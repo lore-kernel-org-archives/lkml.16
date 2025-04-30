@@ -1,171 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5328615A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933C58615A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012011; cv=none; b=ZEfEuQ8ywFxVIZYPe637k8f2LEDjeFf6tCjctk6epB62fYHjFVSlljnRrIDrYeoA8xlp0t4VBfP3o0oAlbPXKTpqkcqAvJLmDCXD7H5NyWnXGJdaBWeRca3ubzy6BSQP/xwEw8dPnurxe/1IsFvS03Xbuyx5TNkbYXphi4+UsKM=
+	t=1746012086; cv=none; b=sRMcSDX9KCuDJkAxFpmPTGj1GwSFqGTmUtE8kl7qwocg02YvHkzt+ZAPwTrCKWfmDUUNuJll4xkDKzqykwX9wFqeCCWISQAjPoP5lUwdrWFoTm5mX6sq8VuoHf4/WIuUdmyVYyKX3j7pdgHD9E2wnhv6xvjtfHmXQr49+N68YVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012011; c=relaxed/simple;
-	bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
+	s=arc-20240116; t=1746012086; c=relaxed/simple;
+	bh=3fBuGco0DYZEyfOgnRGKqO6qa1jOB0e9yN/ZKPqb3Qs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TvctTqHIt54aPcxZQ3qaxNnNqOYNuwhYAXmHmYfC4koDBoaGOlb2X5JVeDsWODpyRmy5R31jwSBN0TMo0FnllKQAzaVZTsNuuvoEXVxVKismJ/wh/6RPj1Hi//mvksGpifvjSssSDkFKhrI6SZiF7EHayfolfdSW991qThjchfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QM+bkjbo; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLjAk44acO8gOLQ96TKtb3UTwkSK0Rha5TGWDgZ84JcGVsfvgYYXX33zcA8kNxSpAKVduSHlLl0aniMw8vAMprGepzfITRUyNm0xpG16d4FNXzKdFqzwjSKoyMGhMStdfoMTmmmo+AwAlJRAWHXesn5GUeWjFb6jAv8bMDGeNfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dRdbT+HS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QM+bkjbo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746012010; x=1777548010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
-  b=QM+bkjboXU+AJ0yIUbN+qAXLx7gtncMLcn4ydmVcgSqGSe6a0yG22xJY
-   Le3bPEiK2cg17j28xhyseTsYoLQJ2k46Fl1VoIET/+LahMs/Ixcd0qqqE
-   fjpwCHrQJY4gXEcJdZ/LS5O2x+27tjyFtoUUDKsNiHLRkJNHiWUTWe4kD
-   z4IijLDVNsuYhts8qncwiCvdq8J6w4Tw5/GwgzozcmROq31HwzzhpkOPU
-   YtCHokpaD2/+7cz2+vC0IE/oA7Y4HRbdXz4YjR8cfjHeuDkd4AIIJ3New
-   Fs62ldBdJGDU2WGfz1kj4PQOCCRi97Sl5fWNBc8U4F9HcZtivpldLc+P/
-   g==;
-X-CSE-ConnectionGUID: TJVI+h+JROSLEVBZM9pT9Q==
-X-CSE-MsgGUID: BQDLj0wRR4Ch1+cxoAdbUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="58324927"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="58324927"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:20:09 -0700
-X-CSE-ConnectionGUID: B4W/LccOQpyqnhDeH4uUWA==
-X-CSE-MsgGUID: +WRh437uRJyCd4LKnyOlpA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="139275736"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
-  by orviesa005.jf.intel.com with SMTP; 30 Apr 2025 04:20:04 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 30 Apr 2025 14:20:02 +0300
-Date: Wed, 30 Apr 2025 14:20:02 +0300
-From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To: Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
-	david@redhat.com, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
-	ryan.roberts@arm.com, ioworker0@gmail.com, da.gomez@samsung.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org,
-	Eero Tamminen <eero.t.tamminen@intel.com>
-Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
- support for tmpfs
-Message-ID: <aBIHYqzar5J8uxGO@intel.com>
-References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
- <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
- <aBEP-6iFhIC87zmb@intel.com>
- <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRdbT+HS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746012083;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0MWOVlw8yXgGQEAuqAramYrkhiU3w78/ZBvJcmOufOI=;
+	b=dRdbT+HS/vmGndo/B3s0CJr615fMzLPeaLVAQITmlcqhFgxpxNKPd9lmXUBOQG1x20KU2K
+	kTLy2ma6brEHdOJiFcRYMG6CkN3/wTfLn4kd+HcaK3mBkfOxpeZLkb7J2rNnYJ1hvAUxX5
+	SEuvR1RgwER3DLdYIYGAYqfmmHRbG9o=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-308-fJyj-U7nPbGCgPFwYxCocw-1; Wed,
+ 30 Apr 2025 07:21:17 -0400
+X-MC-Unique: fJyj-U7nPbGCgPFwYxCocw-1
+X-Mimecast-MFC-AGG-ID: fJyj-U7nPbGCgPFwYxCocw_1746012076
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6257C1800876;
+	Wed, 30 Apr 2025 11:21:16 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.23])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3D32A1956094;
+	Wed, 30 Apr 2025 11:21:13 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 30 Apr 2025 13:20:36 +0200 (CEST)
+Date: Wed, 30 Apr 2025 13:20:33 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Michal Hocko <mhocko@suse.com>
+Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
+	linux-cve-announce@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: CVE-2025-22029: exec: fix the racy usage of fs_struct->in_exec
+Message-ID: <20250430112033.GA9277@redhat.com>
+References: <2025041655-CVE-2025-22029-349f@gregkh>
+ <aBH93qMAhgMEGDAY@tiehlicka>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
-X-Patchwork-Hint: comment
+In-Reply-To: <aBH93qMAhgMEGDAY@tiehlicka>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
-> Hi,
-> 
-> On 2025/4/30 01:44, Ville Syrjälä wrote:
-> > On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
-> >> Add large folio support for tmpfs write and fallocate paths matching the
-> >> same high order preference mechanism used in the iomap buffered IO path
-> >> as used in __filemap_get_folio().
-> >>
-> >> Add shmem_mapping_size_orders() to get a hint for the orders of the folio
-> >> based on the file size which takes care of the mapping requirements.
-> >>
-> >> Traditionally, tmpfs only supported PMD-sized large folios. However nowadays
-> >> with other file systems supporting any sized large folios, and extending
-> >> anonymous to support mTHP, we should not restrict tmpfs to allocating only
-> >> PMD-sized large folios, making it more special. Instead, we should allow
-> >> tmpfs can allocate any sized large folios.
-> >>
-> >> Considering that tmpfs already has the 'huge=' option to control the PMD-sized
-> >> large folios allocation, we can extend the 'huge=' option to allow any sized
-> >> large folios. The semantics of the 'huge=' mount option are:
-> >>
-> >> huge=never: no any sized large folios
-> >> huge=always: any sized large folios
-> >> huge=within_size: like 'always' but respect the i_size
-> >> huge=advise: like 'always' if requested with madvise()
-> >>
-> >> Note: for tmpfs mmap() faults, due to the lack of a write size hint, still
-> >> allocate the PMD-sized huge folios if huge=always/within_size/advise is set.
-> >>
-> >> Moreover, the 'deny' and 'force' testing options controlled by
-> >> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', still retain the same
-> >> semantics. The 'deny' can disable any sized large folios for tmpfs, while
-> >> the 'force' can enable PMD sized large folios for tmpfs.
-> >>
-> >> Co-developed-by: Daniel Gomez <da.gomez@samsung.com>
-> >> Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
-> >> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> > 
-> > Hi,
-> > 
-> > This causes a huge regression in Intel iGPU texturing performance.
-> 
-> Unfortunately, I don't have such platform to test it.
-> 
-> > 
-> > I haven't had time to look at this in detail, but presumably the
-> > problem is that we're no longer getting huge pages from our
-> > private tmpfs mount (done in i915_gemfs_init()).
-> 
-> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE 
-> in the shmem_pwrite(),
+On 04/30, Michal Hocko wrote:
+>
+> Based on a follow up update from Oleg[1] I would like to dispute this
+> CVE.
 
-pwrite is just one random way to write to objects, and probably
-not something that's even used by current Mesa.
+Agreed. Let me quote my reply to my "fix", see
+https://lore.kernel.org/all/20250429154944.GA18907@redhat.com/
 
-> which prevents tmpfs from allocating large 
-> folios. As mentioned in the comments below, tmpfs like other file 
-> systems that support large folios, will allow getting a highest order 
-> hint based on the size of the write and fallocate paths, and then will 
-> attempt each allowable huge order.
-> 
-> Therefore, I think the shmem_pwrite() function should be changed to 
-> remove the limitation that the write size cannot exceed PAGE_SIZE.
-> 
-> Something like the following code (untested):
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c 
-> b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> index ae3343c81a64..97eefb73c5d2 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
-> @@ -420,6 +420,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
->          struct address_space *mapping = obj->base.filp->f_mapping;
->          const struct address_space_operations *aops = mapping->a_ops;
->          char __user *user_data = u64_to_user_ptr(arg->data_ptr);
-> +       size_t chunk = mapping_max_folio_size(mapping);
->          u64 remain;
->          loff_t pos;
->          unsigned int pg;
-> @@ -463,10 +464,10 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
->                  void *data, *vaddr;
->                  int err;
->                  char __maybe_unused c;
-> +               size_t offset;
-> 
-> -               len = PAGE_SIZE - pg;
-> -               if (len > remain)
-> -                       len = remain;
-> +               offset = pos & (chunk - 1);
-> +               len = min(chunk - offset, remain);
-> 
->                  /* Prefault the user page to reduce potential recursion */
->                  err = __get_user(c, user_data);
+	Damn, I am stupid.
 
--- 
-Ville Syrjälä
-Intel
+	On 03/24, Oleg Nesterov wrote:
+	>
+	> check_unsafe_exec() sets fs->in_exec under cred_guard_mutex, then execve()
+	> paths clear fs->in_exec lockless. This is fine if exec succeeds, but if it
+	> fails we have the following race:
+	>
+	> 	T1 sets fs->in_exec = 1, fails, drops cred_guard_mutex
+	>
+	> 	T2 sets fs->in_exec = 1
+	>
+	> 	T1 clears fs->in_exec
+
+	When I look at this code again, I think this race was not possible and thus
+	this patch (applied as af7bb0d2ca45) was not needed.
+
+	Yes, begin_new_exec() can drop cred_guard_mutex on failure, but only after
+	de_thread() succeeds, when we can't race with another sub-thread.
+
+	I hope this patch didn't make the things worse so we don't need to revert it.
+	Plus I think it makes this (confusing) logic a bit more clear. Just, unless
+	I am confused again, it wasn't really needed.
+
+Sorry for the confusion caused by my patch :/
+
+Oleg.
+
