@@ -1,110 +1,103 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDB7263C7F;
-	Wed, 30 Apr 2025 18:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8B31DFDA5;
+	Wed, 30 Apr 2025 18:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039279; cv=none; b=bfjI3R6IvgoW5X6eaOQs6uJujuErBCPr22VHf4GzuuVLkogAkhdaW9O9ad87xSbGiKPioIj9kI2QoqD/kFvmNpXQ4Uf7CtKlspm0w+uzcEaF7LebtxeEFJhBfhzO7+xwxO6toztKNkDAsijsAvS5mNdUfTS6QWFV4/7Q+0ohTAQ=
+	t=1746039374; cv=none; b=B6qjAzvGdTGIcijGmL/SzfMLJblRqRC7+XfvduC81h1tysH6fNfOzZCcC04/WZnW+SAAl1RJK5aLVFHmwzGW7LXUa4/K7xahEhImXuHmzEwZpm3IZWx2PkVpH6EObpROAZipUdIxtpVOfx244nqZb47lAP3r8neXX9rSS+lmYRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039279; c=relaxed/simple;
-	bh=RuEs/0OB2TeUNVBJ7KbaOKTja7dATGjXX+pvvcciRpI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IEC8Roobtm38SdAPOdHp7S9u+xOfLEyV4PUoMGHYN6Km8KZrAJD3qBwwvW5tDvZUtwFH4YIqiCffUAzeVbEJPyBFggAolHU8Hcgpas9tOPFRC0xgWwP5tRbiAPHQp7r+hiq0kQgLfxlcV25miFcxpi7184x9ZGnfToS0DHA9wLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0deOkIC; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746039374; c=relaxed/simple;
+	bh=KeBZqBOT3TzcA4gh+7KvDD9sCKhrBLcUomzdBKW+FUw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FitE6VT25KBaw5D5OFia4RRcnr74/JjEssR3XmJBJriojCc8oXXGRbjkgsSYzK95ukiTE8wYxBcWjC1Hk5ggTdigD1nT+9bP6EvLvHo8+r59iN1AA5DJaDl4+H3Cp9M6vWPmmADs36bMp4LFOHCzW83fyB91H/M1SekfpxvG21Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfMpuZ2K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0deOkIC"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c0517142bso1021251fa.1;
-        Wed, 30 Apr 2025 11:54:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746039276; x=1746644076; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=INnUYS4aztl17KAR4asCnO8mLObv269L2LB64ZQOrdY=;
-        b=C0deOkICKmJQCckbiwLn5NkdfI9azQCB+XgeGB8ZNUwsWJakEsDTFG16vx+Dm4C9OM
-         8ldU+w8EvbMr4TrDkaNno3BOuPcIGE4EDb2ZQ52aqFgV5c2lXCMJRD36Wpj5iDCszq1a
-         RqER1OAhRSx5NVjT53bRXtOsbDYcmYMh6QywHSzOvYcleiRDNZ5lHD0bnDzDjwph2SOw
-         wwk3/VTiGuD5Xk1GdnNfCFUotSj22NtVlRAmRNP/d2JTVLzK/VG+ivSmVQrGJYs+Is3n
-         iT8IU63W4jY5Ku3718zkJvK0bLbQQ7fAvJzxrqnNZgJYXbd28o4Xtkrq0W9v+3NaFn9+
-         PTdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746039276; x=1746644076;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=INnUYS4aztl17KAR4asCnO8mLObv269L2LB64ZQOrdY=;
-        b=nNygLIrvmhM11MdUOpnMpV3A7/03VOJKZlc3b3pXZhVlud+Nt9JfKH1zGEdM4T2vYC
-         YKdcR4KnylcShBacH6SSWcScDEcYQc65s/mgZU4TPFJGr9JkGthDnev/fsv7GdDx2cbd
-         kAQQmajFNd3AXoGRCeEmi8OUcGdGhk+LxgYe/mYeblQyzTmfQlR6GrBffNMRyfz2fWLd
-         bTnhjCYVLqq9n8XMhIRQTEhK4kJN+r5MRooPvRg4zfevkXuUchNb26AEdEDuj8FnAGjo
-         kZzieSXDIrpYKMxLsLpMbiZnWZbj+1dPnt9Nf8U5ohOArYraqk9MwvHyTyfssGmaH1Me
-         6lqw==
-X-Forwarded-Encrypted: i=1; AJvYcCVidq2abLhpt3eMuKm9wbE14k7merO5515RwIBkDJhIAP6g1RSFi07GCSEWR0qI9hGasdanWR5OQ+njMY8=@vger.kernel.org, AJvYcCXEbZ2KcP6mUoyxW6iCYOTWFw11CDJwDDnKVduIvSqHL0GjDlkMMX9jOJtKTDekYsWG8vdpLBu4++C4Mg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+Ad7jXFC84zrCEqSCmH6gq2IsREWSG3aDwBUvwyH7HBxq+61L
-	Wdru/VGiCYiCXCM7+wHhkF1EvctIhWbzhotHNT7xHaZYJVK2ywOjH3sCzQOwO6LJqg18Nc+Eg0q
-	s97fElX/ZlN2oN8k6v32pigB/LiiqfD3rc4Y=
-X-Gm-Gg: ASbGncsjDGTUIZiojZyVnwKFMq1UGt1LJncl34gmaQ4JezPaYY2VX0/RLOEatDkzG+W
-	9+bwiv078j3eLkW6Vv3Pnn8g7KeGzNYOJ2kBYch9e4d3xdGKfrC4rZj7HPa54xlcIwlCvw25BHT
-	cEb9iIr4ZMQEO9EudRIF1S0qYb4vpS+tCCTMhaMA==
-X-Google-Smtp-Source: AGHT+IHmONtEN/xdxnZx+o08PKjnVD4YC1y5YRSR+8KR6UhsXjDD6/Gb/DNtIiijTTw7D4Fogh7Q/wD1bO93+LeWacA=
-X-Received: by 2002:a2e:a912:0:b0:30b:f274:d1e2 with SMTP id
- 38308e7fff4ca-31e69e31eacmr18647711fa.1.1746039275466; Wed, 30 Apr 2025
- 11:54:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfMpuZ2K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B69C4CEE7;
+	Wed, 30 Apr 2025 18:56:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746039372;
+	bh=KeBZqBOT3TzcA4gh+7KvDD9sCKhrBLcUomzdBKW+FUw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LfMpuZ2KiT2J+K25zQgy7Knsn5liQBwAFXi/0YV16OeKryjOcvgVZ73DP2vEHtfUd
+	 c549Ony4evs3/aVwbStezDnnjKON9HnDi5A3nhUzacHGjvw/uvGACxhxCKR+7YUCSR
+	 j4cDZ7tsUxwdvsFgvfCFveXHa8G3cI/k7/q50gp6QyvB4Evrv9MAm1fildh2qUWx+t
+	 uYX79u1gUvCjpeiGp1awM4eWDy2XHhkrP/WD3UKA+DnxiUmCjSgkciLraOWyGch4i4
+	 gJ1Zdhs7uzHZOhl/4Qaf5HYsJFQjBUq1QqEL+w2K/c6Jo46uDaGvOSjXW0lRsfjMeD
+	 8HYufAGD9w3nQ==
+Date: Wed, 30 Apr 2025 11:56:09 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Gow <davidgow@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Bill Wendling <morbo@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Petr Mladek <pmladek@suse.com>, Rae Moar <rmoar@google.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Diego Vieira <diego.daniel.professional@gmail.com>,
+	Luis Chamberlain <mcgrof@kernel.org>, llvm@lists.linux.dev,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Mark Brown <broonie@kernel.org>, WangYuli <wangyuli@uniontech.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 2/3] lib/tests: Add randstruct KUnit test
+Message-ID: <202504301154.1A83E92@keescook>
+References: <20250427013604.work.926-kees@kernel.org>
+ <20250427013836.877214-2-kees@kernel.org>
+ <CABVgOSn1Lrkp96tucPniwPkVbpsBvTRZey=mCVDw7xS+Jro_AA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430085544.12800bdd@canb.auug.org.au> <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
- <4654171.LvFx2qVVIh@rjwysocki.net>
-In-Reply-To: <4654171.LvFx2qVVIh@rjwysocki.net>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 30 Apr 2025 11:53:58 -0700
-X-Gm-Features: ATxdqUEMlf94wCHJAVWSq2q2Y2wziFWbxXtwh7RY2305fcLElottv8bncPvTPHU
-Message-ID: <CAJ-ks9np=yeVPrwNS2BwWJsohqntTgy-2eou68rfWcftR8gjjg@mail.gmail.com>
-Subject: Re: linux-next: Signed-off-by missing for commit in the pm tree
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, gldrk <me@rarity.fan>, Kees Cook <kees@kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABVgOSn1Lrkp96tucPniwPkVbpsBvTRZey=mCVDw7xS+Jro_AA@mail.gmail.com>
 
-On Wed, Apr 30, 2025 at 11:32=E2=80=AFAM Rafael J. Wysocki <rjw@rjwysocki.n=
-et> wrote:
->
-> On Wednesday, April 30, 2025 1:30:43 AM CEST Tamir Duberstein wrote:
-> > On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Stephen Rothwell <sfr@canb.auug=
-.org.au> wrote:
-> > >
-> > > Hi all,
-> > >
-> > > Commits
-> > >
-> > >   9eef70365d71 ("ACPICA: Introduce ACPI_NONSTRING")
-> > >   ac9334785c75 ("ACPICA: utilities: Fix overflow check in vsnprintf()=
-")
-> > >   5de20bc939b0 ("ACPICA: Apply pack(1) to union aml_resource")
-> > >
-> > > are missing a Signed-off-by from their authors.
+On Tue, Apr 29, 2025 at 03:44:01PM +0800, David Gow wrote:
+> On Sun, 27 Apr 2025 at 09:38, Kees Cook <kees@kernel.org> wrote:
 > >
-> > Hi Stephen, how can I remedy this for 5de20bc939b0 ("ACPICA: Apply
-> > pack(1) to union aml_resource")?
->
-> The original ACPICA commit does not carry an S-o-b from you, so this one
-> does not either.
->
-> If you reply with a Signed-off-by to this message:
->
-> https://lore.kernel.org/linux-acpi/4664267.LvFx2qVVIh@rjwysocki.net/
->
-> I will pick up your tag.
->
-> Thanks!
+> > Perform basic validation about layout randomization and initialization
+> > tracking when using CONFIG_RANDSTRUCT=y. Tested using:
+> >
+> > $ ./tools/testing/kunit/kunit.py run \
+> >         --kconfig_add CONFIG_RANDSTRUCT_FULL=y \
+> >         randstruct
+> > [17:22:30] ================= randstruct (2 subtests) ==================
+> > [17:22:30] [PASSED] randstruct_layout
+> > [17:22:30] [PASSED] randstruct_initializers
+> > [17:22:30] =================== [PASSED] randstruct ====================
+> > [17:22:30] ============================================================
+> > [17:22:30] Testing complete. Ran 2 tests: passed: 2
+> > [17:22:30] Elapsed time: 5.091s total, 0.001s configuring, 4.974s building, 0.086s running
+> >
+> > Adding "--make_option LLVM=1" can be used to test Clang, which also
+> > passes.
+> >
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> 
+> This works here for me. I'm a little wary of the prospect of the
+> "unlucky or broken" message making the test fail if we're just
+> unlucky, but it seems unlikely enough that we can deal with it later
+> if it ever becomes a problem.
+> 
+> Acked-by: David Gow <davidgow@google.com>
 
-Done in https://lore.kernel.org/linux-acpi/20250430185019.19528-2-tamird@gm=
-ail.com/.
+Thanks!
+
+Yeah, I wonder if it might be an interesting adjustment to the shuffling
+to make sure it isn't a no-op? Like, it would shuffle with the original
+hash, and if it's a no-op, it could permute the hash again, and then try
+again? Hmmm...
+
+-- 
+Kees Cook
