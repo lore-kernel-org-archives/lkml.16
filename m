@@ -1,166 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217BF21ADA9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5328615A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746011924; cv=none; b=PO6Hge/O8C1uCBEevlie6NSWRhrLcb/UX27w4oh0vHXdiL/lbUGcradBzEJklcjX3R1ZK7A5qmQ10AZlYNXEP2EHVr640aCeWeZ8InbvBG2fNida3cxBpTmE7JlTAcS8owINAZ+FZ3KOmWw8yUKJUxXv4iXYST+Ig4cqRKQBQFs=
+	t=1746012011; cv=none; b=ZEfEuQ8ywFxVIZYPe637k8f2LEDjeFf6tCjctk6epB62fYHjFVSlljnRrIDrYeoA8xlp0t4VBfP3o0oAlbPXKTpqkcqAvJLmDCXD7H5NyWnXGJdaBWeRca3ubzy6BSQP/xwEw8dPnurxe/1IsFvS03Xbuyx5TNkbYXphi4+UsKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746011924; c=relaxed/simple;
-	bh=uDbXMdLMY6+Z0MkTYq2usZkfsYZmZnQqQCBd2W1mE48=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j8lgHtjedYnKqgXjLUaI+g0qriN+5UlAY7MK7tFnofThv/NHebEBdxPsb0H4TKI5CBLVLI8fSX1M7Dnp2I4yQO7FeMEcmg/EiFdRQiMqu+uJowSmRgwDWjZYZUUmQMw9vOqDpPm2DAeA4tyB40lWEvbi3XR0c/s4A4SFj8iHrHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=SiIz+EgD; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746012011; c=relaxed/simple;
+	bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TvctTqHIt54aPcxZQ3qaxNnNqOYNuwhYAXmHmYfC4koDBoaGOlb2X5JVeDsWODpyRmy5R31jwSBN0TMo0FnllKQAzaVZTsNuuvoEXVxVKismJ/wh/6RPj1Hi//mvksGpifvjSssSDkFKhrI6SZiF7EHayfolfdSW991qThjchfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QM+bkjbo; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="SiIz+EgD"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9LnVX032422
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:18:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8ZFIsCqDMndsS+cxLg5we8+lkzN4XxRlgIxgsI40cLE=; b=SiIz+EgDyVjpF0AC
-	FlvOSbq9aNS1XnVLTFUTHcfEW8hDhfPDutaknOg0l09KveVXOk8tkGJ98IJQh4gf
-	pfoOuPQD+YbkYgVYPZcVOzjGiJkpt5RLrs/SgauEQqem1AqD+HLiB3eccAGdZKDj
-	xKc3ZxURike72+VnX8U27MMt1dpf81qklZirM5eoyTiPYsjVJoNVB+0IYvZBL5r0
-	jxNGc3d2U6ZaVbRTivMulmvdMo/02jg8WfyBqY920ddo0HfU9J0HTtX6QxDp6Wai
-	C6b5lPSOLrvzJS8SKcg7e4LU/5q4ocjMkmCFltmToWpm9eOEn076TwfPNBorhf+3
-	fwoQ4Q==
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u29wvx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:18:41 +0000 (GMT)
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4775bdbcdc3so16450931cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:18:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746011921; x=1746616721;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZFIsCqDMndsS+cxLg5we8+lkzN4XxRlgIxgsI40cLE=;
-        b=eXUriihcFsuR0lX3z8KPOYSQ3V3kbGMAUhB3ZGWDC+vFluIH2q0xOQ/hu26VZTj9RA
-         T8Byf7jlKuOuaFAKu8o3n1jf7WtVncNSJ5zNIROdDJETan2H0erIxbo3i1GLDDDf+ghy
-         p2i6JnNYqA1f78qwTUx+0ee+ZKh+LBdYkkXeFzqMJ9y/Ze4yGxMhsZjePgHns8sQpFXX
-         +IUFHnWTwVqec+uqAqOUIiQ37zcblTmqBffffPlQw7/ou1U4gwWblAfchlUsP1JOv6CB
-         IZsXKFecm/APSvbxgnPO0EcjL7jbrYQFWyekTPcp5YZO/WLa7PqcR3LuRJhZaU9YZ5oc
-         QZ5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUBieAewqUZyKOfSL11cuIaCALrV65DLT4VWe96QDheLYL65ZC3m94IN+THT/n+FIOK5fxTgQ5geyoKlbQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvUWZuQfEojdDeBQX9+MtfhClK/kIA4hhzX7EjQY4ZTgpRo38j
-	5TSVDpursFZ8wPv4b8WtQLcseko+9tNNOsi34g/z4qGtxBHla39x11/VuF4v+TohEjVDtnwQ64H
-	0U1eo4DlJedcxoJU48t5HnSk5AjGUt5AdenZMfV2pOMdHBJ7Yd8w3cucvf/7+YW0=
-X-Gm-Gg: ASbGncsAI/cqub6rH9EmPwyf+9+w1kMcuLnphMMmHmW0vhkYS0JIp3kFw80688k4RRq
-	CAeif8JnwNUNIiulR9nxbjNFXJZA3LLxPth88eL5rO9pJyB+kOwAi6flOldiUdjxAeADBKH37xN
-	6FEWoDSwmvmGUa7OQbPoMbiRfdrF+UigeBvd6yAf8F58rrNUZveSJ9lmS/CqNeek38iLCDql9qt
-	Thfp0ODWOWgAtg701SyMDrVIIMDldxA6zmq/g8+ns9t0W+DdIhwxmoAKrDxp1/5BMFMP9e5vQKd
-	aoznu2FFA5AN02DSRFbkEaZCm1fUiocp+AzsPSjsbEfJSGeGRejWvFC23FKFqLgmBK4=
-X-Received: by 2002:a05:622a:1b88:b0:474:f9a1:ffb8 with SMTP id d75a77b69052e-489e5efee93mr11201701cf.10.1746011920926;
-        Wed, 30 Apr 2025 04:18:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYI8AK0llTsxREeTqIZc4iujbSMfKc70TN9di8lFbZ1oHX31huO3bZUjC9mtgoH3qMOFI7aQ==
-X-Received: by 2002:a05:622a:1b88:b0:474:f9a1:ffb8 with SMTP id d75a77b69052e-489e5efee93mr11201471cf.10.1746011920593;
-        Wed, 30 Apr 2025 04:18:40 -0700 (PDT)
-Received: from [192.168.65.132] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecfa910sm903756866b.113.2025.04.30.04.18.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 04:18:40 -0700 (PDT)
-Message-ID: <3e4e628a-740c-4b80-b927-014a635eeeba@oss.qualcomm.com>
-Date: Wed, 30 Apr 2025 13:18:37 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QM+bkjbo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746012010; x=1777548010;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=EF01kkqV58wp6RAxtOeYWzYzYSD4HksIbDbTbhiLyCg=;
+  b=QM+bkjboXU+AJ0yIUbN+qAXLx7gtncMLcn4ydmVcgSqGSe6a0yG22xJY
+   Le3bPEiK2cg17j28xhyseTsYoLQJ2k46Fl1VoIET/+LahMs/Ixcd0qqqE
+   fjpwCHrQJY4gXEcJdZ/LS5O2x+27tjyFtoUUDKsNiHLRkJNHiWUTWe4kD
+   z4IijLDVNsuYhts8qncwiCvdq8J6w4Tw5/GwgzozcmROq31HwzzhpkOPU
+   YtCHokpaD2/+7cz2+vC0IE/oA7Y4HRbdXz4YjR8cfjHeuDkd4AIIJ3New
+   Fs62ldBdJGDU2WGfz1kj4PQOCCRi97Sl5fWNBc8U4F9HcZtivpldLc+P/
+   g==;
+X-CSE-ConnectionGUID: TJVI+h+JROSLEVBZM9pT9Q==
+X-CSE-MsgGUID: BQDLj0wRR4Ch1+cxoAdbUw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="58324927"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="58324927"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:20:09 -0700
+X-CSE-ConnectionGUID: B4W/LccOQpyqnhDeH4uUWA==
+X-CSE-MsgGUID: +WRh437uRJyCd4LKnyOlpA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="139275736"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.74])
+  by orviesa005.jf.intel.com with SMTP; 30 Apr 2025 04:20:04 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Wed, 30 Apr 2025 14:20:02 +0300
+Date: Wed, 30 Apr 2025 14:20:02 +0300
+From: Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+	david@redhat.com, wangkefeng.wang@huawei.com, 21cnbao@gmail.com,
+	ryan.roberts@arm.com, ioworker0@gmail.com, da.gomez@samsung.com,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	regressions@lists.linux.dev, intel-gfx@lists.freedesktop.org,
+	Eero Tamminen <eero.t.tamminen@intel.com>
+Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
+ support for tmpfs
+Message-ID: <aBIHYqzar5J8uxGO@intel.com>
+References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
+ <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
+ <aBEP-6iFhIC87zmb@intel.com>
+ <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/msm/gpu: Fix crash when throttling GPU immediately
- during boot
-To: Stephan Gerhold <stephan.gerhold@linaro.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Johan Hovold <johan@kernel.org>
-References: <20250429-drm-msm-gpu-hot-devfreq-boot-v1-1-8aa9c5f266b4@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250429-drm-msm-gpu-hot-devfreq-boot-v1-1-8aa9c5f266b4@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: oYePr3C1yNkHZZrniXWN7kC1MkQyAUfH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA4MCBTYWx0ZWRfX6N/IWVhdyWpJ DQbjY2gCvxK3j+4OmNXyl9b5Akgcgxi2nM9bLivP4G69uFq+Rr8VY6XYLo9+w9RyOCzsfOg6Ssq wgFdtCW0LkzBTsRayk8/2gU8WiHXDCd1btqVcjV0CSR5lD47u7HhDJMet8teoqE8qUSc2TiEyzA
- nlcABhMmYSAXxhINDRJrBt/anF6wmVUZyNuOwkyF8WwZH7YEmUQUJicI7LO/toleeyWAhZzSRyY doYLZ+dKApYk5lHZQm4GyBkqgQczaerfBP8v0y3rssIYBLQ1jcrSh36tnrsnDCKEmfkP1jOflsq ybb5+G/FvIj0S72itCyOH+HGpNZVNbjzM0y6OA2L0aCQvUkhaXuHLBV42Xn+3AaqTOC7XLZoTRm
- 0AqWMxWTb4ZQFEG/aXwVdiLj530KoZLpyUhMNS6Zfh88gw+0M4TNTEzXrCkx6swhB9r6hBB3
-X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=68120711 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=5xDEUdhm2TPt1CDrq1UA:9
- a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: oYePr3C1yNkHZZrniXWN7kC1MkQyAUfH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300080
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+X-Patchwork-Hint: comment
 
-On 4/29/25 10:33 AM, Stephan Gerhold wrote:
-> There is a small chance that the GPU is already hot during boot. In that
-> case, the call to of_devfreq_cooling_register() will immediately try to
-> apply devfreq cooling, as seen in the following crash:
+On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
+> Hi,
 > 
->   Unable to handle kernel paging request at virtual address 0000000000014110
->   pc : a6xx_gpu_busy+0x1c/0x58 [msm]
->   lr : msm_devfreq_get_dev_status+0xbc/0x140 [msm]
->   Call trace:
->    a6xx_gpu_busy+0x1c/0x58 [msm] (P)
->    devfreq_simple_ondemand_func+0x3c/0x150
->    devfreq_update_target+0x44/0xd8
->    qos_max_notifier_call+0x30/0x84
->    blocking_notifier_call_chain+0x6c/0xa0
->    pm_qos_update_target+0xd0/0x110
->    freq_qos_apply+0x3c/0x74
->    apply_constraint+0x88/0x148
->    __dev_pm_qos_update_request+0x7c/0xcc
->    dev_pm_qos_update_request+0x38/0x5c
->    devfreq_cooling_set_cur_state+0x98/0xf0
->    __thermal_cdev_update+0x64/0xb4
->    thermal_cdev_update+0x4c/0x58
->    step_wise_manage+0x1f0/0x318
->    __thermal_zone_device_update+0x278/0x424
->    __thermal_cooling_device_register+0x2bc/0x308
->    thermal_of_cooling_device_register+0x10/0x1c
->    of_devfreq_cooling_register_power+0x240/0x2bc
->    of_devfreq_cooling_register+0x14/0x20
->    msm_devfreq_init+0xc4/0x1a0 [msm]
->    msm_gpu_init+0x304/0x574 [msm]
->    adreno_gpu_init+0x1c4/0x2e0 [msm]
->    a6xx_gpu_init+0x5c8/0x9c8 [msm]
->    adreno_bind+0x2a8/0x33c [msm]
->    ...
+> On 2025/4/30 01:44, Ville Syrjälä wrote:
+> > On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+> >> Add large folio support for tmpfs write and fallocate paths matching the
+> >> same high order preference mechanism used in the iomap buffered IO path
+> >> as used in __filemap_get_folio().
+> >>
+> >> Add shmem_mapping_size_orders() to get a hint for the orders of the folio
+> >> based on the file size which takes care of the mapping requirements.
+> >>
+> >> Traditionally, tmpfs only supported PMD-sized large folios. However nowadays
+> >> with other file systems supporting any sized large folios, and extending
+> >> anonymous to support mTHP, we should not restrict tmpfs to allocating only
+> >> PMD-sized large folios, making it more special. Instead, we should allow
+> >> tmpfs can allocate any sized large folios.
+> >>
+> >> Considering that tmpfs already has the 'huge=' option to control the PMD-sized
+> >> large folios allocation, we can extend the 'huge=' option to allow any sized
+> >> large folios. The semantics of the 'huge=' mount option are:
+> >>
+> >> huge=never: no any sized large folios
+> >> huge=always: any sized large folios
+> >> huge=within_size: like 'always' but respect the i_size
+> >> huge=advise: like 'always' if requested with madvise()
+> >>
+> >> Note: for tmpfs mmap() faults, due to the lack of a write size hint, still
+> >> allocate the PMD-sized huge folios if huge=always/within_size/advise is set.
+> >>
+> >> Moreover, the 'deny' and 'force' testing options controlled by
+> >> '/sys/kernel/mm/transparent_hugepage/shmem_enabled', still retain the same
+> >> semantics. The 'deny' can disable any sized large folios for tmpfs, while
+> >> the 'force' can enable PMD sized large folios for tmpfs.
+> >>
+> >> Co-developed-by: Daniel Gomez <da.gomez@samsung.com>
+> >> Signed-off-by: Daniel Gomez <da.gomez@samsung.com>
+> >> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+> > 
+> > Hi,
+> > 
+> > This causes a huge regression in Intel iGPU texturing performance.
 > 
-> At this point we haven't initialized the GMU at all yet, so we cannot read
-> the GMU registers inside a6xx_gpu_busy(). A similar issue was fixed before
-> in commit 6694482a70e9 ("drm/msm: Avoid unclocked GMU register access in
-> 6xx gpu_busy"): msm_devfreq_init() does call devfreq_suspend_device(), but
-> unlike msm_devfreq_suspend(), it doesn't set the df->suspended flag
-> accordingly. This means the df->suspended flag does not match the actual
-> devfreq state after initialization and msm_devfreq_get_dev_status() will
-> end up accessing GMU registers, causing the crash.
+> Unfortunately, I don't have such platform to test it.
 > 
-> Fix this by setting df->suspended correctly during initialization.
+> > 
+> > I haven't had time to look at this in detail, but presumably the
+> > problem is that we're no longer getting huge pages from our
+> > private tmpfs mount (done in i915_gemfs_init()).
 > 
-> Cc: stable@vger.kernel.org
-> Fixes: 6694482a70e9 ("drm/msm: Avoid unclocked GMU register access in 6xx gpu_busy")
-> Signed-off-by: Stephan Gerhold <stephan.gerhold@linaro.org>
-> ---
+> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE 
+> in the shmem_pwrite(),
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+pwrite is just one random way to write to objects, and probably
+not something that's even used by current Mesa.
 
-Konrad
+> which prevents tmpfs from allocating large 
+> folios. As mentioned in the comments below, tmpfs like other file 
+> systems that support large folios, will allow getting a highest order 
+> hint based on the size of the write and fallocate paths, and then will 
+> attempt each allowable huge order.
+> 
+> Therefore, I think the shmem_pwrite() function should be changed to 
+> remove the limitation that the write size cannot exceed PAGE_SIZE.
+> 
+> Something like the following code (untested):
+> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c 
+> b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> index ae3343c81a64..97eefb73c5d2 100644
+> --- a/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> @@ -420,6 +420,7 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
+>          struct address_space *mapping = obj->base.filp->f_mapping;
+>          const struct address_space_operations *aops = mapping->a_ops;
+>          char __user *user_data = u64_to_user_ptr(arg->data_ptr);
+> +       size_t chunk = mapping_max_folio_size(mapping);
+>          u64 remain;
+>          loff_t pos;
+>          unsigned int pg;
+> @@ -463,10 +464,10 @@ shmem_pwrite(struct drm_i915_gem_object *obj,
+>                  void *data, *vaddr;
+>                  int err;
+>                  char __maybe_unused c;
+> +               size_t offset;
+> 
+> -               len = PAGE_SIZE - pg;
+> -               if (len > remain)
+> -                       len = remain;
+> +               offset = pos & (chunk - 1);
+> +               len = min(chunk - offset, remain);
+> 
+>                  /* Prefault the user page to reduce potential recursion */
+>                  err = __get_user(c, user_data);
+
+-- 
+Ville Syrjälä
+Intel
