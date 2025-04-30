@@ -1,114 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7CD21B9C3;
-	Wed, 30 Apr 2025 08:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F0421ABC5
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001719; cv=none; b=u2w8dYtcman2krXcIVTEcL6FxhoBXuwFIvGdo/g4HeQXWQ5Nu0ZbTrBs/eY/BSeSPZvpDwUsbnwUxwLlleRFVothCYr70HO6rgwaN4Tcykhay2kYysQkmtUQniwAheK7kDEx6h3fU3c09clezAII+/O+HMvBGEgqqd0cfvmrYgE=
+	t=1746001730; cv=none; b=MirE6eyEO8WNXjWRqAuBwbrHJsiMMeqJ8ZOrM3Q+GzJl+9SGJLHNeGrT1Uk2HTY0v/E2NHMJV/TtEwT9k4tj7Xgr1mmTa6EaU5c6v5wnMl68+cCTNsgf2lD2MUZ4Q3mCFoDeFRQffI4AetCNfmkaEFI7YZ5akYSpVoIJbEvit3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001719; c=relaxed/simple;
-	bh=dRAs2qXXUA/N97RfHpdlApe9kO3tgf2G0Ws27HW/leU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=hh9BgXNAyqdpXiWZMpx4lCG/+u5JAJ3xfgLsyFm3KfTgoUXV/f3FmW5UawftkLrk+D2CW24UrZQhneC7y9zqTOxHy7lwOYwr3G2Q0iI7ie7MZwFK8OEECHm5cl7jOHcTp+mFWPfeJebfy3IX8WvQ10tw7NYcL8/uki+bvnPoe6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLQQRYIK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746001730; c=relaxed/simple;
+	bh=pH0oqBFzXr7dxaa6fyvrd+LLrjaVdoyq6r4ZmuQseF0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=AaRkEsA4zwHoSkgk4zss0WnzYfBq1k4lbezGwMxPCcoIWBfZjBU38CPRGRjDN6uVrgQhFVBcCTp9XSzTZxu6cnipPECZRnWVo+AqFWPXxU61D+Kf/l+mEZRNzMbaYTkAGzezViQjxmfD7iZ8SnGJhXFGDxu1Qmn1Ro0UIBFi+zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uci.edu; spf=pass smtp.mailfrom=uci.edu; dkim=pass (2048-bit key) header.d=uci.edu header.i=@uci.edu header.b=OiO2CgW8; arc=none smtp.client-ip=209.85.208.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uci.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uci.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLQQRYIK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675A2C4CEE9;
-	Wed, 30 Apr 2025 08:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746001718;
-	bh=dRAs2qXXUA/N97RfHpdlApe9kO3tgf2G0Ws27HW/leU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=HLQQRYIKoXpbCGU1oiZAlBYVf2sYWlszXWirWOR7hDLvOKLcxakR6Hs3RjN3ZDT9o
-	 ke/671XCkqpYc76O2on3kpuvoCh9hLTZwUfkWVDNPyp2Cna9grfXVOy82u1s6bDEuP
-	 mLQM87Sif9u9GSoHY1De98kud+SWcTFGTcwpx2u5D2DN6lt6S34n9fHH0lMXSlwYeG
-	 EtCJE+mzLWFKYv5ASk8ITaolzKlv+PBLyNzMkgw4wnnqBXJeCkg8on1KO0My3HCeO3
-	 8kQlMbqSzFqXKZof7wjX/0MP1fTgE1aARvdRqwLGvbX2O+PtPL9ku0h9V7luEzQOZZ
-	 LN8bUTGAV3O9Q==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "kernel test robot" <lkp@intel.com>,  "FUJITA Tomonori"
- <fujita.tomonori@gmail.com>,  <oe-kbuild-all@lists.linux.dev>,
-  <linux-kernel@vger.kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,
-  "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-In-Reply-To: <CANiq72n6tTox7jMX89p4vLihghrJeDcBL+MWR8rp4_Y0LyxcKg@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Wed, 30 Apr 2025 07:06:28 +0200")
-References: <202504301208.YQCguEmE-lkp@intel.com>
-	<D4J3Zi4_pJAvvHPii2-9GqOa4jd7dzNzOJ3Wf_Mo95TggON0WGCiDwXrT2vd_aj5G0tt-tqIDp4vi5tjbLE7AA==@protonmail.internalid>
-	<CANiq72n6tTox7jMX89p4vLihghrJeDcBL+MWR8rp4_Y0LyxcKg@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Wed, 30 Apr 2025 10:28:25 +0200
-Message-ID: <87ecxa2guu.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=uci.edu header.i=@uci.edu header.b="OiO2CgW8"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30ddad694c1so76896791fa.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:28:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uci.edu; s=google; t=1746001726; x=1746606526; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=6lPqXLo5Wb4FjmQISWv1/W8649m7XVXX1Bcf7rCMT1I=;
+        b=OiO2CgW8iu5CCKeSmS3PlKZ+n3xjB4FpmGZ/szRw0QJi8A+YcL0FYUJrTLEgosdX4F
+         d2jIHVcqMDFx8tXKCMTNLxGOgHXxJzDe1Lu5A+HD3aOZY2YteujoRH75Q6yRlSADpr7D
+         FVLvx40vp6KiwdNYybuP9Ljyfgcf+knyPL9/g0CFVT89u3k15c5uis1NnJR4mUXlSJko
+         zeE595klz/aoX3G/7dxfmk/okb1P8e+2elx9oIXR/mq9UO4aBbBncJUmdhGS9w45ZlXo
+         EuU2szghJEATSCEJv63JZTzcijBR1Lt3hkO0CBfuP4aaNjdxIZd+FPqtMVe6/dGanA2S
+         2EWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746001726; x=1746606526;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6lPqXLo5Wb4FjmQISWv1/W8649m7XVXX1Bcf7rCMT1I=;
+        b=kxEzEJyXgbj6LOmb1vYrK9mUcCw97fx5HkWrRueSpkAkGk8ngflcPnknNMs4BDApSE
+         gjOYkm25XPcrm0UIR4B2m0W8XM2bA8DZVxTOEiBhODn+B2SyQzvIxu/JLMifET5xqvX+
+         mOd+LYYRVv4xgO+c+S8StXaORqqyWqyAT5R4cbm/tOYM+ztghecbVQOls1DnMTvtmMbK
+         KHYwM2Zc+7EdXjMeJVKqm7peLuyvrl0Y4OsD3yUS7rMF0JA/7mz3MOgw3cUclXhoyYW7
+         E8uwrcAXMzGbgUZu36QsWGjD2hG7TZ2InNdIyxvKVY+xt2GCi0uknmAH3sAuE+F/9Us0
+         8Jag==
+X-Gm-Message-State: AOJu0YzTuTRLmCtRGYQo3cfZZepS/NzLRG8oA5wRvR8L9uCsZx4Mqd1i
+	0khzjifhUaJT4hjdgBgcOIfGgHVpiG8dPHdfLRACU3zGUl6+voZDITeCu+mJ250/7b0dtcYJ9mU
+	W1QkDE6IbveuLqaVHyT8hlKH7qn8JYAdHHksoJyi9aPbV2l6xK3f/Qg==
+X-Gm-Gg: ASbGncvHmymYN2fUQwjFmB9OJGt26ggw3bVUBllBVtqjFZwbXQmENiETBp2fPj0kFWY
+	QfOORpfkzZooMByHq6aFSIbMBhGjesTMik/8nbd6xN+xjMceWxdK8LnM0fL+SsLcrSjWBLnbv2Y
+	UPA3PwUcRu1OcefnHKgAqcS4gcvLWGWNA3kqVq
+X-Google-Smtp-Source: AGHT+IHm9LGcwO5UfIgmOPoA/NZWU0YUuagpPN/FMkVDaPR9suXAlBToMbxCmPA+26NwR16zuoPZt7Fpu/vyInDHLes=
+X-Received: by 2002:a05:651c:1542:b0:30b:ee78:79d2 with SMTP id
+ 38308e7fff4ca-31e6bb7963amr7026571fa.36.1746001726243; Wed, 30 Apr 2025
+ 01:28:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Ezra Khuzadi <ekhuzadi@uci.edu>
+Date: Wed, 30 Apr 2025 01:28:35 -0700
+X-Gm-Features: ATxdqUHlLjGvyjp1aDqcwzw1xdWYY187ti4MPUlvYdIVpJ5MANTZwWt-gw4LJKI
+Message-ID: <CAPXr0uxh0c_2b2-zJF=N8T6DfccfyvOQRX0X0VO24dS7YsxzzQ@mail.gmail.com>
+Subject: sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
+To: linux-kernel@vger.kernel.org
+Cc: alsa-devel@lists.sourceforge.net, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
 
-> On Wed, Apr 30, 2025 at 6:55=E2=80=AFAM kernel test robot <lkp@intel.com>=
- wrote:
->>
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
-it master
->> head:   8bac8898fe398ffa3e09075ecea2be511725fb0b
->> commit: 584e61452f75bfeac2cdd83730b4059526ec60c7 rust: helpers: Remove v=
-olatile qualifier from io helpers
->> date:   2 weeks ago
->> config: um-randconfig-r063-20250430 (https://download.01.org/0day-ci/arc=
-hive/20250430/202504301208.YQCguEmE-lkp@intel.com/config)
->> compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cb=
-f1a2591520c2491aa35339f227775f4d3adf6)
->> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
->> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arch=
-ive/20250430/202504301208.YQCguEmE-lkp@intel.com/reproduce)
->>
->> If you fix the issue in a separate patch/commit (i.e. not just a new ver=
-sion of
->> the same patch/commit), kindly add following tags
->> | Reported-by: kernel test robot <lkp@intel.com>
->> | Closes: https://lore.kernel.org/oe-kbuild-all/202504301208.YQCguEmE-lk=
-p@intel.com/
->>
->> All errors (new ones prefixed by >>):
->>
->> >> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
->>    --> rust/kernel/block/mq/operations.rs:15:33
->>    |
->>    15 | use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::a=
-tomic::Ordering};
->>    |                                 ^^^^^^^^^^^^^^---------
->>    |                                 |             |
->>    |                                 |             help: a similar name =
-exists in the module: `AtomicU32`
->>    |                                 no `AtomicU64` in `sync::atomic`
->> --
->> >> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
->>    --> rust/kernel/block/mq/request.rs:16:20
->>    |
->>    16 |     sync::atomic::{AtomicU64, Ordering},
->>    |                    ^^^^^^^^^
->>    |                    |
->>    |                    no `AtomicU64` in `sync::atomic`
->>    |                    help: a similar name exists in the module: `Atom=
-icU32`
->
-> Cc'ing Andreas.
->
+Add subsystem ID 0x86e5 for HP Spectre x360 15-eb0xxx so that
+ALC285_FIXUP_HP_SPECTRE_X360_EB1 (GPIO amp-enable, mic-mute LED and
+pinconfigs) is applied.
 
-Gary sent a patch to fix this a while back [1].
+Tested on HP Spectre x360 15-eb0043dx (Vendor 0x10ec0285, Subsys 0x103c86e5)
+with legacy HDA driver and hda-verb toggles:
 
+  $ cat /proc/asound/card0/codec#0 \
+      | sed -n -e '1,5p;/Vendor Id:/p;/Subsystem Id:/p'
+  Codec: Realtek ALC285
+  Vendor Id: 0x10ec0285
+  Subsystem Id: 0x103c86e5
 
-Best regards,
-Andreas Hindborg
+  $ dmesg | grep -i realtek
+  [    5.828728] snd_hda_codec_realtek ehdaudio0D0: ALC285: picked fixup
+        for PCI SSID 103c:86e5
 
-[1] https://lore.kernel.org/all/20250219201602.1898383-4-gary@garyguo.net
+Signed-off-by: Ezra Khuzadi <ekhuzadi@uci.edu>
 
+---
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 877137cb09ac..82ad105e7fa9 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -10563,6 +10563,7 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
+   SND_PCI_QUIRK(0x103c, 0x86c7, "HP Envy AiO 32", ALC274_FIXUP_HP_ENVY_GPIO),
++  SND_PCI_QUIRK(0x103c, 0x86e5, "HP Spectre x360 15-eb0xxx",
+ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+   SND_PCI_QUIRK(0x103c, 0x86e7, "HP Spectre x360 15-eb0xxx",
+ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+   SND_PCI_QUIRK(0x103c, 0x86e8, "HP Spectre x360 15-eb0xxx",
+ALC285_FIXUP_HP_SPECTRE_X360_EB1),
+   SND_PCI_QUIRK(0x103c, 0x86f9, "HP Spectre x360 13-aw0xxx",
+ALC285_FIXUP_HP_SPECTRE_X360_MUTE_LED),
