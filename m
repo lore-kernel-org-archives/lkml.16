@@ -1,194 +1,331 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2073.outbound.protection.outlook.com [40.107.220.73])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F852DC779;
-	Wed, 30 Apr 2025 06:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745994994; cv=fail; b=qj5do9qsaJUpeiwHH6REzlyFRK2btNRmRXZyzEN+6S6eNusQHQEVQRj1vjsyq9ruMVrw0lVdspAJ1cMiP4Fq7FXfmgrAjjp3b/w+faLCJ58MgQ6vD4W4Y7k567VSsCjk69rp8NgbXEYHU51/j5AAQrP83EYLkyyOxK+TV/9NL+k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745994994; c=relaxed/simple;
-	bh=ZZy1hzVFL7vFTFk5yiwQfUR558rGQQ68/g0pitHgZvc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=dgDrHGu78ROly3ZzDH19XO2XjNmU/3szpewYfnUwcbSQVmk2aXiggPrXUiSr+phWGEzre1rwU7zQdl6TMREwZJ3aFjRoAxaBEScBbNXegivY/dm9OhQvamtLXQS65VlREuumwSLwROEnKZ5/gW5c7HnozMDzqMN1yNfgMAE5CL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CmJeuEh/; arc=fail smtp.client-ip=40.107.220.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EE01DE3BE
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:36:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745995006; cv=none; b=qB05520UZEQauE3YU6lgQy6CyBS3w01iJMgdmH+aEZokPfIW8HnN9REf5gLUa4MGuJcA3PTbXalkwGwIQ+1WgxxaoErB+WLz91yiGxO41vL9f1GeA+4A0sUKoncW6hgqwWfuDHm6xw0E0jWp96XnO3FsJzaDm8nq9p9ahzuiUUY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745995006; c=relaxed/simple;
+	bh=s++kBQMUPR8STazuC3AVEzPBLPa903y0uKttqdRzob0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Q6RoIHcfvci1mS3ixWlxp8JQT+cT3szTfuTExVt6erD1fVyspxgwX3119anEHVB+tkowtbnqGhivQHoZivDlWHtAlGYY/fndJC1BodqFPyhmOCq3d1TMMMGk8f3XTT56jVbocdb+wJiAEDVps19laELw+guPMW4EdCLfK1aLkkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pnMT08av; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wdq57TC6; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CmJeuEh/"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yfDEhmVgJC0uR7ZEClNnevX2aM3T5tOJwRgJQTDr9VkiKPymsudz6kImVNFuqX4FZGCECsBMEkzEYns/EyxyiHkVgC/J39ccLst0IN8yC8dzdWHrfD4DgfqDLOmvAV8HvO06klsJn72ANQuxaZ/xv19KeomH3rZAAmkYInCfoLz98+HmStghZ/BF+tHErVZFQvK9zJDfH5eOQevyH1s3c1FiKCdRBlbebd27zSjl5KQvoPComL0HcBBJjSi5rY5rHh7I59fSX01aa2CEvwu6t/RfHtY0h0FQoEFlrx5IJoGi1Hvb7ZN8TRCejvqozER9NheCQH4vadKobhh3drJ5qw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tOss4+qACsy6SHHJUhgo0eQsQ+hHPuRhRKnrkHpCOWY=;
- b=qqwUaGh5MPscXji8IA7BhwbNXiZZ5QCzSBpFx11rUZ9pt8mDwv0SXq5QDOto447looh38OVIXUHMVYEguDBcuOb576ey6PGxpCMZU24BvE5ZmteenHYtU27uT/KnYhoyQm8k7Ww6tMHn/hhxvIX3mErCMuiTkC5Gt8ryIXGLbruvqw8EB0lnoTN8DAPOOTmCIy9aXMof4nFDsUrKxbzJrzf4wE/vG01eqNYr059Dtqij1S4IA+EeXvY+48W5DZU4jtRwj8Kw1QBii9rbrUsGackc7au3grQrgqIhEuKekUZATSlT7iK00XllKhQe/rABVG2F/NO7VubgZ4tQbCcvYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tOss4+qACsy6SHHJUhgo0eQsQ+hHPuRhRKnrkHpCOWY=;
- b=CmJeuEh/5X/7KvByux4/XC1YuCWHkoSdIHa9ZxWvoesvODFgyk5vR4qcuPecrAkv62KqwYtkEgIcDLpIOn+KT9SBPbi2OtsZX7ahBU4beaSoNhG623yimG8pUvbGZhhJJ/4P6kNNFKinAx45TN8XpXJruA6+f7uA0Vc5wW7eIoc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by IA1PR12MB6139.namprd12.prod.outlook.com (2603:10b6:208:3e9::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 06:36:29 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 06:36:29 +0000
-Message-ID: <38f35b60-df8b-48a0-a59a-560bed340a6e@amd.com>
-Date: Wed, 30 Apr 2025 12:06:20 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Joe Mario <jmario@redhat.com>,
- Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Santosh Shukla <santosh.shukla@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das
- <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250429035938.1301-1-ravi.bangoria@amd.com>
- <20250429035938.1301-5-ravi.bangoria@amd.com> <aBE8raTOCVZLfw7J@x1>
- <aBF5UWrxvYgbnxde@x1>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <aBF5UWrxvYgbnxde@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0104.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:27::19) To PH7PR12MB6588.namprd12.prod.outlook.com
- (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pnMT08av";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wdq57TC6"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745995001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zD7ZBEoqaxTOJ7HvYYkOrI7JiWbq4HlzWrXmmIVARBc=;
+	b=pnMT08aviRvpsxx3HYmPqcBsniHpekqCUQ/snT7ive8frC6aXhY8qSoUt0DGyYhq/n9DAf
+	kMXifthAXzvf0hqx6A+Qpboc1BFGI/PeEabxaJMkVp2j11801+JCCd2dLnLiYBswnpWucj
+	RzozAbbWqtlIeDfJrP+5ayHRtWc5iXJe+T2PWYrBUA1HnciJ9NkP3pkSg1tc5tCUuXwDjr
+	12UEOtgL1ANSyzh1aIv644c/A7lQVEZux+FFB/nUYGpHHXrudKiU+PfrZsM7CAJRa0bIyT
+	rEvHoQro/lpjvBFIEp6XCTHmWdFdJtMLSHFURdDGuXZ7WWNjqNd3bYUAsldGEw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745995001;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zD7ZBEoqaxTOJ7HvYYkOrI7JiWbq4HlzWrXmmIVARBc=;
+	b=Wdq57TC6s0QAQfBQrSFVWT3fAHTYHx5unj98uaMxZAcsH7QA1yZqpyaniXO0BnlFn+btSt
+	WO6EMOF0ayA1M/CQ==
+To: Jiri Slaby <jirislaby@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Subject: [patch V2a 02/45] genirq/irqdesc: Switch to lock guards
+In-Reply-To: <b566459c-b0b6-4019-8231-04d246f07b0d@kernel.org>
+References: <20250429065337.117370076@linutronix.de>
+ <20250429065420.125439431@linutronix.de>
+ <b566459c-b0b6-4019-8231-04d246f07b0d@kernel.org>
+Date: Wed, 30 Apr 2025 08:36:39 +0200
+Message-ID: <871ptaqhoo.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|IA1PR12MB6139:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4d6930d0-7a7d-449b-2a57-08dd87b156de
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ck9LM3NZc1VXdzk3NkhWMFIreldyazhuTWhwa05JYVRxV2E3Wk1BVlpFaURk?=
- =?utf-8?B?M2pXN1hxZ2IyZDBPcFlMZHFiRVBlUWV5RnEwZWM3eHlqOW5IN2dlNlJBTHox?=
- =?utf-8?B?ZlIrQldVOTdYYjdGYjdJdGFZS2ZPYll3Q0dWcDZ1MmlIb2tIQ1k4dXBjVS9T?=
- =?utf-8?B?bXdKamtQbDZ0MVM3ZEhRaUNSSkFVRWpsV09sQTUvK2ZqZTNEVnRtTkFRbSs5?=
- =?utf-8?B?SldLbkV1cUJOcnB5UlZTVGphNW5Icnkya255aUFIWFA0SVhDTXFpYlZxdDRO?=
- =?utf-8?B?RzU1NnJ6MWdBL3dpdnlsK1A1RFRSaVVoTFdDTXZnbUtCZmdFSVdWNUxZR3NW?=
- =?utf-8?B?RXorZHZKNkhTbnM5Ym55YWxxRFVBS2RzdkhJdHBYSEdIdk9NSW1nL0g4bVRE?=
- =?utf-8?B?TDRyT2h5bndKNS9YZVFaWTk5d2Z6VW16OE9Bd3h0SHdYV3dWZWl0UjBMVHRh?=
- =?utf-8?B?azVUbDk0ZlFXTFd5ZDRyM1hOZ09aK1NKMFJ1MjhlaUxkeUprZ0NrZEJLb085?=
- =?utf-8?B?UGpLWU0zeEt6SUREeTNSSFVIMFEzdE1CL2FRaWNUTnJNMUJ2T0U5SHlYaVdK?=
- =?utf-8?B?a2pZNDZkUXpFQlNKRHNZTXdjdDJ1YWVKdmdrdE9XNHNsZXZ1TzZxWUp2YkJl?=
- =?utf-8?B?ZnBrQVdLcWRWeHpndHlQenYvMndyNHVXOWJwM0YrT0hQOHdhUkNKc3Q4bEdY?=
- =?utf-8?B?MjZzazRmVjkzSmZjQjdnb1lEQWdtdm5KTnM1S0NYZGdyamk3Vk91Rkk3UnNC?=
- =?utf-8?B?b2gzYW91TWthTnhRYkd5elFRUHlZY3c4Mmo1TUxJSG1sTFIyUGx2Y2ZSZGkr?=
- =?utf-8?B?ek0xWnhkak80UTBHRWNMV3VTMWwrcXBjWXNLNFdaeFZ0NXN5ZWc2UjVCUi93?=
- =?utf-8?B?ZUNiK1lJdWJpNkllMTkxTWZORW5TN3NqM0QxcXcrWGpQYnhnSHcxaFBXL1Bs?=
- =?utf-8?B?SC9VS2RHN2RMbEJwaW1sdnU3aUR2TnJHR1hpaUVLNk9IUGlxQXNRdDQxMnE5?=
- =?utf-8?B?V1hNMS84cHVWZjJRVTE0TzFaazBNNVk1eW56Vkh6dTkzQ21XV1VTMUY5T3Ru?=
- =?utf-8?B?R0VDSi9JV01Rc3B5K1hoSURyUG9CL0ZiT1YrME1QZm5iTjRPTVBFYlEzWTBk?=
- =?utf-8?B?YjEwTC82VmhIb1NIYlc0c1N2VWswQlBWWU8yaEhMRlI5OTY2R1N5ZzZ1QXN6?=
- =?utf-8?B?cHVscHNuNDhDa1l1cXJ4UGNOUEwvRmw3K3IxSVNsSHdBcE5jVFpBUWVnY1lp?=
- =?utf-8?B?RTRzTXE5dTNTTFpCYlBlMUtSZjJuZ2hlQk5DSFQyc29QR3pDTTVJeVdHaUQ3?=
- =?utf-8?B?MFJjRFVnYUYwWHVQQlJZWGhWU0ljSjZCVnVtTWJXNE1jWEpETk1GcldobHpi?=
- =?utf-8?B?VS9CaGxMbEhNeDd6c3U1ekdna2JZRWRzUkRzRjFtb00rR2E2NGkveHFjQkNN?=
- =?utf-8?B?QXJHZnRzZ0FKWVA4QUMzcndET1hLTHFKRXROeHprRVEwRUZWMisvZ3FzMllF?=
- =?utf-8?B?UGdqeVlFVTZQYUtrVjFqNXJva1ZMU1V3R3pkYXFTZVVTbUZlby9xZVFKaHRJ?=
- =?utf-8?B?bmdURDNUMUllSTZLN21NU3k4SjBmWnNHOEQ3SWNOeHlWcU4yMDJIREVQbFR6?=
- =?utf-8?B?ZnA4ZFVLcDBuTnhMNzRoVFJUYkI2ZEdLMnJpalhVRU9GUU42K0Q3aE8rUUgx?=
- =?utf-8?B?dXVqOUxFRmdxWVZoYzVzejJZRlFCbktTTWhxbW1SbUk3RWl5WW1MRjRlb3NR?=
- =?utf-8?B?cUZMZW5KS1UyaUFvb1FjT3hibVpGV3NQTnI2Z2dkWWVORUlieXR1RGEwSkUy?=
- =?utf-8?B?QStwZmFjdnE4RTV1UktUaDY5VWhWVFg5RmxOTVpmSDAwdXJhMlloK08vN3o0?=
- =?utf-8?B?RnhhVFVIUU82OXg2M0FjVitaenZ5cC9rd0VKNkRrUGs3eW9oS3dvUFNMQjA5?=
- =?utf-8?Q?ELpt5LyVaXA=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFh2ZENoaFZ0VXRYRzVocG1GTXBWcXA4eHVtaUVEN3VhR0lMV2V2VE9kcENq?=
- =?utf-8?B?Vk81V1AyeUI2cVh4NSsrU3graUNUenhUZVQ4bi9KRTNJSFNjWU9Lb3pMdDln?=
- =?utf-8?B?VkNRWDY2K2g2c2d3REZCbkFLZHJBTnJOZ1ZtK1FXOGJFUjNXa1IwcGN5OFJ3?=
- =?utf-8?B?QVRYZElSS0dtR0pmbzBtRFVtby9LNWJ5K0swSkNVOTRvRDdtb01veFF6bG1W?=
- =?utf-8?B?US85Z21BcTMvbmljSElyMmRWS2R0cFZFbnFSdmo0NEszcmwyQ3E2cmZQR2Fj?=
- =?utf-8?B?NEwzUlNCaUJVV3hNYXJML0lnL0FDUHdrK2JjVk5aeDB2VXNCTStpUnlBRXY4?=
- =?utf-8?B?YnZ0U2RxTHFRdm9xT0h1NUNmbjdNTHZHWlRuZ3R0NTBFVGZWaU0wNjdjQnZk?=
- =?utf-8?B?NE1LdzhWaE5qTGJxdndJMGFQVUZSc1FmZXU1dFM4NGx2ekxTWmwvbkU1ckJV?=
- =?utf-8?B?b25zbTg2bmdWNzRTbHpITXFRMjVyUGZnWkhra2pIbngxSWJaazkwL3FuWHVt?=
- =?utf-8?B?Smw3TVN2RXFuUHNTd1doWXRjR3J5U2s1Z3F1V1dDWUMxZVQwTkZvTDQ4ZVgv?=
- =?utf-8?B?ZlpvREJ4Zk1PdmpxZFZYRFRaaG9BWUE2MlI0akFPWXIyU2M0S0VNWHRuZjFr?=
- =?utf-8?B?bDV0SUJKblNFVmozQXhsYy80empHRStEdWw3ZDhITzVpaUFLTlBubnhNWmRh?=
- =?utf-8?B?TFZSWS9ubHRaWTkwdncrd2VhMGUxQnBxQ0lXVlh3dkM3T0hsZ3dQNFZsbmNR?=
- =?utf-8?B?ZG9SMWhlUWVJUXdsRTkybnN1WVFmYzRWSkQyM09yVjY5bTNzUEsrdVduWXlZ?=
- =?utf-8?B?Q1pjWEZabDR0dnNqRGhycTRnVDhhRk1aL1RNcTVBVXBPM3h4RllLb3dxb1A5?=
- =?utf-8?B?S2JCcCtvNnBBVnZlMkltTjZWZUtURVFBb0U4TDB2VFpKOVA1SWR0cE5TRXMy?=
- =?utf-8?B?VTkwNnUxWnEyR1o0b0xqUHQ3NUU4Y2ZTQ1B2Z3czTi9BN2d4OHhNVFVudll6?=
- =?utf-8?B?VkFPUytSbnBUQWhuaVlKM1hiS2NFQ0U1MjRUcGhYOSsxNElsSGFsSkZrMFBa?=
- =?utf-8?B?RUU1dTY3dzMzWmx3RFdSNUFEMk95cVBWbXQrU0dnNFY1ZFNOZ3BvNW1aWEgy?=
- =?utf-8?B?b0V0RW82UU9QUm5kRkZVUVFuTUh5VGxBaUczS2hhSUVneUFHbDFGczkyZUtO?=
- =?utf-8?B?ZWt0WmcyVXVMaHJ3ak43UEpXQ2xZOVFUSzhSVCtQTmtIM04wYTZEU3pjYjZR?=
- =?utf-8?B?TTBQTTVjWWJlLzFrUUdyVW1PbjFvL0kxZE5BblNyc28rV2dWUEV2TGY5L0t2?=
- =?utf-8?B?dWo2YkxtL0ZwT3VBZFUzdWtDVlp1em9CTE5MZ0xvWDFudGhDYjdJekZnU2hO?=
- =?utf-8?B?VnBaVHREVStsQTE2TVM0bzJBRzNiVk5mNnRKTjZYZnFxcGZPdFlhKzJxV3Jh?=
- =?utf-8?B?TFFRUWxPcnRDSmZhOHZybnNBL0VlbEZLbWMvR2lDU2RrUzhXQUpVRUxNc1ZX?=
- =?utf-8?B?cFBCUFY5KzhFQjNhSWxkNVRIeHgzamlRVmVDVGltUG9uaFp1Q3VCbkptcjky?=
- =?utf-8?B?WjZSdXZLek1oTlkzM0VRM3F3dXcrMzRFU2gyYllEVEtUb0ZMV1V3SW5sd1pa?=
- =?utf-8?B?TzhlYW14b3VzV1M5WkdKckM5NkZuRVRwYm5sOTZJMDdEbkFxUGdIa1gzaDU5?=
- =?utf-8?B?Zy9uRWYxdC9sU2xOYlZWTGMycFpsZFdxazd6M3hxb1U5dW5uVSt0VzVTY1F2?=
- =?utf-8?B?cGNmMStrUkRGdCs3c0o4R2l2c2UzSkZtZjJhK25zay9DR0pEeTNONEY0c0Fn?=
- =?utf-8?B?QmpqZzlQYUp1b1E5OUFSZ2JmaWp5KzlOWHJDVWp4RHNjOE5kUy82RmNOd0J4?=
- =?utf-8?B?SFc5Zk5NbncvU2VGSXVBYzYvTDE4WlQ1c3VZVDZ3WEdNUVR2WVhrYzNQOGZM?=
- =?utf-8?B?VDNVSHd1NTYzSmxjclRsSy9naklQL21JV1JDbkNpWnZ2ak9kMmI2TkdUMFd1?=
- =?utf-8?B?VWdwSDJRSjU1QXdlbDlXMW1NRFFwYmFKOVBjb2JHY096TjVIcW9JMzhGeTFJ?=
- =?utf-8?B?S3VGU0pJTklIa2lnV0llMk52Vy9aVzdKYjE5WnRVeXhCenNyZ3orazlvbEtU?=
- =?utf-8?Q?TpvJzjrDlXQzBYsOTVUQ7pDcA?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4d6930d0-7a7d-449b-2a57-08dd87b156de
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 06:36:29.6776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sgA0Wrv7CTr40XDqycuHPMYYBT22CWMWAO0QvpeWQexXlXy7K6xiF7Jltc+ydWlTy6dCKDrRojhlXmUpb0YybQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6139
+Content-Type: text/plain
 
-> Another issue when building with clang on musl:
-> 
-> arch/x86/tests/amd-ibs-period.c:81:3: error: no matching function for call to 'memcpy'
->                 memcpy(func, insn1, sizeof(insn1));
->                 ^~~~~~
-> /usr/include/string.h:27:7: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *' for 1st argument
-> void *memcpy (void *__restrict, const void *__restrict, size_t);
->       ^
-> /usr/include/fortify/string.h:40:27: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *const' for 1st argument
-> _FORTIFY_FN(memcpy) void *memcpy(void * _FORTIFY_POS0 __od,
->                           ^
-> arch/x86/tests/amd-ibs-period.c:87:3: error: no matching function for call to 'memcpy'
->                 memcpy(func, insn2, sizeof(insn2));
->                 ^~~~~~
-> /usr/include/string.h:27:7: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *' for 1st argument
-> void *memcpy (void *__restrict, const void *__restrict, size_t);
->       ^
-> /usr/include/fortify/string.h:40:27: note: candidate function not viable: no known conversion from 'int (*)(void)' to 'void *const' for 1st argument
-> _FORTIFY_FN(memcpy) void *memcpy(void * _FORTIFY_POS0 __od,
->                           ^
-> 2 errors generated.
->   CC      /tmp/build/perf/ui/browsers/header.o
->   CC      /tmp/build/perf/arch/x86/util/mem-events.o
-> 
-> Adding the patch below cures it, still need to test on a Zen 5 system.
+Replace all lock/unlock pairs with lock guards and simplify the code flow.
 
-Thanks for the fix. Looks good.
+No functional change.
 
-Ravi
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+V2a: Fixup the stub function too - Jiry
+---
+ kernel/irq/irqdesc.c |  129 +++++++++++++++++----------------------------------
+ 1 file changed, 44 insertions(+), 85 deletions(-)
+
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -246,8 +246,7 @@ static struct kobject *irq_kobj_base;
+ #define IRQ_ATTR_RO(_name) \
+ static struct kobj_attribute _name##_attr = __ATTR_RO(_name)
+ 
+-static ssize_t per_cpu_count_show(struct kobject *kobj,
+-				  struct kobj_attribute *attr, char *buf)
++static ssize_t per_cpu_count_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+ 	ssize_t ret = 0;
+@@ -266,99 +265,75 @@ static ssize_t per_cpu_count_show(struct
+ }
+ IRQ_ATTR_RO(per_cpu_count);
+ 
+-static ssize_t chip_name_show(struct kobject *kobj,
+-			      struct kobj_attribute *attr, char *buf)
++static ssize_t chip_name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
+-	raw_spin_lock_irq(&desc->lock);
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	if (desc->irq_data.chip && desc->irq_data.chip->name)
+-		ret = sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%s\n", desc->irq_data.chip->name);
++	return 0;
+ }
+ IRQ_ATTR_RO(chip_name);
+ 
+-static ssize_t hwirq_show(struct kobject *kobj,
+-			  struct kobj_attribute *attr, char *buf)
++static ssize_t hwirq_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	raw_spin_lock_irq(&desc->lock);
+ 	if (desc->irq_data.domain)
+-		ret = sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%lu\n", desc->irq_data.hwirq);
++	return 0;
+ }
+ IRQ_ATTR_RO(hwirq);
+ 
+-static ssize_t type_show(struct kobject *kobj,
+-			 struct kobj_attribute *attr, char *buf)
++static ssize_t type_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
+-	raw_spin_lock_irq(&desc->lock);
+-	ret = sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++	guard(raw_spinlock_irq)(&desc->lock);
++	return sysfs_emit(buf, "%s\n", irqd_is_level_type(&desc->irq_data) ? "level" : "edge");
+ 
+ }
+ IRQ_ATTR_RO(type);
+ 
+-static ssize_t wakeup_show(struct kobject *kobj,
+-			   struct kobj_attribute *attr, char *buf)
++static ssize_t wakeup_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+-
+-	raw_spin_lock_irq(&desc->lock);
+-	ret = sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
+ 
++	guard(raw_spinlock_irq)(&desc->lock);
++	return sysfs_emit(buf, "%s\n", str_enabled_disabled(irqd_is_wakeup_set(&desc->irq_data)));
+ }
+ IRQ_ATTR_RO(wakeup);
+ 
+-static ssize_t name_show(struct kobject *kobj,
+-			 struct kobj_attribute *attr, char *buf)
++static ssize_t name_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+-	ssize_t ret = 0;
+ 
+-	raw_spin_lock_irq(&desc->lock);
++	guard(raw_spinlock_irq)(&desc->lock);
+ 	if (desc->name)
+-		ret = sysfs_emit(buf, "%s\n", desc->name);
+-	raw_spin_unlock_irq(&desc->lock);
+-
+-	return ret;
++		return sysfs_emit(buf, "%s\n", desc->name);
++	return 0;
+ }
+ IRQ_ATTR_RO(name);
+ 
+-static ssize_t actions_show(struct kobject *kobj,
+-			    struct kobj_attribute *attr, char *buf)
++static ssize_t actions_show(struct kobject *kobj, struct kobj_attribute *attr, char *buf)
+ {
+ 	struct irq_desc *desc = container_of(kobj, struct irq_desc, kobj);
+ 	struct irqaction *action;
+ 	ssize_t ret = 0;
+ 	char *p = "";
+ 
+-	raw_spin_lock_irq(&desc->lock);
+-	for_each_action_of_desc(desc, action) {
+-		ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
+-		p = ",";
++	scoped_guard(raw_spinlock_irq, &desc->lock) {
++		for_each_action_of_desc(desc, action) {
++			ret += sysfs_emit_at(buf, ret, "%s%s", p, action->name);
++			p = ",";
++		}
+ 	}
+-	raw_spin_unlock_irq(&desc->lock);
+ 
+ 	if (ret)
+ 		ret += sysfs_emit_at(buf, ret, "\n");
+-
+ 	return ret;
+ }
+ IRQ_ATTR_RO(actions);
+@@ -414,19 +389,14 @@ static int __init irq_sysfs_init(void)
+ 	int irq;
+ 
+ 	/* Prevent concurrent irq alloc/free */
+-	irq_lock_sparse();
+-
++	guard(mutex)(&sparse_irq_lock);
+ 	irq_kobj_base = kobject_create_and_add("irq", kernel_kobj);
+-	if (!irq_kobj_base) {
+-		irq_unlock_sparse();
++	if (!irq_kobj_base)
+ 		return -ENOMEM;
+-	}
+ 
+ 	/* Add the already allocated interrupts */
+ 	for_each_irq_desc(irq, desc)
+ 		irq_sysfs_add(irq, desc);
+-	irq_unlock_sparse();
+-
+ 	return 0;
+ }
+ postcore_initcall(irq_sysfs_init);
+@@ -569,12 +539,12 @@ static int alloc_descs(unsigned int star
+ 	return -ENOMEM;
+ }
+ 
+-static int irq_expand_nr_irqs(unsigned int nr)
++static bool irq_expand_nr_irqs(unsigned int nr)
+ {
+ 	if (nr > MAX_SPARSE_IRQS)
+-		return -ENOMEM;
++		return false;
+ 	nr_irqs = nr;
+-	return 0;
++	return true;
+ }
+ 
+ int __init early_irq_init(void)
+@@ -652,11 +622,9 @@ EXPORT_SYMBOL(irq_to_desc);
+ static void free_desc(unsigned int irq)
+ {
+ 	struct irq_desc *desc = irq_to_desc(irq);
+-	unsigned long flags;
+ 
+-	raw_spin_lock_irqsave(&desc->lock, flags);
+-	desc_set_defaults(irq, desc, irq_desc_get_node(desc), NULL, NULL);
+-	raw_spin_unlock_irqrestore(&desc->lock, flags);
++	scoped_guard(raw_spinlock_irqsave, &desc->lock)
++		desc_set_defaults(irq, desc, irq_desc_get_node(desc), NULL, NULL);
+ 	delete_irq_desc(irq);
+ }
+ 
+@@ -675,16 +643,15 @@ static inline int alloc_descs(unsigned i
+ 	return start;
+ }
+ 
+-static int irq_expand_nr_irqs(unsigned int nr)
++static inline bool irq_expand_nr_irqs(unsigned int nr)
+ {
+-	return -ENOMEM;
++	return false;
+ }
+ 
+ void irq_mark_irq(unsigned int irq)
+ {
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 	irq_insert_desc(irq, irq_desc + irq);
+-	mutex_unlock(&sparse_irq_lock);
+ }
+ 
+ #ifdef CONFIG_GENERIC_IRQ_LEGACY
+@@ -823,11 +790,9 @@ void irq_free_descs(unsigned int from, u
+ 	if (from >= nr_irqs || (from + cnt) > nr_irqs)
+ 		return;
+ 
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 	for (i = 0; i < cnt; i++)
+ 		free_desc(from + i);
+-
+-	mutex_unlock(&sparse_irq_lock);
+ }
+ EXPORT_SYMBOL_GPL(irq_free_descs);
+ 
+@@ -844,11 +809,10 @@ EXPORT_SYMBOL_GPL(irq_free_descs);
+  *
+  * Returns the first irq number or error code
+  */
+-int __ref
+-__irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
+-		  struct module *owner, const struct irq_affinity_desc *affinity)
++int __ref __irq_alloc_descs(int irq, unsigned int from, unsigned int cnt, int node,
++			    struct module *owner, const struct irq_affinity_desc *affinity)
+ {
+-	int start, ret;
++	int start;
+ 
+ 	if (!cnt)
+ 		return -EINVAL;
+@@ -866,22 +830,17 @@ int __ref
+ 		from = arch_dynirq_lower_bound(from);
+ 	}
+ 
+-	mutex_lock(&sparse_irq_lock);
++	guard(mutex)(&sparse_irq_lock);
+ 
+ 	start = irq_find_free_area(from, cnt);
+-	ret = -EEXIST;
+ 	if (irq >=0 && start != irq)
+-		goto unlock;
++		return -EEXIST;
+ 
+ 	if (start + cnt > nr_irqs) {
+-		ret = irq_expand_nr_irqs(start + cnt);
+-		if (ret)
+-			goto unlock;
++		if (!irq_expand_nr_irqs(start + cnt))
++			return -ENOMEM;
+ 	}
+-	ret = alloc_descs(start, cnt, node, affinity, owner);
+-unlock:
+-	mutex_unlock(&sparse_irq_lock);
+-	return ret;
++	return alloc_descs(start, cnt, node, affinity, owner);
+ }
+ EXPORT_SYMBOL_GPL(__irq_alloc_descs);
+ 
