@@ -1,78 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033981F30A2;
-	Wed, 30 Apr 2025 07:25:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D44151EC01B;
+	Wed, 30 Apr 2025 07:26:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745997945; cv=none; b=fqaBXsOQp66Uim9xrjkeJF2DnKaU36m929ZpoW2xMiF/jKVBp8rOzvPvOAUBN+zTrY+LKW4n1bfXdC+afV5YnY4cDCUH/Vev1WEU+kpq3PNqP+FEHv8kP1LrQzyo3JrvmBbYadNoXoztouvIEUFDbRh78KZCKPhuhigJYchuVYM=
+	t=1745997988; cv=none; b=ZLKJQXEFkF/Y3hANVDXYaIqDKFmkM9dPuGJHn7aLqv+Ga/Z4KLU0nCjC+3TWN2ut4eOtYy9AEqI62fnXlAb/oRAjzgqZbnxT5HsDvYiJns62xoLrC+aqbp0aBtsmVBUusiZDvSc98CAO+TQTwtpXYepFyupGtcYy8ySao0E2T7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745997945; c=relaxed/simple;
-	bh=ubaqlVCfzznK8NA0TMC5zjpm+9ElhduUD1AiUfUvlmM=;
+	s=arc-20240116; t=1745997988; c=relaxed/simple;
+	bh=t6ueMHETV9KCgJvq2360uo0bIUeF3j0Jz52z4tX26yE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GPiRayjjb1NnC9CSgNXjpiknDHAYvx0RR2KHLubXvkhYwNfAPcnPl+jzXXIN2CTL5pUArDDuFrMwlOT0Gnw6oFGjC9p3G92IMlZqi5G4A8mqp5A79zN317AhE5Vr1rGKs8ztjveQ8XtGIuYUJl8kOTNHxVunLWK/XArbVLjXxl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoekLzk9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RVtOn2ZqafvkxInykTIlx03jORgptDUFys5j6e9JJ4YcuuK32nrzbBKXQZSsllxafCZEHEc/xrwEP7l9uXeaKF0pSZLYAdjwNK+sXA6j2wqqnjm0DJeAw2m2TI7vI48Ckyka7vyUHyQE2jAnmzkD7hPhePD70edbPCo3SnlTb5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NvfeD8QQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoekLzk9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689D7C4CEE9;
-	Wed, 30 Apr 2025 07:25:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NvfeD8QQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1017C4CEE9;
+	Wed, 30 Apr 2025 07:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745997944;
-	bh=ubaqlVCfzznK8NA0TMC5zjpm+9ElhduUD1AiUfUvlmM=;
+	s=k20201202; t=1745997987;
+	bh=t6ueMHETV9KCgJvq2360uo0bIUeF3j0Jz52z4tX26yE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eoekLzk9b3pSI3wfRQXkoK+YkC7T9GzOioy/a7VPZclg2DMn4NSy0mZTrYEsFfG6u
-	 j+TVy3071KEcevi9hn+vEoWtxdh3n+nFYIUx/l4H7liz4OFiX586shc1HURUAgcMKs
-	 D/YWV3L7aCN0O9KMc3/piJV1fPH/DQdkNSf1lHYYa76nKTa0rP4vmZJnOX1M4nTukm
-	 aVs5mYEJee2c9fYvgA+7huqkvVELuB0pCfpqL/MjHyKHYWI25tkoeYCg43zRNjqkNn
-	 gfO1a20CeMUXQzTOtUF1av8ph3zczrbwBnjVBrbYHmgOxa9jaR0m6K2tq9W9vUkv0J
-	 riec7HKUrT6pA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uA1pC-0000000088Y-1Y7K;
-	Wed, 30 Apr 2025 09:25:47 +0200
-Date: Wed, 30 Apr 2025 09:25:46 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
- version
-Message-ID: <aBHQejn_ksLyyUm1@hovoldconsulting.com>
-References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+	b=NvfeD8QQKzC0uPB03Va/ckWcaetKMqORWYU7mNHmOrEUeDNqw7jklqILFZ1yIClEn
+	 XJvO5yloSVlgk2e2ngqu0UwXSJ7osrrwPdsqPh7K2nFhr+dkViD+i3557R4wqM+guG
+	 HOeoorPCdi9p7Rpy4rLf6rYMwzwGQq9E1gl6paGPowIPqnM3CBO75H939mkoztme5q
+	 nLXboaD+iH5B7Vj46Dyh8BMFCQ8VA5eRryLiWvtoIfGrlXVGxEsSZTp6U7sSwOoSzr
+	 HZtf5Y12zNpbJ1YH0H5rxFcfJAZPFo0sEXWY3MWJQ+h1/oNkJTj08OFE6Weo0U7Bt4
+	 AzFyrj2aFg/qA==
+Date: Wed, 30 Apr 2025 09:26:24 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Shin Son <shin.son@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Sunyeal Hong <sunyeal.hong@samsung.com>, 
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] clk: samsung: exynosautov920: Fix incorrect
+ CLKS_NR_CPUCL0 definition
+Message-ID: <20250430-wonderful-meticulous-groundhog-cbe6e1@kuoka>
+References: <20250428113517.426987-1-shin.son@samsung.com>
+ <CGME20250428113558epcas2p1f2980cbc58f71dde78a9529e2b85ac20@epcas2p1.samsung.com>
+ <20250428113517.426987-4-shin.son@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20250428113517.426987-4-shin.son@samsung.com>
 
-On Tue, Apr 29, 2025 at 08:08:29PM +0200, Krzysztof Kozlowski wrote:
-> Camss drivers spam kernel dmesg with 64 useless messages during boot:
+On Mon, Apr 28, 2025 at 08:35:16PM GMT, Shin Son wrote:
+> The CLKS_NR_CPUCL0 macro was incorrectly defined based on a wrong clock ID.
+> It mistakenly referenced CLK_DOUT_CLUSTER0_PERIPHCLK, which corresponds to
+> a cluster peripheral clock, not the last clock ID for CPUCL0 as intended.
 > 
->   qcom-camss acb7000.isp: VFE:1 HW Version = 3.0.2
->   qcom-camss acb7000.isp: VFE:2 HW Version = 2.4.0
+> This patch corrects the definition to use CLK_DOUT_CPUCL0_NOCP + 1,
+
+Please do not use "This commit/patch/change", but imperative mood. See
+longer explanation here:
+https://elixir.bootlin.com/linux/v5.17.1/source/Documentation/process/submitting-patches.rst#L95	
+
+> properly matching the last clock ID for CPUCL0 as intended.
 > 
-> All of these messages are the same, so it makes no sense to print same
-> information 32 times.
+> This error was due to confusion with the hardware diagram, and this patch
+> ensures that the number of clocks for CPUCL0 is correctly defined.
 
-It's even worse then that (several hundred messages during use) and I
-sent fixes for these regressions a few weeks ago:
+Fixes: 59636ec89c2c ("clk: samsung: exynosautov920: add cpucl0 clock support")
 
-	https://lore.kernel.org/lkml/20250407104828.3833-1-johan+linaro@kernel.org/
-	https://lore.kernel.org/lkml/20250407085125.21325-1-johan+linaro@kernel.org/
 
-Unfortunately, it seems Bryan missed that this was a regression that
-should be fixed in 6.15 and only included them in a pull request for 6.16:
+And proper order - fixes are *ALWAYS* before new features.
 
-	https://lore.kernel.org/all/20250410233039.77093-1-bod@kernel.org/
+Best regards,
+Krzysztof
 
-Bryan, has your PR been merged? Can you try to get my fixes into 6.15
-since this is a regression in 6.15-rc1?
-
-Johan
