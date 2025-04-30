@@ -1,265 +1,253 @@
-Received: from mail-pl1-f228.google.com (mail-pl1-f228.google.com [209.85.214.228])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB3D022ACC6
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FC2D227EB6;
+	Wed, 30 Apr 2025 22:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053571; cv=none; b=ec6Oe6tE0JsLKuTLz4IXNvAzq58G+AYrfnMLeAJyYzK6nW7t4/jF0YlubNxfKoqjANeEN0UQWTcP7XIkDU73SuQlUH7ZOU3GmPa4OV5EoypRjhI4WXwsRGKzaXJdKnfTccAzZzcN2+KByBQp9qltt5bQC3JcX4Ugy6Ump4mlozU=
+	t=1746053653; cv=none; b=gGn9IZVV7HPPVF86AmG+8LQJsnnOlfkSHpeChU37GgwV2HhFjF8mM5vlWekaw5CYZbET9QdFpM7eQ8TjZ8qPDJZeQR5bqWeMyZclXVhygz7lJ5qd3Zksd/uUohSyfnnzMRWrSZAECI7qa0oEWcsE1nVMa2bmTUoDmBWqBakwCKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053571; c=relaxed/simple;
-	bh=89WlQm8CBY5xlCR2ru9sVqkwi6VOCLX59mKkm7v5axI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PlVqCKnrWe+CUP/x2N+VsmKbJSVM+EuaKCKh3dU6H9pMtnWVvKPvHWb+3jrlvX5FQialPUgc8eWsJyvlwVtIO3ncwBfjuCnifZP299jyFnDADH9PQygA73ZzEiDL0yf+Nbjd1qlLS7e5ZlYNOvZ5joQ+gFFLsVxGEgXQT8VuzgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=J7mWmOvK; arc=none smtp.client-ip=209.85.214.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1746053653; c=relaxed/simple;
+	bh=btJoBqs2JxZXwt6XXUJQK4EDLWHYw59GYHg2ZgejWtk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XXKI1x6csugR2pQWKxmYNe7U8pnzn3SRguQzZbOdIdxGWBnuqmlS6GJRIf2vEpE7Lg9+YYJsLOsCbz/3vEVtKcDiU1bH+2nJIMIbjwY+zHa+SZdRpnsY4GenwBYldgBl2Ms5h8FdAiHf1wcrCnjMs0iyGuWuoEfdw72Ao0osdBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ShFxNywz; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="J7mWmOvK"
-Received: by mail-pl1-f228.google.com with SMTP id d9443c01a7336-2264aefc3b5so680215ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:52:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShFxNywz"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e7316c56e6eso40712276.3;
+        Wed, 30 Apr 2025 15:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746053567; x=1746658367; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746053650; x=1746658450; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZsYRyiMQyE+zkojGTj1LMa02/pZHUAhJh8dpMcIQRlI=;
-        b=J7mWmOvKkNDb0kPcuNh5jhrMnWG1erYhSWEy91k3gt/1UXfy6XVayCKikTA9rzCdRY
-         G3uuaxeZ9O/dFOOt4HfX3jlRpHAYnhS52a9krhTDVlCz0sVTwHUv3l7AV1f30ny7l5L/
-         mZwaK54G7hmzfLjyZtV1egM+DRJoaGjq90mIZvuq/4PUhkqmiyKyhmGedegfwToSYRst
-         ZWEK7uCi7oxBPBk8cXnGlCrzRs1+iC3pP40vWa/E2LRWYTJzAwIgmGq0fYNNFkadQiWS
-         OeCFyUYsIYmXnwYH6VYizQ3vOxWOIWDf2aGngm/B50DzAgFNRLBKSs8c5z5dGsFy9rSt
-         Zk/A==
+        bh=bGlvSY4xy7vtr+5vm5soRE85P3d2Vcbw2tqiq00apYg=;
+        b=ShFxNywzgtI/XwI+aKSzl3Nfxs1JD+XrJaz0sNLddI1UmQFXQ0hhguCOuprADLrAkI
+         wtylkJ34gaSwIKX+4ptmQUWol7R/kJnKohG1rdG4gFuC/Wc0TvpzMx1hdAEhgjCtbr3C
+         7vC13jL31BY26n1AJn0f3E9JsK0oadPrDuRYkCBwQxTg7LbzzGQ6srlWnIQqTfl25wB+
+         QBsFuAjcrM0VaULtDIqOzp9RriAWQLzb2SiXIRUXAZ9JWhH7fIbBfiIJGp7uGRYCAJ4x
+         iAHP/p6Hc0TCL6f0faIVFEw26SlBA8S6auijx08ol+vU+AcDNFxWf0wG+l6JMKiEjm1J
+         MEnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746053567; x=1746658367;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746053650; x=1746658450;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZsYRyiMQyE+zkojGTj1LMa02/pZHUAhJh8dpMcIQRlI=;
-        b=qLGXxHt8BP+BqwuJ3lZuvoqIekd9mcMUR9ArtzW0piohrZPUffzwH6MIW+KT3UExFC
-         1vCK0WUN1/uzuOxCAiuIZE0oWOSWFNTJKEaciF4dooJB2DF/miuOZ4QehynmulgEClFn
-         eUQLy4gUdPQb69tBfcBgml3p+t3apKnOLKd7K7aZ7PfbKFgQVgogAabWJGb3+pv4LjSm
-         ZZR9qnnJWZgw7p8UkaSobyNFxOUGLaOlSpVexibnBOI4Ch/puDJ2Pc5efS1aAPTwjEhm
-         87WMrgyH9K3kCLx/X4nhjgMaxFTeIWvo3YftDOw3rqdn5pSWsZGja235ko9qEnE85LBA
-         P04g==
-X-Forwarded-Encrypted: i=1; AJvYcCUOupdpo4TyfPIuzd0jNpxRe0fCJfKtoT6hGp+6+ImOx89gKODKI4lnJyHh1eeQ36cIpEgr8L8xD1xxDSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbp3nXyffA6I6di5jsRJ2XSnC5EcgH7VnPfiuz9jUsSDZxzMss
-	XCCHe6n3lP7au+CGamZ7cguldcr5czxtDkKBYEdRKMBLcbS5FQOd2E5TYz81fm0qFUq5s96jN7E
-	wgBeiNxroas24k3w8XW1RBx0I9l6D6LpL
-X-Gm-Gg: ASbGncv4q7a6owXcWCU44BRkM5REtstyLtO0DBGj3A/2ZfySedScqwc/XkDgj/XljS2
-	Lc1N4w7kYwmuNaZ45i1oKGnT/ayxHVWQqPdcZTQZtsKmXo3fqdIxF/WOJ0RT7v4yxRJenOuGW3y
-	bd6uGxH7NBf6aZ3INUdGF1FMKTSl+vvHv8PXvTLpWH8jUXOcZ08FI6F3wz7dw07droxpJnkv2it
-	/2L5xlVijgnPhg8JmPEn7RKnkexSLEkkXN4JxXTEP1aV/SQw+FksubFLw49iDyYjAZ+VXME4sXL
-	IXOubTLu/g2FMYTQchCPBr3C6D8YyuwpwJ5pIZwyKW03
-X-Google-Smtp-Source: AGHT+IH6mXEsIKFrxSQZ9fMY0JedlzXNtlt4kDzO3Sr7mcYc121+09EUGSS0UhV936K/s6EW8s7EP3aQ3K0h
-X-Received: by 2002:a17:90b:1b12:b0:2ff:7b41:c3cf with SMTP id 98e67ed59e1d1-30a34a77d45mr2329658a91.4.1746053567026;
-        Wed, 30 Apr 2025 15:52:47 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-30a347b8603sm137430a91.13.2025.04.30.15.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 15:52:47 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 560E53404FD;
-	Wed, 30 Apr 2025 16:52:46 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 543F2E41CC0; Wed, 30 Apr 2025 16:52:46 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Ming Lei <ming.lei@redhat.com>,
-	Jens Axboe <axboe@kernel.dk>
-Cc: Uday Shankar <ushankar@purestorage.com>,
-	linux-block@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 9/9] ublk: store request pointer in ublk_io
-Date: Wed, 30 Apr 2025 16:52:34 -0600
-Message-ID: <20250430225234.2676781-10-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250430225234.2676781-1-csander@purestorage.com>
-References: <20250430225234.2676781-1-csander@purestorage.com>
+        bh=bGlvSY4xy7vtr+5vm5soRE85P3d2Vcbw2tqiq00apYg=;
+        b=OF1rUXnl+Vm+C29hnAj74F2lVdLm/YmW1c/1oLwJXsvkp+0gx972kqKpLv+eo3rzyc
+         ueFuA0bw8iCrDyXXmybkxuwR/SoLSDhZjENxP+GaulQf7aMTP3wrpLX1U+dOFL/MGsEX
+         yTNbNymLhnmH3BgOShXrfS0DOwo+Ub6QugLjxOnwB352Q7+y+1vawYYMEV/qyalh+RQo
+         frL7Yj38dGLO5of8+nO0zjRrtf73KJ06uBTiJ/iYwvU8QTwdic8UNVhMaadbb0k51O3Y
+         Kjr99jr55m5N/JM0fDhDtbvhlNvD7DyXtC6Y2ws0j4KGNMdz+c38p4gTMMWTg2m0nL6F
+         9j6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUk7Sp5+eKEFd/NZMe6R+WtzBnTu7HRq5o8PqJo36cn4XfGVY/ITCGKYIjMSROvN36W6SFCVOOxJSZEpfN8@vger.kernel.org, AJvYcCXHmRM4/9PGED8rqBdGfQeKGHiSXoHqhLUCf+BxidmlE4TtgW4MTtxt/x1vkkJltcvjzm2TXsffmws=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvDynmC1i53t1o0fG3SkemW8FRJu6Ce+/pYaMcu2NvMGRpJsEt
+	Aiow86hiOagy4gEmLqbV/aLYVLjyzSuXloUCsE6WFKhMSX0XzTuB11ZP2lArkpZJt+oXyZFtZDm
+	cn9A0b+MGwjO9FGb26fZncI4cJvg=
+X-Gm-Gg: ASbGncvc4tT8lDHtINsG2kS87mtfSlzOodXDfGzcoK6LV85CKzNgE0ENMPJ+NO3y6Jn
+	Su6dm8U3dehTlOpopFEwz4ilj4OCARikAYoQdWbHiEqlzMbJptjXNI1jJfZCKwMaYPeJTXGZs/I
+	LwD2oEBWmk0bWjWM7W1dt3vQ==
+X-Google-Smtp-Source: AGHT+IHCQ8IGykZJqIoWOiBIU7is9iADQhGwmCUDKAwS1PflcAhilxD9+MR4ntbT9de8cQFXfxjU6rUILNZinxkANsw=
+X-Received: by 2002:a05:690c:fd5:b0:708:2e5c:3012 with SMTP id
+ 00721157ae682-708af020514mr27455797b3.6.1746053650458; Wed, 30 Apr 2025
+ 15:54:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250421220641.105567-1-l.rubusch@gmail.com> <20250421220641.105567-9-l.rubusch@gmail.com>
+ <20250427134759.3cc3a2a4@jic23-huawei>
+In-Reply-To: <20250427134759.3cc3a2a4@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Thu, 1 May 2025 00:53:32 +0200
+X-Gm-Features: ATxdqUGPnTNGtsek4p7bFeMDWJY6zGGPahGsNOLU9VNtCLKT1muOgUxZIZ12wDY
+Message-ID: <CAFXKEHZ3KQ_Z4QB==Bb_CTauV7Wowd0Lgxaick=6mfiLJU654Q@mail.gmail.com>
+Subject: Re: [PATCH v7 08/11] iio: accel: adxl345: add activity event feature
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A ublk_io is converted to a request in several places in the I/O path by
-using blk_mq_tag_to_rq() to look up the (qid, tag) on the ublk device's
-tagset. This involves a bunch of dereferences and a tag bounds check.
+Hi Jonathan - Hi IIO list,
 
-To make this conversion cheaper, store the request pointer in ublk_io.
-Overlap this storage with the io_uring_cmd pointer. This is safe because
-the io_uring_cmd pointer is only valid if UBLK_IO_FLAG_ACTIVE is set on
-the ublk_io, the request pointer is valid if UBLK_IO_FLAG_OWNED_BY_SRV,
-and these flags are mutually exclusive.
+Please, find some (many) questions inlined down below. Appologies for
+the separate
+channels last time and not right away fixing them up as array. I did
+not want to make extra work.
 
-Suggested-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/block/ublk_drv.c | 43 ++++++++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index 97c61c0bf964..02e52b066318 100644
---- a/drivers/block/ublk_drv.c
-+++ b/drivers/block/ublk_drv.c
-@@ -140,11 +140,16 @@ struct ublk_io {
- 	/* userspace buffer address from io cmd */
- 	__u64	addr;
- 	unsigned int flags;
- 	int res;
- 
--	struct io_uring_cmd *cmd;
-+	union {
-+		/* valid if UBLK_IO_FLAG_ACTIVE is set */
-+		struct io_uring_cmd *cmd;
-+		/* valid if UBLK_IO_FLAG_OWNED_BY_SRV is set */
-+		struct request *req;
-+	};
- };
- 
- struct ublk_queue {
- 	int q_id;
- 	int q_depth;
-@@ -1122,24 +1127,29 @@ static void ublk_complete_rq(struct kref *ref)
- 	struct request *req = blk_mq_rq_from_pdu(data);
- 
- 	__ublk_complete_rq(req);
- }
- 
--static void ublk_complete_io_cmd(struct ublk_io *io, int res,
--				 unsigned issue_flags)
-+static void ublk_complete_io_cmd(struct ublk_io *io, struct request *req,
-+				 int res, unsigned issue_flags)
+On Sun, Apr 27, 2025 at 2:48=E2=80=AFPM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Mon, 21 Apr 2025 22:06:38 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
+>
+> > Make the sensor detect and issue interrupts at activity. Activity
+> > events are configured by a threshold stored in regmap cache. Initialize
+> > the activity threshold register to a reasonable default value in probe.
+> > The value is taken from the older ADXL345 input driver, to provide a
+> > similar behavior. Reset the activity/inactivity direction enabling
+> > register in probe. Reset and initialization shall bring the sensor in a
+> > defined initial state to prevent dangling settings when warm restarting
+> > the sensor.
+> >
+> > Activity, ODR configuration together with the range setting prepare the
+> > activity/inactivity hystersesis setup, implemented in a follow up patch=
+.
+> >
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+> > ---
+> >  drivers/iio/accel/adxl345_core.c | 217 ++++++++++++++++++++++++++++++-
+> >  1 file changed, 214 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/iio/accel/adxl345_core.c b/drivers/iio/accel/adxl3=
+45_core.c
+> > index 80b5b8402ced..680981609d83 100644
+> > --- a/drivers/iio/accel/adxl345_core.c
+> > +++ b/drivers/iio/accel/adxl345_core.c
+> > @@ -36,11 +36,16 @@
+> >  #define ADXL345_REG_TAP_AXIS_MSK     GENMASK(2, 0)
+> >  #define ADXL345_REG_TAP_SUPPRESS_MSK BIT(3)
+> >  #define ADXL345_REG_TAP_SUPPRESS     BIT(3)
+> > +#define ADXL345_REG_ACT_AXIS_MSK     GENMASK(6, 4)
+> >
+> >  #define ADXL345_TAP_Z_EN             BIT(0)
+> >  #define ADXL345_TAP_Y_EN             BIT(1)
+> >  #define ADXL345_TAP_X_EN             BIT(2)
+> >
+> > +#define ADXL345_ACT_Z_EN             BIT(4)
+> > +#define ADXL345_ACT_Y_EN             BIT(5)
+> > +#define ADXL345_ACT_X_EN             BIT(6)
+> > +
+> >  /* single/double tap */
+> >  enum adxl345_tap_type {
+> >       ADXL345_SINGLE_TAP,
+> > @@ -64,6 +69,19 @@ static const unsigned int adxl345_tap_time_reg[] =3D=
  {
-+	/* read cmd first because req will overwrite it */
-+	struct io_uring_cmd *cmd = io->cmd;
-+
- 	/* mark this cmd owned by ublksrv */
- 	io->flags |= UBLK_IO_FLAG_OWNED_BY_SRV;
- 
- 	/*
- 	 * clear ACTIVE since we are done with this sqe/cmd slot
- 	 * We can only accept io cmd in case of being not active.
- 	 */
- 	io->flags &= ~UBLK_IO_FLAG_ACTIVE;
- 
-+	io->req = req;
-+
- 	/* tell ublksrv one io request is coming */
--	io_uring_cmd_done(io->cmd, res, 0, issue_flags);
-+	io_uring_cmd_done(cmd, res, 0, issue_flags);
- }
- 
- #define UBLK_REQUEUE_DELAY_MS	3
- 
- static inline void __ublk_abort_rq(struct ublk_queue *ubq,
-@@ -1213,19 +1223,19 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
- 		 * and notify it.
- 		 */
- 		io->flags |= UBLK_IO_FLAG_NEED_GET_DATA;
- 		pr_devel("%s: need get data. qid %d tag %d io_flags %x\n",
- 				__func__, ubq->q_id, req->tag, io->flags);
--		ublk_complete_io_cmd(io, UBLK_IO_RES_NEED_GET_DATA,
-+		ublk_complete_io_cmd(io, req, UBLK_IO_RES_NEED_GET_DATA,
- 				     issue_flags);
- 		return;
- 	}
- 
- 	if (!ublk_start_io(ubq, req, io))
- 		return;
- 
--	ublk_complete_io_cmd(io, UBLK_IO_RES_OK, issue_flags);
-+	ublk_complete_io_cmd(io, req, UBLK_IO_RES_OK, issue_flags);
- }
- 
- static void ublk_cmd_tw_cb(struct io_uring_cmd *cmd,
- 			   unsigned int issue_flags)
- {
-@@ -1609,16 +1619,12 @@ static void ublk_abort_queue(struct ublk_device *ub, struct ublk_queue *ubq)
- 	int i;
- 
- 	for (i = 0; i < ubq->q_depth; i++) {
- 		struct ublk_io *io = &ubq->ios[i];
- 
--		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV) {
--			struct request *rq;
--
--			rq = blk_mq_tag_to_rq(ub->tag_set.tags[ubq->q_id], i);
--			__ublk_fail_req(ubq, io, rq);
--		}
-+		if (io->flags & UBLK_IO_FLAG_OWNED_BY_SRV)
-+			__ublk_fail_req(ubq, io, io->req);
- 	}
- }
- 
- /* Must be called when queue is frozen */
- static void ublk_mark_queue_canceling(struct ublk_queue *ubq)
-@@ -1988,16 +1994,16 @@ static int ublk_fetch(struct io_uring_cmd *cmd, struct ublk_queue *ubq,
- 
- static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 				 struct ublk_io *io, struct io_uring_cmd *cmd,
- 				 const struct ublksrv_io_cmd *ub_cmd)
- {
--	struct blk_mq_tags *tags = ubq->dev->tag_set.tags[ub_cmd->q_id];
--	struct request *req = blk_mq_tag_to_rq(tags, ub_cmd->tag);
-+	struct request *req;
- 
- 	if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 		return -EINVAL;
- 
-+	req = io->req;
- 	if (ublk_need_map_io(ubq)) {
- 		/*
- 		 * COMMIT_AND_FETCH_REQ has to provide IO buffer if
- 		 * NEED GET DATA is not enabled or it is Read IO.
- 		 */
-@@ -2025,13 +2031,14 @@ static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 		ublk_put_req_ref(ubq, req);
- 
- 	return 0;
- }
- 
--static bool ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io,
--			  struct request *req)
-+static bool ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io)
- {
-+	struct request *req = io->req;
-+
- 	/*
- 	 * We have handled UBLK_IO_NEED_GET_DATA command,
- 	 * so clear UBLK_IO_FLAG_NEED_GET_DATA now and just
- 	 * do the copy work.
- 	 */
-@@ -2053,11 +2060,10 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 	struct ublk_queue *ubq;
- 	struct ublk_io *io;
- 	u32 cmd_op = cmd->cmd_op;
- 	unsigned tag = ub_cmd->tag;
- 	int ret = -EINVAL;
--	struct request *req;
- 
- 	pr_devel("%s: received: cmd op %d queue %d tag %d result %d\n",
- 			__func__, cmd->cmd_op, ub_cmd->q_id, tag,
- 			ub_cmd->result);
- 
-@@ -2109,12 +2115,11 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
- 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 			goto out;
- 		io->addr = ub_cmd->addr;
--		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
--		if (!ublk_get_data(ubq, io, req))
-+		if (!ublk_get_data(ubq, io))
- 			return -EIOCBQUEUED;
- 
- 		return UBLK_IO_RES_OK;
- 	default:
- 		goto out;
--- 
-2.45.2
+> >       [ADXL345_TAP_TIME_DUR] =3D ADXL345_REG_DUR,
+> >  };
+> >
+> > +/* activity/inactivity */
+> > +enum adxl345_activity_type {
+> > +     ADXL345_ACTIVITY,
+> > +};
+> > +
+> > +static const unsigned int adxl345_act_int_reg[] =3D {
+> > +     [ADXL345_ACTIVITY] =3D ADXL345_INT_ACTIVITY,
+> > +};
+> > +
+> > +static const unsigned int adxl345_act_thresh_reg[] =3D {
+> > +     [ADXL345_ACTIVITY] =3D ADXL345_REG_THRESH_ACT,
+> > +};
+> > +
+> >  enum adxl345_odr {
+> >       ADXL345_ODR_0P10HZ =3D 0,
+> >       ADXL345_ODR_0P20HZ,
+> > @@ -154,6 +172,13 @@ struct adxl345_state {
+> >  };
+> >
+> >  static struct iio_event_spec adxl345_events[] =3D {
+> > +     {
+> > +             /* activity */
+> > +             .type =3D IIO_EV_TYPE_THRESH,
+>
+> Is this a threshold, or a magnitude? I'd expect an activity detector
+> to be magnitude as it doesn't care which way up the sensor is.
+>
 
+This is touching the main points still unclear to me. I tried to put
+this into the
+following questions. Could you please clarify?
+
+1. Given a measurement "val", and a configured threshold "thr".
+A "rising" for IIO_EV_TYPE_THRESH means: val > thr
+where a "rising" for IIO_EV_TYPE_MAG means something like: val > |thr|
+
+Q: Do I understand this correctly now?
+
+Q: Is this documented somewhere (especially for reviewing further
+EV_TYPE fields)?
+
+Q: I wonder if I missed this for the Tap events. Going by this
+definition, then actually the
+tap events should be rather MAG events, too. Right?
+
+
+2. I oriented myself mostly by reading other drivers, for instance the
+ADXL367, the ADXL372, or also the more recent ADXL380. I am aware that
+there might be differences among different
+(Analog) sensors. But all those sensors specify Inactivity (and Activity) a=
+s a
+IIO_EV_TYPE_THRESH with directions IIO_MOD_X_OR_Y_OR_Z.
+Given the above, I implemented Activity and Inactivity events as
+IIO_EV_TYPE_THRESH,
+now I'm a bit confused.
+
+Q: Why is this different for the ADXL345?
+
+Q: If I implement Activity / Inactivity analogous to the e.g. a
+ADXL380, then shouldn't it be IIO_EV_TYPE_THRESH with
+IIO_MOD_X_OR_Y_OR_Z? Why not?
+
+
+3. For the ADXL345, a Freefall signal is on all axis lower than
+threshold (magnitude). Thus I push a IIO_MOD_X_AND_Y_AND_Z to a
+separate
+fake channel. Inactivity will be like Freefall independent of the axis.
+The ADXL345 Activity can be configured by axis, as also the event will
+respect the axis information.
+
+Q: Setting up the "fake channel" to particuarly push to
+IIO_MOD_X_AND_Y_AND_Z, I probably better should also evaluate
+IIO_MOD_X_AND_Y_AND_Z in write_event_config(), write_event_value(),
+etc. rather than evaluating IIO_MOD_-types as I'm currently
+doing?
+
+Q: Activity probably remains in the regular channels for the corresponding =
+axis?
+
+
+4. I implemented functions like adxl345_write_event_config(),
+adxl345_write_event_value() or corresponding
+readers, as follows
+- THRESH/rising: Activity
+- THRESH/falling: Inactivity
+- MAG/falling: Freefall
+
+If I change Activity and Inactivity to be both of type MAG, I will end
+up with MAG/falling to indicate Freefall or equally Inactivity.
+Both on the IIO_MOD_X_AND_Y_AND_Z channel. I admit (ab)using the
+IIO_EV_TYPEs to solve my combinatorial issues for event configuration
+is probably not as supposed to be.
+Given you still ask me to do Inactivity and Freefall as MAG/falling
+with IIO_MOD_X_AND_Y_AND_Z. The difference between both IMHO,
+is that Activity and Inactivity for the ADXL345 indicate sensor state
+changes, where Freefall indicates the particular event. The
+sensor is either in "active" or "standby/inactive", where Freefall
+just triggers and then retriggers and retriggers...
+
+Q: What is the method to distinguish several similar IIO events, e.g.
+to tag them somehow one as Freefall, the other one as Inactivity?
+
+Best,
+L
+
+> > +             .dir =3D IIO_EV_DIR_RISING,
+> > +             .mask_separate =3D BIT(IIO_EV_INFO_ENABLE),
+> > +             .mask_shared_by_type =3D BIT(IIO_EV_INFO_VALUE),
+> > +     },
+> >       {
+> >               /* single tap */
+> >               .type =3D IIO_EV_TYPE_GESTURE,
+> > @@ -265,6 +290,99 @@ static int adxl345_set_measure_en(struct adxl345_s=
+tate *st, bool en)
+> >       return regmap_write(st->regmap, ADXL345_REG_POWER_CTL, val);
+> >  }
+> >
+> Jonathan
+>
+>
