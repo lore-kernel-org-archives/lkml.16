@@ -1,124 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745BA22576A;
-	Wed, 30 Apr 2025 23:32:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A75922576A;
+	Wed, 30 Apr 2025 23:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746055942; cv=none; b=uFizHAE0MaHPGZD0Td4CpPezbuC2lwspyHRr4V2kSKG7+4ZiLWnTZ1xMuVWxeMJ9EIVKBEEupAGPGPVXhFyBiUQf6p42tGPuUSUVq4RITJ6eJA2wAa/JA7ccNd0DGXRYOIZUZq35OLeK+YpR5KibgdOVImk+raagxy9hF8/gkOE=
+	t=1746055994; cv=none; b=SerU95fp63Sl0umJRBEy4uGN7vyYBdIU46uQLk81NxDuJuXg8RXW365nY7zKdVN5UI2gI9uGtt46ZmBgr5mYBq2+W9shBeXyVcMJTGyJn0wwqL8WueI9TLv6CGuzKIvt+MyLgYvBr3iOn3IQEuiw3PIAaK6O0BNI1uxXoSHFLBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746055942; c=relaxed/simple;
-	bh=injRZ9eFv1pQlB4XTtV4bwLucOJq7jcy48IS30S1PN4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KgMpdk3SQneVSwHVifizXZMuzOXShsxNgvEg+3k2Ag8Ne4ikyTdsC6jKtq7Rs5a34jWXDVsKAtoSk7vNdBAv5E532DACGsas6Ohprg3Phab5e2kUlRzBFcQwyO5TeSRwUFyA6zQ/CrN9KjzdhuhdX6jTCyx97TjoPkEVAOZFvlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIzTjYsF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746055994; c=relaxed/simple;
+	bh=Of7a1v8ioLd7B9v+xxJHvaP8wHaUb+cDK43dgVO54vY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qWiPfG0CCfh5I/LybWLaQOrNQbxP7xEcoKwuMo6EEqmlvRSnrPR3Iee5d11WBx9qngGjjZwz4vN8P7y+xLsViB5v6Xo7x/Px3jfTxGvvlkqruQH+iuJIRb0aW5DlE8OPjvGZTRE8tRlxSt36vllP0V6UGUzkpN1eeeDz4gqiC/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FIPNgmdZ; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIzTjYsF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACAD0C4CEE7;
-	Wed, 30 Apr 2025 23:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746055941;
-	bh=injRZ9eFv1pQlB4XTtV4bwLucOJq7jcy48IS30S1PN4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jIzTjYsFTFwiwRq3tj7yguqrHRe0TbnVzePwStGnaGhUKS6nUd7TqBQ10jr+2jhe2
-	 neo9h6UBYhG2zD3AKVhHK9X7x9hqwgTQGFgUD7AkT00FkxYP3RE6c/sAO2jfFEDEUJ
-	 rjiylF2zs2vkmsALcnTpUvKuWvymy471JQ5zS+yfQCYxS0sOogEza44RfhdjIq8W6M
-	 5lpr0Y5JWS8gy9EV8AulHk8dddIciPhJ8yXKguc2jb5DefDhVLBZh7/sD/wuFAm5Pk
-	 aQ2FOToLP19T6JIZjCofYoWGS59sGBPL/f4Sm9xD7C6+5OuqWuyqsS/185Krzi159A
-	 tpVP1UwtIbWMA==
-Date: Wed, 30 Apr 2025 16:32:14 -0700
-From: Nathan Chancellor <nathan@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
-	io-uring@vger.kernel.org, virtualization@lists.linux.dev
-Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
-Message-ID: <20250430233214.GC3715926@ax162>
-References: <20250429161051.743239894@linuxfoundation.org>
- <CA+G9fYuNjKcxFKS_MKPRuga32XbndkLGcY-PVuoSwzv6VWbY=w@mail.gmail.com>
- <2025043049-banked-doorpost-5e06@gregkh>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FIPNgmdZ"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e743bffc234so333502276.3;
+        Wed, 30 Apr 2025 16:33:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746055991; x=1746660791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZHmEO0fbyI3zWiHX3WZMszxyOKD9Ot7GWFNiX9BtTg4=;
+        b=FIPNgmdZbg6qcUNnRCRakrZKP5dnb4iQdBgGF1hUBv4yrX5plZYQkyOl65+o1MG293
+         7QNsSGB3JpnX4OQqbmDgI/YoaazrFNJUDygH8ZAKlg6/N4NJzzLRHx79ZP5KDcWCsHeX
+         RTxxBPq2WfmIIbSI47wOHZ9CxmD8/m9zPu+2rTIS+ifiuggtu+uZy2EDDQMzH1yt5p5h
+         zfcMUwL7FPf/MxS4ufyv7mBJSc4lWhyC+JMpUKTBer2WTnx5jo3nAoxEpYUeiq6ECJH9
+         nwx8eZ1kydculiqhvyzn171/s1Yp1YmGSW/EwuVdoDj7o/punjeArpcODRX1+ZTg+x6D
+         C0XA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746055991; x=1746660791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZHmEO0fbyI3zWiHX3WZMszxyOKD9Ot7GWFNiX9BtTg4=;
+        b=Q/F0kCJWs78GwKHkzhkAgZAXZXaTXz635wa57PkEWT/XlOk8tiEHeivNoYJTdwFQbD
+         7rrbS2JyAvt76p/Gqyi1XD26XGOqJCWhLmwnDjutu3QO/VgxhSKTn56P7bDvC6dSknSu
+         ZhNcJOI/6Kj5rj/JVbwoQSYhDBF2r9rUJmakMdnSyHj9hAbiRdZZlxHh+JU1mIUOJx/4
+         w1wD/yG7s43+ZkdgssWjnnJ5TpPvP9Tjm08oCDwsZHWSqQDRpC8U8PD/BECoibojaXPL
+         YzObqQicUiIRoj3Saep6q8T9T7USKLhitr3ETod3Z+zqsgbZOAhZ2cJ1+OfYlteAjAmI
+         uVTg==
+X-Forwarded-Encrypted: i=1; AJvYcCURPlp8FKclRd41Qic0/18FD77K1wg3kx9F+yBatsL4bm16iU8lUnlMrwN6cFdnkgOMof2mbR0qSqQPiRJf7TolgQ==@vger.kernel.org, AJvYcCXiN47aIEhsDpAzjO7uRjCIbiOxvu9fCR/QW7N95/v4vKVqQSosV0f4I/aK+YGGYXz7vmUx3NjndEpu8dc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywUt7u9HU6wlccnfy1aYEOKN4A2lt2FrAHZcLqAkEeM2wxfdG5
+	PEkqtA1Byn/impEVJGthTaXV/YABSCwiQdolPu+uUrQV1C8YJUnoSnJXhRNjVRgtV/kN5ut9xFX
+	G5Jgaq4TF+21kMm8TAZDnKh5E5oU=
+X-Gm-Gg: ASbGncvcTtmS1XFKG7zLDKUZFIyjKoi+tNdwDd/eGu2mNk2xQSp8Xm5LwfhgFuDwopz
+	zIMG7yF/e5YYWK3EBufxoHmexWj70OGnTSziYbRoS9UrKJlkOCSrio99ISr74pVqL49R3HYc4DG
+	sIWxk647Rl1HEy8YU42aRu
+X-Google-Smtp-Source: AGHT+IE+O7sLc+C/dbTieCEGPV9NePFRAlH7dGyHFaQHJrFJrMlzCnVV/xs4E60MwzAAVZSm+Zkt5oFCJ5pneCvADKk=
+X-Received: by 2002:a05:6902:1504:b0:e64:54c:2262 with SMTP id
+ 3f1490d57ef6-e75328dbb18mr237025276.30.1746055991146; Wed, 30 Apr 2025
+ 16:33:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025043049-banked-doorpost-5e06@gregkh>
+References: <20250412015652.245123-1-howardchu95@gmail.com> <b950e80b-5f03-4a06-a393-8fb09b0d9843@linux.ibm.com>
+In-Reply-To: <b950e80b-5f03-4a06-a393-8fb09b0d9843@linux.ibm.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Wed, 30 Apr 2025 16:33:00 -0700
+X-Gm-Features: ATxdqUEKCSNismnacssy8DedfxDfRSUzeCKPgG63lH2ujQW-E9T1AQMMDLbySMw
+Message-ID: <CAH0uvohef=2-hE7BBbgNU+OkcY64pZaLgEHJfOq-o+_VsreY3g@mail.gmail.com>
+Subject: Re: [PATCH v2] perf trace: Speed up startup time by bypassing the
+ creation of kernel maps
+To: Aditya Bodkhe <adityab1@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+	kan.liang@linux.intel.com, james.clark@linaro.org, charlie@rivosinc.com, 
+	mpetlan@redhat.com, vmolnaro@redhat.com, linux@treblig.org, 
+	mhiramat@kernel.org, leo.yan@arm.com, dima@secretsauce.net, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	krzysztof.m.lopatowski@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 12:58:13PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Apr 30, 2025 at 04:09:18PM +0530, Naresh Kamboju wrote:
-> > Regressions on x86_64 with defconfig builds with clang-nightly toolchain
-> > on the stable-rc 6.1.136-rc1.
+Hi Aditya,
 
-clang-nightly is always a moving target so for the sake of the stable
--rc reports, I would only focus on issues that appear with just those
-patches, as you should see this issue on 6.1.136.
+Sorry for the late reply =E2=80=94 I was really sick over the past two week=
+s.
+Anyway, thank you so much for testing this patch on powerpc. Could you
+share the commands you used for testing? I noticed a 2-second runtime,
+which makes me think you might have used the time sudo ./perf trace --
+sleep 1 command I mentioned earlier. However, that command may not be
+ideal for benchmarking this patch, as the extra 1-second time makes
+performance gain imperceptible.
 
-> > * x86_64, build
-> >   - clang-nightly-lkftconfig
-> >   - clang-nightly-x86_64_defconfig
-> > 
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducibility? Yes
-> > 
-> > Build regression: x86_64 clang-nightly net ip.h error default
-> > initialization of an object of type 'typeof (rt->dst.expires)'
-> > 
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> > 
-> > ## Build error x86_64
-> > include/net/ip.h:462:14: error: default initialization of an object of
-> > type 'typeof (rt->dst.expires)' (aka 'const unsigned long') leaves the
-> > object uninitialized and is incompatible with C++
-> > [-Werror,-Wdefault-const-init-unsafe]
-> >   462 |                 if (mtu && time_before(jiffies, rt->dst.expires))
-> >       |                            ^
-> 
-> This isn't c++, so are you sure this isn't just a clang bug?
+Personally, I prefer using 'time sudo ./perf trace -C 0 -- true',
+tested both with and without the patch. That said, I think it=E2=80=99s als=
+o
+valid to apply the patch, and test using the following two commands:
 
-Yes, it is intentional that this warns for C code, the clang maintainer
-felt that the default initialization behavior of const variables not
-marked as static or thread local was worth warning about by default.
+# this will not load the kernel map, should be faster.
+time sudo ./perf trace -C 0 -- true
 
-https://github.com/llvm/llvm-project/pull/137166
+# this enables the kernel map, should take longer than the former command
+time sudo ./perf trace --call-graph fp --kernel-syscall-graph -C 0 -- true
 
-But it is going to be adjusted to allow the kernel to opt-out of the
-warning for aggregate members, as that triggers often in the kernel:
+And these are the results I gathered, all obtained with the patch applied.
+perf $ time sudo ./perf trace -C 0 -- true
 
-https://github.com/llvm/llvm-project/pull/137961
+real    0m0.264s
+user    0m0.004s
+sys     0m0.009s
+perf $ time sudo ./perf trace --call-graph fp --kernel-syscall-graph
+-C 0 -- true
 
-The only instance of -Wdefault-const-init-var-unsafe that I have found
-so far is in typecheck(), which should be easy enough to clean up.
+real    0m0.462s
+user    0m0.004s
+sys     0m0.013s
 
-Cheers,
-Nathan
+By the way, the 1-second difference in start up time shown in the
+commit message, is obtained using an older Lenovo T480, with Intel
+i5-8350 processor. The result I gathered above was from a machine with
+i7-12700 processor, where the difference is 200ms. And in your
+results, the difference is even smaller, which may indicate that your
+machine has a better single-core performance, or faster memory, or
+other contributing factors.
 
-diff --git a/include/linux/typecheck.h b/include/linux/typecheck.h
-index 46b15e2aaefb..5b473c9905ae 100644
---- a/include/linux/typecheck.h
-+++ b/include/linux/typecheck.h
-@@ -7,8 +7,8 @@
-  * Always evaluates to 1 so you may use it easily in comparisons.
-  */
- #define typecheck(type,x) \
--({	type __dummy; \
--	typeof(x) __dummy2; \
-+({	type __dummy = {}; \
-+	typeof(x) __dummy2 = {}; \
- 	(void)(&__dummy == &__dummy2); \
- 	1; \
- })
+Would you like a 'Tested-by:' ? :)
+
+Thanks,
+Howard
