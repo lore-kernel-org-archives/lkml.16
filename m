@@ -1,103 +1,145 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579D91C173F
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12511C173F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015951; cv=none; b=nazR1dxjLoypDbUfdBOr0FLtUQVDC1MZZDh/Mh5qIvOJx6kw6n5lNk6UIzD8pK0hSS2ZIkWSWwkcz+kwWg9d+IyXIYkLtKg13iFeJvxHkS3gLK4O16nX5rcxnaQxhTVwBZqGT5JyF2WPRjV3WzxdX/pByaDFPvBhL2OO650ago4=
+	t=1746015976; cv=none; b=In4zl9oqP8QMyApVcZRSIcbSgMCaIY8+lcrlQwE2VLx7bOFlgFDlvHeKaRFP2/hG0Zt00b9ZguPLEKgau31jvpCkNW3iLdFPCQLcs2952SHsd5QLJ1VovjM6P8btwkpd2S45ZKy1ThpWl8Kt0mkgLWhxKPWxSb3PzW4p4b8wPps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015951; c=relaxed/simple;
-	bh=OvhDiCfIW7F3Po3JmIAetfT+uV8brfLhLkiTndCsp6Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fUhJDSFPVemFX6SkDGi2JT2xIOl/V+7FyQ8IhI6E/cxwVkIzYr0xhPj/3P8mFMtjCxDyLbDu2sDKMzH92Nw9yA8pEfHcxGrm5CG1AM8SuSYjtmCskXdhrtNaXFbWgrKjvNhl4hGTVl7my1RjHzesRNqdRIP+5S/AsA4KEId5YxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=iP7H9D2m; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746015976; c=relaxed/simple;
+	bh=YMzETgjDji9IBqxi3AJIqogNPK3rCWR7xLHGOD6pIMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QrBrmIpVMA85UtergBFLbMze9QeLhuQMjGkANPVBBFpp6FKfacMsVO5aH94W0UNKl3csJ5KpoeEFJmLiLi308WZrLa2tSYhpPNxksbX0NdvsjKlYsZtqVVKu6xAzfEc1brmqc/+jofau3CYFp4IdhmGr75WEAyDgo9c/Lnf6uHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=V2UpSzfa; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=hCXx4fFh; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=uU/XDOlP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=H4SlGNt3; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="iP7H9D2m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=8HVkoOLOWo5higWwpqBPXqJ4aIJ/4CrWkQaRfwTgh8g=; b=iP7H9D2mPbeY5/sB
-	oL9H/1GSvuBRS3oCh2TA7/Et+XZdsKZB+MXB7y88A6x2liBxQeF9Ob3MUzArIEX0lqAuPrYM93rLi
-	uQdod3m/IEY+coeVWwgc0w/6LX4bJpbBhi46E4l61JFGZjQoxz95gY08Zhbxo5+vQJJPIgLTDvOS1
-	R+pFmu+PkwBnxhZkYWUpEDWDusHA5iFtZrxhxjMYw4IqFEqO31oFstoHrRQ8F3GErbjWLJvNBcUFb
-	u8XeWtlhDKbQuEvO1UTUB68U9+oW8jTMHxi1H2rMtIwEidYQwKzjm2ryHKJYT2oHbQ1o2PdDu05Tz
-	YnRcbWXbdvQ0zH5skA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uA6VU-000f9I-1Q;
-	Wed, 30 Apr 2025 12:25:44 +0000
-Date: Wed, 30 Apr 2025 12:25:44 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: tglx@linutronix.de, fei1.li@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [REPOST PATCH] virt: acrn: Remove unused list
- 'acrn_irqfd_clients'
-Message-ID: <aBIWyN3xrUIbLQU1@gallifrey>
-References: <20250430003623.313541-1-linux@treblig.org>
- <2025043030-theology-driveway-20b8@gregkh>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="V2UpSzfa";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="hCXx4fFh";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="uU/XDOlP";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="H4SlGNt3"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D17481F449;
+	Wed, 30 Apr 2025 12:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746015973; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gY9W9ZPcorYk3BZB9sftT//K8NCsGTdu0UYiorZFpHo=;
+	b=V2UpSzfa1B/GIwv4L+6EHheZCuaf/GQsh63ETA/WnPmwk81JPV0sfjE4H1rVyF65/+UuHp
+	xj/e62ue1rouiYVv0oV9xYbHRR+8eparGQQpJ2sHpUDroaE9PXuHMeOkHE8hXDTtGBJ6ZB
+	wmxkx8Pq+2DLTyoTzplrTMd0WX+AUqY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746015973;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gY9W9ZPcorYk3BZB9sftT//K8NCsGTdu0UYiorZFpHo=;
+	b=hCXx4fFh26zP2Noo9M4RX6/tGgavOhftxFlGA8KfRd+ResFH6rjqerDuMg6WzzAnwwvG26
+	cseYO3hn3ICvJZBg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="uU/XDOlP";
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=H4SlGNt3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746015972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gY9W9ZPcorYk3BZB9sftT//K8NCsGTdu0UYiorZFpHo=;
+	b=uU/XDOlPFmCfherreyEfiVjx51RoC12sXp0K+qbGj1LawDte1K5obBg2d28xoVPbtQkKDS
+	I5i5SkyIm95qgTS77R8hf9t8Enj0JTkLB3kVigNBA9mTp5xSGSraI914oKlXG9AuhmEQXD
+	zliOF4WyJzoQYNY8LOooL2dBpijOKUM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746015972;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gY9W9ZPcorYk3BZB9sftT//K8NCsGTdu0UYiorZFpHo=;
+	b=H4SlGNt3URQyUwi0/LIzGHFtG/42R1p4I+7/W/4OBk0vst9y2sZAA07IAnbITy6cF0ixCQ
+	cknZPuCgUZIQtMAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BC6B7139E7;
+	Wed, 30 Apr 2025 12:26:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id //KbLeQWEmhdXgAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Wed, 30 Apr 2025 12:26:12 +0000
+Message-ID: <69871de2-af48-4ce9-9612-f87132337a84@suse.cz>
+Date: Wed, 30 Apr 2025 14:26:12 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <2025043030-theology-driveway-20b8@gregkh>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 12:23:15 up 2 days, 20:36,  1 user,  load average: 0.00, 0.02, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] memcg: no irq disable for memcg stock lock
+Content-Language: en-US
+To: Shakeel Butt <shakeel.butt@linux.dev>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
+ Roman Gushchin <roman.gushchin@linux.dev>,
+ Muchun Song <muchun.song@linux.dev>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-mm@kvack.org,
+ cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Meta kernel team <kernel-team@meta.com>
+References: <20250429230428.1935619-1-shakeel.butt@linux.dev>
+ <20250429230428.1935619-5-shakeel.butt@linux.dev>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250429230428.1935619-5-shakeel.butt@linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: D17481F449
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-* Greg KH (gregkh@linuxfoundation.org) wrote:
-> On Wed, Apr 30, 2025 at 01:36:23AM +0100, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > It doesn't look like this was ever used.
-> > 
-> > Build tested only.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> > Acked-by: Fei Li <fei1.li@intel.com>
-> > ---
-> > This is a repost of the patch originally posted last in May
-> > last year as id 20240504174725.93495-1-linux@treblig.org and
-> > Ack'd by Fei Li on 20th May, in Zkq183IzBA6cV9FE@louislifei-OptiPlex-7090
-> > No one picked it up.
-> > (Fixed one typo in the subject line)
-> > 
-> >  drivers/virt/acrn/irqfd.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> > 
-> > diff --git a/drivers/virt/acrn/irqfd.c b/drivers/virt/acrn/irqfd.c
-> > index b7da24ca1475..64d32c8fbf79 100644
-> > --- a/drivers/virt/acrn/irqfd.c
-> > +++ b/drivers/virt/acrn/irqfd.c
-> > @@ -16,8 +16,6 @@
-> >  
-> >  #include "acrn_drv.h"
-> >  
-> > -static LIST_HEAD(acrn_irqfd_clients);
-> > -
+On 4/30/25 01:04, Shakeel Butt wrote:
+> There is no need to disable irqs to use memcg per-cpu stock, so let's
+> just not do that. One consequence of this change is if the kernel while
+> in task context has the memcg stock lock and that cpu got interrupted.
+> The memcg charges on that cpu in the irq context will take the slow path
+> of memcg charging. However that should be super rare and should be fine
+> in general.
 > 
-> Odd, why doesn't the compiler complain about this?
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 
-Because it is used - by its own initialiser!
-I filed a gcc bug for it:
-  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=115027
-and someone has written a patch but it hasn't gone further.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-> I'll queue it up in a bit, thanks!
-
-Thanks!
-
-Dave
-
-> greg k-h
--- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
