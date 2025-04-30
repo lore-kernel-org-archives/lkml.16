@@ -1,165 +1,88 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EC22561CE
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:16:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A37255F36;
+	Wed, 30 Apr 2025 00:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745972216; cv=none; b=ZjmUT2Ac9uvq5Vm6gifuTJBiM4l0n3NWnXy2NkI4agU3G/bEUv1h76WRnUCUC+uI8B+haL0U5ac/fm8VtqNU7ekntpWoBnImd1NSkMGvozyxBtd73qEL+T3x+zA5xSFzhZjxR4IkYk92GW6OkfFblRqWNb2tbfa73Q++jGKIGdI=
+	t=1745972217; cv=none; b=iOjRlONIdiI30COZaZJ1M1fh05x2ueWg4tskuvFsPXwmkU7lC5GR/Hm8FFb9AkUoFZny0d3jGO1+SC1DPhkvVkttgdEZuJvejyIoH27IJpoQMFaGcMr4YHn19HgVqf03pecV/wHeF9LhAlC2bznWccuuBOUDiC2FOJibuocelpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745972216; c=relaxed/simple;
-	bh=6epe1IklbdE30nYdZrV0ZHwki5ITawyBnbVBknH019E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VRxHLcSKseP0vqbmNfOvf6AsJEBeEEUi3rP+H6ROt2k1E3jCHpQ7lOD+ZtHbz8cWXugBZO5UDYTptlMgD20EYtBFiMTYgjukIMLwvPxUYek5L0z3FNYczVCs1hg+lItZDJ6PFARFor7NX0OdKEeccZ1DAL+mGa6vKdm6rJK1VeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=L22v4ol8; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1745972217; c=relaxed/simple;
+	bh=EuhYMPtN24wFpetIjEk5bJ0wQu/lkgDl2Mh3Emi0/YM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BGuA0vR6TaKCTVzafxFOgErXB8oJz7QSdsOgLk9ENgqhTyPE1bfEGrCHYKAqtmPQBxbI0zyRTPIx1lowmcZNXnd1Ak4+uDgZNthXvVWgzZMcmPaHhuaJJuMTvtb91Ee/oxy+uEVKHBIvcIAAamySNA6vl1yXQjtopjKdSdahJXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b=CKxUxPFQ; arc=none smtp.client-ip=211.75.126.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="L22v4ol8"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22d95f0dda4so96380515ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:16:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745972214; x=1746577014; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DsODLDfRcPuDSErfbs+tzfaJx/MFrIF5cCrvvQql1Yk=;
-        b=L22v4ol8y8KR7CzqC463COkzA8qSb4dl9YBn/Ju48YLVisEsN4Wk8NzMdYkiQH9wHM
-         Z3lcFxqN6MUHZPc/cvJgI/a/xAbbJqN6oDl2Nq3FR05E/WbSbczHAFcYRhifIQa2u5ii
-         NXtLfSkO5ocEwxI8ZciO+kb6otd++pV/hax+sCmk690uyCTvoUaXj26L2bjp4kuVemCh
-         1pdHrSdtblvTVgL2Ij84crtTV3vmuM3Lv0iRiGJfIPBnSNCGzJU4e8B30tf+hUC/+Vbm
-         JadZWuirlsBfKoP+wV6bSp0eihzJD0UTCh76ECgDxmD74TUKgz0KFT4JVLccE6TNg3go
-         w2dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745972214; x=1746577014;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DsODLDfRcPuDSErfbs+tzfaJx/MFrIF5cCrvvQql1Yk=;
-        b=jPhr9bmLD/XH6Bf18i/x/Rf0bWyPmxTNbjUjSFvcytI4wXrRsvRU/GccZG7owu/ju3
-         J5X4d7qFQCwOPxvSjHaTf8m1sdybuRhKERUftGR+iYefD06ROjS9IXDFU17kmh0esPRz
-         7giEutiz+SD5MWgAr5400XUNWK9jfNTxSzbfBW0bo2i+uT+U09aklq2S2cNPEx3hNgP+
-         /+g4xx8KvUwzZKwZa2OHiTYua2GEO+T3npPFCOgYStqAMXbpjXu29ehqmJCcajHM5wdL
-         TGatSnwZVWFCP24f8A1ETixFunFHJS7TCBKcmKKRO6zMhqKidL/BbEx9Hd3hTnb7XhkG
-         qx9w==
-X-Gm-Message-State: AOJu0YxA00UuwBuI32NGm6UbIDTr/kiqIc2/6E6GZMqF245d6v3vH/DQ
-	oOiQDzbIMZhIUqGTDGajv6iMMEBQgUQeQD+6IUwzBeqnreP6AZH4kGJeg9wCl0A=
-X-Gm-Gg: ASbGncu2CJiU4jpNDOf+8EYrTlgAumkwiom/FDk7GysxkgELSK8iW4quXDc0Xpuhlnb
-	6++EadeOtnlxWP3XouuDy5cl97oLCQzZ94PnF2ZOXy3iFb8PyAf8OSCwx5LpW1w5FGcCJY3gGBg
-	lL47y5H2BfywXuFmrFCGjN7NxJLhmGw5l6lywghorgOZ5XX/hmdBNZf3OjLvp6JgTcXAw/xX1CK
-	zocWT5i6/UiM22tgiRoGK0d+i/WhtuK6nxr3zX0uEHmeo25hsX/ulleZ5Cctn7EBuCnDDFep7oW
-	oFgyDXv1QD2tjqmxmK1vAP063Jtdz5uNB6fA9yTJsnCp1d6ACtg=
-X-Google-Smtp-Source: AGHT+IFJTmgyX5+R2cHG56gTAhOoSWDR7FtiznejYy+qmKOCH5eDKH+EG+01nS/OcUb7Pgf8hhzsSQ==
-X-Received: by 2002:a17:902:fc47:b0:21f:dbb:20a6 with SMTP id d9443c01a7336-22df35a39b4mr20572645ad.33.1745972214477;
-        Tue, 29 Apr 2025 17:16:54 -0700 (PDT)
-Received: from debug.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d770d6sm109386035ad.17.2025.04.29.17.16.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 17:16:54 -0700 (PDT)
-From: Deepak Gupta <debug@rivosinc.com>
-Date: Tue, 29 Apr 2025 17:16:26 -0700
-Subject: [PATCH v14 09/27] riscv mmu: write protect and shadow stack
+	dkim=temperror (0-bit key) header.d=realtek.com header.i=@realtek.com header.b="CKxUxPFQ"
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 53U0GlGI22014676, This message is accepted by code: ctloc85258
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=realtek.com; s=dkim;
+	t=1745972207; bh=EuhYMPtN24wFpetIjEk5bJ0wQu/lkgDl2Mh3Emi0/YM=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:Content-Transfer-Encoding:MIME-Version;
+	b=CKxUxPFQnv21cRUvFBRLhFHcaAAwsbqSjCpzi7jgbZgtn68eBDSkoaBI1xjHsEixG
+	 d7E7QtiEtFuBALR63UglMWSpMTfqaX9LLwloShHU69uZjZEtzC2Qn8S4TGzGyQ/GCE
+	 gdDjuIc+vnLRZgJw+kghfatRtkxLDDoj+oWTM6w/5/NpbGG29hAmIHm6XegNwhtsTj
+	 E11+7H4QsULFh04lIUOU/AaQAHd5FvZ7gcAT3RxfbuZG6+knaE1dC8o6kep2l0jEpd
+	 ZrGZPqBrvXz+PncGkGQkEvN3ZRW15os0MpgNPA4s4kqP7RNLDYktijFJ+J12+axUAY
+	 JY0S/EQAd43bw==
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/3.06/5.92) with ESMTPS id 53U0GlGI22014676
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 08:16:47 +0800
+Received: from RTEXMBS03.realtek.com.tw (172.21.6.96) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 30 Apr 2025 08:16:48 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Wed, 30 Apr 2025 08:16:47 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622]) by
+ RTEXMBS04.realtek.com.tw ([fe80::4c19:b586:6e71:3622%5]) with mapi id
+ 15.01.2507.035; Wed, 30 Apr 2025 08:16:47 +0800
+From: Ping-Ke Shih <pkshih@realtek.com>
+To: =?iso-8859-2?Q?Ond=F8ej_Jirman?= <megi@xff.cz>
+CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH rtw-next v3 2/2] wifi: rtw89: Fix inadverent sharing of struct ieee80211_supported_band data
+Thread-Topic: [PATCH rtw-next v3 2/2] wifi: rtw89: Fix inadverent sharing of
+ struct ieee80211_supported_band data
+Thread-Index: AQHbuQJsTe1wuXvirkCMDKYarBy5Y7O7WAzg
+Date: Wed, 30 Apr 2025 00:16:47 +0000
+Message-ID: <7b2405f82b8f4b879d10453dde55a7f3@realtek.com>
+References: <20250429122916.1734879-1-megi@xff.cz>
+ <20250429122916.1734879-3-megi@xff.cz>
+In-Reply-To: <20250429122916.1734879-3-megi@xff.cz>
+Accept-Language: en-US, zh-TW
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS03.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250429-v5_user_cfi_series-v14-9-5239410d012a@rivosinc.com>
-References: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
-In-Reply-To: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
- x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
- Andrew Morton <akpm@linux-foundation.org>, 
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
- Vlastimil Babka <vbabka@suse.cz>, 
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
- Christian Brauner <brauner@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
- Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, 
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
- andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
- atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
- alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
- rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
- Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
-X-Mailer: b4 0.13.0
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-`fork` implements copy on write (COW) by making pages readonly in child
-and parent both.
+Ond=F8ej Jirman <megi@xff.cz> wrote:
+>=20
+> Internally wiphy writes to individual channels in this structure,
+> so we must not share one static definition of channel list between
+> multiple device instances, because that causes hard to debug
+> breakage.
+>=20
+> For example, with two rtw89 driven devices in the system, channel
+> information may get incoherent, preventing channel use.
+>=20
+> Signed-off-by: Ondrej Jirman <megi@xff.cz>
 
-ptep_set_wrprotect and pte_wrprotect clears _PAGE_WRITE in PTE.
-Assumption is that page is readable and on fault copy on write happens.
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
 
-To implement COW on shadow stack pages, clearing up W bit makes them XWR =
-000. This will result in wrong PTE setting which says no perms but V=1 and
-PFN field pointing to final page. Instead desired behavior is to turn it
-into a readable page, take an access (load/store) fault on sspush/sspop
-(shadow stack) and then perform COW on such pages. This way regular reads
-would still be allowed and not lead to COW maintaining current behavior
-of COW on non-shadow stack but writeable memory.
-
-On the other hand it doesn't interfere with existing COW for read-write
-memory. Assumption is always that _PAGE_READ must have been set and thus
-setting _PAGE_READ is harmless.
-
-Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-Reviewed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Deepak Gupta <debug@rivosinc.com>
----
- arch/riscv/include/asm/pgtable.h | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index 60d4821627d2..4e3431ccf634 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -423,7 +423,7 @@ static inline int pte_devmap(pte_t pte)
- 
- static inline pte_t pte_wrprotect(pte_t pte)
- {
--	return __pte(pte_val(pte) & ~(_PAGE_WRITE));
-+	return __pte((pte_val(pte) & ~(_PAGE_WRITE)) | (_PAGE_READ));
- }
- 
- /* static inline pte_t pte_mkread(pte_t pte) */
-@@ -624,7 +624,15 @@ static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
- static inline void ptep_set_wrprotect(struct mm_struct *mm,
- 				      unsigned long address, pte_t *ptep)
- {
--	atomic_long_and(~(unsigned long)_PAGE_WRITE, (atomic_long_t *)ptep);
-+	pte_t read_pte = READ_ONCE(*ptep);
-+	/*
-+	 * ptep_set_wrprotect can be called for shadow stack ranges too.
-+	 * shadow stack memory is XWR = 010 and thus clearing _PAGE_WRITE will lead to
-+	 * encoding 000b which is wrong encoding with V = 1. This should lead to page fault
-+	 * but we dont want this wrong configuration to be set in page tables.
-+	 */
-+	atomic_long_set((atomic_long_t *)ptep,
-+			((pte_val(read_pte) & ~(unsigned long)_PAGE_WRITE) | _PAGE_READ));
- }
- 
- #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-
--- 
-2.43.0
+Thanks for your prompt work. :-)
 
