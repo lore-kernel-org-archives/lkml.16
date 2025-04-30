@@ -1,64 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B32211A35;
-	Wed, 30 Apr 2025 11:58:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19EA259C83;
+	Wed, 30 Apr 2025 11:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014335; cv=none; b=bC0rwKODnNk/VZG4Sc4YyUsPgbLxddgcLd9836XgU7SuB8py5x8eIGE9ZQh5hQ8hKu3sbVCMj0VE0a9yVRpf2ZdVJkELO9XibFNPPNvv5uKctsFWAQCJDLLVqmj5u08uzFkjTABJKXgaSgqZkCZwWoBEDZpYnZZ4mutcmjWfSgQ=
+	t=1746014336; cv=none; b=eADvT82Kq+WbESPeujFvkXEofAnw/Ci6FP104fpBkLBsigU/U98OpY2yHMrEVbqCYgwO3xXbOKaa0lH/dZ+N7v51hAtChiSwvqS+ykAvvw+81ZkLuB7zYBsJw7WoA1vSbyF+9aewFNJ2HTrH1oWbeJXWp1GS0osECY8/i0wNhCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014335; c=relaxed/simple;
-	bh=TzuwJpXNeevXE7/Ff0wCefQeVKVKnRYwAPMXEEz0H+A=;
+	s=arc-20240116; t=1746014336; c=relaxed/simple;
+	bh=WwTcbUz7MxK6vH0vqjAvMSF5VUfR/DCgG9h7K6+2nkI=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=Vd6WdbUnHJEvjdsrJ6b6qVK11s59LUnCKP1EMHwFr+xmkO4XIZjLjUeZ7t8+QZIMaUOUWZDF2jLi4uyMHd4dyI3pgdvFTpg+Hi9irZXys0bYDO9Gy7KsvpSTgb+cG98yELd4knT6xf6p9gyrNctm7LA2sb4hrGc//jZ6zi0Q10k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=c+gbLnBS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=X2s59pd8; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=giNl91mAhVURfGoWLgILrW+2U0YU6GnGxq5cHom2AQYZal/uVxbKwPgo5EoRpwLGPogtVtHonOR4z4/R8PEnTVLCzGfoHBVP/o25nIcvnX8VKAi4q154FQD+zxDz6mRKcM1yJtR/rRvLlg0u5fRzHbhysmo+siu8pgX3Rosfvhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hkoIKaNE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bhbj/9Z6; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="c+gbLnBS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="X2s59pd8"
-Date: Wed, 30 Apr 2025 11:58:51 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hkoIKaNE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bhbj/9Z6"
+Date: Wed, 30 Apr 2025 11:58:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746014332;
+	s=2020; t=1746014333;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9tDTd9PjKMsgm9qH+AiJd/bRqshi47m/Nn2NZga1Nms=;
-	b=c+gbLnBSIKqWN6NaI90lIiW6Q6DCS74SQls0ifVFbmUrKeUkRPME5075jGFMgWRYzMqn04
-	Xuv7s0Lm+6Cmdq0+PQkktH9bGFhT1j3H8cCNOM4hcuIc0tgVu2FShGwsycUvgo8FQ3KGIe
-	XgCSK+2oAt42NTcY+KOeNNXufsuqQ34toWuxHUxL25DeW0r/ZMAyVs/Y4sDAIq4k3vIoBD
-	O0cWIoMjpjuaZkSsP34oHugNYLTxydXfbpOBX2JyEaBPwV+vGvZXHxww2jDdDiDwkfTTH0
-	lCAOvCnyHiLiHDiUctDdxtGfLgM4vND2hmpal5qPDgkdWtqFYqDVjwgnN2+1Ow==
+	bh=w/bCM0FUpQXMpHS+XMY/+S3bsrRVQkc8+oj2OKP7GFs=;
+	b=hkoIKaNEBTPtHgFnbe7MKQsM0jgQnn4CF4PbRmM8YJfNH8r5254bYrcCiKuM6A75qaUsoK
+	EoeprKEO28kTqVTC0tNx/gLZqnuJ/9phyLzpMWQPgyAgkLCt0Aqcb4gJ4X7hlCa1hF5KvU
+	k3BllQZvodkKr2wuZRORfjlhvQwji7Gtc7cb+gbF0nvqqz6GRzTF+WKBMBVyv+V3dfM8hY
+	P3+Br1/saXfWqlN7HDxG2T/UZ9fv01LRDxh6x8RPGToHM2LtW5imBql1fIXlqv9hSgAoO/
+	P0TWkfpMQNJXx08P8N8G9kcA3AuvNh7yJhBNjsaU+jQk6eq2oGVhQLxyCbKSUQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746014332;
+	s=2020e; t=1746014333;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=9tDTd9PjKMsgm9qH+AiJd/bRqshi47m/Nn2NZga1Nms=;
-	b=X2s59pd8JU+1GHQdSm+rYXrUbu9dymAWLszkqnX0/FFJjpEwZGviJOoubIN4Zbmak5dTnV
-	qPeQTRUILYxieYCQ==
-From: "tip-bot2 for Qing Wang" <tip-bot2@linutronix.de>
+	bh=w/bCM0FUpQXMpHS+XMY/+S3bsrRVQkc8+oj2OKP7GFs=;
+	b=Bhbj/9Z6uPFneJ1uOxtT8dQRbRE7eRO1PhpTgSiBqvyj+awKnuWnyFuhpapphMBUgwlJ6Y
+	hifjq6LSWr0LabAg==
+From: "tip-bot2 for Kan Liang" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/core] perf/core: Fix broken throttling when max_samples_per_tick=1
-Cc: Qing Wang <wangqing7171@gmail.com>,
+Subject: [tip: perf/core] perf/x86/intel/ds: Fix counter backwards of
+ non-precise events counters-snapshotting
+Cc: Kan Liang <kan.liang@linux.intel.com>,
  "Peter Zijlstra (Intel)" <peterz@infradead.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250405141635.243786-3-wangqing7171@gmail.com>
-References: <20250405141635.243786-3-wangqing7171@gmail.com>
+In-Reply-To: <20250424134718.311934-6-kan.liang@linux.intel.com>
+References: <20250424134718.311934-6-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174601433122.22196.14323067984901288886.tip-bot2@tip-bot2>
+Message-ID: <174601433215.22196.15691518087061204450.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,63 +68,68 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the perf/core branch of tip:
 
-Commit-ID:     f51972e6f8b9a737b2b3eb588069acb538fa72de
-Gitweb:        https://git.kernel.org/tip/f51972e6f8b9a737b2b3eb588069acb538fa72de
-Author:        Qing Wang <wangqing7171@gmail.com>
-AuthorDate:    Sat, 05 Apr 2025 22:16:35 +08:00
+Commit-ID:     7da9960b59fb7e590eb8538c9428db55a4ea2d23
+Gitweb:        https://git.kernel.org/tip/7da9960b59fb7e590eb8538c9428db55a4ea2d23
+Author:        Kan Liang <kan.liang@linux.intel.com>
+AuthorDate:    Thu, 24 Apr 2025 06:47:18 -07:00
 Committer:     Peter Zijlstra <peterz@infradead.org>
-CommitterDate: Fri, 25 Apr 2025 14:55:22 +02:00
+CommitterDate: Fri, 25 Apr 2025 14:55:19 +02:00
 
-perf/core: Fix broken throttling when max_samples_per_tick=1
+perf/x86/intel/ds: Fix counter backwards of non-precise events counters-snapshotting
 
-According to the throttling mechanism, the pmu interrupts number can not
-exceed the max_samples_per_tick in one tick. But this mechanism is
-ineffective when max_samples_per_tick=1, because the throttling check is
-skipped during the first interrupt and only performed when the second
-interrupt arrives.
+The counter backwards may be observed in the PMI handler when
+counters-snapshotting some non-precise events in the freq mode.
 
-Perhaps this bug may cause little influence in one tick, but if in a
-larger time scale, the problem can not be underestimated.
+For the non-precise events, it's possible the counters-snapshotting
+records a positive value for an overflowed PEBS event. Then the HW
+auto-reload mechanism reset the counter to 0 immediately. Because the
+pebs_event_reset is cleared in the freq mode, which doesn't set the
+PERF_X86_EVENT_AUTO_RELOAD.
+In the PMI handler, 0 will be read rather than the positive value
+recorded in the counters-snapshotting record.
 
-When max_samples_per_tick = 1:
-Allowed-interrupts-per-second max-samples-per-second  default-HZ  ARCH
-200                           100                     100         X86
-500                           250                     250         ARM64
-...
-Obviously, the pmu interrupt number far exceed the user's expect.
+The counters-snapshotting case has to be specially handled. Since the
+event value has been updated when processing the counters-snapshotting
+record, only needs to set the new period for the counter via
+x86_pmu_set_period().
 
-Fixes: e050e3f0a71b ("perf: Fix broken interrupt rate throttling")
-Signed-off-by: Qing Wang <wangqing7171@gmail.com>
+Fixes: e02e9b0374c3 ("perf/x86/intel: Support PEBS counters snapshotting")
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20250405141635.243786-3-wangqing7171@gmail.com
+Link: https://lkml.kernel.org/r/20250424134718.311934-6-kan.liang@linux.intel.com
 ---
- kernel/events/core.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ arch/x86/events/intel/ds.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 3c69a1a..05136e8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10065,14 +10065,14 @@ __perf_event_account_interrupt(struct perf_event *event, int throttle)
- 		hwc->interrupts = 1;
- 	} else {
- 		hwc->interrupts++;
--		if (unlikely(throttle &&
--			     hwc->interrupts > max_samples_per_tick)) {
--			__this_cpu_inc(perf_throttled_count);
--			tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
--			hwc->interrupts = MAX_INTERRUPTS;
--			perf_log_throttle(event, 0);
--			ret = 1;
--		}
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 18c3ab5..9b20acc 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -2379,8 +2379,25 @@ __intel_pmu_pebs_last_event(struct perf_event *event,
+ 			 */
+ 			intel_pmu_save_and_restart_reload(event, count);
+ 		}
+-	} else
+-		intel_pmu_save_and_restart(event);
++	} else {
++		/*
++		 * For a non-precise event, it's possible the
++		 * counters-snapshotting records a positive value for the
++		 * overflowed event. Then the HW auto-reload mechanism
++		 * reset the counter to 0 immediately, because the
++		 * pebs_event_reset is cleared if the PERF_X86_EVENT_AUTO_RELOAD
++		 * is not set. The counter backwards may be observed in a
++		 * PMI handler.
++		 *
++		 * Since the event value has been updated when processing the
++		 * counters-snapshotting record, only needs to set the new
++		 * period for the counter.
++		 */
++		if (is_pebs_counter_event_group(event))
++			static_call(x86_pmu_set_period)(event);
++		else
++			intel_pmu_save_and_restart(event);
 +	}
-+
-+	if (unlikely(throttle && hwc->interrupts >= max_samples_per_tick)) {
-+		__this_cpu_inc(perf_throttled_count);
-+		tick_dep_set_cpu(smp_processor_id(), TICK_DEP_BIT_PERF_EVENTS);
-+		hwc->interrupts = MAX_INTERRUPTS;
-+		perf_log_throttle(event, 0);
-+		ret = 1;
- 	}
+ }
  
- 	if (event->attr.freq) {
+ static __always_inline void
