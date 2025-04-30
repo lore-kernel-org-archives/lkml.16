@@ -1,279 +1,176 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A242343CF
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB9825D1F7
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746018162; cv=none; b=sPOL9ZJqfFdd2Ygal/vuodfvbfYQeMoytS5X1EIf+9lOyD+lnObRlhSZrJpaMfPOgtz7GJgjv9U2/9GL6U+DQW/1xHm5iNXqaueVZIgUmpK17EU8QhHd2kdrohu65ZN6+mN2xTV7cJG/UVBRXOr1mar5ZpC7Dv6b8xQmcgAUlTk=
+	t=1746018166; cv=none; b=mkvPIdk5483uLEfbLh9+TxAOZsZsNUoebTIFKs8724Vwz0B7VLI7Khuz/30TZ2xyUknbDGKRN82j18hYNChUSuFltqvtnhkqBAKgQCBNJxD7TPFEzFSifc+Zyv5gM0hggQsyiZXWXwXkWrHIJ2J9EEzCw5Ta9DivBz7PlyZNbYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746018162; c=relaxed/simple;
-	bh=x2ti7/R5nDhd7tDM2yYsl6Li6KD9V2vS1surI/MyTMw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=sLJytg9nsDGmvyCmOlth5dqS3LDLKPqW4z7XDvCqKsKKniIbC5JIoAvgfCHHV9qvD5NgRbvPlBkUKf+vhwoeTSOzERAFY2OT303BPPNuTqLM1j2nQxzAtxggpi9hVaUcqXmFWrxl/wlrge+BMvZCiP9+hMmDhzZwX0tDnsR2Tqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d817cf6e72so9355265ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:02:39 -0700 (PDT)
+	s=arc-20240116; t=1746018166; c=relaxed/simple;
+	bh=9DUhpk2lmQbTIMq3KEpB/+7ggizBjRi+nmm8Z/B3rgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fhr2So2aPhtwKHcnmAz977Njt/FdiqKFOOJ/SkWo6GiOL8J8TIz+LeOUfRCUTK25CqC9vXDrYD/1NIn3t9CDyTsl5rxb45/oLxJPqb5LNmU7L1QE8aau/QR4Q9IMp9OA3gHTUNb2WCPDFBG3Jx9nzIaeq5CigB+VjXWvucN2Bxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=c4D1Olsn; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="c4D1Olsn"
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d9189e9a06so25234405ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:02:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746018162; x=1746622962; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vp0okNAQhGtn3j89G0GTNiN0i7XN6OEtooLucIvK78M=;
+        b=c4D1OlsnXBd2hR40p2rtyaN5Hc0YfYKbUQrlwOokGWwhybBfnX4KTmGaLoF4JLJ2SF
+         1VBy7TwX+AkqueGqz4wYFf/0Bz5gK0cvm3J/d2jh5EstHuo3kfW7vNIRLP3GWBxp8OXq
+         iKj1b4VADiKzn8I4ELCHw0HXXVhVXO39QYZ+B5WyP5pC/jKfUxzYZ+rh2JBc3eSbbTJj
+         jeLsEE3XZZQ9gefPVKJmnsDduGVskW8hpiKBSe827NBvHvShdJfwBW7EHtk7CK6Cgydr
+         b4nOi2tq72+ZFm0ghRjnoU/A/5NHgoudbGMFm4XmyTSfsbdkUR/IXjCvpr1rrVnU0+4k
+         FfHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746018159; x=1746622959;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hmOoeQf9gPzkDmiMisSnG7s0f6SHLuIsdiddQpOp3vM=;
-        b=po47XVfNMg7wpumSwAnuljFCa/oy5yj4Ik157h/E2SJ5+K7cMDzmm74xn51AzdETu8
-         FdWFqVPU7F5TyHtUDj7JmdQy/4AgBDW8qoG76lBbTFM9SVOWGE1fw8FB/fYXhk4m8q6r
-         soh+MBA6HKwRTJWwrYXiew5eCZwxxmVxb9PunHTW6OXzAksybKppCD6BLnmr84SotjGL
-         0UXvJW/0Fztc7vFzxayuOyrd/YoxiEuItREtUCOS8W93DbHV+lR4fmLEiidGkKbOEv+9
-         jkXyqbeciNrALRaArezp+Zrtec2y0arNLpAbLWyyKWS50vuvwKmREsGyiZRDKxR5sO8E
-         eofQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWapmzlQIj20RIxPrhRt/NDF1FNLb1FGX5l994lEfAajCrMYYvLViWkXnIi7LrV329aSIQcY5MkxT9i46U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk0xX0fBZ6ylopuHa0IARWGV/se5g89bUf53nNCf7tq5ExKulM
-	R4WtHwnOzPKgRcFi9faLV9SQXN2QXPwnM+Q/p2ZOFJHeni6j8v5pr0OUh+VjzG4vuo73poUN5rS
-	tJ/NaG4JJtUsGsSApIw7sq8A4BgIg5MkYSXjAXV4zvYqmtO/kX8+sxIo=
-X-Google-Smtp-Source: AGHT+IGWcJ9YH5i+42cHHNOMi/JmDtuM5N80ImmfT0BnlCFeXpfXN7ODPcasb/JJ6wxdcH4O0ruiTAy82WsY5JUmj3MDYNGL4fEu
+        d=1e100.net; s=20230601; t=1746018162; x=1746622962;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vp0okNAQhGtn3j89G0GTNiN0i7XN6OEtooLucIvK78M=;
+        b=DFDX4PBs76P1E9CyIrVGEtJWODweT9FG6rucpHYW07jM6ZMNajSwWs8ZFk7QRxzl4m
+         t8pGgk9festjYVPcneSkuFBiUGrrv/rM4HDZhaNSSdSfVkKIsKiM3/t98uHaDnemP6yZ
+         ZGOFr4qhQPD2r3QPM35Q0qylwXFzqx4k+RfsOC5emkkvqWTfvZ2P8uo062KLL6EjQd6H
+         1zm/wE21r3m7IyfrQbecUyflcBTYSqz89f0L+T9SKFVaP40ajQwmX95uQemd/u1qQjWX
+         Ax5Yswk1nTroQci1GiyMo1KltontRteTXyhT6bt8EUgFxxyJ+1mxyp4CZGaZTD4NeIgM
+         O0Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWq9uHpeRs5XV7SWUURLZLmkvqtC9DRKTMQMsn8/ubHCb8Ztje/VfJBJ4FvEZvj8nHOebsPqag+h2M4FVo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPWO9+vHYlI3s4fG1J094yrCna4LNCgNIodQy4aJkvkD/JHYhU
+	JViPPGAEeF4c5rWMJNLdPzVrzI8+96tNCrueMsM9rasqYipHKASAJeTTt3aFlQwbVCUVzzFoWLi
+	XwnaLJN1UAxCTMI+UrJifmQ89qBNAuhEZvIsi+A==
+X-Gm-Gg: ASbGnctVB8Ee9eAssFbD1/DKXaLyZOaREoVuyTVHIFzLI48PD/jIrbUsKyaDdsUlpwX
+	K3050GaR7d1FULYEO9WP6wluStV6z548WZ777bYohGw8VKyrO8kRzQdFEmE+jRSMvv/Wp8VkLtS
+	sjIdy0liRJPCEvnk52U++OS0k=
+X-Google-Smtp-Source: AGHT+IFltNG5LrzMPCK7C6LDg14PO7W7coDdcuUm278zKD9SLwj77Gzwt4AG6zeQBZfmymsMU1N87BYFfyazgTLsFRc=
+X-Received: by 2002:a05:6e02:188a:b0:3d8:975:b825 with SMTP id
+ e9e14a558f8ab-3d967fa1b89mr21495005ab.5.1746018162237; Wed, 30 Apr 2025
+ 06:02:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:de6:b0:3d2:af0b:6e2a with SMTP id
- e9e14a558f8ab-3d96792b52cmr21081175ab.5.1746018153312; Wed, 30 Apr 2025
- 06:02:33 -0700 (PDT)
-Date: Wed, 30 Apr 2025 06:02:33 -0700
-In-Reply-To: <66ec3506.050a0220.29194.002c.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68121f69.050a0220.14dd7d.0000.GAE@google.com>
-Subject: Re: [syzbot] [mm] INFO: rcu detected stall in shmem_fault (6)
-From: syzbot <syzbot+4145b11cdf925264bff4@syzkaller.appspotmail.com>
-To: akpm@linux-foundation.org, cgroups@vger.kernel.org, hughd@google.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, pasha.tatashin@soleen.com, 
-	syzkaller-bugs@googlegroups.com
+References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
+ <20250403112522.1566629-7-rkrcmar@ventanamicro.com> <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
+ <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com> <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
+ <D9J1TBKYC8YH.1OPUI289U0O2C@ventanamicro.com> <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
+ <D9J9DW53Q2GD.1PB647ISOCXRX@ventanamicro.com> <CAAhSdy0B-pF-jHmTXNYE7NXwdCWJepDtGR__S+P4MhZ1bfUERQ@mail.gmail.com>
+ <CAAhSdy20pq3KvbCeST=h+O5PWfs2E4uXpX9BbbzE7GJzn+pzkA@mail.gmail.com>
+ <D9JTZ6HH00KY.1B1SKH1Z0UI1S@ventanamicro.com> <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
+ <D9JY52BJEFX2.2S5XL9NOOGBS7@ventanamicro.com>
+In-Reply-To: <D9JY52BJEFX2.2S5XL9NOOGBS7@ventanamicro.com>
+From: Anup Patel <anup@brainfault.org>
+Date: Wed, 30 Apr 2025 18:32:31 +0530
+X-Gm-Features: ATxdqUEFxpf2kco5RCzE6InKYF1PowLSM7jupULrAjdgxCDaTJf8QVEmoaCDMJQ
+Message-ID: <CAAhSdy1xCRocu2uNri4iDm+NQd+VE8JRVeASfYJ8Qspr5aEz8g@mail.gmail.com>
+Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming runnable
+To: =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
+Cc: Anup Patel <apatel@ventanamicro.com>, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Atish Patra <atishp@atishpatra.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Andrew Jones <ajones@ventanamicro.com>, Mayuresh Chitale <mchitale@ventanamicro.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Apr 30, 2025 at 5:15=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcma=
+r@ventanamicro.com> wrote:
+>
+> 2025-04-30T15:47:13+05:30, Anup Patel <anup@brainfault.org>:
+> > On Wed, Apr 30, 2025 at 1:59=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rk=
+rcmar@ventanamicro.com> wrote:
+> >> 2025-04-30T10:56:35+05:30, Anup Patel <anup@brainfault.org>:
+> >> > On Wed, Apr 30, 2025 at 9:52=E2=80=AFAM Anup Patel <anup@brainfault.=
+org> wrote:
+> >> >> On Tue, Apr 29, 2025 at 9:51=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99=
+ <rkrcmar@ventanamicro.com> wrote:
+> >> >> > The point of this patch is to reset the boot VCPU, so we reset th=
+e VCPU
+> >> >> > that is made runnable by the KVM_SET_MP_STATE IOCTL.
+> >> >>
+> >> >> Like I said before, we don't need to do this. The initiating VCPU
+> >> >> can be resetted just before exiting to user space for system reset
+> >> >> event exit.
+> >>
+> >> You assume initiating VCPU =3D=3D boot VCPU.
+> >>
+> >> We should prevent KVM_SET_MP_STATE IOCTL for all non-initiating VCPUs =
+if
+> >> we decide to accept the assumption.
+> >
+> > There is no such assumption.
+>
+> You probably haven't intended it:
+>
+>   1) VCPU 0 is "chilling" in userspace.
+>   2) VCPU 1 initiates SBI reset.
+>   3) VCPU 1 makes a reset request to VCPU 0.
+>   4) VCPU 1 returns to userspace.
+>   5) Userspace knows it should reset the VM.
+>   6) VCPU 0 still hasn't entered KVM.
+>   7) Userspace sets the initial state of VCPU 0 and enters KVM.
+>   8) VCPU 0 is reset in KVM, because of the pending request.
+>   9) The initial boot state from userspace is lost.
+>
+> >> I'd rather choose a different design, though.
+> >>
+> >> How about a new userspace interface for IOCTL reset?
+> >> (Can be capability toggle for KVM_SET_MP_STATE or a straight new IOCTL=
+.)
+> >>
+> >> That wouldn't "fix" current userspaces, but would significantly improv=
+e
+> >> the sanity of the KVM interface.
+> >
+> > I believe the current implementation needs a few improvements
+> > that's all. We certainly don't need to introduce any new IOCTL.
+>
+> I do too.  The whole patch could have been a single line:
+>
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index d3d957a9e5c4..b3e6ad87e1cd 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -511,6 +511,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *=
+vcpu,
+>
+>         switch (mp_state->mp_state) {
+>         case KVM_MP_STATE_RUNNABLE:
+> +               kvm_riscv_reset_vcpu(vcpu);
+>                 WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
+>                 break;
+>         case KVM_MP_STATE_STOPPED:
+>
+> It is the backward compatibility and trying to fix current userspaces
+> that's making it ugly.  I already gave up on the latter, so we can have
+> a decently clean solution with the former.
+>
+> > Also, keep in mind that so far we have avoided any RISC-V
+> > specific KVM IOCTLs and we should try to keep it that way
+> > as long as we can.
+>
+> We can re-use KVM_SET_MP_STATE and add a KVM capability.
+> Userspace will opt-in to reset the VCPU through the existing IOCTL.
+>
+> This design will also allow userspace to trigger a VCPU reset without
+> tearing down the whole VM.
 
-HEAD commit:    8bac8898fe39 Merge tag 'mmc-v6.15-rc1' of git://git.kernel..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=156131b3980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9a25b7a36123454
-dashboard link: https://syzkaller.appspot.com/bug?extid=4145b11cdf925264bff4
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1390502f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13e4fecc580000
+Okay, lets go ahead with a KVM capability which user space can opt-in
+for KVM_SET_MP_STATE ioctl().
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-8bac8898.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2a76d594c0f5/vmlinux-8bac8898.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/dae09c25780d/bzImage-8bac8898.xz
+Keep in mind that at runtime Guest can still do CPU hotplug using SBI
+HSM start/stop and do system suspend using SBI SUSP so we should
+continue to have VCPU reset requests for both these SBI extensions.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+4145b11cdf925264bff4@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-0): P6103/1:b..l P6106/1:b..l P6104/1:b..l
-rcu: 	(detected by 0, t=10502 jiffies, g=24761, q=25 ncpus=1)
-task:syz-executor384 state:R  running task     stack:26008 pid:6104  tgid:6104  ppid:5332   task_flags:0x400040 flags:0x00004002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- preempt_schedule_common+0x83/0xd0 kernel/sched/core.c:6947
- preempt_schedule+0xae/0xc0 kernel/sched/core.c:6971
- preempt_schedule_thunk+0x16/0x30 arch/x86/entry/thunk.S:12
- __raw_spin_unlock include/linux/spinlock_api_smp.h:143 [inline]
- _raw_spin_unlock+0x3f/0x50 kernel/locking/spinlock.c:186
- spin_unlock include/linux/spinlock.h:391 [inline]
- finish_fault+0xd97/0x1020 mm/memory.c:5388
- do_read_fault mm/memory.c:5522 [inline]
- do_fault mm/memory.c:5652 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0x3666/0x5380 mm/memory.c:6140
- handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
- faultin_page mm/gup.c:1193 [inline]
- __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
- populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
- __mm_populate+0x24c/0x380 mm/gup.c:2032
- mm_populate include/linux/mm.h:3487 [inline]
- vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc94d0ef959
-RSP: 002b:00007ffed9bc6198 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 000000000005d4df RCX: 00007fc94d0ef959
-RDX: b635773f06ebbeee RSI: 0000000000b36000 RDI: 0000200000000000
-RBP: 0000000000000000 R08: ffffffffffffffff R09: 0000000000000000
-R10: 0000000000008031 R11: 0000000000000246 R12: 00007ffed9bc61dc
-R13: 00007ffed9bc6210 R14: 00007ffed9bc61f0 R15: 000000000000003c
- </TASK>
-task:dhcpcd-run-hook state:R  running task     stack:23928 pid:6106  tgid:6106  ppid:5016   task_flags:0x400000 flags:0x00004002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- preempt_schedule_notrace+0xd1/0x110 kernel/sched/core.c:7040
- preempt_schedule_notrace_thunk+0x16/0x30 arch/x86/entry/thunk.S:13
- rcu_is_watching+0x7f/0xb0 kernel/rcu/tree.c:737
- trace_lock_release include/trace/events/lock.h:69 [inline]
- lock_release+0x4b/0x3e0 kernel/locking/lockdep.c:5877
- rcu_lock_release include/linux/rcupdate.h:341 [inline]
- rcu_read_unlock include/linux/rcupdate.h:871 [inline]
- class_rcu_destructor include/linux/rcupdate.h:1155 [inline]
- unwind_next_frame+0x19a9/0x2390 arch/x86/kernel/unwind_orc.c:680
- arch_stack_walk+0x11c/0x150 arch/x86/kernel/stacktrace.c:25
- stack_trace_save+0x9c/0xe0 kernel/stacktrace.c:122
- kasan_save_stack+0x3e/0x60 mm/kasan/common.c:47
- kasan_record_aux_stack+0xbc/0xd0 mm/kasan/generic.c:548
- __call_rcu_common kernel/rcu/tree.c:3082 [inline]
- call_rcu+0x142/0x990 kernel/rcu/tree.c:3202
- ma_free_rcu lib/maple_tree.c:211 [inline]
- mas_free lib/maple_tree.c:1313 [inline]
- mas_topiary_replace lib/maple_tree.c:2584 [inline]
- mas_wmb_replace+0x209d/0x25f0 lib/maple_tree.c:2641
- mas_split lib/maple_tree.c:3368 [inline]
- mas_commit_b_node+0xa6e/0xf40 lib/maple_tree.c:3388
- mas_wr_bnode lib/maple_tree.c:4049 [inline]
- mas_wr_store_entry+0x510/0x2550 lib/maple_tree.c:4090
- mas_store_prealloc+0xb02/0xf60 lib/maple_tree.c:5475
- vma_iter_store_new mm/vma.h:455 [inline]
- vma_link+0x254/0x450 mm/vma.c:1754
- insert_vm_struct+0x2d0/0x3d0 mm/mmap.c:1357
- __install_special_mapping mm/mmap.c:1507 [inline]
- _install_special_mapping+0x1b0/0x350 mm/mmap.c:1543
- map_vdso+0x1ff/0x480 arch/x86/entry/vdso/vma.c:174
- load_elf_binary+0x1c85/0x27b0 fs/binfmt_elf.c:1277
- search_binary_handler fs/exec.c:1778 [inline]
- exec_binprm fs/exec.c:1810 [inline]
- bprm_execve+0x999/0x1440 fs/exec.c:1862
- do_execveat_common+0x510/0x6a0 fs/exec.c:1968
- do_execve fs/exec.c:2042 [inline]
- __do_sys_execve fs/exec.c:2118 [inline]
- __se_sys_execve fs/exec.c:2113 [inline]
- __x64_sys_execve+0x94/0xb0 fs/exec.c:2113
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7ff7677a0ef7
-RSP: 002b:00007ff76764ae78 EFLAGS: 00000246 ORIG_RAX: 000000000000003b
-RAX: ffffffffffffffda RBX: 00007ffc285c39b0 RCX: 00007ff7677a0ef7
-RDX: 0000557645b67700 RSI: 00007ffc285c3ea0 RDI: 000055761bc40df6
-RBP: 00007ff76764aff0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000008 R11: 0000000000000246 R12: 00007ffc285c3cc8
-R13: 00007ff76764af28 R14: 0000000000000000 R15: 0000000000000041
- </TASK>
-task:syz-executor384 state:R  running task     stack:26008 pid:6103  tgid:6103  ppid:5336   task_flags:0x400040 flags:0x00004002
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- preempt_schedule_irq+0xb5/0x150 kernel/sched/core.c:7090
- irqentry_exit+0x6f/0x90 kernel/entry/common.c:354
- asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-RIP: 0010:__sanitizer_cov_trace_cmp8+0x0/0x90 kernel/kcov.c:293
-Code: 7c 11 10 48 89 74 11 18 48 89 44 11 20 c3 cc cc cc cc cc 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <f3> 0f 1e fa 48 8b 04 24 65 48 8b 0c 25 08 40 75 92 65 8b 15 e8 7e
-RSP: 0018:ffffc9000d9d70a0 EFLAGS: 00000293
-RAX: ffffffff822c9a9b RBX: 0000000000000000 RCX: ffff88801f920000
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
-RBP: 0000000000000001 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: ffffffff822c998a R12: ffff888030e42f70
-R13: 0000000000000000 R14: 00000000000473cc R15: ffffea00011cf2f0
- __page_table_check_zero+0x1d6/0x510 mm/page_table_check.c:139
- page_table_check_alloc include/linux/page_table_check.h:33 [inline]
- post_alloc_hook+0x1eb/0x230 mm/page_alloc.c:1719
- prep_new_page mm/page_alloc.c:1726 [inline]
- get_page_from_freelist+0x21ce/0x22b0 mm/page_alloc.c:3688
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:4970
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2301
- folio_alloc_mpol_noprof+0x39/0x70 mm/mempolicy.c:2320
- shmem_alloc_folio mm/shmem.c:1854 [inline]
- shmem_alloc_and_add_folio+0x447/0xf60 mm/shmem.c:1893
- shmem_get_folio_gfp+0x597/0x15f0 mm/shmem.c:2533
- shmem_fault+0x179/0x390 mm/shmem.c:2734
- __do_fault+0x135/0x390 mm/memory.c:5098
- do_read_fault mm/memory.c:5518 [inline]
- do_fault mm/memory.c:5652 [inline]
- do_pte_missing mm/memory.c:4160 [inline]
- handle_pte_fault mm/memory.c:5997 [inline]
- __handle_mm_fault+0x363e/0x5380 mm/memory.c:6140
- handle_mm_fault+0x3f6/0x8c0 mm/memory.c:6309
- faultin_page mm/gup.c:1193 [inline]
- __get_user_pages+0x16f0/0x2a40 mm/gup.c:1491
- populate_vma_page_range+0x26b/0x340 mm/gup.c:1929
- __mm_populate+0x24c/0x380 mm/gup.c:2032
- mm_populate include/linux/mm.h:3487 [inline]
- vm_mmap_pgoff+0x3f0/0x4c0 mm/util.c:584
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fc94d0ef959
-RSP: 002b:00007ffed9bc6198 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 000000000005d4c4 RCX: 00007fc94d0ef959
-RDX: b635773f06ebbeee RSI: 0000000000b36000 RDI: 0000200000000000
-RBP: 0000000000000000 R08: ffffffffffffffff R09: 0000000000000000
-R10: 0000000000008031 R11: 0000000000000246 R12: 00007ffed9bc61dc
-R13: 00007ffed9bc6210 R14: 00007ffed9bc61f0 R15: 000000000000003c
- </TASK>
-rcu: rcu_preempt kthread timer wakeup didn't happen for 10501 jiffies! g24761 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402
-rcu: 	Possible timer handling issue on cpu=0 timer-softirq=26096
-rcu: rcu_preempt kthread starved for 10502 jiffies! g24761 f0x0 RCU_GP_WAIT_FQS(5) ->state=0x402 ->cpu=0
-rcu: 	Unless rcu_preempt kthread gets sufficient CPU time, OOM is now expected behavior.
-rcu: RCU grace-period kthread stack dump:
-task:rcu_preempt     state:I stack:27640 pid:16    tgid:16    ppid:2      task_flags:0x208040 flags:0x00004000
-Call Trace:
- <TASK>
- context_switch kernel/sched/core.c:5382 [inline]
- __schedule+0x16e2/0x4cd0 kernel/sched/core.c:6767
- __schedule_loop kernel/sched/core.c:6845 [inline]
- schedule+0x165/0x360 kernel/sched/core.c:6860
- schedule_timeout+0x12b/0x270 kernel/time/sleep_timeout.c:99
- rcu_gp_fqs_loop+0x301/0x1540 kernel/rcu/tree.c:2046
- rcu_gp_kthread+0x99/0x390 kernel/rcu/tree.c:2248
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-rcu: Stack dump where RCU GP kthread last ran:
-CPU: 0 UID: 0 PID: 1311 Comm: aoe_tx0 Not tainted 6.15.0-rc4-syzkaller-00040-g8bac8898fe39 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:152 [inline]
-RIP: 0010:_raw_spin_unlock_irqrestore+0xa8/0x110 kernel/locking/spinlock.c:194
-Code: 74 05 e8 8b e1 6e f6 48 c7 44 24 20 00 00 00 00 9c 8f 44 24 20 f6 44 24 21 02 75 4f f7 c3 00 02 00 00 74 01 fb bf 01 00 00 00 <e8> 73 63 38 f6 65 8b 05 5c e5 1c 07 85 c0 74 40 48 c7 04 24 0e 36
-RSP: 0018:ffffc900029cf740 EFLAGS: 00000206
-RAX: b3874e252c70ba00 RBX: 0000000000000a06 RCX: b3874e252c70ba00
-RDX: 0000000000000002 RSI: ffffffff8d749f9b RDI: 0000000000000001
-RBP: ffffc900029cf7d0 R08: ffffffff8f7ed377 R09: 1ffffffff1efda6e
-R10: dffffc0000000000 R11: fffffbfff1efda6f R12: dffffc0000000000
-R13: dffffc0000000000 R14: ffffffff99b4c6c0 R15: 1ffff92000539ee8
-FS:  0000000000000000(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f22234160d0 CR3: 0000000035bd2000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- spin_unlock_irqrestore include/linux/spinlock.h:406 [inline]
- uart_port_unlock_irqrestore include/linux/serial_core.h:786 [inline]
- uart_write+0x4cd/0xa40 drivers/tty/serial/serial_core.c:628
- handle_tx+0x23c/0x610 drivers/net/caif/caif_serial.c:222
- __netdev_start_xmit include/linux/netdevice.h:5203 [inline]
- netdev_start_xmit include/linux/netdevice.h:5212 [inline]
- xmit_one net/core/dev.c:3776 [inline]
- dev_hard_start_xmit+0x2ff/0x880 net/core/dev.c:3792
- __dev_queue_xmit+0x1adf/0x3a70 net/core/dev.c:4629
- dev_queue_xmit include/linux/netdevice.h:3350 [inline]
- tx+0x6b/0x190 drivers/block/aoe/aoenet.c:62
- kthread+0x1cd/0x3e0 drivers/block/aoe/aoecmd.c:1237
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+Regards,
+Anup
