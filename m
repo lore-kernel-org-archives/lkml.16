@@ -1,34 +1,32 @@
 Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id D7B9317BCE;
+	by smtp.subspace.kernel.org (Postfix) with SMTP id D7C5A156677;
 	Wed, 30 Apr 2025 03:27:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745983667; cv=none; b=iB6MuIx91jrPpiAfTWJLCN5qGETGOVsmHiBP+E4tn8FnVgmUVsPotWeONvsDviOzbXr0Vc+mRGTorKK0w298eR5jL4tYnkzxpksz0X/sZ23R3e4oPfZ4la3sQ8NgJsDiQ873SH0SgGmkqWeYNhYpygiby55cEY926F5VnJ6TkoI=
+	t=1745983667; cv=none; b=OyBkhkPNsrbclvRC2PiPWV91K16SxCq9hWG5abS3xABUCOad3Dc+CM37ih9nI7TG1kT1s5k2tCCHAfl38rV1kz8n+7jM+EGkU0kJMi853Gi8Tqzpqv50a5gD/RcYMMO1S4ZabBPjMy8+orhW1Rp9Ka3mtjNfCc2OFZxht8l5tr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745983667; c=relaxed/simple;
-	bh=TA/oaPhLaGpyOFSU6/CEZ4CaYsUYo367iaGcEsvtJSU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=TXHfnDD22p0emBlPGw0C+FouG2+rCWWhjk6Q/IN4jy0pQ3tuDSQhtTihq2A/r5cMXf9QHzaTORNU/D6SlPgaJnDmsO2YKdOHPSPzEy6Cio5HP0n5No5ISe5L5Nydy2tRWn9261F4Ph/B4ximQRrxUzCd6JAOo0UyFRT4CJPd6aw=
+	bh=RyqIkeyhzJuKKSXmPNNcxDLdS+h53puoWX0VpYlQiSA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:MIME-Version; b=gSSK1/8qWCd5DL+CjH/yvw4Uh6nffibp6mHXwftPNNzo3LmrEEyqVIbY2yWjRjHqmQFhCgkhjyvWBuzd1QtWlwQ5Sbr/O7E/Dv6OYO8c0m9CeNB9QKEi07+zdQq4MPAbUehdEpbJt9BWoceGfC52VpmURFSLrEPrm3ASbPQlP9s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
 Received: from longsh.shanghai.nfschina.local (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id C76576019013B;
-	Wed, 30 Apr 2025 11:27:38 +0800 (CST)
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 152716018E584;
+	Wed, 30 Apr 2025 11:27:40 +0800 (CST)
 X-MD-Sfrom: suhui@nfschina.com
 X-MD-SrcIP: 180.167.10.98
 From: Su Hui <suhui@nfschina.com>
-To: jstultz@google.com
-Cc: Su Hui <suhui@nfschina.com>,
+To: jstultz@google.com,
 	tglx@linutronix.de,
-	eahariha@linux.microsoft.com,
-	geert@linux-m68k.org,
-	anna-maria@linutronix.de,
-	ojeda@kernel.org,
+	sboyd@kernel.org
+Cc: Su Hui <suhui@nfschina.com>,
+	dan.carpenter@linaro.org,
 	linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH v3 1/3] time/jiffies: change register_refined_jiffies() to void __init
-Date: Wed, 30 Apr 2025 11:27:32 +0800
-Message-Id: <20250430032734.2079290-2-suhui@nfschina.com>
+Subject: [PATCH v3 3/3] alarmtimer: switch some spin_{lock,unlock}_irqsave() to guard()
+Date: Wed, 30 Apr 2025 11:27:34 +0800
+Message-Id: <20250430032734.2079290-4-suhui@nfschina.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20250430032734.2079290-1-suhui@nfschina.com>
 Precedence: bulk
@@ -39,56 +37,161 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-register_refined_jiffies() is only used in setup code and always return 0.
-Mark it to __init to save some bytes and change it to void.
+Using guard/scoped_guard() to simplify code. Using guard() to remove
+'goto unlock' label is neater especially.
 
 Signed-off-by: Su Hui <suhui@nfschina.com>
+Acked-by: John Stultz <jstultz@google.com>
 ---
-v2/v3:
- - No change. 
+v3:
+ - No Change.
 
- include/linux/jiffies.h | 2 +-
- kernel/time/jiffies.c   | 5 +----
- 2 files changed, 2 insertions(+), 5 deletions(-)
+v2:
+ - Remove some guard() usages acrodding to john's suggestions.
 
-diff --git a/include/linux/jiffies.h b/include/linux/jiffies.h
-index 0ea8c9887429..91b20788273d 100644
---- a/include/linux/jiffies.h
-+++ b/include/linux/jiffies.h
-@@ -59,7 +59,7 @@
- /* LATCH is used in the interval timer and ftape setup. */
- #define LATCH ((CLOCK_TICK_RATE + HZ/2) / HZ)	/* For divider */
- 
--extern int register_refined_jiffies(long clock_tick_rate);
-+extern void register_refined_jiffies(long clock_tick_rate);
- 
- /* TICK_USEC is the time between ticks in usec assuming SHIFTED_HZ */
- #define TICK_USEC ((USEC_PER_SEC + HZ/2) / HZ)
-diff --git a/kernel/time/jiffies.c b/kernel/time/jiffies.c
-index bc4db9e5ab70..34eeacac2253 100644
---- a/kernel/time/jiffies.c
-+++ b/kernel/time/jiffies.c
-@@ -75,13 +75,11 @@ struct clocksource * __init __weak clocksource_default_clock(void)
- 
- static struct clocksource refined_jiffies;
- 
--int register_refined_jiffies(long cycles_per_second)
-+void __init register_refined_jiffies(long cycles_per_second)
+ kernel/time/alarmtimer.c | 56 +++++++++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 33 deletions(-)
+
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index 621d39666e29..9f75aaf1ba35 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -70,12 +70,10 @@ static DEFINE_SPINLOCK(rtcdev_lock);
+  */
+ struct rtc_device *alarmtimer_get_rtcdev(void)
  {
- 	u64 nsec_per_tick, shift_hz;
- 	long cycles_per_tick;
+-	unsigned long flags;
+ 	struct rtc_device *ret;
  
--
--
- 	refined_jiffies = clocksource_jiffies;
- 	refined_jiffies.name = "refined-jiffies";
- 	refined_jiffies.rating++;
-@@ -100,5 +98,4 @@ int register_refined_jiffies(long cycles_per_second)
- 	refined_jiffies.mult = ((u32)nsec_per_tick) << JIFFIES_SHIFT;
+-	spin_lock_irqsave(&rtcdev_lock, flags);
++	guard(spinlock_irqsave)(&rtcdev_lock);
+ 	ret = rtcdev;
+-	spin_unlock_irqrestore(&rtcdev_lock, flags);
  
- 	__clocksource_register(&refined_jiffies);
--	return 0;
+ 	return ret;
  }
+@@ -83,7 +81,6 @@ EXPORT_SYMBOL_GPL(alarmtimer_get_rtcdev);
+ 
+ static int alarmtimer_rtc_add_device(struct device *dev)
+ {
+-	unsigned long flags;
+ 	struct rtc_device *rtc = to_rtc_device(dev);
+ 	struct platform_device *pdev;
+ 	int ret = 0;
+@@ -101,22 +98,21 @@ static int alarmtimer_rtc_add_device(struct device *dev)
+ 	if (!IS_ERR(pdev))
+ 		device_init_wakeup(&pdev->dev, true);
+ 
+-	spin_lock_irqsave(&rtcdev_lock, flags);
+-	if (!IS_ERR(pdev) && !rtcdev) {
+-		if (!try_module_get(rtc->owner)) {
++	scoped_guard(spinlock_irqsave, &rtcdev_lock) {
++		if (!IS_ERR(pdev) && !rtcdev) {
++			if (!try_module_get(rtc->owner)) {
++				ret = -1;
++				break;
++			}
++
++			rtcdev = rtc;
++			/* hold a reference so it doesn't go away */
++			get_device(dev);
++			pdev = NULL;
++		} else {
+ 			ret = -1;
+-			goto unlock;
+ 		}
+-
+-		rtcdev = rtc;
+-		/* hold a reference so it doesn't go away */
+-		get_device(dev);
+-		pdev = NULL;
+-	} else {
+-		ret = -1;
+ 	}
+-unlock:
+-	spin_unlock_irqrestore(&rtcdev_lock, flags);
+ 
+ 	platform_device_unregister(pdev);
+ 
+@@ -198,7 +194,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
+ 	struct alarm *alarm = container_of(timer, struct alarm, timer);
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+ 
+-	scoped_guard (spinlock_irqsave, &base->lock)
++	scoped_guard(spinlock_irqsave, &base->lock)
+ 		alarmtimer_dequeue(base, alarm);
+ 
+ 	if (alarm->function)
+@@ -251,9 +247,8 @@ static int alarmtimer_suspend(struct device *dev)
+ 		struct timerqueue_node *next;
+ 		ktime_t delta;
+ 
+-		spin_lock_irqsave(&base->lock, flags);
+-		next = timerqueue_getnext(&base->timerqueue);
+-		spin_unlock_irqrestore(&base->lock, flags);
++		scoped_guard(spinlock_irqsave, &base->lock)
++			next = timerqueue_getnext(&base->timerqueue);
+ 		if (!next)
+ 			continue;
+ 		delta = ktime_sub(next->expires, base->get_ktime());
+@@ -381,13 +376,11 @@ EXPORT_SYMBOL_GPL(alarm_start_relative);
+ void alarm_restart(struct alarm *alarm)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+-	unsigned long flags;
+ 
+-	spin_lock_irqsave(&base->lock, flags);
++	guard(spinlock_irqsave)(&base->lock);
+ 	hrtimer_set_expires(&alarm->timer, alarm->node.expires);
+ 	hrtimer_restart(&alarm->timer);
+ 	alarmtimer_enqueue(base, alarm);
+-	spin_unlock_irqrestore(&base->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(alarm_restart);
+ 
+@@ -401,14 +394,13 @@ EXPORT_SYMBOL_GPL(alarm_restart);
+ int alarm_try_to_cancel(struct alarm *alarm)
+ {
+ 	struct alarm_base *base = &alarm_bases[alarm->type];
+-	unsigned long flags;
+ 	int ret;
+ 
+-	spin_lock_irqsave(&base->lock, flags);
+-	ret = hrtimer_try_to_cancel(&alarm->timer);
+-	if (ret >= 0)
+-		alarmtimer_dequeue(base, alarm);
+-	spin_unlock_irqrestore(&base->lock, flags);
++	scoped_guard(spinlock_irqsave, &base->lock) {
++		ret = hrtimer_try_to_cancel(&alarm->timer);
++		if (ret >= 0)
++			alarmtimer_dequeue(base, alarm);
++	}
+ 
+ 	trace_alarmtimer_cancel(alarm, base->get_ktime());
+ 	return ret;
+@@ -479,7 +471,6 @@ EXPORT_SYMBOL_GPL(alarm_forward_now);
+ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+ {
+ 	struct alarm_base *base;
+-	unsigned long flags;
+ 	ktime_t delta;
+ 
+ 	switch(type) {
+@@ -498,13 +489,12 @@ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
+ 
+ 	delta = ktime_sub(absexp, base->get_ktime());
+ 
+-	spin_lock_irqsave(&freezer_delta_lock, flags);
++	guard(spinlock_irqsave)(&freezer_delta_lock);
+ 	if (!freezer_delta || (delta < freezer_delta)) {
+ 		freezer_delta = delta;
+ 		freezer_expires = absexp;
+ 		freezer_alarmtype = type;
+ 	}
+-	spin_unlock_irqrestore(&freezer_delta_lock, flags);
+ }
+ 
+ /**
 -- 
 2.30.2
 
