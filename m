@@ -1,42 +1,54 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723CBC148;
-	Wed, 30 Apr 2025 19:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD171E1E0C;
+	Wed, 30 Apr 2025 19:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039753; cv=none; b=tNxJ8SHjVltEKD8i8MhJMzSo9nV96UD4ARhkqMMwlGkcUZhwcKowjzl5ydWAEMHPZTL+bJn5YN3xIpj5/6jCogSmWYYv6i7NLY1D7ew0KHEL8RV/CRZ9eOOqHJXzuXPu5GnamtLTEjJYEVlEGTBl3Y5LjPim/hX9tr5/cZIW/MI=
+	t=1746039829; cv=none; b=mckWoyLrzDWwL3UzDUuUOT9BoA6MY36XsS2rbWAoDO1dFxGltYQtmnix9shdpANH+/avjTGA3Vq3+H5Yn2wFZqsAvUCzIhaE48crYbPG+/F17jqwVKIBmQs3j323sEMFK2XsEsUJCNwIaODHl1yOPHZ4NvIS4D97X8gD/08frgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039753; c=relaxed/simple;
-	bh=v6OGLN/7JlkVPA3m/u0loXZ2gAuaERKROs8ylRl3wjk=;
+	s=arc-20240116; t=1746039829; c=relaxed/simple;
+	bh=7PlAl5GrsC56vg7MmjldnKQvgVZMamAl/DYAPIwwgdI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fDIKgsWz4G4U3z7feozQCRURRRfOkZX4SiZ4x3niEp5qMvCe+aIVo7YPr731xYIDtuHuGUBLBCssX0lQnKFtfVyeISS5omJWisFKAMTQ7XoUMW93YJd9uJEbFk7cHbRs9yh+X/GliS2rKWKCM+vJBSbnB3xbiPd9Tld1pCs9GrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYbsV/7d; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qcOjSQTGqRrhytjBOHSRXVNitLD17bq8EimyzydqjhfyTlYqvJBLKbQK/+bbsuPbpZhXKVn0YWctAnwRij54cBNNAXGndzBKQ+Pe/TiKA+H2pBFnUgjuVfWzhrE1bGewYOIUxkNunLA7D5bBXvb+DxBqkEnmuTI6Uvgv90MR7ww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=b6yvpT8q; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYbsV/7d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F73C4CEE7;
-	Wed, 30 Apr 2025 19:02:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746039751;
-	bh=v6OGLN/7JlkVPA3m/u0loXZ2gAuaERKROs8ylRl3wjk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZYbsV/7d9QLIUK4pfM2HYn+hr9xB1NgDiYHaUYb/43zeKkStR2udlqrEoM7h/7OWe
-	 G+z7a3AXpNT5VpSsE7EtDn1hg9TH7u/F+Z/WsYJHUEqB2SN/NEPccXVvBv6Ywxy+A5
-	 1HCgSr+YNcVHaZYPPqxR5DpktNwITESYdC+GKKEoKr5QTNnKY8ihrmxcV+N3Wof1T7
-	 3+nZAPeb3WGAbrIlO0Dg/mcjFUWa/MaOfYAxIry4HHbCAXK1AIE1isEpsULs4sJCPQ
-	 TSLcWXnJ7Lp8i9KHTZ35btlW9LeIMKV99hx5DVsWHhKbO++8xSmXjZwCSMPkKbE9WS
-	 4guLofJKfqpHQ==
-Date: Wed, 30 Apr 2025 12:02:29 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] btrfs: compression: Adjust cb->compressed_folios
- allocation type
-Message-ID: <202504301201.824ADC93A@keescook>
-References: <20250426062328.work.065-kees@kernel.org>
- <4dd1e595-21c2-4a6c-a7b9-e7c945d3a7a2@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b6yvpT8q"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=4eoS1/JAdmLl2q5sTbw4/3ulNP/0LFxVs4HLw+j+3nY=; b=b6yvpT8qjSWgIETd+HWyaFKyRU
+	GkQfulCHdD95orhMFtJowoz4ejB+4yvZxu2zBb4bVIHhjv9f5nn5i8SzGBJLDwNafuRLu0LSo4blF
+	07ul778ewuftqGYQSK8vdZPG1Q+2YqukAPT+MRPAbvjUZkT+Nl7cpsjV8tv7eB7q0VdkQKq2bCAlk
+	d2R/TjPnNt6Dhv1/XyvCjWEMPzbYy2U5yq7MzioVwr2XU++22Z4G7qirbegL0HwTtcbfjwGcIap62
+	53atdozDyM9o6OiLBpAWvkWHKU7J9yski8Q8v9W831s2oNjSk7GgglmOKHRum1Qg0r0U8F8xwhHoN
+	m6mmdaJw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uACiP-0000000DpFF-3wgw;
+	Wed, 30 Apr 2025 19:03:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 30285300642; Wed, 30 Apr 2025 21:03:29 +0200 (CEST)
+Date: Wed, 30 Apr 2025 21:03:28 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
+	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-efi@vger.kernel.org, samitolvanen@google.com,
+	ojeda@kernel.org
+Subject: Re: [PATCH v2 13/13] objtool: Validate kCFI calls
+Message-ID: <20250430190328.GO4439@noisy.programming.kicks-ass.net>
+References: <20250430110734.392235199@infradead.org>
+ <20250430112350.443414861@infradead.org>
+ <u4v64j3wgdml5zkij43lcksknhpoaqs3jmrm5udejrg75dl2ny@x4jexlz64amd>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,46 +57,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4dd1e595-21c2-4a6c-a7b9-e7c945d3a7a2@embeddedor.com>
+In-Reply-To: <u4v64j3wgdml5zkij43lcksknhpoaqs3jmrm5udejrg75dl2ny@x4jexlz64amd>
 
-On Sat, Apr 26, 2025 at 12:55:21AM -0600, Gustavo A. R. Silva wrote:
+On Wed, Apr 30, 2025 at 08:59:53AM -0700, Josh Poimboeuf wrote:
+> On Wed, Apr 30, 2025 at 01:07:47PM +0200, Peter Zijlstra wrote:
+> > +	case ANNOTYPE_NOCFI:
+> > +		sym = insn->sym;
+> > +		if (!sym) {
+> > +			ERROR_INSN(insn, "dodgy NOCFI annotation");
+> > +			break;
 > 
-> 
-> On 26/04/25 00:23, Kees Cook wrote:
-> > In preparation for making the kmalloc family of allocators type aware,
-> > we need to make sure that the returned type from the allocation matches
-> > the type of the variable being assigned. (Before, the allocator would
-> > always return "void *", which can be implicitly cast to any pointer type.)
-> > 
-> > The assigned type is "struct folio **" but the returned type will be
-> > "struct page **". These are the same allocation size (pointer size), but
-> > the types don't match. Adjust the allocation type to match the assignment.
-> > 
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Chris Mason <clm@fb.com>
-> > Cc: Josef Bacik <josef@toxicpanda.com>
-> > Cc: David Sterba <dsterba@suse.com>
-> > Cc: <linux-btrfs@vger.kernel.org>
-> > ---
-> >   fs/btrfs/compression.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-> > index e7f8ee5d48a4..7f11ef559be6 100644
-> > --- a/fs/btrfs/compression.c
-> > +++ b/fs/btrfs/compression.c
-> > @@ -606,7 +606,7 @@ void btrfs_submit_compressed_read(struct btrfs_bio *bbio)
-> >   	free_extent_map(em);
-> >   	cb->nr_folios = DIV_ROUND_UP(compressed_len, PAGE_SIZE);
-> > -	cb->compressed_folios = kcalloc(cb->nr_folios, sizeof(struct page *), GFP_NOFS);
-> > +	cb->compressed_folios = kcalloc(cb->nr_folios, sizeof(struct folio *), GFP_NOFS);
-> 
-> Why not `sizeof(*cb->compressed_folios)` as in other patches? :)
+> return -1;
 
-I generally trying to match the coding style of each instance, though
-sometimes it wasn't possible. Here, since a type is named for the
-sizeof(), I followed that style.
+Oh right.
 
--- 
-Kees Cook
+> > +	/*
+> > +	 * kCFI call sites look like:
+> > +	 *
+> > +	 *     movl $(-0x12345678), %r10d
+> > +	 *     addl -4(%r11), %r10d
+> > +	 *     jz 1f
+> > +	 *     ud2
+> > +	 *  1: cs call __x86_indirect_thunk_r11
+> > +	 *
+> > +	 * Verify all indirect calls are kCFI adorned by checking for the
+> > +	 * UD2. Notably, doing __nocfi calls to regular (cfi) functions is
+> > +	 * broken.
+> > +	 */
+> > +	list_for_each_entry(insn, &file->retpoline_call_list, call_node) {
+> > +		struct symbol *sym = insn->sym;
+> > +
+> > +		if (sym && sym->type == STT_FUNC && !sym->nocfi) {
+> > +			struct instruction *prev =
+> > +				prev_insn_same_sym(file, insn);
+> > +
+> > +			if (!prev || prev->type != INSN_BUG) {
+> > +				WARN_INSN(insn, "no-cfi indirect call!");
+> > +				warnings++;
+> 
+> Do we not care about indirect calls from !STT_FUNC?
+
+Let me try, see what happens.
