@@ -1,145 +1,103 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2EB519048A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:54:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5543E19048A;
+	Wed, 30 Apr 2025 09:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006879; cv=none; b=OkPpku3gw41fPK9SY5PpeO35tGnpU01sW1O9vjtivUqtVoGZgO296oOvMJ06m971HWgI6JI4FnQSUb7nkbg31LQkOtLJdTD5v0GNew7KAAEEVQc9jKfSia74OE2Cev1DrkWZS7eauz51XuJffwnOufUprQk6q9EzjL9myz095xI=
+	t=1746006982; cv=none; b=k4LLR9ePyoniAQ83+ZThaArb+oUX/GssTneHLJplbGIjjP3FDQSg0+s2SYLjqaOlJEmzlKsS9Zl9zPI4jlvdjyXxsZBWRNN3tF8k5UVcevw4+icmqtlEbiURXETGwCys52I+i4KRFRmIP/aHOgG84c/6UuCM/Lmjv/ofzaGURqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006879; c=relaxed/simple;
-	bh=OPZigiWpxwHv1lnOkpeezwZwtsRjjBDFCG5NyXPV4cw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tsOWzcUdOZrQJDi2kP93WqlVqh64VgDRrBLMCoRe9UXf8CRsfs43TdsMmoIBuwjxSZxecb3RpD1azloP/oRhHe9Fej2ZO0rVr7RDUJP46+APLuxjYJoJ5OL4BmobiPk7HIMyuL8YxJYgRdG3UXKp5BFzIYV+WN5unCPIxpyRia4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=fXiVsn/S; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="fXiVsn/S"
-Message-ID: <2d86bf48-6588-4051-8eb8-30bd4e1a34ca@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746006864;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QbLQyfbFYW96SBXE2wDxy7CIZhwc9mKxQpduRfQsUX4=;
-	b=fXiVsn/SnD01eZr6ljJuAh/mBiFOY+JikmiV1F9soSKz418wlLMGa6KUBIkhCF952LU+yZ
-	RXj477ysmHZd4Fc9jb+rXKolte8iCJHTk1DfqIMQvvGGPfmn4irweA//UKh1dM9taHSMnN
-	LXslZ6zPp5r21G7PndrEJ34zMWxdbUA=
-Date: Wed, 30 Apr 2025 10:54:20 +0100
+	s=arc-20240116; t=1746006982; c=relaxed/simple;
+	bh=NnGrytTwTZHQleCYZ8rAXg134++vlxbWC85ARLru5Eo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=F4LquosavSDFbNY739mTbGJQz4lIw8k3HbPq9dpBQt3L0kqzJpcshPNaFVA9WoZ6YcTyztRws9OnkfuLPpcgMS3Zj1GLOrn1KgL9j4vJCgCrWtcyhT7Bau9Jb2Ol1/0qw8FgQbKsOx0F/o0PqB7Al6upse839S1+mRzRtnKEZFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.44])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZnXf208G3z27hV7;
+	Wed, 30 Apr 2025 17:56:58 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6C11F140295;
+	Wed, 30 Apr 2025 17:56:13 +0800 (CST)
+Received: from [10.174.178.209] (10.174.178.209) by
+ kwepemg500010.china.huawei.com (7.202.181.71) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 30 Apr 2025 17:56:12 +0800
+Message-ID: <8f76ec4f-fb8e-46cf-b59f-ef95c500a85a@huawei.com>
+Date: Wed, 30 Apr 2025 17:56:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs
- operations
-To: Sagi Maimon <maimon.sagi@gmail.com>, jonathan.lemon@gmail.com,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
- Sagi Maimon <sagi.maimon@adtran.com>
-References: <20250429073320.33277-1-maimon.sagi@gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <20250429073320.33277-1-maimon.sagi@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] overlayfs: fix potential NULL pointer dereferences in
+ file handle code
+To: Miklos Szeredi <miklos@szeredi.hu>
+CC: <amir73il@gmail.com>, <linux-unionfs@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>, <yangerkun@huawei.com>
+References: <20250429001308.370040-1-wangzhaolong1@huawei.com>
+ <CAJfpegvKvHwU69F0wazk_TyrKPCcrcVU+Z+5=UNpg29CJGH84w@mail.gmail.com>
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+In-Reply-To: <CAJfpegvKvHwU69F0wazk_TyrKPCcrcVU+Z+5=UNpg29CJGH84w@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On 29/04/2025 08:33, Sagi Maimon wrote:
-> From: Sagi Maimon <sagi.maimon@adtran.com>
-> 
-> On Adva boards, SMA sysfs store/get operations can call
-> __handle_signal_outputs() or __handle_signal_inputs() while the `irig`
-> and `dcf` pointers are uninitialized, leading to a NULL pointer
-> dereference in __handle_signal() and causing a kernel crash. Adva boards
-> don't use `irig` or `dcf` functionality, so add Adva-specific callbacks
-> `ptp_ocp_sma_adva_set_outputs()` and `ptp_ocp_sma_adva_set_inputs()` that
-> avoid invoking `irig` or `dcf` input/output routines.
-> 
-> Fixes: ef61f5528fca ("ptp: ocp: add Adva timecard support")
-> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
-> ---
-> Addressed comments from Vadim Fedorenko:
->   - https://www.spinics.net/lists/kernel/msg5659845.html
-> Changes since v1:
->   - Remove unused `irig` and `dcf` code.
-> ---
-> ---
->   drivers/ptp/ptp_ocp.c | 52 +++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 50 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
-> index faf6e027f89a..2ccdca4f6960 100644
-> --- a/drivers/ptp/ptp_ocp.c
-> +++ b/drivers/ptp/ptp_ocp.c
-> @@ -2578,12 +2578,60 @@ static const struct ocp_sma_op ocp_fb_sma_op = {
->   	.set_output	= ptp_ocp_sma_fb_set_output,
->   };
->   
-> +static int
-> +ptp_ocp_sma_adva_set_output(struct ptp_ocp *bp, int sma_nr, u32 val)
-> +{
-> +	u32 reg, mask, shift;
-> +	unsigned long flags;
-> +	u32 __iomem *gpio;
-> +
-> +	gpio = sma_nr > 2 ? &bp->sma_map1->gpio2 : &bp->sma_map2->gpio2;
-> +	shift = sma_nr & 1 ? 0 : 16;
-> +
-> +	mask = 0xffff << (16 - shift);
-> +
-> +	spin_lock_irqsave(&bp->lock, flags);
-> +
-> +	reg = ioread32(gpio);
-> +	reg = (reg & mask) | (val << shift);
-> +
-> +	iowrite32(reg, gpio);
-> +
-> +	spin_unlock_irqrestore(&bp->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +ptp_ocp_sma_adva_set_inputs(struct ptp_ocp *bp, int sma_nr, u32 val)
-> +{
-> +	u32 reg, mask, shift;
-> +	unsigned long flags;
-> +	u32 __iomem *gpio;
-> +
-> +	gpio = sma_nr > 2 ? &bp->sma_map2->gpio1 : &bp->sma_map1->gpio1;
-> +	shift = sma_nr & 1 ? 0 : 16;
-> +
-> +	mask = 0xffff << (16 - shift);
-> +
-> +	spin_lock_irqsave(&bp->lock, flags);
-> +
-> +	reg = ioread32(gpio);
-> +	reg = (reg & mask) | (val << shift);
-> +
-> +	iowrite32(reg, gpio);
-> +
-> +	spin_unlock_irqrestore(&bp->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
->   static const struct ocp_sma_op ocp_adva_sma_op = {
->   	.tbl		= { ptp_ocp_adva_sma_in, ptp_ocp_adva_sma_out },
->   	.init		= ptp_ocp_sma_fb_init,
->   	.get		= ptp_ocp_sma_fb_get,
-> -	.set_inputs	= ptp_ocp_sma_fb_set_inputs,
-> -	.set_output	= ptp_ocp_sma_fb_set_output,
-> +	.set_inputs	= ptp_ocp_sma_adva_set_inputs,
-> +	.set_output	= ptp_ocp_sma_adva_set_output,
->   };
->   
->   static int
 
-LGTM,
-Reviewed-by: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+
+Thank you for your valuable feedback.
+
+> On Tue, 29 Apr 2025 at 02:13, Wang Zhaolong <wangzhaolong1@huawei.com> wrote:
+>>
+>> Several locations in overlayfs file handle code fail to check if a file
+>> handle pointer is NULL before accessing its members. A NULL file handle
+>> can occur when the lower filesystem doesn't support export operations,
+>> as seen in ovl_get_origin_fh() which explicitly returns NULL in this case.
+> 
+> Have you tried to trigger these conditions?
+> 
+> If you find a bug by code inspection, try to recreate it, by that you
+> can also verify that the patch works.  If you cannot reproduce it, at
+> least prove that triggering the bug is possible.
+> 
+> Without a proof the patch may turn out to do nothing at best and
+> introduce new bugs at worst.
+> 
+
+I haven't yet been able to reproduce these conditions in a live environment.
+
+My analysis started when I noticed the inconsistency in ovl_set_origin_fh()
+where it accesses fh->buf without checking if fh is NULL, but then immediately
+checks "fh ?" in the next parameter. Following the code paths, I found that
+ovl_get_origin_fh() can explicitly return NULL when the lower filesystem
+doesn't support export operations.
+
+>>
+>> The following locations are vulnerable to NULL pointer dereference:
+>>
+>> 1. ovl_set_origin_fh() accesses fh->buf without checking if fh is NULL
+> 
+> Hint: fh->buf is equivalent to &fh->buf in this case, the latter
+> obviously not being a dereference.
+> 
+>> 2. ovl_verify_fh() uses fh->fb members without NULL check
+>> 3. ovl_get_index_name_fh() accesses fh->fb.len without NULL check
+> 
+> These are called in the "index=on" case, which verifies at mount time
+> that all layers support file handles.
+> 
+> Thanks,
+> Miklos
+
+Thank you for pointing out that. I'll work on creating test cases to verify
+whether these NULL dereferences can actually occur in practice.
+
+Thanks again for the guidance.
+
+Regards,
+Wang Zhaolong
+
