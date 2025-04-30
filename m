@@ -1,120 +1,61 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9951B87E8;
-	Wed, 30 Apr 2025 19:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9FF19F11B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:36:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746041588; cv=none; b=BnDujpeDKleFs5NkLYuXa7o0E70A8lrcifBwSMGTqqGxu+WAVSCMP07KkRgEiTuhXatEVA5xAhy6/O08UBVevn8ARRQlQ0jalhQur3b2AVIMnkiR7OXMY8qKQf4V+Hd6W3e9mJmgAHeEfcMVNf5tEc7L99oU8h1v3B9bZGIrLHU=
+	t=1746041763; cv=none; b=eKQv0GCpAZ2J2ndn97/bGKYoiByjCigQqkP6fz7HU3mNj4XXaXDRYEBoCHg5R1xKJYosezZDZCy2k3ZNJer0vNn46VDZAA38fjtjlQVa2mbUqIYqrKxOZOG0I1WqNVxguYW23WbKPNxV3qqNfETdhBdVcdCJ1RDQp7gZHqfk65A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746041588; c=relaxed/simple;
-	bh=NgCpYyhisR+eT14JahIMfINyl+OmdqYb/Aau9YB7T6c=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=APKKksCnk6Z1HRMCGeGi2TiIJEvwXZ7sCD6HKzfrWZ4ADTh85PaE08IgfyX14cM1e7Kk1pWI9HxdUWAMFp/gBYcCsUoUZso6icUsrDkiNeH3pVAaq0mDRpm5QcoiGjm65jZwJzISI6LDxhfHC1gCOEO60XZNjKwBaTbviC+7RtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nmrpDyUH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HutCrlPC; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746041763; c=relaxed/simple;
+	bh=VKBACTm3rLlga04gA2R7WrNWXUzo22seS903vbgz8k0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jpKPEOdC/l2wK1uTzO71eiVUghEtRz7A13mzIb3vO7YN38ms10EcYVQYiaBgSs1+8c/BeIhTAHL51ggoWqBLJoAU64zJuidWsnpcpnnK6sLPa8LFCwQesw8lHdc+uJFqLzMuLR0KNRNAXwoXuhZb9DZfFi0DRZ0VEZEAM+u5Dcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=csttqmiJ; arc=none smtp.client-ip=95.215.58.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nmrpDyUH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HutCrlPC"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746041584;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="csttqmiJ"
+Date: Wed, 30 Apr 2025 15:35:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746041749;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/YyscSAqwZBgtqXLx1SsF2waKn2TwCC0qIe2pJzuSGk=;
-	b=nmrpDyUH7fggWHS/REurepWbQ/wOb99mLz8imaLQvfUrUHHzVw7Innd1Y+sWzkpr61UDDF
-	/DwYtzY9Q5Gdubyebu9/W3OaffBmNhjFcPX1vNC+tC7HWeR9CKPAzbmXPDGkbbE6zRkKxP
-	IsYwpuDYEgQ1tVrvOvNO/PCuDvnpKaiFh4wNuCX9tNiC50ixwHHBNPr4v4TzsY8RdZipxq
-	Tvm9ootQvEXE/G3985aKmxdAWpLN+GsjAZA3MZvFreMOVFQpHuDnN1FLBxRW5X5ksmRf0d
-	jGvl8jvnQ3uXWksTTnIAs00duU6TozHVBVKjpyw589ZsrPC7My7KJIfyPt2tMg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746041584;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/YyscSAqwZBgtqXLx1SsF2waKn2TwCC0qIe2pJzuSGk=;
-	b=HutCrlPCqLxZRtWb2P+1P1aZ2O+umglvdkq8Xl/a7pJgk4Gkq+H+K8t6X0yDSmcKf1EW/r
-	eoBRAUWv11/cWADA==
-To: Roman Kisel <romank@linux.microsoft.com>, ardb@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, decui@microsoft.com,
- dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
- imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com, jgross@suse.com,
- justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
- kys@microsoft.com, lenb@kernel.org, mingo@redhat.com, nikunj@amd.com,
- papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
- rafael@kernel.org, romank@linux.microsoft.com, russ.anderson@hpe.com,
- steve.wahl@hpe.com, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
- tony.luck@intel.com, wei.liu@kernel.org, xin@zytor.com,
- yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v2] arch/x86: Provide the CPU number in the
- wakeup AP callback
-In-Reply-To: <20250430161413.276759-1-romank@linux.microsoft.com>
-References: <20250430161413.276759-1-romank@linux.microsoft.com>
-Date: Wed, 30 Apr 2025 21:33:03 +0200
-Message-ID: <87cyctphqo.ffs@tglx>
+	bh=by7iT1Lkxuic4hLl3vZg4XTvPyRtN1erZjBAaEQxpvQ=;
+	b=csttqmiJbbLNzTNs9KXlja/4IeptEJYrpbW5t5yXxpj6YMDg7iNnHA2c5Zw/g67T0nMKNY
+	E8zXYDrhyoukw/RhEQ9M4ubCIX8ZfHSWzDJPLdHUfbmaLS7FGT+TPjdkj/R9Zch/U6w7ym
+	CUJ7D7awJWqnIS3/XCQRVweILvF6GEk=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2][next] bcachefs: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <zn74qlanwd3b4wmyecn7ostb6i42ceycaa2myijimfsrs3eglc@tsgoa3zbe6ue>
+References: <aBJ4WVcvHv9sD1K6@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBJ4WVcvHv9sD1K6@kspp>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 30 2025 at 09:14, Roman Kisel wrote:
-> -static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
-> +static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, int cpu)
+On Wed, Apr 30, 2025 at 01:22:01PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Refactor a couple of structs that contain flexible arrays in the
+> middle by replacing them with unions.
+> 
+> So, with these changes, fix the following warnings:
+> 
+> fs/bcachefs/disk_accounting.c:429:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> fs/bcachefs/ec_types.h:8:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-unsigned int cpu please. There are no negative CPU numbers yet :)
-
->  {
->  	struct sev_es_save_area *cur_vmsa, *vmsa;
->  	struct ghcb_state state;
-> @@ -1187,7 +1187,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->  	unsigned long flags;
->  	struct ghcb *ghcb;
->  	u8 sipi_vector;
-> -	int cpu, ret;
-> +	int ret;
->  	u64 cr4;
->  
->  	/*
-> @@ -1208,15 +1208,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->  
->  	/* Override start_ip with known protected guest start IP */
->  	start_ip = real_mode_header->sev_es_trampoline_start;
-> -
-> -	/* Find the logical CPU for the APIC ID */
-> -	for_each_present_cpu(cpu) {
-> -		if (arch_match_cpu_phys_id(cpu, apic_id))
-> -			break;
-> -	}
-> -	if (cpu >= nr_cpu_ids)
-> -		return -EINVAL;
-> -
-
-I just looked what arch_match_cpu_phys_id() actually does and I couldn't
-help myself to get a fit of laughter. x86 uses the weak default function
-in drivers/of/cpu.c:
-
-bool __weak arch_match_cpu_phys_id(int cpu, u64 phys_id)
-{
-	return (u32)phys_id == cpu;
-}
-
-So this loop is the most convoluted way to write:
-
-       cpu = apic_id;
-
-which is valid because the to be started CPU must be present, no?
-
-I'm not opposed against the CPU number argument per se, but the
-justification for it is dubious at best.
-
-Thanks,
-
-        tglx
+Applied. Presumably you only need this in 6.16?
