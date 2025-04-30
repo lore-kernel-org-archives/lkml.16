@@ -1,185 +1,158 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2060.outbound.protection.outlook.com [40.107.223.60])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4EB25A358;
-	Wed, 30 Apr 2025 15:04:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025494; cv=fail; b=cEJGXRViSpIDGkWEHFLrdP7Wc2kXfQsCDl4neaS50h8y6/lK3hmLIKdB3gEBBqc2zcQpkmvKODAK4H1kn9OR5zZ573vjqN56AVeK2+OZ2Cl63jkxjtKYtc5iyIlqHMBXYOk+Wy8pa9fT7u8Nf6qCVRZkQ9OIRTCB0at6d5e14+Y=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025494; c=relaxed/simple;
-	bh=+aJQixf9eEZfL/rGr7adeCHyyt1r9ixBO0e7iI/KOd8=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=Mvjjr4Zje53u401ZkPX+JV1YGYXQmGM9BeHMao6dDhCLfbkViucl6CdonQypVuhYHpmTMWENrfsk+q1Ow8unI8AyurlPLvCTLM8Zn1YzPFPenkIzykepu3pC2KFpUKCxJGr2HMT8w25EfKoqYRVuUJ8ZDjhOEHKFyLfhka2YJy0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=KEn8Kyhm; arc=fail smtp.client-ip=40.107.223.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 142301B4244;
+	Wed, 30 Apr 2025 15:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746025540; cv=none; b=qMDlz+nsZa+7Mh47GrUYpOUNAoTZpwXCEN6qjJBlTBzEmq5hMNVDytQPmKEtdu5Hcc7iIEN6LvhJMrfOK+uRPVKgBYnpEYgQyzRl+3cTZ5NiDMFfFpZb+60bs04TzCisYHSjmXIW+1cg4RkFdgNuWfLi/mO/wy1CLTrKrXZx11s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746025540; c=relaxed/simple;
+	bh=/Y8Xcw4X9LJX/QnqM3TAw0gkwR279WtZkcGhFdVGfDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZMrsn7T630CjU2qXXGQXm771ohrKtf9RrwU8NBPQSZ/CtR2DFxNYFWJKRHgCAsGHVWxE7QWSfJQNDVNYlae4TH8JrHNsyKqMm4CI5RShFxEdYD9gKH4b0eq/9IxlnrkEriWgRw7aLEI+vN6+/ER38efct7rkkYk2ql1du3YwC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LFQKKNP+; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="KEn8Kyhm"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qrobVOi7wqVJYlDUIyErvrddmHzBtId+qgtP0MEEu+m2riKHLYe7SukD82dxnuy85D/P/Or1wekQDnzSS0uA75WwREzrgtPJWaOpiNITdex3s6Xb9NurnB6r95/omGMx5KTEVSU/xwEDjSg+a5CDOo3qRtcvIC8r8mSukFkBtuSGe058PU7A3oO6znSYT+N5jpyRI9/ODDc296eP9MOWDC68OGJs2nrqRJaNup/4gx8EJ4HptvrQWc1ZlYEJlO00Uk2SXMDUb+Sz9KxX07lnnPkr4uIJzxWFMox8lbXXLA2BtWTb2EA7+Z30a0JEIHw4fr6J3lvgeIFv/buh88XVOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Td8ux853PdojnRRhngflkl4t8B5WW+/rk29Ry/zfDLI=;
- b=Dxr++8z/qzyadSI/E9E+jVq6rpVsNyEXe7XFMbl0yfdLaN7pImpgxGekkf+JA12LJ9pmVjDn1RcOH/LRfZHVia/MeUJX5JuGYcWRUgCJvclVGv/EMRP+G+VT/W+I8n82BmHMtvu/2kxQBmErjUuGyYl2n8r3q2UeJAn2SyZRoRzyJiKms/1LBPmZLpdlaYb9sozZrCh89POMeaXMeBPHk9l+k5fwXxHukSI2LSWJyKHywyXKz6rHhfpf8lEWyVbzgfDIiGk+WZhBEcdeY0W84n6QvY4Y9f3U5WZ2ARD1bNhHgolSjF8H/3BJ5wVWFTDPmLSZWIrZu4fjD8j1pz+1TQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Td8ux853PdojnRRhngflkl4t8B5WW+/rk29Ry/zfDLI=;
- b=KEn8KyhmYrgSbDC2yqEIMHfmxqxmBS67B5f6Y1Tico4eC5wCK0zG2xa03IyfuK3TlmeZX8rWnIZImp5Jn2+g6gMWTWkI4dwkloxNcWkBPCMKZR5QXzHUWgyUgDqtR6TA40qj4x5MEWQTenb4L3cPVFHja2A/occwi9ZYRScjb/GaXM71vhbd54FE4F9S0pvw6zZfJnDPvthg+DP+020mPO4gbyJLX2NpFnub7qwsivD2oQzB96KNfkA+ixGWbDf8wMcI075Ao9o0Xx8SLQZrkRpZSwz3eOMPxnfSx8QHMJ7ltDRnoHN/nbLc5J0RzA/exkFCQxp4T51AfiS3Wi1oXw==
-Received: from SJ0PR05CA0157.namprd05.prod.outlook.com (2603:10b6:a03:339::12)
- by BN7PPF8FCE094C0.namprd12.prod.outlook.com (2603:10b6:40f:fc02::6d8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Wed, 30 Apr
- 2025 15:04:48 +0000
-Received: from CY4PEPF0000EDD2.namprd03.prod.outlook.com
- (2603:10b6:a03:339:cafe::7e) by SJ0PR05CA0157.outlook.office365.com
- (2603:10b6:a03:339::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.12 via Frontend Transport; Wed,
- 30 Apr 2025 15:04:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CY4PEPF0000EDD2.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 15:04:48 +0000
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 30 Apr
- 2025 08:04:31 -0700
-Received: from rnnvmail202.nvidia.com (10.129.68.7) by rnnvmail202.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 30 Apr
- 2025 08:04:31 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 30 Apr 2025 08:04:30 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.14 000/311] 6.14.5-rc1 review
-In-Reply-To: <20250429161121.011111832@linuxfoundation.org>
-References: <20250429161121.011111832@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LFQKKNP+"
+Date: Wed, 30 Apr 2025 08:05:22 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746025534;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WpIQNCU7S/pOp1j7VaB6fj72/ADMB01oQnJ2fNfA0oQ=;
+	b=LFQKKNP+gwd7xNP/gx4JfwFegBctJsu/O3SYGudvRa2cQmE64BDj7Wo5WP2MZnB7AOHCn/
+	ZnNdly5JqjBnyqgalB9AFwfkB0223ycyy8tekHGM4NRGkoFIzAly5VyhlylxcRf0pQTOlV
+	VmbZuN2yvrekUUTFXDMnlg/PhSCfo6U=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <f4uoxrjr4xer3w4mgwpxypdfdopynwqi4mwc6yskvotbd4ty2f@y4bqddqxoamw>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+ <f3e0c710-0815-44ad-844c-0e8a079bf663@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <41070aa2-09af-445b-993d-a9a9c1c45418@rnnvmail202.nvidia.com>
-Date: Wed, 30 Apr 2025 08:04:30 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD2:EE_|BN7PPF8FCE094C0:EE_
-X-MS-Office365-Filtering-Correlation-Id: a78aa9af-7d38-4f45-fbd5-08dd87f859c2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?MzBSYmFLdEJrU25PdUlsMVp6UFN2L1hyNkNJR3creExNalJobXhaa1J0U0xB?=
- =?utf-8?B?bGZTME43V25YQWhZL0dyTzJvU2tCbkxvN3A1NXpnc3B1MGZhL2JBN01hSXp6?=
- =?utf-8?B?YWVMVTRpdmtEUVhQYlEvVisvOVVjZDFHWGlSd2l5MWl6NU9LOFRSUEJtaHl5?=
- =?utf-8?B?dXE3VGYzOU9uRzlZdlBoTmU0NzBNdFVMZlJwTEdwZnliTGdkMlRLL1pJd3Y0?=
- =?utf-8?B?NTY4OVJYblVBT1U1OWIySFJpOU5RU2QzcUFKa0FPQjVRVy9PMk5KVVNIVllk?=
- =?utf-8?B?b2xhNkdxYUZnRGFlZzE0aW5FOEJBS2NMYXJ4TGlnTHlvakx5bE1iU1kyVFUy?=
- =?utf-8?B?SWNTWlZlN05QUjFCTm9BMWZVSUVBaWVRVlZGeVRlN3NLTmIrd09KSWJIVUQx?=
- =?utf-8?B?SzBlWnNvdTFNWStjT1FNQ3pnVmx1U0RDT0R1ZzhuOGNlbEUrQVVYUWhNbUll?=
- =?utf-8?B?cU9YSTVCSU14cXBLaW5kSmtXYmxDUmZtWmVqb2MxbDBLQm9zdXZCbXRHVk1q?=
- =?utf-8?B?TzJYYW5xRWtsNEI4VkZCSWhIZ2x1aEN4K24raU52TGdJQjlJNHd3ZE1XbWhJ?=
- =?utf-8?B?YmdtMUxGY3U2NzF1MmxBOTF3Y3pSMGw0bVVJa1pjY2o3NEQ1ZmFWeWwxVnRq?=
- =?utf-8?B?YUVuNnlDZWtTRXFJVWE4RVQvYXFEb0xBS3V3eWEzanM0cE13REJyZ1RIRjRn?=
- =?utf-8?B?b285SVV5ZWRpYUp2dXVwY2kwd0g0UWhDTnlMeGZSMEVIcXRKL0F4UFdUM0Jj?=
- =?utf-8?B?UW05cGVyb1FheEppSTVsOHg1OUd1Zzk3R2NtRjJlWU1MWHFKdzNrbEJBUFBX?=
- =?utf-8?B?T2k5M0lrWUZ6cDBtNXpGU1VrWTA1c210RlNhYmZKM0RLbGFaTndtQmhOZ2dt?=
- =?utf-8?B?WjdTeHZsVUdxODJmTzYyVG9tZ1pKTGYvU2RraEdGMEpJWWxDbVpXSHExYjBN?=
- =?utf-8?B?Qnhrazk1Q1dZM1hsNm5KNFMrZVlsZXJOWGtvZ3I0MTNuVHpLRUN1R2tObUhT?=
- =?utf-8?B?Zjg5a01CYk5ZaFVvMk85UE1sVk9HblpDbkZvdWthNURiZGd3eFBiY3RBZ1RE?=
- =?utf-8?B?Nk0wZ1QwWGFZeUl1THI3OVQ4SkhwbnlnWGZ2YjcrK0U0TFJCTTE5WkVXNFlE?=
- =?utf-8?B?MUg2YXdLQkxZUkhZWmpRSEtkcmFCZFRzVkdGZFYweU5BN0JTMkV4R2tsVUNU?=
- =?utf-8?B?cmxuc0ovYU1RN2llbzVGdW9yWHF0KzRxVWd2M1ZxZXNtcVFXOHFIQi8rckYx?=
- =?utf-8?B?TzVxTUhGMk55NUxZTkIyZEdyYnpmRDcycW1lUE56bU85aXRaL3UxT3lKcmdw?=
- =?utf-8?B?eXlyY0YxN1JXNVZnSkIvZExiZjJjVFJ0RS9kS2ZtZDgxYkxBM2E0WGcwUHFU?=
- =?utf-8?B?REN2cVI3OVhmSFJiaFREbjhJOWFjNlQ1N2dKOGcxM1RsRFpVa0o0eExhQkxE?=
- =?utf-8?B?LzIzVWVXMDFKLzVQVUNaUkhUUVJMNjFZcHpIMEpLQ0g0d1F6SHpZeXZ5am9y?=
- =?utf-8?B?dGNack1IZGtZRFdpOWdFQXlXUGFTRVh2TG94ZGprRWtOcFFidXE4QTcybVkr?=
- =?utf-8?B?Nko4WHBVbjhxOGpNMnBvWlI5bENjRUxveUU3VFFicmd4MzkyWGNVNzJvc2cr?=
- =?utf-8?B?L0lFNHlpeVplcmtvT3VBQ0xUamxSSFk1Ym9qNTZiT05WMnlEUXAvZnFnNk9y?=
- =?utf-8?B?ZjQ1aDJUQmhZRVc3Vkx6b2U2cXhXUytzdDZXRDRNMHJvb1g3ZkZPZEYwa3ps?=
- =?utf-8?B?cWhuc3pOU0tRNlZxSTc4dGxPc21ad2M0WnQ4N3A0bG1nOVd3Y2hWclp5Qytu?=
- =?utf-8?B?Vjg2Q29zOGJWMnd1UzZqdTYvakFMQ0pRSDR5UzFmNXM2VG1KcVVreDRXdk5V?=
- =?utf-8?B?WkFGZElOSGpxa212VWhNOWNneC84U3E5dFRDb3h4SkdTL1JpM0RIN2VnWmxx?=
- =?utf-8?B?eWMraXVmcnkwK3BHa25hcmtzZ0tvdmxzVGRtWmI1TXNSYzZxOW42dWIxQm81?=
- =?utf-8?B?MjZrY051Q1E4Y3Qrc00xMlBReitteUNHdlhYVEovdWFockt6bXVMV0QrRDUv?=
- =?utf-8?B?USs2NDd1Sm53T3JxUWs4RkJienRjVjFXSk5nUT09?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 15:04:48.2825
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a78aa9af-7d38-4f45-fbd5-08dd87f859c2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD2.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PPF8FCE094C0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f3e0c710-0815-44ad-844c-0e8a079bf663@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 29 Apr 2025 18:37:17 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.5 release.
-> There are 311 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed, Apr 30, 2025 at 11:57:13AM +0200, Vlastimil Babka wrote:
+> On 4/16/25 20:02, Shakeel Butt wrote:
+> > Memory cgroup accounting is expensive and to reduce the cost, the kernel
+> > maintains per-cpu charge cache for a single memcg. So, if a charge
+> > request comes for a different memcg, the kernel will flush the old
+> > memcg's charge cache and then charge the newer memcg a fixed amount (64
+> > pages), subtracts the charge request amount and stores the remaining in
+> > the per-cpu charge cache for the newer memcg.
+> > 
+> > This mechanism is based on the assumption that the kernel, for locality,
+> > keep a process on a CPU for long period of time and most of the charge
+> > requests from that process will be served by that CPU's local charge
+> > cache.
+> > 
+> > However this assumption breaks down for incoming network traffic in a
+> > multi-tenant machine. We are in the process of running multiple
+> > workloads on a single machine and if such workloads are network heavy,
+> > we are seeing very high network memory accounting cost. We have observed
+> > multiple CPUs spending almost 100% of their time in net_rx_action and
+> > almost all of that time is spent in memcg accounting of the network
+> > traffic.
+> > 
+> > More precisely, net_rx_action is serving packets from multiple workloads
+> > and is observing/serving mix of packets of these workloads. The memcg
+> > switch of per-cpu cache is very expensive and we are observing a lot of
+> > memcg switches on the machine. Almost all the time is being spent on
+> > charging new memcg and flushing older memcg cache. So, definitely we
+> > need per-cpu cache that support multiple memcgs for this scenario.
+> > 
+> > This patch implements a simple (and dumb) multiple memcg percpu charge
+> > cache. Actually we started with more sophisticated LRU based approach but
+> > the dumb one was always better than the sophisticated one by 1% to 3%,
+> > so going with the simple approach.
+> > 
+> > Some of the design choices are:
+> > 
+> > 1. Fit all caches memcgs in a single cacheline.
+> > 2. The cache array can be mix of empty slots or memcg charged slots, so
+> >    the kernel has to traverse the full array.
+> > 3. The cache drain from the reclaim will drain all cached memcgs to keep
+> >    things simple.
+> > 
+> > To evaluate the impact of this optimization, on a 72 CPUs machine, we
+> > ran the following workload where each netperf client runs in a different
+> > cgroup. The next-20250415 kernel is used as base.
+> > 
+> >  $ netserver -6
+> >  $ netperf -6 -H ::1 -l 60 -t TCP_SENDFILE -- -m 10K
+> > 
+> > number of clients | Without patch | With patch
+> >   6               | 42584.1 Mbps  | 48603.4 Mbps (14.13% improvement)
+> >   12              | 30617.1 Mbps  | 47919.7 Mbps (56.51% improvement)
+> >   18              | 25305.2 Mbps  | 45497.3 Mbps (79.79% improvement)
+> >   24              | 20104.1 Mbps  | 37907.7 Mbps (88.55% improvement)
+> >   30              | 14702.4 Mbps  | 30746.5 Mbps (109.12% improvement)
+> >   36              | 10801.5 Mbps  | 26476.3 Mbps (145.11% improvement)
+> > 
+> > The results show drastic improvement for network intensive workloads.
+> > 
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > 
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.14.5-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.14.y
-> and the diffstat can be found below.
+> See below
 > 
-> thanks,
+> > ---
+> >  mm/memcontrol.c | 128 ++++++++++++++++++++++++++++++++++--------------
+> >  1 file changed, 91 insertions(+), 37 deletions(-)
+> > 
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 1ad326e871c1..0a02ba07561e 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1769,10 +1769,11 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
+> >  	pr_cont(" are going to be killed due to memory.oom.group set\n");
+> >  }
+> >  
+> > +#define NR_MEMCG_STOCK 7
+> >  struct memcg_stock_pcp {
+> >  	local_trylock_t stock_lock;
+> > -	struct mem_cgroup *cached; /* this never be root cgroup */
+> > -	unsigned int nr_pages;
+> > +	uint8_t nr_pages[NR_MEMCG_STOCK];
+> > +	struct mem_cgroup *cached[NR_MEMCG_STOCK];
 > 
-> greg k-h
+> I have noticed memcg_stock is a DEFINE_PER_CPU and not
+> DEFINE_PER_CPU_ALIGNED so I think that the intended cacheline usage isn't
+> guaranteed now.
+> 
+> Actually tried compiling and got in objdump -t vmlinux:
+> 
+> ffffffff83a26e60 l     O .data..percpu  0000000000000088 memcg_stock
+> 
+> AFAICS that's aligned to 32 bytes only (0x60 is 96) bytes, not 64.
+> 
+> changing to _ALIGNED gives me:
+> 
+> ffffffff83a2c5c0 l     O .data..percpu  0000000000000088 memcg_stock
+> 
+> 0xc0 is 192 so multiple of 64, so seems to work as intended and indeed
+> necessary. So you should change it too while adding the comment.
+> 
 
-All tests passing for Tegra ...
-
-Test results for stable-v6.14:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    116 tests:	116 pass, 0 fail
-
-Linux version:	6.14.5-rc1-g25b40e24731f
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+Wow I didn't notice this at all. Thanks a lot. I will fix this in the
+next fix diff.
