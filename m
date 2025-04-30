@@ -1,141 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C771C8620;
-	Wed, 30 Apr 2025 15:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B951D1C84A5
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027043; cv=none; b=SrireMJAeXWVk7XTGYiN9Vvq4Df5IQIR73PtR7/4EmtoBzeJkdqs1Lr+nknVsxmW6Sk4OBeOCLlLO1TulK4AJfZ4U+dgJMilWtCqgOJJz0RlxdDZTRta+aj30NGdsvUIcToEqf8oIrSUSq1HuB73hU9GEV5yk1lbmsSdkILPDKA=
+	t=1746027104; cv=none; b=I9bnDI15OBWdQDoYhwW/WQmKZtzjV+10Y6GCOd6ux9BLE3NEBZJPWk+HBq8a6qhZh75yBEXKQ4QO62PQEWXY+7rIrd4jlCPaBd9PyvIjVhZH47FhOiKGc1hvfJdvLRVKEoejdoS/SOzLMkexjG6ZxbjF/zhoGK1SqOsmYXedUPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027043; c=relaxed/simple;
-	bh=opdeUvkVojRGTuPuV8xclDhdJWVmOXLGZEZAoQNAZ9U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JN/gIzJbe9Cu4XEJyviVeA+xtMLP0LwxuDMS/uKFo/+T2eYVqOyM+wA2vkrGdARsf/DFDcflvM4tzXpayh4o/nDFea3SAt3qp17zwefX9CRnWiCoSmo9uSheUbCgk0s2oE8KKgIsdHQ/wbDE01sRlabsHT9DvmAYq3pLIZM62cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El8iv2ma; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746027104; c=relaxed/simple;
+	bh=fXRSK8az77nJsoAUy/Cx1DGbZeRTIdVM+Sl7ZshNeOA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Rgusy0PNatyhFyrvDfpOkEKygqwO492XWnJNhTmQLQQyWoETZl0IxGBb7rVzjKFs8PX4a5a7ZTHiMcOk9Pg7ZANga/NiEduG+Xgv/S6NvAZaiR6P3J1pcW3i2Dts+9ejkPQ/jvH1XXpLFT5TtIcBa6Xc30L/akRY7iBSWKDOqmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=reUT5c2K; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El8iv2ma"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2366EC4CEE7;
-	Wed, 30 Apr 2025 15:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746027042;
-	bh=opdeUvkVojRGTuPuV8xclDhdJWVmOXLGZEZAoQNAZ9U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=El8iv2mafHvxjq4tRarbAiANk1Rhn09dQGIrTMMWuW9SOf1JTp2kKf/zYgmNdXFzC
-	 yosNmtDTs/so4la7muAJ4puJcAQYxzAfwYIYMIwN3ujlQNvygiVkL6LEeaafCdgg1h
-	 u9VZBBpjQ2AkXqgcafE4Ok1jvHODQG5AFNzvtQkcff421or2l1KPW1wk3RJyWHgkY/
-	 f0PimYV43c8xE6Aba2/IhyZ0IEM4+jDdOFl5nSKuZaoq6J9o0mSQXjZXWWB+e178i6
-	 twv3iLKf2v90MbvrHSQq2pRBTRNhhK0Uq4Oid0t6N8FmpQ9l4HKNFtLMra67Sbu4KX
-	 JUVzcgnawUssA==
-Date: Wed, 30 Apr 2025 16:30:37 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] dt-bindings: arm: ti: Add Toradex Verdin AM62P
-Message-ID: <20250430-stylus-reversion-a439538b6fc1@spud>
-References: <20250430102815.149162-1-francesco@dolcini.it>
- <20250430102815.149162-2-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="reUT5c2K"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so12084a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:31:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746027101; x=1746631901; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6q3AvvTtFldFWOFSDMoyKsrqSUogaJUOndjd33ab2yo=;
+        b=reUT5c2Kad1wFrH/hL3Fmf9Ce0uZdfJzvaGvCJtOWu9qe8HMvwSdJoZi9FSLhSQTjq
+         MddcwHnt1g/s+HhUi6SJYBTibYKHq1Gy+55VlBpGgjh2uVzqSSnKdffXM5qjgwdM8tna
+         Jag+SfMCjERDILsSX+yiRDEuoUaWcL4r6nkk3FhMSoikbWO/mizPO4xNy3dIFaGhtmB4
+         2b5zeuEKgtgaBMe6y/bdsf2i2rcWrh/0h8RP7zkou1bH3fGwFTDNb800qBzaW8eU4Qec
+         z34+8GboEJ3bjLOT5UTlpPHc0wGpL+gUgM9OEq065wYM02WgMKS//92glQIDdRvZlSFC
+         iDCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746027101; x=1746631901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6q3AvvTtFldFWOFSDMoyKsrqSUogaJUOndjd33ab2yo=;
+        b=UUd1yO/xhcnUgdJAEn7vXe+ykJeqsZZgm18bmCvmuJL4qFpkWIO7FGrJ3X384IDaJt
+         lFi3aJ2HH5uHHLtIwFJ4RhWP4iSvhQSuB9Zi2uwr5V86ZP7hUtyS2XZOJ9gaT5Xh8H5g
+         /RUuAbqX4wHkcxsf8jjqn8JkZOPUJo6x1+pVYXZXKSQAyuHnuSY/FJkuoyyADS2XH2DX
+         PjqSjF+eaQ9EEJW6uMoeHx+U5Qn0xItPLGLMjlnB0II/F04cf4Pq0ks22s2Lomg1CiCl
+         povnCQHiO57Ix3maX5leZq/5BrRkZo7OwvOOilKN0RwgxwlSjMerW+POBCVOGB+FNdU4
+         XjYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX13R3J4SKq71aezia16WGN0THkJYkjwcquCVWaODt/v7Vcx3JKEpyW3607tSsJIzgHzhXURBk2F2N14qM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yymt9gLN2p1HjrEt5BTWsVIp1OYEF7BvYSt8VixKC+4I93uvpoN
+	xe/pnyLyrFBLxPzUDaiTkdd4VRmN0xwforieHtHiieXP1Fmiqt0fDbAVWhBOSZQRrXXThrh+JCi
+	Pj/aU0eqSXm1/OB989WpiYKPDp1VAKdg3c+Rp
+X-Gm-Gg: ASbGnctAQZHt3KA9bNDVkT0y8tnBOWo1TJ8PTTMT5OfbbndVk5RsupxuaFUxAoznmZD
+	/RGhSj8AbxpLMy8dWGlvSxC+s2K/9iwPjxyoH6HGjZNaPdBYkbdNC46vtvjIQxAI2LwQiCM25q9
+	5cYoGPrKkDIS8Lf8QQ0T8LJCrGs2unLrU0H21AcG3U4LibRZYHofE=
+X-Google-Smtp-Source: AGHT+IHlGnwmvnKpxZtJsuvf5pcWhU4LUYZV0J7+c0o/5rJjgJHBNuc9DKGt5MQ5K5+xyJ5k7vtXGsFcCBuVMGA050g=
+X-Received: by 2002:a05:6402:10c9:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-5f8aac01ed0mr105224a12.7.1746027100840; Wed, 30 Apr 2025
+ 08:31:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="KMHDuPG9qmxNjZvN"
-Content-Disposition: inline
-In-Reply-To: <20250430102815.149162-2-francesco@dolcini.it>
-
-
---KMHDuPG9qmxNjZvN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
+ <20250429-debugfs-rust-v1-1-6b6e7cb7929f@google.com> <2025043021-plaza-grip-2916@gregkh>
+ <CAGSQo00Kg2QV56LYFg6nRY+yS2KtiVAPaggKaKFCdprjBfXCcA@mail.gmail.com> <2025043022-travesty-slicing-2089@gregkh>
+In-Reply-To: <2025043022-travesty-slicing-2089@gregkh>
+From: Matthew Maurer <mmaurer@google.com>
+Date: Wed, 30 Apr 2025 08:31:29 -0700
+X-Gm-Features: ATxdqUEiUtzr0p9I3Jb2VH0NqGLqjnjE0w8Cr3O1gH6G7TBfYuJu6dhVAHvmdE0
+Message-ID: <CAGSQo00nE+n41ehYdAuE1XrJmLZJNLEhKYee6qfF0Gp7b0X5Cw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] rust: debugfs: Bind DebugFS directory creation
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 12:28:10PM +0200, Francesco Dolcini wrote:
-> From: Francesco Dolcini <francesco.dolcini@toradex.com>
->=20
-> Add toradex,verdin-am62p for Toradex Verdin AM62 SoM, its nonwifi and
-> wifi variants, and the Toradex carrier board they may be mated in.
->=20
-> Link: https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am=
-62p
-> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+On Wed, Apr 30, 2025 at 8:23=E2=80=AFAM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Apr 30, 2025 at 08:10:44AM -0700, Matthew Maurer wrote:
+> > On Wed, Apr 30, 2025 at 5:06=E2=80=AFAM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Apr 29, 2025 at 11:15:55PM +0000, Matthew Maurer wrote:
+> > > > The basic API relies on `dput` to prevent leaks. Use of `debugfs_re=
+move`
+> > > > is delayed until the more full-featured API, because we need to avo=
+id
+> > > > the user having an reference to a dir that is recursively removed.
+> > > >
+> > > > Signed-off-by: Matthew Maurer <mmaurer@google.com>
+> > >
+> > > First off, many thanks for doing this.  I like this in general, but I
+> > > have loads of specific questions/comments.  Don't take that as a
+> > > criticism of this feature, I really want these bindings to be in the
+> > > tree and work hopefully better/cleaner than the userspace ones do.
+> > >
+> > > First off, the main "rule" of debugfs is that you should NEVER care
+> > > about the return value of any debugfs function.  So much so that the =
+C
+> > > side hides errors almost entirely where possible.  I'd like to see th=
+is
+> > > carried through to the Rust side as well, but I think you didn't do t=
+hat
+> > > for various "traditional" reasons.
+> >
+> > Sure, I mostly had to do error checking because I was using an
+> > `ARef<Dir>` to represent a directory, which meant that the underlying
+> > directory needed to be a valid pointer. Given that you've said that
+> > the returned `dentry *` should never be used as an actual `dentry`,
+> > only as an abstract handle to a DebugFS object, that requirement goes
+> > away, and I can remove the error handling code and always successfully
+> > return a `Dir`, even in cases where an error has occurred.
+>
+> Great!
+>
+> Except when debugfs is not enabled, then what are you going to return?
+> The same structure, or an error?
+>
+> I'd vote for the same pointer to the structure, just to make it more
+> obvious that this is a totally opaque thing and that no caller should
+> ever know or care if debugfs is working or even present in the system.
+>
+> Note that some drivers will want to save a bit of space if debugfs is
+> not enabled in the build, so be prepared to make the binding work
+> somehow that way too.  Can you have an "empty" object that takes no
+> memory?  Or is this too overthinking things?
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Based on what you've expressed, I think what makes sense is:
 
-> ---
->  .../devicetree/bindings/arm/ti/k3.yaml        | 24 +++++++++++++++++++
->  1 file changed, 24 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documenta=
-tion/devicetree/bindings/arm/ti/k3.yaml
-> index a6d9fd0bcaba..bf6003d8fb76 100644
-> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
-> @@ -76,6 +76,30 @@ properties:
->            - const: toradex,verdin-am62          # Verdin AM62 Module
->            - const: ti,am625
-> =20
-> +      - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Bo=
-ards
-> +        items:
-> +          - enum:
-> +              - toradex,verdin-am62p-nonwifi-dahlia # Verdin AM62P Modul=
-e on Dahlia
-> +              - toradex,verdin-am62p-nonwifi-dev    # Verdin AM62P Modul=
-e on Verdin Development Board
-> +              - toradex,verdin-am62p-nonwifi-ivy    # Verdin AM62P Modul=
-e on Ivy
-> +              - toradex,verdin-am62p-nonwifi-mallow # Verdin AM62P Modul=
-e on Mallow
-> +              - toradex,verdin-am62p-nonwifi-yavia  # Verdin AM62P Modul=
-e on Yavia
-> +          - const: toradex,verdin-am62p-nonwifi     # Verdin AM62P Modul=
-e without Wi-Fi / BT
-> +          - const: toradex,verdin-am62p             # Verdin AM62P Module
-> +          - const: ti,am62p5
-> +
-> +      - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Bo=
-ards with Wi-Fi / BT
-> +        items:
-> +          - enum:
-> +              - toradex,verdin-am62p-wifi-dahlia # Verdin AM62P Wi-Fi / =
-BT Module on Dahlia
-> +              - toradex,verdin-am62p-wifi-dev    # Verdin AM62P Wi-Fi / =
-BT M. on Verdin Development B.
-> +              - toradex,verdin-am62p-wifi-ivy    # Verdin AM62P Wi-Fi / =
-BT Module on Ivy
-> +              - toradex,verdin-am62p-wifi-mallow # Verdin AM62P Wi-Fi / =
-BT Module on Mallow
-> +              - toradex,verdin-am62p-wifi-yavia  # Verdin AM62P Wi-Fi / =
-BT Module on Yavia
-> +          - const: toradex,verdin-am62p-wifi     # Verdin AM62P Wi-Fi / =
-BT Module
-> +          - const: toradex,verdin-am62p          # Verdin AM62P Module
-> +          - const: ti,am62p5
-> +
->        - description: K3 AM642 SoC
->          items:
->            - enum:
-> --=20
-> 2.39.5
->=20
+* Initial patch will always return the same `Dir`, just sometimes it
+will be a wrapper around a pointer that is an error code, and
+sometimes it will be a useful `dentry` pointer. This will match the
+current behavior of C code to my understanding.
+* Follow-up (probably still in this series) will check
+`CONFIG_DEBUG_FS`, and if it's off, will just make `Dir` into a ZST,
+and just discard the pointer. This would be an improvement upon the C
+interface, because drivers would get the shrinkage without needing to
+add conditionals on `CONFIG_DEBUG_FS` in their own driver.
 
---KMHDuPG9qmxNjZvN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBJCHQAKCRB4tDGHoIJi
-0hFcAQDEbZ+iAmM7XPpfRyDtPTb9EQwMDttv6HFl1IfeSyudqQEA6v/ANrKiaOD1
-ss42apT4hN+ggDMZdFM/hW8W9bCYwQg=
-=Q1sp
------END PGP SIGNATURE-----
-
---KMHDuPG9qmxNjZvN--
+>
+> > > Wait, what?  Why would an explicit drop(parent) be required here?  Th=
+at
+> > > feels wrong, and way too complex.  Why can't you rely on the child
+> > > creation to properly manage this if needed (hint, it shouldn't be.)
+> >
+> > The explicit `drop` is not required for normal usage, it was intended
+> > to be illustrative - I was trying to explain what the semantics would
+> > be if the parent `dentry` was released before the child was. As
+> > before, now that the child will not be an `ARef<Dir>`, and so not
+> > assumed to be a valid `dentry` pointer, this example won't be relevant
+> > anymore.
+>
+> Great!
+>
+> thanks, hopefully this should make things simpler.
+>
+> greg k-h
