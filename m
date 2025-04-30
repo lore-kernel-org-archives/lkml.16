@@ -1,112 +1,452 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A65F21C186
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953F521ABCB
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004566; cv=none; b=ZHYNc79Wh2sNC90Z7nQocPktnYF379CYLmcHWq92ih3wdlSBYRv83xoWofsVV+h01duyHECFt84Qvt9+EqkvqZ4T7/ivVOUqwqIhKFqv9t/4e4yN5Uzd15yGLUhpasy18NN3ZiZ+XVJ1l4b/ImymuC2aQWSXp1IAHeUgBqb2VtA=
+	t=1746004593; cv=none; b=RFKjy6jcZogdMo4bP/g4CZXOzVMMTLKBBE7HnrGpMtC+SFzxMcHD6VDA1Tt78PyZS7uvl4RsF4ZmxEN/Vn9yEr2TWZ5/BBgl7w/pHskNJT1dw4ra/ckrdumHwt5gsLqPswCUK2bjWOttZQjEZLgTCLZrmcOgbSOVmnpRvKX+Bi0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004566; c=relaxed/simple;
-	bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Fi4ycbh6HLRfYXH3/IQOg+J/st0JDvmRyNetGDxeeASExE0tL93dKLluhioK/zesR/AbIrH3riJyDx6t0EU2WQsvc7jFld/Jlc6l57gJ9a//gYwyemj2nYaiV4qBfHF80cXtCiduj22fODiZQX1mucJDNWLrhBMKOQrUkj3g1pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wht/Sy0N; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746004593; c=relaxed/simple;
+	bh=9sg3geL+Vq/SstBgQY04tVrifsekE9PoUEd2W+9CMHI=;
+	h=From:Mime-Version:Date:Message-ID:Subject:To:Cc:Content-Type; b=k4VWHX7NrkU5wdjyVmkuDL+PbWNk6GzFzEOBje80UY4kpqmqt45r8UGzKyh2LfFLnKltjIoblLlXAmuxZwqSbxLT8xwySnllUdgRuy1WVBX5oUGTfRoIOVG61KOqPw2yQR0mfIVY/NXBRq3D1Ojj6+mXn7KABwe4CWE8lr9ZduE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=h95Pj+uN; arc=none smtp.client-ip=209.85.221.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wht/Sy0N"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so36417465e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:16:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="h95Pj+uN"
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-52934f4fb23so6720239e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:16:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746004563; x=1746609363; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
-        b=wht/Sy0NO7eC7k8OuCLEzj/cVUKtk1rs142d3AjLnBGJ/srJD4Rxk+cclaB01y25TT
-         c+vgakjArTWvPAO/Ot9rs3DZqbgZ/gpefrtd+feh4yhPuWIW4ZTEeAgt+TM8sZ/1bOEU
-         t8k5gr76KkiKEkL+KzARWdoj240q3eWtIDgO9cdxW7PfC0BqBCNWwl+GYjxudjPZZPOL
-         FrctyBTOZd/dAOsyhh37Ed/VVGcIwZaD77bUWJIaTx2cqKVcjHPsTtmJQM/k5RWHGjoz
-         G3kwGGf3GsTtTZi1Bx2FHRLfbNI4XoyuegRm93IxjDn/FcJEEwIylFcCUD87EiPOurxm
-         VR1A==
+        d=bytedance.com; s=google; t=1746004589; x=1746609389; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:user-agent
+         :mime-version:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/FpfmJioAdNJY0+TNoNhbjTHHg1RLhLRSXLwyGVuMec=;
+        b=h95Pj+uNBnWAgApCSYK4H6EjMgVPN1kbZ+jOvj9selegGRHOslJPACvZrLwONA89wh
+         cnOtiej8KTmisBocazCRUgNwnhl1OXd2v5KhdXvMfXpJf3JLpR+A49CuBis/bonim2Z7
+         d/Epeu/Pgvo7nUSGBwrL2BTG59R8EOsRW/K5qziW7AOfJnO4hd8eWgoVbDrVnAlaLNvK
+         SPdmSyQZqSWJnZXt8lo/Hb9xadWtpjm72iwzEgwpccYgSNpWsOA5Un6ABsothXYK0DTe
+         sjBPOaYtgPMH8FIpqW/gCVpvrjfJQK88zY/KagretL9KPyGhorPYxQEAo4sSBgIi6k5l
+         m67Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746004563; x=1746609363;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
-        b=lxpJJ2aheN+VSG/q4BfYhb2KlhsPPikDcVN+YGGAGwZGi7xEyvE69Pp0QfKeAV2e1X
-         cHoayWrUls3ZxZLoxJdfHEdGIqZ7KFeENuFFK1lCdxdaE3UM9Z4PvulRvPux0gqvOqht
-         Rnqck32DOYEwedot3LE6w6cE30i9cxi58ouZTfr6PDqop6jKJ39ldvOwuWwCTwtDG1YU
-         lgQC9aM6xV+UW65TFN9d+u0GkGJ2nCwl9h6iTGLa6e5Zij4BQMxRgmvDeerfG7JBAA9Y
-         k8IqKCyIdjQafzDknbhEq4gcSpu05TK8MwSfsSNavMRDOjT4AzrjiLN3h0ZTwcLtwS5I
-         JrBA==
-X-Forwarded-Encrypted: i=1; AJvYcCVhgIp6016/EsfRwN/ahcr8wFXQSve3UlpTXtGX1toGcve7N+tKbYIDm/nY5x2S+JtHI5VeoLu5Og3/YE0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTnNe6jDxj/jC9b6mj0gJOFJHXq1OC6LSA7shR0TBdk3XX/WBo
-	8fMYplajtZPZzKb3N3m5cUuBk7ocIg5etY+rX7Q2f1sMn/owxS8B0Cv6gQpNFiWD003jguagitE
-	k048nxTF6/lQPGw==
-X-Google-Smtp-Source: AGHT+IFxhcERQYWAcvbhYHN/OW5FD7v/TzNCgH8DCvMD/GLCXurr03llxmGp+GSubB+keZhqjqEoocx36qx5Vs4=
-X-Received: from wmbeu8.prod.google.com ([2002:a05:600c:81c8:b0:440:59df:376a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:34c1:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-441b263a237mr15978995e9.12.1746004563615;
- Wed, 30 Apr 2025 02:16:03 -0700 (PDT)
-Date: Wed, 30 Apr 2025 09:16:01 +0000
-In-Reply-To: <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
+        d=1e100.net; s=20230601; t=1746004589; x=1746609389;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:user-agent
+         :mime-version:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/FpfmJioAdNJY0+TNoNhbjTHHg1RLhLRSXLwyGVuMec=;
+        b=pxGcLBqsccP2mPs+YDccU3yX2hKVV/jAK0YVCkcMkO5nhz0TInXBkTGLQkRP5Mh0zE
+         gKYEoUi4YKiS6J3SamXvxr3Ci+5cMw5kGp6S+vi3FNCw/v28TJOYckq+DVNW8r6viFNj
+         BUsCQhfLEqJsvXKVQT5lylgMatjfcuRLYCJ6SbkgEs0bCjKU1nrdDEoWu5PB6J170LX6
+         dlcWsjet+tpeu8ngAyQZF+PstT8cc4DjTp3UKE31m/k2EB01cwioEcOYshrQe2+qPOl9
+         pmM7ZrvGnS7GMBWcfKiaA6FNcSxaMeLdQ1emyOY28IiodgSeSOFEMR8mIHEa1u5ca2u3
+         pBgw==
+X-Forwarded-Encrypted: i=1; AJvYcCXhX7E5QHAMzOrsJkSi2kgsMxtfZRSQghbSyCE9H1TvBVvxoyn2VbflIY60+mIwJlDKHoDCUCJQFv/+QOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5HmYMH93yZzqZ8d32T4b9P+x9N+cWs06SplbOxukqWrieGvRN
+	ed6su3H7Ih7rUmjWTQHgBf3IM8PqyjKV+/g1BR6S1MW/jYzmcdAAafln4ZrAY+o9/5nAvmshEYf
+	QnPZVwpm+nUS2+LN9qqe3crxftifmN00HgCSo
+X-Gm-Gg: ASbGncuV32Bm2F8kvTqlPPqHl5dvzdfDwoYqnUffOtytcxwsc2lINx4zWlDHLETE96w
+	947t2C9CQ+x5+BSMEHy3JHtRWAeADESBhs7GhNtN6rOEZ5Q3UR+53HwSYAPdZH1BW2pK9TEx5N9
+	7KymnZOBBjIYkx3MKmsHpgf70=
+X-Google-Smtp-Source: AGHT+IGUdyWIFWemUxR8cGlbp009kWxdylwhOsecl9akidqkmz+IWKOdRPTajULbkm3Y8k761QMI67Wsmq2VLhQzLm0=
+X-Received: by 2002:a05:6122:2224:b0:529:2644:676f with SMTP id
+ 71dfb90a1353d-52acd87ab74mr1464395e0c.8.1746004589261; Wed, 30 Apr 2025
+ 02:16:29 -0700 (PDT)
+Received: from 44278815321 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 30 Apr 2025 04:16:28 -0500
+Received: from 44278815321 named unknown by gmailapi.google.com with HTTPREST;
+ Wed, 30 Apr 2025 04:16:28 -0500
+From: Jiadong Sun <sunjiadong.lff@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com> <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
-Message-ID: <aBHqUdtkP9uHMdKO@google.com>
-Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
-From: Alice Ryhl <aliceryhl@google.com>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, 
-	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+X-Original-From: Jiadong Sun <sunjiadong.lff@bytedance.com>
+Date: Wed, 30 Apr 2025 04:16:28 -0500
+X-Gm-Features: ATxdqUE1GlU75dtjYcQizNLW2r1BtvIcFNfsvG_F7FYhdKaVVj2RrFltONH9NoA
+Message-ID: <CAP2HCOmAkRVTci0ObtyW=3v6GFOrt9zCn2NwLUbZ+Di49xkBiw@mail.gmail.com>
+Subject: [RFC] optimize cost of inter-process communication
+To: luto@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, 
+	akpm@linux-foundation.org
+Cc: x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, viro@zeniv.linux.org.uk, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
+	duanxiongchun@bytedance.com, yinhongbo@bytedance.com, 
+	dengliang.1214@bytedance.com, xieyongji@bytedance.com, 
+	chaiwen.cc@bytedance.com, songmuchun@bytedance.com, yuanzhu@bytedance.com, 
+	sunjiadong.lff@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 10:36:11AM +0200, Christian Schrefl wrote:
-> `UnsafePinned<T>` is useful for cases where a value might be shared with
-> C code but not directly used by it. In particular this is added for
-> storing additional data in the `MiscDeviceRegistration` which will be
-> shared between `fops->open` and the containing struct.
->=20
-> Similar to `Opaque` but guarantees that the value is always initialized
-> and that the inner value is dropped when `UnsafePinned` is dropped.
->=20
-> This was originally proposed for the IRQ abstractions [0] and is also
-> useful for other where the inner data may be aliased, but is always
-> valid and automatic `Drop` is desired.
->=20
-> Since then the `UnsafePinned` type was added to upstream Rust [1] by Sky
-> as a unstable feature, therefore this patch implements the subset of the
-> upstream API for the `UnsafePinned` type required for additional data in
-> `MiscDeviceRegistration` and in the implementation of the `Opaque` type.
->=20
-> Some differences to the upstream type definition are required in the
-> kernel implementation, because upstream type uses some compiler changes
-> to opt out of certain optimizations, this is documented in the
-> documentation and a comment on the `UnsafePinned` type.
->=20
-> The documentation on is based on the upstream rust documentation with
-> minor modifications for the kernel implementation.
->=20
-> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07=
-DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
-> Link: https://github.com/rust-lang/rust/pull/137043 [1]
-> Suggested-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Gerald Wisb=C3=B6ck <gerald.wisboeck@feather.ink>
-> Co-developed-by: Sky <sky@sky9.dev>
-> Signed-off-by: Sky <sky@sky9.dev>
-> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+# Background
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+In traditional inter-process communication (IPC) scenarios, Unix domain
+sockets are commonly used in conjunction with the epoll() family for
+event multiplexing. IPC operations involve system calls on both the data
+and control planes, thereby imposing a non-trivial overhead on the
+interacting processes. Even when shared memory is employed to optimize
+the data plane, two data copies still remain. Specifically, data is
+initially copied from a process's private memory space into the shared
+memory area, and then it is copied from the shared memory into the
+private memory of another process.
+
+This poses a question: Is it possible to reduce the overhead of IPC with
+only minimal modifications at the application level? To address this, we
+observed that the functionality of IPC, which encompasses data transfer
+and invocation of the target thread, is similar to a function call,
+where arguments are passed and the callee function is invoked to process
+them. Inspired by this analogy, we introduce RPAL (Run Process As
+Library), a framework designed to enable one process to invoke another
+as if making a local function call, all without going through the kernel.
+
+# Design
+
+First, let=E2=80=99s formalize RPAL=E2=80=99s core objectives:
+
+1. Data-plane efficiency: Reduce the number of data copies from two (in
+the shared memory solution) to one.
+2. Control-plane optimization: Eliminate the overhead of system calls
+and kernel's thread switches.
+3. Application compatibility: Minimize the modifications to existing
+applications that utilize Unix domain sockets and the epoll() family.
+
+To attain the first objective, processes that use RPAL share the same
+virtual address space. So one process can access another's data directly
+via a data pointer. This means data can be transferred from one process
+to another with just one copy operation.
+
+To meet the second goal, RPAL relies on the shared address space to do
+lightweight context switching in user space, which we call an "RPAL
+call". This allows one process to execute another process's code just
+like a local function call.
+
+To achieve the third target, RPAL stays compatible with the epoll family
+of functions, like epoll_create(), epoll_wait(), and epoll_ctl(). If an
+application uses epoll for IPC, developers can switch to RPAL with just
+a few small changes. For instance, you can just replace epoll_wait()
+with rpal_epoll_wait(). The basic epoll procedure, where a process waits
+for another to write to a monitored descriptor using an epoll file
+descriptor, still works fine with RPAL.
+
+## Address space sharing
+
+For address space sharing, RPAL partitions the entire userspace virtual
+address space and allocates non-overlapping memory ranges to each
+process. On x86_64 architectures, RPAL uses a memory range size covered
+by a single PUD (Page Upper Directory) entry, which is 512GB. This
+restricts each process=E2=80=99s virtual address space to 512GB on x86_64,
+sufficient for most applications in our scenario. The rationale is
+straightforward: address space sharing can be simply achieved by copying
+the PUD from one process=E2=80=99s page table to another=E2=80=99s. So one =
+process can
+directly use the data pointer to access another's memory.
+
+
+  |------------| <- 0
+  |------------| <- 512 GB
+  |  Process A |
+  |------------| <- 2*512 GB
+  |------------| <- n*512 GB
+  |  Process B |
+  |------------| <- (n+1)*512 GB
+  |------------| <- STACK_TOP
+  |  Kernel    |
+  |------------|
+
+## RPAL call
+
+We refer to the lightweight userspace context switching mechanism as
+RPAL call. It enables the caller (or sender) thread of one process to
+directly switch to the callee (or receiver) thread of another process.
+
+When Process A=E2=80=99s caller thread initiates an RPAL call to Process B=
+=E2=80=99s
+callee thread, the CPU saves the caller=E2=80=99s context and loads the cal=
+lee=E2=80=99s
+context. This enables direct userspace control flow transfer from the
+caller to the callee. After the callee finishes data processing, the CPU
+saves Process B=E2=80=99s callee context and switches back to Process A=E2=
+=80=99s caller
+context, completing a full IPC cycle.
+
+
+  |------------|                |---------------------|
+  |  Process A |                |  Process B          |
+  | |-------|  |                | |-------|           |
+  | | caller| --- RPAL call --> | | callee|    handle |
+  | | thread| <------------------ | thread| -> event  |
+  | |-------|  |                | |-------|           |
+  |------------|                |---------------------|
+
+# Security and compatibility with kernel subsystems
+
+## Memory protection between processes
+
+Since processes using RPAL share the address space, unintended
+cross-process memory access may occur and corrupt the data of another
+process. To mitigate this, we leverage Memory Protection Keys (MPK) on
+x86 architectures.
+
+MPK assigns 4 bits in each page table entry to a "protection key", which
+is paired with a userspace register (PKRU). The PKRU register defines
+access permissions for memory regions protected by specific keys (for
+detailed implementation, refer to the kernel documentation "Memory
+Protection Keys"). With MPK, even though the address space is shared
+among processes, cross-process access is restricted: a process can only
+access the memory protected by a key if its PKRU register is configured
+with the corresponding permission. This ensures that processes cannot
+access each other=E2=80=99s memory unless an explicit PKRU configuration is=
+ set.
+
+## Page fault handling and TLB flushing
+
+Due to the shared address space architecture, both page fault handling
+and TLB flushing require careful consideration. For instance, when
+Process A accesses Process B=E2=80=99s memory, a page fault may occur in Pr=
+ocess
+A's context, but the faulting address belongs to Process B. In this
+case, we must pass Process B's mm_struct to the page fault handler.
+
+TLB flushing is more complex. When a thread flushes the TLB, since the
+address space is shared, not only other threads in the current process
+but also other processes that share the address space may access the
+corresponding memory (related to the TLB flush). Therefore, the cpuset
+used for TLB flushing should be the union of the mm_cpumasks of all
+processes that share the address space.
+
+## Lazy switch of kernel context
+
+In RPAL, a mismatch may arise between the user context and the kernel
+context. The RPAL call is designed solely to switch the user context,
+leaving the kernel context unchanged. For instance, when an RPAL call
+takes place, transitioning from caller thread to callee thread, and
+subsequently a system call is initiated within callee thread, the kernel
+will incorrectly utilize the caller's kernel context (such as the kernel
+stack) to process the system call.
+
+To resolve context mismatch issues, a kernel context switch is triggered
+at the kernel entry point when the callee initiates a syscall or an
+exception/interrupt occurs. This mechanism ensures context consistency
+before processing system calls, interrupts, or exceptions. We refer to
+this kernel context switch as a "lazy switch" because it defers the
+switching operation from the traditional thread switch point to the next
+kernel entry point.
+
+Lazy switch should be minimized as much as possible, as it significantly
+degrades performance. We currently utilize RPAL in an RPC framework, in
+which the RPC sender thread relies on the RPAL call to invoke the RPC
+receiver thread entirely in user space. In most cases, the receiver
+thread is free of system calls and the code execution time is relatively
+short. This characteristic effectively reduces the probability of a lazy
+switch occurring.
+
+## Time slice correction
+
+After an RPAL call, the callee's user mode code executes. However, the
+kernel incorrectly attributes this CPU time to the caller due to the
+unchanged kernel context.
+
+To resolve this, we use the Time Stamp Counter (TSC) register to measure
+CPU time consumed by the callee thread in user space. The kernel then
+uses this user-reported timing data to adjust the CPU accounting for
+both the caller and callee thread, similar to how CPU steal time is
+implemented.
+
+## Process recovery
+
+Since processes can access each other=E2=80=99s memory, there is a risk tha=
+t the
+target process=E2=80=99s memory may become invalid at the access time (e.g.=
+, if
+the target process has exited unexpectedly). The kernel must handle such
+cases; otherwise, the accessing process could be terminated due to
+failures originating from another process.
+
+To address this issue, each thread of the process should pre-establish a
+recovery point when accessing the memory of other processes. When such
+an invalid access occurs, the thread traps into the kernel. Inside the
+page fault handler, the kernel restores the user context of the thread
+to the recovery point. This mechanism ensures that processes maintain
+mutual independence, preventing cascading failures caused by
+cross-process memory issues.
+
+# Performance
+
+To quantify the performance improvements driven by RPAL, we measured
+latency both before and after its deployment. Experiments were conducted
+on a server equipped with two Intel(R) Xeon(R) Platinum 8336C CPUs (2.30
+GHz) and 1 TB of memory. Latency was defined as the duration from when
+the client thread initiates a message to when the server thread is
+invoked and receives it.
+
+During testing, the client transmitted 1 million 32-byte messages, and
+we computed the per-message average latency. The results are as follows:
+
+*****************
+Without RPAL: Message length: 32 bytes, Total TSC cycles: 19616222534,
+Message count: 1000000, Average latency: 19616 cycles
+With RPAL: Message length: 32 bytes, Total TSC cycles: 1703459326,
+Message count: 1000000, Average latency: 1703 cycles
+*****************
+
+These results confirm that RPAL delivers substantial latency
+improvements over the current epoll implementation=E2=80=94achieving a
+17,913-cycle reduction (an ~91.3% improvement) for 32-byte messages.
+
+We have applied RPAL to an RPC framework that is widely used in our data
+center. With RPAL, we have successfully achieved up to 15.5% reduction
+in the CPU utilization of processes in real-world microservice scenario.
+The gains primarily stem from minimizing control plane overhead through
+the utilization of userspace context switches. Additionally, by
+leveraging address space sharing, the number of memory copies is
+significantly reduced.
+
+# Future Work
+
+Currently, RPAL requires the MPK (Memory Protection Key) hardware
+feature, which is supported by a range of Intel CPUs. For AMD
+architectures, MPK is supported only on the latest processor,
+specifically, 4th Generation AMD EPYC=E2=84=A2 Processors and subsequent
+generations. Patch sets that extend RPAL support to systems lacking MPK
+hardware will be provided later.
+
+RPAL is currently implemented on the Linux v5.15 kernel, which is
+publicly available at:
+
+             https://github.com/openvelinux/kernel/tree/5.15-rpal
+
+Accompanying test programs are also provided in the samples/rpal/
+directory. And the user-mode RPAL library, which realizes user-space
+RPAL call, is in the samples/rpal/librpal directory.
+
+We are in the process of porting RPAL to the latest kernel version,
+which still requires substantial effort. We hope to firstly get some
+community discussions and feedback on RPAL's optimization approaches and
+architecture.
+
+Look forward to your comments.
+
+Jiadong Sun (11):
+   rpal: enable rpal service registration
+   rpal: enable virtual address space partitions
+   rpal: add user interface for rpal service
+   rpal: introduce service level operations
+   rpal: introduce thread level operations
+   rpal: enable epoll functions support for rpal
+   rpal: enable lazy switch
+   rpal: enable pku memory protection
+   rpal: support page fault handling and tlb flushing
+   rpal: allow user to disable rpal
+   samples: add rpal samples
+
+  arch/x86/Kconfig                                 |    2 +
+  arch/x86/entry/entry_64.S                        |  140 +++++++++++
+  arch/x86/events/amd/core.c                       |   16 ++
+  arch/x86/include/asm/cpufeatures.h               |    3 +-
+  arch/x86/include/asm/pgtable.h                   |   13 +
+  arch/x86/include/asm/pgtable_types.h             |   11 +
+  arch/x86/include/asm/tlbflush.h                  |    5 +
+  arch/x86/kernel/Makefile                         |    2 +
+  arch/x86/kernel/asm-offsets.c                    |    4 +-
+  arch/x86/kernel/nmi.c                            |   21 ++
+  arch/x86/kernel/process.c                        |   19 ++
+  arch/x86/kernel/process_64.c                     |  106 ++++++++
+  arch/x86/kernel/rpal/Kconfig                     |   21 ++
+  arch/x86/kernel/rpal/Makefile                    |    4 +
+  arch/x86/kernel/rpal/core.c                      |  698
++++++++++++++++++++++++++++++++++++++++++++++++++++
+  arch/x86/kernel/rpal/internal.h                  |  130 ++++++++++
+  arch/x86/kernel/rpal/mm.c                        |  456
+++++++++++++++++++++++++++++++++++
+  arch/x86/kernel/rpal/pku.c                       |  240 +++++++++++++++++=
++
+  arch/x86/kernel/rpal/proc.c                      |  208 ++++++++++++++++
+  arch/x86/kernel/rpal/service.c                   |  869
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  arch/x86/kernel/rpal/thread.c                    |  432
+++++++++++++++++++++++++++++++++
+  arch/x86/mm/fault.c                              |  243 +++++++++++++++++=
++
+  arch/x86/mm/mmap.c                               |   10 +
+  arch/x86/mm/tlb.c                                |  170 ++++++++++++-
+  config.x86_64                                    |    2 +
+  fs/binfmt_elf.c                                  |  103 +++++++-
+  fs/eventpoll.c                                   |  306
++++++++++++++++++++++++
+  fs/exec.c                                        |   11 +
+  fs/file_table.c                                  |   10 +
+  include/linux/file.h                             |   13 +
+  include/linux/mm_types.h                         |    3 +
+  include/linux/rpal.h                             |  529
++++++++++++++++++++++++++++++++++++++++
+  include/linux/sched.h                            |   15 ++
+  init/init_task.c                                 |    8 +
+  kernel/entry/common.c                            |   29 +++
+  kernel/exit.c                                    |    5 +
+  kernel/fork.c                                    |   23 ++
+  kernel/sched/core.c                              |  749
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  kernel/sched/fair.c                              |  128 ++++++++++
+  mm/memory.c                                      |   13 +
+  mm/mmap.c                                        |   35 +++
+  mm/mprotect.c                                    |  112 +++++++++
+  mm/rmap.c                                        |    5 +
+  samples/rpal/Makefile                            |   14 ++
+  samples/rpal/client.c                            |  182 ++++++++++++++
+  samples/rpal/librpal/asm_define.h                |    9 +
+  samples/rpal/librpal/asm_x86_64_rpal_call.S      |   57 +++++
+  samples/rpal/librpal/debug.h                     |   12 +
+  samples/rpal/librpal/fiber.c                     |  119 +++++++++
+  samples/rpal/librpal/fiber.h                     |   64 +++++
+  samples/rpal/librpal/jump_x86_64_sysv_elf_gas.S  |   81 ++++++
+  samples/rpal/librpal/make_x86_64_sysv_elf_gas.S  |   82 ++++++
+  samples/rpal/librpal/ontop_x86_64_sysv_elf_gas.S |   84 +++++++
+  samples/rpal/librpal/private.h                   |  302
+++++++++++++++++++++++
+  samples/rpal/librpal/rpal.c                      | 2560
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
++++++++++++++++++++++++++++++++++++++
+  samples/rpal/librpal/rpal.h                      |  155 ++++++++++++
+  samples/rpal/librpal/rpal_pkru.h                 |   78 ++++++
+  samples/rpal/librpal/rpal_queue.c                |  239 +++++++++++++++++=
++
+  samples/rpal/librpal/rpal_queue.h                |   55 ++++
+  samples/rpal/librpal/rpal_x86_64_call_ret.S      |   45 ++++
+  samples/rpal/server.c                            |  249
++++++++++++++++++++
+  61 files changed, 10304 insertions(+), 5 deletions(-)
+  create mode 100644 arch/x86/kernel/rpal/Kconfig
+  create mode 100644 arch/x86/kernel/rpal/Makefile
+  create mode 100644 arch/x86/kernel/rpal/core.c
+  create mode 100644 arch/x86/kernel/rpal/internal.h
+  create mode 100644 arch/x86/kernel/rpal/mm.c
+  create mode 100644 arch/x86/kernel/rpal/pku.c
+  create mode 100644 arch/x86/kernel/rpal/proc.c
+  create mode 100644 arch/x86/kernel/rpal/service.c
+  create mode 100644 arch/x86/kernel/rpal/thread.c
+  create mode 100644 include/linux/rpal.h
+  create mode 100644 samples/rpal/Makefile
+  create mode 100644 samples/rpal/client.c
+  create mode 100644 samples/rpal/librpal/asm_define.h
+  create mode 100644 samples/rpal/librpal/asm_x86_64_rpal_call.S
+  create mode 100644 samples/rpal/librpal/debug.h
+  create mode 100644 samples/rpal/librpal/fiber.c
+  create mode 100644 samples/rpal/librpal/fiber.h
+  create mode 100644 samples/rpal/librpal/jump_x86_64_sysv_elf_gas.S
+  create mode 100644 samples/rpal/librpal/make_x86_64_sysv_elf_gas.S
+  create mode 100644 samples/rpal/librpal/ontop_x86_64_sysv_elf_gas.S
+  create mode 100644 samples/rpal/librpal/private.h
+  create mode 100644 samples/rpal/librpal/rpal.c
+  create mode 100644 samples/rpal/librpal/rpal.h
+  create mode 100644 samples/rpal/librpal/rpal_pkru.h
+  create mode 100644 samples/rpal/librpal/rpal_queue.c
+  create mode 100644 samples/rpal/librpal/rpal_queue.h
+  create mode 100644 samples/rpal/librpal/rpal_x86_64_call_ret.S
+  create mode 100644 samples/rpal/server.c
+
+--
+2.20.1
