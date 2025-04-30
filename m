@@ -1,233 +1,245 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2046.outbound.protection.outlook.com [40.107.94.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2A5217F36;
-	Wed, 30 Apr 2025 08:42:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002565; cv=fail; b=mpZmWqRPNtZpMwO6o71w+3/3ID0DDDQhYNrgg/VWhDIgsJ6kALNfw+puhCO8T4FxZ5egLYrmn5ODoBdQseAN/Q+HNiNOkmFEI2z4GWP9QLxjAFTCEyOeV+VAz+lAsj01XF5m8KBNbkwZTUbXNffwlFepoQcW8Qg3mCFwSBZj8i4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002565; c=relaxed/simple;
-	bh=mHLymPOzuiFDb14I2SuJM6DLi1sbFfw1JkVc5ohhTFM=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=qiDZTPT1CSAkjBO6Do26UXtOLPBfT1Qd+GXWUgWKDWlZ3OeoKnG8AVRjUjT4XKV7Bafa5Tc5tHFspK0nq3ym0pRHFEDE2wq9V0QQVJ+k0f+WSRWWscz/HIGqNxbxPs+/R7ogNOPRq1aKVpvX9AaRl11S6uO7NkAThzkdH9DPyaE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=EAIbP9I6; arc=fail smtp.client-ip=40.107.94.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3299D1EB19B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:43:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746002595; cv=none; b=I2x1j0H34JNEHUYk9cwC8boIBzilAFbZRmh4VGcU0l54qAaBwaJXAIgpgzCWc/3giETM+gIU9rZXQHL86nIWcf6O8UZcwVd6Cj6QRKwVaLtjaZRC6q9Jah2W12dEzgyS/Oo99Lnp25CwJRrtKSBDUieQWoq6GhlDDI/AIjWGxvM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746002595; c=relaxed/simple;
+	bh=4d+nRgwO0m0WjbiS+0R/uQKINrYp9RlWa+SVoJv8NV4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DCcGTrNT9zOrF5MSd+urXMjVKIVKoxT5hVXvPkmclK1fqrasvtIwwrXWT3CYC+fZ7b/HQc8o1zW8MeSLwdWvx2E27f8/2AHbeEE9BJnQCIhwB9jNMQd22XVfA9vJUGif/daVD3UgdcB7uzD4t6XXTpglry2yyv63aBV0LEobNGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=CV/AWjjs; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="EAIbP9I6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=oktG3lO/fEJMrBGUoQBNCbA3Y5DGUAAOOBizSs4Q+zr1WoHRbRXKIeylz8E1pDYBHOUsADFcts/DnyU+s7Tu0Yr+4BsKYj5+e1545kNWA5GNIup29Ta6lraDyKKnFKry9QOTOtAA9shnOEaFAZ8fUp2e8x7phDXFsUjghbXvNGXoRu3x2KW20vucVevUuEILxl9K3vSpDzbnYPHltccVAq0ROB8GGWc9jJpKal1oHjVAiItPrFOXdXNkH2bvPfhZT0zturRKkryDOsiAIK+jCN1WJdJD+yd8uO63uKAOYNHi7YpdZeWF2gpJJcO75HTwK1+3TVyek5iLxL4XXKLMyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CLl/XWii2SlU8mIkZTS91BdSh/KHgOwRJvKhvp5+zwM=;
- b=HyttlAil3vlGNrb1THCGDY1715x2PO/PZZw9az0GE9SNPAi+3ak6I/RuhQIFHBLtPx/YOxGJDRmBetqnSmriXSw/CUUDh51yZJCI/J7Si1jSj22MdYEmSXPO6Fhdcp6IdPNp0Vp9hKb/FEB27dD/yBLTRCvJ5LRlDEYLAusRaVMTJrLv1q7eWabfjwsDO2qJ54D/hMTbHGwe2hSLXM0eLu0SEpYPfX2EYUnk6mJyFVFvc9aLf3/MyqrmtHBzE51JUyn1zwFpyJL0nyFCdRm44Dv9RXY9IBVzUh0+IQwi71F1CkzjUELJ3y3uD5ZQIQMUfyz3q4dzZBvsKOaF+g80yQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CLl/XWii2SlU8mIkZTS91BdSh/KHgOwRJvKhvp5+zwM=;
- b=EAIbP9I63PN7FxVgu2NgEpM3l7ZiIf5ye7+VJ6PJDARBb891WoHe5s3EKwsqelLv1s6SZMG9hLYiqvMVbTyqrG/PuDvBFK407ZMk83XYGScB0oZExDsFAA+IDludJ1jBkxe7bmO2P/r4WWoKyzUAZhytcKv+CGgn8geZ36qtN/U=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com (2603:10b6:5:219::22)
- by SN7PR12MB6910.namprd12.prod.outlook.com (2603:10b6:806:262::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Wed, 30 Apr
- 2025 08:42:41 +0000
-Received: from DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79]) by DM6PR12MB4202.namprd12.prod.outlook.com
- ([fe80::f943:600c:2558:af79%6]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
- 08:42:41 +0000
-Message-ID: <200f8614-34ba-42b4-aa8c-560d3052e496@amd.com>
-Date: Wed, 30 Apr 2025 09:42:35 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] cxl: Allow reprogramming misconfigured hdm decoders
-Content-Language: en-US
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>,
- Gregory Price <gourry@gourry.net>
-Cc: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250430012915.295136-1-lizhijian@fujitsu.com>
- <aBGIMglj8r5MNAmN@gourry-fedora-PF4VCD3F>
- <082de146-d5ed-4b49-ba0f-d6f018436e5b@fujitsu.com>
-From: Alejandro Lucero Palau <alucerop@amd.com>
-In-Reply-To: <082de146-d5ed-4b49-ba0f-d6f018436e5b@fujitsu.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0047.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:152::16) To DM6PR12MB4202.namprd12.prod.outlook.com
- (2603:10b6:5:219::22)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CV/AWjjs"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f7ec0e4978so6872425a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746002591; x=1746607391; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YywoEVDaYDC9htJBIzSiWueEw3oMNUZft+4Pwn9CzDc=;
+        b=CV/AWjjsbSiOl3YgXF/VMJykRM59+iniamk7WYPl1cU3BjL3XVnn5qDN9zj/1Ueb/6
+         eln+LtYd5x9VI45hGdvnjAGD+IoIo2uzC1NiGKi+gb+QZN9xxAwR3/A2xz9jG7fXsQ1j
+         GOOeP8U4PQYhe+z2NTRM4mSi5L13yFG505daA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746002591; x=1746607391;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YywoEVDaYDC9htJBIzSiWueEw3oMNUZft+4Pwn9CzDc=;
+        b=Ia7pdw/m9ser6tEEvyJywIkIJwDIaMV1vNI29RBKhgALQt4eWJyNnSdpLwQp4swr5F
+         fKBvKix3zQt5l88pFbHOFocdifaIyzfslJJlDFKkZI+oLaeXDD/nDxs9c8qMdeiw/AHp
+         rvI3al1bi+xGZY6YbrQb1NK/Zh+RGoYEO1wjFb7XIA3fdIgQzrTv2EHFUgMP+tv0vlnJ
+         vhPwTQKsCJoXUDD9DNUH+MH02XjtMlVPR9ICIL8RTKhRnOsMPUjGSNwH4FB8vXhqNHYS
+         zBoA237PEQf7OHafmdl5V2bKTqQZUm9fwut7AHuPVtutLWcSx2AeUs9tomoJ9QonqicG
+         SWnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVaBnEvxrttHISvF9f0gHm2Z5a/M/TiUWz/5sbqAYegScAJToMVmLI4ToVVPh6TGWXUa8zfYx/Qg3pg/GI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjNBvqG9jFGIepk1sfdFzilATZfUuBe7H8ybqPvipCLqex3WK7
+	tSYYKL7qw9QRUMeqoOHG5WqfmZz1Qz19VQq7SpOteMorl6hVt1CycmLiY3hJ+s910GhuFTZ++uk
+	DNg==
+X-Gm-Gg: ASbGncu80xVk2Bl5iSYhZ3dhDAW8VxWbDPvL9kwjgPuPWjVIOI9rLX47ZZ6dWtamYUs
+	AU2c78a6PwGtoJ9Q1jDkfRfcTWVTEqiByZf5skhMB2h5D5CUwZrZxbtm6zotZdfH/N4p/lrIjQO
+	PRFIWArW/tOFJ4fBR9wOHUrE9Tx2HmhRtriGHu76yKB2uWSae5XoZRugXZFeG1HheJOgVEDd/76
+	MfpEd7Q6bekJE9SpKTm2HdxamRiblrSskT7/3DqEGcCuojTBR0Pb+ID1GwRoscLms90JPIfgRiL
+	V7p9Iz6D2TF09Ws8mCljoOP8EnypSbIcUJ9VX0Z2gnUf7GBdkrULNFtiYf/athhZUw6F/V+e8pX
+	M
+X-Google-Smtp-Source: AGHT+IE5c0FeVMasJYujppu9ZWRH3HDfe017GmqjWo/SZpJCNjWzjd3rDa0gbH7GZzzcVKZSF5t+rQ==
+X-Received: by 2002:a05:6402:5385:b0:5e0:82a0:50dd with SMTP id 4fb4d7f45d1cf-5f89bf17df9mr1983019a12.27.1746002590879;
+        Wed, 30 Apr 2025 01:43:10 -0700 (PDT)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f701400570sm8497791a12.29.2025.04.30.01.43.10
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 01:43:10 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so7564a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:43:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV8UgIP3bMwcnL2bGVmPrGBkqmHHn5d82CgOLUUYcPFdEIexdEEb+bkFH1rvtnWrS2wEKUHYTZRVDPWm30=@vger.kernel.org
+X-Received: by 2002:a05:6402:10c9:b0:5e6:15d3:ffe7 with SMTP id
+ 4fb4d7f45d1cf-5f8aac01ed0mr54584a12.7.1746002589612; Wed, 30 Apr 2025
+ 01:43:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR12MB4202:EE_|SN7PR12MB6910:EE_
-X-MS-Office365-Filtering-Correlation-Id: c4c030f4-6cb8-435b-aeb4-08dd87c2f7cb
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?N1ZmSGdMcjhWOFlwa0lvdzBCVWpKMDZyaUNzRlVnQmxZSVBnZVFTSDBKSDNH?=
- =?utf-8?B?NGtqV0tPWXdhWVFRb01BR3d1cmtCaCtsdVhHWDE3TkowWkpSNnovWklSL2Mv?=
- =?utf-8?B?bDdvelFxNy9NenZ1bFRvRmdMbGVFclVGWlRJMHRua3Q0YngrMkNHWTYvb3Nm?=
- =?utf-8?B?YmQ3UGJRVUYwQ3lVZUNha0NueXhTc282UW1mVk80UGZ5azVGMC9HbFRvc1Vw?=
- =?utf-8?B?bTUvZWJnYVozNWZ5RXNiUHpudEl1SHlNbTdWUDlFdVNNeS9vOUh1eW5lVHR6?=
- =?utf-8?B?dFp2RjVJdHZPMWo5djFxY2p0TmNudWVDWGtsTnZaZCszbERmKzNWajRGdnl1?=
- =?utf-8?B?TTNSRlpYcE0xcnhoQS9nek54UkdlendZZ01xMEV4RkxvTlpSakxOWjRSTDZx?=
- =?utf-8?B?MDlxQ0hQdVQyQmR4WGJXa0FZdGpaU09hQWM1bXFWci9RNmh6VEZ5eHVQUmt0?=
- =?utf-8?B?cStHUEZHZXhwTEJodm1PYWl0dGxtTmowZU04RmtaK3pJdlhZbXd4T08vbDdF?=
- =?utf-8?B?TWluZUxUWnlTMjNZNW9xNU5ha1pLeVoreUFSOXVndnE3NDV6N1JTSTBmYmxP?=
- =?utf-8?B?VEJCcEROdGNOZDlhL0ZNaXNONVZKdG0ybk9saWtyTE1EN1RSZEd2Qng0SFA2?=
- =?utf-8?B?NVI0cnFScWt5WktSVjZmZW8zVlErWmNQRUljVzM4bWRKWTBPcnRham9adStB?=
- =?utf-8?B?SU1RUCtIaXErUWZJdWtwWHdYTHkwYUtON2UyTE02TTc5am5MV2thZTRmbzM2?=
- =?utf-8?B?cDFlUUVqRWlidGlsb3BMQUhjQXczMGh6L2Z0SG5GcERBQ2dzdXJkTXRwOXhx?=
- =?utf-8?B?QmFRb2FCbnFJdi9MbVEzWVkzTVkxQSszamlMSHYySXM1SDBQMGNQS1haRGFC?=
- =?utf-8?B?L2tvRzVsVDBzdVhFK2QwWmZFblVGVlMxNGp2S2QwVkYvR0NIMGsyNHZZNUR5?=
- =?utf-8?B?U0oyUE9JSk5HN0JHUG43K0p1T2Q1cDZuZ2VxTGRGOExFYVdlYjlhbURxRENY?=
- =?utf-8?B?QytUT0t2QzU0emtwdnRud01qd2prQXkwMXJGZi95SXVMdktkYUdFb0xtYy9q?=
- =?utf-8?B?N2NBL3dsZm9icXg3T0JqbXFPK25CWlBBR2l4eXZxcGRhdFErMVpBMmtrZ0VS?=
- =?utf-8?B?RUI4bXBNRzFvMXVJNHFZV2NlNVdFQk5JRHdvNTZ6TzdydnJLZDU5elRoZjR5?=
- =?utf-8?B?QnBLK1gvQkhZWWdHV0lUR05KZTBPeUpSQXo4UDg1aHI5dCt1ZTBVS0p6Mmpl?=
- =?utf-8?B?c1JnTTF0ZXBYMVlCLzlmWlNkUU5EbnRMNHl5bFhqcXhqTXFpMVk1ekxaZDZX?=
- =?utf-8?B?S3ZaVTRNdTNaTklVNnBkSTk2MzV5U2tFTFpTMXVkNEdOK0hPeUtNU3loWEJv?=
- =?utf-8?B?V1kzUHdIVGNUQSt0b3VBMXhNWkdyREo4ckFPc2tXcjJIQzFUK2RZeXo1Uzcv?=
- =?utf-8?B?UDhYUDhoeGRvLzZuTXRHaWZnZ2lSdnEwQU9YQzdGemNNS0FnY0NGMDJBTVlY?=
- =?utf-8?B?bGl2U1FmbVhkQkZnbVRSVG83TVhlUXVSMGdJSVNGelgwb2tPOHFRNnhNR0lj?=
- =?utf-8?B?Q3ZLU1RQbEtOeFBDL1VVbjhwUGZzcEVseHJXRUcwMUdYaUR2Q1J1L0llUjBI?=
- =?utf-8?B?TVBOV2luQ3ZTYjh6NnRaL0UvSkFobWZidlVZUWJyUVFNcEZGU3BjSmpGQUVE?=
- =?utf-8?B?S2MxaFRrNGlDcjBvajUzc1FBa3lSL21yN0ZVN3lZem9wWHF4NVlDbEpwWDd0?=
- =?utf-8?B?ekxhZVZORVRZNEdPUDZJanlhaE5xZWQyTytYeEJwMHBDTUpsWXJTMngzVTNB?=
- =?utf-8?B?cno4OW05OGRBb21rZlFCTEhURjVLY1R3L2pjZUU1WWRhQytTMkZVV0E1MGgx?=
- =?utf-8?B?MlI3Y0tzQnVrMTlrNk5UK2UxdGtxL3Rqa0R3RmoxRVptbGpXMEtPc2l0SHNw?=
- =?utf-8?Q?M2fCeLI7RGQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB4202.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?REdiSCtFellVMzl3UEdZZldlZlBNTTNmbUZRbE1HSzBaMXNERG5TZnJyUjRK?=
- =?utf-8?B?YnI5bzVXNFh4UkluZk43bEN6OEhwRWU4dWNKWXdmT1hZZjR2YjlEa2pNTXVX?=
- =?utf-8?B?a1NnWlN6QTQxYWwrY3BEc2hCc2dOV09hcElDd0EzWWdzZjY3MHZvRnR6WDhT?=
- =?utf-8?B?cXZvb29lQWFCTThGWVdSb3AvRjNtMnZDS1hBaWxzV1FHdFUvczYvYXZYMXhU?=
- =?utf-8?B?MnArUlVXUms3OU4zcDJuSkNFSC8zRC9FYzVLRWg2N24vV0VoTUVsa1pWaVJa?=
- =?utf-8?B?MWhnN2U4Rk56M0w2NVlINTdIOUtEUFlrYm1UcnpGNVkyVWNDRXJDSkZOd0NS?=
- =?utf-8?B?c1R1MnVML2VtNXZ6cmpDQkg1emdiS0VsaCtteXR0M0NLMVJtYTlHaHNYemJF?=
- =?utf-8?B?eDVmZi9rdFE5aU9wSVZZQ0w5ZWFYWFdzbWtCRmJuTUQ3YUJUME52L1BBbzVm?=
- =?utf-8?B?L09UclMybFUwbStVUitkc25peVY0c1Y1Vms2VjRUci9FdEh5TzIxSzlYZGZU?=
- =?utf-8?B?K25aT3BCQXo5cHdBZ0U1eHdWNjF2SFRCVlZuNWp0bUJ1Y2hpckJZTjFUbHVM?=
- =?utf-8?B?TFNGVmtMNm1ja3RoamVNNzhXcFJBV0NFb01uelYwMW5wdHZCNWFhSE1BYzA3?=
- =?utf-8?B?a003TWZrRlJiRTBWR0ZRU3B2dGl1d0RUTGc5YUc1U095NDFWRWlSMnJPTW5H?=
- =?utf-8?B?bis5YUtPbGY2dWtrSno2WStnRHNkZEtGZkZ4d0dEdFlnZG96N3ZFS3RrdEZj?=
- =?utf-8?B?MSsvMEhScGRWWHhma3BOTElkYUQ2VW1pdXFSOGR4Q0dJSjFJL0Y3aW1oanBK?=
- =?utf-8?B?aVpETjBlUCtiUlRBbVVmZXN5ZUd1eSs3c3cydG1zTGFXWUpzaVZmNDhKcUFa?=
- =?utf-8?B?OG5HRzBwM0FLN3Q2VmVtNUdKYlhKOGNMS2c3UnpPZDhONTlHMzNWWWd5MURS?=
- =?utf-8?B?YzFpLzQrTzZ5MnMvdFM5TmNPR0R5Tm1nYXczbVpWNVBaaS9sajFDSmZDNFdC?=
- =?utf-8?B?V2J0NUtBK21QWVg4eUU2YlR5SXJyREVqcEpka29ldWw1a0I1dkV5RUVOYzNF?=
- =?utf-8?B?eC93ZG1CNVQwdE5DNVBBTk9HQWFhR3M3MGtBUlo3TkUrSVEvdHdrcGJ0YUNo?=
- =?utf-8?B?Mnd0Q1l3K05vQXFnbHFKUXFVRk9WVmlad1B5Y3RGMGt1R2ludWpaSmpoMTBH?=
- =?utf-8?B?eTQ3eWIvU0hIZHl3TFIyQ3VCTlB1Z0x6NDV3clNMaXdmN0dtMTN0WDJLMytJ?=
- =?utf-8?B?K1F1VVR6M1ZjZHA5NUNPUEMxQyswSERhZ3VqUWF3c0tCdUp5YXFNT1dsNm1k?=
- =?utf-8?B?VFdTVUFzZTU4cWd6U1hwYmwxRVF3S0dJN3dxMC9UUjBjWWFtbjlaSi9CdXBQ?=
- =?utf-8?B?YXR6Mmw1N1lremo2T2xWa2VXYW1qSW1uZXZIK3kvYlBjbWRwZ3VhZWhkVFVq?=
- =?utf-8?B?a2JTMTFyUnY0L1RHekZ0RUpCN3NFQklEdGNqaXN1YUw5NG1IVXdPc3I3d1Ew?=
- =?utf-8?B?Nm5RTmxNbVJaVHltaU53dlRrQjhMTFNxTjRGbE15NVdxa2RNVndkRzR2T2M4?=
- =?utf-8?B?R1p2UFpMQ2dITC9MY3Fra0VHWUQrWGFQbEttUld6V3lEY243UHJ0czJtbW45?=
- =?utf-8?B?d3hLUWU0Y2pJMmZOaGN4WUdHSUUrUm1PNXdiQXBrcVNPS2M0SVJEdXp4Mm5G?=
- =?utf-8?B?UE5hNXFEbU1WaEtFRU1zajFqZ1FzUzJkd215LzJSNG4wU0k2SnExakQ1akVp?=
- =?utf-8?B?L3JxUDlXdHBKOEVHTXBsTEhVNGNOMHpPYVNrN3BFQXBLQUhnZVhVVnJJbmlD?=
- =?utf-8?B?VEo0YVlnZkxWN3dJenZrNjRuZU9sQnBzSkNISnRXUG5hTmplVlE3cUpzbzd5?=
- =?utf-8?B?TjYwcXQ0QVdlcENjRkh1dGh5QXpXYlhOMmhOR2V4YUVUNTh0Smdmd1Q5Vkw2?=
- =?utf-8?B?ZENIKy81Zys2WmNTdFlBVzFJb0FMMXE5NXhwdkJNZ3R2SnVGQW1uVmxpSjdp?=
- =?utf-8?B?S2ZJR0V5ei91dk1EYWhjNUxQdTlQc3hzVE44eEhGN29wQ0V0MUk0MXBqa1lI?=
- =?utf-8?B?SUV3OUJjUzVoalp1UjhDYVhONzdVVE40ZHFwai84YklRQUY3Qm1kUmoxWUtW?=
- =?utf-8?Q?WhrWYkDdRVD+cL4P8B44tC0Yy?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c4c030f4-6cb8-435b-aeb4-08dd87c2f7cb
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB4202.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 08:42:40.9598
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EEJjj1hTVoflJHMUHljCyQBmcKG3TEomLk/J8YoBJ3isqF202fH1rd92dU+gmmgnwEYBRpAKV8KAdnWzEJ2qLw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6910
+References: <20250424070436.2380215-1-senozhatsky@chromium.org>
+ <aAoZbwEtkQ3gVl5d@pathway.suse.cz> <CAAFQd5A6J-UCy46bp1MYP0imJf3oUL29mxFVLZZZ4JmP2YTvhQ@mail.gmail.com>
+ <aAuq-3yjYM97rvj1@pathway.suse.cz>
+In-Reply-To: <aAuq-3yjYM97rvj1@pathway.suse.cz>
+From: Tomasz Figa <tfiga@chromium.org>
+Date: Wed, 30 Apr 2025 17:42:51 +0900
+X-Gmail-Original-Message-ID: <CAAFQd5BeJnYXZt06WVFBWu8cvCmXWTe_tH8Ly3ywTNRCjxXCMA@mail.gmail.com>
+X-Gm-Features: ATxdqUHV4xIBAA-SfzDnO-kDjeKdAsVebl2zesMOnO2iwTuSso00Zm-K99rpoGc
+Message-ID: <CAAFQd5BeJnYXZt06WVFBWu8cvCmXWTe_tH8Ly3ywTNRCjxXCMA@mail.gmail.com>
+Subject: Re: [PATCH] hung_task: configurable hung-task stacktrace loglevel
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	John Ogness <john.ogness@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, 
+	Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 4/30/25 04:24, Zhijian Li (Fujitsu) wrote:
+On Sat, Apr 26, 2025 at 12:32=E2=80=AFAM Petr Mladek <pmladek@suse.com> wro=
+te:
 >
-> On 30/04/2025 10:17, Gregory Price wrote:
->> On Wed, Apr 30, 2025 at 09:29:15AM +0800, Li Zhijian wrote:
->>> During kernel booting, CXL drivers will attempt to construct the CXL region
->>> according to the pre-programed(firmware provisioning) HDM decoders.
->>>
->>> This construction process will fail for some reasons, in this case, the
->>> userspace cli like ndctl/cxl cannot destroy nor create regions upon the
->>> existing decoders.
->>>
->>> Introuce a new flag CXL_DECODER_F_NEED_RESET tell the driver to reset
->>> the decoder during `cxl destroy-region regionN`, so that region can be
->>> create again after that.
->>>
->> My best understanding of why this is disallowed is that firmware/bios
->> programmed decoders need to be locked because there is an assumption
->> that the platform programmed it that way *for a reason* - and that
->> changing the programming would break it (cause MCEs for other reasons,
->> etc).
+> On Fri 2025-04-25 15:58:46, Tomasz Figa wrote:
+> > Hi Petr,
+> >
+> > On Thu, Apr 24, 2025 at 7:59=E2=80=AFPM Petr Mladek <pmladek@suse.com> =
+wrote:
+> > >
+> > > On Thu 2025-04-24 16:02:43, Sergey Senozhatsky wrote:
+> > > > Currently, hung-task watchdog uses two different loglevels
+> > > > to report hung-tasks: a) KERN_INFO for all the important task
+> > > > information (e.g. sched_show_task()) and b)  KERN_ERR for the
+> > > > rest.
+> > >
+> > > IMHO, the two different loglevels make sense. The KERN_ERR
+> > > message seems to inform about that a task gets blocked for too long.
+> > > And KERN_INFO is used for an extra debug information.
+> > >
+> >
+> > I agree that two different levels make sense, but I think that
+> > KERN_INFO is not necessarily the best one to use, because we have
+> > quite a lot of usual/expected things logged with that level, but this
+> > clearly is not an unusual/expected event that we're logging.
+> >
+> > My preference would be on KERN_NOTICE.
 >
-> Hi Gregory,
+> Sigh, this is the problem with loglevels. Different people have
+> different feeling about them.
 >
-> Thank you for the feedback. Based on current CXL driver behavior, user-space tools
-> can indeed reprogram firmware-provisioned HDM decoders in practice.
+> A solution would be to add an extra log level. But the full 0-7
+> (3 bit) range is already taken.
 >
-> For example, after a successful boot, one may destroy the auto-constructed region
-> via cxl destroy-region and create a new different region.
-> This indicates that the kernel does not inherently lock down these decoders.
+> > > > This makes it a little inconvenient, especially for
+> > > > automated kernel logs parsing.
+> > >
+> > > Anyway, what is the exact problem, please?
+> > > Are the KERN_INFO messages filtered because of console_loglevel?
+> > > Or is it a problem to match all the related lines?
+> >
+> > The problem is that when we're looking at the hundreds of reports with
+> > various problems from the production fleet, we want to be able to
+> > filter out some of the usual/expected logs. The easiest way to do it
+> > is by using the message log level. However, if we set the filters to
+> > anything more severe than KERNEL_INFO, we lose the task dumps and we
+> > need to go and fetch the entire unfiltered log, which is tedious.
 >
-> As for the locking rationale you mentioned, platform vendors might enforce their policies
-> through mechanisms like the *Lock-On-Commit* in CXL HDM Decoder n Control Register
+> Good to know.
 >
-> While platform vendors may have valid considerations (as you noted), from a driver and
-> end-user perspective, depending solely on firmware updates to fix transient failures
-> is not smooth sometimes :).
+> This might be an argument for using the same log level for the entire
+> report. But it might create new problems. It would be more complicated
+> to filter-out known problems. I mean that a single known
+> warning/error/emergency message can be filtered easily. But
+> creating a filter for the entire to-be-ignored backtrace is more
+> complicated.
 >
 
-Hi Zhijan,
+Yeah, but since this filtering would be happening in whatever code
+reads those logs, outside of the kernel, we first need to get the
+candidate backtraces from the kernel, so having them a log level
+appropriate for an unusual event would definitely help.
 
-
- From my current effort trying to get a Type2 device properly 
-initialized by the kernel after the BIOS/platform firmware doing 
-whatever it needs to do, I really think we should have a wider 
-discussion regarding this sync, and maybe to have first something from 
-the kernel expectation of what the BIOS should and should not do.
-
-
-If this makes sense, I could work on a initial draft about the outline 
-or points to discuss about this.
-
-
-Thank you
-
-
->> So the appropriate solution here is for the platform vendor to fix their
->> firmware.
->>
->> But I am not a platform people - so I will defer to them on whether my
->> understanding is correct.
-> Yeah, it's still in the RFC stage, let's hear more voices.
 >
-> Thanks
-> Zhijian
+> > (FWIW, we're also developing an automated analysis tool and it would
+> > make the implementation much easier if we could simply use the log
+> > level to filter out expected vs unexpected events from the logs - and
+> > most of the time that already works, the case Sergey's patch is
+> > addressing is just one of the small number of exceptions.)
 >
->> ~Gregory
->>
+> It might be interesting to see the list of exceptions. Maybe, we
+> could find some common pattern...
+>
+> It would be nice to handle all the reports of critical situations
+> similar way. It would help everyone. This is why I am not happy with
+> a hung-stask-detector-specific setting.
+>
+
+I was convinced that the soft/hard_lockup detector also does the same,
+but I double checked and it seems like it [1] just calls dump_stack()
+that uses KERN_DEFAULT and in our case that defaults to 4
+(KERN_WARNING), which is more severe than 6 (KERN_INFO) that we want
+to filter out, so I guess making the hung task watchdog behave the
+same way would also work for us.
+
+[1] https://elixir.bootlin.com/linux/v6.14.4/source/lib/nmi_backtrace.c#L94
+[2] https://elixir.bootlin.com/linux/v6.14.4/source/lib/dump_stack.c#L127
+
+Besides that, I don't actually have any other cases at hand. I guess
+we'll find out once we look at more crash reports.
+
+> > > If the problem is matching all related lines. Then a solution
+> > > would be printing some help lines around the report, similar
+> > > to
+> > >
+> > >     ------------[ cut here ]------------
+> > >
+> > > in include/asm-generic/bug.h
+> > >
+> > > Plus, it would be needed to filter out messages from other CPUs.
+> > > CONFIG_PRINTK_CALLER should help with this.
+> >
+> > I'm not really in love with that idea - it would make things so much
+> > more complicated, despite already having the right tool to
+> > differentiate between the importance of various logs - after all the
+> > log level is exactly that.
+>
+> Honestly, the more I think about it the more I like the prefix/postfix
+> lines + the caller_id. I am afraid that manipulating log levels is a
+> lost fight  because different people might have different opinion
+> about how various messages are important.
+
+The problem with the special lines is that it completely breaks any
+line-based processing in a data pipeline. For a piece of
+infrastructure that needs to deal with thousands of reports, on an
+on-demand basis, that would mean quite a bit of sequential work done
+instead of doing it in parallel and taking much more time to answer
+users' queries.
+
+That could be worked around, though, if we could prefix each line
+separately with some special tag in addition to log level, timestamp
+and caller, though. Borrowing from Sergey's earlier example:
+
+<3>[  125.297687][  T140][E] INFO: task zsh:470 blocked for more than
+61 seconds.
+<3>[  125.302321][  T140][E]       Not tainted
+6.15.0-rc3-next-20250424-00001-g258d8df78c77-dirty #154
+<3>[  125.309333][  T140][E] "echo 0 >
+/proc/sys/kernel/hung_task_timeout_secs" disables this message.
+<6>[  125.315040][  T140][E] task:zsh             state:D stack:0
+pid:470   tgid:470   ppid:430    task_flags:0x400100 flags:0x00004002
+<6>[  125.320594][  T140][E] Call Trace:
+<6>[  125.322327][  T140][E]  <TASK>
+<6>[  125.323852][  T140][E]  __schedule+0x13b4/0x2120
+<6>[  125.325459][  T140][E]  ? schedule+0xdc/0x280
+<6>[  125.327100][  T140][E]  schedule+0xdc/0x280
+<6>[  125.328590][  T140][E]  schedule_preempt_disabled+0x10/0x20
+<6>[  125.330589][  T140][E]  __mutex_lock+0x698/0x1200
+<6>[  125.332291][  T140][E]  ? __mutex_lock+0x485/0x1200
+<6>[  125.334074][  T140][E]  mutex_lock+0x81/0x90
+<6>[  125.335113][  T140][E]  drop_caches_sysctl_handler+0x3e/0x140
+<6>[  125.336665][  T140][E]  proc_sys_call_handler+0x327/0x4f0
+<6>[  125.338069][  T140][E]  vfs_write+0x794/0xb60
+<6>[  125.339216][  T140][E]  ? proc_sys_read+0x10/0x10
+<6>[  125.340568][  T140][E]  ksys_write+0xb8/0x170
+<6>[  125.341701][  T140][E]  do_syscall_64+0xd0/0x1a0
+<6>[  125.343009][  T140][E]  ? arch_exit_to_user_mode_prepare+0x11/0x60
+<6>[  125.344612][  T140][E]  ? irqentry_exit_to_user_mode+0x7e/0xa0
+<6>[  125.346260][  T140][E]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+
+where [E] would mean an "emergency" message, rather than something
+usual, regardless of the loglevel.
+
+Best,
+Tomasz
