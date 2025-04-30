@@ -1,124 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779B71E9B09;
-	Wed, 30 Apr 2025 08:24:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 615D51E9B09
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:24:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001449; cv=none; b=AVDZOTo0rWVMGzmQH3TsLPXPDMjerTxN8fWFwIIZx2SDaVl84/BZbsx6B3m33l2AAM3p7xzYd7Bj895LYKJbf0n2YrEGb1rmSa8oUUertyfaUGDvXWrfxMvrp/3Ytyq9nMAKL+Xb8d5fXjV6u3Zhzlh48fE8g0L7pFl/z7OCBjA=
+	t=1746001459; cv=none; b=LpKnOwKsktzqIGcL/59ILW6kyo8rbDykiIaemwODspzgRMHE+DXhKgeNefQgcVkDXOMiFLBP1RIfxXKLwUopriFrrriEEvKVK09SURBW3ni+FvKGhxJP2My8yJQybPY2ht0pX/qAYFnLgx7nZd+FAU9OER0wx/bJ1XTMTp/TdVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001449; c=relaxed/simple;
-	bh=XkzCV+HlYtWZq8CFLqb3j+QfX63WPGpBO5U9P6v5HbQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rfOlg0ZYg0yKPF53OcaBA/VogFjJknbU6PrBlUDJfs+Xy9QvyYlFoUMY/xc5OvZ46eWnKo58veUYkGeC+BJITdmbi9FIsal10SgA6mgFckYp/uhvvSYznB53/F8YzRvGHBHx9yvlayf6W9pEr+isqJqmIkajs9HAe0Nb6To72AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ImCt9vrS; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746001459; c=relaxed/simple;
+	bh=jE4PEp33a5PU1lnBYNlqWTkmTy/oubM5i2hDNHSJbAc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=L1s6uMXjGR8ZQXUUYi7J2fvg0poLVy1KDSm1WmztL1vpPAkZY+u9D1Dora4vu7aEJJny9dHVB3eaVL71obLVQjOZleGkvtK72y9wo5CYo4K8uWBo00Nv1ws1He7FzCvraTpJ//WntedX9QKVjJTyj22QY9QoAPCWSQ8o5qpXU84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MT6BVCvi; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ImCt9vrS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746001448; x=1777537448;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XkzCV+HlYtWZq8CFLqb3j+QfX63WPGpBO5U9P6v5HbQ=;
-  b=ImCt9vrSz3IgmxJL3lyq08BskNYRYfz+GOblvcQ4AofFzEM61aT4upid
-   /cJh/7q9VfFVJOoE/XihmTQAD+sHGGfZhpWOJGHJm2LDhkGXG17xLRpVu
-   yt3DAij9/Yx5aTqiJSdocKe4DKq91uaJHQM7bQX6Wh2iYFMLmvCtAkmU9
-   FQ75clh052wAs7VmK1pJcq41wQtkfXrMOoEZl9o9/5IT81+mADkjB2LMR
-   x69Cy2XjHbzb2e82LcAHbewhwKpAVv8VclUCkwySB0r/5Uwok4f0Tz0ih
-   HPqYx4I1DvOJdkIqec61vunJFt2w3iIgZIbTD88D3s1jiR7orf1e+D6uZ
-   w==;
-X-CSE-ConnectionGUID: fmei6GrlQoa3NgTjUEOwmA==
-X-CSE-MsgGUID: jdrwsVQSRt+J/vrN/7MAeg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="73036895"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="73036895"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:24:06 -0700
-X-CSE-ConnectionGUID: mRXpYfzTS/eLd4rgTlskdA==
-X-CSE-MsgGUID: am3Q4LEeQ/yfmJ0T5s0Hkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="134570196"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:24:03 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 090B711F7E7;
-	Wed, 30 Apr 2025 11:24:00 +0300 (EEST)
-Date: Wed, 30 Apr 2025 08:24:00 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Richard Leitner <richard.leitner@linux.dev>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v3 3/9] media: v4l2-flash: add support for flash/strobe
- duration
-Message-ID: <aBHeIBbFRkZ4P82E@kekkonen.localdomain>
-References: <20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev>
- <20250429-ov9282-flash-strobe-v3-3-2105ce179952@linux.dev>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MT6BVCvi"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4394a823036so68227355e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:24:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746001454; x=1746606254; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ufqPEbOwWYWB18ZCf6Yh3nDmouH/kkXVRtJyRpSOlpU=;
+        b=MT6BVCvi4SjxHWopj6rBSu7AnH/4VuaLDr2PkcC/8L6gpfME+CZDsRgjnx/MDxpX1f
+         p97tH65b5RveQsOu48w1vURisczLNAotr/jt/Q9SfEWk9mgFTORUfzz+MLUa6B9nPkoX
+         ZsrdCC5gPY7/FhCRgZax709889dSGfCo9H+gvyG9z3nr3jwTJgEjJYYHuEAnoYDDTXvu
+         jwDX+832UnaLyL44zHbV6nhpGSfiG7bY5RTCcKCa+mZkr4X60w7F3j5+W9SIn4EzQTdd
+         T606BMMmZc8vcT9+/FoF1Y/1gIcVMsqwotdI2Y3tKrC03I44+/QIzLclNONGF72mKdwF
+         AMoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746001454; x=1746606254;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ufqPEbOwWYWB18ZCf6Yh3nDmouH/kkXVRtJyRpSOlpU=;
+        b=llK4jJPO72p1lb7V/jEZTfR9aYQz/NP4sFTdFwmnAulxF4ncPoIldY8PTlMXHPhJG8
+         FkCnr/ApKLbPxB0nb9/urvqguWrDSETd3E/QLMefMy/BVNS21wB2yHzQcdpI0ofK7A9X
+         Rm1WjQVItKjxcdd8A/CcPkrFB/I+ouPpIa9aeyBpMjPyQf9I+UjK1wOe1eYe0ZGEmeo2
+         YMcE7zOVk79/LB+rbToHo7HxarWFN1go9qy1L3A4QCAwqz1SzhOPeYQ7V4a89gVC6U+V
+         vzdEfVPvVPIXo//J8zV2r2Yo/Hx9ld/Fu6IJi0fgNpWQqscgrfVlb3XfWIEqO2gauzzU
+         jt5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXL3qH5//zvAQeczBorM9jvTvXBu1cyudPYFp6GrWR7+NzkUe4H2cdtk+W4MInFOpyo4Drg0fExeBh/38s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWEzP+dLQrLNWih/eAwDtTr9S6i8WeiOdF2aiJiN1bc2Z3Rw6b
+	U8SCfZu+7eHh/ozrJye9lBENP8wi6+85GupyyyGy4l7LIbSntb5uCtQK+baFlXk=
+X-Gm-Gg: ASbGncvjKQhlHgEcwkSiR8FLLZYUGqGW/mHBCFU6e4ni1T8njIJ5Fl+yZXZTNHK4JBG
+	DI+IeJ2IaRKB4K/2DxkJt/phjsyeCb9WPo47E7537aqbt+4s8mjJ4ZQUSXvVSDq5kGyvrB9jVd+
+	XMzXuMeUV3YLM0RDO72SJXmDNM+RTNf5mBEcImCVQWDYSbNTJH1uda0kNieA8n2GyG9+oY298s4
+	iC8sPeHRBpKtxJVYqndnHU06fZdc3ixK9YK+8ponBgJJyDCl265NDpVGXpq7ZURmRgdXPJxKTfb
+	0BVn7XMbnN6u+5K6ikCIbBFLly+blvagEL8GCNgvyQJaO9RAFzSagMKP95QjTsMnTZPWZIiB4Bb
+	BmJOT1Q==
+X-Google-Smtp-Source: AGHT+IEC343GJFUazvyxQ/kBdVhvDtloUR9+rS6OZvl6aiNt5CYM4RgWteI3bMKGtRqRGwvmyMmn9A==
+X-Received: by 2002:a05:600c:3153:b0:440:6a37:be09 with SMTP id 5b1f17b1804b1-441b1f3865fmr19065115e9.16.1746001454638;
+        Wed, 30 Apr 2025 01:24:14 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2bbf046sm15474325e9.35.2025.04.30.01.24.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 01:24:14 -0700 (PDT)
+Message-ID: <c2ba9738-a383-4a53-a7ad-fc65a97d1c4a@linaro.org>
+Date: Wed, 30 Apr 2025 09:24:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-ov9282-flash-strobe-v3-3-2105ce179952@linux.dev>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
+ version
+To: Johan Hovold <johan@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
+ <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Richard,
-
-On Tue, Apr 29, 2025 at 02:59:08PM +0200, Richard Leitner wrote:
-> Add support for the new V4L2_CID_FLASH_DURATION control to the v4l2
-> flash led class.
+On 30/04/2025 08:25, Johan Hovold wrote:
+> Unfortunately, it seems Bryan missed that this was a regression that
+> should be fixed in 6.15 and only included them in a pull request for 6.16:
 > 
-> Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-> ---
->  drivers/media/v4l2-core/v4l2-flash-led-class.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> 	https://lore.kernel.org/all/20250410233039.77093-1-bod@kernel.org/
 > 
-> diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> index 355595a0fefac72c2f6941a30fa430d37dbdccfe..963b549480f6eb3b9eb0d80696a764de7ffcc1a2 100644
-> --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> @@ -298,6 +298,12 @@ static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
->  		 * microamperes for flash intensity units.
->  		 */
->  		return led_set_flash_brightness(fled_cdev, c->val);
-> +	case V4L2_CID_FLASH_DURATION:
-> +		/*
-> +		 * No conversion is needed as LED Flash class also uses
-> +		 * microseconds for flash duration units.
-> +		 */
-> +		return led_set_flash_duration(fled_cdev, c->val);
->  	}
->  
->  	return -EINVAL;
-> @@ -424,6 +430,13 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
->  		ctrl_cfg->flags = V4L2_CTRL_FLAG_VOLATILE |
->  				  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
->  	}
-> +
-> +	/* Init FLASH_DURATION ctrl data */
-> +	if (has_flash_op(fled_cdev, timeout_set)) {
-> +		ctrl_init_data[FLASH_DURATION].cid = V4L2_CID_FLASH_DURATION;
-> +		ctrl_cfg = &ctrl_init_data[FLASH_DURATION].config;
-> +		__lfs_to_v4l2_ctrl_config(&fled_cdev->duration, ctrl_cfg);
-> +		ctrl_cfg->id = V4L2_CID_FLASH_DURATION;
+> Bryan, has your PR been merged? Can you try to get my fixes into 6.15
+> since this is a regression in 6.15-rc1?
 
-Has this been compile tested? :-)
+Let me see.. there's a -fixes branch, I think I should be able to PR 
+anything with a Fixes: tag there.
 
->  }
->  
->  static int v4l2_flash_init_controls(struct v4l2_flash *v4l2_flash,
-> 
-
--- 
-Regards,
-
-Sakari Ailus
+---
+bod
