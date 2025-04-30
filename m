@@ -1,80 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD0E17CA17;
-	Wed, 30 Apr 2025 15:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96AD425DAFB;
+	Wed, 30 Apr 2025 15:55:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028464; cv=none; b=IqFzcsv74V2jSq+AG8GWfDCsOSMieRnXEJZODcpmp+3PvTK4PA+ItJ5XoXswk/Ou+e0VokkzEQY9EZmn7CKGv0Uug1tAeE8bIcfnqHRMxxF+u5gfHvFjGLZ7yJJVE18ez/bQjecZme+BfVrymN7KYR0BKM1k50PU6KhQXovJKII=
+	t=1746028519; cv=none; b=lF51ayRCJF4ZQ4Hm56WjhQj80MYYarqG0jA5ZwDeOvZ3JZ+yxuYAzdkoQ9cUFX087QscUF/au/5vSW+gsHl5sWMoaqg+09mFcuHTTRbloMt2YLWhRNZW0QMbAFVc/0tj7ix3WDdR7vz4k6bgHBP0qhyhdKUXGOif/I1JJzvDHaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028464; c=relaxed/simple;
-	bh=z7E8Qbo13mwyDTVgulR62/h0cxEpdpORLCx+iFA/PcM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=d+J6PFFJwDZGqgRUildkPn1Sn9rx++B+CTfQKVNa2IWsazxE+D66bClYbPNNCm6rpqgsta3kgsE2J1oAxsO3uMEWSCNOmGyr9ulvETI3EcvZGe3gftBF/xoQXgBTXlkvC+hpxR/gMhTuZUiuPvXHISo5APb1S+H4XEbGfxQDS3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQ07nxSD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746028519; c=relaxed/simple;
+	bh=itiBlsf6zR4RTlm3hf+QfHFNY4vVsdzz2uVhJ45Z5FI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gRiBVHqSNZIy0cyh/p2c7MyFXczaNQEqhgMxGz+Au5oSA7cRyNw68EAUB8va6eUxUoo8LPenUhJeTNUdLLZV6Gw/yqo3u33klSNSCFaZsQJzRF8AoHxrt5EV76TVi9DFRoNTO1Ykc//4vAna04Wzv4zNA15ZjUdibryBbt77b3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jEUP/GLo; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQ07nxSD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8763C4CEE7;
-	Wed, 30 Apr 2025 15:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028463;
-	bh=z7E8Qbo13mwyDTVgulR62/h0cxEpdpORLCx+iFA/PcM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=sQ07nxSDESASQakq8rKDdfFSMSacI8dxxX/QW9rZ7BJ+4U12f05PxkYRABFH9IhBH
-	 Owu3Z4yNhSchvqx/6Yl2OEL06UPbSrAZHVqLyFydzwR/v5utxgm/Rf0nNqA1FgsIny
-	 GfC7D/cMvegLkrnSfIQkMJeturfvukKAp2inSjiy+9AZ7wrIZk3muaiotnyeaX+vUW
-	 Iz/imHadJL2tLh+nFu9wnhGvir5CgXpD1887igW64SivhGDm15kejt2bkvBEinsOlv
-	 h1eOyvyGAqdz/YmyKhlzBx927MYiXLr4H5l3CwbmaI9BWiiTEf/C31c/mx5N4eQYmn
-	 hI+/Z1J5Qjk7w==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.6 000/204] 6.6.89-rc1 review
-Date: Wed, 30 Apr 2025 17:54:11 +0200
-Message-ID: <20250430155411.796760-1-ojeda@kernel.org>
-In-Reply-To: <20250429161059.396852607@linuxfoundation.org>
-References: <20250429161059.396852607@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jEUP/GLo"
+Message-ID: <f951b81f-1b46-4219-82fd-0839e27ab3f3@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746028504;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x01/YentqQxiWV+z2dsRSAIeIX6UbbCKUGdMPakv0qE=;
+	b=jEUP/GLoxJGvhRlAHo8UUY72GYTKU2U7nYQiDnmfjuRerBfvwIZZMpmwdytWhh/xlnA4yk
+	jTrmdGlsY2YmIOSEJ+DH24bkZzjHXIG/QOIjHqjNAslgaJR3ZYdM4p74rpLyDEv/HqR/5U
+	MM7aIhHbnP3NPMi6VPkKCuFv9s+4YvM=
+Date: Wed, 30 Apr 2025 23:54:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: Kafai Wan <mannkafai@gmail.com>,
+ Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau
+ <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Matt Bobrowski <mattbobrowski@google.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
+ Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+ bpf <bpf@vger.kernel.org>,
+ linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+ Network Development <netdev@vger.kernel.org>,
+ "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>
+References: <20250426160027.177173-1-mannkafai@gmail.com>
+ <20250426160027.177173-2-mannkafai@gmail.com>
+ <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+ <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Leon Hwang <leon.hwang@linux.dev>
+In-Reply-To: <CALqUS-6XtJ0Bb9jiykdC3jAY_OHjGuirj06Kzssjvo7eW_so2A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 29 Apr 2025 18:41:28 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.89 release.
-> There are 204 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
 
-Boot-tested under QEMU for Rust x86_64:
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+On 2025/4/30 20:43, Kafai Wan wrote:
+> On Wed, Apr 30, 2025 at 10:46 AM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+>>
+>> On Sat, Apr 26, 2025 at 9:00 AM KaFai Wan <mannkafai@gmail.com> wrote:
+>>>
 
-Thanks!
+[...]
 
-Cheers,
-Miguel
+>>> @@ -2312,7 +2322,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u64 *args)
+>>>  #define REPEAT(X, FN, DL, ...)         REPEAT_##X(FN, DL, __VA_ARGS__)
+>>>
+>>>  #define SARG(X)                u64 arg##X
+>>> -#define COPY(X)                args[X] = arg##X
+>>> +#define COPY(X)                args[X + 1] = arg##X
+>>>
+>>>  #define __DL_COM       (,)
+>>>  #define __DL_SEM       (;)
+>>> @@ -2323,9 +2333,10 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, u64 *args)
+>>>         void bpf_trace_run##x(struct bpf_raw_tp_link *link,             \
+>>>                               REPEAT(x, SARG, __DL_COM, __SEQ_0_11))    \
+>>>         {                                                               \
+>>> -               u64 args[x];                                            \
+>>> +               u64 args[x + 1];                                        \
+>>> +               args[0] = x;                                            \
+>>>                 REPEAT(x, COPY, __DL_SEM, __SEQ_0_11);                  \
+>>> -               __bpf_trace_run(link, args);                            \
+>>> +               __bpf_trace_run(link, args + 1);                        \
+>>
+>> This is neat, but what is this for?
+>> The program that attaches to a particular raw_tp knows what it is
+>> attaching to and how many arguments are there,
+>> so bpf_get_func_arg_cnt() is a 5th wheel.
+>>
+>> If the reason is "for completeness" then it's not a good reason
+>> to penalize performance. Though it's just an extra 8 byte of stack
+>> and a single store of a constant.
+>>
+> If we try to capture all arguments of a specific raw_tp in tracing programs,
+> We first obtain the arguments count from the format file in debugfs or BTF
+> and pass this count to the BPF program via .bss section or cookie (if
+> available).
+> 
+> If we store the count in ctx and get it via get_func_arg_cnt helper in
+> the BPF program，
+> a) It's easier and more efficient to get the arguments count in the BPF program.
+> b) It could use a single BPF program to capture arguments for multiple raw_tps,
+> reduce the number of BPF programs when massive tracing.
+> 
+
+
+bpf_get_func_arg() will be very helpful for bpfsnoop[1] when tracing tp_btf.
+
+In bpfsnoop, it can generate a small snippet of bpf instructions to use
+bpf_get_func_arg() for retrieving and filtering arguments. For example,
+with the netif_receive_skb tracepoint, bpfsnoop can use
+bpf_get_func_arg() to filter the skb argument using pcap-filter(7)[2] or
+a custom attribute-based filter. This will allow bpfsnoop to trace
+multiple tracepoints using a single bpf program code.
+
+[1] https://github.com/bpfsnoop/bpfsnoop
+[2] https://www.tcpdump.org/manpages/pcap-filter.7.html
+
+Thanks,
+Leon
+
