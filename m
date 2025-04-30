@@ -1,110 +1,263 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5917DC148
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C51178F44
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745994263; cv=none; b=tIRYtjsYCNEl4S6jGawPopfq9v7llBYAruY0eoptuY2srPj7MGTWco11qGA+xe0mias6GUv8PbA8vC6hxBbLchu2WOqv9tjHjpiMmQMrGvKs+RP5IBYv+bbvqugne1WnOr4PCTnDFWruyMjxl5ysnPSvJJr5AA0Q00N8nKZthwk=
+	t=1745994328; cv=none; b=nPDNMoRKCi81cM8vxHw4ufozK4epUu03hKCM2gdqU5G3KW4CyXr21pnloHerfN6Lw4u76l5xX9mahclVwJ4rqiQMrZp1WixeSSOxyzrsZvmI/lD1cshkNH7+nOCSwzWuyepYfr5CQtbsjtJ8x+pjGL2ixbUE4oDE3OOuGNebaEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745994263; c=relaxed/simple;
-	bh=BUlIa8BzzS2z9z6WDQCdewmzjAzUJyL047+xiQ/8HL0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=E1Bz7OngPZLUP/QaeGR9le8VBJarSC8c20gSIA9O46+iXdL9JKisbh9vhygQg6YmMiYCVf+iIYwYc0cMJVcShe0X845lf8z3PrC34V/CRSbuNlgIFNlC595QUpIdaVzLh9cGiQo/5ryn94PPnmXN9qTTpdWtR8ZCPsDfLcsglRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZifqA0oe; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZifqA0oe"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-225477548e1so72528535ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:24:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745994261; x=1746599061; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t2BkgT+ns1+Mv1Haw5znYsaR1kZcYX+VRlw/c++zNcs=;
-        b=ZifqA0oe+yePfIxmvVtAGtQFZtBuyyhceQNPFg2qv4SlvQlLW63d2YBgm/aHRby8Z7
-         3AnbapK6dHtZgFFjC+ax/3S3ziYuyysIU1G5sb7WtDeiXPw+Tx7Ij8aJiNofAFN6CMLy
-         ACRDENlAfJMEG/0SuRJgT0869OZdoueBW9Ffe9VdMS1J2YjdKhn8nU7EkCPM20vmRQKq
-         Bqbln2N0IDtVTcuqGwY5g4ECl9kZcm8WmCnD7md2yN991qa9lDpypEGjurRDnTN8EoCl
-         jWWVJpcLimEXbRmrLi3qwZuTu2HYb2jiHH8dbDwDtKhyCOuO1XEtnll/b4oQ0Ha2Ni3N
-         EUVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745994261; x=1746599061;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t2BkgT+ns1+Mv1Haw5znYsaR1kZcYX+VRlw/c++zNcs=;
-        b=K0z5atDVyT0s1TRSh2f3v4v2ke0aqSZ/1aI4DxKYpwaUX9Yq2pg5X3smW8uQRzSseG
-         4WoNhk53ShECYq4QZCUvTinB07eGG9JShzhr5yFlJcPqgiX6189S/oQD+Oqutvkc3hkX
-         iu4TTWvyjQLKhDJUABfKGjoxXY0tyllJRuzq2k7I98RC5R55HaVfhR/6mo0Tp+y7uO6d
-         +w7lxbGUedpeneyuxl4A1G24i4i3LeWTPUPPJ2oOZhohgR+8JAm3P3bs50UFCc8eA9Or
-         j+zKiCWVrMbLrY2sPPLWsJprec/PmaTp0DkB4ckHr8JbDr84s3hjUenChdFRJEkXcrA1
-         qmqQ==
-X-Gm-Message-State: AOJu0YxYyse2MmEFjAQJRE6m3qpyIezlGIaBsJbbzbXFkqK7yI4wvSN9
-	f66555Ajj+ka9MDvP6uRshKMDV+3wTa6IhZip++tnpK8wnJ51z2qL3uNODYr
-X-Gm-Gg: ASbGnctf4+YxLH+Drsc5eh/5aqLfAq5J76dIkv71n6OdcblTqw+qO5YqobQrZRv1mGX
-	87+uNe7qvbC6OeVJg0Zs62PvWD59OM0Hfae+lQC1oyjaqS8JRzznG+MTizLoi6gdw3cuCJpvKg5
-	CE0Quo0uuHcYGqc+nMrxbrJuHHz44RlhL3JZ/Gpwaw/o6IXiYe6q7cwPkH0dPXBqQJ7XuC/YgnI
-	xXBK0Imy1XooGbjmYlMhswZemJVcXoRc9BwlZZRfPlghwgB8/XxkWhVQGDQp4JXqCRlvRMvYtfX
-	mFRfrT8AGWTGqFsRxZ6OviqNvU2aLN3QVU4aWMDz5OWl8CUiDa8f6rLohh0=
-X-Google-Smtp-Source: AGHT+IHSjHX+RHqL1/RPrri4TfXKibji4sFCTL39MYugqcNiiBkHWbhLt7vmWGwVOUIhPwt0riovvw==
-X-Received: by 2002:a17:902:d491:b0:223:3b76:4e22 with SMTP id d9443c01a7336-22df34a5d21mr26938355ad.6.1745994261145;
-        Tue, 29 Apr 2025 23:24:21 -0700 (PDT)
-Received: from localhost.localdomain ([103.77.0.13])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-22db52163d6sm114169185ad.214.2025.04.29.23.24.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 23:24:20 -0700 (PDT)
-From: Ankit Chauhan <ankitchauhan2065@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linuxfoundation.org,
-	Ankit Chauhan <ankitchauhan2065@gmail.com>
-Subject: [PATCH] docs: fix spelling mistakes in HID documentation
-Date: Wed, 30 Apr 2025 11:54:12 +0530
-Message-Id: <20250430062412.54133-1-ankitchauhan2065@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1745994328; c=relaxed/simple;
+	bh=HDVBHBHdikDSxIEj/so+amEtljmfbP2qUbkYpvPgcVo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T4yjyFQJzrrJYwijvUZiuYhxnarrWD/9CdsT7FEFmhOSqy4cd5WC5doaxsFW7qR3Ei9zuMqBesOORgvEoIFPugJePaBeDCxdyz3anXQcCbA49jTvO0jywh5g8Q9p4ETNvbdKCOR4ou5UDVanz3srflgD5z+A1r9z0JsQLW9sy+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B8C7106F;
+	Tue, 29 Apr 2025 23:25:18 -0700 (PDT)
+Received: from [10.163.79.251] (unknown [10.163.79.251])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3FA0F3F66E;
+	Tue, 29 Apr 2025 23:25:15 -0700 (PDT)
+Message-ID: <f52746e9-f57a-4e65-af48-f5de3c5887c6@arm.com>
+Date: Wed, 30 Apr 2025 11:55:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
+ ptep_modify_prot_start/commit
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com,
+ willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
+ <20250429052336.18912-4-dev.jain@arm.com>
+ <8780e63d-22c1-4133-a800-dec50fd1b5fa@lucifer.local>
+Content-Language: en-US
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <8780e63d-22c1-4133-a800-dec50fd1b5fa@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This commit fixes spelling mistakes in the HID documentation:
 
-- 'triggerred' is corrected to 'triggered' in multiple places.
 
-Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
----
- Documentation/hid/intel-thc-hid.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On 29/04/25 7:22 pm, Lorenzo Stoakes wrote:
+> On Tue, Apr 29, 2025 at 10:53:32AM +0530, Dev Jain wrote:
+>> Batch ptep_modify_prot_start/commit in preparation for optimizing mprotect.
+>> Architecture can override these helpers.
+>>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>   include/linux/pgtable.h | 38 ++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index b50447ef1c92..ed287289335f 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -891,6 +891,44 @@ static inline void wrprotect_ptes(struct mm_struct *mm, unsigned long addr,
+>>   }
+>>   #endif
+>>
+>> +/* See the comment for ptep_modify_prot_start */
+> 
+> I feel like you really should add a little more here, perhaps point out
+> that it's batched etc.
 
-diff --git a/Documentation/hid/intel-thc-hid.rst b/Documentation/hid/intel-thc-hid.rst
-index 6c417205ac6a..5e0dc51c8d20 100644
---- a/Documentation/hid/intel-thc-hid.rst
-+++ b/Documentation/hid/intel-thc-hid.rst
-@@ -182,7 +182,7 @@ value and use PIO write (by setting SubIP write opcode) to do a write operation.
- 
- THC also includes two GPIO pins, one for interrupt and the other for device reset control.
- 
--Interrupt line can be configured to either level triggerred or edge triggerred by setting MMIO
-+Interrupt line can be configured to either level triggered or edge triggered by setting MMIO
- Control register.
- 
- Reset line is controlled by BIOS (or EFI) through ACPI _RST method, driver needs to call this
-@@ -302,9 +302,9 @@ waiting for interrupt ready then read out the data from system memory.
- 3.3.2 Software DMA channel
- ~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
--THC supports a software triggerred RxDMA mode to read the touch data from touch IC. This SW RxDMA
-+THC supports a software triggered RxDMA mode to read the touch data from touch IC. This SW RxDMA
- is the 3rd THC RxDMA engine with the similar functionalities as the existing two RxDMAs, the only
--difference is this SW RxDMA is triggerred by software, and RxDMA2 is triggerred by external Touch IC
-+difference is this SW RxDMA is triggered by software, and RxDMA2 is triggered by external Touch IC
- interrupt. It gives a flexiblity to software driver to use RxDMA read Touch IC data in any time.
- 
- Before software starts a SW RxDMA, it shall stop the 1st and 2nd RxDMA, clear PRD read/write pointer
--- 
-2.34.1
+Sure. I couldn't easily figure out a way to write the documentation 
+nicely, I'll do it this time.
+
+> 
+>> +#ifndef modify_prot_start_ptes
+>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>> +		unsigned long addr, pte_t *ptep, unsigned int nr)
+> 
+> This name is a bit confusing, it's not any ptes, it's those pte entries
+> belonging to a large folio capped to the PTE table right that you are
+> batching right?
+
+yes, but I am just following the convention. See wrprotect_ptes(), etc. 
+I don't have a strong preference anyways.
+
+> 
+> Perhaps modify_prot_start_large_folio() ? Or something with 'batched' in
+> the name?
+
+How about modify_prot_start_batched_ptes()?
+
+> 
+> We definitely need to mention in comment or name or _somewhere_ the intent
+> and motivation for this.
+> 
+>> +{
+>> +	pte_t pte, tmp_pte;
+>> +
+> 
+> are we not validating what 'nr' is? Even with debug asserts? I'm not sure I
+> love this interface, where you require the user to know the number of
+> remaining PTE entries in a PTE table.
+
+Shall I write in the comments that the range is supposed to be within a 
+PTE table?
+
+> 
+>> +	pte = ptep_modify_prot_start(vma, addr, ptep);
+>> +	while (--nr) {
+> 
+> This loop is a bit horrible. It seems needlessly confusing and you're in
+> _dire_ need of comments to explain what's going on.
+
+Again, following the pattern of get_and_clear_full_ptes :)
+> 
+> So my understanding is, you have the user figure out:
+> 
+> nr = min(nr_pte_entries_in_pte, nr_pgs_in_folio)
+> 
+> Then, you want to return the pte entry belonging to the start of the large
+> folio batch, but you want to adjust that pte value to propagate dirty and
+> young page table flags if any page table entries within the range contain
+> those page table flags, having called ptep_modify_prot_start() on all of
+> them?
+> 
+> This is quite a bit to a. put in a header like this and b. not
+> comment/explain.
+> 
+> So maybe something like:
+> 
+> pte = ptep_modify_prot_start(vma, addr, ptep);
+> 
+> /* Iterate through large folio tail PTEs. */
+> for (pg = 1; pg < nr; pg++) {
+> 	pte_t inner_pte;
+> 
+> 	ptep++;
+> 	addr += PAGE_SIZE;
+> 
+> 	inner_pte = ptep_modify_prot_start(vma, addr, ptep);
+> 
+> 	/* We must propagate A/D state from tail PTEs. */
+> 	if (pte_dirty(inner_pte))
+> 		pte = pte_mkdirty(pte);
+> 	if (pte_young(inner_pte))
+> 		pte = pte_mkyoung(pte);
+> }
+> 
+> Would work better?
+
+No preference, I'll do this then.
+
+> 
+> 
+> 
+>> +		ptep++;
+>> +		addr += PAGE_SIZE;
+>> +		tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+> 
+> 
+> 
+>> +		if (pte_dirty(tmp_pte))
+>> +			pte = pte_mkdirty(pte);
+>> +		if (pte_young(tmp_pte))
+>> +			pte = pte_mkyoung(pte);
+> 
+> Why are you propagating these?
+
+Because the a/d bits are per-folio; and, this will help us batch around 
+can_change_pte_writable (return pte_dirty(pte)) and, batch around 
+pte_needs_flush() for parisc.
+
+> 
+>> +	}
+>> +	return pte;
+>> +}
+>> +#endif
+>> +
+>> +/* See the comment for ptep_modify_prot_commit */
+> 
+> Same comments as above, needs more meat on the bones!
+> 
+>> +#ifndef modify_prot_commit_ptes
+>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma, unsigned long addr,
+> 
+> Again need to reference large folio, batched or something relevant here,
+> 'ptes' is super vague.
+> 
+>> +		pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+> 
+> Nit, but you put 'p' suffix on ptep but not on 'old_pte'?
+
+Because ptep is a pointer, and old_pte isn't.
+
+> 
+> I'm even more concerned about the 'nr' API here now.
+> 
+> So this is now a user-calculated:
+> 
+> min3(large_folio_pages, number of pte entries left in ptep,
+> 	number of pte entries left in old_pte)
+> 
+> It really feels like something that should be calculated here, or at least
+> be broken out more clearly.
+> 
+> You definitely _at the very least_ need to document it in a comment.
+> 
+>> +{
+>> +	for (;;) {
+>> +		ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+>> +		if (--nr == 0)
+>> +			break;
+> 
+> Why are you doing an infinite loop here with a break like this? Again feels
+> needlessly confusing.
+
+Following wrprotect_ptes().
+I agree that this is confusing, which is why I thought why it was done 
+in the first place :) but I just followed what already is.
+I'll change this to a simple for loop if that is your inclination.
+
+> 
+> I think it's ok to duplicate this single line for the sake of clarity,
+> also.
+> 
+> Which gives us:
+> 
+> unsigned long pg;
+> 
+> ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> for (pg = 1; pg < nr; pg++) {
+> 	ptep++;
+> 	addr += PAGE_SIZE;
+> 	old_pte = pte_next_pfn(old_pte);
+> 	pte = pte_next_pfn(pte);
+> 
+> 	ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+> }
+> 
+> There are alternative approaches, but I think doing an infinite loop that
+> breaks and especially the confusing 'if (--foo) break;' stuff is much
+> harder to parse than a super simple ranged loop.
+> 
+>> +		ptep++;
+>> +		addr += PAGE_SIZE;
+>> +		old_pte = pte_next_pfn(old_pte);
+>> +		pte = pte_next_pfn(pte);
+>> +	}
+>> +}
+>> +#endif
+>> +
+>>   /*
+>>    * On some architectures hardware does not set page access bit when accessing
+>>    * memory page, it is responsibility of software setting this bit. It brings
+>> --
+>> 2.30.2
+>>
 
