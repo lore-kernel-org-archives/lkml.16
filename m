@@ -1,120 +1,358 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 676581F941
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:45:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012E825DB08
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:48:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746020745; cv=none; b=GDYMpcZmMfjgFi+1RzLfP/MrGoLD+PiVCP9O0pA4Ui8yaYXPMlTgJVs0+0BdqJOg+hVohzcl1y6pqvqu6/FlR5ONP24dK1Clq2BqQpNrk4wRQpfaM1qiQbLoyKeZLGGQI9p2oSYMY8d3R7qN5TuvF9A4Bnl7/OAa7N5ayCF8B0Q=
+	t=1746020900; cv=none; b=dHLaJ3SsUsDXVgIO7K+jKYL1grIcH1waXoPFIuadOJtOhET+ntgI4YAJ7ssNKEIsIAIzJDLc/v2UesnZUbahhe9IhKHTS65ru8ChiE++835sJSSGm/sa7vWlmIDPyPRfhfadn3glVBNlcgbRCFzOIPNwe2f3K5AZRMJn8Ki7C+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746020745; c=relaxed/simple;
-	bh=ZF9Yw2FW09cI+JGsUcloL/6gJ8Tx3hLerPQi/1EF8Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XEU2DjQzB+mYaZJdnWyPbJkL1ehNsB0+OAN/hEXpXlaBwKXKDqcH5w518HkimqlU47yTYTEmuETIJdb4TJi5tADvf4iuP1edht+ww2suzTjTsXaXzL2YEUtwpz8+DPzrcd1+Nqq/yxi4yf7l3JPQ/dbXdcKxYCBiBbuB7FrOR/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FB0D106F;
-	Wed, 30 Apr 2025 06:45:35 -0700 (PDT)
-Received: from [10.1.33.69] (Suzukis-MBP.cambridge.arm.com [10.1.33.69])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 06E303F5A1;
-	Wed, 30 Apr 2025 06:45:40 -0700 (PDT)
-Message-ID: <f2ffb9fd-ec59-4e67-83a3-437b986ece73@arm.com>
-Date: Wed, 30 Apr 2025 14:45:40 +0100
+	s=arc-20240116; t=1746020900; c=relaxed/simple;
+	bh=6lS+RfIIKCrBcRjbxZAPQ+ncH94JPR+qjqAlZ/S0peA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=t9zI5bVcbB218yW9Exn+NUohvYtRwlCwywQW4HcKUtf7EkLYjg/LWL0Nj3lzqUu4U9XZicgSn6xf0MBOVXLDEETsWbXOQ4kcSRk6Flmth9TqM+wbBK0dyidmWyVr6GMhKuSLi66W65XVlIIC5nOnesX66UyVjgCKLIAjBs8Cu/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipDYuJds; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipDYuJds"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac25520a289so1164381866b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746020895; x=1746625695; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=z75LjcWryjhXEgrOiG6WwRVzqb4M8o9TQ5+ml4Wiq/g=;
+        b=ipDYuJdsOvP052q1WD4DynGhbpE+6tXf4mVlC+nAzFi6X6/Gf0caLaiU2ts9wpHP0t
+         jfPPjQZut8KQXIz8qX6/4K4eQFjxCeybc4TJr9roYKedOgdNGT1G8vTtK3PYlMS743dt
+         9JvgFXDvQnLhect2UEbE2yUIumvDu4ZY5Y6lUg2xoB3RtfmWp1xxqZA9dPmqC3S9YUAG
+         NAblMHYakiQAnXhp3oAXJozpD1getetWviMBaih/nxmWEgNaoP/jvjtTrRmYqOiJ6TcC
+         u6ULnVpe0xV50vfSJcD6+EkBRijOG85cNw+xN6nEJuSWoig71+4aWFeKhV6x5Dkr5pN4
+         QFug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746020895; x=1746625695;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z75LjcWryjhXEgrOiG6WwRVzqb4M8o9TQ5+ml4Wiq/g=;
+        b=A/IrIjj6sTCQ9LUnoDyNsV4ugk0iMVQxDH2pEPGXqenmamQbX6o6hUXmO3QEv8/ozR
+         S7yncBKdsqXT3awPyeiJo7tLIHIg51di4N3TpqlTJu+CAOEoYbXHsUO1mYI9SqPxmIje
+         sv4vh0WQqBC7/so/x4Bb5RXJvULFTTRpKv59N+fLecT/5aHfC5LWUnsp7yPrGs2ONVPx
+         ASfOtX9QYJ37VRDRKCdXnd2+oO0hSSuGOgK5rG+f/t+3tbVtWiNHLiIembt1a6cpzei6
+         a+CSv9PIRr4ylaIwXps9546WKm4ASqGO+/3qogNPhF3V1e9lml5oxi4+XbqXwNhTwRtk
+         eJOw==
+X-Forwarded-Encrypted: i=1; AJvYcCWU7si33sv/EvZEfsOYWjY9rS43A+Wbw5x0iTxx1i+PzDxxsq/PvKRDInhsYXcTbDpRbudks1MrD8OgZKQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxfFvzIIf1OJoohfNZOB/dO2QPmbZKFcF+mJx6Y+I3SPiXXB4U
+	IB7dOAYGU/EM1u+us0uINFDyQjzRNUmtCLDSVWi2UbLOvFjoxCRK1WmwMrGJPY1YN8z+dMrdtnY
+	lsaJzaCl+otSj9m28TG+Vlw5k58Q=
+X-Gm-Gg: ASbGncuFgkpKi/UKfNRfiF+w3WCBbLM0+zuoSe0omr4g+TK60s/+Aji+AU32qQNd+24
+	UJWy+p5mRjYkH/Jn3DNX6V/CRJj0APWalnVBrBzsIqW4dBzoYHwhBhSAfYgLW8bqo1UAUTORIG4
+	rQuOcw+HdIvLCF1PwUybxH4JM=
+X-Google-Smtp-Source: AGHT+IHumecNI7r+PuC8pc8zkvdAU+nckxYX+X6l8RtRmEUVb9At4V5mcbJI9h5TmnpgroAqPCKeLj5hlsWPkRULfO8=
+X-Received: by 2002:a17:907:1c15:b0:ace:3643:1959 with SMTP id
+ a640c23a62f3a-acedc574f17mr368750066b.7.1746020894723; Wed, 30 Apr 2025
+ 06:48:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] coresight: core: Disable helpers for devices that
- fail to enable
-Content-Language: en-GB
-To: Yabin Cui <yabinc@google.com>, Mike Leach <mike.leach@linaro.org>,
- James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>,
- Jie Gan <quic_jiegan@quicinc.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250429231301.1952246-1-yabinc@google.com>
- <20250429231301.1952246-3-yabinc@google.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250429231301.1952246-3-yabinc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
+ <20250331161542.3040005-1-liwei.song.lsong@gmail.com> <87jz73v1th.fsf@bootlin.com>
+In-Reply-To: <87jz73v1th.fsf@bootlin.com>
+From: liwei song <liwei.song.lsong@gmail.com>
+Date: Wed, 30 Apr 2025 21:48:03 +0800
+X-Gm-Features: ATxdqUE3n3npR7e7kDOqRM0e0PnPOcNwfRtNMUkbYYUYZrV9SwshVSp66u66bCY
+Message-ID: <CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc2ZFDqA@mail.gmail.com>
+Subject: Re: [PATCH v2] mtd: core: add sync between read/write and unbind device
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: RichardWeinberger <richard@nod.at>, VigneshRaghavendra <vigneshr@ti.com>, 
+	TudorAmbarus <tudor.ambarus@linaro.org>, PratyushYadav <pratyush@kernel.org>, 
+	MichaelWalle <mwalle@kernel.org>, linux-mtd@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30/04/2025 00:13, Yabin Cui wrote:
-> When enabling a SINK or LINK type coresight device fails, the
-> associated helpers should be disabled.
-> 
-> Signed-off-by: Yabin Cui <yabinc@google.com>
-> Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Reviewed-by: James Clark <james.clark@linaro.org>
-> Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Hi Miqu=C3=A8l,
 
-Again, this should have :
+On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
+n.com> wrote:
+>
+> Hello Liwei,
+>
+> On 01/04/2025 at 00:15:20 +08, Liwei Song <liwei.song.lsong@gmail.com> wr=
+ote:
+>
+> > When unbind mtd device or qspi controller with a high frequency
+> > reading to /dev/mtd0 device, there will be Calltrace as below:
+> >
+> > $ while true; do cat /dev/mtd0 >/dev/null; done &
+> > $ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
+> >
+> > Internal error: synchronous external abort: 0000000096000210 [#1] PREEM=
+PT SMP
+> > Modules linked in:
+> > CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+=
+ #1
+> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+> > pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
+> > lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
+> > Call trace:
+> >  cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
+> >  cqspi_exec_mem_op+0x8bc/0xe40
+> >  spi_mem_exec_op+0x3e0/0x478
+> >  spi_mem_no_dirmap_read+0xa8/0xc8
+> >  spi_mem_dirmap_read+0xdc/0x150
+> >  spi_nor_read_data+0x120/0x198
+> >  spi_nor_read+0xf0/0x280
+> >  mtd_read_oob_std+0x80/0x98
+> >  mtd_read_oob+0x9c/0x168
+> >  mtd_read+0x6c/0xd8
+> >  mtdchar_read+0xdc/0x288
+> >  vfs_read+0xc8/0x2f8
+> >  ksys_read+0x70/0x110
+> >  __arm64_sys_read+0x24/0x38
+> >  invoke_syscall+0x5c/0x130
+> >  el0_svc_common.constprop.0+0x48/0xf8
+> >  do_el0_svc+0x28/0x40
+> >  el0_svc+0x30/0xd0
+> >  el0t_64_sync_handler+0x144/0x168
+> >  el0t_64_sync+0x198/0x1a0
+> > Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
+> > ---[ end trace 0000000000000000 ]---
+> >
+> > Or:
+> > $ while true; do cat /dev/mtd0 >/dev/null; done &
+> > $ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
+> >
+> > Unable to handle kernel paging request at virtual address 0000000000001=
+2e8
+> > Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+> > Modules linked in:
+> > CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+=
+ #1
+> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
+> > pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
+> > pc : spi_mem_exec_op+0x3e8/0x478
+> > lr : spi_mem_exec_op+0x3e0/0x478
+> > Call trace:
+> >  spi_mem_exec_op+0x3e8/0x478 (P)
+> >  spi_mem_no_dirmap_read+0xa8/0xc8
+> >  spi_mem_dirmap_read+0xdc/0x150
+> >  spi_nor_read_data+0x120/0x198
+> >  spi_nor_read+0xf0/0x280
+> >  mtd_read_oob_std+0x80/0x98
+> >  mtd_read_oob+0x9c/0x168
+> >  mtd_read+0x6c/0xd8
+> >  mtdchar_read+0xdc/0x288
+> >  vfs_read+0xc8/0x2f8
+> >  ksys_read+0x70/0x110
+> >  __arm64_sys_read+0x24/0x38
+> >  invoke_syscall+0x5c/0x130
+> >  el0_svc_common.constprop.0+0x48/0xf8
+> >  do_el0_svc+0x28/0x40
+> >  el0_svc+0x30/0xd0
+> >  el0t_64_sync_handler+0x144/0x168
+> >  el0t_64_sync+0x198/0x1a0
+> > Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
+> > ---[ end trace 0000000000000000 ]---
+> >
+> > when unbind is running, the memory allocated to qspi controller and
+> > mtd device is freed during unbinding, but open/close and reading device
+> > are still running, if the reading process get read lock and start
+> > excuting, there will be above illegal memory access. This issue also
+> > can be repruduced on many other platforms like ls1046 and nxpimx8 which
+> > have qspi flash.
+> >
+> > In this patch, register a spi bus notifier which will be called before
+> > unbind process freeing device memory, add a new member mtd_event_remove
+> > to block mtd open/read, then waiting for the running task to be finishe=
+d,
+> > after that, memory is safe to be free.
+> >
+> > Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
+> > ---
+> >
+> > Hi Maintainer,
+> >
+> > This is an improved patch compared with the original one:
+> > (https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.36=
+99535-1-liwei.song.lsong@gmail.com/),
+> > This v2 patch move notifier to spi-nor to avoid crash other types of fl=
+ash.
+> > now this patch only aim at fixing nor-flash "bind/unbind while reading"=
+ calltrace,
+> > but for other types of flash like nand also have this issue.
+>
+> While I agree with the observation and also the conclusion of adding
+> some kind of notifier, I'd like to understand the rationale behind
+> choosing to fix only spi-nor in v2? If any spi memory registered in the
 
-Fixes: 6148652807ba ("coresight: Enable and disable helper devices 
-adjacent to the path")
+My original plan is to fix nand in another patch if the idea of this
+patch is acceptable,
+but after some investigation, it also can be done in this patch together,
+because for nand device, the existing driver will call
+mtd_device_unregister() directly to remove
+device when unbinding, new adding "mtd_event_remove" can be set there, and =
+check
+"mtd_event_remove" in mtd_read(), on my board exist below call trace:
 
-I have added it locally
+for nand unbind:
+mtd_device_unregister+0x50/0x90
+denali_remove+0x58/0x108
+denali_dt_remove+0x24/0x88
+platform_remove+0x34/0x80
+device_remove+0x54/0x90
+device_release_driver_internal+0x1d4/0x238
+device_driver_detach+0x20/0x38
+unbind_store+0xbc/0xc8
 
-Rest looks good to me
+for nand read:
+denali_dma_xfer+0x140/0x218
+denali_read_page+0x5c/0x3c0
+nand_read_oob+0x2b4/0x8a0
+mtd_read_oob_std+0x60/0x98
+mtd_read_oob+0x9c/0x168
+mtd_read+0x6c/0xb0
+mtdchar_read+0xdc/0x288
+
+for spi_nor read:
+cqspi_exec_mem_op+0x8d4/0xfbc
+spi_mem_exec_op+0x3dc/0x45c
+spi_mem_no_dirmap_read+0xa0/0xc0
+spi_mem_dirmap_read+0xdc/0x144
+spi_nor_read_data+0x114/0x180
+spi_nor_read+0xbc/0x164
+mtd_read_oob_std+0x80/0x90
+mtd_read_oob+0x8c/0x150
+mtd_read+0x6c/0xb0
+mtdchar_read+0xdc/0x2a0
 
 
-Suzuki
+> mtd subsystem is subject to this failure, we should find a generic
+> approach (or if it's too difficult, at least have the fix in both
+> spi nor and spi nand). Looking at your implementation, maybe it could
+> fit in spi-mem (I'm not sure).
+
+Thanks for your suggestion, I will have a try to move the code there.
 
 
-> ---
->   drivers/hwtracing/coresight/coresight-core.c | 15 ++++++++++-----
->   1 file changed, 10 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index dabec7073aed..d3523f0262af 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -465,7 +465,7 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
->   		/* Enable all helpers adjacent to the path first */
->   		ret = coresight_enable_helpers(csdev, mode, path);
->   		if (ret)
-> -			goto err;
-> +			goto err_disable_path;
->   		/*
->   		 * ETF devices are tricky... They can be a link or a sink,
->   		 * depending on how they are configured.  If an ETF has been
-> @@ -486,8 +486,10 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
->   			 * that need disabling. Disabling the path here
->   			 * would mean we could disrupt an existing session.
->   			 */
-> -			if (ret)
-> +			if (ret) {
-> +				coresight_disable_helpers(csdev, path);
->   				goto out;
-> +			}
->   			break;
->   		case CORESIGHT_DEV_TYPE_SOURCE:
->   			/* sources are enabled from either sysFS or Perf */
-> @@ -497,16 +499,19 @@ int coresight_enable_path(struct coresight_path *path, enum cs_mode mode,
->   			child = list_next_entry(nd, link)->csdev;
->   			ret = coresight_enable_link(csdev, parent, child, source);
->   			if (ret)
-> -				goto err;
-> +				goto err_disable_helpers;
->   			break;
->   		default:
-> -			goto err;
-> +			ret = -EINVAL;
-> +			goto err_disable_helpers;
->   		}
->   	}
->   
->   out:
->   	return ret;
-> -err:
-> +err_disable_helpers:
-> +	coresight_disable_helpers(csdev, path);
-> +err_disable_path:
->   	coresight_disable_path_from(path, nd);
->   	goto out;
->   }
+>
+> ...
+>
+> > +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
+> > +                                     unsigned long event, void
+> > *data);
+>
+> I believe spi nor maitainers would prefer to avoid forward declarations.
 
+Got it, thanks, will drop this kind of declaration.
+
+>
+> > +
+> >  /**
+> >   * spi_nor_get_cmd_ext() - Get the command opcode extension based on t=
+he
+> >   *                      extension type.
+> > @@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
+> >       if (nor->controller_ops && nor->controller_ops->prepare)
+> >               ret =3D nor->controller_ops->prepare(nor);
+> >
+> > +     if (nor->mtd.mtd_event_remove)
+> > +             return -ENODEV;
+> > +
+> >       return ret;
+> >  }
+>
+> ...
+>
+> > +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
+> > +                                 unsigned long event, void *data)
+> > +{
+> > +     struct device *dev =3D data;
+> > +     struct spi_device *spi;
+> > +     struct spi_mem *mem;
+> > +     struct spi_nor *nor;
+> > +
+> > +     if (!of_match_device(spi_nor_of_table, dev))
+> > +             return 0;
+> > +
+> > +     switch (event) {
+> > +     case BUS_NOTIFY_DEL_DEVICE:
+> > +     case BUS_NOTIFY_UNBIND_DRIVER:
+> > +             spi =3D to_spi_device(dev);
+> > +             mem =3D spi_get_drvdata(spi);
+> > +             if (!mem)
+> > +                     return NOTIFY_DONE;
+> > +             nor =3D spi_mem_get_drvdata(mem);
+> > +
+> > +             mutex_lock(&nor->lock);
+> > +             nor->mtd.mtd_event_remove =3D true;
+> > +             mutex_unlock(&nor->lock);
+> > +             msleep(300);
+>
+> What is this sleep for?
+
+The sleep is to wait the process which already got the lock and
+running in reading
+routine can be finished before memory is released, show in below scenario:
+
+without sleep:
+--------------------------------------------------------------------
+mtd.mtd_event_remove =3D false;
+                                                            reading start;
+mtd.mtd_event_remove =3D true;
+release memory
+                                                            reading end;
+--------------------------------------------------------------------
+
+with sleep:
+-------------------------------------------------------------------
+mtd.mtd_event_remove =3D false;
+                                                           reading start;
+mtd.mtd_event_remove =3D true;
+sleep() start
+                                                           reading end;
+sleep() end
+release memory
+-------------------------------------------------------------------
+
+
+>
+> > +
+> > +             break;
+> > +     }
+> > +
+> > +     return NOTIFY_DONE;
+> > +}
+> > +
+> >  /*
+> >   * REVISIT: many of these chips have deep power-down modes, which
+> >   * should clearly be entered on suspend() to minimize power use.
+> > diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> > index 8d10d9d2e830..134bfa6fcf76 100644
+> > --- a/include/linux/mtd/mtd.h
+> > +++ b/include/linux/mtd/mtd.h
+> > @@ -290,6 +290,7 @@ struct mtd_info {
+> >       /* Kernel-only stuff starts here. */
+> >       const char *name;
+> >       int index;
+> > +     bool mtd_event_remove;
+>
+> No need to repeat 'mtd' here, you are already in the mtd_info structure,
+> so mtd->mtd_event_remove would be redundant.
+
+Got it, will remove the "mtd" prefix.
+
+Thanks,
+Liwei.
+
+
+>
+> >       /* OOB layout description */
+> >       const struct mtd_ooblayout_ops *ooblayout;
+>
+> Thanks,
+> Miqu=C3=A8l
