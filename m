@@ -1,190 +1,211 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E7A02192E3;
-	Wed, 30 Apr 2025 08:43:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD8C20D505;
+	Wed, 30 Apr 2025 08:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002635; cv=none; b=VP8QAp/EzBYqCTM67kOZtiZUZtPR0Z/nd+/evpN89f9+jg0d/mEuDg4LY8LMi10muYw8L3U8p03AWvxWE2uCeVphkPjBTu6PSm4/HiZADwYeEuq8mVm3TSjvruXq8k3v1B+wDkrNcrtLx4CMQxpf8vPPl6g2hNszr+6j85jMKa4=
+	t=1746002642; cv=none; b=BTaBQWO8NJvsrQSEUMxY/OkNvrfdJ31s3JhNG/YOm3AgE+RT324oxeki69RykpFQULFQkGXuT6QAZdKOhFnkKvdpiQjbG+djwmZp+RpFYacgbHZjkK/XKxcra6Jk1wGu96VvWeneP2s8KB1uBn+Y5JpeNzjf7R012xDnuE26p44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002635; c=relaxed/simple;
-	bh=uCbpG3QrjrqIEpeYmGwYvqptFCLTfdx524GgbmyrHrc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eWbBOURzvNn1J8wBnE7fapfUlykssKlr8nulk03waErAUMbxzG4GmuYYgj+n8Ou+P0+Z0CBsp9wdlMZntjQlE0ls2GGTX3hTV//P21Qbe83hbvyvN9tJUSi/KYl4whQVjZHRG28+64HAu50rWIkFoJBRuGmJ6mxTv4twcBcpd6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GmiWafS3; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746002642; c=relaxed/simple;
+	bh=7Co8V1RtFjmvkaayS3lqMKD0JIT+ElCnjx8TinEXKSM=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=G9WvH33vd77yf6/EXRw+DIF4FWt0PdgrSzImMcLYISlGVnnHlQlQF6S5TLOVvUFKiPqaaYpqjA3oa+esi8rVQowFz6I/e8O/HGn+h7vu/QJYXxnJAbLoBC2viF5XuznjOFVtrrk0gBRzFL7EbCX0bsDfQ79KzOchKf1y0qmIHao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=BH1Dqouy; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GmiWafS3"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e63a159525bso5874348276.2;
-        Wed, 30 Apr 2025 01:43:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746002631; x=1746607431; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uCbpG3QrjrqIEpeYmGwYvqptFCLTfdx524GgbmyrHrc=;
-        b=GmiWafS3V7c8bjXlbk4OxAgBNgMdMDRL4V0Vw+CPlm5DNTXxIcss9IxS8NzF0tjYnj
-         9iqxKJh3IZfR9VFEZVfrw+jC6bIVJby0N506XXM/QiWSUTCKAM9OKM3bfLQM/VKdVH48
-         NyTyUH3MNiczNSx6BoEU2aNnJgyhNmoADQIG2ITsmP+uOl/yPCznPExhvJnh1zOvKkQF
-         gP6dfMQJBop2vdSldCvpKxIdQ99KCYSdgRqipz2Wiwru7PUIIXgfNE0y0NXhiJbSpbWM
-         jFARAN0JdouirBgMlFe6nB090TgqQyYAqcuEjW6QKe1lnPP4hfhfXBj7qjM+Mxk/kwi4
-         1eXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746002631; x=1746607431;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uCbpG3QrjrqIEpeYmGwYvqptFCLTfdx524GgbmyrHrc=;
-        b=i6WgjYscued8SlUcFxRfM0BpmqPOJCo1fNCVNUEOu/7jrhFZM96eDA+rR3G01/7xwI
-         sK7yaj+WkWpVmL6SaV9qkLSZrW8P9L7CnEyLDaGYM7cFHw04JUL2f93Te5gLdvkqmc/J
-         ySjuz6qK9nBIsdhRT6R6w1YJsR/OdHyieoIbi3U9G05HMk9yaKromfYax/FXi+Mv9JEE
-         3DF2jBqqQJpIuuwS21HDgKo83rJ21wWDjZMAlXmTJL0vTHH02UfjWXuHfM8LzoxPCqM9
-         0R3oK2TTF+eITyrHyNYEOmY3tmiPuxkogB7ECnUp/xXS3upQ0jX9TZLu3sjxO94rfWTK
-         Zfug==
-X-Forwarded-Encrypted: i=1; AJvYcCV5EjUD5/8tJMBqYyCiHWVuyr6oibeOIhpsOanUrQrgpDRt01BdrPOwUZmkXFnJIsPccx+IJ/qu@vger.kernel.org, AJvYcCVXCmj4KE3bseheJIAZH7j0iD2QsIDUAgSF8N+8RE1/kW4+IJSQ+Be4rZPncdhyqz6Qo7bjSFJiRO3GyOI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9kLQGf+e2FwoyZBORxOD7eThievN0pZW58ftwY/vRprY45z1b
-	NVkRfx46lKVNjPtFEz8QFPLM/wL86y3NNtLN/Wc9frO9rkL00yDLD78aiOb11YXDp6Gd+ohNZCt
-	CjGHfVsimp+nMVXfXvtkFYUhCIBY=
-X-Gm-Gg: ASbGncvEUssB0Frz6ztSerWXM+164AMVPCkc7RhE6J5ttM/rnL83JlWUkySXu+Zk6uE
-	+8EIjfCGkFsKm5qFhS/8uMXhwlPLaXkZpG/H98n8sOmGRrhFLW3eTvpOBdeA+gmvdRjYTauD42b
-	8kODWEd33gQuI8NCHoUyw=
-X-Google-Smtp-Source: AGHT+IEhkfAwWL8fVju4Lkb0QFOaKJJL8P4xY667SzVOwX2PIzzJstixARlzcso7JHOoO0ZjEw+VVPDctr4hEApCZ3s=
-X-Received: by 2002:a05:6902:a86:b0:e73:91a:9311 with SMTP id
- 3f1490d57ef6-e73ea21119cmr2996051276.6.1746002631281; Wed, 30 Apr 2025
- 01:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BH1Dqouy"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLauPr001485;
+	Wed, 30 Apr 2025 08:43:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	x7SCYQVXeDsdR1GUukXJP3PLvXOUonXD4QOh6Fbe46s=; b=BH1DqouyC9AbTFnh
+	OzTHYl4xRsMgNDhOptBGX5sKmJhTGRC/0gFLyEhQcGyjlu+1/7KnbO9q+s/ua7X4
+	KWmBmElxo29dBASfMNcx+HE4a+up+WmgTejn2Arb5dZX7c4OnqTrZ3MPpmVUNKI2
+	KayDE4jPPRYopRlcKYA/xjrgU6Dpoua5E5DyIKjcPJQb6dpxvhsvZtpvKrqC7aCH
+	R7QZnq3mc07uoe2/Zq9218Yy1QYlgLinmebRwt/Zj+nn2x0WM4ns2nKM3k3oDZ0Q
+	Ws7GLjFgmzJVRXrWJ0/Pmx1/y1948fhGhwbR3n8x6Lun60+tNVfefhNKZfogBJzF
+	q4wIVw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u9sd2h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 08:43:55 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U8hs0j030071
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 08:43:54 GMT
+Received: from [10.218.23.250] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
+ 2025 01:43:49 -0700
+Message-ID: <bda4e8ad-0d72-4a07-90ef-9fa4245fd205@quicinc.com>
+Date: Wed, 30 Apr 2025 14:13:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429201710.330937-1-jonas.gorski@gmail.com> <52f4039a-0b7e-4486-ad99-0a65fac3ae70@broadcom.com>
-In-Reply-To: <52f4039a-0b7e-4486-ad99-0a65fac3ae70@broadcom.com>
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Date: Wed, 30 Apr 2025 10:43:40 +0200
-X-Gm-Features: ATxdqUFI7CkDXiAPdAxAFb4q56LGJGrb1AR7EqNZNEXKnpODFXQ2kT5IcrZ2LP8
-Message-ID: <CAOiHx=n_f9CXZf_x1Rd36Fm5ELFd03a9vbLe+wUqWajfaSY5jg@mail.gmail.com>
-Subject: Re: [PATCH net 00/11] net: dsa: b53: accumulated fixes
-To: Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Vladimir Oltean <olteanv@gmail.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Russell King <linux@armlinux.org.uk>, Kurt Kanzenbach <kurt@linutronix.de>, 
-	Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
+ controller
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh
+ Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <H56Iba_grof22uzTtGCI-APhiDAGSejNod6jsSVIykm9ijaaj7PWqyszShCEGjIpM2wCLOn4a3Vfb8Hjziqklg==@protonmail.internalid>
+ <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+ <621d8556-f95b-4cbe-809b-864417f0d48a@linaro.org>
+ <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <b96f8432-132b-4c16-951e-718e91ec52a5@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: QCrNemx7V893oaF_4LBMTq-th3DzkxP4
+X-Proofpoint-ORIG-GUID: QCrNemx7V893oaF_4LBMTq-th3DzkxP4
+X-Authority-Analysis: v=2.4 cv=UZZRSLSN c=1 sm=1 tr=0 ts=6811e2cb cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=0wTyN5AiIvhKT9tr5UwA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA2MCBTYWx0ZWRfX2wu2tMQMbbmw xVDT0VgxEm6dERnm9TwdAu9YRQjCE0hgErAATkGOhamUlJTN5N36sJGyjf55+715A15YPzseKKT QjA96vCY+ZvejOhR0ZSDRspWuONYV+vGWuXfZpO/KwPkR+M8Fl1ARwfZWXg9Y8PdXOPe0qHV4Dr
+ wzRCfYmujpo+hHkZ/EBXJNSV6XQytDKT9RuOakmx9p7INGt6zwQmbDLd/jkfmZoRDAzbpho9ew+ t0MH74P45PxY3fJ+XYq/p8asoLh2M8ewNZzspC16xci6En/65xhzm4QiguN5E8RvfYrtRUSF6FG JWkOUwEIrzGpzzIwjiHix76aPOwhUc+ex2iyu2ti7G5STPvO0PVZrXeofOiRN0PCQMKdyEnamoe
+ jbRoe4OfuXJSzgjjq4SxK3BYFmXxjJ2acEjJ6jgpL/4zb7ipTxJegfwR4rhdYQDs3U3AMRKY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300060
 
-On Wed, Apr 30, 2025 at 10:07=E2=80=AFAM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
+
+On 4/24/2025 4:08 PM, Satya Priya Kakitapalli wrote:
+>
+> On 4/22/2025 5:11 PM, Bryan O'Donoghue wrote:
+>> On 22/04/2025 06:42, Satya Priya Kakitapalli wrote:
+>>> Add device tree bindings for the camera clock controller on
+>>> Qualcomm SC8180X platform.
+>>>
+>>> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>>> ---
+>>>   .../bindings/clock/qcom,sc8180x-camcc.yaml         |  65 ++++++++
+>>>   include/dt-bindings/clock/qcom,sc8180x-camcc.h     | 181 
+>>> +++++++++++++++++++++
+>>>   2 files changed, 246 insertions(+)
+>>>
+>>> diff --git 
+>>> a/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml 
+>>> b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+>>> new file mode 100644
+>>> index 
+>>> 0000000000000000000000000000000000000000..b17f40ee53a3002b2942869d60773dbecd764134
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+>>> @@ -0,0 +1,65 @@
+>>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>>> +%YAML 1.2
+>>> +---
+>>> +$id: http://devicetree.org/schemas/clock/qcom,sc8180x-camcc.yaml#
+>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>>> +
+>>> +title: Qualcomm Camera Clock & Reset Controller on SC8180X
+>>> +
+>>> +maintainers:
+>>> +  - Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>>> +
+>>> +description: |
+>>
+>> You can drop the "|"
+>>
+>
+> okay.
 >
 >
+
+I tried removing this, but it is throwing below error, in the line "See 
+also: include/dt-bindings/clock/qcom,sc8180x-camcc.h" because of usage 
+of a colon there.
+
+Error: 
+Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml:16:12: 
+mapping values are not allowed in this context
+
+As we are following the same format in all other Qualcomm bindings, I'll 
+keep the "|" and "See also:" section as is.
+
+
+>>> +  Qualcomm camera clock control module provides the clocks, resets and
+>>> +  power domains on SC8180X.
+>>> +
+>>> +  See also: include/dt-bindings/clock/qcom,sc8180x-camcc.h
+>>> +
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qcom,sc8180x-camcc
+>>> +
+>>> +  clocks:
+>>> +    items:
+>>> +      - description: Board XO source
+>>> +      - description: Sleep clock source
+>>
+>> Missing clock-names
+>>
 >
-> On 4/29/2025 10:16 PM, Jonas Gorski wrote:
-> > This patchset aims at fixing most issues observed while running the
-> > vlan_unaware_bridge, vlan_aware_bridge and local_termination selftests.
-> >
-> > Most tests succeed with these patches on BCM53115, connected to a
-> > BCM6368.
-> >
-> > It took me a while to figure out that a lot of tests will fail if all
-> > ports have the same MAC address, as the switches drop any frames with
-> > DA =3D=3D SA. Luckily BCM63XX boards often have enough MACs allocated f=
-or
-> > all ports, so I just needed to assign them.
-> >
-> > The still failing tests are:
-> >
-> > FDB learning, both vlan aware aware and unaware:
-> >
-> > This is expected, as b53 currently does not implement changing the
-> > ageing time, and both the bridge code and DSA ignore that, so the
-> > learned entries don't age out as expected.
-> >
-> > ping and ping6 in vlan unaware:
-> >
-> > These fail because of the now fixed learning, the switch trying to
-> > forward packet ingressing on one of the standalone ports to the learned
-> > port of the mac address when the packets ingressed on the bridged port.
+> Since we are using DT based indexing method, clock names are not 
+> required.
 >
-> Sorry not quite getting that part, can you expand a bit more?
-
-The ping test uses four network ports, where two pairs are linked via
-a network cable. So the setup is
-
-sw1p1 <- cable -> sw1p2 <- bridge -> sw1p3 <- cable ->sw1p4
-
-And it tries to ping from sw1p1 to sw1p4.
-
-In the vlan_aware test, the bridge uses VLAN 1 pvid untagged, so it
-learns in VLAN 1, while the standalone ports use VLAN 0. Different
-FIDs, so no issue.
-
-In the vlan_unaware test, untagged traffic uses VLAN 0 everywhere, so
-the following happens:
-
-- switch learns swp1p's MAC at sw1p2
-- switch learns sw1p4's MAC at sw1p3
-
-when sw1p1 sends a unicast to sw1p4' mac it egresses on swp1p3 and
-then ingresses on sw1p4 again. The switch see's sw1p2's MAC as DA and
-then ARL lookup says "sw1p3", but the port VLAN mask disallows sending
-from sw1p4 to sw1p3, so it gets dropped.
-
-Without learning, all packets are flooded, so connectivity works, as
-the standalone ports are always part of the flood masks.
-
-> > The port VLAN masks only prevent forwarding to other ports, but the ARL
-> > lookup will still happen, and the packet gets dropped because the port
-> > isn't allowed to forward there.
 >
-> OK.
+>> A suspicious lack of clock depends here. No AHB clock ?> +
+>>> +  power-domains:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      A phandle and PM domain specifier for the MMCX power domain.
+>>> +
+>>> +  required-opps:
+>>> +    maxItems: 1
+>>> +    description:
+>>> +      A phandle to an OPP node describing required MMCX performance 
+>>> point.
+>>> +
+>>> +allOf:
+>>> +  - $ref: qcom,gcc.yaml#
+>>
+>> A suspicious lack of clock depends here. No AHB clock ? No dependency 
+>> on gcc ?
+>>
+>> You call out the gcc above.
+>>
+>> Could you please recheck your list of clock dependencies.
 >
-> >
-> > I have a fix/workaround for that, but as it is a bit more controversial
-> > and makes use of an unrelated feature, I decided to hold off from that
-> > and post it later.
+> The dependent GCC clocks are marked always on from gcc probe, hence 
+> did not mention the dependency here.
 >
-> Can you expand on the fix/workaround you have?
-
-It's setting EAP mode to simplified on standalone ports, where it
-redirects all frames to the CPU port where there is no matching ARL
-entry for that SA and port. That should work on everything semi recent
-(including BCM63XX), and should work regardless of VLAN. It might
-cause more traffic than expected to be sent to the switch, as I'm not
-sure if multicast filtering would still work (not that I'm sure that
-it currently works lol).
-
-At first I moved standalone ports to VID 4095 for untagged traffic,
-but that only fixed the issue for untagged traffic, and you would have
-had the same issue again when using VLAN uppers. And VLAN uppers have
-the same issue on vlan aware bridges, so the above would be a more
-complete workaround.
-
-> > This wasn't noticed so far, because learning was never working in VLAN
-> > unaware mode, so the traffic was always broadcast (which sidesteps the
-> > issue).
-> >
-> > Finally some of the multicast tests from local_termination fail, where
-> > the reception worked except it shouldn't. This doesn't seem to me as a
-> > super serious issue, so I didn't attempt to debug/fix these yet.
-> >
-> > I'm not super confident I didn't break sf2 along the way, but I did
-> > compile test and tried to find ways it cause issues (I failed to find
-> > any). I hope Florian will tell me.
 >
-> I am currently out of the office but intend to test your patch series at
-> some point in the next few days. Let's gather some review feedback in
-> the meantime, thanks for submitting those fixes!
-
-If you are awake at this hour I guess your are back "home" ;-)
-
-Sure thing, take your time! All I wanted to implement is MST support,
-but then I noticed some things not working as expected, and then I
-became aware of the selftests, and then I suddenly had accumulated a
-lot of fixes trying to make everything say "Okay" (and sometimes
-wondering why other stuff broke when I fixed things, like the learning
-in unaware mode).
-
-Best regards,
-Jonas
+>>
+>> ---
+>> bod
+>
