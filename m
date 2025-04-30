@@ -1,60 +1,58 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9D121ABC6
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACE81DF98B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002543; cv=none; b=KKG19IW7bT0WGiOoV/iCXJdsH4JAvPzELDeOZZJwtRZnjmixgkxXXICZLK/6EfLfdsUhsymJBAKyzVPh7/Bp+MGgYULT+env0tyFHvaTcLZF9EWEeM2MTpqWdE4ohcGo25npRvTu+4ul87S/AN3ji9i+1up0sQQN6GZYnrNGZf0=
+	t=1746002543; cv=none; b=c/1yldervfAj4zQVpurAB2Y9diqT4Sf0POpbeHiSFrZ3jpRhXTiSNB0c6dTEfSSCdugSEvXoj8AU58hdc0h5hRmA/GxVCCMZlpvDuBrIlDsXDhi0I0sfB4QV83sTtdg3txSFQsp3ihLV5KCRAOIWEMSNNxU0BSpfiTPq/mh33dM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746002543; c=relaxed/simple;
-	bh=lrOuAr7//CsCE16uws5U23OQFFSQw7lF11vTqjRDSzg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IYe4WgjwEQ1vMuHfMTD7S/VE1PIH43uafgFgT+dogzwO6lgYAVsMYNL/6zWeB25yQO9It6sSYeOWXXUVrCwnzHSZZhCUkQuecSCU8w2Xai4rGwWXgB6X35wQAyLVz4E1OxtjHdVdpatV8hqj1/ahacRfUzMEwVqKYiJpT9RfvDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=i/JkN+D6; arc=none smtp.client-ip=209.85.208.43
+	bh=GKW8F/esjma3xIisnNdfmxgVLhg33OtW33/8gKmHAKk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ll8dz3sKfAtMx6aOqmJo8TDfsJ1NHYkL36wJ2Pf7Kgyvq0CzOphSLL38grp7uGHKNww7G0Ix+kcOW+zm+7J7BmL3Ze14NrhjqzkYBXAX/z7jxDUwTDfdUa3aScwmusl3EuKwM/wt4p+UARdry42/QtaDNAvL1v3ACF/S4NEKFuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZdP3hXK4; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i/JkN+D6"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso10833969a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:42:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZdP3hXK4"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e677f59438so10964094a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:42:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google; t=1746002539; x=1746607339; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OUfMAZkI61yB2821Vq79bnRbndqVmGSRfkgPEIOM8kc=;
-        b=i/JkN+D63ROIBA6DJGutGsEMbrWDOAAdpL8odZ0nniSdmuwRLzVN6X/WIz+p0hdRQV
-         V/iohUXWjVN98kJblpSPnwI5ldVsTPa/UBBTbCzPoYnrUzmZIomfHquwGH7DcLgwgQ6g
-         n7iz0zGqhxnlHjoSX78xbG4SYyPgQ9UEtaAyM=
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=92CUaGQAbfLwUOAfwUK+51NCmaqkCK/WvaTduxkGT4w=;
+        b=ZdP3hXK4ynRDOFi2tBgcCpqZ11Uhc2Lr+dg3S070NzPMjv9vrjF8vSR3p/4TT7gn5z
+         w74qgnwm0Ux/CEVCuYuALSGsIFve3AuElAG8I0wkNJQqHD/+2X1hC1T6rcSX5cFTqz4I
+         AaysfU8cLxLT7xvaaL4mRXYhgaBK7fuFyAMek=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1746002539; x=1746607339;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OUfMAZkI61yB2821Vq79bnRbndqVmGSRfkgPEIOM8kc=;
-        b=qLwv/hKnXTTom5Crhx3EXjR3HSqbws1TIThVaWidOvIn4leP29n1AerwQzsHjGijjf
-         Kcevbu43bsDKLXnudpIx1GhBYVYjQgu/kP+9e3J7wh8aUZvvDzceIPuh6bx+ezpPWmeE
-         vxoHeaYkLTpaemwcpkihcrZlS0F/NadCWA5p6c3KtwkdweK/a4Fwd9UE9ZFjO+20aLgw
-         L75mzl1AbF8PMXoygC3kzORsrqNd0k88BBS9CpscXjeb4qSFZ8mSgCyLipviNRh6S+LI
-         N35ywagOGnr67uvbXnPrpgFtVcHgEiHUppO8UGTTkm7eTPyxP1O4AJV+L89Nn9BnWHyl
-         cmhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVkJQQ4V2z9xWGQDxg3lOLIUuJUMEmnYZtD93+sKRuvYiGLK9a2Lh1sULv/YEAx/Pp68EmUUQBQuZ4Xvwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3CR6GlTVL6REeeMpzBxerVK8InH8HGYst1PeK9ckNMo2qMwgN
-	IYesX16rpnhGCVunyjDAc89HsGnwBHfFr66MutG/99o5lUlfpLjlQN0IrCGT2Q==
-X-Gm-Gg: ASbGnct+bQRXeR1NuUNWMHMmWu5VC7e8fwiQosYoN9Fw3+zJoIB9M3vDVMm+s8X2go7
-	uL6d1U31zgOQsBVMcTKhGhz9sbQ+cXHtOETsEcEG9jtncyCzlOf7LA+3qTEk90dXUJGUjWUtcjz
-	31aTuXtEq9csK1Ov+IHQz1fZfOg9RbAJTfsyUE0UWD/MWiIKuc2hEKtKkaB1CfcfJ6H3qeUpiQd
-	QdVB5f0KKhkdalhacVEsSeLezOpguK0n4CwyXm/EtS0cydHj46pmezxBXqdVuCWB4KIIjkRjfA3
-	arNqKiMGiixzm23y0PIZkLYxV8+WPNoWkh3vU1FS5D+lyIEkDbT9y+2W/LYR4wz1I9uxUvnqcg0
-	T38HqsbBscrzDBcGupDXO9m0RCA==
-X-Google-Smtp-Source: AGHT+IE2tUm9vY4g6n13IEUjGDpcQXgLL2IoWAKbWzvId5UL7O470kgqnETeVgxpGEkAr3echu2a4w==
-X-Received: by 2002:a05:6402:2707:b0:5f6:23d2:e6f7 with SMTP id 4fb4d7f45d1cf-5f89c10be57mr1961159a12.32.1746002539605;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=92CUaGQAbfLwUOAfwUK+51NCmaqkCK/WvaTduxkGT4w=;
+        b=mOl+pddKzsErBPLobS2k9z62u88XvZ6scVlFkDsWUYhgio/mKX0qyGdhAl4AnVdeCa
+         Ty+3gi6fK4zx0d+8QxbLn2iZG0Pq8SZ/sd+lrJhD+SAhgacWC8CJEs3A0TjXx2OhUZvM
+         aWqOjXOaI0IpKHish/s2QmtG/5Y7SoaJGlQ8OY4Tp7d39xbMZnpkYiLY6YJ8ZTZwvc0S
+         qAV895Iagxl5Tmfm7w4E86bfiBhyXytB8OLGlB4YPn6fAZVyYQ9Iur2XldNr7UXBfRB1
+         i+Ep9CLmB4bAIhv0Y1oYfKg30i89FEh9Ugnv028U38Hs54ALwZ1VfVUzxQjEIp7lSTRO
+         c5fg==
+X-Forwarded-Encrypted: i=1; AJvYcCWHCe/nz0/sPd1H4dFE9VSWsP0S6eLKhj3eRIaRnNTGQzDKiZYt6pIhR/1pFHVqiAEbox43LiSo3ayMCq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTKxYnKN/MjPpIbc96FfjW8jboN+SvTBLuhZcpe5Oq+GSSS35p
+	t4hz1BdWDpjKYQ4zWCDqwP1LXnx7YMJYnWusIg37IhWYHhdNvP7zGlvY+n9uIw==
+X-Gm-Gg: ASbGnctbPqaj5W07Pw4vbbrVUbkrSjKGZz1U4pOYvdMEPeikODvUnmS8VWRpvoeKO7C
+	7XE1fxEVJdPd7G6C3GVJ7K91RuHIuGxM0R98N6/DcSNQnouFl3YscuQsDhXig7UbbDbwC1u7Oks
+	AxtUY7w/9cxuEuM9JyGP9px6YBgaxQYfLputR2FuWRM189E1SxMpl0hCrbkNYVE16K7Zs0Y7hPO
+	agUFD9n7jZ0uPtptEKjBfSUJkbDJVOCyzf4g1mzoha8NOPJ7mN36ab5reXGF4nEU6Og7oqo5aCJ
+	05lfVo4Ml3eqGXnzeJDmXBuonkAWnUfemkImLvW1dqTYfetHK0EbGYULNi1e90SLNEtfZ4Sbd6r
+	tbMZV08trYM1jhPxlM+to4sQAFw==
+X-Google-Smtp-Source: AGHT+IHxx+jvJKhxJN5DAz1Pj/9fep2nbrC9HiPTHd7+BrSnkhxBr/I4PsJYRNJc5L9MSoHlnuyC3A==
+X-Received: by 2002:a05:6402:50d1:b0:5e6:616f:42e4 with SMTP id 4fb4d7f45d1cf-5f89bf1d74cmr1957760a12.27.1746002539157;
         Wed, 30 Apr 2025 01:42:19 -0700 (PDT)
 Received: from jaz-virt.c.googlers.com.com (23.31.204.35.bc.googleusercontent.com. [35.204.31.23])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5342sm8351783a12.35.2025.04.30.01.42.19
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5342sm8351783a12.35.2025.04.30.01.42.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:42:19 -0700 (PDT)
+        Wed, 30 Apr 2025 01:42:18 -0700 (PDT)
 From: Grzegorz Jaszczyk <jaszczyk@chromium.org>
 To: tglx@linutronix.de,
 	robh@kernel.org
@@ -83,12 +81,10 @@ Cc: mingo@redhat.com,
 	akpm@linux-foundation.org,
 	joel.granados@kernel.org,
 	sourabhjain@linux.ibm.com
-Subject: [PATCH v3 1/2] x86/of: add support for reserved memory defined by DT
-Date: Wed, 30 Apr 2025 08:41:37 +0000
-Message-ID: <20250430084138.2287031-2-jaszczyk@chromium.org>
+Subject: [PATCH v3 0/2] x86: add support for reserved memory defined by DT
+Date: Wed, 30 Apr 2025 08:41:36 +0000
+Message-ID: <20250430084138.2287031-1-jaszczyk@chromium.org>
 X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
-In-Reply-To: <20250430084138.2287031-1-jaszczyk@chromium.org>
-References: <20250430084138.2287031-1-jaszczyk@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -99,56 +95,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Grzegorz Jaszczyk <jaszczyk@google.com>
 
+Currently x86 allows to boot with ACPI and DT at the same time and basic DT
+support is already in place but processing DT reserved memory was missing.
+
 The DT reserved-memory nodes can be present in DT as described in
 Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml.
 Similar to other architecture, which supports DT, there is a need to
-create reserved memory regions for such nodes.
+scan and register reserved memory regions on x86 for such nodes. It is required
+by drivers (e.g. open-dice driver) to process DT reserved-memory regions.
 
-Additionally this patch changes the sequence and calls
-x86_flattree_get_config earlier during memblock setup, just after e820
-memblock setup, so the DT reserved-memory can be properly reflected in
-the memblock before it is used for allocation.
+v2 -> v3:
+- Patch #1 which extends of/reserved_mem and adds the possibility to register an
+arch specific hook was dropped. Instead "x86/e820: reserve corresponding to DT
+reserved-memory nomap region" was introduced.
+- "x86/of: add support for reserved memory defined by DT" stop relying on arch
+specific hook. Also calling x86_flattree_get_config was moved and is now called
+earlier during memblock setup.
+For more info please refer to commit log description and v2 discussion:
+https://lore.kernel.org/all/20250418124718.1009563-1-jaszczyk@chromium.org/
 
-Signed-off-by: Grzegorz Jaszczyk <jaszczyk@google.com>
----
- arch/x86/kernel/devicetree.c | 1 +
- arch/x86/kernel/setup.c      | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Grzegorz Jaszczyk (2):
+  x86/of: add support for reserved memory defined by DT
+  x86/e820: reserve corresponding to DT reserved-memory nomap region
 
-diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
-index dd8748c45529..f7db0e8f9c3e 100644
---- a/arch/x86/kernel/devicetree.c
-+++ b/arch/x86/kernel/devicetree.c
-@@ -307,6 +307,7 @@ void __init x86_flattree_get_config(void)
- 		}
- 
- 		early_init_dt_verify(dt, __pa(dt));
-+		early_init_fdt_scan_reserved_mem();
- 	}
- 
- 	unflatten_and_copy_device_tree();
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 9d2a13b37833..6f4eddc11560 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -1047,6 +1047,8 @@ void __init setup_arch(char **cmdline_p)
- 
- 	e820__memblock_setup();
- 
-+	x86_flattree_get_config();
-+
- 	/*
- 	 * Needs to run after memblock setup because it needs the physical
- 	 * memory size.
-@@ -1157,8 +1159,6 @@ void __init setup_arch(char **cmdline_p)
- 	early_acpi_boot_init();
- 	x86_init.mpparse.early_parse_smp_cfg();
- 
--	x86_flattree_get_config();
--
- 	initmem_init();
- 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
- 
+ arch/x86/include/asm/e820/api.h |  1 +
+ arch/x86/kernel/devicetree.c    |  1 +
+ arch/x86/kernel/e820.c          | 19 +++++++++++++++++++
+ arch/x86/kernel/setup.c         |  6 ++++--
+ 4 files changed, 25 insertions(+), 2 deletions(-)
+
 -- 
 2.49.0.901.g37484f566f-goog
 
