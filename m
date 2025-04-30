@@ -1,168 +1,167 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F321E25F8
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:43:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224CD6F06A;
+	Wed, 30 Apr 2025 06:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745995396; cv=none; b=fZxFS+CePsCmI8O8euRnI6U/4t9SvUeP+4NA9de3vCDtZT+rK/XnRobyL4NvW3rVpFPQZo4QzVUBLCefwh1HlXCHBir4r+EIsA7iIfwZ/wmq1zHKEsVaEEs70/MBK0XrR5Qo/6hlaB3IlELIj1SGCU14hf6GLA8Jb9mHGpSgRG4=
+	t=1745995447; cv=none; b=RJ3Dke498mn1IDY47le+k1CJxHurw+WXsYkeHaLi6uWN/IRTpWawFeNhlk69T1qUEfoQSJc+KOIu8SeC5Q8JrL3XVUNBK80Qze5CvsBVUrDe7jfxg0KjqNHgb4poVEqCR7YYACtWms70651TIOJCVhkTJUOGHi+d4vYZ3VzG+x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745995396; c=relaxed/simple;
-	bh=/3qRkQXwNZYTsdB4giOI73esm+P38GQjfF5hmhLMGGY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckb9UltAQUSsS/7Z+zz7lJRf0VHxyaWSqbn7/GNy4RvPB7b0/tKyR/Czwgxu4SD37alC6ivSrEP/TXn5VYCvic1rqWLYvc1mmpBgBNkbJ5+RLxtzoYEpBu4Dcyd0LnEQ2TboPre0ZtFP1X3iJ7/ASHZUyE+OSYBKrncS/crRHvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nKrS5p1U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RDnnzwI9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nKrS5p1U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RDnnzwI9; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745995447; c=relaxed/simple;
+	bh=AYp6pQ3LowXrZUdlkiNr5Hgj/8BH0hPF1FmqZZTurvs=;
+	h=From:To:Subject:Date:Message-Id:In-Reply-To:References; b=GHKBgffn8CSe2CqsaINgQS3btWl/G04YPAXB2H+Ii2ojWDj9pOcrriWxAN1BiCCrt9t/bpZzJf4VNcJ7Wo/gRg6xNjDmC2vgdKTbPO+eLR23bdNiwN0GxEGB6zZZCz9aawyNuaPzbk2CbHQYiVRIa+ZBjz/BnMzLoGxoSkS0mLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM3ERsI2; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nKrS5p1U";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RDnnzwI9";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nKrS5p1U";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RDnnzwI9"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0A8451F7BF;
-	Wed, 30 Apr 2025 06:43:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745995393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
-	b=nKrS5p1UI2IcgjJDkMdXYB9MPnZaUQRPcO+n6hy0/2sFRTMpzSyi1B36y8eNKJVGc0x+R4
-	zJqYrxVvHMTItgLJBZY93ABtaCK8RvLsuBNheC3STArVpYKpmUUVOJWSb0D1+MQjoExAHc
-	Quq0uJLjqc9FN+S/SYdwEFrUjiWPmpw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745995393;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
-	b=RDnnzwI95B7WovRCDRFUsuozJrbba4W472Ph++Eft2hZ70evljDIMgYRioTDmg52CNFTVp
-	QlduB0C6GYpEasCQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745995393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
-	b=nKrS5p1UI2IcgjJDkMdXYB9MPnZaUQRPcO+n6hy0/2sFRTMpzSyi1B36y8eNKJVGc0x+R4
-	zJqYrxVvHMTItgLJBZY93ABtaCK8RvLsuBNheC3STArVpYKpmUUVOJWSb0D1+MQjoExAHc
-	Quq0uJLjqc9FN+S/SYdwEFrUjiWPmpw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745995393;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
-	b=RDnnzwI95B7WovRCDRFUsuozJrbba4W472Ph++Eft2hZ70evljDIMgYRioTDmg52CNFTVp
-	QlduB0C6GYpEasCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E288713A25;
-	Wed, 30 Apr 2025 06:43:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id D8DsNIDGEWiebgAAD6G6ig
-	(envelope-from <dwagner@suse.de>); Wed, 30 Apr 2025 06:43:12 +0000
-Date: Wed, 30 Apr 2025 08:43:04 +0200
-From: Daniel Wagner <dwagner@suse.de>
-To: Keith Busch <kbusch@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Hannes Reinecke <hare@suse.de>, 
-	Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
-	Sagi Grimberg <sagi@grimberg.me>, James Smart <james.smart@broadcom.com>, 
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
-Message-ID: <8121b8d6-2b30-4086-b2fb-bce354f203dc@flourine.local>
-References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
- <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
- <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
- <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
- <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de>
- <aBEW4W40ZelIXfs2@kbusch-mbp>
- <253e0551-d4d7-4ffe-8842-daecf1f6c753@roeck-us.net>
- <aBEdkUky_-bfgISv@kbusch-mbp>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM3ERsI2"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6f4e3618437so35216666d6.1;
+        Tue, 29 Apr 2025 23:44:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745995445; x=1746600245; darn=vger.kernel.org;
+        h=references:in-reply-to:message-id:date:subject:to:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ISfzHoRYtiJGPKJU8QM+7CDd8eBpcXDrcqU+YJg8cfA=;
+        b=YM3ERsI2jmP3848Yl+lbMQlVftU2ExBDcmyO/gDpYwA9IaRMU2UlQ6PPi2caqrL16a
+         YiVJPiqXSDMO1qbkTLRTs2lASDcra7nBzGxgjbk8f7AJpeYkFVgW7cKsl1dNplxLOHne
+         wBHW8P5tmFH/AGpC3OW9e6YtnVWKZDCL7lE+MuTZ0sK9PQsm7cQCXudUlq/fLDcWxXdL
+         TBsHMMF8M5LOVL0hfFGRdjgu6HEql3B8q0pcykXwZbEz0Qeipazt8bMH7XMpQN4nfvox
+         IC9r6paAxn7CzHrCkDrTtyfweo6vZ2mvy0JsyIkJ56OjCyH1CBf3VTweViqBfPdHcDLf
+         ylPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745995445; x=1746600245;
+        h=references:in-reply-to:message-id:date:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ISfzHoRYtiJGPKJU8QM+7CDd8eBpcXDrcqU+YJg8cfA=;
+        b=ExDtvqvnP75YO1cuXKYXEeVormrrK1YZ3yRCINxTnPCSC5D0wN5hrQvCX3qiWuRjvB
+         LJ2KCqQaZAktrvg//UCcYT4NjHG6DawlTTMOxzU3uBMHkifYkyKBYa0viPYjCbVLc2gE
+         gtdQ4eoRQhz7xRNQpMCm7opuOkNn4WpC6WETCT4hLHQyhyccRWAglyV0ZsQ19Vk0ri8q
+         zbrNms9NRd6ykmhf0EORyhLrmlIAWDG7BcGcHR9I+2WQm1IsjVrrj9tzWTKocyGRmlNf
+         Cpka+41Nazw1YfOwD2Drel5WzDyltqT0PTX++2cLMdDrlHL47gQMjiaJbo8+vea9td98
+         bUcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIp3+eaAixbFeuYSvDTHnfHSoSJTegfxeUgWcpU2bW7YueS+itDREjzemQb9lqkBxGm0g90/S3TPiZ52w=@vger.kernel.org, AJvYcCXPc07jot0/YE5RSB4F2d5qgvsDFM+tz2etnJ4Lb+pRuFxhsGlKAnhwhQHgjpY9N3VHtdjRjmAgAnv1vU2bfyh3@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFCl11jbTf6/2tjjcvVWO7JvbA1abOAvq4rY7Ur8QkpP58dFAS
+	GcPx0sh6nPZLo9c1TTHikJTGnQKQbVZfJ4kLNrsQ5XzuYfetGYSH
+X-Gm-Gg: ASbGnctPKpsgxjbORdTMBw38pww/XnCtSVUqUZYWARUMFCT8oXR9sF/hG9pU/ExpkJq
+	XOiYfxOJMabcvXY6kz7IhW5y6QEEvlVoNS18rVnYz27gqYavinYWj7pTqgzc0G2vsqiqh51pE43
+	4Sfxo/YE1q/UTelgVL5JT3cK6n/RaAKgs1oLVmMtJKs3mRp1QMxfI0MOFEn40PO316VGGyyFHol
+	Wp+cOWw5qdcC/7Wr7cnEx+75OQUvu9C4pajnJq7XVduAMCAZSltCwU4S54iPd+Vi97VY17JmAiy
+	5iUlUZxuJ9tlCg+ZQcoyE+kHxoT3nCLb2H3fiZfzxn8oDV/xeGRkPi8WwaryJC/3NuvuyA==
+X-Google-Smtp-Source: AGHT+IEJDOqILfMnwLve4xLjMjTtESiNuO4408dKv7NjG+Wo5RDb4PBOsFQKC/5cf/C55E25bUSbSg==
+X-Received: by 2002:ad4:5cc5:0:b0:6cb:ee08:c1e8 with SMTP id 6a1803df08f44-6f4fcee2fffmr41127546d6.23.1745995444833;
+        Tue, 29 Apr 2025 23:44:04 -0700 (PDT)
+Received: from localhost.localdomain ([66.198.16.131])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe709702sm5107086d6.51.2025.04.29.23.44.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 23:44:04 -0700 (PDT)
+From: avimalin@gmail.com
+X-Google-Original-From: vimal.agrawal@sophos.com
+To: vimal.agrawal@sophos.com,
+	linux-kernel@vger.kernel.org,
+	pablo@netfilter.org,
+	netfilter-devel@vger.kernel.org,
+	fw@strlen.de,
+	anirudh.gupta@sophos.com
+Subject: [PATCH v2] nf_conntrack: sysctl: expose gc worker scan interval via sysctl
+Date: Wed, 30 Apr 2025 06:43:42 +0000
+Message-Id: <20250430064342.62592-1-vimal.agrawal@sophos.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250429132921.GA4721@breakpoint.cc>
+References: <20250429132921.GA4721@breakpoint.cc>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBEdkUky_-bfgISv@kbusch-mbp>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	TO_DN_SOME(0.00)[]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
 
-On Tue, Apr 29, 2025 at 11:42:25AM -0700, Keith Busch wrote:
-> On Tue, Apr 29, 2025 at 11:23:25AM -0700, Guenter Roeck wrote:
-> > On 4/29/25 11:13, Keith Busch wrote:
-> > > On Mon, Apr 28, 2025 at 03:21:18PM +0200, Hannes Reinecke wrote:
-> > > > > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> > > > > index b502ac07483b..d3c4eacf607f 100644
-> > > > > --- a/drivers/nvme/host/core.c
-> > > > > +++ b/drivers/nvme/host/core.c
-> > > > > @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
-> > > > >                   msleep(100);
-> > > > >           }
-> > > > > 
-> > > > > -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
-> > > > > +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
-> > > > > +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
-> > > > >                   return;
-> > > > > 
-> > > > >           nvme_unquiesce_io_queues(ctrl);
-> > > > 
-> > > > I would rather have a separate state for firmware activation.
-> > > > (Ab-)using the 'RESETTING' state here has direct implications
-> > > > with the error handler, as for the error handler 'RESETTING'
-> > > > means that the error handler has been scheduled.
-> > > > Which is not true for firmware activation.
-> > > 
-> > > But the point of having firmware activation set the state to RESETTING
-> > > was to fence off error handling from trying to schedule a real reset.
-> > > The fw activation work schedules its own recovery if it times out, but
-> > > we don't want any other recovery action or user requested resets to
-> > > proceed while an activation is still pending.
-> > 
-> > Not only that; there are various checks against NVME_CTRL_RESETTING
-> > sprinkled through the code. What is the impact of introducing a new state
-> > without handling all those checks ?
-> 
-> Good point, bad things will happen if these checks are not updated to
-> know about the new state. For example, nvme-pci will attempt aborting IO
-> or disabling the controller on a timeout instead of restarting the timer
-> as desired.
-> 
-> Can we just revert the commit that prevented the RESETTING -> LIVE
-> transtion for now?
+From: Vimal Agrawal <vimal.agrawal@sophos.com>
 
-Unfortunately, it will break the FC error handling again(*). The
-simplest fix is right above, add the transition from RESETTING to
-CONNECTING and then to LIVE, IMO.
+Default initial gc scan interval of 60 secs is too long for system
+with low number of conntracks causing delay in conntrack deletion.
+It is affecting userspace which are replying on timely arrival of
+conntrack destroy event. So it is better that this is controlled
+through sysctl
 
-(*) ee59e3820ca9 ("nvme-fc: do not ignore connectivity loss during connecting")
-    f13409bb3f91 ("nvme-fc: rely on state transitions to handle connectivity loss")
+Fixes: 2aa192757005 ("netfilter: conntrack: revisit the gc initial rescheduling bias")
+Signed-off-by: Vimal Agrawal <vimal.agrawal@sophos.com>
+Reviewed-by: Florian Westphal <fw@strlen.de>
+Reviewed-by: Anirudh Gupta <anirudh.gupta@sophos.com>
+---
+v2: Don't allow non-init_net ns to alter this global sysctl
+
+ include/net/netfilter/nf_conntrack.h    | 1 +
+ net/netfilter/nf_conntrack_core.c       | 4 +++-
+ net/netfilter/nf_conntrack_standalone.c | 9 +++++++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 3f02a45773e8..eaf1933687b2 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -321,6 +321,7 @@ extern struct hlist_nulls_head *nf_conntrack_hash;
+ extern unsigned int nf_conntrack_htable_size;
+ extern seqcount_spinlock_t nf_conntrack_generation;
+ extern unsigned int nf_conntrack_max;
++extern unsigned int nf_conntrack_gc_scan_interval_init;
+ 
+ /* must be called with rcu read lock held */
+ static inline void
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 7f8b245e287a..d7e03c29765a 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -204,6 +204,8 @@ EXPORT_SYMBOL_GPL(nf_conntrack_htable_size);
+ 
+ unsigned int nf_conntrack_max __read_mostly;
+ EXPORT_SYMBOL_GPL(nf_conntrack_max);
++__read_mostly unsigned int nf_conntrack_gc_scan_interval_init = GC_SCAN_INTERVAL_INIT;
++EXPORT_SYMBOL_GPL(nf_conntrack_gc_scan_interval_init);
+ seqcount_spinlock_t nf_conntrack_generation __read_mostly;
+ static siphash_aligned_key_t nf_conntrack_hash_rnd;
+ 
+@@ -1513,7 +1515,7 @@ static void gc_worker(struct work_struct *work)
+ 		nf_conntrack_max95 = nf_conntrack_max / 100u * 95u;
+ 
+ 	if (i == 0) {
+-		gc_work->avg_timeout = GC_SCAN_INTERVAL_INIT;
++		gc_work->avg_timeout = nf_conntrack_gc_scan_interval_init;
+ 		gc_work->count = GC_SCAN_INITIAL_COUNT;
+ 		gc_work->start_time = start_time;
+ 	}
+diff --git a/net/netfilter/nf_conntrack_standalone.c b/net/netfilter/nf_conntrack_standalone.c
+index 2f666751c7e7..bdbf37a938bb 100644
+--- a/net/netfilter/nf_conntrack_standalone.c
++++ b/net/netfilter/nf_conntrack_standalone.c
+@@ -559,6 +559,7 @@ enum nf_ct_sysctl_index {
+ #ifdef CONFIG_NF_CONNTRACK_TIMESTAMP
+ 	NF_SYSCTL_CT_TIMESTAMP,
+ #endif
++	NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT,
+ 	NF_SYSCTL_CT_PROTO_TIMEOUT_GENERIC,
+ 	NF_SYSCTL_CT_PROTO_TIMEOUT_TCP_SYN_SENT,
+ 	NF_SYSCTL_CT_PROTO_TIMEOUT_TCP_SYN_RECV,
+@@ -691,6 +692,13 @@ static struct ctl_table nf_ct_sysctl_table[] = {
+ 		.extra2 	= SYSCTL_ONE,
+ 	},
+ #endif
++	[NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT] = {
++		.procname	= "nf_conntrack_gc_scan_interval_init",
++		.data		= &nf_conntrack_gc_scan_interval_init,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_jiffies,
++	},
+ 	[NF_SYSCTL_CT_PROTO_TIMEOUT_GENERIC] = {
+ 		.procname	= "nf_conntrack_generic_timeout",
+ 		.maxlen		= sizeof(unsigned int),
+@@ -1090,6 +1098,7 @@ static int nf_conntrack_standalone_init_sysctl(struct net *net)
+ 		table[NF_SYSCTL_CT_MAX].mode = 0444;
+ 		table[NF_SYSCTL_CT_EXPECT_MAX].mode = 0444;
+ 		table[NF_SYSCTL_CT_BUCKETS].mode = 0444;
++		table[NF_SYSCTL_CT_GC_SCAN_INTERVAL_INIT].mode = 0444;
+ 	}
+ 
+ 	cnet->sysctl_header = register_net_sysctl_sz(net, "net/netfilter",
+-- 
+2.17.1
+
