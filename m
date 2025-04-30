@@ -1,354 +1,215 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2065.outbound.protection.outlook.com [40.107.20.65])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B2C1D86F7;
-	Wed, 30 Apr 2025 04:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745989184; cv=fail; b=A2PtLZoS1sa9xd8YTDzG5x+8jjrPbBlBiu1ZathkBShXjM9Cg0gkdkznlKR6b184i99ftNtmOGWvwHiVdLBBXwChBR2fp82k/L7iKocIqujSkoVNWVhZdXNdWUFIAbj1e2uXI1Zz/psUJiafgdKS/LgRf8TW0usdBA+vbv6GXPA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745989184; c=relaxed/simple;
-	bh=PB1sDFICrg83LO1W+1j6uLl1x0r5s9shGcOaxGrZo9o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=eZAPtsgQJOpzTzCqs/BL06C89GomiogPEjSF/GP7R53aPZSVsYD0nq8YatOgzDU7MJg30v7TTGx/tEkhRH2sNoBLiU884wXJia2Zvpa08ZWJM5KQCBL5rtenHGPV8NUne5lRYe7+mwsRUY+odKSefwea7xJYTTBU1pjmWg98M3U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=n1cs1tGe; arc=fail smtp.client-ip=40.107.20.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BEFEC2;
+	Wed, 30 Apr 2025 05:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745989288; cv=none; b=l90Q8vbOnWQPmnySpC1mF/fbYj2ZCIB3b7GGvhNJPHkWsBEefZVoVoOkzV66O0IRZiGOnWUCLabJeTLPveZaVy3Wcl9ARjcxWrAgB4Ui74CHZZkDDX6PzsCmeVt41t162SN7JTMNt/47EXGIsQUfokYqnVeKlkAISmbCtgd+mFA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745989288; c=relaxed/simple;
+	bh=SHYXxoFgaXiYqZPqs2AGQl+X/4o4ptm1z+faoy0xqSs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CRfTLfcFouiWVwSO1W+EIp4k5sKX+exNidh3DYvvJCYIpWLofTum2hpAeTQd7y4bchze0POpnhm0rm1KovSTB+l19kAcZ9Km9P7ig3obttr+GFEbfS5CEiWzp4qAC2zMCuwavh+BfYnm0MntCcDI+Y0SwRUTxwui20LHIGAUZgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YLrXo4YM; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="n1cs1tGe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FBbUZt75N7VyacEgHvJ4ujnBQdAa5g9wf4bXQ6Jp6eRBXKQRxnuuWeJ1HwGuA3pmn8qMWq1XAz/vUklFh1cWx5BuajW3baA+1T3bBqjn2pfp8mgGqabK8xkP3sxUc3V1HzQCxMNRl24sRkVOxMoRFY2T2HuMDSggUVbIs2zsw/fSWR1GD3/dNS7+wyXfzX32PF5fCVugO3onvSH6QOXfGjl4ynbLsevzSu0DNp/P+NbQapApzK5cC9HcbxuzBsaEE/QPg5uN86eXq5/hg1bXDnoF2S7ryFEe3NSOVZGhbxdeiXli1Li5GGeRyrmp1503i9M/QhoJNwiKN5o//VfIgQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vccj7coqlaLwTAfsRE5A24eNVUMjylLXHpABf2YMWbw=;
- b=p87LUKtPzeq0Q4bEFXcmDiWYzQnOM9twA6fLF0NBTAMYUpW/yXC2/EN9JIwIuo4h3ukQdW1o3NgixeOFGShHmwdWSlkRw9n+XeHoD5aVsLevgdPhedlRX4liVPlEydz8pTb0bL1GWceHekivQC8+g7Cf24f+A2Ykal8cRW14lk4z9vyhDxN06HTS9qDK3dPJBTcOlKZpIHpJ/Yweqpl4fTasr1AUqN+8JSv9LPzekVL9/PhPTgCCM3MNWeWSVLxSc3z6yuUe4yIg5j+GM0XOx4rCCOETGTHKiNGezYKRZSgSFT4bQ710msEDxMAUYXq/t05bwI5mnMAoWmLXOseFPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vccj7coqlaLwTAfsRE5A24eNVUMjylLXHpABf2YMWbw=;
- b=n1cs1tGeS7l1CSCIpMjcuB37zsoQo/bfosY6Duvnrjype5u3ViuPsXSAitvPY/x0UtqqlppPfMpughzivm5x18N0zWDesZDVUUnsgfuQY8LXH761auRJWvvuDbIG+YhXS93j7SKFshzQy3K1j2qxABqhNbCflaw1eHvU3i/pg1pGKF5HDJ9CbQwQEFvV/Ebm/+ON90HGWbmQlgxqZUZcP3Cnb3/+h8zbgumoDYJECUeBkvVxpWSHIQ1j7z62Q22vQX8wOV7iT1cVjspMfF655k8nEfLwNK/RXRcpE6BTmnNLFU6pfoWmpfzLbcWgQORhKQ9cYWS4v97c6O4Mi/fC2g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
- by AM9PR04MB8812.eurprd04.prod.outlook.com (2603:10a6:20b:40b::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Wed, 30 Apr
- 2025 04:59:38 +0000
-Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
- ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 04:59:36 +0000
-Date: Wed, 30 Apr 2025 14:08:35 +0800
-From: Peng Fan <peng.fan@oss.nxp.com>
-To: Hiago De Franco <hiagofranco@gmail.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, daniel.baluta@nxp.com,
-	iuliana.prodan@oss.nxp.com, linux-remoteproc@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Hiago De Franco <hiago.franco@toradex.com>
-Subject: Re: [PATCH] remoteproc: imx_rproc: replace devm_clk_get() with
- devm_clk_get_optional()
-Message-ID: <20250430060835.GA31028@nxa18884-linux>
-References: <20250423155131.101473-1-hiagofranco@gmail.com>
- <aAkf6bxBLjgFjvIZ@p14s>
- <20250423192156.b44wobzcgwgojzk3@hiago-nb>
- <20250426134958.GB13806@nxa18884-linux>
- <20250428171257.276bqhaupe4ksu5l@hiago-nb>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428171257.276bqhaupe4ksu5l@hiago-nb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-ClientProxiedBy: SI2PR04CA0010.apcprd04.prod.outlook.com
- (2603:1096:4:197::11) To PAXPR04MB8459.eurprd04.prod.outlook.com
- (2603:10a6:102:1da::15)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YLrXo4YM"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLaLNe020908;
+	Wed, 30 Apr 2025 05:01:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	MoO94F9INyJM5dUZAvor15RuNFa9ToFOlM0nUC7v1lQ=; b=YLrXo4YMf0itZdEr
+	b5soe+sICnQ94IafB4vWYcTYoMeT6BaOgHbwL0a09Jub6cHaAIVz1LMbRXACgFlS
+	J/lxwlU/m0oD2YO2ERz1SAI0b75cELQj3OqygqS7PvS1znTIL//wbCo6BH3taQxP
+	PyK9gDDG9BHhVTac7nvUtnG08UqiwWqjFwgJYvpIvn1HZUp3L5ftgC/mfYGWGj7+
+	Fhi/Y9gW1guBn5yTF2VLe7gEHcBJmFJaZvYvj6r9uIfap4q1mcvjO4OKHmv0lE9v
+	YpVWoDq9PD6HI5RfiRgjv2Bd7WQPDClmH4Ed5is2QaQWGbZuQx5pif7/S8Lxf8Q+
+	VPl25A==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u1ru94-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 05:01:21 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U51K7p002133
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 05:01:20 GMT
+Received: from [10.218.23.250] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 22:01:16 -0700
+Message-ID: <f93ad19f-be77-4bba-988e-9328c67cd761@quicinc.com>
+Date: Wed, 30 Apr 2025 10:31:13 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AM9PR04MB8812:EE_
-X-MS-Office365-Filtering-Correlation-Id: 193c6b49-e2e3-4bb7-22c0-08dd87a3ce01
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|52116014|376014|7416014|366016|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XAuNfISb6bIglqba+O2oOF3ofJ7h0O3tABr2xGy5jrrv95cEXqmrtUmZ8fxS?=
- =?us-ascii?Q?J6mVkNCjG8M2HcdmsC6FYofgBSjwCprjG8SZYH77jMY/bIVj5HOKtS5+hCtP?=
- =?us-ascii?Q?6fY7mBd79BT7vs9TkJ3y5yNVnZW7ozemgxA15druldSATz3PfdrALlsmbF7h?=
- =?us-ascii?Q?mDPchbKu+pwz2MOIwBv2arzg4154eQcjyOLH/WlHp1ONYgy9i0pazWJ2Yivh?=
- =?us-ascii?Q?d/G6oMntJKHgCMxxUiVjCSrZHdRnuAR4Th/hz39NgkhS0PNuw5m4xeVOvT1j?=
- =?us-ascii?Q?n75wmrrGdkMQlz7+Ouf1f0ys4viu2guoYUcoztUvKqIuT6T7XM3e8yxW1eHl?=
- =?us-ascii?Q?X1uehLPwhpsrkO3NcZTWrwDBrN8Fa99vOxWoUf0VXuNCkXqX1s7PxCVOtp7g?=
- =?us-ascii?Q?JYf+xeTGwLwkl3p4sQZeUtWGNMVLbZP7M7QXgMgu65AWugPKolo1ygmAQk0z?=
- =?us-ascii?Q?/GFYN6opr4M7xE2eC9sd0zDRWpKcLzIzrNv8Cr4cmifkjgHRs/rwrgFHa3PY?=
- =?us-ascii?Q?NWGgRxJjEQjRyrmNLPRVmq7/aU2jyXF3Fr3+VzJXnDouX4DfHIRjRLVoG5nu?=
- =?us-ascii?Q?yUFjcA2jOrmIOy1NRJrvVovDEsw/YjY2JIbQBymjp8Y8Um4DSUOcYtntZ5Eh?=
- =?us-ascii?Q?9J6pWCupxKlrsuaN0iuldhGc/XfnpkvHgf/2WMIEVkmYHmiHAZ/uyIh/Lqg5?=
- =?us-ascii?Q?DJeuBDSRnOqMFtrxzwfvvJWIOmdtiLRAuO2w8LGVrOe1kq1XRNDSOXca4hhJ?=
- =?us-ascii?Q?RHirrBovaSV13pCO5phnmfcXVd79/MPNRbjHyeFvbOj0PwF+d5O63P72+vx5?=
- =?us-ascii?Q?GCy1DhzBC6NgRsGFOBD5rai9eOVfb0UsTrXqO0K7z3kxDq2vhcZvSMuKG9aL?=
- =?us-ascii?Q?gy9GycpF9hprzMC6xUs3R7bms+Vf+Jszsb5PoEBF5puoboEsr4S27ekA21yV?=
- =?us-ascii?Q?/r320w1wkvV9EbqspvG3Rruft8kCviobvMm9jYI8gLNnK4RJBbVAT9hLhNcJ?=
- =?us-ascii?Q?mMiecozRW5yMcaq8FRXrVeKptzOtRYW4uMNBwC93EjmHKWF9hHE3ij5T0JyY?=
- =?us-ascii?Q?Ao7+qdv9gVbX44I0uJxrvKaKeBwNLES63uT8ZpR0es+t967E+snIQuxyi+9J?=
- =?us-ascii?Q?SmF91p8kVMzOKuzB60D6PnXqGg6Si3KsJfYrf8Zispo80JsguVz7Oqk86fdD?=
- =?us-ascii?Q?SDiP1qPgvI/p+Tc2sfxd96CLZID1codRhXlAoqLZW7p5dZJTpd5zI/yremll?=
- =?us-ascii?Q?M44lHBshWudhFI2s6QfHfkgXkrVBWegFNPzeBtUktUStwvTuNgdarmwESSfW?=
- =?us-ascii?Q?sE0H2nKhnmlrU4C4DC57Y71vB0oJCiBLQl/8OepUoJOoGVD4UVM+uT6MoF0o?=
- =?us-ascii?Q?g7DHGFmnf3DHMcUFqdIcX62dygxPuelH4ZxyKRO5HeBMuYvcrp8EQuMZlS0C?=
- =?us-ascii?Q?YswQMsHhTIplSEvVCNEQw/OfwewiN8apvirYzVLRnvGJFNwhU7yCfhRYdMKZ?=
- =?us-ascii?Q?b2zE8n1PSOBSq4E=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(52116014)(376014)(7416014)(366016)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?U0rVuOoYBtc6laNh0hw9Dv9f53qwqQQZNhWBnzHBOa4eGo1ymYHOEb17DuDn?=
- =?us-ascii?Q?Bdo9a1J6ABRfI+zGq61TMeWtBMZhmYe7uv9k4LosQsAnPeZK8h9PwOQpKnHZ?=
- =?us-ascii?Q?RMZs16cOFSvMoG9Lq1VuSxc7gasWuvlv/4PHFZEbcV26p2AY+OvyXV+n7wUh?=
- =?us-ascii?Q?X3Sc688WTy4jF9ewVZpvjMpcocPAKtHMfnL5al06q0eUGEU0GbIXdggRUkEc?=
- =?us-ascii?Q?45rw0a9TDIQE03qxHVTFCNGzzEd2wEnke3+Hca466OE6eA0BtIoAQlmxcBRf?=
- =?us-ascii?Q?1lHk5bL4vAbZ8XlK+9cTG/W01/GI6FUVxIDSV3zCbxR4RzZNnJu1LFMWlEP8?=
- =?us-ascii?Q?7eAlIxXgsJwyt7q65VRfzs2uqv7xkUKF73H+4MgEOihejFRgUlBdUGqFPR1C?=
- =?us-ascii?Q?xmCI2UgG1UtauV7X6OC4saGspB4doUnrrw6zIi0pNXgk4a96+L3h0CxVfuWs?=
- =?us-ascii?Q?qMaVqzDNeFCdh7OW6fEFZb8EpatNJXXt0eVDAZZ4/uAUY3+jHyCUtE53Frvu?=
- =?us-ascii?Q?j9egzuuoaDI+BDUlHcl0XUzoMQGzN0keKQzgDMQZ6KcBk2gGn/NfWgohj0QV?=
- =?us-ascii?Q?lemS/UYIKvg9P7dW755IZfmx77Nlg4EEuVTPKOxIO6jlXDjbdZMc0srNdq+X?=
- =?us-ascii?Q?3sEqNLRKNNYJhhU376mf0criEPoM6JXRiR3lbpIk1XvVQZS/fB4bnCS0/KFQ?=
- =?us-ascii?Q?lQ2qGuzx4A9Jnd2xM6zXjiVGFiWEznDztmXFS/e7wDUae47RSRSC/J5YIxvH?=
- =?us-ascii?Q?mwGOhNaiEiNHFDaH25gNDaHNxxvmhFH4TdnNpTSnyC4OaeUUhOvFSwl8ldUY?=
- =?us-ascii?Q?Hc8FScuZZ5+nmAA2yIiLS6+kVLoa5b0KhlmALm7ZrAUXn+DHoGmqgCskSg0Y?=
- =?us-ascii?Q?yiipMHGpzZw56EEv8xqq7oSC8LZOL+1ztkRc/XWJ5AKNQART6dnGdd4tuDJ5?=
- =?us-ascii?Q?3vzNvCqYxU+TF77uLL7IC1yBkddGE8eSYvfLaJyixnoIgPJD3c/DOd1x1fjp?=
- =?us-ascii?Q?dryS0Ck7znggT28kn1OZQetBYMOO57s8dtLNUF2ZyeWQ7ou4OI0i8W3XvDYW?=
- =?us-ascii?Q?A9zbdmu+EVcfRnH0r44FA4PE86CP2BbAYNwvVxKenzDmk3yYjl+X3d+cPP6p?=
- =?us-ascii?Q?iI/DJ9pM9prNeWDAXn9bLr8NqXAUHttgnXUBPYumR6SFbPRbyK2PndKJhtH/?=
- =?us-ascii?Q?7psnjIv7gnxzM97Y1tImdfwLQhkhkRXAKD5omTPTBJD482wuJlk7buvj+sJ4?=
- =?us-ascii?Q?mUuAizkQSrsQkThfXCBSd8b4Dm3FzoVL4LA4JcO0DRe7igYQXdksK+HS/KSo?=
- =?us-ascii?Q?YCdEn8evsXHwoHjrGgJQzijE56y+605vG0iPlhq+oRgTfeVPu3tmJ8DbvBn8?=
- =?us-ascii?Q?UiWYHXWD28pUd07guGpdGUQI4HmcIOI+O7jxlkYAaDEaRwxd8V6/Htbcm1Gr?=
- =?us-ascii?Q?ZzyLMaeP77vxWAuOr9904lt3Cnuwn3hp/ao0DKyy2Aiv54weI1kqcq7AXzOd?=
- =?us-ascii?Q?oTkumrmVpCDO2roV68X4ooMc2ZMmAwXZY6fdEzE5m6pY9T5pNq8LvbxI+rrz?=
- =?us-ascii?Q?zhEtYzGz8wR1vt9qjOctC3H++FZTMdgDiPfIqUPX?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 193c6b49-e2e3-4bb7-22c0-08dd87a3ce01
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 04:59:36.4680
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: odADMUaXi6QHZ83yed42XPlTQYB1fkJgXlRWbHfdXygL4LQIzhcvlYB4J69g8tP5w/Cxx95C9tnJGm6VIj0zmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8812
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] dt-bindings: clock: Add Qualcomm SC8180X Camera clock
+ controller
+To: Vladimir Zapolskiy <vladimir.zapolskiy@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        "Stephen
+ Boyd" <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Taniya Das <quic_tdas@quicinc.com>,
+        "Jagadeesh
+ Kona" <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20250422-sc8180x-camcc-support-v1-0-691614d13f06@quicinc.com>
+ <20250422-sc8180x-camcc-support-v1-1-691614d13f06@quicinc.com>
+ <a4149ac8-7e47-48a9-84ef-42aa367d014e@linaro.org>
+Content-Language: en-US
+From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+In-Reply-To: <a4149ac8-7e47-48a9-84ef-42aa367d014e@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=6811aea1 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=ZukvfIeAY5YyO8ZDUFMA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDAzMiBTYWx0ZWRfX5W2JgKD+YMcu FN7UEYW6zdW/v9c3haQnd2iB0CtxwTEXADIW1K3Hhq4AEjGZm5eC587wE+Pr9UGA3jYDdIPRfyS bcpXga8+r3ED3LcQSk1VsLZlwExkS8C8PVq3KBn8sqHuaHHmI1CdtNTMO3YcKwlyalLq7+98C+J
+ xHx+9oifTIXvHpBlouaIcmQ3Ns3FDXresGE8OQQXJqEWQIu3DKqLUgy4Xj6p6HR7DUuOXmV0N6+ toNu9x0L2HfQ+wZ65BHyr1uzdtIuRFKpFYy/D54avpzeQGCJ8u6CrUyan+Ll1J1YAVCf0+djy96 /l7Q8HBiTFPTFs+DvveaCWhvml0zM2x5Gu55DlG0DYW2UK5Ak3ojdmX0TnFTeSZkxpHBDxboC+H
+ kNi6bSInQiizUDKxzg+pWXTgQ1EBHYHgNjl1Va0iJI28bTal8TYVjpFjC7jK49bp1ayuBvOo
+X-Proofpoint-GUID: ntuiGcgsIbznuWZKe0VznswMRhvfryEO
+X-Proofpoint-ORIG-GUID: ntuiGcgsIbznuWZKe0VznswMRhvfryEO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
+ clxscore=1011 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300032
 
-On Mon, Apr 28, 2025 at 02:12:57PM -0300, Hiago De Franco wrote:
->On Sat, Apr 26, 2025 at 09:49:58PM +0800, Peng Fan wrote:
->> On Wed, Apr 23, 2025 at 04:21:56PM -0300, Hiago De Franco wrote:
->> >Hi Mathieu,
->> >
->> >On Wed, Apr 23, 2025 at 11:14:17AM -0600, Mathieu Poirier wrote:
->> >> Good morning,
->> >> 
->> >> On Wed, Apr 23, 2025 at 12:51:31PM -0300, Hiago De Franco wrote:
->> >> > From: Hiago De Franco <hiago.franco@toradex.com>
->> >> > 
->> >> > The "clocks" device tree property is not mandatory, and if not provided
->> >> > Linux will shut down the remote processor power domain during boot if it
->> >> > is not present, even if it is running (e.g. it was started by U-Boot's
->> >> > bootaux command).
->> >> 
->> >> If a clock is not present imx_rproc_probe() will fail, the clock will remain
->> >> unused and Linux will switch it off.  I think that is description of what is
->> >> happening.
->> >> 
->> >> > 
->> >> > Use the optional devm_clk_get instead.
->> >> > 
->> >> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
->> >> > ---
->> >> >  drivers/remoteproc/imx_rproc.c | 2 +-
->> >> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >> > 
->> >> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
->> >> > index 74299af1d7f1..45b5b23980ec 100644
->> >> > --- a/drivers/remoteproc/imx_rproc.c
->> >> > +++ b/drivers/remoteproc/imx_rproc.c
->> >> > @@ -1033,7 +1033,7 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
->> >> >  	if (dcfg->method == IMX_RPROC_NONE)
->> >> >  		return 0;
->> >> >  
->> >> > -	priv->clk = devm_clk_get(dev, NULL);
->> >> > +	priv->clk = devm_clk_get_optional(dev, NULL);
->> >> 
->> >> If my understanding of the problem is correct (see above), I think the real fix
->> >> for this is to make the "clocks" property mandatory in the bindings.
->> >
->> >Thanks for the information, from my understanding this was coming from
->> >the power domain, I had a small discussion about this with Peng [1],
->> >where I was able to bisect the issue into a scu-pd commit. But I see
->> >your point for this commit, I can update the commit description.
->> >
->> >About the change itself, I was not able to find a defined clock to use
->> >into the device tree node for the i.MX8QXP/DX, maybe I am missing
->> >something? I saw some downstream device trees from NXP using a dummy
->> >clock, which I tested and it works, however this would not be the
->> >correct solution.
->> 
->> The clock should be "clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;" for
->> i.MX8QX. This should be added into device tree to reflect the hardware truth.
+
+On 4/26/2025 7:33 PM, Vladimir Zapolskiy wrote:
+> On 4/22/25 08:42, Satya Priya Kakitapalli wrote:
+>> Add device tree bindings for the camera clock controller on
+>> Qualcomm SC8180X platform.
+>>
+>> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>> ---
+>>   .../bindings/clock/qcom,sc8180x-camcc.yaml         |  65 ++++++++
+>>   include/dt-bindings/clock/qcom,sc8180x-camcc.h     | 181 
+>> +++++++++++++++++++++
+>>   2 files changed, 246 insertions(+)
+>>
+>> diff --git 
+>> a/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml 
+>> b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+>> new file mode 100644
+>> index 
+>> 0000000000000000000000000000000000000000..b17f40ee53a3002b2942869d60773dbecd764134
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/qcom,sc8180x-camcc.yaml
+>> @@ -0,0 +1,65 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/clock/qcom,sc8180x-camcc.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Qualcomm Camera Clock & Reset Controller on SC8180X
+>> +
+>> +maintainers:
+>> +  - Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
+>> +
+>> +description: |
+>> +  Qualcomm camera clock control module provides the clocks, resets and
+>> +  power domains on SC8180X.
+>> +
+>> +  See also: include/dt-bindings/clock/qcom,sc8180x-camcc.h
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: qcom,sc8180x-camcc
+>> +
+>> +  clocks:
+>> +    items:
+>> +      - description: Board XO source
 >
->Is this correct? I added this clock entry and also updated the clk
->drivers to handle this option:
+> From sc8180x_rpmh_clocks[] in clk/qcom/clk-rpmh.c I get that there is
+> RPMH_CXO_CLK_A clock also, shall it be added to this list then?
 >
->diff --git a/drivers/clk/imx/clk-imx8qxp-rsrc.c b/drivers/clk/imx/clk-imx8qxp-rsrc.c
->index 585c425524a4..69c6f1711667 100644
->--- a/drivers/clk/imx/clk-imx8qxp-rsrc.c
->+++ b/drivers/clk/imx/clk-imx8qxp-rsrc.c
->@@ -58,6 +58,7 @@ static const u32 imx8qxp_clk_scu_rsrc_table[] = {
->        IMX_SC_R_NAND,
->        IMX_SC_R_LVDS_0,
->        IMX_SC_R_LVDS_1,
->+       IMX_SC_R_M4_0_PID0,
->        IMX_SC_R_M4_0_UART,
->        IMX_SC_R_M4_0_I2C,
->        IMX_SC_R_ELCDIF_PLL,
->diff --git a/drivers/clk/imx/clk-imx8qxp.c b/drivers/clk/imx/clk-imx8qxp.c
->index 3ae162625bb1..be6dfe0a5b97 100644
->--- a/drivers/clk/imx/clk-imx8qxp.c
->+++ b/drivers/clk/imx/clk-imx8qxp.c
->@@ -142,6 +142,7 @@ static int imx8qxp_clk_probe(struct platform_device *pdev)
->        imx_clk_scu("a35_clk", IMX_SC_R_A35, IMX_SC_PM_CLK_CPU);
->        imx_clk_scu("a53_clk", IMX_SC_R_A53, IMX_SC_PM_CLK_CPU);
->        imx_clk_scu("a72_clk", IMX_SC_R_A72, IMX_SC_PM_CLK_CPU);
->+       imx_clk_scu("cm40_clk", IMX_SC_R_M4_0_PID0, IMX_SC_PM_CLK_CPU);
+> If yes, and taking into account Konrad's ask for GCC_CAMERA_AHB_CLK, it
+> implies that the new dt bindings can be omitted, instead please consider
+> to add the 'qcom,sc8180x-camcc' compatible into qcom,sa8775p-camcc.yaml.
 >
->        /* LSIO SS */
->        imx_clk_scu("pwm0_clk", IMX_SC_R_PWM_0, IMX_SC_PM_CLK_PER);
+> However still there is a difference, qcom,sa8775p-camcc and 
+> qcom,qcs8300-camcc
+> does not contain 'required-opps' property, it might be an omission over
+> there though, please double check it. The ultimate goal would be to get
+> a shorter list of different camcc dt bindings.
+
+
+The RPMH_CXO_CLK_A clock is not needed for this, and "required-opps" is 
+needed to keep the rail above retention, hence it is better to keep the 
+separate bindings for this.
+
+
 >
+>> +      - description: Sleep clock source
+>> +
+>> +  power-domains:
+>> +    maxItems: 1
+>> +    description:
+>> +      A phandle and PM domain specifier for the MMCX power domain.
+>> +
+>> +  required-opps:
+>> +    maxItems: 1
+>> +    description:
+>> +      A phandle to an OPP node describing required MMCX performance 
+>> point.
+>> +
+>> +allOf:
+>> +  - $ref: qcom,gcc.yaml#
+>> +
+>> +required:
+>> +  - compatible
+>> +  - clocks
+>> +  - power-domains
+>> +  - required-opps
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/clock/qcom,gcc-sc8180x.h>
+>> +    #include <dt-bindings/clock/qcom,rpmh.h>
+>> +    #include <dt-bindings/power/qcom-rpmpd.h>
+>> +    clock-controller@ad00000 {
+>> +      compatible = "qcom,sc8180x-camcc";
+>> +      reg = <0x0ad00000 0x20000>;
+>> +      clocks = <&rpmhcc RPMH_CXO_CLK>,
+>> +               <&sleep_clk>;
+>> +      power-domains = <&rpmhpd SC8180X_MMCX>;
+>> +      required-opps = <&rpmhpd_opp_low_svs>;
+>> +
+>> +      #clock-cells = <1>;
+>> +      #reset-cells = <1>;
+>> +      #power-domain-cells = <1>;
+>> +    };
+>> +...
 >
->However I am seeing a permission denied (-13) from the imx_rproc:
->
->root@colibri-imx8x-07308754:~# dmesg | grep rproc
->[    0.489113] imx-rproc imx8x-cm4: Failed to enable clock
->[    0.489644] imx-rproc imx8x-cm4: probe with driver imx-rproc failed with error -13
->[    0.489708] remoteproc remoteproc0: releasing imx-rproc
->
->	imx8x-cm4 {
->		compatible = "fsl,imx8qxp-cm4";
->		clocks = <&clk IMX_SC_R_M4_0_PID0 IMX_SC_PM_CLK_CPU>;
-
-From hardware perspective, this is correct. But i.MX8QXP has
-SCFW which manages the system resources. For this clock, when
-M4_0_PID0 is powered up, SCFW will not allow clk_prepare_enable to
-enable the clock, the error return will be LOCKED if user continue
-to send the enable request. When SCFW powers up M4, it will automatically
-configure the clock as I said before.
-
-Set rate is still allowed by SCFW, even enable API return failure, but I think
-there is no such requirement.
-
-So,
-diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
-index 74299af1d7f1..627e57a88db2 100644
---- a/drivers/remoteproc/imx_rproc.c
-+++ b/drivers/remoteproc/imx_rproc.c
-@@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
-        struct device *dev = priv->dev;
-        int ret;
-
--       /* Remote core is not under control of Linux */
--       if (dcfg->method == IMX_RPROC_NONE)
-+       /* Remote core is not under control of Linux or it is managed by SCU API */
-+       if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
-                return 0;
-
-        priv->clk = devm_clk_get(dev, NULL);
-
-
-
-Regards,
-Peng
-
->		mbox-names = "tx", "rx", "rxdb";
->		mboxes = <&lsio_mu5 0 1
->			  &lsio_mu5 1 1
->			  &lsio_mu5 3 1>;
->		memory-region = <&vdev0buffer>, <&vdev0vring0>, <&vdev0vring1>,
->				<&vdev1vring0>, <&vdev1vring1>, <&rsc_table>;
->		power-domains = <&pd IMX_SC_R_M4_0_PID0>,
->				<&pd IMX_SC_R_M4_0_MU_1A>;
->		fsl,entry-address = <0x34fe0000>;
->		fsl,resource-id = <IMX_SC_R_M4_0_PID0>;
->	};
->
->Am I missing something?
->
->> 
->> But there are several working configurations regarding M4 on i.MX8QM/QX/DX/DXL.
->> 
->> 1. M4 in a separate SCFW partition, linux has no permission to configure
->>   anything except building rpmsg connection.
->> 2. M4 in same SCFW partition with Linux, Linux has permission to start/stop M4
->>    In this scenario, there are two more items:
->>    -(2.1) M4 is started by bootloader
->>    -(2.2) M4 is started by Linux remoteproc.
->> 
->> 
->> Current imx_rproc.c only supports 1 and 2.2,
->> Your case is 2.1.
->> 
->> There is a clk_prepare_enable which not work for case 1 if adding a real
->> clock entry.
->> 
->> So need move clk_prepare_enable to imx_rproc_start, not leaving it in probe?
->> But for case 2.1, without clk_prepare_enable, kernel clk disable unused will
->> turn off the clk and hang M4. But even leaving clk_prepare_enable in probe,
->> if imx_rproc.c is built as module, clk_disable_unused will still turn
->> off the clk and hang M4.
->> 
->> So for case 2.1, there is no good way to keep M4 clk not being turned off,
->> unless pass "clk_ignore_unused" in bootargs.
->> 
->> 
->> For case 2.2, you could use the clock entry to enable the clock, but actually
->> SCFW will handle the clock automatically when power on M4.
->> 
->> If you have concern on the clk here, you may considering the various cases
->> and choose which to touch the clk, which to ignore the clk, but not 
->> "clk get and clk prepare" for all cases in current imx_rproc.c implementation.
->> 
->> Regards,
->> Peng
->> 
->> 
->> >
->> >[1] https://lore.kernel.org/lkml/20250404141713.ac2ntcsjsf7epdfa@hiago-nb/
->> >
->> >Cheers,
->> >Hiago.
->> >
->> >> 
->> >> Daniel and Iuliana, I'd like to have your opinions on this.
->> >> 
->> >> Thanks,
->> >> Mathieu
->> >> 
->> >> >  	if (IS_ERR(priv->clk)) {
->> >> >  		dev_err(dev, "Failed to get clock\n");
->> >> >  		return PTR_ERR(priv->clk);
->> >> > -- 
->> >> > 2.39.5
->> >> > 
+> -- 
+> Best wishes,
+> Vladimir
