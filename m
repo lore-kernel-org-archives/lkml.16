@@ -1,139 +1,129 @@
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF661EEA46;
-	Wed, 30 Apr 2025 18:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.133.104.62
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B9226C3A9;
+	Wed, 30 Apr 2025 18:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038464; cv=none; b=qgDTC8hMo5b8Oj2FPBDKX8JstPYdAqCU2IKj+UcYnN1cAGm9TlX5aWmdN2KrHU7RYBAiv2ASAFx6I6BNjkRxMsPE2Fal5fPit+FClsq5p8g88trqvT4BWY+j5BWKZiQknF9UTCLjrDfvCcYvdaLILYzQjR8FN0jladb5PVvad8U=
+	t=1746038467; cv=none; b=UyIoNXTJRet8VuwomZOwlqTsReseHS4cnUME8ULrGTXuYFNHWJEeX/ZNcmCOrNSARY9/nwCayEWSflFJ+79sFM+ViIleKCj7X1MoDq+rj+BAvjDHE2pX2eueko6JOpOZ4stpiw66l5ypjrPp7kEPgvpo9T/CVrztoJ3gD7k7zCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038464; c=relaxed/simple;
-	bh=qgP2YJEKl9lEJVENCb1FcgNjLrhMpIE3abDrsfh/gKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=up6BQp3ly2eGbaZT4GhCyjbpCAzNGjpADTgefF61OvaiaEDMljzx6Baw57GFFnfE3NYOpWetIToLUE/ywOQDzwLiMpZ3Y8bQ9QNL23xIrtxfy9HICvasA4oaBSxN60mlbANLLUkRdZ1ALbE+prHCk+k8cfOGMScF+LUG+z7dyV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net; spf=pass smtp.mailfrom=iogearbox.net; dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b=djGIGcf4; arc=none smtp.client-ip=213.133.104.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=iogearbox.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iogearbox.net
+	s=arc-20240116; t=1746038467; c=relaxed/simple;
+	bh=dO5xtNhi2RZ6dwIbWLUIYOG3mwkQ1Mbn9K6tUJsApy0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Vz8+Pm1h9tAWvN3jdUYhXThZTzuMAIuewAQCFJEFApaKrcvQZgfNqOGVJH/45GW++MfHY7Rprj8Lr5J2+AcAZwWihPXh2BK16907B5oGmQ6Z0Tssda6+Hh747LAwjpBKfNMeYWxEg/QoJ2nxncuzrz7ZxnujgUdz9R4nr4398HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NuqcxUiG; arc=none smtp.client-ip=209.85.166.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iogearbox.net header.i=@iogearbox.net header.b="djGIGcf4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=OUllq6b9V2eoDzegUA8tEgJIXHBEsF3AfNjaXAcUvpI=; b=djGIGcf4B2z1il8ld4CUNIeIJ8
-	ArdCoL23pBcwo2FFZwm/YtsyYpYqKtQRMrMMV6Db2y9H0KeAzgnyLh4MVfhlah9Sux140QippLpJE
-	9Q4gU8xnzJbD16M7kUPKkFxIB7B06/kCk55Eef11WVhg74ehenGBNfh+/Df3j6hw98eEdxLH5OicT
-	RJdZzlYGyDunNwnbdGDGzDZNDZapYbMXCtpH2vHtwDWFBJlVflLCHdFL4BVyc7jesKTniCoCAVN9T
-	OudsHz92MU8AaOH0l+xbwY2C6oFgNFa7EtgEai2EPn5TqzP3V7LBBqU3JLfX5sYyUMmKtmAO8FtfD
-	Rz/x8GFQ==;
-Received: from sslproxy07.your-server.de ([78.47.199.104])
-	by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96.2)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uACMS-000Px5-2F;
-	Wed, 30 Apr 2025 20:40:49 +0200
-Received: from [85.195.247.12] (helo=[192.168.1.114])
-	by sslproxy07.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <daniel@iogearbox.net>)
-	id 1uACMS-0008Fj-1q;
-	Wed, 30 Apr 2025 20:40:48 +0200
-Message-ID: <a6a8625c-9d20-48eb-b894-7bd6673a16d3@iogearbox.net>
-Date: Wed, 30 Apr 2025 20:40:47 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NuqcxUiG"
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so896465ab.3;
+        Wed, 30 Apr 2025 11:41:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746038465; x=1746643265; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1yQROOQ/8z6J39sRh6FPaOmwmRuzULCDCO82suAr8rs=;
+        b=NuqcxUiGU0liRIqu6uI3eBo4T5tEAomJooHSGjhVbU+EE+V+M2tJgp3G0ynqU/jDVE
+         drm5PNH0AF+rzEikSNzYlaLJ+MusFOZvU4pLrk4gEMLNZIQEiRC29WGuE4C4EDYOe3+p
+         8FZ8lno3c9/gYAM+qDC5szKK53hv80iwBiSiKtS4ZEKJ4dcD/BqrAQJYAztVzwlhHn5X
+         O31GL1DQZ4c41bW7YlbAmTk/NGJ6F2wa2QUV4UjWqsAFWj8fdKedq0xvF/BUHsqIscXb
+         F54W5sBLmm+9rxpkQjE/mOMHwhhang7mUhRgsgkiF4rDhjmGrwYmW07zyIra/PDF/gzV
+         ZIyg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746038465; x=1746643265;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1yQROOQ/8z6J39sRh6FPaOmwmRuzULCDCO82suAr8rs=;
+        b=Iu6qDS+jsbwqLIFi2fJ2bKZ7n39PlDrh8OcI3aUaLkK+PSZt0i2xPny9WU8cyDv7Qh
+         IqS278py0eq6jBLcWO1sJoNFqc/fMrTUg/SJePsbsl0vBdGlSj8HGdZtio26jaKK6GK8
+         NNr6kh3tjifbIH6Ms2XIVzBmR8MvVua8DLN+fB5B2EjFxg9CbjAdFwdK+qarPeRsVauN
+         ChF+mu0IrU/3lm2U6l+f2GybOSyBVibhafUlRtb7dLaTNkXCd5N9YleZd7fRucb2vUpv
+         XGqjajK/TF4BajhzrB8i2rZJ2SPlWvDpnQFvYc5K6UIioku2htPtNTF2q8VjmC949mXQ
+         TqWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5dPo7VaogOwzGH/gvvOmHZt+1pabxBQIAS+s1e2Kpzi1yn1PIy5XBXn0UtWl80dIYlDU/VlFoNSrnSyI2@vger.kernel.org, AJvYcCV9eWRfE9Woml8QthN87eguwlIjz8Peci5WNqIPHRw+GaXC/pAq3cCwAxYsSurnGt5HcrZTb7ZZEU3l@vger.kernel.org, AJvYcCVPiGRsXASthKYfUNIrCPqCs/3t6+EdJ08wZInykAOCQuPiH+qb8todhvAyTJFRO51vj9L9ZuIL1anccinmOw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzADStVcfeC0+771Pa1RnheYymZEH4azfh3LC8WUi8d0jFOzHjs
+	84sSWcPIx9tXq+dLRBW3zMaPnD/nJkv+9dUvDlVe7yUl6ICHwMbca/w5V8A+C1mZ3UeLw+OpDHL
+	fE4VzSP+21d/pEmm88801UCHVmek=
+X-Gm-Gg: ASbGncsDi1oGiyVPJkKk/lG0HG5dquVmJc71HAJf1qvcIuXtG1lYAZrnWmsOELBfnoX
+	SUKpYDpqhIz8ddXIPCx7zfIIWtdZdBgw3l6R7t8gDRgNUGL1/2V24ze2/F3W6eVEZ4dkSCt4ENY
+	AbNTL8jcfpWYRKUUqwXL0KFz0L4sajkRL3Vxv0DklTSA52pKAeNG2p/RZ0
+X-Google-Smtp-Source: AGHT+IFTdYx2S7PP1ynBVe1/hJjTgkjcofHeE73M1127jD1qw/zLNvWGom/8dxEIbGmOMMDuyfAlou5W4HGP5Ex5D8w=
+X-Received: by 2002:a05:6e02:1a89:b0:3d8:1fe7:4439 with SMTP id
+ e9e14a558f8ab-3d967ffec05mr40542955ab.17.1746038465168; Wed, 30 Apr 2025
+ 11:41:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] xdp: add xdp_skb_reserve_put helper
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Jon Kohler <jon@nutanix.com>, Jason Wang <jasowang@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>, Jesper Dangaard Brouer
- <hawk@kernel.org>, John Fastabend <john.fastabend@gmail.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-References: <20250430182921.1704021-1-jon@nutanix.com>
- <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
-Content-Language: en-US
-From: Daniel Borkmann <daniel@iogearbox.net>
-Autocrypt: addr=daniel@iogearbox.net; keydata=
- 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
-In-Reply-To: <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 1.0.7/27624/Wed Apr 30 10:39:44 2025)
+References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
+ <20250228-a623-gpu-support-v2-5-aea654ecc1d3@quicinc.com> <e22daaae-57fc-4523-b594-87d202d255f3@oss.qualcomm.com>
+ <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com> <41df5398-79f6-484a-8ad3-f3488eb1b71c@oss.qualcomm.com>
+ <hpfqpvkex3dtj6ieosce4phukodnoidh55vxpujyekoehhotqn@l434nae5gzdi> <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
+In-Reply-To: <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
+From: Rob Clark <robdclark@gmail.com>
+Date: Wed, 30 Apr 2025 11:40:53 -0700
+X-Gm-Features: ATxdqUFWSHnqCPWBHWWul9jKnD6RyuizSS6isEVI5YuIqPMbYwvAOXoUXQvDslk
+Message-ID: <CAF6AEGvGEshZbSmmLZMXGiCjRdDJLa7EKN-gviw4oxcapMKN+Q@mail.gmail.com>
+Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Jie Zhang <quic_jiezh@quicinc.com>, Rob Clark <robdclark@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/25 8:25 PM, Willem de Bruijn wrote:
-> Jon Kohler wrote:
->> Add helper for calling skb_{put|reserve} to reduce repetitive pattern
->> across various drivers.
->>
->> Plumb into tap and tun to start.
->>
->> No functional change intended.
->>
->> Signed-off-by: Jon Kohler <jon@nutanix.com>
->> ---
->>   drivers/net/tap.c | 3 +--
->>   drivers/net/tun.c | 3 +--
->>   include/net/xdp.h | 8 ++++++++
->>   net/core/xdp.c    | 3 +--
->>   4 files changed, 11 insertions(+), 6 deletions(-)
-> 
-> Subjective, but I prefer the existing code. I understand what
-> skb_reserve and skb_put do. While xdp_skb_reserve_put adds a layer of
-> indirection that I'd have to follow.
-> 
-> Sometimes deduplication makes sense, sometimes the indirection adds
-> more mental load than it's worth. In this case the code savings are
-> small. As said, subjective. Happy to hear other opinions.
+On Wed, Apr 30, 2025 at 3:39=E2=80=AFAM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 4/29/25 2:17 PM, Dmitry Baryshkov wrote:
+> > On Mon, Apr 28, 2025 at 11:19:32PM +0200, Konrad Dybcio wrote:
+> >> On 4/28/25 12:44 PM, Akhil P Oommen wrote:
+> >>> On 4/14/2025 4:31 PM, Konrad Dybcio wrote:
+> >>>> On 2/27/25 9:07 PM, Akhil P Oommen wrote:
+> >>>>> From: Jie Zhang <quic_jiezh@quicinc.com>
+> >>>>>
+> >>>>> Add gpu and gmu nodes for qcs8300 chipset.
+> >>>>>
+> >>>>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
+> >>>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+> >>>>> ---
+> >>>>
+> >>>> [...]
+> >>>>
+> >>>>> +         gmu: gmu@3d6a000 {
+> >>>>> +                 compatible =3D "qcom,adreno-gmu-623.0", "qcom,adr=
+eno-gmu";
+> >>>>> +                 reg =3D <0x0 0x03d6a000 0x0 0x34000>,
+> >>>>
+> >>>> size =3D 0x26000 so that it doesn't leak into GPU_CC
+> >>>
+> >>> We dump GPUCC regs into snapshot!
+> >>
+> >> Right, that's bad.. the dt heuristics are such that each region
+> >> is mapped by a single device that it belongs to, with some rare
+> >> exceptions..
+> >
+> > It has been like this for most (all?) GMU / GPUCC generations.
+>
+> Eeeeh fine, let's keep it here and fix it the next time (tm)
 
-+1, agree with Willem
+Maybe it would be reasonable to add a comment about this _somewhere_?
+(Bindings doc?)  I feel like this confusion has come up before.  Maybe
+it is a bit "ugly" but since gmu is directly banging on gpucc, it
+doesn't seem completely inappropriate.
+
+BR,
+-R
