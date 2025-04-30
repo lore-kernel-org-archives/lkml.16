@@ -1,170 +1,104 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C604E3B2A0
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CDE526988C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040621; cv=none; b=h+VHQE54rFx9fgYyNMLmrIfzWe038JHXI+y3N8iKbCdTUFFZ5aAB/sSsRfOpGFmZWoCJe6DYBRaJA9l2UXAOZz9w/essJXWWoDsbrY/79ndsAruvmRO+tWqAE2zfqpcm/SclavO1R8/qdiU3eOYYBihB0gM01e7gRJGULgRuYT8=
+	t=1746040638; cv=none; b=WZTvDtdRjEQfeXocDJQJS1upQF1ARnRZcVMMsSf89/51PNwiss8YBvGyAZK8PsWT8t3OlkLl1z4y7DrCzjdjYvOA/iTs2EP0+bSXmQFbgxQl3cDu2AvvXDFZesSHK+Q1yYQQioW30TygqHcfGVE9WTfDbijoDpC5JeShFUyDN/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040621; c=relaxed/simple;
-	bh=Mzmquvf7LtMgiAFwuTVlEEXVwfoajArsBFRVJZgRlvU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=cocUqlisQzzuTps5EC/+7vHJEUG0oJh1sOR7nB4+ZvuX/LGyuxD1tDtfOvXVStHffbYtLwWv7lCKByHfbyGdd3EjVcB3KFmt6/bUquGLO/Hh/WGvUNG5tUQ3mH3kfBtpOhF1SuqpOMPBY1ah+fiE9dNPe+bMdbUCc7Iz2TteIr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l3xihCbD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WPDe6rmx; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746040638; c=relaxed/simple;
+	bh=WE3U9M6bFtNqTnlRCzpMfoMFofIWbXyu0m0xU2AgNKI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=MRAVImHjA9QqKgmq4INUF34pdZfKJ3MxrL8wpS+oLTNwXcYxHMxU0hAGQRvIM9ox83xGdc4h4w34Kcu9427ciE7QZ8WUbz5LKp04WPiUN04B+hUdlrjpsIzsdcI2XHLLHHvTflSxIVBsfmIJ/Zx+g130hZIthlWH9VehRywVDYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eHmopTOC; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l3xihCbD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WPDe6rmx"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746040617;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eHmopTOC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746040635;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=DdMaZNWu4fq0iykzoFc0UbPlCGvg4LzeewKoTcB+Q0E=;
-	b=l3xihCbD010C/ezfMGQLsYjwu40X59Wrka1MzDeIklw2VJbWPZ7R34ld21sBZCc+js2Si0
-	kA9cTaUl1Bgomo+91hq6KyC8BcXeFznbWacYCBVUl7bphf3plz8VdK2iEYgfi6+ulQLDxp
-	ZCznvSxM/YKNm6U53VMSY5ewZo/onBMfmhmAIcDLNQuKB/HRajnF5nGrzY+OLnfIWarwlD
-	SoQc7sIKpiAPHav/BFDWO0QlR9s5YEDvp9uaRA5F8B8ZfxrnyQoyKG+976PUWKhQ5VF0rY
-	gqT+MgAXqrs2DpYJH5dWyTF3nVzT2HgVlAcVO1eEcOtH55EataVww3FD8sfVHg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746040617;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DdMaZNWu4fq0iykzoFc0UbPlCGvg4LzeewKoTcB+Q0E=;
-	b=WPDe6rmxWOsdaZ1Fvy8fYpR1+6aGqAnpDr1GL5Dgv5MskgEdHqCpfqQRRn4g905FeqILNh
-	bVRZ+9sqdd1g2dCw==
-To: Borislav Petkov <bp@alien8.de>
-Cc: Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>,
- linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
- <hpa@zytor.com>
-Subject: Re: [PATCH -v2] x86/microcode: Consolidate the loader enablement
- checking
-In-Reply-To: <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
-References: <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
- <20250406174633.2c581923c145687476191753@ombertech.com>
- <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
- <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
- <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
- <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
- <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
- <20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local> <875xjcteq2.ffs@tglx>
- <20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
- <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
-Date: Wed, 30 Apr 2025 21:16:56 +0200
-Message-ID: <87frhppihj.ffs@tglx>
+	bh=qcJbYty0ZuARoMmKQQUrWafrtx6uU8ln7Eiw3EBt3kw=;
+	b=eHmopTOCmYUOEjVWFk4ywDoN6f8FoDUFprTgDH8CRB1mrLsp8UC89fxjPhDHJs3NKWVjel
+	XY+Osj1gy0SWakdMZEZQ+GuSwYA+nR15+pEhqSzR0wfyxwqHwZRcr9rU0kMoqi1FQ7iqGZ
+	7R+hzQCi+2x4ADWutbgV9QIVQoFPm4I=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-664-sshOLpprMcSD7bfy4TRoSg-1; Wed,
+ 30 Apr 2025 15:17:10 -0400
+X-MC-Unique: sshOLpprMcSD7bfy4TRoSg-1
+X-Mimecast-MFC-AGG-ID: sshOLpprMcSD7bfy4TRoSg_1746040629
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C6251800878;
+	Wed, 30 Apr 2025 19:17:09 +0000 (UTC)
+Received: from [10.22.80.45] (unknown [10.22.80.45])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 82504180087B;
+	Wed, 30 Apr 2025 19:17:06 +0000 (UTC)
+Date: Wed, 30 Apr 2025 21:17:01 +0200 (CEST)
+From: Mikulas Patocka <mpatocka@redhat.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, 
+    Benjamin Marzinski <bmarzins@redhat.com>
+cc: Eric Biggers <ebiggers@kernel.org>, Satya Tangirala <satyat@google.com>, 
+    Alasdair Kergon <agk@redhat.com>, Mike Snitzer <snitzer@kernel.org>, 
+    dm-devel@lists.linux.dev, linux-kernel@vger.kernel.org, 
+    kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dm: add missing unlock on in dm_keyslot_evict()
+In-Reply-To: <aBJgeV7pZ7Q47OCb@stanley.mountain>
+Message-ID: <cad25513-31c4-5895-cfc0-b9c7dce4ce08@redhat.com>
+References: <aBHZ4puON8GNK0vw@stanley.mountain> <20250430165037.GA1958@sol.localdomain> <aBJgeV7pZ7Q47OCb@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Apr 14 2025 at 11:59, Borislav Petkov wrote:
-> -static bool __init check_loader_disabled_bsp(void)
-> +bool __init microcode_loader_disabled(void)
->  {
-> -	static const char *__dis_opt_str = "dis_ucode_ldr";
-> -	const char *cmdline = boot_command_line;
-> -	const char *option  = __dis_opt_str;
-> +	if (dis_ucode_ldr)
-> +		return true;
-> +
-> +	if (!have_cpuid_p())
-> +		goto disable;
->  
->  	/*
->  	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
-> @@ -107,17 +109,18 @@ static bool __init check_loader_disabled_bsp(void)
->  	 * that's good enough as they don't land on the BSP path anyway.
->  	 */
->  	if (native_cpuid_ecx(1) & BIT(31))
-> -		return true;
-> +		goto disable;
->  
->  	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
->  		if (amd_check_current_patch_level())
-> -			return true;
-> +			goto disable;
->  	}
->  
-> -	if (cmdline_find_option_bool(cmdline, option) <= 0)
-> -		dis_ucode_ldr = false;
-> -
->  	return dis_ucode_ldr;
 
-This return here is confusing at best. The only valid return value is
-'false' according to the above logic, because nothing modifies
-dis_ucode_ldr and that must be false according to the top-most check,
-no?
 
-Something like the delta patch below makes it way more obvious and gets
-rid of the ugly gotos as well.
+On Wed, 30 Apr 2025, Dan Carpenter wrote:
 
-Thanks,
+> On Wed, Apr 30, 2025 at 09:50:37AM -0700, Eric Biggers wrote:
+> > On Wed, Apr 30, 2025 at 11:05:54AM +0300, Dan Carpenter wrote:
+> > > We need to call dm_put_live_table() even if dm_get_live_table() returns
+> > > NULL.
+> > > 
+> > > Fixes: 9355a9eb21a5 ("dm: support key eviction from keyslot managers of underlying devices")
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > > ---
+> > >  drivers/md/dm-table.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > 
+> > 
+> > Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+> > 
+> > But that's an awfully error-prone API.
+> 
+> Yep.
+> 
+> > 
+> > dm_blk_report_zones() gets this wrong too.
+> 
+> Ugh...  dm_blk_report_zones() is too weird for my static checker tool.
+> The checker is looking very specifically for error paths with missing
+> unlocks.
 
-        tglx
----
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -84,6 +84,9 @@ static bool amd_check_current_patch_leve
- 	u32 lvl, dummy, i;
- 	u32 *levels;
- 
-+	if (x86_cpuid_vendor() != X86_VENDOR_AMD)
-+		return false;
-+
- 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, lvl, dummy);
- 
- 	levels = final_levels;
-@@ -100,27 +103,25 @@ bool __init microcode_loader_disabled(vo
- 	if (dis_ucode_ldr)
- 		return true;
- 
--	if (!have_cpuid_p())
--		goto disable;
--
- 	/*
--	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
--	 * completely accurate as xen pv guests don't see that CPUID bit set but
--	 * that's good enough as they don't land on the BSP path anyway.
-+	 * Disable when:
-+	 *
-+	 * 1) The CPU does not support cpuid_p
-+	 *
-+	 * 2) Bit 31 in CPUID[1]:ECX is clear
-+	 *    The bit is reserved for hypervisor use. This is still not
-+	 *    completely accurate as XEN PV guests don't see that CPUID bit
-+	 *    set, but that's good enough as they don't land on the BSP
-+	 *    path anyway.
-+	 *
-+	 * 3) The AMD specific patch level check succeeds
- 	 */
--	if (native_cpuid_ecx(1) & BIT(31))
--		goto disable;
--
--	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
--		if (amd_check_current_patch_level())
--			goto disable;
-+	if (!have_cpuid_p() || native_cpuid_ecx(1) & BIT(31) ||
-+	    amd_check_current_patch_level()) {
-+		dis_ucode_ldr = true;
-+		return true;
- 	}
--
--	return dis_ucode_ldr;
--
--disable:
--	dis_ucode_ldr = true;
--	return true;
-+	return false;
- }
- 
- void __init load_ucode_bsp(void)
+Ben already tried to fix it in dm_blk_report_zones (see the linux-dm git, 
+for-next branch) - but his fix is incorrect because the "if" condition for 
+dm_get_live_table and dm_put_live_table differs. I'll update his patch to 
+fix this mismatch.
 
+Mikulas
+
+> regards,
+> dan carpenter
+> 
 
