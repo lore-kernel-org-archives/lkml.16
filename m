@@ -1,174 +1,200 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2429922370A;
-	Wed, 30 Apr 2025 22:06:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671F722333D
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:09:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050766; cv=none; b=Ec/GY+MZycOZ5IYOtv1cNSKndn5PM0n/ndDN4hGoR9gcDnx5CTrZlTS4lSsbd+uzLkE6U9RAq2BxxyM3mY/9euVqrcHdQ2bDltan2E+wCX3VBMrh/sGoztWjLQxg7GH1QNUD4dWBIQ5YjyMec2RQ6XMBUpqDGlE9jjqLFn7Bn/k=
+	t=1746050999; cv=none; b=Miw/S9pujgOdjC8OAIeqnW4Mr1RfDrChFb2SNMN4aNgD/iJ0vWQ/Woy/3txXFqvgmNL84//b+HftV2FMuhSRv9xPApfchSLYHpc2r9UCD7sUYx8wEH1pti7kDqZMG5YTTzx5totVoXGQIrBPMlJI2HgNkaOoIqjft4OgFH3pHAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050766; c=relaxed/simple;
-	bh=Ip8kCIs/NCxhLce9W0wi+ojRYSwPsFGesZ5pyNqongM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=V0gxJS7R3p5o1E63+805kV8QHfHKsLY27oCvScp5TmtycqlKt5ZivGcE2gnDfjEdcbJJ47WJrIaURxOtNuJmGU0s8PRPo+9zFkmsxZaXPJjj/xaNaNxyZMVTeMV36HlBd/8at5bbczVMLi23COvr27nP+6j2Hes7Yf96GYC1ccI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b=ATtOmQef; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxonhyperv.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746050999; c=relaxed/simple;
+	bh=nt9O3bY8xYpbbY8hLFsXM3ylEbVtCa/AX1l7at7vIZE=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BbVED7I9elMKkIESqxL1grwpQiZ+rTq+N4dG1RQPJovHpJo8my1WggUQjH4/6YoFlWR8nBToE37f7PJMsAjBZ32BpAWCLDMVboS4nac3RV5wc5ZX8XTq4uxpHJqlX0Yo43n9KLF9YoJyQeeYLHkwHIqZ0EsgSMkMZzfzMEjG0jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3hzIGGtx; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxonhyperv.com header.i=@linuxonhyperv.com header.b="ATtOmQef"
-Received: by linux.microsoft.com (Postfix, from userid 1202)
-	id C526021130A4; Wed, 30 Apr 2025 15:06:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C526021130A4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxonhyperv.com;
-	s=default; t=1746050763;
-	bh=oEUBSZ8NILqC1QUWEk7J5DCevmeOgK9HDP3Grif/Ql8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ATtOmQefJCnNfY+URkn72qohw97BvneZDHlZ2fTk3PYu6CMVsqYOU8MbHanRKhlCD
-	 qnErqWnZpWDes6gdMonAMAoN1G78LulTcm56cBGd5HyQ5bnwsYykhUsAR+h33CMjNx
-	 o9X2sNajZGpSBacvyA7JXQUEbPhuC4LOhuL7/qPs=
-From: longli@linuxonhyperv.com
-To: "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>,
-	Wei Liu <wei.liu@kernel.org>,
-	Dexuan Cui <decui@microsoft.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Long Li <longli@microsoft.com>
-Subject: [Patch v2 4/4] Drivers: hv: Remove hv_free/alloc_* helpers
-Date: Wed, 30 Apr 2025 15:05:58 -0700
-Message-Id: <1746050758-6829-5-git-send-email-longli@linuxonhyperv.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1746050758-6829-1-git-send-email-longli@linuxonhyperv.com>
-References: <1746050758-6829-1-git-send-email-longli@linuxonhyperv.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3hzIGGtx"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a204efeaeso275697a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:09:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746050997; x=1746655797; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wZ/MaCiqXtq7XnMNvwgF7ZXXhu0iWgk2GK4UvEq7z4I=;
+        b=3hzIGGtxfnMPznGrqcwm39URy/M2kUhl/DL4S3w3hMMfOmrXxpLy2/nOb8yAST52XC
+         bXHyEUUuKx3eUcqRZA6DEyJL1PPHsdtIkL3NIst6cm0C7NI+TM8B71GOEQPiNtHe29u/
+         umgeFS8BMXU1tqwN7dyaV+gnmTpXBofN9gDNz0fzQLh8ZUFbAdDZVaRyvnY8jmOKTGIl
+         OqlRzXBJoatyFdbDBmMcKZZhPLbtPXuUbakmvLRfHwJ+6H7vKY4qngpMDUzLVDneeMHO
+         fHtF40b3eN7shsUGtnpcUW70m7VRV0XL3mSXKhwRRUzWVzp4MA89FP+5VMkvm/klJIvt
+         eNTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746050997; x=1746655797;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wZ/MaCiqXtq7XnMNvwgF7ZXXhu0iWgk2GK4UvEq7z4I=;
+        b=c1St3PHpsYLeB7p6iZDJ1/6ISVl8U4g1aMV/jvHmeAQKxBIcP7PDAkbJiLDvKpu/v5
+         gRhxmD7N/h8BadZW5gvcafHNzNEfWvirWLcsvVg725n4YBeofg13JEmQ8rZfsivEBJMw
+         u/GDGxGjpf7cQtIwtYAGuzF6h5ElWLdc3tLkq+rszScstTlBkaDwWJ0PFSNA8Qz9hdJB
+         IXdyR4kzvtSJqRfOP3KTWP6v8mmIbmSBPaoWNouazYQBJGJ/wmZ6VyAx4KPmTSRw4qLN
+         XuMF+YTMNYliSLh0Wp4RzGIyF3+z0hbx4hVs8HrCUkm9R4Gr5iEfgwOyc7RoL0Krw1Rf
+         MSuw==
+X-Forwarded-Encrypted: i=1; AJvYcCX+UsBQYeYp18werelKm7WlMkZrF2Rh3kRKoDowN4awBOiQtAoQe4x8Un7v1Btd8l19ooSb+6wz5jBgUfQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGpxQPG2kAJaXq4tyIqw+ICFNu/e0xRx8dF+hPEbCxSeLNVNjb
+	bEc5d/fcidlw4duvy9Q5CIhiQrbQEUw7BfXHJmyiDoIAzfvqZmrC3fhu6vMT+u+2rTxqBLHoBQ8
+	K9w==
+X-Google-Smtp-Source: AGHT+IFDCE4ixEWkqW6JuW3nZKoDOeyTblrj/HS+JgqpSphQzY3xCCE/XlAvFn9djfhRe2sBMtC9+CGBoY4=
+X-Received: from pjoo6.prod.google.com ([2002:a17:90b:5826:b0:308:65f7:9f24])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e10:b0:2f8:34df:5652
+ with SMTP id 98e67ed59e1d1-30a431b6d57mr94171a91.21.1746050996743; Wed, 30
+ Apr 2025 15:09:56 -0700 (PDT)
+Reply-To: Sean Christopherson <seanjc@google.com>
+Date: Wed, 30 Apr 2025 15:09:54 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <20250430220954.522672-1-seanjc@google.com>
+Subject: [PATCH v2] KVM: x86/mmu: Prevent installing hugepages when mem
+ attributes are changing
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michael Roth <michael.roth@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Long Li <longli@microsoft.com>
+When changing memory attributes on a subset of a potential hugepage, add
+the hugepage to the invalidation range tracking to prevent installing a
+hugepage until the attributes are fully updated.  Like the actual hugepage
+tracking updates in kvm_arch_post_set_memory_attributes(), process only
+the head and tail pages, as any potential hugepages that are entirely
+covered by the range will already be tracked.
 
-Those helpers are simply wrappers for page allocations.
+Note, only hugepage chunks whose current attributes are NOT mixed need to
+be added to the invalidation set, as mixed attributes already prevent
+installing a hugepage, and it's perfectly safe to install a smaller
+mapping for a gfn whose attributes aren't changing.
 
-Signed-off-by: Long Li <longli@microsoft.com>
+Fixes: 8dd2eee9d526 ("KVM: x86/mmu: Handle page fault for private memory")
+Cc: stable@vger.kernel.org
+Reported-by: Michael Roth <michael.roth@amd.com>
+Tested-by: Michael Roth <michael.roth@amd.com>
+Signed-off-by: Sean Christopherson <seanjc@google.com>
 ---
- drivers/hv/connection.c        | 23 +++++++++++++++++------
- drivers/hv/hv_common.c         | 24 ------------------------
- include/asm-generic/mshyperv.h |  4 ----
- 3 files changed, 17 insertions(+), 34 deletions(-)
 
-diff --git a/drivers/hv/connection.c b/drivers/hv/connection.c
-index 8351360bba16..a0160b73b593 100644
---- a/drivers/hv/connection.c
-+++ b/drivers/hv/connection.c
-@@ -206,11 +206,20 @@ int vmbus_connect(void)
- 	INIT_LIST_HEAD(&vmbus_connection.chn_list);
- 	mutex_init(&vmbus_connection.channel_mutex);
+Mike, if you haven't arleady, can you rerun your testcase to double check
+that adding the "(end + nr_pages) > range->end" check didn't break anything?
+
+v2: Don't add the tail page if its wholly contained by the range whose
+    attributes are being modified. [Yan]
+v1: https://lore.kernel.org/all/20250426001056.1025157-1-seanjc@google.com
+
+ arch/x86/kvm/mmu/mmu.c | 69 ++++++++++++++++++++++++++++++++----------
+ 1 file changed, 53 insertions(+), 16 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 63bb77ee1bb1..de7fd6d4b9d7 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -7669,9 +7669,30 @@ void kvm_mmu_pre_destroy_vm(struct kvm *kvm)
+ }
  
-+	/*
-+	 * The following Hyper-V interrupt and monitor pages can be used by
-+	 * UIO for mapping to user-space, it should always be allocated on
-+	 * system page boundaries. We use page allocation functions to allocate
-+	 * those pages. We assume system page be bigger than Hyper-v page.
-+	 */
-+	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
+ #ifdef CONFIG_KVM_GENERIC_MEMORY_ATTRIBUTES
++static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
++				int level)
++{
++	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
++}
++
++static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
++				 int level)
++{
++	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
++}
++
++static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
++			       int level)
++{
++	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
++}
++
+ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+ 					struct kvm_gfn_range *range)
+ {
++	struct kvm_memory_slot *slot = range->slot;
++	int level;
 +
  	/*
- 	 * Setup the vmbus event connection for channel interrupt
- 	 * abstraction stuff
- 	 */
--	vmbus_connection.int_page = hv_alloc_hyperv_zeroed_page();
-+	vmbus_connection.int_page =
-+		(void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
- 	if (vmbus_connection.int_page == NULL) {
- 		ret = -ENOMEM;
- 		goto cleanup;
-@@ -225,8 +234,8 @@ int vmbus_connect(void)
- 	 * Setup the monitor notification facility. The 1st page for
- 	 * parent->child and the 2nd page for child->parent
- 	 */
--	vmbus_connection.monitor_pages[0] = hv_alloc_hyperv_page();
--	vmbus_connection.monitor_pages[1] = hv_alloc_hyperv_page();
-+	vmbus_connection.monitor_pages[0] = (void *)__get_free_page(GFP_KERNEL);
-+	vmbus_connection.monitor_pages[1] = (void *)__get_free_page(GFP_KERNEL);
- 	if ((vmbus_connection.monitor_pages[0] == NULL) ||
- 	    (vmbus_connection.monitor_pages[1] == NULL)) {
- 		ret = -ENOMEM;
-@@ -342,21 +351,23 @@ void vmbus_disconnect(void)
- 		destroy_workqueue(vmbus_connection.work_queue);
+ 	 * Zap SPTEs even if the slot can't be mapped PRIVATE.  KVM x86 only
+ 	 * supports KVM_MEMORY_ATTRIBUTE_PRIVATE, and so it *seems* like KVM
+@@ -7686,6 +7707,38 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+ 	if (WARN_ON_ONCE(!kvm_arch_has_private_mem(kvm)))
+ 		return false;
  
- 	if (vmbus_connection.int_page) {
--		hv_free_hyperv_page(vmbus_connection.int_page);
-+		free_page((unsigned long)vmbus_connection.int_page);
- 		vmbus_connection.int_page = NULL;
- 	}
- 
- 	if (vmbus_connection.monitor_pages[0]) {
- 		if (!set_memory_encrypted(
- 			(unsigned long)vmbus_connection.monitor_pages[0], 1))
--			hv_free_hyperv_page(vmbus_connection.monitor_pages[0]);
-+			free_page((unsigned long)
-+				vmbus_connection.monitor_pages[0]);
- 		vmbus_connection.monitor_pages[0] = NULL;
- 	}
- 
- 	if (vmbus_connection.monitor_pages[1]) {
- 		if (!set_memory_encrypted(
- 			(unsigned long)vmbus_connection.monitor_pages[1], 1))
--			hv_free_hyperv_page(vmbus_connection.monitor_pages[1]);
-+			free_page((unsigned long)
-+				vmbus_connection.monitor_pages[1]);
- 		vmbus_connection.monitor_pages[1] = NULL;
- 	}
- }
-diff --git a/drivers/hv/hv_common.c b/drivers/hv/hv_common.c
-index 297ccd7d4997..421376cea17e 100644
---- a/drivers/hv/hv_common.c
-+++ b/drivers/hv/hv_common.c
-@@ -105,30 +105,6 @@ void __init hv_common_free(void)
- 	hv_synic_eventring_tail = NULL;
++	if (WARN_ON_ONCE(range->end <= range->start))
++		return false;
++
++	/*
++	 * If the head and tail pages of the range currently allow a hugepage,
++	 * i.e. reside fully in the slot and don't have mixed attributes, then
++	 * add each corresponding hugepage range to the ongoing invalidation,
++	 * e.g. to prevent KVM from creating a hugepage in response to a fault
++	 * for a gfn whose attributes aren't changing.  Note, only the range
++	 * of gfns whose attributes are being modified needs to be explicitly
++	 * unmapped, as that will unmap any existing hugepages.
++	 */
++	for (level = PG_LEVEL_2M; level <= KVM_MAX_HUGEPAGE_LEVEL; level++) {
++		gfn_t start = gfn_round_for_level(range->start, level);
++		gfn_t end = gfn_round_for_level(range->end - 1, level);
++		gfn_t nr_pages = KVM_PAGES_PER_HPAGE(level);
++
++		if ((start != range->start || start + nr_pages > range->end) &&
++		    start >= slot->base_gfn &&
++		    start + nr_pages <= slot->base_gfn + slot->npages &&
++		    !hugepage_test_mixed(slot, start, level))
++			kvm_mmu_invalidate_range_add(kvm, start, start + nr_pages);
++
++		if (end == start)
++			continue;
++
++		if ((end + nr_pages) > range->end &&
++		    (end + nr_pages) <= (slot->base_gfn + slot->npages) &&
++		    !hugepage_test_mixed(slot, end, level))
++			kvm_mmu_invalidate_range_add(kvm, end, end + nr_pages);
++	}
++
+ 	/* Unmap the old attribute page. */
+ 	if (range->arg.attributes & KVM_MEMORY_ATTRIBUTE_PRIVATE)
+ 		range->attr_filter = KVM_FILTER_SHARED;
+@@ -7695,23 +7748,7 @@ bool kvm_arch_pre_set_memory_attributes(struct kvm *kvm,
+ 	return kvm_unmap_gfn_range(kvm, range);
  }
  
--/*
-- * A Hyper-V page can be used by UIO for mapping to user-space, it should
-- * always be allocated on system page boundaries.
-- */
--void *hv_alloc_hyperv_page(void)
+-static bool hugepage_test_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
+-				int level)
 -{
--	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
--	return (void *)__get_free_page(GFP_KERNEL);
+-	return lpage_info_slot(gfn, slot, level)->disallow_lpage & KVM_LPAGE_MIXED_FLAG;
 -}
--EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
--
--void *hv_alloc_hyperv_zeroed_page(void)
--{
--	BUILD_BUG_ON(PAGE_SIZE < HV_HYP_PAGE_SIZE);
--	return (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
--}
--EXPORT_SYMBOL_GPL(hv_alloc_hyperv_zeroed_page);
--
--void hv_free_hyperv_page(void *addr)
--{
--	free_page((unsigned long)addr);
--}
--EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
--
- static void *hv_panic_page;
  
- /*
-diff --git a/include/asm-generic/mshyperv.h b/include/asm-generic/mshyperv.h
-index ccccb1cbf7df..4033508fbb11 100644
---- a/include/asm-generic/mshyperv.h
-+++ b/include/asm-generic/mshyperv.h
-@@ -236,10 +236,6 @@ int hv_common_cpu_init(unsigned int cpu);
- int hv_common_cpu_die(unsigned int cpu);
- void hv_identify_partition_type(void);
- 
--void *hv_alloc_hyperv_page(void);
--void *hv_alloc_hyperv_zeroed_page(void);
--void hv_free_hyperv_page(void *addr);
+-static void hugepage_clear_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
+-				 int level)
+-{
+-	lpage_info_slot(gfn, slot, level)->disallow_lpage &= ~KVM_LPAGE_MIXED_FLAG;
+-}
 -
- /**
-  * hv_cpu_number_to_vp_number() - Map CPU to VP.
-  * @cpu_number: CPU number in Linux terms
+-static void hugepage_set_mixed(struct kvm_memory_slot *slot, gfn_t gfn,
+-			       int level)
+-{
+-	lpage_info_slot(gfn, slot, level)->disallow_lpage |= KVM_LPAGE_MIXED_FLAG;
+-}
+ 
+ static bool hugepage_has_attrs(struct kvm *kvm, struct kvm_memory_slot *slot,
+ 			       gfn_t gfn, int level, unsigned long attrs)
+
+base-commit: 2d7124941a273c7233849a7a2bbfbeb7e28f1caa
 -- 
-2.34.1
+2.49.0.906.g1f30a19c02-goog
 
