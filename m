@@ -1,159 +1,233 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2633325A630
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569CB1CD0C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:18:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019060; cv=none; b=ffvRV0mF1e4wz+7D2LgRNm8QmXuoGYllMS2xaSPGV1SfrnW7QCrsd3sczGpOYGJFe8PJcozzoIJ+hnc6NRfSyjYkxaz23moJDApK1tEBZhOcrIDiLG+sSun5Cvd3O5fz2C9bB6cu0bILkc2rbe3lEkp7W1sSZ6LgYFsLYgldx8Y=
+	t=1746019109; cv=none; b=OCvNkgMoiCgu4hAQ1TUGVbqw+MmBQCA3zTMa8SA332SRJ/uErt7664zuKaYulw5FtJnFpXBS5MFtUlPlCG8A9FVJV6px9CFNMUTh/USQvU8P+t1XXvRIzZlBqOGKKz54MAOANwoCqQFIM10p+CF9ywonYnQGvE3nl/8BXwb1wTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019060; c=relaxed/simple;
-	bh=V0pe99KwToQ2OQKx9jVCO7CGmdG+5UWYsvSoVTUT3/w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YvEpLEWNVn3oWHn7XoNrdIj272bY44URPWwXIZ0DD0mm2QBUYpGnuZ74CIFkqKwjvNvUlJvt8ClKdxAQlyb3KRQqlg6Y5zjl9aHO5uvqEh9Rr6FR7ra2R72xX1SoGcg5wUSj5SSx7qpmd4P85VWzitUe8uKVqGNe+FPfN3lOXbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mS8o1emh; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mS8o1emh"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72ecb4d9a10so4228736a34.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746019056; x=1746623856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CWVOSQGwjBgDHyj1AvVikp/q273qN6vha7yJyjTWfZU=;
-        b=mS8o1emhfPzY9wFd3EGfOi/zu2tnLjRQd1pqxE0qPG1i82uflyQ4BFDVmw2Zg9ZmvN
-         YtTpxqPySEorg8mBpJaOPFQUK/rPW8yWEdJU0soGWrX8DzfRrVlv2N+rJsEb/jvR8+hK
-         3d0sJhoMx0mlcnrIzb1O937WrOOsz4620R6JY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746019056; x=1746623856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CWVOSQGwjBgDHyj1AvVikp/q273qN6vha7yJyjTWfZU=;
-        b=ciFipXCpTItTMS5zVoTp143y+08xwKdjU2M2NcTYpsO5+xKLML9bL81K6U0uG3Roqh
-         fbHT0K8dYIrESJ9H8zvTdcRcVfpRfyBjMepubbd/mf5+I9Qt9Devn9a0xtHMVxMiV9tS
-         5IUV641WKZ/dO23Vut536Bx2xfRBdFESKn34ZSpd9JGGAf954pbHOV8cRTh1DYvavzD2
-         wLLdK7BstE2Qrn1fEKN5e+ZBasCKtBf/J+dCyjmIK1IOzuMgOduJHLw/G0uDTDNLPtK/
-         Mzc5HwrPV/lC8kGBkyS+dngHqnZzPtcY3fwQHhQINyKzpcUxC3AqZPTXFoFwDTnXQebX
-         nLhA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+kYzlejcvxl2G1RjIkIrTLLfBWZWDS2ssMl9Mx0oON1L9S+16uGyjuZc6tdt3mTcPbJxVqhx5lkCsF44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEhDqe+sZBpWKLpHXq+ZzkeueJNv6ZWPO1/P1l/8egwXM59fkS
-	3GSNfrAh9CB0ioFRRxwy1g4lS+gs88+6UQJaQx6vhn7SU4N7P4nyUWZ3XMW0MocTkD++4bDNSYN
-	TCMcRij19Qs9OKpKa2Mi8oL6/Gp3u7jmaO2Uc
-X-Gm-Gg: ASbGncvDWilmOuoEC5FzkyNxQFSq2NTo3CHiEVxRfeGu77GexfQrUBg1XMF00JKhzge
-	unNSdetnIKOkSl4zn3vFS206v+OL6mkFLqlkQDxS04EbD1bC7R27xSSGn+NWfg41PDUQLv/qzjl
-	Ddoo+GIAny37tt3MiW9u+BrO29Q7ha7xx6lRukpRq2fAPozybHesYV
-X-Google-Smtp-Source: AGHT+IFknXD5la0gddBuEBX4XwCV9fHZkdIs7fEw4Vi3CddMyMvaEQq4AL9wzB3b6mXqaQYKX5avzpN+W1kedxnS1fY=
-X-Received: by 2002:a05:6830:6812:b0:72b:8ec6:e533 with SMTP id
- 46e09a7af769-731c0a00badmr1569169a34.7.1746019056140; Wed, 30 Apr 2025
- 06:17:36 -0700 (PDT)
+	s=arc-20240116; t=1746019109; c=relaxed/simple;
+	bh=RjNbOMEc6VzjN67u7cWuW3x1hNGUQR2Zn+I/VajPoJw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LphN1rggfvTEiVxrwnxgtGqXkf7ogtclmD810WRhDLQJu6aM/7JkCULp6FwZkFAWjPXd3uLpGZ2BP0xsbkWVi3qkpwTrLq+tdPw9Co7uq94pcZ+wNGn10umfsIJaC6Z/Rzu3j+zu7fISj0njbQb1YeG7C+XExBDyK3A9gJ1/ovg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5979B106F;
+	Wed, 30 Apr 2025 06:18:19 -0700 (PDT)
+Received: from [10.57.84.121] (unknown [10.57.84.121])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A46223F5A1;
+	Wed, 30 Apr 2025 06:18:21 -0700 (PDT)
+Message-ID: <40826f42-07d2-4c00-8173-a5eb19d2335c@arm.com>
+Date: Wed, 30 Apr 2025 14:18:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422082957.2058229-1-treapking@chromium.org>
- <20250422082957.2058229-4-treapking@chromium.org> <CAE-0n52cwBxJ3gYzSi1+nNcRRSgbMToYBFLJwdVWSMOxBmUN1A@mail.gmail.com>
- <CAEXTbpfb6KOqrU0oAvbzV76Wj_YORsjcukBVZx-d2evYtmwshg@mail.gmail.com> <CAE-0n52aw2HXe1eUCkLbbc7tnr+okF54hOfSSRm9nic3rbCFzA@mail.gmail.com>
-In-Reply-To: <CAE-0n52aw2HXe1eUCkLbbc7tnr+okF54hOfSSRm9nic3rbCFzA@mail.gmail.com>
-From: Pin-yen Lin <treapking@chromium.org>
-Date: Wed, 30 Apr 2025 21:17:24 +0800
-X-Gm-Features: ATxdqUGXMrim_0el_0mBfr6BfbTfpvsYTOlSek5Q_-HvMe5Fkukqgos6OuwR34U
-Message-ID: <CAEXTbpdkP2KM=ByCGP-S7ZMZFjFOaQynPzf7j139aQ4zU=jzrQ@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] dt-bindings: usb: realtek,rts5411: Adapt usb-hub.yaml
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, Rob Herring <robh@kernel.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/7] mm: Optimize mprotect() by batch-skipping PTEs
+Content-Language: en-GB
+To: Dev Jain <dev.jain@arm.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, vbabka@suse.cz, jannh@google.com,
+ anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
+ ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
+ quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
+ yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
+ namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
+ ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
+ <20250429052336.18912-3-dev.jain@arm.com>
+ <f4a90024-3cc7-4536-84b0-665021d96125@lucifer.local>
+ <9687592f-ec04-410f-9fb2-9777edfe1178@arm.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <9687592f-ec04-410f-9fb2-9777edfe1178@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 30, 2025 at 2:24=E2=80=AFAM Stephen Boyd <swboyd@chromium.org> =
-wrote:
->
-> Quoting Pin-yen Lin (2025-04-28 21:57:16)
-> > Hi Stephen,
-> >
-> > On Tue, Apr 29, 2025 at 7:46=E2=80=AFAM Stephen Boyd <swboyd@chromium.o=
-rg> wrote:
-> > >
-> > > Quoting Pin-yen Lin (2025-04-22 01:28:29)
-> > > > diff --git a/Documentation/devicetree/bindings/usb/realtek,rts5411.=
-yaml b/Documentation/devicetree/bindings/usb/realtek,rts5411.yaml
-> > > > index 6577a61cc07531..a020afaf2d6e7a 100644
-> > > > --- a/Documentation/devicetree/bindings/usb/realtek,rts5411.yaml
-> > > > +++ b/Documentation/devicetree/bindings/usb/realtek,rts5411.yaml
-> > > > @@ -10,7 +10,7 @@ maintainers:
-> > > >    - Matthias Kaehlcke <mka@chromium.org>
-> > > >
-> > > >  allOf:
-> > > > -  - $ref: usb-device.yaml#
-> > > > +  - $ref: usb-hub.yaml#
-> > > >
-> > > >  properties:
-> > > >    compatible:
-> > > > @@ -19,61 +19,35 @@ properties:
-> > > [...]
-> > > >
-> > > > -      port@4:
-> > > > -        $ref: /schemas/graph.yaml#/properties/port
-> > > > -        description:
-> > > > -          4th downstream facing USB port
-> > > > -
-> > > > -patternProperties:
-> > > > -  '^.*@[1-4]$':
-> > > > -    description: The hard wired USB devices
-> > > > -    type: object
-> > > > -    $ref: /schemas/usb/usb-device.yaml
-> > > > -    additionalProperties: true
-> > > > +additionalProperties:
-> > > > +  properties:
-> > > > +    reg:
-> > > > +      minimum: 1
-> > > > +      maximum: 4
-> > >
-> > > Is this limiting the 'reg' property of the hub node and not the child
-> > > usb-device nodes?
-> >
-> > Yes, but the regex pattern of patternProperties restricts the
-> > downstream device nodes to '^.*@[1-4]$'. So the 'reg's of the child
-> > usb-device nodes are also checked.
->
-> I'm confused. The path looks like it is removing patternProperties here
-> and limiting the reg property of the hub itself so it can only be at
-> port 1, 2, 3 or 4. Why is the patternProperties being removed? Don't we
-> need to keep the patternProperties around, or somehow get at the
-> patternProperties for the hard wired USB devices in the usb-hub schema
-> so we can constrain the reg property to be between 1 and 4?
+On 30/04/2025 07:37, Dev Jain wrote:
+> 
+> 
+> On 29/04/25 6:49 pm, Lorenzo Stoakes wrote:
+>> Very very very nitty on subject (sorry I realise this is annoying :P) -
+>> generally don't need to capitalise 'Optimize' here :>)
+>>
+>> Generally I like the idea here. But some issues on impl.
+>>
+>> On Tue, Apr 29, 2025 at 10:53:31AM +0530, Dev Jain wrote:
+>>> In case of prot_numa, there are various cases in which we can skip to the
+>>> next iteration. Since the skip condition is based on the folio and not
+>>> the PTEs, we can skip a PTE batch.
+>>>
+>>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>>> ---
+>>>   mm/mprotect.c | 27 ++++++++++++++++++++-------
+>>>   1 file changed, 20 insertions(+), 7 deletions(-)
+>>>
+>>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>>> index 70f59aa8c2a8..ec5d17af7650 100644
+>>> --- a/mm/mprotect.c
+>>> +++ b/mm/mprotect.c
+>>> @@ -91,6 +91,9 @@ static bool prot_numa_skip(struct vm_area_struct *vma,
+>>> struct folio *folio,
+>>>       bool toptier;
+>>>       int nid;
+>>>
+>>> +    if (folio_is_zone_device(folio) || folio_test_ksm(folio))
+>>> +        return true;
+>>> +
+>>
+>> Hm why not just put this here from the start? I think you should put this back
+>> in the prior commit.
+>>
+>>>       /* Also skip shared copy-on-write pages */
+>>>       if (is_cow_mapping(vma->vm_flags) &&
+>>>           (folio_maybe_dma_pinned(folio) ||
+>>> @@ -126,8 +129,10 @@ static bool prot_numa_skip(struct vm_area_struct *vma,
+>>> struct folio *folio,
+>>>   }
+>>>
+>>>   static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
+>>> -        unsigned long addr, pte_t oldpte, int target_node)
+>>> +        unsigned long addr, pte_t *pte, pte_t oldpte, int target_node,
+>>> +        int max_nr, int *nr)
+>>
+>> Hate this ptr to nr.
+>>
+>> Why not just return nr, if it's 0 then skip? Simple!
+>>
+>>>   {
+>>> +    const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>>>       struct folio *folio;
+>>>       int ret;
+>>>
+>>> @@ -136,12 +141,16 @@ static bool prot_numa_avoid_fault(struct vm_area_struct
+>>> *vma,
+>>>           return true;
+>>>
+>>>       folio = vm_normal_folio(vma, addr, oldpte);
+>>> -    if (!folio || folio_is_zone_device(folio) ||
+>>> -        folio_test_ksm(folio))
+>>> +    if (!folio)
+>>>           return true;
+>>> +
+>>
+>> Very nitty, but stray extra line unless intended...
+>>
+>> Not sure why we can't just put this !folio check in prot_numa_skip()?
+> 
+> Because we won't be able to batch if the folio is NULL.
+> 
+> I think I really messed up by having separate patch 1 and 2. The real intent of
+> patch 1 was to do batching in patch 2 *and* not have insane indentation. Perhaps
+> I should merge them, or completely separate them logically, I'll figure this out.
 
-Sorry, I was confused by my own patch... Yes, the patternProperties is
-removed in this patch so please ignore my previous mail.
+I'd be inclined to just merge into single patch...
 
-However, it seems that the addtionalProperties here checks all the
-properties that are not defined in this yaml file. I tried changing
-the node in the example DT to device@5/reg=3D<5>, and make
-dt_binding_check rejects the node as expected.
->
-> > >
-> > > >
-> > > >  required:
-> > > >    - peer-hub
-> > > >    - compatible
-> > > >    - reg
-> > >
-> > > Can 'reg' be dropped because usb-hub.yaml requires it?
-> >
-> > I can drop 'reg' and 'compatible' in the next version, but I see other
-> > schemas referencing usb-device.yaml still set 'reg' as required. Is
-> > this some kind of convention, or people just didn't notice this?
->
-> I assume nobody noticed.
+> 
+>>
+>>>       ret = prot_numa_skip(vma, folio, target_node);
+>>> -    if (ret)
+>>> +    if (ret) {
+>>> +        if (folio_test_large(folio) && max_nr != 1)
+>>> +            *nr = folio_pte_batch(folio, addr, pte, oldpte,
+>>> +                          max_nr, flags, NULL, NULL, NULL);
+>>
+>> So max_nr can <= 0 too? Shouldn't this be max_nr > 1?
+>>
+>>>           return ret;
+>>
+>> Again x = fn_return_bool(); if (x) { return x; } is a bit silly, just do if
+>> (fn_return_bool()) { return true; }.
+>>
+>> If we return the number of pages, then this can become really simple, like:
+>>
+>> I feel like maybe we should abstract the folio large handling here, though it'd
+>> be a tiny function so hm.
+>>
+>> Anyway assuming we leave it in place, and return number of pages processed, this
+>> can become:
+>>
+>> if (prot_numa_skip(vma, folio, target_node)) {
+>>     if (folio_test_large(folio) && max_nr > 1)
+>>         return folio_pte_batch(folio, addr, pte, oldpte, max_nr, flags,
+>>                 NULL, NULL, NULL);
+>>     return 1;
+>> }
+>>
+>> Which is neater I think!
+>>
+>>
+>>> +    }
+>>>       if (folio_use_access_time(folio))
+>>>           folio_xchg_access_time(folio,
+>>>               jiffies_to_msecs(jiffies));
+>>> @@ -159,6 +168,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>       bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
+>>>       bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
+>>>       bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
+>>> +    int nr;
+>>>
+>>>       tlb_change_page_size(tlb, PAGE_SIZE);
+>>>       pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+>>> @@ -173,8 +183,10 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>       flush_tlb_batched_pending(vma->vm_mm);
+>>>       arch_enter_lazy_mmu_mode();
+>>>       do {
+>>> +        nr = 1;
+>>>           oldpte = ptep_get(pte);
+>>>           if (pte_present(oldpte)) {
+>>> +            int max_nr = (end - addr) >> PAGE_SHIFT;
+>>
+>> Not a fan of open-coding this. Since we already provide addr, why not just
+>> provide end as well and have prot_numa_avoid_fault() calculate it?
+>>
+>>>               pte_t ptent;
+>>>
+>>>               /*
+>>> @@ -182,8 +194,9 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                * pages. See similar comment in change_huge_pmd.
+>>>                */
+>>>               if (prot_numa &&
+>>> -                prot_numa_avoid_fault(vma, addr,
+>>> -                          oldpte, target_node))
+>>> +                prot_numa_avoid_fault(vma, addr, pte,
+>>> +                          oldpte, target_node,
+>>> +                              max_nr, &nr))
+>>>                       continue;
+>>>
+>>>               oldpte = ptep_modify_prot_start(vma, addr, pte);
+>>> @@ -300,7 +313,7 @@ static long change_pte_range(struct mmu_gather *tlb,
+>>>                   pages++;
+>>>               }
+>>>           }
+>>> -    } while (pte++, addr += PAGE_SIZE, addr != end);
+>>> +    } while (pte += nr, addr += nr * PAGE_SIZE, addr != end);
+>>
+>> This is icky, having 'nr' here like this.
 
-Okay, then I'll update this in the next version.
+For better or worse, this is the pattern we have already established in other
+loops that are batching-aware. See zap_pte_range(), copy_pte_range(), etc. So
+I'd prefer to follow that pattern here, as Dev has done.
 
-Pin-yen
+Thanks.
+Ryan
+
+>>
+>> But alternatives might be _even more_ icky (that is advancing both on
+>> prot_numa_avoid_fault() so probably we need to keep it like this.
+>>
+>> Maybe more a moan at the C programming language tbh haha!
+>>
+>>
+>>>       arch_leave_lazy_mmu_mode();
+>>>       pte_unmap_unlock(pte - 1, ptl);
+>>>
+>>> -- 
+>>> 2.30.2
+>>>
+> 
+
