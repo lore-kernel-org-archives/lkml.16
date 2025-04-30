@@ -1,63 +1,63 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87EA6156677;
-	Wed, 30 Apr 2025 03:26:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 245A3126F0A;
+	Wed, 30 Apr 2025 03:26:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745983583; cv=none; b=N2BmNBfNlfIIhX75rxzfs5eYMm/l9hU0cTGLKNlRbRjCzjBlZheat8Fy0Hyk1wOzqfs+NweIPg2wRHPGaSMQgGyDBR6GJN+NSdD4NYAyQoe9O+mJyWZGMfPpJKI14Hjji5dB+6ikFeDmZwwswJmDdTKHyXG9at/61BqlMjC4Pno=
+	t=1745983620; cv=none; b=cfUb/WK4poxYXyy+faj8yb739JYpgr+oEAUG6Q3i3BDqoh3pIfkqjJrjBRGs2+jvrrqeO064Me687TuPWLsCTcN6rDFlJ/xUGXe1KRQgYCrRab8c3KMWOhXr0EbYnbGZqbXgv+8wGm2ooXBCXavoLWmODejE/KdqIl/iU+RwVIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745983583; c=relaxed/simple;
-	bh=0f5zSjI7euKU4fzDacN0WtI2ajnunsdrE2QY3GMibGY=;
+	s=arc-20240116; t=1745983620; c=relaxed/simple;
+	bh=WilsSksG91onpFhS75sG+QENiDrqEJLtr48/FCDL+JQ=;
 	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=KJjQVnlOZDBJUa61CJayBtrnJ9wtFul5nBgW1a78qcBy9j+V2dg672XFhyqL6322eIYQttDcqa3LA22LJsBeWxWEWriH7SvLg6O9VAtgTNKO/AAz7Man0idTWPRXecNmviQ+JsF4iNpvEITpPgVuyxwt+xRSHYzCMFWmamWronI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QCwsF//o; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version:Content-Type; b=Wo+ts+C25I1S8JeIf3BZVQuehO+jche5SBAoEWbZgvOBRDkUZieVeiNi2sv0u9LAfuml7Q/6Emdlfyg3I6eUoLQ6EL9SRQlWgWBhGsKdy1zp099jPqcdNBHo6CAVbAULPW43qKf2w8gLm26kdwahB1YoA0/jaY8exqG/GMzfD3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRn4Ghi3; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QCwsF//o"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22423adf751so68343115ad.2;
-        Tue, 29 Apr 2025 20:26:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRn4Ghi3"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-306bf444ba2so6446707a91.1;
+        Tue, 29 Apr 2025 20:26:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745983582; x=1746588382; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745983618; x=1746588418; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:references
          :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=Z6linA/lr0nmXcIVWFPX+1HBEKm/CCuzmP15Be91J/8=;
-        b=QCwsF//oK8VQB3eSMUxDRui5o7WZmV/qs6atIWTNeZ1RbIzlF4bwesq6eFBIO4qiFj
-         d/nUIt0+OzRSXPXY8Rv6+1yDtd51dzC7F8G0bEgGOeDjHOCSq8KXBWnKXJD9yemAKR2y
-         r5tyOMsf5f0gMvWFR8iKwg65vzhDLgHTrXon7PomqsKo2TyO8pQBDKFIKJn5wIxwE4rp
-         FCElRjCa5OMuyosA/E/lTpsGlUI0hnbx2AjNLwjd7HCpml9//B50koZ5WsXSEyw/P91t
-         lP2cfHNG6DW+YaovNP8TWJhu8YPd/Px1MHHJlt3Pf5Mi3H+2Fs4od31sl2+g0lEFRUnz
-         xWVg==
+        bh=CoxN3TaliehdYwer6YmRGsqtFDYD4eVxZVRdPbdq2i4=;
+        b=TRn4Ghi3CUBhNfqyLPKSadSm5X9VZAPqoVQVmIdtd7Jt/OdL3cs4m6rK5vgTdbPmtX
+         9jTO5RrGl+VveiXGTYBX7PNKMavO6H/6hKEYqSU0mE08gw0WGbi9WVJlsVyZNTMtfLFE
+         5YuQizBf0dXwmCJaBXxnbA5hTm/xIFjUvJN9BDuV/OeqC8P1ke8xshfxU5M44BtgHxxR
+         H7Sc8G6oIzjE0GqF20i0B2cOpizgW9cw4BmV3v8nVEHGkuqZscxIrqZ1xKWeSAWUlfBO
+         1dkFrHK79PQCLZsfWvWLlCrvlvoFCA5h5E0jOjPj9KOBpnmVXLoPZjYwujIgF22NKkGM
+         ER5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745983582; x=1746588382;
+        d=1e100.net; s=20230601; t=1745983618; x=1746588418;
         h=content-transfer-encoding:mime-version:message-id:references
          :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6linA/lr0nmXcIVWFPX+1HBEKm/CCuzmP15Be91J/8=;
-        b=FXzrCDM53cLLQUnkq6fC8gqnINUOELbJsiKSLI+r7ZNV7BCDqIa9qZdgzzXu/O5yP/
-         YIGZ/ySiHLaolYFdQAe0HOu7BjFXMyddU4QsfF6VIUmVuFKB7EaEafRdZqi9tBmYK42y
-         g84dv9KCcVEwgMXvurz3uf4rWPzDKiPJLc460rw4l+17CClS6nLILXl8K9DNQbBxN9vY
-         2mG0oWF69VWBUqzBixpJd0ckqFRZj54v5yMB9yG5Opx07091rHP98NQvYoY8wer4RyIa
-         9RdLRZCJzUlasuNY/m7dtoFEqt7KCwnBWqMfWxWA6EYJA/Zy7KrKCMaU7bAMj6SSoOjV
-         RfPA==
-X-Forwarded-Encrypted: i=1; AJvYcCU05+0DOtunwdKSHWD+dtO8tA8As5YEO0MJUU1JT1RIOX0UZnVhzrhjhT3dADADwn+1Zd9d8jW2bRq6JKDp@vger.kernel.org, AJvYcCW4fBinUPnDA9mt+ppUAArYkA/brYZJcKZ5qtNtNDyIqLZoPJW26WsTus2n+d1xjN/REs2EDtoNK1d+FWVhMCq/fJYnSA==@vger.kernel.org, AJvYcCX49FPrkl9gYuoWHH3faMcGiOd9tGq05vXQOCoPvxzBmwZrIdjQoFeHbM/8Ax54bpqlRrS28rKDUYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOG0R+cNNW5XkPASPw5YHz0+ifJxSn8j65sLEWWCtGjdP+jV77
-	c953TlAvg9933Zp4l8myEjga8eXWHjUBTOo2Za2McblSuMMXvago
-X-Gm-Gg: ASbGnctvL6J2xPfpO+i5ybVNKVRLK7pJML+caVh8Yv0iIipcX0SNjOkwcQAE75BRJg3
-	sgfa4MHGzMEPWGYZ60FqgQIwRfU4OaA7g/vs87Gu+w3NOff8xmvkKmA6HbAYWMKRHfUAl8UaisU
-	uR9uVcjGmeaq74B9wqGQBqkFRciQ0ss5H1MZtySaa4MTbG7bxCfPY7/Mnxtb6OTFEwn5cGg6kVN
-	3XrzHOxshRIiDdJcOE7zxJZMv2EuzcN1uj4Hgy3hdMntS4UDnR6KhQmQIf0sIhZ8LY6Gok7jQnC
-	vc04DFOMclLcTlJaUJU+H3VQv6+zvvQQXGJfrBUczQRuUnpV
-X-Google-Smtp-Source: AGHT+IFMB8Y9AZBpEj7LvA0t8hOPxK+Op1UcS6RmB+IO5+n0h5R1E/IhvAL9Sl/x1sAJxMqy5rpvfA==
-X-Received: by 2002:a17:902:ce81:b0:221:331:1d46 with SMTP id d9443c01a7336-22df34b3881mr25053755ad.2.1745983581782;
-        Tue, 29 Apr 2025 20:26:21 -0700 (PDT)
+        bh=CoxN3TaliehdYwer6YmRGsqtFDYD4eVxZVRdPbdq2i4=;
+        b=a51rRTV0Xy50PXsdUJM44jSp8PhfkWY/t3EvpfRUSy0UuLrOABXuBOF0bm5L8Qw6yZ
+         MUM4gcqpSL49fmeJJ2QH5G+rNIyRyiYwWzppllv5cUT+kOHeaKmxM3K2ZXc+3jMbLf7y
+         HU+TwTkAFWP5u4aE5655dmcJ9tHTV3OdeY7l0FbCKa81HpH8vkVPTVR1BW0XGLIunYwa
+         6nQLaskIgQLOJeLvFDLddMZP/8mgwnu00//QYpEEIqrDdloVb7qzKzyds55SBMOYlKv3
+         8hMfbqYMcQb8HIm5wyqK4wFa8qF/B3ygO81I131lbI7kgZtK/bolfxH+mjzIQn282wXF
+         3s+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWvBo3inv8Lke0Ie+eqDBsV862OdcWsSLXeXgosHY2xQgOSPFiI6Lyd0Pt4vJkhyXxjypJFFRkajmtN2IeoXdMva96Khg==@vger.kernel.org, AJvYcCX9iA6WVBt7uGseGUuNSh/6anGl9DTZCLq3bD6vngtQhs59rQ9XCgOvWuRfwv6Vc8YCsGt4CpG5K7o=@vger.kernel.org, AJvYcCXr+aMlQxLuUBe7ANNarBYvDH1F8kQ2obqW4NquYa8ieXui555tA0CvMPmRU8F9UxocIGcbpJ+fBaX+EkLF@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzvQRSvEYBPTNV244AGsch29+dpaKyG9PeyJrjdonpJR+c8+rM
+	UWTcoFA1qTs57cXPrKluNYUcBoU7l8oqRqhaxTka+yGlZk6Dk789
+X-Gm-Gg: ASbGncufIOG5GYGCJUU3WfDc0Jw41qNHfwVIHEuRwcjw9gAmevijofXYBZTcMwcLju7
+	6eUmhWGW6ZGb0G+WWcLiu4PWttQej1BBolNI5xo/Kxqe8i2n6WhjJjrf8hxLg8slkwGT8AAIecP
+	Xm78cY1+WzArBC8KK07fb60UBivUMnvcN7vBatN+1A4/1O3MeJoipBZkaoB6sZxfVD4j9D/cgs5
+	4H4AX0ZfAhblEYphxkU1nwaiacH0H/TqJfD8SVQQNEPUvsHgxnA06f76QGs/ZifA7N6NajNh/1I
+	ulQwdM6lVHEIzWqPANSaR0bD8iKNIFx1a5g79+5wy0yWEyM8
+X-Google-Smtp-Source: AGHT+IG/BfiknV+NeM8W5Lds+DILJsQE4YX7yEK8fIdyoqMxdmY5sYGywFhJYK5VBdlK5Q9B86J6Ew==
+X-Received: by 2002:a17:90b:5824:b0:2ff:618c:a1e0 with SMTP id 98e67ed59e1d1-30a333608d8mr2084748a91.29.1745983618391;
+        Tue, 29 Apr 2025 20:26:58 -0700 (PDT)
 Received: from ?IPv6:::1? ([2607:fb90:8ee3:c96c:ad2:9358:5231:4c28])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbd230sm110832815ad.77.2025.04.29.20.26.20
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3471ef7asm427704a91.9.2025.04.29.20.26.57
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 20:26:21 -0700 (PDT)
-Date: Tue, 29 Apr 2025 20:26:20 -0700
+        Tue, 29 Apr 2025 20:26:58 -0700 (PDT)
+Date: Tue, 29 Apr 2025 20:26:57 -0700
 From: "Derek J. Clark" <derekjohn.clark@gmail.com>
 To: ALOK TIWARI <alok.a.tiwari@oracle.com>, Hans de Goede <hdegoede@redhat.com>,
  =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
@@ -69,11 +69,11 @@ CC: Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
  "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
  platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 5/6] platform/x86: Add Lenovo WMI Gamezone Driver
+Subject: Re: [PATCH v6 6/6] platform/x86: Add Lenovo WMI Other Mode Driver
 User-Agent: Thunderbird for Android
-In-Reply-To: <a18175cc-3513-4621-9d8d-e9556ede1022@oracle.com>
-References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-6-derekjohn.clark@gmail.com> <a18175cc-3513-4621-9d8d-e9556ede1022@oracle.com>
-Message-ID: <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com>
+In-Reply-To: <625dd9b6-0015-4ced-8659-66755695ecd6@oracle.com>
+References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-7-derekjohn.clark@gmail.com> <625dd9b6-0015-4ced-8659-66755695ecd6@oracle.com>
+Message-ID: <E755BEB7-8A0E-42F7-BC61-B4188C28E7A4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,52 +86,154 @@ Content-Transfer-Encoding: quoted-printable
 
 
 
-On April 28, 2025 9:39:55 PM PDT, ALOK TIWARI <alok=2Ea=2Etiwari@oracle=2E=
+On April 29, 2025 1:13:10 PM PDT, ALOK TIWARI <alok=2Ea=2Etiwari@oracle=2E=
 com> wrote:
 >
 >
 >On 28-04-2025 06:48, Derek J=2E Clark wrote:
->> + * Determine if the extreme thermal mode is supported by the hardware=
-=2E
->> + * Anything version 5 or lower does not=2E For devices wuth a version =
-6 or
->
->typo wuth
->
->> + * greater do a DMI check, as some devices report a version that suppo=
-rts
->> + * extreme mode but have an incomplete entry in the BIOS=2E To ensure =
-this
->> + * cannot be set, quirk them to prevent assignment=2E
+>> Adds lenovo-wmi-other driver which provides the Lenovo "Other Mode" WMI
+>> interface that comes on some Lenovo "Gaming Series" hardware=2E Provide=
+s a
+>> firmware-attributes class which enables the use of tunable knobs for SP=
+L,
+>> SPPT, and FPPT=2E
+>>=20
+>> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
+>> ---
+>> +++ b/drivers/platform/x86/lenovo-wmi-other=2Ec
+>> @@ -0,0 +1,655 @@
+>> +// SPDX-License-Identifier: GPL-2=2E0-or-later
+>> +/*
+>> + * Lenovo Other Mode WMI interface driver=2E
 >> + *
->> + * Return: int=2E
+>> + * This driver uses the fw_attributes class to expose the various WMI =
+functions
+>> + * provided by the "Other Mode" WMI interface=2E This enables CPU and =
+GPU power
+>> + * limit as well as various other attributes for devices that fall und=
+er the
+>> + * "Gaming Series" of Lenovo laptop devices=2E Each attribute exposed =
+by the
+>> + * "Other Mode"" interface has a corresponding Capability Data struct =
+that
 >
->The function returns int=2E
->But logically it's returning boolean false, true
-
-I may have overdone it by removing all bools after the v5 review as I inte=
-rpreted Ilpo's comment to mean I shouldn't return any bool c types=2E I'll =
-wait for them to weigh in before changing this back=2E
-
+>typo "Other Mode"" -> "Other Mode"
+>
+>> + * allows the driver to probe details about the attribute such as if i=
+t is
+>> + * supported by the hardware, the default_value, max_value, min_value,=
+ and step
+>> + * increment=2E
+>> + *
+>> + * These attributes typically don't fit anywhere else in the sysfs and=
+ are set
+>> + * in Windows using one of Lenovo's multiple user applications=2E
+>> + *
+>> + * Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
 >> + */
->> +static int lwmi_gz_extreme_supported(int profile_support_ver)
->> +{
->> +	const struct dmi_system_id *dmi_id;
->> +	struct quirk_entry *quirks;
 >> +
->> +	if (profile_support_ver < 6)
->> +		return false;
+>[clip]
 >> +
->> +	dmi_id =3D dmi_first_match(fwbug_list);
->> +	if (!dmi_id)
->> +		return true;
->> +
->> +	quirks =3D dmi_id->driver_data;
->> +	return quirks->extreme_supported;
->> +}
+>> +/**
+>> + * lwmi_om_register_notifier() - Add a notifier to the blocking notifi=
+er chain
+>> + * @nb: The notifier_block struct to register
+>> + *
+>> + * Call blocking_notifier_chain_register to register the notifier bloc=
+k to the
+>> + * lenovo-wmi-other driver notifer chain=2E
 >
->Thank,
+>typo notifer -> notifier
+>
+>> + *
+>> + * Return: 0 on success, %-EEXIST on error=2E
+>> + */
+>> +int lwmi_om_register_notifier(struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_register(&om_chain_head, nb);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(lwmi_om_register_notifier, "LENOVO_WMI_OTHER");
+>> +
+>> +/**
+>> + * lwmi_om_unregister_notifier() - Remove a notifier from the blocking=
+ notifier
+>> + * chain=2E
+>> + * @nb: The notifier_block struct to register
+>> + *
+>> + * Call blocking_notifier_chain_unregister to unregister the notifier =
+block from the
+>> + * lenovo-wmi-other driver notifer chain=2E
+>> + *
+>> + * Return: 0 on success, %-ENOENT on error=2E
+>> + */
+>> +int lwmi_om_unregister_notifier(struct notifier_block *nb)
+>> +{
+>> +	return blocking_notifier_chain_unregister(&om_chain_head, nb);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(lwmi_om_unregister_notifier, "LENOVO_WMI_OTHER");
+>> +
+>> +/**
+>> + * devm_lwmi_om_unregister_notifier() - Remove a notifier from the blo=
+cking
+>> + * notifier chain=2E
+>> + * @data: Void pointer to the notifier_block struct to register=2E
+>> + *
+>> + * Call lwmi_om_unregister_notifier to unregister the notifier block f=
+rom the
+>> + * lenovo-wmi-other driver notifer chain=2E
+>
+>typo notifer -> notifier
+>
+>> + *
+>> + * Return: 0 on success, %-ENOENT on error=2E
+>> + */
+>> +static void devm_lwmi_om_unregister_notifier(void *data)
+>> +{
+>> +	struct notifier_block *nb =3D data;
+>> +
+>> +	lwmi_om_unregister_notifier(nb);
+>> +}
+>> +
+>> +/**
+>> + * devm_lwmi_om_register_notifier() - Add a notifier to the blocking n=
+otifier
+>> + * chain=2E
+>> + * @dev: The parent device of the notifier_block struct=2E
+>> + * @nb: The notifier_block struct to register
+>> + *
+>> + * Call lwmi_om_register_notifier to register the notifier block to th=
+e
+>> + * lenovo-wmi-other driver notifer chain=2E Then add devm_lwmi_om_unre=
+gister_notifier
+>
+>typo notifer -> notifier
+>
+>> + * as a device managed ation to automatically unregister the notifier =
+block
+>
+>typo ation
+>
+>> + * upon parent device removal=2E
+>> + *
+>> + * Return: 0 on success, or on error=2E
+>> + */
+>> +int devm_lwmi_om_register_notifier(struct device *dev,
+>> +				   struct notifier_block *nb)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret =3D lwmi_om_register_notifier(nb);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>
+>
+>Thanks,
 >Alok
+>
+>
+>
+>
 
-Thanks,
+Ack all, thanks=2E
 - Derek
