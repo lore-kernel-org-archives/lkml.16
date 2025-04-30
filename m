@@ -1,251 +1,422 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2076.outbound.protection.outlook.com [40.107.92.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF5913E02D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024512; cv=none; b=VPOFq4R5UCOXzrwY8EQA9x0ONCjCs4z5RDjxI+vv3mM1qNctQMTc6to/SFWWX6+AKcV5KTAB6BQUGFwY1CayBO+NuISe6/a6WjypBEQxFuzaic3VjhhZvurioF9gCnprBiPeFAsh1X0ExvLvZ+e18gV8eP9fXp2W26DUaffxViU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024512; c=relaxed/simple;
-	bh=0YMTewUxt0SnaozREI5ztxaCqTcluXt169MXZrYO5cc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BP7aXVTM+Oa8Jmbq6dQQPIwHH2PPjQ0TJ9JGkjeKihiy1AXXMBMSLFgA33qIkSCjZHINGr+gHUTJbmt1iT46xM8f1wXQHcTJy1hqDfTm03MP1GSqs8xguimM5OE/7/grvEGnHTwBL0JAVXDcKLE6s2Sj5WdG31k/Q5GexM9xAg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=clever-cloud.com; spf=pass smtp.mailfrom=clever-cloud.com; dkim=pass (2048-bit key) header.d=clever-cloud.com header.i=@clever-cloud.com header.b=V4n7HS07; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=clever-cloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=clever-cloud.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 528D6225D6;
+	Wed, 30 Apr 2025 14:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.76
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746024510; cv=fail; b=f8LQAWAZ2k9S8fKwwjtLHdWwjMIwp6gU4aN8Uuekb03VQ/2H1vNICJpvotDk49tM2+P5gmBpI3oNj3hi762bXqhBo4uRH3MYfMiuMj9CAJHsGi9qr/G3L1Ns3/Dry8omVbIcvxhmiX8PzIIxIPff8CSqmOEtECXBqCI+f5IGyuQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746024510; c=relaxed/simple;
+	bh=8oadzLf0h60MCLHBTxYBFhH/ZtHlQy8D8tp4330NB8o=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DYna+xsX+/UcdJU1Dp/sdp4229+Vq3UKe5bPUhinLldaHvO1jrEcUhMO3cmmMAOKLWw1cRWccTC2XQmLOtTjJoH4eCgioxWWq/1IhWNNB7OmudZtiTeEr7gQC4Tj3mwkksJNNbl3z/42II/qzspoRybJkkWcwEZg7g+rFdEWuOA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=DPAsUiIw; arc=fail smtp.client-ip=40.107.92.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=clever-cloud.com header.i=@clever-cloud.com header.b="V4n7HS07"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so67665785e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:48:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=clever-cloud.com; s=google; t=1746024508; x=1746629308; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
-        b=V4n7HS07aFCNP3uFLurPuivJxv69SZkN64bkMtWuHm7YUzce4gRZI/Of8hC0H8CS6R
-         ZETdGcAAvzLDCQhz9Wq84d2nDrhhQB5ZDOZT7quCMeksV6zv1nPI6vOZH7Ku++RfUNWe
-         Q+vOOIMTQAwef6MFOfE02eKghMujGDFO/AldEr25/EzX0TnVGyBWMAHtdY+De+aZkk4o
-         7amCklZLvecjktJa9kR4IofmgKef2JhPrqUmy7p5ML8Vs4hQgmM1N6s94kgE1X+VB3eR
-         DticwP88T/VdfsNE8AdyWOPXT7+aXZLqXouSWS0br5I7/xg6pzRouNUsImOe619/D+zP
-         /kWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746024508; x=1746629308;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QBafi4wy61at6m9m8dlEpfvo5N42mzCjz/Tvd2WuLBw=;
-        b=Y6neDLOi5FQ48QD/XvuHUP4YSuL9KokacFKdtPm1HvhsbCdhhw8UDr18fGyd5v4UjH
-         2dvIw0MReHvb2DQNoE3EaqP5iVI+DjVMTo/d6WWxfaytG/VBHsmmOmtNNxakzVj5jbdh
-         oBXN/w1lK3oIlNIZ1AJkcbuNirnYOW1B3hZ1CCw2c7JsoKgK0YqOeJlPRoDkaM+yJVrO
-         BEt1PWXpKIK5LOJpAVe1EAHKnB68WtXGj9ymRO1vc4d7id8TfFWo0NXvscNY8DbFkICG
-         TuyA7bycUyk/DvAzgXx0npO6HjtjCZcnIVTJ73NqPkq5NSZKnFisXfH06ld6NXugoGMI
-         k2rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXP54lBiIcIGzAwo0eH7m1lqUW+4JPOBm8qbgPEOmku/HbVl+ahwlN5tb23kr8EbFwo7TzFItZzH8VFQxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxGzuhIyvGtNELz/SvH2DQ8iPJHF4Q36Ah5QJllDbV4GAWl1BBw
-	4D9Mce8S/IFbLDa+X3RhcSMJSMcvcbE4YSHdLgsy+qzD4l6LcyWKFlDxZRTPT18=
-X-Gm-Gg: ASbGncuya1OnJjrbeiPJdehKvPl7DJgV5jpQelGq4i1kV1vkEngfugVHK0kW31y7sSl
-	k+IrnJw5frmXa0V9ouZ3tPM1jyw4j5KiogSAMlXML/1uUtpV2HM/Mp23/zeVzPQ949Q8RCwrWUu
-	uZiVA/u6xV089pm4XwR7ztEk45/Qkv1yyZpuYTQCqTHcepnNP0Go5aTZImwnOkt8cMe9sARNuwG
-	cvgi9pi8b1EG0G9IJKvgwTWUP41PmkzbK6/QMcsIdZGTmb+ug9gaz2DDT4Tq2qfWkZkW3d3MUv8
-	GITS/0H0OjpQB+D/ZpNhEopEnJz5pjv6ZbIc3WDlnJtEbIKCaZXbWe4r2VfOw6ONAL+tISMurun
-	xjZM3YrlrCYm8xU9GcNYiTR6+qaw9CKYow+g2GtP3AHmx
-X-Google-Smtp-Source: AGHT+IFM1f/VQjEUzanLgfNlKL8+eZe9frOBhk8fG9VNEkHSwxq81/XTCkO1SajflF9iftLCBa6EiA==
-X-Received: by 2002:a05:600c:4e4d:b0:43b:c284:5bc2 with SMTP id 5b1f17b1804b1-441b1dfb252mr36438585e9.0.1746024508186;
-        Wed, 30 Apr 2025 07:48:28 -0700 (PDT)
-Received: from exherswag (2a01cb059441a4004633a140b8a72842.ipv6.abo.wanadoo.fr. [2a01:cb05:9441:a400:4633:a140:b8a7:2842])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ba4a5fsm27740485e9.12.2025.04.30.07.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 07:48:27 -0700 (PDT)
-Date: Wed, 30 Apr 2025 16:48:25 +0200
-From: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
-	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
-	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
-	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
-	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v8 6/7] x86/crash: pass dm crypt keys to kdump kernel
-Message-ID: <c2mqpzhtyrd5qzove5pa44ob2iiwdcrtnj655sozy2a4pprln7@mql5bjuwjbxs>
-References: <20250207080818.129165-1-coxu@redhat.com>
- <20250207080818.129165-7-coxu@redhat.com>
- <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
- <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="DPAsUiIw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SEpOCeJdPcj/iLjf4vefLd3lbpXqY2M0pA6BYDONbjmwhWZ3MoAWlIfpK2ZGladSYw/gneMAOnfh6s5vXYzkTveqhP/TOrKXcthMkWeLS8En+S8ig5P3n5n5N35PhUajifULvLe5+7xEJZazkGk/ka+7pmsxBQ1ZasLkA0iA+SiSbjx4wfECG+44dZzLGl/Xv9dypeKsEI2Slrv2RL/S5YnVeoUmt5Kd9oevhalq1wTc+CD5mjMaCihSzzzKzR4LLNhgwkRKuPDhCGGEkNHlVetnIfc794w/Tu1W9MCRkWhQuoj3XegVDPnjbH5Zb1D1xgclwCdnUHwvoUWAUH+APw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0y9yKD+mk626hD4vYHZo1DXaucWJYuZLYnn57YesJPY=;
+ b=fDDMmk2xDQFr1rDTIzy3ZpB5aCbbuKu87eftw1oR91ed0n6LqKjqijlF+ZAtytnuxTH2+E74hZC+fmtos0z+361fQzuJ5k/EhX0vkMzPQfUAEAlopSqhN53vOoeVLt1RhTUuBfZ/KPdMj7q8N30TUIYxXAXdnsskRBPVIc9axHb3vXlND8gYdRAvTG5/B6w2AdpoJJBRX6MZmgd4z0n10AlmRKWZpR4NOKncyniBmWls/N/yIWHGlFQRV9BWeEr24J2OubKBAJ/SiI1GY7cfSi1g1yg4AvIkEgeKjiATot6bKgY2zgvJRxUC7hQvi0/30mBX62b9zx+94MAEgXXVWw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0y9yKD+mk626hD4vYHZo1DXaucWJYuZLYnn57YesJPY=;
+ b=DPAsUiIwfPxT7TRy6eaevPdwGr3et20amttN1CLSv6+LGsD/lJcWww3hmzfusE8V/etqjr5oDiDon9ZacOHzB5YLDL4GnCXLzUOvz/+nsTpHtU+BAw/f8HLto/RVRhosrNHxfYpkZbZkQ1uBBqX1M8hYKppL5QoLmz5KsgileOw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com (2603:10b6:510:13c::22)
+ by CH3PR12MB9021.namprd12.prod.outlook.com (2603:10b6:610:173::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
+ 2025 14:48:23 +0000
+Received: from PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5]) by PH7PR12MB5685.namprd12.prod.outlook.com
+ ([fe80::46fb:96f2:7667:7ca5%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 14:48:23 +0000
+Message-ID: <ef261695-79fa-4c0e-9894-6fe19de823bb@amd.com>
+Date: Wed, 30 Apr 2025 16:48:16 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] drm/prime: Support importing DMA-BUF without sg_table
+To: oushixiong <oushixiong1025@163.com>,
+ Sumit Semwal <sumit.semwal@linaro.org>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+ Shixiong Ou <oushixiong@kylinos.cn>
+References: <20250430085658.540746-1-oushixiong1025@163.com>
+ <20250430085658.540746-2-oushixiong1025@163.com>
+ <daaf1445-f0b8-490a-b87b-dab219f13571@amd.com>
+ <c93177d7-be53-4f37-96d4-d09323737581@163.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+In-Reply-To: <c93177d7-be53-4f37-96d4-d09323737581@163.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: FR4P281CA0119.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:bb::14) To PH7PR12MB5685.namprd12.prod.outlook.com
+ (2603:10b6:510:13c::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-In-Reply-To: <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5685:EE_|CH3PR12MB9021:EE_
+X-MS-Office365-Filtering-Correlation-Id: 32a956af-f23c-4cb6-d664-08dd87f60e71
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UHUwVFhrdWRBczhOK0xzS2hQNFJiWEkyNnJ4RFF5UnBWejFUSVRMZWVLbFcy?=
+ =?utf-8?B?NFdpTVpwMWFFNXlZbm5zbXhYVzVoNE4wK1RUcXVXeXBlSVVWMlR4dFNTdm44?=
+ =?utf-8?B?NCtMVnEvclNXNTY2dnlaQnpzSWVvd0VPWFgxSzRJcnNHR2xEZUdUZ1hTVk9O?=
+ =?utf-8?B?a2pKWWNDVTJlcVRXL3pWaHlFUDdMNkxjc3d0K1JTcllPKzY0YkRTOW5rQzBT?=
+ =?utf-8?B?TkJSRzFBaHhFWnE4d2JOVFltRHYwaGpBUnVPUXQ0aGl5QjdKVUwvaVVaaHJn?=
+ =?utf-8?B?eFZKVjR1V0sxbHRTWjBOd2I2OGN0VjdSdkxMWFJ0d3VYZVVJb01LUzVDZlh6?=
+ =?utf-8?B?YjVaeTU2ZlFlSHlha0FZeEh3dnEvSDVKeWdEbWhSS0FMRk1aajhsY2kzWTdt?=
+ =?utf-8?B?YlQrT0tSN2JKSzZOSDlYZlczNXJNWStEQ25uMW5kbTh4WWMzTDN0OG5oNVZa?=
+ =?utf-8?B?U2RpZVJHSEswa2VGSGJVbU9TRTR6VXlxRUhxNWQ0Sy95UUxVTzZ4TytGSThh?=
+ =?utf-8?B?QmJhS2YyUEJwYUNwMUxmTm5MczlDMEdOajVJQytoTFVTT2Y4OTR6U01GNDRw?=
+ =?utf-8?B?VDc0a29oZnZHSDIrcVpIN0dGckYwdzlhTlh5UzlnTkhqZ3pOWVVZS0xWaEJv?=
+ =?utf-8?B?Nkgxa1hlWGVVU1AyN2lHZ0Y1bkVkNG9PV2hXR1lnUmVwbWRzQkNlaWMyNE44?=
+ =?utf-8?B?YlpUYStFL05laG9OVzQrVzRvL2diSkRPVXRqNHdhL2lheXpoTkYvTXlKZnNL?=
+ =?utf-8?B?dXJZMURrMnpocmFjS0JNODB5dGVFVDByc05oYndQT1VaQlVIcE1mZTdRcjZn?=
+ =?utf-8?B?Y3dlcHhGc0ZhcDZLT3hWUnFSSVJVN1dXMThhZlUxeUxtazJRVTR3VmNobEVM?=
+ =?utf-8?B?dWdzTnAzSVA4MXJjMzhXK2YzR0FJa05OT3luT3dFeThPalFjT2pNKzFjM2pJ?=
+ =?utf-8?B?U0E4M1FsYkFGSXV1U1RlSG1uTmxNUzI1bXRmOG5saXJwUGtBUjMvdCttaGI5?=
+ =?utf-8?B?UXRhUTY0bnR6bmJqalRyalBhVVZWVGtCZWdLdDA4dnVwM0lTY0NjVjNiMDE0?=
+ =?utf-8?B?Y0hFVTM5bTdHNFhSTFZzRldpUTg5Rm96WUIyQ2dvbkR2dUVWM0FVbXFubjA4?=
+ =?utf-8?B?NkhWdk5hQTYxL1VSZGR6bE1XTUtDcE00dHZPdHdRZUg2MzFmYzd0UGdCVlNU?=
+ =?utf-8?B?NGN0dHU3Z3F3ZnU5S2oxOWZHSDVtdGgxaW5FUTJxTU02aXh5TDkzOGtiS3kr?=
+ =?utf-8?B?MlhNYkRhUnBmRTltQVFDNHJFaXc5OGtIaHZ3S2JKUHdvSjZSMk43eVJuZ2Rt?=
+ =?utf-8?B?QjJiS3ptbWlRMlFzZEhwcVR1NTlVK3FJZ290Y2phaWVKOGt0ZjJ3YkNkZkQ4?=
+ =?utf-8?B?c3N0UW9Rd25sVUQ2bGVJVnJjdE1wN3piZEtsMTRZdFl3ejZmbjExRmZwMzVC?=
+ =?utf-8?B?NFNNa056REtCRXk4RHJHdS94Rmd1d0ZxcXVIVXE1ZFdzTjRWcnhXOVlFRUt2?=
+ =?utf-8?B?ZGpaYS9lZGRtSDJDbWZ6SjdGb2YzQ1gyd3F1NWZWNkFoZDdRWm1GYjd2WEIv?=
+ =?utf-8?B?UEN3NjFvcnN1OUZ1NTM5VkkvQW5vWjNuMm1ybkp6ZHMxUTA2ZDZleFo1bzVM?=
+ =?utf-8?B?QkRXWE9ZNUlkUzlKekU1ZHJmeG4veFhZNjdrbHdIeEt0VTNVWWk1UW0xa1gw?=
+ =?utf-8?B?WjJFTEgvT2lhUnRxakI1Q1hNUTJwM3JKdWlad1Qxc3A5OUN5WHpaS2M1a09w?=
+ =?utf-8?B?dzFoOWt4Q05renRuUnJKaDhaUjIxd1VjYUxCblhudFFEMVdGMXMwSDdqZTFr?=
+ =?utf-8?B?dmZ0SkJ3K0d4QU9KNU5Ma1hLYUtPa0IrSTR3UTM5WHprdkdqSS9XSStzdFFR?=
+ =?utf-8?B?dDcvbEJrRWNjY3VUSzlZdWpVK2tIQmo5Y29Wb05MRGpKbytBUTQyTFZkR2Fs?=
+ =?utf-8?Q?MT8tC7Ei34o=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5685.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SUVublhMU2JMMDRnK1htWDc0V3NjbjNwUVZLZ1drZ3k3SzNieFRZVEdrcFIx?=
+ =?utf-8?B?UUsyTXc5WWp2N2gyRHNmazhWbGV6RXlZeWFxV2R1SUJmd2VZcEFobzRLV1BI?=
+ =?utf-8?B?R0JUR3I1bXFXa0pXeWNYNXFmVUkzR0xXMGdJNXJ0aElEZ3ppWVF6N1FLbExz?=
+ =?utf-8?B?MGdmclh5VWxpZUk3bG1BeUNnYXIrRnlLUTNLMENsY1VDeXdIckFXOWFLR0g1?=
+ =?utf-8?B?SDg3OHlBczlweG9VWG1yRDgwQXpLN2ZkR0IxK0wzTzJZa1Q5aFFrdFFPYVEw?=
+ =?utf-8?B?NzJEY1MrVkp2WEdTRDB2czRGZnVZdlNMZ29ZRGk5NW9CQXV6cVNsS1hCZWJj?=
+ =?utf-8?B?UWhOUDdsVUxreFByMFZlYVR0cjNNZHF2cmlXYkFRQm02amF1OEd3RFhMWkdF?=
+ =?utf-8?B?VWRhbDIydXpEOEt1TE1oaUF5YXg3cnExQk83eHQ3ZVliME5ZVFZ5VjdnZmht?=
+ =?utf-8?B?aGNPdVlNM1NudnN0RjBJdTZzNGdNSExNSEtaVjQ1eEFRcmhibG1pRXBrRW16?=
+ =?utf-8?B?eWxCVFVacGJSL1JKSjRQdm54aHlyK0lsV2ZmRENkNlkvNExaU1ZzUGFJUVBK?=
+ =?utf-8?B?MnJsMm1NbHFXQUF3MkhlWWtlbzU4cEM0R2RUSVFyZzF6N29tWDZZMDVud1Uv?=
+ =?utf-8?B?S041OVlzTFZla2ZCRGViaXVvU2dnY0YwYzY0NEMyTE1ETVRVbGNUbkhzUEd5?=
+ =?utf-8?B?Q21TWGplNkxHL2hvNERhU1BnZFIxbVdTdzU2SmZ1bVg0YWdQaVlUUFVJRjlH?=
+ =?utf-8?B?VjNvS1BFNnpqcGxxVE9HWURHZzNpa2YyOU5GUVVPUmpweUhqcDFRSitWZFk4?=
+ =?utf-8?B?UktOSjBtUk5GMEN3eW9vTGpXRTR5ZzVnU3lqNGpQVXdXV3BFcVdoRG5HbVFY?=
+ =?utf-8?B?WC9QUnppYkZWQWl1NmhWOGh3aFFFOW03V3VmVHY4cWZlNkVNcHBZU3haaU1B?=
+ =?utf-8?B?cUphMVBsTVRWQXc1RWhGS3BsTFArVEtwU0VFRjBjeEJJZG93WU0vOVpLVHJ4?=
+ =?utf-8?B?TUEyQWdWdXZPMkZ6NUw1VUxYcEVnbGU3WEN2OGZ6ZzBqY0o4c3FXd1U1MXU5?=
+ =?utf-8?B?NGk1dUREZ0R3dmovcVBOc0Z2cDl0SUFJQXVWZXVDMGl0SUhoZ0FyeTFsMFA4?=
+ =?utf-8?B?c0ZCTXhxelFKaHh6L1BiVENFUWltbHJicTNGOHpLM2FKR2N3V0YyR0VrbGtV?=
+ =?utf-8?B?eVdVQnNJTklQd2FVcHZleFFjK0xyakpJUjhQbWFMaERCZFRQOVpsaTdYTUgr?=
+ =?utf-8?B?S3RBUzRnYmx4NjVReUJNT014WlR2UElhSFpwUTdsMjU5d1A1bEZrbDM2dHBm?=
+ =?utf-8?B?b2NyMVRzR0I4dUtPT0FtZWdHNHlyVllWRldXRDc5dkJJTkFKSUdCN2hjT05Q?=
+ =?utf-8?B?aWFpenQ2UnlkWXdvcjNwaWZHUmFsMUFkS29MU2VmYlVtajZWcjdhc1lMTnFh?=
+ =?utf-8?B?U1A3OWhSNXB6SXdySnkzemdhYU9xTFdNR1VlM2NaOGhzRkxwME9mNWRJWng5?=
+ =?utf-8?B?c1NhaWZjbEJiOHl2TkdwTHpIU09Xb1d6b250dUtjc0IxVnBOeUFvRWE3TWdy?=
+ =?utf-8?B?U21Ra1ZJQVZFYlh3djRVNEpKeUd5VlZQZUJiYTcxTjZEcGwrQWFZQUtCWkJE?=
+ =?utf-8?B?aDdUanBLNEh1c0loY3RLbG5ZQ3pwNG9CaDJNUmVFdjdwVFpVZk5HRWhvbFpi?=
+ =?utf-8?B?Wkw3cC9lMmswaFF6UTU1MURhOHBJTFVxSGFYVm5iVWtSRW91d2NxRjRiL3RK?=
+ =?utf-8?B?cG51VEFGbGZZTUU5ZUNGRHBQQWZqb1JnbUx1WjVNZ1N5emE2c0R6TTVNcXhx?=
+ =?utf-8?B?VEE1YXBVa2xFWk5OTVRTTVJiV3ZpS1M3R3JXckJaYXd0QlNHTXFiVnZGMUdX?=
+ =?utf-8?B?WFRyUFZVNUFvazZMcmZRbXhsa05DZVRrWW9KQkVZalhkKzFzUHBmOXgrZ3lS?=
+ =?utf-8?B?QWdKTGljZmlkeSs0ZGFEakJ4RDhuZDhTL3dEa0xSTHdBRGYwaC9SdjRZakVx?=
+ =?utf-8?B?aStlNS9LejQveFVaVmxCREhwaklubmNMSVVpL3ByV2hNNGJPUy82WnFkZFFG?=
+ =?utf-8?B?Vlo0UkRoMi9VVSt2WlRvaDR0akZiVzBHWTNZNEkzVWFwU09La3czVDAzK2hK?=
+ =?utf-8?Q?fVyCDBSsSWVWbE0n40WVw135t?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32a956af-f23c-4cb6-d664-08dd87f60e71
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5685.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 14:48:23.3476
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: I6xi/qkQJTTAvk9ucabhgqAcsz6P6d5rNLTAvRmmc7vlz1qqCtHS9KUC2UMFDFhf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9021
 
-On Tue, Apr 29, 2025 at 05:40:21PM +0800, Coiby Xu wrote:
->On Wed, Apr 23, 2025 at 10:59:06PM +0200, Arnaud Lefebvre wrote:
->>>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->>>index 68530fad05f7..5604a5109858 100644
->>>--- a/arch/x86/kernel/kexec-bzimage64.c
->>>+++ b/arch/x86/kernel/kexec-bzimage64.c
->>>@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
->>>	if (image->type == KEXEC_TYPE_CRASH) {
->>>		len = sprintf(cmdline_ptr,
->>>			"elfcorehdr=0x%lx ", image->elf_load_addr);
->>>+
->>>+		if (image->dm_crypt_keys_addr != 0)
->>>+			len += sprintf(cmdline_ptr + len,
->>>+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
->
->sprintf will return the length of dmcryptkey=xxx which will be added to
->len.
->
->>>	}
->>>	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
->>>	cmdline_len += len;
->
->Then cmdline_len will included the new len.
-
-Yes, the cmdline_len is correct. No issue there.
-
->
+On 4/30/25 16:13, oushixiong wrote:
+> 
+> 在 2025/4/30 19:03, Christian König 写道:
+>> On 4/30/25 10:56,oushixiong1025@163.com wrote:
+>>> From: Shixiong Ou<oushixiong@kylinos.cn>
+>>>
+>>> [WHY]
+>>> On some boards, the dma_mask of Aspeed devices is 0xffff_ffff, this
+>>> quite possibly causes the SWIOTLB to be triggered when importing dmabuf.
+>>> However IO_TLB_SEGSIZE limits the maximum amount of available memory
+>>> for DMA Streaming Mapping, as dmesg following:
+>>>
+>>> [   24.885303][ T1947] ast 0000:07:00.0: swiotlb buffer is full (sz: 3145728 bytes), total 32768 (slots), used 0 (slots)
+>>>
+>>> [HOW] Provide an interface so that attachment is not mapped when
+>>> importing dma-buf.
+>> This is unecessary. The extra abstraction in DRM is only useful when you want to implement the obj->funcs->get_sg_table() callback.
 >>
->>You are adding another kernel parameter but I believe without taking its
->>length into account. See the MAX_ELFCOREHDR_STR_LEN constant which is added to the
->>params_cmdline_sz variable for the elfcorehdr= parameter.
->
->Thanks for raising the concern! I believe this issue has already been
->took care of. Please check the above two inline comments:)
->
-
-I'm sorry but I don't think it is. If you look at my comments below:
-
->
+>> When a driver doesn't want to expose an sg_table for a buffer or want some other special handling it can simply do so by implementing the DMA-buf interface directly.
 >>
->>This will (at least during my tests) truncate the cmdline given to the crash kernel because
->>the next section (efi_map_offset) will have an offset starting inside the cmdline section
->>and it might overwrite the end of it:
+>> See drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c for an example on how to do this.
 >>
->>kexec-bzimage64.c:480:
->>params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
->>			MAX_ELFCOREHDR_STR_LEN; <<< Should have + 31 here for "dmcryptkeys=0x<ptr> "
->>params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
->>kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
->>			sizeof(struct setup_data) +
->>			sizeof(struct efi_setup_data) +
->>			sizeof(struct setup_data) +
->>			RNG_SEED_LENGTH;
->>
->>And I believe the buffer might be too small.
->>
->>Also, there is another check a few lines above that needs to take the size into account:
->>
->>/*
->>* In case of crash dump, we will append elfcorehdr=<addr> to
->>* command line. Make sure it does not overflow
->>*/
->>if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
->>	pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
->>	return ERR_PTR(-EINVAL);
->>}
->>
->
+>> Regards,
+>> Christian.
+> 
+> 
+> Thanks for the reminder,
+> 
+> most drivers that use DRM_GEM_SHADOW_PLANE_HELPER_FUNCSand DRM_GEM_SHMEM_DRIVER_OPS
+> 
+> don't need to import the sg_table, such as the udl and the ast and so on at the moment.
+> 
+> They just need to call dma_buf_vmap() to get the kernel virtual address of the shared buffer.
+> 
+> So I wondered if there was a simple generic PRIME implementation for these drivers.
+> 
+> If you don't recommend this, Maybe try to implement it in DRM_GEM_SHMEM_DRIVER_OPS ?
 
-To try to explain a bit more, we pass a lot of arguments to the crash kernel so
-the initrd (dracut) can mount the encrypted disk. When I run kexec using
-the following:
+Well if you only want to implement vmap/vunmap the necessary code in the driver would look something like this:
 
-/usr/host/bin/kexec --debug --load-panic /linux-hv '--append=maxcpus=1
-reset_devices rd.info rd.cc.kdump root=UUID=d039277c-2ee
-3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10 rd.shell=1
-rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447' --initrd
-/crash-initrd
+const struct dma_buf_ops amdgpu_dmabuf_ops = {
+        .map_dma_buf = dummy_map_function,
+        .release = drm_gem_dmabuf_release,
+        .mmap = drm_gem_dmabuf_mmap,
+        .vmap = drm_gem_dmabuf_vmap,
+        .vunmap = drm_gem_dmabuf_vunmap,
+};
 
-kexec debug print those logs:
+struct dma_buf *drv_gem_prime_export(struct drm_gem_object *gobj,
+                                        int flags)
+{
+        struct dma_buf *buf;
 
-<snip>
-[   53.642483] kexec-bzImage64: Loaded purgatory at 0xb6ffb000
-[   53.642828] kexec-bzImage64: Loaded boot_param, command line and misc at
-0xb6ff9000 bufsz=0x12f0 memsz=0x2000
-[   53.643366] kexec-bzImage64: Loaded 64bit kernel at 0xb1000000
-bufsz=0x16a5000 memsz=0x550d000
-[   53.643918] kexec-bzImage64: Loaded initrd at 0xaeb90000 bufsz=0x246f2a1
-memsz=0x246f2a1
-[   53.644363] kexec-bzImage64: Final command line is: elfcorehdr=0x77000000
-dmcryptkeys=0xa81fc000 maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135  console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
-<snip>
+        buf = drm_gem_prime_export(gobj, flags);
+        if (!IS_ERR(buf))
+                buf->ops = &amdgpu_dmabuf_ops;
 
-Here, we see the full command line, as expected. But when I trigger a panic
-using `echo c > /proc/sysrq-trigger`, the first two lines of the crash kernel
-loading are:
+        return buf;
+}
 
-[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
-(GNU Binutils) 2.44) #4 SMP Wed Apr 30 16:11:39 CEST 2025
-[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0x9ec14000
-maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c26090
+The only thing which could be improved is the dummy_map_function. As far as I can see we could make the map function optional in DMA-buf now.
 
-You can see some of it is truncated at the end. It's missing `7a2447`. This is
-because I guess it gets overridden.
+Apart from that you could make a DRM helper from that few lines, but to be honest I don't think it's worth it. It reduces the loc a bit, but there is no real complexity here which drivers could share.
 
-My comment above explains where and why it might happen. If I add the size of
-the dmcryptkeys string length to the params_cmdline_sz variable, we should
-allocate enough space to have it all. With the patch below, it works fine and I
-get the full cmdline when my crash kernel boots:
-
-[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
-(GNU Binutils) 2.44) #3 SMP Thu Apr 24 16:42:18 CEST 2025
-[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0xa81fc000
-maxcpus=1 reset_devices rd.info rd.cc.kdump
-root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
-rd.shell=1 rd.cc.kdump.encrypted
-rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
-rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
+Regards,
+Christian.
 
 
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 5604a5109858..06fc1f412af4 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -27,6 +27,7 @@
-  #include <asm/kexec-bzimage64.h>
-  
-  #define MAX_ELFCOREHDR_STR_LEN	30	/* elfcorehdr=0x<64bit-value> */
-+#define MAX_DMCRYPTKEYS_STR_LEN 31
-  
-  /*
-   * Defines lowest physical address for various segments. Not sure where
-@@ -434,7 +435,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
-  	 * In case of crash dump, we will append elfcorehdr=<addr> to
-  	 * command line. Make sure it does not overflow
-  	 */
--	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
-+	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN > header->cmdline_size) {
-  		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
-  		return ERR_PTR(-EINVAL);
-  	}
-@@ -478,7 +479,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
-  	 */
-  	efi_map_sz = efi_get_runtime_map_size();
-  	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
--				MAX_ELFCOREHDR_STR_LEN;
-+				MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN;
-  	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
-  	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
-  				sizeof(struct setup_data) +
+> 
+> Regards,
+> 
+> Shixiong Ou.
+> 
+>>> Signed-off-by: Shixiong Ou<oushixiong@kylinos.cn>
+>>> ---
+>>>   drivers/gpu/drm/ast/ast_drv.c          |  2 +-
+>>>   drivers/gpu/drm/drm_gem_shmem_helper.c | 17 +++++++
+>>>   drivers/gpu/drm/drm_prime.c            | 67 ++++++++++++++++++++++++--
+>>>   drivers/gpu/drm/udl/udl_drv.c          |  2 +-
+>>>   include/drm/drm_drv.h                  |  3 ++
+>>>   include/drm/drm_gem_shmem_helper.h     |  6 +++
+>>>   6 files changed, 91 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
+>>> index 6fbf62a99c48..2dac6acf79e7 100644
+>>> --- a/drivers/gpu/drm/ast/ast_drv.c
+>>> +++ b/drivers/gpu/drm/ast/ast_drv.c
+>>> @@ -64,7 +64,7 @@ static const struct drm_driver ast_driver = {
+>>>       .minor = DRIVER_MINOR,
+>>>       .patchlevel = DRIVER_PATCHLEVEL,
+>>>   -    DRM_GEM_SHMEM_DRIVER_OPS,
+>>> +    DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS,
+>>>       DRM_FBDEV_SHMEM_DRIVER_OPS,
+>>>   };
+>>>   diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>> index d99dee67353a..655d841df933 100644
+>>> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+>>> @@ -799,6 +799,23 @@ drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_sg_table);
+>>>   +struct drm_gem_object *
+>>> +drm_gem_shmem_prime_import_attachment(struct drm_device *dev,
+>>> +                      struct dma_buf_attachment *attach)
+>>> +{
+>>> +    size_t size = PAGE_ALIGN(attach->dmabuf->size);
+>>> +    struct drm_gem_shmem_object *shmem;
+>>> +
+>>> +    shmem = __drm_gem_shmem_create(dev, size, true, NULL);
+>>> +    if (IS_ERR(shmem))
+>>> +        return ERR_CAST(shmem);
+>>> +
+>>> +    drm_dbg_prime(dev, "size = %zu\n", size);
+>>> +
+>>> +    return &shmem->base;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(drm_gem_shmem_prime_import_attachment);
+>>> +
+>>>   MODULE_DESCRIPTION("DRM SHMEM memory-management helpers");
+>>>   MODULE_IMPORT_NS("DMA_BUF");
+>>>   MODULE_LICENSE("GPL v2");
+>>> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+>>> index 8e70abca33b9..522cf974e202 100644
+>>> --- a/drivers/gpu/drm/drm_prime.c
+>>> +++ b/drivers/gpu/drm/drm_prime.c
+>>> @@ -911,6 +911,62 @@ struct dma_buf *drm_gem_prime_export(struct drm_gem_object *obj,
+>>>   }
+>>>   EXPORT_SYMBOL(drm_gem_prime_export);
+>>>   +/**
+>>> + * drm_gem_prime_import_dev_skip_map - core implementation of the import callback
+>>> + * @dev: drm_device to import into
+>>> + * @dma_buf: dma-buf object to import
+>>> + * @attach_dev: struct device to dma_buf attach
+>>> + *
+>>> + * This function exports a dma-buf without get it's scatter/gather table.
+>>> + *
+>>> + * Drivers who need to get an scatter/gather table for objects need to call
+>>> + * drm_gem_prime_import_dev() instead.
+>>> + */
+>>> +struct drm_gem_object *drm_gem_prime_import_dev_skip_map(struct drm_device *dev,
+>>> +                             struct dma_buf *dma_buf,
+>>> +                             struct device *attach_dev)
+>>> +{
+>>> +    struct dma_buf_attachment *attach;
+>>> +    struct drm_gem_object *obj;
+>>> +    int ret;
+>>> +
+>>> +    if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
+>>> +        obj = dma_buf->priv;
+>>> +        if (obj->dev == dev) {
+>>> +            /*
+>>> +             * Importing dmabuf exported from our own gem increases
+>>> +             * refcount on gem itself instead of f_count of dmabuf.
+>>> +             */
+>>> +            drm_gem_object_get(obj);
+>>> +            return obj;
+>>> +        }
+>>> +    }
+>>> +
+>>> +    attach = dma_buf_attach(dma_buf, attach_dev, true);
+>>> +    if (IS_ERR(attach))
+>>> +        return ERR_CAST(attach);
+>>> +
+>>> +    get_dma_buf(dma_buf);
+>>> +
+>>> +    obj = dev->driver->gem_prime_import_attachment(dev, attach);
+>>> +    if (IS_ERR(obj)) {
+>>> +        ret = PTR_ERR(obj);
+>>> +        goto fail_detach;
+>>> +    }
+>>> +
+>>> +    obj->import_attach = attach;
+>>> +    obj->resv = dma_buf->resv;
+>>> +
+>>> +    return obj;
+>>> +
+>>> +fail_detach:
+>>> +    dma_buf_detach(dma_buf, attach);
+>>> +    dma_buf_put(dma_buf);
+>>> +
+>>> +    return ERR_PTR(ret);
+>>> +}
+>>> +EXPORT_SYMBOL(drm_gem_prime_import_dev_skip_map);
+>>> +
+>>>   /**
+>>>    * drm_gem_prime_import_dev - core implementation of the import callback
+>>>    * @dev: drm_device to import into
+>>> @@ -946,9 +1002,6 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+>>>           }
+>>>       }
+>>>   -    if (!dev->driver->gem_prime_import_sg_table)
+>>> -        return ERR_PTR(-EINVAL);
+>>> -
+>>>       attach = dma_buf_attach(dma_buf, attach_dev, false);
+>>>       if (IS_ERR(attach))
+>>>           return ERR_CAST(attach);
+>>> @@ -998,7 +1051,13 @@ EXPORT_SYMBOL(drm_gem_prime_import_dev);
+>>>   struct drm_gem_object *drm_gem_prime_import(struct drm_device *dev,
+>>>                           struct dma_buf *dma_buf)
+>>>   {
+>>> -    return drm_gem_prime_import_dev(dev, dma_buf, dev->dev);
+>>> +    if (dev->driver->gem_prime_import_sg_table)
+>>> +        return drm_gem_prime_import_dev(dev, dma_buf, dev->dev);
+>>> +    else if (dev->driver->gem_prime_import_attachment)
+>>> +        return drm_gem_prime_import_dev_skip_map(dev, dma_buf, dev->dev);
+>>> +    else
+>>> +        return ERR_PTR(-EINVAL);
+>>> +
+>>>   }
+>>>   EXPORT_SYMBOL(drm_gem_prime_import);
+>>>   diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+>>> index 05b3a152cc33..c00d8b8834f2 100644
+>>> --- a/drivers/gpu/drm/udl/udl_drv.c
+>>> +++ b/drivers/gpu/drm/udl/udl_drv.c
+>>> @@ -72,7 +72,7 @@ static const struct drm_driver driver = {
+>>>         /* GEM hooks */
+>>>       .fops = &udl_driver_fops,
+>>> -    DRM_GEM_SHMEM_DRIVER_OPS,
+>>> +    DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS,
+>>>       .gem_prime_import = udl_driver_gem_prime_import,
+>>>       DRM_FBDEV_SHMEM_DRIVER_OPS,
+>>>   diff --git a/include/drm/drm_drv.h b/include/drm/drm_drv.h
+>>> index a43d707b5f36..aef8d9051fcd 100644
+>>> --- a/include/drm/drm_drv.h
+>>> +++ b/include/drm/drm_drv.h
+>>> @@ -326,6 +326,9 @@ struct drm_driver {
+>>>                   struct dma_buf_attachment *attach,
+>>>                   struct sg_table *sgt);
+>>>   +    struct drm_gem_object *(*gem_prime_import_attachment)(
+>>> +                struct drm_device *dev,
+>>> +                struct dma_buf_attachment *attach);
+>>>       /**
+>>>        * @dumb_create:
+>>>        *
+>>> diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
+>>> index cef5a6b5a4d6..39a93c222aaa 100644
+>>> --- a/include/drm/drm_gem_shmem_helper.h
+>>> +++ b/include/drm/drm_gem_shmem_helper.h
+>>> @@ -274,6 +274,9 @@ struct drm_gem_object *
+>>>   drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
+>>>                       struct dma_buf_attachment *attach,
+>>>                       struct sg_table *sgt);
+>>> +struct drm_gem_object *
+>>> +drm_gem_shmem_prime_import_attachment(struct drm_device *dev,
+>>> +                      struct dma_buf_attachment *attach);
+>>>   int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>>>                     struct drm_mode_create_dumb *args);
+>>>   @@ -287,4 +290,7 @@ int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
+>>>       .gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+>>>       .dumb_create           = drm_gem_shmem_dumb_create
+>>>   +#define DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS \
+>>> +    .gem_prime_import_attachment = drm_gem_shmem_prime_import_attachment, \
+>>> +    .dumb_create                 = drm_gem_shmem_dumb_create
+>>>   #endif /* __DRM_GEM_SHMEM_HELPER_H__ */
 
-
-Let me know if it makes more sense!
