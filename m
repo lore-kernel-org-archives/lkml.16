@@ -1,185 +1,138 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ACC2CA4B;
-	Wed, 30 Apr 2025 15:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.40
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025488; cv=fail; b=otDKH7y6w7s6p+65glnJCqF1YgKigy1ofYKlxeIH3tVh83MP1xrfHNi2R7TPDgDBYU5UtEzIFxpt70ZMr025a/A9NOJ0HcRwvxxce/zIvpbhxFHUItgkhBH7p2k1FwN223pg01S0Zx27kg3KyMwKpe71R3xD9+0E1NJhrFJSfqw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025488; c=relaxed/simple;
-	bh=HYeufuFY5lA6fap9GT3wU3KyF7z5qaGW7/2CqQFKwN8=;
-	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID:Date; b=s08c/nt9zwNTz+xV2dckeeXZFwa2kaum+Tn495G7ML6lnnpaJ2whxk4LVq6ynaZik40PopYyQKN5uK3l3GAy7ZIMer4aYN0dd0tF0CZg7yLsknbkDUiRHdpHmTRE8VfInGQBxRjD+/pSfzpO4yN20ZABrTSOXxcquLcSPiILocw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uIuIQONa; arc=fail smtp.client-ip=40.107.244.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCA325A625
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:04:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746025494; cv=none; b=XH8tpT8Knqm6raLUpGkxxpm1orUpwDTE/6O5Tvpgm++D32T2j9q6fYU61Ew8HJcThia4Bo+PrRnVh4Z6+UFXVzvDbSlxaeVga+COhv9LocZndA7EguQ9vfR8pn6UV6ej3vtQhTh71EKhhAaIILDUKip2qRHiCQqlvVksiz2qQes=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746025494; c=relaxed/simple;
+	bh=iAUBF84BT6XPeN8Y/n4Oehp+UL7zE/zH+6aZ+LiCsHc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=EqVPWliWbqifoLgG2iadrNP4l9GLMv1Bb2MoMzuP09zPVjlDS3DjMIyeifFpDhxkYfGmt4zxC1tutqa4yJazujU+zks73zJp6Od8rK09w/RpON00plhE9W8M5pOyl7D26TVpCgEqIE/dsOO+lIhNSpGxXCK0uzbIPqQLP9qrvtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VezMumEH; arc=none smtp.client-ip=209.85.161.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uIuIQONa"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UjXG/POHSA2H9DQ152gB0EiLk57Is7EQoz4WL5fULB0K6x5q6KbIt/xrESXriRLmJi3inapU993BebyaPyqP9M5sfYIq+s00xOyHuex6bBMDTEJLxAxp+nFrkrNawjswlTqgPWL9ONIpB/r2AlnkivqiKQGKP2ayKpcehc68MptPQT0Ey1h3ZcCLvNWFlzjLEP4kOJxTRamBs9VIUb78TZG1X0aPa70KWMt4AuNjBo9HrsM9439F+GRZwELwh014wtzbHgptFyjSmh1I37xbcx4GvHqY3vHqJHgcWU+bm2ovDnHdTyA3h8o3yRm07gMOCI1QohamAg4iexyxTBNeEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=f7iVzzOSCOzVby64QwsZqGBvdRPJUA2C2DTLR+U+efE=;
- b=MZId+ZVMM2mtlpG0uTOnVe2hxYQzH4gA1wqztwC9pvHPQbKLw4Oz+4j9PN5skMqrA+OTcRMzg6Rv3yxBGanU5h+vx/uZKMhntwKcGwww/lr4kjoh6AFT8rkMWEwGmRPPOH2XZLppgqgOP54GASnQpyrF+eANS9QRrOsd7BeZ9C0Q8BKthcb7oYGfOCFaGlL8NZm+lQeYsblrtOo5b9ihzhJ83Ka0FdghoiVmWOCnSaoXLF3IhETAj5k2SWsKs0NpmPdwtqVz6/v6465XLXR/f6mFgu5QYfihGgJW+wOVKm+4ZcfnJ4t4oAB1Xaa6lI5TNHGeUSKWVFIg19dNhVs+FQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=linuxfoundation.org
- smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
- header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=f7iVzzOSCOzVby64QwsZqGBvdRPJUA2C2DTLR+U+efE=;
- b=uIuIQONaN59GvzSm0xTguVFfA+CV2+o1DD2/OGP+GOM5QJdwpnHSJ+kUtWySmLfer6Ycbe2yi5YMFeTCHGynGI1g6cuNDkyEgUE3bUdVF6uWLqXrZsMWUVICEradx0gV0yU4qi09pr9OxdmxK6AY9JmWUJEejmcYOGL8cVWwRvJNhP5PhhtuZThnz1VGNPklG3u1VQQfaXjROcSMqgmjCdoI4Ntn8zfeKc45qfsMSmEI5cFPn8cl9zrrqzIft1WPtmWs3LUpZW95OXH7GH0A7dJJjeYcPE2w7QBNtPLEiHOp3jrlDV75dSaW67T+jRWFD5fpnHWfZWz1t9+wShFNaQ==
-Received: from MW4PR04CA0221.namprd04.prod.outlook.com (2603:10b6:303:87::16)
- by MW6PR12MB8663.namprd12.prod.outlook.com (2603:10b6:303:240::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
- 2025 15:04:42 +0000
-Received: from CO1PEPF000044F3.namprd05.prod.outlook.com
- (2603:10b6:303:87:cafe::7a) by MW4PR04CA0221.outlook.office365.com
- (2603:10b6:303:87::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Wed,
- 30 Apr 2025 15:04:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CO1PEPF000044F3.mail.protection.outlook.com (10.167.241.73) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 15:04:41 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 30 Apr
- 2025 08:04:27 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 30 Apr 2025 08:04:26 -0700
-Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 30 Apr 2025 08:04:26 -0700
-From: Jon Hunter <jonathanh@nvidia.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
-	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
-	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
-	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: Re: [PATCH 6.12 000/280] 6.12.26-rc1 review
-In-Reply-To: <20250429161115.008747050@linuxfoundation.org>
-References: <20250429161115.008747050@linuxfoundation.org>
-X-NVConfidentiality: public
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VezMumEH"
+Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-604ad6c4cf1so2621692eaf.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:04:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746025491; x=1746630291; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=n3T9+6PFQU7ODBU+5+B8t+gjHfIuLl3Jh/pj8rJ6DXA=;
+        b=VezMumEH4PnXDpfdIiVOA8FcSVMdKGiH03QLdp2m5CaGxxYPtYQrjtwt3t0cAmix5x
+         2q2rDP9CUs+5m/PybmjnrVslLmWPVZetohfDthCZhqh6DJsLgrJM2juuyGqWEyx6b9QK
+         jiVmvYiNp6VqcNayES9DJnYGeRwk4GKzulrPL4l3KYL8DfTfirsMi1lbfmUHVxozphzw
+         8W9uV6SpqVgGkW7pSbRWLIG3bJEYPLkKkY1rmfmFxG99w1UqboVvqBZP+TfmLt5uuDW5
+         KOcSpJddBNA1BwJ7jV8FXkeE2kPrBUM9lXgf7HOrk+3ihxFCqKpKVnKBdlIXRixdZIBj
+         5QXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746025491; x=1746630291;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=n3T9+6PFQU7ODBU+5+B8t+gjHfIuLl3Jh/pj8rJ6DXA=;
+        b=gc42x6A72B/oN4wQ2n8/UaKtZk62fHXUqFNvzRFy6ehJKkIDIvKRYlsaD23hC7jYIl
+         WJvxnEvMjtyzGdqCakRCAHXDh2tCfB+9lBbkP9HpFFdcwlnTKy4I9plR1YNX/Mq8179j
+         6pHhhenQdD0AA5AczlRg3tMlGmOQiNUwmiu3qwblHlz/QYFvSxxGS42UkFfCEyYrumqy
+         6/Q+wCVP3EKVwJYMKA/4SpAd/GQ/nvzM9ShS8YwomMgiVvLNj2sAMdjq0/u2JQeU0ii+
+         PNP83iK4WsKthVxnZsasm1Qi/Tud1+9ttV8cMJsZw8UyHeFtIuWhT/VkorBB3Ti7HnTr
+         AsGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVKFCUB24+EDeIAyFkp6y7F/vqHUdpYeqXht/1IOd+Qu1Qo1lJy84vfacJlha+bW2HGD6dP4AfS5krJU4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwM5alRXxFLf4KuJVjbRFveUQzu1DGNkyjm/dkWYruB9PX7mLiQ
+	ZG2TFyB1QyMSWhxuHFp1z25yX8ic+t1msk4Qu2UreU1eivoqT3/hNL3NE9PzZT0=
+X-Gm-Gg: ASbGncvQ09X2jKocjZP1QrEcvjzoEzRfNPwKyoknFPf+O9OWt8OIUWOX3mK2e0v7yJf
+	2p0bNAKImZjRH/z0hymCyMT124tY8lphaE/Uj6d4inTGq9L5u1fUa/8hnn39etlI0cgnEkcMULt
+	XelszMrPpKqzuXGhsDdhpl1qUgJLGEKwy2YVIjU6PEmpMYTL/RVDwpB39bxlPVf7AkJxbBy7ckH
+	K6aLZxH8gPSMTHdALbz8jkJ+81gvkitQgJLfUqBxQGUmsxYLTeI5WAi4DndqQgR3fl2NCJZO+XI
+	uPnlX3xHYTqqHFaD9nWC2iTtJnm/AOh8wQ8q1VCnjMyqfpwTX3rCQENiwH5VBoEMkJDzJEhmxX2
+	iy6qDHEjfSElHrEY=
+X-Google-Smtp-Source: AGHT+IGzbbqKeOG5/Z3RMXw05bmJvQ6JAZJPq3w+KmxakZsKev1SHX78l6FcGWqPiLMhX3MPVZr9Uw==
+X-Received: by 2002:a05:6820:3094:b0:606:107a:ebd8 with SMTP id 006d021491bc7-607d5675e89mr1620447eaf.5.1746025491559;
+        Wed, 30 Apr 2025 08:04:51 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60686ec905dsm811235eaf.15.2025.04.30.08.04.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 08:04:49 -0700 (PDT)
+Message-ID: <7fe18625-3a25-40c8-bfb7-a7a22a3eccff@baylibre.com>
+Date: Wed, 30 Apr 2025 10:04:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <7e440929-ec5c-412c-8639-01b2fa73ef63@drhqmail202.nvidia.com>
-Date: Wed, 30 Apr 2025 08:04:26 -0700
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F3:EE_|MW6PR12MB8663:EE_
-X-MS-Office365-Filtering-Correlation-Id: 187c7616-400d-4782-7eef-08dd87f855d2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|7416014|376014|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?R2syelFDYk5WZXBmd1kvK3d5T21XQjhWUjVGL1UwYm5mVnc1bHJ3T1R4NnI5?=
- =?utf-8?B?c3kzN2pSK2t4ZXlWb3hSZUl3LzRXeXdBVGhGc1dGRGN0VGw4akthTHR4UzR5?=
- =?utf-8?B?b042VTJNLzd2Vjl0OFRaQXVMeG1FQjJtUERrSnd6SU5Wbmphdld3S3UwNXBn?=
- =?utf-8?B?TU9qZjhmQWt5VG1GYmpvY3BSaG95dE1Sa3lKZ1JrU2w5eDB0bzRud2tsb3d0?=
- =?utf-8?B?VG4rWUVLRWRUNDFkOXFKMTN2YWVTc1VFdEJMR3h1ODBob25ZL0tZNi9wZDJ3?=
- =?utf-8?B?N1lqSDYzZVlrSDNQcDZOMVBvdFNjanNXR2ZYNFg5bDgvalBnWitYdjJZNi8y?=
- =?utf-8?B?WTV6dmRmQ01EeTkvT2s3UVc5cUdtWVNZQSsrOWljd0xOL2tWdEp5em8vL1BB?=
- =?utf-8?B?NUdzSkpIUVRNMVM3N2RqRDhCTjhIelA5RXZnMzU4bU9mWW05SzlXMzByTFh5?=
- =?utf-8?B?Vk5oNS9HcjI0OWh0aTl2ZzJYQUllbHpHZ0cvdDJYNTlmc2d3ZG84OFNJLzNv?=
- =?utf-8?B?Y0d1VGMxSzhEaWJaK0ZTb29zN1IvMkRrN2hDcFlKWnhGd25ZYWpqMVoyUkxX?=
- =?utf-8?B?WUhHYlVHaUZhdzJiTzlEcURJRUdzVzNtcSs5TmZ0anRQVXllWWd0YUltSE9p?=
- =?utf-8?B?UnFFcmg1eGV4b3pCVWJyN2tFQ3VXRUdtSmdNVEhSUGgwa0p3YU03amU3VkEr?=
- =?utf-8?B?QnloeERIcmhzbUJycVdjQ2V5Y3U2N2h0ajMwdWVQRktmQ1ZhcFV5UnZzQ1VL?=
- =?utf-8?B?MFVvbHFPN2wrai9mckdCWnlaT1lURGh4S0gvY2xCT0hRa1NSQnVBUnQ1M1Zy?=
- =?utf-8?B?YWgyTkNTTCthd1hMVU82ZjFiTFlGOXhrYzZMMXRyM3ZxT2NtNFpqZFVYb3dZ?=
- =?utf-8?B?bnM5VkE1ejJ2d2VnS1YxSzAyTXZzUjQxdnh3TGsrN3RyZmZUTjRMcnZ5VTl1?=
- =?utf-8?B?TFQ1aE8vSW82eU8yNXlYWXFNMFJ1K0RYZzRMaGg3bjRUSXRNeUNWQWdzRzlU?=
- =?utf-8?B?YjZKQVZBOW1McExCMlBSOHBpc0pOUk1EMXR6VUJuZUNCSStVM3pRdkpJdzhI?=
- =?utf-8?B?NkNlR0tUbEZubCt2NzNjanhZd1g3bi84ZE5qNWxjWC85WGJockhWc0M5OHZF?=
- =?utf-8?B?VHhMQjdQQlNWK1IzUHRDUEo5aXgwUHdBT1JmeERRejEvaXRZNCtmQWNUVXlK?=
- =?utf-8?B?ZjZnV2trZWl1WVJmWmQrK01yd1VsQ1NPYWNUM2JKVEtDWE5oalhJQkJ3a3Y2?=
- =?utf-8?B?SXBydUx4Yll6aTkrN3JIaDVLUzdQKzRDbUJBZENDQW1oK25SRWZIbTJ5VnZp?=
- =?utf-8?B?MG5JaDdzYXFTd3crWVBzTGxHSzQ2SjJ2ditTckM1OU1ZcFZBTGNubFJTM083?=
- =?utf-8?B?SzhkbmxqcHI4VG1IZ0x3UnJrTjNrSFR0dnM4eG94aEY0VVhuTk1UOGwvM2k0?=
- =?utf-8?B?ZVdISGUxOUpuYlNHc2tIRDFYb3VxVWJVMEoxL1VqWDY4WE1UWTBRTWZpVDJ4?=
- =?utf-8?B?UVhwZ3pRckV1SW5XYmlleTVDbk9nWDA0ZFc0ZXRDbzRGRXo1aTlhL0xwOWJv?=
- =?utf-8?B?eUlhMjZuNVQxNTJCQ2dTZTdKa2c0WTYyQ2t3NGpEcW9Sd0ZQcDZZUjI0RVlx?=
- =?utf-8?B?MjNUVkptZTBBV05JNXhkcUF1US8yTVpqZXF0MmZwVEdUOW1XTHVlWVAxVWlU?=
- =?utf-8?B?VHdPWHdzOGxsbkdVV2NIVDJRWUVPOUhaeS9LSGFLL21wMy9aYTNMZXVjVGo5?=
- =?utf-8?B?NXVjSnEyNDRGTWtDd3UzaU1LdGZZY1RLY2ExVDZWNWJHMCtFQ3R6ZWk2T1B1?=
- =?utf-8?B?bnYrK21oMWVaeDNYU0Izazh5UE1pUzE2ZXJMUjlPaFNVdmFRZndVUGttUTJC?=
- =?utf-8?B?dEMxZTRPK1lPV0svWDVEcXUzK2hLd3lFalV0MDZvWXJYTGprUzVHL0YySC9k?=
- =?utf-8?B?cTFhQUhOQ3NrTXUrTVpTUWVNMHRuMGx6UHdGSHp1eS9OZkt2cVkyZnErU0dX?=
- =?utf-8?B?c2JWaW1tdnlPZUw5RTZvQWNGMkVFTXdRdVRjeEorRzVuT04rTlVzU1BnSkF1?=
- =?utf-8?B?S3E1WGxmbE5JNnh6bUdhYmRpRWpMRllZVnNYQT09?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(376014)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 15:04:41.6753
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 187c7616-400d-4782-7eef-08dd87f855d2
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F3.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8663
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
+ documentation
+From: David Lechner <dlechner@baylibre.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
+ <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+ <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+ <aBI3eUPirZEXpZgG@smile.fi.intel.com>
+ <896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 29 Apr 2025 18:39:01 +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.26 release.
-> There are 280 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 4/30/25 9:56 AM, David Lechner wrote:
+> On 4/30/25 9:45 AM, Andy Shevchenko wrote:
+>> On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote:
+>>> On 4/30/25 12:40 AM, Nuno Sá wrote:
+>>>> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
+>>>>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>>>>
+>>>>> Add new IIO calibphase_delay documentation.
+>>>>>
+>>>>> The delay suffix is added to specify that the phase, generally in
+>>>>> radiants, is for this case (needed from ad7606) in nanoseconds.
+>>
+>> ...
+>>
+>>>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
+>>>>
+>>>> Not sure if I'm too convinced on the _delay suffix
+>>>>
+>>> Phase is measured in radians, not seconds, so it seems wrong to use it here.
+>>>
+>>> https://en.wikipedia.org/wiki/Phase_(waves)
+>>>
+>>> And the delay here is with respect to individual samples in a simultaneous
+>>> conversion without regard for a sampling frequency, so I don't see how we could
+>>> convert the time to radians in any meaningful way.
+>>
+>> And how this delay is aplicable to the phase in the hardware? Sounds to me that
+>> HW has some meaningful way of such a conversion?
+>>
 > 
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
+> It is a calibration to account for a phase difference between two input signals.
+> This is a simultaneous sampling ADC, so all channels normally sample at exactly
+> the same time. This phase delay calibration factor can introduce a small delay
+> on an individual channel so that it starts it's conversion some microseconds
+> after the others.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.26-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
+> There is a nice diagram here:
 > 
-> thanks,
+> https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606c-18.pdf#%5B%7B%22num%22%3A113%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C34%2C594%2C0%5D
 > 
-> greg k-h
+> To convert the phase delay to a phase angle and back would require also knowing
+> the frequency of the input voltage signals.
 
-All tests passing for Tegra ...
-
-Test results for stable-v6.12:
-    10 builds:	10 pass, 0 fail
-    28 boots:	28 pass, 0 fail
-    116 tests:	116 pass, 0 fail
-
-Linux version:	6.12.26-rc1-g990f4938689a
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
-                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra210-p3450-0000,
-                tegra30-cardhu-a04
-
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-
-Jon
+Maybe calling it "conversion delay" would make more sense? Since the phase part
+of it is really referring to the application rather than to what we are actually
+adjusting.
