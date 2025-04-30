@@ -1,174 +1,108 @@
-Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044B8F64;
-	Wed, 30 Apr 2025 00:36:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745973400; cv=pass; b=jYbT0PpeUDJz65LzNQ2RltcvXYnJIxtHyVjbIsiK6xfQU9N/fv8Ztx+aUKZiDRvmHiV0i0yQrv/MfjlPLWQxMezYopQBNqDonGVwl+tH2PdM3AKGny99ey1soA3nfX0kKQMUuovw4jYC8jJOEg+vLITUFEdAryWkFWMH4PqB/gs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745973400; c=relaxed/simple;
-	bh=H2dHRjr8U2npcEsj1UU3mQuPoyjOtJP5ZkdkT54aQ3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OeHFfk5jgrnVK2BBOd53jBtsM6lIqFKpKGZl7CQRJzWbDMTW6/ZsVtRehwKtLYnlToZeMNDinweUNdkpvd5afRtiiyuZlLtbJltCzF11QCv1zMirXxz2hRjiAXdkn6gzFl0SvHaqKAKOfJJN6bLSF5hucNm72P7vkv2uBNWqOMU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=kHidoBV9; arc=pass smtp.client-ip=136.143.184.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB1442A99;
+	Wed, 30 Apr 2025 00:37:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745973476; cv=none; b=lAUGM3GXDQusEK91nKaINtzKhkibMbbItH5lbENJ9YMHQL78ef6zXGLPnYv1UcEkLGogzThsPDFrEC7wb1bw+rLXZnhCmfqbD6nCVUuJZvYpXHSobMoFnANDQ+Yunmi3meX5yATsQGpqAaXUJlqHmDIsZmDZKAXboXvPtr+eoVU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745973476; c=relaxed/simple;
+	bh=+aqnPA4r+iO0QbmkbcmL3npYlqLKb9+zjCliuHyxX10=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Rbfm6dSb8UXm4UPM3mN1ZjuwVqdKucOelw2wsSF8MLhFy/SvDvQYtIbf4dT0t7T15p3x4aMxEo7iSCuWkN+zdXNVnVBewYIFxaTBc0uTfJKuYVdM+Mvx2RVc2HDEewVdeh3xj+x1OYskojmpovAtbmkOzZv0B21QdbPVMutL6Sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=IRTY2elZ; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="kHidoBV9"
-ARC-Seal: i=1; a=rsa-sha256; t=1745973383; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=H3JJHypUQOVgdDfIyINlDO+T3T8pgcKK4rpLa8zV/zuMRnzlz+mSSIEp+mTjXQ9rBJ3zTxXGFA5MsqF3hWZ5uleu0tS95dmawJSgCp5YhpP0VSruKGyjqYRVwQi0svLfo8lIcPUbBGAYl6LoTimtU5KhukZgW2T/5WQkCmXp/00=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745973383; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=hK3/YoAMvoXAZDEfIf/TYO2O6uZpBKymxwJqiOWbu9Y=; 
-	b=c6WQSZFQxMr4+YitII0dvr/8bwvE9itPaUSrjJpDv5ck7f/xH7i43Hjgov0KLJ8HT8A66sbX/oLYS8jBjkf1+JojXuG5eS4E7TNTcLsCg5pQs/eTO/Aw4gVA1Lj390miRa0Hg7l7mvt3ni0DelH+MnlYkagNRYH/OSq/s2s6NVY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745973383;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=hK3/YoAMvoXAZDEfIf/TYO2O6uZpBKymxwJqiOWbu9Y=;
-	b=kHidoBV9B3JKdv7XaNbJE7fEcDHVLTtNG6bqiBqrAKcuwwMRGdZexM6QVTD7oHYo
-	OzU63VKrPxu7BVT+TPZYO7f/OFbKCDu/JcjymeHrvGYuUw2v1AmcEuUIDKEnOBHIejo
-	RjTKk9W3MsARgRXc59zFCFzXxp6tlAfmiIrir3QM=
-Received: by mx.zohomail.com with SMTPS id 1745973381320911.9802408377296;
-	Tue, 29 Apr 2025 17:36:21 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 476D9180E71; Wed, 30 Apr 2025 02:36:16 +0200 (CEST)
-Date: Wed, 30 Apr 2025 02:36:16 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: t.antoine@uclouvain.be
-Cc: Rob Herring <robh@kernel.org>, 
-	Peter Griffin <peter.griffin@linaro.org>, =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>, 
-	Tudor Ambarus <tudor.ambarus@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Dimitri Fedrau <dima.fedrau@gmail.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org
-Subject: Re: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
-Message-ID: <ieh6g5m4oectmje2gowa6rl2blzjuovjpyd3cmbvoql4qn2c7m@2osiwclwxi43>
-References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
- <20250421-b4-gs101_max77759_fg-v3-2-50cd8caf9017@uclouvain.be>
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="IRTY2elZ"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ce71582e9so49738915e9.1;
+        Tue, 29 Apr 2025 17:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1745973473; x=1746578273; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=36jpzvknKzrbqzrdJBObuGYioHZ4/CkD82SK+7pHs9I=;
+        b=IRTY2elZffgeT4N7k+AlZ1naqygS/eQx+gVyRo6T+0Dod68ZzKquuWS1kQxOaVZ+Ss
+         NgwsQAw2WC/kvmRnVddNsLCPs6aHS3ekAcfgO/i5mingETtuBUqxJcrbd3apFrNpSkEM
+         sM+BfxtdMT9iORWaKYMLoKxe7y1gTTKhhYZLmc6dVGOHdLxjuVErbcUxz4p10h6sKgFf
+         sc3cfy3pC+kFk56t1swEVJNTCThS1zQVgVJJAUgWZv/R8TetbpxRf+hjFYxjCY488Y5O
+         Y27rwUOo7biyZzbwkIy8GMXHdc2Er7y+cn47803NnWsCf+iTp3EGaMZwDDEVl7IcdUvp
+         C4Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745973473; x=1746578273;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=36jpzvknKzrbqzrdJBObuGYioHZ4/CkD82SK+7pHs9I=;
+        b=iW0PPHikR3Fv+H7G01IIvwtB7jw8iizunnBGm8IvyV+lFv1nsmylFOs0CO+5qOgVT6
+         Mb9zJtGsgSQe+upJ75NrkwK4EB55fNS3cuQoeaky6FYWBHsDcW2743pTvOS8Hg0ugdIh
+         2e81iTYMoP5QxUtmkNKyYPeUA2Y/oMgznPiS2y5i98ZrmjzxgWYBYwF9uAMfR2+L1ug0
+         I70hHRH0V+K2ph4mZtZmwuIJPQs5ih55pXPSgLk/luKM7tDwoAUuWoUSo/kg3cktRpBe
+         63Je2hVzbNGSLZvAg0BOXM+dAvJ/kT0Oq2pYeLOTiyaY9+jQlMcz1FEJGFOJiXrtv6A7
+         +X4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU0RbQ3VEyJ4AE7C//v9qD2vSldGJaW9FE7Tx/bKSxwVV4EjhhGPz7C/4iootOdZXkkTTzRxtn5@vger.kernel.org, AJvYcCWiAZnffDaOz40I+xMDcMcq63WrV41zJHZ/4UsG653dpU3ARrbHLQ9TNRV8R7o2iPQIB8h84kxq26bxiJU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6J1NUeJ3OiKdetbBOhedArBlzNvrCMXmTWFgbHYeDVbix3qfK
+	lyG9NuPKVLDgB4Hz+cFpQtxi9jymq6NP+GUkXlEGBbgwP5iYSwV2bOgA
+X-Gm-Gg: ASbGncvgv30TlFBgJ0YM9RTnrxnrQb4NAsnMhY2KrO5uVH+hN63vsAzjWWDLgNJwd0L
+	1keDdIiTCEdEinCIYkF9R5lusiEltQC6YDxrikZiknIxWrvSxK+Wut2l5rs+bYNtuIT2y0vlRjQ
+	vvxADl4qNF6hNP2iDvs7AJ6EcBouQbeLr3qOrx6acABdn/pph0SuQdDyEJN4hE3Nln+wW/aukJZ
+	Q/08lGNkE8GViKx3HoELgR3qVsDVotqFrJK3P/rz2nXX0ZksDadttKKgCF2kOnnBVK5TIBBPgcM
+	wzN4J/FLwZpWSYJUHnY21t1VcEd8G8652SCqTwHMOENqUl+jB/npomL9jcpNAr/wgmwWd2+AU2+
+	ceYXWuuBvi7GFVile
+X-Google-Smtp-Source: AGHT+IEKN5ZYb0V0mxVQ8VeWxSdDrKf1KJS1OxwBEsuSfvGVnc0TndID6ZTMb2SApHZjLTcV88Wixw==
+X-Received: by 2002:a05:600c:540e:b0:43d:160:cd97 with SMTP id 5b1f17b1804b1-441b1f5c0c5mr9040945e9.25.1745973473092;
+        Tue, 29 Apr 2025 17:37:53 -0700 (PDT)
+Received: from [192.168.1.3] (p5b057647.dip0.t-ipconnect.de. [91.5.118.71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b20a65sm4942685e9.32.2025.04.29.17.37.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 17:37:52 -0700 (PDT)
+Message-ID: <39b1a5e4-d8cf-482d-b603-d61f0ea3f51c@googlemail.com>
+Date: Wed, 30 Apr 2025 02:37:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rtpgzvtcmnguzlm6"
-Content-Disposition: inline
-In-Reply-To: <20250421-b4-gs101_max77759_fg-v3-2-50cd8caf9017@uclouvain.be>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/245.962.17
-X-ZohoMailClient: External
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250429161051.743239894@linuxfoundation.org>
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250429161051.743239894@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Am 29.04.2025 um 18:41 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.1.136 release.
+> There are 167 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+Builds, boots and works on my 2-socket Ivy Bridge Xeon E5-2697 v2 server. No dmesg 
+oddities or regressions found.
+
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
 
---rtpgzvtcmnguzlm6
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
-MIME-Version: 1.0
+Beste Grüße,
+Peter Schneider
 
-Hi,
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-On Mon, Apr 21, 2025 at 08:13:33PM +0200, Thomas Antoine via B4 Relay wrote:
-> From: Thomas Antoine <t.antoine@uclouvain.be>
->=20
-> The interface of the Maxim MAX77759 fuel gauge has a lot of common with t=
-he
-> Maxim MAX1720x. A major difference is the lack of non-volatile memory
-> slave address. No slave is available at address 0xb of the i2c bus, which
-> is coherent with the following driver from google: line 5836 disables
-> non-volatile memory for m5 gauge.
->=20
-> Link: https://android.googlesource.com/kernel/google-modules/bms/+/1a68c3=
-6bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c
->=20
-> Other differences include the lack of V_BATT register to read the battery
-> level. The voltage must instead be read from V_CELL, the lowest voltage of
-> all cells. The mask to identify the chip is different. The computation of
-> the charge must also be changed to take into account TASKPERIOD, which
-> can add a factor 2 to the result.
->=20
-> Add support for the MAX77759 by taking into account all of those
-> differences based on chip type.
->=20
-> Do not advertise temp probes using the non-volatile memory as those are
-> not available.
->=20
-> The regmap was proposed by Andr=E9 Draszik in
->=20
-> Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a11=
-6.camel@linaro.org/
->=20
-> Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
-> ---
-
-[...] (I actually skipped reviewing big parts here for now)
-
->
-> +		ret =3D of_property_read_u32(dev->of_node,
-> +					   "shunt-resistor-micro-ohms", &val);
-
-device_property_read_u32(dev, ...)
-
-> [...]
-> +	ret =3D of_property_read_u32(dev->of_node,
-> +				   "charge-full-design-microamp-hours", &info->charge_full_design);
-> +	if (ret)
-> +		info->charge_full_design =3D 0;
-
-This is not in the DT binding and thus not allowed. Also I will NAK
-adding it to the DT binding, since the following should be used:
-
-Documentation/devicetree/bindings/power/supply/battery.yaml
-
-followed by using power_supply_get_battery_info() in this driver.
-
-Adding this support is probably a good idea, since it allows
-providing all kind of static information from DT and you are
-missing the non-volatile memory part from the existing chip.
-
-Note that the power-supply core will pick up and expose any
-of these properties automatically.
-
-> +	ret =3D max1720x_get_rsense(dev, info, data);
->  	if (ret)
-> -		return dev_err_probe(dev, ret, "Failed to probe nvmem\n");
-> +		return dev_err_probe(dev, ret, "Failed to get RSense\n");
-
-You can either drop this error print, or the ones in
-max1720x_get_rsense(). No need to print two errors.
-
-Greetings,
-
--- Sebastian
-
---rtpgzvtcmnguzlm6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgRcHUACgkQ2O7X88g7
-+pr38RAAli3tEyqc3Bn8PtcS0cq4gr4uF1+C324fGggdQXPZ90bAI8CWsbLw8C1b
-0mO8/EYAUUBUXjdX4QT9KdqKm1egLwCS4bj3yujtI7aZtyjWdryxMpwroqfyFqa+
-tdxOlbJdsiQ12m0OFQvM8kUCD7L1JPeXe3HQGrXCu5ZdwnuPTMGog/1QToMIQ6Ga
-c6T8lC7umvxS+HCzBkt7NqEVnRUytsX9z8E8dsF3d1lStyYHNs/7hIdM9naVBjtH
-GThQMIeBhK+VBfh77Qh5HoD4yt9UMw0o05P8ktDg523eWT64y617vPun1fRwkhct
-Zi2nnbiHMO1oEQCVV63DAvyut8qwtBxr9X5Hqfa5AWdea5z8HQmN83SJJq7K7H4G
-dHPdDMSfrHd/djdlOqcWbT3Iddrxh8qcK0z6ED0h7JhS0jseGjSkyUWs9kgAV6QL
-KMTDWiM6qfw62Azq4Wo/koblAhpNXvvWQFYob2QNalIgRTpBImbxO5z0nXcr35Dv
-2xIOsE6kLVYG4CmfrP6+G8lz5PLsiNsH19hBqVFZ7WLxRjpbCv3d8jhDMzSTmItg
-5kPSQnFL9eQBjHFOfOa0Y0Ln9j5ZcVMJdVZNPOATS14o6cxmhCWdTImjoxJc7yHa
-W4MRbTEvhpWVR/w8WlV9zqlhjwTr/xHnJVOrqq3ds5eRjPaUTJ8=
-=aGOF
------END PGP SIGNATURE-----
-
---rtpgzvtcmnguzlm6--
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
