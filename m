@@ -1,253 +1,271 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09AD52B9A9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024022; cv=fail; b=DwdWQbVC68iO8OSgTmVvG7Ur9I/tLvbCG7XJzv/QGk3ZFcAD+ukBelQpdBm+7KgEBN/WBdHJcuGSS6ApMICD0G1ViX+A76mhNQFCkXi0dowXFLy+2wq6hkbtNOQyPnqQxZXEhCd1fMtid8KHvzQ8Z79/Ys5Oc4mUUVpBFgqcHCk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024022; c=relaxed/simple;
-	bh=Jw/aB799UrAXJiporDYfedvrHoT2x726O82HRz6FJCg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=OyWzsRrHxGMVRnWSIX5JjMKEV64wCRi70QXJ+4gigvPx1AWiTxC1jpRotSg493LqkSzrIuneaHwJ68Z+8d6k6khSCcA8jftejcFV/VhvIHRtRBYZTvGmWxzPo31JpkzKwNKSk3YRibPQqpZF30ajSIdEWyNfaEIv5LQmctyED1U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cUIQUmdY; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cUIQUmdY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746024021; x=1777560021;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Jw/aB799UrAXJiporDYfedvrHoT2x726O82HRz6FJCg=;
-  b=cUIQUmdYUe/s5neRFLH5j797RUPnAKVNK3lcubSVpHVpbempuU5FGPMK
-   bhKFoVv3tKrDOd5KWMEYWYmD9vsmb+m3TCQLRbO2pikypNc318UgXnToX
-   S85QCWvoJNaurzdVcYxqS1nbFIljUqOHHeefMoMiRilsF01GuoMFpt9aZ
-   QCKTpaNF+XusqIAgjRuINDEj0HNzO5RDOp2cgIpEShjYcQA91K5lYGtsh
-   0tQKXcqUXPtbM0kFLXsBdSLwjR0NUpONWdJFKLKiyZHXg45am5XeCJFNl
-   9066VMJfy2E9SLg7kJy66UGdUQqP8F1FweJgDw3yEiWj6z75opwMOKe0i
-   Q==;
-X-CSE-ConnectionGUID: iVmj6kyiT1S+Lpd5hUsXoA==
-X-CSE-MsgGUID: LjuitSj2SxeQGWT/ITC3bg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="50342998"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="50342998"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:40:20 -0700
-X-CSE-ConnectionGUID: irThnF6CRtqK1mRC0GO7HA==
-X-CSE-MsgGUID: Qw3Td9hMQpWcGsB78xjlow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="138971359"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:40:20 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 30 Apr 2025 07:40:19 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 30 Apr 2025 07:40:19 -0700
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.172)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 30 Apr 2025 07:40:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OEWIqHmhw0g1k+8cU5pPSwQtHZxuM8/3nl/D+xNf40O/GG+3rmGZio2m3jYG+GgdYqpfggnSXbosWHFcx+uT2VC2NyOzcHZ7yZS6XzE4mGt9b82OpKl89DfrL/h2EfmJ+usvBVNKGok9V5n8FXbAk7eYdtPYLLkKsbd2qHlKoYuFl2kov9n9cDaMRGHbNwtl5/3mV8HRTtdi4h0MlCkPJgB0ks8FwI/jgXok8m5smFfwLFOpTdDKNaClodTXokDZBp0OtF042NG1V9iYZSXyPvCQacqecnQtR9WxxnAspvfyWGO3V5PPMyXQCnh7mi3U5jMwSp6kBQK9zFgTDwqf0w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XOH1XVaQRnZaCgttH+BigaXCSLBFyGoesF6idWqwoFw=;
- b=B/Rkv/juAkB85ulyFiILKh2WJCeaeRB/+iddb/t4ELrQONeLNvww3wOp6QXeRJ4gz+MCEURsDQUoJ9jBxX5KRbyh4UWqxUYYEWd56plqgc30D1lTuD5xUP37cqf9yMVupywz1bd0nd2CpEu6iGYr78KvE3DT+CqG6jl/KX33rMHjIBQup44hhZ/KZzNtHi0FTnFIvpdCwkQo4ewZm+AWXqSAUcuLnU4c2ZhSp9UaxOkN4tWIUHMN9uezizdfclpkmI6Kh++gQHTZoFjChfdPdKoU12EDHxeyHeL0GhWR4Iy0pcAQ6ew4r/5OanxXqwwiy/PgmuyYMDZyEKfeaCEtHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from PH7PR11MB8455.namprd11.prod.outlook.com (2603:10b6:510:30d::11)
- by CY5PR11MB6487.namprd11.prod.outlook.com (2603:10b6:930:31::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 14:39:28 +0000
-Received: from PH7PR11MB8455.namprd11.prod.outlook.com
- ([fe80::e4c5:6a15:8e35:634f]) by PH7PR11MB8455.namprd11.prod.outlook.com
- ([fe80::e4c5:6a15:8e35:634f%7]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
- 14:39:27 +0000
-From: "Miao, Jun" <jun.miao@intel.com>
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-CC: "Li, Zhiquan1" <zhiquan1.li@intel.com>, "Hansen, Dave"
-	<dave.hansen@intel.com>, "dave.hansen@linux.intel.com"
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "Du, Fan"
-	<fan.du@intel.com>
-Subject: RE: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE
- was not successful
-Thread-Topic: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE
- was not successful
-Thread-Index: AQHbuND6vjibOZxG+ka1jAh+mtIp+LO6umSAgAC/WYCAAHqcgIAAGIxwgAAwPgCAAAdwEA==
-Date: Wed, 30 Apr 2025 14:39:27 +0000
-Message-ID: <PH7PR11MB84558F2095C87CF98AFBBFB09A832@PH7PR11MB8455.namprd11.prod.outlook.com>
-References: <20250429143114.1724280-1-jun.miao@intel.com>
- <20250429143114.1724280-2-jun.miao@intel.com>
- <b138cb84-3a34-40b3-a23d-6ff3708dae6b@intel.com>
- <a0676c7b-9e6d-4af4-87d5-f822ab247730@intel.com>
- <sdczrx3z55vbf4jxbedjpccpdmz7h7ukhhiwrwblpozwyrqssv@ljszzrxvgoxr>
- <PH7PR11MB8455BCD71320C0C081C29AEB9A832@PH7PR11MB8455.namprd11.prod.outlook.com>
- <fpu3a5x5zhvm7n6sus5533bnub6ynf6lwvsibxhxoozeoeitxu@5vd7k75x4pzw>
-In-Reply-To: <fpu3a5x5zhvm7n6sus5533bnub6ynf6lwvsibxhxoozeoeitxu@5vd7k75x4pzw>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PH7PR11MB8455:EE_|CY5PR11MB6487:EE_
-x-ms-office365-filtering-correlation-id: bc9d30c6-c0bf-4fc5-3994-08dd87f4cf5d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?eav514sh40UepWau1omRRLoeTOL3/a5EAPg5bLB4b44Mr1ODFah/S8ip1y/j?=
- =?us-ascii?Q?fq0NqsiA2yQUtTQRJxx+DTnAnTVRCoe37zTUB4+vikAldV15NF7kK7HBfd37?=
- =?us-ascii?Q?+GmClYKx/zEXNDyN0x55NoyXQgg1K9ktI8LMIOoNbxRw3pntVKJAlMTn54XC?=
- =?us-ascii?Q?zlL+qKy0Hoa7iTk0elA9taEZFpm6/84yJBKmgC2JglnzB1V9daoZwV9a8LTG?=
- =?us-ascii?Q?RWbtKly/l6DLt/WbXX1CQbihZJWmmvuOGam8iPkWjCFs/te7hBKCN3DXg3vE?=
- =?us-ascii?Q?gJw4PiKw1FSydPbI3tKK+C7EaKUDe9zkaVz2Kk0rMcqVNeXW2OFqH4vKCpdf?=
- =?us-ascii?Q?8Kuhgyrdteo53FrCPaXQRmWL9BKJ7h4ykIEKacUbIjvgflbgiitH7+WOyr0S?=
- =?us-ascii?Q?NAVX9w/HX9cAMmSzXoSS63BAVqIzoYhrzzTX0Hn3MJ2GJX7SyUy6ud6v8z62?=
- =?us-ascii?Q?3ZGAgdJblE9WiFOirwIAH7rh+HIeyESEKaFpWW2anG34qdYRwkTSQQp9sUDk?=
- =?us-ascii?Q?ayQ5/vRRI0uATli9qFpZt6gVfT+qJ97IG4UeT11oUdpkCGKLmFqqmiCfeE2H?=
- =?us-ascii?Q?44GNrvpYsxnFju1gQ473pmFSvlSpRQj8lNCyMTP3g3lcTKzSnS8Qdx2QyWn9?=
- =?us-ascii?Q?k/mWQ0uUxs/4L9eMcp1tORPNUm+54VicT6rcw0pfQK87bbkqVJwxZuDFmqDj?=
- =?us-ascii?Q?sy7kWk6b/OYVq+HmL5bXmU5QSZFh7jMmP7ltlOO84X1fIzxJRL8bjj1pN5HQ?=
- =?us-ascii?Q?rBdpt2jt35QtkgrowBCb3Y5LBCpOPWGBoqxNtpRv/qaLeExzvfIFTv933z5f?=
- =?us-ascii?Q?pVWD2gOgYoW5mOc60Bb58cy1eYSwxEpq1eDEE6ZSz1SR9RRf+PeqegUdJTAH?=
- =?us-ascii?Q?6tOj8L7cv+hP2fdAnhX2w4hACHcGPcm7291fLyTfDLfjaEXGzfmQYt4OYz37?=
- =?us-ascii?Q?+cEGvqJkBXqgGaWR/X45In6rdmb+JKvZ78hhcv/dbRwPwhlsKWa2sQsvaEGA?=
- =?us-ascii?Q?rJ5lNYu3QoCHAeWYnaTK+A8s4zNyb/VlL0gKUu9Z1nqLs1RyqIPSBlsfnfND?=
- =?us-ascii?Q?OiYIiKd0KOeEhoS+PI1EQnr9MFqQtbHjmCmb8nVE3HPXI8jkzJhT+pY71KQG?=
- =?us-ascii?Q?jJj6MPsASx21eCZm+MklhokmMJwu6xChQI7TKHchFfGFVJyIZLZ4e/T7Dbag?=
- =?us-ascii?Q?yeXPoPsZwrGrR5/2joQ0tLDjTkQk3okXdN3YH0wL9+xtVh8jsRzGWVenyqsy?=
- =?us-ascii?Q?Hja5VD5Slopw4WaRdDHbueGDiIcdWJPQwBSDhy5v5FucG5xIeR9hklIn7w8v?=
- =?us-ascii?Q?YfBQhETBGlBKcnxS5f5YgTDfO22v7OxLRslvrI4IGU2RIJo6KLv8gqGkspYv?=
- =?us-ascii?Q?8OV/vTkbT+iH/vGt0/fMULLmcSS1FfMOgph8MiTl7UENXBUkXMjkmUuSiWJp?=
- =?us-ascii?Q?znYj4ciqIutlXjmOifL0erKgznIQ/gnhYqPvZyroNkpN5tNZmOZCKQPjkozc?=
- =?us-ascii?Q?/n8v1jZ/uI+0Dgw=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8455.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?H8BfBC1bTfbB+O7CpEzWivoPkerj/5AT4HazBY3Pj5Ep07DGmrDUBai6391a?=
- =?us-ascii?Q?cL5PEYl2uOjsxl4dA71EufVsPY+YB6Y6PTVvEKTmGTa08Ydq6vqOFATZqFa0?=
- =?us-ascii?Q?nlA3K/Q+FElzKGoaG8rkOjCV0hBSO1XHlyVH6/ws8tUPS7N768d5VMGUqY7Z?=
- =?us-ascii?Q?qkzNLkDwjm3OtDIDaUzZkfoGI4G/74+bc1mddrf3ivVDiAbx6MMA8ffe2/n7?=
- =?us-ascii?Q?ghOFCMXOU2ywZJjKmUzBnxTumPVhu24wkcOUuz2BODVBz0m2v9+VQkCFbOvg?=
- =?us-ascii?Q?2qkKP+zY0q8J79puwol6EEp6kK0unnDYXlFXHbcT+Hsb0wfkA02suGrtYTy6?=
- =?us-ascii?Q?iF51b1E0t00o3F3JWsrfDgblRq61A553kQAYXWRxL0WhtWm0MpfrzC23jecj?=
- =?us-ascii?Q?XlQ7MVJ1uMXhK+lSqniOkcr1RcCjTAfz7bjs1H/KhcJNb8h5Y+fV6vD6avZi?=
- =?us-ascii?Q?3OsLaWjmQoVWd07AilTecI7/DNs/7dvHehQRVtj6zOTlzDp8mssvtuivo0eU?=
- =?us-ascii?Q?lGNPNV2wi2IvQYimRzoNFY7/Z287u/0x+4D+4N0waeUkAlvMuo9Bn/rcPksu?=
- =?us-ascii?Q?5s2rW0tP751AQXr3GwDfPMf3Z/aPtLLIBpMczmQdz8Oa1WY+uyIkmM9/XXdD?=
- =?us-ascii?Q?yLGMibxH69FpbBAJe5NS5a1iqdKgkeiOefnCNExJLCdrlTwfYZxLttTe2lik?=
- =?us-ascii?Q?k+EBFztw/Hru9xa7RxhmWaBEdSBDSNXDnvwTBC7/bzROrXutJHPspN3B4erS?=
- =?us-ascii?Q?ijWAC8n0CktLyxqdt2VLnqL9ooDSb2ZV0i046DQZSouV0n6Nplp/jbxRNFEr?=
- =?us-ascii?Q?DKo+ER01ZaKB/QHJKEDq5shuoUU99QNrlEv3nMNCY9/HTxdtJZVRKb6I6u3o?=
- =?us-ascii?Q?iCZ3jdeNbP5inunkFZMJejk6+G6AjeIziPfZwo6ykxa1dvP7UoQRZM9xZ2Jl?=
- =?us-ascii?Q?mLRq6brwhVTTPyHIJcNtLM9HeMT30N00snZi562Mmzk9pr/nyr+y2p2YsOG0?=
- =?us-ascii?Q?fstkZkF9BuygpYxKc0bzTAI4fFQ235dbD53MqF6E5v+/9tJCWztQuSM6gBpm?=
- =?us-ascii?Q?+hSzuNLtiJUzzhbV9eyOxrvi49WLKWYyIIarNod1DpQEe8v9AlH5/nvHwuu2?=
- =?us-ascii?Q?eeqwV5Ug4LJSl3Bm+FNuBfPA4D16l3EJWMohAfvMlHCnz7RbaJU0CF/H7ker?=
- =?us-ascii?Q?VwG4Sbn0mdlxLoct/SI488Eo1zTxfc/ey0mpMI6NCSAd8hmwOX4nglAYBtqM?=
- =?us-ascii?Q?dmlAp67K72CCi5NJcOXVzIBdqqEFcpCIXVV2jS8M8O+Jh6yQsXXIEmtB5+Vc?=
- =?us-ascii?Q?SivJXQghMy+1tyyFA0XKPJ3m87IOhlz/1N1xpOgHxHjbgoLAknMIuIp6o1rQ?=
- =?us-ascii?Q?/osd3XYpD/H9OMSexIXlrP56QvIzVZV5rmjOB42NOG798HNjSSJqGU8cEeDZ?=
- =?us-ascii?Q?bH/adPgygmKTH5tPT+KhknpRfua3Hde7nzN22nOsxFdJwHyeU2ergIr7deEL?=
- =?us-ascii?Q?d9CVroK09mLMjOK2+00Sm9Kkp4qO99hxpbJsTsjw01F1llI6KalUDdtFTd94?=
- =?us-ascii?Q?cp8GJAWyUMnbELvs+YL1w++wtRVATNZvw1/k4Z7a?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8AE10A1E;
+	Wed, 30 Apr 2025 14:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746024165; cv=none; b=XNgWrmf8fmsyPGy4UzWuO0LM07fbhZ0r1SdiAONK9hgoAkp+1IGgzfFs+wt5gWj4MyrN5Ucqf8tdcn8If8WHxDuobS2J/5/NOI1GqzX539hfp0PRee5iFjTAni2+5Kk7DNrvyPQ2+hTPxJtvrBjpwF8r5yG+BxHjz0XDQ2Njxz8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746024165; c=relaxed/simple;
+	bh=Xx/rlYUB9o0F+6Yp9eJc9LZSqR+bofOM7C8K2ThzjAo=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h2krh20QwAKgE/D2bPKQh8KAi7ndrgB5JAByfRFB7tO6IE9HoMVv33VipnSUjV4vr7hhOC98O9zc9G8BSmMXf8aIUazQY6BU5+BhtI+6BTrGyJLpuATHUZbXn2G59vKBt9Iyd12racALb3aEP6B1+MAE/zgkNrPFp5l8pWzpcVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZnfxF2yDTz67J7D;
+	Wed, 30 Apr 2025 22:40:33 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8D23140275;
+	Wed, 30 Apr 2025 22:42:38 +0800 (CST)
+Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
+ (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Apr
+ 2025 16:42:37 +0200
+Date: Wed, 30 Apr 2025 15:42:32 +0100
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: John Groves <John@Groves.net>
+CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
+	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
+	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
+ Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
+ . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, "Randy Dunlap"
+	<rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, "Kent Overstreet"
+	<kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, "Brian Foster"
+	<bfoster@redhat.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>, Amir Goldstein
+	<amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan
+ Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
+ Bacik <josef@toxicpanda.com>, "Aravind Ramesh" <arramesh@micron.com>, Ajay
+ Joshi <ajayjoshi@micron.com>
+Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
+Message-ID: <20250430154232.000045dd.alireza.sanaee@huawei.com>
+In-Reply-To: <20250421013346.32530-1-john@groves.net>
+References: <20250421013346.32530-1-john@groves.net>
+Organization: Huawei
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8455.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bc9d30c6-c0bf-4fc5-3994-08dd87f4cf5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2025 14:39:27.6917
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: c1AfZqM+lZD8rEgzlHcjLxwOfkkC/0tEzqEHPYnM7oRsbXBE6u0Dx+xaNwX6sjWveLynrXJYqJcxdAK54O7F9A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6487
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
->
->On Wed, Apr 30, 2025 at 11:10:32AM +0000, Miao, Jun wrote:
->> >
->> >On Wed, Apr 30, 2025 at 10:15:05AM +0800, Zhiquan Li wrote:
->> >>
->> >> On 2025/4/29 22:50, Dave Hansen wrote:
->> >> > On 4/29/25 07:31, Jun Miao wrote:
->> >> >> REDUCE_VE can only be enabled if x2APIC_ID has been properly
->> >> >> configured with unique values for each VCPU.  Check if VMM has
->> >> >> provided an activated topology configuration first as it is the
->> >> >> prerequisite of REDUCE_VE and ENUM_TOPOLOGY, so move it to
->> >> >> reduce_unnecessary_ve().  The function
->> >> >> enable_cpu_topology_enumeration() was very little and can be
->> >> >> integrated into reduce_unnecessary_ve().
->> >> >
->> >> > Isn't this just working around VMM bugs? Shouldn't we just panic
->> >> > as quickly as possible so the VMM config gets fixed rather than add=
-ing
->kludges?
->> >>
->> >>
->> >> Now failed to virtualize these two cases will cause TD VM
->> >> regression vs legacy VM.  Do you mean the panic will just for the
->> >> #VE caused by CPUID leaf 0x2? Or both (+ VMM not configure topology) =
-will
->panic?
->> >>
->> >> Currently the most customer's complaints come from the CPUID leaf
->> >> 0x2 not virtualization, and most of access come from user space.
->> >> Is it appropriate for such behavior directly cause a guest kernel pan=
-ic?
->> >
->> >The appropriate behavior would be to fix VMM to configure APIC IDs
->> >correctly and use TDX module that supports REDUCE_VE.
->> >
->>
->> Yes, I completely agree with your point to fix VMM APIC IDs.
->> The idea here is only to avoid this panic by using the guest component e=
-ven when
->the host is incomplete.
->> And thereby improving the robustness of the kernel code. Moreover,
->> even if the VMM becomes complete later, the adjusted logic will
->> continue to adapt still. (^v^)
->
->VIRT_CPUID2 was introduced as stop gap until REDUCE_VE is landed. I don't =
-see a
->point in getting it enabled at this stage. REDUCE_VE covers much more brok=
-en
->corner cases. CPUID 0x2 is just the most prominent one because of glibc bu=
-g.
->
-Hmm, at this stage, I may indeed be a pressing urgency to resolve this glib=
-c issues in=20
-real applications from the user's perspective such as [Bug Report with Redh=
-at/Rocky9.2 qcow].
-The goal is to leverage existing resources(VIRT_CPUID2) to resolve this pan=
-ic, and we're hoping=20
-for the VMM side to prioritize implementing the ability to set x2APIC IDs f=
-or each TD vCPU.
-Thank you for your patient explanation again.
+On Sun, 20 Apr 2025 20:33:27 -0500
+John Groves <John@Groves.net> wrote:
 
----Jun Miao
+> Subject: famfs: port into fuse
+> 
+> This is the initial RFC for the fabric-attached memory file system
+> (famfs) integration into fuse. In order to function, this requires a
+> related patch to libfuse [1] and the famfs user space [2]. 
+> 
+> This RFC is mainly intended to socialize the approach and get
+> feedback from the fuse developers and maintainers. There is some dax
+> work that needs to be done before this should be merged (see the
+> "poisoned page|folio problem" below).
+> 
+> This patch set fully works with Linux 6.14 -- passing all existing
+> famfs smoke and unit tests -- and I encourage existing famfs users to
+> test it.
+> 
+> This is really two patch sets mashed up:
+> 
+> * The patches with the dev_dax_iomap: prefix fill in missing
+> functionality for devdax to host an fs-dax file system.
+> * The famfs_fuse: patches add famfs into fs/fuse/. These are
+> effectively unchanged since last year.
+> 
+> Because this is not ready to merge yet, I have felt free to leave
+> some debug prints in place because we still find them useful; those
+> will be cleaned up in a subsequent revision.
+> 
+> Famfs Overview
+> 
+> Famfs exposes shared memory as a file system. Famfs consumes shared
+> memory from dax devices, and provides memory-mappable files that map
+> directly to the memory - no page cache involvement. Famfs differs
+> from conventional file systems in fs-dax mode, in that it handles
+> in-memory metadata in a sharable way (which begins with never caching
+> dirty shared metadata).
+> 
+> Famfs started as a standalone file system [3,4], but the consensus at
+> LSFMM 2024 [5] was that it should be ported into fuse - and this RFC
+> is the first public evidence that I've been working on that.
+> 
+> The key performance requirement is that famfs must resolve mapping
+> faults without upcalls. This is achieved by fully caching the
+> file-to-devdax metadata for all active files. This is done via two
+> fuse client/server message/response pairs: GET_FMAP and GET_DAXDEV.
+> 
+> Famfs remains the first fs-dax file system that is backed by devdax
+> rather than pmem in fs-dax mode (hence the need for the dev_dax_iomap
+> fixups).
+> 
+> Notes
+> 
+> * Once the dev_dax_iomap patches land, I suspect it may make sense for
+>   virtiofs to update to use the improved interface.
+> 
+> * I'm currently maintaining compatibility between the famfs user
+> space and both the standalone famfs kernel file system and this new
+> fuse implementation. In the near future I'll be running performance
+> comparisons and sharing them - but there is no reason to expect
+> significant degradation with fuse, since famfs caches entire "fmaps"
+> in the kernel to resolve faults with no upcalls. This patch has a bit
+> too much debug turned on to to that testing quite yet. A branch 
+> 
+> * Two new fuse messages / responses are added: GET_FMAP and
+> GET_DAXDEV.
+> 
+> * When a file is looked up in a famfs mount, the LOOKUP is followed
+> by a GET_FMAP message and response. The "fmap" is the full
+> file-to-dax mapping, allowing the fuse/famfs kernel code to handle
+> read/write/fault without any upcalls.
+> 
+> * After each GET_FMAP, the fmap is checked for extents that reference
+>   previously-unknown daxdevs. Each such occurence is handled with a
+>   GET_DAXDEV message and response.
+> 
+> * Daxdevs are stored in a table (which might become an xarray at some
+> point). When entries are added to the table, we acquire exclusive
+> access to the daxdev via the fs_dax_get() call (modeled after how
+> fs-dax handles this with pmem devices). famfs provides
+> holder_operations to devdax, providing a notification path in the
+> event of memory errors.
+> 
+> * If devdax notifies famfs of memory errors on a dax device, famfs
+> currently bocks all subsequent accesses to data on that device. The
+> recovery is to re-initialize the memory and file system. Famfs is
+> memory, not storage...
+> 
+> * Because famfs uses backing (devdax) devices, only privileged mounts
+> are supported.
+> 
+> * The famfs kernel code never accesses the memory directly - it only
+>   facilitates read, write and mmap on behalf of user processes. As
+> such, the RAS of the shared memory affects applications, but not the
+> kernel.
+> 
+> * Famfs has backing device(s), but they are devdax (char) rather than
+>   block. Right now there is no way to tell the vfs layer that famfs
+> has a char backing device (unless we say it's block, but it's not).
+> Currently we use the standard anonymous fuse fs_type - but I'm not
+> sure that's ultimately optimal (thoughts?)
+> 
+> The "poisoned page|folio problem"
+> 
+> * Background: before doing a kernel mount, the famfs user space [2]
+> validates the superblock and log. This is done via raw mmap of the
+> primary devdax device. If valid, the file system is mounted, and the
+> superblock and log get exposed through a pair of files
+> (.meta/.superblock and .meta/.log) - because we can't be using raw
+> device mmap when a file system is mounted on the device. But this
+> exposes a devdax bug and warning...
+> 
+> * Pages that have been memory mapped via devdax are left in a
+> permanently problematic state. Devdax sets page|folio->mapping when a
+> page is accessed via raw devdax mmap (as famfs does before mount),
+> but never cleans it up. When the pages of the famfs superblock and
+> log are accessed via the "meta" files after mount, we see a
+> WARN_ONCE() in dax_insert_entry(), which notices that
+> page|folio->mapping is still set. I intend to address this prior to
+> asking for the famfs patches to be merged.
+> 
+> * Alistair Popple's recent dax patch series [6], which has been merged
+>   for 6.15, addresses some dax issues, but sadly does not fix the
+> poisoned page|folio problem - its enhanced refcount checking turns
+> the warning into an error.
+> 
+> * This 6.14 patch set disables the warning; a proper fix will be
+> required for famfs to work at all in 6.15. Dan W. and I are actively
+> discussing how to do this properly...
+> 
+> * In terms of the correct functionality of famfs, the warning can be
+> ignored.
+> 
+> References
+> 
+> [1] - https://github.com/libfuse/libfuse/pull/1200
+> [2] - https://github.com/cxl-micron-reskit/famfs
+> [3]
+> - https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.net/ [4] - https://lore.kernel.org/linux-cxl/cover.1714409084.git.john@groves.net/
+> [5] - https://lwn.net/Articles/983105/
+> [6]
+> - https://lore.kernel.org/linux-cxl/cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com/
+> 
+> 
+> John Groves (19):
+>   dev_dax_iomap: Move dax_pgoff_to_phys() from device.c to bus.c
+>   dev_dax_iomap: Add fs_dax_get() func to prepare dax for fs-dax usage
+>   dev_dax_iomap: Save the kva from memremap
+>   dev_dax_iomap: Add dax_operations for use by fs-dax on devdax
+>   dev_dax_iomap: export dax_dev_get()
+>   dev_dax_iomap: (ignore!) Drop poisoned page warning in fs/dax.c
+>   famfs_fuse: magic.h: Add famfs magic numbers
+>   famfs_fuse: Kconfig
+>   famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
+>   famfs_fuse: Basic fuse kernel ABI enablement for famfs
+>   famfs_fuse: Basic famfs mount opts
+>   famfs_fuse: Plumb the GET_FMAP message/response
+>   famfs_fuse: Create files with famfs fmaps
+>   famfs_fuse: GET_DAXDEV message and daxdev_table
+>   famfs_fuse: Plumb dax iomap and fuse read/write/mmap
+>   famfs_fuse: Add holder_operations for dax notify_failure()
+>   famfs_fuse: Add famfs metadata documentation
+>   famfs_fuse: Add documentation
+>   famfs_fuse: (ignore) debug cruft
+> 
+>  Documentation/filesystems/famfs.rst |  142 ++++
+>  Documentation/filesystems/index.rst |    1 +
+>  MAINTAINERS                         |   10 +
+>  drivers/dax/Kconfig                 |    6 +
+>  drivers/dax/bus.c                   |  144 +++-
+>  drivers/dax/dax-private.h           |    1 +
+>  drivers/dax/device.c                |   38 +-
+>  drivers/dax/super.c                 |   33 +-
+>  fs/dax.c                            |    1 -
+>  fs/fuse/Kconfig                     |   13 +
+>  fs/fuse/Makefile                    |    4 +-
+>  fs/fuse/dev.c                       |   61 ++
+>  fs/fuse/dir.c                       |   74 +-
+>  fs/fuse/famfs.c                     | 1105
+> +++++++++++++++++++++++++++ fs/fuse/famfs_kfmap.h               |
+> 166 ++++ fs/fuse/file.c                      |   27 +-
+>  fs/fuse/fuse_i.h                    |   67 +-
+>  fs/fuse/inode.c                     |   49 +-
+>  fs/fuse/iomode.c                    |    2 +-
+>  fs/namei.c                          |    1 +
+>  include/linux/dax.h                 |    6 +
+>  include/uapi/linux/fuse.h           |   63 ++
+>  include/uapi/linux/magic.h          |    2 +
+>  23 files changed, 1973 insertions(+), 43 deletions(-)
+>  create mode 100644 Documentation/filesystems/famfs.rst
+>  create mode 100644 fs/fuse/famfs.c
+>  create mode 100644 fs/fuse/famfs_kfmap.h
+> 
+> 
+> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
 
->--
->  Kiryl Shutsemau / Kirill A. Shutemov
+Hi John,
+
+Apologies if the question is far off or irrelevant.
+
+I am trying to understand FAMFS, and I am thinking where does FAMFS
+stand when compared to OpenSHMEM PGAS. Can't we have a OpenSHMEM-based
+shared memory implementation over CXL that serves as FAMFS?
+
+Maybe FAMFS does more than that!?!
+
+Thanks,
+Alireza
+
