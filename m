@@ -1,175 +1,158 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13218101E6;
-	Wed, 30 Apr 2025 14:12:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FAD9101E6
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746022373; cv=none; b=VIHaSe/53YQc8IeQ3g8OcPGUw2mMAVCSMw8K652RBwEqg3SZXv6RQBqOt5vM5SKFeV4Rixt+rW8LOdKOpKl7oEdEgBX6P1E1Y/xsfl7UoFZPsH28umgmJf86avD37j/HY1zMinlIr4YxlE1gkofAbr758RtWuDNSg/XARAlrF50=
+	t=1746022417; cv=none; b=kV3cPH1P4yJ5w+JvOhgvbmxGOnWIB9MvPnDhoP9h3G6XXxOOBf+q1AKCfEZAcSjQrYDAKhEAAVoJQ1N2+uXYamkh23QAhFGcvpmXF2JSm7j0FhQLFb80AV3lkc8J/PbmEKSzs9Ygkg8/bdfGdVDZ586jIacY7R1cRjh8uBoO9r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746022373; c=relaxed/simple;
-	bh=HcvCTaVzzx3q7RPBC6uFYMN9Hd7p5KMc6tnbL+F69YU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y+Z4opyBsS3N8em5QKYj2k+Ekno9vKFxrjW6OEh3VlBL90JOlEeM40bmRS2kkficYlFat2vRB5thPHIz61IC9Mm0BcKfqZoiPVQzuFsfsLwJ82JjcjFS1+l5EYB8gqcp3fOdD0U5kvxiOSzU17iJn80sO0+f6/sz7KrK87XjtrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fT24SPJZ; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746022417; c=relaxed/simple;
+	bh=emAB1rCDyJbLbduld98YJERRm2UpXootehW835nh1M0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qjrj/4cMkRhElfJ14dn38AOupRDuDGThv69ZPzlUGf4BYrLf5JEQgj2CHf78E1VaIrAPHA7I6oA6MFmStN4J4LcjG7mCnTT0a6y5hTgS2HqA9ZLh1fVGEE6fet7NKmA0GiA9xPtthEazBZxO++Z2gc4zOVPBqyuVVzJV/pTVMOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FipQNXhs; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fT24SPJZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746022372; x=1777558372;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HcvCTaVzzx3q7RPBC6uFYMN9Hd7p5KMc6tnbL+F69YU=;
-  b=fT24SPJZ1R7B8fS3Xrp1K0DXDSsoteiVoF753o89i9ib20K5TIqPTXhs
-   uKK95k2CmRxjgqjpHbnsZ0Qn2vyRN2M7uxIeTr8+W8iJyWHcPiX6SRI49
-   7i7vaOzP3fthDggxJtXvpTchrtZ0eaI9Fx5578JP/RHhYlFT3KPOtRj/h
-   SudUJMlr2l2nf5cvElquVGCkSBp/8DLRIsbIk2q/xgj+wZGqI4GDA6/8A
-   c43PC3kfvvZuEanEHiZuiFapCgxdRA1VhCcVn88AsataZ6gcLtYZ/T3fI
-   IQMg8lI6pDoh8cCTy8WbbXfkjeMq8m5fE7tYq9nEjYtB3xyMzGbjUcpYS
-   A==;
-X-CSE-ConnectionGUID: VQ5Ek9f5SsSeLxafDbcVfg==
-X-CSE-MsgGUID: yqnVlpdKRPmEcdJOONtVFw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="70187901"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="70187901"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:12:51 -0700
-X-CSE-ConnectionGUID: PlSVIgpdST2WQ3C+krywdg==
-X-CSE-MsgGUID: GsQDU0juQwGzNeL0+Vaqug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="135111904"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:12:51 -0700
-Received: from [10.246.136.14] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.14])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id DA07B20B5736;
-	Wed, 30 Apr 2025 07:12:48 -0700 (PDT)
-Message-ID: <5206f699-ae03-47ad-98e9-3805bc8f2548@linux.intel.com>
-Date: Wed, 30 Apr 2025 10:12:47 -0400
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FipQNXhs"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2aeada833so212627566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746022413; x=1746627213; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=DinvXadkWJDd/MPH5TVPqJgiCAZstFOZlkyQeJrZvag=;
+        b=FipQNXhsGUwLvrxonA+UiqkjWN3wmBGcfudhXP5pw6x8BHuIzsQ8RFy++arihqQZzN
+         iCHM6undaNEu0PIBWUuQFkeeOPG97XC7IDqn7lWO6zpHvUdPItA6VPaZeWe8seC4tAKA
+         o9OhNV+09gL1OxfFu0Asa3sl2Mp+ZYUJdQZXjnusD3fNrMPvJ/KW0H8i+JmP+5gxkI/w
+         WSnwG2eeYrKvy5E0kvYiOfs+Hdbgl3UBnRf5nwWYQQWyXWhBPqMXK7gp00voeLHCHXGq
+         Su5iClpi9rPGWe/aN0EiZd3RsdHHsYzOeYKt9pmdKanGssHlpEgxvTVDuKG7q0H2dTWG
+         qS/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746022413; x=1746627213;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DinvXadkWJDd/MPH5TVPqJgiCAZstFOZlkyQeJrZvag=;
+        b=HeHu520y9qHgZm1LuQqknFRbpMGoMMvo/OI5x6/n7n0nEaln7v18RAcyuTeB+dRLdC
+         I7AIlo50fBku7RaRzPzdwi7Gex/UXEqesdSc779E9WZ0KmpwM0ddwHIhWLZXRNvL3f5W
+         Wc2rvQyRHEVN6N6mXvjjnBBAmdQtpeqTB2ML9f/IlqPsxaHTHqCgk5ompww8AN/xPVwL
+         jiZhpYpjcKALKXB5dFCF8GPvnq1qV2Cir2MKH9Xd5ewqMgKC8eWoOGUROz2yjMF33/nK
+         NHZo3xYApJTbAAIHNf9Gg70Kgvkg/YHTZRn5DT+OCbkymq1PU8MzxgGKOT6D7LnByZZm
+         kQxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvXyxTglkgSlp7TmBkWJrPlQHodMEsUkWVMWQ39lVq8PWkPHpTV7XyPXC7D86zeykYDoQ/BUWqzafuuxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQMQMVP9lUx/G9SbEbNk9alDpCB0VXxNaHxHInneLLtftqup3T
+	R+H7F57yndf78RpTQT4QYWMz0M0HHbb5E/a5t3BMK/1TPnmyu0whiE6+k5jNvKxfs/FraFvAtG2
+	ixnzKHRmlciyShTqRmE6qU31Vj0ZchsjaAnhyOg==
+X-Gm-Gg: ASbGncvsDoTwauxBuZScAtDcQb1S84La+1JvFlSexoEblzw0MP3Gt5CH0ESYzsdW7Aj
+	VGaCMXa7RjndOyqkf82AW7MhyFWhhT5Ww7MQLWdVPmx9AlOEUM9b1ipBTZU9bdrpDvYzxI4QfJm
+	x/uFWWKCxOLQB5OscZkhrw
+X-Google-Smtp-Source: AGHT+IGF8VVHxsWimGLaMgV51e98vMXf5Cvr8xjqnI4PAimqGU7YWa/LjUBXN00oPWRpNLZFjXgAkAp6ewpV3YI1ZxU=
+X-Received: by 2002:a17:907:7ba7:b0:ac1:791c:153a with SMTP id
+ a640c23a62f3a-acedf9d9efamr243537466b.27.1746022412785; Wed, 30 Apr 2025
+ 07:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86: Fix open counting event error
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Luo Gengkun <luogengkun@huaweicloud.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "mingo@redhat.com" <mingo@redhat.com>, "acme@kernel.org" <acme@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "jolsa@kernel.org" <jolsa@kernel.org>,
- "irogers@google.com" <irogers@google.com>,
- "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "x86@kernel.org" <x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250423064724.3716211-1-luogengkun@huaweicloud.com>
- <f8c349c8-b074-4b27-b799-e484631b9b3e@amd.com>
- <1d1cb14f-5729-4200-af20-d66b4feebe94@linux.intel.com>
- <a04c37c6-8f83-45e9-a39f-1e1ba613f7f4@amd.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <a04c37c6-8f83-45e9-a39f-1e1ba613f7f4@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250429151800.649010-1-neelx@suse.com> <20250430080317.GF9140@twin.jikos.cz>
+ <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com> <20250430133026.GH9140@suse.cz>
+In-Reply-To: <20250430133026.GH9140@suse.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Wed, 30 Apr 2025 16:13:20 +0200
+X-Gm-Features: ATxdqUFDV39jRwOvsZi2WAdnQEIPfo7moTPeaZfWz7ORRcNj4p9JKmV3qppnkug
+Message-ID: <CAPjX3FdexSywSbJQfrj5pazrBRyVns3SdRCsw1VmvhrJv20bvw@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Ravi,
-
-Sorry for the late response. I was on vacation.
-
-On 2025-04-25 6:12 a.m., Ravi Bangoria wrote:
-> Hi Kan,
-> 
->>>> Perf doesn't work at perf stat for hardware events:
->>>>
->>>>  $perf stat -- sleep 1
->>>>  Performance counter stats for 'sleep 1':
->>>>              16.44 msec task-clock                       #    0.016 CPUs utilized
->>>>                  2      context-switches                 #  121.691 /sec
->>>>                  0      cpu-migrations                   #    0.000 /sec
->>>>                 54      page-faults                      #    3.286 K/sec
->>>>    <not supported>	cycles
->>>>    <not supported>	instructions
->>>>    <not supported>	branches
->>>>    <not supported>	branch-misses
->>>
->>> Wondering if it is worth to add this in perf test. Something like
->>> below?
->>>
->>> --- a/tools/perf/tests/shell/stat.sh
->>> +++ b/tools/perf/tests/shell/stat.sh
->>> @@ -16,6 +16,24 @@ test_default_stat() {
->>>    echo "Basic stat command test [Success]"
->>>  }
->>>  
->>> +test_stat_count() {
->>> +  echo "stat count test"
->>> +
->>> +  if ! perf list | grep -q "cpu-cycles OR cycles"
->>> +  then
->>> +    echo "stat count test [Skipped cpu-cycles event missing]"
->>> +    return
->>> +  fi
->>> +
->>> +  if perf stat -e cycles true 2>&1 | grep -E -q "<not supported>"
->>> +  then
->>> +    echo "stat count test [Failed]"
->>> +    err=1
->>> +    return
->>> +  fi
->>> +  echo "stat count test [Success]"
->>> +}
->>> +
->>>  test_stat_record_report() {
->>>    echo "stat record and report test"
->>>    if ! perf stat record -o - true | perf stat report -i - 2>&1 | \
->>> @@ -201,6 +219,7 @@ test_hybrid() {
->>>  }
->>>  
->>>  test_default_stat
->>> +test_stat_count
->>
->> I think the perf stat default should always be supported, not just cycles.
->> Maybe we should add the check in test_default_stat?
-> 
-> Do you mean:
-> 
->   if perf stat true 2>&1 | grep -E -q "<not supported>"
->     err=1
+On Wed, 30 Apr 2025 at 15:30, David Sterba <dsterba@suse.cz> wrote:
 >
+> On Wed, Apr 30, 2025 at 10:21:18AM +0200, Daniel Vacek wrote:
+> > > The benefit of duplicating the length in each eb is that it's in the
+> > > same cacheline as the other members that are used for offset
+> > > calculations or bit manipulations.
+> > >
+> > > Going to the fs_info->nodesize may or may not hit a cache, also because
+> > > it needs to do 2 pointer dereferences, so from that perspective I think
+> > > it's making it worse.
+> >
+> > I was considering that. Since fs_info is shared for all ebs and other
+> > stuff like transactions, etc. I think the cache is hot most of the
+> > time and there will be hardly any performance difference observable.
+> > Though without benchmarks this is just a speculation (on both sides).
+>
+> The comparison is between "always access 1 cacheline" and "hope that the
+> other cacheline is hot", yeah we don't have benchmarks for that but the
+> first access pattern is not conditional.
 
-Yes, I assumed that all the events in the perf stat are always
-available. But it seems the assumption is only true for bare metal.
+That's quite right. Though in many places we already have fs_info
+anyways so it's rather accessing a cacheline in eb vs. accessing a
+cacheline in fs_info. In the former case it's likely a hot memory due
+to accessing surrounding members anyways, while in the later case is
+hopefully hot as it's a heavily shared resource accessed when
+processing other ebs or transactions.
+But yeah, in some places we don't have the fs_info pointer yet and two
+accesses are still needed.
 
+In theory fs_info could be shuffled to move nodesize to the same
+cacheline with buffer_tree. Would that feel better to you?
 
-> Isn't this ambiguous? Also, this fails on machines where HW pmu
-> is not supported. For ex, on my qemu guest with `-cpu pmu=off`:
-> 
->   $ ./perf list | grep "cpu-cycles OR cycles"
->   <empty output>
-> 
->   $ ./perf stat true
->    Performance counter stats for 'true':
->                 0.42 msec task-clock:u                     #    0.470 CPUs utilized
->                    0      context-switches:u               #    0.000 /sec
->                    0      cpu-migrations:u                 #    0.000 /sec
->                   48      page-faults:u                    #  113.874 K/sec
->      <not supported>      cycles:u
-> 
-If taking the virtualization into account, the test_stat_count looks
-good to me.
+> > > I don't think we need to do the optimization right now, but maybe in the
+> > > future if there's a need to add something to eb. Still we can use the
+> > > remaining 16 bytes up to 256 without making things worse.
+> >
+> > This really depends on configuration. On my laptop (Debian -rt kernel)
+> > the eb struct is actually 272 bytes as the rt_mutex is significantly
+> > heavier than raw spin lock. And -rt is a first class citizen nowadays,
+> > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
+> > I think it would be nice to slim the struct below 256 bytes even there
+> > if that's your aim.
+>
+> I configured and built RT kernel to see if it's possible to go to 256
+> bytes on RT and it seems yes with a big sacrifice of removing several
+> struct members that cache values like folio_size or folio_shift and
+> generating worse code.
+>
+> As 272 is a multiple of 16 it's a reasonable size and we don't need to
+> optimize further. The number of ebs in one slab is 30, with the non-rt
+> build it's 34, which sounds OK.
 
-Thanks,
-Kan
+That sounds fair. Well the 256 bytes were your argument in the first place.
 
+Still, with this:
+
+--- a/fs/btrfs/extent_io.h
++++ b/fs/btrfs/extent_io.h
+@@ -82,7 +82,10 @@ void __cold extent_buffer_free_cachep(void);
+ struct extent_buffer {
+        u64 start;
+        u32 folio_size;
+-       unsigned long bflags;
++       u8 folio_shift;
++       /* >= 0 if eb belongs to a log tree, -1 otherwise */
++       s8 log_index;
++       unsigned short bflags;
+        struct btrfs_fs_info *fs_info;
+
+        /*
+@@ -94,9 +97,6 @@ struct extent_buffer {
+        spinlock_t refs_lock;
+        atomic_t refs;
+        int read_mirror;
+-       /* >= 0 if eb belongs to a log tree, -1 otherwise */
+-       s8 log_index;
+-       u8 folio_shift;
+        struct rcu_head rcu_head;
+
+        struct rw_semaphore lock;
+
+you're down to 256 even on -rt. And the great part is I don't see any
+sacrifices (other than accessing a cacheline in fs_info). We're only
+using 8 flags now, so there is still some room left for another 8 if
+needed in the future.
