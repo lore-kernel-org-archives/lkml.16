@@ -1,75 +1,195 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88EED21325D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648ED21325D
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:52:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006718; cv=none; b=JrCaEvMjxReeFQrvcZmnwLxHlsGPbK9EaFA/H+TDfpAXmA2KoTJZPUWEc6dBfltBXjQdjo9YJEyX8gMtsCLHARggrZoU46IhnAFDf+dHlTgS9zrYWklhhVunt3gdOj5UKZhtQiGXTskmdF5J6BxniEA3aHxHibkPCh4LRR8fqLs=
+	t=1746006765; cv=none; b=jGATEqigmG/Z8v72n+I9ek/J0497PT+m9aucB3Vga1Hu/oQh3/5Y8ZVcFUs0bxWfdGCZOalxUUmcGk6aDf9qXt8r+C2dtDWF3AnQ8Plyu1XcGATQFH+YC8j/kUMVNKOVTZDU8SiXd1xfdvToC3BLsoo7exWBRIrNzAqefZffXXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006718; c=relaxed/simple;
-	bh=H9TVpNIUqRJqkHSoRR2HwqA45ZTtVXapiUPjmIrPXOs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Xv9Y1mJnndoOscpMnzayYqdAChti114qRHq2DNOAT3JO1heoW211DTeAjhPMDua8KXVPCWC/I/i306quGI/sDKqHJQ7BVyh53WvzVnD7A5xkgOwJDL1Xd86G1d83s29zaRYhFSqwNcdln311mrX6EnIXf7wm4X2GjbqjKHgM/WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=cQi3bRwt; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1746006765; c=relaxed/simple;
+	bh=oc9dl2byWPPO3Vq6aQgy6QzXniyIDx/pj6vtzDnjH5E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k6KNE6wv6HCR4DCTl/b3yvO9xE2Bleg/qqDveTBnmoeOGagPl3yiQ8KMyDFlFctmEURl78Vi032kdAsEzxKj0k8/psFguu/+0gSvv7GJEq8ztdmXKn3L/ooaJk0cAbyGbB1R6+oPg5ANtJSXk4zld9XMjH6TEQRAtokPWmeduEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bgh+Q5/j; arc=none smtp.client-ip=95.215.58.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="cQi3bRwt"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=H9TVpNIUqRJqkHSoRR2HwqA45ZTtVXapiUPjmIrPXOs=;
-	t=1746006716; x=1747216316; b=cQi3bRwteL+axoGex7Whq7dmLg9gTlVyLy5jAkHPTLPrhjK
-	adJOUCQoNIJSGVEpl/07jhNk7AZfGh2ujvGYvZb6H5oysggn47QczNME03CzEK046K+AoyEL+bnHU
-	alj0xb44Xyccg6aGjjVaIK2C/D2Wo/UKvwfhA7GLvtm1s/LK7Vu84jOltyT9jrUc8DprKLlJAqSWR
-	5sFxAFqCpglsswG3G38V69rPNZhJcsl5/c0jryU1myvPLfakDRYAGV4wB0NsVqgWGXUKcVHgoLJp+
-	IJlpZJ8o6Wf7GY7dTGGPRHKp/RDZCNWr26HXoMjQEP2UZFhGVOyReVKyzVlbYcPA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.1)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uA46V-0000000Dars-3CIj;
-	Wed, 30 Apr 2025 11:51:47 +0200
-Message-ID: <0837b343960cc6392df4a04b974a2ebca4b60b9f.camel@sipsolutions.net>
-Subject: Re: [PATCH v7 00/13] nommu UML
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Hajime Tazaki
-	 <thehajime@gmail.com>
-Cc: linux-um@lists.infradead.org, ricarkol@google.com,
- Liam.Howlett@oracle.com, 	richard@nod.at, anton.ivanov@cambridgegreys.com,
- linux-mm@kvack.org, 	linux-kernel@vger.kernel.org
-Date: Wed, 30 Apr 2025 11:51:47 +0200
-In-Reply-To: <7271fdc2-5f3f-459d-ad64-b0275265fe2a@lucifer.local>
-References: <cover.1737348399.git.thehajime@gmail.com>
-	 <f4242067-0113-432e-b8d1-d26ff5e4a355@lucifer.local>
-	 <m21pte6z73.wl-thehajime@gmail.com>
-	 <7271fdc2-5f3f-459d-ad64-b0275265fe2a@lucifer.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bgh+Q5/j"
+Message-ID: <86889fb9-1d6f-4d6c-8ea8-3fbf2389dae9@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746006759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HNorE4s0n1wq6lXGuCVhLcwvXE+qiMHLcQOcVIjIMR8=;
+	b=Bgh+Q5/jFJZi5Rm1sSqdGNz+pCkAhllDI2GZhw+GaE3buzO67DQ5NmNDoTWWK7VySDjmHl
+	XkIY3Q7qUchpJfkPuAWE4qCt2T7Ged/oaeruewgc/1crwYLbzJEyBk6i8hNaJh+o0MR2xm
+	4Em4A1/tZMjy492JjK5Uy/5qnWpKAks=
+Date: Wed, 30 Apr 2025 10:52:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
+To: Sagi Maimon <maimon.sagi@gmail.com>
+Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
+ andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org
+References: <20250414085412.117120-1-maimon.sagi@gmail.com>
+ <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
+ <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
+ <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
+ <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
+ <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev>
+ <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
+ <44b67f86-ed27-49e8-9e15-917fa2b75a60@linux.dev>
+ <CAMuE1bFk=LFTWfu8RFJeSoPtjO8ieJDdEHhHpKYr4QxqB-7BBg@mail.gmail.com>
+ <507eb775-d7df-4dd2-a7d1-626d5a51c1de@linux.dev>
+ <CAMuE1bFLB24ELFOSG=v+0hxJ+a+KGNWc8=Z3=kbXOs03PtLFOA@mail.gmail.com>
+ <fd813f14-ea75-4f5a-a99e-d2925c25ccd2@linux.dev>
+ <CAMuE1bEH0e+GAsCumED0TdXihtsmYV4T5uRLmz7_pePt8RNQzQ@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAMuE1bEH0e+GAsCumED0TdXihtsmYV4T5uRLmz7_pePt8RNQzQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 2025-04-29 at 14:23 +0100, Lorenzo Stoakes wrote:
-> Thanks, appreciate the response. I would say send a v8 that's rebased to
-> make life easier for maintainers :) if you already have it ready to go th=
-at
-> is!
+On 29/04/2025 09:42, Sagi Maimon wrote:
+> On Wed, Apr 16, 2025 at 5:45 PM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
+>>
+>> On 16/04/2025 14:59, Sagi Maimon wrote:
+>>> On Wed, Apr 16, 2025 at 1:35 PM Vadim Fedorenko
+>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>
+>>>> On 16/04/2025 07:33, Sagi Maimon wrote:
+>>>>> On Mon, Apr 14, 2025 at 4:55 PM Vadim Fedorenko
+>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>
+>>>>>> On 14/04/2025 14:43, Sagi Maimon wrote:
+>>>>>>> On Mon, Apr 14, 2025 at 4:01 PM Vadim Fedorenko
+>>>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>>>
+>>>>>>>> On 14/04/2025 12:38, Sagi Maimon wrote:
+>>>>>>>>> On Mon, Apr 14, 2025 at 2:09 PM Vadim Fedorenko
+>>>>>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>>>>>
+>>>>>>>>>> On 14/04/2025 11:56, Sagi Maimon wrote:
+>>>>>>>>>>> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
+>>>>>>>>>>> <vadim.fedorenko@linux.dev> wrote:
+>>>>>>>>>>>>
+>>>>>>>>>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
+>>>>>>>>>>>>> Sysfs signal show operations can invoke _signal_summary_show before
+>>>>>>>>>>>>> signal_out array elements are initialized, causing a NULL pointer
+>>>>>>>>>>>>> dereference. Add NULL checks for signal_out elements to prevent kernel
+>>>>>>>>>>>>> crashes.
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
+>>>>>>>>>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
+>>>>>>>>>>>>> ---
+>>>>>>>>>>>>>         drivers/ptp/ptp_ocp.c | 3 +++
+>>>>>>>>>>>>>         1 file changed, 3 insertions(+)
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>>>> index 7945c6be1f7c..4c7893539cec 100644
+>>>>>>>>>>>>> --- a/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>>>> +++ b/drivers/ptp/ptp_ocp.c
+>>>>>>>>>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
+>>>>>>>>>>>>>             bool on;
+>>>>>>>>>>>>>             u32 val;
+>>>>>>>>>>>>>
+>>>>>>>>>>>>> +     if (!bp->signal_out[nr])
+>>>>>>>>>>>>> +             return;
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>>             on = signal->running;
+>>>>>>>>>>>>>             sprintf(label, "GEN%d", nr + 1);
+>>>>>>>>>>>>>             seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
+>>>>>>>>>>>>
+>>>>>>>>>>>> That's not correct, the dereference of bp->signal_out[nr] happens before
+>>>>>>>>>>>> the check. But I just wonder how can that even happen?
+>>>>>>>>>>>>
+>>>>>>>>>>> The scenario (our case): on ptp_ocp_adva_board_init we
+>>>>>>>>>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
+>>>>>>>>>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
+>>>>>>>>>>> when calling signal 2 or 3  the dereference occurs.
+>>>>>>>>>>> can you please explain: " the dereference of bp->signal_out[nr] happens before
+>>>>>>>>>>> the check", where exactly? do you mean in those lines:
+>>>>>>>>>>> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
+>>>>>>>>>>          ^^^
+>>>>>>>>>> yes, this is the line which dereferences the pointer.
+>>>>>>>>>>
+>>>>>>>>>> but in case you have only 2 pins to configure, why the driver exposes 4
+>>>>>>>>>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
+>>>>>>>>>>
+>>>>>>>>> I can (and will) expose only 2 sma in adva_timecard_attrs, but still
+>>>>>>>>> ptp_ocp_summary_show runs
+>>>>>>>>> on all 4 signals and not only on the on that exposed, is it not a bug?
+>>>>>>>>
+>>>>>>>> Yeah, it's a bug, but different one, and we have to fix it other way.
+>>>>>>>>
+>>>>>>> Do you want to instruct me how to fix it , or will you fix it?
+>>>>>>
+>>>>>> well, the original device structure was not designed to have the amount
+>>>>>> of SMAs less than 4. We have to introduce another field to store actual
+>>>>>> amount of SMAs to work with, and adjust the code to check the value. The
+>>>>>> best solution would be to keep maximum amount of 4 SMAs in the structure
+>>>>>> but create a helper which will init new field and will have
+>>>>>> BUILD_BUG_ON() to prevent having more SMAs than fixed size array for
+>>>>>> them. That will solve your problem, but I will need to check it on the
+>>>>>> HW we run.
+>>>>>>
+>>>>> just to be clear you will write the fix and test it on your HW, so you
+>>>>> don't want me to write the fix?
+>>>>
+>>>> Well, it would be great if you can write the code which will make SMA
+>>>> functions flexible to the amount of pin the HW has. All our HW has fixed
+>>>> amount of 4 pins that's why the driver was coded with constants. Now
+>>>> your hardware has slightly different amount of pins, so it needs
+>>>> adjustments to the driver to work properly. I just want to be sure that
+>>>> any adjustments will not break my HW - that's what I meant saying I'll
+>>>> test it.
+>>>>
+>>> Just to be clear (correct me please if I am wrong):
+>>> I will write the code, then create a patch and upstream to the vanilla
+>>> you will test my change on your HW and only then approve the patch
+>>
+>> Yes, that's correct
+>>
+> On altera we have implemented 2 signals and 4 SMAs (does not make sense, but...)
+> The original fix is regarding struct ptp_ocp_signal signal[4], but on
+> your fix suggestion
+> you mension SMAs.
+> So what to do? fix the SMA array or signal array or both?
+> and if both should we establish some connection between the two
+> meaning if we have only
+> two SMAs then we can initiate only two signals?
+> please advise
 
-There probably haven't been that many patches since, but I guess why not
-:)
+Ok, now I got it. Previously, the ptp_ocp driver assumed that the amount
+of SMAs is equal to the amount signals supported as well as frequency
+outputs and always equals to 4. With the details you provided the
+assumption is wrong and we have to make proper code for such cases.
 
-I was sort of hoping to get the seccomp patches from Benjamin - that
-have been waiting far longer - in first to see what overlap if any there
-might be, but I think he and Hajime have already concluded there wasn't
-all that much overlap anyway.
+I would suggest to introduce 3 fields of u8 which will store the real
+amount of SMAs/signals/frequencies supported by probed hardware. And
+reuse this fields in any show/set functions.
 
-But it's good to hear that it'd be useful to you.
+>>>>>>>>>>> struct ptp_ocp_signal *signal = &bp->signal[nr];
+>>>>>>>>>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
+>>>>>>>>>>>> the end of ptp_ocp_adva_board_init() like it's done for other boards.
+>>>>>>>>>>>>
+>>>>>>>>>>>> --
+>>>>>>>>>>>> pw-bot: cr
+>>>>>>>>>>
+>>>>>>>>
+>>>>>>
+>>>>
+>>
 
-johannes
