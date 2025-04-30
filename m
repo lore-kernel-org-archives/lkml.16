@@ -1,123 +1,108 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4294629408;
-	Wed, 30 Apr 2025 18:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DB3190676;
+	Wed, 30 Apr 2025 18:23:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037236; cv=none; b=gkssEMn6xXi+4JhYgYyNS9QFoXowso1OkEpisc7xmnR8kmIAyr4bf5Qq+nlpf4SmAit6HDJ7RePQYzF5bHhhsqf3RT+QJZ3KYdjswh8ksS/coc7bknciZUJ9yweGcjKYecQVfCQPWEMtyKo3iQ91xVmVsHF2Hhng+bRyX/JVOko=
+	t=1746037417; cv=none; b=VzP8Cc9W3ih8KMiS0IKYjqD5QDC3j+m8rL2e8nqsf8gmmUQz6gH4DnFPwiGujEXsHD4HoymMXhvwbJYLN24SwLvDttxw0GukRNgphgXvwlfuuqYXvD1AbNrC+BuGUxRecdbmGbeaho+EymS03SH+a5GxTCcpwDyjYq/q9IZ7t+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037236; c=relaxed/simple;
-	bh=xZmXq/yHV4PYm9VEKiW5gq0YpRzlOAJesgu2pi+Pgos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d3krSNMh6Vj6fEp8Qoi/MsdH5pPKb1riRdyLLhlvCbwLOdaE1W6ZLjNy/k/bhOuGYoDyLIRgFTehjPhQFht34d/E9cKgi8hRisLTc+SwmV+jFU1MHiFnPDVnACRwca/Ov/Dd7LrIA8m0eeyju+U9xgM3AT29QQtbQFuD4OwTDAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4Znl4k5gw7z9slR;
-	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id CRILqcdhiA9l; Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4Znl4k4hwwz9slF;
-	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 91A0F8B765;
-	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id CGL3eL1v_ASl; Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 765C98B763;
-	Wed, 30 Apr 2025 19:47:17 +0200 (CEST)
-Message-ID: <11e1a1e7-7bd3-4d48-804c-45b53b5e15d5@csgroup.eu>
-Date: Wed, 30 Apr 2025 19:47:17 +0200
+	s=arc-20240116; t=1746037417; c=relaxed/simple;
+	bh=BGE5P8pILZj++lhgPLZi13PAymNSTla+4LMFaC02wP8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fIjvbC0wXEgZIkNtk8DxyxR+ji4YpLA6ERWHfGXLv58QgVgiO4UQLvfm9t4nHGuXthR6og4wBx5a5t51/NWv9y2R7semuSA61CDMuN4O34xOBQbidgjoSJaF2zj8q/9Y9b1/sDlYE93FIHi+nKKuK3zusJG87Uif/rnocvQHurM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OTzQSgTo; arc=none smtp.client-ip=209.85.219.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OTzQSgTo"
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-6e8ffa00555so2192986d6.0;
+        Wed, 30 Apr 2025 11:23:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746037415; x=1746642215; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ni9fsiOSDdijzrkYLIlegIUtj7F8njM6gU+RRiJK3jo=;
+        b=OTzQSgTodHHI26L/6HNm/nLVClPezAT3Dmtz4/J1zYf8pfwgsqfGkQFKzvcss5O6hW
+         WVVPgsVcfJr10eOUdKQPquMtuf907TUsr0ukN49x33jDt1hKyTG9J8WlBXSPm5dUqeD7
+         zc+rCrOP/lElxkfMurn982Fy7zy9as6JsPVdWXsWTtyL/xq5qH0KhUQQvWkYynFIdJcn
+         mW4K9OAlTS2p6jmcVLi9me43eKHfnLZOrcjwOGa2CaH39UENo+H/PQ00mzdd9avyAj4d
+         NMdV1rxSYUOvV5jKTVfHi/DBY0RT/mOpeR8ZQWRkNCtrX5llf+KA4hXUoKHikNqKHXKd
+         Skvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746037415; x=1746642215;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ni9fsiOSDdijzrkYLIlegIUtj7F8njM6gU+RRiJK3jo=;
+        b=RbEYRnxcvRKpN9nt68pZM9NWEE0CjLEO6pHpF5CqTZxAqNVP9T+FRrnbfIgLjxga3b
+         Ei72vpC3zfRKdF39zrIbAs9HWmVUJQBNflC7ZSvmlD/sSOX2rqHlyTXgpDsPzaWvFs7E
+         fMxfIilNFJ5ebDcUB2s7EKvlo9yeZZjlkQoXRwGzCFPiAMcVxRt/ux9+5wZNqTnvJluB
+         UwHjc/vzJHFrIXX3BZQz7emAO1wLeOpOdb67QFoDkpDYhKqE312vN4rjGkLwxy5cC6gU
+         og90vNKJjlvpfu/hXABrAAlLWoJbBmhvH8wUYH+RtzUaVmweGnh0qW31aBJbQ+3Rwt0s
+         GpOg==
+X-Forwarded-Encrypted: i=1; AJvYcCU0I/Vj4fw1OKHsIa4vZiK/Hkp5jz0BHHVcX1LfWHopczAi24gX8RRl5SoDQ4O6dsFhxjUdC3pBwvA=@vger.kernel.org, AJvYcCWhxJEwri6llDDtPjPbCX9e7jp7/1VtryEE8EH7OSgz3S0nNhvUrY0Cqp4UhPYh06yX7coxGvnSvKAcSGO4@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIF8uU0frn1i5M1j0Ai1RuT/mM8M95BSaOB7VctnscnmR0CZzu
+	HOaghW4BfpltfQ6J+k+B+e0xPcsIK915jHtVBUvqE7GjT4ZYGXis
+X-Gm-Gg: ASbGnctTpBjFklfpif7nNVnptcdY1IVCirHFwULhcYnS/sREe90X5pIY1peJYe//xLr
+	DTnJhlXqeta9e5iEnv6MkxFbZObVxsDOga9mb+dr5MuIIEIngqvh/azsxGZ4mvflbEQgdOvUMN0
+	Vu7hK781BcU4fa2jaFJOdg5Nwi42jOLlvO/Voqo0LjuKxsUQQGD+qvU+iWDFbRNCIWfSVhlUD5p
+	c0/M9QIz+78bkynnsHx1WzPpplEAQuHDhUG8t6KOZDxpD35POBWHCTbDOABxAyYJ0LbMM7UB+Sg
+	NWt5aZTYWeuHJOpDtK88i7RpASoAIJ1t8YV9MjXY+jrnKwN42DgLktpCbvogfc8uBxq/CcTb
+X-Google-Smtp-Source: AGHT+IG4uyiUy+B7giYkxeAY6IdTUsN4jxLf9aft69KrEkNVHODs+hWMZKgECu+DhpxrxYjvD4bDAA==
+X-Received: by 2002:a05:6214:2388:b0:6ea:d6e1:f3f8 with SMTP id 6a1803df08f44-6f4fe1333ecmr59467246d6.45.1746037415123;
+        Wed, 30 Apr 2025 11:23:35 -0700 (PDT)
+Received: from c65201v1.fyre.ibm.com ([129.41.87.7])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe88108esm11084396d6.122.2025.04.30.11.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 11:23:34 -0700 (PDT)
+From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+To: jikos@kernel.org,
+	jic23@kernel.org,
+	srinivas.pandruvada@linux.intel.com,
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Subject: [PATCH] HID: sensor-hub: Fix typo and improve documentation for sensor_hub_remove_callback()
+Date: Wed, 30 Apr 2025 11:23:00 -0700
+Message-ID: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] powerpc: 83xx/gpio: use new line value setter
- callbacks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
- <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org>
- <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
- <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Fixed a typo in "registered" and improved grammar for better readability
+and consistency with kernel-doc standards. No functional changes.
 
+Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+---
+ include/linux/hid-sensor-hub.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Le 30/04/2025 à 19:37, Bartosz Golaszewski a écrit :
-> On Wed, Apr 30, 2025 at 7:33 PM Christophe Leroy
-> <christophe.leroy@csgroup.eu> wrote:
->>
->>
->>
->> Le 08/04/2025 à 09:21, Bartosz Golaszewski a écrit :
->>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>
->>> struct gpio_chip now has callbacks for setting line values that return
->>> an integer, allowing to indicate failures. Convert the driver to using
->>> them.
->>>
->>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>> ---
->>>    arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
->>>    1 file changed, 4 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
->>> index 4d8fa9ed1a67..d4ba6dbb86b2 100644
->>> --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
->>> +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
->>> @@ -92,7 +92,7 @@ static void mcu_power_off(void)
->>>        mutex_unlock(&mcu->lock);
->>>    }
->>>
->>> -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
->>> +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
->>>    {
->>>        struct mcu *mcu = gpiochip_get_data(gc);
->>>        u8 bit = 1 << (4 + gpio);
->>> @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
->>>
->>>        i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctrl);
->>>        mutex_unlock(&mcu->lock);
->>> +
->>> +     return 0;
->>
->> i2c_smbus_write_byte_data() can fail, why not return the value returned
->> by i2c_smbus_write_byte_data() ?
->>
-> 
-> The calls to i2c_smbus_write_byte_data() in this driver are
-> universally not checked. I cannot test it and wasn't sure if that's on
-> purpose so I decided to stay safe. Someone who has access to this
-> platform could potentially fix it across the file.
-
-As far as I can see this function is called three times in this file.
-
-First time is in mcu_power_off(), which must return void.
-Second time is inside a forever loop in shutdown_thread_fn(), and I 
-can't see what could be done with the returned value.
-
-Last time is in the function you are changing. Wouldn't it make sense to 
-take the value into account here ? IIUC it is the purpose of the change, 
-isn't it ?
-
-Christophe
+diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
+index c27329e2a5ad..5d2ac79429d4 100644
+--- a/include/linux/hid-sensor-hub.h
++++ b/include/linux/hid-sensor-hub.h
+@@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
+ /**
+ * sensor_hub_remove_callback() - Remove client callbacks
+ * @hsdev:	Hub device instance.
+-* @usage_id:	Usage id of the client (E.g. 0x200076 for Gyro).
++* @usage_id:	Usage id of the client (e.g. 0x200076 for Gyro).
+ *
+-* If there is a callback registred, this call will remove that
+-* callbacks, so that it will stop data and event notifications.
++* Removes a previously registered callback for the given usage ID.
++* Once removed, the client will no longer receive data or event
++* notifications.
+ */
+ int sensor_hub_remove_callback(struct hid_sensor_hub_device *hsdev,
+ 			u32 usage_id);
+-- 
+2.43.5
 
