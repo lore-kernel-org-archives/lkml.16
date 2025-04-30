@@ -1,365 +1,481 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF69219E93
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E326219E93;
+	Wed, 30 Apr 2025 20:09:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043778; cv=none; b=LFZ14XTcWu3aU874xObl/uTPsjAKZVs17LjT7yCyZ5s1XaO5KBwFJM1Xe3UGJH0sKwe2Z5J13vH9OPqRSn2eNFnV0wFhGOCkTTF+f7GPcK4R33YTSTad1QRBtl8P5vFWMZNnmMsUncjjfPbUzDDzdvIhAH3Y7y1YhpnCbo9twPQ=
+	t=1746043785; cv=none; b=iIgYKaYhO0GV9hjdU8GbqbUQ/fnjV8BvOl7BM4kUa9rlbKrmcGnsNmgiX8HxVVOMtJmaTQuTnKpHgt+5jT5ReIY5bWAOVB1zhKHogStSnMRne2N60CKB710fax74L5Tg1rbkSpBzyd1/Cw5pqSDCpojrNRUe+e0FY4FDjKMRvJg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746043778; c=relaxed/simple;
-	bh=CthprGmrXS/ON0Pq0rm8yyd9RyM7waXfOJ/Qs2aNTbI=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=D43d3wkhsw1c60OF8nc/4QhenOOsnAwjnd770UcR9nyFotBYmRaPpN9ngfdfLeQUqHpFYUAud78e7i5sNAPidovv5Z3ZtofI4jjfcElZAgIguyO6C4cxdTz51oKtFjoKA4Ji+gJfq6WldczDKFwBw/J0D8Yr7VFsgPlYAmZnWTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m8SX3GzO; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1746043785; c=relaxed/simple;
+	bh=aqQoz3zfSHBN7xZi8mNOZ6yFV5uHsGYtCMJRNNTOAnQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=rnLLp8fyUCCKUZTvvTrFAcG0zi2i9mMok+fB+QCffnUoNyf3z6m/xy1CsfhCJ2/1bIULrGTPUamuaCTuxT46jlzRFI+hMVC9E5tbLYkTK8FUX4I/Dg3mPiwBjR2c/ePsbcGp1Gt9T6hDH3yCfegheBbdNze+Smy7I9vpXCKBnM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QCNZ7mHp; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m8SX3GzO"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736c7df9b6cso382941b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:09:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746043775; x=1746648575; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=roo9VbEUeuTY1fPaSMGBkZlZZtsYBcMbMprjUdRSI8w=;
-        b=m8SX3GzOKDw8pEyl6NqsAO/yG/qoAqI8XzEIYOwBncOGkyO6J0N7K6C1HscJNLjqII
-         wGgTP907TOdnLiAn55B6fFksdkJS28TWJuEnFaUQXoFEULERDx2wEwrnyPntYnkStVAT
-         9s79m1/6bR2INMDGwGGpvb8KYWzKyeoRt5tpUqp0XRYi2v1cZygzl7AJTvK96IGCkK3O
-         Q7Cmz/iouECf+qwttnQ5mzvwwj8GieMa/5QjMav232oV8Xf54GrLl+JXSPOQZkkHT1wP
-         uC8zeF4ACxnemyZaRqG73NzFmVRUjYA+fTfs6uMHJ9lRFm+Gulz91a4c0ppZV0z0DdIY
-         sW+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746043775; x=1746648575;
-        h=content-transfer-encoding:cc:to:from:subject:message-id
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=roo9VbEUeuTY1fPaSMGBkZlZZtsYBcMbMprjUdRSI8w=;
-        b=jOKjywutUVQSpDCm/lp2AuD6qVUcEbuhrlS6PQaHTM1scO8yl46RbQJgGSjxp88LCp
-         Wonboo504ihGkjY8iIRQhN7ROHVzaymmx1X12GEcdF4n54gYOEdU5LP1tziDKu/OODTx
-         Gkt9iZJjRFvt4wUttezuqau3CLl2LewuG13+V+OhOM2LtBHUhjR9Wyfj2S0hxzAGSral
-         CQlyte4w5lffiwEkQXoAw+L19L7IElsz7YCZyNYXiT82aIhg7wQ2dAbbm8PcSi6wevGq
-         AAYty9It07QTfY+Mfo6JwTcaO0mfB1GL71FxaiwFwKGJDTzQRZFe9G7TfG8FWznI3uEl
-         +uNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXa4tvsi5lUe0+rjKLDiMZT6a3e/RdUAffWFp2byXA4KhUy7kdftFLLvg2DCtISX7PrOP8HjrCpMtNxAAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjEDEkKbOWxjmSKamAZeXiNkCzfQ3hXAIW3pDCnr9mzfLwdogV
-	jUgHLLQ38n3er8AX44lx/r7tLyo3qbp/DiyUCzjwXAhghCkRQ+jhgMyoGHW0Sr+iaRfjbOO4K+w
-	bvfnfTvYsEOYKH32Z1OrmKA==
-X-Google-Smtp-Source: AGHT+IFBFEey+jz79g0x/N2Y9iwsRGWFSszUVDcZKaPJ2VRwyywiCnN6mK3lLG1CvDJudH65ioUy3VFbaqS30NNXvw==
-X-Received: from pfjq6.prod.google.com ([2002:a05:6a00:886:b0:736:aaee:120e])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:3a44:b0:1fe:90c5:7cee with SMTP id adf61e73a8af0-20aa438094emr6214425637.28.1746043774762;
- Wed, 30 Apr 2025 13:09:34 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:09:33 -0700
-In-Reply-To: <aA7UXI0NB7oQQrL2@yzhao56-desk.sh.intel.com> (message from Yan
- Zhao on Mon, 28 Apr 2025 09:05:32 +0800)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QCNZ7mHp"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGfgNC032392;
+	Wed, 30 Apr 2025 20:09:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	PHWRyztN4HVgp8yG/iB39vMileOEcPynhAEAVEVCXhQ=; b=QCNZ7mHp7XW71SY2
+	lFkR+hXFGr4+BIhG+7KUMjOwlitKSSuY9KrHOUJP4TjEFvzCqcNiDdjuYs7PguvD
+	fWuyrgF+mfxgIukcxZVILajpqAXyAJ/8tTAdOpohHpTUE6Y5k/f8rtj7HwBGI47d
+	9FqJpVJ3k5rJcPys7nxdV1vfDf8dSdWYS6aJNwNFF/UuDpTYnJZjebak7dRc4EHP
+	DKcE2oHlkerF+IOwe/nru2FtavWoX6TS2lsYQ9YYq6Z97ii+OO/o+9qm6GmhOCgo
+	iz8etUDk/pONXnqbRfg8x/cLcB1LR3DLHfe/mr429SZTb6zxae3h55yI2RVKIVmo
+	cyyqLQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u2bhay-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 20:09:34 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UK9XM8010183
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 20:09:33 GMT
+Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
+ 2025 13:09:32 -0700
+Message-ID: <71594689-06f7-41cb-ba6c-65459388fd1d@quicinc.com>
+Date: Wed, 30 Apr 2025 13:09:31 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <diqz4iy5xvgi.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 39/39] KVM: guest_memfd: Dynamically split/reconstruct
- HugeTLB page
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: vannapurve@google.com, chenyi.qiang@intel.com, tabba@google.com, 
-	quic_eberman@quicinc.com, roypat@amazon.co.uk, jgg@nvidia.com, 
-	peterx@redhat.com, david@redhat.com, rientjes@google.com, fvdl@google.com, 
-	jthoughton@google.com, seanjc@google.com, pbonzini@redhat.com, 
-	zhiquan1.li@intel.com, fan.du@intel.com, jun.miao@intel.com, 
-	isaku.yamahata@intel.com, muchun.song@linux.dev, erdemaktas@google.com, 
-	qperret@google.com, jhubbard@nvidia.com, willy@infradead.org, 
-	shuah@kernel.org, brauner@kernel.org, bfoster@redhat.com, 
-	kent.overstreet@linux.dev, pvorel@suse.cz, rppt@kernel.org, 
-	richard.weiyang@gmail.com, anup@brainfault.org, haibo1.xu@intel.com, 
-	ajones@ventanamicro.com, vkuznets@redhat.com, maciej.wieczor-retman@intel.com, 
-	pgonda@google.com, oliver.upton@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/7] drm/msm: make it possible to disable KMS-related
+ code.
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Rob Clark
+	<robdclark@gmail.com>, Dmitry Baryshkov <lumag@kernel.org>,
+        Sean Paul
+	<sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        "David
+ Airlie" <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250413-msm-gpu-split-v1-0-1132f4b616c7@oss.qualcomm.com>
+ <20250413-msm-gpu-split-v1-3-1132f4b616c7@oss.qualcomm.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250413-msm-gpu-split-v1-3-1132f4b616c7@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: OTMzONAXA_11YC1ZSoATYcgSDJzghavs
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDE0NyBTYWx0ZWRfXz6XL9BNcP6en /PKo8hcypFVr9BJkzDraler6QWDJ1G5UHK7/Vqc2vEA06BVyCX2wKOfzR76zOvTLhu9+I+F6N0F EfbyV2TvDsWBohPzn8p3jThFS8vxZehMKqkHGQMGC2mD2sYpyv3rF1bCFNhqFIFGpZYNt1oBEF2
+ pVO6rxCahOZbE1OYDiKQeuFVXyF3749L3A08sQ/SGhMToeSvkXNrun9E/Lyo6eWlICeiNXPIrew d2rpEYjhKGdSJbIvghZBLONpcb686ddX0+ksxRzAT8U0BAiIJ+3WLb3shTs385iVDIEgHFuF3oj SdNuacNLGXEobnMpITLsyAypz62XHvBjcEa8fbMQidYHJiSZ94N3LyNIcr6fzm4LCeCBud/AdWb
+ 6zvEZIVWjnFlNllgSA2DY9erNnL0ar6GzKam7ntUiX8Ddz8lbDDt9YrddrOh6YYIVkD+QlEZ
+X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=6812837e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=ZnBz01trJ1QaHCt7Pq8A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: OTMzONAXA_11YC1ZSoATYcgSDJzghavs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300147
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
 
-> On Fri, Apr 25, 2025 at 03:45:20PM -0700, Ackerley Tng wrote:
->> Yan Zhao <yan.y.zhao@intel.com> writes:
->>=20
->> > On Thu, Apr 24, 2025 at 11:15:11AM -0700, Ackerley Tng wrote:
->> >> Vishal Annapurve <vannapurve@google.com> writes:
->> >>=20
->> >> > On Thu, Apr 24, 2025 at 1:15=E2=80=AFAM Yan Zhao <yan.y.zhao@intel.=
-com> wrote:
->> >> >>
->> >> >> On Thu, Apr 24, 2025 at 01:55:51PM +0800, Chenyi Qiang wrote:
->> >> >> >
->> >> >> >
->> >> >> > On 4/24/2025 12:25 PM, Yan Zhao wrote:
->> >> >> > > On Thu, Apr 24, 2025 at 09:09:22AM +0800, Yan Zhao wrote:
->> >> >> > >> On Wed, Apr 23, 2025 at 03:02:02PM -0700, Ackerley Tng wrote:
->> >> >> > >>> Yan Zhao <yan.y.zhao@intel.com> writes:
->> >> >> > >>>
->> >> >> > >>>> On Tue, Sep 10, 2024 at 11:44:10PM +0000, Ackerley Tng wrot=
-e:
->> >> >> > >>>>> +/*
->> >> >> > >>>>> + * Allocates and then caches a folio in the filemap. Retu=
-rns a folio with
->> >> >> > >>>>> + * refcount of 2: 1 after allocation, and 1 taken by the =
-filemap.
->> >> >> > >>>>> + */
->> >> >> > >>>>> +static struct folio *kvm_gmem_hugetlb_alloc_and_cache_fol=
-io(struct inode *inode,
->> >> >> > >>>>> +                                                         =
-  pgoff_t index)
->> >> >> > >>>>> +{
->> >> >> > >>>>> +       struct kvm_gmem_hugetlb *hgmem;
->> >> >> > >>>>> +       pgoff_t aligned_index;
->> >> >> > >>>>> +       struct folio *folio;
->> >> >> > >>>>> +       int nr_pages;
->> >> >> > >>>>> +       int ret;
->> >> >> > >>>>> +
->> >> >> > >>>>> +       hgmem =3D kvm_gmem_hgmem(inode);
->> >> >> > >>>>> +       folio =3D kvm_gmem_hugetlb_alloc_folio(hgmem->h, h=
-gmem->spool);
->> >> >> > >>>>> +       if (IS_ERR(folio))
->> >> >> > >>>>> +               return folio;
->> >> >> > >>>>> +
->> >> >> > >>>>> +       nr_pages =3D 1UL << huge_page_order(hgmem->h);
->> >> >> > >>>>> +       aligned_index =3D round_down(index, nr_pages);
->> >> >> > >>>> Maybe a gap here.
->> >> >> > >>>>
->> >> >> > >>>> When a guest_memfd is bound to a slot where slot->base_gfn =
-is not aligned to
->> >> >> > >>>> 2M/1G and slot->gmem.pgoff is 0, even if an index is 2M/1G =
-aligned, the
->> >> >> > >>>> corresponding GFN is not 2M/1G aligned.
->> >> >> > >>>
->> >> >> > >>> Thanks for looking into this.
->> >> >> > >>>
->> >> >> > >>> In 1G page support for guest_memfd, the offset and size are =
-always
->> >> >> > >>> hugepage aligned to the hugepage size requested at guest_mem=
-fd creation
->> >> >> > >>> time, and it is true that when binding to a memslot, slot->b=
-ase_gfn and
->> >> >> > >>> slot->npages may not be hugepage aligned.
->> >> >> > >>>
->> >> >> > >>>>
->> >> >> > >>>> However, TDX requires that private huge pages be 2M aligned=
- in GFN.
->> >> >> > >>>>
->> >> >> > >>>
->> >> >> > >>> IIUC other factors also contribute to determining the mappin=
-g level in
->> >> >> > >>> the guest page tables, like lpage_info and .private_max_mapp=
-ing_level()
->> >> >> > >>> in kvm_x86_ops.
->> >> >> > >>>
->> >> >> > >>> If slot->base_gfn and slot->npages are not hugepage aligned,=
- lpage_info
->> >> >> > >>> will track that and not allow faulting into guest page table=
-s at higher
->> >> >> > >>> granularity.
->> >> >> > >>
->> >> >> > >> lpage_info only checks the alignments of slot->base_gfn and
->> >> >> > >> slot->base_gfn + npages. e.g.,
->> >> >> > >>
->> >> >> > >> if slot->base_gfn is 8K, npages is 8M, then for this slot,
->> >> >> > >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [4K,=
- 2M+8K);
->> >> >> > >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M+=
-8K, 4M+8K);
->> >> >> > >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M+=
-8K, 6M+8K);
->> >> >> > >> lpage_info[2M][3].disallow_lpage =3D 1, which is for GFN [6M+=
-8K, 8M+8K);
->> >> >> >
->> >> >> > Should it be?
->> >> >> > lpage_info[2M][0].disallow_lpage =3D 1, which is for GFN [8K, 2M=
-);
->> >> >> > lpage_info[2M][1].disallow_lpage =3D 0, which is for GFN [2M, 4M=
-);
->> >> >> > lpage_info[2M][2].disallow_lpage =3D 0, which is for GFN [4M, 6M=
-);
->> >> >> > lpage_info[2M][3].disallow_lpage =3D 0, which is for GFN [6M, 8M=
-);
->> >> >> > lpage_info[2M][4].disallow_lpage =3D 1, which is for GFN [8M, 8M=
-+8K);
->> >> >> Right. Good catch. Thanks!
->> >> >>
->> >> >> Let me update the example as below:
->> >> >> slot->base_gfn is 2 (for GPA 8KB), npages 2000 (for a 8MB range)
->> >> >>
->> >> >> lpage_info[2M][0].disallow_lpage =3D 1, which is for GPA [8KB, 2MB=
-);
->> >> >> lpage_info[2M][1].disallow_lpage =3D 0, which is for GPA [2MB, 4MB=
-);
->> >> >> lpage_info[2M][2].disallow_lpage =3D 0, which is for GPA [4MB, 6MB=
-);
->> >> >> lpage_info[2M][3].disallow_lpage =3D 0, which is for GPA [6MB, 8MB=
-);
->> >> >> lpage_info[2M][4].disallow_lpage =3D 1, which is for GPA [8MB, 8MB=
-+8KB);
->> >> >>
->> >> >> lpage_info indicates that a 2MB mapping is alllowed to cover GPA 4=
-MB and GPA
->> >> >> 4MB+16KB. However, their aligned_index values lead guest_memfd to =
-allocate two
->> >> >> 2MB folios, whose physical addresses may not be contiguous.
->> >> >>
->> >> >> Additionally, if the guest accesses two GPAs, e.g., GPA 2MB+8KB an=
-d GPA 4MB,
->> >> >> KVM could create two 2MB mappings to cover GPA ranges [2MB, 4MB), =
-[4MB, 6MB).
->> >> >> However, guest_memfd just allocates the same 2MB folio for both fa=
-ults.
->> >> >>
->> >> >>
->> >> >> >
->> >> >> > >>
->> >> >> > >>   ---------------------------------------------------------
->> >> >> > >>   |          |  |          |  |          |  |          |  |
->> >> >> > >>   8K        2M 2M+8K      4M  4M+8K     6M  6M+8K     8M  8M+=
-8K
->> >> >> > >>
->> >> >> > >> For GFN 6M and GFN 6M+4K, as they both belong to lpage_info[2=
-M][2], huge
->> >> >> > >> page is allowed. Also, they have the same aligned_index 2 in =
-guest_memfd.
->> >> >> > >> So, guest_memfd allocates the same huge folio of 2M order for=
- them.
->> >> >> > > Sorry, sent too fast this morning. The example is not right. T=
-he correct
->> >> >> > > one is:
->> >> >> > >
->> >> >> > > For GFN 4M and GFN 4M+16K, lpage_info indicates that 2M is all=
-owed. So,
->> >> >> > > KVM will create a 2M mapping for them.
->> >> >> > >
->> >> >> > > However, in guest_memfd, GFN 4M and GFN 4M+16K do not correspo=
-nd to the
->> >> >> > > same 2M folio and physical addresses may not be contiguous.
->> >> >
->> >> > Then during binding, guest memfd offset misalignment with hugepage
->> >> > should be same as gfn misalignment. i.e.
->> >> >
->> >> > (offset & ~huge_page_mask(h)) =3D=3D ((slot->base_gfn << PAGE_SHIFT=
-) &
->> >> > ~huge_page_mask(h));
->> >> >
->> >> > For non guest_memfd backed scenarios, KVM allows slot gfn ranges th=
-at
->> >> > are not hugepage aligned, so guest_memfd should also be able to
->> >> > support non-hugepage aligned memslots.
->> >> >
->> >>=20
->> >> I drew up a picture [1] which hopefully clarifies this.
->> >>=20
->> >> Thanks for pointing this out, I understand better now and we will add=
- an
->> >> extra constraint during memslot binding of guest_memfd to check that =
-gfn
->> >> offsets within a hugepage must be guest_memfd offsets.
->> > I'm a bit confused.
->> >
->> > As "index =3D gfn - slot->base_gfn + slot->gmem.pgoff", do you mean yo=
-u are going
->> > to force "slot->base_gfn =3D=3D slot->gmem.pgoff" ?
->> >
->> > For some memory region, e.g., "pc.ram", it's divided into 2 parts:
->> > - one with offset 0, size 0x80000000(2G),
->> >   positioned at GPA 0, which is below GPA 4G;
->> > - one with offset 0x80000000(2G), size 0x80000000(2G),
->> >   positioned at GPA 0x100000000(4G), which is above GPA 4G.
->> >
->> > For the second part, its slot->base_gfn is 0x100000000, while slot->gm=
-em.pgoff
->> > is 0x80000000.
->> >
->>=20
->> Nope I don't mean to enforce that they are equal, we just need the
->> offsets within the page to be equal.
->>=20
->> I edited Vishal's code snippet, perhaps it would help explain better:
->>=20
->> page_size is the size of the hugepage, so in our example,
->>=20
->>   page_size =3D SZ_2M;
->>   page_mask =3D ~(page_size - 1);
-> page_mask =3D page_size - 1  ?
->
 
-Yes, thank you!
-
->>   offset_within_page =3D slot->gmem.pgoff & page_mask;
->>   gfn_within_page =3D (slot->base_gfn << PAGE_SHIFT) & page_mask;
->>=20
->> We will enforce that
->>=20
->>   offset_within_page =3D=3D gfn_within_page;
-> For "pc.ram", if it has 2.5G below 4G, it would be configured as follows
-> - slot 1: slot->gmem.pgoff=3D0, base GPA 0, size=3D2.5G
-> - slot 2: slot->gmem.pgoff=3D2.5G, base GPA 4G, size=3D1.5G
->
-> When binding these two slots to the same guest_memfd created with flag
-> KVM_GUEST_MEMFD_HUGE_1GB:=20
-> - binding the 1st slot will succeed;
-> - binding the 2nd slot will fail.
->
-> What options does userspace have in this scenario?
-> It can't reduce the flag to KVM_GUEST_MEMFD_HUGE_2MB. Adjusting the gmem.=
-pgoff
-> isn't ideal either.
->
-> What about something similar as below?
->
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index d2feacd14786..87c33704a748 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -1842,8 +1842,16 @@ __kvm_gmem_get_pfn(struct file *file, struct kvm_m=
-emory_slot *slot,
->         }
->
->         *pfn =3D folio_file_pfn(folio, index);
-> -       if (max_order)
-> -               *max_order =3D folio_order(folio);
-> +       if (max_order) {
-> +               int order;
+On 4/13/2025 9:32 AM, Dmitry Baryshkov wrote:
+> If the Adreno device is used in a headless mode, there is no need to
+> build all KMS components. Build corresponding parts conditionally, only
+> selecting them if modeset support is actually required.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>   drivers/gpu/drm/msm/Kconfig       | 14 ++++++
+>   drivers/gpu/drm/msm/Makefile      | 16 +++----
+>   drivers/gpu/drm/msm/dp/dp_debug.c |  4 ++
+>   drivers/gpu/drm/msm/msm_debugfs.c | 92 ++++++++++++++++++++++-----------------
+>   drivers/gpu/drm/msm/msm_drv.h     |  7 ++-
+>   drivers/gpu/drm/msm/msm_kms.h     | 23 ++++++++++
+>   6 files changed, 108 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/Kconfig b/drivers/gpu/drm/msm/Kconfig
+> index 974bc7c0ea761147d3326bdce9039d6f26f290d0..0be31c5acdd1b7ef80f0e820ff430692616122e0 100644
+> --- a/drivers/gpu/drm/msm/Kconfig
+> +++ b/drivers/gpu/drm/msm/Kconfig
+> @@ -66,6 +66,14 @@ config DRM_MSM_VALIDATE_XML
+>   	  Validate XML files with register definitions against rules-fd schema.
+>   	  This option is mostly targeting DRM MSM developers. If unsure, say N.
+>   
+> +config DRM_MSM_KMS
+> +	def_bool n
+> +	depends on DRM_MSM
 > +
-> +               order =3D folio_order(folio);
+> +config DRM_MSM_KMS_FBDEV
+> +	def_bool DRM_FBDEV_EMULATION
+> +	depends on DRM_MSM_KMS
 > +
-> +               while (order > 0 && ((slot->base_gfn ^ slot->gmem.pgoff) =
-& ((1 << order) - 1)))
-> +                       order--;
+>   config DRM_MSM_MDSS
+>   	bool
+>   	depends on DRM_MSM
+> @@ -74,6 +82,7 @@ config DRM_MSM_MDSS
+>   config DRM_MSM_MDP4
+>   	bool "Enable MDP4 support in MSM DRM driver"
+>   	depends on DRM_MSM
+> +	select DRM_MSM_KMS
+>   	default y
+>   	help
+>   	  Compile in support for the Mobile Display Processor v4 (MDP4) in
+> @@ -84,6 +93,7 @@ config DRM_MSM_MDP5
+>   	bool "Enable MDP5 support in MSM DRM driver"
+>   	depends on DRM_MSM
+>   	select DRM_MSM_MDSS
+> +	select DRM_MSM_KMS
+>   	default y
+>   	help
+>   	  Compile in support for the Mobile Display Processor v5 (MDP5) in
+> @@ -94,6 +104,7 @@ config DRM_MSM_DPU
+>   	bool "Enable DPU support in MSM DRM driver"
+>   	depends on DRM_MSM
+>   	select DRM_MSM_MDSS
+> +	select DRM_MSM_KMS
+>   	select DRM_DISPLAY_DSC_HELPER
+>   	default y
+>   	help
+> @@ -104,6 +115,7 @@ config DRM_MSM_DPU
+>   config DRM_MSM_DP
+>   	bool "Enable DisplayPort support in MSM DRM driver"
+>   	depends on DRM_MSM
+> +	depends on DRM_MSM_KMS
+>   	select RATIONAL
+>   	default y
+>   	help
+> @@ -114,6 +126,7 @@ config DRM_MSM_DP
+>   config DRM_MSM_DSI
+>   	bool "Enable DSI support in MSM DRM driver"
+>   	depends on DRM_MSM
+> +	depends on DRM_MSM_KMS
+>   	select DRM_PANEL
+>   	select DRM_MIPI_DSI
+>   	select DRM_DISPLAY_DSC_HELPER
+> @@ -169,6 +182,7 @@ config DRM_MSM_DSI_7NM_PHY
+>   config DRM_MSM_HDMI
+>   	bool "Enable HDMI support in MSM DRM driver"
+>   	depends on DRM_MSM
+> +	depends on DRM_MSM_KMS
+>   	default y
+>   	select DRM_DISPLAY_HDMI_HELPER
+>   	select DRM_DISPLAY_HDMI_STATE_HELPER
+> diff --git a/drivers/gpu/drm/msm/Makefile b/drivers/gpu/drm/msm/Makefile
+> index 5df20cbeafb8bf07c825a1fd72719d5a56c38613..3749b0af779e73a93d7c219d3fbd3865b9296b50 100644
+> --- a/drivers/gpu/drm/msm/Makefile
+> +++ b/drivers/gpu/drm/msm/Makefile
+> @@ -101,18 +101,15 @@ msm-display-$(CONFIG_DRM_MSM_DPU) += \
+>   msm-display-$(CONFIG_DRM_MSM_MDSS) += \
+>   	msm_mdss.o \
+>   
+> -msm-display-y += \
+> +msm-display-$(CONFIG_DRM_MSM_KMS) += \
+>   	disp/mdp_format.o \
+>   	disp/mdp_kms.o \
+>   	disp/msm_disp_snapshot.o \
+>   	disp/msm_disp_snapshot_util.o \
+>   
+>   msm-y += \
+> -	msm_atomic.o \
+> -	msm_atomic_tracepoints.o \
+>   	msm_debugfs.o \
+>   	msm_drv.o \
+> -	msm_fb.o \
+>   	msm_fence.o \
+>   	msm_gem.o \
+>   	msm_gem_prime.o \
+> @@ -123,21 +120,24 @@ msm-y += \
+>   	msm_gpu_devfreq.o \
+>   	msm_io_utils.o \
+>   	msm_iommu.o \
+> -	msm_kms.o \
+>   	msm_perf.o \
+>   	msm_rd.o \
+>   	msm_ringbuffer.o \
+>   	msm_submitqueue.o \
+>   	msm_gpu_tracepoints.o \
+>   
+> -msm-$(CONFIG_DRM_FBDEV_EMULATION) += msm_fbdev.o
+> +msm-$(CONFIG_DRM_MSM_KMS) += \
+> +	msm_atomic.o \
+> +	msm_atomic_tracepoints.o \
+> +	msm_fb.o \
+> +	msm_kms.o \
+>   
+> -msm-display-$(CONFIG_DEBUG_FS) += \
+> -	dp/dp_debug.o
+> +msm-$(CONFIG_DRM_MSM_KMS_FBDEV) += msm_fbdev.o
+>   
+>   msm-display-$(CONFIG_DRM_MSM_DP)+= dp/dp_aux.o \
+>   	dp/dp_catalog.o \
+>   	dp/dp_ctrl.o \
+> +	dp/dp_debug.o \
+>   	dp/dp_display.o \
+>   	dp/dp_drm.o \
+>   	dp/dp_link.o \
+> diff --git a/drivers/gpu/drm/msm/dp/dp_debug.c b/drivers/gpu/drm/msm/dp/dp_debug.c
+> index 22fd946ee201397b72b43c8499714139deb7ba82..7835d93015b31a69aac824ca04dc65b374546e5c 100644
+> --- a/drivers/gpu/drm/msm/dp/dp_debug.c
+> +++ b/drivers/gpu/drm/msm/dp/dp_debug.c
+> @@ -5,6 +5,8 @@
+>   
+>   #define pr_fmt(fmt)"[drm-dp] %s: " fmt, __func__
+>   
+> +#ifdef CONFIG_DEBUG_FS
 > +
-> +               *max_order =3D order;
-> +       }
->
->         *is_prepared =3D folio_test_uptodate(folio);
->         return folio;
->
+>   #include <linux/debugfs.h>
+>   #include <drm/drm_connector.h>
+>   #include <drm/drm_file.h>
+> @@ -235,3 +237,5 @@ int msm_dp_debug_init(struct device *dev, struct msm_dp_panel *panel,
+>   
+>   	return 0;
+>   }
+> +
+> +#endif
+> diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> index 7ab607252d183f78b99c3a8b878c949ed5f99fec..2b12f2851fadbc3c924827e11570352736869614 100644
+> --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> @@ -117,6 +117,36 @@ static const struct file_operations msm_gpu_fops = {
+>   	.release = msm_gpu_release,
+>   };
+>   
+> +#ifdef CONFIG_DRM_MSM_KMS
+> +static int msm_fb_show(struct seq_file *m, void *arg)
+> +{
+> +	struct drm_info_node *node = m->private;
+> +	struct drm_device *dev = node->minor->dev;
+> +	struct drm_framebuffer *fb, *fbdev_fb = NULL;
+> +
+> +	if (dev->fb_helper && dev->fb_helper->fb) {
+> +		seq_puts(m, "fbcon ");
+> +		fbdev_fb = dev->fb_helper->fb;
+> +		msm_framebuffer_describe(fbdev_fb, m);
+> +	}
+> +
+> +	mutex_lock(&dev->mode_config.fb_lock);
+> +	list_for_each_entry(fb, &dev->mode_config.fb_list, head) {
+> +		if (fb == fbdev_fb)
+> +			continue;
+> +
+> +		seq_puts(m, "user ");
+> +		msm_framebuffer_describe(fb, m);
+> +	}
+> +	mutex_unlock(&dev->mode_config.fb_lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct drm_info_list msm_kms_debugfs_list[] = {
+> +		{ "fb", msm_fb_show },
+> +};
+> +
+>   /*
+>    * Display Snapshot:
+>    */
+> @@ -180,6 +210,27 @@ static const struct file_operations msm_kms_fops = {
+>   	.release = msm_kms_release,
+>   };
+>   
+> +static void msm_debugfs_kms_init(struct drm_minor *minor)
+> +{
+> +	struct drm_device *dev = minor->dev;
+> +	struct msm_drm_private *priv = dev->dev_private;
+> +
+> +	drm_debugfs_create_files(msm_kms_debugfs_list,
+> +				 ARRAY_SIZE(msm_kms_debugfs_list),
+> +				 minor->debugfs_root, minor);
+> +	debugfs_create_file("kms", 0400, minor->debugfs_root,
+> +			    dev, &msm_kms_fops);
+> +
+> +	if (priv->kms->funcs->debugfs_init)
+> +		priv->kms->funcs->debugfs_init(priv->kms, minor);
+> +
+> +}
+> +#else /* ! CONFIG_DRM_MSM_KMS */
+> +static void msm_debugfs_kms_init(struct drm_minor *minor)
+> +{
+> +}
+> +#endif
+> +
+>   /*
+>    * Other debugfs:
+>    */
+> @@ -238,40 +289,11 @@ static int msm_mm_show(struct seq_file *m, void *arg)
+>   	return 0;
+>   }
+>   
+> -static int msm_fb_show(struct seq_file *m, void *arg)
+> -{
+> -	struct drm_info_node *node = m->private;
+> -	struct drm_device *dev = node->minor->dev;
+> -	struct drm_framebuffer *fb, *fbdev_fb = NULL;
+> -
+> -	if (dev->fb_helper && dev->fb_helper->fb) {
+> -		seq_printf(m, "fbcon ");
+> -		fbdev_fb = dev->fb_helper->fb;
+> -		msm_framebuffer_describe(fbdev_fb, m);
+> -	}
+> -
+> -	mutex_lock(&dev->mode_config.fb_lock);
+> -	list_for_each_entry(fb, &dev->mode_config.fb_list, head) {
+> -		if (fb == fbdev_fb)
+> -			continue;
+> -
+> -		seq_printf(m, "user ");
+> -		msm_framebuffer_describe(fb, m);
+> -	}
+> -	mutex_unlock(&dev->mode_config.fb_lock);
+> -
+> -	return 0;
+> -}
+> -
+>   static struct drm_info_list msm_debugfs_list[] = {
+>   		{"gem", msm_gem_show},
+>   		{ "mm", msm_mm_show },
+>   };
+>   
+> -static struct drm_info_list msm_kms_debugfs_list[] = {
+> -		{ "fb", msm_fb_show },
+> -};
+> -
+>   static int late_init_minor(struct drm_minor *minor)
+>   {
+>   	int ret;
+> @@ -343,20 +365,12 @@ void msm_debugfs_init(struct drm_minor *minor)
+>   	if (priv->gpu_pdev)
+>   		msm_debugfs_gpu_init(minor);
+>   
+> -	if (priv->kms) {
+> -		drm_debugfs_create_files(msm_kms_debugfs_list,
+> -					 ARRAY_SIZE(msm_kms_debugfs_list),
+> -					 minor->debugfs_root, minor);
+> -		debugfs_create_file("kms", S_IRUSR, minor->debugfs_root,
+> -				    dev, &msm_kms_fops);
+> -	}
+> +	if (priv->kms)
+> +		msm_debugfs_kms_init(minor);
+>   
+>   	debugfs_create_file("shrink", S_IRWXU, minor->debugfs_root,
+>   		dev, &shrink_fops);
+>   
+> -	if (priv->kms && priv->kms->funcs->debugfs_init)
+> -		priv->kms->funcs->debugfs_init(priv->kms, minor);
+> -
+>   	fault_create_debugfs_attr("fail_gem_alloc", minor->debugfs_root,
+>   				  &fail_gem_alloc);
+>   	fault_create_debugfs_attr("fail_gem_iova", minor->debugfs_root,
+> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+> index a65077855201746c37ee742364b61116565f3794..5f4d3f050c1fde71c405a1ebf516f4f5a396cfc4 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.h
+> +++ b/drivers/gpu/drm/msm/msm_drv.h
+> @@ -88,6 +88,7 @@ struct msm_drm_private {
+>   	/* subordinate devices, if present: */
+>   	struct platform_device *gpu_pdev;
+>   
+> +#ifdef CONFIG_DRM_MSM_KMS
+>   	/* possibly this should be in the kms component, but it is
+>   	 * shared by both mdp4 and mdp5..
+>   	 */
 
-Vishal was wondering how this is working before guest_memfd was
-introduced, for other backing memory like HugeTLB.
+As the comment says, I am also thinking that this should be part of 
+msm_kms struct, to avoid ifdefs. I didnt follow the second half of the 
+comment that this is shared by both mdp4/mdp5. Why does that prevent it 
+from being in the kms component?
 
-I then poked around and found this [1]. I will be adding a similar check
-for any slot where kvm_slot_can_be_private(slot).
 
-Yan, that should work, right?
+> @@ -97,6 +98,7 @@ struct msm_drm_private {
+>   	struct msm_dsi *dsi[MSM_DSI_CONTROLLER_COUNT];
+>   
+>   	struct msm_dp *dp[MSM_DP_CONTROLLER_COUNT];
+> +#endif
+>   
+>   	/* when we have more than one 'msm_gpu' these need to be an array: */
+>   	struct msm_gpu *gpu;
+> @@ -177,11 +179,13 @@ struct msm_drm_private {
+>   		struct mutex lock;
+>   	} lru;
+>   
+> +#ifdef CONFIG_DRM_MSM_KMS
+>   	struct workqueue_struct *wq;
+>   
+>   	unsigned int num_crtcs;
+>   
+>   	struct msm_drm_thread event_thread[MAX_CRTCS];
+> +#endif
+>   
+>   	/* VRAM carveout, used when no IOMMU: */
+>   	struct {
+> @@ -275,7 +279,7 @@ struct drm_framebuffer *msm_framebuffer_create(struct drm_device *dev,
+>   struct drm_framebuffer * msm_alloc_stolen_fb(struct drm_device *dev,
+>   		int w, int h, int p, uint32_t format);
+>   
+> -#ifdef CONFIG_DRM_FBDEV_EMULATION
+> +#ifdef CONFIG_DRM_MSM_KMS_FBDEV
+>   int msm_fbdev_driver_fbdev_probe(struct drm_fb_helper *helper,
+>   				 struct drm_fb_helper_surface_size *sizes);
+>   #define MSM_FBDEV_DRIVER_OPS \
+> @@ -360,6 +364,7 @@ static inline const char *msm_dsi_get_te_source(struct msm_dsi *msm_dsi)
+>   }
+>   #endif
+>   
+> +struct msm_dp;
+>   #ifdef CONFIG_DRM_MSM_DP
+>   int __init msm_dp_register(void);
+>   void __exit msm_dp_unregister(void);
+> diff --git a/drivers/gpu/drm/msm/msm_kms.h b/drivers/gpu/drm/msm/msm_kms.h
+> index 057b20367724a4ca60f2d60c038077dbcc1c7abc..aabbe851f0d533cca4a2ca00b79fbf8603870be3 100644
+> --- a/drivers/gpu/drm/msm/msm_kms.h
+> +++ b/drivers/gpu/drm/msm/msm_kms.h
+> @@ -13,6 +13,8 @@
+>   
+>   #include "msm_drv.h"
+>   
+> +#ifdef CONFIG_DRM_MSM_KMS
+> +
+>   #define MAX_PLANE	4
+>   
+>   /* As there are different display controller blocks depending on the
+> @@ -196,4 +198,25 @@ void msm_drm_kms_post_init(struct device *dev);
+>   void msm_drm_kms_unregister(struct device *dev);
+>   void msm_drm_kms_uninit(struct device *dev);
+>   
+> +#else /* ! CONFIG_DRM_MSM_KMS */
+> +
+> +static inline int msm_drm_kms_init(struct device *dev, const struct drm_driver *drv)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline void msm_drm_kms_post_init(struct device *dev)
+> +{
+> +}
+> +
+> +static inline void msm_drm_kms_unregister(struct device *dev)
+> +{
+> +}
+> +
+> +static inline void msm_drm_kms_uninit(struct device *dev)
+> +{
+> +}
+> +
+> +#endif
+> +
+>   #endif /* __MSM_KMS_H__ */
+> 
 
-[1] https://github.com/torvalds/linux/blob/b6ea1680d0ac0e45157a819c41b46565=
-f4616186/arch/x86/kvm/x86.c#L12996
-
->> >> Adding checks at binding time will allow hugepage-unaligned offsets (=
-to
->> >> be at parity with non-guest_memfd backing memory) but still fix this
->> >> issue.
->> >>=20
->> >> lpage_info will make sure that ranges near the bounds will be
->> >> fragmented, but the hugepages in the middle will still be mappable as
->> >> hugepages.
->> >>=20
->> >> [1] https://lpc.events/event/18/contributions/1764/attachments/1409/3=
-706/binding-must-have-same-alignment.svg
