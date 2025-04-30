@@ -1,101 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC311C8611
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:55:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 521B57405A;
+	Wed, 30 Apr 2025 04:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745988903; cv=none; b=mK5lmTIA8EMmS8MNe7fir50Xm1BjPjj9O7lmmjPaidNWYq9zeIgWNu/PgGrk0FdpHq/+L4a90OuY001W/S408nEME5boQqyTSlb+dXjVeCIjEM0roMgVqi50av4kmH8ZdNDTLMLS1ZAcoDCfVoOWH5M9HGn1vxqhUFQgdqVj+cw=
+	t=1745988986; cv=none; b=KNDeLJYVtUe+q9ZCPMamu4MsC4uuhLJzuNWl8FszTlt2l79iLmm46tE4Gy4vPFtGfnTxNXVcksxVJahe9rBc1v55NxarmX8zpZHuzD93PN0pGTTAqDS/AFoO8vb818MYvlNtkgr7yhjH4KSeJFtL+Pv33t0IcQx+/tsGDsVBQiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745988903; c=relaxed/simple;
-	bh=8jcUURxGcPbuXLBbkLUfa5vg5TKDq+rHrT3IJFD2sOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j+S7tNad9zoohlPWTHNiBWYR/a4H1UmmuulT0B/dwKZ+pac0I9a+M9TQI6TVX0mrjbUX13NzHH3r79/yOK+EAdJ8i609AS00uC/7CJdWr0JaZZFKiqawDbvxuCp6GWVItLnwTqf3h3bwxbLUx+VsHVZ60gow7y5Q+dacHoVSNp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SZ0xJUGP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745988986; c=relaxed/simple;
+	bh=2WN5UivIV0HPsCOboTk/YLB2hjQ7WLv1xRihiCGh/uE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=OKs8ZIgXAn8knxeCfyjVvpYzIgltZJgCU6phzF6ORozWMOTNIFJFQrdqEVwhXPiMpuqN4V2QApJ5QmSxL2qJcvJj+CVT8q9/Ez7KhdLycR0XYBRxZSMjWCJw3T3GFoo65VeXc1esdr9F9wim2TxtNt5TNYLm/aqpPvcvV+MxwI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=peKPTdr0; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SZ0xJUGP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745988901; x=1777524901;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=8jcUURxGcPbuXLBbkLUfa5vg5TKDq+rHrT3IJFD2sOg=;
-  b=SZ0xJUGPYP4NAUNee/HLF3YaNGimpKtJ03iui8OGBPwLqO2ArQk3Ug3f
-   Vz5FrHMXEzBdYzF2mt41bN5dx8zHseMSZEgySPkP9GIkZECfYbXAxXP/m
-   kjXoEGzMU7tWUpHRiACi40+J6Xt8dD0PHx+yQ8Ty67JZgFOPiHGvgOpuV
-   Csc9KlnUU8ZwD/zX8p4ReNGG0/1jS/KHQMvy3ECGeto1GDZ48OB8JQk5d
-   1NYHEuszGYRO4VKM/m9p+XgDaaackewy5RjKdnmv58EKzG86pdtZUjibh
-   a+8umoJyCXUlAluSFfNyBpJp3WkgMcPsk0GPcdB1llTvVNiBVid5MOqID
-   A==;
-X-CSE-ConnectionGUID: 6cCXrYORTSaLgByq1GxnaA==
-X-CSE-MsgGUID: yWyBhKGiQQuvbqGubuCQlg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="65171618"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="65171618"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 21:55:00 -0700
-X-CSE-ConnectionGUID: OMGxhHnfSQaqXMReccWFLA==
-X-CSE-MsgGUID: ODx3vE8xSryAAZzygcpBPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="134961460"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa009.fm.intel.com with ESMTP; 29 Apr 2025 21:54:59 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1u9zTF-0003AL-0V;
-	Wed, 30 Apr 2025 04:54:57 +0000
-Date: Wed, 30 Apr 2025 12:54:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Subject: error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-Message-ID: <202504301208.YQCguEmE-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="peKPTdr0"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLao2p000482;
+	Wed, 30 Apr 2025 04:56:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=GfWT2ob87oaBiZjoFpLKYD
+	EFBhLPBILsPWBHPcZgMKc=; b=peKPTdr0EEdLBpnYsupOb/mwCz3Zadzd4fXDlC
+	y1i3WxY/R1Lf5x3smNuoVvfbmJO/LXkmZzTkvDGaAUCQhl6yQnonBWPVRlozB1Pm
+	UW6PMEuMdWJMgLy+yqOSNagVUDzZ3cZ+E6oyMfyDkYjhVTIgKjKYI2rrZkZvFbc2
+	WrFDOXXmXGczmrESYi2Su+HXEin17a+YOis++d8dTo/S0B/QV72gm14XMriRKaDs
+	/vEUaxb8yPNgFr/jeQieXW2QcMmzHWpMvgn4qUZdhAUPWfmeO4AkLHEhJ8yjfFbd
+	xyHAE4NGWTpzsGSCDWs1nK4Y6or28mdpqKo+YuzDyuiGATMQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u70u2m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 04:56:20 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U4uJgc012019
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 04:56:19 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 29 Apr 2025 21:56:17 -0700
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Date: Wed, 30 Apr 2025 10:25:38 +0530
+Subject: [PATCH ath-next] wifi: ath12k: fix memory leak in
+ ath12k_service_ready_ext_event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250430-wmi-mem-leak-v1-1-fcc9b49c2ddc@quicinc.com>
+X-B4-Tracking: v=1; b=H4sIAEmtEWgC/x3MQQqDMBBG4avIrDsQTW3RqxQXMf7RoU2URKwg3
+ t3g8lu8d1BCFCRqi4MiNkkyh4zyUZCdTBjBMmRTpapaPbXivxf28PyD+fJLN868e1jXW8rJEuF
+ kv3cfMuvEAftK3XleJY15H2gAAAA=
+X-Change-ID: 20250430-wmi-mem-leak-639fa7becfbc
+To: Jeff Johnson <jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, Rajat Soni <quic_rajson@quicinc.com>,
+        "Raj
+ Kumar Bhagat" <quic_rajkbhag@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDAzMiBTYWx0ZWRfX7HQlpWbUGL87 36XGdsaJ1TvaEON5Ks407OUTOXY5sbFAgcgj7+uaGfaPP3FE1Y61uBkluRtm0wQi0h3UZnPZvP2 ciOtpN8kjRvoH6mqs5T8VvRtA9Ab/iwfEm3lL1ldW2lyIXrye9L0/ot4Uy5iDTfceCToV7zviRJ
+ f3icsnaYn9STrr2dmKLR57vt7WtOFFFsOPP05U/yffxq4S1e6xmUX4b1C1XSH6jDf8iNmsCD1V3 EvPsmKmD1dgcLWyVLVahnx/0l90nDoKsl/U0rguDPXaXXvInCDIP71eTh+rS1AOeYbbVcHcYzae ySAxLxgPGRNlEuCfKkhGbgXq2DUCh/CWwjXCXv8/ExQvJcLx4w6UxQX1tTrjvq6Lcnr7cC79ty9
+ pq/3rY4oJ1KV3weFXM6Q/qISMkxgEkybZ1Q1JJD5v8DZ6l2ucFiS9Jkrf5w99do3BgiiYnV8
+X-Proofpoint-GUID: 3dPGE6YOWR9ErMDrazDH-nrGWe10qeev
+X-Authority-Analysis: v=2.4 cv=W404VQWk c=1 sm=1 tr=0 ts=6811ad74 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=R0VpaglY2llq_AbDoOAA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: 3dPGE6YOWR9ErMDrazDH-nrGWe10qeev
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 phishscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300032
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   8bac8898fe398ffa3e09075ecea2be511725fb0b
-commit: 584e61452f75bfeac2cdd83730b4059526ec60c7 rust: helpers: Remove volatile qualifier from io helpers
-date:   2 weeks ago
-config: um-randconfig-r063-20250430 (https://download.01.org/0day-ci/archive/20250430/202504301208.YQCguEmE-lkp@intel.com/config)
-compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cbf1a2591520c2491aa35339f227775f4d3adf6)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250430/202504301208.YQCguEmE-lkp@intel.com/reproduce)
+From: Rajat Soni <quic_rajson@quicinc.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504301208.YQCguEmE-lkp@intel.com/
+Currently, in ath12k_service_ready_ext_event(), svc_rdy_ext.mac_phy_caps
+is not freed in the failure case, causing a memory leak. The following
+trace is observed in kmemleak:
 
-All errors (new ones prefixed by >>):
+unreferenced object 0xffff8b3eb5789c00 (size 1024):
+ comm "softirq", pid 0, jiffies 4294942577
+ hex dump (first 32 bytes):
+   00 00 00 00 01 00 00 00 00 00 00 00 7b 00 00 10  ............{...
+   01 00 00 00 00 00 00 00 01 00 00 00 1f 38 00 00  .............8..
+ backtrace (crc 44e1c357):
+   __kmalloc_noprof+0x30b/0x410
+   ath12k_wmi_mac_phy_caps_parse+0x84/0x100 [ath12k]
+   ath12k_wmi_tlv_iter+0x5e/0x140 [ath12k]
+   ath12k_wmi_svc_rdy_ext_parse+0x308/0x4c0 [ath12k]
+   ath12k_wmi_tlv_iter+0x5e/0x140 [ath12k]
+   ath12k_service_ready_ext_event.isra.0+0x44/0xd0 [ath12k]
+   ath12k_wmi_op_rx+0x2eb/0xd70 [ath12k]
+   ath12k_htc_rx_completion_handler+0x1f4/0x330 [ath12k]
+   ath12k_ce_recv_process_cb+0x218/0x300 [ath12k]
+   ath12k_pci_ce_workqueue+0x1b/0x30 [ath12k]
+   process_one_work+0x219/0x680
+   bh_worker+0x198/0x1f0
+   tasklet_action+0x13/0x30
+   handle_softirqs+0xca/0x460
+   __irq_exit_rcu+0xbe/0x110
+   irq_exit_rcu+0x9/0x30
 
->> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-   --> rust/kernel/block/mq/operations.rs:15:33
-   |
-   15 | use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::atomic::Ordering};
-   |                                 ^^^^^^^^^^^^^^---------
-   |                                 |             |
-   |                                 |             help: a similar name exists in the module: `AtomicU32`
-   |                                 no `AtomicU64` in `sync::atomic`
---
->> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
-   --> rust/kernel/block/mq/request.rs:16:20
-   |
-   16 |     sync::atomic::{AtomicU64, Ordering},
-   |                    ^^^^^^^^^
-   |                    |
-   |                    no `AtomicU64` in `sync::atomic`
-   |                    help: a similar name exists in the module: `AtomicU32`
+Free svc_rdy_ext.mac_phy_caps in the error case to fix this memory leak.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Tested-on: QCN9274 hw2.0 PCI WLAN.WBE.1.4.1-00199-QCAHKSWPL_SILICONZ-1
+
+Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+Signed-off-by: Rajat Soni <quic_rajson@quicinc.com>
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+---
+ drivers/net/wireless/ath/ath12k/wmi.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/net/wireless/ath/ath12k/wmi.c b/drivers/net/wireless/ath/ath12k/wmi.c
+index ea303dca38b51f98399079cd3ac06a48fd9cc025..460837f61894b05b1356d3dfdecfbf7b06f8a3e6 100644
+--- a/drivers/net/wireless/ath/ath12k/wmi.c
++++ b/drivers/net/wireless/ath/ath12k/wmi.c
+@@ -4733,6 +4733,7 @@ static int ath12k_service_ready_ext_event(struct ath12k_base *ab,
+ 	return 0;
+ 
+ err:
++	kfree(svc_rdy_ext.mac_phy_caps);
+ 	ath12k_wmi_free_dbring_caps(ab);
+ 	return ret;
+ }
+
+---
+base-commit: 21346cd925c2567d5f56cdb1421c94815ac10221
+change-id: 20250430-wmi-mem-leak-639fa7becfbc
+
