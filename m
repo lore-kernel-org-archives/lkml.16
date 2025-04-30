@@ -1,101 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622BD26FD9D;
-	Wed, 30 Apr 2025 19:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E0BF25DD10;
+	Wed, 30 Apr 2025 19:18:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040668; cv=none; b=nyx/JQ19HFGyU33of/enqkFJkaeCDCS1xfpdU8aqdR/TAnQ0JSW8CmR+Y1oED0cOu/PtAmcNc0HYgYzyN8VV+vyXWTTg40Bn6I4I7kN9qSle9vsJmc0bvrPrX56NiV5WvpcVLrwdoTP24DCM5HieG+hS9jUigmS8hz66RGfFAgY=
+	t=1746040693; cv=none; b=a27hT/c7Y6x42Wp3v+JzkKqOdHZuPWnH9bTMLK1A3HQ1DehXShsGg2G7l2oEZmXASn0u4tWRELZoRZjpRnUkTBN1EmuNEW46M3Q2OiUQemasEzvqdRfSjpVa8M2ZF3hfJRcOMq4gfEqyz4XGu7VQ1h1zI8we8dK+CRwEsdEEGiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040668; c=relaxed/simple;
-	bh=vRAapF99D6lcXdd9RT4RqWfXXje3DRJWsR+L8eOLh10=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WPY5hnynRvb92jb4K4xIbYS57ud+1lfnk7h5Ig8eIDJqlmgCjVtM/HsW2Acdj0UTrB+LRM5+mFKLvNrDO125EhqgOwZF8AI2ag6T286PdvNXLXw7JpI55y6LSgfKEG7Fx7GTlPPeFudKMR3wzr9UVhjBGD7Ik7rdETs04o83/Kg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qrUBXtTB; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qrUBXtTB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78883C4CEEA;
-	Wed, 30 Apr 2025 19:17:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746040665;
-	bh=vRAapF99D6lcXdd9RT4RqWfXXje3DRJWsR+L8eOLh10=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qrUBXtTBISUwNSo21NcrlMSLR3qV4cUuTrPkTmvxNpTaK2u1YUCA5J446KpqFZ7H1
-	 3LIXnmKhACIYob5y0j23H8uiHoBUJ0OPOnpKa3UGdjpYJPG/ptOZQPnn0OxetBaCft
-	 2RJgjLDBEYQMwCtjwCX5QYKQyQNKRDjmzWnewY0bWCWBrzjYfuTZHY6fHsERQ6obpX
-	 kITECqwxeRQcjcWGC7ZrZSWsjzAN5ela2rCVx7ntSJ7OdVJhOr/3uuMc37yAb21Lh7
-	 v7o81qjhwYwFs11pFioLsWP26yYnPL+r8Pw5zQLfutptlh/SlQbnIzN7WR2IwPRKEc
-	 v2jWvfATAK8sA==
-Message-ID: <35bae46e-3b57-438a-a561-c93868120dcb@kernel.org>
-Date: Wed, 30 Apr 2025 14:17:43 -0500
+	s=arc-20240116; t=1746040693; c=relaxed/simple;
+	bh=Y2qpOIMsb8pa3rCb9o42f9nrygLlXpgYDt/QMQ9ojZ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WCYltLoUPm/p4rimnbCzaBJIlDApCQ9dgI7zbrOq8JslNfDeuk0civ1BCSnbFVc7PEXpIo69q8AOcRJ4k6JpAd7lE+eybBcc6EnGiu3Mhb67JjaaT59f35t47kmCPZwCak/dYAx4ZOeMGivtAOHgGg06HCzgdQGq0MK26M5TAZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59515C4CEE7;
+	Wed, 30 Apr 2025 19:18:10 +0000 (UTC)
+Date: Wed, 30 Apr 2025 15:18:13 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Nam Cao <namcao@linutronix.de>, john.ogness@linutronix.de, Petr Mladek	
+ <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Ingo
+ Molnar	 <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov	 <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin"	 <hpa@zytor.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra	 <peterz@infradead.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/22] RV: Linear temporal logic monitors for RT
+ application
+Message-ID: <20250430151813.0ec8f762@gandalf.local.home>
+In-Reply-To: <cbcefdb80d5e10b8fed80de17bb97bf61df81386.camel@redhat.com>
+References: <cover.1745999587.git.namcao@linutronix.de>
+	<cbcefdb80d5e10b8fed80de17bb97bf61df81386.camel@redhat.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-6-superm1@kernel.org>
- <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
- <e80be47b-5f8d-409c-8c3d-cd1af46944d0@kernel.org>
- <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 4/30/2025 2:10 PM, Borislav Petkov wrote:
-> On Wed, Apr 30, 2025 at 02:05:44PM -0500, Mario Limonciello wrote:
->> On 4/30/2025 2:03 PM, Borislav Petkov wrote:
->>> On Tue, Apr 22, 2025 at 06:48:30PM -0500, Mario Limonciello wrote:
->>>> +	/* Iterate on each bit in the 'value' mask: */
->>>> +	while (true) {
->>>> +		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
->>>> +
->>>> +		/* Reached the end of the word, no more bits: */
->>>> +		if (bit >= BITS_PER_LONG) {
->>>> +			if (!nr_reasons)
->>>> +				pr_info("x86/amd: Previous system reset reason [0x%08lx]: Unknown\n", value);
->>>> +			break;
->>>> +		}
->>>> +
->>>> +		if (!s5_reset_reason_txt[bit])
->>>> +			continue;
->>>> +
->>>> +		nr_reasons++;
->>>> +		pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
->>>> +			value, s5_reset_reason_txt[bit]);
->>>> +	}
->>>
->>> What happened to that simpler idea:
->>>
->>> https://lore.kernel.org/r/20250411125050.GEZ_kQKtYBfEMDQuXU@fat_crate.local
->>>
->>
->> This one was more advantageous in that if multiple bits were set for any
->> reason we could get messages for all of them printed.
-> 
-> I don't understand - you dump an array element for every bit now too...
-> 
+On Wed, 30 Apr 2025 14:17:30 +0200
+Gabriele Monaco <gmonaco@redhat.com> wrote:
 
-Well with that approach once you got a known bit set you broke the loop 
-and would print a message for that known bit.  But if you have two bits 
-set you either need another loop or you only get one message print.
+> Steve,
+> 
+> >From my point of view this series is ready for inclusion, what do you  
+> think?
+
+I haven't had a chance to look at it yet. I'm finishing up some deferred
+unwinding work, and then hopefully I can take a deeper look.
+
+> 
+> We may still need Acks from the x86 and arm64 maintainers regarding the
+> tracepoints changes, though.
+
+Yeah, probably want to start pinging them.
+
+-- Steve
