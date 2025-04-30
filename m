@@ -1,98 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB55A23183A;
-	Wed, 30 Apr 2025 22:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C048226D07
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053532; cv=none; b=ZsKcDCm7kxke7CNSG1/9QVi30Q01Hy2SVJ1nTo5C/cAirvjSkcPm9qKSwu52MLEnFCQQ4nSYJ9HkY+8hkJU/2pn2zvGRXLRXnshyUJJoZY8bBW/TVQQIldZKXA/JsGoAUKcbLjPiWHgEQlxuqnxsRrrI5srroGXf+Ycwt3HHbpc=
+	t=1746053565; cv=none; b=puJEfX2tDlBLlehKDcLEfmxIB507S7uVQiglESxnYjF3oFZBcF5wJTOQj4ZCk7R0prJDhUNxfzXoWBfbtfp/CJebFQa+4lltk0OG3cZ+Bb9FnvCqowZGSZfgRMitiOLTzvEkUEsVpEkFTpEougoOZ43+hzeCG3uLValSJubLRbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053532; c=relaxed/simple;
-	bh=/uzG+0J1HnGhNby4Om5wzthNiZIMfHMbWZZ5tRCOTB4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=fT9ZG1vR1jNW21C/Yp206bsrFG4nYdYQE1KfZx7B7pYgdoXsDpd9+BUnuGEVNr+20Irs7xfwOuCYArxqyTMwPkcV57PLxZ0Mk94NC2SgJUsIkix6EHWBAy8/NnrDO4JBfrzK7Pi2Svb1HBqYq7UtYv2/qmpnLGQggZmAv6U6MkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kx++A0bM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746053565; c=relaxed/simple;
+	bh=F1u4A3II7J516T2IMIxcmX6L0E0d9Mdz2jTNW4o7BAo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tb9I8ufnJ7b6psxV6hTki7R6M39AaK8iahYROKKvxpIRzsVT/T0eKdb0G5zcXINWeRzJEAb3QAMQtAoBgtcOBZ6rtWUPYNBvdtoKlBvN552Yba+35Sv33bgKDZxirghUHgt51S4Mt1xODsBzxiV/mLE05TdVgXFv803hyzN7AzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=JFx/TjIf; arc=none smtp.client-ip=209.85.166.227
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kx++A0bM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A094C4CEED;
-	Wed, 30 Apr 2025 22:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746053532;
-	bh=/uzG+0J1HnGhNby4Om5wzthNiZIMfHMbWZZ5tRCOTB4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=kx++A0bMp7gAM6ju2u/JEMU3HBD5tNVyp+MMhAgduE0m+pXLh+0JjY4rRAqe02j0e
-	 Y8el2A7TmjkJpk6Cd5IcHHFTVzi2uv73oS9cPNehwxqdBKEZgVWDNzZPDQmTcCVNRR
-	 vNvSH8FDMhTqJi4D8OhS074r43f06Hqot5SuLbQF9zVvlAe26lYO01+ux6LQbqTqbW
-	 AvEhXSBhNLbWTS5aYpUNXlKxqR9RhWg3agUYpi5AqLD0OsupVwoYCwSTL47bsBWQai
-	 Rs7fcw21QxdNiGeTUoV2PqEmFU697WmxHUJfpsxMHlrsdeWi/Mov3q0nLwpSBy4H73
-	 nrnOyWYUxpX9g==
-From: Mark Brown <broonie@kernel.org>
-To: Michael Hennerich <michael.hennerich@analog.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- David Lechner <dlechner@baylibre.com>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
-References: <20250428-adi-main-v1-0-4b8a1b88a212@baylibre.com>
-Subject: Re: [PATCH 0/4] spi: axi-spi-engine: offload instruction
- optimization
-Message-Id: <174605353016.3987999.5121261741483294102.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 07:52:10 +0900
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="JFx/TjIf"
+Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-3d8f9657bb3so182855ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1746053562; x=1746658362; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qKzn8c1gT7pxjQ3957pT3uUayQRNh7QQtDCxX/k+loY=;
+        b=JFx/TjIf/FTENfLraB1pg2YnbEYcOAwYP4j+p/oF/+YC9DfKruro2hE3wionmO8vno
+         D0cEboiXx115w7j+DN12wa6Uo4lRTJZBUoJYu1kep2uuw1R4D8pW9qqrqMOvJzSelsAH
+         Q1WBcWNDgE2+7I3saxEWSqS8iAA0XDZ9oWUq7RFbakR1FdlltzsSFbMLKEqXk3lua7Le
+         tZILHad/X3lnV4zIukCX8onj7C0yEEitRgAOMf7BAHXEDo9cQDhTP2eomIw+TZKbk9r5
+         iIzpX9EhRp5dQQDq5Jg6pamCQdf/dPuD7KRH2mspzic+4BxNNk08X/L3xrDUy0LXQC3j
+         QcDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746053562; x=1746658362;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qKzn8c1gT7pxjQ3957pT3uUayQRNh7QQtDCxX/k+loY=;
+        b=IPy2tDyod/xp2Bgc965/vWe5N+vy9jRJ6yC4JGha348Q+pdniOF+jRBsE2hXKTqKK/
+         0mtplp78t4Fm/ZgEFEwz90kahrKAS6Q6Ev3GEfIIRev9CqNB/UkbUcZK6V+YvbcNReLE
+         kqjoWnBIhgn3aPfvw+hvNpftnfW0aEwykbq8K94Yn9Olss1xohhrL7sxrMRFs1L9V/XT
+         At043p6tgZGir+wn3uSbLuLcuwuazINxyTutEFYY1A3UuvkvDNJ6HEQFLyTsAxPIAI5Z
+         fNeDgGISTHykhCpsqwI6XTF7k3DSCjKb5dgites1CjcDCW+LT0DE9Lw4aopSzZkUyjVR
+         nhvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfKDG3E6pkGnqn4EFzNTT07m14b1xdCBIecLxmFKnB0yHqJd3zH+KEde0iGpDD4srgV1nIWEloYQM/vFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIL7Pj7OqtuuYLtihASgVY1twK6M8EsDHPYcEZ1SlxxRa5GscQ
+	3KTHnyxjw5dAKF58qyOMavgEcgOMzVectjfFxXqN5m08efJYU/AMKkD+3nrDInZOnU8/Gd0LjPu
+	1Zg+RjZ0xANayQFeqX7ekMXG8seup0TgzTJiLAu89AEPBUptR
+X-Gm-Gg: ASbGncve5xqjLMCRXMj6yPhuhy3vZ8ISvapM95J0BtpsdTCefMZnj0TEXpqRqRb0SCR
+	GLVGzOWXlyCiDJTBKVFTdrV09nhy33uT3KpBmYuFj4BhgivOYrm9vOET3MvVNi9At4XSfTvQe4I
+	HCBtyb0LZ8DRaW1oWmmGrvOpY6VwFIq7pAMePtk6YmodftK1+WDFs6jm/L9M5cpDu/AU1NPZgqK
+	O0J/uEuAHXbTuGuU3lexYVBAar8Bwi6BPur5mLb+/xFFoRJdW+RLTJaiBfYv7NwaF2X5vforDYZ
+	0D3FNiBthC1DMczP2I8b3ltGea2tXQ==
+X-Google-Smtp-Source: AGHT+IHXcEJToWH3+Ky6wiHTax+SifpxDXUZwle8Tn09a9JGf5xEuvTnKbVzf6vXj+eIm+MLYmELCBeMykmo
+X-Received: by 2002:a05:6e02:19c9:b0:3d4:3aba:9547 with SMTP id e9e14a558f8ab-3d9682a80bcmr13881195ab.4.1746053562302;
+        Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d95f311e01sm3634185ab.31.2025.04.30.15.52.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id EABE3340199;
+	Wed, 30 Apr 2025 16:52:41 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id E4B49E41CC0; Wed, 30 Apr 2025 16:52:41 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Ming Lei <ming.lei@redhat.com>,
+	Jens Axboe <axboe@kernel.dk>
+Cc: Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v2 0/9] ublk: simplify NEED_GET_DATA handling and request lookup
+Date: Wed, 30 Apr 2025 16:52:25 -0600
+Message-ID: <20250430225234.2676781-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
 
-On Mon, 28 Apr 2025 15:58:55 -0500, David Lechner wrote:
-> In order to achieve a 4 MSPS rate on a 16-bit ADC with a 80 MHz SCLK
-> using the SPI offload feature of the AXI SPI Engine, we need to shave
-> off some time that is spent executing unnecessary instructions. There
-> are a few one-time setup instructions that can be moved so that they
-> execute only once when the SPI offload trigger is enabled rather than
-> repeating each time the offload is triggered. Additionally, a recent
-> change to the IP block allows dropping the SYNC instruction completely.
-> With these changes, we are left with only the 3 instructions that are
-> needed to to assert CS, transfer the data, and deassert CS. This makes
-> 3 + 16 * 12.5 ns = 237.5 ns < 250 ns which is comfortably within the
-> available time period.
-> 
-> [...]
+Remove accesses to ublk_io's cmd field after the I/O request is posted to the
+ublk server. This allows the cmd field to be overlapped with a pointer to the
+struct request, avoiding several blk_mq_tag_to_rq() lookups.
 
-Applied to
+Fix a couple of typos noticed along the way.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+Caleb Sander Mateos (8):
+  ublk: fix "immepdately" typo in comment
+  ublk: remove misleading "ubq" in "ubq_complete_io_cmd()"
+  ublk: take const ubq pointer in ublk_get_iod()
+  ublk: don't log uring_cmd cmd_op in ublk_dispatch_req()
+  ublk: factor out ublk_start_io() helper
+  ublk: don't call ublk_dispatch_req() for NEED_GET_DATA
+  ublk: check UBLK_IO_FLAG_OWNED_BY_SRV in ublk_abort_queue()
+  ublk: store request pointer in ublk_io
 
-Thanks!
+Uday Shankar (1):
+  ublk: factor out ublk_commit_and_fetch
 
-[1/4] spi: axi-spi-engine: wait for completion in setup
-      commit: 1d0ee0c9df31c9fd1e4f8d7e2464e36fbf6e3f75
-[2/4] spi: axi-spi-engine: don't repeat mode config for offload
-      commit: 8fc13b822c74a46587c0d8aae4ea0820b6bdb933
-[3/4] spi: axi-spi-engine: optimize bits_per_word for offload
-      commit: 087591c9e4fde86fe2971c34a2745c208103248e
-[4/4] spi: axi-spi-engine: omit SYNC from offload instructions
-      commit: e6702c44c2adb28b62f81de498e9b1e4562ce660
+ drivers/block/ublk_drv.c | 252 ++++++++++++++++++++-------------------
+ 1 file changed, 131 insertions(+), 121 deletions(-)
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+v2:
+- Don't complete uring_cmd if ublk_map_io() returns 0 (Ming)
+- Take const ubq pointers
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+-- 
+2.45.2
 
