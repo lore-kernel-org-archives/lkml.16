@@ -1,217 +1,195 @@
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72134215060
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:46:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 124B33A8F7
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031585; cv=none; b=e5CGHyRdrg5gQxQO7Qjips/X7E9SCdeIWwB8l/7zjclAT0h3VlHMl99fDc7d0hl7ke/nlHld07sD5xbnB6Gz29zbaMJuRUQvnERq2MfPMDFpmhxSFh/iglavcAJzPsYn/bZO7TNtbjU9DEy5usCGpdcE5GG1YlhQFrTXRlUVHTc=
+	t=1746031631; cv=none; b=lbZ/boYPVcqoFfqmXWunVgG1mMjqT6aa0hysQ19undJ5IM3c3fLEVu4uFpfavplWZdeKE1xD6GC5kttg++k1ZhuNS/Yz+X3JpFKSdqOafRCujU2BLllDAQWB5A7ZB7N2JAB/paADyN3fHZYsvhsh4+K8++lL5zsrAc222Alu9sg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031585; c=relaxed/simple;
-	bh=pMlBRncKSdCK24VTT995PN/XIsoTLwggdROEa0Zb3s8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D21nHdRo6BxTOElOf3KsFtNXZ7qTX6tm4EfRLC+Xhzxe9vD6aYYNMid6xgNU6AfUY5hNEuaAaGAsLPLFUKk7VYbOLIQ9ywqZ1Q/y4tQJDyYqiLRf+knYyvtsAO7uSJz2RUu7GZWn6JnHcXFnHj6A2QGybdw8WGj11dAhJhunT1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vO4hOzGT; arc=none smtp.client-ip=209.85.221.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746031631; c=relaxed/simple;
+	bh=cZBrAbeX5IT6YCCfasFvUYVkaCKs3khXkqTan3lrTb0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=T/Jj+wozHBx/Qsj8v9Z1avGG9xM1j/fPjAf0NwfltIDVO+WUNxOYt+tC+LfSggiUgF5DleXwuieroGzD715ehhIFrrjaD3jaTRPr8iOCbr/Yfrf6L3z8wV7LStHNGPFaBKthVrqT6OsSqw+Sqa1gGPT4Ice9m9DPbCjcfNNE9XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZbMJvq7M; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vO4hOzGT"
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51eb18130f9so32104e0c.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:46:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746031582; x=1746636382; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q6QQATCJnAni7lD26HoQnyvx3aPp8MUfzUYQFXvsgnk=;
-        b=vO4hOzGTayZ3yaTaxnUhivygP4ecf1Yz9WYl8Vok5SnNUW9AqiBC/TaeHIfaQhDTWB
-         I9ZDNqXJ9+GgYih3XbjPpUPmfVFYT7MogpInDTrvlEYJGZqqJ7g0HqQCvi8Xv1yGU3D5
-         YeQ6Rh4uaN030jMK9D85jFMz8lhU1Jny5X+gfKSn1RE+UkAoF2L0KrRPTmRYpIcOL4xS
-         OPZNRYyEIoW+u279D5z3m1AjfIy+ykzE2Un9QOqsyxPnJHWA3j65GAIMSAjaINdVT86I
-         LCIHGZS3kv4y2K4ApadIe6vnlIICASI4qk1E7UO8sIggSTceAymPwwDAckPE4dpM/nEw
-         T5rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746031582; x=1746636382;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q6QQATCJnAni7lD26HoQnyvx3aPp8MUfzUYQFXvsgnk=;
-        b=SaLyL88Wkj427IrLBaimcyWculbGbWgopL+cxAOfHV12QeL8EcVHd8l+a9iSp96C/g
-         daxPS26wSsZp1jAhV4dbmIBNVMVZXGSGAKXKx0+M95xHxmT/W3V80iwm7+sAhNNf9svX
-         Hjw5NwO9TSZu/BQbL6mwR1THx9gmc/04Jx/7g2QXa8L8+6pJxAovXniu2hHboO4j93Hn
-         7x81ZZ9iyqEuINZIbAK8c96v1m+5bIcQIIMCcd7Uez4pcaS5kRlFWkQKAOHDT+7cTGAs
-         XOY9dOs/fk4YSKSEnEvE45T1ZzB0xhOxvTlLjqAC5lYBaXtEFa4txe4KXzamYuPpn1Cd
-         9k3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWy4gDfdy0DD6e181iIzCPxsz7Ed6b0Vp/B4JQ+LGQfF1byu4zjE/DhTVpu7FNDF+DZkFo1wjMUe+cp81k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBDgNrc8+UZUHR6AtHDvr6nhnS0iU6aUTwgZHyycVbOBndD94j
-	gtB8n5V3IYW8eaKVzOLYv4wI+4MtPM1t1Xv1X2cQckfncMPRD9YfDhYPN3/Z5FoJISIebEjYS6y
-	M/mY+5Y08pEPQrKhPS1OboLVppA4QgsZd1KLflA==
-X-Gm-Gg: ASbGnctiIeU7T3GIiqPvxiuZa6AG8W7qPeYQwQc9XRBHzdI54y84vycHevPDGnBGtjX
-	IBO/O9WjsziASYT3F1xMd6VI2heoNKZDFHoET6UixR+i7kK0jZBK7l4r62nNl3t9+LQkRtsCMzm
-	9TfHmENbQ957Rkn0F+wIQ03iWLjkkIXdVhOdJOYWYNbD2EE1JU3bngbRQ=
-X-Google-Smtp-Source: AGHT+IHiKsaa/9PupeVMqWQM2qFCut1F3R06PIZ50WdJGmP1n5qFLKYdVGXrnFfD3AEl2/STGwJf72ayeOa3zrci/kk=
-X-Received: by 2002:a05:6122:310e:b0:518:965c:34a with SMTP id
- 71dfb90a1353d-52acd74d8dcmr3700062e0c.2.1746031582213; Wed, 30 Apr 2025
- 09:46:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZbMJvq7M"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746031626;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=uvDxFe99tlP67W9rJgqWgbLX4neeNVtGZon90RdKFIc=;
+	b=ZbMJvq7MrNufKBtpXGIdWfjZD9z/b619WpdYi0gmr081ARrX13VtRJVZcFkXmcvrnZi8Z1
+	DPS6P4rqq+ARW/PmoBHXTbLKRsdzy/93pVxv3M7h70An1Cr5PUkmsKtbD/EQdMDcO8IHlo
+	82jSnavdI8DofvoG+qIk7rIJvnIbD7I=
+From: Tao Chen <chen.dylane@linux.dev>
+To: ast@kernel.org,
+	daniel@iogearbox.net,
+	john.fastabend@gmail.com,
+	andrii@kernel.org,
+	martin.lau@linux.dev,
+	eddyz87@gmail.com,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	kpsingh@kernel.org,
+	sdf@fomichev.me,
+	haoluo@google.com,
+	jolsa@kernel.org,
+	alan.maguire@oracle.com
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Tao Chen <chen.dylane@linux.dev>
+Subject: [RFC PATCH bpf-next 1/2] libbpf: Try get fentry func addr from available_filter_functions_addr
+Date: Thu,  1 May 2025 00:46:07 +0800
+Message-Id: <20250430164608.3790552-2-chen.dylane@linux.dev>
+In-Reply-To: <20250430164608.3790552-1-chen.dylane@linux.dev>
+References: <20250430164608.3790552-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429161049.383278312@linuxfoundation.org>
-In-Reply-To: <20250429161049.383278312@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 30 Apr 2025 22:16:10 +0530
-X-Gm-Features: ATxdqUGa_QPS1XzDQeZR0E56worKFlQ0tfYA7of30Zy7JIE3lz7xhvChppL1Glk
-Message-ID: <CA+G9fYt-Z+4hhQFNCu=RdsK5A4AXWBm=_FANVdd2NziNjWWTQw@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/179] 5.4.293-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, 29 Apr 2025 at 22:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.293 release.
-> There are 179 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.293-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Try to get the real kernel func addr from available_filter_functions_addr,
+in case of the function name is optimized by the compiler and a suffix
+such as ".isra.0" is added, which will be used in the next patch.
 
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ tools/include/uapi/linux/bpf.h |  1 +
+ tools/lib/bpf/bpf.c            |  1 +
+ tools/lib/bpf/bpf.h            |  1 +
+ tools/lib/bpf/gen_loader.c     |  1 +
+ tools/lib/bpf/libbpf.c         | 53 ++++++++++++++++++++++++++++++++++
+ 5 files changed, 57 insertions(+)
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+index 07ee73cdf9..7016e47a70 100644
+--- a/tools/include/uapi/linux/bpf.h
++++ b/tools/include/uapi/linux/bpf.h
+@@ -1577,6 +1577,7 @@ union bpf_attr {
+ 		 * If provided, prog_flags should have BPF_F_TOKEN_FD flag set.
+ 		 */
+ 		__s32		prog_token_fd;
++		__aligned_u64	fentry_func;
+ 		/* The fd_array_cnt can be used to pass the length of the
+ 		 * fd_array array. In this case all the [map] file descriptors
+ 		 * passed in this array will be bound to the program, even if
+diff --git a/tools/lib/bpf/bpf.c b/tools/lib/bpf/bpf.c
+index a9c3e33d0f..639a6b54e8 100644
+--- a/tools/lib/bpf/bpf.c
++++ b/tools/lib/bpf/bpf.c
+@@ -312,6 +312,7 @@ int bpf_prog_load(enum bpf_prog_type prog_type,
+ 
+ 	attr.fd_array = ptr_to_u64(OPTS_GET(opts, fd_array, NULL));
+ 	attr.fd_array_cnt = OPTS_GET(opts, fd_array_cnt, 0);
++	attr.fentry_func = OPTS_GET(opts, fentry_func, 0);
+ 
+ 	if (log_level) {
+ 		attr.log_buf = ptr_to_u64(log_buf);
+diff --git a/tools/lib/bpf/bpf.h b/tools/lib/bpf/bpf.h
+index 777627d33d..b3340bcf7b 100644
+--- a/tools/lib/bpf/bpf.h
++++ b/tools/lib/bpf/bpf.h
+@@ -83,6 +83,7 @@ struct bpf_prog_load_opts {
+ 	__u32 attach_btf_id;
+ 	__u32 attach_prog_fd;
+ 	__u32 attach_btf_obj_fd;
++	__u64 fentry_func;
+ 
+ 	const int *fd_array;
+ 
+diff --git a/tools/lib/bpf/gen_loader.c b/tools/lib/bpf/gen_loader.c
+index 113ae4abd3..d90874b746 100644
+--- a/tools/lib/bpf/gen_loader.c
++++ b/tools/lib/bpf/gen_loader.c
+@@ -1023,6 +1023,7 @@ void bpf_gen__prog_load(struct bpf_gen *gen,
+ 	attr.kern_version = 0;
+ 	attr.insn_cnt = tgt_endian((__u32)insn_cnt);
+ 	attr.prog_flags = tgt_endian(load_attr->prog_flags);
++	attr.fentry_func = tgt_endian(load_attr->fentry_func);
+ 
+ 	attr.func_info_rec_size = tgt_endian(load_attr->func_info_rec_size);
+ 	attr.func_info_cnt = tgt_endian(load_attr->func_info_cnt);
+diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
+index 37d563e140..624e75cf2f 100644
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -7456,6 +7456,50 @@ static int libbpf_prepare_prog_load(struct bpf_program *prog,
+ }
+ 
+ static void fixup_verifier_log(struct bpf_program *prog, char *buf, size_t buf_sz);
++static const char *tracefs_available_filter_functions_addrs(void);
++
++static void try_get_fentry_func_addr(const char *func_name, struct bpf_prog_load_opts *load_attr)
++{
++	const char *available_functions_file = tracefs_available_filter_functions_addrs();
++	char sym_name[500];
++	FILE *f;
++	char *suffix;
++	int ret;
++	unsigned long long sym_addr;
++
++	f = fopen(available_functions_file, "re");
++	if (!f) {
++		pr_warn("failed to open %s: %s\n", available_functions_file, errstr(errno));
++		return;
++	}
++
++	while (true) {
++		ret = fscanf(f, "%llx %499s%*[^\n]\n", &sym_addr, sym_name);
++		if (ret == EOF && feof(f))
++			break;
++
++		if (ret != 2) {
++			pr_warn("failed to parse available_filter_functions_addrs entry: %d\n",
++				ret);
++			goto cleanup;
++		}
++
++		if (strcmp(func_name, sym_name) == 0) {
++			load_attr->fentry_func = sym_addr;
++			break;
++		}
++		/* find [func_name] optimized by compiler like [func_name].isra.0 */
++		suffix = strstr(sym_name, ".");
++		if (suffix && strncmp(sym_name, func_name,
++					strlen(sym_name) - strlen(suffix)) == 0) {
++			load_attr->fentry_func = sym_addr;
++			break;
++		}
++	}
++
++cleanup:
++	fclose(f);
++}
+ 
+ static int bpf_object_load_prog(struct bpf_object *obj, struct bpf_program *prog,
+ 				struct bpf_insn *insns, int insns_cnt,
+@@ -7504,6 +7548,15 @@ static int bpf_object_load_prog(struct bpf_object *obj, struct bpf_program *prog
+ 	load_attr.prog_ifindex = prog->prog_ifindex;
+ 	load_attr.expected_attach_type = prog->expected_attach_type;
+ 
++	if (load_attr.expected_attach_type == BPF_TRACE_FENTRY ||
++		load_attr.expected_attach_type == BPF_TRACE_FEXIT) {
++		const char *func_name;
++
++		func_name = strchr(prog->sec_name, '/');
++		if (func_name)
++			try_get_fentry_func_addr(++func_name, &load_attr);
++	}
++
+ 	/* specify func_info/line_info only if kernel supports them */
+ 	if (obj->btf && btf__fd(obj->btf) >= 0 && kernel_supports(obj, FEAT_BTF_FUNC)) {
+ 		load_attr.prog_btf_fd = btf__fd(obj->btf);
+-- 
+2.43.0
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 5.4.293-rc1
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: d5e62da0f6d50c9412ef6220500b5c0c886d081f
-* git describe: v5.4.292-180-gd5e62da0f6d5
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
-92-180-gd5e62da0f6d5
-
-## Test Regressions (compared to v5.4.291-155-g7a5af469195f)
-
-## Metric Regressions (compared to v5.4.291-155-g7a5af469195f)
-
-## Test Fixes (compared to v5.4.291-155-g7a5af469195f)
-
-## Metric Fixes (compared to v5.4.291-155-g7a5af469195f)
-
-## Test result summary
-total: 53398, pass: 34036, fail: 8725, skip: 10462, xfail: 175
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 130 total, 128 passed, 2 failed
-* arm64: 30 total, 28 passed, 2 failed
-* i386: 19 total, 14 passed, 5 failed
-* mips: 25 total, 22 passed, 3 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 26 total, 21 passed, 5 failed
-* riscv: 9 total, 3 passed, 6 failed
-* s390: 6 total, 6 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 26 total, 26 passed, 0 failed
-
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* lava
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-ipc
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
