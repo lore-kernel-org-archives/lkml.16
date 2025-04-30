@@ -1,77 +1,236 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC122DC760;
-	Wed, 30 Apr 2025 15:42:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AF02609F4;
+	Wed, 30 Apr 2025 15:43:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027777; cv=none; b=WwD855ddNyPksHBr2O3rPXc4mMLxBdZWULdQ8tgSyTcD2QWZzj/9VQdBo7a1FqOA9Bkm3r0cx9KbqFkRRpW2kbBADQegysnCOun9Vl+JC+6cgBDBIWeSS2j/oPbqKLMk8ZkvQG+ubI1s4T/cfJuFeVaSjpbjCJJRjuIFCCncqlI=
+	t=1746027782; cv=none; b=aBE4BzG3a8vEi+Dv5cuVlLBucI8rABjlj8CcVm9n1Y6skscnPQbHfgJY/XoXhJDJfvpkHfqlcOVGScpfAQg9kVScOSCt+xbSwg1S02M69l6lYf4LVuKZq5iYnii4xoIgO7ZpaNnnFNVh2AqbszonE/Z919XXRPzxOOxkWb7xvVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027777; c=relaxed/simple;
-	bh=cJQDxqBbZMGtPjZQq2+K0iYdq6ngOwnw5OlxsKKMBvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Kd4TxtLjxI7gQnXLgd7iMDSwOChBNF9rVOdCgzmW0Wx3M9TPJQQEbbVFqxNwYHFi/r6Y8yAOpoL3dJZOJwRHuOcwzTOYZi4zmMcgWw2o2FJWXoEam4Nr2R63as9lmeeNiuCy9oX9j7MdLmk6IMDycj7VxZ/YSguH0DQRjNsd2dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXqeDL+P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746027782; c=relaxed/simple;
+	bh=cMohmDDOMvrG0cwSob/om89yJTT/ehRLLR48RgsOAo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g5u4DfipFPGZRMRvjaDcSwdHLHdxEznQwNYBNdwmSvZ6ATXE32GcSYBiFuujFJ+RXiStBfj4SPO35edHy5yVWnA22rvsPHgFeWWGesUpRKNKxLmpy8R3SB0jf4MFVAnGOZuuzR/ep4KjWGz1mQ+1FlQTUrrE169NgWOGhFGA+98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPXSIeo8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXqeDL+P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30F9C4CEE7;
-	Wed, 30 Apr 2025 15:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPXSIeo8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8039C4CEEC;
+	Wed, 30 Apr 2025 15:42:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746027777;
-	bh=cJQDxqBbZMGtPjZQq2+K0iYdq6ngOwnw5OlxsKKMBvE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=AXqeDL+PSRG3Tc0f5RPIDwibMfgJnHJ97BlHFUG+jIJh1ZkIL7TcFZ2MMjMticjnB
-	 dtWlc6HYRG8E+qsdL/7tVLhpVgI03ae7hGQq95+fzTWB40/03WSOf/GE8SJnOWDEv6
-	 bSNC/XU32M1v7j7xrEO3kjmWMTJ6JLXak8LvCzej5FqgUGtTBPU6dv72c8akfR/tPT
-	 TTnPtJEGNoxbQE8YDfXStSFaMBIc4Ls0wHfcXS+2wCXqvdlRMwZncd/CiNLP9sQnSP
-	 rJ2FXyxPGFycantwUzUaSZr1+fi3qYpVzTlFSByav3lcNjieWWVI14t0yW7TFI+/YD
-	 NFdRILUHytf9Q==
-Date: Wed, 30 Apr 2025 17:42:52 +0200
-From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Linux Doc Mailing List
- <linux-doc@vger.kernel.org>, Akira Yokosawa <akiyks@gmail.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] docs: Makefile: store __pycache__ at the output
- directory
-Message-ID: <20250430174252.1c3b3e09@foz.lan>
-In-Reply-To: <87jz73rg9n.fsf@trenco.lwn.net>
-References: <cover.1745539360.git.mchehab+huawei@kernel.org>
-	<1b9e7f34c1d99a27a8abb308da3221b4663b5693.1745539360.git.mchehab+huawei@kernel.org>
-	<aAvQFen6D5ukjj-x@smile.fi.intel.com>
-	<87jz73rg9n.fsf@trenco.lwn.net>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	s=k20201202; t=1746027781;
+	bh=cMohmDDOMvrG0cwSob/om89yJTT/ehRLLR48RgsOAo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=BPXSIeo8HMGd3tm0i8k6eHxDGrAkRqfT6/6UdIcX7j3ac35cEXK4mBLh42b+maAko
+	 UxBX3Y56+gydf0wp6iq5VKMuwgY+gp8piPGz8zZvWpjZs4J6BP/aQMWq2N5KiMQqPf
+	 2KP5LmWESocF5N4nyYaejbAp4nqStVOOJWbbIJPED1KarR51MVWXIKET77EUR4xN8D
+	 zp3BAY2gTyzQbw2cOX2WI5sLJI5UnYV8S3rltVzRUakD6y6f0e59nwj2uXOwnToJbn
+	 kg5ElxnTfJXHA3VePv2FUJ6ys1+qB4Agvv+lNMg2hxBVv1kLQUuK4Gcl7UZujd9T35
+	 NMn/PXQXLbIkQ==
+Date: Wed, 30 Apr 2025 16:42:57 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+Cc: jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ~lkcamp/patches@lists.sr.ht,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings:iio:adc:st,spear600-adc: txt to yaml
+ format conversion.
+Message-ID: <20250430-folic-skittle-06b0ccbedf35@spud>
+References: <20250430020248.26639-1-rodrigo.gobbi.7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ibWcqrFQAaMOHemi"
+Content-Disposition: inline
+In-Reply-To: <20250430020248.26639-1-rodrigo.gobbi.7@gmail.com>
 
-Em Mon, 28 Apr 2025 17:57:24 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> Andy Shevchenko <andriy.shevchenko@intel.com> writes:
-> 
-> > On Fri, Apr 25, 2025 at 08:08:53AM +0800, Mauro Carvalho Chehab wrote:  
-> >> Instead of blocking creation of *.pyc cache, store python
-> >> cache under Documentation/output/__pycache__  
-> >
-> > Do we need the below in the commit message?
-> > I think having statistics is enough and this can be moved to the cover letter.  
+--ibWcqrFQAaMOHemi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yeah, agreed.
+Hey,
 
-> I agree, that was a lot of stuff to get to a one-line fix; I took the
-> liberty of trimming the tree listing out.
+On Tue, Apr 29, 2025 at 10:50:01PM -0300, Rodrigo Gobbi wrote:
+> Straight forward conversion from spear-adc.txt into yaml format.
+>=20
+> Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
+> ---
+> Some constraints were extracted from the driver (spear_adc.c) and the pub=
+lic datasheet
+> referenced at the yaml.
+>=20
+> Changelog:
+> v2: add constraints over properties and remove a ref at MAINTAINERS file.
+> v1: https://lore.kernel.org/linux-devicetree/20250423022956.31218-1-rodri=
+go.gobbi.7@gmail.com/
+> ---
+>  .../bindings/iio/adc/st,spear600-adc.yaml     | 69 +++++++++++++++++++
+>  .../bindings/staging/iio/adc/spear-adc.txt    | 24 -------
+>  MAINTAINERS                                   |  2 +-
+>  3 files changed, 70 insertions(+), 25 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600=
+-adc.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spe=
+ar-adc.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.ya=
+ml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
+> new file mode 100644
+> index 000000000000..afce10eab1c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
+> @@ -0,0 +1,69 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ST SPEAr ADC device driver
+> +
+> +maintainers:
+> +  - Jonathan Cameron <jic23@kernel.org>
+> +
+> +description: |
+> +  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
+> +  10-bit resolution. Datasheet can be found here:
+> +  https://www.st.com/resource/en/datasheet/spear600.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - st,spear600-adc
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  sampling-frequency:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 2500000
+> +    maximum: 20000000
+> +    description:
+> +      Default sampling frequency of the ADC
 
-Fine for me. 
+I think you should note that this is in Hz, while you're at it.
 
-> 
-> Applied, thanks.
+> +  vref-external:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1000
+> +    maximum: 2800
+> +    description:
+> +      External voltage reference in milli-volts. If omitted
+> +      the internal voltage reference will be used.
+> +
+> +  average-samples:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 1
+> +    maximum: 128
+> +    default: 0
 
-Thanks!
+Is 0 the default here or 1? "Single data conversion" sounds more like 1
+sample than 0, and the default of 0 is below the minimum of 1. What's
+going on there?
 
-Mauro
+
+> +    description:
+> +      Number of samples to generate an average value. If
+> +      omitted, single data conversion will be used.
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - sampling-frequency
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    adc: adc@d8200000 {
+
+The "adc:" label here can be removed, it's not doing anything!
+
+> +        compatible =3D "st,spear600-adc";
+> +        reg =3D <0xd8200000 0x1000>;
+> +        interrupt-parent =3D <&vic1>;
+> +        interrupts =3D <6>;
+> +        sampling-frequency =3D <5000000>;
+> +        vref-external =3D <2500>;	/* 2.5V VRef */
+> +    };
+> diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.=
+txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+> deleted file mode 100644
+> index 88bc94fe1f6d..000000000000
+> --- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
+> +++ /dev/null
+> @@ -1,24 +0,0 @@
+> -* ST SPEAr ADC device driver
+> -
+> -Required properties:
+> -- compatible: Should be "st,spear600-adc"
+> -- reg: Address and length of the register set for the device
+> -- interrupts: Should contain the ADC interrupt
+> -- sampling-frequency: Default sampling frequency
+> -
+> -Optional properties:
+> -- vref-external: External voltage reference in milli-volts. If omitted
+> -  the internal voltage reference will be used.
+> -- average-samples: Number of samples to generate an average value. If
+> -  omitted, single data conversion will be used.
+> -
+> -Examples:
+> -
+> -	adc: adc@d8200000 {
+> -		compatible =3D "st,spear600-adc";
+> -		reg =3D <0xd8200000 0x1000>;
+> -		interrupt-parent =3D <&vic1>;
+> -		interrupts =3D <6>;
+> -		sampling-frequency =3D <5000000>;
+> -		vref-external =3D <2500>;	/* 2.5V VRef */
+> -	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 906881b6c5cb..e923becb0633 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -23213,7 +23213,7 @@ STAGING - INDUSTRIAL IO
+>  M:	Jonathan Cameron <jic23@kernel.org>
+>  L:	linux-iio@vger.kernel.org
+>  S:	Odd Fixes
+> -F:	Documentation/devicetree/bindings/staging/iio/
+> +F:	Documentation/devicetree/bindings/iio/
+
+This change seems unneeded? The main iio entry already covers this
+directory. I think you can probably just drop the line from the staging
+entry?
+
+Cheers,
+Conor.
+
+>  F:	drivers/staging/iio/
+> =20
+>  STAGING - NVIDIA COMPLIANT EMBEDDED CONTROLLER INTERFACE (nvec)
+> --=20
+> 2.47.0
+>=20
+
+--ibWcqrFQAaMOHemi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBJFAQAKCRB4tDGHoIJi
+0qoZAQDMrzTgfpSpUUMuUtE0d9/Zi/zzTpVR+Xi53kujOqwQjQD8Cgaqm53v5yQ+
+jXxwetXO7DVqdp252PPgH3lDXLq1+AU=
+=VweJ
+-----END PGP SIGNATURE-----
+
+--ibWcqrFQAaMOHemi--
