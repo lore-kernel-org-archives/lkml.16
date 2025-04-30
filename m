@@ -1,156 +1,106 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F47D1ADC93;
-	Wed, 30 Apr 2025 16:17:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746029834; cv=none; b=FuHb2GqHHfKJmMZOvZae3Xu3ISgvEXvKfwVqW/GejmVdabtjG0B0mk/xnyuC38rqfv3twVz0ADsEkATbbnQkCQCTyhp68PXpPlqZI8DDK/40R2u/y4gWm+9r6rTbBdTIwStRcEVcXmU4Vb6R578EsQK//XOsnTFDaIoHOeeZdpQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746029834; c=relaxed/simple;
-	bh=u8pyoCgN3tvzdZvpvYgv063h+QLbtvDhM5b29UpKbk0=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dixbpRgA+M54PKiAnV2m4Iwx2a36SiKgOIMUVjGw1CmtSoKsNbOKYh2pTTZJzoQuzhUy1pwHg+nVnr/mbX3KBc9oug7QI5hrobOmQrCPydUzRCoIIYt6XXj/VIug7eOeTEKVQVFGwflwMJJhz8/5DmoLrpW71V8JMwRTrKQfPp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Znj2F6c1Xz6L4t7;
-	Thu,  1 May 2025 00:15:01 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id A47F814022E;
-	Thu,  1 May 2025 00:17:07 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Apr
- 2025 18:17:07 +0200
-Date: Wed, 30 Apr 2025 17:17:05 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <Victor.Duicu@microchip.com>
-CC: <jic23@kernel.org>, <Marius.Cristea@microchip.com>, <andy@kernel.org>,
-	<dlechner@baylibre.com>, <linux-iio@vger.kernel.org>, <nuno.sa@analog.com>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] iio: temperature: add support for MCP998X
-Message-ID: <20250430171705.00006e29@huawei.com>
-In-Reply-To: <303fbf2f6c64241966009be59f68c1d2f8cdc786.camel@microchip.com>
-References: <20250415132623.14913-1-victor.duicu@microchip.com>
-	<20250415132623.14913-3-victor.duicu@microchip.com>
-	<20250418190757.2b007737@jic23-huawei>
-	<303fbf2f6c64241966009be59f68c1d2f8cdc786.camel@microchip.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A627720C463;
+	Wed, 30 Apr 2025 16:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746029855; cv=pass; b=HK7dQmmhKM0sB5759/KyQLwxQNboEe28CBgX9ikcIiMEw/DHkxMuoPA+sdfHwzo61No1iGG+Hihmc/sq31w8JN14vEqUzginvtynBnTUN8q+IrvPpfHNnbDfLSyo83VU3zHXWOKOTTNivdWGfgwbOuI2g/As+HWYAv8yi1BSRSI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746029855; c=relaxed/simple;
+	bh=UI12DHEIMvhSUwnuUOxmnhKeGFXyWQZ3ohVg1izPjHE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=J5US5sNCbxf4DQU25m94iXJ2mTtWQXYTe8Ytyn69U1TYsAi+41KiXvcWbZxzNU1woo0CH7abEGGVj29PLw1Vr6u2OPg7psadfQa8I0V6oqBT8ZbPCG8MebDEJ6gxwQld1BBYv6KH7WAV0+xzHIJZzc9nGxpFMYQ+FoAVXYBpX7k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=CtnL4PV2; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="CtnL4PV2"
+ARC-Seal: i=1; a=rsa-sha256; t=1746029812; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=B287je1pCwj5KlUdHqnWjILCE28CeDyD/RGttZ73msudPqKOQJa/HpKQzsv5GWQKR1XvfjRGkqhMcaHqZRzYQEjgwHyK6Ygpz+Apl58/sSUOv94GhXFf5QtK3g80fTd8Zc/EwVE71e0fxaAnZ+iQfuU9+6BvyDJbIvruac/Hhxo=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746029812; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=F+Ts31OxWQ0WA/XXfCrTbdTi2PZ2UUmlCJRckaG2TDw=; 
+	b=WWi/OEwYNLm6TdqHoo9nv5gmmobRI5mQY/qYcMw2YeXjW1y8WzGDVaJvi6JL4//FXEO9P1AZu5/gJsTsorRtwnNY/59RIjJspK44fiq+988lggByD7kYQbsX6ajA+5ONHWSVcjqAf4419LIM+IuM4442cj0sedhXw05Cx3GCbIE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746029812;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=F+Ts31OxWQ0WA/XXfCrTbdTi2PZ2UUmlCJRckaG2TDw=;
+	b=CtnL4PV2iszZr2tLD1X+Rxo0+MnLVjzqh6kPbne1NbQidAZESyn4vrjWd/EgVct0
+	fD2vXblzP/zTS2ETW0XN9QaR72t9n7aXuRBQ26zKcVhf4OzikZOOL68dKiymAbEe7qi
+	horD4tl69PFbvVzR7jLvOrne4Bu3Pfms0HOplmZQ=
+Received: by mx.zohomail.com with SMTPS id 1746029810436360.54725368726145;
+	Wed, 30 Apr 2025 09:16:50 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Subject: [PATCH 0/3] RK3576 Hardware RNG
+Date: Wed, 30 Apr 2025 18:16:33 +0200
+Message-Id: <20250430-rk3576-hwrng-v1-0-480c15b5843e@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOFMEmgC/zXMQQ6CMBCF4as0s3aStlhBrmJYlDrCxFB0WpWEc
+ Hcbicv/Je9bIZEwJWjVCkJvTjzHEuagIIw+DoR8LQ1WW6eP9oxyr1x9wvEjccAmVLrpXW2MJyi
+ Xh9CNlx936fYWer6KmvcRep8IwzxNnFsVacn4l6Hbti+PAwAKjwAAAA==
+X-Change-ID: 20250429-rk3576-hwrng-8c308b5711ae
+To: Daniel Golle <daniel@makrotopia.org>, 
+ Aurelien Jarno <aurelien@aurel32.net>, Olivia Mackall <olivia@selenic.com>, 
+ Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Jonas Karlman <jonas@kwiboo.se>
+Cc: Sebastian Reichel <sebastian.reichel@collabora.com>, 
+ kernel@collabora.com, linux-crypto@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Mon, 28 Apr 2025 12:57:05 +0000
-<Victor.Duicu@microchip.com> wrote:
+Gee Nicolas, how come your mom lets you write two Rockchip HWRNG drivers
+in a year?
 
-> On Fri, 2025-04-18 at 19:07 +0100, Jonathan Cameron wrote:
-> > EXTERNAL EMAIL: Do not click links or open attachments unless you
-> > know the content is safe
-> >=20
-> > On Tue, 15 Apr 2025 16:26:23 +0300
-> > <victor.duicu@microchip.com> wrote:
-> >  =20
-> > > From: Victor Duicu <victor.duicu@microchip.com>
-> > >=20
-> > > This is the driver for Microchip MCP998X/33 and MCP998XD/33D
-> > > Multichannel Automotive Monitor Family.
-> > >=20
-> > > Signed-off-by: Victor Duicu <victor.duicu@microchip.com> =20
-> >  =20
->=20
-> Hi Jonathan,
->=20
-> > Hi Victor,
-> >=20
-> > Various comments inline,
-> >=20
-> > Thanks,
-> >=20
-> > Jonathan
-> >  =20
-> > > ---
-> > > =A0.../testing/sysfs-bus-iio-temperature-mcp9982 |=A0 17 +
-> > > =A0MAINTAINERS=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 |=A0=A0 7 +
-> > > =A0drivers/iio/temperature/Kconfig=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0 |=A0 10 +
-> > > =A0drivers/iio/temperature/Makefile=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 |=A0=A0 1 +
-> > > =A0drivers/iio/temperature/mcp9982.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0 | 794
-> > > ++++++++++++++++++
-> > > =A05 files changed, 829 insertions(+)
-> > > =A0create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-
-> > > temperature-mcp9982
-> > > =A0create mode 100644 drivers/iio/temperature/mcp9982.c
-> > >=20
-> > > diff --git a/Documentation/ABI/testing/sysfs-bus-iio-temperature-
-> > > mcp9982 b/Documentation/ABI/testing/sysfs-bus-iio-temperature-
-> > > mcp9982
-> > > new file mode 100644
-> > > index 000000000000..de3360fb05be
-> > > --- /dev/null
-> > > +++ b/Documentation/ABI/testing/sysfs-bus-iio-temperature-mcp9982
-> > > @@ -0,0 +1,17 @@
-> > > +What:=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0
-> > > /sys/bus/iio/devices/iio:deviceX/running_average_window =20
-> >=20
-> > As later in review, I think we can control this via the low pass
-> > filter 3dB point
-> > and use standard ABI.
-> >=20
-> >  =20
-> > >  =20
-> ...
->=20
-> > Hmm.=A0 A running average is a low pass filter.=A0 Can we control this
-> > instead via
-> > standard ABI and the 3dB point?=A0 Take a look at the filter ABI in
-> > Documentation/ABI/testing/sysfs-bus-iio
-> >=20
-> > Custom ABI is rarely used in real cases because the tools tend not to
-> > know about it
-> > so we avoid it if we possibly can.
-> >  =20
-> > > +
-> > >  =20
->=20
->=20
-> The moving average filter is used to smooth the temperature spikes.
-> The user should be able to set the size of the window to
-> a few values: 1(disable the filter), 4 and 8.
-> The user does not have access to the frequency properties.
+In short, RK3576 (and RK3562 and RK3528) introduce another HWRNG IP. It
+actually has quite a few cool features, but I ignored the cool bits and
+went straight for the true entropy. Some of the cool bits someone else
+may wish to add in the future: AES-CTR PRNG that's regularly reseeded
+from the entropy, adjustments for oscillator and oscillator ring lengths
+to maximise entropy generation, automatic continuous quality checking of
+the produced entropy by the hardware itself, etc.
 
-Assuming the device is self clocking, then we know the frequency and
-hence can consider an averaging filter as a type of low pass filter (which =
-is
-what it effectively is) and control via the 3dB point.
+In testing, it seems to produce about 2 mbit/s of high quality entropy
+on the RK3576 with its default settings when we read the TRNG entropy
+output directly. That's less than we'd get if we had the hardware use
+the PRNG to stretch it, but I've decided to leave that up to Linux's
+entropy pool implementation for now.
 
-Whether it is documented that way is just a question of how they
-decided to describe it in the datasheet.
+RK3562 and RK3528 probably just need a compatible and a DTS node to
+enable it as well, but I don't have any RK3562/RK3528 boards to test
+this with, so it's not done in this series.
 
-A moving average is also known as a box car filter.=20
-https://www.wavewalkerdsp.com/2022/08/03/bandwidth-of-a-moving-average-filt=
-er/
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Nicolas Frattaroli (3):
+      dt-bindings: rng: rockchip,rk3588-rng: add rk3576-rng compatible
+      hwrng: rockchip - add support for RK3576's RNG
+      arm64: dts: rockchip: add RK3576 RNG node
 
-Approximately (pi / N)*sampling frequency (I think anyway, I only took a qu=
-ick
-look).
+ .../bindings/rng/rockchip,rk3588-rng.yaml          |  5 +-
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi           |  8 +++
+ drivers/char/hw_random/rockchip-rng.c              | 73 ++++++++++++++++++++++
+ 3 files changed, 84 insertions(+), 2 deletions(-)
+---
+base-commit: 4e0a9c660788594b5b49ac07f0fbdccd2218431e
+change-id: 20250429-rk3576-hwrng-8c308b5711ae
 
-Doing that allows you to map it to standard ABI.
-
->=20
-> Best Regards,
-> Victor
-> >  =20
->=20
+Best regards,
+-- 
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
