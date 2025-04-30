@@ -1,45 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5E3275869;
-	Wed, 30 Apr 2025 19:53:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A918928399
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042829; cv=none; b=cMFCaIGJ0kz9M9P7btbk1A2EOOb8xBiG1b+2G/u9Ic5X39Alc72pTv9Q8n8A9Ip94de3MF4OMhwzfvGe5z3aQzaoCN9LHJHj2DnWXTiddPbActwEAGN5X7zT0dLpQ0HKzjSkS0M90ngip9Idaw9k8uwDPDL1Iv1eS7aWyjzB7ww=
+	t=1746042853; cv=none; b=rRhdvHqRUjzbvqK5L+SHM96biJ1m7FLgWGb/VRp+nE6lFlO20EdlXTefy9NB7fdzLQMM9+sGFimcjYdC0+uN+NYsaiFrbrXORf+cJmFDyVQg0VFHEO9RXIS8lUmey41G1hUNsAvZYeZK3GXXy4SOobtrDtHXZVEAjJcTBrrm8ZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042829; c=relaxed/simple;
-	bh=IvZZcGTOTnqH7UFtbRsVgsVtLFwVQjxriWhwmqPGY70=;
+	s=arc-20240116; t=1746042853; c=relaxed/simple;
+	bh=3yap3ZzGTQYZ/vtwqCQHVg5FTg1hill/s2XBdCCadm0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUCoRjEascFlG10Pul7Olo5bbMRQcji2xzDcELQ+8Asmv6VgKzTNdxMp1xJTw1HUo7nZS7weI4gdRmiCS1FVk+IMczhvu6M343D1JCrrHKiB6Xwj8AwdY5qzS5y41qq5rkynJiAr96nG8c7O59KG75rT6Nu65lo3OeRlZd3JReo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AW8+UDyO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIHiQGs71c4zY4NraM/wYib/fcoeGEtLoJwvbFNifTJWTbhoeGvLLO61SxmDGhbx+RRjjDLU/47NP6d/4d1lwl0w+SkQj8Erx6Kiqqk4bfcv/w0M+ICnkO89D3j63wHqQvXaMYOM8LA4BTxrjgWz3FuYR7SnUd+pglT6RawBRCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dLSkSCoa; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AW8+UDyO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CDE2C4CEE7;
-	Wed, 30 Apr 2025 19:53:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746042828;
-	bh=IvZZcGTOTnqH7UFtbRsVgsVtLFwVQjxriWhwmqPGY70=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AW8+UDyO/xA+7rNLdrrLJK4AuinQkOjSDwDfi6dxKKCZ+v95q9nIu9HxC3ZueOazP
-	 zkPehb/xd7dwBkUKt8O4wZTmpWlTkBHKeIq0w0mCkddE2ZNb8QL5/5SSpRPHoo0sdB
-	 d56BZqx00fh48ofyiqNu6QWFxvKnvt4qr58QFfZ7oTWr2p/pMqX4dBXxGZWt1rDTIx
-	 C6/Vt/vVMvCwnwfRF25RotxTTVs5BDoJyw/SMTbvGsBCnVI8SAWYMzlrynWdjfQt6Q
-	 TRrVgaz+e41XMP072NmF6fSdAVP5S4CUfZ4WuVDSHieWs+TEKGkpdbK5XJyyEm1j+T
-	 KqwsJzfwHhfcw==
-Date: Wed, 30 Apr 2025 12:53:45 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf: Move brk for static PIE even if ASLR disabled
-Message-ID: <202504301207.BCE7A96@keescook>
-References: <20250425224502.work.520-kees@kernel.org>
- <ad6b492c-cf5e-42ec-b772-52e74238483b@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dLSkSCoa"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2255003f4c6so3168885ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:54:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746042851; x=1746647651; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=u8wD0px5HjnR5pxkOK8NrG7Fm/ol5rI8jfr96COPSAI=;
+        b=dLSkSCoaGZKJZ/VG6r3R/KRcMjLm0Ejk1cssuehU2pzRM+m1uRJx6iB5GE2+LfBVLB
+         q9nK89UoPKyfklF7OV6bhyRMO8ytk9NnQDfaF5vOz2R1RuInQSUbxNhwXYghYndq+JXv
+         +FOvb+uXNLkVLbguwo69L3CjORk8Dq7uaAFmeyzu2cXagK+B0hVML9XV/njD1rpkz9sW
+         FBXVQCXk2fR1qqHWeF+jtGp06S73i1zza6NqaLf5eWPwMS0U7rvZ/sznfMTgaRIL+nIP
+         UC56ZErNZMtN38HgRFDblJQ+1TDrO8iCwUmqLBukTVMo6330QV19Bkrb254gGKYUYNAq
+         D74w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746042851; x=1746647651;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u8wD0px5HjnR5pxkOK8NrG7Fm/ol5rI8jfr96COPSAI=;
+        b=HOdaNu3KyM/mqWBeu/tTvJhoMfhoQ4XgkBlMAp+Oq4RCIWxv3hXfdmM5jIwE1UuYeN
+         P5euRJRiJK5tR3siZqrWeHEqX9Wbh3GAzBlSwCylHjltBE00vGm6NcqbAAYm8P3q5rvX
+         NBLWAqQlQ8BQ5AKsJ82W3WdV5rWxPrdMIKqYw7BVyVFj+aOq7ykE32y0ie1398GULRN8
+         X7Cyr1bz2VhG2fawj5pJVDIgGKtcwTOwd9ODRfbG6v261JZPbwiYz788o+8CnfxFsWTf
+         neZ/UhzSnxALRnX80gIJOyBrpPzmSR/+7+IKK3fYqOVwECkDBD2TvSt8VGX4PGJCXD9Y
+         1wjA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdwHhNRMNPiawJ8h2GAHtjU1z61I3J28OSIARjA0VOTfhtpN4h6kjKm7wIIMcpNC0/Q9ughPRBuC+mFiE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZKahHRd1XGJ8cD0EnqL1v9h7nddIK7JPYXG/J7gCXl7YXal40
+	qrIjGs3NynGYaH4pACroh+qzjZlU8G2/Il++5gZvJ4Pw7JLGhstIKsdgBxBQ+w==
+X-Gm-Gg: ASbGncvvJVFC9XmdV0BRdzPniZytFdoszrBWvEyOKcjdXDKPTtxCsLGUn9v176O61Ta
+	MwxaYe2uxbpvN0f2FdD4O9El0ZbfBd1dtXftNjMmUfdiYpB6Osg6Ol3nLpkmzZ2uvVSAmmY5tOx
+	soYUwWyeX58u9UL8rAvuoGbvQnUlVKMvOin703yr9JGzAFi7Xte8O35XSYPG+8wHDZHLyXTN5kA
+	AM+qZ4rFnusKfc98h98FvYB427iqRiikPdEdvc7zNACbj2YE7rEf+MSHWsFxKIYj5agoOB0BJ1w
+	H2i3SZzZ1N9Gq31XUkKvf28WTa4+WG4hB7+GE26YlrpS4MrNnzTqUrl8Oe2Vp838rPVt4ntBXUL
+	t/D4KeE6AApRZ1tkk
+X-Google-Smtp-Source: AGHT+IGuD6kTALubXNZirfBTu3m5HhSSf+bNLb+HyRwsXYMZcmIJMtVfVYD/Pd6uFMOtp50fXulIWg==
+X-Received: by 2002:a17:903:2287:b0:224:13a4:d62e with SMTP id d9443c01a7336-22df3590c0cmr73354905ad.35.1746042850758;
+        Wed, 30 Apr 2025 12:54:10 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5102d31sm126707425ad.198.2025.04.30.12.54.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 12:54:10 -0700 (PDT)
+Date: Wed, 30 Apr 2025 12:54:06 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>, iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cdx: Fix driver_managed_dma check
+Message-ID: <aBJ_3qI6WRXpJ3SL@google.com>
+References: <20250425133929.646493-2-robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,288 +74,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ad6b492c-cf5e-42ec-b772-52e74238483b@arm.com>
+In-Reply-To: <20250425133929.646493-2-robin.murphy@arm.com>
 
-On Mon, Apr 28, 2025 at 11:14:06AM +0100, Ryan Roberts wrote:
-> On 25/04/2025 23:45, Kees Cook wrote:
-> > In commit bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing
-> > direct loader exec"), the brk was moved out of the mmap region when
-> > loading static PIE binaries (ET_DYN without INTERP). The common case
-> > for these binaries was testing new ELF loaders, so the brk needed to
-> > be away from mmap to avoid colliding with stack, future mmaps (of the
-> > loader-loaded binary), etc. But this was only done when ASLR was enabled,
-> > in an attempt to minimize changes to memory layouts.
+On 04/25/2025, Robin Murphy wrote:
+> Since it's not currently safe to take device_lock() in the IOMMU probe
+> path, that can race against really_probe() setting dev->driver before
+> attempting to bind. The race itself isn't so bad, since we're only
+> concerned with dereferencing dev->driver itself anyway, but sadly my
+> attempt to implement the check with minimal churn leads to a kind of
+> TOCTOU issue, where dev->driver becomes valid after to_cdx_driver(NULL)
+> is already computed, and thus the check fails to work as intended.
 > 
-> If it's ok to move the brk to low memory for the !INTERP case, why is it not ok
-> to just load the whole program in low memory? Perhaps if the thing that is being
-> loaded does turn out to be the interpretter then it will move the brk to just
-> after to the program it loads so there is no conflict (I'm just guessing).
+> Will and I both hit this with the platform bus, but the pattern here is
+> the same, so fix it for correctness too.
 
-The bulk of the rationale is in commit eab09532d400 ("binfmt_elf: use
-ELF_ET_DYN_BASE only for PIE"). But it mostly boils down to "try to keep
-things as far apart as possible to avoid having things collide, which
-is especially problematic on 32-bit systems". Also, since memory layouts
-also end up getting limited by userspace assumptions, as seen with commit
-c715b72c1ba4 ("mm: revert x86_64 and arm64 ELF_ET_DYN_BASE base changes"),
-it's been shown we want to change as little as possible at a time. :)
-The intent was to lower ELF_ET_DYN_BASE further, but it ended up not
-being possible on x86 nor arm64. :( So, yes, it would work for 64-bit
-archs, but not 32-bit. I've been trying to avoid region selection being
-arch-width-specific.
+Thanks!
 
-So, since brk is small and isolated, this has proven a viable thing to
-move (rather than the whole program), and with the default being ASLR
-enabled it's been in this position for a while now. Doing it also for
-non-ASLR should be okay too.
-
-> > After adding support to respect alignment requirements for static PIE
-> > binaries in commit 3545deff0ec7 ("binfmt_elf: Honor PT_LOAD alignment
-> > for static PIE"), it became possible to have a large gap after the
-> > final PT_LOAD segment and the top of the mmap region. This means that
-> > future mmap allocations might go after the last PT_LOAD segment (where
-> > brk might be if ASLR was disabled) instead of before them (where they
-> > traditionally ended up).
-> > 
-> > On arm64, running with ASLR disabled, Ubuntu 22.04's "ldconfig" binary,
-> > a static PIE, has alignment requirements that leaves a gap large enough
-> > after the last PT_LOAD segment to fit the vdso and vvar, but still leave
-> > enough space for the brk (which immediately follows the last PT_LOAD
-> > segment) to be allocated by the binary.
-> > 
-> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> 
-> nit: I captured this with a locally built version that has debug symbols, hence
-> the weird "/home/ubuntu/glibc-2.35/build/elf/ldconfig" path. Perhaps it is
-> clearer to change this to "/sbin/ldconfig.real", which is the system installed
-> location?
-
-Sure; I can update the example.
+Reviewed-by: Will McVicker <willmcvicker@google.com>
 
 > 
-> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> > ***[brk will go here at fffff7ffa000]***
-> > fffff7ffc000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> > 
-> > After commit 0b3bc3354eb9 ("arm64: vdso: Switch to generic storage
-> > implementation"), the arm64 vvar grew slightly, and suddenly the brk
-> > collided with the allocation.
-> > 
-> > fffff7f20000-fffff7fde000 r-xp 00000000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7fee000-fffff7ff5000 rw-p 000be000 fe:02 8110426 /home/ubuntu/glibc-2.35/build/elf/ldconfig
-> > fffff7ff5000-fffff7ffa000 rw-p 00000000 00:00 0
-> > ***[oops, no room any more, vvar is at fffff7ffa000!]***
-> > fffff7ffa000-fffff7ffe000 r--p 00000000 00:00 0       [vvar]
-> > fffff7ffe000-fffff8000000 r-xp 00000000 00:00 0       [vdso]
-> > fffffffdf000-1000000000000 rw-p 00000000 00:00 0      [stack]
-> > 
-> > The solution is to unconditionally move the brk out of the mmap region
-> > for static PIE binaries. Whether ASLR is enabled or not does not change if
-> > there may be future mmap allocation collisions with a growing brk region.
-> > 
-> > Update memory layout comments (with kernel-doc headings), consolidate
-> > the setting of mm->brk to later (it isn't needed early), move static PIE
-> > brk out of mmap unconditionally, and make sure brk(2) knows to base brk
-> > position off of mm->start_brk not mm->end_data no matter what the cause of
-> > moving it is (via current->brk_randomized). (Though why isn't this always
-> > just start_brk? More research is needed, but leave that alone for now.)
-> > 
-> > Reported-by: Ryan Roberts <ryan.roberts@arm.com>
-> > Closes: https://lore.kernel.org/lkml/f93db308-4a0e-4806-9faf-98f890f5a5e6@arm.com/
-> > Fixes: bbdc6076d2e5 ("binfmt_elf: move brk out of mmap when doing direct loader exec")
-> > Signed-off-by: Kees Cook <kees@kernel.org>
-> > ---
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Al Viro <viro@zeniv.linux.org.uk>
-> > Cc: Christian Brauner <brauner@kernel.org>
-> > Cc: Jan Kara <jack@suse.cz>
-> > Cc: <linux-fsdevel@vger.kernel.org>
-> > Cc: <linux-mm@kvack.org>
-> > ---
-> >  fs/binfmt_elf.c | 67 +++++++++++++++++++++++++++++++------------------
-> >  1 file changed, 43 insertions(+), 24 deletions(-)
-> > 
-> > diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
-> > index 584fa89bc877..26c87d076adb 100644
-> > --- a/fs/binfmt_elf.c
-> > +++ b/fs/binfmt_elf.c
-> > @@ -830,6 +830,7 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  	struct elf_phdr *elf_ppnt, *elf_phdata, *interp_elf_phdata = NULL;
-> >  	struct elf_phdr *elf_property_phdata = NULL;
-> >  	unsigned long elf_brk;
-> > +	bool brk_moved = false;
-> >  	int retval, i;
-> >  	unsigned long elf_entry;
-> >  	unsigned long e_entry;
-> > @@ -1097,15 +1098,19 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  			/* Calculate any requested alignment. */
-> >  			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-> >  
-> > -			/*
-> > -			 * There are effectively two types of ET_DYN
-> > -			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
-> > -			 * and loaders (ET_DYN without PT_INTERP, since they
-> > -			 * _are_ the ELF interpreter). The loaders must
-> > -			 * be loaded away from programs since the program
-> > -			 * may otherwise collide with the loader (especially
-> > -			 * for ET_EXEC which does not have a randomized
-> > -			 * position). For example to handle invocations of
-> > +			/**
-> > +			 * DOC: PIE handling
-> > +			 *
-> > +			 * There are effectively two types of ET_DYN ELF
-> > +			 * binaries: programs (i.e. PIE: ET_DYN with
-> > +			 * PT_INTERP) and loaders (i.e. static PIE: ET_DYN
-> > +			 * without PT_INTERP, usually the ELF interpreter
-> > +			 * itself). Loaders must be loaded away from programs
-> > +			 * since the program may otherwise collide with the
-> > +			 * loader (especially for ET_EXEC which does not have
-> > +			 * a randomized position).
-> > +			 *
-> > +			 * For example, to handle invocations of
-> >  			 * "./ld.so someprog" to test out a new version of
-> >  			 * the loader, the subsequent program that the
-> >  			 * loader loads must avoid the loader itself, so
-> > @@ -1118,6 +1123,9 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  			 * ELF_ET_DYN_BASE and loaders are loaded into the
-> >  			 * independently randomized mmap region (0 load_bias
-> >  			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
-> > +			 *
-> > +			 * See below for "brk" handling details, which is
-> > +			 * also affected by program vs loader and ASLR.
-> >  			 */
-> >  			if (interpreter) {
-> >  				/* On ET_DYN with PT_INTERP, we do the ASLR. */
-> > @@ -1234,8 +1242,6 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  	start_data += load_bias;
-> >  	end_data += load_bias;
-> >  
-> > -	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
-> > -
-> >  	if (interpreter) {
-> >  		elf_entry = load_elf_interp(interp_elf_ex,
-> >  					    interpreter,
-> > @@ -1291,27 +1297,40 @@ static int load_elf_binary(struct linux_binprm *bprm)
-> >  	mm->end_data = end_data;
-> >  	mm->start_stack = bprm->p;
-> >  
-> > -	if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
-> > +	/**
-> > +	 * DOC: "brk" handling
-> > +	 *
-> > +	 * For architectures with ELF randomization, when executing a
-> > +	 * loader directly (i.e. static PIE: ET_DYN without PT_INTERP),
-> > +	 * move the brk area out of the mmap region and into the unused
-> > +	 * ELF_ET_DYN_BASE region. Since "brk" grows up it may collide
-> > +	 * early with the stack growing down or other regions being put
-> > +	 * into the mmap region by the kernel (e.g. vdso).
-> > +	 */
-> > +	if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+> Reported-by: Will McVicker <willmcvicker@google.com>
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/cdx/cdx.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Does this imply that this issue will persist for !CONFIG_ARCH_HAS_ELF_RANDOMIZE
-> arches?
-
-Ah, hm, interesting point. I think those architectures are unlikely to
-have static PIE binaries, though? ARCH_HAS_ELF_RANDOMIZE is currently
-selected (some through ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT) for these
-architectures:
-
-arm
-arm64
-csky
-loongarch
-mips
-parisc
-powerpc
-riscv
-s390
-x86
-
-In the interest of changing as little as possible, I think I'd like to
-stick with this being gated by CONFIG_ARCH_HAS_ELF_RANDOMIZE, since
-those architectures, in theory, would be expecting brk to be moved, and
-the others may not.
-
+> diff --git a/drivers/cdx/cdx.c b/drivers/cdx/cdx.c
+> index 092306ca2541..8aa92a198b71 100644
+> --- a/drivers/cdx/cdx.c
+> +++ b/drivers/cdx/cdx.c
+> @@ -348,7 +348,7 @@ static void cdx_shutdown(struct device *dev)
+>  
+>  static int cdx_dma_configure(struct device *dev)
+>  {
+> -	struct cdx_driver *cdx_drv = to_cdx_driver(dev->driver);
+> +	const struct device_driver *drv = READ_ONCE(dev->driver);
+>  	struct cdx_device *cdx_dev = to_cdx_device(dev);
+>  	struct cdx_controller *cdx = cdx_dev->cdx;
+>  	u32 input_id = cdx_dev->req_id;
+> @@ -360,8 +360,8 @@ static int cdx_dma_configure(struct device *dev)
+>  		return ret;
+>  	}
+>  
+> -	/* @cdx_drv may not be valid when we're called from the IOMMU layer */
+> -	if (!ret && dev->driver && !cdx_drv->driver_managed_dma) {
+> +	/* @drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && drv && !to_cdx_driver(drv)->driver_managed_dma) {
+>  		ret = iommu_device_use_default_domain(dev);
+>  		if (ret)
+>  			arch_teardown_dma_ops(dev);
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
 > 
-> > +	    elf_ex->e_type == ET_DYN && !interpreter) {
-> > +		elf_brk = ELF_ET_DYN_BASE;
-> > +		/* This counts as moving the brk, so let brk(2) know. */
-> > +		brk_moved = true;
-> 
-> So you are now randomizing the brk regardless of the value of
-> snapshot_randomize_va_space. I suggested this as a potential solution but was
-> concerned about back-compat issues. See this code snippet from memory.c:
-
-Well, the "randomize" is only happening if snapshot_randomize_va_space
-is >1, but we are _moving_ the brk in this case, which is what the
-brk(2) syscall wants to know about, and is what CONFIG_COMPAT_BRK tries
-to deal with. So yes, there is a bit of a conflict. More below...
-
-> 
-> ----8<----
-> /*
->  * Randomize the address space (stacks, mmaps, brk, etc.).
->  *
->  * ( When CONFIG_COMPAT_BRK=y we exclude brk from randomization,
->  *   as ancient (libc5 based) binaries can segfault. )
->  */
-> int randomize_va_space __read_mostly =
-> #ifdef CONFIG_COMPAT_BRK
-> 					1;
-> #else
-> 					2;
-> #endif
-> ----8<----
-> 
-> This implies to me that this change is in danger of breaking libc5-based binaries?
-
-It's possible it could break running the loader directly against some
-libc5-based binaries. If this turns out to be a real-world issue, we can
-find a better solution (perhaps pre-allocating a large brk).
-
--Kees
-
-> 
-> Thanks,
-> Ryan
-> 
-> > +	}
-> > +	mm->start_brk = mm->brk = ELF_PAGEALIGN(elf_brk);
-> > +
-> > +	if ((current->flags & PF_RANDOMIZE) && snapshot_randomize_va_space > 1) {
-> >  		/*
-> > -		 * For architectures with ELF randomization, when executing
-> > -		 * a loader directly (i.e. no interpreter listed in ELF
-> > -		 * headers), move the brk area out of the mmap region
-> > -		 * (since it grows up, and may collide early with the stack
-> > -		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-> > +		 * If we didn't move the brk to ELF_ET_DYN_BASE (above),
-> > +		 * leave a gap between .bss and brk.
-> >  		 */
-> > -		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
-> > -		    elf_ex->e_type == ET_DYN && !interpreter) {
-> > -			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
-> > -		} else {
-> > -			/* Otherwise leave a gap between .bss and brk. */
-> > +		if (!brk_moved)
-> >  			mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
-> > -		}
-> >  
-> >  		mm->brk = mm->start_brk = arch_randomize_brk(mm);
-> > +		brk_moved = true;
-> > +	}
-> > +
-> >  #ifdef compat_brk_randomized
-> > +	if (brk_moved)
-> >  		current->brk_randomized = 1;
-> >  #endif
-> > -	}
-> >  
-> >  	if (current->personality & MMAP_PAGE_ZERO) {
-> >  		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
-> 
-
--- 
-Kees Cook
