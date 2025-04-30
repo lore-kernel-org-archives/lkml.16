@@ -1,108 +1,159 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13F4F25333E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:34:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBA823507A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009277; cv=none; b=XHilkY84SSOeDDY+QS0kzgWWdI6iicKJyjsZsstd+gOylo2U32pYIoD5WZ9f4jmC/pk9ewquKpEGbzLlYdJrxNKPUgw8ByNsgPkxEIgOfcScsgnm1pnHN46bzPh3zJ/NIwrFs+2G+4grEkiDNxM91qO04AwR+P9Zhu9o1sQpJzg=
+	t=1746009357; cv=none; b=XwQK2nk+ow97mRVZRijC+P7s3OJr36BgyHLXGSduuF/bmvrj8nBQihFPKGFHE7AJca8FooSpvn7CEqAX4ee2HQDHbkCq30EGGkFQAJE/yOBJJVrMasUFwCwDj2zJNr6BlphSibl4UZpD1Tt8BFwEjN5w+0X5n5XvhFO8OEOpnnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009277; c=relaxed/simple;
-	bh=57iokHmYjdcAZayIvqdZd5fOEHDPDI/m5Ok9KeY3rFc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=q9pbw/kzS+nl3WVSdqa9dUinfGrQKlgIs91UOzdsu/lqDIDjVpJ/z3R7zDnJFHEWbQxmZFJ8r7gb1PGOwBLyBTunlcb8QLs984IrzF9gaBYiOg+9xg1v2gV3b0AmcQOpSswWqk+FLe51DUE21gv//JVNRadN2LjGgeBedZOvHeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EIKKsLfw; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746009357; c=relaxed/simple;
+	bh=1qKBLvY/eYkZ4HkLzjSBXa9LYhTcMVE86RoGAwD58HU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nKVbj0fRhtE4LJ9rE2QOkQDpzvyZCTED958b/5adCFqltAax4LcM2ID/ZcXazhCfIDs2PkauqPpwOLs6B3DN7svuhrLYZADzaazFnUcC4E3cBHMi/WGInhqStGhcJUGNx+0bRvFqXbbhOWdRrFT0iP7vOgWHDsUhh92/w9D4Sds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cNMaMoOl; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EIKKsLfw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746009274;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=57iokHmYjdcAZayIvqdZd5fOEHDPDI/m5Ok9KeY3rFc=;
-	b=EIKKsLfw4CP9dpmdh58UdoWiQDzXyBT5248aLwL8aqD7NRfkw2EX3E1dfCxf00t0pYqwTW
-	5C8O0ZOYEuiX2hbDf2np8QlHMVa2vGvVdaqoaoOkNwjEbzxBmqal6WVngDShIQQzhISxnd
-	tfbcumi1rM1/F7P8W9mZGr4bYQSGUto=
-Received: from mail-yb1-f197.google.com (mail-yb1-f197.google.com
- [209.85.219.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-GOh01nwWMGK-_ntCMYswBQ-1; Wed, 30 Apr 2025 06:34:31 -0400
-X-MC-Unique: GOh01nwWMGK-_ntCMYswBQ-1
-X-Mimecast-MFC-AGG-ID: GOh01nwWMGK-_ntCMYswBQ_1746009271
-Received: by mail-yb1-f197.google.com with SMTP id 3f1490d57ef6-e6df20900f5so9810091276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:34:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cNMaMoOl"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9LnOa032422
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:35:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qIplIxVQFRQA47SBpjXsBem0pTeYTZkJKwbGOQPx6IU=; b=cNMaMoOl/c8zaL6m
+	rn1oFgm/tjezYbC/HCG1fxpcelw3mcGn88nHmYfH+vy/URLy9N6Ehy0H/BZZREFg
+	uW9dwI9dMDwAF1y3SCIllGJdIF7CJNAbP1wgk9a33lxw6B+VICxvLQnZWHEElABS
+	9vDLmjy4oWxoJRW55eP9QqTpRAIHHGZXW/cwRI/2BSg47T+Q1Hoffk0ZeO3ZEb+8
+	XJnn21T8aeLiQHBBoVSRWxZ4ZZ8Ou3pjtpIqql0Iby7ee7eukclBHJHQ5WaSoGeM
+	tZAk79tGTrRV3IK9BjP20E5eMD1J05QzzVeUCUxWOnmG7KvW180Zkw4+twcE2eST
+	VcPqbg==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u29shn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:35:54 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-476695e930bso13549281cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:35:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746009271; x=1746614071;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=57iokHmYjdcAZayIvqdZd5fOEHDPDI/m5Ok9KeY3rFc=;
-        b=sfFQF8NuhZDQa6/AAIuCSawm1stLZv5UXZ/WD7wOvjSFVHR5UHPI7KiEg9mw6WTxqt
-         WyMbhamH7pdWb4CJYTgPUUekk4OvTC2cHR2RZBRpBdjtQX/dHfnB+5AKAvGKMnvnlHwL
-         Cp3XLTdM439yGewNa67xngiNHqHzOyNhxU384cpsvCYRiN/AT1r6NwM0t0QloaVn7L1B
-         MYl7wjvDoVmJ3sN/nS7HjMwfB8mRcJb/q9TFnaCoeW18lW9kpOwFyokSOEuOhsP9YsBi
-         5MmR7oM1cv9zNU4EXbH6rdSo9q6m/tHaLFA79VrPpMqy0uuywlTW1QosfrjHusXZSJmV
-         67IQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX9hEpQcdIj93PAksCi1X0ESZElaNPGuCaJVSJITOEgj+kTW+0YtVL6An8jzXoUerzIqhxDhQ/ONolST+U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl0cSymrphYss/Bp2ZhY5o0BgYwD+ttVPUpbsLiUlXnuSU3qvS
-	0T3tlTP1OoEFgDJQctHufSlKajyuclf7hc8MbVv83Nea6uQJTrOjnA/JPloqGdIJvlzGseht+Fi
-	YXL3+XgS3GLSjZEzkDZhGVuI95rLg75M7apncDh3h1If1dmgENMJEA5AxeVF+Ob7ddGDr5Ii0yV
-	tqlEcvoSJlJsolbZyIfa/7KQOLsPoQqan8MO69
-X-Gm-Gg: ASbGncuWPJ0EAfMxJ3G0PtRmasmTAM/+O3ds6NxCEsl12WigMZIYuiHrvVSZ2uZ6sQ/
-	OxOQQCGeGZXNUF7vJarigUAF4UPjYVqMhKTqcUMlBDs9klXGEqBNGQ/ta9ukDr9O0Uf6k7qM=
-X-Received: by 2002:a05:6902:2e04:b0:e72:8aca:d06b with SMTP id 3f1490d57ef6-e73eb1e65bbmr3488708276.25.1746009271078;
-        Wed, 30 Apr 2025 03:34:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH2PrL/8Qtn9RsZP8gd5PYBcNrIX0CThPxJuTbKkfEk6rVR0kYHi6XEOL3ZZcMQ3Xfw0mqQVeC6RSWHmdB1B5w=
-X-Received: by 2002:a05:6902:2e04:b0:e72:8aca:d06b with SMTP id
- 3f1490d57ef6-e73eb1e65bbmr3488683276.25.1746009270736; Wed, 30 Apr 2025
- 03:34:30 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746009354; x=1746614154;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qIplIxVQFRQA47SBpjXsBem0pTeYTZkJKwbGOQPx6IU=;
+        b=rI5w6iIm68wI3le0ux9aQ2u7Y5/pwXuPTYkMkoAkzenRPX+UuYXRxHfxD2t4WnQvg8
+         clGchn0yRQg6qAnC03D2Ccu5OA/p04RvtgEdkts81/0e/6wAizFJKDxyStx8WDQycAyf
+         Iq+zGi1OORlB2k1l5IRa8in0nilm5xC9IB1Cot3VZ9HopSFEBPXpAFokuUsaaeNcitp9
+         iGWX2Bb3HxxM++nD3/N1pOOslSngLPRwavu36J3CfiWuzFlc3VoCDaUK4CPO1d8hEGMo
+         VhM9qGCXmRLlfq/LuPHKk91ax8v5mHJHC07lYgoNDvvRvFeR+s36K0LyRni7+Hif2xrl
+         u0Hg==
+X-Forwarded-Encrypted: i=1; AJvYcCWVn7xgLe2KezSDRhQ2K8404HhCQ/ZV9vReC0+CHea0Jh/9q0vKkh6DVmJNaEkItsX8Ed4xc2/XF7gxFsY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzwko/WoMOHu1RJ2WEwi6lSj6SaI1x+TuuVmWVLn323nFtnubfJ
+	/Bmpow/RMrrwfPELKk8CRE3wtvxonSoZ950UkTRnzaOalBi0YQz/wOukdJ8t+OYv9tU8B/4GMIl
+	QT1CZk10OKy70WsP/vqVHReiczTtR3sS55okt30cYJjO3sToCFMh0oDkpilbs+98=
+X-Gm-Gg: ASbGncvyr2ItmWJ/oLM+HCiwjnaL0vdAaGXtJbW6wb0QUIjZ//4KoNtC8bKOFsHMhxr
+	oSb8qPn6PZ7O3MAF4ZwRMGz8spt/4X5Kp2t1XieI1OqsZL86vtpE0R5Ag461INzMQefCaSD21Uo
+	VhW1EpUbclsu4x2ymt3t1CsjSfoZTPuZdT5lyzuTtw0w2ac5dpIMD30Tg4BjtrfStg0mXPGYMXG
+	dPh0j8jaQGsFE+Gl8Yxb1lMQ6U1E/4ou3LjHrM+oOowRtbCl8JWKKaJGnnhcnnaLjNd9MJubuwE
+	xCKJVOzMESd31LQu3ewfAepPhygTiG2xqryEOzc5BeCPIhHNhQm2UUkpjCSYgzVHvdo=
+X-Received: by 2002:ac8:7f06:0:b0:47a:e710:108 with SMTP id d75a77b69052e-489e1acfdf7mr10787231cf.0.1746009353544;
+        Wed, 30 Apr 2025 03:35:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFuxrdliL6vbr6r8aRJl/KXW/EJxjEm2uUrqhJUgG4WhRbhXeKv4jPjowBGXvbwoVE+GqkEwA==
+X-Received: by 2002:ac8:7f06:0:b0:47a:e710:108 with SMTP id d75a77b69052e-489e1acfdf7mr10786971cf.0.1746009353120;
+        Wed, 30 Apr 2025 03:35:53 -0700 (PDT)
+Received: from [192.168.65.132] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41a850sm905527566b.32.2025.04.30.03.35.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 03:35:52 -0700 (PDT)
+Message-ID: <b39f9d2b-17d0-4619-b676-f476d17ffb6b@oss.qualcomm.com>
+Date: Wed, 30 Apr 2025 12:35:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-vsock-linger-v3-0-ddbe73b53457@rbox.co>
- <20250430-vsock-linger-v3-2-ddbe73b53457@rbox.co> <dlk4swnprv52exa3xs5omo76ir7e3x5u7bwlkkuecmrrn2cznm@smxggyqjhgke>
- <1b24198d-2e74-43b5-96be-bdf72274f712@rbox.co>
-In-Reply-To: <1b24198d-2e74-43b5-96be-bdf72274f712@rbox.co>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 30 Apr 2025 12:34:19 +0200
-X-Gm-Features: ATxdqUG9mjYJydPSVQyHlnDymiSRul3tknhI-VICJUQQ6q1CyA6LPz-wMS1FOD0
-Message-ID: <CAGxU2F5_vZ8S7uoU4QF=J0jh11y976+AxFKf94dp01Fctq-ZwQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/4] vsock/virtio: Reduce indentation in virtio_transport_wait_close()
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+To: Abel Vesa <abel.vesa@linaro.org>, Sebastian Reichel <sre@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Sibi Sankar <quic_sibis@quicinc.com>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        Xilin Wu <wuxilin123@gmail.com>,
+        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <quic_kdybcio@quicinc.com>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
+ <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
+ <aBHvwUAISo2JhYSz@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <aBHvwUAISo2JhYSz@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 3n_gZa2cArD-tc46Kb0e95Uzl2NEft5b
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3NSBTYWx0ZWRfX4wJbzbhatZpg HoGABKeLn7zdVYjoF/PxKtZ6oiulEowt0BVQ30+MBC/izcwhchhyl/03mrFcUYuECCT9WgFJBwX /9jmgEXuTm+kQrILhmSYQQv9As5iYEI7fKvmXWQOjBmKuTh5hZK72i7a0qfiIlqTptq4WySEWNQ
+ uVJ91XBLYMmcE/UYbt33k1FpVM3bmFR8iIn1Gx/HnoLG6EglPkdtxRpFmr9gTfD0ML/wHVVVtjS ydkIh8zjupgz/O3mMUKtuLU2xWSgCZq+wX8qPEVj+uEKqAhSkd96E05oNCZu5diMtM9LBcMqQ7d Bsv3NU0RHOCAlPoMp/haQr0WVXMNp0TxAbYlzx3svghDU2JFLTOixnU+OY5GuCdtUzVKix5oLZj
+ lFrqQ9XawYSmOOMMsG/AsdDuOU+z5RQas4A+5O+LXgKfT2fUljhplWBkmMF9UDA9ZrxywN9c
+X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=6811fd0a cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=ZJu6mct0EmN0ZqeJLYoA:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+X-Proofpoint-ORIG-GUID: 3n_gZa2cArD-tc46Kb0e95Uzl2NEft5b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300075
 
-On Wed, 30 Apr 2025 at 12:30, Michal Luczaj <mhal@rbox.co> wrote:
->
-> On 4/30/25 11:28, Stefano Garzarella wrote:
-> > On Wed, Apr 30, 2025 at 11:10:28AM +0200, Michal Luczaj wrote:
-> >> Flatten the function. Remove the nested block by inverting the condition:
-> >> return early on !timeout.
-> >
-> > IIUC we are removing this function in the next commit, so we can skip
-> > this patch IMO. I suggested this change, if we didn't move the code in
-> > the core.
-> Right, I remember your suggestion. Sorry, I'm still a bit uncertain as to
-> what should and shouldn't be done in a single commit.
+On 4/30/25 11:39 AM, Abel Vesa wrote:
+> On 25-04-30 01:26:13, Sebastian Reichel wrote:
+>> Hi,
+>>
+>> On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+>>> It all started with the support for CRD back when we had different
+>>> compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+>>> is now figured out at runtime while using only the DP compatible.
+>>>
+>>> It's almost funny how this got copied over from CRD and spread to all
+>>> X Elite platforms.
+>>>
+>>> TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+>>> beyond X Elite to newer platforms.
+>>>
+>>> Functionally nothing changes.
+>>
+>> Looking at the diff I wonder if this part should also be simplified:
+>>
+>> /delete-property/ #sound-dai-cells;
+>>
+>> This is done by all upstream X1E boards, so maybe just drop the
+>> #sound-dai-cells directly in x1e80100.dtsi?
+> 
+> Yeah, I'm not sure about that.
+> 
+> Though the DP3 PHY is currently used as eDP, I think it could be used
+> as DP. So I think it makes more sense to keep the DP3 controller as is
+> in the SoC dtsi and delete the #sound-dai-cells property in each board
+> specific dts. Don't know if it will ever be the case with this SoC, but
+> maybe someone will use DP3 with the PHY configured as DP rather than
+> eDP.
+> 
+> Not sure if I'm 100% right about this though.
+> 
+> Dmitry, Bjorn, do you think that is accurate enough?
 
-Sorry for the confusion :-)
+I'd say just keep it everywhere, the physical capability of the
+controller to send audio streams is there, but is left unused by
+the specific eDP usecase (which is determined dynamically)
 
-The rule I usually follow is this (but may not be the perfect one):
-- try to make the fewest changes in a commit, to simplify both
-backports, but also for debug/revert/bisection/etc.
-- when I move code around and edit it a bit, then it's okay to edit
-style, comments, etc.
-
-Thanks,
-Stefano
-
+Konrad
