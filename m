@@ -1,239 +1,357 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D1410F1
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DB428399
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745993951; cv=none; b=XvN86k3Jv4ijfC+GQny9NLmpxBlO5iIrTQl05dEjZcbaLd9ejTulY6JmitwuEKznkom+9DZbr9XgSByFNny570uXtk2DR9c7PwuRdBxMv0Moh+zKf5BzerVlhMJWvlrh1kDbXhr1nrRVdoCqpSwrYoUkqSXStuzdumQrm/Ggr2s=
+	t=1745994188; cv=none; b=Kb6IFgAeCRaMLn9TddyUId033Fd5dQgeFvlL/F2MutwD6/3xap8Ojw2rTdxJgClrfcMi3BZXUxhEFU+3nsZ35ldRIOx7GS337tMBpuE+ktKnd9qIfzEFWOFwCfELI2g7+sHHLZDGMto6j52sLmB3CQqajRY6MCKeoKsc+6psa+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745993951; c=relaxed/simple;
-	bh=jL8xvh7MmkitMTTRNILqXKDjV0N1bxWKo2Q8EiScK1Q=;
+	s=arc-20240116; t=1745994188; c=relaxed/simple;
+	bh=bB0Lqbfvi6H+V/Ha4KPjyQJJMp9/dhdIwXaSHbhGVzk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=czT5KovyMrOPFZ2mADf0ogiWXVxHTralYLuwkS21HdZH8tx5FSnaTo01Ky509RkalKg+0aTe0yBJ0qx8gr6xtynUTO+iNByu2GHeyxGHp4Y1Q1y2y/ESoLTGHSqKCta4PFmi6YRL/LTWWjqGXeW4vM78prRN29Gk0zJnqlGP7Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y5ReXdpY; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=WJPKDV8dSOYcqkEuL87k/dvh/5Tt2DTFAlRwFASLkL76ZqcApVmm5kaYtn8Nw6Ub/i62xyvnrub39PZLJorl5S3VrZkTX2gU4aWH4vlE1BlABEpjP0YpGRW+bryKjgRx+Ntc367f7lUg0+iYa6bPaSR9Wzc+kQ8HKa6/DPGhb+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Ai9ipa+s; arc=none smtp.client-ip=91.218.175.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y5ReXdpY"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cee550af2so4670205e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:19:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745993947; x=1746598747; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=F/IL0XFmHPKxoC9j8t7metTTcJtVydc7qbX+iUPXrhg=;
-        b=y5ReXdpYq/EtyCImuzDwATPZXNHJDr6ntVi7ljKUuzEa73l7Ds7nyLyGTw7R2rLRBD
-         hc/ssxdR4GXtgk5xXMLmZxkS4dEV+gSG+q7CP/i4G72TRcqgMMT+Xt7VrWDlr13FLw09
-         q/WalHJ2Cbm5KQnW8XJkeJB9p3BNchlRO9okEAuzCW5xPyfqOfBv+c7Rw3ns/BaVTyp9
-         YkMoySomRrWhTXtheZjP5aCMdXMcLT+hcOD3zZ1gIGtDSX82ji5BzNiGvPuC8CcvUWQx
-         0z1j88F/bHjmlBYrsVEYmSXbkwo/rAtFG0pn2nb/OTyKYezHWfxpj8CLyZmf1iFyp0Np
-         5llw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745993947; x=1746598747;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F/IL0XFmHPKxoC9j8t7metTTcJtVydc7qbX+iUPXrhg=;
-        b=cmZbeTwTrsoSZZDMlVi7F5fwWPoaesMGZ4DwQ21WJJxcVFbegjhlPcMfwq1g8MjxNJ
-         8PgnoHpd32Bs94DsCk1pf50J4DJFc7/ZDNrr9S6zEhuBFN1xI+aMWVw8XdDpiLM4DMNc
-         KQBZ9ltvk1e9TXbG04g5WYB1InSK0cMKkTpmH2onHHb9xF8+V46PDtfzhXtW8DoPQmeZ
-         mdaPQoEdaOxbU0Pe51bmlMMZE2VmEtg0vZV8wadvLbLCKXf5MNZOdvcU6ppAckz1YmZi
-         yWN3zQ+KPImY0QNIdhksfl/FKne8+/OvYUA9L3Z4MugYelw+gCbQMkpizzRu3EQQgZb/
-         1oTg==
-X-Forwarded-Encrypted: i=1; AJvYcCUzy0y8/AAxTCftZg2wL2SyVRGaAB/8Jp1kjl6sJCgSorP4pLEuoI4hKJRCrQm4bJaOz7wHuqYIlZ2rofc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPQIucpbSdGWaB6ehAzbrqkbNXn99usO8WHntBMUoMUyo70uav
-	4Iotwd5OluxBoZwl4CHDDb6SqtftmKjvh3OTKMxBfVHUkyDt+SybaWltpqfG9Cw=
-X-Gm-Gg: ASbGncsKCJnx/JpFuy5TkHOlWe+kayz6SJoblaM5biz8Kmpx0w/8DtQbjjihNA/CVc9
-	6fUut29YfTXb0wn2T9qZdb/NE9L79T2w5912XVJpn8SYn25cxm7e8uB4vwOMGII6s6VEVbYoFBx
-	Z5FNktcGiP2/3rBcEu5C7tw90nFUi8qxMVoCMjC3bQAjZA7UM5XE4mmfMk5aIIfkhZ1QYuFEazI
-	kz2TCc+FiV4hKzWdXwhTBv5Ly0rS9lFhg7ecdv2NttLFXrmMJvKBKBYvub9dHLjxoubKevorfwj
-	c2dg5Q43kvLU6/tRNwFmR+klna/DEKlpPKZW2+bR09jAiX6IY7GHB7UMv+A=
-X-Google-Smtp-Source: AGHT+IGwlSSk/V975d/cid6eJ9/Q9UkNNxcjOHYawcjiK6gUy1kVrfYZq/K4ZlmgsJ8PDkUnk3LTDQ==
-X-Received: by 2002:a5d:5f81:0:b0:3a0:6868:8b13 with SMTP id ffacd0b85a97d-3a08ff57663mr348272f8f.1.1745993947391;
-        Tue, 29 Apr 2025 23:19:07 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46976sm16110911f8f.63.2025.04.29.23.19.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Apr 2025 23:19:06 -0700 (PDT)
-Message-ID: <0e007f7f-d9ff-4b2d-914d-ad62b9983bba@linaro.org>
-Date: Wed, 30 Apr 2025 08:19:04 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Ai9ipa+s"
+Message-ID: <c65c0aa0-1eb9-4ff1-ab81-87e63a3fa89a@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745994182;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=TicTVOmEB3gnVmsnSxlET08PtUTAw7ExU8QRHiIKy9o=;
+	b=Ai9ipa+swlvk6wp6hyZxKB+55UqBgEJPAgarn6r/UgjhhL+D5PngZJkXGwJI+d4l3phYyh
+	PE71HTKiS0ULVsUSSILir4g4HXTlBXhMsV0zKCvEm23t2+10PfvU1orBDbXD5Hw/A+QULH
+	ZWFyjRt0qmGuGPq+Cy6yfNTp3R+0i7k=
+Date: Wed, 30 Apr 2025 14:22:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
- headset codec, dmics)
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
- <20250424-sm8750-audio-part-2-v1-2-50133a0ec35f@linaro.org>
- <dd271e8c-e430-4e6d-88ca-95eabe61ce94@oss.qualcomm.com>
- <e61e17ca-fed7-4712-96fc-a9a2339de1fb@linaro.org>
- <9b6c5f67-0bbc-490f-9982-4e28218aa6eb@oss.qualcomm.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2 0/7] Optimize mprotect for large folios
 Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <9b6c5f67-0bbc-490f-9982-4e28218aa6eb@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Dev Jain <dev.jain@arm.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com,
+ willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
+ vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
+ peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
+ baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
+ christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
+ linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
+ yang@os.amperecomputing.com, ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
+ <ba73873b-1b26-44cd-ac0f-76e33e8fc2cf@linux.dev>
+ <05c3cd68-0d75-4682-a51c-59307e2b2e78@arm.com>
+ <9d995850-d0c4-4e02-8547-74a9723e0405@lucifer.local>
+ <11f86b1c-a12e-4cd3-8b4e-a8a34c64fbf1@arm.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <11f86b1c-a12e-4cd3-8b4e-a8a34c64fbf1@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On 29/04/2025 21:11, Konrad Dybcio wrote:
-> On 4/28/25 4:41 PM, Krzysztof Kozlowski wrote:
->> On 25/04/2025 11:30, Konrad Dybcio wrote:
->>> On 4/24/25 11:40 AM, Krzysztof Kozlowski wrote:
->>>> Add device nodes for most of the sound support - WSA883x smart speakers,
->>>> WCD9395 audio codec (headset) and sound card - which allows sound
->>>> playback via speakers and recording via DMIC microphones.  Changes bring
->>>> necessary foundation for headset playback/recording via USB, but that
->>>> part is not yet ready.
+
+
+On 2025/4/30 13:42, Dev Jain wrote:
+> 
+> 
+> On 29/04/25 4:11 pm, Lorenzo Stoakes wrote:
+>> FWIW can confirm the same thing. Lance's fixes sort most of it out, 
+>> but I also
+>> get this error:
+
+Good catch!
+
+>>
+>> mm/mprotect.c: In function ‘can_change_ptes_writable’:
+>> mm/mprotect.c:46:22: error: unused variable ‘page’ [-Werror=unused- 
+>> variable]
+>>     46 |         struct page *page;
+>>        |                      ^~~~
+>>
+>> So you also need to remove this unused variable at the stop of
+>> can_change_ptes_writable().
+> 
+> Strange that my build didn't catch this.
+
+Well, to catch unused variable warnings with GCC, enable stricter
+checks by passing -Wunused-variable via KCFLAGS, and use 
+-Werror=unused-variable
+to force the build to fail if any variable is declared but unused:
+
+make -j$(nproc) KCFLAGS="-Wunused-variable -Werror=unused-variable"
+
+Thanks,
+Lance
+
+
+> 
+>>
+>> Cheers, Lorenzo
+>>
+>> On Tue, Apr 29, 2025 at 02:32:59PM +0530, Dev Jain wrote:
+>>>
+>>>
+>>> On 29/04/25 12:36 pm, Lance Yang wrote:
+>>>> Hey Dev,
 >>>>
->>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> ---
+>>>> Hmm... I also hit the same compilation errors:
+>>>>
+>>>> In file included from ./include/linux/kasan.h:37,
+>>>>                    from ./include/linux/slab.h:260,
+>>>>                    from ./include/linux/crypto.h:19,
+>>>>                    from arch/x86/kernel/asm-offsets.c:9:
+>>>> ./include/linux/pgtable.h: In function ‘modify_prot_start_ptes’:
+>>>> ./include/linux/pgtable.h:905:15: error: implicit declaration of
+>>>> function ‘ptep_modify_prot_start’
+>>>> [-Werror=implicit-function-declaration]
+>>>>     905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>>         |               ^~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h:905:15: error: incompatible types when
+>>>> assigning to type ‘pte_t’ from type ‘int’
+>>>> ./include/linux/pgtable.h:909:27: error: incompatible types when
+>>>> assigning to type ‘pte_t’ from type ‘int’
+>>>>     909 |                 tmp_pte = ptep_modify_prot_start(vma, 
+>>>> addr, ptep);
+>>>>         |                           ^~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h: In function ‘modify_prot_commit_ptes’:
+>>>> ./include/linux/pgtable.h:925:17: error: implicit declaration of
+>>>> function ‘ptep_modify_prot_commit’
+>>>> [-Werror=implicit-function-declaration]
+>>>>     925 |                 ptep_modify_prot_commit(vma, addr, ptep,
+>>>> old_pte, pte);
+>>>>         |                 ^~~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h: At top level:
+>>>> ./include/linux/pgtable.h:1360:21: error: conflicting types for
+>>>> ‘ptep_modify_prot_start’; have ‘pte_t(struct vm_area_struct *, long
+>>>> unsigned int,  pte_t *)’
+>>>>    1360 | static inline pte_t ptep_modify_prot_start(struct
+>>>> vm_area_struct *vma,
+>>>>         |                     ^~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h:905:15: note: previous implicit 
+>>>> declaration of
+>>>> ‘ptep_modify_prot_start’ with type ‘int()’
+>>>>     905 |         pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>>         |               ^~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h:1371:20: warning: conflicting types for
+>>>> ‘ptep_modify_prot_commit’; have ‘void(struct vm_area_struct *, long
+>>>> unsigned int,  pte_t *, pte_t,  pte_t)’
+>>>>    1371 | static inline void ptep_modify_prot_commit(struct
+>>>> vm_area_struct *vma,
+>>>>         |                    ^~~~~~~~~~~~~~~~~~~~~~~
+>>>> ./include/linux/pgtable.h:1371:20: error: static declaration of
+>>>> ‘ptep_modify_prot_commit’ follows non-static declaration
+>>>> ./include/linux/pgtable.h:925:17: note: previous implicit 
+>>>> declaration of
+>>>> ‘ptep_modify_prot_commit’ with type ‘void(struct vm_area_struct *, long
+>>>> unsigned int,  pte_t *, pte_t,  pte_t)’
+>>>>     925 |                 ptep_modify_prot_commit(vma, addr, ptep,
+>>>> old_pte, pte);
+>>>>         |                 ^~~~~~~~~~~~~~~~~~~~~~~
+>>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
+>>>> objtool/
+>>>> libstring.o
+>>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
+>>>> objtool/
+>>>> libctype.o
+>>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
+>>>> objtool/
+>>>> str_error_r.o
+>>>>     CC /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
+>>>> objtool/
+>>>> librbtree.o
+>>>> cc1: some warnings being treated as errors
+>>>> make[2]: *** [scripts/Makefile.build:98: arch/x86/kernel/asm-offsets.s]
+>>>> Error 1
+>>>> make[1]: *** [/home/runner/work/mm-test-robot/mm-test-robot/linux/
+>>>> Makefile:1280: prepare0] Error 2
+>>>> make[1]: *** Waiting for unfinished jobs....
+>>>>     LD /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/ 
+>>>> objtool/
+>>>> objtool-in.o
+>>>>     LINK /home/runner/work/mm-test-robot/mm-test-robot/linux/tools/
+>>>> objtool/objtool
+>>>> make: *** [Makefile:248: __sub-make] Error 2
+>>>>
+>>>> Well, modify_prot_start_ptes() calls ptep_modify_prot_start(), but x86
+>>>> does not define __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION. To avoid
+>>>> implicit declaration errors, the architecture-independent
+>>>> ptep_modify_prot_start() must be defined before 
+>>>> modify_prot_start_ptes().
+>>>>
+>>>> With the changes below, things work correctly now ;)
 >>>
->>> [...]
+>>> Ah thanks! My bad :(
 >>>
->>>> +	sound {
->>>> +		compatible = "qcom,sm8750-sndcard", "qcom,sm8450-sndcard";
->>>> +		model = "SM8750-MTP";
->>>> +		audio-routing = "SpkrLeft IN", "WSA_SPK1 OUT",
->>>> +				"SpkrRight IN", "WSA_SPK2 OUT",
->>>> +				"IN1_HPHL", "HPHL_OUT",
->>>> +				"IN2_HPHR", "HPHR_OUT",
->>>> +				"AMIC2", "MIC BIAS2",
->>>> +				"VA DMIC0", "MIC BIAS3", /* MIC4 on schematics */
->>>> +				"VA DMIC1", "MIC BIAS3", /* MIC1 on schematics */
->>>
->>> Is this a mistake in what the codec driver exposes, or just a fumble
->>> in numbering $somewhere?
->>
->> Which mistake? MIC4? Schematics call name things differently. They
->> always were, so to make it clear for people without schematics I wrote
->> which MIC it actually is.
-> 
-> I'm not sure how to parse your response
-> 
-> are you saying that there are MIC[0..4] that are/may be connected
-> to different codec ports, and that the MIC4/1 lines are plumbed to
-> VA DMIC0/1 respectively?
-
-Yes, as always. Nothing weird here.
-
-> 
-> I think I got confused about the MIC BIAS3 going to both and none
-
-What is both and none?
-
-> matching the index, but perhaps that's just because it comes from
-> the WCD (which is the third piece of hw involved beyond VA and the
-> mic itself)
-
-Again, what is the mistake you are pointing here?
-
-> 
->>
->>>
->>>> +				"VA DMIC2", "MIC BIAS1",
->>>> +				"VA DMIC3", "MIC BIAS1",
->>>> +				"VA DMIC0", "VA MIC BIAS3",
->>>> +				"VA DMIC1", "VA MIC BIAS3",
->>>> +				"VA DMIC2", "VA MIC BIAS1",
->>>> +				"VA DMIC3", "VA MIC BIAS1",
->>>> +				"TX SWR_INPUT1", "ADC2_OUTPUT";
+>>>>
+>>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>>>> index 10cdb87ccecf..d9d6c49bb914 100644
+>>>> --- a/include/linux/pgtable.h
+>>>> +++ b/include/linux/pgtable.h
+>>>> @@ -895,44 +895,6 @@ static inline void wrprotect_ptes(struct mm_struct
+>>>> *mm, unsigned long addr,
+>>>>    }
+>>>>    #endif
+>>>>
+>>>> -/* See the comment for ptep_modify_prot_start */
+>>>> -#ifndef modify_prot_start_ptes
+>>>> -static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>>>> -        unsigned long addr, pte_t *ptep, unsigned int nr)
+>>>> -{
+>>>> -    pte_t pte, tmp_pte;
+>>>> -
+>>>> -    pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>> -    while (--nr) {
+>>>> -        ptep++;
+>>>> -        addr += PAGE_SIZE;
+>>>> -        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>> -        if (pte_dirty(tmp_pte))
+>>>> -            pte = pte_mkdirty(pte);
+>>>> -        if (pte_young(tmp_pte))
+>>>> -            pte = pte_mkyoung(pte);
+>>>> -    }
+>>>> -    return pte;
+>>>> -}
+>>>> -#endif
+>>>> -
+>>>> -/* See the comment for ptep_modify_prot_commit */
+>>>> -#ifndef modify_prot_commit_ptes
+>>>> -static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
+>>>> unsigned long addr,
+>>>> -        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+>>>> -{
+>>>> -    for (;;) {
+>>>> -        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+>>>> -        if (--nr == 0)
+>>>> -            break;
+>>>> -        ptep++;
+>>>> -        addr += PAGE_SIZE;
+>>>> -        old_pte = pte_next_pfn(old_pte);
+>>>> -        pte = pte_next_pfn(pte);
+>>>> -    }
+>>>> -}
+>>>> -#endif
+>>>> -
+>>>>    /*
+>>>>     * On some architectures hardware does not set page access bit when
+>>>> accessing
+>>>>     * memory page, it is responsibility of software setting this 
+>>>> bit. It
+>>>> brings
+>>>> @@ -1375,6 +1337,45 @@ static inline void 
+>>>> ptep_modify_prot_commit(struct
+>>>> vm_area_struct *vma,
+>>>>        __ptep_modify_prot_commit(vma, addr, ptep, pte);
+>>>>    }
+>>>>    #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
 >>>> +
->>>> +		wcd-playback-dai-link {
->>>> +			link-name = "WCD Playback";
+>>>> +/* See the comment for ptep_modify_prot_start */
+>>>> +#ifndef modify_prot_start_ptes
+>>>> +static inline pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>>>> +        unsigned long addr, pte_t *ptep, unsigned int nr)
+>>>> +{
+>>>> +    pte_t pte, tmp_pte;
 >>>> +
->>>> +			cpu {
->>>> +				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
->>>> +			};
+>>>> +    pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>> +    while (--nr) {
+>>>> +        ptep++;
+>>>> +        addr += PAGE_SIZE;
+>>>> +        tmp_pte = ptep_modify_prot_start(vma, addr, ptep);
+>>>> +        if (pte_dirty(tmp_pte))
+>>>> +            pte = pte_mkdirty(pte);
+>>>> +        if (pte_young(tmp_pte))
+>>>> +            pte = pte_mkyoung(pte);
+>>>> +    }
+>>>> +    return pte;
+>>>> +}
+>>>> +#endif
 >>>> +
->>>> +			codec {
+>>>> +/* See the comment for ptep_modify_prot_commit */
+>>>> +#ifndef modify_prot_commit_ptes
+>>>> +static inline void modify_prot_commit_ptes(struct vm_area_struct *vma,
+>>>> unsigned long addr,
+>>>> +        pte_t *ptep, pte_t old_pte, pte_t pte, unsigned int nr)
+>>>> +{
+>>>> +    for (;;) {
+>>>> +        ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
+>>>> +        if (--nr == 0)
+>>>> +            break;
+>>>> +        ptep++;
+>>>> +        addr += PAGE_SIZE;
+>>>> +        old_pte = pte_next_pfn(old_pte);
+>>>> +        pte = pte_next_pfn(pte);
+>>>> +    }
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>>    #endif /* CONFIG_MMU */
+>>>>
+>>>>    /*
+>>>> -- 
+>>>>
+>>>> Thanks,
+>>>> Lance
+>>>>
+>>>> On 2025/4/29 13:23, Dev Jain wrote:
+>>>>> This patchset optimizes the mprotect() system call for large folios
+>>>>> by PTE-batching.
+>>>>>
+>>>>> We use the following test cases to measure performance, mprotect()'ing
+>>>>> the mapped memory to read-only then read-write 40 times:
+>>>>>
+>>>>> Test case 1: Mapping 1G of memory, touching it to get PMD-THPs, then
+>>>>> pte-mapping those THPs
+>>>>> Test case 2: Mapping 1G of memory with 64K mTHPs
+>>>>> Test case 3: Mapping 1G of memory with 4K pages
+>>>>>
+>>>>> Average execution time on arm64, Apple M3:
+>>>>> Before the patchset:
+>>>>> T1: 7.9 seconds   T2: 7.9 seconds   T3: 4.2 seconds
+>>>>>
+>>>>> After the patchset:
+>>>>> T1: 2.1 seconds   T2: 2.2 seconds   T3: 4.2 seconds
+>>>>>
+>>>>> Observing T1/T2 and T3 before the patchset, we also remove the 
+>>>>> regression
+>>>>> introduced by ptep_get() on a contpte block. And, for large folios 
+>>>>> we get
+>>>>> an almost 74% performance improvement.
+>>>>>
+>>>>> v1->v2:
+>>>>>    - Rebase onto mm-unstable (6ebffe676fcf: util_macros.h: make the
+>>>>> header more resilient)
+>>>>>    - Abridge the anon-exclusive condition (Lance Yang)
+>>>>>
+>>>>> Dev Jain (7):
+>>>>>     mm: Refactor code in mprotect
+>>>>>     mm: Optimize mprotect() by batch-skipping PTEs
+>>>>>     mm: Add batched versions of ptep_modify_prot_start/commit
+>>>>>     arm64: Add batched version of ptep_modify_prot_start
+>>>>>     arm64: Add batched version of ptep_modify_prot_commit
+>>>>>     mm: Batch around can_change_pte_writable()
+>>>>>     mm: Optimize mprotect() through PTE-batching
+>>>>>
+>>>>>    arch/arm64/include/asm/pgtable.h |  10 ++
+>>>>>    arch/arm64/mm/mmu.c              |  21 +++-
+>>>>>    include/linux/mm.h               |   4 +-
+>>>>>    include/linux/pgtable.h          |  42 ++++++++
+>>>>>    mm/gup.c                         |   2 +-
+>>>>>    mm/huge_memory.c                 |   4 +-
+>>>>>    mm/memory.c                      |   6 +-
+>>>>>    mm/mprotect.c                    | 165 +++++++++++++++++++ 
+>>>>> +-----------
+>>>>>    mm/pgtable-generic.c             |  16 ++-
+>>>>>    9 files changed, 198 insertions(+), 72 deletions(-)
+>>>>>
+>>>>
 >>>
->>> 'co'dec < 'cp'u
->>>
->>> [...]
->>
->> That was the convention so far, but we can start a new one, sure. Just
->> ask the same all other patch contributors, because each of them will be
->> copying old code, which means cpu->codec->platform
 > 
-> I've been doing just that for the past couple weeks indeed
-> 
->>>> +		/*
->>>> +		 * WCD9395 RX Port 1 (HPH_L/R)      <=> SWR1 Port 1 (HPH_L/R)
->>>> +		 * WCD9395 RX Port 2 (CLSH)         <=> SWR1 Port 2 (CLSH)
->>>> +		 * WCD9395 RX Port 3 (COMP_L/R)     <=> SWR1 Port 3 (COMP_L/R)
->>>> +		 * WCD9395 RX Port 4 (LO)           <=> SWR1 Port 4 (LO)
->>>> +		 * WCD9395 RX Port 5 (DSD_L/R)      <=> SWR1 Port 5 (DSD_L/R)
->>>> +		 * WCD9395 RX Port 6 (HIFI_PCM_L/R) <=> SWR1 Port 9 (HIFI_PCM_L/R)
->>>> +		 */
->>>> +		qcom,rx-port-mapping = <1 2 3 4 5 9>;
->>>
->>> Does this deserve some dt-bindings constants?
->>
->> No, because these are hardware details/constants. Drivers do not use them.
-> 
-> I'd argue it makes sense here - it makes more sense to pass meaningfully
-> named constants to the driver, rather than blobs with a comment
 
-Sense of what? You want to make it a binding then answer what does it
-bind, what part of ABI for driver is here a binding (answer none:
-because driver does not use it)?
-
-
-
-Best regards,
-Krzysztof
