@@ -1,63 +1,63 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50F8C199FA2
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:12:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A0991AA1E0
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:12:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745971965; cv=none; b=QpOV26NtJdgzf0MpHt8WfGon2fun9v6/rA9oBleafqzOirWmSDVHb6vX183PezGr4yEkCn13DLDNvRKJhh1cWTRyeYnkd/5DTlQGdpNx78fU/0NrifTXeBcqrSgdYrBTPVdnJD6pt+lXE5/FwndFgnAZ7TvkBdVKqDAoy5SYUzA=
+	t=1745971970; cv=none; b=iT84dtIY2exvL19+iIMp6dOPCFQIssiTy5LeTAVfA2EXGTyUjdbEXBUEuVWqqjCWHReOdPvzGNv9Ngg2NMQDsFQhcs+YdX/c4ahXv3KNryXw4aFiedL4SPdJz9xcU+5sh/JBW6VFKVWzHhCiyf9SfuwCmecQ06iNPa7A7IHJupM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745971965; c=relaxed/simple;
-	bh=zYUTlpuZRl1KFq+TAP+s4up7B7gktukHww7X4/FQrhg=;
+	s=arc-20240116; t=1745971970; c=relaxed/simple;
+	bh=JE870abXD6mvQOdGZhbrZh7Dlq87uN7FQJrDxkuYRko=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CHzqd9deZr3ZsinEeZPjxqrjJz7gr6q/1VvIKxjafIrBxv3y1igjoGacYIJM83wGGPAXrweLdNx42YgXjeeZvlMyJK0l1lyn2jNNsSXODHXzp5+SUl48TtFErmKpuelzrJ1K8hHC+MVxSkV/EUEESq9bJTGES/clIo66Mh1033w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=rvraVp9e; arc=none smtp.client-ip=209.85.160.182
+	 MIME-Version; b=oYDdfK+ZwokeBoDp3JThkpJMhLU/KUFEef5WurjqdOsnefWIRGm2Y2VL3jMmB/7Y12LOExbFcV+vluOhELLissDRhKQCDUxuinpTDURMGoKmbZq+LNFWdOat6r5vMllj0WqiZAgNED4HHYWFW4VUBLqjiztXUBJylA2uZDjqOsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=lUSBEjAF; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="rvraVp9e"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47677b77725so85864351cf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:12:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="lUSBEjAF"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-477296dce8dso75549981cf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:12:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745971962; x=1746576762; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1745971966; x=1746576766; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MQ2qi/sFfPuNDbIhtDL8JDuIq6SqSYXpy/jUK0vn2/Q=;
-        b=rvraVp9eDkZIC78t+gdA273m2N35PA6aGifvo/HrJHTkx00cNSsZBng1MDvjyn2w9Z
-         V/0Tf/Gl4YscNjOcuYh3llPeWQ4upEEfYmrZtBkmI+7L7l2wrWACbFchNkCoiTPbEnfd
-         3+2jjXjdxnlMYPdHPqo6QszwvzHiV46nbMWnF96yDwuKorAvJY1g31I+5yV5Cx+MkIgl
-         pI+RVS8mf5FCdpEPDYWTxGRA06FsLnY4CHbLZw6nisjdNeXBtz7wPDi97pxpmKaV9QXb
-         8plXxwYdx62joOBsxVubjiQ4RAAdXrTZuwR8K2gg786q2T5Yb7RqoA0UN/fqGpx7r2F3
-         RVaQ==
+        bh=OzbJ+lbcTmilx4tIqHT+9/1H84YazWKPPxqiI2QgM8c=;
+        b=lUSBEjAFbpw40mLUFTYrk5tygPrNk5yzEx0cIsNAqfRVGPXnnhUhDgT8aGhs60DP7L
+         211tjICVhpddCL+9AduuNtTRt3IYX5akJWr18eJVrDdk1ykl9CS2rK8IjD+ZvR0h3uNy
+         D+d7AhCpCiR0SYtGI41LCgEKALqvc+aT5q/dSLzDhsbc8xrU0NuWKzx442j047wduVug
+         cZDE26wmOY4g9yEdim1LRucf8xfpJ232Ki2+YhXfl3SfB6T6MIazVdIFjlG3xXnIB5i7
+         5PR7KAxgzeVFHgpQgIJkiAbenHw0S82g2hEKbRqgWo8UYN5sQH6H6l3Mih2YQS19wsO9
+         gheA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745971962; x=1746576762;
+        d=1e100.net; s=20230601; t=1745971966; x=1746576766;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MQ2qi/sFfPuNDbIhtDL8JDuIq6SqSYXpy/jUK0vn2/Q=;
-        b=JTb+8BYUo/DDT8swhZfdhGzYRPxBPDn37JgO9xqIDS4Oty7jbhceQ2paw/qqY8z0pf
-         EFJz/Yld9RGzyAgrvGl5pJ6BKBGlpn1qbdlvU2dmgSKgEyOdm1jpPvxQZq/4FgQFVYy0
-         TOKd8WaNxW75ZDmBS/UG3oH4obumyXwOqBOgHoe83nXeZ6tUb94QOg7j5w0e44IxfM4e
-         CVBpnYipEs6dGdw8bFpDU+d9FXcGcIQP3PYPp6ra9i96WSKo3HGL822upqjxJO0ZgqK4
-         66hOyQ/oZzXTIoK8It4cKf6xhxDAl4dMKSxvbBYOtDBpN4iTU7wCpLbXLXIyJFp8icWE
-         pkCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJsAJ+Ugl3fi5xtpEncfjCZCKGcYcUBUxshuJliv+4sfQJ5kOekxmzVEtXIIknG5COYz2m6TSSi0FJNS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YysJAi/q4V0NEJ9ojTwRGo6qUOXAs7N0FH+5qJR0HNyGvvjW/+o
-	nPqbdaN//FDaYD/OxocBvQbf4b1Pi0wrHfo/CufonmRVhGlbgczuIJQDmySKPyM=
-X-Gm-Gg: ASbGncsnC3aM019juQAnXwp8KuglQd4VpD4h4HiDQWKyFdH4jdgMw8/4SBJbItPJ/Ih
-	fxDQUaC82xv/+IQ0W9H4qCsp0ZNrjWONtunLb2Ey2Ji2738UPXYHqVNluEGN9ju3EuYgelAGO3j
-	MEe0W8THW7Ijew4sxvI/kqfgDMuqkJUsB5SL5aLi5M2yCUZpHzzXL0LlYihhX32x9xxuIB09OUG
-	vK68XJeP+yrB3yeo6Xtcz2i2F28lQXGA8SNiLKh7j9Dr2RHIgnrLgkf68bKwr4DiK2CwRhSVaJV
-	kJ14rO3LMyH2fLJZDN0CjDx3wG9bI8N8wFW3vwzsA45pH/RB/KXJeILYpV1yhhgoba04M8amH+f
-	gm5OUvfM4Ud1q/EFzNDHiFdpi7vkD
-X-Google-Smtp-Source: AGHT+IHu7wBCZMByPPxE6SIRMBJ9R0COwH0rCtLvymU2XLo8hRzOBYARDmvp0Oad7GQ5j53f7X7Elw==
-X-Received: by 2002:a05:622a:1149:b0:476:95dd:520e with SMTP id d75a77b69052e-489c3d89e9bmr20747201cf.16.1745971962093;
-        Tue, 29 Apr 2025 17:12:42 -0700 (PDT)
+        bh=OzbJ+lbcTmilx4tIqHT+9/1H84YazWKPPxqiI2QgM8c=;
+        b=dorDeOMBy4T7uo5Y2ckUmVcUbMyOcJq+KkHNcRz6iMiVRjjhVvvZ5qtD9sdJaBjZLA
+         QyDQSJUM1MWDo8W29WO+Sx1Pi0DUMslPv1RLsdPce65QDDtc3NAalzjn+ugFyFY5g7jg
+         bHdW1dfE3Sns7dUq2joTYIpK0fn4HobaJIXVVATmLWmWUT1ITn7HziN20y19I09kgFsK
+         4RRR6TFUdY1D1GN9mW6ZeKzWHFx/dwlCNsvf9aBErZK6JH6J4wt381KsZeZ5Q1QL9xXJ
+         mBL58e9OzHJRoifbGvGsYFwAnMIp54/v+1Wo3DuF2iUxbwuzAUvmX+paqS7z1zrBsrSg
+         TH5w==
+X-Forwarded-Encrypted: i=1; AJvYcCWkWB3jMSDnEDmYdFaQIzhTuFhKFFiouIJow4udoh2/Bx8qsWzmeHpl/QhYwC/dzxK+9ikbWt39N1goQFs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIGsNncg8EXOfVmx2TQx5wnLSj4nqpCS53O8r3BNSUUYmZGEvk
+	ESaG1y9cfd2JMUcS/LCjqlU20VB+0c0GN2+0DkIdfQ0Rm6A0CPAjSmjjG7b8DxU=
+X-Gm-Gg: ASbGncvX6cSUnr+JbQ/tyVmaW0/qnOujc38x569DMmJUhMmEcKOF9Nyyyl89qLFgr34
+	fSe/h+xvqZwvKyALwvcwPbzznfUewXMLdZ+1AX/U/ioopKyPDLsW0o/jxxaryWZ6MxXXIc5duDu
+	P9gmR3PMwgep9s5eHIsl4L8ZAolZw06QG+NURFjwzPwWh5MgQAtKbSP6gglBd/z0ZbU4FfEBzjx
+	4t3iYenmwb6F5DULVAnE7GxJmVVCUhJl3F0KHE0/j3QHTNvBDR61QXzWpCHvOSzGipAD/Xoa8Ai
+	KlCYtxZTMcsr/R5ftRJTIu40Jlk48toCQk5RWP3fY6uxNOXFHqjn50DdpJd/UOZWCsfsb8JZE59
+	/DBLaSprmpSyw2AOoi+m00oYjZ2Za
+X-Google-Smtp-Source: AGHT+IFeXobGzY+UYaAw9ml70E4P3Ut/z3bwXmavgtI4R4ODTbaat+OFdnH3Erfh/wCpOWxEkkV53A==
+X-Received: by 2002:a05:622a:5c99:b0:474:eff7:a478 with SMTP id d75a77b69052e-489c5412645mr17505051cf.46.1745971966068;
+        Tue, 29 Apr 2025 17:12:46 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm87634411cf.41.2025.04.29.17.12.41
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm87634411cf.41.2025.04.29.17.12.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 17:12:41 -0700 (PDT)
+        Tue, 29 Apr 2025 17:12:45 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [RFC PATCH 05/17] cxl: docs/platform/example-configs documentation
-Date: Tue, 29 Apr 2025 20:12:12 -0400
-Message-ID: <20250430001224.1028656-6-gourry@gourry.net>
+Subject: [RFC PATCH 07/17] cxl: docs/linux - early boot configuration
+Date: Tue, 29 Apr 2025 20:12:14 -0400
+Message-ID: <20250430001224.1028656-8-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250430001224.1028656-1-gourry@gourry.net>
 References: <20250430001224.1028656-1-gourry@gourry.net>
@@ -85,707 +85,163 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add example ACPI Table configurations for different sample platforms.
+Document __init time configurations that affect CXL driver probe
+process and memory region configuration.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
  Documentation/driver-api/cxl/index.rst        |   1 +
- .../cxl/platform/example-configs.rst          |  13 +
- .../example-configurations/flexible.rst       | 296 ++++++++++++++++++
- .../example-configurations/hb-interleave.rst  | 107 +++++++
- .../multi-dev-per-hb.rst                      |  90 ++++++
- .../example-configurations/one-dev-per-hb.rst | 136 ++++++++
- 6 files changed, 643 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/platform/example-configs.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
+ .../driver-api/cxl/linux/early-boot.rst       | 129 ++++++++++++++++++
+ 2 files changed, 130 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
 
 diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index e47671e268b2..afc66759eed2 100644
+index 01c0284fc273..da74480207b7 100644
 --- a/Documentation/driver-api/cxl/index.rst
 +++ b/Documentation/driver-api/cxl/index.rst
-@@ -29,6 +29,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+@@ -36,6 +36,7 @@ that have impacts on each other.  The docs here break up configurations steps.
+    :caption: Linux Kernel Configuration
  
-    platform/bios-and-efi
-    platform/acpi
-+   platform/example-configs
+    linux/overview
++   linux/early-boot
+    linux/access-coordinates
  
- .. toctree::
-    :maxdepth: 1
-diff --git a/Documentation/driver-api/cxl/platform/example-configs.rst b/Documentation/driver-api/cxl/platform/example-configs.rst
+ 
+diff --git a/Documentation/driver-api/cxl/linux/early-boot.rst b/Documentation/driver-api/cxl/linux/early-boot.rst
 new file mode 100644
-index 000000000000..90a10d7473c6
+index 000000000000..ca9fa1b57855
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/example-configs.rst
-@@ -0,0 +1,13 @@
++++ b/Documentation/driver-api/cxl/linux/early-boot.rst
+@@ -0,0 +1,129 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+Example Platform Configurations
-+###############################
++Linux Init (Early Boot)
++***********************
 +
-+.. toctree::
-+   :maxdepth: 1
-+   :caption: Contents
++Linux configuration is split into two major steps: Early-Boot and everything else.
 +
-+   example-configurations/one-dev-per-hb.rst
-+   example-configurations/multi-dev-per-hb.rst
-+   example-configurations/hb-interleave.rst
-+   example-configurations/flexible.rst
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-new file mode 100644
-index 000000000000..13a97c03e25a
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
-@@ -0,0 +1,296 @@
-+.. SPDX-License-Identifier: GPL-2.0
++During early boot, Linux sets up immutable resources (such as numa nodes), while
++later operations include things like driver probe and memory hotplug.  Linux may
++read EFI and ACPI information throughout this process to configure logical
++representations of the devices.
 +
-+=====================
-+Flexible Presentation
-+=====================
-+This system has a single socket with two CXL host bridges. Each host bridge
-+has two CXL memory expanders with a 4GB of memory (32GB total).
++During Linux Early Boot stage (functions in the kernel that have the __init
++decorator), the system takes the resources created by EFI/BIOS (ACPI tables)
++and turns them into resources that the kernel can consume.
 +
-+On this system, the platform designer wanted to provide the user flexibility
-+to configure the memory devices in various interleave or NUMA node
-+configurations.  So they provided every combination.
 +
-+Things to note:
-+
-+* Cross-Bridge interleave is described in one CFMWS that covers all capacity.
-+* One CFMWS is also described per-host bridge.
-+* One CFMWS is also described per-device.
-+* This SRAT describes one-node for each of the above CFMWS.
-+* The HMAT describes performance for each node in the SRAT.
-+
-+CEDT ::
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000007
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010370400000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000006
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010380800000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000001000000000
-+              Window size : 0000000400000000
-+ Interleave Members (2^n) : 01
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+            Second Target : 00000006
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000002000000000
-+              Window size : 0000000200000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000002200000000
-+              Window size : 0000000200000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000006
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000003000000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000003100000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000003200000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000006
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000003300000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000006
-+
-+SRAT ::
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000001
-+             Reserved1 : 0000
-+          Base Address : 0000001000000000
-+        Address Length : 0000000400000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000002
-+             Reserved1 : 0000
-+          Base Address : 0000002000000000
-+        Address Length : 0000000200000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000003
-+             Reserved1 : 0000
-+          Base Address : 0000002200000000
-+        Address Length : 0000000200000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000004
-+             Reserved1 : 0000
-+          Base Address : 0000003000000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000005
-+             Reserved1 : 0000
-+          Base Address : 0000003100000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000006
-+             Reserved1 : 0000
-+          Base Address : 0000003200000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000007
-+             Reserved1 : 0000
-+          Base Address : 0000003300000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+HMAT ::
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 00   [Latency]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+ Target Proximity Domain List : 00000003
-+ Target Proximity Domain List : 00000004
-+ Target Proximity Domain List : 00000005
-+ Target Proximity Domain List : 00000006
-+ Target Proximity Domain List : 00000007
-+                        Entry : 0080
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 03   [Bandwidth]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+ Target Proximity Domain List : 00000003
-+ Target Proximity Domain List : 00000004
-+ Target Proximity Domain List : 00000005
-+ Target Proximity Domain List : 00000006
-+ Target Proximity Domain List : 00000007
-+                        Entry : 1200
-+                        Entry : 0400
-+                        Entry : 0200
-+                        Entry : 0200
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+                        Entry : 0100
-+
-+SLIT ::
-+
-+     Signature : "SLIT"    [System Locality Information Table]
-+    Localities : 0000000000000003
-+  Locality   0 : 10 20 20 20 20 20 20 20
-+  Locality   1 : FF 0A FF FF FF FF FF FF
-+  Locality   2 : FF FF 0A FF FF FF FF FF
-+  Locality   3 : FF FF FF 0A FF FF FF FF
-+  Locality   4 : FF FF FF FF 0A FF FF FF
-+  Locality   5 : FF FF FF FF FF 0A FF FF
-+  Locality   6 : FF FF FF FF FF FF 0A FF
-+  Locality   7 : FF FF FF FF FF FF FF 0A
-+
-+DSDT ::
-+
-+  Scope (_SB)
-+  {
-+    Device (S0D0)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x07)  // _UID: Unique ID
-+    }
-+    ...
-+    Device (S0D5)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x06)  // _UID: Unique ID
-+    }
-+  }
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-new file mode 100644
-index 000000000000..fa0885d82deb
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
-@@ -0,0 +1,107 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
++BIOS, Build and Boot Options
 +============================
-+Cross-Host-Bridge Interleave
++
++There are 4 pre-boot options that need to be considered during kernel build
++which dictate how memory will be managed by Linux during early boot.
++
++* EFI_MEMORY_SP
++
++  * BIOS/EFI Option that dictates whether memory is SystemRAM or
++    Specific Purpose.  Specific Purpose memory will be deferred to
++    drivers to manage - and not immediately exposed as system RAM.
++
++* CONFIG_EFI_SOFT_RESERVE
++
++  * Linux Build config option that dictates whether the kernel supports
++    Specific Purpose memory.
++
++* CONFIG_MHP_DEFAULT_ONLINE_TYPE
++
++  * Linux Build config that dictates whether and how Specific Purpose memory
++    converted to a dax device should be managed (left as DAX or onlined as
++    SystemRAM in ZONE_NORMAL or ZONE_MOVABLE).
++
++* nosoftreserve
++
++  * Linux kernel boot option that dictates whether Soft Reserve should be
++    supported.  Similar to CONFIG_EFI_SOFT_RESERVE.
++
++Memory Map Creation
++===================
++
++While the kernel parses the EFI memory map, if :code:`Specific Purpose` memory
++is supported and detect, it will set this region aside as :code:`SOFT_RESERVED`.
++
++If :code:`EFI_MEMORY_SP=0`, :code:`CONFIG_EFI_SOFT_RESERVE=n`, or
++:code:`nosoftreserve=y` - Linux will default a CXL device memory region to
++SystemRAM.  This will expose the memory to the kernel page allocator in
++:code:`ZONE_NORMAL`, making it available for use for most allocations (including
++:code:`struct page` and page tables).
++
++If `Specific Purpose` is set and supported, :code:`CONFIG_MHP_DEFAULT_ONLINE_TYPE_*`
++dictates whether the memory is onlined by default (:code:`_OFFLINE` or
++:code:`_ONLINE_*`), and if online which zone to online this memory to by default
++(:code:`_NORMAL` or :code:`_MOVABLE`).
++
++If placed in :code:`ZONE_MOVABLE`, the memory will not be available for most
++kernel allocations (such as :code:`struct page` or page tables).  This may
++significant impact performance depending on the memory capacity of the system.
++
++
++NUMA Node Reservation
++=====================
++
++Linux refers to the proximity domains (:code:`PXM`) defined in the SRAT to
++create NUMA nodes in :code:`acpi_numa_init`. Typically, there is a 1:1 relation
++between :code:`PXM` and NUMA node IDs.
++
++SRAT is the only ACPI defined way of defining Proximity Domains. Linux chooses
++to, at most, map those 1:1 with NUMA nodes. CEDT adds a description of SPA
++ranges which Linux may wish to map to one or more NUMA nodes
++
++If there are CXL ranges in the CFMWS but not in SRAT, then a fake :code:`PXM`
++is created (as of v6.15). In the future, Linux may reject CFMWS not described
++by SRAT due to the ambiguity of proximity domain association.
++
++It is important to note that NUMA node creation cannot be done at runtime. All
++possible NUMA nodes are identified at :code:`__init` time, more specifically
++during :code:`mm_init`. The CEDT and SRAT must contain sufficient :code:`PXM`
++data for Linux to identify NUMA nodes their associated memory regions.
++
++The relevant code exists in: :code:`linux/drivers/acpi/numa/srat.c`.
++
++See the Example Platform Configurations section for more information.
++
++Memory Tiers Creation
++=====================
++Memory tiers are a collection of NUMA nodes grouped by performance characteristics.
++During :code:`__init`, Linux initializes the system with a default memory tier that
++contains all nodes marked :code:`N_MEMORY`.
++
++:code:`memory_tier_init` is called at boot for all nodes with memory online by
++default. :code:`memory_tier_late_init` is called during late-init for nodes setup
++during driver configuration.
++
++Nodes are only marked :code:`N_MEMORY` if they have *online* memory.
++
++Tier membership can be inspected in ::
++
++  /sys/devices/virtual/memory_tiering/memory_tierN/nodelist
++  0-1
++
++If nodes are grouped which have clear difference in performance, check the HMAT
++and CDAT information for the CXL nodes.  All nodes default to the DRAM tier,
++unless HMAT/CDAT information is reported to the memory_tier component via
++`access_coordinates`.
++
++Contiguous Memory Allocation
 +============================
-+This system has a single socket with two CXL host bridges. Each host bridge
-+has a single CXL memory expander with a 4GB of memory.
++The contiguous memory allocator (CMA) enables reservation of contiguous memory
++regions on NUMA nodes during early boot.  However, CMA cannot reserve memory
++on NUMA nodes that are not online during early boot. ::
 +
-+Things to note:
-+
-+* Cross-Bridge interleave is described.
-+* The expanders are described by a single CFMWS.
-+* This SRAT describes one-node for both host bridges.
-+* The HMAT describes a single node's performance.
-+
-+CEDT ::
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000007
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010370400000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000006
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010380800000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000001000000000
-+              Window size : 0000000200000000
-+ Interleave Members (2^n) : 01
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+            Second Target : 00000006
-+
-+SRAT ::
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000001
-+             Reserved1 : 0000
-+          Base Address : 0000001000000000
-+        Address Length : 0000000200000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+HMAT ::
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 00   [Latency]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+                        Entry : 0080
-+                        Entry : 0100
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 03   [Bandwidth]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+                        Entry : 1200
-+                        Entry : 0400
-+
-+SLIT ::
-+
-+     Signature : "SLIT"    [System Locality Information Table]
-+    Localities : 0000000000000003
-+  Locality   0 : 10 20
-+  Locality   1 : FF 0A
-+
-+DSDT ::
-+
-+  Scope (_SB)
-+  {
-+    Device (S0D0)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x07)  // _UID: Unique ID
-+    }
-+    ...
-+    Device (S0D5)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x06)  // _UID: Unique ID
-+    }
++  void __init hugetlb_cma_reserve(int order) {
++    if (!node_online(nid))
++      /* do not allow reservations */
 +  }
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-new file mode 100644
-index 000000000000..6adf7c639490
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
-@@ -0,0 +1,90 @@
-+.. SPDX-License-Identifier: GPL-2.0
 +
-+================================
-+Multiple Devices per Host Bridge
-+================================
-+
-+In this example system we will have a single socket and one CXL host bridge.
-+There are two CXL memory expanders with 4GB attached to the host bridge.
-+
-+Things to note:
-+
-+* Intra-Bridge interleave is not described here.
-+* The expanders are described by a single CEDT/CFMWS.
-+* This CEDT/SRAT describes one node for both devices.
-+* There is only one proximity domain the HMAT for both devices.
-+
-+CEDT ::
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000007
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010370400000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000001000000000
-+              Window size : 0000000200000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+
-+SRAT ::
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000001
-+             Reserved1 : 0000
-+          Base Address : 0000001000000000
-+        Address Length : 0000000200000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+HMAT ::
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 00   [Latency]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+                        Entry : 0080
-+                        Entry : 0100
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 03   [Bandwidth]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+                        Entry : 1200
-+                        Entry : 0200
-+
-+SLIT ::
-+
-+     Signature : "SLIT"    [System Locality Information Table]
-+    Localities : 0000000000000003
-+  Locality   0 : 10 20
-+  Locality   1 : FF 0A
-+
-+DSDT ::
-+
-+  Scope (_SB)
-+  {
-+    Device (S0D0)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x07)  // _UID: Unique ID
-+    }
-+    ...
-+  }
-diff --git a/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-new file mode 100644
-index 000000000000..8b732dc8c5b6
---- /dev/null
-+++ b/Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
-@@ -0,0 +1,136 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+One Device per Host Bridge
-+==========================
-+
-+This system has a single socket with two CXL host bridges. Each host bridge
-+has a single CXL memory expander with a 4GB of memory.
-+
-+Things to note:
-+
-+* Cross-Bridge interleave is not being used.
-+* The expanders are in two separate but adjascent memory regions.
-+* This CEDT/SRAT describes one-node per device
-+* The expanders have the same performance and will be in the same memory tier.
-+
-+CEDT ::
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000007
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010370400000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 00 [CXL Host Bridge Structure]
-+                 Reserved : 00
-+                   Length : 0020
-+   Associated host bridge : 00000006
-+    Specification version : 00000001
-+                 Reserved : 00000000
-+            Register base : 0000010380800000
-+          Register length : 0000000000010000
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000001000000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000007
-+
-+            Subtable Type : 01 [CXL Fixed Memory Window Structure]
-+                 Reserved : 00
-+                   Length : 002C
-+                 Reserved : 00000000
-+      Window base address : 0000001100000000
-+              Window size : 0000000100000000
-+ Interleave Members (2^n) : 00
-+    Interleave Arithmetic : 00
-+                 Reserved : 0000
-+              Granularity : 00000000
-+             Restrictions : 0006
-+                    QtgId : 0001
-+             First Target : 00000006
-+
-+SRAT ::
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000001
-+             Reserved1 : 0000
-+          Base Address : 0000001000000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+         Subtable Type : 01 [Memory Affinity]
-+                Length : 28
-+      Proximity Domain : 00000002
-+             Reserved1 : 0000
-+          Base Address : 0000001100000000
-+        Address Length : 0000000100000000
-+             Reserved2 : 00000000
-+ Flags (decoded below) : 0000000B
-+             Enabled : 1
-+       Hot Pluggable : 1
-+        Non-Volatile : 0
-+
-+HMAT ::
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 00   [Latency]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+                        Entry : 0080
-+                        Entry : 0100
-+                        Entry : 0100
-+
-+               Structure Type : 0001 [SLLBI]
-+                    Data Type : 03   [Bandwidth]
-+ Target Proximity Domain List : 00000000
-+ Target Proximity Domain List : 00000001
-+ Target Proximity Domain List : 00000002
-+                        Entry : 1200
-+                        Entry : 0200
-+                        Entry : 0200
-+
-+SLIT ::
-+
-+     Signature : "SLIT"    [System Locality Information Table]
-+    Localities : 0000000000000003
-+  Locality   0 : 10 20 20
-+  Locality   1 : FF 0A FF
-+  Locality   2 : FF FF 0A
-+
-+DSDT ::
-+
-+  Scope (_SB)
-+  {
-+    Device (S0D0)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x07)  // _UID: Unique ID
-+    }
-+    ...
-+    Device (S0D5)
-+    {
-+        Name (_HID, "ACPI0016" /* Compute Express Link Host Bridge */)  // _HID: Hardware ID
-+        ...
-+        Name (_UID, 0x06)  // _UID: Unique ID
-+    }
-+  }
++This means if users intend to defer management of CXL memory to the driver, CMA
++cannot be used to guarantee huge page allocations.  If enabling CXL memory as
++SystemRAM in `ZONE_NORMAL` during early boot, CMA reservations per-node can be
++made with the :code:`cma_pernuma` or :code:`numa_cma` kernel command line
++parameters.
 -- 
 2.49.0
 
