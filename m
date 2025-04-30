@@ -1,145 +1,76 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEFC248F6B;
-	Wed, 30 Apr 2025 10:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A1321E7C27
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:38:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009425; cv=none; b=IIEe+tKrWY0Q3ub9JHySeTBFx5O0dHaGUurL9RNhwXvBKAYVZCC0YXqw+8mLi48TQavznMCiyY32CZbPY5bcp8SiuhfOhhjBz4dNw9LlLQeFZGcnoB7Ntnr8ks63cgQHhIfBXdxt5TXVs84VP4i6FEPKMgOpBqtY3NyKL/0eoxE=
+	t=1746009488; cv=none; b=nP275t4QfvKFJ/fCmLJsnCfv6tfh6QwFAAzK5oNTqn7o4tcR69Loo3s1c88/f+xmnm8KMbtdgilqaZqAEhvwF8UX5QUMvztx+N9OsCBoX9I17jejZfO56+zGACoPmxjz71dIXI4X8idXextXb9wlA0er5JlE1455Z5MxmtzHRlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009425; c=relaxed/simple;
-	bh=5rysoOD1D7A/+aX2Q8fi2oLM0yLk90zLzBmQjwYOoFk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M7/bQvDg4ycje+0uij9dEE1c/kf8C5bztuCvAxUfgicgkCpQTq20OFOBEw14kw2uag88490AC+5srEOW2V0bbzwM2TRxx0yZOsmJZs76Q6vk/yv9O0HP81MKDEsGyGtUlHlZ/JN880Qsjcaswu5F4YdwNutmD4v61AOOaoLR2TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=j5IGpt96; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="j5IGpt96"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 59B1343155;
-	Wed, 30 Apr 2025 10:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746009420;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HCqPYAYDeSC4T6gsM+8/d4/R4hTjtWts9K3/InF+2yg=;
-	b=j5IGpt96m3GS1GgdAQYb0DMF9BS9VJKNh0+D/2DDE2MQcbaP8QshRiOSUeBtDIq10LHfcK
-	da6Rz6IPzqh72skLr3qzo8sCS1PQhKF2edPzJp4eG6QBBwrh5nrxL51ckveG3zavYd3qUP
-	J2jx1+yN1XlBcUb/xgzlUVBCN3TYadasJXfR27IzS3EZ5METDQ7Zoy8F1/pK4SrZPTMcLs
-	EeISxDq5NZi4vcUbvqFr2+DghQmkq4QWjiUcMCuSrjLoJhKePJalZDcGyOqVuDEsI237bq
-	COMqwTuYqRY83cpYZO0vAcYqKCUzKgW8Qg5QF6JVH87BqsDr4JvKUr2eOLVdmQ==
-Date: Wed, 30 Apr 2025 12:36:51 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: <Manikandan.M@microchip.com>
-Cc: <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
- <tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
- <andrzej.hajda@intel.com>, <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
- <Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
- <jernej.skrabec@gmail.com>, <jagan@amarulasolutions.com>,
- <shawnguo@kernel.org>, <s.hauer@pengutronix.de>, <kernel@pengutronix.de>,
- <festevam@gmail.com>, <dianders@chromium.org>, <chunkuang.hu@kernel.org>,
- <krzk@kernel.org>, <asrivats@redhat.com>, <paulk@sys-base.io>,
- <lumag@kernel.org>, <Hui.Pu@gehealthcare.com>,
- <thomas.petazzoni@bootlin.com>, <dri-devel@lists.freedesktop.org>,
- <asahi@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <chrome-platform@lists.linux.dev>, <imx@lists.linux.dev>,
- <linux-arm-kernel@lists.infradead.org>,
- <linux-mediatek@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
- <linux-renesas-soc@vger.kernel.org>, <platform-driver-x86@vger.kernel.org>,
- <linux-samsung-soc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
- <freedreno@lists.freedesktop.org>,
- <linux-stm32@st-md-mailman.stormreply.com>, <aford173@gmail.com>,
- <adrien.grassein@gmail.com>, <amishin@t-argos.ru>,
- <andy.yan@rock-chips.com>, <angelogioacchino.delregno@collabora.com>,
- <bleung@chromium.org>, <biju.das.jz@bp.renesas.com>,
- <chf.fritz@googlemail.com>, <cristian.ciocaltea@collabora.com>,
- <detlev.casanova@collabora.com>, <Dharma.B@microchip.com>,
- <groeck@chromium.org>, <heiko@sntech.de>, <jani.nikula@intel.com>,
- <j@jannau.net>, <jbrunet@baylibre.com>, <jesseevg@gmail.com>,
- <khilman@baylibre.com>, <kieran.bingham+renesas@ideasonboard.com>,
- <victor.liu@nxp.com>, <martin.blumenstingl@googlemail.com>,
- <matthias.bgg@gmail.com>, <p.zabel@pengutronix.de>, <ple@baylibre.com>,
- <fnkl.kernel@gmail.com>, <sugar.zhang@rock-chips.com>,
- <sui.jingfeng@linux.dev>, <tomi.valkeinen+renesas@ideasonboard.com>,
- <mordan@ispras.ru>
-Subject: Re: [PATCH v2 01/34] drm: convert many bridge drivers from
- devm_kzalloc() to devm_drm_bridge_alloc() API
-Message-ID: <20250430123651.37be3e38@booty>
-In-Reply-To: <e90b9ef2-ace0-4b98-9d49-5a62e529cf8a@microchip.com>
-References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
-	<20250424-drm-bridge-convert-to-alloc-api-v2-1-8f91a404d86b@bootlin.com>
-	<e90b9ef2-ace0-4b98-9d49-5a62e529cf8a@microchip.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1746009488; c=relaxed/simple;
+	bh=SDgGLFycsnobAE0TAlFw8htn9YGH0/tT58fJ5btXRb4=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=toywtHPaV+QxoOKqT1XukpP6gh7mELrXCB+Ut9gRYpg/cPSLZI+ERFtYhRLPq3/R0jAi2SXhZhZbiZefOetA71frqN+SenVSpkvx9IVTHBFRcBtrarNNVitxn5utK4ekOqSTOeODn3oTA1vofa45l2PM4da5Ap/HUDd/Nig5FxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b5e46a526so716267039f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:38:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746009486; x=1746614286;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zXN82wcI/IbCtTFLNoxHu+KyZbBxiqezwrjpxJTKZks=;
+        b=cpW3ju5g1yWEJ+R+QQMbqT0lnvUQFvN7l8onkTleKQAWKES4FNvsAzxnEMbOqsOCge
+         j2A/ClR0PGxJ078QhT+FnH//RA93g6aRJMCaRUHOCcVZnepCU0OF1YK07+BqjN2H7Ca9
+         56U6S5sLb/557PevY9Hi2BZsB2p6Z6n7ngNf8AtxQ+pmDqNfU7OXMNbn3f9k1O+GOeDh
+         Z1QfRbLDiKlS3dBlBzPtFy07DeGl7hV41xzy9DUJD5w5K1ETvw0eoPgQeLYAngvgd28G
+         ku0GI5j5a0hLdZw06CNozFMMVcusNMAo+nJVP0tjaSz3MgFISgMePv2kprtIOlr27ui0
+         tz8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUjY9UZCjgw6e4inwNKv0g4F7qYgLXhgMohjTyJyDDsh18rTPbeBo8zvvQ/Rsb+idsEMwj1CNUVhasxNqk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxEKDUbzjMSayp4TPMW+YceKaAfbW4dXq8k9AfrZt2Dpp7vQWW
+	sRsMyxwvtob71mbTv9lyQdtJqQdgDZjWauGfj+hqUDEtX2jTbn3dLh5TEfSncMqqB8+DZk8miae
+	R6AYgAodc302+xCRdY+pKc58SrKdlfyV0ScjZapRVQEq2Co9yjPD6zDM=
+X-Google-Smtp-Source: AGHT+IFhpytsmVF/KwUgWFCLf+SiYl6EPhWzgg7n4M0CKLvrJN6q1ASyMrNdevDN2uUhNPTkalK6C6X8KS1qQh8b6S8K3aM7d7A+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: 0
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeigeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecunecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeeglefffefghefhtddvfeeufeeiveekgffgleekieduteekkeetvdehudekgfdvvdenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghlohepsghoohhthidpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeeikedprhgtphhtthhopeforghnihhkrghnuggrnhdrofesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrt
- ghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehinhhtvghlrdgtohhmpdhrtghpthhtohepnhgvihhlrdgrrhhmshhtrhhonhhgsehlihhnrghrohdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+X-Received: by 2002:a05:6602:3a0c:b0:864:4911:f463 with SMTP id
+ ca18e2360f4ac-8649806122fmr160611539f.10.1746009486478; Wed, 30 Apr 2025
+ 03:38:06 -0700 (PDT)
+Date: Wed, 30 Apr 2025 03:38:06 -0700
+In-Reply-To: <20250430100150.279751-1-shivankg@amd.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6811fd8e.050a0220.16fb2c.000c.GAE@google.com>
+Subject: Re: [syzbot] [mm?] WARNING in move_to_new_folio
+From: syzbot <syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, apopple@nvidia.com, david@redhat.com, 
+	donettom@linux.ibm.com, jane.chu@oracle.com, 
+	jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, shaggy@kernel.org, shivankg@amd.com, 
+	syzkaller-bugs@googlegroups.com, wangkefeng.wang@huawei.com, 
+	willy@infradead.org, ziy@nvidia.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello Manikandan,
+Hello,
 
-On Wed, 30 Apr 2025 09:42:16 +0000
-<Manikandan.M@microchip.com> wrote:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-[...]
+Reported-by: syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
+Tested-by: syzbot+8bb6fd945af4e0ad9299@syzkaller.appspotmail.com
 
-> > diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
-> > index 1d4ae0097df847d9f93c79eecff0c4587ae331ba..9f4ff82bc6b49010f8727da3b367f5a744a28edc 100644
-> > --- a/drivers/gpu/drm/bridge/microchip-lvds.c
-> > +++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-> > @@ -157,9 +157,10 @@ static int mchp_lvds_probe(struct platform_device *pdev)
-> >          if (!dev->of_node)
-> >                  return -ENODEV;
-> > 
-> > -       lvds = devm_kzalloc(&pdev->dev, sizeof(*lvds), GFP_KERNEL);
-> > -       if (!lvds)
-> > -               return -ENOMEM;
-> > +       lvds = devm_drm_bridge_alloc(&pdev->dev, struct mchp_lvds, bridge,
-> > +                                    &mchp_lvds_bridge_funcs);
-> > +       if (IS_ERR(lvds))
-> > +               return PTR_ERR(lvds);
-> > 
-> >          lvds->dev = dev;
-> > 
-> > @@ -192,7 +193,6 @@ static int mchp_lvds_probe(struct platform_device *pdev)
-> > 
-> >          lvds->bridge.of_node = dev->of_node;
-> >          lvds->bridge.type = DRM_MODE_CONNECTOR_LVDS;
-> > -       lvds->bridge.funcs = &mchp_lvds_bridge_funcs;
-> > 
-> >          dev_set_drvdata(dev, lvds);
-> >          ret = devm_pm_runtime_enable(dev);  
-> 
-> Reviewed-by: Manikandan Muralidharan <manikandan.m@microchip.com>
+Tested on:
 
-Thanks for reviewing!
+commit:         69a58d52 Revert "x86/mm: Add 'mm' argument to unuse_te..
+git tree:       https://github.com/shivankgarg98/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=137a68d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f002bbe3fe2ccafa
+dashboard link: https://syzkaller.appspot.com/bug?extid=8bb6fd945af4e0ad9299
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-In v3 this patch will be slightly different from v2. See the reply I
-just sent to Doug for the details.
-
-If your Reviewed-by tag refers only to the microchip-lvds driver, for
-which there will be no change in v3, I think it's correct to take your
-tag and add a comment like:
-
- Reviewed-by: Manikandan Muralidharan <manikandan.m@microchip.com> # microchip-lvds.c
-
-Anything against this?
-
-Best regards,
-Luca
-
--- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Note: no patches were applied.
+Note: testing is done by a robot and is best-effort only.
