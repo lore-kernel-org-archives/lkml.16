@@ -1,63 +1,63 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A2412D26A9;
-	Wed, 30 Apr 2025 20:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165E62D1F42;
+	Wed, 30 Apr 2025 20:41:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746045695; cv=none; b=mqmb8Ur+/ejzV6D/NtYice649VjJB7baPQlMvw3YJIdkyPorksqi27rWwjVf9dLh0F7Bbpl2+HZRKtPgo6QBqBffhyEfwUQPlwzi/LV5/9wSjwgIQ8fV7lczVG1Mxqc9p8VFB5PTbnLjA+QFOTgG+4n4BY6zbWmZcKI8moNs5fg=
+	t=1746045698; cv=none; b=UohbaLLQEd33+srxX+JtUSPxcUPTEFAiLEDc11Nf27FBRIRvLmJQBd58gM4uHeEUQkOzcW3TfNoTiX+A+blSRDuGwbke+qML0bIRTw9XLiGwL2FEYw02ATsToOGx96UujoUaaofWOPQqau53xsznXCrnd5aJ6Alz807qNnJwjlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746045695; c=relaxed/simple;
-	bh=VV/pg8YLwFQnxxqs2siRxCPlNz4t70mLfHqgSUHDnUs=;
+	s=arc-20240116; t=1746045698; c=relaxed/simple;
+	bh=Sz2skzXhVthG1Z+7MrnpvHGzpTfhIvgUb6omDw22uhw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BjBJb0Rv/rHoaSCquiwka9+vy7Gj3j0YzmV8e188fBJ9JE7wqd8YobLzUrKc3cMAfxIY7qmx7PnuUjXoki3u3mc3aAquBPW9EMar5ZSlA9uqzAFb/d6qsDifYkc+XQavtQanm7GBt3KNnxaOEeLQG581PLrIqC7M1al1Cws6O7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RjL3vzR2; arc=none smtp.client-ip=209.85.221.52
+	 MIME-Version; b=eJacah72GhNabNWVD8KcmP+xz46qhPCbdWk1+yLz6cJ48hvNWCcCyhDK8HiqIhOORr5op2QMRla7gvn3039GleE2Xb0t7pwTvhHmpsntwtvCA2OtWG/pR70v3czMDQUM8TA+pGQPLcLP8HsQTHmJoyduNLfZ2pQAFhjFRY9Q+9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RU5nAZPJ; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RjL3vzR2"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39bf44be22fso157071f8f.0;
-        Wed, 30 Apr 2025 13:41:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RU5nAZPJ"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43ce70f9afbso2222415e9.0;
+        Wed, 30 Apr 2025 13:41:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746045692; x=1746650492; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746045695; x=1746650495; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zs5IS+IIZjSL2dWZDqgTPqknuqZPmDccKzSPgZKtB/A=;
-        b=RjL3vzR2rSrIQVniiW5RDLR/d3DCGoV0jMFPPAgf7ZnHRFGBlnngeFUnnNExSla3Pg
-         6ToDUkwj6BFgRqFKDkGkHsM80FREREvapEtFMd1/Pt+Gk8Q3jl3yngYc1HUSpP98l4Vk
-         +XuPsaY0Z8aeSVN6j9T9mKYcYROLEubiBSqCdr3wugbXMz0jyhz10Kko6U+L5alXzuhw
-         DZqMIVhh47qFWBSgxYRMiA3JAvKpw81l0iWcvItSOS1a9jneQmxQvWeKZ4JaYOyPKlm2
-         TTvGJM56X64Ee1LYR8XJ2ZnAUwgLlOttrCW/VM7GTwa7ZDDh/boujbSwSQDMsi4JKlZm
-         xSiQ==
+        bh=AO0gGQ8XJg55vakvgacq+nstPR//vJTN3SM+V+tV6y8=;
+        b=RU5nAZPJl63rqaD4mrk+FEjiR8Bh6rNl2wN3z7ZMydx8qSoat1m+QuGWJJrC9B1SuO
+         tb2ZOw37bzR4UjJnQW1RODF2mR3TJNY/NIffw/RXdnaWjRblfIInQW9ZbqAjJqTDTRS0
+         2SMMWsp0f8hV7i612t3uuZ+CjKPhdVYZDraj7ybI/rr4gBYjFza6B5rZJgnlwbZVH/Ld
+         07NYvo69yyQi22DLn/JoO7zgeMaS64nFvUhhmtd8GYLKLfhfd5zBxPvtwXBCxBSk8mVn
+         ShQ1j8v8GmCvxiItimH7oaIwikgAGxo1Zs7Oi6ssdJw/UcC56vTCidS5pZfC9nU6YlXH
+         oDWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746045692; x=1746650492;
+        d=1e100.net; s=20230601; t=1746045695; x=1746650495;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zs5IS+IIZjSL2dWZDqgTPqknuqZPmDccKzSPgZKtB/A=;
-        b=Xxt0UQj4z04IUs2LT2qN/TMcBPXIAEPdoXiwcTsv8kWDAtXWXa7mJW9v+zo1iCO3VL
-         en38ppqcpkjlIcnMV5qwjNtJUT5c2ib0B9hHw2qbDNusS3086IMWDTDFDYugXkHuxD99
-         AiALSg4dB3F88kR6aXyAO76L2SoZDppTynoyZWgysybWTy7+rZBloqgw2FPN6/KvsydZ
-         trxhplQ9yLCF2JBO+XH4TYxYv4Gd/WbncWPBFgCqIc98Per5TqBbCz56lQIb6cwYsGHB
-         cJz5hDm0RAe/+rZd8qNgb/ho2/ZcP00mcS/O4Qgan6Bpe2JBwj5mA3s8XSQ0uQsCuXtI
-         B20w==
-X-Forwarded-Encrypted: i=1; AJvYcCVYQtl0i3ZkPDD8qdHYrGq5p8GuaYolcMTvVYKLIpsZZd3wKdAYuBGPsB8Ce7JSmSfnCSxNTmKuJr1Z@vger.kernel.org, AJvYcCXjkM7fEywICNMmxhFQaVrjInmOCg2/DINwabcsjdOXxPbX+l9GV7Sevex7jpAcbbig/96fQz+nolWGffCj@vger.kernel.org, AJvYcCXraXaLSUbvZ6rOS248g7tlWi1bgq1XWo9JDpNKNuZtsuYr5zXuq9LudDmqg5AaYYyYqdKcKLoBo+RWk32YslpU5BI=@vger.kernel.org, AJvYcCXxOzyF97EnDWbKuUKbmJWIjewGLCg8tjolJy/CJhTBeJH/sIW2+4IvdS1SFYR/YoJchkfRQh8XvkAb@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQGXXwtY8/FBt0n0eLQCWIixQZ4INqQkiBWY4m5h5M/VqVpUCz
-	oh1l2RQjsAnHQwymLXTTaPnFCPWB+PfMuFabWY8ZebbcSGbI+YC+
-X-Gm-Gg: ASbGnctMaEBB5olNBeqsHOoPboERSwwABsQXej7RMX53mANIHY0WWAl/E21mK4zAc66
-	cGGCBeRda/pxghMMg0nDQ+1kuk2/CA1e5BV1O6maHq+wg/hoysWRW3n9txhlndqTpu9luZ5VQZO
-	ToO7gH8S+CT8z2pf7wweWetgOeWk9HpA79VzNuL8H5n3w7HTnV1FBZn/PdkCQhcgVg6Gto9NGOZ
-	vFqcRdmX1Pf6oF2OeTDEjZ2YJ8zlpP+5VOYGNMxQ3yfGQ0qO+YYMzvbfnrf0m9xemCo/wNsaarM
-	cac016LZBDt1s9yGY/XUWOlIUOG9cuKMRiwkZB2SpM3cQhDn6Xg+LGnC1vxYcCN2a9OpFJQCNEc
-	=
-X-Google-Smtp-Source: AGHT+IF6WostFapxQBw6ajNHWZp/i5PjEELly2sDADJ+hQXmv+3xRiGu0yOTdYUI6fnh+IIxhIZCmQ==
-X-Received: by 2002:a05:6000:2287:b0:39c:1f10:ba54 with SMTP id ffacd0b85a97d-3a09303bbb3mr428578f8f.35.1746045692273;
-        Wed, 30 Apr 2025 13:41:32 -0700 (PDT)
+        bh=AO0gGQ8XJg55vakvgacq+nstPR//vJTN3SM+V+tV6y8=;
+        b=W9DNKaQvYvngVhN5GzuyKbNQomawJGD2eHTc9b7h57D44jUp+t730+MOKFSfFUng/h
+         7iecOggHMqR11yCtJa2X87XcscU7TapJ4wcjND+3A1PiVD1pwoIJCjjxMBROyl1bVQj/
+         j65dpIsdY/ZsGZUs+ZC6h0OtVrSE+9nk0lnA5+cu4ICBco4oHvDEs5B7yfkPt6v6b2y+
+         uRkcuL+qqrV6Sh3Q0b6m6Ev22ospCDj/7cSN7DpBXga6WUJVoVTaY8/lVm06YrAG+XBD
+         KaV8fqKK9tt132r94hLlwfDBrGgKrcylgMAc/BLz0xmm0eTb9xo2hhkOYttZi8uWNEwC
+         ArmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUBl2Of13vvQiuMiHo5cVRBKUyAIiN8JeqZs3VnjaMsZ2aDc8KyULDEPWiKhRNwQTYnY1qN/7nEfTsD@vger.kernel.org, AJvYcCUZoLBXBUyZVEh/Erw5Bu4nRYYdsUZdP8+3DopbpOn9W4xzkr8nT3gG9bny5Nvd8oY1D1FTM8ox3OaGBGbJq3gz6r0=@vger.kernel.org, AJvYcCXBUxfJuNr53ky/3/A01Sajg0juvD69nyLK1YGv6Drpy7SR3fcIMLJI0ueRHgEO5JIcsVLyzU8SvIr9@vger.kernel.org, AJvYcCXwn3v7wjqyyKyh+pSIhnry6AGUlr7bhZwPtH6+NhttJprkD3qw8suNowHGJmQXKKO4dTeFHAhWz2z4Q4BK@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw24v5NXsETsa49NABWkaUySi81iC4vzLzlTDi5xJZDqf8DHX1E
+	NA38HC1+93jBsrLVzR8O8Zx7TX17BRziWoSEGYdFmfGV/hwYVG03
+X-Gm-Gg: ASbGncv8p7Agz+VKai/kTu39vzT5dG/xUCvyOuZbFkmEiYLkgQNRFnpiX4SByWRaNM3
+	guIXgxU59rv9XodCCeUnx0Dy1Ax7YXI0ditEtUybu/mXcSEL+dWnOUwnZgDq5JV37NfYzOl4PSX
+	j7qnmPEE4q3Zucmu8/cW+wdF8zkbHj+qmP00VQQMCghsh3KZsuDrWANR3zj7WMEJMXPgzLR0Huu
+	DJDOQD0TnGKSWcjlhhsrGcbUktSK6FFsHCKG2kLC7Hax6cIfGqbj5hC3drPf7au6I6x+fNbWafm
+	LPvd8RCWxNYdGEscG8tpTZLfvV158rzGlpQ5U6NQntan+su7XNePn9CRlqNsl3iC/t/RD/4hn+o
+	mM9/jfxMjuA==
+X-Google-Smtp-Source: AGHT+IHsecdyrGlNtI82mqkkhJLEKR/PshNRP/65SFVobBGuVGxd9oW8pr0BSn7ldq8EinhadMpN0g==
+X-Received: by 2002:a05:6000:2284:b0:3a0:830a:3d63 with SMTP id ffacd0b85a97d-3a08f753ce9mr4332262f8f.9.1746045695308;
+        Wed, 30 Apr 2025 13:41:35 -0700 (PDT)
 Received: from iku.example.org ([2a06:5906:61b:2d00:c5ac:bf15:f358:81a8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca56d5sm18098132f8f.32.2025.04.30.13.41.31
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca56d5sm18098132f8f.32.2025.04.30.13.41.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 13:41:31 -0700 (PDT)
+        Wed, 30 Apr 2025 13:41:34 -0700 (PDT)
 From: Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To: Andrzej Hajda <andrzej.hajda@intel.com>,
@@ -88,9 +88,9 @@ Cc: dri-devel@lists.freedesktop.org,
 	Prabhakar <prabhakar.csengg@gmail.com>,
 	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
 	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v4 12/15] drm: renesas: rz-du: mipi_dsi: Add dphy_late_init() callback for RZ/V2H(P)
-Date: Wed, 30 Apr 2025 21:41:09 +0100
-Message-ID: <20250430204112.342123-13-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 14/15] drm: renesas: rz-du: mipi_dsi: Add support for LPCLK handling
+Date: Wed, 30 Apr 2025 21:41:11 +0100
+Message-ID: <20250430204112.342123-15-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250430204112.342123-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20250430204112.342123-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -104,55 +104,64 @@ Content-Transfer-Encoding: 8bit
 
 From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Introduce the `dphy_late_init` callback in `rzg2l_mipi_dsi_hw_info` to
-allow additional D-PHY register configurations after enabling data and
-clock lanes. This is required for the RZ/V2H(P) SoC but not for the
-RZ/G2L SoC.
+Introduce the `RZ_MIPI_DSI_FEATURE_LPCLK` feature flag in
+`rzg2l_mipi_dsi_hw_info` to indicate the need for LPCLK configuration.
 
-Modify `rzg2l_mipi_dsi_startup()` to invoke `dphy_late_init` if defined,
-ensuring SoC-specific initialization is performed only when necessary.
-
-This change prepares for RZ/V2H(P) SoC support while maintaining
-compatibility with existing platforms.
+On the RZ/V2H(P) SoC, the LPCLK clock rate influences the required
+DPHY register configuration, whereas on the RZ/G2L SoC, this clock
+is not present. To accommodate this difference, add an `lpclk`
+clock handle in `rzg2l_mipi_dsi` and update the probe function to
+conditionally acquire LPCLK if the SoC supports it.
 
 Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
-v3->v4:
+v3->v4
 - No changes
 
 v2->v3:
 - No changes
 
 v1->v2:
-- No changes
+- Added LPCLK as feature flag
 ---
- drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-index 8c7384b95411..66eef39af35e 100644
+index df43ff59e08e..22a386ca8ae3 100644
 --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
 +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
-@@ -35,6 +35,7 @@ struct rzg2l_mipi_dsi;
+@@ -30,6 +30,7 @@
  
- struct rzg2l_mipi_dsi_hw_info {
- 	int (*dphy_init)(struct rzg2l_mipi_dsi *dsi, u64 hsfreq_millihz);
-+	void (*dphy_late_init)(struct rzg2l_mipi_dsi *dsi);
- 	void (*dphy_exit)(struct rzg2l_mipi_dsi *dsi);
- 	u32 phy_reg_offset;
- 	u32 link_reg_offset;
-@@ -318,6 +319,9 @@ static int rzg2l_mipi_dsi_startup(struct rzg2l_mipi_dsi *dsi,
- 	txsetr = TXSETR_DLEN | TXSETR_NUMLANEUSE(dsi->lanes - 1) | TXSETR_CLEN;
- 	rzg2l_mipi_dsi_link_write(dsi, TXSETR, txsetr);
+ #define RZ_MIPI_DSI_FEATURE_DPHY_RST	BIT(0)
+ #define RZ_MIPI_DSI_FEATURE_16BPP	BIT(1)
++#define RZ_MIPI_DSI_FEATURE_LPCLK	BIT(2)
  
-+	if (dsi->info->dphy_late_init)
-+		dsi->info->dphy_late_init(dsi);
+ struct rzg2l_mipi_dsi;
+ 
+@@ -63,6 +64,7 @@ struct rzg2l_mipi_dsi {
+ 	struct drm_bridge *next_bridge;
+ 
+ 	struct clk *vclk;
++	struct clk *lpclk;
+ 
+ 	enum mipi_dsi_pixel_format format;
+ 	unsigned int num_data_lanes;
+@@ -788,6 +790,12 @@ static int rzg2l_mipi_dsi_probe(struct platform_device *pdev)
+ 	if (IS_ERR(dsi->vclk))
+ 		return PTR_ERR(dsi->vclk);
+ 
++	if (dsi->info->features & RZ_MIPI_DSI_FEATURE_LPCLK) {
++		dsi->lpclk = devm_clk_get(dsi->dev, "lpclk");
++		if (IS_ERR(dsi->lpclk))
++			return PTR_ERR(dsi->lpclk);
++	}
 +
- 	hsfreq = DIV_ROUND_CLOSEST_ULL(hsfreq_millihz, MILLI);
- 	/*
- 	 * Global timings characteristic depends on high speed Clock Frequency
+ 	if (dsi->info->features & RZ_MIPI_DSI_FEATURE_DPHY_RST) {
+ 		dsi->rstc = devm_reset_control_get_exclusive(dsi->dev, "rst");
+ 		if (IS_ERR(dsi->rstc))
 -- 
 2.49.0
 
