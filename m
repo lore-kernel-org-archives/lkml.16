@@ -1,270 +1,182 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010021.outbound.protection.outlook.com [52.101.69.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A8015DBC1;
-	Wed, 30 Apr 2025 15:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027375; cv=none; b=bFZEDf5qSQz0hqa6fo2j62dwZ5IiGXzOEYFicNEQpCICvZ75cP6iSxsoJleNklUB9XQENcrJrPUBZgtBi5gWDyL+l0pQ5+n5frgUYfUeb562FLu21/tWOQE5B13yx2Vq3qD+XzE7akJMh02gYh/bs2ru7rW/aF541YCm1eQ0n3o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027375; c=relaxed/simple;
-	bh=LkriFigpaBQ2TCKZy0fvHVXMLA0Cwu9c5uTygANFRaY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qX94ssdc7JknCtRZ8rnkgNuaI2Xg1NyH/dEETnLGULFosuuiplmJLqZFmGDN+hLy6mDNnxhJadDmJMsKvl1qj+4kqTtozbPE7aXjo5HwbvhaataJrc50OfIlACPT+74sPiEqk8EKxZEmivykuPZGp41pkPbDTa5cgRdl3YPTem8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+XvV3mO; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225FF253F32;
+	Wed, 30 Apr 2025 15:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746027408; cv=fail; b=RocY6LCLVHqnY3CEB+OjN3RzYZqtGtsG8DuR1lvZzs5zKt1p7VjEo7vsrZTUbXYWbkBnp6Q2OgsoFSpasy2+YkopLn8NhF4flqs+ONqXzdkJiLPCGJVXgIc0EnpseJMP5Hw3rVKVcpDWRqkVeRmgSAK4XVumjK6/ADK05YnQ1r4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746027408; c=relaxed/simple;
+	bh=x79UyaqklWbVJYAxyDqGQExd46nX5y8rQC+jWZQokYY=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=QNcMHscqptv3nuUFY1w4ExS44xvHTaP1cLD1ZPV0i2JkOMm9whR1yIVegE9RMoRcqwlXR1rJWGev7UirCI6h5tkiQzrQ+Wvetm1U2IGjEGfqnqqi0fBQja/zUPWXkAWpT6G/L5xVlSQd0VDD36whDvN3/bH5JAUp4vKDYc6XCKE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=mt0Q3WUD; arc=fail smtp.client-ip=52.101.69.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+XvV3mO"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c31e4c3e5so4809746f8f.0;
-        Wed, 30 Apr 2025 08:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746027371; x=1746632171; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=+MKDHPwR2l8XAq/X6LzjtjCqC8aFyohmJHmIahoU0Yg=;
-        b=a+XvV3mOpXD0/plQIml84PV5buNt+5nNQQ5qQIE8jrjyi+vyN9SKXZsB7k/Z0t+sSe
-         OidPwFxidPcFc32wmls5aLeR6OErf/xDkZe/uBtd12URMlB1ZpVv/7Ks06/mzUlnJrO/
-         zaXUkGytnkmHBq+e88qX9MqwHj+Q9EodqlnxjDBuF5CFpQoxfROp9LaEoG39cG3IVXV9
-         hHgIKsa5n4TdGwf7OObUmS37U9Iu+OvQtb9VJHjLVR7I74PEFFnVOxDTnIWfGEKSDirf
-         IUra0Jl0UKXPwd8T2PaWHpcuor8Kq6MeHL4cgnq/qsRIoBcXUfhwFMnFqf4DQhFkPVYv
-         C6lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746027371; x=1746632171;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+MKDHPwR2l8XAq/X6LzjtjCqC8aFyohmJHmIahoU0Yg=;
-        b=doa/z01THcMeq3EJb6HetXFeC7NXcSm0OFVXclw/BaMZdY9bTMslV7wog8e2lmdije
-         2rJxmrOC/XjTGEbp7Dml/jat5J+o6B66BiiHHce/nQTuM48E4bFjEwC7nRO5DRnbI2cf
-         22yWojeeJfSIvKmybwVJ8BhPRWmuYyX+jry0tzVEUOOJVmdGexPbORML/wJ8KAuyKxpW
-         AVT5TIo0/IOnbn6zQyCROS8ASaqAwoxcwUQiQ4wN61cP5MXv5IpLOjdMU4bd9vKlbt48
-         foJrcuXknPuI6LCaO1P+N2vB0VHdUgvOqd6Xnak+af5Q8qJyFsZdq8YDl2Y+XvtyFlRs
-         W4sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV8j1zce665eChF4G3BBRc8+qBG27Vlt6dujA4MBe3Mbvd/NuNKEHO233QYkx4Pno9iV//krFHsjmDe@vger.kernel.org, AJvYcCVjUTsg+bJHVmuKoIqWVQgmeYWJiCmKOxw9hsbPjIxqz9QGI/PYfEiEhVmuooe7nmkPgXXs1dps2ww/xLhK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJpMrN+sCdLyTVjo3knGA+SK3lAl0CdcyvLGkI2byVayfgXAUY
-	eWS2XDpBlZihvw1pyRnlSmS/rC9P6BkuvO2JOPihtZJ0hY1uQhNJ
-X-Gm-Gg: ASbGncutKaPVEHzM3zdB1Sk64D4G6VdrmPotokgJ2Kti9lyjdL8zxz9DjPGOsCLi5ei
-	bRzefss4RvZ6Eofz48LWA7VMrKrCVF4ap2izi+ovWAIvs1Vdo0S9nIyaeQHeaYJjMmiFlux8m0c
-	97E87z/wn+KJ4vEQhykjHcOep08kOxmm5VhUGl5a0W2EikzuQHA2QSZDCXHgGpCD/ebTjAEeAXR
-	z+IiPg0sRIV/PIByUGIdMl78ap7+tsOqSOWbAjfA6Zi2J8B5W/12n5X9Mi1RM9RFkoiWBk/c89Y
-	oB+gAwtR7056+71WwsI5F/84kLaZl+QRVSjll9MhbLAnnnnUNQ7/qd/+SivFNFK8pO0TwF3Y5xH
-	zXGZG7de5vKpK
-X-Google-Smtp-Source: AGHT+IE1yfaVRABKM5EZNt0RO3VcMqmdM1CQatWeQBmjRfHbtU6NeGFvzMlRUL0XOcxFd8pk2yQs7Q==
-X-Received: by 2002:a05:6000:3102:b0:390:f394:6271 with SMTP id ffacd0b85a97d-3a08ff466dfmr3099777f8f.43.1746027371214;
-        Wed, 30 Apr 2025 08:36:11 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca435dsm17262428f8f.21.2025.04.30.08.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 08:36:09 -0700 (PDT)
-Message-ID: <d273fa78cb3986da5249bd800dd25c4c0bcfde7e.camel@gmail.com>
-Subject: Re: [PATCH 3/5] iio: adc: ad7606: add offset and phase calibration
- support
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Angelo Dureghello <adureghello@baylibre.com>, Jonathan Cameron	
- <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>, Andy Shevchenko
- <andy@kernel.org>, Lars-Peter Clausen	 <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley	 <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Date: Wed, 30 Apr 2025 16:36:13 +0100
-In-Reply-To: <20250429-wip-bl-ad7606-calibration-v1-3-eb4d4821b172@baylibre.com>
-References: 
-	<20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
-	 <20250429-wip-bl-ad7606-calibration-v1-3-eb4d4821b172@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="mt0Q3WUD"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=reoURxNSR8tigleCQOvewVt+NaNCkdLMHqg4QSUyHz/gBGsLkdeaCml9rXoDHJ3hOYQS6w52W95oayIoIkybiRV8rg9GUdkhRXiA15yR/xtZkQ999haKU7GYxGE9lQ9+rgZGyzF7r9FwnPSbUyR1nJVEzEv4N8FkrRv94wwBHnT2ZQihpqMoSqGaa/RvYSrWBoFBGZeLz769MYLaa5evpydDkzkp2uNbUXhbITdaAeJZJSqgW86S0lW8OxN3BtDBBdPS8au4Pi9LHtK6PNIt+LR44gI1KfvAAAq/q4wlU+dwi0sVY47wpWbisNGXLDdzpX6/voUgHFFYxYtPqjCo/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=skMl4zQ3Q7v8+67T5EhG9c724MlSUpoyqiLNRIxqYqA=;
+ b=WJm5xMDr3xWr/JY+lfTiikyFF/85xXeHIZsydUezl5HOCQJe+qCAXaujS713sZwl42zFgn8GtMsiMjcetK+v8r1Wv+13jziPB9RapVlSj4K2Qs2v1SJkvvYFHE2uKqKo4jiD0JSkwV+NaT245qPSXWiKce9CxZ6jLCLqauwcMCLFAOCTEwavyB6TfBgMgvLw/GweEuh832ebItxUp7MXxi4mxD3iDB6Va+jlJZs5I4vdkVf7T4+CfbZhyAt2bsj86ZVjtRapOVllidp9C0rzD+yV2WfkRrY8yv1tg9gUzYM4QaPaRRNbHjYcZDnaVzpH/GMfgJxJaZYu9COyfRz03A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=skMl4zQ3Q7v8+67T5EhG9c724MlSUpoyqiLNRIxqYqA=;
+ b=mt0Q3WUDgZLoL6FsyvZncM2vtyJ0onWpaZ/hJi4ih2wBEoj9fcLYzRKsh1sG/nnLS1yM8M51yCZ2fDHcZrxQUutmy4GgeWgUWIGYZ5mbNtJjln6iShKVGdWNyFo7oo8/ui9jXMC0a3P9AunSd//LTR1WtJBw7Okxl/SxBpJLDVRGFCoxcihgilJilkGyTGq5R41M1280LUaVwELn8ViVCXFNHscL3ONXb1aYUdUCk27uaTktdyyLhvxJJ6a3uVhgTuY/eh+zH5jZDD/7ji+X1mlnacpC+zUVyVlEnw5nexcUUzJ9Ws6bIrMtABlOVvvKKVaxqUygsKnn+16PFlnrNA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
+ by DU4PR04MB10742.eurprd04.prod.outlook.com (2603:10a6:10:58c::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
+ 2025 15:36:41 +0000
+Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
+ ([fe80::b317:9c26:147f:c06e%3]) with mapi id 15.20.8699.019; Wed, 30 Apr 2025
+ 15:36:40 +0000
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/6] mfd: simple-mfd-i2c: add QIXIS CPLD support
+Date: Wed, 30 Apr 2025 18:36:28 +0300
+Message-Id: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AS4P190CA0032.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:20b:5d1::9) To AS8PR04MB8868.eurprd04.prod.outlook.com
+ (2603:10a6:20b:42f::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|DU4PR04MB10742:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9581a9a-a3da-4039-c981-08dd87fccd17
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?IMX+VsBGq1GCTZIs8w7VAzuvc33OtpoG+Bldst3maI6Rme7qoP63nsRT0f0v?=
+ =?us-ascii?Q?35slmIiuagXsAtWMhD+1agNbSzamR7aLkBPbDzu0utuOYoWWeEuxupjNfhTL?=
+ =?us-ascii?Q?mZHoO46DUFzRXGGV7/rpvPxTvRAuQr4hme6wQRIEKR1Y1ZkiPP9rVY3l1GYY?=
+ =?us-ascii?Q?Mj7Cof9o1w5vySBECDs3CwU62Nb5uwakwa07w+vpBScbvo0aO7nuFPCiXclZ?=
+ =?us-ascii?Q?r2CbX4nqHnpDFIb0uR3yWvvwB0N1237LWhcjCUzLdmgAsAQ0dVvs55aS6jYF?=
+ =?us-ascii?Q?ZKNcYIUfifGm/MxCHLhdZ2Y5vOZGMhchwVg8Xc2rxeRw3afKv8kYEIs2jFdg?=
+ =?us-ascii?Q?yJnBiJxWMaq29LYmMOjPZoLxLshGGqw0tdSxnLVLOgmV8Hzjnm6C4be99WOE?=
+ =?us-ascii?Q?08XyvxUXqn40orM/NQ6wdt4otcMroHDtL/nGg4752VGEWt1+vNT5VkqHppOX?=
+ =?us-ascii?Q?162KcbXaZMZ+VSEb+0ywfTii9LpNiAcaULTqjStiobpTG55xHEuklVefJ8va?=
+ =?us-ascii?Q?OM/mdEdKA897c5ZfoaJxfJrOLqSF9qrLQNHjET7+f4lmrHigrnCQpmfk8Ddn?=
+ =?us-ascii?Q?Uouigd5hqPgAD1yQp4zckF1euyKGE+A9C3HWHQNPsfqdaEgz8AjuDfGhhGHY?=
+ =?us-ascii?Q?QwA7HQvEgtqMwpuwGYLHtAVvGkjfueT/ACk4xy+/Qg+Q3wF1p7dubnOHz/gG?=
+ =?us-ascii?Q?+Q1C2oZzXsc643P6zT60QvnMBK1WdwHmNp0QQ8qbV7fJTTvQDyKR+s3QLzdJ?=
+ =?us-ascii?Q?7uVPMxlXd2V1fIeRenDzEeP55kFd6Rz70t3DgewW5BIPeHltplw/7GBInJXS?=
+ =?us-ascii?Q?nxvlEkbKyygI1XAqx5+YFBX+Hnu3eaOmG5EeKiDZWsQx5qrS1H4XXa++DSck?=
+ =?us-ascii?Q?tUPxNhxhNdrNlmQQBAGRqtY6MWHO6dDEbdT/RnUjOxVHAnXmuRrKupqpLcRm?=
+ =?us-ascii?Q?6gf0KTvrjqP80UJjwkmUfgkWWXMR9DyF+aXMi3oIQrd+SFQYuq2r3hfyYqpq?=
+ =?us-ascii?Q?Lsb1R7/fBjnb/0xr1DBdm8/pL2liOR34dgUZR2gFPvmyy3IqsNf5VhBw0XbV?=
+ =?us-ascii?Q?BMkJcGDIniE8gHQLdnmUowzWlN2jiAzNOUkrl8mx/fmgUw7N4ZOqXiRBmvvs?=
+ =?us-ascii?Q?yqwjIObYxGj1IxU+fWNy87YMAInq1fUXTV1oLusEswXXspVWDQdEq0LWioy4?=
+ =?us-ascii?Q?K+074dukrzzkFlyRmuf+SUWb1aZmNHWNHYkOo80Ef1e9ti8lCjsoF80KImu1?=
+ =?us-ascii?Q?MQGc8NPllJVcCGyxmXZ8Cnvp1SeoH7EOLRPA+p2+VRQFSgafJNjosYMcHNzC?=
+ =?us-ascii?Q?LK58tliFtU4P7W/Oup/KgLwZIxSXtzuWSQfxAjzn3Imhl7Mja4RTHJ9WixIX?=
+ =?us-ascii?Q?1hOK552K8qHx6qwgWtL0Ogco4EZmzppVGWY5OHkplDJSi4BX5BxHSSPeyw4W?=
+ =?us-ascii?Q?+cSMp3amhfc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?p/Zi3/mtGZIjdibKRee7B/GvXaLHBgAF8y3yr44qmim8n1QEoy2k+vsgHQ/o?=
+ =?us-ascii?Q?NyIXJlNtYqxSROu3Tw24/R4MgNNvFt86xvHoaEpvVZX/ChV+s2KlO0S8OB50?=
+ =?us-ascii?Q?mASNsd3AJOXqzt7nBst9Sw2TIEluQxaKD74a7jaG+u1aEbzQT25QxynDRqYZ?=
+ =?us-ascii?Q?Ms8Tp4eK0rtnK0sQ1xvKtrpa1P3HpJkJm3waE3HXU4QeW6tdd7ramTdPrAw3?=
+ =?us-ascii?Q?GAPSRL8p0oPt1b/MvtqmS0txF4/3QOLAm3wHHhQz5BfbmxxGKGnHm0ZUGFmA?=
+ =?us-ascii?Q?4jV0p1ZOERO30A248kekf5+YJMnbSLxH6+OsU5NzaADMQQt8mrpf/l4ja3qB?=
+ =?us-ascii?Q?o482Thw0byVF41qt5xuE54Ylus+vp8sI8E3a7okPI9/EM/CnAcNOcSe++FB4?=
+ =?us-ascii?Q?e+lzZhWIFAygxK6cD7Gp1YGRDgc2qzKtmrNq4ELunZGwBEB+8mSKXY95Kc9f?=
+ =?us-ascii?Q?bEucCeuAQGZu9vlwviMqGkJzJNCvJtdBML7xm4akMwWSMdeHGUk1HMURapKI?=
+ =?us-ascii?Q?OkKmA+T/3zbOv5cNSFpkA1BIz46NepYmHdk00C4OYTKHVe/4w4lVl1WRlAKj?=
+ =?us-ascii?Q?7UAazF65iwmpaHCYJKPcuAWIr7jNTRnzEMizHWmIP/X5S9pgUcdRLgr4Z2hl?=
+ =?us-ascii?Q?evbCGNNY77NTzQ4mumg0oDdddIN9JUIoDUNuI1rcyT1o873rLezG7I6HoqEW?=
+ =?us-ascii?Q?B0F289zDYw+T/nSO3pW9haxaGa0XjJ3kt98Qd3i0pqOjjZuRwNo7QaKQwk66?=
+ =?us-ascii?Q?SDYJRKT4mpNJTFYMV/CmH3L+uI0iDqDC2lHqyNnKebDjoO1B6WqdGQKWkf5a?=
+ =?us-ascii?Q?7whvx8wtOr9lFGm4fI587PCeXuN9Mnh9gDVpdaZeDIqpGmCHBDLpH4BmeHtu?=
+ =?us-ascii?Q?h8P4cM5IXLH/qckipvq7JL5Bb6F2/FX1Fyf3A9qDuJNYahIgka6eY6rKNGJx?=
+ =?us-ascii?Q?cals64EZvZC8WPo8d4hg+IVCdjHUv1Rdz/AhTZuHixz9ZYH15QwjNLsDd2BM?=
+ =?us-ascii?Q?rHS5v/qoaryrlnAVzPb/VFCsTjK7jhlf7sGHjp5JsaVixcSWQ725nigjGXJV?=
+ =?us-ascii?Q?bAUihED9g8Pzg99uEWF+nifPHb1ZscW85baCHmC68Nonqa1zgEvIchZGNZPr?=
+ =?us-ascii?Q?izY5lua2rMOKgRfJVjrpFmEKv1PeAKs6Fs6V46powd+VxuB/EQfUz8ADPeyf?=
+ =?us-ascii?Q?oTMN2qbA58KigQdFjfAPX0Weuqm7G72dk2mgbZcNLeyxEqG6tdC9xH6GOIoE?=
+ =?us-ascii?Q?pb9CgiwxK2T8eRIUszM0xJjIpw6Meq13AE/n/QRsolKZ2Ov85RBlfG8S97S8?=
+ =?us-ascii?Q?suEt3kXCeXKRX6U61EGFU6Lf29hpbCTR4okzsvQrvDKyfOk4D0Tk0RZ2M2y+?=
+ =?us-ascii?Q?05kHftQ1Z5jdlkHXsaiqLhZKXabA3ynuDIqvE6U3Q3Ic6CqUasJu4GV2zJpH?=
+ =?us-ascii?Q?tqR/tvlOYlfs2GHEU4pVQn4P/wNJjRvPbxTZx0EBtr6AoJVjOooqHt3ttC44?=
+ =?us-ascii?Q?nxnPzISlT3j6gOPCVyN09F9bwQd20nWgaBsoSDwQPfkArhTUk4HMni2JewTn?=
+ =?us-ascii?Q?6QwexC44sLgIIw/diWzLif48AiosSJnLfS5rOS9a?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9581a9a-a3da-4039-c981-08dd87fccd17
+X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 15:36:40.7647
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: IdyNJLZ6SKIEG+NQBHgwYaTo7XYzgaxGpTXz3d2p++dH5aMNonEwhFrrcxSIZIdpYNVWnUVG/fdCAunVsucFyQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10742
 
-On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
->=20
-> Add support for offset and phase calibration, only for
-> devices that support software mode, that are:
->=20
-> ad7606b
-> ad7606c-16
-> ad7606c-18
->=20
-> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
-> ---
-> =C2=A0drivers/iio/adc/ad7606.c | 160
-> +++++++++++++++++++++++++++++++++++++++++++++++
-> =C2=A0drivers/iio/adc/ad7606.h |=C2=A0=C2=A0 9 +++
-> =C2=A02 files changed, 169 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> index
-> ad5e6b5e1d5d2edc7f8ac7ed9a8a4e6e43827b85..ec063dd4a67eb94610c41c473e2d804=
-0c919
-> 74cf 100644
-> --- a/drivers/iio/adc/ad7606.c
-> +++ b/drivers/iio/adc/ad7606.c
-> @@ -95,6 +95,22 @@ static const unsigned int ad7616_oversampling_avail[8]=
- =3D {
-> =C2=A0	1, 2, 4, 8, 16, 32, 64, 128,
-> =C2=A0};
-> =C2=A0
-> +static const int ad7606_calib_offset_avail[3] =3D {
-> +	-128, 1, 127,
-> +};
-> +
-> +static const int ad7606c_18bit_calib_offset_avail[3] =3D {
-> +	-512, 4, 511,
-> +};
+The MDIO mux on the LX2160AQDS, LX2162AQDS and LS1028AQDS boards never
+worked in mainline. The DT files were submitted initially as-is, and
+there is a downstream driver for the QIXIS CPLD device:
+https://github.com/nxp-qoriq/linux/blob/lf-6.12.y/drivers/soc/fsl/qixis_ctrl.c
 
-From the DS, it seems this is 508?
+Since the HW works with the already existing
+driver/mfd/similar-mfd-i2c.c driver, extend the list of compatible
+strings to also cover these 3 new boards, instead of trying to upstream
+a duplicate driver.
 
-> +
-> +static const int ad7606b_calib_phase_avail[][2] =3D {
-> +	{ 0, 0 }, { 0, 1250 }, { 0, 318750 },
-> +};
-> +
-> +static const int ad7606c_calib_phase_avail[][2] =3D {
-> +	{ 0, 0 }, { 0, 1000 }, { 0, 255000 },
-> +};
-> +
-> =C2=A0static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev=
-,
-> =C2=A0					=C2=A0 struct iio_chan_spec *chan);
-> =C2=A0static int ad7606c_16bit_chan_scale_setup(struct iio_dev *indio_dev=
-,
-> @@ -164,6 +180,8 @@ const struct ad7606_chip_info ad7606b_info =3D {
-> =C2=A0	.scale_setup_cb =3D ad7606_16bit_chan_scale_setup,
-> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
-> =C2=A0	.offload_storagebits =3D 32,
-> +	.calib_offset_avail =3D ad7606_calib_offset_avail,
-> +	.calib_phase_avail =3D ad7606b_calib_phase_avail,
-> =C2=A0};
-> =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606b_info, "IIO_AD7606");
-> =C2=A0
-> @@ -177,6 +195,8 @@ const struct ad7606_chip_info ad7606c_16_info =3D {
-> =C2=A0	.scale_setup_cb =3D ad7606c_16bit_chan_scale_setup,
-> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
-> =C2=A0	.offload_storagebits =3D 32,
-> +	.calib_offset_avail =3D ad7606_calib_offset_avail,
-> +	.calib_phase_avail =3D ad7606c_calib_phase_avail,
-> =C2=A0};
-> =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606c_16_info, "IIO_AD7606");
-> =C2=A0
-> @@ -226,6 +246,8 @@ const struct ad7606_chip_info ad7606c_18_info =3D {
-> =C2=A0	.scale_setup_cb =3D ad7606c_18bit_chan_scale_setup,
-> =C2=A0	.sw_setup_cb =3D ad7606b_sw_mode_setup,
-> =C2=A0	.offload_storagebits =3D 32,
-> +	.calib_offset_avail =3D ad7606c_18bit_calib_offset_avail,
-> +	.calib_phase_avail =3D ad7606c_calib_phase_avail,
-> =C2=A0};
-> =C2=A0EXPORT_SYMBOL_NS_GPL(ad7606c_18_info, "IIO_AD7606");
-> =C2=A0
-> @@ -683,6 +705,40 @@ static int ad7606_scan_direct(struct iio_dev *indio_=
-dev,
-> unsigned int ch,
-> =C2=A0	return ret;
-> =C2=A0}
-> =C2=A0
-> +static int ad7606_get_calib_offset(struct ad7606_state *st, int ch, int =
-*val)
-> +{
-> +	int ret;
-> +
-> +	ret =3D st->bops->reg_read(st, AD7606_CALIB_OFFSET(ch));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val =3D st->chip_info->calib_offset_avail[0] +
-> +		ret * st->chip_info->calib_offset_avail[1];
-> +
-> +	return 0;
-> +}
-> +
-> +static int ad7606_get_calib_phase(struct ad7606_state *st, int ch, int *=
-val,
-> +				=C2=A0 int *val2)
-> +{
-> +	int ret;
-> +
-> +	ret =3D st->bops->reg_read(st, AD7606_CALIB_PHASE(ch));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val =3D 0;
-> +
-> +	/*
-> +	 * ad7606b: phase delay from 0 to 318.75 =CE=BCs in steps of 1.25 =CE=
-=BCs.
-> +	 * ad7606c-16/18: phase delay from 0 =C2=B5s to 255 =C2=B5s in steps of=
- 1 =C2=B5s.
-> +	 */
-> +	*val2 =3D ret * st->chip_info->calib_phase_avail[1][1];
-> +
-> +	return 0;
-> +}
-> +
-> =C2=A0static int ad7606_read_raw(struct iio_dev *indio_dev,
-> =C2=A0			=C2=A0=C2=A0 struct iio_chan_spec const *chan,
-> =C2=A0			=C2=A0=C2=A0 int *val,
-> @@ -717,6 +773,22 @@ static int ad7606_read_raw(struct iio_dev *indio_dev=
-,
-> =C2=A0		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
-> =C2=A0		*val =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
-> cnvst_pwm_state.period);
-> =C2=A0		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_CALIBBIAS:
-> +		if (!iio_device_claim_direct(indio_dev))
-> +			return -EBUSY;
-> +		ret =3D ad7606_get_calib_offset(st, chan->scan_index, val);
-> +		iio_device_release_direct(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_CALIBPHASE_DELAY:
-> +		if (!iio_device_claim_direct(indio_dev))
-> +			return -EBUSY;
-> +		ret =3D ad7606_get_calib_phase(st, chan->scan_index, val,
-> val2);
-> +		iio_device_release_direct(indio_dev);
-> +		if (ret)
-> +			return ret;
-> +		return IIO_VAL_INT_PLUS_NANO;
-> =C2=A0	}
-> =C2=A0	return -EINVAL;
-> =C2=A0}
-> @@ -767,6 +839,64 @@ static int ad7606_write_os_hw(struct iio_dev *indio_=
-dev,
-> int val)
-> =C2=A0	return 0;
-> =C2=A0}
-> =C2=A0
-> +static int ad7606_set_calib_offset(struct ad7606_state *st, int ch, int =
-val)
-> +{
-> +	int start_val, step_val, stop_val;
-> +
-> +	start_val =3D st->chip_info->calib_offset_avail[0];
-> +	step_val =3D st->chip_info->calib_offset_avail[1];
-> +	stop_val =3D st->chip_info->calib_offset_avail[2];
-> +
-> +	if (val < start_val || val > stop_val)
-> +		return -EINVAL;
-> +
-> +	val +=3D start_val;
+This patch set also adapts the DT nodes for each of the affected boards
+so that we match on the new compatible strings.
 
-Shouldn't this be val -=3D start_val?
+The last patch describes the two on-board RGMII PHYs found on the
+LX2160AQDS boards which make use of the MDIO bus found behind the CPLD
+driven MDIO mux.
 
-I also don't think we have any strict rules in the ABI for units for these =
-kind
-of interfaces so using "raw" values is easier. But FWIW, I think we could h=
-ave
-this in mv (would naturally depend on scale)=20
+Ioana Ciornei (5):
+  dt-bindings: mfd: add bindings for QIXIS CPLD
+  mfd: simple-mfd-i2c: add compatible string for Layerscape QIXIS CPLD
+  arm64: dts: lx2160a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
+    driver
+  arm64: dts: lx2162a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
+    driver
+  arm64: dts: lx2160a-qds: add the two on-board RGMII PHYs
 
-- Nuno S=C3=A1
+Vladimir Oltean (1):
+  arm64: dts: ls1028a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
+    driver
+
+ .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
+ .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  9 +--
+ .../boot/dts/freescale/fsl-lx2160a-qds.dts    | 28 +++++++-
+ .../boot/dts/freescale/fsl-lx2162a-qds.dts    |  8 ++-
+ drivers/mfd/simple-mfd-i2c.c                  |  3 +
+ 5 files changed, 103 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
+
+-- 
+2.25.1
 
