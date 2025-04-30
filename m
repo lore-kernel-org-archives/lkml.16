@@ -1,81 +1,31 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44753221738
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:05:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F90215073;
+	Wed, 30 Apr 2025 10:09:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746007553; cv=none; b=bEgBFX0wQ/QFaHZ4lgbqvGUPPzXCkzbWKjLppjyMKWh1HOIoS7Si9S5wKoBMRmP2E2JDISEIkZUkSJ8boqVic2sj9vii5fGtX24bHsDxy5tlDUq+7E2+ow9ARyb6xSiPaJL0HXJSghJ4IwbhTqfomAvAa0cVCC6sKzPqeCo+0e8=
+	t=1746007767; cv=none; b=YxC+dpBKZjla6twotmpXr1rc/d65cVFcWym5XLtWOjbxQtvJsGJSAEH6RhiO/EPLECQlvuhsJKyNuBBpP5Y86LcD/UwyXx704A6nAUQxLqHTooM4kwnSW2AAb0IIPmGtMCxX4XR5mI47sHTUVmziiLHfvZaNfHnHqu13IqOmxg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746007553; c=relaxed/simple;
-	bh=PU8u7VACN/AJjKJIar6NdPXdcE6ruW+NxSAqS/1EBv8=;
+	s=arc-20240116; t=1746007767; c=relaxed/simple;
+	bh=acUIEYS47N0jfqScIbEZuYGbAxDBtW/KaYO+YY7Fn8s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dha0bxull/9xLueoNiVvM8AyguwyuWtWWSKigV/SFL/SLdefgzGU9JCTmEaXrVK5sfhYqQdqliF052OjyKMRaqnbWzeHwzohotxfpchLk+DuNmZ9GpBZAVkZzDogzds9W51jJoHUHWVw3O1IjOBo7zAtxpM8vcL/YUSfIV1Imuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mZ5Fv/Wi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AXUgg6dA; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=mZ5Fv/Wi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=AXUgg6dA; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=d7JUFsGVeW0c7hrLLBL3QuadaqEGIPZTmbBUWyc6lWBn8voXSNowMzy0WgOhxWecerzaifymvGixbpX6YeT5DczB6r4xEESi3Lc4qYa8G8vOXRPVceOBMUeiHT9d6iNVfy0rQAgEzVcynroHrvImXS2RZ0qi45YhGMZ3cRz/3bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=tQ19MDR3; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mZ5Fv/Wi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AXUgg6dA";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="mZ5Fv/Wi";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="AXUgg6dA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4A35421297;
-	Wed, 30 Apr 2025 10:05:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746007549; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXUil+ET8/TFI2RImwQgr+2V8ec+IC8TtX59DMlILv8=;
-	b=mZ5Fv/WizkLn5NQrcxZu/FLmX8MdFpKMB2/SZ/wtUbFUGK/2tfr+ejbshEi0VS25qAVrhw
-	Jr/aJcKXiDqdhCtW7FazUfoq6X2F2L6CO+6ZxSOoWlMzQwW9hKl98zAfdbe+XafoLd4gGI
-	8FMRNOssevnX6TOFPmOa44mL8ZXzvqo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746007549;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXUil+ET8/TFI2RImwQgr+2V8ec+IC8TtX59DMlILv8=;
-	b=AXUgg6dA2eZI/VUxqCn6CCv2P4mL/A5vhBIQhfCeFvmiADbiR/+r5X8swdJIyEa66qO2pI
-	WilQZ+8X0ltfl7CA==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b="mZ5Fv/Wi";
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=AXUgg6dA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746007549; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXUil+ET8/TFI2RImwQgr+2V8ec+IC8TtX59DMlILv8=;
-	b=mZ5Fv/WizkLn5NQrcxZu/FLmX8MdFpKMB2/SZ/wtUbFUGK/2tfr+ejbshEi0VS25qAVrhw
-	Jr/aJcKXiDqdhCtW7FazUfoq6X2F2L6CO+6ZxSOoWlMzQwW9hKl98zAfdbe+XafoLd4gGI
-	8FMRNOssevnX6TOFPmOa44mL8ZXzvqo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746007549;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aXUil+ET8/TFI2RImwQgr+2V8ec+IC8TtX59DMlILv8=;
-	b=AXUgg6dA2eZI/VUxqCn6CCv2P4mL/A5vhBIQhfCeFvmiADbiR/+r5X8swdJIyEa66qO2pI
-	WilQZ+8X0ltfl7CA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 1D3C8139E7;
-	Wed, 30 Apr 2025 10:05:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id IBLQBv31EWhxMAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 30 Apr 2025 10:05:49 +0000
-Message-ID: <ae4b9ac8-d67d-471f-89b9-7eeaf58dd1b8@suse.cz>
-Date: Wed, 30 Apr 2025 12:05:48 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="tQ19MDR3"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1746007760; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4nwQzxilbFOqh5VEZWNSx+cKoBVCmfBTfSB2Il9HUho=;
+	b=tQ19MDR3vChuXRYCD8wqWAe14Ug2VI2xp7QznEV6lP50Fn7gfGXQc+oeCUqRmm9biFgVdz6THx3iGSJzFfPF9IAvsGOZU9HYi3gS2EP87Ynr6vVGa2HZV2f2xKDHrVudKithlCFqECEduLS/TC6BjVFs+VzZ8Cm+cSZstv8+48k=
+Received: from 30.74.146.9(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WYoKPvm_1746007756 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 30 Apr 2025 18:09:17 +0800
+Message-ID: <140d91bc-13cb-46c4-a6bc-0cbd8d329cdc@linux.alibaba.com>
+Date: Wed, 30 Apr 2025 18:09:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,143 +33,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
-Content-Language: en-US
-To: Shakeel Butt <shakeel.butt@linux.dev>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
- Roman Gushchin <roman.gushchin@linux.dev>,
- Muchun Song <muchun.song@linux.dev>, Jakub Kicinski <kuba@kernel.org>,
- Eric Dumazet <edumazet@google.com>, Soheil Hassas Yeganeh
- <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Meta kernel team <kernel-team@meta.com>, Hugh Dickins <hughd@google.com>
-References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
- <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
-From: Vlastimil Babka <vbabka@suse.cz>
-In-Reply-To: <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH v5 08/12] khugepaged: skip collapsing mTHP to smaller
+ orders
+To: Nico Pache <npache@redhat.com>, linux-mm@kvack.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com,
+ baohua@kernel.org, ryan.roberts@arm.com, willy@infradead.org,
+ peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com,
+ usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com,
+ thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com,
+ kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com,
+ dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com,
+ tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz,
+ cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com,
+ hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com,
+ rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
+References: <20250428181218.85925-1-npache@redhat.com>
+ <20250428181218.85925-9-npache@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250428181218.85925-9-npache@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 4A35421297
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.cz:mid,suse.cz:dkim];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.cz:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
 
-On 4/25/25 22:18, Shakeel Butt wrote:
-> Hi Andrew,
+
+
+On 2025/4/29 02:12, Nico Pache wrote:
+> khugepaged may try to collapse a mTHP to a smaller mTHP, resulting in
+> some pages being unmapped. Skip these cases until we have a way to check
+> if its ok to collapse to a smaller mTHP size (like in the case of a
+> partially mapped folio).
 > 
-> Another fix for this patch. Basically simplification of refill_stock and
-> avoiding multiple cached entries of a memcg.
+> This patch is inspired by Dev Jain's work on khugepaged mTHP support [1].
 > 
-> From 6f6f7736799ad8ca5fee48eca7b7038f6c9bb5b9 Mon Sep 17 00:00:00 2001
-> From: Shakeel Butt <shakeel.butt@linux.dev>
-> Date: Fri, 25 Apr 2025 13:10:43 -0700
-> Subject: [PATCH] memcg: multi-memcg percpu charge cache - fix 2
+> [1] https://lore.kernel.org/lkml/20241216165105.56185-11-dev.jain@arm.com/
 > 
-> Simplify refill_stock by avoiding goto and doing the operations inline
-> and make sure the given memcg is not cached multiple times.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Co-developed-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Dev Jain <dev.jain@arm.com>
+> Signed-off-by: Nico Pache <npache@redhat.com>
 
-It seems to me you could simplify further based on how cached/nr_pages
-arrays are filled from 0 to higher index and thus if you see a NULL it means
-all higher indices are also NULL. At least I don't think there's ever a
-drain_stock() that would "punch a NULL" in the middle? When it's done in
-refill_stock() for the random index, it's immediately reused.
-
-Of course if that invariant was made official and relied upon, it would need
-to be documented and care taken not to break it.
-
-But then I think:
-- refill_stock() could be further simplified
-- loops in consume_stop() and is_drain_needed() could stop on first NULL
-cached[i] encountered.
-
-WDYT?
-
-> ---
->  mm/memcontrol.c | 27 +++++++++++++++------------
->  1 file changed, 15 insertions(+), 12 deletions(-)
-> 
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 997e2da5d2ca..9dfdbb2fcccc 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1907,7 +1907,8 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->  	struct mem_cgroup *cached;
->  	uint8_t stock_pages;
->  	unsigned long flags;
-> -	bool evict = true;
-> +	bool success = false;
-> +	int empty_slot = -1;
->  	int i;
->  
->  	/*
-> @@ -1931,26 +1932,28 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
->  
->  	stock = this_cpu_ptr(&memcg_stock);
->  	for (i = 0; i < NR_MEMCG_STOCK; ++i) {
-> -again:
->  		cached = READ_ONCE(stock->cached[i]);
-> -		if (!cached) {
-> -			css_get(&memcg->css);
-> -			WRITE_ONCE(stock->cached[i], memcg);
-> -		}
-> -		if (!cached || memcg == READ_ONCE(stock->cached[i])) {
-> +		if (!cached && empty_slot == -1)
-> +			empty_slot = i;
-> +		if (memcg == READ_ONCE(stock->cached[i])) {
->  			stock_pages = READ_ONCE(stock->nr_pages[i]) + nr_pages;
->  			WRITE_ONCE(stock->nr_pages[i], stock_pages);
->  			if (stock_pages > MEMCG_CHARGE_BATCH)
->  				drain_stock(stock, i);
-> -			evict = false;
-> +			success = true;
->  			break;
->  		}
->  	}
->  
-> -	if (evict) {
-> -		i = get_random_u32_below(NR_MEMCG_STOCK);
-> -		drain_stock(stock, i);
-> -		goto again;
-> +	if (!success) {
-> +		i = empty_slot;
-> +		if (i == -1) {
-> +			i = get_random_u32_below(NR_MEMCG_STOCK);
-> +			drain_stock(stock, i);
-> +		}
-> +		css_get(&memcg->css);
-> +		WRITE_ONCE(stock->cached[i], memcg);
-> +		WRITE_ONCE(stock->nr_pages[i], stock_pages);
->  	}
->  
->  	local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
-
+LGTM.
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
