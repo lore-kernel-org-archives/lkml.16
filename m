@@ -1,103 +1,174 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7632D1EDA12
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF8B20E718;
+	Wed, 30 Apr 2025 20:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746046006; cv=none; b=RM34g7q9Anuu7OZpjO1Vadzzi7QbnlUV4pEJONShuF7VRvvTr37fKOOLMMGSHLKWQVQorzNBwHiXWa4maPm+qz4BPzV9upfSC+T9gvANHZ1pEB1fHCdZYPwS3jINXZYA4FYVDDo0mqiTssXt6a/uB/VnfLAvus58BFTMEkzUk78=
+	t=1746046033; cv=none; b=ux+fv3ITjYyawStvE0OA277qSNHhDdRd6N8M8IrkFK9bDXizC1P5/9ZAA804T9PX8scFaRJLy8FItLXAqo7PBlW6btfpsSdZ8sWo+BVPdUm3I9YWtJCMnKbYpz2T9V3GFQg5kJEjfCk0YOhuuf7kJRhjA92fe6TIEfea0jn312o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746046006; c=relaxed/simple;
-	bh=aQ1kHFTUkCAsnq+o1MzgOij5Dfu9lqBraoyfjbV9MFs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tiWtzzlSVPO6eFfft2PWEpyTEnWjyDsrLhH1ZY52HY+PwWEC52wrch8bx+f2cs7qczzqW1UoBeMiWhEiK8CeuZsuu5Df+1QV7iaJXtmFusucKocbhov/BJZzhUdZBQhRiK9zQg9MQEFL/ZUNAPeZRDUv+0SBo8Hx4M4CUuxQglo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EgZ8e/AH; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746046033; c=relaxed/simple;
+	bh=npzUvgCq6J5Uc+G4nZ82LxxHvjyLO5RR5lEPUS1jOc4=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=Mw8tCUg0vaaHowm5Lg1Cf4vOjSt6heBkJJzHQ4AftVYzzjeiUtXgC+E96SzOTs8XnXX6JBrn0GTEgsgu31wi236B3DLZ22qvtZIaer45jldekeC2ryomMeMvYL9HwfRBB3ohLzHmJBIy6ygkR7jkYd7AMQgcXJt+g174Fgz2lIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Y2klBdci; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EgZ8e/AH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746046005; x=1777582005;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=aQ1kHFTUkCAsnq+o1MzgOij5Dfu9lqBraoyfjbV9MFs=;
-  b=EgZ8e/AHbN1BmCTQdBfOYxiO8nXuf3YktHvV1blQ9xh/0p6E26fYE+gQ
-   UD+qoCuSels2ClLw0jRgC2hqAJxxztgYXWAPu03GeGfLKI6tCWsqpk5Rw
-   cv3qNzDQV9R8zhNx8nbIoAoKGAW/nI3Qxgz1f7gJb3S+hIxKMe3Qqxb3d
-   9s9GJsT6G3b6lMMCgJsuZmvPLlQG8e9GlH+ypZjUvnXGJkcKXUgCWwsAO
-   B1rM9svUGhU6sJ6/wuc4wZ8OP5YMNsWS3wRghLtF4fJ8AYX0N9nAP07SC
-   UsXAhI2M5FBcgzxP8bVomwIlPUF7K19HkE07MTPp51xx4WhIynfwlkGAt
-   g==;
-X-CSE-ConnectionGUID: ZRiuUzZOQLuO+6FkTc5vZA==
-X-CSE-MsgGUID: l2sWXrl6RlaSJx7YF09Fyg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="58713537"
-X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
-   d="scan'208";a="58713537"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 13:46:44 -0700
-X-CSE-ConnectionGUID: Edh5xGTmTE66Be3+Dn19tA==
-X-CSE-MsgGUID: U6a4JzrFSXWKHHMqUfcXSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
-   d="scan'208";a="138247911"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 30 Apr 2025 13:46:42 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAEKF-0003lJ-2v;
-	Wed, 30 Apr 2025 20:46:39 +0000
-Date: Thu, 1 May 2025 04:46:33 +0800
-From: kernel test robot <lkp@intel.com>
-To: Michal Simek <monstr@monstr.eu>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: arch/arm/boot/dts/xilinx/zynq-parallella.dtb: ethernet@e000b000
- (xlnx,zynq-gem): ethernet-phy@0: Unevaluated properties are not allowed
- ('marvell,reg-init' was unexpected)
-Message-ID: <202505010445.sF2xANeF-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Y2klBdci"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGpZnr016952;
+	Wed, 30 Apr 2025 20:47:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=UOCXB+K1u3MbVXD2qF/vOr
+	NCRP0e2g/X6jxL/1SKlS0=; b=Y2klBdciQlt59qafVaPvAWC5GenTXQrq4XHrJf
+	6t744UziAyrJkPIrVgoE73khlpUmi3IDlRMdqfZcrYHF++NUixJAVjcCFylgqUPE
+	Py/RHxnnwGKmxyNC4G/ic+EV1fYSrhEn8CUGbtCWoFaZ/oNbuQKRhQfJRbu+ObWg
+	s+Fuw8wS+n8BTVZDKls3Vgsmks6aw9CBctUJ5a4NStzzxWfU7F5XI2gdOJho8wbD
+	4cvWnGlRzq53zKfmSeUx0kPCTXhe8uUgayo7kNOULVkbw+E4h0WpACpeCtKMGIqQ
+	wYR/54fiPEpvxOWz4hhVpRE8Gxz5F63STvHXG/VKGZChN/eg==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6uabhkp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 20:47:07 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UKl6li015101
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 20:47:06 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 30 Apr 2025 13:47:02 -0700
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Subject: [PATCH v7 0/5] media: qcom: iris: add support for QCS8300
+Date: Thu, 1 May 2025 02:16:46 +0530
+Message-ID: <20250501-qcs8300_iris-v7-0-b229d5347990@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADaMEmgC/33RTW7DIBAF4KtYXpdqgOHPq96jqirAQ8MicWJcK
+ 1WUuxc7i6ZJlOUgvscbcWoLjZlK2zWndqQ5lzzs6mBemjZu/O6LWO7r3AoQCpBbdojFSoDPPOb
+ CjHdEGlBy9G0l+5FSPq5x7x+XeaTDd02dLod/oV2zRgqh2DTsc2Rla48K2Jo7c2BecBestwGN6
+ WazxAdfiMVhu81T13BEIVOUHuvNFFDqvvdWoQIpHUUREnc8SN0uRTa5TMP4s64587XJ441mzoB
+ pY5wI0oWa/Fbrx7yLr/XdNWoWz7ionBNwaVVwQO6eyysu5A2XlfeGHGjQhMrec7zmeMNxKU9aU
+ 49JB/OgvHrGVeWJc5sUqFiP77m+4hJuuGbLryVfv8JaI8R/fj6ffwF/TLjJbgIAAA==
+X-Change-ID: 20250418-qcs8300_iris-7a9ee604314a
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746046022; l=2887;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=npzUvgCq6J5Uc+G4nZ82LxxHvjyLO5RR5lEPUS1jOc4=;
+ b=tubdaf76r7A/PbsYiAKrnUp6tXUzsSkrAIdFMA60oUxmAAIj3TAjpIFwj+gMpIGvnPIDXDNtI
+ 7kwa1920b1vAoX3a2wT49da0FjF3CYXL8pQnZJJkiXpXfENmPs82yfe
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=BNizrEQG c=1 sm=1 tr=0 ts=68128c4b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
+ a=h97imd1RtcNJs7uGSNUA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDE1MSBTYWx0ZWRfX3CYbpdZlwFP0 7l9ujnmolwMqW5iF5mw2xzPl8QVqnjYh2m6p/6OCg0OW1aouYJAeu4ASsEJ6CMAzY3RUOUIZugA IvhUAq3SFmUJpM8eZTb8YyGaIxO6AMcaVLlc8i3fGSC6FoWniPz3EONYiTenpmrNrY6nuveXmjU
+ JPjR9MVl5TAdH9P9SkDTokTJX97R8RvxCQtbCKVGZ667lQ35H3KHPcvcznYCeOfe2ni7tLlbJgx dodlUsz0ybEG8Q1PbtAlpU0eva1VUgpWR5yekmvyXlmTuXys0GpiD/Zdyg56JV42J+goZHALd0a bpycKF0MLBB8POoDjZMfUI6GcffvHgHkKqS5Rv8JlDtIIup+GnmDyvdUhBWMtMPmp5reu0iTOKn
+ Q9Mc4oZc/lQrsz7FIEt92HNfGe53v98VTRMFncF3iekXE1BaVme1O72lXrfqnuZnVH2iLl+6
+X-Proofpoint-GUID: FK_sVxtzks8xmjBrOTUcxoIXUrhrZRFK
+X-Proofpoint-ORIG-GUID: FK_sVxtzks8xmjBrOTUcxoIXUrhrZRFK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 clxscore=1015 spamscore=0 adultscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300151
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   b6ea1680d0ac0e45157a819c41b46565f4616186
-commit: 876188600a261e867a6308cd30d01c2ab5c7bf48 ARM: zynq: Remove deprecated device_type property
-date:   3 months ago
-config: arm-randconfig-051-20250428 (https://download.01.org/0day-ci/archive/20250501/202505010445.sF2xANeF-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505010445.sF2xANeF-lkp@intel.com/reproduce)
+add support for video hardware acceleration on QCS8300 platform.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505010445.sF2xANeF-lkp@intel.com/
+This series depends on
+https://lore.kernel.org/all/20250417-topic-sm8x50-iris-v10-v7-1-f020cb1d0e98@linaro.org/
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: fpga-full (fpga-region): $nodename:0: 'fpga-full' does not match '^fpga-region(@.*|-([0-9]|[1-9][0-9]+))?$'
-   	from schema $id: http://devicetree.org/schemas/fpga/fpga-region.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: pmu@f8891000 (arm,cortex-a9-pmu): 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/arm/pmu.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: replicator (arm,coresight-static-replicator): 'clock-names', 'clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-static-replicator.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: /axi/adc@f8007100: failed to match any schema with compatible: ['xlnx,zynq-xadc-1.00.a']
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: /axi/i2c@e0004000/isl9305@68: failed to match any schema with compatible: ['isil,isl9305']
->> arch/arm/boot/dts/xilinx/zynq-parallella.dtb: ethernet@e000b000 (xlnx,zynq-gem): ethernet-phy@0: Unevaluated properties are not allowed ('marvell,reg-init' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/net/cdns,macb.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: /axi/slcr@f8000000: failed to match any schema with compatible: ['xlnx,zynq-slcr', 'syscon', 'simple-mfd']
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: /axi/slcr@f8000000/clkc@100: failed to match any schema with compatible: ['xlnx,ps7-clkc']
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: /axi/slcr@f8000000/rstc@200: failed to match any schema with compatible: ['xlnx,zynq-reset']
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: etb@f8801000 (arm,coresight-etb10): clock-names:1: 'atclk' was expected
-   	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-etb10.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: etb@f8801000 (arm,coresight-etb10): clock-names: ['apb_pclk', 'dbg_trc', 'dbg_apb'] is too long
-   	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-etb10.yaml#
-   arch/arm/boot/dts/xilinx/zynq-parallella.dtb: etb@f8801000 (arm,coresight-etb10): clocks: [[1, 27], [1, 46], [1, 47]] is too long
-   	from schema $id: http://devicetree.org/schemas/arm/arm,coresight-etb10.yaml#
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+Changes in v7:
+- Fix clock corner.
+- Link to v6: https://lore.kernel.org/r/20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com
 
+Changes in v6:
+- Address a comment related the commit title.
+- Link to v5: https://lore.kernel.org/r/20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+
+Changes in v5:
+- Fix order in dt bindings.
+- Drop an unrelated sentence from commit description.
+- Link to v4: https://lore.kernel.org/r/20250424-qcs8300_iris-v4-0-6e66ed4f6b71@quicinc.com
+
+Changes in v4:
+- Introduce a patch to fix existing order of compat strings.
+- Fix the order of header inclusions.
+- Link to v3: https://lore.kernel.org/r/20250423-qcs8300_iris-v3-0-d7e90606e458@quicinc.com
+
+Changes in v3:
+- Fix commit description to better describe about QCS8300.
+- Fix the order of the patch.
+- Collect the review tags.
+- Link to v2: https://lore.kernel.org/r/20250418-qcs8300_iris-v2-0-1e01385b90e9@quicinc.com
+
+Changes in v2:
+- Added dependent info in binding patch as well.
+- Fix a sparse error.
+- Link to v1: https://lore.kernel.org/r/20250418-qcs8300_iris-v1-0-67792b39ba21@quicinc.com
+
+---
+Vikash Garodia (5):
+      dt-bindings: media: qcom,sm8550-iris: document QCS8300 IRIS accelerator
+      media: iris: fix the order of compat strings
+      media: iris: add qcs8300 platform data
+      arm64: dts: qcom: qcs8300: add video node
+      arm64: dts: qcom: qcs8300-ride: enable video
+
+ .../bindings/media/qcom,sm8550-iris.yaml           |   1 +
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts          |   4 +
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi              |  71 ++++++++++++
+ .../platform/qcom/iris/iris_platform_common.h      |   1 +
+ .../media/platform/qcom/iris/iris_platform_gen2.c  |  57 ++++++++++
+ .../platform/qcom/iris/iris_platform_qcs8300.h     | 124 +++++++++++++++++++++
+ drivers/media/platform/qcom/iris/iris_probe.c      |  16 ++-
+ 7 files changed, 268 insertions(+), 6 deletions(-)
+---
+base-commit: 14423fc3a4a21fb436dda85450339ec2bf191b36
+change-id: 20250418-qcs8300_iris-7a9ee604314a
+prerequisite-change-id: 20250225-topic-sm8x50-iris-v10-a219b8a8b477:v7
+prerequisite-patch-id: afffe7096c8e110a8da08c987983bc4441d39578
+prerequisite-patch-id: b93c37dc7e09d1631b75387dc1ca90e3066dce17
+prerequisite-patch-id: b7b50aa1657be59fd51c3e53d73382a1ee75a08e
+prerequisite-patch-id: 30960743105a36f20b3ec4a9ff19e7bca04d6add
+prerequisite-patch-id: 2bba98151ca103aa62a513a0fbd0df7ae64d9868
+prerequisite-patch-id: 0e43a6d758b5fa5ab921c6aa3c19859e312b47d0
+prerequisite-patch-id: 35f8dae1416977e88c2db7c767800c01822e266e
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Vikash Garodia <quic_vgarodia@quicinc.com>
+
