@@ -1,171 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5032AEE1;
-	Wed, 30 Apr 2025 08:52:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24662DC768;
+	Wed, 30 Apr 2025 08:53:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003148; cv=none; b=aM5Bu52PLJj8ixrKM4zOzeeiGeAD9hD3Zk4pVzDrwLojlCJP66XqSrZRcyUoBlQiEHEAoQ/O1yIe5LeNiRwN3XIAzdMmQD3E6VxlGX8/ksLpyJYC8ZmfOXDJOGESiEpGyy5GJxury6C7nzN9Swg2Vhm92ZOFm7+eA7lHOAo1+hI=
+	t=1746003217; cv=none; b=XVDGF+OaHf8Yb9/hCTUBkDfwWQmtp68n7LP0sW2I8V3oZBUGuEJOEJokXDPagwhaydtdzwyblugfRj0Aa/KnyiIwA3r+79i6R3pcPk+F0NfHwt54B7czCMk/slYl1mTJ22/6PTx8cQ8uFNj0u06/b8Z7hJk7UkBcCuqymrZQp7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003148; c=relaxed/simple;
-	bh=7Cul/zndrL+/IVYzqfi6IU1dEFCIVPUdV6j259m69G4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=a4oZTvmYj4muIx0aZdlG6ovra7vXrM5qVXHWnealPI+18Sg07Fj/5XeJv/YR59LkXHH3wS/OwhcJl0Aq2x9Y5D6u6kIL5thYm3k0OSM16c0cHzu7wb7XbT/AUt1cfFvStCEW+Leo/FmY9ASkTcNdj2gUbLvDhi7+onYA/4fr8aU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m1lJ8wzZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746003217; c=relaxed/simple;
+	bh=f15OCVR+EgVtXpxgYG3btvR5hejOsTSTYr4Nk2wEQaE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=YVD4ykXwTjRaW5vWpBhaMGWH2z6kEi6kWooWcpSZdbhexSfMRlrrmYkYfIGSSuDMjh4o+WGpXrSr2SGhDT56ZUN8NET4Uz78I0aOtYx2q7KfyrWDrgnHoF927jNe4G7IL+4RfnsGo0TVp98Jy6ff6ogUKHIkPtOjK9Yxg7FVYg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QszeG2Me; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m1lJ8wzZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 941A3C4CEE9;
-	Wed, 30 Apr 2025 08:52:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QszeG2Me"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5B2C4CEED;
+	Wed, 30 Apr 2025 08:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746003148;
-	bh=7Cul/zndrL+/IVYzqfi6IU1dEFCIVPUdV6j259m69G4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m1lJ8wzZTPM8DhfyWr4/2HegX1ltD3jb9oyGwEsxQnggTzFu4BmhN+FDUo2zeu1RN
-	 giDLlf5a2a05M1NTM0TyNM+3EdxGFIjko0NcwuH8tmM4waxKh+taOw9pETLP/OGysx
-	 y6q41rNWMiXvecfuO5utnba6X+/RrlRRRG0Zyp779JD4OXsp8BT5vKLho9xhVLhP01
-	 L3pek8e8yF1Kz3U+jqQ8zO6NCEaQ1htsGbDQh30QnW28U8lUEpb18UeDTpFssre9i9
-	 UMhCihDPn7fYp+FgDTScyGj9IhAcqbLQNWIY9xOmFsozHxD0z0V8xLXR1vNNBZ07+D
-	 pBH9xsh9vL2PA==
-Date: Wed, 30 Apr 2025 09:52:20 +0100
-From: Simon Horman <horms@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Vladimir Oltean <vladimir.oltean@nxp.com>,
-	=?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>,
-	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	=?utf-8?Q?Nicol=C3=B2?= Veronese <nicveronese@gmail.com>,
-	mwojtas@chromium.org, Antoine Tenart <atenart@kernel.org>,
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Daniel Golle <daniel@makrotopia.org>,
-	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Subject: Re: [PATCH net-next v5 04/14] net: phy: dp83822: Add support for
- phy_port representation
-Message-ID: <20250430085220.GS3339421@horms.kernel.org>
-References: <20250425141511.182537-1-maxime.chevallier@bootlin.com>
- <20250425141511.182537-5-maxime.chevallier@bootlin.com>
+	s=k20201202; t=1746003216;
+	bh=f15OCVR+EgVtXpxgYG3btvR5hejOsTSTYr4Nk2wEQaE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=QszeG2MeJl8fAxvFg34GTAR/9H/i9BOOgrn/A0bd6zfjNkn4N5C5aUpYaivD6IxKP
+	 GJ6mmMqc9jTm/IcWhGNoms5AkOCbR1Fycg//B0nm4nZ3blndkfUNCDWO6chWuSZGud
+	 LwCONqLWOKzyu5Acp7NY2yAaTUYWSxBKdOXLvhCIsX7UBS9G5a4swthMHdJ79IHTkK
+	 p6kZbaQdCmrHFpOKFdj3RygNQ07qDou8u5YXWVFNdcM8ns+6S3fP+As/3EGJdaibRt
+	 hC4SCKFh83cfiCpsXrYaDDYV4+WLJCg3x0cVD85MKq/96afUbxNd3bo9j7FshZ6zLh
+	 SXqxbGqfKCCdQ==
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so1218574466b.3;
+        Wed, 30 Apr 2025 01:53:36 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCW2meCuXOtq1hZMjqx8dpQZ8lpeILJgY5PFakgBGOWOvEvyp7ndZJMzneGIk+njxnocRlBpIqXSlLDA4D8=@vger.kernel.org, AJvYcCWp5Tit3r5b4IsXqpAu5jM36odJ2qvdklVkwIpzj6CJqQwAt4KJfAEQAp8jOYVXgZnLeXwD1S3vVqEgJ+0ucYCh@vger.kernel.org, AJvYcCXwsOL2mdMQv8IznrPqkSIkb8b5KCkOyhQAIP6dxTBef0ToWQPG6yH5r7rpimkBQfXAmFMhKzGVbzYp8e1I@vger.kernel.org
+X-Gm-Message-State: AOJu0YyStbFOhJJ6g9liBrmLGlJFr7F6QKdB7AqMhJ5Haad9vOnPNUYM
+	5CTEBDYv/1WxYKi2st/doPfoYKX213x2N2zThPLLJZflK1Ld6rDkj4lWrs/TzLqvA32qghqh2HO
+	grJtPOWaDFneHvuS6Z8T4nhYbH7c=
+X-Google-Smtp-Source: AGHT+IH5ByFw77cLNg27eGSh6LJj24+g4XbE5qVSCGhzY8q8WePZkEcf91AFPzp7kbTaKwjZoUiQ7bhI3SukVRGZdLQ=
+X-Received: by 2002:a17:907:c23:b0:ac2:d0e6:2b99 with SMTP id
+ a640c23a62f3a-acee2404095mr189166066b.36.1746003215050; Wed, 30 Apr 2025
+ 01:53:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425141511.182537-5-maxime.chevallier@bootlin.com>
+References: <20250418093506.1349-1-zhaoqunqin@loongson.cn> <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
+ <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn> <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
+ <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
+In-Reply-To: <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Wed, 30 Apr 2025 16:53:24 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
+X-Gm-Features: ATxdqUHnwMshS9EfXAJbKH-dQtSwy2AQDOhU27KHQ7tHY_jE1Jkc_BiUaRaUdVM
+Message-ID: <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
+Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
+To: Qunqin Zhao <zhaoqunqin@loongson.cn>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, peterhuewe@gmx.de, 
+	jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
+	linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
+	pmenzel@molgen.mpg.de, Lee Jones <lee@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 04:14:57PM +0200, Maxime Chevallier wrote:
-> With the phy_port representation intrduced, we can use .attach_port to
-> populate the port information based on either the straps or the
-> ti,fiber-mode property. This allows simplifying the probe function and
-> allow users to override the strapping configuration.
-> 
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-> ---
->  drivers/net/phy/dp83822.c | 70 ++++++++++++++++++++++++---------------
->  1 file changed, 44 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/net/phy/dp83822.c b/drivers/net/phy/dp83822.c
-> index 490c9f4e5d4e..bbbe509f3bd9 100644
-> --- a/drivers/net/phy/dp83822.c
-> +++ b/drivers/net/phy/dp83822.c
-> @@ -11,6 +11,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/phy.h>
-> +#include <linux/phy_port.h>
->  #include <linux/netdevice.h>
->  #include <linux/bitfield.h>
->  
-> @@ -814,17 +815,6 @@ static int dp83822_of_init(struct phy_device *phydev)
->  	int i, ret;
->  	u32 val;
->  
-> -	/* Signal detection for the PHY is only enabled if the FX_EN and the
-> -	 * SD_EN pins are strapped. Signal detection can only enabled if FX_EN
-> -	 * is strapped otherwise signal detection is disabled for the PHY.
-> -	 */
-> -	if (dp83822->fx_enabled && dp83822->fx_sd_enable)
-> -		dp83822->fx_signal_det_low = device_property_present(dev,
-> -								     "ti,link-loss-low");
-> -	if (!dp83822->fx_enabled)
-> -		dp83822->fx_enabled = device_property_present(dev,
-> -							      "ti,fiber-mode");
-> -
->  	if (!device_property_read_string(dev, "ti,gpio2-clk-out", &of_val)) {
->  		if (strcmp(of_val, "mac-if") == 0) {
->  			dp83822->gpio2_clk_out = DP83822_CLK_SRC_MAC_IF;
-> @@ -953,6 +943,47 @@ static int dp83822_read_straps(struct phy_device *phydev)
->  	return 0;
->  }
->  
-> +static int dp83822_attach_port(struct phy_device *phydev, struct phy_port *port)
-> +{
-> +	struct dp83822_private *dp83822 = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
+On Wed, Apr 30, 2025 at 4:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
+> wrote:
+>
+>
+> =E5=9C=A8 2025/4/30 =E4=B8=8B=E5=8D=884:18, Herbert Xu =E5=86=99=E9=81=93=
+:
+> > On Wed, Apr 30, 2025 at 04:14:40PM +0800, Qunqin Zhao wrote:
+> >> Sorry to bother you, may i ask is it fine to move  the Security Engine=
+ base
+> >> driver[Patch v8 1/5] to drivers/crypto ?
+> >>
+> >> The base driver uses MFD  interface  to register child device(tpm, rng=
+) , as
+> >> done in
+> >>
+> >> "drivers/iio/common/ssp_sensors/ssp_dev.c" and
+> >> "drivers/firmware/xilinx/zynqmp.c".
+> >>
+> >> Thank you, and I look forward to hearing from you.
+> > I don't mind at this point in time.  But if this driver were to
+> > develop features way outside of the Crypto API in future then I
+> > may change my mind.
+>
+> Hi, Herbert, thanks for your reply.
+>
+> In future it just add child platform devices  name(sm2, sm3, sm4) to
+> "struct  mfd_cell engines".
+>
+>
+> Hi, Huaci
+>
+> Let's go via Herbert's crypto tree for the base driver patch under
+> drivers/crypto/loongson/,
+>
+> What do you think of it?
+In my opinion drivers/mfd is better, because another user is in
+drivers/char rather than drivers/crypto.
 
-Hi Maxime,
+But if moving to drivers/crypto is what Lee Jones wants, then everything is=
+ OK.
 
-A nit from my side:
+Huacai
 
-dev is unused if CONFIG_OF_MDIO is not defined.
-
-Perhaps it's scope can be reduced somehow.
-Or &phydev->mdio.dev can be used directly?
-Or the code guarded by CONFIG_OF_MDIO could be moved into a separate
-function that makes use if IS_ENABLED to return early if there is nothing
-to do (maybe the best option if possible, as it would increase compile
-coverage).
-Or ...
-
-> +	int ret;
-> +
-> +	if (port->mediums) {
-> +		if (phy_port_is_fiber(port))
-> +			dp83822->fx_enabled = true;
-> +	} else {
-> +		ret = dp83822_read_straps(phydev);
-> +		if (ret)
-> +			return ret;
-> +
-> +#ifdef CONFIG_OF_MDIO
-> +		if (dp83822->fx_enabled && dp83822->fx_sd_enable)
-> +			dp83822->fx_signal_det_low =
-> +				device_property_present(dev, "ti,link-loss-low");
-> +
-> +		/* ti,fiber-mode is still used for backwards compatibility, but
-> +		 * has been replaced with the mdi node definition, see
-> +		 * ethernet-port.yaml
-> +		 */
-> +		if (!dp83822->fx_enabled)
-> +			dp83822->fx_enabled =
-> +				device_property_present(dev, "ti,fiber-mode");
-> +#endif
-> +
-> +		if (dp83822->fx_enabled) {
-> +			port->lanes = 1;
-> +			port->mediums = BIT(ETHTOOL_LINK_MEDIUM_BASEF);
-> +		} else {
-> +			/* This PHY can only to 100BaseTX max, so on 2 lanes */
-> +			port->lanes = 2;
-> +			port->mediums = BIT(ETHTOOL_LINK_MEDIUM_BASET);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-...
+>
+>
+> BR, Qunqin.
+>
+> >
+> > Thanks,
+>
+>
