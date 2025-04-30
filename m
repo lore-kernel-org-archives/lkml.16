@@ -1,91 +1,114 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395CA21CC7B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A976021CFE0
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004819; cv=none; b=i+fWrf4mwZjoKwlNoP5zAaCgbYZhDrpadBZURkyMa0bliazASASSVjKL8RHwIaJ4SmrFqP9yUV4CNrZN3LF5DazCh3KYcrxOJbhw6xP6PicBitVI2blhfaBqxavLooI7b7qSKk1aJWAVWXgswWPYYvnwHSyehhu8iWNWqRDU+xU=
+	t=1746004820; cv=none; b=pVPqN+Ft9bDRVyBWlWcTFb9HxLx9zXwyFZVdx9vlUuAfAPVKYGbCWZDKcM2PReXui8nx5q9jk6MIbReYO4OXOKNEUyONbKLeFgaiGXJiYrK+AcMpU28C0CizHbY50b3ichhWheencJiLxwTac4S7q0n8StmwnCg4XaHweHtejSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004819; c=relaxed/simple;
-	bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Qiv9M4o6F9iqP6pMlCFwJZ3N/vrIv5Ycqg+uNd6EqqYCKpNe8UTapTOA5dPZY7LeV7dWkfZqEKJxpotTMEcjpwa2LjMOS45bVtigw8eqbqm/P7vgTrBJMrbPh/rdfVDHY9I5cVuQjlpCr1rYZen7oHBKtkw0GfmZNohmCrnPSog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t7yElAxE; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746004820; c=relaxed/simple;
+	bh=4XMu6PmWiKJtEbyVlX4KrB4GS+s4XTABtUWp9SpHQiQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=X2gCg01FRhE+A6jhG9cPfpaOexGV2OZh5nXsI4CnIbUahX4cbxUeENXRl3bxNbZr0HIDyri9OnvSfkgk4vwu48B7WUbD8OMGDtp7Btzixh/RuHL6ElBgON1T/ZDgAPr7eQBfuh3zQpqSSxt/FF6MqKEspqo7hrMdpAyUM0jWe5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=odcvcYZn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kquq+QO1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t7yElAxE"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43eed325461so37759725e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746004816; x=1746609616; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
-        b=t7yElAxEpb2DK6ImMDP/9m9hOYR1GxA7iBPossvLxDtq4MaIBsnjlquFyyENVrS7Ix
-         5FLGP3Ha0PIiTlHmJkEsQNYf1Sdi84j+tay89tYyxV+hk6xtnZ/B/fIoImxgmVGjFS6f
-         JoOr1fQ/bRquOTFap95XbXKDGBtNqzYLmU4zoVEVo9+wNRZ6bdrwBftrYDxq/9LhcRQc
-         tXTy+PQ4JFlG2AGQTV3B8/8PJ1w1MFazjcvgMy1zQacsYnkKa+A33FG9hmN6eqv8dXaE
-         9TfckXF9McUiNVzSm6U8nQ4Snk5d557yN69pLBPH7A0HoyXNU9vYPGfWRbLxdsepf4nw
-         krfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746004816; x=1746609616;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
-        b=qP9KBU/Ckdm1rsp+7stGj5iJ18+71gDZmIzYszbe1P6Vej6zCKrHZ8aC2yFexWD1xz
-         WH+WQTbm4LPJma3gCYdsj2WR3nZFrZgFmSmLi+wF9MLTCJIrXh9CYOe3K9ncdKpzZnap
-         c1W0mfe8IyW719ljIrhG8eNylAFVia5WpagtiQ1JuU9GcJJ4TSUfiJdEgvKY3En14dHz
-         3bRyRcuvurgkNgRj0pphLHGN9dW7IhrcW1EkusYVDCPikB0IFEfBZvSPTq4Ayv5Wv9ba
-         xFJmnBoOoVv8ityzdf/ZE2nzC00z45jvrfeQ9nspNDCH5IHAZxrTEWedFxzVYFhqxmuK
-         dazw==
-X-Forwarded-Encrypted: i=1; AJvYcCXs5nYXY7Qxt1GjSCjpmNoSC4CAL3DDo9BRyThsk8+wKuMzu7qqrFF3DCw2wBqWisFs9A9vyqNicvvnTOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyihTldFp0vXUm82z7qZa9rZX9t1bj4IhSk/rP4BY0JmCd+sQ8X
-	J/1HXaDwc9mI+aDYlH71Xv8dqwd3nHvqrvxGwXH/MsGteVSaA67TJeOzmjGNUa6C0wfUd7DFyCF
-	QDgS84mXaoCH0cw==
-X-Google-Smtp-Source: AGHT+IGoHxc+2SZHxc4L0RgBBwirzugsV5s2XYZKFutlol1D8M28Mep4MPuTr+1AXPcpMDInTumbJB61uQWaboI=
-X-Received: from wrbfu24.prod.google.com ([2002:a05:6000:25f8:b0:399:747a:bfb0])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a5d:64c7:0:b0:39c:1257:c96e with SMTP id ffacd0b85a97d-3a08ff55599mr1167194f8f.58.1746004816651;
- Wed, 30 Apr 2025 02:20:16 -0700 (PDT)
-Date: Wed, 30 Apr 2025 09:20:14 +0000
-In-Reply-To: <20250430-rust_unsafe_pinned-v2-2-fc8617a74024@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="odcvcYZn";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kquq+QO1"
+From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746004816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d925zDAc2kwfRYjdGcNdtwZzRyVS9rKiVQOcUxxA/Rg=;
+	b=odcvcYZnuikNZQL0qcN0xJ5CtI02ZNWkKxiWWPa0Ad7N18LkC3CQ+FetrC+UdScYC//i5U
+	mCL7lk/8CRdvYdd4YjL1sb5d5hM3LHEAdngRZk67EXt8S40C77f180yRkk4GG4QH+cgmF4
+	DEcIsEuKyxXxG6apDTwGtyUdpk8UqKr38z553TQO9tPRqm4zesGaPIbpOr1bgbngNcc31O
+	5QlShvanxG2utzLJmJHyFXTh2Fibee6CawliBrKfHUpCwg3zBGLibEAC/r75KRxzDBlNy5
+	aDEcljcmJiHauNHdz5tBfZZUBdZuOOZ7U5buJENEl/B5XcEi3YGxJQr67wB74Q==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746004816;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=d925zDAc2kwfRYjdGcNdtwZzRyVS9rKiVQOcUxxA/Rg=;
+	b=kquq+QO1AjUAsdKV+uxn/kzOsqePcd0L/V0SsrHjdlllIgJyjm459NiDdDAo4lmWXoLQnf
+	L90sE0YSHNjk0BBQ==
+Date: Wed, 30 Apr 2025 11:20:14 +0200
+Subject: [PATCH v2 2/2] vdso: Reject absolute relocations during build
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com> <20250430-rust_unsafe_pinned-v2-2-fc8617a74024@gmail.com>
-Message-ID: <aBHrTrdY0dnHZgFb@google.com>
-Subject: Re: [PATCH v2 2/3] rust: implement `Wrapper<T>` for `Opaque<T>`
-From: Alice Ryhl <aliceryhl@google.com>
-To: Christian Schrefl <chrisi.schrefl@gmail.com>
-Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, 
-	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250430-vdso-absolute-reloc-v2-2-5efcc3bc4b26@linutronix.de>
+References: <20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de>
+In-Reply-To: <20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de>
+To: Catalin Marinas <catalin.marinas@arm.com>, 
+ Will Deacon <will@kernel.org>, Nam Cao <namcao@linutronix.de>, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, 
+ Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, 
+ Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ Jan Stancek <jstancek@redhat.com>, 
+ =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746004814; l=2113;
+ i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
+ bh=4XMu6PmWiKJtEbyVlX4KrB4GS+s4XTABtUWp9SpHQiQ=;
+ b=Cqd1NFTPQfdv48z6vCZlhE04UKM1O0irx1jjUv8xwS3PLV6Of9e/QUlOWgHhTkT7jW2dZRCDI
+ 52v/1nA3ol5BBV5d+MbucP1kLfF+rFw3wczVF8rUcdcblECAskVVrgd
+X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
+ pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-On Wed, Apr 30, 2025 at 10:36:12AM +0200, Christian Schrefl wrote:
-> Moves the implementation for `pin-init` from an associated function
-> to the trait function of the `Wrapper` trait and extends the
-> implementation to support pin-initializers with error types.
->=20
-> This allows to declare functions that are generic over `Wrapper`
-> types.
->=20
-> Adds a use for the `Wrapper` trait in `revocable.rs`, to use the new
-> `pin-init` function. This is currently the only usage in the kernel.
->=20
-> Reviewed-by: Gerald Wisb=C3=B6ck <gerald.wisboeck@feather.ink>
-> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+All vDSO code needs to be completely position independent.
+Symbol references are marked as hidden so the compiler emits
+PC-relative relocations. However there are cases where the compiler may
+still emit absolute relocations, as they are valid in regular PIC DSO code.
+These would be resolved by the linker and will break at runtime.
 
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+Introduce a build-time check for absolute relocations.
+The check is done on the object files as the relocations will not exist
+anymore in the final DSO. As there is no extension point for the
+compilation of each object file, perform the validation in vdso_check.
+
+Debug information can contain legal absolute relocations and readelf can
+not print relocations from the .text section only. Make use of the fact
+that all global vDSO symbols follow the naming pattern "vdso_u_".
+
+Link: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
+Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
+Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+---
+ lib/vdso/Makefile.include | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/lib/vdso/Makefile.include b/lib/vdso/Makefile.include
+index cedbf15f80874d4bb27c097244bc5b11272f261c..04257d0f28c0ed324e31adbb68497181085752f8 100644
+--- a/lib/vdso/Makefile.include
++++ b/lib/vdso/Makefile.include
+@@ -12,7 +12,13 @@ c-getrandom-$(CONFIG_VDSO_GETRANDOM) := $(addprefix $(GENERIC_VDSO_DIR), getrand
+ #
+ # As a workaround for some GNU ld ports which produce unneeded R_*_NONE
+ # dynamic relocations, ignore R_*_NONE.
++#
++# Also validate that no absolute relocations against global symbols are present
++# in the object files.
+ quiet_cmd_vdso_check = VDSOCHK $@
+       cmd_vdso_check = if $(READELF) -rW $@ | grep -v _NONE | grep -q " R_\w*_"; \
+ 		       then (echo >&2 "$@: dynamic relocations are not supported"; \
++			     rm -f $@; /bin/false); fi && \
++		       if $(READELF) -rW $(filter %.o, $(real-prereqs)) | grep -q " R_\w*_ABS.*vdso_u_"; \
++		       then (echo >&2 "$@: absolute relocations are not supported"; \
+ 			     rm -f $@; /bin/false); fi
+
+-- 
+2.49.0
+
