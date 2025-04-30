@@ -1,221 +1,121 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E683158DAC
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:07:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB49B158DAC
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004082; cv=none; b=ACp47Ldu1E7UFJlVLv9MvBkF+EitYfX1u+ea40AKBCTOxzvBU7Xh0yUlbyoa9n7qjdnuDXYbCfFk3tWG55HCSn0lQB2amSCMI3Tzw8K37R2t2MtkhROBZAkXtUAh3B4m0lFwEl0gQ1luka2TPBysGlf8gAhIVSHcBFV6h6R4l6A=
+	t=1746004103; cv=none; b=qhO5NAqRPeY1XTNlW8jBHDo84ANsvq944z5AS+94KP5TEkMj8u9XwD3n8s8PT42ZqNP/pob7+SnLNTDEmc76e8/e9p/EuUuhqD0Vfx1AjrQ0nOHWOQVxgQzuuC/tw2bwpwms3rLq4DP+aToW+K0VixNPvGGBcqkLfKs6tUKAako=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004082; c=relaxed/simple;
-	bh=YkXF0tJVPRIT8nR1zEU00BoH1bBv1a6qrAvefgd+F4c=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bAe/bQhLpavONhFdAiV/oP/BAw1KaKw95BVdTT3UVAzVB5PW6PdEPi3FoVNTW2lNP7D9X+IhykUseV1B411yIL6fVJLzVyforKJnD2uNaqNAh9u8Um1s/kWFB+8mhApyEx/LFlAhbRoFNsxJl2omE9Utb0UcGhpU7DAS9qForek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.2.10.34])
-	by gateway (Coremail) with SMTP id _____8CxbWtq6BFo4v7KAA--.8581S3;
-	Wed, 30 Apr 2025 17:07:54 +0800 (CST)
-Received: from localhost.localdomain (unknown [10.2.10.34])
-	by front1 (Coremail) with SMTP id qMiowMBxLsdp6BForgKgAA--.14524S2;
-	Wed, 30 Apr 2025 17:07:53 +0800 (CST)
-From: Tianyang Zhang <zhangtianyang@loongson.cn>
-To: chenhuacai@kernel.org,
-	kernel@xen0n.name,
-	wanghongliang@loongson.cn,
-	yangtiezhu@loongson.cn
-Cc: loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Tianyang Zhang <zhangtianyang@loongson.cn>
-Subject: [PATCH V2] LoongArch:support CONFIG_SCHED_MC
-Date: Wed, 30 Apr 2025 17:07:51 +0800
-Message-Id: <20250430090751.24056-1-zhangtianyang@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	s=arc-20240116; t=1746004103; c=relaxed/simple;
+	bh=WQ06cfInUnLKA97xKzt5aHyl3AJCxltnuUTd24moQso=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sTXq+fYM3SyhWC6eG1LsaQ1eFnRWUS9oEpoCEYTsQWRZWKRVE1AAiSlNDd3DN6GTTjOF8dGcAt1MsCoiLN+8FhqY1pG7ZngSoIgvS69h9fKxxIJ3WAT6gSz4us2lAjBd5S6Wx/4Hwq/nS+/O/1WVD0NEoOMxE5QxPGKHMItS8Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu; spf=pass smtp.mailfrom=szeredi.hu; dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b=N/j9DK9t; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=szeredi.hu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="N/j9DK9t"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4769aef457bso101425911cf.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google; t=1746004098; x=1746608898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BhMpF9ZPTtusLyxadlrysDYthg/t1DJyaG/WQBBKCKw=;
+        b=N/j9DK9tPFPLqP2NlfnUrhIvVVKASGxMuyOpkWGPXogR0zrPQVK3sc4DmSjPFte/x5
+         owsOhnRhXDJOk8LJogAxkk2xrKkUIBh8prEpNDvF0+Xmf8GEB4+U/413k65waao1P3Du
+         8sP9t0VgXW5jTFaU+YCl4YzYAj4QD/o17RiLw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746004098; x=1746608898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BhMpF9ZPTtusLyxadlrysDYthg/t1DJyaG/WQBBKCKw=;
+        b=ZMVC1b7VnrfQscFTkQAAr3xNzPGSAVnz6sov90qwbHTf897qF2TPrpZSrfO2kb/4QJ
+         hQCoB0yG9SaTZXIPv7ld2MYE+cBMzEwV2wBnMTUUVGC4KIQ05lWOgoneEJT3+T/Mb43l
+         Gxi5P4n1KizBsmJZRYqjREXB406iWj69r1kTQuukebKuP+aVkdU69//gddrkP4fPPgoB
+         t/zYRy6KaPweK2CjYGMXvsWdipfBBH3FXF88MbxuiLfaoVTQ7yizu02gs+/W083L97jy
+         6yGAih21eUTiP9BIXzXa1j9M11mi17VXGop4cAb4LjDCO7IH41U9RZWDxkNlwqMD/YXQ
+         PGOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV1IL7oLcPSkj/n5EmDlgNG7DeMvDydHxp3fmqMJb6nhXViIByQRYEYfbGXOo7zc+Z60ExcEvhLbeefWrg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKgFNazD5IjtXLfmGdJn/ifZTXqbYL6R8A5Jz5tZ18n2VpHwaI
+	jZJPsjXcD6SvL0xPpUyjbKntncIhPvuvYNupUSrapP1GJqhrgMaTzQSaYr5Ne88MqNirzJ7g0Zs
+	hyhuTAsXDhKMxjJoPgB8gShIETYtn23ELsBnmwQ==
+X-Gm-Gg: ASbGncu8yGylVonTHzYFMyWoEbu252cWam6N7rG6p1vyZCdnb6+j1TFZDGzS3bHxGMf
+	9u90qAXSM0oS5Y2m3dhPG25ppNP7q+NlJrx8yBC81EZiL7NUnVzuU3F2BLY/aLeZRu+4KZP0Q5B
+	yajMniA/JUlxMfMy3a80HyrFW+XRxYzsMODr4O/pQ4L3g3PsdZdGSppPk=
+X-Google-Smtp-Source: AGHT+IGVG98iDSdK5lfsXQAEPtB0RBdUTnCRr6rYE2tT58B+Up30VLXz0bmholjrwMFdvFRX0rFvuoOuy5LcMubDIP0=
+X-Received: by 2002:a05:622a:544d:b0:476:aa36:d67c with SMTP id
+ d75a77b69052e-489c57f93f5mr39719451cf.49.1746004098321; Wed, 30 Apr 2025
+ 02:08:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMBxLsdp6BForgKgAA--.14524S2
-X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW3Ww1kAr18tFWUJryfXw1DJwc_yoW7Wr4Upr
-	nruFyrGrWrWFn3A390q3yruryrurn7Gr1Iqa13KFWfAFsrJw1UJr1vqF9IqF1UG39YqrWS
-	gr98GayFgay8X3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
-	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
-	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
-	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
-	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
-	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
-	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
+References: <20250429183850.211682-1-andrealmeid@igalia.com>
+In-Reply-To: <20250429183850.211682-1-andrealmeid@igalia.com>
+From: Miklos Szeredi <miklos@szeredi.hu>
+Date: Wed, 30 Apr 2025 11:08:06 +0200
+X-Gm-Features: ATxdqUEpofBZK62vFi7AqnDOQPvWYkOAMkHP_DpJNRC3xvO-qNFpo2CmpBv2h4k
+Message-ID: <CAJfpegv=CFjkAXLM26vFc0prGJ18aVeO3j_0LQSh290DQZn_+g@mail.gmail.com>
+Subject: Re: [PATCH] ovl: Fix nested backing file paths
+To: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+Cc: Amir Goldstein <amir73il@gmail.com>, linux-unionfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel-dev@igalia.com, 
+	John Schoenick <johns@valvesoftware.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: wanghongliang <wanghongliang@loongson.cn>
+On Tue, 29 Apr 2025 at 20:39, Andr=C3=A9 Almeida <andrealmeid@igalia.com> w=
+rote:
+>
+> When the lowerdir of an overlayfs is a merged directory of another
+> overlayfs, ovl_open_realfile() will fail to open the real file and point
+> to a lower dentry copy, without the proper parent path. After this,
+> d_path() will then display the path incorrectly as if the file is placed
+> in the root directory.
+>
+> This bug can be triggered with the following setup:
+>
+>  mkdir -p ovl-A/lower ovl-A/upper ovl-A/merge ovl-A/work
+>  mkdir -p ovl-B/upper ovl-B/merge ovl-B/work
+>
+>  cp /bin/cat ovl-A/lower/
+>
+>  mount -t overlay overlay -o \
+>  lowerdir=3Dovl-A/lower,upperdir=3Dovl-A/upper,workdir=3Dovl-A/work \
+>  ovl-A/merge
+>
+>  mount -t overlay overlay -o \
+>  lowerdir=3Dovl-A/merge,upperdir=3Dovl-B/upper,workdir=3Dovl-B/work \
+>  ovl-B/merge
+>
+>  ovl-A/merge/cat /proc/self/maps | grep --color cat
+>  ovl-B/merge/cat /proc/self/maps | grep --color cat
+>
+> The first cat will correctly show `/ovl-A/merge/cat`, while the second
+> one shows just `/cat`.
+>
+> To fix that, uses file_user_path() inside of backing_file_open() to get
+> the correct file path for the dentry.
+>
+> Co-developed-by: John Schoenick <johns@valvesoftware.com>
+> Signed-off-by: John Schoenick <johns@valvesoftware.com>
+> Signed-off-by: Andr=C3=A9 Almeida <andrealmeid@igalia.com>
 
-In order to achieve more reasonable load balancing behavior,
-support for SCHED_MC has been added.
-The LLC distribution of Loongarch now is consistent with numa-node,
-the balancing domain of SCHED_MC can effectively reduce the situation
-where processes are awakened to smt_sibling
+Perfect, thanks!
 
-Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
-Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
-Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
----
- arch/loongarch/Kconfig                |  9 ++++++
- arch/loongarch/include/asm/smp.h      |  1 +
- arch/loongarch/include/asm/topology.h |  8 +++++
- arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
- 4 files changed, 64 insertions(+)
+Added these:
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 1a2cf012b..3d6d129ee 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -456,6 +456,15 @@ config SCHED_SMT
- 	  Improves scheduler's performance when there are multiple
- 	  threads in one physical core.
- 
-+config SCHED_MC
-+	prompt "Multi-core scheduler support"
-+	depends on SMP
-+	default y
-+	help
-+	  Multi-core scheduler support improves the CPU scheduler's decision
-+	  making when dealing with multi-core CPU chips at a cost of slightly
-+	  increased overhead in some places.
-+
- config SMP
- 	bool "Multi-Processing support"
- 	help
-diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
-index b87d1d5e5..13955d726 100644
---- a/arch/loongarch/include/asm/smp.h
-+++ b/arch/loongarch/include/asm/smp.h
-@@ -26,6 +26,7 @@ extern int num_processors;
- extern int disabled_cpus;
- extern cpumask_t cpu_sibling_map[];
- extern cpumask_t cpu_core_map[];
-+extern cpumask_t cpu_llc_shared_map[];
- extern cpumask_t cpu_foreign_map[];
- 
- void loongson_smp_setup(void);
-diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/include/asm/topology.h
-index 50273c918..dfaf45d57 100644
---- a/arch/loongarch/include/asm/topology.h
-+++ b/arch/loongarch/include/asm/topology.h
-@@ -36,6 +36,14 @@ void numa_set_distance(int from, int to, int distance);
- #define topology_sibling_cpumask(cpu)		(&cpu_sibling_map[cpu])
- #endif
- 
-+/*
-+ * return cpus that shares the last level cache.
-+ */
-+static inline const struct cpumask *cpu_coregroup_mask(int cpu)
-+{
-+	return &cpu_llc_shared_map[cpu];
-+}
-+
- #include <asm-generic/topology.h>
- 
- static inline void arch_fix_phys_package_id(int num, u32 slot) { }
-diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
-index 4b24589c0..7b9e996a1 100644
---- a/arch/loongarch/kernel/smp.c
-+++ b/arch/loongarch/kernel/smp.c
-@@ -50,6 +50,9 @@ EXPORT_SYMBOL(cpu_sibling_map);
- cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
- EXPORT_SYMBOL(cpu_core_map);
- 
-+cpumask_t cpu_llc_shared_map[NR_CPUS] __read_mostly;
-+EXPORT_SYMBOL(cpu_llc_shared_map);
-+
- static DECLARE_COMPLETION(cpu_starting);
- static DECLARE_COMPLETION(cpu_running);
- 
-@@ -66,6 +69,10 @@ static cpumask_t cpu_sibling_setup_map;
- /* representing cpus for which core maps can be computed */
- static cpumask_t cpu_core_setup_map;
- 
-+/* representing cpus for which llc sibling maps can be computed */
-+static cpumask_t cpu_llc_shared_setup_map;
-+
-+
- struct secondary_data cpuboot_data;
- static DEFINE_PER_CPU(int, cpu_state);
- 
-@@ -102,6 +109,42 @@ static inline void set_cpu_core_map(int cpu)
- 	}
- }
- 
-+static inline bool cpus_are_shared_llc(int cpua, int cpub)
-+{
-+	if (cpu_to_node(cpua) != cpu_to_node(cpub))
-+		return false;
-+
-+	return true;
-+}
-+
-+static inline void set_cpu_llc_shared_map(int cpu)
-+{
-+	int i;
-+
-+	cpumask_set_cpu(cpu, &cpu_llc_shared_setup_map);
-+
-+	for_each_cpu(i, &cpu_llc_shared_setup_map) {
-+		if (cpus_are_shared_llc(cpu, i)) {
-+			cpumask_set_cpu(i, &cpu_llc_shared_map[cpu]);
-+			cpumask_set_cpu(cpu, &cpu_llc_shared_map[i]);
-+		}
-+	}
-+}
-+
-+static inline void clear_cpu_llc_shared_map(int cpu)
-+{
-+	int i;
-+
-+	for_each_cpu(i, &cpu_llc_shared_setup_map) {
-+		if (cpus_are_shared_llc(cpu, i)) {
-+			cpumask_clear_cpu(i, &cpu_llc_shared_map[cpu]);
-+			cpumask_clear_cpu(cpu, &cpu_llc_shared_map[i]);
-+		}
-+	}
-+
-+	cpumask_clear_cpu(cpu, &cpu_llc_shared_setup_map);
-+}
-+
- static inline void set_cpu_sibling_map(int cpu)
- {
- 	int i;
-@@ -406,6 +449,7 @@ int loongson_cpu_disable(void)
- #endif
- 	set_cpu_online(cpu, false);
- 	clear_cpu_sibling_map(cpu);
-+	clear_cpu_llc_shared_map(cpu);
- 	calculate_cpu_foreign_map();
- 	local_irq_save(flags);
- 	irq_migrate_all_off_this_cpu();
-@@ -573,6 +617,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	loongson_prepare_cpus(max_cpus);
- 	set_cpu_sibling_map(0);
- 	set_cpu_core_map(0);
-+	set_cpu_llc_shared_map(0);
- 	calculate_cpu_foreign_map();
- #ifndef CONFIG_HOTPLUG_CPU
- 	init_cpu_present(cpu_possible_mask);
-@@ -614,6 +659,7 @@ asmlinkage void start_secondary(void)
- 
- 	set_cpu_sibling_map(cpu);
- 	set_cpu_core_map(cpu);
-+	set_cpu_llc_shared_map(cpu);
- 
- 	notify_cpu_starting(cpu);
- 
--- 
-2.43.0
+    Fixes: def3ae83da02 ("fs: store real path instead of fake path in
+backing file f_path")
+    Cc: <stable@vger.kernel.org> # v6.7
 
+and pushed to ovl-next.
+
+Thanks,
+Miklos
