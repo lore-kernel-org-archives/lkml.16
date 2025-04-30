@@ -1,221 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A19B1B87E8;
-	Wed, 30 Apr 2025 21:19:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EC912DC79C;
+	Wed, 30 Apr 2025 21:21:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746047990; cv=none; b=T53IuMp//nwbhjrC+Pff1c9KO0pUDn9hTgBz0qRMCKvhsjGsEJB/HfTn1v1HjCS6FDbjgZtl1zsfuH3PhWDtl6HSYXsmtEHMrksTUidKipN0PtrzSY33i3EkeshGCphTlc6QqwFfOxMB9P9qbMBKMgvWNv4JligojpbujLRsFLs=
+	t=1746048078; cv=none; b=CpYAxID8D2gQJVf8OzVwvzTYygXJ6rEMSixk0qC/gRcAsEOzAMki0CNEh9rYa8em2AQ+ZaiA2jgjpaSw5fcBn9hfQTcaVdT3oN+CNWdLyHAP+DXcIfun7g97KL6Okom4D4QVT3/I1FnwNLC7AOYDdQot68+PtjxPLfR/DI91YMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746047990; c=relaxed/simple;
-	bh=Zh1g5NmzYNwkXg+SKcvvFymhyFnP4VBrEzUpUXaEi6M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RiJk9QfIEsDNgxO53IPCzVU4LK0W9U7kJzZTHckVyl3K+AiXoXHmFpYDMvjFMF+/YAElYVFoyurKDohdkXf+YsXXY1r6Ov2ABnQXiqxnNQ0YMqtY8SyKhWq/O4376l2CLwkXeUS4QcJzCvgVj75zOQu8k+2kvI/klPTkGgyXFhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vg2K3Cum; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746048078; c=relaxed/simple;
+	bh=Hjl/PzJ9OBwygFkBj0UZZ1ITO2bUymcG7qA5rdmdkPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Set3lKNkXa7KnBSxorpmBjNg50xFnb5+1Q8S/hcVJC5YZ3KdoucPzhptf+IYl0Rlg3qc7ZRpBcK72V/vS8PS3l2pySdrJAceoe0BLgnaIJczKF4BM/aW2/oHCfuehqD7eXH3w48EzpRjvdn+B+ZQzkTQueep7WOf8koXET+dLw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f7NQ9o8t; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vg2K3Cum"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E31C4CEE7;
-	Wed, 30 Apr 2025 21:19:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746047989;
-	bh=Zh1g5NmzYNwkXg+SKcvvFymhyFnP4VBrEzUpUXaEi6M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Vg2K3CumnLN9nnRerQEZDRg2R3e+Qn0BI/W+6N5+RN0xGwI3vOg71asshKdjOVQnw
-	 9DKNf8mlYlc1wad7HyRiWZGp9jXay3Y+4vvqfEGq29a+q6wJ5pClXegBBH/W9eyCyj
-	 hSb4sWoaJxiI28n1+mjHYwm6OqVbxrPkEmw4bSdMKIShD0di1JqVYenhhJyRA4y+9H
-	 /r33efJK/tN++qsow0d1O8AV5zd4u89ol0On98PXgUTbHvj9d8Zi+bNKLoYe4w/td/
-	 qtwtblUKIfDD7+mjqxGFjAvmcyY4kHA0qRG99+Nh028F4OWIofuhJA1DLptGk/G9hy
-	 NKh845kHJB1bw==
-Date: Wed, 30 Apr 2025 14:19:46 -0700
-From: Kees Cook <kees@kernel.org>
-To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Dan Williams <dan.j.williams@intel.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH v2][next] acpi: nfit: intel: Avoid multiple
- -Wflex-array-member-not-at-end warnings
-Message-ID: <202504301400.3B1EACEB@keescook>
-References: <Z-QpUcxFCRByYcTA@kspp>
- <67e55ac4dfa2e_13cb29410@dwillia2-mobl3.amr.corp.intel.com.notmuch>
- <df338a70-fdfc-427e-9915-8b9e50de93ad@embeddedor.com>
- <c4828c41-e46c-43c9-a73a-38ce8ab2c1c4@embeddedor.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f7NQ9o8t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746048077; x=1777584077;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=Hjl/PzJ9OBwygFkBj0UZZ1ITO2bUymcG7qA5rdmdkPk=;
+  b=f7NQ9o8t2h2rfwkSfYvTMtHanlw1Q4UHcgK32FJ09GaPfZ5LT90Cf3ha
+   AyXNCGExVdkdGRWq8uxS49QzEXTUAvM8zZqc/iTWcmlInWSOr18enU4ga
+   L8dMfuTEq0+PgrouH+Qte7m1XDKm5D1t597AHFTxs3QDbmCKDKHsT6ac8
+   9gLo0dZZmmXgW+Y6S7tD4fd2WakCPC0u9KpLC468sIHwoOTtQX7uwnB2l
+   uwMdLDfNTOTihCBlh1eUSyHIesCHHGBAVHeRXlJhKrY0YEYAKZFBfCqWa
+   FOt0/sF+GEmBnajkiIb3u+VAOdteB4fxqaW4CuWZ6EpENAOWL6ECnlMsU
+   A==;
+X-CSE-ConnectionGUID: MUlwXpyMTdKtZnj5TnUzbw==
+X-CSE-MsgGUID: 8Mxp7/FvS1WP4y3gkDWPeg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="65257531"
+X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
+   d="scan'208";a="65257531"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 14:21:15 -0700
+X-CSE-ConnectionGUID: 3Sm4mRWpQ5qzLS5mef5mqw==
+X-CSE-MsgGUID: +dnr9V/CQUC8y/UfObSuHQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
+   d="scan'208";a="133972268"
+Received: from agladkov-desk.ger.corp.intel.com (HELO debox1-desk4.lan) ([10.125.110.57])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 14:21:15 -0700
+From: "David E. Box" <david.e.box@linux.intel.com>
+To: linux-kernel@vger.kernel.org,
+	platform-driver-x86@vger.kernel.org,
+	david.e.box@linux.intel.com,
+	srinivas.pandruvada@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	ilpo.jarvinen@linux.intel.com,
+	tony.luck@intel.com,
+	xi.pardee@linux.intel.com
+Cc: hdegoede@redhat.com
+Subject: [PATCH 01/15] MAINTAINERS: Add link to documentation of Intel PMT ABI
+Date: Wed, 30 Apr 2025 14:20:50 -0700
+Message-ID: <20250430212106.369208-2-david.e.box@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250430212106.369208-1-david.e.box@linux.intel.com>
+References: <20250430212106.369208-1-david.e.box@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c4828c41-e46c-43c9-a73a-38ce8ab2c1c4@embeddedor.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 02:07:24PM -0600, Gustavo A. R. Silva wrote:
-> 
-> 
-> On 30/04/25 13:41, Gustavo A. R. Silva wrote:
-> > 
-> > 
-> > On 27/03/25 08:03, Dan Williams wrote:
-> > > Gustavo A. R. Silva wrote:
-> > > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> > > > getting ready to enable it, globally.
-> > > > 
-> > > > Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
-> > > > a flexible structure where the size of the flexible-array member
-> > > > is known at compile-time, and refactor the rest of the code,
-> > > > accordingly.
-> > > > 
-> > > > So, with these changes, fix a dozen of the following warnings:
-> > > > 
-> > > > drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> > > > 
-> > > > Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> > > > ---
-> > > > Changes in v2:
-> > > >   - Use DEFINE_RAW_FLEX() instead of __struct_group().
-> > > > 
-> > > > v1:
-> > > >   - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
-> > > > 
-> > > >   drivers/acpi/nfit/intel.c | 388 ++++++++++++++++++--------------------
-> > > >   1 file changed, 179 insertions(+), 209 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> > > > index 3902759abcba..114d5b3bb39b 100644
-> > > > --- a/drivers/acpi/nfit/intel.c
-> > > > +++ b/drivers/acpi/nfit/intel.c
-> > > > @@ -55,21 +55,17 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
-> > > >   {
-> > > >       struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> > > >       unsigned long security_flags = 0;
-> > > > -    struct {
-> > > > -        struct nd_cmd_pkg pkg;
-> > > > -        struct nd_intel_get_security_state cmd;
-> > > > -    } nd_cmd = {
-> > > > -        .pkg = {
-> > > > -            .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> > > > -            .nd_family = NVDIMM_FAMILY_INTEL,
-> > > > -            .nd_size_out =
-> > > > -                sizeof(struct nd_intel_get_security_state),
-> > > > -            .nd_fw_size =
-> > > > -                sizeof(struct nd_intel_get_security_state),
-> > > > -        },
-> > > > -    };
-> > > > +    DEFINE_RAW_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-> > > > +            sizeof(struct nd_intel_get_security_state));
-> > > > +    struct nd_intel_get_security_state *cmd =
-> > > > +            (struct nd_intel_get_security_state *)nd_cmd->nd_payload;
-> > > >       int rc;
-> > > > +    nd_cmd->nd_command = NVDIMM_INTEL_GET_SECURITY_STATE;
-> > > > +    nd_cmd->nd_family = NVDIMM_FAMILY_INTEL;
-> > > > +    nd_cmd->nd_size_out = sizeof(struct nd_intel_get_security_state);
-> > > > +    nd_cmd->nd_fw_size = sizeof(struct nd_intel_get_security_state);
-> > > 
-> > > Can this keep the C99 init-style with something like (untested):
-> > > 
-> > > _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-> > >               sizeof(struct nd_intel_get_security_state), {
-> > >         .pkg = {
-> > >                 .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> > >                 .nd_family = NVDIMM_FAMILY_INTEL,
-> > >                 .nd_size_out =
-> > >                         sizeof(struct nd_intel_get_security_state),
-> > >                 .nd_fw_size =
-> > >                         sizeof(struct nd_intel_get_security_state),
-> > >         },
-> > >     });
-> > > 
-> > > 
-> > > ?
-> > 
-> > The code below works - however, notice that in this case we should
-> > go through 'obj', which is an object defined in _DEFINE_FLEX().
-> > 
-> >          _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-> >                          sizeof(struct nd_intel_get_security_state), = {
-> >                  .obj = {
-> >                          .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> >                          .nd_family = NVDIMM_FAMILY_INTEL,
-> >                          .nd_size_out =
-> >                                  sizeof(struct nd_intel_get_security_state),
-> >                          .nd_fw_size =
-> >                                  sizeof(struct nd_intel_get_security_state),
-> >                  },
-> >          });
-> > 
-> 
-> Now, I can modify the helper like this:
-> 
-> diff --git a/include/linux/overflow.h b/include/linux/overflow.h
-> index 69533e703be5..170d3cfe7ecc 100644
-> --- a/include/linux/overflow.h
-> +++ b/include/linux/overflow.h
-> @@ -404,7 +404,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->         union {                                                                 \
->                 u8 bytes[struct_size_t(type, member, count)];                   \
->                 type obj;                                                       \
-> -       } name##_u initializer;                                                 \
-> +       } name##_u = { .obj initializer };                                      \
->         type *name = (type *)&name##_u
+Add a link to the documentation for the Intel Platform Monitoring
+Technology ABI in Documentation/ABI/testing/sysfs-class-intel_pmt
 
-Ah yeah, nice. That could work!
+Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index be2f100d7f4b..bd9f99585894 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12180,6 +12180,7 @@ F:	include/linux/mfd/intel_soc_pmic*
+ INTEL PMT DRIVERS
+ M:	David E. Box <david.e.box@linux.intel.com>
+ S:	Supported
++F:	Documentation/ABI/testing/sysfs-class-intel_pmt
+ F:	drivers/platform/x86/intel/pmt/
+=20
+ INTEL PRO/WIRELESS 2100, 2200BG, 2915ABG NETWORK CONNECTION SUPPORT
+--=20
+2.43.0
 
-I wish we could make it more idiomatic, but even if we pushed the
-initializer to the end, we have to repeat the type...
-
-#define _DEFINE_FLEX(type, name, member, count, initializer...)                 \
-        _Static_assert(__builtin_constant_p(count),                             \
-                       "onstack flex array members require compile-time const count"); \
-        union {                                                                 \
-                u8 bytes[struct_size_t(type, member, count)];                   \
-                type obj;                                                       \
-        } name##_u = { };                                                       \
-        type *name = (type *)&name##_u;						\
-	*name
-
-
-	_DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
-		     sizeof(struct nd_intel_get_security_state))
-	= (struct nd_cmd_pkg){
-		.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-		.nd_family = NVDIMM_FAMILY_INTEL,
-		.nd_size_out =
-			sizeof(struct nd_intel_get_security_state),
-		.nd_fw_size =
-			sizeof(struct nd_intel_get_security_state),
-	};
-
-So, I think what you have is more readable (or perhaps less surprising),
-even if a little "weird". :)
-
-> 
->  /**
-> 
-> and then we can use the helper as follows:
-> 
->         _DEFINE_FLEX(struct nd_cmd_pkg, nd_cmd, nd_payload,
->                         sizeof(struct nd_intel_get_security_state), = {
->                         .nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
->                         .nd_family = NVDIMM_FAMILY_INTEL,
->                         .nd_size_out =
->                                 sizeof(struct nd_intel_get_security_state),
->                         .nd_fw_size =
->                                 sizeof(struct nd_intel_get_security_state),
->         });
-> 
-> OK, I'll go and update the helper.
-
-Sounds good!
-
--Kees
-
--- 
-Kees Cook
