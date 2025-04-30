@@ -1,111 +1,185 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9F462135BC
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:07:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737AD1C8632;
+	Wed, 30 Apr 2025 08:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000447; cv=none; b=TmbTXDd+rva/SgpLjJ5NXyMRVj4udn2s5dkv2pOIuQXRn+w/bXvRSJVrZ5U3Zuxns84IlRcynxBHeIQiz5Tu/zf2VYqAa21bLrNpYoFLvPU/+bRANkP8MsGdwI3dZxemy0t3iPxHyGbeGFZFIJS+Wuh2KrnyyIZeGw1Gb8LI7XU=
+	t=1746000498; cv=none; b=fu5+cx3s34/hvTcGKz3aT4DezLHVkfb4j5aoxFKaD+7JPtycVFWM8ABEEU2yKo+FvU1eHfWUch6Eyro271PKv2Hpy9s5Dub9nE3KoTG73p6sPnErzYwDBZSMTy98deHt6m5UfVQ5GZmfPHYy4oZ8o7HZWU+vScE9DWazv2wRQqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000447; c=relaxed/simple;
-	bh=TwBAWvhA2LMsfzhyPe3YteWvIvV7NRQQgO+b0MIyY2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=PbKcwOg7djaWmHS3v4m3etD2Xqb/U0ggmJWUK10/1mZc+nVGicRvW2+WqpjPcGaVYtnJL/669pmHch2WrA+3g2TVfvsKuHvridSVZK48mAAEWyFi83ZB+4K1c2Lb3UJwgIYPaDRpyUSGMyEts+dn+/sM1vUMcmddCVYxoqgMQgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hU94Xi0V; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746000498; c=relaxed/simple;
+	bh=pCUgXguQq1vRA4bGkjweAQOtL40q6Ryp+ab88vmfA3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvIWHujZr0v8dVsJDJUybpMrEchawOQDA6pHYoNPYQuTbVBL5zwf4Dx0TqcjO7s3kN0u/L9MAGWFn424NfL+fb01RSRNKYygXFMMYbcsdvsD03HlqH+ia4te/Isf6C5eLJhnQoJCk59U2SNS7T854ex8jxFPx8b30kZ7U/Euz34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PEhvhvQH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hU94Xi0V"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so35280595e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:07:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746000444; x=1746605244; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uc9OCM7ZIzJpNzeChHt6JK3Q3WLBO25WpfMZPcs6ME4=;
-        b=hU94Xi0VZ1VYHLijxt+hy0dhmt+OGjjL/bmcMkTMS5IA0+V04UBj6y/JHuDEyBN5Yg
-         t3e0x+8LRgy71mJZSwNrdnMwewNasb7SKcCt4XkfMn7Ar5GhYdfh7HlQyyuHpzuLTlbQ
-         ikG54sfa13kbbbKbX+C1CgJdWY1SJk+N99uBrmlIRolKabm4Td6iXtNuFdwg4nD9mw99
-         4rvsQklhXAikRXcwMokReJ1cjZ2TF12jKGF+Adb4KBUwQN46GFa0ASPL3I+FTDIgMRk4
-         Qd93TSZlKWjqlbgdztkyE/S7r39kJZFdMle6/gy1lG2lPA4c3NK2JdDrpSGbPpWx/bV+
-         nbRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000444; x=1746605244;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uc9OCM7ZIzJpNzeChHt6JK3Q3WLBO25WpfMZPcs6ME4=;
-        b=AX1nzHKL6pp1MhWmlVfGbkxy9tZAlYINfbEbLPolBE4ClAQQ50C1pl3mrrkFSdRRIV
-         HT7x9bN4PV+25Re+xFYgjHOnBpPF5CVD9LdUu/aULFZekFCfHaEWZjJ0G2NmEifPrZJY
-         1oyT5pKs0RI1AOoWZ9VlI+9iuNbKtjRnpLA6S+kmGV0DvziwCIhMfZm9Z6LSN8oC1fQe
-         YO7XByVUxDucbHTYXfNaefo1EcMF/0QZ594Z/0LpD3+mX0R/9j72PpUnBmzeAj5TTYdO
-         d2Qn5Quu6yH8h6oyIK2IVWBxH+2iooJKT0hrLR98bMwUsmyFsYb1a3h38ShbRfcRHp1b
-         mV/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUX+A7U8NFmAfAbuqPbVgf1/QXpKp+wyE2HJbwdB8/focNb2fFmosuRnK7EI8o9YcX0Vf2y0P7p+ZgblQI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWr1P3d1sW5PgxoFn9+TkDlkaYBwVY8GrE2EFKjFaND2KK4ezw
-	q6Ju0+cEyxrHP7CO5rdxqU2YhzjODzKHJkxFSZQMRTVwM6bN1x1G1tDtxPkJapQ=
-X-Gm-Gg: ASbGncvKsYfNMRskeNhZGcT0CNZbhanr5odey1+kQCbVPiFEkw+7KM/VLw5S5A+yul2
-	mNnKA4J7j3NPgYXVbxSLUz/Ol2yU7K1TUT/kcXnN0XF4DK7HFUBXCq/XD9xr0scdqMS897LexQs
-	nYKZaWMpq+dnM4KuqMkxgjOl//lZoqI9tor2oXZQ638xo8zPa3WdeYLizAsJ4raYu66saBmWXE5
-	nCGeeGkrLRxwS4InD4LDOgbRB9lB8dgN9ayw/H6lRblriStt+b2qt6ODs9fWwxMSJePQJdAH+bV
-	L2H3u8STWRHJf+wXzA7QNtaMcyGNLFodD34r9IQC5n/A8g==
-X-Google-Smtp-Source: AGHT+IHu/zka1ZNTIDULuYu0Lh1rRpwgaoOIaY8sTkizKLpXGbJF9/FHIhltJWjgeRoIv/Od3HWxDQ==
-X-Received: by 2002:a05:600c:4e8f:b0:43c:fceb:91a with SMTP id 5b1f17b1804b1-441b1f35811mr16919135e9.11.1746000444147;
-        Wed, 30 Apr 2025 01:07:24 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2aecc20sm15588745e9.13.2025.04.30.01.07.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:07:23 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:07:20 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] OPP: core: Fix loop in dev_pm_opp_sync_regulators()
-Message-ID: <aBHaOOE8xHTsMap2@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PEhvhvQH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2C6EC4CEE9;
+	Wed, 30 Apr 2025 08:08:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746000498;
+	bh=pCUgXguQq1vRA4bGkjweAQOtL40q6Ryp+ab88vmfA3g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PEhvhvQHG4rVvDgSY5YEAlvFdlFIjPoEwklqHK2oVDFFscI9oOnH22AFxtXXETEug
+	 iHnVYvMe+t+mjmLvvnbJk0leb+R0US2frAqv3Vo0Rnx1IyUcFzc8Xz+JP/Vc4AgrWv
+	 c48oqzjYkbO2MbC5RCNzUEKgl16x3n093ezpE/HgkfVb2/a5ZQ/gaNtVmMRl6YrsgT
+	 Ek//OIPQJU/El1by4jlyMox7RQIViSupPPfGsNTCUePuh0N0KYiCkq3fsOplC3fn9+
+	 O9mkEGg517iIKGWX+UDcBJI+SdNy3IDIcjLt6YoA/frBd8zWVSzwqyzDqDrFOqkQvK
+	 BJdFA6k3dyQZw==
+Date: Wed, 30 Apr 2025 10:08:14 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>, 
+	Inki Dae <inki.dae@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, 
+	Seung-Woo Kim <sw0312.kim@samsung.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Jagan Teki <jagan@amarulasolutions.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
+	Douglas Anderson <dianders@chromium.org>, Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Anusha Srivatsa <asrivats@redhat.com>, Paul Kocialkowski <paulk@sys-base.io>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Hui Pu <Hui.Pu@gehealthcare.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, dri-devel@lists.freedesktop.org, asahi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	platform-driver-x86@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	freedreno@lists.freedesktop.org, linux-stm32@st-md-mailman.stormreply.com, 
+	Adam Ford <aford173@gmail.com>, Adrien Grassein <adrien.grassein@gmail.com>, 
+	Aleksandr Mishin <amishin@t-argos.ru>, Andy Yan <andy.yan@rock-chips.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Benson Leung <bleung@chromium.org>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, Christoph Fritz <chf.fritz@googlemail.com>, 
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>, Detlev Casanova <detlev.casanova@collabora.com>, 
+	Dharma Balasubiramani <dharma.b@microchip.com>, Guenter Roeck <groeck@chromium.org>, 
+	Heiko Stuebner <heiko@sntech.de>, Jani Nikula <jani.nikula@intel.com>, Janne Grunau <j@jannau.net>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Jesse Van Gavere <jesseevg@gmail.com>, 
+	Kevin Hilman <khilman@baylibre.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+	Liu Ying <victor.liu@nxp.com>, Manikandan Muralidharan <manikandan.m@microchip.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Phong LE <ple@baylibre.com>, 
+	Sasha Finkelstein <fnkl.kernel@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, 
+	Sui Jingfeng <sui.jingfeng@linux.dev>, Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
+	Vitalii Mordan <mordan@ispras.ru>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>, Hans de Goede <hdegoede@redhat.com>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Hsin-Te Yuan <yuanhsinte@chromium.org>, 
+	Pin-yen Lin <treapking@chromium.org>, Xin Ji <xji@analogixsemi.com>, Aradhya Bhatia <a-bhatia1@ti.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Ian Ray <ian.ray@ge.com>, 
+	Martyn Welch <martyn.welch@collabora.co.uk>, Peter Senna Tschudin <peter.senna@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Herve Codina <herve.codina@bootlin.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Bjorn Andersson <quic_bjorande@quicinc.com>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Helge Deller <deller@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
+	Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Philippe Cornu <philippe.cornu@foss.st.com>, 
+	Raphael Gallais-Pou <raphael.gallais-pou@foss.st.com>, Yannick Fertre <yannick.fertre@foss.st.com>, 
+	=?utf-8?B?TWHDrXJh?= Canal <mcanal@igalia.com>, Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Alain Volmat <alain.volmat@foss.st.com>, 
+	Raphael Gallais-Pou <rgallaispou@gmail.com>, Michal Simek <michal.simek@amd.com>
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+Message-ID: <20250430-arrogant-marmoset-of-justice-92ced3@houat>
+References: <20250424-drm-bridge-convert-to-alloc-api-v2-0-8f91a404d86b@bootlin.com>
+ <174591887152.961603.7706063017853945511.b4-ty@bootlin.com>
+ <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="o2svn3fbdbsdr4ij"
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <832a9db0-cf8a-4d35-8a98-08053fbd6723@bootlin.com>
 
-We accidentally deleted the if statement in this loop during a cleanup.
-Add it back.
 
-Fixes: 5330d0dab736 ("OPP: Define and use scope-based cleanup helpers")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/opp/core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+--o2svn3fbdbsdr4ij
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: (subset) [PATCH v2 00/34] drm: convert all bridges to
+ devm_drm_bridge_alloc()
+MIME-Version: 1.0
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index fc9874946453..f56ddae35ef2 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -2889,7 +2889,7 @@ int dev_pm_opp_sync_regulators(struct device *dev)
- {
- 	struct opp_table *opp_table __free(put_opp_table);
- 	struct regulator *reg;
--	int i;
-+	int i, ret;
- 
- 	/* Device may not have OPP table */
- 	opp_table = _find_opp_table(dev);
-@@ -2906,7 +2906,9 @@ int dev_pm_opp_sync_regulators(struct device *dev)
- 
- 	for (i = 0; i < opp_table->regulator_count; i++) {
- 		reg = opp_table->regulators[i];
--		return regulator_sync_voltage(reg);
-+		ret = regulator_sync_voltage(reg);
-+		if (ret)
-+			return ret;
- 	}
- 
- 	return 0;
--- 
-2.47.2
+On Tue, Apr 29, 2025 at 02:41:42PM +0200, Louis Chauvet wrote:
+> Le 29/04/2025 =E0 11:27, Louis Chauvet a =E9crit=A0:
+> >=20
+> > On Thu, 24 Apr 2025 20:59:07 +0200, Luca Ceresoli wrote:
+> > > devm_drm_bridge_alloc() [0] is the new API to allocate and initialize=
+ a DRM
+> > > bridge, and the only one supported from now on. It is also necessary =
+for
+> > > implementing reference counting and thus needed to support removal of
+> > > bridges from a still existing DRM pipeline without use-after-free.
+> > >=20
+> > > This series converts all DRM bridges to the new API.
+> > >=20
+> > > [...]
+> >=20
+> > Applied, thanks!
+> >=20
+> > [02/34] platform: arm64: acer-aspire1-ec: convert to devm_drm_bridge_al=
+loc() API
+> >          commit: 411465d35bc56877c33e2498ac697acfcf484e6b
+> > [03/34] drm/bridge: analogix-anx6345: convert to devm_drm_bridge_alloc(=
+) API
+> >          commit: 53ddeb25159781b029fda404226af600e76f975f
+> > [06/34] drm/bridge: display-connector: convert to devm_drm_bridge_alloc=
+() API
+> >          commit: 4e90a3d96a6185e143041273f9867a1092dd4a71
+> > [07/34] drm/bridge: lt9611uxc: convert to devm_drm_bridge_alloc() API
+> >          commit: 6287ffd9eff6eea65865e64b9d4c45e115fa5ecf
+> > [11/34] drm/bridge: dw-hdmi: convert to devm_drm_bridge_alloc() API
+> >          commit: ed6987b674185873ebed7a619a646da6dd1a78fa
+> > [12/34] drm/bridge: tda998x: convert to devm_drm_bridge_alloc() API
+> >          commit: 7fe58bf1a9a24b533875c262a3222581a3f759e4
+> > [13/34] drm/bridge: ti-sn65dsi86: convert to devm_drm_bridge_alloc() API
+> >          commit: a4754ae9cfa76fbce79f023c268a5bac56f36321
+> > [14/34] drm/exynos: mic: convert to devm_drm_bridge_alloc() API
+> >          commit: 91c5c7b5bb2dd09b43b025bce6d790d3c79f4518
+>=20
+> Hello all,
+>=20
+> I made a mistake while applying those patches. Instead of taking
+> 2-3,11-13,15-18,27,31, I took 2-3,11-18,27,31, which includes the patch 1=
+4.
+>=20
+> This patch is not R-by/A-by/SoB by non-Bootlin people. For me, the patch =
+is
+> correct, it does not break the build nor generate warnings.
+>=20
+> What should I do? Is my SoB sufficient, or should I revert the patch and
+> wait for R/A-by before taking it again?
 
+It's worse: just like msm, it was never supposed to be applied in
+drm-misc, exynos has its own git tree.
+
+Inki, Kyungmin, Seung-Woo, sorry for the mishap. Do you agree with the
+following patch, and it going through drm-misc?
+
+https://lore.kernel.org/dri-devel/20250424-drm-bridge-convert-to-alloc-api-=
+v2-14-8f91a404d86b@bootlin.com/
+
+If not, we'll revert.
+
+Maxime
+
+--o2svn3fbdbsdr4ij
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaBHaaAAKCRAnX84Zoj2+
+dnenAYDBZr6cr88AokBU5IxJIO545Bob3jJW0+AX0AYDOu8icKftnZn/muxH1K/2
+mlgois4Bf2nfOosRvUT+FqHEb3CHJCluDubGG9J2EVzCRjRyMKIJ+yKyJ5VGB4cE
+N6ZGUBWZvg==
+=3YXQ
+-----END PGP SIGNATURE-----
+
+--o2svn3fbdbsdr4ij--
