@@ -1,122 +1,322 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7EA276049
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:41:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6276C14AD2D
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038515; cv=none; b=mWGEm7mAZk5HKePPo0OvCfojAmlr7nRFoJLocq/L56YKMxUPKBZttNHsjDWEBSVRrTm9tp/htgluFpKSzu0xGIM8IsZyBemVRLJeNajLxnUfYIxIwLIX/2rXSNBBrqgfdrAQmVlkh7kqYLVOn8KKFMppIgC8KFhhL631gIyYFeU=
+	t=1746038542; cv=none; b=qnDppSKGpImiCUBDwdIQkr7QsgnDG+Izr7s8Pu9Gy3hWq5aRatlsnu8sRCROqQoKA2+MmZV0cgAbh5dOfGf/hcIb22lxfI2h4nb967W+TrkTm5+4f08H3suDClt1jnpWK0qgPgrDxb6XctgpdnnbCTBdQ0N4KVzNlU9mSG1a8QA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038515; c=relaxed/simple;
-	bh=Jc+rFucwagITVejvWsdUcXv0ICsgBsOW0bOeBjyNcZs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LPW3p6/D4vqyl5Lb1PGz0ME2m0869OhYk6Wf/9cf130JNPdSWv9yIjTfQEi1ZDZTbWHOqq+rFzBN1afg50hgru64rcLUCpwLo8D1n/mT2gxjIQd5gE5Jilg6UjCzOUKH+x8DL4eyX8m5bo6kWcvM88Njv3GNTmdudDrKDG86fuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uwq/ThB5; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746038542; c=relaxed/simple;
+	bh=sWVpV07GkosTG4YtlqMJtrZTtaM1dl35llXbM9o7O8M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EDABAOsSxOsydYIPmQgQ41tk0SEm6oiNt/u14KNw7K/6aCmfZ+xn+g6PqkAw2T2mSgRzn4CkFhu0ATsYneOcqPz/2hxPTjVlJXEEi5TBPyqRhPwTc6UVQFSOZE0seNK9teZS971+YVAzJHPaCuHl6HzPHindOOPZHDipyaPDKrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kWqhMqX9; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uwq/ThB5"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39d73b97500so3183f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:41:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kWqhMqX9"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2240aad70f2so45015ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:42:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746038512; x=1746643312; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RoOrc5kvqzdvNTiarbnictWUOEWhAWEFCVfxauerpPw=;
-        b=Uwq/ThB5xGv9yvkID2rpMHKSaqKY6aBo276gd9cliYg0hJNO+HAafdOc6qtweX8bTM
-         b1PYb5HhunWrr882h59c3Z74FwP3jupf+GF+szXJsMFDeB0CBxhqcNFm/lGYPsSM2a2l
-         0VjJ897D/39f0+4APmltcoR7ddBg5JkhUatdeCMjv/QvrI3LWPeDxRA65Y+0QGz/TQGN
-         cVRqQ0jSUBXMctUXLlRF0yfCxBiUwjEgHv1nfZ7N5ZljtJWjifG4DfnZC17OdHO91eoC
-         WIp33vipfutmyUQ7ynabWpqoV/5bgUly+8mjotS/xccnw1Dq7IaK2UvCpTRqpY+3Yrt8
-         QMFQ==
+        d=google.com; s=20230601; t=1746038538; x=1746643338; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GsjOJiRQohVeKHYuSVlaQjbAdgiTiNRPO9Ov5+6OAak=;
+        b=kWqhMqX98WB0l00Vhp9WEEaeb8lCYx7QMxg3mDmXBf0i2hCdcFTzICXDkFlciloaoY
+         MJSlVrXR9CX/99fm2jVahmuvOPmNp/5mj264VO9QXJ3S1q6Y7kTXwdNXLGq171ruGldT
+         /oAxaIhHboYqzTQmvLLY4yCJSoqqKjx7Ll5rjHJhTM1joPHcci5Z7LHvMjjkI2IfAD59
+         AxYjeFWq3WjlteG+bkmR/cqK1+U9ASsuNZO8T2+ZZRuQ3aDbWIdwFqj1lhEvOfCHUMgh
+         f3AaifYo1WKKAXks9C6ZCBiwNBBtiBmOvIyOJaw2BMH7sfjEP6SBDL1xslvdPT3pZ1zJ
+         SA/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038512; x=1746643312;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RoOrc5kvqzdvNTiarbnictWUOEWhAWEFCVfxauerpPw=;
-        b=EEmB5/Z5+/K43BNLvICs8W4xVsZceBTuF0rACADcfABN4RP6aUh7vXBWaK7NNlKztm
-         h+o3/+esZt5f0+Mrvd2Q67JpyMukrATvCuXAfNZuFjwrQv8uZ+XAJenqiImyODIvSRrk
-         uqR4yDYeai0PvqW3+1GpHu5oKiJVHdLJaMRcoX+7QdgGHeYpKkPWLHl2Y7bvY3uvbP5q
-         kClpq0Z0LKwH3hjQ0yIPBH/lrwQBIV2pRJByOT8LQybldFXfFqqgv1CV44NsyUZsDZ9L
-         63P/vDmcN9jnyKnbzylI6HO/f/G5yDH1cswQvKkMGmx/SRI6uM4h9SwG3NbWEBGaDIkM
-         zmuQ==
-X-Gm-Message-State: AOJu0YzjdjstuiO+9+cFciN9XmvtuHabcckl2BReQejK5Hq0nCpRxovl
-	AV/m/09ZTT19ovXC7045vxt/8ISDTjx38Up0C48AwJAizNhf38lZNQ+qO0dPpuQ=
-X-Gm-Gg: ASbGncv1AsSJhHGM11Sm28ZHc+oDiIRDj2gzDJbvZoxm/Bx8JqxWVsPYpNj3VUmf4Hi
-	B1TvXsWOxxsBb8bsgdxI9CP31oPXdNQHbOMxRvHTxDq/oJMk0hQWSu1nlcUVWo8E7XTtJxOPvnw
-	z/iJxfBTRR6zg11RfqYx2p/eJUQeZIG4uXR8t2GdDQpXXIGZWrVnkj17IUdswiL33L5QmV/Rtl8
-	ENF0+HaG+mKZ5Gw2YL0LQUfmoGlA5/qFHSZXsbUPiuWzB0x16QqrISsPLvx3kQbGjUMAGb+1k5O
-	jogWN7mFJSlDD9Ffj6SvMtFpamqfrg2WzY09t/qPjPOvkgln+2gIt+l0K/U=
-X-Google-Smtp-Source: AGHT+IGq81Gr+U4BorSC3WRcRzmGHBC0m1dMZ6WC9pFeawNiUb+t4q2t2qM9A1gIrYSlBzxLAqFBqg==
-X-Received: by 2002:a05:6000:2207:b0:39e:e588:6727 with SMTP id ffacd0b85a97d-3a091a48901mr511146f8f.2.1746038511734;
-        Wed, 30 Apr 2025 11:41:51 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46257sm17728991f8f.77.2025.04.30.11.41.50
+        d=1e100.net; s=20230601; t=1746038538; x=1746643338;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GsjOJiRQohVeKHYuSVlaQjbAdgiTiNRPO9Ov5+6OAak=;
+        b=NXP+R4atOx+LFVa310/GJIJw/1rIcNHzIE3cDPPX+EDJ6WEYFwWXsypv15Xne4wrkq
+         9ko2UzyjxXKCBi4w0C/wK+t/TYTqm5+Bj0O+fTUTxIOp5wjl4qPJ9vhRNQsbO8NHvo3Z
+         SmLCCFxsZQ+orWLFTGm1Rxw4CeDhtBa+GlWXA6gKHZ4F9oic5z+6MoUeEm7swT3zydFh
+         5dPFuwfMlR2Td9nIE79/fKt0De8B6fPPaftw7+M11y9aiEIERTtrSKSFNAUXVAaTZZra
+         nxCJd4CUrJ24Dh0giaqKv4GALHU0x7B7da/H+FPRTRdQjcmHMv7sf3QGQI54f52PyxKO
+         6EaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX9V1O1p7LzyBnAdM1BBDdbLgLzBAkNyKAuRNF6O6cLw+UM42u/wtm5nTNHdg2aPxOgkMIani6fad7x3oo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUAnCDCGneXwA3pG1nYRlXKesbjq0zJYkYmcNyo7SWyCXeaf2M
+	cdUZSn0TdgTs4tGs9Z2OA7sf5j6aoAIYeL8wbNc7EOLlFHHpt/iMHuJkhN0ZQg==
+X-Gm-Gg: ASbGncvm1v/e+Ccol8rItQk9qdwzE7N3ax9jz2SIWPJsDIj3UcJ/PZlxQzKKSCKmk4B
+	Vr73n8gZM22mmm/p4K0LLEdd8mJq/aK9zO7r+CQH5kpPkllVi3mfeQ3beXlcPFPJg/l0GvjaVWx
+	4mvTFynK82dLG/ZSBe43ckacRlN97nEdtPP9jZ/spNmW7pc0YLyeIpLI24FtUEzFy+A2aXnKvuj
+	ie9ZIqoksh2Ic2xefqjd35v6X5l35Wa3rVpPMQ+V20oR7/S5AUIXVoe2jCVutnqQYBIVmJXL60e
+	S1o6CQ9WJsyRMvmkm/OSZeE3D/ltW5sOJuVk+T8VslPxQdPcm3pQWBuDL7ckH1CpHvQY6R2BIjp
+	u
+X-Google-Smtp-Source: AGHT+IE5MTly6WSsoVAOumLpcNaYTMtE8mlKb0MytfpG/Zqagx8s9Ig/Xkyr7qxG2qLIdlpkZJdbcw==
+X-Received: by 2002:a17:902:c402:b0:224:a93:704d with SMTP id d9443c01a7336-22e03d05ac3mr343385ad.2.1746038538309;
+        Wed, 30 Apr 2025 11:42:18 -0700 (PDT)
+Received: from google.com (152.33.83.34.bc.googleusercontent.com. [34.83.33.152])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22dd9530465sm64007025ad.10.2025.04.30.11.42.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:41:51 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Wed, 30 Apr 2025 20:41:34 +0200
-Subject: [PATCH v2 6/6] cdx: MAINTAINERS: Explicitly mention Greg who
- handles patches
+        Wed, 30 Apr 2025 11:42:17 -0700 (PDT)
+Date: Wed, 30 Apr 2025 18:42:13 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: "Tiffany Y. Yang" <ynaffit@google.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	linux-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH 1/2] binder: Refactor binder_node print synchronization
+Message-ID: <aBJvBRPlh46j9Q9e@google.com>
+References: <20250327220225.3180998-3-ynaffit@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-cdx-clean-v2-6-7dbfda9364a9@linaro.org>
-References: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
-In-Reply-To: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
-To: Nipun Gupta <nipun.gupta@amd.com>, 
- Nikhil Agarwal <nikhil.agarwal@amd.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=799;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=Jc+rFucwagITVejvWsdUcXv0ICsgBsOW0bOeBjyNcZs=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoEm7mEDcN5yDRbc7Niw33zOpepp8oOEj32J2+H
- M6pJl8Z0ViJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBJu5gAKCRDBN2bmhouD
- 16+KD/9ncRRYSryYepcDjMNtvqnLFrmbXgrU5cFjqRqulkZ9E1Nf1MdFaZmaF1C4YDGL6LgRHpe
- +ZSCv/ztJ+PBq8e9yxlg/wHqXrnJQwqHqG5+jLl6m34C+ErNLHdeabbSBwlr/kBLWrN1wluD4Cz
- YbKwQ8AU8Pz2KwzDr8tn59KP4DEHyUTMOqXz/G0MYI66qcqORnhI2ZeCUNx+wF6kmOjwPCh9fqr
- 5IB729DTi0Jf5j9iLWdwKvKvWpDNxv4luYlGQmszxxQH7NTQti9ZhYhEQNqMkU0ySBAoNEw9MJi
- CbHHcVuIO/H18qKL81qpuTNfbG/Nfh9xdPWAZC4OQR5wt3K2/RwEu0WnCsL8bNEQcCR/RVZoRU6
- h/8GFIOFggjMAsrhwawIN2WndK1JpfG1VHmyqdj0HRiYgv4eFwKQeyzeRZivuCxzLseBOA42k1F
- k8APlYWH2Lk5vLz3UZ9m6C5DYnbFBlXlbW+p2aAcPq6PDtggV6G7abdxXhEfkCZaA8ILEgDEd+Y
- p+L8uGSgGa2JDBvIAuyOpAPV5QmkkHTRG1Uf+w0JuAbOXAhrDYcCGoep5PvVcUPMjSIjQ6T59xI
- aU6g2tIpagTxcYSIDUp6TLu6qNLE0jnhPHaJD7eyuNRMzijtORojoa/4YO7XcebT1TnXTNWjEQA
- 3cnJhi3S8JgcirA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250327220225.3180998-3-ynaffit@google.com>
 
-Patches for CDX bus drivers are applied by Greg Kroah-Hartman, so list
-him in the maintainers entry because otherwise contributors would be
-surprised their patches got lost.
+On Thu, Mar 27, 2025 at 10:02:25PM +0000, Tiffany Y. Yang wrote:
+> The binder driver outputs information about each dead binder node by
+> iterating over the dead nodes list, and it prints the state of each live
+> node in the system by traversing each binder_proc's proc->nodes tree.
+> Both cases require similar logic to maintain the global lock ordering
+> while accessing each node.
+> 
+> Create a helper function to synchronize around printing binder nodes in
+> a list. Opportunistically make minor cosmetic changes to binder print
+> functions.
+> 
+> Signed-off-by: Tiffany Y. Yang <ynaffit@google.com>
+> ---
+>  drivers/android/binder.c | 114 +++++++++++++++++++++------------------
+>  1 file changed, 63 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> index 76052006bd87..d963a7860aa3 100644
+> --- a/drivers/android/binder.c
+> +++ b/drivers/android/binder.c
+> @@ -6377,10 +6377,10 @@ static void print_binder_transaction_ilocked(struct seq_file *m,
+>  }
+>  
+>  static void print_binder_work_ilocked(struct seq_file *m,
+> -				     struct binder_proc *proc,
+> -				     const char *prefix,
+> -				     const char *transaction_prefix,
+> -				     struct binder_work *w)
+> +				      struct binder_proc *proc,
+> +				      const char *prefix,
+> +				      const char *transaction_prefix,
+> +				      struct binder_work *w)
+>  {
+>  	struct binder_node *node;
+>  	struct binder_transaction *t;
+> @@ -6430,7 +6430,7 @@ static void print_binder_work_ilocked(struct seq_file *m,
+>  
+>  static void print_binder_thread_ilocked(struct seq_file *m,
+>  					struct binder_thread *thread,
+> -					int print_always)
+> +					bool print_always)
+>  {
+>  	struct binder_transaction *t;
+>  	struct binder_work *w;
+> @@ -6505,8 +6505,50 @@ static void print_binder_ref_olocked(struct seq_file *m,
+>  	binder_node_unlock(ref->node);
+>  }
+>  
+> -static void print_binder_proc(struct seq_file *m,
+> -			      struct binder_proc *proc, int print_all)
+> +/**
+> + * print_next_binder_node_ilocked() - Print binder_node from a locked list
+> + * @m:          struct seq_file for output via seq_printf()
+> + * @node:       struct binder_node to print fields of
+> + * @prev_node:	struct binder_node we hold a temporary reference to (if any)
+> + *
+> + * Helper function to handle synchronization around printing a struct
+> + * binder_node while iterating through @node->proc->nodes or the dead nodes
+> + * list. Caller must hold either @node->proc->inner_lock (for live nodes) or
+> + * binder_dead_nodes_lock.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+nit: kinda obvious but could you specify that these locks get released
+and reaquired? only to be explicit about this functionality.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..505d7d45ad7d1c007e89a555264ff8cbeaf6e1f4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1008,6 +1008,7 @@ F:	Documentation/devicetree/bindings/w1/amd,axi-1wire-host.yaml
- F:	drivers/w1/masters/amd_axi_w1.c
- 
- AMD CDX BUS DRIVER
-+M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- M:	Nipun Gupta <nipun.gupta@amd.com>
- M:	Nikhil Agarwal <nikhil.agarwal@amd.com>
- S:	Maintained
+> + *
+> + * Return:	pointer to the struct binder_node we hold a tmpref on
+> + */
+> +static struct binder_node *
+> +print_next_binder_node_ilocked(struct seq_file *m, struct binder_node *node,
+> +			       struct binder_node *prev_node)
+> +{
+> +	/*
+> +	 * Take a temporary reference on the node so that isn't removed from
+> +	 * its proc's tree or the dead nodes list while we print it.
+> +	 */
+> +	binder_inc_node_tmpref_ilocked(node);
+> +	/*
+> +	 * Live nodes need to drop the inner proc lock and dead nodes need to
+> +	 * drop the binder_dead_nodes_lock before trying to take the node lock.
+> +	 */
+> +	if (node->proc)
+> +		binder_inner_proc_unlock(node->proc);
+> +	else
+> +		spin_unlock(&binder_dead_nodes_lock);
+> +	if (prev_node)
+> +		binder_put_node(prev_node);
+> +	binder_node_inner_lock(node);
+> +	print_binder_node_nilocked(m, node);
+> +	binder_node_inner_unlock(node);
+> +	if (node->proc)
+> +		binder_inner_proc_lock(node->proc);
+> +	else
+> +		spin_lock(&binder_dead_nodes_lock);
+> +	return node;
+> +}
+> +
+> +static void print_binder_proc(struct seq_file *m, struct binder_proc *proc,
+> +			      bool print_all)
+>  {
+>  	struct binder_work *w;
+>  	struct rb_node *n;
+> @@ -6519,31 +6561,17 @@ static void print_binder_proc(struct seq_file *m,
+>  	header_pos = m->count;
+>  
+>  	binder_inner_proc_lock(proc);
+> -	for (n = rb_first(&proc->threads); n != NULL; n = rb_next(n))
+> +	for (n = rb_first(&proc->threads); n; n = rb_next(n))
+>  		print_binder_thread_ilocked(m, rb_entry(n, struct binder_thread,
+>  						rb_node), print_all);
+>  
+> -	for (n = rb_first(&proc->nodes); n != NULL; n = rb_next(n)) {
+> +	for (n = rb_first(&proc->nodes); n; n = rb_next(n)) {
+>  		struct binder_node *node = rb_entry(n, struct binder_node,
+>  						    rb_node);
+>  		if (!print_all && !node->has_async_transaction)
+>  			continue;
+>  
+> -		/*
+> -		 * take a temporary reference on the node so it
+> -		 * survives and isn't removed from the tree
+> -		 * while we print it.
+> -		 */
+> -		binder_inc_node_tmpref_ilocked(node);
+> -		/* Need to drop inner lock to take node lock */
+> -		binder_inner_proc_unlock(proc);
+> -		if (last_node)
+> -			binder_put_node(last_node);
+> -		binder_node_inner_lock(node);
+> -		print_binder_node_nilocked(m, node);
+> -		binder_node_inner_unlock(node);
+> -		last_node = node;
+> -		binder_inner_proc_lock(proc);
+> +		last_node = print_next_binder_node_ilocked(m, node, last_node);
+>  	}
+>  	binder_inner_proc_unlock(proc);
+>  	if (last_node)
+> @@ -6551,12 +6579,10 @@ static void print_binder_proc(struct seq_file *m,
+>  
+>  	if (print_all) {
+>  		binder_proc_lock(proc);
+> -		for (n = rb_first(&proc->refs_by_desc);
+> -		     n != NULL;
+> -		     n = rb_next(n))
+> +		for (n = rb_first(&proc->refs_by_desc); n; n = rb_next(n))
+>  			print_binder_ref_olocked(m, rb_entry(n,
+> -							    struct binder_ref,
+> -							    rb_node_desc));
+> +							     struct binder_ref,
+> +							     rb_node_desc));
+>  		binder_proc_unlock(proc);
+>  	}
+>  	binder_alloc_print_allocated(m, &proc->alloc);
+> @@ -6696,7 +6722,7 @@ static void print_binder_proc_stats(struct seq_file *m,
+>  	count = 0;
+>  	ready_threads = 0;
+>  	binder_inner_proc_lock(proc);
+> -	for (n = rb_first(&proc->threads); n != NULL; n = rb_next(n))
+> +	for (n = rb_first(&proc->threads); n; n = rb_next(n))
+>  		count++;
+>  
+>  	list_for_each_entry(thread, &proc->waiting_threads, waiting_thread_node)
+> @@ -6710,7 +6736,7 @@ static void print_binder_proc_stats(struct seq_file *m,
+>  			ready_threads,
+>  			free_async_space);
+>  	count = 0;
+> -	for (n = rb_first(&proc->nodes); n != NULL; n = rb_next(n))
+> +	for (n = rb_first(&proc->nodes); n; n = rb_next(n))
+>  		count++;
+>  	binder_inner_proc_unlock(proc);
+>  	seq_printf(m, "  nodes: %d\n", count);
+> @@ -6718,7 +6744,7 @@ static void print_binder_proc_stats(struct seq_file *m,
+>  	strong = 0;
+>  	weak = 0;
+>  	binder_proc_lock(proc);
+> -	for (n = rb_first(&proc->refs_by_desc); n != NULL; n = rb_next(n)) {
+> +	for (n = rb_first(&proc->refs_by_desc); n; n = rb_next(n)) {
+>  		struct binder_ref *ref = rb_entry(n, struct binder_ref,
+>  						  rb_node_desc);
+>  		count++;
+> @@ -6756,29 +6782,15 @@ static int state_show(struct seq_file *m, void *unused)
+>  	spin_lock(&binder_dead_nodes_lock);
+>  	if (!hlist_empty(&binder_dead_nodes))
+>  		seq_puts(m, "dead nodes:\n");
+> -	hlist_for_each_entry(node, &binder_dead_nodes, dead_node) {
+> -		/*
+> -		 * take a temporary reference on the node so it
+> -		 * survives and isn't removed from the list
+> -		 * while we print it.
+> -		 */
+> -		node->tmp_refs++;
+> -		spin_unlock(&binder_dead_nodes_lock);
+> -		if (last_node)
+> -			binder_put_node(last_node);
+> -		binder_node_lock(node);
+> -		print_binder_node_nilocked(m, node);
+> -		binder_node_unlock(node);
+> -		last_node = node;
+> -		spin_lock(&binder_dead_nodes_lock);
+> -	}
+> +	hlist_for_each_entry(node, &binder_dead_nodes, dead_node)
+> +		last_node = print_next_binder_node_ilocked(m, node, last_node);
+>  	spin_unlock(&binder_dead_nodes_lock);
+>  	if (last_node)
+>  		binder_put_node(last_node);
+>  
+>  	mutex_lock(&binder_procs_lock);
+>  	hlist_for_each_entry(proc, &binder_procs, proc_node)
+> -		print_binder_proc(m, proc, 1);
+> +		print_binder_proc(m, proc, true);
+>  	mutex_unlock(&binder_procs_lock);
+>  
+>  	return 0;
+> @@ -6807,7 +6819,7 @@ static int transactions_show(struct seq_file *m, void *unused)
+>  	seq_puts(m, "binder transactions:\n");
+>  	mutex_lock(&binder_procs_lock);
+>  	hlist_for_each_entry(proc, &binder_procs, proc_node)
+> -		print_binder_proc(m, proc, 0);
+> +		print_binder_proc(m, proc, false);
+>  	mutex_unlock(&binder_procs_lock);
+>  
+>  	return 0;
+> @@ -6822,7 +6834,7 @@ static int proc_show(struct seq_file *m, void *unused)
+>  	hlist_for_each_entry(itr, &binder_procs, proc_node) {
+>  		if (itr->pid == pid) {
+>  			seq_puts(m, "binder proc state:\n");
+> -			print_binder_proc(m, itr, 1);
+> +			print_binder_proc(m, itr, true);
+>  		}
+>  	}
+>  	mutex_unlock(&binder_procs_lock);
+> -- 
+> 2.49.0.395.g12beb8f557-goog
+> 
 
--- 
-2.45.2
+Other than the minor nit feel free to add:
 
+Acked-by: Carlos Llamas <cmllamas@google.com>
+
+--
+Carlos Llamas
