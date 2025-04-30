@@ -1,173 +1,103 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B870AB640;
-	Wed, 30 Apr 2025 14:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B19B199FA2;
+	Wed, 30 Apr 2025 14:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024874; cv=none; b=PGRgmaE2FOFlpK6DIlrvf/oSBxIuuZF3a+ak7zc0Y3r9jtKEwl6olt/24d3GGlE+Y3t3OF+soSSfkNAY0aja9CCnTApeZhUMNWHK0Y2pyVYI+Zpi3Nhs6vByg18878Y/+6Ra5A7XFWMwiAwcHtUELIDK2Y9QgrWuS+Goo+QpAGM=
+	t=1746024964; cv=none; b=ttMBORF0crkP3bv5qQkIcppBYirO6w75dCQIJqsXMKDrj924S2sJisedaYNCEf+73zk2J+kfVyrs65SVOqSx5d4IPkcymszM4/4uMy3gj2r3cJBPxg3o39aEpC143cszE4KrNCg8v+oVTyoeqgULZkyh8zlYV8LR5H6flBQixdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024874; c=relaxed/simple;
-	bh=/9xOhEYTUhZBBh0XlcuoEXdM4hfh4r7eUVkJMpaLNxA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=In4regcJAM669cT3gXNZcWUpnP6LHVcbH1dIYZhpNUEpBH3HZ9wKVJBmYtk/rTcI9kfr1GfBJhgAbpl9A3/UoYvvio5UGXiTPsUrwovbdSV0zrNpFDxKBpn40CfA8kHLf2d8FzvcX2DvpB3Zvbgdl5FH9VmWWHw7bGLE4RYuw+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D7dPx9OP; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746024964; c=relaxed/simple;
+	bh=g91vEHY2gNNgWu359DyV0tUsX5BBjcdqbFaJa90Gwjk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=e4LeTsl0OtJ/OSofBh+e7DGueWdeEaVSJd89+qE3sU8QgKMezjkzuCcWQAFzZnQwTEV+YV451h39sGok7aur/vCcwWt2sYp4cflFdUxLYCWcw6y2NWccrtQT5HDPEElWC5up2+5oWbRsD+E285Cl7QoCTDkGaJdMUFdhwsJe6qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CmIoUxUh; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D7dPx9OP"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-736c1138ae5so7595140b3a.3;
-        Wed, 30 Apr 2025 07:54:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746024872; x=1746629672; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=++Jf+Qeh1ch1PHZhlAOXZksniFtlc36EzIRFCLcsgmQ=;
-        b=D7dPx9OPghf8389PNQFNsMAYon3ePNfeEMAMqB6yN3OTdnuh6BXbRc2KUCdQFv/KSe
-         ppSC2/i98m9O6p2nReQTlGtDng1ZkmuaIdJXTk8Qva6fCjfk7FVDQjl8RKSzxyAjUbtw
-         370LMgVa05p9I8/6PTNiwb1bv5F0rjRdKJDwiKJZuRUgl4sTTbD9PzrSwP6DHV+e2nkp
-         SMOAHY/GYk2ioHQluvJX9Ghk9OSpBTIIwbWMSixiUsf1DYi7xIb3qmoc/c6aKR6Ufec6
-         C8NS4dTZYUMC7vCjHdg6gGv7pLlAVTP3KSOYkIv3lDNZ/sW6r+ymAeVZkgQXlYBT0qsu
-         1EVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746024872; x=1746629672;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=++Jf+Qeh1ch1PHZhlAOXZksniFtlc36EzIRFCLcsgmQ=;
-        b=UecJ5AEBWjM48M4+QokWB8MlVTcFXg+hXiFWV3CiJUjMaLvl0UGefNzwKpfd2H1Wtk
-         J4CvnRyhg8C2dLHOab5VwAlyFVHCd44mY+UbL4cLpOvOrdrd9/17AbMoyb+BgiLoIAHu
-         EQ+kuwZqjjYPrNh/MXrFKCNvWTviH/jsMMa2QBpMnlpBVpzMAySN4e7qN81ghY3c+ye1
-         I5zKNtGsTy2/8BmVxpUu6MSD6BQfKBQkM/9dj/sUxJs/fsZ5tyXm3z7xhCj+QvkDiMlr
-         /g9vcM4aJbJXBlM2nJfTmXskjOdCx9vTsKLe3YKH/y16oswsXqY31isuFZEVBRqrA0Li
-         Oxqg==
-X-Forwarded-Encrypted: i=1; AJvYcCVDiHAU+87L9OxS91S9jNrR1yeNjwuv0pYLMZHg8mkES5fP0ZulVrC8JF5sbe+krPOCnRuXKsR2jKktcdI=@vger.kernel.org, AJvYcCXvfvCSBpiwIuARoK/jk3oYzHp3pGuBYqD+ekBfy7rX2RGhi3/OUAJk64Jf4K885pxBi3mQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2Ml4h6N15Z/JWiip49Ag6b43utaa+PnXZVL/xlxpUQVU61LaB
-	naXkKt/uYr2BFRyLMCVd/HWAzIc2qKJ4/e3x31rYtnfF08SC2VcpuLfm8RwkXlSOk25Eta8mah8
-	NXsNuWQW900sTdr5GcX7QVW8XwfQ=
-X-Gm-Gg: ASbGncuvUOv4+vGQnnJmZe0QVBd8URixOK6H2D9I88DeHqV4RbKh0b+H3dNYqEK6IoF
-	E7o7OjrF4v3i+hFtWob6Rmbv4rsueA0IbbAa8Ejz1BJtSFzIJkSfdTagVUxsYRC4VITxJwVnEWP
-	WWmjhfRNXMbbJ+2G4rt8Mu9eGQilyOOkRvTV7jxNFnhK486x9XQ4/9aJGr2T8FQpDwF88=
-X-Google-Smtp-Source: AGHT+IH4M4Y1gxipd7iUXF1rSQOnvemFi0LUS8rEqMjumMThqFnGY9acC4DF8NLzyzxBcfkBEL5DxTIfQSWVunvHOsQ=
-X-Received: by 2002:a05:6a00:a83:b0:73e:30de:bacc with SMTP id
- d2e1a72fcca58-7403a75b576mr4533927b3a.3.1746024871871; Wed, 30 Apr 2025
- 07:54:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CmIoUxUh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746024960;
+	bh=g91vEHY2gNNgWu359DyV0tUsX5BBjcdqbFaJa90Gwjk=;
+	h=From:Date:Subject:To:Cc:From;
+	b=CmIoUxUhp4tVJW9jnF9TZjbsFFycTTKz/5C+1QuYSPpxRE5yGrNR7an8GU8ZoTmh6
+	 D+BMqYGkPnESKAUbYB+NZCgSkK3T5UsUHaZRmryR7StOZHJPdQpyxeSjG3dD9DtluE
+	 cTBV8ZrBsieHd3AP6bt1hFARuwrJU3CbHwEo+r3cZTe2B7Max9jntPjkt4+2ItHcG3
+	 SDDffJ6NXyLWacGDuHAPhKxW6Csuonxmh8P2yM9WzOWi0lyAVkeomm0gP9vnZtTyod
+	 IH6zqQhDX5dCuqC1X8y4aVQbLve0wxOjHKrPVmDTfX9S8SNPcmhoL+37m+d1I/mF8L
+	 OGSw609bLIPUA==
+Received: from [192.168.1.63] (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8137A17E02BE;
+	Wed, 30 Apr 2025 16:55:58 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Wed, 30 Apr 2025 10:55:49 -0400
+Subject: [PATCH] kselftest: cpufreq: Get rid of double suspend in rtcwake
+ case
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428095403.22889-1-qiang.zhang1211@gmail.com>
- <aA9U9QvB2t2MLuU2@pavilion.home> <CALm+0cW2tXM-HvzoMsNBk4DNyZ-LuUkGj5M4wVLJixSvUDP+Dw@mail.gmail.com>
-In-Reply-To: <CALm+0cW2tXM-HvzoMsNBk4DNyZ-LuUkGj5M4wVLJixSvUDP+Dw@mail.gmail.com>
-From: Z qiang <qiang.zhang1211@gmail.com>
-Date: Wed, 30 Apr 2025 22:54:19 +0800
-X-Gm-Features: ATxdqUE28K8dZfEMFoxL8v3ZvRTzDWSbyJCaIVynbhcB21yH3Qb0TqRJHuAUBz8
-Message-ID: <CALm+0cWvx1N1KfGJU=kQoTaBRRf9trEU2TzL40b-gXHv5H+Utg@mail.gmail.com>
-Subject: Re: [PATCH] rcu/nocb: Add Safe checks for access offloaded rdp
-To: Frederic Weisbecker <frederic@kernel.org>
-Cc: paulmck@kernel.org, neeraj.upadhyay@kernel.org, joel@joelfernandes.org, 
-	urezki@gmail.com, boqun.feng@gmail.com, rcu@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250430-ksft-cpufreq-suspend-rtc-double-fix-v1-1-dc17a729c5a7@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAPQ5EmgC/x2NQQ6CMBAAv0L27CalWIx+xXDAdgsbTam7lJgQ/
+ m7DceYws4OSMCk8mh2ENlZeUoX20oCfxzQRcqgM1lhnrvaOb40r+lyi0Be1aKYUUFaPYSmvD2H
+ kH96cd72hduxMhFrKQlWfl+dwHH+inCwudQAAAA==
+X-Change-ID: 20250429-ksft-cpufreq-suspend-rtc-double-fix-75c560e1a30f
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Shuah Khan <shuah@kernel.org>, 
+ Shreeya Patel <shreeya.patel@collabora.com>
+Cc: kernel@collabora.com, Shuah Khan <skhan@linuxfoundation.org>, 
+ linux-pm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
->
-> >
-> > Le Mon, Apr 28, 2025 at 05:54:03PM +0800, Zqiang a =C3=A9crit :
-> > > For Preempt-RT kernel, when enable CONFIG_PROVE_RCU Kconfig,
-> > > disable local bh in rcuc kthreads will not affect preempt_count(),
-> > > this resulted in the following splat:
-> > >
-> > > WARNING: suspicious RCU usage
-> > > kernel/rcu/tree_plugin.h:36 Unsafe read of RCU_NOCB offloaded state!
-> > > stack backtrace:
-> > > CPU: 0 UID: 0 PID: 22 Comm: rcuc/0
-> > > Call Trace:
-> > > [    0.407907]  <TASK>
-> > > [    0.407910]  dump_stack_lvl+0xbb/0xd0
-> > > [    0.407917]  dump_stack+0x14/0x20
-> > > [    0.407920]  lockdep_rcu_suspicious+0x133/0x210
-> > > [    0.407932]  rcu_rdp_is_offloaded+0x1c3/0x270
-> > > [    0.407939]  rcu_core+0x471/0x900
-> > > [    0.407942]  ? lockdep_hardirqs_on+0xd5/0x160
-> > > [    0.407954]  rcu_cpu_kthread+0x25f/0x870
-> > > [    0.407959]  ? __pfx_rcu_cpu_kthread+0x10/0x10
-> > > [    0.407966]  smpboot_thread_fn+0x34c/0xa50
-> > > [    0.407970]  ? trace_preempt_on+0x54/0x120
-> > > [    0.407977]  ? __pfx_smpboot_thread_fn+0x10/0x10
-> > > [    0.407982]  kthread+0x40e/0x840
-> > > [    0.407990]  ? __pfx_kthread+0x10/0x10
-> > > [    0.407994]  ? rt_spin_unlock+0x4e/0xb0
-> > > [    0.407997]  ? rt_spin_unlock+0x4e/0xb0
-> > > [    0.408000]  ? __pfx_kthread+0x10/0x10
-> > > [    0.408006]  ? __pfx_kthread+0x10/0x10
-> > > [    0.408011]  ret_from_fork+0x40/0x70
-> > > [    0.408013]  ? __pfx_kthread+0x10/0x10
-> > > [    0.408018]  ret_from_fork_asm+0x1a/0x30
-> > > [    0.408042]  </TASK>
-> > >
-> > > Currently, triggering an rdp offloaded state change need the
-> > > corresponding rdp's CPU goes offline, and at this time the rcuc
-> > > kthreads has already in parking state. this means the corresponding
-> > > rcuc kthreads can safely read offloaded state of rdp while it's
-> > > corresponding cpu is online.
-> > >
-> > > This commit therefore add rdp->rcu_cpu_kthread_task check for
-> > > Preempt-RT kernels.
-> > >
-> > > Signed-off-by: Zqiang <qiang.zhang1211@gmail.com>
-> > > ---
-> > >  kernel/rcu/tree_plugin.h | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> > > index 003e549f6514..fe728eded36e 100644
-> > > --- a/kernel/rcu/tree_plugin.h
-> > > +++ b/kernel/rcu/tree_plugin.h
-> > > @@ -31,7 +31,9 @@ static bool rcu_rdp_is_offloaded(struct rcu_data *r=
-dp)
-> > >                 lockdep_is_held(&rcu_state.nocb_mutex) ||
-> > >                 (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible())=
- &&
-> > >                  rdp =3D=3D this_cpu_ptr(&rcu_data)) ||
-> > > -               rcu_current_is_nocb_kthread(rdp)),
-> > > +               rcu_current_is_nocb_kthread(rdp) ||
-> > > +               (IS_ENABLED(CONFIG_PREEMPT_RT) &&
-> > > +                current =3D=3D rdp->rcu_cpu_kthread_task)),
-> >
-> > Isn't it safe also on !CONFIG_PREEMPT_RT ?
+Commit 0b631ed3ce92 ("kselftest: cpufreq: Add RTC wakeup alarm") added
+support for automatic wakeup in the suspend routine of the cpufreq
+kselftest by using rtcwake, however it left the manual power state
+change in the common path. The end result is that when running the
+cpufreq kselftest with '-t suspend_rtc' or '-t hibernate_rtc', the
+system will go to sleep and be woken up by the RTC, but then immediately
+go to sleep again with no wakeup programmed, so it will sleep forever in
+an automated testing setup.
 
-How about the following?
+Fix this by moving the manual power state change so that it only happens
+when not using rtcwake.
 
-(current =3D=3D rdp->rcu_cpu_kthread_task && in_task())
+Fixes: 0b631ed3ce92 ("kselftest: cpufreq: Add RTC wakeup alarm")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+---
+ tools/testing/selftests/cpufreq/cpufreq.sh | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks
-Zqiang
+diff --git a/tools/testing/selftests/cpufreq/cpufreq.sh b/tools/testing/selftests/cpufreq/cpufreq.sh
+index e350c521b4675080943d2c74dc31533979410316..3aad9db921b5339585da5711a08775ebd965aaf3 100755
+--- a/tools/testing/selftests/cpufreq/cpufreq.sh
++++ b/tools/testing/selftests/cpufreq/cpufreq.sh
+@@ -244,9 +244,10 @@ do_suspend()
+ 					printf "Failed to suspend using RTC wake alarm\n"
+ 					return 1
+ 				fi
++			else
++				echo $filename > $SYSFS/power/state
+ 			fi
+ 
+-			echo $filename > $SYSFS/power/state
+ 			printf "Came out of $1\n"
+ 
+ 			printf "Do basic tests after finishing $1 to verify cpufreq state\n\n"
 
->
-> For !CONFIG_PREEMPT_RT and  in rcuc kthreads, it's also safe,
-> but the following check will passed :
->
-> (!(IS_ENABLED(CONFIG_PREEMPT_COUNT) && preemptible()) &&
->           rdp =3D=3D this_cpu_ptr(&rcu_data))
->
-> Thanks
-> Zqiang
->
->
-> >
-> > Thanks.
-> >
-> > >               "Unsafe read of RCU_NOCB offloaded state"
-> > >       );
-> > >
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > Frederic Weisbecker
-> > SUSE Labs
+---
+base-commit: 8a2d53ce3c5f82683ad3df9a9a55822816fe64e7
+change-id: 20250429-ksft-cpufreq-suspend-rtc-double-fix-75c560e1a30f
+
+Best regards,
+-- 
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
+
