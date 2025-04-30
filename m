@@ -1,171 +1,65 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC38033086;
-	Wed, 30 Apr 2025 12:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9588A33086;
+	Wed, 30 Apr 2025 12:59:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017940; cv=none; b=DMbCAPkd2bSVHtsOznIT5Ch//gXWImncFwi9fJ7rrfLx+xAdzYlmwZtuQbEs/HgyMAEiIVo+Lyd1fqhAXFgCNleQljN9aDq9ZTIaPYxMLu/THyLQUavgW1gMRMurEDUvIc9Sv+KZ/5bUTbfLZGcrA+DljGk1vVc+nJcMg+Q7Xlc=
+	t=1746017955; cv=none; b=C4egciiktdreT/bF6JYicafRh6HruVI85+0PIbvY03PgJNoED/n8rRRz5EQ31xG5nPhZkeULLqvlSx68ip2vE677IPDqQx7cXyId56ckHKBg1ENjSeRL1zNEdN4IA0mTAocu+Q/bd31LUaVBAtbFmv4UIfbmSzIgfx2idFKovbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017940; c=relaxed/simple;
-	bh=zVgltmdq1wA/pgvM1Uq/QGAwIGV8nII32Z/sCy5d8aQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZdOpNx+RMWzP2m32jsNUXPew2kxgegVK0uHVilHO3o3KHjhogva8cHT78qJYmsMj5ZMLiYOgLMAbEvyoclHMXtkaYmTnkczmOaAR7Lx1fkyim/jqTQPfLklXmXN4tI81HJLkcHpgz7nqXi75sM78hFL5LNe8pqrqAHJ0GCKsdaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RaoKFpVg; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RaoKFpVg"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso761385a91.1;
-        Wed, 30 Apr 2025 05:58:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746017938; x=1746622738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9dQgDsBrKKb7LUHfJaqvSu3D4gwYk1wUfztt+eVLekw=;
-        b=RaoKFpVg0bvuCNVO6il67qQxIx/yvYc2eZNb+Ml+PC+T/NsfqMxoftVfRXvIs9Bw9C
-         2k9rsBlvnKNrltALY7D/rwe1PqYpDXMRS/FGZiPCn0f3AfOwAkMzxB/ProNdXy1clqRC
-         rabH4+8U96PPFihgXq8c2r5zh1PsrAkJlDPY5aQzXKPabkPK5T8lYKFdLG2qsEFOjopA
-         TaWRiMW61QlZYld7mzAXTX4rZQCA1KcVd6oWRmwHWlwBFkwr/QkMQ0XFtvQQ5q1zo10t
-         pQ2otjFo9TC1UPqzpB4INI68I+34JXIzbfJko95oz4sa7zwx9NvfNv7JCdgowPfiEMEK
-         3yGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746017938; x=1746622738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9dQgDsBrKKb7LUHfJaqvSu3D4gwYk1wUfztt+eVLekw=;
-        b=o1mwnIJCk9PDXexg7g2RLfuZtBxgMVfPEiYV7YBzB4ZXU63lbTHsqvCUzVaVUKaTMa
-         qGODmR+p8BWxfHO8E3QF0iTCjbTorMPxwmSWmNKPbdfJMPFLwudeDC4yypKqqJAQpTbN
-         bqMUQ5xKgR2s6b0SF+eCuyDviTHXLdfvGdQXdVw9hC+i14qZeh3LllhEoEyrgTq9npz8
-         H+wS+hQVJV3xRoKJZCvNlIRwu/syuS9353hBnMaWr7sopiRCNyur7KvxOg6aF9ZY+A0S
-         zYkbCPariEhlE6AW1f4Du5rERs7WqA8TkSCg1eeSSBf/Ggentm3x/1bYlBu6XLljSbAj
-         1eYw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrsd63HIR/1usM24kA1ZsvE/aKKp/BciAViAhA4KCEK1Kc6NQzRywtYqC9UBiaYTvL5CHCstA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyfHc0vib4X7gaHWZhpELkbIPWg1Yc30L5fWIGKER1aU8C4FoE
-	P9Kpak2eVDiSK9YlB5T83HziXn2TNYSkH163xAJRsvPw49QxizPwmLW9zWsTMSOlyvAkFSnRXs7
-	nYC9+HRMqWBE2lDl+8FY02LRNIis=
-X-Gm-Gg: ASbGncsz3flcO6nj5HbTvb7g2f3avOJy5O3QmLf0uH4LoGHy3b09qxQD4ztaflgmzZj
-	TT3O39z2tHp568YxCLC5EB8gtigUVejfC6ul9ma20pyRRlgyRAMUt8L0rVLpykkB2AjmWCvaZxo
-	lUxVU88jB3jwrzdysgPRH+/nLSwqc2KNsy
-X-Google-Smtp-Source: AGHT+IHPHDfrVZ0RLZ1bQoLDYi3iVYqbjTOtxBO8xR4L/VADlcQSd95Z8b6hZvsjpcRtLCg5EcVqWeVLl2E0ftk48Ew=
-X-Received: by 2002:a17:90b:4d0a:b0:2fe:b2ea:30f0 with SMTP id
- 98e67ed59e1d1-30a3bb65eb8mr270758a91.4.1746017937898; Wed, 30 Apr 2025
- 05:58:57 -0700 (PDT)
+	s=arc-20240116; t=1746017955; c=relaxed/simple;
+	bh=XZoHiZ+bZMB/yj+8myQMKA00svbtX13JjK8sRJtWc20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tsxbndkLRFqjhk7Nrpj+ygvlkHEg70gegSB5a5e4Us8PHJb3Nb31WZ9/HGFeayxOc/FtK4s3YnMlLB+bIXhIcbxkTVYxU6JDu56JpyzYInqTHu0YEOkANXYVTvMsVsrEK8jc8u1PzsJMWiMxWnM1v4WWOsnikzDM+8FeQwuHgG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id A553A68CFE; Wed, 30 Apr 2025 14:59:06 +0200 (CEST)
+Date: Wed, 30 Apr 2025 14:59:06 +0200
+From: Christoph Hellwig <hch@lst.de>
+To: "Darrick J. Wong" <djwong@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, John Garry <john.g.garry@oracle.com>,
+	brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v9 05/15] xfs: ignore HW which cannot atomic write a
+ single block
+Message-ID: <20250430125906.GB834@lst.de>
+References: <20250425164504.3263637-1-john.g.garry@oracle.com> <20250425164504.3263637-6-john.g.garry@oracle.com> <20250429122105.GA12603@lst.de> <20250429144446.GD25655@frogsfrogsfrogs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429235006.536648-1-sashal@kernel.org> <20250429235006.536648-33-sashal@kernel.org>
-In-Reply-To: <20250429235006.536648-33-sashal@kernel.org>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 30 Apr 2025 08:58:45 -0400
-X-Gm-Features: ATxdqUFE2oLBHIj4SHrxk1wfj1ZCoBa2urs6nrnbqf5-qqwOEYtXEpH592CaLS8
-Message-ID: <CADnq5_Neg_tkGf2JVT+QuAuU06EY=XwBXBH680JFXyfW4FwUMg@mail.gmail.com>
-Subject: Re: [PATCH AUTOSEL 6.14 33/39] drm/amdgpu: Allow P2P access through XGMI
-To: Sasha Levin <sashal@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Felix Kuehling <felix.kuehling@amd.com>, Hao Zhou <hao.zhou@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, airlied@gmail.com, simona@ffwll.ch, 
-	Yunxiang.Li@amd.com, tvrtko.ursulin@igalia.com, matthew.auld@intel.com, 
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429144446.GD25655@frogsfrogsfrogs>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Tue, Apr 29, 2025 at 7:51=E2=80=AFPM Sasha Levin <sashal@kernel.org> wro=
-te:
->
-> From: Felix Kuehling <felix.kuehling@amd.com>
->
-> [ Upstream commit a92741e72f91b904c1d8c3d409ed8dbe9c1f2b26 ]
->
-> If peer memory is accessible through XGMI, allow leaving it in VRAM
-> rather than forcing its migration to GTT on DMABuf attachment.
->
-> Signed-off-by: Felix Kuehling <felix.kuehling@amd.com>
-> Tested-by: Hao (Claire) Zhou <hao.zhou@amd.com>
-> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
-> Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-> (cherry picked from commit 372c8d72c3680fdea3fbb2d6b089f76b4a6d596a)
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+On Tue, Apr 29, 2025 at 07:44:46AM -0700, Darrick J. Wong wrote:
+> > So this can't be merged into xfs_setsize_buftarg as suggeted last round
+> > instead of needing yet another per-device call into the buftarg code?
+> 
+> Oh, heh, I forgot that xfs_setsize_buftarg is called a second time by
+> xfs_setup_devices at the end of fill_super.
 
-This patch is only applicable to 6.15 and newer.  Please drop for stable.
+That's actually the real call.  The first is just a dummy to have
+bt_meta_sectorsize/bt_meta_sectormask initialized because if we didn't
+do that some assert in the block layer triggered.  We should probably
+remove that call and open code the two assignments..
 
-Alex
+> I don't like the idea of merging the hw atomic write detection into
+> xfs_setsize_buftarg itself because (a) it gets called for the data
+> device before we've read the fs blocksize so the validation is
+> meaningless and (b) that makes xfs_setsize_buftarg's purpose less
+> cohesive.
 
+As explained last round this came up I'd of course rename it if
+we did that.  But I can do that later.
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c | 30 ++++++++++++++++++++-
->  1 file changed, 29 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/dr=
-m/amd/amdgpu/amdgpu_dma_buf.c
-> index c9842a0e2a1cd..cb043296f9aec 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
-> @@ -43,6 +43,29 @@
->  #include <linux/dma-fence-array.h>
->  #include <linux/pci-p2pdma.h>
->
-> +static const struct dma_buf_attach_ops amdgpu_dma_buf_attach_ops;
-> +
-> +/**
-> + * dma_buf_attach_adev - Helper to get adev of an attachment
-> + *
-> + * @attach: attachment
-> + *
-> + * Returns:
-> + * A struct amdgpu_device * if the attaching device is an amdgpu device =
-or
-> + * partition, NULL otherwise.
-> + */
-> +static struct amdgpu_device *dma_buf_attach_adev(struct dma_buf_attachme=
-nt *attach)
-> +{
-> +       if (attach->importer_ops =3D=3D &amdgpu_dma_buf_attach_ops) {
-> +               struct drm_gem_object *obj =3D attach->importer_priv;
-> +               struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(obj);
-> +
-> +               return amdgpu_ttm_adev(bo->tbo.bdev);
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
->  /**
->   * amdgpu_dma_buf_attach - &dma_buf_ops.attach implementation
->   *
-> @@ -54,11 +77,13 @@
->  static int amdgpu_dma_buf_attach(struct dma_buf *dmabuf,
->                                  struct dma_buf_attachment *attach)
->  {
-> +       struct amdgpu_device *attach_adev =3D dma_buf_attach_adev(attach)=
-;
->         struct drm_gem_object *obj =3D dmabuf->priv;
->         struct amdgpu_bo *bo =3D gem_to_amdgpu_bo(obj);
->         struct amdgpu_device *adev =3D amdgpu_ttm_adev(bo->tbo.bdev);
->
-> -       if (pci_p2pdma_distance(adev->pdev, attach->dev, false) < 0)
-> +       if (!amdgpu_dmabuf_is_xgmi_accessible(attach_adev, bo) &&
-> +           pci_p2pdma_distance(adev->pdev, attach->dev, false) < 0)
->                 attach->peer2peer =3D false;
->
->         amdgpu_vm_bo_update_shared(bo);
-> @@ -459,6 +484,9 @@ bool amdgpu_dmabuf_is_xgmi_accessible(struct amdgpu_d=
-evice *adev,
->         struct drm_gem_object *obj =3D &bo->tbo.base;
->         struct drm_gem_object *gobj;
->
-> +       if (!adev)
-> +               return false;
-> +
->         if (obj->import_attach) {
->                 struct dma_buf *dma_buf =3D obj->import_attach->dmabuf;
->
-> --
-> 2.39.5
->
