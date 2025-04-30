@@ -1,49 +1,25 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4124A2F5B;
-	Wed, 30 Apr 2025 05:49:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 988CF2F5B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745992164; cv=none; b=Txh3R0T/H3DJP/TwLF+ZykB95jopPupERXlnp9o7totjCdaDXha/l7ncSAodYbpdL89spTNSSuab35JCljVCcHfCtQORf5ucgnriUOCIfl6H9FQgG8xkqh07Q/If0isr9jEGardyLR8/hrjExChN9m1duqsONQ2vIjo31/vk5OM=
+	t=1745992203; cv=none; b=ktF4Aj54M89CAzpmcDFl8r6nHnm+mqfiH1B0nkaolnazoF/E7LxOVA1D3VGB3EjFknr1ZLDg6QITE+esRtVs9fDgtuzWAhezJ96Kc7/uMJ+PQMekmRwYJ7wOhg52Py/Fuwhqhv3sJYCFbXRMvwrrTV1aAJp6dH0glIuPRcVt3I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745992164; c=relaxed/simple;
-	bh=SgKFRrj7vUSXt1gze5yicj4cZw1w2QV5fN92BkKMOdU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=fWd/igVURoxrjoQO/d241x9V7gOUO9RMQTpXCNbeEFGoW3MRHDymb0LPQUCR9Z8CcnLlLxIaoI5DJzmoWYvrC8j6cmdnI/V/tuwpJRxy72jVCl6JcObHmSA7cHkA8aYiAmJzEp/DeB75zfWLEc3aWpLq6oHSzxtrPVeQIp7/p/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R4wB0hke; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R4wB0hke"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53U5nFpR3282298
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 00:49:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1745992155;
-	bh=SVjrJMnJOpuiRTEnMRkig0no+x/TJr9/Pw/Rfkn0XB0=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=R4wB0hke52yhPC1TGBVIRgSk8mKtcYCBoIcTfx02J0kQqByFO/6iHOjABczKflkFJ
-	 YM+uYtF3ZDLB0Bx7gIgaZvHPGJJSBlcCMcqg1F/uQWq5D4TbGt3qR7KbT53xeZhzzu
-	 P3vPOAo7Lj1OsdyYdiVFltirmr8Ndlgl1t0a9QN8=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53U5nFHM083316
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 30 Apr 2025 00:49:15 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
- Apr 2025 00:49:14 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 30 Apr 2025 00:49:14 -0500
-Received: from [10.249.135.124] ([10.249.135.124])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53U5n1e0080805;
-	Wed, 30 Apr 2025 00:49:02 -0500
-Message-ID: <511ef271-ed0b-40b6-9abc-9fce0081d25b@ti.com>
-Date: Wed, 30 Apr 2025 11:18:52 +0530
+	s=arc-20240116; t=1745992203; c=relaxed/simple;
+	bh=tGpMwysnsq2TxilekSkNHmsw859wisrfWTcmDCeAUYs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BnK6OJgIcR7+ygz6tgporiLxzb7Bud4ydxv3et4orRDnB+JIMDlLhqj2C2iMahtLEbYtN/l9/KCrZDCa45X1K0C0QxvvuCLX7kxGnpoYSzYtQbNuPk7v5qwMRRrPu4+Iy/3TjIklQKnGnFK4TecWIvwjMaaKkNmsHYd1bXQUApw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3902106F;
+	Tue, 29 Apr 2025 22:49:53 -0700 (PDT)
+Received: from [10.163.79.251] (unknown [10.163.79.251])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 327DD3F5A1;
+	Tue, 29 Apr 2025 22:49:50 -0700 (PDT)
+Message-ID: <5eebef24-6c98-4407-a4f1-5a97f08b76a4@arm.com>
+Date: Wed, 30 Apr 2025 11:19:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,145 +27,152 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] arm64: dts: ti: k3-am62p*/k3-j722s: Add bootph-all
- property to enable Ethernet boot
-To: Nishanth Menon <nm@ti.com>
-CC: Conor Dooley <conor+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Rob Herring <robh@kernel.org>, Tero Kristo
-	<kristo@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>, <srk@ti.com>,
-        <s-vadapalli@ti.com>, <danishanwar@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Roger
- Quadros <rogerq@kernel.org>
-References: <20250429072644.2400295-1-c-vankar@ti.com>
- <20250429072644.2400295-3-c-vankar@ti.com>
- <20250429112728.m54x2jwyjykcuus7@unzip>
+Subject: Re: [PATCH v2 4/7] arm64: Add batched version of
+ ptep_modify_prot_start
+To: Anshuman Khandual <anshuman.khandual@arm.com>, akpm@linux-foundation.org
+Cc: ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+ will@kernel.org, Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com,
+ vbabka@suse.cz, jannh@google.com, peterx@redhat.com, joey.gouly@arm.com,
+ ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
+ quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
+ yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
+ namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
+ ziy@nvidia.com
+References: <20250429052336.18912-1-dev.jain@arm.com>
+ <20250429052336.18912-5-dev.jain@arm.com>
+ <e2c10562-2504-434f-9239-32d67955a9af@arm.com>
 Content-Language: en-US
-From: "Vankar, Chintan" <c-vankar@ti.com>
-In-Reply-To: <20250429112728.m54x2jwyjykcuus7@unzip>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <e2c10562-2504-434f-9239-32d67955a9af@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hello Nishanth,
 
-On 4/29/2025 4:57 PM, Nishanth Menon wrote:
-> On 12:56-20250429, Chintan Vankar wrote:
->> Ethernet boot requires CPSW nodes to be present starting from R5 SPL
->> stage. Add bootph-all property to required nodes to enable Ethernet boot
->> for AM62P5-SK and J722S-EVM.
+
+On 30/04/25 11:13 am, Anshuman Khandual wrote:
+> On 4/29/25 10:53, Dev Jain wrote:
+>> Override the generic definition to use get_and_clear_full_ptes(), so that
+>> we do a TLBI possibly only on the "contpte-edges" of the large PTE block,
+>> instead of doing it for every contpte block, which happens for ptep_get_and_clear().
+> 
+> Could you please explain what does "contpte-edges" really signify in the
+> context of large PTE blocks ? Also how TLBI operation only on these edges
+> will never run into the risk of missing TLB invalidation of some other
+> mapped areas ?
+
+We are doing a TLBI over the whole range already, in the mprotect code:
+see tlb_flush_pte_range. What the arm64 internal API does, irrespective 
+of the caller, is to do a TLBI for every contpte block in case of 
+unfolding. We don't need that for the intermediate blocks because the 
+caller does that. We do need a TLBI for the start and end contpte block,
+because in case the range we are invalidating partially covers them, 
+then the caller will not do a TLBI for the non-overlapped PTEs of the block.
+I'll explain some more in the changelog next version.
+
+> 
 >>
->> Reviewed-by: Roger Quadros <rogerq@kernel.org>
->> Signed-off-by: Chintan Vankar <c-vankar@ti.com>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
 >> ---
+>>   arch/arm64/include/asm/pgtable.h |  5 +++++
+>>   arch/arm64/mm/mmu.c              | 12 +++++++++---
+>>   include/linux/pgtable.h          |  4 ++++
+>>   mm/pgtable-generic.c             | 16 +++++++++++-----
+>>   4 files changed, 29 insertions(+), 8 deletions(-)
 >>
->> Link to v3:
->> https://lore.kernel.org/r/20250425051055.2393301-3-c-vankar@ti.com/
->>
->> Changes from v3 to v4:
->> - No changes.
->>
->>   arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi | 3 +++
-> 
-> Please notice that we have the same problem[1] here as well.
-> 
-> [1] https://lore.kernel.org/all/20250425212427.vvyocc4mmne5g3vq@vividly/
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index 2a77f11b78d5..8872ea5f0642 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -1553,6 +1553,11 @@ extern void ptep_modify_prot_commit(struct vm_area_struct *vma,
+>>   				    unsigned long addr, pte_t *ptep,
+>>   				    pte_t old_pte, pte_t new_pte);
+>>   
+>> +#define modify_prot_start_ptes modify_prot_start_ptes
+>> +extern pte_t modify_prot_start_ptes(struct vm_area_struct *vma,
+>> +				    unsigned long addr, pte_t *ptep,
+>> +				    unsigned int nr);
+>> +
+>>   #ifdef CONFIG_ARM64_CONTPTE
+>>   
+>>   /*
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 8fcf59ba39db..fe60be8774f4 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -1523,7 +1523,8 @@ static int __init prevent_bootmem_remove_init(void)
+>>   early_initcall(prevent_bootmem_remove_init);
+>>   #endif
+>>   
+>> -pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
+>> +pte_t modify_prot_start_ptes(struct vm_area_struct *vma, unsigned long addr,
+>> +			     pte_t *ptep, unsigned int nr)
+>>   {
+>>   	if (alternative_has_cap_unlikely(ARM64_WORKAROUND_2645198)) {
+>>   		/*
+>> @@ -1532,9 +1533,14 @@ pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte
+>>   		 * in cases where cpu is affected with errata #2645198.
+>>   		 */
+>>   		if (pte_user_exec(ptep_get(ptep)))
+>> -			return ptep_clear_flush(vma, addr, ptep);
+>> +			return clear_flush_ptes(vma, addr, ptep, nr);
+>>   	}
+>> -	return ptep_get_and_clear(vma->vm_mm, addr, ptep);
+>> +	return get_and_clear_full_ptes(vma->vm_mm, addr, ptep, nr, 0);
+>> +}
+>> +
+>> +pte_t ptep_modify_prot_start(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep)
+>> +{
+>> +	return modify_prot_start_ptes(vma, addr, ptep, 1);
+>>   }
+>>   
+>>   void ptep_modify_prot_commit(struct vm_area_struct *vma, unsigned long addr, pte_t *ptep,
+>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+>> index ed287289335f..10cdb87ccecf 100644
+>> --- a/include/linux/pgtable.h
+>> +++ b/include/linux/pgtable.h
+>> @@ -828,6 +828,10 @@ extern pte_t ptep_clear_flush(struct vm_area_struct *vma,
+>>   			      pte_t *ptep);
+>>   #endif
+>>   
+>> +extern pte_t clear_flush_ptes(struct vm_area_struct *vma,
+>> +			      unsigned long address,
+>> +			      pte_t *ptep, unsigned int nr);
+>> +
+>>   #ifndef __HAVE_ARCH_PMDP_HUGE_CLEAR_FLUSH
+>>   extern pmd_t pmdp_huge_clear_flush(struct vm_area_struct *vma,
+>>   			      unsigned long address,
+>> diff --git a/mm/pgtable-generic.c b/mm/pgtable-generic.c
+>> index 5a882f2b10f9..e238f88c3cac 100644
+>> --- a/mm/pgtable-generic.c
+>> +++ b/mm/pgtable-generic.c
+>> @@ -90,17 +90,23 @@ int ptep_clear_flush_young(struct vm_area_struct *vma,
+>>   }
+>>   #endif
+>>   
+>> -#ifndef __HAVE_ARCH_PTEP_CLEAR_FLUSH
+>> -pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+>> -		       pte_t *ptep)
+>> +pte_t clear_flush_ptes(struct vm_area_struct *vma, unsigned long address,
+>> +		       pte_t *ptep, unsigned int nr)
+>>   {
+>>   	struct mm_struct *mm = (vma)->vm_mm;
+>>   	pte_t pte;
+>> -	pte = ptep_get_and_clear(mm, address, ptep);
+>> +	pte = get_and_clear_full_ptes(mm, address, ptep, nr, 0);
+>>   	if (pte_accessible(mm, pte))
+>> -		flush_tlb_page(vma, address);
+>> +		flush_tlb_range(vma, address, address + nr * PAGE_SIZE);
+>>   	return pte;
+>>   }
+>> +
+>> +#ifndef __HAVE_ARCH_PTEP_CLEAR_FLUSH
+>> +pte_t ptep_clear_flush(struct vm_area_struct *vma, unsigned long address,
+>> +		       pte_t *ptep)
+>> +{
+>> +	return clear_flush_ptes(vma, address, ptep, 1);
+>> +}
+>>   #endif
+>>   
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 
-I have added "bootph-all" property in the common file of J722S-EVM and 
-AM62P5-SK since we are enabling Ethernet boot for both the boards. Are
-you referring to move the nodes I have added in
-"k3-am62p-j722s-common-main.dtsi" to respective board files,
-"k3-am62p5-sk.dts" and "k3-j722s-evm.dts".
-
-Regards,
-Chintan.
-
-> 
->>   arch/arm64/boot/dts/ti/k3-am62p5-sk.dts                | 2 ++
->>   arch/arm64/boot/dts/ti/k3-j722s-evm.dts                | 3 +++
->>   3 files changed, 8 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
->> index 7b65538110e8..11f484f88603 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
->> +++ b/arch/arm64/boot/dts/ti/k3-am62p-j722s-common-main.dtsi
->> @@ -50,6 +50,7 @@ phy_gmii_sel: phy@4044 {
->>   			compatible = "ti,am654-phy-gmii-sel";
->>   			reg = <0x4044 0x8>;
->>   			#phy-cells = <1>;
->> +			bootph-all;
->>   		};
->>   
->>   		epwm_tbclk: clock-controller@4130 {
->> @@ -730,6 +731,7 @@ cpsw_port1: port@1 {
->>   				mac-address = [00 00 00 00 00 00];
->>   				ti,syscon-efuse = <&cpsw_mac_syscon 0x0>;
->>   				status = "disabled";
->> +				bootph-all;
->>   			};
->>   
->>   			cpsw_port2: port@2 {
->> @@ -751,6 +753,7 @@ cpsw3g_mdio: mdio@f00 {
->>   			clock-names = "fck";
->>   			bus_freq = <1000000>;
->>   			status = "disabled";
->> +			bootph-all;
->>   		};
->>   
->>   		cpts@3d000 {
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->> index d29f524600af..5b2f0945a9eb 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
->> @@ -227,6 +227,7 @@ main_mdio1_pins_default: main-mdio1-default-pins {
->>   			AM62PX_IOPAD(0x0160, PIN_OUTPUT, 0) /* (F17) MDIO0_MDC */
->>   			AM62PX_IOPAD(0x015c, PIN_INPUT, 0) /* (F16) MDIO0_MDIO */
->>   		>;
->> +		bootph-all;
->>   	};
->>   
->>   	main_mmc1_pins_default: main-mmc1-default-pins {
->> @@ -496,6 +497,7 @@ &cpsw3g_mdio {
->>   
->>   	cpsw3g_phy0: ethernet-phy@0 {
->>   		reg = <0>;
->> +		bootph-all;
->>   		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
->>   		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
->>   		ti,min-output-impedance;
->> diff --git a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> index 34b9d190800e..93d770c5792e 100644
->> --- a/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-j722s-evm.dts
->> @@ -310,6 +310,7 @@ mdio_pins_default: mdio-default-pins {
->>   			J722S_IOPAD(0x0160, PIN_OUTPUT, 0) /* (AC24) MDIO0_MDC */
->>   			J722S_IOPAD(0x015c, PIN_INPUT, 0) /* (AD25) MDIO0_MDIO */
->>   		>;
->> +		bootph-all;
->>   	};
->>   
->>   	ospi0_pins_default: ospi0-default-pins {
->> @@ -344,6 +345,7 @@ J722S_IOPAD(0x0140, PIN_OUTPUT, 0) /* (AF24) RGMII1_TD3 */
->>   			J722S_IOPAD(0x0130, PIN_OUTPUT, 0) /* (AG26) RGMII1_TXC */
->>   			J722S_IOPAD(0x012c, PIN_OUTPUT, 0) /* (AF25) RGMII1_TX_CTL */
->>   		>;
->> +		bootph-all;
->>   	};
->>   
->>   	main_usb1_pins_default: main-usb1-default-pins {
->> @@ -388,6 +390,7 @@ &cpsw3g_mdio {
->>   
->>   	cpsw3g_phy0: ethernet-phy@0 {
->>   		reg = <0>;
->> +		bootph-all;
->>   		ti,rx-internal-delay = <DP83867_RGMIIDCTL_2_00_NS>;
->>   		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_4_B_NIB>;
->>   		ti,min-output-impedance;
->> -- 
->> 2.34.1
->>
-> 
