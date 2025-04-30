@@ -1,77 +1,74 @@
-Received: from mail-pl1-f195.google.com (mail-pl1-f195.google.com [209.85.214.195])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F1571E7C23;
-	Wed, 30 Apr 2025 05:57:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 088847FBA2;
+	Wed, 30 Apr 2025 05:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745992630; cv=none; b=QESBNUriKtTNLWWyXhJjXb+K3D5b2OnkXvVerrqgV9S2XuVPPLaLfKBkliwxQ2bViOOObv2gWO6LHUIX+f54Mfigmi5tqDkrAmqy2cTeE0PnTc7AG5GpbN1QFZPFwzlkRU7rgkOCQxAY516AsNURlLoyQsReCWn3n66Uh5W+Nbs=
+	t=1745992702; cv=none; b=SjID2dh3fWEzKHiV9Tsa8UpwEumzwtraqTWyV/SLvOW6tKACQsiKM5lYRDLkRsyvtCOYCvodysY57OylqLis9ab7EhPRf0/neO7xDtJNIUR5knjjVAs7q6Cr0WG+M4shZpnmFxc3ELqLGl/1fBeItCLNdDwY0kbFKCS81oy1imw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745992630; c=relaxed/simple;
-	bh=OPcdA7WzHL8qbupr9CeaRRLP0cf3U+p7fWUcEB+ist8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N7p22M9gf2TeDkGLC5iQ3Jwb9iW5Q2tewDgOpz4f9JV5q3fZFh3LZ/2gys4g3GaecVGBGaLSXzvy6v52miWL6XpTXXnRAYZGBwKbacJ8+AZRhre+IQFf55FXBV3eckLZk8JKNzAHpBvcUBTTOUoCy0z9rcZcWSGA7iK5rTmM1Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fxpdCETO; arc=none smtp.client-ip=209.85.214.195
+	s=arc-20240116; t=1745992702; c=relaxed/simple;
+	bh=ohfi0HqJzhAtGpVR6EnVIzSbyLCb+8C/x27UYL+bpmE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dp7+4LD66C17S+I60TdL5Uqaxkz5s0lLrrvX19cE52KruHLbGaKOO86CfOjbfHqx0O4qNBRMuG//WnzVUh4E7ExZkFBlmc6KiHkm5GPTsYrIKUqG/cr7EVPSAl8v2VgZEjMKi7qD5PDLDckS12dSCCrl34gE0l0Th59707RM2qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CqFYFZSb; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fxpdCETO"
-Received: by mail-pl1-f195.google.com with SMTP id d9443c01a7336-227c7e4d5feso13116475ad.2;
-        Tue, 29 Apr 2025 22:57:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqFYFZSb"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac339f53df9so1326902766b.1;
+        Tue, 29 Apr 2025 22:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745992628; x=1746597428; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kkxFjjdv6suYqQJlXMyq90HjSEeRgcZf4756/6SBQro=;
-        b=fxpdCETO1z/BMhmCti/OaeYINgtvbU8bNMlyZn+Fz5R2SNd9T3acst3enoxTe4FazE
-         Iu09H4I551sbHTbf9TJf24gLJ0gfmcP7I0ytFxHtnPpObHmi3uUvyg2hgQ/hAbZPKjGN
-         WkkjM7eqMh8a244vjHdUWaRODsWRqUiCcQOiOM1NnKB1l0i4ylilCxDbRpiTKDrCBKCc
-         DC+mN00bMwuVDm3opRFO7XPiR/fBNH10WtRamFMONswGjnWqrdVmfIzgLrZx7SdAe05U
-         XDp8TMt0rbk4xQ2JnCKq/rVK8cs7cVZaW5tW+CgWq2sBe/PWwh8B0nzQ1DcjgRR7C8Ly
-         HfHg==
+        d=gmail.com; s=20230601; t=1745992699; x=1746597499; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5qWfhUQvd7EuaFksqXbpSrvG1yXtKPy9RHczOGQWZB0=;
+        b=CqFYFZSbqeHUQArqIl8Y2ghvPTIqBzwcr7km8lSxu9TOMIaX5ITZ6EztEcl1Cixm7D
+         BDelYVxi/CCj1ZtJeODMQRm93Vy/FiPX3LHKo7yDldxN5HDC8PtWLZJBahtxoEugnpZo
+         ogrprPSKTFfKSqpZLG1U/CdSyete48/+4svgHA8/PvmiyZHUVrFGGttgTsLUTs9Rt9I7
+         y0UaIBWXTiSX8qb7yzNdPvAvF4Vlwz0lQd1HaMk5748dqupMs7mPlpKSo+960LTTXey5
+         XS5V9yh4u3z4u+UI5SQBlrMYxNirt/MRoriKrJVEIJDCFviv7QbyVLK41uUzvsfQOpsP
+         X3mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745992628; x=1746597428;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kkxFjjdv6suYqQJlXMyq90HjSEeRgcZf4756/6SBQro=;
-        b=UytfI+3GhW6QzxAXO8LeNbXrRv3xbcmqyGTE7LgedBtYaWh2s06868FvVMilYjBbno
-         Vss1lwUd7yBRoG87n/g5xjsIc/bDIB0x2iUtsl/t0Rd6EDg+S+88Ygc4tm/Dek7ey9Q/
-         9fIOzL6oxHcWCuVZ1VRX2HtHKenE3aDY6eA5jtLt2R2y1PWE2CqkE7aqCyRCOJA2Lq1U
-         bL00/5tclUIaI0T/nzZpIGBH1IAyHSlCJ/hLTQvUiG0Z0CXJmEjsRxW3u71aKvRxaZpU
-         OsCA9tuicNn96rT8tmVwDpmTCZuXh7Ra7DKqoHPrtpYmEs281//Gfam9mnFKeHxzXlBT
-         paGA==
-X-Forwarded-Encrypted: i=1; AJvYcCVU+hiSsx2cnY9GSoHA2afZ0vjTXbiqUr7h9lwk9jx7XSBt2BTjn/Wq1XDHNOWYYMjKxIWIHDA6TM7ZSY6u@vger.kernel.org, AJvYcCXP4LWzOZJNE21hgQo7Ey09MGeCsknEBSKviT4/7hiwVsHouGMA99gfP+m1Mq5XxqIdbVjcrZKdbbJorg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbbzFbNSDS5SK9tdb2FTSt/6f03uqSezULaJWc+ZLKhYHIveOF
-	pY7An4e2F7GRAsJwvYW/woLJTHlflxOBq6T+B8QAYGB0M6H5n6WX
-X-Gm-Gg: ASbGncsMXka81e4k4Y0RKdRaPulLJBKPGcwSRvIKfcbWTGfJlOqN/XOZctzTu8yBqzJ
-	HQFTnj9hVNxjNmlkVTEsqOINCOTedI4nUjI9oIuiSAoU5Wli9y9XKuMB2eixAtfpUQneTt67Omg
-	sQgMWpM+FKJRbBMAqXxOoPaMrYzQlreqheUfebpOeUDh643uGoM/RiV7t3Y9+CgRXCbMdA4Rxjk
-	JOu4bSs2To7e4zt8dbbUmDgESo/EQ+5Qk3NNXqk3ke7Rt9R7C9mN+clecqFstmtlDR7Rhfo5NdN
-	u+vA3qzPpAr3pnmqwd7kTql/XE91SgmPsn1kyuk8QTdNSdtOLgviY80LxAWv27SHLMbDp1IK4kB
-	eUJfLJkyBFPrMekB2cp+p6xJCJFNoizX22oPmMgAQJv0czaemrijxJ6g=
-X-Google-Smtp-Source: AGHT+IHBJYloTgN8pwH+ee69VUknLa8QX3gHDwSiGfv0vAc8H9ceexmkgnOwBPKpCv3nT5A+ZkD2wQ==
-X-Received: by 2002:a17:903:fb0:b0:223:28a8:610b with SMTP id d9443c01a7336-22df358f8f4mr11530585ad.14.1745992628441;
-        Tue, 29 Apr 2025 22:57:08 -0700 (PDT)
-Received: from kerneldev.localdomain (162-225-124-171.lightspeed.sntcca.sbcglobal.net. [162.225.124.171])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5221a82sm113383895ad.257.2025.04.29.22.57.07
+        d=1e100.net; s=20230601; t=1745992699; x=1746597499;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5qWfhUQvd7EuaFksqXbpSrvG1yXtKPy9RHczOGQWZB0=;
+        b=JPoHVid+KSNzVsz5qoPqv70RaEaXQNOKzMZsxEOUqUrBUe+480FPQxTkDtIkMdJj7M
+         yQFwaPIjf1BIyDZy6DYumqcGEU6yyDZApC1dV9g/gGhUBtHOuN0OAbvXBkB9aEklJzsW
+         XXECJbWkN1qcTft8Ld9kVt+Ulm1thNjgvUArz+gpJPIPCPZckzVOyoBfS3bkp+fkB1WE
+         Sbt3LfWGq4YAWiDqyhHKReOGxQtsT+X+XQtGt4UzIwMOV8hIi69hA114vt4Dkq833WPe
+         NBB7AFYWkTJ48BjMRZkmcIbZtbCpw4831Z0N1VS8nLkd949TcnsyFkQpOJ6HFnQrnXNV
+         PWYg==
+X-Forwarded-Encrypted: i=1; AJvYcCV3MW7hE3ByEkb1KWmJCu+jJlVtqP3hnKnR4Rnum7UzHD67DrfRwYNk4mnpRMtsf1VZfeJ07HXruahSYJZx@vger.kernel.org, AJvYcCV9g8n17dJFMj2fN3wF0E1U5+zVe3XkS/05k6DNDq1EwJK2LJ2WVzDesMTqY/FejEH3SmvZshb1N6pN@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKpBig7A6SvNsR8dYCbA+j4gnWvfetvtWi7rFN3q6jiC/0Jp7f
+	F3RCkcc+fhBPbgYcsKJ2fYBONRx9YQtZU8p4NVkWwk07gTLrs933
+X-Gm-Gg: ASbGnctqxBm78efC5W0L03bfjo07dWeavuNU0pOlfANVVZFWUgTfACyaoayu3La/INS
+	ZukqTpaBGsexQ2yWX1oLiBXuMOC2ZxTv0+DrmVQvKr1ZsVkyLey55EjKHM2QR0/quD2yacrF+jB
+	ZVH9P3KVJXZ4ip089qd3nRswMd2sPceAXyX/wLHMN403CINdkTHXvetwLiw7WAtpC2p6e/eBo9n
+	jAtiPavFrBvvq51Qv2qnYQ+gXfCSQXuTHfKlxBWRghA64EAh6fUkjk2yGQyp2wSsop25wHo9EBJ
+	QNDgFg0r8qambH/6nAcc7xGu6HASnl30
+X-Google-Smtp-Source: AGHT+IEZJo2gt5oVrtm7vWQ+wxAYvFyT4LXjM3xpP0Ic2lyy+zgDLtip/AuYurxnEoSle+ios2/yrA==
+X-Received: by 2002:a17:907:6d15:b0:acb:4cd7:2963 with SMTP id a640c23a62f3a-acee241c417mr132058066b.33.1745992699058;
+        Tue, 29 Apr 2025 22:58:19 -0700 (PDT)
+Received: from xeon.. ([188.163.112.70])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e41c71csm883134066b.4.2025.04.29.22.58.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 22:57:08 -0700 (PDT)
-From: Eric Florin <ericflorin.kernel@gmail.com>
-To: teddy.wang@siliconmotion.com
-Cc: sudipm.mukherjee@gmail.com,
-	gregkh@linuxfoundation.org,
-	linux-fbdev@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Eric Florin <ericflorin.kernel@gmail.com>
-Subject: [PATCH 5/5] staging: sm750fb: rename sm750_hw_cursor_setData2
-Date: Tue, 29 Apr 2025 22:55:39 -0700
-Message-Id: <af5080150498adf635be36e332a7ce7121692f93.1745982772.git.ericflorin.kernel@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <cover.1745982772.git.ericflorin.kernel@gmail.com>
-References: <cover.1745982772.git.ericflorin.kernel@gmail.com>
+        Tue, 29 Apr 2025 22:58:18 -0700 (PDT)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-pm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/1] thermal: thermal-generic-adc: add temp sensor function
+Date: Wed, 30 Apr 2025 08:58:06 +0300
+Message-ID: <20250430055807.11805-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,45 +77,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Rename sm750_hw_cursor_setData2 to sm750_hw_cursor_set_data2 to conform
-with kernel style guidelines as reported by checkpatch.pl
+To avoid duplicating sensor functionality and conversion tables, this
+design allows converting an ADC IIO channel's output directly into a
+temperature IIO channel. This is particularly useful for devices where
+hwmon isn't suitable or where temperature data must be accessible through
+IIO.
 
-CHECK: Avoid CamelCase: <sm750_hw_cursor_setData2>
+One such device is, for example, the MAX17040 fuel gauge.
 
-Signed-off-by: Eric Florin <ericflorin.kernel@gmail.com>
 ---
- drivers/staging/sm750fb/sm750_cursor.c | 4 ++--
- drivers/staging/sm750fb/sm750_cursor.h | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Changes on switching from v4 to v5:
+- switched back to IIO_CHAN_INFO_PROCESSED
+- dropped schema commit
+- applied Jonathan Cameron code improvement suggestions
 
-diff --git a/drivers/staging/sm750fb/sm750_cursor.c b/drivers/staging/sm750fb/sm750_cursor.c
-index 3aa26ef00011..7ede144905c9 100644
---- a/drivers/staging/sm750fb/sm750_cursor.c
-+++ b/drivers/staging/sm750fb/sm750_cursor.c
-@@ -131,8 +131,8 @@ void sm750_hw_cursor_set_data(struct lynx_cursor *cursor, u16 rop,
- 	}
- }
- 
--void sm750_hw_cursor_setData2(struct lynx_cursor *cursor, u16 rop,
--			      const u8 *pcol, const u8 *pmsk)
-+void sm750_hw_cursor_set_data2(struct lynx_cursor *cursor, u16 rop,
-+			       const u8 *pcol, const u8 *pmsk)
- {
- 	int i, j, count, pitch, offset;
- 	u8 color, mask;
-diff --git a/drivers/staging/sm750fb/sm750_cursor.h b/drivers/staging/sm750fb/sm750_cursor.h
-index cbb896a35160..88fa02f6377a 100644
---- a/drivers/staging/sm750fb/sm750_cursor.h
-+++ b/drivers/staging/sm750fb/sm750_cursor.h
-@@ -10,6 +10,6 @@ void sm750_hw_cursor_set_pos(struct lynx_cursor *cursor, int x, int y);
- void sm750_hw_cursor_set_color(struct lynx_cursor *cursor, u32 fg, u32 bg);
- void sm750_hw_cursor_set_data(struct lynx_cursor *cursor, u16 rop,
- 			      const u8 *data, const u8 *mask);
--void sm750_hw_cursor_setData2(struct lynx_cursor *cursor, u16 rop,
--			      const u8 *data, const u8 *mask);
-+void sm750_hw_cursor_set_data2(struct lynx_cursor *cursor, u16 rop,
-+			       const u8 *data, const u8 *mask);
- #endif
+Changes on switching from v3 to v4:
+- switch to use of RAW and SCALED channels to provide more accurate data
+
+Changes on switching from v2 to v3:
+- rephrased commit headers
+
+Changes on switching from v1 to v2:
+- documented #iio-channel-cells property
+- switched to IIO_CHAN_INFO_PROCESSED
+---
+
+Svyatoslav Ryhel (1):
+  thermal: thermal-generic-adc: add temperature sensor channel
+
+ drivers/thermal/thermal-generic-adc.c | 55 ++++++++++++++++++++++++++-
+ 1 file changed, 54 insertions(+), 1 deletion(-)
+
 -- 
-2.39.5
+2.48.1
 
