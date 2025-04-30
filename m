@@ -1,86 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9A91DFE09;
-	Wed, 30 Apr 2025 07:21:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2991E9B14;
+	Wed, 30 Apr 2025 07:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745997666; cv=none; b=e3ozFCShaKLA7tqDHtZ7mwH4bOiBrl3AQ0O1Xokx6iwOPUzTD0ZMuBV7wPZnLwPzt5HkgFdgkR93GQ0nMguep83ukBTRKe33Guozs61FfIFSnCT/5mVZI1OcbBQHzqE61Hr+w9TBf4sjuthDmsp7OtXsocrJ4OSA/UWiWKql7uA=
+	t=1745997666; cv=none; b=cgNEPdyn7GyisTNyaD9iVsooDEV+/5HOCNJUVg+MqtyfyTzxje1l+E0zDXJtWQpPQ8rc4bFbrcuTQf152pc+hUhZ14lRrhjWWqJOfknNW75eHHC+dz8LzjIoPbEJSjYBYwm0ySbCD8w7xtiGC1c+pQExf7Z8ezUM9sRZxHNHAmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745997666; c=relaxed/simple;
-	bh=unOAuHHlLSDYswEV053BVvtCpbY1HBhf14HMlI/dclI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P6pVqYgClQ3ARNDUtE8JCeklHpd1YkHtNpxR+Zn1+G4IY4zZzu7chYjjyH8A6ksvDZypYgwq4WhYlSf/4U+7bnAcdBrT4wFUOv8G+NByIIk67m/TqERQIAygIsi32J8QOeEMiCxuwJt3rT1vOsT92bGBgh1zAZsz6BbkvT+8arA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkrydZAB; arc=none smtp.client-ip=10.30.226.201
+	bh=AzrSyuMxDkC5K98zlQAG95tkL/pvPBXmepE6TCRz4Fc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ve8FB3iguL0su0TQD4KfpEsJ6SUjdyR07h/+c0Kg0HK8UFQPxZX7KJT/KSWNt/amuxEGKFpC914QJB7a7Abkk+I1I6xbmYTXcjjLFoFe8R+JaNIygPtLxvbZET/BUwapTDm6tUmKiF+pJdwwWblsJpHQL5+Rl31BKUtI59a0LE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bPJx5QND; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkrydZAB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A350C4CEE9;
-	Wed, 30 Apr 2025 07:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745997665;
-	bh=unOAuHHlLSDYswEV053BVvtCpbY1HBhf14HMlI/dclI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YkrydZABVN2h5znRN4UMWCuCuzR39Wj/6N5lYPSOxVD7PLIr07qGDVz8B0ddsauDn
-	 vfcrkOHyrCDAeShx323/3z12fMsEJYRLoD2ptrbyW3ehqtigC5WsVV1nhvntJ8jRLZ
-	 Lh0YYIkTB1kdvTyvsUAoz0eeV5J5IPQKcejy2iqxEPEy5NKYq//DwhSkzhvnsHrDfy
-	 pGPHAcAa1IkB0NKxjhTtXw/C5R/B0w3LU2AMcVAYguYI3IHs+ZzzSsvFqUCTlJMlqd
-	 CaL/3ZH7gVg/ZWS+3AyTHReOJ2CTKlJw1+8FIlD/wpG8CkftZBTQv9KcSrHAkIy2ZS
-	 Lr4N3qNmn2kXA==
-Date: Wed, 30 Apr 2025 09:21:03 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Icenowy Zheng <uwu@icenowy.me>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, 
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
- PAD_INTERNAL_* virtual pins
-Message-ID: <20250430-vagabond-agile-yak-7afe68@kuoka>
-References: <20250424062017.652969-1-uwu@icenowy.me>
- <20250424062017.652969-2-uwu@icenowy.me>
- <20250428-smiling-azure-sunfish-7c1c25@kuoka>
- <34c92033f4bbf289c6048a85f0f6ba04435e7bf8.camel@icenowy.me>
- <8e131fce-12b6-4a5f-8601-c15a0e4290fe@kernel.org>
- <4d0bf5b8e1dd00f4025b7643a746cd99010c08fc.camel@icenowy.me>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bPJx5QND"
+Message-ID: <a6cb0396-4bc5-4215-9e2e-a68be83c1c94@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1745997661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OuZnX2BRFmICCR806hXS16BUkH/lmlas9chN4sIYfsU=;
+	b=bPJx5QNDt0UOh1b+z/teoeW8pSlsLjqvN8xsIZ7LxxCrsjwdSOitJftIIG28PfVJ0lU720
+	Kq7KISGQs3uESsgO2qFARs4nDrGziShEw2urNKkH/45pLX6V9hvHF4uNfOHFNdimWASxXn
+	WxZsi9Cy1Lkr7N7P2Zm1fFMkaf5y8BI=
+Date: Wed, 30 Apr 2025 00:20:48 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <4d0bf5b8e1dd00f4025b7643a746cd99010c08fc.camel@icenowy.me>
+Subject: Re: [PATCH v2 2/3] KVM: riscv: selftests: Decode stval to identify
+ exact exception type
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>,
+ Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250429-kvm_selftest_improve-v2-0-51713f91e04a@rivosinc.com>
+ <20250429-kvm_selftest_improve-v2-2-51713f91e04a@rivosinc.com>
+ <20250430-b40cd14818cc9264506e61f2@orel>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250430-b40cd14818cc9264506e61f2@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 05:00:04PM GMT, Icenowy Zheng wrote:
-> > > > > +/* virtual pins for forcing GPI */
-> > > > > +#define PAD_INTERNAL_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0254
-> > > > > +#define PAD_INTERNAL_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0255
-> > > >=20
-> > > > Why this cannot be 20 and 21? These are not values for registers,
-> > > > but
-> > > > abstract numbers.
-> > >=20
-> > > The number must not collide with SYS GPIO pads too.
-> >=20
-> > There are no SYS GPIO pads here. Do you understand that this is not
-> > value for registers?
->=20
-> Yes I understand.
->=20
-> The situation is that JH7110 has two similar pin mux controllers, one
-> SYSGPIO and one AONGPIO. Despite I listed the values after the AONGPIO
-> pad list, these values should apply to SYSGPIO too (unless you want to
-> let them have different values for these two pinmux controllers), which
-> is the part with comment "sys_iomux pins".
 
-It is fine for me in such case.
+On 4/30/25 12:09 AM, Andrew Jones wrote:
+> On Tue, Apr 29, 2025 at 05:18:46PM -0700, Atish Patra wrote:
+>> Currently, the sbi_pmu_test continues if the exception type is illegal
+>> instruction because access to hpmcounter will generate that. However
+>> illegal instruction exception may occur due to the other reasons
+>> which should result in test assertion.
+>>
+>> Use the stval to decode the exact type of instructions and which csrs are
+>> being accessed if it is csr access instructions. Assert in all cases
+>> except if it is a csr access instructions that access valid PMU related
+>> registers.
+>>
+>> Reviewed-by: Anup Patel <anup@brainfault.org>
+>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>> ---
+>>   .../testing/selftests/kvm/include/riscv/processor.h  | 13 +++++++++++++
+>>   tools/testing/selftests/kvm/riscv/sbi_pmu_test.c     | 20 ++++++++++++++++++++
+>>   2 files changed, 33 insertions(+)
+>>
+>> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+>> index 1b5aef87de0f..162f303d9daa 100644
+>> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
+>> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+>> @@ -11,6 +11,19 @@
+>>   #include <asm/csr.h>
+>>   #include "kvm_util.h"
+>>   
+>> +#define INSN_OPCODE_MASK	0x007c
+>> +#define INSN_OPCODE_SHIFT	2
+>> +#define INSN_OPCODE_SYSTEM	28
+>> +
+>> +#define INSN_MASK_FUNCT3	0x7000
+>> +#define INSN_SHIFT_FUNCT3	12
+>> +
+>> +#define INSN_CSR_MASK		0xfff00000
+>> +#define INSN_CSR_SHIFT		20
+>> +
+>> +#define GET_RM(insn)            (((insn) & INSN_MASK_FUNCT3) >> INSN_SHIFT_FUNCT3)
+>> +#define GET_CSR_NUM(insn)       (((insn) & INSN_CSR_MASK) >> INSN_CSR_SHIFT)
+>> +
+>>   static inline uint64_t __kvm_reg_id(uint64_t type, uint64_t subtype,
+>>   				    uint64_t idx, uint64_t size)
+>>   {
+>> diff --git a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+>> index 6e66833e5941..3c47268df262 100644
+>> --- a/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+>> +++ b/tools/testing/selftests/kvm/riscv/sbi_pmu_test.c
+>> @@ -130,9 +130,29 @@ static void stop_counter(unsigned long counter, unsigned long stop_flags)
+>>   
+>>   static void guest_illegal_exception_handler(struct pt_regs *regs)
+>>   {
+>> +	unsigned long insn;
+>> +	int opcode, csr_num, funct3;
+>> +
+>>   	__GUEST_ASSERT(regs->cause == EXC_INST_ILLEGAL,
+>>   		       "Unexpected exception handler %lx\n", regs->cause);
+>>   
+>> +	insn = regs->badaddr;
+>> +	opcode = (insn & INSN_OPCODE_MASK) >> INSN_OPCODE_SHIFT;
+>> +	__GUEST_ASSERT(opcode == INSN_OPCODE_SYSTEM,
+>> +		       "Unexpected instruction with opcode 0x%x insn 0x%lx\n", opcode, insn);
+>> +
+>> +	csr_num = GET_CSR_NUM(insn);
+>> +	funct3 = GET_RM(insn);
+>> +	/* Validate if it is a CSR read/write operation */
+>> +	__GUEST_ASSERT(funct3 <= 7 && (funct3 != 0 && funct3 != 4),
+>> +		       "Unexpected system opcode with funct3 0x%x csr_num 0x%x\n",
+>> +		       funct3, csr_num);
+>> +
+>> +	/* Validate if it is a HPMCOUNTER CSR operation */
+>> +	__GUEST_ASSERT((csr_num >= CSR_CYCLE && csr_num <= CSR_HPMCOUNTER31) ||
+>> +		       (csr_num >= CSR_CYCLEH && csr_num <= CSR_HPMCOUNTER31H),
+> We should never get csr accesses to the rv32 high registers since we only
+> support 64-bit.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Sure. I will remove that along with CSR_CYCLEH in pmu_csr_read_num.
 
-Best regards,
-Krzysztof
-
+>> +		       "Unexpected csr_num 0x%x\n", csr_num);
+>> +
+>>   	illegal_handler_invoked = true;
+>>   	/* skip the trapping instruction */
+>>   	regs->epc += 4;
+>>
+>> -- 
+>> 2.43.0
+>>
+> Otherwise,
+>
+> Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
