@@ -1,103 +1,130 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from fout-b8-smtp.messagingengine.com (fout-b8-smtp.messagingengine.com [202.12.124.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933C58615A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:21:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D2E121ADA9;
+	Wed, 30 Apr 2025 11:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012086; cv=none; b=sRMcSDX9KCuDJkAxFpmPTGj1GwSFqGTmUtE8kl7qwocg02YvHkzt+ZAPwTrCKWfmDUUNuJll4xkDKzqykwX9wFqeCCWISQAjPoP5lUwdrWFoTm5mX6sq8VuoHf4/WIuUdmyVYyKX3j7pdgHD9E2wnhv6xvjtfHmXQr49+N68YVA=
+	t=1746012121; cv=none; b=dBQIKQdi7GH+9GMUrgKFmiW10O+VUNrbsrmGuha5YWR4pRewuWyGdgTIGv5204Ahv6fFo2L0raMZBIEA5T57/djrV9Bol1g796VxnisLt6B7Oc/+EbmR5rNvU5U2WTQWDX4ULBwwLu7TBBjzSdLB7z/OXhZojOXyuaeN/QomY9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012086; c=relaxed/simple;
-	bh=3fBuGco0DYZEyfOgnRGKqO6qa1jOB0e9yN/ZKPqb3Qs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GLjAk44acO8gOLQ96TKtb3UTwkSK0Rha5TGWDgZ84JcGVsfvgYYXX33zcA8kNxSpAKVduSHlLl0aniMw8vAMprGepzfITRUyNm0xpG16d4FNXzKdFqzwjSKoyMGhMStdfoMTmmmo+AwAlJRAWHXesn5GUeWjFb6jAv8bMDGeNfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dRdbT+HS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746012121; c=relaxed/simple;
+	bh=RGb5L0+VgpBHNR1U4XWPo+FG2R6wZr4JfsDFFkgVLuY=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=sMKGG4VoeGQIH/nfYdt2DCBxjmMLlZ3gVGKUiJ+TT4a1zxZQm5Vx5cqsIlwvjBmoyEJR3XvzkHSK93chQzQnuDwG1WA1if5VTqdDTdM8C2Jo4P+ADutX1eCHtEH3Q3mVnfS0wJWNiWsPtpP8Yxgyxhzjm9IcjLC831RlaTuiSVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=oQir8fgV; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=epkj3pYE; arc=none smtp.client-ip=202.12.124.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dRdbT+HS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746012083;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0MWOVlw8yXgGQEAuqAramYrkhiU3w78/ZBvJcmOufOI=;
-	b=dRdbT+HS/vmGndo/B3s0CJr615fMzLPeaLVAQITmlcqhFgxpxNKPd9lmXUBOQG1x20KU2K
-	kTLy2ma6brEHdOJiFcRYMG6CkN3/wTfLn4kd+HcaK3mBkfOxpeZLkb7J2rNnYJ1hvAUxX5
-	SEuvR1RgwER3DLdYIYGAYqfmmHRbG9o=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-308-fJyj-U7nPbGCgPFwYxCocw-1; Wed,
- 30 Apr 2025 07:21:17 -0400
-X-MC-Unique: fJyj-U7nPbGCgPFwYxCocw-1
-X-Mimecast-MFC-AGG-ID: fJyj-U7nPbGCgPFwYxCocw_1746012076
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6257C1800876;
-	Wed, 30 Apr 2025 11:21:16 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.23])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3D32A1956094;
-	Wed, 30 Apr 2025 11:21:13 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 30 Apr 2025 13:20:36 +0200 (CEST)
-Date: Wed, 30 Apr 2025 13:20:33 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Michal Hocko <mhocko@suse.com>
-Cc: cve@kernel.org, linux-kernel@vger.kernel.org,
-	linux-cve-announce@vger.kernel.org,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: CVE-2025-22029: exec: fix the racy usage of fs_struct->in_exec
-Message-ID: <20250430112033.GA9277@redhat.com>
-References: <2025041655-CVE-2025-22029-349f@gregkh>
- <aBH93qMAhgMEGDAY@tiehlicka>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="oQir8fgV";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="epkj3pYE"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.stl.internal (Postfix) with ESMTP id 4FA79114019F;
+	Wed, 30 Apr 2025 07:21:57 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-05.internal (MEProxy); Wed, 30 Apr 2025 07:21:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm2; t=1746012117;
+	 x=1746098517; bh=Z36oSXGGg9ROETNVwCaDsohdP4hkvVRdz8OKv4+l4DE=; b=
+	oQir8fgVlfyzBRFRrY5mlQjiosTuk2eLgV+/x8DGY246lQ5nlxxWo0TqE1Q2/qGT
+	Y6E1OpCkgzRFarpaY6Zm+c4tQqnT6auc2KnqD19+hT9iQSDsn1sSHPtcoCoY0stP
+	Kd9IGowSaoGqfTUnXDiORCKzoQ1NiuNlaCwXYwvdBczXOWIl8zCJlVRF3yPByuwp
+	Ax5j8KfNgTZ4hx++AZMjdTbmMpR/yaBVMivUK90Xo2XRiCzz6YcoamAc0b4amNCZ
+	ff31ZS0BnKg7hxhDssQBYiG89rzm8EdTl2UYmkA6geooCXuWVa3c7dBRilyLHE+8
+	yTxMa3xvlwNoOPlwJMLr/g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746012117; x=
+	1746098517; bh=Z36oSXGGg9ROETNVwCaDsohdP4hkvVRdz8OKv4+l4DE=; b=e
+	pkj3pYE3QQwms9iB5yGK0gntBq6AXIWgEIrdiqbtQ8eZMxlymwwzXhkAbD2IA8M6
+	2uOXnWZPTaZfEiuayGHgVhlfTu1cXAS9ZT+AYwYRMik750FWp6pketwzuvQnPC7V
+	EVkfqhYfWFU4YHJpgOcxJccyKwrVtz1+0lcngrUvJkyANUABbqtBCj7ApIaIiu3/
+	dV6efHLFDk/6kwHfLXUcHlo2rN8SSYORsz4DEfsBxtX1hnJyhdm5r+rhMC60ylwm
+	h9BL/Pc552TiDc1tWJ1fH0pPf1xPzkIg7TgPE2pMu2lx1BwGrrVqsw2qOar3/ZeN
+	LuLKDzHyBRxmy5zWWNHUQ==
+X-ME-Sender: <xms:1AcSaLxInYCjZBc64eWNMkRyTuDaWBo84LzmU94AX1FFh-pPkIV-Kg>
+    <xme:1AcSaDT8lm9w0f2ELUVsaw3WrrFZth8IKDtjJxsC0_NpPBJXBPYS_ZcNQxgOLcmj_
+    2Zx1Vnd0K5n2-qE_bw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeiheeiucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephefggfeiveekvdejkeelkeelgfehfefgkeeg
+    hfduudfhgfettddvhfetieejfeefnecuffhomhgrihhnpehlihhnuhigthhvrdhorhhgne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprghrnhgu
+    segrrhhnuggsrdguvgdpnhgspghrtghpthhtohepledpmhhouggvpehsmhhtphhouhhtpd
+    hrtghpthhtoheplhgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghr
+    ugdrtghomhdprhgtphhtthhopehumhgrnhhgrdhjrghinhesihguvggrshhonhgsohgrrh
+    gurdgtohhmpdhrtghpthhtohepughonhhgtghhvghnghdrhigrnhesihhnthgvlhdrtgho
+    mhdprhgtphhtthhopegrrhhnugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgthh
+    gvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepshgrkhgrrhhirdgrihhluhhs
+    sehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvg
+    hlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhgvughi
+    rgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvhgvrhhkuhhilhesgi
+    hsgegrlhhlrdhnlh
+X-ME-Proxy: <xmx:1AcSaFVyMLnqOGIFKlSJbszbKqyimnEMVG9AjOVdxa9tDnpfXauyvg>
+    <xmx:1AcSaFh4mMGbh41gyFR_ZB3RDYkmmbbM9sXXflRgylCnDfmXh108pw>
+    <xmx:1AcSaNARbucmFlg4KQvmzd2Um2plWCtSXPMGXZX_zmQLuFNkHAySow>
+    <xmx:1AcSaOIRhbrrEh3rUFZLEnNi9k8DdbMiliD_5KnVVjKZCVYt7PNBSw>
+    <xmx:1QcSaBLepTdmwAR0Kn65F5QPYioaLHOm64DIDnrDEZjCCKppHSJltkOP>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id B45292220073; Wed, 30 Apr 2025 07:21:56 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBH93qMAhgMEGDAY@tiehlicka>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-ThreadId: T028766a2c840bd23
+Date: Wed, 30 Apr 2025 13:21:36 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Hans Verkuil" <hverkuil@xs4all.nl>,
+ "Dongcheng Yan" <dongcheng.yan@intel.com>, "Arnd Bergmann" <arnd@kernel.org>,
+ "Mauro Carvalho Chehab" <mchehab@kernel.org>
+Cc: "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+ "laurent.pinchart" <laurent.pinchart@ideasonboard.com>,
+ "Umang Jain" <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <9586ec8a-ea48-4586-89f1-3ff118809223@app.fastmail.com>
+In-Reply-To: <0eb40ff7-7123-477f-a477-6d537195346b@xs4all.nl>
+References: <20250314154738.3983798-1-arnd@kernel.org>
+ <ecb959fe-69e3-4265-9e4b-326bff421153@intel.com>
+ <3bb730a9-5d8a-41c6-8a27-e099561b5890@app.fastmail.com>
+ <0eb40ff7-7123-477f-a477-6d537195346b@xs4all.nl>
+Subject: Re: [PATCH] media: i2c: lt6911uxe: Fix Kconfig dependencies:
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On 04/30, Michal Hocko wrote:
+On Tue, Mar 18, 2025, at 14:51, Hans Verkuil wrote:
+> On 3/17/25 11:32, Arnd Bergmann wrote:
+>> On Mon, Mar 17, 2025, at 11:17, Yan, Dongcheng wrote:
+>> 
+>>> So I remove this select flag and passed lkp build test in patch v7.
+>>> But now it encounters build error again, I'm curious why...
+>> 
+>> I don't currently get any more build errors with my patch
+>> added in, and I think this should be sufficient. Can you forward
+>> me the errors and config you get with my patch?
 >
-> Based on a follow up update from Oleg[1] I would like to dispute this
-> CVE.
+> FYI: I plan to take Arnd's patch tomorrow to be in time for the merge window.
+>
+> If more issues are found, then they can be on top later.
 
-Agreed. Let me quote my reply to my "fix", see
-https://lore.kernel.org/all/20250429154944.GA18907@redhat.com/
+Not sure what happened: I see that my patch was in next-20250424
+and earlier but is now missing again, so the link failure returned.
 
-	Damn, I am stupid.
+It was in git://linuxtv.org/media-ci/media-pending.git at the
+time along with two more patches that are now also missing:
 
-	On 03/24, Oleg Nesterov wrote:
-	>
-	> check_unsafe_exec() sets fs->in_exec under cred_guard_mutex, then execve()
-	> paths clear fs->in_exec lockless. This is fine if exec succeeds, but if it
-	> fails we have the following race:
-	>
-	> 	T1 sets fs->in_exec = 1, fails, drops cred_guard_mutex
-	>
-	> 	T2 sets fs->in_exec = 1
-	>
-	> 	T1 clears fs->in_exec
+d51adf038ebe media: cec: tda9950: add back i2c dependency
+118b34092e37 media: i2c: lt6911uxe: add two selects to Kconfig
+0dce5b44bd38 media: platform: synopsys: VIDEO_SYNOPSYS_HDMIRX should depend on ARCH_ROCKCHIP
 
-	When I look at this code again, I think this race was not possible and thus
-	this patch (applied as af7bb0d2ca45) was not needed.
-
-	Yes, begin_new_exec() can drop cred_guard_mutex on failure, but only after
-	de_thread() succeeds, when we can't race with another sub-thread.
-
-	I hope this patch didn't make the things worse so we don't need to revert it.
-	Plus I think it makes this (confusing) logic a bit more clear. Just, unless
-	I am confused again, it wasn't really needed.
-
-Sorry for the confusion caused by my patch :/
-
-Oleg.
-
+      Arnd
