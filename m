@@ -1,197 +1,170 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2041.outbound.protection.outlook.com [40.107.243.41])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7B92DC779;
-	Wed, 30 Apr 2025 03:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.41
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745984019; cv=fail; b=eRcbOd6+GLIEdzUl1A/4G6a8K5GcpySkLLQ6latTeS/Vft3B0OCU+tKGqhUo4eEqVUJRxJh70GG2gJOpxQQeu6XpkcckfZOjVBubvV2+njBtgYah50SVpfQbrUSQgfYZS4R6TB1W4NvV/yCRAtLyZtbsvJomZlYPkPopbxav868=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745984019; c=relaxed/simple;
-	bh=sYBKg0xjnEaDiG/7kbg9bxO9gFTx5/iJ1Ii0J9xhqCc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RG0SWJ8ZyUU9X+KiANJf1TJCBqY32C5tlj9JmZDgbnrvB+IBH+14C/n2bIY1YBJrT1RnBM84icsBrR1NKR0ub887AyHVO4JbmDxbyNG81lAvuj7RYNqQyUcL7XGlCfAlSGGImSJBYkSMdoLwPay/XC67o4r479wSUqbhtns6sKw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=CPs27M+3; arc=fail smtp.client-ip=40.107.243.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A14B2DC779
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745984112; cv=none; b=pS0rKRthEnpvXhAD9tDXW+9hu3L1YDKEzPBhx8/BRcQfwfx3SxTJQgIU7TmMuaMNnb4xO95tma6iLg7fanrFtywEJAvpprCjze8Ne6ioK8EfkPZPTEatPC5mMG/g5tOZQxahg/C4/CnKCKvnrt/AHO3MUQ2evM2XTIjYcB6TVoc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745984112; c=relaxed/simple;
+	bh=8CP1/l95AAIu2RBu8lBb5i+OSNRKCka5XvJ9McWKyls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QowAZf7S2//BNNRG6T/HA6OGPpH4rZ69YYKq0qYrHGS6DMr815HN9DmRg3nXBY09Lo2Yrb9I64Vxd9cA4Y8veKZIMs+qYVLnKIm4jqOhCDZ2lVsazH1YD2rP4wQc1xjeFkE/0o5C4M7dfrC7ZMuBA/XzumwnofdTCngalU25tGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QJGh35hq; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="CPs27M+3"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gvv7rbrslAseoQcD42CIOSGcElrGVyguGJpx3yl3pKMWSx9TyFnimsGTsjkMoTOD46KNe63au+x6KwL+9JdxOJ9/XkjPSdEQ0t/Z24Nica1ytO+OeL78P5oHKiJouRlzUurkpQJuoda3+wUO+LxizOObXQtfKaYMzfgkAL6cZRyte/BzjSYNIoHTbFmTA3qAKmoNdynJhrr2KWzrL22xBeY5KmUJ7SS1Fe+eUchEOBMQwlv2YE39Vr+Eh86GnVJtwK6GTPSjihpqPrmeESPpv6SDU6D+2oadjBQH2P2RCs4Uk4PXj/LgiT9MA8HwFRunzWC0vuNFwyR1x6T/sJH5Iw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G/OZzCk7dQ2jPkJZhpKzWLihV1PDsLsOPWK0bne7TXw=;
- b=j/6o4caZhqNKrDmqtoYC2J/8vsA/iLVPwGwUZ5YoKZLXLQqreido5j1UocMDGgG6xfmZGukjlIBTC+SGoga3ojELHTdcd0uCVpSzwem/yHbGDXhzCWa4Ku7TVOCNBCz2Z179YlPiTvQCKZmPNZLdXb9HWvWCWsYmOF53EzxPS5nWvxbkanrEJrlZAOi/Y7InFRzjBO1H8iv0nY8xtkqH2/AlkCGoaXckadvKp4KdNJghwqupjQWHt3Se0pp7ZlwJykE+W1AIeZbiCGKXMBNikZI/nL1CU73e+XocKcoWsz1GkQRBjBDwEfvIPsfnFM08ge0C5o+3ZxJf/maAh1AFGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=amazon.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G/OZzCk7dQ2jPkJZhpKzWLihV1PDsLsOPWK0bne7TXw=;
- b=CPs27M+308gEnqtJVD3e1g4Z8hUD9pk0obdDCXCY/vAFUbKJmA7NuY0dUxH9usXKsOtHObxnrGsrSCIDM0uggyimVVZKYrxg8yKLnwxiBvpJDRXMSDgoxTnFFUhmDt0wzegRTjAsBKjn/hMfzSFWuUSMbRs94mWade/EDJYQ6jg=
-Received: from BN9PR03CA0418.namprd03.prod.outlook.com (2603:10b6:408:111::33)
- by CYYPR12MB8701.namprd12.prod.outlook.com (2603:10b6:930:bf::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 03:33:34 +0000
-Received: from BN2PEPF00004FBF.namprd04.prod.outlook.com
- (2603:10b6:408:111:cafe::10) by BN9PR03CA0418.outlook.office365.com
- (2603:10b6:408:111::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Wed,
- 30 Apr 2025 03:33:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF00004FBF.mail.protection.outlook.com (10.167.243.185) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 03:33:34 +0000
-Received: from [10.85.37.104] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 29 Apr
- 2025 22:33:29 -0500
-Message-ID: <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
-Date: Wed, 30 Apr 2025 09:03:26 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QJGh35hq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745984107;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8CP1/l95AAIu2RBu8lBb5i+OSNRKCka5XvJ9McWKyls=;
+	b=QJGh35hqh3ayVa0aG1AbnLRUh+M1b+J537MrxsHEovsrWfQSEi6HR8XlApJM7DO+p/o8C1
+	0Vewqu1KOyLGa7pcQXpz6MbdE4pI7dEqSuvi4EBPsfW8XOIoyBnF+stShfH1iVL0iwQHhe
+	sZE2ZgntfOmqUJ6XUfAGK+7P3uBRNKw=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-212-sYXckXxJNim_x8FlgHxAHA-1; Tue, 29 Apr 2025 23:35:03 -0400
+X-MC-Unique: sYXckXxJNim_x8FlgHxAHA-1
+X-Mimecast-MFC-AGG-ID: sYXckXxJNim_x8FlgHxAHA_1745984101
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-30a2b6c8ff2so1097016a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:35:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745984101; x=1746588901;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8CP1/l95AAIu2RBu8lBb5i+OSNRKCka5XvJ9McWKyls=;
+        b=A9u0CP92qgCNqiZ7P4YeqFhCgodbP9/5vF0b8w/Iv4VcI/rMWWAAa5/9uybMmwao0O
+         G223AF7QxHkeED1Cufr5DP9nvM2c6A5+7YYewahSAdRrbbLqRBEtoFG+Hg7FrU6Yt52J
+         17SwVoUHSLqzkhNzI2fH+qSNI3Hl3gNXIdX5FudZ1JEYFgLgbJnMV84Uh1P6IYbCL25a
+         xGWI483XWp0mm4+bPO4Z7qFOS1N9yjVg03p++iYoTq6zNDvkwPzC5R3fHAn7jPO/9JuY
+         HhV9y5Gc+WG6zeuQqssZ7EjIdcqeL1xZd5nwIDkZFQVr1oNQWQW/TcsBUpXQLHkiMLEx
+         g7mg==
+X-Forwarded-Encrypted: i=1; AJvYcCX64Cd2VIhdvLYltyVWnDUTrpkOevEpWbAOhNUegys5hu8fiFeW6Ycy18UWvzTKLp0bg7Lm4oaaRTbnX4E=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/xrpUNNHVq9khLy1zq3EJEl0bnmWMZXQG+K9jWG6I95qRq6mS
+	O01C4nqu/8X0OFg4/JslApnfJpe+fF//i6cEkMCkX5nx2aBuuHjG05ueEoH1q2e12F3Kl9wrvq7
+	jrFP4ZiuF6fhMrIkwIZdwoSf8DNRu3cPCZQF1Q0+55iHzxhEgJ+LBemBvjVk3cBxV54UHPEVakX
+	R9hSjj3zsbWoK2kkkLOXXid5b0woeit5dMAIUk
+X-Gm-Gg: ASbGncs/1sBoOoDTp+/yboZKQrvUH1gy1An+/K9aFQOEbNqoOj7+bspNITs48YHNs4K
+	3G8B+bWtVdMWOzx0Dbml75JV5JfbiZAfWqi+Y375UuVAISfH3B65twLMUUpsi2ktkQ4y6
+X-Received: by 2002:a17:90a:d883:b0:2ee:b4bf:2d06 with SMTP id 98e67ed59e1d1-30a3331ef58mr1953080a91.19.1745984101058;
+        Tue, 29 Apr 2025 20:35:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSS7dOdgP7A+HNpiMxiMx5KPQzzq0FQebByqw2CgDOWtoUxx+JmBHparnOyVfe7iSSZKWz7P4f0WwnDi967iI=
+X-Received: by 2002:a17:90a:d883:b0:2ee:b4bf:2d06 with SMTP id
+ 98e67ed59e1d1-30a3331ef58mr1953058a91.19.1745984100613; Tue, 29 Apr 2025
+ 20:35:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: EEVDF regression still exists
-To: "Prundeanu, Cristian" <cpru@amazon.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>, "Saidi, Ali"
-	<alisaidi@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	"Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
-	"Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, Joseph Salisbury
-	<joseph.salisbury@oracle.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Linus Torvalds
-	<torvalds@linux-foundation.org>, Borislav Petkov <bp@alien8.de>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
-	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
- <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
-Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF00004FBF:EE_|CYYPR12MB8701:EE_
-X-MS-Office365-Filtering-Correlation-Id: cb1f224d-3af6-43af-b353-08dd8797c95d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YThEVXZNMzUwdWlpRWI3Q2U1VW1PTDIzTVZOSC9aUFB4dEtiV0dxYmFmbXk0?=
- =?utf-8?B?ZnI5SVc5MlNoQVd4Qk5GczcwZzhqY0xZR3pVU0FaYTNCRGxYd01zMjd3WUty?=
- =?utf-8?B?Y2p0OVdXenNyL1NRQkZFZ0RONmFQMVhtZ1BhUytaYU1QZlhORmt5OXg1U0Yr?=
- =?utf-8?B?OUlRWWNMOWkvUmVsNXRaTURWNzdpVk0vLytpRzNtMUtHbXZPT0pIYzcxQnQ5?=
- =?utf-8?B?VFBoMHAzK1YwTTVYV0J6bnFnaVVGMjhYWlZKVDhXeHJqQWZ3M3lselNRdjVL?=
- =?utf-8?B?UjlmMGlESG5ycHZmeWNaYWRkaExtelNHZlZwTzd2TkJhbFVxajdtblJTdUdF?=
- =?utf-8?B?czIxb3N4WnN1V3V2NlYvQnJoU1VObm5oY05rU0EvMFZoVDZoanVNTEwwZHlF?=
- =?utf-8?B?ZWJVT01hSXJUVmI5ZzkvVFlETVhkZS9aSm1Bdm1qMk1IN1U2SHc0T1B0S3Q5?=
- =?utf-8?B?Q2FBTC9yR284SXNqbHNibzNPbG9OSGtrM3NTSy9uR3NxU1NEbFFLaXM4c2Z5?=
- =?utf-8?B?Z2plL1FQMjlSNThQcjYxSWMvaUpPVG4rUG1EcFdtbHAzQVBJaDVxZGtxRlV5?=
- =?utf-8?B?c1V4MC9QenpNNVR4WEFUdGxRK0JxOGNrZ0Vsb2ZudGN0T2QvODk2STMyZy9l?=
- =?utf-8?B?dCt6d0E5WER0amNVQjRWaUJUY2NGSXNWVUtlU3F0V210ZnJVc3ViZ2ZmV24w?=
- =?utf-8?B?MVM4MFFTSmt2MTJldmRTSldwb3FhTVp6anFQUTBpODk5b2RkLzJGUTgvTVJ6?=
- =?utf-8?B?enQrL3NOSmU5WkxVMnFXOEpSTUFhZnhpTEZjV1diZ2RUUXpjdnMzZXdXWW5W?=
- =?utf-8?B?VllOS1FkelJ5cURMUXBWZ09IWVBZTEJWSzNjNTRXR3JLNWFJL1VjS1hGckgx?=
- =?utf-8?B?dVpWaTIwZDZ6OWVwZ0k1SjJwSU9JSEhhK0dWTm9wQ0xiR24xNENyMlBRNzF4?=
- =?utf-8?B?VnRERDVDUVlucFh1WHRhUGJ3bXZ1dHh6Y3RKaThlOWpoM1ZyMWcyZHlBZGd1?=
- =?utf-8?B?ekE3UHhzTVU2SWJRaTB6ZmpTZzVHRytMeWJyUUYzSHVKYWc5YmY5aFlXUlo2?=
- =?utf-8?B?SWdoZmkvL21aS2RDOC9EckxWQnphbTBOWnFIZHJWRndJbDhwM3I3MnRJWHBa?=
- =?utf-8?B?TVprQ2MwNnFLZjYwenY2NlRXcWdjb25hSm93OG41aVRLWngyZnlMbXVMN3dE?=
- =?utf-8?B?aWJuR1hGbng5OGtSNFI1d0JibXdWRTNIZG1ySDAvTlJ6Z0gwTjZyaWp1bWN4?=
- =?utf-8?B?RytzNGI2RDdUcTFGS1FkYXRtNUxwbGlKdFhCQkkzbzdQZW9wcHA1Yktmc0lw?=
- =?utf-8?B?NStQT1ZlWFR1ZmR3UVNZeUJMK1NyV1dxMzlqUjhyMWlQdTg1cWduWDdNMy9H?=
- =?utf-8?B?dWdjWnVNV05KSTdMaFhDcEJZakVJeVlzV2I4TFRVeTF5amxzZC83V1h0TVZm?=
- =?utf-8?B?M25Cc1B0a1ora0wzazJZN2tXVmxWRFdWbHFGVHdsSUZnZXlFWXVMOUdNRzA2?=
- =?utf-8?B?STlsMnpJaTdCdGtCeEZxQUhHaysrSlh3Zjd2S21LMjRZemNFaEo1V0xSMjJW?=
- =?utf-8?B?K0M3L0RrWU9sZmtvOEZJZkFhNkJZTllnb1p1UVhqT2xhNk9XOE9iZGVSdjJF?=
- =?utf-8?B?YmE5Tm9MMWUvQlNEM0N4b0pFSFlyZ3A0bWhuREpZaU9qeiszMjcrczhiRnFF?=
- =?utf-8?B?UUxzM3F6aXp1aHR6ck9MWlJTd0NWSGl3MUxCaHIvZk1YWTg1Q1hQZU5EV1VK?=
- =?utf-8?B?MXZZSHVGdEF6Vkw4bUl4cDBlTW9ES3dVKzVDL2RIMVhkV1JXZ3FBb0lFelg5?=
- =?utf-8?B?T3Y4Q2hSVTV0cksydUM1MldyTXJaaFpQVHhIZE9WeDhXakFlMXlSckdrMVN2?=
- =?utf-8?B?ajNxdGxEamNmNDNpa3BGQVVGLzVkQ2I4dVZsVFBITElCY21pRUdVVDNqOTB5?=
- =?utf-8?B?Y0l4SmJ5STE1dlQ2WXppcG1wT2dxZDYvMTNyS2xueUpEYXhkc2pNU254bG82?=
- =?utf-8?B?THNSdlB4T2FiVlp0R1BCQk1XeDFSU2FXM2hiWkpQaWx5WkYycWQyYUV0VTRF?=
- =?utf-8?B?SGkvNUFQZExJNHgyQ1g1WlhZOHJSU2xiRE9LQT09?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 03:33:34.4221
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cb1f224d-3af6-43af-b353-08dd8797c95d
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF00004FBF.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB8701
+References: <20250421024457.112163-1-lulu@redhat.com> <20250421024457.112163-5-lulu@redhat.com>
+ <CACGkMEt-ewTqeHDMq847WDEGiW+x-TEPG6GTDDUbayVmuiVvzg@mail.gmail.com>
+ <CACGkMEte6Lobr+tFM9ZmrDWYOpMtN6Xy=rzvTy=YxSPkHaVdPA@mail.gmail.com>
+ <CACGkMEstbCKdHahYE6cXXu1kvFxiVGoBw3sr4aGs4=MiDE4azg@mail.gmail.com> <20250429065044-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20250429065044-mutt-send-email-mst@kernel.org>
+From: Jason Wang <jasowang@redhat.com>
+Date: Wed, 30 Apr 2025 11:34:49 +0800
+X-Gm-Features: ATxdqUHqfIZKZZ7USbEVYrV7yi8BrNiRLgIgSnFckLR6vC0VClLgTNwjOGLKeT4
+Message-ID: <CACGkMEteBReoezvqp0za98z7W3k_gHOeSpALBxRMhjvj_oXcOw@mail.gmail.com>
+Subject: Re: [PATCH v9 4/4] vhost: Add a KConfig knob to enable IOCTL VHOST_FORK_FROM_OWNER
+To: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Cindy Lu <lulu@redhat.com>, michael.christie@oracle.com, sgarzare@redhat.com, 
+	linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, 
+	netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Cristian,
+On Tue, Apr 29, 2025 at 6:56=E2=80=AFPM Michael S. Tsirkin <mst@redhat.com>=
+ wrote:
+>
+> On Tue, Apr 29, 2025 at 11:39:37AM +0800, Jason Wang wrote:
+> > On Mon, Apr 21, 2025 at 11:46=E2=80=AFAM Jason Wang <jasowang@redhat.co=
+m> wrote:
+> > >
+> > > On Mon, Apr 21, 2025 at 11:45=E2=80=AFAM Jason Wang <jasowang@redhat.=
+com> wrote:
+> > > >
+> > > > On Mon, Apr 21, 2025 at 10:45=E2=80=AFAM Cindy Lu <lulu@redhat.com>=
+ wrote:
+> > > > >
+> > > > > Introduce a new config knob `CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL=
+`,
+> > > > > to control the availability of the `VHOST_FORK_FROM_OWNER` ioctl.
+> > > > > When CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL is set to n, the ioctl
+> > > > > is disabled, and any attempt to use it will result in failure.
+> > > >
+> > > > I think we need to describe why the default value was chosen to be =
+false.
+> > > >
+> > > > What's more, should we document the implications here?
+> > > >
+> > > > inherit_owner was set to false: this means "legacy" userspace may
+> > >
+> > > I meant "true" actually.
+> >
+> > MIchael, I'd expect inherit_owner to be false. Otherwise legacy
+> > applications need to be modified in order to get the behaviour
+> > recovered which is an impossible taks.
+> >
+> > Any idea on this?
+> >
+> > Thanks
+>
+> At this point, as we changed the behaviour, we have two types of legacy a=
+pplications
+> - ones expecting inherit_owner false
+> - ones expecting inherit_owner true
 
-On 4/30/2025 3:36 AM, Prundeanu, Cristian wrote:
-> On 2025-04-29, 16:57, "Peter Zijlstra" <peterz@infradead.org <mailto:peterz@infradead.org>> wrote:
-> 
->>> Here are the latest results for the EEVDF impact on database workloads.
->>> The regression introduced in kernel 6.6 still persists and doesn't look
->>> like it is improving.
->>
->> Well, I was under the impression it had actually been solved :-(
->>
->> My understanding from the last round was that Prateek and co had it
->> sorted -- with the caveat being that you had to stick SCHED_BATCH in at
->> the right place in MySQL start scripts or somesuch.
-> 
-> The statement in the previous thread [1] was that using SCHED_BATCH improves
-> performance over default. While that still holds true, it is also equally true
-> about using SCHED_BATCH on kernel 6.5.
-> 
-> So, when we compare 6.5 with recent kernels, both using SCHED_BATCH, the
-> regression is still visible. (Previously, we only compared SCHED_BATCH with
-> 6.5 default, leading to the wrong conclusion that it's a fix).
+Considering vhost has been used for more than a decade, I would expect
+more will expect inhert_owner to be false.
 
-So I never tried comparing SCHED_BATCH on both old vs new kernel for
-the HammerDB benchmark since SCHED_BATCH had not led to a great
-improvement in the baseline numbers on v6.5 in my previous debugs and
-I was mostly looking at context-switch data, trying to match the EEVDF
-case to baseline numbers.
+>
+> Whatever we do, some of these will have to be changed.
 
-I'll try to setup the reproducer you have posted on my end and reach
-out if I run into any issues. Hopefully the exact setup reveals
-something I've overlooked.
+If we must choose one to break, I'd expect to break less.
 
-P.S. Are the numbers for v6.15-rc4 + SCHED_BATCH comparable to v6.5
-default?
+> Given current
+> kernel has it as true, and given it is a cleaner behaviour that will
+> keep working when we disable CONFIG_VHOST_ENABLE_FORK_OWNER_IOCTL in 10
+> years, I think it's the better default.
 
-One more curious question: Does changing the base slice to a larger
-value (say 6ms) in conjunction with setting SCHED_BATCH on v6.15-rc4
-affect the benchmark result in any way?
+The problem is, if we set it to true and only an ioctl will bring the
+old behavior back. Who will use this ioctl? We can't modify all legacy
+applications.
 
-> 
-> [1] https://lore.kernel.org/all/feb31b6e-6457-454c-a4f3-ce8ad96bf8de@amd.com/
-> 
+> If you want to change it transparently, look for ways to
+> distinguish between the two types.
+>
+> The application in question is qemu, is it not?
 
--- 
-Thanks and Regards,
-Prateek
+Looks not, it's the application or management layer that tries to set
+the affinity to the owner of the vhost.
+
+For example, if I start a testpmd + vhost_net and pinn testpmd runs on
+cpu0. I will get half of the performance since vhost will contend with
+cpu with testpmd.
+
+> I do not see how sticking an ioctl call into its source is such
+> a big deal, if this is what we want to do.
+> A bit of short term pain but we get clear maintainable semantics.
+
+What's more important, the way that introduces new fork behaviors
+without a new uAPI is a bug. We need to fix that by introducing new
+uAPI for the behaviour. This seems to be the short term pain instead
+of introducing new uAPI for the old behaviour.
+
+Thanks
+
+>
+> --
+> MST
+>
 
