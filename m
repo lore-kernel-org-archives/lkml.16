@@ -1,269 +1,364 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FDB25E459
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ED025E459
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023844; cv=none; b=pd/boU+jqrPcDdUjQO+2sJkBF+dL/umGhuMY5f5I6A/AWklq/gLJWHwW61T9BfLbMyOiQsz348ETsliPV61BzOCIv542Be0zjQsKyMjGLmN2ikotyEyv+X9/cJhxB8j61UhX8VYAfpnrbSuBJKUy2v5zUIW1m0aZYnjLWuhHrOQ=
+	t=1746023851; cv=none; b=u6BG9+1E3KJbMYp3DQBRrXglIMhCEMwvKxCuXlwpw3Jbe4m1vHdf5WT2NAnmlFwMFrFNtwYmqvhM88gVftCAQw8kGCj5M38GSF+oYZfTgYgdTZdh/Ufm7QEsYt0vnp9/a5Vc0X5P5+wY67r2neoCawl5H7i+7xsFUZpiLQ/I0wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023844; c=relaxed/simple;
-	bh=x7bH5IM/o9aq40OpfG0lr+55flVGQfdSrcby2S7JJ5M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FDRZUUmVfxKJIHu/ChB6Ioy2zHYDRYMvkcixPwt3DjsLe+SzkcUFc+JdlCjhieJryIY3CpU9MSndW+Vv8S1Z0AeulzbUEQCu9btjywWaa2iNc0REQe0skW2Q9wgjhcV9yEQEuOD+VDn+qZps2RtY6LKPY3lutdCRTsO+y7wWYQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=mvl71Vpb; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	s=arc-20240116; t=1746023851; c=relaxed/simple;
+	bh=n1AgU7Esz7OmbJ0mkpQ7ynDk3NIgF7onvADsHHENBB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E6D1HJcKmAfppjX8MDWrrD1/9jAHDtaatXI9iri+N1Yt8UuEqYQhKYalFq3Rer3jO2A61Wuda/XAvFd+9/om69qZ7zqLpa3UbL0nKB47obJWcW1IUM9BWdp80iXknoLqrCzIAz77VBhAkU7z7r63bhjVRZsmE37g4NjiJf1QbjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JEL4mfxE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="mvl71Vpb"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-7c5aecec8f3so1286657885a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:37:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746023839; x=1746628639; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MzVj9ui+z7nAPJ/VH08Dz8u4s9z3xTyhLsSPXPC81XI=;
-        b=mvl71Vpbo+MKrJ3C2JKEGiDqKZiZ+N59zynMpkaMGfqNniwGfalQIXv2nMeq7CmLfC
-         IY3m4Qen9ISyUbHHzCe1TbgJk+VK1i5ywoz2uhAEL4gDzbFuJgmskHxRz4uAxljuZhfv
-         +x5ZopxXnsxcxQ+S3iGeEa64KdQVDe7iNJXELOviOLvNdKHqO5AiKq1W0OgR4cjmPb62
-         /EgPeLUhobzKIac1rjTRmqLX7u1p04m1Y0TYjH0Nh2abCeLJlPOspOV2XZruAU6Nyg64
-         QS/6ro8sjMOgK/2DzBVUGbRc4G6aBJbGeKjxyZp6NzYxj9v86NjogqDZ6vX0mHAXIX0l
-         dyEg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JEL4mfxE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746023847;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=MnkXjFY3TEcL0dXqwM2Thq4YlP1rbhLrXBXsYqEQ+Ro=;
+	b=JEL4mfxEsQdoXlE8khJhFPDrtfd+e347c13cj97fsVKLLalgMWSX7xjhRXVzjJvF1fgtcp
+	7LwWcwyS9Oku98iJM55G14EWAguwYgcljNbmtHYRuteWy9ngm2N6Nl62NsfVev8s3jodjd
+	QKc/FYApOaJeJ2p8Rx7O7FPHEF8RV7g=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-671-a8TgBznVMXuvQ65I3zS20w-1; Wed, 30 Apr 2025 10:37:24 -0400
+X-MC-Unique: a8TgBznVMXuvQ65I3zS20w-1
+X-Mimecast-MFC-AGG-ID: a8TgBznVMXuvQ65I3zS20w_1746023844
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39c2da64df9so3290323f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:37:24 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746023839; x=1746628639;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MzVj9ui+z7nAPJ/VH08Dz8u4s9z3xTyhLsSPXPC81XI=;
-        b=a1QG8rrTO9lx/kpuSRtpQ8P07qG5DAwv2tLkR5eCg33GQdkSHZb39XmgLMbrSxNhVo
-         7Fto8tEu18Mn/uj5e8k8eYGslEe5VUXC+rL08SHbaCVK5zjtMkLaMpmJL52/qXmj1GNz
-         oNuVKFk+cf5+KJCN9pJFdsUns/OCu7O7P/5FUryruQ5TESAt09kWcqaEzvosp61s9dFr
-         9781FzSmfUpu5gMPlK5fdT1JjGR75BSX1MYui56TYjVnX4uthNllpqiG1mvmhZOIbKWP
-         YTbRq2pLYv2eaaHOKblHONlyeUghvVzdl4Zt7P3NRWL6TSBSIoNVOiURiBteGxvMb1qJ
-         iT4w==
-X-Forwarded-Encrypted: i=1; AJvYcCV8uOuxylGABhRO7gsIPNbgjMrOTv5aPGRSDpduEBXfSTeRrKcHALH/DWjmwFVJRnJUhdKagY/SY2J2OcI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJG8gJEVbXPZ1zlp/yQJAXDwcHRWLy5qYVEIBzq4O4H4PLoZeU
-	m8Hfas4uCVOIJ3sv4YXQ+FK2XRc2tXZhacnCfTL74e7SKWkIRBIFUdTuOQYUsj0=
-X-Gm-Gg: ASbGncvrStkhNuURvU4XbffntvzQg/62JPFWgDthv3sSGFTPrCtuHqz3zeYsZmVNKdF
-	wBBAmUC3eFF11VWtQel0V/vixRDE9MbeIYqIC4gwDkMrAZH82mYgPu9PvaKmI+j/ORaJYyukPyy
-	jJOnuX8p9IYPjUR6LVntlTe4VgqSTnpeuJYpPiivJHGTZWupl40i2+1x4QbG9ubhJF+B54OcFmL
-	acWWFhGv41Elcv9O1l0E68tkOaz9vWK40ZQrEVFhgjwEMjtIP/Psf5aKaU0gditNvKUndCCUcCZ
-	Ovh8ZNUqZXEpNp8sf0SWwzxicmL+rYwwMvEOIbI=
-X-Google-Smtp-Source: AGHT+IF/g0RVsanqksAWT9Fbsscv/im0UZWq7N41chxmZ092JzV8NwJVeYMDw+WxTk+jdjo8RoJDcQ==
-X-Received: by 2002:a05:620a:2404:b0:7c5:dfd6:dc7b with SMTP id af79cd13be357-7cac7e26161mr407447985a.22.1746023839465;
-        Wed, 30 Apr 2025 07:37:19 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c958d871efsm859944785a.84.2025.04.30.07.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 07:37:18 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:37:14 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Muchun Song <songmuchun@bytedance.com>
-Cc: mhocko@kernel.org, roman.gushchin@linux.dev, shakeel.butt@linux.dev,
-	muchun.song@linux.dev, akpm@linux-foundation.org,
-	david@fromorbit.com, zhengqi.arch@bytedance.com,
-	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
-	linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
-	linux-mm@kvack.org, hamzamahfooz@linux.microsoft.com,
-	apais@linux.microsoft.com, Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH RFC 07/28] mm: thp: use folio_batch to handle THP
- splitting in deferred_split_scan()
-Message-ID: <20250430143714.GA2020@cmpxchg.org>
-References: <20250415024532.26632-1-songmuchun@bytedance.com>
- <20250415024532.26632-8-songmuchun@bytedance.com>
+        d=1e100.net; s=20230601; t=1746023843; x=1746628643;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MnkXjFY3TEcL0dXqwM2Thq4YlP1rbhLrXBXsYqEQ+Ro=;
+        b=BLHEG0Y48a0fOsYZWUHXVJC0K4Q5/dVLkWBAKwNf6+yBDgvQbbQmeQaKM1WGreh+cP
+         5ef0M4SMxw02e9sW8jxx6CpEThEPGL09WaXyDH5oBmj4MaKa2vs1Ztoy7NH59MeecyWK
+         IPCDifiUmMIXYTrFe2txWiV7wt2/wMk9A21j2BzD1pcBHNA+07P2XYGs0cRUcyxUvXAa
+         lnKBU4TEeI/GxdtLGrQj0WTDDXYi+rHnhMa9Mz1Ez/ynLbsmMqC8Zsi5PNgvXPa1y8Um
+         bM1X7z0DbNYiswevC/dmDw9z4d4EWTkJzU+lcnc2lr56LVkirYrp0PgbnkqFjTWvlhzv
+         AVwA==
+X-Gm-Message-State: AOJu0YzIwA1AQDyrLlyqeaN3xANtrESJiybUbRuDrGz2okAY36we4q2R
+	fGxvjMmYKMs20vbVX2RkFl8upCrlGkH8s2t4qxZjAnV/63AowBT781UcxOP/2HrqMwhYBVLjoxL
+	VHzweeSJ9cTHM7Q7MxoFCb+ZNjjSPgfK01RHoUrVokTY6lvqbGOijzG4Ev8uamgirKK56ctXbeU
+	4=
+X-Gm-Gg: ASbGncuDIFJ+bScNcRqpDNMAlc5Ja5wqXUDJkcGJC9lXY5G4LNd4JCblCCEa6sMLQMx
+	j42DmbwFwE+Fr5+pBrtDzc/yBolnPF7GHkMe5tX49/04s5Ucwwq+EQ4eiyxMN1hUfNNeHqEfTtr
+	MmcDBYwkUzwSC04lkuMgW4cANXgKVwBqxWRzQPEcK7VSoX+eW99uw3zeho/P0LtuLmgc0/kr7Ek
+	Y96Mt6ZYotPbdh4YQOIly1kVWuMQcf1NPRYVbU73w6ZReEsW4/p9hQOa4T3fEwJNO3JOCA1JH3b
+	hqcPbMd/DBfnYicCmh+62GSRxBJ7xgSW7xsMky4to0m4Jm1y
+X-Received: by 2002:a05:6000:2481:b0:3a0:80bf:b4e3 with SMTP id ffacd0b85a97d-3a08ff50967mr2212403f8f.58.1746023843583;
+        Wed, 30 Apr 2025 07:37:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwrkb+QAgrfKTfZCLUpqNq2im1MtwJnU5K+x0x8Nke1bFEBVj3+6QE5/TBxK5sBPrLyYpM9g==
+X-Received: by 2002:a05:6000:2481:b0:3a0:80bf:b4e3 with SMTP id ffacd0b85a97d-3a08ff50967mr2212365f8f.58.1746023843092;
+        Wed, 30 Apr 2025 07:37:23 -0700 (PDT)
+Received: from [192.168.178.21] (tmo-081-40.customers.d1-online.com. [80.187.81.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d52bsm17672837f8f.90.2025.04.30.07.37.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 07:37:22 -0700 (PDT)
+Message-ID: <9c412f4f-3bdf-43c0-a3cd-7ce52233f4e5@redhat.com>
+Date: Wed, 30 Apr 2025 16:37:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250415024532.26632-8-songmuchun@bytedance.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
+To: =?UTF-8?Q?Petr_Van=C4=9Bk?= <arkamar@atlas.cz>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+ Ryan Roberts <ryan.roberts@arm.com>, linux-mm@kvack.org,
+ stable@vger.kernel.org
+References: <20250429142237.22138-1-arkamar@atlas.cz>
+ <20250429142237.22138-2-arkamar@atlas.cz>
+ <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+ <2025429144547-aBDmGzJBQc9RMBj--arkamar@atlas.cz>
+ <ef317615-3e26-4641-8141-4d3913ced47f@redhat.com>
+ <b6613b71-3eb9-4348-9031-c1dd172b9814@redhat.com>
+ <2025429183321-aBEbcQQY3WX6dsNI-arkamar@atlas.cz>
+ <1df577bb-eaba-4e34-9050-309ee1c7dc57@redhat.com>
+ <202543011526-aBIO5nq6Olsmq2E--arkamar@atlas.cz>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <202543011526-aBIO5nq6Olsmq2E--arkamar@atlas.cz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 15, 2025 at 10:45:11AM +0800, Muchun Song wrote:
-> The maintenance of the folio->_deferred_list is intricate because it's
-> reused in a local list.
+On 30.04.25 13:52, Petr Vaněk wrote:
+> On Tue, Apr 29, 2025 at 08:56:03PM +0200, David Hildenbrand wrote:
+>> On 29.04.25 20:33, Petr Vaněk wrote:
+>>> On Tue, Apr 29, 2025 at 05:45:53PM +0200, David Hildenbrand wrote:
+>>>> On 29.04.25 16:52, David Hildenbrand wrote:
+>>>>> On 29.04.25 16:45, Petr Vaněk wrote:
+>>>>>> On Tue, Apr 29, 2025 at 04:29:30PM +0200, David Hildenbrand wrote:
+>>>>>>> On 29.04.25 16:22, Petr Vaněk wrote:
+>>>>>>>> folio_pte_batch() could overcount the number of contiguous PTEs when
+>>>>>>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
+>>>>>>>> memory also happens to be zero. The loop doesn't break in such a case
+>>>>>>>> because pte_same() returns true, and the batch size is advanced by one
+>>>>>>>> more than it should be.
+>>>>>>>>
+>>>>>>>> To fix this, bail out early if a non-present PTE is encountered,
+>>>>>>>> preventing the invalid comparison.
+>>>>>>>>
+>>>>>>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
+>>>>>>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
+>>>>>>>> bisect.
+>>>>>>>>
+>>>>>>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
+>>>>>>>> Cc: stable@vger.kernel.org
+>>>>>>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+>>>>>>>> ---
+>>>>>>>>       mm/internal.h | 2 ++
+>>>>>>>>       1 file changed, 2 insertions(+)
+>>>>>>>>
+>>>>>>>> diff --git a/mm/internal.h b/mm/internal.h
+>>>>>>>> index e9695baa5922..c181fe2bac9d 100644
+>>>>>>>> --- a/mm/internal.h
+>>>>>>>> +++ b/mm/internal.h
+>>>>>>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+>>>>>>>>       			dirty = !!pte_dirty(pte);
+>>>>>>>>       		pte = __pte_batch_clear_ignored(pte, flags);
+>>>>>>>>       
+>>>>>>>> +		if (!pte_present(pte))
+>>>>>>>> +			break;
+>>>>>>>>       		if (!pte_same(pte, expected_pte))
+>>>>>>>>       			break;
+>>>>>>>
+>>>>>>> How could pte_same() suddenly match on a present and non-present PTE.
+>>>>>>
+>>>>>> In the problematic case pte.pte == 0 and expected_pte.pte == 0 as well.
+>>>>>> pte_same() returns a.pte == b.pte -> 0 == 0. Both are non-present PTEs.
+>>>>>
+>>>>> Observe that folio_pte_batch() was called *with a present pte*.
+>>>>>
+>>>>> do_zap_pte_range()
+>>>>> 	if (pte_present(ptent))
+>>>>> 		zap_present_ptes()
+>>>>> 			folio_pte_batch()
+>>>>>
+>>>>> How can we end up with an expected_pte that is !present, if it is based
+>>>>> on the provided pte that *is present* and we only used pte_advance_pfn()
+>>>>> to advance the pfn?
+>>>>
+>>>> I've been staring at the code for too long and don't see the issue.
+>>>>
+>>>> We even have
+>>>>
+>>>> VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+>>>>
+>>>> So the initial pteval we got is present.
+>>>>
+>>>> I don't see how
+>>>>
+>>>> 	nr = pte_batch_hint(start_ptep, pte);
+>>>> 	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+>>>>
+>>>> would suddenly result in !pte_present(expected_pte).
+>>>
+>>> The issue is not happening in __pte_batch_clear_ignored but later in
+>>> following line:
+>>>
+>>>     expected_pte = pte_advance_pfn(expected_pte, nr);
+>>>
+>>> The issue seems to be in __pte function which converts PTE value to
+>>> pte_t in pte_advance_pfn, because warnings disappears when I change the
+>>> line to
+>>>
+>>>     expected_pte = (pte_t){ .pte = pte_val(expected_pte) + (nr << PFN_PTE_SHIFT) };
+>>>
+>>> The kernel probably uses __pte function from
+>>> arch/x86/include/asm/paravirt.h because it is configured with
+>>> CONFIG_PARAVIRT=y:
+>>>
+>>>     static inline pte_t __pte(pteval_t val)
+>>>     {
+>>>     	return (pte_t) { PVOP_ALT_CALLEE1(pteval_t, mmu.make_pte, val,
+>>>     					  "mov %%rdi, %%rax", ALT_NOT_XEN) };
+>>>     }
+>>>
+>>> I guess it might cause this weird magic, but I need more time to
+>>> understand what it does :)
 > 
-> Here are some peculiarities:
+> I understand it slightly more. __pte() uses xen_make_pte(), which calls
+> pte_pfn_to_mfn(), however, mfn for this pfn contains INVALID_P2M_ENTRY
+> value, therefore the pte_pfn_to_mfn() returns 0, see [1].
 > 
->    1) When a folio is removed from its split queue and added to a local
->       on-stack list in deferred_split_scan(), the ->split_queue_len isn't
->       updated, leading to an inconsistency between it and the actual
->       number of folios in the split queue.
+> I guess that the mfn was invalidated by xen-balloon driver?
 > 
->    2) When the folio is split via split_folio() later, it's removed from
->       the local list while holding the split queue lock. At this time,
->       this lock protects the local list, not the split queue.
+> [1] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/xen/mmu_pv.c?h=v6.15-rc4#n408
 > 
->    3) To handle the race condition with a third-party freeing or migrating
->       the preceding folio, we must ensure there's always one safe (with
->       raised refcount) folio before by delaying its folio_put(). More
->       details can be found in commit e66f3185fa04. It's rather tricky.
+>> What XEN does with basic primitives that convert between pteval and
+>> pte_t is beyond horrible.
+>>
+>> How come set_ptes() that uses pte_next_pfn()->pte_advance_pfn() does not
+>> run into this?
 > 
-> We can use the folio_batch infrastructure to handle this clearly. In this
-> case, ->split_queue_len will be consistent with the real number of folios
-> in the split queue. If list_empty(&folio->_deferred_list) returns false,
-> it's clear the folio must be in its split queue (not in a local list
-> anymore).
+> I don't know, but I guess it is somehow related to pfn->mfn translation.
 > 
-> In the future, we aim to reparent LRU folios during memcg offline to
-> eliminate dying memory cgroups. This patch prepares for using
-> folio_split_queue_lock_irqsave() as folio memcg may change then.
+>> Is it only a problem if we exceed a certain pfn?
 > 
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-
-This is a very nice simplification. And getting rid of the stack list
-and its subtle implication on all the various current and future
-list_empty(&folio->_deferred_list) checks should be much more robust.
-
-However, I think there is one snag related to this:
-
-> ---
->  mm/huge_memory.c | 69 +++++++++++++++++++++---------------------------
->  1 file changed, 30 insertions(+), 39 deletions(-)
+> No, it is a problem if the corresponding mft to given pfn is invalid.
 > 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 70820fa75c1f..d2bc943a40e8 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -4220,40 +4220,47 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
->  	struct pglist_data *pgdata = NODE_DATA(sc->nid);
->  	struct deferred_split *ds_queue = &pgdata->deferred_split_queue;
->  	unsigned long flags;
-> -	LIST_HEAD(list);
-> -	struct folio *folio, *next, *prev = NULL;
-> -	int split = 0, removed = 0;
-> +	struct folio *folio, *next;
-> +	int split = 0, i;
-> +	struct folio_batch fbatch;
-> +	bool done;
->  
->  #ifdef CONFIG_MEMCG
->  	if (sc->memcg)
->  		ds_queue = &sc->memcg->deferred_split_queue;
->  #endif
-> -
-> +	folio_batch_init(&fbatch);
-> +retry:
-> +	done = true;
->  	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
->  	/* Take pin on all head pages to avoid freeing them under us */
->  	list_for_each_entry_safe(folio, next, &ds_queue->split_queue,
->  							_deferred_list) {
->  		if (folio_try_get(folio)) {
-> -			list_move(&folio->_deferred_list, &list);
-> -		} else {
-> +			folio_batch_add(&fbatch, folio);
-> +		} else if (folio_test_partially_mapped(folio)) {
->  			/* We lost race with folio_put() */
-> -			if (folio_test_partially_mapped(folio)) {
-> -				folio_clear_partially_mapped(folio);
-> -				mod_mthp_stat(folio_order(folio),
-> -					      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
-> -			}
-> -			list_del_init(&folio->_deferred_list);
-> -			ds_queue->split_queue_len--;
-> +			folio_clear_partially_mapped(folio);
-> +			mod_mthp_stat(folio_order(folio),
-> +				      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
->  		}
-> +		list_del_init(&folio->_deferred_list);
-> +		ds_queue->split_queue_len--;
->  		if (!--sc->nr_to_scan)
->  			break;
-> +		if (folio_batch_space(&fbatch) == 0) {
-> +			done = false;
-> +			break;
-> +		}
->  	}
->  	split_queue_unlock_irqrestore(ds_queue, flags);
->  
-> -	list_for_each_entry_safe(folio, next, &list, _deferred_list) {
-> +	for (i = 0; i < folio_batch_count(&fbatch); i++) {
->  		bool did_split = false;
->  		bool underused = false;
-> +		struct deferred_split *fqueue;
->  
-> +		folio = fbatch.folios[i];
->  		if (!folio_test_partially_mapped(folio)) {
->  			underused = thp_underused(folio);
->  			if (!underused)
-> @@ -4269,39 +4276,23 @@ static unsigned long deferred_split_scan(struct shrinker *shrink,
->  		}
->  		folio_unlock(folio);
->  next:
-> +		if (did_split || !folio_test_partially_mapped(folio))
-> +			continue;
+> I am not sure if my original patch is a good fix.
 
-There IS a list_empty() check in the splitting code that we actually
-relied on, for cleaning up the partially_mapped state and counter:
+No :)
 
-		    !list_empty(&folio->_deferred_list)) {
-			ds_queue->split_queue_len--;
-			if (folio_test_partially_mapped(folio)) {
-				folio_clear_partially_mapped(folio);
-				mod_mthp_stat(folio_order(folio),
-					      MTHP_STAT_NR_ANON_PARTIALLY_MAPPED, -1);
-			}
-			/*
-			 * Reinitialize page_deferred_list after removing the
-			 * page from the split_queue, otherwise a subsequent
-			 * split will see list corruption when checking the
-			 * page_deferred_list.
-			 */
-			list_del_init(&folio->_deferred_list);
+Maybe it would be
+> better to have some sort of native_pte_advance_pfn() which will use
+> native_make_pte() rather than __pte(). Or do you think the issue is in
+> Xen part?
 
-With the folios isolated up front, it looks like you need to handle
-this from the shrinker.
+I think what's happening is that -- under XEN only -- we might get garbage when
+calling pte_advance_pfn() and the next PFN would no longer fall into the folio. And
+the current code cannot deal with that XEN garbage.
 
-Otherwise this looks correct to me. But this code is subtle, I would
-feel much better if Hugh (CC-ed) could take a look as well.
+But still not 100% sure.
 
-Thanks!
+The following is completely untested, could you give that a try? I
+might find some time this evening to test myself and try to further improve it.
 
->  		/*
-> -		 * split_folio() removes folio from list on success.
->  		 * Only add back to the queue if folio is partially mapped.
->  		 * If thp_underused returns false, or if split_folio fails
->  		 * in the case it was underused, then consider it used and
->  		 * don't add it back to split_queue.
->  		 */
-> -		if (did_split) {
-> -			; /* folio already removed from list */
-> -		} else if (!folio_test_partially_mapped(folio)) {
-> -			list_del_init(&folio->_deferred_list);
-> -			removed++;
-> -		} else {
-> -			/*
-> -			 * That unlocked list_del_init() above would be unsafe,
-> -			 * unless its folio is separated from any earlier folios
-> -			 * left on the list (which may be concurrently unqueued)
-> -			 * by one safe folio with refcount still raised.
-> -			 */
-> -			swap(folio, prev);
-> -		}
-> -		if (folio)
-> -			folio_put(folio);
-> +		fqueue = folio_split_queue_lock_irqsave(folio, &flags);
-> +		list_add_tail(&folio->_deferred_list, &fqueue->split_queue);
-> +		fqueue->split_queue_len++;
-> +		split_queue_unlock_irqrestore(fqueue, flags);
->  	}
-> +	folios_put(&fbatch);
->  
-> -	spin_lock_irqsave(&ds_queue->split_queue_lock, flags);
-> -	list_splice_tail(&list, &ds_queue->split_queue);
-> -	ds_queue->split_queue_len -= removed;
-> -	split_queue_unlock_irqrestore(ds_queue, flags);
-> -
-> -	if (prev)
-> -		folio_put(prev);
-> -
-> +	if (!done)
-> +		goto retry;
->  	/*
->  	 * Stop shrinker if we didn't split any page, but the queue is empty.
->  	 * This can happen if pages were freed under us.
-> -- 
-> 2.20.1
+
+ From 7d4149a5ea18cba6a694946e59efa9f51d793a4e Mon Sep 17 00:00:00 2001
+From: David Hildenbrand <david@redhat.com>
+Date: Wed, 30 Apr 2025 16:35:12 +0200
+Subject: [PATCH] tmp
+
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+  mm/internal.h | 29 +++++++++++++----------------
+  1 file changed, 13 insertions(+), 16 deletions(-)
+
+diff --git a/mm/internal.h b/mm/internal.h
+index e9695baa59226..a9ea7f62486ec 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -248,11 +248,9 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+  		pte_t *start_ptep, pte_t pte, int max_nr, fpb_t flags,
+  		bool *any_writable, bool *any_young, bool *any_dirty)
+  {
+-	unsigned long folio_end_pfn = folio_pfn(folio) + folio_nr_pages(folio);
+-	const pte_t *end_ptep = start_ptep + max_nr;
+  	pte_t expected_pte, *ptep;
+  	bool writable, young, dirty;
+-	int nr;
++	int nr, cur_nr;
+  
+  	if (any_writable)
+  		*any_writable = false;
+@@ -265,11 +263,17 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+  	VM_WARN_ON_FOLIO(!folio_test_large(folio) || max_nr < 1, folio);
+  	VM_WARN_ON_FOLIO(page_folio(pfn_to_page(pte_pfn(pte))) != folio, folio);
+  
++	/* Limit max_nr to the actual remaining PFNs in the folio. */
++	max_nr = min_t(unsigned long, max_nr,
++		       folio_pfn(folio) + folio_nr_pages(folio) - pte_pfn(pte));
++	if (unlikely(max_nr == 1))
++		return 1;
++
+  	nr = pte_batch_hint(start_ptep, pte);
+  	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+  	ptep = start_ptep + nr;
+  
+-	while (ptep < end_ptep) {
++	while (nr < max_nr) {
+  		pte = ptep_get(ptep);
+  		if (any_writable)
+  			writable = !!pte_write(pte);
+@@ -282,14 +286,6 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+  		if (!pte_same(pte, expected_pte))
+  			break;
+  
+-		/*
+-		 * Stop immediately once we reached the end of the folio. In
+-		 * corner cases the next PFN might fall into a different
+-		 * folio.
+-		 */
+-		if (pte_pfn(pte) >= folio_end_pfn)
+-			break;
+-
+  		if (any_writable)
+  			*any_writable |= writable;
+  		if (any_young)
+@@ -297,12 +293,13 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+  		if (any_dirty)
+  			*any_dirty |= dirty;
+  
+-		nr = pte_batch_hint(ptep, pte);
+-		expected_pte = pte_advance_pfn(expected_pte, nr);
+-		ptep += nr;
++		cur_nr = pte_batch_hint(ptep, pte);
++		expected_pte = pte_advance_pfn(expected_pte, cur_nr);
++		ptep += cur_nr;
++		nr += cur_nr;
+  	}
+  
+-	return min(ptep - start_ptep, max_nr);
++	return min(nr, max_nr);
+  }
+  
+  /**
+-- 
+2.49.0
+
+
+-- 
+Cheers,
+
+David / dhildenb
+
