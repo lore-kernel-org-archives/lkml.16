@@ -1,131 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A29226139A;
-	Wed, 30 Apr 2025 12:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18BBC2550B3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:07:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014811; cv=none; b=aqP6kdf2Iu9FUOUsTiZi+zDmAalLQOkdhi9IYwNjkqZVzyFE+o0cAla3s5hJkMtoYA18PQAcRWzSH2YxQF5Ss2tnU1ifHdhT1Q65OrS9JfKbrD5xNW3LigkeD/FY4/sg1Qkq1eeLfF3xWYsnmepIdtduPkyhgRrrFus1uIgERKA=
+	t=1746014872; cv=none; b=U4M4eXMnr1FsKfsmtxmngeDAu8xemfEFOvg4I3GFdAcSvUvVn3TvXXuEKti5UCJtHaDA15oZNW4mmBZODgRskD9/iLuZ+KKrdScfvFcJTMrSA9Goax5JEMLsHEyFywZUmxLfViAQjRYdrKtQAlC0qiDZuHLyARySq0WfJOuCO0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014811; c=relaxed/simple;
-	bh=RL/8XTQxUPcBIYY01+9ALkEe5daMAevNC3FTDM2eoLE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P7Kf7zuVxuhAsDKRwS+0fu5T0RFcuriSF1JN5zWPb7A8lpPMLVHhwhYjT04CCZ99l5eydnKj0cmGysBmwYILbEb7cFK5APLBJh/cj53aAiIsuJRYXZrN4Q2geLgIcDwBWduYBMf8l6oylK2mHgGJUm49WYM4zjsK3X/nSSJOp+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WEKM5o9R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746014872; c=relaxed/simple;
+	bh=d6I+bZCKSKv8vKALt43bmwyGtXI93URckbCg0nFuuFs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=fgHuY7R02bfivVwemC6Aiy2gZYrqzCHQB18Mmf37k8HKkIiZi8ObDKFcFrA/nq9ozzMXQdyPk3kgh9YVl/wTPsxx9pBa1EoUCnrCADXq9pR7Lr5s3+1/80RVjCvMT5QrahHADK+1R0oxKiiq4HI3H5sq/BLEG/ohCjGteb+Eat4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org; spf=fail smtp.mailfrom=beagleboard.org; dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b=1D2yIcsp; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=beagleboard.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WEKM5o9R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04B8EC4CEE9;
-	Wed, 30 Apr 2025 12:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746014811;
-	bh=RL/8XTQxUPcBIYY01+9ALkEe5daMAevNC3FTDM2eoLE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WEKM5o9RqtjECWTJw91jObFoiWD/O7HUBaybfAyTUp1Jy6U8b6ZRrqSGtUfQSLAAH
-	 o5l/N9m8MC4/QvRQT26NjRhvrp86l1YMqAUVTkqfWIYa7TnknTjr5W//3rQdfvXdS0
-	 mT3ZTk4ZKFyL7OrutPujsZf1iVfymc0Kfkia2SXU=
-Date: Wed, 30 Apr 2025 13:40:17 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Xin Chen <quic_cxin@quicinc.com>
-Cc: Rob Herring <robh@kernel.org>, Jiri Slaby <jirislaby@kernel.org>,
-	linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-	liulzhao@qti.qualcomm.com, quic_chejiang@quicinc.com,
-	zaiyongc@qti.qualcomm.com, quic_zijuhu@quicinc.com,
-	quic_mohamull@quicinc.com,
-	Panicker Harish <quic_pharish@quicinc.com>
-Subject: Re: [PATCH v1] tty: serdev: serdev-ttyport: Fix use-after-free in
- ttyport_close() due to uninitialized serport->tty
-Message-ID: <2025043022-rumbling-guy-26fb@gregkh>
-References: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="1D2yIcsp"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-223f4c06e9fso8238395ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1746014870; x=1746619670; darn=vger.kernel.org;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HkUw/hLNBJeQ1pMrFmWnr5vSnFNE+RWvw+N/vq84oP0=;
+        b=1D2yIcspM9v6Roq06HCCzrfwJtnup52ViakfcDwUt/5iCTrdVF7VuYe15jYFY1TK04
+         jjgYQyK4manVh9SGuGSAXMcELdl8B52i+Ctb8Vg0hMwS70xnx8D6dtV8BctDxnarBCTE
+         mQGC4+FoqibehQF8mkCQZxzg2FoijddqNQEj9rFddvofOF71mkA0OHe156CaI+L6HL0s
+         6aWpll2DHd05zc6nW0wUEN+oOHomQzk313AJVmAc9Qqw0rs69zoVmXn8C8oQ4jdSwZTP
+         wcLk5JDUV/2vZPSE7FrCwiuFyq3+NWQ8WbRaxJ76WiQOSttOPQRqY4BMgXdkvwiXpR9Z
+         M79g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746014870; x=1746619670;
+        h=content-transfer-encoding:subject:from:cc:to:content-language
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=HkUw/hLNBJeQ1pMrFmWnr5vSnFNE+RWvw+N/vq84oP0=;
+        b=qgcn9k8V+ldC4KDJp+m8vUAyrGyrP2cYlQxWhYfoihtclvjFWX1dp/D7NyNccLdKIm
+         qp0faR9eiWgXXSo7d2ozPCJPeZVd+EdMFE/7FPuh3lHPe4ZwjWhGiD0co3pnDGlDzKvB
+         Yi7ZpfualswqgcIAx52FA1+bzXqgdH8KMkmX9Mxe623Gge4yMOebQoym3RQrMo/GcNz9
+         7xw8sc7/QM6lLpqqYZXt1R21Hz+5rxiuBeRqVMt3ybzgsOCwnD1hynB+3H48Sw/wplfe
+         T76yWGMgZ8L18qFsC1QUNlIAM7g2NRmDUHvtVTUn7kJrKZab4/0v7n3RPe/kWBQ88GDl
+         Il0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUNAacOzM0ImpVdgCm9WmKhnEVO/gQt9bHTBL83bHTarqa0D3D6odztblWAIHR1q8UyAhAbMcrbOq94Yas=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywm7OvYuzcvBHVPKNNRIKOyXhghbNNfgua6EytOkzUl/MupuBxk
+	/ZigW6EcZY3MsxzXiPOxhw4tQdELaBK8VVg8g7GF/iVBGgcRMB2NPAgq5SlWJA==
+X-Gm-Gg: ASbGncvMdZpczsfPrBSJH6ZdA65sNNcypyl2CnEyBbFQoTcFezasnAYlCwryo6htpce
+	fKV0MtMH7wefnf53XDjoqEsCpy95VBemrT7RPvaERv5C0hGaDAAuPdWkWOIun/T4OAr+A58P0cn
+	gwf8ejswgB/sn1tDtlceBS9Kl33fg5lbpK3rWcXUviU7k8UwFG+oCVMbg3IRQrjlfUk1Qkp3KQr
+	2WQ0fGzCKVDB3RknYs6fNpjbqEpOJ0RhQ2e7t7H4bC1XaBuLdsH9j3EJhRIcMNwaAai+kEAoBYW
+	oYB8haYe1PMyPagB6ffW48w2u5YLe7WcPzVTQ+XJox6cZNk=
+X-Google-Smtp-Source: AGHT+IHhb8NFe8lUAsoDgFv5UN8RsQHrujabcEFLMT4WjBW7XdlPw/0o6X/SBcXZaqyOpBFFqPzTCw==
+X-Received: by 2002:a17:902:ce82:b0:21f:58fd:d215 with SMTP id d9443c01a7336-22df4787428mr35026165ad.11.1746014869771;
+        Wed, 30 Apr 2025 05:07:49 -0700 (PDT)
+Received: from [172.16.116.85] ([103.15.228.94])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbe614sm119994375ad.98.2025.04.30.05.07.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 05:07:49 -0700 (PDT)
+Message-ID: <b1990c97-8751-4964-a3e8-9598f4cfac2a@beagleboard.org>
+Date: Wed, 30 Apr 2025 17:37:33 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430111617.1151390-1-quic_cxin@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: xypron.glpk@gmx.de, Jason Kridner <jkridner@beagleboard.org>,
+ Deepak Khatri <lorforlinux@beagleboard.org>, Dhruva Gole <d-gole@ti.com>,
+ Robert Nelson <robertcnelson@beagleboard.org>, Andrew Davis <afd@ti.com>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ David Gibson <david@gibson.dropbear.id.au>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Pantelis Antoniou <pantelis.antoniou@gmail.com>,
+ Herve Codina <herve.codina@bootlin.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Ayush Singh <ayush@beagleboard.org>
+Subject: [Discussion] Global vs Local devicetree overlays for addon board +
+ connector setups
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 07:16:17PM +0800, Xin Chen wrote:
-> When ttyport_open() fails to initialize a tty device, serport->tty is not
-> set to NULL, leading to a use-after-free scenario in ttyport_close().
-> 
-> To fix this, initialize serport->tty to NULL upon failure and check its
-> value before reading.
-> 
-> Call trace1:
-> release_tty
-> tty_init_dev
-> ttyport_open
-> serdev_device_open
-> qca_setup[hci_uart]
-> hci_uart_setup[hci_uart]
-> hci_dev_open_sync[bluetooth]
-> hci_dev_do_open[bluetooth]
-> hci_dev_open[bluetooth]
-> hci_sock_bind[bluetooth]
-> 
-> Call trace2:
-> refcount_warn_saturate
-> tty_lock
-> ttyport_close
-> serdev_device_close
-> hci_uart_close[hci_uart]
-> hci_dev_open_sync[bluetooth]
-> hci_dev_do_open[bluetooth]
-> hci_dev_open[bluetooth]
-> hci_sock_bind[bluetooth]
-> 
-> Co-developed-by: Panicker Harish <quic_pharish@quicinc.com>
-> Signed-off-by: Panicker Harish <quic_pharish@quicinc.com>
-> Signed-off-by: Xin Chen <quic_cxin@quicinc.com>
-> ---
->  drivers/tty/serdev/serdev-ttyport.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-> index 3d7ae7fa5018..287908f2009b 100644
-> --- a/drivers/tty/serdev/serdev-ttyport.c
-> +++ b/drivers/tty/serdev/serdev-ttyport.c
-> @@ -88,6 +88,10 @@ static void ttyport_write_flush(struct serdev_controller *ctrl)
->  {
->  	struct serport *serport = serdev_controller_get_drvdata(ctrl);
->  	struct tty_struct *tty = serport->tty;
-> +	if (!tty) {
-> +		dev_err(&ctrl->dev, "tty is null\n");
-> +		return;
-> +	}
+Hello everyone,
 
-What prevents tty from going NULL right after you just checked this?
 
-And why print out that message, what can userspace do with it?
+This mailing thread is dedicated to discussing what approach should be 
+taken regarding overlays for addon board + connector setups. It is 
+loosely a continuation of [0], so feel free to go through it.
 
-> 
->  	tty_driver_flush_buffer(tty);
->  }
-> @@ -108,8 +112,10 @@ static int ttyport_open(struct serdev_controller *ctrl)
->  	int ret;
-> 
->  	tty = tty_init_dev(serport->tty_drv, serport->tty_idx);
-> -	if (IS_ERR(tty))
-> +	if (IS_ERR(tty)) {
-> +		serport->tty = NULL;
->  		return PTR_ERR(tty);
-> +	}
->  	serport->tty = tty;
-> 
->  	if (!tty->ops->open || !tty->ops->close) {
-> @@ -156,6 +162,11 @@ static void ttyport_close(struct serdev_controller *ctrl)
-> 
->  	clear_bit(SERPORT_ACTIVE, &serport->flags);
-> 
-> +	if (!tty) {
-> +		dev_err(&ctrl->dev, "tty is null\n");
-> +		return;
-> +	}
 
-Again, what prevents it from changing right after you just checked it?
+Introduction
+*************
 
-thanks,
+To provide a background, the goal is to have a common way to support 
+setups involving addon board + connector. Some examples are as follows:
 
-greg k-h
+- MikroBUS [1]
+
+- PocketBeagle 2 [2]: After discussion in [0], it seems that even board 
+headers should be treated as a addon board + connector problem.
+
+
+There are 2 main approaches currently floating around. They serve as 
+examples of Global and Local approaches. However, the main discussion 
+topic is global vs local rather than the specific approaches.
+
+
+1. __symbols__ based approach [3]
+
+
+This was originally proposed by Andre Davis [3]. It defines an overlay 
+with just special names in `__symbols__`, which is used along with an 
+overlay for the addon-board, which makes use of the node names defined 
+in the connector `__symbols__` overlay. Please take a look at the 
+original patch series since it provides a working example of how it can 
+be used [3].
+
+
+It has a few nice benefits such as it works pretty well with existing 
+infrastructure, and does not need much in the way of new functionality. 
+However, for this discussion thread, I want to consolidate the 
+discussion regarding how this approach directly adds the devices to the 
+appropriate nodes, Eg. An SPI device in addon board will be added to the 
+appropriate SPI controller, etc. This means the changes are made to the 
+global tree.
+
+
+2. export-symbols based approach [4]
+
+
+This approach was originally proposed by Herve Codina [5]. It defines a 
+special node (local to the connector) say `export-symbols`. This node 
+takes precedence over global `__symbols__`, and thus is used to define 
+standard names for nodes used in addon board overlay. Please look at [4] 
+to get a more in-depth explanation.
+
+
+The main difference here is that all the addon board overlay changes are 
+isolated to the connector node in the devicetree. Eg: an I2C device in 
+addon board will be added to the connector node (as defined in i2c bus 
+extension patch series [6]). This means the changes are made to the 
+connector node and not the global tree.
+
+
+This approach needs extra plumbing (like i2c bus extension [6], 
+something similar for SPI, etc) to make the whole approach work. Only 
+GPIO and PWM with Nexus node can use this approach right now.
+
+
+Basic Requirements
+
+*********************
+
+
+Here are some basic functionality that the chosen approach can do for it 
+to be viable for the connector + addon board setups:
+
+
+1. Dynamic device addition/removal from userspace
+
+
+A lot of connectors + addon board setups do not have any dynamic 
+discovery addition. This is compounded when talking about treating the 
+whole header in SBCs like PocketBeagle 2 as a connector, since people 
+would want to wire LEDs and stuff to individual pins. So a mechanism 
+using sysfs or configfs is required
+
+
+2. Dynamic device addition/removal by driver using EEPROM or something else
+
+
+Some setups (MikroBUS boards with 1-wire EEPROM, Beagle capes) have 
+EEPROMs that contain board information which can be used to detect which 
+overlay should be applied.
+
+
+Main Discussion
+
+*****************
+
+The main topic I wish to discuss if global devicetree overlays are okay 
+for addon-board setups. Let me outline some reasons for I prefer the 
+local devicetree overlays approach:
+
+
+1. Addon board removal on multiple connector setups
+
+
+Say connector A added an I2C device to the controller, then connector B 
+added an I2C device to the same controller. I am not sure how well 
+removing overlays out-of-order works.
+
+
+2. Who owns the device
+
+
+Say there are 2 connectors A and B. Both connectors share an I2C 
+controller. Let both connectors have the same device attached. In case 
+of `__symbols__` based approach, both connectors would technically be 
+successful in applying the overlays, rather than one of the overlays 
+failing.
+
+
+3. How to register the newly added devices
+
+
+I am a bit unsure about this one since I will have to check if the 
+kernel tries to register new devices automatically after applying the 
+overlay. For local setups, I was using `devm_of_platform_populate` on 
+the connector device.
+
+
+4. Security
+
+
+I think local modification is more secure than global tree modification. 
+A completely local solution should be as secure from devicetree 
+perspective as USB. But I am not an expert.
+
+
+Drawbacks of local setups
+
+***************************
+
+
+1. Needs a lot of surrounding work.
+
+
+I2C bus extension is needed for I2C devices to work, something similar 
+for SPI. At least ADC, PWM and GPIO should be covered with just nexus nodes.
+
+
+Closing Thoughts
+
+******************
+
+
+I would really like to reach consensus regarding weather the addon-board 
+overlays should be global or local. This will help to give a direction 
+regarding what should be improved, and hopefully make future development 
+move faster. Once a bit of consensus has been reached, we can discuss 
+specific implementations.
+
+
+[0]: 
+https://lore.kernel.org/linux-devicetree/d42100cb-eaa0-487f-aaaa-6d8f87bc0705@beagleboard.org/T/#m09b2ebe28b6202b2a926970150caf718eff6d9ac
+
+[1]: https://www.mikroe.com/mikrobus
+
+[2]: https://www.beagleboard.org/boards/pocketbeagle-2
+
+[3]: https://lore.kernel.org/lkml/20240702164403.29067-1-afd@ti.com/
+
+[4]: 
+https://lore.kernel.org/devicetree-spec/dbe566ea-447f-4f91-a0b2-f464374955f4@beagleboard.org/T/#m591e737b48ebe96aafa39d87652e07eef99dff90
+
+[5]: 
+https://lore.kernel.org/all/20241209151830.95723-1-herve.codina@bootlin.com/
+
+[6]: 
+https://lore.kernel.org/devicetree-spec/20250401081041.114333-1-herve.codina@bootlin.com/T/#t
+
+
+
+Best Regards,
+
+Ayush Singh
+
