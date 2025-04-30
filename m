@@ -1,161 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8D2DC789
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50398204F9C;
+	Wed, 30 Apr 2025 11:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012331; cv=none; b=djtonVQaLHhHSgqpNFaa+4AspDLjdh9EA1XXdWi4cYGlLKxv4ObFXFOLZywAk7sAPPU18DEnbCPOwe+d7vMnUcB5yK9p1Gg50j/QrDSt1xTygBU26XwRPaZbv1iJ5sUKHTHTrc6eF/oHOgttt3kcL0pY6DIYkk3x0mOiBLs8ve8=
+	t=1746012407; cv=none; b=YZF4AVrajaUfSIeAgcb1u9kFvihdqYTMs1M5pdazXmjO3KIkKQlD4yL+UkVZfdEPIMPHxZPo2G09Ym48VXc+QONFA66k7cMzFq0gYONhzi9iKQvA0/3cYlfoVA1daaCo+kZwiNIeSSO4sn+eDvYUCD+BTmSS2xpji1tC0GzQ3W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012331; c=relaxed/simple;
-	bh=JnmBo6iTDvcJ3v3cqSYz+bAFnCuB7hiplr07wZ4j0Rg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HcQt5H9zhrhrZsxBiyjyEeL1l9w7Y7hoKFQIRpEGlZtwxLjsGnzdyb2iDgy4Sy1ttBg5ChV+ZWiOu2FVU0WxG6lvbV5Vj8aq2C9yQWV50Og2m16w6WWYvqwZqSeHp9wG2YsDjk9vxe9plyBhcIYwf1ND7xos9V52LLbaLfgm4bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aBtf3gwx; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746012407; c=relaxed/simple;
+	bh=pQ9Yaxx54zBVXHxbZ2BkYpBzdP6e5jjIv6A+opO62k8=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=S27yRrdjUjQ4ydtm3aMx7dte02O6/mQbGRmegJCvbyfxYB1yBgWkUW0907BLOMkadAegZTBNGNHZo9lhw344DLYB+pAPjI6QfAOlspwjwfj7c3aSOrscBF4STv5rB90vNKbCHGrAByHkZ17FU3EEXYhwB3G9BPq1thcMDqGznkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MnYymzMs; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aBtf3gwx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746012329; x=1777548329;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=JnmBo6iTDvcJ3v3cqSYz+bAFnCuB7hiplr07wZ4j0Rg=;
-  b=aBtf3gwxa7n9Td61r3dzVGT2Y0Fzh1PuH+Nuy5+GgZUUvKegaAr6eQhv
-   9nC+rNV+60pizkiWA8m0B141kYYSKsecxAM6HKGHOyMYo2glabqmKKTsa
-   5ea6k908ouPadDtWcU4/7R+9BN7H0vFh9V1T41lo5NuPFv1SKLCZiIwg/
-   oUZFrDw7Uy3VaMCfSdCkeyjnrnm8ilvSjgxqmyFRg/a6wVJ9BEdZ5wLRV
-   Qw/ujhlPwQl9jLEr2ijcFGS81JEKceNNhgPYKVm3OgxA/qKmqpuF0Hiw9
-   5VU7COFLPNSMvX0IPj/DzIQTg2fDUFZQdyRumyRu+4/qw5irG9ZxqXoDC
-   A==;
-X-CSE-ConnectionGUID: L+Yky5eURxiApRkODHGmiA==
-X-CSE-MsgGUID: NI62GzTQSPuc7dpjm2t/NA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47799072"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="47799072"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:25:28 -0700
-X-CSE-ConnectionGUID: fO9WqGgIQWiM4RP/anI7PQ==
-X-CSE-MsgGUID: QTyvYmOeRMeqDaKbsXKhtg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="133994118"
-Received: from unknown (HELO localhost) ([10.237.66.160])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:25:25 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, =?utf-8?Q?Ma=C3=ADra?= Canal
- <mcanal@igalia.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Andrzej
- Hajda <andrzej.hajda@intel.com>, Neil Armstrong
- <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
- Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
- <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Dmitry
- Baryshkov <lumag@kernel.org>
-Subject: Re: [PATCH v5 06/11] drm/display: add CEC helpers code
-In-Reply-To: <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
- <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
-Date: Wed, 30 Apr 2025 14:25:21 +0300
-Message-ID: <87plgtvqla.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MnYymzMs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=2FI0P7JQN/8TK4ts59kC/fO10NTZfLMEix72+dV+X7U=; b=MnYymzMsf8tkCwJFiDMJ/8gnOa
+	DXoYNnPBrg2IMJdeR7FTzqwJuhRsvmXO9rQXn7ozeb6wlzWjSQYKRaYMYvXWFQL0DHRhYbqpD7S5O
+	gws0BM8Eb4LNTlQzIogrPJ98yx16HDhgwh2o6SIMTFonBPQchAx10WKaxbILUiWHHv3lxntQZjvvY
+	OEs/98UXbBfPGF1zkrWkqfMMl7gwBxqoTTUDKIb+0IIyloGLx37zzqH1GjnG2m0wRsg/i/QOZTVhY
+	Pku0geu+XPfgXCc3W61vDb8mIE2Frb2NwEiYR2z2QyAnC3j8vMk2v+V6l3Pe8Hkk0lXcIbq1NaObm
+	FbHC/Sxg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uA5aH-0000000C6a5-02iR;
+	Wed, 30 Apr 2025 11:26:37 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id E08E63061EE; Wed, 30 Apr 2025 13:26:35 +0200 (CEST)
+Message-ID: <20250430112349.751028945@infradead.org>
+User-Agent: quilt/0.66
+Date: Wed, 30 Apr 2025 13:07:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: x86@kernel.org
+Cc: kys@microsoft.com,
+ haiyangz@microsoft.com,
+ wei.liu@kernel.org,
+ decui@microsoft.com,
+ tglx@linutronix.de,
+ mingo@redhat.com,
+ bp@alien8.de,
+ dave.hansen@linux.intel.com,
+ hpa@zytor.com,
+ seanjc@google.com,
+ pbonzini@redhat.com,
+ ardb@kernel.org,
+ kees@kernel.org,
+ Arnd Bergmann <arnd@arndb.de>,
+ gregkh@linuxfoundation.org,
+ jpoimboe@kernel.org,
+ peterz@infradead.org,
+ linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ kvm@vger.kernel.org,
+ linux-efi@vger.kernel.org,
+ samitolvanen@google.com,
+ ojeda@kernel.org
+Subject: [PATCH v2 07/13] x86/kvm/emulate: Introduce COP1SRC2
+References: <20250430110734.392235199@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 
-On Mon, 07 Apr 2025, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
-> diff --git a/include/drm/display/drm_hdmi_cec_helper.h b/include/drm/display/drm_hdmi_cec_helper.h
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..39bb6d12acb35f539a4a6cd1b61ce97bf4e063ab
-> --- /dev/null
-> +++ b/include/drm/display/drm_hdmi_cec_helper.h
-> @@ -0,0 +1,74 @@
-> +/* SPDX-License-Identifier: MIT */
-> +
-> +#ifndef DRM_DISPLAY_HDMI_CEC_HELPER
-> +#define DRM_DISPLAY_HDMI_CEC_HELPER
-> +
-> +#include <drm/drm_connector.h>
+Replace the FASTOP1SRC2*() instructions.
 
-Is there anything in this file that requires that include?
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/kvm/emulate.c |   34 ++++++++++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 8 deletions(-)
 
-> +
-> +#include <linux/types.h>
-> +
-> +struct drm_connector;
-> +
-> +struct cec_msg;
-> +struct device;
-> +
-> +struct drm_connector_hdmi_cec_funcs {
-> +	/**
-> +	 * @init: perform hardware-specific initialization before registering the CEC adapter
-> +	 */
-> +	int (*init)(struct drm_connector *connector);
-> +
-> +	/**
-> +	 * @uninit: perform hardware-specific teardown for the CEC adapter
-> +	 */
-> +	void (*uninit)(struct drm_connector *connector);
-> +
-> +	/**
-> +	 * @enable: enable or disable CEC adapter
-> +	 */
-> +	int (*enable)(struct drm_connector *connector, bool enable);
-> +
-> +	/**
-> +	 * @log_addr: set adapter's logical address, can be called multiple
-> +	 * times if adapter supports several LAs
-> +	 */
-> +	int (*log_addr)(struct drm_connector *connector, u8 logical_addr);
-> +
-> +	/**
-> +	 * @transmit: start transmission of the specified CEC message
-> +	 */
-> +	int (*transmit)(struct drm_connector *connector, u8 attempts,
-> +			u32 signal_free_time, struct cec_msg *msg);
-> +};
-> +
-> +int drm_connector_hdmi_cec_register(struct drm_connector *connector,
-> +				    const struct drm_connector_hdmi_cec_funcs *funcs,
-> +				    const char *name,
-> +				    u8 available_las,
-> +				    struct device *dev);
-> +
-> +void drm_connector_hdmi_cec_received_msg(struct drm_connector *connector,
-> +					 struct cec_msg *msg);
-> +
-> +void drm_connector_hdmi_cec_transmit_done(struct drm_connector *connector,
-> +					  u8 status,
-> +					  u8 arb_lost_cnt, u8 nack_cnt,
-> +					  u8 low_drive_cnt, u8 error_cnt);
-> +
-> +void drm_connector_hdmi_cec_transmit_attempt_done(struct drm_connector *connector,
-> +						  u8 status);
-> +
-> +#if IS_ENABLED(CONFIG_DRM_DISPLAY_HDMI_CEC_NOTIFIER_HELPER)
-> +int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
-> +					     const char *port_name,
-> +					     struct device *dev);
-> +#else
-> +static inline int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
-> +							   const char *port_name,
-> +							   struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +#endif
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -317,6 +317,24 @@ static int em_##op(struct x86_emulate_ct
+ 	ON64(case 8: COP_ASM1(op##q, rax); break;) \
+ 	COP_END
+ 
++/* 1-operand, using "c" (src2) */
++#define COP1SRC2(op, name) \
++	COP_START(name) \
++	case 1: COP_ASM1(op##b, cl); break; \
++	case 2: COP_ASM1(op##w, cx); break; \
++	case 4: COP_ASM1(op##l, ecx); break; \
++	ON64(case 8: COP_ASM1(op##q, rcx); break;) \
++	COP_END
++
++/* 1-operand, using "c" (src2) with exception */
++#define COP1SRC2EX(op, name) \
++	COP_START(name) \
++	case 1: COP_ASM1_EX(op##b, cl); break; \
++	case 2: COP_ASM1_EX(op##w, cx); break; \
++	case 4: COP_ASM1_EX(op##l, ecx); break; \
++	ON64(case 8: COP_ASM1(op##q, rcx); break;) \
++	COP_END
++
+ /* 2-operand, using "a" (dst), "d" (src) */
+ #define COP2(op) \
+ 	COP_START(op) \
+@@ -1074,10 +1092,10 @@ COP2(cmp);
+ COP2(test);
+ COP2(xadd);
+ 
+-FASTOP1SRC2(mul, mul_ex);
+-FASTOP1SRC2(imul, imul_ex);
+-FASTOP1SRC2EX(div, div_ex);
+-FASTOP1SRC2EX(idiv, idiv_ex);
++COP1SRC2(mul, mul_ex);
++COP1SRC2(imul, imul_ex);
++COP1SRC2EX(div, div_ex);
++COP1SRC2EX(idiv, idiv_ex);
+ 
+ FASTOP3WCL(shld);
+ FASTOP3WCL(shrd);
+@@ -4103,10 +4121,10 @@ static const struct opcode group3[] = {
+ 	I(DstMem | SrcImm | NoWrite, em_test),
+ 	I(DstMem | SrcNone | Lock, em_not),
+ 	I(DstMem | SrcNone | Lock, em_neg),
+-	F(DstXacc | Src2Mem, em_mul_ex),
+-	F(DstXacc | Src2Mem, em_imul_ex),
+-	F(DstXacc | Src2Mem, em_div_ex),
+-	F(DstXacc | Src2Mem, em_idiv_ex),
++	I(DstXacc | Src2Mem, em_mul_ex),
++	I(DstXacc | Src2Mem, em_imul_ex),
++	I(DstXacc | Src2Mem, em_div_ex),
++	I(DstXacc | Src2Mem, em_idiv_ex),
+ };
+ 
+ static const struct opcode group4[] = {
 
--- 
-Jani Nikula, Intel
+
