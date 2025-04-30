@@ -1,113 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24662DC768;
-	Wed, 30 Apr 2025 08:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AE92DC768;
+	Wed, 30 Apr 2025 08:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003217; cv=none; b=XVDGF+OaHf8Yb9/hCTUBkDfwWQmtp68n7LP0sW2I8V3oZBUGuEJOEJokXDPagwhaydtdzwyblugfRj0Aa/KnyiIwA3r+79i6R3pcPk+F0NfHwt54B7czCMk/slYl1mTJ22/6PTx8cQ8uFNj0u06/b8Z7hJk7UkBcCuqymrZQp7o=
+	t=1746003297; cv=none; b=PDom6og6TqM4UHqJ/OAgfd3zBeZp2qDE/xN9NkeuT3Z1J/NxQkIevaBumC/D/D5JUUb1YBtFSMg4GW7Iqh/tTY2C2Cxsn8rfMHHtK4Mi9efndL0y/9kwJvaB5mxAXDcyO4HxJtb3BvELkD2ZoX7sGjRMh+kyl3Cs2kaF+hC83vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003217; c=relaxed/simple;
-	bh=f15OCVR+EgVtXpxgYG3btvR5hejOsTSTYr4Nk2wEQaE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YVD4ykXwTjRaW5vWpBhaMGWH2z6kEi6kWooWcpSZdbhexSfMRlrrmYkYfIGSSuDMjh4o+WGpXrSr2SGhDT56ZUN8NET4Uz78I0aOtYx2q7KfyrWDrgnHoF927jNe4G7IL+4RfnsGo0TVp98Jy6ff6ogUKHIkPtOjK9Yxg7FVYg4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QszeG2Me; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746003297; c=relaxed/simple;
+	bh=hqpNbv1ndK+wJJDzwcVGDnRE6dB7V/xVAI4gET8aaag=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=A+SClWeza34R4xT1id/IWXWHizGr/12N5z7Mj6RkxsiA9rA2uwUEC81AgFo9/2NaaaqLYBCM9nxdc5Ga0KH1i9yhYvu3EowzRCpittbTjr6+uH9lW6HHrEe6Sai5F9hwWK2T/utNJdTCnyjuc9skAl/VMJOmiEMDawvunTx1LY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=a0k67r5B; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QszeG2Me"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B5B2C4CEED;
-	Wed, 30 Apr 2025 08:53:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746003216;
-	bh=f15OCVR+EgVtXpxgYG3btvR5hejOsTSTYr4Nk2wEQaE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=QszeG2MeJl8fAxvFg34GTAR/9H/i9BOOgrn/A0bd6zfjNkn4N5C5aUpYaivD6IxKP
-	 GJ6mmMqc9jTm/IcWhGNoms5AkOCbR1Fycg//B0nm4nZ3blndkfUNCDWO6chWuSZGud
-	 LwCONqLWOKzyu5Acp7NY2yAaTUYWSxBKdOXLvhCIsX7UBS9G5a4swthMHdJ79IHTkK
-	 p6kZbaQdCmrHFpOKFdj3RygNQ07qDou8u5YXWVFNdcM8ns+6S3fP+As/3EGJdaibRt
-	 hC4SCKFh83cfiCpsXrYaDDYV4+WLJCg3x0cVD85MKq/96afUbxNd3bo9j7FshZ6zLh
-	 SXqxbGqfKCCdQ==
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac2dfdf3c38so1218574466b.3;
-        Wed, 30 Apr 2025 01:53:36 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW2meCuXOtq1hZMjqx8dpQZ8lpeILJgY5PFakgBGOWOvEvyp7ndZJMzneGIk+njxnocRlBpIqXSlLDA4D8=@vger.kernel.org, AJvYcCWp5Tit3r5b4IsXqpAu5jM36odJ2qvdklVkwIpzj6CJqQwAt4KJfAEQAp8jOYVXgZnLeXwD1S3vVqEgJ+0ucYCh@vger.kernel.org, AJvYcCXwsOL2mdMQv8IznrPqkSIkb8b5KCkOyhQAIP6dxTBef0ToWQPG6yH5r7rpimkBQfXAmFMhKzGVbzYp8e1I@vger.kernel.org
-X-Gm-Message-State: AOJu0YyStbFOhJJ6g9liBrmLGlJFr7F6QKdB7AqMhJ5Haad9vOnPNUYM
-	5CTEBDYv/1WxYKi2st/doPfoYKX213x2N2zThPLLJZflK1Ld6rDkj4lWrs/TzLqvA32qghqh2HO
-	grJtPOWaDFneHvuS6Z8T4nhYbH7c=
-X-Google-Smtp-Source: AGHT+IH5ByFw77cLNg27eGSh6LJj24+g4XbE5qVSCGhzY8q8WePZkEcf91AFPzp7kbTaKwjZoUiQ7bhI3SukVRGZdLQ=
-X-Received: by 2002:a17:907:c23:b0:ac2:d0e6:2b99 with SMTP id
- a640c23a62f3a-acee2404095mr189166066b.36.1746003215050; Wed, 30 Apr 2025
- 01:53:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="a0k67r5B"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 10C86AF;
+	Wed, 30 Apr 2025 10:54:47 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746003287;
+	bh=hqpNbv1ndK+wJJDzwcVGDnRE6dB7V/xVAI4gET8aaag=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=a0k67r5Bh0KbuWECHjmywEtTTNPyKeZxSQq10Y0At6widSjxNiKDkBnRfov8JBlE6
+	 lNlrdGAprnTPB2DyUzkJzwgPtIYLGza9jaYidG+CpYcpio4W/MxNFhfKyogXeiDCJm
+	 stiP87bsYTDeEhI8YUL3bEooa+U7Bze/HKGKus3k=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250418093506.1349-1-zhaoqunqin@loongson.cn> <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
- <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn> <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
- <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
-In-Reply-To: <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Wed, 30 Apr 2025 16:53:24 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
-X-Gm-Features: ATxdqUHnwMshS9EfXAJbKH-dQtSwy2AQDOhU27KHQ7tHY_jE1Jkc_BiUaRaUdVM
-Message-ID: <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
-Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
-To: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net, peterhuewe@gmx.de, 
-	jarkko@kernel.org, linux-kernel@vger.kernel.org, loongarch@lists.linux.dev, 
-	linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org, 
-	pmenzel@molgen.mpg.de, Lee Jones <lee@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aBHjFcbjR_oPiINu@valkosipuli.retiisi.eu>
+References: <20250430073649.1986018-1-kieran.bingham@ideasonboard.com> <aBHjFcbjR_oPiINu@valkosipuli.retiisi.eu>
+Subject: Re: [PATCH] drivers: media: i2c: imx335: Fix frame size enumeration
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Date: Wed, 30 Apr 2025 09:54:50 +0100
+Message-ID: <174600329094.1586992.9902010088598676539@ping.linuxembedded.co.uk>
+User-Agent: alot/0.10
 
-On Wed, Apr 30, 2025 at 4:47=E2=80=AFPM Qunqin Zhao <zhaoqunqin@loongson.cn=
-> wrote:
->
->
-> =E5=9C=A8 2025/4/30 =E4=B8=8B=E5=8D=884:18, Herbert Xu =E5=86=99=E9=81=93=
-:
-> > On Wed, Apr 30, 2025 at 04:14:40PM +0800, Qunqin Zhao wrote:
-> >> Sorry to bother you, may i ask is it fine to move  the Security Engine=
- base
-> >> driver[Patch v8 1/5] to drivers/crypto ?
-> >>
-> >> The base driver uses MFD  interface  to register child device(tpm, rng=
-) , as
-> >> done in
-> >>
-> >> "drivers/iio/common/ssp_sensors/ssp_dev.c" and
-> >> "drivers/firmware/xilinx/zynqmp.c".
-> >>
-> >> Thank you, and I look forward to hearing from you.
-> > I don't mind at this point in time.  But if this driver were to
-> > develop features way outside of the Crypto API in future then I
-> > may change my mind.
->
-> Hi, Herbert, thanks for your reply.
->
-> In future it just add child platform devices  name(sm2, sm3, sm4) to
-> "struct  mfd_cell engines".
->
->
-> Hi, Huaci
->
-> Let's go via Herbert's crypto tree for the base driver patch under
-> drivers/crypto/loongson/,
->
-> What do you think of it?
-In my opinion drivers/mfd is better, because another user is in
-drivers/char rather than drivers/crypto.
+Quoting Sakari Ailus (2025-04-30 09:45:09)
+> Hi Kieran,
+>=20
+> On Wed, Apr 30, 2025 at 08:36:49AM +0100, Kieran Bingham wrote:
+> > In commit cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit
+> > mode") the IMX335 driver was extended to support multiple output
+> > bitdepth modes.
+> >=20
+> > This incorrectly extended the frame size enumeration to check against
+> > the supported mbus_codes array instead of the supported mode/frame
+> > array. This has the unwanted side effect of reporting the currently
+> > supported frame size 2592x1944 three times.
+> >=20
+> > Fix the check accordingly to report a frame size for each supported
+> > size, which is presently only a single entry.
+> >=20
+> > Fixes: cfa49ff0558a ("media: i2c: imx335: Support 2592x1940 10-bit mode=
+")
+> > Signed-off-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
+>=20
+> Thanks for the patch.
+>=20
+> Cc: stable is required these days with Fixes: tag, I've added it this tim=
+e.
 
-But if moving to drivers/crypto is what Lee Jones wants, then everything is=
- OK.
 
-Huacai
+I didn't know that. I thought stable tree picked up from the fixes tags.
+(Or I remember there was some AI system that was picking them out too?)
 
->
->
-> BR, Qunqin.
->
-> >
-> > Thanks,
->
->
+I'll see if I can automate/add that to my fixes helper.
+
+Does it need to be in this format?
+
+Cc: stable@vger.kernel.org      # 6.8
+
+--
+Kieran
+
+
+>=20
+> --=20
+> Sakari Ailus
