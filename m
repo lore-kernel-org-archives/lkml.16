@@ -1,157 +1,181 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2084.outbound.protection.outlook.com [40.107.94.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF62B1E9B23
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000122; cv=none; b=N60zfJt4HP/9WhFVRtuJkMnWb11l8Lvndde446xwjMlcaKKkXk5BTUbjAlqaPmQ08J0xpK4OBEnhGkXzAMLy1MfJSMWKtrTmypuY3xOW0+KSnq47TaZgZc5ApGR52/7tiBTfQqdmMMScpXsLmQae7d2vOfSwR69Kpk05UTHchRU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000122; c=relaxed/simple;
-	bh=imNZM0y0X2Zh0glJewNR4M0/mnywvZ7XPAeuRNJmlBs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YJogQfxUO9oS8Q97WW41GvRb8Fc/HFgz0k3T9+6d1q0onuGwN7QRT88JZ0sk8szXtl/31KsYch2ucU/o5wt2d1moe/Q7Lnq4uxxLLxggkN+kCzxw+9DYzdLOsoK+Fw1s+jbXXJEtPQQDk7yciw0qbSC8f+XP9v33UDITKTcTZoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1JTzKuaw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tByTKZ6B; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pkIaEELL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yhYIwOU/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7BB1E9B23;
+	Wed, 30 Apr 2025 08:02:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.84
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746000133; cv=fail; b=LS8J0cUmRdobUBKHQFX2IA/moMi1Ca/gZ8mOA1CSDGAWfJucETH1jdRQ3DWRGt8HFazsIkHgSQoSgCjbZgx/Uh0BwhrMBL6fokFoHZIt55aajr6Gi8cGGVEYwZLQdfaUbzNEIvE+nkXJUV7JRr8QoanhlTNdvt6p2PexUWz25Lk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746000133; c=relaxed/simple;
+	bh=41kqCo9OPsBLmqQCPvj1mwNqmDoXMu/7cLPuNBKkofk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ndADeBafoiiunGRzyCOJNsl3vCqYfky1mnB/7ALzoRyEq80LuRPhSHM1tKdnB7Jr8Zc3Sp/K2K6VRj86pVldcoa+J6OSk8/G9DrpjUdWzloMuaQFGZWjVOWTK8pEnJ7PEkgoO2G4H1uDKU66Ts/XfHX4n7iinVvBtmzn5JMWc2M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=s30esJZJ; arc=fail smtp.client-ip=40.107.94.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1JTzKuaw";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tByTKZ6B";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pkIaEELL";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yhYIwOU/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id EC10521227;
-	Wed, 30 Apr 2025 08:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746000118; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
-	b=1JTzKuawdTXdtZE6wr6Tsza1zxtzz5sm9FdR75lY8OGRZXygGd95d9ktIw83NGOjceoG02
-	dPj5NeTQilr2ZXPzmIYodkEJk3bGYn/U5H73VM2dJK03OCu3HPVbEl0t1DfqMQwvDWyB5A
-	NckY7raho18q3GNH4yK9yQfe3KAEMlc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746000118;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
-	b=tByTKZ6BT9NweKRTkFuTjFHUjKCcB2k+QFFmmT9tYw5vtekUJj3VBS2zaYgHuobY9U5Ofa
-	oPjq0cxzfg84/1BA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746000117; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
-	b=pkIaEELLDx7JOFPt2lPzQfQIp5d2ZWuF159NU3qm1Q6Zrm3Ux0HeQp0pklRVspKkY9aCDn
-	FpN92g8vEX4JQWVZhhk9mZ1PxA/pVwq9iuo+9sQZ1IO9hacCtHH8SResJQqhvqM7fiQmci
-	6P9cGnMIL4g64C/cB/x5GFDzXJLb+/s=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746000117;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
-	b=yhYIwOU/ehkbYQO1rCtFM8R6X8hONytUkXhGN1FtTx/1AnfdRwzf0ulDzPdJqKjBJwD42q
-	vFJedRKAVd6A/UBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC562139E7;
-	Wed, 30 Apr 2025 08:01:57 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id xs/CNfXYEWiECAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 30 Apr 2025 08:01:57 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 8B961A0AF0; Wed, 30 Apr 2025 10:01:53 +0200 (CEST)
-Date: Wed, 30 Apr 2025 10:01:53 +0200
-From: Jan Kara <jack@suse.cz>
-To: Zhang Yi <yi.zhang@huaweicloud.com>
-Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
-	wanghaichi0403@gmail.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
-	yangerkun@huawei.com
-Subject: Re: [PATCH 4/4] ext4: ensure i_size is smaller than maxbytes
-Message-ID: <ou367b36z65wilppck3eyeah445gbr4623irp4k4kuzypnhdkr@jouh63bmmy4r>
-References: <20250430011301.1106457-1-yi.zhang@huaweicloud.com>
- <20250430011301.1106457-4-yi.zhang@huaweicloud.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="s30esJZJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=bj11sHfPUFsl+Bg1gpPPzO0gV9+vIsu313rghF8BNxw052E3jj3YyTRX/UeE3IdXW9j3wYx5mkGmvVtzHCFbgDMLaY96HwR3bjQzuP9QRVdjMeKJr+EKBNKjYtKsbe8wXkmZCD7y/vLl36RZ8hWBUCRXRNnukkJdCyl7xZNyAjCOcA9ofZanoqPsWx2CHQ0fw4p9NlC+SKD8aPMabs/S6EymFbYVrZ4d+Z+6oqxSY+zupu6cl0NL1Ryqs/oY2EtEfV05aEdlOuQv/TefXrIjiwhPIak4WX1cJSwMhkFvTULXLc/3s0rpjXeErYqNuyZ6624rGDIANIZAUYult1J1ng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uAB7RlcS5TQd1fDlp4I/1yO5reiRgBbxBRTGiWpy/90=;
+ b=BWzMaBjNFoolfBVuEXkC0qeQx+DdjeDYqKtKIjPWcjeE41OXGsPUvKy5p7+6ocqUPfHAns/ZhZzsbgrVUN4xqaTL1vhE2xw7oLMzY7kyBvJXKxVImtNBQabLMhMmAsTuTsOyu5mUrjNVSkjIBSAYCVX3VmCv70kO/vCMK6fZR25XdCDbV12fxXikxUXzPaNLp91VWfa7USSxjNHsmATIsFXCcrh3G0/dkBH+8KEL4BZgl4sfOVrQ/ZYnT6MLNrth1FTuSLdJbx/1sDUTKqLpp4pitrgKnCVCuV9bvKozZepJBRbP5zLIes29kTt/UkOWlMD90usLEb8O+MiGF1XMow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=amd.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uAB7RlcS5TQd1fDlp4I/1yO5reiRgBbxBRTGiWpy/90=;
+ b=s30esJZJBs+fWjE1oOH5uANMxiHgUXCWyePTmkX1+Dtph5RH5M11q6ahp4DX16bL935P4EPyRWCuw6dOLmyovpMF4VMLzAWSh4Gts5Z9No+fapzdIDVTKEjrG6vvG7suMdTQXfiYWBbcVWA0zzSHyWrtzU0dzVtVEY1K9AcBxzWq+LyGd+krxXsL1/I0HkVnhb0ScCohQSALa13B8fe1D0k6ANwhsow0AuhpHi2LVvz1ja3VCGXrR/h5ch6q2q6cydZrR96j6SGLgiM9piHgA9pZXJM8ftiJyoxnU8qBjQgYs3pMSYfvhos8vsagrPGbw+qf3w/BxoXG6EC98cyqng==
+Received: from BLAPR03CA0010.namprd03.prod.outlook.com (2603:10b6:208:32b::15)
+ by DS5PPF482CFEB7D.namprd12.prod.outlook.com (2603:10b6:f:fc00::64a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8655.33; Wed, 30 Apr
+ 2025 08:02:09 +0000
+Received: from BL02EPF0001A106.namprd05.prod.outlook.com
+ (2603:10b6:208:32b:cafe::a9) by BLAPR03CA0010.outlook.office365.com
+ (2603:10b6:208:32b::15) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Wed,
+ 30 Apr 2025 08:02:09 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL02EPF0001A106.mail.protection.outlook.com (10.167.241.139) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 08:02:09 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 30 Apr
+ 2025 01:01:59 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 30 Apr 2025 01:01:59 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com
+ (10.126.190.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 30 Apr 2025 01:01:57 -0700
+Date: Wed, 30 Apr 2025 01:01:55 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Vasant Hegde <vasant.hegde@amd.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <praan@google.com>, <zhangzekun11@huawei.com>,
+	<iommu@lists.linux.dev>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-tegra@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+	<patches@lists.linux.dev>, <mochs@nvidia.com>, <alok.a.tiwari@oracle.com>,
+	Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
+ ioctl
+Message-ID: <aBHY8wOmpMOxelE/@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
+ <b0d01609-bdda-49a3-af0c-ca828a9c4cea@amd.com>
+ <aA/exylmYJhIhEVL@Asurada-Nvidia>
+ <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
+ <aBB1gLfahnLmn0N1@Asurada-Nvidia>
+ <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
+ <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
+ <7c813df6-e37d-47ae-9b5a-b8735c865626@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20250430011301.1106457-4-yi.zhang@huaweicloud.com>
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-0.999];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,huawei.com:email,suse.com:email]
-X-Spam-Score: -3.80
-X-Spam-Flag: NO
+In-Reply-To: <7c813df6-e37d-47ae-9b5a-b8735c865626@amd.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0001A106:EE_|DS5PPF482CFEB7D:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e8c3e13-45df-4f02-1e89-08dd87bd4ea7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?vwbV5/hLSv+in3riSOYPtwZJnrqhj+mhENDHkS8ij0XQYtWD49vuxC2Uu4jF?=
+ =?us-ascii?Q?WBxQBTMzSMnh2SuCuDB41fThXJXpY7dwnBjLgLnvIFIMlcbEOrBdyo553wGY?=
+ =?us-ascii?Q?Bw05+y15rbJTzx9004NkvYxPAio5vskAXQsmee7FhUB4w0FQbdS+6n99THON?=
+ =?us-ascii?Q?6stYbnBUPfPSJjPBVBf9e1CmCwDGgNGEMAqsdWqqTEZ6KGJuiO1LdjXIC5TG?=
+ =?us-ascii?Q?cQdAYr9gdcDUItKGbbB/oVqX0Oeky2aH2rsqUyl5A78qs9Of3qxpLgGaQI6d?=
+ =?us-ascii?Q?X3thacDnLXi5DP7BAzbc5tDXcnLcMP2CwiRKDydY7Ns+c8tz01szvWiGIkkY?=
+ =?us-ascii?Q?6+IC5rO7ZG+V8obSj9RnR1gkDnipDpfLMXD9MujPjNBwh8VX6FdApWvfPHnr?=
+ =?us-ascii?Q?vx+nCasmlAHo3lc/GonuQFySqaSelPY1jjeMJFWd6zhVvYKUNgy23er/KkRU?=
+ =?us-ascii?Q?Xn2IG0SgMyK5HY9rv8sTER2pS/CLLqEgIyAOKMqJQStTN14eggMf5jm026nT?=
+ =?us-ascii?Q?r7WpYBA3LlD8SGmBiQh6/F8F6jfY4Kyi8JZdULJB4AeK986nHZ5vp/YRDiX0?=
+ =?us-ascii?Q?IfJmPOG2EFuiesdsrH/+Inf7/UkJ2JGYkYQnlWCOjOsrZEDcF1eFxfjLQ3SP?=
+ =?us-ascii?Q?YgzwTKWo9D5ut5zDrx1g8/nqYc4c842mAaNBs389mWFcVUbqs3vB9u8N8gY7?=
+ =?us-ascii?Q?ckQFpOn29HJ/MwH6vqo3i037voGaacQwAzbRfEU6Urck13slI7pF5AY+KBM+?=
+ =?us-ascii?Q?byfE+wV+aVAMm7MMWGipMRV8RCnypEv4iT+jQo4PfQvdfvhYqwdMsVGvBIiP?=
+ =?us-ascii?Q?Hwq9jjiahc/LoZfWLO3CxfEwsz5rpFclAM+IOxSHVl1TMebTr71vqSUVxilv?=
+ =?us-ascii?Q?joRrsQmi/4E9vhHY7xbnMN/M/udSt6+wl/+jGzMTjYht+StEz0szsdBC2d93?=
+ =?us-ascii?Q?fABcxpsTQxAdAQLmwGVGoI9WWRYi5cAt2b+2SXocUC6Aj6aUKNLo6uhlRpz3?=
+ =?us-ascii?Q?SIRax1VuMwyz1Jb8q9pN75wLn8MlH6Ja+s2ps3Hs5MbwYe4MbwwHeYTjW1Pv?=
+ =?us-ascii?Q?3E9el12IepE1723VMbR6zYX869WKZcGtfBbX8SbHbVFi/5EnH7/vErPnbQON?=
+ =?us-ascii?Q?ukEFc/tn3lv04BxTBea6pUtRFw14cIPsoxVUAAJ9FQt6ojyJEmdRVVm7N+2p?=
+ =?us-ascii?Q?PTVEIshl6bb6eFDUKo4qUDK20oylm2TluoPO5U6vo3h5V9XoCBk6yIfurFYS?=
+ =?us-ascii?Q?hCnhHq5RW4uWFaLbZmAncQl7kEufm/Lm67Y70Px5LopONhwLYcZT8HZSHCDi?=
+ =?us-ascii?Q?O8D/gX6wzaDoh3eH4lMqqWvOZr3zDySSNHecoSjRxVEEoWEdcr3uuykksQUe?=
+ =?us-ascii?Q?vBc5zWlAEx+qqX6Hmc8GthHXno8qUXGbbEzyPCQ8eEda9tuLQ3Th2sZ/10DP?=
+ =?us-ascii?Q?hfpJTP57ltnVQxP7rKLt4Pj6Kh8RcwPCu68/Egzygf7+IWlZLMVF6+U+lRrB?=
+ =?us-ascii?Q?0I/6g63BqI+FiZhLi4qlxnzwH30x1nxX5/Ek?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(7416014)(376014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 08:02:09.2794
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e8c3e13-45df-4f02-1e89-08dd87bd4ea7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL02EPF0001A106.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS5PPF482CFEB7D
 
-On Wed 30-04-25 09:13:01, Zhang Yi wrote:
-> From: Zhang Yi <yi.zhang@huawei.com>
+On Wed, Apr 30, 2025 at 09:52:09AM +0530, Vasant Hegde wrote:
+> >>> Will the hardware replace the physical device ID in the event with
+> >>> the virtual device ID when injecting the event to a guest event/PPR
+> >>> queue? 
+> >>> If so, yea, I think you can define them separately using the> vCMDQ
+> >> infrastructures:
+> >>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_CMDBUF
+> >>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_EVENTLOG
+> >>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_PPRLOG
+> >>> (@Kevin @Jason Hmm, in this case we might want to revert the naming
+> >>>  "vCMDQ" back to "vQEUEUE", once Vasant confirms.)
+> > 
+> > I think I should rename IOMMUFD_OBJ_VCMDQ back to IOMMUFD_OBJ_VQUEUE
+> > since the same object fits three types of queue now in the AMD case.
 > 
-> The inode i_size cannot be larger than maxbytes, check it while loading
-> inode from the disk.
+> Makes sense.
 > 
-> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+> AMD architecture supports 5 buffers. In practice we have not implemented event
+> log  B / PPR Log B in Linux.
+>   Command buffer
+>   Event Log A / B
+>   PPR Log A / B
 
-Looks good. Feel free to add:
+I think those A/B should be dual buffers of the same type?
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Anyway, I have renamed all the core "vCMDQ" back to "vQUEUE" in my
+local branch. Will send v3 in the next days.
 
-								Honza
-
-> ---
->  fs/ext4/inode.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index 9f32af1241ff..2bd2a4f4d9d7 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -4916,7 +4916,8 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
->  		ei->i_file_acl |=
->  			((__u64)le16_to_cpu(raw_inode->i_file_acl_high)) << 32;
->  	inode->i_size = ext4_isize(sb, raw_inode);
-> -	if ((size = i_size_read(inode)) < 0) {
-> +	size = i_size_read(inode);
-> +	if (size < 0 || size > ext4_get_maxbytes(inode)) {
->  		ext4_error_inode(inode, function, line, 0,
->  				 "iget: bad i_size value: %lld", size);
->  		ret = -EFSCORRUPTED;
-> -- 
-> 2.46.1
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Thanks
+Nicolin
