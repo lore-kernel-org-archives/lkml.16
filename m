@@ -1,142 +1,234 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBEA25A33A;
-	Wed, 30 Apr 2025 12:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0650025B1C0
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015460; cv=none; b=EiQV7aaOx+XiwwWfY0iMIKCVIPVRjSFSNlUbKu+UkYG+sglBAXjRHoob8ENnngMYKL6m5DlzAbWafZLIJfazbnTvKuFElL2Ysradxv8bWowr1Mi4Mof6Vm/g9CuB8RVBqPMK6xssPys/9yCf9wvQddANBnQHa1WGUjQBp8LBkOc=
+	t=1746015459; cv=none; b=E6aE+YDeVkydw//wyAs+8CRtDCs6MaCXFbwsEEybfTe3xM5Lemz9YYP+J7smlkCZnzHBI7uYYB358b75+MqlypFp8V/Sg1haaIN5ou/eGEo2WkCCVyrhUYdjvQT7i9ne3KrhfAC3XqeGhFGptUWDf9bBVqGhwzkxJrbPyIwEvZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015460; c=relaxed/simple;
-	bh=4DzUzOKwy6DSSRfp+nnSfX/4PY/Jw+jHcXxpvS4r32Y=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=UfiAdDJOwZeGNmb3sL1hV6n83yCcWbrklHmIu1WrbCyBpZ5uvOvDpSjxrIHkyZzVeOx9r8w9tyipfXP7GaF+6n+8JjeEpgkd4p/5EGCd9wH7YlLAl20OaTnW7UcbMJYdNWQt0G8IAXMkOPDMrQwuV+zKFnfmW0Ex+NA/pY2tnoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TrhL8ciP; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746015459; c=relaxed/simple;
+	bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=bIYcnvrE03qSJ4PgcOx2asXYNZyxM1ilPwHgXqx+qM2W7DCvBzvLjwWSNtlCiOEis6Pf244VEbUqmCvUBmjkzyH0/cGOamZjPJL+COjT5s1XCUmwIT4SqPtaFCwmePyLFD2/ABH5yOrv/mxScDYwPN7nrOwCJvQuZyagoYsRQt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bvOwTZc3; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TrhL8ciP"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9Kj0V013711;
-	Wed, 30 Apr 2025 12:17:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	16oFqs7WbpeH5xaeg7evZDbakxDj9PDI8ujqe0iQovQ=; b=TrhL8ciPqtfJkrf/
-	CUSAcf5uuDsyDg+zykx0IKsxSu8FWmv4ZeGhFtKm47JcZJ4fplsZpuCVvPf8elWv
-	pSW1lKEqMPD0iNBk2lC0y3UwGXBWuLTll2BX8IF+PiPGn8t7RFTEzcWzRF5NzVTN
-	pTqKrNDKF7lGJke/WOoN1Q6sYM4aYww9TcBWnb5nRgNifdSxsU7UQeprAih+GkJ2
-	soUW9uGjSe3qks+JsGdYNosVCmLTF8gsLa7ErOZ1C7z/n3NkJt9IQNG9LtzsZy54
-	xg2e2JLRoURLF+BeeVytQv/s755s2c8SKupM733sjoAqHEjfJnPuxA7CQyBEHEie
-	tw1ddA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubj442-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 12:17:35 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UCHYcC024751
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 12:17:34 GMT
-Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
- nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 30 Apr 2025 05:17:30 -0700
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-Date: Wed, 30 Apr 2025 17:47:08 +0530
-Subject: [PATCH v6 2/5] media: iris: fix the order of compat strings
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bvOwTZc3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746015456;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
+	b=bvOwTZc3PM/7u67F1FJcrYdnVyxeome5PkxoGp4cj6XGeuMZ2240KfNpJOpaVAG95wpnbg
+	Rq8m7uAWS4lHIpcJFSe3SAi2cpgEuLkUX9lL22y0sybfGwy+VZmn1Eem7nEzCjqAeOrbnX
+	XjCo3KiVeWxaFkfGOyTMiCNRuktOIVk=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-643-0JtIIWNwM1WJ7v24kSsqdA-1; Wed, 30 Apr 2025 08:17:35 -0400
+X-MC-Unique: 0JtIIWNwM1WJ7v24kSsqdA-1
+X-Mimecast-MFC-AGG-ID: 0JtIIWNwM1WJ7v24kSsqdA_1746015454
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-43f251dc364so39189055e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:17:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746015454; x=1746620254;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lN3XXhvZkEzmXtYd28YKRe70tCct3jaUfGTuQGGD+g0=;
+        b=tXwz2jBb0wKYwrDbzorpwv0m0S1YH+JJtC57WZkmoqrGHmrAcobgDQoY1QHPCoFBxm
+         YfHRkMH7X3QvaQTx9CLSX1TlND/mRSNoFxfrHgJzdeTfokJyAq2xpbsLnzNcvbWQpSdf
+         Ara++dEeL9Y2ZZofMGlw7Sj5I74LcDJPeCGrTK4JABxnEGGx4U1GwEHjFYKWqKErqr78
+         mu87P6Ojt/uW/y1Wbn1X9xnXVlfkzgoE+i4xQxOQtqoPidrR1DWIQgHw26aVXAN7U3fo
+         hhuCmFWfWPNZfQ8ryu3i3rtOSlReSXitsdhNuxRHGtRxhkdb+DsQtWRtl8NY3O9PgOld
+         X9IA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCwj9CR3hYOZXak5O9CKz4uiJV4c6lkbaf2jbk1qBZfkiJ2EBV3E5d5264490cslOSCqZN1lK3dqtqYsM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxszVwOsBwANlWm7iJ9hAQiiqevompa3rsvLY7I+yL51i6PJrNa
+	8h4bVQthALN84UzWK3ZmdGS3odxzScUmEDe1Pw17ySoU1gT+OXUFjYGimIOdmPTiPq1Eerazjjy
+	sc8axTrHqML5Uxts6DsOZ1YCfO2x7yzCePBi7jCw4vsbXitpRXsPjOcHvKIU3VA==
+X-Gm-Gg: ASbGncsViUNhmgL9PgpFOFnmU/zVO+WwEi9aF02qLQ85QveX9BQMVywvXcErafdhkyw
+	7fCoBq5bVTfaelZuwAr1uv9q/bMAV0gZQ8IBn9NQAZAEtFiU6HcvSSGrHm4gD2LANEam7azZGNW
+	xFgOyMabnvB0/yXxBGtaCKMDlN+ujWIrLPpDosvTqYMo57CQSRZ/K3Wnfug3kNnxIwNBOouzJ6j
+	8jNJ5yJPDQreRtbukXyKjX+tEw5Rfxh4ZrinrSw2WZjIojBxLvRp7wW96Qo9oEgjFfHKzfJ16vo
+	jO3zHGi9EPRUwkjEcnouVUEOSwgNnwlvpiz0Nw==
+X-Received: by 2002:a05:600c:3b08:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-441b43a6849mr12659325e9.31.1746015454196;
+        Wed, 30 Apr 2025 05:17:34 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEeDRQpH85Tjf5lCeTC38YV5zFGOEEWEJ15Q43zpvFHsUBUREIV9t8rFVVspwP+av3krGaKQA==
+X-Received: by 2002:a05:600c:3b08:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-441b43a6849mr12658865e9.31.1746015453815;
+        Wed, 30 Apr 2025 05:17:33 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2af2a9dsm23611265e9.19.2025.04.30.05.17.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 05:17:33 -0700 (PDT)
+Message-ID: <cbcefdb80d5e10b8fed80de17bb97bf61df81386.camel@redhat.com>
+Subject: Re: [PATCH v6 00/22] RV: Linear temporal logic monitors for RT
+ application
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Nam Cao <namcao@linutronix.de>, john.ogness@linutronix.de, Petr Mladek	
+ <pmladek@suse.com>, Sergey Senozhatsky <senozhatsky@chromium.org>, Ingo
+ Molnar	 <mingo@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov	 <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin"	 <hpa@zytor.com>, Andy Lutomirski
+ <luto@kernel.org>, Peter Zijlstra	 <peterz@infradead.org>, Catalin Marinas
+ <catalin.marinas@arm.com>, 	linux-arm-kernel@lists.infradead.org, Paul
+ Walmsley <paul.walmsley@sifive.com>,  Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	linux-riscv@lists.infradead.org, linux-trace-kernel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Wed, 30 Apr 2025 14:17:30 +0200
+In-Reply-To: <cover.1745999587.git.namcao@linutronix.de>
+References: <cover.1745999587.git.namcao@linutronix.de>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250430-qcs8300_iris-v6-2-a2fa43688722@quicinc.com>
-References: <20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com>
-In-Reply-To: <20250430-qcs8300_iris-v6-0-a2fa43688722@quicinc.com>
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>
-CC: <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746015441; l=1183;
- i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
- bh=4DzUzOKwy6DSSRfp+nnSfX/4PY/Jw+jHcXxpvS4r32Y=;
- b=LHqe+syrKPLy9KcaWXcvuonbBhCtEapWpmAkdx/rzWIxh6+raXOLz3B9Cfjh4mIm7OcIFeojp
- ajgZ3KfjT46BN1smOMhlRsHfToj52V9wog+6APkCLPjVCkW76l2lIOv
-X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
- pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: l2fpAvMMbYEo6cjEXvfAS3HS1I76dHnM
-X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=681214df cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=uyQifVC19GIw0kz6rKwA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA4NyBTYWx0ZWRfX/bY5/eiDAQmS hY0Dfnf5o6ejOKcUtczewnDD9rvy2kLLheTZc0QaqQqyXbTnfIOBqRDaPTPIr5+Zyq4MYKcvyzN cH0cioz3A/ZVjUornkIFMfYVaHSQZ7cFq4aRrU6rJNMV2iMKPzF8SY8JV2bJ9OF/iQY7/6y2fJK
- FK2ofvBtp8DRRuH0PpsQnoCZrsuQeSphB1YGGa0wa5x47JL9sf3L059NmRsYxlpBncgVVt/kL6D MDd0QGrJEZ9UjYKSonr75T87Yd1yicp+nPzx1B2SOyVjDspXNbHjKVdklg5XIDTIPLPVUn6w6V5 V0znL8KbqDmfR+hJQ3YpWrie/Mdxg9oK4jeG0GZRL788GHBgYN4U6JUoq1kGl4IiN17/ab00c7r
- GDNntxcQbDqAcjtIX7UGKtLrq/otf+bihSF32EeYkb1emq7XhBB2w3GGAlLpbmgAkj41dbzu
-X-Proofpoint-ORIG-GUID: l2fpAvMMbYEo6cjEXvfAS3HS1I76dHnM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300087
 
-Fix the order of compatible strings to make it in alpha numeric order.
+On Wed, 2025-04-30 at 13:02 +0200, Nam Cao wrote:
+> Real-time applications may have design flaws causing them to have
+> unexpected latency. For example, the applications may raise page
+> faults, or
+> may be blocked trying to take a mutex without priority inheritance.
+>=20
+> However, while attempting to implement DA monitors for these real-
+> time
+> rules, deterministic automaton is found to be inappropriate as the
+> specification language. The automaton is complicated, hard to
+> understand,
+> and error-prone.
+>=20
+> For these cases, linear temporal logic is found to be more suitable.
+> The
+> LTL is more concise and intuitive.
+>=20
+> This series adds support for LTL RV monitor, and use it to implement
+> two
+> monitors for reporting problems with real-time tasks.
+>=20
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
----
- drivers/media/platform/qcom/iris/iris_probe.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Steve,
 
-diff --git a/drivers/media/platform/qcom/iris/iris_probe.c b/drivers/media/platform/qcom/iris/iris_probe.c
-index 7cd8650fbe9c09598670530103e3d5edf32953e7..fa3b9c9b1493e4165f8c6d9c1cc0b76d3dfa9b7b 100644
---- a/drivers/media/platform/qcom/iris/iris_probe.c
-+++ b/drivers/media/platform/qcom/iris/iris_probe.c
-@@ -335,16 +335,16 @@ static const struct dev_pm_ops iris_pm_ops = {
- };
- 
- static const struct of_device_id iris_dt_match[] = {
-+#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
-+	{
-+		.compatible = "qcom,sm8250-venus",
-+		.data = &sm8250_data,
-+	},
-+#endif
- 	{
- 		.compatible = "qcom,sm8550-iris",
- 		.data = &sm8550_data,
- 	},
--#if (!IS_ENABLED(CONFIG_VIDEO_QCOM_VENUS))
--		{
--			.compatible = "qcom,sm8250-venus",
--			.data = &sm8250_data,
--		},
--#endif
- 	{
- 		.compatible = "qcom,sm8650-iris",
- 		.data = &sm8650_data,
+From my point of view this series is ready for inclusion, what do you
+think?
 
--- 
-2.34.1
+We may still need Acks from the x86 and arm64 maintainers regarding the
+tracepoints changes, though.
+
+Thanks,
+Gabriele
+
+> Patch 1-12 cleanup and prepare the RV code for the integration of LTL
+> monitors.
+>=20
+> Patch 13 adds support for LTL monitors.
+>=20
+> Patch 14 adds the container monitor "rtapp". This encapsulates the
+> sub-monitors for real-time.
+>=20
+> Patch 15-18 prepares the pagefault tracepoints, so that patch 19 can
+> add
+> the monitor which watches real-time tasks doing page faults.
+>=20
+> Patch 20 adds the "sleep" monitor: it detects potential undesirable
+> latency
+> with real-time threads.
+>=20
+> Patch 21 adds documentation on the new monitors.
+>=20
+> Patch 22 allows the number of per-task monitors to be configurable,
+> so that
+> the two new monitors can be enabled simultaneously.
+>=20
+> v5->v6
+> https://lore.kernel.org/lkml/cover.1745926331.git.namcao@linutronix.de
+> =C2=A0 - sleep monitor: Drop the block_on_rt_mutex tracepoints. The
+> contention
+> =C2=A0=C2=A0=C2=A0 tracepoints are sufficient.
+>=20
+> v4->v5
+> https://lore.kernel.org/lkml/cover.1745390829.git.namcao@linutronix.de
+> =C2=A0 - sleep monitor: Fix a false positive due to a race with waking an=
+d
+> =C2=A0=C2=A0=C2=A0 scheduling.
+> =C2=A0 - sleep monitor: Add block_on_rt_mutex tracepoints and use them fo=
+r
+> =C2=A0=C2=A0=C2=A0 BLOCK_ON_RT_MUTEX, instead of trace_sched_pi_setprio
+> =C2=A0 - sleep monitor: tighten the rule on nanosleep: only
+> clock_nanosleep()
+> =C2=A0=C2=A0=C2=A0 with TIMER_ABSTIME and CLOCK_MONOTONIC is allowed
+> =C2=A0 - add comments explaining why it is correct to treat PI-boosted
+> tasks as
+> =C2=A0=C2=A0=C2=A0 real-time tasks.
+>=20
+> =C2=A0=C2=A0=C2=A0 It should be noted that due to the changes in v5, 'per=
+f' does not
+> work
+> =C2=A0=C2=A0=C2=A0 as well as before, because sometimes the errors happen=
+ out of the
+> =C2=A0=C2=A0=C2=A0 real-time tasks' contexts. Fixing this is left for fut=
+ure work.
+>=20
+> =C2=A0=C2=A0=C2=A0 stress-ng is also far noisier in v5, because the rule =
+on
+> nanosleep is
+> =C2=A0=C2=A0=C2=A0 tightened.
+>=20
+> v3->v4
+> https://lore.kernel.org/lkml/cover.1744785335.git.namcao@linutronix.de
+> =C2=A0 - support deadline tasks
+> =C2=A0 - rtapp_sleep: use sched_pi_setprio tracepoint instead of
+> contention
+> =C2=A0=C2=A0=C2=A0 tracepoints for BLOCK_ON_RT_MUTEX, so that proxy lock =
+is covered.
+> =C2=A0 - fix the scripts generating an "slightly" incorrect verification
+> automaton
+> =C2=A0 - makes rtapp monitor depends on RV_PER_TASK_MONITORS >=3D 2
+> =C2=A0 - make the event tracepoint output a bit more readable
+> =C2=A0 - some documentation's format fixes
+>=20
+> v2->v3
+> https://lore.kernel.org/lkml/cover.1744355018.git.namcao@linutronix.de/
+> =C2=A0 - fix a problem with sleep monitor's specification (around
+> =C2=A0=C2=A0=C2=A0 KTHREAD_SHOULD_STOP)
+> =C2=A0 - merge the patches that move the dot2k/rvgen scripts around
+> =C2=A0 - pull panic/printk changes into separate patches
+> =C2=A0 - fixup some build errors
+> =C2=A0 - fixup monitor's init function return code
+> =C2=A0 - fix some flake8 warnings with the scripts
+> =C2=A0 - add some references to LTL documentation
+> =C2=A0 - fixup some mistakes with rtapp documentation
+> =C2=A0 - fixup capitalization mistake with monitor_synthesis.rst
+> =C2=A0 - remove the now-redundant macro RV_PER_TASK_MONITORS
+>=20
+> v1->v2
+> https://lore.kernel.org/lkml/cover.1741708239.git.namcao@linutronix.de/
+> =C2=A0 - Integrate the LTL scripts into the existing dot2k tool, taking
+> =C2=A0=C2=A0=C2=A0 advantage of the existing monitor generation scripts.
+> =C2=A0 - Switch the struct ltl_monitor to use bitmap instead of an array,
+> to
+> =C2=A0=C2=A0=C2=A0 optimize memory usage.
+> =C2=A0 - Correct the generated code to be non-deterministic state machine=
+,
+> =C2=A0=C2=A0=C2=A0 instead of deterministic state machine
+> =C2=A0 - Put common code for all LTL monitors into a single file
+> =C2=A0=C2=A0=C2=A0 (include/rv/ltl_monitor.h), reducing code duplication
+> =C2=A0 - Change the LTL monitors to make user of container. Add a bug fix
+> to
+> =C2=A0=C2=A0=C2=A0 container while at it.
+> =C2=A0 - Make the number of per-task monitor configurable
 
