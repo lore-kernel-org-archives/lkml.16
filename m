@@ -1,40 +1,40 @@
 Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2E6246795;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C798423A9BF;
 	Wed, 30 Apr 2025 11:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012410; cv=none; b=K4uvLOI+GDICxAS51UrBDFfPxaT+lyXS6tn7/0/923eDgHv50ixiyssCy1RrTjw1CiYGQifIGKZmwrw22PwfUS4lH8Eul1DC6gjRSl1NyyYvUFrWeNCCyVX+2iEfvK7XGm9P0BGhvLgga4XjZHN+KkYVncDpgfotOwwDN27vS1A=
+	t=1746012410; cv=none; b=HiHtW27T2OGyey6Hx7+yFT/+qF+a3sFZMxof/CXn+J/fmUPZ8PqOosMsKoAqFQQL3R2TOCh7BgnyUa0L5suSB3ctNbqKbDkcetFDP71610Ydlumh7wojTAW8Gqmy+zyfLprl1KlSh6pRbwbNRxJXFZieSFV1k2ACZjHMgzIu3vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746012410; c=relaxed/simple;
-	bh=mg8jKvSmgfVVHoZ7hw5hkCmvXf95pqqRq6UeCwgAa34=;
+	bh=pcCiP5FTA+Lm/bobq6YiOZWGbXIV/H7h3fpmxDOHmBo=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=YbRVvgFADiLOJ/4v1LcRSPFPzelb947s2+8kLeQiTkDlHbkjYCDdBhfaAfcun3aHFo1rHehJcn3e3Ro+fHapvXqwrwi46/L/imESXhI03bKDAcBBSjMA3/Ph4dr5gGEY9H/MilbnwbLeYLRsqS9LdLG4nREpMjBfGKGTDUgEx1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=NRChl+xy; arc=none smtp.client-ip=90.155.92.199
+	 Content-Type; b=ag7+OWwllduhyuEZoPTjB5/aiNp9uyD7SCZ2e3YMolXA+cRr3jFRSP4S9qbmsek8Au2GrpbAkm3Aglajk8LqlyiSasfslF5EHuqzfxJEp/mB1Ywcd8mcwEiH6PZd8Sy+NWiaT4fQHzUXKZDgpFMUohSULhkr02YvXduxytMojAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VMuR0wpU; arc=none smtp.client-ip=90.155.92.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NRChl+xy"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VMuR0wpU"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
 	Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
 	Content-ID:Content-Description:In-Reply-To;
-	bh=a3oTVFV42BAnlcjOkQsl89vvtKHMlPa0kSRiVt7oMbc=; b=NRChl+xyv1Fb8q6cvEUds9mj+r
-	XKE1uCDILG+/gdVWShdljUZ6z4/vQHLeKrkQJPptSDFFdHsc+JMtyj2mK+kbFcQfcE5NfSZ5ykNCe
-	5i1B8N5S3/PhRQS5e3kNfBbTq89pyhz7AQwLZyjUNleAmlCWurTepxvEByCqAfb8p/x7VagcYeuJL
-	4TOG3Cm5GMF5DewNfQiasHh6aN94LGcEQZwG2cV32yRNfo8i7xI909lgl+k7pLkSTVv+zoDL6ZRCw
-	cxQUF+NbK/MoEQ/bq6zzimTrFkHUYnfP1xvmxv/khd9cd+R9nA5r8QZIM+nBWrarLN6LPoxXQu25r
-	eP4/EiWA==;
+	bh=Af6nUOSfZkjof68kUCgJ+wjJzCjJKMFbRfwFCJ9l/cg=; b=VMuR0wpUdRiBcwgvlB5GE+AwLe
+	nwXKGBftj9AYTH9hnm0ya7mDbWLIKByzGMB8HKwCS+Eb/dYwSvX+qpTnuk5ZiVmoBrvYreJKv/f6I
+	gDn9T8j4v/OYU/Hv8GK7pNZ2gegw5fc94au5Rr9SFFVchMD4VcA9vRCTjs+voqDEZ85MmxGFcdqwX
+	/3Wi8HTReX62hvDL70gY/KVQtSscGxZOhESHqrJL1y32ryoWpJa5tIRaoX4sYNttRIGNYh1WxBKGE
+	kBuM2cPdyS4nd7/IaZDpCEVIfl8hT9q/3vJRdqfDcMpF/HynNm+Z9hxA14ED/ej8v9cGxdbBwMsqs
+	0u5G+diA==;
 Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
 	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uA5aH-0000000Dm7y-06eH;
-	Wed, 30 Apr 2025 11:26:37 +0000
+	id 1uA5aG-0000000Dm7n-17Ez;
+	Wed, 30 Apr 2025 11:26:36 +0000
 Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
-	id E478F307FAE; Wed, 30 Apr 2025 13:26:35 +0200 (CEST)
-Message-ID: <20250430112349.855046292@infradead.org>
+	id CAF8B30072F; Wed, 30 Apr 2025 13:26:35 +0200 (CEST)
+Message-ID: <20250430112349.089758096@infradead.org>
 User-Agent: quilt/0.66
-Date: Wed, 30 Apr 2025 13:07:42 +0200
+Date: Wed, 30 Apr 2025 13:07:35 +0200
 From: Peter Zijlstra <peterz@infradead.org>
 To: x86@kernel.org
 Cc: kys@microsoft.com,
@@ -60,7 +60,7 @@ Cc: kys@microsoft.com,
  linux-efi@vger.kernel.org,
  samitolvanen@google.com,
  ojeda@kernel.org
-Subject: [PATCH v2 08/13] x86/kvm/emulate: Introduce COP3WCL
+Subject: [PATCH v2 01/13] x86/kvm/emulate: Implement test_cc() in C
 References: <20250430110734.392235199@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,71 +70,115 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-Replace the FASTOP3WCL instructions.
+Current test_cc() uses the fastop infrastructure to test flags using
+SETcc instructions. However, int3_emulate_jcc() already fully
+implements the flags->CC mapping, use that.
+
+Removes a pile of gnarly asm.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/kvm/emulate.c |   25 +++++++++++++++++++------
- 1 file changed, 19 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/text-patching.h |   20 +++++++++++++-------
+ arch/x86/kvm/emulate.c               |   34 ++--------------------------------
+ 2 files changed, 15 insertions(+), 39 deletions(-)
 
+--- a/arch/x86/include/asm/text-patching.h
++++ b/arch/x86/include/asm/text-patching.h
+@@ -177,9 +177,9 @@ void int3_emulate_ret(struct pt_regs *re
+ }
+ 
+ static __always_inline
+-void int3_emulate_jcc(struct pt_regs *regs, u8 cc, unsigned long ip, unsigned long disp)
++bool __emulate_cc(unsigned long flags, u8 cc)
+ {
+-	static const unsigned long jcc_mask[6] = {
++	static const unsigned long cc_mask[6] = {
+ 		[0] = X86_EFLAGS_OF,
+ 		[1] = X86_EFLAGS_CF,
+ 		[2] = X86_EFLAGS_ZF,
+@@ -192,15 +192,21 @@ void int3_emulate_jcc(struct pt_regs *re
+ 	bool match;
+ 
+ 	if (cc < 0xc) {
+-		match = regs->flags & jcc_mask[cc >> 1];
++		match = flags & cc_mask[cc >> 1];
+ 	} else {
+-		match = ((regs->flags & X86_EFLAGS_SF) >> X86_EFLAGS_SF_BIT) ^
+-			((regs->flags & X86_EFLAGS_OF) >> X86_EFLAGS_OF_BIT);
++		match = ((flags & X86_EFLAGS_SF) >> X86_EFLAGS_SF_BIT) ^
++			((flags & X86_EFLAGS_OF) >> X86_EFLAGS_OF_BIT);
+ 		if (cc >= 0xe)
+-			match = match || (regs->flags & X86_EFLAGS_ZF);
++			match = match || (flags & X86_EFLAGS_ZF);
+ 	}
+ 
+-	if ((match && !invert) || (!match && invert))
++	return (match && !invert) || (!match && invert);
++}
++
++static __always_inline
++void int3_emulate_jcc(struct pt_regs *regs, u8 cc, unsigned long ip, unsigned long disp)
++{
++	if (__emulate_cc(regs->flags, cc))
+ 		ip += disp;
+ 
+ 	int3_emulate_jmp(regs, ip);
 --- a/arch/x86/kvm/emulate.c
 +++ b/arch/x86/kvm/emulate.c
-@@ -302,6 +302,9 @@ static int em_##op(struct x86_emulate_ct
- #define COP_ASM2(op, dst, src) \
- 		COP_ASM(#op " %%" #src ", %%" #dst " \n\t")
+@@ -26,6 +26,7 @@
+ #include <asm/debugreg.h>
+ #include <asm/nospec-branch.h>
+ #include <asm/ibt.h>
++#include <asm/text-patching.h>
  
-+#define COP_ASM3(op, dst, src, src2) \
-+		COP_ASM(#op " %%" #src2 ", %%" #src ", %%" #dst " \n\t")
-+
- #define COP_END \
- 	} \
- 	ctxt->eflags = (ctxt->eflags & ~EFLAGS_MASK) | (flags & EFLAGS_MASK); \
-@@ -371,6 +374,16 @@ static int em_##op(struct x86_emulate_ct
- 	ON64(case 8: COP_ASM2(op##q, rax, cl); break;) \
- 	COP_END
+ #include "x86.h"
+ #include "tss.h"
+@@ -416,31 +417,6 @@ static int fastop(struct x86_emulate_ctx
+ 	ON64(FOP3E(op##q, rax, rdx, cl)) \
+ 	FOP_END
  
-+/* 3-operand, using "a" (dst), "d" (src) and CL (src2) */
-+#define COP3WCL(op) \
-+	COP_START(op) \
-+	case 1: break; \
-+	case 2: COP_ASM3(op##w, ax, dx, cl); break; \
-+	case 4: COP_ASM3(op##l, eax, edx, cl); break; \
-+	ON64(case 8: COP_ASM3(op##q, rax, rdx, cl); break;) \
-+	COP_END
-+
-+
- /*
-  * fastop functions have a special calling convention:
-  *
-@@ -1097,8 +1110,8 @@ COP1SRC2(imul, imul_ex);
- COP1SRC2EX(div, div_ex);
- COP1SRC2EX(idiv, idiv_ex);
+-/* Special case for SETcc - 1 instruction per cc */
+-#define FOP_SETCC(op) \
+-	FOP_FUNC(op) \
+-	#op " %al \n\t" \
+-	FOP_RET(op)
+-
+-FOP_START(setcc)
+-FOP_SETCC(seto)
+-FOP_SETCC(setno)
+-FOP_SETCC(setc)
+-FOP_SETCC(setnc)
+-FOP_SETCC(setz)
+-FOP_SETCC(setnz)
+-FOP_SETCC(setbe)
+-FOP_SETCC(setnbe)
+-FOP_SETCC(sets)
+-FOP_SETCC(setns)
+-FOP_SETCC(setp)
+-FOP_SETCC(setnp)
+-FOP_SETCC(setl)
+-FOP_SETCC(setnl)
+-FOP_SETCC(setle)
+-FOP_SETCC(setnle)
+-FOP_END;
+-
+ FOP_START(salc)
+ FOP_FUNC(salc)
+ "pushf; sbb %al, %al; popf \n\t"
+@@ -1068,13 +1044,7 @@ static int em_bsr_c(struct x86_emulate_c
  
--FASTOP3WCL(shld);
--FASTOP3WCL(shrd);
-+COP3WCL(shld);
-+COP3WCL(shrd);
+ static __always_inline u8 test_cc(unsigned int condition, unsigned long flags)
+ {
+-	u8 rc;
+-	void (*fop)(void) = (void *)em_setcc + FASTOP_SIZE * (condition & 0xf);
+-
+-	flags = (flags & EFLAGS_MASK) | X86_EFLAGS_IF;
+-	asm("push %[flags]; popf; " CALL_NOSPEC
+-	    : "=a"(rc), ASM_CALL_CONSTRAINT : [thunk_target]"r"(fop), [flags]"r"(flags));
+-	return rc;
++	return __emulate_cc(flags, condition & 0xf);
+ }
  
- COP2W(imul);
- 
-@@ -4496,14 +4509,14 @@ static const struct opcode twobyte_table
- 	I(Stack | Src2FS, em_push_sreg), I(Stack | Src2FS, em_pop_sreg),
- 	II(ImplicitOps, em_cpuid, cpuid),
- 	I(DstMem | SrcReg | ModRM | BitOp | NoWrite, em_bt),
--	F(DstMem | SrcReg | Src2ImmByte | ModRM, em_shld),
--	F(DstMem | SrcReg | Src2CL | ModRM, em_shld), N, N,
-+	I(DstMem | SrcReg | Src2ImmByte | ModRM, em_shld),
-+	I(DstMem | SrcReg | Src2CL | ModRM, em_shld), N, N,
- 	/* 0xA8 - 0xAF */
- 	I(Stack | Src2GS, em_push_sreg), I(Stack | Src2GS, em_pop_sreg),
- 	II(EmulateOnUD | ImplicitOps, em_rsm, rsm),
- 	I(DstMem | SrcReg | ModRM | BitOp | Lock | PageTable, em_bts),
--	F(DstMem | SrcReg | Src2ImmByte | ModRM, em_shrd),
--	F(DstMem | SrcReg | Src2CL | ModRM, em_shrd),
-+	I(DstMem | SrcReg | Src2ImmByte | ModRM, em_shrd),
-+	I(DstMem | SrcReg | Src2CL | ModRM, em_shrd),
- 	GD(0, &group15), I(DstReg | SrcMem | ModRM, em_imul),
- 	/* 0xB0 - 0xB7 */
- 	I2bv(DstMem | SrcReg | ModRM | Lock | PageTable | SrcWrite, em_cmpxchg),
+ static void fetch_register_operand(struct operand *op)
 
 
