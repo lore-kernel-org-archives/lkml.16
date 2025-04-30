@@ -1,254 +1,226 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2112.outbound.protection.outlook.com [40.107.22.112])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BDA51D6DBC;
-	Wed, 30 Apr 2025 13:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021000; cv=fail; b=mIZL8F+NRKqrUFFK+8RAV7tt5DSqkJjf5353IHMeTSvcDywHETDen/jiGbkVebcsVHYbH2F7+r0+6k3jjCgICSnDh/aRkrQY7umOXWyjwoRrBw9S32HX9rcOycKpPhUVyFmrVwGCI5ZNQWQmoJ7U6JY8GCqn94RXAP3tJ3JwLng=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021000; c=relaxed/simple;
-	bh=IucfSYHYx3fFYxFwvlJOZzIXAPZyR05wUmmyBrhontc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IJMMIsRVUVCtC0E2+HnxuDfSk0/jkEHhD4IJFiHRydH3XWRBZCMl8VECoUmh0/06rFWhX8csGDzNN6i/J3jDrwFu4fYTh3/1BG5s8zIBwKFnBbmjb32jTGZmubrvFp/1Z3R0BhYIyVuJZb+5ZIL5+BCnAr/kllQtR67YmubyjwU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uclouvain.be; spf=pass smtp.mailfrom=uclouvain.be; dkim=pass (2048-bit key) header.d=uclouvain.be header.i=@uclouvain.be header.b=juhEZaaF; arc=fail smtp.client-ip=40.107.22.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uclouvain.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uclouvain.be
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D532817BA9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746021048; cv=none; b=qT62ePTHERAm4CpdMSI5snZUuu3yo9ig6onyccyXCZHC4ByCgFao9JsGBh9jCnlcz7GlTjrL09HzSf8MlO5T9KqdL88SXLvX35XBVzQhHK4hZRyoSsn8a+mV4FK6dU2GTHdDmcyICZ5JC8jz6Zs8KPPYxkzRGlZcZd8pYvA1ahc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746021048; c=relaxed/simple;
+	bh=XkIQo7LPf5Ok9RWGc7zcJBFMi0NL+uFcvQctnQlXXsU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B6CCMXQJBkZX519PAQ+cQHa8P6BMieD2O+UET28K+nq4hD9ye8d1z0YPHYmybaOkNmOQTtlIlvmVV2mpt8jxK8i1YGCA/YG0BOrgsDq/F3PInKwquvrU0KgxrASoBMgHSd5nzuukMq5eEtVddPTc2/t0qb0iHhJ0hK+G8vY1d5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Gl2v0wFe; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uclouvain.be header.i=@uclouvain.be header.b="juhEZaaF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LcatJLQkrbp+gXaJScF1McxjfWK2LWt8H9mlx53a3543PjPe3SdTb+9G7yhIdRkMDUqS/Pw1SUDv97WNNhd/uSJIa7sPPLI2wyFR+G6yize87WVSylUdNIdKfmS/dbFfmiDhi0IzCJoTZPsALyKrS+0nCChPUFhVBU+1SId/ZX/Jsyi3Yi6L3bmWmcnRvYnR7D6RVpL6RPRkZ7zqrAqrOpY/4F1+GrStu8tpZ5xIkYV7gF6VjYEmFIrSg1kEQKOOBw9vMdmh4JsgBR4YyWTp6ElJ5uF3aAZqkUH85UnawMZlY+utfZEi6JFbMIlTWVfLYTDzASrWceWQIzwveSmnzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jERfBa7XOF7DDelPcDI7CB+VTAzLtijmCvMQpNGJ87Q=;
- b=ZDNT055BzWL7CY1VpEzVNfFR2C9600Yd2A1PkokZxw7iT58u3WyGY80wn7curv2ZVnFZgfGIjUdOlI1yH+WfVpmjxkY5Sz7Rr/bNg/WTmemDXuYoNb22X5r0q6SqtG0K/o2VK3LHa12f8GigsxLLMnyksEvnRm3y3PB6vn4aL2759DVyRu3qY9kTT2FPH+Dy2N2tGnfWGkAj+teaZv7lJ6WqGD+WIQW5XAk1tnQUsretDifCYxa/HTbLJLkSezVx+Xjoi0FN8GzxlxfpfK1svJCauD2HKyYDoNifsQG3XTZUR55kt+epESi6oabLF5SoCv6FAYzzEZYWz1drQfujGg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uclouvain.be; dmarc=pass action=none header.from=uclouvain.be;
- dkim=pass header.d=uclouvain.be; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uclouvain.be;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jERfBa7XOF7DDelPcDI7CB+VTAzLtijmCvMQpNGJ87Q=;
- b=juhEZaaFulfxD4NFtwAP3/qv/YhgH3MjsawbOMwDaSmuUOqtoQ6cECGoMMKbx7LEcYrVIgeDrcJ2Z1FfBUVcCBxZovGIysKqbdXg4CJ0fPqRGl9IM6cMdrOfhOgHd0Ebjpv3RM47bOPaGFf+jFFWTkOkExtRMY5nSmm9flz1gIPUpDnxAn6nC11IJCQOe0Fhc6z30HboaGb0FpInTAPsutkjxKlUHjrBmutXQuvpykV7oBMHaxeNtSVIGag31fmjRnQ6nLMimb8SE36nlPKogvUCbQOMcxiAkP6cWtdJ4eBI8zNn0Yjp2VxHsBTXXpic2CC7+ABDpvj3f7sUGWBzyg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=uclouvain.be;
-Received: from AS8PR03MB9047.eurprd03.prod.outlook.com (2603:10a6:20b:5b6::13)
- by DB9PR03MB9711.eurprd03.prod.outlook.com (2603:10a6:10:453::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
- 2025 13:49:53 +0000
-Received: from AS8PR03MB9047.eurprd03.prod.outlook.com
- ([fe80::c90e:deef:6dcf:538c]) by AS8PR03MB9047.eurprd03.prod.outlook.com
- ([fe80::c90e:deef:6dcf:538c%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 13:49:53 +0000
-Message-ID: <49ead205-0181-4d2f-83c4-e04e501dc95c@uclouvain.be>
-Date: Wed, 30 Apr 2025 15:49:39 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Rob Herring <robh@kernel.org>, Peter Griffin <peter.griffin@linaro.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Dimitri Fedrau <dima.fedrau@gmail.com>,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org
-References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
- <20250421-b4-gs101_max77759_fg-v3-2-50cd8caf9017@uclouvain.be>
- <ieh6g5m4oectmje2gowa6rl2blzjuovjpyd3cmbvoql4qn2c7m@2osiwclwxi43>
-Content-Language: en-US
-From: Thomas Antoine <t.antoine@uclouvain.be>
-In-Reply-To: <ieh6g5m4oectmje2gowa6rl2blzjuovjpyd3cmbvoql4qn2c7m@2osiwclwxi43>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MI1P293CA0016.ITAP293.PROD.OUTLOOK.COM (2603:10a6:290:3::8)
- To AS8PR03MB9047.eurprd03.prod.outlook.com (2603:10a6:20b:5b6::13)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Gl2v0wFe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746021044;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xtvDQU7c0DbWPgBlbfWVJ21g70tkL57uEZ0WOXCqKjE=;
+	b=Gl2v0wFemrgjL10u4IGP79x5N5gf+Wflg8XkupA1C6trbconM3fJEvX/ne4ZYfyO9gRRHe
+	9cTx+S+9WKp8ryc/ZFyw9lLRurMrXqhU22mu8fjEkAuSqe2NlJ0SxqsguUa3IeUfYQr0o5
+	YqFcH0I43R93R4iRJUCbsA3cMkkWv9U=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-8-gyWjHR1VNoeOwe7d5JjaVw-1; Wed, 30 Apr 2025 09:50:43 -0400
+X-MC-Unique: gyWjHR1VNoeOwe7d5JjaVw-1
+X-Mimecast-MFC-AGG-ID: gyWjHR1VNoeOwe7d5JjaVw_1746021042
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-acb94dbd01fso594027366b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:50:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746021042; x=1746625842;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xtvDQU7c0DbWPgBlbfWVJ21g70tkL57uEZ0WOXCqKjE=;
+        b=aq10cl92jBtzZZBEy5XL+qVVgZcaesyFttiwmTvTZy1SNy9rqtowK1RoVyDvXLZMGt
+         E11ZxD9woI6HchhZtVggYY59tOGYYPzwoDD0wwxGtp1rrGqZcy7K+FSwn0EorAVHiYmY
+         pzPJFMULszqpHiUaezdvLYE+mF/WQdRLF5CX1j8N5NldScFWNF3eKLjw2QI8y9HvhK6H
+         aIQhqbedjjKg2CkRHDM2bRB7DPX5rn1f4KTcjpuetW0l3PadMDShREAL6qdZMxNQ52gt
+         d8n0jVnqamUsLf+XF8Ma7pOu4Go+Bb01svTp/VdcYl/IgGT0NWsvFxwayCwD4NKsCXhn
+         hglA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoq4Xdhx3OHTHVTPAG+87/RVpfSGHL4IjVe1GDnyUuWP/meQU38hvtzMR9sJCpSbZjD6ZByH/fUjrdcos=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxfNJKHwla3yoR7SPfTaWmME+J8gw0YRMQeEa7QWlONdwYQZq4
+	E6liIm9oq2IZMhWCreP3EO7J/V3IbQHG0smoXV1nrZspLaOMou8usC5H0smubwmrclDNOteM4uf
+	Sq0BjRitpRS4ihHd+CSHZOyjFFvWkZhfa5v+ffmktHHjIP1vlESnHnF5ulYQxFQ==
+X-Gm-Gg: ASbGnctBLOYvOs6plsB5K6MRN+7e5DBWR4agDTkEZSb7EfiCKwj8exo1bUVXlrk8V7g
+	l74H628IotuIXTIeq6tpqVkuht64RqWw1gWCr+UtSl9v1dhIk+TPZgxaZBqMBkudjGtVFIsp67z
+	We6Uuj06s+t3xZ49NAhMOGYfOxTIEUE0tMNv5HxyMkxg1/AvmOg4AoicUHxzBYq8YJQyLQFlx1H
+	ncDX+xWTm8AdM7U8alyMX3GM0oZLtmJhmW8qmnRH3npEdDl9n3C0CCnNo7XLZRStXqNl7JbwrzQ
+	V44DUB2N32uYPLnasw==
+X-Received: by 2002:a17:907:9408:b0:acb:baff:fd5f with SMTP id a640c23a62f3a-acee21e5fdamr268768366b.35.1746021042165;
+        Wed, 30 Apr 2025 06:50:42 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHjmc4F5C0ScUDooY60QYw9aKFDqWQU9lPIHKeft/Gghe0ofd5YKvvbBWiYfVKu3t+CO5GkTQ==
+X-Received: by 2002:a17:907:9408:b0:acb:baff:fd5f with SMTP id a640c23a62f3a-acee21e5fdamr268763966b.35.1746021041545;
+        Wed, 30 Apr 2025 06:50:41 -0700 (PDT)
+Received: from sgarzare-redhat ([193.207.200.114])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec5d0d74esm277482766b.117.2025.04.30.06.50.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 06:50:40 -0700 (PDT)
+Date: Wed, 30 Apr 2025 15:50:35 +0200
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH net-next v3 3/4] vsock: Move lingering logic to af_vsock
+ core
+Message-ID: <t4ltq5zni4x7ahcntnhjeyzaj5hxciqzto3t6ubjfn2klb5ici@zhhlqjw33lie>
+References: <20250430-vsock-linger-v3-0-ddbe73b53457@rbox.co>
+ <20250430-vsock-linger-v3-3-ddbe73b53457@rbox.co>
+ <oo5tmbu7okyqojwxt4xked4jvq6jqydrddowspz3p66nsjzajt@36mxuduci4am>
+ <fa71ef5e-7603-4241-bfd3-7aa7b5ea8945@rbox.co>
+ <CAGxU2F62CTUKVjuG9Fjo29E6uopVzOK8zgr+HwooqMr4V_RvLQ@mail.gmail.com>
+ <f1943412-ccbf-4913-a5c5-818f0f586db1@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR03MB9047:EE_|DB9PR03MB9711:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7a1db28a-25e3-455e-8e50-08dd87ede249
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZGZiRXNHWWE2eGFTRWhMUDZKQmxESDR0enFRdTFJdXVpZUdrVVUyclR5bVpi?=
- =?utf-8?B?RWdkdmRwSS9oemtQNHJUN2h1eThlUFlPRjh6dHZBdEV0QXc0K04xS3RId2Qr?=
- =?utf-8?B?amJUSTRIRWt2M3Q2QWJhTWJqYkFFaG1RN0R0azNhODU4OG80b1pETHVIQkFm?=
- =?utf-8?B?a05sZHNNV0NjQ2hzWGV0T2tRdm5xRFVwNFRMQkVTSnJHdU9XemREMHkrWUtS?=
- =?utf-8?B?Vmo3dDkrUXh3YUg0dTMzL2pCSnZiNUxoRnVTbW5Wc2VKcnY3VW1RaVNBUjFt?=
- =?utf-8?B?eFF0dHVNczRzT1Nxelg3U2FPcWQ2aWpzMmVscW5sS1IrY1ovWGl0VytmNlVV?=
- =?utf-8?B?bVhFTzFwUG94NThYb1M1aVR6eE85eDc3RDFybVpjckZzd0tITzZRVmQwK2Zw?=
- =?utf-8?B?V3VWaGdVa1MzeEgxV3psMjdKTVR1cFNjZFdoWmVEdWt2TktSNG1uMWc3U2dO?=
- =?utf-8?B?YkErbTYrc0dTeFZNM3FoL0NPTnFtb3JDemR6dDU5ZHJscWkwTkcwTlptcWNS?=
- =?utf-8?B?ZGFucEtRektMOXZkTWszOGQrVFppZlhQVHVXMGx4djh1SExqZzZMb1BabDdR?=
- =?utf-8?B?OFZLWjRnQ1c0V1B6UnpCdEsxc09nTjBSZTJxZC9MdGVBUWJKMnArWVNXYWdS?=
- =?utf-8?B?WjhxZFhkV1RVWERrcDJQZDc1T0MrdEtsek1TRDkzRjgzUHZJTWhyY0t0NVVS?=
- =?utf-8?B?RGh5UUd0WGU3N3h1L3ZDWnp2S2h3eG1UL3pBSTJ5UFk1ZzVsZkFkc1l4cEty?=
- =?utf-8?B?bVc1VWVTTDF0YmJJUVJnNUNldXJKY3RIai9sd3lIb1hHRzRvQ0s0ZVVRTm15?=
- =?utf-8?B?QWhqRXBTWVpDeGthaEhVczhjVWNOUEl0VkJaR1pYZ2ZMVFFpdTZQSmI3eFVZ?=
- =?utf-8?B?SUxIdFVDQjRBSEpvME5uM3lpWW9pMmZoeWdGaUM3cFk0eWJYVU5GWktoK3p4?=
- =?utf-8?B?Y1h2UGo5SGVQQi9qVm5nTVFLTWlRNk12dzl6bFc0UnhpYjhJWVlNWWR2cVBE?=
- =?utf-8?B?NEV4dm11VkdaTXhLV296L1hPQnBlcldPYlkzRGJ1VnRkUWx3d2hZemJLYmRT?=
- =?utf-8?B?ODBBK2RpTjJXR29VaEJKVlYvZGNCZFR2SEF5U0tzZnBlWjFxMTRxU0sxbTZQ?=
- =?utf-8?B?UnFLTndHZWdtclpoVjRkbU1FNGNLdzVxckQyUkpKSUdMS3ZPUDEwOE96U0Ex?=
- =?utf-8?B?djNqM2h5cEh5WEZCRDZLV2dINS9KandkM09JOElVK2ErYU1pWWxrdDU5eWU2?=
- =?utf-8?B?djVEM2MrcDNNUFpxS0lmUDN2WEUzYjNnd294SWRnWE10Lzg2eSsxd0dXbkwr?=
- =?utf-8?B?WEtkcXhDSjhuTFphTHRhckhTYVRwZzVHOERwQURmZTNIUS9UNEZZUVYxWEhC?=
- =?utf-8?B?NzVtN2g4UHZ1Nk5Qc1RnZlhBTkZBL3cvQ0VsUkxhS2o2c0s1bVlCK2ozcGdu?=
- =?utf-8?B?bnRLV3pZeWY0Q29KK3owamVYSzZ2TWhGN3Y4UVh5NktCS0pqeis2VlJkUjJo?=
- =?utf-8?B?WTh2WU5HOFErVzZveFVzWjhKamNoejNxRTRBekZvL2tGVXNMdWRmaDJDMnoz?=
- =?utf-8?B?aytTRFBYbExhRGh3dXNya1VhMzU5UmkvVmJ3NVR1VzFJOFU4VlNhU3VhL1pT?=
- =?utf-8?B?UThhZ1VPbjJSbGVVbHA4ZTFsY3lPRTRQbzRNeSsxK0NjelhVVGxFc1hGSXFr?=
- =?utf-8?B?dENGK3ZNb1RyWnhJMHZYQ1JhY1VmWXZBUWpVRmZkUTlwTUdESkhZeE9yMFZC?=
- =?utf-8?B?R1VWeHZXMmFBcmRsUitRWkRxd0xmdnl2dkRmSEV4aTY4NVpzMnpRMzZpeHp3?=
- =?utf-8?B?TWN3T2hpWWtucUF2T0p0SUFENFhnUllsM2N1VkVmZVhHbWNHQi8yakpjVWh4?=
- =?utf-8?B?MU1JNnZuWnNURzY4VXNEcW5BUi9HSVZ2aWY4SVA2YjZkeDBxcGRra29hREJF?=
- =?utf-8?Q?yU62TEKG5sM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR03MB9047.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SVFodEFJbDhEdTNGT0xmNTdlMFdRbE1IOHdMUnNKYnVTZkFtdjMzV0xHMkRQ?=
- =?utf-8?B?VnkvUWJ4VkFkelc1TkY4RFd5MVB4cXVRSWEyQmUyYlF5Y3pCNVlKdzdKUXdP?=
- =?utf-8?B?dEgrMGdHeHYyekJlQzJHcnRYNEt6a1A3MjduK2RTVTI5WEZSWXdJbkxtamhq?=
- =?utf-8?B?LzMwei82TEVESlFEOEIyRDBhdkNVdkduR1Vua0d6aWtJcDd6eVV0UkJTakVF?=
- =?utf-8?B?UXFuOXNxSlBKclJJdzV0dHVEdVNUd2QrV2J0ck5FRzc1ZjJ4d2lPMjNkRzh2?=
- =?utf-8?B?Zitxb3RUZDkzdXcvQmhHc1lzcGZ4OEo0bHhnRWt4NUZ0NDA1MVg5eUxtOWJF?=
- =?utf-8?B?Q2RxbE5xSWlrQ2VRUnltMGJzM0Nhem00dFRlVVNjeStjOUFyT1dGbEVOOHdE?=
- =?utf-8?B?aFdCcE9aOGs4OFV2ckpnRVJaZGRiQXg1ZHZzbDZlSnVHeXF0LzJLelJyQmlu?=
- =?utf-8?B?OUxIeWp2dkRDLzJBR0ZqaHpzVkJMc09qaEZ4YUhubjMrZGd4czlTN1dCYVBz?=
- =?utf-8?B?UTdncFYzTUcrdnI5emp1cnIxSVY3K0FGbXlMZkR3bC9tTHlVbUdUeXlwQnN5?=
- =?utf-8?B?S2kzNWVSbHl3M1ZXWndVd3MwaFZxRDVUNG00ZlNKaldFejJCQ2VoZUgwWVg2?=
- =?utf-8?B?TTNPZysyb3RSZmF2Sk5vd1hXcFVnejZZeklnUjI5a3J6cTYwMDg2b3ExVWt3?=
- =?utf-8?B?K2tmYnkyNVFoUy9QeFVZSVE4MXdUNDk2UjU4ME5GTCtzVUI4UjVRSTVDdzEz?=
- =?utf-8?B?NFlwa0NGQTVmdUlrVDA1Zy9WTHkvTS9lNWVBNTJqdDYrTXl4bWNoRXFta2F0?=
- =?utf-8?B?SVlxREdmWWxRZ3U5NEZ1Z2dwL2Ewb3pGbXQ5YTBLSlhJbERpdy81ckxlVkxC?=
- =?utf-8?B?VS9PUVVXLzhDbzdnQldDdmtDNEg3NWtjV1hTU0xlYUNYeTRJRGRRa2t2b0U4?=
- =?utf-8?B?bjRnWW9SMjl4WUJJbWQydGR1VlF0cDVCemRMMVU4YnFQWXkxWVU4Nyt5elBL?=
- =?utf-8?B?Z0dsOU44UzBLZjhGWE03WTFMVnVhb3Zna0xJZ0VDSjdia0FBSzFyQm01YXhV?=
- =?utf-8?B?Vy94UW1DYittOVNMKzlEKy9xMW4va284VWdQNXo3b2I4U0NLVE53MEVTRk14?=
- =?utf-8?B?WndwSUNSOTB2Y2JlVGU1bCtsQnlhaE1vK29MVkw0SnhpR0N1SW5heU5yaWtX?=
- =?utf-8?B?Q3MrblJNZXVZZEpNSngzVWp6U21CekZrMlBYSXlzaEVXTzVyNWIxVEJJampm?=
- =?utf-8?B?RE53MDFpZ2NJSWc1MDNLaVNjREE0dEg0NnhCWnhhRVBjWWVJYzNkVTBCOWdi?=
- =?utf-8?B?enBvYlVLWCtmbnowTWtDdzZVRHVXaTg1TVBTUndBeTMycDFVaWt2cHptSjlG?=
- =?utf-8?B?aXB4d2p2WWtwVWdEVFZ5UDdHOVg2cDUrZ21CNE9RL0ttZ1hkbG9tdFl1a1N3?=
- =?utf-8?B?SzN2T2FOblgvYi9mWmRsUXVUMmVuQlpuRS9KVDhIZmRyU3VrNFRsTDFBcHBF?=
- =?utf-8?B?V0ZTa1N1eFdXTmR3VVBkRTJid0ZOS2cwbUNFN3J5L25TWUFTeGthenFycTUy?=
- =?utf-8?B?VmhENTBZZ1hHVHdjb1gwK21QaEUxWUV6aFpvSlhydEtmSDhVVmcweDJNdDZS?=
- =?utf-8?B?ampBT0g0OEkxVEQwMk5ldFZseEFtTWJBbC9JSzRZL1JjaWRhWHhSejVDZ2I0?=
- =?utf-8?B?cFdHQ1hENUlhTmsxVVJHMnZxbzZ0dC9jMDBFdmx3OWtHQU5lTzlFbDB2dTBB?=
- =?utf-8?B?YUFacHpzYWw3bmJBbGVZTmRSaTl1T1ZnNHdFanpmOVl4TGlnTHZyMmE3QzRX?=
- =?utf-8?B?bytzMEZpVHNBdHJtYzlMazB2R2F0MDYveVg4V1NvNnVSTjlocXFyMGZ6MTFJ?=
- =?utf-8?B?TDRmRjhCWHRqdm1naHNtck5FNldIRlhIWHNBM0FrWHNhQjB3R0NXcnBIbkR5?=
- =?utf-8?B?Q2tvTUwySWJ6OERzbjlIeGQ1MmdDQWdSQ052U3NVRGdYMEJPNS90VXZKQVdu?=
- =?utf-8?B?UDcvMGlyM3FqaURYQ01wYVN6VzEya0hsdmVJU3RNR3ZxWFBhaitKRUh0MEhr?=
- =?utf-8?B?WnRhd3NwWnFsNFRwVzdUUWtBZGNwWlBiaUFkVWg0R2oxek5zZzNLV29VVU1G?=
- =?utf-8?B?ZCs0c3hIWlBkRkgvSTBOK3VtdWZaT0hOcUw4WjhySWI5TWtiQnVkektRdENE?=
- =?utf-8?Q?v4d0n30NPirGcijiMGVPGewKtnPnH8bMQX7VCEzfluFB?=
-X-OriginatorOrg: uclouvain.be
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a1db28a-25e3-455e-8e50-08dd87ede249
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR03MB9047.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 13:49:53.4368
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ab090d4-fa2e-4ecf-bc7c-4127b4d582ec
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QocbOCD7T7RiBaVvQawPLd9r1YpzjQyQacgTIUoLLaBmmmWiFIgd9aJV2CJT73lewFj+92OXr3LeL1OgAP63Wg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR03MB9711
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <f1943412-ccbf-4913-a5c5-818f0f586db1@rbox.co>
 
-Hi,
-
-On 4/30/25 02:36, Sebastian Reichel wrote:
-> Hi,
-> 
-> On Mon, Apr 21, 2025 at 08:13:33PM +0200, Thomas Antoine via B4 Relay wrote:
->> From: Thomas Antoine <t.antoine@uclouvain.be>
+On Wed, Apr 30, 2025 at 01:11:48PM +0200, Michal Luczaj wrote:
+>On 4/30/25 12:37, Stefano Garzarella wrote:
+>> On Wed, 30 Apr 2025 at 12:33, Michal Luczaj <mhal@rbox.co> wrote:
+>>>
+>>> On 4/30/25 11:36, Stefano Garzarella wrote:
+>>>> On Wed, Apr 30, 2025 at 11:10:29AM +0200, Michal Luczaj wrote:
+>>>>> Lingering should be transport-independent in the long run. In preparation
+>>>>> for supporting other transports, as well the linger on shutdown(), move
+>>>>> code to core.
+>>>>>
+>>>>> Guard against an unimplemented vsock_transport::unsent_bytes() callback.
+>>>>>
+>>>>> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
+>>>>> Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>>>>> ---
+>>>>> include/net/af_vsock.h                  |  1 +
+>>>>> net/vmw_vsock/af_vsock.c                | 25 +++++++++++++++++++++++++
+>>>>> net/vmw_vsock/virtio_transport_common.c | 23 +----------------------
+>>>>> 3 files changed, 27 insertions(+), 22 deletions(-)
+>>>>>
+>>>>> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
+>>>>> index 9e85424c834353d016a527070dd62e15ff3bfce1..bd8b88d70423051dd05fc445fe37971af631ba03 100644
+>>>>> --- a/include/net/af_vsock.h
+>>>>> +++ b/include/net/af_vsock.h
+>>>>> @@ -221,6 +221,7 @@ void vsock_for_each_connected_socket(struct vsock_transport *transport,
+>>>>>                                   void (*fn)(struct sock *sk));
+>>>>> int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk);
+>>>>> bool vsock_find_cid(unsigned int cid);
+>>>>> +void vsock_linger(struct sock *sk, long timeout);
+>>>>>
+>>>>> /**** TAP ****/
+>>>>>
+>>>>> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>>>>> index fc6afbc8d6806a4d98c66abc3af4bd139c583b08..946b37de679a0e68b84cd982a3af2a959c60ee57 100644
+>>>>> --- a/net/vmw_vsock/af_vsock.c
+>>>>> +++ b/net/vmw_vsock/af_vsock.c
+>>>>> @@ -1013,6 +1013,31 @@ static int vsock_getname(struct socket *sock,
+>>>>>      return err;
+>>>>> }
+>>>>>
+>>>>> +void vsock_linger(struct sock *sk, long timeout)
+>>>>> +{
+>>>>> +    DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>>>>> +    ssize_t (*unsent)(struct vsock_sock *vsk);
+>>>>> +    struct vsock_sock *vsk = vsock_sk(sk);
+>>>>> +
+>>>>> +    if (!timeout)
+>>>>> +            return;
+>>>>> +
+>>>>> +    /* unsent_bytes() may be unimplemented. */
+>>>>> +    unsent = vsk->transport->unsent_bytes;
+>>>>> +    if (!unsent)
+>>>>> +            return;
+>>>>> +
+>>>>> +    add_wait_queue(sk_sleep(sk), &wait);
+>>>>> +
+>>>>> +    do {
+>>>>> +            if (sk_wait_event(sk, &timeout, unsent(vsk) == 0, &wait))
+>>>>> +                    break;
+>>>>> +    } while (!signal_pending(current) && timeout);
+>>>>> +
+>>>>> +    remove_wait_queue(sk_sleep(sk), &wait);
+>>>>> +}
+>>>>> +EXPORT_SYMBOL_GPL(vsock_linger);
+>>>>> +
+>>>>> static int vsock_shutdown(struct socket *sock, int mode)
+>>>>> {
+>>>>>      int err;
+>>>>> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+>>>>> index 4425802c5d718f65aaea425ea35886ad64e2fe6e..9230b8358ef2ac1f6e72a5961bae39f9093c8884 100644
+>>>>> --- a/net/vmw_vsock/virtio_transport_common.c
+>>>>> +++ b/net/vmw_vsock/virtio_transport_common.c
+>>>>> @@ -1192,27 +1192,6 @@ static void virtio_transport_remove_sock(struct vsock_sock *vsk)
+>>>>>      vsock_remove_sock(vsk);
+>>>>> }
+>>>>>
+>>>>> -static void virtio_transport_wait_close(struct sock *sk, long timeout)
+>>>>> -{
+>>>>> -    DEFINE_WAIT_FUNC(wait, woken_wake_function);
+>>>>> -    ssize_t (*unsent)(struct vsock_sock *vsk);
+>>>>> -    struct vsock_sock *vsk = vsock_sk(sk);
+>>>>> -
+>>>>> -    if (!timeout)
+>>>>> -            return;
+>>>>> -
+>>>>> -    unsent = vsk->transport->unsent_bytes;
+>>>>> -
+>>>>> -    add_wait_queue(sk_sleep(sk), &wait);
+>>>>> -
+>>>>> -    do {
+>>>>> -            if (sk_wait_event(sk, &timeout, unsent(vsk) == 0, &wait))
+>>>>> -                    break;
+>>>>> -    } while (!signal_pending(current) && timeout);
+>>>>> -
+>>>>> -    remove_wait_queue(sk_sleep(sk), &wait);
+>>>>> -}
+>>>>> -
+>>>>> static void virtio_transport_cancel_close_work(struct vsock_sock *vsk,
+>>>>>                                             bool cancel_timeout)
+>>>>> {
+>>>>> @@ -1283,7 +1262,7 @@ static bool virtio_transport_close(struct vsock_sock *vsk)
+>>>>>              (void)virtio_transport_shutdown(vsk, SHUTDOWN_MASK);
+>>>>>
+>>>>>      if (sock_flag(sk, SOCK_LINGER) && !(current->flags & PF_EXITING))
+>>>>> -            virtio_transport_wait_close(sk, sk->sk_lingertime);
+>>>>> +            vsock_linger(sk, sk->sk_lingertime);
+>>>>
+>>>> Ah, I'd also move the check in that function, I mean:
+>>>>
+>>>> void vsock_linger(struct sock *sk) {
+>>>>       ...
+>>>>       if (!sock_flag(sk, SOCK_LINGER) || (current->flags & PF_EXITING))
+>>>>               return;
+>>>>
+>>>>       ...
+>>>> }
+>>>
+>>> One note: if we ever use vsock_linger() in vsock_shutdown(), the PF_EXITING
+>>> condition would be unnecessary checked for that caller, right?
 >>
->> The interface of the Maxim MAX77759 fuel gauge has a lot of common with the
->> Maxim MAX1720x. A major difference is the lack of non-volatile memory
->> slave address. No slave is available at address 0xb of the i2c bus, which
->> is coherent with the following driver from google: line 5836 disables
->> non-volatile memory for m5 gauge.
->>
->> Link: https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c
->>
->> Other differences include the lack of V_BATT register to read the battery
->> level. The voltage must instead be read from V_CELL, the lowest voltage of
->> all cells. The mask to identify the chip is different. The computation of
->> the charge must also be changed to take into account TASKPERIOD, which
->> can add a factor 2 to the result.
->>
->> Add support for the MAX77759 by taking into account all of those
->> differences based on chip type.
->>
->> Do not advertise temp probes using the non-volatile memory as those are
->> not available.
->>
->> The regmap was proposed by André Draszik in
->>
->> Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a116.camel@linaro.org/
->>
->> Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
->> ---
-> 
-> [...] (I actually skipped reviewing big parts here for now)
-> 
->>
->> +		ret = of_property_read_u32(dev->of_node,
->> +					   "shunt-resistor-micro-ohms", &val);
-> 
-> device_property_read_u32(dev, ...)
-> 
->> [...]
->> +	ret = of_property_read_u32(dev->of_node,
->> +				   "charge-full-design-microamp-hours", &info->charge_full_design);
->> +	if (ret)
->> +		info->charge_full_design = 0;
-> 
-> This is not in the DT binding and thus not allowed. Also I will NAK
-> adding it to the DT binding, since the following should be used:
-> 
-> Documentation/devicetree/bindings/power/supply/battery.yaml
-> 
-> followed by using power_supply_get_battery_info() in this driver.
-> 
-> Adding this support is probably a good idea, since it allows
-> providing all kind of static information from DT and you are
-> missing the non-volatile memory part from the existing chip.
-> 
-> Note that the power-supply core will pick up and expose any
-> of these properties automatically.
+>> Right, for shutdown it should always be false, so maybe better to keep
+>> the check in the caller.
+>
+>Or split it? Check `!sock_flag(sk, SOCK_LINGER) || !timeout` in
+>vsock_linger() and defer `!(flags & PF_EXITING)` to whoever does the socket
+>release?
 >
 
-As I said to Dimitri Fedrau, this is actually a mistake on my part coming from
-an attempt at getting things working which failed. Charge full design should
-be correctly computed now so I don't think it would be useful to get it from
-DT.
- 
->> +	ret = max1720x_get_rsense(dev, info, data);
->>  	if (ret)
->> -		return dev_err_probe(dev, ret, "Failed to probe nvmem\n");
->> +		return dev_err_probe(dev, ret, "Failed to get RSense\n");
-> 
-> You can either drop this error print, or the ones in
-> max1720x_get_rsense(). No need to print two errors.
-> 
-> Greetings,
-> 
-> -- Sebastian
+Yep, this is also fine with me!
 
-I will do that in v4.
+Stefano
 
-Best regards,
-Thomas
