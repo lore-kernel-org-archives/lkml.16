@@ -1,182 +1,142 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC42220698
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45F21EDA06
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050648; cv=none; b=iDnZSysbOrqBZAyQYoIkof8QNt2u17XrQvtG1AjXdV9VKCDsOOnl1tRtXSKL9GhSq8HA60JFffXOt96GDDcfS53DpwzOZlmoD8cz9f5QdCn95MkZbEgcAwg6atGmktZn1M22CL7pXxWMNp5LdShEsfAke7rBWHqCsGJDRmcrDI0=
+	t=1746050663; cv=none; b=brsv1cJ1Shpf3DVDWn/QPX1pWJMkqyOl+mVB3RT+OPX8IaUnpt68BbJLnij5UN6aqnJ8cNaLWBNTUZ1FmoDoymJ+ielQRlpe9E8Yz6xHpyfAioLEK5rBSTDSPHTiI1a33QP4uROX3Urz5vYynZWnvs0OaCn794frfdlpub68pl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050648; c=relaxed/simple;
-	bh=a6a4m8o4Fnf9b9bUx8vDZ1tnb4WXvfqXb62W3uQzEvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bxFdQ70H/Ldi+aDamvUZ0HZHX435+mFeT3oYeSJKEMP5ZNYKx/mITlqTVXnSILhYn/V5QHMX+jNw6yuuhIiJVbbJZQvomMWOQwvJjrLwouYgQ2PE7roGsUopta+t+PkFK1xyrMDDOAwp/fXarA0qh8uYjKShST8dKUUpS7CaJP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=m7NZzPWr; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1746050663; c=relaxed/simple;
+	bh=V+uBfjWF7Nv/iGZBpfHhVifIs7t6R8r7ypyIiHDWEtE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iew6DML6hHRzfK4saiR5/MPtqckzgnJ5mWxEsc8GjLXgj5YaeGxz8Veo90CQ+NFbUkubvmqwjOtzJYdwdjkS4BrnpCSxVTT1rW2ecEX2Y3QlnbwfbEyHI9cbm2H1RI+R8ry0DZv21SxGLTQ5Ng/raZOJSKOoQqdEqrOGmAGqIss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RKzyXW/2; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m7NZzPWr"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-2263428c8baso16305ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:04:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RKzyXW/2"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-54af20849adso379198e87.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:04:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746050645; x=1746655445; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FVawBlGLpoSzo0dY08dmSMH05U/ahZ0t0/eytQcNdTQ=;
-        b=m7NZzPWrvaIxkrXieWO8VS44wSkkS+8IoweWj45R+cGh+KsmSRFwkrDO1oWv/vIRbf
-         QlJrOxgyahmmuttQyWa2V1GGL530Fjy6f0/r2Pt9gJsSTfGjrjlcDhue+bPFoWWmcpab
-         SkMCX0A1rJw+Ko8pjQxk8VZor9owOqRBIo7YhFypJDkVtDGb/hSI5ePAo48MGCUckB1S
-         Ku835QpK231uww3ziZs0oOEYr+OMRDjsHrIA+tqZ48Doj5mLtVCatlzzQi6yOFgTW5Wg
-         rFiE9KemGS+CKZeDHq5ALzREfjowRi2y0svn15uDWvLYkiwN95eo1w1C84kTWL6serhC
-         9Q0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746050645; x=1746655445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1746050660; x=1746655460; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FVawBlGLpoSzo0dY08dmSMH05U/ahZ0t0/eytQcNdTQ=;
-        b=PX8zp10uFT3YwOUEFhNx9xUriN/HBqdJa0Xugi1n9JJ4ZOzpcAIDjzO0Uf/cL/T3qC
-         PCPoY7hkMr11oEsSezbqFBJC10GlfDWOr+eZuPyqsgTpILtxJ5HX7gHUllSiNW8KisCF
-         psEa82xK/Fw18XnsWbedyTS987SQ7tcVPN2/4HXGytroPiePRhl+/4n0AqgvEdlKJIj5
-         lPDVi35ni9DjMBqE4AlVbkBZNMpCBxG+ticUaMN6iUndoS61HWDTLzZZQGnitwxKnGk8
-         vDXmEussRKJkzcvEw+5n/QxwC18dqaz2oirRWkwojMvYlUvd8ORe4FOETGDCWGr8xMyc
-         d2tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUasYJ0mr/EZu/fI2sgjd2huXMz9hzmJtxzQmwPe4Zei4lHM/pZDRnZSqFumtEmY1ozNl8ikCLDbC02DGI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKeKGA+1+wXapTJujCHxN+YvLvJBDcBTKZYTdxg9faEcQszEGT
-	p/ys/FV4y+4nU2CxujWxS71Xwtn+C8K5b2sYYGz7fl7pUliMLgilPXgc/j3P/w==
-X-Gm-Gg: ASbGnct19gQ1DvoDBCS0H338aR0B/Y36nNZbyb3iS4DN7LIyKHJsti5SHzm3lq+6hzE
-	g/1K9KpiyEzXTSFrAbll3kQ7uPSgFkUzAyD1tBettoD0Myy3Y29SCkV7SCdfJDfBYcfZ2GqgyZ7
-	lsblHRM0FvD/WkP5nclgcnHuOnY9B7pWBs6djYqREgmayeRoS5qk/xOS5cRUz7IwyGwnyuh9F+b
-	pV+FJOJtsfGv7xq+jNlLp+p4B+ZnrYUvpvTUPCg9vU50yC4/AvkzK16NMxPx3chjOhmelVKO0S5
-	mY8pqHGyVffI8W6AWf6un2uhYK27mxaqmvMZTP4j7e01bp5W0eYbCy5YkOp2jjSMcXh9qHsF
-X-Google-Smtp-Source: AGHT+IGd4hYbbWLBFZpJCFZt3J+kQFvNTF3X43diXZZjefIRoFc4WvBq3IOD+DnYRjbMCinfwG1ReQ==
-X-Received: by 2002:a17:903:17c3:b0:21f:9f4:4a03 with SMTP id d9443c01a7336-22e07a8ada1mr325415ad.21.1746050644476;
-        Wed, 30 Apr 2025 15:04:04 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5104cd5sm127537775ad.199.2025.04.30.15.03.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 15:04:04 -0700 (PDT)
-Date: Wed, 30 Apr 2025 22:03:53 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 22/22] iommu/tegra241-cmdqv: Add
- IOMMU_VEVENTQ_TYPE_TEGRA241_CMDQV support
-Message-ID: <aBKeSeuPvTruzchM@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <a7db1d2fe5dd43ac7ac075df662f3ab743ac6aa2.1745646960.git.nicolinc@nvidia.com>
+        bh=JfxhSPdXLWl6PO+Mfnzt5fptOWyX9muDxmvIopUSBvA=;
+        b=RKzyXW/2u5TU3Zxy5u/YZuBSLgACmkHGodzwSQdLLNoaY+HOdh8HqzUSpUXaHpW9i3
+         xtp9PX34IbgzReTRCNJ6Cl30cwvaN9iBLBMU/i4ukeAaBu95HGgfEMSrcscT1tOrQxTc
+         97gj/5946RfveAtWVrJHr+sr4Zcj/rHZFhHeTi813mWRhZ1CDgWnfc6fy4e9c88MTvcq
+         VZfU27PgcU95tdPM/GlsxzKQGTfbW46KrgBQlIDyUXaHoBvgisjHnyLKWxxM/dDW0naK
+         dy6MUMYsavNkS5NQsETUztQ9bPkq0XHXZ9l/mlsRn3v/ct+a80Zq11lbZMJIKAp5VUIR
+         iUFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746050660; x=1746655460;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JfxhSPdXLWl6PO+Mfnzt5fptOWyX9muDxmvIopUSBvA=;
+        b=iqBwo/ryJTXVolRoZXOByQ1Ords42QpCMGvWlBJ7Q1mHcwsYvKOcJlsvrXHAspio3r
+         YVJ3VN3pD9XitUyFlUIxMZgDZIeRr8/8MQG5uCnWqCnJZ6ESIfmBQDmEwlWc65+SPH9J
+         srdM31+tyGkQ9nInUwYgR2/cGFJchzAI1uJavT/sVLUrhTM7GF4rvQPId2roPT3wYy2Y
+         xQiI0f5U6idYuwaxXY/oWd764pHPAFhygkFZ5g4gXt/TOeWIxZQvUKyreVPvxRiZlem7
+         57AQnIgBjLrPqgRffnDZur/TwjwWoYz/+3BuQEGjYBq5ZsSGf4JAmgk8oPeY/GPGIbJX
+         Hb9w==
+X-Gm-Message-State: AOJu0Yy9Xwl4jqd/E34DjmKfqfDvcG4wIlw8qc/sG0OKVryKGnCx2/dt
+	cG+ltwhxC8fq52KIdRM1M0EBsjhHOg6trKLT3OAiAuIzcd751wVRiSIdPv925rxs2niHWyM1xiX
+	UJ5MsmQlJl4RAHtkLuS5hyXRQa2tc7j64snE=
+X-Gm-Gg: ASbGncu5Un4F/u6M2+/TM7hZoLgmGxMlI3RqwmE+29xWq26UhBQgADrLI7OjKPVCBNq
+	auUF9cI+9HNn60HfyRobC4sYvuIl1ZKOKXOSLMUH4hyGQ12hQgIlNVLNOv3U7EH5h5KYdsoCCRX
+	Uu3oxhEKMPwDFM3unSM3AiUHPk0x4MAdlT0IpOb91erHtc8V1qMSfwUUDTVdgQvg==
+X-Google-Smtp-Source: AGHT+IG/8XC2NFmxTFwX9kl2NaGxudCN0erWY1DDz4TdrxeXHNJsucbZQoyHbYf6Kj0GoWtPlplQwodcUM5AtJ5hTdw=
+X-Received: by 2002:a05:6512:2389:b0:54e:8189:2eac with SMTP id
+ 2adb3069b0e04-54ea7a4d63bmr34121e87.12.1746050659490; Wed, 30 Apr 2025
+ 15:04:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a7db1d2fe5dd43ac7ac075df662f3ab743ac6aa2.1745646960.git.nicolinc@nvidia.com>
+References: <20250429150736.3778580-1-jstultz@google.com> <20250430124339.GM4439@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250430124339.GM4439@noisy.programming.kicks-ass.net>
+From: John Stultz <jstultz@google.com>
+Date: Wed, 30 Apr 2025 15:04:06 -0700
+X-Gm-Features: ATxdqUEPBTTnnnzc6fwH0xN6iGwKVVt4J9u9-p1eu6QNfqq2iLCXi9JPLxl9Zys
+Message-ID: <CANDhNCq7qvW-CujA+bYzoK1=BJ_TEk6WD2fQJtOpcTC1fjNcfA@mail.gmail.com>
+Subject: Re: [PATCH v3] sched/core: Tweak wait_task_inactive() to force
+ dequeue sched_delayed tasks
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, 
+	Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com, 
+	peter-yc.chang@mediatek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 25, 2025 at 10:58:17PM -0700, Nicolin Chen wrote:
-> Add a new vEVENTQ type for VINTFs that are assigned to the user space.
-> Simply report the two 64-bit LVCMDQ_ERR_MAPs register values.
-> 
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-
-Reviewed-by: Pranjal Shrivastava <praan@google.com>
-
-Thanks,
-Praan
-
+On Wed, Apr 30, 2025 at 5:43=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+> On Tue, Apr 29, 2025 at 08:07:26AM -0700, John Stultz wrote:
+> > It was reported that in 6.12, smpboot_create_threads() was
+> > taking much longer then in 6.6.
+> >
+> > I narrowed down the call path to:
+> >  smpboot_create_threads()
+> >  -> kthread_create_on_cpu()
+> >     -> kthread_bind()
+> >        -> __kthread_bind_mask()
+> >           ->wait_task_inactive()
+> >
+> > Where in wait_task_inactive() we were regularly hitting the
+> > queued case, which sets a 1 tick timeout, which when called
+> > multiple times in a row, accumulates quickly into a long
+> > delay.
+> >
+> > I noticed disabling the DELAY_DEQUEUE sched feature recovered
+> > the performance, and it seems the newly create tasks are usually
+> > sched_delayed and left on the runqueue.
+> >
+> > So in wait_task_inactive() when we see the task
+> > p->se.sched_delayed, manually dequeue the sched_delayed task
+> > with DEQUEUE_DELAYED, so we don't have to constantly wait a
+> > tick.
+>
 > ---
->  include/uapi/linux/iommufd.h                  | 15 +++++++++++++
->  .../iommu/arm/arm-smmu-v3/tegra241-cmdqv.c    | 22 +++++++++++++++++++
->  2 files changed, 37 insertions(+)
-> 
-> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-> index d69e7c1d39ea..d814b0f61fad 100644
-> --- a/include/uapi/linux/iommufd.h
-> +++ b/include/uapi/linux/iommufd.h
-> @@ -1113,10 +1113,12 @@ struct iommufd_vevent_header {
->   * enum iommu_veventq_type - Virtual Event Queue Type
->   * @IOMMU_VEVENTQ_TYPE_DEFAULT: Reserved for future use
->   * @IOMMU_VEVENTQ_TYPE_ARM_SMMUV3: ARM SMMUv3 Virtual Event Queue
-> + * @IOMMU_VEVENTQ_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV Extension IRQ
->   */
->  enum iommu_veventq_type {
->  	IOMMU_VEVENTQ_TYPE_DEFAULT = 0,
->  	IOMMU_VEVENTQ_TYPE_ARM_SMMUV3 = 1,
-> +	IOMMU_VEVENTQ_TYPE_TEGRA241_CMDQV = 2,
->  };
->  
->  /**
-> @@ -1140,6 +1142,19 @@ struct iommu_vevent_arm_smmuv3 {
->  	__aligned_le64 evt[4];
->  };
->  
-> +/**
-> + * struct iommu_vevent_tegra241_cmdqv - Tegra241 CMDQV IRQ
-> + *                                      (IOMMU_VEVENTQ_TYPE_TEGRA241_CMDQV)
-> + * @lvcmdq_err_map: 128-bit logical vcmdq error map, little-endian.
-> + *                  (Refer to register LVCMDQ_ERR_MAPs per VINTF )
-> + *
-> + * The 128-bit register value from HW exclusively reflect the error bits for a
-> + * Virtual Interface represented by a vIOMMU object. Read and report directly.
-> + */
-> +struct iommu_vevent_tegra241_cmdqv {
-> +	__aligned_le64 lvcmdq_err_map[2];
-> +};
-> +
->  /**
->   * struct iommu_veventq_alloc - ioctl(IOMMU_VEVENTQ_ALLOC)
->   * @size: sizeof(struct iommu_veventq_alloc)
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> index 88e2b6506b3a..d8830b526601 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> @@ -292,6 +292,20 @@ static inline int vcmdq_write_config(struct tegra241_vcmdq *vcmdq, u32 regval)
->  
->  /* ISR Functions */
->  
-> +static void tegra241_vintf_user_handle_error(struct tegra241_vintf *vintf)
-> +{
-> +	struct iommufd_viommu *viommu = &vintf->vsmmu.core;
-> +	struct iommu_vevent_tegra241_cmdqv vevent_data;
-> +	int i;
-> +
-> +	for (i = 0; i < LVCMDQ_ERR_MAP_NUM_64; i++)
-> +		vevent_data.lvcmdq_err_map[i] =
-> +			readq_relaxed(REG_VINTF(vintf, LVCMDQ_ERR_MAP_64(i)));
-> +
-> +	iommufd_viommu_report_event(viommu, IOMMU_VEVENTQ_TYPE_TEGRA241_CMDQV,
-> +				    &vevent_data, sizeof(vevent_data));
-> +}
-> +
->  static void tegra241_vintf0_handle_error(struct tegra241_vintf *vintf)
->  {
->  	int i;
-> @@ -337,6 +351,14 @@ static irqreturn_t tegra241_cmdqv_isr(int irq, void *devid)
->  		vintf_map &= ~BIT_ULL(0);
->  	}
->  
-> +	/* Handle other user VINTFs and their LVCMDQs */
-> +	while (vintf_map) {
-> +		unsigned long idx = __ffs64(vintf_map);
-> +
-> +		tegra241_vintf_user_handle_error(cmdqv->vintfs[idx]);
-> +		vintf_map &= ~BIT_ULL(idx);
-> +	}
-> +
->  	return IRQ_HANDLED;
->  }
->  
-> -- 
-> 2.43.0
-> 
+>
+> (that is, I'll trim the Changelog a this point, seeing how the rest is
+> 'discussion')
+>
+
+Ah, thanks. I've noted you tweaking my commit messages before merging,
+so I'll try to do better about leaving ephemeral notes (and Cc lists,
+apparently) after the "---" fold.
+My apologies for the trouble!
+
+
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index c81cf642dba05..b986cd2fb19b7 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -2283,6 +2283,12 @@ unsigned long wait_task_inactive(struct task_str=
+uct *p, unsigned int match_state
+> >                * just go back and repeat.
+> >                */
+> >               rq =3D task_rq_lock(p, &rf);
+> > +             /*
+> > +              * If task is sched_delayed, force dequeue it, to avoid a=
+lways
+> > +              * hitting the tick timeout in the queued case
+> > +              */
+> > +             if (p->se.sched_delayed)
+> > +                     dequeue_task(rq, p, DEQUEUE_SLEEP | DEQUEUE_DELAY=
+ED);
+> >               trace_sched_wait_task(p);
+> >               running =3D task_on_cpu(rq, p);
+> >               queued =3D task_on_rq_queued(p);
+>
+> Lets just do this. I'll to stick it in queue/sched/core.
+
+Ok, thanks so much!
+-john
