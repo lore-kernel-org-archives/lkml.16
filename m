@@ -1,92 +1,193 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C6F267B04;
-	Wed, 30 Apr 2025 18:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6DF1C6FE0
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037950; cv=none; b=E5PTPouSrYtgUUVuM3+vGwxUCUqNzLZtAhQ7Fq8S+9Hm9hRV1pBz10tM4koP+DQERTbHC7i42LI57pJQOWmDz31LIFPRRvbew9HCm4seUiXfFFSrIuNaMxt35YflRJaXE7RMzLJt2fm4+gebB1u4ZMsWmAXNnk+3P06ajavGbQ4=
+	t=1746037979; cv=none; b=nVifyhyME+Urma8ZrcRpruZ66zgIiSgrV6LyR1dfZPttZ7fOJVpFSrv5MOsPlSgDevx+iJGBEVUaEPT5W5aG+icC5Yy+oO6jzk6J6l/FYs2npyxdZ4yOsaa+0slpU0I4Eb/Hf2kUolFcdSuTKuh5j6vEGkX445rkKeSnbOW8eYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037950; c=relaxed/simple;
-	bh=vRPBUr1VAOQ7/YLa0ijgWj8XY3xCbZH7MxZo0NC06xY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=U9adGDKGMsgJIXF69QJanakl/1hVCtVQWEcyKMpJZxBEtQ34I/osxP1MEXDylVEvrKscl+7tTKtIfK7hH2jyndUqPpSSmcSPEHH2avvUyZHAdH3wlMQwQcFw+gTTyR8mRXigDwer5dqz8/3FvCtZ84sRoZfTRk5LFXeSsBKpjpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=JxQ2o6Sr; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1746037979; c=relaxed/simple;
+	bh=7dlKktqCOIiGzoJ0Hs7B9iO5DHTZlcGIUvzJTtAp4BQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jvW+wqj0T8W+x54U5h2c7dp3SDCsqrQ/pxG3ZdGpDpNq5ODzmg+/G7/82lzMWQOGScypKJNXXYtyeJw5sZHq7iq79J+0c/l/bO7EAU+ntekGr+CjgjnOvHBvQBRkL21lHA7NpTHhv7xs4dWqq11XQWonYWCslhH+MKYqyHT6lDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=jRUIgOxQ; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="JxQ2o6Sr"
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1F8E966690D;
-	Wed, 30 Apr 2025 20:32:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1746037946;
-	bh=vRPBUr1VAOQ7/YLa0ijgWj8XY3xCbZH7MxZo0NC06xY=;
-	h=From:Subject:Date;
-	b=JxQ2o6SrzLMdIeRLD3FLPA1YSGTISvilwv/AJaDxu5zcMkwUICuBMhY+1ojPQqoNI
-	 0Nfud5DWw5D8cJM69r67qsh8g279PuISnsdhIcF/4U1LU0wevF050IwQxZlbkGttJ+
-	 KIJsJRYqpCJlVEN83ATMO6aWWa+VBapX8dIwY+BXnCDOxh3FDQQ0F4R0xzwdUhglsB
-	 jdVpOa0BzR5Lo4JOIDg2YgMEeVDGhi2Y5KC7R1mFwiFeGtYMxBx6E5+IGyXYJ31xuL
-	 f5oRLtuwZNbhc2tWI6sUa+FSv/E71EQMNWr0RS+5eeHcGFQR5GnGJ/8AaJHG8JI/JK
-	 1NK8Gr8LYWUSQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, gldrk <me@rarity.fan>,
- Kees Cook <kees@kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: Signed-off-by missing for commit in the pm tree
-Date: Wed, 30 Apr 2025 20:32:25 +0200
-Message-ID: <4654171.LvFx2qVVIh@rjwysocki.net>
-In-Reply-To:
- <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
-References:
- <20250430085544.12800bdd@canb.auug.org.au>
- <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="jRUIgOxQ"
+Date: Wed, 30 Apr 2025 14:32:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746037964;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yoJYAWx7Zq6nI7wanJbzvpIAUvHzY3ZL8cl3YT7AY9E=;
+	b=jRUIgOxQmEkkDft/osEDJMMGDSi7LOYB/6hIW6s7EJgl6QgD0aAhoa9vbdls3RFSGAtDWo
+	57UDiGmWiCdxVMKHX+H7bzQBlSQLBv/NFetVc2tqa0Is3EvHkYx2EfCrG5Zhaufqd5GoDx
+	PVZz/pF3RY5PbIiTSE/2rqgr9M/qjjs=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] bcachefs: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <gynmaxokdg2t73okjvtl7cuvlcfa5saqwdnd3jh5obwejzy3ce@ic3q4nkrozlr>
+References: <aBF5udHEHwWvmWJw@kspp>
+ <wxh5qw7hzvvyg4texozjbviicfe2xmbjxngwlc3a7xef6jm6kn@wi3f25t2fftd>
+ <a1edcb19-f463-4d15-be3d-2393191c45fd@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepkeeileehffelfefggfdtjedvkeettdejfeevueegfedvhffgudeuteeigfeileetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepmhgvsehrrghrihhthidrfhgrnhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohe
-X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1edcb19-f463-4d15-be3d-2393191c45fd@embeddedor.com>
+X-Migadu-Flow: FLOW_OUT
 
-On Wednesday, April 30, 2025 1:30:43 AM CEST Tamir Duberstein wrote:
-> On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.o=
-rg.au> wrote:
-> >
-> > Hi all,
-> >
-> > Commits
-> >
-> >   9eef70365d71 ("ACPICA: Introduce ACPI_NONSTRING")
-> >   ac9334785c75 ("ACPICA: utilities: Fix overflow check in vsnprintf()")
-> >   5de20bc939b0 ("ACPICA: Apply pack(1) to union aml_resource")
-> >
-> > are missing a Signed-off-by from their authors.
->=20
-> Hi Stephen, how can I remedy this for 5de20bc939b0 ("ACPICA: Apply
-> pack(1) to union aml_resource")?
+On Wed, Apr 30, 2025 at 12:27:26PM -0600, Gustavo A. R. Silva wrote:
+> 
+> 
+> On 29/04/25 19:40, Kent Overstreet wrote:
+> > On Tue, Apr 29, 2025 at 07:15:37PM -0600, Gustavo A. R. Silva wrote:
+> > > -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> > > getting ready to enable it, globally.
+> > > 
+> > > Use the `DEFINE_FLEX()` helper for on-stack definitions of a flexible
+> > > structure where the size of the flexible-array member is known at
+> > > compile-time, and refactor the rest of the code, accordingly.
+> > > 
+> > > So, with these changes, fix the following warning:
+> > > 
+> > > fs/bcachefs/disk_accounting.c:429:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> > 
+> > We also have bch_replicas_padded, does that also need a fix?
+> 
+> Yes - so, how about the following to address both issues:
 
-The original ACPICA commit does not carry an S-o-b from you, so this one
-does not either.
+Yes, I like that much better
 
-If you reply with a Signed-off-by to this message:
-
-https://lore.kernel.org/linux-acpi/4664267.LvFx2qVVIh@rjwysocki.net/
-
-I will pick up your tag.
-
-Thanks!
-
-
-
+> 
+> diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
+> index 7be71952425c..2dcccf1edbb9 100644
+> --- a/fs/bcachefs/disk_accounting.c
+> +++ b/fs/bcachefs/disk_accounting.c
+> @@ -287,7 +287,7 @@ static inline bool accounting_to_replicas(struct bch_replicas_entry_v1 *r, struc
+> 
+>  static int bch2_accounting_update_sb_one(struct bch_fs *c, struct bpos p)
+>  {
+> -       struct bch_replicas_padded r;
+> +       union bch_replicas_padded r;
+>         return accounting_to_replicas(&r.e, p)
+>                 ? bch2_mark_replicas(c, &r.e)
+>                 : 0;
+> @@ -361,7 +361,7 @@ static int __bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accoun
+>  int bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accounting a,
+>                                enum bch_accounting_mode mode)
+>  {
+> -       struct bch_replicas_padded r;
+> +       union bch_replicas_padded r;
+> 
+>         if (mode != BCH_ACCOUNTING_read &&
+>             accounting_to_replicas(&r.e, a.k->p) &&
+> @@ -425,10 +425,12 @@ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
+> 
+>         percpu_down_read(&c->mark_lock);
+>         darray_for_each(acc->k, i) {
+> -               struct {
+> +               union {
+> +                       u8 bytes[struct_size_t(struct bch_replicas_usage, r.devs,
+> +                                              BCH_BKEY_PTRS_MAX)];
+>                         struct bch_replicas_usage r;
+> -                       u8 pad[BCH_BKEY_PTRS_MAX];
+>                 } u;
+> +               u.r.r.nr_devs = BCH_BKEY_PTRS_MAX;
+> 
+>                 if (!accounting_to_replicas(&u.r.r, i->pos))
+>                         continue;
+> @@ -627,7 +629,7 @@ static int bch2_disk_accounting_validate_late(struct btree_trans *trans,
+> 
+>         switch (acc->type) {
+>         case BCH_DISK_ACCOUNTING_replicas: {
+> -               struct bch_replicas_padded r;
+> +               union bch_replicas_padded r;
+>                 __accounting_to_replicas(&r.e, acc);
+> 
+>                 for (unsigned i = 0; i < r.e.nr_devs; i++)
+> diff --git a/fs/bcachefs/ec_types.h b/fs/bcachefs/ec_types.h
+> index 06144bfd9c19..809446c78951 100644
+> --- a/fs/bcachefs/ec_types.h
+> +++ b/fs/bcachefs/ec_types.h
+> @@ -4,9 +4,10 @@
+> 
+>  #include "bcachefs_format.h"
+> 
+> -struct bch_replicas_padded {
+> +union bch_replicas_padded {
+> +       u8                              bytes[struct_size_t(struct bch_replicas_entry_v1,
+> +                                                           devs, BCH_BKEY_PTRS_MAX)];
+>         struct bch_replicas_entry_v1    e;
+> -       u8                              pad[BCH_BKEY_PTRS_MAX];
+>  };
+> 
+>  struct stripe {
+> @@ -28,7 +29,7 @@ struct gc_stripe {
+>         u16                     block_sectors[BCH_BKEY_PTRS_MAX];
+>         struct bch_extent_ptr   ptrs[BCH_BKEY_PTRS_MAX];
+> 
+> -       struct bch_replicas_padded r;
+> +       union bch_replicas_padded r;
+>  };
+> 
+>  #endif /* _BCACHEFS_EC_TYPES_H */
+> diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
+> index 58e3983d860a..7c09a3c109ab 100644
+> --- a/fs/bcachefs/journal_io.c
+> +++ b/fs/bcachefs/journal_io.c
+> @@ -1404,7 +1404,7 @@ int bch2_journal_read(struct bch_fs *c,
+>         }
+> 
+>         genradix_for_each(&c->journal_entries, radix_iter, _i) {
+> -               struct bch_replicas_padded replicas = {
+> +               union bch_replicas_padded replicas = {
+>                         .e.data_type = BCH_DATA_journal,
+>                         .e.nr_devs = 0,
+>                         .e.nr_required = 1,
+> @@ -1632,7 +1632,7 @@ static CLOSURE_CALLBACK(journal_write_done)
+>         closure_type(w, struct journal_buf, io);
+>         struct journal *j = container_of(w, struct journal, buf[w->idx]);
+>         struct bch_fs *c = container_of(j, struct bch_fs, journal);
+> -       struct bch_replicas_padded replicas;
+> +       union bch_replicas_padded replicas;
+>         u64 seq = le64_to_cpu(w->data->seq);
+>         int err = 0;
+> 
+> @@ -2055,7 +2055,7 @@ CLOSURE_CALLBACK(bch2_journal_write)
+>         closure_type(w, struct journal_buf, io);
+>         struct journal *j = container_of(w, struct journal, buf[w->idx]);
+>         struct bch_fs *c = container_of(j, struct bch_fs, journal);
+> -       struct bch_replicas_padded replicas;
+> +       union bch_replicas_padded replicas;
+>         unsigned nr_rw_members = dev_mask_nr(&c->rw_devs[BCH_DATA_journal]);
+>         int ret;
+> 
+> diff --git a/fs/bcachefs/journal_reclaim.c b/fs/bcachefs/journal_reclaim.c
+> index 66bfb95f1ea4..0acaf20f2181 100644
+> --- a/fs/bcachefs/journal_reclaim.c
+> +++ b/fs/bcachefs/journal_reclaim.c
+> @@ -953,7 +953,7 @@ int bch2_journal_flush_device_pins(struct journal *j, int dev_idx)
+>         seq = 0;
+>         spin_lock(&j->lock);
+>         while (!ret) {
+> -               struct bch_replicas_padded replicas;
+> +               union bch_replicas_padded replicas;
+> 
+>                 seq = max(seq, journal_last_seq(j));
+>                 if (seq >= j->pin.back)
+> 
+> 
+> Thanks
+> -Gustavo
