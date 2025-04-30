@@ -1,122 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6936A24728A;
-	Wed, 30 Apr 2025 12:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEB8B674
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015251; cv=none; b=mAOshULqI3aQTwdgqomxfhzuycHEuM2P88cKxdtTAiGB07KiuuxL1wmallnoMSWsbZSHEeUX7Z0T9+5AC5fvoAuKmYDJFd3ue//Y1u44DIOsgMPV5MAA/+cbRxOHRZaZrPztgMWdIDm51E6I/ok3FhfK9Xpe/cbcph2IjI6HVuU=
+	t=1746015319; cv=none; b=Dpu36zjjWcEd2RuT73PAvkoMAGe65YE06kQZlJY+7SAqDqoZSkqaVDy7Hnk5O59ss94dixJ6LWb84X+zeMa/KiLTPTq8e/D/LzUWrnfhSGJ/41AjMIug6tuj6P9qrxYcrIiHIRg4HgB1a16evEGi052VgAjq2TLID0byx0aiZuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015251; c=relaxed/simple;
-	bh=LiBOXVSo3YvRCvgf0MEGE0OBC6pt4z+3BeVByew1hq0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CEsmS6S/Yzcsf1iSzrTw+QgJwtHl3H0mSOC/8CHE/VpJmnbp2fYgGr/iPZ2auvsHO54p16wDcJLFPbfvKYO0tFavxqxzNRPcN4Mq7ZLwdm9cpwdio7TtJqjyOMy37h/O/OiCoOpzhwySbMkG/oDY1y7wiNw2itPW8OwQPVUSq1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC502C4CEE9;
-	Wed, 30 Apr 2025 12:14:08 +0000 (UTC)
-Message-ID: <6fc17824-8442-4b97-8a8a-8a593dfd98cc@xs4all.nl>
-Date: Wed, 30 Apr 2025 14:14:07 +0200
+	s=arc-20240116; t=1746015319; c=relaxed/simple;
+	bh=+PMrTV4cMqqu/lA+cBky0GvUBIqaXbLjxr4LQJmpKag=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FTkPhdo2W9pyM9xoghKgS4qiwHo/BWSXKOP/Wn4DplP2ZF++u+UNaaBYen76En0m6Sen4Ip7FK9qhirt58e1Wf3E5uv9QeH+nQ0ycNM6k5N1AnvUPDg+Om9LLYg6VZuj74kMCvjlxiZ73pO03nlfYoKf7BL7QwHRQvCIOjaEOsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JY2Uls+j; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JY2Uls+j"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so55023765e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:15:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746015316; x=1746620116; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=nTKCIm+7pqVBVyacOmAhIisX4MK9GGaxDxO7NBbyAN4=;
+        b=JY2Uls+jmAxMbrMhH47Nzk3Bh3KqBPPOHK5E8xB9azg7e/jiZJC+YkfR+J1w4z72ua
+         1ANIIsHmNy/4kLXzKR7AoHb5WUgl/cH5RkLVB/Z9vzjqFwo26okrwZEyA8MuejFy0h5F
+         NkmLLMil1tnagQwOFvHgIZZP5P3J06JjskfBMWPVnEM1geC6y2BID7FmhOYGCbifs6U4
+         IPIGKwX/wti9FEQIwr4XdgPTcyXtk4j3UFH31ofpixcZLfdfVRSlKCIlkv2tGTxiVazZ
+         FbHFH68F26hOkD3+7nvOgz0inZwKaf+CFRGtpmlUG4URkr6fuDE+l1hmZ0MWCYzfGpeo
+         pXcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746015316; x=1746620116;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nTKCIm+7pqVBVyacOmAhIisX4MK9GGaxDxO7NBbyAN4=;
+        b=ppCpYwWvxcBzTY/ZxQ5J9ynkQ4mEs4NUJD+ytlVoiYuTD2Jf425ewHXjyJwZbTVzfc
+         xxacjUFSI9ROCNJEalzzBM8Qlt3jwK91ESQEKk912YaZvXcQySvB2g+1s+bflAvGk8Nl
+         YRf2dPUBlIjtoL4zk281tAgWyzMQbASCg3tOUy0JpeZQbd0IqBtkZlf9Gb5HpI5lIbJc
+         sYve4/wrf8yhWGxyXBzOpnTs75C36oWxigeeYaL03xfRPWfDKgp7cFa2DLXVYwF573UH
+         tMwPpmxa3lYPzOUpVdIaGHAz50UjMTkB2diVTiIZYF4MOdgFxz7uzFBIckjWgJarfvs5
+         SSdg==
+X-Forwarded-Encrypted: i=1; AJvYcCXtmggSLyeWq8kIejLe5LL7bp+A2ncgFJ4EVWHsRRnWWasumCBKC9Nq8ZsyUn2GlxtxZpxGLsp5CjgDP+Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUo6rr6ekTrMmg2D/rfB9lFV+QnEuW36W1DMxUlcAsX5cerzP4
+	j/L0udTwdqH2EDuUSRZu78RSsh3AwPWjjri3wuvpAcpj9hnFkJD5k7YQblngoWgaOLHSnzesd37
+	o0j0fCWmlMlBgag==
+X-Google-Smtp-Source: AGHT+IHMDr/rZjgFYSiN16p1TscIq688FqOB0h/PUjPN14cIJ5RHkwIyd6kYOwKeOQZmyhKW+W0dB9Qx4oUzhP8=
+X-Received: from wmrs8.prod.google.com ([2002:a05:600c:3848:b0:43c:fd72:aae1])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3b08:b0:43c:f64c:447f with SMTP id 5b1f17b1804b1-441b43a62ccmr10399725e9.29.1746015316406;
+ Wed, 30 Apr 2025 05:15:16 -0700 (PDT)
+Date: Wed, 30 Apr 2025 12:15:14 +0000
+In-Reply-To: <2025043045-overbuilt-swab-5b65@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] media: i2c: lt6911uxe: Fix Kconfig dependencies:
-To: Arnd Bergmann <arnd@arndb.de>, Dongcheng Yan <dongcheng.yan@intel.com>,
- Arnd Bergmann <arnd@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
- "laurent.pinchart" <laurent.pinchart@ideasonboard.com>,
- Umang Jain <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250314154738.3983798-1-arnd@kernel.org>
- <ecb959fe-69e3-4265-9e4b-326bff421153@intel.com>
- <3bb730a9-5d8a-41c6-8a27-e099561b5890@app.fastmail.com>
- <0eb40ff7-7123-477f-a477-6d537195346b@xs4all.nl>
- <9586ec8a-ea48-4586-89f1-3ff118809223@app.fastmail.com>
-Content-Language: en-US, nl
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Autocrypt: addr=hverkuil@xs4all.nl; keydata=
- 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
-In-Reply-To: <9586ec8a-ea48-4586-89f1-3ff118809223@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
+ <20250429-vec-methods-v4-7-dad4436ff82d@google.com> <2025042925-kindly-squash-fa6f@gregkh>
+ <aBIIZ64_Wsk1unB2@google.com> <2025043045-overbuilt-swab-5b65@gregkh>
+Message-ID: <aBIUUs4AWTII2bcO@google.com>
+Subject: Re: [PATCH v4 7/7] rust: alloc: add Vec::insert_within_capacity
+From: Alice Ryhl <aliceryhl@google.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 30/04/2025 13:21, Arnd Bergmann wrote:
-> On Tue, Mar 18, 2025, at 14:51, Hans Verkuil wrote:
->> On 3/17/25 11:32, Arnd Bergmann wrote:
->>> On Mon, Mar 17, 2025, at 11:17, Yan, Dongcheng wrote:
->>>
->>>> So I remove this select flag and passed lkp build test in patch v7.
->>>> But now it encounters build error again, I'm curious why...
->>>
->>> I don't currently get any more build errors with my patch
->>> added in, and I think this should be sufficient. Can you forward
->>> me the errors and config you get with my patch?
->>
->> FYI: I plan to take Arnd's patch tomorrow to be in time for the merge window.
->>
->> If more issues are found, then they can be on top later.
+On Wed, Apr 30, 2025 at 01:39:03PM +0200, Greg KH wrote:
+> On Wed, Apr 30, 2025 at 11:24:23AM +0000, Alice Ryhl wrote:
+> > On Tue, Apr 29, 2025 at 05:30:06PM +0200, Greg KH wrote:
+> > > On Tue, Apr 29, 2025 at 02:44:27PM +0000, Alice Ryhl wrote:
+> > > > This adds a variant of Vec::insert that does not allocate memory. This
+> > > > makes it safe to use this function while holding a spinlock. Rust Binder
+> > > > uses it for the range allocator fast path.
+> > > > 
+> > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > > ---
+> > > >  rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
+> > > >  1 file changed, 39 insertions(+)
+> > > > 
+> > > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > > > index 0682108951675cbee05faa130e5a9ce72fc343ba..998afdcde47bec94b2c9d990ba3afbb3488ea99e 100644
+> > > > --- a/rust/kernel/alloc/kvec.rs
+> > > > +++ b/rust/kernel/alloc/kvec.rs
+> > > > @@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
+> > > >          unsafe { self.inc_len(1) };
+> > > >      }
+> > > >  
+> > > > +    /// Inserts an element at the given index in the [`Vec`] instance.
+> > > > +    ///
+> > > > +    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
+> > > > +    /// of bounds.
+> > > 
+> > > Why panic and why not just return an error instead?
+> > 
+> > It's for consistency with stdlib. Illegal use is panic, expected error
+> > conditions are errors.
 > 
-> Not sure what happened: I see that my patch was in next-20250424
-> and earlier but is now missing again, so the link failure returned.
+> But this is the kernel, not userspace :)
 > 
-> It was in git://linuxtv.org/media-ci/media-pending.git at the
-> time along with two more patches that are now also missing:
+> As you can return an error, why not?  Rebooting a box should be a "last
+> resort" type of thing when you can not recover from an error.  You can
+> easily not overflow and return an error here, so why do you want to just
+> give up and cause all data to be lost?
 > 
-> d51adf038ebe media: cec: tda9950: add back i2c dependency
-> 118b34092e37 media: i2c: lt6911uxe: add two selects to Kconfig
-> 0dce5b44bd38 media: platform: synopsys: VIDEO_SYNOPSYS_HDMIRX should depend on ARCH_ROCKCHIP
-> 
->       Arnd
+> And I don't see any other panics happening in this file, so would this
+> be the first one?
 
-I believe Mauro is working on preparing a PR for 6.15 with these patches.
-They are here:
+I don't feel strongly about this method, but it's not the first panic.
+The vector type has an indexing operator vec[i] that panics if you index
+out-of-bounds.
 
-https://git.linuxtv.org/media-ci/media-pending.git/log/?h=fixes
-
-Regards,
-
-	Hans
+Alice
