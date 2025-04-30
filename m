@@ -1,134 +1,217 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A75CE26462A;
-	Wed, 30 Apr 2025 16:45:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72134215060
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031544; cv=none; b=hToNsxoIVTPFo4DsmpC/dQlcv3f+9iGc7V5qygTEG1seH/olTwZhjHFG7VWMwlfe+l6OsaeC0EVFdKc70ysb8wVZS9xuwthSiF2JIem8R5EM05PCKLEw51MbjkfMCF7/bw/6omzXB3GEbKC7tBLc4tejHrWkCKx+U72jiI2vC9g=
+	t=1746031585; cv=none; b=e5CGHyRdrg5gQxQO7Qjips/X7E9SCdeIWwB8l/7zjclAT0h3VlHMl99fDc7d0hl7ke/nlHld07sD5xbnB6Gz29zbaMJuRUQvnERq2MfPMDFpmhxSFh/iglavcAJzPsYn/bZO7TNtbjU9DEy5usCGpdcE5GG1YlhQFrTXRlUVHTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031544; c=relaxed/simple;
-	bh=B+6epQmRu6aAM29sRnHSJHrCA+DIUmhRfWz0R1Ej17U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pH4LWU11ZCEgLsmtxoPfr23ppwYLeHeBCjzH6xpQnguO0Cn73SN8sKGtLMSeUojySJqCs/5fVWIAUCD+F/vNZyuXu7VMT8swj1GTfc7++MhoCE297Tj9Spl/GkucKAXLqT8vby1D2bQvsGnJKAW2m7smHtllTHCnEJrGH9FTa7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UkQwzLdS; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746031585; c=relaxed/simple;
+	bh=pMlBRncKSdCK24VTT995PN/XIsoTLwggdROEa0Zb3s8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D21nHdRo6BxTOElOf3KsFtNXZ7qTX6tm4EfRLC+Xhzxe9vD6aYYNMid6xgNU6AfUY5hNEuaAaGAsLPLFUKk7VYbOLIQ9ywqZ1Q/y4tQJDyYqiLRf+knYyvtsAO7uSJz2RUu7GZWn6JnHcXFnHj6A2QGybdw8WGj11dAhJhunT1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vO4hOzGT; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UkQwzLdS"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so9465095e9.1;
-        Wed, 30 Apr 2025 09:45:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vO4hOzGT"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-51eb18130f9so32104e0c.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:46:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746031541; x=1746636341; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wjRXEWIFTqTSwI6s8gL4rcvQiMkOK5OYlEpGCyQUo30=;
-        b=UkQwzLdSi5fKFp/T7J/apcTZBgvxkv7kZb0zVw0swPD34iXgSjJkDcM6KcZlQVs5Oi
-         Ra8qNctpK4l5TaP+kTH/gn3Tx7rBBnRFmWQd3/peNPTv2wbFf7D4Ect8DJSSJqJvBosx
-         fndNax4Eux384VmORKhNjFl05pIChvya4kNVrYR36z+KcOBM1M2Ti4h9fr0872DqOeNv
-         JSr5sIy8q5cDHqsaRseEzxBuY7hCGE/FYC4sSqYrKz0/0vQhIlTrFGuW9HG10cIgrY2H
-         mmF9tSWYbQ5uKIRK3M6Jkkkk5zBsM+Rvb1TtP+JZCcWjHr5FLZ/VVgdPn+1zCpjpa6IZ
-         VSXw==
+        d=linaro.org; s=google; t=1746031582; x=1746636382; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q6QQATCJnAni7lD26HoQnyvx3aPp8MUfzUYQFXvsgnk=;
+        b=vO4hOzGTayZ3yaTaxnUhivygP4ecf1Yz9WYl8Vok5SnNUW9AqiBC/TaeHIfaQhDTWB
+         I9ZDNqXJ9+GgYih3XbjPpUPmfVFYT7MogpInDTrvlEYJGZqqJ7g0HqQCvi8Xv1yGU3D5
+         YeQ6Rh4uaN030jMK9D85jFMz8lhU1Jny5X+gfKSn1RE+UkAoF2L0KrRPTmRYpIcOL4xS
+         OPZNRYyEIoW+u279D5z3m1AjfIy+ykzE2Un9QOqsyxPnJHWA3j65GAIMSAjaINdVT86I
+         LCIHGZS3kv4y2K4ApadIe6vnlIICASI4qk1E7UO8sIggSTceAymPwwDAckPE4dpM/nEw
+         T5rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746031541; x=1746636341;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wjRXEWIFTqTSwI6s8gL4rcvQiMkOK5OYlEpGCyQUo30=;
-        b=eN4sG3NaoBQFK+211F2FJwXC8BfvZb9iBgkCu8mg/yAL6y5i+/jzpmI7RVpR+oOin8
-         iedYENMgkhyfkKSfgtCXCRKVR6difYveACOZyVhHvhP2SwAiLSAolTD9NXgfG/ajLF+s
-         4f5tJzKQcFP9mzIglQ8FQ/zsDtRx04beXilMMoJvwPKLcflx994ZpMFoP+Wf8wYIiYe1
-         iC7abrtvH6A7BygeWPohjUVY9Ih5Em8XknZfX+GiSexzS85VwDVhDnH0I/kCIMKmQudS
-         RDRxiKv6iGGZwM3x/D/MEpZBAz0rLuSEIYZrWBBvkI8NBUjxggthJsuemo93ev2c308l
-         o5Tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZQCbN+2S+LOQW1anuec1IwkQLwjU7AKL6XgxwEQzeZTeWY3qgEsDaSPi7lxJHDQxXsPHreTWncXRKK/IpNzQ=@vger.kernel.org, AJvYcCXYH9isR/6Mpl9O1iQdYBws9Ykt7yqRrjjxDvrMy52cskA0x22afBd8jlmSpazAYsRjTYgKuZG4hT20k/o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxU9GquzBc4wOTU7YgpTUlTMX0oHy6r7AtSEHlnKoIhxnMmMc5X
-	mf+sv2hJxc42Hj9IwLJByeirzwzZx/zTyN/j2OSlGKgX7CUEyawX
-X-Gm-Gg: ASbGncsy+Sns/ruQMQYmz1OPP5nYtWA5t+7zDs/vATvM7S/6hKHzClwHZXxd7fHL8Ep
-	zVAEM1bYl+bncaHn8G8gCvGUmp7dgWPnrIXiCblIjdYiSKj8omy1W5f+/smVte9fwH3Ob2SxzE+
-	81UYDwsx6vQ+dfpx56sc/oSU02qNS1dB1WCaTrVb/sZUZqiNOVUx+NBx4L2xGxyhu8FuT6as54/
-	qaR7dS6pydN44YxiGD1T2IiA4vL8qY/Z7sWmyEDCiY7ddCo9z0hw702jNt1379s1OgAcuBIgDo/
-	URc81RXiuycSGOV6rop8pOD+bwjLfKtc6RhMFvdUWhQGXeAIaWH1+w==
-X-Google-Smtp-Source: AGHT+IE2aMt++LC1H0+BWMSupUM1f7yZvyDXar+UBiQyNWKI+kWeQ6zYt4S/IzAeep+Ms+FjfOs/bA==
-X-Received: by 2002:a05:600c:698c:b0:440:6a68:826a with SMTP id 5b1f17b1804b1-441b5cb1dedmr1501205e9.13.1746031540814;
-        Wed, 30 Apr 2025 09:45:40 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad7688sm31328575e9.3.2025.04.30.09.45.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 09:45:40 -0700 (PDT)
-Message-ID: <4ba59b40-7842-4ff3-8ee2-cfa5aa8002bb@gmail.com>
-Date: Wed, 30 Apr 2025 18:45:39 +0200
+        d=1e100.net; s=20230601; t=1746031582; x=1746636382;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q6QQATCJnAni7lD26HoQnyvx3aPp8MUfzUYQFXvsgnk=;
+        b=SaLyL88Wkj427IrLBaimcyWculbGbWgopL+cxAOfHV12QeL8EcVHd8l+a9iSp96C/g
+         daxPS26wSsZp1jAhV4dbmIBNVMVZXGSGAKXKx0+M95xHxmT/W3V80iwm7+sAhNNf9svX
+         Hjw5NwO9TSZu/BQbL6mwR1THx9gmc/04Jx/7g2QXa8L8+6pJxAovXniu2hHboO4j93Hn
+         7x81ZZ9iyqEuINZIbAK8c96v1m+5bIcQIIMCcd7Uez4pcaS5kRlFWkQKAOHDT+7cTGAs
+         XOY9dOs/fk4YSKSEnEvE45T1ZzB0xhOxvTlLjqAC5lYBaXtEFa4txe4KXzamYuPpn1Cd
+         9k3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWy4gDfdy0DD6e181iIzCPxsz7Ed6b0Vp/B4JQ+LGQfF1byu4zjE/DhTVpu7FNDF+DZkFo1wjMUe+cp81k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBDgNrc8+UZUHR6AtHDvr6nhnS0iU6aUTwgZHyycVbOBndD94j
+	gtB8n5V3IYW8eaKVzOLYv4wI+4MtPM1t1Xv1X2cQckfncMPRD9YfDhYPN3/Z5FoJISIebEjYS6y
+	M/mY+5Y08pEPQrKhPS1OboLVppA4QgsZd1KLflA==
+X-Gm-Gg: ASbGnctiIeU7T3GIiqPvxiuZa6AG8W7qPeYQwQc9XRBHzdI54y84vycHevPDGnBGtjX
+	IBO/O9WjsziASYT3F1xMd6VI2heoNKZDFHoET6UixR+i7kK0jZBK7l4r62nNl3t9+LQkRtsCMzm
+	9TfHmENbQ957Rkn0F+wIQ03iWLjkkIXdVhOdJOYWYNbD2EE1JU3bngbRQ=
+X-Google-Smtp-Source: AGHT+IHiKsaa/9PupeVMqWQM2qFCut1F3R06PIZ50WdJGmP1n5qFLKYdVGXrnFfD3AEl2/STGwJf72ayeOa3zrci/kk=
+X-Received: by 2002:a05:6122:310e:b0:518:965c:34a with SMTP id
+ 71dfb90a1353d-52acd74d8dcmr3700062e0c.2.1746031582213; Wed, 30 Apr 2025
+ 09:46:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
- <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
- <aBHrO_hE0CEb0Wfw@google.com>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <aBHrO_hE0CEb0Wfw@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250429161049.383278312@linuxfoundation.org>
+In-Reply-To: <20250429161049.383278312@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 30 Apr 2025 22:16:10 +0530
+X-Gm-Features: ATxdqUGa_QPS1XzDQeZR0E56worKFlQ0tfYA7of30Zy7JIE3lz7xhvChppL1Glk
+Message-ID: <CA+G9fYt-Z+4hhQFNCu=RdsK5A4AXWBm=_FANVdd2NziNjWWTQw@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/179] 5.4.293-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 30.04.25 11:19 AM, Alice Ryhl wrote:
-> On Wed, Apr 30, 2025 at 10:36:11AM +0200, Christian Schrefl wrote:
->> `UnsafePinned<T>` is useful for cases where a value might be shared with
->> C code but not directly used by it. In particular this is added for
->> storing additional data in the `MiscDeviceRegistration` which will be
->> shared between `fops->open` and the containing struct.
->>
->> Similar to `Opaque` but guarantees that the value is always initialized
->> and that the inner value is dropped when `UnsafePinned` is dropped.
->>
->> This was originally proposed for the IRQ abstractions [0] and is also
->> useful for other where the inner data may be aliased, but is always
->> valid and automatic `Drop` is desired.
->>
->> Since then the `UnsafePinned` type was added to upstream Rust [1] by Sky
->> as a unstable feature, therefore this patch implements the subset of the
->> upstream API for the `UnsafePinned` type required for additional data in
->> `MiscDeviceRegistration` and in the implementation of the `Opaque` type.
->>
->> Some differences to the upstream type definition are required in the
->> kernel implementation, because upstream type uses some compiler changes
->> to opt out of certain optimizations, this is documented in the
->> documentation and a comment on the `UnsafePinned` type.
->>
->> The documentation on is based on the upstream rust documentation with
->> minor modifications for the kernel implementation.
->>
->> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
->> Link: https://github.com/rust-lang/rust/pull/137043 [1]
->> Suggested-by: Alice Ryhl <aliceryhl@google.com>
->> Reviewed-by: Gerald Wisböck <gerald.wisboeck@feather.ink>
->> Co-developed-by: Sky <sky@sky9.dev>
->> Signed-off-by: Sky <sky@sky9.dev>
->> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-> 
->> +config RUSTC_HAS_UNSAFE_PINNED
->> +	def_bool RUSTC_VERSION >= 108800
-> 
->> +#![cfg_attr(CONFIG_RUSTC_HAS_UNSAFE_PINNED, feature(unsafe_pinned))]
-> 
-> Actually, I missed this on the first look. Where is this feature used?
-> You only have a re-implementation right now.
-Was just a leftover from the previous version, removing the feature and
-config flag (to be reintroduced once we want to use the upstream version).
+On Tue, 29 Apr 2025 at 22:16, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.293 release.
+> There are 179 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.293-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Cheers
-Christian
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 5.4.293-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: d5e62da0f6d50c9412ef6220500b5c0c886d081f
+* git describe: v5.4.292-180-gd5e62da0f6d5
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.4.y/build/v5.4.2=
+92-180-gd5e62da0f6d5
+
+## Test Regressions (compared to v5.4.291-155-g7a5af469195f)
+
+## Metric Regressions (compared to v5.4.291-155-g7a5af469195f)
+
+## Test Fixes (compared to v5.4.291-155-g7a5af469195f)
+
+## Metric Fixes (compared to v5.4.291-155-g7a5af469195f)
+
+## Test result summary
+total: 53398, pass: 34036, fail: 8725, skip: 10462, xfail: 175
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 130 total, 128 passed, 2 failed
+* arm64: 30 total, 28 passed, 2 failed
+* i386: 19 total, 14 passed, 5 failed
+* mips: 25 total, 22 passed, 3 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 26 total, 21 passed, 5 failed
+* riscv: 9 total, 3 passed, 6 failed
+* s390: 6 total, 6 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 26 total, 26 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* lava
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
