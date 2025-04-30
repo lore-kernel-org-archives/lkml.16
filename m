@@ -1,142 +1,170 @@
-Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5E32AF11
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C604E3B2A0
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:16:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040383; cv=none; b=Kk92MmeUZdmY7zdMc1r9428LuqBIRv1mEFwkMz2IxoXh7YvnYDcYnyv7soON/Hva5p0wfT1CRiROoamgQKh+GTt4Umhyep3TjB/K5Q3vmuaLyby5jlrQ39HZJLz6HR4WNNqUxTlycT5gLNa9DbKcdrwofttvSU4wLzqd0p9O3yg=
+	t=1746040621; cv=none; b=h+VHQE54rFx9fgYyNMLmrIfzWe038JHXI+y3N8iKbCdTUFFZ5aAB/sSsRfOpGFmZWoCJe6DYBRaJA9l2UXAOZz9w/essJXWWoDsbrY/79ndsAruvmRO+tWqAE2zfqpcm/SclavO1R8/qdiU3eOYYBihB0gM01e7gRJGULgRuYT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040383; c=relaxed/simple;
-	bh=8u2Vwur6/brL3MS2FHrCrNTlIXuPRTf7Ks62Bc4eSHc=;
-	h=From:Content-Type:Mime-Version:Subject:Message-Id:Date:To; b=gOfiFHVhGpgbeRW3aLoXBGvS3H9BHeST4sfkCXPXh3Ovwj3b39U77j0NOr8K5z7Ja8FP7HF0YHeBjSJX/5d7jepBSpNa4e6pcFXqmfZDE0WaVjSbP+zG33qAOyWn/zWUC2+ttcywA0iaWKDoL86saV/KjZRcOEbZvfEVCY1fjbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CVvsfSqF; arc=none smtp.client-ip=209.85.166.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746040621; c=relaxed/simple;
+	bh=Mzmquvf7LtMgiAFwuTVlEEXVwfoajArsBFRVJZgRlvU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=cocUqlisQzzuTps5EC/+7vHJEUG0oJh1sOR7nB4+ZvuX/LGyuxD1tDtfOvXVStHffbYtLwWv7lCKByHfbyGdd3EjVcB3KFmt6/bUquGLO/Hh/WGvUNG5tUQ3mH3kfBtpOhF1SuqpOMPBY1ah+fiE9dNPe+bMdbUCc7Iz2TteIr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=l3xihCbD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WPDe6rmx; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVvsfSqF"
-Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-864a071b44bso6364839f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:13:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746040381; x=1746645181; darn=vger.kernel.org;
-        h=to:date:message-id:subject:mime-version:content-transfer-encoding
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=199CSFgta0xKw+hoIN2eQo8Kj/2jEx9+QEyE1jBow5M=;
-        b=CVvsfSqFCuo562uDD4UjjQW5ldrXQfUejASPvnhcZmWPp6CFEJGgeMFfwuU2ExPtiG
-         WOP+R0ZerPc3I/cf+SZVT9kRown4V2JT33+UFubltHqBf98yNHrm+rSXG54xXerXbHTg
-         uduw+LvXgjhOFJsJKFwO7jO4uqwKq5Yy26517O9HJRYFcex7yx75kRgBh7bi5rfr8m5v
-         QTbUiJ/33s0ICoeQ091c2N9z0SiEd5yWQHU1UwHI5LcnrqJJKx3hBorS+cNyybuhucAn
-         DXGG2bWeXZoqphZHBofA1A+WFpicLY327zp9OkT8zOAcUvq1wixfJ5EBpqshGb5ToKG0
-         Q+bA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746040381; x=1746645181;
-        h=to:date:message-id:subject:mime-version:content-transfer-encoding
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=199CSFgta0xKw+hoIN2eQo8Kj/2jEx9+QEyE1jBow5M=;
-        b=agnd/Y+kPTRwGKtA7yc/9vw/gFABufB5gEvJvY2kwVu9rISyvISGQHKTIrh/xc+5f0
-         fB1CqFdyOM3O15NJUN9wegylFSPppD8ZnM4D0ZG4irxHFL5qOACDOh0y/tYYIAt0Sma8
-         8LCEeSBq8SkzbPhrnIb9jfa8d0d9t5dNuxYrDsgvrO83doQbU0pXjIvA22lLKgfKR+mI
-         Ij97GzoZdg0OMaiCB+AcOuRiT6Wa5maJ1rRLZ8I9n/0ELsJaoLS6UIsKOoRjGQDiyzm5
-         KneM9AxImhKZPgUOwYJq5j/vGRzCZwIv7k6NC7vxeb9HL55yBcWp/jNTaQYaAhJhGfwf
-         jCWQ==
-X-Gm-Message-State: AOJu0Yw9JmDuN2P0FMoINCzzF6J4Ver9bVrXWOZsd0MxSCzgASLU34oL
-	LZRNJN+WM8akExRIAU2cski55tWApivQOpPW3cXOxqKTUExpvasuZTLp0w==
-X-Gm-Gg: ASbGncv5xLZFl1SwKNbYYGM6jkeeo8ECq3/tk07hl5aep+gQkydBqKFfuCdNC7Xy6Ur
-	p/7WKe90BP7nXlot/JvOJO+SbmEqZtQb2Q27Nyi4JE7zznoOHh1H/iYQ5+EUcSQDKfRlyHwOOLl
-	eoO4Ws7A2P75dTEs+FQtGK7tlNDg+HZ3VZPIH6GWQTfWwdcwGU/eQoGxeB9v9qCWAlkjTIAtaNZ
-	ElK0lx6qB7Q9NwlRvTMlC/ysp+lbLIMhTiz9+wMjK2RuFbkWu6Qv8w3Z5MfTdM/ca6pQlCBCV/W
-	lmaMWbZi3YThb06h7p30X+uC4+Se5exBoggqL5MDlXd4kkv2O043NUmVh0wZjA==
-X-Google-Smtp-Source: AGHT+IEbeG+qTsoD4CbJwo11zS3gVkhg0nlBoTkQXiUXbn4HCuco64dMdJaxWgaBtGcBxL32fOu60A==
-X-Received: by 2002:a05:6602:2744:b0:864:48f7:56aa with SMTP id ca18e2360f4ac-864a22378dfmr51897339f.7.1746040380538;
-        Wed, 30 Apr 2025 12:13:00 -0700 (PDT)
-Received: from smtpclient.apple ([2601:647:6700:543d:1411:931f:60b:116e])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8648c09c2c0sm80391639f.35.2025.04.30.12.12.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 30 Apr 2025 12:12:59 -0700 (PDT)
-From: Thomas Haynes <loghyr@gmail.com>
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 7bit
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="l3xihCbD";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WPDe6rmx"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746040617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DdMaZNWu4fq0iykzoFc0UbPlCGvg4LzeewKoTcB+Q0E=;
+	b=l3xihCbD010C/ezfMGQLsYjwu40X59Wrka1MzDeIklw2VJbWPZ7R34ld21sBZCc+js2Si0
+	kA9cTaUl1Bgomo+91hq6KyC8BcXeFznbWacYCBVUl7bphf3plz8VdK2iEYgfi6+ulQLDxp
+	ZCznvSxM/YKNm6U53VMSY5ewZo/onBMfmhmAIcDLNQuKB/HRajnF5nGrzY+OLnfIWarwlD
+	SoQc7sIKpiAPHav/BFDWO0QlR9s5YEDvp9uaRA5F8B8ZfxrnyQoyKG+976PUWKhQ5VF0rY
+	gqT+MgAXqrs2DpYJH5dWyTF3nVzT2HgVlAcVO1eEcOtH55EataVww3FD8sfVHg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746040617;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DdMaZNWu4fq0iykzoFc0UbPlCGvg4LzeewKoTcB+Q0E=;
+	b=WPDe6rmxWOsdaZ1Fvy8fYpR1+6aGqAnpDr1GL5Dgv5MskgEdHqCpfqQRRn4g905FeqILNh
+	bVRZ+9sqdd1g2dCw==
+To: Borislav Petkov <bp@alien8.de>
+Cc: Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>
+Subject: Re: [PATCH -v2] x86/microcode: Consolidate the loader enablement
+ checking
+In-Reply-To: <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
+References: <20250406164049.c0666bc18073e3b88c92d1f1@ombertech.com>
+ <20250406174633.2c581923c145687476191753@ombertech.com>
+ <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+ <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
+ <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+ <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+ <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
+ <20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local> <875xjcteq2.ffs@tglx>
+ <20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
+ <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local>
+Date: Wed, 30 Apr 2025 21:16:56 +0200
+Message-ID: <87frhppihj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: [QUESTION] io_uring: Handling -EAGAIN and potential duplicate
- submissions
-Message-Id: <D74C05BD-EC64-4A24-B7D8-E126056E831A@gmail.com>
-Date: Wed, 30 Apr 2025 12:12:48 -0700
-To: linux-kernel@vger.kernel.org
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hi LKML,
+On Mon, Apr 14 2025 at 11:59, Borislav Petkov wrote:
+> -static bool __init check_loader_disabled_bsp(void)
+> +bool __init microcode_loader_disabled(void)
+>  {
+> -	static const char *__dis_opt_str = "dis_ucode_ldr";
+> -	const char *cmdline = boot_command_line;
+> -	const char *option  = __dis_opt_str;
+> +	if (dis_ucode_ldr)
+> +		return true;
+> +
+> +	if (!have_cpuid_p())
+> +		goto disable;
+>  
+>  	/*
+>  	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
+> @@ -107,17 +109,18 @@ static bool __init check_loader_disabled_bsp(void)
+>  	 * that's good enough as they don't land on the BSP path anyway.
+>  	 */
+>  	if (native_cpuid_ecx(1) & BIT(31))
+> -		return true;
+> +		goto disable;
+>  
+>  	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
+>  		if (amd_check_current_patch_level())
+> -			return true;
+> +			goto disable;
+>  	}
+>  
+> -	if (cmdline_find_option_bool(cmdline, option) <= 0)
+> -		dis_ucode_ldr = false;
+> -
+>  	return dis_ucode_ldr;
 
-I am using kernel version 6.14.4-300.fc42.x86_64 and performing RPC
-handling of NFSv3 requests in an user land server.
+This return here is confusing at best. The only valid return value is
+'false' according to the above logic, because nothing modifies
+dis_ucode_ldr and that must be false according to the top-most check,
+no?
 
-I'm working with io_uring and have a question about the correct way
-to handle -EAGAIN from io_uring_submit(), specifically to avoid
-potential duplicate submissions.
-
-I have a submission loop that looks like this:
-
-    for (int i = 0; i < MAX_RETRIES; i++) {
-        ret = io_uring_submit(ring);
-        if (ret >= 0)
-            break;
-        if (ret == -EAGAIN) {
-            TRACE(write_fragment_trace,
-                  "Context=%p resubmission %d", (void *)ic, i);
-            usleep(IO_URING_WAIT_US);
-        } else
-            break;
-    }
-
-My understanding is that -EAGAIN from io_uring_submit() indicates
-that the kernel's submission queue was temporarily full and the
-submission should be retried. However, I'm observing a behavior
-that suggests a potential for duplicate operations:
-
-  * I submit a request.
-
-  * io_uring_submit() returns -EAGAIN. The SQE remains in the 
-  submission queue.
-
-  * I retry the io_uring_submit().
-
-  * Eventually, io_uring_submit() returns a positive value.
-
-It appears that both the original SQE (from the -EAGAIN case) and
-the SQE submitted in the successful call are processed, leading to
-the operation being performed twice. It also leads to heap-use-after-free
-after I release the associated memory after processing the first
-CQE.
-
-This raises a few questions:
-
-  * Is this behavior expected? Does -EAGAIN in io_uring_submit() 
-  imply that the SQE may or may not have been partially processed
-  or queued for processing, even though the submit call itself
-  failed?
-
-  * If this is expected, what is the recommended way to handle 
-  -EAGAIN to guarantee that each SQE is submitted and processed
-  exactly once, even under temporary queue pressure? Should I be
-  modifying the SQE or the submission queue in some way before
-  retrying?
-
-  * Are there any specific io_uring setup flags or other considerations 
-  that might influence this behavior?
-
-I'm concerned about the potential for data corruption or other 
-issues if operations are performed multiple times.
-
-Any insights or best practices on handling -EAGAIN in this context
-would be greatly appreciated.
+Something like the delta patch below makes it way more obvious and gets
+rid of the ugly gotos as well.
 
 Thanks,
-Tom Haynes
+
+        tglx
+---
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -84,6 +84,9 @@ static bool amd_check_current_patch_leve
+ 	u32 lvl, dummy, i;
+ 	u32 *levels;
+ 
++	if (x86_cpuid_vendor() != X86_VENDOR_AMD)
++		return false;
++
+ 	native_rdmsr(MSR_AMD64_PATCH_LEVEL, lvl, dummy);
+ 
+ 	levels = final_levels;
+@@ -100,27 +103,25 @@ bool __init microcode_loader_disabled(vo
+ 	if (dis_ucode_ldr)
+ 		return true;
+ 
+-	if (!have_cpuid_p())
+-		goto disable;
+-
+ 	/*
+-	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
+-	 * completely accurate as xen pv guests don't see that CPUID bit set but
+-	 * that's good enough as they don't land on the BSP path anyway.
++	 * Disable when:
++	 *
++	 * 1) The CPU does not support cpuid_p
++	 *
++	 * 2) Bit 31 in CPUID[1]:ECX is clear
++	 *    The bit is reserved for hypervisor use. This is still not
++	 *    completely accurate as XEN PV guests don't see that CPUID bit
++	 *    set, but that's good enough as they don't land on the BSP
++	 *    path anyway.
++	 *
++	 * 3) The AMD specific patch level check succeeds
+ 	 */
+-	if (native_cpuid_ecx(1) & BIT(31))
+-		goto disable;
+-
+-	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
+-		if (amd_check_current_patch_level())
+-			goto disable;
++	if (!have_cpuid_p() || native_cpuid_ecx(1) & BIT(31) ||
++	    amd_check_current_patch_level()) {
++		dis_ucode_ldr = true;
++		return true;
+ 	}
+-
+-	return dis_ucode_ldr;
+-
+-disable:
+-	dis_ucode_ldr = true;
+-	return true;
++	return false;
+ }
+ 
+ void __init load_ucode_bsp(void)
 
 
