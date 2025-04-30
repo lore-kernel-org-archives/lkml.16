@@ -1,238 +1,221 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EFFC2110;
-	Wed, 30 Apr 2025 16:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746030130; cv=none; b=PWnMQxsWhqE+pfuTfA6f4wIh29wYp5ewPc0ilcxF4qERgIEgPypDInHiFyJNAuqLPl/fMsdMLEmEbpRoMfTpSmBYUebE4+61ZjDeOahSptAhR9ruPq3Nl209VtZtpWNCJ7rZIEzfFT+FQTbbuMFGzFhZar/FSiZRqCOBCz1tQyQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746030130; c=relaxed/simple;
-	bh=UFeOnbIz3T1QSHiDq7P4ewiS30rbMB8EppuUEFRXqDU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NacLAojjdfOMocNtb2VW9btpbhlPbXF94uCmR6Qwx8k9208AmuWS3yIfJyq6i8wC39CWlNM4zmsJ0CsvhQ06ba5Jij+RaFV+yyLfbSEGKLVLahYhOUyKv3lsSlAFdSaWC7XJMDv61ddH53wityz4l7/3RxuzcGIxa8cj2n4FJZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=EYAqFnbe; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0812DC769;
+	Wed, 30 Apr 2025 16:23:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746030239; cv=fail; b=CJpFCjOu8wUDyWDNIYJOtdX371K5JqwTTrPN08EN41hkUKHfLxSJsSC36KgF3muAXZotKNw7bo9Qxcb9MIM6TFNn1fqfQn5qqvdZolIn6ER4PfzRYG8oFuUt8RqGPU4UzUNYGSQXlCz0Kt0oF9TTpNxLyd3tQYqtcVndUvXWklA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746030239; c=relaxed/simple;
+	bh=ab+9E3BTUlxgisNkLT2KxUiMOOtYkLs0p/3v1IBtyBQ=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=t3kujS2Qb2c3lQRO3vXpZiJiIAhr6NCsdzzNvKvOm/9DAN4aCwsFkHJXZs8TAyezbwEcM7RTQnpsOvs8q/+4NNRJKZIBzJBCLGu+QXtO24V4A4Z/abM9FSaJpdq4hTDCCoGEakvZEMrkrTStb/bueqBRBiIinh3Lp8h4rETlRC0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AeBSmARL; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=P3eHMMYU; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="EYAqFnbe"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:From:Sender:Reply-To:Subject:Date:Message-ID:
-	To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=0d7WLnl504sekXp0Nz/5l4ROh+QwmTFgFcPUq5zV4qI=; b=EYAqFnbeHkkGbH8FLCZGX7i3DX
-	uzB8Ml2z5AYNI/gq9ruDXmaWq0k4PyDEsGasyE32JxeHq32PTtKWc85aWIbChIZL6KTmBw0Hkt9Ed
-	+0apX4ByU3Y8Hn9NQ4aKPO5O45HCGll0IYepNB3S0UQ2fToI6GPGmZY/Z0g69gbyP6NU=;
-Received: from c-68-46-73-62.hsd1.mn.comcast.net ([68.46.73.62] helo=thinkpad.home.lunn.ch)
-	by vps0.lunn.ch with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uAAC9-00BFer-4j; Wed, 30 Apr 2025 18:22:02 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-Date: Wed, 30 Apr 2025 11:21:35 -0500
-Subject: [PATCH net v2] dt-bindings: net: ethernet-controller: Add
- informative text about RGMII delays
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AeBSmARL";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="P3eHMMYU"
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UFMwgZ017727;
+	Wed, 30 Apr 2025 16:23:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=2Ur0kWLjV6IEUYeIGqVKSlMbbDeoBTGIPH5G+utVUDs=; b=
+	AeBSmARLBA0/i1K1/HdshqRXwAIOrQz/C4Q3bwLvTiGxTx3VR3X3NiwZWaBONXYz
+	YCHSTroRtCehazPttil40P+hncSha4doIST1rPPgMkdJoA2Tz80KbvL7VMrvBO6V
+	DZiy/fia1FQuVXfEJeXEXHIEjBRPynyVJLbbWDE+jAmp4ytWllRZMKWMC5G8KhKg
+	jBwmvcrU8odcVs0De9Q0XSBq/wsZ0FuJo/PvgtIxmoNbqDBmv291S69tzjnfkQ1o
+	T37DXPUzINgA9bsyjZafdV4mbKVzZYVPt4ZiQXfPIDt4Z9PmU+6ZjGHE9ps1hlmP
+	qzLFcTLDoQLU/1H1j3a9qw==
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6ushkn9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 16:23:23 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 53UFdlFK033376;
+	Wed, 30 Apr 2025 16:23:22 GMT
+Received: from nam02-dm3-obe.outbound.protection.outlook.com (mail-dm3nam02lp2049.outbound.protection.outlook.com [104.47.56.49])
+	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nxbhqet-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 16:23:22 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Yi9eYPxP+hBy2AIuycM4B5B3BBQUg487DXx0T0kORJ6m9a5hCbmFPJtY/3O+AyCM6A1ko8wSfTygrH59ciVJxSgNLrPjflFWPSq3QzBmxQLR2H1qgy9cZgOLlKQI0+0RNKgOiia47WVIYaYRpTxwwAFkp3tUqztM+JLBEvugU4GElFz3smZYjAmc11t5F/Dm+l2ULbcW3ZBU0/w3hrAgMpE5nJhcxqa2xWJCt/hPPmDc9OAnU2ZwqWM4bI+4oRDwynmXOlHNJFcPUvg4CWzrbKgIOvs67HqLdCMPOW4dS7s+uVYbIwHHuB2S7x/PAVUheZCXMJlhEsMz8e+rgxtqLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Ur0kWLjV6IEUYeIGqVKSlMbbDeoBTGIPH5G+utVUDs=;
+ b=FU8hmf19Vb/qnS+Ni3vUiWNTToPtHEOHwpkqZm6XYPpUl7dsOY0Whx47JJnXk13F1uXjQ+bm2vlnVJohna3bXGFq9fGa5FGe9Hk9/MPTJDkmCdhJ3zyrHdpjAM9cctscNbJR4+kBb5jIfCf6S1iWQR2E3l04tdw/PY95/IgyuHR+7S8qp5z4n276z3AZv4SMsPTqzamWihxXiJDwhst+14nhY8ifDXQ23FaZqUDdTgYHF2zc6xeP7D5beGKcTPkE3h3Vnly+y939y1ec9PlVDO7PJKHkzc3CrCpbdKIox/PI8Wl+p1Zm2x8BPQYj6pIxS40kjDbyhDPdi2sduPQ6VQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Ur0kWLjV6IEUYeIGqVKSlMbbDeoBTGIPH5G+utVUDs=;
+ b=P3eHMMYUekaeswieJ1V8kINlLnXEfIRSj4W/NfFn8JFDOvBXAYW6glO2PqEtxVMwTCiRamvAFhSuO91BiKMk+v1b92oI9DLKk2eXYBlpJ723J0UyN5BRd8LNr4tMpD8evqsY+4fOWSDXT/C0UPsEOkOTfiPlrZyLAvbQIuKmsDo=
+Received: from DM4PR10MB6886.namprd10.prod.outlook.com (2603:10b6:8:102::10)
+ by SJ0PR10MB5615.namprd10.prod.outlook.com (2603:10b6:a03:3d8::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Wed, 30 Apr
+ 2025 16:23:19 +0000
+Received: from DM4PR10MB6886.namprd10.prod.outlook.com
+ ([fe80::bdcc:98f5:ebd5:cd38]) by DM4PR10MB6886.namprd10.prod.outlook.com
+ ([fe80::bdcc:98f5:ebd5:cd38%7]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
+ 16:23:19 +0000
+Message-ID: <b8c4d960-cc66-437b-81fd-aeaafc64a38d@oracle.com>
+Date: Wed, 30 Apr 2025 21:53:10 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.12 000/280] 6.12.26-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+        rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com,
+        broonie@kernel.org
+References: <20250429161115.008747050@linuxfoundation.org>
+Content-Language: en-US
+From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+In-Reply-To: <20250429161115.008747050@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SI1PR02CA0027.apcprd02.prod.outlook.com
+ (2603:1096:4:1f4::18) To DM4PR10MB6886.namprd10.prod.outlook.com
+ (2603:10b6:8:102::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-v6-15-rc3-net-rgmii-delays-v2-1-099ae651d5e5@lunn.ch>
-X-B4-Tracking: v=1; b=H4sIAA5OEmgC/42NvQ7CMBCDX6W6mUNJSPrDBGJhZGBDHaI0bU8qK
- UpKRFX13Ql9AibLlv15gWA92QDHbAFvIwUaXTJil4HptessUpM8CCYUk6LCmCNX6M0BnZ3Qd08
- ibOyg54ClZszIoixbXUACvLxt6bPBH3A73y/XX5pmUCftKUyjn7fnyLfOPyeRI8dWiTyXlVSF5
- Kfh7dze9FCv6/oFKaGEtdAAAAA=
-X-Change-ID: 20250429-v6-15-rc3-net-rgmii-delays-8a00c4788fa7
-To: Rob Herring <robh@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Chaoyi Chen <chaoyi.chen@rock-chips.com>, 
- Matthias Schiffer <matthias.schiffer@ew.tq-group.com>, 
- "Russell King (Oracle)" <linux@armlinux.org.uk>, 
- Heiner Kallweit <hkallweit1@gmail.com>, netdev@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andrew Lunn <andrew@lunn.ch>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7503; i=andrew@lunn.ch;
- h=from:subject:message-id; bh=UFeOnbIz3T1QSHiDq7P4ewiS30rbMB8EppuUEFRXqDU=;
- b=owEBbQKS/ZANAwAIAea/DcumaUyEAcsmYgBoEk4jEH4v8AS3x/0G2P7cfPq+DLiZBaDC9S7zh
- J85vksdGjCJAjMEAAEIAB0WIQRh+xAly1MmORb54bfmvw3LpmlMhAUCaBJOIwAKCRDmvw3LpmlM
- hHs8EACZEZqCep17D4HcXyIzV61vB1KzwbkAaHdUHIzD9D4tt+CfHzRWW3BVLeakOPp2M+c9BIt
- IGIxEJiTH9AaZFlr2LwPQdJW7NrtMAKp5kJwGSQnzLMuamCuw+Pe0KEL4IIFP48FpYmnlSZkraQ
- dakSD0qMi3sycQlGzaVanC3dWOSmng3vU6OnovGEJpP9uD5XRGdFLgYD2yoFM9WYhUenGruntaE
- YhSDWSZHmKxnOzlSc0aKcPc/1zTIgxSfARn1I5u4J5BsVMP1+8VEfLGCmo7C2Z0WOb9m6iTPzEQ
- v0SmmV/rWPFHVZUEIXTIv9LIsKEcNoOEvxCRWivTsC2ogBulVzOarLQ3XFeUiNVXzC7vKSxjSp7
- U4RfSP0R+CP+YqD8asTHcS1zoYPUwGxAQN/4sE/PcRYmH4mun86SbPFnjDBiyymOiWjDpUZxIyP
- eO8jx/1Avz0p4ls2HS/TMQq3gv2aocmPCJOOmwOsP9iayJzcNIWq2pQ5PcCp3nBuuVADZUSpeP9
- 9G0XhD+KQpD0NByWQrckRSdyOTsestY+hsNdaLWw18yMi+KY9a45u3JzGZXtLvDdfL6bO78qgWd
- W+lPf6CRM5csQmjG5ScWgM6rRv5h7L6JBYruGzVsb4kDh3M/TwxC19x4fwjhHoJhhu+TwJ6m1SE
- Wpm81FT6xMwXvVw==
-X-Developer-Key: i=andrew@lunn.ch; a=openpgp;
- fpr=61FB1025CB53263916F9E1B7E6BF0DCBA6694C84
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR10MB6886:EE_|SJ0PR10MB5615:EE_
+X-MS-Office365-Filtering-Correlation-Id: ab7ad013-e338-47cb-20c1-08dd8803518e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZGxOdVd0ZjBORmFxeHdYZGRPQzRKdVB5ejJMYXNIaysvTm44aWkraktmanBW?=
+ =?utf-8?B?QUM1ajUrOHpiWlRzcnA5dkEwUkxUMTZQaTA2OS83QlBYV1Q4NDhHWUp1WjBr?=
+ =?utf-8?B?QTIvQjhYcUQwUHg3SGltZWo4RWg0VkxlODF0ZndEWWVLM1l2WllrSnpRUmQr?=
+ =?utf-8?B?YitXVDFSYlZ6eVdEUWRXM3ltR2U4YzRsdDV3SjZCbndTTzNlMWowODZQdmdL?=
+ =?utf-8?B?cUxZQkE3VDJ5cStrdFJwQU5iN2c1MlkzWlJudGUycVowLzhCRjBuS0Fzaitm?=
+ =?utf-8?B?QXFlSWN2S2ZEeFZvMEc5Z3FnK2UrRVNVUFMxdHFSb1B1RFdnU1FLa1hpQ3dN?=
+ =?utf-8?B?U3NTVHdPaStPN0cyblFxVk9MVC8va3JQYU9YajRGNHE1YzRJMms5OWpKaWNC?=
+ =?utf-8?B?R1ZuazRxTGMrK2liaVRZS2tuUm9YVUd5TjlLVnYrbE5NYXBzWWF2bWQ5VEZG?=
+ =?utf-8?B?cTExR1dBVlZvcUlsdHNvMXFXMGF4ZnJBRnFLN1BGM0Y5ZnFYQmRjb2R4dS8z?=
+ =?utf-8?B?Yjl0eFMxTExGSktMSmFCSDdWNDdEUWcvc2JHZ3B1SDB3UFl4WlVGaUEwbjVS?=
+ =?utf-8?B?eThQNXY4U2lObTNxYm1hbzFvT0V2THAzWjkxdk1EMDRHT1J4T0NyYU9rTkti?=
+ =?utf-8?B?aDk1RjhUT0VlOU9qdDF4bmRVVVJYdWJFOHBHU3Q4clArVFI4Q0ZiT216bWRG?=
+ =?utf-8?B?amhIUEJCVzd4eGNPTWNMdnRtYXZNejNDVi9pTUxUVmROMmw1MFZYZ0lNa0pV?=
+ =?utf-8?B?Y2tOaGw3cHV4WDFwbSt5a08zeExDM2wvNFZjQXZCMlVLdy9yVmR1NVZERlBV?=
+ =?utf-8?B?UDJDZlRPZjZOOTdkT0dUR1ZvcW5tSlR2ODdLc3doaDBpdkF4TzJPUzN0ajFr?=
+ =?utf-8?B?L1lPL2lCa2g5a3pvaVhrand1SWswdzUxb0Znazc3b2ZXY21oc1lHMDdQejZI?=
+ =?utf-8?B?c1BRT0pQQVJBSnYvSTlqdlhManBmTk40bDFBZ0RxbkRpK3F0Z3VMYk5vM3R6?=
+ =?utf-8?B?a25yQWNvVkUrTUNLMksvbUdKNHhycXlzeUxleVJIU0hxdXQremgyaCtiZVR2?=
+ =?utf-8?B?VmVQbHZ0dUFVSG5HbWlyVHpDWk5abEN0RVdyc2dLQzhFMnhUeVh3M2tubGds?=
+ =?utf-8?B?RnRIVzlLWk95YXF4MTFSZGNsK3pjZHpwcFE4Z0NHTWJiMExaWDVGWWtZZnBj?=
+ =?utf-8?B?bldxZjlHRk91UDAvcFBpOUtnV2grckJvY1d1RDJKaEdsYmtWYXN6TlpZUHc2?=
+ =?utf-8?B?ZkladGp1YTFxcFUyVTZBY2ZuZU9Ndk43QUN1UUlRKy9BZnJmQ29iMW5tQXpl?=
+ =?utf-8?B?aWZ0dWVOSjV6ODl6aDFQcUdQZmFRVUk3NllFa00zM2pSWGFMbGRnVUN3cGZv?=
+ =?utf-8?B?WVZFYjVoNVEwWFgwN0RHYVBKejlKUXZDNXBVZ2VtODlxRktoTDJ1aitESmx4?=
+ =?utf-8?B?eHB4a05sSlZhbWZMQU9IdVpFWEgycGdsQ2tDUWcvWUpIYURXdUd4ZVJrT2VN?=
+ =?utf-8?B?dVhvRUc2SXc2cWQyampWVy9ha1FpaG9ibHdiNUJuNitHcWRmL1JuNk83Qmdt?=
+ =?utf-8?B?eFpoUEdxdHhEdXppV3c3clRKcDlFTXd0dXJCOG9XM2RsRFJ0YURyWWJ1OUt4?=
+ =?utf-8?B?VFhQRTFVNzNIUUdiYzVnT0o4QmJ6eDZwWS9EVnJFU1gxNjBvWVdTcExzVWlI?=
+ =?utf-8?B?a3gyYk9wUmZVdjVoYVRUYnEyNG5ISlBkM2l3UnRDSFBJcE1GbytmM09SOURr?=
+ =?utf-8?B?Ukh0Qk41T09sNG41SU5zNU42cTlVd2F2Qzh1R0V5SHRzTzJWMGdIVHZGckw1?=
+ =?utf-8?B?Q1I1TVhvSTJTcmJMdnUyRkd3ZHIra3NYZzRwcUlHeEdwYlJsVGZDYjY0TUZs?=
+ =?utf-8?B?NS94YXlZdHZhUEt4cmdFd1dFZm11c3lKTlc0UVRjVHpPdVJHa1NtOVdzVnp5?=
+ =?utf-8?Q?GCXVg7gfDwU=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB6886.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WExzWnJUTnFTM2JoSFRvUlA5VVFOYXFpZk1xcHJMcE1BQVhRTkFWbDNqQlA4?=
+ =?utf-8?B?dlp2RnNULzlzckxMVnVNZ1lZMXNHcytiMHN2REpsbWZlVWhBR3VBZmsyR2NV?=
+ =?utf-8?B?YzVOcmZLUmxVT1BKbzJBNWlpRTdHOUNTZTUzd29TUTh0ZmRxSzFINmpWdVJO?=
+ =?utf-8?B?ZHBQekRLcjN5czNHdDdSMklPVG0wOExhYXdteURhTGJPRzhNN0l1NnJIdEls?=
+ =?utf-8?B?TFM1NDhUQ1ZNd0xmbzQ2NDZ3MCtGVUJOUGp6NHI4OGVJTCtFU3FjZ2FFbUFX?=
+ =?utf-8?B?Y3EvMWtnWUpvRE92c0pKRHVNOWVSbHpLSS9PUDNzcjRValJ5YmtkSVZEOHF6?=
+ =?utf-8?B?dW9tbWRRQ2llVUs4Yk5RMkdaeGtISzFVNjJHaXJzQk1PczZ6MkZVcDdsYnF3?=
+ =?utf-8?B?dGY2eDhHajJ4UW0yZ25ZaTNHWkJtMUYvRC9Nc1pPajY2aXFJTTFabjJjeUJ1?=
+ =?utf-8?B?NTJFeWg1ZWxTaFNZc2hKdzQyT3FxbDV5ZXpMMlI2VTcvVlVKa0FvejNrNWU0?=
+ =?utf-8?B?SEhmNFN4YlJ0TmM0azUwYm00WnlyRXViZlJ4NDNnUHFJVXA3Z1JoblRldnZE?=
+ =?utf-8?B?djluMHB0UHR3cWNrUnBESjFWWGE0YTYvTWRCNlFVMkozOFIybml1R3ZvSjVE?=
+ =?utf-8?B?RnNNbFMyZzlQREoybXQxSllPSlhxRlY1QnZvT01PV0dhU29ieGhlM0FsdnpK?=
+ =?utf-8?B?aGYveGRzRzFLcWF1eGJmQTVMMTREQUlXenpnTjFkQmtEeEFFdlNXZlYxL0E0?=
+ =?utf-8?B?eHBDL0EzMWQ3akFpMk5CUjREdFdtcGNBZEdYQTRtUThXaGJhb3pCcndzNE05?=
+ =?utf-8?B?KzQ2OEU4d01KajdWK2tuWDRZZzI4SWFnN1JkR1Y4UUhkckRWTkk4dURHYitk?=
+ =?utf-8?B?OUZwN3RNVVJORXBPS1ZLYmxxeGFhQUk2QVM4RXJjRGY0dzBDc2NuME9GVUdi?=
+ =?utf-8?B?aVVsd2NJN01QZUUxOEs4czVJNWo1NjBGbGR5cHphMHQyTXB2Yk81N0NjNUN0?=
+ =?utf-8?B?NmJCLytpK0hnRWh6RVByOHZUOE92cHNsWEZaaitVQ3Blc1kydVFsakRkN1pt?=
+ =?utf-8?B?QW84TEtkRWZWT0hUQlM5NkF3cndFMTJtOUkrMlI1dE13VzhsU3FLUG1zMHMv?=
+ =?utf-8?B?QmpXWlUzNlVtdUc0bHBQY0UyWklUWDBzWmVrMFZZS250T0YzdDNVaGVydGxv?=
+ =?utf-8?B?T3RpbTBsUkQ2RHlQbXF2YnRVQmFZZ3UwZFM3ZjRJMWxMcGRqNjExV0JzYzl5?=
+ =?utf-8?B?S0JRQWt5OVd4NDI3QmFXNEhrTUlyck5OK0ZOQVNMTWRSK09NckVKaFg3RWgy?=
+ =?utf-8?B?OUg3Z2o1THFrdTNPSnlRZDFsSzFFVkwzRFRYMWxEdnovTkJGSy9XR1d4N3dn?=
+ =?utf-8?B?TG1BSS9CV2hVY0ExcHVPMk1OVm92OGRZcS9qck1WVUZSYmV1bnJ4RENrQVNY?=
+ =?utf-8?B?NjNIcFhJdnEwV2pQdkhMQzdCYUVjclFWWFlld3ZLYytNRkdCd0dNaGx5WXJj?=
+ =?utf-8?B?Y25UU01IbzhFNXE5RDFTU21YMSsycFFjZ1R6RjdaVnhudzJzVWtNNERRaDl0?=
+ =?utf-8?B?dVNXc1ZybnFxWmt2VldRSVBnZVAva2ZUTzNRa09YTHVlay9hbmhsekFTRk1z?=
+ =?utf-8?B?OHc2TU9qV1NmRVRmS0dUWkQ4UkpFUEZJR29sekswaE40aUN4dUVLaE5sV1Zk?=
+ =?utf-8?B?aXNsb3NHbWhRSGkvS1Nrd1BybHFHUGtpL2w2c1FUeEVraHB2SUdQUE16ZUQ1?=
+ =?utf-8?B?aEdiKzVsdytSUjBvVHRaTGxHSll4RXgzS3BqQXlFenFaaS9XN2hoMGNxZFdv?=
+ =?utf-8?B?VVg0eXp2d1hTWitDUUg3VHlSL0cxSkhmZENtUVJpeHBtR2ZNYkJxdE1zNzYz?=
+ =?utf-8?B?SjBVVzhkc0FucUVVVG02N3QyNncyeUhvbGpSelMyTHFIQ1NJOHJUYlhPaG5y?=
+ =?utf-8?B?RDJSUFlrZjJ0bHJhbHNCQnVid1c1dU1aUVljcUVOcmRSNlYvS3BjcmJZb0Q0?=
+ =?utf-8?B?TGtiOUdrQkkxZFlCM3ptaUhVWVo2c2tCSGZXbWRURDFXaC96b2NWZ2hzVFd1?=
+ =?utf-8?B?NENySVRSaXY4YmtFTmFZN2p2NWwvRmJIRlJTQnRVWmJVSnlLUzdYa0txcmZG?=
+ =?utf-8?B?WUlDVjcyeW90bHZWcnQ2VWdkelZsaS9oOExHMTVJbHBMOFdKSHlqZ1QvdlI2?=
+ =?utf-8?Q?fS824q/8TnsF+Ty2XdnSdSg=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	D3NGiqJirwnZm831On0BxnhyQXtdOpFj90iMERuZ3w6N+14wR/2LU3kBmUA0zkv6UD1bhXWOjwDa+LTh3XqtthZxAlVpzq8AGIwipcISGNrgE0K5lcPa7MpvmI1k4UQbrVuPYKtKtNAL068Nyfe9UMR8g8IvfA+edDBOnGHtjLS8nJ1F3R5LSqUKJFWz48R/WZ5IPvCbwQTEiL/E0XHUpPyS0fr5KOuZSJl0Pl884wSm5oyO9p25MU5OXsYbRc+uD/FTKclBMaKqeEyL3jP5bqXykR/2XCOyEjNCgs8CkG9NbKCcWH99+zYW+GYoXBetoaGDhyfPrxunDJfqPXfzgoU3gMohP132ny5frvQOZv19+G4V1YJM2+YMJ0OLhfKRYIrmIuJUp1sZce3WFlIKsRssaePI/SvzE4kbWgyrG+GgpeSRv3BD4GDYFl8Y4WSrDJlh+QqmUwJeaU7yiMknCvu03RzPwchoMYsn2W9aCirZ/dTQ2ur0PqcTI/4zKzAoyd5nPis7P3wBQmxO0RFQJudGKO+dFog8XRNhx9Lc1uGKmwkcT0Bnvk6G7IDWcM82AGM/wsBMS8WzGzyOovwCgsv8uVGjcj0Z8yH0ggnDeKg=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab7ad013-e338-47cb-20c1-08dd8803518e
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB6886.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 16:23:19.4623
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5Ys5Q16hVGvgTfDUdnEKDLWdK0Kj2UUSaSC79UoGOz07oywaVuGgCTTfQECn4botQic3Rfa+pH6+O6BpZjavN/uc4DpZ/o5J9dOe/4IYaM1z5l+PH6LwycpPa/ebQbue
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5615
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ malwarescore=0 mlxscore=0 bulkscore=0 phishscore=0 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2504300117
+X-Proofpoint-ORIG-GUID: XoNW3fUl9_N37mitOldqYUGlC7F-V73b
+X-Proofpoint-GUID: XoNW3fUl9_N37mitOldqYUGlC7F-V73b
+X-Authority-Analysis: v=2.4 cv=Hd0UTjE8 c=1 sm=1 tr=0 ts=68124e7b cx=c_pps a=OOZaFjgC48PWsiFpTAqLcw==:117 a=OOZaFjgC48PWsiFpTAqLcw==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=X_drXzbwcQU-ujxrCA4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDExNyBTYWx0ZWRfX5bczE2IksVeq 92jzhTz3jUue98xY0L5bIgDKndcrxf7t9Ln15KzdAycM4cGy/3Ub50DZfC6tiRbqg8xCvS8mmsN APJHoQvhqosWzKE06XOHEbxqizIWEkmb9V4vCjdjshkUP7n2IOjuRPp2SckMb2Z//0rSCbmL1L/
+ VenalJQ1Mo1isR/LYtckt15wGedglwWOdOI7/d5ZDnJBNOZPi5U+x5EcIjj05r3HUdhZmv7KMfC SiLm8iK5nglgM3X9jPl/SA3S0ZrqPyAm+UnXHLQJZLU02RTKv5LmDY19TGKNrtfCFHJH85vcyL4 ORVDwHonK78zIZff8clpNSk4wVVLlXbw8hE4yb4Elr5PdSxZfn65BAcT/t+Qhy8wtH25tX2N/9o
+ aluZqX/acNuZGV87XqE0HJnMlJL9RMPl6AkTvWGvRQdzIN0DxDoXR1j4cD7HjcYN8lpc1XsP
 
-Device Tree and Ethernet MAC driver writers often misunderstand RGMII
-delays. Rewrite the Normative section in terms of the PCB, is the PCB
-adding the 2ns delay. This meaning was previous implied by the
-definition, but often wrongly interpreted due to the ambiguous wording
-and looking at the definition from the wrong perspective. The new
-definition concentrates clearly on the hardware, and should be less
-ambiguous.
+Hi Greg,
 
-Add an Informative section to the end of the binding describing in
-detail what the four RGMII delays mean. This expands on just the PCB
-meaning, adding in the implications for the MAC and PHY.
+On 29/04/25 22:09, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.12.26 release.
+> There are 280 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
+> Anything received after that time might be too late.
 
-Additionally, when the MAC or PHY needs to add a delay, which is
-software configuration, describe how Linux does this, in the hope of
-reducing errors. Make it clear other users of device tree binding may
-implement the software configuration in other ways while still
-conforming to the binding.
+No problems seen on x86_64 and aarch64 with our testing.
 
-Fixes: 9d3de3c58347 ("dt-bindings: net: Add YAML schemas for the generic Ethernet options")
-Signed-off-by: Andrew Lunn <andrew@lunn.ch>
----
-Changes in v2:
-Reword Normative section
-manor->manner
-add when using phylib/phylink
-request details in the commit message and .dts comments
-clarify PHY -internal-delay-ps values being depending on rgmii-X mode.
-Link to v1: https://lore.kernel.org/r/20250429-v6-15-rc3-net-rgmii-delays-v1-1-f52664945741@lunn.ch
----
- .../bindings/net/ethernet-controller.yaml          | 97 ++++++++++++++++++++--
- 1 file changed, 90 insertions(+), 7 deletions(-)
+Tested-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet-controller.yaml b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-index 45819b2358002bc75e876eddb4b2ca18017c04bd..a2d4c626f659a57fc7dcd39301f322c28afed69d 100644
---- a/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-+++ b/Documentation/devicetree/bindings/net/ethernet-controller.yaml
-@@ -74,19 +74,17 @@ properties:
-       - rev-rmii
-       - moca
- 
--      # RX and TX delays are added by the MAC when required
-+      # RX and TX delays are provided by the PCB. See below
-       - rgmii
- 
--      # RGMII with internal RX and TX delays provided by the PHY,
--      # the MAC should not add the RX or TX delays in this case
-+      # RX and TX delays are not provided by the PCB. This is the most
-+      # frequent case. See below
-       - rgmii-id
- 
--      # RGMII with internal RX delay provided by the PHY, the MAC
--      # should not add an RX delay in this case
-+      # TX delay is provided by the PCB. See below
-       - rgmii-rxid
- 
--      # RGMII with internal TX delay provided by the PHY, the MAC
--      # should not add an TX delay in this case
-+      # RX delay is provided by the PCB. See below
-       - rgmii-txid
-       - rtbi
-       - smii
-@@ -286,4 +284,89 @@ allOf:
- 
- additionalProperties: true
- 
-+# Informative
-+# ===========
-+#
-+# 'phy-modes' & 'phy-connection-type' properties 'rgmii', 'rgmii-id',
-+# 'rgmii-rxid', and 'rgmii-txid' are frequently used wrongly by
-+# developers. This informative section clarifies their usage.
-+#
-+# The RGMII specification requires a 2ns delay between the data and
-+# clock signals on the RGMII bus. How this delay is implemented is not
-+# specified.
-+#
-+# One option is to make the clock traces on the PCB longer than the
-+# data traces. A sufficiently difference in length can provide the 2ns
-+# delay. If both the RX and TX delays are implemented in this manner,
-+# 'rgmii' should be used, so indicating the PCB adds the delays.
-+#
-+# If the PCB does not add these delays via extra long traces,
-+# 'rgmii-id' should be used. Here, 'id' refers to 'internal delay',
-+# where either the MAC or PHY adds the delay.
-+#
-+# If only one of the two delays are implemented via extra long clock
-+# lines, either 'rgmii-rxid' or 'rgmii-txid' should be used,
-+# indicating the MAC or PHY should implement one of the delays
-+# internally, while the PCB implements the other delay.
-+#
-+# Device Tree describes hardware, and in this case, it describes the
-+# PCB between the MAC and the PHY, if the PCB implements delays or
-+# not.
-+#
-+# In practice, very few PCBs make use of extra long clock lines. Hence
-+# any RGMII phy mode other than 'rgmii-id' is probably wrong, and is
-+# unlikely to be accepted during review without details provided in
-+# the commit description and comments in the .dts file.
-+#
-+# When the PCB does not implement the delays, the MAC or PHY must.  As
-+# such, this is software configuration, and so not described in Device
-+# Tree.
-+#
-+# The following describes how Linux implements the configuration of
-+# the MAC and PHY to add these delays when the PCB does not. As stated
-+# above, developers often get this wrong, and the aim of this section
-+# is reduce the frequency of these errors by Linux developers. Other
-+# users of the Device Tree may implement it differently, and still be
-+# consistent with both the normative and informative description
-+# above.
-+#
-+# By default in Linux, when using phylib/phylink, the MAC is expected
-+# to read the 'phy-mode' from Device Tree, not implement any delays,
-+# and pass the value to the PHY. The PHY will then implement delays as
-+# specified by the 'phy-mode'. The PHY should always be reconfigured
-+# to implement the needed delays, replacing any setting performed by
-+# strapping or the bootloader, etc.
-+#
-+# Experience to date is that all PHYs which implement RGMII also
-+# implement the ability to add or not add the needed delays. Hence
-+# this default is expected to work in all cases. Ignoring this default
-+# is likely to be questioned by Reviews, and require a strong argument
-+# to be accepted.
-+#
-+# There are a small number of cases where the MAC has hard coded
-+# delays which cannot be disabled. The 'phy-mode' only describes the
-+# PCB.  The inability to disable the delays in the MAC does not change
-+# the meaning of 'phy-mode'. It does however mean that a 'phy-mode' of
-+# 'rgmii' is now invalid, it cannot be supported, since both the PCB
-+# and the MAC and PHY adding delays cannot result in a functional
-+# link. Thus the MAC should report a fatal error for any modes which
-+# cannot be supported. When the MAC implements the delay, it must
-+# ensure that the PHY does not also implement the same delay. So it
-+# must modify the phy-mode it passes to the PHY, removing the delay it
-+# has added. Failure to remove the delay will result in a
-+# non-functioning link.
-+#
-+# Sometimes there is a need to fine tune the delays. Often the MAC or
-+# PHY can perform this fine tuning. In the MAC node, the Device Tree
-+# properties 'rx-internal-delay-ps' and 'tx-internal-delay-ps' should
-+# be used to indicate fine tuning performed by the MAC. The values
-+# expected here are small. A value of 2000ps, i.e 2ns, and a phy-mode
-+# of 'rgmii' will not be accepted by Reviewers.
-+#
-+# If the PHY is to perform fine tuning, the properties
-+# 'rx-internal-delay-ps' and 'tx-internal-delay-ps' in the PHY node
-+# should be used. When the PHY is implementing delays, e.g. 'rgmii-id'
-+# these properties should have a value near to 2000ps. If the PCB is
-+# implementing delays, e.g. 'rgmii', a small value can be used to fine
-+# tune the delay added by the PCB.
- ...
-
----
-base-commit: d4cb1ecc22908ef46f2885ee2978a4f22e90f365
-change-id: 20250429-v6-15-rc3-net-rgmii-delays-8a00c4788fa7
-
-Best regards,
--- 
-Andrew Lunn <andrew@lunn.ch>
-
+Thanks,
+Harshit
