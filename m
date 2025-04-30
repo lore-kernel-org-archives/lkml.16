@@ -1,40 +1,40 @@
-Received: from 9.mo550.mail-out.ovh.net (9.mo550.mail-out.ovh.net [178.32.108.172])
+Received: from 2.mo550.mail-out.ovh.net (2.mo550.mail-out.ovh.net [178.32.119.250])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235291BF37
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:50:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.108.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27C151BF37
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.119.250
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053433; cv=none; b=Gmiu+G5wkYKIT9o1/2Ud2TkoveUgPJjIdoUfpT0QsgW/in043Ojzo9er+zXaTl2v9YXk3UxS/ArPMv3JbIzvkHxXLuwcJDOhU2re0kT9a7+g9wKLQHg+uNiiipVjm6qvuMeFGIIAoZiWtBv4lXtNzfNOt9ktcriPa52toiGWVVk=
+	t=1746053441; cv=none; b=muataBeu9QmlwYP86L45VMMBw08uH7masgQxC3EivOcZdRnxiG53c312HYLP1MyfibKsj6F09Qh66lW4wmlXA9+Uy8v4LGdvB7w5daO7rBSh8AqlVajY/aJD0BWfD1o/FRo3sVFqtGde7rUVYQlzM42qVhjD8FLBZ7XwVrzXMcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053433; c=relaxed/simple;
-	bh=kPomQ7PXgpw7knpV3SVfubuKhsQUI05+skk6zT7Eq1I=;
+	s=arc-20240116; t=1746053441; c=relaxed/simple;
+	bh=DJOkI8RRTkcQYiwRlk6gpscGvGHJ0hzePQk2+QLs4Qw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KqHHuSqzPpwfFGcoCtCko4DOGL9KBs8PmSuvvV/M7nkmnZkJZdI4y5yJHs2j1P/xg68VcVsnBoQxXv0dqPz2Onzh8PzFCBPlZseZdGkG5u1PP6BqOFfqAMoXKqSq7IrIYlezxuIN4Pp3aK6NyRjc5svfse6wKxSF3VHtHXrsxhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=NGixRtCX; arc=none smtp.client-ip=178.32.108.172
+	 MIME-Version; b=U+cQ51r0X6oo3dWRnvgH4j38BHLuBD9atCTZoeVNg5Sfcqy98A+ex+RwqNStql9fQBkKMUwPKS0wH4lFXIAqQtO/WdFvv8Hg00xTc536kyGnIbj+4JXRW3QRLTsDp3mEhdnJvik5k29Q0TW2wFle6nn/06tRNa0iiQekL/9GFkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=bmWpKgDX; arc=none smtp.client-ip=178.32.119.250
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="NGixRtCX"
+	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="bmWpKgDX"
 Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.176.170])
-	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4ZnshT6jk9z1Xnx
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:45:13 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-twnx5 (unknown [10.110.164.49])
-	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 9A8971FD29;
-	Wed, 30 Apr 2025 22:45:13 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.114])
-	by ghost-submission-5b5ff79f4f-twnx5 with ESMTPSA
-	id SuivGfmnEmgRWAgA1PhhsQ
-	(envelope-from <sergii.dmytruk@3mdeb.com>); Wed, 30 Apr 2025 22:45:13 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-114S00894c63abd-27f7-477a-bf0c-fa55fba5a45f,
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4Znshd3trMz1XpY
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:45:21 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-qblm5 (unknown [10.110.188.135])
+	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 402571FDEE;
+	Wed, 30 Apr 2025 22:45:21 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.103])
+	by ghost-submission-5b5ff79f4f-qblm5 with ESMTPSA
+	id IwamBQGoEmhmuQIAmzuhMg
+	(envelope-from <sergii.dmytruk@3mdeb.com>); Wed, 30 Apr 2025 22:45:21 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-103G00578138a33-c66c-4bcf-8dca-08c187643215,
                     7FFE21389DDF989CCD6FB7268846A7FDE11993D7) smtp.auth=sergii.dmytruk@3mdeb.com
 X-OVh-ClientIp:176.111.181.178
 From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
 To: linux-kernel@vger.kernel.org
 Cc: trenchboot-devel@googlegroups.com
-Subject: [RFC PATCH v2 4/9] x86: Split up Secure Launch setup and finalize functions
-Date: Thu,  1 May 2025 01:44:46 +0300
-Message-ID: <bd2d21fb90cbb4905afcb5d934c48e4ff23a3ed8.1746037489.git.sergii.dmytruk@3mdeb.com>
+Subject: [RFC PATCH v2 7/9] x86/slmodule: Support AMD SKINIT
+Date: Thu,  1 May 2025 01:44:49 +0300
+Message-ID: <7a39e40036b795339244fac870bead7983f06aec.1746037489.git.sergii.dmytruk@3mdeb.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
 References: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
@@ -45,191 +45,299 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 12103705474822026396
+X-Ovh-Tracer-Id: 12105957275724133532
 X-VR-SPAMSTATE: OK
 X-VR-SPAMSCORE: 0
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefuvghrghhiihcuffhmhihtrhhukhcuoehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomheqnecuggftrfgrthhtvghrnhephfehfeehudeileeikeffgfffgfefuddtveelvedvhfffgfelvdfgtddutdehfeeinecukfhppeduvdejrddtrddtrddupddujeeirdduuddurddukedurddujeekpdefjedrheelrddugedvrdduudegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtdgmpdhmohguvgepshhmthhpohhuth
-DKIM-Signature: a=rsa-sha256; bh=5VFk4FOVNsAWcUO093+INFp3zTO4CmYlsU9Pb5Y3iAY=;
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefuvghrghhiihcuffhmhihtrhhukhcuoehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomheqnecuggftrfgrthhtvghrnhephfehfeehudeileeikeffgfffgfefuddtveelvedvhfffgfelvdfgtddutdehfeeinecukfhppeduvdejrddtrddtrddupddujeeirdduuddurddukedurddujeekpdefjedrheelrddugedvrddutdefnecuvehluhhsthgvrhfuihiivgepfeenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtdgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=+FaceXCqu/ICnaOIGecXj8d3JMkfkxWToutOnQ3DjqU=;
  c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1746053114; v=1;
- b=NGixRtCXiVNRihEJULF8W1ZW/fYzDX8yDyGmrA6teCk3Ay5vijC/ujJIEvuiIt77Jvbovyg5
- 1emvo6H6OUx/EGrumVzKuPIPcKZTXbZF64GGzgswl72MQQ0mDrGCR9ij7vYC91kMCaXiR5r2MOw
- n/XdkN2Jt67S4UvPhfwyJ3XxJpw3NTLNy2dqsO1RWmTUeWZ///FTqQ8l+xuqU/udfT1oD4aThYV
- mpsdLtXMW4HPWLiNOriK53mnZvcJt/mEP5aeicp950Rx2d0Z8JOKvouY7B0SfKkyMwx1BWKmNQy
- zp7kImWAnNhPFybpQ4UIa7rl5+yRadOv952gxYnC6pVUQ==
+ t=1746053121; v=1;
+ b=bmWpKgDXEybw6vS4cDcRwuOlciKyjxKn2yUjKSQT0/J8M0Hxx13rz9mugrBd1ruMHKF1Au70
+ abUKB8uUq7d7iegeE6tGDArL54xhisd8H5OtlMF24cwpFuwVWgAQ/ZndqG6qAI1iznLS55RecIY
+ 12ezxAhtrFuy+Ff4x+wn2oNtL5rXCq66vQSwlFsXC5xnzkLfIKG+FEQ8kHZrWGf800UPxDGtTHx
+ ze5Jh92geUf0dJIxS/7/drHx1PlpB4krTrdv++c8wqgV7QK8JXFN/GBWXa/mbVW2akyuR6Grfm8
+ IMs7qc405DMyNPQ/UC53B6pp2SQERMaJ8L/M4wZRhQgwg==
 
 From: Ross Philipson <ross.philipson@oracle.com>
 
-Split up the setup and findalize functions internally to determine
-the type of launch and call the appropriate function (TXT or SKINIT
-version).
+Some of the changes are related to generalization: common macro for
+resetting the platform. The rest are:
+ - SKINIT-specific way of getting to SLRT
+ - handling of TPM log which has TXT-specific header embedded as vendor
+   data of a TCG-compliant one
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
 ---
- arch/x86/include/asm/svm.h |  2 ++
- arch/x86/kernel/setup.c    |  2 +-
- arch/x86/kernel/slaunch.c  | 69 +++++++++++++++++++++++++++++++-------
- include/linux/slaunch.h    |  4 +--
- 4 files changed, 62 insertions(+), 15 deletions(-)
+ arch/x86/kernel/slmodule.c | 161 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 134 insertions(+), 27 deletions(-)
 
-diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
-index 9b7fa99ae951..da9536c5a137 100644
---- a/arch/x86/include/asm/svm.h
-+++ b/arch/x86/include/asm/svm.h
-@@ -584,6 +584,8 @@ static inline void __unused_size_checks(void)
- 
- #define SVM_CPUID_FUNC 0x8000000a
- 
-+#define SVM_VM_CR_INIT_REDIRECTION 1
-+
- #define SVM_SELECTOR_S_SHIFT 4
- #define SVM_SELECTOR_DPL_SHIFT 5
- #define SVM_SELECTOR_P_SHIFT 7
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index afb1b238202f..3bcf5a5fbac7 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -999,7 +999,7 @@ void __init setup_arch(char **cmdline_p)
- 	early_gart_iommu_check();
- #endif
- 
--	slaunch_setup_txt();
-+	slaunch_setup();
- 
- 	/*
- 	 * partially used pages are not usable - thus
-diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
-index b6ba4c526aa3..d81433a9b699 100644
---- a/arch/x86/kernel/slaunch.c
-+++ b/arch/x86/kernel/slaunch.c
-@@ -18,6 +18,7 @@
- #include <asm/tlbflush.h>
- #include <asm/e820/api.h>
- #include <asm/setup.h>
-+#include <asm/svm.h>
- #include <asm/realmode.h>
+diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
+index 64010bac038c..4d29c1628a90 100644
+--- a/arch/x86/kernel/slmodule.c
++++ b/arch/x86/kernel/slmodule.c
+@@ -18,12 +18,21 @@
+ #include <linux/security.h>
+ #include <linux/memblock.h>
+ #include <linux/tpm.h>
++#include <asm/setup.h>
+ #include <asm/segment.h>
+ #include <asm/sections.h>
+ #include <crypto/sha2.h>
  #include <linux/slr_table.h>
  #include <linux/slaunch.h>
-@@ -437,21 +438,11 @@ void __init slaunch_fixup_jump_vector(void)
-  * Intel TXT specific late stub setup and validation called from within
-  * x86 specific setup_arch().
-  */
--void __init slaunch_setup_txt(void)
-+static void __init slaunch_setup_txt(void)
+ 
++#define slaunch_reset(t, m, e)					\
++	do {							\
++		if (t)						\
++			slaunch_txt_reset((t), (m), (e));	\
++		else						\
++			slaunch_skinit_reset((m), (e));		\
++	} while (0)
++
+ /*
+  * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
+  * public registers as unsigned values.
+@@ -83,6 +92,7 @@ struct memfile {
+ 
+ static struct memfile sl_evtlog = {"eventlog", NULL, 0};
+ static void *txt_heap;
++static void *skinit_evtlog;
+ static struct txt_heap_event_log_pointer2_1_element *evtlog21;
+ static DEFINE_MUTEX(sl_evt_log_mutex);
+ static struct tcg_efi_specid_event_head *efi_head;
+@@ -239,12 +249,19 @@ static void slaunch_teardown_securityfs(void)
+ 			memunmap(txt_heap);
+ 			txt_heap = NULL;
+ 		}
++	} else if (slaunch_get_flags() & SL_FLAG_ARCH_SKINIT) {
++		if (skinit_evtlog) {
++			memunmap(skinit_evtlog);
++			skinit_evtlog = NULL;
++		}
++		sl_evtlog.addr = NULL;
++		sl_evtlog.size = 0;
+ 	}
+ 
+ 	securityfs_remove(slaunch_dir);
+ }
+ 
+-static void slaunch_intel_evtlog(void __iomem *txt)
++static void slaunch_txt_evtlog(void __iomem *txt)
  {
- 	u64 one = TXT_REGVALUE_ONE, val;
+ 	struct slr_entry_log_info *log_info;
+ 	struct txt_os_mle_data *params;
+@@ -312,6 +329,88 @@ static void slaunch_intel_evtlog(void __iomem *txt)
+ 	efi_head = (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + sizeof(struct tcg_pcr_event));
+ }
+ 
++static void slaunch_skinit_evtlog(void)
++{
++	struct slr_entry_amd_info amd_info_temp;
++	struct slr_entry_amd_info *amd_info;
++	struct slr_entry_log_info *log_info;
++	struct setup_data *data;
++	struct slr_table *slrt;
++	u64 pa_data;
++
++	pa_data = (u64)boot_params.hdr.setup_data;
++	amd_info = NULL;
++
++	while (pa_data) {
++		data = (struct setup_data *)memremap(pa_data, sizeof(*data), MEMREMAP_WB);
++		if (!data)
++			slaunch_skinit_reset("Error failed to memremap setup data\n",
++					     SL_ERROR_MAP_SETUP_DATA);
++
++		if (data->type == SETUP_SECURE_LAUNCH) {
++			memunmap(data);
++			amd_info = (struct slr_entry_amd_info *)
++				memremap(pa_data - sizeof(struct slr_entry_hdr),
++					 sizeof(*amd_info), MEMREMAP_WB);
++			if (!amd_info)
++				slaunch_skinit_reset("Error failed to memremap AMD info\n",
++						     SL_ERROR_MAP_SETUP_DATA);
++			break;
++		}
++
++		pa_data = data->next;
++		memunmap(data);
++	}
++
++	if (!amd_info)
++		slaunch_skinit_reset("Error failed to find AMD info\n", SL_ERROR_MISSING_EVENT_LOG);
++
++	amd_info_temp = *amd_info;
++	memunmap(amd_info);
++
++	/* Get the SLRT and remap it */
++	slrt = memremap(amd_info_temp.slrt_base, amd_info_temp.slrt_size, MEMREMAP_WB);
++	if (!slrt)
++		slaunch_skinit_reset("Error failed to memremap SLR Table\n", SL_ERROR_SLRT_MAP);
++
++	log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
++	if (!log_info)
++		slaunch_skinit_reset("Error failed to find event log info SLR Table\n",
++				     SL_ERROR_SLRT_MISSING_ENTRY);
++
++	/* Finally map the actual event log and find the proper offsets */
++	skinit_evtlog = memremap(log_info->addr, log_info->size, MEMREMAP_WB);
++	if (!skinit_evtlog)
++		slaunch_skinit_reset("Error failed to memremap TPM event log\n",
++				     SL_ERROR_EVENTLOG_MAP);
++
++	sl_evtlog.size = log_info->size;
++	sl_evtlog.addr = skinit_evtlog;
++
++	memunmap(slrt);
++
++	/*
++	 * See the comment for the following function concerning the
++	 * logic used here:
++	 * arch/x86/boot/compressed/sl_main.c:sl_find_event_log()
++	 */
++	if (!memcmp(skinit_evtlog + sizeof(struct tcg_pcr_event),
++		    TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG))) {
++		evtlog21 = skinit_evtlog + sizeof(struct tcg_pcr_event)
++			+ TCG_EfiSpecIdEvent_SIZE(
++			  TPM2_HASH_COUNT(skinit_evtlog
++				+ sizeof(struct tcg_pcr_event)));
++	} else {
++		sl_evtlog.addr += sizeof(struct tcg_pcr_event)
++			+ TCG_PCClientSpecIDEventStruct_SIZE;
++		sl_evtlog.size -= sizeof(struct tcg_pcr_event)
++			+ TCG_PCClientSpecIDEventStruct_SIZE;
++	}
++
++	/* Save pointer to the EFI SpecID log header */
++	efi_head = (struct tcg_efi_specid_event_head *)(skinit_evtlog + sizeof(struct tcg_pcr_event));
++}
++
+ static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
+ 				      struct tcg_pcr_event2_head *event)
+ {
+@@ -331,8 +430,7 @@ static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
+ 
+ 	digests = kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNEL);
+ 	if (!digests)
+-		slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
+-				  SL_ERROR_GENERIC);
++		slaunch_reset(txt, "Failed to allocate array of digests\n", SL_ERROR_GENERIC);
+ 
+ 	for (i = 0; i < event->count; i++) {
+ 		dptr = (u8 *)alg_id_field + sizeof(u16);
+@@ -349,8 +447,7 @@ static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
+ 	ret = tpm_pcr_extend(tpm, event->pcr_idx, digests);
+ 	if (ret) {
+ 		pr_err("Error extending TPM20 PCR, result: %d\n", ret);
+-		slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
+-				  SL_ERROR_TPM_EXTEND);
++		slaunch_reset(txt, "Failed to extend TPM20 PCR\n", SL_ERROR_TPM_EXTEND);
+ 	}
+ 
+ 	kfree(digests);
+@@ -372,8 +469,8 @@ static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
+ 	while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offset) {
+ 		size = __calc_tpm2_event_size(event, event_header, false);
+ 		if (!size)
+-			slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
+-					  SL_ERROR_TPM_INVALID_EVENT);
++			slaunch_reset(txt, "TPM20 invalid event in event log\n",
++				      SL_ERROR_TPM_INVALID_EVENT);
+ 
+ 		/*
+ 		 * Marker events indicate where the Secure Launch early stub
+@@ -400,8 +497,8 @@ static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
+ 	}
+ 
+ 	if (!start || !end)
+-		slaunch_txt_reset(txt, "Missing start or end events for extending TPM20 PCRs\n",
+-				  SL_ERROR_TPM_EXTEND);
++		slaunch_reset(txt, "Missing start or end events for extending TPM20 PCRs\n",
++			      SL_ERROR_TPM_EXTEND);
+ }
+ 
+ static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
+@@ -442,8 +539,8 @@ static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
+ 			ret = tpm_pcr_extend(tpm, event->pcr_idx, &digest);
+ 			if (ret) {
+ 				pr_err("Error extending TPM12 PCR, result: %d\n", ret);
+-				slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
+-						  SL_ERROR_TPM_EXTEND);
++				slaunch_reset(txt, "Failed to extend TPM12 PCR\n",
++					      SL_ERROR_TPM_EXTEND);
+ 			}
+ 		}
+ 
+@@ -452,8 +549,8 @@ static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
+ 	}
+ 
+ 	if (!start || !end)
+-		slaunch_txt_reset(txt, "Missing start or end events for extending TPM12 PCRs\n",
+-				  SL_ERROR_TPM_EXTEND);
++		slaunch_reset(txt, "Missing start or end events for extending TPM12 PCRs\n",
++			      SL_ERROR_TPM_EXTEND);
+ }
+ 
+ static void slaunch_pcr_extend(void __iomem *txt)
+@@ -463,13 +560,11 @@ static void slaunch_pcr_extend(void __iomem *txt)
+ 
+ 	tpm = tpm_default_chip();
+ 	if (!tpm)
+-		slaunch_txt_reset(txt, "Could not get default TPM chip\n",
+-				  SL_ERROR_TPM_INIT);
++		slaunch_reset(txt, "Could not get default TPM chip\n", SL_ERROR_TPM_INIT);
+ 
+ 	rc = tpm_chip_set_locality(tpm, 2);
+ 	if (rc)
+-		slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
+-				  SL_ERROR_TPM_INIT);
++		slaunch_reset(txt, "Could not set TPM chip locality 2\n", SL_ERROR_TPM_INIT);
+ 
+ 	if (evtlog21)
+ 		slaunch_tpm2_extend(tpm, txt);
+@@ -482,19 +577,31 @@ static int __init slaunch_module_init(void)
  	void __iomem *txt;
  
--	if (!boot_cpu_has(X86_FEATURE_SMX))
--		return;
--
--	/*
--	 * If booted through secure launch entry point, the loadflags
--	 * option will be set.
--	 */
--	if (!(boot_params.hdr.loadflags & SLAUNCH_FLAG))
--		return;
--
- 	/*
- 	 * See if SENTER was done by reading the status register in the
- 	 * public space. If the public register space cannot be read, TXT may
-@@ -523,6 +514,42 @@ void __init slaunch_setup_txt(void)
- 	pr_info("Intel TXT setup complete\n");
+ 	/* Check to see if Secure Launch happened */
+-	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
+-	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
++	if (!(slaunch_get_flags() & SL_FLAG_ACTIVE))
+ 		return 0;
+ 
+-	txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
+-		      PAGE_SIZE);
+-	if (!txt)
+-		panic("Error ioremap of TXT priv registers\n");
++	if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
++		txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
++			      PAGE_SIZE);
++		if (!txt)
++			panic("Error ioremap of TXT priv registers\n");
++
++		slaunch_txt_evtlog(txt);
++
++		slaunch_pcr_extend(txt);
++
++		iounmap(txt);
++
++		pr_info("TXT Secure Launch module setup\n");
++	} else if (slaunch_get_flags() & SL_FLAG_ARCH_SKINIT) {
++		slaunch_skinit_evtlog();
++
++		slaunch_pcr_extend(NULL);
++
++		pr_info("SKINIT Secure Launch module setup\n");
++	} else
++		panic("Secure Launch unknown architecture\n");
+ 
+-	/* Only Intel TXT is supported at this point */
+-	slaunch_intel_evtlog(txt);
+-	slaunch_pcr_extend(txt);
+-	iounmap(txt);
+ 
+ 	return slaunch_expose_securityfs();
  }
- 
-+/*
-+ * AMD SKINIT specific late stub setup and validation called from within
-+ * x86 specific setup_arch().
-+ */
-+static void __init slaunch_setup_skinit(void)
-+{
-+	u64 val;
-+
-+	/*
-+	 * If the platform is performing a Secure Launch via SKINIT
-+	 * INIT_REDIRECTION flag will be active.
-+	 */
-+	rdmsrl(MSR_VM_CR, val);
-+	if (!(val & (1 << SVM_VM_CR_INIT_REDIRECTION)))
-+		return;
-+
-+	/* Set flags on BSP so subsequent code knows it was a SKINIT launch */
-+	sl_flags |= (SL_FLAG_ACTIVE|SL_FLAG_ARCH_SKINIT);
-+	pr_info("AMD SKINIT setup complete\n");
-+}
-+
-+void __init slaunch_setup(void)
-+{
-+	/*
-+	 * If booted through secure launch entry point, the loadflags
-+	 * option will be set.
-+	 */
-+	if (!(boot_params.hdr.loadflags & SLAUNCH_FLAG))
-+		return;
-+
-+	if (boot_cpu_has(X86_FEATURE_SMX))
-+		slaunch_setup_txt();
-+	else if (boot_cpu_has(X86_FEATURE_SKINIT))
-+		slaunch_setup_skinit();
-+}
-+
- static inline void smx_getsec_sexit(void)
- {
- 	asm volatile ("getsec\n"
-@@ -533,7 +560,7 @@ static inline void smx_getsec_sexit(void)
-  * Used during kexec and on reboot paths to finalize the TXT state
-  * and do an SEXIT exiting the DRTM and disabling SMX mode.
-  */
--void slaunch_finalize(int do_sexit)
-+static void slaunch_finalize_txt(int do_sexit)
- {
- 	u64 one = TXT_REGVALUE_ONE, val;
- 	void __iomem *config;
-@@ -594,3 +621,21 @@ void slaunch_finalize(int do_sexit)
- 
- 	pr_info("TXT SEXIT complete.\n");
- }
-+
-+/*
-+ * Used during kexec and on reboot paths to finalize the SKINIT.
-+ */
-+static void slaunch_finalize_skinit(void)
-+{
-+	/* AMD CPUs with PSP-supported DRTM */
-+	if (!slaunch_is_skinit_psp())
-+		return;
-+}
-+
-+void slaunch_finalize(int do_sexit)
-+{
-+	if (boot_cpu_has(X86_FEATURE_SMX))
-+		slaunch_finalize_txt(do_sexit);
-+	else if (boot_cpu_has(X86_FEATURE_SKINIT))
-+		slaunch_finalize_skinit();
-+}
-diff --git a/include/linux/slaunch.h b/include/linux/slaunch.h
-index ec7e0d736a03..22e253960fdd 100644
---- a/include/linux/slaunch.h
-+++ b/include/linux/slaunch.h
-@@ -547,7 +547,7 @@ static inline int tpm2_log_event(struct txt_heap_event_log_pointer2_1_element *e
- /*
-  * External functions available in mainline kernel.
-  */
--void slaunch_setup_txt(void);
-+void slaunch_setup(void);
- void slaunch_fixup_jump_vector(void);
- u32 slaunch_get_flags(void);
- struct sl_ap_wake_info *slaunch_get_ap_wake_info(void);
-@@ -563,7 +563,7 @@ void slaunch_psp_finalize(void);
- 
- #else
- 
--static inline void slaunch_setup_txt(void)
-+static inline void slaunch_setup(void)
- {
- }
- 
 -- 
 2.49.0
 
