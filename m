@@ -1,201 +1,123 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086522DC768;
-	Wed, 30 Apr 2025 16:37:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834442641EE
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:38:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031082; cv=none; b=LAfXzQKINOFO8dqaPn9fgpzhsxmwbXpVB0F/ZjPF1uxjSvBIVOHwWoqr8S4Rl+OcRiwS50xRc8MyGNlYNHy45Os5EWS6Ueww+jSWK+nt1bg/Iup/0k8o1zgebkMK0iYL3+NJvE1begfKtQFhZo7p16tCF6NdlAeSnA142o0ZUaw=
+	t=1746031125; cv=none; b=Tmeb7mP0Zrv3vMXXTOAEjelI8oUyEIl8yVQi2rVXAsqUAKZj6vVXhwmrItudsmz7qG9kwLIXbfY1RcNR9TabPqnTBJtzTnko7mxH3uxHEjAHWIEieNIYnae6X1NlIygozEXMZ5U276dKG13GgCveFlIZEbmPFGnh92CwTcRmoJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031082; c=relaxed/simple;
-	bh=VvRMlfT4VgobUB0P0bqwvBN95Fvzh/5fnLVG24jCK+Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qPtwP4BLnOxBu/j8EN6O0sN0MxSIJtfAkD76DD59eWEdURWdCQzvU8a3q4sLK1U/5CmmONam5BBg87GcDgXhBmcST4gzZ15Wr2QeGS51LOjtICGmqMkFdUJ63671Icz5fFIfEFnasqavdHk8xq8rMyyKNLnorruGhvUWgr9rPZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=YO8E7UOW; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746031125; c=relaxed/simple;
+	bh=a+aS3VH0fFr3wLv+ziZGwPORQcPz6cZRwZ8j2YP4ds0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R+KgoAz79Q+wqDYRSflNvo7qjeCf1+Az/0W4kGjC9Z1f8mW/VKDGtfhWeqAZYbW2AW35fW810E99WkB/US7xnGytO8QDCYvTjfSR6KF0dCKAHAVGSJk/fajF38okBNXoUgqx1NZNvPppO+bFAD6v+7vv9OB7fbW7TXuV/ispBi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CKkIitfA; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YO8E7UOW"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53UGbPFO3433713
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 11:37:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746031045;
-	bh=b3dp5KW7OreVaxGvi8WjnNnrvEUPu4U0ZEyTIjYYRug=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=YO8E7UOWV/1k49uebg0Dz8gWLfFkhIrgGdvBeQFYhxNuxkMQIjoJOcJnnLBi8Ce1M
-	 AsEdzDYxO27bgI4VExootBdBHvPP4aKwS1OL4V5n9adS7Fzceg3/aTU0BBtu1AcRp7
-	 NAbuziNBWconD3zY9N3zWJcX75jTKharo3hLOAuY=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53UGbPE9009237
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 30 Apr 2025 11:37:25 -0500
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
- Apr 2025 11:37:24 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 30 Apr 2025 11:37:24 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53UGbInj068775;
-	Wed, 30 Apr 2025 11:37:19 -0500
-Message-ID: <1f8c43cd-8c26-4e42-b144-b91f5ffc2e2e@ti.com>
-Date: Wed, 30 Apr 2025 22:07:18 +0530
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CKkIitfA"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so70635915e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746031122; x=1746635922; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ImSfHGGDXmae3/biQUrc2P/URlkNlj76LbgQ/xlJH98=;
+        b=CKkIitfADxBdSqGUCWMkOThE1jTrvFSJZuyRABPLGn2aS7dnws+eH3W6XLQ1qG5gjO
+         Gr5IYJK5FNFHumMYGdFv0aXyPy5xPczbI/uVN3/YOn1Ea34z0SrhbMqGNnClh/vskurO
+         diEbki/F5X/gj6o9T9Kzp6S3+zQsUvSg6gmqWr3P6n7YFddQACB8b2UWqSR031MphRGp
+         eXVhTEXnGkI4166ayB6JWPH9dtDDBP2b3TyHNJS0Qoyl8T2/8Hfu3zdxRbbYd9XefVwn
+         ZMl/pZ9f2W70BukkG0sop+BWefRIs44Ej03vfrk5JjswxqVlIGBJDghrvaM3SiBgNkdk
+         kjuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746031122; x=1746635922;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ImSfHGGDXmae3/biQUrc2P/URlkNlj76LbgQ/xlJH98=;
+        b=kGzOII6Ha67T5O9OwK7eAxcr+PY0oERF+6qK1gp2pT9yhc4x1NFrrZoGiKFtebXvbH
+         9eDZEq22Cun2WeDvFiY8gjGMGXEgJcEh8+Xfvk8hopNKVlx6Vh9S4mZrEizAZo8eod+7
+         8FYXJIRlUSgwoxgg7+3DXVLyDm9vfzGKGqXAGzrizNYBpLcor2qBhjp3xRBnww50+C4v
+         PmJRo4BWmxx1cO4/E9OusAF5VTxlASuSw3HQ2NFYobLpzJAbZmEUdULSsw8DBhcawyls
+         QyZce6Hw4zc9KSoS7VkwoxgmVAUjuCmSczI2+E/gm0iKu7xk54ckRXmHyaOvLlf7I6RK
+         OSDg==
+X-Forwarded-Encrypted: i=1; AJvYcCXGX0afL/MPXW4aE4kYkvfoWRJSdPekg4kjQyGXVaAAf692KiO+s0d7MeBWBk7TXLFvp18Bbp5a80YiEcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwYRPkxckJyhRIRVHLTq/AxINH6kb1vnHWlOverClMWsra/8nvO
+	jGBmhzXTtR2y/oGVTXtF2h9TIxOtYa8crqBH7Y3X3bYyawhuZyoFXQXDJ0DikTI=
+X-Gm-Gg: ASbGncvvt8ZXdruXQuWNzvreLjHJD3UMr74cObPf+M7ZjR3fsT+OKMtbpt73xYmbBVB
+	eETGRf1hfaA9m1v10l7gnqt4B6urrSl37lWJp1BnDbUu/8XkVjfHMM7ut2CVNndX0g+cczC9+t4
+	a39sWe3ODp4Qi61xpTYf9hzG9YXS6ZQ3BGCQV7TYpm5dfGXftgzgjLJ2X1h/W8G35NgDbsTnGIH
+	XjkgeK0Dw6nfqkMuwnDw58tLHZF5zIstj6ARfuaHDUwkO0p6jsx0t9s6Edzapm3hxgAeJFNFPgZ
+	f9lQ70GRZzMZJM9ttFSr8yssfMf3IJglI2nKAGI5Q+MbDrnUV6em/1TwLqR0iahLvxGYLUnYnm+
+	wmp8=
+X-Google-Smtp-Source: AGHT+IEKy3F4uYVmzfjaV7eUGAdjznhecYK7JE8sAsW9F6Cog3MaZ4CfTM6KaWY5hOefQKaGuojVAA==
+X-Received: by 2002:a05:600c:1e12:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-441b25dd779mr37480605e9.0.1746031121822;
+        Wed, 30 Apr 2025 09:38:41 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2af2a5fsm31756385e9.20.2025.04.30.09.38.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 09:38:41 -0700 (PDT)
+Date: Wed, 30 Apr 2025 18:38:39 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: amitk@kernel.org, thara.gopinath@gmail.com, rafael@kernel.org,
+	rui.zhang@intel.com, lukasz.luba@arm.com,
+	david.collins@oss.qualcomm.com, srinivas.kandagatla@linaro.org,
+	stefan.schmidt@linaro.org, quic_tsoni@quicinc.com,
+	linux-arm-msm@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, dmitry.baryshkov@linaro.org
+Subject: Re: [PATCH v3 4/5 RESEND] thermal: qcom-spmi-temp-alarm: add support
+ for GEN2 rev 2 PMIC peripherals
+Message-ID: <aBJSDwZg6Sr7t4bZ@mai.linaro.org>
+References: <20250320202408.3940777-1-anjelique.melendez@oss.qualcomm.com>
+ <20250320202408.3940777-5-anjelique.melendez@oss.qualcomm.com>
+ <aAI1JnQ2yCjtJL9u@mai.linaro.org>
+ <6031624c-9c65-4df8-88db-96800d58c910@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
- cut-down versions
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
-        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
-        <h-shenoy@ti.com>, <jyri.sarha@iki.fi>, <airlied@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-References: <20250429143656.3252877-1-devarsht@ti.com>
- <20250429143656.3252877-3-devarsht@ti.com>
- <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <6031624c-9c65-4df8-88db-96800d58c910@oss.qualcomm.com>
 
-Hi Tomi
-
-Thanks for the review.
-
-<snip>
->>   @@ -2025,7 +2101,7 @@ int dispc_plane_check(struct dispc_device
->> *dispc, u32 hw_plane,
->>                 const struct drm_plane_state *state,
->>                 u32 hw_videoport)
->>   {
->> -    bool lite = dispc->feat->vid_lite[hw_plane];
->> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
+On Wed, Apr 23, 2025 at 04:31:18PM -0700, Anjelique Melendez wrote:
 > 
-> I don't think this is correct. You can't access the vid_info[] with the
-> hw-id.
+> 
+> On 4/18/2025 4:19 AM, Daniel Lezcano wrote:
+> > On Thu, Mar 20, 2025 at 01:24:07PM -0700, Anjelique Melendez wrote:
+> > > Add support for TEMP_ALARM GEN2 PMIC peripherals with digital major
+> > > revision 2.  This revision utilizes individual temp DAC registers
+> > > to set the threshold temperature for over-temperature stages 1,
+> > > 2, and 3 instead of a single register to specify a set of
+> > > thresholds.
+> > 
+> > Can you elaborate what are the different stages in the QCom semantic ?
+> Stage 1: warning
+> Stage 2: system shutdown
+> Stage 3: emergency shutdown
+> 
+> This is the same as was outlined in original driver documentation:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/drivers/thermal?h=v5.4.281&id=f1599f9e4cd6f1dd0cad202853fb830854f4e944.
+> Will add this info to commit.
 
-I don't think hw_id is getting passed to hw_plane here. The
-dispc_plane_check is called from tidss_plane_atomic_check which passes
-hw_plane as tplane->hw_plane_id and this index starts from actually
-instantiated planes i.e. from 0 and are contiguous as these are
-populated from vid_order array (hw_plane_id =
-feat->vid_order[tidss->num_planes];) and not the hw_id index.
+Thanks for the pointer and the clarification
 
-So for e.g. for AM62L even though hw_id is 1 for VIDL hw_plane is
-getting passed as 0 and that's how it is able to access the first and
-only member of vid_info struct and read the properties correctly and
-function properly as seen in test logs [1].
+> > > Signed-off-by: David Collins <david.collins@oss.qualcomm.com>
+> > > Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> > > ---
+> > >   drivers/thermal/qcom/qcom-spmi-temp-alarm.c | 136 ++++++++++++++++++++
+> > >   1 file changed, 136 insertions(+)
+> > > 
 
-> 
->>       u32 fourcc = state->fb->format->format;
->>       bool need_scaling = state->src_w >> 16 != state->crtc_w ||
->>           state->src_h >> 16 != state->crtc_h;
->> @@ -2096,7 +2172,7 @@ void dispc_plane_setup(struct dispc_device
->> *dispc, u32 hw_plane,
->>                  const struct drm_plane_state *state,
->>                  u32 hw_videoport)
->>   {
->> -    bool lite = dispc->feat->vid_lite[hw_plane];
->> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
-> 
-> Here too.
+-- 
 
-Here also hw_plane is getting passed as 0 and not the hw_id which is 1
-for AM62L.
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-> 
->>       u32 fourcc = state->fb->format->format;
->>       u16 cpp = state->fb->format->cpp[0];
->>       u32 fb_width = state->fb->pitches[0] / cpp;
->> @@ -2210,7 +2286,7 @@ static void dispc_k2g_plane_init(struct
->> dispc_device *dispc)
->>       /* MFLAG_START = MFLAGNORMALSTARTMODE */
->>       REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
->>   -    for (hw_plane = 0; hw_plane < dispc->feat->num_planes;
->> hw_plane++) {
->> +    for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
->>           u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
->>           u32 thr_low, thr_high;
->>           u32 mflag_low, mflag_high;
->> @@ -2226,7 +2302,7 @@ static void dispc_k2g_plane_init(struct
->> dispc_device *dispc)
->>             dev_dbg(dispc->dev,
->>               "%s: bufsize %u, buf_threshold %u/%u, mflag threshold
->> %u/%u preload %u\n",
->> -            dispc->feat->vid_name[hw_plane],
->> +            dispc->feat->vid_info[hw_plane].name,
-> 
-> Here hw_plane is not actually the hw-id (anymore), but elsewhere in this
-> function it is used as a hw-id, which is no longer correct.
-
-For accessing vid_info hw_plane needs to be used which is the index of
-actually instantiated planes and I see it as correctly being passed for
-AM62L too. hw_id is only for dispc_k3_vid* functions where we need to
-skip the not-instantiated vid regions by adding the offset per the hw_id
-index.
-
-> 
->>               size,
->>               thr_high, thr_low,
->>               mflag_high, mflag_low,
->> @@ -2265,7 +2341,7 @@ static void dispc_k3_plane_init(struct
->> dispc_device *dispc)
->>       /* MFLAG_START = MFLAGNORMALSTARTMODE */
->>       REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
->>   -    for (hw_plane = 0; hw_plane < dispc->feat->num_planes;
->> hw_plane++) {
->> +    for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
->>           u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
->>           u32 thr_low, thr_high;
->>           u32 mflag_low, mflag_high;
->> @@ -2281,7 +2357,7 @@ static void dispc_k3_plane_init(struct
->> dispc_device *dispc)
->>             dev_dbg(dispc->dev,
->>               "%s: bufsize %u, buf_threshold %u/%u, mflag threshold
->> %u/%u preload %u\n",
->> -            dispc->feat->vid_name[hw_plane],
->> +            dispc->feat->vid_info[hw_plane].name,
-> 
-> And here.
-> 
-> All these issues make me wonder whether we have the right model. It's
-> just too easy to get the usage wrong.
-> 
-> I'm not sure which way to go here.
-> 
-> Fix the current issues? It's a bit cumbersome to go from hw-id to the
-> index (needs a search), just to get some hw properties.
-> 
-> Or go back to the earlier one, with a vid array containing unused slots?
-> That makes the for loops a bit harder.
-> 
-> I need to think about it...
-> 
-
-Hmm, I don't think so, it seems to look fine to me and work fine too. I
-have tested thoroughly for AM62L (which has uninstantiated vid region)
-along with AM62x and AM62A with all planes displayed simultaneously. If
-you want I can put on some test logs, create some dummy holes for VID
-regions in AM62 and AM62A to put this on to some further negative tests.
-
-Also if naming convention is confusing (hw_id vs hw_plane) then maybe we
-can use something else like vid_idx ??
-
-[1]: https://gist.github.com/devarsht/82505ca69f0bd5d9788bfc240d2e83d4
-
-Regards
-Devarsh
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
