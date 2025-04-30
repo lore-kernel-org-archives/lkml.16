@@ -1,89 +1,157 @@
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741AC25D534
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:22:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2931E834A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:24:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746033761; cv=none; b=u9IxA+46eZ8gVhleQPGmoI+/Gv3cYr49VDHyxgwq/SaJ32ozvhfw+595o2IeCALY6bElFXS8x2gj7sGaHhG7aykocWuKq8PGp+w1Wo6Wd+WK/Hynz6xV4y5aH1lN8CjGKwwgO1Uny3M9IknMHEU5/1Guvew4rKdgPxoJPqhtdSs=
+	t=1746033868; cv=none; b=YgAAxYFbcuGDMcvuKr7me+NxlQ304iRsMdp7laBayA8luFGajTQtnYn+LMVakN2VXRW/utx0D2GuK+e0wJ49HYMCj1WsKlnYp326j4SpHUy9kw9epooO5yRcB9bybGah+7FLKXpzanJdqlrrXtC8xDaSsOttGiRSd61Xj4N++zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746033761; c=relaxed/simple;
-	bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HTIiD+r+2CCnrTXRlemRFbQ1+Q7GQlgSn/dhKhP6GO1dKHFnc60p6AJD1nUBZwq6ukzf9Uc/Y73ER+eJ1gD9Mzc1DRZabPpFvdDduISA96wWmJnGyQN/VUv1sa5XZeEDG8ZaOdlV7qljexIlIdlM+KjY0GfWjmMPvEPKxUFw8TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7p5gLzu; arc=none smtp.client-ip=209.85.219.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746033868; c=relaxed/simple;
+	bh=mMZAlErZ6zeNrhp3KAdn7ICynxIviBAECZy9aocNaec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L8d4zF6HYNr7PTsG+wXk2Mi4KCGh47HTDxVAxN7TYZLfBRD1PAVFthQnum2iavuZYTVFvcCC3oAFQ5UXyrYi8F4FBkCuvxwwc1fM/6A7UjwDwxGp8GmgHTPrFxSzhwK+nXqOp6643LKOpG2TGQ5YlR1m3VikYNFBLQaHTQde9c0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hENnRGKD; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7p5gLzu"
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e900a7ce55so2009916d6.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:22:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hENnRGKD"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so17969f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:24:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746033758; x=1746638558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
-        b=Z7p5gLzu00uAAMW6THlo7nFcH73ZpoXEKksrJ7jn3UHkvnc/mkITMA4Te29WerYAI3
-         aIzHirknmMB73TF9i+MeIAOwlud6DhJytlV0/1DqBoFbX00kD6D06eTx4HMuiXCeql9X
-         g7a3HiGpL3pnnAGvkxpFgrbALkDom0tPB5w3iw3ZFuITIJBcHAVGOHRpueBiOMnoGjgJ
-         G0OKaJNaEuT8YOVE8P4IX4K+/VnGQdO5TTIKIB/m/I5eUHXJJis0xGbUk7bSXEsZCIIN
-         Q99dxkcnSBJxq4M2XK7tf9hE0vLJpLKm+CuLesljnUWLM9aMXq1clTAqtis6vWTKmj+i
-         MdOw==
+        d=linaro.org; s=google; t=1746033865; x=1746638665; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ayaaH32OR9vWgQYDr3r7ikDeC22kKOnm+kDUQdBlQOM=;
+        b=hENnRGKDSte8OyPd+RfsRz8j+UC2tHDyUdXhSYUvePFQd99vHe6jQtIGzlRz7qvc0t
+         WncimjjJb3nHwEUItB9z2nNnKFsOSaA7Loz0SQIsPBqYjTkvjGTx0URW0mmMx0wfBm9a
+         O3oG4Yo36rVDBga+EupvuVNiqdHtOkPO+6H4VfVU1bwXKERCImw6aSXc5MRx8mMLJ5/y
+         De1R4jIP7Sc201Q0e828FYX4P3jI7Oa5bLsn5Gtl4dGn77Qupucug4MdeG5kPk6zWmdm
+         veOboqz0WK0xt4Ek43+Qjo4fzOqShFKdOy3u6sSGzM7AmALEuLlMnULCWOEjfVmfPy6z
+         vuGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746033758; x=1746638558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
-        b=NXzfJyfexxFuB//P4KQy24LFZx19m8pTXwZMlzrthaBqoGdKIRaBcri6WxVu971s2W
-         E6EICWCZPvtB/3WHOHL7AHoCBGEAJ9umvUF2Vd4vmyT+Mq6wnxMOUF1uGlLTTcKFpAyj
-         /6YppuayosWK61FN+MHXgZzGknGT50W6A357UlyWbrUyRnCedcI96jyhsBQqvdBHWrlv
-         KJHdJy3usXYT7Oril9+2lEqYIBKE880L0UjBZM/MDChM/9P6i2AQbT7i5WO4YZL7G3Id
-         yrsJxwdhQ8QSdtggFqDolRvPZ7IBvClII+9mKqswkHicmzZMsNW8uy1feYnulMcAwcFr
-         +qNw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBPv4IOr9fm6TNt2F/mK7YAV6x1R6rhFWGOlb4VtqT64GBVe0unHGe4r2bvMMbvo5hJ5DFffRrYizfSwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPO05xlNavj4j4mivHjt0qDhqfKaIMRMmmfUsGDMmPrXEKW82G
-	F2Jynp2uC8tS/89TkXsKemiyhSaidLoskIqOvoJHoj8q/k/dkrmv7cvOk3nSnKavu/cbbNhTng4
-	WxxPnx82yItb+OCFXNv8oaiDB3iA=
-X-Gm-Gg: ASbGncuL2QGfV6aM5vsM6H4ER/GYuH76cC8B3Is3DvyjEvc97n+RSh85Pb5J71gtn0K
-	evs090Ree+o3jaMpSzTaqhuM7InNgV/ucgjymZwcv5qUSmx5rsUAxASUZm3Xb2pg9fpBUqFP62A
-	akcZ+ihLVw/BKWz8neTjXn6xo=
-X-Google-Smtp-Source: AGHT+IF0hkSUkBscoztwrJiCPtGe/eqecg5IeOVFYTEiAr9H2ndJDheoCXzUScHPG2WNdnXZOmnD+9FyO9Oh9/9V6Q4=
-X-Received: by 2002:a05:6214:d8d:b0:6e8:ddf6:d11e with SMTP id
- 6a1803df08f44-6f509135fd5mr1962686d6.21.1746033758098; Wed, 30 Apr 2025
- 10:22:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746033865; x=1746638665;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ayaaH32OR9vWgQYDr3r7ikDeC22kKOnm+kDUQdBlQOM=;
+        b=H2kq6dUc7Bmvf269XF6eRtgjTYKqmhXvbG1xv1apADgzYO4wnlq68Lr9sNfP/reaVR
+         mXcUAnfJL38ujfJd47gOHp2qlOaq62BDwKmvdK5thBTOAkqlSvtyLhBYSDIwRplLEEbL
+         KA4x59zan1ipoDTbXy3seulJin79X3kdw78Z522jeSK2MjiVaICGYzZ/Ymz4jgd/e+ss
+         h+eld70lok8yMAwzamLvOEOzNM0O1Hcu2UiGm0wHPGRUvnahMNI7NzDJrUzsfACT5lDg
+         mPoUM24SPwoTVoIBvYZ4YZM/0Gv89sRc1Hlg+07dW0kQdHGHRwXMVb32iomBedxk29kA
+         3p3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVjMr9Bbh+UjzqcnMlvpdmxMj3IzRBzNBVb6/naftmLDwVF6k7/ONwYTH+C4DHjAuwyIO2nhZLY5H6DDjE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1rs5XFYG3dg/7ckCamIxrcyp2H2ymmbaFRygfZqqrQyc8UwUk
+	ND9i/1JG/Ngnr8jgL8vG5gEAD+8hCdIMGRBZ4EDhd+wQ5eM+l+vjr5ckDkqykV8=
+X-Gm-Gg: ASbGncszOS3QP/KYjkf6cNWtj9NyHX/HMlTbtkcraG+3mX+VwD6lDMK3QR5l0hKdg3s
+	77bNMrie9BimMG3cwukroqR4z/bbKdgR4YBmfYNcQWeVDzwmuJvG+GQvQD4BQ9TDSNhkp9KQhoN
+	Kb3VsZ9YDs4w2F/RV4Q2Jg2pcD2YBUC72U9cJ5n4Hcl71kmMlvfoFE9LkEkK/UMohJ7v7CI/icA
+	lj5uc5BEwFu6+BlPQ08dkl5TcrGeEu8oJCJtH3Y90KQdujhq7YeX0H7MXvGQwqgx4h7boOrpItF
+	RcF/w3RiQ5fHQ+rec1JAwGxEpSWNSsONCgzQuloaMHWsqZQNDTeQkdGRVy0AUAN+NhwAQr0zXaH
+	C2BKKNCfGQk1O8Q==
+X-Google-Smtp-Source: AGHT+IGOhD9VTEP3B95PCaK57gP5L5FqVsVm5W5JWQufEnZgC4ns/6K60KiF/Cb9Oj1M6oJruDEGDg==
+X-Received: by 2002:a05:6000:2cc:b0:3a0:8c46:1763 with SMTP id ffacd0b85a97d-3a08f7292a7mr4154159f8f.0.1746033864978;
+        Wed, 30 Apr 2025 10:24:24 -0700 (PDT)
+Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073c8d60asm17897655f8f.18.2025.04.30.10.24.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 10:24:24 -0700 (PDT)
+Date: Wed, 30 Apr 2025 19:24:22 +0200
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jon Hunter <jonathanh@nvidia.com>, Robert Lin <robelin@nvidia.com>,
+	tglx@linutronix.de, pohsuns@nvidia.com,
+	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	sumitg@nvidia.com
+Subject: Re: [PATCH v5 1/3] clocksource/drivers/timer-tegra186: add
+ WDIOC_GETTIMELEFT support
+Message-ID: <aBJcxnOhKLUGA5lx@mai.linaro.org>
+References: <20250421100821.2907217-1-robelin@nvidia.com>
+ <20250421100821.2907217-2-robelin@nvidia.com>
+ <aBCU5vec0XMX5VRz@mai.linaro.org>
+ <fbb3a1b3-3949-402a-b51c-f5446a392e83@nvidia.com>
+ <0fc89d71-6510-4ca9-a789-290e1818798c@linaro.org>
+ <4ks74upuufmt2ibh5ur5zpazvfj66ak4gyq7v4rtz2zi2u5wsi@rls64ws3rukp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
-In-Reply-To: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
-From: Nhat Pham <nphamcs@gmail.com>
-Date: Wed, 30 Apr 2025 10:22:27 -0700
-X-Gm-Features: ATxdqUEz8NUpZ41yOc0wEWBdYrRigHz3dBQhIEdEZTRmRa2kkuklIIa5A4uoDWA
-Message-ID: <CAKEwX=P192ijuK+O6r5ocwZsbtiV=-gVc1tz-=dtQ1NCw65gUA@mail.gmail.com>
-Subject: Re: [PATCH] mm: Add Kcompressd for accelerated memory compression
-To: Qun-Wei Lin <qun-wei.lin@mediatek.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, Casper Li <casper.li@mediatek.com>, 
-	Chinwen Chang <chinwen.chang@mediatek.com>, Andrew Yang <andrew.yang@mediatek.com>, 
-	James Hsu <james.hsu@mediatek.com>, Barry Song <21cnbao@gmail.com>, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Kairui Song <ryncsn@gmail.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4ks74upuufmt2ibh5ur5zpazvfj66ak4gyq7v4rtz2zi2u5wsi@rls64ws3rukp>
 
-On Wed, Apr 30, 2025 at 1:27=E2=80=AFAM Qun-Wei Lin <qun-wei.lin@mediatek.c=
-om> wrote:
->
+On Tue, Apr 29, 2025 at 04:23:22PM +0200, Thierry Reding wrote:
+> On Tue, Apr 29, 2025 at 03:19:25PM +0200, Daniel Lezcano wrote:
+> > On 29/04/2025 11:15, Jon Hunter wrote:
+> > > Hi Daniel,
+> > > 
+> > > On 29/04/2025 09:59, Daniel Lezcano wrote:
+> > > > On Mon, Apr 21, 2025 at 06:08:19PM +0800, Robert Lin wrote:
+> > > > > From: Pohsun Su <pohsuns@nvidia.com>
+> > > > > 
+> > > > > This change adds support for WDIOC_GETTIMELEFT so userspace
+> > > > > programs can get the number of seconds before system reset by
+> > > > > the watchdog timer via ioctl.
+> > > > > 
+> > > > > Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
+> > > > > Signed-off-by: Robert Lin <robelin@nvidia.com>
+> > > > > ---
+> > > > 
+> > > > Hi Robert,
+> > > > 
+> > > > I realize that this driver should be split in two and the watchdog
+> > > > part go
+> > > > under drivers/watchdog.
+> > > 
+> > > Are there any other examples you know of where the timer is split in
+> > > this way? It is not clear to me how you propose we do this?
+> > 
+> > Just keep the clocksource and move the watchdog code (everything related to
+> > the watchdog_ops) to a new driver under drivers/watchdog
+> 
+> That's a bad idea. This is all a single register space, so we can't have
+> "proper" drivers (i.e. ones that exclusively request I/O memory regions)
+> if we split them up.
+> 
+> I understand that it's nice and easy to have things split up along
+> subsystem boundaries, but sometimes hardware designs just aren't that
+> cleanly separated.
 
-cc-ing a couple more folks who are interested/working on this area
-(Kairui, Shakeel, Johannes, Yosry, Chengming, etc.).
+Yes, that's true.
+
+The driver has a lot of watchdog code inside and I think it is
+possible to move most part of it under drivers/watchdog. Perhaps by
+exporting tegra186_wdt_disable() / tegra186_wdt_enable().
+
+Anyway, I understand that is an important change and I don't want to
+block this series for this reason. At the first glance, these changes
+seem to be fine for me, I'll just do a last review and comment/pick
+them.
+
+> > BTW, there are three clocksources with the same rating, what is the point of
+> > having them supported ?
+> > 
+> > Is it not the architected clocksource enough ?
+> 
+> The TSC clock source that this driver exposes is different from the
+> architected timer. It's a SoC-wide clock that is routed to various IP
+> blocks and used for timestamping events. This clocksource allows these
+> events to be properly compared, etc.
+
+I see, thanks for clarifying
+
+  -- Daniel
+
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
