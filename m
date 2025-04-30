@@ -1,97 +1,159 @@
-Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37420E032
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:47:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
+Received: from zucker2.schokokeks.org (zucker2.schokokeks.org [178.63.68.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8DB01E9B3A;
+	Wed, 30 Apr 2025 19:48:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.68.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042439; cv=none; b=kReAxrIwjRN/ACxVetaz9w+SoLErvL6fXdAWx94miWN9YbmmojHdn6XPAsFzoUfiQ14qph5Y7ldwxq7uPxdulW+jq1pEbEs1s8xW33wRCCkosPCHd56r90B4UZjx/AGIGN40C3L8k9iTwZO6LxrKyNtUSwI1vYRULlGPMr5ogXg=
+	t=1746042512; cv=none; b=LMP6NzmmoNqnNbihitvcpfJedSVpsEyjqEM8XFbHB3Ji/C4d8v6AQs8k2QTRhl3Q1plVByy2EF2A9VfgQsbirKmQfIePWs0z+ZkXrdIpIFVTIdY1uY5oHZAZ7ciy9czt+ErbIRskBMI4cP9H/brXg1cIsH8WGlmqDoJoFKWivtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042439; c=relaxed/simple;
-	bh=rZMBHrZhnFOIs/GKEWTOf+qqgNTCxbQ6a+81ctNfUNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=raqn7KpTtzcwPam98+sEOXhAQD1dIGbvShXdeMkqJYY+cP5674he/baSS9FYJrJrB7E0x2P6cGVWcTBEiL/9jNik0vy3L5RgUXiA5e38Q3y31l7jtJ5CauubkzOj/WrWgx/ZAE4BmoQDircijgQm/Gao8aCxokts5y+ML1hStZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dmeWlgMz; arc=none smtp.client-ip=44.202.169.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1746042512; c=relaxed/simple;
+	bh=vIXBsceJywR8lxkQXHTvqCxXPpEsE5ob+i7eM7Lw1wE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZKc6VDzCwQIu7cYyQJnsr84tFtcKsVxGnTCYD4ye6/pltMVgz6F0vNpoDJqEadtiGNDih5yE59as3MqNDnR+5Tp45rdqJtX4VAmnXzctkaDTi00snjK8d9HUgPo+sKUhDvpH2FlKedkf/OruFsF2OcDi5TCyFAiSeCZCOIRQrOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de; spf=pass smtp.mailfrom=hboeck.de; dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b=FuoljF3/; arc=none smtp.client-ip=178.63.68.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hboeck.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dmeWlgMz"
-Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
-	by cmsmtp with ESMTPS
-	id AAp5uOBIQiuzSADOmuOOYW; Wed, 30 Apr 2025 19:47:16 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id ADOluRekwW4jOADOmuifrC; Wed, 30 Apr 2025 19:47:16 +0000
-X-Authority-Analysis: v=2.4 cv=UNHbHjfy c=1 sm=1 tr=0 ts=68127e44
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
- a=nXsU5qcrRgWmc-VP2AYA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=rZMBHrZhnFOIs/GKEWTOf+qqgNTCxbQ6a+81ctNfUNU=; b=dmeWlgMz6G6zXCPBYFiRD+4rtU
-	3iR0nNQWlD8tkIqek5wLtiSDtkG5JgSMD0A21zlTW1lHRoFxmypSGpA6ylsvMPI+q6V65BGO27GEn
-	MXtf2hc/33osF/0jiEeblKx4gUlF0ipPo0yucnfg887oWtimnR7nwyxuirjU6gA5AQ4o7voNkaC1A
-	xSdtaqHMKOQIBwrWteidDWFCRZVi6vOoI+2UrDQnyVV4Xk8BuKmudXJJ644CTYZfUQ/GG7swwfNoE
-	iqAQxAOVc5Zd+8vkKOw87Te9fUYVUXvuhMl9H6QyiJ1OdjxenF8CU5rhAce22W0X6HkQ6tiZYNVty
-	Ru3GyvvQ==;
-Received: from [177.238.17.151] (port=37764 helo=[192.168.0.101])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uADOk-00000002wuX-3ONN;
-	Wed, 30 Apr 2025 14:47:15 -0500
-Message-ID: <ff411eb8-0321-488a-8e5e-14f426943697@embeddedor.com>
-Date: Wed, 30 Apr 2025 13:47:09 -0600
+	dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b="FuoljF3/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hboeck.de; s=key1;
+	t=1746041898; bh=eTaDm98D/en97YYrn4m0socY7fqhyB9xFUhKJAjwdrY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Transfer-Encoding;
+	b=FuoljF3/nr41SJmTdH9DXOPKNJuSIdOJyK9ph8FX2zWZA8f65y1fEZuqcPiXK2aUL
+	 wqdU0H+ZTStw8O6MyghFuCgzy1SUQlSiTJ3hrW9n7TH9brrmsQzZj+bbPG6tVD/e7B
+	 ooR1fN91LH/ocj6dpTgY5pGO8D/2yD9M8pbZrt9tlrcXcQIc2JRTC2W3pN1IId7+F9
+	 nT1uuT4243ELAdXHBVzsDMVGfu3yoUfkwvpiau7U2a34Hi8WVOUMUgGdnX7uvuIDvi
+	 CN/KczyOnp9cKkX/+bLUDdNS3ztnT6DTD/rs+37toRWqlxqaIXV+KwkhHMaIDagdt6
+	 dmuZJWgw/mEGw==
+Original-Subject: linux/rmi4 driver: "BUG: kernel NULL pointer dereference" when
+ accessing update_fw_status or bootloader_id
+Author: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
+Original-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, david@ixit.cz
+Date: Wed, 30 Apr 2025 21:38:16 +0200
+From: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
+To: dmitry.torokhov@gmail.com
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+  david@ixit.cz
+Subject: linux/rmi4 driver: "BUG: kernel NULL pointer dereference" when
+ accessing update_fw_status or bootloader_id
+Message-ID: <20250430213816.7527e190@hboeck.de>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2][next] bcachefs: Avoid -Wflex-array-member-not-at-end
- warnings
-To: Kent Overstreet <kent.overstreet@linux.dev>,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <aBJ4WVcvHv9sD1K6@kspp>
- <zn74qlanwd3b4wmyecn7ostb6i42ceycaa2myijimfsrs3eglc@tsgoa3zbe6ue>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <zn74qlanwd3b4wmyecn7ostb6i42ceycaa2myijimfsrs3eglc@tsgoa3zbe6ue>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1uADOk-00000002wuX-3ONN
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:37764
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 14
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfKWoav5zkK7bLzFYN7BdIYv5oKhtxnVhjeY408ztj1rrYy5/EYmOTrBl7YGRa4MXHBhlaazFj1Tkie84jDPe1JvhGf4MCwKqBysgn3clu6QzkZTVpR2x
- TZA2yAqh4uIVStw5MZ4LyW5ooTRUj9N5vMSmQ9OQ56KfNPR5ZEvqGXuqcL2Ha+wXRvuG/uwzXB7U5itMDOztZ3fbs1y906pOR8AlMbAq9sHEv+874P5jv1JB
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-> Applied. Presumably you only need this in 6.16?
+Hi,
 
-Yes - there's no hurry.
+I noticed that trying to read some sysfs entries created by the rmi4
+driver cause a kernel oops (BUG: kernel NULL pointer dereference).
 
-Thanks
+This can be triggered simply by running cat on these files, also as a
+user. Tested on a current vanilla kernel (6.14.4).
+It happens when trying to read from one of these files (exact path
+likely will differ depending on system):
+/sys/devices/pci0000:00/0000:00:1f.4/i2c-6/6-002c/rmi4-00/update_fw_status
+/sys/devices/pci0000:00/0000:00:1f.4/i2c-6/6-002c/rmi4-00/bootloader_id
 
--Gustavo
+This is on a Lenovo X1 Carbon 2018 edition, lsusb lists the touchpad as:
+Bus 001 Device 010: ID 06cb:009a Synaptics, Inc. Metallica MIS Touch
+Fingerprint Reader
 
+The dmesg output for an access to bootloader_id:
+[   68.184846] BUG: kernel NULL pointer dereference, address: 0000000000000=
+008
+[   68.184866] #PF: supervisor read access in kernel mode
+[   68.184875] #PF: error_code(0x0000) - not-present page
+[   68.184882] PGD 0 P4D 0=20
+[   68.184892] Oops: Oops: 0000 [#1] SMP
+[   68.184902] CPU: 6 UID: 1000 PID: 4704 Comm: cat Tainted: G     U       =
+      6.14.4 #2
+[   68.184915] Tainted: [U]=3DUSER
+[   68.184919] Hardware name: LENOVO 20KHCTO1WW/20KHCTO1WW, BIOS N23ET90W (=
+1.65 ) 11/07/2024
+[   68.184926] RIP: 0010:rmi_driver_bootloader_id_show+0x1d/0x60
+[   68.184964] Code: 98 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 =
+d7 48 8b 40 78 48 8b 50 20 31 c0 48 85 d2 74 3f 55 48 8b 82 90 00 00 00 <80=
+> 78 08 05 0f b6 70 09 0f b6 50 0a 48 89 e5 74 12 89 f1 48 c7 c6
+[   68.184973] RSP: 0018:ffffac4e419ebc28 EFLAGS: 00010286
+[   68.184982] RAX: 0000000000000000 RBX: ffffffffb6d78700 RCX: 00000000000=
+00000
+[   68.184989] RDX: ffffa31782c28000 RSI: ffffffffb6d78700 RDI: ffffa317841=
+50000
+[   68.184995] RBP: ffffac4e419ebc48 R08: ffffa31782c22400 R09: ffffa317841=
+50000
+[   68.185000] R10: 0000000000001000 R11: ffffffffb56f8b0b R12: ffffffffb67=
+2c590
+[   68.185006] R13: ffffac4e419ebd30 R14: 0000000000000001 R15: ffffa317852=
+11348
+[   68.185013] FS:  00007f75e3a5a740(0000) GS:ffffa31ac2780000(0000) knlGS:=
+0000000000000000
+[   68.185021] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   68.185028] CR2: 0000000000000008 CR3: 00000001a0448006 CR4: 00000000003=
+726f0
+[   68.185034] Call Trace:
+[   68.185039]  <TASK>
+[   68.185044]  ? dev_attr_show+0x15/0x40
+[   68.185054]  sysfs_kf_seq_show+0x9c/0xe0
+[   68.185065]  kernfs_seq_show+0x1c/0x20
+[   68.185073]  seq_read_iter+0xf8/0x410
+[   68.185082]  kernfs_fop_read_iter+0x12b/0x180
+[   68.185091]  vfs_read+0x236/0x300
+[   68.185102]  ksys_read+0x56/0xc0
+[   68.185112]  __x64_sys_read+0x14/0x20
+[   68.185122]  x64_sys_call+0x9f2/0xa00
+[   68.185129]  do_syscall_64+0x63/0xf0
+[   68.185141]  ? __count_memcg_events+0x49/0xe0
+[   68.185152]  ? handle_mm_fault+0x1b1/0x2d0
+[   68.185162]  ? irqentry_exit+0x19/0x30
+[   68.185169]  ? exc_page_fault+0x190/0x5b0
+[   68.185181]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+[   68.185189] RIP: 0033:0x7f75e3aeaad7
+[   68.185196] Code: 20 49 89 d0 48 89 fa 4c 89 df e8 24 b4 00 00 8b 93 08 =
+03 00 00 59 5e 48 83 f8 fc 74 16 5b c3 0f 1f 40 00 48 8b 44 24 10 0f 05 <5b=
+> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 e2 e8 23 ff ff ff
+[   68.185204] RSP: 002b:00007ffe9e258720 EFLAGS: 00000202 ORIG_RAX: 000000=
+0000000000
+[   68.185213] RAX: ffffffffffffffda RBX: 00007f75e3a5a740 RCX: 00007f75e3a=
+eaad7
+[   68.185220] RDX: 0000000000040000 RSI: 00007f75e36d0000 RDI: 00000000000=
+00003
+[   68.185226] RBP: 0000000000040000 R08: 0000000000000000 R09: 00000000000=
+00000
+[   68.185231] R10: 0000000000000000 R11: 0000000000000202 R12: 00007f75e36=
+d0000
+[   68.185237] R13: 0000000000000003 R14: 00007f75e3cb1000 R15: 00000000000=
+00000
+[   68.185244]  </TASK>
+[   68.185248] Modules linked in: iwlmvm iwlwifi
+[   68.185261] CR2: 0000000000000008
+[   68.185267] ---[ end trace 0000000000000000 ]---
+[   68.199705] pstore: backend (efi_pstore) writing error (-28)
+[   68.199709] RIP: 0010:rmi_driver_bootloader_id_show+0x1d/0x60
+[   68.199715] Code: 98 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 =
+d7 48 8b 40 78 48 8b 50 20 31 c0 48 85 d2 74 3f 55 48 8b 82 90 00 00 00 <80=
+> 78 08 05 0f b6 70 09 0f b6 50 0a 48 89 e5 74 12 89 f1 48 c7 c6
+[   68.199718] RSP: 0018:ffffac4e419ebc28 EFLAGS: 00010286
+[   68.199721] RAX: 0000000000000000 RBX: ffffffffb6d78700 RCX: 00000000000=
+00000
+[   68.199723] RDX: ffffa31782c28000 RSI: ffffffffb6d78700 RDI: ffffa317841=
+50000
+[   68.199724] RBP: ffffac4e419ebc48 R08: ffffa31782c22400 R09: ffffa317841=
+50000
+[   68.199726] R10: 0000000000001000 R11: ffffffffb56f8b0b R12: ffffffffb67=
+2c590
+[   68.199727] R13: ffffac4e419ebd30 R14: 0000000000000001 R15: ffffa317852=
+11348
+[   68.199729] FS:  00007f75e3a5a740(0000) GS:ffffa31ac2780000(0000) knlGS:=
+0000000000000000
+[   68.199731] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   68.199733] CR2: 0000000000000008 CR3: 00000001a0448006 CR4: 00000000003=
+726f0
+[   68.199735] note: cat[4704] exited with irqs disabled
+
+
+--=20
+Hanno B=C3=B6ck
+https://hboeck.de/
