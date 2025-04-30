@@ -1,67 +1,69 @@
-Received: from mail-il1-f227.google.com (mail-il1-f227.google.com [209.85.166.227])
+Received: from mail-yb1-f228.google.com (mail-yb1-f228.google.com [209.85.219.228])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C048226D07
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDFFF226D14
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:52:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.228
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053565; cv=none; b=puJEfX2tDlBLlehKDcLEfmxIB507S7uVQiglESxnYjF3oFZBcF5wJTOQj4ZCk7R0prJDhUNxfzXoWBfbtfp/CJebFQa+4lltk0OG3cZ+Bb9FnvCqowZGSZfgRMitiOLTzvEkUEsVpEkFTpEougoOZ43+hzeCG3uLValSJubLRbk=
+	t=1746053566; cv=none; b=EHwTOY1artsnJ2/7ffWbth6eWLCc0o/9Jhviurxzqvu/o4tbY94JIV1D0XA9A+fHgR8w86nmb/8Fc8djyvUKh6aR2D9HA/0E+ct2uh3HFTqbiC0IR9xXv+SpkoMZQ6icJi2vLTJRssuZ/nYwhfSyVNwMnUD3z5OeKZeTMgJAjyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053565; c=relaxed/simple;
-	bh=F1u4A3II7J516T2IMIxcmX6L0E0d9Mdz2jTNW4o7BAo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tb9I8ufnJ7b6psxV6hTki7R6M39AaK8iahYROKKvxpIRzsVT/T0eKdb0G5zcXINWeRzJEAb3QAMQtAoBgtcOBZ6rtWUPYNBvdtoKlBvN552Yba+35Sv33bgKDZxirghUHgt51S4Mt1xODsBzxiV/mLE05TdVgXFv803hyzN7AzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=JFx/TjIf; arc=none smtp.client-ip=209.85.166.227
+	s=arc-20240116; t=1746053566; c=relaxed/simple;
+	bh=cKuSj07UNIbFR1xRrPWEFTmA04qMg5m4ZTKpCK+46sY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ceDVNHTNtkaXqHUoh9dapOVSXiAXPawqRTBTTSbAnnIQnJodyho2gd9v8i4DEGmof6NAAV3GTOtvKtfeUD9xe0nI7GyfKg9iY/SB6LKq9Lu4JX1+26x42vp6lTIhS8O3xanwuXrf2IdHub0zuu2D3Jc0Tm53R0o7bUkjlMzOXrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=GRM9m0PI; arc=none smtp.client-ip=209.85.219.228
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="JFx/TjIf"
-Received: by mail-il1-f227.google.com with SMTP id e9e14a558f8ab-3d8f9657bb3so182855ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="GRM9m0PI"
+Received: by mail-yb1-f228.google.com with SMTP id 3f1490d57ef6-e634949074eso38402276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:52:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746053562; x=1746658362; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qKzn8c1gT7pxjQ3957pT3uUayQRNh7QQtDCxX/k+loY=;
-        b=JFx/TjIf/FTENfLraB1pg2YnbEYcOAwYP4j+p/oF/+YC9DfKruro2hE3wionmO8vno
-         D0cEboiXx115w7j+DN12wa6Uo4lRTJZBUoJYu1kep2uuw1R4D8pW9qqrqMOvJzSelsAH
-         Q1WBcWNDgE2+7I3saxEWSqS8iAA0XDZ9oWUq7RFbakR1FdlltzsSFbMLKEqXk3lua7Le
-         tZILHad/X3lnV4zIukCX8onj7C0yEEitRgAOMf7BAHXEDo9cQDhTP2eomIw+TZKbk9r5
-         iIzpX9EhRp5dQQDq5Jg6pamCQdf/dPuD7KRH2mspzic+4BxNNk08X/L3xrDUy0LXQC3j
-         QcDw==
+        d=purestorage.com; s=google2022; t=1746053564; x=1746658364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zX3d6Es1jqYsyf58SuUf5JPCb512PPSOHmR2awR6dbQ=;
+        b=GRM9m0PI3tT1o2mH2Hw54ioWkMbII0CYyKdJG8OXwSDgCc+jUvWB3XqKFn1CtWowpx
+         pQJBAurxYkqUoRS1pvCKBXTnLs/eFwUvo9XOjBPNqMznHfVwUsjVbEh+LcQGbZusUOvf
+         K1LahCgZBykVi2Ev1aTTgXpBA9ttC0oPZqxy9XA2vdwv1QgVUO7KDm2AJTOdTkT0AxP2
+         Dh56/4DG7ClIIbTyxd7IzBDZpM4pM6P51e5/gklEMt5UI6fWkhdcvjx9yJpKOG0KCLhX
+         3lpMrfWo2m9LpqDra8nKLHSC9uCITkCVD7Eto+bTIuuiP2iyeqGG4N4gXctljytUxCur
+         nXbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746053562; x=1746658362;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qKzn8c1gT7pxjQ3957pT3uUayQRNh7QQtDCxX/k+loY=;
-        b=IPy2tDyod/xp2Bgc965/vWe5N+vy9jRJ6yC4JGha348Q+pdniOF+jRBsE2hXKTqKK/
-         0mtplp78t4Fm/ZgEFEwz90kahrKAS6Q6Ev3GEfIIRev9CqNB/UkbUcZK6V+YvbcNReLE
-         kqjoWnBIhgn3aPfvw+hvNpftnfW0aEwykbq8K94Yn9Olss1xohhrL7sxrMRFs1L9V/XT
-         At043p6tgZGir+wn3uSbLuLcuwuazINxyTutEFYY1A3UuvkvDNJ6HEQFLyTsAxPIAI5Z
-         fNeDgGISTHykhCpsqwI6XTF7k3DSCjKb5dgites1CjcDCW+LT0DE9Lw4aopSzZkUyjVR
-         nhvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUfKDG3E6pkGnqn4EFzNTT07m14b1xdCBIecLxmFKnB0yHqJd3zH+KEde0iGpDD4srgV1nIWEloYQM/vFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIL7Pj7OqtuuYLtihASgVY1twK6M8EsDHPYcEZ1SlxxRa5GscQ
-	3KTHnyxjw5dAKF58qyOMavgEcgOMzVectjfFxXqN5m08efJYU/AMKkD+3nrDInZOnU8/Gd0LjPu
-	1Zg+RjZ0xANayQFeqX7ekMXG8seup0TgzTJiLAu89AEPBUptR
-X-Gm-Gg: ASbGncve5xqjLMCRXMj6yPhuhy3vZ8ISvapM95J0BtpsdTCefMZnj0TEXpqRqRb0SCR
-	GLVGzOWXlyCiDJTBKVFTdrV09nhy33uT3KpBmYuFj4BhgivOYrm9vOET3MvVNi9At4XSfTvQe4I
-	HCBtyb0LZ8DRaW1oWmmGrvOpY6VwFIq7pAMePtk6YmodftK1+WDFs6jm/L9M5cpDu/AU1NPZgqK
-	O0J/uEuAHXbTuGuU3lexYVBAar8Bwi6BPur5mLb+/xFFoRJdW+RLTJaiBfYv7NwaF2X5vforDYZ
-	0D3FNiBthC1DMczP2I8b3ltGea2tXQ==
-X-Google-Smtp-Source: AGHT+IHXcEJToWH3+Ky6wiHTax+SifpxDXUZwle8Tn09a9JGf5xEuvTnKbVzf6vXj+eIm+MLYmELCBeMykmo
-X-Received: by 2002:a05:6e02:19c9:b0:3d4:3aba:9547 with SMTP id e9e14a558f8ab-3d9682a80bcmr13881195ab.4.1746053562302;
-        Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746053564; x=1746658364;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zX3d6Es1jqYsyf58SuUf5JPCb512PPSOHmR2awR6dbQ=;
+        b=KjBsvqtPFGi2zvoNOpQUar2nlbpKY+zX16h8SLXh3XF2Xs7UlrmcjUEhc95pB92YEE
+         t0P48AVk0TDTTg6/7pdAh7JOafCO7t+1Mp09UiUjzri3swT7PzmfQPqdCWvKfAPTJ2zQ
+         /TaGcs9ZfBWDQBWg02gXejSP8UeeKNvl2rVlzs3TsDzfdhW9yqnhFTSt8GzT64kpDmxr
+         MczyPQwxvzurtTI90BIPQYT4cNF9xAbUgLLk7k7ZRptVpet5uvg92AxXJnORThsaxooz
+         H0m9pW3HE7NWzkMab66R7qVwWBbHXN0OV2umozDYYhU/i+n9Gb5Ua/H3VwtkwkiTZTQM
+         znqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWINNq1aBI4Q0sMu/76whWsJpd4yuN8JLpmGrbYKHJQkdoMKED+IBOX+68FEe6BrzAtK3rkPaWX64QbKtU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQFrJFGiFZjL0vR+ZRRfVZuRiASSTscI4iwVBfmYY2CkeMQvXO
+	WobHXdyd19A5IJm/FnrW/D1GBy99Tn3cw3xxsLUVqxJDaoaYl+JcC/Om9uhgt5uzSk6r8UCS/OX
+	MG42pCeWodnFfqd7aQC1ZE2AWdHZ95Ub8FqZCO6RaBUTeTuio
+X-Gm-Gg: ASbGncsFDOoxRtGnhenDp51mLBCsOTMXETwzySBbXok7I27h/RyTbHoCMuMYGW1b5VB
+	L0lIQOen53uCYEBbbGnETnbK4kMpdmNFJJRl80RSkOUkjI0LEI2fh0hZ0fKmuB4wYSK4OjTT/fZ
+	tBbqe+VSLhm0PZUi2T9sYyCwLID4+v5bp68fz2Gxrd5CvDdU7avKZIPlAGAshphnFLcccNyv0Vh
+	oqJTSbUSw4iKaLjQPq5A2THK94GjN+2aCBDqY/kMS6nQErJNTbszjSI3VcMhxy30xwp4KrOHZde
+	FjXCESSYH/dv55ZKuGT+I2WnRSUmpg==
+X-Google-Smtp-Source: AGHT+IFnJsuKlmbBF0hmSnvalU7hKImH2yDVj+qrhAdYzIaphRu5c+jNpubN5obJYJRBoIoqINxkaWU+M6mO
+X-Received: by 2002:a05:690c:4:b0:6fb:b18e:147c with SMTP id 00721157ae682-708aee70293mr26628307b3.1.1746053563707;
+        Wed, 30 Apr 2025 15:52:43 -0700 (PDT)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id e9e14a558f8ab-3d95f311e01sm3634185ab.31.2025.04.30.15.52.42
+        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-708adfb9e1asm1748467b3.1.2025.04.30.15.52.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 15:52:42 -0700 (PDT)
+        Wed, 30 Apr 2025 15:52:43 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id EABE3340199;
-	Wed, 30 Apr 2025 16:52:41 -0600 (MDT)
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2AD4A340199;
+	Wed, 30 Apr 2025 16:52:43 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id E4B49E41CC0; Wed, 30 Apr 2025 16:52:41 -0600 (MDT)
+	id 2948FE41CC0; Wed, 30 Apr 2025 16:52:43 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>
@@ -69,10 +71,12 @@ Cc: Uday Shankar <ushankar@purestorage.com>,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 0/9] ublk: simplify NEED_GET_DATA handling and request lookup
-Date: Wed, 30 Apr 2025 16:52:25 -0600
-Message-ID: <20250430225234.2676781-1-csander@purestorage.com>
+Subject: [PATCH v2 2/9] ublk: fix "immepdately" typo in comment
+Date: Wed, 30 Apr 2025 16:52:27 -0600
+Message-ID: <20250430225234.2676781-3-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250430225234.2676781-1-csander@purestorage.com>
+References: <20250430225234.2676781-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,32 +85,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove accesses to ublk_io's cmd field after the I/O request is posted to the
-ublk server. This allows the cmd field to be overlapped with a pointer to the
-struct request, avoiding several blk_mq_tag_to_rq() lookups.
+Looks like "immediately" was intended.
 
-Fix a couple of typos noticed along the way.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+ drivers/block/ublk_drv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Caleb Sander Mateos (8):
-  ublk: fix "immepdately" typo in comment
-  ublk: remove misleading "ubq" in "ubq_complete_io_cmd()"
-  ublk: take const ubq pointer in ublk_get_iod()
-  ublk: don't log uring_cmd cmd_op in ublk_dispatch_req()
-  ublk: factor out ublk_start_io() helper
-  ublk: don't call ublk_dispatch_req() for NEED_GET_DATA
-  ublk: check UBLK_IO_FLAG_OWNED_BY_SRV in ublk_abort_queue()
-  ublk: store request pointer in ublk_io
-
-Uday Shankar (1):
-  ublk: factor out ublk_commit_and_fetch
-
- drivers/block/ublk_drv.c | 252 ++++++++++++++++++++-------------------
- 1 file changed, 131 insertions(+), 121 deletions(-)
-
-v2:
-- Don't complete uring_cmd if ublk_map_io() returns 0 (Ming)
-- Take const ubq pointers
-
+diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
+index 7809ed585e1c..44ba6c9d8929 100644
+--- a/drivers/block/ublk_drv.c
++++ b/drivers/block/ublk_drv.c
+@@ -1180,11 +1180,11 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
+ 	}
+ 
+ 	if (ublk_need_get_data(ubq) && ublk_need_map_req(req)) {
+ 		/*
+ 		 * We have not handled UBLK_IO_NEED_GET_DATA command yet,
+-		 * so immepdately pass UBLK_IO_RES_NEED_GET_DATA to ublksrv
++		 * so immediately pass UBLK_IO_RES_NEED_GET_DATA to ublksrv
+ 		 * and notify it.
+ 		 */
+ 		if (!(io->flags & UBLK_IO_FLAG_NEED_GET_DATA)) {
+ 			io->flags |= UBLK_IO_FLAG_NEED_GET_DATA;
+ 			pr_devel("%s: need get data. op %d, qid %d tag %d io_flags %x\n",
 -- 
 2.45.2
 
