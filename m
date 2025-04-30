@@ -1,35 +1,35 @@
 Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D43A25D8F6;
-	Wed, 30 Apr 2025 12:52:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A2A25DB0C;
+	Wed, 30 Apr 2025 12:52:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017535; cv=none; b=Km5hxMQXeqVBy6AW3yGbIrcIDx0pIbr1sd8NJPBMx8GWJyK1zlryY0vv0meHHzVGqi3O8Z6uqxfQIaztxUDsAb2yKfb6yuFAOJxG7Nf55lfAY42+ieSrp8NgpDazfzBrDaNZ0ueg6PTRmPwdsJ+xE1bghO0I3dQ08kJWorvEDWY=
+	t=1746017536; cv=none; b=GfGGAUXOi546yEBnfTzlOSF/TmWW2h1u6CuJkzjpcBMldb0W1uY/dxH1ppQ32NxBM6VrflhX4Y+Tz/uCEG4Je28BezU/jR2sw7W0bK/+qHapIqtE6+8q3cDhsRekOogGVgrG5kVhGRi004XtGvHffd3ID49QW/5IqRC5RrfCbaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017535; c=relaxed/simple;
-	bh=Zlo0JIAVBhVcxhoeRxFpnpqdS1ScVVuHOETJuuNopRY=;
+	s=arc-20240116; t=1746017536; c=relaxed/simple;
+	bh=lhY3UhDu5nx+O1Fi44z/mcLChAzZrf0RUHIYCmu8iL8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H8yNtKb7ThpsLHTNpcFNsMRGc+8i3yD6xQqdDQjR4X0yXkUCDqUfrZrnReBUU26oCEa/vjAYRwMGy6gC97I+FZXJX4ZfatOmWdASzO371r1MKFlFv76xryc2tl/ygDhD0R82CEN+xdLOlqw2qgzuFWYOQTBT8M7QPn4AQz/hf0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RHgV4Lqd; arc=none smtp.client-ip=217.70.183.194
+	 MIME-Version; b=kOtcAK7qp54GpxIX3KTr+i9ORRIJm4CAqtcr1yzbuTlB/gIN+xQFRp5CYX1MP28X0vukr1DC3VmYbDmj5X81IFYRpwE6JQZ1LAbcDbu/4YckhKA6VUxwHSwfcnZ2hbTOA9dPLkIW6ZT+8c/EUmUd1bL7CnEmvGVxf/j2kICjm5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LjHwqNIL; arc=none smtp.client-ip=217.70.183.194
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RHgV4Lqd"
-Received: by mail.gandi.net (Postfix) with ESMTPA id 75148438B6;
-	Wed, 30 Apr 2025 12:52:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LjHwqNIL"
+Received: by mail.gandi.net (Postfix) with ESMTPA id 56F8D438BA;
+	Wed, 30 Apr 2025 12:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746017531;
+	t=1746017532;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nLx+9dvUsBPx0JucbrUMlWbWrTUIqTh5/5kioAg10L8=;
-	b=RHgV4LqdLorrR6xJm4/uLjDusLIrre5bEQL+2OF5f1XHVd+XyTQ0Kq1AyDUzz4v9OLD5sp
-	aJyGhhGNCzzWdP5rbLc/UQT3VXWMTaNFdOQh8mM9Y/pixP4S41SjEnMwuIcQUw0+MzKsK7
-	xWm40X91jIFmWEZo6RBwhjOTVYZtEPS01QBuuw1P1qZYvTFiuRyZvc6ZNue4way7Nty/9k
-	ZseoqTURf5y4jP1WiVqzdl4fwMdeG5DeIp1Vh4Q+hYr6R1VEq86Q3Y6p25OaNipfdxZTuN
-	IIJM3RYF4wUeC7yZZ+ntmbwbIUXGnEWBYWszyQoo5AHavMdHZk9SG5L2IECmeA==
+	bh=H/OUpl+c2QHHtmrmXPqlciNY816qMvdz6fKciUiS4VQ=;
+	b=LjHwqNIL2CefS4lVhWarqgROkJvi4jPWBM7szCY7rQBoQx0xkZsV0ZJGho+FGJfJuoqNoH
+	+CZFeTVHSBppgkygX+vWaIxu/6gU9FZeagZuX7rRv9btnvcgmFY/7X1fJ3HrbqLQandada
+	EVz+kRUASNMZ+SUFWRWoVgdRoHOoqZryp8raE/t3dk2zgAhIXS1n/bbHcPsc0uY0Osn5KN
+	FVuRmfIx5QjtqPuKfVoIeo5MeHYHq3/mTgOgN0tJtGgAICv6ajB1adcjhCUoXm8mJNS9Yb
+	MCCqavyVtREE00a4gE/xUrnYlCbFlmUMIGBzoX3a/9ro7BJC5vRHbjJFJXj/uQ==
 From: Herve Codina <herve.codina@bootlin.com>
 To: David Gibson <david@gibson.dropbear.id.au>,
 	Andrew Davis <afd@ti.com>,
@@ -47,9 +47,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Luca Ceresoli <luca.ceresoli@bootlin.com>,
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: [PATCH v2 6/7] of: overlay: Add support for the export symbols node
-Date: Wed, 30 Apr 2025 14:51:50 +0200
-Message-ID: <20250430125154.195498-7-herve.codina@bootlin.com>
+Subject: [PATCH v2 7/7] of: unittest: Add tests for export symbols
+Date: Wed, 30 Apr 2025 14:51:51 +0200
+Message-ID: <20250430125154.195498-8-herve.codina@bootlin.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250430125154.195498-1-herve.codina@bootlin.com>
 References: <20250430125154.195498-1-herve.codina@bootlin.com>
@@ -66,69 +66,203 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeijeehucetufdoteggode
  hhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomh
 X-GND-Sasl: herve.codina@bootlin.com
 
-The resolver already supports the use of the export symbol node.
+The export symbols feature allows to use some additional symbols
+provided in an export symbols node to resolve overlay symbols.
 
-Add support of the export symbol node feature in of_overlay_fdt_apply()
-simply getting the export node from its name and passing it to the
-resolver.
+Add tests to exercise the export symbols feature.
 
 Signed-off-by: Herve Codina <herve.codina@bootlin.com>
 Tested-by: Ayush Singh <ayush@beagleboard.org>
 ---
- drivers/of/overlay.c | 23 ++++++++++++++++++++---
- 1 file changed, 20 insertions(+), 3 deletions(-)
+ drivers/of/unittest-data/Makefile             |  5 ++
+ .../unittest-data/overlay_export_symbols.dtso | 15 +++++
+ .../of/unittest-data/testcases_common.dtsi    |  1 +
+ .../unittest-data/tests-export-symbols.dtsi   | 30 +++++++++
+ drivers/of/unittest.c                         | 65 +++++++++++++++++++
+ 5 files changed, 116 insertions(+)
+ create mode 100644 drivers/of/unittest-data/overlay_export_symbols.dtso
+ create mode 100644 drivers/of/unittest-data/tests-export-symbols.dtsi
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 73ff38c41de2..7c55d39f89af 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -891,6 +891,10 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
-  * of_overlay_apply() - Create and apply an overlay changeset
-  * @ovcs:	overlay changeset
-  * @base:	point to the target node to apply overlay
-+ * @export_symbols_name:
-+ *		Name of the export symbol subnode of the @base node to
-+ *		provide extra symbols. Those extra symbols are used in
-+ *		the overlay symbols resolution.
-  *
-  * Creates and applies an overlay changeset.
-  *
-@@ -915,11 +919,24 @@ static void free_overlay_changeset(struct overlay_changeset *ovcs)
-  */
+diff --git a/drivers/of/unittest-data/Makefile b/drivers/of/unittest-data/Makefile
+index 01a966e39f23..b51be046749a 100644
+--- a/drivers/of/unittest-data/Makefile
++++ b/drivers/of/unittest-data/Makefile
+@@ -34,6 +34,7 @@ obj-$(CONFIG_OF_OVERLAY) += overlay.dtbo.o \
+ 			    overlay_gpio_04a.dtbo.o \
+ 			    overlay_gpio_04b.dtbo.o \
+ 			    overlay_pci_node.dtbo.o \
++			    overlay_export_symbols.dtbo.o \
+ 			    overlay_bad_unresolved.dtbo.o
  
- static int of_overlay_apply(struct overlay_changeset *ovcs,
--			    const struct device_node *base)
-+			    const struct device_node *base,
-+			    const char *export_symbols_name)
- {
-+	struct device_node *export_symbols = NULL;
- 	int ret = 0, ret_revert, ret_tmp;
- 
--	ret = of_resolve_phandles(ovcs->overlay_root, NULL);
-+	if (base && export_symbols_name) {
-+		export_symbols = of_get_child_by_name(base, export_symbols_name);
-+		if (!export_symbols) {
-+			pr_err("overlay get export symbols '%s' from %pOF failed\n",
-+			       export_symbols_name, base);
-+			ret = -EINVAL;
-+			goto out;
-+		}
-+	}
+ # enable creation of __symbols__ node
+@@ -66,6 +67,10 @@ DTC_FLAGS_testcases += -Wno-interrupts_property \
+ #			  overlay_bad_add_dup_prop.dtbo \
+ #			  overlay_bad_phandle.dtbo \
+ #			  overlay_bad_symbol.dtbo \
++#
++# Also overlay_export_symbols_ovl.dtbo is designed to be applied to a specific
++# node and cannot be applied statically with fdtoverlay
 +
-+	ret = of_resolve_phandles(ovcs->overlay_root, export_symbols);
-+	of_node_put(export_symbols);
- 	if (ret)
- 		goto out;
  
-@@ -1059,7 +1076,7 @@ int of_overlay_fdt_apply(const void *overlay_fdt, u32 overlay_fdt_size,
- 	}
- 	ovcs->overlay_mem = overlay_mem;
+ apply_static_overlay_1 := overlay_0.dtbo \
+ 			  overlay_1.dtbo \
+diff --git a/drivers/of/unittest-data/overlay_export_symbols.dtso b/drivers/of/unittest-data/overlay_export_symbols.dtso
+new file mode 100644
+index 000000000000..89c9df4ef89b
+--- /dev/null
++++ b/drivers/of/unittest-data/overlay_export_symbols.dtso
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++/plugin/;
++
++/ {
++	fragment@0 {
++		target-path="";
++		__overlay__ {
++			ovl_node {
++				ref-base = <&test_export_base>;
++				ref-node = <&test_export_node>;
++			};
++		};
++	};
++};
+diff --git a/drivers/of/unittest-data/testcases_common.dtsi b/drivers/of/unittest-data/testcases_common.dtsi
+index 1c2cdf353ae3..21ffe0fb03ef 100644
+--- a/drivers/of/unittest-data/testcases_common.dtsi
++++ b/drivers/of/unittest-data/testcases_common.dtsi
+@@ -18,4 +18,5 @@ node-remove {
+ #include "tests-address.dtsi"
+ #include "tests-platform.dtsi"
+ #include "tests-overlay.dtsi"
++#include "tests-export-symbols.dtsi"
+ #include "tests-lifecycle.dtsi"
+diff --git a/drivers/of/unittest-data/tests-export-symbols.dtsi b/drivers/of/unittest-data/tests-export-symbols.dtsi
+new file mode 100644
+index 000000000000..1650289b34cd
+--- /dev/null
++++ b/drivers/of/unittest-data/tests-export-symbols.dtsi
+@@ -0,0 +1,30 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/ {
++	testcase-data {
++		test-export-symbols {
++			test_export_symbols_b0: base0 {
++				test_export_symbols_n0: node {
++					dummy;
++				};
++
++				export-symbols {
++					test_export_base = <&test_export_symbols_b0>;
++					test_export_node = <&test_export_symbols_n0>;
++				};
++			};
++
++			test_export_symbols_b1: base1 {
++
++				test_export_symbols_n1: node {
++					dummy;
++				};
++
++				export-symbols {
++					test_export_base = <&test_export_symbols_b1>;
++					test_export_node = <&test_export_symbols_n1>;
++				};
++			};
++		};
++	};
++};
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 11091b0176e0..bf286902c65b 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -4164,6 +4164,69 @@ static __init void of_unittest_overlay_high_level(void)
+ 	mutex_unlock(&of_mutex);
+ }
  
--	ret = of_overlay_apply(ovcs, base);
-+	ret = of_overlay_apply(ovcs, base, export_symbols_name);
- 	/*
- 	 * If of_overlay_apply() error, calling free_overlay_changeset() may
- 	 * result in a memory leak if the apply partly succeeded, so do NOT
++OVERLAY_INFO_EXTERN(overlay_export_symbols);
++
++static __init void of_unittest_export_symbols(const char *prefix,
++					      const char *base_full_path)
++{
++	const struct overlay_info ovl = OVERLAY_INFO(overlay_export_symbols, 0, 0);
++	struct device_node *ovl_node;
++	struct device_node *base;
++	struct device_node *node;
++	struct device_node *ref;
++	int ovcs_id;
++	u32 size;
++	int ret;
++
++	base = of_find_node_by_path(base_full_path);
++	if (unittest(base, "%s: Get base (%s) failed\n", prefix, base_full_path))
++		return;
++
++	node = of_get_child_by_name(base, "node");
++	if (unittest(base, "%s: Get node from %pOF failed\n", prefix, base))
++		goto end_put_base;
++
++	size = ovl.dtbo_end - ovl.dtbo_begin;
++	ret = of_overlay_fdt_apply(ovl.dtbo_begin, size, &ovcs_id, base, "export-symbols");
++	if (unittest(!ret, "%s: Apply '%s' failed (%d)\n", prefix, ovl.name, ret))
++		goto end_put_node;
++
++	ovl_node = of_get_child_by_name(base, "ovl_node");
++	if (unittest(ovl_node, "%s: Get ovl_node from %pOF failed\n", prefix, base))
++		goto end_remove_overlay;
++
++	ref = of_parse_phandle(ovl_node, "ref-base", 0);
++	if (unittest(ref, "%s: Parse 'ref-base' from %pOF failed\n", prefix, ovl_node))
++		goto end_put_ovl_node;
++	unittest(ref == base,
++		 "%s: Node from 'ref-base' phandle mismatches (got %pOF, expected %pOF)\n",
++		 prefix, ref, base);
++	of_node_put(ref);
++
++	ref = of_parse_phandle(ovl_node, "ref-node", 0);
++	if (unittest(ref, "%s: Parse 'ref-node' from %pOF failed\n", prefix, ovl_node))
++		goto end_put_ovl_node;
++	unittest(ref == node,
++		 "%s: Node from 'ref-node' phandle mismatches (got %pOF, expected %pOF)\n",
++		 prefix, ref, node);
++	of_node_put(ref);
++
++end_put_ovl_node:
++	of_node_put(ovl_node);
++end_remove_overlay:
++	of_overlay_remove(&ovcs_id);
++end_put_node:
++	of_node_put(node);
++end_put_base:
++	of_node_put(base);
++}
++
++static __init void of_unittest_overlay_export_symbols(void)
++{
++	of_unittest_export_symbols("base0", "/testcase-data/test-export-symbols/base0");
++	of_unittest_export_symbols("base1", "/testcase-data/test-export-symbols/base1");
++}
++
+ static int of_unittest_pci_dev_num;
+ static int of_unittest_pci_child_num;
+ 
+@@ -4349,6 +4412,7 @@ static void __init of_unittest_pci_node(void)
+ #else
+ 
+ static inline __init void of_unittest_overlay_high_level(void) {}
++static inline __init void of_unittest_overlay_export_symbols(void) {}
+ static inline __init void of_unittest_pci_node(void) { }
+ 
+ #endif
+@@ -4404,6 +4468,7 @@ static int __init of_unittest(void)
+ 	of_unittest_overlay();
+ 	of_unittest_lifecycle();
+ 	of_unittest_pci_node();
++	of_unittest_overlay_export_symbols();
+ 
+ 	/* Double check linkage after removing testcase data */
+ 	of_unittest_check_tree_linkage();
 -- 
 2.49.0
 
