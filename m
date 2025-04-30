@@ -1,100 +1,209 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962A429D0B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:09:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB4D77104
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745971767; cv=none; b=M5MhAYdXIeCzCkR3Ezee/beMT/cPd7IQjMFzIvTEVaOb0MLlxe0QU1SJNen/i/Y+S0dLN8zIp6mbbq1T2ghB7UWoQTWrP/6RgZX1dvSvZ1HNkWF8wE+BBreium/pSlxKVAg6bMm9qgyV8Wg2lbWp1LESTC3/xK8XoOMkvcf587A=
+	t=1745971954; cv=none; b=Vfe6uoz0aUH9poyWg9LeXyMg/zJArWwWy8rbcJm2Y165ZxKlndSBmRvMnPnq6WE1BC8GMasj8VWMwXUIjexrh4Vhw5B1N8ljp8GVPaX2CTQ6yWZf5S54ISKxtlLmz2F2OsyfOf8zl6ULWRNuTsof39pCorVNJUSPY2vaCi9gwuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745971767; c=relaxed/simple;
-	bh=nWIRVXNziIXV8U6vS6Ynr/rXvc0HzMyqYPWLe66JFJ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ylbw9cqMHvDzEqlSYhI6Ts2knKSXIWrAIToaq0iv6t85gNI0YsiPlJlsJymqD8TLkIRist3eyABu/OefJINJYbSQm4ivIqMOPPBerh8WHkYquL7tfoKkb04maVuwPDUlhPG4mWcYYcP9TQaZEaeV2qBm8PYnTG2p88pD5EL57LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NmK+1lKl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1745971954; c=relaxed/simple;
+	bh=ZXjEjXsHfjUa0iCrPCgE3lVEAf2malrtgL9WvuAkaWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJHoEbi7bgTrPxT17CbHhdEG75DfW6/vQFE+krTQt51idvtE4F2Y+y07R4O10dZdNNTSNEkB3gncTD+6Pf/dVsQaaPZqZh5M8p0/klX8+Ijxew6qda1qG6Fi+PQDJeySIwfRX9I+js6PZjf+lLl2KkX/o1ASUFGnTD/qiOrb67o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mtXtP6sn; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NmK+1lKl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1745971764;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5lJzIa8zN478vM1h2v+0aBrpsB1V2UdrD0VW9ycWo8Y=;
-	b=NmK+1lKl0p405lqYmRcScskdRgpfSvyaHiw2MyUxqXtzUt2KImMhVlChuGYrLb0QrkBp9O
-	oqE3dqXUoK3WK5DjJ7goUr6CsmB9J40VleDoxwwEIKE9rBFS9GuPz1Dn/m1hnANOtWJQVO
-	zDDtqKUOICXo0vUPnU/SpMRrjPuIoNs=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-qBZhgEgIOvWeqh89gKFP4g-1; Tue,
- 29 Apr 2025 20:09:23 -0400
-X-MC-Unique: qBZhgEgIOvWeqh89gKFP4g-1
-X-Mimecast-MFC-AGG-ID: qBZhgEgIOvWeqh89gKFP4g_1745971762
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8099180056F;
-	Wed, 30 Apr 2025 00:09:21 +0000 (UTC)
-Received: from fedora (unknown [10.72.116.13])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A1E919560A3;
-	Wed, 30 Apr 2025 00:09:17 +0000 (UTC)
-Date: Wed, 30 Apr 2025 08:09:13 +0800
-From: Ming Lei <ming.lei@redhat.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] selftests: ublk: kublk: build with -Werror iff
- WERROR!=0
-Message-ID: <aBFqKZFAqwc5dEYl@fedora>
-References: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
- <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mtXtP6sn"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4774193fdffso122581311cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:12:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1745971951; x=1746576751; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XwkrHfxPIhIcdIYIVNv5VYPO5SHZTfxK8AinQWxi748=;
+        b=mtXtP6sn+DLqWZQ4B5+Mro5FUX85BEkBA3C3KO9jKMQmmXpaPLzCeV1KEZ19PUUGst
+         zAjEmSmRJ+M/yclCin2aoVvRAoblqxbD6vll5J6soNmHBgiz4aEo6qqGan3ZAfanB/Q3
+         ACA2BmpMI2FAUVVFMqwdb81dXFPj/SPZXFnoWliniuA1LeoiKxAhxuOIRm4eWQOQuJJt
+         6no3Pj01tYYx0nBGN9aKLev4SS7v1vU6lWJoR62GHqilH70jX03xFUWl0Uh4Ho9MaXW6
+         xxImKq++nNHIULW7LgV/Nxl6kxjRdvh5U2HJ8vTxNrGhsgC3Rt2X8pCfKzVmFYhEAPV9
+         RPag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745971951; x=1746576751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XwkrHfxPIhIcdIYIVNv5VYPO5SHZTfxK8AinQWxi748=;
+        b=umXtrDGAqZY/h2o49LqTTfs8lkctzRjOWTWaqmgBcBBTgX5lGA+BjYIdtsGqVcA1Ts
+         Z4NQ9f1TBtNPFYp6WuSb13f/jlkzZzLZjlwblb083P6AbuzmJrSYvMwBYA3XvrBmKmHv
+         +6wl6OvYFM7Dc6F8DbqQQ71OjUPaG7BlKNtaZOaG+1SRfTri+QKsewIhNUbpTOVatrtB
+         OUMrRMcAG9IYkDFHUaXXopVDfGbr4HeSsXlSSsyJIiIy2KDnzWKUh4DcmvtB/H8oi51X
+         clRs6fs5M50q0ROLxcBsWKUemDLL/jsPcHvIQYKOi6Q1VnNU+1g0Zl+RPqejLU2Lt4AK
+         ioRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVj791TT9yEd9FjBhHFlg0KWHtGVXlBtHS1zyRXtcaGXFNIl/K1pLKlPEN3OK0PAVrDmSraqzHBY9cOtWc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8Ed3AZqEh3+WotlU9FLhb4Gavf2TSZta+Rq5Jox1wSxft+j12
+	ZWLjKkTdcH1ebfPomNzRvZXM1V9YW7y6Oeduyuq5kj6+3QRleZWFqOGSUz3dFaDK+46e/GReHnf
+	t
+X-Gm-Gg: ASbGncu7LE8EutNmB6UAjHj5rYrMmi08ZjfcNqfy6spDjscsDU/yCnUX0/h4muu1oud
+	OkH7kTSKtkL55dZMnobXJfqnPxa1rgXkDHrqUdJRRogjSEFRLWy0XcJBAWgJ85SlI25T+xKfdKL
+	JHm6ceVZ7+zhW/JwXbilc0axN3RiP4apc9lhGIdJ/m856QI5l5VW/r9scxZI109TnfuTMVkPtZk
+	Fv8XYYakFQ8TDEQrXVCgQKsj5vr/xEnXatPfZ9liuCMK1Ab45U43Dd36c19NfzcDvXuwH/mA4v5
+	bYe9DrsUAB2SxCsBZ/GDYHflFPgL1zP5M0clDoE1k7a8FrcSjX5uBiaJNWu2On5bN2DTMgr43Wo
+	wPQPcah3As0ktRve8DuuvNVgomT2z
+X-Google-Smtp-Source: AGHT+IGx7yWMnstTX6Ocxy96mhz8w9pNto5sYt4gawjQLHNDDT1JWwKm6SA8P6j6AQaDIRZciIZTvw==
+X-Received: by 2002:a05:622a:2b44:b0:476:b7cf:4d42 with SMTP id d75a77b69052e-489e4f6e095mr11161921cf.27.1745971951326;
+        Tue, 29 Apr 2025 17:12:31 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm87634411cf.41.2025.04.29.17.12.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 17:12:30 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	corbet@lwn.net,
+	Joshua Hahn <joshua.hahnjy@gmail.com>
+Subject: [RFC PATCH 00/17] CXL Boot to Bash Documentation
+Date: Tue, 29 Apr 2025 20:12:07 -0400
+Message-ID: <20250430001224.1028656-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 04:41:03PM -0600, Uday Shankar wrote:
-> Compiler warnings can catch bugs at compile time; thus, heeding them is
-> usually a good idea. Turn warnings into errors by default for the kublk
-> build so that anyone making changes is forced to heed them. Compiler
-> warnings can also sometimes produce annoying false positives, so provide
-> a flag WERROR that the developer can use as follows to have the build
-> and selftests run go through even if there are warnings:
-> 
-> make WERROR=0 TARGETS=ublk kselftest
+This series converts CXL Boot to Bash Docs to Linux Kernel Docs.
+I tried to break it into separate patches to make it easier for
+people with specific expertise to review.
 
-I thought WERROR is 0 default, but actually the default value is 1.
+The big open TODOs:
+- use-case documentation.
 
-Just tried gcc 14/15 and clang 18/20, looks everything works fine.
+  I only have the type-3 perspective, and only one perspective.
+  It would be good to have that hacked on more generally.
 
-For kernel selftests, I guess the usual way is to do it explicitly
-by passing 'make -C tools/testing/selftests TARGETS=ublk'.
+- memory tiering documentation.
 
-Even though the build fails for people who is running the test on purpose,
-or doling whole kernel selfests, they still can:
+  I basically left this unfilled for now.  Would like some basic
+  docs on at least TPP and DAMON.
 
-- report the failure
+- devices: CDAT explanation
 
-- skip ublk test by adding 'SKIP_TARGETS=ublk' to command line
+  It would be good to have this spelled out at least a little bit.
 
-Also this ways has been used by perf, lib/api, lib/subcmd and lib/sysmbol in
-linux kernel tools/, so I feel the change should be doable, but let Jens decide
-if it is fine to pass -Werror at default:
+- platform: ACPI SRAT Generic port / initiator docs
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+  I don't know anything about this and people say it's important.
 
-Otherwise, it still can be enabled conditionally with default off.
+Thank you to everyone who contributed feedback during LSF/MM
+Boot-to-Bash proposal.  Hopefully I incorporated most feedback,
+but I may have missed some.
 
+Co-developed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
 
-Thanks,
-Ming
+Gregory Price (17):
+  cxl: update documentation structure in prep for new docs
+  cxl: docs/devices - device reference and uefi placeholder
+  cxl: docs/platform/bios-and-efi documentation
+  cxl: docs/platform/acpi reference documentation
+  cxl: docs/platform/example-configs documentation
+  cxl: docs/linux - overview
+  cxl: docs/linux - early boot configuration
+  cxl: docs/linux - add cxl-driver theory of operation
+  cxl: docs/linux/cxl-driver - add example configurations
+  cxl: docs/linux/dax-driver documentation
+  cxl: docs/linux/memory-hotplug
+  cxl: docs/allocation/dax
+  cxl: docs/allocation/page-allocator
+  cxl: docs/allocation/reclaim
+  cxl: docs/allocation/hugepages
+  cxl: docs/allocation/tiering
+  cxl: docs/use-cases
+
+ .../driver-api/cxl/allocation/dax.rst         |  59 ++
+ .../driver-api/cxl/allocation/hugepages.rst   |  30 +
+ .../cxl/allocation/page-allocator.rst         |  85 +++
+ .../driver-api/cxl/allocation/reclaim.rst     |  50 ++
+ .../driver-api/cxl/allocation/tiering.rst     |  30 +
+ .../driver-api/cxl/devices/device-types.rst   | 169 ++++++
+ .../theory-of-operation.rst}                  |   0
+ Documentation/driver-api/cxl/devices/uefi.rst |   9 +
+ Documentation/driver-api/cxl/index.rst        |  55 +-
+ .../cxl/{ => linux}/access-coordinates.rst    |   0
+ .../driver-api/cxl/linux/cxl-driver.rst       | 531 ++++++++++++++++++
+ .../driver-api/cxl/linux/dax-driver.rst       |  42 ++
+ .../driver-api/cxl/linux/early-boot.rst       | 129 +++++
+ .../example-configurations/hb-interleave.rst  | 314 +++++++++++
+ .../intra-hb-interleave.rst                   | 291 ++++++++++
+ .../multi-interleave.rst                      | 401 +++++++++++++
+ .../example-configurations/single-device.rst  | 246 ++++++++
+ .../driver-api/cxl/linux/memory-hotplug.rst   |  77 +++
+ .../driver-api/cxl/linux/overview.rst         | 104 ++++
+ .../driver-api/cxl/platform/acpi.rst          |  83 +++
+ .../driver-api/cxl/platform/acpi/cedt.rst     |  52 ++
+ .../driver-api/cxl/platform/acpi/dsdt.rst     |  27 +
+ .../driver-api/cxl/platform/acpi/hmat.rst     |  28 +
+ .../driver-api/cxl/platform/acpi/slit.rst     |  17 +
+ .../driver-api/cxl/platform/acpi/srat.rst     |  37 ++
+ .../driver-api/cxl/platform/bios-and-efi.rst  | 261 +++++++++
+ .../cxl/platform/example-configs.rst          |  13 +
+ .../example-configurations/flexible.rst       | 296 ++++++++++
+ .../example-configurations/hb-interleave.rst  | 107 ++++
+ .../multi-dev-per-hb.rst                      |  90 +++
+ .../example-configurations/one-dev-per-hb.rst | 136 +++++
+ .../cxl/use-case/dynamic-capacity.rst         |  19 +
+ .../cxl/use-case/memory-expansion.rst         |  14 +
+ .../driver-api/cxl/use-case/shared-memory.rst |  14 +
+ .../cxl/use-case/virtual-machines.rst         |  18 +
+ 35 files changed, 3831 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/driver-api/cxl/allocation/dax.rst
+ create mode 100644 Documentation/driver-api/cxl/allocation/hugepages.rst
+ create mode 100644 Documentation/driver-api/cxl/allocation/page-allocator.rst
+ create mode 100644 Documentation/driver-api/cxl/allocation/reclaim.rst
+ create mode 100644 Documentation/driver-api/cxl/allocation/tiering.rst
+ create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+ rename Documentation/driver-api/cxl/{memory-devices.rst => devices/theory-of-operation.rst} (100%)
+ create mode 100644 Documentation/driver-api/cxl/devices/uefi.rst
+ rename Documentation/driver-api/cxl/{ => linux}/access-coordinates.rst (100%)
+ create mode 100644 Documentation/driver-api/cxl/linux/cxl-driver.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/dax-driver.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/hb-interleave.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/intra-hb-interleave.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/multi-interleave.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/single-device.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/memory-hotplug.rst
+ create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi/cedt.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi/dsdt.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi/hmat.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi/slit.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/acpi/srat.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/bios-and-efi.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/example-configs.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
+ create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
+ create mode 100644 Documentation/driver-api/cxl/use-case/dynamic-capacity.rst
+ create mode 100644 Documentation/driver-api/cxl/use-case/memory-expansion.rst
+ create mode 100644 Documentation/driver-api/cxl/use-case/shared-memory.rst
+ create mode 100644 Documentation/driver-api/cxl/use-case/virtual-machines.rst
+
+-- 
+2.49.0
 
