@@ -1,132 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED6D221ABC6;
-	Wed, 30 Apr 2025 14:24:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F6C521ABC6;
+	Wed, 30 Apr 2025 14:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023063; cv=none; b=d/tdlI+UUdVJfocf0BLIUBgA2K7xgoCR08o87CN/EEwn6vDRWjXhXzKWZPXLFwRPeuetVHlF6VrGeaSStwXfnznoglHTRgOb2OXUV86CfQ2GG3IbnTcjpg/SqwDjSiAaPPKhbRjylBb1hz1EPJzpTk17n5fblzXtFCa6TDDQvx4=
+	t=1746023103; cv=none; b=IPgMKpISL5Yfm7hI54xHYv4wJAjTWKd2hmvVXIsr5Vk7qREpBuxrO5+qWM22EM4SuxCQlRPeRrcEAzUkMBaIvN7o9NQ2taco3Tk8gnIfbuQRBHLmL/YuVVcRbQijw3KiE+iwZB+pzPKSaZQvEpzi6uQnsa7cmliGZte4zWn8fvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023063; c=relaxed/simple;
-	bh=DiilKaJG0/WO35VO8ryl3whyZcAVo/+1zf6kcyc7JZM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OolZoDbwewqfKiytdm1f3WgGtZk1huk9hsJipXcd8udBiNcf6QiDOyGP6l0zi1kchKsp2SqGcvoo+JAl49OnHUZJIB0nuBhCHy+aztkF/Rx4E+XyPW5Spl1RZ+vRGDEPOSUT6N90mSgqt2ldBthR/qhTVEQrOiHQ0kt9LeTP8mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOjh4U6t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746023103; c=relaxed/simple;
+	bh=rjMvhhoHC1X7+lw3l2dB4rGD+6HMJz3GsS5ASyow71I=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=I0i1LuueXFVgdy2vc2anFJ0gnz7XJyx1o3WUBDhp6wTG8bnS3+8iBDw3BWuu+qYXYJoBtzKqMjP6nQJVN16bnDDtJ7sIjarrY3znJ52uh5hYL+auVSHUghHlasK2nrIXp8qDO4dQdCXOcDUPpDQokUEWwkXd56uAWfr4n265iS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=G1ewDVEd; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOjh4U6t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67EFEC4CEE9;
-	Wed, 30 Apr 2025 14:24:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746023062;
-	bh=DiilKaJG0/WO35VO8ryl3whyZcAVo/+1zf6kcyc7JZM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oOjh4U6tWSyBrn74QNMejxT6f/5QGbKaTcekHDUUDRgdze7OsjPLO8rJd9rLfM9j2
-	 dWNs0m4q9+cEJwlrFqgxvVgcf53Gr/+49IxPk2xs7wv+7aChyVDKc/J+aSqomecaXU
-	 HttNVrIK/tBYmu2tr4reQ9BTuuOScwgtJRXXKq5QW5hRq+IpUcbsn4axXo6nf9RKHp
-	 kDWzI4aq2MwTqtHjT+AE1IH/G51ZwOpc/uWym2cK7w7KRzPsnLUUckcuibIlyuh9Rl
-	 +A1tSSy+8dfAvHWnLJZJPcJLb7wGTXStrCql+2+RgU+OjC9dxDxWTxdss60OTMu9tg
-	 psoGsl4itI3Uw==
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so678657fac.0;
-        Wed, 30 Apr 2025 07:24:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUWGBP4i4EHoWnF1cENkAZ/eJjNY0gskXug8B82T9sVW0iBpsJ/3Usf7Nd3v5MHnznNxZ+4DGioUYyilq0=@vger.kernel.org, AJvYcCVYZqVnexTBNGYFO28iPWB/HA2kKuniAiiJJPpJrDc5h7tRr85zZYHi9RsMYcjVQUQLIm2sHPuVXeY=@vger.kernel.org, AJvYcCXOosLdWCm2IGJB44ljhFSwxmWe57VOIQ3AHtzv9YVJb1gJn9IR7Pv5sVjSZCO7bVUhUyBQ6osDfyNHeLE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywpl+aVQrnwY6jb5la+wW3tqe27vY0Vryzwm9Rl/FYBax0gHif5
-	jyXyQS4AxJC30Q47c3WpEaA0uHepRSSt0gGrL/yVnBANbFoXsO/GhFUs8nsgPn5ssa5ym3hcD31
-	+DoUTRslU1hTeypqFIcXyLgl+Hlc=
-X-Google-Smtp-Source: AGHT+IHI21hvZo5h8zBeQ4iz7Vk+x6EUW3fSjt0GGJli/RFF4twaJgW3jOs5FPheFilXL7iC2g4xzqMaMWypSx8BqdU=
-X-Received: by 2002:a05:6871:8913:b0:2b8:5a6a:6f5f with SMTP id
- 586e51a60fabf-2da6b5b1622mr1876941fac.19.1746023061756; Wed, 30 Apr 2025
- 07:24:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="G1ewDVEd"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53UEOI5X931491
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 30 Apr 2025 07:24:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53UEOI5X931491
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746023059;
+	bh=pQL8GxGCP0lOqhjZgQIjgeXZK6YREx5vQoMNpPTLrHU=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=G1ewDVEdQC6La4J5R7kMKwnkqVpNGebEjVhRdP8CbyAj4JzpaV+0lhKWzQgviR5Jz
+	 DnHGbQYWM0DUzo52eq8rHyuiP6ugp8H+u4HqECJ8ihkukboZW7TMa7IIrDAplGBmdO
+	 PnYBtM1FotSDGP0Bwmd3LQeqCgtZ+/DRE8sWb1QLo6aQbwVT8vaa4jQ32stDbGr9Pv
+	 oxP6dsv+CWX+tLfnoiF9XpDI0hZpikUo9GVld07MAjzYS/EGIUqWvWp07qhZNwt/Wg
+	 jHQIj1zz1GDMcwQqmZxnpwFKTpI2+0AEGA4hhTodBLWJXHWfh1l0J23ON/EjuigJld
+	 JJ/nQMjAp4l8g==
+Date: Wed, 30 Apr 2025 07:24:15 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+CC: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+        decui@microsoft.com, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, seanjc@google.com,
+        pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+        jpoimboe@kernel.org, peterz@infradead.org,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+        samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_00/13=5D_objtool=3A_Detect_and_wa?=
+ =?US-ASCII?Q?rn_about_indirect_calls_in_=5F=5Fnocfi_functions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250430110734.392235199@infradead.org>
+References: <20250430110734.392235199@infradead.org>
+Message-ID: <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <12680420.O9o76ZdvQC@rjwysocki.net> <d4cafb3f-2045-40c1-a8fd-58dd46485232@linux.intel.com>
-In-Reply-To: <d4cafb3f-2045-40c1-a8fd-58dd46485232@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 30 Apr 2025 16:24:10 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0gam8XmtwJ+8yp75EXmCXPrd3twSC_d39aMWw23YdCxfA@mail.gmail.com>
-X-Gm-Features: ATxdqUHrtNP14h5bQQ1DruxfhiAAPaU6Kzuw40KNrqPp7z8XoIpCAe9R856-66U
-Message-ID: <CAJZ5v0gam8XmtwJ+8yp75EXmCXPrd3twSC_d39aMWw23YdCxfA@mail.gmail.com>
-Subject: Re: [PATCH v2] soundwire: intel_auxdevice: Fix system suspend/resume handling
-To: "Liao, Bard" <yung-chuan.liao@linux.intel.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Vinod Koul <vkoul@kernel.org>, 
-	Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, LKML <linux-kernel@vger.kernel.org>, 
-	Linux PM <linux-pm@vger.kernel.org>, Sanyog Kale <sanyog.r.kale@intel.com>, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 2:59=E2=80=AFAM Liao, Bard
-<yung-chuan.liao@linux.intel.com> wrote:
+On April 30, 2025 4:07:34 AM PDT, Peter Zijlstra <peterz@infradead=2Eorg> w=
+rote:
+>Hi!
+>
+>On kCFI (CONFIG_CFI_CLANG=3Dy) builds all indirect calls should have the =
+CFI
+>check on (with very few exceptions)=2E Not having the CFI checks undermin=
+es the
+>protection provided by CFI and will make these sites candidates for peopl=
+e
+>wanting to steal your cookies=2E
+>
+>Specifically the ABI changes are so that doing indirect calls without the=
+ CFI
+>magic, to a CFI adorned function is not compatible (although it happens t=
+o work
+>for some setups, it very much does not for FineIBT)=2E
+>
+>Rust people tripped over this the other day, since their 'core' happened =
+to
+>have some no_sanitize(kcfi) bits in, which promptly exploded when ran wit=
+h
+>FineIBT on=2E
+>
+>Since this is very much not a supported model -- on purpose, have objtool
+>detect and warn about such constructs=2E
+>
+>This effort [1] found all existing [2] non-cfi indirect calls in the kern=
+el=2E
+>
+>Notably the KVM fastop emulation stuff -- which I've completely rewritten=
+ for
+>this version -- the generated code doesn't look horrific, but is slightly=
+ more
+>verbose=2E I'm running on the assumption that instruction emulation is no=
+t super
+>performance critical these days of zero VM-exit VMs etc=2E
+>
+>KVM has another; the VMX interrupt injection stuff calls the IDT handler
+>directly=2E  Is there an alternative? Can we keep a table of Linux functi=
+ons
+>slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
+>
+>HyperV hypercall page stuff, which I've previously suggested use direct c=
+alls,
+>and which I've now converted (after getting properly annoyed with that co=
+de)=2E
+>
+>Also available at:
+>
+>  git://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/peterz/queue=2Egit x8=
+6/core
+>
+>Changes since v1:
+>
+> - complete rewrite of the fastop stuff
+> - HyperV tweaks (Michael)
+> - objtool changes (Josh)
 >
 >
+>[1] https://lkml=2Ekernel=2Eorg/r/20250410154556=2EGB9003@noisy=2Eprogram=
+ming=2Ekicks-ass=2Enet
+>[2] https://lkml=2Ekernel=2Eorg/r/20250410194334=2EGA3248459@google=2Ecom
 >
-> On 4/29/2025 3:50 AM, Rafael J. Wysocki wrote:
-> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > Before commit bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND
-> > conditionally") the runtime PM status of the device in intel_resume()
-> > had always been RPM_ACTIVE because setting DPM_FLAG_SMART_SUSPEND had
-> > caused the core to call pm_runtime_set_active() for that device during
-> > the "noirq" resume phase.  For this reason, the pm_runtime_suspended()
-> > check in intel_resume() had never triggered and the code depending on
-> > it had never run.  That had not caused any observable functional issues
-> > to appear, so effectively the code in question had never been needed.
-> >
-> > After commit bca84a7b93fd the core does not call pm_runtime_set_active(=
-)
-> > for all devices with DPM_FLAG_SMART_SUSPEND set any more and the code
-> > depending on the pm_runtime_suspended() check in intel_resume() runs if
-> > the device is runtime-suspended prior to a system-wide suspend
-> > transition.  Unfortunately, when it runs, it breaks things due to the
-> > attempt to runtime-resume bus->dev which most likely is not ready for a
-> > runtime resume at that point.
-> >
-> > It also does other more-or-less questionable things.  Namely, it
-> > calls pm_runtime_idle() for a device with a nonzero runtime PM usage
-> > counter which has no effect (all devices have nonzero runtime PM
-> > usage counters during system-wide suspend and resume).  It also calls
-> > pm_runtime_mark_last_busy() for the device even though devices cannot
-> > runtime-suspend during system-wide suspend and resume (because their
-> > runtime PM usage counters are nonzero) and an analogous call is made
-> > in the same function later.  Moreover, it sets the runtime PM status
-> > of the device to RPM_ACTIVE before activating it.
-> >
-> > For the reasons listed above, remove that code altogether.
-> >
-> > On top of that, add a pm_runtime_disable() call to intel_suspend() to
-> > prevent the device from being runtime-resumed at any point after
-> > intel_suspend() has started to manipulate it because the changes
-> > made by that function would be undone by a runtime-suspend of the
-> > device.
-> >
-> > Next, once runtime PM has been disabled, the runtime PM status of the
-> > device cannot change, so pm_runtime_status_suspended() can be used
-> > instead of pm_runtime_suspended() in intel_suspend().
-> >
-> > Finally, make intel_resume() call pm_runtime_set_active() at the end to
-> > set the runtime PM status of the device to "active" because it has just
-> > been activated and re-enable runtime PM for it after that.
-> >
-> > Additionally, drop the setting of DPM_FLAG_SMART_SUSPEND from the
-> > driver because it has no effect on devices handled by it.
-> >
-> > Fixes: bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditional=
-ly")
-> > Reported-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> > Tested-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > ---
-> >
-> > v1 -> v2: New changelog
-> >
-> > Since it fixes a recent regression in 6.15-rc, I can route it through t=
-he
-> > PM tree unless that would be a major concern.
-> >
->
->  Acked-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 
-Thanks, applied.
+We do have a table of handlers higher up in the stack in the form of the d=
+ispatch tables for FRED=2E They don't in general even need the assembly ent=
+ry stubs, either=2E
