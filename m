@@ -1,73 +1,87 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AFA72D023
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:01:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF62B1E9B23
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000092; cv=none; b=uiJSltsfyKx8W7JFnm0LaKG49Fb2OxZtQo54jgh9ktGLhRbLp7m4dSFRVzDRbx26Wojkowti5A1iLrR8jjNsCYOPPXgP6B2cGo8IucatMzG9Jp3EzXU4AlIQPKRqwwWohjPWRdMuJlv9Vst0FHfe1oHe7jzzz2e9IXZ54+jY5Lc=
+	t=1746000122; cv=none; b=N60zfJt4HP/9WhFVRtuJkMnWb11l8Lvndde446xwjMlcaKKkXk5BTUbjAlqaPmQ08J0xpK4OBEnhGkXzAMLy1MfJSMWKtrTmypuY3xOW0+KSnq47TaZgZc5ApGR52/7tiBTfQqdmMMScpXsLmQae7d2vOfSwR69Kpk05UTHchRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000092; c=relaxed/simple;
-	bh=Y3M4/XazFS4JvfwkyeTT5R0L6rzIdjKz52NtK4YKQm0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=uvjxzK344D4K8NDjQs6P76S3xJeFn48XBGcHChqBtWueb88pLcxkuH5CaHwGl4lByIhqo469fa18V3bHrjDBRt9hWFpIYQ49zA9s0Ei9khZaMdyUbh23acE55eZjlT+w28g+6W2KnQBA7cq9osub/PrF/jR+vI2KxgZImrR17Jk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PWFDrQmm; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746000122; c=relaxed/simple;
+	bh=imNZM0y0X2Zh0glJewNR4M0/mnywvZ7XPAeuRNJmlBs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YJogQfxUO9oS8Q97WW41GvRb8Fc/HFgz0k3T9+6d1q0onuGwN7QRT88JZ0sk8szXtl/31KsYch2ucU/o5wt2d1moe/Q7Lnq4uxxLLxggkN+kCzxw+9DYzdLOsoK+Fw1s+jbXXJEtPQQDk7yciw0qbSC8f+XP9v33UDITKTcTZoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=1JTzKuaw; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tByTKZ6B; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=pkIaEELL; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=yhYIwOU/; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PWFDrQmm"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43ea40a6e98so63659715e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:01:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746000089; x=1746604889; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XVsI8LQZj8BwCLrRgRJ4kPnlB5Zuoj8Y+TGCFkKkR4M=;
-        b=PWFDrQmmt05SQIAgbofflHWch6k1udxDTnOz1iBMY3ws/BfOs77aYC1ZEPcFRxIoIY
-         JiRiH8Cx4KKf+JUJrgUCcO20uxv1dSArGASouEZiuuPXD2UUg+M0cOWWNvNkcvQZjxvT
-         vN11H4ySY9neBVliRfqioR8qqsDt2IQ/CrkD4p6qqQgEFYgxxcghIE8qOWi+UM6EZArB
-         EchQYKffuZTTEz7zZodUcaN+Mu2+k7VgFqRc1wt6nveRkwghS9904oxm3Z9RT7M1XW2p
-         iD5NGrKpWKQvnGzdphPQrXLRJ6YBj2XU9ZTZi/RPk4zlHRi5AXFcJu3SW5isQWjAgKNe
-         k1KQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000089; x=1746604889;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XVsI8LQZj8BwCLrRgRJ4kPnlB5Zuoj8Y+TGCFkKkR4M=;
-        b=XmCEu6knzgGNfgBm67g5zfGQ1PRXel7ztIPVeIn1xITyjCxcjnmvEa31Pt5KsuE2w5
-         TRb5wulpDN2x5qljDU3CwQdh8jaMHdpLvCdRmXzpZJFfFezUBvhu6J0xODBWxuUW1Fui
-         TwsF7KwuAKKbqKk/oiZdk7CluphFnOBxiyTuzk828CKo+WZFNSP57AvevwqjgsRBmMgl
-         TWYTOdOrBdgDkxU5bnd142D2UC2uyPUrIse1O3HuEVA87pOP3ZLOlkLEpuKN3QhwPbOW
-         RsK4P5gLkpcDOIn0xipVgpphkPMZMQGcTp1sp/rU5ec0tnVOsoRsyoNoZpdyZKrsHFZx
-         qLDA==
-X-Forwarded-Encrypted: i=1; AJvYcCX0OhQz7Eg9yTXxOhjr72JTyoX/Z+3fFUh0i7CcbYCKAloWkv1AQ6QG4Rxep0TTsLcPZWEL8GTCdNMEmH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynzTTVo7o7kBwUWmAm/eMYYzFKXiDNNRFrzvHS1NW0TEo62vNN
-	jlRkMWC06HNKW7jma5KwUPb4DYZLZfKG5vcM6ueRpUtJUvQkVqYUqVX/aukkjkE=
-X-Gm-Gg: ASbGncvcF5QDnrN/LNWTWkQJneojovhimwj5bFnYQ5aWKWR0dmOqHcEBDE3yDiLJcFA
-	X7FtdCtZHCKPOmPdjtZsvaY7cqXc4mcmO6Hf0wnsTDBB5N1u3hjdmKxSFHbsxIJRHH61Mxzd4Vw
-	1/QwOxkd16A3PyE/beiDkJwvvQsDfYnZLgI0+guvtXRTtMNVFW4xQ4uVXvROQkjT/kuef3cUO5J
-	ETGZA4kr/x7ccvUc3jfxML+Z2gUY0VWbBKk9ccA0byT3eFGr+rRFBoe70ldVVS8uJxoyXYhO6ox
-	w1lvphrLS42dXoIifTQ27fxKi5dqV40ca6JJLTSvOxMOmQ==
-X-Google-Smtp-Source: AGHT+IGSWw5YzFLfOEVeGZ2sMxce5ruW0SonDB1/HWE46YfPkACQqdVyQiIV6naiuky8x9154Y7AYg==
-X-Received: by 2002:a05:600c:35cc:b0:43c:f470:7605 with SMTP id 5b1f17b1804b1-441b1f33a80mr15531415e9.12.1746000088903;
-        Wed, 30 Apr 2025 01:01:28 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2b5951asm15364615e9.0.2025.04.30.01.01.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:01:28 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:01:24 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Arvind Yadav <Arvind.Yadav@amd.com>,
-	Shashank Sharma <shashank.sharma@amd.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH next] drm/amdgpu/userq: Call unreserve on error in
- amdgpu_userq_fence_read_wptr()
-Message-ID: <aBHY1IPONYHyybrf@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="1JTzKuaw";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tByTKZ6B";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="pkIaEELL";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="yhYIwOU/"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id EC10521227;
+	Wed, 30 Apr 2025 08:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746000118; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
+	b=1JTzKuawdTXdtZE6wr6Tsza1zxtzz5sm9FdR75lY8OGRZXygGd95d9ktIw83NGOjceoG02
+	dPj5NeTQilr2ZXPzmIYodkEJk3bGYn/U5H73VM2dJK03OCu3HPVbEl0t1DfqMQwvDWyB5A
+	NckY7raho18q3GNH4yK9yQfe3KAEMlc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746000118;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
+	b=tByTKZ6BT9NweKRTkFuTjFHUjKCcB2k+QFFmmT9tYw5vtekUJj3VBS2zaYgHuobY9U5Ofa
+	oPjq0cxzfg84/1BA==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746000117; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
+	b=pkIaEELLDx7JOFPt2lPzQfQIp5d2ZWuF159NU3qm1Q6Zrm3Ux0HeQp0pklRVspKkY9aCDn
+	FpN92g8vEX4JQWVZhhk9mZ1PxA/pVwq9iuo+9sQZ1IO9hacCtHH8SResJQqhvqM7fiQmci
+	6P9cGnMIL4g64C/cB/x5GFDzXJLb+/s=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746000117;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=03W5YtvlVGgcHBJCGX1MqxQSc7zu2MhPizkqenI0Lt0=;
+	b=yhYIwOU/ehkbYQO1rCtFM8R6X8hONytUkXhGN1FtTx/1AnfdRwzf0ulDzPdJqKjBJwD42q
+	vFJedRKAVd6A/UBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DC562139E7;
+	Wed, 30 Apr 2025 08:01:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id xs/CNfXYEWiECAAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 30 Apr 2025 08:01:57 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id 8B961A0AF0; Wed, 30 Apr 2025 10:01:53 +0200 (CEST)
+Date: Wed, 30 Apr 2025 10:01:53 +0200
+From: Jan Kara <jack@suse.cz>
+To: Zhang Yi <yi.zhang@huaweicloud.com>
+Cc: linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca, jack@suse.cz, 
+	wanghaichi0403@gmail.com, yi.zhang@huawei.com, libaokun1@huawei.com, yukuai3@huawei.com, 
+	yangerkun@huawei.com
+Subject: Re: [PATCH 4/4] ext4: ensure i_size is smaller than maxbytes
+Message-ID: <ou367b36z65wilppck3eyeah445gbr4623irp4k4kuzypnhdkr@jouh63bmmy4r>
+References: <20250430011301.1106457-1-yi.zhang@huaweicloud.com>
+ <20250430011301.1106457-4-yi.zhang@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,28 +90,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+In-Reply-To: <20250430011301.1106457-4-yi.zhang@huaweicloud.com>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,mit.edu,dilger.ca,suse.cz,gmail.com,huawei.com];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,imap1.dmz-prg2.suse.org:helo,huawei.com:email,suse.com:email]
+X-Spam-Score: -3.80
+X-Spam-Flag: NO
 
-This error path should call amdgpu_bo_unreserve() before returning.
+On Wed 30-04-25 09:13:01, Zhang Yi wrote:
+> From: Zhang Yi <yi.zhang@huawei.com>
+> 
+> The inode i_size cannot be larger than maxbytes, check it while loading
+> inode from the disk.
+> 
+> Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
 
-Fixes: d8675102ba32 ("drm/amdgpu: add vm root BO lock before accessing the vm")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c | 1 +
- 1 file changed, 1 insertion(+)
+Looks good. Feel free to add:
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-index be068e8e37d1..57169a8224be 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq_fence.c
-@@ -373,6 +373,7 @@ static int amdgpu_userq_fence_read_wptr(struct amdgpu_usermode_queue *queue,
- 
- 	mapping = amdgpu_vm_bo_lookup_mapping(queue->vm, addr >> PAGE_SHIFT);
- 	if (!mapping) {
-+		amdgpu_bo_unreserve(queue->vm->root.bo);
- 		DRM_ERROR("Failed to lookup amdgpu_bo_va_mapping\n");
- 		return -EINVAL;
- 	}
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/ext4/inode.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 9f32af1241ff..2bd2a4f4d9d7 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -4916,7 +4916,8 @@ struct inode *__ext4_iget(struct super_block *sb, unsigned long ino,
+>  		ei->i_file_acl |=
+>  			((__u64)le16_to_cpu(raw_inode->i_file_acl_high)) << 32;
+>  	inode->i_size = ext4_isize(sb, raw_inode);
+> -	if ((size = i_size_read(inode)) < 0) {
+> +	size = i_size_read(inode);
+> +	if (size < 0 || size > ext4_get_maxbytes(inode)) {
+>  		ext4_error_inode(inode, function, line, 0,
+>  				 "iget: bad i_size value: %lld", size);
+>  		ret = -EFSCORRUPTED;
+> -- 
+> 2.46.1
+> 
 -- 
-2.47.2
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
