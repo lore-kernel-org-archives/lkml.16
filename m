@@ -1,119 +1,106 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A84125E821
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:29:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015072DC768;
+	Wed, 30 Apr 2025 16:32:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746030555; cv=none; b=q03HyGF5HpT5o2f6YIVRMinuOud7FX222eHI/+UXBd/e94JM/cLZnHSILrhixGBljYYTS6EaAq7n1gU/fWq8leYdCC0jcfteqA9fbRTNq0ARnyiE3fNjktiJ1FH5ysK+KPHutv1rk3bjcaXl9FMkkShJDbul2AsOMGttsJ71Mbk=
+	t=1746030778; cv=none; b=qCo7xYOFrradL4SzFqRrocf1CEPa34Akg0MPA1W2Q2IQXA1BZcMTLo9uUtQKaQnK/KQ1iT9BZRP6aCHSUHuSBr4oYM1wjkWr0UO+TrJrFbC5XDBPgzfeB18Z4X924+QaLV7FdSPBKRuIB2dAK5wHfDvGdy6IZOTGqkxbkYMq4yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746030555; c=relaxed/simple;
-	bh=N2fIhTPP3bAsp+EgIBZ1fV/xQFWlcYofrCRmusWDnh8=;
-	h=Date:Subject:In-Reply-To:CC:From:To:Message-ID; b=hdSUK0MQfTWE956cFAeLYusZ6Pxv+g0TmYDNyhSBKI/cSeY5pp5ysxO/2Gljvrr/1COXhHhW7TzEQUDQVukBkhKZhXReplyYCd6BHBEX4adWEodytMJJMTiQe2/MCIOBheyzhl3rfrIjLUHRQIgLHfnoZYwVkQlewzHlOU7AmzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com; spf=pass smtp.mailfrom=dabbelt.com; dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b=MJvRCvHV; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dabbelt.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dabbelt.com
+	s=arc-20240116; t=1746030778; c=relaxed/simple;
+	bh=6Eg5Y4/rwVqIGf5W318Jzy8DyWKM01YESmSAk1Erv9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=QNzTEJGhjgUEgAEMcbxViWqVP4yReEMbx8H5uKxosBwxuwFH/XDO1C3qHJJKm1yk1F6spr9vMbGZlE5FLtbaBh8zW9HILS3ZRaWuBIykx1WPskCYKoxraqqoexOioMjZTU7xS1A66vHcB8HAW6S1ASl95aX03yyejiqWSvV/w/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=rHdQ6S2L; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20230601.gappssmtp.com header.i=@dabbelt-com.20230601.gappssmtp.com header.b="MJvRCvHV"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-736c277331eso1214162b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:29:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20230601.gappssmtp.com; s=20230601; t=1746030552; x=1746635352; darn=vger.kernel.org;
-        h=message-id:to:from:cc:in-reply-to:subject:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GFOC4sM5/CH4fwuCHLrUzpIazRlQRbLd7/G/i93FgIw=;
-        b=MJvRCvHVFKRCK2J9qzxUI9YQOZ5vQsTZTtI+4dzuvLOKru4mNhjLgLqWg7yfZaFCh/
-         oE8u7WSCpVg+zaTwGWBhtm3Sc2ARTdfN7tSehpECzFLESgdVJPNcc5rmTLxiYkwMWFtn
-         rdVxRdnRJfmaUa4NTMSYEFLb94vp/IOXH87zD0epTs0w3gVl+62FYG4IrrEp+4WjLEHY
-         wX6+t5M9UCYj7XLmc0EdXr+M3wE5WPU6ECFhQUyzUDJyKrC9mdV96CVkkh5OZA3ig32p
-         ZPRBacUaKCdmPqQ5Eh82/aRJo3Agg0tS+GKgZiXr6TqXknNkptRBYYPINvK4Vtzc2Oe9
-         bQ2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746030552; x=1746635352;
-        h=message-id:to:from:cc:in-reply-to:subject:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=GFOC4sM5/CH4fwuCHLrUzpIazRlQRbLd7/G/i93FgIw=;
-        b=hVlr6lFE63RajxgIbRBTlNP7SiLUJG6TwM/DKWFW6B+3mo0mEuTHA9kMmK0cy1/Q+b
-         QakWEKUIJx+ol4t1t/s4mblfHWTlf5rAabsCJB2CnpqPa6rJ3VNPSdP+YTG0jc4ZPjMr
-         YdTbkCYbiFDyuE6N1MLfCKqkp2cH2xwRwh73ylhgmzoCqNpCtTJGXQIq8rQOA/gx2KVs
-         j3kAaR5oa/0CsoEXCZ1CvaaA0PHpMQdyoPfYMRcZRldvT3277CbqHSEymUz7UYev6Hu/
-         f2nLVKUelVO+IUOY5YrypqZVslig4d7QETzrI7hk5awf4w9mX6IbrJnpourUMkpx/UXq
-         ADcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWNMzxXp9gcdkcVDvgmYlIfgcoj00Uh0z2TVIfwnkwQIK+XvYmwzJTEMrsGC/QCNgXBqmkmJ5+j5RgIdww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbeSG+BSZwO2v0QnDVIEC0bTwMZcLJKh1EFzdada9zMjrZFAoO
-	lkA8RSnDtQmtGdTPeVdqGbOdjKCOsGmARjPxB+MYf0nyL4CW2Qu0it+zjyPDV4o=
-X-Gm-Gg: ASbGnctyE1HD9U5qAWx5yG6wX5KJ33/OXURraPPEZbfbuJ4OcKdFx7kt6Z5mnVloKuy
-	rhnd3aOzr46nHysQKGlfoaWXnR7RMGhgBhlGr97WudaM5zRIZDSBe3FfEZgQqAUlL5rffOVxbUY
-	fGmaiKZ0sl5XwoRpR2Jp1eHB538wLHs6k/VxwCXkCr17EeLeZ35OBsMwK4XCWeJ1AHVExupO/Et
-	NaiaaS1c71Y3Xj5uXrcWb+8vjWopRB4C92QpWp5pccnYckwHyIV0cYkt+hlPLJuXrmtZGFZeiM6
-	0EgbVe8dOGyuKdtW4BocIT5wqEXrDh/NUb8oLA==
-X-Google-Smtp-Source: AGHT+IExcv1noClcSuOpJP7nbUZjzGDa8bluXkLE8YWpSh0gFLO9pEFgcrLD3V9H/3+JCHX18NNokQ==
-X-Received: by 2002:a05:6a20:2585:b0:1e1:a449:ff71 with SMTP id adf61e73a8af0-20b9688ad53mr178074637.1.1746030552553;
-        Wed, 30 Apr 2025 09:29:12 -0700 (PDT)
-Received: from localhost ([192.184.165.199])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740415497a1sm865577b3a.116.2025.04.30.09.29.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 09:29:12 -0700 (PDT)
-Date: Wed, 30 Apr 2025 09:29:12 -0700 (PDT)
-X-Google-Original-Date: Wed, 30 Apr 2025 09:25:26 PDT (-0700)
-Subject:     Re: [PATCH v2 3/4] Kbuild: Create intermediate vmlinux build with relocations preserved
-In-Reply-To: <20250430-bronze-unsuited-3f47ce46d8d2@spud>
-CC: ardb+git@google.com, linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-  x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>, masahiroy@kernel.org, mingo@kernel.org
-From: Palmer Dabbelt <palmer@dabbelt.com>
-To: Conor Dooley <conor@kernel.org>
-Message-ID: <mhng-66039f92-bd1a-4314-a728-3fa8db3f3e58@palmer-ri-x1c9>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="rHdQ6S2L"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53UGWab54018227
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 11:32:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746030756;
+	bh=2/VRFfnkqVPnUwIAJmS6kQe55c2crnb7DT2VESQPAmo=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=rHdQ6S2L3udZ7GKOjOQW92zdjKcvoewSBCMLj119fxri7UxzF8eXLVUZcT/jz6xE9
+	 BoZpHTjdFxex1Yoang9Sb5aLTpGZDaxUV7hSE0rQXJfs9+T196YFVIYhKpGsS7cnHI
+	 p8LJ90rPJLolLpyXRHhhrKCiCOKJmDxQWyef3T5M=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53UGWahr088425
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 30 Apr 2025 11:32:36 -0500
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
+ Apr 2025 11:32:36 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 30 Apr 2025 11:32:35 -0500
+Received: from [10.249.48.175] ([10.249.48.175])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53UGWZQW064226;
+	Wed, 30 Apr 2025 11:32:35 -0500
+Message-ID: <413691a4-7c00-f82f-2481-1b7029631c9e@ti.com>
+Date: Wed, 30 Apr 2025 11:32:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am62-main: Add PRUSS-M node
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Beleswar Padhi <b-padhi@ti.com>
+References: <20250430144343.972234-1-jm@ti.com>
+Content-Language: en-US
+From: Hari Nagalla <hnagalla@ti.com>
+In-Reply-To: <20250430144343.972234-1-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, 30 Apr 2025 09:03:56 PDT (-0700), Conor Dooley wrote:
-> +CC Palmer
->
-> On Tue, Mar 11, 2025 at 12:06:20PM +0100, Ard Biesheuvel wrote:
->> From: Ard Biesheuvel <ardb@kernel.org>
->> 
->> The imperative paradigm used to build vmlinux, extract some info from it
->> or perform some checks on it, and subsequently modify it again goes
->> against the declarative paradigm that is usually employed for defining
->> make rules.
->> 
->> In particular, the Makefile.postlink files that consume their input via
->> an output rule result in some dodgy logic in the decompressor makefiles
->> for RISC-V and x86, given that the vmlinux.relocs input file needed to
->> generate the arch-specific relocation tables may not exist or be out of
->> date, but cannot be constructed using the ordinary Make dependency based
->> rules, because the info needs to be extracted while vmlinux is in its
->> ephemeral, non-stripped form.
->> 
->> So instead, for architectures that require the static relocations that
->> are emitted into vmlinux when passing --emit-relocs to the linker, and
->> are subsequently stripped out again, introduce an intermediate vmlinux
->> target called vmlinux.unstripped, and organize the reset of the build
->> logic accordingly:
->> 
->> - vmlinux.unstripped is created only once, and not updated again
->> - build rules under arch/*/boot can depend on vmlinux.unstripped without
->>   running the risk of the data disappearing or being out of date
->> - the final vmlinux generated by the build is not bloated with static
->>   relocations that are never needed again after the build completes.
->> 
->> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
->
-> Delayed report since I have been slacking on my testing, but looks like
-> this has broken boot for me on riscv (mpfs-icicle-kit), no output after
-> "Starting kernel", defconfig should be:
-> https://raw.githubusercontent.com/ConchuOD/riscv-env/refs/heads/dev/conf/defconfig
-> Toolchain is llvm 16. LMK if there's some salient info missing.
+On 4/30/25 09:43, Judith Mendez wrote:
+> From: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> Add the DT node for the PRUSS-M processor subsystem that is present
+> on the K3 AM62x SoCs. The K3 AM62x family of SoC has one PRUSS-M
+> instance and it has two Programmable Real-Time Units (PRU0 and PRU1).
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> [ Judith: Fix pruss_iclk id for pruss_coreclk_mux ]
+> Signed-off-by: Judith Mendez <jm@ti.com>
+> ---
 
-Thanks for tracking this down. It's not manifesting on my end, but we 
-talked this morning about this maybe being some config-specific issue.  
-I'm also on LLVM 18.
+Acked-by: Hari Nagalla <hnagalla@ti.com>
 
-I'm going to start poking around with the configs...
+> Changelog:
+> - drop internal tags
+> - rebase against ti-k3-dts-next
+> - fix header
+> 
+> Link to v1:
+> https://lore.kernel.org/linux-devicetree/20250108222048.818835-1-jm@ti.com/
+> ---
+>   arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 90 ++++++++++++++++++++++++
+>   1 file changed, 90 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> index 7d355aa73ea2..ee53e663b5bd 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+> @@ -1079,6 +1079,96 @@ dphy0: phy@30110000 {
+>   		status = "disabled";
+>   	};
+>   
 
->
-> Cheers,
-> Conor.
