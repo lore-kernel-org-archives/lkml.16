@@ -1,80 +1,75 @@
-Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8C21325D;
-	Wed, 30 Apr 2025 09:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF9A0235049;
+	Wed, 30 Apr 2025 09:53:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006811; cv=none; b=ff3RYhQwRXTndE/LTmQtJpS3FMcVpFNMUz78GGJfqTW/xPDOHpRXJRkqh+CkLVqSCg1KVw6LR53DyOvY0cgJP9S0TpfUNDXlbDRkiWpZV8kTq27iyh9Z54SSbr3Q4cyx0fF0Khtp7MxaTJuvABXmKGdXCcKZfuPvl1B9ZST7gGk=
+	t=1746006815; cv=none; b=usxrxAuusMJxkh5NJz/mh7RzHxoyE/Wf6BJCPDm4HGr+y9kz3mWwP2rS003AmUPmojOQZmuEqrEdfUr1rB37v495yzwiBGId9l8Y17W71FCNbpiTXm8wM0cYv16ItS8YwB0bZz9Kn1HOKq1b43fNIVH6AyIyp4wj8ofYul3cUiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006811; c=relaxed/simple;
-	bh=JzQpokK6fstc6jMeRyD83tGumvON7WS7NNjqeNY3D98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=PiOHIXUQU1s2qpnkgO3rxnzF8Gbtn5YmlLuUTACFLmYmaND7oK8JEZlpfCTV1sI/SDSQW3w3p7bsiPfJlxO3plEWg0Ur51qd5pv0oEQBAbq1mgkDoP2R+C7eKUsnEEm050TJu6KDjfn4fnpqzPk4sIGWZrFc/o30qpODy+jmeZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.206.16.166
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
-X-QQ-mid: esmtpsz17t1746006696t61dbbf8b
-X-QQ-Originating-IP: SgdxThapkgx48M+mCvGDLsHXNAQ5atEQrIwqzuEiytg=
-Received: from localhost.localdomain ( [175.9.43.233])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 30 Apr 2025 17:51:34 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 0
-X-BIZMAIL-ID: 11376402698331337444
-From: Zhou Bowen <zhoubowen@kylinsec.com.cn>
-To: Simon Horman <horms@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org,
+	s=arc-20240116; t=1746006815; c=relaxed/simple;
+	bh=ZYar+ZpT/hHW+BjicvwY2/oyKJa/a97+twGdFQAsV5E=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lxSiumSqI/aRnnfbLuyVqK9C547i753xT4o2HqQ6Yl4Dtwk1uh655PbRc5ycof4YOd0NE6TzzxgeZ2aAiYAkZM/AOxewk5JxmeYdGcQUscHSLlIyC+IJIbE6qmxVLezvVgQnGMDXXrLnex5E0fQvKyYtTAlXZ9Mad0kmEYAw4T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=fail smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A229A106F;
+	Wed, 30 Apr 2025 02:53:25 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.manchester.arm.com [10.32.100.21])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3620B3F673;
+	Wed, 30 Apr 2025 02:53:31 -0700 (PDT)
+From: Andre Przywara <andre.przywara@arm.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>
+Cc: linux-clk@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH WITHDRAW] amd-xgbe: Add device IDs for Hygon 10Gb ethernet controller
-Date: Wed, 30 Apr 2025 17:49:12 +0800
-Message-Id: <20250430094912.6590-1-zhoubowen@kylinsec.com.cn>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20250416185218.GY395307@horms.kernel.org>
-References: <20250416185218.GY395307@horms.kernel.org>
+Subject: [PATCH] clk: sunxi-ng: fix order of arguments in clock macro
+Date: Wed, 30 Apr 2025 10:53:25 +0100
+Message-Id: <20250430095325.477311-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: esmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: MX+1SEN3H+wAU6OWG1ICS4n58oY0tX6NTu///qtjaJUJiwo52GIvs6DF
-	9/dk+ZURmKVZuGMV87PiB4lP6ZKY9wFG66C6s1hPNg+DfwGKUM1KcJzNs7zZaRVRh1JQjxi
-	yql/D04/+IacHSQB5dwSokfQ3yicOSiVcXrDOOc0MinAjufzULnxzV/Q8R6ndfofuQfgakO
-	TU1FAt1vARXmtz6ebtVhYjq8Lk8xkXalElWiMm62bidzkEoMt4hj3Pyy/wlsGbtI1E+LvRe
-	VpK0KG90czmx+zHE0s6xWblEuxbJ+Q6ZSAXesVpYFuOHS5JxGjQVFVkRf6jG8//Za/hs8NV
-	t+rC/+n2zh/ASxu4dC/BW+DhPPrZVLwf2mvd1nN2b8Ms162Xn5UjFDgrpmWPpu6RFE4rG9p
-	PVCaDAkNnQZQMr78kGjHcc87O5XGkFu8/uYy1ttaPWCFxAQLiXX/h2FMpH2PUwa2zMl66Dv
-	mFObEdwGam9jjeAU+yJkgTDTfF4UghG4MPCMaCaxGokY/jmLOJ23tyBy/vx8KEYcW9ORMc2
-	hhJ19UiARN3pGW3q7zF+jbnP+HyM9Dt2Hj9c2Ru7Afn+0VuGKKWKllehRzwjT57yiho9H5I
-	gKeB8a9BXdjQasCkDAFm086v8JCLRw8oKD3OtWp7oyRt+iQa5xLwa4iTFY8UDFB7+VzV9DJ
-	3XXsgwzzMVpQS2HREbwlDDaouUc90PYOgSoxLcCjRomDnr4bvG0BwcEJt/iQBfAGB/UjlNK
-	5JpA81LLQBuy/pvXMkjc8jBPLrjeKLrLo3SvxzZ+h3hPsOpCmIL+5wQnXzX3py+pBxyq0Rn
-	X+85Ym58hMMNcEweRt7qiAbVtjxmjQFRxmbl5WMfhwp12ZVTiJ40EwNt5BzcITDgWBLYsGq
-	/WNg1eXLc1FDzy543VVhhCMA1XyCjjPODRloFRZpji+SqkywL6suPRNLC7DVMq6gIZZPmx3
-	DVMxgr6U9wJf9dGCByEVd+wIJOwHoF9rOdkT3ntH25ll/c1JWzTV5Wlkb
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
 
-Hi all,
+When introducing the SUNXI_CCU_MP_DATA_WITH_MUX_GATE_FEAT macro, the order
+of the last two arguments was different between the users and the
+definition: features became flags and flags became features.
 
-I would like to formally withdraw the following patch due to a possible conflict
-with Hygon product using in the future :
+This just didn't end up in a desaster yet because most users ended up
+passing 0 for both arguments, and other clocks (for the new A523 SoC) are
+not yet used.
 
-Subject: [PATCH] amd-xgbe: Add device IDs for Hygon 10Gb ethernet controller
-Message-ID: <20250415132006.11268-1-zhoubowen@kylinsec.com.cn>
+Swap the order of the arguments in the definition, so that users stay
+untouched.
 
-Apologies for the confusion and thank you for your understanding.
-
+Fixes: cdbb9d0d09db ("clk: sunxi-ng: mp: provide wrappers for setting feature flags")
+Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 ---
-Best regards,
-Zhou Bowen
+ drivers/clk/sunxi-ng/ccu_mp.h | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu_mp.h b/drivers/clk/sunxi-ng/ccu_mp.h
+index b35aeec70484d..8fc7fdb7ef494 100644
+--- a/drivers/clk/sunxi-ng/ccu_mp.h
++++ b/drivers/clk/sunxi-ng/ccu_mp.h
+@@ -109,8 +109,7 @@ struct ccu_mp {
+ 					     _mshift, _mwidth,		\
+ 					     _pshift, _pwidth,		\
+ 					     _muxshift, _muxwidth,	\
+-					     _gate, _features,		\
+-					     _flags)			\
++					     _gate, _flags, _features)	\
+ 	struct ccu_mp _struct = {					\
+ 		.enable	= _gate,					\
+ 		.m	= _SUNXI_CCU_DIV(_mshift, _mwidth),		\
+-- 
+2.25.1
+
