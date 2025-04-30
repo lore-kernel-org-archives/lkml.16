@@ -1,168 +1,436 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01672258CC3
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB1CE221557
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014122; cv=none; b=mTIIsqZ/AZU+ZmdOSW3lEtnnBe8Ak6KoOf1PeNCXWf1WawFNNXWF8Vnp+UGx3WZPji697PiOPiPDXRIRjMpPriccc9mDqmhBIqomSEoew9WYNzQgLe8R7XNq3UnBU4Gn0gtMON0yPK0qgG964ZDcqJEBOuuFzJV4b9jej8SxwrU=
+	t=1746014121; cv=none; b=pBRPPqlQ4brvytcwoyjooIfLsGjSwu4sjQhSPXCry0TQwWbYO8YGaHshT6Ff055n8keGmnWE28njuV4l5ECc7fg5R+RXax2Ur0HkLquyi7srL5e5uy+DquIjUTiYK444RThS00PpMU36jB3XBS0vRwu5lSGauU0EJXhQ9oMtics=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014122; c=relaxed/simple;
-	bh=cEafmn+CQvRdDtyXdQjjjTvqE/nBCdUlVRZYmX2VXog=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uXg4TqjA9HbWFcae+ygMNZQ+3G+sxewuvRrJ+cnN00a5kA2oqeMiDAswmdaQjHF+wlPKpQoSO4mgfjGuAgk5tCtLcV6UtxUbW8v0iXc25sJqJUpLM7TKK3RIjz/YaxlGSwHtKwgHJcEuld5RX2I3qc+YnRJSezOalA+w0YnqhIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YoJ+ndUL; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746014121; c=relaxed/simple;
+	bh=fw8sbmO1e6O0328NKQzYF9tfFXk9nA49fAcnrdPiRUc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uz+bSpECk0FdHpEyhNFVCuWJGjewFzVawtlVxcB06FczRvFmq4G7SelksBdiMagXag7fIPcuJ2ToaG+/bdaQjKvYYRz1mVzmvbo+DwgroybKEWgE/IsZy1wLvVvYF7KuaVs+UYNZpeY7gpz7e+ntAvWd5fkKMUfOxyHjuwr3x9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=cUMcnJRx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YoJ+ndUL"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30384072398so6025960a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:55:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746014120; x=1746618920; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XuyGNzxgDiOkjQwKgLR+DPXNIJCg0WiL8KUtY79VEQs=;
-        b=YoJ+ndULHvhDDEaOaEviI4jkJJ55/+UgDZdUpuZX3Yg7aXH44j24FW2HPRc6neAjB3
-         QMuJFyjSMM3HzbrIwJ1eBkxer5cYtPgS8In+F2nEM0drWzg8fLlNlyFSAb/+KKIi+/qx
-         KExhH+iQYaU1RWKP6tfLQillpfBjgmxsKElcjI1JBDrut5D4/KYKZ49MZ7OuTyIcLc+S
-         FG/esUVPqhypZ6OAJsWiFQw13wwT7PEuff/RWm6i2yLEGCs+4+Vp1csnoRZ3HQM5HsmN
-         b2LWovWx7uuXjlAnsafGySecjRuec7/AFNBUg4FZCprNBHXB559rWOX5KCsbO4q+biEB
-         83DQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cUMcnJRx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746014117;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xnq3OLYaF+K0sVWrSL5fn61Vue0Rlx0kE9aNbGR/m3o=;
+	b=cUMcnJRxUvFPotg+30JgF2bqpv0EOXv0fDdjLgq7m+YS/rLZ6t7Q9x5YrdoCgn1oXvBLLs
+	isZX3nFa8dBtZ975F4rTP8+NjY4pkKHn7jJdNU/Zx/cCddXOOQu9e5MS1WlPFl2FmBVCEO
+	nRe8WGDONOgqiIKivp0C0nutHYDICa4=
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
+ [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-530-OGYG6k7lMt6gsHfstcgRlQ-1; Wed, 30 Apr 2025 07:55:16 -0400
+X-MC-Unique: OGYG6k7lMt6gsHfstcgRlQ-1
+X-Mimecast-MFC-AGG-ID: OGYG6k7lMt6gsHfstcgRlQ_1746014115
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-736cd27d51fso5511536b3a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:55:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746014120; x=1746618920;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XuyGNzxgDiOkjQwKgLR+DPXNIJCg0WiL8KUtY79VEQs=;
-        b=N6qSNudli+3Ma4K97yPExGRQn13/6Eznt7/83DMficMAKxa/x13k1Fs8k0nXOPy2V7
-         pTalculdJm4h/AwzkKgi+talfRoT7GrvwNlJ6cNyv8HeY3AUFeTNt/RI6dxJteoiXROX
-         KZ9FW1alcBdow+1CjVGTv9ZzImPTd3L/4O54BIGqkRhIn8pSPKvp9bQn+xaLysbpCybQ
-         CyR+pnrptCrxtUMrQiLPgWxHWBH4BCjqeycUnsTi7NxdKX66zs/MMiRu2TeniyI34uaS
-         IUkiCr0K6B1ck9KY67pmp1VDc0nQe7TlM3x5lgn3dQFX6gpQ1GMYhj4f/odtLXZPPrfQ
-         XUMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaUG4pa7RTlbcJALhG8SSWbqzWKgU3LjcsZCF58MP56lQI9/MwFkjp1yDEK/vb6bMGGiot+I9Wfqa6DCw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxPtrlcottPlq+tmF3MdCJjr5jr3+nRelt+3hSmspJF4PgnC7I
-	I+HMYOJh63AGUIhz44/IHyOQPPsKQvgIZR1OgvmrecFOoG8bmDli+Juzs+vzDJYYcivlRVmRnN+
-	C6caghxpziBPbWvaG5U+qfBdyVs/89Y7mEQRb
-X-Gm-Gg: ASbGnctEKBz7jvtKKQWVZ/A0jiE5NKAbKNg+laSZDJjWY5cyWc5ojk96bR4MQl/rgkN
-	6z0fGT6T5EJE79CANuAdiLG7FKEfvuxksRxnGuaRwFcl5CMN8NAqLEMK/KhokOWAVAam6Xelutu
-	njpbPs4xVxIWDuRs2XVvyGQCl+dI6d7HnBFbtceU5LpdotZpWM9sJJ
-X-Google-Smtp-Source: AGHT+IGwJXAzQrRYamfgcjkePkCyZD/+tcwqKUOPh3vaz9WJg9ywHz6ypW3p7A0p0mLXG8BPw3/UYz781u1FtNYWFzs=
-X-Received: by 2002:a17:90a:da83:b0:305:2d27:7c9f with SMTP id
- 98e67ed59e1d1-30a3331eebbmr4689528a91.16.1746014119912; Wed, 30 Apr 2025
- 04:55:19 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746014115; x=1746618915;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xnq3OLYaF+K0sVWrSL5fn61Vue0Rlx0kE9aNbGR/m3o=;
+        b=hNmY9CdGgBDCKdEGK/8ngX/9ctGo1lYschBVob3+WEaS4XO7Qn+6KcF0gpJd07vVXo
+         s5/8xnFjjpC43Z+TxPJIJ7YydpRGuz7zC0Tb7CDFr63PDF/KBe5NnTW0up39n6yt3VdF
+         /iFyWV8sE9/wVkCS94SjDI+aDVV5P/ChhFJIFzopdDaqsnt3dPpl+P5m+OsIU8X/zKuE
+         Oz/wjrPNiOKCSP9K+PFTEzhnOdsaFFhPawDLd6+tRu6sRzx3T2EdItW2tSr9OB1qaLYG
+         8gfsUdiv8o678CLJCMAD760UUOPxXTxZTS1equZqTgBi4kAfQSprKZ9vS6Hp0rlfUYwa
+         WapA==
+X-Forwarded-Encrypted: i=1; AJvYcCVvts6EXEQhinOE9Qx/kLOKKv8G36CQjScKQfBi3W1dam3xM9+Jo8EoVarMKsnMv99rz9ts1HqVEkHSKq0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweWGn2JkdISJH1YETPLcSjZKTSM0sjk3+9aAri7QURloZM4eiu
+	hr10xjW+lbdScUNefZYuJbsyzVna8ObxT7uZ5DQJVAhQP+c5T5bMwJf7iFzOW6H2DuzPeO8jF8i
+	pYv9vWQgSHwTggaV4NUqWjYo6/lzFaupCudyztmi5CFRo5m/Vqm+BFHRqyiDSWg==
+X-Gm-Gg: ASbGncv3H/r21MFh+BXMf/rCEiBseB3xMPXZ7eqqYIvpZqkQnWSdhbWe29b67aCrBPj
+	VrHTd26MFF08+5h11HylHu4NUZIv1wki2Ba8Qt829dDwW/J0EGoGL34jn/QBOWXjK1V1BlCdmFm
+	gKxrn/c9idEFRv+tPf3dnttatjnER+/rm7oxMyanS8yyriYUM1Uk59jeexkxn3+cr8CkP5vwW8R
+	A2o/BSjQVrB/pmDaN7OjxdrRkBbxVeIj+cr03yjfVi2c27V48jMw/Ey7An2uaC4wQSZPArS1B8i
+	X/0i6UNpW3Yj
+X-Received: by 2002:a05:6a00:1414:b0:72f:590f:2859 with SMTP id d2e1a72fcca58-740389ba998mr3850414b3a.13.1746014115272;
+        Wed, 30 Apr 2025 04:55:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFSfuAYjpYj51WsKtmoHkz37YKpvduGHDsHCx97KPPTiCcp6hHFcIFol3aPI4I+SwKGgfY2og==
+X-Received: by 2002:a05:6a00:1414:b0:72f:590f:2859 with SMTP id d2e1a72fcca58-740389ba998mr3850388b3a.13.1746014114855;
+        Wed, 30 Apr 2025 04:55:14 -0700 (PDT)
+Received: from [192.168.68.51] ([180.233.125.65])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740398f982csm1420938b3a.21.2025.04.30.04.55.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 04:55:14 -0700 (PDT)
+Message-ID: <e6a69a4a-8014-44b4-aef6-37afe0fa8d29@redhat.com>
+Date: Wed, 30 Apr 2025 21:55:05 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-rust-kcov-v1-1-b9ae94148175@google.com>
-In-Reply-To: <20250430-rust-kcov-v1-1-b9ae94148175@google.com>
-From: Aleksandr Nogikh <nogikh@google.com>
-Date: Wed, 30 Apr 2025 13:55:06 +0200
-X-Gm-Features: ATxdqUGMpC2B1RGjyZnHvqdqDFG5FAFUqW_p8EIC04ZX-V4PP8t0Bammv6S-GJE
-Message-ID: <CANp29Y4o8o6gz6GbM6NhP9sJUi94q29=aa+tLc1aCk0UVpgj0w@mail.gmail.com>
-Subject: Re: [PATCH] kcov: rust: add flags for KCOV with Rust
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	Matthew Maurer <mmaurer@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 16/43] arm64: RME: Handle realm enter/exit
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-17-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250416134208.383984-17-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 10:04=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
-wrote:
->
-> Rust code is currently not instrumented properly when KCOV is enabled.
-> Thus, add the relevant flags to perform instrumentation correctly. This
-> is necessary for efficient fuzzing of Rust code.
->
-> The sanitizer-coverage features of LLVM have existed for long enough
-> that they are available on any LLVM version supported by rustc, so we do
-> not need any Kconfig feature detection.
->
-> The coverage level is set to 3, as that is the level needed by trace-pc.
->
-> Co-developed-by: Matthew Maurer <mmaurer@google.com>
-> Signed-off-by: Matthew Maurer <mmaurer@google.com>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-
-Thanks!
-
-I've run syzkaller against a kernel built with the patch applied and
-the tool was able to successfully obtain coverage feedback from the
-Rust code, so
-Tested-by: Aleksandr Nogikh <nogikh@google.com>
-
-As a side note, in the resulting code coverage I also see a lot of PCs
-from rustlib, which isn't the primary target when fuzzing the kernel.
-Do you find it reasonable not to instrument rustlib with coverage
-callbacks? For C code, there do exist some exceptions for KCOV, see
-e.g. lib/Makefile.
-
+On 4/16/25 11:41 PM, Steven Price wrote:
+> Entering a realm is done using a SMC call to the RMM. On exit the
+> exit-codes need to be handled slightly differently to the normal KVM
+> path so define our own functions for realm enter/exit and hook them
+> in if the guest is a realm guest.
+> 
+> Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
->  scripts/Makefile.kcov | 6 ++++++
->  scripts/Makefile.lib  | 3 +++
->  2 files changed, 9 insertions(+)
->
-> diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
-> index 67e8cfe3474b7dcf7552e675cffe356788e6c3a2..ddcc3c6dc513e1988aeaf07b8=
-efa106e8dffa640 100644
-> --- a/scripts/Makefile.kcov
-> +++ b/scripts/Makefile.kcov
-> @@ -3,4 +3,10 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)    +=3D -fsa=
-nitize-coverage=3Dtrace-pc
->  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)   +=3D -fsanitize-coverage=
-=3Dtrace-cmp
->  kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)         +=3D -fplugin=3D$(objtree=
-)/scripts/gcc-plugins/sancov_plugin.so
->
-> +kcov-rflags-y                                  +=3D -Cpasses=3Dsancov-mo=
-dule
-> +kcov-rflags-y                                  +=3D -Cllvm-args=3D-sanit=
-izer-coverage-level=3D3
-> +kcov-rflags-y                                  +=3D -Cllvm-args=3D-sanit=
-izer-coverage-trace-pc
-> +kcov-rflags-$(CONFIG_KCOV_ENABLE_COMPARISONS)  +=3D -Cllvm-args=3D-sanit=
-izer-coverage-trace-compares
+> Changes since v7:
+>   * A return of 0 from kvm_handle_sys_reg() doesn't mean the register has
+>     been read (although that can never happen in the current code). Tidy
+>     up the condition to handle any future refactoring.
+> Changes since v6:
+>   * Use vcpu_err() rather than pr_err/kvm_err when there is an associated
+>     vcpu to the error.
+>   * Return -EFAULT for KVM_EXIT_MEMORY_FAULT as per the documentation for
+>     this exit type.
+>   * Split code handling a RIPAS change triggered by the guest to the
+>     following patch.
+> Changes since v5:
+>   * For a RIPAS_CHANGE request from the guest perform the actual RIPAS
+>     change on next entry rather than immediately on the exit. This allows
+>     the VMM to 'reject' a RIPAS change by refusing to continue
+>     scheduling.
+> Changes since v4:
+>   * Rename handle_rme_exit() to handle_rec_exit()
+>   * Move the loop to copy registers into the REC enter structure from the
+>     to rec_exit_handlers callbacks to kvm_rec_enter(). This fixes a bug
+>     where the handler exits to user space and user space wants to modify
+>     the GPRS.
+>   * Some code rearrangement in rec_exit_ripas_change().
+> Changes since v2:
+>   * realm_set_ipa_state() now provides an output parameter for the
+>     top_iap that was changed. Use this to signal the VMM with the correct
+>     range that has been transitioned.
+>   * Adapt to previous patch changes.
+> ---
+>   arch/arm64/include/asm/kvm_rme.h |   3 +
+>   arch/arm64/kvm/Makefile          |   2 +-
+>   arch/arm64/kvm/arm.c             |  19 +++-
+>   arch/arm64/kvm/rme-exit.c        | 170 +++++++++++++++++++++++++++++++
+>   arch/arm64/kvm/rme.c             |  19 ++++
+>   5 files changed, 207 insertions(+), 6 deletions(-)
+>   create mode 100644 arch/arm64/kvm/rme-exit.c
+> 
+
+One nitpick below.
+
+Reviewed-by: Gavin Shan <gshan@redhat.com>
+
+> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
+> index b916db8565a2..d86051ef0c5c 100644
+> --- a/arch/arm64/include/asm/kvm_rme.h
+> +++ b/arch/arm64/include/asm/kvm_rme.h
+> @@ -101,6 +101,9 @@ void kvm_realm_destroy_rtts(struct kvm *kvm, u32 ia_bits);
+>   int kvm_create_rec(struct kvm_vcpu *vcpu);
+>   void kvm_destroy_rec(struct kvm_vcpu *vcpu);
+>   
+> +int kvm_rec_enter(struct kvm_vcpu *vcpu);
+> +int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_status);
 > +
->  export CFLAGS_KCOV :=3D $(kcov-flags-y)
-> +export RUSTFLAGS_KCOV :=3D $(kcov-rflags-y)
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 2fe73cda0bddb9dcf709d0a9ae541318d54754d2..520905f19a9b19631394cfb5e=
-129effb8846d5b8 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -169,6 +169,9 @@ ifeq ($(CONFIG_KCOV),y)
->  _c_flags +=3D $(if $(patsubst n%,, \
->         $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-ke=
-rnel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
->         $(CFLAGS_KCOV))
-> +_rust_flags +=3D $(if $(patsubst n%,, \
-> +       $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-ke=
-rnel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
-> +       $(RUSTFLAGS_KCOV))
->  endif
->
->  #
->
-> ---
-> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
-> change-id: 20250430-rust-kcov-6c74fd0f1f06
->
-> Best regards,
-> --
-> Alice Ryhl <aliceryhl@google.com>
->
+>   void kvm_realm_unmap_range(struct kvm *kvm,
+>   			   unsigned long ipa,
+>   			   unsigned long size,
+> diff --git a/arch/arm64/kvm/Makefile b/arch/arm64/kvm/Makefile
+> index 2ebc66812d49..c4b10012faa3 100644
+> --- a/arch/arm64/kvm/Makefile
+> +++ b/arch/arm64/kvm/Makefile
+> @@ -24,7 +24,7 @@ kvm-y += arm.o mmu.o mmio.o psci.o hypercalls.o pvtime.o \
+>   	 vgic/vgic-mmio.o vgic/vgic-mmio-v2.o \
+>   	 vgic/vgic-mmio-v3.o vgic/vgic-kvm-device.o \
+>   	 vgic/vgic-its.o vgic/vgic-debug.o vgic/vgic-v3-nested.o \
+> -	 rme.o
+> +	 rme.o rme-exit.o
+>   
+>   kvm-$(CONFIG_HW_PERF_EVENTS)  += pmu-emul.o pmu.o
+>   kvm-$(CONFIG_ARM64_PTR_AUTH)  += pauth.o
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 7c0bb1b05f4c..cf707130ef66 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -1263,7 +1263,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>   		trace_kvm_entry(*vcpu_pc(vcpu));
+>   		guest_timing_enter_irqoff();
+>   
+> -		ret = kvm_arm_vcpu_enter_exit(vcpu);
+> +		if (vcpu_is_rec(vcpu))
+> +			ret = kvm_rec_enter(vcpu);
+> +		else
+> +			ret = kvm_arm_vcpu_enter_exit(vcpu);
+>   
+>   		vcpu->mode = OUTSIDE_GUEST_MODE;
+>   		vcpu->stat.exits++;
+> @@ -1319,10 +1322,13 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>   
+>   		local_irq_enable();
+>   
+> -		trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu), *vcpu_pc(vcpu));
+> -
+>   		/* Exit types that need handling before we can be preempted */
+> -		handle_exit_early(vcpu, ret);
+> +		if (!vcpu_is_rec(vcpu)) {
+> +			trace_kvm_exit(ret, kvm_vcpu_trap_get_class(vcpu),
+> +				       *vcpu_pc(vcpu));
+> +
+> +			handle_exit_early(vcpu, ret);
+> +		}
+>   
+>   		preempt_enable();
+>   
+> @@ -1345,7 +1351,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>   			ret = ARM_EXCEPTION_IL;
+>   		}
+>   
+> -		ret = handle_exit(vcpu, ret);
+> +		if (vcpu_is_rec(vcpu))
+> +			ret = handle_rec_exit(vcpu, ret);
+> +		else
+> +			ret = handle_exit(vcpu, ret);
+>   	}
+>   
+>   	/* Tell userspace about in-kernel device output levels */
+> diff --git a/arch/arm64/kvm/rme-exit.c b/arch/arm64/kvm/rme-exit.c
+> new file mode 100644
+> index 000000000000..a1adf5610455
+> --- /dev/null
+> +++ b/arch/arm64/kvm/rme-exit.c
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 ARM Ltd.
+> + */
+> +
+> +#include <linux/kvm_host.h>
+> +#include <kvm/arm_hypercalls.h>
+> +#include <kvm/arm_psci.h>
+> +
+> +#include <asm/rmi_smc.h>
+> +#include <asm/kvm_emulate.h>
+> +#include <asm/kvm_rme.h>
+> +#include <asm/kvm_mmu.h>
+> +
+> +typedef int (*exit_handler_fn)(struct kvm_vcpu *vcpu);
+> +
+> +static int rec_exit_reason_notimpl(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	vcpu_err(vcpu, "Unhandled exit reason from realm (ESR: %#llx)\n",
+> +		 rec->run->exit.esr);
+> +	return -ENXIO;
+> +}
+> +
+> +static int rec_exit_sync_dabt(struct kvm_vcpu *vcpu)
+> +{
+> +	return kvm_handle_guest_abort(vcpu);
+> +}
+> +
+> +static int rec_exit_sync_iabt(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	vcpu_err(vcpu, "Unhandled instruction abort (ESR: %#llx).\n",
+> +		 rec->run->exit.esr);
+> +	return -ENXIO;
+> +}
+> +
+> +static int rec_exit_sys_reg(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long esr = kvm_vcpu_get_esr(vcpu);
+> +	int rt = kvm_vcpu_sys_get_rt(vcpu);
+> +	bool is_write = !(esr & 1);
+> +	int ret;
+> +
+> +	if (is_write)
+> +		vcpu_set_reg(vcpu, rt, rec->run->exit.gprs[0]);
+> +
+> +	ret = kvm_handle_sys_reg(vcpu);
+> +	if (ret > 0 && !is_write)
+> +		rec->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+
+kvm_handle_sys_reg() always returns positive value, so it can be:
+
+	if (!is_write)
+		rc->run->enter.gprs[0] = vcpu_get_reg(vcpu, rt);
+
+> +
+> +	return ret;
+> +}
+> +
+> +static exit_handler_fn rec_exit_handlers[] = {
+> +	[0 ... ESR_ELx_EC_MAX]	= rec_exit_reason_notimpl,
+> +	[ESR_ELx_EC_SYS64]	= rec_exit_sys_reg,
+> +	[ESR_ELx_EC_DABT_LOW]	= rec_exit_sync_dabt,
+> +	[ESR_ELx_EC_IABT_LOW]	= rec_exit_sync_iabt
+> +};
+> +
+> +static int rec_exit_psci(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	int i;
+> +
+> +	for (i = 0; i < REC_RUN_GPRS; i++)
+> +		vcpu_set_reg(vcpu, i, rec->run->exit.gprs[i]);
+> +
+> +	return kvm_smccc_call_handler(vcpu);
+> +}
+> +
+> +static int rec_exit_ripas_change(struct kvm_vcpu *vcpu)
+> +{
+> +	struct kvm *kvm = vcpu->kvm;
+> +	struct realm *realm = &kvm->arch.realm;
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	unsigned long base = rec->run->exit.ripas_base;
+> +	unsigned long top = rec->run->exit.ripas_top;
+> +	unsigned long ripas = rec->run->exit.ripas_value;
+> +
+> +	if (!kvm_realm_is_private_address(realm, base) ||
+> +	    !kvm_realm_is_private_address(realm, top - 1)) {
+> +		vcpu_err(vcpu, "Invalid RIPAS_CHANGE for %#lx - %#lx, ripas: %#lx\n",
+> +			 base, top, ripas);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Exit to VMM, the actual RIPAS change is done on next entry */
+> +	kvm_prepare_memory_fault_exit(vcpu, base, top - base, false, false,
+> +				      ripas == RMI_RAM);
+> +
+> +	/*
+> +	 * KVM_EXIT_MEMORY_FAULT requires an return code of -EFAULT, see the
+> +	 * API documentation
+> +	 */
+> +	return -EFAULT;
+> +}
+> +
+> +static void update_arch_timer_irq_lines(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	__vcpu_sys_reg(vcpu, CNTV_CTL_EL0) = rec->run->exit.cntv_ctl;
+> +	__vcpu_sys_reg(vcpu, CNTV_CVAL_EL0) = rec->run->exit.cntv_cval;
+> +	__vcpu_sys_reg(vcpu, CNTP_CTL_EL0) = rec->run->exit.cntp_ctl;
+> +	__vcpu_sys_reg(vcpu, CNTP_CVAL_EL0) = rec->run->exit.cntp_cval;
+> +
+> +	kvm_realm_timers_update(vcpu);
+> +}
+> +
+> +/*
+> + * Return > 0 to return to guest, < 0 on error, 0 (and set exit_reason) on
+> + * proper exit to userspace.
+> + */
+> +int handle_rec_exit(struct kvm_vcpu *vcpu, int rec_run_ret)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +	u8 esr_ec = ESR_ELx_EC(rec->run->exit.esr);
+> +	unsigned long status, index;
+> +
+> +	status = RMI_RETURN_STATUS(rec_run_ret);
+> +	index = RMI_RETURN_INDEX(rec_run_ret);
+> +
+> +	/*
+> +	 * If a PSCI_SYSTEM_OFF request raced with a vcpu executing, we might
+> +	 * see the following status code and index indicating an attempt to run
+> +	 * a REC when the RD state is SYSTEM_OFF.  In this case, we just need to
+> +	 * return to user space which can deal with the system event or will try
+> +	 * to run the KVM VCPU again, at which point we will no longer attempt
+> +	 * to enter the Realm because we will have a sleep request pending on
+> +	 * the VCPU as a result of KVM's PSCI handling.
+> +	 */
+> +	if (status == RMI_ERROR_REALM && index == 1) {
+> +		vcpu->run->exit_reason = KVM_EXIT_UNKNOWN;
+> +		return 0;
+> +	}
+> +
+> +	if (rec_run_ret)
+> +		return -ENXIO;
+> +
+> +	vcpu->arch.fault.esr_el2 = rec->run->exit.esr;
+> +	vcpu->arch.fault.far_el2 = rec->run->exit.far;
+> +	vcpu->arch.fault.hpfar_el2 = rec->run->exit.hpfar;
+> +
+> +	update_arch_timer_irq_lines(vcpu);
+> +
+> +	/* Reset the emulation flags for the next run of the REC */
+> +	rec->run->enter.flags = 0;
+> +
+> +	switch (rec->run->exit.exit_reason) {
+> +	case RMI_EXIT_SYNC:
+> +		return rec_exit_handlers[esr_ec](vcpu);
+> +	case RMI_EXIT_IRQ:
+> +	case RMI_EXIT_FIQ:
+> +		return 1;
+> +	case RMI_EXIT_PSCI:
+> +		return rec_exit_psci(vcpu);
+> +	case RMI_EXIT_RIPAS_CHANGE:
+> +		return rec_exit_ripas_change(vcpu);
+> +	}
+> +
+> +	kvm_pr_unimpl("Unsupported exit reason: %u\n",
+> +		      rec->run->exit.exit_reason);
+> +	vcpu->run->exit_reason = KVM_EXIT_INTERNAL_ERROR;
+> +	return 0;
+> +}
+> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
+> index 33eb793d8bdb..bee9dfe12e03 100644
+> --- a/arch/arm64/kvm/rme.c
+> +++ b/arch/arm64/kvm/rme.c
+> @@ -863,6 +863,25 @@ void kvm_destroy_realm(struct kvm *kvm)
+>   	kvm_free_stage2_pgd(&kvm->arch.mmu);
+>   }
+>   
+> +int kvm_rec_enter(struct kvm_vcpu *vcpu)
+> +{
+> +	struct realm_rec *rec = &vcpu->arch.rec;
+> +
+> +	switch (rec->run->exit.exit_reason) {
+> +	case RMI_EXIT_HOST_CALL:
+> +	case RMI_EXIT_PSCI:
+> +		for (int i = 0; i < REC_RUN_GPRS; i++)
+> +			rec->run->enter.gprs[i] = vcpu_get_reg(vcpu, i);
+> +		break;
+> +	}
+> +
+> +	if (kvm_realm_state(vcpu->kvm) != REALM_STATE_ACTIVE)
+> +		return -EINVAL;
+> +
+> +	return rmi_rec_enter(virt_to_phys(rec->rec_page),
+> +			     virt_to_phys(rec->run));
+> +}
+> +
+>   static void free_rec_aux(struct page **aux_pages,
+>   			 unsigned int num_aux)
+>   {
+
+Thanks,
+Gavin
+
