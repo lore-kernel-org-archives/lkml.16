@@ -1,307 +1,271 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE3A3F9D2;
-	Wed, 30 Apr 2025 16:14:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3009925F7AE
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:14:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746029658; cv=none; b=l5LzgtZUa8k5vMZOBV+hiB6moJ3fPY/IoaMsJ+LFrtgSAUdTaXUH/EfqPEIPsibw0+P82R/f9hX7e+z0kFPynS5rIaWygZsYJUKNOhVJZEzKAium5C9qsuelZuUDn/MSBNSz3YtqsOLpIHQoS7OwVbp1oBAE2wbQ/rxS5wX94uE=
+	t=1746029674; cv=none; b=AnJr15fdxvqYPmTaVkjDyeVdhEj5zpOzdOUw0d0Tu6oE0UMhaTgmcmuNecAbi2Re7NssDyJVdwPiRwSoQyMnBNFqZYQUnjMKeJg+u9Y3bJSz86KyTDy0/lwEjPFN2/94K7GRp4ODJO6X6JjlkDn3XxUnCl/z4Wlt5oei1fe/Z74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746029658; c=relaxed/simple;
-	bh=xpmQ+BGtx8m609EARhSYhsheeO7ZrcF2u+r1XAIFE0Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y/L/0Amz2kvI+9NBq85o5zAk1uCtMm0RXjABi/eQUkuF4DWf98juRZsQcvdOUC7iVr+kidIb4EPCVJMKQNTGCCWt6cLMi87omo9gl6hU7kPGKtS0X21rtDVLKdROZNlIM02unzG2/9xpnVVHh93/IcDUXJFPkGMFIi2v9qMiLr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I7gbwUv0; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746029674; c=relaxed/simple;
+	bh=Kxa5TrbMk8cQnyYSEkEDzIOulNCQdwC3lUTarSwq244=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Thsgo6yD+jWNnl4lae38cHAVME8+YL8q/QBp0K5D9gtF1YvK6ipmoD13aypa5daR4dhWglGG3L8X7zC+90DHXSYpp5M+i34AfRQkwrSpb26xW8LOUh0qnIZnyxfEFPyBr5bUmwMvXnivWUgQP4Cj0h2eSuc8Zec/jC7Ve0AxtSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=jRzGVYJV; arc=none smtp.client-ip=209.85.210.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I7gbwUv0"
-Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 994BC20BCAD1;
-	Wed, 30 Apr 2025 09:14:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 994BC20BCAD1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746029655;
-	bh=vTj4i+3Z0et1oqhVuavrgSvDIAQcRm5A2DxSvwq3gY4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=I7gbwUv0nb79WoAfkdo1OAACJxkXFidfW51TfLP+1mP6xeg4wkURaoJg6LODpcK2h
-	 rGRO20YaeWo6g3vrsi0l540U5y3SVOAZVnrn8sY0TIOo6TtBrQnew8ykl+nddhQ2oW
-	 hwzvbf/IXJvVpLLwFXS5D3oMQoHKPhQH/M8Nu+Kk=
-From: Roman Kisel <romank@linux.microsoft.com>
-To: ardb@kernel.org,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	decui@microsoft.com,
-	dimitri.sivanich@hpe.com,
-	haiyangz@microsoft.com,
-	hpa@zytor.com,
-	imran.f.khan@oracle.com,
-	jacob.jun.pan@linux.intel.com,
-	jgross@suse.com,
-	justin.ernst@hpe.com,
-	kprateek.nayak@amd.com,
-	kyle.meyer@hpe.com,
-	kys@microsoft.com,
-	lenb@kernel.org,
-	mingo@redhat.com,
-	nikunj@amd.com,
-	papaluri@amd.com,
-	perry.yuan@amd.com,
-	peterz@infradead.org,
-	rafael@kernel.org,
-	romank@linux.microsoft.com,
-	russ.anderson@hpe.com,
-	steve.wahl@hpe.com,
-	tglx@linutronix.de,
-	thomas.lendacky@amd.com,
-	tim.c.chen@linux.intel.com,
-	tony.luck@intel.com,
-	wei.liu@kernel.org,
-	xin@zytor.com,
-	yuehaibing@huawei.com,
-	linux-acpi@vger.kernel.org,
-	linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	x86@kernel.org
-Cc: apais@microsoft.com,
-	benhill@microsoft.com,
-	bperkins@microsoft.com,
-	sunilmut@microsoft.com
-Subject: [PATCH hyperv-next v2] arch/x86: Provide the CPU number in the wakeup AP callback
-Date: Wed, 30 Apr 2025 09:14:13 -0700
-Message-ID: <20250430161413.276759-1-romank@linux.microsoft.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="jRzGVYJV"
+Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-72c3b863b8eso5747841a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746029671; x=1746634471; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0FyGIaGBEw+UPtig6v2xIFrKQgtBaHFHeiU2fAQceqg=;
+        b=jRzGVYJVZw9Y4KfWDfVhw9jwHtJ3UPTruCUoxnHcqeLO/9siJCLvz0BP6cLDuAuioL
+         TaFDGrGnep0Cb5xljGpcsNNHs2G7R70ab1qpQzTZCVNi6L+rkt6M30eb1mrOQNK2TP6f
+         Sx+kjYB9IpUHZMaaQxfJ7hoFXgqGNhrail9/k1I4icG8lcGW+Nx2UEzgLpU4EPGpgLwb
+         bhDl/cgYtJF7KtpdaQ0JOsspX1CMQJ3eJZ7ojD4hT6YgJHXy/enkPJPCvsRMQcGkvXHl
+         ksUGpms3y9N6u0TS8g6mTckiPr0QwOZVe64Pmh76grZm53hpKBM/IRamJ6mPyDb4+TIJ
+         jwwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746029671; x=1746634471;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0FyGIaGBEw+UPtig6v2xIFrKQgtBaHFHeiU2fAQceqg=;
+        b=SJUOgFxNoFKJt4S8YMH5hwUWl+p0kiYqVweyw6Qz9XFpXVY0DWn30IMgbTj+4xbfJe
+         MfkOVlaUJSeom7mamDy33lMAaBXKhWNphOpxV0bvRqyKj1b9TgqDG7SdX8FgkomQAuJY
+         rZiK22nhCN/OCByw0mNC6sOdQVLuKnGyCNv8GsB3sio0iuVjjZ3eXpKs3/ZiR25T4g0F
+         vy+xgTyLm0PpLMEXpqB3wnOaEBDcxiL5zv4pSVnbCqQbXFMA6f88aFGAOmM7IBVgXcth
+         TlR4SRTNKhBlYPHnHTfKO1UfVk0+zB6rKeoHDeCTtd6fdNjxXUiAjbi2kOKMzScS7rEm
+         q3HQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVULD4rzckiP3HtQLbxPiWfVGZx+WduXecx9IwHkyMOoCyCBR2FrWi4bac7DCBPPudPMX81aJjyfAVAa54=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxY1lhEGSbRJUukKGi2VWPo6y1avgafAKHZCHBIcrCm+XlVe6KL
+	aSlqBn4dR3i6q51rK4hqYTeboq6n0ifx+g/JNvkPewtHohtoIr63eYrPMneU6gc=
+X-Gm-Gg: ASbGnct6Iz24k+u3EklKZdL9CD33nLC7qjWk0wJ4XUWp07Ua7sIOtbB1Fic1fqmCjZX
+	9cs/h7thqJ1HWP72FwM/xxKiIueEr6cijCkbfTe5B0IVmvvUNYZN8KXjt3y6t5ROzth/J7kIBYg
+	BIdwgD9sPYc7650Eku8e6+4gsGiUoz6NmaMZ4Otu/DTPNsF2LZawdeJfCU1vJSdIr95rxlZvUbD
+	ZSQxqPjvUENFBaNRIx0FlTDoToRQVlAZ1Cc+xULT5HOyFTAf6L/wiI3u8F/mZd6biNmoAhp4z2n
+	H+As+OtJdeyDB4YBSVeZot3aKKkr6HPEgVl/TO9PtpUioW3FjKF1xbLomaeXIeFiewrf5mKK0rd
+	FFWjgpu6WjR24j6Q=
+X-Google-Smtp-Source: AGHT+IHp04MZ7CRXwXM9dWLEKyOrxJqAlVfMAqGQuVTd6bwNrFBUZvRBm/0NddDjTQACxj8asi04FQ==
+X-Received: by 2002:a05:6830:6688:b0:72b:87bd:ad49 with SMTP id 46e09a7af769-731c09e5867mr2243162a34.6.1746029671146;
+        Wed, 30 Apr 2025 09:14:31 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b131071sm936548a34.32.2025.04.30.09.14.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 09:14:30 -0700 (PDT)
+Message-ID: <9c02b2bd-dabf-4818-8adf-83c9127946d1@baylibre.com>
+Date: Wed, 30 Apr 2025 11:14:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/5] iio: adc: ad7606: add offset and phase calibration
+ support
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-3-eb4d4821b172@baylibre.com>
+ <d273fa78cb3986da5249bd800dd25c4c0bcfde7e.camel@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <d273fa78cb3986da5249bd800dd25c4c0bcfde7e.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When starting APs, confidential guests and paravisor guests
-need to know the CPU number, and the pattern of using the linear
-search has emerged in several places. With N processors that leads
-to the O(N^2) time complexity.
+On 4/30/25 10:36 AM, Nuno Sá wrote:
+> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
+>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>
+>> Add support for offset and phase calibration, only for
+>> devices that support software mode, that are:
+>>
+>> ad7606b
+>> ad7606c-16
+>> ad7606c-18
+>>
+>> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+>> ---
+>>  drivers/iio/adc/ad7606.c | 160
+>> +++++++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/iio/adc/ad7606.h |   9 +++
+>>  2 files changed, 169 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
+>> index
+>> ad5e6b5e1d5d2edc7f8ac7ed9a8a4e6e43827b85..ec063dd4a67eb94610c41c473e2d8040c919
+>> 74cf 100644
+>> --- a/drivers/iio/adc/ad7606.c
+>> +++ b/drivers/iio/adc/ad7606.c
+>> @@ -95,6 +95,22 @@ static const unsigned int ad7616_oversampling_avail[8] = {
+>>  	1, 2, 4, 8, 16, 32, 64, 128,
+>>  };
+>>  
+>> +static const int ad7606_calib_offset_avail[3] = {
+>> +	-128, 1, 127,
+>> +};
+>> +
+>> +static const int ad7606c_18bit_calib_offset_avail[3] = {
+>> +	-512, 4, 511,
+>> +};
+> 
+> From the DS, it seems this is 508?
+> 
+>> +
+>> +static const int ad7606b_calib_phase_avail[][2] = {
+>> +	{ 0, 0 }, { 0, 1250 }, { 0, 318750 },
+>> +};
+>> +
+>> +static const int ad7606c_calib_phase_avail[][2] = {
+>> +	{ 0, 0 }, { 0, 1000 }, { 0, 255000 },
+>> +};
+>> +
+>>  static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
+>>  					  struct iio_chan_spec *chan);
+>>  static int ad7606c_16bit_chan_scale_setup(struct iio_dev *indio_dev,
+>> @@ -164,6 +180,8 @@ const struct ad7606_chip_info ad7606b_info = {
+>>  	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
+>>  	.sw_setup_cb = ad7606b_sw_mode_setup,
+>>  	.offload_storagebits = 32,
+>> +	.calib_offset_avail = ad7606_calib_offset_avail,
+>> +	.calib_phase_avail = ad7606b_calib_phase_avail,
+>>  };
+>>  EXPORT_SYMBOL_NS_GPL(ad7606b_info, "IIO_AD7606");
+>>  
+>> @@ -177,6 +195,8 @@ const struct ad7606_chip_info ad7606c_16_info = {
+>>  	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
+>>  	.sw_setup_cb = ad7606b_sw_mode_setup,
+>>  	.offload_storagebits = 32,
+>> +	.calib_offset_avail = ad7606_calib_offset_avail,
+>> +	.calib_phase_avail = ad7606c_calib_phase_avail,
+>>  };
+>>  EXPORT_SYMBOL_NS_GPL(ad7606c_16_info, "IIO_AD7606");
+>>  
+>> @@ -226,6 +246,8 @@ const struct ad7606_chip_info ad7606c_18_info = {
+>>  	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
+>>  	.sw_setup_cb = ad7606b_sw_mode_setup,
+>>  	.offload_storagebits = 32,
+>> +	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
+>> +	.calib_phase_avail = ad7606c_calib_phase_avail,
+>>  };
+>>  EXPORT_SYMBOL_NS_GPL(ad7606c_18_info, "IIO_AD7606");
+>>  
+>> @@ -683,6 +705,40 @@ static int ad7606_scan_direct(struct iio_dev *indio_dev,
+>> unsigned int ch,
+>>  	return ret;
+>>  }
+>>  
+>> +static int ad7606_get_calib_offset(struct ad7606_state *st, int ch, int *val)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = st->bops->reg_read(st, AD7606_CALIB_OFFSET(ch));
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	*val = st->chip_info->calib_offset_avail[0] +
+>> +		ret * st->chip_info->calib_offset_avail[1];
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int ad7606_get_calib_phase(struct ad7606_state *st, int ch, int *val,
+>> +				  int *val2)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = st->bops->reg_read(st, AD7606_CALIB_PHASE(ch));
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	*val = 0;
+>> +
+>> +	/*
+>> +	 * ad7606b: phase delay from 0 to 318.75 μs in steps of 1.25 μs.
+>> +	 * ad7606c-16/18: phase delay from 0 µs to 255 µs in steps of 1 µs.
+>> +	 */
+>> +	*val2 = ret * st->chip_info->calib_phase_avail[1][1];
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static int ad7606_read_raw(struct iio_dev *indio_dev,
+>>  			   struct iio_chan_spec const *chan,
+>>  			   int *val,
+>> @@ -717,6 +773,22 @@ static int ad7606_read_raw(struct iio_dev *indio_dev,
+>>  		pwm_get_state(st->cnvst_pwm, &cnvst_pwm_state);
+>>  		*val = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,
+>> cnvst_pwm_state.period);
+>>  		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_CALIBBIAS:
+>> +		if (!iio_device_claim_direct(indio_dev))
+>> +			return -EBUSY;
+>> +		ret = ad7606_get_calib_offset(st, chan->scan_index, val);
+>> +		iio_device_release_direct(indio_dev);
+>> +		if (ret)
+>> +			return ret;
+>> +		return IIO_VAL_INT;
+>> +	case IIO_CHAN_INFO_CALIBPHASE_DELAY:
+>> +		if (!iio_device_claim_direct(indio_dev))
+>> +			return -EBUSY;
+>> +		ret = ad7606_get_calib_phase(st, chan->scan_index, val,
+>> val2);
+>> +		iio_device_release_direct(indio_dev);
+>> +		if (ret)
+>> +			return ret;
+>> +		return IIO_VAL_INT_PLUS_NANO;
+>>  	}
+>>  	return -EINVAL;
+>>  }
+>> @@ -767,6 +839,64 @@ static int ad7606_write_os_hw(struct iio_dev *indio_dev,
+>> int val)
+>>  	return 0;
+>>  }
+>>  
+>> +static int ad7606_set_calib_offset(struct ad7606_state *st, int ch, int val)
+>> +{
+>> +	int start_val, step_val, stop_val;
+>> +
+>> +	start_val = st->chip_info->calib_offset_avail[0];
+>> +	step_val = st->chip_info->calib_offset_avail[1];
+>> +	stop_val = st->chip_info->calib_offset_avail[2];
+>> +
+>> +	if (val < start_val || val > stop_val)
+>> +		return -EINVAL;
+>> +
+>> +	val += start_val;
+> 
+> Shouldn't this be val -= start_val?
+> 
+> I also don't think we have any strict rules in the ABI for units for these kind
+> of interfaces so using "raw" values is easier. But FWIW, I think we could have
+> this in mv (would naturally depend on scale) 
+> 
+> - Nuno Sá
+> 
 
-Provide the CPU number in the AP wake up callback so that one can
-get the CPU number in constant time.
+From testing, it seems to be working as expected for me, so I think this is
+correct. The register value is not signed. 0x80 is no offset.
 
-Suggested-by: Michael Kelley <mhklinux@outlook.com>
-Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
----
-The diff in ivm.c might catch your eye but that code mixes up the
-APIC ID and the CPU number anyway. That is fixed in another patch:
-https://lore.kernel.org/linux-hyperv/20250428182705.132755-1-romank@linux.microsoft.com/
-independently of this one (being an optimization).
-I separated the two as this one might be more disputatious due to
-the change in the API (although it is a tiny one and comes with
-the benefits).
-
-[V2]
-	- Remove the struct used in v1 in favor of passing the CPU number
-	  directly to the callback not to increase complexity.
-	** Thank you, Michael! **
-[V1]
-	https://lore.kernel.org/linux-hyperv/20250428225948.810147-1-romank@linux.microsoft.com/
----
- arch/x86/coco/sev/core.c           | 13 ++-----------
- arch/x86/hyperv/hv_vtl.c           | 12 ++----------
- arch/x86/hyperv/ivm.c              |  2 +-
- arch/x86/include/asm/apic.h        |  8 ++++----
- arch/x86/include/asm/mshyperv.h    |  4 ++--
- arch/x86/kernel/acpi/madt_wakeup.c |  2 +-
- arch/x86/kernel/apic/apic_noop.c   |  2 +-
- arch/x86/kernel/apic/x2apic_uv_x.c |  2 +-
- arch/x86/kernel/smpboot.c          |  8 ++++----
- 9 files changed, 18 insertions(+), 35 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 82492efc5d94..e7b6dba30a0a 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1179,7 +1179,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
- 		free_page((unsigned long)vmsa);
- }
- 
--static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
-+static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, int cpu)
- {
- 	struct sev_es_save_area *cur_vmsa, *vmsa;
- 	struct ghcb_state state;
-@@ -1187,7 +1187,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	unsigned long flags;
- 	struct ghcb *ghcb;
- 	u8 sipi_vector;
--	int cpu, ret;
-+	int ret;
- 	u64 cr4;
- 
- 	/*
-@@ -1208,15 +1208,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 
- 	/* Override start_ip with known protected guest start IP */
- 	start_ip = real_mode_header->sev_es_trampoline_start;
--
--	/* Find the logical CPU for the APIC ID */
--	for_each_present_cpu(cpu) {
--		if (arch_match_cpu_phys_id(cpu, apic_id))
--			break;
--	}
--	if (cpu >= nr_cpu_ids)
--		return -EINVAL;
--
- 	cur_vmsa = per_cpu(sev_vmsa, cpu);
- 
- 	/*
-diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
-index 582fe820e29c..5784b6c56ca4 100644
---- a/arch/x86/hyperv/hv_vtl.c
-+++ b/arch/x86/hyperv/hv_vtl.c
-@@ -237,17 +237,9 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
- 	return ret;
- }
- 
--static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
-+static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, int cpu)
- {
--	int vp_id, cpu;
--
--	/* Find the logical CPU for the APIC ID */
--	for_each_present_cpu(cpu) {
--		if (arch_match_cpu_phys_id(cpu, apicid))
--			break;
--	}
--	if (cpu >= nr_cpu_ids)
--		return -EINVAL;
-+	int vp_id;
- 
- 	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
- 	vp_id = hv_vtl_apicid_to_vp_id(apicid);
-diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
-index c0039a90e9e0..ba744dbc22bb 100644
---- a/arch/x86/hyperv/ivm.c
-+++ b/arch/x86/hyperv/ivm.c
-@@ -288,7 +288,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa)
- 		free_page((unsigned long)vmsa);
- }
- 
--int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
-+int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu)
- {
- 	struct sev_es_save_area *vmsa = (struct sev_es_save_area *)
- 		__get_free_page(GFP_KERNEL | __GFP_ZERO);
-diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-index f21ff1932699..a480f7626847 100644
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -313,9 +313,9 @@ struct apic {
- 	u32	(*get_apic_id)(u32 id);
- 
- 	/* wakeup_secondary_cpu */
--	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
-+	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, int cpu);
- 	/* wakeup secondary CPU using 64-bit wakeup point */
--	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
-+	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, int cpu);
- 
- 	char	*name;
- };
-@@ -333,8 +333,8 @@ struct apic_override {
- 	void	(*send_IPI_self)(int vector);
- 	u64	(*icr_read)(void);
- 	void	(*icr_write)(u32 low, u32 high);
--	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
--	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
-+	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, int cpu);
-+	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, int cpu);
- };
- 
- /*
-diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
-index 07aadf0e839f..abca9d8d4a82 100644
---- a/arch/x86/include/asm/mshyperv.h
-+++ b/arch/x86/include/asm/mshyperv.h
-@@ -268,11 +268,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
- #ifdef CONFIG_AMD_MEM_ENCRYPT
- bool hv_ghcb_negotiate_protocol(void);
- void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
--int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
-+int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu);
- #else
- static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
- static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
--static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
-+static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu) { return 0; }
- #endif
- 
- #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
-diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
-index d5ef6215583b..d95c806f0e93 100644
---- a/arch/x86/kernel/acpi/madt_wakeup.c
-+++ b/arch/x86/kernel/acpi/madt_wakeup.c
-@@ -169,7 +169,7 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
- 	return 0;
- }
- 
--static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
-+static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip, int cpu)
- {
- 	if (!acpi_mp_wake_mailbox_paddr) {
- 		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
-diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noop.c
-index b5bb7a2e8340..cab7cac16f53 100644
---- a/arch/x86/kernel/apic/apic_noop.c
-+++ b/arch/x86/kernel/apic/apic_noop.c
-@@ -27,7 +27,7 @@ static void noop_send_IPI_allbutself(int vector) { }
- static void noop_send_IPI_all(int vector) { }
- static void noop_send_IPI_self(int vector) { }
- static void noop_apic_icr_write(u32 low, u32 id) { }
--static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
-+static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, int cpu) { return -1; }
- static u64 noop_apic_icr_read(void) { return 0; }
- static u32 noop_get_apic_id(u32 apicid) { return 0; }
- static void noop_apic_eoi(void) { }
-diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
-index 7fef504ca508..f8000555127b 100644
---- a/arch/x86/kernel/apic/x2apic_uv_x.c
-+++ b/arch/x86/kernel/apic/x2apic_uv_x.c
-@@ -667,7 +667,7 @@ static __init void build_uv_gr_table(void)
- 	}
- }
- 
--static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip)
-+static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip, int cpu)
- {
- 	unsigned long val;
- 	int pnode;
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index c10850ae6f09..4b514e485f9c 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -715,7 +715,7 @@ static void send_init_sequence(u32 phys_apicid)
- /*
-  * Wake up AP by INIT, INIT, STARTUP sequence.
-  */
--static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip)
-+static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip, int cpu)
- {
- 	unsigned long send_status = 0, accept_status = 0;
- 	int num_starts, j, maxlvt;
-@@ -916,11 +916,11 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
- 	 * - Use an INIT boot APIC message
- 	 */
- 	if (apic->wakeup_secondary_cpu_64)
--		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
-+		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip, cpu);
- 	else if (apic->wakeup_secondary_cpu)
--		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
-+		ret = apic->wakeup_secondary_cpu(apicid, start_ip, cpu);
- 	else
--		ret = wakeup_secondary_cpu_via_init(apicid, start_ip);
-+		ret = wakeup_secondary_cpu_via_init(apicid, start_ip, cpu);
- 
- 	/* If the wakeup mechanism failed, cleanup the warm reset vector */
- 	if (ret)
-
-base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
--- 
-2.43.0
-
+Also, I like having the scaling so that the units are the same LSB as the raw
+value like it is now. It makes calibration easy since I can generate a constant
+voltage and do a buffered read. Then I can take the average of all samples and
+see how it compares to the expected value. Then take the difference and that is
+the exact value to enter into the attribute. Millivolts would work to but that
+requires applying the scale to the average of the raw values to get the number
+that you would need to enter into the calibration attribute.
