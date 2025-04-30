@@ -1,179 +1,166 @@
-Received: from 7.mo584.mail-out.ovh.net (7.mo584.mail-out.ovh.net [178.33.253.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E42821BF37
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.253.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C834545;
+	Wed, 30 Apr 2025 22:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053708; cv=none; b=fJelbT0SdNcdb1aCALSJKzY/DFaBJw8B7pRTffQrcPinF0yP9LMtZfcIjbPQpllrw7ZJh66Hr8rGR6b66a0+kMX9EYCsW9GQ8COPnOAZgBC+a5fi9IQ2HSBG+DQDq30/5Oy8m5ieJdQHtE25M1Wxoq238dSnB6W+a6h41eyxAT8=
+	t=1746053806; cv=none; b=eY0f0Y/8IOiHEAcDe/gP/OaRyJmjjTgXUDvR7R6lJkoh9g8zzcr2hRPVP6rCsB8j/Yj1OR12YDVP0soDgAsPYLm01Uvw4u3VqKhhQuceJyAvYLjEAehsHgKB7ovz4E3dxhQgk6aVGdMyzcnAINr5ltsSk4K2CemeSSeB3HgJ4Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053708; c=relaxed/simple;
-	bh=hAX5/2RgCiZ7dm8HuqF2Gk36vMTUzfOwRjmXOB7iipI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OALcgvv1XPG7rf45YIMSc5+v6aaC9IkJpS4oSfsoyNiuNHxePMtJeBvfnZdhPS9X0OjXdAc0BjkjYI3IseU6OOVZTB/uUnG4jOo0XdkP0X4yFfZBRR24PjFOBITL5dg3hvhI9vWoHixFtlMdlKErQLBwtSNjUgsVoN/AhZoGzYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=TBVfq+Oh; arc=none smtp.client-ip=178.33.253.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
+	s=arc-20240116; t=1746053806; c=relaxed/simple;
+	bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b8AoZ+6Or1m7ZAG5E3aRl/5fEcJzAeErDVFVQ4k8uHHAoKQ34RYX97ax5MzMOZhRet4lWUld5Eb1Xk60he/YMVe3o4qngTb6dAVnlRSK5eJeaaxkuBoqKDHGSZMpLBvGy+qhAYJm8ZdHRDNRuWq5RznAbhPYA69NkviwzZXzjtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=st1n5EdK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="TBVfq+Oh"
-Received: from director7.ghost.mail-out.ovh.net (unknown [10.109.140.5])
-	by mo584.mail-out.ovh.net (Postfix) with ESMTP id 4Znshb2DQ7z1GPD
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:45:19 +0000 (UTC)
-Received: from ghost-submission-5b5ff79f4f-bggcb (unknown [10.111.182.153])
-	by director7.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 762311FD63;
-	Wed, 30 Apr 2025 22:45:18 +0000 (UTC)
-Received: from 3mdeb.com ([37.59.142.111])
-	by ghost-submission-5b5ff79f4f-bggcb with ESMTPSA
-	id rIBXDf6nEmij+wgAhAnCLA
-	(envelope-from <sergii.dmytruk@3mdeb.com>); Wed, 30 Apr 2025 22:45:18 +0000
-Authentication-Results:garm.ovh; auth=pass (GARM-111S0057806b8b7-35c0-4670-b495-38674cfdb939,
-                    7FFE21389DDF989CCD6FB7268846A7FDE11993D7) smtp.auth=sergii.dmytruk@3mdeb.com
-X-OVh-ClientIp:176.111.181.178
-From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
-To: linux-kernel@vger.kernel.org
-Cc: trenchboot-devel@googlegroups.com,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [RFC PATCH v2 6/9] x86: Prepare CPUs for post SKINIT launch
-Date: Thu,  1 May 2025 01:44:48 +0300
-Message-ID: <c9454ff74336571385920563f5c9cce0dfc7e553.1746037489.git.sergii.dmytruk@3mdeb.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
-References: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="st1n5EdK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4B3C4CEE7;
+	Wed, 30 Apr 2025 22:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746053805;
+	bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
+	h=From:Date:Subject:To:Cc:From;
+	b=st1n5EdKTzbAv59cJyBOXTg0Q0iPY9+y3i960YA/MJWXOrQvrSaijF9qI6r1ilAbc
+	 wPiU0FIDcgJPYjthVJEl7s+D25rje3gX1QhcGxodsyyXkGido7CtD+PAZE+4F2odiy
+	 NUPg/VBA4JamlPJ7zc/oMKOW2m4ut1+COq7np61su6uEEe0bJJoxum53L3zbDJuLUv
+	 TxcVC0D5QvfPJ0Nj3AiF+RHnQmsWIAFwZcV59jVKJTbHXw2tNhyoItRBuQGY/o39U1
+	 VvBVr8en0slTY1A9hYAaD0ubV3pmR5ZTSaY4a92Pg3PjZALbb9ekAmjwiO1Df2Atdz
+	 zrNjTGlYgKEoQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Date: Wed, 30 Apr 2025 15:56:34 -0700
+Subject: [PATCH] kbuild: Properly disable
+ -Wunterminated-string-initialization for clang
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Ovh-Tracer-Id: 12105394324229108987
-X-VR-SPAMSTATE: OK
-X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgvrhhgihhiucffmhihthhruhhkuceoshgvrhhgihhirdgumhihthhruhhkseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpefhheefheduieelieekfffgfffgfedutdevleevvdfhfffgledvgfdtuddtheefieenucfkphepuddvjedrtddrtddruddpudejiedrudduuddrudekuddrudejkedpfeejrdehledrudegvddrudduudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepshgvrhhgihhirdgumhihthhruhhkseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkeegmgdpmhhouggvpehsmhhtphhouhht
-DKIM-Signature: a=rsa-sha256; bh=O00A8RdNRWNaW2vNZPkGrsXiTUMw9V7ndOmhojSb+LI=;
- c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
- t=1746053119; v=1;
- b=TBVfq+Ohq0rxNWJ5bjI9PDDnSjnSARFA4+vJVSlrIM+DKe+9y+77koDHrfgT0rFXNia14Ue+
- U/xjB8huUlEl70HI29Jnaph2gMqFR/Jn9OBep3yhybSBm0/VTDqNZv9GF73weSTX8NPpDqSQzi3
- VjHv3OmCtKJB8ohSXhwOSD9iG1vmaI1v5WCz5BmN/DJrmXS98yTKq0hCMGRuvj09kqtdgZIZbz4
- tR+seUCeOvfm/O0LoQ03FMHtMY0Vgp2aFbiJRZ6h6CFNWqm2ncYRTgEpRnkeJm9OhVHj4taSquX
- APzYkQPDJvXJZ7Beo/5nHGzu/7wxOvUV5GCCm1H5em+cg==
+Message-Id: <20250430-unterminated-string-init-clang-v1-1-10eab729bf3d@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAKGqEmgC/x2N0QqCQBQFf0XucxdWzWj9lehB9GgH6ip3twjEf
+ 2/pcWCY2SXBiSR9tYvjw8TVCtSnSsbHYAuUU2FpQtOFcxv0bRn+og0Zk6bstEVpzDo+i67XOHd
+ Ai3iJkBLZHDO//8Htfhw/acc3T3AAAAA=
+X-Change-ID: 20250430-unterminated-string-init-clang-89f5ee3e969e
+To: Linus Torvalds <torvalds@linux-foundation.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>, 
+ Nicolas Schier <nicolas.schier@linux.dev>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5056; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBlCq9YILWpoi2qNWzFTt33fjwP9LOdFSqPcj+9492Qn1
+ 7WGlz/vdJSyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJhFkz/NORe/JZe8Gji116
+ 76vtA86UnV927cq7q00VWbEy+k4SCi4M/50LjOUOOWRn8LpEbr7pmTb1tLVRZ6LmibBE9ufF/dP
+ 7WQE=
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
-From: Ross Philipson <ross.philipson@oracle.com>
+Clang and GCC have different behaviors around disabling warnings
+included in -Wall and -Wextra and the order in which flags are
+specified, which is exposed by clang's new support for
+-Wunterminated-string-initialization.
 
-The SKINIT instruction disables the GIF and it must be re-enabled
-on the BSP and APs as they are started. Since enabling GIF also
-re-enables NMIs, it should be done after a valid IDT is loaded for
-each CPU.
+  $ cat test.c
+  const char foo[3] = "FOO";
+  const char bar[3] __attribute__((__nonstring__)) = "BAR";
 
-SKINIT also already performed #INIT on the APs and it should be
-bypassed before issuing the startup IPIs.
+  $ clang -fsyntax-only -Wextra test.c
+  test.c:1:21: warning: initializer-string for character array is too long, array size is 3 but initializer has size 4 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+      1 | const char foo[3] = "FOO";
+        |                     ^~~~~
+  $ clang -fsyntax-only -Wextra -Wno-unterminated-string-initialization test.c
+  $ clang -fsyntax-only -Wno-unterminated-string-initialization -Wextra test.c
+  test.c:1:21: warning: initializer-string for character array is too long, array size is 3 but initializer has size 4 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
+      1 | const char foo[3] = "FOO";
+        |                     ^~~~~
 
-Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
-Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+  $ gcc -fsyntax-only -Wextra test.c
+  test.c:1:21: warning: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (4 chars into 3 available) [-Wunterminated-string-initialization]
+      1 | const char foo[3] = "FOO";
+        |                     ^~~~~
+  $ gcc -fsyntax-only -Wextra -Wno-unterminated-string-initialization test.c
+  $ gcc -fsyntax-only -Wno-unterminated-string-initialization -Wextra test.c
+
+Move -Wextra up right below -Wall in Makefile.extrawarn to ensure these
+flags are at the beginning of the warning options list. Move the couple
+of warning options that have been added to the main Makefile since
+commit e88ca24319e4 ("kbuild: consolidate warning flags in
+scripts/Makefile.extrawarn") to scripts/Makefile.extrawarn after -Wall /
+-Wextra to ensure they get properly disabled for all compilers.
+
+Fixes: 9d7a0577c9db ("gcc-15: disable '-Wunterminated-string-initialization' entirely for now")
+Link: https://github.com/llvm/llvm-project/issues/10359
+Signed-off-by: Nathan Chancellor <nathan@kernel.org>
 ---
- arch/x86/kernel/slaunch.c | 23 +++++++++++++++++++++++
- arch/x86/kernel/smpboot.c | 15 ++++++++++++++-
- arch/x86/kernel/traps.c   |  4 ++++
- 3 files changed, 41 insertions(+), 1 deletion(-)
+I am sending this to Linus since he added
+-Wno-unterminated-string-initialization so it seems reasonable to take a
+fix for it but if it should just go via Masahiro's kbuild tree, that's
+fine as well.
+---
+ Makefile                   | 7 -------
+ scripts/Makefile.extrawarn | 9 ++++++++-
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
-index 3a031043d2f1..a1c8be7de8d3 100644
---- a/arch/x86/kernel/slaunch.c
-+++ b/arch/x86/kernel/slaunch.c
-@@ -17,6 +17,7 @@
- #include <asm/sections.h>
- #include <asm/tlbflush.h>
- #include <asm/e820/api.h>
-+#include <asm/svm.h>
- #include <asm/setup.h>
- #include <asm/svm.h>
- #include <asm/realmode.h>
-@@ -716,3 +717,25 @@ void slaunch_finalize(int do_sexit)
- 	else if (boot_cpu_has(X86_FEATURE_SKINIT))
- 		slaunch_finalize_skinit();
- }
-+
-+/*
-+ * AMD specific SKINIT CPU setup and initialization.
-+ */
-+void slaunch_cpu_setup_skinit(void)
-+{
-+	u64 val;
-+
-+	if (!slaunch_is_skinit_launch())
-+		return;
-+
-+	/*
-+	 * We don't yet handle #SX. Disable INIT_REDIRECTION first, before
-+	 * enabling GIF, so a pending INIT resets us, rather than causing a
-+	 * panic due to an unknown exception.
-+	 */
-+	rdmsrl(MSR_VM_CR, val);
-+	wrmsrl(MSR_VM_CR, val & ~(1 << SVM_VM_CR_INIT_REDIRECTION));
-+
-+	/* Enable Global Interrupts flag */
-+	asm volatile ("stgi" ::: "memory");
-+}
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 219523884fdc..322fa4f8c5df 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -251,6 +251,12 @@ static void notrace __noendbr start_secondary(void *unused)
+diff --git a/Makefile b/Makefile
+index 5aa9ee52a765..94be5dfb81fb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1052,13 +1052,6 @@ NOSTDINC_FLAGS += -nostdinc
+ # perform bounds checking.
+ KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
  
- 	cpu_init_exception_handling(false);
+-#Currently, disable -Wstringop-overflow for GCC 11, globally.
+-KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-disable-warning, stringop-overflow)
+-KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
+-
+-#Currently, disable -Wunterminated-string-initialization as broken
+-KBUILD_CFLAGS += $(call cc-disable-warning, unterminated-string-initialization)
+-
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= -fno-strict-overflow
  
-+	/*
-+	 * If this is an AMD SKINIT secure launch, some extra work is done
-+	 * to prepare to start the secondary CPUs.
-+	 */
-+	slaunch_cpu_setup_skinit();
+diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
+index 2d6e59561c9d..d88acdf40855 100644
+--- a/scripts/Makefile.extrawarn
++++ b/scripts/Makefile.extrawarn
+@@ -8,6 +8,7 @@
+ 
+ # Default set of warnings, always enabled
+ KBUILD_CFLAGS += -Wall
++KBUILD_CFLAGS += -Wextra
+ KBUILD_CFLAGS += -Wundef
+ KBUILD_CFLAGS += -Werror=implicit-function-declaration
+ KBUILD_CFLAGS += -Werror=implicit-int
+@@ -56,6 +57,13 @@ KBUILD_CFLAGS += -Wno-pointer-sign
+ # globally built with -Wcast-function-type.
+ KBUILD_CFLAGS += $(call cc-option, -Wcast-function-type)
+ 
++# Currently, disable -Wstringop-overflow for GCC 11, globally.
++KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-disable-warning, stringop-overflow)
++KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
 +
- 	/*
- 	 * Load the microcode before reaching the AP alive synchronization
- 	 * point below so it is not part of the full per CPU serialized
-@@ -703,7 +709,14 @@ static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_ei
- 
- 	preempt_disable();
- 	maxlvt = lapic_get_maxlvt();
--	send_init_sequence(phys_apicid);
++# Currently, disable -Wunterminated-string-initialization as broken
++KBUILD_CFLAGS += $(call cc-disable-warning, unterminated-string-initialization)
 +
-+	/*
-+	 * If this is an SKINIT secure launch, #INIT is already done on the APs
-+	 * by issuing the SKINIT instruction. For security reasons #INIT
-+	 * should not be done again.
-+	 */
-+	if (!slaunch_is_skinit_launch())
-+		send_init_sequence(phys_apicid);
+ # The allocators already balk at large sizes, so silence the compiler
+ # warnings for bounds checks involving those possible values. While
+ # -Wno-alloc-size-larger-than would normally be used here, earlier versions
+@@ -82,7 +90,6 @@ KBUILD_CFLAGS += $(call cc-option,-Werror=designated-init)
+ # Warn if there is an enum types mismatch
+ KBUILD_CFLAGS += $(call cc-option,-Wenum-conversion)
  
- 	mb();
+-KBUILD_CFLAGS += -Wextra
+ KBUILD_CFLAGS += -Wunused
  
-diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-index 9f88b8a78e50..0a4d218a426b 100644
---- a/arch/x86/kernel/traps.c
-+++ b/arch/x86/kernel/traps.c
-@@ -43,6 +43,7 @@
- #include <linux/atomic.h>
- #include <linux/iommu.h>
- #include <linux/ubsan.h>
-+#include <linux/slaunch.h>
- 
- #include <asm/stacktrace.h>
- #include <asm/processor.h>
-@@ -1564,5 +1565,8 @@ void __init trap_init(void)
- 	if (!cpu_feature_enabled(X86_FEATURE_FRED))
- 		idt_setup_traps();
- 
-+	/* If SKINIT was done on the BSP, this is the spot to enable GIF */
-+	slaunch_cpu_setup_skinit();
-+
- 	cpu_init();
- }
+ #
+
+---
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+change-id: 20250430-unterminated-string-init-clang-89f5ee3e969e
+
+Best regards,
 -- 
-2.49.0
+Nathan Chancellor <nathan@kernel.org>
 
