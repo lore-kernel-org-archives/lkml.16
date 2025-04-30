@@ -1,97 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE85F3D76;
-	Wed, 30 Apr 2025 19:32:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9951B87E8;
+	Wed, 30 Apr 2025 19:33:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746041567; cv=none; b=IauCc9Cc+0bm4Jev1XWBAm+LGCQZOXxrXXyRP3i+L4KTweI/Nm/x4DTMJiZMTxTOQF5BhhAEZlrfEBTUWL3ikQM/1QBg78CpyF5DXssO1Qmm45QR+eJ6HOJDhsAuC/Q17BzZ9dF4T8q06mNxC3aW5E/1rJq36YwdiqXe5nlg5+M=
+	t=1746041588; cv=none; b=BnDujpeDKleFs5NkLYuXa7o0E70A8lrcifBwSMGTqqGxu+WAVSCMP07KkRgEiTuhXatEVA5xAhy6/O08UBVevn8ARRQlQ0jalhQur3b2AVIMnkiR7OXMY8qKQf4V+Hd6W3e9mJmgAHeEfcMVNf5tEc7L99oU8h1v3B9bZGIrLHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746041567; c=relaxed/simple;
-	bh=eto3ig9zOdbipNWtSXdSig+DyQCl3cdu9O7NHaZG3K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D5LJYHaCrExfezbnbGxzXF4GxWEVTgF+lgu6tnONbDQJMyge+tw6eDCTi4bpeJc76385MfgCYvt4K5MxN+X4yTHjMo4nj/306nivZPGbAUcR8G6r2U7ejmRYBm/9umiXJ/aKD86qjDeWQTl82kM3LBLitBxB+jFlh/UAmRHjCmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6+7VyHI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746041588; c=relaxed/simple;
+	bh=NgCpYyhisR+eT14JahIMfINyl+OmdqYb/Aau9YB7T6c=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=APKKksCnk6Z1HRMCGeGi2TiIJEvwXZ7sCD6HKzfrWZ4ADTh85PaE08IgfyX14cM1e7Kk1pWI9HxdUWAMFp/gBYcCsUoUZso6icUsrDkiNeH3pVAaq0mDRpm5QcoiGjm65jZwJzISI6LDxhfHC1gCOEO60XZNjKwBaTbviC+7RtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nmrpDyUH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HutCrlPC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6+7VyHI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8230EC4CEE7;
-	Wed, 30 Apr 2025 19:32:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746041566;
-	bh=eto3ig9zOdbipNWtSXdSig+DyQCl3cdu9O7NHaZG3K0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=M6+7VyHI87AqgVw6moUQ8QGECLano4KjwwKDXD57m404YDGwi/WjET4Fdoj43/6I1
-	 HAyV8UJTWr8eQiyADBBrIZM5uhGkACd0PeDfB8y4eRDhrzruVewnE6Z2/8PRdr8QTL
-	 1wQSc+iF/qpfnaDtKxiUi9XffgNZLjjBVzdk7E60lf3ycm/4ZcROFOsoWGSQcTqoaL
-	 osHOPIrKVrK6MR0SQDq9riZiniaeph8FavKVU1CrclIutVLYtZIqm3mtdT6otzIDbc
-	 1MRKUo9wJB3//E+ZtxWKArBV2dujwrDQo/IZ5JbQokfPBb+OWA9e1KRAsiwmjppYgY
-	 3W12rBy/fgTDw==
-Message-ID: <4bf62335-2e67-43c5-b2dc-4b0bed0521ed@kernel.org>
-Date: Wed, 30 Apr 2025 14:32:44 -0500
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nmrpDyUH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HutCrlPC"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746041584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/YyscSAqwZBgtqXLx1SsF2waKn2TwCC0qIe2pJzuSGk=;
+	b=nmrpDyUH7fggWHS/REurepWbQ/wOb99mLz8imaLQvfUrUHHzVw7Innd1Y+sWzkpr61UDDF
+	/DwYtzY9Q5Gdubyebu9/W3OaffBmNhjFcPX1vNC+tC7HWeR9CKPAzbmXPDGkbbE6zRkKxP
+	IsYwpuDYEgQ1tVrvOvNO/PCuDvnpKaiFh4wNuCX9tNiC50ixwHHBNPr4v4TzsY8RdZipxq
+	Tvm9ootQvEXE/G3985aKmxdAWpLN+GsjAZA3MZvFreMOVFQpHuDnN1FLBxRW5X5ksmRf0d
+	jGvl8jvnQ3uXWksTTnIAs00duU6TozHVBVKjpyw589ZsrPC7My7KJIfyPt2tMg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746041584;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/YyscSAqwZBgtqXLx1SsF2waKn2TwCC0qIe2pJzuSGk=;
+	b=HutCrlPCqLxZRtWb2P+1P1aZ2O+umglvdkq8Xl/a7pJgk4Gkq+H+K8t6X0yDSmcKf1EW/r
+	eoBRAUWv11/cWADA==
+To: Roman Kisel <romank@linux.microsoft.com>, ardb@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, decui@microsoft.com,
+ dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
+ imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com, jgross@suse.com,
+ justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
+ kys@microsoft.com, lenb@kernel.org, mingo@redhat.com, nikunj@amd.com,
+ papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
+ rafael@kernel.org, romank@linux.microsoft.com, russ.anderson@hpe.com,
+ steve.wahl@hpe.com, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
+ tony.luck@intel.com, wei.liu@kernel.org, xin@zytor.com,
+ yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v2] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+In-Reply-To: <20250430161413.276759-1-romank@linux.microsoft.com>
+References: <20250430161413.276759-1-romank@linux.microsoft.com>
+Date: Wed, 30 Apr 2025 21:33:03 +0200
+Message-ID: <87cyctphqo.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-6-superm1@kernel.org>
- <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
- <e80be47b-5f8d-409c-8c3d-cd1af46944d0@kernel.org>
- <20250430191025.GFaBJ1oQjxCuig1vS6@fat_crate.local>
- <35bae46e-3b57-438a-a561-c93868120dcb@kernel.org>
- <20250430192538.GGaBJ5MuS4CEKa4kIX@fat_crate.local>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250430192538.GGaBJ5MuS4CEKa4kIX@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 4/30/2025 2:25 PM, Borislav Petkov wrote:
-> On Wed, Apr 30, 2025 at 02:17:43PM -0500, Mario Limonciello wrote:
->> Well with that approach once you got a known bit set you broke the loop and
->> would print a message for that known bit.  But if you have two bits set you
->> either need another loop or you only get one message print.
-> 
-> So I gather you want to print for *each* set bit?
-> 
-> If so:
-> 
-> 	for (i = 0; i <= ARRAY_SIZE(s5_reset_reason_txt); i++) {
-> 		if (!(value & BIT(i)))
-> 			continue;
-> 
-> 		if (s5_reset_reason_txt[i])
-> 			pr_info(...);
-> 	}
-> 
-> Still a lot easier instead of calling some function and dealing with from
-> which bit to start etc etc.
-> 
-> 
+On Wed, Apr 30 2025 at 09:14, Roman Kisel wrote:
+> -static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+> +static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, int cpu)
 
-This would work, but would still need to track if "no" known bits were 
-set to emit an "unknown" message.
+unsigned int cpu please. There are no negative CPU numbers yet :)
 
-So the loops end up being for() and check a bit or while (true) and 
-find_next_bit() and otherwise identical.
+>  {
+>  	struct sev_es_save_area *cur_vmsa, *vmsa;
+>  	struct ghcb_state state;
+> @@ -1187,7 +1187,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>  	unsigned long flags;
+>  	struct ghcb *ghcb;
+>  	u8 sipi_vector;
+> -	int cpu, ret;
+> +	int ret;
+>  	u64 cr4;
+>  
+>  	/*
+> @@ -1208,15 +1208,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+>  
+>  	/* Override start_ip with known protected guest start IP */
+>  	start_ip = real_mode_header->sev_es_trampoline_start;
+> -
+> -	/* Find the logical CPU for the APIC ID */
+> -	for_each_present_cpu(cpu) {
+> -		if (arch_match_cpu_phys_id(cpu, apic_id))
+> -			break;
+> -	}
+> -	if (cpu >= nr_cpu_ids)
+> -		return -EINVAL;
+> -
 
-At that point does it really buy much more than the while (true) 
-approach and find_next_bit()?
+I just looked what arch_match_cpu_phys_id() actually does and I couldn't
+help myself to get a fit of laughter. x86 uses the weak default function
+in drivers/of/cpu.c:
+
+bool __weak arch_match_cpu_phys_id(int cpu, u64 phys_id)
+{
+	return (u32)phys_id == cpu;
+}
+
+So this loop is the most convoluted way to write:
+
+       cpu = apic_id;
+
+which is valid because the to be started CPU must be present, no?
+
+I'm not opposed against the CPU number argument per se, but the
+justification for it is dubious at best.
+
+Thanks,
+
+        tglx
