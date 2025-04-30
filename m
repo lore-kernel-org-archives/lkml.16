@@ -1,106 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F412580D5;
-	Wed, 30 Apr 2025 10:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE8C140E34;
+	Wed, 30 Apr 2025 10:51:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746010256; cv=none; b=Y5bgtSPn5Ev4gX+7DZABD7PuVQVuLKvt1kkg87xJtlUIymxElNMrbGYvN7X9KUBgjFb2OBb5ImVW9+DddDE9KMLRZe/pBIFftC5v5RYcrRFL6HDIWdZtR/ldhqAqzKVyYGMF7focXRpxDs/c8bAKAGnvkb+YJjML9iIN0dLeOQQ=
+	t=1746010298; cv=none; b=LURvirLYWQGvLcvpA03Gxf7TBwfnH74KXACOKx7Y+AK2HAmC5/+vO2VRRbazXWlWEhLcuTCQBcgU2OTg2bD6Zs7BBSrGhJ7OBX/Y+hwqdQWxJr529QjVgmpztVM9wb/29IqA42C2n2k8G2pO1qAnXgyGim+OuIijYMKC5PZgvFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746010256; c=relaxed/simple;
-	bh=ZjzGktDuEXTVBXBesmsZddLH/eT94AqUPytgvMpqg0c=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=Bz1WqsvYjthpQZp+FWvteBlHaiwCHaPZhFq+s0AlbEcrI/Z9sJOZNcwZW6C6NZQcfBrRryEn/yB3h+sfB+RsG3c7kVnEsmA04/CZx7W94advR7jmgxRMlVac9Le5df05N7PKH+CR4LvDtDHWjOKo0JwacN3zmrEAylr8ND8c/28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtkmVCYF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746010298; c=relaxed/simple;
+	bh=V7iAPQqOmoF/O1OXq1Sbzh8qpXPEsRZ8ROMvqXj81CY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BHHcMfagB7WneUSCZQVmabWpoI/o8v8qazG9fKuXmHNRC5DIscf4YbghLiR99abXs6aAL3sy1saLdNPRQa4HEOfzft+9m8zyDGVSv5BTjAZjGOer+1LyGU3RZb0qEJvfOnVDRrqVLgYdy3VhSXB6V4rhBNTavQOdg5S9zb9TPro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=yIw+v3Wl; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtkmVCYF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 992C5C4CEE9;
-	Wed, 30 Apr 2025 10:50:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746010254;
-	bh=ZjzGktDuEXTVBXBesmsZddLH/eT94AqUPytgvMpqg0c=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=YtkmVCYFSPPq2DvJRioYCjMT4Mcl+xYmUXng0aOdlomNdNeWz8b8HJViDUOJgRPFm
-	 8lC/lPz0VG88pfupxMhOdV/9oSILxHmHUZhRg3p7/0xusNYlaMnBCYFHVMa3cF+kyd
-	 L0XTdoHYdJn6NCNkM7vAcIowqqsD7p4v0mvJaKUkUGXqEzDXQ6ZDWg1RZD9X/iKnur
-	 qrG26wIJWCVtB2mn0SV8wG4W/yC+FaIIjzjNDLsDB7hpw6e7NJiNrnowiY4SwctCRp
-	 cMkBd+tRK2LuuCi+nd0FwnjvSpcFwS2grCCVQy8AFs70mm9qA+jkx0j0ZsKhnKudAL
-	 +P0fabQTwSeRw==
-Date: Wed, 30 Apr 2025 05:50:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="yIw+v3Wl"
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 22A3D2E08E8D;
+	Wed, 30 Apr 2025 13:51:23 +0300 (EEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1746010286;
+	bh=9wWeGTwck9cQKoXA+Cw29FQixCUyMz9GrplRuEXpa9M=;
+	h=Received:From:Subject:To;
+	b=yIw+v3Wliwt0Qub10E0ZqaZll5wbFrmzo8RBWeqFDEgdEc/4nw/cbyFPpRwfWzf1L
+	 JYmWSPLEud7QRbYRlb2khky7sUdEe/BNhGyni/oLncsMtZOCvmz+92uEh66oi/tbvW
+	 706sBoBMqYUweyJtH35X4KJ0R/TRUDQu1gokJrVg=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.175) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f175.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f175.google.com with SMTP id
+ 38308e7fff4ca-30c416cdcc0so70102751fa.2;
+        Wed, 30 Apr 2025 03:51:23 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCVmF9ise3yimweXd7wcXhZhjd8rXt33K4BH64MBiobJDq9UEkr8+RYpRF+0vpdfwkHoDNVHQWYM/C1y2k4=@vger.kernel.org,
+ AJvYcCXjZjcktDJIOgghQWSIxeP4iN1U3m+6Ld3Yxw1Jl2xmkvuVBcFnxXDE3KcNUlW59OsZD4iIbEeZHnmj5Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx+ph2xJIw/SlHilphvh7RGoH+H764vhH1CQnWMeN5GjrHubJg
+	EYZMVdEXJt3n2oMX7m7zbLt5skyNf2HkTNYeva8f5kf53TJjRzSda+ag364ObVpWQa2H1WhJECM
+	hlg5YfDt+Pju9G/y5oBkXXEi+y+w=
+X-Google-Smtp-Source: 
+ AGHT+IGvRFag6/+N/X79gcDNxA2yVgOBaG5b1ppkZPLX4ucqtLNThMNUkYfMcEIH8do8abXCew3SECz5KE4DhOAQRms=
+X-Received: by 2002:a05:651c:19a1:b0:30b:bdb0:f09d with SMTP id
+ 38308e7fff4ca-31ea45ca5bemr7927481fa.32.1746010282517; Wed, 30 Apr 2025
+ 03:51:22 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- linux-media@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- devicetree@vger.kernel.org, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Alexander Shiyan <eagle.alexander923@gmail.com>, 
- linux-rockchip@lists.infradead.org, 
- Collabora Kernel Team <kernel@collabora.com>, 
- Maxime Chevallier <maxime.chevallier@bootlin.com>, 
- Gerald Loacker <gerald.loacker@wolfvision.net>, 
- Sebastian Reichel <sebastian.reichel@collabora.com>, 
- Kever Yang <kever.yang@rock-chips.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- linux-arm-kernel@lists.infradead.org, Conor Dooley <conor+dt@kernel.org>, 
- linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, Val Packett <val@packett.cool>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Heiko Stuebner <heiko@sntech.de>, 
- Michael Riesch <michael.riesch@wolfvision.net>, 
- Mehdi Djait <mehdi.djait@linux.intel.com>, 
- Paul Kocialkowski <paulk@sys-base.io>, Rob Herring <robh+dt@kernel.org>
-To: Michael Riesch <michael.riesch@collabora.com>
-In-Reply-To: <20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com>
-References: <20240220-rk3568-vicap-v6-0-d2f5fbee1551@collabora.com>
- <20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com>
-Message-Id: <174601024955.2105633.4770841218138986246.robh@kernel.org>
-Subject: Re: [PATCH v6 05/13] media: dt-bindings: add rockchip rk3568 mipi
- csi receiver
+References: <20250430204517.75d88615@canb.auug.org.au>
+In-Reply-To: <20250430204517.75d88615@canb.auug.org.au>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Wed, 30 Apr 2025 12:51:11 +0200
+X-Gmail-Original-Message-ID: 
+ <CAGwozwEd3B3H4iKjn5YrLOzHpXajqsPVEVVmzHc=wEAz23AR4g@mail.gmail.com>
+X-Gm-Features: ATxdqUH0_kwmRpdLRoxQnxD51z3-ZdL5e_QuBRF0VLpQPuo1p8Vw9XfP0y7ApnM
+Message-ID: 
+ <CAGwozwEd3B3H4iKjn5YrLOzHpXajqsPVEVVmzHc=wEAz23AR4g@mail.gmail.com>
+Subject: Re: linux-next: build warning after merge of the drivers-x86 tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Hans de Goede <hdegoede@redhat.com>, Mark Gross <markgross@kernel.org>,
+	=?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174601028353.15909.12244521786516013348@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
+
+On Wed, 30 Apr 2025 at 12:45, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the drivers-x86 tree, today's linux-next build (htmldocs)
+> produced this warning:
+>
+> Documentation/hwmon/index.rst:19: WARNING: toctree contains reference to nonexisting document 'hwmon/oxpec' [toc.not_readable]
+>
+> Introduced by commit
+>
+>   fe812896e55d ("platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86")
+
+Hm,
+after removing the documentation I might have left an erroneous oxcec
+entry in the documentation file.
+
+In some previous versions of the series the hwmon doc file was renamed
+but in the final one it is removed. So this file should not be introduced.
+
+Should I do a fixup commit?
 
 
-On Wed, 30 Apr 2025 11:15:54 +0200, Michael Riesch wrote:
-> From: Michael Riesch <michael.riesch@wolfvision.net>
-> 
-> Add documentation for the Rockchip RK3568 MIPI CSI-2 Receiver.
-> 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
-> ---
->  .../bindings/media/rockchip,rk3568-mipi-csi.yaml   | 113 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 114 insertions(+)
-> 
+Antheas
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/rockchip,rk3568-mipi-csi.example.dtb: csi@fdfb0000 (rockchip,rk3568-mipi-csi): 'phy-names' is a required property
-	from schema $id: http://devicetree.org/schemas/media/rockchip,rk3568-mipi-csi.yaml#
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240220-rk3568-vicap-v6-5-d2f5fbee1551@collabora.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+>
+> --
+> Cheers,
+> Stephen Rothwell
