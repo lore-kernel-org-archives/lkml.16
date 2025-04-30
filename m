@@ -1,273 +1,179 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C2618641
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013947; cv=fail; b=EiukIvg5mbFbNXOWZmHouxVNZbH0Dj0cVue3mA4NVQxOHD/S2xLMyPQBgxjcyUVq9Qhxx9xO3dS6sk2dVfTlv3r0j99M5FVH0Bkka4bkXkkL1kAW11lNiOxrVrF8QKrmubqWxLEDOBsJhF8o+UcRE3Fz1lnMC0dHopEkXC2amWQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013947; c=relaxed/simple;
-	bh=8rzAmVip2gWIvGj/bZ7KYgfIhpJx790xKlUSoO+3LFo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=cRgRtjjbDUSpTHAUH6WWnmNFqi8wmWmix699Ob1DfnhnzykYgW1qAHkJxiMZRraZHvnv0hCHvNedcQbAu65vO/Dz7QV5sh8jsaTgFVc0IKk6K/ce9Dt/5fe4RMGJCWTRcIo/30IS01gz4O9YcTPKvw4QpihP/v5jY5jvSQSLlI8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xq3Tq/uq; arc=fail smtp.client-ip=40.107.93.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13184E1C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746013974; cv=none; b=VBiufpMMBEVOMGwVy09Ejsb7ygNi7J4J480qfK/xUalEWA1jKtxIpRaZqIp3GUm9mEWPuvD9bzdd8x6X1luM0LAhAO+nneRGg88o5eCIkkXVSXFf02BJwtvu7HhfR60RwjW6CuGv+miEIcDhRS9FowhyuysTB1Vwa6GMumy8KHE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746013974; c=relaxed/simple;
+	bh=uecXYXmTBkAUyRcnMOGbczeiCVo6fGy/Iknn4XhNAgE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Q8v3ukgJoD5LObMLNBYtRAZJ0I/KHW90htoF4cTNxSvAtHXhRrVkPxBmQycotyFFx1/ZBbQ/aMqel84Fla0YHu5Q1vDNoHvofn8el7jKRw4SWikCAO7n6zFvTySECxnKIr0E6nujfFF5GDukf92bp5/BIL1cQQp1VeHOMfo2FGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wb61IUU4; arc=none smtp.client-ip=209.85.160.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xq3Tq/uq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PCIAk3jUTmKWdWSRuH9qfWkbtOkjBRzLf8jYREkIhcT+w8U2rfqVCOwwRKoo+APjmDlltuyN94KTn7q8ULbqfYeQD/ga5DVIRxgJ5Nw1ZFQ8JyqdHCV7pTkGuKmtX0UKfjLApYiBs6rSbRtBNqma9xVavOgwswanm82t6jAwbETmfjqXtwYlAjMDshY+uI8HxQn/wnyCOuF18DrHOIt6nTdZY/k0nbLIbq2PBrBraypTgfmXwTwHa9xaUi4hL9l4AB6zxTPdYmhizHhEOBXXlhAPLViih5+JccRvkOTnLv7BxmwKsFWdjC7BkYVpjJknsfP1hpOPaqaNSUial4NRbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JNC0n5zTFMdh+4FX9TA0K8pD7q/KE4mrReJdEp9s7j4=;
- b=RX+dNQ4gI4cqvIYl+g+tyO2Y7fGdRT7n2cEfpvpZ+x3RhXq0BEHAV3VICvCy7cG/mMGa1fzTdpiFk4UWhRAH/8iCPd2wNZ9mFBf2/cQ0LYYIXu4gJ1m8iOnZ/zZ7X/Ett5UisB8OVqIddB/hRTq4oHbnQP3m3bKVoRBRC49lmok4dMCr0OFj1Jgrd6kDKLyveDrNLbg0dGgvB/VrrXHMhgS17KtJ4WribPi8A6wB1wtLHRrecQAikNf3vjCdeFQArzlkYUjX2rivNmXUwYBE3ms8GBl7vlP2gvHUr2QvInGhMwrtHu8IBfBJfNBhJ1q1QkHfr+JKif6qWOD4HlE7XQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JNC0n5zTFMdh+4FX9TA0K8pD7q/KE4mrReJdEp9s7j4=;
- b=Xq3Tq/uqsCowIhJbrzgWxpvcT4JyfH1PK0HkkLeySDV+ft9dGU+GWZjRsK0cfm9WiSLQ8tIGjIUHHrIB58lz3LzkOMdkJU8KkHqCY5lTu7Exs9QEmKYh5QEmeFBCTGmU+zTP/fbss495FTViKVufHB03tOVsHuzbmlKRyrzQGbM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
- SA3PR12MB7923.namprd12.prod.outlook.com (2603:10b6:806:317::9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8678.31; Wed, 30 Apr 2025 11:52:22 +0000
-Received: from DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
- ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 11:52:22 +0000
-Message-ID: <44aa28c7-69fe-4073-bd61-6aca57203c64@amd.com>
-Date: Wed, 30 Apr 2025 17:22:14 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] iommu/amd: Add HATDis feature support
-To: Joao Martins <joao.m.martins@oracle.com>, Ankit Soni
- <Ankit.Soni@amd.com>, iommu@lists.linux.dev,
- Baolu Lu <baolu.lu@linux.intel.com>
-Cc: suravee.suthikulpanit@amd.com, joro@8bytes.org, will@kernel.org,
- robin.murphy@arm.com, linux-kernel@vger.kernel.org,
- Alejandro Jimenez <alejandro.j.jimenez@oracle.com>,
- David Woodhouse <dwmw2@infradead.org>
-References: <cover.1745389415.git.Ankit.Soni@amd.com>
- <6282a5c349812a311a67a8522dc5e4aabfe3ec3a.1745389415.git.Ankit.Soni@amd.com>
- <596ed125-c995-4e2b-824c-b7929c852754@oracle.com>
-Content-Language: en-US
-From: Vasant Hegde <vasant.hegde@amd.com>
-In-Reply-To: <596ed125-c995-4e2b-824c-b7929c852754@oracle.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0124.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:96::12) To DS7PR12MB6048.namprd12.prod.outlook.com
- (2603:10b6:8:9f::5)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wb61IUU4"
+Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so579252fac.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:52:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746013971; x=1746618771; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G0WvDa5aRQnCCMGegtVa2lEUDXecKX5r4xxX/pnvbM0=;
+        b=wb61IUU4Qu5dyaF0evJRrldtyIVlhUPoDz6QhorUWOBPDnJ3nbfMC8drU5SwdJZuhB
+         eurEJrQR0gnZ3DnySu4aPNBQIQMOq7raSVSCYhLLrdD0IanFIbpxv6oJv3iN67aQ1rii
+         jfpGnoGmOWUm7jP0oopTvkCY+AP8HfHxzT6L3+KwR8tLbTN0zlgGrbaPeKDYNS8Mv5Lg
+         khihDocBO4xttkjfXuA/ImXq4fmBEGC5GlSGREIdRTjGYLpDyqo+ahVntxFPKdjVoQ/+
+         SCVBFbmh/zX0JnESBwW2N8t5jo/4P2Hfn3aQtC1syAMf+qxevT41Ul682xbSQOQcRnzk
+         xNrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746013971; x=1746618771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G0WvDa5aRQnCCMGegtVa2lEUDXecKX5r4xxX/pnvbM0=;
+        b=B6IGOy0tHZ1LVUo/qJMx2M01CRedA5aefzQWc6YoKv8KNdOdOu2MvA2Jti2kkpQz7R
+         x0wucm4aRbs/7Wmtymuxm+Rqodfx7ENm1I+TocYhLZjjFyExS5EtxJuzLiQvw/TUlqw0
+         hj0z4kAnaE6gYNHs2W2YDgwL9jSCEoJuqo20OCnPPxiicqCfGXdxqtv3gIL0H8Fqtawp
+         TwflNSftqOlwEU01BCa4mFPAMOM2K2RWUNt5mZp55DJD70sz4KiN4mQ5QpGOGrs9Lf/9
+         BJ7ywYRpchf2pxfTfzmlLnKmPv4JNWPMhxseuPU4yqcXrCBTMmE+irpVmh5AlYVgCZcF
+         ZWvw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpKFS1tIJZHQu6+1TPaCPRX/N1s6oBiomk5OZpdo5VGaYkKRJozR/BhtJw1U70jVBDUZvE1fgohkmJ7RQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAodtswMtSHmuAJ2b6sABEdhHzwn0K2/2MnSUsfD5wTbtmIN1N
+	KtpGGQgKvfksLtexVxvMALgjir76m5odioeI5Yb/wM9AjdQh6BWc3JOqDoGhQnaRWW9yWU8G34b
+	4xLVox1o3BoNqZVzOFJl7y7VAfnsSEkjmQ5Ua+g==
+X-Gm-Gg: ASbGncu8HvPoXWqMHQ5wepPChZBPG6g3xHrNaoF6wpPgHSKpru7juMq9voWQU6iP5FX
+	VCnByZVLByiH9JuhIf4vRvolegskpOm/N8PbztI4nwFslR8JGDY54WZ8T45oiMG28l14fx+jaGu
+	NqXVuhbzuQPccjRw1R6EtUOsg3RG2fPxvKzHUwRyJqecE4Op1Jy7FA7UAa
+X-Google-Smtp-Source: AGHT+IFRIZnmxicAbUlYiuG5vLwm0zpLjlGxO6F7Sble6XEMwZjOx0YCP+eTbDVX6oNny+5GYdtnRFrO+U4f1mWnIr4=
+X-Received: by 2002:a05:6871:7241:b0:2da:731e:41b8 with SMTP id
+ 586e51a60fabf-2da731e5b10mr1064031fac.14.1746013971426; Wed, 30 Apr 2025
+ 04:52:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|SA3PR12MB7923:EE_
-X-MS-Office365-Filtering-Correlation-Id: 15fe452b-1090-4544-16ef-08dd87dd778d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dWYrT1ExUWVHRk0vOVpia055azVFbEhqK2hlU3ZQTkgzM3JtR2Jvd0lMc0JP?=
- =?utf-8?B?enlFYlBGcmRETkhuV2FBeFNGRGg1V0xDT0pxWFlFOU5RK0wvUkJsK051cDgw?=
- =?utf-8?B?QzlMTGNDREZrY1M3ckg4VnFoZUIvMnB2NjdvRGplUlQ1bEZtQUllWDVibDBG?=
- =?utf-8?B?ZGxyNFo2cFZBZUQrS1hpd0QzaGFJV2JNSk0ySjd1eWpYL2ZETnJNQ0VveGoz?=
- =?utf-8?B?SnIwa2wzWFJLR3pVZHRTQlVPVkpZc1gxMlMrMUQ3Nm1SVitKaEpwcTZmVzIw?=
- =?utf-8?B?dHQ4WUFHcnM3UXR0a3FuS2Nrb29UZ3pGTUp1UWRDV3BoR2F6TytGb2RUZUFh?=
- =?utf-8?B?TjdzM1IxTlRtelVrUEFGMWlSTE43b0MvLzRPaXJQWkFsME5nT3daVElJSDN3?=
- =?utf-8?B?UVVHdnZEYUwzWFVCYXFseFE1dldXYmlTd2pRR2VrNVU5NENpREpSS2VOZnR4?=
- =?utf-8?B?aDNOcFNVMTk0bUcwTkw0Q0FWQWxSVmZEWDB5bkRQbUw3MFlvK1Nia0phcGdP?=
- =?utf-8?B?UlIxWmZ2QkZjc094NktTRlJ0S0FwNXI2ZFZuTndWUjNhWlJHakE5RXFUOFRX?=
- =?utf-8?B?OFhmL3V5RlMwTlJULzVDaEhuek1tN2Q4c0d2NDV0WGhFNjBLNE5kZ0doL3hD?=
- =?utf-8?B?WnV5TjVtNm5wWmdZY05JT29xSVp3Ulk3WUR1enNyV0RFVWFzbmNEdEttaXFm?=
- =?utf-8?B?cTFCd0dQUFhPQ2duREZrMHQ4UGlEOUdQUXZBZXpLRmJESGREV0VHcFJSSjdM?=
- =?utf-8?B?TmpqdzhDcUppU3ZmRlBtNVlvOWkwRDAyR3V1RVBXcVo5YUVVcGJ4NnJ4L2h4?=
- =?utf-8?B?c2thMXRpTERLYWxlQzVBRGJ3U3RmVytwd0lRbnRDYmxnOGZ2bGRDeW9IVVJG?=
- =?utf-8?B?QzRTRUs3bG5uNXVrT2RWSWFDOEgrdzgrZWp3NTZIRERiYU5WYzJYMG9jeFUw?=
- =?utf-8?B?Y0pUOXhUSDJUdHQyUWl0Z3hpbXZYOWg1QXNoK25ZUDNkbjFlcjQyV1ZlaVJL?=
- =?utf-8?B?QW1KU0FBZXBFK21SVFpwaWdYQ1BjZGFZVGNEL2F0UTE1MHpKZW4yTmthRXJC?=
- =?utf-8?B?Vjl1YnJaNklrRlFXSFlpRkZJbEFnRmhNdDQwdWtqZ3VkNGNjdUlWNWFFcjhE?=
- =?utf-8?B?elljYVZ0UHplQ290alNaMWs4WFF6VVlmZWpOOGhBRnpHcTh2NG95by9yL0tC?=
- =?utf-8?B?U3RRd1RMeVZzQVhSOFdDOXl5MXRmazRYb1c2TzlDZU9obG05d2NXYzkyNGZ0?=
- =?utf-8?B?ak1oUFJIR2xwUXNTeENJbmF1dm5xWlhaQnpJSDA4SFNFYlUwaFhiRUVtbjNB?=
- =?utf-8?B?SVA3Q2NYdHJQZTJ2NFdzNTFQdXo5ZlRvazdzK0FzYko4V0tVdXZWa0ZsL2pR?=
- =?utf-8?B?U3Fnc3l5Qm1OZGNUUy85RzJuUUtEbGdOQjNkb3FxU1ZjQXpaeEpMYWhGV0VQ?=
- =?utf-8?B?TGF3SWVNVk9CWkF4N1V5ODRwWWNxbGY3UGNTLzNtMlNBZU1jNy9SV3NZMUZK?=
- =?utf-8?B?V2Iwd3hUemF4TDY2WnJPNHI4eXZvV05vV280ZFB3NlFZalpVWnVxQUF3ZjJ5?=
- =?utf-8?B?cUZzamtTd2NFRGZwekN4MXV6eEhCakNHZ0VGbklSY2tlRnJkM3UvK2dnL0N4?=
- =?utf-8?B?a3E1Y3YzSExpVUpLMFNMTmkvYnhMTzJudWttYnRwSHFvUm85UFhUS1hiOVhu?=
- =?utf-8?B?anE5a3JDVkpkSGNCK2xMWXJHYms1UVU5R2QrbWtCdk4zcno3SjV4WlNJZVVu?=
- =?utf-8?B?YzBLQ1JjSHpjYUV5b1B4eDBacm9zN3JIbFVUZ0RtY3NaSnFYRjNXQWV1V0tZ?=
- =?utf-8?B?dVd3ZHliNE1PNUVQZ1VlV1J6aER5bS9kdGErS3N1NDl2bjExUXNSenQyZERN?=
- =?utf-8?B?L1NqWEFoOWRnZE10dExyL1JJTnUwR0xMcEN0YWpERFBVZXJ0dmtENDA5QkVx?=
- =?utf-8?Q?Fl22Xaounpo=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VjZWQzJJcm9yVGVQM2s2dEdWSW9kMGRLdmZRZ2V0cUlmK09iSmk2RC8yZzJN?=
- =?utf-8?B?MzdSUHBhcXBCZkZWZlZqUGI5Ui9xektjR0RNclc3Q2p5VXFRUGEzZ0pwMFlI?=
- =?utf-8?B?eW9DNGZGbDhFdzBSUXNnTW5haXFiK2NUNUlWZyt3QWhoS25OTzdLeUhOMnhB?=
- =?utf-8?B?eTNtOUVpazcvZVRRTmdkTVhSQjVNNnR2ajJaSDdjOG9MZzlpVFRiRzRhQUcy?=
- =?utf-8?B?VUxEYVc5SVFtaEFjNE9FNGZnWXg4VGh3eEcvYjN4VGhleGp4TGNnY2Q0Vys5?=
- =?utf-8?B?WVZtNUp5UHZldE42Y2l3c20wdXpwQmMwS1ZJTk1nVTE5V3JJazlHVlVZMGgx?=
- =?utf-8?B?bVlnSm5tVUlKSEs2TnY3cTN3UUJVK2JocEd1TmhQa3RLSFJqQ0hDZ0oxWlhv?=
- =?utf-8?B?a2k1WmNyM1VhRTA0TDNjTlVtTi90WmZKMDdYOWxlSXRlZkhMc1VMVVo2ajA4?=
- =?utf-8?B?U3EwejZoQTVEU3lUYytvWitLcWp6b1NNNHVxUndKOVlVbzUyYWdKUXg0T2hE?=
- =?utf-8?B?dGRkcllxWS9sR2duaXFDZTBSeWhYaWZ1LzBkcWRpNGxvMG5vbER5WTNtVnEv?=
- =?utf-8?B?UnhTQjNxRTlkamxoeUZCaFF4NDVDRGhWR09tdHU5YTIyRnlhT0RSU0IxLzhi?=
- =?utf-8?B?VVUwSklYQkY4RUI4aTEyZEJ3QmZqbERoTTRrQXRZd0oyQmxvUlpCUFk1VFFY?=
- =?utf-8?B?aUZFaVhsNmlmdlVqN2llaG5qckJXTkJLZnhxL3JJUjNSd0tVUTFWaXBVSWgw?=
- =?utf-8?B?TXlOTUl6d1lrM24zc0RhTmhZNlVacWRhQ0JxZEtMWm1Cc1BDWkRUbzIwVEhl?=
- =?utf-8?B?TklFUGRPZkJrMVc5SnVXYUdXV3RSVnJEQmdZZDFRL0k4RlAvcjlUb2lTeFFQ?=
- =?utf-8?B?UGlBSmtCeFJtMlpyZnZnZ3FveDVNMGgxSS9FYkZWdFZOUmdFdngveE90Sllo?=
- =?utf-8?B?SWhESVZNMGR6RWxYeUlvWHc0eDhoZllFUzFXRW1lTUJvV0ZMcW8zNWFKaklN?=
- =?utf-8?B?N2xKaHV2dW8vTXVDQ04zVmtNUjUyZjlmd0pNRW5kMHBwbFpkcFpVTTJDNzhL?=
- =?utf-8?B?cnJvWnZ2YVJBaGQxd20zRDROZXZQNjBZUVhwVmE4bHkrd0ZaUjBhRThUYno0?=
- =?utf-8?B?cU51VkZHdzJEQVUybHhweHNZRm9PNm1MVFBkQTk1RUoyVGw1bUFpMkQrbmR6?=
- =?utf-8?B?Wk5Xenk2UGpOeTV0azFQcFdSWGl1NjlncGF4VUhUOEh2RWt2RVZVc3pWWEpU?=
- =?utf-8?B?WitiMncrWkVIRmRWYytLTk5mNlpzQXVYRnZpSkhrZUNJc0xSRnA0TngxRUpj?=
- =?utf-8?B?NUhPRS9aSlE5Mk1uanB3L21CbGNnZXRNTGlieWNod3E4b2plMmRUZVlQZlQr?=
- =?utf-8?B?ajJPc2VCWVN6V0F5endiODVWNzJXS1BzOWpaN1gvTjhzdHk4ajVQbWNtbnRZ?=
- =?utf-8?B?WStncXhYYW9FSzFXckVsUDFBRGFDeVVERlArTG0wL1E1KzNxZGR5MlBiSXl4?=
- =?utf-8?B?T0xsK1pnTGFDVnlOVVhweE9LMWRvdHVoVmZPSjUvMVJjcVdHb0l2bVM4Z2tx?=
- =?utf-8?B?d2lHNlhxaFMvL3FXN0IxSm9pSG9nMWMvdUNBZFVDREFrNzBVcVpxcUpteEl1?=
- =?utf-8?B?N0Y1VUVnb3JLc3pFUm5BQlFsTWJkYnZnVmg0MUZaZStiR29Mc2dlZXZraHZI?=
- =?utf-8?B?ZzJQQVlIczk5NEkzVzUyWHUxTVAyS00vanZxQUEzMUlDZHNjb1BRWE80YnY5?=
- =?utf-8?B?QSt4VHZIODl4ek01U0VIRk5XQTBia3NEa1F0VUhQTkNyNnR2M1MyallPMlBi?=
- =?utf-8?B?S1h4TityLzZHYXZXZ0VHSGFtdDQwdzhVeHozb2FTSWZ0cXFLRTVUOE9zTzNL?=
- =?utf-8?B?ekhnUEFvSStPWWZjT3ptMnZ1V1p0d3U3Q3JUS3J6MUhVeTkyQWlNY3VqUjZH?=
- =?utf-8?B?M2tjbXNia1BpaVhQLzY3L0Q3L254eGcyYmtSL3IzNmpCdXVxWHV0dXFnd1Y5?=
- =?utf-8?B?b2N4WVRPeVY4bnMyMDF2VGowOXhuV1JjbTZjeElSeEh6ZlladDhqNU82Q1Yy?=
- =?utf-8?B?akk0K3VjVmxEK25aYUR4bktMNVcxa3IxRmJIdlRxWmNTMWZsem9qVzlZb21w?=
- =?utf-8?Q?S3y9Dk1HLKat/9VKyxC5xJsOj?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 15fe452b-1090-4544-16ef-08dd87dd778d
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 11:52:22.3092
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +HyACFQTjLVw0Ur2+mZB75VEEQfVrexodl8fX90x4i65fntm7oWWxcqUVBInME7fx7VCze05VlXGAGpNqp0U6w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7923
+References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
+In-Reply-To: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Date: Wed, 30 Apr 2025 13:52:39 +0200
+X-Gm-Features: ATxdqUFxVQEPdG55cKDVp9al9A1dB524Vm1psqiJUvk69O024T4Uf-HrXxS9Rvg
+Message-ID: <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
+Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit kernels
+To: Jann Horn <jannh@google.com>
+Cc: Sumit Garg <sumit.garg@kernel.org>, op-tee@lists.trustedfirmware.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Joao,
+On Mon, Apr 28, 2025 at 3:06=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
+>
+> The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
+> 32-bit kernels: Multiplying a user-provided 32-bit value with the
+> size of a structure can wrap around on such platforms.
+>
+> Fix it by using saturating arithmetic for the size calculation.
+>
+> This has no security consequences because, in all users of
+> TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
+> for wrapping.
+>
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
+> Note that I don't have a test device with a TEE; I only compile-tested
+> the change on an x86-64 build.
+> ---
+>  drivers/tee/tee_core.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 
-[+Baolu to get clarification on intel driver behaviour.]
+Looks good, I'm picking up this.
 
-On 4/24/2025 5:49 PM, Joao Martins wrote:
-> On 23/04/2025 07:50, Ankit Soni wrote:
->> Current AMD IOMMU assumes Host Address Translation (HAT) is always
->> supported, and Linux kernel enables this capability by default. However,
->> in case of emulated and virtualized IOMMU, this might not be the case.
-> 
-> +Alejandro as he is filling that gap
-> 
->> For example,current QEMU-emulated AMD vIOMMU does not support host
->> translation for VFIO pass-through device, but the interrupt remapping
->> support is required for x2APIC (i.e. kvm-msi-ext-dest-id is also not
->> supported by the guest OS). This would require the guest kernel to boot
->> with guest kernel option iommu=pt to by-pass the initialization of
->> host (v1) table.
->>
->> The AMD I/O Virtualization Technology (IOMMU) Specification Rev 3.10 [1]>
-> introduces a new flag 'HATDis' in the IVHD 11h IOMMU attributes to indicate
->> that HAT is not supported on a particular IOMMU instance.
->>
->> Therefore, modifies the AMD IOMMU driver to detect the new HATDis
->> attributes, and disable host translation and switch to use guest
->> translation if it is available. Otherwise, the driver will disable DMA
->> translation.
->>
->> [1] https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/specifications/48882_IOMMU.pdf
->>
->> Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
->> Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
->> ---
->>  drivers/iommu/amd/amd_iommu.h       |  1 +
->>  drivers/iommu/amd/amd_iommu_types.h |  6 +++++-
->>  drivers/iommu/amd/init.c            | 23 +++++++++++++++++++++--
->>  drivers/iommu/amd/iommu.c           | 13 +++++++++++++
->>  4 files changed, 40 insertions(+), 3 deletions(-)
->>
+Thanks,
+Jens
 
-
-.../...
-
->> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
->> index be8761bbef0f..0ebc264726da 100644
->> --- a/drivers/iommu/amd/iommu.c
->> +++ b/drivers/iommu/amd/iommu.c
->> @@ -2393,6 +2393,13 @@ static struct iommu_device *amd_iommu_probe_device(struct device *dev)
->>  					     pci_max_pasids(to_pci_dev(dev)));
->>  	}
->>  
->> +	if (amd_iommu_pgtable == PD_MODE_NONE) {
->> +		pr_warn_once("%s: DMA translation not supported by iommu.\n",
->> +			     __func__);
->> +		iommu_dev = ERR_PTR(-ENODEV);
->> +		goto out_err;
->> +	}
->> +
->>  out_err:
->>  
->>  	iommu_completion_wait(iommu);
->> @@ -2480,6 +2487,9 @@ static int pdom_setup_pgtable(struct protection_domain *domain,
->>  	case PD_MODE_V2:
->>  		fmt = AMD_IOMMU_V2;
->>  		break;
->> +	case PD_MODE_NONE:
->> +		WARN_ON_ONCE(1);
->> +		return -EPERM;
->>  	}
->>  
->>  	domain->iop.pgtbl.cfg.amd.nid = dev_to_node(dev);
->> @@ -2501,6 +2511,9 @@ static inline u64 dma_max_address(enum protection_domain_mode pgtable)
->>  
->>  static bool amd_iommu_hd_support(struct amd_iommu *iommu)
->>  {
->> +	if (amd_iommu_hatdis)
->> +		return false;
->> +
->>  	return iommu && (iommu->features & FEATURE_HDSUP);
->>  }
->>  
-> 
-> It's strange we seem to somehow have host translation disabled, while it
-> advertises other translation-related features like the normal case.
-
-I think even if qemu advertises those features we shouldn't hit this code path
-as probe() will fail and core shouldn't try to allocate domain, etc.
-
-I was extra cautious and suggested to add this check!
-
-> 
-> In any case we should probably follow Intel's example (which does similar thing
-> to HATSDis) where we only call invoke IOMMU groups
-> iommu_device_register()/iommu_device_sysfs_add() with DMA translation enabled?
-> That should simplify most of the patch as those codepaths are not reachable via
-> kernel/userspace? Unless I am missing something ofc
-> 
-> See also commit c40aaaac10 ("iommu/vt-d: Gracefully handle DMAR units with no
-> supported address widths"). I am not sure what else is the closest example here
-> besides intel-iommu equivalent.
-
-@Baolu,
-  Looking into intel driver, my understanding is if DMA is not supported, intel
-driver will set `drhd->ignored` to 1 (alloc_iommu()). So iommu_is_dummy() check
-will return `true` and hence intel_iommu_probe_device() will fail. But it will
-continue to support interrupt remapping. Is that the correct understanding?
-
--Vasant
-
-
-
+>
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index d113679b1e2d..acc7998758ad 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/idr.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/slab.h>
+>  #include <linux/tee_core.h>
+>  #include <linux/uaccess.h>
+> @@ -19,7 +20,7 @@
+>
+>  #define TEE_NUM_DEVICES        32
+>
+> -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
+> +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x))=
+)
+>
+>  #define TEE_UUID_NS_NAME_SIZE  128
+>
+> @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_context =
+*ctx,
+>         if (copy_from_user(&arg, uarg, sizeof(arg)))
+>                 return -EFAULT;
+>
+> -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf.b=
+uf_len)
+> +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) !=
+=3D buf.buf_len)
+>                 return -EINVAL;
+>
+>         if (arg.num_params) {
+> @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx,
+>         if (copy_from_user(&arg, uarg, sizeof(arg)))
+>                 return -EFAULT;
+>
+> -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf.b=
+uf_len)
+> +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) !=
+=3D buf.buf_len)
+>                 return -EINVAL;
+>
+>         if (arg.num_params) {
+> @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *ct=
+x,
+>         if (get_user(num_params, &uarg->num_params))
+>                 return -EFAULT;
+>
+> -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) !=3D buf.buf=
+_len)
+> +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) !=
+=3D buf.buf_len)
+>                 return -EINVAL;
+>
+>         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KERN=
+EL);
+> @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *ct=
+x,
+>             get_user(num_params, &uarg->num_params))
+>                 return -EFAULT;
+>
+> -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_le=
+n)
+> +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) > b=
+uf.buf_len)
+>                 return -EINVAL;
+>
+>         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KERN=
+EL);
+>
+> ---
+> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+> change-id: 20250428-tee-sizecheck-299d5eff8fc7
+>
+> --
+> Jann Horn <jannh@google.com>
+>
