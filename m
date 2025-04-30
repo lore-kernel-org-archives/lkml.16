@@ -1,185 +1,228 @@
-Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADD8D264637;
-	Wed, 30 Apr 2025 18:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA65829408
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037671; cv=none; b=lHuY8wN1aHwFil6gIfeyZhuZZyQDI8PNlxg5nUAFKAPSaqkC6MD1FK9+GAizK/ZkG9vgEkAIRXT5oVuJixHx9HKXpS4ThDd/nq3SIvqWBGXno4akZ00h2Vib66rzKp7Cp3+Grim/8ntgdVRGf4nzb7Pf0uIowxOuz5zP3kniV7Y=
+	t=1746037752; cv=none; b=EpzHYqDf5NA6DCTiUzQoEBg62fbH7OIDIhpI5iPdB7ZnLh3yAsDOTHqKmsIphVJXbrGNl6qH3uQQO1vpcR5MN/tKIy6Y4nGyMRNaezSyT20MvyJEJEHLyQtX7Q+mk57BQpjiw46QtA565DJq2Ae+99chTJfB9uxo8UL7HVn/Hmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037671; c=relaxed/simple;
-	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HO+KlPRYjATbORfkxx/8/fOgiYsWVeaVhDZY6eq/PDaLNEZTcw9J+sfqcMiYwcKoRgOsDvQt13C18lfHgYNCYXCdeiSs+Umfjrr/2BHD+T4Bn7fxiMyX8hGySvt4KzEpsxT2+6/pxj/8INLVX5TWSpKP2ZERUE4J42OTOaYYPgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=Ckf6iXag; arc=none smtp.client-ip=79.96.170.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
+	s=arc-20240116; t=1746037752; c=relaxed/simple;
+	bh=nNyRbhoQ6hDPbyGYMQxS21MrhqYv/wuN5Nmm5p8+wko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IXDQV69OV/7Sq+cnkdv6o3yce+C4CZtCEhZwXd8nYVOhhRpoGVPwlXV62JEujfzAX83A7s9qetNHIoGI1cMH6+YvIMHE2gBpYwifF4AJe/cR+9f2yPSJ114C8sOQ79PaXJX969DerHgxBwA9+K16MAVWrrR7YyB+7z4o7NTIH0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=RToXduq7; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="Ckf6iXag"
-Received: from kreacher.localnet (unknown [217.114.34.19])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 5A6FE666854;
-	Wed, 30 Apr 2025 20:27:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1746037661;
-	bh=BAnu53X6LUhNIJoXvEr0FZYi1TI93lQ+xX62tTdscNE=;
-	h=From:Subject:Date;
-	b=Ckf6iXagpU23zp9V/WVAVTY/2vc3c9NUaz4YTy+UK6EfUYSysN/pgMpEbPMkXfAIn
-	 BinPDShn4fU7MmcdwlnXXH3ZcVEhPAAqkepYfoYMd1R8y4vurcKhmvl1bR10wwpRei
-	 Mln2Uzvl+6EkDu2iGHJBEjN3OIZT8bck/1nWpSnUDfG4kYaGaXrj5bLM23eU5lTAxV
-	 LohGuSqf+CdU/QHD1mKFV3vUYqb/SOlC1p4ZEEHyi19qctA5N27rvW2/2wtQBk4rxD
-	 6gjVeHyUZIxzPxfTtEXjAwwxCRl6JBuVwdb0BNU6BAw5PmHBgxUpyIFWw4UkXr1n8y
-	 rHsXP5Z8LWJhQ==
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Linux ACPI <linux-acpi@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
- Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
-Subject:
- [PATCH v1] pinctrl: amd: Fix hibernation support with CONFIG_SUSPEND unset
-Date: Wed, 30 Apr 2025 20:27:41 +0200
-Message-ID: <5889368.DvuYhMxLoT@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="RToXduq7"
+Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
+	by cmsmtp with ESMTPS
+	id A3qquDjSPVkcRAC9euuaPG; Wed, 30 Apr 2025 18:27:34 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id AC9duuHLFyqzCAC9euJBgl; Wed, 30 Apr 2025 18:27:34 +0000
+X-Authority-Analysis: v=2.4 cv=F4ZRdLhN c=1 sm=1 tr=0 ts=68126b96
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
+ a=6yfx0up5UoRXeW_57n8A:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=Y7b0SrnsMBxBUF3wTDa4FZHX6WIDaAZjaSiOEx6wD28=; b=RToXduq7UX3SU3KHHCbFfN4jBP
+	cpNo407367PXBy3uv03NbZRhkEkKNTGu+ufR6azOqU/H0524w0EhcSEXpnypolJ3+LI2eg/qqRsnc
+	Y5WGzX/17iRMGg20QazhckTTHdFWn5QteEqWLD+2udsp4KDoHcjqkXQRQXjhyHD0LMJrnwlBUERcT
+	trSwjekJ8QPjNsksmS+ujlUQp0yw3LphUT85QX8o2ZeGmD8ZVi7HPRF43vpgajGULk9ZjUm4EkqSU
+	mDI9nDu3F/14lQN9DwlIlpXOJXa+wBAvmrxnpHnnAvD1cpf04xuTIPCJaz3BonEybuCg/037GCyDp
+	OyO38Qow==;
+Received: from [177.238.17.151] (port=62754 helo=[192.168.0.101])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uAC9d-00000001Sg8-0kie;
+	Wed, 30 Apr 2025 13:27:33 -0500
+Message-ID: <a1edcb19-f463-4d15-be3d-2393191c45fd@embeddedor.com>
+Date: Wed, 30 Apr 2025 12:27:26 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="UTF-8"
-X-CLIENT-IP: 217.114.34.19
-X-CLIENT-HOSTNAME: 217.114.34.19
-X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgggfgtsehtufertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepgeffhfdujeelhfdtgeffkeetudfhtefhhfeiteethfekvefgvdfgfeeikeeigfehnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeekpdhrtghpthhtohepshhuphgvrhhmudeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqrggtphhisehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphhmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhushd
-X-DCC--Metrics: v370.home.net.pl 1024; Body=8 Fuz1=8 Fuz2=8
-
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-After recent changes, pinctrl-amd will not support hibernation when
-CONFIG_HIBERNATION is set and CONFIG_SUSPEND isn't because it will not
-register amd_gpio_pm_ops then.
-
-Address this by restoring dependencies on CONFIG_PM_SLEEP where
-necessary for hibernation support.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Mario, this is on top of:
-
-https://patchwork.kernel.org/project/linux-acpi/patch/20250414203551.779320-1-superm1@kernel.org/
-
-which is currently in my bleeding-edge branch only.
-
----
- drivers/pinctrl/pinctrl-amd.c |   63 ++++++++++++++++++++++++------------------
- 1 file changed, 36 insertions(+), 27 deletions(-)
-
---- a/drivers/pinctrl/pinctrl-amd.c
-+++ b/drivers/pinctrl/pinctrl-amd.c
-@@ -894,26 +894,7 @@
- 	}
- }
- 
--#ifdef CONFIG_SUSPEND
--static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
--{
--	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
--
--	if (!pd)
--		return false;
--
--	/*
--	 * Only restore the pin if it is actually in use by the kernel (or
--	 * by userspace).
--	 */
--	if (pd->mux_owner || pd->gpio_owner ||
--	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
--		return true;
--
--	return false;
--}
--
--#ifdef CONFIG_ACPI
-+#if defined(CONFIG_SUSPEND) && defined(CONFIG_ACPI)
- static void amd_gpio_check_pending(void)
- {
- 	struct amd_gpio *gpio_dev = pinctrl_dev;
-@@ -936,8 +917,40 @@
- static struct acpi_s2idle_dev_ops pinctrl_amd_s2idle_dev_ops = {
- 	.check = amd_gpio_check_pending,
- };
-+
-+static void amd_gpio_register_s2idle_ops(void)
-+{
-+	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
-+}
-+
-+static void amd_gpio_unregister_s2idle_ops(void)
-+{
-+	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
-+}
-+#else
-+static inline void amd_gpio_register_s2idle_ops(void) {}
-+static inline void amd_gpio_unregister_s2idle_ops(void) {}
- #endif
- 
-+#ifdef CONFIG_PM_SLEEP
-+static bool amd_gpio_should_save(struct amd_gpio *gpio_dev, unsigned int pin)
-+{
-+	const struct pin_desc *pd = pin_desc_get(gpio_dev->pctrl, pin);
-+
-+	if (!pd)
-+		return false;
-+
-+	/*
-+	 * Only restore the pin if it is actually in use by the kernel (or
-+	 * by userspace).
-+	 */
-+	if (pd->mux_owner || pd->gpio_owner ||
-+	    gpiochip_line_is_irq(&gpio_dev->gc, pin))
-+		return true;
-+
-+	return false;
-+}
-+
- static int amd_gpio_suspend_hibernate_common(struct device *dev, bool is_suspend)
- {
- 	struct amd_gpio *gpio_dev = dev_get_drvdata(dev);
-@@ -1211,9 +1224,7 @@
- 
- 	platform_set_drvdata(pdev, gpio_dev);
- 	acpi_register_wakeup_handler(gpio_dev->irq, amd_gpio_check_wake, gpio_dev);
--#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
--	acpi_register_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
--#endif
-+	amd_gpio_register_s2idle_ops();
- 
- 	dev_dbg(&pdev->dev, "amd gpio driver loaded\n");
- 	return ret;
-@@ -1232,9 +1243,7 @@
- 
- 	gpiochip_remove(&gpio_dev->gc);
- 	acpi_unregister_wakeup_handler(amd_gpio_check_wake, gpio_dev);
--#if defined(CONFIG_ACPI) && defined(CONFIG_SUSPEND)
--	acpi_unregister_lps0_dev(&pinctrl_amd_s2idle_dev_ops);
--#endif
-+	amd_gpio_unregister_s2idle_ops();
- }
- 
- #ifdef CONFIG_ACPI
-@@ -1251,7 +1260,7 @@
- 	.driver		= {
- 		.name	= "amd_gpio",
- 		.acpi_match_table = ACPI_PTR(amd_gpio_acpi_match),
--#ifdef CONFIG_SUSPEND
-+#ifdef CONFIG_PM_SLEEP
- 		.pm	= &amd_gpio_pm_ops,
- #endif
- 	},
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH][next] bcachefs: Avoid -Wflex-array-member-not-at-end
+ warning
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aBF5udHEHwWvmWJw@kspp>
+ <wxh5qw7hzvvyg4texozjbviicfe2xmbjxngwlc3a7xef6jm6kn@wi3f25t2fftd>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <wxh5qw7hzvvyg4texozjbviicfe2xmbjxngwlc3a7xef6jm6kn@wi3f25t2fftd>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uAC9d-00000001Sg8-0kie
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:62754
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfH92TWJa4nVtIegh/tud9mW7ifIxVgwtDvyMUqm3Cviwe2tsbo5zyXH2p7DSaYttBtBD3UVwN6BkCp+lmi3/35BMGG21ahNHxgohbA4zmFGVBBWykL8B
+ CAIWe/M6hgxqkp4E4NDS8HdB+mT3AHymPOJ4QQ91jJWEC6rsOemSaLIsXFcIOrH129LBxwoe2UtYttFUco/7LtnCNBgpvERjk9plgocTjFeqDdFQ4BgVpV/F
 
 
 
+On 29/04/25 19:40, Kent Overstreet wrote:
+> On Tue, Apr 29, 2025 at 07:15:37PM -0600, Gustavo A. R. Silva wrote:
+>> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+>> getting ready to enable it, globally.
+>>
+>> Use the `DEFINE_FLEX()` helper for on-stack definitions of a flexible
+>> structure where the size of the flexible-array member is known at
+>> compile-time, and refactor the rest of the code, accordingly.
+>>
+>> So, with these changes, fix the following warning:
+>>
+>> fs/bcachefs/disk_accounting.c:429:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> We also have bch_replicas_padded, does that also need a fix?
+
+Yes - so, how about the following to address both issues:
+
+diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
+index 7be71952425c..2dcccf1edbb9 100644
+--- a/fs/bcachefs/disk_accounting.c
++++ b/fs/bcachefs/disk_accounting.c
+@@ -287,7 +287,7 @@ static inline bool accounting_to_replicas(struct bch_replicas_entry_v1 *r, struc
+
+  static int bch2_accounting_update_sb_one(struct bch_fs *c, struct bpos p)
+  {
+-       struct bch_replicas_padded r;
++       union bch_replicas_padded r;
+         return accounting_to_replicas(&r.e, p)
+                 ? bch2_mark_replicas(c, &r.e)
+                 : 0;
+@@ -361,7 +361,7 @@ static int __bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accoun
+  int bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accounting a,
+                                enum bch_accounting_mode mode)
+  {
+-       struct bch_replicas_padded r;
++       union bch_replicas_padded r;
+
+         if (mode != BCH_ACCOUNTING_read &&
+             accounting_to_replicas(&r.e, a.k->p) &&
+@@ -425,10 +425,12 @@ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
+
+         percpu_down_read(&c->mark_lock);
+         darray_for_each(acc->k, i) {
+-               struct {
++               union {
++                       u8 bytes[struct_size_t(struct bch_replicas_usage, r.devs,
++                                              BCH_BKEY_PTRS_MAX)];
+                         struct bch_replicas_usage r;
+-                       u8 pad[BCH_BKEY_PTRS_MAX];
+                 } u;
++               u.r.r.nr_devs = BCH_BKEY_PTRS_MAX;
+
+                 if (!accounting_to_replicas(&u.r.r, i->pos))
+                         continue;
+@@ -627,7 +629,7 @@ static int bch2_disk_accounting_validate_late(struct btree_trans *trans,
+
+         switch (acc->type) {
+         case BCH_DISK_ACCOUNTING_replicas: {
+-               struct bch_replicas_padded r;
++               union bch_replicas_padded r;
+                 __accounting_to_replicas(&r.e, acc);
+
+                 for (unsigned i = 0; i < r.e.nr_devs; i++)
+diff --git a/fs/bcachefs/ec_types.h b/fs/bcachefs/ec_types.h
+index 06144bfd9c19..809446c78951 100644
+--- a/fs/bcachefs/ec_types.h
++++ b/fs/bcachefs/ec_types.h
+@@ -4,9 +4,10 @@
+
+  #include "bcachefs_format.h"
+
+-struct bch_replicas_padded {
++union bch_replicas_padded {
++       u8                              bytes[struct_size_t(struct bch_replicas_entry_v1,
++                                                           devs, BCH_BKEY_PTRS_MAX)];
+         struct bch_replicas_entry_v1    e;
+-       u8                              pad[BCH_BKEY_PTRS_MAX];
+  };
+
+  struct stripe {
+@@ -28,7 +29,7 @@ struct gc_stripe {
+         u16                     block_sectors[BCH_BKEY_PTRS_MAX];
+         struct bch_extent_ptr   ptrs[BCH_BKEY_PTRS_MAX];
+
+-       struct bch_replicas_padded r;
++       union bch_replicas_padded r;
+  };
+
+  #endif /* _BCACHEFS_EC_TYPES_H */
+diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
+index 58e3983d860a..7c09a3c109ab 100644
+--- a/fs/bcachefs/journal_io.c
++++ b/fs/bcachefs/journal_io.c
+@@ -1404,7 +1404,7 @@ int bch2_journal_read(struct bch_fs *c,
+         }
+
+         genradix_for_each(&c->journal_entries, radix_iter, _i) {
+-               struct bch_replicas_padded replicas = {
++               union bch_replicas_padded replicas = {
+                         .e.data_type = BCH_DATA_journal,
+                         .e.nr_devs = 0,
+                         .e.nr_required = 1,
+@@ -1632,7 +1632,7 @@ static CLOSURE_CALLBACK(journal_write_done)
+         closure_type(w, struct journal_buf, io);
+         struct journal *j = container_of(w, struct journal, buf[w->idx]);
+         struct bch_fs *c = container_of(j, struct bch_fs, journal);
+-       struct bch_replicas_padded replicas;
++       union bch_replicas_padded replicas;
+         u64 seq = le64_to_cpu(w->data->seq);
+         int err = 0;
+
+@@ -2055,7 +2055,7 @@ CLOSURE_CALLBACK(bch2_journal_write)
+         closure_type(w, struct journal_buf, io);
+         struct journal *j = container_of(w, struct journal, buf[w->idx]);
+         struct bch_fs *c = container_of(j, struct bch_fs, journal);
+-       struct bch_replicas_padded replicas;
++       union bch_replicas_padded replicas;
+         unsigned nr_rw_members = dev_mask_nr(&c->rw_devs[BCH_DATA_journal]);
+         int ret;
+
+diff --git a/fs/bcachefs/journal_reclaim.c b/fs/bcachefs/journal_reclaim.c
+index 66bfb95f1ea4..0acaf20f2181 100644
+--- a/fs/bcachefs/journal_reclaim.c
++++ b/fs/bcachefs/journal_reclaim.c
+@@ -953,7 +953,7 @@ int bch2_journal_flush_device_pins(struct journal *j, int dev_idx)
+         seq = 0;
+         spin_lock(&j->lock);
+         while (!ret) {
+-               struct bch_replicas_padded replicas;
++               union bch_replicas_padded replicas;
+
+                 seq = max(seq, journal_last_seq(j));
+                 if (seq >= j->pin.back)
+
+
+Thanks
+-Gustavo
