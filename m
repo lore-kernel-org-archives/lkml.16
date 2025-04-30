@@ -1,105 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 982C920C488;
-	Wed, 30 Apr 2025 09:07:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E683158DAC
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:07:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004067; cv=none; b=u8tSJKq14rir14I7Owgz+5JdAdvER49kPger/Wip/x/Hz6XZXQG9prcvC1lNF8DcexdQyDQ3MOMSIUvnoMnwx/NBXjCnrnQCrc3GuQD6KgKbnW/8NuG/7iWEJoe+XgHgyYJ9r9RND4jZIRJdhDuiIsbyYniN8iz7/yicQk/JrxM=
+	t=1746004082; cv=none; b=ACp47Ldu1E7UFJlVLv9MvBkF+EitYfX1u+ea40AKBCTOxzvBU7Xh0yUlbyoa9n7qjdnuDXYbCfFk3tWG55HCSn0lQB2amSCMI3Tzw8K37R2t2MtkhROBZAkXtUAh3B4m0lFwEl0gQ1luka2TPBysGlf8gAhIVSHcBFV6h6R4l6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004067; c=relaxed/simple;
-	bh=JTFm4bna49JCkHZqj/tyafzK8uqLqlQp4ByNOAyKIx0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hJC/W+g7AhApMMDW6NE+xuWX0jOrWf+nSzARxWGcK1N+EWXNh79MYvRLDoJrFnvl1qz9YcvBaJk/dw7BqfB+An1GcoslXWVdlhJdY3D/CFvmMR4UKUTFkPQ9+P9GJQykUDra0edm+D4Pdh18QJsdRX444veNP/lPRt5vBKFM/iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AjjGTNbE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AjjGTNbE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E02C4CEE9;
-	Wed, 30 Apr 2025 09:07:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746004065;
-	bh=JTFm4bna49JCkHZqj/tyafzK8uqLqlQp4ByNOAyKIx0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AjjGTNbErxWGCzhEbbOuEOlUu5zqXJuNMw/05gI1660HBi1a31QLPK7BIJ8hxUO8o
-	 ploriJYljhQqnr2B+QsvmcXgWlFEneGl4+NfEdHev/LWoNMVayw5YiQOAqKTAoY3dN
-	 XteJ9zb30s8qSRBuaUbXHU54xyez0vni90ByktrS+Tm3ZLw4CGxe4yijNpP9IiZMF6
-	 NAW62V1NU8VJ4a+Rii0DWNVcJisTp30uleC71K9kb0keYDEOthBLc+SztpC8Q/7kkm
-	 wQQqQJv+l3UGh9GhjHxEFY/ITALVAayIM6STJUCyErKOK0qAV8iw6wUNVlEUmY4bqL
-	 vEWHKXtmnF1xg==
-Date: Wed, 30 Apr 2025 10:07:38 +0100
-From: Lee Jones <lee@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Georgi Djakov <djakov@kernel.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Leo Yan <leo.yan@linux.dev>, David Heidelberg <david@ixit.cz>,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v3 01/11] Revert "dt-bindings: mfd: syscon: Add
- qcom,apq8064-mmss-sfpb"
-Message-ID: <20250430090738.GE1567507@google.com>
-References: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
- <20250425-fix-nexus-4-v3-1-da4e39e86d41@oss.qualcomm.com>
+	s=arc-20240116; t=1746004082; c=relaxed/simple;
+	bh=YkXF0tJVPRIT8nR1zEU00BoH1bBv1a6qrAvefgd+F4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bAe/bQhLpavONhFdAiV/oP/BAw1KaKw95BVdTT3UVAzVB5PW6PdEPi3FoVNTW2lNP7D9X+IhykUseV1B411yIL6fVJLzVyforKJnD2uNaqNAh9u8Um1s/kWFB+8mhApyEx/LFlAhbRoFNsxJl2omE9Utb0UcGhpU7DAS9qForek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.2.10.34])
+	by gateway (Coremail) with SMTP id _____8CxbWtq6BFo4v7KAA--.8581S3;
+	Wed, 30 Apr 2025 17:07:54 +0800 (CST)
+Received: from localhost.localdomain (unknown [10.2.10.34])
+	by front1 (Coremail) with SMTP id qMiowMBxLsdp6BForgKgAA--.14524S2;
+	Wed, 30 Apr 2025 17:07:53 +0800 (CST)
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	wanghongliang@loongson.cn,
+	yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Tianyang Zhang <zhangtianyang@loongson.cn>
+Subject: [PATCH V2] LoongArch:support CONFIG_SCHED_MC
+Date: Wed, 30 Apr 2025 17:07:51 +0800
+Message-Id: <20250430090751.24056-1-zhangtianyang@loongson.cn>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250425-fix-nexus-4-v3-1-da4e39e86d41@oss.qualcomm.com>
+X-CM-TRANSID:qMiowMBxLsdp6BForgKgAA--.14524S2
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Ww1kAr18tFWUJryfXw1DJwc_yoW7Wr4Upr
+	nruFyrGrWrWFn3A390q3yruryrurn7Gr1Iqa13KFWfAFsrJw1UJr1vqF9IqF1UG39YqrWS
+	gr98GayFgay8X3cCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUkjb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j0FALUUUUU=
 
-On Fri, 25 Apr 2025, Dmitry Baryshkov wrote:
+From: wanghongliang <wanghongliang@loongson.cn>
 
-> For some reason Lee has mis-squashed two commits, picking up one chunk
-> from the first patch and one chunk from the second one. Rather than
-> trying to fix it, revert commit 2c8de7df7418 ("dt-bindings: mfd: syscon:
-> Add qcom,apq8064-mmss-sfpb").
+In order to achieve more reasonable load balancing behavior,
+support for SCHED_MC has been added.
+The LLC distribution of Loongarch now is consistent with numa-node,
+the balancing domain of SCHED_MC can effectively reduce the situation
+where processes are awakened to smt_sibling
 
-Ah yes.  Looks like I took patch 5 before patch 4, then fudged the
-conflict resolution.  No need to submit a revert, I have removed the
-patch.
+Co-developed-by: wanghongliang <wanghongliang@loongson.cn>
+Signed-off-by: wanghongliang <wanghongliang@loongson.cn>
+Signed-off-by: Tianyang Zhang <zhangtianyang@loongson.cn>
+---
+ arch/loongarch/Kconfig                |  9 ++++++
+ arch/loongarch/include/asm/smp.h      |  1 +
+ arch/loongarch/include/asm/topology.h |  8 +++++
+ arch/loongarch/kernel/smp.c           | 46 +++++++++++++++++++++++++++
+ 4 files changed, 64 insertions(+)
 
-> Fixes: 2c8de7df7418 ("dt-bindings: mfd: syscon: Add qcom,apq8064-mmss-sfpb")
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.yaml | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> index 71741f06d2fddd2d4fb6b69c1cfd2d449ce73f64..c6bbb19c3e3e2245b4a823df06e7f361da311000 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-> @@ -98,7 +98,6 @@ select:
->            - mstar,msc313-pmsleep
->            - nuvoton,ma35d1-sys
->            - nuvoton,wpcm450-shm
-> -          - qcom,apq8064-mmss-sfpb
->            - rockchip,px30-qos
->            - rockchip,rk3036-qos
->            - rockchip,rk3066-qos
-> @@ -202,7 +201,6 @@ properties:
->            - mstar,msc313-pmsleep
->            - nuvoton,ma35d1-sys
->            - nuvoton,wpcm450-shm
-> -          - qcom,apq8064-sps-sic
->            - rockchip,px30-qos
->            - rockchip,rk3036-qos
->            - rockchip,rk3066-qos
-> 
-> -- 
-> 2.39.5
-> 
-
+diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+index 1a2cf012b..3d6d129ee 100644
+--- a/arch/loongarch/Kconfig
++++ b/arch/loongarch/Kconfig
+@@ -456,6 +456,15 @@ config SCHED_SMT
+ 	  Improves scheduler's performance when there are multiple
+ 	  threads in one physical core.
+ 
++config SCHED_MC
++	prompt "Multi-core scheduler support"
++	depends on SMP
++	default y
++	help
++	  Multi-core scheduler support improves the CPU scheduler's decision
++	  making when dealing with multi-core CPU chips at a cost of slightly
++	  increased overhead in some places.
++
+ config SMP
+ 	bool "Multi-Processing support"
+ 	help
+diff --git a/arch/loongarch/include/asm/smp.h b/arch/loongarch/include/asm/smp.h
+index b87d1d5e5..13955d726 100644
+--- a/arch/loongarch/include/asm/smp.h
++++ b/arch/loongarch/include/asm/smp.h
+@@ -26,6 +26,7 @@ extern int num_processors;
+ extern int disabled_cpus;
+ extern cpumask_t cpu_sibling_map[];
+ extern cpumask_t cpu_core_map[];
++extern cpumask_t cpu_llc_shared_map[];
+ extern cpumask_t cpu_foreign_map[];
+ 
+ void loongson_smp_setup(void);
+diff --git a/arch/loongarch/include/asm/topology.h b/arch/loongarch/include/asm/topology.h
+index 50273c918..dfaf45d57 100644
+--- a/arch/loongarch/include/asm/topology.h
++++ b/arch/loongarch/include/asm/topology.h
+@@ -36,6 +36,14 @@ void numa_set_distance(int from, int to, int distance);
+ #define topology_sibling_cpumask(cpu)		(&cpu_sibling_map[cpu])
+ #endif
+ 
++/*
++ * return cpus that shares the last level cache.
++ */
++static inline const struct cpumask *cpu_coregroup_mask(int cpu)
++{
++	return &cpu_llc_shared_map[cpu];
++}
++
+ #include <asm-generic/topology.h>
+ 
+ static inline void arch_fix_phys_package_id(int num, u32 slot) { }
+diff --git a/arch/loongarch/kernel/smp.c b/arch/loongarch/kernel/smp.c
+index 4b24589c0..7b9e996a1 100644
+--- a/arch/loongarch/kernel/smp.c
++++ b/arch/loongarch/kernel/smp.c
+@@ -50,6 +50,9 @@ EXPORT_SYMBOL(cpu_sibling_map);
+ cpumask_t cpu_core_map[NR_CPUS] __read_mostly;
+ EXPORT_SYMBOL(cpu_core_map);
+ 
++cpumask_t cpu_llc_shared_map[NR_CPUS] __read_mostly;
++EXPORT_SYMBOL(cpu_llc_shared_map);
++
+ static DECLARE_COMPLETION(cpu_starting);
+ static DECLARE_COMPLETION(cpu_running);
+ 
+@@ -66,6 +69,10 @@ static cpumask_t cpu_sibling_setup_map;
+ /* representing cpus for which core maps can be computed */
+ static cpumask_t cpu_core_setup_map;
+ 
++/* representing cpus for which llc sibling maps can be computed */
++static cpumask_t cpu_llc_shared_setup_map;
++
++
+ struct secondary_data cpuboot_data;
+ static DEFINE_PER_CPU(int, cpu_state);
+ 
+@@ -102,6 +109,42 @@ static inline void set_cpu_core_map(int cpu)
+ 	}
+ }
+ 
++static inline bool cpus_are_shared_llc(int cpua, int cpub)
++{
++	if (cpu_to_node(cpua) != cpu_to_node(cpub))
++		return false;
++
++	return true;
++}
++
++static inline void set_cpu_llc_shared_map(int cpu)
++{
++	int i;
++
++	cpumask_set_cpu(cpu, &cpu_llc_shared_setup_map);
++
++	for_each_cpu(i, &cpu_llc_shared_setup_map) {
++		if (cpus_are_shared_llc(cpu, i)) {
++			cpumask_set_cpu(i, &cpu_llc_shared_map[cpu]);
++			cpumask_set_cpu(cpu, &cpu_llc_shared_map[i]);
++		}
++	}
++}
++
++static inline void clear_cpu_llc_shared_map(int cpu)
++{
++	int i;
++
++	for_each_cpu(i, &cpu_llc_shared_setup_map) {
++		if (cpus_are_shared_llc(cpu, i)) {
++			cpumask_clear_cpu(i, &cpu_llc_shared_map[cpu]);
++			cpumask_clear_cpu(cpu, &cpu_llc_shared_map[i]);
++		}
++	}
++
++	cpumask_clear_cpu(cpu, &cpu_llc_shared_setup_map);
++}
++
+ static inline void set_cpu_sibling_map(int cpu)
+ {
+ 	int i;
+@@ -406,6 +449,7 @@ int loongson_cpu_disable(void)
+ #endif
+ 	set_cpu_online(cpu, false);
+ 	clear_cpu_sibling_map(cpu);
++	clear_cpu_llc_shared_map(cpu);
+ 	calculate_cpu_foreign_map();
+ 	local_irq_save(flags);
+ 	irq_migrate_all_off_this_cpu();
+@@ -573,6 +617,7 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
+ 	loongson_prepare_cpus(max_cpus);
+ 	set_cpu_sibling_map(0);
+ 	set_cpu_core_map(0);
++	set_cpu_llc_shared_map(0);
+ 	calculate_cpu_foreign_map();
+ #ifndef CONFIG_HOTPLUG_CPU
+ 	init_cpu_present(cpu_possible_mask);
+@@ -614,6 +659,7 @@ asmlinkage void start_secondary(void)
+ 
+ 	set_cpu_sibling_map(cpu);
+ 	set_cpu_core_map(cpu);
++	set_cpu_llc_shared_map(cpu);
+ 
+ 	notify_cpu_starting(cpu);
+ 
 -- 
-Lee Jones [李琼斯]
+2.43.0
+
