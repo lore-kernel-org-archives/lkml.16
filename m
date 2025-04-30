@@ -1,110 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D55CE216E23;
-	Wed, 30 Apr 2025 08:29:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3DE216E23;
+	Wed, 30 Apr 2025 08:29:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001759; cv=none; b=tCc1M1pgq0uk8DRC1FdwohWtq8nLFuRQ/0aKbJaD9o0URgX5V18sg3x50IvAgXzsVQ+rCNXNFVEgn5GeO2WFopwSYR0qcxI0d5Qwa0X7T+ldSZKY3xlYlZVH2PpnkV2U2njXYtZ7h238HBaeTElDSDGYUwtx1G4VC7QswuPuOwU=
+	t=1746001766; cv=none; b=aOHc0rD83R8kHuWMut+8d90MY/j83buNcDY5Yp8fPpOp8PW2AyOyi7jowoF1y3NyQ4/D3aAEfAKhgLJdK2Km9CICVPe8iyLIoJVSP4vUtsI8Dd6f1zndiZTP2tBLP8bf1UsxLhy1UbBZ9KBbr/ami0oryYU5cGNq+tZNUHn/1LE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001759; c=relaxed/simple;
-	bh=ihEuHFzNRjp+DKXrn8qQS+XjDZv5HELK/7qL3p9Fdzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ma6Z9VTElWfwlz7HNrxZAy8lnEGU45GKQgRM4BkHZcaIAD2flbi52v0lDD+nBeGZ0yNr5XXyT9qUoMMN2b/50LsPxP56YKKFl3Uc/rh5GqcJgr3y67z3TsNKtVk+28itFIaJqCeSeP1479FRH6/nD7OaLgNin218G/p+k+puCss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zvz9Kbwu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746001766; c=relaxed/simple;
+	bh=Y399pOk2PwFyXdUDdU2fl2otfNhae3MlGbg3fitUhBQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WKDu16NHX0gv4AYztvHxGU5hh3vJcqWmLOWDJmudEzJfOzRAO3BY3wCaFBKkvSh5g+LoU1lfI24/sZUcqqyrXBAD9JIpa3Y0EkquD5QX7SjdHFoi4+Bk0uhJNI8eBj5RP6YsRYVnfp9YJOSNC8hkgiYE/o2myiymFDScTo8g8wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=1pPrsFN6; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zvz9Kbwu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA7E9C4CEE9;
-	Wed, 30 Apr 2025 08:29:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746001756;
-	bh=ihEuHFzNRjp+DKXrn8qQS+XjDZv5HELK/7qL3p9Fdzg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Zvz9Kbwuw5AfmPZiep4ck2zKtaqnXhYs2r18+NFV1aWE9OPYI1lTSnDa3gKPDgDMG
-	 il6o3FlkEVZKMMk4zfQaBtdiSKrXDJ0eAUF/75AkO1QQgWq4UghT4aN7KzhrLvFUEV
-	 aB2yCVYlWX+HDhvtF3GhKgOi1awCzPm+Uxuv0k67SFBhRqazHDc+SoTc0YHMMCEWCi
-	 JKyKWpLTUaP3lZeIQSDSN9sLQZRjUOskHNwiXxy868mR15pnEA4Hw3CRU2jEJO/yZn
-	 jVDqW1oZQMiCeu2LwOq35h390tmbRwgK74sYlzMUjV1fNKT68LNL6b5KA0e+btJZiM
-	 ZYpYwuCZVsIDw==
-Message-ID: <4386227a-3dc9-42c4-9cc1-827dad1556be@kernel.org>
-Date: Wed, 30 Apr 2025 10:29:12 +0200
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="1pPrsFN6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:
+	Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References;
+	bh=hQyzVgSeS1zqqoyGREtN+mz33pRSUXUrrYNi91vis3M=; b=1pPrsFN6Bx75iVbdytX4QUGAef
+	SBhDdRSKKdJoVVMtn7Njgqt5S8xRJZUA1g5nlHezxIktzKi7mCO+n9QZWuhKqx34OjHdThxaztS5v
+	lncGWqIQgAXDRcl1ucg6mlD9+VqyByfEJH6Lnd3m0NM703WKcrVVk4AcqPaflzZ3JuT2LCIh5DRhz
+	vhtWcP45xbKyfRxkzNgVdHVEMSoIrDvbu+gs2Z6U9J6mBke+khQLi5bLPlqkOopVWlhx8OZATxKSe
+	DksVca83S65gqyudQpD7Ca1oD7nW/a6NE1pgu28NskLsRjtGjyACSSwuacjNFti1lRB4z8ViO6E7l
+	xmyQ6+Ow==;
+Received: from i53875ba4.versanet.de ([83.135.91.164] helo=localhost.localdomain)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uA2oV-00032E-P0; Wed, 30 Apr 2025 10:29:07 +0200
+From: Heiko Stuebner <heiko@sntech.de>
+To: neil.armstrong@linaro.org
+Cc: quic_jesszhan@quicinc.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	quentin.schulz@cherry.de,
+	heiko@sntech.de,
+	dri-devel@lists.freedesktop.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Allow port dt-property on two leadtek dsi displays
+Date: Wed, 30 Apr 2025 10:28:48 +0200
+Message-ID: <20250430082850.244199-1-heiko@sntech.de>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: duplicate patch in the pinctrl-samsung tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250430175001.4d12e01f@canb.auug.org.au>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250430175001.4d12e01f@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30/04/2025 09:50, Stephen Rothwell wrote:
-> Hi all,
-> 
-> The following commit is also in the pinctrl tree as a different commit
-> (but the same patch):
-> 
->   0a5b9be31f78 ("pinctrl: samsung: use new GPIO line value setter callbacks")
-> 
-> This is commit
-> 
->   9e4c444755b1 ("pinctrl: samsung: use new GPIO line value setter callbacks")
-> 
+Working on an upcoming board dts, I noticed a dtc check warning
+about the port node and at the same time the kernel-test-robot
+noticed the same warning with a overlay I added recently.
 
-Thanks, I will drop mine.
+So allow the port node in the binding of two leadtek displays
+to fix that.
 
-Best regards,
-Krzysztof
+
+Heiko Stuebner (2):
+  dt-bindings: display: ltk050h3146w: add port property
+  dt-bindings: display: ltk500hd1829: add port property
+
+ .../devicetree/bindings/display/panel/leadtek,ltk050h3146w.yaml  | 1 +
+ .../devicetree/bindings/display/panel/leadtek,ltk500hd1829.yaml  | 1 +
+ 2 files changed, 2 insertions(+)
+
+-- 
+2.47.2
+
