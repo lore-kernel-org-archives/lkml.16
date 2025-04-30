@@ -1,63 +1,65 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3252C1C8FB5
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04952609CA
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038509; cv=none; b=H8PJli/NiwSMrptPs9HcwpGKiVXpa2ljx1zAki8aRQnJva8BySBHo6sPpIVR2LvF8KnGGSGniTbvEtCZpdMpH69SZqb2rbHdDg9QviUYrFoy6TS2UiaE7tX20DUuNotX9gwljZp5tulLdiWZrju6xOAknKUPuE+KozIFm8+T/rU=
+	t=1746038509; cv=none; b=E5c3vmPEZJpBwXtkyHOAkyHy920TxJd4oAKIbCOV3ObJZ4CaIhJaDbOcso1PzVvuyabc4b3cyJBbp82sXDrt/poe+tanAeKtzo+iSDWp++1nI+KfXHDrgETOwvyE54EfFUReiC45+SXz3iULAfQ0HlqFMqXMIM8sKbgxEyDmcgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746038509; c=relaxed/simple;
-	bh=J0PH2ZcN2ZDgavrC0QE37WjFKhuQ/AIOsrgiuTFEZ/w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cyYHpsL9+zdKgIvvlCFn8zEzk7Wto2kIb9FLY8mNd39KZ/VvUDyUVweQd1CSutThYNAzLBcq9XlBzPH493zBRLCe7GTVHv1taBpeT1cK5S5C2pphB2ffpdvTsK8WrzsOi1DijY7WgsTYMpBpWNy1Dwd5SjLTpg4XsnftD28OBxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rtok5Xdy; arc=none smtp.client-ip=209.85.221.54
+	bh=VdScxxYwI0VoeKxBPwPGQrsVDAAxzP9pATm4OBb3UnM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=klzy+s8XWK8rBWBy0LdBDO4X7Ye5Jvbnu6PgiMkoQHIop9odckjyQdqZKBL6MRoK7dOCU+ydhS3QjdPweSte9Nqn9Z9G6vydv2g6fCtaLCBkuaVaUAjUwUMLpljPCzcwWvUmE1j0FjdLiPHwa5xboo6QK9hMo/Ou7twRhUSQzaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ms87Su6y; arc=none smtp.client-ip=209.85.221.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rtok5Xdy"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee6260fc7so3103f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:41:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ms87Su6y"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-391295490c8so2402f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:41:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746038504; x=1746643304; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fJ/0KoQAPu739/8iZCKca6ZuzZ5mrABiyOeLc0Hxuuc=;
-        b=rtok5Xdy4NlD+hmStqFNI9nmsX6GtlWZSZz1pA7877GYrmmmnUvFWeEYuYBC7nM6HH
-         wT4lEOXu0S09Nje6sjdgk1EnLV5BV2c5zSUIFcadRbheb2GNR2U6tB7X0QAiZUQOkcWt
-         0O+7W5QnQ0BOy0VxAJm7s2U6SoKc3zutMWH3+irbVQ/ZvnN8iEIyZjBfnBeg5JNRsKt7
-         Jx33RhICP+WcFOP985wOzFaqKTkM0NKxrAQHI90xz7niYn9DxdAIgLN2R+yfHG/I+weS
-         kWBpuuEiBfPCzh7MF9pR6CqXh5xAdmEo0kYPdifAjlc4kNOgt3STumruvmqfLCkT2oxW
-         pYwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038504; x=1746643304;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1746038506; x=1746643306; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fJ/0KoQAPu739/8iZCKca6ZuzZ5mrABiyOeLc0Hxuuc=;
-        b=AsGLGbDf4HK/v+WM2qaMkCevy47vlSTC6VmDC7PiQSpIk/TmJ6t9h15Qkd2rhzKCi+
-         7ss+AqXrNzgCMXasYWbIqwdlfUsjl9MsrPxMJqnVtl9n2dWGt+YRB5n/PbmOZyIXSxzG
-         F9NbUqxMigLNl3B40YrNYM3xhwuKR0BBONZn4rJA7bmjEs+0p/1/3kgFqMh0jX7P2O+h
-         JFmR/JGKPBjVkTPcU1Jlm15ZPLE50YQvX1fbusHdpms4evlRogj/RfcRqyBqoMd/ypur
-         Trgd2LnT32gWoMzW1BPvTFvdruC2rjpnyjDV0gcANLjjSMBSj24G7wq2YngEWT0Sr3J8
-         yAaQ==
-X-Gm-Message-State: AOJu0YxIieCr3RqhWkTzcXlFOxq3dLusq+E/mi+6HbrpMpLPSbxVZ3XV
-	joQlmkRAdrqpbDdoWmZMj88OmvZenvfPBvu7x5dL+NVhEqU1En6pabGMOa3HIPA=
-X-Gm-Gg: ASbGnctCf0OAj+S4vQpXAtPVWVuHqez1Rprx64ryIuC+Wq8t34PsSa4q3xjXbfPrIUs
-	JES2nXjMlnWN5PiUOSpPyFPmI4SVpkqTZZnS90PGEQIhzcI7N8p2B2TZeQvkINpr+MZkUYmp4EU
-	8dUbkXbuKvHFe/ZZK+trS9pvG4V9YAM5wOeyo+nrPGUPT+ehJ+RBpwkdAE0judCFKGeOsyzrr5B
-	EvfXIsxlRPwJ5T3IXHcebir/Oo0Ew+jUQA8Zylsx/lwyDReQ4ROzrpasjgg+KgPhRKfrLd9xMI3
-	FKTjammhndinEoprCvsmDK1A0GqTa8tyawAEJrxl3wakfmwOkqHbTRG/3HEpOzSbmOUT+A==
-X-Google-Smtp-Source: AGHT+IEshZk8PLHeNRJJzRxLpXBE4APsuyYljUVZ9lTsie9TDceUQEYK2pTVak2xdvxY2zDgOgI0gw==
-X-Received: by 2002:a5d:5989:0:b0:38f:2ad4:6b1b with SMTP id ffacd0b85a97d-3a091d667a2mr481452f8f.13.1746038504549;
-        Wed, 30 Apr 2025 11:41:44 -0700 (PDT)
+        bh=OFu0tYebHc+au7S9kqolNvPBWjNBLFeGMoDZEf6/GeQ=;
+        b=ms87Su6yheoZxEmGJUJPtjX2tDj6bIGufcC7e1Er6Q2Ppc8rRz46j63SxGH2JBH4XT
+         UMbRGhgQewNALSqaLeHczKMs/5NG5fKGoMpBZKiEiOZE43Idmnz2r3IJPWI/b9I9Lgez
+         OjokhQfViLLsYH0L3m+4J6xaDnqDlJBDR4T/l+UPVvlBtJWNfNcdkiKLh60UCJtYkEGM
+         6vLXW1UN0jgSkHQOyEnPN2r6UmgR8xXwtk8govl4iN9uAuukCvhZ6SgacWJZMC45MPv6
+         gO5jacU7fcctnRqAgBEq1ES+2WZI8RMpILsJ2YyV0MXL0YM+sdkN4LFLuhPfTc0gJizC
+         KR0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746038506; x=1746643306;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OFu0tYebHc+au7S9kqolNvPBWjNBLFeGMoDZEf6/GeQ=;
+        b=Q6WMU+temDQqQd6zIayrzK5yT7msi66LuPOoPUH5t591rRGuYXwV6XEXNhXkFlXkxw
+         zrdjJIQvl3RzDxXU6J3qoAiKa78f8KGr2a1C33ZNYiYJe0HwtJ/OQkD1Zy6ajzO+/bZC
+         LD9lmbWhOeCiLxjxUt5CyUtS1KcfCup09Tfpmc1T2k6xrv0jK57dfEGFdkeb919IXp+f
+         fOmpFsMZTygr3WPRBnwFvItnqa3XKHNzystBUnfF+WbuaQH2hdAODoUq8Y9Le0beJFv9
+         b7WpAQcI1nUJXkyQu9tctTilH57x3Y2ALiiIMhvllSXzEt2/HAcxWLc1uK/uKRX/M9+4
+         SClA==
+X-Gm-Message-State: AOJu0YxfovVDkKXRvlPCqy118ThzRiJ67y4BIkqZlFysGN0opfm264Yl
+	JLGsLp/q+cDqUYyCcIaRcwix6VP22OYcef+tvR4s2GY2GjW1PjYzaGN5sfjs3exfjJ8qK1QQC05
+	x
+X-Gm-Gg: ASbGnct27zdSvKEeRv735kwYtlb9k4mHkXxOLu1YlinZMRrc5nVjNXo4oBlME+ApzcG
+	xt4LIzK9duWpT8TaJLSNoDAWiK7akLKmik6PyGsUXp4MM6Yn+5mjPJFmFG+J7SuRIcBtBMKExQk
+	DpHNoAQAVpCOYOh8xmmOd6duiPFwMwgdWxqEUFqPEXlP3AWZn2tXMxKIYx4NxCMqO/jf3f1YITQ
+	KAnOPPGVFO8qD37x65IoYqPJKGIGsfX+6LE0W68FrOTiZePwlzEYS3I8PtAoCNdcyLHsgzQUc11
+	TaVciaMq5HjlOIhTgNRMQtxbyUJL7mL37QoiqdsEPXSXumLQsANd/7gCHg0=
+X-Google-Smtp-Source: AGHT+IG9Bkpd+/kScOVF5dFeiD3otJtNzV7g+3RXwicanWursFKZHiY50X4F/fbMCX07j/+H2U+zfQ==
+X-Received: by 2002:adf:a11e:0:b0:39f:733:18fb with SMTP id ffacd0b85a97d-3a09007d82emr1016928f8f.11.1746038505850;
+        Wed, 30 Apr 2025 11:41:45 -0700 (PDT)
 Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46257sm17728991f8f.77.2025.04.30.11.41.43
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46257sm17728991f8f.77.2025.04.30.11.41.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:41:43 -0700 (PDT)
+        Wed, 30 Apr 2025 11:41:45 -0700 (PDT)
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v2 0/6] cdx: Minor cleanups
-Date: Wed, 30 Apr 2025 20:41:28 +0200
-Message-Id: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
+Date: Wed, 30 Apr 2025 20:41:29 +0200
+Subject: [PATCH v2 1/6] cdx: Enable compile testing
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,63 +68,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANluEmgC/23MQQrDIBCF4auEWdcysbpoV71HyWLQMRkIWrRIQ
- vDutVl3+T8e3wGFs3CBx3BA5ipFUuyhLwO4heLMSnxv0KgtGm2V85tyK1NUFAzdw+jQ2Rv0/zt
- zkO20XlPvRcon5f2k6/hb/yl1VKiYNKL23iD65yqRcrqmPMPUWvsCW1EZSKMAAAA=
-X-Change-ID: 20250425-cdx-clean-af4a9f1c0c53
+Message-Id: <20250430-cdx-clean-v2-1-7dbfda9364a9@linaro.org>
+References: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
+In-Reply-To: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
 To: Nipun Gupta <nipun.gupta@amd.com>, 
  Nikhil Agarwal <nikhil.agarwal@amd.com>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1090;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1370;
  i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=J0PH2ZcN2ZDgavrC0QE37WjFKhuQ/AIOsrgiuTFEZ/w=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoEm7c46mSYwlJGevjpOKlMhDtEvMwHN8nWGibZ
- D7mjOWwp5OJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBJu3AAKCRDBN2bmhouD
- 1zwPD/97kC65d/CKT65taKsKjrpPbbV29/iIJ4lWT6Xt/VmWJ82MQ/SPTdFMMEgZg7SMVBQI7h8
- E2BbHK1c5AHGNhD40Uy3nSjBJdVhf6CQSdrAJHsacTn6DQAto1JDEwWaJT3J3Ge76mwuTmlfKi9
- Js4yQBGgXNzIg53u8sOdppNVEb52VJUOa7A2RFAe/Lz9nYFozAb4NiuBiWbBn9QZzHZZo/vToai
- zd9FqZ1pZS/XxdsQB/ItQp/sseJepiOHhdkm0vO6X/MEEs7QcHbzyg3txTL9sl1qvo1dRHXM3JT
- Gxex7ZN2CjJcj4TQqT4KxT+Y76IVVXvDWe8uB8GyE5i/Ad/KXRjw6orw8J2T3bPfMqQKrghmFcF
- uFx+cwHluoGi6n9KLUMDSLqhHWipdjhlOtKULvj/9iKYt4IX5tcNtFpLX3BJlumb/CUmO6UgpqT
- RqKaNNWhF3LYmbItNaJzTicKOslf5Re6Q1XNolKYvdcnRu1qC5zMidOrfGFG3r0ueZZFGC/UF9J
- hboGTf1KvtSMCn1wGbzDZyP42NdKmxO/b6MSmtriTNycTqpgBU+7pZGwczm+czoviwTFyNlkmmN
- awGNO/vdHUhmRIaXrzEXFt5zxWpYFSLZ7BcDlg12vx3A3lxiI3m7UDkxeCKxVVLuSeFheRL+3oY
- M2r9mcJomorkHLQ==
+ bh=VdScxxYwI0VoeKxBPwPGQrsVDAAxzP9pATm4OBb3UnM=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoEm7gl6xZOTMTHozha9YoWVRCc1LKIhfYN9Etx
+ Y5oi3iHsl+JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBJu4AAKCRDBN2bmhouD
+ 12XMD/95JkTwMcRRfR9KmUgdYnERT9ngt8Hn65qbYGRiOGR/Ewhj8Sk6oRJ6JjyroYNWGGKkCxC
+ zARjCi0g5UcP4k47NSfk6633Ou7mMaaqYGSS4M+zCWTVcrlAbaLsOkIPrmlTxSk5aRxCWjqkz8Y
+ bw6fQ9xX/ZQIm1bjNL3GHcc+0UcstRAd9y4L1KUz8KrGCoX/CBFQH/qHF/jiTrpPeVZTPD/QH8B
+ oFPRdgA2iN5+yLxzBfEjLpOvZhc+yElCaH/2A+qO5i4OTkmgOdT8dlrgyrNErN0N7iaD0wrt5sA
+ +W2BS5K8S4EEDpLOXPbS10eN2um0RiLmAwSChuxi8LPahyUx81zbf5uXHxBHcOYiuk9YjCCr15d
+ Ju3BN15cbwnQmQDxj5mpsNjNib6B6oazcjKUDmTmgJxTaS0DMxo0jzqw06036ti4zyWp4xPbjza
+ 0t/tP/u6Jkz1W0VDtArPFtwXeehu5Opfj7M5xz2Y8fPPJdlbx/trm0OcrkcE7/BRMjGCFzdD9kx
+ me+oaCRUCfvVqitfIQggl0RnWo7RTcH2NEeaEqTtrT27qATY5xK3ARtom0dNusH/hxkWwPyFjTw
+ wCj5jRN+oIj969T7QXYfbFKV5JFz9aXwEo8ggd8ckG8ZpYkNKrqcXr6k0dEaHyJbTgF7eOHGQeX
+ bpLHGg6vSQgCtxw==
 X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
  fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-Changes in v2:
-- Patch #1: Add HAS_DMA dependency
-- Patch #5: New patch, split from previous
-- Link to v1: https://lore.kernel.org/r/20250425-cdx-clean-v1-0-ea2002dd400d@linaro.org
+There is no code limited to ARM64 or OF/Devicetree in the CDX bus
+driver, so CDX_BUS can be compile tested on all platforms.
+CDX_CONTROLLER on the other hand selects REMOTEPROC which depends on
+HAS_DMA, so add that dependency for compile testing.
 
-Few simple cleanups for CDX drivers.
-
-Best regards,
-Krzysztof
-
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
-Krzysztof Kozlowski (6):
-      cdx: Enable compile testing
-      cdx: controller: Simplify with dev_err_probe()
-      cdx: controller: Drop useless probe success message
-      cdx: controller: Do not open-code module_platform_driver()
-      cdx: controller: Drop unneeded driver.pm NULL assignment
-      cdx: MAINTAINERS: Explicitly mention Greg who handles patches
+ drivers/cdx/Kconfig            | 2 +-
+ drivers/cdx/controller/Kconfig | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
- MAINTAINERS                             |  1 +
- drivers/cdx/Kconfig                     |  2 +-
- drivers/cdx/controller/Kconfig          |  1 +
- drivers/cdx/controller/cdx_controller.c | 27 +++------------------------
- 4 files changed, 6 insertions(+), 25 deletions(-)
----
-base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
-change-id: 20250425-cdx-clean-af4a9f1c0c53
+diff --git a/drivers/cdx/Kconfig b/drivers/cdx/Kconfig
+index a08958485e316a1a3e00390d90c7a9eaa518d0e8..1f1e360507d7d5c33671c601534e82f2d4de0424 100644
+--- a/drivers/cdx/Kconfig
++++ b/drivers/cdx/Kconfig
+@@ -7,7 +7,7 @@
+ 
+ config CDX_BUS
+ 	bool "CDX Bus driver"
+-	depends on OF && ARM64
++	depends on OF && ARM64 || COMPILE_TEST
+ 	help
+ 	  Driver to enable Composable DMA Transfer(CDX) Bus. CDX bus
+ 	  exposes Fabric devices which uses composable DMA IP to the
+diff --git a/drivers/cdx/controller/Kconfig b/drivers/cdx/controller/Kconfig
+index f8e729761aeed03302d6c625b74f5e54bfd1bcbf..0641a4c21e660833efd9ac05e9431b58aa10ec03 100644
+--- a/drivers/cdx/controller/Kconfig
++++ b/drivers/cdx/controller/Kconfig
+@@ -9,6 +9,7 @@ if CDX_BUS
+ 
+ config CDX_CONTROLLER
+ 	tristate "CDX bus controller"
++	depends on HAS_DMA
+ 	select GENERIC_MSI_IRQ
+ 	select REMOTEPROC
+ 	select RPMSG
 
-Best regards,
 -- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+2.45.2
 
