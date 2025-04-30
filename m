@@ -1,276 +1,301 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F746205AD7;
-	Wed, 30 Apr 2025 07:22:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C88B1F03FB;
+	Wed, 30 Apr 2025 07:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745997745; cv=none; b=miIv9+wCkv5iaBW/iefAzgSZ6mZmiMuaVXN3BdU8t7T5sAU3uFa956U+Id7UakKexpRPxZKzWDjZARAPs0bLLUGvM0F4CMPzVp3bVRcwW2eq0rKjeOC2BaQq1eyKES7fZ32dprdNY9jBqnY61bCuxuN6gjeZT+oCIUshokDcnbw=
+	t=1745997748; cv=none; b=IIEPohCSPwK1S7nTFzFnuW4PD7EKWlQy5dsKLet1wlrhW6QpOaJbEaPZ/CHFwmzUHmmZdMkdAbyk86X0o7/VBvXXe2f6n21b1j0tCD8d5oNYWQOcHhIRLty2+eeczAHSk8y/GEwjY+iTvTkt7dM5sCyzS28wOUHHVx83Qf/t9Ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745997745; c=relaxed/simple;
-	bh=5bGrN5HsQmazWaJ64ju5zln7WV7ytklEm827xVVHrWk=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=UuJSjGXzHaDtKiFVbwJotnAcuoF8xRtzLYzw42pIUbSTMJpjP2lKOzIDbxtA99RGoSO6rBYKE7S69DgIWGK767s6TjdY4i6zyU9TSCi+t0AEuK3qP4mNPDSTP6CMZ4hemdJBRnNMGI0/Wa//gVNzS6A8OUdyCKcRLgn2F6lhT8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Z+yHbOSx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t3teywSg; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1745997748; c=relaxed/simple;
+	bh=ED5M+XMr6sd1ffXjvdC3S9QDusOPxQT1RfvD+UzN0oQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=TXqcmmuF31d/tViE/ZYxiKVXi6SaHX+fw4X9/I5mIYdbWim8G3GNQzb7s1Hw+imi7RmWI1ronvUwwdboIV40r7hLyx79H0CE3poMPfVWDMgCKIxyMc7+pzjZVVxu3jB1O5tSG+41YlE2LJlamrul8flPIKzz0IUIjDeKLOCulJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=mQeQOqvm; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Z+yHbOSx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t3teywSg"
-Date: Wed, 30 Apr 2025 07:22:14 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1745997741;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NoEyHd0ojtCg6ptfiLNPIr4qqZcBeG7fwTAYVLhorV0=;
-	b=Z+yHbOSxvJD3BNsT89IDJKW3AuABDXNfzdmvahbz1EIyBUxtpfS0aVn37Au1jBTD0bEO2E
-	/KNrduhOk0sI4pYkgK3ZUOsYwSfTZulPmxknEM1SlJ7AHhpGzhdoTZQYHHAbZwQ/7w9/62
-	NrASsFaBndzqSGWEGqAqVTwqFR0tNQ83HtW16jR5WfvUCWtQQn00ruj78My/fVg9dvJ4QV
-	wcw8gSTigRpnOyRggCFoRyX7u2/R72GJdf+hKDN03uAuIRFWc5A/R/nEiXzfS8frRtagEA
-	djGilC+J4fKr9Kq+nt06K2GLS7rqC+IaDpKuf9w+ntIMwHi1BHtKYbI1hiqZ+g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1745997741;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NoEyHd0ojtCg6ptfiLNPIr4qqZcBeG7fwTAYVLhorV0=;
-	b=t3teywSgO3SQTmp89ruO6cyzoOnj4HXeJa8DZqg6k2+n6QsaqIgmigWu6l4/jpavuPr0w1
-	JZD2or67n+W/y1CA==
-From: "tip-bot2 for Su Hui" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: timers/core] alarmtimer: Switch spin_{lock,unlock}_irqsave() to guards
-Cc: Su Hui <suhui@nfschina.com>, Thomas Gleixner <tglx@linutronix.de>,
- John Stultz <jstultz@google.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250430032734.2079290-4-suhui@nfschina.com>
-References: <20250430032734.2079290-4-suhui@nfschina.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mQeQOqvm"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLaVQ3012269;
+	Wed, 30 Apr 2025 07:22:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	cmHbdxz2WTDbW7aj8JbortVTW8La21RceHQfeYKZQZI=; b=mQeQOqvmezMI7H46
+	hODWxKF/GTjlwE+sIf0R1AGKGCndCzLAIe8qRv7cHM2g7WZzdAfy2q/DM5KsnIk2
+	4ekulLiXOL52XpviNIoD8NuRLtEd7/MumEDoyPzYk0DcKQeLQHM1xX6PdrBqbhvA
+	LE29hKGATnIdQGl6k1q/Z9VwjCgoO6UWIkIiBghwX1lMpD69yZzG2pELhiq0PjkP
+	TKV9RvmZWGhVH6IBtWbEGS97onvUhcEod0fJeRqyIs6TapJfkYjGxslQOKpbkE4u
+	KB1CI/oVqbayjIDX9ZXsMjyn7WinaJrOefcK7bf87kdcTKc1yIYzIZrXcQrzAaeC
+	SZbLtA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u3s6bw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 07:22:19 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U7MIil000538
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 07:22:18 GMT
+Received: from [10.50.41.127] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
+ 2025 00:22:09 -0700
+Message-ID: <50f12fea-fbc9-8880-5e34-3d3a49d9ca65@quicinc.com>
+Date: Wed, 30 Apr 2025 12:52:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174599773468.22196.17349676424536470133.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer if
+ not dequeued
+Content-Language: en-US
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Nicolas Dufresne
+	<nicolas.dufresne@collabora.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Stefan Schmidt
+	<stefan.schmidt@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
+ <dc9b20aecc8740896b2b3e7352b8e0d73d43fed2.camel@collabora.com>
+ <32379a29-ab58-95b3-77f9-d1ada61e5359@quicinc.com>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <32379a29-ab58-95b3-77f9-d1ada61e5359@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Bv6dwZX5 c=1 sm=1 tr=0 ts=6811cfab cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=5XAp0Sb-NG9feswOWF0A:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: oCPAJPRVQu2ogoIyRBQ57nCYQG8G_XyV
+X-Proofpoint-ORIG-GUID: oCPAJPRVQu2ogoIyRBQ57nCYQG8G_XyV
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA1MCBTYWx0ZWRfX04guIh6fDqeV dzeTuUbYm2X0O1hCVbXdxTQemnE+sJCYneLW+FsrI3Rv2rtId/SX6tyQSI7WDfUkpryQrEg39ML pr34A7uRlJJELjicGiyg/QWBPaFzHrJO+sRH0EDc7v5u9BDiNkBkAFyFrF2Cz83KsMIFx5Zoe/T
+ 9NB05cxqow2Abm7lH0+VdkUjiNP0FXsjVFMZ644nQXd+km0fuIw8Zg0GoKlL3IZnZrInCTIXiSy 6+h0qTjqHIo6gdWLgF9U57bt554tPXnuIpaJzUbVQ1f60vfx1kULXwsaLfTE8n0e11H8HqUWwub 9RDIkBksSdaWCW1RE4hzqxHOoTzpSvoEWZrdqEOGVQTBcTuKT/xXHdfxJphIkQMVMnTTK0+RyID
+ 7LUc3RByEV4YwI2q6DxdFPU5/BZ9Ghz3Le16PtmYwCoJ2qxSDvUF4k7ZR3OKNvqlt5Euo/tx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300050
 
-The following commit has been merged into the timers/core branch of tip:
 
-Commit-ID:     2117c1d503b4e0fd0c6776ae9fe4df2260643eae
-Gitweb:        https://git.kernel.org/tip/2117c1d503b4e0fd0c6776ae9fe4df2260643eae
-Author:        Su Hui <suhui@nfschina.com>
-AuthorDate:    Wed, 30 Apr 2025 11:27:34 +08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 30 Apr 2025 09:06:23 +02:00
 
-alarmtimer: Switch spin_{lock,unlock}_irqsave() to guards
+On 4/30/2025 11:08 AM, Dikshita Agarwal wrote:
+> 
+> 
+> On 4/29/2025 6:17 PM, Nicolas Dufresne wrote:
+>> Not mine to review, but wanted to highlight some best practices,
+>>
+>> comment below...
+>>
+>> Le lundi 28 avril 2025 à 14:58 +0530, Dikshita Agarwal a écrit :
+>>> Firmware might hold the DPB buffers for reference in case of sequence
+>>> change, so skip destroying buffers for which QUEUED flag is not removed.
+>>> Also, make sure that all buffers are released during streamoff.
+>>>
+>>> Cc: stable@vger.kernel.org
+>>> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+>>> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+>>> ---
+>>>  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
+>>>  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
+>>>  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
+>>>  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
+>>>  4 files changed, 44 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+>>> index e5c5a564fcb8..606d76b10be2 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+>>> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>>> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
+>>
+>> Its always tempting to just glue a boolean at the end of a parameter
+>> list. But this has huge downside in code readability, see below...
+>>
+>>>  {
+>>>  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>>>  	struct iris_buffer *buf, *next;
+>>> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>>>  	for (i = 0; i < len; i++) {
+>>>  		buffers = &inst->buffers[internal_buf_type[i]];
+>>>  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
+>>> +			/*
+>>> +			 * during stream on, skip destroying internal(DPB) buffer
+>>> +			 * if firmware did not return it.
+>>> +			 * during close, destroy all buffers irrespectively.
+>>> +			 */
+>>> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
+>>> +				continue;
+>>> +
+>>>  			ret = iris_destroy_internal_buffer(inst, buf);
+>>>  			if (ret)
+>>>  				return ret;
+>>> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
+>>> +{
+>>> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>>> +	struct iris_buffer *buf, *next;
+>>> +	struct iris_buffers *buffers;
+>>> +	const u32 *internal_buf_type;
+>>> +	u32 internal_buffer_count, i;
+>>> +	u32 count = 0;
+>>> +
+>>> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
+>>> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
+>>> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
+>>> +	} else {
+>>> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
+>>> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
+>>> +	}
+>>> +
+>>> +	for (i = 0; i < internal_buffer_count; i++) {
+>>> +		buffers = &inst->buffers[internal_buf_type[i]];
+>>> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
+>>> +			count++;
+>>> +		if (count)
+>>> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
+>>> +				count, internal_buf_type[i]);
+>>> +	}
+>>> +}
+>>> +
+>>>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
+>>>  {
+>>>  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+>>> index c36b6347b077..03a32b91cf21 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
+>>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+>>> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+>>>  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+>>>  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
+>>>  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+>>> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
+>>> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
+>>> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
+>>>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
+>>>  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
+>>>  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+>>> index 4143acedfc57..2c1a7162d2da 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+>>> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
+>>>  
+>>>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>>>  
+>>> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>>> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
+>>>  
+>>>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>>  
+>>> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
+>>
+>> If I was reviewing some changes (or even debugging) this specific C
+>> file, I would not be able to understanding what this "false" means. I
+>> would have to spend extra time, opening the declaration, going back and
+>> forth, and breaking the flow.
+>>
+>> An alternative approach is to keep the boolean parameter in a static
+>> function (c local), and then add two function wrappers that have
+>> explicit names.
+>>
+> Sure, I can implement the alternative approach, if recommended.
+> 
+> If I understand correctly, you are suggesting to have one static helper and
+> two wrappers around this. like:
+> 
+> static int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane,
+> bool force)
+> {
+> 	...
+> 	list_for_each_entry_safe(buf, next, &buffers->list, list) {
+>        		if (!force && buf->attr & BUF_ATTR_QUEUED)
+> 			continue;
+> 		...
+> 	}
+> 	...
+> }
+> 
+> //called during stream on
+> int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane)
+Name this iris_force_destroy...That way, it is easy for caller to understand
+without the need to interpret the boolean.
 
-Using guard/scoped_guard() to simplify code. Using guard() to remove
-'goto unlock' label is neater especially.
-
-[ tglx: Brought back the scoped_guard()'s which were dropped in v2 and
-  	simplified alarmtimer_rtc_add_device() ]
-
-Signed-off-by: Su Hui <suhui@nfschina.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/all/20250430032734.2079290-4-suhui@nfschina.com
-
----
- kernel/time/alarmtimer.c | 78 +++++++++++++++------------------------
- 1 file changed, 30 insertions(+), 48 deletions(-)
-
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 621d396..577f0e6 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -70,12 +70,10 @@ static DEFINE_SPINLOCK(rtcdev_lock);
-  */
- struct rtc_device *alarmtimer_get_rtcdev(void)
- {
--	unsigned long flags;
- 	struct rtc_device *ret;
- 
--	spin_lock_irqsave(&rtcdev_lock, flags);
-+	guard(spinlock_irqsave)(&rtcdev_lock);
- 	ret = rtcdev;
--	spin_unlock_irqrestore(&rtcdev_lock, flags);
- 
- 	return ret;
- }
-@@ -83,7 +81,6 @@ EXPORT_SYMBOL_GPL(alarmtimer_get_rtcdev);
- 
- static int alarmtimer_rtc_add_device(struct device *dev)
- {
--	unsigned long flags;
- 	struct rtc_device *rtc = to_rtc_device(dev);
- 	struct platform_device *pdev;
- 	int ret = 0;
-@@ -101,25 +98,18 @@ static int alarmtimer_rtc_add_device(struct device *dev)
- 	if (!IS_ERR(pdev))
- 		device_init_wakeup(&pdev->dev, true);
- 
--	spin_lock_irqsave(&rtcdev_lock, flags);
--	if (!IS_ERR(pdev) && !rtcdev) {
--		if (!try_module_get(rtc->owner)) {
-+	scoped_guard(spinlock_irqsave, &rtcdev_lock) {
-+		if (!IS_ERR(pdev) && !rtcdev && try_module_get(rtc->owner)) {
-+			rtcdev = rtc;
-+			/* hold a reference so it doesn't go away */
-+			get_device(dev);
-+			pdev = NULL;
-+		} else {
- 			ret = -1;
--			goto unlock;
- 		}
--
--		rtcdev = rtc;
--		/* hold a reference so it doesn't go away */
--		get_device(dev);
--		pdev = NULL;
--	} else {
--		ret = -1;
- 	}
--unlock:
--	spin_unlock_irqrestore(&rtcdev_lock, flags);
- 
- 	platform_device_unregister(pdev);
--
- 	return ret;
- }
- 
-@@ -198,7 +188,7 @@ static enum hrtimer_restart alarmtimer_fired(struct hrtimer *timer)
- 	struct alarm *alarm = container_of(timer, struct alarm, timer);
- 	struct alarm_base *base = &alarm_bases[alarm->type];
- 
--	scoped_guard (spinlock_irqsave, &base->lock)
-+	scoped_guard(spinlock_irqsave, &base->lock)
- 		alarmtimer_dequeue(base, alarm);
- 
- 	if (alarm->function)
-@@ -228,17 +218,16 @@ EXPORT_SYMBOL_GPL(alarm_expires_remaining);
- static int alarmtimer_suspend(struct device *dev)
- {
- 	ktime_t min, now, expires;
--	int i, ret, type;
- 	struct rtc_device *rtc;
--	unsigned long flags;
- 	struct rtc_time tm;
-+	int i, ret, type;
- 
--	spin_lock_irqsave(&freezer_delta_lock, flags);
--	min = freezer_delta;
--	expires = freezer_expires;
--	type = freezer_alarmtype;
--	freezer_delta = 0;
--	spin_unlock_irqrestore(&freezer_delta_lock, flags);
-+	scoped_guard(spinlock_irqsave, &freezer_delta_lock) {
-+		min = freezer_delta;
-+		expires = freezer_expires;
-+		type = freezer_alarmtype;
-+		freezer_delta = 0;
-+	}
- 
- 	rtc = alarmtimer_get_rtcdev();
- 	/* If we have no rtcdev, just return */
-@@ -251,9 +240,8 @@ static int alarmtimer_suspend(struct device *dev)
- 		struct timerqueue_node *next;
- 		ktime_t delta;
- 
--		spin_lock_irqsave(&base->lock, flags);
--		next = timerqueue_getnext(&base->timerqueue);
--		spin_unlock_irqrestore(&base->lock, flags);
-+		scoped_guard(spinlock_irqsave, &base->lock)
-+			next = timerqueue_getnext(&base->timerqueue);
- 		if (!next)
- 			continue;
- 		delta = ktime_sub(next->expires, base->get_ktime());
-@@ -352,13 +340,12 @@ EXPORT_SYMBOL_GPL(alarm_init);
- void alarm_start(struct alarm *alarm, ktime_t start)
- {
- 	struct alarm_base *base = &alarm_bases[alarm->type];
--	unsigned long flags;
- 
--	spin_lock_irqsave(&base->lock, flags);
--	alarm->node.expires = start;
--	alarmtimer_enqueue(base, alarm);
--	hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
--	spin_unlock_irqrestore(&base->lock, flags);
-+	scoped_guard(spinlock_irqsave, &base->lock) {
-+		alarm->node.expires = start;
-+		alarmtimer_enqueue(base, alarm);
-+		hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_ABS);
-+	}
- 
- 	trace_alarmtimer_start(alarm, base->get_ktime());
- }
-@@ -381,13 +368,11 @@ EXPORT_SYMBOL_GPL(alarm_start_relative);
- void alarm_restart(struct alarm *alarm)
- {
- 	struct alarm_base *base = &alarm_bases[alarm->type];
--	unsigned long flags;
- 
--	spin_lock_irqsave(&base->lock, flags);
-+	guard(spinlock_irqsave)(&base->lock);
- 	hrtimer_set_expires(&alarm->timer, alarm->node.expires);
- 	hrtimer_restart(&alarm->timer);
- 	alarmtimer_enqueue(base, alarm);
--	spin_unlock_irqrestore(&base->lock, flags);
- }
- EXPORT_SYMBOL_GPL(alarm_restart);
- 
-@@ -401,14 +386,13 @@ EXPORT_SYMBOL_GPL(alarm_restart);
- int alarm_try_to_cancel(struct alarm *alarm)
- {
- 	struct alarm_base *base = &alarm_bases[alarm->type];
--	unsigned long flags;
- 	int ret;
- 
--	spin_lock_irqsave(&base->lock, flags);
--	ret = hrtimer_try_to_cancel(&alarm->timer);
--	if (ret >= 0)
--		alarmtimer_dequeue(base, alarm);
--	spin_unlock_irqrestore(&base->lock, flags);
-+	scoped_guard(spinlock_irqsave, &base->lock) {
-+		ret = hrtimer_try_to_cancel(&alarm->timer);
-+		if (ret >= 0)
-+			alarmtimer_dequeue(base, alarm);
-+	}
- 
- 	trace_alarmtimer_cancel(alarm, base->get_ktime());
- 	return ret;
-@@ -479,7 +463,6 @@ EXPORT_SYMBOL_GPL(alarm_forward_now);
- static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
- {
- 	struct alarm_base *base;
--	unsigned long flags;
- 	ktime_t delta;
- 
- 	switch(type) {
-@@ -498,13 +481,12 @@ static void alarmtimer_freezerset(ktime_t absexp, enum alarmtimer_type type)
- 
- 	delta = ktime_sub(absexp, base->get_ktime());
- 
--	spin_lock_irqsave(&freezer_delta_lock, flags);
-+	guard(spinlock_irqsave)(&freezer_delta_lock);
- 	if (!freezer_delta || (delta < freezer_delta)) {
- 		freezer_delta = delta;
- 		freezer_expires = absexp;
- 		freezer_alarmtype = type;
- 	}
--	spin_unlock_irqrestore(&freezer_delta_lock, flags);
- }
- 
- /**
+Regards,
+Vikash
+> {
+> 	return iris_destroy_internal_buffers(inst, plane, false)
+> }
+> 
+> //called during close
+> int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane)
+> {
+> 	return iris_destroy_internal_buffers(inst, plane, true)
+> }
+> 
+> Thanks,
+> Dikshita
+>> regards,
+>> Nicolas
+>>
+>>>  	if (ret)
+>>>  		return ret;
+>>>  
+>>> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+>>> index ca0f4e310f77..56531a7f0dfe 100644
+>>> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
+>>> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+>>> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
+>>>  	iris_session_close(inst);
+>>>  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
+>>>  	iris_v4l2_fh_deinit(inst);
+>>> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>>> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
+>>> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
+>>> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>>> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>>  	iris_remove_session(inst);
+>>>  	mutex_unlock(&inst->lock);
+>>>  	mutex_destroy(&inst->ctx_q_lock);
+>>
