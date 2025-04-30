@@ -1,99 +1,161 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6749235041
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C8D2DC789
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:25:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012268; cv=none; b=WAT4Q9a1SVyxwshUKJFbzpAQG6yDZ2IFoZIwyih0f4a+A4cm+xX8jY6rCOh5Xp4vVK+gQP7CaibUvBXtKu/h3FMBnD9CTJsRDNEWze6b2QBL9txqBa3HDwVXAVC45S3VxIdyr6Ay2Lu9kDvUKBcx3zIbM5awwB4yenl4gnum/Ds=
+	t=1746012331; cv=none; b=djtonVQaLHhHSgqpNFaa+4AspDLjdh9EA1XXdWi4cYGlLKxv4ObFXFOLZywAk7sAPPU18DEnbCPOwe+d7vMnUcB5yK9p1Gg50j/QrDSt1xTygBU26XwRPaZbv1iJ5sUKHTHTrc6eF/oHOgttt3kcL0pY6DIYkk3x0mOiBLs8ve8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012268; c=relaxed/simple;
-	bh=bZ9kSFAVhqilvJIaWIIW4kFg/TXFgNtCq3Cxyroer+A=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rivhpsk9amtge2/XwNa5tifE/g0y1Z1w5Qpwo8l2dH1xgOLC/LoPzDzgEpV+tZKnV+bYt49yGunPPYdVbiQUkuLC6Ny+Mwo1uLDW1Xdbgy5huiCkNCZjZItigtekge5kqqIt1dmpF2p5C42NNhBvQhDdLaQXI2eXTabKxS00fd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BS5reHCn; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746012331; c=relaxed/simple;
+	bh=JnmBo6iTDvcJ3v3cqSYz+bAFnCuB7hiplr07wZ4j0Rg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HcQt5H9zhrhrZsxBiyjyEeL1l9w7Y7hoKFQIRpEGlZtwxLjsGnzdyb2iDgy4Sy1ttBg5ChV+ZWiOu2FVU0WxG6lvbV5Vj8aq2C9yQWV50Og2m16w6WWYvqwZqSeHp9wG2YsDjk9vxe9plyBhcIYwf1ND7xos9V52LLbaLfgm4bc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aBtf3gwx; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BS5reHCn"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so53177055e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:24:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746012265; x=1746617065; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iGAQKQ/aFDiQw4O9FsIPSw4ATD056ucQ6toOWszUxRs=;
-        b=BS5reHCnuqhD2WfC50evTyC4i8EXWu+HzQaTrTkW0VoNU+vkGywDo4+ZAi4T2FHbt3
-         aQS7zprOi9BXIaI2YXDlppf967fDzqmsbHsi0iVsT2ZbG6vMamfulkur/PRcoEC28nZt
-         QJJeY1J+08vBFzne2HkcBtaXiADRBjIDJ1YrgZTq1ED9q+P0vKbhjisMvCUqB9E5gN8R
-         XdBUexfKY/RcGhl+dLlpbXwx0/dZc/zmQjUMnaRep9FvyexQfyxnnEpWMtY9kgig+Ck3
-         5gMdIURySife6yn9g3JfHJNO8vDaNwL44KTM37/lkfaP/0DcQDYjvb6y+vtl0FQILqNH
-         M74Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746012265; x=1746617065;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iGAQKQ/aFDiQw4O9FsIPSw4ATD056ucQ6toOWszUxRs=;
-        b=t+nFjuwclLbxAMrDjTc1tUUsZXLt+gD9WMyS1QBEr4Nyu2mIQ9qlGdy5tdxOb+ltt2
-         VnFECTO96C2+EK/IWx07qIkENRBuWdWY88nLCmd5JLNFDljXmpAJ5kpUwhEA78n1LUJK
-         8fjc7Tn2Ju8gMQcSmIE0H23DW83Z/fxVWEMTpC2hBoRXyYBo3Syf2qdoWC/1Vb/tRbEi
-         Xv6iTu4LRJBRF2XmfdSJ8BodlbVRJl/BHHGi8XOmUSFBsYfq5DxSn/drfg/+KTjna0l+
-         LVsghhDNm6AgIntOqL794QmfW6u/GhlFD96tUh0sAueShEmgkl1nkAng+rZnnQ59vU37
-         JDGw==
-X-Forwarded-Encrypted: i=1; AJvYcCVAkgK877xyM66u901L2bgLE1KcWOica4phfUDZQMTPfqxjkee+cXRmdgAwYpdM8BuMkFI38VTiRvJame0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzg/DGwgx7ofgZ2ksWM8+pVM6TKQkzDfTs+3EWyWs/Lr9sZeZXh
-	ui8lwZPMRphyQPbIy4STg33OSbtvgW6EJcm44SvnrhVc6qgZghZ/eYcmVY8rZc3U1NAzCJgY29F
-	xr5kkMlfC437eow==
-X-Google-Smtp-Source: AGHT+IFZHSdjjbSkHsQWG96/54Z9SMWj0Byc+ibvdGn0cXkoGVoUOZbYA7xLDo1rlzsYAJbkrQ/4Qd5WN7KPU6U=
-X-Received: from wmbes26.prod.google.com ([2002:a05:600c:811a:b0:43c:fd99:1b7e])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:500d:b0:43d:b32:40aa with SMTP id 5b1f17b1804b1-441b50210bemr2935555e9.3.1746012265231;
- Wed, 30 Apr 2025 04:24:25 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:24:23 +0000
-In-Reply-To: <2025042925-kindly-squash-fa6f@gregkh>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aBtf3gwx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746012329; x=1777548329;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=JnmBo6iTDvcJ3v3cqSYz+bAFnCuB7hiplr07wZ4j0Rg=;
+  b=aBtf3gwxa7n9Td61r3dzVGT2Y0Fzh1PuH+Nuy5+GgZUUvKegaAr6eQhv
+   9nC+rNV+60pizkiWA8m0B141kYYSKsecxAM6HKGHOyMYo2glabqmKKTsa
+   5ea6k908ouPadDtWcU4/7R+9BN7H0vFh9V1T41lo5NuPFv1SKLCZiIwg/
+   oUZFrDw7Uy3VaMCfSdCkeyjnrnm8ilvSjgxqmyFRg/a6wVJ9BEdZ5wLRV
+   Qw/ujhlPwQl9jLEr2ijcFGS81JEKceNNhgPYKVm3OgxA/qKmqpuF0Hiw9
+   5VU7COFLPNSMvX0IPj/DzIQTg2fDUFZQdyRumyRu+4/qw5irG9ZxqXoDC
+   A==;
+X-CSE-ConnectionGUID: L+Yky5eURxiApRkODHGmiA==
+X-CSE-MsgGUID: NI62GzTQSPuc7dpjm2t/NA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47799072"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="47799072"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:25:28 -0700
+X-CSE-ConnectionGUID: fO9WqGgIQWiM4RP/anI7PQ==
+X-CSE-MsgGUID: QTyvYmOeRMeqDaKbsXKhtg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="133994118"
+Received: from unknown (HELO localhost) ([10.237.66.160])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:25:25 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, Maarten Lankhorst
+ <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dave Stevenson
+ <dave.stevenson@raspberrypi.com>, =?utf-8?Q?Ma=C3=ADra?= Canal
+ <mcanal@igalia.com>,
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, Andrzej
+ Hajda <andrzej.hajda@intel.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, Laurent
+ Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman
+ <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Dmitry
+ Baryshkov <lumag@kernel.org>
+Subject: Re: [PATCH v5 06/11] drm/display: add CEC helpers code
+In-Reply-To: <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250407-drm-hdmi-connector-cec-v5-0-04809b10d206@oss.qualcomm.com>
+ <20250407-drm-hdmi-connector-cec-v5-6-04809b10d206@oss.qualcomm.com>
+Date: Wed, 30 Apr 2025 14:25:21 +0300
+Message-ID: <87plgtvqla.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
- <20250429-vec-methods-v4-7-dad4436ff82d@google.com> <2025042925-kindly-squash-fa6f@gregkh>
-Message-ID: <aBIIZ64_Wsk1unB2@google.com>
-Subject: Re: [PATCH v4 7/7] rust: alloc: add Vec::insert_within_capacity
-From: Alice Ryhl <aliceryhl@google.com>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain
 
-On Tue, Apr 29, 2025 at 05:30:06PM +0200, Greg KH wrote:
-> On Tue, Apr 29, 2025 at 02:44:27PM +0000, Alice Ryhl wrote:
-> > This adds a variant of Vec::insert that does not allocate memory. This
-> > makes it safe to use this function while holding a spinlock. Rust Binder
-> > uses it for the range allocator fast path.
-> > 
-> > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > ---
-> >  rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
-> > 
-> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > index 0682108951675cbee05faa130e5a9ce72fc343ba..998afdcde47bec94b2c9d990ba3afbb3488ea99e 100644
-> > --- a/rust/kernel/alloc/kvec.rs
-> > +++ b/rust/kernel/alloc/kvec.rs
-> > @@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
-> >          unsafe { self.inc_len(1) };
-> >      }
-> >  
-> > +    /// Inserts an element at the given index in the [`Vec`] instance.
-> > +    ///
-> > +    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
-> > +    /// of bounds.
-> 
-> Why panic and why not just return an error instead?
+On Mon, 07 Apr 2025, Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com> wrote:
+> diff --git a/include/drm/display/drm_hdmi_cec_helper.h b/include/drm/display/drm_hdmi_cec_helper.h
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..39bb6d12acb35f539a4a6cd1b61ce97bf4e063ab
+> --- /dev/null
+> +++ b/include/drm/display/drm_hdmi_cec_helper.h
+> @@ -0,0 +1,74 @@
+> +/* SPDX-License-Identifier: MIT */
+> +
+> +#ifndef DRM_DISPLAY_HDMI_CEC_HELPER
+> +#define DRM_DISPLAY_HDMI_CEC_HELPER
+> +
+> +#include <drm/drm_connector.h>
 
-It's for consistency with stdlib. Illegal use is panic, expected error
-conditions are errors.
+Is there anything in this file that requires that include?
 
-Alice
+> +
+> +#include <linux/types.h>
+> +
+> +struct drm_connector;
+> +
+> +struct cec_msg;
+> +struct device;
+> +
+> +struct drm_connector_hdmi_cec_funcs {
+> +	/**
+> +	 * @init: perform hardware-specific initialization before registering the CEC adapter
+> +	 */
+> +	int (*init)(struct drm_connector *connector);
+> +
+> +	/**
+> +	 * @uninit: perform hardware-specific teardown for the CEC adapter
+> +	 */
+> +	void (*uninit)(struct drm_connector *connector);
+> +
+> +	/**
+> +	 * @enable: enable or disable CEC adapter
+> +	 */
+> +	int (*enable)(struct drm_connector *connector, bool enable);
+> +
+> +	/**
+> +	 * @log_addr: set adapter's logical address, can be called multiple
+> +	 * times if adapter supports several LAs
+> +	 */
+> +	int (*log_addr)(struct drm_connector *connector, u8 logical_addr);
+> +
+> +	/**
+> +	 * @transmit: start transmission of the specified CEC message
+> +	 */
+> +	int (*transmit)(struct drm_connector *connector, u8 attempts,
+> +			u32 signal_free_time, struct cec_msg *msg);
+> +};
+> +
+> +int drm_connector_hdmi_cec_register(struct drm_connector *connector,
+> +				    const struct drm_connector_hdmi_cec_funcs *funcs,
+> +				    const char *name,
+> +				    u8 available_las,
+> +				    struct device *dev);
+> +
+> +void drm_connector_hdmi_cec_received_msg(struct drm_connector *connector,
+> +					 struct cec_msg *msg);
+> +
+> +void drm_connector_hdmi_cec_transmit_done(struct drm_connector *connector,
+> +					  u8 status,
+> +					  u8 arb_lost_cnt, u8 nack_cnt,
+> +					  u8 low_drive_cnt, u8 error_cnt);
+> +
+> +void drm_connector_hdmi_cec_transmit_attempt_done(struct drm_connector *connector,
+> +						  u8 status);
+> +
+> +#if IS_ENABLED(CONFIG_DRM_DISPLAY_HDMI_CEC_NOTIFIER_HELPER)
+> +int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
+> +					     const char *port_name,
+> +					     struct device *dev);
+> +#else
+> +static inline int drm_connector_hdmi_cec_notifier_register(struct drm_connector *connector,
+> +							   const char *port_name,
+> +							   struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +#endif
+> +
+> +#endif
+
+-- 
+Jani Nikula, Intel
