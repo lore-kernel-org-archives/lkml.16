@@ -1,255 +1,168 @@
-Received: from gmmr-4.centrum.cz (gmmr-4.centrum.cz [46.255.227.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BA22505BE;
-	Wed, 30 Apr 2025 11:54:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01672258CC3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014061; cv=none; b=E9pQket/MASXbtLb6M5kouKvG+S8W5HtHQfGywIE597EGQ295hkgaXsXWXcqVoRAnHMHhZskPC6qfVfYALJyJf1BmlbBMyeI5GGOsnutEYwAMe100vrexqPPSbzt9ybCcALBUKNDq9kqgcLTpY4kTHWLEoP7EX12OGY8SNqXPCo=
+	t=1746014122; cv=none; b=mTIIsqZ/AZU+ZmdOSW3lEtnnBe8Ak6KoOf1PeNCXWf1WawFNNXWF8Vnp+UGx3WZPji697PiOPiPDXRIRjMpPriccc9mDqmhBIqomSEoew9WYNzQgLe8R7XNq3UnBU4Gn0gtMON0yPK0qgG964ZDcqJEBOuuFzJV4b9jej8SxwrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014061; c=relaxed/simple;
-	bh=+VarrTygfhbwK4js+lP3jOaPp2vAB8U3GzifIiBuJ1Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DhCRAKYqQOOYizqqdhtjzPxteo+oUHzUl1qoGa+JWbqLuHite90S4mLqvwaBmlaLKDngbU7oOjGBJx1yS1h3oC6vI/KB3ovc1R49RvoHKV7On1fCvO+WvyuKrKgmkbVSTbY+RUmT7BdVyH+kL8gLf//k80F2tlO2eGL+1xm6ZSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RTB3JeXJ; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RTB3JeXJ; arc=none smtp.client-ip=46.255.227.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
+	s=arc-20240116; t=1746014122; c=relaxed/simple;
+	bh=cEafmn+CQvRdDtyXdQjjjTvqE/nBCdUlVRZYmX2VXog=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uXg4TqjA9HbWFcae+ygMNZQ+3G+sxewuvRrJ+cnN00a5kA2oqeMiDAswmdaQjHF+wlPKpQoSO4mgfjGuAgk5tCtLcV6UtxUbW8v0iXc25sJqJUpLM7TKK3RIjz/YaxlGSwHtKwgHJcEuld5RX2I3qc+YnRJSezOalA+w0YnqhIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YoJ+ndUL; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RTB3JeXJ";
-	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RTB3JeXJ"
-Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
-	by gmmr-4.centrum.cz (Postfix) with ESMTP id 799A070359;
-	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1746013929; bh=gRxAtLm/QO9fsYQPEJOWqw8SabNqdhfSGQ+yE3cIFwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RTB3JeXJA546P08RVVGQI0ARlHDGeoa1e/aQfRytY5xZ7Qhw1I3FTXp31PmlwLXn1
-	 DaDZysat3X4oJZ9DPKcacajfwznyyndLnJcDwk77p/h7xlRxuB2Hd3lT4Mtu2OU+P2
-	 pa+UzKyJXmeZ5vShPMXd4+TvzY2ZI0tlXTS0QGug=
-Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 75FA8389;
-	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
-	t=1746013929; bh=gRxAtLm/QO9fsYQPEJOWqw8SabNqdhfSGQ+yE3cIFwE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RTB3JeXJA546P08RVVGQI0ARlHDGeoa1e/aQfRytY5xZ7Qhw1I3FTXp31PmlwLXn1
-	 DaDZysat3X4oJZ9DPKcacajfwznyyndLnJcDwk77p/h7xlRxuB2Hd3lT4Mtu2OU+P2
-	 pa+UzKyJXmeZ5vShPMXd4+TvzY2ZI0tlXTS0QGug=
-Received: from antispam23.centrum.cz (antispam23.cent [10.30.208.23])
-	by gmmr-1.centrum.cz (Postfix) with ESMTP id 742931B4;
-	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
-X-CSE-ConnectionGUID: il8GC3snTl+fq4UfCzNHZw==
-X-CSE-MsgGUID: mUzgsuM3Rwutlk1vHl3xAQ==
-X-ThreatScanner-Verdict: Negative
-X-IPAS-Result: =?us-ascii?q?A2EPAACjDRJo/0vj/y5aGwEBAQEBAQEBBQEBARIBAQEDA?=
- =?us-ascii?q?wEBAUAJgTcFAQEBCwGDQIFkhFWRcQOKJIgFi2uBfg8BAQEBAQEBAQEJPQcEA?=
- =?us-ascii?q?QEDBDiESAKLNSc1CA4BAgQBAQEBAwIDAQEBAQEBAQEBDQEBBgEBAQEBAQYGA?=
- =?us-ascii?q?QKBHYU1Rg2CYgGBJIEmAQEBAQEBAQEBAQEBHQINfQEBAQECASMECwFGBQsLD?=
- =?us-ascii?q?QsCAiYCAlYGE4MCAYIvAQMOIxSxM3p/DSYaAmXccAJJBVVjgSQGgRsuAYhPA?=
- =?us-ascii?q?YVshHdCgg2EBzg+gkoXBBiFIYJpBIItgRaFeZgnUnscA1ksAVUTFwsHBYEmQ?=
- =?us-ascii?q?wOBDyNLBS4dghGFIYIRgVwDAyIBgxN0HIRphFAtT4MvggJoRCNAAwttPTcUG?=
- =?us-ascii?q?waWfINkBgFyHBwQFwllEy3FD4JDgxyBCYROh0uVSjOXcAOSZC6HZZBrG41rm?=
- =?us-ascii?q?y+BUBkBghMzIjCDIlIZl0O1eXYCAQEBNwIHAQoBAQMJgjuNfIFLAQE?=
-IronPort-PHdr: A9a23:PAfZtRKPXN13wwpQUdmcuCdgWUAX0o4c3iYr45Yqw4hDbr6kt8y7e
- hCEv7M11BSTA9uFsrptsKn/jePJYSQ4+5GPsXQPItRndiQuroE7uTJlK+O+TXPBEfjxciYhF
- 95DXlI2t1uyMExSBdqsLwaK+i764jEdAAjwOhRoLerpBIHSk9631+ev8JHPfglEnjWwbL1sI
- BmssQndqsYajZVjJ6swyxbFv2ZDdvhLy29vOV+ckBHw69uq8pV+6SpQofUh98BBUaX+Yas1S
- KFTASolPW4o+sDlrAHPQwSX6HQTS2kbjBVGDRXd4B71Qpn+vC36tvFg2CaBJs35Uao0WTW54
- Kh1ThLjlToKOCQ48GHTjcxwkb5brRe8rBFx34LYfIeYP+dlc6jDYd0VW3ZOXsdJVyxAHIy8a
- ZcPD/EcNupctoXxukcCoQe7CQSqGejhyCJHhmXu0KM00+ovDx/L0hEjEdIAv3vbsMj6OqgQX
- u2u0KnFzi/OY+9K1Tvh6oXFdA0qr/GWXbJ3dMrc0VMhGB3ZjlWKtIfqMCma1uITtmiY8uFtU
- vigi3Qkqw5rpzig3N0sh5LTiYIJzlDL7z55zJwpKty5UUN2Z8OvH5RMuS+ALYR2Xt8iTH9yu
- CY80rAItpG1cicJxZg5xBPSa/iKfoyG7x79VOufITN1iXJqdr6imxu/8kmtxOPzW8S13ltHo
- TZInsTQu30P1BHe6taKR/1g9Umv3jaP0hrc6uBCIU0slqrUNYQhwrgumZoXq0jDGTX2mErwg
- aSLdUsk4vCl5uvmb7n8uJORN495hhvgPqgwmMGzG+Y1PwgWU2SF5Oix2qfv8VPnTLlWlPE6j
- KbUvIzAKckfp6O0BRJe3Jw55BalFTim1cwVnXwALF1YZh2Kl5PpO1TSIPDgCve/nkisnC9rx
- //YOr3hBY3ALnfGkLv4ZrZ97lJcyBIuwdxC/Z5bFq8OIPTvWk/rqdzYCwU1PBC1wur/CdV90
- J0RWX6XD6KWMa7eq0GE6+IvLuWWeoMZpjTwJ+In6vPulXM5nEUSfait3ZsZcnC4GfFmLl2Db
- nr2gdcOC2IKsRAkTOHxklKCTTpTaGypX64m+j46CZqqDZ3fSYC1nLyBwCC7E4VMZmFGEF+MF
- 23kd5+DW/gXdi2SONNhkicfWLe7UY8h0AuiuxP9y7piNubU4DEXtYr/1Nhp4O3ejRUy9T1yD
- 8SA3GCBVmR0nmYTSj81wqBwu1ByylSZ3ah/mfxYGsRf5+lVXQciKZ7c0+t6BsjoVQLCZteJT
- U2rQtGnATE3U9IwzMYCY0h6G9W/iBDMwjClA6MUl7yMApw46KXc32L+J8pl0XbJyLEhj0U6Q
- stILWCpm7Rw9xbSB4HUiEiZjbilerkc3CHX6GeP13aBvEZdUAJoS6XKQWgfZlfKrdT+/k7CS
- 76uCbI6MgpO0MKCKbVFasfvjVpYQPfuI8reY22vlGeqHxqIxa2DbJDse2oD2CXREk8Ekxoc/
- XqeLwgxGj+ho37CDDxpDV/veF/s/vNlp3O/UEA51B+Kb0J/2Lqv4BIVhuKTS+kV3r0avCcts
- TJ0HEyy397ODdqPvBJufL9AbtMl/FdHyWXZuhR8M5C4Mq9ihV8ecwFvsk322Bt4BJtOn9Q2o
- X0sn0JOLve02U1Ae3u43JT8N7vdMGD08Fj7Z6fI2132ytua+q4Trv8/rgOwkhuuEx8a/ml9m
- +dc1difrsHDFgkbVJvrek8r8xFh4brINHpur7jI3GFhZPHn+gTJ3MgkUa58kk7IQg==
-IronPort-Data: A9a23:gjtfcaKT2NBYMJ/5FE+R5ZQlxSXFcZb7ZxGr2PjKsXjdYENSgjVSn
- 2sWXDjQPP6OMWL8Ldp+Pd6/9EgOvJ7QztRmQAEd+CA2RRqmiyZk6fd1jKvUF3nPRiEWZBs/t
- 63yUvGZcYZpCCaa/krwWlTYhSEU/bmSQbbhA/LzNCl0RAt1IA8skhsLd9QR2+aEuvDnRVrQ0
- T/Oi5eHYgL9h2Usajt8B5+r8XuDgtyj5Vv0gXRhPZinjHeG/1EJAZQWI72GLneQauF8Au6gS
- u/f+6qy92Xf8g1FIovNfmHTLyXm6paLVeS/oiI+t5qK23CulQRuukoPD8fwXG8M49m/t4sol
- IgS78zYpTABZcUgkMxFO/VR/roX0aduoNcrKlDn2SCfItGvn9IBDJyCAWlvVbD09NqbDklP8
- aw3A2sWaCyHxOyvnI+1YftKpvY8eZyD0IM34hmMzBnWCLM9RIzbGvyM7tJewC0tg4ZFD54yZ
- eJFN3w1MUmGOUcQfAhKYH49tL7Aan3XeidboVecv4I+/2za10p6wtABNfKOI4PUG58MxRnwS
- mTu+lnrDQoHEYel1ieZ9nH1mM/LxjPSYddHfFG/3rsw6LGJ/UQJGRQQE0G8q/SjllWWUshab
- UcT/0IGqak06VzuS9zVXAOxq33CuQQTM/JZEPU/wAWMzLfEpgieG24IRyJAb9pgs9U5LRQm3
- 0GIk/vzCDBvuaHTQnWYnp+QrDWvKW0WIHUEaCssUwQI+Z/grZs1gxaJScxseIauktT/HTzY3
- T+Htm49iq8VgMpN0L+0lW0rmBrw+N6TE1NzvF+IGD34hu9kWLOYi0WTwQCzxZ59wEyxFzFtY
- FBsdxCi0d0z
-IronPort-HdrOrdr: A9a23:eseF66pEhV0SX4Op1/4xgPoaV5o8eYIsimQD101hICG9JPb4qy
- nOpoV/6faQsl0ssR4b6LK90cW7MBDhHOdOjrX5ZI3PYOCEghrNEGg41+XfKlTbckWVygc378
- ddmsZFZeHNMQ==
-X-Talos-CUID: 9a23:yP35kGHoX+7JHuW3qmJm8B47MZs+dEHZj3nJf3K2InRPaI+KHAo=
-X-Talos-MUID: 9a23:Vx35fQk8nW2Arj87fYWRdnpnCdVn+LmLU3oSjIkCuJCaFSgrKx6k2WE=
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-AV: E=Sophos;i="6.15,251,1739833200"; 
-   d="scan'208";a="317662137"
-Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
-  by antispam23.centrum.cz with ESMTP; 30 Apr 2025 13:52:09 +0200
-Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id E0407100AE10D;
-	Wed, 30 Apr 2025 13:52:08 +0200 (CEST)
-Date: Wed, 30 Apr 2025 13:52:06 +0200
-From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Ryan Roberts <ryan.roberts@arm.com>, linux-mm@kvack.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
-Message-ID: <202543011526-aBIO5nq6Olsmq2E--arkamar@atlas.cz>
-References: <20250429142237.22138-1-arkamar@atlas.cz>
- <20250429142237.22138-2-arkamar@atlas.cz>
- <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
- <2025429144547-aBDmGzJBQc9RMBj--arkamar@atlas.cz>
- <ef317615-3e26-4641-8141-4d3913ced47f@redhat.com>
- <b6613b71-3eb9-4348-9031-c1dd172b9814@redhat.com>
- <2025429183321-aBEbcQQY3WX6dsNI-arkamar@atlas.cz>
- <1df577bb-eaba-4e34-9050-309ee1c7dc57@redhat.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YoJ+ndUL"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-30384072398so6025960a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746014120; x=1746618920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XuyGNzxgDiOkjQwKgLR+DPXNIJCg0WiL8KUtY79VEQs=;
+        b=YoJ+ndULHvhDDEaOaEviI4jkJJ55/+UgDZdUpuZX3Yg7aXH44j24FW2HPRc6neAjB3
+         QMuJFyjSMM3HzbrIwJ1eBkxer5cYtPgS8In+F2nEM0drWzg8fLlNlyFSAb/+KKIi+/qx
+         KExhH+iQYaU1RWKP6tfLQillpfBjgmxsKElcjI1JBDrut5D4/KYKZ49MZ7OuTyIcLc+S
+         FG/esUVPqhypZ6OAJsWiFQw13wwT7PEuff/RWm6i2yLEGCs+4+Vp1csnoRZ3HQM5HsmN
+         b2LWovWx7uuXjlAnsafGySecjRuec7/AFNBUg4FZCprNBHXB559rWOX5KCsbO4q+biEB
+         83DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746014120; x=1746618920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XuyGNzxgDiOkjQwKgLR+DPXNIJCg0WiL8KUtY79VEQs=;
+        b=N6qSNudli+3Ma4K97yPExGRQn13/6Eznt7/83DMficMAKxa/x13k1Fs8k0nXOPy2V7
+         pTalculdJm4h/AwzkKgi+talfRoT7GrvwNlJ6cNyv8HeY3AUFeTNt/RI6dxJteoiXROX
+         KZ9FW1alcBdow+1CjVGTv9ZzImPTd3L/4O54BIGqkRhIn8pSPKvp9bQn+xaLysbpCybQ
+         CyR+pnrptCrxtUMrQiLPgWxHWBH4BCjqeycUnsTi7NxdKX66zs/MMiRu2TeniyI34uaS
+         IUkiCr0K6B1ck9KY67pmp1VDc0nQe7TlM3x5lgn3dQFX6gpQ1GMYhj4f/odtLXZPPrfQ
+         XUMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXaUG4pa7RTlbcJALhG8SSWbqzWKgU3LjcsZCF58MP56lQI9/MwFkjp1yDEK/vb6bMGGiot+I9Wfqa6DCw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyxPtrlcottPlq+tmF3MdCJjr5jr3+nRelt+3hSmspJF4PgnC7I
+	I+HMYOJh63AGUIhz44/IHyOQPPsKQvgIZR1OgvmrecFOoG8bmDli+Juzs+vzDJYYcivlRVmRnN+
+	C6caghxpziBPbWvaG5U+qfBdyVs/89Y7mEQRb
+X-Gm-Gg: ASbGnctEKBz7jvtKKQWVZ/A0jiE5NKAbKNg+laSZDJjWY5cyWc5ojk96bR4MQl/rgkN
+	6z0fGT6T5EJE79CANuAdiLG7FKEfvuxksRxnGuaRwFcl5CMN8NAqLEMK/KhokOWAVAam6Xelutu
+	njpbPs4xVxIWDuRs2XVvyGQCl+dI6d7HnBFbtceU5LpdotZpWM9sJJ
+X-Google-Smtp-Source: AGHT+IGwJXAzQrRYamfgcjkePkCyZD/+tcwqKUOPh3vaz9WJg9ywHz6ypW3p7A0p0mLXG8BPw3/UYz781u1FtNYWFzs=
+X-Received: by 2002:a17:90a:da83:b0:305:2d27:7c9f with SMTP id
+ 98e67ed59e1d1-30a3331eebbmr4689528a91.16.1746014119912; Wed, 30 Apr 2025
+ 04:55:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1df577bb-eaba-4e34-9050-309ee1c7dc57@redhat.com>
+References: <20250430-rust-kcov-v1-1-b9ae94148175@google.com>
+In-Reply-To: <20250430-rust-kcov-v1-1-b9ae94148175@google.com>
+From: Aleksandr Nogikh <nogikh@google.com>
+Date: Wed, 30 Apr 2025 13:55:06 +0200
+X-Gm-Features: ATxdqUGMpC2B1RGjyZnHvqdqDFG5FAFUqW_p8EIC04ZX-V4PP8t0Bammv6S-GJE
+Message-ID: <CANp29Y4o8o6gz6GbM6NhP9sJUi94q29=aa+tLc1aCk0UVpgj0w@mail.gmail.com>
+Subject: Re: [PATCH] kcov: rust: add flags for KCOV with Rust
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
+	Matthew Maurer <mmaurer@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 08:56:03PM +0200, David Hildenbrand wrote:
-> On 29.04.25 20:33, Petr Vaněk wrote:
-> > On Tue, Apr 29, 2025 at 05:45:53PM +0200, David Hildenbrand wrote:
-> >> On 29.04.25 16:52, David Hildenbrand wrote:
-> >>> On 29.04.25 16:45, Petr Vaněk wrote:
-> >>>> On Tue, Apr 29, 2025 at 04:29:30PM +0200, David Hildenbrand wrote:
-> >>>>> On 29.04.25 16:22, Petr Vaněk wrote:
-> >>>>>> folio_pte_batch() could overcount the number of contiguous PTEs when
-> >>>>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
-> >>>>>> memory also happens to be zero. The loop doesn't break in such a case
-> >>>>>> because pte_same() returns true, and the batch size is advanced by one
-> >>>>>> more than it should be.
-> >>>>>>
-> >>>>>> To fix this, bail out early if a non-present PTE is encountered,
-> >>>>>> preventing the invalid comparison.
-> >>>>>>
-> >>>>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
-> >>>>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
-> >>>>>> bisect.
-> >>>>>>
-> >>>>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
-> >>>>>> Cc: stable@vger.kernel.org
-> >>>>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
-> >>>>>> ---
-> >>>>>>      mm/internal.h | 2 ++
-> >>>>>>      1 file changed, 2 insertions(+)
-> >>>>>>
-> >>>>>> diff --git a/mm/internal.h b/mm/internal.h
-> >>>>>> index e9695baa5922..c181fe2bac9d 100644
-> >>>>>> --- a/mm/internal.h
-> >>>>>> +++ b/mm/internal.h
-> >>>>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
-> >>>>>>      			dirty = !!pte_dirty(pte);
-> >>>>>>      		pte = __pte_batch_clear_ignored(pte, flags);
-> >>>>>>      
-> >>>>>> +		if (!pte_present(pte))
-> >>>>>> +			break;
-> >>>>>>      		if (!pte_same(pte, expected_pte))
-> >>>>>>      			break;
-> >>>>>
-> >>>>> How could pte_same() suddenly match on a present and non-present PTE.
-> >>>>
-> >>>> In the problematic case pte.pte == 0 and expected_pte.pte == 0 as well.
-> >>>> pte_same() returns a.pte == b.pte -> 0 == 0. Both are non-present PTEs.
-> >>>
-> >>> Observe that folio_pte_batch() was called *with a present pte*.
-> >>>
-> >>> do_zap_pte_range()
-> >>> 	if (pte_present(ptent))
-> >>> 		zap_present_ptes()
-> >>> 			folio_pte_batch()
-> >>>
-> >>> How can we end up with an expected_pte that is !present, if it is based
-> >>> on the provided pte that *is present* and we only used pte_advance_pfn()
-> >>> to advance the pfn?
-> >>
-> >> I've been staring at the code for too long and don't see the issue.
-> >>
-> >> We even have
-> >>
-> >> VM_WARN_ON_FOLIO(!pte_present(pte), folio);
-> >>
-> >> So the initial pteval we got is present.
-> >>
-> >> I don't see how
-> >>
-> >> 	nr = pte_batch_hint(start_ptep, pte);
-> >> 	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
-> >>
-> >> would suddenly result in !pte_present(expected_pte).
-> > 
-> > The issue is not happening in __pte_batch_clear_ignored but later in
-> > following line:
-> > 
-> >    expected_pte = pte_advance_pfn(expected_pte, nr);
-> > 
-> > The issue seems to be in __pte function which converts PTE value to
-> > pte_t in pte_advance_pfn, because warnings disappears when I change the
-> > line to
-> > 
-> >    expected_pte = (pte_t){ .pte = pte_val(expected_pte) + (nr << PFN_PTE_SHIFT) };
-> > 
-> > The kernel probably uses __pte function from
-> > arch/x86/include/asm/paravirt.h because it is configured with
-> > CONFIG_PARAVIRT=y:
-> > 
-> >    static inline pte_t __pte(pteval_t val)
-> >    {
-> >    	return (pte_t) { PVOP_ALT_CALLEE1(pteval_t, mmu.make_pte, val,
-> >    					  "mov %%rdi, %%rax", ALT_NOT_XEN) };
-> >    }
-> > 
-> > I guess it might cause this weird magic, but I need more time to
-> > understand what it does :)
+On Wed, Apr 30, 2025 at 10:04=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> =
+wrote:
+>
+> Rust code is currently not instrumented properly when KCOV is enabled.
+> Thus, add the relevant flags to perform instrumentation correctly. This
+> is necessary for efficient fuzzing of Rust code.
+>
+> The sanitizer-coverage features of LLVM have existed for long enough
+> that they are available on any LLVM version supported by rustc, so we do
+> not need any Kconfig feature detection.
+>
+> The coverage level is set to 3, as that is the level needed by trace-pc.
+>
+> Co-developed-by: Matthew Maurer <mmaurer@google.com>
+> Signed-off-by: Matthew Maurer <mmaurer@google.com>
+> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
-I understand it slightly more. __pte() uses xen_make_pte(), which calls
-pte_pfn_to_mfn(), however, mfn for this pfn contains INVALID_P2M_ENTRY
-value, therefore the pte_pfn_to_mfn() returns 0, see [1].
+Thanks!
 
-I guess that the mfn was invalidated by xen-balloon driver?
+I've run syzkaller against a kernel built with the patch applied and
+the tool was able to successfully obtain coverage feedback from the
+Rust code, so
+Tested-by: Aleksandr Nogikh <nogikh@google.com>
 
-[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/xen/mmu_pv.c?h=v6.15-rc4#n408
+As a side note, in the resulting code coverage I also see a lot of PCs
+from rustlib, which isn't the primary target when fuzzing the kernel.
+Do you find it reasonable not to instrument rustlib with coverage
+callbacks? For C code, there do exist some exceptions for KCOV, see
+e.g. lib/Makefile.
 
-> What XEN does with basic primitives that convert between pteval and 
-> pte_t is beyond horrible.
-> 
-> How come set_ptes() that uses pte_next_pfn()->pte_advance_pfn() does not 
-> run into this?
-
-I don't know, but I guess it is somehow related to pfn->mfn translation.
-
-> Is it only a problem if we exceed a certain pfn?
-
-No, it is a problem if the corresponding mft to given pfn is invalid.
-
-I am not sure if my original patch is a good fix. Maybe it would be
-better to have some sort of native_pte_advance_pfn() which will use
-native_make_pte() rather than __pte(). Or do you think the issue is in
-Xen part?
-
-Cheers,
-Petr
+> ---
+>  scripts/Makefile.kcov | 6 ++++++
+>  scripts/Makefile.lib  | 3 +++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/scripts/Makefile.kcov b/scripts/Makefile.kcov
+> index 67e8cfe3474b7dcf7552e675cffe356788e6c3a2..ddcc3c6dc513e1988aeaf07b8=
+efa106e8dffa640 100644
+> --- a/scripts/Makefile.kcov
+> +++ b/scripts/Makefile.kcov
+> @@ -3,4 +3,10 @@ kcov-flags-$(CONFIG_CC_HAS_SANCOV_TRACE_PC)    +=3D -fsa=
+nitize-coverage=3Dtrace-pc
+>  kcov-flags-$(CONFIG_KCOV_ENABLE_COMPARISONS)   +=3D -fsanitize-coverage=
+=3Dtrace-cmp
+>  kcov-flags-$(CONFIG_GCC_PLUGIN_SANCOV)         +=3D -fplugin=3D$(objtree=
+)/scripts/gcc-plugins/sancov_plugin.so
+>
+> +kcov-rflags-y                                  +=3D -Cpasses=3Dsancov-mo=
+dule
+> +kcov-rflags-y                                  +=3D -Cllvm-args=3D-sanit=
+izer-coverage-level=3D3
+> +kcov-rflags-y                                  +=3D -Cllvm-args=3D-sanit=
+izer-coverage-trace-pc
+> +kcov-rflags-$(CONFIG_KCOV_ENABLE_COMPARISONS)  +=3D -Cllvm-args=3D-sanit=
+izer-coverage-trace-compares
+> +
+>  export CFLAGS_KCOV :=3D $(kcov-flags-y)
+> +export RUSTFLAGS_KCOV :=3D $(kcov-rflags-y)
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 2fe73cda0bddb9dcf709d0a9ae541318d54754d2..520905f19a9b19631394cfb5e=
+129effb8846d5b8 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -169,6 +169,9 @@ ifeq ($(CONFIG_KCOV),y)
+>  _c_flags +=3D $(if $(patsubst n%,, \
+>         $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-ke=
+rnel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
+>         $(CFLAGS_KCOV))
+> +_rust_flags +=3D $(if $(patsubst n%,, \
+> +       $(KCOV_INSTRUMENT_$(target-stem).o)$(KCOV_INSTRUMENT)$(if $(is-ke=
+rnel-object),$(CONFIG_KCOV_INSTRUMENT_ALL))), \
+> +       $(RUSTFLAGS_KCOV))
+>  endif
+>
+>  #
+>
+> ---
+> base-commit: 9c32cda43eb78f78c73aee4aa344b777714e259b
+> change-id: 20250430-rust-kcov-6c74fd0f1f06
+>
+> Best regards,
+> --
+> Alice Ryhl <aliceryhl@google.com>
+>
