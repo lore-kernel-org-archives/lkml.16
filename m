@@ -1,111 +1,109 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F903C6BA;
-	Wed, 30 Apr 2025 06:54:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14FF917E0;
+	Wed, 30 Apr 2025 06:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745996083; cv=none; b=cVCw4QN0Iuxv6YPlGddr8vermm6wAVchDL8EE4Kfh8eB4lzLof7O5QnL1Rlyuaq+MasPVnKtvSIfK7RDBmKM2gQjsxLyi8jAxB9XkMt6jdd89mr+o7hH8HXgtKHzBdgy0R9cVfH3fO8g35ckoamZ8VoRakX6owlzQSu8pa0Egfo=
+	t=1745996316; cv=none; b=Htb5y6H5OKa8IFOCLmMNadbYSgz+frkJ4GOMxgPEZSKRbEJkzpFSZH6TTu9iqvWOaeFD/X2awpRayUs6RdZcqEDASIoVMk7AkTiWmHusvz4cJd7QpwM4xW6jdNKr/cB3bg1l0NPIQ9Zy/PkDMXCvDTtnoqTHKAqhA5DEwB0eXPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745996083; c=relaxed/simple;
-	bh=FWsVKMBpJoSvjzMtNQ11+FVVEGiAvbP5ltH1178r0LQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZXSdfjfk1cOBYrnSbIkQq+OVz8c4A/83NJpX8yZDn3td1OYC4QfOmTsEE0uVGloBVyz4ITjuOql3McP6hQ5MvoOhMCV5ATOiRJLNpBzi4mCRze2yBwz+BbOSujCzCATq6hYPeCCoALQkhmv6yGFod4QyifKAW02ch/XBrq85z0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LpZdiy00; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745996316; c=relaxed/simple;
+	bh=7CUhpQ9+zIhyv0GvZjAoVHD9ajVOAIWKqnDgeOZSAdA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=N77b7B/MEHkXupArjD94LmRy3q0IxvMZOMg8cCRT3L5kCodwseV9/pDwiruWqzxSjRdUoXvFpBPTjgmWAc3pz4GVWUl9yeK+OSSUCocmK0vWo/0+KmE8XwGBqI259c2vFiqEbOVOCVEDdI+5KYcDVM+y+snssd6tqz0zaLpnCbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WQPZ9YhE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xh7ZqCgV; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LpZdiy00"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6e8f254b875so77530486d6.1;
-        Tue, 29 Apr 2025 23:54:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745996080; x=1746600880; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=IHPC6ouTLZh9rZq6+aZMT/nynJpeCvxeKEaQao7uCfI=;
-        b=LpZdiy009ijRMVcAA1Wob3bGfgLWoZtQo6v5WCI1wKuEMNgHJQkZzcClug8cbVjEvw
-         xKdCs0bmTmTsDVsk73vUmc0Whr0v8PDtuyrrUS+RHa9cxI1PY/T0RujiocGmDiYL+z3I
-         XbrCMh68IxsQG3Gh/iqlbJU649OlDWUhzc3FyzldlUyrPa5wgKjsSQREJ7lUHHZMEFBO
-         4XERpXt+Gj2t6Y6m4r5zF4m/GadFpMiOeGI0xilw7YD+KtJOaciiaapyr8V48hnY9agD
-         c6z0ytY3PEICvfhyQZMCvpNtq/zHDTr+rd7FmcT8gBg/aCcU1QsDcmQ4U0vAPMQLLXoX
-         F7vA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745996080; x=1746600880;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IHPC6ouTLZh9rZq6+aZMT/nynJpeCvxeKEaQao7uCfI=;
-        b=nOnrl3lXYGDbRn01OClymSRQXVN/GpRQGkOqqn3NsK9YUhrd/G2nq393/mT/JyoX/w
-         MwXacBJlER/spauaFKNMv6sqSTK1D+doYPiD8bWttvHWgw+cOBrxtlc62L0sfJRG2Ohi
-         kMU7EuOIzdvstgorC1S4mFmbNz+3OW/y+wMN3dSmclmHXvTlWifJU+iBiFhNopOcuBLY
-         U8XSmqJYQQbro9c2g9tkdzdylOAz+Gh+gbOzvrW8ZmmLd9w9hJo4b0KxOxxW0dHc+4ls
-         p3tkrx3JNcIufUw/Mi/jhTDM3JnwJBdgXoEApN0TshXRt7EJAPXqF/ytTefzPFGuIn53
-         vWHg==
-X-Forwarded-Encrypted: i=1; AJvYcCWnByNuayRW8k3X3xghA22MlGWDW6tZUPG3qMcE7Nhnjvx8wPjU2wBxQ/l15oK8IofwngPsqiAS4i7nnyM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuOIQjUbmjIveBer+7vTmWRDqJoexUZBsMDOZx54Fhujgkpubg
-	P/Rx+rOkmnK+lhJHPx2tGYnHt4xgF+jrME7pXW3BCBN1lcsk4and
-X-Gm-Gg: ASbGncsK6/jbYTVikULVK247BRLney5Zl9AbeOfKz/FF5FDbV9+Hmk7VPu6sz9r4GdD
-	oko5CPrgg6IzgizTGqUcqF61LmNhXTwjwnIXKtG4/LQvXrj6U9P+XTyiFgD704ISjgRsUGE3LuA
-	bSZvAa2MA63BYUlmlzxQ6HzID5rkyxa+/108kiwef/MBJirKpJqTyi4V9ZTcp1Aqe/YW7oIyg6+
-	CwXu9R8eFbojEhkP9gioyZ6DsdmcErJSSdUI7w0zzCfB83ifY53X9doNTNK7IlqHPanWzdT28qW
-	g56qDibFjwK3mJw1
-X-Google-Smtp-Source: AGHT+IFizVCYxmFryP83K8Efv63dHaODZi9WbULtELwp3gzA1WDs1vRsKFV4wOSDStjITe1CP6hCgw==
-X-Received: by 2002:a05:6214:1d0b:b0:6e8:fe16:4d45 with SMTP id 6a1803df08f44-6f4fcfcb78fmr31461436d6.41.1745996080261;
-        Tue, 29 Apr 2025 23:54:40 -0700 (PDT)
-Received: from localhost ([2001:da8:7001:11::cb])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f4fe8358dcsm5091866d6.86.2025.04.29.23.54.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 23:54:39 -0700 (PDT)
-Date: Wed, 30 Apr 2025 14:54:23 +0800
-From: Inochi Amaoto <inochiama@gmail.com>
-To: Ze Huang <huangze@whut.edu.cn>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Chen Wang <unicorn_wang@outlook.com>, Inochi Amaoto <inochiama@gmail.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: devicetree@vger.kernel.org, sophgo@lists.linux.dev, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, Yu Yuan <yu.yuan@sjtu.edu.cn>, 
-	Ze Huang <huange@whut.edu.cn>
-Subject: Re: [PATCH] riscv: dts: sophgo: fix DMA data-width configuration for
- CV18xx
-Message-ID: <uo7nea7hxw7qrzw7yhtoulusejbynw6qlotwozpboxtm6vyotv@rdkuc4d776so>
-References: <20250428-duo-dma-config-v1-1-eb6ad836ca42@whut.edu.cn>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WQPZ9YhE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xh7ZqCgV"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1745996313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UBgDD27NsLa3RNSfaO8xNkStzEbW1eu3yXOUdjUkJfA=;
+	b=WQPZ9YhEzgOWDJ04IOSVvahwwt2m/mtd68TP/cYb8lUMTtj1sbLgxpdrhcnuRjHlCxlajZ
+	RQPpyaMjbNzZExn/43jyVw0MAV60M5VCE+4Wla824MHBvGRA026q/DqGtVI6aguWauKgU6
+	Jb9CjTM3USxThLTeIGWmw8Ti+15vSum/QX5iGVHQ59R0y8AcF98uiae783qs37yUXMsm8v
+	h4ze8g5PfcEVaBW2LGi1d3e+z5xHowbj8Fu8Dj4PJX+EQJYphGea/2bYykvksBDjpc80sE
+	b5IPR9TLPaxz8OGCfzNsVbnU21G2R2tG8uexUhKwTF/O6gcDj6MteWd/X3mJaQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1745996313;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UBgDD27NsLa3RNSfaO8xNkStzEbW1eu3yXOUdjUkJfA=;
+	b=xh7ZqCgVTbQ7h+QZGKcm2N9MxrIQp+fmQ2rvlcWtJlgeoQD09XcMYs1UPk7bBOsKVRtB/O
+	ucKcWBDz5gBIW+Bw==
+To: John Stultz <jstultz@google.com>, Su Hui <suhui@nfschina.com>
+Cc: sboyd@kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH 3/3] alarmtimer: switch spin_{lock,unlock}_irqsave() to
+ guard()
+In-Reply-To: <CANDhNCq0yOXRF+6_JaMYo98o5uKP_af+UXJcJmzuFvX63RdTaA@mail.gmail.com>
+References: <20250424144819.24884-1-suhui@nfschina.com>
+ <20250424144819.24884-4-suhui@nfschina.com>
+ <CANDhNCq0yOXRF+6_JaMYo98o5uKP_af+UXJcJmzuFvX63RdTaA@mail.gmail.com>
+Date: Wed, 30 Apr 2025 08:58:27 +0200
+Message-ID: <87y0vip23w.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428-duo-dma-config-v1-1-eb6ad836ca42@whut.edu.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2025 at 05:24:36PM +0800, Ze Huang wrote:
-> The "snps,data-width" property[1] defines the AXI data width of the DMA
-> controller as:
-> 
->     width = 8 × (2^n) bits
-> 
-> (0 = 8 bits, 1 = 16 bits, 2 = 32 bits, ..., 6 = 512 bits)
-> where "n" is the value of "snps,data-width".
-> 
-> For the CV18xx DMA controller, the correct AXI data width is 32 bits,
-> corresponding to "snps,data-width = 2".
-> 
-> Test results on Milkv Duo S can be found here [2].
-> 
-> Link: https://github.com/torvalds/linux/blob/master/Documentation/devicetree/bindings/dma/snps%2Cdw-axi-dmac.yaml#L74 [1]
-> Link: https://gist.github.com/Sutter099/4fa99bb2d89e5af975983124704b3861 [2]
-> 
-> Co-developed-by: Yu Yuan <yu.yuan@sjtu.edu.cn>
-> Signed-off-by: Yu Yuan <yu.yuan@sjtu.edu.cn>
-> Signed-off-by: Ze Huang <huange@whut.edu.cn>
-> ---
-> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
+On Thu, Apr 24 2025 at 16:59, John Stultz wrote:
+> On Thu, Apr 24, 2025 at 7:48=E2=80=AFAM Su Hui <suhui@nfschina.com> wrote:
+>> -       spin_unlock_irqrestore(&freezer_delta_lock, flags);
+>> +       scoped_guard(spinlock_irqsave, &freezer_delta_lock) {
+>> +               min =3D freezer_delta;
+>> +               expires =3D freezer_expires;
+>> +               type =3D freezer_alarmtype;
+>> +               freezer_delta =3D 0;
+>> +       }
+>
+> I'm not necessarily opposed, but I'm not sure we're gaining much here.
 
-I think there is a wrong sob here, also, please add a fixes tag if
-you fix something. I will take care of this when merging.
+>> @@ -352,13 +347,13 @@ EXPORT_SYMBOL_GPL(alarm_init);
+>>  void alarm_start(struct alarm *alarm, ktime_t start)
+>>  {
+>>         struct alarm_base *base =3D &alarm_bases[alarm->type];
+>> -       unsigned long flags;
+>>
+>> -       spin_lock_irqsave(&base->lock, flags);
+>> -       alarm->node.expires =3D start;
+>> -       alarmtimer_enqueue(base, alarm);
+>> -       hrtimer_start(&alarm->timer, alarm->node.expires, HRTIMER_MODE_A=
+BS);
+>> -       spin_unlock_irqrestore(&base->lock, flags);
+>> +       scoped_guard(spinlock_irqsave, &base->lock) {
+>> +               alarm->node.expires =3D start;
+>> +               alarmtimer_enqueue(base, alarm);
+>> +               hrtimer_start(&alarm->timer, alarm->node.expires,
+>> +                             HRTIMER_MODE_ABS);
+>> +       }
+>
+> Similarly, this just seems more like churn, than making the code
+> particularly more clear.
 
-Fixes: 514951a81a5e ("riscv: dts: sophgo: cv18xx: add DMA controller")
+I disagree. scoped_guard() is actually superior as it makes it
+visually entirely clear what the actual scope of the spin lock protected
+code is. That's the whole point.
+
+Especially in alarm_suspend() this would end up with a mix of scoped
+guards and open coded spinlock regions. That's obstructing the reading
+flow.
+
+I'll bring them back for consistency when applying the series.
+
+Thanks,
+
+        tglx
+
