@@ -1,127 +1,171 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4389221B9E0;
-	Wed, 30 Apr 2025 11:04:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3558F221F35;
+	Wed, 30 Apr 2025 11:05:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746011053; cv=none; b=Le5e4WLLmZkpb4RuJ3IW2cfxuYbdOzpx1RYDbZ2SK4F/Hnmz99yjsu8BscT28oZc0INIPevqbscpNT5Kgj7mq+gTSz5HHhV5q26lwmqptC3akAPTu5hqMz5GQ6/E/qnUKF7zL2FrLnWqVpnHa7FNQ803OOxMPhyA5xYVaQOH/bY=
+	t=1746011133; cv=none; b=pnhWvkx+SCXxOyjW0K38KOHeZB/AHCm8F4CfUgNIcBn4bEJsy64hAhTQyCGLQDMRODo5MRcdLcs6JDfg1nO79gJWgrqHwb8cE43XZAl6n+U/S1NQio1i+JlNSkP0dTvI1t3FyWwXTKLaS+IKAGsT1uMRweZUjQLJiItshrOQiR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746011053; c=relaxed/simple;
-	bh=mvALsY+IwGGogHBtWJUORKxwQ9SvDdLDCNU5DjW5K+U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hmqtaWsD+OS0LyvJNtWVzlGeRyaTjFl1lZ4oAeHJ3OzHq+FtRFugC0CN36U327jaCog+sSwmu7js6iOnxKQ69NlNJz9GCsVuKVusyDoeKxAnU6EoI7iS0tj9xhadjhTuDgJIq7Z1aOpVQ95Nkhpo9hA2MoP851BH7eLlbzN1Khc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HcXHScSu; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746011133; c=relaxed/simple;
+	bh=nQrASJ6hdVZOdSLWPhEr1DleCbN40IIG8C9hTJrUoPc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jK79LJCsuSHPApNMTLAZIO51MSXpzNDS3R6EL0pJHN1LdRuCSkT+xbYvSEJXZwL42YV/x9zsjYe84hdROrzqoPVCp/n3Ekn0Jjw/lIe67ab52gKnYF9VgX1NdP2cmfugv/etJEFvmkcW4aAJuYINlMOePCMlHinMCiTNRwshW8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhtuDTpH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HcXHScSu"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9Vg8o020908;
-	Wed, 30 Apr 2025 11:04:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=hKEMsFz+5InyWRGlQjljTV
-	a4FuIOoyVGX3MTSQHG8CQ=; b=HcXHScSu9OWopRFmC+98IqgqTuGr36HWMRe5dW
-	TrXYplnoEwyaGk8CXRS6l1ZPl+hrRDIIqJ4LuRFebGnyG9CXSWHoxoOYLHRJith3
-	2NcAhjEoX+gHMeBEZgibde9RD11zeYVyUe1xk4cQqSO+m2eXnii6OAIKAkFutmN/
-	ppmO/Ny8hCOkjzogelR6fteq/Dx0nJGognBJRt82jCUiUo7Es2AF6WMT255VTkF2
-	PJgmMnUByg9k+6aK+aQYbzoBCeNFB1zqVoKCmS5cErAbsBUwAKYcKzy7jnGfSro7
-	+q8pjo68aJc7LQd3kG7SWGdXhD3SUxHLmzIpqdRnAOTFz/gQ==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u1svrn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 11:04:01 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UB406N000323
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 11:04:00 GMT
-Received: from hu-jinlmao-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 30 Apr 2025 04:03:59 -0700
-From: Mao Jinlong <quic_jinlmao@quicinc.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach
-	<mike.leach@linaro.org>,
-        James Clark <james.clark@linaro.org>,
-        "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>
-CC: Mao Jinlong <quic_jinlmao@quicinc.com>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>
-Subject: [PATCH] coresight: Disable MMIO logging for coresight stm driver
-Date: Wed, 30 Apr 2025 04:03:47 -0700
-Message-ID: <20250430110347.2091013-1-quic_jinlmao@quicinc.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhtuDTpH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81121C4CEE9;
+	Wed, 30 Apr 2025 11:05:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746011132;
+	bh=nQrASJ6hdVZOdSLWPhEr1DleCbN40IIG8C9hTJrUoPc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=GhtuDTpH/HkACn8tSfiUklpASOuhO/C98x0A3Ood3J7HKFwfXJMGAEjQSveuZ7n0r
+	 YYma3pvwztypVtQtY4GNUXwf3fRmMNncyUeqWSdA7lLmT7vHS3ampVRlxL42GPXg5N
+	 kUwsiSOJLN2yH2exsZulJfFqZTKhj9Jm0Cd4Optp1SbdYLN0dguPTnK8OB/0DlgKSl
+	 cSTMx2LpEwYXRru/m4G32yxusTFjn7UDuHXZa8L87+K5D1PXZ/Fshq9bsA1b+45ywK
+	 xyrpFTwCeos6AVkNnDAzZN9PvjjlPzzhkgLu/eEIuu+R10v5JqhRWWRrezNn/X4I5Z
+	 QInEMwzZvtb/Q==
+From: Christian Brauner <brauner@kernel.org>
+Subject: [PATCH RFC 0/3] coredump: support AF_UNIX sockets
+Date: Wed, 30 Apr 2025 13:05:00 +0200
+Message-Id: <20250430-work-coredump-socket-v1-0-2faf027dbb47@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=681203a1 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=veiSyZ7YIUJwdJkxcWIA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3OCBTYWx0ZWRfXzcHPg5bF2V3V 5ci/HKzPJBTroBOjJXIZ3GGTQt04f/uBScdMxOyZ4J1W0f2HpsKg6WIWR9DX+d7oCy9fR2WE+0q CCaGHLgL0HCRkQd5cq27tEMbX2EiWJXLlFGNrcLRhKOAam+9ZAJj6+uqF6P5pXFP6kJCwqPsWPR
- re35RFMnBHV1KrShHnhGrJWVKZbuIq5LIpDRT2TQrg9ONxBLMEkfpl2vfkyi1hkJrjmLMFgWZCJ 6BYmOktCganK0UogKr9l86WMKK9KGyiIUEW/iMovdZzomAZmhm+9LAyUIQ2gBJEJw0Gw8LATJFC 9c8Mur686zP9gTAQfDVr00hoXt0+BYz79hZaeACWKjGr02oLjLIbMrShel70aCWalrMj6V6XQGe
- 1df3gh1rjtxXWrCXb9WfVlp2JrRRelFHmhhhp7AbqNnWufObUsP3GApTzJ/CUlTLtUB8FCpT
-X-Proofpoint-GUID: F0SnEkpOGs_Q7K3q_ivJ26wbALxZLoGJ
-X-Proofpoint-ORIG-GUID: F0SnEkpOGs_Q7K3q_ivJ26wbALxZLoGJ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=952
- lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- clxscore=1015 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300078
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAN0DEmgC/zXMQQrCMBCF4auUWTslCdpYt4IHcCsu0unEhmJSM
+ lqF0rsbBZf/g/ctIJwDCxyqBTLPQUKKJfSmAhpcvDGGvjQYZXZqa1p8pTwipcz98z6hJBr5gXt
+ LpLy21rQE5Tpl9uH9Yy9wPh3hWsbOCWOXXaThK85esKl1U/8xWNcP6GXQnY8AAAA=
+X-Change-ID: 20250429-work-coredump-socket-87cc0f17729c
+To: linux-fsdevel@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, 
+ Alexander Viro <viro@zeniv.linux.org.uk>, 
+ Daan De Meyer <daan.j.demeyer@gmail.com>, 
+ David Rheinsberg <david@readahead.eu>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ Lennart Poettering <lennart@poettering.net>, 
+ Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+ Oleg Nesterov <oleg@redhat.com>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, 
+ =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+ Christian Brauner <brauner@kernel.org>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4051; i=brauner@kernel.org;
+ h=from:subject:message-id; bh=nQrASJ6hdVZOdSLWPhEr1DleCbN40IIG8C9hTJrUoPc=;
+ b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWQIMX/3vbNgemrJCh1x413lhw1stm97ynD8et7heV68f
+ P/Opzk96ihlYRDjYpAVU2RxaDcJl1vOU7HZKFMDZg4rE8gQBi5OAZjIWgWG/z5ng0QbU6QUfmtH
+ te2VmrXM8Gh8pWuSmPFzN+PSnX0/LzH8s6t4FuMxu0623TvS13p1XJfGV07GvLidruXxB5xu7mp
+ iBgA=
+X-Developer-Key: i=brauner@kernel.org; a=openpgp;
+ fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
 
-When read/write registers with readl_relaxed and writel_relaxed,
-log_read_mmio and log_write_mmio will be called. If mmio trace
-is enabled to STM, STM driver will write the register to send the
-trace and writel_relaxed will be called again. The circular call
-like callstack below will happen. Disable mmio logging for stm
-driver to avoid this issue.
+Coredumping currently supports two modes:
 
-[] stm_source_write[stm_core]+0xc4
-[] stm_ftrace_write[stm_ftrace]+0x40
-[] trace_event_buffer_commit+0x238
-[] trace_event_raw_event_rwmmio_rw_template+0x8c
-[] log_post_write_mmio+0xb4
-[] writel_relaxed[coresight_stm]+0x80
-[] stm_generic_packet[coresight_stm]+0x1a8
-[] stm_data_write[stm_core]+0x78
-[] ost_write[stm_p_ost]+0xc8
-[] stm_source_write[stm_core]+0x7c
-[] stm_ftrace_write[stm_ftrace]+0x40
-[] trace_event_buffer_commit+0x238
-[] trace_event_raw_event_rwmmio_read+0x84
-[] log_read_mmio+0xac
-[] readl_relaxed[coresight_tmc]+0x50
+(1) Dumping directly into a file somewhere on the filesystem.
+(2) Dumping into a pipe connected to a usermode helper process
+    spawned as a child of the system_unbound_wq or kthreadd.
 
-Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+For simplicity I'm mostly ignoring (1). There's probably still some
+users of (1) out there but processing coredumps in this way can be
+considered adventurous especially in the face of set*id binaries.
+
+The most common option should be (2) by now. It works by allowing
+userspace to put a string into /proc/sys/kernel/core_pattern like:
+
+        |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h
+
+The "|" at the beginning indicates to the kernel that a pipe must be
+used. The path following the pipe indicator is a path to a binary that
+will be spawned as a usermode helper process. Any additional parameters
+pass information about the task that is generating the coredump to the
+binary that processes the coredump.
+
+In this case systemd-coredump is spawned as a usermode helper. There's
+various conceptual consequences of this (non-exhaustive list):
+
+- systemd-coredump is spawned with file descriptor number 0 (stdin)
+  to the read-end of the pipe. All other file descriptors are closed.
+  That specifically includes 1 (stdout) and 2 (stderr). This has already
+  caused bugs because userspace assumed that this cannot happen (Whether
+  or not this is a sane assumption is irrelevant.).
+
+- systemd-coredump will be spawned as a child of system_unbound_wq. So
+  it is not a child of any userspace process and specifically not a
+  child of PID 1 so it cannot be waited upon and is in general a weird
+  hybrid upcall.
+
+- systemd-coredump is spawned highly privileged as it is spawned with
+  full kernel credentials requiring all kinds of weird privilege
+  dropping excercises in userspaces.
+
+This adds another mode:
+
+(3) Dumping into a AF_UNIX socket.
+
+Userspace can set /proc/sys/kernel/core_pattern to:
+
+        :/run/coredump.socket
+
+The ":" at the beginning indicates to the kernel that an AF_UNIX socket
+is used to process coredumps. The task generating the coredump simply
+connects to the socket and writes the coredump into the socket.
+
+Userspace can get a stable handle on the task generating the coredump by
+using the SO_PEERPIDFD socket option. SO_PEERPIDFD uses the thread-group
+leader pid stashed during connect(). Even if the task generating the
+coredump is a subthread in the thread-group the pidfd of the
+thread-group leader is a reliable stable handle. Userspace that's
+interested in the credentials of the specific thread that crashed can
+use SCM_PIDFD to retrieve them.
+
+The pidfd can be used to safely open and parse /proc/<pid> of the task
+and it can also be used to retrieve additional meta information via the
+PIDFD_GET_INFO ioctl().
+
+This will allow userspace to not have to rely on usermode helpers for
+processing coredumps and thus to stop having to handle super privileged
+coredumping helpers.
+
+This is easy to test:
+
+(a) coredump processing (we're using socat):
+
+    > cat coredump_socket.sh
+    #!/bin/bash
+    
+    set -x
+    
+    sudo bash -c "echo ':/tmp/stream.sock' > /proc/sys/kernel/core_pattern"
+    socat --statistics unix-listen:/tmp/stream.sock,fork FILE:core_file,create,append,truncate
+
+(b) trigger a coredump:
+
+    user1@localhost:~/data/scripts$ cat crash.c
+    #include <stdio.h>
+    #include <unistd.h>
+    
+    int main(int argc, char *argv[])
+    {
+            fprintf(stderr, "%u\n", (1 / 0));
+            _exit(0);
+    }
+
+Signed-off-by: Christian Brauner <brauner@kernel.org>
 ---
- drivers/hwtracing/coresight/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+Christian Brauner (3):
+      coredump: massage format_corname()
+      coredump: massage do_coredump()
+      coredump: support AF_UNIX sockets
 
-diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-index 4ba478211b31..f3158266f75e 100644
---- a/drivers/hwtracing/coresight/Makefile
-+++ b/drivers/hwtracing/coresight/Makefile
-@@ -22,6 +22,8 @@ condflags := \
- 	$(call cc-option, -Wstringop-truncation)
- subdir-ccflags-y += $(condflags)
- 
-+CFLAGS_coresight-stm.o := -D__DISABLE_TRACE_MMIO__
-+
- obj-$(CONFIG_CORESIGHT) += coresight.o
- coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
- 		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
--- 
-2.25.1
+ fs/coredump.c | 241 ++++++++++++++++++++++++++++++++++++++++------------------
+ 1 file changed, 168 insertions(+), 73 deletions(-)
+---
+base-commit: 80e14080a00bc429a4ee440d17746a49867df663
+change-id: 20250429-work-coredump-socket-87cc0f17729c
 
