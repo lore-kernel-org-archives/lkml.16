@@ -1,99 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8183D1854;
-	Wed, 30 Apr 2025 00:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40A3746E;
+	Wed, 30 Apr 2025 00:48:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745974116; cv=none; b=YyfXGRj9prn42ZVYyZA9pLcTHxqJbAXFsq7+We66zAHkk2xk8Cbo2PLfAOnOVliCbywuOC2YrPWfksFPqBSZldP86UOJlPoPGEdKz2FPImb02ahZDifaobgqtXiuaAUiC7gNukAnd43WESh7bI6BCsFbPlsFY9CF/0WJd456Er4=
+	t=1745974127; cv=none; b=MLEuQfuB0nbtyCqu8b7klSx+7+38gO/dj5se5cOthX6q5YOEvKUQPQdy7TICMx8zCIqAtXQbPLq1pHXityL3f5eMpiczLMazrUgcLWD0XXC/WrD9JpFsH1YIdOXMrUvZNlg0ZkwyUiiBk7tSIkagxJiJqkMiM40pr/aklPhO7HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745974116; c=relaxed/simple;
-	bh=VVFZTctHxV0J4BThDv/Rh1bu5X7V1E/RSG49b70KuFk=;
+	s=arc-20240116; t=1745974127; c=relaxed/simple;
+	bh=p8LoEjX2XoT16Hzndkl9yNf+dNli1V2KfZpukMx7Sjo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F3DtYWFeQKH4xNDwAOO0sRec0Bq/ashWMXNPZZOvz+hTmmxecTnAq/sB5+1onviG+PPCyf/WWXmazEX0TEotC34ev1U7JkVC9AAn6+iVMj/Ltj2KCByws719T5YZPLhOyqA4PA50TT8fuEFG0tvx1wM03/N4OP3EcE6SV5ubc9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NW+eklPw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IXSpYs1y9IQAKv+a1o4egEZUm7WYdJKUOT80ygOCGMp9jHGZTr9U3rti3G9GIoKwIWUdzDZzqFOGkwWhqGfdpMSruWkqTdeIjzV+ymEw4hC+iFsUgs77kXAvscSe2XneU2hk6qPmuVO+u2VFDl+bgqW13fImW+XDA1/7XQWZ9uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9mINEwp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NW+eklPw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CD11C4CEE3;
-	Wed, 30 Apr 2025 00:48:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9mINEwp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BFFC4CEE3;
+	Wed, 30 Apr 2025 00:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745974115;
-	bh=VVFZTctHxV0J4BThDv/Rh1bu5X7V1E/RSG49b70KuFk=;
+	s=k20201202; t=1745974126;
+	bh=p8LoEjX2XoT16Hzndkl9yNf+dNli1V2KfZpukMx7Sjo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NW+eklPwrSa6qc0ANGDyz5ecCRQIwS8PesnSG7ZB0CPRIM67IQ+chPQENuKAi8zd0
-	 Zm0R4pyyTFAJ92d2wvYK8KPthnCFMB4BchhmNBtnzWe8xgtVMFWUGiyoWKvSGNE2Fw
-	 ENRTIbvu37efEZw9Qc9JXc3kQFVt9iN7UUm1kJrvcFFzdq6cNsGSE7nkA+c7mr4XpO
-	 1Lzs6pVxugKDBfktLfW4aEWSQIThcWbYpdZvOE+/EEUrwFtNI6r3Tq0J9zcYco04Ao
-	 uuPddb65DCIMCvzEIGz8vbggqDjU6uZxMsTS6t7v1flq7FdDn5fM4GFDvj9xs+TbRA
-	 /7/jj5o1gfZ/A==
-Date: Wed, 30 Apr 2025 09:48:31 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH] KVM: selftests: add test for SVE host corruption
-Message-ID: <aBFzXw-ASk1bXQvx@finisterre.sirena.org.uk>
-References: <20250417-kvm-selftest-sve-signal-v1-1-6330c2f3da0c@kernel.org>
- <aBDv39FD7eDYoplg@J2N7QTR9R3.cambridge.arm.com>
+	b=D9mINEwpJOHzRG51dQHF1ie+HTdjGsvoUSLOg2H5VJSBupK3/jSC1eZfu+CV8YZLN
+	 T2EmYBoD/ezNkRLJRHrN7AmQkoUNuAnjRDlMuutcLG76HcHqilYAOfLo1bzVjoIINV
+	 riEXQWRrMhplkUE9Y8D8w36beKGElJ2GaKwz6xGj+LCP91yHLY4KVXwlxhvqwGOo0c
+	 JSCtDlNrp2GtCF9abM4Rc1uwFveaYV69FQzPT7zAhxOOlUzkzSKhkuHRCA+V0j2WRe
+	 9oxhaMkCJ3AiqIAFp4sYY7lLG+XmDZq2pv8zmpyInjlFgyCeCUq7ZShBN8HG8Dyjzf
+	 Y4qOnMu9vo9bw==
+Date: Tue, 29 Apr 2025 17:48:44 -0700
+From: Luis Chamberlain <mcgrof@kernel.org>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
+	kdevops@lists.linux.dev, Christian Brauner <brauner@kernel.org>,
+	viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.12 25/37] fs/buffer: split locking for
+ pagecache lookups
+Message-ID: <aBFzbF_kRJAawSkE@bombadil.infradead.org>
+References: <20250429235122.537321-1-sashal@kernel.org>
+ <20250429235122.537321-25-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="C+U9jvApfUFUi2KB"
-Content-Disposition: inline
-In-Reply-To: <aBDv39FD7eDYoplg@J2N7QTR9R3.cambridge.arm.com>
-X-Cookie: Well begun is half done.
-
-
---C+U9jvApfUFUi2KB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250429235122.537321-25-sashal@kernel.org>
 
-On Tue, Apr 29, 2025 at 04:27:27PM +0100, Mark Rutland wrote:
-> On Thu, Apr 17, 2025 at 12:32:49AM +0100, Mark Brown wrote:
+On Tue, Apr 29, 2025 at 07:51:10PM -0400, Sasha Levin wrote:
+> From: Davidlohr Bueso <dave@stgolabs.net>
+> 
+> [ Upstream commit 7ffe3de53a885dbb5836541c2178bd07d1bad7df ]
+> 
+> Callers of __find_get_block() may or may not allow for blocking
+> semantics, and is currently assumed that it will not. Layout
+> two paths based on this. The the private_lock scheme will
+> continued to be used for atomic contexts. Otherwise take the
+> folio lock instead, which protects the buffers, such as
+> vs migration and try_to_free_buffers().
+> 
+> Per the "hack idea", the latter can alleviate contention on
+> the private_lock for bdev mappings. For reasons of determinism
+> and avoid making bugs hard to reproduce, the trylocking is not
+> attempted.
+> 
+> No change in semantics. All lookup users still take the spinlock.
+> 
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+> Link: https://kdevops.org/ext4/v6.15-rc2.html # [0]
+> Link: https://lore.kernel.org/all/aAAEvcrmREWa1SKF@bombadil.infradead.org/ # [1]
+> Link: https://lore.kernel.org/20250418015921.132400-2-dave@stgolabs.net
+> Tested-by: kdevops@lists.linux.dev
+> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+> Signed-off-by: Christian Brauner <brauner@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
+Same no way. This is pushing it.
 
-> Looks like my Signed-off-by got dropped by accident; it should be above
-> yours here.
-
-> Aside from that, and the initial feature test, this looks pretty much
-> identical to my original WIP.
-
-Sorry, for a while I had a version of the program that was a lot more
-modified (I was trying to make it work with a wider range of supervised
-programs) so it didn't feel right to carry your SoB forward, but those
-didn't actually go all the way to working enough to enable any of the
-additional programs I was looking at so I ended up unwinding them and
-didn't also unwind that change.
-
-> I'm not sure if it's worth keeping all the printf() calls, which were
-> only there to help me check the UDF trap was being handled correctly.
-
-I've found them handy when using it.
-
---C+U9jvApfUFUi2KB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgRc10ACgkQJNaLcl1U
-h9AtJAf+MbIe0znLqzLeaZE59FpZ7imkJVYN6BNayn6dR6KSH0ba5TR2bJ6BOB+F
-420HSoFS7860BB8M5gF1SYpt0BfhiwjXrCFEBjh/CI4n7XhIJKgWodPjFsSN4hIA
-scNzDwbQ8TSF6N2BV/Wqa1y6SX2qE6HcSEsS3kiIn8dcPFXWKwxMAypCXPJpVF6p
-SfQKTaqgkOkQBHW4TrPMbA20jdgLgGnYfGtB77/1VgTWfqaULkOc16bYSPVTYvu7
-DXXhpzMrMwzCLSPIS9t9c3IZDSQKyeyk5SM2O17y5moR2ymnTSBRtR9aA1IQh+AJ
-D/dD4tw21AQDTCp5d5zWoqSLzmIeyg==
-=V8X6
------END PGP SIGNATURE-----
-
---C+U9jvApfUFUi2KB--
+  Luis
