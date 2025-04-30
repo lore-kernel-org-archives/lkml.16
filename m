@@ -1,32 +1,94 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6E417C21B;
-	Wed, 30 Apr 2025 15:18:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026332; cv=none; b=ndQ8OxBUcCGuEt1TPW7TlikcwdEHsLZCt2HoIiPLittCqIDdIwlEaYYNquSr+7AUlDPo5MmPJFH2aztP02QDu/IgiDXzTew8oPgaLaj5d2zFE8iYHc2wNu7NrYy+nej9a17TYM+bo7XwACmoh1MGEhWr8VJgHy7GIvzDAp90+/k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026332; c=relaxed/simple;
-	bh=nrJiV7sgfoqobeFu2c5QT8+ttTCIBuCCcpHrEeGwo98=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Anz/wAqsNAYeQRtR4nTyJyv6ezbY8Hi9BzAat6V+u9znih1n0Ox8lLbbZDUaqW+1ncPoih3Ki56Tgl90QDE+o5PSHHGdiMOFSR/lKxnjxl8NRqVD2L1gZf0wYKVI9VpEW/M2RNWI7TasrDPlbK8va81c/6g8/HkJquFjf5x4Q00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=Y2Y7v2S4; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Received: from mta-outp-ksl-1.case.edu (mta-outp-ksl-1.case.edu [129.22.103.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DCA725E44B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:18:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=129.22.103.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746026338; cv=pass; b=tSBwFGaQHyURp8+LJ2EmvCTtOEFt+M/9FLB8IZqZhWNVHiqUDlCGkdetnPs0knuqgYspb3dYxxRk5aZ6XDLjyaz8VUbLESLohzZ2ghNiGWkmjVFjdgilQeantxEsfGj+6c1ON5nY3XXoPpZUOCMO7JLDtjUkPMUOiLuTdqS0r0k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746026338; c=relaxed/simple;
+	bh=AzjcWtzCo+O8MqZEFAe+xbB7xQLkIglom2B10pFpT6o=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fRLaMgdu4TIZKLvOhlsD0h946FnMg/dd5taNnq8mFoG72jcbAKjaq1+DLEbGg1pwpKlVJoMb0VTpJVcfUDobmbfRuz1YDFs1j8p5JH1cMDQYyGzPexIydO0QIPNJTCGyo2FiZHmbw1nGn73AYN3g0M+tvNMu79VE+cTgdScg1xc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu; spf=pass smtp.mailfrom=case.edu; dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b=I4Dr7AYL; arc=pass smtp.client-ip=129.22.103.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=case.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Y2Y7v2S4"
-Received: from [10.137.184.60] (unknown [131.107.1.188])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 9E4DF204E7EF;
-	Wed, 30 Apr 2025 08:18:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E4DF204E7EF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746026329;
-	bh=HNltF6UYzDOWYGrDmfXEvIuEhL7RmRKUuY9prprlfqo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Y2Y7v2S4dbUqt5Tno4WLb/AcCl187l1X/VZsI+BqIF15l48W8h47S6zHSbYD0Sykb
-	 8bnhOaxe17uN8KUakzxE1JoTBSdVSdwlGHZyS8kdxvKH20fsY/EP/KrzZSW0MojZ8F
-	 FGdIf2HSW21QydaGLmEILertBGDA6/HNMhVGk5h8=
-Message-ID: <5b74ac52-c5fb-4182-8bc7-df65092fb9d4@linux.microsoft.com>
-Date: Wed, 30 Apr 2025 08:18:49 -0700
+	dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b="I4Dr7AYL"
+Authentication-Results: mta-outp-ksl-1;
+       spf=pass (mta-outp-ksl-1.case.edu: domain of case.edu designates 209.85.160.198 as permitted sender) smtp.mailfrom=case.edu ;
+       dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case;
+       dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu;
+ARC-Filter: OpenARC Filter v1.0.0 mta-outp-ksl-1.case.edu 3A2B213DB
+Authentication-Results: mta-outp-ksl-1; arc=none smtp.remote-ip=129.22.103.196
+ARC-Seal: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta; t=1746025789; cv=none;
+	b=YwRhGLZb6p2P9KUYMNYQ3roYUvdnilOyPt7od5T5eIosB7s3Bmlc3DbDO+P+IGlzRld57rgGc47hYCvHsLzWv2x/b7F925P1qn0wzhVVpl/8sDwKGw6XtFh1mBEXAsosSAL9GgQhO+WcJNNVqh8ykLRYFd+RihupSRIgrIGkb6wsBZznsJA8J8lY9DZ1XSXxdMvIFMaPIN+cClev8oIfyY+3TdxPqOY8IzGkG+1XLCreNFXifraTuLzWpImoYy0EN3xQiunIpG8DKQhK5lhSj5/dLw1M0AHqg6nbXTfkf6pIIe6Hx2uAwrk7rKgyoxo0YN8cQvrR0fGkq+JYUI/Xgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta;
+	t=1746025789; c=relaxed/simple;
+	bh=AzjcWtzCo+O8MqZEFAe+xbB7xQLkIglom2B10pFpT6o=;
+	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:From:to:
+	 subject:message-id:date:from:mime-version:dkim-signature; b=LjwyeTznc7BRPGA3e8fhFd9U4mWVtn8KDAc/dupUd7sUlloA7cNtkrWeuxo3qStJF8qGT1LF0LG+iVpx9IdxTwDCUffHZmTJ9MsXZKlEdT1WFcRg3kP0aroXb1lkq/XwGEhSk9c7Qx7nW+UFM2IWFq8hH6UZBSSA/8feVQD4WQbb4KWZbf6Wlv7a0HnpOPIHSENKW+RCXoYaVtWMfmYmv02ShxZp3sbt3ClQ93S+/+W/QP5+/zwhlTTqtcP+g+fmPCCfXs4lSpz2Fjxrnj7/PC6cEEsnsMkaJyPN0OMTo3jIu1pSVdpBYwjHEVSY1RemHHHmp/ljmNCuBcCpbdgqqA==
+ARC-Authentication-Results: i=1; mta-outp-ksl-1; spf=pass (mta-outp-ksl-1.case.edu: domain of case.edu designates 209.85.160.198 as permitted sender) smtp.mailfrom=case.edu; dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case; dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu
+Received-SPF: Pass (mta-outp-ksl-1.case.edu: domain of case.edu designates 209.85.160.198 as permitted sender) client-ip=209.85.160.198
+Received: from mpv-out-cfd-1.case.edu (mpv-out-cfd-1.case.edu [129.22.103.196])
+	by mta-outp-ksl-1.case.edu (Postfix) with ESMTPS id 3A2B213DB
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:09:49 -0400 (EDT)
+Received: from mpv-local-cfd-1.case.edu (EHLO mpv-local-cfd-1.case.edu) ([129.22.103.203])
+	by mpv-out-cfd-1.case.edu (MOS 4.4.8-GA FastPath queued)
+	with ESMTP id DDI91463;
+	Wed, 30 Apr 2025 11:09:49 -0400 (EDT)
+Received: from mail-qt1-f198.google.com (EHLO mail-qt1-f198.google.com) ([209.85.160.198])
+	by mpv-local-cfd-1.case.edu (MOS 4.4.8-GA FastPath queued)
+	with ESMTP id EHU28302;
+	Wed, 30 Apr 2025 11:09:48 -0400 (EDT)
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-47699e92ab0so143378511cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:09:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=case.edu; s=g-case; t=1746025788; x=1746630588; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:cc:reply-to:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=SlRUNotoyOPrZmtBHdOmGWaPKtm8Fs35t7kqSSKlfjM=;
+        b=I4Dr7AYLMDxdkSVGt4mygoeL8/ANzESYNAuDv6mY+KY1Ool44oZN8VuRopFI2FDhBb
+         asKGyCItta2OIXlvEkIFmBXhNljlVVIUHUbTlJ2gl/wejfOTwj6dN3BKyYXfds5UEQTS
+         wCnQLST7uOy4C6se1+MZMmy7Rq3nnclkrj0CBE6Wtyq71C0j/WD1Jgo8t9mGTMRP1CaI
+         zpQnvoh7Btc9uHuhS69ILIi+2ojINeNOVrcZBSkNBh4J5a5yR9A5FJp8a/4kxl1HkcLU
+         PDmfQUV/tzdhNP0U1VUBI2yDB/geYDkcF0cfEqc5AsImCsfu1BPDhiGpHuGXD1s+SVTh
+         /yPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746025788; x=1746630588;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
+         :content-language:subject:cc:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SlRUNotoyOPrZmtBHdOmGWaPKtm8Fs35t7kqSSKlfjM=;
+        b=it6+OUxIRrdyGXqo8PjUTq9OkMlpsBvEk5VK91k1DsXvHv7003lGruR3RXHW3+bO/W
+         rnz/KD6rQDP4+IWtpoL3t3FAbewBlWkiiYxSm4120g1kZuvol6kcakoZC30zHVC0jVNc
+         gtTQi3Us4kJ9G6mRBZPzP017psQ2VctXqKredIUiVncJF3r4zRySYGQ58zzNvtpONzEc
+         moXD54hijTCVJDxV01lcuFKYaJqfKCM/q3BspZAGe3Sg0TEf3uWQwPq6g1BELCc5o1ZY
+         7qyj0sMWhAPHVdHXSbKWB3vwLBhIvi7DA6YeX0fSOIFTrczUsQZTYTB7AxeVYhwWzH8m
+         Pi+g==
+X-Forwarded-Encrypted: i=1; AJvYcCXm6s5MYyZyM2amoPc9Nld9E12ZNbUkFaGWR7bCMoRDXFMIwJa4FA6po/2rz3WPp9bK2bdZX1nQ/9yamj4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOf5kMZVYZhAX5mS6n29l3YppUOOVOzkhyXXRipgKcS1D5hyuj
+	HBCczu+xgRIUVZcrDh3fDO++E4ZcTS2P9Vut4L371sLzGA31VkYdwmQ9AU9jYPJ1cAdpngg32xE
+	vvKI8/av0NJDcSBFK9NhlHyK5/WwVxOIrqgqMKeXawjvGii779ymxYp6zfZZFuCM=
+X-Gm-Gg: ASbGnctPwyrovB2bQdn9PeA5ZBKWzmOdVgIw4ILXyLwNczE7pCnQxIlI2MFWcIrjmlK
+	bbPcst5rGii9nmXo1+2vhL/KFMWKKC273A/5nqHwxiCG8cnGpOMM0MyKOnKXxprMcFFdk951q3H
+	5kucW3tyoQPob1RcCQ/glf5CneidLwyeWQmoMC8UxmArO2R7RUFagB2nxOFcbTyu/j8GVk8pr23
+	2jyTYN0PpF4fQ0c83GbgwI9MK8CAj9AahoxmBYud0PJC0xEWj1EJQfwU8wkB7tWALN9Jeb8M4hd
+	qxwKmg+X/OHcmNHUKx26oCAm1vZ26IcmKzNcoOw=
+X-Received: by 2002:a05:622a:1f10:b0:477:1ee2:1260 with SMTP id d75a77b69052e-489c38ae0e4mr59729511cf.1.1746025787956;
+        Wed, 30 Apr 2025 08:09:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwc3yOTaObmu1NRdEPUxNDIHKFCkwt05nWczHxLVmvt32NfqQFV7+6fNq30eCQf4mlEKzUXg==
+X-Received: by 2002:a05:622a:1f10:b0:477:1ee2:1260 with SMTP id d75a77b69052e-489c38ae0e4mr59728861cf.1.1746025787490;
+        Wed, 30 Apr 2025 08:09:47 -0700 (PDT)
+Received: from [129.22.8.211] (caleb.INS.CWRU.Edu. [129.22.8.211])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f0d231csm94370501cf.29.2025.04.30.08.09.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 08:09:46 -0700 (PDT)
+Message-ID: <473bad0c-9e38-4f8b-9939-c70c52890cd2@case.edu>
+Date: Wed, 30 Apr 2025 11:09:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -34,415 +96,80 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH hyperv-next] arch/x86: Provide the CPU number in the
- wakeup AP callback
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "apais@microsoft.com" <apais@microsoft.com>,
- "benhill@microsoft.com" <benhill@microsoft.com>,
- "bperkins@microsoft.com" <bperkins@microsoft.com>,
- "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
- "ardb@kernel.org" <ardb@kernel.org>, "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "dimitri.sivanich@hpe.com" <dimitri.sivanich@hpe.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "imran.f.khan@oracle.com" <imran.f.khan@oracle.com>,
- "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
- "jgross@suse.com" <jgross@suse.com>,
- "justin.ernst@hpe.com" <justin.ernst@hpe.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- "kyle.meyer@hpe.com" <kyle.meyer@hpe.com>,
- "kys@microsoft.com" <kys@microsoft.com>, "lenb@kernel.org"
- <lenb@kernel.org>, "mingo@redhat.com" <mingo@redhat.com>,
- "nikunj@amd.com" <nikunj@amd.com>, "papaluri@amd.com" <papaluri@amd.com>,
- "perry.yuan@amd.com" <perry.yuan@amd.com>,
- "peterz@infradead.org" <peterz@infradead.org>,
- "rafael@kernel.org" <rafael@kernel.org>,
- "russ.anderson@hpe.com" <russ.anderson@hpe.com>,
- "steve.wahl@hpe.com" <steve.wahl@hpe.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
- "tim.c.chen@linux.intel.com" <tim.c.chen@linux.intel.com>,
- "tony.luck@intel.com" <tony.luck@intel.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>, "xin@zytor.com" <xin@zytor.com>,
- "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>
-References: <20250428225948.810147-1-romank@linux.microsoft.com>
- <SN6PR02MB4157D83C50EC47D816DB9574D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+Reply-To: chet.ramey@case.edu
+Cc: chet.ramey@case.edu, Etienne Champetier <champetier.etienne@gmail.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Steve French <sfrench@samba.org>, linux-afs@lists.infradead.org,
+        openafs-devel@openafs.org, linux-cifs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a
+ sticky dir
 Content-Language: en-US
-From: Roman Kisel <romank@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157D83C50EC47D816DB9574D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+To: Jeffrey E Altman <jaltman@auristor.com>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro
+ <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
+References: <433928.1745944651@warthog.procyon.org.uk>
+ <3d19dc03-72aa-46de-a6cc-4426cc84eb51@auristor.com>
+From: Chet Ramey <chet.ramey@case.edu>
+Autocrypt: addr=chet.ramey@case.edu; keydata=
+ xsDiBEEOsGwRBACFa0A1oa71HSZLWxAx0svXzhOZNQZOzqHmSuGOG92jIpQpr8DpvgRh40Yp
+ AwdcXb8QG1J5yGAKeevNE1zCFaA725vGSdHUyypHouV0xoWwukYO6qlyyX+2BZU+okBUqoWQ
+ koWxiYaCSfzB2Ln7pmdys1fJhcgBKf3VjWCjd2XJTwCgoFJOwyBFJdugjfwjSoRSwDOIMf0D
+ /iQKqlWhIO1LGpMrGX0il0/x4zj0NAcSwAk7LaPZbN4UPjn5pqGEHBlf1+xDDQCkAoZ/VqES
+ GZragl4VqJfxBr29Ag0UDvNbUbXoxQsARdero1M8GiAIRc50hj7HXFoERwenbNDJL86GPLAQ
+ OTGOCa4W2o29nFfFjQrsrrYHzVtyA/9oyKvTeEMJ7NA3VJdWcmn7gOu0FxEmSNhSoV1T4vP2
+ 1Wf7f5niCCRKQLNyUy0wEApQi4tSysdz+AbgAc0b/bHYVzIf2uO2lIEZQNNt+3g2bmXgloWm
+ W5fsm/di50Gm1l1Na63d3RZ00SeFQos6WEwLUHEB0yp6KXluXLLIZitEJM0gQ2hldCBSYW1l
+ eSA8Y2hldC5yYW1leUBjYXNlLmVkdT7CYQQTEQIAIQIbAwYLCQgHAwIDFQIDAxYCAQIeAQIX
+ gAUCRX3FIgIZAQAKCRC7WGnwZOp0q069AKCNDRn+zzN/AHbaynls/Lvq1kH/RQCgkLvF8bDs
+ maUHSxSIPqzlGuKWDxbOwE0EQQ6wbxAEAJCukwDigRDPhAuI+lf+6P64lWanIFOXIndqhvU1
+ 3cDbQ/Wt5LwPzm2QTvd7F+fcHOgZ8KOFScbDpjJaRqwIybMTcIN0B2pBLX/C10W1aY+cUrXZ
+ gXUGVISEMmpaP9v02auToo7XXVEHC+XLO9IU7/xaU98FL69l6/K4xeNSBRM/AAMHA/wNAmRB
+ pcyK0+VggZ5esQaIP/LyolAm2qwcmrd3dZi+g24s7yjV0EUwvRP7xHRDQFgkAo6++QbuecU/
+ J90lxrVnQwucZmfz9zgWDkT/MpfB/CNRSKLFjhYq2yHmHWT6vEjw9Ry/hF6Pc0oh1a62USdf
+ aKAiim0nVxxQmPmiRvtCmcJJBBgRAgAJBQJBDrBvAhsMAAoJELtYafBk6nSr43AAn2ZZFQg8
+ Gs/zUzvXMt7evaFqVTzcAJ0cHtKpP1i/4H4R9+OsYeQdxxWxTQ==
+In-Reply-To: <3d19dc03-72aa-46de-a6cc-4426cc84eb51@auristor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Mirapoint-Received-SPF: 209.85.160.198 mail-qt1-f198.google.com chet.ramey@case.edu 5 none
+X-Mirapoint-Received-SPF: 129.22.103.203 mpv-local-cfd-1.case.edu chet.ramey@case.edu 5 none
+X-Junkmail-Status: score=10/90, host=mpv-out-cfd-1.case.edu
+X-Junkmail-Signature-Raw: score=unknown,
+	refid=str=0001.0A006375.68123D3B.00B4,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0,
+	ip=0.0.0.0,
+	so=2016-11-06 16:00:04,
+	dmn=2013-03-21 17:37:32,
+	mode=single engine
+X-Junkmail-IWF: false
+
+On 4/29/25 1:35 PM, Jeffrey E Altman wrote:
+
+> I think its worth clarifying the purpose of this fallback logic and why it 
+> exists.  The fallback
+> logic was added to bash 1.14.7 as part of the introduction of support for 
+> IBM/Transarc AFS 3.4.
+
+The chronology is wrong. The workaround came in in January, 1992, when
+bash-1.11 was current and IBM released AFS 3.1. (The bug was actually
+encountered with bash-1.08.)
+
+The old code, without the workaround, caused widespread mail delivery
+failures at CMU, who reported the problem to me and (they claimed at the
+time) IBM, and provided the patch.
 
 
+> It was noted that sometimes EEXIST would be returned from open(filename, 
+> flags | O_CREAT)
+> but would succeed if open(filename, flags & ~O_CREAT) was called.  There is 
+> no evidence that
+> the AFS developers were aware of the problem.
 
-On 4/29/2025 9:05 PM, Michael Kelley wrote:
-> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 28, 2025 4:00 PM
->>
->> When starting APs, confidential guests and paravisor guests
->> need to know the CPU number, and the pattern of using the linear
->> search has emerged in several places. With N processors that leads
->> to the O(N^2) time complexity.
->>
->> Provide the CPU number in the AP wake up callback so that one can
->> get the CPU number in constant time.
-> 
-> This patch aligns with my original suggestion and brings the expected
-> benefit in runtime and in code simplification. But to me, introducing
-> struct wakeup_secondary_cpu_data seems a bit unnecessary. The
-> secondary wakeup functions currently have two arguments, and
-> increasing that to three arguments is not problematic. I usually see
-> structures introduced when the argument count gets into the 6 or
-> more range, and there are multiple call layers that need those same
-> arguments (such as the TLB flushing code, for example). In those
-> cases, adding a structure makes sense.
-> 
-> But in this case, quite a few lines of code get added to define local
-> variables and to pull values out of the structure and into those local
-> variables, all of which would be avoided if the three arguments just
-> remained as individual arguments. Adding a structure perhaps makes
-> it easier to add a 4th argument should the need arise, but that seems
-> unlikely and could be dealt with when and if it actually happened.
-> 
-> So I'd say drop the structure, and just pass "cpu" directly as a
-> 3rd argument.
-
-Yep, I designed that to be future-proof :D
-
-I do agree with your take on that: likely too much for now, and it's too
-early to invest in that. I'll drop the structure, thanks for the
-discussion!
-
-> 
-> Michael
-> 
->>
->> Suggested-by: Michael Kelley <mhklinux@outlook.com>
->> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
->> ---
->>   arch/x86/coco/sev/core.c           | 18 ++++++++----------
->>   arch/x86/hyperv/hv_vtl.c           | 17 +++++++----------
->>   arch/x86/hyperv/ivm.c              |  8 +++++++-
->>   arch/x86/include/asm/apic.h        | 14 ++++++++++----
->>   arch/x86/include/asm/mshyperv.h    |  5 +++--
->>   arch/x86/kernel/acpi/madt_wakeup.c |  8 +++++++-
->>   arch/x86/kernel/apic/apic_noop.c   |  2 +-
->>   arch/x86/kernel/apic/x2apic_uv_x.c |  7 ++++++-
->>   arch/x86/kernel/smpboot.c          | 19 +++++++++++++++----
->>   9 files changed, 64 insertions(+), 34 deletions(-)
->>
->> diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
->> index 82492efc5d94..063f176854fd 100644
->> --- a/arch/x86/coco/sev/core.c
->> +++ b/arch/x86/coco/sev/core.c
->> @@ -1179,17 +1179,24 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
->>   		free_page((unsigned long)vmsa);
->>   }
->>
->> -static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->> +static int wakeup_cpu_via_vmgexit(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->>   	struct sev_es_save_area *cur_vmsa, *vmsa;
->>   	struct ghcb_state state;
->> +	unsigned long start_ip;
->>   	struct svsm_ca *caa;
->>   	unsigned long flags;
->>   	struct ghcb *ghcb;
->>   	u8 sipi_vector;
->>   	int cpu, ret;
->> +	u32 apic_id;
->>   	u64 cr4;
->>
->> +
->> +	cpu = wakeup->cpu;
->> +	apic_id = wakeup->apicid;
->> +	start_ip = wakeup->start_ip;
->> +
->>   	/*
->>   	 * The hypervisor SNP feature support check has happened earlier, just check
->>   	 * the AP_CREATION one here.
->> @@ -1208,15 +1215,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
->>
->>   	/* Override start_ip with known protected guest start IP */
->>   	start_ip = real_mode_header->sev_es_trampoline_start;
->> -
->> -	/* Find the logical CPU for the APIC ID */
->> -	for_each_present_cpu(cpu) {
->> -		if (arch_match_cpu_phys_id(cpu, apic_id))
->> -			break;
->> -	}
->> -	if (cpu >= nr_cpu_ids)
->> -		return -EINVAL;
->> -
->>   	cur_vmsa = per_cpu(sev_vmsa, cpu);
->>
->>   	/*
->> diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
->> index 582fe820e29c..7ed3c639d612 100644
->> --- a/arch/x86/hyperv/hv_vtl.c
->> +++ b/arch/x86/hyperv/hv_vtl.c
->> @@ -237,17 +237,14 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
->>   	return ret;
->>   }
->>
->> -static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
->> +static int hv_vtl_wakeup_secondary_cpu(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->> -	int vp_id, cpu;
->> +	unsigned long start_ip;
->> +	u32 apicid;
->> +	int vp_id;
->>
->> -	/* Find the logical CPU for the APIC ID */
->> -	for_each_present_cpu(cpu) {
->> -		if (arch_match_cpu_phys_id(cpu, apicid))
->> -			break;
->> -	}
->> -	if (cpu >= nr_cpu_ids)
->> -		return -EINVAL;
->> +	apicid = wakeup->apicid;
->> +	start_ip = wakeup->start_ip;
->>
->>   	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
->>   	vp_id = hv_vtl_apicid_to_vp_id(apicid);
->> @@ -261,7 +258,7 @@ static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
->>   		return -EINVAL;
->>   	}
->>
->> -	return hv_vtl_bringup_vcpu(vp_id, cpu, start_eip);
->> +	return hv_vtl_bringup_vcpu(vp_id, wakeup->cpu, start_ip);
->>   }
->>
->>   int __init hv_vtl_early_init(void)
->> diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
->> index c0039a90e9e0..6037cabc1ae0 100644
->> --- a/arch/x86/hyperv/ivm.c
->> +++ b/arch/x86/hyperv/ivm.c
->> @@ -9,6 +9,7 @@
->>   #include <linux/bitfield.h>
->>   #include <linux/types.h>
->>   #include <linux/slab.h>
->> +#include <asm/apic.h>
->>   #include <asm/svm.h>
->>   #include <asm/sev.h>
->>   #include <asm/io.h>
->> @@ -288,7 +289,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa)
->>   		free_page((unsigned long)vmsa);
->>   }
->>
->> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
->> +int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->>   	struct sev_es_save_area *vmsa = (struct sev_es_save_area *)
->>   		__get_free_page(GFP_KERNEL | __GFP_ZERO);
->> @@ -296,11 +297,16 @@ int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
->>   	struct desc_ptr gdtr;
->>   	u64 ret, retry = 5;
->>   	struct hv_enable_vp_vtl *start_vp_input;
->> +	unsigned long start_ip;
->>   	unsigned long flags;
->> +	u32 cpu;
->>
->>   	if (!vmsa)
->>   		return -ENOMEM;
->>
->> +	cpu = wakeup->cpu;
->> +	start_ip = wakeup->apicid;
->> +
->>   	native_store_gdt(&gdtr);
->>
->>   	vmsa->gdtr.base = gdtr.address;
->> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
->> index f21ff1932699..7e660125f749 100644
->> --- a/arch/x86/include/asm/apic.h
->> +++ b/arch/x86/include/asm/apic.h
->> @@ -262,6 +262,12 @@ extern void __init check_x2apic(void);
->>
->>   struct irq_data;
->>
->> +struct wakeup_secondary_cpu_data {
->> +	int cpu;
->> +	u32 apicid;
->> +	unsigned long start_ip;
->> +};
->> +
->>   /*
->>    * Copyright 2004 James Cleverdon, IBM.
->>    *
->> @@ -313,9 +319,9 @@ struct apic {
->>   	u32	(*get_apic_id)(u32 id);
->>
->>   	/* wakeup_secondary_cpu */
->> -	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
->> +	int	(*wakeup_secondary_cpu)(struct wakeup_secondary_cpu_data *data);
->>   	/* wakeup secondary CPU using 64-bit wakeup point */
->> -	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
->> +	int	(*wakeup_secondary_cpu_64)(struct wakeup_secondary_cpu_data *data);
->>
->>   	char	*name;
->>   };
->> @@ -333,8 +339,8 @@ struct apic_override {
->>   	void	(*send_IPI_self)(int vector);
->>   	u64	(*icr_read)(void);
->>   	void	(*icr_write)(u32 low, u32 high);
->> -	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
->> -	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
->> +	int	(*wakeup_secondary_cpu)(struct wakeup_secondary_cpu_data *data);
->> +	int	(*wakeup_secondary_cpu_64)(struct wakeup_secondary_cpu_data *data);
->>   };
->>
->>   /*
->> diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
->> index 07aadf0e839f..62c64778ad01 100644
->> --- a/arch/x86/include/asm/mshyperv.h
->> +++ b/arch/x86/include/asm/mshyperv.h
->> @@ -6,6 +6,7 @@
->>   #include <linux/nmi.h>
->>   #include <linux/msi.h>
->>   #include <linux/io.h>
->> +#include <asm/apic.h>
->>   #include <asm/nospec-branch.h>
->>   #include <asm/paravirt.h>
->>   #include <hyperv/hvhdk.h>
->> @@ -268,11 +269,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct
->> hv_interrupt_entry *entry);
->>   #ifdef CONFIG_AMD_MEM_ENCRYPT
->>   bool hv_ghcb_negotiate_protocol(void);
->>   void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
->> -int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
->> +int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup);
->>   #else
->>   static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
->>   static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
->> -static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
->> +static inline int hv_snp_boot_ap(struct wakeup_secondary_cpu_data *wakeup) {
->> return 0; }
->>   #endif
->>
->>   #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
->> diff --git a/arch/x86/kernel/acpi/madt_wakeup.c
->> b/arch/x86/kernel/acpi/madt_wakeup.c
->> index d5ef6215583b..5de1bd4e49ed 100644
->> --- a/arch/x86/kernel/acpi/madt_wakeup.c
->> +++ b/arch/x86/kernel/acpi/madt_wakeup.c
->> @@ -169,8 +169,14 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
->>   	return 0;
->>   }
->>
->> -static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
->> +static int acpi_wakeup_cpu(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->> +	unsigned long start_ip;
->> +	u32 apicid;
->> +
->> +	start_ip = wakeup->start_ip;
->> +	apicid = wakeup->apicid;
->> +
->>   	if (!acpi_mp_wake_mailbox_paddr) {
->>   		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
->>   		return -EOPNOTSUPP;
->> diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noop.c
->> index b5bb7a2e8340..dd4ba29042f9 100644
->> --- a/arch/x86/kernel/apic/apic_noop.c
->> +++ b/arch/x86/kernel/apic/apic_noop.c
->> @@ -27,7 +27,7 @@ static void noop_send_IPI_allbutself(int vector) { }
->>   static void noop_send_IPI_all(int vector) { }
->>   static void noop_send_IPI_self(int vector) { }
->>   static void noop_apic_icr_write(u32 low, u32 id) { }
->> -static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
->> +static int noop_wakeup_secondary_cpu(struct wakeup_secondary_cpu_data *data) { return -1; }
->>   static u64 noop_apic_icr_read(void) { return 0; }
->>   static u32 noop_get_apic_id(u32 apicid) { return 0; }
->>   static void noop_apic_eoi(void) { }
->> diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
->> index 7fef504ca508..b76f865c31ef 100644
->> --- a/arch/x86/kernel/apic/x2apic_uv_x.c
->> +++ b/arch/x86/kernel/apic/x2apic_uv_x.c
->> @@ -667,11 +667,16 @@ static __init void build_uv_gr_table(void)
->>   	}
->>   }
->>
->> -static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip)
->> +static int uv_wakeup_secondary(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->> +	unsigned long start_rip;
->>   	unsigned long val;
->> +	u32 phys_apicid;
->>   	int pnode;
->>
->> +	phys_apicid = wakeup->apicid;
->> +	start_rip = wakeup->start_ip;
->> +
->>   	pnode = uv_apicid_to_pnode(phys_apicid);
->>
->>   	val = (1UL << UVH_IPI_INT_SEND_SHFT) |
->> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
->> index c10850ae6f09..341620f1e1fe 100644
->> --- a/arch/x86/kernel/smpboot.c
->> +++ b/arch/x86/kernel/smpboot.c
->> @@ -715,8 +715,14 @@ static void send_init_sequence(u32 phys_apicid)
->>   /*
->>    * Wake up AP by INIT, INIT, STARTUP sequence.
->>    */
->> -static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip)
->> +static int wakeup_secondary_cpu_via_init(struct wakeup_secondary_cpu_data *wakeup)
->>   {
->> +	unsigned long start_eip;
->> +	u32 phys_apicid;
->> +
->> +	start_eip = wakeup->start_ip;
->> +	phys_apicid = wakeup->apicid;
->> +
->>   	unsigned long send_status = 0, accept_status = 0;
->>   	int num_starts, j, maxlvt;
->>
->> @@ -865,6 +871,7 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
->>   static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
->>   {
->>   	unsigned long start_ip = real_mode_header->trampoline_start;
->> +	struct wakeup_secondary_cpu_data wakeup;
->>   	int ret;
->>
->>   #ifdef CONFIG_X86_64
->> @@ -906,6 +913,10 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
->>   		}
->>   	}
->>
->> +	wakeup.cpu = cpu;
->> +	wakeup.apicid = apicid;
->> +	wakeup.start_ip = start_ip;
->> +
->>   	smp_mb();
->>
->>   	/*
->> @@ -916,11 +927,11 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
->>   	 * - Use an INIT boot APIC message
->>   	 */
->>   	if (apic->wakeup_secondary_cpu_64)
->> -		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
->> +		ret = apic->wakeup_secondary_cpu_64(&wakeup);
->>   	else if (apic->wakeup_secondary_cpu)
->> -		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
->> +		ret = apic->wakeup_secondary_cpu(&wakeup);
->>   	else
->> -		ret = wakeup_secondary_cpu_via_init(apicid, start_ip);
->> +		ret = wakeup_secondary_cpu_via_init(&wakeup);
->>
->>   	/* If the wakeup mechanism failed, cleanup the warm reset vector */
->>   	if (ret)
->>
->> base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
->> --
->> 2.43.0
->>
-> 
+Well, except for CMU's report.
 
 -- 
-Thank you,
-Roman
-
+``The lyf so short, the craft so long to lerne.'' - Chaucer
+		 ``Ars longa, vita brevis'' - Hippocrates
+Chet Ramey, UTech, CWRU    chet@case.edu    http://tiswww.cwru.edu/~chet/
