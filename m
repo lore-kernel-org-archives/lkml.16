@@ -1,223 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934B418CBFB;
-	Wed, 30 Apr 2025 15:53:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD0E17CA17;
+	Wed, 30 Apr 2025 15:54:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028388; cv=none; b=W6DN5590KGlOcT+Q+pbhQFZj+2wyFz/W/nHt6Yfc8RL492TU7h0shQlyFyYqkZU5NLtQEGqGoWScr2lZnKAG0edcUHuvDsABz7LsMfOalPlimicBGT4ojaEaAombRW9HxnVC+Iz+BHgPD8wOER/edVLS6MV7nH/9w6nnVbaaMIU=
+	t=1746028464; cv=none; b=IqFzcsv74V2jSq+AG8GWfDCsOSMieRnXEJZODcpmp+3PvTK4PA+ItJ5XoXswk/Ou+e0VokkzEQY9EZmn7CKGv0Uug1tAeE8bIcfnqHRMxxF+u5gfHvFjGLZ7yJJVE18ez/bQjecZme+BfVrymN7KYR0BKM1k50PU6KhQXovJKII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028388; c=relaxed/simple;
-	bh=m0UugMtWCbzfPWtuy2ts8556YUjy07o4bV0mVOb9sq8=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pytFKpiqz7iF2JFJrl0tlIZHCIVliUL9tsmit1A0iUQCNeGtokA8q7cu7UBuqZcjMLo1K5wiB87he9DQTy0NJoeP1vwkigSw0lAZZJ+c+uhq09K+soqWdneJatpAeNFl3VCVRTE7mWiekecxNOHjq9M3V5oFqQO6zfxe3qdP7Hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1g+2Omv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746028464; c=relaxed/simple;
+	bh=z7E8Qbo13mwyDTVgulR62/h0cxEpdpORLCx+iFA/PcM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=d+J6PFFJwDZGqgRUildkPn1Sn9rx++B+CTfQKVNa2IWsazxE+D66bClYbPNNCm6rpqgsta3kgsE2J1oAxsO3uMEWSCNOmGyr9ulvETI3EcvZGe3gftBF/xoQXgBTXlkvC+hpxR/gMhTuZUiuPvXHISo5APb1S+H4XEbGfxQDS3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQ07nxSD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1g+2Omv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B25AC4CEE7;
-	Wed, 30 Apr 2025 15:53:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQ07nxSD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8763C4CEE7;
+	Wed, 30 Apr 2025 15:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028388;
-	bh=m0UugMtWCbzfPWtuy2ts8556YUjy07o4bV0mVOb9sq8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=e1g+2OmvuZOGcznUQ5tILgNY9GEUShEVzqZwoFHgpSeRPpz+49sIXbBOwEtBm/cAJ
-	 8AD3KZDARms4UDFekzvsmu0tO50mzOFsD6UkZEMExNYTSnvj1Hxd+mOH1AlPirN2XS
-	 PKOGK8XXJMVmHqjRfsw3esfbyOoL7m063jMZh1kpy2g48W2kEdra0/F1/Il8EWsRBU
-	 t43/UXhKohzxEILsWIIWy3jfDxHhDVUIxErgzdbCmfCv0q6zsjLIX1ov/D6y2DabXO
-	 Mt8LUmI+UW8QafEdNolGovNdR44Bb5KSxhj7v6J7lmjHLgV3KFZU9H2iy9NuXvMWxP
-	 dMsH+XX3Q9pfQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uA9k9-00AKWb-I4;
-	Wed, 30 Apr 2025 16:53:05 +0100
-Date: Wed, 30 Apr 2025 16:53:04 +0100
-Message-ID: <865xilir33.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: D Scott Phillips <scott@os.amperecomputing.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	James Morse <james.morse@arm.com>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Kevin Brodsky <kevin.brodsky@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	"Rob Herring  (Arm)" <robh@kernel.org>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Shiqi Liu <shiqiliu@hust.edu.cn>,
-	Will Deacon <will@kernel.org>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] arm64: errata: Work around AmpereOne's erratum AC04_CPU_23
-In-Reply-To: <20250425024741.1309893-1-scott@os.amperecomputing.com>
-References: <20250425024741.1309893-1-scott@os.amperecomputing.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1746028463;
+	bh=z7E8Qbo13mwyDTVgulR62/h0cxEpdpORLCx+iFA/PcM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=sQ07nxSDESASQakq8rKDdfFSMSacI8dxxX/QW9rZ7BJ+4U12f05PxkYRABFH9IhBH
+	 Owu3Z4yNhSchvqx/6Yl2OEL06UPbSrAZHVqLyFydzwR/v5utxgm/Rf0nNqA1FgsIny
+	 GfC7D/cMvegLkrnSfIQkMJeturfvukKAp2inSjiy+9AZ7wrIZk3muaiotnyeaX+vUW
+	 Iz/imHadJL2tLh+nFu9wnhGvir5CgXpD1887igW64SivhGDm15kejt2bkvBEinsOlv
+	 h1eOyvyGAqdz/YmyKhlzBx927MYiXLr4H5l3CwbmaI9BWiiTEf/C31c/mx5N4eQYmn
+	 hI+/Z1J5Qjk7w==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
+	linux-kernel@vger.kernel.org,
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org,
+	Miguel Ojeda <ojeda@kernel.org>
+Subject: Re: [PATCH 6.6 000/204] 6.6.89-rc1 review
+Date: Wed, 30 Apr 2025 17:54:11 +0200
+Message-ID: <20250430155411.796760-1-ojeda@kernel.org>
+In-Reply-To: <20250429161059.396852607@linuxfoundation.org>
+References: <20250429161059.396852607@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: scott@os.amperecomputing.com, catalin.marinas@arm.com, james.clark@linaro.org, james.morse@arm.com, joey.gouly@arm.com, kevin.brodsky@arm.com, broonie@kernel.org, mark.rutland@arm.com, oliver.upton@linux.dev, robh@kernel.org, shameerali.kolothum.thodi@huawei.com, shiqiliu@hust.edu.cn, will@kernel.org, yangyicong@hisilicon.com, kvmarm@lists.linux.dev, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, 25 Apr 2025 03:47:41 +0100,
-D Scott Phillips <scott@os.amperecomputing.com> wrote:
-> 
-> Updates to HCR_EL2 can rarely corrupt simultaneous translations for data
-> addresses initiated by load/store instructions. Only instruction
-> initiated translations are vulnerable, not translations from prefetches
-> for example. A DSB before the store to HCR_EL2 is sufficient to prevent older
-> instructions from hitting the window for corruption, and an ISB after
-> is sufficient to prevent younger instructions from hitting the window
-> for corruption.
-> 
-> Signed-off-by: D Scott Phillips <scott@os.amperecomputing.com>
-> ---
-> v1: https://lore.kernel.org/kvmarm/20250415154711.1698544-2-scott@os.amperecomputing.com/
-> Changes since v1:
->  - Add a write_sysreg_hcr() helper (Oliver)
->  - Add more specific wording in the errata description (Oliver & Marc)
-> 
->  arch/arm64/Kconfig                      | 17 +++++++++++++++++
->  arch/arm64/include/asm/hardirq.h        |  4 ++--
->  arch/arm64/include/asm/sysreg.h         | 10 ++++++++++
->  arch/arm64/kernel/cpu_errata.c          | 14 ++++++++++++++
->  arch/arm64/kvm/at.c                     |  8 ++++----
->  arch/arm64/kvm/hyp/include/hyp/switch.h |  2 +-
->  arch/arm64/kvm/hyp/nvhe/mem_protect.c   |  2 +-
->  arch/arm64/kvm/hyp/nvhe/switch.c        |  2 +-
->  arch/arm64/kvm/hyp/vhe/switch.c         |  2 +-
->  arch/arm64/kvm/hyp/vhe/tlb.c            |  4 ++--
->  arch/arm64/tools/cpucaps                |  1 +
->  11 files changed, 54 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index a182295e6f08b..3ae4e80e3002b 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -464,6 +464,23 @@ config AMPERE_ERRATUM_AC03_CPU_38
->  
->  	  If unsure, say Y.
->  
-> +config AMPERE_ERRATUM_AC04_CPU_23
-> +        bool "AmpereOne: AC04_CPU_23:  Failure to synchronize writes to HCR_EL2 may corrupt address translations."
-> +	default y
-> +	help
-> +	  This option adds an alternative code sequence to work around Ampere
-> +	  errata AC04_CPU_23 on AmpereOne.
-> +
-> +	  Updates to HCR_EL2 can rarely corrupt simultaneous translations for
-> +	  data addresses initiated by load/store instructions. Only
-> +	  instruction initiated translations are vulnerable, not translations
-> +	  from prefetches for example. A DSB before the store to HCR_EL2 is
-> +	  sufficient to prevent older instructions from hitting the window
-> +	  for corruption, and an ISB after is sufficient to prevent younger
-> +	  instructions from hitting the window for corruption.
-> +
-> +	  If unsure, say Y.
-> +
->  config ARM64_WORKAROUND_CLEAN_CACHE
->  	bool
->  
-> diff --git a/arch/arm64/include/asm/hardirq.h b/arch/arm64/include/asm/hardirq.h
-> index cbfa7b6f2e098..77d6b8c63d4e6 100644
-> --- a/arch/arm64/include/asm/hardirq.h
-> +++ b/arch/arm64/include/asm/hardirq.h
-> @@ -41,7 +41,7 @@ do {									\
->  									\
->  	___hcr = read_sysreg(hcr_el2);					\
->  	if (!(___hcr & HCR_TGE)) {					\
-> -		write_sysreg(___hcr | HCR_TGE, hcr_el2);		\
-> +		write_sysreg_hcr(___hcr | HCR_TGE);			\
->  		isb();							\
->  	}								\
->  	/*								\
-> @@ -82,7 +82,7 @@ do {									\
->  	 */								\
->  	barrier();							\
->  	if (!___ctx->cnt && !(___hcr & HCR_TGE))			\
-> -		write_sysreg(___hcr, hcr_el2);				\
-> +		write_sysreg_hcr(___hcr);				\
->  } while (0)
->  
->  static inline void ack_bad_irq(unsigned int irq)
-> diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
-> index 2639d3633073d..d41eeba7f8201 100644
-> --- a/arch/arm64/include/asm/sysreg.h
-> +++ b/arch/arm64/include/asm/sysreg.h
-> @@ -1185,6 +1185,16 @@
->  		write_sysreg_s(__scs_new, sysreg);			\
->  } while (0)
->  
-> +#define write_sysreg_hcr(__val) do {					\
-> +	if(IS_ENABLED(CONFIG_AMPERE_ERRATUM_AC04_CPU_23) &&		\
-> +	   alternative_has_cap_unlikely(ARM64_WORKAROUND_AMPERE_AC04_CPU_23)) \
-> +		asm volatile("dsb nsh; msr hcr_el2, %x0; isb"		\
-> +			     : : "rZ" (__val));				\
-> +	else								\
-> +		asm volatile("msr hcr_el2, %x0"				\
-> +			     : : "rZ" (__val));				\
-> +} while (0)
-> +
+On Tue, 29 Apr 2025 18:41:28 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.6.89 release.
+> There are 204 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
+> Anything received after that time might be too late.
 
-I'm worried that some of these accesses may occur before we compute
-the capabilities. I'd be more confident if the default was to have the
-workaround, and only to relax it once we know we're not on a broken
-system.
+Boot-tested under QEMU for Rust x86_64:
 
-But that leaves the question of the early stuff that runs before we
-get to C code. Are you sure this isn't affected by this issue (for
-example, the code in head.S, hyp-stub.S, and el2-setup.h)?
+Tested-by: Miguel Ojeda <ojeda@kernel.org>
 
->  #define read_sysreg_par() ({						\
->  	u64 par;							\
->  	asm(ALTERNATIVE("nop", "dmb sy", ARM64_WORKAROUND_1508412));	\
-> diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-> index b55f5f7057502..60f1b70fc0845 100644
-> --- a/arch/arm64/kernel/cpu_errata.c
-> +++ b/arch/arm64/kernel/cpu_errata.c
-> @@ -557,6 +557,13 @@ static const struct midr_range erratum_ac03_cpu_38_list[] = {
->  };
->  #endif
->  
-> +#ifdef CONFIG_AMPERE_ERRATUM_AC04_CPU_23
-> +static const struct midr_range erratum_ac04_cpu_23_list[] = {
-> +	MIDR_ALL_VERSIONS(MIDR_AMPERE1A),
-> +	{},
-> +};
-> +#endif
-> +
->  const struct arm64_cpu_capabilities arm64_errata[] = {
->  #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
->  	{
-> @@ -875,6 +882,13 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
->  		.capability = ARM64_WORKAROUND_AMPERE_AC03_CPU_38,
->  		ERRATA_MIDR_RANGE_LIST(erratum_ac03_cpu_38_list),
->  	},
-> +#endif
-> +#ifdef CONFIG_AMPERE_ERRATUM_AC04_CPU_23
-> +	{
-> +		.desc = "AmpereOne erratum AC04_CPU_23",
-> +		.capability = ARM64_WORKAROUND_AMPERE_AC04_CPU_23,
-> +		ERRATA_MIDR_RANGE_LIST(erratum_ac04_cpu_23_list),
-> +	},
->  #endif
+Thanks!
 
-This needs to be captured in Documentation/arch/arm64/silicon-errata.rst.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Cheers,
+Miguel
