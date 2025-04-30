@@ -1,217 +1,81 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-m93197.xmail.ntesmail.com (mail-m93197.xmail.ntesmail.com [103.126.93.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9DBC2DC77E;
-	Wed, 30 Apr 2025 02:03:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20667405A;
+	Wed, 30 Apr 2025 02:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.126.93.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745978582; cv=none; b=sFs//f7AtFWRiVA6RTOppdu3BSL5kk93YXUkQfnp0oZstTV1e5OrmmkMVy1Y644S7lPyffpqh7NYIt/cLjBKPIDKiUGjBu5Fs+hHjq0oCFxp72C+tGBKLJtWlGJ3808o9ZvqIJkUDX7lexo0hgfNzj0LYRzUSu5NsmrtTyb7k1E=
+	t=1745978658; cv=none; b=F/38LPhjfBbY1ePH1Q5L7hF2kQDqNnLIrg0nD4m+nNaZJWC2CEIVPtTJgjzWWpcmjn+R4844FWevq3SReGEMzTOZhAVIAVap8SX04qQ76bX611+R5M3LnfPKGBJ7msmbgwg49/p0j5p/IZjwhWORSz52AKiWZ3VLGKPz+eyISWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745978582; c=relaxed/simple;
-	bh=e25vsFQvM7K9a+NWv9Hv7JhvUfauCVFzCE5OgLo8MPE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tCVi/7oYzJS2B1JcWMhQhKLz53AI6ecQy0w0aXwcHJsOWJNbm8vlRtd/FrFe98/0IEZ2rxA+Gcg/pr1Gm24xvXnj0Wi7KXp270TDPL0MWlBq2mNZ0HZjJChfnZc0hirDgtXaxPY04HvxnYCg2YgudOsR5wfBEHGfvRa8n9tY4cY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FGk/AOSr; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1745978658; c=relaxed/simple;
+	bh=zY7m/i5fkkk0qT0ubn4v6yh7AcHEEjb6q0ezIKXYFq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CWN8qnGQt1dOY71NTb9iL8+VxiMR0InresWFTOGlAP56ISqeZY5T7Nq3lYyH/fdXa4/gWXt09X7ffYlfE+U3adGxABSw1GSHZtbFdPVY7dKi9cGFXwbfJjNMkASyA6pELAIP6p08/v8d1E6jh5kJNKVofleoJr8fSlzuoZM92bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com; spf=pass smtp.mailfrom=rock-chips.com; dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b=Qi9o/yJn; arc=none smtp.client-ip=103.126.93.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rock-chips.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rock-chips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FGk/AOSr"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-736aaeed234so5607646b3a.0;
-        Tue, 29 Apr 2025 19:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745978580; x=1746583380; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PU2BMFTnVtPjOHXZX3MwYrwKdLPtw4QrVftiOXMGqpw=;
-        b=FGk/AOSrTnV9qyh1ke1eNcAqxlCzMG+exCZjea13GF80FjCYWqdTT26VXc0PhorEUV
-         u1hatA8IJJpZdXhvJC5g2JvCQRFPwMZEG8bixXNRNNw7xnq0XKXcJ5ckQ9nf8TJpvGXS
-         MeXBLzRh0KfXajHM5G6xt+QnELIYXgJDMSzJQt2F4UPiGBw6KDTJ/gSSTWoloQuzM0mg
-         M+JVssavY+4Ry6VDetJkYUW5/P8a3gVv0SHP+tkEBEIR3QMLmx6ArF05Wo5otUJ07X/5
-         +hAzGWEC6gTdubd22alnfxtXFxFLFxMpnfAfVdfa9M0lYtmxsuOnRX1NPr/ff0P59qtq
-         FJ6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745978580; x=1746583380;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PU2BMFTnVtPjOHXZX3MwYrwKdLPtw4QrVftiOXMGqpw=;
-        b=GXeqBftWTXOAxEcyvTD+zTgRhXdmzF9GVc1rbbemIXDiDiHBp8U4SsPu9TnEsYB2IU
-         ZlW8HFIQUk9L1SjRauigT/0GhSJrZtqvcqwNpX6R/P5sM17/oOKGQWVx+AtV0U7zZ8yP
-         PXyiMAImUsh7yYApicNr8ui6HQa4pfdKzYxohRH4C4Jt1+ip0IeXTimMPe15yOw5AI55
-         vIslJlNszaq1EphkHVI57dz0vqrTybVOZLtEMN5iRTgZwKF8MeMIufgMCVcy7g9epGRl
-         fxkpLEzQpU4j2Vp6rS0x0EL5cuyYIDwH6Lh+JEcW0MrW0zzFNNTNynIO+grmnWxv0amg
-         gxxg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjkMMo6oPoVbrDzzKJPu97p2EO0UFCwlTFNi5JQkR/B+3bEtv0rm20zQ2NzdgqGDk80/0O3/JKlSmy2fY9@vger.kernel.org, AJvYcCXrzs8I0aymw36DOfL7Z2rlTcuQcplqZ85GpUzQj5LMyiKFEFbfAXxFO6JSts3L+K2MHyHxGlp8J2Nc@vger.kernel.org, AJvYcCXz5MtiZ4thstY2dSa+2q1kxFAizxU0FOmyM1Jvwxn2auxihga/3cHVcxoBMbR2aBhLsTa1abz/HgvD@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOXw21ulULlNWa3rh0xY4l1Do77C7fH7B9DdrPcGj71Psdcl7e
-	NpUNTojP1wc93AnVxqylNsuqcAmZhLplkAMOXOBqWXC6juvksV4tKpo+4adp
-X-Gm-Gg: ASbGncsD2Tjew197u5eBXi48RfJ49aZtl3XR3og2tRvaaFb9S1woU3YULrXnqcfxsWA
-	qjhrHKOZJVJIR1w2DI/TzAoH+XDNdXBdp1lXEIXur8D/obC1xICHrk74ewaFkPDgxRlvFn06awZ
-	XZrtze9tbUREJwW2AC4fbJd6BGgws1oeI0tpqF8WIZMOEHKvkx1DdiBxOrSvNGLAcy/fYHOE5Yt
-	k+ierOKRNWuAKyTeHT90Ja0vNFnRe5pAz2GCD2kuLEhKVyQQCMXj8lxaG7OXzn1NwJZBxLZPpJP
-	rbrtIzIXYg4c9W+RB9A0l2HbkhilTgFWbzd+mtyf3lZ6avgYuI7NlqeIslAxfW8=
-X-Google-Smtp-Source: AGHT+IHOaZdyKtUuNnxCkWkAIUmlGJeGdXdT+lkJ9XoblFjEg6+XQGjW6oJ2RUEHE2nQP+fbQuVjXA==
-X-Received: by 2002:a05:6a20:c90c:b0:1f5:60fb:8d9 with SMTP id adf61e73a8af0-20a88f11293mr1875081637.33.1745978579802;
-        Tue, 29 Apr 2025 19:02:59 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14d:4c64:81ec:4ff:1626:32b1:712a])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15faee61e1sm9689735a12.78.2025.04.29.19.02.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 19:02:59 -0700 (PDT)
-From: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
-To: jic23@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org
-Cc: ~lkcamp/patches@lists.sr.ht,
-	linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings:iio:adc:st,spear600-adc: txt to yaml format conversion.
-Date: Tue, 29 Apr 2025 22:50:01 -0300
-Message-ID: <20250430020248.26639-1-rodrigo.gobbi.7@gmail.com>
-X-Mailer: git-send-email 2.47.0
+	dkim=pass (1024-bit key) header.d=rock-chips.com header.i=@rock-chips.com header.b="Qi9o/yJn"
+Received: from [127.0.0.1] (gy-adaptive-ssl-proxy-4-entmail-virt151.gy.ntes [58.22.7.114])
+	by smtp.qiye.163.com (Hmail) with ESMTP id 1398a2eb4;
+	Wed, 30 Apr 2025 10:03:55 +0800 (GMT+08:00)
+Message-ID: <3c66f508-6192-4dd5-8561-d746665952b5@rock-chips.com>
+Date: Wed, 30 Apr 2025 10:03:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: rockchip: Add rk3399-evb-ind board
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Chaoyi Chen <kernel@airkyi.com>, Heiko Stuebner <heiko@sntech.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Jonas Karlman <jonas@kwiboo.se>,
+ Kever Yang <kever.yang@rock-chips.com>,
+ Jianfeng Liu <liujianfeng1994@gmail.com>, Dragan Simic <dsimic@manjaro.org>,
+ Jimmy Hon <honyuenkwun@gmail.com>, Quentin Schulz
+ <quentin.schulz@cherry.de>, FUKAUMI Naoki <naoki@radxa.com>,
+ Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+ Alexey Charkov <alchark@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250427094211.246-1-kernel@airkyi.com>
+ <20250427094211.246-3-kernel@airkyi.com>
+ <6291f6b8-75d3-4243-9935-9b64450e2b7f@lunn.ch>
+ <c583c59a-d5b7-4e20-9a1f-96f51bd7b4f3@rock-chips.com>
+ <15ee1a6b-55ba-41e9-b8a0-6e0bf62cabf0@lunn.ch>
+ <027de192-4227-4010-a759-5283b6af1531@rock-chips.com>
+ <c9b46d09-f1ed-4549-8267-9a38ceca6461@lunn.ch>
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+In-Reply-To: <c9b46d09-f1ed-4549-8267-9a38ceca6461@lunn.ch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+	tZV1koWUFDSUNOT01LS0k3V1ktWUFJV1kPCRoVCBIfWUFZQ05MTVYZSBlDSk4ZQktISR9WFRQJFh
+	oXVRMBExYaEhckFA4PWVdZGBILWUFZTkNVSUlVTFVKSk9ZV1kWGg8SFR0UWUFZT0tIVUpLSU9PT0
+	hVSktLVUpCS0tZBg++
+X-HM-Tid: 0a96846fb72b03abkunm1398a2eb4
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ok06Njo4GDJKNy1MCA1DCgsp
+	TgIaFDZVSlVKTE9OQkxDTU9ISUxDVTMWGhIXVRgTGhQCElUYEx4VOwkUGBBWGBMSCwhVGBQWRVlX
+	WRILWUFZTkNVSUlVTFVKSk9ZV1kIAVlBSUtDTzcG
+DKIM-Signature:a=rsa-sha256;
+	b=Qi9o/yJnFnGDgKs0UMtWAB+KmxAU1cggUCmbwwZZvSgaw9HgdNIBQbnVSDAYivJSgWn5fEJyOWxU3NDN0AtKDtfizNo1gcFjpl8ZnNRIhBx/cn/Tf18qUuybJbdYIETC9Sqvm2L0hi5+QChG3fQVg13Prv4pe6D8izTHZUjdeQE=; c=relaxed/relaxed; s=default; d=rock-chips.com; v=1;
+	bh=DKR60j4UMg5PnXkIvOcvtrX6NGX6zXBYsWyUwoAwfA8=;
+	h=date:mime-version:subject:message-id:from;
 
-Straight forward conversion from spear-adc.txt into yaml format.
+Hi Andrew,
 
-Signed-off-by: Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>
----
-Some constraints were extracted from the driver (spear_adc.c) and the public datasheet
-referenced at the yaml.
+On 2025/4/29 20:22, Andrew Lunn wrote:
+> Please consider how you can fix the MAC driver without breaking all
+> the boards using the wrong rgmii value. There are a few discussion
+> about this on the mailing list if you go searching.
 
-Changelog:
-v2: add constraints over properties and remove a ref at MAINTAINERS file.
-v1: https://lore.kernel.org/linux-devicetree/20250423022956.31218-1-rodrigo.gobbi.7@gmail.com/
----
- .../bindings/iio/adc/st,spear600-adc.yaml     | 69 +++++++++++++++++++
- .../bindings/staging/iio/adc/spear-adc.txt    | 24 -------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 70 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
- delete mode 100644 Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-new file mode 100644
-index 000000000000..afce10eab1c1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/st,spear600-adc.yaml
-@@ -0,0 +1,69 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/st,spear600-adc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ST SPEAr ADC device driver
-+
-+maintainers:
-+  - Jonathan Cameron <jic23@kernel.org>
-+
-+description: |
-+  Integrated ADC inside the ST SPEAr SoC, SPEAr600, supporting
-+  10-bit resolution. Datasheet can be found here:
-+  https://www.st.com/resource/en/datasheet/spear600.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - st,spear600-adc
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  sampling-frequency:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 2500000
-+    maximum: 20000000
-+    description:
-+      Default sampling frequency of the ADC
-+
-+  vref-external:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1000
-+    maximum: 2800
-+    description:
-+      External voltage reference in milli-volts. If omitted
-+      the internal voltage reference will be used.
-+
-+  average-samples:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    minimum: 1
-+    maximum: 128
-+    default: 0
-+    description:
-+      Number of samples to generate an average value. If
-+      omitted, single data conversion will be used.
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - sampling-frequency
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    adc: adc@d8200000 {
-+        compatible = "st,spear600-adc";
-+        reg = <0xd8200000 0x1000>;
-+        interrupt-parent = <&vic1>;
-+        interrupts = <6>;
-+        sampling-frequency = <5000000>;
-+        vref-external = <2500>;	/* 2.5V VRef */
-+    };
-diff --git a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt b/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-deleted file mode 100644
-index 88bc94fe1f6d..000000000000
---- a/Documentation/devicetree/bindings/staging/iio/adc/spear-adc.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--* ST SPEAr ADC device driver
--
--Required properties:
--- compatible: Should be "st,spear600-adc"
--- reg: Address and length of the register set for the device
--- interrupts: Should contain the ADC interrupt
--- sampling-frequency: Default sampling frequency
--
--Optional properties:
--- vref-external: External voltage reference in milli-volts. If omitted
--  the internal voltage reference will be used.
--- average-samples: Number of samples to generate an average value. If
--  omitted, single data conversion will be used.
--
--Examples:
--
--	adc: adc@d8200000 {
--		compatible = "st,spear600-adc";
--		reg = <0xd8200000 0x1000>;
--		interrupt-parent = <&vic1>;
--		interrupts = <6>;
--		sampling-frequency = <5000000>;
--		vref-external = <2500>;	/* 2.5V VRef */
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 906881b6c5cb..e923becb0633 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -23213,7 +23213,7 @@ STAGING - INDUSTRIAL IO
- M:	Jonathan Cameron <jic23@kernel.org>
- L:	linux-iio@vger.kernel.org
- S:	Odd Fixes
--F:	Documentation/devicetree/bindings/staging/iio/
-+F:	Documentation/devicetree/bindings/iio/
- F:	drivers/staging/iio/
- 
- STAGING - NVIDIA COMPLIANT EMBEDDED CONTROLLER INTERFACE (nvec)
--- 
-2.47.0
+Thanks for the clarification. I'll fix the problems in the RK3399 gmac 
+driver in a separate patch series. In v2 of this patch, I'll remove the 
+ethernet device tree content for now.
 
