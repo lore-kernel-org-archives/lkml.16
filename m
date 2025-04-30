@@ -1,140 +1,154 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56719213E85;
-	Wed, 30 Apr 2025 08:42:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9D121ABC6
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:42:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002530; cv=none; b=inDGjJeOW0iuFqDkoRJjAtUPOzMU4XjN0bT44DEkvw+nM48O6s/LuZXFIdwXTvK6Mi49J8K7xr17CHD82cyzjIZIbBJRDI2eWql6X2cOmRTZkQ+o1ZxLEbfMjGsZxSpsrboE9BlqsekuBeZAe1CUFbLVOeQdpcaAGkJEbN2f6IY=
+	t=1746002543; cv=none; b=KKG19IW7bT0WGiOoV/iCXJdsH4JAvPzELDeOZZJwtRZnjmixgkxXXICZLK/6EfLfdsUhsymJBAKyzVPh7/Bp+MGgYULT+env0tyFHvaTcLZF9EWEeM2MTpqWdE4ohcGo25npRvTu+4ul87S/AN3ji9i+1up0sQQN6GZYnrNGZf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002530; c=relaxed/simple;
-	bh=opIdtlH9FxubqDCmTmFXZCwSpsZlw8Xv63oX88tUBpI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aryEQfYEQh31biNJ/NJEkuP44U6yyLLWcgphbERSlc4KDGZH7p2mSAoXaZzfNqV0K235mgtkO54Jh7vD4k+yzmtvyrEtiTdhmC5h6Tr5Mnbcdj1eYwNsAxek4qzNtnYdWKTxTEpSuaQzneMNLaiPnEm6he8b7wo1zHcwEumMFo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=RJT6OmDA; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746002543; c=relaxed/simple;
+	bh=lrOuAr7//CsCE16uws5U23OQFFSQw7lF11vTqjRDSzg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IYe4WgjwEQ1vMuHfMTD7S/VE1PIH43uafgFgT+dogzwO6lgYAVsMYNL/6zWeB25yQO9It6sSYeOWXXUVrCwnzHSZZhCUkQuecSCU8w2Xai4rGwWXgB6X35wQAyLVz4E1OxtjHdVdpatV8hqj1/ahacRfUzMEwVqKYiJpT9RfvDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=i/JkN+D6; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RJT6OmDA"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 53U8f73s812541
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 30 Apr 2025 01:41:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 53U8f73s812541
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746002472;
-	bh=2/QHRN+D8/djEoWuIZIlllhMwAZHSg2wUWQdlu6s4Ik=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RJT6OmDAoNn/cc5MacwB1vC5wQ1M64qGWRanjOVN66rVpkGlXaLeGE7PE7eD7mISD
-	 /dIdmza3K+wfDZyQexgmDwpxPQNN4+/Fbw41fhxlT3K0uT/PJjyGzdwaAn+yyr9k0A
-	 CWJPVsS03uahIX8JX2uLwg3Z3hye2BZ7LId8jWJUQAdh/it1N65JzEiy3LsHYL9aJT
-	 C68Y5ccPbfaA9gH+J9F27HnzlVWkht45bvdBotMjohzZpoa3XaE99KXAA3Fc4+U100
-	 OtHQ9EQb/i6ZeoBsZ7v43PfIbFra7Pd1cFeKQ0RpDx0DYLCFE4fbEUVwSoFN8jeJCO
-	 fS0vj6MT1+Cdw==
-Message-ID: <c16677bd-ee63-4032-8825-7d2789dd7555@zytor.com>
-Date: Wed, 30 Apr 2025 01:41:06 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i/JkN+D6"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f6222c6c4cso10833969a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:42:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746002539; x=1746607339; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OUfMAZkI61yB2821Vq79bnRbndqVmGSRfkgPEIOM8kc=;
+        b=i/JkN+D63ROIBA6DJGutGsEMbrWDOAAdpL8odZ0nniSdmuwRLzVN6X/WIz+p0hdRQV
+         V/iohUXWjVN98kJblpSPnwI5ldVsTPa/UBBTbCzPoYnrUzmZIomfHquwGH7DcLgwgQ6g
+         n7iz0zGqhxnlHjoSX78xbG4SYyPgQ9UEtaAyM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746002539; x=1746607339;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OUfMAZkI61yB2821Vq79bnRbndqVmGSRfkgPEIOM8kc=;
+        b=qLwv/hKnXTTom5Crhx3EXjR3HSqbws1TIThVaWidOvIn4leP29n1AerwQzsHjGijjf
+         Kcevbu43bsDKLXnudpIx1GhBYVYjQgu/kP+9e3J7wh8aUZvvDzceIPuh6bx+ezpPWmeE
+         vxoHeaYkLTpaemwcpkihcrZlS0F/NadCWA5p6c3KtwkdweK/a4Fwd9UE9ZFjO+20aLgw
+         L75mzl1AbF8PMXoygC3kzORsrqNd0k88BBS9CpscXjeb4qSFZ8mSgCyLipviNRh6S+LI
+         N35ywagOGnr67uvbXnPrpgFtVcHgEiHUppO8UGTTkm7eTPyxP1O4AJV+L89Nn9BnWHyl
+         cmhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkJQQ4V2z9xWGQDxg3lOLIUuJUMEmnYZtD93+sKRuvYiGLK9a2Lh1sULv/YEAx/Pp68EmUUQBQuZ4Xvwk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3CR6GlTVL6REeeMpzBxerVK8InH8HGYst1PeK9ckNMo2qMwgN
+	IYesX16rpnhGCVunyjDAc89HsGnwBHfFr66MutG/99o5lUlfpLjlQN0IrCGT2Q==
+X-Gm-Gg: ASbGnct+bQRXeR1NuUNWMHMmWu5VC7e8fwiQosYoN9Fw3+zJoIB9M3vDVMm+s8X2go7
+	uL6d1U31zgOQsBVMcTKhGhz9sbQ+cXHtOETsEcEG9jtncyCzlOf7LA+3qTEk90dXUJGUjWUtcjz
+	31aTuXtEq9csK1Ov+IHQz1fZfOg9RbAJTfsyUE0UWD/MWiIKuc2hEKtKkaB1CfcfJ6H3qeUpiQd
+	QdVB5f0KKhkdalhacVEsSeLezOpguK0n4CwyXm/EtS0cydHj46pmezxBXqdVuCWB4KIIjkRjfA3
+	arNqKiMGiixzm23y0PIZkLYxV8+WPNoWkh3vU1FS5D+lyIEkDbT9y+2W/LYR4wz1I9uxUvnqcg0
+	T38HqsbBscrzDBcGupDXO9m0RCA==
+X-Google-Smtp-Source: AGHT+IE2tUm9vY4g6n13IEUjGDpcQXgLL2IoWAKbWzvId5UL7O470kgqnETeVgxpGEkAr3echu2a4w==
+X-Received: by 2002:a05:6402:2707:b0:5f6:23d2:e6f7 with SMTP id 4fb4d7f45d1cf-5f89c10be57mr1961159a12.32.1746002539605;
+        Wed, 30 Apr 2025 01:42:19 -0700 (PDT)
+Received: from jaz-virt.c.googlers.com.com (23.31.204.35.bc.googleusercontent.com. [35.204.31.23])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7016f5342sm8351783a12.35.2025.04.30.01.42.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 01:42:19 -0700 (PDT)
+From: Grzegorz Jaszczyk <jaszczyk@chromium.org>
+To: tglx@linutronix.de,
+	robh@kernel.org
+Cc: mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	saravanak@google.com,
+	dmaluka@chromium.org,
+	bgrzesik@google.com,
+	jaszczyk@google.com,
+	ilpo.jarvinen@linux.intel.com,
+	usamaarif642@gmail.com,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	tnowicki@google.com,
+	mazurekm@google.com,
+	vineethrp@google.com,
+	rppt@kernel.org,
+	agordeev@linux.ibm.com,
+	dyoung@redhat.com,
+	myrrhperiwinkle@qtmlabs.xyz,
+	guoweikang.kernel@gmail.com,
+	kirill.shutemov@linux.intel.com,
+	akpm@linux-foundation.org,
+	joel.granados@kernel.org,
+	sourabhjain@linux.ibm.com
+Subject: [PATCH v3 1/2] x86/of: add support for reserved memory defined by DT
+Date: Wed, 30 Apr 2025 08:41:37 +0000
+Message-ID: <20250430084138.2287031-2-jaszczyk@chromium.org>
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+In-Reply-To: <20250430084138.2287031-1-jaszczyk@chromium.org>
+References: <20250430084138.2287031-1-jaszczyk@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        Netdev <netdev@vger.kernel.org>, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 4/29/2025 2:45 AM, Ilpo Järvinen wrote:
->>   arch/x86/events/msr.c                                         | 3 +++
->>   arch/x86/events/perf_event.h                                  | 1 +
->>   arch/x86/events/probe.c                                       | 2 ++
-> Under arch/x86/events/ a few files seem to be missing the include?
+From: Grzegorz Jaszczyk <jaszczyk@google.com>
 
+The DT reserved-memory nodes can be present in DT as described in
+Documentation/devicetree/bindings/reserved-memory/reserved-memory.yaml.
+Similar to other architecture, which supports DT, there is a need to
+create reserved memory regions for such nodes.
 
-Most C files in arch/x86/events/ include arch/x86/events/perf_event.h,
-thus they don't need to include <asm/msr.h> directly once
-arch/x86/events/perf_event.h includes <asm/msr.h>, and this patch does
-that.
+Additionally this patch changes the sequence and calls
+x86_flattree_get_config earlier during memblock setup, just after e820
+memblock setup, so the DT reserved-memory can be properly reflected in
+the memblock before it is used for allocation.
 
+Signed-off-by: Grzegorz Jaszczyk <jaszczyk@google.com>
+---
+ arch/x86/kernel/devicetree.c | 1 +
+ arch/x86/kernel/setup.c      | 4 ++--
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-The following files include arch/x86/events/intel/uncore.h which 
-includes arch/x86/events/perf_event.h, thus no change needed:
-     arch/x86/events/intel/uncore.c
-     arch/x86/events/intel/uncore_discovery.c
-     arch/x86/events/intel/uncore_nhmex.c
-     arch/x86/events/intel/uncore_snb.c
-     arch/x86/events/intel/uncore_snbep.c
-
-The following 2 files don't include arch/x86/events/perf_event.h so they
-include <asm/msr.h> directly with this patch:
-     arch/x86/events/msr.c
-     arch/x86/events/probe.c
-
-arch/x86/events/amd/uncore.c doesn't include
-arch/x86/events/perf_event.h but includes <asm/msr.h> already.
-
-
-So we are good in this directory, but it should be a separate patch with
-the above explanation then.
-
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index dd8748c45529..f7db0e8f9c3e 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -307,6 +307,7 @@ void __init x86_flattree_get_config(void)
+ 		}
+ 
+ 		early_init_dt_verify(dt, __pa(dt));
++		early_init_fdt_scan_reserved_mem();
+ 	}
+ 
+ 	unflatten_and_copy_device_tree();
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 9d2a13b37833..6f4eddc11560 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -1047,6 +1047,8 @@ void __init setup_arch(char **cmdline_p)
+ 
+ 	e820__memblock_setup();
+ 
++	x86_flattree_get_config();
++
+ 	/*
+ 	 * Needs to run after memblock setup because it needs the physical
+ 	 * memory size.
+@@ -1157,8 +1159,6 @@ void __init setup_arch(char **cmdline_p)
+ 	early_acpi_boot_init();
+ 	x86_init.mpparse.early_parse_smp_cfg();
+ 
+-	x86_flattree_get_config();
+-
+ 	initmem_init();
+ 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+ 
+-- 
+2.49.0.901.g37484f566f-goog
 
