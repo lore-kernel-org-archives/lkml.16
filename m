@@ -1,77 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAB1FC0B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 933A21E98E7;
+	Wed, 30 Apr 2025 13:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021075; cv=none; b=QHX2YrTO2Q0EjyZ/xOqmHZCmRRYb85mjvkZId1omkB674IcG19DB5LnLvIlE9Qz5G6gPIxKB9OGSwcYK8jwW75jnmgffcH6gyR76DHBw+gdFPT/8K5QoFZVIY15CKbYus00AUGtX2Lzg+Emy1jQ4qMkUJeAfa9WVASKYEDZoSbk=
+	t=1746021103; cv=none; b=CGCkpj9AnBBah7TPXavuwPLSx8usw+R9q5Sadf/yBLXjXPnkE6Oehw+HEOPC96uAK40NGfWHqwXJNgg6o0BOy+fI28+dh1xfdJ8IyVa4NWbplWLhZuDRh2WBAuV4nKvspYRQLtqNJqYCxRGH8HeLb5fafLnsQZR6vVZJBl+yO84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021075; c=relaxed/simple;
-	bh=+ldYEvqb+hwZaur+5ZU3Vf/BQL2XMqQNtO4hKxG/Pr4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Nakkc567yXQOCtxdxn0uYKPYusoWjFdfXDGgmP+5jxjfBinPvvKNXVFQzVq9RmVc7nQCM+QdyMM34rzf/0eVDJ+EYZsk0gB1rGdAWy3h28PLomJlnxWVX+QnP0bBqa466HxTjljFyOC8MeNeFsJkasglLxvkUo1+soSxNLDSWeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rgaw3S6r; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rgaw3S6r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746021073; x=1777557073;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=+ldYEvqb+hwZaur+5ZU3Vf/BQL2XMqQNtO4hKxG/Pr4=;
-  b=Rgaw3S6ruQ6YXXhgYCye3qq+w2+4LYd4c1nF3ZRRRBesQkTM1/n2oU3S
-   arZKSi7shHLJJiLVzlkFsxe6ADMQyk3GITU+STqjmgmPz9weUeabbEKPB
-   kI8V7pMPkailpJHphFZpDYJKFYvkO/THPhz62qKCxFMUBjYT2kj6iwDlM
-   oqFeUknB/Rl7ZysAyeObiQAjmMIpunK6ssbhM+VQjMNmLAuxZEmkspVKf
-   trOdkefZpja9VstvJg8iPzUlRoIW0hSS9anUtJGIS8VFjcDWHXsayiE0h
-   4hokNPqzLDuzGJGWD7pEbrPlZnWqd2QBGGuv4e3fGU1IeojxH9CdmFQns
-   w==;
-X-CSE-ConnectionGUID: 4C9e7p2STIuZhSG8Q5d0Vg==
-X-CSE-MsgGUID: WizxTMA2QRCA3L//ShMK+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="35297142"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="35297142"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 06:51:12 -0700
-X-CSE-ConnectionGUID: CjlYMQdcRBuDr657SkmKVA==
-X-CSE-MsgGUID: abKzfZaSRlqglQ9CjqbPUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="133844232"
-Received: from unknown (HELO localhost) ([10.237.66.160])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 06:51:10 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Harry Austen <hpausten@protonmail.com>, intel-xe@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, Thomas
- =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
-Subject: Re: [PATCH v3] drm/xe: Allow building as kernel built-in
-In-Reply-To: <47kdwkkmejb7ot6qbfvto6heunnosggyn5o76gaaqcjdiviqt7@4h6u3hdxy3jb>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250425115148.12815-1-hpausten@protonmail.com>
- <874iy7w58c.fsf@intel.com>
- <47kdwkkmejb7ot6qbfvto6heunnosggyn5o76gaaqcjdiviqt7@4h6u3hdxy3jb>
-Date: Wed, 30 Apr 2025 16:51:06 +0300
-Message-ID: <87ecx9vjud.fsf@intel.com>
+	s=arc-20240116; t=1746021103; c=relaxed/simple;
+	bh=UIhg9oR0wVTRD36C+pR8L+b3uTqxZoo4MurjjgXJxBs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e8S+7/YIunD/f6ZeX61fp1XeQMBAlBGL3TUpmf1aInrQcKHb71P7cEl9KBJ7iP+t3PNpJUtIahaERG9Z8ZX8goIiwfyxrjgBJM5vGLxAiTfryRA7ztI266K02BeNzCj0nd1aStjzceLPYKGjyvd5777k9y+8EXaldAjaTZYYYlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2326106F;
+	Wed, 30 Apr 2025 06:51:33 -0700 (PDT)
+Received: from [10.1.33.69] (Suzukis-MBP.cambridge.arm.com [10.1.33.69])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 934443F673;
+	Wed, 30 Apr 2025 06:51:39 -0700 (PDT)
+Message-ID: <1efe761e-964b-4b24-b1e3-dc33bf1749b7@arm.com>
+Date: Wed, 30 Apr 2025 14:51:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] coresight: Disable MMIO logging for coresight stm driver
+Content-Language: en-GB
+To: Mao Jinlong <quic_jinlmao@quicinc.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250430110347.2091013-1-quic_jinlmao@quicinc.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+In-Reply-To: <20250430110347.2091013-1-quic_jinlmao@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Apr 2025, Lucas De Marchi <lucas.demarchi@intel.com> wrote:
-> I think we really need to start spliting the module and move the
-> conflicting symbols.
+Hi,
 
-Start? I've been working on it for more than a year now.
+On 30/04/2025 12:03, Mao Jinlong wrote:
+> When read/write registers with readl_relaxed and writel_relaxed,
+> log_read_mmio and log_write_mmio will be called. If mmio trace
+> is enabled to STM, STM driver will write the register to send the
+> trace and writel_relaxed will be called again. The circular call
+> like callstack below will happen. Disable mmio logging for stm
+> driver to avoid this issue.
+> 
 
-BR,
-Jani.
+Thanks for the fix, looks good to me. However, I think the commit 
+description is a bit cryptic. Could we say :
 
--- 
-Jani Nikula, Intel
+With MMIO logging enabled, the MMIO access are traced and could be
+sent to an STM device. Thus, an STM driver MMIO access could create
+circular call chain with MMIO logging. Disable it for STM driver.
+
+Suzuki
+
+> [] stm_source_write[stm_core]+0xc4
+> [] stm_ftrace_write[stm_ftrace]+0x40
+> [] trace_event_buffer_commit+0x238
+> [] trace_event_raw_event_rwmmio_rw_template+0x8c
+> [] log_post_write_mmio+0xb4
+> [] writel_relaxed[coresight_stm]+0x80
+> [] stm_generic_packet[coresight_stm]+0x1a8
+> [] stm_data_write[stm_core]+0x78
+> [] ost_write[stm_p_ost]+0xc8
+> [] stm_source_write[stm_core]+0x7c
+> [] stm_ftrace_write[stm_ftrace]+0x40
+> [] trace_event_buffer_commit+0x238
+> [] trace_event_raw_event_rwmmio_read+0x84
+> [] log_read_mmio+0xac
+> [] readl_relaxed[coresight_tmc]+0x50
+> 
+> Signed-off-by: Mao Jinlong <quic_jinlmao@quicinc.com>
+> ---
+>   drivers/hwtracing/coresight/Makefile | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
+> index 4ba478211b31..f3158266f75e 100644
+> --- a/drivers/hwtracing/coresight/Makefile
+> +++ b/drivers/hwtracing/coresight/Makefile
+> @@ -22,6 +22,8 @@ condflags := \
+>   	$(call cc-option, -Wstringop-truncation)
+>   subdir-ccflags-y += $(condflags)
+>   
+> +CFLAGS_coresight-stm.o := -D__DISABLE_TRACE_MMIO__
+> +
+>   obj-$(CONFIG_CORESIGHT) += coresight.o
+>   coresight-y := coresight-core.o  coresight-etm-perf.o coresight-platform.o \
+>   		coresight-sysfs.o coresight-syscfg.o coresight-config.o \
+
