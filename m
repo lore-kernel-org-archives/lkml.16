@@ -1,72 +1,43 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41757216396
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2759216396;
+	Wed, 30 Apr 2025 08:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001650; cv=none; b=S5f+xfyc9i3QbKQe7hsRvbh9y/QKvQu1F1Bn0vJ39/xky8tP7WaBjtwHNdtiLTGf5QLvcwpr4GvQK9RWgwNLFbd+WrQgPW3l16Uhkm4TOmkI+I07XwLl7d9bQ2x+H5Y81/98jWGAGrjLDZwPZjQWd9DV+pw+BAvLnowxby65qyg=
+	t=1746001656; cv=none; b=I2TVjHSw3NRC49eH6fFxoIMIgOrhn3+3hEyT8TgVeLzFFOI11R8ouoVEJaG507/joVBtqDesdXRecFy1NgDhxZtQNiUp/5AQbbMyw8IN3XTue8Mf6RejCreY1PhVPlQsM9CePFONFM63JliSA/bePm+BdFjOFnGQ9goVm/7JtW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001650; c=relaxed/simple;
-	bh=xPP7d3J9Mbr2HWLZwvqRyujPuKr6mcqoJc9CxFzickE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=BydmKjOMcgEo3neC0fPRY+7NrnRa3xe3AEbP7V/SFWM6v9vBFg4VRDmAvLfUbgsxSGR9FOekOI52Bb3op41u5VZHe9FEvYYybgIrYrFoGyIaPxAs8hwM0ryFCxN2QZjdkroCBgyF3Syv+q3JAC/x2VkUqA3BLtzA7jSJPUy1MEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yGUnTNVx; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746001656; c=relaxed/simple;
+	bh=LqgULXMn2OyWwJLPaUxW4p+pmAtTcodjOr6gIWycDbM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pQPYlPzem3NPu6L8GPX3qEGfoHDXc+K7SgE7Z9+k3AQdu/UD5Fdnk07GSDLTVDvoqOpc9Rmc9UFWPCc+tr+kjqMGgBSMStTO092fMs1XGfMbzSVI/CP0SC0hzBdHXQ/x3fjCEOlhjPONrAxFGcoFSkpAtOy3wtpczaDmB1TnLC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rpa15Cv1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yGUnTNVx"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43ede096d73so46674635e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746001647; x=1746606447; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wRxUK2FUEvHutdWtSofNv9/gWau2hfAWBjlb4ZMxnvk=;
-        b=yGUnTNVxneNswlEqap/AcAMeh4io1lZHSWnOlMOeHH+0k2r5aofIDLinlnNAWudJ8Y
-         I006Tqebt6qMuZ7kXnU5POsNb9qDoyBHpmcGjfnRLVIkeCLC4vxFUL0EeTXmSpN0S5nw
-         qxXKj3l3sjVLOEQLZ7qyQlrQ7Buyaax2M3KPkNHrEGDHcZr/u2Gv7m+c7ZxaOyu09dY2
-         2zasulIkA79FNcCI5/hO7buR4Lrfns1eobdNPNenBZq/8WF5LpcCJr/y+FQk8idjJuEf
-         yEB6M6tRTCij5iCM8sc3PeGx2Qa8CjO2BL20erjdv0d3kM2hnkIHP631E8FmHr+E5se+
-         74MQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746001647; x=1746606447;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wRxUK2FUEvHutdWtSofNv9/gWau2hfAWBjlb4ZMxnvk=;
-        b=I98v+NsbrK2rU7HFMhSit329nZu/vY/gykfDef5Kzqa+qACfATaE15cpLa6obFf78n
-         KhmkqH1v/rWnGHFfUOsS5ornO6auqbBL6e1TzPCEmJ6yMjGEa10FWi/cWlBvO6NtmXJG
-         iOuL7/MnNy0PHcVCqV7omZIw2xKrqZ39JQgv/t0EJAnEP1WBZDNJoeSqjT4kuSl4G1tN
-         9GapGvBaNzuMO+ZEoioL4hzAjM2vbUr3ND+McEd1ZFTN0bKHprALJX6lzBfP916wzQoK
-         RhpNWaRKX1am4muWlG0Nu9DvhjyBF+LiPfY7qB/cGXm9JBkgCto2wDsDcHnJk9oKdFCu
-         2GDw==
-X-Forwarded-Encrypted: i=1; AJvYcCX9Dm27utnxyPAXRx69wnWQcxUCsbNsPz20M9DMnzOPYpAPBBfod3QDIr+Ugc/d5ab8OYsFYXIs74ldgJI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyylzo49bh52vhDqCVOp1w+9Azqwc8iiwD9g0wFAHoyb6/WkVNf
-	DFgRiG7fjEnlYn5dQ15NVgnbE4G3tsBTk2JYqvMJh56LKJw7iHEBWpjeY7NMbnE=
-X-Gm-Gg: ASbGncuPBIqdl+JoppEl8d0j0o8x75e8iGqoFMXVYPGE7Vbh3vITCU1gZTXmt6GchLB
-	5dwdpYzlBhunIrNSMffCL/fg3RMbKHtrv1+worH+jXYGxbSUpULw5jz5YVLcvUcfGVkgYvqjMvP
-	sy+BEOIMBlfttH81kkc5f1bFQe/RNpmcfp+Im2fMt/5xSzXAcx9Fi/jOvU8UElpBX7YLcFcWR7e
-	0pGP2rv5NvUnAYWPmhR4/VYse5Jy0+ROYwle8ntc2Zf9SUgBpAWRHZ7vG4LmYZv4NTZS6etFsu4
-	0TLlVjqBvk3EWzShZ5CL9PI8YgX0jl3CRnYojzjWNLqvGA==
-X-Google-Smtp-Source: AGHT+IGLgSE82V30QGFI2YTNb5zjWgrYnQeumoN54mXutxmesQkpkc+itpXoS/eNr3nk+ofe2Yujeg==
-X-Received: by 2002:a05:600c:348e:b0:434:fa55:eb56 with SMTP id 5b1f17b1804b1-441b1f3060dmr18338955e9.7.1746001646622;
-        Wed, 30 Apr 2025 01:27:26 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2aecedcsm16461545e9.15.2025.04.30.01.27.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:27:26 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:27:22 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Tarang Raval <tarang.raval@siliconsignals.io>
-Cc: Hans Verkuil <hverkuil@xs4all.nl>,
-	Jai Luthra <jai.luthra@ideasonboard.com>,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Shravan Chippa <Shravan.Chippa@microchip.com>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Subject: [PATCH 0/3] media: i2c: Fix some uninitialized return values
-Message-ID: <cover.1746001540.git.dan.carpenter@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rpa15Cv1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41046C4CEEA;
+	Wed, 30 Apr 2025 08:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746001654;
+	bh=LqgULXMn2OyWwJLPaUxW4p+pmAtTcodjOr6gIWycDbM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rpa15Cv1sCbu2xoxGPHppbxoSLDA8kNuFTUwv46xpaKvcgLZn1UMAvK0qQQK61XSw
+	 beEXZMF1er+tMT0mxtRKYwVehz9un+tP0kgugJOOnFuZpdiqB4F3m+INLfBqiN5f7e
+	 jZF1QiYK6uksqcLEe6AjpTHC/HhDD70EZNJs7x2I7/kTJwzMJWcMsaEvHZueC/ATFE
+	 oSq7arl/q/VoO3C/991+EadMx3pju1a2GPqwNsWytNPlpfcQJKGjTqlxer/RusH5uG
+	 7dQscE5lKIAVnCW/s4eolz8bBl4m0dBZKNgCEih1dRwh9pcZz/4h4SirUhoFUtf2Hi
+	 oKwaKBjXhIYbA==
+Date: Wed, 30 Apr 2025 10:27:29 +0200
+From: Carlos Maiolino <cem@kernel.org>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-xfs@vger.kernel.org, Chandan Babu R <chandanbabu@kernel.org>, 
+	"Darrick J. Wong" <djwong@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	kernel-janitors@vger.kernel.org, Qasim Ijaz <qasdev00@gmail.com>, 
+	Natalie Vock <natalie.vock@gmx.de>
+Subject: Re: [PATCH] xfs: Simplify maximum determination in
+ xrep_calc_ag_resblks()
+Message-ID: <wv2ygjx2ste2hfusgp7apsp76wufeegrd26kdkzqmergwhwfqd@spof2npy32p5>
+References: <oL08RYG1VC2E9huS2ixv9tI5xAJxx88B60-95yE-8PIDHIdkDkYdqKhA9T_qDEoFzv4qGpCn0M0WtI3JV3f5EA==@protonmail.internalid>
+ <2b6b0608-136b-4328-a42f-eb5ca77688a0@web.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,20 +46,44 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <2b6b0608-136b-4328-a42f-eb5ca77688a0@web.de>
 
-These were a couple uninitialized variable bugs detected by Smatch.
+On Sat, Mar 01, 2025 at 11:30:52AM +0100, Markus Elfring wrote:
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Sat, 1 Mar 2025 11:24:52 +0100
+> 
+> Reduce nested max() calls by a single max3() call in this
+> function implementation.
+> 
+> The source code was transformed by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  fs/xfs/scrub/repair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/xfs/scrub/repair.c b/fs/xfs/scrub/repair.c
+> index 3b5288d3ef4e..6b23a3943907 100644
+> --- a/fs/xfs/scrub/repair.c
+> +++ b/fs/xfs/scrub/repair.c
+> @@ -382,7 +382,7 @@ xrep_calc_ag_resblks(
+>  			refcbt_sz);
+>  	xfs_perag_put(pag);
+> 
+> -	return max(max(bnobt_sz, inobt_sz), max(rmapbt_sz, refcbt_sz));
+> +	return max3(bnobt_sz, inobt_sz, max(rmapbt_sz, refcbt_sz));
 
-Dan Carpenter (3):
-  media: i2c: imx334: uninitialized variable in imx334_update_exp_gain()
-  media: i2c: ds90ub960: Fix uninitialized variable in
-    ub960_serializer_temp_ramp()
-  media: i2c: ds90ub960: Fix uninitialized variable in
-    ub960_rxport_bc_ser_config()
+I have nothing against the patch itself, but honestly I don't see how it
+improves anything. It boils down to nesting comparison instructions too, and
+doesn't make the code more clear IMHO.
+So, unless somebody else has a stronger reason to have this change, NAK from my
+side.
 
- drivers/media/i2c/ds90ub960.c | 4 ++--
- drivers/media/i2c/imx334.c    | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Carlos
 
--- 
-2.47.2
-
+>  }
+> 
+>  #ifdef CONFIG_XFS_RT
+> --
+> 2.48.1
+> 
