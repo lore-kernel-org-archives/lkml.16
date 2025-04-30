@@ -1,115 +1,94 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5C1C7017
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC961C7017;
+	Wed, 30 Apr 2025 08:38:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002302; cv=none; b=ZuAcWNC9NRGUvQOVJgqDfLBfIBBUUowqAdUrLqiANCFvT5b474iGqRKzeUJcC5o/pF5c4qsO+LoSKo+urbPf8R+zxmMAWMD2oygebgOcPuQiPmOZec4OlBb3VAlCqPtqWHLMa09F6LnpAz3T+1EXKZcA8hQJgvfTmI7pGk0b5Zs=
+	t=1746002308; cv=none; b=k5ZGiP2s7SIV/vpce5sSCI6eY0XRmB3pOsJ6p/Mzd1T7MbyrtQA28QeZW5eRnsnPC37I1Sr1J0EYryD4g/c3B9KZxKt77vFjqVoo6EP9HhYolVT1Wq5ra67ZFLrIhVNY6gDTTlm6DOwMyPJ9xTamDWtfZh8r/fzquMAy9fINTss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002302; c=relaxed/simple;
-	bh=8zi5cyFcVckW9t2pCIiEBn2bNjtZCSk84A1Zm7fViRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R7J23RRoUNIs76dWm7j201LzXH1faKQYvQ74/ZryUaZsxOtS5R3FeAweUVECUCCzAUPbbB5DZ3ISlWcxClMhW8eAZRh9502cg5oLM4dLARKLqGqRXErVZQNsWH04ng93nrDCmMoVHch7nx6Kt9DtDTrQZ8OJzPfkXyULI59Psco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G9UnLdK8; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746002308; c=relaxed/simple;
+	bh=5W+BttyNrx6QCpGXeulQZ8MO5gxve/TsYWvBDtxJqyI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MI8vEOfdJRMyT162PMA/A0sZFcVoLws/Zl6GjcSSanGri4FourSA0Vae3MyqnqF2cUpNss3/srpdP9ANvTGrIM9ll6G7kRdo/cjW+R60C1ehuChcEuWRWL/0wHlgqL5rukxbpxqEMpdvjMgIKNSK4HsqzApa9vdoZfqnjVry2Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eTnO9kFV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sPepPg7f; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G9UnLdK8"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acb5cf13996so95098266b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746002297; x=1746607097; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hw1h6CkpVzZ1WBfBkzfAYu3EbWwU7nqNOd7qFsicdoU=;
-        b=G9UnLdK8r+iN0eWelzoAzIFW/A5vA/6jDVRooAJxg7oy9txOWJctSCcKbuIjhmBjx5
-         fpzWJyE/bIsmQQu1ccKDlzrOw11yvEfMqgg4qRJ6khzy9rh3z70s7AhyDRrpPUVbKN9N
-         5SalCSsxP5rK7zT5aQ/oZqGhzB53Ztees6nOH3B4n+NU8V+t/MUiH9q3zLUyyXWfbZmz
-         3HTG7N3TCErlC2RhVkSrANZc1XSqeIWLjsXLLSvSkdQYJIPp7ilveimM0QUj4UGp/u3X
-         /xzV7W9BIU19RyIapleKUPK0KWiJ3farSMxP8i50nme8umAC8TjKunK1XI48BFBVn3Bs
-         /tfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746002297; x=1746607097;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hw1h6CkpVzZ1WBfBkzfAYu3EbWwU7nqNOd7qFsicdoU=;
-        b=oa+jo0ZLxw9ME6h1elwiIYmT6P154WJQVDtxX+t0PCmv6RdjraigrhP5jFM6k2bqRd
-         5hePZLWYSRxLz8CowcQOvcq6onxRSTJlbMEsFIs4JKFOueI2V3FNSUwz94dPyoUKOn53
-         LwY+8SwitCWHZ5rFyVh6zyA/RrobEeIA7hGxCq6H16O7+1pwSIlW00qR88iiQl8nWvdm
-         I/m1dOgwR7RGnvYG7eyZdQ4tL+yPk6rt4pbomqIzV/wkyW20hZy22WdEsKoXLaTEUb60
-         3r2xQXbFjpC8pIbLhPgekSYLkk8K2uHYFMJ7c7Y6zd31MNia7knjALtYbc3+agIEuoTQ
-         7dcw==
-X-Forwarded-Encrypted: i=1; AJvYcCXPFSVnIrGIrbPx+F/1JEDxdECLUn54bGQMQlzqt7tEAds6QuYPqmksbhJ8hc7Uzdu06T1T+p3A6frTgAA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5BrIocmIQ0htbRMCHzb8WJU98T7ZS268re+9Md6/sIpqT2kr0
-	S9QcpGhP5MCtpTVobfSN2n5JC80y7WtfDoUUViHARYFw5525IstNLVOs/DS/bLU=
-X-Gm-Gg: ASbGncukhRh/xzlTFAADA08XkFT77DskXOBLep1PrBBD0GsOh9VNYjG6x9yJAOfHRsI
-	gpuRFaanZ2nG4wIm1sj74e+Mn0JVnczPmH8L9J40hWacWck/99yTAw+BSpkwVmXpDvGjSsMZdFf
-	XybG7vuY3Kgg7g0eO1ncaNFSwVH+nqn3G8Qv/tERyh9HAsEqfgN90ghQfnFwz7Ow897wwjX4EHj
-	InavRgWObILWS51cgwCGYSCgUH5yqsfGuMYVnm3crhN2wFKOmhgVWMvmV4HxJZ7bi5rlmluFx0e
-	UCEnsQGVPBlcaO6T58B6QEHK9bhUXliU2tZl1sWay5Rtw5p63h5kUusKZ6NefWI7+gXiFC7ohBC
-	K5ojKrQ/Y2nvsqGtdsEomKwLqMYbTbg==
-X-Google-Smtp-Source: AGHT+IFqkJthPFAOd6c/6owM9CGgAK4lDSph/qo6ciNRRRzE4a0sKhq9+GnkkHtvadbY0MtJiZLKgw==
-X-Received: by 2002:a17:907:f497:b0:ac7:9237:60a8 with SMTP id a640c23a62f3a-acedc610398mr81783766b.9.1746002296958;
-        Wed, 30 Apr 2025 01:38:16 -0700 (PDT)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec668dd9csm245517466b.96.2025.04.30.01.38.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:38:16 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:38:13 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-rt-users@vger.kernel.org, Valentin Schneider <vschneid@redhat.com>,
- catalin.marinas@arm.com, kernel-team@android.com, Mike Galbraith
- <efault@gmx.de>, Peter Collingbourne <pcc@google.com>, Mark Rutland
- <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Neeraj
- Upadhyay <neeraj.upadhyay@kernel.org>, Thiago Jung Bauermann
- <thiago.bauermann@linaro.org>, Mark Brown <broonie@kernel.org>, Kristina
- Martsenko <kristina.martsenko@arm.com>, Sebastian Andrzej Siewior
- <bigeasy@linutronix.de>, Jinjie Ruan <ruanjinjie@huawei.com>, Juri Lelli
- <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH 0/1] arm64: enable PREEMPT_LAZY
-Message-ID: <20250430103813.5bea9f4a@mordecai>
-In-Reply-To: <174593068821.431779.9112946165910138990.b4-ty@kernel.org>
-References: <20250305104925.189198-1-vschneid@redhat.com>
-	<174593068821.431779.9112946165910138990.b4-ty@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.48; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eTnO9kFV";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sPepPg7f"
+Date: Wed, 30 Apr 2025 10:38:19 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746002304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HG13rZ9/BdN7VQFKd7Jm7KmYTv9EqNp3CTV2ih2XQKE=;
+	b=eTnO9kFVC/riHFiSA0xhXQ5jGUJDjElswE/MRvYmWsmvFQk5wZIa5GdgBGrhvpXh0Ut5Zc
+	Hr3JsEI9/npeRj4PCSL+zPweP1VNZH36mDtwFuN2mOwolFGanjTJe00WOt59xp5SjKPZvV
+	OT2hIp0bqhGzzpZG1ITl3/7Og9espBbIK9YSha7o5BlH+ajfIChDyauGNl9CD7Q9Aaimit
+	K3LeST4SRGuS66pt12mIDKhRCmgLAzZENG0RK37q6Xd5nlGRLhohzEcEnTxelaUgc5s/x7
+	UWg0BLK44XnarqbQlUTE7DR6d/zxIchZHymKeiYPIUWunu8T8AjcjQrlOm/waA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746002304;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HG13rZ9/BdN7VQFKd7Jm7KmYTv9EqNp3CTV2ih2XQKE=;
+	b=sPepPg7fCYJlcOfVtGUZgG9gHkA4Uj/JXvKzjOLf5SBJgluWKDYSwmOBbEcEndBrwmQbnG
+	oypekW5SkjgUm2AQ==
+From: Nam Cao <namcao@linutronix.de>
+To: Gabriele Monaco <gmonaco@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	john.ogness@linutronix.de, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>, Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v5 21/23] rv: Add rtapp_sleep monitor
+Message-ID: <20250430083819.-UXxRu1U@linutronix.de>
+References: <cover.1745926331.git.namcao@linutronix.de>
+ <57ea14992e148121fc010a200986e4db60ac2de0.1745926331.git.namcao@linutronix.de>
+ <bfe8322cf5817037af57f10ffbffcd9b30f43b42.camel@redhat.com>
+ <20250429172055.QICnVQ2s@linutronix.de>
+ <c0dca589e8615e1e0105cf1ae20f3f613992d33d.camel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c0dca589e8615e1e0105cf1ae20f3f613992d33d.camel@redhat.com>
 
-On Tue, 29 Apr 2025 21:27:52 +0100
-Will Deacon <will@kernel.org> wrote:
-
-> On Wed, 05 Mar 2025 11:49:24 +0100, Valentin Schneider wrote:
-> > Hey folks,
-> > 
-> > This is a resubmission of Mark's patch [1]. I didn't end up changing anything
-> > other than fluffing up the changelog.
-> > 
-> > I ran this under an arm64 VM, added some trace_printk's and checked that
-> > sched_switch's between runnable hackbench threads would occurr in the right
-> > conditions:
-> > o with TIF_NEED_RESCHED_LAZY set
-> >   o at the tick
-> >   o at do_notify_resume()
-> > o with TIF_NEED_RESCHED set
-> > 
-> > [...]  
+On Wed, Apr 30, 2025 at 10:05:07AM +0200, Gabriele Monaco wrote:
+> I've got one more small remark though, the name ALLOWLIST doesn't give
+> justice to what you explained above.
+> It suggests me something potentially wrong that we can't do much about,
+> while in case of RT mutexes and futex lock, we just don't want the
+> monitor to yell in a perfectly RT-compliant scenario.
 > 
-> Applied to arm64 (for-next/entry), thanks!
+> What is happening here, from what I see, is that the kernel is handling
+> the RT behaviour and your monitor is just meant to tell when userspace
+> is doing something it could do better (unless we deal with kthreads,
+> there we are in fact whitelisting the ones we know are not complying).
 > 
-> [1/1] arm64: enable PREEMPT_LAZY
->       https://git.kernel.org/arm64/c/c8597e2dd8b6
+> What about calling it RT_KERNEL_MANAGED_SLEEP or something along the
+> line to say we just trust what the kernel is doing?
 
-Great news. Thank you!
+That would also work. The generated automaton should be exactly the same.
 
-Petr T
+But I think this is quite subjective, so let's not argue too much about it.
+In short, I prefer it as is, sorry.
+
+I think "ALLOWLIST" is a suitable name. From Wikipedia: "A whitelist or
+allowlist is a list or register of entities that are being provided a
+particular privilege, service, mobility, access or recognition. Entities on
+the list will be accepted, approved and/or recognized".
+
+We trust rt_mutex and futex_lock_pi to do the right things, so I think they
+belong to the allowlist. We also trust the RCU thread and the migration/
+threads to be correct.
+
+Best regards,
+Nam
