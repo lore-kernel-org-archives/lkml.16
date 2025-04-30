@@ -1,55 +1,55 @@
 Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAC4927A451
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A9727C17F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035477; cv=none; b=qbzFLyUfOQkGosIck29rVH4g+I243PwRZN4x9zPKKB1WtzL1F5MXANbu7o/hMdZHay0s+EvmRA654HZE6r+yNX1qjNJGxCjVGw+LwjonnMqWMsFsWKlkIe5UVfZydIo/rQ8E/FrUo8w1FnjKS37U1AGaAkpm3pz35mrlqDZ3GxY=
+	t=1746035482; cv=none; b=MRQr2jol7lkHW2sv74jyEXtIiPyEGQOx/xzJjhVrxrzW9yF4fbyqQmWpsmxGLMJbM7GADOl0RKvdzOH5efzCCZoEwNiT+NzIrRauOSHKmb//86T27ZvcLgMqaTAO8f005LckG/sn2GBRWTL4gTQW0m7hFyMGfJLxU7+Go9hjmV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035477; c=relaxed/simple;
-	bh=xjyQ7g9jq6RKekqoqi9q1JclHgXj/0ej3wup3SnSAN4=;
+	s=arc-20240116; t=1746035482; c=relaxed/simple;
+	bh=rftYB7Je9QanXS06aJQAV64mnCyECLTT1AGVyG3u3zU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=pUbuRo59NwEUk+N5rJ2+avFP6KgD/SWbFyU+LabuyEZksEIM022Fh5wIElBl7uKqOq9uvkt/Nqe1QikS3t8e2/WZ10JgUGgaUQ7cs/F6dNOnzcLgZFCRUCBIbsq2/HFDdo96pXG/q5i6nLgqCSLXQS9VPgHHLlQIROOWQXH4jws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MaXGN8LE; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=kK+pOP74tKGPa5uM9tfrw+GjAzRxmnRmYdAJ63xUxTwK2G/DUTsNMFIkTdnE6Ro/fRz9g68x0V0+5ZxkY62uBjRLmXWiTRyQ8sFnim0/D8LGtveIEy74Naszbet2PhpnMJPBRQaSbqDtAolAkt/rKYC9ccYGCYQi35o2Adz4v+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SKANfbjC; arc=none smtp.client-ip=209.85.210.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MaXGN8LE"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736abba8c5cso201950b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SKANfbjC"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736d64c5e16so116019b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035474; x=1746640274; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035480; x=1746640280; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHzlJA54u8q5bx76vzxWhQW+rfsmIFz0AvsWO5D3DUE=;
-        b=MaXGN8LEwSlTgjOQyisJPcQy0NasebRnGsmeMy6xXIWM6lttROUj+BWqPl/39jpXCA
-         9lLDfGOJ69EhcLjc2YRwn2A3outAm9CQp6utjGzUYMy56n8P4R2Q9w6SVmLLM25rbc9Z
-         VqPi3HqU8ZGbBDWCKBpe/AvXK9FQbQYhEjUGVtAZVHMy2uW2rxZbSOTWUi6x6mbkkfe7
-         64bhfXf6VqMz8ZRzrxlvW/Z0PE9FW8xYY3q0y5740u194mCIGbnDI3BNkc9rxBbXEadM
-         DDwmaFpimR+9NbkSSbVU9aK7mIVfn8HJook9ePy5Mx9LDjzlLQeKCagCcnvj6gJHXF3i
-         eLMg==
+        bh=P29K1kujZoMXWie6DZ8D+w5WeYejq+SDhNJ0Ah+HhrM=;
+        b=SKANfbjC9UG3Z/6g0Dj9tzS2d7Cw8Uy3vkJB7e7GJ0UlD/Kb76BjHp0ahgh8oVC/B7
+         T2ocnueNYviuWnL1B2tPQorFUQbDUs6RDHy5KAkZKmWZbIkraCnALSy/uEOCMuO1tOE+
+         A+rD/mHpD7ipNr2mPSaTlnK6gzdTUKfAGP3L1XYXJ0/cfuXl+ZvMd9aHav0fZKyKei/G
+         xIphRDn/7/n51AoauOJgcSs4geLpw76HTRccuucIbI4dJDhsQF48Y6iwKAeOtYWFjms5
+         6dLLhmarUndGUaln+xi7kFPrExoVVczX3nsIvGPbQCv5fKV3MqqGZhTsKt74fokrhn8b
+         WNAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035474; x=1746640274;
+        d=1e100.net; s=20230601; t=1746035480; x=1746640280;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lHzlJA54u8q5bx76vzxWhQW+rfsmIFz0AvsWO5D3DUE=;
-        b=NLmrjfqNKCGrWr6VOyLf5LY54XMJkVbz139hcwJ8B4rg5pccQ3pJ4Pukl802MM2HTv
-         A62XekCkaSuk5+LLrWloPzgUf5UDxX0TMpFI+Xe5FiJ1iok7Xxxd0W8J5j2GB5amHOb6
-         wfmwfA+p9DoXsp33AbIDkhGdLO0OoDxrwujnJsLAgj9LGpOu5D8MNV3FYcK8a3+jXPu2
-         fGG6DX7rvJGmEgVQmM99dgTmc1/jBXXwGF9sIBnbIkpiJoYLLrqo4EH9+YvJuleLMJQ8
-         3rV3bHcMxgY1rMualjtySLWtC8sMRAGc12vna7/D1D5mX+k6qZjUpaz3Nu1Em/nEZ8ky
-         5jHw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVd287xajFIX3BKCWxyv7fBvuu6qkxFb+twZ3xyHNn80/j2HVIETOZ7QO7G0xE0EyoY8QIB00EfKB5YK8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywj10ESxjLSoIyF8e3wm9K1iHvPBeuuljf5cIHXPWM3ss8l2kuM
-	VhKTh24pmr+SmE49on/Hr7c67O/iFIRKfRh9BYH6CaGoqHeUM+wqtqgQ6R7ROE8xa2djvaOtDmu
-	fWOuTNg==
-X-Google-Smtp-Source: AGHT+IG2k/ZxRcyjEA8PDx6q+rfzzdGM/sd8XT8EODwAXypaNMonj3txM//jVFszLvjUCeGyNazMihy30y7O
-X-Received: from pgam9.prod.google.com ([2002:a05:6a02:2b49:b0:af2:54b0:c8d5])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:9c8c:b0:1f5:64fd:68ea
- with SMTP id adf61e73a8af0-20a87642f46mr6025571637.4.1746035473857; Wed, 30
- Apr 2025 10:51:13 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:49:56 -0700
+        bh=P29K1kujZoMXWie6DZ8D+w5WeYejq+SDhNJ0Ah+HhrM=;
+        b=P1BpwyGSlVSVZ1E1beTwxIikdndJn+auhFJl94jf+ybxWvX86J2jwH8zAr9RuZAvoH
+         vWuJD0/dbsObzkAMgPbGz6mkCnoffU4+WKTAHMeb4vTiOmGRPLbvFeFRtmvpu8U+vuR3
+         7rAvmP0gb5rT6H7iRRb1yvaWk0zcxiihd/dSxnLqlcGxc42RoUgdZChUifUlFp0OLeRS
+         d8YzO0cpz65/DjSQqq9LMIow0zIysgL1MxKAcsPZuoReniyOJkzHvNUMbtHHwhQg3jzU
+         joJrtBE3pu2rTvmxJXzMex5wgf1rLM4i55dhcIO4MlPYm07Eyc/MA3lUJya5uJDdPPmG
+         VQhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVxDc9OB3E5puIkD3JhiUZSZ9zoY1ulT87JwXvqVa3l+/AGCUMkUDA8bvb1RWSeD9cS2exBQE6dtEnoH7A=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0dfXxI+M9yvU0J84kzoJOjQ+W3SwGPoeTBnuFbAxsC4wp5WeQ
+	fM9xTFmmWcnPlhTFLVbguEx72GLK7XTcZ2H1PfxiQCAoM8SJrwM2LH09lV/JQqMeaVY7nfnrF0H
+	Rgxx70Q==
+X-Google-Smtp-Source: AGHT+IEGPWI/bLU0ChmanZkkVccc6w0xuZletv87Ryews2M2tIKd7C7dL8CS1bxtiFThWozumCMb4ytAPaSq
+X-Received: from pgg7.prod.google.com ([2002:a05:6a02:4d87:b0:aee:6db5:c8ea])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d50b:b0:1f5:8622:5ecb
+ with SMTP id adf61e73a8af0-20ba87895b6mr142585637.34.1746035479906; Wed, 30
+ Apr 2025 10:51:19 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:49:59 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-9-irogers@google.com>
-Subject: [PATCH v2 08/47] libperf: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-12-irogers@google.com>
+Subject: [PATCH v2 11/47] perf arm-spe: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -114,469 +114,140 @@ changing the sign of a result, for example, truncation to return an
 int to fit a sort routine. Silence the warning by making the implicit
 truncation explicit.
 
-Note: this change avoids truncating size_t values to int by changing
-the type to size_t, but this causes sign comparison warnings requiring
-the -Wno-sign-compare EXTRA_CFLAGS option. This gets resolved by the
-end of the series.
-
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/perf/cpumap.c                     | 18 +++++-----
- tools/lib/perf/evsel.c                      | 40 +++++++++------------
- tools/lib/perf/include/internal/cpumap.h    |  2 +-
- tools/lib/perf/include/internal/evsel.h     |  2 +-
- tools/lib/perf/include/internal/lib.h       |  2 +-
- tools/lib/perf/include/internal/mmap.h      |  4 +--
- tools/lib/perf/include/internal/threadmap.h |  2 +-
- tools/lib/perf/include/internal/xyarray.h   |  8 ++---
- tools/lib/perf/include/perf/cpumap.h        |  3 +-
- tools/lib/perf/lib.c                        |  2 +-
- tools/lib/perf/mmap.c                       | 13 ++++---
- tools/lib/perf/threadmap.c                  |  4 +--
- tools/lib/perf/xyarray.c                    |  2 +-
- 13 files changed, 46 insertions(+), 56 deletions(-)
+ .../util/arm-spe-decoder/arm-spe-decoder.c    |  4 ++--
+ .../arm-spe-decoder/arm-spe-pkt-decoder.c     |  2 +-
+ tools/perf/util/arm-spe.c                     | 24 +++++++++----------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/tools/lib/perf/cpumap.c b/tools/lib/perf/cpumap.c
-index 4454a5987570..37d94911449b 100644
---- a/tools/lib/perf/cpumap.c
-+++ b/tools/lib/perf/cpumap.c
-@@ -20,7 +20,7 @@ void perf_cpu_map__set_nr(struct perf_cpu_map *map, int nr_cpus)
- 	RC_CHK_ACCESS(map)->nr = nr_cpus;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 688fe6d75244..58107970b215 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -117,7 +117,7 @@ static int arm_spe_get_data(struct arm_spe_decoder *decoder)
+ 	if (!decoder->len)
+ 		pr_debug("No more data\n");
+ 
+-	return decoder->len;
++	return (int)decoder->len;
  }
  
--struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
-+struct perf_cpu_map *perf_cpu_map__alloc(size_t nr_cpus)
- {
- 	RC_STRUCT(perf_cpu_map) *cpus;
- 	struct perf_cpu_map *result;
-@@ -30,7 +30,7 @@ struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus)
- 
- 	cpus = malloc(sizeof(*cpus) + sizeof(struct perf_cpu) * nr_cpus);
- 	if (ADD_RC_CHK(result, cpus)) {
--		cpus->nr = nr_cpus;
-+		cpus->nr = (int)nr_cpus;
- 		refcount_set(&cpus->refcnt, 1);
- 	}
- 	return result;
-@@ -78,7 +78,7 @@ void perf_cpu_map__put(struct perf_cpu_map *map)
- static struct perf_cpu_map *cpu_map__new_sysconf(void)
- {
- 	struct perf_cpu_map *cpus;
--	int nr_cpus, nr_cpus_conf;
-+	size_t nr_cpus, nr_cpus_conf;
- 
- 	nr_cpus = sysconf(_SC_NPROCESSORS_ONLN);
- 	if (nr_cpus < 0)
-@@ -86,15 +86,13 @@ static struct perf_cpu_map *cpu_map__new_sysconf(void)
- 
- 	nr_cpus_conf = sysconf(_SC_NPROCESSORS_CONF);
- 	if (nr_cpus != nr_cpus_conf) {
--		pr_warning("Number of online CPUs (%d) differs from the number configured (%d) the CPU map will only cover the first %d CPUs.",
-+		pr_warning("Number of online CPUs (%zu) differs from the number configured (%zu) the CPU map will only cover the first %zu CPUs.",
- 			nr_cpus, nr_cpus_conf, nr_cpus);
+ static int arm_spe_get_next_packet(struct arm_spe_decoder *decoder)
+@@ -187,7 +187,7 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 			break;
+ 		case ARM_SPE_COUNTER:
+ 			if (idx == SPE_CNT_PKT_HDR_INDEX_TOTAL_LAT)
+-				decoder->record.latency = payload;
++				decoder->record.latency = (u32)payload;
+ 			break;
+ 		case ARM_SPE_CONTEXT:
+ 			decoder->record.context_id = payload;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+index 13cadb2f1cea..a6d04ad50db6 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-pkt-decoder.c
+@@ -63,7 +63,7 @@ static int arm_spe_get_payload(const unsigned char *buf, size_t len,
+ 	default: return ARM_SPE_BAD_PACKET;
  	}
  
- 	cpus = perf_cpu_map__alloc(nr_cpus);
- 	if (cpus != NULL) {
--		int i;
--
--		for (i = 0; i < nr_cpus; ++i)
-+		for (size_t i = 0; i < nr_cpus; ++i)
- 			RC_CHK_ACCESS(cpus)->map[i].cpu = i;
+-	return 1 + ext_hdr + payload_len;
++	return 1 + ext_hdr + (int)payload_len;
+ }
+ 
+ static int arm_spe_get_pad(struct arm_spe_pkt *packet)
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 2a9775649cc2..561bef7b4628 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -786,7 +786,7 @@ static bool arm_spe__synth_ds(struct arm_spe_queue *speq,
  	}
  
-@@ -132,7 +130,7 @@ static int cmp_cpu(const void *a, const void *b)
- 	return cpu_a->cpu - cpu_b->cpu;
- }
- 
--static struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-+static struct perf_cpu __perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx)
- {
- 	return RC_CHK_ACCESS(cpus)->map[idx];
- }
-@@ -247,13 +245,13 @@ static int __perf_cpu_map__nr(const struct perf_cpu_map *cpus)
- 	return RC_CHK_ACCESS(cpus)->nr;
- }
- 
--struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx)
-+struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx)
- {
- 	struct perf_cpu result = {
- 		.cpu = -1
- 	};
- 
--	if (cpus && idx < __perf_cpu_map__nr(cpus))
-+	if (cpus && idx < (size_t)__perf_cpu_map__nr(cpus))
- 		return __perf_cpu_map__cpu(cpus, idx);
- 
- 	return result;
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c475319e2e41..d647ca25a6db 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -71,7 +71,7 @@ int perf_evsel__alloc_fd(struct perf_evsel *evsel, int ncpus, int nthreads)
- 	return evsel->fd != NULL ? 0 : -ENOMEM;
- }
- 
--static int perf_evsel__alloc_mmap(struct perf_evsel *evsel, int ncpus, int nthreads)
-+static int perf_evsel__alloc_mmap(struct perf_evsel *evsel, size_t ncpus, size_t nthreads)
- {
- 	evsel->mmap = xyarray__new(ncpus, nthreads, sizeof(struct perf_mmap));
- 
-@@ -83,7 +83,7 @@ sys_perf_event_open(struct perf_event_attr *attr,
- 		    pid_t pid, struct perf_cpu cpu, int group_fd,
- 		    unsigned long flags)
- {
--	return syscall(__NR_perf_event_open, attr, pid, cpu.cpu, group_fd, flags);
-+	return (int)syscall(__NR_perf_event_open, attr, pid, cpu.cpu, group_fd, flags);
- }
- 
- static int get_group_fd(struct perf_evsel *evsel, int cpu_map_idx, int thread, int *group_fd)
-@@ -179,11 +179,9 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
- 	return err;
- }
- 
--static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu_map_idx)
-+static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, size_t cpu_map_idx)
- {
--	int thread;
--
--	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
-+	for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
- 		int *fd = FD(evsel, cpu_map_idx, thread);
- 
- 		if (fd && *fd >= 0) {
-@@ -195,7 +193,7 @@ static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- void perf_evsel__close_fd(struct perf_evsel *evsel)
- {
--	for (int idx = 0; idx < xyarray__max_x(evsel->fd); idx++)
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++)
- 		perf_evsel__close_fd_cpu(evsel, idx);
- }
- 
-@@ -224,13 +222,11 @@ void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- void perf_evsel__munmap(struct perf_evsel *evsel)
- {
--	int idx, thread;
--
- 	if (evsel->fd == NULL || evsel->mmap == NULL)
- 		return;
- 
--	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
-+		for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 			int *fd = FD(evsel, idx, thread);
- 
- 			if (fd == NULL || *fd < 0)
-@@ -246,7 +242,7 @@ void perf_evsel__munmap(struct perf_evsel *evsel)
- 
- int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- {
--	int ret, idx, thread;
-+	int ret;
- 	struct perf_mmap_param mp = {
- 		.prot = PROT_READ | PROT_WRITE,
- 		.mask = (pages * page_size) - 1,
-@@ -258,8 +254,8 @@ int perf_evsel__mmap(struct perf_evsel *evsel, int pages)
- 	if (perf_evsel__alloc_mmap(evsel, xyarray__max_x(evsel->fd), xyarray__max_y(evsel->fd)) < 0)
- 		return -ENOMEM;
- 
--	for (idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
--		for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t idx = 0; idx < xyarray__max_x(evsel->fd); idx++) {
-+		for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 			int *fd = FD(evsel, idx, thread);
- 			struct perf_mmap *map;
- 			struct perf_cpu cpu = perf_cpu_map__cpu(evsel->cpus, idx);
-@@ -415,7 +411,7 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- }
- 
- static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
--			     int cpu_map_idx, int thread)
-+			     size_t cpu_map_idx, size_t thread)
- {
- 	int *fd = FD(evsel, cpu_map_idx, thread);
- 
-@@ -427,11 +423,9 @@ static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
- 
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 				 int ioc,  void *arg,
--				 int cpu_map_idx)
-+				 size_t cpu_map_idx)
- {
--	int thread;
--
--	for (thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
-+	for (size_t thread = 0; thread < xyarray__max_y(evsel->fd); thread++) {
- 		int err = perf_evsel__ioctl(evsel, ioc, arg, cpu_map_idx, thread);
- 
- 		if (err)
-@@ -463,10 +457,9 @@ int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread)
- 
- int perf_evsel__enable(struct perf_evsel *evsel)
- {
--	int i;
- 	int err = 0;
- 
--	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+	for (size_t i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
- 	return err;
- }
-@@ -478,10 +471,9 @@ int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
- {
--	int i;
- 	int err = 0;
- 
--	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+	for (size_t i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
- 	return err;
- }
-@@ -512,7 +504,7 @@ struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel)
- 	return &evsel->attr;
- }
- 
--int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
-+int perf_evsel__alloc_id(struct perf_evsel *evsel, size_t ncpus, size_t nthreads)
- {
- 	if (ncpus == 0 || nthreads == 0)
- 		return 0;
-diff --git a/tools/lib/perf/include/internal/cpumap.h b/tools/lib/perf/include/internal/cpumap.h
-index e2be2d17c32b..624c8163cc84 100644
---- a/tools/lib/perf/include/internal/cpumap.h
-+++ b/tools/lib/perf/include/internal/cpumap.h
-@@ -21,7 +21,7 @@ DECLARE_RC_STRUCT(perf_cpu_map) {
- 	struct perf_cpu	map[];
- };
- 
--struct perf_cpu_map *perf_cpu_map__alloc(int nr_cpus);
-+struct perf_cpu_map *perf_cpu_map__alloc(size_t nr_cpus);
- int perf_cpu_map__idx(const struct perf_cpu_map *cpus, struct perf_cpu cpu);
- bool perf_cpu_map__is_subset(const struct perf_cpu_map *a, const struct perf_cpu_map *b);
- 
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index ea78defa77d0..ed04a5d4b032 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -139,7 +139,7 @@ void perf_evsel__free_fd(struct perf_evsel *evsel);
- int perf_evsel__read_size(struct perf_evsel *evsel);
- int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
- 
--int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
-+int perf_evsel__alloc_id(struct perf_evsel *evsel, size_t ncpus, size_t nthreads);
- void perf_evsel__free_id(struct perf_evsel *evsel);
- 
- bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/include/internal/lib.h b/tools/lib/perf/include/internal/lib.h
-index 85471a4b900f..60253b81699f 100644
---- a/tools/lib/perf/include/internal/lib.h
-+++ b/tools/lib/perf/include/internal/lib.h
-@@ -4,7 +4,7 @@
- 
- #include <sys/types.h>
- 
--extern unsigned int page_size;
-+extern size_t page_size;
- 
- ssize_t readn(int fd, void *buf, size_t n);
- ssize_t writen(int fd, const void *buf, size_t n);
-diff --git a/tools/lib/perf/include/internal/mmap.h b/tools/lib/perf/include/internal/mmap.h
-index 5f08cab61ece..4780691c65f3 100644
---- a/tools/lib/perf/include/internal/mmap.h
-+++ b/tools/lib/perf/include/internal/mmap.h
-@@ -23,7 +23,7 @@ typedef void (*libperf_unmap_cb_t)(struct perf_mmap *map);
-  */
- struct perf_mmap {
- 	void			*base;
--	int			 mask;
-+	size_t			 mask;
- 	int			 fd;
- 	struct perf_cpu		 cpu;
- 	refcount_t		 refcnt;
-@@ -40,7 +40,7 @@ struct perf_mmap {
- 
- struct perf_mmap_param {
- 	int	prot;
--	int	mask;
-+	size_t	mask;
- };
- 
- size_t perf_mmap__mmap_len(struct perf_mmap *map);
-diff --git a/tools/lib/perf/include/internal/threadmap.h b/tools/lib/perf/include/internal/threadmap.h
-index df748baf9eda..c223432be7a5 100644
---- a/tools/lib/perf/include/internal/threadmap.h
-+++ b/tools/lib/perf/include/internal/threadmap.h
-@@ -18,6 +18,6 @@ struct perf_thread_map {
- 	struct thread_map_data map[];
- };
- 
--struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, int nr);
-+struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, size_t nr);
- 
- #endif /* __LIBPERF_INTERNAL_THREADMAP_H */
-diff --git a/tools/lib/perf/include/internal/xyarray.h b/tools/lib/perf/include/internal/xyarray.h
-index f10af3da7b21..f8f6e1facf91 100644
---- a/tools/lib/perf/include/internal/xyarray.h
-+++ b/tools/lib/perf/include/internal/xyarray.h
-@@ -14,11 +14,11 @@ struct xyarray {
- 	char contents[] __aligned(8);
- };
- 
--struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size);
-+struct xyarray *xyarray__new(size_t xlen, size_t ylen, size_t entry_size);
- void xyarray__delete(struct xyarray *xy);
- void xyarray__reset(struct xyarray *xy);
- 
--static inline void *__xyarray__entry(struct xyarray *xy, int x, int y)
-+static inline void *__xyarray__entry(struct xyarray *xy, size_t x, size_t y)
- {
- 	return &xy->contents[x * xy->row_size + y * xy->entry_size];
- }
-@@ -30,12 +30,12 @@ static inline void *xyarray__entry(struct xyarray *xy, size_t x, size_t y)
- 	return __xyarray__entry(xy, x, y);
- }
- 
--static inline int xyarray__max_y(struct xyarray *xy)
-+static inline size_t xyarray__max_y(struct xyarray *xy)
- {
- 	return xy->max_y;
- }
- 
--static inline int xyarray__max_x(struct xyarray *xy)
-+static inline size_t xyarray__max_x(struct xyarray *xy)
- {
- 	return xy->max_x;
- }
-diff --git a/tools/lib/perf/include/perf/cpumap.h b/tools/lib/perf/include/perf/cpumap.h
-index 8c1ab0f9194e..51bf70f639ad 100644
---- a/tools/lib/perf/include/perf/cpumap.h
-+++ b/tools/lib/perf/include/perf/cpumap.h
-@@ -5,6 +5,7 @@
- #include <perf/core.h>
- #include <stdbool.h>
- #include <stdint.h>
-+#include <stdlib.h>
- 
- /** A wrapper around a CPU to avoid confusion with the perf_cpu_map's map's indices. */
- struct perf_cpu {
-@@ -47,7 +48,7 @@ LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
-  * perf_cpu_map__cpu - get the CPU value at the given index. Returns -1 if index
-  *                     is invalid.
-  */
--LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
-+LIBPERF_API struct perf_cpu perf_cpu_map__cpu(const struct perf_cpu_map *cpus, size_t idx);
- /**
-  * perf_cpu_map__nr - for an empty map returns 1, as perf_cpu_map__cpu returns a
-  *                    cpu of -1 for an invalid index, this makes an empty map
-diff --git a/tools/lib/perf/lib.c b/tools/lib/perf/lib.c
-index 696fb0ea67c6..b759f9caee7a 100644
---- a/tools/lib/perf/lib.c
-+++ b/tools/lib/perf/lib.c
-@@ -5,7 +5,7 @@
- #include <linux/kernel.h>
- #include <internal/lib.h>
- 
--unsigned int page_size;
-+size_t page_size;
- 
- static ssize_t ion(bool is_read, int fd, void *buf, size_t n)
- {
-diff --git a/tools/lib/perf/mmap.c b/tools/lib/perf/mmap.c
-index c1a51d925e0e..3af5150f6ccf 100644
---- a/tools/lib/perf/mmap.c
-+++ b/tools/lib/perf/mmap.c
-@@ -109,11 +109,11 @@ void perf_mmap__consume(struct perf_mmap *map)
- 		perf_mmap__put(map);
- }
- 
--static int overwrite_rb_find_range(void *buf, int mask, u64 *start, u64 *end)
-+static int overwrite_rb_find_range(void *buf, size_t mask, u64 *start, u64 *end)
- {
- 	struct perf_event_header *pheader;
- 	u64 evt_head = *start;
--	int size = mask + 1;
-+	size_t size = mask + 1;
- 
- 	pr_debug2("%s: buf=%p, start=%"PRIx64"\n", __func__, buf, *start);
- 	pheader = (struct perf_event_header *)(buf + (*start & mask));
-@@ -157,7 +157,7 @@ static int __perf_mmap__read_init(struct perf_mmap *md)
- 	if ((md->end - md->start) < md->flush)
- 		return -EAGAIN;
- 
--	size = md->end - md->start;
-+	size = (unsigned long)(md->end - md->start);
- 	if (size > (unsigned long)(md->mask) + 1) {
- 		if (!md->overwrite) {
- 			WARN_ONCE(1, "failed to keep up with mmap data. (warn only once)\n");
-@@ -212,7 +212,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
- {
- 	unsigned char *data = map->base + page_size;
- 	union perf_event *event = NULL;
--	int diff = end - *startp;
-+	s64 diff = end - *startp;
- 
- 	if (diff >= (int)sizeof(event->header)) {
- 		size_t size;
-@@ -228,8 +228,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
- 		 * be inside due to u64 alignment of output.
+ 	for (i = 0; i < ARRAY_SIZE(data_source_handles); i++) {
+-		if (is_midr_in_range_list(midr, data_source_handles[i].midr_ranges)) {
++		if (is_midr_in_range_list((u32)midr, data_source_handles[i].midr_ranges)) {
+ 			data_source_handles[i].ds_synth(record, data_src);
+ 			return true;
+ 		}
+@@ -956,7 +956,7 @@ static int arm_spe_run_decoder(struct arm_spe_queue *speq, u64 *timestamp)
  		 */
- 		if ((*startp & map->mask) + size != ((*startp + size) & map->mask)) {
--			unsigned int offset = *startp;
--			unsigned int len = size, cpy;
-+			u64 offset = *startp, len = size, cpy;
- 			void *dst = map->event_copy;
+ 		record = &speq->decoder->record;
+ 		if (!spe->timeless_decoding && record->context_id != (u64)-1) {
+-			ret = arm_spe_set_tid(speq, record->context_id);
++			ret = arm_spe_set_tid(speq, (pid_t)record->context_id);
+ 			if (ret)
+ 				return ret;
  
- 			if (size > map->event_copy_sz) {
-@@ -242,7 +241,7 @@ static union perf_event *perf_mmap__read(struct perf_mmap *map,
+@@ -1344,8 +1344,8 @@ static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
+ 	}
  
- 			do {
- 				cpy = min(map->mask + 1 - (offset & map->mask), len);
--				memcpy(dst, &data[offset & map->mask], cpy);
-+				memcpy(dst, &data[offset & map->mask], (size_t)cpy);
- 				offset += cpy;
- 				dst += cpy;
- 				len -= cpy;
-diff --git a/tools/lib/perf/threadmap.c b/tools/lib/perf/threadmap.c
-index 07968f3ea093..21c50737bbc2 100644
---- a/tools/lib/perf/threadmap.c
-+++ b/tools/lib/perf/threadmap.c
-@@ -7,7 +7,7 @@
- #include <asm/bug.h>
- #include <stdio.h>
+ 	*ver = ptr[ARM_SPE_HEADER_VERSION];
+-	hdr_sz = ptr[ARM_SPE_HEADER_SIZE];
+-	*nr_cpu = ptr[ARM_SPE_CPUS_NUM];
++	hdr_sz = (int)ptr[ARM_SPE_HEADER_SIZE];
++	*nr_cpu = (int)ptr[ARM_SPE_CPUS_NUM];
  
--static void perf_thread_map__reset(struct perf_thread_map *map, int start, int nr)
-+static void perf_thread_map__reset(struct perf_thread_map *map, size_t start, size_t nr)
- {
- 	size_t size = (nr - start) * sizeof(map->map[0]);
+ 	metadata = calloc(*nr_cpu, sizeof(*metadata));
+ 	if (!metadata)
+@@ -1353,7 +1353,7 @@ static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
  
-@@ -15,7 +15,7 @@ static void perf_thread_map__reset(struct perf_thread_map *map, int start, int n
- 	map->err_thread = -1;
+ 	/* Locate the start address of per CPU metadata */
+ 	ptr += hdr_sz;
+-	per_cpu_sz = (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
++	per_cpu_sz = (int)((metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu));
+ 
+ 	for (i = 0; i < *nr_cpu; i++) {
+ 		metadata[i] = arm_spe__alloc_per_cpu_metadata(ptr, per_cpu_sz);
+@@ -1405,7 +1405,7 @@ static void arm_spe_free(struct perf_session *session)
+ 	auxtrace_heap__free(&spe->heap);
+ 	arm_spe_free_events(session);
+ 	session->auxtrace = NULL;
+-	arm_spe__free_metadata(spe->metadata, spe->metadata_nr_cpu);
++	arm_spe__free_metadata(spe->metadata, (int)spe->metadata_nr_cpu);
+ 	free(spe);
  }
  
--struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, int nr)
-+struct perf_thread_map *perf_thread_map__realloc(struct perf_thread_map *map, size_t nr)
- {
- 	size_t size = sizeof(*map) + sizeof(map->map[0]) * nr;
- 	int start = map ? map->nr : 0;
-diff --git a/tools/lib/perf/xyarray.c b/tools/lib/perf/xyarray.c
-index dcd901d154bb..35b2088da9c4 100644
---- a/tools/lib/perf/xyarray.c
-+++ b/tools/lib/perf/xyarray.c
-@@ -4,7 +4,7 @@
- #include <stdlib.h>
- #include <string.h>
+@@ -1451,8 +1451,8 @@ static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
+ 		hdr_size = ARM_SPE_AUXTRACE_V1_PRIV_MAX;
+ 		hdr_fmts = metadata_hdr_v1_fmts;
+ 	} else {
+-		cpu_num = arr[ARM_SPE_CPUS_NUM];
+-		hdr_size = arr[ARM_SPE_HEADER_SIZE];
++		cpu_num = (unsigned int)arr[ARM_SPE_CPUS_NUM];
++		hdr_size = (unsigned int)arr[ARM_SPE_HEADER_SIZE];
+ 		hdr_fmts = metadata_hdr_fmts;
+ 	}
  
--struct xyarray *xyarray__new(int xlen, int ylen, size_t entry_size)
-+struct xyarray *xyarray__new(size_t xlen, size_t ylen, size_t entry_size)
- {
- 	size_t row_size = ylen * entry_size;
- 	struct xyarray *xy = zalloc(sizeof(*xy) + xlen * row_size);
+@@ -1466,7 +1466,7 @@ static void arm_spe_print_info(struct arm_spe *spe, __u64 *arr)
+ 		 * are fixed. The sequential parameter size is decided by the
+ 		 * field 'ARM_SPE_CPU_NR_PARAMS'.
+ 		 */
+-		cpu_size = (ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS];
++		cpu_size = (unsigned int)((ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS]);
+ 		for (i = 0; i < cpu_size; i++)
+ 			fprintf(stdout, metadata_per_cpu_fmts[i], arr[i]);
+ 		arr += cpu_size;
+@@ -1731,9 +1731,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->machine = &session->machines.host; /* No kvm support */
+ 	spe->auxtrace_type = auxtrace_info->type;
+ 	if (metadata_ver == 1)
+-		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
++		spe->pmu_type = (u32)auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+ 	else
+-		spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE_V2];
++		spe->pmu_type = (u32)auxtrace_info->priv[ARM_SPE_PMU_TYPE_V2];
+ 	spe->metadata = metadata;
+ 	spe->metadata_ver = metadata_ver;
+ 	spe->metadata_nr_cpu = nr_cpu;
+@@ -1752,7 +1752,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	 * "time_cycles" only if they are contained in the event.
+ 	 */
+ 	spe->tc.time_shift = tc->time_shift;
+-	spe->tc.time_mult = tc->time_mult;
++	spe->tc.time_mult = (u32)tc->time_mult;
+ 	spe->tc.time_zero = tc->time_zero;
+ 
+ 	if (event_contains(*tc, time_cycles)) {
 -- 
 2.49.0.906.g1f30a19c02-goog
 
