@@ -1,907 +1,174 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7112922172B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552832222C9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050369; cv=none; b=R3FcM9UgQdQvYCgY5YFkfYh8AQ50eFm3PA6HFvt+filctzMYdJ33jy4dq4gRUhPszq4Vh7+pRZB2R/Px1LDNZ2ZNC6FBsNru3tic6VSGlQeB5Zl8IibcXrJB5/a7Db8f24JvjsdYySslnlGvm5+gdsbLnMvzlMY08KpPoPwRJ/E=
+	t=1746050602; cv=none; b=C3PkOrsGz68uRfm4SVjXYluhJbtqmB94IcAs/cz4KtA67VNTmoctRnmnexxXiQNLPJmREvJ/YdmUfRWTVuAaD9//0VXMsVYVwt2fEvgeN3UTONZKaptnOEdncftvOKd6SoU6slzPFRHIQjUWS6hAqv0qshpqcKuGrh/GlB926TM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050369; c=relaxed/simple;
-	bh=tO5TKeOk9pMSeyngdLH2VO19Jzb6plJzfCSMP/ye6zY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKaEExBa6EPJ/85/1lAiIld3i73HiOsWyyhp1HlMEnCUcXjZ+tIBBsksTtnONqi00Wn1JAzhEQ5kkNFmhY8CNkP1SoG0Lu9dwPy4JiNi0/ZDXD/L/wwkDh/ew+78+R340EI51qGL7oslqpWIuiHOzPWfuazzlKTEQCjFHOpEoGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jlga4bvH; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746050602; c=relaxed/simple;
+	bh=carmFchbB3h6+n0MrYXOugZ7YhuAaQxUxJVlaqD2wNA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CsGiV/MkiWq41UTIRBz4GFFEs2bMZCU6bvNHAewhX4CJeJEYOpTjmIt0dr/XLETyQ1mIUF9357Gfgz0aB33xiHHGmcQ7ijpp+Xx3Qym8+ag2kjEz1WJG89RffVKlgFAA57XVTBtaL3Ni3+6QZy6eCWLw5mErzd5VGtANg6XR3pM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=J/wjIEWL; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jlga4bvH"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240aad70f2so22035ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:59:26 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="J/wjIEWL"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-b074d908e56so261235a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746050365; x=1746655165; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2L1JtxKV5xyZASMlAKF+FVRetR7mqhJ23bXGpwf3hA=;
-        b=jlga4bvHysh1x9sR8ZRMYShXrlKykf5eFBRaEL58KHY+oEcbyNlts6Xh2MPvnKZnLf
-         B9oDxgpcospbsFXwVmcNMl4y47MrqL2MTngYjdONPUvhuO7La7pqZiAOJWkWWLJtuPUT
-         ZqfmMtDSwj8lJUhm04guifqf9S68qoOaUHKgAVTfLUEKHLbxf6cnoqiIwCoB2EPSe+xR
-         T8fQaPeoFv9x+ORzd7yGmB2Va0qGt8GJPjqlHNVW1yUt60kDkh7vZc7WHqO7uQNyOwfQ
-         sDkBcJBUzwXU9RYPuT7iocBJ3CTzudAaVNa79F3zfHTb6cvKzek39RvrAtb8J35GBAFg
-         GcQA==
+        d=broadcom.com; s=google; t=1746050597; x=1746655397; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=2YWN51GbRiePbmSrLsK3YdrUKa8WqlcywHQ98t4q0ho=;
+        b=J/wjIEWLQNEMcTWT/OH935StgK+VGN/KO0RL29VwV/LNvBtPtRlEoyfwl+8CKZpJDB
+         mCyBrDNMespXAcj6Uo4qPZLUxD9pNcEUtdTI7LH2j1gWlG6CoHijIOU80u7QI3zxkiT8
+         sIUtuxykwreXcm1oSC9GKHZy2RnnFCni1ggZw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746050365; x=1746655165;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1746050597; x=1746655397;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g2L1JtxKV5xyZASMlAKF+FVRetR7mqhJ23bXGpwf3hA=;
-        b=PxCJUbzZVm+T0qBnJGHBoovzaJVI+ElM5p4PHhtRdaLwDMQcvxSAOmnSM0YUnjN7LO
-         Kz/9Yu4snwdn7uuNCMmLHmtGDsQk+/uxE6fNlSeWf86wX+1md21SnytmuGciMkIYk8qS
-         67GdPhVnVe09C+wfe0NXB+lxLIC/xY8i/zhr/gx82BgpYIBLMl8+mr5RZZipHSx3De7V
-         g9lyNIGPsol1v6liE1cIDD8gs7AHt61X2JY6j350ShGjHjxnEKIa023qpai9dw+qV0tn
-         ygKdAXbdY4G0h45q6XSTZApKUPu8XVRuM08bJiKXy6ePY2Pa8puYc6khUhJ/er5fGRZm
-         qOIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXn0yjGvJl5cD5O7idpBth+8WApi/bSeCYVXyqpujCBV7qF9VNeP+yYDESeQGMi6RDN9R+z3IGqaj7Q6cY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkC/K+mJVJ7eLffnMwuZY8YkaxGI7QcSJ+V2axC7ZZeygvCqcO
-	lFSyRkvaGuUBds2lKuXz+NpNaQgHoJQhYBWpuBW/PoPd9FZnApj/YGQ73YgjfA==
-X-Gm-Gg: ASbGncvA3B+OBLF/dIVKFCSNIzJuZ7hCnGjBgITfOXOkhpvKo3E9cqKb631w6XqAPTw
-	LlfqiOZt9AWX20aufNrSWC02zwIV11i7S2urAuFribauJjTZDdMspfIRxm72nTv4yZv/RDjecxE
-	g29u0XKgRLDo7kg5MFz7m5QGCs+1BpwXPuSfdwIl7eptENnXH9Co/Ucp66z+tDoSVhcb2+PJGfY
-	IPa3FQMFZCkGLIdGl8Lt3xNoGIE7dHiTER78GGtBMa/jPtPX6JD0bANkSUA6T6wWGY7UU0uItCi
-	XfSmtR9YgOuLnoGCkfOrVUW9iJWWTutSPuXQEcIQjT8oRVTQgsfyu3SRCzv4WGMgZCC3ObIn
-X-Google-Smtp-Source: AGHT+IEIS7iOGZQKq+NLnBgh3Z77rP4uHEJ0msSqnsLfKUumDUWg5G2IGbS0g0aYdbr36LRET7yUwA==
-X-Received: by 2002:a17:903:1acf:b0:216:27f5:9dd7 with SMTP id d9443c01a7336-22e0797c820mr384205ad.11.1746050364997;
-        Wed, 30 Apr 2025 14:59:24 -0700 (PDT)
-Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5100c13sm127809385ad.162.2025.04.30.14.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 14:59:24 -0700 (PDT)
-Date: Wed, 30 Apr 2025 21:59:13 +0000
-From: Pranjal Shrivastava <praan@google.com>
-To: Nicolin Chen <nicolinc@nvidia.com>
-Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
-	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
-	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
-	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
-	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v2 21/22] iommu/tegra241-cmdqv: Add user-space use support
-Message-ID: <aBKdMaFLPFJYegIS@google.com>
-References: <cover.1745646960.git.nicolinc@nvidia.com>
- <b81b2332f793a9ffccc528d821f2ed3ac051f9e0.1745646960.git.nicolinc@nvidia.com>
+        bh=2YWN51GbRiePbmSrLsK3YdrUKa8WqlcywHQ98t4q0ho=;
+        b=qD29ZaLUI+zg499M+uhNUVvl3HoaiRw/+nbq37X2jlSo/cESM6FlSxavDYTdQnF/AX
+         m2jRxTS9cukmKdqh7+Gzliu9la4yYLuOFa9toNNtyBE4qKt9unNCKpAbU5qKFdLNOBR3
+         ro6yQohUV9gizGIF3jwXzaSlx06m0nGNgWfDSCFqtI01REWcqryKuy2D7ExzhXRlCsEJ
+         IodNN1A4esGYSv5nrCmZqrrO+iFlPy8MzX9y/gRqCznJPVdZQqADzTfCIl3G4y6zLSg5
+         VrzdVcfcCXzmyWjVlEU8q03zt7TSG1vM1PQJVN9btIF0xBqNKzJf8f/ykDQFbIs7Ka4n
+         urLQ==
+X-Gm-Message-State: AOJu0YyPLU8ZJkG2dquPr2Sz4wbPO4SyN0/tDWjFP4xxIxqXW6fY501c
+	uDe4MSBnFcp2khszm+WQ3WUrAoO3pL0dv59REEETC9rPVjvdZeIywU96nYNOYMtPWByVh7BqaYU
+	hqmtv3RzIh+vBk2xdFiLoQjb8cnqnOCcvKP+n8i9rcYQo/Y+IE3JuQJd5fm++5nzI1g3LYIPvXr
+	S6W1M5QsMIe9e0NEJ1H6l781mtmdArc2mcVWXcUaWIoBbIpZhpev62
+X-Gm-Gg: ASbGncvVDWVrIr3Q73JmcCitdjjwYdzf2PG+ns3FDMQk+/PmUbWXDkUFPY9ArPcSDfb
+	P//HwkfInD1OmJ4fGXrgZfa1Zfzw3H6BcOngUTrZYM6KEtIIbeEeMYvverBahEGxYdK9IcuaSWu
+	1nFK5VazIl3T1IQV4EKE/2AKXaMnQrwACSffRVi12s3ypNi6L74LcBeVt7fLeczSTAZS6WjLZY4
+	Rl0DVUwY8qsVpEr2jLhe3W8+x99KkwOJ+pBDm8ClOaVvBkbPF7FJH2kqMhbyBbQuJqQity9aizF
+	SWfyW07FtxflywNT3xrmhIcJ5Mj9eocpzrtnloNzywzPTyQYyZpqe/7mOOryQu6FBwJ+LSU/2TJ
+	NjlFVWAxwz29aBjmxbxDpzjwX8rQ=
+X-Google-Smtp-Source: AGHT+IFpLzmAWQyi3yHhSLx4NQ7vfkHaDuiqhdSemTCGHQcKg8Di7BJKaapB4H2wF946DpWxN1pZbA==
+X-Received: by 2002:a17:90b:2e41:b0:2ee:af31:a7bd with SMTP id 98e67ed59e1d1-30a343ce7ddmr6267761a91.5.1746050597312;
+        Wed, 30 Apr 2025 15:03:17 -0700 (PDT)
+Received: from [10.66.194.199] ([192.19.161.250])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a34826677sm2210052a91.40.2025.04.30.15.03.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 15:03:16 -0700 (PDT)
+Message-ID: <2fe44a46-cd13-47a8-8873-56292028b165@broadcom.com>
+Date: Wed, 30 Apr 2025 15:03:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b81b2332f793a9ffccc528d821f2ed3ac051f9e0.1745646960.git.nicolinc@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: update Alexey Makhalov's email address
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+ virtualization@lists.linux.dev, x86@kernel.org
+Cc: gregkh@linuxfoundation.org, bp@alien8.de, ajay.kaher@broadcom.com,
+ Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+References: <20250318004031.2703923-1-alexey.makhalov@broadcom.com>
+Content-Language: en-US
+From: Alexey Makhalov <alexey.makhalov@broadcom.com>
+Autocrypt: addr=alexey.makhalov@broadcom.com; keydata=
+ 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 EuY0
+In-Reply-To: <20250318004031.2703923-1-alexey.makhalov@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Apr 25, 2025 at 10:58:16PM -0700, Nicolin Chen wrote:
-> The CMDQV HW supports a user-space use for virtualization cases. It allows
-> the VM to issue guest-level TLBI or ATC_INV commands directly to the queue
-> and executes them without a VMEXIT, as HW will replace the VMID field in a
-> TLBI command and the SID field in an ATC_INV command with the preset VMID
-> and SID.
-> 
-> This is built upon the vIOMMU infrastructure by allowing VMM to allocate a
-> VINTF (as a vIOMMU object) and assign VCMDQs (vCMDQ objects) to the VINTF.
-> 
-> So firstly, replace the standard vSMMU model with the VINTF implementation
-> but reuse the standard cache_invalidate op (for unsupported commands) and
-> the standard alloc_domain_nested op (for standard nested STE).
-> 
-> Each VINTF has two 64KB MMIO pages (128B per logical vCMDQ):
->  - Page0 (directly accessed by guest) has all the control and status bits.
->  - Page1 (trapped by VMM) has guest-owned queue memory location/size info.
-> 
-> VMM should trap the emulated VINTF0's page1 of the guest VM for the guest-
-> level VCMDQ location/size info and forward that to the kernel to translate
-> to a physical memory location to program the VCMDQ HW during an allocation
-> call. Then, it should mmap the assigned VINTF's page0 to the VINTF0 page0
-> of the guest VM. This allows the guest OS to read and write the guest-own
-> VINTF's page0 for direct control of the VCMDQ HW.
-> 
-> For ATC invalidation commands that hold an SID, it requires all devices to
-> register their virtual SIDs to the SID_MATCH registers and their physical
-> SIDs to the pairing SID_REPLACE registers, so that HW can use those as a
-> lookup table to replace those virtual SIDs with the correct physical SIDs.
-> Thus, implement the driver-allocated vDEVICE op with a tegra241_vintf_sid
-> structure to allocate SID_REPLACE and to program the SIDs accordingly.
-> 
-> This enables the HW accelerated feature for NVIDIA Grace CPU. Compared to
-> the standard SMMUv3 operating in the nested translation mode trapping CMDQ
-> for TLBI and ATC_INV commands, this gives a huge performance improvement:
-> 70% to 90% reductions of invalidation time were measured by various DMA
-> unmap tests running in a guest OS.
-> 
+Hi Borislav,
 
-The write-up is super helpful to understand how the HW works from a high
-level. Thanks for explaining this well! :) 
-
-I'm curious to know the DMA unmap tests that were run for perf?
-
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
-> ---
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h   |  15 +
->  include/uapi/linux/iommufd.h                  |  49 ++-
->  .../arm/arm-smmu-v3/arm-smmu-v3-iommufd.c     |   6 +-
->  .../iommu/arm/arm-smmu-v3/tegra241-cmdqv.c    | 374 +++++++++++++++++-
->  4 files changed, 435 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> index bab7a9ce1283..d3f18a286447 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.h
-> @@ -1000,6 +1000,14 @@ int arm_smmu_cmdq_issue_cmdlist(struct arm_smmu_device *smmu,
->  				struct arm_smmu_cmdq *cmdq, u64 *cmds, int n,
->  				bool sync);
->  
-> +static inline phys_addr_t
-> +arm_smmu_domain_ipa_to_pa(struct arm_smmu_domain *smmu_domain, u64 ipa)
-> +{
-> +	if (WARN_ON_ONCE(smmu_domain->stage != ARM_SMMU_DOMAIN_S2))
-> +		return 0;
-> +	return iommu_iova_to_phys(&smmu_domain->domain, ipa);
-> +}
-> +
->  #ifdef CONFIG_ARM_SMMU_V3_SVA
->  bool arm_smmu_sva_supported(struct arm_smmu_device *smmu);
->  bool arm_smmu_master_sva_supported(struct arm_smmu_master *master);
-> @@ -1076,9 +1084,16 @@ int arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
->  void arm_smmu_attach_commit_vmaster(struct arm_smmu_attach_state *state);
->  void arm_smmu_master_clear_vmaster(struct arm_smmu_master *master);
->  int arm_vmaster_report_event(struct arm_smmu_vmaster *vmaster, u64 *evt);
-> +struct iommu_domain *
-> +arm_vsmmu_alloc_domain_nested(struct iommufd_viommu *viommu, u32 flags,
-> +			      const struct iommu_user_data *user_data);
-> +int arm_vsmmu_cache_invalidate(struct iommufd_viommu *viommu,
-> +			       struct iommu_user_data_array *array);
->  #else
->  #define arm_smmu_hw_info NULL
->  #define arm_vsmmu_alloc NULL
-> +#define arm_vsmmu_alloc_domain_nested NULL
-> +#define arm_vsmmu_cache_invalidate NULL
->  
->  static inline int
->  arm_smmu_attach_prepare_vmaster(struct arm_smmu_attach_state *state,
-> diff --git a/include/uapi/linux/iommufd.h b/include/uapi/linux/iommufd.h
-> index b2614f0f1547..d69e7c1d39ea 100644
-> --- a/include/uapi/linux/iommufd.h
-> +++ b/include/uapi/linux/iommufd.h
-> @@ -549,12 +549,25 @@ struct iommu_hw_info_vtd {
->  	__aligned_u64 ecap_reg;
->  };
->  
-> +/**
-> + * enum iommu_hw_info_arm_smmuv3_flags - Flags for ARM SMMUv3 hw_info
-> + * @IOMMU_HW_INFO_ARM_SMMUV3_HAS_TEGRA241_CMDQV: Tegra241 implementation with
-> + *                                               CMDQV support; @impl is valid
-> + */
-> +enum iommu_hw_info_arm_smmuv3_flags {
-> +	IOMMU_HW_INFO_ARM_SMMUV3_HAS_TEGRA241_CMDQV = 1 << 0,
-> +};
-> +
->  /**
->   * struct iommu_hw_info_arm_smmuv3 - ARM SMMUv3 hardware information
->   *                                   (IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
->   *
-> - * @flags: Must be set to 0
-> - * @impl: Must be 0
-> + * @flags: Combination of enum iommu_hw_info_arm_smmuv3_flags
-> + * @impl: Implementation-defined bits when the following flags are set:
-> + *        - IOMMU_HW_INFO_ARM_SMMUV3_HAS_TEGRA241_CMDQV
-> + *          Bits[15:12] - Log2 of the total number of SID replacements
-> + *          Bits[07:04] - Log2 of the total number of vCMDQs per vIOMMU
-> + *          Bits[03:00] - Version number for the CMDQ-V HW
-
-Nit: It seems that we deliberately chose not to reveal `NUM_VINTF_LOG2`
-to the user-space. If so, maybe we shall mark those bitfields as unused
-or reserved for clarity? Bits[11:08] - Reserved / Unused (even 31:16).
-
->   * @idr: Implemented features for ARM SMMU Non-secure programming interface
->   * @iidr: Information about the implementation and implementer of ARM SMMU,
->   *        and architecture version supported
-> @@ -952,10 +965,28 @@ struct iommu_fault_alloc {
->   * enum iommu_viommu_type - Virtual IOMMU Type
->   * @IOMMU_VIOMMU_TYPE_DEFAULT: Reserved for future use
->   * @IOMMU_VIOMMU_TYPE_ARM_SMMUV3: ARM SMMUv3 driver specific type
-> + * @IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV Extension for SMMUv3
->   */
->  enum iommu_viommu_type {
->  	IOMMU_VIOMMU_TYPE_DEFAULT = 0,
->  	IOMMU_VIOMMU_TYPE_ARM_SMMUV3 = 1,
-> +	IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV = 2,
-> +};
-
-This is a little confusing.. I understand that we need a new viommu type
-to copy the new struct iommu_viommu_tegra241_cmdqv b/w the user & kernel
-
-But, in a previous patch (Add vsmmu_alloc impl op), we add a check to
-fallback to the standard type SMMUv3, if the impl_ops->vsmmu_alloc 
-returns -EOPNOTSUPP:
-
-	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
-		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
-			master->smmu, s2_parent, ictx, viommu_type, user_data);
-	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
-		if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
-			return ERR_PTR(-EOPNOTSUPP);
-		/* Fallback to standard SMMUv3 type if viommu_type matches */
-		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
-					     &arm_vsmmu_ops);
-
-Now, if we'll ALWAYS try to allocate an impl-specified vsmmu first, even
-when the viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3, we are anyways
-going to return back from the impl_ops->vsmmu_alloc with -EOPNOTSUPP.
-Then we'll again check if the retval was -EOPNOTSUPP and re-check the
-viommu_type requested.. which seems a little counter intuitive.
-
-Instead, I'd suggest to simply call the impl_ops->vsmmu_alloc if the
-viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3, in case the type isn't
-supported, the impl_op->vsmmu_alloc would return with error anyway.
-
-Thus, the snippet from arm_vsmmu_alloc could look like:
-
-	if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3) {
-		if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
-			vsmmu = master->smmu->impl_ops->vsmmu_alloc(
-				master->smmu, s2_parent, ictx, viommu_type, user_data);
-			if (IS_ERR(vsmmu))
-				return return ERR_CAST(vsmmu);
-	} else {
-		/* Fallback to standard SMMUv3 type */
-		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
-					     &arm_vsmmu_ops);
-	}
-
-> +
-> +/**
-> + * struct iommu_viommu_tegra241_cmdqv - NVIDIA Tegra241 CMDQV Virtual Interface
-> + *                                      (IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV)
-> + * @out_vintf_page0_pgoff: Offset of the VINTF page0 for mmap syscall
-> + * @out_vintf_page0_pgsz: Size of the VINTF page0 for mmap syscall
-> + *
-> + * Both @out_vintf_page0_pgoff and @out_vintf_page0_pgsz are given by the kernel
-> + * for user space to mmap the VINTF page0 from the host physical address space
-> + * to the guest physical address space so that a guest kernel can directly R/W
-> + * access to the VINTF page0 in order to control its virtual comamnd queues.
-> + */
-> +struct iommu_viommu_tegra241_cmdqv {
-> +	__aligned_u64 out_vintf_page0_pgoff;
-> +	__aligned_u64 out_vintf_page0_pgsz;
->  };
->  
->  /**
-> @@ -1152,9 +1183,23 @@ struct iommu_veventq_alloc {
->  /**
->   * enum iommu_vcmdq_type - Virtual Command Queue Type
->   * @IOMMU_VCMDQ_TYPE_DEFAULT: Reserved for future use
-> + * @IOMMU_VCMDQ_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV Extension for SMMUv3
->   */
->  enum iommu_vcmdq_type {
->  	IOMMU_VCMDQ_TYPE_DEFAULT = 0,
-> +	/*
-> +	 * TEGRA241_CMDQV requirements (otherwise it will fail)
-> +	 * - alloc starts from the lowest @index=0 in ascending order
-> +	 * - destroy starts from the last allocated @index in descending order
-> +	 * - @addr must be aligned to @length in bytes and be mmapped in IOAS
-> +	 * - @length must be a power of 2, with a minimum 32 bytes and a maximum
-> +	 *   1 ^ idr[1].CMDQS x 16 bytes (do GET_HW_INFO call to read idr[1] in
-> +	 *   struct iommu_hw_info_arm_smmuv3)
-> +	 * - suggest to back the queue memory with contiguous physical pages or
-> +	 *   a single huge page with alignment of the queue size, limit vSMMU's
-> +	 *   IDR1.CMDQS to the huge page size divided by 16 bytes
-> +	 */
-> +	IOMMU_VCMDQ_TYPE_TEGRA241_CMDQV = 1,
->  };
->  
->  /**
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> index 63861c60b615..40246cd04656 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-iommufd.c
-> @@ -226,7 +226,7 @@ static int arm_smmu_validate_vste(struct iommu_hwpt_arm_smmuv3 *arg,
->  	return 0;
->  }
->  
-> -static struct iommu_domain *
-> +struct iommu_domain *
->  arm_vsmmu_alloc_domain_nested(struct iommufd_viommu *viommu, u32 flags,
->  			      const struct iommu_user_data *user_data)
->  {
-> @@ -337,8 +337,8 @@ static int arm_vsmmu_convert_user_cmd(struct arm_vsmmu *vsmmu,
->  	return 0;
->  }
->  
-> -static int arm_vsmmu_cache_invalidate(struct iommufd_viommu *viommu,
-> -				      struct iommu_user_data_array *array)
-> +int arm_vsmmu_cache_invalidate(struct iommufd_viommu *viommu,
-> +			       struct iommu_user_data_array *array)
->  {
->  	struct arm_vsmmu *vsmmu = container_of(viommu, struct arm_vsmmu, core);
->  	struct arm_smmu_device *smmu = vsmmu->smmu;
-> diff --git a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> index 869c90b660c1..88e2b6506b3a 100644
-> --- a/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> +++ b/drivers/iommu/arm/arm-smmu-v3/tegra241-cmdqv.c
-> @@ -8,7 +8,9 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/interrupt.h>
->  #include <linux/iommu.h>
-> +#include <linux/iommufd.h>
->  #include <linux/iopoll.h>
-> +#include <uapi/linux/iommufd.h>
->  
->  #include <acpi/acpixf.h>
->  
-> @@ -26,8 +28,10 @@
->  #define  CMDQV_EN			BIT(0)
->  
->  #define TEGRA241_CMDQV_PARAM		0x0004
-> +#define  CMDQV_NUM_SID_PER_VM_LOG2	GENMASK(15, 12)
->  #define  CMDQV_NUM_VINTF_LOG2		GENMASK(11, 8)
->  #define  CMDQV_NUM_VCMDQ_LOG2		GENMASK(7, 4)
-> +#define  CMDQV_VER			GENMASK(3, 0)
->  
->  #define TEGRA241_CMDQV_STATUS		0x0008
->  #define  CMDQV_ENABLED			BIT(0)
-> @@ -53,6 +57,9 @@
->  #define  VINTF_STATUS			GENMASK(3, 1)
->  #define  VINTF_ENABLED			BIT(0)
->  
-> +#define TEGRA241_VINTF_SID_MATCH(s)	(0x0040 + 0x4*(s))
-> +#define TEGRA241_VINTF_SID_REPLACE(s)	(0x0080 + 0x4*(s))
-> +
->  #define TEGRA241_VINTF_LVCMDQ_ERR_MAP_64(m) \
->  					(0x00C0 + 0x8*(m))
->  #define  LVCMDQ_ERR_MAP_NUM_64		2
-> @@ -114,16 +121,20 @@ MODULE_PARM_DESC(bypass_vcmdq,
->  
->  /**
->   * struct tegra241_vcmdq - Virtual Command Queue
-> + * @core: Embedded iommufd_vcmdq structure
->   * @idx: Global index in the CMDQV
->   * @lidx: Local index in the VINTF
->   * @enabled: Enable status
->   * @cmdqv: Parent CMDQV pointer
->   * @vintf: Parent VINTF pointer
-> + * @prev: Previous LVCMDQ to depend on
->   * @cmdq: Command Queue struct
->   * @page0: MMIO Page0 base address
->   * @page1: MMIO Page1 base address
->   */
->  struct tegra241_vcmdq {
-> +	struct iommufd_vcmdq core;
-> +
->  	u16 idx;
->  	u16 lidx;
->  
-> @@ -131,22 +142,29 @@ struct tegra241_vcmdq {
->  
->  	struct tegra241_cmdqv *cmdqv;
->  	struct tegra241_vintf *vintf;
-> +	struct tegra241_vcmdq *prev;
->  	struct arm_smmu_cmdq cmdq;
->  
->  	void __iomem *page0;
->  	void __iomem *page1;
->  };
-> +#define core_to_vcmdq(v) container_of(v, struct tegra241_vcmdq, core)
->  
->  /**
->   * struct tegra241_vintf - Virtual Interface
-> + * @vsmmu: Embedded arm_vsmmu structure
->   * @idx: Global index in the CMDQV
->   * @enabled: Enable status
->   * @hyp_own: Owned by hypervisor (in-kernel)
->   * @cmdqv: Parent CMDQV pointer
->   * @lvcmdqs: List of logical VCMDQ pointers
->   * @base: MMIO base address
-> + * @immap_id: Allocated immap_id ID for mmap() call
-> + * @sids: Stream ID replacement resources
->   */
->  struct tegra241_vintf {
-> +	struct arm_vsmmu vsmmu;
-> +
->  	u16 idx;
->  
->  	bool enabled;
-> @@ -156,6 +174,24 @@ struct tegra241_vintf {
->  	struct tegra241_vcmdq **lvcmdqs;
->  
->  	void __iomem *base;
-> +	unsigned long immap_id;
-> +
-> +	struct ida sids;
-> +};
-> +#define viommu_to_vintf(v) container_of(v, struct tegra241_vintf, vsmmu.core)
-> +
-> +/**
-> + * struct tegra241_vintf_sid - Virtual Interface Stream ID Replacement
-> + * @core: Embedded iommufd_vdevice structure, holding virtual Stream ID
-> + * @vintf: Parent VINTF pointer
-> + * @sid: Physical Stream ID
-> + * @id: Slot index in the VINTF
-> + */
-> +struct tegra241_vintf_sid {
-> +	struct iommufd_vdevice core;
-> +	struct tegra241_vintf *vintf;
-> +	u32 sid;
-> +	u8 idx;
->  };
->  
->  /**
-> @@ -163,10 +199,12 @@ struct tegra241_vintf {
->   * @smmu: SMMUv3 device
->   * @dev: CMDQV device
->   * @base: MMIO base address
-> + * @base_phys: MMIO physical base address, for mmap
->   * @irq: IRQ number
->   * @num_vintfs: Total number of VINTFs
->   * @num_vcmdqs: Total number of VCMDQs
->   * @num_lvcmdqs_per_vintf: Number of logical VCMDQs per VINTF
-> + * @num_sids_per_vintf: Total number of SID replacements per VINTF
->   * @vintf_ids: VINTF id allocator
->   * @vintfs: List of VINTFs
->   */
-> @@ -175,12 +213,14 @@ struct tegra241_cmdqv {
->  	struct device *dev;
->  
->  	void __iomem *base;
-> +	phys_addr_t base_phys;
->  	int irq;
->  
->  	/* CMDQV Hardware Params */
->  	u16 num_vintfs;
->  	u16 num_vcmdqs;
->  	u16 num_lvcmdqs_per_vintf;
-> +	u16 num_sids_per_vintf;
->  
->  	struct ida vintf_ids;
->  
-> @@ -380,6 +420,12 @@ static void tegra241_vcmdq_hw_deinit(struct tegra241_vcmdq *vcmdq)
->  	dev_dbg(vcmdq->cmdqv->dev, "%sdeinited\n", h);
->  }
->  
-> +/* This function is for LVCMDQ, so @vcmdq must be mapped prior */
-> +static void _tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	writeq_relaxed(vcmdq->cmdq.q.q_base, REG_VCMDQ_PAGE1(vcmdq, BASE));
-> +}
-> +
->  /* This function is for LVCMDQ, so @vcmdq must be mapped prior */
->  static int tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
->  {
-> @@ -390,7 +436,7 @@ static int tegra241_vcmdq_hw_init(struct tegra241_vcmdq *vcmdq)
->  	tegra241_vcmdq_hw_deinit(vcmdq);
->  
->  	/* Configure and enable VCMDQ */
-> -	writeq_relaxed(vcmdq->cmdq.q.q_base, REG_VCMDQ_PAGE1(vcmdq, BASE));
-> +	_tegra241_vcmdq_hw_init(vcmdq);
->  
->  	ret = vcmdq_write_config(vcmdq, VCMDQ_EN);
->  	if (ret) {
-> @@ -420,6 +466,7 @@ static void tegra241_vcmdq_unmap_lvcmdq(struct tegra241_vcmdq *vcmdq)
->  static void tegra241_vintf_hw_deinit(struct tegra241_vintf *vintf)
->  {
->  	u16 lidx = vintf->cmdqv->num_lvcmdqs_per_vintf;
-> +	int sidx;
->  
->  	/* HW requires to unmap LVCMDQs in descending order */
->  	while (lidx--) {
-> @@ -429,6 +476,10 @@ static void tegra241_vintf_hw_deinit(struct tegra241_vintf *vintf)
->  		}
->  	}
->  	vintf_write_config(vintf, 0);
-> +	for (sidx = 0; sidx < vintf->cmdqv->num_sids_per_vintf; sidx++) {
-> +		writel_relaxed(0, REG_VINTF(vintf, SID_REPLACE(sidx)));
-> +		writel_relaxed(0, REG_VINTF(vintf, SID_MATCH(sidx)));
-> +	}
->  }
->  
->  /* Map a global VCMDQ to the pre-assigned LVCMDQ */
-> @@ -457,7 +508,8 @@ static int tegra241_vintf_hw_init(struct tegra241_vintf *vintf, bool hyp_own)
->  	 * whether enabling it here or not, as !HYP_OWN cmdq HWs only support a
->  	 * restricted set of supported commands.
->  	 */
-> -	regval = FIELD_PREP(VINTF_HYP_OWN, hyp_own);
-> +	regval = FIELD_PREP(VINTF_HYP_OWN, hyp_own) |
-> +		 FIELD_PREP(VINTF_VMID, vintf->vsmmu.vmid);
->  	writel(regval, REG_VINTF(vintf, CONFIG));
->  
->  	ret = vintf_write_config(vintf, regval | VINTF_EN);
-> @@ -584,7 +636,9 @@ static void tegra241_vintf_free_lvcmdq(struct tegra241_vintf *vintf, u16 lidx)
->  
->  	dev_dbg(vintf->cmdqv->dev,
->  		"%sdeallocated\n", lvcmdq_error_header(vcmdq, header, 64));
-> -	kfree(vcmdq);
-> +	/* Guest-owned VCMDQ is free-ed with vcmdq by iommufd core */
-> +	if (vcmdq->vintf->hyp_own)
-> +		kfree(vcmdq);
->  }
->  
->  static struct tegra241_vcmdq *
-> @@ -623,6 +677,9 @@ tegra241_vintf_alloc_lvcmdq(struct tegra241_vintf *vintf, u16 lidx)
->  
->  static void tegra241_cmdqv_deinit_vintf(struct tegra241_cmdqv *cmdqv, u16 idx)
->  {
-> +	if (cmdqv->vintfs[idx]->immap_id)
-> +		iommufd_ctx_free_mmap(cmdqv->vintfs[idx]->vsmmu.core.ictx,
-> +				      cmdqv->vintfs[idx]->immap_id);
->  	kfree(cmdqv->vintfs[idx]->lvcmdqs);
->  	ida_free(&cmdqv->vintf_ids, idx);
->  	cmdqv->vintfs[idx] = NULL;
-> @@ -671,7 +728,11 @@ static void tegra241_cmdqv_remove_vintf(struct tegra241_cmdqv *cmdqv, u16 idx)
->  
->  	dev_dbg(cmdqv->dev, "VINTF%u: deallocated\n", vintf->idx);
->  	tegra241_cmdqv_deinit_vintf(cmdqv, idx);
-> -	kfree(vintf);
-> +	if (!vintf->hyp_own)
-> +		ida_destroy(&vintf->sids);
-> +	/* Guest-owned VINTF is free-ed with viommu by iommufd core */
-> +	if (vintf->hyp_own)
-> +		kfree(vintf);
->  }
->  
->  static void tegra241_cmdqv_remove(struct arm_smmu_device *smmu)
-> @@ -699,10 +760,32 @@ static void tegra241_cmdqv_remove(struct arm_smmu_device *smmu)
->  	put_device(cmdqv->dev); /* smmu->impl_dev */
->  }
->  
-> +static struct arm_vsmmu *
-> +tegra241_cmdqv_vsmmu_alloc(struct arm_smmu_device *smmu,
-> +			   struct arm_smmu_domain *smmu_domain,
-> +			   struct iommufd_ctx *ictx, unsigned int viommu_type,
-> +			   const struct iommu_user_data *user_data);
-> +
-> +static u32 tegra241_cmdqv_hw_info(struct arm_smmu_device *smmu, u32 *impl)
-> +{
-> +	struct tegra241_cmdqv *cmdqv =
-> +		container_of(smmu, struct tegra241_cmdqv, smmu);
-> +	u32 regval = readl_relaxed(REG_CMDQV(cmdqv, PARAM));
-> +
-> +	*impl = FIELD_GET(CMDQV_VER, regval);
-> +	*impl |= FIELD_PREP(CMDQV_NUM_VCMDQ_LOG2,
-> +			    ilog2(cmdqv->num_lvcmdqs_per_vintf));
-> +	*impl |= FIELD_PREP(CMDQV_NUM_SID_PER_VM_LOG2,
-> +			   ilog2(cmdqv->num_sids_per_vintf));
-> +	return IOMMU_HW_INFO_ARM_SMMUV3_HAS_TEGRA241_CMDQV;
-> +}
-> +
->  static struct arm_smmu_impl_ops tegra241_cmdqv_impl_ops = {
->  	.get_secondary_cmdq = tegra241_cmdqv_get_cmdq,
->  	.device_reset = tegra241_cmdqv_hw_reset,
->  	.device_remove = tegra241_cmdqv_remove,
-> +	.vsmmu_alloc = tegra241_cmdqv_vsmmu_alloc,
-> +	.hw_info = tegra241_cmdqv_hw_info,
->  };
->  
->  /* Probe Functions */
-> @@ -844,6 +927,7 @@ __tegra241_cmdqv_probe(struct arm_smmu_device *smmu, struct resource *res,
->  	cmdqv->irq = irq;
->  	cmdqv->base = base;
->  	cmdqv->dev = smmu->impl_dev;
-> +	cmdqv->base_phys = res->start;
->  
->  	if (cmdqv->irq > 0) {
->  		ret = request_threaded_irq(irq, NULL, tegra241_cmdqv_isr,
-> @@ -860,6 +944,8 @@ __tegra241_cmdqv_probe(struct arm_smmu_device *smmu, struct resource *res,
->  	cmdqv->num_vintfs = 1 << FIELD_GET(CMDQV_NUM_VINTF_LOG2, regval);
->  	cmdqv->num_vcmdqs = 1 << FIELD_GET(CMDQV_NUM_VCMDQ_LOG2, regval);
->  	cmdqv->num_lvcmdqs_per_vintf = cmdqv->num_vcmdqs / cmdqv->num_vintfs;
-> +	cmdqv->num_sids_per_vintf =
-> +		1 << FIELD_GET(CMDQV_NUM_SID_PER_VM_LOG2, regval);
->  
->  	cmdqv->vintfs =
->  		kcalloc(cmdqv->num_vintfs, sizeof(*cmdqv->vintfs), GFP_KERNEL);
-> @@ -913,3 +999,283 @@ struct arm_smmu_device *tegra241_cmdqv_probe(struct arm_smmu_device *smmu)
->  	put_device(smmu->impl_dev);
->  	return ERR_PTR(-ENODEV);
->  }
-> +
-> +/* User-space vIOMMU and vCMDQ Functions */
-> +
-> +static int tegra241_vcmdq_hw_init_user(struct tegra241_vcmdq *vcmdq)
-> +{
-> +	char header[64];
-> +
-> +	/* Configure the vcmdq only; User space does the enabling */
-> +	_tegra241_vcmdq_hw_init(vcmdq);
-> +
-> +	dev_dbg(vcmdq->cmdqv->dev, "%sinited at host PA 0x%llx size 0x%lx\n",
-> +		lvcmdq_error_header(vcmdq, header, 64),
-> +		vcmdq->cmdq.q.q_base & VCMDQ_ADDR,
-> +		1UL << (vcmdq->cmdq.q.q_base & VCMDQ_LOG2SIZE));
-> +	return 0;
-> +}
-> +
-> +static struct iommufd_vcmdq *
-> +tegra241_vintf_alloc_lvcmdq_user(struct iommufd_viommu *viommu,
-> +				 unsigned int type, u32 index, dma_addr_t addr,
-> +				 size_t length)
-> +{
-> +	struct tegra241_vintf *vintf = viommu_to_vintf(viommu);
-> +	struct tegra241_cmdqv *cmdqv = vintf->cmdqv;
-> +	struct arm_smmu_device *smmu = &cmdqv->smmu;
-> +	struct tegra241_vcmdq *vcmdq, *prev = NULL;
-> +	u32 log2size, max_n_shift;
-> +	phys_addr_t q_base;
-> +	char header[64];
-> +	int ret;
-> +
-> +	if (type != IOMMU_VCMDQ_TYPE_TEGRA241_CMDQV)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	if (index >= cmdqv->num_lvcmdqs_per_vintf)
-> +		return ERR_PTR(-EINVAL);
-> +	if (vintf->lvcmdqs[index])
-> +		return ERR_PTR(-EEXIST);
-> +	/*
-> +	 * HW requires to map LVCMDQs in ascending order, so reject if the
-> +	 * previous lvcmdqs is not allocated yet.
-> +	 */
-> +	if (index) {
-> +		prev = vintf->lvcmdqs[index - 1];
-> +		if (!prev)
-> +			return ERR_PTR(-EIO);
-> +	}
-> +	/*
-> +	 * @length must be a power of 2, in range of
-> +	 *   [ 32, 1 ^ (idr[1].CMDQS + CMDQ_ENT_SZ_SHIFT) ]
-> +	 */
-
-Nit: 2 ^ (idr[1].CMDQS + CMDQ_ENT_SZ_SHIFT) to match the comment in uapi
-
-> +	max_n_shift = FIELD_GET(IDR1_CMDQS,
-> +				readl_relaxed(smmu->base + ARM_SMMU_IDR1));
-> +	if (!is_power_of_2(length) || length < 32 ||
-> +	    length > (1 << (max_n_shift + CMDQ_ENT_SZ_SHIFT)))
-> +		return ERR_PTR(-EINVAL);
-> +	log2size = ilog2(length) - CMDQ_ENT_SZ_SHIFT;
-> +
-> +	/* @addr must be aligned to @length and be mapped in s2_parent domain */
-> +	if (addr & ~VCMDQ_ADDR || addr & (length - 1))
-> +		return ERR_PTR(-EINVAL);
-> +	q_base = arm_smmu_domain_ipa_to_pa(vintf->vsmmu.s2_parent, addr);
-> +	if (!q_base)
-> +		return ERR_PTR(-ENXIO);
-> +
-> +	vcmdq = iommufd_vcmdq_alloc(viommu, struct tegra241_vcmdq, core);
-> +	if (!vcmdq)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	/*
-> +	 * HW requires to unmap LVCMDQs in descending order, so destroy() must
-> +	 * follow this rule. Set a dependency on its previous LVCMDQ so iommufd
-> +	 * core will help enforce it.
-> +	 */
-> +	if (prev) {
-> +		ret = iommufd_vcmdq_depend(vcmdq, prev, core);
-> +		if (ret)
-> +			goto free_vcmdq;
-> +	}
-> +	vcmdq->prev = prev;
-> +
-> +	ret = tegra241_vintf_init_lvcmdq(vintf, index, vcmdq);
-> +	if (ret)
-> +		goto free_vcmdq;
-> +
-> +	dev_dbg(cmdqv->dev, "%sallocated\n",
-> +		lvcmdq_error_header(vcmdq, header, 64));
-> +
-> +	tegra241_vcmdq_map_lvcmdq(vcmdq);
-> +
-> +	vcmdq->cmdq.q.q_base = q_base & VCMDQ_ADDR;
-> +	vcmdq->cmdq.q.q_base |= log2size;
-> +
-> +	ret = tegra241_vcmdq_hw_init_user(vcmdq);
-> +	if (ret)
-> +		goto free_vcmdq;
-> +	vintf->lvcmdqs[index] = vcmdq;
-> +
-> +	return &vcmdq->core;
-> +free_vcmdq:
-> +	iommufd_struct_destroy(viommu->ictx, vcmdq, core);
-> +	return ERR_PTR(ret);
-
-Are we missing an undepend here?
-
-     if (vcmdq->prev)
-     	iommufd_vcmdq_undepend(vcmdq, vcmdq->prev, core);
-
-> +}
-> +
-> +static void tegra241_vintf_destroy_lvcmdq_user(struct iommufd_vcmdq *core)
-> +{
-> +	struct tegra241_vcmdq *vcmdq = core_to_vcmdq(core);
-> +
-> +	tegra241_vcmdq_hw_deinit(vcmdq);
-> +	tegra241_vcmdq_unmap_lvcmdq(vcmdq);
-> +	tegra241_vintf_free_lvcmdq(vcmdq->vintf, vcmdq->lidx);
-> +	if (vcmdq->prev)
-> +		iommufd_vcmdq_undepend(vcmdq, vcmdq->prev, core);
-> +
-> +	/* IOMMUFD core frees the memory of vcmdq and vcmdq */
-> +}
-> +
-> +static void tegra241_cmdqv_destroy_vintf_user(struct iommufd_viommu *viommu)
-> +{
-> +	struct tegra241_vintf *vintf = viommu_to_vintf(viommu);
-> +
-> +	tegra241_cmdqv_remove_vintf(vintf->cmdqv, vintf->idx);
-> +
-> +	/* IOMMUFD core frees the memory of vintf and viommu */
-> +}
-> +
-> +static struct iommufd_vdevice *
-> +tegra241_vintf_alloc_vdevice(struct iommufd_viommu *viommu, struct device *dev,
-> +			     u64 dev_id)
-> +{
-> +	struct tegra241_vintf *vintf = viommu_to_vintf(viommu);
-> +	struct arm_smmu_master *master = dev_iommu_priv_get(dev);
-> +	struct arm_smmu_stream *stream = &master->streams[0];
-> +	struct tegra241_vintf_sid *vsid;
-> +	int sidx;
-> +
-> +	if (dev_id > UINT_MAX)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	vsid = iommufd_vdevice_alloc(viommu, struct tegra241_vintf_sid, core);
-> +	if (!vsid)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	WARN_ON_ONCE(master->num_streams != 1);
-> +
-> +	/* Find an empty pair of SID_REPLACE and SID_MATCH */
-> +	sidx = ida_alloc_max(&vintf->sids, vintf->cmdqv->num_sids_per_vintf - 1,
-> +			     GFP_KERNEL);
-> +	if (sidx < 0) {
-> +		iommufd_struct_destroy(viommu->ictx, vsid, core);
-> +		return ERR_PTR(sidx);
-> +	}
-> +
-> +	writel_relaxed(stream->id, REG_VINTF(vintf, SID_REPLACE(sidx)));
-> +	writel_relaxed(dev_id << 1 | 0x1, REG_VINTF(vintf, SID_MATCH(sidx)));
-> +	dev_dbg(vintf->cmdqv->dev,
-> +		"VINTF%u: allocated SID_REPLACE%d for pSID=%x, vSID=%x\n",
-> +		vintf->idx, sidx, stream->id, (u32)dev_id);
-> +
-> +	vsid->idx = sidx;
-> +	vsid->vintf = vintf;
-> +	vsid->sid = stream->id;
-> +
-> +	return &vsid->core;
-> +}
-> +
-> +static void tegra241_vintf_destroy_vdevice(struct iommufd_vdevice *vdev)
-> +{
-> +	struct tegra241_vintf_sid *vsid =
-> +		container_of(vdev, struct tegra241_vintf_sid, core);
-> +	struct tegra241_vintf *vintf = vsid->vintf;
-> +
-> +	writel_relaxed(0, REG_VINTF(vintf, SID_REPLACE(vsid->idx)));
-> +	writel_relaxed(0, REG_VINTF(vintf, SID_MATCH(vsid->idx)));
-
-Just a thought: Should these be writel to avoid races?
-Although I believe all user-queues would be free-d by this point?
-
-> +	ida_free(&vintf->sids, vsid->idx);
-> +	dev_dbg(vintf->cmdqv->dev,
-> +		"VINTF%u: deallocated SID_REPLACE%d for pSID=%x\n", vintf->idx,
-> +		vsid->idx, vsid->sid);
-> +
-> +	/* IOMMUFD core frees the memory of vsid and vdev */
-> +}
-> +
-> +static struct iommufd_viommu_ops tegra241_cmdqv_viommu_ops = {
-> +	.destroy = tegra241_cmdqv_destroy_vintf_user,
-> +	.alloc_domain_nested = arm_vsmmu_alloc_domain_nested,
-> +	.cache_invalidate = arm_vsmmu_cache_invalidate,
-> +	.vdevice_alloc = tegra241_vintf_alloc_vdevice,
-> +	.vdevice_destroy = tegra241_vintf_destroy_vdevice,
-> +	.vcmdq_alloc = tegra241_vintf_alloc_lvcmdq_user,
-> +	.vcmdq_destroy = tegra241_vintf_destroy_lvcmdq_user,
-> +};
-> +
-> +static struct arm_vsmmu *
-> +tegra241_cmdqv_vsmmu_alloc(struct arm_smmu_device *smmu,
-> +			   struct arm_smmu_domain *s2_parent,
-> +			   struct iommufd_ctx *ictx, unsigned int viommu_type,
-> +			   const struct iommu_user_data *user_data)
-> +{
-> +	struct tegra241_cmdqv *cmdqv =
-> +		container_of(smmu, struct tegra241_cmdqv, smmu);
-> +	struct iommu_viommu_tegra241_cmdqv data;
-> +	struct tegra241_vintf *vintf;
-> +	phys_addr_t page0_base;
-> +	int ret;
-> +
-> +	if (viommu_type != IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV)
-> +		return ERR_PTR(-EOPNOTSUPP);
-> +	if (!user_data)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	ret = iommu_copy_struct_from_user(&data, user_data,
-> +					  IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV,
-> +					  out_vintf_page0_pgsz);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-> +
-> +	vintf = iommufd_viommu_alloc(ictx, struct tegra241_vintf, vsmmu.core,
-> +				     &tegra241_cmdqv_viommu_ops);
-> +	if (!vintf)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = tegra241_cmdqv_init_vintf(cmdqv, cmdqv->num_vintfs - 1, vintf);
-> +	if (ret < 0) {
-> +		dev_err(cmdqv->dev, "no more available vintf\n");
-> +		goto free_vintf;
-> +	}
-> +
-> +	vintf->vsmmu.smmu = smmu;
-> +	vintf->vsmmu.s2_parent = s2_parent;
-> +	/* FIXME Move VMID allocation from the S2 domain allocation to here */
-> +	vintf->vsmmu.vmid = s2_parent->s2_cfg.vmid;
-> +
-> +	/*
-> +	 * Initialize the user-owned VINTF without a LVCMDQ, because it has to
-> +	 * wait for the allocation of a user-owned LVCMDQ, for security reason.
-> +	 * It is different than the kernel-owned VINTF0, which had pre-assigned
-> +	 * and pre-allocated global VCMDQs that would be mapped to the LVCMDQs
-> +	 * by the tegra241_vintf_hw_init() call.
-> +	 */
-> +	ret = tegra241_vintf_hw_init(vintf, false);
-> +	if (ret)
-> +		goto deinit_vintf;
-> +
-> +	vintf->lvcmdqs = kcalloc(cmdqv->num_lvcmdqs_per_vintf,
-> +				 sizeof(*vintf->lvcmdqs), GFP_KERNEL);
-> +	if (!vintf->lvcmdqs) {
-> +		ret = -ENOMEM;
-> +		goto hw_deinit_vintf;
-> +	}
-> +
-> +	page0_base = cmdqv->base_phys + TEGRA241_VINTFi_PAGE0(vintf->idx);
-> +	ret = iommufd_ctx_alloc_mmap(ictx, page0_base, SZ_64K,
-> +				     &vintf->immap_id);
-> +	if (ret)
-> +		goto hw_deinit_vintf;
-> +
-> +	data.out_vintf_page0_pgsz = SZ_64K;
-> +	data.out_vintf_page0_pgoff = vintf->immap_id;
-> +	ret = iommu_copy_struct_to_user(user_data, &data,
-> +					IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV,
-> +					out_vintf_page0_pgsz);
-> +	if (ret)
-> +		goto free_mmap;
-> +
-> +	ida_init(&vintf->sids);
-> +
-> +	dev_dbg(cmdqv->dev, "VINTF%u: allocated with vmid (%d)\n", vintf->idx,
-> +		vintf->vsmmu.vmid);
-> +
-> +	return &vintf->vsmmu;
-> +
-> +free_mmap:
-> +	iommufd_ctx_free_mmap(ictx, vintf->immap_id);
-> +hw_deinit_vintf:
-> +	tegra241_vintf_hw_deinit(vintf);
-> +deinit_vintf:
-> +	tegra241_cmdqv_deinit_vintf(cmdqv, vintf->idx);
-> +free_vintf:
-> +	iommufd_struct_destroy(ictx, vintf, vsmmu.core);
-> +	return ERR_PTR(ret);
-> +}
+I see this patch didn't get a traction.
+Can you to merge this fix in x86 tree, please?
 
 Thanks,
-Praan
+--Alexey
 
-> -- 
-> 2.43.0
+On 3/17/25 5:40 PM, Alexey Makhalov wrote:
+> Fix a typo in an email address.
 > 
+> Cc: stable@vger.kernel.org
+> Reported-by: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+> Closes: https://lore.kernel.org/all/20240925-rational-succinct-vulture-cca9fb@lemur/T/
+> Signed-off-by: Alexey Makhalov <alexey.makhalov@broadcom.com>
+> ---
+>   MAINTAINERS | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index c9763412a508..c2eb78c1ab75 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -17945,7 +17945,7 @@ F:	include/uapi/linux/ppdev.h
+>   PARAVIRT_OPS INTERFACE
+>   M:	Juergen Gross <jgross@suse.com>
+>   R:	Ajay Kaher <ajay.kaher@broadcom.com>
+> -R:	Alexey Makhalov <alexey.amakhalov@broadcom.com>
+> +R:	Alexey Makhalov <alexey.makhalov@broadcom.com>
+>   R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+>   L:	virtualization@lists.linux.dev
+>   L:	x86@kernel.org
+> @@ -25341,7 +25341,7 @@ F:	drivers/misc/vmw_balloon.c
+>   
+>   VMWARE HYPERVISOR INTERFACE
+>   M:	Ajay Kaher <ajay.kaher@broadcom.com>
+> -M:	Alexey Makhalov <alexey.amakhalov@broadcom.com>
+> +M:	Alexey Makhalov <alexey.makhalov@broadcom.com>
+>   R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+>   L:	virtualization@lists.linux.dev
+>   L:	x86@kernel.org
+> @@ -25369,7 +25369,7 @@ F:	drivers/scsi/vmw_pvscsi.h
+>   VMWARE VIRTUAL PTP CLOCK DRIVER
+>   M:	Nick Shi <nick.shi@broadcom.com>
+>   R:	Ajay Kaher <ajay.kaher@broadcom.com>
+> -R:	Alexey Makhalov <alexey.amakhalov@broadcom.com>
+> +R:	Alexey Makhalov <alexey.makhalov@broadcom.com>
+>   R:	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+>   L:	netdev@vger.kernel.org
+>   S:	Supported
+
