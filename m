@@ -1,71 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0DE19C556;
-	Wed, 30 Apr 2025 15:48:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E865A2DC797;
+	Wed, 30 Apr 2025 15:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028136; cv=none; b=MLHXAm0E+Db0xJrN8iCMx5Ik6WCzhVJmJJTo1WbXxWis3K/ZJy2VqZdSDAv6TkRUTBBau8MdgGsgRAkCQwo3oBQ4SHdShkTNPw+PBCUrXKWg87H0CgQCHDyiK32dtQSNcu2xYWbeg7ZPo+PSRE3LiDlRwcdJSw4LgwW1bdhKGfM=
+	t=1746028183; cv=none; b=hlNkxJl3w3aduz53ltqUwVJENMOhVsXoLfw6UgP2Eb1NLVhcJ4xq38Nugw2tyeasCz9T53aHTp2VHF6r774Zn8yYANmfQM7gzrKf99EOXfA8R1JETSR3Yk5CtOmALjvxFqugi03AIrxXDda4w423mv2S3oYmaXoO11Ga/HBWojo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028136; c=relaxed/simple;
-	bh=EpdyxGfmIGM/4y2DbJ0OMYH/LxyVa4jnB71F6fCAjiI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nWzzrJC5T/nU23zFegdOt1rEOXJ72x+kSHvsh4XHWJC+OqKv8CQ5DFa07J03TrEqiutZCm2va03FREmXZwe9HR9OczL0ffmu/Jh0S0ymiAUfxz5khN4rM1ospx+GtZTclw9xrRhfa55PeAQNdPGhlijnqoS1bW8Rav7D1xz0XZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hV+RSHRO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746028183; c=relaxed/simple;
+	bh=jbN75Y77ia3DaPmLil5WAcGzaZgfrTs67v8JYHeLyFY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ulhlpMZEF0md3NFO6yMwYYb6YqBVeKV1q3+9kR8a+DlKDGaVfub2yKY6EpEnjQnFiccEWuyykFigB5CxR/ROPc69EtKO7KDnXCcz4s6pgNKpVbZj8hV2Q75NpdYr+XLVSoQ6NWHYq0eRjH5gMNnYYogbVZHvs79TkPnqqEGkaGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILkRzJmx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hV+RSHRO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9A5C4CEE7;
-	Wed, 30 Apr 2025 15:48:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILkRzJmx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB48DC4CEE7;
+	Wed, 30 Apr 2025 15:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028136;
-	bh=EpdyxGfmIGM/4y2DbJ0OMYH/LxyVa4jnB71F6fCAjiI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hV+RSHROe8y9M6TG3n4UqKL/GYMH1zRzLtVqgegLtW/9lsNUn95NlSrItfc+bHfEA
-	 n6sO+hDAlFxcucIpRcjeVICiOWRHXxa49nhV+LMzqYVJmW33k+83cTJCT/wVz5UUgW
-	 REjzRljhm9OKHR/UuT3XiaBKSqHiFO6CA7J8ulboqXfBMCpLjB8gUnwMEEl48iaOzW
-	 Cek2zPGuf8n4TXhCcOTB710jnn8VmpCApsSFjPxJLIO2exXSmrIRFdtu3zbhJ4d+Dh
-	 aIzN0U/QBkV/rGKqbQ4BvKQhunAMKyJtamk2Zh2ZknUjpueb6PBzNAqaXHEsYfBmy8
-	 8XZI5WBXktHCQ==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: naresh.kamboju@linaro.org
-Cc: anders.roxell@linaro.org,
-	aou@eecs.berkeley.edu,
-	arnd@arndb.de,
-	dan.carpenter@linaro.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	lkft-triage@lists.linaro.org,
-	llvm@lists.linux.dev,
-	masahiroy@kernel.org,
-	namcao@linutronix.de,
-	nathan@kernel.org,
-	palmer@dabbelt.com,
-	regressions@lists.linux.dev
-Subject: Re: next-20250422: arch/riscv/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
-Date: Wed, 30 Apr 2025 17:48:45 +0200
-Message-ID: <20250430154845.795993-1-ojeda@kernel.org>
-In-Reply-To: <CA+G9fYtN2ie+YtK3H9mrQ5QqrSCFGGjVbtJcfiYX0oHMVWMn9w@mail.gmail.com>
-References: <CA+G9fYtN2ie+YtK3H9mrQ5QqrSCFGGjVbtJcfiYX0oHMVWMn9w@mail.gmail.com>
+	s=k20201202; t=1746028182;
+	bh=jbN75Y77ia3DaPmLil5WAcGzaZgfrTs67v8JYHeLyFY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ILkRzJmxPdFObsI9MPCYwxX97C4pY7WZMUG69FkF2voL4XquCgdJqXarl/qXSmdsT
+	 lIE+AMd4Db+DvmeQIlqNoL1xbfIFeUiYZIWEMhbbxTe6T82fBtJQVkcfuwBWzs9vnZ
+	 2v1VvzarKWKk6kHsUF7YLUq8XDSco1Hy7lT0Owon3EWnk74hfL0VsyDxC1CugjAZrz
+	 0KhAuvpzMf2pXyQG4H3hQtLNkWpqyEAMtY8aiDijMy3p5zSKqi5zD7Nsuw/CecffIl
+	 Y+CFLFQ5Ck/om6P0AA0xzbTrnH45tDY2ptwuSj3T2Ag4pWXq1iPlboUxdMmHpjZus1
+	 pT5EdHo2bLaXg==
+Date: Wed, 30 Apr 2025 18:49:37 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Naveen N Rao <naveen@kernel.org>,
+	Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>,
+	linux-integrity@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH v3 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
+Message-ID: <aBJGkSil1YAzSXsg@kernel.org>
+References: <20250414145653.239081-1-sgarzare@redhat.com>
+ <20250414145653.239081-5-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250414145653.239081-5-sgarzare@redhat.com>
 
-On Wed, 23 Apr 2025 20:15:45 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
->
-> build errors with clang
-> ld.lld: error: version script assignment of 'LINUX_4.15' to symbol
-> '__vdso_getrandom' failed: symbol not defined
-> llvm-nm: error: arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg: No
-> such file or directory
+On Mon, Apr 14, 2025 at 04:56:53PM +0200, Stefano Garzarella wrote:
+> From: Stefano Garzarella <sgarzare@redhat.com>
+> 
+> This driver does not support interrupts, and receiving the response is
+> synchronous with sending the command.
+> 
+> So we can set TPM_CHIP_FLAG_SYNC to support synchronous send() and
+> return responses in the same buffer used for commands. This way we
+> don't need to implement recv() op.
+> 
+> Keep using the same pre-allocated buffer to avoid having to allocate
+> it for each command. We need the buffer to have the header required by
+> the SVSM protocol and the command contiguous in memory.
+> 
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-I have also been seeing this too in my Rust-enabled builds for a few
-days at least.
+Similar comments, and a bit redundancy does not matter i.e., they can
+have pretty much the same explanation.
 
-Thanks!
+> ---
+>  drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
+>  1 file changed, 11 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
+> index d3ca5615b6f7..db1983072345 100644
+> --- a/drivers/char/tpm/tpm_svsm.c
+> +++ b/drivers/char/tpm/tpm_svsm.c
+> @@ -25,38 +25,32 @@ struct tpm_svsm_priv {
+>  	void *buffer;
+>  };
+>  
+> -static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len,
+> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
+>  			 size_t buf_size)
+>  {
+>  	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+>  	int ret;
+>  
+> -	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
+> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
+>  	if (ret)
+>  		return ret;
+>  
+>  	/*
+>  	 * The SVSM call uses the same buffer for the command and for the
+> -	 * response, so after this call, the buffer will contain the response
+> -	 * that can be used by .recv() op.
+> +	 * response, so after this call, the buffer will contain the response.
+> +	 *
+> +	 * Note: we have to use an internal buffer because the device in SVSM
+> +	 * expects the svsm_vtpm header + data to be physically contiguous.
+>  	 */
+> -	return snp_svsm_vtpm_send_command(priv->buffer);
+> -}
+> -
+> -static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
+> -{
+> -	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
+> +	ret = snp_svsm_vtpm_send_command(priv->buffer);
+> +	if (ret)
+> +		return ret;
+>  
+> -	/*
+> -	 * The internal buffer contains the response after we send the command
+> -	 * to SVSM.
+> -	 */
+> -	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
+> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, buf_size);
+>  }
+>  
+>  static struct tpm_class_ops tpm_chip_ops = {
+>  	.flags = TPM_OPS_AUTO_STARTUP,
+> -	.recv = tpm_svsm_recv,
+>  	.send = tpm_svsm_send,
+>  };
+>  
+> @@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
+>  
+>  	dev_set_drvdata(&chip->dev, priv);
+>  
+> +	chip->flags |= TPM_CHIP_FLAG_SYNC;
+>  	err = tpm2_probe(chip);
+>  	if (err)
+>  		return err;
+> -- 
+> 2.49.0
+> 
 
-Cheers,
-Miguel
+BR, Jarkko
