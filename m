@@ -1,252 +1,75 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE9119F11B;
-	Wed, 30 Apr 2025 19:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693871E570B;
+	Wed, 30 Apr 2025 19:41:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042091; cv=none; b=pQVLBdE2Gz5Y5XY4m63aHkRmQ81MxUe/mx0VDxMh31mKDW3/C5pED18ZMlR4ADoju6BOoFOFAzU/zNNDE0jXeOiz9qVYJbw5HGAFFnwwXe4guwxf/XrIDtcoChw81umMwrVLBHgkEh6tp3W6kHeCGVcn897QAvzuPB4mxP0Tx4U=
+	t=1746042109; cv=none; b=NPbioKxdfM+MA5mWRwWbysa4o0hkgqb8Nb+vuIZ1sHfgOB2KkZUzOEUrXSdGf/6dfqRkfY3dfkUKX6eAGAnpdm7xfXE/pxq1LPRXSPisAallcA4VwX8ydWmXWpqI/uBzo4hAWAcWdnzjJrBDPerZ4gj37UWeU+cpig1bogST3is=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042091; c=relaxed/simple;
-	bh=L00nMiYXt6U1pqfjE4ugf/WVdHCISUv2EAMn4Uzqa2c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CCi5DA4R4UHCJEoEou/v/K/qsjmOMZkAWU7I7w8pp51eRaspbYhfQ5q0MAh3UZhzU1vvBiVW33jLhZgl7OeHwzvN2fSKLVTgtDad+cWD7Ls2wiZnYaXW/3V7DqjSREVQEi5MI0o+vc+V8FoCKjuUxMpg6on2NwJmisWUym6tvdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Glo7zhLm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746042109; c=relaxed/simple;
+	bh=hpfAhy/7tVhagfc9z4JgybjSfRl2vTPI06TuCoChDUg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=LbivDyRJIc4nPQd15gbbGHuC0ecqHexeD1MT/rDeRgu48PF7UkphSgj45KWXsc9GYYE5TF3JCVcL0WssTpZ4iYUqb1+HcK/5JW9Hjfi1JhTnnuZ6x0iM1jVALCdrc1w0dtwAH9P61PhAKh+Hp+P16NcRMEmVRw7uCzvN4hUrVVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y9UCymD/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Glo7zhLm"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGgxBS029556;
-	Wed, 30 Apr 2025 19:41:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	JPJj2ypVxLM6FirxIox1Ym4HrMcpwqg5uqyspzcdVqA=; b=Glo7zhLmOH1FFffG
-	+GPcusVVc4fHmf5fOD6JZ1418X0nASD0XaFSgjY0lOmpNm6YKtjJlfQypGeSA1MF
-	WHKIveIsxAnjic4Xu7X+3m+hKhmBfFgQ1cG9WrFtQ0YBEe4XqRqo7EeNJEXvZ9UL
-	WWdfr6VRYTZpS8TfsK7goFd2SSq9zxByaJoS7/dIzMTzfLBtiVNGA5EeztEiQpen
-	ftLV/3b8xEYkWmBcL0RoBjR/P53S3pCJPlo0WCzdp/t2/YGHmYjLQTMjj+K2DEhA
-	lNX/Ez+T36Zl4OD8RQJQhH3ga8PtUg91FbLTTziXAbblwqrylxZT37cwW2CvJPL/
-	dhZxIQ==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u7ug0e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 19:41:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UJfG1i030862
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 19:41:16 GMT
-Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
- 2025 12:41:15 -0700
-Message-ID: <0e07f35d-0eeb-4380-84e2-97a45841bf15@quicinc.com>
-Date: Wed, 30 Apr 2025 12:41:14 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y9UCymD/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3D6C4CEE7;
+	Wed, 30 Apr 2025 19:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746042108;
+	bh=hpfAhy/7tVhagfc9z4JgybjSfRl2vTPI06TuCoChDUg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Y9UCymD/N2lgHtazdCALwEztIiO3B6AihkoBnLIQwX8jf5BouAMCk2GqQO+F2j17i
+	 LD1YLsmNsWc8n1bJWzdge2XYDrroxdW4jpDyx/0s5xuN79n+gMpVMxtQXk4R/x3PTD
+	 g25P8NedW9cmZohv1NMH2CHa9fKEpXnmvclK0s3oq+eewwqMhBuMxOaOCu8PVcEfRh
+	 JvO0YW06OXT8OvmFMTpmTv2N+3URcdcn8aJb7wMOboV8lSbOdBLJyky7PJSQo4mn8Z
+	 9wBEJhdKv6ozC3X8zlFQTnSxmokHy8FxBnmOkdWg9qWauZuHX3SnLLEXi/Tc04m7Kq
+	 mX30ayso6Irjg==
+From: Srinivas Kandagatla <srini@kernel.org>
+To: Sven Peter <sven@svenpeter.dev>, Janne Grunau <j@jannau.net>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>, Neal Gompa <neal@gompa.dev>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Srinivas Kandagatla <srini@kernel.org>, 
+ Sasha Finkelstein <fnkl.kernel@gmail.com>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Hector Martin <marcan@marcan.st>, Nick Chan <towinchenmi@gmail.com>
+In-Reply-To: <20250423-spmi-nvmem-v3-0-2985aa722ddc@gmail.com>
+References: <20250423-spmi-nvmem-v3-0-2985aa722ddc@gmail.com>
+Subject: Re: (subset) [PATCH v3 0/3] Apple PMIC NVMEM cell driver
+ (Formerly: Generic SPMI NVMEM cell driver)
+Message-Id: <174604210497.121736.17664603572137635486.b4-ty@kernel.org>
+Date: Wed, 30 Apr 2025 20:41:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] drm/msm: move wq handling to KMS code
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark
-	<robdclark@gmail.com>
-CC: Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
-References: <20250413-msm-gpu-split-v1-0-1132f4b616c7@oss.qualcomm.com>
- <20250413-msm-gpu-split-v1-1-1132f4b616c7@oss.qualcomm.com>
- <CAF6AEGtG2K79zAd9tyNAG7JSVhS2sPdC-VjqubpmhD9AvoVoAA@mail.gmail.com>
- <9f64ea5e-1b59-4522-b55a-d9b11e412ee5@oss.qualcomm.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <9f64ea5e-1b59-4522-b55a-d9b11e412ee5@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Ldc86ifi c=1 sm=1 tr=0 ts=68127cdc cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=EUspDBNiAAAA:8 a=ZvaOMdlihffMFPaspHcA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: OYPJ16N5teY2OzZPBYTTALRqidUUVMO8
-X-Proofpoint-ORIG-GUID: OYPJ16N5teY2OzZPBYTTALRqidUUVMO8
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDE0NCBTYWx0ZWRfXxKy1z67eH/WT CK8Zndnp8kdp6x1GIlg7c6gy0EJbrfw5sCdALay+F7rEyXdGodUZvWwakPuLMiCZN9UZ1P+/ILr pBoApuK8J+0Ck9YEE+rlUE9yWZdqcNjXLNOhtZ6Afz4eMO0iG85zfSIPSwJ/qQgzUbUZmCejxM7
- TlgEWHPiWvgBP0b8uX3U4JYHoFvGobpIXJh6R+ErMM70yChfnGFQGoEBRzyY72Kajr73adZJOpl +7oTSLBV+8mJc+6Ulp91ywumnIWKVMNprz3qeJXkTqf9pgL+vhARKTcaAlb7swxdNB0PRAvRpKt HJdUZTFJe3brbj0jYHCgr+HLvjyBnmQ+vKClGe2JUHrKzOcdcLy02Q4SG5Hfcx0tSS50I+1VS+B
- uqe6ZxSs1pr3QD1EJro+KDT3mqLFwmcxQYEdNjd9YgORksJsiKo+zDBtEs1rcYyPyUo+4oBb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 clxscore=1015 spamscore=0
- bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300144
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
 
-
-On 4/15/2025 1:59 AM, Dmitry Baryshkov wrote:
-> On 14/04/2025 18:58, Rob Clark wrote:
->> On Sun, Apr 13, 2025 at 9:33 AM Dmitry Baryshkov
->> <dmitry.baryshkov@oss.qualcomm.com> wrote:
->>>
->>> The global workqueue is only used for vblanks inside KMS code. Move
->>> allocation / flushing / deallcation of it to msm_kms.c
->>
->> Maybe we should also just move the wq into struct msm_kms?
+On Wed, 23 Apr 2025 19:55:12 +0200, Sasha Finkelstein wrote:
+> This patch series adds a driver for exposing a set of registers
+> as NVMEM cells on a SPMI-attached PMIC on Apple ARM platforms.
+> Those are used to store the RTC offset and to communicate platform
+> power state between the OS and boot firmware.
 > 
-> ... together with several other KMS-only fields. I will take a look.
+> The NVMEM cell consumer drivers will be sent in a further series.
 > 
+> [...]
 
-Yeah the usages seem to be only within kms, so we can move this to msm_kms.
+Applied, thanks!
 
->>
->> BR,
->> -R
->>
->>>
->>> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
->>> ---
->>>   drivers/gpu/drm/msm/msm_drv.c | 21 ++-------------------
->>>   drivers/gpu/drm/msm/msm_kms.c | 16 +++++++++++++++-
->>>   2 files changed, 17 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/ 
->>> msm_drv.c
->>> index 
->>> c3588dc9e53764a27efda1901b094724cec8928a..02beb40eb9146941aa43862d07a6d82ae21c965e 100644
->>> --- a/drivers/gpu/drm/msm/msm_drv.c
->>> +++ b/drivers/gpu/drm/msm/msm_drv.c
->>> @@ -82,13 +82,6 @@ static int msm_drm_uninit(struct device *dev)
->>>                          drm_atomic_helper_shutdown(ddev);
->>>          }
->>>
->>> -       /* We must cancel and cleanup any pending vblank enable/disable
->>> -        * work before msm_irq_uninstall() to avoid work re-enabling an
->>> -        * irq after uninstall has disabled it.
->>> -        */
->>> -
->>> -       flush_workqueue(priv->wq);
->>> -
->>>          msm_gem_shrinker_cleanup(ddev);
->>>
->>>          msm_perf_debugfs_cleanup(priv);
->>> @@ -104,8 +97,6 @@ static int msm_drm_uninit(struct device *dev)
->>>          ddev->dev_private = NULL;
->>>          drm_dev_put(ddev);
->>>
->>> -       destroy_workqueue(priv->wq);
->>> -
->>>          return 0;
->>>   }
->>>
->>> @@ -227,12 +218,6 @@ static int msm_drm_init(struct device *dev, 
->>> const struct drm_driver *drv)
->>>          ddev->dev_private = priv;
->>>          priv->dev = ddev;
->>>
->>> -       priv->wq = alloc_ordered_workqueue("msm", 0);
->>> -       if (!priv->wq) {
->>> -               ret = -ENOMEM;
->>> -               goto err_put_dev;
->>> -       }
->>> -
->>>          INIT_LIST_HEAD(&priv->objects);
->>>          mutex_init(&priv->obj_lock);
->>>
->>> @@ -253,12 +238,12 @@ static int msm_drm_init(struct device *dev, 
->>> const struct drm_driver *drv)
->>>          if (priv->kms_init) {
->>>                  ret = drmm_mode_config_init(ddev);
->>>                  if (ret)
->>> -                       goto err_destroy_wq;
->>> +                       goto err_put_dev;
->>>          }
->>>
->>>          ret = msm_init_vram(ddev);
->>>          if (ret)
->>> -               goto err_destroy_wq;
->>> +               goto err_put_dev;
->>>
->>>          dma_set_max_seg_size(dev, UINT_MAX);
->>>
->>> @@ -304,8 +289,6 @@ static int msm_drm_init(struct device *dev, const 
->>> struct drm_driver *drv)
->>>
->>>   err_deinit_vram:
->>>          msm_deinit_vram(ddev);
->>> -err_destroy_wq:
->>> -       destroy_workqueue(priv->wq);
->>>   err_put_dev:
->>>          drm_dev_put(ddev);
->>>
->>> diff --git a/drivers/gpu/drm/msm/msm_kms.c b/drivers/gpu/drm/msm/ 
->>> msm_kms.c
->>> index 
->>> 35d5397e73b4c5cb90b1770e8570277e782be7ec..821f0b9f968fc3d448e612bfae04639ceb770353 100644
->>> --- a/drivers/gpu/drm/msm/msm_kms.c
->>> +++ b/drivers/gpu/drm/msm/msm_kms.c
->>> @@ -227,6 +227,13 @@ void msm_drm_kms_uninit(struct device *dev)
->>>
->>>          BUG_ON(!kms);
->>>
->>> +       /* We must cancel and cleanup any pending vblank enable/disable
->>> +        * work before msm_irq_uninstall() to avoid work re-enabling an
->>> +        * irq after uninstall has disabled it.
->>> +        */
->>> +
->>> +       flush_workqueue(priv->wq);
->>> +
->>>          /* clean up event worker threads */
->>>          for (i = 0; i < priv->num_crtcs; i++) {
->>>                  if (priv->event_thread[i].worker)
->>> @@ -243,6 +250,8 @@ void msm_drm_kms_uninit(struct device *dev)
->>>
->>>          if (kms && kms->funcs)
->>>                  kms->funcs->destroy(kms);
->>> +
->>> +       destroy_workqueue(priv->wq);
->>>   }
->>>
->>>   int msm_drm_kms_init(struct device *dev, const struct drm_driver *drv)
->>> @@ -258,10 +267,14 @@ int msm_drm_kms_init(struct device *dev, const 
->>> struct drm_driver *drv)
->>>          if (ret)
->>>                  return ret;
->>>
->>> +       priv->wq = alloc_ordered_workqueue("msm", 0);
->>> +       if (!priv->wq)
->>> +               return -ENOMEM;
->>> +
->>>          ret = priv->kms_init(ddev);
->>>          if (ret) {
->>>                  DRM_DEV_ERROR(dev, "failed to load kms\n");
->>> -               return ret;
->>> +               goto err_msm_uninit;
->>>          }
->>>
->>>          /* Enable normalization of plane zpos */
->>> @@ -319,6 +332,7 @@ int msm_drm_kms_init(struct device *dev, const 
->>> struct drm_driver *drv)
->>>          return 0;
->>>
->>>   err_msm_uninit:
->>> +       destroy_workqueue(priv->wq);
->>>          return ret;
->>>   }
->>>
->>>
->>> -- 
->>> 2.39.5
->>>
-> 
-> 
+[1/3] dt-bindings: spmi: Add Apple SPMI NVMEM
+      commit: 342ad99689be22776c50ab5d82064b700e516a98
+[2/3] nvmem: Add apple-spmi-nvmem driver
+      commit: 8d2900cc141122ad3a754d6d86cd15a9a4bf0b74
+
+Best regards,
+-- 
+Srinivas Kandagatla <srini@kernel.org>
 
