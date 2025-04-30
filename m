@@ -1,61 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478E51EEF9;
-	Wed, 30 Apr 2025 06:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849571EEF9;
+	Wed, 30 Apr 2025 06:35:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745994917; cv=none; b=BJaZQ+VwhCNJIOvOhIXCFdqCnz1EH3Ir/cwwKGdux55kl59nXjkfKqpiI1NCZ9VDamU0q3IsG66wDvhWjp8Gw+pmtsomF1miwsOjRqeZbNRkdDtrE8ZZqnXA+tVbORbG1msvNQSygyD/fyQqyIzq1B4GOZJaHnK7XKUZLIGAVlQ=
+	t=1745994924; cv=none; b=DObCrepu5dr5K585BxqpXvAB1wq8e9SgilRaMG0aXHedfCs4+Sv8/aDan/Jh+3JCA8jnXVhStFu/Dcn7PV1XOZDfGaWnAJhMe7sKpB4uPMHwoowJ57EgYrO84S/y3Tk7g23i0vm5tmCiYj90l5re00U0bAL1DkHS+Y88AxKfqL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745994917; c=relaxed/simple;
-	bh=R0EzpLjoRCY0UKjIKj/B4YO03H+hveYLXF2IY8J5jes=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Qqe1hhm8c/OA9FQqNwWEnbJ6ugLt+bv/zka9uuQlJZTn7hZwfMkQ+4bGL5YBiFuifDtFtZEvepNY+yPWQBhSWy9DQHXPvAc3onuB5Md1HKK/5iu8NPUsyZx+ELItEipNALq39li/M4O9qd2vtkZGmUBtpAvzi4Gc6tsS4sbcUhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=baf3zwOt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745994924; c=relaxed/simple;
+	bh=2GBR4Hi5ao4ZWwIgFEL+gg6kKOZ4jKqEx1gxgiu8CSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VoULwLFp4WTXH8DNwhnah0YMrGlus2xI+IACE4Kf7nyV4rqXuUm33QXI5laa1N5hHHczU8di1FzQ/FkqMBGeoWo+Avv++kv6H7qUyOQPQG+iIv08LJ2ZhRZ9eJGK5Hm3wqmgcPqpZv/L7UsGpWPpAHTjDlOQkbfeo8KJcOh7WYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S0+8I6l1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="baf3zwOt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA637C4CEE9;
-	Wed, 30 Apr 2025 06:35:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S0+8I6l1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7F98C4CEE9;
+	Wed, 30 Apr 2025 06:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745994915;
-	bh=R0EzpLjoRCY0UKjIKj/B4YO03H+hveYLXF2IY8J5jes=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=baf3zwOt1kmYSyB09vMY/s4cup7zaGV4+KBOZ7wx1PCSFPuxF7dCL4Cq+BGthzGMn
-	 iMWGaDz7xxF0d6DgwoHWsx4SnV3AEdbgZsjt9BMjAFGfDqnyYgnJX13Jo5E38pUkXt
-	 nFvzOnqdHdOj2WbfQMSkW8GcsQBXZb1hPaDSY9DZ+u1u8K25jN8SRjRlmZkuT/tGGw
-	 ee7/2d5apylN6rpOTi8wWW5XfHSxPhmbA12sqcfpq/7BuZRrUoTWHqysBYvs3It8Ip
-	 0iYHCSapTdoeHx85O/E5TTdt+y6dGErEgia7v2T0HgDQdkT2bfP/TXVVr1WVlyBjRF
-	 5Ota7gypV8I0Q==
-From: Niklas Cassel <cassel@kernel.org>
-To: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Damien Le Moal <dlemoal@kernel.org>, Mikko Korhonen <mjkorhon@gmail.com>
-In-Reply-To: <20250429164610.68746-1-mjkorhon@gmail.com>
-References: <20250429164610.68746-1-mjkorhon@gmail.com>
-Subject: Re: [PATCH v4] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0
- hard drives
-Message-Id: <174599491460.1423052.1166861891633519770.b4-ty@kernel.org>
-Date: Wed, 30 Apr 2025 08:35:14 +0200
+	s=k20201202; t=1745994924;
+	bh=2GBR4Hi5ao4ZWwIgFEL+gg6kKOZ4jKqEx1gxgiu8CSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S0+8I6l1mbFthpT1IzvMzXEMZJBe9cGpkyteul4sP/gD+CZQaFXc/Prp03BYRz3Ac
+	 K2ac5c2s5IgBLnnVzfufMhZR8sqYGMvXrS3qkKzH+4XiggLLbNNxaXiCJYTzNP+3O4
+	 RW8Ga767/nq9NsK8m8E0qD6W8OgR1VnsL4elc4srXSbuKUBUD1ATLJxWVB90P0Abal
+	 gIL6jFKZHNNoij/zg/gDVt9PvQsKxyg4LUJumX0eIXbeUZnuNH97Yo+C2TMTpQ+6D/
+	 8tDtpWmqF6qWj6tC2ArxMcgV9F/1NoJOQG9uX0yucecjDVB+OgPNOS+HZYvRcRUjMo
+	 fzrhEQmSw/4IQ==
+Date: Wed, 30 Apr 2025 08:35:21 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Yixun Lan <dlan@gentoo.org>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Maxime Ripard <mripard@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Andre Przywara <andre.przywara@arm.com>, Corentin Labbe <clabbe.montjoie@gmail.com>, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] dt-bindings: sram: sunxi-sram: Add A523 compatible
+Message-ID: <20250430-fanatic-singing-terrier-68acbb@kuoka>
+References: <20250430-01-sun55i-emac0-v3-0-6fc000bbccbd@gentoo.org>
+ <20250430-01-sun55i-emac0-v3-1-6fc000bbccbd@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250430-01-sun55i-emac0-v3-1-6fc000bbccbd@gentoo.org>
 
-On Tue, 29 Apr 2025 19:44:35 +0300, Mikko Korhonen wrote:
-> Make WDC WD20EFAX-68FB5N0 hard drives work again after regression in
-> 6.9.0 when LPM was enabled, so disable it for this model.
+On Wed, Apr 30, 2025 at 01:32:03PM GMT, Yixun Lan wrote:
+> The Allwinner A523 family of SoCs have their "system control" registers
+> compatible to the A64 SoC, so add the new SoC specific compatible string.
 > 
-> 
+> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+> Signed-off-by: Yixun Lan <dlan@gentoo.org>
+> ---
+>  .../devicetree/bindings/sram/allwinner,sun4i-a10-system-control.yaml     | 1 +
+>  1 file changed, 1 insertion(+)
 
-Applied to libata/linux.git (for-6.15-fixes), thanks!
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-[1/1] ata: libata: disable LPM for WDC WD20EFAX-68FB5N0 hard drives
-      https://git.kernel.org/libata/linux/c/f847305c
-
-Kind regards,
-Niklas
+Best regards,
+Krzysztof
 
