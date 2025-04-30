@@ -1,63 +1,66 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EB625F980
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:15:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEAF025E440
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:15:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746033343; cv=none; b=SwbnDHvQU+Z8oShAko5Atw0p29baSi+QbBTH+8ISMJrcDVVDAPLMssoRlSiv+UZnVWdzxt7Qoanp3FZhRGlicbkViZBapOH8unQt3VQCEE9cDiUNCWPLwRxBiRb9ihjUJaqhkW7vVUc1qJe5eRHxz4yY4UZp7EtIFELZbcJjF7k=
+	t=1746033344; cv=none; b=pM3oa1ShRMqad0HqgjtJyRnao57tR/FyiDjFy1laVNWz3jNX6UeJo+2X3USDS+8JsVkTKd90Yb8YrbF0XU+/Q19B1BEAWTn2gKUu/53d8rOghZQv2gMAoN8Q9LTfAVrGNP3mjm+F8dw9q0Oi3StX57RSHTBPQqK100vSrMfU2G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746033343; c=relaxed/simple;
-	bh=a1OE5bfqiQpD3wUqlPPLecFwn0/TgL4JwzH7YA5a96I=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=m3y67IKARn9ZHzjazHSp1Wiub0rYeG4HeZsLHyHOrAh7YXho/knZKaF9Pef4xmoKswCQ9QLE8j5DPsvDnWgffSXQuEaldDv5DQP4Bd1xJFd7IaeHorn0O/u46v6bGiWMng1dtiFrv7n65q6QSoPbb7psxxAb7LeU3UyLt3rWIy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CKZV7+v+; arc=none smtp.client-ip=209.85.210.201
+	s=arc-20240116; t=1746033344; c=relaxed/simple;
+	bh=lm5ga5E1Bh0WGysa1ZSSmKbnAd9w4JpDDVcJpw+p0k4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Content-Type; b=OIt/YnlPHOXcFEqAI/1agWP2oUfUlAfV4td1zFi/we4IGjHUNf7EZw96SgXRnkes1Q5WLx85Ei04sPFtw//xNwK/xu5aV97Gb0So8RyDuWYWZmEJxVgq65hw7/+aKd4JtKl52qcAgL803vCYtnUWOTGG0xycfijcOX4g0bjkVoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PmKPxZYp; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CKZV7+v+"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736d64c5e16so92115b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:15:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PmKPxZYp"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-739515de999so98606b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:15:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746033340; x=1746638140; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=2l6EpSn49twaG/1RM3U2XqpvkRe6FWEsiPTfIGBFJKk=;
-        b=CKZV7+v+XqB+eJFxYGGWtpU9caUc4ZRN1HuxhZXHfbOTcz6zoe+1HDakACaCwvr0v/
-         c16wy5ntS+PcxuklMLxmQ3n9xdqquA2/3cVj1Sqz9WdK55ASlLEbCCrmgevyvBIciQhw
-         mpqJH89ypTJ1ELKqP6xNBaVoqWoCQkV2tv2f+USmNr2d3vBg4e+lURuOkZgS7v5L51Zj
-         H743/he3U8UPxjE6StyRhpD8w/2dlYUSrASyKECtXEIZH4mX9ILRaqAaKraq6XZ8ynFG
-         JTFpZSwB901Wpkpgk1YspfHD3pJ0IKfGYBCi/nM5Ypnb4ItpvX7m8CAQVFWlS4/WhtJc
-         oBvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746033340; x=1746638140;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+        d=google.com; s=20230601; t=1746033342; x=1746638142; darn=vger.kernel.org;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2l6EpSn49twaG/1RM3U2XqpvkRe6FWEsiPTfIGBFJKk=;
-        b=TL6mUFVmGIu4LQry4AGUQZ000vtz0KZlNBMbQuTLHg2YNPM8udu8IZjsBKYum2CiDC
-         QemEywmCZAfdnCmUbkt9emzms9chHW8rkQqiUWadgC++Uv59Xcua/6CkzPAPu23lrBwd
-         YNwIiVQzDQSr1mgD0d1LB8vph/hiFCIO/XK8/k5j+yxObap2KKaFgAlIVKIAFJ0/gEN/
-         1Qmhlc1pcmArtSkqkVOIJhcTgGiMe9k1l6mNPN5JSLfMwcr0oU/fG+h6ObXpdCoSswBH
-         /KqVmTdQ+we3+aUlpLJlW9dEqV/buNK02jZBio5L8ZPFlCbIJHuxpSSApDsqVMv7rna+
-         9X6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUgxO0DcHfKN97pCmAm/kBSsckIqnvNIz9/dVQRKuuqt1dpy9gYQ86c0f1ahsyid+gsTgjbxAUz0DpZvcE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyCh7QinxJbsO9YZl1fW6ZgJ9auYf0eZNmzv/q9xgJkmlDa3cN
-	qWuiVm2hhVodJ8eqZsoqK80/VEheiVVOjCI8rFcObyvba6ZUHKFzSQ0drU7sXukSPlAu8OHoaM5
-	ST5/MsQ==
-X-Google-Smtp-Source: AGHT+IHwG7pdNLiBaAM24HThjkOi7tLfoBL4L6u/i7asjEelEVXiAdsmMsTUPy8p7bw7xwkQu9IheoDEPmPe
-X-Received: from pgbfq21.prod.google.com ([2002:a05:6a02:2995:b0:af2:3b16:9767])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d8c:b0:1f1:432:f4a3
- with SMTP id adf61e73a8af0-20aa2fcc884mr4171936637.23.1746033340179; Wed, 30
- Apr 2025 10:15:40 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:15:29 -0700
+        bh=FpIgS0wmOV5UbvgaGzkA8qij/rEeOqGzeG6VWVukYPI=;
+        b=PmKPxZYptul18cSKHetms8n+PTcVIzKUlAVUFOQgagL5/znyW/MBGYppFcxrDsnUpA
+         Ermr+cqYzHLXL7RUKbxvb8H9vTwMAjn2NkBn242oJ2bwrezB5K7naNc9tFXtF8jV8aXA
+         NSjCHVPL2ntKIVTFZnoIkXx7inIx/ZY56zsg8LVD3+FJJYd6h3tIuexxAoSxvMGihqBE
+         1OVGqyp+Z6yYdp8/gum8K2OWtoUdvtzrXhSd8k505E/ILCHcmirvFUQI9I9ig4nCRnAk
+         zhDEkazss/WPAJhXXFS0QNOMb/i5ZXd0vdnj6EV88u0TAfqmaFuMS/NXx+Hfo0k3tXmv
+         E2kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746033342; x=1746638142;
+        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FpIgS0wmOV5UbvgaGzkA8qij/rEeOqGzeG6VWVukYPI=;
+        b=Je6EIN6UItxeZ+OejDvcLKG7/orvygpsfC+ei9cTm/vzeuMCSujTfUqhMJGoahHk54
+         UjoMq8fWLB/1b6DPyFdDon4aH7uRk/zX1ZAyVGrSfPd+imENKcJm57zweWzRYyseWkf5
+         P+1BCHBQt7QHEEa5WWkhz0XnoiiOTegjlVYCe9RyTVVTkjyCZIwWu2YMzdGdnfVK6MVF
+         cceLq132OQc1ddNCht0uIpQKDufkDbbhgFKuv+EuF48HgTkjG3kHa9oGeW4jA5deGIBW
+         tUbZh7OJjhUpUjUdcCcZKDLqZu/jUd+gSwwoux3rMLNW5QuZnfcfmMzfDPmW1CfaYssx
+         1b+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX8ZsmrJMlDfvIWy8n2ufdlizMhmB0Yi7/O1b1qB8/9UxA/VaktvzPLIip4+DlWUoNDa7shYo1JCf/qtGE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3aER5npMhF/8J8jaJROkmwGLhEv+rllnl0PUOJIIcn7aiJA79
+	N/UeOmW1h6CW73YBHJrQBZd8Vr+V8JgAr5ZwIzKxNSGdIQta6IihShIoSjmRTQqyfMG2MNshCur
+	AuAdeSg==
+X-Google-Smtp-Source: AGHT+IGv8XMgRIoeJR1rySLXISqqmVQqJou5NGwUjKxk7iOH4VQdGHhiObrDzUu60o16T054lU4v3OaRDTR/
+X-Received: from pgkb21.prod.google.com ([2002:a63:eb55:0:b0:b1f:857e:2198])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:e617:b0:1f5:75a9:526c
+ with SMTP id adf61e73a8af0-20a87c5680dmr5326067637.13.1746033342084; Wed, 30
+ Apr 2025 10:15:42 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:15:30 -0700
+In-Reply-To: <20250430171534.132774-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20250430171534.132774-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430171534.132774-1-irogers@google.com>
-Subject: [PATCH v2 0/5] Silence some clang -Wshorten-64-to-32 warnings
+Message-ID: <20250430171534.132774-2-irogers@google.com>
+Subject: [PATCH v2 1/5] bitfield: Silence a clang -Wshorten-64-to-32 warning
 From: Ian Rogers <irogers@google.com>
 To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
 	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
@@ -68,35 +71,32 @@ To: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.d
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Clang's shorten-64-to-32 can be useful to spot certain kinds of bugs
-that can be more prevalent in C code due to implicit 64 to 32-bit
-casting. Add some explicit casts to header files so as to avoid the
-warning when these headers are used.
+The clang warning -Wshorten-64-to-32 can be useful to catch
+inadvertent truncation. In some instances this truncation can lead to
+changing the sign of a result, for example, truncation to return an
+int to fit a sort routine. Silence the warning by making the implicit
+truncation explicit. This isn't to say the code is currently incorrect
+but without silencing the warning it is hard to spot the erroneous
+cases.
 
-This patch started out as a single patch in a series for the perf tool
-where a bug could have been identified were -Wshorten-64-to-32
-enabled:
-https://lore.kernel.org/lkml/20250401182347.3422199-3-irogers@google.com/
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ include/linux/bitfield.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v2: Rebase and try to address Arnd Bergmann's comments wrt the commit
-    message. Arnd also mentioned doing larger refactors, changing
-    return types and adding helper functions. I've held off doing this
-    given concerns over breaking printf flags.
-
-Ian Rogers (5):
-  bitfield: Silence a clang -Wshorten-64-to-32 warning
-  bitmap: Silence a clang -Wshorten-64-to-32 warning
-  bitops: Silence a clang -Wshorten-64-to-32 warning
-  math64: Silence a clang -Wshorten-64-to-32 warning
-  hash.h: Silence a clang -Wshorten-64-to-32 warning
-
- include/asm-generic/bitops/fls64.h | 2 +-
- include/linux/bitfield.h           | 2 +-
- include/linux/bitmap.h             | 2 +-
- include/linux/hash.h               | 2 +-
- include/linux/math64.h             | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
+diff --git a/include/linux/bitfield.h b/include/linux/bitfield.h
+index 63928f173223..cc5cfed041bb 100644
+--- a/include/linux/bitfield.h
++++ b/include/linux/bitfield.h
+@@ -176,7 +176,7 @@ static __always_inline __##type type##_encode_bits(base v, base field)	\
+ {									\
+ 	if (__builtin_constant_p(v) && (v & ~field_mask(field)))	\
+ 		__field_overflow();					\
+-	return to((v & field_mask(field)) * field_multiplier(field));	\
++	return to((__##type)((v & field_mask(field)) * field_multiplier(field))); \
+ }									\
+ static __always_inline __##type type##_replace_bits(__##type old,	\
+ 					base val, base field)		\
 -- 
 2.49.0.906.g1f30a19c02-goog
 
