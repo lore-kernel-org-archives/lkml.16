@@ -1,87 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1FDA204F9C;
-	Wed, 30 Apr 2025 15:21:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713D720CCE4;
+	Wed, 30 Apr 2025 15:21:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026472; cv=none; b=kWn+zkQgoutzV4Ti9U2NRB7X5qP+32x8qrGoGidzLtwkL/9vpuJJk/a/NfBpHwZFPyRQuP9ptNDupCBth+UmpNAm/6A5PsTA57+2wKoAlpSFxFjIuDmIhrzEA0PyKRduO8BTj0zhOThtviaBFttB/IM5NwkaBLyHR1d9yOnDN80=
+	t=1746026515; cv=none; b=WxcrEl6Gxu6TXd4dJtQLXEzdxrEhDpDE6a/SfUwEKEQnZHEGcLsfTcZ4gW8NCZ0GrpartRh/Ppk6dtfzDVm9wwO+a/pnLJCiSJRJMsRBX+pTiUTl1AnlBwZbzY4B0E9Yuobsk9bdDofGEz6DzgPmnlGMyyX40PtoHjkz84A2XvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026472; c=relaxed/simple;
-	bh=2t0avsYGFh5dbngitM91y3UXh//iU+YmHd1EzhAodJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mNj7FAZVPZ/85DYVOZccADwBL2ee9zltj/4Fr7vSlBtCGWbbEMhLbZkXXhfvWer1uophnNGgjlJpfBT/l0HrnHJMFbwmoFNRjTczs28AHcz6unbYdJl9+233uVUoYv2aSVBjuU4HR+flWHWzOtEt1cEvf4GHg5w+oxyjtgVynrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Xvz7OAl1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746026515; c=relaxed/simple;
+	bh=lKmd53gZu4sZuMWovJkl8sg3t6gwAHm6zuqk3EmqbIs=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=pBJE0ao/7BToptsBClO3WEHpYQxFyHMuUXt0QwTyj2nOgxJhpBGhbCnfM/gUsdEMBx8tIxzcj0YWfvy2fQK5I7RUN0LuB1r6HxFJCWYWlSIWTy3OKHzEYDJWTjH4GdUtykBqP9VOWJ7FUfv1Gcrm3z87CQhJO5KWTxn1JsyNRgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rwWn4VTq; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TdQdA3GC; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Xvz7OAl1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739D1C4CEE7;
-	Wed, 30 Apr 2025 15:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746026472;
-	bh=2t0avsYGFh5dbngitM91y3UXh//iU+YmHd1EzhAodJU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xvz7OAl1AD3mMKNOz5ZJUvauSAKo6qYe65ZC9WN86ulr2CZCF+P0qBetm/9t9hAse
-	 2dQXoL5mxH/KXXm/ZFBpjrGDJO15CgoavebDLVcCOZC5T1KCVCtkGd8HIrsY1FGfJ7
-	 1o82B6fOxyTHtjT5v+Cv6Ptg0FoMddDXQs0EIcp4=
-Date: Wed, 30 Apr 2025 17:21:09 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 0/8] rust: DebugFS Bindings
-Message-ID: <2025043005-monkhood-caring-7829@gregkh>
-References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
- <2025043024-disk-rockfish-1c1b@gregkh>
- <CAGSQo0040a9efWj8bCr4KiMUXezJJ2HVQVR5aJ90rgrYSjKq1w@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rwWn4VTq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TdQdA3GC"
+Date: Wed, 30 Apr 2025 15:21:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746026511;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTrXUJ8uWmtUfrDQ/bOE/lzxWV9miQFyESrvKu9cRSs=;
+	b=rwWn4VTqDCWXttpIL37+0j/6Aaa59dhh0ZNXYKuRwcLf+S2DC7IJPNPr02h5U5KiieSBIc
+	VuQP+yREbMu8V0DDzhj3QceqKjmWjgfgdHRkfsxADT/RKGyt095KVmauOj0zg+cigyYcno
+	PFMYgtnGWtRg+c4JmD6b9xbJcXGWdbBj6I96QGDiswAx4yn2auK5MoFhQFjKwaakAou8hJ
+	/VyWMZfnGK2qIJiNpgkdo0+K7mHoclCPwH1U9lVkQFj7INFzq45tlKuGGQoNERs2Fc4xEi
+	4CwIo8v9rv2nFXztDXSBtOyVr/s9MH93RA0//6SMi/fZfgT0oEgjw4Z0PTwegA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746026511;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OTrXUJ8uWmtUfrDQ/bOE/lzxWV9miQFyESrvKu9cRSs=;
+	b=TdQdA3GCKKEKa0oLglmMFb9YQTAjgsLopgKXw/bKdcky4hP3rJS7V/DUhEf9EBQpzELRcM
+	CwWnCxQmZArwggAg==
+From: "tip-bot2 for Annie Li" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/microcode] x86/microcode/AMD: Do not return error when
+ microcode update is not necessary
+Cc: Annie Li <jiayanli@google.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250430053424.77438-1-jiayanli@google.com>
+References: <20250430053424.77438-1-jiayanli@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGSQo0040a9efWj8bCr4KiMUXezJJ2HVQVR5aJ90rgrYSjKq1w@mail.gmail.com>
+Message-ID: <174602650759.22196.2016156297642927611.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 08:01:38AM -0700, Matthew Maurer wrote:
-> > And yes, I know why you want to tie debugfs layout to a structure
-> > layout, it makes one type of debugfs use really easy to write in rust,
-> > but that's not the common user for what we have today.  Let's address
-> > the common use first please, save the "builder" pattern stuff for after
-> > we nail all of that down.
-> >
-> > thanks,
-> >
-> > greg k-h
-> 
-> I'll remove that API in the next version of the patch series to get
-> the basics down first, but to give some motivation to what I was
-> trying to support which *is* done in C today, see qcom-socinfo [1] -
-> it uses a backing `socinfo_params` struct which is expected to outlive
-> its whole directory structure.
+The following commit has been merged into the x86/microcode branch of tip:
 
-What exactly do you mean by "outlive"?  Right now debugfs has no way to
-"own" a structure and it just "has to work" so that the file will always
-be there and hope that the backing variable is also still there.  I
-guess you are trying to encode that "hope" into something real?  :)
+Commit-ID:     b43dc4ab097859c24e2a6993119c927cffc856aa
+Gitweb:        https://git.kernel.org/tip/b43dc4ab097859c24e2a6993119c927cffc856aa
+Author:        Annie Li <jiayanli@google.com>
+AuthorDate:    Wed, 30 Apr 2025 05:34:24 
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 30 Apr 2025 17:10:46 +02:00
 
-> [1]: https://github.com/torvalds/linux/blob/b6ea1680d0ac0e45157a819c41b46565f4616186/drivers/soc/qcom/socinfo.c#L133-L156
-> 
+x86/microcode/AMD: Do not return error when microcode update is not necessary
 
-Yes, SOC drivers are a mess of debugfs files, but manually creating them
-is "fine" to start with, let's not go wild to start with.  If we see
-common patterns outside of the single soc driver use case, then we can
-propose exporting structures as a directory structure in debugfs, but I
-really think that is a very minor use of the api at the moment.
+After
 
-thanks,
+  6f059e634dcd("x86/microcode: Clarify the late load logic"),
 
-greg k-h
+if the load is up-to-date, the AMD side returns UCODE_OK which leads to
+load_late_locked() returning -EBADFD.
+
+Handle UCODE_OK in the switch case to avoid this error.
+
+  [ bp: Massage commit message. ]
+
+Fixes: 6f059e634dcd ("x86/microcode: Clarify the late load logic")
+Signed-off-by: Annie Li <jiayanli@google.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250430053424.77438-1-jiayanli@google.com
+---
+ arch/x86/kernel/cpu/microcode/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index b3658d1..2309321 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -686,6 +686,8 @@ static int load_late_locked(void)
+ 		return load_late_stop_cpus(true);
+ 	case UCODE_NFOUND:
+ 		return -ENOENT;
++	case UCODE_OK:
++		return 0;
+ 	default:
+ 		return -EBADFD;
+ 	}
