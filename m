@@ -1,72 +1,87 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4BE28399;
-	Wed, 30 Apr 2025 19:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5922B9A9;
+	Wed, 30 Apr 2025 19:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039969; cv=none; b=ViFbOwRD1sn7/4I43On0OfBvlJNF+8xXcVcYZWh16pfsyv3/MElX7iIHSa3VN+t81LiGiIm2P0DFgft0EBHlNiB3iVqhP6/i6keEQgYlnj0iNxEkS5RVgB96CL+lUFkup/0FiKU34KBfY5cMEy56ZTLgevG9QcoV/gXOW7aeoPI=
+	t=1746040006; cv=none; b=vFziL3Yl5XwbwpZg+wZIMyOe2ElE5icnVUphXOjwJpmy5KPjo82TfR8tKL9KCkkVyNzvGbB36ZkgkxDOc2irNSau/OwPgSbWIMfQYT1xXoE2bNWILRK/gCZE/9RS9KAlNMHXsXhC31G2GwBQi+oNl6uaDLFY5INcBxJWCf5nY+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039969; c=relaxed/simple;
-	bh=HVTYUGB8B2dodtSKewK0K/BimvYomZ6GlzqFUH6W6GM=;
+	s=arc-20240116; t=1746040006; c=relaxed/simple;
+	bh=54IGMiZoSITdqFuruS1CfT7kOBbA4cCLxrOaIZ38igM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHa9KsBrQxRJj5byBIc+OFDYgV9R1jZCChEeZPSfnldgc9aRgpik8bfuF73GwtPvqfagx4MtgI+4fmIsgGo/W3bPxVVUbpgFygDeXRjWLCndAs6vpCkOl0d6eiY9o3tBJdiOdimXV9Vv2/Q3MwxepRdwgvRPxjnhKRnc0vRVmIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JJr6Mu0A; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNdAzw0POg0tpSKrii6SpBms1A3q/4jusQumgm3GWbpFr6w5dbzf0PtzGTH30+UXMbeeRkUugjwOLOlIVtcXgvt5tHRzdAmuQFRAlYAh/eFE8i21+9I/YtDdx7jZpoGZoYOO0qLL/rAJzrh3CMlZ1QDMqYv48efMzmqHjhgoDEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBx6xqXf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JJr6Mu0A"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=shyzb66kCfe6GvSOT0DIWIKrBHWCmjZKqJTICSG4Hak=; b=JJr6Mu0AYxFe5sTs0QnftLDuzw
-	/3AP0FWOCAOjotk/UquIqNnaOARlEPZv5vEd2SN1XG4eQfkbSyk6A6F4AvZvJrnCEWBzNqaVJTI4z
-	XLm4oI5G16etLhak7enVjJ99O83+pmVTKva8d1I1HxdXbzVZV27udwyFX0WpbLrbWBjpThiqun/Iz
-	JkMfA1B2t8oQUhj1eR9qL73Qn8qGxnYMeo/Rm+odclhatt/Z0Q1/OeaXi5XjtDvZnkopW2oNxhFyY
-	8FJv5YDLJHoEG3vsHrBXhiFur2eDUI4pE+rOBJ2ZLY1hKVHsMimkth8p+f66XO+QsVxMxwpvkOub5
-	EerjtfsQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uACkq-0000000DZ3b-2v21;
-	Wed, 30 Apr 2025 19:06:00 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 579A2300642; Wed, 30 Apr 2025 21:06:00 +0200 (CEST)
-Date: Wed, 30 Apr 2025 21:06:00 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBx6xqXf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1458EC4CEE7;
+	Wed, 30 Apr 2025 19:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746040006;
+	bh=54IGMiZoSITdqFuruS1CfT7kOBbA4cCLxrOaIZ38igM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lBx6xqXfwDFmrjbUs2hgy2zDbXK/vNdfjGIhlftSbWHOroXMr0YsmGSPUq4eq6YD8
+	 x5newvh0h4h85IG+RYltJLxbn5aRj9gONt/DE4L/+fHLyMWheN/sWg+9HPqVmla6Gp
+	 kDBktrQ0ZytBmKKOWAzQEOQvnXduiLQswyTxOyOAixXqEXBIc1NiAR46Q1ZMPcGZzg
+	 yl/wMbQvxBTC4y+vql6tMc9EbKiIO6Bn5U9YhGajsz9LYHLSCOyqNgfn4s0FyD76hs
+	 vnQUkmvLZnC8pbVmmovexV2Q+0ct24Sd1wt3PcNAq7EVEyGlM1S4F6Rc9Gf3jJGo8c
+	 zw4hU+IXA/XmQ==
+Date: Wed, 30 Apr 2025 12:06:43 -0700
+From: Kees Cook <kees@kernel.org>
+To: Louis Chauvet <louis.chauvet@bootlin.com>
+Cc: Haneen Mohammed <hamohammed.sa@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Melissa Wen <melissa.srw@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] drm/vkms: Adjust vkms_state->active_planes allocation
+ type
+Message-ID: <202504301205.B3AD2E7@keescook>
+References: <20250426061431.work.304-kees@kernel.org>
+ <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
 
-On Wed, Apr 30, 2025 at 07:24:15AM -0700, H. Peter Anvin wrote:
+On Mon, Apr 28, 2025 at 10:18:34AM +0200, Louis Chauvet wrote:
+> 
+> 
+> Le 26/04/2025 à 08:14, Kees Cook a écrit :
+> > In preparation for making the kmalloc family of allocators type aware,
+> > we need to make sure that the returned type from the allocation matches
+> > the type of the variable being assigned. (Before, the allocator would
+> > always return "void *", which can be implicitly cast to any pointer type.)
+> > 
+> > The assigned type is "struct vkms_plane_state **", but the returned type
+> > will be "struct drm_plane **". These are the same size (pointer size), but
+> > the types don't match. Adjust the allocation type to match the assignment.
+> 
+> I think this is an issue, can you add the proper Fixup tag in this commit?
 
-> >KVM has another; the VMX interrupt injection stuff calls the IDT handler
-> >directly.  Is there an alternative? Can we keep a table of Linux functions
-> >slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
+I think trailers updating tools like b4 will pick this up:
 
-> We do have a table of handlers higher up in the stack in the form of
-> the dispatch tables for FRED. They don't in general even need the
-> assembly entry stubs, either.
+Fixes: 8b1865873651 ("drm/vkms: totally reworked crc data tracking")
 
-Oh, right. I'll go have a look at those.
+Would you rather I send a v2 with the Fixes added?
+
+> 
+> With this:
+> 
+> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+
+Thanks!
+
+-Kees
+
+-- 
+Kees Cook
