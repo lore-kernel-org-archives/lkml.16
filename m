@@ -1,174 +1,132 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2077.outbound.protection.outlook.com [40.107.92.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958AB2797BA;
-	Wed, 30 Apr 2025 19:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042950; cv=fail; b=CvoPc6W0QYr905ssbh6b+/VBjnakFxImIIeNmeDRde3Q/M273ZNh2tNfSMtcaDW5rrAoUzATaGi4OjW5IRQOd2LBVQSHuau+Z8VPaRCeqHB5m0YPfg9+zMjZO9iWEWm/mdjb6fu69Aq8JBg95UKts8ZhCdGEwjZtShQeYWNLOVM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042950; c=relaxed/simple;
-	bh=MPw8SdR8S6AutihhOgWvUlWu/ls0ZQpOa+wvciy1yRY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nosZo37RAlYZR0E+7hlmSk2rQ7s83fgfSTBNh9lb0FEMduywoV5/LLrKkMPlyC3PREJ75TfBJET8gFQk7CBJNODbMhYs+xQos1ZTlDbaaiLT3BWHHKWC2N2XQRSpsv7oXvZj8Sh6WStzLswESJ393TMwTGbM6EGuuVqBnwh9zSE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ezpy2rH4; arc=fail smtp.client-ip=40.107.92.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28BA327A107
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746042986; cv=none; b=FxdarCuDcTv5ZrvCTMWAJ8i4EnxYo2hTl94QAA6Qi0EvCsaDKdm9sgHg+/3+mWIlx7LSfzeaio1Jriwvlvluy7pW8w1k72+XmwIo0xqM2cYo+iK54ey0welpe0DyO3b69JCj7YOZESJhX7qKtB6Mn0gC08LNJ/O7NDBK7PyCdd4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746042986; c=relaxed/simple;
+	bh=8DYO87tL4uz15oxFGRFzhq4FVDsfxOJqXVc91boKovk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DG7S29cC65Xscs8LuQS3SRMGlmJFZqhkq3vN/fKAjqlTK8jhyNI2C8jTnHtTwMEChBc3uAecHMpr4QfIDLboawt3zUFC9v1S09r0asVa5Q77da1PqCxAn1HeTxHZDwu9LJ1evBvQdPM/86mScquWKaD4cfeAQIKQc0qTNVbbDMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SZJMwvcn; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ezpy2rH4"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Fv7DeOeuP3bxVUUr7k+8MX/hgQReOEeNCNtWx3UMzMPGFdwe1P5XRCsuOGDV/2oi+UdbkN1z2iTTxNOri3iJLoJsoaEP3zWnPaZ0xEL6VZ9DU8nvfoMeZhVU39iXsJbTq+XqKiNTij5DiLrhraoSw0zfOB5elBfAPLEsluPEZ9wiqfW4Y+Wk0xzzQ4jx/uS2zEyYTtcfytAJ19uNCpzLZ78q6HtfJC2rDF++aVtQljEuS9EuKbHMXIE7e6CgOdx46pAK1ZSDwdIpiACYlWdJMZDeWZo4LN5yVPcbkWy0JAU8otVGXwI0gfWDI8+R14vjVLJmV+5XJFV0wFLO7mEdNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zwV1G6bFEuOoq2wzJSRUwdpZSwYrR5Hg3k2a1LOfCY0=;
- b=HzIrwL3GYBNEaXS9cyKeQ/S8hijK5VahAn9ezaSWHJwvR8B+U4S1Kg0/EAQySr0iKSVWs6aHb/WQ9ZF2PjebQCNfD+J7Aj6Y4LvX26JVARpadnT5PMbLaRjkwkbf6ZZYKmgbE2z5KUk2xc+eofBdwWJdsncFNd+rKJ82VUcJIzZ+fw8RAPbMbu7CXW0ZHwqK8ptcgacL+qdKlGj2hZ6AC8EzKgv5Qfq8zQOahX03z9yckFqKzD8TtNoMRVA4Jz7oDm42IY+yzrUJzcGcc8vUH/ze1+3X4DkaDl3U+MW2iaIHoPnz0zOw6d3dOgERlGW/lqr24JBmjj+ErceMzHHcXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zwV1G6bFEuOoq2wzJSRUwdpZSwYrR5Hg3k2a1LOfCY0=;
- b=Ezpy2rH48zme3gPt7PDN4tMqELCi3X0qDP0ByAPmJAvHX7SekYCMYjWrlwDaWA737VWZeZ5yyeQMVVILZ3n7QP42MjfBzGSjJ1Fh70tFUBOKk78qcUcZWIRTtG3BzC5BUek7Dfh9bNfeV6dfp7mjwYDqTQ2nprjZTfrRbB1BQyo=
-Received: from BN0PR04CA0182.namprd04.prod.outlook.com (2603:10b6:408:e9::7)
- by DM6PR12MB4369.namprd12.prod.outlook.com (2603:10b6:5:2a1::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 19:55:42 +0000
-Received: from BN2PEPF0000449F.namprd02.prod.outlook.com
- (2603:10b6:408:e9:cafe::dd) by BN0PR04CA0182.outlook.office365.com
- (2603:10b6:408:e9::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Wed,
- 30 Apr 2025 19:55:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN2PEPF0000449F.mail.protection.outlook.com (10.167.243.150) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 19:55:42 +0000
-Received: from vijendar-linux.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 14:55:38 -0500
-From: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
-To: <broonie@kernel.org>
-CC: <alsa-devel@alsa-project.org>, <Sunil-kumar.Dommati@amd.com>,
-	<Basavaraj.Hiregoudar@amd.com>, <venkataprasad.potturu@amd.com>,
-	<Mario.Limonciello@amd.com>, Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>, "open list:SOUND - SOC LAYER / DYNAMIC AUDIO
- POWER MANAGEM..." <linux-sound@vger.kernel.org>, open list
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH] ASoC: amd: ps: fix for irq handler return status
-Date: Thu, 1 May 2025 01:24:43 +0530
-Message-ID: <20250430195517.3065308-1-Vijendar.Mukunda@amd.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SZJMwvcn"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2243803b776so4824875ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746042983; x=1746647783; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fl3ZSe7H35q1B+EOiZUwtSQdGXkhze1P/MPuzRRU2ao=;
+        b=SZJMwvcnxY4QDjtbwttO7EPipebLtB52QzGosHj8EZc6viUyhJE6bBISxoOciR/LcL
+         zWO+MmJTdA95/Xy6lP2Q0mfo1pwkNXmwsjo+Z02KRe1jq6qTuM9tyagEFmPTaoxx/v4F
+         km2Kj5wk8OxjZPdxqhFiVATxiSr94vgqQ/VW8fPzB8Ty/7tWSaxePf8RXp2BP7YXJl1i
+         bLXaf16mAMx4BB7hOhBAxvBa6S0bjBxcRCCbmNaGK6bbd5yC07tT3b43jjiyvCHOv7zO
+         8cD7SV1mOolZYR//p/0itfpvKvI3sLUGjyUPhgXMro/Nax1/BL2k2OaC9Ke/22RjA8J5
+         rKbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746042983; x=1746647783;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fl3ZSe7H35q1B+EOiZUwtSQdGXkhze1P/MPuzRRU2ao=;
+        b=HSMCVdYwdqAN1yk5RjJfohQ19JnGM30YjZQoGGx4Dno+vwdFY5W3Pp2Rnq2P0PPJRh
+         2F8VDY609DopUrEMw/QyNbYlvX/+J1Bva0EDkDE0CWRiJV8JY2IAAqApypmsR3g+7Pe0
+         qBxenD/2pdHvyDe+oR7r4HIZkrE5AqGnzxhFh6WwvidFqoypzy1PAP4Vh9pXNkKb7jYt
+         XWcdP6Vx1+MrFhVojmCi0TTTRGSVD7C95L7GxWiS8sEAgdiwpBexcxpbDy+nbivwkc04
+         zkMHIiKsTzLQLNe7fcKs1P677ePFEaKHt1x7FilyYfjQOYlMz6NNlOf13AWxHCSCkfvq
+         Hs3w==
+X-Forwarded-Encrypted: i=1; AJvYcCWj2n98x1DsHPppLzJoXjSK5lm4SrAlN4ExWW5m/Z72w095vFgQTBPsY5yChMtn/SekvzUpI5s7MdAIW6Q=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz93ucY73ssKzltcS6vmWiKmjel1VnrpNREjYiIJPEloKLuAMSv
+	v030vzh780rZ5QKRfPMKdK2zTIXzONpRVcxcrQ6GuWpFarFyFoMmYC3NFM4MkjnQci2QcCEHpTp
+	6RQ==
+X-Gm-Gg: ASbGncvecny1LQOQOHs8z0a/Gk8IAzWp36d6KK3nu64+EFBpe/VLLdJE8r0xStrUwoK
+	UBJ2IW8lDv3FIdQksO6XogcfvgqkrFhuKYxbNlZ9nF1FBYw0YWOrX6jpM1VT8x72gKoj5VM7Cwj
+	vwhUSemYaXPJunqKsQE7LdrJ6LYYP/kOdTwyWyiqDhVcys1WHpc8C3cFtIhN4if7qxGTITHLDHV
+	b8BbUmQ/PfiYoeK4Ef1mia9ODHj+N0Kax9WCjIhtsT7JakFfrfftUzY/ADPKlt9RwRuAuX8grX2
+	9pALUgb46M+mQ3JSWc/+6DlWes29g6PCixT6RKJsi5g80TVvySJC+hwOKyDnGglbjAhn9m8YwWr
+	CGlNkpA==
+X-Google-Smtp-Source: AGHT+IEfvBtw6ZDkXGIV92ANTqElq200z1gKvtBKSpmArntOiAskzPFgnv57q18obGXP2jeZOb7RVA==
+X-Received: by 2002:a17:902:f785:b0:223:6744:bfb9 with SMTP id d9443c01a7336-22e041084e8mr4719445ad.41.1746042983190;
+        Wed, 30 Apr 2025 12:56:23 -0700 (PDT)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbb1a0sm126748995ad.58.2025.04.30.12.56.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 12:56:22 -0700 (PDT)
+Date: Wed, 30 Apr 2025 12:56:18 -0700
+From: William McVicker <willmcvicker@google.com>
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: joro@8bytes.org, will@kernel.org, Ioana Ciornei <ioana.ciornei@nxp.com>,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] bus: fsl_mc: Fix driver_managed_dma check
+Message-ID: <aBKAYnP0u9ZlK12y@google.com>
+References: <20250425133929.646493-3-robin.murphy@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF0000449F:EE_|DM6PR12MB4369:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a396ab0-3c2c-429b-99c5-08dd8820fd31
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GdCX7jnqrVeciRZugycF85TFziPtqsczJaSa3LZEdraCEN11/ou/n6nEbOmw?=
- =?us-ascii?Q?0w4XsIXYOIE2N6ch9CDsbafXXMZ2VhjwKyBQPjL8mcebTbqux8zfkwT52H5I?=
- =?us-ascii?Q?yetE5ejKQjj+2ziLtwRziMtT5s8WizhcMmjvPTEyGT1Pex8UWrVtRuGjvEZk?=
- =?us-ascii?Q?znFGFj4CscGqjCj6j42YPvwiphIHKrXEstZ/YfLGGsVdeqtV696iGgrixn2r?=
- =?us-ascii?Q?mUcQhdc8mMFDB8MsOoUIro65E0Jm9Fgar8eyqh80G2ceZhomA2ndCGQGZGQ7?=
- =?us-ascii?Q?I030HPqB7i5vP2P62sKk2fXarjE1RkrdRXkwDgZLGDtJWpkGKWVsl5ahoWhW?=
- =?us-ascii?Q?9UYwhgo4Er/MgvkVKVTlWvK5upRWMl/VrPZlK1n+P2kaqJO/4aQcqXVMFtt/?=
- =?us-ascii?Q?lqiTNWRzag3P+fnxms8D9Q24svEOie2HfwofsNtAQ75B8BPM8er2iG3AK8Gc?=
- =?us-ascii?Q?iXiSVcIlltBMgIGDuQIQI3kgStJAIfc4Azny+p2irzrzDlrFk4CTxW2gEi4r?=
- =?us-ascii?Q?qYNgDP6l8nOpE9mgOzt3yosebAO65Do8BANPV7cvWyqNy3y1GkATygEUpBkk?=
- =?us-ascii?Q?ryRIOJKD6ASFCHmwirIyCtNK9QVjl75b3kea0n9IhCwnKPMOm6dbH135AJ4d?=
- =?us-ascii?Q?e4CWnmgDgwUf9puK0QZILQuPZT3lkTV2ZK2Vbz0FiKue6diu934Zkpvk1fiG?=
- =?us-ascii?Q?fdsyE6r4oXh1wxEu5CluFZvX3wSOrzERPQF5e7deCMWf+UZEYmcqiuTZhX4D?=
- =?us-ascii?Q?DCmoa/xbjtdwXfkW+gP+cmpSOlfWqUrbBTqEvWitzbBahYkhjYuA7xCLZ4kE?=
- =?us-ascii?Q?ZFoBBY6t+gCWVOeUXnL6GnMZ1dc+5Au0/CPVGffu8jXfHg20S8XEJ8y7S8ZP?=
- =?us-ascii?Q?BBGJfY5twPcCONfl616JVcMJNoVOwcg/zj6OX4W7xbwr0PHgM5cWf0lJRK7X?=
- =?us-ascii?Q?qgu/FdEPldiutMDEXygtmsyIVunqU0osPCWCzBOcqJVHOgVhtpjIVXmp7Pg/?=
- =?us-ascii?Q?UpfPBAWOkEyS+jDf0q1j56+nCSrv7SehnZjmwOk68Rre49w4qS86egswIFMv?=
- =?us-ascii?Q?F9m14Vj4b2+oMWwiFxxtXv5alK2Bhxus5gk+VUxVg0mgPNmU3MrnBBxjUA3p?=
- =?us-ascii?Q?/Xhvk1+im5ZCAOsMIlwWBPFg1TvDk7DxOoEyxuxhp/ihmLe4WSlWeMjptfpK?=
- =?us-ascii?Q?LlyTft6BcMjVBn1AP1VsEZWzreHGmmIHI6nOxjwg4MIPl3OgxXE5nkG/jxW7?=
- =?us-ascii?Q?gXE8O8Ih/Kw6/gFHZWpsR4ewtABW+XDq9aOyQRfvBvWZq3aacT57VOoiqkoV?=
- =?us-ascii?Q?uWOTjUESN8olXVFxZHX3QcfY+d6UHgFrGQjBUAfJGofsP4qXHeH0bOVp31vn?=
- =?us-ascii?Q?GCcafBObRR4QuHrh2y3vGttBWVac3h1Vm4jjxG4b3Zz4RgGBV6BxWOpnVTS4?=
- =?us-ascii?Q?n0KhtbFSjZOpcMPNyMysR87yxgzgfmK/xYVgWrdYXznnNl+lKdY/402Ms2F8?=
- =?us-ascii?Q?w6ndHs7uyqpWfRtHPPM+HsL/ydKjlcLLHwtH?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 19:55:42.4268
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a396ab0-3c2c-429b-99c5-08dd8820fd31
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF0000449F.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4369
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250425133929.646493-3-robin.murphy@arm.com>
 
-If any Soundwire manager interrupt is reported, and wake interrupt
-is not reported, in this scenario irq_flag will be set to zero,
-which results in interrupt handler return status as IRQ_NONE.
+On 04/25/2025, Robin Murphy wrote:
+> Since it's not currently safe to take device_lock() in the IOMMU probe
+> path, that can race against really_probe() setting dev->driver before
+> attempting to bind. The race itself isn't so bad, since we're only
+> concerned with dereferencing dev->driver itself anyway, but sadly my
+> attempt to implement the check with minimal churn leads to a kind of
+> TOCTOU issue, where dev->driver becomes valid after to_fsl_mc_driver(NULL)
+> is already computed, and thus the check fails to work as intended.
+> 
+> Will and I both hit this with the platform bus, but the pattern here is
+> the same, so fix it for correctness too.
 
-Add new irq flag 'wake_irq_flag' check for SoundWire wake interrupt
-handling to fix incorrect irq handling return status.
+Thanks!
 
-Fixes: 3898b189079c8 ("ASoC: amd: ps: add soundwire wake interrupt handling")
-Signed-off-by: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
----
- sound/soc/amd/ps/pci-ps.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Reviewed-by: Will McVicker <willmcvicker@google.com>
 
-diff --git a/sound/soc/amd/ps/pci-ps.c b/sound/soc/amd/ps/pci-ps.c
-index 8e57f31ef7f7..7936b3173632 100644
---- a/sound/soc/amd/ps/pci-ps.c
-+++ b/sound/soc/amd/ps/pci-ps.c
-@@ -193,6 +193,7 @@ static irqreturn_t acp63_irq_handler(int irq, void *dev_id)
- 	struct amd_sdw_manager *amd_manager;
- 	u32 ext_intr_stat, ext_intr_stat1;
- 	u16 irq_flag = 0;
-+	u16 wake_irq_flag = 0;
- 	u16 sdw_dma_irq_flag = 0;
- 
- 	adata = dev_id;
-@@ -231,7 +232,7 @@ static irqreturn_t acp63_irq_handler(int irq, void *dev_id)
- 	}
- 
- 	if (adata->acp_rev >= ACP70_PCI_REV)
--		irq_flag = check_and_handle_acp70_sdw_wake_irq(adata);
-+		wake_irq_flag = check_and_handle_acp70_sdw_wake_irq(adata);
- 
- 	if (ext_intr_stat & BIT(PDM_DMA_STAT)) {
- 		ps_pdm_data = dev_get_drvdata(&adata->pdm_dev->dev);
-@@ -245,7 +246,7 @@ static irqreturn_t acp63_irq_handler(int irq, void *dev_id)
- 	if (sdw_dma_irq_flag)
- 		return IRQ_WAKE_THREAD;
- 
--	if (irq_flag)
-+	if (irq_flag | wake_irq_flag)
- 		return IRQ_HANDLED;
- 	else
- 		return IRQ_NONE;
--- 
-2.45.2
-
+> 
+> Reported-by: Will McVicker <willmcvicker@google.com>
+> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> ---
+>  drivers/bus/fsl-mc/fsl-mc-bus.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-bus.c b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> index a8be8cf246fb..67031136ef66 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-bus.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-bus.c
+> @@ -139,9 +139,9 @@ static int fsl_mc_bus_uevent(const struct device *dev, struct kobj_uevent_env *e
+>  
+>  static int fsl_mc_dma_configure(struct device *dev)
+>  {
+> +	const struct device_driver *drv = READ_ONCE(dev->driver);
+>  	struct device *dma_dev = dev;
+>  	struct fsl_mc_device *mc_dev = to_fsl_mc_device(dev);
+> -	struct fsl_mc_driver *mc_drv = to_fsl_mc_driver(dev->driver);
+>  	u32 input_id = mc_dev->icid;
+>  	int ret;
+>  
+> @@ -153,8 +153,8 @@ static int fsl_mc_dma_configure(struct device *dev)
+>  	else
+>  		ret = acpi_dma_configure_id(dev, DEV_DMA_COHERENT, &input_id);
+>  
+> -	/* @mc_drv may not be valid when we're called from the IOMMU layer */
+> -	if (!ret && dev->driver && !mc_drv->driver_managed_dma) {
+> +	/* @drv may not be valid when we're called from the IOMMU layer */
+> +	if (!ret && drv && !to_fsl_mc_driver(drv)->driver_managed_dma) {
+>  		ret = iommu_device_use_default_domain(dev);
+>  		if (ret)
+>  			arch_teardown_dma_ops(dev);
+> -- 
+> 2.39.2.101.g768bb238c484.dirty
+> 
