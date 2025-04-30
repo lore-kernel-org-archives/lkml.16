@@ -1,179 +1,255 @@
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gmmr-4.centrum.cz (gmmr-4.centrum.cz [46.255.227.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC13184E1C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73BA22505BE;
+	Wed, 30 Apr 2025 11:54:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.255.227.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013974; cv=none; b=VBiufpMMBEVOMGwVy09Ejsb7ygNi7J4J480qfK/xUalEWA1jKtxIpRaZqIp3GUm9mEWPuvD9bzdd8x6X1luM0LAhAO+nneRGg88o5eCIkkXVSXFf02BJwtvu7HhfR60RwjW6CuGv+miEIcDhRS9FowhyuysTB1Vwa6GMumy8KHE=
+	t=1746014061; cv=none; b=E9pQket/MASXbtLb6M5kouKvG+S8W5HtHQfGywIE597EGQ295hkgaXsXWXcqVoRAnHMHhZskPC6qfVfYALJyJf1BmlbBMyeI5GGOsnutEYwAMe100vrexqPPSbzt9ybCcALBUKNDq9kqgcLTpY4kTHWLEoP7EX12OGY8SNqXPCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013974; c=relaxed/simple;
-	bh=uecXYXmTBkAUyRcnMOGbczeiCVo6fGy/Iknn4XhNAgE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Q8v3ukgJoD5LObMLNBYtRAZJ0I/KHW90htoF4cTNxSvAtHXhRrVkPxBmQycotyFFx1/ZBbQ/aMqel84Fla0YHu5Q1vDNoHvofn8el7jKRw4SWikCAO7n6zFvTySECxnKIr0E6nujfFF5GDukf92bp5/BIL1cQQp1VeHOMfo2FGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wb61IUU4; arc=none smtp.client-ip=209.85.160.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746014061; c=relaxed/simple;
+	bh=+VarrTygfhbwK4js+lP3jOaPp2vAB8U3GzifIiBuJ1Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DhCRAKYqQOOYizqqdhtjzPxteo+oUHzUl1qoGa+JWbqLuHite90S4mLqvwaBmlaLKDngbU7oOjGBJx1yS1h3oC6vI/KB3ovc1R49RvoHKV7On1fCvO+WvyuKrKgmkbVSTbY+RUmT7BdVyH+kL8gLf//k80F2tlO2eGL+1xm6ZSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz; spf=pass smtp.mailfrom=atlas.cz; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RTB3JeXJ; dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b=RTB3JeXJ; arc=none smtp.client-ip=46.255.227.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=atlas.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atlas.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wb61IUU4"
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-2cc89c59cc0so579252fac.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:52:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746013971; x=1746618771; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G0WvDa5aRQnCCMGegtVa2lEUDXecKX5r4xxX/pnvbM0=;
-        b=wb61IUU4Qu5dyaF0evJRrldtyIVlhUPoDz6QhorUWOBPDnJ3nbfMC8drU5SwdJZuhB
-         eurEJrQR0gnZ3DnySu4aPNBQIQMOq7raSVSCYhLLrdD0IanFIbpxv6oJv3iN67aQ1rii
-         jfpGnoGmOWUm7jP0oopTvkCY+AP8HfHxzT6L3+KwR8tLbTN0zlgGrbaPeKDYNS8Mv5Lg
-         khihDocBO4xttkjfXuA/ImXq4fmBEGC5GlSGREIdRTjGYLpDyqo+ahVntxFPKdjVoQ/+
-         SCVBFbmh/zX0JnESBwW2N8t5jo/4P2Hfn3aQtC1syAMf+qxevT41Ul682xbSQOQcRnzk
-         xNrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746013971; x=1746618771;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G0WvDa5aRQnCCMGegtVa2lEUDXecKX5r4xxX/pnvbM0=;
-        b=B6IGOy0tHZ1LVUo/qJMx2M01CRedA5aefzQWc6YoKv8KNdOdOu2MvA2Jti2kkpQz7R
-         x0wucm4aRbs/7Wmtymuxm+Rqodfx7ENm1I+TocYhLZjjFyExS5EtxJuzLiQvw/TUlqw0
-         hj0z4kAnaE6gYNHs2W2YDgwL9jSCEoJuqo20OCnPPxiicqCfGXdxqtv3gIL0H8Fqtawp
-         TwflNSftqOlwEU01BCa4mFPAMOM2K2RWUNt5mZp55DJD70sz4KiN4mQ5QpGOGrs9Lf/9
-         BJ7ywYRpchf2pxfTfzmlLnKmPv4JNWPMhxseuPU4yqcXrCBTMmE+irpVmh5AlYVgCZcF
-         ZWvw==
-X-Forwarded-Encrypted: i=1; AJvYcCUpKFS1tIJZHQu6+1TPaCPRX/N1s6oBiomk5OZpdo5VGaYkKRJozR/BhtJw1U70jVBDUZvE1fgohkmJ7RQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAodtswMtSHmuAJ2b6sABEdhHzwn0K2/2MnSUsfD5wTbtmIN1N
-	KtpGGQgKvfksLtexVxvMALgjir76m5odioeI5Yb/wM9AjdQh6BWc3JOqDoGhQnaRWW9yWU8G34b
-	4xLVox1o3BoNqZVzOFJl7y7VAfnsSEkjmQ5Ua+g==
-X-Gm-Gg: ASbGncu8HvPoXWqMHQ5wepPChZBPG6g3xHrNaoF6wpPgHSKpru7juMq9voWQU6iP5FX
-	VCnByZVLByiH9JuhIf4vRvolegskpOm/N8PbztI4nwFslR8JGDY54WZ8T45oiMG28l14fx+jaGu
-	NqXVuhbzuQPccjRw1R6EtUOsg3RG2fPxvKzHUwRyJqecE4Op1Jy7FA7UAa
-X-Google-Smtp-Source: AGHT+IFRIZnmxicAbUlYiuG5vLwm0zpLjlGxO6F7Sble6XEMwZjOx0YCP+eTbDVX6oNny+5GYdtnRFrO+U4f1mWnIr4=
-X-Received: by 2002:a05:6871:7241:b0:2da:731e:41b8 with SMTP id
- 586e51a60fabf-2da731e5b10mr1064031fac.14.1746013971426; Wed, 30 Apr 2025
- 04:52:51 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RTB3JeXJ";
+	dkim=pass (1024-bit key) header.d=atlas.cz header.i=@atlas.cz header.b="RTB3JeXJ"
+Received: from gmmr-1.centrum.cz (envoy-stl.cent [10.32.56.18])
+	by gmmr-4.centrum.cz (Postfix) with ESMTP id 799A070359;
+	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1746013929; bh=gRxAtLm/QO9fsYQPEJOWqw8SabNqdhfSGQ+yE3cIFwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RTB3JeXJA546P08RVVGQI0ARlHDGeoa1e/aQfRytY5xZ7Qhw1I3FTXp31PmlwLXn1
+	 DaDZysat3X4oJZ9DPKcacajfwznyyndLnJcDwk77p/h7xlRxuB2Hd3lT4Mtu2OU+P2
+	 pa+UzKyJXmeZ5vShPMXd4+TvzY2ZI0tlXTS0QGug=
+Received: from gmmr-1.centrum.cz (localhost [127.0.0.1])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id 75FA8389;
+	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=atlas.cz; s=mail;
+	t=1746013929; bh=gRxAtLm/QO9fsYQPEJOWqw8SabNqdhfSGQ+yE3cIFwE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RTB3JeXJA546P08RVVGQI0ARlHDGeoa1e/aQfRytY5xZ7Qhw1I3FTXp31PmlwLXn1
+	 DaDZysat3X4oJZ9DPKcacajfwznyyndLnJcDwk77p/h7xlRxuB2Hd3lT4Mtu2OU+P2
+	 pa+UzKyJXmeZ5vShPMXd4+TvzY2ZI0tlXTS0QGug=
+Received: from antispam23.centrum.cz (antispam23.cent [10.30.208.23])
+	by gmmr-1.centrum.cz (Postfix) with ESMTP id 742931B4;
+	Wed, 30 Apr 2025 13:52:09 +0200 (CEST)
+X-CSE-ConnectionGUID: il8GC3snTl+fq4UfCzNHZw==
+X-CSE-MsgGUID: mUzgsuM3Rwutlk1vHl3xAQ==
+X-ThreatScanner-Verdict: Negative
+X-IPAS-Result: =?us-ascii?q?A2EPAACjDRJo/0vj/y5aGwEBAQEBAQEBBQEBARIBAQEDA?=
+ =?us-ascii?q?wEBAUAJgTcFAQEBCwGDQIFkhFWRcQOKJIgFi2uBfg8BAQEBAQEBAQEJPQcEA?=
+ =?us-ascii?q?QEDBDiESAKLNSc1CA4BAgQBAQEBAwIDAQEBAQEBAQEBDQEBBgEBAQEBAQYGA?=
+ =?us-ascii?q?QKBHYU1Rg2CYgGBJIEmAQEBAQEBAQEBAQEBHQINfQEBAQECASMECwFGBQsLD?=
+ =?us-ascii?q?QsCAiYCAlYGE4MCAYIvAQMOIxSxM3p/DSYaAmXccAJJBVVjgSQGgRsuAYhPA?=
+ =?us-ascii?q?YVshHdCgg2EBzg+gkoXBBiFIYJpBIItgRaFeZgnUnscA1ksAVUTFwsHBYEmQ?=
+ =?us-ascii?q?wOBDyNLBS4dghGFIYIRgVwDAyIBgxN0HIRphFAtT4MvggJoRCNAAwttPTcUG?=
+ =?us-ascii?q?waWfINkBgFyHBwQFwllEy3FD4JDgxyBCYROh0uVSjOXcAOSZC6HZZBrG41rm?=
+ =?us-ascii?q?y+BUBkBghMzIjCDIlIZl0O1eXYCAQEBNwIHAQoBAQMJgjuNfIFLAQE?=
+IronPort-PHdr: A9a23:PAfZtRKPXN13wwpQUdmcuCdgWUAX0o4c3iYr45Yqw4hDbr6kt8y7e
+ hCEv7M11BSTA9uFsrptsKn/jePJYSQ4+5GPsXQPItRndiQuroE7uTJlK+O+TXPBEfjxciYhF
+ 95DXlI2t1uyMExSBdqsLwaK+i764jEdAAjwOhRoLerpBIHSk9631+ev8JHPfglEnjWwbL1sI
+ BmssQndqsYajZVjJ6swyxbFv2ZDdvhLy29vOV+ckBHw69uq8pV+6SpQofUh98BBUaX+Yas1S
+ KFTASolPW4o+sDlrAHPQwSX6HQTS2kbjBVGDRXd4B71Qpn+vC36tvFg2CaBJs35Uao0WTW54
+ Kh1ThLjlToKOCQ48GHTjcxwkb5brRe8rBFx34LYfIeYP+dlc6jDYd0VW3ZOXsdJVyxAHIy8a
+ ZcPD/EcNupctoXxukcCoQe7CQSqGejhyCJHhmXu0KM00+ovDx/L0hEjEdIAv3vbsMj6OqgQX
+ u2u0KnFzi/OY+9K1Tvh6oXFdA0qr/GWXbJ3dMrc0VMhGB3ZjlWKtIfqMCma1uITtmiY8uFtU
+ vigi3Qkqw5rpzig3N0sh5LTiYIJzlDL7z55zJwpKty5UUN2Z8OvH5RMuS+ALYR2Xt8iTH9yu
+ CY80rAItpG1cicJxZg5xBPSa/iKfoyG7x79VOufITN1iXJqdr6imxu/8kmtxOPzW8S13ltHo
+ TZInsTQu30P1BHe6taKR/1g9Umv3jaP0hrc6uBCIU0slqrUNYQhwrgumZoXq0jDGTX2mErwg
+ aSLdUsk4vCl5uvmb7n8uJORN495hhvgPqgwmMGzG+Y1PwgWU2SF5Oix2qfv8VPnTLlWlPE6j
+ KbUvIzAKckfp6O0BRJe3Jw55BalFTim1cwVnXwALF1YZh2Kl5PpO1TSIPDgCve/nkisnC9rx
+ //YOr3hBY3ALnfGkLv4ZrZ97lJcyBIuwdxC/Z5bFq8OIPTvWk/rqdzYCwU1PBC1wur/CdV90
+ J0RWX6XD6KWMa7eq0GE6+IvLuWWeoMZpjTwJ+In6vPulXM5nEUSfait3ZsZcnC4GfFmLl2Db
+ nr2gdcOC2IKsRAkTOHxklKCTTpTaGypX64m+j46CZqqDZ3fSYC1nLyBwCC7E4VMZmFGEF+MF
+ 23kd5+DW/gXdi2SONNhkicfWLe7UY8h0AuiuxP9y7piNubU4DEXtYr/1Nhp4O3ejRUy9T1yD
+ 8SA3GCBVmR0nmYTSj81wqBwu1ByylSZ3ah/mfxYGsRf5+lVXQciKZ7c0+t6BsjoVQLCZteJT
+ U2rQtGnATE3U9IwzMYCY0h6G9W/iBDMwjClA6MUl7yMApw46KXc32L+J8pl0XbJyLEhj0U6Q
+ stILWCpm7Rw9xbSB4HUiEiZjbilerkc3CHX6GeP13aBvEZdUAJoS6XKQWgfZlfKrdT+/k7CS
+ 76uCbI6MgpO0MKCKbVFasfvjVpYQPfuI8reY22vlGeqHxqIxa2DbJDse2oD2CXREk8Ekxoc/
+ XqeLwgxGj+ho37CDDxpDV/veF/s/vNlp3O/UEA51B+Kb0J/2Lqv4BIVhuKTS+kV3r0avCcts
+ TJ0HEyy397ODdqPvBJufL9AbtMl/FdHyWXZuhR8M5C4Mq9ihV8ecwFvsk322Bt4BJtOn9Q2o
+ X0sn0JOLve02U1Ae3u43JT8N7vdMGD08Fj7Z6fI2132ytua+q4Trv8/rgOwkhuuEx8a/ml9m
+ +dc1difrsHDFgkbVJvrek8r8xFh4brINHpur7jI3GFhZPHn+gTJ3MgkUa58kk7IQg==
+IronPort-Data: A9a23:gjtfcaKT2NBYMJ/5FE+R5ZQlxSXFcZb7ZxGr2PjKsXjdYENSgjVSn
+ 2sWXDjQPP6OMWL8Ldp+Pd6/9EgOvJ7QztRmQAEd+CA2RRqmiyZk6fd1jKvUF3nPRiEWZBs/t
+ 63yUvGZcYZpCCaa/krwWlTYhSEU/bmSQbbhA/LzNCl0RAt1IA8skhsLd9QR2+aEuvDnRVrQ0
+ T/Oi5eHYgL9h2Usajt8B5+r8XuDgtyj5Vv0gXRhPZinjHeG/1EJAZQWI72GLneQauF8Au6gS
+ u/f+6qy92Xf8g1FIovNfmHTLyXm6paLVeS/oiI+t5qK23CulQRuukoPD8fwXG8M49m/t4sol
+ IgS78zYpTABZcUgkMxFO/VR/roX0aduoNcrKlDn2SCfItGvn9IBDJyCAWlvVbD09NqbDklP8
+ aw3A2sWaCyHxOyvnI+1YftKpvY8eZyD0IM34hmMzBnWCLM9RIzbGvyM7tJewC0tg4ZFD54yZ
+ eJFN3w1MUmGOUcQfAhKYH49tL7Aan3XeidboVecv4I+/2za10p6wtABNfKOI4PUG58MxRnwS
+ mTu+lnrDQoHEYel1ieZ9nH1mM/LxjPSYddHfFG/3rsw6LGJ/UQJGRQQE0G8q/SjllWWUshab
+ UcT/0IGqak06VzuS9zVXAOxq33CuQQTM/JZEPU/wAWMzLfEpgieG24IRyJAb9pgs9U5LRQm3
+ 0GIk/vzCDBvuaHTQnWYnp+QrDWvKW0WIHUEaCssUwQI+Z/grZs1gxaJScxseIauktT/HTzY3
+ T+Htm49iq8VgMpN0L+0lW0rmBrw+N6TE1NzvF+IGD34hu9kWLOYi0WTwQCzxZ59wEyxFzFtY
+ FBsdxCi0d0z
+IronPort-HdrOrdr: A9a23:eseF66pEhV0SX4Op1/4xgPoaV5o8eYIsimQD101hICG9JPb4qy
+ nOpoV/6faQsl0ssR4b6LK90cW7MBDhHOdOjrX5ZI3PYOCEghrNEGg41+XfKlTbckWVygc378
+ ddmsZFZeHNMQ==
+X-Talos-CUID: 9a23:yP35kGHoX+7JHuW3qmJm8B47MZs+dEHZj3nJf3K2InRPaI+KHAo=
+X-Talos-MUID: 9a23:Vx35fQk8nW2Arj87fYWRdnpnCdVn+LmLU3oSjIkCuJCaFSgrKx6k2WE=
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-AV: E=Sophos;i="6.15,251,1739833200"; 
+   d="scan'208";a="317662137"
+Received: from unknown (HELO gm-smtp11.centrum.cz) ([46.255.227.75])
+  by antispam23.centrum.cz with ESMTP; 30 Apr 2025 13:52:09 +0200
+Received: from arkam (ip-213-220-240-96.bb.vodafone.cz [213.220.240.96])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by gm-smtp11.centrum.cz (Postfix) with ESMTPSA id E0407100AE10D;
+	Wed, 30 Apr 2025 13:52:08 +0200 (CEST)
+Date: Wed, 30 Apr 2025 13:52:06 +0200
+From: Petr =?utf-8?B?VmFuxJtr?= <arkamar@atlas.cz>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Ryan Roberts <ryan.roberts@arm.com>, linux-mm@kvack.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] mm: Fix folio_pte_batch() overcount with zero PTEs
+Message-ID: <202543011526-aBIO5nq6Olsmq2E--arkamar@atlas.cz>
+References: <20250429142237.22138-1-arkamar@atlas.cz>
+ <20250429142237.22138-2-arkamar@atlas.cz>
+ <d53fd549-887f-4220-b0d1-ebc336eecb9f@redhat.com>
+ <2025429144547-aBDmGzJBQc9RMBj--arkamar@atlas.cz>
+ <ef317615-3e26-4641-8141-4d3913ced47f@redhat.com>
+ <b6613b71-3eb9-4348-9031-c1dd172b9814@redhat.com>
+ <2025429183321-aBEbcQQY3WX6dsNI-arkamar@atlas.cz>
+ <1df577bb-eaba-4e34-9050-309ee1c7dc57@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
-In-Reply-To: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Wed, 30 Apr 2025 13:52:39 +0200
-X-Gm-Features: ATxdqUFxVQEPdG55cKDVp9al9A1dB524Vm1psqiJUvk69O024T4Uf-HrXxS9Rvg
-Message-ID: <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
-Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit kernels
-To: Jann Horn <jannh@google.com>
-Cc: Sumit Garg <sumit.garg@kernel.org>, op-tee@lists.trustedfirmware.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1df577bb-eaba-4e34-9050-309ee1c7dc57@redhat.com>
 
-On Mon, Apr 28, 2025 at 3:06=E2=80=AFPM Jann Horn <jannh@google.com> wrote:
->
-> The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
-> 32-bit kernels: Multiplying a user-provided 32-bit value with the
-> size of a structure can wrap around on such platforms.
->
-> Fix it by using saturating arithmetic for the size calculation.
->
-> This has no security consequences because, in all users of
-> TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
-> for wrapping.
->
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
-> Note that I don't have a test device with a TEE; I only compile-tested
-> the change on an x86-64 build.
-> ---
->  drivers/tee/tee_core.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+On Tue, Apr 29, 2025 at 08:56:03PM +0200, David Hildenbrand wrote:
+> On 29.04.25 20:33, Petr Vaněk wrote:
+> > On Tue, Apr 29, 2025 at 05:45:53PM +0200, David Hildenbrand wrote:
+> >> On 29.04.25 16:52, David Hildenbrand wrote:
+> >>> On 29.04.25 16:45, Petr Vaněk wrote:
+> >>>> On Tue, Apr 29, 2025 at 04:29:30PM +0200, David Hildenbrand wrote:
+> >>>>> On 29.04.25 16:22, Petr Vaněk wrote:
+> >>>>>> folio_pte_batch() could overcount the number of contiguous PTEs when
+> >>>>>> pte_advance_pfn() returns a zero-valued PTE and the following PTE in
+> >>>>>> memory also happens to be zero. The loop doesn't break in such a case
+> >>>>>> because pte_same() returns true, and the batch size is advanced by one
+> >>>>>> more than it should be.
+> >>>>>>
+> >>>>>> To fix this, bail out early if a non-present PTE is encountered,
+> >>>>>> preventing the invalid comparison.
+> >>>>>>
+> >>>>>> This issue started to appear after commit 10ebac4f95e7 ("mm/memory:
+> >>>>>> optimize unmap/zap with PTE-mapped THP") and was discovered via git
+> >>>>>> bisect.
+> >>>>>>
+> >>>>>> Fixes: 10ebac4f95e7 ("mm/memory: optimize unmap/zap with PTE-mapped THP")
+> >>>>>> Cc: stable@vger.kernel.org
+> >>>>>> Signed-off-by: Petr Vaněk <arkamar@atlas.cz>
+> >>>>>> ---
+> >>>>>>      mm/internal.h | 2 ++
+> >>>>>>      1 file changed, 2 insertions(+)
+> >>>>>>
+> >>>>>> diff --git a/mm/internal.h b/mm/internal.h
+> >>>>>> index e9695baa5922..c181fe2bac9d 100644
+> >>>>>> --- a/mm/internal.h
+> >>>>>> +++ b/mm/internal.h
+> >>>>>> @@ -279,6 +279,8 @@ static inline int folio_pte_batch(struct folio *folio, unsigned long addr,
+> >>>>>>      			dirty = !!pte_dirty(pte);
+> >>>>>>      		pte = __pte_batch_clear_ignored(pte, flags);
+> >>>>>>      
+> >>>>>> +		if (!pte_present(pte))
+> >>>>>> +			break;
+> >>>>>>      		if (!pte_same(pte, expected_pte))
+> >>>>>>      			break;
+> >>>>>
+> >>>>> How could pte_same() suddenly match on a present and non-present PTE.
+> >>>>
+> >>>> In the problematic case pte.pte == 0 and expected_pte.pte == 0 as well.
+> >>>> pte_same() returns a.pte == b.pte -> 0 == 0. Both are non-present PTEs.
+> >>>
+> >>> Observe that folio_pte_batch() was called *with a present pte*.
+> >>>
+> >>> do_zap_pte_range()
+> >>> 	if (pte_present(ptent))
+> >>> 		zap_present_ptes()
+> >>> 			folio_pte_batch()
+> >>>
+> >>> How can we end up with an expected_pte that is !present, if it is based
+> >>> on the provided pte that *is present* and we only used pte_advance_pfn()
+> >>> to advance the pfn?
+> >>
+> >> I've been staring at the code for too long and don't see the issue.
+> >>
+> >> We even have
+> >>
+> >> VM_WARN_ON_FOLIO(!pte_present(pte), folio);
+> >>
+> >> So the initial pteval we got is present.
+> >>
+> >> I don't see how
+> >>
+> >> 	nr = pte_batch_hint(start_ptep, pte);
+> >> 	expected_pte = __pte_batch_clear_ignored(pte_advance_pfn(pte, nr), flags);
+> >>
+> >> would suddenly result in !pte_present(expected_pte).
+> > 
+> > The issue is not happening in __pte_batch_clear_ignored but later in
+> > following line:
+> > 
+> >    expected_pte = pte_advance_pfn(expected_pte, nr);
+> > 
+> > The issue seems to be in __pte function which converts PTE value to
+> > pte_t in pte_advance_pfn, because warnings disappears when I change the
+> > line to
+> > 
+> >    expected_pte = (pte_t){ .pte = pte_val(expected_pte) + (nr << PFN_PTE_SHIFT) };
+> > 
+> > The kernel probably uses __pte function from
+> > arch/x86/include/asm/paravirt.h because it is configured with
+> > CONFIG_PARAVIRT=y:
+> > 
+> >    static inline pte_t __pte(pteval_t val)
+> >    {
+> >    	return (pte_t) { PVOP_ALT_CALLEE1(pteval_t, mmu.make_pte, val,
+> >    					  "mov %%rdi, %%rax", ALT_NOT_XEN) };
+> >    }
+> > 
+> > I guess it might cause this weird magic, but I need more time to
+> > understand what it does :)
 
-Looks good, I'm picking up this.
+I understand it slightly more. __pte() uses xen_make_pte(), which calls
+pte_pfn_to_mfn(), however, mfn for this pfn contains INVALID_P2M_ENTRY
+value, therefore the pte_pfn_to_mfn() returns 0, see [1].
 
-Thanks,
-Jens
+I guess that the mfn was invalidated by xen-balloon driver?
 
->
-> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> index d113679b1e2d..acc7998758ad 100644
-> --- a/drivers/tee/tee_core.c
-> +++ b/drivers/tee/tee_core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/fs.h>
->  #include <linux/idr.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/slab.h>
->  #include <linux/tee_core.h>
->  #include <linux/uaccess.h>
-> @@ -19,7 +20,7 @@
->
->  #define TEE_NUM_DEVICES        32
->
-> -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
-> +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x))=
-)
->
->  #define TEE_UUID_NS_NAME_SIZE  128
->
-> @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_context =
-*ctx,
->         if (copy_from_user(&arg, uarg, sizeof(arg)))
->                 return -EFAULT;
->
-> -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf.b=
-uf_len)
-> +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) !=
-=3D buf.buf_len)
->                 return -EINVAL;
->
->         if (arg.num_params) {
-> @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx,
->         if (copy_from_user(&arg, uarg, sizeof(arg)))
->                 return -EFAULT;
->
-> -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf.b=
-uf_len)
-> +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) !=
-=3D buf.buf_len)
->                 return -EINVAL;
->
->         if (arg.num_params) {
-> @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *ct=
-x,
->         if (get_user(num_params, &uarg->num_params))
->                 return -EFAULT;
->
-> -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) !=3D buf.buf=
-_len)
-> +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) !=
-=3D buf.buf_len)
->                 return -EINVAL;
->
->         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KERN=
-EL);
-> @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *ct=
-x,
->             get_user(num_params, &uarg->num_params))
->                 return -EFAULT;
->
-> -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_le=
-n)
-> +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) > b=
-uf.buf_len)
->                 return -EINVAL;
->
->         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KERN=
-EL);
->
-> ---
-> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-> change-id: 20250428-tee-sizecheck-299d5eff8fc7
->
-> --
-> Jann Horn <jannh@google.com>
->
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/x86/xen/mmu_pv.c?h=v6.15-rc4#n408
+
+> What XEN does with basic primitives that convert between pteval and 
+> pte_t is beyond horrible.
+> 
+> How come set_ptes() that uses pte_next_pfn()->pte_advance_pfn() does not 
+> run into this?
+
+I don't know, but I guess it is somehow related to pfn->mfn translation.
+
+> Is it only a problem if we exceed a certain pfn?
+
+No, it is a problem if the corresponding mft to given pfn is invalid.
+
+I am not sure if my original patch is a good fix. Maybe it would be
+better to have some sort of native_pte_advance_pfn() which will use
+native_make_pte() rather than __pte(). Or do you think the issue is in
+Xen part?
+
+Cheers,
+Petr
