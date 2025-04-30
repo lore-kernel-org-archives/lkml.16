@@ -1,73 +1,86 @@
-Received: from mail.nfschina.com (unknown [42.101.60.213])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 6376C1DFE09;
-	Wed, 30 Apr 2025 07:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9A91DFE09;
+	Wed, 30 Apr 2025 07:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745997592; cv=none; b=YOFreC2W3kCa0lwQT06ryF84V0+aPPPTirIZdJOJ6xR+HAvK1xoUCVDIi3tB4wf2Aux4nvjx881Q6eCZC36cDwjE+8uXAnsVHsMEEQ2MZoGheJBoKHAqAoSY/dLH436fG2jGT2pdXfJhTHSfAUjEAAvmJuz0cjkNGTlCSEY1Jfs=
+	t=1745997666; cv=none; b=e3ozFCShaKLA7tqDHtZ7mwH4bOiBrl3AQ0O1Xokx6iwOPUzTD0ZMuBV7wPZnLwPzt5HkgFdgkR93GQ0nMguep83ukBTRKe33Guozs61FfIFSnCT/5mVZI1OcbBQHzqE61Hr+w9TBf4sjuthDmsp7OtXsocrJ4OSA/UWiWKql7uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745997592; c=relaxed/simple;
-	bh=asyKUuyUZ9C0o/uQdF7lBLo5mFr0FF/pBL+vIGX9a8k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type; b=Wx2Lxz9Yj+xkKI8LNy3Vwo3IfQx6pZ+mHiSeBRG0POcqO31y6fB12COW0Orpj5OyyYkWrMkfLY7ut8+9572gL+vODTwwpSMmZ6zpYj+pQm/FZSMz5bcoQxXmwt6R06LKGBxHCb8DiYmVUeMGaitjinisAQATQNfqo6gLN9tOrlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
-Received: from [172.30.20.101] (unknown [180.167.10.98])
-	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id D376F602DF0D9;
-	Wed, 30 Apr 2025 15:19:42 +0800 (CST)
-Message-ID: <6608ee51-0dd9-45d9-ac17-a4e9b736ceb3@nfschina.com>
-Date: Wed, 30 Apr 2025 15:19:42 +0800
+	s=arc-20240116; t=1745997666; c=relaxed/simple;
+	bh=unOAuHHlLSDYswEV053BVvtCpbY1HBhf14HMlI/dclI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6pVqYgClQ3ARNDUtE8JCeklHpd1YkHtNpxR+Zn1+G4IY4zZzu7chYjjyH8A6ksvDZypYgwq4WhYlSf/4U+7bnAcdBrT4wFUOv8G+NByIIk67m/TqERQIAygIsi32J8QOeEMiCxuwJt3rT1vOsT92bGBgh1zAZsz6BbkvT+8arA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkrydZAB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkrydZAB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A350C4CEE9;
+	Wed, 30 Apr 2025 07:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745997665;
+	bh=unOAuHHlLSDYswEV053BVvtCpbY1HBhf14HMlI/dclI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YkrydZABVN2h5znRN4UMWCuCuzR39Wj/6N5lYPSOxVD7PLIr07qGDVz8B0ddsauDn
+	 vfcrkOHyrCDAeShx323/3z12fMsEJYRLoD2ptrbyW3ehqtigC5WsVV1nhvntJ8jRLZ
+	 Lh0YYIkTB1kdvTyvsUAoz0eeV5J5IPQKcejy2iqxEPEy5NKYq//DwhSkzhvnsHrDfy
+	 pGPHAcAa1IkB0NKxjhTtXw/C5R/B0w3LU2AMcVAYguYI3IHs+ZzzSsvFqUCTlJMlqd
+	 CaL/3ZH7gVg/ZWS+3AyTHReOJ2CTKlJw1+8FIlD/wpG8CkftZBTQv9KcSrHAkIy2ZS
+	 Lr4N3qNmn2kXA==
+Date: Wed, 30 Apr 2025 09:21:03 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Icenowy Zheng <uwu@icenowy.me>
+Cc: Emil Renner Berthing <kernel@esmil.dk>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, Hal Feng <hal.feng@starfivetech.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: starfive,jh7110: add
+ PAD_INTERNAL_* virtual pins
+Message-ID: <20250430-vagabond-agile-yak-7afe68@kuoka>
+References: <20250424062017.652969-1-uwu@icenowy.me>
+ <20250424062017.652969-2-uwu@icenowy.me>
+ <20250428-smiling-azure-sunfish-7c1c25@kuoka>
+ <34c92033f4bbf289c6048a85f0f6ba04435e7bf8.camel@icenowy.me>
+ <8e131fce-12b6-4a5f-8601-c15a0e4290fe@kernel.org>
+ <4d0bf5b8e1dd00f4025b7643a746cd99010c08fc.camel@icenowy.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] alarmtimer: switch some
- spin_{lock,unlock}_irqsave() to guard()
-To: Thomas Gleixner <tglx@linutronix.de>, jstultz@google.com, sboyd@kernel.org
-Cc: dan.carpenter@linaro.org, linux-kernel@vger.kernel.org,
- kernel-janitors@vger.kernel.org
-Content-Language: en-US
-X-MD-Sfrom: suhui@nfschina.com
-X-MD-SrcIP: 180.167.10.98
-From: Su Hui <suhui@nfschina.com>
-In-Reply-To: <87v7qmp1t1.ffs@tglx>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <4d0bf5b8e1dd00f4025b7643a746cd99010c08fc.camel@icenowy.me>
 
-On 2025/4/30 15:04, Thomas Gleixner wrote:
-> On Wed, Apr 30 2025 at 11:27, Su Hui wrote:
->> -	spin_lock_irqsave(&rtcdev_lock, flags);
->> -	if (!IS_ERR(pdev) && !rtcdev) {
->> -		if (!try_module_get(rtc->owner)) {
->> +	scoped_guard(spinlock_irqsave, &rtcdev_lock) {
->> +		if (!IS_ERR(pdev) && !rtcdev) {
->> +			if (!try_module_get(rtc->owner)) {
->> +				ret = -1;
->> +				break;
-> This really reads odd and relies on the internals of scoped_guard(). I
-> actually had to look at the scoped_guard() implementation to validate
-> it.
->
-> The whole thing can be simplified to:
->
->   	scoped_guard(spinlock_irqsave, &rtcdev_lock) {
-> 		if (!IS_ERR(pdev) && !rtcdev && try_module_get(rtc->owner)) {
->   			rtcdev = rtc;
->   			/* hold a reference so it doesn't go away */
->   			get_device(dev);
->                          pdev = NULL;
-> 		} else {
->   			ret = -1;
-> 		}
->
-> No?
-Yes, it's simpler and better.
-> No need to resend. I fixed it up already.
+On Tue, Apr 29, 2025 at 05:00:04PM GMT, Icenowy Zheng wrote:
+> > > > > +/* virtual pins for forcing GPI */
+> > > > > +#define PAD_INTERNAL_LOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0254
+> > > > > +#define PAD_INTERNAL_HIGH=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0255
+> > > >=20
+> > > > Why this cannot be 20 and 21? These are not values for registers,
+> > > > but
+> > > > abstract numbers.
+> > >=20
+> > > The number must not collide with SYS GPIO pads too.
+> >=20
+> > There are no SYS GPIO pads here. Do you understand that this is not
+> > value for registers?
+>=20
+> Yes I understand.
+>=20
+> The situation is that JH7110 has two similar pin mux controllers, one
+> SYSGPIO and one AONGPIO. Despite I listed the values after the AONGPIO
+> pad list, these values should apply to SYSGPIO too (unless you want to
+> let them have different values for these two pinmux controllers), which
+> is the part with comment "sys_iomux pins".
 
-Thanks a lot :).
+It is fine for me in such case.
 
-Su Hui
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
