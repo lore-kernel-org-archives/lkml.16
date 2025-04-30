@@ -1,90 +1,72 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D163218EB1;
-	Wed, 30 Apr 2025 19:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4BE28399;
+	Wed, 30 Apr 2025 19:06:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039947; cv=none; b=NbNsXmMLd/SyUUIpLCqIwllK8l7hrzbla2F2pcmm0ENx8GRs04Ih7/hDg3yJ0fdtGWF7HZOerjIaHc7tG/0MUicDYJGt3fayF6LEv9RpFLxj9Bzlz7siGrOfcJuyOiFwKSSJ4NiCk3wl4bGGztGSuqU7ZKuPI9oCdFf62MiPYUw=
+	t=1746039969; cv=none; b=ViFbOwRD1sn7/4I43On0OfBvlJNF+8xXcVcYZWh16pfsyv3/MElX7iIHSa3VN+t81LiGiIm2P0DFgft0EBHlNiB3iVqhP6/i6keEQgYlnj0iNxEkS5RVgB96CL+lUFkup/0FiKU34KBfY5cMEy56ZTLgevG9QcoV/gXOW7aeoPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039947; c=relaxed/simple;
-	bh=2BdOQ8pQ6t7gLyIXQd5kf0ne6BczcueN50D5MyIeqbk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bydUhIOEF3k9JUw6DiLS4W5dMiqa5sDAZAmEUtzYOVKiPyCaW4B3zwwIS0DFIlaZB1467uomLUYINYaz8dRFFyRqCIj6siRLZcFm5eKp0suUhpeZJiEfdVdRr1AqzKoPCvM4+Jftq4Diagt72NET6EqSqc92sRCNPSyEpmfBWuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=avlo+vkD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746039969; c=relaxed/simple;
+	bh=HVTYUGB8B2dodtSKewK0K/BimvYomZ6GlzqFUH6W6GM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GHa9KsBrQxRJj5byBIc+OFDYgV9R1jZCChEeZPSfnldgc9aRgpik8bfuF73GwtPvqfagx4MtgI+4fmIsgGo/W3bPxVVUbpgFygDeXRjWLCndAs6vpCkOl0d6eiY9o3tBJdiOdimXV9Vv2/Q3MwxepRdwgvRPxjnhKRnc0vRVmIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JJr6Mu0A; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="avlo+vkD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1514C4CEE7;
-	Wed, 30 Apr 2025 19:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746039947;
-	bh=2BdOQ8pQ6t7gLyIXQd5kf0ne6BczcueN50D5MyIeqbk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=avlo+vkDZMsnRA8eAO8BQb6qqHvjDyaAo7BRStAj+jISXqrBotPojeHI2wm+QFK0e
-	 RVoTpUl5wCYDOWk6outxeSEKnHF9tv9GvdVb5J2bTU1OqonNv9YtlZVMwVb/IJanxH
-	 yogonY6MrIYTk82H2Sl7iKrgLAlDeMQS8NiMFo35+GnbI6povyk/T474g963CVFZue
-	 6rgryJty8hbRFNQiCTC0UqlNpGCeFEvXQgyAJHWahdGDyp4MOs8Xje6Xc59ruqUT92
-	 AxCsKVGkPZsqlKKcaGCaA7djHpbJKHREmPfyjuIPbHGdk59hf2UpzybBfSKHIBx8xv
-	 SOKaZyHZlxeDQ==
-Message-ID: <e80be47b-5f8d-409c-8c3d-cd1af46944d0@kernel.org>
-Date: Wed, 30 Apr 2025 14:05:44 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JJr6Mu0A"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=shyzb66kCfe6GvSOT0DIWIKrBHWCmjZKqJTICSG4Hak=; b=JJr6Mu0AYxFe5sTs0QnftLDuzw
+	/3AP0FWOCAOjotk/UquIqNnaOARlEPZv5vEd2SN1XG4eQfkbSyk6A6F4AvZvJrnCEWBzNqaVJTI4z
+	XLm4oI5G16etLhak7enVjJ99O83+pmVTKva8d1I1HxdXbzVZV27udwyFX0WpbLrbWBjpThiqun/Iz
+	JkMfA1B2t8oQUhj1eR9qL73Qn8qGxnYMeo/Rm+odclhatt/Z0Q1/OeaXi5XjtDvZnkopW2oNxhFyY
+	8FJv5YDLJHoEG3vsHrBXhiFur2eDUI4pE+rOBJ2ZLY1hKVHsMimkth8p+f66XO+QsVxMxwpvkOub5
+	EerjtfsQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uACkq-0000000DZ3b-2v21;
+	Wed, 30 Apr 2025 19:06:00 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 579A2300642; Wed, 30 Apr 2025 21:06:00 +0200 (CEST)
+Date: Wed, 30 Apr 2025 21:06:00 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org,
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
+	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
+ in __nocfi functions
+Message-ID: <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
+References: <20250430110734.392235199@infradead.org>
+ <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
-To: Borislav Petkov <bp@alien8.de>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
- Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
- "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
- "H . Peter Anvin" <hpa@zytor.com>,
- Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
- Hans de Goede <hdegoede@redhat.com>,
- "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
- "open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-6-superm1@kernel.org>
- <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
 
-On 4/30/2025 2:03 PM, Borislav Petkov wrote:
-> On Tue, Apr 22, 2025 at 06:48:30PM -0500, Mario Limonciello wrote:
->> +	/* Iterate on each bit in the 'value' mask: */
->> +	while (true) {
->> +		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
->> +
->> +		/* Reached the end of the word, no more bits: */
->> +		if (bit >= BITS_PER_LONG) {
->> +			if (!nr_reasons)
->> +				pr_info("x86/amd: Previous system reset reason [0x%08lx]: Unknown\n", value);
->> +			break;
->> +		}
->> +
->> +		if (!s5_reset_reason_txt[bit])
->> +			continue;
->> +
->> +		nr_reasons++;
->> +		pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
->> +			value, s5_reset_reason_txt[bit]);
->> +	}
-> 
-> What happened to that simpler idea:
-> 
-> https://lore.kernel.org/r/20250411125050.GEZ_kQKtYBfEMDQuXU@fat_crate.local
-> 
+On Wed, Apr 30, 2025 at 07:24:15AM -0700, H. Peter Anvin wrote:
 
-This one was more advantageous in that if multiple bits were set for any 
-reason we could get messages for all of them printed.
+> >KVM has another; the VMX interrupt injection stuff calls the IDT handler
+> >directly.  Is there an alternative? Can we keep a table of Linux functions
+> >slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
+
+> We do have a table of handlers higher up in the stack in the form of
+> the dispatch tables for FRED. They don't in general even need the
+> assembly entry stubs, either.
+
+Oh, right. I'll go have a look at those.
