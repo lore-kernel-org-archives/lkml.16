@@ -1,54 +1,51 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09C542512D9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:44:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F59625A621
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017077; cv=none; b=av6MwF/KvwcNi1Wa91K0en1MyZ9+Z327SBAv1yYqnRd5lmVyfZSr/FTDHEgZVMkGu//TtSyYxxpcai51FnewxDzaHl/POR0WdGxAEIPrHzrsCGM4uDZeha80k2axDtatzb1zA67BtI97N64QfFQitR1z8q/QguVadVqGo/Qj4H8=
+	t=1746017109; cv=none; b=XVUqMYk5c5/SI5Yw7jXTDndJHXxRCKWFHgWvFZD1Em82D0+QEPDeEr02guIlhxTtgbIV7eJdCtXTBzvZcdj0PN21eHzpMjwv3cgmp4bFuvsFNu5TctMjbXcy3snMr6hjAiFB83t4akhinP+Z+YZLhD6gDxGB/zoL0eZa5z8vKQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017077; c=relaxed/simple;
-	bh=pFBPBKVeh3ECn3LZe0QEjxLBb0Hxgu2pZEAUbK3e/ZE=;
+	s=arc-20240116; t=1746017109; c=relaxed/simple;
+	bh=raxdQ2PUzo4294bXe2kpUGFCV0Y0wngoPwLYkkeWKRk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Za/wMgWrDIxj2//ilE29Nri0H9i3TmDE46cNYbpAfQA7VHwuPvGWUiTzbxj2cXKNn/GlNlyG0OYIAZHMZNcQXWZvSZM45sZQnRN85fwnN8s4s/AtsTwUwePSMTDnoPlDOHfwP9bTky5wEZsNJq3uvATuSYmmWU5oKzdInbZ1Fdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lh5OshG0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0Aq+HAJiC4xkXkCeIXcE3GHItNcKTZFAShAtyv1ceYAdO7Tn6SspZQ3mVzy7SGx26yhlWHd3uRXULa+dKTneIcWKul3UIIx33IADvVBvMfWwlQNLRi3D8nT5lo8zsDj0ris0fA6RSSHdzBl+B53tsu//gK2zkf/BNK5s1vUrjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ERwIhe2K; arc=none smtp.client-ip=95.215.58.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lh5OshG0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ZDV2ImwHah1jRIyOwBhpwDfe5XOpCc4jcOz1U69rE9w=; b=lh5OshG0cnqluiCiON/Dp6ESmT
-	wXcAU3z2uJFliyIp2L6L4BXWru6+i9X6IRCqJE826fGNV77YG/d1sWIyv1uMqo5nB3VbbIEEFV9LM
-	MUQE26c9qfOYx7QbPY/mDCD5VBT6n31XQ5Xd7hCdz7ZbtaiArIpjdtqKiBnmNcx1n7qhAulAMJbcO
-	PWsNsnLVfm9fSeztTMtXjeqmzwrXJP3mbfHZ6YId+Oy6g4CbCmEi3ypI+rhsZDrgWTvM7G8V1bUVd
-	iqfK9MzuBkt6XhWvY+N6bUDmU8h+yA6mb8ega2PJBJAcuuRjwfjhqqZ6fev6B5ErMrz+oaDC/vy0N
-	s2iLsing==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uA6na-0000000CKwV-2Vp3;
-	Wed, 30 Apr 2025 12:44:26 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E3E07300642; Wed, 30 Apr 2025 14:44:25 +0200 (CEST)
-Date: Wed, 30 Apr 2025 14:44:25 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Phil Auld <pauld@redhat.com>
-Cc: John Stultz <jstultz@google.com>, LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>, kernel-team@android.com,
-	peter-yc.chang@mediatek.com
-Subject: Re: [PATCH v3] sched/core: Tweak wait_task_inactive() to force
- dequeue sched_delayed tasks
-Message-ID: <20250430124425.GN4439@noisy.programming.kicks-ass.net>
-References: <20250429150736.3778580-1-jstultz@google.com>
- <20250429153605.GA69823@pauld.westford.csb>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ERwIhe2K"
+Date: Wed, 30 Apr 2025 05:44:54 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746017103;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OL6pMpPrHxyalMOEj7Fjs8lPAUCwXWRv7qPE6i/mzfw=;
+	b=ERwIhe2KSaPvDzZid2uMe37+8TaX+7mKx4+9WR7jMGe8+VJZdwPZmH2/xOXwnWqVITMkiR
+	Ui97Kbpco+3k4kBbX4xeHq+Iuy6Q4h8AANT93TUkd1Hps8TLlTlxh2fTZmSCTYODBRpvcE
+	hX7V3ZbTLrXw956QCoYrR+LCdSU0HVQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yosry Ahmed <yosry.ahmed@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Roman Gushchin <roman.gushchin@linux.dev>,
+	Muchun Song <muchun.song@linux.dev>,
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org,
+	linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [RFC PATCH 1/3] llist: add list_add_iff_not_on_list()g
+Message-ID: <aBIbRhLjmO-fKKGr@Asmaa.>
+References: <20250429061211.1295443-1-shakeel.butt@linux.dev>
+ <20250429061211.1295443-2-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,35 +54,94 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429153605.GA69823@pauld.westford.csb>
+In-Reply-To: <20250429061211.1295443-2-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Apr 29, 2025 at 11:36:05AM -0400, Phil Auld wrote:
-> Hi John,
+On Mon, Apr 28, 2025 at 11:12:07PM -0700, Shakeel Butt wrote:
+> As the name implies, list_add_iff_not_on_list() adds the given node to
+> the given only if the node is not on any list. Many CPUs can call this
+> concurrently on the same node and only one of them will succeed.
 > 
-> On Tue, Apr 29, 2025 at 08:07:26AM -0700 John Stultz wrote:
-> > It was reported that in 6.12, smpboot_create_threads() was
-> > taking much longer then in 6.6.
-> > 
-> > I narrowed down the call path to:
-> >  smpboot_create_threads()
-> >  -> kthread_create_on_cpu()
-> >     -> kthread_bind()
-> >        -> __kthread_bind_mask()
-> >           ->wait_task_inactive()
-> > 
-> > Where in wait_task_inactive() we were regularly hitting the
-> > queued case, which sets a 1 tick timeout, which when called
-> > multiple times in a row, accumulates quickly into a long
-> > delay.
-> > 
-> > I noticed disabling the DELAY_DEQUEUE sched feature recovered
-> > the performance, and it seems the newly create tasks are usually
-> > sched_delayed and left on the runqueue.
+> This is also useful to be used by different contexts like task, irq and
+> nmi. In the case of failure either the node as already present on some
+> list or the caller can lost the race to add the given node to a list.
+> That node will eventually be added to a list by the winner.
 > 
-> This seems odd to me. Maybe I'm just misunderstanding something but
-> I don't see how newly created tasks should have accumulated enough
-> runtime to have negative lag that needs to be decayed. 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> ---
+>  include/linux/llist.h |  3 +++
+>  lib/llist.c           | 30 ++++++++++++++++++++++++++++++
+>  2 files changed, 33 insertions(+)
 > 
-> That said, I think it does make sense to dequeue in this case. 
+> diff --git a/include/linux/llist.h b/include/linux/llist.h
+> index 2c982ff7475a..030cfec8778b 100644
+> --- a/include/linux/llist.h
+> +++ b/include/linux/llist.h
+> @@ -236,6 +236,9 @@ static inline bool __llist_add_batch(struct llist_node *new_first,
+>  	return new_last->next == NULL;
+>  }
+>  
+> +extern bool llist_add_iff_not_on_list(struct llist_node *new,
+> +				      struct llist_head *head);
+> +
+>  /**
+>   * llist_add - add a new entry
+>   * @new:	new entry to be added
+> diff --git a/lib/llist.c b/lib/llist.c
+> index f21d0cfbbaaa..9d743164720f 100644
+> --- a/lib/llist.c
+> +++ b/lib/llist.c
+> @@ -36,6 +36,36 @@ bool llist_add_batch(struct llist_node *new_first, struct llist_node *new_last,
+>  }
+>  EXPORT_SYMBOL_GPL(llist_add_batch);
+>  
+> +/**
+> + * llist_add_iff_not_on_list - add an entry if it is not on list
+> + * @new:	entry to be added
+> + * @head:	the head for your lock-less list
+> + *
+> + * Adds the given entry to the given list only if the entry is not on any list.
+> + * This is useful for cases where multiple CPUs tries to add the same node to
+> + * the list or multiple contexts (process, irq or nmi) may add the same node to
+> + * the list.
+> + *
+> + * Return true only if the caller has successfully added the given node to the
+> + * list. Returns false if entry is already on some list or if another inserter
+> + * wins the race to eventually add the given node to the list.
+> + */
+> +bool llist_add_iff_not_on_list(struct llist_node *new, struct llist_head *head)
 
-Well, they start at 0, any runtime will likely push them negative.
+What about llist_try_add()?
+
+> +{
+> +	struct llist_node *first = READ_ONCE(head->first);
+> +
+> +	if (llist_on_list(new))
+> +		return false;
+> +
+> +	if (cmpxchg(&new->next, new, first) != new)
+> +		return false;
+
+Here we will set new->next to the current head of the list, but this may
+change from under us, and the next loop will then set it correctly
+anyway. This is a bit confusing though.
+
+Would it be better if we set new->next to NULL here, and then completely
+rely on the loop below to set it properly?
+
+> +
+> +	while (!try_cmpxchg(&head->first, &first, new))
+> +		new->next = first;
+
+Not a big deal, but should we use llist_add_batch() here instead?
+
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_GPL(llist_add_iff_not_on_list);
+> +
+>  /**
+>   * llist_del_first - delete the first entry of lock-less list
+>   * @head:	the head for your lock-less list
+> -- 
+> 2.47.1
+> 
