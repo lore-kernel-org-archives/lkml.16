@@ -1,88 +1,110 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27D52DC791
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:54:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EDB7263C7F;
+	Wed, 30 Apr 2025 18:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039277; cv=none; b=JDqkYpB0V7A1D29SxKrQ+0zeBhl8h2bu5e4P7sJX9Wudbw6DbO2/7f9NjC4o4kJbQ8WcdcRHz1iRhJFYpRckQ7kjZIGkOXDSMMsJmojg4g5IP52OmMEU7yOiMjSgMD78eTu9iiYxVv3t9mNub3oxslf+zLM2LiiCovDVSI1hecI=
+	t=1746039279; cv=none; b=bfjI3R6IvgoW5X6eaOQs6uJujuErBCPr22VHf4GzuuVLkogAkhdaW9O9ad87xSbGiKPioIj9kI2QoqD/kFvmNpXQ4Uf7CtKlspm0w+uzcEaF7LebtxeEFJhBfhzO7+xwxO6toztKNkDAsijsAvS5mNdUfTS6QWFV4/7Q+0ohTAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039277; c=relaxed/simple;
-	bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdjoxy1cvqG33zN3nGlu9bFfJ39+XkXsesAYkfe9KxI1wrWdO6Wn7DnRF+/qmLI0EWTxOAO6WWxuyhBv8pJG34zPwtknelrUrdMGwUkeMZa7JNvGGwysKjeOOZ5FrSrlPtgC1BEMqqoZ8baSCX7Px9qtKHK4mp8a98OuVQ07IAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D2wJB7hP; arc=none smtp.client-ip=209.85.166.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746039279; c=relaxed/simple;
+	bh=RuEs/0OB2TeUNVBJ7KbaOKTja7dATGjXX+pvvcciRpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IEC8Roobtm38SdAPOdHp7S9u+xOfLEyV4PUoMGHYN6Km8KZrAJD3qBwwvW5tDvZUtwFH4YIqiCffUAzeVbEJPyBFggAolHU8Hcgpas9tOPFRC0xgWwP5tRbiAPHQp7r+hiq0kQgLfxlcV25miFcxpi7184x9ZGnfToS0DHA9wLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C0deOkIC; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D2wJB7hP"
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-861d7a09c88so5250539f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:54:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0deOkIC"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c0517142bso1021251fa.1;
+        Wed, 30 Apr 2025 11:54:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746039274; x=1746644074; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
-        b=D2wJB7hPvnhW2nOAd8QTcG6IrKcLABrBZDSW/oi0LT0l6ucTbFNd+BzGVhkFpydtvj
-         0iIV4I6ZpybIa/I+ShxTpLgSXsDZX5s6rcmSHLh/lIy72vW4FGucOWEXCPYjKxdx+BVS
-         IRzQylVWxMGXvJditySYJv5yb3LYHmcpobReQ=
+        d=gmail.com; s=20230601; t=1746039276; x=1746644076; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=INnUYS4aztl17KAR4asCnO8mLObv269L2LB64ZQOrdY=;
+        b=C0deOkICKmJQCckbiwLn5NkdfI9azQCB+XgeGB8ZNUwsWJakEsDTFG16vx+Dm4C9OM
+         8ldU+w8EvbMr4TrDkaNno3BOuPcIGE4EDb2ZQ52aqFgV5c2lXCMJRD36Wpj5iDCszq1a
+         RqER1OAhRSx5NVjT53bRXtOsbDYcmYMh6QywHSzOvYcleiRDNZ5lHD0bnDzDjwph2SOw
+         wwk3/VTiGuD5Xk1GdnNfCFUotSj22NtVlRAmRNP/d2JTVLzK/VG+ivSmVQrGJYs+Is3n
+         iT8IU63W4jY5Ku3718zkJvK0bLbQQ7fAvJzxrqnNZgJYXbd28o4Xtkrq0W9v+3NaFn9+
+         PTdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746039274; x=1746644074;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
-        b=YFKF2A0VbHNQAQPpMJGnTVRe0erawxo3k+U2zX+4ITXJgN7OOBKewCixLrUW8nFauN
-         2WL7eSX4xU8KwJCEZSwiSBfBRcHih2P36MGlePg1VVFSoFpwkkJG7t6391E1L1hgB9Sk
-         95yy4fVSCzBX17mj+4XNWSzaSRoLuOfxAN0ItdYSQNKpopRFB+X09dUxB0sGUPMFUB78
-         CC520h4F/rufNSfDjv+h8u5T1RbWFAgrNZ6zoLyknGIOBxhwj5Cl7z1sDlNnIIyJsepy
-         be6Pko2e/NHBMxRMs2/j925tA1H3vJqXam51i760UUIwG2v/phJteUoebHNNAnonCiqN
-         bupQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJIxWriiDKc6uQWg21FJdJ3S9B9AK3+Goao9ssmfAc3WjbVE+S7mmHLCEozbXJYsijCHx6M94c0JCX0Qw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy28Ag/czhxhRmwzfN+ax/8M3giTi/YPoXRi0xUCTLq3/MQA7/X
-	fvyD49yRL2ifGONDGB0Rs/wGmvtGqd1S5P+FooBpydBHYQxz8mTtJrvai7p6M2o=
-X-Gm-Gg: ASbGncvaz2+IVSupEmY3w6xGZxJ/4dM8NkwXU7zdq5SH2LM6o6QeRHyMv3gkqe0h0qE
-	1wkCoZSB2DdW0Dcyxo8TTQZKUu6FHcIv+iLoXBZ/9mgaN8Xwwbf764gx4esHjT8pSHwzwiAIjU7
-	031K+i8jzoOYbILR0WHN+OFCSj4rhsMzaQDAebh1KI6PMYdaF0r7LwAfL5B7Nh44+h2h+uCEETY
-	/RHSz8RXetfW38ejKepN/BSPlGGGJv+YyW6b/qX+FaU62f/2zluE9rhHP1HmkopRuVbU+gjbBrE
-	1Z+Ma7J88xyx+5n1CHsQrIZvo7lmRbuWCiqO4Po2GSB3+pJhRcBmtG1GOCXBUQ==
-X-Google-Smtp-Source: AGHT+IE9D9dHDIH8+xKtHJUGmzEQO0mhEEj08arKdlDwswO8uWorHYe0lGPtYSS7JWukag+pUyvaug==
-X-Received: by 2002:a05:6602:36ca:b0:861:1ba3:3e50 with SMTP id ca18e2360f4ac-864a2051d04mr59173839f.0.1746039273897;
-        Wed, 30 Apr 2025 11:54:33 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8648c19572bsm81370839f.37.2025.04.30.11.54.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 11:54:33 -0700 (PDT)
-Message-ID: <a0ae3ab9-14e2-4ec4-ac7e-a9ad59955df4@linuxfoundation.org>
-Date: Wed, 30 Apr 2025 12:54:32 -0600
+        d=1e100.net; s=20230601; t=1746039276; x=1746644076;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=INnUYS4aztl17KAR4asCnO8mLObv269L2LB64ZQOrdY=;
+        b=nNygLIrvmhM11MdUOpnMpV3A7/03VOJKZlc3b3pXZhVlud+Nt9JfKH1zGEdM4T2vYC
+         YKdcR4KnylcShBacH6SSWcScDEcYQc65s/mgZU4TPFJGr9JkGthDnev/fsv7GdDx2cbd
+         kAQQmajFNd3AXoGRCeEmi8OUcGdGhk+LxgYe/mYeblQyzTmfQlR6GrBffNMRyfz2fWLd
+         bTnhjCYVLqq9n8XMhIRQTEhK4kJN+r5MRooPvRg4zfevkXuUchNb26AEdEDuj8FnAGjo
+         kZzieSXDIrpYKMxLsLpMbiZnWZbj+1dPnt9Nf8U5ohOArYraqk9MwvHyTyfssGmaH1Me
+         6lqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVidq2abLhpt3eMuKm9wbE14k7merO5515RwIBkDJhIAP6g1RSFi07GCSEWR0qI9hGasdanWR5OQ+njMY8=@vger.kernel.org, AJvYcCXEbZ2KcP6mUoyxW6iCYOTWFw11CDJwDDnKVduIvSqHL0GjDlkMMX9jOJtKTDekYsWG8vdpLBu4++C4Mg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+Ad7jXFC84zrCEqSCmH6gq2IsREWSG3aDwBUvwyH7HBxq+61L
+	Wdru/VGiCYiCXCM7+wHhkF1EvctIhWbzhotHNT7xHaZYJVK2ywOjH3sCzQOwO6LJqg18Nc+Eg0q
+	s97fElX/ZlN2oN8k6v32pigB/LiiqfD3rc4Y=
+X-Gm-Gg: ASbGncsjDGTUIZiojZyVnwKFMq1UGt1LJncl34gmaQ4JezPaYY2VX0/RLOEatDkzG+W
+	9+bwiv078j3eLkW6Vv3Pnn8g7KeGzNYOJ2kBYch9e4d3xdGKfrC4rZj7HPa54xlcIwlCvw25BHT
+	cEb9iIr4ZMQEO9EudRIF1S0qYb4vpS+tCCTMhaMA==
+X-Google-Smtp-Source: AGHT+IHmONtEN/xdxnZx+o08PKjnVD4YC1y5YRSR+8KR6UhsXjDD6/Gb/DNtIiijTTw7D4Fogh7Q/wD1bO93+LeWacA=
+X-Received: by 2002:a2e:a912:0:b0:30b:f274:d1e2 with SMTP id
+ 38308e7fff4ca-31e69e31eacmr18647711fa.1.1746039275466; Wed, 30 Apr 2025
+ 11:54:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] docs: fix spelling mistakes in HID documentation
-To: Ankit Chauhan <ankitchauhan2065@gmail.com>, linux-kernel@vger.kernel.org
-Cc: linux-kernel-mentees@lists.linuxfoundation.org
-References: <20250430062412.54133-1-ankitchauhan2065@gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20250430062412.54133-1-ankitchauhan2065@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250430085544.12800bdd@canb.auug.org.au> <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
+ <4654171.LvFx2qVVIh@rjwysocki.net>
+In-Reply-To: <4654171.LvFx2qVVIh@rjwysocki.net>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 30 Apr 2025 11:53:58 -0700
+X-Gm-Features: ATxdqUEMlf94wCHJAVWSq2q2Y2wziFWbxXtwh7RY2305fcLElottv8bncPvTPHU
+Message-ID: <CAJ-ks9np=yeVPrwNS2BwWJsohqntTgy-2eou68rfWcftR8gjjg@mail.gmail.com>
+Subject: Re: linux-next: Signed-off-by missing for commit in the pm tree
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, gldrk <me@rarity.fan>, Kees Cook <kees@kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/25 00:24, Ankit Chauhan wrote:
-> This commit fixes spelling mistakes in the HID documentation:
+On Wed, Apr 30, 2025 at 11:32=E2=80=AFAM Rafael J. Wysocki <rjw@rjwysocki.n=
+et> wrote:
+>
+> On Wednesday, April 30, 2025 1:30:43 AM CEST Tamir Duberstein wrote:
+> > On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Stephen Rothwell <sfr@canb.auug=
+.org.au> wrote:
+> > >
+> > > Hi all,
+> > >
+> > > Commits
+> > >
+> > >   9eef70365d71 ("ACPICA: Introduce ACPI_NONSTRING")
+> > >   ac9334785c75 ("ACPICA: utilities: Fix overflow check in vsnprintf()=
+")
+> > >   5de20bc939b0 ("ACPICA: Apply pack(1) to union aml_resource")
+> > >
+> > > are missing a Signed-off-by from their authors.
+> >
+> > Hi Stephen, how can I remedy this for 5de20bc939b0 ("ACPICA: Apply
+> > pack(1) to union aml_resource")?
+>
+> The original ACPICA commit does not carry an S-o-b from you, so this one
+> does not either.
+>
+> If you reply with a Signed-off-by to this message:
+>
+> https://lore.kernel.org/linux-acpi/4664267.LvFx2qVVIh@rjwysocki.net/
+>
+> I will pick up your tag.
+>
+> Thanks!
 
-The change log has to read in imperative mood:
-
-"Fix spelling mistakes in the HID documentation" is the right
-phrasing.
-
-Make sure to send the patch to maintainers. You have to send
-the patch to everybody get_maintainer.pl tell you to.
-
-thanks,
--- Shuah
+Done in https://lore.kernel.org/linux-acpi/20250430185019.19528-2-tamird@gm=
+ail.com/.
