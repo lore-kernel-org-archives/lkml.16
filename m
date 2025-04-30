@@ -1,108 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86AB52609C5;
-	Wed, 30 Apr 2025 17:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741AC25D534
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:22:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746033655; cv=none; b=po5KW45EueBSa+Ip5hdMDNBwI+m/dcFETDy4mNNzAL5zQPGniKI5t5dSnTYnGtIMxVWyLEPRC68OsV2yY1CBMO5bxP9o0/bdaE7x9ObePsQe8RVA/UtFMO5ZyNcCk5REATmZ+3Pqc89Z2HiEn5cldt0jppzqKzJDEXObsKX10ps=
+	t=1746033761; cv=none; b=u9IxA+46eZ8gVhleQPGmoI+/Gv3cYr49VDHyxgwq/SaJ32ozvhfw+595o2IeCALY6bElFXS8x2gj7sGaHhG7aykocWuKq8PGp+w1Wo6Wd+WK/Hynz6xV4y5aH1lN8CjGKwwgO1Uny3M9IknMHEU5/1Guvew4rKdgPxoJPqhtdSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746033655; c=relaxed/simple;
-	bh=39KWSZA/+5ZTjQd4vRuOPIK2i+N4nybWhXUJllaBu/c=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b5KntVeZGijtm27y0qoRBsKEEiFDMkIKwEvZM0FeCpVtTB54aV5+y+O5v2hyhZBSCsjWQVAw7nEzVvV5/Qmb0KAoEiU+o+OeCC8SjkJEB3be28rMTHxDNpWwUpG2iLO9pMjr2o4vb/8ZzBaKa5X2sLL0bWAcXuBH8s0RJTK3efY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD676C4CEEB;
-	Wed, 30 Apr 2025 17:20:43 +0000 (UTC)
-Date: Wed, 30 Apr 2025 13:20:47 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
- linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>, Marcelo Tosatti
- <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>, Josh Poimboeuf
- <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>, Petr Tesarik
- <ptesarik@suse.com>, Nicolas Saenz Julienne <nsaenz@amazon.com>, Frederic
- Weisbecker <frederic@kernel.org>, "Paul E. McKenney" <paulmck@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Sean Christopherson
- <seanjc@google.com>, Juergen Gross <jgross@suse.com>, Ajay Kaher
- <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.amakhalov@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui
- <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
- <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H.
- Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, Pawan
- Gupta <pawan.kumar.gupta@linux.intel.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Jason Baron
- <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>, Luis Chamberlain
- <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen
- <samitolvanen@google.com>, Daniel Gomez <da.gomez@samsung.com>, Naveen N
- Rao <naveen@kernel.org>, Anil S Keshavamurthy
- <anil.s.keshavamurthy@intel.com>, "David S. Miller" <davem@davemloft.net>,
- Masami Hiramatsu <mhiramat@kernel.org>, Neeraj Upadhyay
- <neeraj.upadhyay@kernel.org>, Joel Fernandes <joel@joelfernandes.org>, Josh
- Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
- Uladzislau Rezki <urezki@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>,
- Zqiang <qiang.zhang1211@gmail.com>, Vincent Guittot
- <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
- Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, Kees Cook
- <kees@kernel.org>, Shuah Khan <shuah@kernel.org>, Masahiro Yamada
- <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda
- <ojeda@kernel.org>, "Mike Rapoport (Microsoft)" <rppt@kernel.org>, Rong Xu
- <xur@google.com>, Rafael Aquini <aquini@redhat.com>, Song Liu
- <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
- <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>, "Kirill A.
- Shutemov" <kirill.shutemov@linux.intel.com>, Benjamin Berg
- <benjamin.berg@intel.com>, Vishal Annapurve <vannapurve@google.com>, Randy
- Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>, Tiezhu
- Yang <yangtiezhu@loongson.cn>
-Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
- user->kernel transition
-Message-ID: <20250430132047.01d48647@gandalf.local.home>
-In-Reply-To: <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
-References: <20250429113242.998312-1-vschneid@redhat.com>
-	<fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746033761; c=relaxed/simple;
+	bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HTIiD+r+2CCnrTXRlemRFbQ1+Q7GQlgSn/dhKhP6GO1dKHFnc60p6AJD1nUBZwq6ukzf9Uc/Y73ER+eJ1gD9Mzc1DRZabPpFvdDduISA96wWmJnGyQN/VUv1sa5XZeEDG8ZaOdlV7qljexIlIdlM+KjY0GfWjmMPvEPKxUFw8TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7p5gLzu; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7p5gLzu"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6e900a7ce55so2009916d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:22:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746033758; x=1746638558; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
+        b=Z7p5gLzu00uAAMW6THlo7nFcH73ZpoXEKksrJ7jn3UHkvnc/mkITMA4Te29WerYAI3
+         aIzHirknmMB73TF9i+MeIAOwlud6DhJytlV0/1DqBoFbX00kD6D06eTx4HMuiXCeql9X
+         g7a3HiGpL3pnnAGvkxpFgrbALkDom0tPB5w3iw3ZFuITIJBcHAVGOHRpueBiOMnoGjgJ
+         G0OKaJNaEuT8YOVE8P4IX4K+/VnGQdO5TTIKIB/m/I5eUHXJJis0xGbUk7bSXEsZCIIN
+         Q99dxkcnSBJxq4M2XK7tf9hE0vLJpLKm+CuLesljnUWLM9aMXq1clTAqtis6vWTKmj+i
+         MdOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746033758; x=1746638558;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CH4napBsCBC0WBNNu69lyH6W2wkeBWtP8Vh2WDJOLuQ=;
+        b=NXzfJyfexxFuB//P4KQy24LFZx19m8pTXwZMlzrthaBqoGdKIRaBcri6WxVu971s2W
+         E6EICWCZPvtB/3WHOHL7AHoCBGEAJ9umvUF2Vd4vmyT+Mq6wnxMOUF1uGlLTTcKFpAyj
+         /6YppuayosWK61FN+MHXgZzGknGT50W6A357UlyWbrUyRnCedcI96jyhsBQqvdBHWrlv
+         KJHdJy3usXYT7Oril9+2lEqYIBKE880L0UjBZM/MDChM/9P6i2AQbT7i5WO4YZL7G3Id
+         yrsJxwdhQ8QSdtggFqDolRvPZ7IBvClII+9mKqswkHicmzZMsNW8uy1feYnulMcAwcFr
+         +qNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVBPv4IOr9fm6TNt2F/mK7YAV6x1R6rhFWGOlb4VtqT64GBVe0unHGe4r2bvMMbvo5hJ5DFffRrYizfSwo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPO05xlNavj4j4mivHjt0qDhqfKaIMRMmmfUsGDMmPrXEKW82G
+	F2Jynp2uC8tS/89TkXsKemiyhSaidLoskIqOvoJHoj8q/k/dkrmv7cvOk3nSnKavu/cbbNhTng4
+	WxxPnx82yItb+OCFXNv8oaiDB3iA=
+X-Gm-Gg: ASbGncuL2QGfV6aM5vsM6H4ER/GYuH76cC8B3Is3DvyjEvc97n+RSh85Pb5J71gtn0K
+	evs090Ree+o3jaMpSzTaqhuM7InNgV/ucgjymZwcv5qUSmx5rsUAxASUZm3Xb2pg9fpBUqFP62A
+	akcZ+ihLVw/BKWz8neTjXn6xo=
+X-Google-Smtp-Source: AGHT+IF0hkSUkBscoztwrJiCPtGe/eqecg5IeOVFYTEiAr9H2ndJDheoCXzUScHPG2WNdnXZOmnD+9FyO9Oh9/9V6Q4=
+X-Received: by 2002:a05:6214:d8d:b0:6e8:ddf6:d11e with SMTP id
+ 6a1803df08f44-6f509135fd5mr1962686d6.21.1746033758098; Wed, 30 Apr 2025
+ 10:22:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
+In-Reply-To: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
+From: Nhat Pham <nphamcs@gmail.com>
+Date: Wed, 30 Apr 2025 10:22:27 -0700
+X-Gm-Features: ATxdqUEz8NUpZ41yOc0wEWBdYrRigHz3dBQhIEdEZTRmRa2kkuklIIa5A4uoDWA
+Message-ID: <CAKEwX=P192ijuK+O6r5ocwZsbtiV=-gVc1tz-=dtQ1NCw65gUA@mail.gmail.com>
+Subject: Re: [PATCH] mm: Add Kcompressd for accelerated memory compression
+To: Qun-Wei Lin <qun-wei.lin@mediatek.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, Casper Li <casper.li@mediatek.com>, 
+	Chinwen Chang <chinwen.chang@mediatek.com>, Andrew Yang <andrew.yang@mediatek.com>, 
+	James Hsu <james.hsu@mediatek.com>, Barry Song <21cnbao@gmail.com>, 
+	Yosry Ahmed <yosry.ahmed@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Kairui Song <ryncsn@gmail.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Chengming Zhou <chengming.zhou@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 29 Apr 2025 09:11:57 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Wed, Apr 30, 2025 at 1:27=E2=80=AFAM Qun-Wei Lin <qun-wei.lin@mediatek.c=
+om> wrote:
+>
 
-> I don't think we should do this series.
-
-Could you provide more rationale for your decision.
-
->=20
-> If folks want this functionality, they should get a new CPU that can
-> flush the TLB without IPIs.
-
-That's a pretty heavy handed response. I'm not sure that's always a
-feasible solution.
-
-=46rom my experience in the world, software has always been around to fix the
-hardware, not the other way around ;-)
-
--- Steve
-
+cc-ing a couple more folks who are interested/working on this area
+(Kairui, Shakeel, Johannes, Yosry, Chengming, etc.).
