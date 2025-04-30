@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A966B297A7F;
-	Wed, 30 Apr 2025 21:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4F27299506;
+	Wed, 30 Apr 2025 21:21:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746048080; cv=none; b=tmNMAKiSK698U+rlcr/fxftcN1tWfYrGPC2nrusvbHnA6Nkx8aajU/ht+BcFN8OdelZDWATV4RonFEOFwLUIWoxd+f/hv/XdteMY+ZeEff3J8CQO5kS4aKLiAxNAgkHnTlvwUb2caH4XXVaFihG6NrPbnkwG/0LinY+2hsISZCk=
+	t=1746048081; cv=none; b=YpiyNu5m8KNl7UZCYJ4UsVhzI9dKkInK3WunBjHLZIw2BMQ8EjEVXUto5LKx99O8ng1fsT4/BRr7PSGg2VlGStIJCoUjEH7Y0qNbGF17q14tSthFvSiOeFL/srgz65h0TM2pykD353lRba2IwmhwrnllaPJe2IfpGYiTZ+noFR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746048080; c=relaxed/simple;
-	bh=Bb4t4NZhxy2mpayz8DSDhl4k1CNEmUQcxFsZdVoxU/E=;
+	s=arc-20240116; t=1746048081; c=relaxed/simple;
+	bh=YKlUt4V0D51gsfSfgDQX0NK2LDnnc+H+McaVVJ99AVw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R0YpZjkNaMuRODYw1qKcds07ao6oXLhEKlyn7SozJqFETTa9EaIchvfzXFdSQjZXauVurHRlx3RwrjoTI8dwJWIwGyMQrDLstgKfHwKx5j6YuObqV7mXvdD4J3GuWWoImENeLuvdPJSUOkwWB8BNH39SHIecCPkaNxUYnUhbLDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MJqCpRpB; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version:Content-Type; b=cKlWnjfVgyGBjQGBg1zTH/fX6+MqLPK43eLfCi2mTh77kbsncVDOZLuqtpxGyAScc2+4OdJ0cTdRufjXtmqodmGsBWZVVx6L0uU3palgkMvptD7t+miQ9ZlqpuMl4k+esZ2sG0kjU+8AX8jq0IIYNuSCGFAzBWFQoAciZALIuMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UhXfMA8R; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MJqCpRpB"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UhXfMA8R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1746048079; x=1777584079;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Bb4t4NZhxy2mpayz8DSDhl4k1CNEmUQcxFsZdVoxU/E=;
-  b=MJqCpRpB6Gk/zWGDKMy54H4LjIi1wFPCuAVz3jHjICTtNWI1fjOQ6DyZ
-   bLqG71YATQmDge5zbWIm5gTFzcffavkiFXrWmQGQxRy8Oq5orzsNSoxMO
-   rsRLOGTfNwELhw56Sk1Wk7Pp+ac3/Phat6EB2UNCmEkH2GN/NimVX0Rhe
-   aBK6t+1WCWVXXRkpqTLcUUYmD8KdKIdIzelzuU584/3pbsbCWawyLpnxH
-   WN3C8/qW+XAt3u6ee52FY1xkQJwhsUwmkGHNOHGlgARSmRqrvQUvuILnM
-   JJcIfg+NNV9TFZgsa55wNL/cx/n/naO9r4yJhBFxorHVlC0GpgScCkdT5
-   g==;
-X-CSE-ConnectionGUID: aQzvIKkAQEuk0y+YxG8d8w==
-X-CSE-MsgGUID: RVIbj2xdRLmECulayos8rQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="65257533"
+  bh=YKlUt4V0D51gsfSfgDQX0NK2LDnnc+H+McaVVJ99AVw=;
+  b=UhXfMA8RbupNVP8htfGsaBlCBiMHQkmwQrLhFlhcW/v1mW4LZ2tNrwBp
+   yUXD1+y7sOGjySmFlivTHJSJ6s7JzGpLMk0Bv5ZUENyNwWhqSXGIcS8sV
+   Avb7070j8mMwq6Q/YpaUz0roqm9MQX+lEBLgKwRjwyNDAmh2G+ffpz98h
+   3ddqZ4mnjTiyh9iDdx1RO0DksTe5heaoTjpWZNk5HbOVDSrWni4JO/XGZ
+   Z1BAR4NujtGx1z/KkyL1WEBcPELZTURFzLcge72yYPQZa9nWU4vVr36Vh
+   qm1/+RFFNQ9UvOcfsA6lOEETzyw6abHmHvoT7nvxTLkNNIrvd3v9F0/Ts
+   w==;
+X-CSE-ConnectionGUID: pVTIkRLhTGiCCywRdtr7dw==
+X-CSE-MsgGUID: g+4vyS6ARISqmE47nIVKDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="65257535"
 X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
-   d="scan'208";a="65257533"
+   d="scan'208";a="65257535"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 14:21:15 -0700
-X-CSE-ConnectionGUID: OA6N/eS3Tb2KahUTSiN6Xw==
-X-CSE-MsgGUID: uK7VRa/qQMi3vKQTDcdpEg==
+X-CSE-ConnectionGUID: mRII4pAqQHK+nJU7AGV+xw==
+X-CSE-MsgGUID: caMQxxOjQkWqc734ToBPxQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
-   d="scan'208";a="133972271"
+   d="scan'208";a="133972274"
 Received: from agladkov-desk.ger.corp.intel.com (HELO debox1-desk4.lan) ([10.125.110.57])
   by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 14:21:15 -0700
 From: "David E. Box" <david.e.box@linux.intel.com>
@@ -53,9 +53,9 @@ To: linux-kernel@vger.kernel.org,
 	tony.luck@intel.com,
 	xi.pardee@linux.intel.com
 Cc: hdegoede@redhat.com
-Subject: [PATCH 02/15] platform/x86/intel/vsec: Add private data for per-device data
-Date: Wed, 30 Apr 2025 14:20:51 -0700
-Message-ID: <20250430212106.369208-3-david.e.box@linux.intel.com>
+Subject: [PATCH 03/15] platform/x86/intel/vsec: Create wrapper to walk PCI config space
+Date: Wed, 30 Apr 2025 14:20:52 -0700
+Message-ID: <20250430212106.369208-4-david.e.box@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250430212106.369208-1-david.e.box@linux.intel.com>
 References: <20250430212106.369208-1-david.e.box@linux.intel.com>
@@ -68,58 +68,71 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Introduce a new private structure, struct vsec_priv, to hold a pointer to
-the platform-specific information. Although the driver didn=E2=80=99t previ=
-ously
-require this per-device data, adding it now lays the groundwork for
-upcoming patches that will manage such data. No functional changes
-intended.
+Combine three PCI config space walkers =E2=80=94 intel_vsec_walk_dvsec(),
+intel_vsec_walk_vsec(), and intel_vsec_walk_header() =E2=80=94 into a new w=
+rapper
+function, intel_vsec_feature_walk().  This refactoring simplifies the probe
+logic and lays the groundwork for future patches that will loop over these
+calls. No functional changes.
 
 Signed-off-by: David E. Box <david.e.box@linux.intel.com>
 ---
- drivers/platform/x86/intel/vsec.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/platform/x86/intel/vsec.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/platform/x86/intel/vsec.c b/drivers/platform/x86/intel=
 /vsec.c
-index 055ca9f48fb4..59fb6568a855 100644
+index 59fb6568a855..f01651f498ca 100644
 --- a/drivers/platform/x86/intel/vsec.c
 +++ b/drivers/platform/x86/intel/vsec.c
-@@ -32,6 +32,10 @@ static DEFINE_IDA(intel_vsec_ida);
- static DEFINE_IDA(intel_vsec_sdsi_ida);
- static DEFINE_XARRAY_ALLOC(auxdev_array);
+@@ -349,6 +349,27 @@ int intel_vsec_register(struct pci_dev *pdev,
+ }
+ EXPORT_SYMBOL_NS_GPL(intel_vsec_register, "INTEL_VSEC");
 =20
-+struct vsec_priv {
-+	struct intel_vsec_platform_info *info;
-+};
++static void intel_vsec_feature_walk(struct pci_dev *pdev, bool *have_devic=
+es,
++				    struct intel_vsec_platform_info *info)
++{
++	/*
++	 * Both DVSEC and VSEC capabilities can exist on the same device,
++	 * so both intel_vsec_walk_dvsec() and intel_vsec_walk_vsec() must be
++	 * called independently. Additionally, intel_vsec_walk_header() is
++	 * needed for devices that do not have VSEC/DVSEC but provide the
++	 * information via device_data.
++	 */
++	if (intel_vsec_walk_dvsec(pdev, info))
++		*have_devices =3D true;
 +
- static const char *intel_vsec_name(enum intel_vsec_id id)
- {
- 	switch (id) {
-@@ -348,6 +352,7 @@ EXPORT_SYMBOL_NS_GPL(intel_vsec_register, "INTEL_VSEC");
++	if (intel_vsec_walk_vsec(pdev, info))
++		*have_devices =3D true;
++
++	if (info && (info->quirks & VSEC_QUIRK_NO_DVSEC) &&
++	    intel_vsec_walk_header(pdev, info))
++		*have_devices =3D true;
++}
++
  static int intel_vsec_pci_probe(struct pci_dev *pdev, const struct pci_dev=
 ice_id *id)
  {
  	struct intel_vsec_platform_info *info;
-+	struct vsec_priv *priv;
- 	bool have_devices =3D false;
- 	int ret;
-=20
-@@ -360,6 +365,13 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, =
+@@ -372,15 +393,7 @@ static int intel_vsec_pci_probe(struct pci_dev *pdev, =
 const struct pci_device_id
- 	if (!info)
- 		return -EINVAL;
+ 	priv->info =3D info;
+ 	pci_set_drvdata(pdev, priv);
 =20
-+	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->info =3D info;
-+	pci_set_drvdata(pdev, priv);
-+
- 	if (intel_vsec_walk_dvsec(pdev, info))
- 		have_devices =3D true;
+-	if (intel_vsec_walk_dvsec(pdev, info))
+-		have_devices =3D true;
+-
+-	if (intel_vsec_walk_vsec(pdev, info))
+-		have_devices =3D true;
+-
+-	if (info && (info->quirks & VSEC_QUIRK_NO_DVSEC) &&
+-	    intel_vsec_walk_header(pdev, info))
+-		have_devices =3D true;
++	intel_vsec_feature_walk(pdev, &have_devices, info);
 =20
+ 	if (!have_devices)
+ 		return -ENODEV;
 --=20
 2.43.0
 
