@@ -1,395 +1,531 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F5924BBE4;
-	Wed, 30 Apr 2025 10:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C562580D5
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:29:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746008971; cv=none; b=o8j2rTveCrxSXY1C0hMGQcPOwCgOxSrQfbFer+6igrpqErw4o5S6yUdYaAcq/yTfMP69/AcyT9e/Qxm51ZixEWuCfbc5epAe1iJI2qgzuzahQ0su3URe29qRXeMgAxOps8xmkdqd9nVZSgZ2hCUfJsZdPGs9yFqYCs8MXOYz+Jw=
+	t=1746008977; cv=none; b=h8vTRR88oV3I59cduxvGBqsDvmwC5Q86PTX/WlqWTW6EGs1plgMJt8r/0ZMFi/nrIkZ4T5v0Yk2Bb58UmD3Y7cBIQFKuZ7LUjlmx30Q9FsA269IJHjv3qr23+58WtIrpaffKJj81Ju2q4tdVWgmgMPEszJMzOcfPoK/zATtzuLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746008971; c=relaxed/simple;
-	bh=vyEYGJwQ8WWLVQjJhLCdIgxAYRIY1vbhhY4FB3EGe6w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mEsa5Ws6b03I97XeXnknSiJg702N9OfUbok+S/AOb3r5sxOYYTTjtfJlFvhgeha8zmo/sC5tvigQPRepjN8I3C7RQlK0peTW6ODAerjshAe0hfMEeLIayA+tPdgeT+fwby338AWg243reY8QrSRkaOZ2M+uw6Go4EB9miOfqWXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pWkwvsig; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746008977; c=relaxed/simple;
+	bh=1/hcK43LJWnxHIbsp7c5JWka3wbNQxvU7cl2sNw1YBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=edFfBFui1DGM3UTdqs2ys7PrjdD+yhru6d8jxT8oCdnWIQoinKQMoplwZBoBOoC41WvJYoJ+xUhjXSww49BeriKNqOvKtx8Zbn6ov4hfSxR4keJB/oITSZv0TRYb2eLf2dKgjzDWvmlw+GRtRylaAiBLa9d64wsBa95ZRAZefZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ieoyY9KA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K0VMrtG5; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ieoyY9KA; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=K0VMrtG5; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pWkwvsig"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9cs3L016182;
-	Wed, 30 Apr 2025 10:29:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fOM2ezhm/LqmkAl4hyhgo9x/KLpMeNedn6bl0pyKVls=; b=pWkwvsigOjJO7IVr
-	Kl5FskssiymkZOO5Lw3g2+ofXgAWgekobVt2hBF/1b19tYGYHwqOvz2zn/PODRfz
-	Wv9+5jOU7PAmgAMBUsxbXr5aC2cIkRp6WSbAf7f3PUZxP58CfjazFy/DXazk4bhF
-	24B3ZlVwuNXvtHzXr0KcXaxXMtK5W7xd23Yfrk6Vi9BIjjAtF1JMKvF4SUZegBlu
-	TvZWL4ITx/3yjQVwIZxSAFwmKNsyggNuq258Fv0ib1YBgFvJcgLCkf7epXSf9cyc
-	T1zk+ng5DA+GMi3SS8IxIOHnMrvFU0TxMCpnog75mlHN1TXXNKK9dRWhwuj/dG8o
-	VSPwOw==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubhrtb-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 10:29:17 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53UATGC7016885
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 10:29:16 GMT
-Received: from [10.50.41.127] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
- 2025 03:29:08 -0700
-Message-ID: <0069909f-6945-d497-0420-8df8dcae8f0f@quicinc.com>
-Date: Wed, 30 Apr 2025 15:59:02 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ieoyY9KA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K0VMrtG5";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ieoyY9KA";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="K0VMrtG5"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4B4E61F7BF;
+	Wed, 30 Apr 2025 10:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746008972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6pfV9V94VhItRTKKq7RUu0RiR0suKrLZMLyEsiIoomU=;
+	b=ieoyY9KAucohCmxfC8BQW0LYVX1WS7tNLupQsdGCQW32t/JHCG+R+9AtpLRkxBP+Rc9uMw
+	x3Fai0xhDa9hM372aajosgkmfI7Nj5f1XvfBcBxAEfTM3cPC2ypiWdJ370WsvKLDIFyCTD
+	hytiwElYyKLEQG8Wr/0uRJlsaAFPA40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746008972;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6pfV9V94VhItRTKKq7RUu0RiR0suKrLZMLyEsiIoomU=;
+	b=K0VMrtG5h23L8CpZaYz9FMshpiOcjN3bvlV+QH9z5zG1cvF/9h53rIOlNAHzr8BheEuNCm
+	p24NGi+evX8QZ1BA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746008972; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6pfV9V94VhItRTKKq7RUu0RiR0suKrLZMLyEsiIoomU=;
+	b=ieoyY9KAucohCmxfC8BQW0LYVX1WS7tNLupQsdGCQW32t/JHCG+R+9AtpLRkxBP+Rc9uMw
+	x3Fai0xhDa9hM372aajosgkmfI7Nj5f1XvfBcBxAEfTM3cPC2ypiWdJ370WsvKLDIFyCTD
+	hytiwElYyKLEQG8Wr/0uRJlsaAFPA40=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746008972;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=6pfV9V94VhItRTKKq7RUu0RiR0suKrLZMLyEsiIoomU=;
+	b=K0VMrtG5h23L8CpZaYz9FMshpiOcjN3bvlV+QH9z5zG1cvF/9h53rIOlNAHzr8BheEuNCm
+	p24NGi+evX8QZ1BA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 2994E139E7;
+	Wed, 30 Apr 2025 10:29:32 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id +BbhCYz7EWi2NwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 30 Apr 2025 10:29:32 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id D3D17A0AF0; Wed, 30 Apr 2025 12:29:27 +0200 (CEST)
+Date: Wed, 30 Apr 2025 12:29:27 +0200
+From: Jan Kara <jack@suse.cz>
+To: =?utf-8?B?6IOh54Sc?= <huk23@m.fudan.edu.cn>
+Cc: Theodore Ts'o <tytso@mit.edu>, Jan Kara <jack@suse.com>, 
+	linux-ext4 <linux-ext4@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	syzkaller <syzkaller@googlegroups.com>, =?utf-8?B?6KaD5L2z5Z+6?= <jjtan24@m.fudan.edu.cn>, 
+	baishuoran <baishuoran@hrbeu.edu.cn>
+Subject: Re: INFO_ task hung in jbd2_complete_transaction
+Message-ID: <476pyowwvydb3vewhc666g7wdz4hleq74f3ht7vzodgysbfjh6@tv4xnbr5hgao>
+References: <tencent_795BB5FD00A0E9FA2986495F@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v2 19/23] media: iris: Add HEVC and VP9 formats for
- decoder
-Content-Language: en-US
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Stefan Schmidt <stefan.schmidt@linaro.org>,
-        Hans Verkuil
-	<hverkuil@xs4all.nl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
- <20250428-qcom-iris-hevc-vp9-v2-19-3a6013ecb8a5@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250428-qcom-iris-hevc-vp9-v2-19-3a6013ecb8a5@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ohzJGw3BtHlmL8NYpLx-5Nl6nW69MyJL
-X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=6811fb7d cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=cx80FoHkXkGiqVZj6RgA:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3MyBTYWx0ZWRfX2NrTczr6ftgZ ZwvwwZNcgxd4jabKFajWn9oS61FLIoHkhZ4fNmpRpwI96JaGEu1M+0IuPPuUxLHBP3mzdC1ek7z Od10kZcyUSkkkeD4ePtpaySm3mxSNWZ9vv5oLcrs2BBnZNqK4ML8lYj6Vm2Zt8YldnEQ6Q0cH4G
- 8pszO0DYGLbd/b54Jqit2tbcf+WW9Ea6MjeCDOcqhQoPNYD3MlLqtcBLenUNPNwP4Tl4a991W8d 5mqjpJNc+nUIuQusIBE/Lug3S8wtF4DaZ19Ida5TBmqEEtkUkGLDkDA+9ADCAGqEMCVeN/pN42G wAFsM4Oi6vkQ70Gexb0cgPNejMUxVWpFTtMZ8QEo/7yDvff62EPcYvmixmY4guaJKskIrRZq234
- jHqRPJRCdanI45hqjhNa8/l+Gdp/U2oVH6a/I83k0tLn8gTRYwrX23mez23oC9pGg6r+CqWV
-X-Proofpoint-ORIG-GUID: ohzJGw3BtHlmL8NYpLx-5Nl6nW69MyJL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300073
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <tencent_795BB5FD00A0E9FA2986495F@qq.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-0.999];
+	MIME_GOOD(-0.10)[text/plain];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_COUNT_THREE(0.00)[3];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_ALL(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
+Hello!
 
+On Wed 30-04-25 16:51:17, 胡焜 wrote:
+> When using our customized Syzkaller to fuzz the latest Linux kernel, the
+> following crash (49th)was triggered.
+> 
+> HEAD commit: 6537cfb395f352782918d8ee7b7f10ba2cc3cbf2
+> git tree: upstream
+> Output:https://github.com/pghk13/Kernel-Bug/blob/main/0115rc7/49-INFO_%20task%20hung%20in%20jbd2_complete_transaction/report0
+> Kernel config:https://github.com/pghk13/Kernel-Bug/blob/main/0115rc7/config.txt
+> C reproducer:https://github.com/pghk13/Kernel-Bug/blob/main/0115rc7/49-INFO_%20task%20hung%20in%20jbd2_complete_transaction/4repro.c
+> Syzlang reproducer: https://github.com/pghk13/Kernel-Bug/blob/main/0115rc7/49-INFO_%20task%20hung%20in%20jbd2_complete_transaction/4_repro.txt
 
-On 4/28/2025 2:59 PM, Dikshita Agarwal wrote:
-> Extend the decoder driver's supported formats to include HEVC (H.265)
-> and VP9. This change updates the format enumeration (VIDIOC_ENUM_FMT)
-> and allows setting these formats via VIDIOC_S_FMT.
+So the reproducer does nothing with ext4 filesystem which is suspicious and
+suggests that there are likely other factors on your system causing the
+lockup.
+
+> Multiple processes are in an uninterruptible sleep state (D) for more
+> than 143 seconds, causing the system to hang. The core problem may be in
+> jbd2_log_wait_commit function. Log commits are blocked because another
+> process holds a read/write lock (s_writepages_rwsem) on the file system,
+> and the process holding that lock may be waiting for the lock held by the
+> current process, creating a ring dependency deadlock We have reproduced
+> this issue several times on 6.13-rc7 again, but we don't have too much
+> knowledge about this area, could we trouble you to check the root cause.
+
+So this certainly isn't the full story. In particular I don't see how a
+transaction commit can block on s_writepages_rwsem because it should not
+acquire it at all.
+
+The stack traces below don't show any deadlock loop either. When you
+reproduce this again, can you do "echo w >/proc/sysrq-trigger" in the hung
+VM (or perhaps add this your automation when lockup is detected) so that we
+capture stack traces of all blocked tasks? Thanks!
+
+								Honza
+
+> ==================================================================
+> INFO: task syz.8.17184:127686 blocked for more than 143 seconds.
+> &nbsp; &nbsp; &nbsp; Not tainted 6.13.0-rc7 #1
+> "echo 0 &gt; /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz.8.17184 &nbsp; &nbsp; state:D stack:27568 pid:127686 tgid:127684 ppid:125724 flags:0x00004004
+> Call Trace:
+> &nbsp;<TASK&gt;
+> &nbsp;context_switch kernel/sched/core.c:5369 [inline]
+> &nbsp;__schedule+0xe60/0x4120 kernel/sched/core.c:6756
+> &nbsp;__schedule_loop kernel/sched/core.c:6833 [inline]
+> &nbsp;schedule+0xd4/0x210 kernel/sched/core.c:6848
+> &nbsp;jbd2_log_wait_commit+0x2cc/0x430 fs/jbd2/journal.c:673
+> &nbsp;jbd2_complete_transaction+0x188/0x1f0 fs/jbd2/journal.c:799
+> &nbsp;ext4_fc_commit+0x984/0x1840 fs/ext4/fast_commit.c:1236
+> &nbsp;ext4_fallocate+0x540/0x3810 fs/ext4/extents.c:4827
+> &nbsp;vfs_fallocate+0x49d/0xeb0 fs/open.c:327
+> &nbsp;ksys_fallocate+0x55/0xa0 fs/open.c:351
+> &nbsp;__do_sys_fallocate fs/open.c:356 [inline]
+> &nbsp;__se_sys_fallocate fs/open.c:354 [inline]
+> &nbsp;__x64_sys_fallocate+0x97/0x100 fs/open.c:354
+> &nbsp;do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> &nbsp;do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
+> &nbsp;entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f0e50ae071d
+> RSP: 002b:00007f0e4f733ba8 EFLAGS: 00000246 ORIG_RAX: 000000000000011d
+> RAX: ffffffffffffffda RBX: 00007f0e50ca2f80 RCX: 00007f0e50ae071d
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000003
+> RBP: 00007f0e50b55425 R08: 0000000000000000 R09: 0000000000000000
+> R10: 00000000001000f8 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f0e50ca2f8c R14: 00007f0e50ca3018 R15: 00007f0e4f733d40
+> &nbsp;</TASK&gt;
+> INFO: task syz.8.17184:127690 blocked for more than 143 seconds.
+> &nbsp; &nbsp; &nbsp; Not tainted 6.13.0-rc7 #1
+> "echo 0 &gt; /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz.8.17184 &nbsp; &nbsp; state:D stack:28376 pid:127690 tgid:127684 ppid:125724 flags:0x00000004
+> Call Trace:
+> &nbsp;<TASK&gt;
+> &nbsp;context_switch kernel/sched/core.c:5369 [inline]
+> &nbsp;__schedule+0xe60/0x4120 kernel/sched/core.c:6756
+> &nbsp;__schedule_loop kernel/sched/core.c:6833 [inline]
+> &nbsp;schedule+0xd4/0x210 kernel/sched/core.c:6848
+> &nbsp;schedule_preempt_disabled+0x13/0x30 kernel/sched/core.c:6905
+> &nbsp;rwsem_down_read_slowpath+0x78f/0xf10 kernel/locking/rwsem.c:1084
+> &nbsp;__down_read_common kernel/locking/rwsem.c:1248 [inline]
+> &nbsp;__down_read kernel/locking/rwsem.c:1261 [inline]
+> &nbsp;down_read+0xf0/0x480 kernel/locking/rwsem.c:1526
+> &nbsp;inode_lock_shared include/linux/fs.h:828 [inline]
+> &nbsp;ext4_dio_read_iter fs/ext4/file.c:78 [inline]
+> &nbsp;ext4_file_read_iter fs/ext4/file.c:145 [inline]
+> &nbsp;ext4_file_read_iter+0x211/0x410 fs/ext4/file.c:130
+> &nbsp;copy_splice_read+0x5d5/0xb90 fs/splice.c:365
+> &nbsp;do_splice_read.part.0+0x1c1/0x230 fs/splice.c:984
+> &nbsp;do_splice_read fs/splice.c:967 [inline]
+> &nbsp;splice_direct_to_actor+0x2c4/0xa10 fs/splice.c:1089
+> &nbsp;do_splice_direct_actor+0x181/0x250 fs/splice.c:1207
+> &nbsp;do_splice_direct+0x41/0x60 fs/splice.c:1233
+> &nbsp;do_sendfile+0xac1/0xde0 fs/read_write.c:1363
+> &nbsp;__do_sys_sendfile64 fs/read_write.c:1424 [inline]
+> &nbsp;__se_sys_sendfile64 fs/read_write.c:1410 [inline]
+> &nbsp;__x64_sys_sendfile64+0x1d5/0x210 fs/read_write.c:1410
+> &nbsp;do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> &nbsp;do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
+> &nbsp;entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f0e50ae071d
+> RSP: 002b:00007f0e4f712ba8 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+> RAX: ffffffffffffffda RBX: 00007f0e50ca3058 RCX: 00007f0e50ae071d
+> RDX: 0000000000000000 RSI: 0000000000000003 RDI: 0000000000000003
+> RBP: 00007f0e50b55425 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000100000008 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f0e50ca3064 R14: 00007f0e50ca30f0 R15: 00007f0e4f712d40
+> &nbsp;</TASK&gt;
+> INFO: task syz.4.17192:127724 blocked for more than 143 seconds.
+> &nbsp; &nbsp; &nbsp; Not tainted 6.13.0-rc7 #1
+> "echo 0 &gt; /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz.4.17192 &nbsp; &nbsp; state:D stack:30144 pid:127724 tgid:127723 ppid:125700 flags:0x00000004
+> Call Trace:
+> &nbsp;<TASK&gt;
+> &nbsp;context_switch kernel/sched/core.c:5369 [inline]
+> &nbsp;__schedule+0xe60/0x4120 kernel/sched/core.c:6756
+> &nbsp;__schedule_loop kernel/sched/core.c:6833 [inline]
+> &nbsp;schedule+0xd4/0x210 kernel/sched/core.c:6848
+> &nbsp;jbd2_log_wait_commit+0x2cc/0x430 fs/jbd2/journal.c:673
+> &nbsp;ext4_sync_fs+0x6f6/0x880 fs/ext4/super.c:6373
+> &nbsp;dquot_quota_sync+0xeb/0x3a0 fs/quota/dquot.c:755
+> &nbsp;quota_sync_one+0x14d/0x1a0 fs/quota/quota.c:60
+> &nbsp;iterate_supers+0xff/0x230 fs/super.c:934
+> &nbsp;quota_sync_all+0xca/0xe0 fs/quota/quota.c:69
+> &nbsp;__do_sys_quotactl fs/quota/quota.c:938 [inline]
+> &nbsp;__se_sys_quotactl fs/quota/quota.c:917 [inline]
+> &nbsp;__x64_sys_quotactl+0x255/0x3b0 fs/quota/quota.c:917
+> &nbsp;do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> &nbsp;do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
+> &nbsp;entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f23f835971d
+> RSP: 002b:00007f23f6facba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000b3
+> RAX: ffffffffffffffda RBX: 00007f23f851bf80 RCX: 00007f23f835971d
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff80000102
+> RBP: 00007f23f83ce425 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f23f851bf8c R14: 00007f23f851c018 R15: 00007f23f6facd40
+> &nbsp;</TASK&gt;
+> INFO: task syz.4.17192:127725 blocked for more than 143 seconds.
+> &nbsp; &nbsp; &nbsp; Not tainted 6.13.0-rc7 #1
+> "echo 0 &gt; /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz.4.17192 &nbsp; &nbsp; state:D stack:28320 pid:127725 tgid:127723 ppid:125700 flags:0x00000004
+> Call Trace:
+> &nbsp;<TASK&gt;
+> &nbsp;context_switch kernel/sched/core.c:5369 [inline]
+> &nbsp;__schedule+0xe60/0x4120 kernel/sched/core.c:6756
+> &nbsp;__schedule_loop kernel/sched/core.c:6833 [inline]
+> &nbsp;schedule+0xd4/0x210 kernel/sched/core.c:6848
+> &nbsp;jbd2_log_wait_commit+0x2cc/0x430 fs/jbd2/journal.c:673
+> &nbsp;ext4_sync_fs+0x6f6/0x880 fs/ext4/super.c:6373
+> &nbsp;dquot_quota_sync+0xeb/0x3a0 fs/quota/dquot.c:755
+> &nbsp;quota_sync_one+0x14d/0x1a0 fs/quota/quota.c:60
+> &nbsp;iterate_supers+0xff/0x230 fs/super.c:934
+> &nbsp;quota_sync_all+0xca/0xe0 fs/quota/quota.c:69
+> &nbsp;__do_sys_quotactl fs/quota/quota.c:938 [inline]
+> &nbsp;__se_sys_quotactl fs/quota/quota.c:917 [inline]
+> &nbsp;__x64_sys_quotactl+0x255/0x3b0 fs/quota/quota.c:917
+> &nbsp;do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> &nbsp;do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
+> &nbsp;entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f23f835971d
+> RSP: 002b:00007f23f6f8bba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000b3
+> RAX: ffffffffffffffda RBX: 00007f23f851c058 RCX: 00007f23f835971d
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff80000101
+> RBP: 00007f23f83ce425 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f23f851c064 R14: 00007f23f851c0f0 R15: 00007f23f6f8bd40
+> &nbsp;</TASK&gt;
+> INFO: task syz.4.17192:127726 blocked for more than 143 seconds.
+> &nbsp; &nbsp; &nbsp; Not tainted 6.13.0-rc7 #1
+> "echo 0 &gt; /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> task:syz.4.17192 &nbsp; &nbsp; state:D stack:28320 pid:127726 tgid:127723 ppid:125700 flags:0x00000004
+> Call Trace:
+> &nbsp;<TASK&gt;
+> &nbsp;context_switch kernel/sched/core.c:5369 [inline]
+> &nbsp;__schedule+0xe60/0x4120 kernel/sched/core.c:6756
+> &nbsp;__schedule_loop kernel/sched/core.c:6833 [inline]
+> &nbsp;schedule+0xd4/0x210 kernel/sched/core.c:6848
+> &nbsp;jbd2_log_wait_commit+0x2cc/0x430 fs/jbd2/journal.c:673
+> &nbsp;ext4_sync_fs+0x6f6/0x880 fs/ext4/super.c:6373
+> &nbsp;dquot_quota_sync+0xeb/0x3a0 fs/quota/dquot.c:755
+> &nbsp;quota_sync_one+0x14d/0x1a0 fs/quota/quota.c:60
+> &nbsp;iterate_supers+0xff/0x230 fs/super.c:934
+> &nbsp;quota_sync_all+0xca/0xe0 fs/quota/quota.c:69
+> &nbsp;__do_sys_quotactl fs/quota/quota.c:938 [inline]
+> &nbsp;__se_sys_quotactl fs/quota/quota.c:917 [inline]
+> &nbsp;__x64_sys_quotactl+0x255/0x3b0 fs/quota/quota.c:917
+> &nbsp;do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> &nbsp;do_syscall_64+0xc3/0x1d0 arch/x86/entry/common.c:83
+> &nbsp;entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f23f835971d
+> RSP: 002b:00007f23f6f6aba8 EFLAGS: 00000246 ORIG_RAX: 00000000000000b3
+> RAX: ffffffffffffffda RBX: 00007f23f851c130 RCX: 00007f23f835971d
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff80000101
+> RBP: 00007f23f83ce425 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+> R13: 00007f23f851c13c R14: 00007f23f851c1c8 R15: 00007f23f6f6ad40
+> &nbsp;</TASK&gt;
 > 
-> Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->  .../platform/qcom/iris/iris_hfi_gen1_command.c     | 15 ++++-
->  .../platform/qcom/iris/iris_hfi_gen1_defines.h     |  2 +
->  .../platform/qcom/iris/iris_hfi_gen2_command.c     | 14 ++++-
->  .../platform/qcom/iris/iris_hfi_gen2_defines.h     |  3 +
->  drivers/media/platform/qcom/iris/iris_instance.h   |  2 +
->  drivers/media/platform/qcom/iris/iris_vdec.c       | 69 ++++++++++++++++++++--
->  drivers/media/platform/qcom/iris/iris_vdec.h       | 11 ++++
->  drivers/media/platform/qcom/iris/iris_vidc.c       |  3 -
->  8 files changed, 108 insertions(+), 11 deletions(-)
 > 
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-> index ef3ca676d2ea..2473165a1f10 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_command.c
-> @@ -88,16 +88,29 @@ static int iris_hfi_gen1_sys_pc_prep(struct iris_core *core)
->  static int iris_hfi_gen1_session_open(struct iris_inst *inst)
->  {
->  	struct hfi_session_open_pkt packet;
-> +	u32 codec = 0;
->  	int ret;
->  
->  	if (inst->state != IRIS_INST_DEINIT)
->  		return -EALREADY;
->  
-> +	switch (inst->codec) {
-> +	case V4L2_PIX_FMT_H264:
-> +		codec = HFI_VIDEO_CODEC_H264;
-> +		break;
-> +	case V4L2_PIX_FMT_HEVC:
-> +		codec = HFI_VIDEO_CODEC_HEVC;
-> +		break;
-> +	case V4L2_PIX_FMT_VP9:
-> +		codec = HFI_VIDEO_CODEC_VP9;
-> +		break;
-> +	}
-> +
->  	packet.shdr.hdr.size = sizeof(struct hfi_session_open_pkt);
->  	packet.shdr.hdr.pkt_type = HFI_CMD_SYS_SESSION_INIT;
->  	packet.shdr.session_id = inst->session_id;
->  	packet.session_domain = HFI_SESSION_TYPE_DEC;
-> -	packet.session_codec = HFI_VIDEO_CODEC_H264;
-> +	packet.session_codec = codec;
->  
->  	reinit_completion(&inst->completion);
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> index adffcead58ea..d4d119ca98b0 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_defines.h
-> @@ -13,6 +13,8 @@
->  #define HFI_SESSION_TYPE_DEC				2
->  
->  #define HFI_VIDEO_CODEC_H264				0x00000002
-> +#define HFI_VIDEO_CODEC_HEVC				0x00002000
-> +#define HFI_VIDEO_CODEC_VP9				0x00004000
->  
->  #define HFI_ERR_NONE					0x0
->  
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-> index 802fa62c26eb..f23be2340658 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
-> @@ -416,7 +416,19 @@ static int iris_hfi_gen2_session_set_config_params(struct iris_inst *inst, u32 p
->  static int iris_hfi_gen2_session_set_codec(struct iris_inst *inst)
->  {
->  	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
-> -	u32 codec = HFI_CODEC_DECODE_AVC;
-> +	u32 codec = 0;
-> +
-> +	switch (inst->codec) {
-> +	case V4L2_PIX_FMT_H264:
-> +		codec = HFI_CODEC_DECODE_AVC;
-> +		break;
-> +	case V4L2_PIX_FMT_HEVC:
-> +		codec = HFI_CODEC_DECODE_HEVC;
-> +		break;
-> +	case V4L2_PIX_FMT_VP9:
-> +		codec = HFI_CODEC_DECODE_VP9;
-> +		break;
-> +	}
->  
->  	iris_hfi_gen2_packet_session_property(inst,
->  					      HFI_PROP_CODEC,
-> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> index 666061a612c3..283d2f27e4c8 100644
-> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
-> @@ -104,6 +104,9 @@ enum hfi_color_format {
->  enum hfi_codec_type {
->  	HFI_CODEC_DECODE_AVC			= 1,
->  	HFI_CODEC_ENCODE_AVC			= 2,
-> +	HFI_CODEC_DECODE_HEVC			= 3,
-> +	HFI_CODEC_ENCODE_HEVC			= 4,
-> +	HFI_CODEC_DECODE_VP9			= 5,
->  };
->  
->  enum hfi_picture_type {
-> diff --git a/drivers/media/platform/qcom/iris/iris_instance.h b/drivers/media/platform/qcom/iris/iris_instance.h
-> index 9ed197799ee7..3c211b027e77 100644
-> --- a/drivers/media/platform/qcom/iris/iris_instance.h
-> +++ b/drivers/media/platform/qcom/iris/iris_instance.h
-> @@ -43,6 +43,7 @@
->   * @sequence_out: a sequence counter for output queue
->   * @tss: timestamp metadata
->   * @metadata_idx: index for metadata buffer
-> + * @codec: codec type
->   * @in_reconfig: a flag raised by decoder when the stream resolution changes
->   * @last_buffer_dequeued: a flag to indicate that last buffer is sent by driver
->   */
-> @@ -76,6 +77,7 @@ struct iris_inst {
->  	u32				sequence_out;
->  	struct iris_ts_metadata		tss[VIDEO_MAX_FRAME];
->  	u32				metadata_idx;
-> +	u32				codec;
->  	bool				in_reconfig;
->  	bool				last_buffer_dequeued;
->  };
-> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
-> index 30a9969bc368..b6e3f95fb3d7 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
-> @@ -32,6 +32,7 @@ int iris_vdec_inst_init(struct iris_inst *inst)
->  	f->fmt.pix_mp.width = DEFAULT_WIDTH;
->  	f->fmt.pix_mp.height = DEFAULT_HEIGHT;
->  	f->fmt.pix_mp.pixelformat = V4L2_PIX_FMT_H264;
-> +	inst->codec = f->fmt.pix_mp.pixelformat;
->  	f->fmt.pix_mp.num_planes = 1;
->  	f->fmt.pix_mp.plane_fmt[0].bytesperline = 0;
->  	f->fmt.pix_mp.plane_fmt[0].sizeimage = iris_get_buffer_size(inst, BUF_INPUT);
-> @@ -67,14 +68,67 @@ void iris_vdec_inst_deinit(struct iris_inst *inst)
->  	kfree(inst->fmt_src);
->  }
->  
-> +static const struct iris_fmt iris_vdec_formats[] = {
-> +	[IRIS_FMT_H264] = {
-> +		.pixfmt = V4L2_PIX_FMT_H264,
-> +		.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-> +	},
-> +	[IRIS_FMT_HEVC] = {
-> +		.pixfmt = V4L2_PIX_FMT_HEVC,
-> +		.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-> +	},
-> +	[IRIS_FMT_VP9] = {
-> +		.pixfmt = V4L2_PIX_FMT_VP9,
-> +		.type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE,
-> +	},
-> +};
-> +
-> +static const struct iris_fmt *
-> +find_format(struct iris_inst *inst, u32 pixfmt, u32 type)
-> +{
-> +	unsigned int size = ARRAY_SIZE(iris_vdec_formats);
-> +	const struct iris_fmt *fmt = iris_vdec_formats;
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < size; i++) {
-> +		if (fmt[i].pixfmt == pixfmt)
-> +			break;
-> +	}
-> +
-> +	if (i == size || fmt[i].type != type)
-> +		return NULL;
-> +
-> +	return &fmt[i];
-> +}
-> +
-> +static const struct iris_fmt *
-> +find_format_by_index(struct iris_inst *inst, u32 index, u32 type)
-> +{
-> +	const struct iris_fmt *fmt = iris_vdec_formats;
-> +	unsigned int size = ARRAY_SIZE(iris_vdec_formats);
-> +
-> +	if (index >= size || fmt[index].type != type)
-> +		return NULL;
-> +
-> +	return &fmt[index];
-> +}
-> +
->  int iris_vdec_enum_fmt(struct iris_inst *inst, struct v4l2_fmtdesc *f)
->  {
-> +	const struct iris_fmt *fmt;
-> +
->  	switch (f->type) {
->  	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> -		f->pixelformat = V4L2_PIX_FMT_H264;
-> +		fmt = find_format_by_index(inst, f->index, f->type);
-> +		if (!fmt)
-> +			return -EINVAL;
-> +
-> +		f->pixelformat = fmt->pixfmt;
->  		f->flags = V4L2_FMT_FLAG_COMPRESSED | V4L2_FMT_FLAG_DYN_RESOLUTION;
->  		break;
->  	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
-> +		if (f->index)
-> +			return -EINVAL;
->  		f->pixelformat = V4L2_PIX_FMT_NV12;
->  		break;
->  	default:
-> @@ -88,13 +142,15 @@ int iris_vdec_try_fmt(struct iris_inst *inst, struct v4l2_format *f)
->  {
->  	struct v4l2_pix_format_mplane *pixmp = &f->fmt.pix_mp;
->  	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
-> +	const struct iris_fmt *fmt;
->  	struct v4l2_format *f_inst;
->  	struct vb2_queue *src_q;
->  
->  	memset(pixmp->reserved, 0, sizeof(pixmp->reserved));
-> +	fmt = find_format(inst, pixmp->pixelformat, f->type);
->  	switch (f->type) {
->  	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> -		if (f->fmt.pix_mp.pixelformat != V4L2_PIX_FMT_H264) {
-> +		if (!fmt) {
->  			f_inst = inst->fmt_src;
->  			f->fmt.pix_mp.width = f_inst->fmt.pix_mp.width;
->  			f->fmt.pix_mp.height = f_inst->fmt.pix_mp.height;
-> @@ -102,7 +158,7 @@ int iris_vdec_try_fmt(struct iris_inst *inst, struct v4l2_format *f)
->  		}
->  		break;
->  	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
-> -		if (f->fmt.pix_mp.pixelformat != V4L2_PIX_FMT_NV12) {
-> +		if (!fmt) {
->  			f_inst = inst->fmt_dst;
->  			f->fmt.pix_mp.pixelformat = f_inst->fmt.pix_mp.pixelformat;
->  			f->fmt.pix_mp.width = f_inst->fmt.pix_mp.width;
-> @@ -145,13 +201,14 @@ int iris_vdec_s_fmt(struct iris_inst *inst, struct v4l2_format *f)
->  
->  	switch (f->type) {
->  	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
-> -		if (f->fmt.pix_mp.pixelformat != V4L2_PIX_FMT_H264)
-> +		if (!(find_format(inst, f->fmt.pix_mp.pixelformat, f->type)))
->  			return -EINVAL;
->  
->  		fmt = inst->fmt_src;
->  		fmt->type = V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE;
-> -
-> -		codec_align = DEFAULT_CODEC_ALIGNMENT;
-> +		fmt->fmt.pix_mp.pixelformat = f->fmt.pix_mp.pixelformat;
-> +		inst->codec = fmt->fmt.pix_mp.pixelformat;
-> +		codec_align = inst->codec == V4L2_PIX_FMT_HEVC ? 32 : 16;
->  		fmt->fmt.pix_mp.width = ALIGN(f->fmt.pix_mp.width, codec_align);
->  		fmt->fmt.pix_mp.height = ALIGN(f->fmt.pix_mp.height, codec_align);
->  		fmt->fmt.pix_mp.num_planes = 1;
-> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.h b/drivers/media/platform/qcom/iris/iris_vdec.h
-> index b24932dc511a..cd7aab66dc7c 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vdec.h
-> +++ b/drivers/media/platform/qcom/iris/iris_vdec.h
-> @@ -8,6 +8,17 @@
->  
->  struct iris_inst;
->  
-> +enum iris_fmt_type {
-> +	IRIS_FMT_H264,
-> +	IRIS_FMT_HEVC,
-> +	IRIS_FMT_VP9,
-> +};
-> +
-> +struct iris_fmt {
-> +	u32 pixfmt;
-> +	u32 type;
-> +};
-> +
->  int iris_vdec_inst_init(struct iris_inst *inst);
->  void iris_vdec_inst_deinit(struct iris_inst *inst);
->  int iris_vdec_enum_fmt(struct iris_inst *inst, struct v4l2_fmtdesc *f);
-> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
-> index 56531a7f0dfe..dd97eb93cb7b 100644
-> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
-> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
-> @@ -251,9 +251,6 @@ static int iris_enum_fmt(struct file *filp, void *fh, struct v4l2_fmtdesc *f)
->  {
->  	struct iris_inst *inst = iris_get_inst(filp, NULL);
->  
-> -	if (f->index)
-> -		return -EINVAL;
-> -
->  	return iris_vdec_enum_fmt(inst, f);
->  }
->  
+> Showing all locks held in the system:
+> 1 lock held by systemd/1:
+> &nbsp;#0: ff110000082a2cc8 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000082a2cc8 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by khungtaskd/45:
+> &nbsp;#0: ffffffffab51aea0 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+> &nbsp;#0: ffffffffab51aea0 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+> &nbsp;#0: ffffffffab51aea0 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x75/0x340 kernel/locking/lockdep.c:6744
+> 1 lock held by kswapd0/83:
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: balance_pgdat+0xfb/0xe80 mm/vmscan.c:6871
+> 1 lock held by systemd-journal/222:
+> &nbsp;#0: ff11000055863698 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff11000055863698 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by cron/288:
+> &nbsp;#0: ff1100000db1f9b8 (&amp;type-&gt;i_mutex_dir_key#3){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:828 [inline]
+> &nbsp;#0: ff1100000db1f9b8 (&amp;type-&gt;i_mutex_dir_key#3){++++}-{4:4}, at: lookup_slow fs/namei.c:1807 [inline]
+> &nbsp;#0: ff1100000db1f9b8 (&amp;type-&gt;i_mutex_dir_key#3){++++}-{4:4}, at: walk_component+0x338/0x5b0 fs/namei.c:2112
+> 2 locks held by in:imklog/328:
+> &nbsp;#0: ff110000082dacc8 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000082dacc8 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_fault+0x17c1/0x2ec0 mm/filemap.c:3342
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 1 lock held by sshd/402:
+> &nbsp;#0: ff110000080cd408 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000080cd408 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by syz-executor/408:
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 4 locks held by kworker/u18:5/740:
+> &nbsp;#0: ff11000002250948 ((wq_completion)writeback){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000002250948 ((wq_completion)writeback){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa000001420fd98 ((work_completion)(&amp;(&amp;wb-&gt;dwork)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa000001420fd98 ((work_completion)(&amp;(&amp;wb-&gt;dwork)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: super_trylock_shared+0x21/0x100 fs/super.c:562
+> &nbsp;#3: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 3 locks held by kworker/2:4/90257:
+> &nbsp;#0: ff11000001071948 ((wq_completion)events_power_efficient){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001071948 ((wq_completion)events_power_efficient){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa00000047b7d98 ((reg_check_chans).work){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa00000047b7d98 ((reg_check_chans).work){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: reg_check_chans_work+0x8c/0x1050 net/wireless/reg.c:2480
+> 4 locks held by kworker/3:5/107489:
+> 3 locks held by kworker/u20:3/114127:
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000003cd7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000003cd7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 3 locks held by kworker/u16:1/117711:
+> &nbsp;#0: ff1100000a902148 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff1100000a902148 ((wq_completion)ipv6_addrconf){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000004147d98 ((work_completion)(&amp;(&amp;ifa-&gt;dad_work)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000004147d98 ((work_completion)(&amp;(&amp;ifa-&gt;dad_work)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: addrconf_dad_work+0xb2/0x12c0 net/ipv6/addrconf.c:4215
+> 3 locks held by kworker/u17:7/125828:
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000003e57d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000003e57d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 3 locks held by kworker/u17:11/125830:
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000003da7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000003da7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 3 locks held by kworker/u17:20/125839:
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000003eb7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000003eb7d98 ((work_completion)(&amp;(&amp;krcp-&gt;page_cache_work)-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 2 locks held by kworker/u17:21/125840:
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3211 [inline]
+> &nbsp;#0: ff11000001079148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_scheduled_works+0x1175/0x1ba0 kernel/workqueue.c:3317
+> &nbsp;#1: ffa0000003ec7d98 ((work_completion)(&amp;sub_info-&gt;work)){+.+.}-{0:0}, at: process_one_work kernel/workqueue.c:3212 [inline]
+> &nbsp;#1: ffa0000003ec7d98 ((work_completion)(&amp;sub_info-&gt;work)){+.+.}-{0:0}, at: process_scheduled_works+0x52f/0x1ba0 kernel/workqueue.c:3317
+> 3 locks held by syz.1.17173/127617:
+> 2 locks held by syz.8.17184/127686:
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: ksys_fallocate+0x55/0xa0 fs/open.c:351
+> &nbsp;#1: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
+> &nbsp;#1: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_fallocate+0x2dc/0x3810 fs/ext4/extents.c:4796
+> 1 lock held by syz.8.17184/127690:
+> &nbsp;#0: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:828 [inline]
+> &nbsp;#0: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_dio_read_iter fs/ext4/file.c:78 [inline]
+> &nbsp;#0: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_file_read_iter fs/ext4/file.c:145 [inline]
+> &nbsp;#0: ff1100000dbde618 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_file_read_iter+0x211/0x410 fs/ext4/file.c:130
+> 1 lock held by syz.4.17192/127724:
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: __super_lock fs/super.c:58 [inline]
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: super_lock+0x17a/0x3e0 fs/super.c:120
+> 1 lock held by syz.4.17192/127725:
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: __super_lock fs/super.c:58 [inline]
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: super_lock+0x17a/0x3e0 fs/super.c:120
+> 1 lock held by syz.4.17192/127726:
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: __super_lock fs/super.c:58 [inline]
+> &nbsp;#0: ff1100000acf20e0 (&amp;type-&gt;s_umount_key#52){++++}-{4:4}, at: super_lock+0x17a/0x3e0 fs/super.c:120
+> 1 lock held by syz.9.17206/128665:
+> &nbsp;#0: ff1100003388f3e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
+> &nbsp;#0: ff1100003388f3e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise mm/madvise.c:1671 [inline]
+> &nbsp;#0: ff1100003388f3e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise+0x3dd/0x9c0 mm/madvise.c:1635
+> 1 lock held by syz.5.17137/128685:
+> &nbsp;#0: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 1 lock held by syz.2.17205/128709:
+> &nbsp;#0: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 2 locks held by syz.7.17241/128994:
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: do_pwritev+0x1b1/0x270 fs/read_write.c:1146
+> &nbsp;#1: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 1 lock held by syz.1.17261/129124:
+> &nbsp;#0: ff1100003c6f3ae0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
+> &nbsp;#0: ff1100003c6f3ae0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise mm/madvise.c:1671 [inline]
+> &nbsp;#0: ff1100003c6f3ae0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise+0x3dd/0x9c0 mm/madvise.c:1635
+> 2 locks held by syz.0.17260/129092:
+> &nbsp;#0: ff1100000ecf9ec8 (&amp;sb-&gt;s_type-&gt;i_mutex_key#12){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
+> &nbsp;#0: ff1100000ecf9ec8 (&amp;sb-&gt;s_type-&gt;i_mutex_key#12){+.+.}-{4:4}, at: __sock_release+0x86/0x270 net/socket.c:639
+> &nbsp;#1: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: ip_mc_drop_socket+0x92/0x290 net/ipv4/igmp.c:2718
+> 3 locks held by syz.5.17276/129138:
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: ioctl_setflags fs/ioctl.c:725 [inline]
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: do_vfs_ioctl+0x1df/0x1850 fs/ioctl.c:869
+> &nbsp;#1: ff1100000ef06fe8 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
+> &nbsp;#1: ff1100000ef06fe8 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: vfs_fileattr_set+0x14c/0xa00 fs/ioctl.c:681
+> &nbsp;#2: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: ext4_writepages_down_write fs/ext4/ext4.h:1788 [inline]
+> &nbsp;#2: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: ext4_ind_migrate+0x23c/0xa10 fs/ext4/migrate.c:626
+> 1 lock held by syz.2.17290/129203:
+> &nbsp;#0: ff1100003d0794e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
+> &nbsp;#0: ff1100003d0794e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise mm/madvise.c:1671 [inline]
+> &nbsp;#0: ff1100003d0794e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise+0x3dd/0x9c0 mm/madvise.c:1635
+> 1 lock held by syz.0.17293/129212:
+> &nbsp;#0: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 1 lock held by syz.0.17293/129213:
+> &nbsp;#0: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 1 lock held by syz.0.17293/129215:
+> &nbsp;#0: ff1100000acf4b98 (&amp;sbi-&gt;s_writepages_rwsem){++++}-{0:0}, at: do_writepages+0x19d/0x7d0 mm/page-writeback.c:2702
+> 1 lock held by syz.6.17302/129248:
+> &nbsp;#0: ff1100000af273e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: mmap_read_lock include/linux/mmap_lock.h:144 [inline]
+> &nbsp;#0: ff1100000af273e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise mm/madvise.c:1671 [inline]
+> &nbsp;#0: ff1100000af273e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: do_madvise+0x3dd/0x9c0 mm/madvise.c:1635
+> 2 locks held by syz.3.17305/129251:
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: ksys_fallocate+0x55/0xa0 fs/open.c:351
+> &nbsp;#1: ff1100000db83508 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
+> &nbsp;#1: ff1100000db83508 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_zero_range fs/ext4/extents.c:4607 [inline]
+> &nbsp;#1: ff1100000db83508 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_fallocate+0xc98/0x3810 fs/ext4/extents.c:4787
+> 2 locks held by syz.0.17314/129284:
+> &nbsp;#0: ff1100000acf2420 (sb_writers#3){.+.+}-{0:0}, at: ksys_fallocate+0x55/0xa0 fs/open.c:351
+> &nbsp;#1: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock include/linux/fs.h:818 [inline]
+> &nbsp;#1: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_fallocate+0x2dc/0x3810 fs/ext4/extents.c:4796
+> 1 lock held by syz.0.17314/129285:
+> &nbsp;#0: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: inode_lock_shared include/linux/fs.h:828 [inline]
+> &nbsp;#0: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_dio_read_iter fs/ext4/file.c:78 [inline]
+> &nbsp;#0: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_file_read_iter fs/ext4/file.c:145 [inline]
+> &nbsp;#0: ff1100000fcd5c48 (&amp;sb-&gt;s_type-&gt;i_mutex_key#7){++++}-{4:4}, at: ext4_file_read_iter+0x211/0x410 fs/ext4/file.c:130
+> 3 locks held by syz-executor/129398:
+> &nbsp;#0: ffffffffac415aa0 (&amp;ops-&gt;srcu){.+.+}-{0:0}, at: srcu_lock_acquire include/linux/srcu.h:158 [inline]
+> &nbsp;#0: ffffffffac415aa0 (&amp;ops-&gt;srcu){.+.+}-{0:0}, at: srcu_read_lock include/linux/srcu.h:249 [inline]
+> &nbsp;#0: ffffffffac415aa0 (&amp;ops-&gt;srcu){.+.+}-{0:0}, at: rtnl_link_ops_get+0x116/0x2c0 net/core/rtnetlink.c:559
+> &nbsp;#1: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:79 [inline]
+> &nbsp;#1: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_nets_lock net/core/rtnetlink.c:326 [inline]
+> &nbsp;#1: ffffffffacfb2208 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_newlink+0x77c/0x1cb0 net/core/rtnetlink.c:4011
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#2: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 1 lock held by syz-executor/129430:
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#0: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 2 locks held by modprobe/129433:
+> &nbsp;#0: ff1100003d0781e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:122 [inline]
+> &nbsp;#0: ff1100003d0781e0 (&amp;mm-&gt;mmap_lock){++++}-{4:4}, at: setup_arg_pages+0x2a8/0xce0 fs/exec.c:770
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __perform_reclaim mm/page_alloc.c:3926 [inline]
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_direct_reclaim mm/page_alloc.c:3951 [inline]
+> &nbsp;#1: ffffffffab647720 (fs_reclaim){+.+.}-{0:0}, at: __alloc_pages_slowpath.constprop.0+0x50c/0x2170 mm/page_alloc.c:4382
+> 1 lock held by syz-executor/129434:
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by syz-executor/129435:
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by syz-executor/129436:
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: page_cache_ra_unbounded+0x159/0x690 mm/readahead.c:226
+> 1 lock held by syz-executor/129437:
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_fault+0xe80/0x2ec0 mm/filemap.c:3323
+> 1 lock held by syz-executor/129438:
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_invalidate_lock_shared include/linux/fs.h:873 [inline]
+> &nbsp;#0: ff110000102f0f58 (mapping.invalidate_lock){++++}-{4:4}, at: filemap_fault+0xe80/0x2ec0 mm/filemap.c:3323
 > 
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> 
+> =============================================
+> 
+> 
+> 
+> 
+> 
+> 
+> ------------------------------
+> thanks,
+> Kun Hu
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
