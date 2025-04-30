@@ -1,45 +1,69 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D982512D9;
-	Wed, 30 Apr 2025 12:36:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECA423C384;
+	Wed, 30 Apr 2025 12:37:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746016586; cv=none; b=SeJXoA+1sNLJaIchCD8IQ4y3UKZFCXoRNzCO+Jw/tu05annWG2vdf/FAyPnIOtnDWznH0ciILJtwkJHZWOnaebE6QVDZzYeFdYLkDZJ6Ue4pS+efuHkUlwX1SYhMiHk7BshmewUVDa9AwXgRoSJrwiFmjxcEnpFGNg8v4OqdgHo=
+	t=1746016674; cv=none; b=fkulgRzdECW3xpyUcegeIeQOrcJAQnpByX7sUYhpO4R5r9daEEwUttz6CFqnR98sj0viD7M3aDq210DHRTw4neK9V2rSTrebvyBnl6kU78643GOsM9U3yDUfZ+xB5Nldh4znrPkgGi0KyvtW4tIE8oWQhQjc9Uq1u8vw5uXzQdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746016586; c=relaxed/simple;
-	bh=cFbq5SIAJSv/xT/RKflh4/UM5b0ozJSrJFYHMFaCovY=;
+	s=arc-20240116; t=1746016674; c=relaxed/simple;
+	bh=rmRQ5wp4uWHdfYSKbJ9Aw4PRmQnVzVOzB/ll2+935kg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QkoS4bXT2tU7j297X9UP6fLk3opG81HbXKpNxkXeP0Z8jRZoZymvxC+N/y7uudSIoYmPGD18djezEOuTeLJbXdLAAPSKS9NzXIyulBtWi6vMU22nUwtY92RE72RD8VKQEjvwm+eWYUtVFzbOw44aE0phULHfq2fS1iIB3BUjMko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LkxAW8Sf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RorjeP010vDLtUWJN0z1DE8B2ZAtxiYPK7yv4K/qWUVEBAvZdBufGO3VE7KqWc0g9qW8c27ukbowI+/nx6dhmg1l8uGhdNAbcWfNyiMlN5tRorXkGUrUAsyEw+JA/K3loCO3CsglFSNHCxzeHMvsGkvzYyvkMf3tOO0B0UtfHFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eqGDlESL; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LkxAW8Sf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6570C4CEE9;
-	Wed, 30 Apr 2025 12:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746016586;
-	bh=cFbq5SIAJSv/xT/RKflh4/UM5b0ozJSrJFYHMFaCovY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LkxAW8SfNjoe0pOWwdeeSofPgim9CHvUArIh1cA/nAhejKIVEYbnNbBQ5VASnCZaN
-	 kBZeFBFIbw9tRTEuwJckaqa3jiBtRcUhFid1XOmhxzg8iHRhdrnAkC6YUpgrlydLG0
-	 7hAZh0Z4no44Ir6zhHJqDxS8WomAusicsZ9fB+1zplnWs2deEghn3YxKi81pCGd451
-	 0Sbt4HvRyOJKc16aAChJ/UkrU2J3CflzUtcZlP/aQgQPc6PLqXtlzE79V7Z2rVRqj0
-	 /3cLw6j2xenXYFouRSUInqfmk9b0meKnOYxa72y2HKPA3IazAGxwwZaGf2qyJwg4sg
-	 g1Mthd3QqVQ6w==
-Date: Wed, 30 Apr 2025 14:36:22 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Greg KH <gregkh@linuxfoundation.org>,
-	Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] rust: alloc: add Vec::insert_within_capacity
-Message-ID: <aBIZRoGo5J6_rqo3@pollux>
-References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
- <20250429-vec-methods-v4-7-dad4436ff82d@google.com>
- <2025042925-kindly-squash-fa6f@gregkh>
- <aBIIZ64_Wsk1unB2@google.com>
- <2025043045-overbuilt-swab-5b65@gregkh>
- <aBIUUs4AWTII2bcO@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eqGDlESL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746016673; x=1777552673;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=rmRQ5wp4uWHdfYSKbJ9Aw4PRmQnVzVOzB/ll2+935kg=;
+  b=eqGDlESL5Decypu04638ZXZ7KqVcy1JacNbK5Y85TKGItjfJ/+W+VcT+
+   cSGWFlbpQeUgrhgGGJ02XMh2K/KoE/Ll0NWUEHKOpdBjGUCI4I6/wzJmX
+   ixjNNSphYqSLhgM6TMGkQH1b+szAiWHbXWl+Y1e2e0nFD05ztZ4gWkTsq
+   hh9elDu0WxZHDQrJFDVHQVwW/UDF4/oy+KeVLyqHW/RnW8UdIGoFfbXyC
+   J3Ax5HnnRkxd9My81dNTEDu87Vb/CVR76l+KXGjoPVThxv+9sAMsofVj1
+   6YWc8UIkti8C3+DZwXQJ2yRhoKf8VlqT8VeX9KxJ0/pUg7MtnPJD/EKiE
+   w==;
+X-CSE-ConnectionGUID: ZoGXnscFQYmmuCBtwDLfEg==
+X-CSE-MsgGUID: z2H349ucT26yyghLYROj8g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="57871563"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="57871563"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 05:37:51 -0700
+X-CSE-ConnectionGUID: wXPnGUn5TAiSCGg5KbQ4rA==
+X-CSE-MsgGUID: L3VajdjdRiSkd46fIlKQSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="134414365"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 05:37:47 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uA6h6-00000001cry-1QQ8;
+	Wed, 30 Apr 2025 15:37:44 +0300
+Date: Wed, 30 Apr 2025 15:37:44 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	Weidong Wang <wangweidong.a@awinic.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Eric Biggers <ebiggers@google.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Zhu Jun <zhujun2@cmss.chinamobile.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ASoC: codecs: Use min() to simplify
+ aw_dev_dsp_update_container()
+Message-ID: <aBIZmC6ax1BUuS_L@smile.fi.intel.com>
+References: <20250429071032.65391-2-thorsten.blum@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,57 +72,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBIUUs4AWTII2bcO@google.com>
+In-Reply-To: <20250429071032.65391-2-thorsten.blum@linux.dev>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 30, 2025 at 12:15:14PM +0000, Alice Ryhl wrote:
-> On Wed, Apr 30, 2025 at 01:39:03PM +0200, Greg KH wrote:
-> > On Wed, Apr 30, 2025 at 11:24:23AM +0000, Alice Ryhl wrote:
-> > > On Tue, Apr 29, 2025 at 05:30:06PM +0200, Greg KH wrote:
-> > > > On Tue, Apr 29, 2025 at 02:44:27PM +0000, Alice Ryhl wrote:
-> > > > > This adds a variant of Vec::insert that does not allocate memory. This
-> > > > > makes it safe to use this function while holding a spinlock. Rust Binder
-> > > > > uses it for the range allocator fast path.
-> > > > > 
-> > > > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > > > > ---
-> > > > >  rust/kernel/alloc/kvec.rs | 39 +++++++++++++++++++++++++++++++++++++++
-> > > > >  1 file changed, 39 insertions(+)
-> > > > > 
-> > > > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > > > > index 0682108951675cbee05faa130e5a9ce72fc343ba..998afdcde47bec94b2c9d990ba3afbb3488ea99e 100644
-> > > > > --- a/rust/kernel/alloc/kvec.rs
-> > > > > +++ b/rust/kernel/alloc/kvec.rs
-> > > > > @@ -355,6 +355,45 @@ pub unsafe fn push_within_capacity_unchecked(&mut self, v: T) {
-> > > > >          unsafe { self.inc_len(1) };
-> > > > >      }
-> > > > >  
-> > > > > +    /// Inserts an element at the given index in the [`Vec`] instance.
-> > > > > +    ///
-> > > > > +    /// Fails if the vector does not have capacity for the new element. Panics if the index is out
-> > > > > +    /// of bounds.
-> > > > 
-> > > > Why panic and why not just return an error instead?
-> > > 
-> > > It's for consistency with stdlib. Illegal use is panic, expected error
-> > > conditions are errors.
-> > 
-> > But this is the kernel, not userspace :)
-> > 
-> > As you can return an error, why not?  Rebooting a box should be a "last
-> > resort" type of thing when you can not recover from an error.  You can
-> > easily not overflow and return an error here, so why do you want to just
-> > give up and cause all data to be lost?
-> > 
-> > And I don't see any other panics happening in this file, so would this
-> > be the first one?
+On Tue, Apr 29, 2025 at 09:10:13AM +0200, Thorsten Blum wrote:
+> Use min() to simplify aw_dev_dsp_update_container() and improve its
+> readability.
 > 
-> I don't feel strongly about this method, but it's not the first panic.
-> The vector type has an indexing operator vec[i] that panics if you index
-> out-of-bounds.
+> No functional changes intended.
 
-This is because core::ops::Index isn't fallible and even if we wouldn't
-implement Index for Vec, we'd get a slice through Deref, where it is exactly the
-same.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-In this case though, we can easily avoid the panic by checking the index and
-return an error instead, which is what we should do.
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
