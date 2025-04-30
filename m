@@ -1,73 +1,69 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EFC0209F38
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:05:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5FE1E4110
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000323; cv=none; b=nRu0va55djlAqARiwa9KwfUQYOqawr9m6HrEpP+Ui0b63yzYhjzAnOJ8hhMDxWNvGQ3b8dWG92Ma2jqF1XmRy6AyV8ihd7OgO7QkKEqSijlKoRSCa+BeOHrf5tyh7cU+aQu7hbSUp4qv2e9z/NI86E107rfyBflUwzLQJZpmBbA=
+	t=1746000351; cv=none; b=B+Z0hjOyjuZD3hdkB1IoMlMzMTSVIEmcFZeSmDwBvhiJ6UlakCyAeMyZfkEd1dCIa00AKtgvQTz+h0IweqVEydUXmjFa541WEUN+GDFB/EUK7Uy18zaQU2/dWs1s+//Kdba126J3ITJ9xi3y61j3OJiFU6v/3wJekybEgm4CVkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000323; c=relaxed/simple;
-	bh=kH6E+aEGNz9CP4yhozHj1ifZzwFtPtUsQEfaB7h5NBE=;
+	s=arc-20240116; t=1746000351; c=relaxed/simple;
+	bh=ZqvHfDFGxrFXdLJ27WXdmU7pM11pkbcxNPujmSlum4g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=GpsM3vHjKd0yzQJvDqiI7rw7AznqQq+oUnLAfbJlC2ekKCa8bQkll/HDr3XpaW0Pknodfq8akcCp1G/9w9rRa+Tu7emzjltVAMA1GBgAL6LGTssdwcNdL//fJ2qe8KZIHIrjublbIcKayUuATQA5GVzN/EeVYSZHwz/fgsYBs+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=teLTKoZ6; arc=none smtp.client-ip=209.85.128.51
+	 Content-Disposition; b=PkPNxz5+2MCP53d87TTbzWXpwGlAWlA0rKtofWMlMFkdz33KXmKUgmc5w6vClZ06zketdrBh9nSPDpAqJIsIVmMLa4GXqdx/w9CiUmsL8F+gzBMmFgyXF+bdygQzs+rIWvAiShiq9Jb35m9NFX14vCbu3l+V7FN4tJtUqAn9aLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y+iB64BH; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="teLTKoZ6"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf848528aso49558115e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y+iB64BH"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso47505955e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746000317; x=1746605117; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746000347; x=1746605147; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qD6CtIO/TisXjPtHYMRMSY8vPIJC8aCPMTopK7WpI/k=;
-        b=teLTKoZ6F0L64azdy0zdwLz0qDsa5mjz3OOL5FTmAAA3Rfv7ksSTbWiXtxXctTQNcX
-         orVGgySifXLhih9c4d+bRyyCwgAYlUsHVv/hlUutHHx8q4gjl4AswwJwWZ5u2VJPzw0r
-         7cRebwhzU/2ISFeQM46D4Q/o6n28YZWbR66GlCeDwhpT2fTYbEJbaqNQUDBLMjJA6lQH
-         UDAVIii3+uYUKr5EwDTzntlDB0rsVib55Vs0CEP95GK9JuoPz2k9AbYXLhtpyAW+ZNnJ
-         64OjagBmXuEWYLjFpVOAlNE/j1ko/Uhz6uGU1X+f+w3by24RHwz41mrgVoNro5hu9jsq
-         4RXQ==
+        bh=fqWvU5S5lLe8ZShiLr0+11SRPt/eXf13R7SasBVI7Sk=;
+        b=Y+iB64BHp3do9RGctvWSKL5JTVoEk07Gt4MxTNGwIXgfHUmid3wH2LfD1oltt/Q+X7
+         TdXsZOCmFYTWOd9xqsxvoti0DJUdvm1oMStYb9LecSkQbgiQl6AuvtdKqaKaCzK4gwFj
+         knzsuP8bhNvrpq4gmIUYvLq7jtH6XA3bkR8hxDBLPts9V2ffXbaJMcDEr2Jxfa7wuJVD
+         biMrKtHlGjMF/SPI4wArVeak52apkJ5iSOTOFu9Q7SXa6HAFDUH4hIj+I9c+O1Q2S2wL
+         uRMcLidSAIxeEUfhD4JHP1slnWrNFrILL5J24VFzS5noV8loAw4jTJdppR2R5OEOM2d6
+         927g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000317; x=1746605117;
+        d=1e100.net; s=20230601; t=1746000347; x=1746605147;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qD6CtIO/TisXjPtHYMRMSY8vPIJC8aCPMTopK7WpI/k=;
-        b=SScPbt5kEwtCZbHg4quIXAgUpumwTaa9cRLin8dXEaE4JQtIv1nGDqS5JB0D90fVAd
-         Go7R6mcWRFh0FRoYxf5GIKQ/5frGbmOAHg/ThDrEh40iEZdcqyFndFJRpN/bCBIBfVi1
-         3O51UDuvdgS/titttXvXO4qEIdW3jQoB1J4K+pu6LJavnYpqr2tNsYY+3NNfjb7WT9Hd
-         jNJsVkmBm1/8yztndolYJfAtfvVQrsf7/CfAjQkDmgnJkHD34Iit3x7kTmSiYPEbGFdb
-         0LH8AQa+BDpDLyqK0yRhp8cWz0uuhXSkcOxp3ZdPfKFAJljQDT2itc8CuG0zKcBgrVbL
-         pHNg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMq4WUCIC9dS3DOVe2rkwJgyLgX5WY4/fclc/C46WPhdUeBwy2JRgh4C1pHX0s9GFqY5l2KIim9xi4fR4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsCbfVazuCPsL/8qghFGEY7WoqWSrkEbVGukIsVVyGatYXeh7W
-	Fuh2EZqHixxQ2GuROZb5gBZCthl9L3xafOR0GAL7lbV902sMbEy9MfUSEIqDeqA=
-X-Gm-Gg: ASbGncstdy4Z7PELMQv8S4YUApfmkQDN9o3f+IB32PVA3KfGa+f8GbQo8iU+X6e9+2n
-	QxB2qXUM2kUzo9wv8dO9XWMlsm+FrBYscBwW+o4+wqP6goyPZcyGZAiUkd5LrVxv/HMi6mMud/n
-	7qeUO3WZxitS4YNvkHxfAzu/YqH+MPT+OIRcwciJNKf7XnqkxKRe9Qwt8PiId9GOkxSUYSDriCk
-	VfwUDwcvq6qgttFKDguLL9PUY9h5axAgch9+osceILZgrAo/vy+g2RbpaFsqp0bunkYs9N+YDZS
-	HagYHdMr613G8MUxZ+TuzzssCennQDxH9i4t9uA5OgOcHg==
-X-Google-Smtp-Source: AGHT+IHdEtFR63Z6oiW9IVvngwXx6ZQiZzLOjAXgoM9uBkm6EKIWAveHvb1hm/cJiMmkSf12Z002jw==
-X-Received: by 2002:a05:600c:c054:b0:43d:300f:fa1d with SMTP id 5b1f17b1804b1-441b1f5fffbmr15536155e9.31.1746000317302;
-        Wed, 30 Apr 2025 01:05:17 -0700 (PDT)
+        bh=fqWvU5S5lLe8ZShiLr0+11SRPt/eXf13R7SasBVI7Sk=;
+        b=oHALdrUHX2RFMOifBVHzyXPZ/a0KFnraI/uj5ORjtgdGEMUryN1S521+zH2kRpdZQm
+         6lh2HkocXgQdUZpiUkMqsVSyyw0d5xxWq7jSvJQ3MtTd1UbAfn/FjCEf45fm8STOv1aF
+         f7Qd11m+1QfNCxVLcNh1c7W1iTenZ23aCEMgdRNbBAlBBxLYLjGTaQlhgYetUNYEM0es
+         lMOM3EEgS/m0fAZG2+EFA9hdfgS4H/VXFxuLkN0KSysYVuO55gS3s+RP1I5NtSOPgql2
+         mbqhzTHwRQt6UGo8MJaDWp1Go2+J+yxQ/77HtEZO27du4ayLmUPBEPLJUpNUTsFtGl73
+         7X+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXUteERVEp0rCoYQ6GuJ3YCZTWifeHb+yRblotHDvVmvYvAH5R0D5dMyzJOXTJS23HbAneN1O8MUrJTW3w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxBnOTHmEGqRVdngu8Q5R09wIDbs6JsWNJIiz0e/fjbY6yh3rDq
+	uwoYYvphUG8OURUNb7+HHRtf/g+Cxo9rFzUIZ9zbTKndV+f8gg8qM3b8az1rbvYuXYynWYAkmN8
+	v
+X-Gm-Gg: ASbGncuS43ouazt463NfnM4Wo4ZdMQiUtTJ5uJxKZPaBLaCFnUv1Hsh0LcNoYGhAyi/
+	1NAqCiNges7bOx3E6eq9zxC4/PCRxSXjN2s3//q8DBKeU3zxP6OVByn8aFeA3NZDNSMCW6dGaMI
+	v6qXTA0HnYGdWHjQekfbAOYg8G2zEAnLgS4mW8bfUtYP+AgLr5T4gTPuHCJ7ApYpArshcIookVO
+	AtFG0GYVe37spQeXTtTSXv8Q8fdAUPHlCyOTexFGAROdWa1WYA2aGaGN9VFxyrKGtlktVyz4OfJ
+	m1D7wY9KD+WXZs6IwBIJ0wi10v7ySa2UEXte04qPQdVUvA==
+X-Google-Smtp-Source: AGHT+IEDP4j6PWm+SFGfBw5+tbnB8EDT0CQ/gUZjNaKthvdfQEhiUCvSW6a6RsNFm+kY0bY0w89Lqw==
+X-Received: by 2002:a05:600c:5246:b0:43d:49eb:963f with SMTP id 5b1f17b1804b1-441b1f5bdb0mr13183955e9.24.1746000347523;
+        Wed, 30 Apr 2025 01:05:47 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2b20c3fsm15479405e9.28.2025.04.30.01.05.16
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2bb3f34sm14911025e9.19.2025.04.30.01.05.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:05:16 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:05:13 +0300
+        Wed, 30 Apr 2025 01:05:47 -0700 (PDT)
+Date: Wed, 30 Apr 2025 11:05:40 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Alex Deucher <alexander.deucher@amd.com>
-Cc: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Shashank Sharma <shashank.sharma@amd.com>,
-	Sunil Khatri <sunil.khatri@amd.com>,
-	Arvind Yadav <Arvind.Yadav@amd.com>,
-	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>,
+	Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
-Message-ID: <aBHZuejTTKkdnGaZ@stanley.mountain>
+Subject: [PATCH] of: unittest: Unlock on error in unittest_data_add()
+Message-ID: <aBHZ1DvXiBcZkWmk@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,27 +74,51 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-The "ticket" pointer points to in the middle of the &exec struct so it
-can't be NULL.  Remove the check.
+The of_overlay_mutex_unlock() was accidentally deleted if "of_root" is
+NULL.  Change this to a goto unlock.
 
+Fixes: d1eabd218ede ("of: unittest: treat missing of_root as error instead of fixing up")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/unittest.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
-index b0e8098a3988..7505d920fb3d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
-@@ -631,7 +631,7 @@ amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq_mgr)
- 			clear = false;
- 			unlock = true;
- 		/* The caller is already holding the reservation lock */
--		} else if (ticket && dma_resv_locking_ctx(resv) == ticket) {
-+		} else if (dma_resv_locking_ctx(resv) == ticket) {
- 			clear = false;
- 			unlock = false;
- 		/* Somebody else is using the BO right now */
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 64d301893af7..eeb370e0f507 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -2029,15 +2029,16 @@ static int __init unittest_data_add(void)
+ 	rc = of_resolve_phandles(unittest_data_node);
+ 	if (rc) {
+ 		pr_err("%s: Failed to resolve phandles (rc=%i)\n", __func__, rc);
+-		of_overlay_mutex_unlock();
+-		return -EINVAL;
++		rc = -EINVAL;
++		goto unlock;
+ 	}
+ 
+ 	/* attach the sub-tree to live tree */
+ 	if (!of_root) {
+ 		pr_warn("%s: no live tree to attach sub-tree\n", __func__);
+ 		kfree(unittest_data);
+-		return -ENODEV;
++		rc = -ENODEV;
++		goto unlock;
+ 	}
+ 
+ 	EXPECT_BEGIN(KERN_INFO,
+@@ -2056,9 +2057,10 @@ static int __init unittest_data_add(void)
+ 	EXPECT_END(KERN_INFO,
+ 		   "Duplicate name in testcase-data, renamed to \"duplicate-name#1\"");
+ 
++unlock:
+ 	of_overlay_mutex_unlock();
+ 
+-	return 0;
++	return rc;
+ }
+ 
+ #ifdef CONFIG_OF_OVERLAY
 -- 
 2.47.2
 
