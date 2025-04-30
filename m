@@ -1,111 +1,176 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C471E5B72;
-	Wed, 30 Apr 2025 19:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC28C148;
+	Wed, 30 Apr 2025 19:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039849; cv=none; b=imxth6R2qyzTdRWbwRFYSaCPvs5GdEJ1FdjsBAA2vve1Ytb9PT0NGNpg95SNxf7YcqcYTIYhLVrD/KVB9dn6S8HXw022uD/FOjm6xEolSPzyPhsJzH7Km0BsGB1hL2SISwxdI2sEGXcSNM2YbYqrmnviI3fVm0RpDkxHjcsZsHQ=
+	t=1746039860; cv=none; b=FMqfTaDHWpeIAY3CBEMNeNbKcYj8xeu8nrpUxII7YMcmyvs6l2rR3fvw5mWzzilpUc+N8JFUwRkiJurJQl9ikiMoWJDJx+aVMhqKXp+deW12GJoHSVWsegJUcxAObXQAXk5f0A2VAIQk9/7IXAdrbWafeKQOgPdbp90CzBEZXB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039849; c=relaxed/simple;
-	bh=bOBmZCaLio3PHDE+590GR71RKxO0IpILYud+NalfUIM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LPhqWZgF0f+W4hNV4eAcPtl0uPqgzR2+oeJlTZfYQdpXUR2f2xH7uZkJAivqymSWvtl9uThit53k5BDMP6ZpqcuJvy64E7ZlRORg6hNnsYYUvCiT4gxGdSCCkq9molLUojHnxRA42I0AdQvYBRqpv0/np1BVi+Ft1ze3Wyg5ZwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=MDUNzwBh; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1746039860; c=relaxed/simple;
+	bh=JWb9fA4/pTm7XYbZ29bvLGeMmP6Yjmy55Ye3Mdy8qpU=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=mrOKFPVUUeWb/S8Bb4Z26rDraEY0yC34+SpVdBa5d5c2YVFBfFJRWQkLE+e7ZmidAd9O4noTBDfCCqXPiVdnap4dnkPDe7Tw0fArc+AsHDH8/5ihoeawyrOF+EAwaZau93xeji8my7f3fK1lRZo7bbLGDFNC6bRhKjj2r4fbTx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TqgO00p3; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="MDUNzwBh"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0ADC040E016E;
-	Wed, 30 Apr 2025 19:04:02 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 0Kd9ex3xfqLx; Wed, 30 Apr 2025 19:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746039838; bh=+rv3dT2lLM2mlZEzzsl/PKBPs96f8bVorTvl3aSIvFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MDUNzwBhEJNpVRa6Pjbzt69dqzY0+u3WIR5AbJxRDpsBKFnd84gJxkWWt6UjmSrAv
-	 1WpdnwtyD0OlxAnVeo6QJX2v2QD35sqKzjvK23vSCtlXz9wd7SQgEyQ6poggrXx4Ec
-	 qUG1esugmdh35YTuRSE78Cuw+WiM3/CGvJ2OP+j2LkhF6SzQUh4WlduKSLrpaG9VCT
-	 SUzbg/eo/iBtMybwz5j0bxUU/TklCbahl3grll/GL4ek//azWIK9jnFE/jj8goCQup
-	 DxU+KMuBi0/uNzqcxsJpzlRl1wR6g/7vEbO3bnH9gpdqjju97wSBUlNRgthhR4zD6q
-	 4uUWxassVblDG5zdscHr5q0lAFF+sjMnzIH3pe/VLcQqVM7Ts0ImJKkFYYcPIiWF0E
-	 kGQL09up/r5XroowkUqqVqBtBK8c9X11DLU1TLeviO7gKI3Q2lpTw1N9PhjxZkmp2p
-	 LbWxYwCZ5sSk01tjOqalIh10kX5lJlfEoL8QONuZWEsSJb1zBrmlPzKJV0kFD8bTbR
-	 tAW1sYH3HQqwLRty2hOXWXWE/P75OaNRrxjqSXVJMmpsF6Kifkp4vUeIAU4B/WkqEJ
-	 EChipTFg40CadzaSz5hUzlHapGFZU1xs/Y8e0FK0pvEciyqMj2HHEcoG+cuZhm8zap
-	 wVojmU9M/5bKUDEw1xmnr+o4=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E4A0A40E015D;
-	Wed, 30 Apr 2025 19:03:39 +0000 (UTC)
-Date: Wed, 30 Apr 2025 21:03:33 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Andi Shyti <andi.shyti@kernel.org>,
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Yazen Ghannam <yazen.ghannam@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:I2C/SMBUS CONTROLLER DRIVERS FOR PC" <linux-i2c@vger.kernel.org>,
-	"open list:AMD PMC DRIVER" <platform-driver-x86@vger.kernel.org>
-Subject: Re: [PATCH v5 5/5] x86/CPU/AMD: Print the reason for the last reset
-Message-ID: <20250430190333.GIaBJ0BWuMdZ1KNVQ7@fat_crate.local>
-References: <20250422234830.2840784-1-superm1@kernel.org>
- <20250422234830.2840784-6-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TqgO00p3"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c5e39d1db2so9092285a.3;
+        Wed, 30 Apr 2025 12:04:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746039857; x=1746644657; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oyY5YMQOyCq9kucbKedI/MA55x5l77eYwgsxeL/I6SU=;
+        b=TqgO00p3z74hZyM53ywjEBQxuoHcF2ilTG9wKZkyWQpif1qWc9yTebu/TI4CDIFSpZ
+         n83Pw+0Q6J0ygrlCbN4Sb5f23H5RPE+5Piw+Hi1KTOQuKr9R3YTBMh5Qi0+9JNAF+SiS
+         KAaiKa/8Z90EcMu3xOMvmpCOEXLQEkswokbBs1psvldKbrxq7pNpYyaB76ArdgV8xR67
+         74d0EVTjbLWLNXf82CxQQs+fUahTyfaGjGu7Oatgd30WwB5m9Q1GgalfoueIds3pDGyV
+         Pr2P4ewYJEQdS1l+a0C50ZOKG6u4Wvxr41PZXLDPbpvh93w0qvOg/MlDg0xw2AOXd/6e
+         58FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746039857; x=1746644657;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oyY5YMQOyCq9kucbKedI/MA55x5l77eYwgsxeL/I6SU=;
+        b=DbJRgMWIS9Wp24wf5bIdttheFCIWkbRuLkHbX9Y5Ebte7KEaOFyIJoN6cfHrW8jw/L
+         +tmM+zVGb1sUf5ORfbVfon9x8zcFdc2z8IuugdJgoiYcM7FZ9oYOmuthWr/4YJ7ZlAiE
+         1pyvzMnYNnaKpWaHTFydI4qqEvbJXLWaDs4KuQDntpOg/O5Yfr/10MfIwvUgXU6cRY+M
+         GYccGEul+0kO//efEIrtrz6a5+PCfDyG0WtmAN6mqmVYuW/a0l/Fue/JI35hpy57RJGp
+         XQZM0MoQb6bWIv4q4kb7S0xE0FwBaxSMBeSFoUrl0rnEQhpvdT4cs/SjRzwufLCcumQl
+         tjCw==
+X-Forwarded-Encrypted: i=1; AJvYcCUo1krrIohHfWs0Gpzed2kMlZ1Lt19MYMXZ3WvYvxSJtUnX5dkvTmm303EFGsGRPtHigVS2YKbg@vger.kernel.org, AJvYcCVomyZmHzENLTn8e81+H4wnvcTUGOXJIVczQsdwSFKE81Ffx9CpP0l96be+gSnONfC1Jn8=@vger.kernel.org, AJvYcCX3fhiV0kOK+JCA5kz79yYDfpnNN5l9ZFq2da2USAadop8MVrGQNAJ/ABOikSQYZeA8RChX8SQiwPCWsR8b@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHUhwrtCgVD63/3hJmyDamyOZD6EXKfjgftNLgoCXOWR/u/OWG
+	fOncWWaZtR+m96+f7rB4K67s7jAPyDMCYrfEEDmtg8h6aQm7nUlHiIlQ/g==
+X-Gm-Gg: ASbGncvOw46pcCf10nPmi4fLqldntmGABcx07rbdhDCIfjce+YDbxbQZdNIwx0u/jpt
+	bZDt7B+BaCRQjo4rJWYISW0/fC+1S6thZNkEW5waXAmV58w87Zy4deycnB+ekrkJnU4CJdJDk4y
+	tovl3Rx68JnpAzgSwtSR7TBHT47Sk86Ld8TrmjZC0gBmqtouT6MiwDUyO0l0ZHdIvF+ARMfyuKt
+	7Sl70rOZ/txZRdy3rdhUtq9du40sv1nVk5kaQUMpnWtyyy7DDInBFBS6ehJWi5NpRZ2XpOhubHw
+	N/IAAt7r7rfHnTIeMBpbLTIoQnu5+iRlPovmDs5+OaYvejMJ0xQOz1CTCw1Ewmo9uu/LgFpzZVE
+	JGReLCN3U7hinvFbexYvM
+X-Google-Smtp-Source: AGHT+IE8g0ghP0kLYsq60LgowZeWzqEGMs36Vg84EHLTQr0YwSJ9Wq869sRRrf6f2swFvGa6gkshfw==
+X-Received: by 2002:a05:620a:2482:b0:7c5:55f9:4bb2 with SMTP id af79cd13be357-7cac760a9f8mr545706885a.22.1746039857119;
+        Wed, 30 Apr 2025 12:04:17 -0700 (PDT)
+Received: from localhost (141.139.145.34.bc.googleusercontent.com. [34.145.139.141])
+        by smtp.gmail.com with UTF8SMTPSA id af79cd13be357-7c958ea0a01sm886102885a.102.2025.04.30.12.04.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 12:04:16 -0700 (PDT)
+Date: Wed, 30 Apr 2025 15:04:16 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jon Kohler <jon@nutanix.com>, 
+ Daniel Borkmann <daniel@iogearbox.net>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+ Jason Wang <jasowang@redhat.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, 
+ Alexei Starovoitov <ast@kernel.org>, 
+ Jesper Dangaard Brouer <hawk@kernel.org>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Simon Horman <horms@kernel.org>, 
+ "netdev@vger.kernel.org" <netdev@vger.kernel.org>, 
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Message-ID: <681274309ee3_30bc5e29490@willemb.c.googlers.com.notmuch>
+In-Reply-To: <2EB0DFB0-E12D-4FFC-89CF-CF286A9CF8E2@nutanix.com>
+References: <20250430182921.1704021-1-jon@nutanix.com>
+ <68126b09c77f7_3080df29453@willemb.c.googlers.com.notmuch>
+ <a6a8625c-9d20-48eb-b894-7bd6673a16d3@iogearbox.net>
+ <2EB0DFB0-E12D-4FFC-89CF-CF286A9CF8E2@nutanix.com>
+Subject: Re: [PATCH net-next] xdp: add xdp_skb_reserve_put helper
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250422234830.2840784-6-superm1@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 22, 2025 at 06:48:30PM -0500, Mario Limonciello wrote:
-> +	/* Iterate on each bit in the 'value' mask: */
-> +	while (true) {
-> +		bit = find_next_bit(&value, BITS_PER_LONG, bit + 1);
-> +
-> +		/* Reached the end of the word, no more bits: */
-> +		if (bit >= BITS_PER_LONG) {
-> +			if (!nr_reasons)
-> +				pr_info("x86/amd: Previous system reset reason [0x%08lx]: Unknown\n", value);
-> +			break;
-> +		}
-> +
-> +		if (!s5_reset_reason_txt[bit])
-> +			continue;
-> +
-> +		nr_reasons++;
-> +		pr_info("x86/amd: Previous system reset reason [0x%08lx]: %s\n",
-> +			value, s5_reset_reason_txt[bit]);
-> +	}
+Jon Kohler wrote:
+> =
 
-What happened to that simpler idea:
+> =
 
-https://lore.kernel.org/r/20250411125050.GEZ_kQKtYBfEMDQuXU@fat_crate.local
+> > On Apr 30, 2025, at 2:40=E2=80=AFPM, Daniel Borkmann <daniel@iogearbo=
+x.net> wrote:
+> > =
 
-?
+> > !-------------------------------------------------------------------|=
 
--- 
-Regards/Gruss,
-    Boris.
+> > CAUTION: External Email
+> > =
 
-https://people.kernel.org/tglx/notes-about-netiquette
+> > |-------------------------------------------------------------------!=
+
+> > =
+
+> > On 4/30/25 8:25 PM, Willem de Bruijn wrote:
+> >> Jon Kohler wrote:
+> >>> Add helper for calling skb_{put|reserve} to reduce repetitive patte=
+rn
+> >>> across various drivers.
+> >>> =
+
+> >>> Plumb into tap and tun to start.
+> >>> =
+
+> >>> No functional change intended.
+> >>> =
+
+> >>> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> >>> ---
+> >>>  drivers/net/tap.c | 3 +--
+> >>>  drivers/net/tun.c | 3 +--
+> >>>  include/net/xdp.h | 8 ++++++++
+> >>>  net/core/xdp.c    | 3 +--
+> >>>  4 files changed, 11 insertions(+), 6 deletions(-)
+> >> Subjective, but I prefer the existing code. I understand what
+> >> skb_reserve and skb_put do. While xdp_skb_reserve_put adds a layer o=
+f
+> >> indirection that I'd have to follow.
+> >> Sometimes deduplication makes sense, sometimes the indirection adds
+> >> more mental load than it's worth. In this case the code savings are
+> >> small. As said, subjective. Happy to hear other opinions.
+> > =
+
+> > +1, agree with Willem
+> =
+
+> That=E2=80=99s a fair point. I was also toying with the idea of somethi=
+ng like
+> this instead:
+> =
+
+> e.g.
+> xdp_headroom(xdp) =3D=3D xdp->data - xdp->data_hard_start
+> =E2=80=A6 similar to skb_headroom
+> =
+
+> xdp_length_base(xdp) =3D=3D xdp->data_end - xdp->data
+> =E2=80=A6 similar to xdp_get_buff_len, but doesn=E2=80=99t look at frag=
+s
+> =
+
+> then we could do:
+> skb_reserve(skb, xdp_headroom(xdp));
+> skb_put(skb, xdp_length_base(xdp));
+> =
+
+> Names TBD of course, but thoughts?
+> =
+
+> That way we keep skb_reserve/put just the same, but have
+> a nice helper like we do for skb_headroom() already
+
+I like the idea of xdp_headroom and xdk_headlen, similar to
+skb_headroom and skb_headlen.
+
+
+
