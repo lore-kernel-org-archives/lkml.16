@@ -1,176 +1,136 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6457C1E9B0B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:58:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DD57E0E8;
+	Wed, 30 Apr 2025 07:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999921; cv=none; b=ung97aREuXXPN0rPpJQkJrEIXL/mlC9xhEiwaJRwsn38VnLEjZcW1grkBX4nsNCyKpaWtibCxsBaS3p5UY4Soy4qls7HpdjzLXY4kLf73N4Nn94vZclohWdy5r7f8MWyuNa5RC8hbGjAmvZYP3AFg08E51EBgAds9ML+4CML6f8=
+	t=1745999936; cv=none; b=ZF4OkJiSBnNqDkwbuDYG3G0Qn4XPa686whil2zh4FJ9cjDJSjKiTQifq29pPZDiXSfFXeLHLJHcHme/ejvWzzwHnwHNrK+Im5azgp43qid/ke5oAyRSymQ45qVG1DM2ztEh9WVGre24bfC55JNrroGw+jE+LpWhBSSyHHrOc42g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999921; c=relaxed/simple;
-	bh=A5bs3Y0HgnKMZO9n6N0qe8Dj9r0Ew2s+T0UNo6/pnOU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gyTCNCuZCKf2jhIAj7TaX46Wpcd0SeObysfm0e3cZckf/Gj7OsODKyS0CyFKIaSsfCb/eY9eyWsET/AdGbDqB0XrZJlEzNgiHL7uch4JWwNE9EU27KUKWuUSI3Vp24a3nFs3LVs3QTelyEFbutXAVzRHzWJNPx2Js6iKV5lE0zE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yz/8EJox; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R5NEXsyn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yz/8EJox; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=R5NEXsyn; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745999936; c=relaxed/simple;
+	bh=cFRX/7ymuu4ViXj4PKPJ9YpybId6+ipgWQoROgASOJQ=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=k1tSO8sisFdkeOxqJYkpa9xQw83DEdUnlxl2c18MSVAnePclXSCa4uOoyqvp75ZFTwo1J3E626T+dnMbIkerqAselkP4oLRV9iX4ehuTJKjCO1XY3BWcdqDrp086AtKJ7OU/t10vY+cfS6i1ggaz/0hQhzGzAeeJwP8Op+/D6e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azgecay1; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yz/8EJox";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R5NEXsyn";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yz/8EJox";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="R5NEXsyn"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7633D1F7C3;
-	Wed, 30 Apr 2025 07:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745999917; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K+M0v88wXkTO2lfW07pgxE5E1/OLEgDm+uJTK9nmId0=;
-	b=yz/8EJoxTd6DvEU+JcHbFqvWeP7IgDWih8frOXqGghRnE/VQPlcNXPr7vlDWJav7nODC0x
-	MGFpeVCeyQ7lF4l22EGW28vzISTN0pvvr2JfxFZhMUKzovRvI3B2ioi0o4/bZJh1bghJ1a
-	bTFNx9GxBWngadWdHOg1LecNwNRWVWM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745999917;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K+M0v88wXkTO2lfW07pgxE5E1/OLEgDm+uJTK9nmId0=;
-	b=R5NEXsynJ53+34V2g4jOsXv0bPItofkgVGow2tQZV7g4U1KiMX67x/EksZ/2U9O/2ehm77
-	5q3SIHs/EzgfPKBw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="yz/8EJox";
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=R5NEXsyn
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745999917; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K+M0v88wXkTO2lfW07pgxE5E1/OLEgDm+uJTK9nmId0=;
-	b=yz/8EJoxTd6DvEU+JcHbFqvWeP7IgDWih8frOXqGghRnE/VQPlcNXPr7vlDWJav7nODC0x
-	MGFpeVCeyQ7lF4l22EGW28vzISTN0pvvr2JfxFZhMUKzovRvI3B2ioi0o4/bZJh1bghJ1a
-	bTFNx9GxBWngadWdHOg1LecNwNRWVWM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745999917;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=K+M0v88wXkTO2lfW07pgxE5E1/OLEgDm+uJTK9nmId0=;
-	b=R5NEXsynJ53+34V2g4jOsXv0bPItofkgVGow2tQZV7g4U1KiMX67x/EksZ/2U9O/2ehm77
-	5q3SIHs/EzgfPKBw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D042B139E7;
-	Wed, 30 Apr 2025 07:58:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id oZhDMCzYEWgwBwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 30 Apr 2025 07:58:36 +0000
-Date: Wed, 30 Apr 2025 09:58:35 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: nifan.cxl@gmail.com
-Cc: muchun.song@linux.dev, willy@infradead.org, mcgrof@kernel.org,
-	a.manzanares@samsung.com, dave@stgolabs.net,
-	akpm@linux-foundation.org, david@redhat.com, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Fan Ni <fan.ni@samsung.com>
-Subject: Re: [PATCH v3 3/4] mm/hugetlb: Refactor __unmap_hugepage_range() to
- take folio instead of page
-Message-ID: <aBHYK3mqUyvqrGm2@localhost.localdomain>
-References: <20250428171608.21111-3-nifan.cxl@gmail.com>
- <20250428171608.21111-6-nifan.cxl@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azgecay1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745999936; x=1777535936;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=cFRX/7ymuu4ViXj4PKPJ9YpybId6+ipgWQoROgASOJQ=;
+  b=azgecay1vhWBJBWkVjjI5Vd2C3PKcCYygtEB3rIF+5UKSmBKUMLqVnT4
+   mx8LHLAfuZmAJc358oml3ZD+N4IivpVXvXAIJChuKU51yvgrzEJvPId7p
+   0V/+pas+JFvTY3ykbe7rcx6FA2DxP/o92ktsT9xcSPWaqcojtnUfIsSDt
+   K1UVbaTi19arOWWRi04k4QH4vWPKOdCPgtUobsUjZy27Ai7ExcX+2NuYI
+   CxYvej+PJBsPX0aL2SL+P7OC5QWnXmOnv0WrFHcS1GC1zShMr1+/pg/Pn
+   ZBFN21Br6mnIAyA00u8wJhPRBfOJaQmOitwGysggDOjNt7ZoXUvtRDgw4
+   A==;
+X-CSE-ConnectionGUID: ZLpbKMHzSNG3FnziXKEH7A==
+X-CSE-MsgGUID: 9Pw2j40MTzmDU5trgfiUyg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47797783"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="47797783"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 00:58:44 -0700
+X-CSE-ConnectionGUID: BKh+t8mQQ/OXxMR7awRQaQ==
+X-CSE-MsgGUID: BjhmomkHSFu9QPm1D3FwEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="165143575"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 00:58:39 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 30 Apr 2025 10:58:35 +0300 (EEST)
+To: "Derek J. Clark" <derekjohn.clark@gmail.com>
+cc: ALOK TIWARI <alok.a.tiwari@oracle.com>, 
+    Hans de Goede <hdegoede@redhat.com>, Armin Wolf <W_Armin@gmx.de>, 
+    Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>, 
+    Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>, 
+    Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>, 
+    Mark Pearson <mpearson-lenovo@squebb.ca>, 
+    "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>, 
+    "Cody T . -H . Chiu" <codyit@gmail.com>, 
+    John Martens <johnfanv2@gmail.com>, platform-driver-x86@vger.kernel.org, 
+    linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 5/6] platform/x86: Add Lenovo WMI Gamezone Driver
+In-Reply-To: <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com>
+Message-ID: <1108c3ac-4815-814d-82b0-2ba74311d883@linux.intel.com>
+References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-6-derekjohn.clark@gmail.com> <a18175cc-3513-4621-9d8d-e9556ede1022@oracle.com> <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428171608.21111-6-nifan.cxl@gmail.com>
-X-Rspamd-Queue-Id: 7633D1F7C3
-X-Spam-Score: -3.01
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:dkim,samsung.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Apr 28, 2025 at 10:11:46AM -0700, nifan.cxl@gmail.com wrote:
-> From: Fan Ni <fan.ni@samsung.com>
+On Tue, 29 Apr 2025, Derek J. Clark wrote:
+
 > 
-> The function __unmap_hugepage_range() has two kinds of users:
-> 1) unmap_hugepage_range(), which passes in the head page of a folio.
->    Since unmap_hugepage_range() already takes folio and there are no other
->    uses of the folio struct in the function, it is natural for
->    __unmap_hugepage_range() to take folio also.
-> 2) All other uses, which pass in NULL pointer.
 > 
-> In both cases, we can pass in folio. Refactor __unmap_hugepage_range() to
-> take folio.
+> On April 28, 2025 9:39:55 PM PDT, ALOK TIWARI <alok.a.tiwari@oracle.com> wrote:
+> >
+> >
+> >On 28-04-2025 06:48, Derek J. Clark wrote:
+> >> + * Determine if the extreme thermal mode is supported by the hardware.
+> >> + * Anything version 5 or lower does not. For devices wuth a version 6 or
+> >
+> >typo wuth
+> >
+> >> + * greater do a DMI check, as some devices report a version that supports
+> >> + * extreme mode but have an incomplete entry in the BIOS. To ensure this
+> >> + * cannot be set, quirk them to prevent assignment.
+> >> + *
+> >> + * Return: int.
+> >
+> >The function returns int.
+> >But logically it's returning boolean false, true
 > 
-> Signed-off-by: Fan Ni <fan.ni@samsung.com>
+> I may have overdone it by removing all bools after the v5 review as I 
+> interpreted Ilpo's comment to mean I shouldn't return any bool c types. 
+> I'll wait for them to weigh in before changing this back.
 
-Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Hi Derek,
 
-But:
+That is certainly a misinterpretation.
 
->  void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
->  			    unsigned long start, unsigned long end,
-> -			    struct page *ref_page, zap_flags_t zap_flags)
-> +			    struct folio *folio, zap_flags_t zap_flags)
+It's perfectly fine to return bool from a function. If there's no good 
+reason e.g. because of some API that requires int return, booleans should 
+be returned as bool.
 
-I think we are kinda losing information here. ref_ was a good hint
-and...
-
->  	struct mm_struct *mm = vma->vm_mm;
->  	unsigned long address;
-> @@ -5885,8 +5885,8 @@ void __unmap_hugepage_range(struct mmu_gather *tlb, struct vm_area_struct *vma,
->  		 * page is being unmapped, not a range. Ensure the page we
->  		 * are about to unmap is the actual page of interest.
->  		 */
-> -		if (ref_page) {
-> -			if (page != ref_page) {
-> +		if (folio) {
-> +			if (page_folio(page) != folio) {
-
-You have to update the comment above, since we are not passing a
-reference page anymore but a folio.
-
- 
+I was trying to say your kerneldoc said "Return: bool" for a function that 
+returns int. Both "bool" and "int" are C types so there was a contradition 
+in that, which is what I tried to point out. Please write "boolean" if you 
+refer to a boolean which is not "bool" typed (but consider what was said 
+above and if the type too can be changed to bool in that case).
 
 -- 
-Oscar Salvador
-SUSE Labs
+ i.
+
+> >> + */
+> >> +static int lwmi_gz_extreme_supported(int profile_support_ver)
+> >> +{
+> >> +	const struct dmi_system_id *dmi_id;
+> >> +	struct quirk_entry *quirks;
+> >> +
+> >> +	if (profile_support_ver < 6)
+> >> +		return false;
+> >> +
+> >> +	dmi_id = dmi_first_match(fwbug_list);
+> >> +	if (!dmi_id)
+> >> +		return true;
+> >> +
+> >> +	quirks = dmi_id->driver_data;
+> >> +	return quirks->extreme_supported;
+> >> +}
+> >
+> >Thank,
+> >Alok
+> 
+> Thanks,
+> - Derek
+> 
