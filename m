@@ -1,97 +1,123 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E38925A2B9;
-	Wed, 30 Apr 2025 10:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A75925A33A
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:42:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009756; cv=none; b=YCZoW3l2ba1/hI0aaPYktJQ2v6NL/5MnTZ7SwDg8OHDp/ONCkNqR7pAk8OaTtC3BC5/QzD+6ASJ1kZzv48O1uuLLks+pRQWz20qjTOdSbgs1AfIo8/9vUdJFi90/CpQfizOvSPPDU7k33Ppd7RKQzY6kF+KP1tdqwPonGuIc/ss=
+	t=1746009760; cv=none; b=gTIgi3boPOYBUR8rKPigj+EdiJIPv+JPx5R100UBj0mDg/ZfH1yPJym3H0W0WzxhLcmPxFlwnQm9HRayHWCAcre9n4lyeGBohN2wl0csaw4YA6y9usyXO886kJb+X14UHdmoFwDYZhIIUkXwCB//7Fh6TRiVr7ibKriylbpWsCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009756; c=relaxed/simple;
-	bh=zxQ6fGKI5m58QThT5LuBA5TVYnM3IRxIYodE/yq6ZDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=jvwkeXkI7BaopCLNsFtWHbHYHf/LeH2hpiO3ylJWrqFA9din6b9oNCiM36wmfHxZMCG7uE5h0tgb6J6/fu1RZehSVROf+9wNoCdF2HNjQ47sbnve5chxZdn11IwllPydbjSC7+0+tPoXXmr1wZefgm2gamkEgT8JQ7/9E1Xe7Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=MUTYhPTP; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746009760; c=relaxed/simple;
+	bh=JlLvldGIfDbHrnB5LrDceGt+7VtfTDEk9EgBP//rGyA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Nc4dtUaRiNEbclKscAgPkZU4zgQOdoJ/iHiedH8WGg8wd7OIdY+MnMdCN/T3/sUxK1wQvdJmUoeVORAuhm6Nu/1G4Qs8WQJ0m/XjIBP7v11ckJSlXoYTFCHzk78lOTyLYxl8eByRv4Wu9uKNQKNjWjacJnx3We7IsgGNZa9Lj1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DG4fGBLl; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MUTYhPTP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746009750;
-	bh=a4db0jGbjZG5YpSE6E/3f/+hk0TLsCY4qxjKwbGG7Kk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=MUTYhPTPHBapHjwKgZYjGE+cQkXp1mY7eQ0P9unzC2MyN6ofQD5HKhSaG9CPTmPqq
-	 49CtR0P3B+dd3rDJ79Ay0nCffsE9bLCZq0/FzjpBfT7eOF7melJu73gpZGobdo1/xZ
-	 G9tuPY0N5fo/hYtsMMUG+K55rr1ZxQtfhYRZ+UIjJ5cUDWpylL7c0M596GOemV7fFR
-	 WX4loIAREJsNdz4z7Bv36J3GACZpGfDf9zdTto/FQkRdDFpN056qi6AF4SQJ49V9PS
-	 d0z0/mv9a1tfsSQFLkZZOvppxZlEJeaitS0kAdSYH50AMNBiKUzqF4lPAKs+G059sN
-	 bW/svvXluEqpA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZnYfZ0ghQz4x8S;
-	Wed, 30 Apr 2025 20:42:30 +1000 (AEST)
-Date: Wed, 30 Apr 2025 20:42:29 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Jaegeuk Kim <jaegeuk@kernel.org>
-Cc: Chao Yu <chao@kernel.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the f2fs tree
-Message-ID: <20250430204229.3971ac8a@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DG4fGBLl"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736a7e126c7so6521548b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:42:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746009758; x=1746614558; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4gl3XU8JoJn5dwDW6OC+cxv1hib4kwdH98QGnhy+dmg=;
+        b=DG4fGBLl7XAHMyiYPRpIQw1pTKIAMhdsH2z9e8JvuFys7Ef9CzDIf/E3Z7+WiC9rdJ
+         ojseM2Zk8Gnz4fzcNUIGAbI87zJk2y/hjenhPCowerDToR4J8zqlcOo3G1V0UmwEIeZi
+         wW2YR20mShYU4sEEye6A2DZRVlZs3bfPDfnQlEMCCggyvwjtNE37LUjRG+9OT16CQxKv
+         nqlw3ckUUVo2bUALT5S80/jlG7TE92rmHQ1P366XHWdYvW3Hve5UI1XXVBCJiB0rkU8m
+         eaWhEbVJtApin6MviF4HG8BvJSP+21nUfx6KofwMUPPvn1fbXa9W6NpWbMuOJMScvl9X
+         y4DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746009758; x=1746614558;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4gl3XU8JoJn5dwDW6OC+cxv1hib4kwdH98QGnhy+dmg=;
+        b=WlhIXiaREWygCKq2X5N63X6b/Ssz3QY4dRGrD5xTmIssa5tUB65GbsegUJCyi0wloj
+         iwZtNF8Rs28+E4zrmmffG2bTj9DG/I83PsnpBC9xkdP+HQWsQ10RUPOvfQtiaetPQqY8
+         5djqTdM27DQ51pTJiBBkHpXJDCJpfWyDFKLZhIw+rAps4FZKA1Yp4usNJs4M2FVtg6mq
+         nwG7aNMrpyBai3UdaMPX1bj9tQ7in86VRrm+g+eQCSX3GqYvgCbIxhsJ7FpVwGaWa4T1
+         1yprdVft1/hA3PJWFZPFFeqLWNkqXjfAqAZI+MuKzqTduhTmrSbihl0NuZ5YpbBYqelj
+         OYrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXUlYV3Qs2JddVPwnQE4tufeLY1VSrjuxS97K4B7t+WTgdtP/9liXQCm1qLZDwk5v1VGvayxSPS2TpZf0E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwK67zH2RUxux8LNXflqs4y4375Jw5cwkLU71E7HQsSv1YA4MUS
+	aaP08sxMDYe+ZIDWxVBDU+0XEa5CrVrWBRffejv0ns0E+w9md6IDikH58mVIB08=
+X-Gm-Gg: ASbGncticQezOo5O92SE27gXwOS4BCQhyTBrWkRYCvA3/Ec7sxSxjJQ4l5GksfMQT+v
+	RWgOk1vpuE37TQf9qNQfMjx1bNcSwIV0tH2DGy3HNrIeTFU/I+56OBoWu+0c7iPP9b+zR++Ca65
+	jA7+U/nr25hLbtL//15xEAhOwowbfur3OXORzv3vMyAdOTMeO1Q9XzZlbVYCztXMZiKzzfSR3fB
+	sZcoPgVSWlL1VR5rWQpuUgpFW3yjZDZbMsJulSq8dMPCyRHxHx6NYrIikvhWA7nqdKPupM44sZO
+	xaLAg5W0fjv10BoTU7YNUAEwJBfghD29zdfXQpY68w==
+X-Google-Smtp-Source: AGHT+IE5aoAUnm09kBy2axv3TvAAHpf075PJ6ak0Gwu1Lu258byCuGSU3Nwqt2mSHiDYVnppASvXrQ==
+X-Received: by 2002:a05:6a21:8cc6:b0:1f5:591b:4f7a with SMTP id adf61e73a8af0-20aa457e4a4mr3055673637.38.1746009757697;
+        Wed, 30 Apr 2025 03:42:37 -0700 (PDT)
+Received: from localhost ([122.172.83.32])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a9451csm1291575b3a.167.2025.04.30.03.42.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 03:42:36 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:12:34 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rust-xarray tree
+Message-ID: <20250430104234.dmwnn5ih232kfk4z@vireshk-i7>
+References: <20250430202315.62bb1c1b@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/KgYFyJ4+Pb_h9+xtV.VZZLK";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430202315.62bb1c1b@canb.auug.org.au>
 
---Sig_/KgYFyJ4+Pb_h9+xtV.VZZLK
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 30-04-25, 20:23, Stephen Rothwell wrote:
+> Caused by commit
+> 
+>   a68f46e83747 ("rust: types: add `ForeignOwnable::PointedTo`")
+> 
+> interacting with commit
+> 
+>   254df142ab42 ("rust: cpufreq: Add initial abstractions for cpufreq framework")
+> 
+> from the cpufreq-arm tree.
+> 
+> I don't know how to fix this up, so I have dropped the rust-xarray tree
+> for today.
 
-Hi all,
+Probably this:
 
-After merging the f2fs tree, today's linux-next build (htmldocs) produced
-this warning:
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 49246e50f67e..82d20b999e6c 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -630,7 +630,7 @@ pub fn data<T: ForeignOwnable>(&mut self) -> Option<<T>::Borrowed<'_>> {
+             None
+         } else {
+             // SAFETY: The data is earlier set from [`set_data`].
+-            Some(unsafe { T::borrow(self.as_ref().driver_data) })
++            Some(unsafe { T::borrow(self.as_ref().driver_data.cast()) })
+         }
+     }
 
-Documentation/ABI/testing/sysfs-fs-f2fs:850: ERROR: Malformed table.
-Text in column margin in table line 5.
+@@ -657,7 +657,7 @@ fn clear_data<T: ForeignOwnable>(&mut self) -> Option<T> {
+             let data = Some(
+                 // SAFETY: The data is earlier set by us from [`set_data`]. It is safe to take
+                 // back the ownership of the data from the foreign interface.
+-                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref().driver_data) },
++                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref().driver_data.cast()) },
+             );
+             self.as_mut_ref().driver_data = ptr::null_mut();
+             data
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Flag_Name                        Flag_Value
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-SB_ENC_STRICT_MODE_FL            0x00000001
-SB_ENC_NO_COMPAT_FALLBACK_FL     0x00000002
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D      =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D [docutils]
 
-Introduced by commit
+Andreas, is your xarray-next branch immmutable ? I can rebase over the
+change then.
 
-  0d56663919d2 ("f2fs: sysfs: add encoding_flags entry")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/KgYFyJ4+Pb_h9+xtV.VZZLK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgR/pUACgkQAVBC80lX
-0Gy+HAgAnGWQ4LgGxbyO3Pdkr0++udaLGPcW3daSLNYVZThik9G6J9kJU76xKZy7
-1l8OyVwe2064HIIxKzJ6zFURukmMVxj1bSxB9yRrU6wu7PkQ2gJXwPlDbmcGr2ZB
-Ja4zuDi2pR2sivtjTImjMa5HzArruoI4ZNaVpfcHzrf7TiazFxsXZ/gwT1N7pyay
-TCAcpYV+AUP1xngpoyBGub8WWSjO95tJqpagZxo0t4tjUGNVID/5+Wt83zygxB8i
-Q7Hax/Wrfp52eNDYbd3i/YRMrZi3UTMTt3sbCg6Hyu+ib+G7R5Fw+cFVUiQcXv++
-Q5QSPcp4tA4u9ocCjKa83MiwH8YPwA==
-=wDMN
------END PGP SIGNATURE-----
-
---Sig_/KgYFyJ4+Pb_h9+xtV.VZZLK--
+-- 
+viresh
