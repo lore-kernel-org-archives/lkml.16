@@ -1,146 +1,107 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54A4725F980
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:37:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCDA264F9D
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:40:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746034651; cv=none; b=Mv0bE+XbOQOJRa5q3YsDW1nwrg6mbUnEbCY8JcaaKS78EJ4nQZ9WFb2R7vaDVuF4djrs87ixdr78OdfCRyRUJd9O6oaHz6998dtCnXP5ZhnEJy99dwPHMxJSXDGM1pj5RogRdipZs5m7MI76NFBevYjnIzCS3EIKLduteKYm7CI=
+	t=1746034816; cv=none; b=L0B4XT6LPi5+oxlT2wAcZYrmnt0s7u85tc6aafKcB4e3XxrtmW2T8c9zR4mmZijKoW4Tj9G6LisnFyBhYFnYN5HO1sahCIg2VGujATdol3QLkVNEy9nt9YC+KR3Q/wtC9qmnylH4H5wNK0ygvxrndaz291VjU19S2/rNVF2BU40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746034651; c=relaxed/simple;
-	bh=OaA5OCQkvQnVP7nf8AXqDZtBH7PFGtrlg3Uojswc5M0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kdKxQNojhV2/K7w32AOesWjOYUs4dCrsAm8OK0w7z9f+yVDFeGWh+1Ov87S6iLDVuZUforFy4fk9RROQNbWJ+gn9L3TBbKoJPnVX8cW9MSrps2Re/uJlZKh+Y0wSw2MDktxcj+PhEqGDAzAt8crpRFFfO/keb3wwi0TNbAIEhJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wEgiSrDm; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1746034816; c=relaxed/simple;
+	bh=NDzeKYPe2I8Yfoh+f4eSw99RP2htupFat6fSOf0y+Cg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bBRewIopfC86vrNKtST6wz2q11IDF2pN8ageebJGnZ/jpfVhO4hKSC7V6jqlAiz1G+h88SUPq8FqQb61IpixwUTOqo2Oe/yzSdnhAWwa5McojVl5PgFuNGfA0tvIZJm9u+YJVWCW2VqlYzjmDqpX16AaMam00JpnBJwbBHImO6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gP87IG3t; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wEgiSrDm"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-3105ef2a08dso486161fa.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:37:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gP87IG3t"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913d129c1aso121249f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746034647; x=1746639447; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
-        b=wEgiSrDm4PpSIjcw4EnkIIIArFYyjm6Q9haUgNQ/RKw3qhK51kDS61qWy497RzVCua
-         80fVOm38TTTHGnJF8FCvpw3Pjc7Br3IQz30Rr0iivVfXN3ShsRdQxUM0A1e9jzp872yM
-         WciFlw222dUjrrGLh/nLG3GXF5jNzh7DTD30hKTGeMABlJ6SZEwY0rB0CouP5MNEJ0vo
-         a7kSoZ26W54U/U6Jt701vdd7yNzl0a0bapMZxb/chsDgKtWGi5B2NleAwwlv423wjY0N
-         LhCppanyRKWo9jNiK7AWFJA2svGZ6obonekccVTObeR8Jf5Gg37Lbaek1uhu83CHepJd
-         uTuA==
+        d=linaro.org; s=google; t=1746034813; x=1746639613; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fTI+NTQY1S5fmWs9NCsPjnEhqIDgFiuLJ0sQ9mVO6og=;
+        b=gP87IG3tzLQfE/9/oZlAJ2LJ+9D2gddvbiu323SYtZkJ2xTboQwRMxJx69Hf6r32nf
+         CN9dvCM/fdtkQxNEhsdjT0A1kZzqE5voHnThBobnlkEmgS02cb8dqL7968BDoWdiqjOJ
+         WBygYEcslwcPT6UXaKLYezu2C4Pocv2/Fex1q/lMimExLagdypHe1dgFkTmiEC7gWWP7
+         wJOtF7dtoEvkUUsJhtr3mU8foK1zbp2TCzx8sTqaZ2kImpbjZzUdVNaF66sHOpL6dl7z
+         9LIi9EQHYJCL1bTDS8pO9gZgKivbzzAhNk5HbrP47+jz8peMEY/yDsjFFNXvPcppVjKO
+         HmRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746034647; x=1746639447;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B80QHmr+sB5OMT7DkCFdd8/2a+nIvyDwd83EjF1b7wg=;
-        b=DyRdPfoKGV603ljG3mxKPGkkyQhQL+HNXWzZL6nhCaBiQ33/aa8LNiS+S60oMmQpbA
-         Tksdxro9XxFtW6+C7sDjzpe7wHUw2Dw/NZRF9rOSYYGuroWHysqORMVfZKKfSd6ON5yw
-         M/szU/SWBeoAgV0XebP38C3TwnrQWR8bEF844U+niHHrPNIDYRMnMZrq5GFrX+y0vt9/
-         dHEZoCenK8LRwJ4ayRi8+od6yIo1dlTEj9Mg7sSppIaLDid6kuokavFzh/3Sw11FPveq
-         3pVqFo5zkKrA7OYR3aQ1hfndMGhW3Iuu79dopfGIOU2V7PaDB+5PsFgSKdM7pH3cVneI
-         PRpA==
-X-Forwarded-Encrypted: i=1; AJvYcCVc77pDlqRqIRwCZoyu2jcwDP/uxACaa4z3j33NArWRDwyxIUcEzcXrjg79XUW+1C1YiHPYXZzlW/U4wLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXynxt5a7HG9FumoLiMeH0D3OymGAJEyGh48qUmtCPmSAadfY3
-	6N2eC6PpmwNk9qlloSNPXV39Q/v+gc65Og78oji6jgRYFt3f60Chk/mWAAUSpn/5bwxEkaDA9ya
-	SKDpKxmbfNCbOEF1pS8rJZUsLuwbEJBMt+M2ABw==
-X-Gm-Gg: ASbGnculNrJkiTuDrgxvrq35m3gNJroCiOd1QPFUMSwnI8uN02ko4IW9Fj7OxXILeVs
-	5AjetL3edrmwj7e7nba4g6wb3zS6UoeBVtDtpUThRwkxw3H/IIeQ2Xt177Zl9VvTqWF+i7igOq8
-	7ARHVyvUqR4LKiJlXdiEKtYWWu/6TI9pdFiEjyTx4hK72fiqwXUUzrgw==
-X-Google-Smtp-Source: AGHT+IHEUyDS2y73x5UTLVTCAeSkmZ9cGIaS0WUiShuP4klNjjtKcVRhzpqZk/qxLOTTSObt/mVmSixEfyP9TzJHf3w=
-X-Received: by 2002:a05:651c:2112:b0:30b:a185:47d8 with SMTP id
- 38308e7fff4ca-31e69d17438mr13186651fa.4.1746034647109; Wed, 30 Apr 2025
- 10:37:27 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746034813; x=1746639613;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fTI+NTQY1S5fmWs9NCsPjnEhqIDgFiuLJ0sQ9mVO6og=;
+        b=iK6uDuVfdTCx4NA6kHxXQF+cGnT3htSkOWQ00UDBmnn2jgYLvkYnCjvFkB/LlvfLuA
+         FRAs/wSVcFMjtc3SEMaL5E5l1GiuJr/xNsHv0ET8JDBlmCl7rsL3lVmrphYYGyDEyqhX
+         hRNZq3MK4YCcTKgc7fTsxVDMBRx0V0LfRfx/2e70Mh9vus9D+K/NSIOQUlACgwB31Lf8
+         nrtH/WK6rTsKcSRTLSgdAy44wW0IfrSQ+rLmZAR1eebSuR/x9cTezLi6xlS/SFNmA3Fd
+         yTIs9M7avMiaYXrdOMrIvholO4fQnLO/y6hnG1Jk1vjz7JUidQ4ISugPEnwoOjYDrevD
+         bQbw==
+X-Forwarded-Encrypted: i=1; AJvYcCVOUqahQdDzjNY5Kh36cRwqp4ekfQz2nbuhBGE4AXvzYn7bdauGPnu/Ji3gPrNOyLjCiPdUHNKp0GF2AtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3az4KUzP6IyLYlKc3YYAgxUUtxc5oLjxEvQ+FJbjZGlejstU9
+	2F2sAj/ekJp8LKHa9lybAAEzCb/U9E/bOkzPdbhmfABZb2cNWZqd9iwfpIFNZas=
+X-Gm-Gg: ASbGncvNmUVe/N0cqE5JP2BBDEtgB4xWRfJC3L6829Fr+tQFm5Y0tOH3MgQ1be88XCf
+	e7Vhu02iD2tu2Vmgq9DuoWngTmbmW/U/DndU/dIFZAfiVFEe0ID8Af3J00KC3cT+1z29gdyyD9U
+	VVZeD7v2liUAIk+wUBcZgbpIzp68ZCCPXpmXSfC4L4tOSlZQq1ssFMKqB8dv11fK7TbF/wcsun/
+	zw9BvvkEXJm80kmgBnJkUuJ5zycs+AM3izaFjN8yIR+dvb0AU2+dhwWRheXXLaSf1ieDJ6E+BQV
+	3gm9dBqQ7riMs1ptO0C/qTwJk9ib57iUp3xC5UjpI+4FaQ==
+X-Google-Smtp-Source: AGHT+IF1nO2qpvxe8YcGotQpsDAI9G2//rj00Y8Vv2gR//T8UoGu6ib91X10edaNaTJyuRE9TTivJg==
+X-Received: by 2002:adf:ee0a:0:b0:3a0:831a:8fef with SMTP id ffacd0b85a97d-3a092d00c42mr301702f8f.22.1746034812866;
+        Wed, 30 Apr 2025 10:40:12 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073cbf04dsm17858905f8f.52.2025.04.30.10.40.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 10:40:12 -0700 (PDT)
+Date: Wed, 30 Apr 2025 20:40:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Satya Tangirala <satyat@google.com>, Alasdair Kergon <agk@redhat.com>,
+	Mike Snitzer <snitzer@kernel.org>,
+	Mikulas Patocka <mpatocka@redhat.com>, dm-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] dm: add missing unlock on in dm_keyslot_evict()
+Message-ID: <aBJgeV7pZ7Q47OCb@stanley.mountain>
+References: <aBHZ4puON8GNK0vw@stanley.mountain>
+ <20250430165037.GA1958@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
- <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org> <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
-In-Reply-To: <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 30 Apr 2025 19:37:14 +0200
-X-Gm-Features: ATxdqUEh34Gz1POqWO9v2IKaGBTgS6zz7pi2s7vMr2oV8EN8tMuslc97xocJ6hQ
-Message-ID: <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] powerpc: 83xx/gpio: use new line value setter callbacks
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430165037.GA1958@sol.localdomain>
 
-On Wed, Apr 30, 2025 at 7:33=E2=80=AFPM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
->
->
-> Le 08/04/2025 =C3=A0 09:21, Bartosz Golaszewski a =C3=A9crit :
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > struct gpio_chip now has callbacks for setting line values that return
-> > an integer, allowing to indicate failures. Convert the driver to using
-> > them.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Wed, Apr 30, 2025 at 09:50:37AM -0700, Eric Biggers wrote:
+> On Wed, Apr 30, 2025 at 11:05:54AM +0300, Dan Carpenter wrote:
+> > We need to call dm_put_live_table() even if dm_get_live_table() returns
+> > NULL.
+> > 
+> > Fixes: 9355a9eb21a5 ("dm: support key eviction from keyslot managers of underlying devices")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 > > ---
-> >   arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
-> >   1 file changed, 4 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powe=
-rpc/platforms/83xx/mcu_mpc8349emitx.c
-> > index 4d8fa9ed1a67..d4ba6dbb86b2 100644
-> > --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-> > +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
-> > @@ -92,7 +92,7 @@ static void mcu_power_off(void)
-> >       mutex_unlock(&mcu->lock);
-> >   }
-> >
-> > -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int =
-val)
-> > +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int v=
-al)
-> >   {
-> >       struct mcu *mcu =3D gpiochip_get_data(gc);
-> >       u8 bit =3D 1 << (4 + gpio);
-> > @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsi=
-gned int gpio, int val)
-> >
-> >       i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctr=
-l);
-> >       mutex_unlock(&mcu->lock);
-> > +
-> > +     return 0;
->
-> i2c_smbus_write_byte_data() can fail, why not return the value returned
-> by i2c_smbus_write_byte_data() ?
->
+> >  drivers/md/dm-table.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> 
+> Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+> 
+> But that's an awfully error-prone API.
 
-The calls to i2c_smbus_write_byte_data() in this driver are
-universally not checked. I cannot test it and wasn't sure if that's on
-purpose so I decided to stay safe. Someone who has access to this
-platform could potentially fix it across the file.
+Yep.
 
-Bartosz
+> 
+> dm_blk_report_zones() gets this wrong too.
 
-> >   }
-> >
-> >   static int mcu_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, =
-int val)
-> > @@ -123,7 +125,7 @@ static int mcu_gpiochip_add(struct mcu *mcu)
-> >       gc->can_sleep =3D 1;
-> >       gc->ngpio =3D MCU_NUM_GPIO;
-> >       gc->base =3D -1;
-> > -     gc->set =3D mcu_gpio_set;
-> > +     gc->set_rv =3D mcu_gpio_set;
-> >       gc->direction_output =3D mcu_gpio_dir_out;
-> >       gc->parent =3D dev;
-> >
-> >
->
+Ugh...  dm_blk_report_zones() is too weird for my static checker tool.
+The checker is looking very specifically for error paths with missing
+unlocks.
+
+regards,
+dan carpenter
+
