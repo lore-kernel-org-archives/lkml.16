@@ -1,225 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F4F265CB6
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5652A1DFDA5;
+	Wed, 30 Apr 2025 18:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039129; cv=none; b=fI0hruUP1znNM6thXlJew9rwyPvK8iW14aTLgcu/V4morqFa/bZI5VmlP6vPQ4joPvs3UzQLkyYNttKCAGyBLmm2VTm8Ii3qCTXpg5cGNPmjK/mYKamfmxUmIYjESoxdwdC4LF3W62Pi0Z4Bk0SQhfszEmGGhAXqIGWKshrhW7E=
+	t=1746039198; cv=none; b=SjGe1dwWL10Za1+tD6/YPrlTKKB0D0FSmS68+QTtrXCjRZWdQg52byk/v9vNBpFVGTdm6/T94IDgbXrCm5ZX2Y6AwrcF4o0STKyUqU2yBc8OONk2hJzRN1gGk57/oB8s6YPuyCNPo0MwC7FISyhY82FKvtlQhKZU95hhQb/1P/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039129; c=relaxed/simple;
-	bh=m/8gh4C7zSRFHSMiGPx6X+dYvNjlflIkT8CNHGNdgfk=;
+	s=arc-20240116; t=1746039198; c=relaxed/simple;
+	bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mTlDV//F7cEsEqZ3Sh8s0xT7lHVIuMD0CLIj89C844cHVcAyK8GrRmAEnJ1tlV18jIUSgVFmVXSNqB80jAbIyloWxyUoZ6C7C+yJbK2a4muO0tGIjx2jlfUETZ435Mx4llBMzeqp3Dyesm+8bpELc9+FDLBMtJEpRcJwJJMID6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUcwpeAH; arc=none smtp.client-ip=10.30.226.201
+	 To:Cc:Content-Type; b=BK8Nye5ydusD/uIEv199jAJFGcG/kBeSC6UZ469QZlLV+AcsUNc94K2/TvGJRv7BS2zPO/oqnVRI7yRaJ2rM+gSdjeGF2HSZf8LhP8DblMtXzSbbfAO3v669HdvH3WgNdgfZSmu3ZJw1g087LWOjx4EqrD94ZHwYaK34BTY6RHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEMz18tJ; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUcwpeAH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8DD8C4CEEA
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746039128;
-	bh=m/8gh4C7zSRFHSMiGPx6X+dYvNjlflIkT8CNHGNdgfk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YUcwpeAHiFYaL7roColVPVgqAwg083lEnwINrDeiyKWR+uemDpd0QHMv3FK3ZX0GS
-	 sK+FojiQlF1jnUcsiHm5YcMHae6e3mymWsANgGrGlCKP/E2IesOb1OO8iYUSo1SL6I
-	 OC8wm2xkw/NkgRrCwSYDMTv0ArKnUtjsf80b630SGDi5+ADkcLVrLR2k4X/Jre6kvu
-	 fG+dlQfHModH9ZO5LUhO1Wvu+709lQ3GcG9duqVsBfSD3IosqHyXfi98lAFIiLWnjL
-	 0vav5EpgHwq65nm8TzcYSI0xN4sTW6KntdL70S28zPhTjN6dVyMA88DOLt8XGpL7r4
-	 ajS0qiuVUNypg==
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5499c5d9691so231024e87.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:52:08 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUylPTts/Q/IHfJPYU4g5dR87oN82kq/hs2Dd+L/8vWlsYmG7BpgPWh8TE4PZZr1dPq7lnwDDKTdagbq9A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBPGgcpUsXu5Y7bBQBTpIG+ATPhSNeGzMcLG9+ysF38dcupBs4
-	aPkCim6isIU0VrmhP90RSHMT548ZOOt7zbQjeQeGa1JYzDnTA9HWkVTGX2uxX1ZbwugoBtypu8g
-	GG0AKIQkPm1nGouSb0Snw9EVcA6w97k3wpsq9
-X-Google-Smtp-Source: AGHT+IE0K5POXjSzi6PVmVrzzNUz5C/TwrdOq3L9wFNvUlNtX4GskbINsst/0+rP2duvkTLtKdKGSet0iv4McAObDYU=
-X-Received: by 2002:a05:6512:33cf:b0:545:c7d:1784 with SMTP id
- 2adb3069b0e04-54ea72919cemr26556e87.43.1746039126238; Wed, 30 Apr 2025
- 11:52:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEMz18tJ"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30db2c2c609so1253931fa.3;
+        Wed, 30 Apr 2025 11:53:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746039192; x=1746643992; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
+        b=EEMz18tJeDY1n9ZG1jieT+6X7LSVZGq3zE2U4mxVBBjXdWdo1kCkxDni9LH7oPcPDG
+         eWOOBjsjTdZcH+NoEowCAVEu4Lba82eRMOqQEhfStQcfw72K4p7gsHc/9EEueCKc6tWZ
+         bGJFGFT3EFTUqHFF89fuiVScnjd7s/jJMRdaMECMwQaJ7lXRKogso81/TY5j4LuhiBdg
+         SOeZ6WO2T90KNLt5Gd8E4rDCG9b45OmGWF+Y++qjiD6/NvTbUYFMzgnFWwsF5DazjCZL
+         GaKBq3fO3bayw+wcxUVVd17dqiIEF0hX+x4ev4gzg1PGvcm//9+1SMffF6MT5A9K2Onz
+         7WCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746039192; x=1746643992;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
+        b=dJiaGxqlZYwSbBo2aOXo3DYZTxddrMiX+1ryyEyp6J5hbVFHecxx0Mx7bZxm2CtFuV
+         /suB17G6gnT5X9yjZ5JpxJb5b8VlZ5/1woOIA/1WBFh6H9nXDGJdbL1gY2Xag3708xNg
+         9evRqDHwzKlYVFyMLFp3hFFTMrcPr4eUZ223Qe/BwvOVI1Zk9juGEq8uBMGm1VC9/MC8
+         SiYzVSEVDO4zbp+AnOajRr3Uo05oAYXUEQvcs5VcQdtv89nBtplnk5Wy0VjlED1fdTde
+         qfjk/Kx8OE1kAk8l2CNuB8Rjq7vFP0hqI2xxgP3kLEjnHtrqYSkoRtD7cvuqLXiP8irz
+         yKhg==
+X-Forwarded-Encrypted: i=1; AJvYcCUfNdSS1ElDXose9IySt3eVPM4Isj6/q+eqEixupR0pVYW8qe7xzJRJxIHGlDgoxTSWOg5idEnBGAmjSMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywbsggp7pCq4sMm46t3pZWEEjUI1Mc4qbcnLicc/U43qKlqlwEB
+	3St2Ya5qT7ZQ2SVlbAUhleKWPZBH31l3KyTp8tEMtT8aRgaFy67y+8CHPtw69aDhTzFFxspnzoS
+	Yt5T+29zLLXXM1xAPrp9duGzaUt4=
+X-Gm-Gg: ASbGnctKVpVxGrOz5AzisvB0snA2lBlNzsaVciJuzLPY6QZ2QPrWeh0yFZcPE0iowlX
+	7R7G+kOEytXYFqQlBllIASLW3BGms/KSUmlSd9zeLQFmzKpzbT9pZRE8VKsrYqD7L6ppt26XxXa
+	iwLYPeeg/Nlvvgygl5L+pOStW9NIJ/VC8pbZtOKQ==
+X-Google-Smtp-Source: AGHT+IE1uQ++FjCkKhQJZ7cMIVgQBJMGgIRP1tpha+mSsq2Dm0WDNf0Bkn1ExNY4pud7CTYClvJ4erGm5XjS95+y6qQ=
+X-Received: by 2002:a2e:ad13:0:b0:30b:c8b1:dd95 with SMTP id
+ 38308e7fff4ca-31e6a7f48d1mr18143581fa.22.1746039192182; Wed, 30 Apr 2025
+ 11:53:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-19-ross.philipson@oracle.com> <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
- <077163e1-b7e1-4bc9-8294-e557cc7bd78d@apertussolutions.com>
-In-Reply-To: <077163e1-b7e1-4bc9-8294-e557cc7bd78d@apertussolutions.com>
-From: Andy Lutomirski <luto@kernel.org>
-Date: Wed, 30 Apr 2025 11:51:54 -0700
-X-Gmail-Original-Message-ID: <CALCETrVfrP=RL0W1cOY1PXGAsVLgbgSVLCy+ZsDg=-rxMQ=u9w@mail.gmail.com>
-X-Gm-Features: ATxdqUFyoGR-AY1tkFj9SH8YcCxlyGufKMkkioxYlBMgz0llRYwovkkXKsIy3U0
-Message-ID: <CALCETrVfrP=RL0W1cOY1PXGAsVLgbgSVLCy+ZsDg=-rxMQ=u9w@mail.gmail.com>
-Subject: Re: [PATCH v14 18/19] x86: Secure Launch late initcall platform module
-To: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Cc: Ross Philipson <ross.philipson@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, kexec@lists.infradead.org, 
-	linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com, 
-	ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com, 
-	peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu, 
-	herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net, 
-	ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com, 
-	kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com, 
-	trenchboot-devel@googlegroups.com
+References: <4664267.LvFx2qVVIh@rjwysocki.net> <20250430185019.19528-3-tamird@gmail.com>
+In-Reply-To: <20250430185019.19528-3-tamird@gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 30 Apr 2025 11:52:35 -0700
+X-Gm-Features: ATxdqUFjAf8Msr1Cb51650ntnGmG2m9PfkVIDrtXiA26TOGYQ-ZYk_TJzVAhDNk
+Message-ID: <CAJ-ks9kmwpf85tW_R30WmzU=fjB5p6+2vjZvzojsLuu3gFzv8w@mail.gmail.com>
+Subject: Re: [PATCH 0/0] Cover letter only
+To: rjw@rjwysocki.net
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	robert.moore@intel.com, saket.dumbre@intel.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 6:41=E2=80=AFPM Daniel P. Smith
-<dpsmith@apertussolutions.com> wrote:
->
-> On 4/28/25 13:38, Andy Lutomirski wrote:
-> >> On Apr 21, 2025, at 9:36=E2=80=AFAM, Ross Philipson <ross.philipson@or=
-acle.com> wrote:
-> >>
-> >> =EF=BB=BFFrom: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-> >>
-> >> The Secure Launch platform module is a late init module. During the
-> >> init call, the TPM event log is read and measurements taken in the
-> >> early boot stub code are located. These measurements are extended
-> >> into the TPM PCRs using the mainline TPM kernel driver.
-> >
-> > I read through some of the TPM and TXT docs, and I haven=E2=80=99t foun=
-d a
-> > clear explanation of exactly what gets hashed into which PCR.  (Mostly
-> > because the docs are full of TXT-specific terms.)
->
->
-> For Intel TXT, the general approach is detailed in section 1.10.2 of the
-> TXT Software Development Guide[1]. I point you at the Detail and
-> Authorities Usage section because the ability to do Legacy Usage has
-> been unavailable for some time.
->
-> In section 1.10.2.1, the dialogue explains how and what the initial
-> measurement is into PCR17. After that is Table 1, which provides a
-> listing of all the measurements the ACM could make before starting the
-> MLE. Just as an FYI, on Gen 9 and later, the STM measurement will be
-> present and will be the hash of the PPAM module.[2]
->
-> Section 1.10.2.2 gives a similar treatment to PCR18.
->
-> [1]
-> https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel=
--txt-software-development-guide.pdf
-> [2]
-> https://www.intel.com/content/dam/www/central-libraries/us/en/documents/d=
-rtm-based-computing-whitepaper.pdf
->
->
-> > But I=E2=80=99m really struggling to understand how the security model =
-ends up
-> > being consistent with this late_initcall thing. We measure some state
-> > into the event log, and then we do a whole bunch of things (everything
-> > from the very beginning of loading the kernel proper to the whenever
-> > in the late_initcall stage this code runs), and then we actually
-> > extend the PCRs.  It seems to me that this may involve a whole lot of
-> > crossing fingers that an attacker can=E2=80=99t find a way to get the k=
-ernel
-> > to execute code that changes the event log in memory prior to
-> > extending PCRs such that attacker-controlled values get written.  Even
-> > if the design is, in principle, sound, the attack surface seems much,
-> > much larger than it deserves to be.
-
-I hate to be obnoxious, but your email kind of exemplifies why I, and
-I think many developers, REALLY dislike the TXT and related specs.
-It's full of magic words that mean nothing to anyone not immersed in
-this particular ecosystem.
-
->
->
-> There is a more fundemental flaw to your scenario, but before covering
-> that, consider what measurements could be tampered with that are made by
-> the setup kernel:
-
-What is the "setup kernel"?  Do you mean the early code in the kernel?
-
->
->   - Kernel Setup Data
->   - TrenchBoot's SLRT
->   - Boot Params
->   - Command line
->   - EFI Memory Map
->   - EFI configuration items, populated by efi-stub (currently unused)
->   - External Ramdisk
-
-Are you saying that all of these items are measured by the early
-loader (and *not* measured by the ACM or otherwise by anything that is
-trustworthy and runs before the early code)?
-
->
-> Outside of the case of an external ramdisk, the attacker can only
-> pretend valid configuration data was passed to it.
->
-> Correct me if I am wrong, but I don't think that is what is bothering
-> you. You are either concerned with one of two cases here. Either you are
-> concerned that the attacker may be able to hide the loading of a corrupt
-> kernel or that the attacker can corrupt the kernel after loading.
-
-Here is my concern:
-
-Suppose there is a set of measurements that an attacker wants to
-replicate.  Some of these measurements are done prior to transferring
-control to the early code that's in this patchset (call these
-before-Linux measurements) and some are done by the loaded kernel
-(let's call these Linux measurements).
-
-I am concerned that the attacker will load a combination of things
-that have the correct before-Linux measurements but the wrong
-after-Linux measurements.  (Wrong in the sense that, *if those
-measurements actually landed in the PCRs, then the attacker would
-lose*.)  *But* the attacker carefully chooses what they're loading to
-gain control of the system prior to the actual PCR extension.  Then
-the attacker extends the PCR with the hash that they want to
-replicate, and the attacker wins.
-
-For the security model to make any sense at all, then it needs to be
-impossible for the attacker to gain control prior to the early kernel
-code running without changing the before-Linux measurements.  But
-there is a huge gap between when the early Linux code runs and when
-the late initcalls run, and the attacker has that entire window to
-break your security.
-
-> first case, the answer is no; the attacker cannot. The kernel and the
-> initrd if it was packed in the kernel are measured and sent to the TPM
-> by the ACM running in cache-as-ram before execution begins.
->
-> The second case is the flawed scenario, a strawman, if you will. This is
-> a runtime-integrity problem that is outside the scope/protections of
-> load-time-integrity solutions such as SRTM and DRTM. If the correct
-> kernel was loaded and measured, but an attacker already has a position
-> in the system that they can corrupt the kernel before the user-space
-> init process can be run, then they already won.
-
-I'm arguing that it seems like that this patchset has a
-runtime-integrity problem.  It's outside the scope of the TXT spec per
-se.  It's in the scope of *the Linux kernel*, and anyone who wants to
-trust that the Linux DRTM code actually works needs to factor in this
-giant weakness.
-
-And you haven't explained why there is no way for an attacker to
-corrupt the process between the early kernel code and the late
-measurement code.
-
-
-> > Is there some reason for all this complexity instead of extending the
-> > PCRs at the early stage when the measurements are taken?
->
->
-> We did have TPM logic in the setup kernel at one point. Within their
-> rights, the TPM maintainers took the position that the only TPM
-> interface logic should be the existing driver.
-
-Hey TPM maintainers, I think this is nonsense, or maybe someone has
-misinterpreted something that someone else said.  I understand that
-avoiding code duplication is nice.  I understand that, at runtime, all
-TPM access ought to go through the driver.  But, if the driver is
-incapable of working during the very very early kernel load, then
-there should be an alternate interface.  Kind of like how we have
-early_printk instead of saying "well, there should only be one printk,
-so instead of having early_printk, we'll just have a big buffer of
-messages and log them eventually".  Or kind of like how we might call
-EFI boot service functions during early boot.
-
---Andy
+Oops, apologies. Manually replying to an email I wasn't included on
+proved tricky.
