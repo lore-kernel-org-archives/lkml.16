@@ -1,181 +1,235 @@
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 9.mo550.mail-out.ovh.net (9.mo550.mail-out.ovh.net [178.32.108.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85A63126C05
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:50:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235291BF37
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:50:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.32.108.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053404; cv=none; b=NRGFPsvSk5Y8rwaK7KLd1nvxEPGPFpJb2XniXy+FphSsrPFiBcRSVsuik4dlCQ7Ds/X2LzfZv/ifQ/Fv6YkGMJHJSgwDnejkHOb73WoglNn147t9x2TFNTZPT/wfXRKdSQjQyAuOojKAajGbaBH3VrKMAtd0QqTX3sTJsGKkHwc=
+	t=1746053433; cv=none; b=Gmiu+G5wkYKIT9o1/2Ud2TkoveUgPJjIdoUfpT0QsgW/in043Ojzo9er+zXaTl2v9YXk3UxS/ArPMv3JbIzvkHxXLuwcJDOhU2re0kT9a7+g9wKLQHg+uNiiipVjm6qvuMeFGIIAoZiWtBv4lXtNzfNOt9ktcriPa52toiGWVVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053404; c=relaxed/simple;
-	bh=9MGMOeD6EkUGwyYOX99XuRPkhol/Rk4nwiKNSB8UfBw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GcKRSA9XCD5gVh1yP8rmiRIbq/iamDxpA5M9PAAiYQqeOXp9t7Kdr81JGyWP++bsuov8TlCvvIq3NnlkN8G669tEg3nnCuMrSRH2018J8q/KG2LIRMHu0VUlK0M1koaLwWuANEhwyig3XbLBXqUeZpxZOy2g4uMGmw7Z2fXa5/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HLkgAuGQ; arc=none smtp.client-ip=209.85.217.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746053433; c=relaxed/simple;
+	bh=kPomQ7PXgpw7knpV3SVfubuKhsQUI05+skk6zT7Eq1I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KqHHuSqzPpwfFGcoCtCko4DOGL9KBs8PmSuvvV/M7nkmnZkJZdI4y5yJHs2j1P/xg68VcVsnBoQxXv0dqPz2Onzh8PzFCBPlZseZdGkG5u1PP6BqOFfqAMoXKqSq7IrIYlezxuIN4Pp3aK6NyRjc5svfse6wKxSF3VHtHXrsxhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=NGixRtCX; arc=none smtp.client-ip=178.32.108.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HLkgAuGQ"
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-4dad6cc2be0so122727137.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:50:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746053401; x=1746658201; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nbpbINSrxfUumV9lwyjlqLA8g7akUpbSjiCjBJP9b4Q=;
-        b=HLkgAuGQopxQuG4nVPS+1gEvY5p08oNWFwm7TWRJ/4SXcj1AFki/ga6rE9jLJ3NjSZ
-         ucDSpFg3dg3jC+0jbKJr3tUnAjmLOdEfq8YlKB05XzvVY/itNVqCfzUy/UnhEx7yFMPn
-         8rw8ezmUvMAFj1CIH94T5lfmluayeELlYrWeOlyvsYK+X+XfRsa35lVWJQnepc+DffqP
-         sw5CyQXtGCGvsgcls1+8EsrbGFDdogGEikvaYYRcdN6CX2uIRrKfnh2ZIk8ALd1CNR4Z
-         KbUGR6dF94ZkEXO53P/e30viGdZ+SI8l9Xbv7jcgpzosU+Vh880fnvG+rdWtqzNCEcwZ
-         eMjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746053401; x=1746658201;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nbpbINSrxfUumV9lwyjlqLA8g7akUpbSjiCjBJP9b4Q=;
-        b=PWS9Q6Ndymwj//Zquvu4968qedVSFSt9TSAFd8v77eSsfRZFBEDE9Fasa43hx8olJx
-         xwcOTCYtjUJC0CPG1JIM8vJYhIHFMWe05oyv6V0Z6LDQ9fIrNlvKacNn4A9RRzT+r2XS
-         MxiBUa7vgC760/GY94ZO9OcHH5zvpr+9qYJuHI228DPu9Ku6NevTPs7C4xq2b6rSHuqr
-         wOikbiOdpgJRmHrK0n353z7TUWaZ1u1957SexwzMhKOjPz6Ec8V/8O9Iv7XpDABoyGsw
-         jYAp4l4VCmiuEXEy4SL3Nrh/HUsWPJGwa0lF6f7c9fRT7Gm8VUzrs4wVrkD5ziwWfcTK
-         ew/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCV4E8F487SrCB4arRgH86B5muCyFgRhGW7Qv+lwdWWJnjvmXlnLmn1U1e9IZ0eaWrjdeASpDAmOkOZVEuo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNx0S9s1S5SvPRvRlX9MWxQhK1+rzyhhtupvGMKW8vJh+A4r+5
-	xGhyBJWto7dkUnzzAInImTFSYbhUuu6eEfo0z55rZuZpp4FzLSwQdaNi4dFDeLfy0RlmvoRW3QA
-	ShN3KNPQ/KUnbXbufWf/8HaRJzec=
-X-Gm-Gg: ASbGncus8b5wvRiQfuyX0m2JDZCMJQ8RG3h0MH7UNMa+N2VnuonN7NwDaw3KPn3sod4
-	caA+1CDNiVp0siaV5cnwwfFjOc1rPp1Bdw+k6VA0lULgRX5Cmk6Ui7dC8cNtCkjo/70iAdOCiiF
-	EAtFAqZlKrt+jT1k1ir8egKYJNcroKw1rq
-X-Google-Smtp-Source: AGHT+IGzkaGVgrKTVWAg6uYcHiRtwbA0R/supqUwGLiy3GtgazMGGDJF+F5gy1Ww2dKzbjTsV1APhcaThlpXeBvRPg8=
-X-Received: by 2002:a05:6102:3e8d:b0:4c4:e018:326f with SMTP id
- ada2fe7eead31-4dae53bb727mr916415137.10.1746053401317; Wed, 30 Apr 2025
- 15:50:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="NGixRtCX"
+Received: from director4.ghost.mail-out.ovh.net (unknown [10.109.176.170])
+	by mo550.mail-out.ovh.net (Postfix) with ESMTP id 4ZnshT6jk9z1Xnx
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:45:13 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-twnx5 (unknown [10.110.164.49])
+	by director4.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 9A8971FD29;
+	Wed, 30 Apr 2025 22:45:13 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.114])
+	by ghost-submission-5b5ff79f4f-twnx5 with ESMTPSA
+	id SuivGfmnEmgRWAgA1PhhsQ
+	(envelope-from <sergii.dmytruk@3mdeb.com>); Wed, 30 Apr 2025 22:45:13 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-114S00894c63abd-27f7-477a-bf0c-fa55fba5a45f,
+                    7FFE21389DDF989CCD6FB7268846A7FDE11993D7) smtp.auth=sergii.dmytruk@3mdeb.com
+X-OVh-ClientIp:176.111.181.178
+From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+To: linux-kernel@vger.kernel.org
+Cc: trenchboot-devel@googlegroups.com
+Subject: [RFC PATCH v2 4/9] x86: Split up Secure Launch setup and finalize functions
+Date: Thu,  1 May 2025 01:44:46 +0300
+Message-ID: <bd2d21fb90cbb4905afcb5d934c48e4ff23a3ed8.1746037489.git.sergii.dmytruk@3mdeb.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
+References: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430082651.3152444-1-qun-wei.lin@mediatek.com> <20250430145106.8ce79a05d35cec72aa02baa6@linux-foundation.org>
-In-Reply-To: <20250430145106.8ce79a05d35cec72aa02baa6@linux-foundation.org>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 1 May 2025 10:49:50 +1200
-X-Gm-Features: ATxdqUGvtOD0hW5rJBr5f2DF6ZxtN6Be6JTfSzIEhz5_WOzsDzAADbdK5XApyCE
-Message-ID: <CAGsJ_4wLuJNe9uPE3-fBNLdiCPBpKt4a1ytuf7-+oiS5rBrg_w@mail.gmail.com>
-Subject: Re: [PATCH] mm: Add Kcompressd for accelerated memory compression
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Qun-Wei Lin <qun-wei.lin@mediatek.com>, Mike Rapoport <rppt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>, Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, Casper Li <casper.li@mediatek.com>, 
-	Chinwen Chang <chinwen.chang@mediatek.com>, Andrew Yang <andrew.yang@mediatek.com>, 
-	James Hsu <james.hsu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 12103705474822026396
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: 0
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejleegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpefuvghrghhiihcuffhmhihtrhhukhcuoehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomheqnecuggftrfgrthhtvghrnhephfehfeehudeileeikeffgfffgfefuddtveelvedvhfffgfelvdfgtddutdehfeeinecukfhppeduvdejrddtrddtrddupddujeeirdduuddurddukedurddujeekpdefjedrheelrddugedvrdduudegnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepuddvjedrtddrtddruddpmhgrihhlfhhrohhmpehsvghrghhiihdrughmhihtrhhukhesfehmuggvsgdrtghomhdpnhgspghrtghpthhtohepuddprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdpoffvtefjohhsthepmhhoheehtdgmpdhmohguvgepshhmthhpohhuth
+DKIM-Signature: a=rsa-sha256; bh=5VFk4FOVNsAWcUO093+INFp3zTO4CmYlsU9Pb5Y3iAY=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1746053114; v=1;
+ b=NGixRtCXiVNRihEJULF8W1ZW/fYzDX8yDyGmrA6teCk3Ay5vijC/ujJIEvuiIt77Jvbovyg5
+ 1emvo6H6OUx/EGrumVzKuPIPcKZTXbZF64GGzgswl72MQQ0mDrGCR9ij7vYC91kMCaXiR5r2MOw
+ n/XdkN2Jt67S4UvPhfwyJ3XxJpw3NTLNy2dqsO1RWmTUeWZ///FTqQ8l+xuqU/udfT1oD4aThYV
+ mpsdLtXMW4HPWLiNOriK53mnZvcJt/mEP5aeicp950Rx2d0Z8JOKvouY7B0SfKkyMwx1BWKmNQy
+ zp7kImWAnNhPFybpQ4UIa7rl5+yRadOv952gxYnC6pVUQ==
 
-On Thu, May 1, 2025 at 9:51=E2=80=AFAM Andrew Morton <akpm@linux-foundation=
-.org> wrote:
->
-> On Wed, 30 Apr 2025 16:26:41 +0800 Qun-Wei Lin <qun-wei.lin@mediatek.com>=
- wrote:
->
-> > This patch series introduces a new mechanism called kcompressd to
-> > improve the efficiency of memory reclaiming in the operating system.
-> >
-> > Problem:
-> >   In the current system, the kswapd thread is responsible for both scan=
-ning
-> >   the LRU pages and handling memory compression tasks (such as those
-> >   involving ZSWAP/ZRAM, if enabled). This combined responsibility can l=
-ead
-> >   to significant performance bottlenecks, especially under high memory
-> >   pressure. The kswapd thread becomes a single point of contention, cau=
-sing
-> >   delays in memory reclaiming and overall system performance degradatio=
-n.
-> >
-> > Solution:
-> >   Introduced kcompressd to handle asynchronous compression during memor=
-y
-> >   reclaim, improving efficiency by offloading compression tasks from
-> >   kswapd. This allows kswapd to focus on its primary task of page recla=
-im
-> >   without being burdened by the additional overhead of compression.
-> >
-> > In our handheld devices, we found that applying this mechanism under hi=
-gh
-> > memory pressure scenarios can increase the rate of pgsteal_anon per sec=
-ond
-> > by over 260% compared to the situation with only kswapd. Additionally, =
-we
-> > observed a reduction of over 50% in page allocation stall occurrences,
-> > further demonstrating the effectiveness of kcompressd in alleviating me=
-mory
-> > pressure and improving system responsiveness.
->
-> It's a significant change and I'm thinking that broader performance
-> testing across a broader range of machines is needed before we can
-> confidently upstream such a change.
+From: Ross Philipson <ross.philipson@oracle.com>
 
-We ran the same test on our phones and saw the same results as Qun-Wei.
-The async compression significantly reduces allocation stalls and improves
-reclamation speed. However, I agree that broader testing is needed, and
-we=E2=80=99ll also need the zswap team=E2=80=99s help with testing zswap ca=
-ses.
+Split up the setup and findalize functions internally to determine
+the type of launch and call the appropriate function (TXT or SKINIT
+version).
 
->
-> Also, it's presumably a small net loss on single-CPU machines (do these
-> exist any more?).  Is it hard to disable this feature on such machines?
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+---
+ arch/x86/include/asm/svm.h |  2 ++
+ arch/x86/kernel/setup.c    |  2 +-
+ arch/x86/kernel/slaunch.c  | 69 +++++++++++++++++++++++++++++++-------
+ include/linux/slaunch.h    |  4 +--
+ 4 files changed, 62 insertions(+), 15 deletions(-)
 
-A net loss is possible, but kswapd can sometimes enter sleep contexts,
-allowing the parallel kcompressd thread to continue compression.
-This could actually be a win. But I agree that additional testing on
-single-CPU machines may be necessary.
+diff --git a/arch/x86/include/asm/svm.h b/arch/x86/include/asm/svm.h
+index 9b7fa99ae951..da9536c5a137 100644
+--- a/arch/x86/include/asm/svm.h
++++ b/arch/x86/include/asm/svm.h
+@@ -584,6 +584,8 @@ static inline void __unused_size_checks(void)
+ 
+ #define SVM_CPUID_FUNC 0x8000000a
+ 
++#define SVM_VM_CR_INIT_REDIRECTION 1
++
+ #define SVM_SELECTOR_S_SHIFT 4
+ #define SVM_SELECTOR_DPL_SHIFT 5
+ #define SVM_SELECTOR_P_SHIFT 7
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index afb1b238202f..3bcf5a5fbac7 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -999,7 +999,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_gart_iommu_check();
+ #endif
+ 
+-	slaunch_setup_txt();
++	slaunch_setup();
+ 
+ 	/*
+ 	 * partially used pages are not usable - thus
+diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
+index b6ba4c526aa3..d81433a9b699 100644
+--- a/arch/x86/kernel/slaunch.c
++++ b/arch/x86/kernel/slaunch.c
+@@ -18,6 +18,7 @@
+ #include <asm/tlbflush.h>
+ #include <asm/e820/api.h>
+ #include <asm/setup.h>
++#include <asm/svm.h>
+ #include <asm/realmode.h>
+ #include <linux/slr_table.h>
+ #include <linux/slaunch.h>
+@@ -437,21 +438,11 @@ void __init slaunch_fixup_jump_vector(void)
+  * Intel TXT specific late stub setup and validation called from within
+  * x86 specific setup_arch().
+  */
+-void __init slaunch_setup_txt(void)
++static void __init slaunch_setup_txt(void)
+ {
+ 	u64 one = TXT_REGVALUE_ONE, val;
+ 	void __iomem *txt;
+ 
+-	if (!boot_cpu_has(X86_FEATURE_SMX))
+-		return;
+-
+-	/*
+-	 * If booted through secure launch entry point, the loadflags
+-	 * option will be set.
+-	 */
+-	if (!(boot_params.hdr.loadflags & SLAUNCH_FLAG))
+-		return;
+-
+ 	/*
+ 	 * See if SENTER was done by reading the status register in the
+ 	 * public space. If the public register space cannot be read, TXT may
+@@ -523,6 +514,42 @@ void __init slaunch_setup_txt(void)
+ 	pr_info("Intel TXT setup complete\n");
+ }
+ 
++/*
++ * AMD SKINIT specific late stub setup and validation called from within
++ * x86 specific setup_arch().
++ */
++static void __init slaunch_setup_skinit(void)
++{
++	u64 val;
++
++	/*
++	 * If the platform is performing a Secure Launch via SKINIT
++	 * INIT_REDIRECTION flag will be active.
++	 */
++	rdmsrl(MSR_VM_CR, val);
++	if (!(val & (1 << SVM_VM_CR_INIT_REDIRECTION)))
++		return;
++
++	/* Set flags on BSP so subsequent code knows it was a SKINIT launch */
++	sl_flags |= (SL_FLAG_ACTIVE|SL_FLAG_ARCH_SKINIT);
++	pr_info("AMD SKINIT setup complete\n");
++}
++
++void __init slaunch_setup(void)
++{
++	/*
++	 * If booted through secure launch entry point, the loadflags
++	 * option will be set.
++	 */
++	if (!(boot_params.hdr.loadflags & SLAUNCH_FLAG))
++		return;
++
++	if (boot_cpu_has(X86_FEATURE_SMX))
++		slaunch_setup_txt();
++	else if (boot_cpu_has(X86_FEATURE_SKINIT))
++		slaunch_setup_skinit();
++}
++
+ static inline void smx_getsec_sexit(void)
+ {
+ 	asm volatile ("getsec\n"
+@@ -533,7 +560,7 @@ static inline void smx_getsec_sexit(void)
+  * Used during kexec and on reboot paths to finalize the TXT state
+  * and do an SEXIT exiting the DRTM and disabling SMX mode.
+  */
+-void slaunch_finalize(int do_sexit)
++static void slaunch_finalize_txt(int do_sexit)
+ {
+ 	u64 one = TXT_REGVALUE_ONE, val;
+ 	void __iomem *config;
+@@ -594,3 +621,21 @@ void slaunch_finalize(int do_sexit)
+ 
+ 	pr_info("TXT SEXIT complete.\n");
+ }
++
++/*
++ * Used during kexec and on reboot paths to finalize the SKINIT.
++ */
++static void slaunch_finalize_skinit(void)
++{
++	/* AMD CPUs with PSP-supported DRTM */
++	if (!slaunch_is_skinit_psp())
++		return;
++}
++
++void slaunch_finalize(int do_sexit)
++{
++	if (boot_cpu_has(X86_FEATURE_SMX))
++		slaunch_finalize_txt(do_sexit);
++	else if (boot_cpu_has(X86_FEATURE_SKINIT))
++		slaunch_finalize_skinit();
++}
+diff --git a/include/linux/slaunch.h b/include/linux/slaunch.h
+index ec7e0d736a03..22e253960fdd 100644
+--- a/include/linux/slaunch.h
++++ b/include/linux/slaunch.h
+@@ -547,7 +547,7 @@ static inline int tpm2_log_event(struct txt_heap_event_log_pointer2_1_element *e
+ /*
+  * External functions available in mainline kernel.
+  */
+-void slaunch_setup_txt(void);
++void slaunch_setup(void);
+ void slaunch_fixup_jump_vector(void);
+ u32 slaunch_get_flags(void);
+ struct sl_ap_wake_info *slaunch_get_ap_wake_info(void);
+@@ -563,7 +563,7 @@ void slaunch_psp_finalize(void);
+ 
+ #else
+ 
+-static inline void slaunch_setup_txt(void)
++static inline void slaunch_setup(void)
+ {
+ }
+ 
+-- 
+2.49.0
 
-It could be disabled by the following if we discover any regression on
-single-CPU machines?
-
-if (num_online_cpus() =3D=3D 1)
-     return false;
-
->
-> >
-> > +static bool swap_sched_async_compress(struct folio *folio)
-> > +{
-> > +     struct swap_info_struct *sis =3D swp_swap_info(folio->swap);
-> > +     int nid =3D numa_node_id();
-> > +     pg_data_t *pgdat =3D NODE_DATA(nid);
-> > +
-> > +     if (unlikely(!pgdat->kcompressd))
-> > +             return false;
-> > +
-> > +     if (!current_is_kswapd())
-> > +             return false;
-> > +
-> > +     if (!folio_test_anon(folio))
-> > +             return false;
->
-> Are you sure the above three tests are really needed?
-
-Currently, it runs as a per-node thread mainly to accelerate asynchronous
-reclamation, which effectively reduces direct reclamation. Since direct
-reclamation already follows the slow path, asynchronous compression offers
-limited additional benefit in that context. Moreover, it's difficult
-to determine
-the optimal number of threads for direct reclamation, whereas the  compress=
-ion
-in the current direct reclamation allows it to utilize all CPUs.
-
-The first condition checks whether kcompressd is present. The second
-ensures that we're in kswapd asynchronous reclamation, not direct
-reclamation. The third condition might be optimized or dropped, at least fo=
-r
-swap-backed shmem, and similar cases.
-
-Thanks
-Barry
