@@ -1,83 +1,58 @@
-Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF55B1DFDA5;
-	Wed, 30 Apr 2025 18:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 321EC2DC791;
+	Wed, 30 Apr 2025 18:56:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039390; cv=none; b=XA3FkMkfahoGBff6QEDBYa/6oBrx9br/c4e3YVasdn2mfdLY/PtQq4huIJGjiUBusByC+J6I7549ben5XfzpUm4cL7eJHF7//b8N6ziCoIXjn4OoM6JPZGATComMJZU8fyj/VfAElvffTEkYwWjKcJX1fS8hMC0k9wnvuY/F5Ow=
+	t=1746039404; cv=none; b=kUlO7FdqYh9fch2i0xDrfXBzFElpAFN0tmc3jmIziqTKkaF7qWno9xfKG/4AvMXcNyOowY/TwnEMBq+7xexMk25byOb68/j81gjvHk6KNjBkuNdI291HGQycDBo2odq17Y6w26+kcnYZH5OGP2/NE8eSXyjTeBljzDzbx+aRDwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039390; c=relaxed/simple;
-	bh=alLES3wn1aAFAUtBAPq6rQdaW3D80Q7vAQRQbyQh1lE=;
+	s=arc-20240116; t=1746039404; c=relaxed/simple;
+	bh=E8Dg28eLfWM0Bp27HfmoqYVosUDnKw+dSGVkNPWm+t8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=URaoie/l9Hl93WDz0pBSMpJimZ5DCXGKXaeKO+eXpJDBKlwKvwgzbSdujLDqUuRIl8irfzCPMVsKasJBRkjYHFxPiMxEnISpDk1EjBD0mQ37M4//PTLazxbLcDo8ZkKlXdqPi2+LDurEnTh22CS3/Q9Rpa2pjNM3kavq5NXCq5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=j3/41Jgd; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=HLbqVmQY; arc=none smtp.client-ip=202.12.124.155
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=V0Pk47cda5uiQ43FkScOrOvz/FuuMyFMn6ec04nfbEe69DBv6kIKu0seRtiFEl0wgzK39ZNTOCv/YqWWn5NiRwor/ZeMOL0RjNN/j9H6gv4dlyn6/9ZkVOz/zwybqkFsoKqHsiYRSP0/+ADGKZor4Zo7xKvqDg54ki0BTnNBu7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sM6lS6Mz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="j3/41Jgd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HLbqVmQY"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id A61882540200;
-	Wed, 30 Apr 2025 14:56:26 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Wed, 30 Apr 2025 14:56:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm3; t=1746039386; x=1746125786; bh=lP0Hmi/QdP
-	d1+RgtWoU2Pue5AtzFe45mtYWAsbiLhZA=; b=j3/41Jgdhj0XvMSAZYTilXFJZY
-	VhD0ocBjVH0/KaoMniQNCi9BWCzdSGFx7HE1NdlYwyhdp8ZLH7L/C6W2LIOTDwfS
-	y4UQb6mNggkdUpWg+m6GTUrr+QMUzdbffid3A8Me8TA5nFHO0xImgJiTTTVPxYKn
-	HW+cPDbeOBByiS6PVNyr+/q7ELh0YR/rP5nza20bfezjMzChJKtmtKzzHvP3vqKx
-	b6VBWvH2212YcltxM96jqYexQw+Oeujeewyw+QFUBNqGa46nXsmJSrQV/R75vo9K
-	NIAl8AR49x4rgeeRynpO1+Hwm+7Eavup8ywCZu46Nd9g33L9T8PhW4WWBMcA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746039386; x=1746125786; bh=lP0Hmi/QdPd1+RgtWoU2Pue5AtzFe45mtYW
-	AsbiLhZA=; b=HLbqVmQYUHJFZ2I5ojx7/8wcO6dzbsr67mo+/1DHcglWjY/isEO
-	HCPU6SUkj35Mu4jtcGoPQNNt5870cglS71MTvbpJlOcdoN2w7ezEBjsYQoyU0cY6
-	oRfaML7+GA3i0fTDIzq1ynhc0kDqzyzMepAf0AeRLCilcLde0QfyPUBIbsRw1+Yx
-	4QGLl+hbT/Q2tF2cNeUXMB7Mbqg811UhTlu6fzXpeX4Ib8YSDLONvQo77gow+EaL
-	PCs/lmZ6ctMexxwSvWhBpJkM8miRKsn7vjB+6vGEl1hOlJmWoiG1uOLJa5frSfKo
-	JzehXaw4sRkxK7X4aVntv5CIpNIOgEMxqFA==
-X-ME-Sender: <xms:WnISaL4-dPhAyJzRzvhrOzK0tqVb68JQV5reNrswTBY8Vc32gFiCZg>
-    <xme:WnISaA6H-xxspObe7u9oMdVJe-1kNj1BMGrPgvc6o2JA_R49tOU_iJbH5wkWMIzew
-    yBUPa6LFx-a2w>
-X-ME-Received: <xmr:WnISaCdtt-6tCxIfH1pvX0P5droqrqKw2yC8ofPPYM2tZrREabjDJxZqM-IBDscDKIli1uoGQo8yUcTG-g8aY5TRbqoAUGE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgeejucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
-    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
-    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
-    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeekpdhmohguvgep
-    shhmthhpohhuthdprhgtphhtthhopehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhrtg
-    hpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtoheplhhi
-    nhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WnISaMLvASdQRn_9ks5mY_Erf34tbdK4hxPPCNMNGqvuX2D7lpQ4jA>
-    <xmx:WnISaPIlV9inqTZVOp0u-yUDg5L3fZyvMooqHP_Y2xvj4hCZ2Ku84A>
-    <xmx:WnISaFwwMcFmlxiYtCpFqGaqhWFiwk-FHcB2DpBz0Ex4FlNmNjRwYg>
-    <xmx:WnISaLLQ0UJl_qx8vMU1clYnalEaDydjPJazBr52zzKTwer1hLtBkA>
-    <xmx:WnISaOiL4O0B1i6Z-vRzPhr3fYwB2KwqYOVMXYh2mTUejSg3uJxMLADn>
-Feedback-ID: i787e41f1:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 30 Apr 2025 14:56:25 -0400 (EDT)
-Date: Wed, 30 Apr 2025 20:56:23 +0200
-From: Greg KH <greg@kroah.com>
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: duplicate patch in the driver-core tree
-Message-ID: <2025043005-default-hurray-7567@gregkh>
-References: <20250430174726.0322f461@canb.auug.org.au>
- <4984921.GXAFRqVoOG@rjwysocki.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sM6lS6Mz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3593C4CEE7;
+	Wed, 30 Apr 2025 18:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746039404;
+	bh=E8Dg28eLfWM0Bp27HfmoqYVosUDnKw+dSGVkNPWm+t8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sM6lS6Mz8dWP55ow90MyM3Mbyw3jy961LcZc5oC2YA0QQwp3rfFIy42KVuTLaydO+
+	 rvPnZkgNdLq+gDn6REqgCRCD+qGPU1PyR/mIjiMZ7lmNN3zMB91W0E+RWTbA4pwnP7
+	 ykOBmwgcUnmZue5g0VYaIwWcZCILnt629I/TmpZ+mJQcm/ZIRETTfF7JXiM7kEi5+4
+	 k1CE8AucFzceDYOu3Q2QnMxVNtwsBTtM1Uuf2MreJBt8mhQ5DOQ4BsUb08hx+uEvYS
+	 BLU8h+o5nubKrJMhcB6g+Wq5D90EBoHXcreFP5HLVBaXY6yOhfKGLnNP24gnB3HgsQ
+	 ApPSk9akjLlBw==
+Date: Wed, 30 Apr 2025 11:56:41 -0700
+From: Kees Cook <kees@kernel.org>
+To: kernel test robot <lkp@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, llvm@lists.linux.dev,
+	oe-kbuild-all@lists.linux.dev, Bill Wendling <morbo@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Petr Mladek <pmladek@suse.com>, David Gow <davidgow@google.com>,
+	Rae Moar <rmoar@google.com>, Tamir Duberstein <tamird@gmail.com>,
+	Diego Vieira <diego.daniel.professional@gmail.com>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Mark Brown <broonie@kernel.org>, WangYuli <wangyuli@uniontech.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	=?iso-8859-1?Q?G=FCnther?= Noack <gnoack@google.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 2/3] lib/tests: Add randstruct KUnit test
+Message-ID: <202504301156.5DA54A7@keescook>
+References: <20250427013836.877214-2-kees@kernel.org>
+ <202504271150.Be642Srg-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,29 +61,42 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4984921.GXAFRqVoOG@rjwysocki.net>
+In-Reply-To: <202504271150.Be642Srg-lkp@intel.com>
 
-On Wed, Apr 30, 2025 at 08:34:39PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, April 30, 2025 9:47:26 AM CEST Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > The following commit is also in the pm tree as a different commit (but
-> > the same patch):
-> > 
-> >   142ba31d8b4a ("PM: wakeup: Do not expose 4 device wakeup source APIs")
-> > 
-> > This is commit
-> > 
-> >   150b374b9ff9 ("PM: wakeup: Define four low-level functions as static")
-> > 
-> > in the pm tree.
+On Sun, Apr 27, 2025 at 11:47:19AM +0800, kernel test robot wrote:
+> Hi Kees,
 > 
-> I'll drop this from the PM tree, but this technically is PM material.
+> kernel test robot noticed the following build warnings:
 > 
+> [auto build test WARNING on kees/for-next/hardening]
+> [also build test WARNING on linus/master v6.15-rc3 next-20250424]
+> [cannot apply to akpm-mm/mm-nonmm-unstable soc/for-next]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Kees-Cook/randstruct-gcc-plugin-Remove-bogus-void-member/20250427-093946
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git for-next/hardening
+> patch link:    https://lore.kernel.org/r/20250427013836.877214-2-kees%40kernel.org
+> patch subject: [PATCH 2/3] lib/tests: Add randstruct KUnit test
+> config: riscv-randconfig-001-20250427 (https://download.01.org/0day-ci/archive/20250427/202504271150.Be642Srg-lkp@intel.com/config)
+> compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250427/202504271150.Be642Srg-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202504271150.Be642Srg-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+> >> lib/tests/randstruct_kunit.c:36:36: warning: '_Static_assert' with no message is a C23 extension [-Wc23-extensions]
+>       36 | _Static_assert(MEMBER_NAME_MAX == 8);
+>          |                                    ^
+>          |                                    , ""
+>    1 warning generated.
 
-Sorry about that, my fault.  I can revert it if that makes more sense.
-Which ever you want is fine.
+Thanks! I've fixed this locally.
 
-thanks,
-
-greg k-h
+-- 
+Kees Cook
