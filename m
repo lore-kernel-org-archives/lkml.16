@@ -1,211 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CD025B1F6;
-	Wed, 30 Apr 2025 12:33:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0550D25B68D;
+	Wed, 30 Apr 2025 12:33:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746016425; cv=none; b=qB7VkN5LUYbgSNgUpa2B3g+hMhB8xAvhw+kWrt99xCaJtmNSHZh9I/S6UXdt1u1lJjM8pt0ddXvIsTA2wph/LG2IMRv+dNLLxrYLnh20qGZx5dlY+xhsIaXCJTXfsEC1AzqazbQMb797Tkd2JdpTbVVa1hgGjYDsr5hhiPK3cbo=
+	t=1746016428; cv=none; b=hsbhDAKptCsxb6FmE1ougJD08fWzmjpCsMhwZsGPmUg90S1DZrGP6DBhnL9X0xLeYaerE9d5LMQ8XJeX2urkfikuf0ERX/+FJQzRjmXLnVZXhZSJ/VaAScQeQNYbHV7a/wwyJCfdxHmxyAyQkPkcHjIeO3ObcZLBgh1hMSx4l/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746016425; c=relaxed/simple;
-	bh=CYlvTWDWhOgSaAty4rTheIQ+iS6Dm1BlS+jESU4cLTU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qds+/qvAlWOTPMs7OeiPcBoYN4AIHKLHXGCxhMkbeHhbrG8XLh1VBYZz6WsltYN10c5yqXczVz2CDMZhZOHga6KmlKgGnJ+mx1Opqv8q4rgxceH9tT8s2EWhdR1apjKSegPXbWkSLWiPwBcjKrH5dKhdsp3tQb89azEYK4D4Zmo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ej07RYaB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746016428; c=relaxed/simple;
+	bh=NaQIDks9q3n5AJ3fdvvvN06Dc2CyVDzyDsG6sNYlTnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jD2cOz2VYmjnC2EEHcpVsIWycXTiKDeUCx5uSIYYYAqFwA2rLF7YXZmNvnnK7OaApzmBvdmsJb5UPwFJGnFFEx0DBV4+qvMmoh9Lrjo+bSjBp8tMhzSF1HE6k1MfOAN0cIHPolTs6MWumpxlpmmBX2vLrYB9kEosMpSVMUJAQVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5r9b7Lu; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ej07RYaB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7211AC4CEE9;
-	Wed, 30 Apr 2025 12:33:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746016425;
-	bh=CYlvTWDWhOgSaAty4rTheIQ+iS6Dm1BlS+jESU4cLTU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ej07RYaBPnSgRT4rQciY+84QnmXBjw42Y5B0ot7gAr3j0265bSs7jsb0/K9jEA+Q8
-	 A+grj75Arf2GoSPQ31LJbADZ6G+2ouaByOPimfTO1nbD7pZ8NWGwTjKHOJimt8zS4N
-	 re3NeH0bbnXwMec0v+qoH++nVMF/ahAxoompySeNZ4dJlx6gyGmMV2aKQbHBvw9fCL
-	 pgODU3EdT6ATfPw74/vER8DcUASxAajBD74UXwS+bRDupd+dMesOhu+o4ueY8N9f2z
-	 /6tIgQZGY5KnyQYXvrqtFG/I68WrziuagzjyxDG4clYoCMaeyA9JsCQsZ/Sc2KpJjx
-	 yMujGNnKAGxuw==
-Date: Wed, 30 Apr 2025 14:33:42 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Abel Vesa <abel.vesa@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-pwm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
-Message-ID: <5urcec625u3jva5kyf7bztehqijfhztmo4op25joqyt7gl6kjt@5tn2fbot3fri>
-References: <20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org>
- <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
- <Z8BjiRjLin8jTE8j@linaro.org>
- <rplq65h5k7kfu7anwhuh3w6lmwtm47lzeruofon4ilsxkhogjl@6k7nmeotjidd>
- <Z8CX3vr1xuaKT38m@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5r9b7Lu"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736aa9d0f2aso8931874b3a.0;
+        Wed, 30 Apr 2025 05:33:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746016426; x=1746621226; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t3SNFYqaM9t1VFZcOe3OuDknXKerjgLDw3YgF3gLBg0=;
+        b=H5r9b7Lu94UtIDctKaRmWILKuvdyrb62VIQdkVw+qHZBAfPHdApqu10f1PIxhuXkfb
+         Q/bha2NJ1Xe3Epi25HSIqI7ZIoNDA5XRNN94Y6+iwCdsQRRnqOCq6i5sZfg2XvGofX/K
+         GBJ2RgPfjdVPBwY1R+uSvzSyoOD/KD33BSSQJ4RwVi++OUkx0WK3Pd5HrI+qJ0NrHpsT
+         WhRIqHYTqeUVOyLg38Si28xXDY6J2O5WrupgMfrKbSoHHz3MGCNsRKQqfKmwRcX3l7P9
+         I5FRzse5F0mTaHUSaJa7Ca19mrX1Fpth7Eim3O402DVJ3+PDWsQlrh3lS6S2FTqGLOAK
+         7FQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746016426; x=1746621226;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=t3SNFYqaM9t1VFZcOe3OuDknXKerjgLDw3YgF3gLBg0=;
+        b=mvQImYw6b52dgRYP6jcxla4pVuT6ektUszNBYMpiACB2NXcDRGRm0NhbNc+I7Dv5iM
+         Eij/PqZn1Wm14I/Sz0SETrXbrLS/XNqO4zQF/5j9RSSkXO1Jg5KaGl0memqz+oYNx1tv
+         b2rMe0slA7644gpuPfkFDxp5l9cEFcY7eS9cUrbyuWCzdamLv+dyR6F20V+A2dXhGk0n
+         LXjxNireBD2bXpk+H++skVYQAOOgHGcoxaIdIHgQx85hI+Vw62DppCILylAZqIG690cD
+         KeZ9hHSnjPQvDaBwZGhZVPBlwurnOwf9uRq/M8bpass+qgTeb0xeCcj/yO+9DsLBGXKk
+         Q9AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUU2x+T7joLf6S50Tg3MYzCTtddIKUtu9D0bh63Pel5d+27cAD81kfWtANgZ1SKFtnCWL1Y6xxu0EKU8zM0/7E+pU=@vger.kernel.org, AJvYcCVnN+Z46dmyNVkWGoS8knKocimmDLDCjhU8BoCj3J9DfBHsX4mYbMSGx84tUrDxpclKsumw8f9QLoclnLI=@vger.kernel.org, AJvYcCWMeNi8BCBrXocVGnoqhq/8u5Ho3Y1HObQ3rPqsUR3G9wUJbPRXt47QtzJqRCwXm33YHMrPVkvlSZo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcJtlihRpZWPQ3Qv9RWRdB38bH/zQ2yOc0EMpFfPTand9yFF1g
+	4KbGCoonCK+pMCVzONCu1Q5ulhTbAfPh+gkrrhJSjNVAdeJWT5yHKfM44Q==
+X-Gm-Gg: ASbGncuEp4KRxtAAtuR/e7sHtw8IyoGipOymW67mWfSt9L7j/q+ccxWH4UTHQpXmjac
+	l4QC9s/PKUKntpt/oyhfPUp82N7Tj5GOOCgwA+fjI/txUBdCnoPpkfs8fxqMr4153sfMD5FLmdG
+	FhLC0qxBFmDiKWu8BnIEkvCnyilT2a67HO7EfqGayA8h/gcc9wsuiVIhWS7H705UZE7QYOeW3I8
+	jQqCpgl+eeQ83VQZr6cz+hRj8/Dwyp/s89G7pbMiocWTjHd4myTaEWDOFQZKzopHRpD6qdT+yLc
+	33N8KaeWCCP8BCCyoVY9QaGyGj6+5/k97ehEuX9CuMcA6lC8JMo3rw==
+X-Google-Smtp-Source: AGHT+IF2qnBTKenZ1AypOYLHMpucMP9SRa5u9iFuGqy1ut0HTtqxttm3kMbnkZczvm/vAv3TieOZ8g==
+X-Received: by 2002:a05:6a20:d50b:b0:1f5:709d:e0cb with SMTP id adf61e73a8af0-20a8980fb29mr4306826637.39.1746016426310;
+        Wed, 30 Apr 2025 05:33:46 -0700 (PDT)
+Received: from localhost.localdomain ([110.44.101.8])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a62e23sm1522627b3a.147.2025.04.30.05.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 05:33:45 -0700 (PDT)
+From: Anand Moon <linux.amoon@gmail.com>
+To: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>,
+	Lukasz Luba <lukasz.luba@arm.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-pm@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
+	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
+	linux-kernel@vger.kernel.org (open list),
+	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT:Keyword:\b(?i:clang|llvm)\b)
+Cc: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH v6 3/4] thermal/drivers/exynos: Remove redundant IS_ERR() checks for clk_sec clock
+Date: Wed, 30 Apr 2025 18:02:59 +0530
+Message-ID: <20250430123306.15072-4-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250430123306.15072-1-linux.amoon@gmail.com>
+References: <20250430123306.15072-1-linux.amoon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2ysdmqcj2sl7kjzl"
-Content-Disposition: inline
-In-Reply-To: <Z8CX3vr1xuaKT38m@linaro.org>
+Content-Transfer-Encoding: 8bit
 
+Remove unnecessary IS_ERR() checks for the clk_sec clock,
+the clk_enable() and clk_disable() functions can handle NULL clock
+pointers, so the additional checks are redundant and have been removed
+to simplify the code.
 
---2ysdmqcj2sl7kjzl
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
-MIME-Version: 1.0
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+v6: Add Rb - Lukasz and Fix the typo in the subject
+v5: None
+v4: drop IE_ERR() for clk_unprepare() as its handle in earlier code.
+v3: improve the commit message.
+---
+ drivers/thermal/samsung/exynos_tmu.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-Hello Abel,
+diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+index aa0726b33c84..5f017a78f437 100644
+--- a/drivers/thermal/samsung/exynos_tmu.c
++++ b/drivers/thermal/samsung/exynos_tmu.c
+@@ -258,8 +258,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+ 
+ 	mutex_lock(&data->lock);
+ 	clk_enable(data->clk);
+-	if (!IS_ERR(data->clk_sec))
+-		clk_enable(data->clk_sec);
++	clk_enable(data->clk_sec);
+ 
+ 	status = readb(data->base + EXYNOS_TMU_REG_STATUS);
+ 	if (!status) {
+@@ -269,8 +268,7 @@ static int exynos_tmu_initialize(struct platform_device *pdev)
+ 		data->tmu_clear_irqs(data);
+ 	}
+ 
+-	if (!IS_ERR(data->clk_sec))
+-		clk_disable(data->clk_sec);
++	clk_disable(data->clk_sec);
+ 	clk_disable(data->clk);
+ 	mutex_unlock(&data->lock);
+ 
+-- 
+2.49.0
 
-On Thu, Feb 27, 2025 at 06:50:38PM +0200, Abel Vesa wrote:
-> On 25-02-27 16:51:15, Uwe Kleine-K=F6nig wrote:
-> > On Thu, Feb 27, 2025 at 03:07:21PM +0200, Abel Vesa wrote:
-> > > On 25-02-26 17:34:50, Uwe Kleine-K=F6nig wrote:
-> > > > On Wed, Feb 26, 2025 at 05:31:08PM +0200, Abel Vesa wrote:
-> > > > > The current implementation assumes that the PWM provider will be =
-able to
-> > > > > meet the requested period, but that is not always the case. Some =
-PWM
-> > > > > providers have limited HW configuration capabilities and can only
-> > > > > provide a period that is somewhat close to the requested one. This
-> > > > > simply means that the duty cycle requested might either be above =
-the
-> > > > > PWM's maximum value or the 100% duty cycle is never reached.
-> > > >=20
-> > > > If you request a state with 100% relative duty cycle you should get=
- 100%
-> > > > unless the hardware cannot do that. Which PWM hardware are you usin=
-g?
-> > > > Which requests are you actually doing that don't match your expecta=
-tion?
-> > >=20
-> > > The PWM hardware is Qualcomm PMK8550 PMIC. The way the duty cycle is
-> > > controlled is described in the following comment found in lpg_calc_fr=
-eq
-> > > of the leds-qcom-lpg driver:
-> > >=20
-> > > /*
-> > >  * The PWM period is determined by:
-> > >  *
-> > >  *          resolution * pre_div * 2^M
-> > >  * period =3D --------------------------
-> > >  *                   refclk
-> > >  *
-> > >  * Resolution =3D 2^9 bits for PWM or
-> > >  *              2^{8, 9, 10, 11, 12, 13, 14, 15} bits for high resolu=
-tion PWM
-> > >  * pre_div =3D {1, 3, 5, 6} and
-> > >  * M =3D [0..7].
-> > >  *
-> > >  * This allows for periods between 27uS and 384s for PWM channels and=
- periods between
-> > >  * 3uS and 24576s for high resolution PWMs.
-> > >  * The PWM framework wants a period of equal or lower length than req=
-uested,
-> > >  * reject anything below minimum period.
-> > >  */
-> > >=20
-> > > So if we request a period of 5MHz, that will not ever be reached no m=
-atter what config
-> > > is used. Instead, the 4.26 MHz is selected as closest possible.
-> >=20
-> > The trace in the other mail thread suggest that you asked for a period
-> > of 5 ms, not 5 MHz. And that results in a period of 4.26 ms.
->=20
-> OK. So unit is ms. Got it.
->=20
-> >=20
-> > > Now, the pwm_bl is not aware of this limitation and will request duty=
- cycle values that
-> > > go above 4.26MHz.
-> >=20
-> > It requests .period =3D 5 ms + .duty_cycle =3D 5 ms. This is fine, and
-> > according to the trace this results in both values becoming 4.26 ms in
-> > real life. Seems fine to me.
->=20
-> Right, but as I keep trying to explain is that, the consumer keeps
-> asking for duty cycles that go over the 4.26ms, which is the period that
-> the provider decided it can do instead of 5ms.
-
-I see no problem here. Yes, requests are not implemented exactly in
-general, but there is no way around that. For some use-cases the picked
-configuration is sensible, for others less so. There is also no way
-around that.
-
-> > > > > This could be easily fixed if the pwm_apply*() API family would a=
-llow
-> > > > > overriding the period within the PWM state that's used for provid=
-ing the
-> > > > > duty cycle. But that is currently not the case.
-> > > >=20
-> > > > I don't understand what you mean here.
-> > >=20
-> > > What I was trying to say is that the PWM generic framework currently =
-doesn't
-> > > allow overriding the PWM state's period with one provided by the cons=
-umer,
-> > > when calling pwm_apply_might_sleep().
-> >=20
-> > Either I still don't understand what you want, or that is impossible or
-> > useless. If you target .period =3D 5 ms and the hardware can only do 4.=
-26
-> > ms, why would you want to override period to 5 ms?
->=20
-> Meaning the consumer should become aware of the period the provider can
-> do before asking for a duty cycle.=20
-
-There is pwm_round_waveform_might_sleep() that you could use. Downside
-is that is currently only works for two lowlevel drivers.
-
-> If you look at the other mail thread, the trace there shows the
-> following sequence for every new backlight update request:
->=20
-> 1. pwm_apply with consumer's period (5ms)
-> 2. pwm_get reads the provider's period (4.25ms)=20
->    - which is what the provider is able to do instead of 5ms
-> 3. pwm_apply (due to debug) which uses the state from 2.
-> 4. pwm_get reads back exactly as 2.
->=20
-> So we can ignore 3 and 4 for now as they are there due to debug,
-> but the step 1 still requests a value over the 4.26ms (5ms),
-> which in the provider will translate to a pwm value higher than allowed
-> by the selected configuration.
-
-The lowlevel driver sees the request e.g.
-
-	.period =3D 5000
-	.duty_cycle =3D 4600
-
-and is supposed to implement (I guess)
-
-	.period =3D 4260
-	.duty_cycle =3D 4260
-
-=2E I don't see a technical problem here (apart from you being unlucky
-about the choice made?).
-
-Best regards
-Uwe
-
---2ysdmqcj2sl7kjzl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgSGKQACgkQj4D7WH0S
-/k44Rwf/aNKxkT+yPlC4Q8XTXzFe99nZwAn4OVpAe8qXQ6H3PeeU4CGPHDxPomi5
-QPpT0x53dWtJbk0qe9vr6fs6smmhN0w/kIVCaBj1eRUYKQdPnAE0lmPz01njPeM1
-1ASwQxqhOS2ikZHvwgm7hZlXee5nW39R6Fdx/aC/8ff+Xiv+wk283f8aXQwFaYv8
-C6W9z98zQ/51YZpmDATg6K9tD0uhMwfYsO5sikUNdZFv6rNosqzcd5DX+lQGE1ud
-SxUJprwiGIgi/sy0Yhy3JKAYK4+ktk27E+j+VX8qi2lsrLWqtvT54eulUcRX+tAj
-5ra7VKQWNbSMFO38wT6AIB3z3uzI7g==
-=B4w0
------END PGP SIGNATURE-----
-
---2ysdmqcj2sl7kjzl--
