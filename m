@@ -1,48 +1,49 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCB52213E89
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8752C1EB19B;
+	Wed, 30 Apr 2025 08:03:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000202; cv=none; b=aqqrXJJzCnis/aghsHLTLgwjZCrZH+ENxWd9ma4ONvopF0BWxzFkX5z3FX5+o1ZJfp6dB64E7Z8bsbNqHQM54rcnaFoacpWSr3U3bLO4vumkPktflwvSmJqUE+48TtXkqmQ+zDuajOXUQg3EaNimCRkgmfoPtFBfwgzACGGY3wA=
+	t=1746000213; cv=none; b=MWvaAUM+gtZ9zzEFqsPgHeBP+tp2NkGuMMoat4DZdJh8pd3EIiWdZ6Cl5vUGnFqvqDXiODjBF3atwXCIEeWJq9z5Ok7tQsl6QcaAs+8k9pghZ3f2WqH1CrHI0D8lTr1lI9IZeEdZYGW1wilDN4kMZ9c92FLNPYaWcAnWz2yzlzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000202; c=relaxed/simple;
-	bh=CXsTHkWQEAL72OBe7l8/qFCxgil1OjuIPzgRVi9MxnI=;
+	s=arc-20240116; t=1746000213; c=relaxed/simple;
+	bh=RlnABCF7WCe8RVLZReHP66Pa73bC8yt5d8eBUmJneKE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VpFmHQRUDQLyIbb0BHNfm7LSSz7kGlB+oTZs7PnLGVWnjU1Iby82Eh2ClLGcH3gf2FeLWiy6gLBRluI1SJT3TVJ5lVav550Im8MtAHVWdX9O1DaatUgjlcG31J8bjwUAHAR/skRmwNTklbDPjBN4INcLG02OLCYVxoTL56+rRkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 1826C1F7BD;
-	Wed, 30 Apr 2025 08:03:19 +0000 (UTC)
-Authentication-Results: smtp-out2.suse.de;
-	none
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id F0B47139E7;
-	Wed, 30 Apr 2025 08:03:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id nxaLOkbZEWjfCAAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Wed, 30 Apr 2025 08:03:18 +0000
-Date: Wed, 30 Apr 2025 10:03:17 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member
- field
-Message-ID: <20250430080317.GF9140@twin.jikos.cz>
-Reply-To: dsterba@suse.cz
-References: <20250429151800.649010-1-neelx@suse.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=aMaKjwJVI0Cm6x3uyQUtQ14FM577qx61jMPmIqFW/ZLbN4GYq4ag1q7vmhofNr6ZzxthfY7Y2WJOebY249WmrPajIg+co/In+bYWqtILlcG77W+ytUyP1y1L+tkpsIVCa7VtKw9Bz4+UywVLfh08R0E0dT6DUS4jAkRVoDoGpnw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBFir0Pu; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBFir0Pu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA10CC4CEE9;
+	Wed, 30 Apr 2025 08:03:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746000212;
+	bh=RlnABCF7WCe8RVLZReHP66Pa73bC8yt5d8eBUmJneKE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UBFir0PumNtsyhRcyxswUYKkQFbxj4U9rU1ILc/gnLeWlVWvWv0AuFFR43w79q5nI
+	 lC4XHCpPUuxLiQHZVitSfmKwA6wzrN51gkEOBiB68nyFedAw2890mXFFrv2N4plGkF
+	 pgbSjCp3p7CloUXv9rEuHPCBg6Y3UTFTOvh5VIe67CAnVmKpZL94v1bv2zaoD/Ezy6
+	 ITkdVoR9Ywz5gzKHONxvQ7XL+hLOnjuc4Kc8U3odszxuh2aAUl69V1msFUfo0iZZzJ
+	 Xx7yB3KU9KZriVTBdH7We3SMz1tHsqQRzd6Y4QcIM81vRccWPu7/S7kMdzj46aRSHE
+	 TNVSXGWOHcoyA==
+Date: Wed, 30 Apr 2025 10:03:27 +0200
+From: Niklas Cassel <cassel@kernel.org>
+To: Wilfred Mallawa <wilfred.opensource@gmail.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Alistair Francis <alistair@alistair23.me>,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Subject: Re: [PATCH] PCI: dwc: Add support for slot reset on link down event
+Message-ID: <aBHZT_mOruwH7HxJ@ryzen>
+References: <20250430-b4-pci_dwc_reset_support-v1-1-f654abfa7925@wdc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,72 +52,208 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429151800.649010-1-neelx@suse.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	REPLY(-4.00)[];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU]
-X-Spam-Flag: NO
-X-Spam-Score: -4.00
-X-Rspamd-Queue-Id: 1826C1F7BD
-X-Rspamd-Pre-Result: action=no action;
-	module=replies;
-	Message is reply to one we originated
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Level: 
+In-Reply-To: <20250430-b4-pci_dwc_reset_support-v1-1-f654abfa7925@wdc.com>
 
-On Tue, Apr 29, 2025 at 05:17:57PM +0200, Daniel Vacek wrote:
-> Even super block nowadays uses nodesize for eb->len. This is since commits
+Hello Wilfred,
+
+Nice to see this feature :)
+
+On Wed, Apr 30, 2025 at 05:43:51PM +1000, Wilfred Mallawa wrote:
+> From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
 > 
-> 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
-> da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
-> ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
-> a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
+> The PCIe link may go down in cases like firmware crashes or unstable
+> connections. When this occurs, the PCIe slot must be reset to restore
+> functionality. However, the current driver lacks link down handling,
+> forcing users to reboot the system to recover.
 > 
-> With these the eb->len is not really useful anymore. Let's use the nodesize
-> directly where applicable.
+> This patch implements the `reset_slot` callback for link down handling
+> for DWC PCIe host controller. In which, the RC is reset, reconfigured
+> and link training initiated to recover from the link down event.
+> 
+> This patch by extension fixes issues with sysfs initiated bus resets.
+> In that, currently, when a sysfs initiated bus reset is issued, the
+> endpoint device is non-functional after (may link up with downgraded link
+> status). With this patch adding support for link down recovery, a sysfs
+> initiated bus reset works as intended. Testing conducted on a ROCK5B board
+> with an M.2 NVMe drive.
+> 
+> Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+> ---
+> Hey all,
+> 
+> This patch builds ontop of [1] to extend the reset slot support for the
+> DWC PCIe host controller. Which implements link down recovery support
+> for the DesignWare PCIe host controller by adding a `reset_slot` callback.
+> This allows the system to recover from PCIe link failures without requiring a reboot.
+> 
+> This patch by extension improves the behavior of sysfs-initiated bus resets.
+> Previously, a `reset` issued via sysfs could leave the endpoint in a
+> non-functional state or with downgraded link parameters. With the added
+> link down recovery logic, sysfs resets now result in a properly reinitialized
+> and fully functional endpoint device. This issue was discovered on a
+> Rock5B board, and thus testing was also conducted on the same platform
+> with a known good M.2 NVMe drive.
+> 
+> Thanks!
+> 
+> [1] https://lore.kernel.org/all/20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org/
+> ---
+>  drivers/pci/controller/dwc/Kconfig            |  1 +
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 89 ++++++++++++++++++++++++++-
+>  2 files changed, 88 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..878c52de0842e32ca50dfcc4b66231a73ef436c4 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -347,6 +347,7 @@ config PCIE_ROCKCHIP_DW_HOST
+>  	depends on OF
+>  	select PCIE_DW_HOST
+>  	select PCIE_ROCKCHIP_DW
+> +	select PCI_HOST_COMMON
+>  	help
+>  	  Enables support for the DesignWare PCIe controller in the
+>  	  Rockchip SoC (except RK3399) to work in host mode.
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index 3c6ab71c996ec1246954f52a9454c8ae67956a54..4c2c683d170f19266e1dfe0efde76d6feb23bf7a 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -23,6 +23,8 @@
+>  #include <linux/reset.h>
+>  
+>  #include "pcie-designware.h"
+> +#include "../../pci.h"
+> +#include "../pci-host-common.h"
+>  
+>  /*
+>   * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
+> @@ -83,6 +85,9 @@ struct rockchip_pcie_of_data {
+>  	const struct pci_epc_features *epc_features;
+>  };
+>  
+> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
+> +				       struct pci_dev *pdev);
+> +
+>  static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
+>  {
+>  	return readl_relaxed(rockchip->apb_base + reg);
+> @@ -256,6 +261,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
+>  					 rockchip);
+>  
+>  	rockchip_pcie_enable_l0s(pci);
+> +	pp->bridge->reset_slot = rockchip_pcie_rc_reset_slot;
+>  
+>  	return 0;
+>  }
+> @@ -455,6 +461,11 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
+>  	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
+>  	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
+>  
+> +	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
+> +		dev_dbg(dev, "hot reset or link-down reset\n");
+> +		pci_host_handle_link_down(pp->bridge);
+> +	}
+> +
+>  	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
+>  		if (rockchip_pcie_link_up(pci)) {
+>  			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
+> @@ -536,8 +547,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
+>  		return ret;
+>  	}
+>  
+> -	/* unmask DLL up/down indicator */
+> -	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
+> +	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
+> +	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
+>  	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
+>  
+>  	return ret;
+> @@ -688,6 +699,80 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  	return ret;
+>  }
+>  
+> +static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
+> +				  struct pci_dev *pdev)
+> +{
+> +	struct pci_bus *bus = bridge->bus;
+> +	struct dw_pcie_rp *pp = bus->sysdata;
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
+> +	struct device *dev = rockchip->pci.dev;
+> +	u32 val;
+> +	int ret;
+> +
+> +	dw_pcie_stop_link(pci);
+> +	rockchip_pcie_phy_deinit(rockchip);
+> +
+> +	ret = reset_control_assert(rockchip->rst);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = rockchip_pcie_phy_init(rockchip);
+> +	if (ret)
+> +		goto disable_regulator;
+> +
+> +	ret = reset_control_deassert(rockchip->rst);
+> +	if (ret)
+> +		goto deinit_phy;
+> +
+> +	ret = rockchip_pcie_clk_init(rockchip);
+> +	if (ret)
+> +		goto deinit_phy;
 
-I've had this patch in my local branch for some years from the times we
-were optimizing extent buffer size. The size on release config is 240
-bytes. The goal was to get it under 256 and keep it aligned.
+Here you call rockchip_pcie_clk_init(), but I don't see that we ever called
+clk_bulk_disable_unprepare() after stopping the link. I would have expected
+the clk framework to have given us a warning about enabling clocks that are
+already enabled.
 
-Removing eb->len does not change the structure size and leaves a hole
 
- struct extent_buffer {
-        u64                        start;                /*     0     8 */
--       u32                        len;                  /*     8     4 */
--       u32                        folio_size;           /*    12     4 */
-+       u32                        folio_size;           /*     8     4 */
-+
-+       /* XXX 4 bytes hole, try to pack */
-+
-        long unsigned int          bflags;               /*    16     8 */
-        struct btrfs_fs_info *     fs_info;              /*    24     8 */
-        void *                     addr;                 /*    32     8 */
-@@ -5554,8 +5556,8 @@ struct extent_buffer {
-        struct rw_semaphore        lock;                 /*    72    40 */
-        struct folio *             folios[16];           /*   112   128 */
- 
--       /* size: 240, cachelines: 4, members: 14 */
--       /* sum members: 238, holes: 1, sum holes: 2 */
-+       /* size: 240, cachelines: 4, members: 13 */
-+       /* sum members: 234, holes: 2, sum holes: 6 */
-        /* forced alignments: 1, forced holes: 1, sum forced holes: 2 */
-        /* last cacheline: 48 bytes */
- } __attribute__((__aligned__(8)));
+> +
+> +	ret = pp->ops->init(pp);
+> +	if (ret) {
+> +		dev_err(dev, "Host init failed: %d\n", ret);
+> +		goto deinit_clk;
+> +	}
+> +
+> +	/* LTSSM enable control mode */
+> +	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
+> +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
+> +
+> +	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE, PCIE_CLIENT_GENERAL_CON);
+> +
+> +	ret = dw_pcie_setup_rc(pp);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to setup RC: %d\n", ret);
+> +		goto deinit_clk;
+> +	}
+> +
+> +	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
+> +	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
+> +	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
+> +
+> +	ret = dw_pcie_start_link(pci);
+> +	if (ret)
+> +		return ret;
 
-The benefit of duplicating the length in each eb is that it's in the
-same cacheline as the other members that are used for offset
-calculations or bit manipulations.
+Here you are simply returning ret in case of error,
+should we perhaps goto error if this function fails?
 
-Going to the fs_info->nodesize may or may not hit a cache, also because
-it needs to do 2 pointer dereferences, so from that perspective I think
-it's making it worse.
 
-I don't think we need to do the optimization right now, but maybe in the
-future if there's a need to add something to eb. Still we can use the
-remaining 16 bytes up to 256 without making things worse.
+> +
+> +	ret = dw_pcie_wait_for_link(pci);
+> +	if (ret)
+> +		return ret;
+
+Here, I think that we should simply call dw_pcie_wait_for_link()
+without checking for error.
+
+1) That is what Mani does in the qcom patch that implements the
+reset_slot() callback.
+2) That is what we do in:
+https://github.com/torvalds/linux/blob/master/drivers/pci/controller/dwc/pcie-designware-host.c#L558-L559
+
+(Ignore errors, the link may come up later)
+
+
+Kind regards,
+Niklas
