@@ -1,130 +1,114 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FFC20D505
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7CD21B9C3;
+	Wed, 30 Apr 2025 08:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001713; cv=none; b=V0JsVhBh1W1SBxrxsHyHaLh4L6VEv38iUD0luu+Ve4EkvZcr/0//ubIuT8hN0Ot2GpnPzmUU5i430v6rD4/nqvozZeRfrdji9nfynmehtJh88mazo/L+PdRx1NmgmQ+UeL3VBzGy4XWmgP91wDZyrXToULqJeLeUkL9f6kSg+3o=
+	t=1746001719; cv=none; b=u2w8dYtcman2krXcIVTEcL6FxhoBXuwFIvGdo/g4HeQXWQ5Nu0ZbTrBs/eY/BSeSPZvpDwUsbnwUxwLlleRFVothCYr70HO6rgwaN4Tcykhay2kYysQkmtUQniwAheK7kDEx6h3fU3c09clezAII+/O+HMvBGEgqqd0cfvmrYgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001713; c=relaxed/simple;
-	bh=Tgj0b8wEyAscpECMyq6oZdPbM5PjpTjZ9DzPNxVUtdo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=idQADvCLurazqvXNeb0oGLxxFgvBJFYCfjSyjbY3lMCC8qMCHamD+j076jvk+H4Lz5aPrqK0x0Z3i0Sot8ZNoPgqxnB83koN98qMchS8WrcbB9gXyR6fBiJAxmbjqbDjE4bks6k5fjS42t2VfOVvE2imtO4vxGhMYF4+kIO1o1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ugWvjkNX; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1746001719; c=relaxed/simple;
+	bh=dRAs2qXXUA/N97RfHpdlApe9kO3tgf2G0Ws27HW/leU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hh9BgXNAyqdpXiWZMpx4lCG/+u5JAJ3xfgLsyFm3KfTgoUXV/f3FmW5UawftkLrk+D2CW24UrZQhneC7y9zqTOxHy7lwOYwr3G2Q0iI7ie7MZwFK8OEECHm5cl7jOHcTp+mFWPfeJebfy3IX8WvQ10tw7NYcL8/uki+bvnPoe6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLQQRYIK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ugWvjkNX"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso7730706f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1746001710; x=1746606510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iQU+bng+xkR7HviR9k3Fod5rLUwRR2Wp2EYNWSD72hA=;
-        b=ugWvjkNXL5AIJubLY2lUDW3CnP1LC969ErMeH6em7rkDxWsBBmjXnH4pF7L04oKasQ
-         bgaW/E0iGMgYJLh8nNoltlHKhl6onZnNi7L/2ke0UtKbsnhZD2KmEBuErlVcVX9+EGCr
-         8unU9UISL5k2UxI6jpMUGugHkJ60O328HtDL9inrIJzUAPKxXEzKkePNnsSTa1ShIFVw
-         I73BxUmeesIcKQagc6tKBiGyF/NBYyHcCv2papLTNBzZZjiB1NEhzAmYJfW3OmVQDQfw
-         qzHDcZj25eOxq1poHfs0RofbDAxzbatYx/SIK1FZG4hNLrbPEWsaDo9iabvCB2wH7rTf
-         htgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746001710; x=1746606510;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iQU+bng+xkR7HviR9k3Fod5rLUwRR2Wp2EYNWSD72hA=;
-        b=eu42vv+bRCVB+mh4b819SMrw/id7R5bPPyaPm4o+gPIjfwEI7zyPS4EyUpMBLQM63V
-         XybzU45LaSbwXi6YJRpcbOV+fGhPdZtUgHUhnjlX8Dz5xLich00tfdX5cMsrvvmqAg8v
-         CNC6A8rMJec2l27obN9HGSa24AsAsrcTv8K3TjirQBNCSAfIRKLgAO87uNoOlRunsZAu
-         DuglzYHcu7AzpsAruEv3/w2bXPbQ4GB+b3eA96A1LKjvPzCnP1emy7tzIQ2WKHU/LnwU
-         SUQ7PfrpcuDAoxSIF+I1ULA7GwA5sn+xrgrnHHEji0eE/3dpBuAXRTUTDIPUy8dCBa6J
-         TqDw==
-X-Forwarded-Encrypted: i=1; AJvYcCU5i8tpZeK6GnuRyVlY1jfbwdzjpvPCCP9v3bfMcf79WRW7NVSRtFSYGO27mmH63tE51H7loyE5ayHkQUg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrJhh7dpaSHG6F7XswXJa15W/WkUbN/r5ibf8GgI73q028XB9N
-	zkhoQtbIONMGlMfWCkaCKfxeOJlumualAkSRQCYuuZVu//Hsr8gkP9ShUmJlsTM=
-X-Gm-Gg: ASbGncu8F2dK97J+D7AN324rcSzbiUKSPH8m2u0OfsApVI6UIjO1BGb7yBqCDXMrZ/+
-	K0ZZuIXurTHeYvAe5x0r1yCqBl/Cb2SNhhMl9ppAOJIo9mNjRokwRluW89U1tyStnZdZPjxJxmR
-	2jNhlwr7wJUtk9SjWsriBQd37VLgMwePPQrtSzl12DXreuDZyHSkC9J9hgqnozx/lhU2d0gaMIx
-	Al9i/nqI73ASUE/Eoo4ss+0ogcLNsmFP/bD+bH0gL+k5lltMhH/t0ZUMzjM5j1ImrN1/4nQeqZO
-	gfu0eMrwsNMfhkBvJL9UzNDBnmBVFtp4n+5vYcEIurPOfcbYcmzH
-X-Google-Smtp-Source: AGHT+IHgMvuDAt895ICDc0XLDGqBuslTtH+D05AWu6mlFg6UPu208Udg0K1dATfjFDOpPEGc7f862A==
-X-Received: by 2002:a05:600c:3516:b0:43c:fdbe:43be with SMTP id 5b1f17b1804b1-441b1f61398mr18443775e9.27.1746001709493;
-        Wed, 30 Apr 2025 01:28:29 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:6298:7254:d3df:f23e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecedcsm16496835e9.15.2025.04.30.01.28.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:28:28 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Lixu Zhang <lixu.zhang@intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/12] gpio: convert more GPIO chips to using new value setters - part 2 for v6.16
-Date: Wed, 30 Apr 2025 10:28:27 +0200
-Message-ID: <174600170555.13323.4628945373721333783.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
-References: <20250423-gpiochip-set-rv-gpio-part2-v1-0-b22245cde81a@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLQQRYIK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 675A2C4CEE9;
+	Wed, 30 Apr 2025 08:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746001718;
+	bh=dRAs2qXXUA/N97RfHpdlApe9kO3tgf2G0Ws27HW/leU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=HLQQRYIKoXpbCGU1oiZAlBYVf2sYWlszXWirWOR7hDLvOKLcxakR6Hs3RjN3ZDT9o
+	 ke/671XCkqpYc76O2on3kpuvoCh9hLTZwUfkWVDNPyp2Cna9grfXVOy82u1s6bDEuP
+	 mLQM87Sif9u9GSoHY1De98kud+SWcTFGTcwpx2u5D2DN6lt6S34n9fHH0lMXSlwYeG
+	 EtCJE+mzLWFKYv5ASk8ITaolzKlv+PBLyNzMkgw4wnnqBXJeCkg8on1KO0My3HCeO3
+	 8kQlMbqSzFqXKZof7wjX/0MP1fTgE1aARvdRqwLGvbX2O+PtPL9ku0h9V7luEzQOZZ
+	 LN8bUTGAV3O9Q==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "kernel test robot" <lkp@intel.com>,  "FUJITA Tomonori"
+ <fujita.tomonori@gmail.com>,  <oe-kbuild-all@lists.linux.dev>,
+  <linux-kernel@vger.kernel.org>,  "Miguel Ojeda" <ojeda@kernel.org>,
+  "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
+In-Reply-To: <CANiq72n6tTox7jMX89p4vLihghrJeDcBL+MWR8rp4_Y0LyxcKg@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Wed, 30 Apr 2025 07:06:28 +0200")
+References: <202504301208.YQCguEmE-lkp@intel.com>
+	<D4J3Zi4_pJAvvHPii2-9GqOa4jd7dzNzOJ3Wf_Mo95TggON0WGCiDwXrT2vd_aj5G0tt-tqIDp4vi5tjbLE7AA==@protonmail.internalid>
+	<CANiq72n6tTox7jMX89p4vLihghrJeDcBL+MWR8rp4_Y0LyxcKg@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Wed, 30 Apr 2025 10:28:25 +0200
+Message-ID: <87ecxa2guu.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
+> On Wed, Apr 30, 2025 at 6:55=E2=80=AFAM kernel test robot <lkp@intel.com>=
+ wrote:
+>>
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.g=
+it master
+>> head:   8bac8898fe398ffa3e09075ecea2be511725fb0b
+>> commit: 584e61452f75bfeac2cdd83730b4059526ec60c7 rust: helpers: Remove v=
+olatile qualifier from io helpers
+>> date:   2 weeks ago
+>> config: um-randconfig-r063-20250430 (https://download.01.org/0day-ci/arc=
+hive/20250430/202504301208.YQCguEmE-lkp@intel.com/config)
+>> compiler: clang version 16.0.6 (https://github.com/llvm/llvm-project 7cb=
+f1a2591520c2491aa35339f227775f4d3adf6)
+>> rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+>> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/arch=
+ive/20250430/202504301208.YQCguEmE-lkp@intel.com/reproduce)
+>>
+>> If you fix the issue in a separate patch/commit (i.e. not just a new ver=
+sion of
+>> the same patch/commit), kindly add following tags
+>> | Reported-by: kernel test robot <lkp@intel.com>
+>> | Closes: https://lore.kernel.org/oe-kbuild-all/202504301208.YQCguEmE-lk=
+p@intel.com/
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>> >> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
+>>    --> rust/kernel/block/mq/operations.rs:15:33
+>>    |
+>>    15 | use core::{marker::PhantomData, sync::atomic::AtomicU64, sync::a=
+tomic::Ordering};
+>>    |                                 ^^^^^^^^^^^^^^---------
+>>    |                                 |             |
+>>    |                                 |             help: a similar name =
+exists in the module: `AtomicU32`
+>>    |                                 no `AtomicU64` in `sync::atomic`
+>> --
+>> >> error[E0432]: unresolved import `core::sync::atomic::AtomicU64`
+>>    --> rust/kernel/block/mq/request.rs:16:20
+>>    |
+>>    16 |     sync::atomic::{AtomicU64, Ordering},
+>>    |                    ^^^^^^^^^
+>>    |                    |
+>>    |                    no `AtomicU64` in `sync::atomic`
+>>    |                    help: a similar name exists in the module: `Atom=
+icU32`
+>
+> Cc'ing Andreas.
+>
 
-On Wed, 23 Apr 2025 09:15:02 +0200, Bartosz Golaszewski wrote:
-> struct gpio_chip now has callbacks for setting line values that return
-> an integer, allowing to indicate failures. We're in the process of
-> converting all GPIO drivers to using the new API. This series converts
-> another round of GPIO controllers.
-> 
-> 
+Gary sent a patch to fix this a while back [1].
 
-Applied, thanks!
-
-[01/12] gpio: imx-scu: don't check the GPIO range
-        https://git.kernel.org/brgl/linux/c/57bbc60be45b750073acc7d94aaccc4e652319a1
-[02/12] gpio: imx-scu: use lock guards
-        https://git.kernel.org/brgl/linux/c/dd6d13abb4c363f49ddca2697a781945cf80ad89
-[03/12] gpio: imx-scu: destroy the mutex in detach path
-        https://git.kernel.org/brgl/linux/c/68ef71400d0e7a9049c36cd0954ecc67521b0bc8
-[04/12] gpio: imx-scu: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/40150dda92cd8718a367a32ac345dce05f788a16
-[05/12] gpio: it87: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/ef877a159072ca31ed183b086c41fb9951521886
-[06/12] gpio: janz-ttl: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/3444049044ce24c2a2bc98c6e30d189451147b63
-[07/12] gpio: kempld: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/0c5fa4ee5a2256cd2d37bd0d0dda5d4fbbb30281
-[08/12] gpio: ljca: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/722332f58aa82b92c857b053426dd46e09988e38
-[09/12] gpio: logicvc: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/ba2ce44332142a86bb0e9246d40b97d6cc191c5d
-[10/12] gpio: loongson-64bit: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/145c4d7052fd15d20e5165305b3296a026a40747
-[11/12] gpio: loongson: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/7d34d9fbab771779a2b365934fdafff32bddd029
-[12/12] gpio: lp3943: use new line value setter callbacks
-        https://git.kernel.org/brgl/linux/c/127da457c4e01bd6e4b8a126aaf1be1a6c03fc0b
 
 Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Andreas Hindborg
+
+[1] https://lore.kernel.org/all/20250219201602.1898383-4-gary@garyguo.net
+
+
