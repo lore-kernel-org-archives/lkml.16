@@ -1,106 +1,220 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1921819DFA2
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:48:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ED7B2609CA
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:49:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031691; cv=none; b=JUVD2oct252RtwEO1GyGuvgy0V1mvM59cN7hGvCkeWPyEjaKnhrh8U6iO+7q/37A9QNxKFZSz6EXKnbF7HNJ1AkJSdHmEpGyuK7hAoQoLY0BnFF3r5aVaLpUzi9S4KWVWm4/edJu1UXTKjHK7Q3b8foffV/oWNVzqI7HiauEDL4=
+	t=1746031782; cv=none; b=hP25xmaxAdo1gwZMW37VAAdmPkZ4gxLHKjfMeM5forVnTtCoYgIefqfCE0zp2XfOb3sq6s+iB0a9lHzrQhGioNq7YkDhD+kD7vXKfiGA/6X2aqEyVIhgM0lRZHUgO1fq7QxO8f+/JpQ2WZooAs76bJlamf4vyDIOiLao+CJrFa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031691; c=relaxed/simple;
-	bh=c7FwnIsZRqiF7KNfIIwlZlGxxW/tuXrOwYx7tDSOD2Y=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=LbAV/895SORc0WxtREfdgS3DnHS1278ApTk6eosRyYnHwLi3KRsQBxHuNpTAXjnJu3TBUPx/vg3eIpXrjcqU7W8RAXj4BYc5XXKYXZskCW3gT3otMDCi+ttDcmLSEOJgpqf4RfZhu1bdL4+5xOO64boaFOQFmZhh8pFHiQEVbfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aZEqMwCM; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746031782; c=relaxed/simple;
+	bh=3rnUtBbGRrj2GtfIBzxXQYWs4cLaMq+FIs5BosSWcq4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nDjrzzL6iFyyvwRBOiqo1I1Pr7PsIX0rdzU2WehtRZTLPTUojzFCG69u0KOgFiESAuanrUMNh04043x/YoAakH5j+02ANgrmggeH/3OG+mRaP+lTwtVV/PvrRngnWJkCN4kMKg4ivDMxHSMAKpesC1t8JNCLCsd7ZvsN1P4HLOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jeJXU1HN; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZEqMwCM"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-309fac646adso1166086a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:48:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jeJXU1HN"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86d6fd581f4so691480241.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746031689; x=1746636489; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vjAqOlz4ej8mAEvmPxCkrLJ8pkjvVteFBc1yiUvD/JM=;
-        b=aZEqMwCMnUmMh4ipRw6lbwK7r6FDhpjJfUiQpdSwPVEHc7jFPu9hyMjHFQbO5gLmfg
-         HpDwkukxRj25F/wlS0T1LRr2/mmyULgks/ir3s+12ijSkVVbjyLa0sqY+yBthIqt3Emh
-         6gHIQg0hC6UHlzC6aPI3tZ9zir7CX15OiJe0c3Qd4w1QQoSf/BU06viXaEQL08bywSLu
-         BW2QpV9YKGMofVWxV+mCRNg3mfdMIxHgP53t+R/ZILIKnLAzMcQ+CeP05BppY0oEg92p
-         reuRQYb3FQ3rCGxxpII17+XZzEu+GNigDN9vKeVtkWN+H7gAqexVlNuITUBEIpRoz9aj
-         BFBA==
+        d=linaro.org; s=google; t=1746031779; x=1746636579; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=K6wGEOSopeYQzjMpu6ToZD/+3YW6eIVoWLjM6+vWMm8=;
+        b=jeJXU1HNLEcT2nYiWAx5SMxRKUIbwJSUUYqlJ7SwRVA6dRJi6NrU7836M/u8G8oq0K
+         UGD/+gDI6Uwtiyujq2VtmWh9LMJGejNXNbOGt6LHrApw8UfuiM8+6Vz8E6xNVQ9ArAAu
+         ERWBGfXWLxQd3b2bMwBZenRpPAy/PR2Y5BvOgardaSvPzU0MmqEcssdyDGk9NI7GWrkp
+         SyCXeg2PI2PbyxYPqFRRA9Kig+pJPDzVmOkAfkWEx8QJGVwzyepucRfdNd+/w0FLWdJ8
+         yJckLum1dWi291PFsDionYqDyXKNxEc3mTIkcyOuqBgqIH/982moUQuxwg8YEOSaYeUB
+         S4Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746031689; x=1746636489;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vjAqOlz4ej8mAEvmPxCkrLJ8pkjvVteFBc1yiUvD/JM=;
-        b=WkUazOmqiQXhntvEG5amhWaDCFMoo8q8wAPrdZgfQDuidz19kZ6pZp7vZ04HfiIzNT
-         efhX4N1Y2ru0nnPOKf7aYbBJMRKC6NaRTWxgQ76tPrAblAl8dlDZukOyWJO/mhHgym4A
-         CqAns11qAYaBM7YYGzPJB8znC4PMepDPc/Ye2mGfVF3to/U5ZwG3Y9iKrAysqL4AcFk/
-         +0p0rM1DVMslts4VTRGuWQDSYaPIye8r6oZ+QpXx7Gewx3htKSRxdf1YVuOKC06Gxl9J
-         ScL3PJRKolhqJZ7l3cmdZ2+XtTKk8mNztWC9rzdIJjyDyum7w2O6hThqsvOpVZpx/+He
-         smAg==
-X-Gm-Message-State: AOJu0Yy30H2mftqCUf0rXgkoZnZEJ3JZgO1vW714M0QBDtbj5k8GRv80
-	wygpeW9N6vaXDENY7ez61nulOuAG1Ev24T95xKjkl+s0Vr17iL4j
-X-Gm-Gg: ASbGncsog+uQ4YwntT6CP+ZvJW4nLylUVCKkQ4Io90eCZv6VMYXqaqbmXGIs2CJZaUT
-	9pxBu4kNxMnRQVEXVECFnbuqmkk4niEyzs4CPZNh0VaR9W+6Ap9ncy+X57vDZjGVrNOcwiPOKmL
-	ZpVXiC4a85tFEhJf5XgcotHVZIGwylJEO6hUN4+l98RZ5kAZMGsfFqXcfkyqN0+mukqeikcIlqc
-	vM8tLfJdLa8hZMB+f2PvKpi/AvLIdc0+PTBLrMkQz13wWZS+YWTg7u4BtH0bmNiqRsluxrixbvV
-	cV7fRQxm2zEXL6Msc9gR1xOxz7auGUMSnYi5vX3YJravkKHF14SbjkXWTkov4eR5pc9zdpQVU+o
-	ZulLQ9aPVVGkQUMFG
-X-Google-Smtp-Source: AGHT+IEEVJ/H3Mg6YyIjqgKS7JBZvGm8HXIc5lSuL7Ma18Ik4b3Jxy5RHK5+1QjymAb+ZrN1/2ZIxw==
-X-Received: by 2002:a17:90b:3c8f:b0:309:f46e:a67c with SMTP id 98e67ed59e1d1-30a3f078b27mr271150a91.11.1746031689158;
-        Wed, 30 Apr 2025 09:48:09 -0700 (PDT)
-Received: from localhost (i223-218-150-204.s42.a014.ap.plala.or.jp. [223.218.150.204])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0ccsm2064180a91.30.2025.04.30.09.48.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 09:48:08 -0700 (PDT)
-Date: Thu, 01 May 2025 01:48:05 +0900 (JST)
-Message-Id: <20250501.014805.2174568059164798902.konishi.ryusuke@gmail.com>
-To: syzbot+f30591e72bfc24d4715b@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [nilfs?] possible deadlock in nilfs_get_block
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-In-Reply-To: <68122276.050a0220.3a872c.0000.GAE@google.com>
-References: <68122276.050a0220.3a872c.0000.GAE@google.com>
-X-Mailer: Mew version 6.8 on Emacs 29.3
+        d=1e100.net; s=20230601; t=1746031779; x=1746636579;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=K6wGEOSopeYQzjMpu6ToZD/+3YW6eIVoWLjM6+vWMm8=;
+        b=xUj2kW7PaPpZg2qI13OeDlC55+KTyj6JtDL7as1GAAP5/2up0IOlo/3gMGxcg6XRMP
+         ZjxEOOu9SZ1S9pOnBipKIqYMVDwuRtjHbyi0NRjaSWdSAUttn3D+k2aY0oPL32PZQPZD
+         TcR0HxhkxfamUwFK8PlPIqAJd5gUhXgXnfM3dcLUrjOvP1Pe1JIOV68Af1FbByQyO16M
+         hpLKoz/uWRG450kPaf3r/leQer2rcpHwIWpWnM1FBKu6kRn3OpBPp8hCc8rdQwd8SsUR
+         hluWTETTs/+oLI/C9BSIZoN8rGKk+3H5W9R9KcjQq/HFVrLUYIrFeaYjushThmzW0QCH
+         I5dA==
+X-Forwarded-Encrypted: i=1; AJvYcCUhj3qfAHM+5t95Qxu3nwvVYRv00aRLjVPkCFn/BhD0LpgBXjILCfDSK/MOC0CYyGKQg/sJu9qn05jCCcE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5ZjGZr96faotoRXbtkdUuzPytT3LLt8HvbkkU7W4HSp4OT5H+
+	bHjGglYsSEgLTzZ5+FwjL56W69dGP417of64Xe9W47g6H4ArsSe2gy61rcI41ErXlcBusQMt31x
+	/nfNWERlqgi4sTRLKStdoozIXGxENhJ0SzCFn+w==
+X-Gm-Gg: ASbGncuRSfKPbaJV4NpI9mr0ltMbtrbyYfczIoDVEoiwyurS6ixvQoDqrAw/muWFZcb
+	I83eQxzUneuKFbgVhZ9EDMThX9fqFnY2qsL5caQZcUAm5fFiI8ele/U2mFOu2yD86X3Dv8i80Tp
+	UFbM7zYMVYCu1sYMDAOQACsplM9G/It4HkFKjH+A6S4W4jkRGJD71vM+U=
+X-Google-Smtp-Source: AGHT+IHB9EAwLxpqiSSeqU27ovIV9mp5mBfnZNLtn0Kyqm5KskL5elpAVGIgTEid98G2EVBqt6/xAa/38um/Xx1bBi8=
+X-Received: by 2002:a05:6122:1ac3:b0:520:4806:a422 with SMTP id
+ 71dfb90a1353d-52adbc88c7dmr243623e0c.3.1746031779296; Wed, 30 Apr 2025
+ 09:49:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20250429161123.119104857@linuxfoundation.org>
+In-Reply-To: <20250429161123.119104857@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 30 Apr 2025 22:19:27 +0530
+X-Gm-Features: ATxdqUHDFBFjAk7YpA8kz6XQdc4Jmx2bsFw4-LGkVUjB74in0vBizWcCsZ4TzB8
+Message-ID: <CA+G9fYu2_JCDFF+RtB2-nw_zcPYcXzNEMhZcM9cU6DcjHwTsTg@mail.gmail.com>
+Subject: Re: [PATCH 5.15 000/373] 5.15.181-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Try removing unnecessary ns_sem lock in init_nilfs() to eliminate lock
-dependencies that were causing false positive deadlock warnings.
+On Tue, 29 Apr 2025 at 23:11, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.15.181 release.
+> There are 373 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.15.181-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-#syz test
 
-diff --git a/fs/nilfs2/the_nilfs.c b/fs/nilfs2/the_nilfs.c
-index cb01ea81724d..d0bcf744c553 100644
---- a/fs/nilfs2/the_nilfs.c
-+++ b/fs/nilfs2/the_nilfs.c
-@@ -705,8 +705,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
- 	int blocksize;
- 	int err;
- 
--	down_write(&nilfs->ns_sem);
--
- 	blocksize = sb_min_blocksize(sb, NILFS_MIN_BLOCK_SIZE);
- 	if (!blocksize) {
- 		nilfs_err(sb, "unable to set blocksize");
-@@ -779,7 +777,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
- 	set_nilfs_init(nilfs);
- 	err = 0;
-  out:
--	up_write(&nilfs->ns_sem);
- 	return err;
- 
-  failed_sbh:
--- 
-2.43.0
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+## Build
+* kernel: 5.15.181-rc1
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: c77e7bf5aa741c165e37394b3adb82bcb3cd9918
+* git describe: v5.15.180-374-gc77e7bf5aa74
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.15.y/build/v5.15=
+.180-374-gc77e7bf5aa74
+
+## Test Regressions (compared to v5.15.180)
+
+## Metric Regressions (compared to v5.15.180)
+
+## Test Fixes (compared to v5.15.180)
+
+## Metric Fixes (compared to v5.15.180)
+
+## Test result summary
+total: 62723, pass: 47525, fail: 2904, skip: 11880, xfail: 414
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 102 total, 102 passed, 0 failed
+* arm64: 30 total, 30 passed, 0 failed
+* i386: 22 total, 20 passed, 2 failed
+* mips: 22 total, 22 passed, 0 failed
+* parisc: 3 total, 3 passed, 0 failed
+* powerpc: 22 total, 22 passed, 0 failed
+* riscv: 8 total, 8 passed, 0 failed
+* s390: 9 total, 9 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 6 total, 6 passed, 0 failed
+* x86_64: 26 total, 26 passed, 0 failed
+
+## Test suites summary
+* boot
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
+
+--
+Linaro LKFT
+https://lkft.linaro.org
