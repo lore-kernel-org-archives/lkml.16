@@ -1,214 +1,190 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A593022AE71
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F1C214232;
+	Wed, 30 Apr 2025 23:34:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746056003; cv=none; b=fP8Jxsd1SZMAfWTVD1pC0SlNxULCZhO0S4hsgzWTqIdsE81w/+tl2SvPek8TR9LdCgaq2pgZdlOHens3tlL8dDEGkxbPVK/SS/fG/ryXLyec+G7nVXUVzF9gO7V3VWyS7gYvtriyEN6GFdI2H/sMDefPrRKPVkuCSSVPewuchW4=
+	t=1746056077; cv=none; b=WjqIZDxPvRAPjFR3ZfZLJZsi029RaO8vqEOHr84wdzptxgklbY/yubZdRg60xBq7Sx7jbk4eNsBFeClkeYIQ3XRZ7NLo0g3INTKpPjoGUf+u4IKfL+BIWusKTXlaxPFDw+ukZ9USvXLWCliANI+h2uxGtlQNvqhcaPxJnBQQFmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746056003; c=relaxed/simple;
-	bh=13TEoOug1c178shNErwxbItX4rCUgqJob++RRGIzov4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OaSFAqNZCGtWcBfgH5Xea+3DCVgPbttaU/xgtUMSxcvmvjo9jj/Z1S4RNulwDkxjsu/Ww9Cy/x8bE0alNleNuH/FrNOWCT6MPz/BwLFi4SXVrFvrzbwO4ETDFV5nNQJHjaH6aSdL81vvqyIxSoO0YlOiA7bRO+W0Xht02b+ieB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W7zjKHsX; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746056077; c=relaxed/simple;
+	bh=t2o8/vITjJ4c0EvOAK4tHPIZKFznT3jfoyWLhCY3ngM=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=mF0n9Mxr3Zp7J5uzEBh8APC/pRc7lRSuoR9hi/7DxH4fK6JqOYeTrdnVtWVAItz379M4dyEKdVvR3sKiGqf167OajFAlyplwHfv45/pcocfBNWAzRWe39hO0N+aorv+bOPw7AIbK6kXrrS31cd289DfB7I10sPbrWAGlFFAppS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fIp1kfbK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W7zjKHsX"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-6c8f99fef10so355672a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:33:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746056001; x=1746660801; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=o1afqcCJkSh9e1hKor3mC9NijR9trNJa2vPHDOEPSfQ=;
-        b=W7zjKHsXdrPy1Bu5FUKV4myTNac/EnZb/5ByhnkNz4acNn5McPOYkYmGlTNR6zACqP
-         NDJnod1OvardS/wnb3XlKEdnb/a9xX9VeYU9rs3VblJPHwwuneCVVvBfn5PlFqdFWKsM
-         fvqU6fUBUHtRgHHRLlCNar1B6f/C2huVGVX7RcT/UGm4Wg5qZGYoEbshdLVwMhs7Y123
-         tu/pf+vjMR/dIoyE81cE48GojKCT6CJfLm54eEPOdJINBmT3zrnfsnO7oUmGJaIKmDTa
-         8zp95WFRO636GUF+APYR+F5OLx8mEpQrrw9UNNAYPMqNTelUmiCYKiYMwNbH9sqflqf1
-         5udQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746056001; x=1746660801;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o1afqcCJkSh9e1hKor3mC9NijR9trNJa2vPHDOEPSfQ=;
-        b=IcrJfz9sFU/FaTVaRy+ddeIoycXUEsp71T2EJNQPqKPsah722aKKz33RNvtg1EBbyw
-         jMqmbORAfB/nZWthovvk+imM/6T8yBU0XpJtZGpmXw0MIm1E7oGxw5CM9lfbl3sepx5t
-         XM6KkmtvMRMpp6YbNvzqIAv6lZ2GdtxlexQ31ZCR4R3u4bpBIrJoLCq3SFJ/RC8jWGRV
-         37hEk5Qqt+YEmzMHBHfLLXy6Ztifq3oOIOwzSpyekrDeShkKrJ5GP4fLoRZmN84c+i2h
-         LtPsXvXyj3WcKrhRGGEHdvyLPbBaLdyh+7xYRfD067dNJ8fU3SfwR4IFNdV32CmQsUdE
-         9CAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWF6RfXf4S6xUoEIKCglL02ZX6a2/VZubCCXjxaSS6Q1nJ2PXRUuM1KgQjFojzt0JErO/Jrs+8aaq7eVDk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwId04aMmX931GSbxwCjgLefQwMb1U8VlupmY2BqO7qKi0Chuuh
-	x91X1JqGVjnfjxEjHs0u4NLz5zPy0S5kKBNcdfynP4YNC2Lt+qoKWvUYGKdmQA5NWuUIIhyAjIG
-	w9A==
-X-Google-Smtp-Source: AGHT+IHA2tU9fmodeKKj4wNJF1CmHY6EYcSAZlb4ury7FhVhH8iZPp0UzgjQHs7WpsvPsidc+Ipop646fzQ=
-X-Received: from pjj5.prod.google.com ([2002:a17:90b:5545:b0:2ff:5516:6add])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2883:b0:2f9:cf97:56a6
- with SMTP id 98e67ed59e1d1-30a34409e9cmr6804834a91.14.1746056000424; Wed, 30
- Apr 2025 16:33:20 -0700 (PDT)
-Date: Wed, 30 Apr 2025 16:33:19 -0700
-In-Reply-To: <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIp1kfbK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A46DEC4CEE7;
+	Wed, 30 Apr 2025 23:34:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746056077;
+	bh=t2o8/vITjJ4c0EvOAK4tHPIZKFznT3jfoyWLhCY3ngM=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fIp1kfbKF9BKWNHJomJ0IMnsnPkWGCnKRhJiBKmXRIEczCtPSs/+s1S9OfDTp26BE
+	 SP3BbtLDlPDikUaCFdn6QSeEkt0bdE70+4XBe1DaP3CvVtb9vOQrp/yd/Bdh/yU8A8
+	 sVntpiidVgsfybfU3J/L8OvcS8MlVe467hV1N9RJyfafposHiQq5h7t38yyVj8R67G
+	 0sPNRiKnU5NDdXIJGZ2h7dvIaIM9+rkntlNB3/H8GBjTqESFIyh3z8n6Y0W4LS8aSu
+	 kXEVQb9IttEnZsLeGGaCHp1z8UASUPScqu1ECjuUYv69R625o5pIvkBFj1IB/YxGf+
+	 vFZayjFs/MdpA==
+Date: Wed, 30 Apr 2025 20:34:34 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Joe Mario <jmario@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: DW_AT_comp_dir and O= usage not working with objdump -dS, perf
+ probe, etc
+Message-ID: <aBKziq9dr_EsWLuZ@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250213175057.3108031-1-derkling@google.com> <20250214201005.GBZ6-jHUff99tmkyBK@fat_crate.local>
- <20250215125307.GBZ7COM-AkyaF8bNiC@fat_crate.local> <Z7LQX3j5Gfi8aps8@Asmaa.>
- <20250217160728.GFZ7NewJHpMaWdiX2M@fat_crate.local> <Z7OUZhyPHNtZvwGJ@Asmaa.>
- <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local> <f16941c6a33969a373a0a92733631dc578585c93@linux.dev>
- <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local> <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local>
-Message-ID: <aBKzPyqNTwogNLln@google.com>
-Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
-From: Sean Christopherson <seanjc@google.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Patrick Bellasi <derkling@google.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Patrick Bellasi <derkling@matbug.net>, 
-	Brendan Jackman <jackmanb@google.com>, David Kaplan <David.Kaplan@amd.com>, 
-	Michael Larabel <Michael@michaellarabel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025, Borislav Petkov wrote:
-> On Tue, Feb 18, 2025 at 12:13:33PM +0100, Borislav Petkov wrote:
-> > So,
-> > 
-> > in the interest of finally making some progress here I'd like to commit this
-> > below (will test it one more time just in case but it should work :-P). It is
-> > simple and straight-forward and doesn't need an IBPB when the bit gets
-> > cleared.
-> > 
-> > A potential future improvement is David's suggestion that there could be a way
-> > for tracking when the first guest gets started, we set the bit then, we make
-> > sure the bit gets set on each logical CPU when the guests migrate across the
-> > machine and when the *last* guest exists, that bit gets cleared again.
-> 
-> Well, that "simplicity" was short-lived:
-> 
-> https://www.phoronix.com/review/linux-615-amd-regression
+Hi,
 
-LOL.
+	I noticed recently while testing some other patches that
+disassembling with objdump -dS didn't work when building the kernel with
+O= as it sets it to the build dir, not to where the sources are, for
+instance:
 
-> Sean, how about this below?
+Make sure perf uses objdump to disassembly:
 
-Eww.  That's quite painful, and completely disallowing enable_virt_on_load is
-undesirable, e.g. for use cases where the host is (almost) exclusively running
-VMs.
+root@number:~# rm -f ~/.perfconfig 
+root@number:~# perf config annotate.disassemblers=objdump
+root@number:~# perf record -a sleep 5 
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 2.012 MB perf.data (6307 samples) ]
+root@number:~# pahole --running_kernel_vmlinux
+/lib/modules/6.15.0-rc4+/build/vmlinux
+root@number:~# readelf -wi /lib/modules/6.15.0-rc4+/build/vmlinux | grep -m1 DW_AT_comp_dir
+    <17>   DW_AT_comp_dir    : (indirect line string, offset: 0): /home/acme/git/build/v6.15.0-rc4+
+root@number:~# 
 
-Best idea I have is to throw in the towel on getting fancy, and just maintain a
-dedicated count in SVM.
+root@number:~# readelf -wi /lib/modules/6.15.0-rc4+/build/vmlinux | grep -m1 DW_AT_comp_dir
+    <17>   DW_AT_comp_dir    : (indirect line string, offset: 0): /home/acme/git/build/v6.15.0-rc4+
+root@number:~# perf report | grep -v ^# | head -10
+    16.53%  swapper          [kernel.kallsyms]                  [k] poll_idle
+    11.21%  swapper          [kernel.kallsyms]                  [k] acpi_os_read_port
+     1.39%  swapper          [kernel.kallsyms]                  [k] io_idle
+     0.92%  swapper          [kernel.kallsyms]                  [k] switch_mm_irqs_off
+     0.87%  swapper          [kernel.kallsyms]                  [k] __update_load_avg_cfs_rq
+     0.84%  swapper          [kernel.kallsyms]                  [k] read_tsc
+     0.76%  swapper          [kernel.kallsyms]                  [k] psi_group_change
+     0.76%  swapper          [kernel.kallsyms]                  [k] menu_select
+     0.67%  swapper          [kernel.kallsyms]                  [k] native_sched_clock
+     0.53%  Isolated Web Co  libxul.so                          [.] mozilla::EventListenerManager::AddEventListenerInternal(mozilla::dom::CallbackObjectHolder<mozilla::dom::EventListener, nsIDOMEventListener>, mozilla::EventMessage, nsAtom*, mozilla::EventListenerFlags const&, bool, bool, mozilla::dom::AbortSignal*)
+root@number:~#
+root@number:~# perf probe -L icmp_rcv
+Failed to find source file path.
+  Error: Failed to show lines.
+root@number:~# perf probe -v -L icmp_rcv
+Looking at the vmlinux_path (8 entries long)
+Using /lib/modules/6.15.0-rc4+/build/vmlinux for symbols
+Open Debuginfo file: /lib/modules/6.15.0-rc4+/build/vmlinux
+fname: net/ipv4/icmp.c, lineno:1198
+New line range: 1198 to 2147483647
+path: net/ipv4/icmp.c
+Search /home/acme/git/build/v6.15.0-rc4+/net/ipv4/icmp.c from debuginfod -> -2
+Failed to find /home/acme/git/build/v6.15.0-rc4+/net/ipv4/icmp.c in debuginfod (d391f0e79126801bc8a8f907e763de7979941712)
+Failed to find source file path.
+  Error: Failed to show lines. Reason: No such file or directory (Code: -2)
+root@number:~#
 
-Alternatively, we could plumb an arch hook into kvm_create_vm() and kvm_destroy_vm()
-that's called when KVM adds/deletes a VM from vm_list, and key off vm_list being
-empty.  But that adds a lot of boilerplate just to avoid a mutex+count.
+In 'perf probe' we have the old --source that allows us to override that
+DW_AT_comp_dir pointing to the build dir (O= one) and then it works:
 
-I haven't tested on a system with X86_FEATURE_SRSO_BP_SPEC_REDUCE, but did verify
-the mechanics by inverting the flag.
+root@number:~# perf probe --source /home/acme/git/linux/ -L icmp_rcv | head -20
+<icmp_rcv@/home/acme/git/linux//net/ipv4/icmp.c:0>
+      0  int icmp_rcv(struct sk_buff *skb)
+         {
+      2  	enum skb_drop_reason reason = SKB_DROP_REASON_NOT_SPECIFIED;
+         	struct rtable *rt = skb_rtable(skb);
+         	struct net *net = dev_net_rcu(rt->dst.dev);
+         	struct icmphdr *icmph;
+         
+         	if (!xfrm4_policy_check(NULL, XFRM_POLICY_IN, skb)) {
+      8  		struct sec_path *sp = skb_sec_path(skb);
+      9  		int nh;
+         
+         		if (!(sp && sp->xvec[sp->len - 1]->props.flags &
+         				 XFRM_STATE_ICMP)) {
+         			reason = SKB_DROP_REASON_XFRM_POLICY;
+         			goto drop;
+         		}
+         
+     17  		if (!pskb_may_pull(skb, sizeof(*icmph) + sizeof(struct iphdr)))
+         			goto drop;
+root@number:~#
 
---
-From: Sean Christopherson <seanjc@google.com>
-Date: Wed, 30 Apr 2025 15:34:50 -0700
-Subject: [PATCH] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count
- transitions
+But objdump has no override and thus doesn't work:
 
-Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
-only if KVM has at least one active VM.  Leaving the bit set at all times
-unfortunately degrades performance by a wee bit more than expected.
+root@number:~# objdump --disassemble=icmp_rcv -S /lib/modules/6.15.0-rc4+/build/vmlinux | head -40
 
-Use a dedicated mutex and counter instead of hooking virtualization
-enablement, as changing the behavior of kvm.enable_virt_at_load based on
-SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
-result in performance issues for flows that are sensity to VM creation
-latency.
+/lib/modules/6.15.0-rc4+/build/vmlinux:     file format elf64-x86-64
 
-Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
-Reported-by: Michael Larabel <Michael@michaellarabel.com>
-Closes: https://www.phoronix.com/review/linux-615-amd-regression
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/kvm/svm/svm.c | 39 +++++++++++++++++++++++++++++++++------
- 1 file changed, 33 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index d5d0c5c3300b..fe8866572218 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
- 	kvm_cpu_svm_disable();
- 
- 	amd_pmu_disable_virt();
--
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
- }
- 
- static int svm_enable_virtualization_cpu(void)
-@@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
- 		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
- 	}
- 
--	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
--		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
--
- 	return 0;
- }
- 
-@@ -5032,10 +5026,42 @@ static void svm_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
- 	sev_vcpu_deliver_sipi_vector(vcpu, vector);
- }
- 
-+static DEFINE_MUTEX(srso_lock);
-+static int srso_nr_vms;
-+
-+static void svm_toggle_srso_spec_reduce(void *set)
-+{
-+	if (set)
-+		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+	else
-+		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
-+}
-+
-+static void svm_srso_add_remove_vm(int count)
-+{
-+	bool set;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
-+		return;
-+
-+	guard(mutex)(&srso_lock);
-+
-+	set = !srso_nr_vms;
-+	srso_nr_vms += count;
-+
-+	WARN_ON_ONCE(srso_nr_vms < 0);
-+	if (!set && srso_nr_vms)
-+		return;
-+
-+	on_each_cpu(svm_toggle_srso_spec_reduce, (void *)set, 1);
-+}
-+
- static void svm_vm_destroy(struct kvm *kvm)
- {
- 	avic_vm_destroy(kvm);
- 	sev_vm_destroy(kvm);
-+
-+	svm_srso_add_remove_vm(-1);
- }
- 
- static int svm_vm_init(struct kvm *kvm)
-@@ -5061,6 +5087,7 @@ static int svm_vm_init(struct kvm *kvm)
- 			return ret;
- 	}
- 
-+	svm_srso_add_remove_vm(1);
- 	return 0;
- }
- 
+Disassembly of section .text:
 
-base-commit: f158e1b145f73aae1d3b7e756eb129a15b2b7a90
---
+ffffffff8231a6f0 <icmp_rcv>:
+ffffffff8231a6f0:	f3 0f 1e fa          	endbr64
+ffffffff8231a6f4:	e8 97 bf 05 ff       	call   ffffffff81376690 <__fentry__>
+ffffffff8231a6f9:	41 56                	push   %r14
+ffffffff8231a6fb:	31 f6                	xor    %esi,%esi
+ffffffff8231a6fd:	41 54                	push   %r12
+ffffffff8231a6ff:	55                   	push   %rbp
+ffffffff8231a700:	53                   	push   %rbx
+ffffffff8231a701:	48 89 fb             	mov    %rdi,%rbx
+ffffffff8231a704:	48 83 ec 10          	sub    $0x10,%rsp
+ffffffff8231a708:	48 8b 6f 58          	mov    0x58(%rdi),%rbp
+ffffffff8231a70c:	48 83 e5 fe          	and    $0xfffffffffffffffe,%rbp
+ffffffff8231a710:	48 8b 45 00          	mov    0x0(%rbp),%rax
+ffffffff8231a714:	4c 8b a0 08 01 00 00 	mov    0x108(%rax),%r12
+ffffffff8231a71b:	e8 d0 e4 ff ff       	call   ffffffff82318bf0 <__xfrm_policy_check2.constprop.0>
+ffffffff8231a720:	85 c0                	test   %eax,%eax
+ffffffff8231a722:	0f 85 c9 00 00 00    	jne    ffffffff8231a7f1 <icmp_rcv+0x101>
+ffffffff8231a728:	f6 43 7f 02          	testb  $0x2,0x7f(%rbx)
+ffffffff8231a72c:	0f 84 bc 01 00 00    	je     ffffffff8231a8ee <icmp_rcv+0x1fe>
+ffffffff8231a732:	48 8b 83 e0 00 00 00 	mov    0xe0(%rbx),%rax
+ffffffff8231a739:	0f b6 50 05          	movzbl 0x5(%rax),%edx
+ffffffff8231a73d:	c1 e2 03             	shl    $0x3,%edx
+ffffffff8231a740:	48 63 d2             	movslq %edx,%rdx
+ffffffff8231a743:	48 01 c2             	add    %rax,%rdx
+ffffffff8231a746:	0f 84 a2 01 00 00    	je     ffffffff8231a8ee <icmp_rcv+0x1fe>
+ffffffff8231a74c:	8b 02                	mov    (%rdx),%eax
+ffffffff8231a74e:	83 e8 01             	sub    $0x1,%eax
+ffffffff8231a751:	48 98                	cltq
+ffffffff8231a753:	48 83 f8 06          	cmp    $0x6,%rax
+ffffffff8231a757:	0f 83 3b 03 00 00    	jae    ffffffff8231aa98 <icmp_rcv+0x3a8>
+ffffffff8231a75d:	48 8b 44 c2 10       	mov    0x10(%rdx,%rax,8),%rax
+ffffffff8231a762:	f6 80 01 01 00 00 10 	testb  $0x10,0x101(%rax)
+ffffffff8231a769:	0f 84 7f 01 00 00    	je     ffffffff8231a8ee <icmp_rcv+0x1fe>
+ffffffff8231a76f:	8b 53 70             	mov    0x70(%rbx),%edx
+root@number:~#
+
+I haven't checked, ran out of time today, but I think this may be
+involved:
+
+commit 97282e6d380db8a07120fe1b794ac969ee4a3b5c
+Author: Thomas Weiﬂschuh <linux@weissschuh.net>
+Date:   Sat Mar 22 10:03:16 2025 +0100
+
+    x86: drop unnecessary prefix map configuration
+
+wdyt?
+
+I'll continue tomorrow,
+
+Cheers,
+
+- Arnaldo
