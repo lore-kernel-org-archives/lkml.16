@@ -1,178 +1,110 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158AF1DE2A7
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1241CDFD4;
+	Wed, 30 Apr 2025 06:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745993320; cv=none; b=Fy4CAvIbXwA5LHZMunogKGL+gSn1pGTkK6/gQZpUXIgXiGBcgHuT6ti0yILeaV/wyphlqyPEe+fyhd8GwYnFg5ScamS/sUPb0nVGHV5xtWGFT2LICtqERMuk48RMRztd/e46KBRphl8TyVcpnJbAPvnKN3UYGxfC9I8+nNZH7sE=
+	t=1745993500; cv=none; b=OE5u2rkvyp7RI46ywZKnuyMZsTstYGsjfN09KCSRQBQnzVjbRSkOq7+7mtP57JTbtaXoXYb6zWmRy3UIwOzZ2phSANiGmRYwqfvzTkImN4QDv6huErihdXLuZDmmaklkS+MhDGxNLVABxtbVHfHqezKyxcSXU1HztNMjhC16BQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745993320; c=relaxed/simple;
-	bh=5lOJcGEX7G4Zx9jpydFFSo49PqTeib4SkU/oMsR7eNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AAIA54p56YiZGiHgkfPmC1oFPOxtpVwXEa0oSBDD+FZW0H+9teZLh8cRRCHkF42mNcQcYjcscRWX5eJtjTRs73wGSYHTo1jGaUc7EOcEryAgfz2zz4PaNJUjd/8o6BoExJzECrSyqksqhndTRsy2/GhgB84T5sTjf3O8NZjn/nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fDEQ8Zpk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qVq1Icc0; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=fDEQ8Zpk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=qVq1Icc0; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1745993500; c=relaxed/simple;
+	bh=v1pIsxP6g51VyfRbw0KYK/eHIg7gjK0YTemiE8HpC5E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K9475IWs1mC4GsPPZditAnamQPu6k9rZv3nt9uYzMHmaNtmdLvrXp5mdb5ql4zZGPZ7qBg/48K7ek0VDuQiUAY7chuISWqG4eZGJyM5zdgym1NFFNlweqejM1ED5Pi6A513RcXsBws+9oJNF8vA7TxYnSEJDLLkJyds7tZ99SbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cAwRWdJ5; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fDEQ8Zpk";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qVq1Icc0";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="fDEQ8Zpk";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="qVq1Icc0"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1EA3B211E5;
-	Wed, 30 Apr 2025 06:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745993317; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCJ7kphXDRJ8nsOq63foj70HkiOS92To0zYCk/e+AIs=;
-	b=fDEQ8ZpkVj0MXrc8R2xno8NlIQF1aT/PKyO452+QM8M4EQrDNbzhjyuLJWOZheWO9HHcQV
-	gXrXTKdWhrsYzxLffyrAtLdZ3dK57AdO1OnbYyDgZzjLCLPKkF3iArtL+WZGqCc9pZVKI6
-	bntKqvddUyXq1Y5fn7H+KqLXjKcDDHo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745993317;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCJ7kphXDRJ8nsOq63foj70HkiOS92To0zYCk/e+AIs=;
-	b=qVq1Icc0Gx/cRf8HT+DsU5RtydquBqBAec6OpMd8tmLHx6kZ8tagFNK5CwM+P8SPH7QYMd
-	4S0gZoRGNSLUtsBQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=fDEQ8Zpk;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=qVq1Icc0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1745993317; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCJ7kphXDRJ8nsOq63foj70HkiOS92To0zYCk/e+AIs=;
-	b=fDEQ8ZpkVj0MXrc8R2xno8NlIQF1aT/PKyO452+QM8M4EQrDNbzhjyuLJWOZheWO9HHcQV
-	gXrXTKdWhrsYzxLffyrAtLdZ3dK57AdO1OnbYyDgZzjLCLPKkF3iArtL+WZGqCc9pZVKI6
-	bntKqvddUyXq1Y5fn7H+KqLXjKcDDHo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1745993317;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=iCJ7kphXDRJ8nsOq63foj70HkiOS92To0zYCk/e+AIs=;
-	b=qVq1Icc0Gx/cRf8HT+DsU5RtydquBqBAec6OpMd8tmLHx6kZ8tagFNK5CwM+P8SPH7QYMd
-	4S0gZoRGNSLUtsBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A6B9C139E7;
-	Wed, 30 Apr 2025 06:08:36 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id RgHkJmS+EWhfZAAAD6G6ig
-	(envelope-from <hare@suse.de>); Wed, 30 Apr 2025 06:08:36 +0000
-Message-ID: <80bf4e1d-b60d-4c61-a887-b6d093cfbd60@suse.de>
-Date: Wed, 30 Apr 2025 08:08:36 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cAwRWdJ5"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-476a720e806so66636611cf.0;
+        Tue, 29 Apr 2025 23:11:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745993497; x=1746598297; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+7Sx1WcG8f/lEhG1xD4WO6e65BUg4XMEnaaFpCgdP74=;
+        b=cAwRWdJ5kq0hhR8k6azLRcNeXu97tRozHb9QB55+f6YcCoyl4bhFz6EhjwrxhW/nvv
+         w0QG8xm4juO2e74nxLFtpL9SRyUI3/pRUk8HbZiAhxfQI/LtcdAEen0+dkdwGEiEZa8t
+         +dw6EXRNMMx2i9ypSBH/gswIVodAMIlPKB9ZVNcdD340aVF9sQKb22HL+Y33d5c6SKa+
+         Pe2zjFFjCpvcSsq2E7eBGTO60+JGT4KRrieoN9vbopV3MgldGcC9Y6BEeaeSSpFzmOId
+         mV7PLEnFaQ6hgXA5vuEuFmnd3BWIIKzKTcR1+cDlmeC/j53rtB6nLoeePS9Y4mLiPqeW
+         lswA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745993497; x=1746598297;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+7Sx1WcG8f/lEhG1xD4WO6e65BUg4XMEnaaFpCgdP74=;
+        b=OwN3ofX6GlqKGVFCSIY0Clc4uiO8+WCDsEffjI8WcQ5CR3pDIaqcjaeL+14F2Vr3J0
+         3VS3cc9Ge8OxbtssgOlPKAkeTtEr0YINuKET0erBZyCNvll7kbNOUxxAVVAtSD3weqTB
+         uXodCf06x8smHzGk3ROSf5vKYwa0LLrPGoWC70hcHKCXS+UmV9QfZ0GA4p3aBsXPrekX
+         FSn0gt4fkxaL80+eRc3CnDpFxXvEOkP11h9z1vlqUXBw+owaiOivrjkljuUsWIZNi3Wr
+         z8Ba5OCceGtAZGSut4wNxe2HJ2L7czy6oQ/iKGbN5YfaZlnNTf/lHx7d2eSrAos+NDDv
+         8Z/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVkzCFAYdVoPd/l96BScwRnZ5pzcYM/ftslP8VF+yTwBRlsuoDwUM/TeMgwdog1SZMGY+tYZPWk+mT9@vger.kernel.org, AJvYcCWq5PDjVE2xFlzN2EtYsCeXKu+oxJ05rxUNxyULpkRhQP6DISiyMuGaq7pPXnZDBg38PR6ZD3bUtDEWv9pf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzItNppNbdfg2FzSH7YRE3/w7kc+Y1nazmQuhLwyZvFkQkG2/6z
+	Bx2r0HkkzW4BKhhaatp4vgZlzjJV9irjBOmZUZYzZ1xRcb7qOnap
+X-Gm-Gg: ASbGncsxuSg5iaV3cHr5O6XNBRn6OU7XWT4Ku/fUBtg6rDNoSHqZP1FrGeINBFXxxz2
+	T7e5Vn+cQumDOU6fNhcDJZgPrzWga3DtY9Wrqt94Oc7HLWaHTAvkLlhiIeyVfrbZMzahiNdR9D0
+	5Lq1lminmtVgOgg+3RzwnGHSchr5HMabJWmDnlIfQbYMPbZREKPiVDIK/PaZN2nfdnV5cr1/csO
+	WOlunxNjUrLng2zFx/iq/96EtdIGmDo6u576OSSZHD2b1iL9sT8Whb/h+jo58Mfh7pM4k8MROae
+	u9dvcJYdWxlUP+Yi
+X-Google-Smtp-Source: AGHT+IGs1P+XfC/zsF9LCXLoh8Go5qSMxvWRH8PVyfFT1zFItCSZlKafKUoX4M940mVzPotcHqa3cQ==
+X-Received: by 2002:ac8:6f09:0:b0:476:63e5:eb96 with SMTP id d75a77b69052e-489c4169351mr35148251cf.28.1745993497561;
+        Tue, 29 Apr 2025 23:11:37 -0700 (PDT)
+Received: from localhost ([2001:da8:7001:11::cb])
+        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-47e9f5b4f0asm88406361cf.33.2025.04.29.23.11.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 23:11:37 -0700 (PDT)
+From: Inochi Amaoto <inochiama@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen Wang <unicorn_wang@outlook.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Ze Huang <huangze@whut.edu.cn>
+Cc: Inochi Amaoto <inochiama@gmail.com>,
+	devicetree@vger.kernel.org,
+	sophgo@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Yu Yuan <yu.yuan@sjtu.edu.cn>,
+	Ze Huang <huange@whut.edu.cn>
+Subject: Re: [PATCH] riscv: dts: sophgo: fix DMA data-width configuration for CV18xx
+Date: Wed, 30 Apr 2025 14:11:19 +0800
+Message-ID: <174599347430.640588.3561713391476977843.b4-ty@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250428-duo-dma-config-v1-1-eb6ad836ca42@whut.edu.cn>
+References: <20250428-duo-dma-config-v1-1-eb6ad836ca42@whut.edu.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
-To: Keith Busch <kbusch@kernel.org>
-Cc: Daniel Wagner <dwagner@suse.de>, Guenter Roeck <linux@roeck-us.net>,
- Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- James Smart <james.smart@broadcom.com>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
- <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
- <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
- <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
- <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de> <aBEW4W40ZelIXfs2@kbusch-mbp>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <aBEW4W40ZelIXfs2@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 1EA3B211E5
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.51
-X-Spam-Flag: NO
 
-On 4/29/25 20:13, Keith Busch wrote:
-> On Mon, Apr 28, 2025 at 03:21:18PM +0200, Hannes Reinecke wrote:
->>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->>> index b502ac07483b..d3c4eacf607f 100644
->>> --- a/drivers/nvme/host/core.c
->>> +++ b/drivers/nvme/host/core.c
->>> @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
->>>                   msleep(100);
->>>           }
->>>
->>> -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
->>> +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
->>> +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
->>>                   return;
->>>
->>>           nvme_unquiesce_io_queues(ctrl);
->>
->> I would rather have a separate state for firmware activation.
->> (Ab-)using the 'RESETTING' state here has direct implications
->> with the error handler, as for the error handler 'RESETTING'
->> means that the error handler has been scheduled.
->> Which is not true for firmware activation.
+On Mon, 28 Apr 2025 17:24:36 +0800, Ze Huang wrote:
+> The "snps,data-width" property[1] defines the AXI data width of the DMA
+> controller as:
 > 
-> But the point of having firmware activation set the state to RESETTING
-> was to fence off error handling from trying to schedule a real reset.
-> The fw activation work schedules its own recovery if it times out, but
-> we don't want any other recovery action or user requested resets to
-> proceed while an activation is still pending.
+>     width = 8 × (2^n) bits
+> 
+> (0 = 8 bits, 1 = 16 bits, 2 = 32 bits, ..., 6 = 512 bits)
+> where "n" is the value of "snps,data-width".
+> 
+> [...]
 
-I know; that was precisely my point. We are overloading the 'RESETTTING'
-state to mean either 'reset has started' or 'fw activation is ongoing'.
-Which are two _vastly_ different situations, and we should differentiate
-them eg by introducing a new state. That new state can (and should) have
-the same effects as the RESETTING state, true.
+Applied to fixes, thanks!
 
-Cheers,
+[1/1] riscv: dts: sophgo: fix DMA data-width configuration for CV18xx
+      https://github.com/sophgo/linux/commit/32b3f9d3e57bb4bd2204a6a4305b9f899f725859
 
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Thanks,
+Inochi
+
