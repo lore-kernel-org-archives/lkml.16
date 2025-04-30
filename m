@@ -1,157 +1,96 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D034545;
-	Wed, 30 Apr 2025 23:24:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B85D3228CB0;
+	Wed, 30 Apr 2025 23:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746055455; cv=none; b=aZExynqsFIQAHSxlltXuy6D/KzZAyLKuqm8irW0b+tUdLeHvAcgnFar2LFGshhEN9UX2G9HXe7z9gYiQJy4MIE/BdR70pwoiBzBaIyQSLgd9dE9RWTGIRMSsXzaXcmRLmOmz6aqm7jtiF6+sQQ7AH9lB5Ub3617bv+65HrK5T4g=
+	t=1746055496; cv=none; b=m73d/iBdOEmp1AJv0HHWuOx16yh91tKQuMZdTRX0i7ZxsiImv0Ungrq1F5ZLqCnazF9MhK9g6tEwFqaA9Gw77Bz55aE7vc8fGK0EWAid/GJRLiqeMKTIxNAci2YAFUYpsfHcY5MRQzY7v0MGBtsqzZFJy/BPyiybheqJyb9Ho4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746055455; c=relaxed/simple;
-	bh=tc20sQFbQ8SUugz2cW6mF+BRvDm6qDynr07fAX7iz0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GEz7BYBWLE6kXWs5DaBWuEBpKqaWoIv97ug+2IuLEnsHzWe24e8BmaFDzkPGanX+ylM7RwwtChD50xRQKchLy+HWB4CEVWTxNZaEJ50RrmWIvgcoPoPqlL1kQHaFeJIdXtAqNtDgX9IRzF3ucq1t3PNQYObtB7vSlDh/i2ySU9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmIbHHp1; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746055496; c=relaxed/simple;
+	bh=R8qGUQj0WsUU7AExrF71Pi7VBmUYNaoJjOIObQJ2DE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pP8aMjPjNsuvD+gHTVLboAa1n9HVv9UkxaN0xBgGym6QIX2wnnfdDMG0C/ROFRvg2C97Qbgl3n5+AFxKlSkwgwxItRtP43jyXKvELEp2S7YxIRs3Pn13O0k0dstD4ndhuN8NismlLgt4a5j007tXu+WHBp0Y7CRnYoMmF/vmQXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3BiiNFi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmIbHHp1"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so568756d6.3;
-        Wed, 30 Apr 2025 16:24:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746055452; x=1746660252; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=s7OGUFsBaaFGDg5Er+LmFFX/Hm+5kapCAxsBx1islgk=;
-        b=BmIbHHp1cq5UuF8hKVcWQa4DSvkCwZqksHSKSPu+ofkFgzBowZ1EOneANmnZLMRU3/
-         ytlyHVr0yeUbsrH2stv21OxA6SuTRVQ7VvX5K3xd5Z7KtuGI09gemjuXgo5QpLKfD/1W
-         bOCh8XxUuUhimUZgpDm3Y+Bx9/LMi1mMNzdIcIWGo4EHkYZueF8gZ1Xh9jptxFvX7Gey
-         MoKaMkFXWGF57c8S9fnFQmM85ZKAF755m4FOEAxRy/KAER+58vHcTUqDRKf5+6doaxoO
-         IcbR6M9k6rW0bTNfYWllQ67Kuzwu34ejldHig0FUr+UuAW8W/AgMHFQtFaWI6ULcrmvB
-         hMzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746055452; x=1746660252;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s7OGUFsBaaFGDg5Er+LmFFX/Hm+5kapCAxsBx1islgk=;
-        b=WpioTyRcOJlywqOczrvrJm0H9CiyCPE78P1r8AaeKAeysQYoZbEAAL+H0+TPO+ZZ/2
-         /sw5H/somKKvbsw9I5F+Knwk2URK/2SpbTwTxtleQBTGgynSlqtZQX7zSXLoEq2iZreK
-         l3d4JnNQgzPO9Oigt+ihEX9JgyI6gu5EjamLCwUp/2jDc29GUZ9FYtzDdWeQg0IYZv/r
-         D9A2J/jPDR981IFrYbQne6wWQHkvmSyP3MQrQcCHgbjlRGDX1Prau7bqZybyvhwong4d
-         qwF3Q09q98fIzHWTQoOSoPtCP7tyY+eaHTKTSMEESKeD6BqyhJ61M9Hv7pC1z/F9Uo4O
-         8uGA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHw/PZxZJGn1WxtAlhaQmsLzde1172NOWYBBx8DJC6LeYdrt6YGJuelNv6PgdC6FpwG4rjZcw+l2Hs@vger.kernel.org, AJvYcCV45BRUS7g0U79dy8dhAs+Kij/jzFWOhSvCQgVeRW++a2JtXbUVN0snlPkPcPanmzEn/y0+0xzjZW9aIA==@vger.kernel.org, AJvYcCVUBZnDp0u5r+IFOPtDejw8N6TZWhJuAa/7sawgKEE8cTG1MCTKiGjhxTu2bXRwARvdP9DDllMIp5F9@vger.kernel.org, AJvYcCWqsIEHDrk4CT3ujRsvS/3n2d6llxNDnSgroFzQxN9EU74kwjPaW4UlWFeM1C6dLhTMWHboXWVRRflYD9G3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1Yhm1BEaQy0tpwfyeZ2G8nIwMP9a9frd4e+5uV//HARWyZKxb
-	D3RMmH6yVhO3xal/G8hciwU/ngilrD42B8y7FOE43MiQCCarIl/j
-X-Gm-Gg: ASbGnctbG7t8Rg64O1+h/fqHgHvwjsXuDjoIWv2GcZvg/0Fwmn6+VhBsHUufIu+ndrF
-	Dnxsyis1erF2XuTH9BYZrkFbhEh+BihpCX9LGfzEe1v0YjrKyZYNYUInK5vFwNAfwnGv5AXMSmp
-	dNLWbzPz82ZyZAlj97p8j08KLsGidHxJxfpaLilRYAsiI8YeF04tjjh9jdf+xIWZ/j+lKuX0GGO
-	vm9T9ops1gKoeNA0WpVz6KDQSxlUodesAwLaWvimqXAtuM4kZBDtIjh7aw6zipzt3bHV/xspnc+
-	ZytdfsqeO8EwPADUsFNbmAouJm1a+W42OS/jNMxNwJ6AGnjVl7mvhvmSAkpfFA==
-X-Google-Smtp-Source: AGHT+IE862y0az6oFJm+4yszQuxoFzydInMLM/t6RNobxLsJwfhPlRYUITfUdSu7uC4z2pLnEi2Tmw==
-X-Received: by 2002:ad4:5c46:0:b0:6f2:af37:d877 with SMTP id 6a1803df08f44-6f4ff314cacmr27311246d6.3.1746055452367;
-        Wed, 30 Apr 2025 16:24:12 -0700 (PDT)
-Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe6abe85sm14170276d6.25.2025.04.30.16.24.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 16:24:12 -0700 (PDT)
-Date: Wed, 30 Apr 2025 20:24:06 -0300
-From: Jonathan Santos <jonath4nns@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
-	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
-	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
-	broonie@kernel.org, dlechner@baylibre.com
-Subject: Re: [PATCH v6 05/11] iio: adc: ad7768-1: add regulator to control
- VCM output
-Message-ID: <aBKxFuKFYDWdDlh7@JSANTO12-L01.ad.analog.com>
-Reply-To: CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com
-References: <cover.1745605382.git.Jonathan.Santos@analog.com>
- <8a04f8f1e9c14d57b1db2f38a8433a0367c0c9dd.1745605382.git.Jonathan.Santos@analog.com>
- <CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3BiiNFi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31458C4CEEF;
+	Wed, 30 Apr 2025 23:24:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746055496;
+	bh=R8qGUQj0WsUU7AExrF71Pi7VBmUYNaoJjOIObQJ2DE4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=g3BiiNFix/egbXCPo7ksUUBq6VXcySoXnzplC7XPI5JR872S6WOS4BRTpA/gc4ouN
+	 mAW8/4FY59XqOEPXy0dRdKsU27tM9sb2+LhiuNL71UqLOfZaSUCeKQbHohNIgBeiX5
+	 JrIj5d6D7TI9SqGb67yz5DqsjthTOHdF6VjeP6NH3Cuei0UPPFGccjTXl6xKuVBzhp
+	 NMOyBXINMc54u1j1nN3OtJSIFNi6c0KwlPAhUzqr2IuaGSCdQcht5joCw88TjYZZad
+	 7s5NjakB7Sla4Tub1+ZraUNnQm71PXMFGXkuX9pKGI/hpDRMZ5DXECEhqUqBe7WNYm
+	 uBKzLFRJEK1kQ==
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e6e1cd3f1c5so361953276.0;
+        Wed, 30 Apr 2025 16:24:56 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVPLCl3zsog77l8ndTjps4yUEImOxZWQwe72rnH2BHOX3yIGYn46CuWaE/W53BZQnoieymngm4DsDB86NIGWbSECRBX+a7I@vger.kernel.org, AJvYcCXsdocYPd01tJ8S6XPRslu2RY2srZekIQQUF4fUDbXIdUkKz3ZXu20in0TaX/sN4G/dVfAB6L8CIHbUQhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yybg0gN6MYIImXKOk/uBzedabclgU91ImNH/B9apb1I1PDU/gix
+	9U+CMPy0m+gKKLQwtTD5Dx3dK90XHu3BsHKZHlWf2e/e3fDh1Q3zapexecJrLQhEqcaRQnZ7u9N
+	8grj4pqleg+ES1eIu1TTAj6HTTUI=
+X-Google-Smtp-Source: AGHT+IEFb5WKeTRO5ku9Dx9DwwQgc18oJPQ/xKG17qWkh8xO/tVwN1QrvsFUK7xHQwD6qXq8deenEeLjaHUpEN9Fl5k=
+X-Received: by 2002:a05:6902:1690:b0:e72:d88e:80d3 with SMTP id
+ 3f1490d57ef6-e74f8a617f4mr1696642276.36.1746055495439; Wed, 30 Apr 2025
+ 16:24:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com>
+References: <1745961770-7188-1-git-send-email-jasjivsingh@linux.microsoft.com>
+In-Reply-To: <1745961770-7188-1-git-send-email-jasjivsingh@linux.microsoft.com>
+From: Fan Wu <wufan@kernel.org>
+Date: Wed, 30 Apr 2025 16:24:43 -0700
+X-Gmail-Original-Message-ID: <CAKtyLkGvcRP9f5gGhsSnEA28Nh0Udcq76ZZv0SA5Vko6w8R7qw@mail.gmail.com>
+X-Gm-Features: ATxdqUE-PtIOlhPKHRm327Vzj_UUY1r52fOy6jBuOQSuFz4DpIQTYlqWRkzQTzw
+Message-ID: <CAKtyLkGvcRP9f5gGhsSnEA28Nh0Udcq76ZZv0SA5Vko6w8R7qw@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 0/1] ipe: added script enforcement with BPRM check
+To: Jasjiv Singh <jasjivsingh@linux.microsoft.com>
+Cc: wufan@kernel.org, paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com, 
+	mic@digikod.net, linux-security-module@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/28, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 3:13 AM Jonathan Santos
-> <Jonathan.Santos@analog.com> wrote:
-> >
-> > The VCM output voltage can be used as a common-mode voltage within the
-> > amplifier preconditioning circuits external to the AD7768-1.
-> >
-> > This change allows the user to configure VCM output using the regulator
-> > framework.
-> 
-> ...
-> 
-> >  #include <linux/gpio/consumer.h>
-> >  #include <linux/kernel.h>
-> >  #include <linux/module.h>
-> > +#include <linux/of.h>
-> 
-> Why?
+On Tue, Apr 29, 2025 at 2:23=E2=80=AFPM Jasjiv Singh
+<jasjivsingh@linux.microsoft.com> wrote:
 >
+> From: jasjivsingh_microsoft <jasjivsingh@linux.microsoft.com>
+>
+> Currently, IPE only enforces the policy operations for direct
+> file execution (e.g. ./script.sh). However, indirect file execution
+> (e.g. sh script.sh) needs to be enforced by IPE based on the rules.
+>
+> Overview
+> --------
+>
+> This patch introduces the `ipe_bprm_creds_for_exec` LSM hook. This hook
+> specifically targets the `AT_EXECVE_CHECK` scenario [1], allowing IPE to
+> evaluate the `EXECUTE` operation policy for the script file during the
+> check phase itself.
+>
+> [1] https://lore.kernel.org/linux-security-module/20241212174223.389435-1=
+-mic@digikod.net/
+>
+> Example
+> --------
+>
+> ipe_op=3DEXECUTE ipe_hook=3DBPRM_CHECK enforcing=3D1 pid=3D18571 comm=3D"=
+inc"
+> path=3D"/tmp/script/hello.inc" dev=3D"tmpfs" ino=3D24 rule=3D"DEFAULT act=
+ion=3DDENY"
+>
+> the log message when the IPE policy denies the indirect script execution
+> via the 'inc' test interpreter.
+>
+> The IPE test suite has been updated to include script enforcement tests:
+> https://github.com/microsoft/ipe/tree/test-suite
 
-I was using of_match_ptr() before, but forgot to remove it, sorry.
+Please use the PR link instead of the repo link.
 
-> >  #include <linux/regmap.h>
-> >  #include <linux/regulator/consumer.h>
-> > +#include <linux/regulator/driver.h>
-> 
-> ...
-> 
-> > +static int ad7768_vcm_enable(struct regulator_dev *rdev)
-> > +{
-> > +       struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
-> > +       struct ad7768_state *st = iio_priv(indio_dev);
-> > +       int ret, regval;
-> 
-> > +       if (!indio_dev)
-> > +               return -EINVAL;
-> 
-> Isn't it a dead code? Or i.o.w. under which circumstances can this be true?
-> Ditto for other functions with the same check.
-> 
-
-Yes, you're right. Since I defined the driver data below, there was no
-need for the check.
-
-> > +       if (!iio_device_claim_direct(indio_dev))
-> > +               return -EBUSY;
-> > +
-> > +       /* To enable, set the last selected output */
-> > +       regval = AD7768_REG_ANALOG2_VCM(st->vcm_output_sel + 1);
-> > +       ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
-> > +                                AD7768_REG_ANALOG2_VCM_MSK, regval);
-> > +       iio_device_release_direct(indio_dev);
-> > +
-> > +       return ret;
-> > +}
-> 
-> ...
-> 
-> > +       return clamp(val, 1, (int)rdev->desc->n_voltages) - 1;
-> 
-> No explicit castings in min/max/clamp, please. This may lead to subtle
-> mistakes. Also, don't forget to include minmax.h.
-> 
-
-Okay, thanks.
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+-Fan
