@@ -1,106 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D17A2BE5E;
-	Wed, 30 Apr 2025 15:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C771C8620;
+	Wed, 30 Apr 2025 15:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027034; cv=none; b=NfsXFKJrNfSlUq6ug3qa00gc5KPVX/TJnXR5YeJJj2lHxeFVdrdutUh8GxaMlZ4gSPW1cDFoX5sKoELfe7YaBFVaWIVTbUO0EWiI1HTmI5JdMiVSiapZ2NU490CNNwstwMarDIbB9D4zhy460P/dPRZsB5B4owixs6IrcJ+PcwQ=
+	t=1746027043; cv=none; b=SrireMJAeXWVk7XTGYiN9Vvq4Df5IQIR73PtR7/4EmtoBzeJkdqs1Lr+nknVsxmW6Sk4OBeOCLlLO1TulK4AJfZ4U+dgJMilWtCqgOJJz0RlxdDZTRta+aj30NGdsvUIcToEqf8oIrSUSq1HuB73hU9GEV5yk1lbmsSdkILPDKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027034; c=relaxed/simple;
-	bh=AS32/rHTjyOFXoo7tYTj0CBEoCErW9c1FZVBo3FZpE4=;
+	s=arc-20240116; t=1746027043; c=relaxed/simple;
+	bh=opdeUvkVojRGTuPuV8xclDhdJWVmOXLGZEZAoQNAZ9U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J2aFsqDCJHn3osCpf75VizpMJJZ9MDzL3vg62PJOq3eoCPCsBTIGt/E5IQ1PYNdDzsvqq87At8284as0a90mZ3R9vkVawvkORFeQ2CPU4kNbrmz6BjJrx7FrGfgWZ5CXsxyaGLdV6tMsCtDliD2BEGtZ7x2g6MVO0L9KHwT4z0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=h1M+70X8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=JN/gIzJbe9Cu4XEJyviVeA+xtMLP0LwxuDMS/uKFo/+T2eYVqOyM+wA2vkrGdARsf/DFDcflvM4tzXpayh4o/nDFea3SAt3qp17zwefX9CRnWiCoSmo9uSheUbCgk0s2oE8KKgIsdHQ/wbDE01sRlabsHT9DvmAYq3pLIZM62cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=El8iv2ma; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="h1M+70X8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DFEC4CEE7;
-	Wed, 30 Apr 2025 15:30:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746027034;
-	bh=AS32/rHTjyOFXoo7tYTj0CBEoCErW9c1FZVBo3FZpE4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="El8iv2ma"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2366EC4CEE7;
+	Wed, 30 Apr 2025 15:30:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746027042;
+	bh=opdeUvkVojRGTuPuV8xclDhdJWVmOXLGZEZAoQNAZ9U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h1M+70X86HpkqWt+J93cvxLR36srNRdlFuuUluHV/oICxxaOlxKhTyVn9BDidDmSQ
-	 rBCdgQOhNyZUolyoDZbcETnryEkRNMJC2uKnojKXe6qCcFKGwfD4iEy1myXDgptSS2
-	 B4uuzz+fklh55JjGu2lmhKTlhqOZmDkISoxKO1Qs=
-Date: Wed, 30 Apr 2025 17:30:31 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH 0/8] rust: DebugFS Bindings
-Message-ID: <2025043044-suds-vascular-c7fa@gregkh>
-References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
- <2025043024-disk-rockfish-1c1b@gregkh>
- <CAGSQo0040a9efWj8bCr4KiMUXezJJ2HVQVR5aJ90rgrYSjKq1w@mail.gmail.com>
- <2025043005-monkhood-caring-7829@gregkh>
- <CAGSQo03=09qCj230-y3yqD_4zRJ9PE8U-9NLmOZokUfBpRdKCg@mail.gmail.com>
+	b=El8iv2mafHvxjq4tRarbAiANk1Rhn09dQGIrTMMWuW9SOf1JTp2kKf/zYgmNdXFzC
+	 yosNmtDTs/so4la7muAJ4puJcAQYxzAfwYIYMIwN3ujlQNvygiVkL6LEeaafCdgg1h
+	 u9VZBBpjQ2AkXqgcafE4Ok1jvHODQG5AFNzvtQkcff421or2l1KPW1wk3RJyWHgkY/
+	 f0PimYV43c8xE6Aba2/IhyZ0IEM4+jDdOFl5nSKuZaoq6J9o0mSQXjZXWWB+e178i6
+	 twv3iLKf2v90MbvrHSQq2pRBTRNhhK0Uq4Oid0t6N8FmpQ9l4HKNFtLMra67Sbu4KX
+	 JUVzcgnawUssA==
+Date: Wed, 30 Apr 2025 16:30:37 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Francesco Dolcini <francesco@dolcini.it>
+Cc: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Francesco Dolcini <francesco.dolcini@toradex.com>,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/6] dt-bindings: arm: ti: Add Toradex Verdin AM62P
+Message-ID: <20250430-stylus-reversion-a439538b6fc1@spud>
+References: <20250430102815.149162-1-francesco@dolcini.it>
+ <20250430102815.149162-2-francesco@dolcini.it>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="KMHDuPG9qmxNjZvN"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGSQo03=09qCj230-y3yqD_4zRJ9PE8U-9NLmOZokUfBpRdKCg@mail.gmail.com>
+In-Reply-To: <20250430102815.149162-2-francesco@dolcini.it>
 
-On Wed, Apr 30, 2025 at 08:24:14AM -0700, Matthew Maurer wrote:
-> On Wed, Apr 30, 2025 at 8:21 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Apr 30, 2025 at 08:01:38AM -0700, Matthew Maurer wrote:
-> > > > And yes, I know why you want to tie debugfs layout to a structure
-> > > > layout, it makes one type of debugfs use really easy to write in rust,
-> > > > but that's not the common user for what we have today.  Let's address
-> > > > the common use first please, save the "builder" pattern stuff for after
-> > > > we nail all of that down.
-> > > >
-> > > > thanks,
-> > > >
-> > > > greg k-h
-> > >
-> > > I'll remove that API in the next version of the patch series to get
-> > > the basics down first, but to give some motivation to what I was
-> > > trying to support which *is* done in C today, see qcom-socinfo [1] -
-> > > it uses a backing `socinfo_params` struct which is expected to outlive
-> > > its whole directory structure.
-> >
-> > What exactly do you mean by "outlive"?  Right now debugfs has no way to
-> > "own" a structure and it just "has to work" so that the file will always
-> > be there and hope that the backing variable is also still there.  I
-> > guess you are trying to encode that "hope" into something real?  :)
-> 
-> Yes, the `Values` structure used by the builder interface enforces
-> that the backing variable must live at least as long as the `Dir`
-> corresponding to the lowest directory it's going to be used in. To
-> make DebugFS safe in Rust, we either need to:
-> 1. Have DebugFS files own things (not currently done, doesn't seem to
-> match intentions).
 
-Agreed, let's not do that.
+--KMHDuPG9qmxNjZvN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 2. Expose things that live forever (e.g. globals, like the early patches do)
+On Wed, Apr 30, 2025 at 12:28:10PM +0200, Francesco Dolcini wrote:
+> From: Francesco Dolcini <francesco.dolcini@toradex.com>
+>=20
+> Add toradex,verdin-am62p for Toradex Verdin AM62 SoM, its nonwifi and
+> wifi variants, and the Toradex carrier board they may be mated in.
+>=20
+> Link: https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am=
+62p
+> Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Let's start with this for now.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> 3. Have a pinned structure that is guaranteed to outlive the files
-> that use it (what the builder interface is trying to support)
+> ---
+>  .../devicetree/bindings/arm/ti/k3.yaml        | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documenta=
+tion/devicetree/bindings/arm/ti/k3.yaml
+> index a6d9fd0bcaba..bf6003d8fb76 100644
+> --- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
+> +++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+> @@ -76,6 +76,30 @@ properties:
+>            - const: toradex,verdin-am62          # Verdin AM62 Module
+>            - const: ti,am625
+> =20
+> +      - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Bo=
+ards
+> +        items:
+> +          - enum:
+> +              - toradex,verdin-am62p-nonwifi-dahlia # Verdin AM62P Modul=
+e on Dahlia
+> +              - toradex,verdin-am62p-nonwifi-dev    # Verdin AM62P Modul=
+e on Verdin Development Board
+> +              - toradex,verdin-am62p-nonwifi-ivy    # Verdin AM62P Modul=
+e on Ivy
+> +              - toradex,verdin-am62p-nonwifi-mallow # Verdin AM62P Modul=
+e on Mallow
+> +              - toradex,verdin-am62p-nonwifi-yavia  # Verdin AM62P Modul=
+e on Yavia
+> +          - const: toradex,verdin-am62p-nonwifi     # Verdin AM62P Modul=
+e without Wi-Fi / BT
+> +          - const: toradex,verdin-am62p             # Verdin AM62P Module
+> +          - const: ti,am62p5
+> +
+> +      - description: K3 AM62P5 SoC Toradex Verdin Modules and Carrier Bo=
+ards with Wi-Fi / BT
+> +        items:
+> +          - enum:
+> +              - toradex,verdin-am62p-wifi-dahlia # Verdin AM62P Wi-Fi / =
+BT Module on Dahlia
+> +              - toradex,verdin-am62p-wifi-dev    # Verdin AM62P Wi-Fi / =
+BT M. on Verdin Development B.
+> +              - toradex,verdin-am62p-wifi-ivy    # Verdin AM62P Wi-Fi / =
+BT Module on Ivy
+> +              - toradex,verdin-am62p-wifi-mallow # Verdin AM62P Wi-Fi / =
+BT Module on Mallow
+> +              - toradex,verdin-am62p-wifi-yavia  # Verdin AM62P Wi-Fi / =
+BT Module on Yavia
+> +          - const: toradex,verdin-am62p-wifi     # Verdin AM62P Wi-Fi / =
+BT Module
+> +          - const: toradex,verdin-am62p          # Verdin AM62P Module
+> +          - const: ti,am62p5
+> +
+>        - description: K3 AM642 SoC
+>          items:
+>            - enum:
+> --=20
+> 2.39.5
+>=20
 
-Let's add this "after" we get the basics down.  Should make things
-simpler for you to work on now, and for us to review.
+--KMHDuPG9qmxNjZvN
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Baby steps :)
+-----BEGIN PGP SIGNATURE-----
 
-thanks,
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBJCHQAKCRB4tDGHoIJi
+0hFcAQDEbZ+iAmM7XPpfRyDtPTb9EQwMDttv6HFl1IfeSyudqQEA6v/ANrKiaOD1
+ss42apT4hN+ggDMZdFM/hW8W9bCYwQg=
+=Q1sp
+-----END PGP SIGNATURE-----
 
-greg k-h
+--KMHDuPG9qmxNjZvN--
