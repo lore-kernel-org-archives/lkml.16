@@ -1,82 +1,82 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 966CB27FD55
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23326656F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036683; cv=none; b=S70fWXCdhuiMOrF6Wv/uS0TRtlDvMp/unz0ANo5+ORH8/jIdop9YAYLMN9sr5xKOGdBmRc0IrVPNpvyJz1xphBU5K65E0WEK+biHpHGpe6cKZ9WVdqJx2DRwGix+JyPSmHK2lBk+pHui9HDiVw2RafPzWauS5hkt6YG4lE6sg0g=
+	t=1746036687; cv=none; b=h2zNMnhw3/XyA3nse4S4Dfc8LvaElBIdYH1uyFQGtQpS9Y+zcT1c5l9nIu0jNhNuMk3Da1nvxYutdO8arUpHt8blpCtBClTcJfy1Rgq8I35IozfyQY4BI/cfsHvHjUrW8y75GkJkvPSjoNjiSpPm/O39VlRuEsw3zpIizbHtNBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036683; c=relaxed/simple;
-	bh=yfrC0Eme8BmQ1/OHJ9XQ1ZL+snR+lO3XBR/5UUcZJfg=;
+	s=arc-20240116; t=1746036687; c=relaxed/simple;
+	bh=CQu6NY+XXCjQ0pDoxIrTBz6qrVh4Glx1z3jLOwt79bY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Qlim/rh6+hCHKV3lYXhdOEoZhFXCOEfrFEPIl3Rhj6fRmhM60hr5Vr5k/V63RAXCpl/gkYhiBf2sL2b0M2uRR6eNi4f9Oq3XBbSBJGBUZ956oKHj70EtnVxDnjh+GiG6pKM31APv6hkcqFrbF3FwOZV7JcwrABFzAEb9A5kfEXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jKR0MMC9; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 MIME-Version; b=q0C2gnNC6PpQWjH71bKEMJpBLD9Ft4gOeeHLxBSg5Oz+bPgQYmzGi6sWvAdU1dlG/FXgHzNfa8S/gJcO5z9hYBt35jddtXPnZbp67Ce4IUpJn9vfB/2+nyR5wzT6plei4R0+gM7F0iyQBi01dPoNAoDqUZ5ayhqotP+wMc+ldB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VLnpInnA; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jKR0MMC9"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4772f48f516so14874191cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLnpInnA"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so107889a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746036680; x=1746641480; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IvC2rs3uihn14TnY/NB2X/a9ksGTd6adbUOlhi/H5xc=;
-        b=jKR0MMC9vUO+cTHFNR9O/Mq4rW9izXl1/pEOs0z9h5Zbs+UPtLWfdIdTIZOV6EUtAV
-         ohGcItTO1tBCob7Xw6kLk4qX03UHoCnoyrBUKqRoVqQBAkL/c0sZyM5M6JmNEotAJ+6W
-         4e5Z5QXrd73iVPZMiJSM6J1Kx/0Ar6FNiiw1T1quCWJPMWU5ndXntQBNhYRMa8wDWs8L
-         md/Nmajw2yHPMbRjeINPpwnbxFwVfvGqOlDgT3wnes55TKdcmbf5JjU7gDppnj74N4v9
-         2zCJa685cVyDVHMK12w9H/IyxcDKCjpLpwZTvbZGG+h5SAQXCLO+9LBlrrbMt7qSrMFh
-         wPCg==
+        d=gmail.com; s=20230601; t=1746036685; x=1746641485; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ABVuvP5TNG4tVYGMuC//l3k1Ki5yFOjDY70WGpcFOzo=;
+        b=VLnpInnAmXiY75sDp4x75brDKpRp/VGCeuXCb3IeAjhh/V67LOb8l18bihH1iKpEco
+         flNbfgGzco2Ekgw+2mpkIv8PLoDEeXwxYCVg37JyBUPhpfH1U+jlBfNkOwmGbnyLelzb
+         u/K1W/66z76c9ZbuE+DNdGiTRcLbKi9kzNM9tHPAuFVgNiJQdJ8KTNJ8WukGyVt7TYMF
+         oy5NXkjcIFzvle2WO5CmN7glrhzBlrBNudelnDjEIRpv/Z1abyoNTzapY9ukt7OcFR5w
+         QL684UTmmo4bBFWOTiqoF+No9Cttf5vfg0bNHNXRa4O2L9zwckt8V22D7eQ07IHZgV0V
+         ZSSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036680; x=1746641480;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IvC2rs3uihn14TnY/NB2X/a9ksGTd6adbUOlhi/H5xc=;
-        b=FU73efwzITRF/WqhAVOr2hQVk38B5KikjAP94uxTtCLxifQlfXlA9ir92QTdL9vx1Z
-         loAeovbzNtvZnDzfn7+EbATrEQBNoM2md/ybOgi+zagxYrGXDWX2dX/yJqGIoZ+rj1L2
-         29/6oaYBbVDR+ITIM7NftEcslcsxC4RMorE5b7Pgx55I78CyUgTMFUCcjZmZKjTGK9eL
-         0DhyUKimV8SJyklOFBIlVzkLNZdK9ra2Hrj3CnF3U2dp0eRhtEngbPftZkIozevCrIlQ
-         xsu5mihW7TJhIalPKtocw+fIxusbzYZ8sLAZW8W41JqpUxqqIhJH/ZvBsYf5qVt75OuL
-         YiBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV3OXLjvoNyDajRZrSl23Hh+mvKbJDzx8KhBglYhPJlDzl5Rfp7zl8wG22zhomB+zKPHTeW2c+XhSUvfDo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCd73BF0YfQ81j51gjz0dvMsSLkbuaj7I/gGjIsFCya8dVdoUd
-	rbw8txd1lviyYOI66oz9dl2vq6Oq1j1dEf7ArDu1R+62wtJLr87hnPP4ZNYkv5I=
-X-Gm-Gg: ASbGncuJN2hlt1+wn9M2GhHUn9SCbS/e1vCU7Xdds1duvAjRREdoSz3W61r0tHSstdT
-	csuLGzR77Lm8pTemweAWqLxY1SFXl2BYiJ14txeuDqL5iQxe+SjBjB0b4zqWRVMKQwPbVSh6Lch
-	o6HEU7gMxH6LSVhrG6RoNzWDje0RkCrlqqnMtk1bcLdenVBhVedZ+oWFCKgEFMvYSXj0mPxZsnv
-	7ki21lnPrclOw0E2zN+hl+P8EGXrRT2srOimKBDnZq55nIOJc041PUjYl+dkpIaZCyLf7q9Gt7g
-	axeir0SPpk7QikzbD+r/QUkruHU8zBbQVmKSsWYSP0pkRJoIx4wPBofiAhesFAKOtbkHLj3b8uq
-	jRv0ECgAEwCcnoj9kGtHq1rYD7kRr
-X-Google-Smtp-Source: AGHT+IFz5WPodsmmRrFPGLR1bzkZlvspw+qAXKgayP3FunFG0J4oFtDaOJOklbA327O2PgMdv3UdIg==
-X-Received: by 2002:a05:622a:228e:b0:471:80ef:35e7 with SMTP id d75a77b69052e-48ad7e8d24fmr6910221cf.4.1746036680313;
-        Wed, 30 Apr 2025 11:11:20 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:11:19 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
+        d=1e100.net; s=20230601; t=1746036685; x=1746641485;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ABVuvP5TNG4tVYGMuC//l3k1Ki5yFOjDY70WGpcFOzo=;
+        b=M3hRi3F9Yh8064hEGD5myNuFjJq0H+o3fPPIdAr9zaczSVTH7f1GA74UAjJz/GKNPR
+         cUEWjyO411B9yqNwEbq5vuhQFs8JG7aVY408SuSzONcKKmHMddtakfBzCADV/mq+dWn5
+         7T6KBVLsY+cSxzsolfXDsXK8hBQq3rhcMg5BO98PCOwSFPUs6/E3zpq37sAvEa10eAgT
+         UbISXV78peOvVQdT8ZgSHL++pxRw2VvBEypu2SwKNzEHNzvHrjjp2OCQDV91BbcEHm3R
+         sqd15AHuqxGFMgwTK5C4TgBltgxA9rKNQOOGq0TACgtHq10WeSi7J1zNujM7krG/ebN3
+         E4Yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWexNsuIOiW+BDTc5QqliUa+2vcAbtR6/5i0e5nVcmWIaj8iKiAx79tbh5VgOVHbkkR7qT4xrbHm6sJ9/s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZnf0LBeMyrSfbyYc6TOSqGaZQe79Z3xmWMfTKNJ38pzc/T9SS
+	zXifhZPjCuGPABSosv0lVi64cjPqusCkjaJrtkombxYr/ka1pTM8
+X-Gm-Gg: ASbGncvArXKga33eHe/dULns1k1wOz0jM+q3I0WNXC37fwlijaLziteiQTPt9a+wi3q
+	0qXefaHFb1M8aP1LqLakenye26x00LPLJ7j+hMPFgtB0XDSaHj+UGsWn25O9GSmFCLTvoA/JP85
+	mVnlRvMNeTUE+FcLLqZ2zES6o+7s3cdjYgitc5veV5M2UyXcMBeG/jyJ0kpGh4WOfOlRhyWXl1P
+	OmgzS0YlmcETD22H/sDoAQCH/EP9JSqPZA3qCBCVr/AFxIUWu4CGYQCfVf3yPo4qNXgoi3U+4lz
+	yAlpbGkXNDpvHYmXRbNozBPP6p8ZPsow2NMeAHUwR18SDJox6modvUwWto9Ayw==
+X-Google-Smtp-Source: AGHT+IGvk0oJWttNM6c0zFmz2EsnDvT1Lr3GHsue6PfHLv/bA327BK4ptz41QX/l91eCNpM4QRO2Ag==
+X-Received: by 2002:a05:6a21:1583:b0:1f5:6d00:ba05 with SMTP id adf61e73a8af0-20a89a012bcmr5766473637.38.1746036685092;
+        Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.122.198])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039947976sm1983822b3a.84.2025.04.30.11.11.21
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 30 Apr 2025 11:11:24 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Hugh Dickins <hughd@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	corbet@lwn.net
-Subject: [RFC PATCH v2 13/18] cxl: docs/allocation/page-allocator
-Date: Wed, 30 Apr 2025 14:10:43 -0400
-Message-ID: <20250430181048.1197475-14-gourry@gourry.net>
+	Kairui Song <kasong@tencent.com>
+Subject: [PATCH v3 5/6] mm: move folio_index to mm/swap.h and remove no longer needed helper
+Date: Thu,  1 May 2025 02:10:51 +0800
+Message-ID: <20250430181052.55698-6-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
-References: <20250430181048.1197475-1-gourry@gourry.net>
+In-Reply-To: <20250430181052.55698-1-ryncsn@gmail.com>
+References: <20250430181052.55698-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,119 +85,149 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document some interesting interactions that occur when exposing CXL
-memory capacity to page allocator.
+From: Kairui Song <kasong@tencent.com>
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+There are no remaining users of folio_index() outside the mm subsystem.
+Move it to mm/swap.h to co-locate it with swap_cache_index(), eliminating
+a forward declaration, and a function call overhead.
+
+Also remove the helper that was used to fix circular header dependency
+issue.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
 ---
- .../cxl/allocation/page-allocator.rst         | 86 +++++++++++++++++++
- Documentation/driver-api/cxl/index.rst        |  1 +
- 2 files changed, 87 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/allocation/page-allocator.rst
+ include/linux/pagemap.h | 20 --------------------
+ mm/gup.c                |  1 +
+ mm/memfd.c              |  1 +
+ mm/migrate.c            |  1 +
+ mm/page-writeback.c     |  1 +
+ mm/swap.h               | 18 ++++++++++++++++++
+ mm/swapfile.c           |  6 ------
+ 7 files changed, 22 insertions(+), 26 deletions(-)
 
-diff --git a/Documentation/driver-api/cxl/allocation/page-allocator.rst b/Documentation/driver-api/cxl/allocation/page-allocator.rst
-new file mode 100644
-index 000000000000..f5b21d3eb63f
---- /dev/null
-+++ b/Documentation/driver-api/cxl/allocation/page-allocator.rst
-@@ -0,0 +1,86 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==================
-+The Page Allocator
-+==================
-+
-+The kernel page allocator services all general page allocation requests, such
-+as :code:`kmalloc`.  CXL configuration steps affect the behavior of the page
-+allocator based on the selected `Memory Zone` and `NUMA node` the capacity is
-+placed in.
-+
-+This section mostly focuses on how these configurations affect the page
-+allocator (as of Linux v6.15) rather than the overall page allocator behavior.
-+
-+NUMA nodes and mempolicy
-+========================
-+Unless a task explicitly registers a mempolicy, the default memory policy
-+of the linux kernel is to allocate memory from the `local NUMA node` first,
-+and fall back to other nodes only if the local node is pressured.
-+
-+Generally, we expect to see local DRAM and CXL memory on separate NUMA nodes,
-+with the CXL memory being non-local.  Technically, however, it is possible
-+for a compute node to have no local DRAM, and for CXL memory to be the
-+`local` capacity for that compute node.
-+
-+
-+Memory Zones
-+============
-+CXL capacity may be onlined in :code:`ZONE_NORMAL` or :code:`ZONE_MOVABLE`.
-+
-+As of v6.15, the page allocator attempts to allocate from the highest
-+available and compatible ZONE for an allocation from the local node first.
-+
-+An example of a `zone incompatibility` is attempting to service an allocation
-+marked :code:`GFP_KERNEL` from :code:`ZONE_MOVABLE`.  Kernel allocations are
-+typically not migratable, and as a result can only be serviced from
-+:code:`ZONE_NORMAL` or lower.
-+
-+To simplify this, the page allocator will prefer :code:`ZONE_MOVABLE` over
-+:code:`ZONE_NORMAL` by default, but if :code:`ZONE_MOVABLE` is depleted, it
-+will fallback to allocate from :code:`ZONE_NORMAL`.
-+
-+
-+Zone and Node Quirks
-+====================
-+Lets consider a configuration where the local DRAM capacity is largely onlined
-+into :code:`ZONE_NORMAL`, with no :code:`ZONE_MOVABLE` capacity present. The
-+CXL capacity has the opposite configuration - all onlined in
-+:code:`ZONE_MOVABLE`.
-+
-+Under the default allocation policy, the page allocator will completely skip
-+:code:`ZONE_MOVABLE` has a valid allocation target.  This is because, as of
-+Linux v6.15, the page allocator does approximately the following: ::
-+
-+  for (each zone in local_node):
-+
-+    for (each node in fallback_order):
-+
-+      attempt_allocation(gfp_flags);
-+
-+Because the local node does not have :code:`ZONE_MOVABLE`, the CXL node is
-+functionally unreachable for direct allocation.  As a result, the only way
-+for CXL capacity to be used is via `demotion` in the reclaim path.
-+
-+This configuration also means that if the DRAM ndoe has :code:`ZONE_MOVABLE`
-+capacity - when that capacity is depleted, the page allocator will actually
-+prefer CXL :code:`ZONE_MOVABLE` pages over DRAM :code:`ZONE_NORMAL` pages.
-+
-+We may wish to invert these configurations in future Linux versions.
-+
-+If `demotion` and `swap` are disabled, Linux will begin to cause OOM crashes
-+when the DRAM nodes are depleted. This will be covered amore in depth in the
-+reclaim section.
-+
-+
-+CGroups and CPUSets
-+===================
-+Finally, assuming CXL memory is reachable via the page allocation (i.e. onlined
-+in :code:`ZONE_NORMAL`), the :code:`cpusets.mems_allowed` may be used by
-+containers to limit the accessibility of certain NUMA nodes for tasks in that
-+container.  Users may wish to utilize this in multi-tenant systems where some
-+tasks prefer not to use slower memory.
-+
-+In the reclaim section we'll discuss some limitations of this interface to
-+prevent demotions of shared data to CXL memory (if demotions are enabled).
-+
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index f779dfb0cd64..2be2855e5870 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -46,5 +46,6 @@ that have impacts on each other.  The docs here break up configurations steps.
-    :caption: Memory Allocation
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index 0c9aff5ec77f..627cb0338e5d 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -884,26 +884,6 @@ static inline struct page *grab_cache_page_nowait(struct address_space *mapping,
+ 			mapping_gfp_mask(mapping));
+ }
  
-    allocation/dax
-+   allocation/page-allocator
+-extern pgoff_t __folio_swap_cache_index(struct folio *folio);
+-
+-/**
+- * folio_index - File index of a folio.
+- * @folio: The folio.
+- *
+- * For a folio which is either in the page cache or the swap cache,
+- * return its index within the address_space it belongs to.  If you know
+- * the page is definitely in the page cache, you can look at the folio's
+- * index directly.
+- *
+- * Return: The index (offset in units of pages) of a folio in its file.
+- */
+-static inline pgoff_t folio_index(struct folio *folio)
+-{
+-	if (unlikely(folio_test_swapcache(folio)))
+-		return __folio_swap_cache_index(folio);
+-	return folio->index;
+-}
+-
+ /**
+  * folio_next_index - Get the index of the next folio.
+  * @folio: The current folio.
+diff --git a/mm/gup.c b/mm/gup.c
+index f32168339390..91bbf57579f0 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -26,6 +26,7 @@
+ #include <asm/tlbflush.h>
  
- .. only::  subproject and html
+ #include "internal.h"
++#include "swap.h"
+ 
+ struct follow_page_context {
+ 	struct dev_pagemap *pgmap;
+diff --git a/mm/memfd.c b/mm/memfd.c
+index c64df1343059..ab367e61553d 100644
+--- a/mm/memfd.c
++++ b/mm/memfd.c
+@@ -20,6 +20,7 @@
+ #include <linux/memfd.h>
+ #include <linux/pid_namespace.h>
+ #include <uapi/linux/memfd.h>
++#include "swap.h"
+ 
+ /*
+  * We need a tag: a new tag would expand every xa_node by 8 bytes,
+diff --git a/mm/migrate.c b/mm/migrate.c
+index f3ee6d8d5e2e..662e5dc44b33 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -50,6 +50,7 @@
+ #include <trace/events/migrate.h>
+ 
+ #include "internal.h"
++#include "swap.h"
+ 
+ bool isolate_movable_page(struct page *page, isolate_mode_t mode)
+ {
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index 20e1d76f1eba..9ff44b64d3d6 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -41,6 +41,7 @@
+ #include <trace/events/writeback.h>
+ 
+ #include "internal.h"
++#include "swap.h"
+ 
+ /*
+  * Sleep at most 200ms at a time in balance_dirty_pages().
+diff --git a/mm/swap.h b/mm/swap.h
+index 6f4a3f927edb..521bf510ec75 100644
+--- a/mm/swap.h
++++ b/mm/swap.h
+@@ -201,4 +201,22 @@ static inline int swap_zeromap_batch(swp_entry_t entry, int max_nr,
+ 
+ #endif /* CONFIG_SWAP */
+ 
++/**
++ * folio_index - File index of a folio.
++ * @folio: The folio.
++ *
++ * For a folio which is either in the page cache or the swap cache,
++ * return its index within the address_space it belongs to.  If you know
++ * the folio is definitely in the page cache, you can look at the folio's
++ * index directly.
++ *
++ * Return: The index (offset in units of pages) of a folio in its file.
++ */
++static inline pgoff_t folio_index(struct folio *folio)
++{
++	if (unlikely(folio_test_swapcache(folio)))
++		return swap_cache_index(folio->swap);
++	return folio->index;
++}
++
+ #endif /* _MM_SWAP_H */
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index b86637cfb17a..9fe58284079d 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -3671,12 +3671,6 @@ struct address_space *swapcache_mapping(struct folio *folio)
+ }
+ EXPORT_SYMBOL_GPL(swapcache_mapping);
+ 
+-pgoff_t __folio_swap_cache_index(struct folio *folio)
+-{
+-	return swap_cache_index(folio->swap);
+-}
+-EXPORT_SYMBOL_GPL(__folio_swap_cache_index);
+-
+ /*
+  * add_swap_count_continuation - called when a swap count is duplicated
+  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
 -- 
 2.49.0
 
