@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FBCA921;
-	Wed, 30 Apr 2025 14:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C84A71A0714
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024997; cv=none; b=EklnKBAb89Vbvqxq3kCpRWmzGcJbdrZYPC/44tzdx351W6sXd4Va84q50Lekq05MatYokqQtWQiB3IBl5BD0dLzNSku7yg1FaqWCXdE0uZm2a97OUnRDkg+sBYU/RYFIB/OoItcfLnaoIzbKJ3p4ycvDpR3r+1NRWDXrPS6IJgs=
+	t=1746025008; cv=none; b=R4u1bWTTgwEzIUDPslcDjvPKgG2z33bNp5p3EuL6MC0koGR3v1zy8/WLqmohC2OGx4N5xyuP/mtf51lUpsQdHJqdzrDNNo+SEeiZ4JYJn1y2C5/MQfE4vtgUztzxobPr+YaIWt4Y26PRZIwsW1kec4xZuPscjKqQ7QWxZxKaZos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024997; c=relaxed/simple;
-	bh=ZDhemFI3wk7+oKmCQPnnKPrmu3o0K0L437vtWpHD45Q=;
+	s=arc-20240116; t=1746025008; c=relaxed/simple;
+	bh=2NcOLfzZKue6h2awXGoXt4niifDn/e+a1VZPDlSG97o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e5rAIOX4LN/bGzpwk9e1s0Vuc0RFGvTvG2uY0mXkKubHPbxoeLCECzbcH5uBwPGC+Z1r8oY0AACZdNyhTlGL0IkK0HrbQcC4iPJwAEYv0sqxMooJbsUF7j/GriNHTZV2zC/Dp6K5cXH/di34rmVmsnz+a5WWcCAXoCHidKYKe7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p4v+Q51D; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NaGIOK8zqOtg9sI66l+aEJzuLcNC3hN3Irk8ojiLS0d+gI/vw2HnhGAdzsmlcUCTxOhdE4pEQO0Cy9BejxYkuB8lt6sagNS1EqUDcbEwUz2FBVJ1XCZa+tVUwmjGHPX8EQSNqYJq34SbyiMunZMy357+7Nqef92a5nYIG8ujuyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=1iUsR0Y3; arc=none smtp.client-ip=209.85.160.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p4v+Q51D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4615C4CEE7;
-	Wed, 30 Apr 2025 14:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746024997;
-	bh=ZDhemFI3wk7+oKmCQPnnKPrmu3o0K0L437vtWpHD45Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=p4v+Q51DBosLKEYDP1xu8v1LSCpHW5tdNhk2McmtomzvDiGE0HFITW6RZ67nIetwg
-	 nmhpIr8KxlRevmrSr7667phfz509ORcM73+MOb129oRrA3qM1WOvNmgTcFTSWMEkgu
-	 SXLZnm5BAogrX/djef6MbfVMBjwIr4JjdxRNPCefxfqFZ3Lz+eJ6a92t1s3x/2+rt+
-	 tUbyC/ZbXqJjDbqfX5VeeP2E/Sc7C+hWSfpmN3mlFMBnlJetbFLrWQo2Ae6OBOLsE0
-	 00E1RG6nZNE07A8OWeejsGyGj7EW7KWj/jUkKJE8LubYQoOCVmC8exxzgel61ZpGdD
-	 yF7WVZypse4zA==
-Message-ID: <07c540a2-c645-460c-bfad-c9229d5d5ad0@kernel.org>
-Date: Wed, 30 Apr 2025 17:56:29 +0300
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="1iUsR0Y3"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d4e7797d59so1379fac.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746025006; x=1746629806; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Sk93f/QmfWRFnir5kQcAvlAIOBCq59GYkwRW++xpxLQ=;
+        b=1iUsR0Y3hX0/HHa00t77cOkQ+I+QktEI9Fq6epgrW8Hm915ukNUi0oYIul+88EsxiI
+         ybsYBcKiHl28aLYStRJKuRlszVK9gVi2q2x/I+InHeJfOFzP7IiBVqnPC7jrHs7WvliA
+         rbKpaIqh9KO4cxUiLSkEjzXvt5wmOUbdYdIi8KqqCRdxTYUaFwgnpl1tl6HszIOlw6FX
+         TaNP9kVjVHkZK+In5HNx8yJSsjIXORn//bDHHS9eChWEA6tmvb9rgdJ/GqUzrSmn3uYk
+         3rSZ7K2rIeha+4E9zi+WMgitKzjCT7Lyjc/JRlCFznHcJsBPgP3X6i2T/aZGj7e4AkIK
+         q+zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746025006; x=1746629806;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sk93f/QmfWRFnir5kQcAvlAIOBCq59GYkwRW++xpxLQ=;
+        b=MlMcnas24H4HqsDffJ6oq1mrftGsJ0hsS/AbYOJf/ohhs2knKxuWz19uWdqi5j1TRw
+         juR3Fbh9MxCmqHolKVGQHgKpu0tB+vpX4PV3lApLA0sK7MD5e3dSwB1/vMhw91xe75d3
+         tivPZPk+ZoTeHzTJooo9tVj0hraHnd9rvY7as4yz0i6m5n/Ak9jetRnTxfltOIw5nZbo
+         Tvdzp80IkuNlc697LoZO2iAxyiQ3Ae8haVyJG8aTrkmQgaD7q5ocI8xhq/mKvBfomVFM
+         IT7Z3Ayn9jucWW44wm4/zAMRpASUINiyuuMuPjul8WczzdCzI1p4gLveYeQfULm4lIhj
+         Y4ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMd1d+b+sMJYM6lBdoW3skaP0tt3/XgYBJR5kZmvzC1QkOduzHyYnGLS6uXmz6vmlOoOGJ0ZKL7CC9Ex0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRzj4PukNr+V9ED+g+VgecS6zpjQxpmtX/8l5QouDtSbAS9pXV
+	9yjyl37c80gKwxOHo8MCbVBW3CP//78qdF+noNc7D6cF057+SZcLm4anNuLHzrM=
+X-Gm-Gg: ASbGncu1gwxBxSraLQNfg3GuMTAQj0D8FZLgFlO09hFTO4qMgm4rMzks50rXJS8oS1U
+	7irJRR3xJPNC3TYmvry/ZUwwbWPlikORndcHQl0EQDJWhoIAfMHiV8U3ayQcrPtYpkAatNTOU4A
+	hmhboN9uOmiHOAASvFBhBWyTKcilCvPkIFz2DWMZm991w848bm/nXCwEfiB3iT19w9EmzRTiEHK
+	IdFQUZlsRKoNFkZCe0p5d3zflN9KQHPZyenEThK+bIuHt2Z7Mobu9RtGamcES4kLE39A1/i+qh/
+	UxyyXGRidCR1TjzrzeEuUWJXlEbs9ZT+hYR7zGkbPwjpEVTeGdH3oVp1yjomF/tYXpnZQMJ5/Xa
+	Oygp61GGRD6pC5Qg=
+X-Google-Smtp-Source: AGHT+IEKD9KMxxcH3+s+rQUgR1CdT0kXIMoJRPA9zp3G4pnlVTK9HHZKKfZE0x8ViCpn6Iz77Q3PaA==
+X-Received: by 2002:a05:6870:e98e:b0:2bd:455e:c22e with SMTP id 586e51a60fabf-2da69f21801mr1756582fac.19.1746025005850;
+        Wed, 30 Apr 2025 07:56:45 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-60686eec865sm808691eaf.22.2025.04.30.07.56.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 07:56:44 -0700 (PDT)
+Message-ID: <896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
+Date: Wed, 30 Apr 2025 09:56:42 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,101 +67,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next 3/4] net: ethernet: ti: am65-cpsw: fixup PHY mode
- for fixed RGMII TX delay
-To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
+ documentation
+To: Andy Shevchenko <andy@kernel.org>
+Cc: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Andy Whitcroft <apw@canonical.com>
-Cc: Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>,
- Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>,
- Vignesh Raghavendra <vigneshr@ti.com>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, Tero Kristo <kristo@kernel.org>,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
- <32e0dffa7ea139e7912607a08e391809d7383677.1744710099.git.matthias.schiffer@ew.tq-group.com>
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
+ <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+ <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+ <aBI3eUPirZEXpZgG@smile.fi.intel.com>
+From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-From: Roger Quadros <rogerq@kernel.org>
-In-Reply-To: <32e0dffa7ea139e7912607a08e391809d7383677.1744710099.git.matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <aBI3eUPirZEXpZgG@smile.fi.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Matthias,
-
-On 15/04/2025 13:18, Matthias Schiffer wrote:
-> All am65-cpsw controllers have a fixed TX delay, so the PHY interface
-> mode must be fixed up to account for this.
+On 4/30/25 9:45 AM, Andy Shevchenko wrote:
+> On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote:
+>> On 4/30/25 12:40 AM, Nuno Sá wrote:
+>>> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
+>>>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>>>
+>>>> Add new IIO calibphase_delay documentation.
+>>>>
+>>>> The delay suffix is added to specify that the phase, generally in
+>>>> radiants, is for this case (needed from ad7606) in nanoseconds.
 > 
-> Modes that claim to a delay on the PCB can't actually work. Warn people
-Could you please help me understand this statement? Which delay? TX or RX?
-
-Isn't this patch forcing the device tree to have TX delay mentioned in it?
-
-> to update their Device Trees if one of the unsupported modes is specified.
+> ...
 > 
-> Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-> ---
->  drivers/net/ethernet/ti/am65-cpsw-nuss.c | 27 ++++++++++++++++++++++--
->  1 file changed, 25 insertions(+), 2 deletions(-)
+>>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
+>>>
+>>> Not sure if I'm too convinced on the _delay suffix
+>>>
+>> Phase is measured in radians, not seconds, so it seems wrong to use it here.
+>>
+>> https://en.wikipedia.org/wiki/Phase_(waves)
+>>
+>> And the delay here is with respect to individual samples in a simultaneous
+>> conversion without regard for a sampling frequency, so I don't see how we could
+>> convert the time to radians in any meaningful way.
 > 
-> diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> index c9fd34787c998..a1d32735c7512 100644
-> --- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> +++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-> @@ -2602,6 +2602,7 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
->  		return -ENOENT;
->  
->  	for_each_child_of_node(node, port_np) {
-> +		phy_interface_t phy_if;
->  		struct am65_cpsw_port *port;
->  		u32 port_id;
->  
-> @@ -2667,14 +2668,36 @@ static int am65_cpsw_nuss_init_slave_ports(struct am65_cpsw_common *common)
->  
->  		/* get phy/link info */
->  		port->slave.port_np = port_np;
-> -		ret = of_get_phy_mode(port_np, &port->slave.phy_if);
-> +		ret = of_get_phy_mode(port_np, &phy_if);
->  		if (ret) {
->  			dev_err(dev, "%pOF read phy-mode err %d\n",
->  				port_np, ret);
->  			goto of_node_put;
->  		}
->  
-> -		ret = phy_set_mode_ext(port->slave.ifphy, PHY_MODE_ETHERNET, port->slave.phy_if);
-> +		/* CPSW controllers supported by this driver have a fixed
-> +		 * internal TX delay in RGMII mode. Fix up PHY mode to account
-> +		 * for this and warn about Device Trees that claim to have a TX
-> +		 * delay on the PCB.
-> +		 */
-> +		switch (phy_if) {
-> +		case PHY_INTERFACE_MODE_RGMII_ID:
-> +			phy_if = PHY_INTERFACE_MODE_RGMII_RXID;
-> +			break;
-> +		case PHY_INTERFACE_MODE_RGMII_TXID:
-> +			phy_if = PHY_INTERFACE_MODE_RGMII;
-> +			break;
-> +		case PHY_INTERFACE_MODE_RGMII:
-> +		case PHY_INTERFACE_MODE_RGMII_RXID:
-> +			dev_warn(dev,
-> +				 "RGMII mode without internal TX delay unsupported; please fix your Device Tree\n");
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +
-> +		port->slave.phy_if = phy_if;
-> +		ret = phy_set_mode_ext(port->slave.ifphy, PHY_MODE_ETHERNET, phy_if);
->  		if (ret)
->  			goto of_node_put;
->  
+> And how this delay is aplicable to the phase in the hardware? Sounds to me that
+> HW has some meaningful way of such a conversion?
+> 
 
--- 
-cheers,
--roger
+It is a calibration to account for a phase difference between two input signals.
+This is a simultaneous sampling ADC, so all channels normally sample at exactly
+the same time. This phase delay calibration factor can introduce a small delay
+on an individual channel so that it starts it's conversion some microseconds
+after the others.
 
+There is a nice diagram here:
+
+https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606c-18.pdf#%5B%7B%22num%22%3A113%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C34%2C594%2C0%5D
+
+To convert the phase delay to a phase angle and back would require also knowing
+the frequency of the input voltage signals.
