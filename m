@@ -1,70 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4130519C556;
-	Wed, 30 Apr 2025 15:47:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A38F19C556;
+	Wed, 30 Apr 2025 15:47:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028036; cv=none; b=ig26TyDNjOkpFbHaOhIyZVE7cnCBBq4cZuufelOuNh1JmXjxIgRuPFb0YQODF3ta6wQba9f4v/WkRbH35pIww9BlZsUO2WRcUFm02MObAfyR0UYlZ1DZgyIj4vJ9q3uQki/gug5tDzLVe6JwH8KB1jLpx7x6iiTHC3D8bCS5F4U=
+	t=1746028050; cv=none; b=UNaQxtE931Os0MZwSwNSLKOqQj6uce0w2FyigmwQTUJL2sIDOI94DNiMcPWO+jbTczUhXoQC5++oUfBDSsgac1sdNzktSUneaQhNcq++8d1ksONZ8hjUfjGjVda5ZG1l313aPS1CpGA/sqY4VoUYGGn+v3ycuecDQI4R6jRm+hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028036; c=relaxed/simple;
-	bh=RqZy/6PU4jTCi/K6S4Ve1RF8Ukphek4E1WYilXhVSTs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UBDZNYZgqVjR5/s0bMHx87N/I2ptHMzoCj/NGnOnF+RiF4ZV+MgXLxf15tAbgOwePOnUdM21YerqRPjDUCpxJkJZnxN+89Yg/nDNZ+ttl7ZUWMSpKsqjkHYp3L7vKM72t/cDaEp3jU17YdAoM32NnJe2uInz1/sU2XDPawCD5LQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZBynokb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZBynokb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5D6EC4CEE7;
-	Wed, 30 Apr 2025 15:47:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028035;
-	bh=RqZy/6PU4jTCi/K6S4Ve1RF8Ukphek4E1WYilXhVSTs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YZBynokb7QgG7cAmgQyqkkQuUjObYPQIvFMHKClLFgxrlk0uyp85Ql8e7a+Gp3Fra
-	 HytERvZ3YySdxmXj21yOjDKLvVX2y7AukSqf5nSeJlawdNtGUz1JcH/rVhWzycPseT
-	 0Iqx9WE1sa/GsjwM4y/IsjYowCQU9U4z9P+fRJPzd5+0gGOmXke3ki1eNZEAcOHSnk
-	 5mNi+SiLu5bLKxQrGIFtjVF9apTiod/m9l9aKIQP2fPxyXFytXJ4rBxBN0mLv/s7Vk
-	 3VKgo5zkxtlB1NI7S50L9N110n337eD1OqrnjXrcJx+RGPz48J8u0gKTG5OYaA+A2U
-	 itjFUz7vHkb8Q==
-Date: Wed, 30 Apr 2025 17:47:11 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] rust: alloc: add Vec::drain_all
-Message-ID: <aBJF_5_5fM5mORmd@pollux>
-References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
- <20250429-vec-methods-v4-4-dad4436ff82d@google.com>
+	s=arc-20240116; t=1746028050; c=relaxed/simple;
+	bh=ahui+q9/P4ykIV2+I5zWINb2R8LLzsTOV2mfFGCgVuA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=HEcjZ3zm+/DZsIyVd9RBzzxwxPVsnysNUdT6BH2g5t+l+WMSqjqRHZEpUad0XoD+A20D/Ibh5KywahFat9HoWb8NKfHRQikznU4XGTeAUxsEh6YTylLMMLsptZMcM887TtqlL1C3gUb1Iwz8aOmHGMztzkaad7mlUYhSZ+rQJ1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CE5A1063;
+	Wed, 30 Apr 2025 08:47:21 -0700 (PDT)
+Received: from beelzebub.ast.arm.com (u203013-lin.austin.arm.com [10.118.28.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E8C53F5A1;
+	Wed, 30 Apr 2025 08:47:28 -0700 (PDT)
+From: Stuart Yoder <stuart.yoder@arm.com>
+To: linux-integrity@vger.kernel.org,
+	jarkko@kernel.org,
+	peterhuewe@gmx.de,
+	jgg@ziepe.ca,
+	sudeep.holla@arm.com
+Cc: linux-kernel@vger.kernel.org
+Subject: [PATCH v2] tpm_crb: ffa_tpm: fix/update comments describing the CRB over FFA ABI
+Date: Wed, 30 Apr 2025 10:47:23 -0500
+Message-Id: <20250430154723.1025101-1-stuart.yoder@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429-vec-methods-v4-4-dad4436ff82d@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 29, 2025 at 02:44:24PM +0000, Alice Ryhl wrote:
-> 
-> +    /// Takes ownership of all items in this vector without consuming the allocation.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// let mut v = kernel::kvec![0, 1, 2, 3]?;
-> +    ///
-> +    /// for (i, j) in v.drain_all().enumerate() {
-> +    ///     assert_eq!(i, j);
-> +    /// }
-> +    ///
-> +    /// assert!(v.capacity() >= 4);
-> +    /// # Ok::<(), Error>(())
-> +    /// ```
-> +    pub fn drain_all(&mut self) -> DrainAll<'_, T> {
-> +        let len = self.len();
-> +        // SAFETY: The length is not greater than the length.
-> +        let elems = unsafe { self.dec_len(len) };
+-Fix the comment describing the 'start' function, which was a cut/paste
+ mistake for a different function.
 
-Maybe just pass self.len() directly and say that "`By the safety requirements of
-`dec_len()`, self.len() is a valid argument".
+-The comment for DIRECT_REQ and DIRECT_RESP only mentioned AArch32
+ and listed 32-bit function IDs.  Update to include 64-bit.
+
+Signed-off-by: Stuart Yoder <stuart.yoder@arm.com>
+---
+v2:
+  -squashed the two comment updates into a single patch
+
+ drivers/char/tpm/tpm_crb_ffa.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
+index 3169a87a56b60..134747911ba38 100644
+--- a/drivers/char/tpm/tpm_crb_ffa.c
++++ b/drivers/char/tpm/tpm_crb_ffa.c
+@@ -38,9 +38,11 @@
+  * messages.
+  *
+  * All requests with FFA_MSG_SEND_DIRECT_REQ and FFA_MSG_SEND_DIRECT_RESP
+- * are using the AArch32 SMC calling convention with register usage as
+- * defined in FF-A specification:
+- * w0:    Function ID (0x8400006F or 0x84000070)
++ * are using the AArch32 or AArch64 SMC calling convention with register usage
++ * as defined in FF-A specification:
++ * w0:    Function ID
++ *          -for 32-bit: 0x8400006F or 0x84000070
++ *          -for 64-bit: 0xC400006F or 0xC4000070
+  * w1:    Source/Destination IDs
+  * w2:    Reserved (MBZ)
+  * w3-w7: Implementation defined, free to be used below
+@@ -68,7 +70,8 @@
+ #define CRB_FFA_GET_INTERFACE_VERSION 0x0f000001
+ 
+ /*
+- * Return information on a given feature of the TPM service
++ * Notifies the TPM service that a TPM command or TPM locality request is
++ * ready to be processed, and allows the TPM service to process it.
+  * Call register usage:
+  * w3:    Not used (MBZ)
+  * w4:    TPM service function ID, CRB_FFA_START
+-- 
+2.34.1
+
