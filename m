@@ -1,271 +1,194 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B8AE10A1E;
-	Wed, 30 Apr 2025 14:42:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B8125DCEE;
+	Wed, 30 Apr 2025 14:44:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024165; cv=none; b=XNgWrmf8fmsyPGy4UzWuO0LM07fbhZ0r1SdiAONK9hgoAkp+1IGgzfFs+wt5gWj4MyrN5Ucqf8tdcn8If8WHxDuobS2J/5/NOI1GqzX539hfp0PRee5iFjTAni2+5Kk7DNrvyPQ2+hTPxJtvrBjpwF8r5yG+BxHjz0XDQ2Njxz8=
+	t=1746024246; cv=none; b=nPFHiG4XqbtgZmeHmNH2TSxmi1A1zMql9wfCgb85rxIEFAF0aMUoyxwcBvlkfZsGSgdH6HduVSOneXWVbnM6jHcl+DDWcFq3quUgeN1QwQPlOGbl+zHlULnnOA0+9Qa0e5wKD2ZjnBBu3I9XLyB5JAdbx38F2uJoyJ0NdzmEtck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024165; c=relaxed/simple;
-	bh=Xx/rlYUB9o0F+6Yp9eJc9LZSqR+bofOM7C8K2ThzjAo=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h2krh20QwAKgE/D2bPKQh8KAi7ndrgB5JAByfRFB7tO6IE9HoMVv33VipnSUjV4vr7hhOC98O9zc9G8BSmMXf8aIUazQY6BU5+BhtI+6BTrGyJLpuATHUZbXn2G59vKBt9Iyd12racALb3aEP6B1+MAE/zgkNrPFp5l8pWzpcVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZnfxF2yDTz67J7D;
-	Wed, 30 Apr 2025 22:40:33 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id E8D23140275;
-	Wed, 30 Apr 2025 22:42:38 +0800 (CST)
-Received: from localhost (10.203.177.99) by frapeml500003.china.huawei.com
- (7.182.85.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Apr
- 2025 16:42:37 +0200
-Date: Wed, 30 Apr 2025 15:42:32 +0100
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: John Groves <John@Groves.net>
-CC: Dan Williams <dan.j.williams@intel.com>, Miklos Szeredi
-	<miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, John Groves
-	<jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, Vishal Verma
-	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, "Matthew
- Wilcox" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Alexander Viro
-	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, "Darrick J
- . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, "Randy Dunlap"
-	<rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, "Kent Overstreet"
-	<kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, "Brian Foster"
-	<bfoster@redhat.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <nvdimm@lists.linux.dev>,
-	<linux-cxl@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>, Amir Goldstein
-	<amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, Stefan
- Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, Josef
- Bacik <josef@toxicpanda.com>, "Aravind Ramesh" <arramesh@micron.com>, Ajay
- Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-Message-ID: <20250430154232.000045dd.alireza.sanaee@huawei.com>
-In-Reply-To: <20250421013346.32530-1-john@groves.net>
-References: <20250421013346.32530-1-john@groves.net>
-Organization: Huawei
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746024246; c=relaxed/simple;
+	bh=kupx3yolNfCmLfE4yH4acdFlofzSrUt931bw+3iCTFY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=M8H9+GjnY5WueozCejkiWKRlOAIXMeGttOd/W4qzL6gpuoKPuyclc/abUfdJcNmk6pCA0gE23rbq+g71gHHfrM3zBqYkQMXT9Y26asJhCO3fL95/ZeGcCMz90ZSMoMSilbo2D5QCeuvEIZB33dIeXnlBmMQ7mNxLAp5LL3bP14Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dwafZavz; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dwafZavz"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 53UEhhg64153727
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 30 Apr 2025 09:43:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746024224;
+	bh=kGgcBIJlasn09T/g5VpV74XLvyCGF6hZwVI6cUGZecM=;
+	h=From:To:CC:Subject:Date;
+	b=dwafZavzIFWuc21vp2hZw/mWH3QXYSc++aXphcw5dPADYg0HaO5SNy8X2uHaiiZyw
+	 +Tbw5LUJiBjNz9TaSXW+pWIxLnP8YdsJPYjuK3WbffhTO6Jw9vmZGwpLIqATzWRtgf
+	 iZ4LHVUcxnYy6X9i0925BxJVP/hVxOgCAi48FRKQ=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 53UEhhPi001467
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 30 Apr 2025 09:43:43 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
+ Apr 2025 09:43:43 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 30 Apr 2025 09:43:43 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 53UEhhvt041513;
+	Wed, 30 Apr 2025 09:43:43 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
+        Vignesh Raghavendra
+	<vigneshr@ti.com>
+CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+        Beleswar
+ Padhi <b-padhi@ti.com>
+Subject: [PATCH v2] arm64: dts: ti: k3-am62-main: Add PRUSS-M node
+Date: Wed, 30 Apr 2025 09:43:43 -0500
+Message-ID: <20250430144343.972234-1-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- frapeml500003.china.huawei.com (7.182.85.28)
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Sun, 20 Apr 2025 20:33:27 -0500
-John Groves <John@Groves.net> wrote:
+From: Kishon Vijay Abraham I <kishon@ti.com>
 
-> Subject: famfs: port into fuse
-> 
-> This is the initial RFC for the fabric-attached memory file system
-> (famfs) integration into fuse. In order to function, this requires a
-> related patch to libfuse [1] and the famfs user space [2]. 
-> 
-> This RFC is mainly intended to socialize the approach and get
-> feedback from the fuse developers and maintainers. There is some dax
-> work that needs to be done before this should be merged (see the
-> "poisoned page|folio problem" below).
-> 
-> This patch set fully works with Linux 6.14 -- passing all existing
-> famfs smoke and unit tests -- and I encourage existing famfs users to
-> test it.
-> 
-> This is really two patch sets mashed up:
-> 
-> * The patches with the dev_dax_iomap: prefix fill in missing
-> functionality for devdax to host an fs-dax file system.
-> * The famfs_fuse: patches add famfs into fs/fuse/. These are
-> effectively unchanged since last year.
-> 
-> Because this is not ready to merge yet, I have felt free to leave
-> some debug prints in place because we still find them useful; those
-> will be cleaned up in a subsequent revision.
-> 
-> Famfs Overview
-> 
-> Famfs exposes shared memory as a file system. Famfs consumes shared
-> memory from dax devices, and provides memory-mappable files that map
-> directly to the memory - no page cache involvement. Famfs differs
-> from conventional file systems in fs-dax mode, in that it handles
-> in-memory metadata in a sharable way (which begins with never caching
-> dirty shared metadata).
-> 
-> Famfs started as a standalone file system [3,4], but the consensus at
-> LSFMM 2024 [5] was that it should be ported into fuse - and this RFC
-> is the first public evidence that I've been working on that.
-> 
-> The key performance requirement is that famfs must resolve mapping
-> faults without upcalls. This is achieved by fully caching the
-> file-to-devdax metadata for all active files. This is done via two
-> fuse client/server message/response pairs: GET_FMAP and GET_DAXDEV.
-> 
-> Famfs remains the first fs-dax file system that is backed by devdax
-> rather than pmem in fs-dax mode (hence the need for the dev_dax_iomap
-> fixups).
-> 
-> Notes
-> 
-> * Once the dev_dax_iomap patches land, I suspect it may make sense for
->   virtiofs to update to use the improved interface.
-> 
-> * I'm currently maintaining compatibility between the famfs user
-> space and both the standalone famfs kernel file system and this new
-> fuse implementation. In the near future I'll be running performance
-> comparisons and sharing them - but there is no reason to expect
-> significant degradation with fuse, since famfs caches entire "fmaps"
-> in the kernel to resolve faults with no upcalls. This patch has a bit
-> too much debug turned on to to that testing quite yet. A branch 
-> 
-> * Two new fuse messages / responses are added: GET_FMAP and
-> GET_DAXDEV.
-> 
-> * When a file is looked up in a famfs mount, the LOOKUP is followed
-> by a GET_FMAP message and response. The "fmap" is the full
-> file-to-dax mapping, allowing the fuse/famfs kernel code to handle
-> read/write/fault without any upcalls.
-> 
-> * After each GET_FMAP, the fmap is checked for extents that reference
->   previously-unknown daxdevs. Each such occurence is handled with a
->   GET_DAXDEV message and response.
-> 
-> * Daxdevs are stored in a table (which might become an xarray at some
-> point). When entries are added to the table, we acquire exclusive
-> access to the daxdev via the fs_dax_get() call (modeled after how
-> fs-dax handles this with pmem devices). famfs provides
-> holder_operations to devdax, providing a notification path in the
-> event of memory errors.
-> 
-> * If devdax notifies famfs of memory errors on a dax device, famfs
-> currently bocks all subsequent accesses to data on that device. The
-> recovery is to re-initialize the memory and file system. Famfs is
-> memory, not storage...
-> 
-> * Because famfs uses backing (devdax) devices, only privileged mounts
-> are supported.
-> 
-> * The famfs kernel code never accesses the memory directly - it only
->   facilitates read, write and mmap on behalf of user processes. As
-> such, the RAS of the shared memory affects applications, but not the
-> kernel.
-> 
-> * Famfs has backing device(s), but they are devdax (char) rather than
->   block. Right now there is no way to tell the vfs layer that famfs
-> has a char backing device (unless we say it's block, but it's not).
-> Currently we use the standard anonymous fuse fs_type - but I'm not
-> sure that's ultimately optimal (thoughts?)
-> 
-> The "poisoned page|folio problem"
-> 
-> * Background: before doing a kernel mount, the famfs user space [2]
-> validates the superblock and log. This is done via raw mmap of the
-> primary devdax device. If valid, the file system is mounted, and the
-> superblock and log get exposed through a pair of files
-> (.meta/.superblock and .meta/.log) - because we can't be using raw
-> device mmap when a file system is mounted on the device. But this
-> exposes a devdax bug and warning...
-> 
-> * Pages that have been memory mapped via devdax are left in a
-> permanently problematic state. Devdax sets page|folio->mapping when a
-> page is accessed via raw devdax mmap (as famfs does before mount),
-> but never cleans it up. When the pages of the famfs superblock and
-> log are accessed via the "meta" files after mount, we see a
-> WARN_ONCE() in dax_insert_entry(), which notices that
-> page|folio->mapping is still set. I intend to address this prior to
-> asking for the famfs patches to be merged.
-> 
-> * Alistair Popple's recent dax patch series [6], which has been merged
->   for 6.15, addresses some dax issues, but sadly does not fix the
-> poisoned page|folio problem - its enhanced refcount checking turns
-> the warning into an error.
-> 
-> * This 6.14 patch set disables the warning; a proper fix will be
-> required for famfs to work at all in 6.15. Dan W. and I are actively
-> discussing how to do this properly...
-> 
-> * In terms of the correct functionality of famfs, the warning can be
-> ignored.
-> 
-> References
-> 
-> [1] - https://github.com/libfuse/libfuse/pull/1200
-> [2] - https://github.com/cxl-micron-reskit/famfs
-> [3]
-> - https://lore.kernel.org/linux-cxl/cover.1708709155.git.john@groves.net/ [4] - https://lore.kernel.org/linux-cxl/cover.1714409084.git.john@groves.net/
-> [5] - https://lwn.net/Articles/983105/
-> [6]
-> - https://lore.kernel.org/linux-cxl/cover.8068ad144a7eea4a813670301f4d2a86a8e68ec4.1740713401.git-series.apopple@nvidia.com/
-> 
-> 
-> John Groves (19):
->   dev_dax_iomap: Move dax_pgoff_to_phys() from device.c to bus.c
->   dev_dax_iomap: Add fs_dax_get() func to prepare dax for fs-dax usage
->   dev_dax_iomap: Save the kva from memremap
->   dev_dax_iomap: Add dax_operations for use by fs-dax on devdax
->   dev_dax_iomap: export dax_dev_get()
->   dev_dax_iomap: (ignore!) Drop poisoned page warning in fs/dax.c
->   famfs_fuse: magic.h: Add famfs magic numbers
->   famfs_fuse: Kconfig
->   famfs_fuse: Update macro s/FUSE_IS_DAX/FUSE_IS_VIRTIO_DAX/
->   famfs_fuse: Basic fuse kernel ABI enablement for famfs
->   famfs_fuse: Basic famfs mount opts
->   famfs_fuse: Plumb the GET_FMAP message/response
->   famfs_fuse: Create files with famfs fmaps
->   famfs_fuse: GET_DAXDEV message and daxdev_table
->   famfs_fuse: Plumb dax iomap and fuse read/write/mmap
->   famfs_fuse: Add holder_operations for dax notify_failure()
->   famfs_fuse: Add famfs metadata documentation
->   famfs_fuse: Add documentation
->   famfs_fuse: (ignore) debug cruft
-> 
->  Documentation/filesystems/famfs.rst |  142 ++++
->  Documentation/filesystems/index.rst |    1 +
->  MAINTAINERS                         |   10 +
->  drivers/dax/Kconfig                 |    6 +
->  drivers/dax/bus.c                   |  144 +++-
->  drivers/dax/dax-private.h           |    1 +
->  drivers/dax/device.c                |   38 +-
->  drivers/dax/super.c                 |   33 +-
->  fs/dax.c                            |    1 -
->  fs/fuse/Kconfig                     |   13 +
->  fs/fuse/Makefile                    |    4 +-
->  fs/fuse/dev.c                       |   61 ++
->  fs/fuse/dir.c                       |   74 +-
->  fs/fuse/famfs.c                     | 1105
-> +++++++++++++++++++++++++++ fs/fuse/famfs_kfmap.h               |
-> 166 ++++ fs/fuse/file.c                      |   27 +-
->  fs/fuse/fuse_i.h                    |   67 +-
->  fs/fuse/inode.c                     |   49 +-
->  fs/fuse/iomode.c                    |    2 +-
->  fs/namei.c                          |    1 +
->  include/linux/dax.h                 |    6 +
->  include/uapi/linux/fuse.h           |   63 ++
->  include/uapi/linux/magic.h          |    2 +
->  23 files changed, 1973 insertions(+), 43 deletions(-)
->  create mode 100644 Documentation/filesystems/famfs.rst
->  create mode 100644 fs/fuse/famfs.c
->  create mode 100644 fs/fuse/famfs_kfmap.h
-> 
-> 
-> base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
+Add the DT node for the PRUSS-M processor subsystem that is present
+on the K3 AM62x SoCs. The K3 AM62x family of SoC has one PRUSS-M
+instance and it has two Programmable Real-Time Units (PRU0 and PRU1).
 
-Hi John,
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+[ Judith: Fix pruss_iclk id for pruss_coreclk_mux ]
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changelog:
+- drop internal tags
+- rebase against ti-k3-dts-next
+- fix header
 
-Apologies if the question is far off or irrelevant.
+Link to v1:
+https://lore.kernel.org/linux-devicetree/20250108222048.818835-1-jm@ti.com/
+---
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 90 ++++++++++++++++++++++++
+ 1 file changed, 90 insertions(+)
 
-I am trying to understand FAMFS, and I am thinking where does FAMFS
-stand when compared to OpenSHMEM PGAS. Can't we have a OpenSHMEM-based
-shared memory implementation over CXL that serves as FAMFS?
-
-Maybe FAMFS does more than that!?!
-
-Thanks,
-Alireza
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 7d355aa73ea2..ee53e663b5bd 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -1079,6 +1079,96 @@ dphy0: phy@30110000 {
+ 		status = "disabled";
+ 	};
+ 
++	pruss: pruss@30040000 {
++		compatible = "ti,am625-pruss";
++		reg = <0x00 0x30040000 0x00 0x80000>;
++		power-domains = <&k3_pds 81 TI_SCI_PD_EXCLUSIVE>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x00 0x30040000 0x80000>;
++
++		pruss_mem: memories@0 {
++			reg = <0x0 0x2000>,
++			      <0x2000 0x2000>,
++			      <0x10000 0x10000>;
++			reg-names = "dram0", "dram1", "shrdram2";
++		};
++
++		pruss_cfg: cfg@26000 {
++			compatible = "ti,pruss-cfg", "syscon";
++			reg = <0x26000 0x200>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges = <0x0 0x26000 0x2000>;
++
++			clocks {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				pruss_coreclk_mux: coreclk-mux@3c {
++					reg = <0x3c>;
++					#clock-cells = <0>;
++					clocks = <&k3_clks 81 0>,  /* pruss_core_clk */
++						 <&k3_clks 81 14>; /* pruss_iclk */
++					assigned-clocks = <&pruss_coreclk_mux>;
++					assigned-clock-parents = <&k3_clks 81 14>;
++				};
++
++				pruss_iepclk_mux: iepclk-mux@30 {
++					reg = <0x30>;
++					#clock-cells = <0>;
++					clocks = <&k3_clks 81 3>,	/* pruss_iep_clk */
++						 <&pruss_coreclk_mux>;	/* pruss_coreclk_mux */
++					assigned-clocks = <&pruss_iepclk_mux>;
++					assigned-clock-parents = <&pruss_coreclk_mux>;
++				};
++			};
++		};
++
++		pruss_intc: interrupt-controller@20000 {
++			compatible = "ti,pruss-intc";
++			reg = <0x20000 0x2000>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "host_intr0", "host_intr1",
++					  "host_intr2", "host_intr3",
++					  "host_intr4", "host_intr5",
++					  "host_intr6", "host_intr7";
++		};
++
++		pru0: pru@34000 {
++			compatible = "ti,am625-pru";
++			reg = <0x34000 0x3000>,
++			      <0x22000 0x100>,
++			      <0x22400 0x100>;
++			reg-names = "iram", "control", "debug";
++			firmware-name = "am62x-pru0-fw";
++			interrupt-parent = <&pruss_intc>;
++			interrupts = <16 2 2>;
++			interrupt-names = "vring";
++		};
++
++		pru1: pru@38000 {
++			compatible = "ti,am625-pru";
++			reg = <0x38000 0x3000>,
++			      <0x24000 0x100>,
++			      <0x24400 0x100>;
++			reg-names = "iram", "control", "debug";
++			firmware-name = "am62x-pru1-fw";
++			interrupt-parent = <&pruss_intc>;
++			interrupts = <18 3 3>;
++			interrupt-names = "vring";
++		};
++	};
++
+ 	gpmc0: memory-controller@3b000000 {
+ 		compatible = "ti,am64-gpmc";
+ 		power-domains = <&k3_pds 80 TI_SCI_PD_EXCLUSIVE>;
+-- 
+2.49.0
 
