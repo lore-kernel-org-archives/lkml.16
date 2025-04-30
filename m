@@ -1,73 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48AFE22A7E3
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:07:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AA5347C7
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746047272; cv=none; b=kOUSn/wpzntmKHcNceAZ4EfaolG3y5VdwcDY8yUoG1npdkKuWrgCEdwhKvL+Hg81YYlKPc33CW19o9mEy6PE/1blZUne8noMVLYkUYfxH5L9qWW+vXotg1npL6nFXZW/b1Ya6CmFAOVNKm6McscB+qbCPGfaIDux6ZmNc7RmqsQ=
+	t=1746047299; cv=none; b=l/ggfbl+pKvvAr+/jfWKYzRRstoij+JsMVVT/QpnuQyqRWHszO1fwcLKrMmiq7Bea+QDgEj8lrmjOH5i8rwlLphi2piGjlrrvaGWeL81aHCzxQkPI8z+VZGi9HPyjkLIpXUDF2UuEbGvYpaHGArGLFUN78VQp77lawwfslFezp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746047272; c=relaxed/simple;
-	bh=cwCs+zpkrMOPPZeQHKLa+BnlB0Xf6e58qBB1QWLZyJM=;
+	s=arc-20240116; t=1746047299; c=relaxed/simple;
+	bh=1WlT2SrSfy0Td2d5Rk5U/Sxd4MjTMw+198rYgCZ7nok=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NQw3h5naUyPDjNTpaGbcBoR121L752LOvouUfsmPtwjX40VVO2VaQQ19i7wmTOsmun0xK+xywPWm46S7/T7nIyVHCaBTGMt5pqfNBM/DHcKPIn3cp219hIkIDbzL8wWx44j+X3Cv4cOTXUBs4CTjlIJpgiy1MGTIthFF5E+pjnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WyDlCTQw; arc=none smtp.client-ip=170.10.133.124
+	 In-Reply-To:Content-Type; b=TepfFsQEaLML871tN6kUgIV/8y/p9PaK3tTKfHvZt/F6WnX7Qj1m4YKqnyuWeyHEE5o2paawwymeBWoBX6i2b+6l/E+G6cmkE3WGMadEuE3k8KQ8bvSWDenv6v+3OapJ4LEs5Z0j8uSRBB8TSVo9SwHTR7c3yo8bbsRFY8O1gNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KSr0N+RE; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WyDlCTQw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KSr0N+RE"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746047270;
+	s=mimecast20190719; t=1746047295;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=xCTNXStG6Jgjf/krGcp6W4D8H/hsb7gaw/+9wel0lI0=;
-	b=WyDlCTQw5R3X948Frem3SS89AvAoR3vA+TyPaUndO2ubeUmRtYIy+SPT+dUCMXNlubYKxF
-	h9Qu5qX2kQg4T3dVQHhil0eWYpFvwcOYZ9wnaOfr1VSu7LNMEOAcEK/Ogq7PCWNbjwjrBa
-	lilv6v6Khv5sTxwTne54EKuXHwLg2e0=
+	bh=01jBPxnqk92t1rPGznj6ym7/qLqG6tY/jU5pL3ZoH4k=;
+	b=KSr0N+RE+BAVIWbT4w/HCovqvH8cWmTw3lV/Abm47FuBZ2C1LmvbVHVatge43UuaqRkN4i
+	lVtlXbECXF/fvWWdCHjFqbOtJfa/upb88wd8xJ0ZLthXXWHh5YTYZhoyM6Sho2LnZI5Fed
+	VQ7Ja81vrUnTesCN8qd27UHa3jEZJAU=
 Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
  [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-144-fKlAMn5sNmimJFL0rPCsfA-1; Wed, 30 Apr 2025 17:07:48 -0400
-X-MC-Unique: fKlAMn5sNmimJFL0rPCsfA-1
-X-Mimecast-MFC-AGG-ID: fKlAMn5sNmimJFL0rPCsfA_1746047267
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a064c45f03so146167f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:07:48 -0700 (PDT)
+ us-mta-145-GBKVeOL4O7GDNr2WeMO0bQ-1; Wed, 30 Apr 2025 17:08:13 -0400
+X-MC-Unique: GBKVeOL4O7GDNr2WeMO0bQ-1
+X-Mimecast-MFC-AGG-ID: GBKVeOL4O7GDNr2WeMO0bQ_1746047292
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3912539665cso576149f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:08:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746047267; x=1746652067;
+        d=1e100.net; s=20230601; t=1746047292; x=1746652092;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:from:references:cc:to:subject:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=xCTNXStG6Jgjf/krGcp6W4D8H/hsb7gaw/+9wel0lI0=;
-        b=OFRtgAXkJfHzc7dbXfKDws7tzgDgS9rUST50+TKPNG1+1sg06DUtiMS/R5WAieGOyM
-         nWvOwtQhUQjC0aE6WQ+8LcCePDDPv/jUqmKR8UTkJ3IphzlUusR3/N6J7VhTqL4OTkH2
-         MK/cbHVaMw/Bo1yCAGdO1IDfQVtnjI/DaKEdu50XoVsp9nwrJ0QoePpp7cCm09b1pn0f
-         hZ7gGdlXgS4S34E87ItWfTwzR1K3rgWEhalHkAbWXL6je4n5TnT1N070mhvYKaOTzdUh
-         42m8d0eu5jgX8aDu+hhF+kFtbr/PWoQeImCYudwIy3mp2ftr6NZAKxtb1xO6BNCwf43W
-         WCnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVQKnxEWnpWRTaJLEq1m2ItTqTJXz/PFBywklQaQzfEmO67WMdEnBWzW7pJZ08EePLsoDTCqHW/1rgKjNg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8i1QcQZ4s3X2lpVG0t5gq8wKnGHovy0yAwOBsxRkpuN0+186q
-	qw65kMguNhVvNq3jIw4yzybN15at835/6zHQV/feq0ppXoXhTrjB/i8Cj75uOGOc6FmxP01mgUz
-	hju6JyLVp0o0ZDRr1L4kSjGLEjM1AJd3sE+qbpDh4Rbkg8FBgb1U3lroZ4hB3Lg==
-X-Gm-Gg: ASbGncuEPTh9VKOqdA7upgsoCLsM3L4F00dEXjFoAxWRXwFhhNwzbqUJwQIcthzyBLx
-	w8lt0BPYM6dRsTSIMxDCNRfJfoZgZW/pEKUFJ2ya+RSCBQ9rWlNnte2Q0gb9vwBCgvwkF83YzuU
-	OwX8zhOKtWiRew3yr67WDqfyyhdVIh9rOaROjGQ6MRw542eO1WcKfAqkFdMG98J8efWdigde0bQ
-	Z37xIHEbKADYC1V8pqfoi6oiUTwQ/TWKxpY6ndmYw78anOQ/JbuAUHvVnoC5ECa/qqaGFd0vatu
-	yBSP94JXMtmn9z5P1ZFaVCtjKl9A7J2xm7umxsr5HSNQJGdlyPebxi1NGfyn7lCnFeYrgQE5eSJ
-	gjknpzTkfmgg++Y3bhnWF1HnXwLxXUl1oU2Xi8M8=
-X-Received: by 2002:a5d:5f8d:0:b0:39c:1401:679e with SMTP id ffacd0b85a97d-3a092cf2c0cmr868548f8f.5.1746047267119;
-        Wed, 30 Apr 2025 14:07:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEog72SutnheszftTSCfiKun8Y4HdqThvk1mAh/dfhpjZg2tbfsVDEmaiAQ0AdWogX66blQiA==
-X-Received: by 2002:a5d:5f8d:0:b0:39c:1401:679e with SMTP id ffacd0b85a97d-3a092cf2c0cmr868527f8f.5.1746047266755;
-        Wed, 30 Apr 2025 14:07:46 -0700 (PDT)
+        bh=01jBPxnqk92t1rPGznj6ym7/qLqG6tY/jU5pL3ZoH4k=;
+        b=b/nDKtV+cJXoAdIWjH4iH1Wi3g0bswsCNFB9fq0nLnwtIFu099ITPzwS0gy3G/dgow
+         qbCDMTQcMyM0FQDImqBQZH2FVeGMW3lXifWo87XZoffgH50Ckecz2Bv4RcUz3A14PWZW
+         Hq7xKp8JNHPWaHi1gBdK31ONb/R5YBD53s8qnJgKPu9NfEv3i3TjARh9Uu5eaoF02AKB
+         Pkv+LyillKwATmYrugDxJszR2KFVmiv93xTOHQ442nPb29t8JctSaWpq9a4VdwFxiDFr
+         Jnpi15LHLI6vJ4Uu5WbsNksyJzl+nzSpjJd32wMdzHimHzhGZXCPaZKh1YZ5k8exu9oq
+         9OXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1/WeWgcrGzCZbRuqVm7/ygjDvcy87TzKL1xutniPRr+oZox1l/ghBmeUVCZxZOaKnAeAqrah8wNBTRy8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+K2r1/npZAS1Jfh2+5EhUyohcxy6JUlrxKETiQw5YX9CgeDNP
+	L0kDgC7b/u97Im52YkpsY2koO2pa6bgK1EGWzg5J0l/LojVJojTqaHw/VguASo1X9qpYVHluOHU
+	4BYjr1oKFk6Iqvk9129/oXGL4ooO0EgyBIs8/DeFafo3mwVF8Yz/4PboAvS/XdQ==
+X-Gm-Gg: ASbGncsIp3mV0Uvorq/cXZY0Ky5b1zXTkvglglBR+2pucDm6iA5Sod+KoswnMlyuOSC
+	vc2t3eSHKnWO6iT4f/qiKtOqXBG9AF1x5bMfP75GsURqbTlkyz22wcY3yZ9RL/og7JBHq3kFYCf
+	2diUFDiT4YO6IX5Rln0V0JZ1BNSA5r7QP5/lCt8FLofiQZ0hg4FZaTXt7ZM5NVzfoGNIaV3qlHX
+	e4SAYV8C9y6WyNLrnuj4Qf+s7gbN1K1I0lq5asrcIEsPUAItNuF5NjTJmbMEpI63XlCX1E85eQx
+	LFK7zU2W8LTy7xBepDC9KZpG0Q0yn95TKG5EPsDRheShAh6ZWb1f6YPh8252w95mTd+BNSH2oYM
+	A7IZOMoGwMi5MEzZlp9nB/im5VPNLm4Ryp0d0X48=
+X-Received: by 2002:a5d:684a:0:b0:39f:d13:32a with SMTP id ffacd0b85a97d-3a092d028ccmr748159f8f.29.1746047292486;
+        Wed, 30 Apr 2025 14:08:12 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHn7bC7vT1tiu/n8jrljv5sjGW6uSdNlOCmXc7ddSIDa2k3vXUMwpJkn2Ldnsb3A0+SQjpNkA==
+X-Received: by 2002:a5d:684a:0:b0:39f:d13:32a with SMTP id ffacd0b85a97d-3a092d028ccmr748144f8f.29.1746047292033;
+        Wed, 30 Apr 2025 14:08:12 -0700 (PDT)
 Received: from ?IPV6:2003:cb:c745:a500:7f54:d66b:cf40:8ee9? (p200300cbc745a5007f54d66bcf408ee9.dip0.t-ipconnect.de. [2003:cb:c745:a500:7f54:d66b:cf40:8ee9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46869sm18003938f8f.72.2025.04.30.14.07.45
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca543bsm18124715f8f.34.2025.04.30.14.08.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 14:07:46 -0700 (PDT)
-Message-ID: <38af3e39-a639-4807-aed2-d15c956cf2cc@redhat.com>
-Date: Wed, 30 Apr 2025 23:07:45 +0200
+        Wed, 30 Apr 2025 14:08:11 -0700 (PDT)
+Message-ID: <5e6cd2c8-b0d1-436a-96e7-b8cb7f6d75cc@redhat.com>
+Date: Wed, 30 Apr 2025 23:08:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,20 +75,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
-To: Andrew Morton <akpm@linux-foundation.org>,
- Kairui Song <kasong@tencent.com>
-Cc: Kairui Song <ryncsn@gmail.com>, linux-mm@kvack.org,
+Subject: Re: [PATCH v3 1/6] fuse: drop usage of folio_index
+To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
  Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
  Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>,
  "Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>,
  Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
- Qu Wenruo <wqu@suse.com>
+ Miklos Szeredi <miklos@szeredi.hu>, Joanne Koong <joannelkoong@gmail.com>,
+ Josef Bacik <josef@toxicpanda.com>, linux-fsdevel@vger.kernel.org
 References: <20250430181052.55698-1-ryncsn@gmail.com>
- <20250430181052.55698-3-ryncsn@gmail.com>
- <20250430140608.6f53896a1f09d58e65dd1cc2@linux-foundation.org>
+ <20250430181052.55698-2-ryncsn@gmail.com>
 From: David Hildenbrand <david@redhat.com>
 Content-Language: en-US
 Autocrypt: addr=david@redhat.com; keydata=
@@ -136,24 +133,54 @@ Autocrypt: addr=david@redhat.com; keydata=
  jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
  WNyWQQ==
 Organization: Red Hat
-In-Reply-To: <20250430140608.6f53896a1f09d58e65dd1cc2@linux-foundation.org>
+In-Reply-To: <20250430181052.55698-2-ryncsn@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 30.04.25 23:06, Andrew Morton wrote:
-> On Thu,  1 May 2025 02:10:48 +0800 Kairui Song <ryncsn@gmail.com> wrote:
+On 30.04.25 20:10, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
 > 
->> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
->> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
->> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+> folio_index is only needed for mixed usage of page cache and swap
+> cache, for pure page cache usage, the caller can just use
+> folio->index instead.
 > 
-> Please tell us where these extra tags came from.  Did some tool
-> generate them?
+> It can't be a swap cache folio here.  Swap mapping may only call into fs
+> through `swap_rw` but fuse does not use that method for SWAP.
 > 
-> I think they're quite useful - perhaps something we could encourage.
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Cc: Miklos Szeredi <miklos@szeredi.hu>
+> Cc: Joanne Koong <joannelkoong@gmail.com>
+> Cc: Josef Bacik <josef@toxicpanda.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> ---
+>   fs/fuse/file.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 > 
+> diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+> index 754378dd9f71..6f19a4daa559 100644
+> --- a/fs/fuse/file.c
+> +++ b/fs/fuse/file.c
+> @@ -487,7 +487,7 @@ static inline bool fuse_folio_is_writeback(struct inode *inode,
+>   					   struct folio *folio)
+>   {
+>   	pgoff_t last = folio_next_index(folio) - 1;
+> -	return fuse_range_is_writeback(inode, folio_index(folio), last);
+> +	return fuse_range_is_writeback(inode, folio->index, last);
+>   }
+>   
+>   static void fuse_wait_on_folio_writeback(struct inode *inode,
+> @@ -2349,7 +2349,7 @@ static bool fuse_writepage_need_send(struct fuse_conn *fc, struct folio *folio,
+>   		return true;
+>   
+>   	/* Discontinuity */
+> -	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio_index(folio))
+> +	if (data->orig_folios[ap->num_folios - 1]->index + 1 != folio->index)
+>   		return true;
+>   
+>   	/* Need to grow the pages array?  If so, did the expansion fail? */
 
-I guess that's just the get_maintainers output?
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Cheers,
