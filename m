@@ -1,159 +1,111 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C7F1E50B;
-	Wed, 30 Apr 2025 14:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC23A41;
+	Wed, 30 Apr 2025 14:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021645; cv=none; b=NWKQJvI8L1nLcO9ea/otlwrt1SKNGsC9VvWLbnRvr3MIzN7Di6/IVo9oN4gPop81upMQqBdiOfjyd1pnJqJSLJr91iXhEtAU4NEALgcGZvToPGwlQbxqjIUdftOW58/vOZQQmMIEFwFcfCA5Z4BHN+skoEP49ldgllZi61i0KGY=
+	t=1746021666; cv=none; b=RUurbtsoJMETDNrcc7D2HqExtYFopM0TAf2bDdvVEADOBA7cFqUdkmrOtHGzei3cNuxDO7EXGTTQECNuUIM+DXPs1JDV483rBNrHyBwRtPAXrIaHV/nz2Xp357RKxRUPOWHfjngfXBWt+fCl9JFIfpCL8an22GOBkZ+489sLN68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021645; c=relaxed/simple;
-	bh=yx2wEOAFgXewt07Uh8b3G92s1UT3Nr7VVujc0HNCDiw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qQEJLmw4pd41f6qzZgNMR0qbEtb0YZoZxYacqZlt7VuYAIKfDh8CZnhlxZrs90EHPt2ljd74Cw/n9X1iRGpFeMlmsMqmJSuQPmjFCnMBOoeQAdjjBTze1lUdu/X4zTbpP1Jzzkby+VeRRafdU9kaf6/lm1d+g0wGllPksyNo5YU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZQcPYc5N; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1746021666; c=relaxed/simple;
+	bh=g3mqcDp20GVHB/q8qmntjxUMyBRxr3Pf8u1Ph+O76LE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUi5TQktOJgAy2VilPquAt3ZQGDk10dErCoQ5nZDA1Vanp8a5cMs1YhcY3FCRm1o6yLwPwUqBAvz2WN7dBO2ESEFZC29HMzWEAtjnPISWmRXz5+Hn8vAo0uO96sW/+dxWMajy8BZjK4gBC/RoInHj3aegh07HclVIHDmNsFWGQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bqzK/326; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZQcPYc5N"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UCo0dV024548;
-	Wed, 30 Apr 2025 14:00:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=PHcIhf
-	/Hg/v5q3P6bgsIf0he7ViXGC7s26Zz87dieUY=; b=ZQcPYc5NBe1SD5RFSY3VzQ
-	+qSPYn3A8I5zta6ideT2GezV7CHGG54wxUtfTv+HBsKzOWqv+jOB4xt27dGZRWe+
-	DfhAWPa9X1QYb/88VFiz9gV8bUBf/L/gOxofyHnUPXfqizQ1QWfP/OAZBsA1lT8q
-	QJ1NYU1bxVtJEL3eKoflTwZgWbEBTCf+TZvpfuMcyN19wepaFDqQaJjhcNspjo/g
-	GdlPinxeBRjUDTUva2J9z4oT1Mbk01ZFi7uE7xwuh/QMB+d6j5F/Bf7eDIZMxU/G
-	fwRzmH3xKchBFAQ5MwGXqjyGKw13RJbDJ5zhNA8fDPav15BfFmcyXXM2tYFU6pUg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6wwbc8h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:00:27 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 53UDac7J015491;
-	Wed, 30 Apr 2025 14:00:26 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46b6wwbc8e-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:00:26 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 53UBPJZG031677;
-	Wed, 30 Apr 2025 14:00:26 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tu88km-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 14:00:25 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 53UE0MtX42140040
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 14:00:22 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3BD1120043;
-	Wed, 30 Apr 2025 14:00:22 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D14E720040;
-	Wed, 30 Apr 2025 14:00:21 +0000 (GMT)
-Received: from [9.152.212.229] (unknown [9.152.212.229])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 30 Apr 2025 14:00:21 +0000 (GMT)
-Message-ID: <273daacc-4a82-41d0-bb8e-af28540868ec@linux.ibm.com>
-Date: Wed, 30 Apr 2025 16:00:21 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bqzK/326"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746021665; x=1777557665;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=g3mqcDp20GVHB/q8qmntjxUMyBRxr3Pf8u1Ph+O76LE=;
+  b=bqzK/3268ZFGtYFzuwoi9cXdO/EytWMah1S/yClKvgk721WV8+3EnZpp
+   NEUZlaicR/Rqiic5Zh80KoFdwQ/LcxP6YZPjRJA2EFlEwAYQRPpU0VTTq
+   eMeuNTDnupNuzV7/jDBRFMLHhgoD41o9RmZ4n3phuXsaGiAXRx/oLedc5
+   r7rqWRXvHiFAq12RnJ2o8vpDJFPvoaW/GwZnG0vCZLq0tQh6dsim4d7wm
+   ajfhuhoMxghA0s+2/usbEB6BhYsEuO0w/ajDj2AlDIBP2O4uxZjF1/b52
+   R/emDIN4SjYTF7e0LxKsQyLVaGpMOigMrO2FHYDevr4IVCZbdh5RU7JII
+   w==;
+X-CSE-ConnectionGUID: C2429F9BQIWDcnEJVkT5Yg==
+X-CSE-MsgGUID: lra6iO4HRfqbCVsWyJRy+Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="47819016"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="47819016"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:00:55 -0700
+X-CSE-ConnectionGUID: 48bfJdwQSDq2dVZ3BtnmQQ==
+X-CSE-MsgGUID: glWlL4EiREC8ohwKqQlOFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="157360740"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa002.fm.intel.com with SMTP; 30 Apr 2025 07:00:51 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 30 Apr 2025 17:00:50 +0300
+Date: Wed, 30 Apr 2025 17:00:50 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: RD Babiera <rdbabiera@google.com>
+Cc: badhri@google.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] usb: typec: tcpm: delay SNK_TRY_WAIT_DEBOUNCE to
+ SRC_TRYWAIT transition
+Message-ID: <aBItEvvt3Pz-FLfD@kuha.fi.intel.com>
+References: <20250429234703.3748506-2-rdbabiera@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PING PATCH v3] perf test: Allow tolerance for leader sampling
- test
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-        ctshao@google.com, irogers@google.com, agordeev@linux.ibm.com,
-        gor@linux.ibm.com, sumanthk@linux.ibm.com, hca@linux.ibm.com
-References: <20250422110643.2900090-1-tmricht@linux.ibm.com>
- <aBIeFio2nkbzFj0b@x1>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <aBIeFio2nkbzFj0b@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: GTAMxfKHPmV21pmP-LzF8qPabfrh-O7p
-X-Proofpoint-GUID: JBmxKgMB-U9lWdIsCOQFhlO1Mlg1YOaN
-X-Authority-Analysis: v=2.4 cv=GOIIEvNK c=1 sm=1 tr=0 ts=68122cfb cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=1XWaLZrsAAAA:8 a=VnNF1IyMAAAA:8 a=RwRM1mRPO-xhfnsLoCkA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA5NiBTYWx0ZWRfX63QeRVDajKwU NtFaEwFMdhhzeKZ+B/B7KD8PJgqgIxEApnetV4ZCBTUknD2qSJ9eOcrIzxm7YO3HTHsgiGHAW+h rYGTQKIVS5ihEZGj8VGmYBqv4FvKRBBAoy8rK4Orb+pgWZXrAV6KYY67if5QtK8Yk98D/weLkTk
- jcVOuxmpcXDwL2GuLvy9d88WFHcwodZgSRtw3mLFBOazLZjVqFf53txHVma9UhdU5y0bQKyd30w MomgilL7Sha9Pc+Sx0lTEFi99VQgjsalObl9b86B+X8emU5nludMyW+cDOTwJ+xjXjXtuewatcn 2zfmk7jl+Rw5T7sAyo1Qo6qJgABNclUWavESZ05W5bkUlObz5b5m2IGKYdvbLIfUxR3nPGyQs/K
- kP/Hpb0WnP0V2X7BIpAYn4VFdh6dA0SnnU0Ppqy2TZoyEWdWKTwqMWv0eeKS+4YpEBb3+Pau
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_04,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 malwarescore=0
- bulkscore=0 adultscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999
- spamscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300096
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429234703.3748506-2-rdbabiera@google.com>
 
-On 4/30/25 14:56, Arnaldo Carvalho de Melo wrote:
-> On Tue, Apr 22, 2025 at 01:06:43PM +0200, Thomas Richter wrote:
->> V3: Added check for missing samples as suggested by Chun-Tse.
->> V2: Changed bc invocation to return 0 on success and 1 on error.
->  
->> There is a known issue that the leader sampling is inconsistent, since
->> throttle only affect leader, not the slave. The detail is in [1]. To
->> maintain test coverage, this patch sets a tolerance rate of 80% to
->> accommodate the throttled samples and prevent test failures due to
->> throttling.
->  
->> [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
->  
->> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
->> Suggested-by: Ian Rogers <irogers@google.com>
->> Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
->> Tested-by: Thomas Richter <tmricht@linux.ibm.com>
->> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+On Tue, Apr 29, 2025 at 11:47:01PM +0000, RD Babiera wrote:
+> This patch fixes Type-C Compliance Test TD 4.7.6 - Try.SNK DRP Connect
+> SNKAS.
 > 
-> This doesn't apply to perf-tools-next:
+> The compliance tester moves into SNK_UNATTACHED during toggling and
+> expects the PUT to apply Rp after tPDDebounce of detection. If the port
+> is in SNK_TRY_WAIT_DEBOUNCE, it will move into SRC_TRYWAIT immediately
+> and apply Rp. This violates TD 4.7.5.V.3, where the tester confirms that
+> the PUT attaches Rp after the transitions to Unattached.SNK for
+> tPDDebounce.
 > 
-> ⬢ [acme@toolbx perf-tools-next]$        git am ./v3_20250422_tmricht_perf_test_allow_tolerance_for_leader_sampling_test.mbx
-> Applying: perf test: Allow tolerance for leader sampling test
-> error: patch failed: tools/perf/tests/shell/record.sh:238
-> error: tools/perf/tests/shell/record.sh: patch does not apply
-> Patch failed at 0001 perf test: Allow tolerance for leader sampling test
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> hint: When you have resolved this problem, run "git am --continue".
-> hint: If you prefer to skip this patch, run "git am --skip" instead.
-> hint: To restore the original branch and stop patching, run "git am --abort".
-> hint: Disable this message with "git config set advice.mergeConflict false"
-> ⬢ [acme@toolbx perf-tools-next]$
+> Change the tcpm_set_state delay between SNK_TRY_WAIT_DEBOUNCE and
+> SRC_TRYWAIT to tPDDebounce.
 > 
-> Are you proposing this for perf-tools, i.e. for this release cycles?
-> 
-> Namhyung, what do you think?
-> 
->
+> Fixes: a0a3e04e6b2c ("staging: typec: tcpm: Check for Rp for tPDDebounce")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: RD Babiera <rdbabiera@google.com>
+> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
 
-It would be good if this could go onto linux-next. However I noticed
-this patch does not apply anymore on that tree. I will send updated
-patch as version 4.
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Thanks a lot
+> ---
+>  drivers/usb/typec/tcpm/tcpm.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/tcpm/tcpm.c b/drivers/usb/typec/tcpm/tcpm.c
+> index 784fa23102f9..87d56ac4565d 100644
+> --- a/drivers/usb/typec/tcpm/tcpm.c
+> +++ b/drivers/usb/typec/tcpm/tcpm.c
+> @@ -6003,7 +6003,7 @@ static void _tcpm_cc_change(struct tcpm_port *port, enum typec_cc_status cc1,
+>  	case SNK_TRY_WAIT_DEBOUNCE:
+>  		if (!tcpm_port_is_sink(port)) {
+>  			port->max_wait = 0;
+> -			tcpm_set_state(port, SRC_TRYWAIT, 0);
+> +			tcpm_set_state(port, SRC_TRYWAIT, PD_T_PD_DEBOUNCE);
+>  		}
+>  		break;
+>  	case SRC_TRY_WAIT:
+> 
+> base-commit: 615dca38c2eae55aff80050275931c87a812b48c
+> -- 
+> 2.49.0.967.g6a0df3ecc3-goog
 
 -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
-
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
-
-Geschäftsführung: David Faller
-
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
+heikki
