@@ -1,77 +1,140 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D38299518
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:35:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71AF6283FD7;
+	Wed, 30 Apr 2025 20:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746045307; cv=none; b=C09wj/S/+RzUw/WOaz3m0j6/0lXgQywqeKMhksfms0T8ezGrHcSrMGCSiivyeLLV8ZEko3Cq6bX5YVTMSKp/QpWcKlpM3pWZMkWqMJRjZdDcZJlz9jxVXhGU5ucUCK1ctgyxtZfQQhjcxfwg2BT4fK6vqN227/PAaAjCEvIhwm0=
+	t=1746045459; cv=none; b=PMOVtPK1xK92L03sHhpqULUu4xnXNVGI4TcYT8Q7XpH5m8DUonGPR1VAEQ7mZiRYhqXTvz1fNLoIOLFE+PxNl0G7utldW4HPBl0vDnUuHcSCV/oA4T3Posp3uLavs9IgEz0c1fKXT+tnZpcwlutev5npmyWYkxY2g6LMinod/Qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746045307; c=relaxed/simple;
-	bh=4/XsuOC0IPr5wwJxQNqjW0/dFud1iOENDHvvrETODY4=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=hmK/1oL8PWyjdSsMbvWVlRNTDsLjoPO4G74vPlS5Ys4VayI/Ki3sabu/1PXzs6VFBCiIr55MXKj1HshZK5dksNBpA87dEECVhtkLWz10s3/M8wHyvfOaUbY/AXr+0+qbv6Mu4xXt6jD7ugafx6n2q+Z8c2gM1kRUqdH5dKKeTck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d94fe1037cso4491805ab.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:35:05 -0700 (PDT)
+	s=arc-20240116; t=1746045459; c=relaxed/simple;
+	bh=GsovpquVxxvyAV+Zvr34QrYMsuTYQ2FlQWLHGhDnEdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VXoxRrhSghAQKyvn6RSKbuC9v0jx9mjVWcYGuv9ymPmTbFrBtinWbibKmfRjFa7XFxGZSvxx0N0elkxWEjFh6XBZ1eTs2roxXr5wZaHy8WEB4mcX7Mrqr6RiUgHKRF5HYGz9Zi2i3UPufvOXhBB6wD7g/G+i55wqSS2ieK8aEP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FiEKCVxv; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FiEKCVxv"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39c0dfba946so161404f8f.3;
+        Wed, 30 Apr 2025 13:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746045456; x=1746650256; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gq2pzDYaQuPaeBvQUvPUR+RhjlKe1qrt7xuK/8qXLTA=;
+        b=FiEKCVxvZgx0yjo7Nx5H/tQcNMF3cr7KRZlc1LssIne2oPHWen+SedxZ4fIcktWDj8
+         z7wBGBpEjFUf1KVYbe28sSMziwjg+eIHOEac/+SsJkhErW9yRDl3sZoMZy81Gpe6m6qZ
+         Fni26asPkLTuFe4Wv8jhLRhzVtKqQQBXfrKElenBuFxFQ1LNrCWG2/Ugtjs4/GE/YYI0
+         m5lBa/+WQAifNGI72G0uv0nR1sep41kWjPXNTCFTM8gGZZsMeG0/5fqUymGJWzmzpnF1
+         I0HeLbalbttg+8x58cmGUgrgSJVs0czly2G/XSswIBLuIU+Tnimor6ZwpieUMkX7CnVA
+         gb0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746045305; x=1746650105;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e32cUp/b3R++mkuBmGQFgYOpYmO4M0/4mpbcHu13CvM=;
-        b=SckbmYcb7DbJmV5K/C1JIE9825WYZ9zqZRpJC3f1B4XjRkMhR/exE/EGBkBa9UOmAM
-         6HZxJtBCMNcYM7+xhOAfgwnjRtXAhDsziaP2wEUMnYmttYP6fEfb3ZlDBy6//pWGXpTC
-         s4uYc7SzwgG04ikm5ghNZ/F3AGnv8kaZgTJ87gONT1Pvlq9oCysKtD3LXtc+m8gTeslw
-         tEfnLY3P/NB7mjaTXnKHEyOfDAZ4qduWnE+10ayafZ3NH8klRpaOYmeOEDCj3pRVSgLp
-         +6rZiuhilzRVdCsepsQeS6RKOPj+f+ena/UGids1YwVh1wRPzUvPZA1ygfPjmPb0ndjN
-         zugA==
-X-Forwarded-Encrypted: i=1; AJvYcCXM/ulbyzwLXaLRC/JI6NBZ1ZYJL+Nv/wrYCjoMf/91uTfPq77F/udbRvJsKLXGMAR3s1x/3qkBfr8Fbig=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBZFLlC9Gxz3Eag6j1OVhVwzFzPrwg8p8fTzBAMWsURj2cDJeN
-	2sKt8eI8dEHyNIMok2oZsB8wAHnY7nE5MSQt+idmn84MMksty+yqNXbTxGelBsy22JOPKbY9oWP
-	Kjl7Uqmoermp7kqMfRfAWaOqINJk3OO5Kul06iYU9tg2FTkgAnrZZt10=
-X-Google-Smtp-Source: AGHT+IEBSWGzoRlHuLR+qdi2Ai+Wn5WkkdIy2n2sXyISJxwgZlUJfE+Jc92i1axHYa26ZBE0+rhXJtskgAwVShWtbKXhIN+Iz6ix
+        d=1e100.net; s=20230601; t=1746045456; x=1746650256;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Gq2pzDYaQuPaeBvQUvPUR+RhjlKe1qrt7xuK/8qXLTA=;
+        b=jsbrst5rOPYxbbMYUNH00K+mVeAd2wIXcFovCItFf3NitoHEtXaPqZnDo/zfdlvB8h
+         kTmNxKxL7o89sYua4RmekWgsEfXvM4iyVnhB+rItST7QLs7aq2HS0kfMznUJH4vgHXNP
+         mHJAHyo2mKX/d1KUZEKY+M2uBkERtEcyKbJFPK40rXMGouZQ5IJVx2owNLaZlLMtxHk6
+         WbxF5aQh0NZpBK4GF7nOT7y+v/I7MAYlDcbh1gdqDu98y3Y+iZpZKhb+qdAat5mhPnfT
+         phURfxNLJtuKl0ixcVYu5NL3Y8hnwaSsoyKM4tz11IeJ9FEKA4a2zHTsXlWZHw/EsQMh
+         8Txw==
+X-Forwarded-Encrypted: i=1; AJvYcCUd4szu8W/U/SE7eo2pb8iDswxIh4UWz608EyXUF8HQ5+aRHdr8NZXVydUHOvHpaXhCNH1Okd9GWkcvvjJK@vger.kernel.org, AJvYcCVrAta2uw42WJsQmR3VoNDc0vYg8t6ir5NcS2bSghdLxrmqB9duxy07uGauMZyrqHPoeVn75kHBu/dg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyUBMPpuC+9m2cCOz026m92YQX7UTtXxwTqZkTIdPqrLAbc4NX
+	7w+Lhkpc3Fu7sYKvy0Dg25BBpJKa19VcuiOn90iQpPvf6Abb6wKoj3/klea4vYdJhjHDV+uUsRw
+	gFaZ+P4nrslI4+EvFtzng1yPI7V0=
+X-Gm-Gg: ASbGnctmsBOJ/7xq2YNnzQtdKirvE9Nl5DYgIvtsYIcxWcME8RLePt8AJQyYQL5BbKu
+	gNomyKy2WpM/eMFy6I8du0FDZDGTHvGBPm2rdcIxbeNccieDb/OV08iA6UCv8NRUS9sciyU043W
+	5IHzmKPAREF57N2VofYH3uKg==
+X-Google-Smtp-Source: AGHT+IHQylK9tC7uixYQXN3q0QkkbVkLBp5RxRAGaWF4oL2rBi2DtA/+AkTMvTva7X2p0TM7Hm+arj9RLuMaB1XVvoo=
+X-Received: by 2002:a05:6000:430c:b0:397:8f09:5f6 with SMTP id
+ ffacd0b85a97d-3a08ff50ad1mr3833933f8f.47.1746045455602; Wed, 30 Apr 2025
+ 13:37:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3309:b0:3d3:fdcc:8fb8 with SMTP id
- e9e14a558f8ab-3d967fad850mr45222025ab.10.1746045304833; Wed, 30 Apr 2025
- 13:35:04 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:35:04 -0700
-In-Reply-To: <0000000000003392c606179ddd1a@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68128978.050a0220.3a872c.0008.GAE@google.com>
-Subject: Re: [syzbot] [bcachefs] KASAN: use-after-free Read in scatterwalk_copychunks
-From: syzbot <syzbot+8c4acf719c3fc41e8439@syzkaller.appspotmail.com>
-To: bfoster@redhat.com, davem@davemloft.net, herbert@gondor.apana.org.au, 
-	kent.overstreet@linux.dev, linux-bcachefs@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20250415195131.281060-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250415195131.281060-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 30 Apr 2025 21:37:09 +0100
+X-Gm-Features: ATxdqUHN4UqVHRvL2ltcAb34qGEYqVxTGvRfaMtKeCOqPh5lk9uOHn1js3jbwGI
+Message-ID: <CA+V-a8trb7Kxg0FeuvpJCnbqGaR5FMPdTd-CaHorMDvSM3Wy7A@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Add USB2PHY Port Reset Control driver for Renesas
+ RZ/V2H(P) SoC
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-renesas-soc@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot suspects this issue was fixed by commit:
+Hi Philipp,
 
-commit bcf77a05fb3d6210026483703bcacb22ed961c99
-Author: Kent Overstreet <kent.overstreet@linux.dev>
-Date:   Fri Nov 8 05:25:18 2024 +0000
+On Tue, Apr 15, 2025 at 8:51=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
+>
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Hi All,
+>
+> This patch series adds support for the USB2PHY Port Reset control driver
+> for the Renesas RZ/V2H(P) SoC. The changes include documenting the USB2PH=
+Y
+> Port Reset control bindings and adding the driver.
+>
+> v4->v5
+> - Added Reviewed-by tag from Biju Das for patch 2/3
+> - Dropped NULL check for of_device_get_match_data() in probe()
+> - Dropped dev_set_drvdata() in probe()
+>
+> v3->v4
+> - Added Reviewed-by tag from Krzysztof Kozlowski for patch 1/3
+> - Updated commit message for patch 1/3 as per review comments
+>
+> v2->v3
+> - Dropped Acks from Conor and Fabrizio, due to below changes
+> - Renamed binding renesas,rzv2h-usb2phy-ctrl.yaml to
+>   renesas,rzv2h-usb2phy-reset.yaml
+> - Renamed node name in example to reset-controller
+> - Renamed function names in reset-rzv2h-usb2phy.c
+> - Kept the reset line in asserted state during probe
+> - Added comment for rzv2h_init_vals[]
+> - Added entry in MAINTAINERS file
+>
+> v1->v2
+> - Dropped binding postfix in subject line for patch 1/2
+> - Moved acquiring the ctrl2 pin in deassert callback
+> - Updated ctrl_status_bits
+>
+> Cheers,
+> Prabhakar
+>
+> Lad Prabhakar (3):
+>   dt-bindings: reset: Document RZ/V2H(P) USB2PHY reset
+>   reset: Add USB2PHY port reset driver for Renesas RZ/V2H(P)
+>   MAINTAINERS: Add entry for Renesas RZ/V2H(P) USB2PHY Port Reset driver
+>
+>  .../reset/renesas,rzv2h-usb2phy-reset.yaml    |  56 +++++
+>  MAINTAINERS                                   |   8 +
+>  drivers/reset/Kconfig                         |   7 +
+>  drivers/reset/Makefile                        |   1 +
+>  drivers/reset/reset-rzv2h-usb2phy.c           | 236 ++++++++++++++++++
+>  5 files changed, 308 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/renesas,rzv2h=
+-usb2phy-reset.yaml
+>  create mode 100644 drivers/reset/reset-rzv2h-usb2phy.c
+>
+Gentle ping for review.
 
-    bcachefs: Fix hidden btree errors when reading roots
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10dab1b3980000
-start commit:   da4373fbcf00 Merge tag 'thermal-6.12-rc7' of git://git.ker..
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=347f0ef7656eeb41
-dashboard link: https://syzkaller.appspot.com/bug?extid=8c4acf719c3fc41e8439
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1579235f980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1379235f980000
-
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: bcachefs: Fix hidden btree errors when reading roots
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Cheers,
+Prabhakar
