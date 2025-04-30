@@ -1,74 +1,74 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB25F1DED63
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:28:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D311E570B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745987282; cv=none; b=oUyaR7rspZ8imQ+w8/Ig0DG85F0pPQFdLtGqO5+7fWAzVHMNkjQKPP/+ZuLECqd24jDxp1e/+5LD3TNY5Mbtomh85qsVvbCMO2iu9vb6Qt2/gOypHvDghYJP5d0pMPkdpJW3CxsGcLcd05pJ/DJKay34ddjMxiYzN5M50qH9aHE=
+	t=1745987285; cv=none; b=e1S3DiE9fa94QkwEmb3Nq9Et9b+/oXtfxP0vMD4I6BhHAOtb9FXYWKtaXIMiXdj31kSeanMrMqAw1RfIELDGEUdBuEOJUGlTNK0lCybmeY0yeikwyq4RkXyUty8emLgP2FEa+53Et8joQg0Av7hff0mRzgyWADvz24ymrqxxhQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745987282; c=relaxed/simple;
-	bh=tvWwcvdelH2ZCwaXkDs3RnjvaPgYvNWnZZNy0rariak=;
+	s=arc-20240116; t=1745987285; c=relaxed/simple;
+	bh=wSkPm5yBeW+wrBDAjRTe5/DIUE2FvkpgHBkUEbYzM04=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ou9CzPegc3vKpt0MlpzFA9pjFsRnrnwgxlvXeuLRr3SI58vk1v9R62Xngvsum08bfexGNRrSewBEQYvwLYRZlqWsax64UITTQnNEbtyLOujuEBvDq0QUEyVMTnE3EhEWNk3jI2IgWsus/wFpaphkMyB0RM08uqO8JybHg2sEkHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akLGP+LQ; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=t09/YNAEI99OIJh2IRflYIG2NCCb9fJgqhVjIB10f6jpp7ZCX1OzWCr4OnaAhO21E0HfC4ltx8dfuMTUpbHPtLqYsCD5ftstOX9l3UNt+AkHiyQKwavw0dfKsrqylNcNR66zQi5jRkFpq5Iq87M/BCdxzw+sx9jTxFdypMTdYck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SQMp708r; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akLGP+LQ"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-73972a54919so5776414b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:28:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SQMp708r"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-227d6b530d8so75754785ad.3
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 21:28:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745987280; x=1746592080; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745987283; x=1746592083; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mp6eKKbWpiSHyJXYBVOlGqFhgugHf5gGjyOnElsYIQ8=;
-        b=akLGP+LQ0exlj7HT2y9S7bN69kEpqDizlIjo5yrJAm9Sf7aPBD+bTpFpfxSsjcT9hQ
-         DSkBcgcZ1dTAyUnVXAkdLyBCVwagO6Qlv7QKU6LVE6wlEZZ+mSfQEcFJPbyjdHn21vEK
-         W17H/MVPW6nmKKFbg1cViw6junG6fz27P84W3bPeNblwkockf+zTfos+zzocTyGqQfOB
-         0ZcKGqb0KXPNYQPfn63j1MwLQQdLUjQreX6nQH90AH5oC39M0oHC/gsup6rP3VFW9aoR
-         wYicSczv3RIzUrx+srXk4lTu3R+cl4W14ueHRlYthAFaMO/W37iF9XkjrxFfWNkEGosE
-         j25g==
+        bh=B/ZhA8POgOa1pDP88Eiedzl7Qg41tN4Rus19EAaNMog=;
+        b=SQMp708rvwPa3n4JpHgRPPe3RYFVYYE3ysUUuHewqVDyo4Y3HgNf2ws/mTQk3Tcf84
+         woRLVnJ7HCfjn3ltKCb+Xyk/a2LJR/tVaExSFLsiYD+oMmJFQIXJnjAcWYZ4GIjrcVTR
+         5QSY17zBiDjI5obWhOyEOwt7jRLrqVvVZvZhN7kKEnvmmqwPIGjKr0lQviQXnTwtpJ6i
+         c+kEfcfg7PZcAyQAXkvFp9c+a6oX21ID2kjFm/TgwGJNKdurTj8ABp3RKRajIrN/7XfD
+         aQMv5+WeatsLZkn5CkGaKpC/xGIcN8slcDyRZ+pBZzuhiqT3X+w9Y94c5NPfBYueggG5
+         XWGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745987280; x=1746592080;
+        d=1e100.net; s=20230601; t=1745987283; x=1746592083;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mp6eKKbWpiSHyJXYBVOlGqFhgugHf5gGjyOnElsYIQ8=;
-        b=tTeKxO9JUW1QRuW6TXotQUkFZhmdtM/ZlSLj04LkSod7OOfvTW91lJcB4N8AOAT6qR
-         ea9FaKYRsGvl56BnJAR4fXoWyYur+LZEKdvayCmYrhoyekjyKQ6LeFBlFD9mY3pxLpaq
-         HCMOrQH1On3O2PIn/UfwjtNNzvQOQE4z7Ur6ChcrWB6YCLQHcpr31QDY26weTX8GcOEu
-         UAOypX/tvMy1LKEPgFyhtJxSJbHlAaHqzgUXMxd4ZV5+X3JbQdvDrEZZN98zW10hSXih
-         RVyrRw5xI0YnDgIMd2vEpk2FmORUJHeOw6tgOwCbBXmt9G7EfWz1cuHqIg/gX+O8g+Ro
-         +3tQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXHWh9DrH4oheuY74iXTBxk7LdY1XcbjuLNkw2CE2NE/aIUa2ANxDP5nXLdn5ytsFKSCSGCYJSKyc+0Ewo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8M/yW54Av6A7xKOWKuYwXfBeW7nPxRBYEKGMPXoWD8/AaA6lF
-	SCkHk9vYmkcI6iPtDARU55OqYu8cZwGMIODiTyEhrB3BuMiKQEUB
-X-Gm-Gg: ASbGnctm9Ejj881J8L0XleBqEYYJLmsWGTTbVJakd3NaX0nXBvVVejlfDiNwTsRH5Rs
-	9qjLE2oiX55ZYanSs3g9+6a8uyuUQ/EjrkLYW2zyd+BOyTYvOuj8A/7Mx/aqsSMSAeGvBvwLc/F
-	NZ4Pq5NLAPJmLkwYX/YargVoSrrmwTmHY74XFuk4fmTD0hTkTTNYphRsRiTizpbNPncuFIjPRbx
-	uRaN/6hqO1fB/sjRyhxb5so+uLUvWSpKBdmLiOqcrWc35+DT0huO6Mo0mI6vLgwX5w1Ru5gz0TG
-	JoZyQ6ZwYZSLR2w+pVGljmN/U8LhE3E786AXMh4rX1n9se2yj6NeA8yPbdRGJp1g0QUGfzcijtx
-	cTBb5dG1IAAQ=
-X-Google-Smtp-Source: AGHT+IFs9TraF1kR6FW5u1Q5u6Tmlb0LDMb+CsM3q0Udn9dfC/0UdzNr3zkLiVA4e0ssPjXNHc5cNA==
-X-Received: by 2002:a05:6a20:d046:b0:1f5:8220:7452 with SMTP id adf61e73a8af0-20a87d4eb30mr2154035637.24.1745987280011;
-        Tue, 29 Apr 2025 21:28:00 -0700 (PDT)
+        bh=B/ZhA8POgOa1pDP88Eiedzl7Qg41tN4Rus19EAaNMog=;
+        b=lJH8RF2jUPJM7sMG+ktB8bxiDUepXL30ndnS3r3MXnlSFPHNq81yQWOmNtTZBKUTNe
+         rXvVAVvc2f9/j5U6GrNktAyDyUEU9fIUuqnPVecZSgV0fmMQdTI7BzNiOTM8Zl9jsGNj
+         jIBEoSABDiTvDwsTBQ8b3TBNhd0fwi1TUma6/zKeKvtuD1uX/BqiLooUS9R1fLM0m5TL
+         1j7igzQjZB95hwMuM9a4Ia1iAcDMQAGKPv2hW8s1og4KWebcGAseevQ45KURSBAJS5mW
+         qga0f1xECLlsxwcvQ+/q48I/bnd0qwOQY6gHax3r6zAfwZN+B+GVGj/wO1PZU0wvEM6y
+         OXVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQKHbMWSUnjMA1B4KCATqwj5+aFq6HdpzZo4Di31Kz3iMjgdjSLllZfUIlysURN/jNsiA/hTctxCm4vUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/ZBlKT3N54nbvcDoXpBS3i/hjCXPam6MYD2OdDmGdpF42dt4I
+	gkp+WBVsXMvcAhV0LsvXP3ARL1ye9dnUYTX2jKLL52yXGD+UXorC
+X-Gm-Gg: ASbGncvNZLb8sQOcUbJi7tehJk65m3dLveakOlnvRN68EHFogLp4Yi+nUXY0JKNIaiI
+	FtCIU0n2AbAYP/JtmDOb9R8t/zxOwTdc8KSg68LAYxCjkp/pmCyr/iobT8VPilqW5pjYkkTUr15
+	c+31oWU+j0lYz4wsOGHnJaR7+BWua0DsovuE1V2EWxuzCDCPAIjVt6JsGwrRhTK1ABjZxsKIcy2
+	hupMwXxzlI8x/n+qGq1AWNEW0LW5tL0mKWnRNIUcHwmU2pGfjCJ4vWWXImIQm3sfSLe/8SghtwV
+	yHCZNZToJSQPB4Uqf0YiSYgYZdl5aQMZjvLtM8RaqY/r6WZKaY28QaUS+MljdIF5zdx7wsr5N6S
+	RmQrKIDaqHocT263wYAFLMw==
+X-Google-Smtp-Source: AGHT+IHLnJV1jRxDa8YUV/nZ0brQ2Gx6YopooEOeWXq2tdOwSnZ7t3052ntTYHbm7mId/W8e0+yiSA==
+X-Received: by 2002:a17:902:d58b:b0:224:26fd:82e5 with SMTP id d9443c01a7336-22df35caa68mr29021325ad.48.1745987282966;
+        Tue, 29 Apr 2025 21:28:02 -0700 (PDT)
 Received: from ikb-h07-29-noble.in.iijlab.net ([202.214.97.5])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1b7efab4a5sm6348034a12.19.2025.04.29.21.27.59
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db51062casm111526675ad.208.2025.04.29.21.28.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 21:27:59 -0700 (PDT)
+        Tue, 29 Apr 2025 21:28:02 -0700 (PDT)
 Received: by ikb-h07-29-noble.in.iijlab.net (Postfix, from userid 1010)
-	id 98529E94824; Wed, 30 Apr 2025 13:27:57 +0900 (JST)
+	id 33EA2E94826; Wed, 30 Apr 2025 13:28:00 +0900 (JST)
 From: Hajime Tazaki <thehajime@gmail.com>
 To: linux-um@lists.infradead.org
 Cc: thehajime@gmail.com,
 	ricarkol@google.com,
 	Liam.Howlett@oracle.com,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v8 09/12] x86/um: nommu: signal handling
-Date: Wed, 30 Apr 2025 13:27:15 +0900
-Message-ID: <ca8b6d4da1d7028731d88fa8b8fd9c98c4fbebd2.1745980082.git.thehajime@gmail.com>
+Subject: [PATCH v8 10/12] um: change machine name for uname output
+Date: Wed, 30 Apr 2025 13:27:16 +0900
+Message-ID: <64d60cf0ac06f49a4ff7f79df4c60e364d11464f.1745980082.git.thehajime@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1745980082.git.thehajime@gmail.com>
 References: <cover.1745980082.git.thehajime@gmail.com>
@@ -80,351 +80,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This commit updates the behavior of signal handling under !MMU
-environment. It adds the alignment code for signal frame as the frame
-is used in userspace as-is.
-
-floating point register is carefully handling upon entry/leave of
-syscall routine so that signal handlers can read/write the contents of
-the register.
-
-It also adds the follow up routine for SIGSEGV as a signal delivery runs
-in the same stack frame while we have to avoid endless SIGSEGV.
+This commit tries to display MMU/!MMU mode from the output of uname(2)
+so that users can distinguish which mode of UML is running right now.
 
 Signed-off-by: Hajime Tazaki <thehajime@gmail.com>
 ---
- arch/um/include/shared/kern_util.h    |   4 +
- arch/um/nommu/Makefile                |   2 +-
- arch/um/nommu/os-Linux/signal.c       |  13 ++
- arch/um/nommu/trap.c                  | 194 ++++++++++++++++++++++++++
- arch/x86/um/nommu/do_syscall_64.c     |   6 +
- arch/x86/um/nommu/os-Linux/mcontext.c |  11 ++
- arch/x86/um/shared/sysdep/mcontext.h  |   1 +
- arch/x86/um/shared/sysdep/ptrace.h    |   2 +-
- 8 files changed, 231 insertions(+), 2 deletions(-)
- create mode 100644 arch/um/nommu/trap.c
+ arch/um/Makefile        | 6 ++++++
+ arch/um/os-Linux/util.c | 3 ++-
+ 2 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/um/include/shared/kern_util.h b/arch/um/include/shared/kern_util.h
-index 2c8c18bd5860..85a4f154423b 100644
---- a/arch/um/include/shared/kern_util.h
-+++ b/arch/um/include/shared/kern_util.h
-@@ -73,4 +73,8 @@ void um_idle_sleep(void);
+diff --git a/arch/um/Makefile b/arch/um/Makefile
+index fcf4bb915a31..722a3bd03f24 100644
+--- a/arch/um/Makefile
++++ b/arch/um/Makefile
+@@ -155,6 +155,12 @@ export CFLAGS_vmlinux := $(LINK-y) $(LINK_WRAPS) $(LD_FLAGS_CMDLINE) $(CC_FLAGS_
+ CLEAN_FILES += linux x.i gmon.out
+ MRPROPER_FILES += $(HOST_DIR)/include/generated
  
- void kasan_map_memory(void *start, size_t len);
- 
-+#ifndef CONFIG_MMU
-+extern void arch_sigsegv_handler(int sig, struct siginfo *si, void *mc);
-+#endif
++ifeq ($(CONFIG_MMU),y)
++UTS_MACHINE := "um"
++else
++UTS_MACHINE := "um\(nommu\)"
++endif
 +
+ archclean:
+ 	@find . \( -name '*.bb' -o -name '*.bbg' -o -name '*.da' \
+ 		-o -name '*.gcov' \) -type f -print | xargs rm -f
+diff --git a/arch/um/os-Linux/util.c b/arch/um/os-Linux/util.c
+index 4193e04d7e4a..20421e9f0f77 100644
+--- a/arch/um/os-Linux/util.c
++++ b/arch/um/os-Linux/util.c
+@@ -65,7 +65,8 @@ void setup_machinename(char *machine_out)
+ 	}
+ # endif
  #endif
-diff --git a/arch/um/nommu/Makefile b/arch/um/nommu/Makefile
-index baab7c2f57c2..096221590cfd 100644
---- a/arch/um/nommu/Makefile
-+++ b/arch/um/nommu/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
- 
--obj-y := os-Linux/
-+obj-y := trap.o os-Linux/
-diff --git a/arch/um/nommu/os-Linux/signal.c b/arch/um/nommu/os-Linux/signal.c
-index 19043b9652e2..b2cd0470b67c 100644
---- a/arch/um/nommu/os-Linux/signal.c
-+++ b/arch/um/nommu/os-Linux/signal.c
-@@ -5,6 +5,7 @@
- #include <os.h>
- #include <sysdep/mcontext.h>
- #include <sys/ucontext.h>
-+#include <as-layout.h>
- 
- void sigsys_handler(int sig, struct siginfo *si,
- 		    struct uml_pt_regs *regs, void *ptr)
-@@ -14,3 +15,15 @@ void sigsys_handler(int sig, struct siginfo *si,
- 	/* hook syscall via SIGSYS */
- 	set_mc_sigsys_hook(mc);
+-	strcpy(machine_out, host.machine);
++	strcat(machine_out, "/");
++	strcat(machine_out, host.machine);
  }
-+
-+void arch_sigsegv_handler(int sig, struct siginfo *si, void *ptr)
-+{
-+	mcontext_t *mc = (mcontext_t *) ptr;
-+
-+	/* !MMU specific part; detection of userspace */
-+	if (mc->gregs[REG_RIP] > uml_reserved &&
-+	    mc->gregs[REG_RIP] < high_physmem) {
-+		/* !MMU: force handle signals after rt_sigreturn() */
-+		set_mc_userspace_relay_signal(mc);
-+	}
-+}
-diff --git a/arch/um/nommu/trap.c b/arch/um/nommu/trap.c
-new file mode 100644
-index 000000000000..2053a3b5071b
---- /dev/null
-+++ b/arch/um/nommu/trap.c
-@@ -0,0 +1,194 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/mm.h>
-+#include <linux/sched/signal.h>
-+#include <linux/hardirq.h>
-+#include <linux/module.h>
-+#include <linux/uaccess.h>
-+#include <linux/sched/debug.h>
-+#include <asm/current.h>
-+#include <asm/tlbflush.h>
-+#include <arch.h>
-+#include <as-layout.h>
-+#include <kern_util.h>
-+#include <os.h>
-+#include <skas.h>
-+
-+/*
-+ * Note this is constrained to return 0, -EFAULT, -EACCES, -ENOMEM by
-+ * segv().
-+ */
-+int handle_page_fault(unsigned long address, unsigned long ip,
-+		      int is_write, int is_user, int *code_out)
-+{
-+	/* !MMU has no pagefault */
-+	return -EFAULT;
-+}
-+
-+static void show_segv_info(struct uml_pt_regs *regs)
-+{
-+	struct task_struct *tsk = current;
-+	struct faultinfo *fi = UPT_FAULTINFO(regs);
-+
-+	if (!unhandled_signal(tsk, SIGSEGV))
-+		return;
-+
-+	pr_warn_ratelimited("%s%s[%d]: segfault at %lx ip %p sp %p error %x",
-+			    task_pid_nr(tsk) > 1 ? KERN_INFO : KERN_EMERG,
-+			    tsk->comm, task_pid_nr(tsk), FAULT_ADDRESS(*fi),
-+			    (void *)UPT_IP(regs), (void *)UPT_SP(regs),
-+			    fi->error_code);
-+}
-+
-+static void bad_segv(struct faultinfo fi, unsigned long ip)
-+{
-+	current->thread.arch.faultinfo = fi;
-+	force_sig_fault(SIGSEGV, SEGV_ACCERR, (void __user *) FAULT_ADDRESS(fi));
-+}
-+
-+void fatal_sigsegv(void)
-+{
-+	force_fatal_sig(SIGSEGV);
-+	do_signal(&current->thread.regs);
-+	/*
-+	 * This is to tell gcc that we're not returning - do_signal
-+	 * can, in general, return, but in this case, it's not, since
-+	 * we just got a fatal SIGSEGV queued.
-+	 */
-+	os_dump_core();
-+}
-+
-+/**
-+ * segv_handler() - the SIGSEGV handler
-+ * @sig:	the signal number
-+ * @unused_si:	the signal info struct; unused in this handler
-+ * @regs:	the ptrace register information
-+ *
-+ * The handler first extracts the faultinfo from the UML ptrace regs struct.
-+ * If the userfault did not happen in an UML userspace process, bad_segv is called.
-+ * Otherwise the signal did happen in a cloned userspace process, handle it.
-+ */
-+void segv_handler(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs,
-+		  void *mc)
-+{
-+	struct faultinfo *fi = UPT_FAULTINFO(regs);
-+
-+	/* !MMU specific part; detection of userspace */
-+	/* mark is_user=1 when the IP is from userspace code. */
-+	if (UPT_IP(regs) > uml_reserved && UPT_IP(regs) < high_physmem)
-+		regs->is_user = 1;
-+
-+	if (UPT_IS_USER(regs) && !SEGV_IS_FIXABLE(fi)) {
-+		show_segv_info(regs);
-+		bad_segv(*fi, UPT_IP(regs));
-+		return;
-+	}
-+	segv(*fi, UPT_IP(regs), UPT_IS_USER(regs), regs, mc);
-+
-+	/* !MMU specific part; detection of userspace */
-+	arch_sigsegv_handler(sig, unused_si, mc);
-+}
-+
-+/*
-+ * We give a *copy* of the faultinfo in the regs to segv.
-+ * This must be done, since nesting SEGVs could overwrite
-+ * the info in the regs. A pointer to the info then would
-+ * give us bad data!
-+ */
-+unsigned long segv(struct faultinfo fi, unsigned long ip, int is_user,
-+		   struct uml_pt_regs *regs, void *mc)
-+{
-+	int si_code;
-+	int err;
-+	int is_write = FAULT_WRITE(fi);
-+	unsigned long address = FAULT_ADDRESS(fi);
-+
-+	if (!is_user && regs)
-+		current->thread.segv_regs = container_of(regs, struct pt_regs, regs);
-+
-+	if (current->mm == NULL) {
-+		show_regs(container_of(regs, struct pt_regs, regs));
-+		panic("Segfault with no mm");
-+	} else if (!is_user && address > PAGE_SIZE && address < TASK_SIZE) {
-+		show_regs(container_of(regs, struct pt_regs, regs));
-+		panic("Kernel tried to access user memory at addr 0x%lx, ip 0x%lx",
-+		       address, ip);
-+	}
-+
-+	if (SEGV_IS_FIXABLE(&fi))
-+		err = handle_page_fault(address, ip, is_write, is_user,
-+					&si_code);
-+	else {
-+		err = -EFAULT;
-+		/*
-+		 * A thread accessed NULL, we get a fault, but CR2 is invalid.
-+		 * This code is used in __do_copy_from_user() of TT mode.
-+		 * XXX tt mode is gone, so maybe this isn't needed any more
-+		 */
-+		address = 0;
-+	}
-+
-+	if (!err)
-+		goto out;
-+	else if (!is_user && arch_fixup(ip, regs))
-+		goto out;
-+
-+	if (!is_user) {
-+		show_regs(container_of(regs, struct pt_regs, regs));
-+		panic("Kernel mode fault at addr 0x%lx, ip 0x%lx",
-+		      address, ip);
-+	}
-+
-+	show_segv_info(regs);
-+
-+	if (err == -EACCES) {
-+		current->thread.arch.faultinfo = fi;
-+		force_sig_fault(SIGBUS, BUS_ADRERR, (void __user *)address);
-+	} else {
-+		WARN_ON_ONCE(err != -EFAULT);
-+		current->thread.arch.faultinfo = fi;
-+		force_sig_fault(SIGSEGV, si_code, (void __user *) address);
-+	}
-+
-+out:
-+	if (regs)
-+		current->thread.segv_regs = NULL;
-+
-+	return 0;
-+}
-+
-+void relay_signal(int sig, struct siginfo *si, struct uml_pt_regs *regs,
-+		  void *mc)
-+{
-+	int code, err;
-+
-+	if (!UPT_IS_USER(regs)) {
-+		if (sig == SIGBUS)
-+			pr_err("Bus error - the host /dev/shm or /tmp mount likely just ran out of space\n");
-+		panic("Kernel mode signal %d", sig);
-+	}
-+
-+	arch_examine_signal(sig, regs);
-+
-+	/* Is the signal layout for the signal known?
-+	 * Signal data must be scrubbed to prevent information leaks.
-+	 */
-+	code = si->si_code;
-+	err = si->si_errno;
-+	if ((err == 0) && (siginfo_layout(sig, code) == SIL_FAULT)) {
-+		struct faultinfo *fi = UPT_FAULTINFO(regs);
-+
-+		current->thread.arch.faultinfo = *fi;
-+		force_sig_fault(sig, code, (void __user *)FAULT_ADDRESS(*fi));
-+	} else {
-+		pr_err("Attempted to relay unknown signal %d (si_code = %d) with errno %d\n",
-+		       sig, code, err);
-+		force_sig(sig);
-+	}
-+}
-+
-+void winch(int sig, struct siginfo *unused_si, struct uml_pt_regs *regs,
-+	   void *mc)
-+{
-+	do_IRQ(WINCH_IRQ, regs);
-+}
-diff --git a/arch/x86/um/nommu/do_syscall_64.c b/arch/x86/um/nommu/do_syscall_64.c
-index 796beb0089fc..48b3d29e2db1 100644
---- a/arch/x86/um/nommu/do_syscall_64.c
-+++ b/arch/x86/um/nommu/do_syscall_64.c
-@@ -48,6 +48,9 @@ __visible void do_syscall_64(struct pt_regs *regs)
- 	/* set fs register to the original host one */
- 	os_x86_arch_prctl(0, ARCH_SET_FS, (void *)host_fs);
  
-+	/* save fp registers */
-+	asm volatile("fxsaveq %0" : "=m"(*(struct _xstate *)regs->regs.fp));
-+
- 	if (likely(syscall < NR_syscalls)) {
- 		PT_REGS_SET_SYSCALL_RETURN(regs,
- 				EXECUTE_SYSCALL(syscall, regs));
-@@ -66,6 +69,9 @@ __visible void do_syscall_64(struct pt_regs *regs)
- 	set_thread_flag(TIF_SIGPENDING);
- 	interrupt_end();
- 
-+	/* restore fp registers */
-+	asm volatile("fxrstorq %0" : : "m"((current->thread.regs.regs.fp)));
-+
- 	/* restore back fs register to userspace configured one */
- 	os_x86_arch_prctl(0, ARCH_SET_FS,
- 		      (void *)(current->thread.regs.regs.gp[FS_BASE
-diff --git a/arch/x86/um/nommu/os-Linux/mcontext.c b/arch/x86/um/nommu/os-Linux/mcontext.c
-index c4ef877d5ea0..955e7d9f4765 100644
---- a/arch/x86/um/nommu/os-Linux/mcontext.c
-+++ b/arch/x86/um/nommu/os-Linux/mcontext.c
-@@ -6,6 +6,17 @@
- #include <sysdep/mcontext.h>
- #include <sysdep/syscalls.h>
- 
-+static void __userspace_relay_signal(void)
-+{
-+	/* XXX: dummy syscall */
-+	__asm__ volatile("call *%0" : : "r"(__kernel_vsyscall), "a"(39) :);
-+}
-+
-+void set_mc_userspace_relay_signal(mcontext_t *mc)
-+{
-+	mc->gregs[REG_RIP] = (unsigned long) __userspace_relay_signal;
-+}
-+
- void set_mc_sigsys_hook(mcontext_t *mc)
- {
- 	mc->gregs[REG_RCX] = mc->gregs[REG_RIP];
-diff --git a/arch/x86/um/shared/sysdep/mcontext.h b/arch/x86/um/shared/sysdep/mcontext.h
-index 15e9ff287021..0efe5ddf95af 100644
---- a/arch/x86/um/shared/sysdep/mcontext.h
-+++ b/arch/x86/um/shared/sysdep/mcontext.h
-@@ -9,6 +9,7 @@
- extern void get_regs_from_mc(struct uml_pt_regs *, mcontext_t *);
- #ifndef CONFIG_MMU
- extern void set_mc_sigsys_hook(mcontext_t *mc);
-+extern void set_mc_userspace_relay_signal(mcontext_t *mc);
- #endif
- 
- #ifdef __i386__
-diff --git a/arch/x86/um/shared/sysdep/ptrace.h b/arch/x86/um/shared/sysdep/ptrace.h
-index 8f7476ff6e95..7d553d9f05be 100644
---- a/arch/x86/um/shared/sysdep/ptrace.h
-+++ b/arch/x86/um/shared/sysdep/ptrace.h
-@@ -65,7 +65,7 @@ struct uml_pt_regs {
- 	int is_user;
- 
- 	/* Dynamically sized FP registers (holds an XSTATE) */
--	unsigned long fp[];
-+	unsigned long fp[] __attribute__((aligned(16)));
- };
- 
- #define EMPTY_UML_PT_REGS { }
+ void setup_hostinfo(char *buf, int len)
 -- 
 2.43.0
 
