@@ -1,214 +1,94 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74AB1E9B3D;
-	Wed, 30 Apr 2025 07:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7BE1E990A;
+	Wed, 30 Apr 2025 07:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745996987; cv=none; b=SNeIUqHJ80Z766GE3ZcBOX/BVVMC4sBJnQ37zYMY+sie1bjg0tVC7y0oukugYC/xsJ+h0O4xQkxq9+lr60QZ5y3Ah9O+gFuZjrALQxI7PmkoxJgzqnC4WcAzZTb41yXWFG0plsE4AEhFpr3OyM6sd+H9tkMWU7HIWLu851/1LAs=
+	t=1745997023; cv=none; b=CIJqrPdifutWnUrPaWg2AfihSaEPm8C/R6/qhUc7JJWE8haz2ghlOhcsfMuwnLfF6NvJWIKZ0Ibsu38Y8ZAob/hhTC6SXp7XBeaJTRaTU2S7Xl3gUHWofgcXqkU3OvNkm1HFigJVibK3zxErQgSRcJy9eyQf7x8mtWDZ9BVJkow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745996987; c=relaxed/simple;
-	bh=DSjUXtPY0IMmDn9ERQ+ei4/8C3se/S9dpG852ERauxs=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=LmV4b7/RpgTKdhiXps2tjbbcRiW9hIX1o3ALUMjmF4PYk4syinP0kfrxYlvP3mttJKTJc0zoGtAEZSKHSjQ4xsppGae7ARKxDt6KfahUHNcAxeaxGrkl55Y1DeE99bJOEfuUCs6iXlgIAVXKNHHZQMef8Yzryh3pE3p0zrFGSE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=LE3wSJ7E; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1745997023; c=relaxed/simple;
+	bh=UlIz3BsJiESUbd0PqNHjGxSN7AGOc5ii+Gj8qpPwqLs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RLlmFm7NnHwiBYjRrmDnIPLrODQ9HIFBTx2fR9FNaT2J178bOSy8ITE+bzhJmX/VwL3mSUART77FF1lf6IlgQ7sM2FSEQtYZfZT9lcFORahjKe14sZcdTeprqcD64nOrJ0lTNvb9h73KfpY63MflyQ8I1UJq8khiGelKY+rnDKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Blt/qIuc; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="LE3wSJ7E"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 7FE3344330;
-	Wed, 30 Apr 2025 07:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1745996982;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=BAJ4WtJKLrVZd0SdvQUHGBiYWBYcBFlgYk+Jn80meNY=;
-	b=LE3wSJ7E+jYPJOEhYQNWr0JYf7yXPPC4n4yFmj2V/V5o5KjbHrzSyyaPlZ5cYbMOdPXzbA
-	gToOWNPm4Z3vMjPGAvR/IFoTTHXWcpzqIEjKE23Th+VcmaRioIonsieCAN4yL1orJlIUyx
-	dtVVqgC1qXtDgQ9hivM04aLEWGzqDjmUrbnnM77Z5f2d0S6/M933/kREF4Q4S2UEHHrKpC
-	cM+UxwpyVxbT+ZRjdvPhkZ6LyA4J8kaQZWlkh5GcUgZN/t/q/w8a5u6WhCubvmSvYao8p9
-	GJv9N1fM6okwxNfdUqbI8jgZzsWT2bXLECwPbKbXOBvgbhkpO3lUm1WE0gdQnQ==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Vladimir Kondratiev
- <vladimir.kondratiev@mobileye.com>, =?utf-8?Q?Th=C3=A9o?= Lebrun
- <theo.lebrun@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
-In-Reply-To: <CAAhV-H6iOwoYCCob6TmFf1boKQHb0=Mim2bWFvZCMfi9Rw5FPQ@mail.gmail.com>
-References: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
- <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
- <CAAhV-H6iOwoYCCob6TmFf1boKQHb0=Mim2bWFvZCMfi9Rw5FPQ@mail.gmail.com>
-Date: Wed, 30 Apr 2025 09:09:40 +0200
-Message-ID: <87wmb2ceh7.fsf@BLaptop.bootlin.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Blt/qIuc"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLZWIJ026622;
+	Wed, 30 Apr 2025 09:10:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	PbfPCoz7K3yyLKhPzzjMngjt4hki3q6Xp4ZTRt1mSNE=; b=Blt/qIucYIVVVjdF
+	ZXX1VYBNOpLeOwvWCmP850xclhl8KSwzXUefbVFvV7gP6aYxTVfJddEsKwJ+EdA3
+	h5AhP3EBcF3QN3bZMT1mBUWb/QTw1p1nvg9RLM1rrtYu0CzjldTqoIVVpL12aA6s
+	l+uIm20CzooNw6RyT1MJ7Vi2GbVUhTshXYRdp8FfJe8estFLaH1F3y8Rg43tq88a
+	JI8emqTt1e7x0i9q3sKy3W7RTU3srgWsCLJLJ7oOhWunaniTIYqibSwaJtVZrsAG
+	yNvShTkfwupYfGkiwj/veUpfd5HFNZUVuXxeX7LnIquylZbSXaVHwN9RDFhbuxye
+	sJuokg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46b6tmsjbr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 09:10:00 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 948604005E;
+	Wed, 30 Apr 2025 09:08:47 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A6E6FA564C6;
+	Wed, 30 Apr 2025 09:06:00 +0200 (CEST)
+Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
+ 2025 09:06:00 +0200
+Message-ID: <ae61407f-81fe-43a6-bdb6-1d1a58ed67de@foss.st.com>
+Date: Wed, 30 Apr 2025 09:05:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeitdeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhffkfggtgfgsehtqhertddttdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepueetgfffueeivdeitdeuhedtteffueffjedthfevvdegvdevgeduhfektdfhleeunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmegvrgegfhemieguiegvmeeifheitgemheefudgunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmegvrgegfhemieguiegvmeeifheitgemheefudgupdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeelpdhrtghpthhtoheptghhvghnhhhurggtrghisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrt
- ghpthhtohepjhhirgiguhhnrdihrghnghesfhhlhihgohgrthdrtghomhdprhgtphhtthhopehvlhgrughimhhirhdrkhhonhgurhgrthhivghvsehmohgsihhlvgihvgdrtghomhdprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-GND-Sasl: gregory.clement@bootlin.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ARM: dts: st: stm32: Align wifi node name with bindings
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Christoph
+ Niedermaier <cniedermaier@dh-electronics.com>,
+        Marek Vasut <marex@denx.de>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@dh-electronics.com>
+References: <20250424084706.105049-1-krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
+In-Reply-To: <20250424084706.105049-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
 
-Hello Huacai,
+Hi Krzysztof
 
-> Hi, Gregory,
->
-> On Sun, Apr 27, 2025 at 6:13=E2=80=AFPM Huacai Chen <chenhuacai@kernel.or=
-g> wrote:
->>
->> Hi, Gregory and Thomas,
->>
->> I'm sorry I'm late, but I have some questions about this patch.
->>
->> On Mon, Apr 14, 2025 at 3:12=E2=80=AFAM Gregory CLEMENT
->> <gregory.clement@bootlin.com> wrote:
->> >
->> > Added support for starting CPUs in parallel on EyeQ to speed up boot t=
-ime.
->> >
->> > On EyeQ5, booting 8 CPUs is now ~90ms faster.
->> > On EyeQ6, booting 32 CPUs is now ~650ms faster.
->> >
->> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> > ---
->> > Hello,
->> >
->> > This patch allows CPUs to start in parallel. It has been tested on
->> > EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. These
->> > systems use CPS to support SMP.
->> >
->> > As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
->> > faster.
->> >
->> > Currently, this support is only for EyeQ SoC. However, it should also
->> > work for other CPUs using CPS. I am less sure about MT ASE support,
->> > but this patch can be a good starting point. If anyone wants to add
->> > support for other systems, I can share some ideas, especially for the
->> > MIPS_GENERIC setup that needs to handle both types of SMP setups.
->> >
-[...]
->> >   * A logical cpu mask containing only one VPE per core to
->> > @@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
->> >
->> >  cpumask_t cpu_coherent_mask;
->> >
->> > +struct cpumask __cpu_primary_thread_mask __read_mostly;
->> > +
->> >  unsigned int smp_max_threads __initdata =3D UINT_MAX;
->> >
->> >  static int __init early_nosmt(char *s)
->> > @@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
->> >         set_cpu_core_map(cpu);
->> >
->> >         cpumask_set_cpu(cpu, &cpu_coherent_mask);
->> > +#ifdef CONFIG_HOTPLUG_PARALLEL
->> > +       cpuhp_ap_sync_alive();
->> This is a "synchronization point" due to the description from commit
->> 9244724fbf8ab394a7210e8e93bf037abc, which means things are parallel
->> before this point and serialized after this point.
->>
->> But unfortunately, set_cpu_sibling_map() and set_cpu_core_map() cannot
->> be executed in parallel. Maybe you haven't observed problems, but in
->> theory it's not correct.
+On 4/24/25 10:47, Krzysztof Kozlowski wrote:
+> Since commit 3c3606793f7e ("dt-bindings: wireless: bcm4329-fmac: Use
+> wireless-controller.yaml schema"), bindings expect 'wifi' as node name:
+> 
+>    stm32h750i-art-pi.dtb: bcrmf@1: $nodename:0: 'bcrmf@1' does not match '^wifi(@.*)?$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> ---
 
-I am working on it. To address your remark, I have a few options that I
-evaluate.
+Applied on stm32-next.
 
-> I don't know whether you have done reboot tests (for ~1000 times),
-> Jiaxun Yang submitted similar patches for LoongArch [1], but during
-> reboot tests we encountered problems that I have described in my
-> previous reply.
->
-> [1] https://lore.kernel.org/loongarch/20240716-loongarch-hotplug-v3-0-af5=
-9b3bb35c8@flygoat.com/
-
-I saw that series and I wondered why the last patch was not merged.
-
-I performed around 100 tests so far without encountering any issues; I
-plan to automate them further to gather more data.
-
-Gregpory
-
->
-> Huacai
->
->>
->> Huacai
->>
->> > +#endif
->> >         notify_cpu_starting(cpu);
->> >
->> > +#ifndef CONFIG_HOTPLUG_PARALLEL
->> >         /* Notify boot CPU that we're starting & ready to sync counter=
-s */
->> >         complete(&cpu_starting);
->> > +#endif
->> >
->> >         synchronise_count_slave(cpu);
->> >
->> > @@ -386,11 +395,13 @@ asmlinkage void start_secondary(void)
->> >
->> >         calculate_cpu_foreign_map();
->> >
->> > +#ifndef CONFIG_HOTPLUG_PARALLEL
->> >         /*
->> >          * Notify boot CPU that we're up & online and it can safely re=
-turn
->> >          * from __cpu_up
->> >          */
->> >         complete(&cpu_running);
->> > +#endif
->> >
->> >         /*
->> >          * irq will be enabled in ->smp_finish(), enabling it too early
->> > @@ -447,6 +458,12 @@ void __init smp_prepare_boot_cpu(void)
->> >         set_cpu_online(0, true);
->> >  }
->> >
->> > +#ifdef CONFIG_HOTPLUG_PARALLEL
->> > +int arch_cpuhp_kick_ap_alive(unsigned int cpu, struct task_struct *ti=
-dle)
->> > +{
->> > +       return mp_ops->boot_secondary(cpu, tidle);
->> > +}
->> > +#else
->> >  int __cpu_up(unsigned int cpu, struct task_struct *tidle)
->> >  {
->> >         int err;
->> > @@ -466,6 +483,7 @@ int __cpu_up(unsigned int cpu, struct task_struct =
-*tidle)
->> >         wait_for_completion(&cpu_running);
->> >         return 0;
->> >  }
->> > +#endif
->> >
->> >  #ifdef CONFIG_PROFILING
->> >  /* Not really SMP stuff ... */
->> >
->> > ---
->> > base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
->> > change-id: 20250411-parallel-cpu-bringup-78999a9235ea
->> >
->> > Best regards,
->> > --
->> > Gr=C3=A9gory CLEMENT, Bootlin
->> > Embedded Linux and Kernel engineering
->> > https://bootlin.com
->> >
->> >
-
---=20
-Gr=C3=A9gory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+thanks
