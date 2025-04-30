@@ -1,92 +1,88 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA642111;
-	Wed, 30 Apr 2025 02:47:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6632017BB6
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:52:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745981268; cv=none; b=A9P+YX3TjDkueJNLw2J5ez/KlDVmROWWEI3Ac3rDUihzdwoUBlo2ys9wMmwvkI33/fpE3+YvhhxKMK3DmTmL2ozFmONTkSZXJ9WoY/WyNINMtFKyOblUnAWHBg2eXQ2ujQyQPYAfoiiR3eohmnvDyHx60xZMqbbx18N/P8ZoAis=
+	t=1745981536; cv=none; b=bWc/qvJvTkuUz547CYNAJs+i/XGk5Ij/d+GTkat7aUeBq+DkXtJJ27wz49+zeTln8gnB05l8I3x/DZtmWztLkksW17AraQ9X4OmDyubzbWJhb+7U2HGy4zgtJ7xd/34uk0QC+oyR7Chrb92RQMi9+Tj23gVFsYK7QaTzGaYTJ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745981268; c=relaxed/simple;
-	bh=+Ob5i8Dn7eF+x4miDHXxuDe3afBUibimhKURbRd+Lic=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TKcCOO9+8BW3h2syFISz5AYROlq25Mju9GvgSiI9UktvVodkSSEVCOltoSDE8pFviu3lUORG+imUE6jHuh8GjUgRbWjA+C6HC4GTmCSgkQ/RFwjWwhZRNo9Q7OqAOeE673Pq6b0BkwfYPRemH9+5DKi32N6vF00SeofpBzuNJhw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=qvKIYmzq; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745981536; c=relaxed/simple;
+	bh=wRx45Eo25zW0PBYGNVMcwlHsTkB1kkO3CIiiZVB+M4U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UbDHbonfe8pvhkDDdAbJpCchFlwZ4rS4jeXA60m7KDp4Dc2+UbwTzy1KR8t/x2uWzjJNEetifiihoxlXD3o+HFbCBdO4mST0Icc4Mbt46qJPjnJH72/FYjkhKG0P3AVsWWal9E+GZCoSg0m+CuMpF0bgD/VdVE+RQe0K++iZFN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dy7+CHIh; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="qvKIYmzq"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:To:From:Date:Sender:Reply-To:Cc:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=dinu/IcYpDONett6L65YxigVMJYuWf4ibUzIRHPzHAw=; b=qvKIYmzqbInh9gBZMfH+8X0whE
-	qUkpzTfCxw9xC2P5jineD6QJ2m8LzDtnc9B3uf8fDjVnhqn58HRkMZtJEvqbTi/9tervXuMTAGw6x
-	suBN/jUCd+4VzFUPfGkAc8+WOfeOx6ta4vzEyqKGTthNyPljl9UVYDl9E7gxfhiVAUXUDlQp+fdXr
-	LABAdWp0aciRzG6Q0h/Hsul6Sj/kX67DYnouk/HA8+Rceb8MZuKHAJbG/Ih45T5fTdxj4gWUNAgoY
-	yBJZ6PfYoKLnKCxTFqdk5exfpAPsLOGfCfxINxEXeyfEJHB+1g4OI78MSh4RG9uJV4Jz9vBYklhuc
-	2aG57nbg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u9xU2-00290q-2o;
-	Wed, 30 Apr 2025 10:47:40 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 30 Apr 2025 10:47:38 +0800
-Date: Wed, 30 Apr 2025 10:47:38 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: [GIT PULL] Crypto Fixes for 6.15
-Message-ID: <aBGPSpJcLRrwiutd@gondor.apana.org.au>
-References: <ZZ3F/Pp1pxkdqfiD@gondor.apana.org.au>
- <ZbstBewmaIfrFocE@gondor.apana.org.au>
- <ZgFIP3x1w294DIxQ@gondor.apana.org.au>
- <ZkrC8u1NmwpldTOH@gondor.apana.org.au>
- <ZvDbn6lSNdWG9P6f@gondor.apana.org.au>
- <Z11ODNgZwlA9vhfx@gondor.apana.org.au>
- <Z-ofAGzvFfuGucld@gondor.apana.org.au>
- <Z_CUFE0pA3l6IwfC@gondor.apana.org.au>
- <Z_89K7tSzQVKRqr6@gondor.apana.org.au>
- <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dy7+CHIh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745981534; x=1777517534;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=wRx45Eo25zW0PBYGNVMcwlHsTkB1kkO3CIiiZVB+M4U=;
+  b=dy7+CHIhrWN4YUSSuW3VAvPoqvmOzPH40tG3jrGU4E9S+HMBr4vpZFiz
+   bp3kkGeHzQccN90Yq2UEh3NQLUJUhNulnHnuGkAXmHZ2rC30bROmI8NL1
+   DDYYU8MKJF//fxYyzVBG5nzboILIH/h+ChaYBznyZ2aQHW9eZ15m7snoe
+   uoKs1CWcmWWRL+shfX8S7puNCBXv90k+f2+jRlMhV3UL3WDVHYwQj44Gc
+   DhLvzoq1Y4IQw2JiJDMjaL+KKx4wLK6D/3qUOr1jsAIKHr53+VsdQlG74
+   oka8vy/V6S11s/7oGixBse5nRhYlgsVj3DyURHlh4Bw1Lh6l0zzfIqFOg
+   A==;
+X-CSE-ConnectionGUID: gG1AsCwaTHaiTF3oJn5NIA==
+X-CSE-MsgGUID: 9F3cw2vLT5axyElM1gkFTg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47764412"
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="47764412"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 19:52:13 -0700
+X-CSE-ConnectionGUID: pPBQKa81RpKUTSUCq3yoSQ==
+X-CSE-MsgGUID: hBbuFPGbQjqdAgHmQo8CJw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="133710817"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa009.jf.intel.com with ESMTP; 29 Apr 2025 19:52:11 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH 1/1] iommu: Cleanup comments for dev_enable/disable_feat
+Date: Wed, 30 Apr 2025 10:52:49 +0800
+Message-ID: <20250430025249.2371751-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAn_NWZjdX-wYHxR@gondor.apana.org.au>
+Content-Transfer-Encoding: 8bit
 
-Hi Linus:
+The dev_enable/disable_feat ops have been removed by commit
+<f984fb09e60e> ("iommu: Remove iommu_dev_enable/disable_feature()").
+Cleanup the comments to make the code clean.
 
-The following changes since commit 8006aff15516a170640239c5a8e6696c0ba18d8e:
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+---
+ include/linux/iommu.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-  crypto: atmel-sha204a - Set hwrng quality to lowest possible (2025-04-23 09:32:57 +0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6.git tags/v6.15-p6
-
-for you to fetch changes up to a32f1923c6d6e9e727d00558a15ec0af6639de19:
-
-  crypto: scompress - increment scomp_scratch_users when already allocated (2025-04-25 10:33:30 +0800)
-
-----------------------------------------------------------------
-This push fixes a regression in scompress.
-----------------------------------------------------------------
-
-Sabrina Dubroca (1):
-      crypto: scompress - increment scomp_scratch_users when already allocated
-
- crypto/scompress.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
-
-Thanks,
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 1785caee5977..36df38c2d3a9 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -590,8 +590,6 @@ iommu_copy_struct_from_full_user_array(void *kdst, size_t kdst_entry_size,
+  * @of_xlate: add OF master IDs to iommu grouping
+  * @is_attach_deferred: Check if domain attach should be deferred from iommu
+  *                      driver init to device driver init (default no)
+- * @dev_enable/disable_feat: per device entries to enable/disable
+- *                               iommu specific features.
+  * @page_response: handle page request response
+  * @def_domain_type: device default domain type, return value:
+  *		- IOMMU_DOMAIN_IDENTITY: must use an identity domain
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.43.0
+
