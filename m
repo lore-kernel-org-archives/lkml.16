@@ -1,209 +1,168 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2030413FEE;
-	Wed, 30 Apr 2025 06:42:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745995372; cv=fail; b=EUTlrQlf/eZLnAe5Tdk0GhpLblP6sejoave/5YFKEl7jGTR34uE+poeFFwisjum4YbG+EPbByRrF8xUK4jCoGPQ752zcXpY1Yz62uBBmSwNOBiaLArKNzI+PmwVBEu03RBC1Z6yiuOZPw0nSj9SBQdqZ+E7eLfmzCrWOOb1lAWk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745995372; c=relaxed/simple;
-	bh=JX7d7B+qkXIF1JzMIXySlqf0oIuVE1WMSoyHPGl6Diw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bsJX1qYtbOES16/7ryEoXaSXQ9Ql7huL3+fZE/GWTKfhhFUjhas6xTacxwHqPxfhLqvD2hJTibDpOsA/d0FWAC6VFovTPix02A0RJSWuy1uI+uiD5e/X4GhK6eoPmBkWzII0TOfSH+v8/GmPBEDG1zJFQIZkkXBlZsCzJ9Cpvp4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=B5cs0xpp; arc=fail smtp.client-ip=40.107.244.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F321E25F8
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:43:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745995396; cv=none; b=fZxFS+CePsCmI8O8euRnI6U/4t9SvUeP+4NA9de3vCDtZT+rK/XnRobyL4NvW3rVpFPQZo4QzVUBLCefwh1HlXCHBir4r+EIsA7iIfwZ/wmq1zHKEsVaEEs70/MBK0XrR5Qo/6hlaB3IlELIj1SGCU14hf6GLA8Jb9mHGpSgRG4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745995396; c=relaxed/simple;
+	bh=/3qRkQXwNZYTsdB4giOI73esm+P38GQjfF5hmhLMGGY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckb9UltAQUSsS/7Z+zz7lJRf0VHxyaWSqbn7/GNy4RvPB7b0/tKyR/Czwgxu4SD37alC6ivSrEP/TXn5VYCvic1rqWLYvc1mmpBgBNkbJ5+RLxtzoYEpBu4Dcyd0LnEQ2TboPre0ZtFP1X3iJ7/ASHZUyE+OSYBKrncS/crRHvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nKrS5p1U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RDnnzwI9; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nKrS5p1U; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RDnnzwI9; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="B5cs0xpp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fTuTSYlTp/8PFiHr+wEA7Cp7FOd3K35Pamwxhhlno9gYsgKEIyxfFTt43HtSqSTrKLanRZbYpVAT5SA88kqlOHhz/qWgDUioRUqkSC33wtx8ENtk9fttEaufiD3nP0F0Wh4xRGhHrzQc3Xgm0Rit7xz5jVbL/75mAZTVk95wkfckUBQqbf+R0hk1RSCmD59luX/p/HLwMauPkjAHnRV9wcXijDbIY7DhFpcOUqCm1SeRBhuTEK8RzYdWcwXeyZvmti30fv71S8TaqtOaAoPYsduL14gmt7/37uvR55MGYtI8msapaYsfDEzyo0gottaTlgQgPKbAlZ/GTLHkxpqw5A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=GkhYSPxPJmd6EAIw7GWsDwb49gfqbxjJFtxMaaQD4Pc=;
- b=f8OazHLy+9LiDNSMGO0GFlBCTe0tZ+D0vTce2CTKYAGD5QTPEiJKR4FaLxTTJNFYLvR2Bhjx4JpeweDUT+ecYW9xFhLv+UPxpGv85vIRkqbgjnvXbhRuDJtNk56fADRH5/XMuvR0aKW5JzdQ7NBJYooD0VSucjO6CoitcXhr1Q2iH9JbnFl6xpAkCA+OcaEZQ4o4scIKL6Mlggv7baA9EhalRAlM0fFLw7cA31xxMP0pnYsqEYURNKwEsyzeqKrwQjgu4GlFfS7QyVRC1cQgqCwHo+jc6vUp5jlyrwWI8CEDmqoY/xDNMmEcQqiee5f0Lva28ApKUwTzI4Y9CSvrWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=GkhYSPxPJmd6EAIw7GWsDwb49gfqbxjJFtxMaaQD4Pc=;
- b=B5cs0xppyJ52mHitNBFKU/k/ViCZumgao8g55GGBdqAdFMsfq55+7x/E/0fkk0KnGiJ8WZwTbcOcMsMr0JfgtkYScZBOy2/L/CQTcvTD8wxO+wGcMBmmeKi84WWw1402ocA4t7nubBAs7JFFxs0VfdIIAEzPvZe7VfBIYUACxzE=
-Received: from MW4PR04CA0269.namprd04.prod.outlook.com (2603:10b6:303:88::34)
- by BY5PR12MB4179.namprd12.prod.outlook.com (2603:10b6:a03:211::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 06:42:48 +0000
-Received: from SJ1PEPF00002311.namprd03.prod.outlook.com
- (2603:10b6:303:88:cafe::43) by MW4PR04CA0269.outlook.office365.com
- (2603:10b6:303:88::34) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Wed,
- 30 Apr 2025 06:42:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002311.mail.protection.outlook.com (10.167.242.165) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 06:42:47 +0000
-Received: from tapi.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 01:42:28 -0500
-From: Swapnil Sapkal <swapnil.sapkal@amd.com>
-To: <mario.limonciello@amd.com>, <rafael@kernel.org>, <gautham.shenoy@amd.com>
-CC: <ray.huang@amd.com>, <dhananjay.ugwekar@amd.com>, <perry.yuan@amd.com>,
-	<viresh.kumar@linaro.org>, <linux-pm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH] amd-pstate-ut: Reset amd-pstate driver mode after running selftests
-Date: Wed, 30 Apr 2025 06:42:06 +0000
-Message-ID: <20250430064206.7402-1-swapnil.sapkal@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nKrS5p1U";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RDnnzwI9";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nKrS5p1U";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RDnnzwI9"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0A8451F7BF;
+	Wed, 30 Apr 2025 06:43:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745995393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
+	b=nKrS5p1UI2IcgjJDkMdXYB9MPnZaUQRPcO+n6hy0/2sFRTMpzSyi1B36y8eNKJVGc0x+R4
+	zJqYrxVvHMTItgLJBZY93ABtaCK8RvLsuBNheC3STArVpYKpmUUVOJWSb0D1+MQjoExAHc
+	Quq0uJLjqc9FN+S/SYdwEFrUjiWPmpw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745995393;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
+	b=RDnnzwI95B7WovRCDRFUsuozJrbba4W472Ph++Eft2hZ70evljDIMgYRioTDmg52CNFTVp
+	QlduB0C6GYpEasCQ==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745995393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
+	b=nKrS5p1UI2IcgjJDkMdXYB9MPnZaUQRPcO+n6hy0/2sFRTMpzSyi1B36y8eNKJVGc0x+R4
+	zJqYrxVvHMTItgLJBZY93ABtaCK8RvLsuBNheC3STArVpYKpmUUVOJWSb0D1+MQjoExAHc
+	Quq0uJLjqc9FN+S/SYdwEFrUjiWPmpw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745995393;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c07lb+O2RrNYtXRjvdK15QLO5xAGy7hLNxPxDwDrnQg=;
+	b=RDnnzwI95B7WovRCDRFUsuozJrbba4W472Ph++Eft2hZ70evljDIMgYRioTDmg52CNFTVp
+	QlduB0C6GYpEasCQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E288713A25;
+	Wed, 30 Apr 2025 06:43:12 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id D8DsNIDGEWiebgAAD6G6ig
+	(envelope-from <dwagner@suse.de>); Wed, 30 Apr 2025 06:43:12 +0000
+Date: Wed, 30 Apr 2025 08:43:04 +0200
+From: Daniel Wagner <dwagner@suse.de>
+To: Keith Busch <kbusch@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Hannes Reinecke <hare@suse.de>, 
+	Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+	Sagi Grimberg <sagi@grimberg.me>, James Smart <james.smart@broadcom.com>, 
+	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>, linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
+Message-ID: <8121b8d6-2b30-4086-b2fb-bce354f203dc@flourine.local>
+References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
+ <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
+ <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
+ <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
+ <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de>
+ <aBEW4W40ZelIXfs2@kbusch-mbp>
+ <253e0551-d4d7-4ffe-8842-daecf1f6c753@roeck-us.net>
+ <aBEdkUky_-bfgISv@kbusch-mbp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002311:EE_|BY5PR12MB4179:EE_
-X-MS-Office365-Filtering-Correlation-Id: d440df3a-160c-4aab-f8fa-08dd87b2385b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?FPfCXoZkmixovr3DUR1jc+whLPAk985e9AaGG0DXuVvv023mJUSPT4ewlyXi?=
- =?us-ascii?Q?mZtI9gurvTz0IDpdiZwuPPpxb9W122AI19U8GYPiVaZ8o3MvWCwhcmmWlqvb?=
- =?us-ascii?Q?pwwoO9ljTVPe+yrF7MzoQA7JK3sBF+2bq3/TyGgGT0BtNvQ7r9Qa0mhbbyPn?=
- =?us-ascii?Q?1klizFmQ15N6Wp16zpVD/wAEArWhU7qC6FnUBxrMstpaq7FegR+kYK7Pin4A?=
- =?us-ascii?Q?XA/3zpWvPBW8flFzsrGjSTljf4W/gWVjorpRbO13G8Siovh6XK/wklBpYDQt?=
- =?us-ascii?Q?lxnSA2UR9atuaupzuizgMcNCLfeuKapBkNAM3/tFrZv2i0lS/BqV6krf+V9B?=
- =?us-ascii?Q?5zHnA7JyeD72+NHqcUGnJvsSFwiyjVOF0+z5Al6MLKOcRUne4JavVHJrd2vv?=
- =?us-ascii?Q?P3K5CkPHxpSdcsnopscW2bEUdo2TL+CY6gnH3ctDe1FtjwJtRFtdHa4UaZ0U?=
- =?us-ascii?Q?tcuqQk0z+9HCFcskJE7rh8uNQHEwYv/lBUOQtD98aQyYo5kWWtKLzuV9WWQd?=
- =?us-ascii?Q?pl1eqqGW4ha6IH7hyTA555puMz816urMU3Iev54QyVXQnX785xnnYF6rTuUk?=
- =?us-ascii?Q?5sJtSn07Oxb3GHycPVyeKId7zf2bRcgMfW8NoIFy83UvF0ob0noIWuQRB0Hs?=
- =?us-ascii?Q?ODUySmG8uCjWob8zZ+K70L3+cjAU0dp4z24XesB1fR2lKV8G1igwhm3TJ/NT?=
- =?us-ascii?Q?zIMOrQh5Nxmyyy16Jv1DGqcEVtLsOvCSODPhKddPYvhakm4OmoerqVNZE/s+?=
- =?us-ascii?Q?HaX6hjN/eOjANjBRwzWcdgT3CxFiuAGZDWzzqIsC2973TXRMXOmgnxD3rTmC?=
- =?us-ascii?Q?5vlVZJDaTr9wYENw1YcnF1t9moGpjb1lWO8q27p63TPfE9tDIHZmDYtEyx3t?=
- =?us-ascii?Q?c65uzJTglk4oSQsjlqtGlJIce/ZoYHl1pbDBdm5uJP5/dPnmLam5BDXmNk4X?=
- =?us-ascii?Q?U9NZ+O9IZsswxj7QGlgaz60zknmJIDv9oM53lHAnKycq9ormyZ1G74AWA1X+?=
- =?us-ascii?Q?BBFhpgmwELTqim3frRETv0qNJB2h2j66b/X/SSrF7ICOy9JzwlIiIfm51azu?=
- =?us-ascii?Q?dlLD0FYnWwQYcixpa+mpNSJhbNKtq9OI63YU7Z4iOm1eklwztEPUbUs+oPkH?=
- =?us-ascii?Q?YVe0Vbr0s0LInhXmBJpU25oSDeIsabq2uoiJCKKul8HxXdd7inCVDuYU9LNW?=
- =?us-ascii?Q?2YXRphmISkKI33BbIE4EdLNxA/vsU/9B0+b5Dkk+RWs49J4rLLTvkrbPXK6J?=
- =?us-ascii?Q?O3b/XbwvbkDonvt7EIlF2pw2diEPLnmu5fcMM8b3jhxenK4mMb9nhBGu+2oC?=
- =?us-ascii?Q?Aeg8AFVlc0qJ/nZ8Zrbz3GDKgZc9g1HXQJoKDhXnywzWPwcvKo4Rqm14EUdH?=
- =?us-ascii?Q?E7Jl6hRuxqF6zVR2Eu5sRDjoeLzGKpy4VivptfbeCKarrmvfYH6KnvlmGrl5?=
- =?us-ascii?Q?sU2V6LvFxK0x4+BeB1+rxsC3gLkKnxDsFO917bNkU5vqvrAre4XZfWKjH+60?=
- =?us-ascii?Q?zbrg0wOukVqpHwFBuutu7vYOQMW+x6iOYUV7?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 06:42:47.4442
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d440df3a-160c-4aab-f8fa-08dd87b2385b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002311.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4179
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBEdkUky_-bfgISv@kbusch-mbp>
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	TO_DN_SOME(0.00)[]
+X-Spam-Score: -4.30
+X-Spam-Flag: NO
 
-In amd-pstate-ut, one of the basic test is to switch between all
-possible mode combinations. After running this test the mode of the
-amd-pstate driver is active mode. Store and reset the mode to its original
-state.
+On Tue, Apr 29, 2025 at 11:42:25AM -0700, Keith Busch wrote:
+> On Tue, Apr 29, 2025 at 11:23:25AM -0700, Guenter Roeck wrote:
+> > On 4/29/25 11:13, Keith Busch wrote:
+> > > On Mon, Apr 28, 2025 at 03:21:18PM +0200, Hannes Reinecke wrote:
+> > > > > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+> > > > > index b502ac07483b..d3c4eacf607f 100644
+> > > > > --- a/drivers/nvme/host/core.c
+> > > > > +++ b/drivers/nvme/host/core.c
+> > > > > @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
+> > > > >                   msleep(100);
+> > > > >           }
+> > > > > 
+> > > > > -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+> > > > > +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
+> > > > > +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
+> > > > >                   return;
+> > > > > 
+> > > > >           nvme_unquiesce_io_queues(ctrl);
+> > > > 
+> > > > I would rather have a separate state for firmware activation.
+> > > > (Ab-)using the 'RESETTING' state here has direct implications
+> > > > with the error handler, as for the error handler 'RESETTING'
+> > > > means that the error handler has been scheduled.
+> > > > Which is not true for firmware activation.
+> > > 
+> > > But the point of having firmware activation set the state to RESETTING
+> > > was to fence off error handling from trying to schedule a real reset.
+> > > The fw activation work schedules its own recovery if it times out, but
+> > > we don't want any other recovery action or user requested resets to
+> > > proceed while an activation is still pending.
+> > 
+> > Not only that; there are various checks against NVME_CTRL_RESETTING
+> > sprinkled through the code. What is the impact of introducing a new state
+> > without handling all those checks ?
+> 
+> Good point, bad things will happen if these checks are not updated to
+> know about the new state. For example, nvme-pci will attempt aborting IO
+> or disabling the controller on a timeout instead of restarting the timer
+> as desired.
+> 
+> Can we just revert the commit that prevented the RESETTING -> LIVE
+> transtion for now?
 
-Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-Signed-off-by: Swapnil Sapkal <swapnil.sapkal@amd.com>
----
- drivers/cpufreq/amd-pstate-ut.c | 19 ++++++++++++-------
- drivers/cpufreq/amd-pstate.c    |  6 ++++++
- drivers/cpufreq/amd-pstate.h    |  1 +
- 3 files changed, 19 insertions(+), 7 deletions(-)
+Unfortunately, it will break the FC error handling again(*). The
+simplest fix is right above, add the transition from RESETTING to
+CONNECTING and then to LIVE, IMO.
 
-diff --git a/drivers/cpufreq/amd-pstate-ut.c b/drivers/cpufreq/amd-pstate-ut.c
-index e671bc7d1550..30835d0e4994 100644
---- a/drivers/cpufreq/amd-pstate-ut.c
-+++ b/drivers/cpufreq/amd-pstate-ut.c
-@@ -242,6 +242,8 @@ static int amd_pstate_set_mode(enum amd_pstate_mode mode)
- static int amd_pstate_ut_check_driver(u32 index)
- {
- 	enum amd_pstate_mode mode1, mode2 = AMD_PSTATE_DISABLE;
-+	enum amd_pstate_mode orig_mode = amd_pstate_get_status();
-+	int ret;
- 
- 	for (mode1 = AMD_PSTATE_DISABLE; mode1 < AMD_PSTATE_MAX; mode1++) {
- 		int ret = amd_pstate_set_mode(mode1);
-@@ -251,16 +253,19 @@ static int amd_pstate_ut_check_driver(u32 index)
- 			if (mode1 == mode2)
- 				continue;
- 			ret = amd_pstate_set_mode(mode2);
--			if (ret) {
--				pr_err("%s: failed to update status for %s->%s\n", __func__,
--					amd_pstate_get_mode_string(mode1),
--					amd_pstate_get_mode_string(mode2));
--				return ret;
--			}
-+			if (ret)
-+				goto out;
- 		}
- 	}
- 
--	return 0;
-+out:
-+	if (ret)
-+		pr_warn("%s: failed to update status for %s->%s: %d\n", __func__,
-+			amd_pstate_get_mode_string(mode1),
-+			amd_pstate_get_mode_string(mode2), ret);
-+
-+	amd_pstate_set_mode(orig_mode);
-+	return ret;
- }
- 
- static int __init amd_pstate_ut_init(void)
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index b961f3a3b580..af08049fe96f 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -1305,6 +1305,12 @@ static ssize_t amd_pstate_show_status(char *buf)
- 	return sysfs_emit(buf, "%s\n", amd_pstate_mode_string[cppc_state]);
- }
- 
-+int amd_pstate_get_status(void)
-+{
-+	return cppc_state;
-+}
-+EXPORT_SYMBOL_GPL(amd_pstate_get_status);
-+
- int amd_pstate_update_status(const char *buf, size_t size)
- {
- 	int mode_idx;
-diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
-index fbe1c08d3f06..512d5d97806e 100644
---- a/drivers/cpufreq/amd-pstate.h
-+++ b/drivers/cpufreq/amd-pstate.h
-@@ -119,6 +119,7 @@ enum amd_pstate_mode {
- 	AMD_PSTATE_MAX,
- };
- const char *amd_pstate_get_mode_string(enum amd_pstate_mode mode);
-+int amd_pstate_get_status(void);
- int amd_pstate_update_status(const char *buf, size_t size);
- 
- #endif /* _LINUX_AMD_PSTATE_H */
--- 
-2.43.0
-
+(*) ee59e3820ca9 ("nvme-fc: do not ignore connectivity loss during connecting")
+    f13409bb3f91 ("nvme-fc: rely on state transitions to handle connectivity loss")
