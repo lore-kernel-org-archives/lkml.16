@@ -1,195 +1,197 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 648ED21325D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:52:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D64235043
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006765; cv=none; b=jGATEqigmG/Z8v72n+I9ek/J0497PT+m9aucB3Vga1Hu/oQh3/5Y8ZVcFUs0bxWfdGCZOalxUUmcGk6aDf9qXt8r+C2dtDWF3AnQ8Plyu1XcGATQFH+YC8j/kUMVNKOVTZDU8SiXd1xfdvToC3BLsoo7exWBRIrNzAqefZffXXA=
+	t=1746006793; cv=none; b=EeLg1sQArleYIYmyLEio8ZHR7CjyNXcK2s4/fUCNTkRSskh6CPod0gxCkWmXeROn+dtnL3eCsT4cN2z2hjJ7+1R20hUFIFfClFKIVJgI0Uvy/X6MAoPWMvj6dhzDblqSMXCI5tDmLCmBMhClXAL8PNBqoAUkJo4ec4ZYJT/sBms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006765; c=relaxed/simple;
-	bh=oc9dl2byWPPO3Vq6aQgy6QzXniyIDx/pj6vtzDnjH5E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k6KNE6wv6HCR4DCTl/b3yvO9xE2Bleg/qqDveTBnmoeOGagPl3yiQ8KMyDFlFctmEURl78Vi032kdAsEzxKj0k8/psFguu/+0gSvv7GJEq8ztdmXKn3L/ooaJk0cAbyGbB1R6+oPg5ANtJSXk4zld9XMjH6TEQRAtokPWmeduEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Bgh+Q5/j; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746006793; c=relaxed/simple;
+	bh=fe5blfcHEV6p6DqK9EinGD8sn4r9SggUaqP0hbUf4K8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=N4WbTapRMtxFdVmMuCwGUU8b0Pg2LTd+EnRw/+dty4u/OI/0Obts4LjR2ggshcJmkuJNTKTgDqSTEN+6zLRmcg95wq+z6lKxzjcozY99oXU5llgQ+q8CsCIdDXvVbJvq6gEvtVuIDAoPJ5R26afnCZlWZbEkaw5n6r8Ef9zra1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SGBFb8N4; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Bgh+Q5/j"
-Message-ID: <86889fb9-1d6f-4d6c-8ea8-3fbf2389dae9@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746006759;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=HNorE4s0n1wq6lXGuCVhLcwvXE+qiMHLcQOcVIjIMR8=;
-	b=Bgh+Q5/jFJZi5Rm1sSqdGNz+pCkAhllDI2GZhw+GaE3buzO67DQ5NmNDoTWWK7VySDjmHl
-	XkIY3Q7qUchpJfkPuAWE4qCt2T7Ged/oaeruewgc/1crwYLbzJEyBk6i8hNaJh+o0MR2xm
-	4Em4A1/tZMjy492JjK5Uy/5qnWpKAks=
-Date: Wed, 30 Apr 2025 10:52:24 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGBFb8N4"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso5119169f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:53:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746006790; x=1746611590; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQ33tAShH1B9qY7Mvbeo2mk5ktxHALQMW++e/cV2rKM=;
+        b=SGBFb8N4DRyBNiJrBuRtDEGlgeUBRJfqdeZ7WogzDe6qdqCNggOONmkF6n1CEuvgwv
+         FNExrUISxCbTeS5hEOPyYxBO+lzy3BsMJsKxBTILbtSIqIUgYeJIr4Sx94LnN1RN7YUT
+         8+Y3gUcqaFgdzAIqiCuZquGkXLAiULCUxFEj/gwOrTmJZwgxbyGzsHuJDqGBs9QbtZ84
+         xLa122gGfEoZR5qRI81zlJp9gquDsRMLzdC6JRkhH7Sfb8nxOhEMdw4PNctExyjLrHcw
+         aAlfsGK97MuEiXDPHC+U7uEakTZu0D7c9VPoF1BET813E070Cs7Vypp0nbnJkaYuTJjL
+         Lz0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746006790; x=1746611590;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NQ33tAShH1B9qY7Mvbeo2mk5ktxHALQMW++e/cV2rKM=;
+        b=ld1skg5PbTQ+VHGodYjO0rr0Wl2VVxy/bP63EJKhMMjumq0IJUP7Y3utD3QpOAj/ex
+         O9tnudiw+UmIqmtyZ7s7RY4fzHrHAVqaFAb1dQ3EmTwoAh/VwZYCgzmMe1GhhyWhrnWE
+         htcn3Qfsr8aySuTCxSLJnKc3Jh3Iiz9SJ6YRw2HkPvnEsVVjbJ9EJQEk8IaKkhJ9tSQN
+         ynE7ereiqpsv2mlrnmSoleMK7D3R7YeyAK2xv0VW8cO2sStXZW8M76Wf7x1JEsaJGCN7
+         WGGn0aGgEmMLJeZQG7aPML0XrqW1djEJsfZVIl1YwwEx6Vaf2dwsiwSvx4bx6LMoseeP
+         ZTaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGwVMLprNEhJRmTYc71Y4GjBXhg3LvJlIaTzhyjKxgNiPYDHcXPdcCw/KITKkJJ7sParGDSmuU9D61TIk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpCbpZUaZs804JGgwA67k02tj2hIJyzXfFDEEaB7RMcGMUmSHs
+	T/fsB4kuw8o5JhdqjgQqY8I3+djO56eqzPEs+6kkoQ+lIWXPUoJyaeipOsZdp1Q=
+X-Gm-Gg: ASbGncsfknQQXn7VhZ8UCEHzWtI7awtSl9fCuIWYGTyN7YlEy5q5weCAa+BLxdHsXwZ
+	WHLlWFTzBT7k2laSl9HrtoQAhKDyZyLn2/hJZwZXjUJG7omMs2uFcoa+r8F99SrLA9t6gV/2E/O
+	yNWZzyZh/H4AuEMbyY8vkcH0emAM14Rk0KX89x96tKLN7hVtyWMTgDsDmgGI4P5uukGDRAgN90H
+	JLcQgepgpDGvMOkL0PazvK8zTYE/azG51Ahuh+NOa+NCIRYgn9gieN5zQjMZOxayxFYIg8086hd
+	Q/MOuZav77EGvGweVk7cqT2F4Gd7Rgg2SoO6oXoZ+IwHHI68eYKC07BmF1OzMX6N27WSKm6skL0
+	jnxORjkQeUVL9FuQlyw==
+X-Google-Smtp-Source: AGHT+IHmFxBVgaTsAGbGDh4EsUHv+T+0NrbKf322VztbdkbBDNbxxF0eQnDWIUCwiaEeUi/56VbRMA==
+X-Received: by 2002:a5d:59af:0:b0:39f:76:8bc with SMTP id ffacd0b85a97d-3a08f765397mr2097367f8f.17.1746006789750;
+        Wed, 30 Apr 2025 02:53:09 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:b3d6:213c:5c50:7785? ([2a01:e0a:3d9:2080:b3d6:213c:5c50:7785])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4742sm16225841f8f.23.2025.04.30.02.53.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 02:53:09 -0700 (PDT)
+Message-ID: <6ec33d95-ed93-40bb-8ff3-d2e039dcdaa4@linaro.org>
+Date: Wed, 30 Apr 2025 11:53:08 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v1] ptp: ocp: fix NULL deref in _signal_summary_show
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: jonathan.lemon@gmail.com, richardcochran@gmail.com,
- andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org
-References: <20250414085412.117120-1-maimon.sagi@gmail.com>
- <b6aea926-ebb6-48fe-a1be-6f428a648eae@linux.dev>
- <CAMuE1bG_+qj++Q0OXfBe3Z_aA-zFj3nmzr9CHCuKJ_Jr19oWEg@mail.gmail.com>
- <aa9a1485-0a0b-442b-b126-a00ee5d4801c@linux.dev>
- <CAMuE1bETL1+sGo9wq46O=Ad-_aa8xNLK0kWC63Mm5rTFdebp=w@mail.gmail.com>
- <39839bcb-90e9-4886-913d-311c75c92ad8@linux.dev>
- <CAMuE1bHsPeaokc-_qR4Ai8o=b3Qpbosv6MiR5_XufyRTtE4QFQ@mail.gmail.com>
- <44b67f86-ed27-49e8-9e15-917fa2b75a60@linux.dev>
- <CAMuE1bFk=LFTWfu8RFJeSoPtjO8ieJDdEHhHpKYr4QxqB-7BBg@mail.gmail.com>
- <507eb775-d7df-4dd2-a7d1-626d5a51c1de@linux.dev>
- <CAMuE1bFLB24ELFOSG=v+0hxJ+a+KGNWc8=Z3=kbXOs03PtLFOA@mail.gmail.com>
- <fd813f14-ea75-4f5a-a99e-d2925c25ccd2@linux.dev>
- <CAMuE1bEH0e+GAsCumED0TdXihtsmYV4T5uRLmz7_pePt8RNQzQ@mail.gmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
-In-Reply-To: <CAMuE1bEH0e+GAsCumED0TdXihtsmYV4T5uRLmz7_pePt8RNQzQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 2/2] drivers: gpu: drm: panel: Add BOE TD4320
+To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
+ Jessica Zhang <quic_jesszhan@quicinc.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+ phone-devel@vger.kernel.org
+References: <20250429-lavender-panel-v2-0-fb467ff81bac@mainlining.org>
+ <20250429-lavender-panel-v2-2-fb467ff81bac@mainlining.org>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250429-lavender-panel-v2-2-fb467ff81bac@mainlining.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 29/04/2025 09:42, Sagi Maimon wrote:
-> On Wed, Apr 16, 2025 at 5:45 PM Vadim Fedorenko
-> <vadim.fedorenko@linux.dev> wrote:
->>
->> On 16/04/2025 14:59, Sagi Maimon wrote:
->>> On Wed, Apr 16, 2025 at 1:35 PM Vadim Fedorenko
->>> <vadim.fedorenko@linux.dev> wrote:
->>>>
->>>> On 16/04/2025 07:33, Sagi Maimon wrote:
->>>>> On Mon, Apr 14, 2025 at 4:55 PM Vadim Fedorenko
->>>>> <vadim.fedorenko@linux.dev> wrote:
->>>>>>
->>>>>> On 14/04/2025 14:43, Sagi Maimon wrote:
->>>>>>> On Mon, Apr 14, 2025 at 4:01 PM Vadim Fedorenko
->>>>>>> <vadim.fedorenko@linux.dev> wrote:
->>>>>>>>
->>>>>>>> On 14/04/2025 12:38, Sagi Maimon wrote:
->>>>>>>>> On Mon, Apr 14, 2025 at 2:09 PM Vadim Fedorenko
->>>>>>>>> <vadim.fedorenko@linux.dev> wrote:
->>>>>>>>>>
->>>>>>>>>> On 14/04/2025 11:56, Sagi Maimon wrote:
->>>>>>>>>>> On Mon, Apr 14, 2025 at 12:37 PM Vadim Fedorenko
->>>>>>>>>>> <vadim.fedorenko@linux.dev> wrote:
->>>>>>>>>>>>
->>>>>>>>>>>> On 14/04/2025 09:54, Sagi Maimon wrote:
->>>>>>>>>>>>> Sysfs signal show operations can invoke _signal_summary_show before
->>>>>>>>>>>>> signal_out array elements are initialized, causing a NULL pointer
->>>>>>>>>>>>> dereference. Add NULL checks for signal_out elements to prevent kernel
->>>>>>>>>>>>> crashes.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Fixes: b325af3cfab9 ("ptp: ocp: Add signal generators and update sysfs nodes")
->>>>>>>>>>>>> Signed-off-by: Sagi Maimon <maimon.sagi@gmail.com>
->>>>>>>>>>>>> ---
->>>>>>>>>>>>>         drivers/ptp/ptp_ocp.c | 3 +++
->>>>>>>>>>>>>         1 file changed, 3 insertions(+)
->>>>>>>>>>>>>
->>>>>>>>>>>>> diff --git a/drivers/ptp/ptp_ocp.c b/drivers/ptp/ptp_ocp.c
->>>>>>>>>>>>> index 7945c6be1f7c..4c7893539cec 100644
->>>>>>>>>>>>> --- a/drivers/ptp/ptp_ocp.c
->>>>>>>>>>>>> +++ b/drivers/ptp/ptp_ocp.c
->>>>>>>>>>>>> @@ -3963,6 +3963,9 @@ _signal_summary_show(struct seq_file *s, struct ptp_ocp *bp, int nr)
->>>>>>>>>>>>>             bool on;
->>>>>>>>>>>>>             u32 val;
->>>>>>>>>>>>>
->>>>>>>>>>>>> +     if (!bp->signal_out[nr])
->>>>>>>>>>>>> +             return;
->>>>>>>>>>>>> +
->>>>>>>>>>>>>             on = signal->running;
->>>>>>>>>>>>>             sprintf(label, "GEN%d", nr + 1);
->>>>>>>>>>>>>             seq_printf(s, "%7s: %s, period:%llu duty:%d%% phase:%llu pol:%d",
->>>>>>>>>>>>
->>>>>>>>>>>> That's not correct, the dereference of bp->signal_out[nr] happens before
->>>>>>>>>>>> the check. But I just wonder how can that even happen?
->>>>>>>>>>>>
->>>>>>>>>>> The scenario (our case): on ptp_ocp_adva_board_init we
->>>>>>>>>>> initiate only signals 0 and 1 so 2 and 3 are NULL.
->>>>>>>>>>> Later ptp_ocp_summary_show runs on all 4 signals and calls _signal_summary_show
->>>>>>>>>>> when calling signal 2 or 3  the dereference occurs.
->>>>>>>>>>> can you please explain: " the dereference of bp->signal_out[nr] happens before
->>>>>>>>>>> the check", where exactly? do you mean in those lines:
->>>>>>>>>>> struct signal_reg __iomem *reg = bp->signal_out[nr]->mem;
->>>>>>>>>>          ^^^
->>>>>>>>>> yes, this is the line which dereferences the pointer.
->>>>>>>>>>
->>>>>>>>>> but in case you have only 2 pins to configure, why the driver exposes 4
->>>>>>>>>> SMAs? You can simply adjust the attributes (adva_timecard_attrs).
->>>>>>>>>>
->>>>>>>>> I can (and will) expose only 2 sma in adva_timecard_attrs, but still
->>>>>>>>> ptp_ocp_summary_show runs
->>>>>>>>> on all 4 signals and not only on the on that exposed, is it not a bug?
->>>>>>>>
->>>>>>>> Yeah, it's a bug, but different one, and we have to fix it other way.
->>>>>>>>
->>>>>>> Do you want to instruct me how to fix it , or will you fix it?
->>>>>>
->>>>>> well, the original device structure was not designed to have the amount
->>>>>> of SMAs less than 4. We have to introduce another field to store actual
->>>>>> amount of SMAs to work with, and adjust the code to check the value. The
->>>>>> best solution would be to keep maximum amount of 4 SMAs in the structure
->>>>>> but create a helper which will init new field and will have
->>>>>> BUILD_BUG_ON() to prevent having more SMAs than fixed size array for
->>>>>> them. That will solve your problem, but I will need to check it on the
->>>>>> HW we run.
->>>>>>
->>>>> just to be clear you will write the fix and test it on your HW, so you
->>>>> don't want me to write the fix?
->>>>
->>>> Well, it would be great if you can write the code which will make SMA
->>>> functions flexible to the amount of pin the HW has. All our HW has fixed
->>>> amount of 4 pins that's why the driver was coded with constants. Now
->>>> your hardware has slightly different amount of pins, so it needs
->>>> adjustments to the driver to work properly. I just want to be sure that
->>>> any adjustments will not break my HW - that's what I meant saying I'll
->>>> test it.
->>>>
->>> Just to be clear (correct me please if I am wrong):
->>> I will write the code, then create a patch and upstream to the vanilla
->>> you will test my change on your HW and only then approve the patch
->>
->> Yes, that's correct
->>
-> On altera we have implemented 2 signals and 4 SMAs (does not make sense, but...)
-> The original fix is regarding struct ptp_ocp_signal signal[4], but on
-> your fix suggestion
-> you mension SMAs.
-> So what to do? fix the SMA array or signal array or both?
-> and if both should we establish some connection between the two
-> meaning if we have only
-> two SMAs then we can initiate only two signals?
-> please advise
+On 29/04/2025 23:33, Barnabás Czémán wrote:
+> Add driver for BOE TD4320 DSI panel, used in Xiaomi Redmi Note 7
+> mobile phone.
+> 
+> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
+> ---
+>   drivers/gpu/drm/panel/Kconfig            |   9 ++
+>   drivers/gpu/drm/panel/Makefile           |   1 +
+>   drivers/gpu/drm/panel/panel-boe-td4320.c | 247 +++++++++++++++++++++++++++++++
+>   3 files changed, 257 insertions(+)
 
-Ok, now I got it. Previously, the ptp_ocp driver assumed that the amount
-of SMAs is equal to the amount signals supported as well as frequency
-outputs and always equals to 4. With the details you provided the
-assumption is wrong and we have to make proper code for such cases.
+<snip>
 
-I would suggest to introduce 3 fields of u8 which will store the real
-amount of SMAs/signals/frequencies supported by probed hardware. And
-reuse this fields in any show/set functions.
+> +
+> +	ctx->dsi = dsi;
+> +	mipi_dsi_set_drvdata(dsi, ctx);
+> +
+> +	dsi->lanes = 4;
+> +	dsi->format = MIPI_DSI_FMT_RGB888;
+> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
+> +			  MIPI_DSI_CLOCK_NON_CONTINUOUS;
+> +
+> +	drm_panel_init(&ctx->panel, dev, &boe_td4320_panel_funcs,
+> +		       DRM_MODE_CONNECTOR_DSI);
 
->>>>>>>>>>> struct ptp_ocp_signal *signal = &bp->signal[nr];
->>>>>>>>>>>> I believe the proper fix is to move ptp_ocp_attr_group_add() closer to
->>>>>>>>>>>> the end of ptp_ocp_adva_board_init() like it's done for other boards.
->>>>>>>>>>>>
->>>>>>>>>>>> --
->>>>>>>>>>>> pw-bot: cr
->>>>>>>>>>
->>>>>>>>
->>>>>>
->>>>
->>
+Please switch to devm_drm_panel_alloc()
 
+> +	ctx->panel.prepare_prev_first = true;
+> +
+> +	ret = drm_panel_of_backlight(&ctx->panel);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get backlight\n");
+> +
+> +	drm_panel_add(&ctx->panel);
+> +
+> +	ret = mipi_dsi_attach(dsi);
+> +	if (ret < 0) {
+> +		drm_panel_remove(&ctx->panel);
+> +		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void boe_td4320_remove(struct mipi_dsi_device *dsi)
+> +{
+> +	struct boe_td4320 *ctx = mipi_dsi_get_drvdata(dsi);
+> +	int ret;
+> +
+> +	ret = mipi_dsi_detach(dsi);
+> +	if (ret < 0)
+> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
+> +
+> +	drm_panel_remove(&ctx->panel);
+> +}
+> +
+> +static const struct of_device_id boe_td4320_of_match[] = {
+> +	{ .compatible = "boe,td4320" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, boe_td4320_of_match);
+> +
+> +static struct mipi_dsi_driver boe_td4320_driver = {
+> +	.probe = boe_td4320_probe,
+> +	.remove = boe_td4320_remove,
+> +	.driver = {
+> +		.name = "panel-boe-td4320",
+> +		.of_match_table = boe_td4320_of_match,
+> +	},
+> +};
+> +module_mipi_dsi_driver(boe_td4320_driver);
+> +
+> +MODULE_AUTHOR("Barnabas Czeman <barnabas.czeman@mainlining.org>");
+> +MODULE_DESCRIPTION("DRM driver for boe td4320 fhdplus video mode dsi panel");
+> +MODULE_LICENSE("GPL");
+> 
+
+Otherwise it looks fine.
+
+Thanks,
+Neil
