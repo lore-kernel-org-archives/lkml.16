@@ -1,100 +1,123 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D32638A1;
-	Wed, 30 Apr 2025 18:17:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4294629408;
+	Wed, 30 Apr 2025 18:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037056; cv=none; b=XCMe0u7pgp/GIvjUzJxx5dTc5AobO8ccG0+FNPOYxWMCm2+O7TpuOwL44a/nxkWa6AVQAp7mmJsEtfggoEU1su3Cx08e0CwOFUlibq05b2nbMaU+WVTxEYzHAirxiN9qfNSongk0SDkvkwRbEUhyd6uQmfQLvwVUztFo/QsrKbw=
+	t=1746037236; cv=none; b=gkssEMn6xXi+4JhYgYyNS9QFoXowso1OkEpisc7xmnR8kmIAyr4bf5Qq+nlpf4SmAit6HDJ7RePQYzF5bHhhsqf3RT+QJZ3KYdjswh8ksS/coc7bknciZUJ9yweGcjKYecQVfCQPWEMtyKo3iQ91xVmVsHF2Hhng+bRyX/JVOko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037056; c=relaxed/simple;
-	bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jg0c1nHjtfejQheR9wNFMl8UiVQFiLId3hQ9l4r6cppDJccnxrBAvSWQL0jAtRfrMmYyaf8SjI/m2C9+VCtCzkO++yKU+CiP1Cvq74Dn6vseiF9SqLMo54mttSxJLT02x193r/zt+NWKunwYHchn2dWTY52xU9I2+9MvFha0bBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lghmvSC0; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lghmvSC0"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ace333d5f7bso17662366b.3;
-        Wed, 30 Apr 2025 11:17:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746037053; x=1746641853; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-        b=lghmvSC0wUSxPy12iHEMnkEiJ7LG8p38e2Idel0omhQNPmyFcIGPx21FlDjspImmth
-         N6+VqlCCFe5UF3hBABaWjmTzLjytuTm5GxFPBM0jBNAG9+PsuXDlnEJxiibC9DnhufiY
-         oAweiygZKlMGIo0TFVhwhan3sbh3NfAmvgcbhRuE2+Tq97ywQy7ysnRHLOtaXOKgJ8ZU
-         c2tX9BDewZlEKw5ifD5f0Mhi6N7xswONmLYiAgawHvxDXyAonL9pDcDSgzuYXBaIj+VL
-         Y+IJxeUUzfpepHxcsYBo/N3zkPwwpEjEdTw0wMs19xeTXxsGxengUhKE6bQFX8ux4Lot
-         HvhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746037053; x=1746641853;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
-        b=gGguWk2VaICOpinilewaGl6kYPN8U0zmB5II6TiINf3+Wwy+tTl9Mog9DsgKYx+CWA
-         FNz/YWgQnRbMG2ojd0FAdrEedwiGKIMHlk4U0T5oUNyGKKdqcSz2ZiCNU+1m2aAyCkzZ
-         SVzQxxaiM//Xy+/WMdLKNCJIT3QoOaIQO6EeLAhmsxZTJfOdMG2lD2Ai2mnU45HenYST
-         RL9KOwIvRB30Ct0GY9d5Z/l+E05vQ8wLpqJU8cnacl7VpYW5Ysw5ce+tf+S5nNem/ND9
-         GJdS6LeCn2OfKWm8Hlo0OZq8IUZISuKGUx7sp8wmn1rxgPoyUWEjdHUENrJsjijKtpFv
-         NVew==
-X-Forwarded-Encrypted: i=1; AJvYcCV1axPaOg21YwxFo3nyfXeQgnEtavGjlOlHznOoOJcIBAGRyGERaTaRoZiWM7yjIbWaO5gtUK0nd6vYgygC@vger.kernel.org, AJvYcCVkQ2BVGjMNDK7LtZCkpoU67VDTL+fjwtQepjNz5zVVNg8CXmoCLzfrr3JDZ/E3q3B3JmKFO2mNnZIh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyx4SBlBuSweFDm4cqWuR0e0fi8yvaGXJKgD2XY2WIJITxeLAcq
-	iRgJ/KPCeridmWtQjk4xbfhTKz9M8LZnwpNI78X2VORvCUZZe/HzPZJgzth0/e9UXhs0GX/WeUx
-	wGZblJsXrsTQOy4vukYI9JN5NcPZoOVKRyCA=
-X-Gm-Gg: ASbGnctUooKdOSu4sAU5qSfVjEjfzRzeXfUO6NoMC06SrJmpVSedn1Z5KUFAtBzFrIr
-	sJuRbveKNmioYkNdgGwcRLnq77jLCYXK+oD4jzTfv48CwPrYWo6Ns/3lY+WJiDWyI5Rp8iFVK6R
-	6DA09puKdNw1F1SqBoMelEUw==
-X-Google-Smtp-Source: AGHT+IHo7vrjzoHJavBMnKjeuMAIEZNioUuX2F9fOYFlukm++RPIL7DlnzSNXWqD9CisW72t0j+V7ncSPEXQrlmkbuQ=
-X-Received: by 2002:a17:907:96a2:b0:ac7:e366:1eab with SMTP id
- a640c23a62f3a-acef45a8f8fmr34709266b.48.1746037053266; Wed, 30 Apr 2025
- 11:17:33 -0700 (PDT)
+	s=arc-20240116; t=1746037236; c=relaxed/simple;
+	bh=xZmXq/yHV4PYm9VEKiW5gq0YpRzlOAJesgu2pi+Pgos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d3krSNMh6Vj6fEp8Qoi/MsdH5pPKb1riRdyLLhlvCbwLOdaE1W6ZLjNy/k/bhOuGYoDyLIRgFTehjPhQFht34d/E9cKgi8hRisLTc+SwmV+jFU1MHiFnPDVnACRwca/Ov/Dd7LrIA8m0eeyju+U9xgM3AT29QQtbQFuD4OwTDAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
+	by localhost (Postfix) with ESMTP id 4Znl4k5gw7z9slR;
+	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id CRILqcdhiA9l; Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase1.c-s.fr (Postfix) with ESMTP id 4Znl4k4hwwz9slF;
+	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 91A0F8B765;
+	Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id CGL3eL1v_ASl; Wed, 30 Apr 2025 19:47:18 +0200 (CEST)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 765C98B763;
+	Wed, 30 Apr 2025 19:47:17 +0200 (CEST)
+Message-ID: <11e1a1e7-7bd3-4d48-804c-45b53b5e15d5@csgroup.eu>
+Date: Wed, 30 Apr 2025 19:47:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430153239.7137-1-ariel@simulevski.at> <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
-In-Reply-To: <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 30 Apr 2025 21:16:57 +0300
-X-Gm-Features: ATxdqUFMwmB3y28A-hm95F8boEEb_jY5iJhskLEEBjLgwXpZVanJzJZ34Jvxles
-Message-ID: <CAHp75Vcc0jX_AXh25sicRJCF1o7au8oOeCkN4GoTUTHyXYQv5g@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: tigerlake: Document supported platforms in
- Kconfig help
-To: Ariel Simulevski <ariel@simulevski.at>
-Cc: andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guido Trentalancia <guido2022@trentalancia.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Apr 30, 2025 at 9:14=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Apr 30, 2025 at 6:32=E2=80=AFPM Ariel Simulevski <ariel@simulevsk=
-i.at> wrote:
->
-> Technically this is a v2 of the previous patch, but it has been
-> changed a lot, so for _this_ time it's okay to have it still v1. Also
-> note when v2 or any new version of patch is required the changelog
-> must be provided (after the cutter '---' line below).
-
-On top of that, you forgot to include (all) maintainers of the
-respective code. I recommend using my "smart" script [1] for sending
-patches to the Linux kernel subsystems.
-
-...
-
-> With that, waiting for v2.
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/5] powerpc: 83xx/gpio: use new line value setter
+ callbacks
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Anatolij Gustschin <agust@denx.de>, linuxppc-dev@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250408-gpiochip-set-rv-powerpc-v1-0-73dc1ebc6ef1@linaro.org>
+ <20250408-gpiochip-set-rv-powerpc-v1-2-73dc1ebc6ef1@linaro.org>
+ <4a6e8ac1-b4e8-49e1-bc8a-d1854985bb31@csgroup.eu>
+ <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <CAMRc=MesdgXAivzDnm1RW-jcxs_5goZiyKvK0-JLwqDv=9F6LQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.=
-sh
 
---=20
-With Best Regards,
-Andy Shevchenko
+Le 30/04/2025 à 19:37, Bartosz Golaszewski a écrit :
+> On Wed, Apr 30, 2025 at 7:33 PM Christophe Leroy
+> <christophe.leroy@csgroup.eu> wrote:
+>>
+>>
+>>
+>> Le 08/04/2025 à 09:21, Bartosz Golaszewski a écrit :
+>>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>
+>>> struct gpio_chip now has callbacks for setting line values that return
+>>> an integer, allowing to indicate failures. Convert the driver to using
+>>> them.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>> ---
+>>>    arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c | 6 ++++--
+>>>    1 file changed, 4 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+>>> index 4d8fa9ed1a67..d4ba6dbb86b2 100644
+>>> --- a/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+>>> +++ b/arch/powerpc/platforms/83xx/mcu_mpc8349emitx.c
+>>> @@ -92,7 +92,7 @@ static void mcu_power_off(void)
+>>>        mutex_unlock(&mcu->lock);
+>>>    }
+>>>
+>>> -static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>>> +static int mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>>>    {
+>>>        struct mcu *mcu = gpiochip_get_data(gc);
+>>>        u8 bit = 1 << (4 + gpio);
+>>> @@ -105,6 +105,8 @@ static void mcu_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+>>>
+>>>        i2c_smbus_write_byte_data(mcu->client, MCU_REG_CTRL, mcu->reg_ctrl);
+>>>        mutex_unlock(&mcu->lock);
+>>> +
+>>> +     return 0;
+>>
+>> i2c_smbus_write_byte_data() can fail, why not return the value returned
+>> by i2c_smbus_write_byte_data() ?
+>>
+> 
+> The calls to i2c_smbus_write_byte_data() in this driver are
+> universally not checked. I cannot test it and wasn't sure if that's on
+> purpose so I decided to stay safe. Someone who has access to this
+> platform could potentially fix it across the file.
+
+As far as I can see this function is called three times in this file.
+
+First time is in mcu_power_off(), which must return void.
+Second time is inside a forever loop in shutdown_thread_fn(), and I 
+can't see what could be done with the returned value.
+
+Last time is in the function you are changing. Wouldn't it make sense to 
+take the value into account here ? IIUC it is the purpose of the change, 
+isn't it ?
+
+Christophe
+
