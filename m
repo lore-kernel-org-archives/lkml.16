@@ -1,159 +1,202 @@
-Received: from zucker2.schokokeks.org (zucker2.schokokeks.org [178.63.68.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8DB01E9B3A;
-	Wed, 30 Apr 2025 19:48:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.68.90
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C501C1E9B19;
+	Wed, 30 Apr 2025 19:49:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042512; cv=none; b=LMP6NzmmoNqnNbihitvcpfJedSVpsEyjqEM8XFbHB3Ji/C4d8v6AQs8k2QTRhl3Q1plVByy2EF2A9VfgQsbirKmQfIePWs0z+ZkXrdIpIFVTIdY1uY5oHZAZ7ciy9czt+ErbIRskBMI4cP9H/brXg1cIsH8WGlmqDoJoFKWivtU=
+	t=1746042559; cv=none; b=AvwKQ+qHcB/10zYCygM9EUEOU4h6DpRH7idb14dLDw7WVPwQj97R49MNmnJyqxtWKI7gEu5ymQiK40UbaIBSR251ylxtwEOiQ7gIndYvse3B20OBZgQi5Z9HnD2Q4TvXroPhRAc0Qpp/mWhUzW7IRSJTEibB3AG2jvTrp/YcKC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042512; c=relaxed/simple;
-	bh=vIXBsceJywR8lxkQXHTvqCxXPpEsE5ob+i7eM7Lw1wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ZKc6VDzCwQIu7cYyQJnsr84tFtcKsVxGnTCYD4ye6/pltMVgz6F0vNpoDJqEadtiGNDih5yE59as3MqNDnR+5Tp45rdqJtX4VAmnXzctkaDTi00snjK8d9HUgPo+sKUhDvpH2FlKedkf/OruFsF2OcDi5TCyFAiSeCZCOIRQrOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de; spf=pass smtp.mailfrom=hboeck.de; dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b=FuoljF3/; arc=none smtp.client-ip=178.63.68.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hboeck.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hboeck.de
+	s=arc-20240116; t=1746042559; c=relaxed/simple;
+	bh=SMIqjX1PijUCBNJS6A0ie8/EUNwKLw21NX7N5LeVjr4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Fxru1q7wnzXlodnwCNYKzk0C+NW2MzThNp5N80m0ITXSKo42XJFtf4DAA73V+sd4+ILA+4qXoMROu1ABBDqjgOFAASnzPbYWFiUd9eHm5PhblY9+v7PnMNH+IQ1Cl9YqBAL5pY/2jS83bJ6wuYD+YfHSSrutYpWhO+Y33FmyRxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N+ZMxy0U; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hboeck.de header.i=@hboeck.de header.b="FuoljF3/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hboeck.de; s=key1;
-	t=1746041898; bh=eTaDm98D/en97YYrn4m0socY7fqhyB9xFUhKJAjwdrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Transfer-Encoding;
-	b=FuoljF3/nr41SJmTdH9DXOPKNJuSIdOJyK9ph8FX2zWZA8f65y1fEZuqcPiXK2aUL
-	 wqdU0H+ZTStw8O6MyghFuCgzy1SUQlSiTJ3hrW9n7TH9brrmsQzZj+bbPG6tVD/e7B
-	 ooR1fN91LH/ocj6dpTgY5pGO8D/2yD9M8pbZrt9tlrcXcQIc2JRTC2W3pN1IId7+F9
-	 nT1uuT4243ELAdXHBVzsDMVGfu3yoUfkwvpiau7U2a34Hi8WVOUMUgGdnX7uvuIDvi
-	 CN/KczyOnp9cKkX/+bLUDdNS3ztnT6DTD/rs+37toRWqlxqaIXV+KwkhHMaIDagdt6
-	 dmuZJWgw/mEGw==
-Original-Subject: linux/rmi4 driver: "BUG: kernel NULL pointer dereference" when
- accessing update_fw_status or bootloader_id
-Author: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
-Original-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, david@ixit.cz
-Date: Wed, 30 Apr 2025 21:38:16 +0200
-From: Hanno =?UTF-8?B?QsO2Y2s=?= <hanno@hboeck.de>
-To: dmitry.torokhov@gmail.com
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-  david@ixit.cz
-Subject: linux/rmi4 driver: "BUG: kernel NULL pointer dereference" when
- accessing update_fw_status or bootloader_id
-Message-ID: <20250430213816.7527e190@hboeck.de>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N+ZMxy0U"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acec5b99052so31434366b.1;
+        Wed, 30 Apr 2025 12:49:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746042556; x=1746647356; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y5vFC8AhrZtOhJIds93Y4EHwr/YoR1RMhFCgXyxy4qo=;
+        b=N+ZMxy0U8TPXfCgt+OFOt9E6KzZ73JQGpoldhJxz62wa+/ZsyskIc8KHHU7lQVpX49
+         IyHxWgIu+JcNFxBgABgGn7wTeuBTJOJQomCF3+1JoWAe/s7HFcLPpHBYhmm2LqdlCRC7
+         pElfJsr4/KRz3iVRNmK9p3C+0m1IKi5Kk+bjxFs5yGhE9/4FZpmqnor6z+jZIzhtssND
+         D/+VmPEgo0sAAZ7Bey2hbao3pWZ9VnwNDrkvSbEEMkebvRvQ5bj6kNwOFmU6C2Lx/ruV
+         UG1Qz62nhhNKVbZiGArRrkxFrj6M/qc43kJbJ1HK3DnWq5AztmXkLx36eqwJ2ZN3QMGR
+         45tw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746042556; x=1746647356;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y5vFC8AhrZtOhJIds93Y4EHwr/YoR1RMhFCgXyxy4qo=;
+        b=oUJsWj8qKQSYXnTi0ZPMNLk5XAUbXzZROp7CdFSAil9OnJHPSkecWC0YDIPDra0l94
+         Zgi3nWRhkMGFemYKEHzVri3BCns4h+DA/Jn40U9a9V/P9IwANmDhv8VOKlXRpadxJYdH
+         pe5ERkDHzx7p2wYmbmQugI+q2yZk4xV4QlQ7yhCkVohtHY4RlKOcxG64RQ9VBA0Hytc9
+         6k3jgX3AMzwSaqgVykSqwZ94q/eQXAdPA9RRxyt+wjDLGt0O1ytY5pdSwnBd5rN6B9s7
+         uEg//W2rFKPc8TluB2x9LxdtcqexG5XxRn+yNSGIlY4kEs9eLmRMD6BcSayjIedeVfFd
+         Z4EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWSw+5xhYaGbPhaCoXYcCkfglukUCUVIu629FmOWDyHENZalPZSQtGn4mKUeAIcH+cOYk/dfqVn@vger.kernel.org, AJvYcCXKuiU94QKmGwot5qhVcntmiuEPUE6FmWVA/gDS1CgJplaPbYFvJlGl+X5gJlisJ2PPG3UvHMO1crmbpJE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV7+naX5xGPWeJI8unWWl4nBJQFoKr1+SDhtq0CIUiNYvRPxCk
+	f28mr0xP91sRosUinZEWzm6QFOFO9ma7jEEITFHetISZYQFTa6R2KvW70O5Y1afi+8C6MdD1B2D
+	jMSniipfPX9VH1+hNBPnzKB17bfU=
+X-Gm-Gg: ASbGncuLYQJc5z07V9iXpHOQ67SG76CY2TbjqyvBix/uf5aD7aAdTIxJEim8DEf5Wtq
+	LswcfgyZBpdHiLX47/3wciGk1/tMv/3tPAEV5QBpywQzgYncK5PLCDKIWxbUDrGm4wIH1xC0hh8
+	UwBCsyTtAkc7dk6Bm3D2v2kysZ8tTsPFI=
+X-Google-Smtp-Source: AGHT+IHpT+iTWDFMpDYFHHF3i70rxCnGl9rhceHR3hYQzhGNL2ueWGAsYtHXahAnbbzOSF84ATohrmtx/W4nupgJxCo=
+X-Received: by 2002:a17:907:7b9d:b0:ac6:cea2:6c7 with SMTP id
+ a640c23a62f3a-acedc701d69mr453954466b.42.1746042555700; Wed, 30 Apr 2025
+ 12:49:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+References: <20250424080755.272925-1-harry.yoo@oracle.com> <lr2nridih62djx5ccdijiyacdz2hrubsh52tj6bivr6yfgajsj@mgziscqwlmtp>
+ <aAtf8t4lNG2DhWMy@harry> <vd3k2bljkzow6ozzan2hkeiyytcqe2g6gavroej23457erucza@fknlr6cmzvo7>
+In-Reply-To: <vd3k2bljkzow6ozzan2hkeiyytcqe2g6gavroej23457erucza@fknlr6cmzvo7>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 30 Apr 2025 21:49:02 +0200
+X-Gm-Features: ATxdqUFl3ZIseT5-rXLXwt2orZP-o0_kcICmKwmBNRne1lS2Hq2Mm11zQAmstzI
+Message-ID: <CAGudoHF4Tj+LcMSEZK3H3TF0Xc2xzf_NWro3ghXddOwVHNRTuw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/7] Reviving the slab destructor to tackle the percpu
+ allocator scalability problem
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: Harry Yoo <harry.yoo@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
+	Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+	Jiri Pirko <jiri@resnulli.us>, Vlad Buslov <vladbu@nvidia.com>, 
+	Yevgeny Kliteynik <kliteyn@nvidia.com>, Jan Kara <jack@suse.cz>, Byungchul Park <byungchul@sk.com>, 
+	linux-mm@kvack.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Apr 25, 2025 at 12:42=E2=80=AFPM Pedro Falcato <pfalcato@suse.de> w=
+rote:
+> With regards to "leaf locks", I still don't really understand what you/Ma=
+teusz
+> mean or how that's even enforceable from the get-go.
+>
+> So basically:
+> - ->ctor takes more args, can fail, can do fancier things (multiple alloc=
+ations,
+>   lock holding, etc, can be hidden with a normal kmem_cache_alloc; certai=
+n
+>   caches become GFP_ATOMIC-incompatible)
+>
+> - ->dtor *will* do fancy things like recursing back onto the slab allocat=
+or and
+>   grabbing locks
+>
+> - a normal kmem_cache_free can suddenly attempt to grab !SLUB locks as it=
+ tries
+>   to dispose of slabs. It can also uncontrollably do $whatever.
+>
+> - a normal kmem_cache_alloc can call vast swaths of code, uncontrollably,=
+ due to
+>   ->ctor. It can also set off direct reclaim, and thus run into all sorts=
+ of kmem_
+>   cache_free/slab disposal issues
+>
+> - a normal, possibly-unrelated GFP_KERNEL allocation can also run into al=
+l of these
+>   issues by purely starting up shrinkers on direct reclaim as well.
+>
+> - the whole original "Slab object caching allocator" idea from 1992 is ex=
+tremely
+>   confusing and works super poorly with various debugging features (like,=
+ e.g,
+>   KASAN). IMO it should really be reserved (in a limited capacity!) for s=
+tuff like
+>   TYPESAFE_BY_RCU, that we *really* need.
+>
+> These are basically my issues with the whole idea. I highly disagree that=
+ we should
+> open this pandora's box for problems in *other places*.
 
-I noticed that trying to read some sysfs entries created by the rmi4
-driver cause a kernel oops (BUG: kernel NULL pointer dereference).
+Apologies for the late reply.
 
-This can be triggered simply by running cat on these files, also as a
-user. Tested on a current vanilla kernel (6.14.4).
-It happens when trying to read from one of these files (exact path
-likely will differ depending on system):
-/sys/devices/pci0000:00/0000:00:1f.4/i2c-6/6-002c/rmi4-00/update_fw_status
-/sys/devices/pci0000:00/0000:00:1f.4/i2c-6/6-002c/rmi4-00/bootloader_id
+Looks like your primary apprehension concerns dtor, I'm going to
+address it below.
 
-This is on a Lenovo X1 Carbon 2018 edition, lsusb lists the touchpad as:
-Bus 001 Device 010: ID 06cb:009a Synaptics, Inc. Metallica MIS Touch
-Fingerprint Reader
+But first a quick remark that the headline here is expensive
+single-threaded work which keeps happening on every mm alloc/free and
+which does not have to, extending beyond the percpu allocator
+problems. Having a memory allocator which can handle it would be most
+welcome.
 
-The dmesg output for an access to bootloader_id:
-[   68.184846] BUG: kernel NULL pointer dereference, address: 0000000000000=
-008
-[   68.184866] #PF: supervisor read access in kernel mode
-[   68.184875] #PF: error_code(0x0000) - not-present page
-[   68.184882] PGD 0 P4D 0=20
-[   68.184892] Oops: Oops: 0000 [#1] SMP
-[   68.184902] CPU: 6 UID: 1000 PID: 4704 Comm: cat Tainted: G     U       =
-      6.14.4 #2
-[   68.184915] Tainted: [U]=3DUSER
-[   68.184919] Hardware name: LENOVO 20KHCTO1WW/20KHCTO1WW, BIOS N23ET90W (=
-1.65 ) 11/07/2024
-[   68.184926] RIP: 0010:rmi_driver_bootloader_id_show+0x1d/0x60
-[   68.184964] Code: 98 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 =
-d7 48 8b 40 78 48 8b 50 20 31 c0 48 85 d2 74 3f 55 48 8b 82 90 00 00 00 <80=
-> 78 08 05 0f b6 70 09 0f b6 50 0a 48 89 e5 74 12 89 f1 48 c7 c6
-[   68.184973] RSP: 0018:ffffac4e419ebc28 EFLAGS: 00010286
-[   68.184982] RAX: 0000000000000000 RBX: ffffffffb6d78700 RCX: 00000000000=
-00000
-[   68.184989] RDX: ffffa31782c28000 RSI: ffffffffb6d78700 RDI: ffffa317841=
-50000
-[   68.184995] RBP: ffffac4e419ebc48 R08: ffffa31782c22400 R09: ffffa317841=
-50000
-[   68.185000] R10: 0000000000001000 R11: ffffffffb56f8b0b R12: ffffffffb67=
-2c590
-[   68.185006] R13: ffffac4e419ebd30 R14: 0000000000000001 R15: ffffa317852=
-11348
-[   68.185013] FS:  00007f75e3a5a740(0000) GS:ffffa31ac2780000(0000) knlGS:=
-0000000000000000
-[   68.185021] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   68.185028] CR2: 0000000000000008 CR3: 00000001a0448006 CR4: 00000000003=
-726f0
-[   68.185034] Call Trace:
-[   68.185039]  <TASK>
-[   68.185044]  ? dev_attr_show+0x15/0x40
-[   68.185054]  sysfs_kf_seq_show+0x9c/0xe0
-[   68.185065]  kernfs_seq_show+0x1c/0x20
-[   68.185073]  seq_read_iter+0xf8/0x410
-[   68.185082]  kernfs_fop_read_iter+0x12b/0x180
-[   68.185091]  vfs_read+0x236/0x300
-[   68.185102]  ksys_read+0x56/0xc0
-[   68.185112]  __x64_sys_read+0x14/0x20
-[   68.185122]  x64_sys_call+0x9f2/0xa00
-[   68.185129]  do_syscall_64+0x63/0xf0
-[   68.185141]  ? __count_memcg_events+0x49/0xe0
-[   68.185152]  ? handle_mm_fault+0x1b1/0x2d0
-[   68.185162]  ? irqentry_exit+0x19/0x30
-[   68.185169]  ? exc_page_fault+0x190/0x5b0
-[   68.185181]  entry_SYSCALL_64_after_hwframe+0x4b/0x53
-[   68.185189] RIP: 0033:0x7f75e3aeaad7
-[   68.185196] Code: 20 49 89 d0 48 89 fa 4c 89 df e8 24 b4 00 00 8b 93 08 =
-03 00 00 59 5e 48 83 f8 fc 74 16 5b c3 0f 1f 40 00 48 8b 44 24 10 0f 05 <5b=
-> c3 0f 1f 80 00 00 00 00 83 e2 39 83 fa 08 75 e2 e8 23 ff ff ff
-[   68.185204] RSP: 002b:00007ffe9e258720 EFLAGS: 00000202 ORIG_RAX: 000000=
-0000000000
-[   68.185213] RAX: ffffffffffffffda RBX: 00007f75e3a5a740 RCX: 00007f75e3a=
-eaad7
-[   68.185220] RDX: 0000000000040000 RSI: 00007f75e36d0000 RDI: 00000000000=
-00003
-[   68.185226] RBP: 0000000000040000 R08: 0000000000000000 R09: 00000000000=
-00000
-[   68.185231] R10: 0000000000000000 R11: 0000000000000202 R12: 00007f75e36=
-d0000
-[   68.185237] R13: 0000000000000003 R14: 00007f75e3cb1000 R15: 00000000000=
-00000
-[   68.185244]  </TASK>
-[   68.185248] Modules linked in: iwlmvm iwlwifi
-[   68.185261] CR2: 0000000000000008
-[   68.185267] ---[ end trace 0000000000000000 ]---
-[   68.199705] pstore: backend (efi_pstore) writing error (-28)
-[   68.199709] RIP: 0010:rmi_driver_bootloader_id_show+0x1d/0x60
-[   68.199715] Code: 98 c3 66 66 2e 0f 1f 84 00 00 00 00 00 48 89 f8 48 89 =
-d7 48 8b 40 78 48 8b 50 20 31 c0 48 85 d2 74 3f 55 48 8b 82 90 00 00 00 <80=
-> 78 08 05 0f b6 70 09 0f b6 50 0a 48 89 e5 74 12 89 f1 48 c7 c6
-[   68.199718] RSP: 0018:ffffac4e419ebc28 EFLAGS: 00010286
-[   68.199721] RAX: 0000000000000000 RBX: ffffffffb6d78700 RCX: 00000000000=
-00000
-[   68.199723] RDX: ffffa31782c28000 RSI: ffffffffb6d78700 RDI: ffffa317841=
-50000
-[   68.199724] RBP: ffffac4e419ebc48 R08: ffffa31782c22400 R09: ffffa317841=
-50000
-[   68.199726] R10: 0000000000001000 R11: ffffffffb56f8b0b R12: ffffffffb67=
-2c590
-[   68.199727] R13: ffffac4e419ebd30 R14: 0000000000000001 R15: ffffa317852=
-11348
-[   68.199729] FS:  00007f75e3a5a740(0000) GS:ffffa31ac2780000(0000) knlGS:=
-0000000000000000
-[   68.199731] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   68.199733] CR2: 0000000000000008 CR3: 00000001a0448006 CR4: 00000000003=
-726f0
-[   68.199735] note: cat[4704] exited with irqs disabled
+Now to business:
+I'm going to start with pointing out that dtors callable from any
+place are not an *inherent* requirement of the idea. Given that
+apparently sheaves don't do direct reclaim and that Christoph's idea
+does not do it either, I think there is some support for objs with
+unsafe dtors *not* being direct reclaimable (instead there can be a
+dedicated workqueue or some other mechanism sorting them out). I did
+not realize something like this would be considered fine. It is the
+easiest way out and is perfectly fine with me.
 
+However, suppose objs with dtors do need to be reclaimable the usual way.
 
+I claim that writing dtors which are safe to use in that context is
+not a significant challenge. Moreover, it is also possible to extend
+lockdep to validate correct behavior. Finally, test code can trigger
+ctor and dtor calls for all slabs to execute all this code at least
+once with lockdep enabled. So while *honest* mistakes with locking are
+very much possible, they will be trivially caught and I don't believe
+the box which is being opened here belongs to Pandora.
+
+So here is another attempt at explaning leaf spinlocks.
+
+Suppose you have a global lock named "crapper". Further suppose the
+lock is only taken with _irqsave *and* no locks are taken while
+holding it.
+
+Say this is the only consumer:
+void crapperbump(void) {
+    int flags;
+    spin_lock_irqsave(&crapper, flags);
+    mehvar++;
+    spin_unlock_irqsave(&crapper);
+}
+
+Perhaps you can agree *anyone* can call here at any point and not risk
+deadlocking.
+
+That's an example of a leaf lock.
+
+Aight, so how does one combat cases where the code turns into:
+spin_lock_irqsave(&crapper, flags);
+spin_lock_irqsave(&meh, flags2);
+
+In this case "crapper" is no longer a leaf lock and in principle there
+may be lock ordering involving "meh" which does deadlock.
+
+Here is an example way out: when initializing the "crapper" lock, it
+gets marked as a leaf lock so that lockdep can check for it. Then on a
+lockdep-enabled kernel you get a splat when executing the routine when
+you get to locking "meh". This sorts out the ctor side of things.
+
+How does one validate dtor? lockdep can have a "only leaf-locks
+allowed in this area" tunable around calls to dtors. Then should a
+dtor have ideas of acquiring a lock which is not a leaf lock you are
+once more going to get a splat.
+
+And of course you can just force call all ctors and dtors on a debug
+kernel (no need to trigger any memory pressure, just walk the list of
+slabs with ctor + dtor pairs and call the stuff).
+
+This of course would require some effort to implement, but there is no
+rocket science degree required.
+
+However, given that direct reclaim for mm is apparently not a strict
+requirement, my preferred way out is to simply not provide it.
 --=20
-Hanno B=C3=B6ck
-https://hboeck.de/
+Mateusz Guzik <mjguzik gmail.com>
