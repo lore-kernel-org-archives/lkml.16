@@ -1,81 +1,135 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A523235050;
-	Wed, 30 Apr 2025 09:38:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5FAE231856
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746005913; cv=none; b=FXmQs0sGFDeGwNVlvEkA03sARQNbwvK67SjYCl16/sUVg7ZzG5xAC6hKQOTOb57tlypsB7Hl5yJacRD+walJFUug6BVYCl5/OHdkmx8EmEIAbA125ACq8BS4mCBH4TwoZ65i1v+2NW7OI8oijqmTsTnv8SvW5aq/22AGlaP4McM=
+	t=1746005959; cv=none; b=BQeBkNq/Dqjciwg1Xv4dmPnnvMImNbRDMsfyeiLXQ2t7DT5vhaCO0fSVwhknL9H15H8Hkiaw2ZJESu3sdveHzOg0raBStbKW0CpnK+tPe6YI0MyUm6m35oKQMAOSJG1R9t5glWR8ug3NJGvhmMgpsC7YWmFfnK6coLTM4SgPa7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746005913; c=relaxed/simple;
-	bh=zf60cnGWJmyto7hJniS3i37W9CD8mvZyR+D1yMUdzGM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ik2sh5eNPFQaddtxJ8C7aJv2CpbyHmvEvQQd63XIN21hDWOi1jGZzliuFV9TBzYG5qRKf0TP10O9vUmMvCe69JWyXghyZHDfptoFfYS//HNzaTFZBbaP4QjOYh8Vj/dv1KDv6Jj7X0A6TqNRCffuIYxzU/R4uMAm/dh4xwQSwME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZnXFY1MQ9z27hbP;
-	Wed, 30 Apr 2025 17:39:13 +0800 (CST)
-Received: from kwepemk100013.china.huawei.com (unknown [7.202.194.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9899A1400DA;
-	Wed, 30 Apr 2025 17:38:28 +0800 (CST)
-Received: from localhost.localdomain (10.90.30.45) by
- kwepemk100013.china.huawei.com (7.202.194.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 30 Apr 2025 17:38:27 +0800
-From: Jijie Shao <shaojijie@huawei.com>
-To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <andrew+netdev@lunn.ch>, <horms@kernel.org>
-CC: <shenjian15@huawei.com>, <wangpeiyang1@huawei.com>,
-	<liuyonglong@huawei.com>, <chenhao418@huawei.com>,
-	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
-	<salil.mehta@huawei.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <shaojijie@huawei.com>
-Subject: [PATCH net 1/2] net: hibmcge: fix incorrect statistics update issue
-Date: Wed, 30 Apr 2025 17:31:26 +0800
-Message-ID: <20250430093127.2400813-2-shaojijie@huawei.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250430093127.2400813-1-shaojijie@huawei.com>
-References: <20250430093127.2400813-1-shaojijie@huawei.com>
+	s=arc-20240116; t=1746005959; c=relaxed/simple;
+	bh=AUDJd4dz5XyC/N6fEGt5cYH/J0DmYOyJCqcdAnsYAcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GwCdC/PVs/r3ghTfnMEZ6uA+3u2zDB9yrsMzVKx2N9W+4wI5KQubfB98Y0Dluw0EIJ9cTqBWViMmyvB4Tsx9P85t7nTIQ/VBoeRnxXhDPtga0JYiO0bN8gkKs8gSjNFZtvcomt3cB7/xrVNKM05QbWMvbQiRlRU85MP+RuojrBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uO3SaQvM; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uO3SaQvM"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so883122966b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:39:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746005956; x=1746610756; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6OGMbcMEkhBmGqs5Z3YtgBQ6Hwa1jUmstb0M0+KK0Nc=;
+        b=uO3SaQvMg2uYB5lOtoFBdyDcAipupleaSdHMd14tWmPxYRsMP0RVbfRhnuW7lMa+Jq
+         oAmLd2va15V7SUtqz90aKf3EWd/xWqEd0xWoeQsBCy9saIyy44cxEBOe4uhg9rAKzvwV
+         qNIXo7Swfnf9PS6tWrptvpRJjL6RizDJw3AR1RlpDPwgB897bn4f8peMWw1963xnxUAr
+         HhyrJG+qR/xoMsJ2Hq050qymPzMiuq6ETz1smE+Iwgixdb2vIMSIrlEQza6SnriZQBtz
+         IN7dl7qdMbAYFq7MSxSuydv5PgSwjN/w7djsXMs8axi4tOaUajgvJaiZTHgiNP2tAt8R
+         nMGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746005956; x=1746610756;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6OGMbcMEkhBmGqs5Z3YtgBQ6Hwa1jUmstb0M0+KK0Nc=;
+        b=eYyBgQmuRf4w5gsmvIZ/fgDMjAJG4B0uKlzP+RgcHuJcPe/JpE0d68nIpSMcujSilu
+         B35rT4bG7EfadcAgYOBxa9TYOQgfBc/I5BqMtnS1sBM7WDbYETYrtm+zpHtvjBqx+jZd
+         vs6xEWiZpwp78gAQT0c1K5saRwSQp+AKCbOEmMg/UINsbYzN9BtgFYjIT+3xueO13pgu
+         2mfiugyTxzDznncTEmSUxqElS3F42o0l7DiNHn1B3fW6f5QcBZoQoeqhphJPHci62yN4
+         Oy5A9K11pIKNXKHUIExaRJB0+Ljelvax6sV1Akm3GYhp5iSK9tCxgWHp5gFK6RNaZvji
+         JqBw==
+X-Forwarded-Encrypted: i=1; AJvYcCXR75rYjrzFpqHI1U2Zi5E+6nwXBUPIfl7v0S+kSOtafxXwurw+HDWeOt7FA/ny0GgRajDbSp+oFvzfCIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO0mWajhzbTgK43Oz68h3AU38p+wTtZP2jlCGGhxlHRz1bMDAb
+	/IXVypvg0J0kKaS12kBXjkNHDIEYXKCqZceuYM8e5yM/7JjD2KjXh96ubtgKZL0=
+X-Gm-Gg: ASbGncvqKXwAeaip14BSRn6SZ6EUe3zBzBfRiS5hClFK64qR6MpT7EYE0HZVMYZ6e1s
+	BxLFVjBChmd5O6szcI0sYKZdaYb4OCEscf9xK7v01p2BJRWfK8v07nyJ9PhB1v6JyvJRQ6MwIE3
+	5AAEK3XyUBR/+RXVX9E4ErPts+4+uHmTRMuF6leh/ZZipe0BSklI/JsaC6LI4Swzfb+rMt8427V
+	vYoidnxDa8LZA2GcrpTUWT58aGxJU+gOxDSj8DMlYjOToBtBTl4NvI8Oek0qNqxKHL/IccIBnOj
+	hstjQ+tt9CYY5lbRZIqXbzUE7qU7zdL5iQAWdA==
+X-Google-Smtp-Source: AGHT+IFdTIvskANcQfZgyrnhvSLOX/uhDZK8XOpbGmgtU0SafrRwMbwRPtiX/Z0dHI+9ZICQQQNkbA==
+X-Received: by 2002:a17:907:d17:b0:aca:a347:c050 with SMTP id a640c23a62f3a-acedc029a40mr272914266b.0.1746005955819;
+        Wed, 30 Apr 2025 02:39:15 -0700 (PDT)
+Received: from linaro.org ([62.231.96.41])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e4f841fsm902286966b.72.2025.04.30.02.39.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 02:39:15 -0700 (PDT)
+Date: Wed, 30 Apr 2025 12:39:13 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Sebastian Reichel <sre@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Sibi Sankar <quic_sibis@quicinc.com>,
+	Rajendra Nayak <quic_rjendra@quicinc.com>,
+	Xilin Wu <wuxilin123@gmail.com>,
+	Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+	Srinivas Kandagatla <srini@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Konrad Dybcio <quic_kdybcio@quicinc.com>
+Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
+ compatible override
+Message-ID: <aBHvwUAISo2JhYSz@linaro.org>
+References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
+ <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemk100013.china.huawei.com (7.202.194.61)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
 
-When the user dumps statistics, the hibmcge driver automatically
-updates all statistics. If the driver is performing the reset operation,
-the error data of 0xFFFFFFFF is updated.
+On 25-04-30 01:26:13, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
+> > It all started with the support for CRD back when we had different
+> > compatibles for eDP and DP. Meanwhile, that has been sorted out and it
+> > is now figured out at runtime while using only the DP compatible.
+> > 
+> > It's almost funny how this got copied over from CRD and spread to all
+> > X Elite platforms.
+> > 
+> > TBH, the best reason to drop it ASAP is to make sure this doesn't spread
+> > beyond X Elite to newer platforms.
+> > 
+> > Functionally nothing changes.
+> 
+> Looking at the diff I wonder if this part should also be simplified:
+> 
+> /delete-property/ #sound-dai-cells;
+> 
+> This is done by all upstream X1E boards, so maybe just drop the
+> #sound-dai-cells directly in x1e80100.dtsi?
 
-Therefore, if the driver is resetting, the hbg_update_stats_by_info()
-needs to return directly.
+Yeah, I'm not sure about that.
 
-Fixes: c0bf9bf31e79 ("net: hibmcge: Add support for dump statistics")
-Signed-off-by: Jijie Shao <shaojijie@huawei.com>
----
- drivers/net/ethernet/hisilicon/hibmcge/hbg_ethtool.c | 3 +++
- 1 file changed, 3 insertions(+)
+Though the DP3 PHY is currently used as eDP, I think it could be used
+as DP. So I think it makes more sense to keep the DP3 controller as is
+in the SoC dtsi and delete the #sound-dai-cells property in each board
+specific dts. Don't know if it will ever be the case with this SoC, but
+maybe someone will use DP3 with the PHY configured as DP rather than
+eDP.
 
-diff --git a/drivers/net/ethernet/hisilicon/hibmcge/hbg_ethtool.c b/drivers/net/ethernet/hisilicon/hibmcge/hbg_ethtool.c
-index 8f1107b85fbb..55520053270a 100644
---- a/drivers/net/ethernet/hisilicon/hibmcge/hbg_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hibmcge/hbg_ethtool.c
-@@ -317,6 +317,9 @@ static void hbg_update_stats_by_info(struct hbg_priv *priv,
- 	const struct hbg_ethtool_stats *stats;
- 	u32 i;
- 
-+	if (test_bit(HBG_NIC_STATE_RESETTING, &priv->state))
-+		return;
-+
- 	for (i = 0; i < info_len; i++) {
- 		stats = &info[i];
- 		if (!stats->reg)
--- 
-2.33.0
+Not sure if I'm 100% right about this though.
+
+Dmitry, Bjorn, do you think that is accurate enough?
+
+> 
+> Greetings,
+> 
+> -- Sebastian
+
 
