@@ -1,405 +1,214 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2064.outbound.protection.outlook.com [40.107.101.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4555522E40E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:30:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746012640; cv=none; b=QShxLfuPSdvYG0RPnBGMlddwQgOLi1EYk89y9LiBtLsiwl+3bg8IQZ1n4RAqylW9zD7yMtPPwrm5gFWkdRzKA90MiDW0S0DK+3Hj4RqVa8GqM65eld6cyIeR6c7OJiLi96WchsTZH0AAxxmEJ/rxUNvV+0xbUv1LplvU4Jkcwqs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746012640; c=relaxed/simple;
-	bh=etVMEYjRUeoslaeqvIXFOZ47xDCRXCVHMfMSuv87Oqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=tHLEq5Okd6kw1J+Nwg3d+ftn4MjJpsPeoTeDNOR7cuVasArGk/SIgj/7NGakxMmJZbcQsSqHjvzf+BQNPFgFbfZZi6veJUDrDIgobEE8sytPS/a24nJgquJ2JvLoVNIF//6T6Mg6XM/uOj5IM9h+Vv7ADreuhkhpoq8iesgreqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJiPlhBV; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7665C25A2A9;
+	Wed, 30 Apr 2025 11:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746012665; cv=fail; b=lrBqsrlDXvVmbzb0MLx5DZQRX/CKfxmYT/KtafEqAAt+eMm18yg7nhpkzxh61yfPmy29H4AJn64O426Bhn25WM4w/mkbZbw6YbIP8Ulr/XthsOS6hIDhUa4bpK3zfTBzSUeJbqCdg+m1MAqFqGGXsWWVMf6IGPBOHg55Sq2zYbc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746012665; c=relaxed/simple;
+	bh=yw5qBErrF+5bVaYIgN/Oqsjg7MOTaUbWYQI0j6Kc/zE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bgs4VSaKTfzw/2Lg+e7fZuLfQdrsQ8hwHJ5w+bUoBl9AQBQHgBeridzZKOnKawRpoV8/VjSaLn8havksAkdm8Yu5Qv7CQPNyqfOknE5MfkK0dBEl47CYsD2wvMDafCHVLjrTX0yGU1v/YeX7MYUiO8KiQKF9IL289nsVInywPAk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=O7BYEisP; arc=fail smtp.client-ip=40.107.101.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJiPlhBV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746012638; x=1777548638;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=etVMEYjRUeoslaeqvIXFOZ47xDCRXCVHMfMSuv87Oqo=;
-  b=FJiPlhBVqyP51jQzZl9rJNousBaPU2X6qxNVub6xFSxUNVQTZ1BEQnd4
-   2k0WrfUDu3MZizPdyslSt4BmNFkOnJ2Cg/cbGvfynUeH/6t0KUhr/xRL0
-   IyXDy6919+rGo+FbKlcsCzJHpvpA0b5qNY+JsgvHs/4d3BySrDOIj7EvU
-   kVK9ovw2L2AkFra+amiMfBrM3krQopEKrBliCFNrybRB9NL5wPd+rtByd
-   TjQRxenaE5XSNiTrWQz1CZ7wVxJcQBq7VZeTBOBHcSUSof2q/03gDhgY3
-   nTiHikbVqJsrzdAtAknHg9/29exgKw16ZqzNmLGWaKLFECa0nOCcoojQy
-   g==;
-X-CSE-ConnectionGUID: xNl87Ds/So66WQYqUaLQ1w==
-X-CSE-MsgGUID: ja8Gtkv/RWKI75kio6hhCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47386063"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="47386063"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 04:30:36 -0700
-X-CSE-ConnectionGUID: 6brIhxDCQqi05vjvhn5iOw==
-X-CSE-MsgGUID: ydE0aDhySim9oiKjyEBvhw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="134609066"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa007.jf.intel.com with ESMTP; 30 Apr 2025 04:30:33 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uA5e2-0003Pj-2m;
-	Wed, 30 Apr 2025 11:30:30 +0000
-Date: Wed, 30 Apr 2025 19:29:40 +0800
-From: kernel test robot <lkp@intel.com>
-To: Friday Yang <friday.yang@mediatek.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stephen Boyd <sboyd@kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Subject: arch/arm64/boot/dts/mediatek/mt8188-evb.dtb:
- clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells'
- is a required property
-Message-ID: <202504301933.6REBjomp-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="O7BYEisP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CNW1W9VLRhVnp/oaWB2yYBp/Y2+QJV3UJl/znKo5miuczIelfuszkYefQwU3n11d9sxt3GbkzCS2qQhx9MgFBrpgh3HJK0r1Y137oTCUCHVq2c6dKtQ3oho4dNKY5jECL5QY4fGpgO2yUrLuABWOXBYaYMhbaCO8L0EhRCPyygEhK6o8Wq94k7D66o8ZuQled0PIoBDrWg9OYaCRVBJE8ic3JQQl2qeTvTcxz7hM3rs/InigpPPqoV9z1s5VOx8C6IvBak01XKduTT8/iTJ6urp+5AFqtpnsrY4h3Dg8vP9cU0ppFQi98YWS7pn9UHF7DrO97COEkz2rEl97kQiu7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kB4i9ftNSOvRiEmk6L9KnZpnJww+Pl0ohoKE/JEXnvw=;
+ b=prGgC81IhCgKxTg6KE7k+PUjdtHKchUPz7qWAI68WYUDf0Mf/qH/rD5iGybxHY6gMCieewIa3kJNFkBLmvdjVwUvhfZtz7wE/kHDp8Ij4zsXMo5Ipdz+32NwGO7FN/fCJ9SFzHnj/bDB/dAlisQM3ECq8D/1AaXo38Vsmsc1UBQ+v7kSgUKhypDR7U7CuByRmEGub/MLyMEGxhVWWPFySf26BWz/luqZ5wEhefH6kYIlG1OOM3LvOdowNbqNXFEWnOCQn5AwlR0kzJlYkyZseA3OvKCsVYeyOD1jt+izRj0MeGzVI3yJeEEOYAYYv9hOasUBI7FHBEjjAGEd+TddhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linutronix.d smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kB4i9ftNSOvRiEmk6L9KnZpnJww+Pl0ohoKE/JEXnvw=;
+ b=O7BYEisPYLTNnrbhJh4ljZob1hbRgKsAazfnfTG76fh/i4vHJVcP0lS6rtnUGPPQ5Yc/A9H5FNA1AOCFmvWg6L+2lZntm8vg4Oihz5uxY3TztknEAXtRSNc3+6VG6notnh+p2NErB8o44up6CfdelYywLU1oR2sSUoA7EWYrjLc=
+Received: from SA9PR10CA0017.namprd10.prod.outlook.com (2603:10b6:806:a7::22)
+ by SJ0PR12MB6760.namprd12.prod.outlook.com (2603:10b6:a03:44c::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.27; Wed, 30 Apr
+ 2025 11:31:01 +0000
+Received: from SN1PEPF0002BA4B.namprd03.prod.outlook.com
+ (2603:10b6:806:a7:cafe::62) by SA9PR10CA0017.outlook.office365.com
+ (2603:10b6:806:a7::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Wed,
+ 30 Apr 2025 11:31:00 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002BA4B.mail.protection.outlook.com (10.167.242.68) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 11:31:00 +0000
+Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
+ 2025 06:30:55 -0500
+From: Shivank Garg <shivankg@amd.com>
+To: <tglx@linutronix.d>, <mingo@redhat.com>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
+	<luto@kernel.org>, <peterz@infradead.org>, <rafael@kernel.org>,
+	<pavel@kernel.org>, <akpm@linux-foundation.org>
+CC: <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+	<shivankg@amd.com>
+Subject: [PATCH 1/4] x86/mm: pgtable: Fix W=1 build kernel-doc warnings
+Date: Wed, 30 Apr 2025 11:29:59 +0000
+Message-ID: <20250430113001.546066-1-shivankg@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002BA4B:EE_|SJ0PR12MB6760:EE_
+X-MS-Office365-Filtering-Correlation-Id: ff5eb123-5d0c-4fda-9202-08dd87da7b89
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|36860700013|82310400026|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?fB1Qu8jcHa6kHRUYwV16Z6VvJCU67TbMjurEddgzoXY1fy811et18cJ9T7qA?=
+ =?us-ascii?Q?yrLTeG+cd6flwzAIS5BIHewcc/rXoJTEWSgf4kCLWoema1PZNze0Pu0HJCbw?=
+ =?us-ascii?Q?9XF2HfPbqxWcH59BaOB4CWfnV2idOk8BtBQR3bochKtod8+sMbz+oOV3D2ZV?=
+ =?us-ascii?Q?xH8MK2BMP69N1O2rGfsLBCImGLwK4kruTIPyR13phfpOSiCAVzKC0yOOnr+2?=
+ =?us-ascii?Q?ygqqqUL21000ZC0uuiuSxR92A0zMi6aoGM11auq2Kg/KTEWW/Bif0TqH9ine?=
+ =?us-ascii?Q?Xu+4FTCTsKJ+4BtMnMPwZytbtui5H+L17EvIQR7E2GCAp+lhudriUUw355np?=
+ =?us-ascii?Q?UYPjeFfOukFIqgsrGmu0/oKyj1zhDFRTwDb7ah5lljzkynrgbSG4bpsm1dEL?=
+ =?us-ascii?Q?u9hhtqKwP703uHOazo5d8Nogets06yjsUec6nO8Zi6ytKK2t3SpF9/W7s/CT?=
+ =?us-ascii?Q?kZRKVfSNhjtUNz2yYW14Yoqs/rjmZe5u4UnxppQHHgJVgQ9WAZWHjE4SV2e7?=
+ =?us-ascii?Q?qSyBjU+PngUnvKooBSmjSD3j3uqrJqbwhM3YBMdKj7Ep/A1tiVtlWq/M6YQR?=
+ =?us-ascii?Q?NL8iniLQDDq6YJa6bWUhmk6Mnr4e2tg1spJFijoViYGbby7apdXbpF8v5lc3?=
+ =?us-ascii?Q?5p4ZexQ4QD+Q5gh26HgtA9iSS8kWj7nHL43q/FrZ1sGSu5yd6pwCpkLp46Fg?=
+ =?us-ascii?Q?Ofts/SIyxqjq0RQkY8r3f2J8pahyZd4LllsWfL6YeGahsok7czEzUMCs+MW3?=
+ =?us-ascii?Q?pH7f1PeTNPpSWS3HYt6zPJWDYNUpRjEkTMwBh5PwdODA7HuSdWr9cwibRbDc?=
+ =?us-ascii?Q?lLyZEUZOQ5+13LdFRvf+wTDptUmcydj1m8rV1Yg8KJvCDZcQx0KJgBRTA/0L?=
+ =?us-ascii?Q?B611SXWjnMVYyPmr2LYHuVMmUdaAlMlKPqRfBEZFouNr9Br+vfpitU71fX+1?=
+ =?us-ascii?Q?76/abvXnW8JB5ZQ/yNqw1/B2mc0vaZlJTP7NSAyunmLtSgrC4MoM+3pU19VE?=
+ =?us-ascii?Q?O2dQTbJpQ7gcsAd6uneUOyax4fHQy/sboxbA1GE9b+pM4GR4N3vI6yP/E697?=
+ =?us-ascii?Q?9WFbJp//eQstyDxJY6TG5QjIk36jkCcXsZMgu6qrp/67Qp1ee33PJ3WRe8Yn?=
+ =?us-ascii?Q?9Iw5ELAHkL20KrW0RelKE0NAf4a71q2Ak9cX8Y/pifJl9TJpSw5mUg9KMv8o?=
+ =?us-ascii?Q?AxZO5SYN1ipihJHjKV4wMEg6iF/O3A+a/pFJgIY9BZW8zcSuY1SJL1Ogn/rC?=
+ =?us-ascii?Q?OOUsecok60L++LpWRIEH92M1AD1JlwTnE4CDp39cUHGDquAqXME+WzXgg/7B?=
+ =?us-ascii?Q?Q++nTPjPNeRyW1p/fXF/h2G9snDxP01Wm2jU1/ytSzJbxdtlrEweQ0ZSUOYn?=
+ =?us-ascii?Q?psYj3wpdBqbrNK3ZXj7EhEGIFbeVgV7JQDyIZHTmWef+3HImhmZJNmAOCGMj?=
+ =?us-ascii?Q?/UxZMk3yVyRRy25MJ7UMjHrhS+4CiwfP+1ekxDmfN+60bV0FUn7eHUdGtyXe?=
+ =?us-ascii?Q?CCqRA1aUdys7nkT+vrjTxglwXJro15eKe1KWAx5MvD4DHajjRw7HG+d93Q?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(36860700013)(82310400026)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 11:31:00.1141
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ff5eb123-5d0c-4fda-9202-08dd87da7b89
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002BA4B.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6760
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ca91b9500108d4cf083a635c2e11c884d5dd20ea
-commit: 9a5cd59640ac6231ac32f560818eb8eb7ff4438f dt-bindings: clock: mediatek: Add SMI LARBs reset for MT8188
-date:   9 weeks ago
-config: arm64-randconfig-052-20250428 (https://download.01.org/0day-ci/archive/20250430/202504301933.6REBjomp-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250430/202504301933.6REBjomp-lkp@intel.com/reproduce)
+Sample warnings generated with 'make W=1':
+arch/x86/mm/pgtable.c:623: warning: Function parameter or struct member 'reserve' not described in 'reserve_top_address'
+arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'p4d' not described in 'p4d_set_huge'
+arch/x86/mm/pgtable.c:672: warning: Function parameter or struct member 'addr' not described in 'p4d_set_huge'
+... so on
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504301933.6REBjomp-lkp@intel.com/
+Add missing parameter documentation in page table functions to
+fix kernel-doc warnings.
 
-dtcheck warnings: (new ones prefixed by >>)
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-evb.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[102, 685], [102, 686], [102, 690], [102, 691], [102, 692], [102, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku0.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[131, 685], [131, 686], [131, 690], [131, 691], [131, 692], [131, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku1.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[130, 685], [130, 686], [130, 690], [130, 691], [130, 692], [130, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku2.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[130, 685], [130, 686], [130, 690], [130, 691], [130, 692], [130, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku3.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[131, 685], [131, 686], [131, 690], [131, 691], [131, 692], [131, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: amplifier@4f (ti,tas2563): reg:0:0: 79 is greater than the maximum of 63
-   	from schema $id: http://devicetree.org/schemas/sound/ti,tas2781.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku4.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[129, 685], [129, 686], [129, 690], [129, 691], [129, 692], [129, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: amplifier@4f (ti,tas2563): reg:0:0: 79 is greater than the maximum of 63
-   	from schema $id: http://devicetree.org/schemas/sound/ti,tas2781.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku5.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[128, 685], [128, 686], [128, 690], [128, 691], [128, 692], [128, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: amplifier@4f (ti,tas2563): reg:0:0: 79 is greater than the maximum of 63
-   	from schema $id: http://devicetree.org/schemas/sound/ti,tas2781.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku6.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[128, 685], [128, 686], [128, 690], [128, 691], [128, 692], [128, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: amplifier@4f (ti,tas2563): reg:0:0: 79 is greater than the maximum of 63
-   	from schema $id: http://devicetree.org/schemas/sound/ti,tas2781.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8188-geralt-ciri-sku7.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[129, 685], [129, 686], [129, 690], [129, 691], [129, 692], [129, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
---
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: pinctrl@10005000 (mediatek,mt8188-pinctrl): 'pcie-default' does not match any of the regexes: '-pins$', 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/mediatek,mt8188-pinctrl.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: pmic (mediatek,mt6359): '#sound-dai-cells', 'mt6359codec', 'mt6359rtc' do not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: pmic (mediatek,mt6359): regulators: 'compatible' is a required property
-   	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6397.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: mailbox@10320000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: mailbox@10330000 (mediatek,mt8188-gce): 'clock-names' is a required property
-   	from schema $id: http://devicetree.org/schemas/mailbox/mediatek,gce-mailbox.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15110000 (mediatek,mt8188-imgsys1-dip-top): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15130000 (mediatek,mt8188-imgsys1-dip-nr): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15220000 (mediatek,mt8188-imgsys-wpe1): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15330000 (mediatek,mt8188-ipesys): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15520000 (mediatek,mt8188-imgsys-wpe2): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@15620000 (mediatek,mt8188-imgsys-wpe3): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@1604f000 (mediatek,mt8188-camsys-rawa): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@1606f000 (mediatek,mt8188-camsys-yuva): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@1608f000 (mediatek,mt8188-camsys-rawb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
->> arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: clock-controller@160af000 (mediatek,mt8188-camsys-yuvb): '#reset-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/clock/mediatek,mt8188-clock.yaml#
-   arch/arm64/boot/dts/mediatek/mt8390-genio-700-evk.dtb: jpeg-decoder@1a040000 (mediatek,mt8188-jpgdec): iommus: [[125, 685], [125, 686], [125, 690], [125, 691], [125, 692], [125, 693]] is too long
-   	from schema $id: http://devicetree.org/schemas/media/mediatek-jpeg-decoder.yaml#
+Signed-off-by: Shivank Garg <shivankg@amd.com>
+---
+ arch/x86/mm/pgtable.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
+diff --git a/arch/x86/mm/pgtable.c b/arch/x86/mm/pgtable.c
+index f7ae44d3dd9e..8a5bc4545ad3 100644
+--- a/arch/x86/mm/pgtable.c
++++ b/arch/x86/mm/pgtable.c
+@@ -614,7 +614,7 @@ pud_t pudp_invalidate(struct vm_area_struct *vma, unsigned long address,
+ 
+ /**
+  * reserve_top_address - reserves a hole in the top of kernel address space
+- * @reserve - size of hole to reserve
++ * @reserve: Size of hole to reserve.
+  *
+  * Can be used to relocate the fixmap area and poke a hole in the top
+  * of kernel address space to make room for a hypervisor.
+@@ -665,6 +665,9 @@ void native_set_fixmap(unsigned /* enum fixed_addresses */ idx,
+ #ifdef CONFIG_X86_5LEVEL
+ /**
+  * p4d_set_huge - setup kernel P4D mapping
++ * @p4d: Pointer to a p4d entry.
++ * @addr: Virtual Address associated with p4d.
++ * @prot: Protection bits to use.
+  *
+  * No 512GB pages yet -- always return 0
+  */
+@@ -675,8 +678,9 @@ int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
+ 
+ /**
+  * p4d_clear_huge - clear kernel P4D mapping when it is set
++ * @p4d: Pointer to the p4d entry to clear.
+  *
+- * No 512GB pages yet -- always return 0
++ * No 512GB pages yet -- do nothing
+  */
+ void p4d_clear_huge(p4d_t *p4d)
+ {
+@@ -685,6 +689,9 @@ void p4d_clear_huge(p4d_t *p4d)
+ 
+ /**
+  * pud_set_huge - setup kernel PUD mapping
++ * @pud: Pointer to a pud entry.
++ * @addr: Virtual Address associated with pud.
++ * @prot: Protection bits to use.
+  *
+  * MTRRs can override PAT memory types with 4KiB granularity. Therefore, this
+  * function sets up a huge page only if the complete range has the same MTRR
+@@ -716,6 +723,9 @@ int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot)
+ 
+ /**
+  * pmd_set_huge - setup kernel PMD mapping
++ * @pmd: Pointer to a pmd entry.
++ * @addr: Virtual Address associated with pmd.
++ * @prot: Protection bits to use.
+  *
+  * See text over pud_set_huge() above.
+  *
+@@ -745,6 +755,7 @@ int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot)
+ 
+ /**
+  * pud_clear_huge - clear kernel PUD mapping when it is set
++ * @pud: Pointer to the pud entry to clear.
+  *
+  * Returns 1 on success and 0 on failure (no PUD map is found).
+  */
+@@ -760,6 +771,7 @@ int pud_clear_huge(pud_t *pud)
+ 
+ /**
+  * pmd_clear_huge - clear kernel PMD mapping when it is set
++ * @pmd: Pointer to the pmd entry to clear.
+  *
+  * Returns 1 on success and 0 on failure (no PMD map is found).
+  */
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
