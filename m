@@ -1,308 +1,226 @@
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azolkn19010003.outbound.protection.outlook.com [52.103.12.3])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01DA32C85;
-	Wed, 30 Apr 2025 04:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.12.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A871E2DC775;
+	Wed, 30 Apr 2025 04:22:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745986860; cv=fail; b=ACkfV35XPtc959Gip0vMi/PtyFno4BeNix7V921rG49hi4dV8MFcKN5+nldLBdBi3J6Cbh/hje8KuxfrwtwOQNo5zbx516mHCqbUb9cBpGujzzvF5kqXpm2rM6ZT7736Vwr6Qw6wjQJv14FILf0/1UYIeXOoG7zqwzRKNZExjT0=
+	t=1745986948; cv=fail; b=KkFCOfX/lIzzkSATGYFE2Giq2K9NiCTdWfa51J+yNHVrZh59zETPQahyXpIb2bCdkC3H+o7SQNQgIKpsX6K+zUlzGZEWCCc9z45TN45OsBa6TV41F7z40DMrUF0wET1dg33hfZvaYIb2NswcOkVPDblPKbTATeBXy232+niHEMk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745986860; c=relaxed/simple;
-	bh=KWYz4HiFOZ3yX4G0KklaWry7u3sF9v0oz96ipPJ0Zqc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J6ft6fIdRmo6TBDyolVI52SYB35Vx2j2uuTn1stfU/bT/xny/v1j7YSZuYbIDNwOJhvZMTkOcgnZq38l1E9eFBRQXhJLHn5Nf5TrIoz1Ipkw7Q632PmNqYPjCbGFdZqhyNLNoYjyxZwuvR0PscnPYkOL8Ld1TT8csO5hieM32Vk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=s1LPyTtz; arc=fail smtp.client-ip=52.103.12.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	s=arc-20240116; t=1745986948; c=relaxed/simple;
+	bh=lKplf4Q+OBuYlPmsMFyTCrz99GD6uWokx4jakmZcK7k=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=F6UNoiZ25GlmBxjAwig1mEuFcfak/N+txfCoMrMC5ckE3YJ/onOLoi4Y8c0zty/TAS2v0rizs8AiUmYiBmx/5zNbHx1aZ0Nn4aBoopSOCEZXrNnqn0GjK9GyPRE1u4VDska3Ic4q+zstZp09erko1mCqJ7QzX4f+o1V7JDdnIws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mW/7C5v0; arc=fail smtp.client-ip=40.107.92.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="s1LPyTtz"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mW/7C5v0"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ga/E4WGXqv5N4wpBc8DzychM63nQINi3PIZyQhvHEa/DI9rN/3dze5jz+be4ovRww5u7oV93YGi2/72Sz/v4GhJuYuG1Yxdk4vg9qGfOiAJqSGv/tamywScYyFaAyAJWWWe8+xE6gh3JhEuyB/RAWWoNz4GcxeGJbcqFOoWCtiHoWR5FJNXKbUafO9rUf/3A8r4Vdm4QujcxJOkUgMP2OSAmV2PB24uvvXFAhFeQBTojWVg0lfJ2MpNVv0YCPU/e+ngshY7cjd6AfzrRQ2enHaZ2y787IrXA8/gCVQzkOe/DPXoT3zyW0/8YYGnLZQn84Ltm8sJeYXJ7ZNYjJSHMmQ==
+ b=vRjF8Z8s7B0B5y6etUhhcUaUArTloGAU46xv1TE2a44Jimp2w4Hg71E0Qx1MkJAB+H+e9zN8GpmI1e1YjnN4/HaxJsqU3muhBRgyjMSRBHb313trGO5II9FlrygzIZ2JCu8ct6P6Fu6AsmLv52OGM00ufuYrEfk41bemVBLpA6akOhlgh/zmS/oVf6tea8XxSCo7UIHEalfecDgd7kgZhVsjwUbN9wyh4ovnMXWkVpCQROB/TNELX3hAtVqyZywDLUZIKaCIpaRljgw71dDRRMA9T7yzJ9h9KtgW8Yzwk273HJtyclFPt+cZEtNIEOrsy6jGfMlxxByuCwBrcPE8CA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dvK2r+/hEf2JsEW/4ID2HtZg7/lC0WNw/mRBGzmJ9UI=;
- b=HHSaZX2FdcEfRpDkg+44rRHuksrqoKqCQVU4akcJXqYupuuu8NeIAFCo2x5WDP3sMG7XuM+RBx2rk2fLzoVMmsiIBqrp/spZE0PkZbXctGsadAUn2YF/9xJVKY1YoOKmKqcBVVXfdAvtwpE0q1cqA19VUz7YK3ag+gUktPqn9wty8CXZc18Sr5rrwmKY2Mw3miOv7gv2w6rdwQaRP4v0ENP6V8K14QrSUHw1c1fhfla4r5seHFMMzHpV9BO7MrF7kKCU0eTexEdv5wQBlQY7HJNaznSaVG6bSTr/KtcfM6ijohzADpOx7p0t2Rebew4kXdk1Wj1yyKuS676JLToDYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
+ bh=O5tJxQ+evYjVMmpPmqBdQCCwzS2gwUGZ22Y1x8Hvga0=;
+ b=iZ2h5YRso0mznvN7pC+cq61++BgCDcidLFJr4E8Wb+UZEuKy3uV/pyZ9qR2uVgXGvdEfBVsY+pJn4X54MpXEEwmJXbno5oW6SRKxbVKiG3y8XccaTABK5yHnwU8QAk7SN+6Za/Y8Xy7DzSUN3xC+kUd55SjK5H/GqU1OoGC/1/atkFDbWgvqCuufo+tnAZ0asNGWKWW151n18oQjVfcJ69kXC0qcmQ+cg54xtAsO6IOIYaNHmR94wM7SV6liAJByBDA2L0bgmNefJuvaMycVL+SL/Xe6F50K/65DEXgSUpzSNPd9rs+OHn34yzaH8XH51f2Usvc1HUJ8HicgM3CWUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dvK2r+/hEf2JsEW/4ID2HtZg7/lC0WNw/mRBGzmJ9UI=;
- b=s1LPyTtzZMFRmWOY43AU9AHEdyANDTA2OH+M60JwjcHqAulz897g+WPHljm3SWLHlWD0DeZ5K/wncSS2kUtNYtjYI2ugYq/CuppAJUqbqXrzy7m/33EwkwATwHm2p+Lz3HYtKIiq1yS36yn4b88GL3g7aM049VGivZpb0IF7vU++ten7/7aB4rSvR5cL8pQCx/Dxr7HN51+xw2+ZXyxdXG+AP5pnM5c7hbL65j9yvB1nzOe9k3GFGXCUhfb+eNaJgoHWL7Rf6SiZ7QeLfJqoiGEuB/xAPexGd4Etmzysf292N3/HpjnSVN1EZW/J0jj5R54qnZ9vY85UJW0PkZh2Xw==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by CY8PR02MB9428.namprd02.prod.outlook.com (2603:10b6:930:75::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.18; Wed, 30 Apr
- 2025 04:20:54 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::cedd:1e64:8f61:b9df%3]) with mapi id 15.20.8699.008; Wed, 30 Apr 2025
- 04:20:54 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: =?iso-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, "Xin Li
- (Intel)" <xin@zytor.com>
-CC: LKML <linux-kernel@vger.kernel.org>, "kvm@vger.kernel.org"
-	<kvm@vger.kernel.org>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-hyperv@vger.kernel.org"
-	<linux-hyperv@vger.kernel.org>, "virtualization@lists.linux.dev"
-	<virtualization@lists.linux.dev>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "linux-edac@vger.kernel.org"
-	<linux-edac@vger.kernel.org>, "xen-devel@lists.xenproject.org"
-	<xen-devel@lists.xenproject.org>, "linux-acpi@vger.kernel.org"
-	<linux-acpi@vger.kernel.org>, "linux-hwmon@vger.kernel.org"
-	<linux-hwmon@vger.kernel.org>, Netdev <netdev@vger.kernel.org>,
-	"platform-driver-x86@vger.kernel.org" <platform-driver-x86@vger.kernel.org>,
-	"tglx@linutronix.de" <tglx@linutronix.de>, "mingo@redhat.com"
-	<mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, "x86@kernel.org"
-	<x86@kernel.org>, "hpa@zytor.com" <hpa@zytor.com>, "acme@kernel.org"
-	<acme@kernel.org>, "jgross@suse.com" <jgross@suse.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>,
-	"peterz@infradead.org" <peterz@infradead.org>, "namhyung@kernel.org"
-	<namhyung@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>,
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
-	"jolsa@kernel.org" <jolsa@kernel.org>, "irogers@google.com"
-	<irogers@google.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>,
-	"kan.liang@linux.intel.com" <kan.liang@linux.intel.com>, "wei.liu@kernel.org"
-	<wei.liu@kernel.org>, "ajay.kaher@broadcom.com" <ajay.kaher@broadcom.com>,
-	"bcm-kernel-feedback-list@broadcom.com"
-	<bcm-kernel-feedback-list@broadcom.com>, "tony.luck@intel.com"
-	<tony.luck@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"vkuznets@redhat.com" <vkuznets@redhat.com>, "seanjc@google.com"
-	<seanjc@google.com>, "luto@kernel.org" <luto@kernel.org>,
-	"boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-	"kys@microsoft.com" <kys@microsoft.com>, "haiyangz@microsoft.com"
-	<haiyangz@microsoft.com>, "decui@microsoft.com" <decui@microsoft.com>,
-	"dapeng1.mi@linux.intel.com" <dapeng1.mi@linux.intel.com>
-Subject: RE: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-Thread-Topic: [PATCH v4 01/15] x86/msr: Add missing includes of <asm/msr.h>
-Thread-Index: AQHbt1dCxRX1SSJBLkyUN2kSfV4ndLO6aEuAgAE1BbA=
-Date: Wed, 30 Apr 2025 04:20:53 +0000
-Message-ID:
- <SN6PR02MB4157EA2E3B827141588DA310D4832@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-2-xin@zytor.com>
- <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-In-Reply-To: <a1917b37-e41e-d303-749b-4007cda01605@linux.intel.com>
-Accept-Language: en-US
+ bh=O5tJxQ+evYjVMmpPmqBdQCCwzS2gwUGZ22Y1x8Hvga0=;
+ b=mW/7C5v0DompPEJMyHLJB2WRM+l9KlatO28znwOgpZhjwM8FPkReqxdcd8W/rhax0sJsdFNfy4Ew2cIGg95vxQEbyM2Ec652xdR4ikbwpa/VPXQBTtwVhmtJ26/IKxKLsxoJsLJW6Jdrm6+y2KrnJFSbh1LxhFvIo75cr6luBvc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ DM3PR12MB9390.namprd12.prod.outlook.com (2603:10b6:0:42::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.34; Wed, 30 Apr 2025 04:22:21 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 04:22:21 +0000
+Message-ID: <7c813df6-e37d-47ae-9b5a-b8735c865626@amd.com>
+Date: Wed, 30 Apr 2025 09:52:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 10/22] iommufd/viommmu: Add IOMMUFD_CMD_VCMDQ_ALLOC
+ ioctl
+To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com, kevin.tian@intel.com
+Cc: corbet@lwn.net, will@kernel.org, bagasdotme@gmail.com,
+ robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+ vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+ jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+ yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
+ zhangzekun11@huawei.com, iommu@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-tegra@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ patches@lists.linux.dev, mochs@nvidia.com, alok.a.tiwari@oracle.com,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <094992b874190ffdcf6012104b419c8649b5e4b4.1745646960.git.nicolinc@nvidia.com>
+ <b0d01609-bdda-49a3-af0c-ca828a9c4cea@amd.com>
+ <aA/exylmYJhIhEVL@Asurada-Nvidia>
+ <b8338b47-6fbf-44ac-9b99-3555997c9f36@amd.com>
+ <aBB1gLfahnLmn0N1@Asurada-Nvidia>
+ <a3860aed-5b6b-4e68-a8fd-1a6ee28ba022@amd.com>
+ <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|CY8PR02MB9428:EE_
-x-ms-office365-filtering-correlation-id: 3d0d210a-0c2d-4037-26cd-08dd879e65cb
-x-ms-exchange-slblob-mailprops:
- 70qbaZjg4mvbis83qL2U5WvEmRMBS6Og9W/3014Us/uuwmhN2UMLRJLUTlmuqN5h9ehr8uc6w6voiES8QxIGpN0rfCSOM9sOOHGLjemzx5vQcTGO902AiVqPz2A3JQjnNpxe+TmFCiX45epvb1/3E/S3dfmB2IMc6Sb5ndzUEmhxssKtmEvp14NWRaHnFrw0WfyKXLFWZHE9acl4TNTQEsEu2HU3f0UKjU/UX+YJwX4k3uWTUqE0DZHWP69nVlSBLjWeBqPlZ6K1qpn77jaYLfB3Bz0dHAjXzcVxdtqb6xdBDnbSc0yNWRaBrkzWWu+H254LnHV+pHFD/oi59WsjdoBkyG6V20uf+TedjnyD3uFNl6uy6HCeWUb3GCb+Lb9FedlS9/k31aK78fViFEM9TLpwgQO5hAzNa+K5Web9rzREs0PzO5c6XoOeyaNpFknp3pT136KOQpfNix+EqD3O/JhBn7qKAgHbmirv3yzuoEtWGcn68EyMRjFfsGfLhZfEkseUv0Az7QRsqcwv3Q9HNGBWa3Xw5TjT7IVQn6byPyF/rDDHJXJb+Mwu4mQKJbokv5eZrLVW2qFYwPw7+8vJGo55OGPMzuDsYDZBugm826HQBw+0h8GCwcvrySV2YrD8kcpgITqSZ7kSsqNgyf9Jnbw4iT7xLfzQeVeRqwCe6RH/9SRKDXNJ4nD+ryVAdkLeYUb7GEDe/R3Z7K5AeleYFv+p4EhZtZdU3bI6e82Z4MHFIA+tdk5pzQ==
-x-microsoft-antispam:
- BCL:0;ARA:14566002|12121999004|19110799003|461199028|15080799006|8062599003|7072599006|8060799006|102099032|3412199025|440099028|19111999003|21061999003|12071999003;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?sAHcTpNlk86YDWmdOjpjnVGfqswYWqUmVVV01MSP5d+6CLugqu9DDRrRpW?=
- =?iso-8859-1?Q?uZZA1rl6GPfrNusZXaarGueIpwi8Q5ayKtp626EpHtCKvNCh/z9omy7Ip1?=
- =?iso-8859-1?Q?dNi9Vl1FcWAtvxkWHSdNEE7Hfxv/zNDKmPnqFIaBWnb/8w/M+Fo8/DhAkD?=
- =?iso-8859-1?Q?x1kOGshNgwS6F7jQSuf9Pa6AIACpt8WCaHG0f8XKmVWymesSmiBRtrbPmX?=
- =?iso-8859-1?Q?pjRhOfEe7fvI4MbaaeYiDrXKKltX9xDawlEiP2muaG4tDot/vad4XOzDV5?=
- =?iso-8859-1?Q?oDxyzf5WbsSzQeTrF9DR//PpQaO0MC6cX1Y0WDZ07zGJoAe1cCs8tiixaI?=
- =?iso-8859-1?Q?WgmHuWq+o2li88q4iq+9jlPtL3AEJCJMERnHfaHoPV6NY0awa6rwtI8DYp?=
- =?iso-8859-1?Q?wVmiG0VKOYaiVszrc1JHCnb2wUZAORWUwRsJBANUc7z945TjgjkIx6fNRx?=
- =?iso-8859-1?Q?PyRkALMTUxKeqcnJM7Jy/VymuYrnNoPHNm6h59YFI28VA69J36aUTug/Y1?=
- =?iso-8859-1?Q?hbDJKl9jFRUm6WrQbFvZN6omiAVR8PpCUWRljjjhgLCVIo5ta0QcDlPXjs?=
- =?iso-8859-1?Q?rsfmnL1o6skGx0vaa06y33p25QviLyrlqdev616BmETRtJ1YiGTwuD4GSo?=
- =?iso-8859-1?Q?LaueymHkPhouAVIGnKzPyS9hqFmkql7N53RaaAM5lJkf9xtQpExfrmq5zd?=
- =?iso-8859-1?Q?1jeqo+wfO83sVMoF7ha+nOa34GqzbtcJa2sEckN/90lbL5fRzgK/CsADRi?=
- =?iso-8859-1?Q?vHaMVScui45ypd0/T+g+xcnRqNdiJNhsC4E5Qz2EDI7+66pyxiTXigV2ds?=
- =?iso-8859-1?Q?w6FNILVJljSPTqKp/8NoUgVtHYPs7DzFYWyoH8PultihFHpn9giSm+ddPP?=
- =?iso-8859-1?Q?s4sst1NTjetFCCwqpp+GtZ8XOQ31E3s9GKHbN1lcGDhleXtsAMvPpw9fp+?=
- =?iso-8859-1?Q?84PamiJ43E7lAfpHbeSbwtZ78XHQh2a1aBRb1DfP9WtmymvkZ+5hiQ+Jtt?=
- =?iso-8859-1?Q?exCggCOz3vT5JSUMvjl9vC9i5WgIh+VrOo4/bWg/4zeaXIJBUa7u+Txtk8?=
- =?iso-8859-1?Q?3Ct8MUCtP3mg0j0gqB6TTFxY3IZHSrJ+uDIuepJd+8BqnErUTzv2cdODhU?=
- =?iso-8859-1?Q?AxL+0XrpyWwdc3zBYWl1cu/OmIkj8gdyAh2cKKG1ljZFKy0eefh/nD9N2Y?=
- =?iso-8859-1?Q?WBq1xgdNiTFaecZQGenBafpOQalkmcrrn8IkFuPwY3Ct0rvfhqzrSxVw3v?=
- =?iso-8859-1?Q?hscSj88xP6N7FqaOLiwt1fWf9jRQTG9RH0QKSkH4Q=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?46i1sKkGUf2Kl0zhlolABqRmtZzPSJWRjAt3BFRy8ECcgF+mQjobIr8cFQ?=
- =?iso-8859-1?Q?+xL9oK/IIbRvPY+mKZFTmaj2v7xwVnxmp5FLnoEHtjFro3dm6V664MBU+3?=
- =?iso-8859-1?Q?+wPEZkUsza3xlJCNL9TMoEJDpLke0A+mmjcDkB4kRERzec3xK39migWixJ?=
- =?iso-8859-1?Q?pg5WLKFxzHTPGcw1w3nXH9OHxmF3MHrXV2GSMo5xDw+ZR674xPhR3HKi+3?=
- =?iso-8859-1?Q?byXeWGntA73Y90gvA/KzHl27/g3QhxIbumHYJx02+nRDrPELJs5pOgfKhg?=
- =?iso-8859-1?Q?8as9Bh0H2ZTBKlto5EOzn9Sj+k9RlFIvp2h+TdByzwptC7+7jFk2Mmx9hf?=
- =?iso-8859-1?Q?ahypKdmrVptvlkMPgCJyizYP5ZAqlk3abvjfVjqDqlb6jZneUcJcyEByX9?=
- =?iso-8859-1?Q?1Pb+zpJtWKqj2u7rSUjduaK4jqrfZ/a2iY5G28cGyaUlHkIwZmU2kj/gYq?=
- =?iso-8859-1?Q?CEbNY10bJ8JbiO1eRntgpbuCj/c2VX5g+p6o6S5kvJ2iZ1TKI+8rTXyYEw?=
- =?iso-8859-1?Q?sfgLmQWoIhX/O/4kPtMMUS0GqX8pdwPHqalj3PlCd2XwMLG2Un7beBj5u6?=
- =?iso-8859-1?Q?fVNgjaQy/9+r1Nrkaqoh8nTd4pi3Y71sGpRLDhBN9tfZ9DHynMkc9gLNXV?=
- =?iso-8859-1?Q?ZLoTxKuHu2PCJuvV73F7LJNO1AN9ctVA66T9Y5CZv37eA0wxjOnJAXy9L9?=
- =?iso-8859-1?Q?+X2JXWnztCyw8Oau0IG/Db/UMzkXXXQ0ChVqnz40TvV/MlvlzKHhgegih3?=
- =?iso-8859-1?Q?qjTKwx2HkgXvMOHanw5rUpwOiTDWV0uyc+kAoOeUmZu68Uri9XOPO7XVd4?=
- =?iso-8859-1?Q?MF1FFTnKeanbFYR7K0SEvJr7gOTHl6rF0n4hb4A7olHugY6esyZjj//LmC?=
- =?iso-8859-1?Q?WuRnkqxBF7voOdjtfGN/YqMqHJ8m50DqyqoTnWtFNE05mxqFNmW/oxghUb?=
- =?iso-8859-1?Q?/IbP705YFTxIZyHYnEw+ClfPc9B+HvOSxdAVPVGbiZwWqp16xrAN9fxEe4?=
- =?iso-8859-1?Q?Z1cSzpkkI4v4KfI53O1bcxI7Nx/8xDZZVf7wE6+D2s4FGibs3bQMknxKaf?=
- =?iso-8859-1?Q?N4jVzDAQb32d4v0nmFp+Pj7NVGYtGk391AOzFilb844Vu9pgakBFAiHVjK?=
- =?iso-8859-1?Q?vxivww+0PJrUeh/POy7j7pEyrr/rYsJvl/6omeOiM9K79pBUxEHyBXaW4m?=
- =?iso-8859-1?Q?PEGHpafia27LjTH2/m1MbQ3fyjNt7F+AkithQGsohmUxpLpSmgPdAmdaw5?=
- =?iso-8859-1?Q?D7NbEddypJrHYEzE0DKSxbU0+RQIMRlu4i+2edvB0=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <aBEI+T7P+hV8Y6tU@Asurada-Nvidia>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0059.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:274::9) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|DM3PR12MB9390:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3f8fae7f-392f-4c63-1e44-08dd879e999b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SnZ1ckp3NXFIUGsrQyt0anF4S1llVWNZcWtJeTB1Q3F3L2tHblJGdWFGM09r?=
+ =?utf-8?B?Z1JKL3J3SVRudVdFYU1USHNMMDNaMHFsVE9nQkZ2SWtkbkFsWG5jZ1o1L2VR?=
+ =?utf-8?B?QnUyYlNtcVJodkJrWVZ2WWxVMmN6Ky9RZmNoTjhBQ3RWS0FmSTFzNjZWbGtK?=
+ =?utf-8?B?TU43QTY1aThtUURia2dzeUJqbkdEQ1IwT3pLRmRXQ2dhbjlnT0tlZUNFRzRm?=
+ =?utf-8?B?TWljcnltTkgxR0ZrMTEvOEhBUHJYT29tdmxxSkJndmcyaEhjNzlXSkc5Unlu?=
+ =?utf-8?B?cGpYeHVNT2FEbG1ZallBTncrMGJlNjdUYWlLWE5YVlRLY1Q1c2hWSGFBWVJB?=
+ =?utf-8?B?SGNzQU56NWxzTDc4YlJrK1FySVFwRmFnbDYvcUk3R3N1OTNVaUFrblMrQnd6?=
+ =?utf-8?B?dmRLTWZ4QnROMzE2RUZCVERUWU5lTUh2MXZLSjA2bjg1Q0lXNzRRSzBDQjBG?=
+ =?utf-8?B?QjhFek5mdWNFSG9ENmtnempRMzBLM09nL2djNnhtSEJmMisyZWR2K0kvYitF?=
+ =?utf-8?B?RytvZVJFREZZZjljbW9tdG5qdzZQTXhFcWRzR0o2blVhM3J4MUxmbTBGSW0x?=
+ =?utf-8?B?MHlKNXdoendqQmorSFRFTFpRemdpRktjNUd2ZG5OVUxXTDJTR1Q0NWNWS3Zx?=
+ =?utf-8?B?a054N0hCamk0UW94TlZIYXBkYzdIL010V25NYnlGSGJtbnFwNWJ2UGtQWmdi?=
+ =?utf-8?B?bnNXR2lnNGR1U2dUUEc1ZGhwa2ZPWVk5dmUzYVhBeHJXRzFGeTU0bVFnUW9z?=
+ =?utf-8?B?MUZFMEN6Y1VwK0lzcEp2MXh0RzI3U0xWUmNmUXBXa2o3WVlwb1JDb09aR0RV?=
+ =?utf-8?B?OU1uODJRNUZSNllqa3dyRDBMTHN3STFSc1lFaEVuL005RXA3eTdORU9EQzAz?=
+ =?utf-8?B?SVZqSDhEeU14aDF6LzZHMWF3eU9SQmhJTWo4RFVyMFg3bUV2VTNyUkF3b3V4?=
+ =?utf-8?B?NmtpY0thd2NhNkhMTDlqemZlbEdQcFNFUisyWk9VUDRodXNSdWdRWlpSbjVD?=
+ =?utf-8?B?cGNjSS9UVGJPK3pOZ2o5bXBQNTFjUU5ZU3A2QXc5NU5EQUl0K2NUTEJZZ0Jj?=
+ =?utf-8?B?clZkU3NuNitMOTNnNWhrdG1ES2t0dUZkc1F3bVN6TUJBRHZFdjRtUHhwRkVG?=
+ =?utf-8?B?NzI1L2VraHI1bjZtN1l5SXJSYWVZeGxXd3ArU2xSWW94KzBjU1RxVzE2cTVK?=
+ =?utf-8?B?WkU3VkszRkhCWk1RaFZvZHdVeGZiaEE1L1krU0JtamNyZnQzZzF5S1cyRE1u?=
+ =?utf-8?B?QUp1NllCM1JrWjN2MlpxQVBpdUp4YVBTN3ZQcDNoRzhVNzNwaStlMGE1cHk0?=
+ =?utf-8?B?MmF2ZEc1VWpqU3VlRDdONUh3TkdSaXRQT25JSDZJL3RUWkoyVE5yMmdyc0Qv?=
+ =?utf-8?B?VGdGeVFSa1U3NUpta0xYTTdpYTI4d3dyc0Y1cStmQVB4dTRHL0tMUXVUdnlO?=
+ =?utf-8?B?UUgyR2lSTjNDTjljemxCT0RuQmJ4YVJCc21rNnREZ012WWZxcVBVTzE0c2VL?=
+ =?utf-8?B?STBBR0VqY0hmOUJBQjBoWU51RmVMNnN4cVpNNk5lVmZ4UzIyYnpMQWF5NlAx?=
+ =?utf-8?B?aTVUYlFUc0MxTjd6T1pMWkQvRHVNNjdPc3puK0cvZkVmYVNQMzRoM0JMUHps?=
+ =?utf-8?B?N0VUeW1sL0dKNzVsalR0STZheURBOXA1ZUJOS0FDcDMvU2ZZcERRVmpkVXhF?=
+ =?utf-8?B?OWpjejZJUHBYZ2RFTlJnM2NSSU0vdzF4dUdDT0dOb2dvdUg0WFI0RWNTQVhT?=
+ =?utf-8?B?OUY5SWdkRkF4b2h3TEEwTGRXRmpjcVlvUXVYOFZYMHV4MU1RRjRtcjIya0xr?=
+ =?utf-8?B?em5GcFpwZkxWbXhGNjdPMSthMXNyT3lZMmZNUlNvTTYwTzR2OE8wU2hrNnpI?=
+ =?utf-8?B?K1lsNGJwWGRrNEJpSWtqOUR6NzJ1M3NrMG1iaWJzU2xhRkNIeVlkT002MmhY?=
+ =?utf-8?Q?NI/621Sfj6s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bERSM2RmTm12MkJFSStidHdLaWNpakt6UkhGVFRwczNoTkxrb3pnSzBDZUt6?=
+ =?utf-8?B?aGlGN1VWeUR5dHN3d2dLUXAzcTZCM1NjaThyS29Tbnd6QUxsMVJsMmxidHg5?=
+ =?utf-8?B?QjhzSlFab3Rwa2hwSE00RHg0dFJIbkEvTVVQNnNXTEx1RjM5bXBoS1AzUGd4?=
+ =?utf-8?B?RUxUYy82aSt3ZXA2SGxrcWNPa0RybHpQMWtyN1F5S2M2OTZsNER5dC8rN0VJ?=
+ =?utf-8?B?cjFkZ1hTV3ZuS2hYK3hlMUpONTN0RGk3Vy81OXZaYkZDUnNSRGNQbnZKREJQ?=
+ =?utf-8?B?c0VMVk5QRlJuQUhFSWgrMytWVXo1K2w2b2ppL0hNNnlWVUFZN3dPOFZRbkxI?=
+ =?utf-8?B?WThLeS94U3luWEpNeFg4OVJteCsrOTZyQkNaeVdMY0M5cnpzakhQSmswYXNv?=
+ =?utf-8?B?cXlIUlYvY0ZPbVpaSThNMnB2eDBqZFBLUnFsWnZuSldtelUvZEp4STNSeDhG?=
+ =?utf-8?B?ZWdoU0diSUYxanEvNnovNTFnb0dIelYwTWI1eXNUODM0R1BzeUtPaU9zeGNr?=
+ =?utf-8?B?MkdoeHM2bkp3TVBtYUpSc0VEUmNsNEcrMVpiRlArS2NkUHFueHRNUXpNWDZI?=
+ =?utf-8?B?eURVTjRsbkduWkpFd0tBK0I2ZzF2TkJnVTlUZGxwSzMvK0JQRURFeEFPQStw?=
+ =?utf-8?B?UjQxcE9vTHdoS1ZGTFJHVzF0QkNidVVpZ0dIdVJhZnpodDhiYXg5Q3d3NXU3?=
+ =?utf-8?B?WW1IU1FIczJybWRkV3Q0UGhqdE9WQjgzbXJnYUdEK3BsZzVtZzNBcUtnVmRY?=
+ =?utf-8?B?Z0Rob210Q1V4bCtQSFU4UVFZaStuYnFjSHpCR2tsM1dNcFo1M3RPeHhmNWhT?=
+ =?utf-8?B?QktEelJodlQ4M05GNzUwM2ZyOXBqN0ducmZHK0YwdFZUc3crUmZCTzBwZUxX?=
+ =?utf-8?B?Mlh1T2piRnY3dVAxbGVLQzZkU2lmbG00T0NmcG5LMSttQVBFUDA4cldIVUUx?=
+ =?utf-8?B?ZE1mYVRSZU0vbHptTUVjcHlQVEI4bllpT1ZKSk41a1JxZU9KNDhENmJTWDVB?=
+ =?utf-8?B?aE5vVVR3SDQvRlA4VTZOWHgwY3V2b013VzNUU3A1WWZIaVV3elNGV2w0Q2Ez?=
+ =?utf-8?B?QjZ1UmQwdUM2Yk5VS0Zmd1Q1Tk5TZk01eWVXSHM5ZUtKSFFpL0xGNXhGUk9o?=
+ =?utf-8?B?RWVuUzdBVWVjemh1WndKMXRIRFpRUUdYSVB6N0xKU3lnWFVlWFYwZEdqN2lh?=
+ =?utf-8?B?ZHdvclZneGlIWnF3QVFiMjJNT09VYmo3VFpLUm5pZkRNcHhwOWRTUUpEUVBH?=
+ =?utf-8?B?aHRTNUd0ak0xb2ErMXYrSGpTTFFzby9FV2YvYXJQd3cvV1Y4emZ2SzI5TlVI?=
+ =?utf-8?B?ODBiZ1ZjNXRhMlV2aFhXdTl1SE5tbkExbnZCTUxLWlRoc1FWcThqb2xmYnpt?=
+ =?utf-8?B?WGhISGxqTzYxU1JZZXVNTlNQanZVaWpyNVhlTVpHWFhwNkwyRVFRZFhzV05o?=
+ =?utf-8?B?OG4xZmRIdHNpdU5RcWRaTWlGeVYzaEVCYnZDVkF4b1dITU1uM1lVT2JweE1X?=
+ =?utf-8?B?SVlqMGVHYVp3eDFwN09YbmdDeXhTbnVUNHdFVHRVRjhlcG0wa1dISDY2OXlX?=
+ =?utf-8?B?VjIzNlhrUmNxS0J0dm9xK1lZbjYyaXZYRDNoOXJTNFBqc0pZM2Z2bGVoZkM1?=
+ =?utf-8?B?K25mLzViNUE0L1U0bFllUEhNR2ZqSmw1RnpmMzdEL3NORHpmbUd3TkYvMXdW?=
+ =?utf-8?B?alFaZnBOYzBvcm5IYWJpb0N2YWJxa2ZCRHJRRVV0NER2UEdDVWNmWk1qVG9W?=
+ =?utf-8?B?ekxjUUcybXA2QWFZMHh5VG0wK0FqMlFVS0dtNWUxYUR5V2dNSjNKR1N5djZ2?=
+ =?utf-8?B?bU5ZU2hNWlZ3U1ZFRXFPWUtsOVcvMkZGYTk3UzQzcUdvT0lCNkIyQ1huMmpk?=
+ =?utf-8?B?d01VWnB2SnVodHk1NEh6UzdQcUJYYUpkQXNtM01rdTFRTVFNQ3dSMnJmMmU0?=
+ =?utf-8?B?ME0zSUZieUlya0ltZnRuREd4V3lLL2VsWFc5MS9vSkVZNkhFQ2N0WWhYTlhZ?=
+ =?utf-8?B?ZjY2M2g4a2NKRG9XZnRUcHJET05CamtLVityaUVIRUJrNys0eDNzL1lMNS95?=
+ =?utf-8?B?NVpGOXoyemNNNWVMK1lUNkYzU082dExPOTBUeG03VGQ2Q2pPYzJWbkthR3Qz?=
+ =?utf-8?Q?oF9lu/FyxcoOsYec/YPIR3ejb?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3f8fae7f-392f-4c63-1e44-08dd879e999b
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3d0d210a-0c2d-4037-26cd-08dd879e65cb
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Apr 2025 04:20:53.8258
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 04:22:21.1750
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR02MB9428
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: tU/2rJTFBQ8okASRhqCWPAH99o72rK7YlxhveVPwEfUSuUAiLSD3KdfkgockGQvNL5tKrnMpmysZcFY32U2WeA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9390
 
-From: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> Sent: Tuesday, April =
-29, 2025 2:46 AM
->=20
-> On Sun, 27 Apr 2025, Xin Li (Intel) wrote:
->=20
-> > For some reason, there are some TSC-related functions in the MSR
-> > header even though there is a tsc.h header.
-> >
-> > To facilitate the relocation of rdtsc{,_ordered}() from <asm/msr.h>
-> > to <asm/tsc.h> and to eventually eliminate the inclusion of
-> > <asm/msr.h> in <asm/tsc.h>, add <asm/msr.h> to the source files that
-> > reference definitions from <asm/msr.h>.
-> >
-> > Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> > Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > ---
-> >
-> > Change in v4:
-> > *) Add missing includes in a different patch (Ilpo J=E4rvinen).
-> > *) Add all necessary direct inclusions for msr.h (Ilpo J=E4rvinen).
-> >
-> > Change in v3:
-> > * Add a problem statement to the changelog (Dave Hansen).
-> > ---
-> >  arch/x86/events/msr.c                                         | 3 +++
-> >  arch/x86/events/perf_event.h                                  | 1 +
-> >  arch/x86/events/probe.c                                       | 2 ++
->=20
-> Under arch/x86/events/ a few files seem to be missing the include?
->=20
-> >  arch/x86/hyperv/ivm.c                                         | 1 +
->=20
-> Also under hyperv/ not all files are covered but I'm a bit hesitant to
-> suggest a change there since I'm not sure if they (hypervisors) do
-> something special w.r.t. msr.
+Hi Nicolin,
 
-I've worked on the Hyper-V code in Linux for 8 years or so, first as
-a Microsoft employee, and more recently as a retiree. :-) I'm not
-aware of anything special w.r.t. MSR access for Hyper-V guests.
-All the normal Linux code for accessing MSRs just works. Hyper-V
-*does* provide a set of synthetic MSRs that are unique to
-Hyper-V, but they are also accessed using normal Linux code. Of
-course, at runtime the access to these synthetic MSRs always
-traps to the hypervisor.
 
-I'm planning to apply Xin Li's patch set and make sure nothing
-breaks for Hyper-V guests, and particularly when running as an
-SEV-SNP or TDX guest. Hopefully I can do that by early next week
-at the latest.
+On 4/29/2025 10:44 PM, Nicolin Chen wrote:
+> On Tue, Apr 29, 2025 at 03:52:48PM +0530, Vasant Hegde wrote:
+>> On 4/29/2025 12:15 PM, Nicolin Chen wrote:
+>>> On Tue, Apr 29, 2025 at 11:04:06AM +0530, Vasant Hegde wrote:
+>>>> On 4/29/2025 1:32 AM, Nicolin Chen wrote:
+>>>>> On Mon, Apr 28, 2025 at 05:42:27PM +0530, Vasant Hegde wrote:
+>>>>> Yes. For AMD "vIOMMU", it needs a new type for iommufd vIOMMU:
+>>>>> 	IOMMU_VIOMMU_TYPE_AMD_VIOMMU,
+>>>>>
+>>>>> For AMD "vIOMMU" command buffer, it needs a new type too:
+>>>>> 	IOMMU_VCMDQ_TYPE_AMD_VIOMMU, /* Kdoc it to be Command Buffer */
+>>>>
+>>>> You are suggesting we define one type for AMD and use it for all buffers like
+>>>> command buffer, event log, PPR buffet etc? and use iommu_vcmdq_alloc->index to
+>>>> identity different buffer type?
+>>>
+>>> We have vEVENTQ for event logging and FAULT_QUEUE for PRI, but both
+>>> are not for hardware accelerated use cases.
+>>>
+>>> I didn't check the details of AMD's event log and PPR buffers. But
+>>> they seem to be the same ring buffers and can be consumed by guest
+>>> kernel directly?
+>>
+>> Right. Event log is accelerated and consumed by guest directly. Also we have
+>> Event Log B !
+>>
+>>>
+>>> Will the hardware replace the physical device ID in the event with
+>>> the virtual device ID when injecting the event to a guest event/PPR
+>>> queue? 
+>>> If so, yea, I think you can define them separately using the> vCMDQ
+>> infrastructures:
+>>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_CMDBUF
+>>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_EVENTLOG
+>>>  - IOMMU_VCMDQ_TYPE_AMD_VIOMMU_PPRLOG
+>>> (@Kevin @Jason Hmm, in this case we might want to revert the naming
+>>>  "vCMDQ" back to "vQEUEUE", once Vasant confirms.)
+> 
+> I think I should rename IOMMUFD_OBJ_VCMDQ back to IOMMUFD_OBJ_VQUEUE
+> since the same object fits three types of queue now in the AMD case.
 
-Michael
+Makes sense.
 
->=20
-> >  arch/x86/include/asm/fred.h                                   | 1 +
-> >  arch/x86/include/asm/microcode.h                              | 2 ++
-> >  arch/x86/include/asm/mshyperv.h                               | 1 +
-> >  arch/x86/include/asm/msr.h                                    | 1 +
-> >  arch/x86/include/asm/suspend_32.h                             | 1 +
-> >  arch/x86/include/asm/suspend_64.h                             | 1 +
-> >  arch/x86/include/asm/switch_to.h                              | 2 ++
->=20
-> arch/x86/kernel/acpi/ ?
-> acrh/x86/kernel/cet.c ?
-> ...
->=20
-> There seem to be quite many under arch/x86/ that still don't have it, I
-> didn't list them all as there were so many after this point.
->=20
-> But that's up to x86 maintainers how throughout they want you to be.
->=20
-> This command may be helpful to exclude the files which already have the
-> include so you can focus on the ones that may still be missing it:
->=20
-> git grep -l -e rdmsr -e wrmsr | grep -v -f <(git grep -l -e 'asm/msr\.h')
->=20
-> >  arch/x86/kernel/cpu/resctrl/pseudo_lock.c                     | 1 +
-> >  arch/x86/kernel/fpu/xstate.h                                  | 1 +
-> >  arch/x86/kernel/hpet.c                                        | 1 +
-> >  arch/x86/kernel/process_64.c                                  | 1 +
-> >  arch/x86/kernel/trace_clock.c                                 | 2 +-
-> >  arch/x86/kernel/tsc_sync.c                                    | 1 +
-> >  arch/x86/lib/kaslr.c                                          | 2 +-
-> >  arch/x86/mm/mem_encrypt_identity.c                            | 1 +
-> >  arch/x86/realmode/init.c                                      | 1 +
-> >  drivers/acpi/acpi_extlog.c                                    | 1 +
-> >  drivers/acpi/processor_perflib.c                              | 1 +
-> >  drivers/acpi/processor_throttling.c                           | 3 ++-
-> >  drivers/char/agp/nvidia-agp.c                                 | 1 +
-> >  drivers/cpufreq/amd-pstate-ut.c                               | 2 ++
-> >  drivers/crypto/ccp/sev-dev.c                                  | 1 +
-> >  drivers/edac/amd64_edac.c                                     | 1 +
-> >  drivers/edac/ie31200_edac.c                                   | 1 +
-> >  drivers/edac/mce_amd.c                                        | 1 +
-> >  drivers/hwmon/hwmon-vid.c                                     | 4 ++++
-> >  drivers/idle/intel_idle.c                                     | 1 +
-> >  drivers/misc/cs5535-mfgpt.c                                   | 1 +
-> >  drivers/net/vmxnet3/vmxnet3_drv.c                             | 4 ++++
-> >  drivers/platform/x86/intel/ifs/core.c                         | 1 +
-> >  drivers/platform/x86/intel/ifs/load.c                         | 1 +
-> >  drivers/platform/x86/intel/ifs/runtest.c                      | 1 +
-> >  drivers/platform/x86/intel/pmc/cnp.c                          | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_if_common.c   | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_if_mbox_msr.c | 1 +
-> >  drivers/platform/x86/intel/speed_select_if/isst_tpmi_core.c   | 1 +
-> >  drivers/platform/x86/intel/turbo_max_3.c                      | 1 +
-> >  .../platform/x86/intel/uncore-frequency/uncore-frequency.c    | 1 +
-> >  drivers/powercap/intel_rapl_common.c                          | 1 +
-> >  drivers/powercap/intel_rapl_msr.c                             | 1 +
-> >  .../thermal/intel/int340x_thermal/processor_thermal_device.c  | 1 +
-> >  drivers/thermal/intel/intel_tcc_cooling.c                     | 1 +
-> >  drivers/thermal/intel/x86_pkg_temp_thermal.c                  | 1 +
-> >  drivers/video/fbdev/geode/display_gx.c                        | 1 +
-> >  drivers/video/fbdev/geode/gxfb_core.c                         | 1 +
-> >  drivers/video/fbdev/geode/lxfb_ops.c                          | 1 +
->=20
-> Under drivers/ this looked pretty complete. Nice work.
->=20
-> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com> # for pdx86
->=20
-> I also noticed these files might not need to include msr.h:
->=20
-> drivers/cpufreq/elanfreq.c
-> drivers/cpufreq/sc520_freq.c
-> drivers/accel/habanalabs/common/habanalabs_ioctl.c
->=20
-> ...so if you want, you may consider optionally adding a cleanup patch to
-> remove the include from them.
->=20
-> > --- a/drivers/video/fbdev/geode/gxfb_core.c
-> > +++ b/drivers/video/fbdev/geode/gxfb_core.c
-> > @@ -30,6 +30,7 @@
-> >  #include <linux/cs5535.h>
-> >
-> >  #include <asm/olpc.h>
-> > +#include <asm/msr.h>
->=20
-> In wrong order.
-> >
-> >  #include "gxfb.h"
->=20
-> --
->  i.
+AMD architecture supports 5 buffers. In practice we have not implemented event
+log  B / PPR Log B in Linux.
+  Command buffer
+  Event Log A / B
+  PPR Log A / B
+
+
+-Vasant
