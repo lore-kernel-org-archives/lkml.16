@@ -1,140 +1,171 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F56325A2B8
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:26:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34C99248F75;
+	Wed, 30 Apr 2025 13:27:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019594; cv=none; b=HbehTaKCSObwgBjDcAZmGybiL1hq7itwmItQvPVF8OUuXssrsx3ufheK+RH1JAfgudrn61CHIjqsNm+E6ZqE3iWNiA5nzu3gEwyHXu3LocdmkEHkICEDVzeuWyrGaq0XkfbNyn8WQcerevEyUKSW5/DNDMxBmZ9+id2WQOKnCXs=
+	t=1746019650; cv=none; b=bG+WRoomJzNdDPsMbg35OKDCBlTZLrCuXuG7z4mKIkUx4w+YPSjqr7IZ6r+1/MFR7NniVNswR7ZXQGiF3Hf6FwwhTe2/UWBwbx0fDZyr07UVZaSR7F+lK1OI94IAIJjwQ+cz4q7N9HmDtSxwaYxJI97gBp0o7261wIcPhUlM47Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019594; c=relaxed/simple;
-	bh=m9G3KsrOltkHpbgEhnKH0reG1Ths7w9P7h5Z5hovUpM=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=CqWldYnQMaoj1esqME4e4xX40uoFIUg/nwCF0xZIvDJgzvLlF7/U0OWTkNJKh9KdfMTEMe52XtHqt+gTJnVKUm5MDykKfLtmi5dK/elbRvCMGAfIsrfthfje5BH+/9h5Mhxei3uUJV95acVq2TKCMzUdKu82DZhu4wCS4fxDkk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d90a7e86f7so146833755ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:26:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746019591; x=1746624391;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=G+237LQ5iDTpGgWqsmXhiKAIuePyLHF0GBZhVW2IFIM=;
-        b=sKPbE1hvX925kp2DBxDzbeS5QyWSwNBzvW+Vmof9SDkAnnM7nGhM0J+cTF9Kwl3v6/
-         c9KyeTW6ze+sXnvwdlldljSMjAWYv//FpBow75BpHZS2oKd5v4pQMffnR/K0yvYMix7m
-         FnXlO7MVh8/4p3Y6Qse8kdx7MdSn8Isu3iIUAJRMIjVkM/nEy+3t5dR89zR/VvNi/mg9
-         HCnc4y1uB5T4G0QhmjE7CSS+qpFDAQIiKCtTFWkcZrC7YqYBS45XCDEvjlXgWwU82f/S
-         v5V8PVZc70WPcbCPk4eXRGdl4lholv3xkKKQHfcMZzHk9p9eMIRMpVllNssWYI5DONUe
-         PL/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXlo4u9AP95HJo6NLY4DeSsYUm3YirSTURWG51QXdeowZbNDkGIj1OpnrenqyY/yS+JOOPrkIoZtLEbcRo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuAbpdEJKYud4qQLqf2UfcrkCVACAMu/MZ/EJKSzk7NvwzjSk6
-	7uWWlxhht8tPrzh4gbbtexWg4lFMyCEt7+k7pvQQIE0RgtcIj1qHrSLu6RMrOeRlvliUwuUWwLI
-	Qm0Pthf3wxtx6KxbAUXOLZKKHFB7BS+EYWtPvIKog+SexbantIXX7+MM=
-X-Google-Smtp-Source: AGHT+IHGbfhQQEPzUz/dA5V7wtEkPe7oRP8F8ANZhTN+H60vE9AaujMpDbZMmkEMdnQtHG85jwPtGBMDh2oJABDF16VyoEvP1BXU
+	s=arc-20240116; t=1746019650; c=relaxed/simple;
+	bh=Yn79ILWkMhejVZU/NmRTknuHJiU3am0yYKmjKtjhyMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ELDs14Ixmh5re09GneQTbPoJps3fc1jErzKNgwei6z7O/ygO5nWWXu7Z5jesUt6pfem/NGbcvaQr0xaFMk+ffn08vIILsjDjbbopvXi79ZWdi0rVCjzrvh19WeXlWD92e3aeD705rWH5T/eaJVSgcDX4BT5EiRtO1Jknrj0Csrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FjM9kVLc; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FjM9kVLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FDFCC4CEE9;
+	Wed, 30 Apr 2025 13:27:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746019650;
+	bh=Yn79ILWkMhejVZU/NmRTknuHJiU3am0yYKmjKtjhyMY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FjM9kVLc1KgEXTTKxa4ljsBfos0w3g7vvcQ0tSiDuZuK2s4/oLdusZuYCRieTQ+3N
+	 A+FRHX8M0lf1TFd7TzvX8J1CAkM5tUev2yoWChU3sGPjDICFWAh2/fkJ8yFVigUZxj
+	 NYBoLiXWJZf0zw/me2ZSp+kMgoH3O1Fjb1ozQ4LXU4Eqh4QiUICwiP71rgYjxtdrdY
+	 5cWJsSyuJ9NwHZu2QtI3+PB4EInJth0oP3x4GNlIthd5VOPRBQMNNYRdkjMpS7C8LD
+	 KjeapLDglBb2g81eW8rxdOvN15bqWsjISlgQaUjMZ7bcJd5G6yydNPGctWGQ6rGucD
+	 /fiiBvqav0Eyw==
+Date: Wed, 30 Apr 2025 15:27:22 +0200
+From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
+Message-ID: <aBIlOrqLtbB5e7B/@lpieralisi>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+ <20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
+ <867c31j20i.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:cd84:0:b0:3d9:666f:486d with SMTP id
- e9e14a558f8ab-3d9677192b4mr32545115ab.15.1746019591545; Wed, 30 Apr 2025
- 06:26:31 -0700 (PDT)
-Date: Wed, 30 Apr 2025 06:26:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68122507.050a0220.3a872c.0001.GAE@google.com>
-Subject: [syzbot] [jfs?] UBSAN: shift-out-of-bounds in jfs_statfs (3)
-From: syzbot <syzbot+13ba7f3e9a17f77250fe@syzkaller.appspotmail.com>
-To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
-	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <867c31j20i.wl-maz@kernel.org>
 
-Hello,
+On Wed, Apr 30, 2025 at 12:57:01PM +0100, Marc Zyngier wrote:
+> On Thu, 24 Apr 2025 11:25:32 +0100,
+> Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> > 
+> > The GICv5 architecture implements the Interrupt Wire Bridge (IWB) in
+> > order to support wired interrupts that cannot be connected directly
+> > to an IRS and instead uses the ITS to translate a wire event into
+> > an IRQ signal.
+> > 
+> > An IWB is a special ITS device with its own deviceID; upon probe,
+> > an IWB calls into the ITS driver to allocate DT/ITT tables for its
+> > events (ie wires).
+> > 
+> > An IWB is always associated with a single ITS in the system.
+> > 
+> > An IWB is connected to an ITS and it has its own deviceID for all
+> > interrupt wires that it manages; the IWB input wire number is
+> > exposed to the ITS as an eventID. This eventID is not programmable
+> > and therefore requires special handling in the ITS driver.
+> > 
+> > Add an IWB driver in order to:
+> > 
+> > - Probe IWBs in the system and allocate ITS tables
+> > - Manage IWB IRQ domains
+> > - Handle IWB input wires state (enable/disable)
+> > - Add the required IWB IRQchip representation
+> > - Handle firmware representation to Linux IRQ translation
+> > 
+> > Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
+> > Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
+> > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Marc Zyngier <maz@kernel.org>
+> > ---
+> >  drivers/irqchip/Makefile         |   2 +-
+> >  drivers/irqchip/irq-gic-v5-its.c |  68 ++++++--
+> >  drivers/irqchip/irq-gic-v5-iwb.c | 356 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/irqchip/irq-gic-v5.c     |   2 +
+> >  drivers/irqchip/irq-gic-v5.h     |  28 +++
+> >  5 files changed, 437 insertions(+), 19 deletions(-)
+> > 
+> > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> > index 4280395e3bdff7858102f0b4eaaea1121cace52f..7bfb2369fbe494a64b72308d95ae33de93c6b8c6 100644
+> > --- a/drivers/irqchip/Makefile
+> > +++ b/drivers/irqchip/Makefile
+> > @@ -37,7 +37,7 @@ obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o
+> >  obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
+> >  obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
+> >  obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o irq-gic-v5-irs.o
+> > -obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o
+> > +obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o irq-gic-v5-iwb.o
+> >  obj-$(CONFIG_HISILICON_IRQ_MBIGEN)	+= irq-mbigen.o
+> >  obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
+> >  obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
+> > diff --git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
+> > index da349b4709cc5ec8978859237838f039389ca4a1..b5eb4dbfe2296dc6620889eb9291b542cae4aeb6 100644
+> > --- a/drivers/irqchip/irq-gic-v5-its.c
+> > +++ b/drivers/irqchip/irq-gic-v5-its.c
+> > @@ -786,9 +786,8 @@ static struct gicv5_its_dev *gicv5_its_find_device(struct gicv5_its_chip_data *i
+> >  	return dev ? dev : ERR_PTR(-ENODEV);
+> >  }
+> >  
+> > -static struct gicv5_its_dev *gicv5_its_alloc_device(
+> > -				struct gicv5_its_chip_data *its, int nvec,
+> > -				u32 dev_id)
+> > +struct gicv5_its_dev *gicv5_its_alloc_device(struct gicv5_its_chip_data *its,
+> > +					     int nvec, u32 dev_id, bool is_iwb)
+> >  {
+> >  	struct gicv5_its_dev *its_dev;
+> >  	int ret;
+> > @@ -815,6 +814,7 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
+> >  	its_dev->device_id = dev_id;
+> >  	its_dev->num_events = nvec;
+> >  	its_dev->num_mapped_events = 0;
+> > +	its_dev->is_iwb = is_iwb;
+> >  
+> >  	ret = gicv5_its_device_register(its, its_dev);
+> >  	if (ret) {
+> > @@ -827,9 +827,11 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
+> >  
+> >  	/*
+> >  	 * This is the first time we have seen this device. Hence, it is not
+> > -	 * shared.
+> > +	 * shared, unless it is an IWB that is a shared ITS device by
+> > +	 * definition, its eventids are hardcoded and never change - we allocate
+> > +	 * it once for all and never free it.
+> 
+> I'm not convinced the IWB should be treated differently from any other
+> device. Its lifetime is not tied to its inputs, so all that's needed
+> is to probe it, get a bunch of interrupts, and that's about it.
 
-syzbot found the following issue on:
+I need to check again how this works for devices requesting wires
+from an IWB if we don't allow ITS device sharing.
 
-HEAD commit:    c72692105976 Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b1f574580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2a6efb1b6b7e84ef
-dashboard link: https://syzkaller.appspot.com/bug?extid=13ba7f3e9a17f77250fe
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-userspace arch: arm64
+> The other thing is that the IWB really is a standalone thing. It
+> shouldn't have its fingers in the ITS code, and should only rely on
+> the core infrastructure to get its interrupts.
+> 
+> As much as I dislike it, the MBIGEN actually provides a decent example
+> of how this could be structured.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+We wrote that code already, I should have posted it. An MBIgen can
+programme the eventids it sents to the ITS, an IWB can't. So yes,
+I can make an IWB MBIgen like but the ITS code has to know it is
+allocating an IRQ for an IWB - one way or another, the eventids
+are not programmable.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/bc4c947b6a4c/disk-c7269210.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/26198601f51b/vmlinux-c7269210.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/426ac395cf1d/Image-c7269210.gz.xz
+I will try to post a v3 with the code in it so that I can get flamed
+and find a solution to this niggle.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+13ba7f3e9a17f77250fe@syzkaller.appspotmail.com
-
- ... Log Wrap ... Log Wrap ... Log Wrap ...
-------------[ cut here ]------------
-UBSAN: shift-out-of-bounds in fs/jfs/super.c:140:14
-shift exponent 770 is too large for 64-bit type 's64' (aka 'long long')
-CPU: 1 UID: 0 PID: 6605 Comm: syz.1.10 Not tainted 6.15.0-rc2-syzkaller-gc72692105976 #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:466 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- dump_stack+0x1c/0x28 lib/dump_stack.c:129
- ubsan_epilogue+0x14/0x48 lib/ubsan.c:231
- __ubsan_handle_shift_out_of_bounds+0x2b0/0x34c lib/ubsan.c:492
- jfs_statfs+0x400/0x484 fs/jfs/super.c:140
- statfs_by_dentry fs/statfs.c:66 [inline]
- vfs_statfs+0x13c/0x2b0 fs/statfs.c:90
- ovl_check_namelen fs/overlayfs/super.c:388 [inline]
- ovl_get_upper fs/overlayfs/super.c:506 [inline]
- ovl_fill_super+0x5b8/0x2bac fs/overlayfs/super.c:1387
- vfs_get_super fs/super.c:1280 [inline]
- get_tree_nodev+0xb4/0x144 fs/super.c:1299
- ovl_get_tree+0x28/0x38 fs/overlayfs/params.c:701
- vfs_get_tree+0x90/0x28c fs/super.c:1759
- do_new_mount+0x228/0x814 fs/namespace.c:3879
- path_mount+0x5b4/0xde0 fs/namespace.c:4206
- do_mount fs/namespace.c:4219 [inline]
- __do_sys_mount fs/namespace.c:4430 [inline]
- __se_sys_mount fs/namespace.c:4407 [inline]
- __arm64_sys_mount+0x3e8/0x468 fs/namespace.c:4407
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x150 arch/arm64/kernel/entry-common.c:744
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:762
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
----[ end trace ]---
-read_mapping_page failed!
-ERROR: (device loop1): txAbort: 
-
-ERROR: (device loop1): remounting filesystem as read-only
-overlayfs: failed to create directory ./file0/work (errno: 5); mounting read-only
-overlayfs: failed to set uuid (/file2, err=-30); falling back to uuid=null.
-netlink: 277 bytes leftover after parsing attributes in process `syz.1.10'.
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Thanks,
+Lorenzo
