@@ -1,112 +1,192 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E1E1E9B14;
-	Wed, 30 Apr 2025 07:37:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772561C5489
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:38:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745998678; cv=none; b=BYe3c0Yps126avCD5tDQ9Hc7sJEqtu5OzMawnovz6jFF1RKtRgc7ypgj7kvucZWfvKUKAKggLITHXUXPT/3TGbl7xr0Ai78xVBfpfq0HTB3fneUUSrdWrmWqQWen4YGviVcOAcYmlwm3HmYqVW6wucS43Gfg6xiEZzZ7K8BuE2s=
+	t=1745998724; cv=none; b=hfKmknqj+4zUEj0LpXieFtJpg8qo2zBhtkDhQMsBg+ggHQYf1VlqShtJ6IopQCYJ5uBzwfz5XPiF7VUNe5Yncwucczsn4Y3udqYjc+PdE4MOiqQR8z8jEmZ5xylHdiDKO5kciPmCndpDlSUZ0TJUbZkMXs03eNSOP6Am1xlG5DE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745998678; c=relaxed/simple;
-	bh=C4sWc4j5j5AeC0Pzx7XtMY7aROUJ/SFJgSlMDYKwMIQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=honRWhtoyb/+Czw4KqZDo6rWpj7l3/R8kYCWF2MY8uNxb4R54FpZUcOclS3Ubc626k8qqbR5NoJI9s+lo4daEAPsRlwLESPFTapBtrD7upQAk6yzBWNoBkxBusaKFHnCPfiSQAXQlpH8Zt434RI50RAvyobT9U00Wu1M4BCmbIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=qiDXNL33; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	s=arc-20240116; t=1745998724; c=relaxed/simple;
+	bh=3S1jW0u9Fom9G1enfgWnzKclq7b3VjAVQjhyQSU1Dkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cz6vYYhQgqwY3uOpDZebFciVCVsDIv3kqePte0BPzpXIl/3QGaq6RJVfU/nKf50B0NdKJZOCPVoFqgxRJPQ2q1TYwlm2WKwAgDv8j3q8ge9dqZ0WSuFVqGDa9leWgblUvYcAHkqjOZLUaAWVnVhlogq0dp//976FuQteX0fZh5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TnxU1PwQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PkuMMQun; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=TnxU1PwQ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=PkuMMQun; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="qiDXNL33"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1745998668; x=1746603468;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=C4sWc4j5j5AeC0Pzx7XtMY7aROUJ/SFJgSlMDYKwMIQ=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=qiDXNL33SbF84E7ZWDUtnM//0zHHLqF9OrMwrX1CjiKVFmzFzT2DnWJ/oAPgY/sa
-	 cuw8JbQqYiJlb3y87GjdHtHIVcrarTVULYPOG7QIa8qGDvrnXmpqpxfIWc4JDaT1x
-	 Ca3S6Ir+ausKe9Z2Bor2X6PuWvvgOm3lWkvYc1cfqpImQl3X/PNNI/xJOXiU5Gg5z
-	 F4CaGgKy746So4rtifuRNgT9yEd/GoESPqe6Z9DLebFoYkEugTTWpU/iumfpSbN61
-	 zhiou4RVsjX5GO8y3g3uXWkXeX2qECZBsndMB6vs78lnxe4AY9l/tBSTjOHC+aOtk
-	 2VJVG+4ad8cXvxFabw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.174] ([62.226.32.213]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MIxmm-1uUJkX3cFe-00OMvm; Wed, 30 Apr 2025 09:37:48 +0200
-Message-ID: <4d8142a3-6f65-454d-a187-9207d1eb4b82@oldschoolsolutions.biz>
-Date: Wed, 30 Apr 2025 09:37:46 +0200
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TnxU1PwQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PkuMMQun";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="TnxU1PwQ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="PkuMMQun"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9AEEB21259;
+	Wed, 30 Apr 2025 07:38:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745998720; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O0Wxq+lm+JZ1Afn0Ufjma0zDuusZNEP1SWkG1+hjfJ4=;
+	b=TnxU1PwQyrHRVyF+pcR6yLWKS41mxzATA+bT3LLUwzcJIMdoxyNnJpZHV062EbJBqMTnvI
+	OJC1fsJxX/K+xD3Hf3QrXwmKYLT9Aj2MVmesRtHh5F6Z/E5SVC2sbE/8OwhHG0Uzxs7wm8
+	kdsnXe8nzWlwU+8/aYDQ771a4XjFXNU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745998720;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O0Wxq+lm+JZ1Afn0Ufjma0zDuusZNEP1SWkG1+hjfJ4=;
+	b=PkuMMQun5mNMXZKTtF3Y5RmTQaEBzsPArrEG75Cnf3nK8flTcm8gW/9nAWLch2hVh6WmbN
+	x5Mp6Y6I4yBpXcBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=TnxU1PwQ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=PkuMMQun
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1745998720; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O0Wxq+lm+JZ1Afn0Ufjma0zDuusZNEP1SWkG1+hjfJ4=;
+	b=TnxU1PwQyrHRVyF+pcR6yLWKS41mxzATA+bT3LLUwzcJIMdoxyNnJpZHV062EbJBqMTnvI
+	OJC1fsJxX/K+xD3Hf3QrXwmKYLT9Aj2MVmesRtHh5F6Z/E5SVC2sbE/8OwhHG0Uzxs7wm8
+	kdsnXe8nzWlwU+8/aYDQ771a4XjFXNU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1745998720;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=O0Wxq+lm+JZ1Afn0Ufjma0zDuusZNEP1SWkG1+hjfJ4=;
+	b=PkuMMQun5mNMXZKTtF3Y5RmTQaEBzsPArrEG75Cnf3nK8flTcm8gW/9nAWLch2hVh6WmbN
+	x5Mp6Y6I4yBpXcBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DD88E139E7;
+	Wed, 30 Apr 2025 07:38:39 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id vXZNM3/TEWhWfwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 30 Apr 2025 07:38:39 +0000
+Date: Wed, 30 Apr 2025 09:38:33 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Donet Tom <donettom@linux.ibm.com>
+Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+	Danilo Krummrich <dakr@kernel.org>,
+	Ritesh Harjani <ritesh.list@gmail.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Dave Jiang <dave.jiang@intel.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] driver/base: Optimize memory block registration
+ to reduce boot time
+Message-ID: <aBHTeeAWtlrt4gN8@localhost.localdomain>
+References: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 0/7] arm64: dts: qcom: x1e80100-*: Drop useless DP3
- compatible override
-To: Sebastian Reichel <sre@kernel.org>, Abel Vesa <abel.vesa@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>,
- Rajendra Nayak <quic_rjendra@quicinc.com>, Xilin Wu <wuxilin123@gmail.com>,
- Srinivas Kandagatla <srini@kernel.org>,
- Johan Hovold <johan+linaro@kernel.org>, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
- Konrad Dybcio <quic_kdybcio@quicinc.com>
-References: <20250429-x1e80100-dts-drop-useless-dp-compatible-override-v1-0-058847814d70@linaro.org>
- <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
-Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <wsdhqocld54ygjrnn6etydorcg6j6uko4ner2dawoomflvu3bp@tq5jbqcahip4>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JpVSqj09iZRd8sl6/HjNSrEVXKRnrfcWP9XCJ4yO5yO+3xVOc8c
- j21KQQu+FbHh0FHvBgsKPBUbyWXuCNFNJbX7AhIfIxDCbcvNTBMetWI1dlWAbrZykUo3g7A
- lFCT8BBWv1r9VYPBbJ4pIBElpx+IUTXiencs3O7mHHTyYgjGiUCPU7n6i5wsBGmQfuSk0uI
- tfLNhAWqyey5qbCY5v7Fg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
+X-Rspamd-Queue-Id: 9AEEB21259
+X-Spam-Level: 
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TAGGED_RCPT(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,linuxfoundation.org,linux-foundation.org,gmail.com,huawei.com,intel.com,kvack.org,vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
+	RCVD_COUNT_TWO(0.00)[2];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -3.01
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HaGr14C37kE=;wJFa2OrmyhIBESnHP8BKCQCn+f/
- dkEilGKaKUIZUMdhTMkgfYSrdd9I4l9kK7LuTp3u4uQbmuyKty2Trm3B3VbgFRRtcj/elmRDS
- KJ/mUhxwjcUuMvnqxCNZ5uxhYg/VpHJ1jzL1zkpnn+XArwKkjUdpP5fIoZLqF8P0TLZa4j/rC
- /tHKD0IqkgBDM+ghME6p8JRbB/WWmet/KBNraCsf8ngqgT6PTTXKTWJhcGSHa5LssMONphtIP
- aQg9fLUfJC9n3p1rlWIlIyHeyWL+0Jmol0TEbk/ZKW1R1doLQeoEaVjb7xx+O13gkaU5AytOY
- Nh0Gns+qZ8FZF6rpGEWrt8v/bcXCK1zqHu73AE0p+OP+MP0gaRtY/puzFW+OzqSx5DQaJuHNV
- HNZQSkU5/HiTyKD8CjMmb8m5sFj/z6JebNoZO0lceJ/yXpLEeHdUiFp9JXh2cvYhg9+Dgr+Ns
- z+x+Eyuu+mXq0F2PVAfH0YrOz2LouzAwHpWzkgnBsgN6jwcttVWnwpB+CAVd1R0hkBXJM++xB
- VeAN5rNCsgQftJBDDBNTSl/8pB4A7jaK7dUFjllzYTze2KgR0DJAOUqPlwUkrj+RiRP1ja4WE
- pZEku+pttacbEUPjGN5hLm1Jg2IoT9lmuFI7S1bqGrVTvCDlZ3CM9Bu2m/fuKVDJo+NMl6UyB
- xYgFX+Ad2PZpueQdeQ+mALpa5PB1+pAatQdsW7uJR6Q3ht9y3TlQYxvyeFB7ATik/CIUZric2
- 7Ki5kDsq4e060GAx1cIGQEgUpSEKyU1TL1p7Xpt18+/1I6bxOCaIE/lDDzplBjhhYzS1sVdBO
- eWE+eiQQIJ3mAtd3DjNOBfYfJKoBb+oY49vRK+xUFXlPlJ0iM3ccoAEFPGxdie03v3g3m/iFl
- 9VZg4yXhxdwvwLz2BhXPRbuG0Pslc/UwpiW+5r8Z0sRyTYdL1OyqGOMpRvmwJx7Z2rR0Trkhs
- pj8tr7cz43HX3lCjHOPfkLlsBEBuRDHzgNC58ukJdwsCxC0eqYEnMgkACCF8ZkpWxCzFsooGA
- S9REldhysCgXMeg7sX9Glvui6HpTaiyvsXjaniXQ+gQCSqXjv3y3C8XsvUC+pHuGk/4oQgrEc
- YJ9XcSqt8WPTJfVWNdvTyT1WPW1XjSmQWEM91J2RR1ITd2yi1rGWxxFYDbfQLgzfaNQ4zfxVL
- OHjddI1TbtwJs/inqsvjO3rP8Lb1s7EQ896noNgt7ihfb527uUz6y4JI1w00V9NqrGLiNXR/b
- 4Q0hBcCtEzhcmi+GGukUH3Vfu5OPykJ4Skn+kcixRWl4KCCs8LKxF95o4CHqU3H50vpqNTJNi
- j6huzRE5LZgN8CFut3GBpSBnDcMq73o8zC89cDuTEgu1j2hjRm5tKFoxs1BS93tBTWO3zUXHI
- eXNG580ZB5n6Zr5IafE+TLdrIKwEdX9q+MPf8UNijgGop+5NcWU2zKSexT
 
-On 4/30/25 01:26, Sebastian Reichel wrote:
-> Hi,
->
-> On Tue, Apr 29, 2025 at 10:42:28AM +0300, Abel Vesa wrote:
->> ...
-> Looking at the diff I wonder if this part should also be simplified:
->
-> /delete-property/ #sound-dai-cells;
->
-> This is done by all upstream X1E boards, so maybe just drop the
-> #sound-dai-cells directly in x1e80100.dtsi?
->
-This is for phy configurations where a display panel is connected that=20
-has no sound channels. Not guaranteed that it's always on mdss_dp3.
+On Mon, Apr 28, 2025 at 10:33:46PM +0530, Donet Tom wrote:
+> During node device initialization, `memory blocks` are registered under
+> each NUMA node. The `memory blocks` to be registered are identified using
+> the node’s start and end PFNs, which are obtained from the node's pg_data
+> 
 
-with best regards
+Hi Donet,
 
-Jens Gathe
+> Test Results on My system with 32TB RAM
+> =======================================
+> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+> 
+> Without this patch
+> ------------------
+> Startup finished in 1min 16.528s (kernel)
+> 
+> With this patch
+> ---------------
+> Startup finished in 17.236s (kernel) - 78% Improvement
 
+That is pretty impressive.
+
+> +void register_memory_blocks_under_node_early(int nid)
+> +{
+> +	struct memblock_region *r;
+> +	unsigned long start_block_id;
+> +	unsigned long end_block_id;
+> +	struct memory_block *mem;
+> +	unsigned long block_id;
+> +
+> +	for_each_mem_region(r) {
+> +		if (r->nid == nid) {
+> +			start_block_id = phys_to_block_id(r->base);
+> +			end_block_id = phys_to_block_id(r->base + r->size - 1);
+> +
+> +			for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+> +				mem = find_memory_block_by_id(block_id);
+> +				if (!mem)
+> +					continue;
+
+I would just mention what David already said here, reduce identation,
+and maybe declare the variables where they are needed. It might be clearer.
+
+> +
+> +				do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
+> +				put_device(&mem->dev);
+
+I will comment on the "context" on patch#2.
+
+> +void register_memory_blocks_under_node_early(int nid);
+static void ... ?
+
+
+-- 
+Oscar Salvador
+SUSE Labs
