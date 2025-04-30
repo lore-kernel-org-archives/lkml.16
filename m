@@ -1,116 +1,115 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CBC20F07C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5C1C7017
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002277; cv=none; b=rjcQnx5tN2qf3w01hZgEHtrHOff/P0EtuyQQpOOqRwfT0WxTIrpZ0io1FywQ5TU0b1USUAD/nSfYapA++LdtJ8Fql0CScBk1FtwfiKurRcHBc4gcABjTQ4AvrNJXAkj3g+0FLIVFB3z292Jfn4XWlKLw4sQJ1fTY6/pxBeOZlAU=
+	t=1746002302; cv=none; b=ZuAcWNC9NRGUvQOVJgqDfLBfIBBUUowqAdUrLqiANCFvT5b474iGqRKzeUJcC5o/pF5c4qsO+LoSKo+urbPf8R+zxmMAWMD2oygebgOcPuQiPmOZec4OlBb3VAlCqPtqWHLMa09F6LnpAz3T+1EXKZcA8hQJgvfTmI7pGk0b5Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002277; c=relaxed/simple;
-	bh=3hJIWEz/tMEntYl2Z5rZWF+3utBSrdD+a8jANC9Y5wE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZypFrSiJHLFOWyFipU8xDwkSzB5xupYK2YBQwHawjg31oSGf+92l+mHoEq5+W2sxBuZVbPZhWQqqqxrzR9znHzu0QpiG0ax/5+Hv5GKcies/R8kDM6wLPPdngs1Lgn8nh3CuXUCKu/vtAX0ghVa8hPkGoOoPYAnnJNhYPi53Llk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X9455uFD; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746002302; c=relaxed/simple;
+	bh=8zi5cyFcVckW9t2pCIiEBn2bNjtZCSk84A1Zm7fViRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=R7J23RRoUNIs76dWm7j201LzXH1faKQYvQ74/ZryUaZsxOtS5R3FeAweUVECUCCzAUPbbB5DZ3ISlWcxClMhW8eAZRh9502cg5oLM4dLARKLqGqRXErVZQNsWH04ng93nrDCmMoVHch7nx6Kt9DtDTrQZ8OJzPfkXyULI59Psco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=G9UnLdK8; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X9455uFD"
-Date: Wed, 30 Apr 2025 10:37:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746002271;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GmmLAoenAXMvd5HQQrNyQLm1JEq196aDUFttDU9EE+g=;
-	b=X9455uFDY33xHDfWnIc84P6y5DA/VD7Gj+WGa/ZqPdI53fH78o6VSpOEQtmNF3EeOkTNiJ
-	Wgj6GfIzjZAZzw/EPbdVCO6ZLO0hTHHdWEsWTW61grZytx5jR/pFyFs8apSqCgLfBSX2x8
-	LaiyjuXYOFR3ECPkr54ahsidskO/20E=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Richard Leitner <richard.leitner@linux.dev>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
-Subject: Re: [PATCH v3 3/9] media: v4l2-flash: add support for flash/strobe
- duration
-Message-ID: <zpmfhi6fzg3zhwifpi2kmstn4soex4fvg5jhha2me73r76bhgo@j2bfwdza23xs>
-References: <20250429-ov9282-flash-strobe-v3-0-2105ce179952@linux.dev>
- <20250429-ov9282-flash-strobe-v3-3-2105ce179952@linux.dev>
- <aBHeIBbFRkZ4P82E@kekkonen.localdomain>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="G9UnLdK8"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acb5cf13996so95098266b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:38:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746002297; x=1746607097; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hw1h6CkpVzZ1WBfBkzfAYu3EbWwU7nqNOd7qFsicdoU=;
+        b=G9UnLdK8r+iN0eWelzoAzIFW/A5vA/6jDVRooAJxg7oy9txOWJctSCcKbuIjhmBjx5
+         fpzWJyE/bIsmQQu1ccKDlzrOw11yvEfMqgg4qRJ6khzy9rh3z70s7AhyDRrpPUVbKN9N
+         5SalCSsxP5rK7zT5aQ/oZqGhzB53Ztees6nOH3B4n+NU8V+t/MUiH9q3zLUyyXWfbZmz
+         3HTG7N3TCErlC2RhVkSrANZc1XSqeIWLjsXLLSvSkdQYJIPp7ilveimM0QUj4UGp/u3X
+         /xzV7W9BIU19RyIapleKUPK0KWiJ3farSMxP8i50nme8umAC8TjKunK1XI48BFBVn3Bs
+         /tfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746002297; x=1746607097;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hw1h6CkpVzZ1WBfBkzfAYu3EbWwU7nqNOd7qFsicdoU=;
+        b=oa+jo0ZLxw9ME6h1elwiIYmT6P154WJQVDtxX+t0PCmv6RdjraigrhP5jFM6k2bqRd
+         5hePZLWYSRxLz8CowcQOvcq6onxRSTJlbMEsFIs4JKFOueI2V3FNSUwz94dPyoUKOn53
+         LwY+8SwitCWHZ5rFyVh6zyA/RrobEeIA7hGxCq6H16O7+1pwSIlW00qR88iiQl8nWvdm
+         I/m1dOgwR7RGnvYG7eyZdQ4tL+yPk6rt4pbomqIzV/wkyW20hZy22WdEsKoXLaTEUb60
+         3r2xQXbFjpC8pIbLhPgekSYLkk8K2uHYFMJ7c7Y6zd31MNia7knjALtYbc3+agIEuoTQ
+         7dcw==
+X-Forwarded-Encrypted: i=1; AJvYcCXPFSVnIrGIrbPx+F/1JEDxdECLUn54bGQMQlzqt7tEAds6QuYPqmksbhJ8hc7Uzdu06T1T+p3A6frTgAA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5BrIocmIQ0htbRMCHzb8WJU98T7ZS268re+9Md6/sIpqT2kr0
+	S9QcpGhP5MCtpTVobfSN2n5JC80y7WtfDoUUViHARYFw5525IstNLVOs/DS/bLU=
+X-Gm-Gg: ASbGncukhRh/xzlTFAADA08XkFT77DskXOBLep1PrBBD0GsOh9VNYjG6x9yJAOfHRsI
+	gpuRFaanZ2nG4wIm1sj74e+Mn0JVnczPmH8L9J40hWacWck/99yTAw+BSpkwVmXpDvGjSsMZdFf
+	XybG7vuY3Kgg7g0eO1ncaNFSwVH+nqn3G8Qv/tERyh9HAsEqfgN90ghQfnFwz7Ow897wwjX4EHj
+	InavRgWObILWS51cgwCGYSCgUH5yqsfGuMYVnm3crhN2wFKOmhgVWMvmV4HxJZ7bi5rlmluFx0e
+	UCEnsQGVPBlcaO6T58B6QEHK9bhUXliU2tZl1sWay5Rtw5p63h5kUusKZ6NefWI7+gXiFC7ohBC
+	K5ojKrQ/Y2nvsqGtdsEomKwLqMYbTbg==
+X-Google-Smtp-Source: AGHT+IFqkJthPFAOd6c/6owM9CGgAK4lDSph/qo6ciNRRRzE4a0sKhq9+GnkkHtvadbY0MtJiZLKgw==
+X-Received: by 2002:a17:907:f497:b0:ac7:9237:60a8 with SMTP id a640c23a62f3a-acedc610398mr81783766b.9.1746002296958;
+        Wed, 30 Apr 2025 01:38:16 -0700 (PDT)
+Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-acec668dd9csm245517466b.96.2025.04.30.01.38.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 01:38:16 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:38:13 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+To: Will Deacon <will@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rt-users@vger.kernel.org, Valentin Schneider <vschneid@redhat.com>,
+ catalin.marinas@arm.com, kernel-team@android.com, Mike Galbraith
+ <efault@gmx.de>, Peter Collingbourne <pcc@google.com>, Mark Rutland
+ <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Neeraj
+ Upadhyay <neeraj.upadhyay@kernel.org>, Thiago Jung Bauermann
+ <thiago.bauermann@linaro.org>, Mark Brown <broonie@kernel.org>, Kristina
+ Martsenko <kristina.martsenko@arm.com>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Jinjie Ruan <ruanjinjie@huawei.com>, Juri Lelli
+ <juri.lelli@redhat.com>, Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH 0/1] arm64: enable PREEMPT_LAZY
+Message-ID: <20250430103813.5bea9f4a@mordecai>
+In-Reply-To: <174593068821.431779.9112946165910138990.b4-ty@kernel.org>
+References: <20250305104925.189198-1-vschneid@redhat.com>
+	<174593068821.431779.9112946165910138990.b4-ty@kernel.org>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.48; x86_64-suse-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBHeIBbFRkZ4P82E@kekkonen.localdomain>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Sakari,
+On Tue, 29 Apr 2025 21:27:52 +0100
+Will Deacon <will@kernel.org> wrote:
 
-thanks for your quick feedback!
-
-On Wed, Apr 30, 2025 at 08:24:00AM +0000, Sakari Ailus wrote:
-> Hi Richard,
-> 
-> On Tue, Apr 29, 2025 at 02:59:08PM +0200, Richard Leitner wrote:
-> > Add support for the new V4L2_CID_FLASH_DURATION control to the v4l2
-> > flash led class.
+> On Wed, 05 Mar 2025 11:49:24 +0100, Valentin Schneider wrote:
+> > Hey folks,
 > > 
-> > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-flash-led-class.c | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
+> > This is a resubmission of Mark's patch [1]. I didn't end up changing anything
+> > other than fluffing up the changelog.
 > > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > index 355595a0fefac72c2f6941a30fa430d37dbdccfe..963b549480f6eb3b9eb0d80696a764de7ffcc1a2 100644
-> > --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > @@ -298,6 +298,12 @@ static int v4l2_flash_s_ctrl(struct v4l2_ctrl *c)
-> >  		 * microamperes for flash intensity units.
-> >  		 */
-> >  		return led_set_flash_brightness(fled_cdev, c->val);
-> > +	case V4L2_CID_FLASH_DURATION:
-> > +		/*
-> > +		 * No conversion is needed as LED Flash class also uses
-> > +		 * microseconds for flash duration units.
-> > +		 */
-> > +		return led_set_flash_duration(fled_cdev, c->val);
-> >  	}
-> >  
-> >  	return -EINVAL;
-> > @@ -424,6 +430,13 @@ static void __fill_ctrl_init_data(struct v4l2_flash *v4l2_flash,
-> >  		ctrl_cfg->flags = V4L2_CTRL_FLAG_VOLATILE |
-> >  				  V4L2_CTRL_FLAG_EXECUTE_ON_WRITE;
-> >  	}
-> > +
-> > +	/* Init FLASH_DURATION ctrl data */
-> > +	if (has_flash_op(fled_cdev, timeout_set)) {
-> > +		ctrl_init_data[FLASH_DURATION].cid = V4L2_CID_FLASH_DURATION;
-> > +		ctrl_cfg = &ctrl_init_data[FLASH_DURATION].config;
-> > +		__lfs_to_v4l2_ctrl_config(&fled_cdev->duration, ctrl_cfg);
-> > +		ctrl_cfg->id = V4L2_CID_FLASH_DURATION;
-> 
-> Has this been compile tested? :-)
-
-Oooh... Damn. That's embarrasing. SORRY! There should have been at least
-another '}' in this patch.... Seems I somehow messed up my last rebase.
-
-Will fix that in v4. Sorry again :-/
-
-> 
-> >  }
-> >  
-> >  static int v4l2_flash_init_controls(struct v4l2_flash *v4l2_flash,
+> > I ran this under an arm64 VM, added some trace_printk's and checked that
+> > sched_switch's between runnable hackbench threads would occurr in the right
+> > conditions:
+> > o with TIF_NEED_RESCHED_LAZY set
+> >   o at the tick
+> >   o at do_notify_resume()
+> > o with TIF_NEED_RESCHED set
 > > 
+> > [...]  
 > 
-> -- 
-> Regards,
+> Applied to arm64 (for-next/entry), thanks!
 > 
-> Sakari Ailus
+> [1/1] arm64: enable PREEMPT_LAZY
+>       https://git.kernel.org/arm64/c/c8597e2dd8b6
 
-regards;rl
+Great news. Thank you!
+
+Petr T
