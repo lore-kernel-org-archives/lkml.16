@@ -1,194 +1,176 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284CE1EF388
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0F511DF98B;
+	Wed, 30 Apr 2025 08:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001676; cv=none; b=NlD1MNm5MkXqLoE68bquDizVCqVtacYyw+SPJAN8lE3yun/V5Mq/rL8DWuJX5T16ehnciVX2pBe/TjNqMYuckvnggy3MomCT+oxgqVh0V24VOUaOYMWZCIICpXICWNRwvlx+RbcwEE3/te9JJPcm2ng0DPAJJS1dpfrtUiPhy9o=
+	t=1746001687; cv=none; b=KdJWEhPaOQ7rc21twWmlU4KsvkvgZ/WNPqX46NMWeSrfjWTKecKNPrx063cC3s0UyPlTQCKehUZFug4JmQraUEoJvW0aXaFarbboJYU4XIf6M5tqyG9w732xkrcDvxk5cnla2jw4nt8PATVj0PyCYKJ1ud0cBXFMlvUCV4D0di8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001676; c=relaxed/simple;
-	bh=KP0WbRYyXweFla+W9yKoUm82l153JkxLlFZrvyQgDFE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Q8KFLPICqit3Oxv30F8UoOKLxynbOpK6UXgrQjR+5UcfWI3oUDSsHJ1Ss+XxazQbrSAYn7Hv5BMwQ2aShSnvCph6J2wG3/DuGkMQ7z31dUWJ3oS75NyeByyc2pg7+VhAJhrvUZms+7UdeBCF97D2RCbOt3gMv1djLLwazgnXc0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=VIjl0B80; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=34ylF4mT; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=r0KLLECP; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=0xeY6gNN; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1746001687; c=relaxed/simple;
+	bh=6q9qsUeVrZkFKWD/cX+YQyeHAlagANDwh1NSxGjeCjs=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=FmpbE9oxZ96Puc2+Kn31QmVhHDD30eFwLmTdc23R95x8/QV/R5LVysvz9AVl0dh19VEiPSwhmoGQ3C6t4LjF4zHxfcIIMi/YrKU7tM48br5KWPAKIOk5QSpnhcZIf5H3ORvXI/KYXvPBZEazgfTanzuXSLSGZ7s6+GoBO2mFM5k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=bg/pJU9k; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="VIjl0B80";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="34ylF4mT";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="r0KLLECP";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="0xeY6gNN"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 53CF51F7BF;
-	Wed, 30 Apr 2025 08:27:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746001667; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L+g1TDP6rhx8pD3i0tB2oZWqxFYE0CqTNE2BvNf7Ycw=;
-	b=VIjl0B80Uh3OUx3+Pshx9kY6dUdBWDIAmXxE40ltIMkkAw6HJy5NF8n2wR/Vw/N6U//Mz/
-	q43tMlVKwvxlPjDZIZ36pWNmVElVfkBF4fjZjXjb+R/BwO3W7x7vCttQLcGPSfe9+U5wkc
-	VwECC9C1r4ivjILpHWOsw+9pE8Eo2RM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746001667;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L+g1TDP6rhx8pD3i0tB2oZWqxFYE0CqTNE2BvNf7Ycw=;
-	b=34ylF4mTZj3STtfYtJGb1S3C6Ei9P7OlRGBTUYXWqsGldxCwQKSpPz7iANglSxXlRrs4UZ
-	c6LQlp1HcrReJHAA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=r0KLLECP;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=0xeY6gNN
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746001666; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L+g1TDP6rhx8pD3i0tB2oZWqxFYE0CqTNE2BvNf7Ycw=;
-	b=r0KLLECPsP8+xL6H7OibzAZq/4xdyKExIWg8qM+i0x7PUIvIfnbE2dV7hSQSAO3cIBumqi
-	iHq36qGokctFQcDoZgBGcdJsLcvBgorABMY+VR57Zx07RQ/nE28cZng+QrN6ez4u6DgzTN
-	vxn1r/IhXvabSNT2XWH1rCieh1qKkJg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746001666;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=L+g1TDP6rhx8pD3i0tB2oZWqxFYE0CqTNE2BvNf7Ycw=;
-	b=0xeY6gNNADEAcP/1u5v0rxgig/6h7Zy3mSE8sNHy7Dg42tJTDMR6SpT4vFQFK1wPPVq3nS
-	3P54IpBgpCUANGCw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 47A4D139E7;
-	Wed, 30 Apr 2025 08:27:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 4yVvEQLfEWgaEAAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 30 Apr 2025 08:27:46 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id 05DDEA0AF0; Wed, 30 Apr 2025 10:27:45 +0200 (CEST)
-Date: Wed, 30 Apr 2025 10:27:45 +0200
-From: Jan Kara <jack@suse.cz>
-To: Max Kellermann <max.kellermann@ionos.com>
-Cc: viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, Joe Damato <jdamato@fastly.com>, 
-	stable@vger.kernel.org
-Subject: Re: [PATCH] fs/eventpoll: fix endless busy loop after timeout has
- expired
-Message-ID: <diilyq37i35qlll7hu3si6dqrjntiif5gzajazkgtqvfsi4kgg@yr3v562urmjp>
-References: <20250429185827.3564438-1-max.kellermann@ionos.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="bg/pJU9k"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U777fV004534;
+	Wed, 30 Apr 2025 10:27:57 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=gjW9ik0Vdl+i9e3FBAPSXm
+	84CQMS+y93ODapRLzXvIM=; b=bg/pJU9ktsNK6MVGwM8rTwJQI2GnY3fGtmbRJm
+	Te+3VAyjYxidZiyTa8c05M36ZbYOhm0/Yx23RdvYfssD0NGktBgFyf37TQIGEMcH
+	R4kRohT6Dl1EfaW7o5U00AofKsRLnLajPLbGMyOW+pGQk4VnjlXQt6j1OikEdFCg
+	aBbtWcv4I/PzAIQidR8b+42CWSaJisej+91awQ+0i/J9mQpxVeBAOtkqTe7tU8xS
+	RnwxRCGK6nPZLH3a9GxUKaCvQuurzVKvbNaXSnW86twNnsvMegT25bD3sVYKBvqP
+	jXt7eg3FQBTDB3bRlqPJ38kMpsYPCu/NrvCg1XlGF0S10UqA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46b6tf1wp7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 10:27:56 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 875034007A;
+	Wed, 30 Apr 2025 10:26:41 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 059029AD323;
+	Wed, 30 Apr 2025 10:24:40 +0200 (CEST)
+Received: from localhost (10.252.1.18) by SHFDAG1NODE1.st.com (10.75.129.69)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
+ 2025 10:24:39 +0200
+From: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+Subject: [PATCH v7 0/2] media: Add support for ST VD55G1 camera sensor
+Date: Wed, 30 Apr 2025 10:24:37 +0200
+Message-ID: <20250430-b4-vd55g1-v7-0-761b72495ac3@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429185827.3564438-1-max.kellermann@ionos.com>
-X-Rspamd-Queue-Id: 53CF51F7BF
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.01 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RCVD_COUNT_THREE(0.00)[3];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email,suse.cz:dkim,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.01
-X-Spam-Flag: NO
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEXeEWgC/3XQTW7DIBAF4KtErEsEw4wNXfUeVRf8JiwaRyZCr
+ SLfvdibksZdDuJ7bzR3VuKcY2GvhzubY80lT5c2jC8H5s/2coo8hzYzEEACgLhDXgPRSXIXnBH
+ BRWWcYu3/dY4pf21Z7x9tPudym+bvLbrK9XUvpUouuApkhYYkkjVvaSrlWG5HP32usZtRoP8aH
+ eTg0I4mwaNZuyv89qGQvYVmhdfWaYvaEz1b1VvorVp3NcpoQoEj7fTivxbXndHJROiHUfhnS73
+ F3lKzRqd2IIjR7/UOvR17OzQrNYkkdSsHfLTLsvwAcIslLwQCAAA=
+X-Change-ID: 20250225-b4-vd55g1-bdb90dbe39b3
+To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>,
+        Sylvain Petinot
+	<sylvain.petinot@foss.st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Sakari Ailus
+	<sakari.ailus@linux.intel.com>
+CC: <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
 
-On Tue 29-04-25 20:58:27, Max Kellermann wrote:
-> After commit 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in
-> the future"), the following program would immediately enter a busy
-> loop in the kernel:
-> 
-> ```
-> int main() {
->   int e = epoll_create1(0);
->   struct epoll_event event = {.events = EPOLLIN};
->   epoll_ctl(e, EPOLL_CTL_ADD, 0, &event);
->   const struct timespec timeout = {.tv_nsec = 1};
->   epoll_pwait2(e, &event, 1, &timeout, 0);
-> }
-> ```
-> 
-> This happens because the given (non-zero) timeout of 1 nanosecond
-> usually expires before ep_poll() is entered and then
-> ep_schedule_timeout() returns false, but `timed_out` is never set
-> because the code line that sets it is skipped.  This quickly turns
-> into a soft lockup, RCU stalls and deadlocks, inflicting severe
-> headaches to the whole system.
-> 
-> When the timeout has expired, we don't need to schedule a hrtimer, but
-> we should set the `timed_out` variable.  Therefore, I suggest moving
-> the ep_schedule_timeout() check into the `timed_out` expression
-> instead of skipping it.
-> 
-> Fixes: 0a65bc27bd64 ("eventpoll: Set epoll timeout if it's in the future")
-> Cc: Joe Damato <jdamato@fastly.com>
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+Hi,
 
-I agree this makes the logic somewhat more obvious than Joe's fix so feel
-free to add:
+This serie adds support for the STMicroelectronics VD55G1 camera sensor.
+The VD55G1 is a monochrome global shutter camera with a 804x704 maximum
+resolution with RAW8 and RAW10 bytes per pixel.
+Datasheets and other documentation can be found at st.com [1].
+A lot of inspiration was taken from the imx219 and the vd56g3 serie.
+It is compatible with libcamera. Tested on Raspberry Pi 4 and 5, with and
+without libcamera.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+[1] https://www.st.com/en/imaging-and-photonics-solutions/vd55g1.html#documentation
 
-Thanks!
+Regards,
+Benjamin
 
-								Honza
+---
+Changes in v7:
+- Fix autosuspend
+- Rework active state
+- Fix vd55g1_power_off() call order
+- Merge vd55g1_check_sensor_revision() in vd55g1_detect()
+- Fix mipi_rate semantics
+- Add defines for XCLK and MIPI frequency bounds
+- Fix data_rate not being u32
+- Fix comment case
+- Don't grab hblank_ctrl
+- Rename vd55g1_lock_ctrls() to vd55g1_grab_ctrls()
+- Remove spurious braces in vd55g1_update_expo_cluster()
+- Move get_regulators() above probe()
+- Add missing 'vd55g1_' prefix to some functions
+- Factorize get_*_by_code()
+- Refactor ctrl_to_sd() to ctrl_to_vd55g1()
+- Simplify i2c_client->dev accesses
+- Explicit pattern generator names
+- Fix some registers values being defined as struct instead of macros
+- Properly indent dynamic registers values
+- binding: Split description in 2 paragraphs
+- Link to v6: https://lore.kernel.org/r/20250407-b4-vd55g1-v6-0-1850f18b1f24@foss.st.com
 
-> ---
->  fs/eventpoll.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index 4bc264b854c4..d4dbffdedd08 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -2111,9 +2111,10 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
->  
->  		write_unlock_irq(&ep->lock);
->  
-> -		if (!eavail && ep_schedule_timeout(to))
-> -			timed_out = !schedule_hrtimeout_range(to, slack,
-> -							      HRTIMER_MODE_ABS);
-> +		if (!eavail)
-> +			timed_out = !ep_schedule_timeout(to) ||
-> +				!schedule_hrtimeout_range(to, slack,
-> +							  HRTIMER_MODE_ABS);
->  		__set_current_state(TASK_RUNNING);
->  
->  		/*
-> -- 
-> 2.47.2
-> 
+Changes in v6:
+- Use return 0 whenever possible
+- Remove unneeded return values initializations
+- Fix traces format
+- Fix comment typo
+- Link to v5: https://lore.kernel.org/r/20250404-b4-vd55g1-v5-0-98f2f02eec59@foss.st.com
+
+Changes in v5:
+- Include missing proprety.h header
+- Move link_freq to device structure
+- Update get_vblank_limits() prototype
+- Add BUILD_BUG_ON() in vd55g1_update_patgen()
+- Drop hdl->error check
+- Use device_property*() instead of of_property*()
+- Drop OF requirement
+- Improve runtime pm usage
+- Various syntax fixes
+- Link to v4: https://lore.kernel.org/r/20250402-b4-vd55g1-v4-0-84b1f54c670c@foss.st.com
+
+Changes in v4:
+- Fix data-lanes syntax in binding
+- Link to v3: https://lore.kernel.org/r/20250402-b4-vd55g1-v3-0-393985404759@foss.st.com
+
+Changes in v3:
+- Add maxItems to data-lanes in binding
+- Drop redondant 'binding' in binding commit message
+- Link to v2: https://lore.kernel.org/r/20250401-b4-vd55g1-v2-0-0c8ab8a48c55@foss.st.com
+
+Changes in v2:
+- Fix device tree binding mistakes
+- Drop linux media git from MAINTAINERS file
+- Fix coding style mistakes
+- Drop vd55g1_err_probe wrapper
+- Fix 32bits build
+- Fix config symbol help paragraph being too short for checkpatch
+- Link to v1: https://lore.kernel.org/r/20250328-b4-vd55g1-v1-0-8d16b4a79f29@foss.st.com
+
+---
+Benjamin Mugnier (2):
+      media: dt-bindings: Add ST VD55G1 camera sensor
+      media: i2c: Add driver for ST VD55G1 camera sensor
+
+ .../devicetree/bindings/media/i2c/st,vd55g1.yaml   |  133 ++
+ MAINTAINERS                                        |    9 +
+ drivers/media/i2c/Kconfig                          |   11 +
+ drivers/media/i2c/Makefile                         |    1 +
+ drivers/media/i2c/vd55g1.c                         | 1965 ++++++++++++++++++++
+ 5 files changed, 2119 insertions(+)
+---
+base-commit: b2c4bf0c102084e77ed1b12090d77a76469a6814
+change-id: 20250225-b4-vd55g1-bdb90dbe39b3
+
+Best regards,
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Benjamin Mugnier <benjamin.mugnier@foss.st.com>
+
