@@ -1,112 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510412973B3;
-	Wed, 30 Apr 2025 20:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D34CC2980DD;
+	Wed, 30 Apr 2025 20:06:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043455; cv=none; b=byEBZDWXGXmpPCFO/WzW+0SXbYILRmHHpw+VBd8St0MA90tt9nQAakaKPQzuFIYI7zW93/bVxOHM3iitmdVvVAlTW8P5OI6R3BRbyh99CKF3eGKXd3aNYySimjEb9dDUrXVujeVYPMEbjsJDMaNvU9q9Om+efBDoiw/b4KD9T1A=
+	t=1746043587; cv=none; b=fI0cS1Ai59I1s6X+fJYRVf/2SeFVFvK/coSl1FFuXBSb0RmjTeaeQMB9HKIkquD7BqLxOhXcNjyNjLksbnZoLrAz/6WBPlJw5BG7DNJddEKwLIuj3nRLIGNTzlAhWAJ7DXmWAHJWXgNST+Vebwk82pNU36wewD4o/Ftzofcaovc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746043455; c=relaxed/simple;
-	bh=sOnwfSJ05AlVpzAlYbQ/0NuGlFxQqXAq2x1C4iV2EKY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=V6fYh/lUfB1GVfpWKDREHNeNntKJlNHmkmFPQSCclKwiOoJYMdN8f1hndmivU2+qO9I2NGoVsllZKuO6ElIF7GkA8LW1ZZPR8ihd83v0Jd4ywzWKXPWUM3mU/SJzT/OioJ6qA2mUdoD1ZgMtVQT+KIe0MNe/T3TmZduR/+M2MOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U25JLx1c; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746043587; c=relaxed/simple;
+	bh=iZIMCppN1Ev0tPCOUt0ZBGp5W6iVvPZP4no8Hky88Dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ecA+XfEGTNk8jfxIbqPI8ri4PXTnNIyENKEh63j+HTSRS8kZ2d9rlQt6J3+cgl75+a1lbTemBaHC6CHBH60QyvJZ7+Z9Jjf0RmFm9e/nL2wjSkOZqZP6ElVoGhiHnhRQJ8+Bl0EK0yLrehg7h6WzSmEJ4h6qoPQqgsHm3OVpE2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5syfOcP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U25JLx1c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9BC6C4CEEA;
-	Wed, 30 Apr 2025 20:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5syfOcP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B60C4CEE7;
+	Wed, 30 Apr 2025 20:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746043454;
-	bh=sOnwfSJ05AlVpzAlYbQ/0NuGlFxQqXAq2x1C4iV2EKY=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=U25JLx1cmAY+jpWLVGD0vUDAi4OfIKit6ldTPXGNtCcvkl9+Yrzln8DVc2doXdj47
-	 xkjFrBz9Y0tEP8myMxUKQ+JIcpBpW0fDmzwH06jInApIkXhzRwIVFIvB1WiFriwrNR
-	 xI3x/NzJTpC5sTT8TPYBqvS+VuoGYrJMI/iUyyJweJ56UajtNkFmZU8WrgOKFisF7S
-	 45ZLrk8Hmbw+IGf379X4/KP+kZibwO5oxFGkPmlyH8cNr05oCqD4GL7fQD2zKjlnsB
-	 W6m1TJonDGklm018uSSO7ZsLp+Hjbl5gIWd38Z4Sjv6Rq5//RstYDhsNM6UUaZ8ue6
-	 JYR+B7fjy/d7g==
-Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 03690120007A;
-	Wed, 30 Apr 2025 16:04:13 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-05.internal (MEProxy); Wed, 30 Apr 2025 16:04:13 -0400
-X-ME-Sender: <xms:PIISaMl66q4oIQvefNEDkOI1vL_wBtYRNWEX8IlLtlVykoJRdjBLTA>
-    <xme:PIISaL35aOu31TsXpttNJagiKcZuvx3e8XY8ThmPsByKQnTQNOnX_DjzklWsRsEmx
-    v8-chyMEUsn9JataY0>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejieduucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusehkvghrnh
-    gvlhdrohhrgheqnecuggftrfgrthhtvghrnhepjeejffetteefteekieejudeguedvgfef
-    feeitdduieekgeegfeekhfduhfelhfevnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
-    hrrghmpehmrghilhhfrhhomheprghrnhguodhmvghsmhhtphgruhhthhhpvghrshhonhgr
-    lhhithihqdduvdekhedujedtvdegqddvkeejtddtvdeigedqrghrnhgupeepkhgvrhhnvg
-    hlrdhorhhgsegrrhhnuggsrdguvgdpnhgspghrtghpthhtohepudehpdhmohguvgepshhm
-    thhpohhuthdprhgtphhtthhopehmihgthhgrlhdrshhimhgvkhesrghmugdrtghomhdprh
-    gtphhtthhopegtrhhishhtihgrnhdrmhgrrhhushhsihesrghrmhdrtghomhdprhgtphht
-    thhopehsuhguvggvphdrhhholhhlrgesrghrmhdrtghomhdprhgtphhtthhopehjrghmvg
-    hsrdhquhhinhhlrghnsegsrhhorggutghomhdrtghomhdprhgtphhtthhopehfrdhfrghi
-    nhgvlhhlihesghhmrghilhdrtghomhdprhgtphhtthhopehjohhhrghnodhlihhnrghroh
-    eskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhohhgrnheskhgvrhhnvghlrdhorhhg
-    pdhrtghpthhtohepmhgriieskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhdrtg
-    grrhhpvghnthgvrheslhhinhgrrhhordhorhhg
-X-ME-Proxy: <xmx:PIISaKp7rqOCdVGbRA2HZDpQJhnVGN5XFHi05juz8PVw8TSEVKlDxw>
-    <xmx:PIISaInPACZ2CgKBMH-zw7kJQJ1mlVk92P2laGAC8_MMSsa3IlDHTQ>
-    <xmx:PIISaK03XUW8ZeWNLPhTfV3ir-Y9kQd2S23QilEqOqABzQsbMg9m1Q>
-    <xmx:PIISaPu-GCM62oFJ-kntqLgaucGOboWPKtoLJoev1nyKI1lVPIQ2Yg>
-    <xmx:PIISaGVkIFm3CLtJ7Ou0CatlVuNOkKpCPShcUnK5NeUi2Dujl8k9tTr4>
-Feedback-ID: i36794607:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id B7E0D2220074; Wed, 30 Apr 2025 16:04:12 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=k20201202; t=1746043587;
+	bh=iZIMCppN1Ev0tPCOUt0ZBGp5W6iVvPZP4no8Hky88Dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=R5syfOcPY2POt/ZJvF9cL+XB3hlalp94tlny8tHbD6yPBLvSZLfW/NO0hq2BF5tYz
+	 wvQp93q9uZqRIdmrrYxP0nB1alymdp7ohuOrEjMLabHaMzKV91R+HKwIzgRA3O6xMd
+	 0cHMTQi7c94h0sRxsulxU8eOuByBUgVuhYNf9g6teJehRHQXTcI96c6dSnpStF55Cs
+	 et00A5E77jU1qU7v0Vu4TPk4OxRFPUrgPfKC42KpKR2TPk3inimxP8JTOoKMhZRQzp
+	 O5r0ddvRiyxIgopT+Qnk4oiYoVmp1dgNoWjgoP6Ayqqwv/BrrRQeebnmN0GkGhvpO/
+	 7MYEyc4exNdUg==
+Date: Wed, 30 Apr 2025 13:06:24 -0700
+From: Kees Cook <kees@kernel.org>
+To: Petr Pavlu <petr.pavlu@suse.com>
+Cc: Luis Chamberlain <mcgrof@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH] module/decompress: Adjust module_extend_max_pages()
+ allocation type
+Message-ID: <202504301305.2A0CD4E8@keescook>
+References: <20250426062359.work.358-kees@kernel.org>
+ <d7382c8a-cfb2-4389-b120-f01a17e248ab@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T9031dfa3c80e4b2d
-Date: Wed, 30 Apr 2025 22:03:42 +0200
-From: "Arnd Bergmann" <arnd@kernel.org>
-To: "Sudeep Holla" <sudeep.holla@arm.com>,
- "Cristian Marussi" <cristian.marussi@arm.com>
-Cc: "Marc Zyngier" <maz@kernel.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, arm-scmi@vger.kernel.org,
- "Jim Quinlan" <james.quinlan@broadcom.com>,
- "Florian Fainelli" <f.fainelli@gmail.com>,
- "Vincent Guittot" <vincent.guittot@linaro.org>, peng.fan@oss.nxp.com,
- "Michal Simek" <michal.simek@amd.com>,
- "Sibi Sankar" <quic_sibis@quicinc.com>,
- "Dan Carpenter" <dan.carpenter@linaro.org>,
- "Johan Hovold" <johan@kernel.org>, "Johan Hovold" <johan+linaro@kernel.org>
-Message-Id: <94e94c5f-210b-43b8-99bc-e7ad7da2588d@app.fastmail.com>
-In-Reply-To: <20250430-efficient-spider-of-criticism-e857bf@sudeepholla>
-References: <20250429141108.406045-1-cristian.marussi@arm.com>
- <20250429141108.406045-3-cristian.marussi@arm.com> <aBHXHnXA95TwJths@pluto>
- <868qnhj2yf.wl-maz@kernel.org> <aBIbC15NiqUseZc7@pluto>
- <20250430-efficient-spider-of-criticism-e857bf@sudeepholla>
-Subject: Re: [PATCH v3 2/3] firmware: arm_scmi: Add Quirks framework
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d7382c8a-cfb2-4389-b120-f01a17e248ab@suse.com>
 
-On Wed, Apr 30, 2025, at 17:26, Sudeep Holla wrote:
->
-> Arnd,
->
-> I don't see much discussions on 20250407094116.1339199-1-arnd@kernel.org
-> to conclude if you plan to get this for v6.16
->
-> We probably can wait to push this $subject after your changes land. But
-> it would be good to know your opinion here especially if you are not
-> pushing your patches for v6.16
+On Mon, Apr 28, 2025 at 12:30:03PM +0200, Petr Pavlu wrote:
+> On 4/26/25 08:24, Kees Cook wrote:
+> > In preparation for making the kmalloc family of allocators type aware,
+> > we need to make sure that the returned type from the allocation matches
+> > the type of the variable being assigned. (Before, the allocator would
+> > always return "void *", which can be implicitly cast to any pointer type.)
+> > 
+> > The assigned type is "struct page **" but the returned type will be
+> > "struct page ***". These have the same allocation size (pointer size), but
+> > the types don't match. Adjust the allocation type to match the assignment.
+> > 
+> > Signed-off-by: Kees Cook <kees@kernel.org>
+> > ---
+> > Cc: Luis Chamberlain <mcgrof@kernel.org>
+> > Cc: Petr Pavlu <petr.pavlu@suse.com>
+> > Cc: Sami Tolvanen <samitolvanen@google.com>
+> > Cc: Daniel Gomez <da.gomez@samsung.com>
+> > Cc: <linux-modules@vger.kernel.org>
+> > ---
+> >  kernel/module/decompress.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/module/decompress.c b/kernel/module/decompress.c
+> > index 474e68f0f063..bbb2a55568cd 100644
+> > --- a/kernel/module/decompress.c
+> > +++ b/kernel/module/decompress.c
+> > @@ -19,7 +19,7 @@ static int module_extend_max_pages(struct load_info *info, unsigned int extent)
+> >  	struct page **new_pages;
+> >  
+> >  	new_pages = kvmalloc_array(info->max_pages + extent,
+> > -				   sizeof(info->pages), GFP_KERNEL);
+> > +				   sizeof(*new_pages), GFP_KERNEL);
+> >  	if (!new_pages)
+> >  		return -ENOMEM;
+> >  
+> 
+> The function has a similar type mismatch a few lines below:
+> 
+> memcpy(new_pages, info->pages, info->max_pages * sizeof(info->pages));
+> 
+> The sizeof operator is used on 'struct page **', but it should be really
+> on 'struct page *'.
+> 
+> Could you please fix this as well? For consistency with your patch,
+> I suggest changing it to 'sizeof(*new_pages)'.
 
-I've pushed my branch to the asm-generic tree now, so it should 
-show up in the next linux-next.
+Actually, this whole function is basically just open-coded kvrealloc...
+I will send a v2.
 
-Cristian, I think you can keep the __VA_OPT__, as the build bots
-should stop testing with older gcc versions once my series is in
-linux-next.
-
-    Arnd
+-- 
+Kees Cook
