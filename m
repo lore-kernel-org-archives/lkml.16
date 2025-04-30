@@ -1,61 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-181.mta0.migadu.com (out-181.mta0.migadu.com [91.218.175.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8941B2DC770;
-	Wed, 30 Apr 2025 15:16:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962082DC797
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026186; cv=none; b=IJczuzo1Dmk4IT+aGywYujSV+HcZBw5OXnWfEj/CRBORndWfJxiuNERMy/aNKrfVJZwkTRAFD1bApXs6GXUkBtWNli7wP1+z8mfLHbbkemL36Kwbo/ZGaeGVSIa6SE5rTccyMVblgF1ZBUloOINXQMlm4VnesE4wHI5U6o0PJkg=
+	t=1746026220; cv=none; b=hozGiTFXYbxty8BpswvO4q42u3yg+J7oQma0+ArNBvGv1lU24jq81+aOQna1S5W71bbRRNN7Ro+l80SCR5XgJxr+9/4oVS+3guqhQ+jEWRH5yGZ911jzihWENNlgBUwNTbp79KnUPTdvjD7T/0Sn1OMpmv0cQb6J6RFSCgolobI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026186; c=relaxed/simple;
-	bh=ttE3sHexDRAFmrcQqUiwsk+71nttsmLhwmVo1OAt7Hg=;
+	s=arc-20240116; t=1746026220; c=relaxed/simple;
+	bh=QG8bqgr3qWo8btyscx6Pg1np246S/tBDUlpyBuH76hI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jp10+M8C+GEkYP+x5eHZ5H/eQnByQt4ikWG0WfOb/HIATlmwfkNtjfa3OSAzo/KA/pXk8ewkdCcqDv+zfV2ZjRmy1BW3Z7O70Nxpijua7V+sbQf1o/LA6PgzGZEdK3udLkSSd6iKE1AqAXiidRC58YHJ6sp2Jc7nsRbeD2ijb6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DvhRgt58; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WQlpRAiWHWY7/QYSSRgYcqeX1s5jdE4XJMyPNENzgWLDBhaFxFsJBVlkVlyZWm5pFQBFHFqjylbSkEUCVMBHfqJcPX/GyRTMMCkiTVM6/xZl3skFsIhIKiRzziJ6wffuI5zopi2cQL+I4Am+75bTpbaQfcIVlOeQxpdXEAjKKT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=tbPh85mq; arc=none smtp.client-ip=91.218.175.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DvhRgt58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CBC3C4CEE7;
-	Wed, 30 Apr 2025 15:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746026186;
-	bh=ttE3sHexDRAFmrcQqUiwsk+71nttsmLhwmVo1OAt7Hg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DvhRgt58tN19SSfK2+EAbkO3AE73rZHsBsXTJrj8M80KRzi6RoRRGoaqZUXgOh0tr
-	 3pGuLtybBhrxk6/pB9g3m6HKKzPIu48m4MvhMYhpQGCtmJsvs4jjcNDsDZcmt6DeET
-	 qT23czBnKG2hpq0qBmq3CfbA32/UhtDniygBLVT/0nd3CUqezY1FrFbP10tEIwFk96
-	 a4aWnwNjF9xDqBWWnhgVPNCZZmvgb/jwPaAHN52p6nbcrF246Ir9IZkZcQ+igE1hBY
-	 7XyOJjt9P5CCDEkcACuv+ZGDXiU/VRB4OnNQtRIVSKcXVXMeLOagNKpeFDw9Cs088c
-	 11gzEP0hw9HDg==
-Date: Wed, 30 Apr 2025 18:16:21 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: "Reshetova, Elena" <elena.reshetova@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	Sean Christopherson <seanjc@google.com>,
-	"Huang, Kai" <kai.huang@intel.com>,
-	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-	"Scarlata, Vincent R" <vincent.r.scarlata@intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"Annapurve, Vishal" <vannapurve@google.com>,
-	"Cai, Chong" <chongc@google.com>,
-	"Mallick, Asit K" <asit.k.mallick@intel.com>,
-	"Aktas, Erdem" <erdemaktas@google.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bondarn@google.com" <bondarn@google.com>,
-	"dionnaglaze@google.com" <dionnaglaze@google.com>,
-	"Raynor, Scott" <scott.raynor@intel.com>
-Subject: Re: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
- opportunistically call it during first EPC page alloc
-Message-ID: <aBI-xQzatja2Y9dh@kernel.org>
-References: <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
- <aAviqeAdGn-w1GpK@google.com>
- <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
- <aAv445Sr71NUJP1X@google.com>
- <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
- <aAwFhaqQDLXoqbmv@google.com>
- <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
- <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
- <8db47bc1-445b-49db-b932-96aff0eb58a9@intel.com>
- <DM8PR11MB5750200DFF8CF40E3539B688E7832@DM8PR11MB5750.namprd11.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="tbPh85mq"
+Date: Wed, 30 Apr 2025 08:16:40 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746026206;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QuMn9HO2ylHkudtJJgWW+uAsUFq7j0ybDWnjZm1chbA=;
+	b=tbPh85mqFuFE68zG9wwsyzvn0w6q9QuM+tyJK8/hQ/ZBmw8hoZyObkmHYHybSvoObi4+cv
+	QGRo+e36qf+yddQwfi4mYAWAiyTM3HNdl9YrzzAL4Hs0r7nwS2o1DdyRTdYMBuCIWmCZNT
+	3JvPQLMoYKh/+B36R4CstLUfTjk0YDo=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Jakub Kicinski <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, 
+	Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>, Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <mjmayud53r2ypus22ab75c7kfaq7izaidde2bju536e2ghifdi@lslljpj2hdtm>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+ <as5cdsm4lraxupg3t6onep2ixql72za25hvd4x334dsoyo4apr@zyzl4vkuevuv>
+ <ae4b9ac8-d67d-471f-89b9-7eeaf58dd1b8@suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,18 +49,88 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DM8PR11MB5750200DFF8CF40E3539B688E7832@DM8PR11MB5750.namprd11.prod.outlook.com>
+In-Reply-To: <ae4b9ac8-d67d-471f-89b9-7eeaf58dd1b8@suse.cz>
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Apr 30, 2025 at 06:53:32AM +0000, Reshetova, Elena wrote:
-> 2. Switch to Sean's approach to execute EUPDATESVN during the sgx_open().
-> Btw, Sean do you agree that we don't gain much doing it second time during
-> release() given the microcode flow?
-> I would rather leave only one invocation of eupdatesvn during sgx_inc_usage_count().
+On Wed, Apr 30, 2025 at 12:05:48PM +0200, Vlastimil Babka wrote:
+> On 4/25/25 22:18, Shakeel Butt wrote:
+> > Hi Andrew,
+> > 
+> > Another fix for this patch. Basically simplification of refill_stock and
+> > avoiding multiple cached entries of a memcg.
+> > 
+> > From 6f6f7736799ad8ca5fee48eca7b7038f6c9bb5b9 Mon Sep 17 00:00:00 2001
+> > From: Shakeel Butt <shakeel.butt@linux.dev>
+> > Date: Fri, 25 Apr 2025 13:10:43 -0700
+> > Subject: [PATCH] memcg: multi-memcg percpu charge cache - fix 2
+> > 
+> > Simplify refill_stock by avoiding goto and doing the operations inline
+> > and make sure the given memcg is not cached multiple times.
+> > 
+> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 > 
-> Proc: No new uABI. More predictable on svn change compared to option 1.
+> It seems to me you could simplify further based on how cached/nr_pages
+> arrays are filled from 0 to higher index and thus if you see a NULL it means
+> all higher indices are also NULL. At least I don't think there's ever a
+> drain_stock() that would "punch a NULL" in the middle? When it's done in
+> refill_stock() for the random index, it's immediately reused.
+> 
+> Of course if that invariant was made official and relied upon, it would need
+> to be documented and care taken not to break it.
+> 
+> But then I think:
+> - refill_stock() could be further simplified
+> - loops in consume_stop() and is_drain_needed() could stop on first NULL
+> cached[i] encountered.
+> 
+> WDYT?
+> 
 
-> Cons: Two explicit paths to hook: sgx_open() and sgx_vepc_open(). 
+Please see below.
 
-Why this is a con?
+> > ---
+> >  mm/memcontrol.c | 27 +++++++++++++++------------
+> >  1 file changed, 15 insertions(+), 12 deletions(-)
+> > 
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 997e2da5d2ca..9dfdbb2fcccc 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1907,7 +1907,8 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+> >  	struct mem_cgroup *cached;
+> >  	uint8_t stock_pages;
+> >  	unsigned long flags;
+> > -	bool evict = true;
+> > +	bool success = false;
+> > +	int empty_slot = -1;
+> >  	int i;
+> >  
+> >  	/*
+> > @@ -1931,26 +1932,28 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+> >  
+> >  	stock = this_cpu_ptr(&memcg_stock);
+> >  	for (i = 0; i < NR_MEMCG_STOCK; ++i) {
+> > -again:
+> >  		cached = READ_ONCE(stock->cached[i]);
+> > -		if (!cached) {
+> > -			css_get(&memcg->css);
+> > -			WRITE_ONCE(stock->cached[i], memcg);
+> > -		}
+> > -		if (!cached || memcg == READ_ONCE(stock->cached[i])) {
+> > +		if (!cached && empty_slot == -1)
+> > +			empty_slot = i;
+> > +		if (memcg == READ_ONCE(stock->cached[i])) {
+> >  			stock_pages = READ_ONCE(stock->nr_pages[i]) + nr_pages;
+> >  			WRITE_ONCE(stock->nr_pages[i], stock_pages);
+> >  			if (stock_pages > MEMCG_CHARGE_BATCH)
+> >  				drain_stock(stock, i);
 
-BR, Jarkko
+So, this drain_stock() above can punch a NULL hole in the array but I
+think I do see your point. We can fill this hole by moving the last
+non-NULL here. For now I plan to keep it as is as I have some followup
+plans to make this specific drain_stock() conditional on the caller
+(somewhat similar to commit 5387c90490f7f) and then I will re-check if
+we can eliminate this NULL hole.
+
+Thanks a lot for the reviews and suggestions.
+
