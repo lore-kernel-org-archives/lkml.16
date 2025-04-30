@@ -1,330 +1,276 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2089.outbound.protection.outlook.com [40.107.94.89])
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BB3125E440;
-	Wed, 30 Apr 2025 12:50:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.89
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017454; cv=fail; b=kTIk1l4I/0Kyo0mZzm4OXJi8EQI4v6kfRxwi48uYIXv98eH+0f5+LqyCL/mw+40XXSz8nczF01L1882cA2++uauuhCIkVzgHwQALnp0IbMvzx6us6mqbbfRHKqNI6hVPmvr1iiBpP4zl3bzNnIUUm2pPmCtrfUwdBepxkVhi1kc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017454; c=relaxed/simple;
-	bh=JdL5W+TvsGBuJAY2xbU1rUgNE+CkenS7S6WkPg54Pt8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=L4W1GLIxyaeUNxRyZ2dPNhG/Bg4hHGsIEhiR3OOhMvi4iZvJwZhy3mW1SSCRittMIlY+RBwt9R85JHOUjv5GoVB8p87olHVESwvB2eOGmXN9iUgbabLuLDgxqG6vbNwmZELnGiPls4wREKtOgTh/zhrkkJeOLRbZY3DFa+sO6qU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=YQz06Vor; arc=fail smtp.client-ip=40.107.94.89
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1C0258CE6;
+	Wed, 30 Apr 2025 12:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746017463; cv=none; b=DBgu2rh8fDsO0e17oxsaMMTNazYD3kKBYD0SP98AwGfR6i4hfzP/RZipG5JfZ7Y60O+33KvRw3OAy6dTHHzxTUgHeFG3v1Ra4aOufzDnpY9UXZ7iyRAbXXabqP8pniXAFDjgrrFBRsoQrGK5QYxf7PhHiIU+7GpQZRYctSHE2Dk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746017463; c=relaxed/simple;
+	bh=aOpF7LdSFVl4udDgXJTo/4c5XKeqCEy7aotPgpNQmvk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gVb6muI9iZmUBL7DeoJYRz3SjfMwVUZlMSmm6PqqJnSa3NU+r28kduYYpw5a4y8wevrJzKLiuzvb60ADseYVuZS0jncKs6h9WWL6qqf71sKCvHU4fCYF9i8FS68H3ShPi1t6m53Ar0EL7msa8Yf2vFgMJYaZE9PsazP3RRN4HQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U0V/lgCy; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="YQz06Vor"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MF8i9AXKvTmD10hbyWW9XfNME6PRvwoNY8VuM7g6lP9Q3w+HkK7SYmaJLjZ1MAqzim+339LdXJFFv3KD75VWk/fGccZ42zenzwiHBgbCUpdEKorzcX/NLEUh6hdJJ7XL2KEu7568VMv42EqMXzGIbQ890ZgQVOgGMoB1YuDmHMPw7uKksIlw68RhUOBRcc4e6KtBuUbCMlWQ9lcqPy8ZgoF6WuTqrJGOXyCG05y3myl0HttgIsoxYEkidhpsU+1WRCjbdjY3KeK+HxgvonqmBkkYLdNmAmXHwhkbXvc/BcLJ+oVfPLUh9BeYpZNWUy06xflICPnRXf6qiSB2+fvtvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aj6S1HsLQCzCQ9hx09oCnB4GNVVzZZawWtvvpU0fYPQ=;
- b=IyoHENtpYLZjLOMj/EaZbtBQAwRS7xtVwVwItByIFem8muLp85DX7zihW1FZjheWce4TLmPryMZVVyFiZmeQLt4Q1KJMZb0p4HaEh7bXXD6h8tiBCnH7MIQMHsw5j1PuVnpo4NQOICUNxO90NKcn420mubpniuIj2KKbTXDSZQWr3OP+skhLN//wV+w0+zYBUVuaHP6A7xJkiQ3yrvsMWFnDTJebE26AIKWTFzSa3AL+6oAH/ltAbkVrgZB/F0tdActsjlanYpKiivlcjwLK/m1vIhf+GlL4bfg0KcRGk4t/OjLqOUv9pOmgB6/OXtqtOuh4HMOUs9rssbJHWecF+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aj6S1HsLQCzCQ9hx09oCnB4GNVVzZZawWtvvpU0fYPQ=;
- b=YQz06VorMc0JUq3HxGrzlNBhyeGSPTRG4gvyiDurdPpMcdhbmOpfWxWzoUK+jzLkRc25jyBToFPIjj8kp3j2/58s3yaaP1NdHPUxfoS6w3s9g9HntCiTlbtDBvcN83o7DOhs8z75eqgPOeBIlGFOf9uE1TTRxNvhrvnWarG7ycY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW4PR12MB5667.namprd12.prod.outlook.com (2603:10b6:303:18a::10)
- by PH7PR12MB5782.namprd12.prod.outlook.com (2603:10b6:510:1d1::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.30; Wed, 30 Apr
- 2025 12:50:50 +0000
-Received: from MW4PR12MB5667.namprd12.prod.outlook.com
- ([fe80::6216:e70a:9c8b:7abb]) by MW4PR12MB5667.namprd12.prod.outlook.com
- ([fe80::6216:e70a:9c8b:7abb%4]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
- 12:50:49 +0000
-Message-ID: <254d31f8-0cbb-45d2-9686-2923e511811b@amd.com>
-Date: Wed, 30 Apr 2025 14:50:44 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: "Deucher, Alexander" <Alexander.Deucher@amd.com>,
- "Koenig, Christian" <Christian.Koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- "Khatri, Sunil" <Sunil.Khatri@amd.com>, "Yadav, Arvind"
- <Arvind.Yadav@amd.com>,
- "Paneer Selvam, Arunpravin" <Arunpravin.PaneerSelvam@amd.com>,
- "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-References: <aBHZuejTTKkdnGaZ@stanley.mountain>
- <MW4PR12MB566769E097E394ED607DBD9CF2832@MW4PR12MB5667.namprd12.prod.outlook.com>
- <ac039a7e-4152-4df5-af3d-c952cedfa6dd@stanley.mountain>
-Content-Language: en-US
-From: "Sharma, Shashank" <shashank.sharma@amd.com>
-In-Reply-To: <ac039a7e-4152-4df5-af3d-c952cedfa6dd@stanley.mountain>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0144.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:95::15) To MW4PR12MB5667.namprd12.prod.outlook.com
- (2603:10b6:303:18a::10)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U0V/lgCy"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 1E3DD43A0B;
+	Wed, 30 Apr 2025 12:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746017454;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Hj4Fd+UF7XJ/NHAkeOSU1Q67QFtWACPDre02lM84o9A=;
+	b=U0V/lgCy9/C6/HwiavOP+kRV5n1Oj+/k2ATkwlM/J4urq73RnIEc1rSCVNW7VBtBWS0yfS
+	FomyBDDFP1IdAxQEVSvwKVRIakuClYphKH3hV0L2WBYcOHScR4y5bPEdk0tBo4IP/Z/crQ
+	qjVqcWvFx4nEJM9sMF/mf1cb/iDn2gqR5KimhDX+vIyxg3t4CGYRbp9mWJvJ87/1w+YNLe
+	U7/+doeGTYdpgiyHvs7euog5huW8n09F9FEHbGXfIMLbhkunLv7NNKfmPjuONgnOotDb6o
+	3ASvFy2F3tj0PY/FEh6uC6Uh6OLA74ZZTgjwPEvt67bEqVG7o76n9VGy72RvKw==
+Date: Wed, 30 Apr 2025 14:50:50 +0200
+From: Herve Codina <herve.codina@bootlin.com>
+To: David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
+ Ayush Singh <ayush@beagleboard.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Herve Codina
+ <herve.codina@bootlin.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan
+ <saravanak@google.com>
+Cc: devicetree@vger.kernel.org, devicetree-compiler@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 0/7] of: overlay: Add support for export-symbols node
+ feature
+Message-ID: <20250430145050.69f2e950@bootlin.com>
+In-Reply-To: <20250430124910.195368-1-herve.codina@bootlin.com>
+References: <20250430124910.195368-1-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW4PR12MB5667:EE_|PH7PR12MB5782:EE_
-X-MS-Office365-Filtering-Correlation-Id: a8aa4097-3d2f-4f1d-9d3b-08dd87e5a22e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?NmlXTHdPK1JEVk9ud3BEQUsva0Z4SXpXazhZaVk4WHpYMGN1U3hDWks5aDh6?=
- =?utf-8?B?b3Y4T0NuOXBaK01yZ2F4SXZFbm5DMmNTVXVqQjJQQUZmZERTd0RWYXpmdEtm?=
- =?utf-8?B?RzZiZXFlZ09SckluYmM1eThEY0pJenIxR3BlVjJvL0RnSjNnSVRHd09seTVl?=
- =?utf-8?B?L0NONEZCOGpzRDNEUWs0QldlMGRhMDNUemV6U29YZ0s4YUozMExJeXp3TDBl?=
- =?utf-8?B?eGwydTVuYUo4Z0VBWjNtTERrWG5Wb3FIR1ZSeU54K0pJaXY3Tmw2QUowMUNV?=
- =?utf-8?B?Y1EyclMvV0NlZnNqeGsvVGM2YjlBai9zck51bTBXUWRvamhaZkNpSXFWR0NF?=
- =?utf-8?B?UjQ5QitFMmZ5bU81WnlHdHhoeWxmOGJ5SEJZWHpEOEN2NW45d3VScW5VSC9u?=
- =?utf-8?B?dXNOK09PUXc3aUtpaTlWQThHWUg1RlNtaFlYcGppSGV5TUNEN1A4MUxZTXlL?=
- =?utf-8?B?MW4wSFk4dnNQeVBWeWtJMGYxanNFTnQ0cHdMMkhyUVN4QVd5bkxEcEFEdVlK?=
- =?utf-8?B?RENpM1Y5WmtKckxvcCtKRFpIOFF3cHpCaTF2REpta09rc2VrR0N6RVpiZ2ZG?=
- =?utf-8?B?eVdQQ1pVWUdiV2NndTN5RDcvc2xZZVhDWWZLWmY4SE5tZkIzY254YzF5Kytj?=
- =?utf-8?B?UFJsbWhQZEFJNnRnWk1UM2w3c0VmMndCQmNmVG5mdU5NQ3h4RkVpMFZBV0xj?=
- =?utf-8?B?aFNtQnV6ekZNY1E4bG9wZFZLNzg3LzhSbWhvS0tlcy9iZC9aaWhWYXVRNjZs?=
- =?utf-8?B?eFdjUVExTTJZcitiVXlnai8yU3l1RHd2RVcyL1JzeUNQN2l4UjArc29zVUlm?=
- =?utf-8?B?c2swTmRQVkRXK0MzZXVwOUphZDRUaUtxNHV2TXpURFZPTlhycE1tOGY2MWF5?=
- =?utf-8?B?blpEN0tzc3A4VUFUbTFPaTNXTC83S3JOcFU1ZXdVaDFpWS92YlBycEh4cFk0?=
- =?utf-8?B?SVdNYk9uaGhqRU5CaXlZVjBXenk3eVNxY0dWY1FjSkltYURWREI5RzNsSmZl?=
- =?utf-8?B?NXdIWnZBZzRad2JveUd3M2d0elpTWUVRYytrdDQyTE5WMVhPSXdrcXZ1RTFa?=
- =?utf-8?B?N2RlNlF2S2xoRHJzMHlhNDFCNmJ6VmZoOE4xSHpYV05MakhCRE9WZU5GSTNz?=
- =?utf-8?B?OEp6YzJKaytWQWRYaUx3Q3FLQ0RwaU1KUTIwRlBmS2RLcDRzdGFhUmNyaU1l?=
- =?utf-8?B?aTdpVW5XSGdSQ01PRDAyM1AvNU1mbTE3THFYakxYMXMxY0RudEhRSVlIZ2lM?=
- =?utf-8?B?ZnF0eUNPN0g5RkFTY2FFcE00SmxVQVl5Wm05YUorZHROaTVFbmRNVko4RVU1?=
- =?utf-8?B?M29qdE9zT0dkNTNPZ1Rka3Q2OUR1Tm5UdWdIa2FlRDlEdThrUFl0eGVEOUhS?=
- =?utf-8?B?MU04eVpsNk5wZnBTeTVRVjZScXRVdkcwRVNoNk9BL2doWjlxaG5ZeThYWnIr?=
- =?utf-8?B?UTdrSDBvd1YxMFZJZ2dTT01TR3dwY040aGROTmZqN2NNNkpsVUVubWdYSzEr?=
- =?utf-8?B?NnNOazBFOG44citmWnNDbEVVWTFFcmhtZWh1eWticFZwSGNlSzlZb3pRVXlw?=
- =?utf-8?B?bjVJMHhSdDBVV3ExMkxjMHg1NXJQSFE0OVFVVzZabVNrS1IyN3orbUFweXAw?=
- =?utf-8?B?WTd1L1VSUTRPR3locXVTMG5XMFdFRDE3ZGxHQkk4a2FzUVhIbk1rZlNEOENt?=
- =?utf-8?B?SjhEZ2tnelE2dGlkTTFqc1ZtMjhuK1BFVzNIMExJV0hHMHJZYWZrSy9uUzlP?=
- =?utf-8?B?OXZVRS9xL3piM1BzeUVPRXZPQUFaTVEzQWc2cW5oM0FkMUdkUHpyQUdpOW1N?=
- =?utf-8?B?UldDWmdkQ0VTeVR4Y1YvRXVWQVhtWXFPcCs0Ri9kaHk1cDhUK1loMUVCeERz?=
- =?utf-8?B?bWd3S25ObnJBWm5vVkZFUzluWVRqenloZTlRTThPVzNLakFYRkNXYXV3OGJw?=
- =?utf-8?Q?FrJ+dycoz/w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW4PR12MB5667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MnNBdlF1SU9mWDlrTkJqSStjWEM1NUFqaTF1V3lPMWRLaTltRnREV0tLWDlX?=
- =?utf-8?B?c29McGlHMVdTYVpPcitBVk5LMlplRGhsS3FJN2Z5WXgyVVhwcTJNVldLRVVq?=
- =?utf-8?B?TXNqTVNXcGFwVy85eFp3bGRmOGZ6bHZ2TWNwSThaV3g5alIrcmsveTd4cHRl?=
- =?utf-8?B?QWpRNW9BMVN4YUNac09zTDVKeFdPckJnTndHc3FXV0NpcktCTFEydVpqR3FV?=
- =?utf-8?B?N2l1SURFTXNsVWN6STA5WkMyMlhURHZjZTFMRVhEVnp3RUhjUkJNa2xzbGdQ?=
- =?utf-8?B?VFZYbDVoOXZMc3h0YWlvb0pRR2xVU3NibTEyb3FEbmxDSkZlR1NES3RrTFpW?=
- =?utf-8?B?Wm1jZ0gxM0hJQjBJQmhYd1gxVUV0ZGl4OWVRTC96TDl0Qlh3YjUyc1BqMlhG?=
- =?utf-8?B?WVNMUUJFSEtFSGNzYzdZNFBrZTFOTDR3a21rVWRWR29PNmpsMmNsRk84UzlO?=
- =?utf-8?B?M3RTMThZNm5jZDQ4R2VoOXl3a2trbkFNTkxMbk13Z1pXVFVtNnZEQUI0SHFa?=
- =?utf-8?B?NjdxWXVqRkJ3YWRZcVhSMzhqM1pHaW5ucVFmVi90T0w3V1czNDhjeU1yMlpD?=
- =?utf-8?B?dHM3NHhMSDR3dVU3R2hVLzZlTVJHck53aVJZa0svb2o0S2NRd3d5V0orY2RW?=
- =?utf-8?B?Q0NqNDF6ejhxbGh6akZROGI2M0pYMFp0SzhBQUsvS1V2YUR5eHJ5R1ZYb2gz?=
- =?utf-8?B?V0M4SXh5MzhUNStCTHEydy9BMEYweGtOTldDckFHZStTc2FxMkptWEpMZW0w?=
- =?utf-8?B?MmZNUktkaFRob1kraTZpaUtUL296c2hXd05SaElQN3RzeUhDMUYyMU5BLzFX?=
- =?utf-8?B?ZzJXNG1oaUkwb2M2QjdYSWdTUTJEUityR2lvREgrVktCT3MrSHNGZVZ1eFJG?=
- =?utf-8?B?SE9CUDJ1VmNtT1JqNnlHM0RjVXF1Uk9ucTgvRnFoY2FycTMrWGZQTDhJM0dD?=
- =?utf-8?B?Yks1QUZMR0ZDa09Ga1YxYXhjNXZCNnRLYXpHMG0rR05nM1lGN0dmaEpmWjFJ?=
- =?utf-8?B?czdhZ1U1Nm05TEJMUk9CRlBiV05DS2h2aUxzNlVFWHI3ODVHbTlpT0JYRXBv?=
- =?utf-8?B?T3hxWWxiZWpRcVd3Vlh2ei93aDUveXZTaUFVNXlBM0MzUDhxTWU4d0lvRzdT?=
- =?utf-8?B?L21uSnllcVkzVE5SZ1FUT1FQNXJKNVh1TDdHMG1leGhNZjQvRU42Mzl1djZB?=
- =?utf-8?B?ZWxLQmlzOWp0OHpJSE10c3BpWGJwRi8yTmwwdnBsN1lra2I5ZDdRMXUzRmRD?=
- =?utf-8?B?TEdTWENtZXl6NVNsQzFWMUxTS2xvR0FaelJzV2hlLzVnS2tTRHBGY0gwUEhz?=
- =?utf-8?B?M2VXZWIyQ2xSeWVMQS9wbDBkdG9EZ3F3UmxEam9xRzZNRjA5akh3azEwZHEv?=
- =?utf-8?B?Y0l4bEh3YjVEeTVnTkx3MEpnODFJQmF0ZVdGM2hBblloQ3gxMTFMYU1QbUNi?=
- =?utf-8?B?RmxDbUM5Y2xpTXJSaFR0MDJWd3A2c2ZzejZTZDlMclM0ZEtBRXpYZTJEdUN6?=
- =?utf-8?B?RjhBNk82K3VqRU9Ob2owTjVJTnNVMHRwdm9kd0daSFdLNkMxaURQdUZhcjVC?=
- =?utf-8?B?b1hFRGR6djBPeWhLTFFkQTNLVHBza2k4WEV6RmtrL3ZjNkdqbnhTZkN4VjEy?=
- =?utf-8?B?QWxmQlhKWWRkTjhOQzlubTI0TUhqUlJFcjE1cGE0TXpsL1o0eVp3dVVIMG4x?=
- =?utf-8?B?Q1pPSEFOVkN0MHlVK2tZMU9ZN3g4K0pYTHJLaXVCaHJVZm5ZTzExM2pVZXF5?=
- =?utf-8?B?MlFPK3p5QnFpWDVqVFRaRkFTU2J4UlBHaWYzN2ttSGx6Tk9RR0pma0IyU1kv?=
- =?utf-8?B?Y1daNW1OZml6YkJLQUVwd2RpcExZUVVoanZRQkptR04zUjNLQURhazFpLzV0?=
- =?utf-8?B?VFRhV3ZZdExySlMwTkJSOWRyY04rZWJjWEhSOUJKUnF4Q2tzcUIzUzhYMEZT?=
- =?utf-8?B?bmhWSlNUUDVObW9ITTJ5QmRSWFppMUd4SzdoZlhaUVp1SWpoaWNPQ3g4M2Jh?=
- =?utf-8?B?dExvZTNsLzcyM2w4elJMMVRhamc1MVJOZVR1bWlUU0NjZGNFc2IwVFJaQ245?=
- =?utf-8?B?ZWpUVUpwWDJWa3hhZHltV3dGU1ZUZEpkdkUzcjk4ZmNOdTEvSFNVQkhqaXFq?=
- =?utf-8?Q?emX6K8xqkfJmnpQyryP3fPNbb?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a8aa4097-3d2f-4f1d-9d3b-08dd87e5a22e
-X-MS-Exchange-CrossTenant-AuthSource: MW4PR12MB5667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 12:50:49.8227
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2yQuaDFx9u7FhblfISudpN5aFHYNjl+N+IwMCFfDFs+qUQtM6MfdoYKxHPdCp2LUvZK66dDHxOa8rx2Yj2hivw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5782
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeijeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdetjeeitdeuhedvtdehleeiueevfeduiedthedtfeeiudffheegleehieegveetnecuffhomhgrihhnpehlphgtrdgvvhgvnhhtshdpkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomhdpsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudeipdhrtghpthhtohepuggrvhhiugesghhisghsohhnrdgurhhophgsvggrrhdrihgurdgruhdprhgtphhtthhopegrfhgusehtihdrtghomhdprhgtphhtthhopegrhihushhhsegsvggrghhlvggsohgrrhgurdhorhhgpdhrtghpthhtohepghgvvghrtheslhhin
+ hhugidqmheikehkrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhm
+X-GND-Sasl: herve.codina@bootlin.com
+
+Hi all,
+
+Sorry, this should be a v2 series.
+
+I resend as v2.
+
+Please ighnore this one.
+
+Best regards,
+Hervé
 
 
-On 30/04/2025 11:49, Dan Carpenter wrote:
-> On Wed, Apr 30, 2025 at 09:28:59AM +0000, Sharma, Shashank wrote:
->> [AMD Official Use Only - AMD Internal Distribution Only]
->>
->> Hello Dan,
->>
->> ________________________________
->> From: Dan Carpenter
->> Sent: Wednesday, April 30, 2025 10:05 AM
->> To: Deucher, Alexander
->> Cc: Koenig, Christian; David Airlie; Simona Vetter; Sharma, Shashank; Khatri, Sunil; Yadav, Arvind; Paneer Selvam, Arunpravin; amd-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-kernel@vger.kernel.org; kernel-janitors@vger.kernel.org
->> Subject: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
->>
->> The "ticket" pointer points to in the middle of the &exec struct so it
->> can't be NULL.  Remove the check.
->>
->> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
->> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
->> index b0e8098a3988..7505d920fb3d 100644
->> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
->> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
->> @@ -631,7 +631,7 @@ amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq_mgr)
->>                           clear = false;
->>                           unlock = true;
->>                   /* The caller is already holding the reservation lock */
->> -               } else if (ticket && dma_resv_locking_ctx(resv) == ticket) {
->> +               } else if (dma_resv_locking_ctx(resv) == ticket) {
->>
->> Its a Nack for me, There are a few situations (particularly during the
->> first launch of the desktop, and also when eviction fence and new queue
->> creation are working in parallel) where this ticket can be NULL, we
->> observed it during the stress validation and hence added this check,
->>
-> It shouldn't be NULL.  It sounds like you are experiencing stack
-> corruption and this is just a bandaid.
->
-> drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
->     566  static int
->     567  amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq_mgr)
->     568  {
->     569          struct amdgpu_fpriv *fpriv = uq_mgr_to_fpriv(uq_mgr);
->     570          struct amdgpu_vm *vm = &fpriv->vm;
->     571          struct amdgpu_device *adev = uq_mgr->adev;
->     572          struct amdgpu_bo_va *bo_va;
->     573          struct ww_acquire_ctx *ticket;
->     574          struct drm_exec exec;
->                  ^^^^^^^^^^^^^^^^^^^^^
-> The "exec" struct is declared on the stack.
->
->     575          struct amdgpu_bo *bo;
->     576          struct dma_resv *resv;
->     577          bool clear, unlock;
->     578          int ret = 0;
->     579
->     580          drm_exec_init(&exec, DRM_EXEC_IGNORE_DUPLICATES, 0);
->     581          drm_exec_until_all_locked(&exec) {
->     582                  ret = amdgpu_vm_lock_pd(vm, &exec, 2);
->     583                  drm_exec_retry_on_contention(&exec);
->     584                  if (unlikely(ret)) {
->     585                          DRM_ERROR("Failed to lock PD\n");
->     586                          goto unlock_all;
->     587                  }
->     588
->     589                  /* Lock the done list */
->     590                  list_for_each_entry(bo_va, &vm->done, base.vm_status) {
->     591                          bo = bo_va->base.bo;
->     592                          if (!bo)
->     593                                  continue;
->     594
->     595                          ret = drm_exec_lock_obj(&exec, &bo->tbo.base);
->     596                          drm_exec_retry_on_contention(&exec);
->     597                          if (unlikely(ret))
->     598                                  goto unlock_all;
->     599                  }
->     600          }
->     601
->     602          spin_lock(&vm->status_lock);
->     603          while (!list_empty(&vm->moved)) {
->     604                  bo_va = list_first_entry(&vm->moved, struct amdgpu_bo_va,
->     605                                           base.vm_status);
->     606                  spin_unlock(&vm->status_lock);
->     607
->     608                  /* Per VM BOs never need to bo cleared in the page tables */
->     609                  ret = amdgpu_vm_bo_update(adev, bo_va, false);
->     610                  if (ret)
->     611                          goto unlock_all;
->     612                  spin_lock(&vm->status_lock);
->     613          }
->     614
->     615          ticket = &exec.ticket;
->                  ^^^^^^^^^^^^^^^^^^^^^
-> ticket is only set here.  We know that &exec is non-NULL because it's
-> declared on the stack.  ticket is 4 bytes into the middle of a non-NULL
-> struct.  It is impossible for ticket to be NULL here.
+On Wed, 30 Apr 2025 14:48:59 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
 
-Yep, you are right. I just did a code review, and probably we added that 
-NULL check before we had the right locks in place, and there was a race 
-between eviction thread and the UQ create thread, causing corruption. 
-Please feel free to use Acked-by: Shashank Sharma <shashank.sharma@amd.com>
+> Hi,
+> 
+> At Linux Plumbers Conference 2024, we (me and Luca Ceresolli) talked
+> about issues we have with runtime hotplug on non-discoverable busses
+> with device tree overlays [1].
+> 
+> On our system, a base board has a connector and addon boards can be
+> connected to this connector. Both boards are described using device
+> tree. The base board is described by a base device tree and addon boards
+> are describe by overlays device tree. More details can be found at [2].
+> 
+> This kind of use case can be found also on:
+>   - Grove Sunlight Sensor [3]
+>   - mikroBUS [4]
+> 
+> One of the issue we were facing on was referencing resources available
+> on the base board device tree from the addon overlay device tree.
+> 
+> Using a nexus node [5] helps decoupling resources and avoid the
+> knowledge of the full base board from the overlay. Indeed, with nexus
+> node, the overlay need to know only about the nexus node itself.
+> 
+> For instance, suppose a connector where a GPIO is connected at PinA. On
+> the base board this GPIO is connected to the GPIO 12 of the SoC GPIO
+> controller.
+> 
+> The base board can describe this GPIO using a nexus node:
+>     soc_gpio: gpio-controller {
+>       #gpio-cells = <2>;
+>     };
+> 
+>     connector1: connector1 {
+>         /*
+>          * Nexus node for the GPIO available on the connector.
+>          * GPIO 0 (Pin A GPIO) is connected to GPIO 12 of the SoC gpio
+>          * controller
+>          */
+>         #gpio-cells = <2>;
+>         gpio-map = <0 0 &soc_gpio 12 0>;
+>         gpio-map-mask = <0xf 0x0>;
+>         gpio-map-pass-thru = <0x0 0xf>;
+>     };
+> 
+> The connector pin A GPIO can be referenced using:
+>   <&connector1 0 GPIO_ACTIVE_HIGH>
+> 
+> This implies that the overlay needs to know about exact label that
+> references the connector. This label can be different on a different
+> board and so applying the overlay could failed even if it is used to
+> describe the exact same addon board. Further more, a given base board
+> can have several connectors where the exact same addon board can be
+> connected. In that case, the same overlay cannot be used on both
+> connector. Indeed, the connector labels have to be different.
+> 
+> The export-symbols node introduced by this current series solves this
+> issue.
+> 
+> The idea of export-symbols is to have something similar to the global
+> __symbols__ node but local to a specific node. Symbols listed in this
+> export-symbols are local and visible only when an overlay is applied on
+> a node having an export-symbols subnode.
+> 
+> Using export-symbols, our example becomes:
+>     soc_gpio: gpio-controller {
+>       #gpio-cells = <2>;
+>     };
+> 
+>     connector1: connector1 {
+>         /*
+>          * Nexus node for the GPIO available on the connector.
+>          * GPIO 0 (Pin A GPIO) is connected to GPIO 12 of the SoC gpio
+>          * controller
+>          */
+>         #gpio-cells = <2>;
+>         gpio-map = <0 0 &soc_gpio 12 0>;
+>         gpio-map-mask = <0xf 0x0>;
+>         gpio-map-pass-thru = <0x0 0xf>;
+> 
+>         export-symbols {
+>           connector = <&connector1>;
+>         };
+>     };
+> 
+> With that export-symbols node, an overlay applied on connector1 node can
+> have the symbol named 'connector' resolved to connector1. Indeed, the
+> export-symbols node available at connector1 node is used when the
+> overlay is applied. If the overlay has an unresolved 'connector' symbol,
+> it will be resolved to connector1 thanks to export-symbols.
+> 
+> Our overlay using the nexus node can contains:
+>    node {
+>       foo-gpio = <&connector 0 GPIO_ACTIVE_HIGH>;
+>    };
+> It used the GPIO 0 from the connector it is applied on.
+> 
+> A board with two connectors can be described with:
+>     connector1: connector1 {
+>         ...
+>         export-symbols {
+>           connector = <&connector1>;
+>         };
+>     };
+> 
+>     connector2: connector2 {
+>         ...
+>         export-symbols {
+>           connector = <&connector2>;
+>         };
+>     };
+> 
+> In that case, the same overlay with unresolved 'connector' symbol can be
+> applied on both connectors and the correct symbol resolution (connector1
+> or connector2) will be done.
+> 
+> This current series add support for the export-symbols node feature:
+>   - Patch 1 describes the export-symbols binding
+>   - Patches 2 to 6 prepare and add the support for the export-symbols
+>     feature
+>   - Patch 7 adds an unittest for the export-symbols feature
+> 
+> Compare to the previous iteration, the series has been rebased on
+> top of v6.15-rc1 and an compilation issue in unittest has been fixed.
+> 
+> Also it is worth noting the work already done by Ayush Singh related to
+> this topic on other repositories:
+>   - Add export-symbols in device-tree specification
+>       [PATCH v3] Add new `export-symbols` node [6]
+> 
+>   - Support for export-symbols in the device tree compiler
+>       [PATCH 0/3] Allow specifying target node in fdtoverlay [7]
+>       [PATCH] checks: Add support for export-symbols [8]
+> 
+> Best regards,
+> Hervé
+> 
+> [1] https://lpc.events/event/18/contributions/1696/
+> [2] https://lore.kernel.org/lkml/20240917-hotplug-drm-bridge-v4-0-bc4dfee61be6@bootlin.com/
+> [3] https://lore.kernel.org/lkml/20240702164403.29067-1-afd@ti.com/
+> [4] https://lore.kernel.org/lkml/20240627-mikrobus-scratch-spi-v5-0-9e6c148bf5f0@beagleboard.org/
+> [5] https://github.com/devicetree-org/devicetree-specification/blob/v0.4/source/chapter2-devicetree-basics.rst#nexus-nodes-and-specifier-mapping
+> [6] https://lore.kernel.org/all/20250411-export-symbols-v3-1-f59368d97063@beagleboard.org/
+> [7] https://lore.kernel.org/all/20250313-fdtoverlay-target-v1-0-dd5924e12bd3@beagleboard.org/
+> [8] https://lore.kernel.org/all/20250110-export-symbols-v1-1-b6213fcd6c82@beagleboard.org/
+> 
+> Changes v1 -> v2
+>   v1: https://lore.kernel.org/all/20241209151830.95723-1-herve.codina@bootlin.com/
+> 
+>   - All patches
+>     Add 'Tested-by: Ayush Singh <ayush@beagleboard.org>'
+> 
+>   - Patch 1
+>     Update the 'patternProperties' regexp
+> 
+>   - Patch 2 and 4
+>     Fix conflicts due to the rebase on top of v6.15-rc1
+> 
+>   - Patch 5
+>     Fix a typo in commit log
+> 
+>   - Patch 7
+>     Fix a compilation issue detected by a kernel test robot
+> 
+> Herve Codina (7):
+>   dt-bindings: Add support for export-symbols node
+>   of: resolver: Introduce get_phandle_from_symbols_node()
+>   of: resolver: Add export_symbols in of_resolve_phandles() parameters
+>   of: resolver: Add support for the export symbols node
+>   of: overlay: Add export_symbols_name in of_overlay_fdt_apply()
+>     parameters
+>   of: overlay: Add support for the export symbols node
+>   of: unittest: Add tests for export symbols
+> 
+>  .../devicetree/bindings/export-symbols.yaml   | 43 +++++++++++
+>  drivers/misc/lan966x_pci.c                    |  3 +-
+>  drivers/of/of_kunit_helpers.c                 |  2 +-
+>  drivers/of/of_private.h                       |  2 +-
+>  drivers/of/overlay.c                          | 30 +++++++-
+>  drivers/of/resolver.c                         | 75 ++++++++++++++----
+>  drivers/of/unittest-data/Makefile             |  5 ++
+>  .../unittest-data/overlay_export_symbols.dtso | 15 ++++
+>  .../of/unittest-data/testcases_common.dtsi    |  1 +
+>  .../unittest-data/tests-export-symbols.dtsi   | 30 ++++++++
+>  drivers/of/unittest.c                         | 77 +++++++++++++++++--
+>  include/linux/of.h                            |  6 +-
+>  12 files changed, 258 insertions(+), 31 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/export-symbols.yaml
+>  create mode 100644 drivers/of/unittest-data/overlay_export_symbols.dtso
+>  create mode 100644 drivers/of/unittest-data/tests-export-symbols.dtsi
+> 
 
-- Shashank
 
->
->     616          while (!list_empty(&vm->invalidated)) {
->     617                  bo_va = list_first_entry(&vm->invalidated, struct amdgpu_bo_va,
->     618                                           base.vm_status);
->     619                  resv = bo_va->base.bo->tbo.base.resv;
->     620                  spin_unlock(&vm->status_lock);
->     621
->     622                  bo = bo_va->base.bo;
->     623                  ret = amdgpu_userq_validate_vm_bo(NULL, bo);
->     624                  if (ret) {
->     625                          DRM_ERROR("Failed to validate BO\n");
->     626                          goto unlock_all;
->     627                  }
->     628
->     629                  /* Try to reserve the BO to avoid clearing its ptes */
->     630                  if (!adev->debug_vm && dma_resv_trylock(resv)) {
->     631                          clear = false;
->     632                          unlock = true;
->     633                  /* The caller is already holding the reservation lock */
->     634                  } else if (ticket && dma_resv_locking_ctx(resv) == ticket) {
->
-> I've included the whole rest of the function so that we can see it is not
-> set a second time.
->
-> regards,
-> dan carpenter
->
->     635                          clear = false;
->     636                          unlock = false;
->     637                  /* Somebody else is using the BO right now */
->     638                  } else {
->     639                          clear = true;
->     640                          unlock = false;
->     641                  }
->     642
->     643                  ret = amdgpu_vm_bo_update(adev, bo_va, clear);
->     644
->     645                  if (unlock)
->     646                          dma_resv_unlock(resv);
->     647                  if (ret)
->     648                          goto unlock_all;
->     649
->     650                  spin_lock(&vm->status_lock);
->     651          }
->     652          spin_unlock(&vm->status_lock);
->     653
->     654          ret = amdgpu_eviction_fence_replace_fence(&fpriv->evf_mgr, &exec);
->     655          if (ret)
->     656                  DRM_ERROR("Failed to replace eviction fence\n");
->     657
->     658  unlock_all:
->     659          drm_exec_fini(&exec);
->     660          return ret;
->     661  }
->
->
+
+-- 
+Hervé Codina, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
