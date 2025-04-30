@@ -1,54 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977EE25D1F8;
-	Wed, 30 Apr 2025 15:41:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFC122DC760;
+	Wed, 30 Apr 2025 15:42:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027716; cv=none; b=j0GoWVbMvYR8EXeMsj0CLJ+kG8lAgurzlhlM4DVpTCHHCQPr4ylapEMRVQyF4JDQLbwcUAdU/LghkiCA+W+gcyjE5AglThM56vORBlIoBbIS4rBOjWR69jN7BIjfRLmUiIw3EEA794JDOI2SKdEhET3SA/fTGT40tJwfq6ZDXuY=
+	t=1746027777; cv=none; b=WwD855ddNyPksHBr2O3rPXc4mMLxBdZWULdQ8tgSyTcD2QWZzj/9VQdBo7a1FqOA9Bkm3r0cx9KbqFkRRpW2kbBADQegysnCOun9Vl+JC+6cgBDBIWeSS2j/oPbqKLMk8ZkvQG+ubI1s4T/cfJuFeVaSjpbjCJJRjuIFCCncqlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027716; c=relaxed/simple;
-	bh=wvXwtYYiGxiI48kMlFqI73B5EWv7xUXFBIxXkrTt+Bs=;
+	s=arc-20240116; t=1746027777; c=relaxed/simple;
+	bh=cJQDxqBbZMGtPjZQq2+K0iYdq6ngOwnw5OlxsKKMBvE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oGziYQzE1ponTlioMelQbLMgEbIvhDXIacBszgNMzrmca9+uQPchzSb9AiqGC+/EcgV3Tpn+/+7vKIieA8jASWn3Udx4By1fsDYYfe7TK/NvfwtL5FhPNoWEh8buuRQ4W6SrJOHH6qT+gHxTLYaeshu7w5F9id+JMLqLuWnuYRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CvQkXnD6; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Kd4TxtLjxI7gQnXLgd7iMDSwOChBNF9rVOdCgzmW0Wx3M9TPJQQEbbVFqxNwYHFi/r6Y8yAOpoL3dJZOJwRHuOcwzTOYZi4zmMcgWw2o2FJWXoEam4Nr2R63as9lmeeNiuCy9oX9j7MdLmk6IMDycj7VxZ/YSguH0DQRjNsd2dI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AXqeDL+P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CvQkXnD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CBD8C4CEE7;
-	Wed, 30 Apr 2025 15:41:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AXqeDL+P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D30F9C4CEE7;
+	Wed, 30 Apr 2025 15:42:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746027716;
-	bh=wvXwtYYiGxiI48kMlFqI73B5EWv7xUXFBIxXkrTt+Bs=;
+	s=k20201202; t=1746027777;
+	bh=cJQDxqBbZMGtPjZQq2+K0iYdq6ngOwnw5OlxsKKMBvE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CvQkXnD6RRGzklG5EJL3MIu49bvDA2Vje5jq31Zjyv2Nscn6EYlldH9tuao2IjrML
-	 30afHneVRi57pHYoNLnfpYjhkW+6iyni/VCnNmF0bLvzCKxoD7P7TxdnLzmx3ge3c1
-	 7WJTUtpAsKUl9HOPPon78HV8gjsHURM10LYvOyhKXo6IVV8LT17RGpHUaWZpA2LcVw
-	 yJfadKUxfK8xiA+UbbkkA98320JxxNblIeSxw/HnCC3+0io8rJaIcRtdhr13ldlzZs
-	 9FKO+0ClU3Z+u2qmzU1g2y5vXwOZ3MX0tDU7NtpV3vFmhkera/NMv7fAYSfL8SPUv8
-	 7ZsdRDuSXAXIg==
-Date: Wed, 30 Apr 2025 17:41:47 +0200
+	b=AXqeDL+PSRG3Tc0f5RPIDwibMfgJnHJ97BlHFUG+jIJh1ZkIL7TcFZ2MMjMticjnB
+	 dtWlc6HYRG8E+qsdL/7tVLhpVgI03ae7hGQq95+fzTWB40/03WSOf/GE8SJnOWDEv6
+	 bSNC/XU32M1v7j7xrEO3kjmWMTJ6JLXak8LvCzej5FqgUGtTBPU6dv72c8akfR/tPT
+	 TTnPtJEGNoxbQE8YDfXStSFaMBIc4Ls0wHfcXS+2wCXqvdlRMwZncd/CiNLP9sQnSP
+	 rJ2FXyxPGFycantwUzUaSZr1+fi3qYpVzTlFSByav3lcNjieWWVI14t0yW7TFI+/YD
+	 NFdRILUHytf9Q==
+Date: Wed, 30 Apr 2025 17:42:52 +0200
 From: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To: Nicolas Schier <nicolas@fjasle.eu>
-Cc: Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List
- <linux-doc@vger.kernel.org>, David Airlie <airlied@gmail.com>, Jani Nikula
- <jani.nikula@linux.intel.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Masahiro Yamada
- <masahiroy@kernel.org>, Maxime Ripard <mripard@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Simona Vetter <simona@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Tvrtko Ursulin
- <tursulin@ursulin.net>, dri-devel@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, linux-kbuild@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andy Shevchenko
- <andriy.shevchenko@intel.com>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 3/4] scripts/kernel-doc.py: don't create *.pyc files
-Message-ID: <20250430174147.05b330a9@foz.lan>
-In-Reply-To: <aAvYkchT7RISfxsX@fjasle.eu>
-References: <cover.1745453655.git.mchehab+huawei@kernel.org>
-	<158b962ed7cd104f7bbfe69f499ec1cc378864db.1745453655.git.mchehab+huawei@kernel.org>
-	<aAvYkchT7RISfxsX@fjasle.eu>
+To: Jonathan Corbet <corbet@lwn.net>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Linux Doc Mailing List
+ <linux-doc@vger.kernel.org>, Akira Yokosawa <akiyks@gmail.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] docs: Makefile: store __pycache__ at the output
+ directory
+Message-ID: <20250430174252.1c3b3e09@foz.lan>
+In-Reply-To: <87jz73rg9n.fsf@trenco.lwn.net>
+References: <cover.1745539360.git.mchehab+huawei@kernel.org>
+	<1b9e7f34c1d99a27a8abb308da3221b4663b5693.1745539360.git.mchehab+huawei@kernel.org>
+	<aAvQFen6D5ukjj-x@smile.fi.intel.com>
+	<87jz73rg9n.fsf@trenco.lwn.net>
 X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,50 +50,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Em Fri, 25 Apr 2025 20:46:41 +0200
-Nicolas Schier <nicolas@fjasle.eu> escreveu:
+Em Mon, 28 Apr 2025 17:57:24 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> On Thu, Apr 24, 2025 at 08:16:23AM +0800 Mauro Carvalho Chehab wrote:
-> > As reported by Andy, kernel-doc.py is creating a __pycache__
-> > directory at build time.
-> > 
-> > Disable creation of __pycache__ for the libraries used by
-> > kernel-doc.py, when excecuted via the build system or via
-> > scripts/find-unused-docs.sh.
-> > 
-> > Reported-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> > Closes: https://lore.kernel.org/linux-doc/Z_zYXAJcTD-c3xTe@black.fi.intel.com/
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> > Tested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > ---
-> >  drivers/gpu/drm/Makefile      | 2 +-
-> >  drivers/gpu/drm/i915/Makefile | 2 +-
-> >  include/drm/Makefile          | 2 +-
-> >  scripts/Makefile.build        | 2 +-
-> >  scripts/find-unused-docs.sh   | 2 +-
-> >  5 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> > index ed54a546bbe2..d21d0cd2c752 100644
-> > --- a/drivers/gpu/drm/Makefile
-> > +++ b/drivers/gpu/drm/Makefile
-> > @@ -236,7 +236,7 @@ always-$(CONFIG_DRM_HEADER_TEST) += \
-> >  quiet_cmd_hdrtest = HDRTEST $(patsubst %.hdrtest,%.h,$@)
-> >        cmd_hdrtest = \
-> >  		$(CC) $(c_flags) -fsyntax-only -x c /dev/null -include $< -include $<; \
-> > -		$(srctree)/scripts/kernel-doc -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \
-> > +		 PYTHONDONTWRITEBYTECODE=1 $(KERNELDOC) -none $(if $(CONFIG_WERROR)$(CONFIG_DRM_WERROR),-Werror) $<; \  
+> Andy Shevchenko <andriy.shevchenko@intel.com> writes:
 > 
-> Did someone check if we could add
-> 
->   sys.dont_write_bytecode = True
-> 
-> to the script itself instead of cluttering PYTHONDONTWRITEBYTECODE
-> everywhere [1]?
+> > On Fri, Apr 25, 2025 at 08:08:53AM +0800, Mauro Carvalho Chehab wrote:  
+> >> Instead of blocking creation of *.pyc cache, store python
+> >> cache under Documentation/output/__pycache__  
+> >
+> > Do we need the below in the commit message?
+> > I think having statistics is enough and this can be moved to the cover letter.  
 
-Nice to know that we can set it at the script level. Yet, this is is
-meant to be a temporary solution, as IMO the best is to set
-PYTHONCACHEPREFIX to match the directory on O=, when it is used.
+Yeah, agreed.
 
-Thanks,
+> I agree, that was a lot of stuff to get to a one-line fix; I took the
+> liberty of trimming the tree listing out.
+
+Fine for me. 
+
+> 
+> Applied, thanks.
+
+Thanks!
+
 Mauro
