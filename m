@@ -1,198 +1,307 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE8F227BA5
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:12:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BE3A3F9D2;
+	Wed, 30 Apr 2025 16:14:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746029555; cv=none; b=QNKXGLA8NdvGPQ8Zf7on6DTOpBMUPXQfELGydSzggkazVEHheufMTqdozhfky16q0kLew6X+abrY2LqcnGb+HKBSJh+3diHJitylBhnUyZivPbZgsdl1nhvyWhtc5s9tbficudlqDM7z+Ss1gxOqPdgVOnoBCnIEfthO0PwfPRo=
+	t=1746029658; cv=none; b=l5LzgtZUa8k5vMZOBV+hiB6moJ3fPY/IoaMsJ+LFrtgSAUdTaXUH/EfqPEIPsibw0+P82R/f9hX7e+z0kFPynS5rIaWygZsYJUKNOhVJZEzKAium5C9qsuelZuUDn/MSBNSz3YtqsOLpIHQoS7OwVbp1oBAE2wbQ/rxS5wX94uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746029555; c=relaxed/simple;
-	bh=VeFlkvRrqluEcJumeLoaSe7Zch5bozTuOrqJP6XZglE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s4YbIRvzY1kXjeiDLmmvD0FrXYnaLw0+WZv+RHZTvHizBJd6wdW+1gnpTeMWAyaBK7HwwySWuAFrBdvj0P8q705XMEgWpHx9v9J5IUdqgBkg/YoYbJiuRCX48BuhudM6XYnKTHH6jp9KpDvKivK6sBCPqp287B2sjP6gvxQBPxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CwzQb4ah; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746029658; c=relaxed/simple;
+	bh=xpmQ+BGtx8m609EARhSYhsheeO7ZrcF2u+r1XAIFE0Y=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Y/L/0Amz2kvI+9NBq85o5zAk1uCtMm0RXjABi/eQUkuF4DWf98juRZsQcvdOUC7iVr+kidIb4EPCVJMKQNTGCCWt6cLMi87omo9gl6hU7kPGKtS0X21rtDVLKdROZNlIM02unzG2/9xpnVVHh93/IcDUXJFPkGMFIi2v9qMiLr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=I7gbwUv0; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CwzQb4ah"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-739525d4e12so98281b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:12:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746029553; x=1746634353; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJJqUV5zTq4SuKAwpTIhgwruln11bq0nuEzvblXoSi0=;
-        b=CwzQb4ahj+daUyX3fjJpirtRlluYJjhj3EshY5QPEUfzy9q+GXLlTxAvZJdKwUeq08
-         oQxtxDz4fnUx07KdenCy0zwzdyUqvCaCI1ocopKlrENYwGJi1BDrTZTFwurClwU4Ovsm
-         UDB9RMoMyNzm9JCD3DbPO1Ffs7ka5ZvTxc1RH7wCDazr5uxv2/DEuqz2JAfQz9XgNvaY
-         +1V/oWuG4nqbaowtweOGvE2M1dRbkEZwDwKp7ymQ/0tGlvritT0Z5s8IJLZriG21seGZ
-         e69PHM03iZpMGwtNRItqTM+6gv1aJ0CoUHp5trJi38fLcRvp08bm3F4skfZ/ctKqhC3G
-         VcxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746029553; x=1746634353;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJJqUV5zTq4SuKAwpTIhgwruln11bq0nuEzvblXoSi0=;
-        b=O4uD+xu7F2rPBNdB19NIbWxibr6Q9aYFmVD4RguWUtMpsjG3kioSqy0UT/BxHRUygu
-         GXSj9suTHp5hAASYP6iCzt6DMNi86DANQ63dvtU1mfKcyCYHSMl00sddT2Lizp0hEOLJ
-         nplcGuRakr64cjvEDWhMta9F3arYNW7xKNafGxFK50vPbBQ4/ruvfDLBFyv8zVQs7x0r
-         87VkSjjqsya7tAYZON3ksfYHyiLTzn0ecqU/+cy2u0/c5Hlmh1mCxds1EaD0C6EM7SC6
-         avj8aM8iuPZ2Of1pD/PexmFqgP7yXvygXNU1PDHX/EnalqWBmmUwPTSDMhwHKEWn3AkM
-         Zwkg==
-X-Forwarded-Encrypted: i=1; AJvYcCUavruAs5KzLsyaw6u5GRT4AjqXMjyvkfJbNjCsr9zqmQPGx5QTliwg+vr0akEhGULayWL7+D8tfy/HdfQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz5XDR7iVw3OQgl7jg5VtzHPe8XZK8GlzQW49Ay8g2qfXgVjFju
-	EGe8aPJk/pgDRt+KZQ1I+T7nZkz187AdeywcjGSzPvBk8+u4hSY7
-X-Gm-Gg: ASbGncsk+3QuD1o9BPatcqnCBy9CBvuCmlDnN8K5ttKmc5S+RJ6y2A76AoU+RivXGVq
-	wKor6eVmNntKDkks7a0Kh0d5PTVk+eWyURuXzpk4bfbx1elm+Hcxf8iv+9WEff4XmoZ64oGjvng
-	BXlkBbc3utSBnSjAXxB1FTAIobadPmcc8TajhJLMfka/uU2ej2YnYCr9aBYMWnsTsClfFaO2b2w
-	Pv5U3Gf1TtsCBhZyoImQu+gCsIAwCbu6dQyK61XTlbROlLpqD23F/oW5Xh2GORKnIXdkIzuEN7/
-	SiNcMbgut4vW8sWpbIeaFXVVS9FKscjeiJbciryLI6/KcsimVT0EFNq0keNSavGLIp8VEKAEdQ3
-	tWnyrCE3FtD/joA==
-X-Google-Smtp-Source: AGHT+IF1QxhqmtfoW+P880p2hcKc4dZLjzz4WUl32BwIYhDdro/3mUFzvKg09FJiMUNCnseO1GodKA==
-X-Received: by 2002:a05:6a00:a22:b0:737:9b:582a with SMTP id d2e1a72fcca58-74038aac069mr6336536b3a.24.1746029552601;
-        Wed, 30 Apr 2025 09:12:32 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a5c244sm1899143b3a.134.2025.04.30.09.12.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 09:12:31 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <d8fa9332-9475-433e-a203-e376845dcc66@roeck-us.net>
-Date: Wed, 30 Apr 2025 09:12:30 -0700
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="I7gbwUv0"
+Received: from romank-3650.corp.microsoft.com (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 994BC20BCAD1;
+	Wed, 30 Apr 2025 09:14:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 994BC20BCAD1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746029655;
+	bh=vTj4i+3Z0et1oqhVuavrgSvDIAQcRm5A2DxSvwq3gY4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=I7gbwUv0nb79WoAfkdo1OAACJxkXFidfW51TfLP+1mP6xeg4wkURaoJg6LODpcK2h
+	 rGRO20YaeWo6g3vrsi0l540U5y3SVOAZVnrn8sY0TIOo6TtBrQnew8ykl+nddhQ2oW
+	 hwzvbf/IXJvVpLLwFXS5D3oMQoHKPhQH/M8Nu+Kk=
+From: Roman Kisel <romank@linux.microsoft.com>
+To: ardb@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	decui@microsoft.com,
+	dimitri.sivanich@hpe.com,
+	haiyangz@microsoft.com,
+	hpa@zytor.com,
+	imran.f.khan@oracle.com,
+	jacob.jun.pan@linux.intel.com,
+	jgross@suse.com,
+	justin.ernst@hpe.com,
+	kprateek.nayak@amd.com,
+	kyle.meyer@hpe.com,
+	kys@microsoft.com,
+	lenb@kernel.org,
+	mingo@redhat.com,
+	nikunj@amd.com,
+	papaluri@amd.com,
+	perry.yuan@amd.com,
+	peterz@infradead.org,
+	rafael@kernel.org,
+	romank@linux.microsoft.com,
+	russ.anderson@hpe.com,
+	steve.wahl@hpe.com,
+	tglx@linutronix.de,
+	thomas.lendacky@amd.com,
+	tim.c.chen@linux.intel.com,
+	tony.luck@intel.com,
+	wei.liu@kernel.org,
+	xin@zytor.com,
+	yuehaibing@huawei.com,
+	linux-acpi@vger.kernel.org,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org
+Cc: apais@microsoft.com,
+	benhill@microsoft.com,
+	bperkins@microsoft.com,
+	sunilmut@microsoft.com
+Subject: [PATCH hyperv-next v2] arch/x86: Provide the CPU number in the wakeup AP callback
+Date: Wed, 30 Apr 2025 09:14:13 -0700
+Message-ID: <20250430161413.276759-1-romank@linux.microsoft.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
-To: Keith Busch <kbusch@kernel.org>, Daniel Wagner <dwagner@suse.de>
-Cc: Hannes Reinecke <hare@suse.de>, Daniel Wagner <wagi@kernel.org>,
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>, James Smart <james.smart@broadcom.com>,
- Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
- linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
- <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
- <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
- <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
- <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de> <aBEW4W40ZelIXfs2@kbusch-mbp>
- <253e0551-d4d7-4ffe-8842-daecf1f6c753@roeck-us.net>
- <aBEdkUky_-bfgISv@kbusch-mbp>
- <8121b8d6-2b30-4086-b2fb-bce354f203dc@flourine.local>
- <aBJJQoOBhaXj7P36@kbusch-mbp>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <aBJJQoOBhaXj7P36@kbusch-mbp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 4/30/25 09:01, Keith Busch wrote:
-> On Wed, Apr 30, 2025 at 08:43:04AM +0200, Daniel Wagner wrote:
->> On Tue, Apr 29, 2025 at 11:42:25AM -0700, Keith Busch wrote:
->>> On Tue, Apr 29, 2025 at 11:23:25AM -0700, Guenter Roeck wrote:
->>>> On 4/29/25 11:13, Keith Busch wrote:
->>>>> On Mon, Apr 28, 2025 at 03:21:18PM +0200, Hannes Reinecke wrote:
->>>>>>> diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
->>>>>>> index b502ac07483b..d3c4eacf607f 100644
->>>>>>> --- a/drivers/nvme/host/core.c
->>>>>>> +++ b/drivers/nvme/host/core.c
->>>>>>> @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
->>>>>>>                    msleep(100);
->>>>>>>            }
->>>>>>>
->>>>>>> -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
->>>>>>> +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
->>>>>>> +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
->>>>>>>                    return;
->>>>>>>
->>>>>>>            nvme_unquiesce_io_queues(ctrl);
->>>>>>
->>>>>> I would rather have a separate state for firmware activation.
->>>>>> (Ab-)using the 'RESETTING' state here has direct implications
->>>>>> with the error handler, as for the error handler 'RESETTING'
->>>>>> means that the error handler has been scheduled.
->>>>>> Which is not true for firmware activation.
->>>>>
->>>>> But the point of having firmware activation set the state to RESETTING
->>>>> was to fence off error handling from trying to schedule a real reset.
->>>>> The fw activation work schedules its own recovery if it times out, but
->>>>> we don't want any other recovery action or user requested resets to
->>>>> proceed while an activation is still pending.
->>>>
->>>> Not only that; there are various checks against NVME_CTRL_RESETTING
->>>> sprinkled through the code. What is the impact of introducing a new state
->>>> without handling all those checks ?
->>>
->>> Good point, bad things will happen if these checks are not updated to
->>> know about the new state. For example, nvme-pci will attempt aborting IO
->>> or disabling the controller on a timeout instead of restarting the timer
->>> as desired.
->>>
->>> Can we just revert the commit that prevented the RESETTING -> LIVE
->>> transtion for now?
->>
->> Unfortunately, it will break the FC error handling again(*). The
->> simplest fix is right above, add the transition from RESETTING to
->> CONNECTING and then to LIVE, IMO.
-> 
-> Gotcha, yes, that looks like the simplest fix for the current release
-> then. We need to be careful with adding new states, so we can revisit
-> Hannes' suggestion for 6.16 if we really want to split this.
-> 
-> If you send the simple fix as a formal patch, please add my review and
-> the "Fixes:" tag.
-> 
-> Reviewed-by: Keith Busch <kbusch@kernel.org>
+When starting APs, confidential guests and paravisor guests
+need to know the CPU number, and the pattern of using the linear
+search has emerged in several places. With N processors that leads
+to the O(N^2) time complexity.
 
-Please feel free to add mine as well:
+Provide the CPU number in the AP wake up callback so that one can
+get the CPU number in constant time.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Suggested-by: Michael Kelley <mhklinux@outlook.com>
+Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+---
+The diff in ivm.c might catch your eye but that code mixes up the
+APIC ID and the CPU number anyway. That is fixed in another patch:
+https://lore.kernel.org/linux-hyperv/20250428182705.132755-1-romank@linux.microsoft.com/
+independently of this one (being an optimization).
+I separated the two as this one might be more disputatious due to
+the change in the API (although it is a tiny one and comes with
+the benefits).
+
+[V2]
+	- Remove the struct used in v1 in favor of passing the CPU number
+	  directly to the callback not to increase complexity.
+	** Thank you, Michael! **
+[V1]
+	https://lore.kernel.org/linux-hyperv/20250428225948.810147-1-romank@linux.microsoft.com/
+---
+ arch/x86/coco/sev/core.c           | 13 ++-----------
+ arch/x86/hyperv/hv_vtl.c           | 12 ++----------
+ arch/x86/hyperv/ivm.c              |  2 +-
+ arch/x86/include/asm/apic.h        |  8 ++++----
+ arch/x86/include/asm/mshyperv.h    |  4 ++--
+ arch/x86/kernel/acpi/madt_wakeup.c |  2 +-
+ arch/x86/kernel/apic/apic_noop.c   |  2 +-
+ arch/x86/kernel/apic/x2apic_uv_x.c |  2 +-
+ arch/x86/kernel/smpboot.c          |  8 ++++----
+ 9 files changed, 18 insertions(+), 35 deletions(-)
+
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 82492efc5d94..e7b6dba30a0a 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1179,7 +1179,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
+ 		free_page((unsigned long)vmsa);
+ }
+ 
+-static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
++static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip, int cpu)
+ {
+ 	struct sev_es_save_area *cur_vmsa, *vmsa;
+ 	struct ghcb_state state;
+@@ -1187,7 +1187,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+ 	unsigned long flags;
+ 	struct ghcb *ghcb;
+ 	u8 sipi_vector;
+-	int cpu, ret;
++	int ret;
+ 	u64 cr4;
+ 
+ 	/*
+@@ -1208,15 +1208,6 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
+ 
+ 	/* Override start_ip with known protected guest start IP */
+ 	start_ip = real_mode_header->sev_es_trampoline_start;
+-
+-	/* Find the logical CPU for the APIC ID */
+-	for_each_present_cpu(cpu) {
+-		if (arch_match_cpu_phys_id(cpu, apic_id))
+-			break;
+-	}
+-	if (cpu >= nr_cpu_ids)
+-		return -EINVAL;
+-
+ 	cur_vmsa = per_cpu(sev_vmsa, cpu);
+ 
+ 	/*
+diff --git a/arch/x86/hyperv/hv_vtl.c b/arch/x86/hyperv/hv_vtl.c
+index 582fe820e29c..5784b6c56ca4 100644
+--- a/arch/x86/hyperv/hv_vtl.c
++++ b/arch/x86/hyperv/hv_vtl.c
+@@ -237,17 +237,9 @@ static int hv_vtl_apicid_to_vp_id(u32 apic_id)
+ 	return ret;
+ }
+ 
+-static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip)
++static int hv_vtl_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, int cpu)
+ {
+-	int vp_id, cpu;
+-
+-	/* Find the logical CPU for the APIC ID */
+-	for_each_present_cpu(cpu) {
+-		if (arch_match_cpu_phys_id(cpu, apicid))
+-			break;
+-	}
+-	if (cpu >= nr_cpu_ids)
+-		return -EINVAL;
++	int vp_id;
+ 
+ 	pr_debug("Bringing up CPU with APIC ID %d in VTL2...\n", apicid);
+ 	vp_id = hv_vtl_apicid_to_vp_id(apicid);
+diff --git a/arch/x86/hyperv/ivm.c b/arch/x86/hyperv/ivm.c
+index c0039a90e9e0..ba744dbc22bb 100644
+--- a/arch/x86/hyperv/ivm.c
++++ b/arch/x86/hyperv/ivm.c
+@@ -288,7 +288,7 @@ static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa)
+ 		free_page((unsigned long)vmsa);
+ }
+ 
+-int hv_snp_boot_ap(u32 cpu, unsigned long start_ip)
++int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu)
+ {
+ 	struct sev_es_save_area *vmsa = (struct sev_es_save_area *)
+ 		__get_free_page(GFP_KERNEL | __GFP_ZERO);
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index f21ff1932699..a480f7626847 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -313,9 +313,9 @@ struct apic {
+ 	u32	(*get_apic_id)(u32 id);
+ 
+ 	/* wakeup_secondary_cpu */
+-	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, int cpu);
+ 	/* wakeup secondary CPU using 64-bit wakeup point */
+-	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, int cpu);
+ 
+ 	char	*name;
+ };
+@@ -333,8 +333,8 @@ struct apic_override {
+ 	void	(*send_IPI_self)(int vector);
+ 	u64	(*icr_read)(void);
+ 	void	(*icr_write)(u32 low, u32 high);
+-	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip);
+-	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip);
++	int	(*wakeup_secondary_cpu)(u32 apicid, unsigned long start_eip, int cpu);
++	int	(*wakeup_secondary_cpu_64)(u32 apicid, unsigned long start_eip, int cpu);
+ };
+ 
+ /*
+diff --git a/arch/x86/include/asm/mshyperv.h b/arch/x86/include/asm/mshyperv.h
+index 07aadf0e839f..abca9d8d4a82 100644
+--- a/arch/x86/include/asm/mshyperv.h
++++ b/arch/x86/include/asm/mshyperv.h
+@@ -268,11 +268,11 @@ int hv_unmap_ioapic_interrupt(int ioapic_id, struct hv_interrupt_entry *entry);
+ #ifdef CONFIG_AMD_MEM_ENCRYPT
+ bool hv_ghcb_negotiate_protocol(void);
+ void __noreturn hv_ghcb_terminate(unsigned int set, unsigned int reason);
+-int hv_snp_boot_ap(u32 cpu, unsigned long start_ip);
++int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu);
+ #else
+ static inline bool hv_ghcb_negotiate_protocol(void) { return false; }
+ static inline void hv_ghcb_terminate(unsigned int set, unsigned int reason) {}
+-static inline int hv_snp_boot_ap(u32 cpu, unsigned long start_ip) { return 0; }
++static inline int hv_snp_boot_ap(u32 apic_id, unsigned long start_ip, int cpu) { return 0; }
+ #endif
+ 
+ #if defined(CONFIG_AMD_MEM_ENCRYPT) || defined(CONFIG_INTEL_TDX_GUEST)
+diff --git a/arch/x86/kernel/acpi/madt_wakeup.c b/arch/x86/kernel/acpi/madt_wakeup.c
+index d5ef6215583b..d95c806f0e93 100644
+--- a/arch/x86/kernel/acpi/madt_wakeup.c
++++ b/arch/x86/kernel/acpi/madt_wakeup.c
+@@ -169,7 +169,7 @@ static int __init acpi_mp_setup_reset(u64 reset_vector)
+ 	return 0;
+ }
+ 
+-static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip)
++static int acpi_wakeup_cpu(u32 apicid, unsigned long start_ip, int cpu)
+ {
+ 	if (!acpi_mp_wake_mailbox_paddr) {
+ 		pr_warn_once("No MADT mailbox: cannot bringup secondary CPUs. Booting with kexec?\n");
+diff --git a/arch/x86/kernel/apic/apic_noop.c b/arch/x86/kernel/apic/apic_noop.c
+index b5bb7a2e8340..cab7cac16f53 100644
+--- a/arch/x86/kernel/apic/apic_noop.c
++++ b/arch/x86/kernel/apic/apic_noop.c
+@@ -27,7 +27,7 @@ static void noop_send_IPI_allbutself(int vector) { }
+ static void noop_send_IPI_all(int vector) { }
+ static void noop_send_IPI_self(int vector) { }
+ static void noop_apic_icr_write(u32 low, u32 id) { }
+-static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip) { return -1; }
++static int noop_wakeup_secondary_cpu(u32 apicid, unsigned long start_eip, int cpu) { return -1; }
+ static u64 noop_apic_icr_read(void) { return 0; }
+ static u32 noop_get_apic_id(u32 apicid) { return 0; }
+ static void noop_apic_eoi(void) { }
+diff --git a/arch/x86/kernel/apic/x2apic_uv_x.c b/arch/x86/kernel/apic/x2apic_uv_x.c
+index 7fef504ca508..f8000555127b 100644
+--- a/arch/x86/kernel/apic/x2apic_uv_x.c
++++ b/arch/x86/kernel/apic/x2apic_uv_x.c
+@@ -667,7 +667,7 @@ static __init void build_uv_gr_table(void)
+ 	}
+ }
+ 
+-static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip)
++static int uv_wakeup_secondary(u32 phys_apicid, unsigned long start_rip, int cpu)
+ {
+ 	unsigned long val;
+ 	int pnode;
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index c10850ae6f09..4b514e485f9c 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -715,7 +715,7 @@ static void send_init_sequence(u32 phys_apicid)
+ /*
+  * Wake up AP by INIT, INIT, STARTUP sequence.
+  */
+-static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip)
++static int wakeup_secondary_cpu_via_init(u32 phys_apicid, unsigned long start_eip, int cpu)
+ {
+ 	unsigned long send_status = 0, accept_status = 0;
+ 	int num_starts, j, maxlvt;
+@@ -916,11 +916,11 @@ static int do_boot_cpu(u32 apicid, int cpu, struct task_struct *idle)
+ 	 * - Use an INIT boot APIC message
+ 	 */
+ 	if (apic->wakeup_secondary_cpu_64)
+-		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip);
++		ret = apic->wakeup_secondary_cpu_64(apicid, start_ip, cpu);
+ 	else if (apic->wakeup_secondary_cpu)
+-		ret = apic->wakeup_secondary_cpu(apicid, start_ip);
++		ret = apic->wakeup_secondary_cpu(apicid, start_ip, cpu);
+ 	else
+-		ret = wakeup_secondary_cpu_via_init(apicid, start_ip);
++		ret = wakeup_secondary_cpu_via_init(apicid, start_ip, cpu);
+ 
+ 	/* If the wakeup mechanism failed, cleanup the warm reset vector */
+ 	if (ret)
+
+base-commit: 628cc040b3a2980df6032766e8ef0688e981ab95
+-- 
+2.43.0
 
