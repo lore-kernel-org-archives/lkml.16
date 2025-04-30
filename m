@@ -1,98 +1,449 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA2E21B182;
-	Wed, 30 Apr 2025 08:58:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003496; cv=none; b=f5yNNIBAXuSyyWFFqDoUZk/QRoLlFQ0JuyfLPGxwYsSKHxUGNlN7aeyFCTlZxKyLIFHMIlKAafqcKuZYrOjdtRagdLXGy1+gGCvUpyavowzV/h8PrwmYUAFNdP9GgHotVcY9Pd+niaQXwgkdCYLzWPds0Q8O+UL7xWXBhLM0CCI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003496; c=relaxed/simple;
-	bh=Ll3KSEqa1UYp5DsI2uGdvjwuMS4ugb23LjatdJSgsJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ndnyM4TOGyACTzx5eVVzOoxI0sLRG2ZhGazMrlUEOuatu55VipBd2v1ueBcYkQWWqMqe+Hg6Oj33pEnm4mIL+f0xtd8BjzSbDRes3wff5y3NSpbtAtX4HeOZ9jJ8WIr46XgzTbOVKCd0M4V7QNiQWhKqWC8AptL0uMIlA6cs9hI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nrw6hQcR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nrw6hQcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D954C4CEED;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02A3621B9F0;
 	Wed, 30 Apr 2025 08:58:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746003495;
-	bh=Ll3KSEqa1UYp5DsI2uGdvjwuMS4ugb23LjatdJSgsJw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nrw6hQcRBj+PQvfvFioygyq8v/eSiOAUv39rnKVE/w9X1EF61Mx0CwWzN1+19GarC
-	 RuFUYGve7a/eQj/crVN/u3Szpf0rO5XpENbRXnvDrCuYpgiwwr2NjfBW5e4UReg4X7
-	 V2yrCniCmQuOvqHaNYvYVPVJVWpGs5QpM57g6xht52RDOzhptXbwlaD7vlNpZX74M+
-	 zBfQrGx4lH2fGSw4HjTS1H1gl3ZrtRWnGQmJnpMaRSdyzCNmemrAvNg73yIHb79QSJ
-	 0YKk2yh2GRCJgL9HzAjCLI6Wve00w1+6qeUvjKk3lSMGwAiJknm0GtBT/AuMW77kDI
-	 DWk5fXYaHwKhw==
-Date: Wed, 30 Apr 2025 09:58:09 +0100
-From: Lee Jones <lee@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>,
-	Herbert Xu <herbert@gondor.apana.org.au>, davem@davemloft.net,
-	peterhuewe@gmx.de, jarkko@kernel.org, linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev, linux-crypto@vger.kernel.org,
-	jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	pmenzel@molgen.mpg.de
-Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
-Message-ID: <20250430085809.GD1567507@google.com>
-References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
- <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
- <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn>
- <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
- <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
- <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746003497; cv=none; b=pWNbNL7+rHDIZzrwTf7kiJk2aZzvdZgaIVNMicfJAvS/05pcU6jrmuXHbXidReXEtmyadnh2qGLybwOCMcmZw/pwdHvKPXiRLS6FrxzxmV2R1o2iqME5LdhXMBl/+Z2xj8ndjeApE0q0+yD34WAdbsP8eP4wXFhSE6qkrIQmbjc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746003497; c=relaxed/simple;
+	bh=R9vFjLUYLD/eI3Tko+66Opdx1rBvBCNH8a37zDYcpdE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jVQ0p7JkesmvYM8h27mFK7xXmTAqSWf4AKcmfGLFCBXCs1ZLYIg1tK8vKrmE3Ijh4WZw2raDotoFqKQEPUHFO/f97ZsXzLA0MFZaqmn4nbyx5MMrLP7ct4YtZ7Ro1rBTvwp0qPAcwKH8USW2T4azyddlmemkwBNL+buyYnw9jjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Kr9zL4b4; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Kr9zL4b4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=inMIW
+	EhVfTFIN8ho7f8yrG5qi3Y8wmmQJwlgSIp5P78=; b=Kr9zL4b4+N8pvX11SB5NL
+	WVgY4jOCU22EYJ1SSF77LXUJqoHmwFFcSwv9yt9R1m7I42USLhY7iB5g28qneISF
+	mOVMGGDTp1+SrskO1kv3KNK5H+ffZtV/GZ+XWiAif4M9Hk7gZKimjuql4O8SSihK
+	EYqlDtEeCWjhTSSDZ5m6Ms=
+Received: from localhost.localdomain (unknown [])
+	by gzsmtp1 (Coremail) with SMTP id PCgvCgD351ze5RFo2yEaBg--.45889S2;
+	Wed, 30 Apr 2025 16:57:04 +0800 (CST)
+From: oushixiong1025@163.com
+To: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org,
+	linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Dave Airlie <airlied@redhat.com>,
+	Sean Paul <sean@poorly.run>,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH 1/3] dma-buf: add flags to skip map_dma_buf() for some drivers
+Date: Wed, 30 Apr 2025 16:56:56 +0800
+Message-Id: <20250430085658.540746-1-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H6ku=imPGqaFrey6hCMwXSL4Qsoif9Rv=Gko2R1CBtGmw@mail.gmail.com>
+X-CM-TRANSID:PCgvCgD351ze5RFo2yEaBg--.45889S2
+X-Coremail-Antispam: 1Uf129KBjvAXoWfJw4xZr4DWr1ktr4Dur1Utrb_yoW8Wry3Jo
+	WfXFy3J3WrX34rAr9xJFnxtF9xX3Z5Zw4fGw4rtrs0qFW2qF4jyFyavr13AF15tr4UJFsr
+	ua43tw1rXry5Ga4xn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxU2vPfDUUUU
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXBw-D2gR4Jp7-QAAs1
 
-On Wed, 30 Apr 2025, Huacai Chen wrote:
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-> On Wed, Apr 30, 2025 at 4:47 PM Qunqin Zhao <zhaoqunqin@loongson.cn> wrote:
-> >
-> >
-> > 在 2025/4/30 下午4:18, Herbert Xu 写道:
-> > > On Wed, Apr 30, 2025 at 04:14:40PM +0800, Qunqin Zhao wrote:
-> > >> Sorry to bother you, may i ask is it fine to move  the Security Engine base
-> > >> driver[Patch v8 1/5] to drivers/crypto ?
-> > >>
-> > >> The base driver uses MFD  interface  to register child device(tpm, rng) , as
-> > >> done in
-> > >>
-> > >> "drivers/iio/common/ssp_sensors/ssp_dev.c" and
-> > >> "drivers/firmware/xilinx/zynqmp.c".
-> > >>
-> > >> Thank you, and I look forward to hearing from you.
-> > > I don't mind at this point in time.  But if this driver were to
-> > > develop features way outside of the Crypto API in future then I
-> > > may change my mind.
-> >
-> > Hi, Herbert, thanks for your reply.
-> >
-> > In future it just add child platform devices  name(sm2, sm3, sm4) to
-> > "struct  mfd_cell engines".
-> >
-> >
-> > Hi, Huaci
-> >
-> > Let's go via Herbert's crypto tree for the base driver patch under
-> > drivers/crypto/loongson/,
-> >
-> > What do you think of it?
-> In my opinion drivers/mfd is better, because another user is in
-> drivers/char rather than drivers/crypto.
-> 
-> But if moving to drivers/crypto is what Lee Jones wants, then everything is OK.
+[WHY] Some Importer does not need to call dma_buf_map_attachment() to
+get the scatterlist info, especially those drivers of hardware that do
+not support DMA, such as the udl, the virtgpu and the ast.
 
-You can move the driver, but then you must not reference or use the MFD API.
+[HOW] skip map_dma_buf() when dma_buf_dynamic_attach() for some drivers.
 
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+ drivers/accel/ivpu/ivpu_gem.c                 |  2 +-
+ drivers/accel/qaic/qaic_data.c                |  2 +-
+ drivers/dma-buf/dma-buf.c                     | 29 ++++++++++---------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c   |  2 +-
+ drivers/gpu/drm/armada/armada_gem.c           |  2 +-
+ drivers/gpu/drm/drm_prime.c                   |  2 +-
+ drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c    |  2 +-
+ .../drm/i915/gem/selftests/i915_gem_dmabuf.c  |  2 +-
+ drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c     |  2 +-
+ drivers/gpu/drm/tegra/gem.c                   |  4 +--
+ drivers/gpu/drm/virtio/virtgpu_prime.c        |  2 +-
+ drivers/gpu/drm/xe/xe_dma_buf.c               |  2 +-
+ drivers/iio/industrialio-buffer.c             |  2 +-
+ drivers/infiniband/core/umem_dmabuf.c         |  3 +-
+ .../common/videobuf2/videobuf2-dma-contig.c   |  2 +-
+ .../media/common/videobuf2/videobuf2-dma-sg.c |  2 +-
+ .../platform/nvidia/tegra-vde/dmabuf-cache.c  |  2 +-
+ drivers/misc/fastrpc.c                        |  2 +-
+ drivers/usb/gadget/function/f_fs.c            |  2 +-
+ drivers/xen/gntdev-dmabuf.c                   |  2 +-
+ include/linux/dma-buf.h                       |  5 ++--
+ net/core/devmem.c                             |  2 +-
+ 22 files changed, 41 insertions(+), 36 deletions(-)
+
+diff --git a/drivers/accel/ivpu/ivpu_gem.c b/drivers/accel/ivpu/ivpu_gem.c
+index 8741c73b92ce..5258a66ed945 100644
+--- a/drivers/accel/ivpu/ivpu_gem.c
++++ b/drivers/accel/ivpu/ivpu_gem.c
+@@ -183,7 +183,7 @@ struct drm_gem_object *ivpu_gem_prime_import(struct drm_device *dev,
+ 	struct drm_gem_object *obj;
+ 	int ret;
+ 
+-	attach = dma_buf_attach(dma_buf, attach_dev);
++	attach = dma_buf_attach(dma_buf, attach_dev, false);
+ 	if (IS_ERR(attach))
+ 		return ERR_CAST(attach);
+ 
+diff --git a/drivers/accel/qaic/qaic_data.c b/drivers/accel/qaic/qaic_data.c
+index 43aba57b48f0..c13c64d59143 100644
+--- a/drivers/accel/qaic/qaic_data.c
++++ b/drivers/accel/qaic/qaic_data.c
+@@ -803,7 +803,7 @@ struct drm_gem_object *qaic_gem_prime_import(struct drm_device *dev, struct dma_
+ 	obj = &bo->base;
+ 	get_dma_buf(dma_buf);
+ 
+-	attach = dma_buf_attach(dma_buf, dev->dev);
++	attach = dma_buf_attach(dma_buf, dev->dev, false);
+ 	if (IS_ERR(attach)) {
+ 		ret = PTR_ERR(attach);
+ 		goto attach_fail;
+diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+index 5baa83b85515..dd7fe5fbf197 100644
+--- a/drivers/dma-buf/dma-buf.c
++++ b/drivers/dma-buf/dma-buf.c
+@@ -904,7 +904,7 @@ static struct sg_table *__map_dma_buf(struct dma_buf_attachment *attach,
+ struct dma_buf_attachment *
+ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 		       const struct dma_buf_attach_ops *importer_ops,
+-		       void *importer_priv)
++		       void *importer_priv, bool skip_map)
+ {
+ 	struct dma_buf_attachment *attach;
+ 	int ret;
+@@ -941,8 +941,6 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 	 */
+ 	if (dma_buf_attachment_is_dynamic(attach) !=
+ 	    dma_buf_is_dynamic(dmabuf)) {
+-		struct sg_table *sgt;
+-
+ 		dma_resv_lock(attach->dmabuf->resv, NULL);
+ 		if (dma_buf_is_dynamic(attach->dmabuf)) {
+ 			ret = dmabuf->ops->pin(attach);
+@@ -950,16 +948,20 @@ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 				goto err_unlock;
+ 		}
+ 
+-		sgt = __map_dma_buf(attach, DMA_BIDIRECTIONAL);
+-		if (!sgt)
+-			sgt = ERR_PTR(-ENOMEM);
+-		if (IS_ERR(sgt)) {
+-			ret = PTR_ERR(sgt);
+-			goto err_unpin;
++		if (!skip_map) {
++			struct sg_table *sgt;
++
++			sgt = __map_dma_buf(attach, DMA_BIDIRECTIONAL);
++			if (!sgt)
++				sgt = ERR_PTR(-ENOMEM);
++			if (IS_ERR(sgt)) {
++				ret = PTR_ERR(sgt);
++				goto err_unpin;
++			}
++			attach->sgt = sgt;
++			attach->dir = DMA_BIDIRECTIONAL;
+ 		}
+ 		dma_resv_unlock(attach->dmabuf->resv);
+-		attach->sgt = sgt;
+-		attach->dir = DMA_BIDIRECTIONAL;
+ 	}
+ 
+ 	return attach;
+@@ -989,9 +991,10 @@ EXPORT_SYMBOL_NS_GPL(dma_buf_dynamic_attach, "DMA_BUF");
+  * mapping.
+  */
+ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+-					  struct device *dev)
++					  struct device *dev,
++					  bool skip_map)
+ {
+-	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL);
++	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL, skip_map);
+ }
+ EXPORT_SYMBOL_NS_GPL(dma_buf_attach, "DMA_BUF");
+ 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+index e6913fcf2c7b..26c94834e6d2 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
+@@ -479,7 +479,7 @@ struct drm_gem_object *amdgpu_gem_prime_import(struct drm_device *dev,
+ 		return obj;
+ 
+ 	attach = dma_buf_dynamic_attach(dma_buf, dev->dev,
+-					&amdgpu_dma_buf_attach_ops, obj);
++					&amdgpu_dma_buf_attach_ops, obj, false);
+ 	if (IS_ERR(attach)) {
+ 		drm_gem_object_put(obj);
+ 		return ERR_CAST(attach);
+diff --git a/drivers/gpu/drm/armada/armada_gem.c b/drivers/gpu/drm/armada/armada_gem.c
+index 1a1680d71486..7e1a82828b87 100644
+--- a/drivers/gpu/drm/armada/armada_gem.c
++++ b/drivers/gpu/drm/armada/armada_gem.c
+@@ -514,7 +514,7 @@ armada_gem_prime_import(struct drm_device *dev, struct dma_buf *buf)
+ 		}
+ 	}
+ 
+-	attach = dma_buf_attach(buf, dev->dev);
++	attach = dma_buf_attach(buf, dev->dev, false);
+ 	if (IS_ERR(attach))
+ 		return ERR_CAST(attach);
+ 
+diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+index bdb51c8f262e..8e70abca33b9 100644
+--- a/drivers/gpu/drm/drm_prime.c
++++ b/drivers/gpu/drm/drm_prime.c
+@@ -949,7 +949,7 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+ 	if (!dev->driver->gem_prime_import_sg_table)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	attach = dma_buf_attach(dma_buf, attach_dev);
++	attach = dma_buf_attach(dma_buf, attach_dev, false);
+ 	if (IS_ERR(attach))
+ 		return ERR_CAST(attach);
+ 
+diff --git a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+index 9473050ac842..6015f6beb8e6 100644
+--- a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
++++ b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
+@@ -305,7 +305,7 @@ struct drm_gem_object *i915_gem_prime_import(struct drm_device *dev,
+ 		return ERR_PTR(-E2BIG);
+ 
+ 	/* need to attach */
+-	attach = dma_buf_attach(dma_buf, dev->dev);
++	attach = dma_buf_attach(dma_buf, dev->dev, false);
+ 	if (IS_ERR(attach))
+ 		return ERR_CAST(attach);
+ 
+diff --git a/drivers/gpu/drm/i915/gem/selftests/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/gem/selftests/i915_gem_dmabuf.c
+index 2fda549dd82d..1992241fdf54 100644
+--- a/drivers/gpu/drm/i915/gem/selftests/i915_gem_dmabuf.c
++++ b/drivers/gpu/drm/i915/gem/selftests/i915_gem_dmabuf.c
+@@ -287,7 +287,7 @@ static int igt_dmabuf_import_same_driver(struct drm_i915_private *i915,
+ 		goto out_import;
+ 
+ 	/* Now try a fake an importer */
+-	import_attach = dma_buf_attach(dmabuf, obj->base.dev->dev);
++	import_attach = dma_buf_attach(dmabuf, obj->base.dev->dev, false);
+ 	if (IS_ERR(import_attach)) {
+ 		err = PTR_ERR(import_attach);
+ 		goto out_import;
+diff --git a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
+index 30cf1cdc1aa3..41fb4149409e 100644
+--- a/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
++++ b/drivers/gpu/drm/omapdrm/omap_gem_dmabuf.c
+@@ -114,7 +114,7 @@ struct drm_gem_object *omap_gem_prime_import(struct drm_device *dev,
+ 		}
+ 	}
+ 
+-	attach = dma_buf_attach(dma_buf, dev->dev);
++	attach = dma_buf_attach(dma_buf, dev->dev, false);
+ 	if (IS_ERR(attach))
+ 		return ERR_CAST(attach);
+ 
+diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
+index ace3e5a805cf..e5527c9d10bb 100644
+--- a/drivers/gpu/drm/tegra/gem.c
++++ b/drivers/gpu/drm/tegra/gem.c
+@@ -79,7 +79,7 @@ static struct host1x_bo_mapping *tegra_bo_pin(struct device *dev, struct host1x_
+ 	if (obj->dma_buf) {
+ 		struct dma_buf *buf = obj->dma_buf;
+ 
+-		map->attach = dma_buf_attach(buf, dev);
++		map->attach = dma_buf_attach(buf, dev, false);
+ 		if (IS_ERR(map->attach)) {
+ 			err = PTR_ERR(map->attach);
+ 			goto free;
+@@ -470,7 +470,7 @@ static struct tegra_bo *tegra_bo_import(struct drm_device *drm,
+ 	 * domain, map it first to the DRM device to get an sgt.
+ 	 */
+ 	if (tegra->domain) {
+-		attach = dma_buf_attach(buf, drm->dev);
++		attach = dma_buf_attach(buf, drm->dev, false);
+ 		if (IS_ERR(attach)) {
+ 			err = PTR_ERR(attach);
+ 			goto free;
+diff --git a/drivers/gpu/drm/virtio/virtgpu_prime.c b/drivers/gpu/drm/virtio/virtgpu_prime.c
+index 4de2a63ccd18..6d9d1fe342b6 100644
+--- a/drivers/gpu/drm/virtio/virtgpu_prime.c
++++ b/drivers/gpu/drm/virtio/virtgpu_prime.c
+@@ -326,7 +326,7 @@ struct drm_gem_object *virtgpu_gem_prime_import(struct drm_device *dev,
+ 	drm_gem_private_object_init(dev, obj, buf->size);
+ 
+ 	attach = dma_buf_dynamic_attach(buf, dev->dev,
+-					&virtgpu_dma_buf_attach_ops, obj);
++					&virtgpu_dma_buf_attach_ops, obj, true);
+ 	if (IS_ERR(attach)) {
+ 		kfree(bo);
+ 		return ERR_CAST(attach);
+diff --git a/drivers/gpu/drm/xe/xe_dma_buf.c b/drivers/gpu/drm/xe/xe_dma_buf.c
+index f7a20264ea33..9f524b9ed425 100644
+--- a/drivers/gpu/drm/xe/xe_dma_buf.c
++++ b/drivers/gpu/drm/xe/xe_dma_buf.c
+@@ -293,7 +293,7 @@ struct drm_gem_object *xe_gem_prime_import(struct drm_device *dev,
+ 		attach_ops = test->attach_ops;
+ #endif
+ 
+-	attach = dma_buf_dynamic_attach(dma_buf, dev->dev, attach_ops, &bo->ttm.base);
++	attach = dma_buf_dynamic_attach(dma_buf, dev->dev, attach_ops, &bo->ttm.base, false);
+ 	if (IS_ERR(attach)) {
+ 		obj = ERR_CAST(attach);
+ 		goto out_err;
+diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
+index a80f7cc25a27..1296af4c2f7a 100644
+--- a/drivers/iio/industrialio-buffer.c
++++ b/drivers/iio/industrialio-buffer.c
+@@ -1679,7 +1679,7 @@ static int iio_buffer_attach_dmabuf(struct iio_dev_buffer_pair *ib,
+ 		goto err_free_priv;
+ 	}
+ 
+-	attach = dma_buf_attach(dmabuf, indio_dev->dev.parent);
++	attach = dma_buf_attach(dmabuf, indio_dev->dev.parent, false);
+ 	if (IS_ERR(attach)) {
+ 		err = PTR_ERR(attach);
+ 		goto err_dmabuf_put;
+diff --git a/drivers/infiniband/core/umem_dmabuf.c b/drivers/infiniband/core/umem_dmabuf.c
+index 0ec2e4120cc9..ed635c407cbd 100644
+--- a/drivers/infiniband/core/umem_dmabuf.c
++++ b/drivers/infiniband/core/umem_dmabuf.c
+@@ -159,7 +159,8 @@ ib_umem_dmabuf_get_with_dma_device(struct ib_device *device,
+ 					dmabuf,
+ 					dma_device,
+ 					ops,
+-					umem_dmabuf);
++					umem_dmabuf,
++					false);
+ 	if (IS_ERR(umem_dmabuf->attach)) {
+ 		ret = ERR_CAST(umem_dmabuf->attach);
+ 		goto out_free_umem;
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+index a13ec569c82f..362f5b555ce2 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+@@ -786,7 +786,7 @@ static void *vb2_dc_attach_dmabuf(struct vb2_buffer *vb, struct device *dev,
+ 	buf->vb = vb;
+ 
+ 	/* create attachment for the dmabuf with the user device */
+-	dba = dma_buf_attach(dbuf, buf->dev);
++	dba = dma_buf_attach(dbuf, buf->dev, false);
+ 	if (IS_ERR(dba)) {
+ 		pr_err("failed to attach dmabuf\n");
+ 		kfree(buf);
+diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+index c6ddf2357c58..4f9a4e9783a1 100644
+--- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
++++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+@@ -632,7 +632,7 @@ static void *vb2_dma_sg_attach_dmabuf(struct vb2_buffer *vb, struct device *dev,
+ 
+ 	buf->dev = dev;
+ 	/* create attachment for the dmabuf with the user device */
+-	dba = dma_buf_attach(dbuf, buf->dev);
++	dba = dma_buf_attach(dbuf, buf->dev, false);
+ 	if (IS_ERR(dba)) {
+ 		pr_err("failed to attach dmabuf\n");
+ 		kfree(buf);
+diff --git a/drivers/media/platform/nvidia/tegra-vde/dmabuf-cache.c b/drivers/media/platform/nvidia/tegra-vde/dmabuf-cache.c
+index b34244ea14dd..d04da2d3e4da 100644
+--- a/drivers/media/platform/nvidia/tegra-vde/dmabuf-cache.c
++++ b/drivers/media/platform/nvidia/tegra-vde/dmabuf-cache.c
+@@ -95,7 +95,7 @@ int tegra_vde_dmabuf_cache_map(struct tegra_vde *vde,
+ 		goto ref;
+ 	}
+ 
+-	attachment = dma_buf_attach(dmabuf, dev);
++	attachment = dma_buf_attach(dmabuf, dev, false);
+ 	if (IS_ERR(attachment)) {
+ 		dev_err(dev, "Failed to attach dmabuf\n");
+ 		err = PTR_ERR(attachment);
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 7b7a22c91fe4..aee6f4cbd6c6 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -778,7 +778,7 @@ static int fastrpc_map_create(struct fastrpc_user *fl, int fd,
+ 		goto get_err;
+ 	}
+ 
+-	map->attach = dma_buf_attach(map->buf, sess->dev);
++	map->attach = dma_buf_attach(map->buf, sess->dev, false);
+ 	if (IS_ERR(map->attach)) {
+ 		dev_err(sess->dev, "Failed to attach dmabuf\n");
+ 		err = PTR_ERR(map->attach);
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index 2dea9e42a0f8..51926ffdb843 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1487,7 +1487,7 @@ static int ffs_dmabuf_attach(struct file *file, int fd)
+ 	if (IS_ERR(dmabuf))
+ 		return PTR_ERR(dmabuf);
+ 
+-	attach = dma_buf_attach(dmabuf, gadget->dev.parent);
++	attach = dma_buf_attach(dmabuf, gadget->dev.parent, false);
+ 	if (IS_ERR(attach)) {
+ 		err = PTR_ERR(attach);
+ 		goto err_dmabuf_put;
+diff --git a/drivers/xen/gntdev-dmabuf.c b/drivers/xen/gntdev-dmabuf.c
+index 5453d86324f6..9de191b6d1f7 100644
+--- a/drivers/xen/gntdev-dmabuf.c
++++ b/drivers/xen/gntdev-dmabuf.c
+@@ -587,7 +587,7 @@ dmabuf_imp_to_refs(struct gntdev_dmabuf_priv *priv, struct device *dev,
+ 	gntdev_dmabuf->priv = priv;
+ 	gntdev_dmabuf->fd = fd;
+ 
+-	attach = dma_buf_attach(dma_buf, dev);
++	attach = dma_buf_attach(dma_buf, dev, false);
+ 	if (IS_ERR(attach)) {
+ 		ret = ERR_CAST(attach);
+ 		goto fail_free_obj;
+diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+index 36216d28d8bd..1ea25089b3ba 100644
+--- a/include/linux/dma-buf.h
++++ b/include/linux/dma-buf.h
+@@ -598,11 +598,12 @@ dma_buf_attachment_is_dynamic(struct dma_buf_attachment *attach)
+ }
+ 
+ struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+-					  struct device *dev);
++					  struct device *dev,
++					  bool skip_map);
+ struct dma_buf_attachment *
+ dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+ 		       const struct dma_buf_attach_ops *importer_ops,
+-		       void *importer_priv);
++		       void *importer_priv, bool skip_map);
+ void dma_buf_detach(struct dma_buf *dmabuf,
+ 		    struct dma_buf_attachment *attach);
+ int dma_buf_pin(struct dma_buf_attachment *attach);
+diff --git a/net/core/devmem.c b/net/core/devmem.c
+index 6e27a47d0493..8137ecff9e39 100644
+--- a/net/core/devmem.c
++++ b/net/core/devmem.c
+@@ -202,7 +202,7 @@ net_devmem_bind_dmabuf(struct net_device *dev, unsigned int dmabuf_fd,
+ 
+ 	binding->dmabuf = dmabuf;
+ 
+-	binding->attachment = dma_buf_attach(binding->dmabuf, dev->dev.parent);
++	binding->attachment = dma_buf_attach(binding->dmabuf, dev->dev.parent, false);
+ 	if (IS_ERR(binding->attachment)) {
+ 		err = PTR_ERR(binding->attachment);
+ 		NL_SET_ERR_MSG(extack, "Failed to bind dmabuf to device");
 -- 
-Lee Jones [李琼斯]
+2.17.1
+
