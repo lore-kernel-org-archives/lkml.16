@@ -1,69 +1,69 @@
-Received: from mail-yb1-f226.google.com (mail-yb1-f226.google.com [209.85.219.226])
+Received: from mail-qv1-f100.google.com (mail-qv1-f100.google.com [209.85.219.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A0A22A7ED
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB3122A813
 	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.226
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053569; cv=none; b=vBk5Yx6LHF6LPDTlt9MIi141knlCbiP7fT+bIr6TzJr/nqwYHhiRZCbmEjW835S2XS9Xzl4YMCgsFuaOiFIDKMoxqYpsWLyDsBOUQ5lMiiK6AA5Gy/q1I0KuzjkYELvvvTY2/cZwvfyoZiXTcJTKp5IRIyJGj1l/6i6h48H560s=
+	t=1746053570; cv=none; b=Wr5R4lBMpGU5RZ57VQ4dCRR7CYPktRsGWFW6b3eQA52oFIXGTeRuuFsiImXWxlga4DAxs5JelgnF/mekAEgE8Ke+ie5MUudZZWGx7DS8vle0ONtKYPqBqrzwv4s81ML9VEZ3+eFZSzeeDxGxQsOhzk9SAWQJSixi/Ne45nPasl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053569; c=relaxed/simple;
-	bh=ChKMqf1RvETVsEvT5sJjmD/ZOdGzQDcoe+otqADHBU8=;
+	s=arc-20240116; t=1746053570; c=relaxed/simple;
+	bh=feVv8f7d0KgVnnhw1uFkQnOAw5OAMYzup6QnL1O24ec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aTncpNMOOTknq/lXzFjeyMt6x4J0qEXvkRfePBCBSs+Cexpl7RL8MxWBhZGMc/6SYpuyc5kv8hnETdciA4oJ0Pqfss9c01cYo9SeTV4sy6DAV3R8PuKagcSfavjiLi/4hysIm7H4w9vOsj0Pv7HXu7SzAPjlyxjWlvD9cpZ2FoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=C0LJ8Ecc; arc=none smtp.client-ip=209.85.219.226
+	 MIME-Version; b=Qr5Ap+DN1G0eXlOR/7S4YGYE4Th2HB4CvZBs+YIFhSU03nWooRfE8cWhW6Yv0ZiBQR+n1EkXm7zuRWduhQV1UGqgmwJ1NyjDkEOLVxcJ7Iahp9yE8shCSvgoW9tiFvscCpAdWb+WcgQXXrZZQrKFm6N0tQa0UXplraWOlpiGiCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=L8gfYkoF; arc=none smtp.client-ip=209.85.219.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="C0LJ8Ecc"
-Received: by mail-yb1-f226.google.com with SMTP id 3f1490d57ef6-e7456415f1bso52067276.2
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="L8gfYkoF"
+Received: by mail-qv1-f100.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so544276d6.3
         for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:52:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1746053566; x=1746658366; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1746053565; x=1746658365; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QbYmq7hwdo4gr4HQcys5STyhEhXZt+ulzS0YWq0QdIk=;
-        b=C0LJ8EccD2Poq25tpXS6PVYqgsVN+DezhiZRWuYoDe5vTFIYPAGNFuf248im1Ymipw
-         UqsR//CKpDwAb0S3ZGbJHmBFp/pd/1iNKAY3obKrICwwBqyByDn7m1xcf8gVdUOrg9Mz
-         VxfDWm3cuYFT99uV+1XLPpIadKntT6kaRxAhhSBeXSsRUKL76wKZbK9QK3hxNWbBb0iv
-         Y+L20vmWQcNVwdZimIWypYwgPRf6X3hGf/h+dx3TU8jfOVNNeYnkODvrBkjgw5YmeuM2
-         AxdI4f5Hx4k9Gu3Kkv0C2S6eMrNDkeiYhj9cbPy7F4awI8PDUgGBeLPOX6R0bTkHVh03
-         BGzg==
+        bh=Kb0AiFPk4f9Yg8x1AOb62HbUM9uzpcieXEg0cQHgsk4=;
+        b=L8gfYkoFGZ+FQVFn8J62bfM27dr7Su+Ia22XDJmwQ51/OHwMTRypiezTPPPwToh2au
+         KZyC7C3uUrh/gGs58IRoT6krnxhmlh2bVFzcGABXZDrBQw2TNPvngF41kINpjKinuWiV
+         fZy+d8NnGkKB2idTHtMhqDvynUney2o7pgA360QaJAYDmwl7EPOoz3WD4YuhAcL9E29Q
+         wbEIcKLE19novtqRZ7WF/59OD830VoJiZku/wacWxh4Q++DzjtSEr99Ghu0ce5QBiHYZ
+         y6p2AGh5iG0K0DTnjbRTTbo/4Ck+ucjkef9Y666raxA/ZYquirgi6eW4kSooW2tCWl4X
+         Mvfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746053566; x=1746658366;
+        d=1e100.net; s=20230601; t=1746053565; x=1746658365;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QbYmq7hwdo4gr4HQcys5STyhEhXZt+ulzS0YWq0QdIk=;
-        b=g8tm6KYzHmSHMOqVCooNN1dE/YofBuEjgVkrLnqNswg9115Woby980uY5yha/Y43gA
-         fuk7s6fjlzBYWmugjIZmjA95qDjE3kOFDtZ9oYR659x77I/LzAkev4sDp3hcEMHhw8B6
-         aqs3BUXWumgEzIbNdSH2enLPDUBTkUF8xZnlIKllzx+iBw5club4VZfNsN94CFIWkn1s
-         vCiqG4JFGBWPNSxhnMh6c3xrE7TaL/pvZ6q0eUnu/nmBd756jieNu686mcdQ2Sp4GTpm
-         aQeYlsSxRUTmBqnVrUdIwCkewUMiiWvECWARNK2+4SstXbpKBTY1qrIRLRnUuyRK5bgh
-         s2pw==
-X-Forwarded-Encrypted: i=1; AJvYcCXl9dPPGJaPQ2YKCeR11ncyeqchhs9K/OKGPtkyv8bchqVJGnxmQH0D+NfjJWpPMjfDNn0Ql9eAfT+xNyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+t2zgUml9/VK9IA+G/RRruRxEWMW+b+JCR8vNPn6imZHEM7yi
-	l4+KXfxFp4NRMTECBve+Hao8VJW0l1BZdM1sSB/kAGzNZM+xZGQxld8Bs8wjm5duy0nCBkjBIv0
-	Upvr8CuPRPurDmnwLs4tYOJsImkWPZajk/1gOs/894BmOLf05
-X-Gm-Gg: ASbGncsnxJRAtb+XJd2zPy2UgxuSxlpLDC8w5U0rHu23ahL2avoatPnXNfqlB3d79oT
-	ukP6wbS+j4OXaaEOVfju5T5D0fkmf1QzIhz4tFzgo0DN3qXpexZQbRji+mS3R9sLGFDvLyuwDhO
-	okGHxCw4YRqiwnLrosE66gmD1evQrlfRnJiB6O8nMqrPvxD5J6oHPvLSCyXOhz9d0o0TY/J96Va
-	K+9U+cU+6DapBxK3b9ciIbWyk508Yvnk47LONIUMGoOMAYU4DMZyE2kZcFSF2JgPXjmrJBdk24/
-	uMFi3wKEkCqU1eQiyLtvZRfUZ/Wqpg==
-X-Google-Smtp-Source: AGHT+IHMBKUP30X+fnZBNuVVqGAC4YwFzK3I2dcrRyVeqHF4tNVp7j3CQOEw8CeZwATubLEilqG1IPN1+Z8g
-X-Received: by 2002:a05:690c:8:b0:6f2:9533:8fb6 with SMTP id 00721157ae682-708aee5bbc5mr24377497b3.1.1746053566013;
-        Wed, 30 Apr 2025 15:52:46 -0700 (PDT)
+        bh=Kb0AiFPk4f9Yg8x1AOb62HbUM9uzpcieXEg0cQHgsk4=;
+        b=tRjYIGO2i9HjaoEvxbPKnbo8YzmDAVeXP8J5tz/V13+SK4RWPxL4uhxI6NgnetqWzE
+         mb/3MtCI/y62IlAc5tUwmusHJkJ/97PIncBd3GtqLuNY9MFhMYw5qn3EQ2gRMAqhJYRd
+         4hFH50CuUIhYHv7u7iZsGvaEoLddY3u630zh+Tn1mo3tDD92FzcBPUY3ul92xPvSrQLi
+         4gE7rC6Ip8pRcS5OEcNjlASP+sA77XsLU+ZR7XPTM2U5wd3jA5/e78Ll6MAjrtBI6BcU
+         5D+5IjY5O7hNugASaMe8yCx61rTNheEdoO8e85MXBlzm2O6PLyDDz11S07GLhqtHoget
+         pxcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUYp2aeiz0MLxR/NqnoznUN7fMIYD+6GwX15wPSMTfRSSDSyPxeHzAHcEUPG9mi4LjVT3X0k+OPQda9VlY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSBxfcrSkQzsePJttn6wcB3cJNWW7mzgctqDmTL+0ghCFbGwQL
+	/40F6GnkZSTVewGBc17fKGCNETT0p48qdiLB0p3qX8WJ0bWLrPbxsqkFdr4PyuYXff7t8/EgmZV
+	o3nHzxjVJxDn9ddJf8vIZVh4zEXw1smAs1kYytltriRLx8UeK
+X-Gm-Gg: ASbGncthlErVL6Xc1bVUOI9uH1en2gjSGpXfVaGk+TejD6qRkv3bggudJ03+I4jw55+
+	qmkQ0ktk/UnHkzQcdPBU2dSZAdAFFyHBS4EI1Vm1lFjDbY8B/cXbMNyPGbOk0k5sqp4c6I+4zXt
+	/f3qdvAXLgilvtRlMZAVC6epBfHIko1IYYHhAQgf/IQQW1jqK8uwytcvvlHo5DNrGMnb3tA1oJt
+	7tLSJ5wb6ANkLKwzMcagU0EIcuKs/pSfJxDIrthqHVMbedI+bQxx0rEoiu98F035WLYHup1A8eh
+	314DJQafwTgWsvGo4Me6atcxkQ2QDg==
+X-Google-Smtp-Source: AGHT+IGj4pUNY527LNbrQYpNEH5IuUSjm8Ld9l2T6zD8Q/PzI+Wm7Jp3b1JOVJB4XF+D8vVf9wlO/OuBOs7f
+X-Received: by 2002:a05:6214:400d:b0:6f4:c603:588c with SMTP id 6a1803df08f44-6f4ff5f60cfmr21770926d6.7.1746053565642;
+        Wed, 30 Apr 2025 15:52:45 -0700 (PDT)
 Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-708ae081eb2sm981707b3.42.2025.04.30.15.52.45
+        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6f4fe82291bsm1233686d6.69.2025.04.30.15.52.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 15:52:46 -0700 (PDT)
+        Wed, 30 Apr 2025 15:52:45 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (unknown [IPv6:2620:125:9007:640:ffff::418a])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 7433634022D;
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 06CE8340199;
 	Wed, 30 Apr 2025 16:52:45 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 727DCE41CC0; Wed, 30 Apr 2025 16:52:45 -0600 (MDT)
+	id 05136E41CC0; Wed, 30 Apr 2025 16:52:45 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Ming Lei <ming.lei@redhat.com>,
 	Jens Axboe <axboe@kernel.dk>
@@ -71,9 +71,9 @@ Cc: Uday Shankar <ushankar@purestorage.com>,
 	linux-block@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH v2 7/9] ublk: don't call ublk_dispatch_req() for NEED_GET_DATA
-Date: Wed, 30 Apr 2025 16:52:32 -0600
-Message-ID: <20250430225234.2676781-8-csander@purestorage.com>
+Subject: [PATCH v2 6/9] ublk: factor out ublk_start_io() helper
+Date: Wed, 30 Apr 2025 16:52:31 -0600
+Message-ID: <20250430225234.2676781-7-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250430225234.2676781-1-csander@purestorage.com>
 References: <20250430225234.2676781-1-csander@purestorage.com>
@@ -85,121 +85,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-ublk_dispatch_req() currently handles 3 different cases: incoming ublk
-requests that don't need to wait for a data buffer, incoming requests
-that do need to wait for a buffer, and resuming those requests once the
-buffer is provided. But the call site that provides a data buffer
-(UBLK_IO_NEED_GET_DATA) is separate from those for incoming requests.
-
-So simplify the function by splitting the UBLK_IO_NEED_GET_DATA case
-into its own function ublk_get_data(). This avoids several redundant
-checks in the UBLK_IO_NEED_GET_DATA case, and streamlines the incoming
-request cases.
-
-Don't call ublk_fill_io_cmd() for UBLK_IO_NEED_GET_DATA, as it's no
-longer necessary to set io->cmd or the UBLK_IO_FLAG_ACTIVE flag for
-ublk_dispatch_req().
-
-Since UBLK_IO_NEED_GET_DATA no longer relies on ublk_dispatch_req()
-calling io_uring_cmd_done(), return the UBLK_IO_RES_OK status directly
-from the ->uring_cmd() handler. If ublk_start_io() fails, don't complete
-the UBLK_IO_NEED_GET_DATA command, matching the existing behavior.
+In preparation for calling it from outside ublk_dispatch_req(), factor
+out the code responsible for setting up an incoming ublk I/O request.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
 ---
- drivers/block/ublk_drv.c | 51 +++++++++++++++++++++++-----------------
- 1 file changed, 29 insertions(+), 22 deletions(-)
+ drivers/block/ublk_drv.c | 54 +++++++++++++++++++++++-----------------
+ 1 file changed, 31 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/block/ublk_drv.c b/drivers/block/ublk_drv.c
-index b4c64779c4fd..483205a0dfe8 100644
+index dcde38b39a82..b4c64779c4fd 100644
 --- a/drivers/block/ublk_drv.c
 +++ b/drivers/block/ublk_drv.c
-@@ -1210,29 +1210,16 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
- 		/*
- 		 * We have not handled UBLK_IO_NEED_GET_DATA command yet,
- 		 * so immediately pass UBLK_IO_RES_NEED_GET_DATA to ublksrv
- 		 * and notify it.
- 		 */
--		if (!(io->flags & UBLK_IO_FLAG_NEED_GET_DATA)) {
--			io->flags |= UBLK_IO_FLAG_NEED_GET_DATA;
--			pr_devel("%s: need get data. qid %d tag %d io_flags %x\n",
--					__func__, ubq->q_id, req->tag, io->flags);
--			ublk_complete_io_cmd(io, UBLK_IO_RES_NEED_GET_DATA,
--					     issue_flags);
--			return;
--		}
--		/*
--		 * We have handled UBLK_IO_NEED_GET_DATA command,
--		 * so clear UBLK_IO_FLAG_NEED_GET_DATA now and just
--		 * do the copy work.
--		 */
--		io->flags &= ~UBLK_IO_FLAG_NEED_GET_DATA;
--		/* update iod->addr because ublksrv may have passed a new io buffer */
--		ublk_get_iod(ubq, req->tag)->addr = io->addr;
--		pr_devel("%s: update iod->addr: qid %d tag %d io_flags %x addr %llx\n",
--				__func__, ubq->q_id, req->tag, io->flags,
--				ublk_get_iod(ubq, req->tag)->addr);
-+		io->flags |= UBLK_IO_FLAG_NEED_GET_DATA;
-+		pr_devel("%s: need get data. qid %d tag %d io_flags %x\n",
-+				__func__, ubq->q_id, req->tag, io->flags);
-+		ublk_complete_io_cmd(io, UBLK_IO_RES_NEED_GET_DATA,
-+				     issue_flags);
-+		return;
- 	}
- 
- 	if (!ublk_start_io(ubq, req, io))
- 		return;
- 
-@@ -2043,10 +2030,28 @@ static int ublk_commit_and_fetch(const struct ublk_queue *ubq,
- 		ublk_put_req_ref(ubq, req);
- 
- 	return 0;
+@@ -1150,17 +1150,45 @@ static inline void __ublk_abort_rq(struct ublk_queue *ubq,
+ 		blk_mq_requeue_request(rq, false);
+ 	else
+ 		blk_mq_end_request(rq, BLK_STS_IOERR);
  }
  
-+static bool ublk_get_data(const struct ublk_queue *ubq, struct ublk_io *io,
-+			  struct request *req)
++static bool ublk_start_io(const struct ublk_queue *ubq, struct request *req,
++			  struct ublk_io *io)
 +{
-+	/*
-+	 * We have handled UBLK_IO_NEED_GET_DATA command,
-+	 * so clear UBLK_IO_FLAG_NEED_GET_DATA now and just
-+	 * do the copy work.
-+	 */
-+	io->flags &= ~UBLK_IO_FLAG_NEED_GET_DATA;
-+	/* update iod->addr because ublksrv may have passed a new io buffer */
-+	ublk_get_iod(ubq, req->tag)->addr = io->addr;
-+	pr_devel("%s: update iod->addr: qid %d tag %d io_flags %x addr %llx\n",
-+			__func__, ubq->q_id, req->tag, io->flags,
-+			ublk_get_iod(ubq, req->tag)->addr);
++	unsigned mapped_bytes = ublk_map_io(ubq, req, io);
 +
-+	return ublk_start_io(ubq, req, io);
++	/* partially mapped, update io descriptor */
++	if (unlikely(mapped_bytes != blk_rq_bytes(req))) {
++		/*
++		 * Nothing mapped, retry until we succeed.
++		 *
++		 * We may never succeed in mapping any bytes here because
++		 * of OOM. TODO: reserve one buffer with single page pinned
++		 * for providing forward progress guarantee.
++		 */
++		if (unlikely(!mapped_bytes)) {
++			blk_mq_requeue_request(req, false);
++			blk_mq_delay_kick_requeue_list(req->q,
++					UBLK_REQUEUE_DELAY_MS);
++			return false;
++		}
++
++		ublk_get_iod(ubq, req->tag)->nr_sectors =
++			mapped_bytes >> 9;
++	}
++
++	ublk_init_req_ref(ubq, req);
++	return true;
 +}
 +
- static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 			       unsigned int issue_flags,
- 			       const struct ublksrv_io_cmd *ub_cmd)
+ static void ublk_dispatch_req(struct ublk_queue *ubq,
+ 			      struct request *req,
+ 			      unsigned int issue_flags)
  {
- 	struct ublk_device *ub = cmd->file->private_data;
-@@ -2108,14 +2113,16 @@ static int __ublk_ch_uring_cmd(struct io_uring_cmd *cmd,
- 			goto out;
- 		break;
- 	case UBLK_IO_NEED_GET_DATA:
- 		if (!(io->flags & UBLK_IO_FLAG_OWNED_BY_SRV))
- 			goto out;
--		ublk_fill_io_cmd(io, cmd, ub_cmd->addr);
-+		io->addr = ub_cmd->addr;
- 		req = blk_mq_tag_to_rq(ub->tag_set.tags[ub_cmd->q_id], tag);
--		ublk_dispatch_req(ubq, req, issue_flags);
--		return -EIOCBQUEUED;
-+		if (!ublk_get_data(ubq, io, req))
-+			return -EIOCBQUEUED;
-+
-+		return UBLK_IO_RES_OK;
- 	default:
- 		goto out;
+ 	int tag = req->tag;
+ 	struct ublk_io *io = &ubq->ios[tag];
+-	unsigned int mapped_bytes;
+ 
+ 	pr_devel("%s: complete: qid %d tag %d io_flags %x addr %llx\n",
+ 			__func__, ubq->q_id, req->tag, io->flags,
+ 			ublk_get_iod(ubq, req->tag)->addr);
+ 
+@@ -1203,33 +1231,13 @@ static void ublk_dispatch_req(struct ublk_queue *ubq,
+ 		pr_devel("%s: update iod->addr: qid %d tag %d io_flags %x addr %llx\n",
+ 				__func__, ubq->q_id, req->tag, io->flags,
+ 				ublk_get_iod(ubq, req->tag)->addr);
  	}
- 	ublk_prep_cancel(cmd, issue_flags, ubq, tag);
- 	return -EIOCBQUEUED;
+ 
+-	mapped_bytes = ublk_map_io(ubq, req, io);
+-
+-	/* partially mapped, update io descriptor */
+-	if (unlikely(mapped_bytes != blk_rq_bytes(req))) {
+-		/*
+-		 * Nothing mapped, retry until we succeed.
+-		 *
+-		 * We may never succeed in mapping any bytes here because
+-		 * of OOM. TODO: reserve one buffer with single page pinned
+-		 * for providing forward progress guarantee.
+-		 */
+-		if (unlikely(!mapped_bytes)) {
+-			blk_mq_requeue_request(req, false);
+-			blk_mq_delay_kick_requeue_list(req->q,
+-					UBLK_REQUEUE_DELAY_MS);
+-			return;
+-		}
+-
+-		ublk_get_iod(ubq, req->tag)->nr_sectors =
+-			mapped_bytes >> 9;
+-	}
++	if (!ublk_start_io(ubq, req, io))
++		return;
+ 
+-	ublk_init_req_ref(ubq, req);
+ 	ublk_complete_io_cmd(io, UBLK_IO_RES_OK, issue_flags);
+ }
+ 
+ static void ublk_cmd_tw_cb(struct io_uring_cmd *cmd,
+ 			   unsigned int issue_flags)
 -- 
 2.45.2
 
