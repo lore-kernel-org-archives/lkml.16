@@ -1,100 +1,112 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD09420E718
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:59:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851912629F;
+	Wed, 30 Apr 2025 08:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999959; cv=none; b=DRHm9UnRjjmtQM+EtJ8KaRbh2aRVJnuUxPJPXL4WpK2pp+2EGvZjTSb3dmFJ7YT/fLdrzy822krGmJC1FdgcqWE7MZIHnu6Bnn1E9n70QtqrU+D7SEeOPBuRYtr/2feVw2AemEOIge5S6y0Yl3m+iarTqpnrCK52nphrvLXQ8CU=
+	t=1746000050; cv=none; b=A1K7Utqmo/z6lFUbmL4tH8IYoZmv2JvVI6x3XS34JgLbsXKt+8O0JcyeMOQ/BqbMyP24vzoc/5GdjAyy264u5ABm/CcaZLSvXdFudSDNkwDM1SerKquqbOShjnyN5EQmZL6AukQHqD3aMADoyhlBS8F356XatE9xnIzMfPEIeck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999959; c=relaxed/simple;
-	bh=DquqmNQHF/m4HxpbBFGGEP0CL6fNCvqmk6w0i06OtMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SwlS21FOaJzT/7AllU7LGMCNgkc0Nbfy5nQOCbvzWeasDlkEJu15/NG/IEh9dMU3j09yz+OQ4BXeaddro7jOGsHzFNmPZlpB09bNJy0Y+VfaeUHHx1ohTLYzS/phznxNVW7B6oDxDVuFrpjnRmpP93j+LCDCWN6a+BIbfVctLrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cJAVpRHD; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746000050; c=relaxed/simple;
+	bh=YmiCW6q7DJwXf/OrdKqtYEugswdEJMRSv9cvj3V7CA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZDyiXM3P9AiMBexZ0W4zDBQZ42WCu3iw8e2fm40zuZmSfdBXr9BCdbLmf7HDVnupnryxrno6Blgg6zlzakELaCyCrugzvVIVDep9jfqBWbGXUnlOZWpyxxgdn6dCy/MdhtJT8R5FBqdZRO3Q2DGxeoglZT+AxzBQc3fn8i8WJus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rty926Vx; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cJAVpRHD"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so4552567f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:59:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rty926Vx"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe574976so47884935e9.1;
+        Wed, 30 Apr 2025 01:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745999955; x=1746604755; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8yhws0Q5ikh04CNsW2reZQlwgg0sFJvUUD9TkSfglwk=;
-        b=cJAVpRHDu0gFavbqDRrYG6OQn0HYb+FUfldGKQCYMrFSxRPo9hsJmxQ7m54ycBnpEk
-         9FtH/vBPIUwqpRYxc1lpDOrsTkAFYxAS380I57PZ4SmLTYm7zzeIXjtUBsGoZKPl7VHh
-         Eo4yNm1wf6R7Qv0B+TNkqqf5MvjzL6Ghza5Priyg69gzAZsaYaRKvDd23AfXQg+Olh0r
-         4Z+AHYf49BrjLYKBL82Co8Y0N6yHzD7lrUPLuRJPQoWnNOadQDZ7DH8rUvAD7aNmAFnM
-         M5IibDQbUrllYZEhni88smZysmFVGN7TT9aBpNLZjm+KtuVyl4dbnTBOMIE5ykh6/l6W
-         bc7g==
+        d=gmail.com; s=20230601; t=1746000047; x=1746604847; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9K6mDCECT8W3Bovw6myYDbhmO8/mbagCIk0F1CteZwg=;
+        b=Rty926VxVvsySFTXWzBpPYm6Ch/Npog9O0cHX1FXuVdGAhfCzq739aS9MFV4G2HzR9
+         tJ0PM6P3/eFu3aZt2/ZWI5JcsolpFn3VwUoh3h3lLpf4vIloYP6C/YIq8O/oEtT7I93+
+         GOigyXbFxdjb0Abd1V4AQYrosLUvkNvi7yqe31nXqx6U/ryqeiSWMf0gm+2j4uG36Ltp
+         l1BY8XKaPF35k1TSjX2oV7IxFdo34Yy9e5F42q4XKCCdd6m9WrToUtHrLSUDLg5xVLHC
+         GaD+QwZjx/4jk6ItwJ3Mu1/GQ4BaLc6vZVrBmf6g60+AiPuj++PLOJ26bLeMK/AIZ2qH
+         /zVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745999955; x=1746604755;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8yhws0Q5ikh04CNsW2reZQlwgg0sFJvUUD9TkSfglwk=;
-        b=TpMvCCtJ8nXK48TGm9xrYWBV7lWQ6tjTcKS6ydcuJbj8SKRRmDDLL07BeqaeSy9EY4
-         kSnSkE9UDrX7qG2xeIaZOC9nAO+mRGQVDLpcL8NjA84F3yzOGJhtsKjKFO5Ri3JCRvhe
-         WpgTHcO7jFBypNXzqfpgoHmVGnjDHAX7hyNj1L2sifyqyybpiEz+fCwxml7EZGXBQcqA
-         y72srWd/6gLc0O+MJldamoz4SKBLfpHiMXxM79anXPyXIr6sLbUDtgfcrtqU+zFGtIg/
-         nBzOlWMirSPRduMJ1FkIl5ERAdw8FrZLWpaI+j2WKvV6+R8NZnbPeEmoEZgOtTo6NMnH
-         xUeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUAD7VIDrK+qqt0cMWbpy9uKJ8WJRxVVK/HEwYONjfWKn0jXNpfoCt2pvTwVvffBdXFbawDLS0wWr68N2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLUvZG6d12H4pc5OJE8EhSEFymFOhhomWU3GmaWp+OPUnsa7xw
-	m6FQyn4zXDqE8D8/uT5PCOAwDitKbN3OF/757epyegvsZInEBmj+wEiaXP2Qfwc=
-X-Gm-Gg: ASbGncv2552Z2p5VieQwNqpm1wMp/aBkHXbXqKdzhMCwE4EUfufO6rQ4Ivobd1/u0hs
-	ANib2hfgMMtuNtnFaFewZOGxMcKHcwHp+JZJykdrjXXyQ1YNq6oVl5vnpFw6DJTGTrltiR0YogA
-	Gs+y8xm0pMqbMAeHSgcO+xBJll7otXtxC7KxG2/Y9lffOT/FiC5ga9WfLpR+hxkhU0iIhVOSNMT
-	Lfc6VALIZ/EKbhRch09fX2YV6xuZIUjVJjS8yQrZCh+/dIBd5U2+dZeRxBJ0wpKj2pNmj4O/Z4V
-	7rYZLeR/gXfsT/Bzj9Z9NeNN3lpgzCp+GMQxFVsytBxXZg==
-X-Google-Smtp-Source: AGHT+IGWwUXDagNfvdIwDMwiMvzIUkzM92P8IN4dxhpdZm8gc9KQcT5g6by4Y8L4epCfcq+h79CqWw==
-X-Received: by 2002:a5d:5c84:0:b0:3a0:8ac0:bbbb with SMTP id ffacd0b85a97d-3a08f7b78c9mr1757255f8f.46.1745999955164;
-        Wed, 30 Apr 2025 00:59:15 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073e5da02sm16350707f8f.93.2025.04.30.00.59.14
+        d=1e100.net; s=20230601; t=1746000047; x=1746604847;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9K6mDCECT8W3Bovw6myYDbhmO8/mbagCIk0F1CteZwg=;
+        b=iQme3y4lyDqEN0KjesPFMi0C5D84jtAQiOOwya/8G6blCTZhxYA2RNNXTnKQeYZbkJ
+         wH3yANtnfR7aH5Iuvd3CSXazR1oJ+Fv6sobJX24mAl7t1fedp4PTkdI3ADZJD8CMnVyW
+         3mIqFnatzKd28wpotLtLUlDCw6ribVuMTR6764ST7Px5OkMv68ahn1aL8Rvz+Wx9SSVw
+         6cyeAlX9y2Dw9N2yjmzisOLqJZPcuv6CWUFm006cTvVmO25EB7/Yi4R6r4gTEnTqmZPw
+         rKj6fkpkd8nHQY+g8+8vgKdN2DJNkR+x3TMSdnfdR+kSim5UTdgNAuemV9/ssBe9nnPI
+         +MPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXAaqvYZnmtfK3BW6bTMGCR9v/TnuyMyrODucqc8Ny3ttHnU7Yc3s5P7mVtum4s171EPiYnhqV/naFnEDPjlEo=@vger.kernel.org, AJvYcCXqr81048WROV9veVgua8teQ220zIwZtf7BlB76bOR/e0EJVGAezigFBvQnDh38bO8Z9qSEa+YPA3Dfp4kw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4ipc0sjLKT2Ex29i2xtsCe7wNFjGYCYK46S1yLqrE9ABBXJoS
+	ZzRZVocUtqFxA5383BtQTjFqhKOL5376naiJLM96hIpvBawcPFGv
+X-Gm-Gg: ASbGncsR1PZc0PtAUfdmqFDT6KT+/8k0Y9Ms7INvdibkL95ux7YQTQ5FvApL/XOJleG
+	f24pz6xg0Q0ZzvbyXPBSyIIawJTqoMwyWcz34c9js/+Gbpq5Degsb8KoA8MhPpnEF9Fd4vo4heA
+	5NBwqC2lntutAGdmhh54LPUN4Xcr4YupObNSIkyySkRfIkjeLkstka6bLNU67z4xs3MLKuTvG/B
+	49fbOO4VTZ7CLhpB7EQ+Mf6Zle4IQ3YrVFHA0KIt5ZuZnMdsa1TTQ7oiAXNNqUW/bPTFAyfZiXN
+	tb2Lx8bIcbTRVm8I4a0vYAovCviBscJ5OtrdAtvJpg==
+X-Google-Smtp-Source: AGHT+IEk1a/o7E5nFPRynA4tKzjO97Pglf5ne9r4g+R9H1XPl6ea21/dzuWLNACGIfTAB9iVw9P43A==
+X-Received: by 2002:a05:600c:a4e:b0:43b:c95f:fd9 with SMTP id 5b1f17b1804b1-441b1f30682mr18772175e9.5.1746000046481;
+        Wed, 30 Apr 2025 01:00:46 -0700 (PDT)
+Received: from localhost ([194.120.133.25])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af2922sm15356535e9.17.2025.04.30.01.00.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 00:59:14 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:59:11 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Zhongkun He <hezhongkun.hzk@bytedance.com>
-Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, mhocko@suse.com,
-	yosry.ahmed@linux.dev, muchun.song@linux.dev, yuzhao@google.com,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 2/3] mm: add max swappiness arg to lru_gen for
- anonymous memory only
-Message-ID: <aBHYT27M1tRxNLRj@stanley.mountain>
-References: <cover.1744169302.git.hezhongkun.hzk@bytedance.com>
- <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
+        Wed, 30 Apr 2025 01:00:46 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-integrity@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] tpm: remove kmalloc failure error message
+Date: Wed, 30 Apr 2025 09:00:37 +0100
+Message-ID: <20250430080037.848396-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b3af3747daefa00177b48f4666780da58177f7c0.1744169302.git.hezhongkun.hzk@bytedance.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 09, 2025 at 03:06:19PM +0800, Zhongkun He wrote:
-> +		/* set by userspace for anonymous memory only */
-> +		if (!strncmp("max", swap_string, sizeof("max"))) {
+The kmalloc failure message is just noise. Remove it and
+replace -EFAULT with -ENOMEM as standard for out of memory
+allocation error returns.
 
-This pattern of strncmp("foo", str, sizeof("foo")) is exactly the same
-as strcmp().  It doesn't provide any additional security.  The strncmp()
-function is meant for matching string prefixes and it's a relatively
-common bug to do this:
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+---
 
-intended: if (strcmp(string, "prefix", sizeof("prefix") - 1) == 0) {
-  actual: if (strcmp(string, "prefix", sizeof("prefix")) == 0) {
+V1: remove trailing space after \n
+V2: remove entire message, originally just removed a trailing space
+V3: replace -EFAULT with -ENOMEM
 
-I have a static checker warning for these:
-https://lore.kernel.org/all/30210ed77b40b4b6629de659cb56b9ec7832c447.1744452787.git.dan.carpenter@linaro.org/
+---
+ drivers/char/tpm/eventlog/tpm1.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-If people deliberately misuse the function then it makes it trickier
-to tell accidental mistakes from deliberate mistakes.
-
-regards,
-dan carpenter
+diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
+index 12ee42a31c71..773e9e537991 100644
+--- a/drivers/char/tpm/eventlog/tpm1.c
++++ b/drivers/char/tpm/eventlog/tpm1.c
+@@ -257,11 +257,8 @@ static int tpm1_ascii_bios_measurements_show(struct seq_file *m, void *v)
+ 	    (unsigned char *)(v + sizeof(struct tcpa_event));
+ 
+ 	eventname = kmalloc(MAX_TEXT_EVENT, GFP_KERNEL);
+-	if (!eventname) {
+-		printk(KERN_ERR "%s: ERROR - No Memory for event name\n ",
+-		       __func__);
++	if (!eventname)
+ 		return -EFAULT;
+-	}
+ 
+ 	/* 1st: PCR */
+ 	seq_printf(m, "%2d ", do_endian_conversion(event->pcr_index));
+-- 
+2.49.0
 
