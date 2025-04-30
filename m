@@ -1,109 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41B3149DE8;
-	Wed, 30 Apr 2025 14:46:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA50224FA;
+	Wed, 30 Apr 2025 14:47:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024403; cv=none; b=jEF/NapnWpni0eW8lxLxZ42raL1cKnij5YZTuJLtG59/Wd8rOfdptDItYaeoQiBoTOG+brDzuIQ1sGzeon6/wsU7OpSbkjImROVcIRPgYOGv6CtguTCa5o3a3AXQ6LDPy8ChT8BgbWY0betgCIdngfFJkKcioi6Lm7QgoB04lfw=
+	t=1746024460; cv=none; b=qo4MBzzdSTyMsUVltzydvqmAGpFv9+bF5gA2cEuTIXj0C5Y3VH8XtmYAqfUOPLiFGsOPKTGIHQuZr+WAYbqXmw0PWbjM82rdrKYOTNsv+olut1XiFMWgrfwb55DN0WlY6o3H3VUy8K8yyvrGcDsK5Eh4jesgY8ULpFxeRmsFFvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024403; c=relaxed/simple;
-	bh=gJY5KpuGymBc06cwncC7Fx2bYurfhjxAo/SRBqouwtU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N221FsiWryTbyqZ1Zhfj2ygRCGzM+gBrC/5XgDvmqu97xy4EO8r209rSWyx+iPO1KeQo3huBIu06vZXJx1TaxHPPHWhVetkG8ycMWN+oj7osPFdA5DWmYw+rXtx6Zxz/F6c7OtxmMSH1EXsm4ctH57ASkU5DQpyqS3/v+5HraMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eNezmNMv; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746024460; c=relaxed/simple;
+	bh=8Kby3BF9Goa+u8k9qxOdZq2WO9DIL0NJjF87tLz5zeo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hw04bmd/m4CBSUQZgdrsqRV+Zbq6pQOGoeCuJW/CMb1q90kq1ZgUwrUz0zjjEVbmz7Ry+SrSIvlGazZVyg8fX+kXzHTks9qCkxaK7W8AIk1goq7uqLnFGhQGLQ+X7YCHebIsctPSj3MMGL5sAki6dx7be8/unJICpJHp8tuAva0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OF0GYw09; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eNezmNMv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746024402; x=1777560402;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=gJY5KpuGymBc06cwncC7Fx2bYurfhjxAo/SRBqouwtU=;
-  b=eNezmNMvLaauO5A6/wj8H1MBDLj/IZt1HiZxgctz3HLlPJBkvJeIIQZZ
-   m+OecX1QpqrSJBO/P6e74sCr9mt55qczKjgkaX4INRWRoKi4o+rcTvpTx
-   bCprQrn4Zu3M1d6QWk3fVjHJy7GUrFPCMs50ewarMoiSHvKhBGkgY94Lm
-   6K5PRRqVueFkxgPw1UytlJVDynkB3mbQmKjduQXVFHqa95r1WV8PmSGgT
-   TvZNLowqrjHtrT0/hkxtykE0y6ZT9qjKjwIGUHd85o3rJShLh6KScuqiy
-   Rz0RTOfZI/Jr+9hd4982hbWfIYRLWt3VjRIImJ8iZFP+hl9vHA3WpTW6l
-   g==;
-X-CSE-ConnectionGUID: D6ZfClphQq+48xxLSQQUCA==
-X-CSE-MsgGUID: S/Avg8K3Rxms+zM3VTeZRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="46933551"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="46933551"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 07:46:41 -0700
-X-CSE-ConnectionGUID: 2wrjLOIBRrGWeaAPg2HhCQ==
-X-CSE-MsgGUID: VwNQe1UnSdeD4loCSfEDKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="171374969"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa001.jf.intel.com with ESMTP; 30 Apr 2025 07:46:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 8BD6C9F; Wed, 30 Apr 2025 17:46:37 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Pavel Machek <pavel@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [rft, PATCH v2 1/1] PM: Don't use "proxy" headers
-Date: Wed, 30 Apr 2025 17:42:13 +0300
-Message-ID: <20250430144635.3714821-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OF0GYw09"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746024450;
+	bh=8Kby3BF9Goa+u8k9qxOdZq2WO9DIL0NJjF87tLz5zeo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OF0GYw09mwXW+/AF6xC9bMUzN2ywdOOiQkfxRpk7R8/ttoZhe3IGNKpbP0I4dPMGt
+	 ndet0ENHqF4TXoS+vskRGolwyrnEE+FwiwJx1MG2HCdM0wEDZ74Fr8EYp5ejNvviYk
+	 Xj+sG6RljlA51qNyywAS8EUJPbhESbF3mpiXL9136kVvjTY3hwgIqyTIVrq18Zscpm
+	 xtscdC88iGoNgOSGWgZhOETvcXNajHCCkawE6LQeo/+yj8ATAKNdz7yb6GxlLGT/ZT
+	 SMbcr0h651ImCTq9VS1kxyyA0MT3NsdUzgao/YHqRYHPHsMy5Lf0pkdH+Koh/N7Rg9
+	 8TSyXPhob+cfQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9F7E617E0630;
+	Wed, 30 Apr 2025 16:47:29 +0200 (CEST)
+Message-ID: <5a99252b-d251-4385-bf53-105262b821a4@collabora.com>
+Date: Wed, 30 Apr 2025 16:47:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] rtc: mt6359: Add mt6357 support
+To: Alexandre Mergnat <amergnat@baylibre.com>,
+ Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+Il 28/04/25 16:29, Alexandre Mergnat ha scritto:
+> The MT6357 PMIC contains the same RTC as MT6358 which allows to add
+> support for it trivially by just complementing the list of compatibles.
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
-
-v2: fixed obvious missing hrtimer_types.h include (LKP)
-
-It may fail some builds, let's wait for CIs to report any issues before
-applying this. But I also encourage to test it locally as much as possible.
-
- include/linux/pm.h | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/pm.h b/include/linux/pm.h
-index f0bd8fbae4f2..938b1b446a5d 100644
---- a/include/linux/pm.h
-+++ b/include/linux/pm.h
-@@ -8,14 +8,15 @@
- #ifndef _LINUX_PM_H
- #define _LINUX_PM_H
- 
--#include <linux/export.h>
--#include <linux/list.h>
--#include <linux/workqueue.h>
--#include <linux/spinlock.h>
--#include <linux/wait.h>
--#include <linux/timer.h>
--#include <linux/hrtimer.h>
- #include <linux/completion.h>
-+#include <linux/export.h>
-+#include <linux/hrtimer_types.h>
-+#include <linux/mutex.h>
-+#include <linux/spinlock.h>
-+#include <linux/types.h>
-+#include <linux/util_macros.h>
-+#include <linux/wait.h>
-+#include <linux/workqueue_types.h>
- 
- /*
-  * Callbacks for platform drivers to implement.
--- 
-2.47.2
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
