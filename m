@@ -1,166 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0C834545;
-	Wed, 30 Apr 2025 22:56:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 202DC34545;
+	Wed, 30 Apr 2025 22:58:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053806; cv=none; b=eY0f0Y/8IOiHEAcDe/gP/OaRyJmjjTgXUDvR7R6lJkoh9g8zzcr2hRPVP6rCsB8j/Yj1OR12YDVP0soDgAsPYLm01Uvw4u3VqKhhQuceJyAvYLjEAehsHgKB7ovz4E3dxhQgk6aVGdMyzcnAINr5ltsSk4K2CemeSSeB3HgJ4Ek=
+	t=1746053935; cv=none; b=ksoll7oFfURhOxSyQIf0Yr/TLpYt/hkxvcznz+7TRWgVYqHbz1l/p8JFQFDOn7EKFx+cfTNNKGHN5rQLQdRnkZkUj9Uj4mYGJ9IDhENIvFpMfzF2IrXB5sKlL0S9MvY/CWWqJCnDtAVzrtsVP7pIFtE1e1jzclMTAJpwMQ2MsR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053806; c=relaxed/simple;
-	bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=b8AoZ+6Or1m7ZAG5E3aRl/5fEcJzAeErDVFVQ4k8uHHAoKQ34RYX97ax5MzMOZhRet4lWUld5Eb1Xk60he/YMVe3o4qngTb6dAVnlRSK5eJeaaxkuBoqKDHGSZMpLBvGy+qhAYJm8ZdHRDNRuWq5RznAbhPYA69NkviwzZXzjtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=st1n5EdK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746053935; c=relaxed/simple;
+	bh=wiInPDhsaRQhzyjCvueGftRayfrzomVv/gP9R4/ohjw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SSdq5hAT+7HoduWxM67EiGJ0ehZqkjjH/pCZ1a9zIZN6fPyApRSV2DQpvFFoxLl3Mqc1mfvyLpO24CMTmer6OFD+LsmLUtFyVKG7kk5Pypd3tj2iC1Ch9VLE67XK2yOHjj6sTG7J16cdXyBdDXvkYU1SrFBHvgFj7z/98EQj+AE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvOZlYlO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="st1n5EdK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4B3C4CEE7;
-	Wed, 30 Apr 2025 22:56:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvOZlYlO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06E04C4CEE7;
+	Wed, 30 Apr 2025 22:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746053805;
-	bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
-	h=From:Date:Subject:To:Cc:From;
-	b=st1n5EdKTzbAv59cJyBOXTg0Q0iPY9+y3i960YA/MJWXOrQvrSaijF9qI6r1ilAbc
-	 wPiU0FIDcgJPYjthVJEl7s+D25rje3gX1QhcGxodsyyXkGido7CtD+PAZE+4F2odiy
-	 NUPg/VBA4JamlPJ7zc/oMKOW2m4ut1+COq7np61su6uEEe0bJJoxum53L3zbDJuLUv
-	 TxcVC0D5QvfPJ0Nj3AiF+RHnQmsWIAFwZcV59jVKJTbHXw2tNhyoItRBuQGY/o39U1
-	 VvBVr8en0slTY1A9hYAaD0ubV3pmR5ZTSaY4a92Pg3PjZALbb9ekAmjwiO1Df2Atdz
-	 zrNjTGlYgKEoQ==
-From: Nathan Chancellor <nathan@kernel.org>
-Date: Wed, 30 Apr 2025 15:56:34 -0700
-Subject: [PATCH] kbuild: Properly disable
- -Wunterminated-string-initialization for clang
+	s=k20201202; t=1746053934;
+	bh=wiInPDhsaRQhzyjCvueGftRayfrzomVv/gP9R4/ohjw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EvOZlYlOvx9FfiJWIxuWbBIFwPGJpc2hLl9EgmwstajH6zalh1O9gRhQKcM4gpcJm
+	 ex9kSULKUrzRrCkEzXWG95pfFatFpXTNpSFsaCSRxki27WPZA6VqSY4XbUWzPrwxUK
+	 qw810+1JLAWGPiCuYmIh8oo0R1aA03D/jP8s5unzgi/0yu30qLAf80D8KUxGYf5Q13
+	 NKjxyychXjrd30YE1+bMEvLwj4hV/0VmXDiUOL6p8/ZpzvM6xS2xqzXDfYzSe7O1ju
+	 mLnjXO5pL4al47OBlzs5QZqdrcK8iQKPGjhiNaabJSM09yInXE9mj/SpVXw0JlEhuP
+	 en+ScX72hvAaw==
+Date: Thu, 1 May 2025 07:58:50 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
+Message-ID: <aBKrKvYpCKWcoOGI@finisterre.sirena.org.uk>
+References: <20250429161051.743239894@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250430-unterminated-string-init-clang-v1-1-10eab729bf3d@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAKGqEmgC/x2N0QqCQBQFf0XucxdWzWj9lehB9GgH6ip3twjEf
- 2/pcWCY2SXBiSR9tYvjw8TVCtSnSsbHYAuUU2FpQtOFcxv0bRn+og0Zk6bstEVpzDo+i67XOHd
- Ai3iJkBLZHDO//8Htfhw/acc3T3AAAAA=
-X-Change-ID: 20250430-unterminated-string-init-clang-89f5ee3e969e
-To: Linus Torvalds <torvalds@linux-foundation.org>, 
- Masahiro Yamada <masahiroy@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>
-Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
- llvm@lists.linux.dev, Nathan Chancellor <nathan@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5056; i=nathan@kernel.org;
- h=from:subject:message-id; bh=/xOwbU5+ed/8fEvKgMPKKxMfTBakbgn8YBkdvdq0rso=;
- b=owGbwMvMwCUmm602sfCA1DTG02pJDBlCq9YILWpoi2qNWzFTt33fjwP9LOdFSqPcj+9492Qn1
- 7WGlz/vdJSyMIhxMciKKbJUP1Y9bmg45yzjjVOTYOawMoEMYeDiFICJhFkz/NORe/JZe8Gji116
- 76vtA86UnV927cq7q00VWbEy+k4SCi4M/50LjOUOOWRn8LpEbr7pmTb1tLVRZ6LmibBE9ufF/dP
- 7WQE=
-X-Developer-Key: i=nathan@kernel.org; a=openpgp;
- fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="O4i/hNuYEfmFpkoL"
+Content-Disposition: inline
+In-Reply-To: <20250429161051.743239894@linuxfoundation.org>
+X-Cookie: Well begun is half done.
 
-Clang and GCC have different behaviors around disabling warnings
-included in -Wall and -Wextra and the order in which flags are
-specified, which is exposed by clang's new support for
--Wunterminated-string-initialization.
 
-  $ cat test.c
-  const char foo[3] = "FOO";
-  const char bar[3] __attribute__((__nonstring__)) = "BAR";
+--O4i/hNuYEfmFpkoL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  $ clang -fsyntax-only -Wextra test.c
-  test.c:1:21: warning: initializer-string for character array is too long, array size is 3 but initializer has size 4 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
-      1 | const char foo[3] = "FOO";
-        |                     ^~~~~
-  $ clang -fsyntax-only -Wextra -Wno-unterminated-string-initialization test.c
-  $ clang -fsyntax-only -Wno-unterminated-string-initialization -Wextra test.c
-  test.c:1:21: warning: initializer-string for character array is too long, array size is 3 but initializer has size 4 (including the null terminating character); did you mean to use the 'nonstring' attribute? [-Wunterminated-string-initialization]
-      1 | const char foo[3] = "FOO";
-        |                     ^~~~~
+On Tue, Apr 29, 2025 at 06:41:48PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.1.136 release.
+> There are 167 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-  $ gcc -fsyntax-only -Wextra test.c
-  test.c:1:21: warning: initializer-string for array of ‘char’ truncates NUL terminator but destination lacks ‘nonstring’ attribute (4 chars into 3 available) [-Wunterminated-string-initialization]
-      1 | const char foo[3] = "FOO";
-        |                     ^~~~~
-  $ gcc -fsyntax-only -Wextra -Wno-unterminated-string-initialization test.c
-  $ gcc -fsyntax-only -Wno-unterminated-string-initialization -Wextra test.c
+This breaks NFS boot on the Raspberry Pi 3+, the same issue appears in
+5.15.  We don't appear to get any incoming traffic:
 
-Move -Wextra up right below -Wall in Makefile.extrawarn to ensure these
-flags are at the beginning of the warning options list. Move the couple
-of warning options that have been added to the main Makefile since
-commit e88ca24319e4 ("kbuild: consolidate warning flags in
-scripts/Makefile.extrawarn") to scripts/Makefile.extrawarn after -Wall /
--Wextra to ensure they get properly disabled for all compilers.
+  Begin: Waiting up to 180 secs for any network device to become available ... done.
+  IP-Config: enxb827eb57f534 hardware address b8:27:eb:57:f5:34 mt[   16.127316] lan78xx 1-1.1.1:1.0 enxb827eb57f534: Link is Down
+  u 1500 DHCP
+  [   16.840932] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): clkctl 0x50
+  IP-Config: no response after 2 secs - giving up
+  IP-Config: enxb827eb57f534 hardware address b8:27:eb:57:f5:34 mtu 1500 DHCP
 
-Fixes: 9d7a0577c9db ("gcc-15: disable '-Wunterminated-string-initialization' entirely for now")
-Link: https://github.com/llvm/llvm-project/issues/10359
-Signed-off-by: Nathan Chancellor <nathan@kernel.org>
----
-I am sending this to Linus since he added
--Wno-unterminated-string-initialization so it seems reasonable to take a
-fix for it but if it should just go via Masahiro's kbuild tree, that's
-fine as well.
----
- Makefile                   | 7 -------
- scripts/Makefile.extrawarn | 9 ++++++++-
- 2 files changed, 8 insertions(+), 8 deletions(-)
+There was a similar issue in mainline last release, I can't remember the
+exact fix though.
 
-diff --git a/Makefile b/Makefile
-index 5aa9ee52a765..94be5dfb81fb 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1052,13 +1052,6 @@ NOSTDINC_FLAGS += -nostdinc
- # perform bounds checking.
- KBUILD_CFLAGS += $(call cc-option, -fstrict-flex-arrays=3)
- 
--#Currently, disable -Wstringop-overflow for GCC 11, globally.
--KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-disable-warning, stringop-overflow)
--KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
--
--#Currently, disable -Wunterminated-string-initialization as broken
--KBUILD_CFLAGS += $(call cc-disable-warning, unterminated-string-initialization)
--
- # disable invalid "can't wrap" optimizations for signed / pointers
- KBUILD_CFLAGS	+= -fno-strict-overflow
- 
-diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-index 2d6e59561c9d..d88acdf40855 100644
---- a/scripts/Makefile.extrawarn
-+++ b/scripts/Makefile.extrawarn
-@@ -8,6 +8,7 @@
- 
- # Default set of warnings, always enabled
- KBUILD_CFLAGS += -Wall
-+KBUILD_CFLAGS += -Wextra
- KBUILD_CFLAGS += -Wundef
- KBUILD_CFLAGS += -Werror=implicit-function-declaration
- KBUILD_CFLAGS += -Werror=implicit-int
-@@ -56,6 +57,13 @@ KBUILD_CFLAGS += -Wno-pointer-sign
- # globally built with -Wcast-function-type.
- KBUILD_CFLAGS += $(call cc-option, -Wcast-function-type)
- 
-+# Currently, disable -Wstringop-overflow for GCC 11, globally.
-+KBUILD_CFLAGS-$(CONFIG_CC_NO_STRINGOP_OVERFLOW) += $(call cc-disable-warning, stringop-overflow)
-+KBUILD_CFLAGS-$(CONFIG_CC_STRINGOP_OVERFLOW) += $(call cc-option, -Wstringop-overflow)
-+
-+# Currently, disable -Wunterminated-string-initialization as broken
-+KBUILD_CFLAGS += $(call cc-disable-warning, unterminated-string-initialization)
-+
- # The allocators already balk at large sizes, so silence the compiler
- # warnings for bounds checks involving those possible values. While
- # -Wno-alloc-size-larger-than would normally be used here, earlier versions
-@@ -82,7 +90,6 @@ KBUILD_CFLAGS += $(call cc-option,-Werror=designated-init)
- # Warn if there is an enum types mismatch
- KBUILD_CFLAGS += $(call cc-option,-Wenum-conversion)
- 
--KBUILD_CFLAGS += -Wextra
- KBUILD_CFLAGS += -Wunused
- 
- #
+A bisect identifies "net: phy: microchip: force IRQ polling mode for
+lan88xx" as the problematic commit.
 
----
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-change-id: 20250430-unterminated-string-init-clang-89f5ee3e969e
+# bad: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] Linux 5.15.181-rc1
+# good: [f7347f4005727f3155551c0550f4deb9c40b56c2] Linux 5.15.180
+git bisect start 'c77e7bf5aa741c165e37394b3adb82bcb3cd9918' 'f7347f4005727f3155551c0550f4deb9c40b56c2'
+# test job: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] https://lava.sirena.org.uk/scheduler/job/1340356
+# bad: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] Linux 5.15.181-rc1
+git bisect bad c77e7bf5aa741c165e37394b3adb82bcb3cd9918
+# test job: [9599afaa6d1a303c39918a477f76fe8cc9534115] https://lava.sirena.org.uk/scheduler/job/1340569
+# good: [9599afaa6d1a303c39918a477f76fe8cc9534115] KVM: arm64: Always start with clearing SVE flag on load
+git bisect good 9599afaa6d1a303c39918a477f76fe8cc9534115
+# test job: [714307f60a32bfc44a0767e9b0fc66a841d2b8f6] https://lava.sirena.org.uk/scheduler/job/1340691
+# good: [714307f60a32bfc44a0767e9b0fc66a841d2b8f6] kmsan: disable strscpy() optimization under KMSAN
+git bisect good 714307f60a32bfc44a0767e9b0fc66a841d2b8f6
+# test job: [db8fb490436bd100da815da4e775b51b01e42df2] https://lava.sirena.org.uk/scheduler/job/1341008
+# bad: [db8fb490436bd100da815da4e775b51b01e42df2] s390/sclp: Add check for get_zeroed_page()
+git bisect bad db8fb490436bd100da815da4e775b51b01e42df2
+# test job: [4757e8122001124752d7854bec726a61c60ae36a] https://lava.sirena.org.uk/scheduler/job/1341258
+# bad: [4757e8122001124752d7854bec726a61c60ae36a] USB: storage: quirk for ADATA Portable HDD CH94
+git bisect bad 4757e8122001124752d7854bec726a61c60ae36a
+# test job: [1f079f1c5fcf13295fc1b583268cc53c80492cfb] https://lava.sirena.org.uk/scheduler/job/1341360
+# good: [1f079f1c5fcf13295fc1b583268cc53c80492cfb] tipc: fix NULL pointer dereference in tipc_mon_reinit_self()
+git bisect good 1f079f1c5fcf13295fc1b583268cc53c80492cfb
+# test job: [cee5176a98accc550585680213f71d1d307a2e9a] https://lava.sirena.org.uk/scheduler/job/1341449
+# good: [cee5176a98accc550585680213f71d1d307a2e9a] virtio_console: fix missing byte order handling for cols and rows
+git bisect good cee5176a98accc550585680213f71d1d307a2e9a
+# test job: [5e9fff164f2e60ade9282ee30ad3293eb6312f0e] https://lava.sirena.org.uk/scheduler/job/1341692
+# bad: [5e9fff164f2e60ade9282ee30ad3293eb6312f0e] drm/amd/display: Fix gpu reset in multidisplay config
+git bisect bad 5e9fff164f2e60ade9282ee30ad3293eb6312f0e
+# test job: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] https://lava.sirena.org.uk/scheduler/job/1341795
+# bad: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] net: phy: microchip: force IRQ polling mode for lan88xx
+git bisect bad ecc30d7f041daf7de7d0d554ebeeaec1a0870e53
+# test job: [40dc7515d0b13057d576610a8dd23ccb42d4259f] https://lava.sirena.org.uk/scheduler/job/1341924
+# good: [40dc7515d0b13057d576610a8dd23ccb42d4259f] net: selftests: initialize TCP header and skb payload with zero
+git bisect good 40dc7515d0b13057d576610a8dd23ccb42d4259f
+# first bad commit: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] net: phy: microchip: force IRQ polling mode for lan88xx
 
-Best regards,
--- 
-Nathan Chancellor <nathan@kernel.org>
+--O4i/hNuYEfmFpkoL
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgSqycACgkQJNaLcl1U
+h9D5Bwf9EeXIvXszO1tBDS/6cWnKGy4O2RYhYlouW/pMJCgi74GrRcTl1zHpdPoW
+jVRZcDg9d+y43v47B4i+PYE3vKqZV0VSFIGudhEirrHHoSySuHBjqrZWbGRAoR9S
+Z6vYCJgMK2VAbwnbKbKNSf+GLmbu/gJliqtFAKsN9PKmkzeaIE/wMDaP+sqV/ZVU
+2Bha9utW7nHI4txcGLSH/uTUvxojGPqxxh5C/WpOgV8UkaB8yO4LsAZtgCgSGGNV
+PwbjSclnlBqJfY7F01SyhDMHOBe8VlAO0BaupEoJcgJ9krMGmn7HADuX+VHdIR3T
+gbZo6A/82+EV1R8HNnVICtnZDtv5mQ==
+=57/T
+-----END PGP SIGNATURE-----
+
+--O4i/hNuYEfmFpkoL--
