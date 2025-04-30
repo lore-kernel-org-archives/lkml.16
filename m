@@ -1,161 +1,239 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59DBE1E47CA
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:18:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D1410F1
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:19:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745993903; cv=none; b=ijZKfyfVNI6sPLbd/uCIROwlwrZ6jnjjz8+5PK0h/v1xHg90imzR18IfMg8BHO11FL+cTnt1LlI0c6v6z2Y6PaRVNm746JmYHY9adwcGRAGwDzZ8ucflhtxidl2HzM3b2vfht24DG+K3ZYQgPnZzIQFrYFWI3VIyZwA9cO02hFk=
+	t=1745993951; cv=none; b=XvN86k3Jv4ijfC+GQny9NLmpxBlO5iIrTQl05dEjZcbaLd9ejTulY6JmitwuEKznkom+9DZbr9XgSByFNny570uXtk2DR9c7PwuRdBxMv0Moh+zKf5BzerVlhMJWvlrh1kDbXhr1nrRVdoCqpSwrYoUkqSXStuzdumQrm/Ggr2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745993903; c=relaxed/simple;
-	bh=PYkZX74d10lvPGrseB5FE9s3+bTtnF0aDOcSfLFSv0w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=owvjqyMBs09I4QPqMt1wQDwG6RSsBeptu3nr+B9Pul+BvuKIPFcI2WJN+3j58JpPg0JWgmlPevtWT2IQk+fii3t1IH6/B0ThtiTK/3Lyng/6I4iSaLAlhKiW5Ast8+y/0JVCVzVGXWckP3voZyaV0+FxNtq6hnJfR3ItwRyiwX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e9g9fz2r; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745993951; c=relaxed/simple;
+	bh=jL8xvh7MmkitMTTRNILqXKDjV0N1bxWKo2Q8EiScK1Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=czT5KovyMrOPFZ2mADf0ogiWXVxHTralYLuwkS21HdZH8tx5FSnaTo01Ky509RkalKg+0aTe0yBJ0qx8gr6xtynUTO+iNByu2GHeyxGHp4Y1Q1y2y/ESoLTGHSqKCta4PFmi6YRL/LTWWjqGXeW4vM78prRN29Gk0zJnqlGP7Qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y5ReXdpY; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e9g9fz2r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745993901; x=1777529901;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PYkZX74d10lvPGrseB5FE9s3+bTtnF0aDOcSfLFSv0w=;
-  b=e9g9fz2rvJJQVwFQma6mHkmrz1PnzcuTnS6nDoFp1y/88OjIU5+9f7hR
-   tmAllqCy6i9SHpyWP/68kE1fZwKfkxpGURLaOckwPL/RiqgieiyxiO5Xj
-   Bvu9hdgP85uJytHPdguyWGBZ/3bkDEf/Ms2MYv38AmaNZstgk6vilisVu
-   2jL6FOUWUrK0ML8IjhEq558T0cU8Qw6ztL1nBFSQo6/nwp5j1scIEh6qa
-   okdS04iugaEUS10C7aW2BQfao00It+GYazsXrMbrpyLW2jdGliW5sT90J
-   TTgPEVLvcgKqqKMSdSqIi3IMSzf1fK8yTo1owqFqD3C+paUEWS2PgjOZK
-   A==;
-X-CSE-ConnectionGUID: tTWo+yBnQtyzhsXRqp18KA==
-X-CSE-MsgGUID: 45hUh6FORByMjRQZZPLlZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47521357"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="47521357"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 23:18:20 -0700
-X-CSE-ConnectionGUID: JZDNPxd7Si6aYG0rC+r71w==
-X-CSE-MsgGUID: v1JASB2zTtuddJoWKG34Iw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="133929263"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa006.jf.intel.com with ESMTP; 29 Apr 2025 23:18:12 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uA0lm-0003Dv-0B;
-	Wed, 30 Apr 2025 06:18:10 +0000
-Date: Wed, 30 Apr 2025 14:17:42 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	ryan.roberts@arm.com, david@redhat.com, willy@infradead.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-	catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
-	anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
-	ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
-	quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
-	yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-	namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
-	ziy@nvidia.com, Dev Jain <dev.jain@arm.com>
-Subject: Re: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
-Message-ID: <202504301306.AU2G1yvg-lkp@intel.com>
-References: <20250429052336.18912-7-dev.jain@arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y5ReXdpY"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cee550af2so4670205e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 23:19:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1745993947; x=1746598747; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=F/IL0XFmHPKxoC9j8t7metTTcJtVydc7qbX+iUPXrhg=;
+        b=y5ReXdpYq/EtyCImuzDwATPZXNHJDr6ntVi7ljKUuzEa73l7Ds7nyLyGTw7R2rLRBD
+         hc/ssxdR4GXtgk5xXMLmZxkS4dEV+gSG+q7CP/i4G72TRcqgMMT+Xt7VrWDlr13FLw09
+         q/WalHJ2Cbm5KQnW8XJkeJB9p3BNchlRO9okEAuzCW5xPyfqOfBv+c7Rw3ns/BaVTyp9
+         YkMoySomRrWhTXtheZjP5aCMdXMcLT+hcOD3zZ1gIGtDSX82ji5BzNiGvPuC8CcvUWQx
+         0z1j88F/bHjmlBYrsVEYmSXbkwo/rAtFG0pn2nb/OTyKYezHWfxpj8CLyZmf1iFyp0Np
+         5llw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745993947; x=1746598747;
+        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
+         :from:references:cc:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=F/IL0XFmHPKxoC9j8t7metTTcJtVydc7qbX+iUPXrhg=;
+        b=cmZbeTwTrsoSZZDMlVi7F5fwWPoaesMGZ4DwQ21WJJxcVFbegjhlPcMfwq1g8MjxNJ
+         8PgnoHpd32Bs94DsCk1pf50J4DJFc7/ZDNrr9S6zEhuBFN1xI+aMWVw8XdDpiLM4DMNc
+         KQBZ9ltvk1e9TXbG04g5WYB1InSK0cMKkTpmH2onHHb9xF8+V46PDtfzhXtW8DoPQmeZ
+         mdaPQoEdaOxbU0Pe51bmlMMZE2VmEtg0vZV8wadvLbLCKXf5MNZOdvcU6ppAckz1YmZi
+         yWN3zQ+KPImY0QNIdhksfl/FKne8+/OvYUA9L3Z4MugYelw+gCbQMkpizzRu3EQQgZb/
+         1oTg==
+X-Forwarded-Encrypted: i=1; AJvYcCUzy0y8/AAxTCftZg2wL2SyVRGaAB/8Jp1kjl6sJCgSorP4pLEuoI4hKJRCrQm4bJaOz7wHuqYIlZ2rofc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPQIucpbSdGWaB6ehAzbrqkbNXn99usO8WHntBMUoMUyo70uav
+	4Iotwd5OluxBoZwl4CHDDb6SqtftmKjvh3OTKMxBfVHUkyDt+SybaWltpqfG9Cw=
+X-Gm-Gg: ASbGncsKCJnx/JpFuy5TkHOlWe+kayz6SJoblaM5biz8Kmpx0w/8DtQbjjihNA/CVc9
+	6fUut29YfTXb0wn2T9qZdb/NE9L79T2w5912XVJpn8SYn25cxm7e8uB4vwOMGII6s6VEVbYoFBx
+	Z5FNktcGiP2/3rBcEu5C7tw90nFUi8qxMVoCMjC3bQAjZA7UM5XE4mmfMk5aIIfkhZ1QYuFEazI
+	kz2TCc+FiV4hKzWdXwhTBv5Ly0rS9lFhg7ecdv2NttLFXrmMJvKBKBYvub9dHLjxoubKevorfwj
+	c2dg5Q43kvLU6/tRNwFmR+klna/DEKlpPKZW2+bR09jAiX6IY7GHB7UMv+A=
+X-Google-Smtp-Source: AGHT+IGwlSSk/V975d/cid6eJ9/Q9UkNNxcjOHYawcjiK6gUy1kVrfYZq/K4ZlmgsJ8PDkUnk3LTDQ==
+X-Received: by 2002:a5d:5f81:0:b0:3a0:6868:8b13 with SMTP id ffacd0b85a97d-3a08ff57663mr348272f8f.1.1745993947391;
+        Tue, 29 Apr 2025 23:19:07 -0700 (PDT)
+Received: from [192.168.1.28] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46976sm16110911f8f.63.2025.04.29.23.19.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 29 Apr 2025 23:19:06 -0700 (PDT)
+Message-ID: <0e007f7f-d9ff-4b2d-914d-ad62b9983bba@linaro.org>
+Date: Wed, 30 Apr 2025 08:19:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429052336.18912-7-dev.jain@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sm8750-mtp: Add sound (speakers,
+ headset codec, dmics)
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250424-sm8750-audio-part-2-v1-0-50133a0ec35f@linaro.org>
+ <20250424-sm8750-audio-part-2-v1-2-50133a0ec35f@linaro.org>
+ <dd271e8c-e430-4e6d-88ca-95eabe61ce94@oss.qualcomm.com>
+ <e61e17ca-fed7-4712-96fc-a9a2339de1fb@linaro.org>
+ <9b6c5f67-0bbc-490f-9982-4e28218aa6eb@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <9b6c5f67-0bbc-490f-9982-4e28218aa6eb@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Dev,
+On 29/04/2025 21:11, Konrad Dybcio wrote:
+> On 4/28/25 4:41 PM, Krzysztof Kozlowski wrote:
+>> On 25/04/2025 11:30, Konrad Dybcio wrote:
+>>> On 4/24/25 11:40 AM, Krzysztof Kozlowski wrote:
+>>>> Add device nodes for most of the sound support - WSA883x smart speakers,
+>>>> WCD9395 audio codec (headset) and sound card - which allows sound
+>>>> playback via speakers and recording via DMIC microphones.  Changes bring
+>>>> necessary foundation for headset playback/recording via USB, but that
+>>>> part is not yet ready.
+>>>>
+>>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>> ---
+>>>
+>>> [...]
+>>>
+>>>> +	sound {
+>>>> +		compatible = "qcom,sm8750-sndcard", "qcom,sm8450-sndcard";
+>>>> +		model = "SM8750-MTP";
+>>>> +		audio-routing = "SpkrLeft IN", "WSA_SPK1 OUT",
+>>>> +				"SpkrRight IN", "WSA_SPK2 OUT",
+>>>> +				"IN1_HPHL", "HPHL_OUT",
+>>>> +				"IN2_HPHR", "HPHR_OUT",
+>>>> +				"AMIC2", "MIC BIAS2",
+>>>> +				"VA DMIC0", "MIC BIAS3", /* MIC4 on schematics */
+>>>> +				"VA DMIC1", "MIC BIAS3", /* MIC1 on schematics */
+>>>
+>>> Is this a mistake in what the codec driver exposes, or just a fumble
+>>> in numbering $somewhere?
+>>
+>> Which mistake? MIC4? Schematics call name things differently. They
+>> always were, so to make it clear for people without schematics I wrote
+>> which MIC it actually is.
+> 
+> I'm not sure how to parse your response
+> 
+> are you saying that there are MIC[0..4] that are/may be connected
+> to different codec ports, and that the MIC4/1 lines are plumbed to
+> VA DMIC0/1 respectively?
 
-kernel test robot noticed the following build warnings:
+Yes, as always. Nothing weird here.
 
-[auto build test WARNING on akpm-mm/mm-everything]
-[also build test WARNING on arm64/for-next/core linus/master v6.15-rc4 next-20250429]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> I think I got confused about the MIC BIAS3 going to both and none
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dev-Jain/mm-Refactor-code-in-mprotect/20250429-133151
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250429052336.18912-7-dev.jain%40arm.com
-patch subject: [PATCH v2 6/7] mm: Batch around can_change_pte_writable()
-config: arm64-randconfig-002-20250430 (https://download.01.org/0day-ci/archive/20250430/202504301306.AU2G1yvg-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250430/202504301306.AU2G1yvg-lkp@intel.com/reproduce)
+What is both and none?
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504301306.AU2G1yvg-lkp@intel.com/
+> matching the index, but perhaps that's just because it comes from
+> the WCD (which is the third piece of hw involved beyond VA and the
+> mic itself)
 
-All warnings (new ones prefixed by >>):
+Again, what is the mistake you are pointing here?
 
->> mm/mprotect.c:46:15: warning: unused variable 'page' [-Wunused-variable]
-      46 |         struct page *page;
-         |                      ^~~~
-   mm/mprotect.c:226:51: error: use of undeclared identifier 'folio'
-     226 |                             can_change_ptes_writable(vma, addr, ptent, folio, 1))
-         |                                                                        ^
-   1 warning and 1 error generated.
+> 
+>>
+>>>
+>>>> +				"VA DMIC2", "MIC BIAS1",
+>>>> +				"VA DMIC3", "MIC BIAS1",
+>>>> +				"VA DMIC0", "VA MIC BIAS3",
+>>>> +				"VA DMIC1", "VA MIC BIAS3",
+>>>> +				"VA DMIC2", "VA MIC BIAS1",
+>>>> +				"VA DMIC3", "VA MIC BIAS1",
+>>>> +				"TX SWR_INPUT1", "ADC2_OUTPUT";
+>>>> +
+>>>> +		wcd-playback-dai-link {
+>>>> +			link-name = "WCD Playback";
+>>>> +
+>>>> +			cpu {
+>>>> +				sound-dai = <&q6apmbedai RX_CODEC_DMA_RX_0>;
+>>>> +			};
+>>>> +
+>>>> +			codec {
+>>>
+>>> 'co'dec < 'cp'u
+>>>
+>>> [...]
+>>
+>> That was the convention so far, but we can start a new one, sure. Just
+>> ask the same all other patch contributors, because each of them will be
+>> copying old code, which means cpu->codec->platform
+> 
+> I've been doing just that for the past couple weeks indeed
+> 
+>>>> +		/*
+>>>> +		 * WCD9395 RX Port 1 (HPH_L/R)      <=> SWR1 Port 1 (HPH_L/R)
+>>>> +		 * WCD9395 RX Port 2 (CLSH)         <=> SWR1 Port 2 (CLSH)
+>>>> +		 * WCD9395 RX Port 3 (COMP_L/R)     <=> SWR1 Port 3 (COMP_L/R)
+>>>> +		 * WCD9395 RX Port 4 (LO)           <=> SWR1 Port 4 (LO)
+>>>> +		 * WCD9395 RX Port 5 (DSD_L/R)      <=> SWR1 Port 5 (DSD_L/R)
+>>>> +		 * WCD9395 RX Port 6 (HIFI_PCM_L/R) <=> SWR1 Port 9 (HIFI_PCM_L/R)
+>>>> +		 */
+>>>> +		qcom,rx-port-mapping = <1 2 3 4 5 9>;
+>>>
+>>> Does this deserve some dt-bindings constants?
+>>
+>> No, because these are hardware details/constants. Drivers do not use them.
+> 
+> I'd argue it makes sense here - it makes more sense to pass meaningfully
+> named constants to the driver, rather than blobs with a comment
+
+Sense of what? You want to make it a binding then answer what does it
+bind, what part of ABI for driver is here a binding (answer none:
+because driver does not use it)?
 
 
-vim +/page +46 mm/mprotect.c
 
-36f881883c5794 Kirill A. Shutemov 2015-06-24  42  
-695112a1385b39 Dev Jain           2025-04-29  43  bool can_change_ptes_writable(struct vm_area_struct *vma, unsigned long addr,
-695112a1385b39 Dev Jain           2025-04-29  44  			      pte_t pte, struct folio *folio, unsigned int nr)
-64fe24a3e05e5f David Hildenbrand  2022-06-14  45  {
-64fe24a3e05e5f David Hildenbrand  2022-06-14 @46  	struct page *page;
-64fe24a3e05e5f David Hildenbrand  2022-06-14  47  
-7ea7e333842ed5 David Hildenbrand  2022-11-08  48  	if (WARN_ON_ONCE(!(vma->vm_flags & VM_WRITE)))
-7ea7e333842ed5 David Hildenbrand  2022-11-08  49  		return false;
-64fe24a3e05e5f David Hildenbrand  2022-06-14  50  
-7ea7e333842ed5 David Hildenbrand  2022-11-08  51  	/* Don't touch entries that are not even readable. */
-d84887739d5c98 Nadav Amit         2022-11-08  52  	if (pte_protnone(pte))
-64fe24a3e05e5f David Hildenbrand  2022-06-14  53  		return false;
-64fe24a3e05e5f David Hildenbrand  2022-06-14  54  
-64fe24a3e05e5f David Hildenbrand  2022-06-14  55  	/* Do we need write faults for softdirty tracking? */
-f38ee285191813 Barry Song         2024-06-08  56  	if (pte_needs_soft_dirty_wp(vma, pte))
-64fe24a3e05e5f David Hildenbrand  2022-06-14  57  		return false;
-64fe24a3e05e5f David Hildenbrand  2022-06-14  58  
-64fe24a3e05e5f David Hildenbrand  2022-06-14  59  	/* Do we need write faults for uffd-wp tracking? */
-64fe24a3e05e5f David Hildenbrand  2022-06-14  60  	if (userfaultfd_pte_wp(vma, pte))
-64fe24a3e05e5f David Hildenbrand  2022-06-14  61  		return false;
-64fe24a3e05e5f David Hildenbrand  2022-06-14  62  
-64fe24a3e05e5f David Hildenbrand  2022-06-14  63  	if (!(vma->vm_flags & VM_SHARED)) {
-64fe24a3e05e5f David Hildenbrand  2022-06-14  64  		/*
-7ea7e333842ed5 David Hildenbrand  2022-11-08  65  		 * Writable MAP_PRIVATE mapping: We can only special-case on
-7ea7e333842ed5 David Hildenbrand  2022-11-08  66  		 * exclusive anonymous pages, because we know that our
-7ea7e333842ed5 David Hildenbrand  2022-11-08  67  		 * write-fault handler similarly would map them writable without
-7ea7e333842ed5 David Hildenbrand  2022-11-08  68  		 * any additional checks while holding the PT lock.
-64fe24a3e05e5f David Hildenbrand  2022-06-14  69  		 */
-695112a1385b39 Dev Jain           2025-04-29  70  		if (!folio)
-695112a1385b39 Dev Jain           2025-04-29  71  			folio = vm_normal_folio(vma, addr, pte);
-695112a1385b39 Dev Jain           2025-04-29  72  		return folio_test_anon(folio) && !folio_maybe_mapped_shared(folio);
-64fe24a3e05e5f David Hildenbrand  2022-06-14  73  	}
-64fe24a3e05e5f David Hildenbrand  2022-06-14  74  
-fce831c92092ad David Hildenbrand  2024-05-22  75  	VM_WARN_ON_ONCE(is_zero_pfn(pte_pfn(pte)) && pte_dirty(pte));
-fce831c92092ad David Hildenbrand  2024-05-22  76  
-7ea7e333842ed5 David Hildenbrand  2022-11-08  77  	/*
-7ea7e333842ed5 David Hildenbrand  2022-11-08  78  	 * Writable MAP_SHARED mapping: "clean" might indicate that the FS still
-7ea7e333842ed5 David Hildenbrand  2022-11-08  79  	 * needs a real write-fault for writenotify
-7ea7e333842ed5 David Hildenbrand  2022-11-08  80  	 * (see vma_wants_writenotify()). If "dirty", the assumption is that the
-7ea7e333842ed5 David Hildenbrand  2022-11-08  81  	 * FS was already notified and we can simply mark the PTE writable
-7ea7e333842ed5 David Hildenbrand  2022-11-08  82  	 * just like the write-fault handler would do.
-7ea7e333842ed5 David Hildenbrand  2022-11-08  83  	 */
-d84887739d5c98 Nadav Amit         2022-11-08  84  	return pte_dirty(pte);
-64fe24a3e05e5f David Hildenbrand  2022-06-14  85  }
-64fe24a3e05e5f David Hildenbrand  2022-06-14  86  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
