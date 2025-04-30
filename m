@@ -1,55 +1,55 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14321262807
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 119CC283FFA
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035499; cv=none; b=h1tiU6qVmwZxPFptm8oGgb9EWaWY54N7zRyK3fjq1a8e0LkbWIXL7mxcxZFp/n9WDsHSNIP8DpEZM+Cjgzce6pOUoXz3dkXCAhDRnQw+mIHcC5DWfLcLMgiDQBdWU0LQzaP9zmMJiaNRyyRKTaBzISpJa4XaEOEDXNAYBo4rhLE=
+	t=1746035499; cv=none; b=JRaW8Ai/aKWwsq/9kYUDWdFiJ5rFNcLn/2ZE51JGPT8tDRQnhynazvSLCsyRfnHd42Bb1pHdh0yGia6FFpslsyefjwmSRLCnF56QKcjLnU2DovpDvQIcH07VyB2752KvjocHRnjeHdONUACu+bEaJ/s+hxRPu2kMm1DGo2qx41I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746035499; c=relaxed/simple;
-	bh=sCPbQWpl2KULh3E4LCAV0bh/JHaMSP/NP3ql5s1b1Do=;
+	bh=gL0JsppexHfLgdpL9ybInupf5ODZNlBh95n4agspux4=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uTdtF/G35vRCe2c0nmWlj/6Tom4V+gnc1DqhmPWb08MIRme3KRvSTGE5gukfxxchGrGmFUNCdelGhpjasp+klFLWR/CFu5QHj0o7MdwxyV5RaZJ6jN1BKTPqX5yjt+Bx2qdhWMWtReXmr6kvdskyLDm5wEVGq5+ibWDRknfn+1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QgMt7Vlr; arc=none smtp.client-ip=209.85.210.201
+	 To:Cc:Content-Type; b=mlUOB3yPG2NC5M6E431/p3ywfQduAX7uoWAbOilfIR0d1Pl+dv83Gj7L3UPTa8btxhzkAzAlbuuEgu9pFi6BMd8rVMup328WE3vQozBFGhVjL3sQTDew2S7dkO6lAFMp4lrwl7mGHkXihIhZsJ+LuHnfpDNHqca5r65R3rSylvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DIVEqSQe; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QgMt7Vlr"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-736abba8c5cso202437b3a.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DIVEqSQe"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30a0a8ddcc4so159117a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035497; x=1746640297; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035495; x=1746640295; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9+mjbfIpVuolnm3GMooUNSg/0jE5LZYACjxU5MzkWs=;
-        b=QgMt7Vlrr9t0pbtgCFiyn29njbVX9B8DaeHWlVhUcKHrHXeHrBolpLnVNC3gkb1LAD
-         CHwW4ehCxFZTfHPAT1zNn59omhoQKL48zspFNxsqyVmRutVfyvcW1nx0ZysaDwStWoPf
-         TtVUMnRqhFSqJPQXwrQ1ax7/9s9MlEZdCNElxqKIVvkz6DF3aLTYigpPD/38MOv0Wu1a
-         eygNBSENKTlOudjo8U53Ax3wLvmfGx4GxWbVjhSZM113SgTYm22IFHaMcQ0Rw1MzAO2x
-         m/sVUHRxpyeczkA/PlB1ewuqTjP/5DUSdgAqlDxwVETGzAZ+R9ghCKLs49cR2L4Nx3Lz
-         P97g==
+        bh=wAvYWpruCaKSQi/0IJYatNgrngaahUPrm34T+oxODBg=;
+        b=DIVEqSQex2JJUwxW2WAAt8kT9M+jaEvSC7b82tpvjEUy8ESU2TShtzrT7w4F3AEPTS
+         VZf8wJRs/n1PNeGINYBP37C5C+SNeaVVSWA8PRRXNcwdmKkL2K5WiitgeqB0M80rhVwL
+         YfL8oa9p1BcQC/jAYUHeFv+xs6EKqAcZW5vuDNMWv72HH9PD680kLRESJwSknTgLEKOP
+         YsoqXhyKMuccRPGiRnMZSiISEapvmOS+hLziVxZtQFxEaI+66RZzwuyxsO63Z3KNcqQh
+         /hX6apcB+Rlkw9l0eVCeqAeQ7T1cjccig17KyHNraqrqwVzXLXjNkhys6uwKH8pc5Qks
+         DFoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035497; x=1746640297;
+        d=1e100.net; s=20230601; t=1746035495; x=1746640295;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l9+mjbfIpVuolnm3GMooUNSg/0jE5LZYACjxU5MzkWs=;
-        b=Vu6tW8UBvxPqphMoEmcBJrgD4Lnn1J4iPwMpZ082VN8141hBTUWC2GjnpPYUom8orq
-         Xc/T/D+wyd1W/URqADhnhmpg5AhWoZ/a/THnkmuABChkvTJCQMwJOBbzzX3QkTaNSojD
-         GR/KNd1A105eJQRpOJMCkXVsTmiGPn/14Nx+sRe8+3xuGls5+rO1TlL3nR6Qb4DN4pLs
-         L/9jDWVtaEytzEUDciS/BN/0DEAQ7MVrueAtP3r7fZxd5aQZiaxDpJZa6mhRVpX8u/F2
-         P3SkP/9lx4AgiRQUo/aWYlV71rI2ubF1Devh8FZaEW3ylT0GQNdbUXDywijPcdSG06fX
-         PIjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXaQYtoY6P6ApzfO1sqrNa7AJFAUFVnYUyQxVZ/SDnv5XFVh0lxHNy9VovTiSwIOdfiYjH9z+Kj0ID23cI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YygQKTzMuniCxa5OjPHXVOj4gNh+02zZ7fMnLxSIPiBECXtulxc
-	QSQeyKsrkH7BZn/uSyB5My9OPcZ26cy5347Cd2Mck6vT1/DpwqcTf10jiHjG6K5vAGyr1/W4vvW
-	n+RofOw==
-X-Google-Smtp-Source: AGHT+IHpf31xgCUhp/bSgmJMIP3K05vEfqw1PLaxr//TR346O2GAWFitRRWNuL9GJdbLUJ5lR6UpoSDbOexs
-X-Received: from pfbhc7.prod.google.com ([2002:a05:6a00:6507:b0:736:5012:3564])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:14d1:b0:736:562b:9a9c
- with SMTP id d2e1a72fcca58-74038a9295fmr5722381b3a.18.1746035497149; Wed, 30
- Apr 2025 10:51:37 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:50:08 -0700
+        bh=wAvYWpruCaKSQi/0IJYatNgrngaahUPrm34T+oxODBg=;
+        b=Om6CKjiG5fjG/hVNl7FUfil502wDLLRiAKyQILCk5rdXS5oYjphK/SqZMKxdw8H+N2
+         /qlX9kKbgBVH4NHj40MTjle4dAMEJNvYEQnZUJxs4j2ZsuTbta7mpXehyG/3HTrCU9Pk
+         mMeIa2lHjbYEmS4W1Y3zNbmQsSgDiz841Ec4eT6eAfFUNPIdaSP0sOFG3VzAId73gyRT
+         EVeVxeKX5KmugBqnQOC3JWvMkrpomhXFsKEnS2+q/QvSP1Jqtfl2mh1ZIQfIyQcT4GrR
+         Ng8gzNdyPwOR1YqemCA8gfMV7zNATmfQg6SZv5U0aI7z0SSIq36oqhH00tnds/uaqMrL
+         gIGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWtzGq0K1m1r0TZE/xFPYwHtJCxsiDmzwW0PFG9orh2ebueGNy8kml1RKhsE9eT/kheqzdyXSVf7zAqUHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxYCWQoo7Tpse8rVjTQvNZNmfjnoT6MARPmIZiHdHHLGgaduQp
+	ym3NLejUT+HyrOCImgTSHmRvH1KaHCKWeh+v023hcU+qxWnWxxluTfutN8uwd0XQnb26Iw1wSgu
+	uIL+DdQ==
+X-Google-Smtp-Source: AGHT+IFLW87NChKUpuru729ez+YTzQQPQ1zJZuAFZHyKX2/vqO6EiFywYU4NMbFp9eXaY3WEpeUQyVtWJ+aZ
+X-Received: from pjbst3.prod.google.com ([2002:a17:90b:1fc3:b0:301:4260:4d23])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:288a:b0:2fe:80cb:ac05
+ with SMTP id 98e67ed59e1d1-30a332f75fcmr6116198a91.9.1746035495170; Wed, 30
+ Apr 2025 10:51:35 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:50:07 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-21-irogers@google.com>
-Subject: [PATCH v2 20/47] perf dlfilter: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-20-irogers@google.com>
+Subject: [PATCH v2 19/47] perf stat: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -116,64 +116,147 @@ truncation explicit.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/dlfilters/dlfilter-test-api-v0.c |  4 ++--
- tools/perf/util/dlfilter.c                  | 10 +++++-----
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ tools/perf/builtin-stat.c      |  6 +++---
+ tools/perf/util/metricgroup.c  | 15 +++++++--------
+ tools/perf/util/stat-display.c | 10 +++++-----
+ 3 files changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/dlfilters/dlfilter-test-api-v0.c b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-index 4ca2d7b2ea6c..bf2a1a7b3c71 100644
---- a/tools/perf/dlfilters/dlfilter-test-api-v0.c
-+++ b/tools/perf/dlfilters/dlfilter-test-api-v0.c
-@@ -166,10 +166,10 @@ int start(void **data, void *ctx)
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 300b6393bb41..8c6bf194bba0 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -831,7 +831,7 @@ static int __run_perf_stat(int argc, const char **argv, int run_idx)
  
- 	CHECK(dlargc == 6);
- 	CHECK(!strcmp(dlargv[0], "first"));
--	verbose = strtol(dlargv[1], NULL, 0);
-+	verbose = (int)strtol(dlargv[1], NULL, 0);
- 	d->ip = strtoull(dlargv[2], NULL, 0);
- 	d->addr = strtoull(dlargv[3], NULL, 0);
--	d->do_early = strtol(dlargv[4], NULL, 0);
-+	d->do_early = (int)strtol(dlargv[4], NULL, 0);
- 	CHECK(!strcmp(dlargv[5], "last"));
+ 		l = strlen(counter->unit);
+ 		if (l > stat_config.unit_width)
+-			stat_config.unit_width = l;
++			stat_config.unit_width = (unsigned int)l;
  
- 	pr_debug("%s API\n", __func__);
-diff --git a/tools/perf/util/dlfilter.c b/tools/perf/util/dlfilter.c
-index ddacef881af2..0e513ac7feae 100644
---- a/tools/perf/util/dlfilter.c
-+++ b/tools/perf/util/dlfilter.c
-@@ -38,7 +38,7 @@ static void al_to_d_al(struct addr_location *al, struct perf_dlfilter_al *d_al)
- 		else
- 			d_al->dso = dso__name(dso);
- 		d_al->is_64_bit = dso__is_64_bit(dso);
--		d_al->buildid_size = dso__bid(dso)->size;
-+		d_al->buildid_size = (__u32)dso__bid(dso)->size;
- 		d_al->buildid = dso__bid(dso)->data;
- 	} else {
- 		d_al->dso = NULL;
-@@ -51,9 +51,9 @@ static void al_to_d_al(struct addr_location *al, struct perf_dlfilter_al *d_al)
- 		d_al->sym_start = sym->start;
- 		d_al->sym_end = sym->end;
- 		if (al->addr < sym->end)
--			d_al->symoff = al->addr - sym->start;
-+			d_al->symoff = (__u32)(al->addr - sym->start);
- 		else if (al->map)
--			d_al->symoff = al->addr - map__start(al->map) - sym->start;
-+			d_al->symoff = (__u32)(al->addr - map__start(al->map) - sym->start);
- 		else
- 			d_al->symoff = 0;
- 		d_al->sym_binding = sym->binding;
-@@ -290,9 +290,9 @@ static __s32 code_read(__u64 ip, struct map *map, struct machine *machine, void
- 	u64 offset = map__map_ip(map, ip);
+ 		if (evsel__should_store_id(counter) &&
+ 		    evsel__store_ids(counter, evsel_list)) {
+@@ -2099,7 +2099,7 @@ static int __cmd_record(const struct option stat_options[], struct opt_aggr_mode
+ 	session = perf_session__new(data, NULL);
+ 	if (IS_ERR(session)) {
+ 		pr_err("Perf session creation failed\n");
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
+ 	}
  
- 	if (ip + len >= map__end(map))
--		len = map__end(map) - ip;
-+		len = (__u32)(map__end(map) - ip);
+ 	init_features(session);
+@@ -2281,7 +2281,7 @@ static int __cmd_report(int argc, const char **argv)
  
--	return dso__data_read_offset(map__dso(map), machine, offset, buf, len);
-+	return (__s32)dso__data_read_offset(map__dso(map), machine, offset, buf, len);
+ 	session = perf_session__new(&perf_stat.data, &perf_stat.tool);
+ 	if (IS_ERR(session))
+-		return PTR_ERR(session);
++		return (int)PTR_ERR(session);
+ 
+ 	perf_stat.session  = session;
+ 	stat_config.output = stderr;
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 46920ebadfd1..1e07dcaed3d7 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -256,12 +256,10 @@ static struct metric *metric__new(const struct pmu_metric *pm,
+ 	return NULL;
  }
  
- static __s32 dlfilter__object_code(void *ctx, __u64 ip, void *buf, __u32 len)
+-static bool contains_metric_id(struct evsel **metric_events, int num_events,
++static bool contains_metric_id(struct evsel **metric_events, size_t num_events,
+ 			       const char *metric_id)
+ {
+-	int i;
+-
+-	for (i = 0; i < num_events; i++) {
++	for (size_t i = 0; i < num_events; i++) {
+ 		if (!strcmp(evsel__metric_id(metric_events[i]), metric_id))
+ 			return true;
+ 	}
+@@ -355,7 +353,7 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
+ 
+ static bool match_metric(const char *metric_or_groups, const char *sought)
+ {
+-	int len;
++	size_t len;
+ 	char *m;
+ 
+ 	if (!sought)
+@@ -570,7 +568,7 @@ static int encode_metric_id(struct strbuf *sb, const char *x)
+ 			if (ret)
+ 				break;
+ 
+-			ret = strbuf_addch(sb, '0' + (c - code_characters));
++			ret = strbuf_addch(sb, '0' + (int)(c - code_characters));
+ 			if (ret)
+ 				break;
+ 		} else {
+@@ -1145,7 +1143,8 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+ 	const struct metric *left = container_of(l, struct metric, nd);
+ 	const struct metric *right = container_of(r, struct metric, nd);
+ 	struct expr_id_data *data;
+-	int i, left_count, right_count;
++	int i;
++	size_t left_count, right_count;
+ 
+ 	left_count = hashmap__size(left->pctx->ids);
+ 	tool_pmu__for_each_event(i) {
+@@ -1159,7 +1158,7 @@ static int metric_list_cmp(void *priv __maybe_unused, const struct list_head *l,
+ 			right_count--;
+ 	}
+ 
+-	return right_count - left_count;
++	return (int)right_count - (int)left_count;
+ }
+ 
+ /**
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index e852ac0d9847..0aa172cf5e39 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -622,7 +622,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 	struct outstate *os = ctx;
+ 	FILE *out = os->fh;
+ 	char buf[1024], str[1024];
+-	unsigned mlen = config->metric_only_len;
++	size_t mlen = config->metric_only_len;
+ 	const char *color = metric_threshold_classify__color(thresh);
+ 
+ 	if (!valid_only_metric(unit))
+@@ -635,7 +635,7 @@ static void print_metric_only(struct perf_stat_config *config,
+ 		mlen += strlen(color) + sizeof(PERF_COLOR_RESET) - 1;
+ 
+ 	color_snprintf(str, sizeof(str), color ?: "", fmt ?: "", val);
+-	fprintf(out, "%*s ", mlen, str);
++	fprintf(out, "%*s ", (int)mlen, str);
+ 	os->first = false;
+ }
+ 
+@@ -954,7 +954,7 @@ static void evsel__uniquify_counter(struct evsel *counter)
+ 
+ 	config = strchr(name, '/');
+ 	if (config) {
+-		int len = config - name;
++		int len = (int)(config - name);
+ 
+ 		if (config[1] == '/') {
+ 			/* case: event// */
+@@ -967,7 +967,7 @@ static void evsel__uniquify_counter(struct evsel *counter)
+ 		config = strchr(name, ':');
+ 		if (config) {
+ 			/* case: event:.. */
+-			int len = config - name;
++			int len = (int)(config - name);
+ 
+ 			ret = asprintf(&new_name, "%s/%.*s/%s", pmu_name, len, name, config + 1);
+ 		} else {
+@@ -1493,7 +1493,7 @@ static int get_precision(double num)
+ 	if (num > 1)
+ 		return 0;
+ 
+-	return lround(ceil(-log10(num)));
++	return (int)lround(ceil(-log10(num)));
+ }
+ 
+ static void print_table(struct perf_stat_config *config,
 -- 
 2.49.0.906.g1f30a19c02-goog
 
