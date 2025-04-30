@@ -1,217 +1,195 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2048.outbound.protection.outlook.com [40.107.96.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B07F17A2F5;
-	Wed, 30 Apr 2025 16:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746029243; cv=none; b=rB+ud7VajlbJDHx44chIkEDkOxlRwE2XsOPDgOouVEXcN/KFlUVcC63U5fpNzAEYs6zy8+GynMkpJcc2T2cH11UhnM8JFDlejrAMzfbndaWfrsCkDChbZCwkaay1dnOOVr101CltnIaOO0WNdOFjYilW3U4e/a16byf7AAUooz8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746029243; c=relaxed/simple;
-	bh=2d0e5iaIZu3pd5474EGx6dQUABlZaX2gxnnAruiiSSU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HJXku4JkvOl3E5PYl75tyV4CnBK0CPCxbvls6OdAbxl9qOu1wWEBx7JuLRudG1MTk5TqHPLOtYkbA9iIEgQbEiQzjWl4Ye3pW4+TRpxbJc2322bhC1KITLKrKw1pAIBqageW9q4VCOT2cLAdxhYCP4vLPCuN6w3nwkAJZB1bQKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bi3QaiUr; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D3017A2F5;
+	Wed, 30 Apr 2025 16:07:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746029257; cv=fail; b=T9ilwkxV0dANOB0lnmRMXiW5jfnrk9719GwS/B9+K3TSpC9sGzp5oCej9F6AiV63zHcniIcpZu44JRbsgntvMHX/hHUYVpOI0YHInWLrsdpJxDeaD5cZ5kZMlNGWltIltkpfR9QH6qiLnduKeU7en3VCPdhc20Pghw+vmkEWIyU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746029257; c=relaxed/simple;
+	bh=pstPltbkXG1rJIGKoKrEI+FoQ+3xHtfH6Zb9QWC4T+E=;
+	h=Message-ID:Date:From:Subject:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YtH6Eg58YVQnZcIpm3VJopCP7RN6YkPsE3c/oWzeLMHO0C8lRq5Zf6vclvwrs7hHCKDGREyttNlI9MhewMz3Im9I3RYwhlkhZlWRa8I0oVeNg2kc6RutzjOhk5VC0QeowGhYh9CzEgjJfI+rzHwBvEJCSKI42n9292TcLHzCTFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=qv2ckXPP; arc=fail smtp.client-ip=40.107.96.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bi3QaiUr"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6ecfa716ec1so830696d6.2;
-        Wed, 30 Apr 2025 09:07:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746029240; x=1746634040; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wEs4/vMxiR7hq6sbXkpfoC4TKgbs/ANlioALa5x6i50=;
-        b=Bi3QaiUrgpwMFFWZhGrj6LN4SWGSwjZQuicRNuNlzAxUy4hHSPrFoFgyTDQ4DVjEeM
-         XSv7qXr5mhNOXWGdLYkP89sDp7KEOXevi12B+GIcbUfINYnllG7Gce4WXIWHxPs6K6NC
-         AiUjL46AQB0kR2DDVfMs+JCSJWu8geXWpuXIhrf0R8hhC8jirk+tjf5dqL8LJ/kangbK
-         7B/2ytrpf8LlUdx9BDsAQK8ojc0GmLOIQjf+8hIfGv7Q3dRFMxvP8Jhn9THoqb83A5KY
-         mRDleklSwp/7AoShbyM17hpLU0lQ/M0qFnFuCGw4WcUt3LPAIbujcTqU+IVPGB44WVZi
-         MR+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746029240; x=1746634040;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wEs4/vMxiR7hq6sbXkpfoC4TKgbs/ANlioALa5x6i50=;
-        b=KReDD8mlvZ/LAkunHgr51limMzuJDF3yqX1n5Eup4aeC3T6396y9LzsgIXh/UdzCkT
-         UJz1vxb4AlH1hIYLlG91CXqVCkxdkzU1dN/N1YveBMMuatdjtmNvMzc9l1FnkN4abyp2
-         16Y280SDSu7hC2kXjmKWZTUXww5P44BTRegJG1RTGba5GtEpmfdx1kYQkEy4gYZZyf6Y
-         SvMFwXIOiBNKxc7UqI1kMQZbEQxGC25YWClofK+5xtokdXaPBnujKlrxMf+aYThpGsKg
-         SJ8Lw9PoF91h/yNKl/rPqXqzkvpcahBmOcfgi9DGzp+8HG6/JbS0hjTyZvoHqmYhdliA
-         v8Ng==
-X-Forwarded-Encrypted: i=1; AJvYcCVE7TsEKFHTzZgKQsaaKRHT3mnE4wokva+J/30KmgCfrijl5+RuHhBNrrE90buHCZEo2wjgDBBfIdRN5OA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZG2mbGO1iHUHvU4sV3QHDZ4YJyCii03aEXGx+pDX/zmAN8wQ7
-	I0z5FPIsdVZW7Bs+HY+yTX6X70AfEEj5vtWaeKs0xUrGsDm8GJW/
-X-Gm-Gg: ASbGncuj3XYZmVMccXPBCIVwEYnELAXJPQVNlostssAHUmOdepJUNHaku+MR9wc5ZjL
-	dxWVEdiJrr2HB8QwDpD84ba1INjo5WqX1kvELT/3tdxZpze9mVJBB3j8HfKE2oKccSt4Ag/LiPK
-	F5FMr4apuF2MsuatXWvEvVWjT2itaDL3KnanzBAZbRVCL7kD4YrUqt2rODg7AXEaMs287DyyAQQ
-	pjHK3xCmSNF2400EQj1huEk/hXpzXzDCGZ44Ide693D0iD9jSRWLirFyQwe3BBcgrgWwR2EZOSv
-	13IexP671pj66v5wJ+p34u3rjYIC6vOuKn0hJaf2R1yzKtap/O2u/vfDu5Io0PIIK/L/v4RIL7W
-	6CWMptChDK0U1PVILjcEl3x7W0XXmdIo=
-X-Google-Smtp-Source: AGHT+IGtWqa/7iXk55bAaDAa5NjVIWxZ7j7iN/jx6/jq0IYRfZtaHIIpY9sDStNQ1FvhYdcBEbQmew==
-X-Received: by 2002:ad4:5d61:0:b0:6e4:4274:aaf8 with SMTP id 6a1803df08f44-6f4fe055990mr53152656d6.17.1746029239964;
-        Wed, 30 Apr 2025 09:07:19 -0700 (PDT)
-Received: from iman-pc.home (bras-base-bitnon2805w-grc-06-184-148-73-125.dsl.bell.ca. [184.148.73.125])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe6ad6a8sm9803796d6.4.2025.04.30.09.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 09:07:19 -0700 (PDT)
-From: Seyediman Seyedarab <imandevel@gmail.com>
-X-Google-Original-From: Seyediman Seyedarab <ImanDevel@gmail.com>
-To: rafael@kernel.org,
-	viresh.kumar@linaro.org
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Seyediman Seyedarab <ImanDevel@gmail.com>
-Subject: [PATCH v3] cpufreq: fix locking order in store_local_boost to prevent deadlock
-Date: Wed, 30 Apr 2025 12:09:43 -0400
-Message-ID: <20250430160943.2836-1-ImanDevel@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="qv2ckXPP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=upUuhkZCTLt9G1TbkeWkxlKCIkDrgG0ZiaA7BgkIJ9077YJvIMg0krpaVQJ8zZKN0vNRug9+wzXst4mAswh1hQhFAVFJvGRyYbTr0pkiBIpzIBsb0Vtt1Sc/qTppaZWSxemZ55zKZuR90Kp6uLzdxrXmTf2aMhfbjkgHch11r409jronAW6WBX5EMajiMbLljwJeWdiafKncBpSZZ9mANVNfWAgU7O/76prfIGc2HKXIWncg83nanMKD2w709k9Zq/3nXfv+HYZaLRS5RYY6m1whdgdxrpulaiJlaXI/bJpROSO1f4OuJnxLMBYhFEuvbDNRqxIQamIJClcVgj0P0Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hP0l8L1Jr7k4Hy8oYX8JF0/luzI8deszVrxdKVtK1ks=;
+ b=uEQP3BFSBXfE8NlI1mmAjbjEokNacR0f2ltXwUdk726FpibD3glp9kAuxhq9k80vppc5jqfHX8QY6qBlN3BKk/XK5v8U5PIBFXlYbFdhQHC72Oebc/j3l+XshEfCLy/19pb2tn5MZbelPXZoXLbSDDAgBwyk6zo57F5yMkPkteNPGGhGAyHyWZI/dQJsLZom1nqoneQPHhYCsNNf8A45K26zRIAgF/pavplfEU18T5XCDwP66JtDRiaW270/yBpjYldqmoeYc+2vFHNYJla8y9c7RXbh0K6vManGTaWRSIJT4BKHwxvtw3Wm2Ec6xOVb+HMpXZ2A8sihh+HvoYs0aQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hP0l8L1Jr7k4Hy8oYX8JF0/luzI8deszVrxdKVtK1ks=;
+ b=qv2ckXPPPJOZJhFLtjyV9dpOR5ye3eReuTNIr3jFFsz0c1cG2Kner9AsFp5QvDsnM7Nf2XC9+6rA7Dfs1F5znWgsEq6UY4eYEJGf1ZW/M7I0zhndihWeFMm/uenPn3wzNh3lQOxkpUz1eSkLLTOqrr01kzPbkMfmh4zCVOtyikU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+ by DM6PR12MB4251.namprd12.prod.outlook.com (2603:10b6:5:21e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Wed, 30 Apr
+ 2025 16:07:32 +0000
+Received: from PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
+ ([fe80::5e9c:4117:b5e0:cf39%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 16:07:32 +0000
+Message-ID: <09f5d37b-0ef8-4cc5-bf60-172c448ff9c7@amd.com>
+Date: Wed, 30 Apr 2025 21:37:22 +0530
+User-Agent: Mozilla Thunderbird
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH v4 4/4] perf test amd ibs: Add sample period unit test
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Joe Mario <jmario@redhat.com>,
+ Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "Shukla, Santosh" <santosh.shukla@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>, Sandipan Das
+ <sandipan.das@amd.com>, Ravi Bangoria <ravi.bangoria@amd.com>
+References: <20250429035938.1301-1-ravi.bangoria@amd.com>
+ <20250429035938.1301-5-ravi.bangoria@amd.com> <aBE8raTOCVZLfw7J@x1>
+ <aBF5UWrxvYgbnxde@x1> <aBF7ZarWJvzeDKqF@x1>
+ <4bea7b8a-9ff5-4ae9-8154-57ec7377ee4e@amd.com> <aBIgVi90Zinz6Rl4@x1>
+ <aBImI03VHeJSGVfn@x1>
+Content-Language: en-US
+In-Reply-To: <aBImI03VHeJSGVfn@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4PR01CA0088.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:2ae::10) To PH7PR12MB6588.namprd12.prod.outlook.com
+ (2603:10b6:510:210::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DM6PR12MB4251:EE_
+X-MS-Office365-Filtering-Correlation-Id: 80855683-208f-4239-c45b-08dd88011cca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?T0xZN3pLUTdwS3BJN1RxRmRLb09hbWsrK2cwN1kxekptRTRTU3p1UGdKdHNh?=
+ =?utf-8?B?V3VvaVJHMzUvL1EyN1NlckRvMWs3RXAyNy9rUWc1Z3VhNDFXRFNGOFRmem9M?=
+ =?utf-8?B?dHUxZFZaTm9wdWl1QjZCcG5reXFCSDZ1Nk81b3ZnZGRCRGJyZFJZdm5ubjVM?=
+ =?utf-8?B?Q2NMUEl0ZkFHT3ovSHNzVlBVODdjOWlWZFJEdzZ5aThuaXNaSlh4Nll1Y291?=
+ =?utf-8?B?M3FMTkxpYk5adzlWTTVucEpmc3dyYmo1R0VaOTNJUCtONWVDRkMrbUlzS2lB?=
+ =?utf-8?B?SGdXS1AxOHJjV2o1SlVnZTJReWdhY3U2eVVJQ1lxQTByVkpVWU05WDR6aEo0?=
+ =?utf-8?B?RnV2WnR6SC8yeldMWFRvdyt0a21aWWZHR1kzWnh4QmUzZVdjZ1JNMXhJV2pE?=
+ =?utf-8?B?K0d3OWZ5c2g0Rzl3MU9DVnp1Q1J3ZVV3UXRPRnRSTkU3S2JuNndwSmF1emFX?=
+ =?utf-8?B?VDFlSm9LSXlEdU1zWFVJVXhLLytpQnNCbmxwQ2pNZlJBWGxMbitJVnRmTVZZ?=
+ =?utf-8?B?aUhiQlY1MDNmcFJjZTRKQk9XQ1dlQmZPSzFhcEJEVnZONTZWRFU1QWpaV25I?=
+ =?utf-8?B?eExmK25GWUlXYWRPT1BOZzJHMHJGcWQ2SFpUR1YvaURQVDlwRU1MZjB3eEZr?=
+ =?utf-8?B?cll0YUwrSHh3OXVvbzIxNVQ1bVZwZWIzQlpUNUE0WDduWG8yRUtuT2VjU1Q3?=
+ =?utf-8?B?VEhIWlpJbFc2NWx5ZU9sNmNjK3Q2T0lhMUp2dDFocFlyYVE2WG04c2tRSllw?=
+ =?utf-8?B?UXgvVFJ5RUtwWHlRaGdJQW12SEN3NkVZcmZPVkpFYk83S3ltRENvMjlJbDR5?=
+ =?utf-8?B?Yk1uL1BQUkxkanQzSlJmNWJSY2hab3hEcHpWa0F3bjFkeDlDdnJ0UVYxWXZy?=
+ =?utf-8?B?SzE2RTBHVUtOcnhjcFJvc0xGaUh3U1ZtYmppM1FnS2NmbElOUDNIRGpicXQ0?=
+ =?utf-8?B?Z1REK2JMaDV5OXhYcVRFcy9malVCUEpENzFOSGxINjdEOVk4RFVWck14YUdm?=
+ =?utf-8?B?azBTY1VpNlhBQ2FDTUZsUGRYWS92Y1dmZVBDL1RhNnZOQkhNMy9VTFV5d3lY?=
+ =?utf-8?B?Yy9NUFVKb25sa1J4VnArekpEZnIwM3RpdFhKTnQrOFJBcUdzczBJMndzWkFR?=
+ =?utf-8?B?a2FsTTE2N1JZQjJ4Z3U3Mldia0oyY0NDa0grNXc2NGlaaDJicHJkS3luT3pZ?=
+ =?utf-8?B?Mnl6eDNUWVExU3J5VFhwNlNWWVBicFRnZWpzcFZlVGJVSmozRDJDQUYzNjhi?=
+ =?utf-8?B?U0dJODh0RU9NTFhwSzQza05iVTBQZGlWbjdrSXNrQXg3NzFvRlJ0bkNMZTZn?=
+ =?utf-8?B?VkN5UWx2V1N0NjhoMlVPVXRBNFZFWkJTdDVDUWNzazJkMkNoN3Y1M0huOStj?=
+ =?utf-8?B?UDJCVE84Q0ZhSG16K2hjL2M1QjRWY2JoaWFCdHhMN1ZuUS8xNXZSL0pWN1BD?=
+ =?utf-8?B?czdKYlJXQVlHaHZNSDI4U3ZJWHl5TmxFYlN2ODBsK0crZzhWU0tvN0dKeWxi?=
+ =?utf-8?B?V1JrYXRxeG53RktrRXMvTklMeS9OV00wTkJSQ3ovVzdnZWFudjlncjJaY0J4?=
+ =?utf-8?B?RlZDcGZ1aGZYT0owN1VoaHJGcGtqOXNLMDBuMEkxRlppTGNhTjZNem80d041?=
+ =?utf-8?B?bFJiSFh6cjM2alM5Rk5kcjRQdHpYRy93aEJSWlRrT0tmSWM1b2Y1Rk9naXlT?=
+ =?utf-8?B?VGF4R3BRbmt3Y29LaTlUMWNhcnJjNlJqZWtXZmJ3ZmtPZG0xNGhycm81bm5U?=
+ =?utf-8?B?RWZWdUVkRHFLb1pqaXF3UnVhSUlLTlB2UlAxNVJEWEFrd2VHRVgwVndUcnhW?=
+ =?utf-8?B?c0lYUFlaOHhTR0VCVGJDZm8yR2I0dlJRd04xL1U4emxyN25wU1pLVVdMaU9z?=
+ =?utf-8?B?VTdIcHE5UjJRcTFSZjZvSlhZSW51RGxxTTBkYjFobEwydDd5L01hME1hWlI4?=
+ =?utf-8?Q?qr/TQ8IFaK0=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bXc1blkvbjRPeWR0Z2ZGY2R2Z0hhQXgyTFBiUmowYWJqYkgwQ0pRY1UxczRu?=
+ =?utf-8?B?WVZDQVpOVGpoemdoWkNCU3hsME9GTThLSkIvTlJKMWpHOHlpbzdXR2NLdEF5?=
+ =?utf-8?B?azR5a3lJcC9qVGNkeWNTbG1SbGJLMVVsSHppMXRTS3BFdXpTWURvSXBXQUxP?=
+ =?utf-8?B?RGk5UFVnSHAxSXdsRDBFRCtiWkh5dis0WDZCbnJkQmNMZ2E3Y3pNelVBcTVy?=
+ =?utf-8?B?bzBmSTFLV1NySzAyamJHcDRZRitHM3lEa0hQaDNoYjh3dzNqQjNmMGFoNWpl?=
+ =?utf-8?B?M0NRN2RLUGl0YUkvSko0eHRVYURtVnZCenBzWUM0cURSM3lmRzh1UU10QVpS?=
+ =?utf-8?B?aUdrdk5ldWIxUDlsUGhOa3RQS2k0M2JHOWIzcndvV1dHRVpKT3FZSk5BL2Qz?=
+ =?utf-8?B?SDMzb0xnd2VBdjFiMVFpV2d3ek93UVp3MDIwMk9laHVoRW1iWjd2T0RhQTNX?=
+ =?utf-8?B?QmpYL2lHV3NMWFFLM3kvZUg2aTBoS3V6aENzUTZseWljUHR2NDdxbGY4VjBM?=
+ =?utf-8?B?WnphbElRZzZtWkhTd3lLd041K2xDcmo5SXpNSjR4WW9jV3JoZDVQeEZ5U3Nl?=
+ =?utf-8?B?Q29VR2YyOHBxaUdIMzZxaEVKUE90R09LdGl1NjNIbFhxRW0zTUViOUYvK1Bt?=
+ =?utf-8?B?aUFmZzU0d1RZZGJCWUptcERNMlZxMFdYMjNUYTJSZ1JRQmFITkhubjFEY3Ja?=
+ =?utf-8?B?NHk2ZWh3clFveDZodGplb2dCQzhkMWkrTmVsUEtnY0hpb1Y4SW9wS2Y3czlz?=
+ =?utf-8?B?UDgxVjN5dW54YndOY3dhOFZMUVZIQjBLWFE5aWxoSzcvOGJEMm96N1FOeXAy?=
+ =?utf-8?B?c2w5VGpWeUo1TVpDRUVVZ2FKaGlQN3BrUTh2R29vcGNRSjI4bjhYanhvM0FM?=
+ =?utf-8?B?RzlBVXBPQWRIZWZjbEpNSE5CcWNwVGEvRXl4cTZUeUJlSVlMN3pqc1VKT3pV?=
+ =?utf-8?B?MTZqdS9oZWNVaktqNXFQb1FWTnErVDJhMVhnS2NXVEQ2dWFQcFJQWXUvRFNa?=
+ =?utf-8?B?QXBpT2c1UmZVY3Yydk9CZm1NV3U5dnZmOWswd0VZVC9rRXV4WWFrU1d6LytJ?=
+ =?utf-8?B?Y25lcUJ3a1BhODR0Nm5oQkdYZlgvZXdOcEkwbmdYazhIeWp6Q09DTHlUVzJ2?=
+ =?utf-8?B?U2tqZmRsa0U2MEdocUhyZ040eFovWk9zUkZnRXFlTUhqbDdUVVZvNGw3K3M1?=
+ =?utf-8?B?M2NXYlRxQ2NJM3RBODRrSW5sQlFwNDE3TkdnTTB0TlhoWHVna2lHeFlDYldD?=
+ =?utf-8?B?eEpnL0JkRlUrTWNrUHVBZm9XSGRvRHdlRWUwdkhSVXJkc2l6cXNkRXJzelFo?=
+ =?utf-8?B?aXBaOUJKVThuMGFMZVQyNFFncjZnazV4TUdFZ0J4cWhMYThDK0V3QXJzdUJ3?=
+ =?utf-8?B?dk9TaEZZVnd1cDVHVkNaRVFaYUwvLzFyYWlpWVdVUlRNWmd2NTN5eEp3SUNn?=
+ =?utf-8?B?cExobGg2QTJJbVNEY3Rqb3hLb3kxZWhLSXpwdEZiUjNuREU2b3NvT2FpNXJS?=
+ =?utf-8?B?Uzl1bGFlNXhjZlRHdXdaNnlqeHpXNmRDMGx4Umg0V0lrTENjZGUyTm0wby84?=
+ =?utf-8?B?Q0Y2emhlQTdRV2ZwdmlKQi9JeW40TnR6cUdkVDdnOTRWa212YVVvcENENUZK?=
+ =?utf-8?B?SmV6UDVpWlBsZVFXUzdmbC9NbGF2NmVkblJtUzhjY1FPdEJ0eTRWemo2WWNG?=
+ =?utf-8?B?UWZ1OHBhMEY2dmZmcS9wVE5vWm0yZVJnQzB2VytJc2V3OWgwYnFpVzhDKzEy?=
+ =?utf-8?B?dzM5Slh6cVlwQVhpVjhSRjMrWDZicnV1Q21rRVVscDVvL2kvcjhKQm1GcWZy?=
+ =?utf-8?B?ekRNWGdnMDFOcEEwM0pUVldiRDFQZGsrVStPOTNEa00zcHp5bGF4NW5mODJ5?=
+ =?utf-8?B?WjBNcEt2L0l3SnloS2JqeUU4cXJVWW9MZkVPU0owcU4rdVdPSGNTdzBFeTBr?=
+ =?utf-8?B?NFNsL2pHREgxOGliYncxVmM0cFZQbldUYm94Q1BCOHJ2MnNMNEZFb3ZWS29R?=
+ =?utf-8?B?bWVuaDVwNkF4bW1NNERYdnF5YUt3K3FDVDFXN2xGQUNiRlJlNVpNQU5pM0tj?=
+ =?utf-8?B?SmE1aTF1TnZiZWNvNjVHMmJ3TkVEQ3dzN0lrR0Q0bkh0cVByUnA3Q21vRkk5?=
+ =?utf-8?Q?BxerVJSnMM66ba0OXskbaPPdz?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80855683-208f-4239-c45b-08dd88011cca
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 16:07:31.9600
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 249nrckF9SETuWfZU1cVlm03R2fR5w80GESEOHPg+HJ6BAyHc/c6xjLZAF7mJpCwR2GFaZZkLo3tdk1ytxEzcg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4251
 
-Lockdep reports a possible circular locking dependency[1] when
-writing to /sys/devices/system/cpu/cpufreq/policyN/boost,
-triggered by power-profiles-daemon at boot.
+Hi Arnaldo,
 
-store_local_boost() used to acquire cpu_hotplug_lock *after*
-the policy lock had already been taken by the store() handler.
-However, the expected locking hierarchy is to acquire
-cpu_hotplug_lock before the policy guard. This inverted lock order
-creates a *theoretical* deadlock possibility.
+> root@number:/home/acme/git/linux# perf test -vvv ibs
+>  73: AMD IBS via core pmu:
+> --- start ---
+> test child forked, pid 10047
+> Using CPUID AuthenticAMD-26-44-0
+> type: 0x0, config: 0x0, fd: 3  -  Pass
+> type: 0x0, config: 0x1, fd: -1  -  Pass
+> type: 0x4, config: 0x76, fd: 3  -  Pass
+> type: 0x4, config: 0xc1, fd: 3  -  Pass
+> type: 0x4, config: 0x12, fd: -1  -  Pass
+> ---- end(0) ----
+>  73: AMD IBS via core pmu                                            : Ok
+> root@number:/home/acme/git/linux#
 
-Acquire cpu_hotplug_lock in the store() handler *only* for the
-local_boost attribute, before entering the policy guard block,
-and remove the cpus_read_lock/unlock() calls from store_local_boost().
-Also switch from guard() to scoped_guard() to allow explicitly wrapping
-the policy guard inside the cpu_hotplug_lock critical section.
+It picks up both the IBS tests for me. (Is that what you mean?)
 
- [1]
- ======================================================
- WARNING: possible circular locking dependency detected
- 6.15.0-rc4-debug #28 Not tainted
- ------------------------------------------------------
- power-profiles-/596 is trying to acquire lock:
- ffffffffb147e910 (cpu_hotplug_lock){++++}-{0:0}, at: store_local_boost+0x6a/0xd0
+  $ sudo ./perf test ibs
+   73: AMD IBS via core pmu                                            : Ok
+  112: AMD IBS sample period                                           : Ok
 
- but task is already holding lock:
- ffff9eaa48377b80 (&policy->rwsem){++++}-{4:4}, at: store+0x37/0x90
+  $ ./perf --version
+  perf version 6.15.rc2.g35db59fa8ea2
 
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #2 (&policy->rwsem){++++}-{4:4}:
-        down_write+0x29/0xb0
-        cpufreq_online+0x841/0xa00
-        cpufreq_add_dev+0x71/0x80
-        subsys_interface_register+0x14b/0x170
-        cpufreq_register_driver+0x154/0x250
-        amd_pstate_register_driver+0x36/0x70
-        amd_pstate_init+0x1e7/0x270
-        do_one_initcall+0x67/0x2c0
-        kernel_init_freeable+0x230/0x270
-        kernel_init+0x15/0x130
-        ret_from_fork+0x2c/0x50
-        ret_from_fork_asm+0x11/0x20
-
- -> #1 (subsys mutex#3){+.+.}-{4:4}:
-        __mutex_lock+0xc2/0x930
-        subsys_interface_register+0x83/0x170
-        cpufreq_register_driver+0x154/0x250
-        amd_pstate_register_driver+0x36/0x70
-        amd_pstate_init+0x1e7/0x270
-        do_one_initcall+0x67/0x2c0
-        kernel_init_freeable+0x230/0x270
-        kernel_init+0x15/0x130
-        ret_from_fork+0x2c/0x50
-        ret_from_fork_asm+0x11/0x20
-
- -> #0 (cpu_hotplug_lock){++++}-{0:0}:
-        __lock_acquire+0x1087/0x17e0
-        lock_acquire.part.0+0x66/0x1b0
-        cpus_read_lock+0x2a/0xc0
-        store_local_boost+0x6a/0xd0
-        store+0x50/0x90
-        kernfs_fop_write_iter+0x135/0x200
-        vfs_write+0x2ab/0x540
-        ksys_write+0x6c/0xe0
-        do_syscall_64+0xbb/0x1d0
-        entry_SYSCALL_64_after_hwframe+0x56/0x5e
-
-Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
----
-Changes in v3:
- - Rebased over PM tree's linux-next branch
- - Added a comment to explain why this piece of code is required
- - Switched from guard() to scoped_guard() to allow explicitly wrapping
-   the policy guard inside the cpu_hotplug_lock critical section.
-
-Changes in v2:
- - Restrict cpu_hotplug_lock acquisition to only
-   the local_boost attribute in store() handler.
-
-Regards,
-Seyediman
-
- drivers/cpufreq/cpufreq.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 21fa733a2..b349adbeb 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -622,10 +622,7 @@ static ssize_t store_local_boost(struct cpufreq_policy *policy,
- 	if (!policy->boost_supported)
- 		return -EINVAL;
- 
--	cpus_read_lock();
- 	ret = policy_set_boost(policy, enable);
--	cpus_read_unlock();
--
- 	if (!ret)
- 		return count;
- 
-@@ -1006,16 +1003,28 @@ static ssize_t store(struct kobject *kobj, struct attribute *attr,
- {
- 	struct cpufreq_policy *policy = to_policy(kobj);
- 	struct freq_attr *fattr = to_attr(attr);
-+	int ret = -EBUSY;
- 
- 	if (!fattr->store)
- 		return -EIO;
- 
--	guard(cpufreq_policy_write)(policy);
-+	/*
-+	 * store_local_boost() requires cpu_hotplug_lock to be held, and must be
-+	 * called with that lock acquired *before* taking policy->rwsem to avoid
-+	 * lock ordering violations.
-+	 */
-+	if (fattr == &local_boost)
-+		cpus_read_lock();
- 
--	if (likely(!policy_is_inactive(policy)))
--		return fattr->store(policy, buf, count);
-+	scoped_guard(cpufreq_policy_write, policy) {
-+		if (likely(!policy_is_inactive(policy)))
-+			ret = fattr->store(policy, buf, count);
-+	}
- 
--	return -EBUSY;
-+	if (fattr == &local_boost)
-+		cpus_read_unlock();
-+
-+	return ret;
- }
- 
- static void cpufreq_sysfs_release(struct kobject *kobj)
--- 
-2.49.0
-
+Thanks,
+Ravi
