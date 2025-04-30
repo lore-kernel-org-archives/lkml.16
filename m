@@ -1,96 +1,107 @@
-Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26D32DC768;
-	Wed, 30 Apr 2025 16:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A682609C8
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:37:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031024; cv=none; b=WskO5wwanB+Inm5bdsez0RBAIY6nbU2dlUg+b9XIdyeMmGcTggXsXyJNqw09VVVeUXcJiaZmCe+P0LQS38ElH6eMFzsS03RZC8X1kGkPusr++MDtPdGGVhZEpi8DAWQvVSyU2MwnFcqQ784ItERFSyCT4Gg3z2Cq9eMrLsYo+9U=
+	t=1746031064; cv=none; b=pjsqV7Zy30snvB/O4FxPasINGvJWc3qAmRxPPsZ2hpTsg8IRpeFsWymcSlUxneUacsfiDvunZzTrKPWe1sjwgvKnWkBs49ijkaF3yx2c1dVlv9TYqhaK+GYQK5pQdqW6OTpj6pW2p/MG51XxNIZFyE7UkM6sCwh9F6l5Mcoy0EI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031024; c=relaxed/simple;
-	bh=9geV/FjB9jog23wCw1W/StqQ0myuqQkS4rykbVNxuNY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YcM+otHB7ppoCerZxfrdV+t+vQPsA5Z9ZdLxBjQvgRbgPokMFNstukIU3X43uyyCSW4t3BI7J99yMs1Cy2bgkFzf2mW0HwqHVTSISKoC0gPpUCXOrYRhu1lCNY43mrqOotTltoGC+Hrtu0aJeO64/Tjaa5JhpW7xjSjwy3lukqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=XWDxr3A8; arc=none smtp.client-ip=213.97.179.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1746031064; c=relaxed/simple;
+	bh=DLQtM5PA9tnX4LJeaZa3hFR6w41lGFUSQFPETZ1b/x0=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=p4NHTAyhZFPpY0JRN2zqD2AkR5WtTRqnmyL7kQfB8sdDWQEYtr1XWXPAoJWL2p7sOIhHt6vFU5t0dsDbS/zSCdHXbX7VOEyE7Zq4rmoOCnQ8znZbV8ilBhLVvr/o5wUwM4L4z6eOdZCxSRByxhZIB8tOQwV/tMH6fjnakgMFFDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GuXCFgaE; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="XWDxr3A8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Cc:To:Message-Id:Content-Transfer-Encoding:Content-Type:
-	MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=u7nNGcfk3YS6f+K/g0woe4Rifi6nim8UCZ/niqDjLko=; b=XWDxr3A8XsgDAvBFCigLA/7cz3
-	w9RO3KlsJ4ye37LnsnEv68WCDp/3huEwve9yG43vzEUmOLexUixvFbgWt1HsCytHU9EQDE6t36VDA
-	UOo5F35Qq/JI1VSPlVJeJ3hruYY0XxDHX7KQ/ckv72u2WeJi9o8Dlqq1PbsscqOnXXM522skTIS16
-	NmMiRZwHWGRcX3MV72zN+juudrcMJAvUicdVcY4oShlJwoWoqGDpayx8N7fjeJ+RL+AaFQTdGE8jU
-	JRzkaaIITHZezOctm4HR1UOoHjO7Kn0schnWAvkTAd66SOhj09cS700j0Lm6V4OxRIvnNTz7I8oI4
-	00Cv9Arw==;
-Received: from 179-125-79-234-dinamico.pombonet.net.br ([179.125.79.234] helo=[192.168.67.187])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
-	id 1uAAPT-000zis-3o; Wed, 30 Apr 2025 18:36:43 +0200
-From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-Date: Wed, 30 Apr 2025 13:36:28 -0300
-Subject: [PATCH] char: misc: make miscdevice unit test built-in only
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuXCFgaE"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb3so125137a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:37:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746031062; x=1746635862; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qxjWOzCodYh6h91i+Fd4DO9wFsqHoGVnoY26/g1sEjk=;
+        b=GuXCFgaEL5dxc4t1j91lRsivYKnbJWaF0Vkr2JWD+qRrm3N61E1WVoDNnHH85l/JUc
+         JF7wD9H0ISHZ9fpJSagELHnrrpOQJJ9ik8H/dnJvH4Qps4VVD9Z5E3Ojg0mMsb5E0IAW
+         cJjMLi7SXE6i6/rLRoSYucyzq4y6EoS68TlR/g2XpNb7vUS2uOEOb528ACg3fJ2aF85K
+         s6alY8JvvqQ0r0qRZtQ8Pz8AEJPxSTyCZuHvELCRk+F+nw/fTqwlGXW1r6FjLKTp6Ue0
+         0jCNeOECEB/gPYOQla81udqFIK9ad3eu1QwYQ/yjmUCz/W3OLBoznKgcrCDCX/akretX
+         WQ5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746031062; x=1746635862;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=qxjWOzCodYh6h91i+Fd4DO9wFsqHoGVnoY26/g1sEjk=;
+        b=p5rMKTqa1AhlyCbPheukR+DtolnRoM8mJMN8r12ihMik50Q3LAdJ7qVR8LjEqZ6fay
+         5ZOdvpJ+lUkbwuzH0UIJ42LUfM8befVzXLPGxDY1XP/jvEYpTknQ+6O3mbZBPQEld4WR
+         pkIHigNyBs/093fSZoVsrZU1I2OQkkk4OZmI64Brdolg6Cxne78TvuNao7HOQ0zBE7Cd
+         OIJgXDpVUePegWKwRfWjcf5EUwN4SAZx5ZR1H3eaBunGJdqrIou+4AvDCOEe9o/JY7Gu
+         3nmF4ksrXueruPmmlRvwsuJFvPYUJRLzbdOmqvljG0OmkRwEGrzR5ydrLVJSFgoejGmr
+         GZjw==
+X-Gm-Message-State: AOJu0YwpxRu79+HJ679vb2MZvQoPczMqAD6/BmtxQkXg/QhWfKFgz4Mi
+	p9co/mltgvzgAr4pHnkWiTVPSJEyxO7CJPhua3wPeFSgrrpr00H9
+X-Gm-Gg: ASbGnctZbtXgNRypabkeP1/jNycRQIbFmVOmysqbTSnA91rmHQXqIsbh7zF9xTD4O9+
+	mpgdaVX38yqnyoXxtKVeEOqrXI+T0QdtV8G2n/r1cPSUEte29p8TZbt0pCrrXesv7Dn/yS85krl
+	VSecQeHehlkhCs9lwbppkT/MrAw0BKDr0AvJmUCa4vwv9N1qnzqqP6YBirhoLfaZi7EU/K13gpn
+	vyy8YRiEWBi+OzC/YQtbN/+2YF2AWnQcM6GPaM4a5sJl7sDT00vzHcUMLfd/PAGZ6qJwCKy/5Sp
+	EbGFC5Lg9XxD31CnnGz8bzynRTaramcQ4Ajd5GTrofD/dE5TAuSuGpKyUrjgjurySqHjMXaGM3e
+	hJIWiItzpGO4o8gX4
+X-Google-Smtp-Source: AGHT+IFZGcI74EhGKxPzzAuz4dRadRUA7d+g93mMYCaI9MFy924XUYPiyQ9WM8HNYOOlIamO7v3orQ==
+X-Received: by 2002:a17:90a:ba98:b0:2ff:4f04:4261 with SMTP id 98e67ed59e1d1-30a344894fbmr3071328a91.34.1746031062097;
+        Wed, 30 Apr 2025 09:37:42 -0700 (PDT)
+Received: from localhost (i223-218-150-204.s42.a014.ap.plala.or.jp. [223.218.150.204])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a349e3c2csm2025308a91.2.2025.04.30.09.37.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 09:37:41 -0700 (PDT)
+Date: Thu, 01 May 2025 01:37:37 +0900 (JST)
+Message-Id: <20250501.013737.1960337608602672035.konishi.ryusuke@gmail.com>
+To: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [nilfs?] possible deadlock in __nilfs_error (3)
+From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
+In-Reply-To: <68118a52.050a0220.39e3a1.0cab.GAE@google.com>
+References: <68118a52.050a0220.39e3a1.0cab.GAE@google.com>
+X-Mailer: Mew version 6.8 on Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-misc-test-fixup-v1-1-6f39ed6c733d@igalia.com>
-X-B4-Tracking: v=1; b=H4sIAItREmgC/x2MywqAIBAAfyX23IKaHupXooPYWnvogVsRiP+ed
- ByGmQxCiUlgaDIkelj42CvotoGw+n0h5LkyGGWcsp3CjSXgRXJh5Pc+sVfB+RhIz9pCrc5EVfz
- HcSrlA9LHNjVhAAAA
-X-Change-ID: 20250430-misc-test-fixup-90c5afce1d14
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
- Stephen Rothwell <sfr@canb.auug.org.au>, 
- Andrew Morton <akpm@linux-foundation.org>, kernel-dev@igalia.com, 
- kernel test robot <lkp@intel.com>, 
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-X-Mailer: b4 0.14.2
 
-Since it uses __init symbols, it cannot be a module. Builds with
-CONFIG_TEST_MISC_MINOR=m will fail with:
+Try removing unnecessary ns_sem lock in init_nilfs() to eliminate lock
+dependencies that were causing false positive deadlock warnings in
+__nilfs_error() etc.
 
-ERROR: modpost: "init_mknod" [drivers/misc/misc_minor_kunit.ko] undefined!
-ERROR: modpost: "init_unlink" [drivers/misc/misc_minor_kunit.ko] undefined!
+#syz test
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Closes: https://lore.kernel.org/linux-next/20250429155404.2b6fe5b1@canb.auug.org.au/
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202504160338.BjUL3Owb-lkp@intel.com/
-Fixes: 45f0de4f8dc3 ("char: misc: add test cases")
-Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
----
- lib/Kconfig.debug | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index f9051ab610d54358b21d61c141b737bb345b4cee..0117b852bd131b8a585dc02d8225e2e8c0740077 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -2512,7 +2512,7 @@ config TEST_IDA
- 	tristate "Perform selftest on IDA functions"
+diff --git a/fs/nilfs2/the_nilfs.c b/fs/nilfs2/the_nilfs.c
+index cb01ea81724d..d0bcf744c553 100644
+--- a/fs/nilfs2/the_nilfs.c
++++ b/fs/nilfs2/the_nilfs.c
+@@ -705,8 +705,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
+ 	int blocksize;
+ 	int err;
  
- config TEST_MISC_MINOR
--	tristate "miscdevice KUnit test" if !KUNIT_ALL_TESTS
-+	bool "miscdevice KUnit test" if !KUNIT_ALL_TESTS
- 	depends on KUNIT
- 	default KUNIT_ALL_TESTS
- 	help
-
----
-base-commit: 4f822ad5ee944ffafc21937a32dd055f1df5c28d
-change-id: 20250430-misc-test-fixup-90c5afce1d14
-
-Best regards,
+-	down_write(&nilfs->ns_sem);
+-
+ 	blocksize = sb_min_blocksize(sb, NILFS_MIN_BLOCK_SIZE);
+ 	if (!blocksize) {
+ 		nilfs_err(sb, "unable to set blocksize");
+@@ -779,7 +777,6 @@ int init_nilfs(struct the_nilfs *nilfs, struct super_block *sb)
+ 	set_nilfs_init(nilfs);
+ 	err = 0;
+  out:
+-	up_write(&nilfs->ns_sem);
+ 	return err;
+ 
+  failed_sbh:
 -- 
-Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+2.43.0
 
