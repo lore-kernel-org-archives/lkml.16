@@ -1,170 +1,273 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2045.outbound.protection.outlook.com [40.107.93.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78BDF21D3E9
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013534; cv=none; b=COHHHlCBeyG+eYmAJXKZrLtxnGovQ5qsq63Qv16kusxqfVKOAnvKJtohc8nkmBugfl4bxjAXa2/AFvwb6JTBqZugr+Nugf63dlHiZG71AQVxTYSWSVZUf38uJWiAOuYDmIl5qplOFiZP9d9xtL9xcCZrYEuA8BgfvXBR1WuQHTU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013534; c=relaxed/simple;
-	bh=CJJauCshp21Gt8IYh7pezCpA++nAGgiCyqfq7wFZA1I=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=XLaf3kus53aFKtQP0qhaG+uKDfhb/v7vSpIUrfJb3UvMMyPulw+ZuF5E2ffBZAkKZbQg5ViqyxzQQCU7VO3W82Dbdx0t+RqnjU3ixzzqt9HkW/wg1PzUKaWW2+XyY6nJjvUIsGuVYXZucDWVCgCs7/RlzpNhR3UovmzovxqrnTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=LctQzrmY; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9C2618641
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:52:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746013947; cv=fail; b=EiukIvg5mbFbNXOWZmHouxVNZbH0Dj0cVue3mA4NVQxOHD/S2xLMyPQBgxjcyUVq9Qhxx9xO3dS6sk2dVfTlv3r0j99M5FVH0Bkka4bkXkkL1kAW11lNiOxrVrF8QKrmubqWxLEDOBsJhF8o+UcRE3Fz1lnMC0dHopEkXC2amWQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746013947; c=relaxed/simple;
+	bh=8rzAmVip2gWIvGj/bZ7KYgfIhpJx790xKlUSoO+3LFo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=cRgRtjjbDUSpTHAUH6WWnmNFqi8wmWmix699Ob1DfnhnzykYgW1qAHkJxiMZRraZHvnv0hCHvNedcQbAu65vO/Dz7QV5sh8jsaTgFVc0IKk6K/ce9Dt/5fe4RMGJCWTRcIo/30IS01gz4O9YcTPKvw4QpihP/v5jY5jvSQSLlI8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Xq3Tq/uq; arc=fail smtp.client-ip=40.107.93.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="LctQzrmY"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-391324ef4a0so395314f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:45:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1746013531; x=1746618331; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MwfMy0+KN//YvkfkLkShPPR01KHLLVwze7q8vnuMUqk=;
-        b=LctQzrmYVxuoiKEcNFGPoiJMVuDod7iHS+hyKPuTm1tvzI5wa7YDEVAsIATZ5Z5S5/
-         AtiXmR91rOSOIHeorlEwEtQrYvSAYlbDuElhGo5+hOEx/en1LwEi4fvftqUdp6GNhm27
-         F6tYrV+dLFVFn6j36bEYPMp0iXshfWGlZqrc7uv4iSiIwxpOVMKjCB45+C1f/qwNfxvM
-         l8VTgDD8c3rOp7CVwfP/B0sLHzhuFNrw5tD33BY27ks8jh5TOZaJy59VPTA6bOnXsPiA
-         W8GfM5/cquuaPX9ewqoizSJhRcdRvOsnmNtK3qcZV8Vr2M3InW8CzYKggGJJ7URZ29X1
-         sTtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746013531; x=1746618331;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=MwfMy0+KN//YvkfkLkShPPR01KHLLVwze7q8vnuMUqk=;
-        b=fn5S+94VAW3aw7hAKajGruOCP7h8hchC0yFNQ2D67cW/QGWrBhQ+LzHBOuREqZ0kDg
-         FiGUuGTr36tdsUdZf4n0Ym5k1+bh9CunxLEf5e6ieksmwYqSHh58FI8KNIEPkukObNaK
-         hvpVukfjdNAienup8kW0ocFUB617GKiW6pzvvY6ZTXoH3SGYP4oqhTJb6ajVx9k0MsKW
-         U6n4OvoJ1R6t/gql0OTLIcIuojCJAV8m+PdpxeTUTRy4oopSxG9czwE5ZLEK4fwpwP0C
-         HBFt0ncu60YfEmmYfmaMy95f52eXBOqMXasTFTynoRkcv54R5cmMbbJu+nUVsqIskAiR
-         MC1g==
-X-Forwarded-Encrypted: i=1; AJvYcCV4W/DhPcwk2VzFlS6Dc6qckpGyOT0w9QiTesFoGth7zSx9o0O7T9tcgVehWqdJWhTY6NNCtsU/2B4r4fA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLp+DYDdAAq+mUHZzvrYyCH0vUYeOUCtdS+40dEL/weRWB9bQP
-	6EjyDt2ZuPJCW8dXQAmO1eiRWGkN/EZC3jedtEw4lU80TglUwvuILFu1SdNFFsM=
-X-Gm-Gg: ASbGncs4b3IN03sFp846LNZahSDPLwcDKRCO3dSareG0unpGXWQ3p77EniEtkqklCSG
-	4bVG50Zpfnnznbk6Z91Y4phy3/FXBZGzyM6WfaVi7H3Zi/Tyc0c6rpDDogkujl5gSlpUVcyhnQZ
-	WYsWz+ChAZ/vp25u6AVdyS+o5hEU3D7EjYdi0VoHrShHgdDvv5JmbeWGNq0Ip9468rYeZznj6j9
-	YZoJ57FhIVYN37ujGmfMj5Meh6QiEYUDA7s3gKQQL8W0GR2UAX2O/X7KVKnq0vuVlrjYmYSWLAT
-	WTBJWrH2rvmXbZh0RG8zMwsi6Gd5KBPd8cZWnttiT2uvic2vAMwQGfRIjCpuQKUi/LjBUSZbss/
-	3OQMxpHC964A=
-X-Google-Smtp-Source: AGHT+IGPsHFo0i2I8e2STgcf8/9L1wSmTK1gIO5CuUV/Z9SjXZXm3h77FFhC8bIycStr7wFr3jgBMA==
-X-Received: by 2002:a05:6000:22c3:b0:3a0:678f:8023 with SMTP id ffacd0b85a97d-3a091a624b4mr22754f8f.4.1746013530645;
-        Wed, 30 Apr 2025 04:45:30 -0700 (PDT)
-Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e460b2sm17013970f8f.70.2025.04.30.04.45.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 04:45:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Xq3Tq/uq"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PCIAk3jUTmKWdWSRuH9qfWkbtOkjBRzLf8jYREkIhcT+w8U2rfqVCOwwRKoo+APjmDlltuyN94KTn7q8ULbqfYeQD/ga5DVIRxgJ5Nw1ZFQ8JyqdHCV7pTkGuKmtX0UKfjLApYiBs6rSbRtBNqma9xVavOgwswanm82t6jAwbETmfjqXtwYlAjMDshY+uI8HxQn/wnyCOuF18DrHOIt6nTdZY/k0nbLIbq2PBrBraypTgfmXwTwHa9xaUi4hL9l4AB6zxTPdYmhizHhEOBXXlhAPLViih5+JccRvkOTnLv7BxmwKsFWdjC7BkYVpjJknsfP1hpOPaqaNSUial4NRbg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JNC0n5zTFMdh+4FX9TA0K8pD7q/KE4mrReJdEp9s7j4=;
+ b=RX+dNQ4gI4cqvIYl+g+tyO2Y7fGdRT7n2cEfpvpZ+x3RhXq0BEHAV3VICvCy7cG/mMGa1fzTdpiFk4UWhRAH/8iCPd2wNZ9mFBf2/cQ0LYYIXu4gJ1m8iOnZ/zZ7X/Ett5UisB8OVqIddB/hRTq4oHbnQP3m3bKVoRBRC49lmok4dMCr0OFj1Jgrd6kDKLyveDrNLbg0dGgvB/VrrXHMhgS17KtJ4WribPi8A6wB1wtLHRrecQAikNf3vjCdeFQArzlkYUjX2rivNmXUwYBE3ms8GBl7vlP2gvHUr2QvInGhMwrtHu8IBfBJfNBhJ1q1QkHfr+JKif6qWOD4HlE7XQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JNC0n5zTFMdh+4FX9TA0K8pD7q/KE4mrReJdEp9s7j4=;
+ b=Xq3Tq/uqsCowIhJbrzgWxpvcT4JyfH1PK0HkkLeySDV+ft9dGU+GWZjRsK0cfm9WiSLQ8tIGjIUHHrIB58lz3LzkOMdkJU8KkHqCY5lTu7Exs9QEmKYh5QEmeFBCTGmU+zTP/fbss495FTViKVufHB03tOVsHuzbmlKRyrzQGbM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com (2603:10b6:8:9f::5) by
+ SA3PR12MB7923.namprd12.prod.outlook.com (2603:10b6:806:317::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8678.31; Wed, 30 Apr 2025 11:52:22 +0000
+Received: from DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5]) by DS7PR12MB6048.namprd12.prod.outlook.com
+ ([fe80::6318:26e5:357a:74a5%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 11:52:22 +0000
+Message-ID: <44aa28c7-69fe-4073-bd61-6aca57203c64@amd.com>
+Date: Wed, 30 Apr 2025 17:22:14 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] iommu/amd: Add HATDis feature support
+To: Joao Martins <joao.m.martins@oracle.com>, Ankit Soni
+ <Ankit.Soni@amd.com>, iommu@lists.linux.dev,
+ Baolu Lu <baolu.lu@linux.intel.com>
+Cc: suravee.suthikulpanit@amd.com, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, linux-kernel@vger.kernel.org,
+ Alejandro Jimenez <alejandro.j.jimenez@oracle.com>,
+ David Woodhouse <dwmw2@infradead.org>
+References: <cover.1745389415.git.Ankit.Soni@amd.com>
+ <6282a5c349812a311a67a8522dc5e4aabfe3ec3a.1745389415.git.Ankit.Soni@amd.com>
+ <596ed125-c995-4e2b-824c-b7929c852754@oracle.com>
+Content-Language: en-US
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <596ed125-c995-4e2b-824c-b7929c852754@oracle.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN3PR01CA0124.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:96::12) To DS7PR12MB6048.namprd12.prod.outlook.com
+ (2603:10b6:8:9f::5)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 30 Apr 2025 13:45:29 +0200
-Message-Id: <D9JY52BJEFX2.2S5XL9NOOGBS7@ventanamicro.com>
-Subject: Re: [PATCH 4/5] KVM: RISC-V: reset VCPU state when becoming
- runnable
-Cc: "Anup Patel" <apatel@ventanamicro.com>, <kvm-riscv@lists.infradead.org>,
- <kvm@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
- <linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@atishpatra.org>,
- "Paul Walmsley" <paul.walmsley@sifive.com>, "Palmer Dabbelt"
- <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Andrew Jones" <ajones@ventanamicro.com>, "Mayuresh
- Chitale" <mchitale@ventanamicro.com>
-To: "Anup Patel" <anup@brainfault.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250403112522.1566629-3-rkrcmar@ventanamicro.com>
- <20250403112522.1566629-7-rkrcmar@ventanamicro.com>
- <CAAhSdy0e3HVN6pX-hcX2N+kpwsupsCf6BqrYq=bvtwtFOuEVhA@mail.gmail.com>
- <D9IGJR9DGFAM.1PVHVOOTVRFZW@ventanamicro.com>
- <CAK9=C2Woc5MtrJeqNtaVkMXWEsGeZPsmUgtFQET=OKLHLwRbPA@mail.gmail.com>
- <D9J1TBKYC8YH.1OPUI289U0O2C@ventanamicro.com>
- <CAAhSdy01yBBfJwdTn90WeXFR85=1zTxuebFhi4CQJuOujVTHXg@mail.gmail.com>
- <D9J9DW53Q2GD.1PB647ISOCXRX@ventanamicro.com>
- <CAAhSdy0B-pF-jHmTXNYE7NXwdCWJepDtGR__S+P4MhZ1bfUERQ@mail.gmail.com>
- <CAAhSdy20pq3KvbCeST=h+O5PWfs2E4uXpX9BbbzE7GJzn+pzkA@mail.gmail.com>
- <D9JTZ6HH00KY.1B1SKH1Z0UI1S@ventanamicro.com>
- <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
-In-Reply-To: <CAAhSdy0TfpWQ-kC_gUUCU0oC5dR45A1v9q84H2Tj9A8kdO0d1A@mail.gmail.com>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6048:EE_|SA3PR12MB7923:EE_
+X-MS-Office365-Filtering-Correlation-Id: 15fe452b-1090-4544-16ef-08dd87dd778d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?dWYrT1ExUWVHRk0vOVpia055azVFbEhqK2hlU3ZQTkgzM3JtR2Jvd0lMc0JP?=
+ =?utf-8?B?enlFYlBGcmRETkhuV2FBeFNGRGg1V0xDT0pxWFlFOU5RK0wvUkJsK051cDgw?=
+ =?utf-8?B?QzlMTGNDREZrY1M3ckg4VnFoZUIvMnB2NjdvRGplUlQ1bEZtQUllWDVibDBG?=
+ =?utf-8?B?ZGxyNFo2cFZBZUQrS1hpd0QzaGFJV2JNSk0ySjd1eWpYL2ZETnJNQ0VveGoz?=
+ =?utf-8?B?SnIwa2wzWFJLR3pVZHRTQlVPVkpZc1gxMlMrMUQ3Nm1SVitKaEpwcTZmVzIw?=
+ =?utf-8?B?dHQ4WUFHcnM3UXR0a3FuS2Nrb29UZ3pGTUp1UWRDV3BoR2F6TytGb2RUZUFh?=
+ =?utf-8?B?TjdzM1IxTlRtelVrUEFGMWlSTE43b0MvLzRPaXJQWkFsME5nT3daVElJSDN3?=
+ =?utf-8?B?UVVHdnZEYUwzWFVCYXFseFE1dldXYmlTd2pRR2VrNVU5NENpREpSS2VOZnR4?=
+ =?utf-8?B?aDNOcFNVMTk0bUcwTkw0Q0FWQWxSVmZEWDB5bkRQbUw3MFlvK1Nia0phcGdP?=
+ =?utf-8?B?UlIxWmZ2QkZjc094NktTRlJ0S0FwNXI2ZFZuTndWUjNhWlJHakE5RXFUOFRX?=
+ =?utf-8?B?OFhmL3V5RlMwTlJULzVDaEhuek1tN2Q4c0d2NDV0WGhFNjBLNE5kZ0doL3hD?=
+ =?utf-8?B?WnV5TjVtNm5wWmdZY05JT29xSVp3Ulk3WUR1enNyV0RFVWFzbmNEdEttaXFm?=
+ =?utf-8?B?cTFCd0dQUFhPQ2duREZrMHQ4UGlEOUdQUXZBZXpLRmJESGREV0VHcFJSSjdM?=
+ =?utf-8?B?TmpqdzhDcUppU3ZmRlBtNVlvOWkwRDAyR3V1RVBXcVo5YUVVcGJ4NnJ4L2h4?=
+ =?utf-8?B?c2thMXRpTERLYWxlQzVBRGJ3U3RmVytwd0lRbnRDYmxnOGZ2bGRDeW9IVVJG?=
+ =?utf-8?B?QzRTRUs3bG5uNXVrT2RWSWFDOEgrdzgrZWp3NTZIRERiYU5WYzJYMG9jeFUw?=
+ =?utf-8?B?Y0pUOXhUSDJUdHQyUWl0Z3hpbXZYOWg1QXNoK25ZUDNkbjFlcjQyV1ZlaVJL?=
+ =?utf-8?B?QW1KU0FBZXBFK21SVFpwaWdYQ1BjZGFZVGNEL2F0UTE1MHpKZW4yTmthRXJC?=
+ =?utf-8?B?Vjl1YnJaNklrRlFXSFlpRkZJbEFnRmhNdDQwdWtqZ3VkNGNjdUlWNWFFcjhE?=
+ =?utf-8?B?elljYVZ0UHplQ290alNaMWs4WFF6VVlmZWpOOGhBRnpHcTh2NG95by9yL0tC?=
+ =?utf-8?B?U3RRd1RMeVZzQVhSOFdDOXl5MXRmazRYb1c2TzlDZU9obG05d2NXYzkyNGZ0?=
+ =?utf-8?B?ak1oUFJIR2xwUXNTeENJbmF1dm5xWlhaQnpJSDA4SFNFYlUwaFhiRUVtbjNB?=
+ =?utf-8?B?SVA3Q2NYdHJQZTJ2NFdzNTFQdXo5ZlRvazdzK0FzYko4V0tVdXZWa0ZsL2pR?=
+ =?utf-8?B?U3Fnc3l5Qm1OZGNUUy85RzJuUUtEbGdOQjNkb3FxU1ZjQXpaeEpMYWhGV0VQ?=
+ =?utf-8?B?TGF3SWVNVk9CWkF4N1V5ODRwWWNxbGY3UGNTLzNtMlNBZU1jNy9SV3NZMUZK?=
+ =?utf-8?B?V2Iwd3hUemF4TDY2WnJPNHI4eXZvV05vV280ZFB3NlFZalpVWnVxQUF3ZjJ5?=
+ =?utf-8?B?cUZzamtTd2NFRGZwekN4MXV6eEhCakNHZ0VGbklSY2tlRnJkM3UvK2dnL0N4?=
+ =?utf-8?B?a3E1Y3YzSExpVUpLMFNMTmkvYnhMTzJudWttYnRwSHFvUm85UFhUS1hiOVhu?=
+ =?utf-8?B?anE5a3JDVkpkSGNCK2xMWXJHYms1UVU5R2QrbWtCdk4zcno3SjV4WlNJZVVu?=
+ =?utf-8?B?YzBLQ1JjSHpjYUV5b1B4eDBacm9zN3JIbFVUZ0RtY3NaSnFYRjNXQWV1V0tZ?=
+ =?utf-8?B?dVd3ZHliNE1PNUVQZ1VlV1J6aER5bS9kdGErS3N1NDl2bjExUXNSenQyZERN?=
+ =?utf-8?B?L1NqWEFoOWRnZE10dExyL1JJTnUwR0xMcEN0YWpERFBVZXJ0dmtENDA5QkVx?=
+ =?utf-8?Q?Fl22Xaounpo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6048.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VjZWQzJJcm9yVGVQM2s2dEdWSW9kMGRLdmZRZ2V0cUlmK09iSmk2RC8yZzJN?=
+ =?utf-8?B?MzdSUHBhcXBCZkZWZlZqUGI5Ui9xektjR0RNclc3Q2p5VXFRUGEzZ0pwMFlI?=
+ =?utf-8?B?eW9DNGZGbDhFdzBSUXNnTW5haXFiK2NUNUlWZyt3QWhoS25OTzdLeUhOMnhB?=
+ =?utf-8?B?eTNtOUVpazcvZVRRTmdkTVhSQjVNNnR2ajJaSDdjOG9MZzlpVFRiRzRhQUcy?=
+ =?utf-8?B?VUxEYVc5SVFtaEFjNE9FNGZnWXg4VGh3eEcvYjN4VGhleGp4TGNnY2Q0Vys5?=
+ =?utf-8?B?WVZtNUp5UHZldE42Y2l3c20wdXpwQmMwS1ZJTk1nVTE5V3JJazlHVlVZMGgx?=
+ =?utf-8?B?bVlnSm5tVUlKSEs2TnY3cTN3UUJVK2JocEd1TmhQa3RLSFJqQ0hDZ0oxWlhv?=
+ =?utf-8?B?a2k1WmNyM1VhRTA0TDNjTlVtTi90WmZKMDdYOWxlSXRlZkhMc1VMVVo2ajA4?=
+ =?utf-8?B?U3EwejZoQTVEU3lUYytvWitLcWp6b1NNNHVxUndKOVlVbzUyYWdKUXg0T2hE?=
+ =?utf-8?B?dGRkcllxWS9sR2duaXFDZTBSeWhYaWZ1LzBkcWRpNGxvMG5vbER5WTNtVnEv?=
+ =?utf-8?B?UnhTQjNxRTlkamxoeUZCaFF4NDVDRGhWR09tdHU5YTIyRnlhT0RSU0IxLzhi?=
+ =?utf-8?B?VVUwSklYQkY4RUI4aTEyZEJ3QmZqbERoTTRrQXRZd0oyQmxvUlpCUFk1VFFY?=
+ =?utf-8?B?aUZFaVhsNmlmdlVqN2llaG5qckJXTkJLZnhxL3JJUjNSd0tVUTFWaXBVSWgw?=
+ =?utf-8?B?TXlOTUl6d1lrM24zc0RhTmhZNlVacWRhQ0JxZEtMWm1Cc1BDWkRUbzIwVEhl?=
+ =?utf-8?B?TklFUGRPZkJrMVc5SnVXYUdXV3RSVnJEQmdZZDFRL0k4RlAvcjlUb2lTeFFQ?=
+ =?utf-8?B?UGlBSmtCeFJtMlpyZnZnZ3FveDVNMGgxSS9FYkZWdFZOUmdFdngveE90Sllo?=
+ =?utf-8?B?SWhESVZNMGR6RWxYeUlvWHc0eDhoZllFUzFXRW1lTUJvV0ZMcW8zNWFKaklN?=
+ =?utf-8?B?N2xKaHV2dW8vTXVDQ04zVmtNUjUyZjlmd0pNRW5kMHBwbFpkcFpVTTJDNzhL?=
+ =?utf-8?B?cnJvWnZ2YVJBaGQxd20zRDROZXZQNjBZUVhwVmE4bHkrd0ZaUjBhRThUYno0?=
+ =?utf-8?B?cU51VkZHdzJEQVUybHhweHNZRm9PNm1MVFBkQTk1RUoyVGw1bUFpMkQrbmR6?=
+ =?utf-8?B?Wk5Xenk2UGpOeTV0azFQcFdSWGl1NjlncGF4VUhUOEh2RWt2RVZVc3pWWEpU?=
+ =?utf-8?B?WitiMncrWkVIRmRWYytLTk5mNlpzQXVYRnZpSkhrZUNJc0xSRnA0TngxRUpj?=
+ =?utf-8?B?NUhPRS9aSlE5Mk1uanB3L21CbGNnZXRNTGlieWNod3E4b2plMmRUZVlQZlQr?=
+ =?utf-8?B?ajJPc2VCWVN6V0F5endiODVWNzJXS1BzOWpaN1gvTjhzdHk4ajVQbWNtbnRZ?=
+ =?utf-8?B?WStncXhYYW9FSzFXckVsUDFBRGFDeVVERlArTG0wL1E1KzNxZGR5MlBiSXl4?=
+ =?utf-8?B?T0xsK1pnTGFDVnlOVVhweE9LMWRvdHVoVmZPSjUvMVJjcVdHb0l2bVM4Z2tx?=
+ =?utf-8?B?d2lHNlhxaFMvL3FXN0IxSm9pSG9nMWMvdUNBZFVDREFrNzBVcVpxcUpteEl1?=
+ =?utf-8?B?N0Y1VUVnb3JLc3pFUm5BQlFsTWJkYnZnVmg0MUZaZStiR29Mc2dlZXZraHZI?=
+ =?utf-8?B?ZzJQQVlIczk5NEkzVzUyWHUxTVAyS00vanZxQUEzMUlDZHNjb1BRWE80YnY5?=
+ =?utf-8?B?QSt4VHZIODl4ek01U0VIRk5XQTBia3NEa1F0VUhQTkNyNnR2M1MyallPMlBi?=
+ =?utf-8?B?S1h4TityLzZHYXZXZ0VHSGFtdDQwdzhVeHozb2FTSWZ0cXFLRTVUOE9zTzNL?=
+ =?utf-8?B?ekhnUEFvSStPWWZjT3ptMnZ1V1p0d3U3Q3JUS3J6MUhVeTkyQWlNY3VqUjZH?=
+ =?utf-8?B?M2tjbXNia1BpaVhQLzY3L0Q3L254eGcyYmtSL3IzNmpCdXVxWHV0dXFnd1Y5?=
+ =?utf-8?B?b2N4WVRPeVY4bnMyMDF2VGowOXhuV1JjbTZjeElSeEh6ZlladDhqNU82Q1Yy?=
+ =?utf-8?B?akk0K3VjVmxEK25aYUR4bktMNVcxa3IxRmJIdlRxWmNTMWZsem9qVzlZb21w?=
+ =?utf-8?Q?S3y9Dk1HLKat/9VKyxC5xJsOj?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 15fe452b-1090-4544-16ef-08dd87dd778d
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6048.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 11:52:22.3092
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +HyACFQTjLVw0Ur2+mZB75VEEQfVrexodl8fX90x4i65fntm7oWWxcqUVBInME7fx7VCze05VlXGAGpNqp0U6w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7923
 
-2025-04-30T15:47:13+05:30, Anup Patel <anup@brainfault.org>:
-> On Wed, Apr 30, 2025 at 1:59=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrc=
-mar@ventanamicro.com> wrote:
->> 2025-04-30T10:56:35+05:30, Anup Patel <anup@brainfault.org>:
->> > On Wed, Apr 30, 2025 at 9:52=E2=80=AFAM Anup Patel <anup@brainfault.or=
-g> wrote:
->> >> On Tue, Apr 29, 2025 at 9:51=E2=80=AFPM Radim Kr=C4=8Dm=C3=A1=C5=99 <=
-rkrcmar@ventanamicro.com> wrote:
->> >> > The point of this patch is to reset the boot VCPU, so we reset the =
-VCPU
->> >> > that is made runnable by the KVM_SET_MP_STATE IOCTL.
->> >>
->> >> Like I said before, we don't need to do this. The initiating VCPU
->> >> can be resetted just before exiting to user space for system reset
->> >> event exit.
+Hi Joao,
+
+[+Baolu to get clarification on intel driver behaviour.]
+
+On 4/24/2025 5:49 PM, Joao Martins wrote:
+> On 23/04/2025 07:50, Ankit Soni wrote:
+>> Current AMD IOMMU assumes Host Address Translation (HAT) is always
+>> supported, and Linux kernel enables this capability by default. However,
+>> in case of emulated and virtualized IOMMU, this might not be the case.
+> 
+> +Alejandro as he is filling that gap
+> 
+>> For example,current QEMU-emulated AMD vIOMMU does not support host
+>> translation for VFIO pass-through device, but the interrupt remapping
+>> support is required for x2APIC (i.e. kvm-msi-ext-dest-id is also not
+>> supported by the guest OS). This would require the guest kernel to boot
+>> with guest kernel option iommu=pt to by-pass the initialization of
+>> host (v1) table.
 >>
->> You assume initiating VCPU =3D=3D boot VCPU.
+>> The AMD I/O Virtualization Technology (IOMMU) Specification Rev 3.10 [1]>
+> introduces a new flag 'HATDis' in the IVHD 11h IOMMU attributes to indicate
+>> that HAT is not supported on a particular IOMMU instance.
 >>
->> We should prevent KVM_SET_MP_STATE IOCTL for all non-initiating VCPUs if
->> we decide to accept the assumption.
->
-> There is no such assumption.
-
-You probably haven't intended it:
-
-  1) VCPU 0 is "chilling" in userspace.
-  2) VCPU 1 initiates SBI reset.
-  3) VCPU 1 makes a reset request to VCPU 0.
-  4) VCPU 1 returns to userspace.
-  5) Userspace knows it should reset the VM.
-  6) VCPU 0 still hasn't entered KVM.
-  7) Userspace sets the initial state of VCPU 0 and enters KVM.
-  8) VCPU 0 is reset in KVM, because of the pending request.
-  9) The initial boot state from userspace is lost.
-
->> I'd rather choose a different design, though.
+>> Therefore, modifies the AMD IOMMU driver to detect the new HATDis
+>> attributes, and disable host translation and switch to use guest
+>> translation if it is available. Otherwise, the driver will disable DMA
+>> translation.
 >>
->> How about a new userspace interface for IOCTL reset?
->> (Can be capability toggle for KVM_SET_MP_STATE or a straight new IOCTL.)
+>> [1] https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/specifications/48882_IOMMU.pdf
 >>
->> That wouldn't "fix" current userspaces, but would significantly improve
->> the sanity of the KVM interface.
->
-> I believe the current implementation needs a few improvements
-> that's all. We certainly don't need to introduce any new IOCTL.
+>> Reviewed-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+>> Signed-off-by: Ankit Soni <Ankit.Soni@amd.com>
+>> ---
+>>  drivers/iommu/amd/amd_iommu.h       |  1 +
+>>  drivers/iommu/amd/amd_iommu_types.h |  6 +++++-
+>>  drivers/iommu/amd/init.c            | 23 +++++++++++++++++++++--
+>>  drivers/iommu/amd/iommu.c           | 13 +++++++++++++
+>>  4 files changed, 40 insertions(+), 3 deletions(-)
+>>
 
-I do too.  The whole patch could have been a single line:
 
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index d3d957a9e5c4..b3e6ad87e1cd 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -511,6 +511,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vc=
-pu,
-=20
- 	switch (mp_state->mp_state) {
- 	case KVM_MP_STATE_RUNNABLE:
-+		kvm_riscv_reset_vcpu(vcpu);
- 		WRITE_ONCE(vcpu->arch.mp_state, *mp_state);
- 		break;
- 	case KVM_MP_STATE_STOPPED:
+.../...
 
-It is the backward compatibility and trying to fix current userspaces
-that's making it ugly.  I already gave up on the latter, so we can have
-a decently clean solution with the former.
+>> diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
+>> index be8761bbef0f..0ebc264726da 100644
+>> --- a/drivers/iommu/amd/iommu.c
+>> +++ b/drivers/iommu/amd/iommu.c
+>> @@ -2393,6 +2393,13 @@ static struct iommu_device *amd_iommu_probe_device(struct device *dev)
+>>  					     pci_max_pasids(to_pci_dev(dev)));
+>>  	}
+>>  
+>> +	if (amd_iommu_pgtable == PD_MODE_NONE) {
+>> +		pr_warn_once("%s: DMA translation not supported by iommu.\n",
+>> +			     __func__);
+>> +		iommu_dev = ERR_PTR(-ENODEV);
+>> +		goto out_err;
+>> +	}
+>> +
+>>  out_err:
+>>  
+>>  	iommu_completion_wait(iommu);
+>> @@ -2480,6 +2487,9 @@ static int pdom_setup_pgtable(struct protection_domain *domain,
+>>  	case PD_MODE_V2:
+>>  		fmt = AMD_IOMMU_V2;
+>>  		break;
+>> +	case PD_MODE_NONE:
+>> +		WARN_ON_ONCE(1);
+>> +		return -EPERM;
+>>  	}
+>>  
+>>  	domain->iop.pgtbl.cfg.amd.nid = dev_to_node(dev);
+>> @@ -2501,6 +2511,9 @@ static inline u64 dma_max_address(enum protection_domain_mode pgtable)
+>>  
+>>  static bool amd_iommu_hd_support(struct amd_iommu *iommu)
+>>  {
+>> +	if (amd_iommu_hatdis)
+>> +		return false;
+>> +
+>>  	return iommu && (iommu->features & FEATURE_HDSUP);
+>>  }
+>>  
+> 
+> It's strange we seem to somehow have host translation disabled, while it
+> advertises other translation-related features like the normal case.
 
-> Also, keep in mind that so far we have avoided any RISC-V
-> specific KVM IOCTLs and we should try to keep it that way
-> as long as we can.
+I think even if qemu advertises those features we shouldn't hit this code path
+as probe() will fail and core shouldn't try to allocate domain, etc.
 
-We can re-use KVM_SET_MP_STATE and add a KVM capability.
-Userspace will opt-in to reset the VCPU through the existing IOCTL.
+I was extra cautious and suggested to add this check!
 
-This design will also allow userspace to trigger a VCPU reset without
-tearing down the whole VM.
+> 
+> In any case we should probably follow Intel's example (which does similar thing
+> to HATSDis) where we only call invoke IOMMU groups
+> iommu_device_register()/iommu_device_sysfs_add() with DMA translation enabled?
+> That should simplify most of the patch as those codepaths are not reachable via
+> kernel/userspace? Unless I am missing something ofc
+> 
+> See also commit c40aaaac10 ("iommu/vt-d: Gracefully handle DMAR units with no
+> supported address widths"). I am not sure what else is the closest example here
+> besides intel-iommu equivalent.
+
+@Baolu,
+  Looking into intel driver, my understanding is if DMA is not supported, intel
+driver will set `drhd->ignored` to 1 (alloc_iommu()). So iommu_is_dummy() check
+will return `true` and hence intel_iommu_probe_device() will fail. But it will
+continue to support interrupt remapping. Is that the correct understanding?
+
+-Vasant
+
+
+
