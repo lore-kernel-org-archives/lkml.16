@@ -1,184 +1,167 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2085.outbound.protection.outlook.com [40.107.21.85])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935E6204F9C;
-	Wed, 30 Apr 2025 07:44:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.85
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999084; cv=fail; b=DnCzyMz/MQY5W2Lfr41eGvMu3djEecURD7EtVCg+L90XJilOcttdlC2USpukbtz53o3WrHsAb1RSsJZJWISQCwwrnxdAPvgvTlRepZmSY8Nzt/uINTvKwWNy/5h7FKSVR3Si1lRHMpUht3st+pqoyI3eQI4jfnN6vGHN9uJdPYc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999084; c=relaxed/simple;
-	bh=h5KY6ffPJoe3aYlLVNpgDHzPdf0KNV3bCbhVydU5sfc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CLPwTRuZQPYqRrYvEMx5yoFpHij8k05HQ+PYgsjZ6Y2JUZlU1iPwp3hZbxmMlp3R3ky2wqANq+P9qDsXd+Rf4qyqVZZezM7BnVilvQvqLEsGD94It/lhQQfpIBCiY6tPxUY6sYRT9HklRoDHvwd0QtPI3LZ+srhXKJz5+iNnlvA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=Arn3ByAM; arc=fail smtp.client-ip=40.107.21.85
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB501FE478
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745999197; cv=none; b=orrJ5p+wjerz0+eA7LoMzGPgy0eOYoJ36RYiW9kpbuk60koM73tqkKQ+xqC9tHmxjyYh2uSZCyM2K3vLSieRiCiLBXuZNOagCjj6SJurAjVosLVXBRXJ+GgzMbQB0OsFI9TiUotgPfgxLXvtASbfdRn7lrmJf4txGdMrBBBbgos=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745999197; c=relaxed/simple;
+	bh=CTEjPujSZAqf3P+j1NI3hRXUfVHwxDengmLbAq8TEXg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VLvLj+twh/ra1oy0N8hkhB+FfhlrhjeyCFoLrvBJ1ud1S9t6qgTK2qDdKbjEFQWVjwzt9KoccFBAl0qygO23WzNN8/i3uHd25bwbnHt4fIEsNX6EBSy29UZn0L2L3oVDh4E5LTlfptkOVxtx52Dj66nY/NA7U7K0W4gxCwMxFhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EPnBdTbt; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="Arn3ByAM"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pRbVafceyWE+9pPObHXRPq58iz0u6SNjC9DbhBeknn9tJaBRgXObCJqLiM8DvMK/aHX6rTLaQBqmB1zCUMtg3wz3HjHzIVbFZTAjHQzgkV9apPGpf2DlFtqRkhRR5Xucrhp+OLslcTx5fa36RksAOdqu9uULoHLQ5R332kMw3qD+v7tgSKvdqU18lNV0uXTWpvyiiN2i/3V+y4OTW0AsqjjLgNVpiWjPxRDqYDt8XmxXLRaN8nEpjhI8HSbNlP/ZNYBvdmWLpzJy1Ekzo9vN3PhirUcQlNV+zw3KzBGF1PTmOpCZq8EaFdP7ifcnOAS50RpyDFvxUonOgfhOgGsryg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LqFt9Jd12jxYN6lY4LDJXBPir8JfirRblcVSyC2QY5Y=;
- b=BwLA7p1AeTI+v2oMHv4r+Aubp9GZ1JbDadmgHQc82/1s2fctbLq9dIR32f/3jQ30es9yh8ne29UqI9W4c/dxZIj1bMuKQ1e0lwD/2oCiOdOjjuNHpRn09RdBgq0I0zsHr+s38Y55SE2NlaXa/i8s0yAHAE1JaTsKe3XuVc+AxzS0Q7Wmx3H6IH146UntHhP5eZmMrr28oRL78y42ikPuj3HZc/WsF5OYOEitYyteBPZ4mikq1D0yZpVBcpLUAPLBZZbo82tbQtLiMcKMERrGs2wYRTREkNjnUtDgXByICw1DWhF07I18hqcjLLDB1QJIgkV6u8w2XCNtgpzxoBZkOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.205) smtp.rcpttodomain=buenzli.dev smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LqFt9Jd12jxYN6lY4LDJXBPir8JfirRblcVSyC2QY5Y=;
- b=Arn3ByAMMyY+9whZH9FPBeHvKPyRCV5W+fXuixEh6sfOC+ctDKQUl0Zoa7qaWZpp8nFKcpIi5VpG6Oa/7RrUX33nmRXQ6O3abFjZbP74veH0JloDHDbj7T2qivtwvXVqVHZYP6VndyPxchL7P9v/4gws5ijH/5dYcqLC9TWIrsqR86qbEehb5oR74NUXdJqjVtYbjScgowUBfSUaCkvryF79DApGJDetxc5dSSuThtJoqNQBDfOMmREUV024na9Mqtx1Sa0SQMe+38fq3lRn5G1rs8W+w3ij7xPOBhHED2B/ILSGrexkYEYUlsi3um6OeyCOThzMOEBIp64Feb0S9g==
-Received: from AS4P195CA0044.EURP195.PROD.OUTLOOK.COM (2603:10a6:20b:65a::7)
- by GV1PR10MB9092.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:150:1d4::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Wed, 30 Apr
- 2025 07:44:37 +0000
-Received: from AMS0EPF000001A6.eurprd05.prod.outlook.com
- (2603:10a6:20b:65a:cafe::c6) by AS4P195CA0044.outlook.office365.com
- (2603:10a6:20b:65a::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Wed,
- 30 Apr 2025 07:44:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.205)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.205 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.205; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.205) by
- AMS0EPF000001A6.mail.protection.outlook.com (10.167.16.233) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 07:44:37 +0000
-Received: from FE-EXCAS2001.de.bosch.com (10.139.217.200) by eop.bosch-org.com
- (139.15.153.205) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 30 Apr
- 2025 09:44:33 +0200
-Received: from [10.34.219.93] (10.139.217.196) by FE-EXCAS2001.de.bosch.com
- (10.139.217.200) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.43; Wed, 30 Apr
- 2025 09:44:33 +0200
-Message-ID: <6b1393ac-bb45-4911-ad79-59f0bd7d882c@de.bosch.com>
-Date: Wed, 30 Apr 2025 09:44:20 +0200
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EPnBdTbt"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLadww002524
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:46:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	XcCLzzMlB7ZxM/ezJ4VGPTAmUkXjhMccCtENn84um/A=; b=EPnBdTbt9S8eSEoU
+	1mt/l+svodQUGTAy7ITtLDuvP7/1rRy/i1nBHU5AhHgtkqN2kLfCKzPj00AQKv40
+	ZM3FjwGOOsb9IrnzETKnLLrOIFjW+y12Uq2liUme9nl1Y8isI7r1Y6m2lJNnlh+I
+	iKSLfShghwg4zSG1ks6oeP/mgH9GyG4tLSRsmTJyvmApfWksQS/urUk6gIqQIwUE
+	IUbABca6OocyBGPh0AEesl5vwm4lfTpcQ5nnId42e+YmrNt6n9WXRf+mB/AQeV5V
+	BcqRTQvcw3Y3njk7Dr6VbbY4V4He0nP7JNQpVIlUOtY65yw2x99pgWivxbZ8LzID
+	26NLjw==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u897u9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:46:29 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4792d998b21so10570121cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:46:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745999188; x=1746603988;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XcCLzzMlB7ZxM/ezJ4VGPTAmUkXjhMccCtENn84um/A=;
+        b=F52VfI8s5ZMH6QzAVnywoneO20HvIjrJVaQPsEQgOQH1tU/9oYb3AW2XaGZKLcBpUo
+         Wb045muDS9Qrhgqs/ZUBQJofiuJ2xq8wf+uUDdX7Bk1iy13tYOjICFhxvR7gdsNF2/zu
+         oUF8CbjLv2sUkMVhDJAFioWkkc9Oo5Ludt9nG8wXotKIbi2ioipvXgUAkafuCsg2DLUY
+         sMn1ZQiHHNdrozsTpAGx7aWWCnTojQ3RGwF+0Ip7jxPieuw7JgCGzjqbmAepcfp1xROP
+         PLqkuK/xo6+hPdpXEyomtlR9DRTfbV3s5vEFNpkpwBKU7rZLZY49c52FWR3rPecHf4Fk
+         24eA==
+X-Forwarded-Encrypted: i=1; AJvYcCUX9Uhw9LMfUWTAqfgCKNUyfBsEM2Ts/HWqQd3ly1cTClgefYkXeAoHkGVV88w4H6R3yk4fSkfp56K6UTQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDg3PafOxpaOPgKBmEqtQsQePpg3/18JhgAf3a4cAHiO0LuB7r
+	yGyiaPGXP9p7i4+cT1D+tWowZQb1Lvi05pdXxYuqe1c9qtk/8hdDHI0mHNbwEoAKubXsQjkcx7M
+	8ZSH2php/312JD5IB19Ay+9C8cEH26kUm8bYpQK57cSR9esXeAfBpiuaeCnf8oF8=
+X-Gm-Gg: ASbGncuPZH60+O+AZoZ201twPRp0gMUrqbugtnXl0hY01bCD4F0qbe8Xk4RSgGHxsuD
+	lZ9dztwuf0XjMIyeOYk5LnJt65j9tuYCsFuNNzri/ahOLArPC/77buGJbc22C+JNqjTuSR51TSY
+	PVzwZpVUlPX7l1EwsFL48jXjlqV9t82Ko1vKEdBLqOm1jVMDpFEx5TqHHNyogEb8C6XgSFMfhg+
+	/8mA2JNIIZBn1ZiRNKC3SrQVimjnSkwawn7TC8b6VUBB5GesgmGb4sON9f01Wd5vhedKew6nJiR
+	Q5ROUZzkZ05Q4cyMyqzQN/7I/PQnJuEGt8ujFWtjZ75FI4t1KwmWMQ/ktWYmGwqAhh8=
+X-Received: by 2002:ac8:7e89:0:b0:474:e213:7480 with SMTP id d75a77b69052e-489e64ceed0mr9350851cf.15.1745999188228;
+        Wed, 30 Apr 2025 00:46:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmeOMwpptckVk+jetsDOiR+1e4jS5dFJwxeM7DhbyeRAzyOqqNSOpz4xjt7gtRJg3L8eOXmQ==
+X-Received: by 2002:ac8:7e89:0:b0:474:e213:7480 with SMTP id d75a77b69052e-489e64ceed0mr9350621cf.15.1745999187615;
+        Wed, 30 Apr 2025 00:46:27 -0700 (PDT)
+Received: from [192.168.65.132] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8ca6sm881270266b.118.2025.04.30.00.46.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 00:46:27 -0700 (PDT)
+Message-ID: <59e3e34d-83b6-4f83-be4c-eeaaba9a353e@oss.qualcomm.com>
+Date: Wed, 30 Apr 2025 09:46:24 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v3 2/7] rust: property: Enable printing fwnode name and
- path
-To: Remo Senekowitsch <remo@buenzli.dev>, Rob Herring <robh@kernel.org>,
-	Saravana Kannan <saravanak@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	"Alex Gaynor" <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
-	<bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, "Trevor
- Gross" <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
-	<rafael@kernel.org>
-CC: <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<rust-for-linux@vger.kernel.org>
-References: <20250425150130.13917-1-remo@buenzli.dev>
- <20250425150130.13917-3-remo@buenzli.dev>
-Content-Language: en-GB
-From: Dirk Behme <dirk.behme@de.bosch.com>
-In-Reply-To: <20250425150130.13917-3-remo@buenzli.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A6:EE_|GV1PR10MB9092:EE_
-X-MS-Office365-Filtering-Correlation-Id: b07861f6-b870-45e8-555c-08dd87badbac
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|921020|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?d0toOWNXNWlWYkUxTi9YZUJxQmRUbld6ejlsUVYwWkc2dk5IYzhxUEtqdi9o?=
- =?utf-8?B?R1QrRm1NWEVkcjBVRTEvWEZYMW1hMVRJUFNxZldSNTBzeWlBd2tGeG1ocTU3?=
- =?utf-8?B?RzNyazk0TENmMFpvaWRDTDZMZ1B2OTg3andJeHh2eDUyTFBVMElvTlJJOG05?=
- =?utf-8?B?SkJweVcxRXJZMkt0VG9lejd6TEJWWWllZnRvbUdkaWJIcStGbEVCdlVyVmNU?=
- =?utf-8?B?R1dBZlIvTmtGOEYyM29kTnJPNlExTUd6Ry9IV2ZDYTZtbFdPQVA0SVErQXdv?=
- =?utf-8?B?VDUyZ0h0Mk01TnJCUGFOT0tabFl6YUxEdHhWMmc3K0tzOVRiTG9KT0l2TTBl?=
- =?utf-8?B?YzdJQS95Sy9wTFNMSTlXaVlWczI1MU5leDYxWjl0WlV3cmpFOEQ1K3IzWXdN?=
- =?utf-8?B?cWlDa0Z1RUJGL3hiNUR2TUUzcHFoc1VuTnB1NTZlc1F4ZU1aOTB4N1VIcXRG?=
- =?utf-8?B?QVl0QXExcW55NGh0WlJHTHZxTFVNMkdhN1ZWdk82eS9XY05UdGd2M1poVVZn?=
- =?utf-8?B?eUFaMndmR2hDTkp0K2MyaURjOEZpMTYxYzZ6V1JuU1gzY2pmN2RlblpZakdL?=
- =?utf-8?B?azVVQUVRSXhsdzRWTEVaSjVTVXcwODVoYXNkTHFsY3k1d1FUZkRvNXFETEMy?=
- =?utf-8?B?QlpwN3JsNFVVektmMzU1OFZQMXQzTFNxdiswSHB6REx2Y1U0S3phdEU5MHdG?=
- =?utf-8?B?V0F4bDJWb0x3bWhiQ2xRT0N5cUZoRHFrMEFkL3k4VU9mUlJXcnVrNnhtN2Yz?=
- =?utf-8?B?aGhHU0R5b0JQQ01KQTNUYitwVnF4bW9lUWZxR01CRHdBZ2R1ZGFHb3NMRmxT?=
- =?utf-8?B?ZWlkTitndy9FNGJ2VVUwWHhrelVIYitvdGJLeFp2eU5PcTRkOTZlaXdvRmlO?=
- =?utf-8?B?bXNkZnpJcjQxd3pRNVVpVmtXMmZ4d1haWWhuVjIrVFRQVFk1ZHEraDlCRGNa?=
- =?utf-8?B?RzJ0ck5QZDE2V0EwWmo4K3ZYdzRuZ09kR0ZtaWxaZnVXSklGdWRFTEpoRGZD?=
- =?utf-8?B?SW9uUmppM21uQWlmZ0NORUdxVnJKUjBGSUxQcG0wWjk4dFdXL1duSTJ3VVly?=
- =?utf-8?B?OEpEUWhqdWtnK2wxVzNIUkNVM2FsVVMyYUlGcit3RjZjSURSdjdySmtiNWVV?=
- =?utf-8?B?bnBxMjV5V1dHZzhRS1JjU3h0MGRLVnBJUDNvWnhVV0oySFFlVE1vcytPbThQ?=
- =?utf-8?B?dnlrM2kwcDhwMDdUOCtPUE11N3hLMk9sS25EazU0c1JHanZJNFZ0anBVeC9X?=
- =?utf-8?B?dFBtYmQ5c2NZN1MxWmlwUUk2QytGS2ZqQ3hSTlBRMkJ6MkVSV1Q3bzZWbUNW?=
- =?utf-8?B?WUgxRmlqcys4bisxWWdWSnVqLzVnT1hPNjFYQmcxRDV0Sjc0ejlvdHoveHVH?=
- =?utf-8?B?SlhzZFc0QVFWeS9YNGZmMHhRNzRkdnBqRENTWkdETnhtdDAyd08vUmNsN0V6?=
- =?utf-8?B?L2hvZ2ZFcTR4VmpVQkV4cGRhSC9KUlZJMFJibUFLMWozWHBOZ0hTQ2o5Ujcy?=
- =?utf-8?B?VEM1dUdrME5Fb0IyaWpPSklITnJxbVJtK1J0MGRjYVJ1SnBNUUMyYTNnaWlY?=
- =?utf-8?B?OVdpclYwNWVULzVnb2Jnb3hJNW11TSt5RDJRY0gybkl3Z2ZQR1MrNU5iNzVO?=
- =?utf-8?B?VVBXQlU1cjFxYU11akxMcTFxb0pnL0lRbGRIUlNqNnREZFByVlN2RU81cVRL?=
- =?utf-8?B?MG12Umg3ZGhoT1NWOEpwVmtUd0o5NFNsMkVNUkF2L2xIWlk4aXZZTEhZWmY1?=
- =?utf-8?B?VnVvc0IyNUIyTE9oMzkyTVA3L085blZ3c3AvZWZJYlVpdFdSb0hnQ0w5SHU5?=
- =?utf-8?B?T1B6d2lWdlowUkVlY2hJTm43YTJtdEFIVEo3dWhKcGhPWEVFNzB3bzFFV0hW?=
- =?utf-8?B?Y3FBVXBEWU1PQ1NnQUkvekc3dGhHNG1aSTMwdnZQRkdLKzl0ZlQvNFVYNnhX?=
- =?utf-8?B?ZEVmS3lWeGlqZlBGMGk1b29QWXZ2c3NCK1B0SmtyYnkycHpmeEFHSDduRUdG?=
- =?utf-8?B?bHJxbW83UmozOWJhQlg1aXJPalExdjF0NmI2eUlJSjdHb1RyeHAzTTRxcFpZ?=
- =?utf-8?B?V09uN05vb3JQM0R5V0t0UnFLbHNYOTBuTUZVdz09?=
-X-Forefront-Antispam-Report:
-	CIP:139.15.153.205;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(921020)(7053199007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 07:44:37.4909
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b07861f6-b870-45e8-555c-08dd87badbac
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.205];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A6.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR10MB9092
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC/WIP 1/4] arm64: dts: qcom: sm8750: Add display (MDSS)
+ with Display CC
+To: Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+Cc: Jessica Zhang <jesszhan@quicinc.com>,
+        Abhinav Kumar
+ <abhinavk@quicinc.com>,
+        Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250424-sm8750-display-dts-v1-0-6fb22ca95f38@linaro.org>
+ <20250424-sm8750-display-dts-v1-1-6fb22ca95f38@linaro.org>
+ <81205948-ae43-44ee-aa07-e490ea3bba23@oss.qualcomm.com>
+ <97ae84c6-0807-4b19-a474-ba76cc049da9@quicinc.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <97ae84c6-0807-4b19-a474-ba76cc049da9@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Authority-Analysis: v=2.4 cv=B7i50PtM c=1 sm=1 tr=0 ts=6811d555 cx=c_pps a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=KKAkSRfTAAAA:8 a=bmsyZSe9DYnGDotP4YEA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+ a=kacYvNCVWA4VmyqE58fU:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: jCrWfkyE0m_PB-5fsqm8O_97zlxtgCq9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA1MyBTYWx0ZWRfX37ZFQ26kSy3K q4JKDCF5iT4tPgcxUwRh09X0ha1vT9CFUZafPzuOURJPqvkQ+Cm/EWuZOHWX1TwYkcogKeKVsBM e2cv/oAsocbK5Wo0PMt8ZaHYK1Ki5BGXHhIGQbRkelTxdHFAfgeBWdJMe6MnOQSj1lJG90S5BO2
+ UhTwsx2a86e7j9OUX53iqvQXZpmRQ+39ibatBeOdtR55z2W2h/pCF1EO6OYVRcZXkUu1ysWdXJ4 kEAkCqH1PJ4UGOzzpEXWR+lXprExEqaqxtTQJtDGFwkwUUdQHVfE6cdrRx1e5yyRGG32jDGNGC5 /3uroWF9hrRZ0I6viS4lfXnLLv8qC/AcUtWfMhdEsAWnSTF+sHUlNVJg2ZzzOITP6MH520Fo/HD
+ Biz5tZWeinpC1N/3l2FM6JT4Qg23mEVqSF73qarkUfhAOB57x/lZ7Fo60zw8qX9Zh3WW7VKK
+X-Proofpoint-ORIG-GUID: jCrWfkyE0m_PB-5fsqm8O_97zlxtgCq9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 bulkscore=0 suspectscore=0 spamscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300053
 
-On 25/04/2025 17:01, Remo Senekowitsch wrote:
-> Add two new public methods `display_name` and `display_path` to
-> `FwNode`. They can be used by driver authors for logging purposes. In
-> addition, they will be used by core property abstractions for automatic
-> logging, for example when a driver attempts to read a required but
-> missing property.
+On 4/30/25 1:07 AM, Abhinav Kumar wrote:
 > 
-> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
-> ---
->  rust/kernel/device/property.rs | 78 ++++++++++++++++++++++++++++++++++
->  1 file changed, 78 insertions(+)
 > 
-> diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
-> index d89715f7d..28850aa3b 100644
-> --- a/rust/kernel/device/property.rs
-> +++ b/rust/kernel/device/property.rs
-> @@ -49,6 +49,84 @@ pub(crate) fn as_raw(&self) -> *mut bindings::fwnode_handle {
-....
-> +    /// Returns an object that implements [`Display`](core::fmt::Display) for
-> +    /// printing the full path of a node.
-> +    pub fn display_path(&self) -> impl core::fmt::Display + '_ {
-> +        struct FwNodeDisplayPath<'a>(&'a FwNode);
-> +
-> +        impl core::fmt::Display for FwNodeDisplayPath<'_> {
-> +            fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-> +                // The logic here is the same as the one in lib/vsprintf.c
-> +                // (fwnode_full_name_string).
-> +
-> +                let num_parents = unsafe { bindings::fwnode_count_parents(self.0.as_raw()) };
+> On 4/28/2025 2:31 PM, Konrad Dybcio wrote:
+>> On 4/24/25 3:04 PM, Krzysztof Kozlowski wrote:
+>>> Add device nodes for entire display: MDSS, DPU, DSI, DSI PHYs,
+>>> DisplayPort and Display Clock Controller.
+>>>
+>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>
+>>> ---
+>>
+>> [...]
+>>
+>>> +                mdp_opp_table: opp-table {
+>>> +                    compatible = "operating-points-v2";
+>>> +
+>>
+>> The computer tells me there's also a 156 MHz rate @ SVS_D1
+>>
+>> Maybe Abhinav could chime in whether we should add it or not
+>>
+> 
+> Yes I also see a 156Mhz for LOW_SVS_D1 but we had a similar entry even for sm8650 and did not publish it in the dt.
+> 
+> It was present till sm8450.dtsi but dropped in sm8550/sm8650 even though LOW_SVS_D1 is present even on those.
+> 
+> I think the reason could be that the displays being used on the reference boards will need a pixel clock of atleast >= low_svs and the MDP clock usually depends on the value of the DSI pixel clock (which has a fixed relationship to the byte clock) to maintain the data rate. So as a result perhaps even if we add it, for most displays this level will be unused.
+> 
+> If we end up using displays which are so small that the pixel clock requirement will be even lower than low_svs, we can add those.
+> 
+> OR as an alternative, we can leave this patch as it is and add the low_svs_d1 for all chipsets which support it together in another series that way it will have the full context of why we are adding it otherwise it will look odd again of why sm8550/sm8650 was left out but added in sm8750.
 
-Missing a safety comment.
+I would assume that with VRR even fancy panels at low refresh rate (in
+the 1-5 Hz range) may make use of this, so I would be happy to go with
+option 2
 
-Dirk
+> 
+>> [...]
+>>
+>>> +                mdss_dsi_opp_table: opp-table {
+>>> +                    compatible = "operating-points-v2";
+>>> +
+>>
+>> Similarly there's a 140.63 MHz rate at SVS_D1, but it seems odd
+>> with the decimals
+> 
+> For this one, yes its true that LOW_SVS_D1 is 140.63Mhz for sm8750 but this voltage corner was somehow never used for DSI byte clock again I am thinking this is because for the display resolutions we use, we will always be >= low_svs so the low_svs_d1 will never hit even if we add it.
 
+Alright
 
+Konrad
