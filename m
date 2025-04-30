@@ -1,146 +1,101 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A309925DD15
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 976EB25A2D9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:48:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746017300; cv=none; b=B7gk4dInSsXOl3kJMa3RTN1RXot+3jo3Mvzzm5z6EHGA+BD5DlWGav6f9adDEmm8sCsJeR2daA+FHY3fG6kjTw3FJa5eQ/stUR4RW0diQejqtA1nXJHHwB15FHnKmoYijbcLLWtoRzu9LYJz9RWXluBYAtFpC+1iMceYdDUakZ8=
+	t=1746017321; cv=none; b=Q3xTQKcDrih3oSVzkntrX205LeGZ66svqX9pDZZx1LsiRSmkU8tEXalJpXhaqoaCg9HTOR3mNE/hwQAxAo6zdrOeJ6ys0RomKotZ8k+zSpLuermotztfLE43LJGR2LYyfNDGt/4FIl5ZeXT/qQrmHNg7W4979xcnZYj6lCOdnmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746017300; c=relaxed/simple;
-	bh=iXqh6JMClLUAps5gEZsQzUHOSiUBzXhckx9408MiJ1g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=jS68B48nE3Mp4hTEIt1du/W62F0731PXgky8G+B35/2qWlfugXlfSwjdgK4RywTW/SCI/TuSq1adRBjRKU6O20BMj+X7sxYtAVACjq0Emp3ugra6JZKTSAiTUo9x6FTZWCBGNyjDdb0Hu7CWGVLiZLzj6fWgkDTP4Mr210V9WRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fcIEHrLV; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OKusDwoc; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746017321; c=relaxed/simple;
+	bh=QeRn1NU2eea+J6yNvboMoLakg9XsO3BWpGKxT3f5vgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xr4Il6/NvG+uRXvDBAfgC5gpgmznbekJadgwRJH7U5ruGk9tTu0QsPlyxdI+M370W0BQvjbwDWxMO0a604GeBsJtkxACHQVGcgaT7DVJ/EtdrKDRtAcGBjGeKgMYyWqOy8p5bJ0rKpWimAmfq6XXl1knPEYs5S44QXu5O/M+vB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ePaCClld; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fcIEHrLV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OKusDwoc"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746017295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CbMS+i5KjJobTHjv4nAKAOXl90tIbvktu5yABmTMxQA=;
-	b=fcIEHrLVL4rzwx+TfU+lLRAHhSgKY/xM7seWlECXwVpdy/Xm+9D3PwmWlV2gAu2Ss9lx9+
-	63xCgB41/Vm/pmNsst8jsycKad7g/5nMNnrbz6Tmt5hge61m20mto0rI/hJBb5YXTrk3+c
-	nsmL5FWMg7OoBoAcegRMIH5gdmz0FLxvUUKDmYFMJ8y26bX1wkgUK44KrfJm4VnSSxlP1e
-	qRq33nHZS4QNEXf0FpiPJph5fuKHTxZ+OC19UjSqIWk1h1QwToN9jc30xSlj7edMbSiAle
-	gyiWvcyB//73jAtgqN5i3OwOe/pQUAADXNP3rGvpQfWfJG9PGSkMYERX1xIGmg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746017295;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CbMS+i5KjJobTHjv4nAKAOXl90tIbvktu5yABmTMxQA=;
-	b=OKusDwockcIUpQe9TJVlUdrkMbB1sByfjvpgjmHkN1XpWCsNR5Jrw18Q3QhTkF7QEbd5jn
-	zM4Lt+2A0CSNMRDA==
-To: Jiri Slaby <jirislaby@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Subject: [patch V2a 35/45] genirq/manage: Rework irq_set_irq_wake()
-In-Reply-To: <87plgtq0qb.ffs@tglx>
-References: <20250429065337.117370076@linutronix.de>
- <20250429065422.128859754@linutronix.de>
- <e9a0abc5-7ee0-4ee1-9e19-37d43a5d41de@kernel.org> <87plgtq0qb.ffs@tglx>
-Date: Wed, 30 Apr 2025 14:48:15 +0200
-Message-ID: <87ldrhq0hc.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ePaCClld"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39c14016868so7802732f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:48:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1746017318; x=1746622118; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r87uiOS2eZepV6da/asr0cY6efgFF096A1rdC7Nhh6U=;
+        b=ePaCClld8Hthh2szr167GP5U5XUp+WNuGU0ZfZ6kL4P/lJ9zyiAXb6YUK7jghkFADo
+         XlUVHBIKy2SkCm9dm01OL6vluG4miOxUUMEaw2BffVJTNgrYOy0WdjN3EK10kMj/Nrx2
+         /ZaiQmgd3EiYqXvcHO1ny9ZoA8qk8PyjgevdvJYoki+XqMmLxWkJ10qL5gigD46Y1Mgi
+         W2ViH1VGrDs+3tyPvXN8Jtm+m7Gt64dxVAHuAOR4HeTQ2sM3D/R+/IFLVLeRoi9UKxbK
+         rDtYNiCdZ8TqfAQ3BaJNMjRY9arOlJMYcqqf8lzNhZXPdByfqtHyCMbs4Dy+ySucw2R+
+         gRGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746017318; x=1746622118;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r87uiOS2eZepV6da/asr0cY6efgFF096A1rdC7Nhh6U=;
+        b=Q2bUSzjmiO4Z/TxE8JyTqQeLZp2QzBUFMDM1AROawMo5gnvNH/lLL70rItUsVg305Z
+         wrZRyx2a2jkILTDQ4V91o6/VACbZuFsooXzxJ/JpCnYIr5Lzv/M7ELSZZYe40bV3z7Gt
+         wbWSbtNOZZ2Ru66ykvUIltd33xAEBKwWZaTqFDrEG+tUERd8QelDxj2lM1pJzhmWZ5io
+         B3RlALKgg+WFNeg+mcnh+Usqt+68/fxFw8FG88/D1c36rXnOIQSw0t70s2bIWbrTG3LM
+         gGr4gmWDxTkaLJJ1dlghYgZaydfNoIHt/GOwSjS9mVm8P1FZlfQ2xPwOS/kwZfWWdEQ2
+         7Yow==
+X-Gm-Message-State: AOJu0YyaIlcqo/ozasAT54+dyUpB+TYehMEy6w8421JdeHE6WcZ+Bgg7
+	owsz3uh1zF1QFoMim7rm/0SrvjYlgZWuuO2n5etikcnlPp0hmfx5rxTXPyHhviuV8q6PDIX665Q
+	Pmso=
+X-Gm-Gg: ASbGncto7iKx7bKDQJXg0KimCTP2zSBHDher7xeSEEK8tm3BpNc0411+mmRA9CluJQ0
+	WLnt/QuVQ+V+54wETiYzHTjJ/HGyzXMfWRO70Q4ZMFxcVjvTqI2LQVn8NPrFn3oUHrr1euBOJ/Y
+	OnW2sTKlCDrH+PW9Zo+I/cPW12tsJglUDYZE2zvzLTa8mSxl7PCosAxOcdtl49uwR51MPIc/RVy
+	0W3RFQ1Ry8sjso13U7GvZIrv51ETcpKQOcq0vJajTPPM7z+Gg1KsOEG+yJvQxwNHDADXrhPa65H
+	FBQfHNj0zGivKbgSsWIiU/u1xWmT
+X-Google-Smtp-Source: AGHT+IH+MPKHXUZJF7idCbMWvelbL3DnTQQbuFuKaiLNPpRAhogqBOwEjJB5QdJ/DipqR8WDBm6WcA==
+X-Received: by 2002:a05:6000:420e:b0:3a0:847d:8326 with SMTP id ffacd0b85a97d-3a08f777d82mr2987308f8f.25.1746017317749;
+        Wed, 30 Apr 2025 05:48:37 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::f716])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca52e5sm17233581f8f.36.2025.04.30.05.48.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 05:48:37 -0700 (PDT)
+From: Andrew Jones <ajones@ventanamicro.com>
+To: linux-kernel@vger.kernel.org
+Cc: tglx@linutronix.de,
+	18255117159@163.com
+Subject: [PATCH] genirq/msi: Fix MSI domain debugfs show
+Date: Wed, 30 Apr 2025 14:48:37 +0200
+Message-ID: <20250430124836.49964-2-ajones@ventanamicro.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-Use the new guards to get and lock the interrupt descriptor and tidy up the
-code.
+irq_domain_debug_show_one() calls the irqdomain's debug_show() with
+a non-null domain pointer and a null irqdata pointer
+(irq_debug_show_data() calls debug_show() with those the other way
+around). Ensure we have a non-null irqdata pointer in
+msi_domain_debug_show() before dereferencing it.
 
-No functional change.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Fixes: 01499ae673dc ("genirq/msi: Expose MSI message data in debugfs")
+Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
 ---
-V2a: Fix the return value for the on/off paths - Jiry
----
- kernel/irq/manage.c |   65 ++++++++++++++++++++++++----------------------------
- 1 file changed, 30 insertions(+), 35 deletions(-)
+ kernel/irq/msi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/irq/manage.c
-+++ b/kernel/irq/manage.c
-@@ -846,45 +846,40 @@ static int set_irq_wake_real(unsigned in
-  */
- int irq_set_irq_wake(unsigned int irq, unsigned int on)
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index 5c8d43cdb0a3..c05ba7ca00fa 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -761,7 +761,7 @@ static int msi_domain_translate(struct irq_domain *domain, struct irq_fwspec *fw
+ static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
+ 				  struct irq_data *irqd, int ind)
  {
--	unsigned long flags;
--	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
--	int ret = 0;
-+	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
-+		struct irq_desc *desc = scoped_irqdesc;
-+		int ret = 0;
+-	struct msi_desc *desc = irq_data_get_msi_desc(irqd);
++	struct msi_desc *desc = irqd ? irq_data_get_msi_desc(irqd) : NULL;
  
--	if (!desc)
--		return -EINVAL;
-+		/* Don't use NMIs as wake up interrupts please */
-+		if (irq_is_nmi(desc))
-+			return -EINVAL;
- 
--	/* Don't use NMIs as wake up interrupts please */
--	if (irq_is_nmi(desc)) {
--		ret = -EINVAL;
--		goto out_unlock;
--	}
--
--	/* wakeup-capable irqs can be shared between drivers that
--	 * don't need to have the same sleep mode behaviors.
--	 */
--	if (on) {
--		if (desc->wake_depth++ == 0) {
--			ret = set_irq_wake_real(irq, on);
--			if (ret)
--				desc->wake_depth = 0;
--			else
--				irqd_set(&desc->irq_data, IRQD_WAKEUP_STATE);
--		}
--	} else {
--		if (desc->wake_depth == 0) {
--			WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
--		} else if (--desc->wake_depth == 0) {
--			ret = set_irq_wake_real(irq, on);
--			if (ret)
--				desc->wake_depth = 1;
--			else
--				irqd_clear(&desc->irq_data, IRQD_WAKEUP_STATE);
-+		/*
-+		 * wakeup-capable irqs can be shared between drivers that
-+		 * don't need to have the same sleep mode behaviors.
-+		 */
-+		if (on) {
-+			if (desc->wake_depth++ == 0) {
-+				ret = set_irq_wake_real(irq, on);
-+				if (ret)
-+					desc->wake_depth = 0;
-+				else
-+					irqd_set(&desc->irq_data, IRQD_WAKEUP_STATE);
-+			}
-+		} else {
-+			if (desc->wake_depth == 0) {
-+				WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
-+			} else if (--desc->wake_depth == 0) {
-+				ret = set_irq_wake_real(irq, on);
-+				if (ret)
-+					desc->wake_depth = 1;
-+				else
-+					irqd_clear(&desc->irq_data, IRQD_WAKEUP_STATE);
-+			}
- 		}
-+		return ret;
- 	}
--
--out_unlock:
--	irq_put_desc_busunlock(desc, flags);
--	return ret;
-+	return -EINVAL;
- }
- EXPORT_SYMBOL(irq_set_irq_wake);
- 
+ 	if (!desc)
+ 		return;
+-- 
+2.49.0
+
