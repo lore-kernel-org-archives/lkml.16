@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4507D229B18;
-	Wed, 30 Apr 2025 22:52:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A722322FF22;
+	Wed, 30 Apr 2025 22:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746053526; cv=none; b=eI0wmXwSErOBnXEiNja0v94WhsairB8NI5/JhaYRo2E/RAHPLL+Uevi7raDm37zl/BC8vSov9L47sSvkFv+4k38wPPn68/oLabH1pKqk3optLBfPJkH/iBUgzjf+u6NMsItXk1IAEprq9LrKEl6DeUIrg330ywy8u6AwZpNEyLA=
+	t=1746053527; cv=none; b=ZD4pmc8f7UfDWEjmhcfg9undCjwEXmbfjrulUYcsPbp6/ljNYOze1/Isdij2rdjhLeE2shn8W6tRSyGGnR7kBX/kGY7G5pwMWpxcjyTbcoKpkc7TdFMsFnKWqMYU8BUgal6jm6pnTqQT6id5SMxYyyEDPZbYOmA7+xlt98N3jco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746053526; c=relaxed/simple;
-	bh=TRf5nNxoG1OLT8kDErnJIhib+961nKj12iCjKjJ51rU=;
+	s=arc-20240116; t=1746053527; c=relaxed/simple;
+	bh=4h2BCOssuYf0kQML71qfvD/CQB1Auz2TykxH3S6TwWQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=iVI4WgT23affg/q0hk8YVHeB6c6ctEcML+FvWJ1SxztI3/8Wk27DP4vgkzMeSCU+q/YKl7VZoT6I7KvzIJvXt8WGdxBlSqaq1ufbzoDPYKR1nJfAazWsl/j44nNsskYpCYf6e117bqQVYGN9Q/WQp9dxj4k3glh3RYwB+YRVCtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FYj4eN3g; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=X+CXJ6QD++njxTZtpzzq1suEHCoApMqlxq1Za/EKgajrJMzaow/sUZHHTlluMfPtahDiTWNpBupbL9EqT+2QlxrzUh59m2m3ELr2mbZUm+cNmdmLbSSIkF34VATP/PGhisKL/EDzm+PdE6DRuUwxZihcDCxw2mKzHzclydtKqjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lUI9E/Dy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FYj4eN3g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C696EC4CEE7;
-	Wed, 30 Apr 2025 22:52:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lUI9E/Dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15439C4CEE9;
+	Wed, 30 Apr 2025 22:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746053524;
-	bh=TRf5nNxoG1OLT8kDErnJIhib+961nKj12iCjKjJ51rU=;
+	s=k20201202; t=1746053526;
+	bh=4h2BCOssuYf0kQML71qfvD/CQB1Auz2TykxH3S6TwWQ=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=FYj4eN3gNW/VW5ZmPevRCefDvodXNrYtQOC82Ce1xh3SMehwH8aMWLq2mCusOuS6H
-	 vlBZQv432yT0M0Pk0lh4oblwRAUGAkflZBM9A5Pu7nf1HT6yo2ZeQxB9yKuKJk08un
-	 HNLJfrtzQktn470y6AS5yV+FiBOzUdLJ6jNkUwjdDC9AEcxmmQ36fZG1qNRFaq3ZOv
-	 /jIFSSgKSyXMA35sk7n9bCUQNb2+D8SU4iMsJR6gFUwDtLz+iH7iZW1Jf8IjH5FKDo
-	 d/1WVcF65I4epttFRLMCdcYVw2vRwMcTaaaREtLlMsofQ20BQACf/icER9aCBWISa8
-	 ItZqYjQJbpgOA==
+	b=lUI9E/DyyV3AMnFbABnANub2+e5IY52EG0Kpm3JyL4E94t7na+/W+xvRLPVzibz0F
+	 uii88OTk9gHQCGX3AlSw6+gh8NaBETHUbG+rIkIDnYO3P1Ax7SPs5ZOOknQsyDIft+
+	 lPVr2ovY4d6bxgkDhCUcRMXPeEIsaRPX8uKEsskXmpEUWmtBfXjfdxO7weMO2xICEl
+	 HDepWI4u4sQP3n0ckvfeVwJs2sb5baVy5dwAAKMD4oVXpeQhGf7jOf2X7doVmhvX3K
+	 tXD+HhwWV5getHL1jPDr+9rdahEIb5JAMe9j+seTLa99vA8SHScZHC6EGDP8HVTY/r
+	 C2HHqrZXthdZQ==
 From: Mark Brown <broonie@kernel.org>
-To: kernel@collabora.com, Liam Girdwood <lgirdwood@gmail.com>, 
- Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, 
- Daniel Baluta <daniel.baluta@nxp.com>, 
- Kai Vehmanen <kai.vehmanen@linux.intel.com>, 
- Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
- Julien Massot <julien.massot@collabora.com>
-Cc: Liam Girdwood <liam.r.girdwood@intel.com>, 
- sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>, 
+To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, 
  Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-In-Reply-To: <20250429-fixup-of-sof-topology-v4-1-ff692244d64c@collabora.com>
-References: <20250429-fixup-of-sof-topology-v4-1-ff692244d64c@collabora.com>
-Subject: Re: [PATCH v4] ASoC: SOF: topology: Fix null pointer dereference
-Message-Id: <174605352065.3987837.14664479563513199593.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 07:52:00 +0900
+Cc: kernel@collabora.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250429-acp-sof-probe-assign-v1-1-9784f6eb7660@collabora.com>
+References: <20250429-acp-sof-probe-assign-v1-1-9784f6eb7660@collabora.com>
+Subject: Re: [PATCH] ASoC: amd: acp: Drop superfluous assignment in
+ acp_sof_probe()
+Message-Id: <174605352392.3987837.5322034989048569569.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 07:52:03 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,11 +48,11 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 29 Apr 2025 11:19:22 +0200, Julien Massot wrote:
-> The "get_function_tplg_files" function is only applicable to
-> ACPI-based devices (sof_pdata->machine and not sof_pdata->of_machine).
-> Skip this check for OF-based devices to avoid a NULL pointer
-> dereference in snd_sof_load_topology().
+On Tue, 29 Apr 2025 13:29:43 +0300, Cristian Ciocaltea wrote:
+> The 'card' pointer is not required to be NULL initialized as it is never
+> accessed before the related memory allocation takes place.
+> 
+> Drop the redundant assignment.
 > 
 > 
 
@@ -70,8 +62,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: SOF: topology: Fix null pointer dereference
-      commit: 114a6e63d9cc11311587773d5db4cf4105cf658f
+[1/1] ASoC: amd: acp: Drop superfluous assignment in acp_sof_probe()
+      commit: 85f380f2b9ab6e9a8753626fa3d8a3f4a323043a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
