@@ -1,179 +1,292 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4C32E401
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818AE801;
+	Wed, 30 Apr 2025 05:38:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745991376; cv=none; b=Zb7yj0rLXmRg4gismkjk1fFkOMgCMDvX1W37zZRSpMMe9zWdOCBlP2QICJD/w8nJzCew897AalAB9bZaixLzd/L9c7Xt6ApscxFraGccjU7QefSzNKs9TTE+Ud2MY9b/q3I6p3LvNiQcWVtbDW0fJQ17nZ2a3ULfT3qujiFETwM=
+	t=1745991507; cv=none; b=hnHYPpIVrnoqC/21yxIsxn3ndDsMAuesGn3JPUrsdGL0JHpV/DohO67tsxNgc1MZwgUoBYf4Mne1r8Otbe6jT2WJH2Yb+8GZee8FRrM/DvGRPilha6r/lvRIlFBA0sEjkVA2N6x+lQoMaWncmvHoodopTqCNyc5GjWaCeqD7oJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745991376; c=relaxed/simple;
-	bh=qkNRqzaLetnXbthDZ+02HWpZDM7Dejcb6Ifv+OyI2gI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bO0TiQwzEq8qHGKu6ufFOumapQ7TdsyMIXHDPqtt0rQISGMhZQtAVJP8rDFEw95M2CmcgorozbuswspUpSsSiy8ELmOeVXRXbgh6ah0GQJerOGHO1l6Wm1uvUAOxIwtf/nTRCRTin3z16hy6O51sabh7WHGXznpTcb/TvWvgijs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LlEAl+3Z; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1745991507; c=relaxed/simple;
+	bh=B2NidxMu4iRLcef9BLgK8PV62E/VhYEy7e5YDJIc8EA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tMjkXvah4UHWYpHWzbo44GYj6lSywT/ONfwPSf4Hl+QNMTKyLuf1GAnsCL6g+fLww3cXtQmLwJyeg8iFamAbO23VgCOexnLvUmRrsWVsJKl4NmHqKHh43Ysi78YnYNWkuVuJOUEWElc+j4yixGDYYKvJ49B/ydUYEvwbBvy+hJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=m0S6Ujh8; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LlEAl+3Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1745991375; x=1777527375;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qkNRqzaLetnXbthDZ+02HWpZDM7Dejcb6Ifv+OyI2gI=;
-  b=LlEAl+3ZEZB8QhjCTwKz/QCbSJ/LwcweMPjOzTA1QlG89KlkSrbpprmG
-   6kx/GFkGgUZVq4jUh/nXOIc2U8B1wEHlDKJf1nl0zXADh2u8JzsQzwpGb
-   PkIM5kknRvXMPSQQgVgx6b8UPm8U9Od0kQf0W7+qfjxIjQ5kAZOnZ28bY
-   eXYNyNKyLOIRJMTPuPVl8Sl9X3AS0pPuEAjjS/yME0Ev4twIIwJfZzL2f
-   5ksJP5J24lAsI2sBInEqCGHcBt4u+8HjmB9TU57z4Ngtyy8M/Z74LVqrw
-   RyqXJePKOAE0rKGaIl65zWPNqe6k8ijElViAIovWgt5Lb9yjM8iL0SfPT
-   Q==;
-X-CSE-ConnectionGUID: oDdEOSHYTWq+KUT6zOMj1g==
-X-CSE-MsgGUID: C2T8bSmcS224szWOP1zrPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="73022535"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="73022535"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 22:36:14 -0700
-X-CSE-ConnectionGUID: Tm8+kCPLQKmrtyrTulHBOQ==
-X-CSE-MsgGUID: rpoIVj1rTmaU9sTCPIEO3Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="133929533"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 29 Apr 2025 22:36:06 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uA072-0003Bh-0e;
-	Wed, 30 Apr 2025 05:36:04 +0000
-Date: Wed, 30 Apr 2025 13:35:11 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org
-Cc: oe-kbuild-all@lists.linux.dev, ryan.roberts@arm.com, david@redhat.com,
-	willy@infradead.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
-	will@kernel.org, Liam.Howlett@oracle.com,
-	lorenzo.stoakes@oracle.com, vbabka@suse.cz, jannh@google.com,
-	anshuman.khandual@arm.com, peterx@redhat.com, joey.gouly@arm.com,
-	ioworker0@gmail.com, baohua@kernel.org, kevin.brodsky@arm.com,
-	quic_zhenhuah@quicinc.com, christophe.leroy@csgroup.eu,
-	yangyicong@hisilicon.com, linux-arm-kernel@lists.infradead.org,
-	namit@vmware.com, hughd@google.com, yang@os.amperecomputing.com,
-	ziy@nvidia.com, Dev Jain <dev.jain@arm.com>
-Subject: Re: [PATCH v2 3/7] mm: Add batched versions of
- ptep_modify_prot_start/commit
-Message-ID: <202504301319.aph2eccP-lkp@intel.com>
-References: <20250429052336.18912-4-dev.jain@arm.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="m0S6Ujh8"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLb32e011095;
+	Wed, 30 Apr 2025 05:38:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	KESzOejqPulb1TPwlFso+th0l+OLtBke9zOk/N/k4to=; b=m0S6Ujh8QffSOfj2
+	W588g10xawwW3TxE0KAnVuavnFN+Xm+VSQ1W5vbmgUYKEyr4ARXYlt4iOMDGkjFp
+	uukREeUbSyoIPEaleJh2W96KVHBKbpnRYiZXAlYMkjUHASQcPWTa7+k3BciEcMHd
+	HtYMuRxKIVzptmdoKJmQ+SMJXeVUv6YbbLDL0qmUcRR5jblVuO2iPQekSfWsI/Ar
+	HAFONZG0jHK+EVw1s441B5e+rKq29rmO0LyxwHKU3CCe3Q2NPlpiGU5lCkIZTuDU
+	LUaslJxGOY7xy5db57I6GSCn+KIizW+R3PKO++TpZOdgda8qLUHiroNC/6y1Yf6c
+	/x4SAg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6uarweb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 05:38:11 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 53U5cA89026083
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 05:38:10 GMT
+Received: from [10.50.5.200] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 29 Apr
+ 2025 22:38:03 -0700
+Message-ID: <32379a29-ab58-95b3-77f9-d1ada61e5359@quicinc.com>
+Date: Wed, 30 Apr 2025 11:08:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429052336.18912-4-dev.jain@arm.com>
-
-Hi Dev,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on arm64/for-next/core linus/master v6.15-rc4 next-20250429]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Dev-Jain/mm-Refactor-code-in-mprotect/20250429-133151
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250429052336.18912-4-dev.jain%40arm.com
-patch subject: [PATCH v2 3/7] mm: Add batched versions of ptep_modify_prot_start/commit
-config: arm-randconfig-001-20250430 (https://download.01.org/0day-ci/archive/20250430/202504301319.aph2eccP-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 10.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250430/202504301319.aph2eccP-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202504301319.aph2eccP-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from include/linux/mm.h:31,
-                    from arch/arm/kernel/asm-offsets.c:12:
-   include/linux/pgtable.h: In function 'modify_prot_start_ptes':
-   include/linux/pgtable.h:901:8: error: implicit declaration of function 'ptep_modify_prot_start' [-Werror=implicit-function-declaration]
-     901 |  pte = ptep_modify_prot_start(vma, addr, ptep);
-         |        ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pgtable.h: In function 'modify_prot_commit_ptes':
-   include/linux/pgtable.h:921:3: error: implicit declaration of function 'ptep_modify_prot_commit' [-Werror=implicit-function-declaration]
-     921 |   ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-         |   ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pgtable.h: At top level:
->> include/linux/pgtable.h:1356:21: error: conflicting types for 'ptep_modify_prot_start'
-    1356 | static inline pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
-         |                     ^~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pgtable.h:901:8: note: previous implicit declaration of 'ptep_modify_prot_start' was here
-     901 |  pte = ptep_modify_prot_start(vma, addr, ptep);
-         |        ^~~~~~~~~~~~~~~~~~~~~~
->> include/linux/pgtable.h:1367:20: warning: conflicting types for 'ptep_modify_prot_commit'
-    1367 | static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
-         |                    ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pgtable.h:1367:20: error: static declaration of 'ptep_modify_prot_commit' follows non-static declaration
-   include/linux/pgtable.h:921:3: note: previous implicit declaration of 'ptep_modify_prot_commit' was here
-     921 |   ptep_modify_prot_commit(vma, addr, ptep, old_pte, pte);
-         |   ^~~~~~~~~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-   make[3]: *** [scripts/Makefile.build:98: arch/arm/kernel/asm-offsets.s] Error 1 shuffle=2044487564
-   make[3]: Target 'prepare' not remade because of errors.
-   make[2]: *** [Makefile:1280: prepare0] Error 2 shuffle=2044487564
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:248: __sub-make] Error 2 shuffle=2044487564
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:248: __sub-make] Error 2 shuffle=2044487564
-   make: Target 'prepare' not remade because of errors.
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v2 01/23] media: iris: Skip destroying internal buffer if
+ not dequeued
+Content-Language: en-US
+To: Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+        Vikash Garodia
+	<quic_vgarodia@quicinc.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Stefan Schmidt
+	<stefan.schmidt@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        "Bjorn
+ Andersson" <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        "Rob Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>
+CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>,
+        Neil Armstrong
+	<neil.armstrong@linaro.org>,
+        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <stable@vger.kernel.org>
+References: <20250428-qcom-iris-hevc-vp9-v2-0-3a6013ecb8a5@quicinc.com>
+ <20250428-qcom-iris-hevc-vp9-v2-1-3a6013ecb8a5@quicinc.com>
+ <dc9b20aecc8740896b2b3e7352b8e0d73d43fed2.camel@collabora.com>
+From: Dikshita Agarwal <quic_dikshita@quicinc.com>
+In-Reply-To: <dc9b20aecc8740896b2b3e7352b8e0d73d43fed2.camel@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: gziX25vrn4uEgWo7AxBvtamTrqNjscOC
+X-Authority-Analysis: v=2.4 cv=KtlN2XWN c=1 sm=1 tr=0 ts=6811b743 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=e6OCQq0veDw7Aj3gnXcA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: gziX25vrn4uEgWo7AxBvtamTrqNjscOC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDAzNiBTYWx0ZWRfX3fuVyDZ9vfVi anL3EQ41BDYNk4lQq6xNvM3HiCWFG43S0KFQ8Ktk5hsdnAvB8rXnMFO/444+LLxRIUdY7kuU5cH 0fZTJX1ew+RcKG1gQET4eoiXloCbFmBSo+mRlZqgsjS452JIT33ol4FfSFdSkA0gyMx2tCC9XVN
+ KudJ5bqpNbKPDVsBllnOgRVtJ5QPMFwawpnWANCBk1SnsXRidG4+fXhkfsICMzd8umyTSd73wUr OPzOAEXE2vqkHN1pGWqX/mlRsBh1yo52EgSOt62A0ov4cScGNiOYVGJs9CRrfB47OYFZWqyGPiT 5wQB3g8mlzBSgRI0BnBcoWP5kTm+L1JLuOdqlmvUoc5Vx1mHMcZiE0PdLXKRaaYjvg0qc1k89u+
+ 8zDSkGdtgE3O5g0qgng1B5YSI6nVxE3fq9Ig/Uwh68SqwxqTsKm10Pf3SfnpqUdcOqokBuG3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=0
+ lowpriorityscore=0 phishscore=0 adultscore=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300036
 
 
-vim +/ptep_modify_prot_start +1356 include/linux/pgtable.h
 
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1340  
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1341  #ifndef __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1342  /*
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1343   * Start a pte protection read-modify-write transaction, which
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1344   * protects against asynchronous hardware modifications to the pte.
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1345   * The intention is not to prevent the hardware from making pte
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1346   * updates, but to prevent any updates it may make from being lost.
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1347   *
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1348   * This does not protect against other software modifications of the
-2eb70aab25dd9b include/linux/pgtable.h       Bhaskar Chowdhury   2021-05-06  1349   * pte; the appropriate pte lock must be held over the transaction.
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1350   *
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1351   * Note that this interface is intended to be batchable, meaning that
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1352   * ptep_modify_prot_commit may not actually update the pte, but merely
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1353   * queue the update to be done at some later time.  The update must be
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1354   * actually committed before the pte lock is released, however.
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1355   */
-0cbe3e26abe0cf include/asm-generic/pgtable.h Aneesh Kumar K.V    2019-03-05 @1356  static inline pte_t ptep_modify_prot_start(struct vm_area_struct *vma,
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1357  					   unsigned long addr,
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1358  					   pte_t *ptep)
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1359  {
-0cbe3e26abe0cf include/asm-generic/pgtable.h Aneesh Kumar K.V    2019-03-05  1360  	return __ptep_modify_prot_start(vma, addr, ptep);
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1361  }
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1362  
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1363  /*
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1364   * Commit an update to a pte, leaving any hardware-controlled bits in
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1365   * the PTE unmodified.
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1366   */
-0cbe3e26abe0cf include/asm-generic/pgtable.h Aneesh Kumar K.V    2019-03-05 @1367  static inline void ptep_modify_prot_commit(struct vm_area_struct *vma,
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1368  					   unsigned long addr,
-04a8645304500b include/asm-generic/pgtable.h Aneesh Kumar K.V    2019-03-05  1369  					   pte_t *ptep, pte_t old_pte, pte_t pte)
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1370  {
-0cbe3e26abe0cf include/asm-generic/pgtable.h Aneesh Kumar K.V    2019-03-05  1371  	__ptep_modify_prot_commit(vma, addr, ptep, pte);
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1372  }
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1373  #endif /* __HAVE_ARCH_PTEP_MODIFY_PROT_TRANSACTION */
-fe1a6875fcaaac include/asm-generic/pgtable.h Sebastian Siewior   2008-07-15  1374  #endif /* CONFIG_MMU */
-1ea0704e0da65b include/asm-generic/pgtable.h Jeremy Fitzhardinge 2008-06-16  1375  
+On 4/29/2025 6:17 PM, Nicolas Dufresne wrote:
+> Not mine to review, but wanted to highlight some best practices,
+> 
+> comment below...
+> 
+> Le lundi 28 avril 2025 à 14:58 +0530, Dikshita Agarwal a écrit :
+>> Firmware might hold the DPB buffers for reference in case of sequence
+>> change, so skip destroying buffers for which QUEUED flag is not removed.
+>> Also, make sure that all buffers are released during streamoff.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 73702f45db81 ("media: iris: allocate, initialize and queue internal buffers")
+>> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+>> ---
+>>  drivers/media/platform/qcom/iris/iris_buffer.c | 37 +++++++++++++++++++++++++-
+>>  drivers/media/platform/qcom/iris/iris_buffer.h |  3 ++-
+>>  drivers/media/platform/qcom/iris/iris_vdec.c   |  4 +--
+>>  drivers/media/platform/qcom/iris/iris_vidc.c   |  6 +++--
+>>  4 files changed, 44 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+>> index e5c5a564fcb8..606d76b10be2 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_buffer.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+>> @@ -376,7 +376,7 @@ int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buf
+>>  	return 0;
+>>  }
+>>  
+>> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force)
+> 
+> Its always tempting to just glue a boolean at the end of a parameter
+> list. But this has huge downside in code readability, see below...
+> 
+>>  {
+>>  	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>>  	struct iris_buffer *buf, *next;
+>> @@ -396,6 +396,14 @@ int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane)
+>>  	for (i = 0; i < len; i++) {
+>>  		buffers = &inst->buffers[internal_buf_type[i]];
+>>  		list_for_each_entry_safe(buf, next, &buffers->list, list) {
+>> +			/*
+>> +			 * during stream on, skip destroying internal(DPB) buffer
+>> +			 * if firmware did not return it.
+>> +			 * during close, destroy all buffers irrespectively.
+>> +			 */
+>> +			if (!force && buf->attr & BUF_ATTR_QUEUED)
+>> +				continue;
+>> +
+>>  			ret = iris_destroy_internal_buffer(inst, buf);
+>>  			if (ret)
+>>  				return ret;
+>> @@ -446,6 +454,33 @@ static int iris_release_input_internal_buffers(struct iris_inst *inst)
+>>  	return 0;
+>>  }
+>>  
+>> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane)
+>> +{
+>> +	const struct iris_platform_data *platform_data = inst->core->iris_platform_data;
+>> +	struct iris_buffer *buf, *next;
+>> +	struct iris_buffers *buffers;
+>> +	const u32 *internal_buf_type;
+>> +	u32 internal_buffer_count, i;
+>> +	u32 count = 0;
+>> +
+>> +	if (V4L2_TYPE_IS_OUTPUT(plane)) {
+>> +		internal_buf_type = platform_data->dec_ip_int_buf_tbl;
+>> +		internal_buffer_count = platform_data->dec_ip_int_buf_tbl_size;
+>> +	} else {
+>> +		internal_buf_type = platform_data->dec_op_int_buf_tbl;
+>> +		internal_buffer_count = platform_data->dec_op_int_buf_tbl_size;
+>> +	}
+>> +
+>> +	for (i = 0; i < internal_buffer_count; i++) {
+>> +		buffers = &inst->buffers[internal_buf_type[i]];
+>> +		list_for_each_entry_safe(buf, next, &buffers->list, list)
+>> +			count++;
+>> +		if (count)
+>> +			dev_err(inst->core->dev, "%d buffer of type %d not released",
+>> +				count, internal_buf_type[i]);
+>> +	}
+>> +}
+>> +
+>>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst)
+>>  {
+>>  	struct iris_buffers *buffers = &inst->buffers[BUF_PERSIST];
+>> diff --git a/drivers/media/platform/qcom/iris/iris_buffer.h b/drivers/media/platform/qcom/iris/iris_buffer.h
+>> index c36b6347b077..03a32b91cf21 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_buffer.h
+>> +++ b/drivers/media/platform/qcom/iris/iris_buffer.h
+>> @@ -106,7 +106,8 @@ void iris_get_internal_buffers(struct iris_inst *inst, u32 plane);
+>>  int iris_create_internal_buffers(struct iris_inst *inst, u32 plane);
+>>  int iris_queue_internal_buffers(struct iris_inst *inst, u32 plane);
+>>  int iris_destroy_internal_buffer(struct iris_inst *inst, struct iris_buffer *buffer);
+>> -int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane);
+>> +int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane, bool force);
+>> +void iris_get_num_queued_internal_buffers(struct iris_inst *inst, u32 plane);
+>>  int iris_alloc_and_queue_persist_bufs(struct iris_inst *inst);
+>>  int iris_alloc_and_queue_input_int_bufs(struct iris_inst *inst);
+>>  int iris_queue_buffer(struct iris_inst *inst, struct iris_buffer *buf);
+>> diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
+>> index 4143acedfc57..2c1a7162d2da 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_vdec.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
+>> @@ -408,7 +408,7 @@ int iris_vdec_streamon_input(struct iris_inst *inst)
+>>  
+>>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>>  
+>> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, false);
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> @@ -496,7 +496,7 @@ int iris_vdec_streamon_output(struct iris_inst *inst)
+>>  
+>>  	iris_get_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>  
+>> -	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>> +	ret = iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, false);
+> 
+> If I was reviewing some changes (or even debugging) this specific C
+> file, I would not be able to understanding what this "false" means. I
+> would have to spend extra time, opening the declaration, going back and
+> forth, and breaking the flow.
+> 
+> An alternative approach is to keep the boolean parameter in a static
+> function (c local), and then add two function wrappers that have
+> explicit names.
+> 
+Sure, I can implement the alternative approach, if recommended.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If I understand correctly, you are suggesting to have one static helper and
+two wrappers around this. like:
+
+static int iris_destroy_internal_buffers(struct iris_inst *inst, u32 plane,
+bool force)
+{
+	...
+	list_for_each_entry_safe(buf, next, &buffers->list, list) {
+       		if (!force && buf->attr & BUF_ATTR_QUEUED)
+			continue;
+		...
+	}
+	...
+}
+
+//called during stream on
+int iris_destroy_dequeued_internal_buffers(struct iris_inst *inst, u32 plane)
+{
+	return iris_destroy_internal_buffers(inst, plane, false)
+}
+
+//called during close
+int iris_destroy_all_internal_buffers(struct iris_inst *inst, u32 plane)
+{
+	return iris_destroy_internal_buffers(inst, plane, true)
+}
+
+Thanks,
+Dikshita
+> regards,
+> Nicolas
+> 
+>>  	if (ret)
+>>  		return ret;
+>>  
+>> diff --git a/drivers/media/platform/qcom/iris/iris_vidc.c b/drivers/media/platform/qcom/iris/iris_vidc.c
+>> index ca0f4e310f77..56531a7f0dfe 100644
+>> --- a/drivers/media/platform/qcom/iris/iris_vidc.c
+>> +++ b/drivers/media/platform/qcom/iris/iris_vidc.c
+>> @@ -233,8 +233,10 @@ int iris_close(struct file *filp)
+>>  	iris_session_close(inst);
+>>  	iris_inst_change_state(inst, IRIS_INST_DEINIT);
+>>  	iris_v4l2_fh_deinit(inst);
+>> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>> -	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE, true);
+>> +	iris_destroy_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE, true);
+>> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+>> +	iris_get_num_queued_internal_buffers(inst, V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE);
+>>  	iris_remove_session(inst);
+>>  	mutex_unlock(&inst->lock);
+>>  	mutex_destroy(&inst->ctx_q_lock);
+> 
