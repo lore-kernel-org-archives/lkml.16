@@ -1,30 +1,32 @@
 Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105E2262FE7
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789F7264A90
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:47:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031634; cv=none; b=GfLE9sbhWpp2OvcBK9W2SVhyTo7pwqbYvl7fP67v+FNdOwYrjj72ejB0Cfz9X8aFsSSvqBCPZceyEEEdCNVP3mSquDI06vnGQlfpclPwbPU2ZpqH9HhyjWWCWngFoAUSDQD5a7UzVW6FuVB6D8MyRuKskyMBhyU/pvwFjrwQGrM=
+	t=1746031635; cv=none; b=dop/I4zhZ2hljVoenA0WMPsoCpY+JE0jRvTCRuR1wNjwZ8PpWY7q7DZsW4/AII8tFL8oldZtOznxUibKOelyULX3T3R6M6VBrAX+HKQIeA5rHgsQiIzHtBd9DUFVryETah64IfkXRIvJgWN7AfEPx6hQdaHZcQFKE8qCMbuc57k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031634; c=relaxed/simple;
-	bh=Z4+c36xlrpQnmEMOiKZcbo6zN4E7rBAyOguYrJB/StU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LwTY2YWgN3bihXbH2DCD+aE/5KI9iC9kZPyTdYpx4JcKShkz9v2StI71ec7uShdOFkrAm1WMVSvYHcL7swpTdHOrObAW+wwrK4G0SygbGX4eqlpeLlGGc7dgFjT0Tp4vWcCxI92DEUXiZv7WY8xRCNEc5FU7/G7tzXROw44MvIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ex2q6wUv; arc=none smtp.client-ip=91.218.175.172
+	s=arc-20240116; t=1746031635; c=relaxed/simple;
+	bh=q9ytZ2bqnS4AW5iOsrYAArh8ag5ZF0zJhleYllk09Tw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=P4FFQ1BZie3zDrxDZ1R8LO/bjN5OwkTECDgDnUGTaPnplVdRK9xL9l9NkCd0fEdn4Br3uBIDppLomcdLHQjGdNue2NiIuhkgy/fNyB/mNTzbOIMCbWw+GVam4uZX08r0NAatuLH3TrbksGMRxio5V4H06ERDAtjDtluCFkSPceA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=otrJNo1A; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ex2q6wUv"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="otrJNo1A"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746031621;
+	t=1746031631;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=WNUmJmzk1ISm5BdSoA14fep8NYFtReY+NRi29+VsNv4=;
-	b=ex2q6wUvT9s8AxYBN2tBfv6sEpzwJ/MG85+lZ4hY7a66Q9/xh9DxNG4CnvE0hVvuvYGEcY
-	PBzsXAyD4y2m633k7BgdSpuiXFnCIveJnxFrcMan1Ec4ZhR2jZSSGQ6deVqS+ypWZpEOTf
-	gGMMICvfA9Bvp0MXQxGycZ2UW4qM3P0=
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DZoAG17QbBV/4PAv7+P9YXWHmX6KfllOZqrH5JYkMPo=;
+	b=otrJNo1AcYDrI0/AhSwcB4K20up9Ma9jsPFVr8QgJDLYZPBHJMsocjpyJu5pYC7+5iAh2l
+	MowTfTwI3XJeWRSC5LtPu6KtW/kU2TffsYPra/INRbRQ7eplhEc6R82A9VqF02uWb1u0Bq
+	KKgT4Yctyk6VaYze8jIb1R8QjDhsSco=
 From: Tao Chen <chen.dylane@linux.dev>
 To: ast@kernel.org,
 	daniel@iogearbox.net,
@@ -42,9 +44,11 @@ To: ast@kernel.org,
 Cc: bpf@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Tao Chen <chen.dylane@linux.dev>
-Subject: [RFC PATCH bpf-next 0/2] fentry supports function optimized by complier
-Date: Thu,  1 May 2025 00:46:06 +0800
-Message-Id: <20250430164608.3790552-1-chen.dylane@linux.dev>
+Subject: [RFC PATCH bpf-next 2/2] bpf: Get fentry func addr from user when BTF info invalid
+Date: Thu,  1 May 2025 00:46:08 +0800
+Message-Id: <20250430164608.3790552-3-chen.dylane@linux.dev>
+In-Reply-To: <20250430164608.3790552-1-chen.dylane@linux.dev>
+References: <20250430164608.3790552-1-chen.dylane@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,36 +58,76 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-The previous discussion about fentry invalid on function optimeized by complier
-is as follows:
-https://lore.kernel.org/bpf/3c6f539b-b498-4587-b0dc-5fdeba717600@oracle.com/
+If kernel function optimized by the compiler, the function name in
+kallsyms will have suffix like ".isra.0" or others. And fentry uses
+function name from BTF to find the function address in kallsyms, in this
+situation, it will fail due to the inconsistency of function names.
+If so, try to use the function address passed from the user.
 
-This seems to be something that pahole needs to resolve. However, Alan
-mentioned that there are many situations involved in this, and he proposed
-that the available_filter_functions_addr can be used to find the address of
-the real function. If we can get the real address from user, maybe this address
-can be used when the function obtained from the BTF is invalid.
+Signed-off-by: Tao Chen <chen.dylane@linux.dev>
+---
+ include/linux/bpf.h      | 1 +
+ include/uapi/linux/bpf.h | 1 +
+ kernel/bpf/syscall.c     | 1 +
+ kernel/bpf/verifier.c    | 9 +++++++++
+ 4 files changed, 12 insertions(+)
 
-The specific selftest has not been added yet. I just wrote a simple test
-program and ran it.
-
-This is the initial RFC patch, feedback is welcome.
-
-Tao Chen (2):
-  libbpf: Try get fentry func addr from available_filter_functions_addr
-  bpf: Get fentry func addr from user when BTF info invalid
-
- include/linux/bpf.h            |  1 +
- include/uapi/linux/bpf.h       |  1 +
- kernel/bpf/syscall.c           |  1 +
- kernel/bpf/verifier.c          |  9 ++++++
- tools/include/uapi/linux/bpf.h |  1 +
- tools/lib/bpf/bpf.c            |  1 +
- tools/lib/bpf/bpf.h            |  1 +
- tools/lib/bpf/gen_loader.c     |  1 +
- tools/lib/bpf/libbpf.c         | 53 ++++++++++++++++++++++++++++++++++
- 9 files changed, 69 insertions(+)
-
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index 3f0cc89c06..fd53d1817f 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -1626,6 +1626,7 @@ struct bpf_prog_aux {
+ 		struct work_struct work;
+ 		struct rcu_head	rcu;
+ 	};
++	u64 fentry_func;
+ };
+ 
+ struct bpf_prog {
+diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+index 07ee73cdf9..7016e47a70 100644
+--- a/include/uapi/linux/bpf.h
++++ b/include/uapi/linux/bpf.h
+@@ -1577,6 +1577,7 @@ union bpf_attr {
+ 		 * If provided, prog_flags should have BPF_F_TOKEN_FD flag set.
+ 		 */
+ 		__s32		prog_token_fd;
++		__aligned_u64	fentry_func;
+ 		/* The fd_array_cnt can be used to pass the length of the
+ 		 * fd_array array. In this case all the [map] file descriptors
+ 		 * passed in this array will be bound to the program, even if
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 9794446bc8..6c1e3572cc 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -2892,6 +2892,7 @@ static int bpf_prog_load(union bpf_attr *attr, bpfptr_t uattr, u32 uattr_size)
+ 	prog->sleepable = !!(attr->prog_flags & BPF_F_SLEEPABLE);
+ 	prog->aux->attach_btf = attach_btf;
+ 	prog->aux->attach_btf_id = attr->attach_btf_id;
++	prog->aux->fentry_func = attr->fentry_func;
+ 	prog->aux->dst_prog = dst_prog;
+ 	prog->aux->dev_bound = !!attr->prog_ifindex;
+ 	prog->aux->xdp_has_frags = attr->prog_flags & BPF_F_XDP_HAS_FRAGS;
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 54c6953a8b..507c281ddc 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -23304,6 +23304,15 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
+ 			} else {
+ 				addr = kallsyms_lookup_name(tname);
+ 			}
++
++			if (!addr && (prog->expected_attach_type == BPF_TRACE_FENTRY ||
++					prog->expected_attach_type == BPF_TRACE_FEXIT)) {
++				fname = kallsyms_lookup((unsigned long)prog->aux->fentry_func,
++							NULL, NULL, NULL, trace_symbol);
++				if (fname)
++					addr = (long)prog->aux->fentry_func;
++			}
++
+ 			if (!addr) {
+ 				module_put(mod);
+ 				bpf_log(log,
 -- 
 2.43.0
 
