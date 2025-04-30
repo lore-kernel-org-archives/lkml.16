@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8167E1A5B84;
-	Wed, 30 Apr 2025 14:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C04113E02D;
+	Wed, 30 Apr 2025 14:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025179; cv=none; b=nntuW32uX2GAiTKkW+5soOeUcYJ8GChQotIK436HMdOnzXpryeKUy6hmUbLjiE9Nh6L3c2W67NFqBEi3kQGrBDcla3XCTAVTspRPdeeJg7H1U9p2Prh2++OiBUGcLvtkLvlrVrIFxvUFkMN5cyfTjX23jX3XbWQCr+onhuz92Js=
+	t=1746025180; cv=none; b=pQ36ORrHyGYPeXj5ffQtBduqp5bbci2CbXgk7LutixAZEIgxjXAXracBRZq1xgvbOl4DAPk9/9TwT0tPCns7SQA20bLEuIe3dRXQAXRjIc+jolsubu9fr20pZOnpNmMNGCTwgM3bStmcP4rVcSNWMNfFSBfckaGh4fNQvlIure8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025179; c=relaxed/simple;
-	bh=RhAzlCJbPtUUpaoj2kdnNovqzYuOnqKFmxO+EPw/OLA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nhELvvDwrbHDsgkOsjaNkA942A3KG0jf8oT1/b/kbfuW6HDMbfQTiWWj7a/SVmna22ZU1fKA8IlO5U1y0SYOb97U1Zk8xmHJ4z28lO4EV0lmpycQPFM0gqW6oSgCzEExq1bCZxNIZREIThmfm5t44z15ZFxdnJ3cGPS9ms0Ewl8=
+	s=arc-20240116; t=1746025180; c=relaxed/simple;
+	bh=pKiHMXgN1CKKfPTJF7z/0J7LkE7fjzM6JNtcw2wFw38=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fm4SASS73wDD3xrpvsuFgO8gNZcQrlJQ7m/+J3QVYUB486SUwb6zJT7PjhyqXmKLhOsZChm+yqTx8LZlc/J3QOo7hsNuZ/XjvUVIVDBvWJ/xc6Wd6raq3YoEIFwlMCKA9Xtax8eLs6ZnEBhJLioDrMN+G5SxjQCsWxs4t3OGsPo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66C201007;
-	Wed, 30 Apr 2025 07:59:24 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1430168F;
+	Wed, 30 Apr 2025 07:59:30 -0700 (PDT)
 Received: from e125769.cambridge.arm.com (e125769.cambridge.arm.com [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B37EC3F5A1;
-	Wed, 30 Apr 2025 07:59:29 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4BD443F5A1;
+	Wed, 30 Apr 2025 07:59:36 -0700 (PDT)
 From: Ryan Roberts <ryan.roberts@arm.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -34,10 +35,12 @@ Cc: Ryan Roberts <ryan.roberts@arm.com>,
 	linux-kernel@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org,
 	linux-mm@kvack.org
-Subject: [RFC PATCH v4 0/5] Readahead tweaks for larger folios
-Date: Wed, 30 Apr 2025 15:59:13 +0100
-Message-ID: <20250430145920.3748738-1-ryan.roberts@arm.com>
+Subject: [RFC PATCH v4 3/5] mm/readahead: Make space in struct file_ra_state
+Date: Wed, 30 Apr 2025 15:59:16 +0100
+Message-ID: <20250430145920.3748738-4-ryan.roberts@arm.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250430145920.3748738-1-ryan.roberts@arm.com>
+References: <20250430145920.3748738-1-ryan.roberts@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,74 +49,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi All,
+We need to be able to store the preferred folio order associated with a
+readahead request in the struct file_ra_state so that we can more
+accurately increase the order across subsequent readahead requests. But
+struct file_ra_state is per-struct file, so we don't really want to
+increase it's size.
 
-This RFC series adds some tweaks to readahead so that it does a better job of
-ramping up folio sizes as readahead extends further into the file. And it
-additionally special-cases executable mappings to allow the arch to request a
-preferred folio size for text.
+mmap_miss is currently 32 bits but it is only counted up to 10 *
+MMAP_LOTSAMISS, which is currently defined as 1000. So 16 bits should be
+plenty. Redefine it to unsigned short, making room for order as unsigned
+short in follow up commit.
 
-Previous versions of the series focussed on the latter part only (large folios
-for text). See [3]. But after discussion with Matthew Wilcox last week, we
-decided that we should really be fixing some of the unintended behaviours in how
-a folio size is selected in general before special-casing for text. As a result
-patches 1-4 make folio size selection behave more sanely, then patch 5
-introduces large folios for text. Patch 5 depends on patch 1, but does not
-depend on patches 2-4.
-
+Signed-off-by: Ryan Roberts <ryan.roberts@arm.com>
 ---
+ include/linux/fs.h |  2 +-
+ mm/filemap.c       | 11 ++++++-----
+ 2 files changed, 7 insertions(+), 6 deletions(-)
 
-I'm leaving this marked as RFC for now as I intend to do more testing, and
-haven't yet updated the benchmark results in patch 5 (although I expect them to
-be similar).
-
-Applies on top of Monday's mm-unstable (b18dec6a6ad3) and passes all mm
-kselftests.
-
-Changes since v3 [3]
-====================
-
- - Added patchs 1-4 to do better job of ramping up folio order
- - In patch 5:
-   - Confine readahead blocks to vma boundaries (per Kalesh)
-   - Rename arch_exec_folio_order() to exec_folio_order() (per Matthew)
-   - exec_folio_order() now returns unsigned int and defaults to order-0
-     (per Matthew)
-   - readahead size is honoured (including when disabled)
-
-Changes since v2 [2]
-====================
-
- - Rename arch_wants_exec_folio_order() to arch_exec_folio_order() (per Andrew)
- - Fixed some typos (per Andrew)
-
-Changes since v1 [1]
-====================
-
- - Remove "void" from arch_wants_exec_folio_order() macro args list
-
-[1] https://lore.kernel.org/linux-mm/20240111154106.3692206-1-ryan.roberts@arm.com/
-[2] https://lore.kernel.org/all/20240215154059.2863126-1-ryan.roberts@arm.com/
-[3] https://lore.kernel.org/linux-mm/20250327160700.1147155-1-ryan.roberts@arm.com/
-
-Thanks,
-Ryan
-
-Ryan Roberts (5):
-  mm/readahead: Honour new_order in page_cache_ra_order()
-  mm/readahead: Terminate async readahead on natural boundary
-  mm/readahead: Make space in struct file_ra_state
-  mm/readahead: Store folio order in struct file_ra_state
-  mm/filemap: Allow arch to request folio size for exec memory
-
- arch/arm64/include/asm/pgtable.h |  8 +++++
- include/linux/fs.h               |  4 ++-
- include/linux/pgtable.h          | 11 +++++++
- mm/filemap.c                     | 55 ++++++++++++++++++++++++--------
- mm/internal.h                    |  3 +-
- mm/readahead.c                   | 27 +++++++++-------
- 6 files changed, 81 insertions(+), 27 deletions(-)
-
---
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 016b0fe1536e..44362bef0010 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1042,7 +1042,7 @@ struct file_ra_state {
+ 	unsigned int size;
+ 	unsigned int async_size;
+ 	unsigned int ra_pages;
+-	unsigned int mmap_miss;
++	unsigned short mmap_miss;
+ 	loff_t prev_pos;
+ };
+ 
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 7b90cbeb4a1a..fa129ecfd80f 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -3207,7 +3207,7 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	DEFINE_READAHEAD(ractl, file, ra, mapping, vmf->pgoff);
+ 	struct file *fpin = NULL;
+ 	unsigned long vm_flags = vmf->vma->vm_flags;
+-	unsigned int mmap_miss;
++	unsigned short mmap_miss;
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	/* Use the readahead code, even if readahead is disabled */
+@@ -3275,7 +3275,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+ 	struct file_ra_state *ra = &file->f_ra;
+ 	DEFINE_READAHEAD(ractl, file, ra, file->f_mapping, vmf->pgoff);
+ 	struct file *fpin = NULL;
+-	unsigned int mmap_miss;
++	unsigned short mmap_miss;
+ 
+ 	/* If we don't want any read-ahead, don't bother */
+ 	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
+@@ -3595,7 +3595,7 @@ static struct folio *next_uptodate_folio(struct xa_state *xas,
+ static vm_fault_t filemap_map_folio_range(struct vm_fault *vmf,
+ 			struct folio *folio, unsigned long start,
+ 			unsigned long addr, unsigned int nr_pages,
+-			unsigned long *rss, unsigned int *mmap_miss)
++			unsigned long *rss, unsigned short *mmap_miss)
+ {
+ 	vm_fault_t ret = 0;
+ 	struct page *page = folio_page(folio, start);
+@@ -3657,7 +3657,7 @@ static vm_fault_t filemap_map_folio_range(struct vm_fault *vmf,
+ 
+ static vm_fault_t filemap_map_order0_folio(struct vm_fault *vmf,
+ 		struct folio *folio, unsigned long addr,
+-		unsigned long *rss, unsigned int *mmap_miss)
++		unsigned long *rss, unsigned short *mmap_miss)
+ {
+ 	vm_fault_t ret = 0;
+ 	struct page *page = &folio->page;
+@@ -3699,7 +3699,8 @@ vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+ 	struct folio *folio;
+ 	vm_fault_t ret = 0;
+ 	unsigned long rss = 0;
+-	unsigned int nr_pages = 0, mmap_miss = 0, mmap_miss_saved, folio_type;
++	unsigned int nr_pages = 0, folio_type;
++	unsigned short mmap_miss = 0, mmap_miss_saved;
+ 
+ 	rcu_read_lock();
+ 	folio = next_uptodate_folio(&xas, mapping, end_pgoff);
+-- 
 2.43.0
 
