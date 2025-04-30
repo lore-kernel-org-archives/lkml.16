@@ -1,107 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84740219A76;
-	Wed, 30 Apr 2025 09:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA8823182C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:25:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746005042; cv=none; b=OV6HNWD9Q2/FDhunsjbDlXAL++mDsawPN2Svd4OZeQ9QM3dtI5D+9Hl2LNiJOOssbk/FNrwfB3519icBTjnn9ELJ0v7sOu8T5i6fvpirdQAGriMxEQ4lsF/IilhQlR6m/UluyZ7aQpx6u4USwLgDSOlZ4OYUNmtHOCKLb67v24k=
+	t=1746005121; cv=none; b=K+3AfvUfHrVhSXuAsqImMLKE86HEfvfMbwRrjStwLzPmCpzbZ71zZhxMt4TkEkcUJLUZLZHv8x1QCkN78i1fe4EBywGVQfI0j4HpySrPBf6X5EvWx7+vj1/VQtM2lWniK/W1OlzL8L7M7maaLh6B3rIuFiJcDJaIER/6B2QDo/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746005042; c=relaxed/simple;
-	bh=+MBmnjAAkTJneqn9nzEKfrM8IXb0M6NgDB3rJ9PWOV8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OlizJXA9nW3mtN3nvadcn9IKy8xmpfnlKq/hhmppaiMJpI94RoEgWpGDfTH0V++eQ0iudOOWYdm19ccj0f002S1kvApgYFxLuZZjop9b/Rj3s1jByJSEa3KXahdtOUd/rxHuzjAkdJKGa2CMrWWdMtpQgwGDHTqUqAatSeG41Gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNmNmVnK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746005121; c=relaxed/simple;
+	bh=L/S/cstdhaw0q/9+lapFQUBWguY35JuC/j0+aEzJZXM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QkcmmAVmQ22doFeKOnG/HYy0itv7M++jkrkvTnlwQynZMeIQmk19lvnp/iUdY+ugjer/q3pCVW4rJm3YCsljgmjR2PkC34d/4Kh3u8QCvQi1iNPVy7f+m4tp1LwB5qTTae/S0bRNfUqXyOPAVoTbieHa+PlDnN/t12OOnHm1C2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AoiEfcyx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNmNmVnK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F21BC4CEEA;
-	Wed, 30 Apr 2025 09:24:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746005042;
-	bh=+MBmnjAAkTJneqn9nzEKfrM8IXb0M6NgDB3rJ9PWOV8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YNmNmVnKDfo5SHn9MUhH4Qc2WD96pka4i3NjgbWqXffQPG1xPZb4MNvmpSosmI16c
-	 Bcw+0cYEHpY2wIn9bQrcFPn22/HtM9QT8cWxEHcQ8kMfAbJ3fbzSr7RO5m/4qjL2kM
-	 4dRYNfduwC9cvAs7Hx6fztOyS3M9gxVM4Ttoud1y2EilmR41jJwePiBLi+ibB2qDBN
-	 +guavzbRQ3QqMvHpVML6xbCx54wwNgkwb60KzOxc5SUPaP0xASYGNIfZ6EmGp4A8r1
-	 pqr4TvAX56xtm9FS2DUpReT8tmzUuy9fpHXhsxdeXWVu9SzYhw+eonO0fvS3UD7vMX
-	 PhQYJWxEpoERw==
-Date: Wed, 30 Apr 2025 11:23:57 +0200
-From: Carlos Maiolino <cem@kernel.org>
-To: Charalampos Mitrodimas <charmitro@posteo.net>
-Cc: linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] xfs: Verify DA node btree hash order
-Message-ID: <dyo3cdnqg3zocge2ygspovdlrjjo2dbwefbvq6w5mcbjgs3bdj@diwkyidcrpjg>
-References: <6Fo_nCBU7RijxC1Kg6qD573hCAQBTcddQlb7i0E9C7tbpPIycSQ8Vt3BeW-1DqdayPO9EzyJLyNgxpH6rfts4g==@protonmail.internalid>
- <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AoiEfcyx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746005119;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=+volEyBef2ye7NUghL7e/PLx9YGoFozJlvYKJwtiFcg=;
+	b=AoiEfcyxZprVaLTx4JiGm8IEKc8ccVShEHSTZzomUFTHhCSgBGzJ3bt7yNDlfRgBJxILri
+	L+PVPKETlnIdyKu6pqL28YDHzF8pliP5SJcSTLXJiRARbZ9BeDdTw1V7khloxXoUKXq2lr
+	zYdr5s4AnjqtaNU8WaL7yg8uJG8Fvbk=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-Z5mF4TYpPjOcm2gJr7Qjjg-1; Wed,
+ 30 Apr 2025 05:25:14 -0400
+X-MC-Unique: Z5mF4TYpPjOcm2gJr7Qjjg-1
+X-Mimecast-MFC-AGG-ID: Z5mF4TYpPjOcm2gJr7Qjjg_1746005112
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FAF41800980;
+	Wed, 30 Apr 2025 09:25:11 +0000 (UTC)
+Received: from [10.44.33.50] (unknown [10.44.33.50])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A7E219560A3;
+	Wed, 30 Apr 2025 09:25:06 +0000 (UTC)
+Message-ID: <c6a24765-2b9d-4e64-a139-d2c3ddcc7b89@redhat.com>
+Date: Wed, 30 Apr 2025 11:25:04 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250412-xfs-hash-check-v1-1-fec1fef5d006@posteo.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v5 4/8] mfd: zl3073x: Add support for devlink
+ device info
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Morton
+ <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20250425170935.740102-1-ivecera@redhat.com>
+ <20250425170935.740102-5-ivecera@redhat.com>
+ <20250429115933.53a1914c@kernel.org>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250429115933.53a1914c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Sat, Apr 12, 2025 at 08:03:57PM +0000, Charalampos Mitrodimas wrote:
-> The xfs_da3_node_verify() function checks the integrity of directory
-> and attribute B-tree node blocks. However, it was missing a check to
-> ensure that the hash values of the btree entries within the node are
-> strictly increasing, as required by the B-tree structure.
-> 
-> Add a loop to iterate through the btree entries and verify that each
-> entry's hash value is greater than the previous one. If an
-> out-of-order hash value is detected, return failure to indicate
-> corruption.
-> 
-> This addresses the "XXX: hash order check?" comment and improves
-> corruption detection for DA node blocks.
-> 
-> Signed-off-by: Charalampos Mitrodimas <charmitro@posteo.net>
-> ---
->  fs/xfs/libxfs/xfs_da_btree.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/xfs/libxfs/xfs_da_btree.c b/fs/xfs/libxfs/xfs_da_btree.c
-> index 17d9e6154f1978ce5a5cb82176eea4d6b9cd768d..6c748911e54619c3ceae9b81f55cf61da6735f01 100644
-> --- a/fs/xfs/libxfs/xfs_da_btree.c
-> +++ b/fs/xfs/libxfs/xfs_da_btree.c
-> @@ -247,7 +247,16 @@ xfs_da3_node_verify(
->  	    ichdr.count > mp->m_attr_geo->node_ents)
->  		return __this_address;
-> 
-> -	/* XXX: hash order check? */
-> +	/* Check hash order */
-> +	uint32_t prev_hash = be32_to_cpu(ichdr.btree[0].hashval);
-> +
-> +	for (int i = 1; i < ichdr.count; i++) {
-> +		uint32_t curr_hash = be32_to_cpu(ichdr.btree[i].hashval);
-> +
-> +		if (curr_hash <= prev_hash)
-> +			return __this_address;
-> +		prev_hash = curr_hash;
-> +	}
 
-Hmmm. Do you have any numbers related to the performance impact of this patch?
 
-IIRC for very populated directories we can end up having many entries here. It's
-not uncommon to have filesystems with millions of entries in a single directory.
-Now we'll be looping over all those entries here during verification, which could
-scale to many interactions on this loop.
-I'm not sure if I'm right here, but this seems to add a big performance penalty
-for directory writes, so I'm curious about the performance implications of this
-patch.
+On 29. 04. 25 8:59 odp., Jakub Kicinski wrote:
+> On Fri, 25 Apr 2025 19:09:31 +0200 Ivan Vecera wrote:
+>> +static int zl3073x_devlink_info_get(struct devlink *devlink,
+>> +				    struct devlink_info_req *req,
+>> +				    struct netlink_ext_ack *extack)
+>> +{
+>> +	struct zl3073x_dev *zldev = devlink_priv(devlink);
+>> +	u16 id, revision, fw_ver;
+>> +	char buf[16];
+>> +	u32 cfg_ver;
+>> +	int rc;
+>> +
+>> +	rc = zl3073x_read_u16(zldev, ZL_REG_ID, &id);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	snprintf(buf, sizeof(buf), "%X", id);
+>> +	rc = devlink_info_version_fixed_put(req,
+>> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_ID,
+>> +					    buf);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = zl3073x_read_u16(zldev, ZL_REG_REVISION, &revision);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	snprintf(buf, sizeof(buf), "%X", revision);
+>> +	rc = devlink_info_version_fixed_put(req,
+>> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_REV,
+>> +					    buf);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = zl3073x_read_u16(zldev, ZL_REG_FW_VER, &fw_ver);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	snprintf(buf, sizeof(buf), "%u", fw_ver);
+>> +	rc = devlink_info_version_fixed_put(req,
+>> +					    DEVLINK_INFO_VERSION_GENERIC_FW,
+> 
+> Are you sure FW version is fixed? Fixed is for unchangeable
+> properties like ASIC revision or serial numbers.
 
+Hmm, should be running. Thanks for pointing out.
+
+>> +					    buf);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	rc = zl3073x_read_u32(zldev, ZL_REG_CUSTOM_CONFIG_VER, &cfg_ver);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	/* No custom config version */
+>> +	if (cfg_ver == U32_MAX)
+>> +		return 0;
+>> +
+>> +	snprintf(buf, sizeof(buf), "%lu.%lu.%lu.%lu",
+>> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
+>> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
+>> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
+>> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
+>> +
+>> +	return devlink_info_version_running_put(req, "cfg.custom_ver", buf);
 > 
->  	return NULL;
->  }
-> 
-> ---
-> base-commit: ecd5d67ad602c2c12e8709762717112ef0958767
-> change-id: 20250412-xfs-hash-check-be7397881a2c
-> 
-> Best regards,
-> --
-> Charalampos Mitrodimas <charmitro@posteo.net>
-> 
+> You need to document the custom versions and properties in a driver
+> specific file under Documentation/networking/device_drivers/
+
+Will add.
+
+Thanks for the review, Jakub.
+
+Ivan
+
