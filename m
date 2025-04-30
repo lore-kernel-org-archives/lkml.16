@@ -1,67 +1,67 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4B81F0990;
-	Wed, 30 Apr 2025 06:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3706A20C01C;
+	Wed, 30 Apr 2025 06:50:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745995806; cv=none; b=fDV+WMIIjKvRg0I3uX+zNVvnrqdKDEjYSnthIG2amCrE4NBRfT4mvSAb/pVmG+/bRISQUOizOusjp6TP4SF2FEN4OaNex8gcQnqL019FoWh4PMhdUVnFunytYbBCDhzEZv33BhV155CjwPKgt4aiq35xAwc/otUBVYWXHyOceXc=
+	t=1745995806; cv=none; b=SzG0EWA1sCLhvvYX6vF2L7nnIqqrK8I5dM5EzIUfboxYT8FNx8K84ywidWgiLiqEukMdwlHc5ZUt94Wn8TUj5AjLn5PWg6Q4ZOLrGANN+IBwGhri1QtHEcL/yHrHUqBFBmgl76hidpz62NuldFlmdIkOc8Ww9s/sbxXfQfcYfRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745995806; c=relaxed/simple;
-	bh=o7X/4GECjENDH1ijH4aYrFFLIfNbwXyik12NQU8Zssg=;
+	bh=7o0PGly54Zp/AzBT/JM05c9KWMgzTPvh4JiH1iVx85U=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ellNxiJhWbkKOisJ6ngDt5t6PDxbu41yrdr9nz4v1R1myyY43ovLKile3PpGpKhQahPjSFZOGvZlYBTbKEqXvdkmsE+VTCuQaLjYWgwpdNcWzysH14J+AZFEp6gvgBMvnJAKbTrVVSDP8+EBYfZb5Cp/xxnertPKkb41ZuskAoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H8FpuQKG; arc=none smtp.client-ip=209.85.208.43
+	 In-Reply-To:To:Cc; b=qD2TYI3I/MGHlrmBx0TAZsav38/KVrnwY7Tsd4qKsxh5vPK+GEmgrSsV1F/ARZ+FRcewcXm5ITugbnVjEjkydQX1yg1phcVTWofB2A+xUeyN4/53dudVotPikrrFAx32/0a12XUu1XMyiqRG8F/xPE4RM19sovcUiOdVvw03lYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ngJRZa2k; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H8FpuQKG"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5f4ca707e31so11470362a12.2;
-        Tue, 29 Apr 2025 23:50:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ngJRZa2k"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acb615228a4so118287466b.0;
+        Tue, 29 Apr 2025 23:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1745995802; x=1746600602; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1745995803; x=1746600603; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fvJx3UmzS8dVjptlRaiQbYqyjCdjDtmMrhIbcXQbz5s=;
-        b=H8FpuQKG/T/UbWqGkigFogOqKwLti+vZQwbZMFjO4rReWpio8BKpJHf5ELY3D2c/LL
-         4fvW3RhInkFQH1CxQVTKCXbb3qmXxvghaPMJJ5moJn8Oqq/8XC82U5Ta7OOhaFWG+p5n
-         xkY/JCN9pwmyw7dx+ILEnc7F01p22OAEDnJasL4SiN0XC3kQW72OTbVYNXdWOE8HffId
-         WaeoicoiTLTDhXThcLvesloS5SMrm9kGd9bmPfgEmlRtvyA//lPE5EwkOBcgiC/j1m6R
-         UdwsJyW0yKCU1OeeJyFetaz3M5vRArHzWlPSS0hgVhzytn9ULIgMk1botbCXx6zYNJQ+
-         EZDg==
+        bh=+oXm4nz3WDuUHxKThxISaC4MDw6D9O5zwow0ZgRQDyA=;
+        b=ngJRZa2k+d4XOpe0J3c+uCV+idMF7iFjsNKRaW/f+DVoyHVetzVdnU01wOFXdagly6
+         JbnKFpovYiyTghn7/fVYMy+KVZp9rSb3y6cpC8UeouvC7eP8r6Ot5i0fkZerCV0yVdBq
+         sZyEo11ZNORUcB5ygjrol8L0AaLnWF9pOUN7QXprkc13QVcx8bTYmW1bu3G/01tTamor
+         UPeLm7tz6NWqPgU0yRKisvtHZW1dNIZKnXa5rrv98BLtbkbhiEjzfqpw434zCNDlMD/d
+         Y1/ruhVvovlhb1rDbms86pi4iy/E9QTBYRiNl4z40S8oQ+M8loIFFldLowGXbyUlo+QR
+         AVmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745995802; x=1746600602;
+        d=1e100.net; s=20230601; t=1745995803; x=1746600603;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fvJx3UmzS8dVjptlRaiQbYqyjCdjDtmMrhIbcXQbz5s=;
-        b=dkU+Qx+cwQjY5qGiOywlcHLBybkbPYTi3hOjpEQCknLl3JzBy8wSTPmGhQG1IiP4kU
-         6lKTORBXGm4WYeD6lDvHHCrjmuHErQM/aJsY50TZIQ3ByA1/O8GVgLffwAvPZWvonn0x
-         z6I5jlLAy1CaTvndNDSWqx5Y2TKsoEZNz5KTudyqTLwCqme2IO+Jnk1dPK+iKEeW6Azd
-         6lPPKIFWql9pJ2Vcu8EhmByWHuq24nHX2IYaee0meLQm4Tupb+suJPTD1j2bHO7Sl8OP
-         QjZN/vLsXc5tKiU7fuZ3JCQyW8kxvVjuTGYOUNmCwZh6ZAVxymcH6Li/N4pTPjxun1vX
-         +dHA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+kneVqjFdwIbTCkpLDJlU1lFX5DfFYTOCPDaYG7iEJco2BgqCgkkTSs2z6LjSYvFu1zfSFd9vIUFc@vger.kernel.org, AJvYcCW958Phraj2g7qajw5suf9HopQ6Ygtq77oo+sslZjFJQKCLCubbM4J2rbnG6UOahZ88fWvcGKNmQE1F9NMk@vger.kernel.org, AJvYcCWYfg4gISalMXRhv1yWuGUBhl/VIX3Jn7L4S2S3EkZE1pfczyqmFWkyth6CikHSzk3xZRQOl0Pd/R5K@vger.kernel.org
-X-Gm-Message-State: AOJu0YycHqRu4TwekGDxMS1/P/OOQjA6CclFJpjsMpMUsx2MbqKp8Vpn
-	cmKRnvybHW1Bj15deK/QndXQwr/y47G6++bxCTiC3ILnq0yS2KpP
-X-Gm-Gg: ASbGncvHbAntjIZ4lqpTf9DxTanUX2ch2tMpeTKktC8cmtL6fFBYqPoS7n4oXPrG9hO
-	5uXoDijy6o0JQM5wWcZR/5oRhzvstEYsGdinhx413q0PpxajqlGZwnNEoFGim6u6FrwntQhkHOp
-	LszsnXfgZnVIpTiKxjxd7J/TymgYR2iCKK4UwJ80nmkpG+Xgt/qTpBMAOYo0z/3aR8KZ48WsoEw
-	lDRyxcXE0J81s5syXKdsr9An7k4OT4ZYdsx55Ag0VkLtbSdtP3GaJcWIu0pQ3WRjeV0OiFroZ67
-	cu1iUCUlVXC5LIBY9tGK/tuUnaeyiw9RiTmXS70T/CbL8/MUojXUo0NdYCqIWq+8kLcFVHVbhu2
-	ZS62W/i6nKNE=
-X-Google-Smtp-Source: AGHT+IFdwliJt5x0A4qtfykEcwA+6DL4K6djtpFHi/OOI+ENvTwdlHFLjLx8LlsK+DOKmb5QvWM/iw==
-X-Received: by 2002:a17:907:2d08:b0:ace:8398:b772 with SMTP id a640c23a62f3a-acee21ac4e6mr138915766b.14.1745995802224;
-        Tue, 29 Apr 2025 23:50:02 -0700 (PDT)
+        bh=+oXm4nz3WDuUHxKThxISaC4MDw6D9O5zwow0ZgRQDyA=;
+        b=byhGKF85wdp6RqqPomhDQyQFVS61Ps5oa/ilijLzJrr5XWNqn5H5j/Atgtu8AWnGQy
+         8RGuQRQ/OJBQhcXWQMopCklFNZX511+w/Ve/hAMgXWa5kyTpbcgtODPdNq+LF6/iR0sf
+         cFubFml4NndK0+hmo1DTsTCLcEMYvPwtGr0lOmwPnb42Gz3bw+N8K3gPBYjp59yWFVmV
+         fZ6waMFXXKQLJqVA6J0SO1EClIzJEuyEk8RLKA9WT09aDusCFtajNCUVub1Kh2WAZep2
+         MaO3A3YbWA9+OvFBp6iNUGf/QTqC/pyerar1E5GyP/EB38OBwh0HOQjWK48aISVNPVMy
+         WcvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWmH9xHvjQ5Y2d7OR1gOmjD6tWyPhzLRaC1tlKZOP70S54HAyjga+HYiywry6oOB2T0OlYFV97jB8Lc@vger.kernel.org, AJvYcCXI8BlwN+/k/Ysznmt0m2Qo2MaQsNPbdQrE4Jz/T1Bm0jRshl9465axgwD/9Jk5xEPXtvzW5E2dGCin@vger.kernel.org, AJvYcCXyjVzbYgtxJYO5qP9ojUMmmegwwEAEOKy7z4QxJ9IxB/rTKN8t8sg3Fbhq80ExanQxzyfXON/ka7nU9xpa@vger.kernel.org
+X-Gm-Message-State: AOJu0YzqXiktrgonH6KP1dKcjsYfNuhXwJkb6+1BPH00w/fi8LGBuUyi
+	hI5B229klaPpFTM/kUlhz1+mjY4SK4virb5txODowWHKmiMe1izP
+X-Gm-Gg: ASbGnctFDJBuHg6Mq59YFzU3Nj4eISktkuBofXYpZX8KasRaD+j5yGz062iN3LGzGag
+	caYWGrrVnAmFwZQuII+tCFkqFXUw7YGI5vlLp/wT6mXNRuBaYyIjljH2ChOAVDdleutE4ZBWWD1
+	rr/Ul37mdMPW+GFOWdL2lWCK52Nc5ZLy+0qvrtqsbUDS6RWayEafASdqpnoiNHo59jGLGmhNno2
+	BY/weRS1DOceYVuYgesIIQylumz7QAzLBAKuZPTby48sEOcZB5dkVOygVZCnnBXbkE/eAQr5h1t
+	7YBvhhwMOni2HTaaDneAq+XAlBTvo/sQ37Jvc1D28WwHIc6/sZeg1ZGxm3jPUaach0CjaKIfgP8
+	3ykg43toF/dE=
+X-Google-Smtp-Source: AGHT+IFHsjk/e+HvU3k+Cfd3WPsaPabVVlDh+uQI6G5na3WSnoI1NcRuSIkqtFWwvUUhuTQ3dclIgw==
+X-Received: by 2002:a17:907:805:b0:ace:4870:507c with SMTP id a640c23a62f3a-acedf98ee37mr138059266b.23.1745995803508;
+        Tue, 29 Apr 2025 23:50:03 -0700 (PDT)
 Received: from hex.my.domain (83.8.121.197.ipv4.supernova.orange.pl. [83.8.121.197])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5087e4sm881222866b.73.2025.04.29.23.50.01
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e5087e4sm881222866b.73.2025.04.29.23.50.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 23:50:01 -0700 (PDT)
+        Tue, 29 Apr 2025 23:50:03 -0700 (PDT)
 From: Artur Weber <aweber.kernel@gmail.com>
-Date: Wed, 30 Apr 2025 08:49:53 +0200
-Subject: [PATCH v5 6/8] clk: bcm281xx: Add corresponding bus clocks for
- peripheral clocks
+Date: Wed, 30 Apr 2025 08:49:54 +0200
+Subject: [PATCH v5 7/8] ARM: dts: bcm2166x-common: Add matching bus clocks
+ for peripheral clocks
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-kona-bus-clock-v5-6-46766b28b93a@gmail.com>
+Message-Id: <20250430-kona-bus-clock-v5-7-46766b28b93a@gmail.com>
 References: <20250430-kona-bus-clock-v5-0-46766b28b93a@gmail.com>
 In-Reply-To: <20250430-kona-bus-clock-v5-0-46766b28b93a@gmail.com>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -86,203 +86,92 @@ Cc: Alex Elder <elder@kernel.org>,
  ~postmarketos/upstreaming@lists.sr.ht, 
  Artur Weber <aweber.kernel@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1745995792; l=5998;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1745995792; l=2451;
  i=aweber.kernel@gmail.com; s=20231030; h=from:subject:message-id;
- bh=o7X/4GECjENDH1ijH4aYrFFLIfNbwXyik12NQU8Zssg=;
- b=N7xhtirkIcicp56xw7cPbSiEEzBw3Dvr/xc44PyGtAx3UhldkU8DcJ9LdQVcoKueYC6qr6ViH
- DlRmOFnaM9uAIVOln+wb1+qT4q4x8kfOLtGDC0h86s5Lw89l1aQX0cF
+ bh=7o0PGly54Zp/AzBT/JM05c9KWMgzTPvh4JiH1iVx85U=;
+ b=1dA93tYsefhzi4uXLzDvljB0WxnRigvMaDAEHcADOhOHtbEm7BxMbchFf/0n95t8rkzyVwsRq
+ 77T/WhVPQZ/Df5V2ACeLtCj4Zuc92SR2/qsb355hNs6EqxbRB+LVmXM
 X-Developer-Key: i=aweber.kernel@gmail.com; a=ed25519;
  pk=RhDBfWbJEHqDibXbhNEBAnc9FMkyznGxX/hwfhL8bv8=
 
-Add bus clocks corresponding to peripheral clocks currently supported
-by the BCM281xx clock driver.
+Following changes in the clock driver, add bus clocks for timer, SDIO,
+BSC and UART to the DTS clock output names. Replace the usb_otg_ahb
+fixed clock with the real bus clock.
 
 Signed-off-by: Artur Weber <aweber.kernel@gmail.com>
 ---
 Changes in v4:
-- Adapt to CLOCK_COUNT -> CLK_COUNT rename
-
-Changes in v3:
-- Adapt to CLOCK_COUNT defines being moved
-
-Changes in v2:
-- Add this patch (BCM281xx bus clocks)
+- Change commit summary to match equivalent BCM281xx commit
 ---
- drivers/clk/bcm/clk-bcm281xx.c | 127 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 124 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi | 28 ++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
-index 62c3bf4656259261ae4f7d81dae48c90ab26c04e..13fd8a5ea8fa07bf6f3cca83b6b18e59a8de63df 100644
---- a/drivers/clk/bcm/clk-bcm281xx.c
-+++ b/drivers/clk/bcm/clk-bcm281xx.c
-@@ -59,7 +59,17 @@ static struct peri_clk_data pmu_bsc_var_data = {
- 	.trig		= TRIGGER(0x0a40, 2),
- };
+diff --git a/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi b/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
+index 87180b7fd695e65b52c52743e6315cbcca385fba..ab6ad8c6d326171a6da1762ecd839bd82e9da482 100644
+--- a/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
++++ b/arch/arm/boot/dts/broadcom/bcm2166x-common.dtsi
+@@ -143,7 +143,7 @@ usbotg: usb@e20000 {
+ 			compatible = "snps,dwc2";
+ 			reg = <0x00e20000 0x10000>;
+ 			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&usb_otg_ahb_clk>;
++			clocks = <&master_ccu BCM21664_MASTER_CCU_USB_OTG_AHB>;
+ 			clock-names = "otg";
+ 			phys = <&usbphy>;
+ 			phy-names = "usb2-phy";
+@@ -248,12 +248,6 @@ var_52m_clk: var_52m {
+ 			clock-frequency = <52000000>;
+ 		};
  
--#define BCM281XX_AON_CCU_CLK_COUNT	(BCM281XX_AON_CCU_PMU_BSC_VAR + 1)
-+static struct bus_clk_data hub_timer_apb_data = {
-+	.gate		= HW_SW_GATE(0x0414, 18, 3, 2),
-+	.hyst		= HYST(0x0414, 10, 11),
-+};
-+
-+static struct bus_clk_data pmu_bsc_apb_data = {
-+	.gate		= HW_SW_GATE(0x0418, 18, 3, 2),
-+	.hyst		= HYST(0x0418, 10, 11),
-+};
-+
-+#define BCM281XX_AON_CCU_CLK_COUNT	(BCM281XX_AON_CCU_PMU_BSC_APB + 1)
+-		usb_otg_ahb_clk: usb_otg_ahb {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <52000000>;
+-		};
+-
+ 		ref_96m_clk: ref_96m {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
+@@ -301,7 +295,8 @@ aon_ccu: aon_ccu@35002000 {
+ 			compatible = "brcm,bcm21664-aon-ccu";
+ 			reg = <0x35002000 0x0f00>;
+ 			#clock-cells = <1>;
+-			clock-output-names = "hub_timer";
++			clock-output-names = "hub_timer",
++					     "hub_timer_apb";
+ 		};
  
- static struct ccu_data aon_ccu_data = {
- 	BCM281XX_CCU_COMMON(aon, AON),
-@@ -70,6 +80,10 @@ static struct ccu_data aon_ccu_data = {
- 			KONA_CLK(aon, pmu_bsc, peri),
- 		[BCM281XX_AON_CCU_PMU_BSC_VAR] =
- 			KONA_CLK(aon, pmu_bsc_var, peri),
-+		[BCM281XX_AON_CCU_HUB_TIMER_APB] =
-+			KONA_CLK(aon, hub_timer_apb, bus),
-+		[BCM281XX_AON_CCU_PMU_BSC_APB] =
-+			KONA_CLK(aon, pmu_bsc_apb, bus),
- 		[BCM281XX_AON_CCU_CLK_COUNT] = LAST_KONA_CLK,
- 	},
- };
-@@ -178,7 +192,36 @@ static struct peri_clk_data hsic2_12m_data = {
- 	.trig		= TRIGGER(0x0afc, 5),
- };
+ 		slave_ccu: slave_ccu@3e011000 {
+@@ -314,7 +309,15 @@ slave_ccu: slave_ccu@3e011000 {
+ 					     "bsc1",
+ 					     "bsc2",
+ 					     "bsc3",
+-					     "bsc4";
++					     "bsc4",
++					     "uartb_apb",
++					     "uartb2_apb",
++					     "uartb3_apb",
++					     "bsc1_apb",
++					     "bsc2_apb",
++					     "bsc3_apb",
++					     "bsc4_apb";
++
+ 		};
  
--#define BCM281XX_MASTER_CCU_CLK_COUNT	(BCM281XX_MASTER_CCU_HSIC2_12M + 1)
-+static struct bus_clk_data sdio1_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0358, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data sdio2_ahb_data = {
-+	.gate		= HW_SW_GATE(0x035c, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data sdio3_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0364, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data sdio4_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0360, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data usb_ic_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0354, 16, 1, 0),
-+};
-+
-+/* also called usbh_ahb */
-+static struct bus_clk_data hsic2_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0370, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data usb_otg_ahb_data = {
-+	.gate		= HW_SW_GATE(0x0348, 16, 1, 0),
-+};
-+
-+#define BCM281XX_MASTER_CCU_CLK_COUNT	(BCM281XX_MASTER_CCU_USB_OTG_AHB + 1)
- 
- static struct ccu_data master_ccu_data = {
- 	BCM281XX_CCU_COMMON(master, MASTER),
-@@ -197,6 +240,20 @@ static struct ccu_data master_ccu_data = {
- 			KONA_CLK(master, hsic2_48m, peri),
- 		[BCM281XX_MASTER_CCU_HSIC2_12M] =
- 			KONA_CLK(master, hsic2_12m, peri),
-+		[BCM281XX_MASTER_CCU_SDIO1_AHB] =
-+			KONA_CLK(master, sdio1_ahb, bus),
-+		[BCM281XX_MASTER_CCU_SDIO2_AHB] =
-+			KONA_CLK(master, sdio2_ahb, bus),
-+		[BCM281XX_MASTER_CCU_SDIO3_AHB] =
-+			KONA_CLK(master, sdio3_ahb, bus),
-+		[BCM281XX_MASTER_CCU_SDIO4_AHB] =
-+			KONA_CLK(master, sdio4_ahb, bus),
-+		[BCM281XX_MASTER_CCU_USB_IC_AHB] =
-+			KONA_CLK(master, usb_ic_ahb, bus),
-+		[BCM281XX_MASTER_CCU_HSIC2_AHB] =
-+			KONA_CLK(master, hsic2_ahb, bus),
-+		[BCM281XX_MASTER_CCU_USB_OTG_AHB] =
-+			KONA_CLK(master, usb_otg_ahb, bus),
- 		[BCM281XX_MASTER_CCU_CLK_COUNT] = LAST_KONA_CLK,
- 	},
- };
-@@ -309,7 +366,51 @@ static struct peri_clk_data pwm_data = {
- 	.trig		= TRIGGER(0x0afc, 15),
- };
- 
--#define BCM281XX_SLAVE_CCU_CLK_COUNT	(BCM281XX_SLAVE_CCU_PWM + 1)
-+static struct bus_clk_data uartb_apb_data = {
-+	.gate		= HW_SW_GATE(0x0400, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data uartb2_apb_data = {
-+	.gate		= HW_SW_GATE(0x0404, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data uartb3_apb_data = {
-+	.gate		= HW_SW_GATE(0x0408, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data uartb4_apb_data = {
-+	.gate		= HW_SW_GATE(0x040c, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data ssp0_apb_data = {
-+	.gate		= HW_SW_GATE(0x0410, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data ssp2_apb_data = {
-+	.gate		= HW_SW_GATE(0x0418, 16, 1, 0),
-+};
-+
-+static struct bus_clk_data bsc1_apb_data = {
-+	.gate		= HW_SW_GATE(0x0458, 16, 1, 0),
-+	.hyst		= HYST(0x0458, 8, 9),
-+};
-+
-+static struct bus_clk_data bsc2_apb_data = {
-+	.gate		= HW_SW_GATE(0x045c, 16, 1, 0),
-+	.hyst		= HYST(0x045c, 8, 9),
-+};
-+
-+static struct bus_clk_data bsc3_apb_data = {
-+	.gate		= HW_SW_GATE(0x0484, 16, 1, 0),
-+	.hyst		= HYST(0x0484, 8, 9),
-+};
-+
-+static struct bus_clk_data pwm_apb_data = {
-+	.gate		= HW_SW_GATE(0x0468, 16, 1, 0),
-+	.hyst		= HYST(0x0468, 8, 9),
-+};
-+
-+#define BCM281XX_SLAVE_CCU_CLK_COUNT	(BCM281XX_SLAVE_CCU_PWM_APB + 1)
- 
- static struct ccu_data slave_ccu_data = {
- 	BCM281XX_CCU_COMMON(slave, SLAVE),
-@@ -334,6 +435,26 @@ static struct ccu_data slave_ccu_data = {
- 			KONA_CLK(slave, bsc3, peri),
- 		[BCM281XX_SLAVE_CCU_PWM] =
- 			KONA_CLK(slave, pwm, peri),
-+		[BCM281XX_SLAVE_CCU_UARTB_APB] =
-+			KONA_CLK(slave, uartb_apb, bus),
-+		[BCM281XX_SLAVE_CCU_UARTB2_APB] =
-+			KONA_CLK(slave, uartb2_apb, bus),
-+		[BCM281XX_SLAVE_CCU_UARTB3_APB] =
-+			KONA_CLK(slave, uartb3_apb, bus),
-+		[BCM281XX_SLAVE_CCU_UARTB4_APB] =
-+			KONA_CLK(slave, uartb4_apb, bus),
-+		[BCM281XX_SLAVE_CCU_SSP0_APB] =
-+			KONA_CLK(slave, ssp0_apb, bus),
-+		[BCM281XX_SLAVE_CCU_SSP2_APB] =
-+			KONA_CLK(slave, ssp2_apb, bus),
-+		[BCM281XX_SLAVE_CCU_BSC1_APB] =
-+			KONA_CLK(slave, bsc1_apb, bus),
-+		[BCM281XX_SLAVE_CCU_BSC2_APB] =
-+			KONA_CLK(slave, bsc2_apb, bus),
-+		[BCM281XX_SLAVE_CCU_BSC3_APB] =
-+			KONA_CLK(slave, bsc3_apb, bus),
-+		[BCM281XX_SLAVE_CCU_PWM_APB] =
-+			KONA_CLK(slave, pwm_apb, bus),
- 		[BCM281XX_SLAVE_CCU_CLK_COUNT] = LAST_KONA_CLK,
- 	},
+ 		master_ccu: master_ccu@3f001000 {
+@@ -328,7 +331,12 @@ master_ccu: master_ccu@3f001000 {
+ 					     "sdio1_sleep",
+ 					     "sdio2_sleep",
+ 					     "sdio3_sleep",
+-					     "sdio4_sleep";
++					     "sdio4_sleep",
++					     "sdio1_ahb",
++					     "sdio2_ahb",
++					     "sdio3_ahb",
++					     "sdio4_ahb",
++					     "usb_otg_ahb";
+ 		};
+ 	};
  };
 
 -- 
