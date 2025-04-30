@@ -1,62 +1,64 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB4D77104
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:12:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D38112B17C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745971954; cv=none; b=Vfe6uoz0aUH9poyWg9LeXyMg/zJArWwWy8rbcJm2Y165ZxKlndSBmRvMnPnq6WE1BC8GMasj8VWMwXUIjexrh4Vhw5B1N8ljp8GVPaX2CTQ6yWZf5S54ISKxtlLmz2F2OsyfOf8zl6ULWRNuTsof39pCorVNJUSPY2vaCi9gwuE=
+	t=1745971956; cv=none; b=jBbYY+303BL1+Q9tMne3AHELnfKbD9a7Dife18MAeVKd7pZfLlXILvRBPhR7KbPp9Vfu+mEEeNMkYFCReCbls6rKqzLwjuXlrqApN/8VdxR/rmO3lUOth1HDQNR4khKSlR8e0kkSxYFrQz3z92+g6QAjzxJu8Px82RYqlemymSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745971954; c=relaxed/simple;
-	bh=ZXjEjXsHfjUa0iCrPCgE3lVEAf2malrtgL9WvuAkaWg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fJHoEbi7bgTrPxT17CbHhdEG75DfW6/vQFE+krTQt51idvtE4F2Y+y07R4O10dZdNNTSNEkB3gncTD+6Pf/dVsQaaPZqZh5M8p0/klX8+Ijxew6qda1qG6Fi+PQDJeySIwfRX9I+js6PZjf+lLl2KkX/o1ASUFGnTD/qiOrb67o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=mtXtP6sn; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1745971956; c=relaxed/simple;
+	bh=qJvAeC9PJ0yrfTjybs1QJ63QO49Ry6kSSEW1PYb/KCM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=csF/vGcFnMZrsAGIKsCObRMYtft8DZ2BPQgYoZBGI4oP4i0kakkUXCysuH9B1JELG3KMrs/f04+MFRh8Ify4jAIDO7BcDmjUpyFpgeXgln8cf4TDvV0Xkvn9fhEGXTmgh8ka87i8j4bGhmfWKIBADQPo9tePZu5tblCrJbJO0xU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=B5mR4VJV; arc=none smtp.client-ip=209.85.160.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="mtXtP6sn"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4774193fdffso122581311cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:12:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="B5mR4VJV"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4768f90bf36so75863961cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:12:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1745971951; x=1746576751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XwkrHfxPIhIcdIYIVNv5VYPO5SHZTfxK8AinQWxi748=;
-        b=mtXtP6sn+DLqWZQ4B5+Mro5FUX85BEkBA3C3KO9jKMQmmXpaPLzCeV1KEZ19PUUGst
-         zAjEmSmRJ+M/yclCin2aoVvRAoblqxbD6vll5J6soNmHBgiz4aEo6qqGan3ZAfanB/Q3
-         ACA2BmpMI2FAUVVFMqwdb81dXFPj/SPZXFnoWliniuA1LeoiKxAhxuOIRm4eWQOQuJJt
-         6no3Pj01tYYx0nBGN9aKLev4SS7v1vU6lWJoR62GHqilH70jX03xFUWl0Uh4Ho9MaXW6
-         xxImKq++nNHIULW7LgV/Nxl6kxjRdvh5U2HJ8vTxNrGhsgC3Rt2X8pCfKzVmFYhEAPV9
-         RPag==
+        d=gourry.net; s=google; t=1745971954; x=1746576754; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1s5gcOP/bkzD9yLDRr1nu8e/0M24YgRWFUxLhi7LbcA=;
+        b=B5mR4VJVK5aZiN3MIE2zDyFkz1/I+UUKDVZ/Jglqg0mM2oAo1Fj3YBFchXnDN2DD90
+         OdjBNFWqkeyfTE/oNh20SSTk0CiaYHL7y8K2JXXk5JuDo6ovGpN7BxM0uQdRte6NK/Nz
+         koFYtJMacdZ7yVXB35IyAAICy6HRkXUrYt+ZOed6L5BXKnw1z0vwo5/7R1LgLcN4Dmi8
+         6/wnPdbv90D4Xt+9X8HB/s7BdpFDevdvWGMT2c/i2bQkirYEK/FnTj2X5QTUGCa+u7q5
+         fyykCrkTZmhTsV6vTlxLZq3Oo3GEVsD19y5FHkNZpke2W4Rbi8foDQfvnOca5xhiSN3u
+         YXpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745971951; x=1746576751;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XwkrHfxPIhIcdIYIVNv5VYPO5SHZTfxK8AinQWxi748=;
-        b=umXtrDGAqZY/h2o49LqTTfs8lkctzRjOWTWaqmgBcBBTgX5lGA+BjYIdtsGqVcA1Ts
-         Z4NQ9f1TBtNPFYp6WuSb13f/jlkzZzLZjlwblb083P6AbuzmJrSYvMwBYA3XvrBmKmHv
-         +6wl6OvYFM7Dc6F8DbqQQ71OjUPaG7BlKNtaZOaG+1SRfTri+QKsewIhNUbpTOVatrtB
-         OUMrRMcAG9IYkDFHUaXXopVDfGbr4HeSsXlSSsyJIiIy2KDnzWKUh4DcmvtB/H8oi51X
-         clRs6fs5M50q0ROLxcBsWKUemDLL/jsPcHvIQYKOi6Q1VnNU+1g0Zl+RPqejLU2Lt4AK
-         ioRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVj791TT9yEd9FjBhHFlg0KWHtGVXlBtHS1zyRXtcaGXFNIl/K1pLKlPEN3OK0PAVrDmSraqzHBY9cOtWc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8Ed3AZqEh3+WotlU9FLhb4Gavf2TSZta+Rq5Jox1wSxft+j12
-	ZWLjKkTdcH1ebfPomNzRvZXM1V9YW7y6Oeduyuq5kj6+3QRleZWFqOGSUz3dFaDK+46e/GReHnf
-	t
-X-Gm-Gg: ASbGncu7LE8EutNmB6UAjHj5rYrMmi08ZjfcNqfy6spDjscsDU/yCnUX0/h4muu1oud
-	OkH7kTSKtkL55dZMnobXJfqnPxa1rgXkDHrqUdJRRogjSEFRLWy0XcJBAWgJ85SlI25T+xKfdKL
-	JHm6ceVZ7+zhW/JwXbilc0axN3RiP4apc9lhGIdJ/m856QI5l5VW/r9scxZI109TnfuTMVkPtZk
-	Fv8XYYakFQ8TDEQrXVCgQKsj5vr/xEnXatPfZ9liuCMK1Ab45U43Dd36c19NfzcDvXuwH/mA4v5
-	bYe9DrsUAB2SxCsBZ/GDYHflFPgL1zP5M0clDoE1k7a8FrcSjX5uBiaJNWu2On5bN2DTMgr43Wo
-	wPQPcah3As0ktRve8DuuvNVgomT2z
-X-Google-Smtp-Source: AGHT+IGx7yWMnstTX6Ocxy96mhz8w9pNto5sYt4gawjQLHNDDT1JWwKm6SA8P6j6AQaDIRZciIZTvw==
-X-Received: by 2002:a05:622a:2b44:b0:476:b7cf:4d42 with SMTP id d75a77b69052e-489e4f6e095mr11161921cf.27.1745971951326;
-        Tue, 29 Apr 2025 17:12:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1745971954; x=1746576754;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1s5gcOP/bkzD9yLDRr1nu8e/0M24YgRWFUxLhi7LbcA=;
+        b=izR05DTXWphLCN8aifRqaqlG+GMmUW+mje0ylolAsJHsGzx1hOC17vRQrJbG4nycMg
+         utO10WfKy+gP+SBc8qNMynscxA/E/hfr0klcG6DIgPMnV5mysAS5zCAwWMEM2apxS3De
+         SkiN6VMNvcHS5miM5+fHC4d/5yF8wiFFYqSOrbksuXwJjStgjQlVlPoaBtczraa9nxfs
+         bwSTz0vhiPZaajdI2gAhoAYvjltwFiFkdlHATmJWie3fTVKWF3HKUTp6dab6/oVJeTID
+         lmzmLZp2iLVCvFdw0YFLeHS8sYAc0c00iEhhF+xoTYPCMyxaXUaewzqymADEJ1KMleGD
+         WE3A==
+X-Forwarded-Encrypted: i=1; AJvYcCW9lUGG7b7R2Wxkt6rkZDj5UlzB+jHGsJqf81if+ItqjemDeHcs+E/RFV+qExoIewS6YW5ePIW8zayzQqg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlLzp62kNK5eKrr+JGcADcH+fqhjyQiTaVq4T954hgPgE+kQmS
+	8tTGhj4J8y0z5frC0FYLumzpLY+xgLy9cxUbruUVRtFk7WwvK98AaW0J+5TqpyMa9M9qjxcnJ1m
+	l
+X-Gm-Gg: ASbGncsxW/7MFyjkcVEv4ASjktWz1jKPWahP+ZSchKTbtuGmzbTkalIwBMl3TzmExO9
+	gUhDP0+lRxgNuQfIDyVSIEzl2anId7XE+hW2zosTZLL3mN8Y65mHlqtlSqd+/9+agRA8egr4PDz
+	qrQBRYEo07oo43w6AxtcIJHeNgax8erWnNOygwa9r70vJ/UDwmVN3V5GcTnxGPE4MPSq9G3f1c2
+	SgSkmYjnBL6Whd2rNLj1fsuUmwFwh2y12vOF1s5w+QtUzllqVoQsy3tKFqDFDZ0VMcDDt342Pq5
+	IiZMGhuOpfEqXfLgYUjPbDeZ6TDmhrfiVEdQHA9dMTgLwCSFH/2tFr880iQv1z73utJntdI7q+Y
+	OUwbHRD46emkzjfKVmUfALdNyQHDw
+X-Google-Smtp-Source: AGHT+IEKGR2FHHd25LiYQesqqVIWnTFxWxv53o72vrO3uUoe9coBak8e3HrW/K1B4aZLE7+Z/ygLCA==
+X-Received: by 2002:ac8:6f10:0:b0:476:79d2:af57 with SMTP id d75a77b69052e-489e4a8942amr9867851cf.22.1745971954008;
+        Tue, 29 Apr 2025 17:12:34 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm87634411cf.41.2025.04.29.17.12.30
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-47e9f7a820esm87634411cf.41.2025.04.29.17.12.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 17:12:30 -0700 (PDT)
+        Tue, 29 Apr 2025 17:12:33 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -69,12 +71,13 @@ Cc: linux-doc@vger.kernel.org,
 	vishal.l.verma@intel.com,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
-	corbet@lwn.net,
-	Joshua Hahn <joshua.hahnjy@gmail.com>
-Subject: [RFC PATCH 00/17] CXL Boot to Bash Documentation
-Date: Tue, 29 Apr 2025 20:12:07 -0400
-Message-ID: <20250430001224.1028656-1-gourry@gourry.net>
+	corbet@lwn.net
+Subject: [RFC PATCH 01/17] cxl: update documentation structure in prep for new docs
+Date: Tue, 29 Apr 2025 20:12:08 -0400
+Message-ID: <20250430001224.1028656-2-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250430001224.1028656-1-gourry@gourry.net>
+References: <20250430001224.1028656-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,127 +86,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series converts CXL Boot to Bash Docs to Linux Kernel Docs.
-I tried to break it into separate patches to make it easier for
-people with specific expertise to review.
+Restructure the cxl folder to make adding docs per-page cleaner.
 
-The big open TODOs:
-- use-case documentation.
-
-  I only have the type-3 perspective, and only one perspective.
-  It would be good to have that hacked on more generally.
-
-- memory tiering documentation.
-
-  I basically left this unfilled for now.  Would like some basic
-  docs on at least TPP and DAMON.
-
-- devices: CDAT explanation
-
-  It would be good to have this spelled out at least a little bit.
-
-- platform: ACPI SRAT Generic port / initiator docs
-
-  I don't know anything about this and people say it's important.
-
-Thank you to everyone who contributed feedback during LSF/MM
-Boot-to-Bash proposal.  Hopefully I incorporated most feedback,
-but I may have missed some.
-
-Co-developed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Signed-off-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 Signed-off-by: Gregory Price <gourry@gourry.net>
-
-Gregory Price (17):
-  cxl: update documentation structure in prep for new docs
-  cxl: docs/devices - device reference and uefi placeholder
-  cxl: docs/platform/bios-and-efi documentation
-  cxl: docs/platform/acpi reference documentation
-  cxl: docs/platform/example-configs documentation
-  cxl: docs/linux - overview
-  cxl: docs/linux - early boot configuration
-  cxl: docs/linux - add cxl-driver theory of operation
-  cxl: docs/linux/cxl-driver - add example configurations
-  cxl: docs/linux/dax-driver documentation
-  cxl: docs/linux/memory-hotplug
-  cxl: docs/allocation/dax
-  cxl: docs/allocation/page-allocator
-  cxl: docs/allocation/reclaim
-  cxl: docs/allocation/hugepages
-  cxl: docs/allocation/tiering
-  cxl: docs/use-cases
-
- .../driver-api/cxl/allocation/dax.rst         |  59 ++
- .../driver-api/cxl/allocation/hugepages.rst   |  30 +
- .../cxl/allocation/page-allocator.rst         |  85 +++
- .../driver-api/cxl/allocation/reclaim.rst     |  50 ++
- .../driver-api/cxl/allocation/tiering.rst     |  30 +
- .../driver-api/cxl/devices/device-types.rst   | 169 ++++++
- .../theory-of-operation.rst}                  |   0
- Documentation/driver-api/cxl/devices/uefi.rst |   9 +
- Documentation/driver-api/cxl/index.rst        |  55 +-
- .../cxl/{ => linux}/access-coordinates.rst    |   0
- .../driver-api/cxl/linux/cxl-driver.rst       | 531 ++++++++++++++++++
- .../driver-api/cxl/linux/dax-driver.rst       |  42 ++
- .../driver-api/cxl/linux/early-boot.rst       | 129 +++++
- .../example-configurations/hb-interleave.rst  | 314 +++++++++++
- .../intra-hb-interleave.rst                   | 291 ++++++++++
- .../multi-interleave.rst                      | 401 +++++++++++++
- .../example-configurations/single-device.rst  | 246 ++++++++
- .../driver-api/cxl/linux/memory-hotplug.rst   |  77 +++
- .../driver-api/cxl/linux/overview.rst         | 104 ++++
- .../driver-api/cxl/platform/acpi.rst          |  83 +++
- .../driver-api/cxl/platform/acpi/cedt.rst     |  52 ++
- .../driver-api/cxl/platform/acpi/dsdt.rst     |  27 +
- .../driver-api/cxl/platform/acpi/hmat.rst     |  28 +
- .../driver-api/cxl/platform/acpi/slit.rst     |  17 +
- .../driver-api/cxl/platform/acpi/srat.rst     |  37 ++
- .../driver-api/cxl/platform/bios-and-efi.rst  | 261 +++++++++
- .../cxl/platform/example-configs.rst          |  13 +
- .../example-configurations/flexible.rst       | 296 ++++++++++
- .../example-configurations/hb-interleave.rst  | 107 ++++
- .../multi-dev-per-hb.rst                      |  90 +++
- .../example-configurations/one-dev-per-hb.rst | 136 +++++
- .../cxl/use-case/dynamic-capacity.rst         |  19 +
- .../cxl/use-case/memory-expansion.rst         |  14 +
- .../driver-api/cxl/use-case/shared-memory.rst |  14 +
- .../cxl/use-case/virtual-machines.rst         |  18 +
- 35 files changed, 3831 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/driver-api/cxl/allocation/dax.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/hugepages.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/page-allocator.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/reclaim.rst
- create mode 100644 Documentation/driver-api/cxl/allocation/tiering.rst
- create mode 100644 Documentation/driver-api/cxl/devices/device-types.rst
+---
+ .../theory-of-operation.rst}                  |  0
+ Documentation/driver-api/cxl/index.rst        | 22 ++++++++++++++++---
+ .../cxl/{ => linux}/access-coordinates.rst    |  0
+ 3 files changed, 19 insertions(+), 3 deletions(-)
  rename Documentation/driver-api/cxl/{memory-devices.rst => devices/theory-of-operation.rst} (100%)
- create mode 100644 Documentation/driver-api/cxl/devices/uefi.rst
  rename Documentation/driver-api/cxl/{ => linux}/access-coordinates.rst (100%)
- create mode 100644 Documentation/driver-api/cxl/linux/cxl-driver.rst
- create mode 100644 Documentation/driver-api/cxl/linux/dax-driver.rst
- create mode 100644 Documentation/driver-api/cxl/linux/early-boot.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/intra-hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/multi-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/linux/example-configurations/single-device.rst
- create mode 100644 Documentation/driver-api/cxl/linux/memory-hotplug.rst
- create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/cedt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/dsdt.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/hmat.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/slit.rst
- create mode 100644 Documentation/driver-api/cxl/platform/acpi/srat.rst
- create mode 100644 Documentation/driver-api/cxl/platform/bios-and-efi.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configs.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/flexible.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/hb-interleave.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/multi-dev-per-hb.rst
- create mode 100644 Documentation/driver-api/cxl/platform/example-configurations/one-dev-per-hb.rst
- create mode 100644 Documentation/driver-api/cxl/use-case/dynamic-capacity.rst
- create mode 100644 Documentation/driver-api/cxl/use-case/memory-expansion.rst
- create mode 100644 Documentation/driver-api/cxl/use-case/shared-memory.rst
- create mode 100644 Documentation/driver-api/cxl/use-case/virtual-machines.rst
 
+diff --git a/Documentation/driver-api/cxl/memory-devices.rst b/Documentation/driver-api/cxl/devices/theory-of-operation.rst
+similarity index 100%
+rename from Documentation/driver-api/cxl/memory-devices.rst
+rename to Documentation/driver-api/cxl/devices/theory-of-operation.rst
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index 965ba90e8fb7..dfc0a4aa9003 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -4,12 +4,28 @@
+ Compute Express Link
+ ====================
+ 
++CXL device configuration has a complex handoff between platform (Hardware,
++BIOS, EFI), OS (early boot, core kernel, driver), and user policy decisions
++that have impacts on each other.  The docs here break up configurations steps.
++
+ .. toctree::
+    :maxdepth: 1
++   :caption: Overview
+ 
+-   memory-devices
+-   access-coordinates
+-
++   self
+    maturity-map
+ 
++.. toctree::
++   :maxdepth: 2
++   :caption: Device Reference
++
++   devices/theory-of-operation
++
++.. toctree::
++   :maxdepth: 1
++   :caption: Linux Kernel Configuration
++
++   linux/access-coordinates
++
++
+ .. only::  subproject and html
+diff --git a/Documentation/driver-api/cxl/access-coordinates.rst b/Documentation/driver-api/cxl/linux/access-coordinates.rst
+similarity index 100%
+rename from Documentation/driver-api/cxl/access-coordinates.rst
+rename to Documentation/driver-api/cxl/linux/access-coordinates.rst
 -- 
 2.49.0
 
