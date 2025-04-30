@@ -1,225 +1,155 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93121246799
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D0154BE2
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746009491; cv=none; b=ajq62ffHPtbnQY0NjNjsf+cqIYpKqalt6hV0wgeNd+wXyMSUzTCPC6NkVqhnlJ+O3sb9HEhumk4CEc9Nc88Mc7tiAB9TEEvNlnU0Y6JJSLRIkfdV9j61BxKi1GBo5gayfh0tSLUUwNj2B35Z3EYztherfjAxYXd60K2Xqz65lYI=
+	t=1746009545; cv=none; b=UYL4oYcmGbgkSPLr7zUs49oe6qdHPlED+OlykITQwRgBa/sjRPvp6O6kDvMYdp/I118zc57DYyYC+Jtuqk1GaJwelUqBvkEUsqJIQnl0azOAqM9Phbw2xEdz0ogHYyylkZUjAg6pCAG1OJWd6mcgbjvPJzThB3+uv2tAJDhFenE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746009491; c=relaxed/simple;
-	bh=L0SAAefyveDoX/FjdHc/xGaLZ37kY++Yjt697RpzkAY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fuMN9XHqNOaCfo3NYze/2BdmjWQuT7M7vVzJUCNySfapCLhK0ksldSPMDA4UwDA0Ga4Tgi7W6oqE4Y9WBYuY9YETmAGyeUXsIzDoXyXAxZEXkuFeLeIT3qpoTyKQlx2DKUulwZKxHUUihEuX4C9VGnPDpTT87tyldfmEP9bTF3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=goqljN5c; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746009545; c=relaxed/simple;
+	bh=QYmTOn6Mr4dhC9mWN8gmhtBbHfTTI51Y1NKpL1+fT5k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cAE84vzhi9oM6Rj8IBe+QOhknQ0gZwWWlqVMLO9ZNk7fAsnw1A1zmgeOSa/GFp6DIlgVp4jPo2Oxie83mqbw5I4PNV0sthQKtZwQaU4TPXhdy/UNmlwgsbKILJ11aRMLmvh+IWjQg/jutQ03U3nRukW+k9h4hqQxGz7u02aUwks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=j5+fx0Jo; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goqljN5c"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746009487;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pi8G66LgJAq886SVmCWw3P+Bv6HYWhRZ3tZsp9fmenI=;
-	b=goqljN5chgv8YXRRnggUje7FaCV4cLtDjUSFMwRcbGUGvuB1d/Gqo4VywO+3c2Grbfk8q6
-	nJOUTTR7nQqmXL3WMFPbqpEp2bIYZmoxmYOFKTcu4YWU3HS30x0mnec6Lvgme9xYNLKwwC
-	Ig8wcF/BqNMsQfKTPm0Pi4Cu+QTbdtI=
-Received: from mail-yb1-f198.google.com (mail-yb1-f198.google.com
- [209.85.219.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-UAyPLrVSNwGoO5wcLT9JGA-1; Wed, 30 Apr 2025 06:38:06 -0400
-X-MC-Unique: UAyPLrVSNwGoO5wcLT9JGA-1
-X-Mimecast-MFC-AGG-ID: UAyPLrVSNwGoO5wcLT9JGA_1746009486
-Received: by mail-yb1-f198.google.com with SMTP id 3f1490d57ef6-e72b0980138so5895207276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:38:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="j5+fx0Jo"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9MDKI004141
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:39:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	tTiniXOe50bWwoWCn68Sn+g32IeeFnNdfbw7A7ZGjr4=; b=j5+fx0Jo0PfTfwae
+	r4fJXEQZm7/q/1U8/tiHRK7oFGTDIbCLsIw4diFG3EPx/nPJw6RosXpIEO1kFDvj
+	dNOPul2XKiH2+UXo30R/a0AuwlkV6R/JzWXqT+V3zIBSdyvCd34cMA6QF/EEdBpU
+	BJm7a0KRj5Y+wOPgmSMQNcEY6KnDHQOp6SN+0s18tvDmBYDcZi86Yp0FxldsgvoX
+	iCt6JXcqZr+I4cWX21ySOxWsN6F6EFD0kSNhkBK8V1HevDPxdu2UvSeBD6TCqkzK
+	e/4n7BcReNGPwxYPBUY3oURRuG2++kP0IA7afSu1nW4xwKJtdMazGUGoOnIxh08A
+	wfRiOQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u49ssr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:39:02 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6ece15fd50fso19781376d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:39:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746009486; x=1746614286;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Pi8G66LgJAq886SVmCWw3P+Bv6HYWhRZ3tZsp9fmenI=;
-        b=So4eEalipO69xDvOXjy3JemDa4hYnLdvdUzpiMbRvhSnVaZehZXcC3kH3TjUSiokhL
-         YhFh/4epckfyN5EHQ3W9drQ+x4e25gzLtRGbmUnZtG2n7niZSE6qaXNKjRP3Lg9U3ovo
-         MvPOeoTkKhPydYYr8hZct+FYrhaUKhi35RcYeWl14FAGqtsSIebod2L09u/lu6k3grFN
-         CqG+L1bQxLtt+ueX5/qJvJMaEQS4frBVKh3zp7diD64Vir1oJqRRktJsHpP9jhZOl0S2
-         z46Ngq2xDtnUiL9RG3EAmPo6ecSEwPtW5zjlcfcQW0eydbnHaNyvhZcaGjERCKDaTdXp
-         utNw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4bvlnJ2w5lEMrbfGKs5CWWhZZXIXliA5mTDdBbmUebSBCVYecV/HgKd/0Ue1lKUfXbruqhnT+JiKbREU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzliAcdsD7lA7VSBhiQbZbakwtt029CuZv2T0VWf+iJ9GT9JkZa
-	aI6lJdkl6g9RC6NVd6+77fuISliB8VFyW0GkAKC4wAYZl+XQU/j7m+7jZ8zhK5jyHIAL+t+FxaJ
-	bPbZyqh3kgJDIuTE+Mqvih2+R7/BIvBuypmEo/UUupizFGJitR8L/kbJD5wt/xvu7r2XW4sMooA
-	ovF5FWLrEQ/hQ4JzaKXBZliKwGFp0ITXtfBx8q
-X-Gm-Gg: ASbGncvnwPKoZDyi31itlVJCK7X07XFMUgg6z020iHAueF4C4TXY6PEs919iP29E14S
-	122Aj1ZHqtRuTCfINWsae7ZqNKM5AC2zswxHd4ly718i3iSL87oPzguZshcb7etwjiiD6TQA=
-X-Received: by 2002:a05:6902:70f:b0:e73:1a8c:b85c with SMTP id 3f1490d57ef6-e7404cf1cd6mr2499383276.27.1746009485715;
-        Wed, 30 Apr 2025 03:38:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHe4hS/4tTJe3wQp1DO4q16a9js38tPsRexlXFhwlVepkoC+asFZ9MA+8cxL1MgjRQ/gYtfO9kGzahI7xKCWA8=
-X-Received: by 2002:a05:6902:70f:b0:e73:1a8c:b85c with SMTP id
- 3f1490d57ef6-e7404cf1cd6mr2499358276.27.1746009485276; Wed, 30 Apr 2025
- 03:38:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746009541; x=1746614341;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tTiniXOe50bWwoWCn68Sn+g32IeeFnNdfbw7A7ZGjr4=;
+        b=QIDUS1Jdml+0PeXe/e+g3z+066VOrFSEFg5tc4GL8yMr8QEeYmraD+Cg3HIEj78Vlx
+         04M2nXyDhQSzcAFi2tlQJrwn3Sg5WxBrE7fooPcGRIvkOWoQKpH1qfHjJB9svDJo0WAd
+         cOnZrTIhTsXfpo8HnICaK//cSNL0LsR1pxcfPDKWeTSqqhmSBQ9QBvufysumS88iH7wj
+         qI9saUCCbQdOPv1SpKZ+vqaj1RYlGSFKoFAcBKTwp/5u/a4zkGVaIqGkRFg18rxfXtkk
+         Y+gZFcISFnP2Xb5Pvxsq12C51Qp17dfEZMNRHSV0XdaZlV1tVR3Bmo1xfxmYXHF2Rk2r
+         W98g==
+X-Forwarded-Encrypted: i=1; AJvYcCUxsCXCaEHij2EX/yv9ipmQdVTktSEq/XwymykT04k1KJzTzdgMsiA02iEpZIzCXV7NbuxglPzfeF2MTSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyI/gQQmWMICxZwb+HBUL9KkHYQ/ta7B17uLaMiplrxAWO+wpAA
+	Hccq4KCs1gbi0ns9QrIqn9nPD8+oRyGfO7JZjf0ok39fgwvM1lGLxyDp6KyB1zYZf/fN/wXq31e
+	vXlXlWkh7UF250UZufqltuFrRLjB7LhgEBrwSnVSeB4S5vJDNWU6++gJirkSfRkE=
+X-Gm-Gg: ASbGncveJHQAacqSoGDYizQ12+04psOfN0RaPkMuhoey/wKDFuyvNb6BzU2NZbm+Bq9
+	EUw9EeFLjOkgHVBX2vLALMUDpVQzJBs9DvBL8TfLQ+Opf+nO21rph6NVLCI/8CdlRzgIFYkZoze
+	QDFWlxuKJD2EA0/6sWalLBLzKZAf+hZsISNOhbotxQ8ggcuRaE5XWVJUSTNp2umDqQ2WGRnii1m
+	e8Y4l0WViLPPXyOYmXVCeSe323f8LlpCb55OJ7JQ4DIlUOgVH5zs2rpBHNt1IVQ9ewfgnjNXzVv
+	yd290pvClmmW6YA08Bg9L506MlDB3nHiIjRQSR8fW83i5ve6qR7D9mhgUszDkmSSx7c=
+X-Received: by 2002:a05:6214:3012:b0:6f0:e2d4:226e with SMTP id 6a1803df08f44-6f4fcf8da52mr14601236d6.8.1746009541612;
+        Wed, 30 Apr 2025 03:39:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFZlDZ7fgacYzToVTLAIqF1SbHulHpm3F3MMH+wjGvrRzv5uoIFNvo0UB+Ri+k9t28tLdOxCA==
+X-Received: by 2002:a05:6214:3012:b0:6f0:e2d4:226e with SMTP id 6a1803df08f44-6f4fcf8da52mr14601096d6.8.1746009541285;
+        Wed, 30 Apr 2025 03:39:01 -0700 (PDT)
+Received: from [192.168.65.132] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f7035462c2sm8439702a12.58.2025.04.30.03.38.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 03:39:00 -0700 (PDT)
+Message-ID: <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
+Date: Wed, 30 Apr 2025 12:38:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-vsock-linger-v3-0-ddbe73b53457@rbox.co>
- <20250430-vsock-linger-v3-3-ddbe73b53457@rbox.co> <oo5tmbu7okyqojwxt4xked4jvq6jqydrddowspz3p66nsjzajt@36mxuduci4am>
- <fa71ef5e-7603-4241-bfd3-7aa7b5ea8945@rbox.co>
-In-Reply-To: <fa71ef5e-7603-4241-bfd3-7aa7b5ea8945@rbox.co>
-From: Stefano Garzarella <sgarzare@redhat.com>
-Date: Wed, 30 Apr 2025 12:37:54 +0200
-X-Gm-Features: ATxdqUFYdEhpc2hMG3McWkKruB0g8l88EcvME9mfW0rN5K7PplMaQvDwSrnYRHE
-Message-ID: <CAGxU2F62CTUKVjuG9Fjo29E6uopVzOK8zgr+HwooqMr4V_RvLQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 3/4] vsock: Move lingering logic to af_vsock core
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Akhil P Oommen <quic_akhilpo@quicinc.com>,
+        Rob Clark
+ <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jie Zhang <quic_jiezh@quicinc.com>
+References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
+ <20250228-a623-gpu-support-v2-5-aea654ecc1d3@quicinc.com>
+ <e22daaae-57fc-4523-b594-87d202d255f3@oss.qualcomm.com>
+ <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com>
+ <41df5398-79f6-484a-8ad3-f3488eb1b71c@oss.qualcomm.com>
+ <hpfqpvkex3dtj6ieosce4phukodnoidh55vxpujyekoehhotqn@l434nae5gzdi>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <hpfqpvkex3dtj6ieosce4phukodnoidh55vxpujyekoehhotqn@l434nae5gzdi>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: F4fAoA5zfsor7ryRHfr2cOU8bNadeKQR
+X-Authority-Analysis: v=2.4 cv=Yaq95xRf c=1 sm=1 tr=0 ts=6811fdc6 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=COk6AnOGAAAA:8 a=Y1ZdfsrSitFJjnkYTe0A:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDA3NSBTYWx0ZWRfXwZvFUMcLoQzK eb/kzACYlVXbYDSeIV6xEpC/YdIYnclF4iAufU3uWcIpZ3JmDdKuv45jZvr52L+GcSlwpGzJ/DF gZ/VS8BrEANGU4OqrxKcGfV3EltfzfAFwpliisvEREgiHHeMSMq7lSrTfA/Z7vbsLaPZ32lf2nF
+ KMtYmgzIRnku08PcmZm+MfciCMOl/pBJep+n713EpR5dVue/Pdd68SBSAZAFBmEeaN3mz0GCISy 4nlyKk6GPa5Nof667SLvrzYOeNaZoNU/L4HRq6/ELzFYbV3r2oIr1d3sQw3wEpurESpbblRwT2i egzChoJiOSBYhXQ5CKo8GXi03QKCXOTr/fhYL/gvDTBVawje/jZPS5q4nnaTfyEei+mCGjvFj18
+ R3Ut60EG/Q6BIOKhJ7qvebzEDruboWyK4LTVl97qaZfO8ZCmFcHASti3vmzfuaem3VaCfyvm
+X-Proofpoint-GUID: F4fAoA5zfsor7ryRHfr2cOU8bNadeKQR
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=762 malwarescore=0
+ mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2504300075
 
-On Wed, 30 Apr 2025 at 12:33, Michal Luczaj <mhal@rbox.co> wrote:
->
-> On 4/30/25 11:36, Stefano Garzarella wrote:
-> > On Wed, Apr 30, 2025 at 11:10:29AM +0200, Michal Luczaj wrote:
-> >> Lingering should be transport-independent in the long run. In preparation
-> >> for supporting other transports, as well the linger on shutdown(), move
-> >> code to core.
-> >>
-> >> Guard against an unimplemented vsock_transport::unsent_bytes() callback.
-> >>
-> >> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
-> >> Signed-off-by: Michal Luczaj <mhal@rbox.co>
-> >> ---
-> >> include/net/af_vsock.h                  |  1 +
-> >> net/vmw_vsock/af_vsock.c                | 25 +++++++++++++++++++++++++
-> >> net/vmw_vsock/virtio_transport_common.c | 23 +----------------------
-> >> 3 files changed, 27 insertions(+), 22 deletions(-)
-> >>
-> >> diff --git a/include/net/af_vsock.h b/include/net/af_vsock.h
-> >> index 9e85424c834353d016a527070dd62e15ff3bfce1..bd8b88d70423051dd05fc445fe37971af631ba03 100644
-> >> --- a/include/net/af_vsock.h
-> >> +++ b/include/net/af_vsock.h
-> >> @@ -221,6 +221,7 @@ void vsock_for_each_connected_socket(struct vsock_transport *transport,
-> >>                                   void (*fn)(struct sock *sk));
-> >> int vsock_assign_transport(struct vsock_sock *vsk, struct vsock_sock *psk);
-> >> bool vsock_find_cid(unsigned int cid);
-> >> +void vsock_linger(struct sock *sk, long timeout);
-> >>
-> >> /**** TAP ****/
-> >>
-> >> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-> >> index fc6afbc8d6806a4d98c66abc3af4bd139c583b08..946b37de679a0e68b84cd982a3af2a959c60ee57 100644
-> >> --- a/net/vmw_vsock/af_vsock.c
-> >> +++ b/net/vmw_vsock/af_vsock.c
-> >> @@ -1013,6 +1013,31 @@ static int vsock_getname(struct socket *sock,
-> >>      return err;
-> >> }
-> >>
-> >> +void vsock_linger(struct sock *sk, long timeout)
-> >> +{
-> >> +    DEFINE_WAIT_FUNC(wait, woken_wake_function);
-> >> +    ssize_t (*unsent)(struct vsock_sock *vsk);
-> >> +    struct vsock_sock *vsk = vsock_sk(sk);
-> >> +
-> >> +    if (!timeout)
-> >> +            return;
-> >> +
-> >> +    /* unsent_bytes() may be unimplemented. */
-> >> +    unsent = vsk->transport->unsent_bytes;
-> >> +    if (!unsent)
-> >> +            return;
-> >> +
-> >> +    add_wait_queue(sk_sleep(sk), &wait);
-> >> +
-> >> +    do {
-> >> +            if (sk_wait_event(sk, &timeout, unsent(vsk) == 0, &wait))
-> >> +                    break;
-> >> +    } while (!signal_pending(current) && timeout);
-> >> +
-> >> +    remove_wait_queue(sk_sleep(sk), &wait);
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(vsock_linger);
-> >> +
-> >> static int vsock_shutdown(struct socket *sock, int mode)
-> >> {
-> >>      int err;
-> >> diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-> >> index 4425802c5d718f65aaea425ea35886ad64e2fe6e..9230b8358ef2ac1f6e72a5961bae39f9093c8884 100644
-> >> --- a/net/vmw_vsock/virtio_transport_common.c
-> >> +++ b/net/vmw_vsock/virtio_transport_common.c
-> >> @@ -1192,27 +1192,6 @@ static void virtio_transport_remove_sock(struct vsock_sock *vsk)
-> >>      vsock_remove_sock(vsk);
-> >> }
-> >>
-> >> -static void virtio_transport_wait_close(struct sock *sk, long timeout)
-> >> -{
-> >> -    DEFINE_WAIT_FUNC(wait, woken_wake_function);
-> >> -    ssize_t (*unsent)(struct vsock_sock *vsk);
-> >> -    struct vsock_sock *vsk = vsock_sk(sk);
-> >> -
-> >> -    if (!timeout)
-> >> -            return;
-> >> -
-> >> -    unsent = vsk->transport->unsent_bytes;
-> >> -
-> >> -    add_wait_queue(sk_sleep(sk), &wait);
-> >> -
-> >> -    do {
-> >> -            if (sk_wait_event(sk, &timeout, unsent(vsk) == 0, &wait))
-> >> -                    break;
-> >> -    } while (!signal_pending(current) && timeout);
-> >> -
-> >> -    remove_wait_queue(sk_sleep(sk), &wait);
-> >> -}
-> >> -
-> >> static void virtio_transport_cancel_close_work(struct vsock_sock *vsk,
-> >>                                             bool cancel_timeout)
-> >> {
-> >> @@ -1283,7 +1262,7 @@ static bool virtio_transport_close(struct vsock_sock *vsk)
-> >>              (void)virtio_transport_shutdown(vsk, SHUTDOWN_MASK);
-> >>
-> >>      if (sock_flag(sk, SOCK_LINGER) && !(current->flags & PF_EXITING))
-> >> -            virtio_transport_wait_close(sk, sk->sk_lingertime);
-> >> +            vsock_linger(sk, sk->sk_lingertime);
-> >
-> > Ah, I'd also move the check in that function, I mean:
-> >
-> > void vsock_linger(struct sock *sk) {
-> >       ...
-> >       if (!sock_flag(sk, SOCK_LINGER) || (current->flags & PF_EXITING))
-> >               return;
-> >
-> >       ...
-> > }
->
-> One note: if we ever use vsock_linger() in vsock_shutdown(), the PF_EXITING
-> condition would be unnecessary checked for that caller, right?
+On 4/29/25 2:17 PM, Dmitry Baryshkov wrote:
+> On Mon, Apr 28, 2025 at 11:19:32PM +0200, Konrad Dybcio wrote:
+>> On 4/28/25 12:44 PM, Akhil P Oommen wrote:
+>>> On 4/14/2025 4:31 PM, Konrad Dybcio wrote:
+>>>> On 2/27/25 9:07 PM, Akhil P Oommen wrote:
+>>>>> From: Jie Zhang <quic_jiezh@quicinc.com>
+>>>>>
+>>>>> Add gpu and gmu nodes for qcs8300 chipset.
+>>>>>
+>>>>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
+>>>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
+>>>>> ---
+>>>>
+>>>> [...]
+>>>>
+>>>>> +		gmu: gmu@3d6a000 {
+>>>>> +			compatible = "qcom,adreno-gmu-623.0", "qcom,adreno-gmu";
+>>>>> +			reg = <0x0 0x03d6a000 0x0 0x34000>,
+>>>>
+>>>> size = 0x26000 so that it doesn't leak into GPU_CC
+>>>
+>>> We dump GPUCC regs into snapshot!
+>>
+>> Right, that's bad.. the dt heuristics are such that each region
+>> is mapped by a single device that it belongs to, with some rare
+>> exceptions..
+> 
+> It has been like this for most (all?) GMU / GPUCC generations.
 
-Right, for shutdown it should always be false, so maybe better to keep
-the check in the caller.
+Eeeeh fine, let's keep it here and fix it the next time (tm)
 
-Thanks,
-Stefano
-
->
-> > Or, if we move the call to vsock_linger() in __vsock_release(), we can
-> > do the check there.
-> >
-> > Thanks,
-> > Stefano
-> >
-> >>
-> >>      if (sock_flag(sk, SOCK_DONE)) {
-> >>              return true;
-> >>
-> >> --
-> >> 2.49.0
-> >>
-> >>
->
-
+Konrad
