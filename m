@@ -1,258 +1,118 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbg150.qq.com (smtpbg150.qq.com [18.132.163.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B407620E33D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:50:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE2720C489;
+	Wed, 30 Apr 2025 07:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.132.163.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745999422; cv=none; b=FS5JQX4VfcBZrQW7g5xBS4/U2z9Gp0z8mUMUZ5FZpvA/y2tRRnSgsJk2TADsnoE4ofVVJjec7BvSWXz94zldCDi33Ra2iDah1R3aRFrr8N2FeToHrfu+sj6LD1zLCtFKBRu6JX0AZvNtR96YM4kn2qPYu1zfNFgngjAdjZmRdk0=
+	t=1745999436; cv=none; b=eVmuj/xq82dwWbC9TQWtCG96ctlsxfjIDCRYpak35eVUJLsNXeJUEhXPLDqMeOzgriiHemt3HtdGE0sm/uAS2/KerE5XdsWldvPfUEgZ6d0OM7NZRyULGZgV9xdDmRv/q2rsQHtIlHTiSbXg+sNLyIUTO9+Y0WJPqrjki7THdp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745999422; c=relaxed/simple;
-	bh=dpGOxMLIeOmwxW/FB5SchRaiP+uCvl2prhEvt6qK08s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aVv0OqbwIF1j1AvTAagwnJ1t5xFXISAaT5HJ/50yamw1U+9UAVMaudJFGi7qoghMgFLxmVqgGB8FB4qnnmSmUEiC3Zx37rDYIuPu3Gz0YS2JQfY1zwZZvu8jUpCSMX9dKmkKvcZn4nQ707v2cJ9DONnyQkOhOXq3SHP/2MnB5P0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e96Q4IKs; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745999436; c=relaxed/simple;
+	bh=/2vgeX76RqNtdA0U0Zy/xciEEyCJ8TvRTjhRQFyqgWc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=ePKi85rRI4exFft8aeK6JEIHYQUQKZu7qQrhfB2AYiqH9ptkkLGkNFnnfuQoLm0Laszd1VMYDMKYtAX5AYL2+KJlQ07KMSmberYaWGqmhPEEmZxIFw/bdOYYHb/KctLwdsbFsFIncLqMRYysxPlF/HTR4kEhz8giM+QaKjXNT5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com; spf=pass smtp.mailfrom=airkyi.com; dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b=EbUAMf+3; arc=none smtp.client-ip=18.132.163.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=airkyi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=airkyi.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e96Q4IKs"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af5139ad9a2so4685457a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:50:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745999417; x=1746604217; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9yxKFbS7FJYlVTaW80XPyRVVbRWztaV2reVeiBVpKKQ=;
-        b=e96Q4IKseXOyeDyxnanbHcGoohPRV2q+Ozf/UigxZsd5rM5r6PSiLlwjCQNjEVZqS7
-         AO8Hs2BlmxJb2U5zx9XT8Wtm/PyyCu4BlZHuqzVYLuZvPRBUPTQ5Ju7ijComO+Y9zc/u
-         QIMX1Sega50EC8yzP8BNwfNIO/1o5j9RBuOHjMmfl/gXoJEZZFZmCE7sK0prn0xJzR0Z
-         R9wdNmOa0Nv4WbaOcy/Ic1mALFJT+9Q96gmA/xoz4nMr+AREOjU43CDJPIh3mhdWzJGI
-         IEKGmJToh45+YpdFwoiTKaH1JNhgr9HPBKfOt09hIS2H/Qrjz10fFS2meQdOcJBIR8+N
-         6tAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745999417; x=1746604217;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9yxKFbS7FJYlVTaW80XPyRVVbRWztaV2reVeiBVpKKQ=;
-        b=itFEMXtapDcDLl7d5++9DByMHEW9P2xlswFzZjWsQaPD2M19vFhYaWl0SqtQ+39Kdm
-         qnSgumOsffxaLJC2rdfBmBaccu1Ss9/S0p+MwI3y/nEuKrfaOAIA8KWBcIhQfjghNzs0
-         n4qoeXb089RgEgyFWZX3KaiMzmoanwkmmBpfQtKO+bWjAI3uitG5D4hGcl60e3phRnrs
-         oF/N3enPx0hK68/8ai+x9QZeLKAxlnOSxThtW7ymjNDoe3DICCzgcJB3u6QCyXllg709
-         UOZ5jsaA58/R5dIDsWKK0ixjc6FARAUgVDsPclt8wmkEgHP5xzZpIxw3kVKA4st3+s1T
-         rAyg==
-X-Forwarded-Encrypted: i=1; AJvYcCX7GuFg4ofYf2IZeZHzxseGEqEZeaLdIsmimcnVEacd2YBo+VJ6flKNxPZVUL71bOzSwp7tfakpm5ZRR/U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx+ZdD9zWq1DCSmY+KcthqN/6fKIvdsbiIBJ4swVGqcNtjVx8A/
-	dLbMZr3hPJ21JfYe7lhrtjjbp2tYNklSziR/LRSZRMIXOxww4zpcmki36/HGUQ==
-X-Gm-Gg: ASbGncvvqqsFTCCANjKOAQtpN/1AkvVcb3gavI1wUyozc9SCE7JwBby2Tg3RpkxFVlj
-	s8otZigeu9+1nEbLpYWSv0PJtOi6X0O6uGwuRssS6Hjx22DHDrJ4XM5bVKwodf7HHqX++xv2A0h
-	DjVP6DKJ0c2Z/tpM1nsIPowGf2MiDARRzHBWit1EFkZGlY/jyXTdAKgoGWqxCyCH1WywCpN7+lc
-	DRJJMWnm2LbYHO06Hmcu0KbZ3iMZwXDNJ950Kz3ID0c0IqSi+jKM0B2KJRHDDdYzgJDmh14R5T6
-	xBY/7RptNOYIkyPyf+zR4gb/BuO+2Wd3ZKz2+G8ANDvQO0zC37lB
-X-Google-Smtp-Source: AGHT+IFvx4UAfDgrq2sMjoLi6VEnM3rJ09t7/z8JxBTCQ55y5uUYEKoDCPk40jK6HkYjUv4z1LuM8A==
-X-Received: by 2002:a17:90b:56c3:b0:2ff:502e:62d4 with SMTP id 98e67ed59e1d1-30a3336472dmr2604246a91.32.1745999416760;
-        Wed, 30 Apr 2025 00:50:16 -0700 (PDT)
-Received: from thinkpad ([120.56.197.193])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a349e4586sm909365a91.8.2025.04.30.00.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 00:50:16 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:20:06 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Christian Bruel <christian.bruel@foss.st.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	thippeswamy.havalige@amd.com, shradha.t@samsung.com, quic_schintav@quicinc.com, 
-	cassel@kernel.org, johan+linaro@kernel.org, linux-pci@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 4/9] PCI: stm32: Add PCIe Endpoint support for
- STM32MP25
-Message-ID: <tdgyva6qyn6qwzvft4f7r3tgp5qswuv4q5swoaeomnnbxtmz5j@zo3gvevx2skp>
-References: <20250423090119.4003700-1-christian.bruel@foss.st.com>
- <20250423090119.4003700-5-christian.bruel@foss.st.com>
+	dkim=pass (1024-bit key) header.d=airkyi.com header.i=@airkyi.com header.b="EbUAMf+3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=airkyi.com;
+	s=altu2504; t=1745999356;
+	bh=RtbWXu1Lq4oqcNF7F9S6wJjaCfZrKW9sN45LGyNkuKA=;
+	h=From:To:Subject:Date:Message-Id;
+	b=EbUAMf+31sUqFXdzW+G9uuu4h/owyzfuykHCFXnXtAhSqFw2Nv6sQRu1zz6CFdnPm
+	 TYsq3fY4mOVc5tmwW8hRwovTaqkbZI2UuiGExrQZ0XXsxxStfhoHNd4CRmx/D9JGPH
+	 D9a16j/FYoQdZj/ffVBnBNZbQzmtKHVkJNiiSlak=
+X-QQ-mid: zesmtpsz5t1745999345tbad6bb5a
+X-QQ-Originating-IP: mMG6lTOs1jj7ZfCB8QDuvDT3HCvOcEXEIRd00n7uVZA=
+Received: from DESKTOP-8BT1A2O.localdomain ( [58.22.7.114])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 30 Apr 2025 15:49:02 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 708952558315222896
+EX-QQ-RecipientCnt: 21
+From: Chaoyi Chen <kernel@airkyi.com>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Andrew Lunn <andrew@lunn.ch>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Dragan Simic <dsimic@manjaro.org>,
+	Jimmy Hon <honyuenkwun@gmail.com>,
+	Quentin Schulz <quentin.schulz@cherry.de>,
+	FUKAUMI Naoki <naoki@radxa.com>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/2] dt-bindings: arm: rockchip: Add rk3399 industry evaluation board
+Date: Wed, 30 Apr 2025 15:48:47 +0800
+Message-Id: <20250430074848.539-2-kernel@airkyi.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250430074848.539-1-kernel@airkyi.com>
+References: <20250430074848.539-1-kernel@airkyi.com>
+X-QQ-SENDSIZE: 520
+Feedback-ID: zesmtpsz:airkyi.com:qybglogicsvrsz:qybglogicsvrsz4a-0
+X-QQ-XMAILINFO: Md8NwmqZYy3fGFbeVKWadYOXuN0hE2n1euAcwBemCKk80UQMyeVF2j6E
+	ie3+AbiOfMcMNOkMr4oy26GcE32e6Wf/pg3ul8x7DcWdasdlFUkCpG9l///q/+dSoCs9Ky7
+	cyVSiQ+s+mGfs4zaVPWbRf+SxJ3hQQzDeKpndsRc0Z6Qje5M/S5uCu7Bt93NKT3Lum1yVzx
+	eJXoOhFZkky7F19t9EZdfa/2xKt9rn/ZLRdkhZZn4Jam+kl+9LU7gN3k+dR3qYgvscRQ0DL
+	l4K3bv08qOUq3UAnhDTxywXBTMne0l6tq4JUOKiVbLVDzVYDRPLwW8+bjl0PYB6P0HwEQ3k
+	TAu6CP8Zi0buqOmuJ7w+S9iFrEa//4GVfcboyNOSMJWkCFKBrKssWHc9/Yq7lrs3DVFMtXr
+	842e+Jg6uATVbXzKXBAqgfKtDv8p2Q3/8/rZHK6oxGOqtAgVZolLPKrlGooVhVF8zXpcEYn
+	hKbb2CeRGGo08RdLTATWbtjuUJAoN9fXsLuSnOH83gz7bG+zxnQ+6dwgJNvCnMpIKbnINN/
+	2DWznzw2D/4T9GwMVZovqjtMQXCNrWTir2GRQSyqXUev4g0QL9dzFL7BZ/TX1txul9x/0V9
+	7qYVFPHqchki3RRgDj9HA+zGsx9zuq7RtHRReRe8dHmLOeZrplxpIjdmtWbzQPpFmRYODxQ
+	lNrqGJNdBG4NRNb34y0hjzszE7DBghx1Stnkn2fiUpbBagoFWPtcDhSsrPNlbrsfIs+JZLg
+	ENH1lz8i9lneuSoDMR3UqWuXtv5x6js1OC0BnI067Cgbnw4vh2Kp9Nkj39+owYlqfp5+bC6
+	qaou/fRcnJDFks0hfdpkLGoKVHGAo1DK/mMaKDmJpISAp0Uaa2RMNI7j0lHRJ+lUMw+Qa16
+	d7rFIsh2gQTvWxNjfQ9tWV0+GnQz0iNLen7RUOObixybdLLnPHn44N9E5uj/rSLUXBrwoMC
+	eF97L5jFb+K8rEjmGWgKOO4cl8kjHw+GaYAWj6Ko1lzqZlkBwdDXhDPipcK9OO4VtjAsWEH
+	R7HqZKVWtSiYQCZVymG7GGJ8B00EZg2wKZD1vKhxrhxTLdlXcjyabtFTXHDGA=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-QQ-RECHKSPAM: 0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250423090119.4003700-5-christian.bruel@foss.st.com>
 
-On Wed, Apr 23, 2025 at 11:01:14AM +0200, Christian Bruel wrote:
-> Add driver to configure the STM32MP25 SoC PCIe Gen1 2.5GT/s or Gen2 5GT/s
-> controller based on the DesignWare PCIe core in endpoint mode.
-> 
-> Uses the common reference clock provided by the host.
-> 
-> The PCIe core_clk receives the pipe0_clk from the ComboPHY as input,
-> and the ComboPHY PLL must be locked for pipe0_clk to be ready.
-> Consequently, PCIe core registers cannot be accessed until the ComboPHY is
-> fully initialised and refclk is enabled and ready.
-> 
-> Signed-off-by: Christian Bruel <christian.bruel@foss.st.com>
-> ---
->  drivers/pci/controller/dwc/Kconfig         |  12 +
->  drivers/pci/controller/dwc/Makefile        |   1 +
->  drivers/pci/controller/dwc/pcie-stm32-ep.c | 414 +++++++++++++++++++++
->  drivers/pci/controller/dwc/pcie-stm32.h    |   1 +
->  4 files changed, 428 insertions(+)
->  create mode 100644 drivers/pci/controller/dwc/pcie-stm32-ep.c
-> 
-> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> index 2aec5d2f9a46..aceff7d1ef33 100644
-> --- a/drivers/pci/controller/dwc/Kconfig
-> +++ b/drivers/pci/controller/dwc/Kconfig
-> @@ -422,6 +422,18 @@ config PCIE_STM32_HOST
->  	  This driver can also be built as a module. If so, the module
->  	  will be called pcie-stm32.
->  
-> +config PCIE_STM32_EP
-> +	tristate "STMicroelectronics STM32MP25 PCIe Controller (endpoint mode)"
-> +	depends on ARCH_STM32 || COMPILE_TEST
-> +	depends on PCI_ENDPOINT
-> +	select PCIE_DW_EP
-> +	help
-> +	  Enables endpoint support for DesignWare core based PCIe controller
-> +	  found in STM32MP25 SoC.
+From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
 
-Can you please use similar description for the RC driver also?
+Add devicetree binding for the rk3399 industry evaluation board.
 
-"Enables Root Complex (RC) support for the DesignWare core based PCIe host
-controller found in STM32MP25 SoC."
+Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+---
 
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called pcie-stm32-ep.
-> +
->  config PCI_DRA7XX
->  	tristate
->  
+(no changes since v1)
 
-[...]
+ Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-> +static int stm32_add_pcie_ep(struct stm32_pcie *stm32_pcie,
-> +			     struct platform_device *pdev)
-> +{
-> +	struct dw_pcie_ep *ep = &stm32_pcie->pci.ep;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	ret = pm_runtime_resume_and_get(dev);
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index 650fb833d96e..684d48ba20fc 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -1047,6 +1047,11 @@ properties:
+           - const: rockchip,rk3399-evb
+           - const: rockchip,rk3399
 
-This needs to be called before devm_pm_runtime_enable().
++      - description: Rockchip RK3399 Industry Evaluation board
++        items:
++          - const: rockchip,rk3399-evb-ind
++          - const: rockchip,rk3399
++
+       - description: Rockchip RK3399 Sapphire standalone
+         items:
+           - const: rockchip,rk3399-sapphire
+--
+2.49.0
 
-> +	if (ret < 0) {
-> +		dev_err(dev, "pm runtime resume failed: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_update_bits(stm32_pcie->regmap, SYSCFG_PCIECR,
-> +				 STM32MP25_PCIECR_TYPE_MASK,
-> +				 STM32MP25_PCIECR_EP);
-> +	if (ret) {
-> +		goto err_pm_put_sync;
-> +		return ret;
-> +	}
-> +
-> +	reset_control_assert(stm32_pcie->rst);
-> +	reset_control_deassert(stm32_pcie->rst);
-> +
-> +	ep->ops = &stm32_pcie_ep_ops;
-> +
-> +	ret = dw_pcie_ep_init(ep);
-> +	if (ret) {
-> +		dev_err(dev, "failed to initialize ep: %d\n", ret);
-> +		goto err_pm_put_sync;
-> +	}
-> +
-> +	ret = stm32_pcie_enable_resources(stm32_pcie);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable resources: %d\n", ret);
-> +		goto err_ep_deinit;
-> +	}
-> +
-> +	ret = dw_pcie_ep_init_registers(ep);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to initialize DWC endpoint registers\n");
-> +		goto err_disable_resources;
-> +	}
-> +
-> +	pci_epc_init_notify(ep->epc);
-> +
-
-Hmm, looks like you need to duplicate dw_pcie_ep_init_registers() and
-pci_epc_init_notify() in stm32_pcie_perst_deassert() for hw specific reasons.
-So can you drop these from there?
-
-> +	return 0;
-> +
-> +err_disable_resources:
-> +	stm32_pcie_disable_resources(stm32_pcie);
-> +
-> +err_ep_deinit:
-> +	dw_pcie_ep_deinit(ep);
-> +
-> +err_pm_put_sync:
-> +	pm_runtime_put_sync(dev);
-> +	return ret;
-> +}
-> +
-> +static int stm32_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct stm32_pcie *stm32_pcie;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	stm32_pcie = devm_kzalloc(dev, sizeof(*stm32_pcie), GFP_KERNEL);
-> +	if (!stm32_pcie)
-> +		return -ENOMEM;
-> +
-> +	stm32_pcie->pci.dev = dev;
-> +	stm32_pcie->pci.ops = &dw_pcie_ops;
-> +
-> +	stm32_pcie->regmap = syscon_regmap_lookup_by_compatible("st,stm32mp25-syscfg");
-> +	if (IS_ERR(stm32_pcie->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->regmap),
-> +				     "No syscfg specified\n");
-> +
-> +	stm32_pcie->phy = devm_phy_get(dev, NULL);
-> +	if (IS_ERR(stm32_pcie->phy))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->phy),
-> +				     "failed to get pcie-phy\n");
-> +
-> +	stm32_pcie->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(stm32_pcie->clk))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->clk),
-> +				     "Failed to get PCIe clock source\n");
-> +
-> +	stm32_pcie->rst = devm_reset_control_get_exclusive(dev, NULL);
-> +	if (IS_ERR(stm32_pcie->rst))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->rst),
-> +				     "Failed to get PCIe reset\n");
-> +
-> +	stm32_pcie->perst_gpio = devm_gpiod_get(dev, "reset", GPIOD_IN);
-> +	if (IS_ERR(stm32_pcie->perst_gpio))
-> +		return dev_err_probe(dev, PTR_ERR(stm32_pcie->perst_gpio),
-> +				     "Failed to get reset GPIO\n");
-> +
-> +	ret = phy_set_mode(stm32_pcie->phy, PHY_MODE_PCIE);
-> +	if (ret)
-> +		return ret;
-> +
-> +	platform_set_drvdata(pdev, stm32_pcie);
-> +
-> +	ret = devm_pm_runtime_enable(dev);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to enable pm runtime %d\n", ret);
-
-Use dev_err_probe() please for consistency.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
