@@ -1,71 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2FEF1BE251;
-	Wed, 30 Apr 2025 18:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C6F267B04;
+	Wed, 30 Apr 2025 18:32:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037947; cv=none; b=mJu5Z/eN6n5NAktZfnVyxF/1qiGxqVbyBQ+R+O0Yxoza5Z1cdqlZ149PaBnk2j9niyicLawdqlkoCBBfGd74t6Z3QhwywxwcisAlIYf2qdPeKyUqqnrqKT0/PjpDEOtRX4LPzo/b2K8/rjobhtJA2LCc7VMjxL2wEpOG0dDeXKw=
+	t=1746037950; cv=none; b=E5PTPouSrYtgUUVuM3+vGwxUCUqNzLZtAhQ7Fq8S+9Hm9hRV1pBz10tM4koP+DQERTbHC7i42LI57pJQOWmDz31LIFPRRvbew9HCm4seUiXfFFSrIuNaMxt35YflRJaXE7RMzLJt2fm4+gebB1u4ZMsWmAXNnk+3P06ajavGbQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037947; c=relaxed/simple;
-	bh=TYhgix12dGzxcZC8EV8jdnO88G/BhDWgXBe6jHhLI8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVGd6pJ2TfeL8WO5fW3CKch5LLrorOIp/QciJ/VEvvAPshuyvqqYJTi76TePIvL3vS37O2xYv6QCUZgkWwX+LF0m49sknbFDdXYdWfo2+s0BFfMh7TnrjEURGjBS5FTlsffcVzvS7jWLUiFwfsIjeCs9LYrn6GFGmjQZDYwPsk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IB2X2j/T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746037950; c=relaxed/simple;
+	bh=vRPBUr1VAOQ7/YLa0ijgWj8XY3xCbZH7MxZo0NC06xY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=U9adGDKGMsgJIXF69QJanakl/1hVCtVQWEcyKMpJZxBEtQ34I/osxP1MEXDylVEvrKscl+7tTKtIfK7hH2jyndUqPpSSmcSPEHH2avvUyZHAdH3wlMQwQcFw+gTTyR8mRXigDwer5dqz8/3FvCtZ84sRoZfTRk5LFXeSsBKpjpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=JxQ2o6Sr; arc=none smtp.client-ip=79.96.170.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IB2X2j/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A331C4CEE7;
-	Wed, 30 Apr 2025 18:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746037946;
-	bh=TYhgix12dGzxcZC8EV8jdnO88G/BhDWgXBe6jHhLI8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IB2X2j/TomWE4MnvUk8n5a4msFY5rPtItY31T/FdMJyQc/vE7POD5ctE1hHyWVhBo
-	 xgmxVKXZHEuJZfiEeimc8LhMhbpqHzzt1fgnySSyw76jxjchTvd1WoRVqQ2mVhiX/k
-	 FnGCRet0XJwNjHQfgwDWVpRTpFpmWLpLjxvvtp5khqq5F4dLBO82E4bXdpsyocoUBW
-	 5lGBWvGntuH2bJX3xAmp/gBXg3tj09DHNTw48bp/Ct/Mf53GMb2yFzEfV8JtPd8gHD
-	 EXeohERnPfRCUtSvD2k+f7GJpzZqY0acWyBcjPUhjA6JbcRFRGmGV4xWGWrlrxzseK
-	 ok32P1l0oUmcA==
-Date: Wed, 30 Apr 2025 11:32:23 -0700
-From: Kees Cook <kees@kernel.org>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com,
-	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev,
-	broonie@kernel.org, catalin.marinas@arm.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, elver@google.com,
-	andreyknvl@gmail.com, ryabinin.a.a@gmail.com,
-	akpm@linux-foundation.org, yuzenghui@huawei.com,
-	suzuki.poulose@arm.com, joey.gouly@arm.com, masahiroy@kernel.org,
-	nathan@kernel.org, nicolas.schier@linux.dev
-Subject: Re: [PATCH v2 0/4] KVM: arm64: UBSAN at EL2
-Message-ID: <202504301131.3C1CBCA8@keescook>
-References: <20250430162713.1997569-1-smostafa@google.com>
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="JxQ2o6Sr"
+Received: from kreacher.localnet (unknown [217.114.34.19])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1F8E966690D;
+	Wed, 30 Apr 2025 20:32:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
+	s=dkim; t=1746037946;
+	bh=vRPBUr1VAOQ7/YLa0ijgWj8XY3xCbZH7MxZo0NC06xY=;
+	h=From:Subject:Date;
+	b=JxQ2o6SrzLMdIeRLD3FLPA1YSGTISvilwv/AJaDxu5zcMkwUICuBMhY+1ojPQqoNI
+	 0Nfud5DWw5D8cJM69r67qsh8g279PuISnsdhIcF/4U1LU0wevF050IwQxZlbkGttJ+
+	 KIJsJRYqpCJlVEN83ATMO6aWWa+VBapX8dIwY+BXnCDOxh3FDQQ0F4R0xzwdUhglsB
+	 jdVpOa0BzR5Lo4JOIDg2YgMEeVDGhi2Y5KC7R1mFwiFeGtYMxBx6E5+IGyXYJ31xuL
+	 f5oRLtuwZNbhc2tWI6sUa+FSv/E71EQMNWr0RS+5eeHcGFQR5GnGJ/8AaJHG8JI/JK
+	 1NK8Gr8LYWUSQ==
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To: Tamir Duberstein <tamird@gmail.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, gldrk <me@rarity.fan>,
+ Kees Cook <kees@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the pm tree
+Date: Wed, 30 Apr 2025 20:32:25 +0200
+Message-ID: <4654171.LvFx2qVVIh@rjwysocki.net>
+In-Reply-To:
+ <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
+References:
+ <20250430085544.12800bdd@canb.auug.org.au>
+ <CAJ-ks9mQfDwmz=chKjjcjv2KxPk1su4NWfZXey7nNgQWYXzaWA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430162713.1997569-1-smostafa@google.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+X-CLIENT-IP: 217.114.34.19
+X-CLIENT-HOSTNAME: 217.114.34.19
+X-VADE-SPAMSTATE: clean
+X-VADE-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecujffqoffgrffnpdggtffipffknecuuegrihhlohhuthemucduhedtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkfgjfhgggfgtsehtqhertddttdejnecuhfhrohhmpedftfgrfhgrvghlucflrdcuhgihshhotghkihdfuceorhhjfiesrhhjfiihshhotghkihdrnhgvtheqnecuggftrfgrthhtvghrnhepkeeileehffelfefggfdtjedvkeettdejfeevueegfedvhffgudeuteeigfeileetnecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucfkphepvddujedruddugedrfeegrdduleenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvudejrdduudegrdefgedrudelpdhhvghlohepkhhrvggrtghhvghrrdhlohgtrghlnhgvthdpmhgrihhlfhhrohhmpehrjhifsehrjhifhihsohgtkhhirdhnvghtpdhnsggprhgtphhtthhopeeipdhrtghpthhtohepthgrmhhirhgusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrghupdhrtghpthhtohepmhgvsehrrghrihhthidrfhgrnhdprhgtphhtthhopehkvggvsheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohe
+X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
-On Wed, Apr 30, 2025 at 04:27:07PM +0000, Mostafa Saleh wrote:
-> Many of the sanitizers the kernel supports are disabled when running
-> in EL2 with nvhe/hvhe/proctected modes, some of those are easier
-> (and makes more sense) to integrate than others.
-> Last year, kCFI support was added in [1]
-> 
-> This patchset adds support for UBSAN in EL2.
+On Wednesday, April 30, 2025 1:30:43 AM CEST Tamir Duberstein wrote:
+> On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.o=
+rg.au> wrote:
+> >
+> > Hi all,
+> >
+> > Commits
+> >
+> >   9eef70365d71 ("ACPICA: Introduce ACPI_NONSTRING")
+> >   ac9334785c75 ("ACPICA: utilities: Fix overflow check in vsnprintf()")
+> >   5de20bc939b0 ("ACPICA: Apply pack(1) to union aml_resource")
+> >
+> > are missing a Signed-off-by from their authors.
+>=20
+> Hi Stephen, how can I remedy this for 5de20bc939b0 ("ACPICA: Apply
+> pack(1) to union aml_resource")?
 
-This touches both UBSAN and arm64 -- I'm happy to land this via the
-hardening tree, but I expect the arm64 folks would rather take it via
-their tree. What would people like to have happen?
+The original ACPICA commit does not carry an S-o-b from you, so this one
+does not either.
 
--Kees
+If you reply with a Signed-off-by to this message:
 
--- 
-Kees Cook
+https://lore.kernel.org/linux-acpi/4664267.LvFx2qVVIh@rjwysocki.net/
+
+I will pick up your tag.
+
+Thanks!
+
+
+
