@@ -1,87 +1,196 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5922B9A9;
-	Wed, 30 Apr 2025 19:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8602AF14
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040006; cv=none; b=vFziL3Yl5XwbwpZg+wZIMyOe2ElE5icnVUphXOjwJpmy5KPjo82TfR8tKL9KCkkVyNzvGbB36ZkgkxDOc2irNSau/OwPgSbWIMfQYT1xXoE2bNWILRK/gCZE/9RS9KAlNMHXsXhC31G2GwBQi+oNl6uaDLFY5INcBxJWCf5nY+w=
+	t=1746040047; cv=none; b=NwxxoC1EMW2VFvJQ2dOppyYL9MNVkWht7UgIwHKc1+LlcoJNVYT19DCImvFGsR1sWIWRkx1k2lEu1VqU/VI6Nf0WE74LDxnSxdi0OAwAmU+FID8K7ToE81lWkk+eIEHeNi6RimS2+9M7UspFDEXqs2dxOQyHsgL7hlSzNy/+vCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040006; c=relaxed/simple;
-	bh=54IGMiZoSITdqFuruS1CfT7kOBbA4cCLxrOaIZ38igM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rNdAzw0POg0tpSKrii6SpBms1A3q/4jusQumgm3GWbpFr6w5dbzf0PtzGTH30+UXMbeeRkUugjwOLOlIVtcXgvt5tHRzdAmuQFRAlYAh/eFE8i21+9I/YtDdx7jZpoGZoYOO0qLL/rAJzrh3CMlZ1QDMqYv48efMzmqHjhgoDEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lBx6xqXf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746040047; c=relaxed/simple;
+	bh=Mtlu1YXyNBwG2h3ygr9dqrRxqm2wdhJyl6YDuhQ3wR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RmX8UWPz3XZVkgZN0/A0boMtXSwGDTGyIC/DvmwCng+uF0Mf97Okopv1gs7D5z0j06Vwnu/njLdU0j9dF5zO3S7mhJJfpZ9c+d5mgNyXuUDP7DiOSAibwfIMrqDHgsqXqnRAbHit4Inrser2WeqW1OA3DzLhtGDp7TxIFYO+rzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=a+DTulzi; arc=none smtp.client-ip=209.85.167.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lBx6xqXf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1458EC4CEE7;
-	Wed, 30 Apr 2025 19:06:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746040006;
-	bh=54IGMiZoSITdqFuruS1CfT7kOBbA4cCLxrOaIZ38igM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lBx6xqXfwDFmrjbUs2hgy2zDbXK/vNdfjGIhlftSbWHOroXMr0YsmGSPUq4eq6YD8
-	 x5newvh0h4h85IG+RYltJLxbn5aRj9gONt/DE4L/+fHLyMWheN/sWg+9HPqVmla6Gp
-	 kDBktrQ0ZytBmKKOWAzQEOQvnXduiLQswyTxOyOAixXqEXBIc1NiAR46Q1ZMPcGZzg
-	 yl/wMbQvxBTC4y+vql6tMc9EbKiIO6Bn5U9YhGajsz9LYHLSCOyqNgfn4s0FyD76hs
-	 vnQUkmvLZnC8pbVmmovexV2Q+0ct24Sd1wt3PcNAq7EVEyGlM1S4F6Rc9Gf3jJGo8c
-	 zw4hU+IXA/XmQ==
-Date: Wed, 30 Apr 2025 12:06:43 -0700
-From: Kees Cook <kees@kernel.org>
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: Haneen Mohammed <hamohammed.sa@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Melissa Wen <melissa.srw@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/vkms: Adjust vkms_state->active_planes allocation
- type
-Message-ID: <202504301205.B3AD2E7@keescook>
-References: <20250426061431.work.304-kees@kernel.org>
- <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="a+DTulzi"
+Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-3f6eaa017d0so206467b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746040044; x=1746644844; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=80mRLjys5Hd2u6ysZghS8YZztGds6iRGiX59kcQq5fM=;
+        b=a+DTulziBBgjK15PobKXItb6pezBzOAeZTXoWYyszi9ELWCUEPVBzye077Cv3E1YLh
+         YsnR9S55uiAIzu5/zmVwF4uwx0Nst3NJlCTrHsqg5+h5hk9hXctkjq48epypFAHgFQb8
+         7+Mwz0ifa7H4gVWDEk/k4THbeDD6fP7Z0HbFvPwbVOTJDsW8yVz8Do5uerANtzl03nVE
+         7XxcH4luzONwDP9ET3GrMP3Nqj2NYH6PLuomYW0B1ves6gJpJ5N2qns7iz6dW3+RXDF6
+         Yjf6bBVXMW5r8Gg2cPia1ABw2OMVQtDx5FNhHenz1+NlqmlgtuFzEFoqNCNHNOzgZu04
+         9X6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746040044; x=1746644844;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=80mRLjys5Hd2u6ysZghS8YZztGds6iRGiX59kcQq5fM=;
+        b=LME2pgr4QitKPmfRydO/GaMYRPr2Ek0tl3rUdXDRm89SxM+n1qEaBDVwgMHevkMx9d
+         k6WtcXaSpGPBto1MyUhat7YQdoDaqhklWJXJwQuUvo+dJACNXbjZSQhK2F1pIrANegV0
+         wiZZ9GkB21NMM5QhHglFHc+O3U/BNFMi3q7omznKcDuXTJjenls0b04QJuyIJGYFKNDl
+         Sfk/6pHytHUcR5Unwrfe9b5p8pDUuj2cqKZZB/nAvD0y6LqkUgWlvAxUgRRgHvLgvvOb
+         oZNg6JyRgVDd4GESLQRHqHRmiKPHNM0UcW0JeCr4z/U8r5RiIsE2MEgvyNb83y3sdICg
+         D1Mg==
+X-Forwarded-Encrypted: i=1; AJvYcCXU208hW6kpj7AA2BDckQrZ0Dj/knl0LtVtrLvauRTM9MiR7MKWejYFlHISI5/SbgUYKzq0FsszO0R7eTo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwkOLhj/jKwP1Ke2OHKSFvw7C4LZUwx4z2/ey7n301R3kBxDFTD
+	wCUGdFaMrfvtyR3iqaTtd/+iGlWMPcyaJs4ekGGEAkMES1JWhj+f9Gm9mnTvj4M=
+X-Gm-Gg: ASbGncuTMKz6ueWC3IcFfsOozhz4qeBEpe5DL1IZTFGvuY13OZzyBEEuT91LbMfwxQo
+	m6cQ8g3PGNwLZPM0KPlbCZIdJtScX61a1McUgUorgyCZg2o6xMubaYijsRuoEfFQqqYcTNdf3Et
+	FmBpgRb9VdK4Tun2cSQVimlpPj6oGhpJYmY3ZhEa81wpk88cmrDMQSMFUG3FwkO2Kx1ur6b89mb
+	qev2KbTdTSst4oxdvO1twf27YjmDuWncfg/y054vADbjLqSfkl56+aiRQQt6YdO3TQlZFBLfpnt
+	qvIdUAb5J4LGqJ6VyH1gfgvwTSxScIT7D6a4KYLpwGx50ljM1bQybH37jRrosJ+YcdHelmuzyeS
+	tfovDFZRNm2xlOeY=
+X-Google-Smtp-Source: AGHT+IGxFe30jnIEtcfXxdqEbeOH01eszlna0BNlLl4bX8yJXYfGDxf9e+JqaxB0WSf1rlJMFOvtVQ==
+X-Received: by 2002:a05:6808:80cb:b0:401:ea99:532 with SMTP id 5614622812f47-40239e77c8bmr3044029b6e.21.1746040044090;
+        Wed, 30 Apr 2025 12:07:24 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40212c4dc27sm920732b6e.48.2025.04.30.12.07.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 12:07:23 -0700 (PDT)
+Message-ID: <4fd62562-cd94-4019-952d-38624656ea81@baylibre.com>
+Date: Wed, 30 Apr 2025 14:07:22 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <823d4d24-da80-4834-95ca-d5698edfe18f@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/11] iio: adc: ad7768-1: add support for
+ Synchronization over SPI
+To: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+Cc: andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+ marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+ linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+ broonie@kernel.org, jonath4nns@gmail.com
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <c5a5376a6ffbb571d7874218494b04fd20015ee9.1745605382.git.Jonathan.Santos@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 28, 2025 at 10:18:34AM +0200, Louis Chauvet wrote:
+On 4/27/25 7:13 PM, Jonathan Santos wrote:
+> The synchronization method using GPIO requires the generated pulse to be
+> truly synchronous with the base MCLK signal. When it is not possible to
+> do that in hardware, the datasheet recommends using synchronization over
+> SPI, where the generated pulse is already synchronous with MCLK. This
+> requires the SYNC_OUT pin to be connected to SYNC_IN pin.
 > 
+> Use trigger-sources property to enable device synchronization over SPI
+> and multi-device synchronization, as an alternative to adi,sync-in-gpios
+> property.
 > 
-> Le 26/04/2025 à 08:14, Kees Cook a écrit :
-> > In preparation for making the kmalloc family of allocators type aware,
-> > we need to make sure that the returned type from the allocation matches
-> > the type of the variable being assigned. (Before, the allocator would
-> > always return "void *", which can be implicitly cast to any pointer type.)
-> > 
-> > The assigned type is "struct vkms_plane_state **", but the returned type
-> > will be "struct drm_plane **". These are the same size (pointer size), but
-> > the types don't match. Adjust the allocation type to match the assignment.
-> 
-> I think this is an issue, can you add the proper Fixup tag in this commit?
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
 
-I think trailers updating tools like b4 will pick this up:
+...
 
-Fixes: 8b1865873651 ("drm/vkms: totally reworked crc data tracking")
+> +static int ad7768_trigger_sources_get_sync(struct device *dev,
+> +					   struct ad7768_state *st)
+> +{
+> +	struct fwnode_reference_args args;
+> +	struct fwnode_handle *fwnode = NULL;
+> +	int ret;
+> +
+> +	/*
+> +	 * The AD7768-1 allows two primary methods for driving the SYNC_IN pin
+> +	 * to synchronize one or more devices:
+> +	 * 1. Using an external GPIO.
+> +	 * 2. Using a SPI command, where the SYNC_OUT pin generates a
+> +	 *    synchronization pulse that drives the SYNC_IN pin.
+> +	 */
+> +	if (!device_property_present(dev, "trigger-sources")) {
+> +		/*
+> +		 * In the absence of trigger-sources property, enable self
+> +		 * synchronization over SPI (SYNC_OUT).
+> +		 */
+> +		st->en_spi_sync = true;
+> +		return 0;
+> +	}
+> +
+> +	ret = fwnode_property_get_reference_args(dev_fwnode(dev),
+> +						 "trigger-sources",
+> +						 "#trigger-source-cells",
+> +						 0,
+> +						 AD7768_TRIGGER_SOURCE_SYNC_IDX,
+> +						 &args);
+> +	if (ret)
+> +		return ret;
+> +
+> +	fwnode = args.fwnode;
+> +	/*
+> +	 * First, try getting the GPIO trigger source and fallback to
+> +	 * synchronization over SPI in case of failure.
+> +	 */
+> +	st->gpio_sync_in = ad7768_trigger_source_get_gpio(dev, fwnode);
+> +	if (IS_ERR(st->gpio_sync_in)) {
 
-Would you rather I send a v2 with the Fixes added?
+Normally, having error be the indented path like this is preferred, but I think
+this case is an exception since the following is "normal" code path, not error
+return path.
 
-> 
-> With this:
-> 
-> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
+I would understand this better as:
 
-Thanks!
+	st->gpio_sync_in = ad7768_trigger_source_get_gpio(dev, fwnode);
+	if (!IS_ERR(st->gpio_sync_in))
+		/* The trigger is a GPIO, our job is done here. */
+		goto out_put_node;
 
--Kees
+	/* Second, ... */
 
--- 
-Kees Cook
+> +		/*
+> +		 * For this case, it requires one argument, which indicates the
+> +		 * output pin referenced.
+> +		 */
+> +		if (args.nargs < 1)
+> +			goto err_not_supp;
+> +
+> +		if (args.args[0] != AD7768_TRIGGER_SOURCE_SYNC_OUT)
+> +			goto err_not_supp;
+> +
+> +		/*
+> +		 * Only self trigger is supported for now, i.e.,
+> +		 * external SYNC_OUT is not allowed.
+> +		 */
+> +		if (fwnode->dev == dev) {
+
+As Andy pointed out, this is a bit odd. Technically, we should be allowing any
+trigger provider with the right capabilities. But we don't have a trigger
+subsystem yet to make that easy. Since we can already handle the SYNC_IN is
+wired to SYNC_OUT of the same chip above by omitting the trigger-sources
+property, I would just make a TODO here and always return the not supported
+error for now.
+
+> +			st->en_spi_sync = true;
+> +			goto out_put_node;
+> +		}
+> +
+> +		goto err_not_supp;
+> +	}
+> +
+> +	goto out_put_node;
+> +
+> +err_not_supp:
+> +	ret = dev_err_probe(dev, -EOPNOTSUPP,
+> +			    "Invalid synchronization trigger source");
+> +out_put_node:
+> +	fwnode_handle_put(args.fwnode);
+> +	return ret;
+> +}
+> +
