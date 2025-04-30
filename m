@@ -1,187 +1,230 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266193FE4;
-	Wed, 30 Apr 2025 03:48:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24CB19C54F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 03:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745984919; cv=none; b=WdX4oOt8L5srrfq1Vns+vD8g5BRNWqgPGJfIPSUvWj5FD8aPgsUPNjEj6FwYSQoF4nARtHvShbW7HTFoXEvjR3VLVJYfl6CAeYpA5fULHy6TYs1eTeRCfs2HN4xa81o6EZ3pHTw+42XTJPkLfp8T4XCCyPfBNFXiuXDohtgUyJQ=
+	t=1745985297; cv=none; b=t+nn0A9lYbrYkJf9IagELl/vj+HiNlhPK8tDppI8FY6uVTu6sAzyV4gg6xJGeoSMJPwgvHOUXsXsMOC1a7K+JowWkdaAuqvHdAc/J1ECF/A3DlB5uQkIcykp0FxFfwL8Lhz/ASm5iTdYGEyeAxIIgoGvXdJLlXO34plM0mRy6bQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745984919; c=relaxed/simple;
-	bh=owYSNEZrINdHA/WPUJwb/zHXBMGIP8AgTItLqkrPG1E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r0qLYnmddG/yfhrBd/4QHuEUOSGqzrsn/Uya6x5cj7VUM5Wx8jtyNNBA0gPv++feOov9VxMSOJFRXkIo7R0swle7nAqyX1RtFKuDpNRT30N6KG/x+cEwO6QTnyUoyivH+iEob91I8/+Eqn3R+glCpEu0dwCIK+eFwMcIW+eEq2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=hWW2WGSU; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745985297; c=relaxed/simple;
+	bh=6e7PuLPogQjnCqSoAszx2s72h730uwxFY+uL/Q7/p2U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IsRGdeEIlKAOtPmtRb00Eo5O811A7Ely/PxNmLEgXoimd+AZYluVDhrMq8XKdSUS8CdEsAJtWLvpEgeHVuGlcGTT82rHEH7+DTF91YNtruKadltRMWkZTlUvtHjOQ4c2JqbWeiCGigaJ1E6rwawwkcHwQlHfQpd1jf/Z0ZMrHok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0owz60Wr; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="hWW2WGSU"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=fD6zxRFFdRFmxzaf4tcfULngb0ghBzMFzuAhq3mvYqE=; b=hWW2WGSUC7/9y1k66lTSv8t0NB
-	86jMa18oP8xVKrRy2pet+kyNDfDkiWXnkDiHusEJqsOTzP0cP/0PkMigOPIuo+87s9Z9XPVpskRro
-	dS1WOUUbPQ1jKfi/lWH17yj4Q/Wuok27nYeCDky8E3CU7xBge8BSa1jutA53iZWzZm+x6tU6XvwXb
-	Gp6LoZ5J7KqxmrS/+M/LV41C4ymxNHH/0Ilke/dwwr4I6LwfkqKV6LfmlgSYX1Fx8Big8f8hBVE9M
-	/BAxCuYpNOUBD5NdkedVJypqafu3Mghqtyq1NxuuZtmuXUh+9ajklKb+hq0UBQv8VBgh17AwRRM4p
-	3wjeCrog==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u9yQs-0029Ri-24;
-	Wed, 30 Apr 2025 11:48:27 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 30 Apr 2025 11:48:26 +0800
-Date: Wed, 30 Apr 2025 11:48:26 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	linux-riscv@lists.infradead.org, sparclinux@vger.kernel.org,
-	linux-s390@vger.kernel.org, x86@kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v4 01/13] crypto: sha256 - support arch-optimized lib and
- expose through shash
-Message-ID: <aBGdiv17ztQnhAps@gondor.apana.org.au>
-References: <20250428170040.423825-1-ebiggers@kernel.org>
- <20250428170040.423825-2-ebiggers@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0owz60Wr"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4772f48f516so6223591cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 20:54:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745985293; x=1746590093; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=zdngKpqrEsOKE2RRopIITNmQHHudCaqOaMoPKpcAFf0=;
+        b=0owz60WrCGdR+Mlyf6uIBxCrQ2Fk/VhfQ5CQY7jTBGAwLojpP17E9NZcAXOxkbNZPp
+         XiQ8046vo3Uz2IXEmHd2iarqxnn1g3DfQJMbqk/aQBFAv19ho6rlAZ6Hf/cgwJGrbQ4M
+         xr73k7d5KA0wzK3qvq84xkZbPnyfao7sOem7/IGWVOT/+bnGHBC634bq5C9rxdmZ9oSw
+         Yh+LoNI0FZTKKTsjxH/VawgepNx4QCnDHPFH8Tck0oSLoAaOpMFRMli5yqPKbkGEhe9y
+         f1t7RpaJTTq11tycitXoZfeYAKcF9/rjQ0jFl3RIneYEBVMy51pjWLqF1MaUml+oArdn
+         nCEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745985293; x=1746590093;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zdngKpqrEsOKE2RRopIITNmQHHudCaqOaMoPKpcAFf0=;
+        b=KtHQTz+OwH0q8iJwrS9WOqlgYk2qQUcmiABELhRE/ud8AI8CCbHX77BzmYe9vuRtSa
+         EdeDjSZgiRImGoZoTUDRZXYM6lyBy3SAwVbeC1FSMb1zTogRdm7CgE/NXw8XvAvhVyIo
+         yPVSqMAPRBeDbRPw3Cb9/dsSHiifa/dQtWYJmzidNzRd7QiYp78nmt0XrtqIVv7imy5Q
+         8q33pW/gYPTF+6rhruOLeOJfZ8tOXfd+H1KdbBzc4f66Kr4d8HRITPBDtHodlh/FHOYA
+         4w/aysWVJen9LKtg5RX4JnTCqHzyJTJeH1Q5iAXyjXllZitLBPKx/phNriW0jfY9MxiD
+         XC1A==
+X-Forwarded-Encrypted: i=1; AJvYcCX08wpPDq12GT42gpcuqzIXVeWGfNakM/RzV45YO/RQONX4vDgdIjv7ajPlZn6/xTWk+3E5ZnQoGWX/aQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6XFnUowDq+wWDsMqw6Tb5+1ze8NyPuUlJKFdcVLRKzIKzf7Cf
+	gDotX3FZecK4yZqI7D6pXkMztyNO03G2Ot4DI8eSM7mQyXbk2AdVPbilCpedNaJgT15hkYz7tL+
+	9jAE6qjdUbivNWz/YllbTc8L8rY23rVzdH/aZr7sS7B6Yn5iBow==
+X-Gm-Gg: ASbGnctuaeNYdXU7VGyjWEUpuA0vXzEjOnZLEIO5YNfQln97LYnc3Pm2cKDiSCklPIF
+	FDj5jhOe6rVWkgu1YhriQ33YegynqFwXdL1dMS/dcAH9K55wQLRUfIto/UAAB6p6J4aM5mroFiU
+	1jVBah7jILyYHECy9DfvqKR1E=
+X-Google-Smtp-Source: AGHT+IEzatGCZtJsjkNDKfIlnIA7W2itvtArqxngfPHE0the8Wej/qOlXaYkjg24vN+sj3VRdh2zNnHHsuzCFt8b+DI=
+X-Received: by 2002:ad4:5ec6:0:b0:6eb:2e6c:3e02 with SMTP id
+ 6a1803df08f44-6f4fdd87cb1mr21883646d6.21.1745985293362; Tue, 29 Apr 2025
+ 20:54:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250428170040.423825-2-ebiggers@kernel.org>
+References: <cover.1745965121.git.skhan@linuxfoundation.org> <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
+In-Reply-To: <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
+From: David Gow <davidgow@google.com>
+Date: Wed, 30 Apr 2025 11:54:39 +0800
+X-Gm-Features: ATxdqUGvIEo75IBg9dA5imfDnsck4XP59aakw_TjMnGj1jOcJUJcduW7g8-NwXI
+Message-ID: <CABVgOSnKPPLH9BASOZ0b3mMOUuiVXxsdXQcoQqyTKd5UYONpUQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] kunit: add tips to clean source tree to build help message
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: brendan.higgins@linux.dev, rmoar@google.com, corbet@lwn.net, 
+	linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
+	workflows@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="0000000000003a631e0633f6e1b2"
 
-On Mon, Apr 28, 2025 at 10:00:26AM -0700, Eric Biggers wrote:
-> From: Eric Biggers <ebiggers@google.com>
-> 
-> As has been done for various other algorithms, rework the design of the
-> SHA-256 library to support arch-optimized implementations, and make
-> crypto/sha256.c expose both generic and arch-optimized shash algorithms
-> that wrap the library functions.
-> 
-> This allows users of the SHA-256 library functions to take advantage of
-> the arch-optimized code, and this makes it much simpler to integrate
-> SHA-256 for each architecture.
-> 
-> Note that sha256_base.h is not used in the new design.  It will be
-> removed once all the architecture-specific code has been updated.
-> 
-> Move the generic block function into its own module to avoid a circular
-> dependency from libsha256.ko => sha256-$ARCH.ko => libsha256.ko.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@google.com>
+--0000000000003a631e0633f6e1b2
+Content-Type: text/plain; charset="UTF-8"
+
+On Wed, 30 Apr 2025 at 06:27, Shuah Khan <skhan@linuxfoundation.org> wrote:
+>
+> Add tips to clean source tree to build help message. When user run
+> kunit.py after building another kernel for ARCH=foo, it is necessary
+> to run 'make ARCH=foo mrproper' to remove all build artifacts generated
+> during the build. In such cases, kunit build could fail.
+>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > ---
->  crypto/Kconfig                 |   1 +
->  crypto/Makefile                |   3 +-
->  crypto/sha256.c                | 201 +++++++++++++++++++++++++++++++++
->  crypto/sha256_generic.c        | 102 -----------------
->  include/crypto/internal/sha2.h |  28 +++++
->  include/crypto/sha2.h          |  15 +--
->  include/crypto/sha256_base.h   |   9 +-
->  lib/crypto/Kconfig             |  19 ++++
->  lib/crypto/Makefile            |   3 +
->  lib/crypto/sha256-generic.c    | 137 ++++++++++++++++++++++
->  lib/crypto/sha256.c            | 196 ++++++++++++++------------------
->  11 files changed, 487 insertions(+), 227 deletions(-)
->  create mode 100644 crypto/sha256.c
->  delete mode 100644 crypto/sha256_generic.c
->  create mode 100644 include/crypto/internal/sha2.h
->  create mode 100644 lib/crypto/sha256-generic.c
 
-This is the patch that I will fold in here to maintain the existing
-export format:
+Thanks for doing this.
 
-diff --git a/crypto/sha256.c b/crypto/sha256.c
-index 1c2edcf9453d..c2588d08ee3e 100644
---- a/crypto/sha256.c
-+++ b/crypto/sha256.c
-@@ -116,6 +116,32 @@ static int crypto_sha224_final_arch(struct shash_desc *desc, u8 *out)
- 	return 0;
- }
- 
-+static int crypto_sha256_import_lib(struct shash_desc *desc, const void *in)
-+{
-+	struct sha256_state *sctx = shash_desc_ctx(desc);
-+	const u8 *p = in;
-+
-+	memcpy(sctx, p, sizeof(*sctx));
-+	p += sizeof(*sctx);
-+	sctx->count += *p;
-+	return 0;
-+}
-+
-+static int crypto_sha256_export_lib(struct shash_desc *desc, void *out)
-+{
-+	struct sha256_state *sctx0 = shash_desc_ctx(desc);
-+	struct sha256_state sctx = *sctx0;
-+	unsigned int partial;
-+	u8 *p = out;
-+
-+	partial = sctx.count % SHA256_BLOCK_SIZE;
-+	sctx.count -= partial;
-+	memcpy(p, &sctx, sizeof(sctx));
-+	p += sizeof(sctx);
-+	*p = partial;
-+	return 0;
-+}
-+
- static struct shash_alg algs[] = {
- 	{
- 		.base.cra_name		= "sha256",
-@@ -130,6 +156,10 @@ static struct shash_alg algs[] = {
- 		.finup			= crypto_sha256_finup_generic,
- 		.digest			= crypto_sha256_digest_generic,
- 		.descsize		= sizeof(struct sha256_state),
-+		.statesize		= sizeof(struct crypto_sha256_state) +
-+					  SHA256_BLOCK_SIZE + 1,
-+		.import			= crypto_sha256_import_lib,
-+		.export			= crypto_sha256_export_lib,
- 	},
- 	{
- 		.base.cra_name		= "sha224",
-@@ -142,6 +172,10 @@ static struct shash_alg algs[] = {
- 		.update			= crypto_sha256_update_generic,
- 		.final			= crypto_sha224_final_generic,
- 		.descsize		= sizeof(struct sha256_state),
-+		.statesize		= sizeof(struct crypto_sha256_state) +
-+					  SHA256_BLOCK_SIZE + 1,
-+		.import			= crypto_sha256_import_lib,
-+		.export			= crypto_sha256_export_lib,
- 	},
- 	{
- 		.base.cra_name		= "sha256",
-@@ -156,6 +190,10 @@ static struct shash_alg algs[] = {
- 		.finup			= crypto_sha256_finup_arch,
- 		.digest			= crypto_sha256_digest_arch,
- 		.descsize		= sizeof(struct sha256_state),
-+		.statesize		= sizeof(struct crypto_sha256_state) +
-+					  SHA256_BLOCK_SIZE + 1,
-+		.import			= crypto_sha256_import_lib,
-+		.export			= crypto_sha256_export_lib,
- 	},
- 	{
- 		.base.cra_name		= "sha224",
-@@ -168,6 +206,10 @@ static struct shash_alg algs[] = {
- 		.update			= crypto_sha256_update_arch,
- 		.final			= crypto_sha224_final_arch,
- 		.descsize		= sizeof(struct sha256_state),
-+		.statesize		= sizeof(struct crypto_sha256_state) +
-+					  SHA256_BLOCK_SIZE + 1,
-+		.import			= crypto_sha256_import_lib,
-+		.export			= crypto_sha256_export_lib,
- 	},
- };
+This looks good to me, save for the issue below.
+
+I do wonder whether there's a more general fix we can do in the
+makefiles, but I'm not sure how that'd have to work. Maybe by storing
+the architecture used somewhere and amending the error based on that,
+or hacking around the specific x86_64/UML incompatibilities. But let's
+go ahead with this fix regardless.
 
 Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+-- David
+
+>  tools/testing/kunit/kunit.py | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/testing/kunit/kunit.py b/tools/testing/kunit/kunit.py
+> index 7f9ae55fd6d5..db86a396ed33 100755
+> --- a/tools/testing/kunit/kunit.py
+> +++ b/tools/testing/kunit/kunit.py
+> @@ -583,7 +583,7 @@ def main(argv: Sequence[str]) -> None:
+>                                                 'the options in .kunitconfig')
+>         add_common_opts(config_parser)
+>
+> -       build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests')
+> +       build_parser = subparser.add_parser('build', help='Builds a kernel with KUnit tests. Successful build depends on a clean source tree. Run mrproper to clean generated artifcats for prior ARCH=foo kernel build. Run 'make ARCH=foo mrproper')
+
+Because this string is enclosed by single quotes, the 'make ARCH=foo
+mrproper' is not part of the string (and there's a missing terminating
+quote as well).
+
+Maybe change help= to use double quotes, and add the missing one? Or
+use double quotes or backticks for the make example?
+
+
+>         add_common_opts(build_parser)
+>         add_build_opts(build_parser)
+>
+> --
+> 2.47.2
+>
+
+--0000000000003a631e0633f6e1b2
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIIUnQYJKoZIhvcNAQcCoIIUjjCCFIoCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
+ghIEMIIGkTCCBHmgAwIBAgIQfofDAVIq0iZG5Ok+mZCT2TANBgkqhkiG9w0BAQwFADBMMSAwHgYD
+VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSNjETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
+AxMKR2xvYmFsU2lnbjAeFw0yMzA0MTkwMzUzNDdaFw0zMjA0MTkwMDAwMDBaMFQxCzAJBgNVBAYT
+AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
+IFI2IFNNSU1FIENBIDIwMjMwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDYydcdmKyg
+4IBqVjT4XMf6SR2Ix+1ChW2efX6LpapgGIl63csmTdJQw8EcbwU9C691spkltzTASK2Ayi4aeosB
+mk63SPrdVjJNNTkSbTowej3xVVGnYwAjZ6/qcrIgRUNtd/mbtG7j9W80JoP6o2Szu6/mdjb/yxRM
+KaCDlloE9vID2jSNB5qOGkKKvN0x6I5e/B1Y6tidYDHemkW4Qv9mfE3xtDAoe5ygUvKA4KHQTOIy
+VQEFpd/ZAu1yvrEeA/egkcmdJs6o47sxfo9p/fGNsLm/TOOZg5aj5RHJbZlc0zQ3yZt1wh+NEe3x
+ewU5ZoFnETCjjTKz16eJ5RE21EmnCtLb3kU1s+t/L0RUU3XUAzMeBVYBEsEmNnbo1UiiuwUZBWiJ
+vMBxd9LeIodDzz3ULIN5Q84oYBOeWGI2ILvplRe9Fx/WBjHhl9rJgAXs2h9dAMVeEYIYkvW+9mpt
+BIU9cXUiO0bky1lumSRRg11fOgRzIJQsphStaOq5OPTb3pBiNpwWvYpvv5kCG2X58GfdR8SWA+fm
+OLXHcb5lRljrS4rT9MROG/QkZgNtoFLBo/r7qANrtlyAwPx5zPsQSwG9r8SFdgMTHnA2eWCZPOmN
+1Tt4xU4v9mQIHNqQBuNJLjlxvalUOdTRgw21OJAFt6Ncx5j/20Qw9FECnP+B3EPVmQIDAQABo4IB
+ZTCCAWEwDgYDVR0PAQH/BAQDAgGGMDMGA1UdJQQsMCoGCCsGAQUFBwMCBggrBgEFBQcDBAYJKwYB
+BAGCNxUGBgkrBgEEAYI3FQUwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQUM7q+o9Q5TSoZ
+18hmkmiB/cHGycYwHwYDVR0jBBgwFoAUrmwFo5MT4qLn4tcc1sfwf8hnU6AwewYIKwYBBQUHAQEE
+bzBtMC4GCCsGAQUFBzABhiJodHRwOi8vb2NzcDIuZ2xvYmFsc2lnbi5jb20vcm9vdHI2MDsGCCsG
+AQUFBzAChi9odHRwOi8vc2VjdXJlLmdsb2JhbHNpZ24uY29tL2NhY2VydC9yb290LXI2LmNydDA2
+BgNVHR8ELzAtMCugKaAnhiVodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL3Jvb3QtcjYuY3JsMBEG
+A1UdIAQKMAgwBgYEVR0gADANBgkqhkiG9w0BAQwFAAOCAgEAVc4mpSLg9A6QpSq1JNO6tURZ4rBI
+MkwhqdLrEsKs8z40RyxMURo+B2ZljZmFLcEVxyNt7zwpZ2IDfk4URESmfDTiy95jf856Hcwzdxfy
+jdwx0k7n4/0WK9ElybN4J95sgeGRcqd4pji6171bREVt0UlHrIRkftIMFK1bzU0dgpgLMu+ykJSE
+0Bog41D9T6Swl2RTuKYYO4UAl9nSjWN6CVP8rZQotJv8Kl2llpe83n6ULzNfe2QT67IB5sJdsrNk
+jIxSwaWjOUNddWvCk/b5qsVUROOuctPyYnAFTU5KY5qhyuiFTvvVlOMArFkStNlVKIufop5EQh6p
+jqDGT6rp4ANDoEWbHKd4mwrMtvrh51/8UzaJrLzj3GjdkJ/sPWkDbn+AIt6lrO8hbYSD8L7RQDqK
+C28FheVr4ynpkrWkT7Rl6npWhyumaCbjR+8bo9gs7rto9SPDhWhgPSR9R1//WF3mdHt8SKERhvtd
+NFkE3zf36V9Vnu0EO1ay2n5imrOfLkOVF3vtAjleJnesM/R7v5tMS0tWoIr39KaQNURwI//WVuR+
+zjqIQVx5s7Ta1GgEL56z0C5GJoNE1LvGXnQDyvDO6QeJVThFNgwkossyvmMAaPOJYnYCrYXiXXle
+A6TpL63Gu8foNftUO0T83JbV/e6J8iCOnGZwZDrubOtYn1QwggWDMIIDa6ADAgECAg5F5rsDgzPD
+hWVI5v9FUTANBgkqhkiG9w0BAQwFADBMMSAwHgYDVQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBS
+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
+YE9NAgMBAAGjggHgMIIB3DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1UdDwEB
+/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFHgsCGkO2Hex
+N6ybc+GeQEb6790qMFgGA1UdIARRME8wCQYHZ4EMAQUBAjBCBgorBgEEAaAyCgMDMDQwMgYIKwYB
+BQUHAgEWJmh0dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQC
+MAAwgZoGCCsGAQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWdu
+LmNvbS9jYS9nc2F0bGFzcjZzbWltZWNhMjAyMzBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5n
+bG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3J0MB8GA1UdIwQYMBaA
+FDO6vqPUOU0qGdfIZpJogf3BxsnGMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFs
+c2lnbi5jb20vY2EvZ3NhdGxhc3I2c21pbWVjYTIwMjMuY3JsMA0GCSqGSIb3DQEBCwUAA4ICAQAs
+exV05yVDmPhHRqOq9lAbfWOUvEf8zydxabZUHna6bayb83jD2eb9nMGGEprfuNBRmFg35sgF1TyN
++ieuQakvQYmY8tzK49hhHa2Y3qhGCTqYTHO3ypHvhHsZiGbL0gmdgB9P8ssVIws//34ae99GUOxo
+XKTxPwwsQ5Arq42besv3/HXAW+4nRAT8d3ht5ZWCHc5rjL/vdGzu7PaYo3u0da69AZ8Sh4Gf5yoc
+QANr2ZkMrxXbLmSmnRvbkQrzlZp2YbTFnczx46429D6q75/FNFOL1vAjxtRAPzkyACvW0eKvchza
+TMvvD3IWERLlcBL5yXpENc3rI8/wVjqgAWYxlFg1b/4b/TCgYe2MZC0rx4Uh3zTIbmPNiHdN6QZ9
+oDiYzWUcqWZ5jCO4bMKNlVJXeCvdANLHuhcC8FONj5VzNgYXs6gWkp9/Wt6XnQPX4dF4JBa8JdL/
+cT46RJIzoiJHEx/8syO5FparZHIKbkunoq6niPsRaQUGeqWc56H4Z1sQXuBJN9fhqkIkG0Ywfrwt
+uFrCoYIRlx4rSVHpBIKgnsgdm0SFQK72MPmIkfhfq9Fh0h8AjhF73sLO7K5BfwWkx1gwMySyNY0e
+PCRYr6WEVOkUJS0a0fui693ymMPFLQAimmz8EpyFok4Ju066StkYO1dIgUIla4x61auxkWHwnzGC
+Al0wggJZAgEBMGgwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKjAo
+BgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjYgU01JTUUgQ0EgMjAyMwIQAcDMKctW1GQKDKqEUSh4
+pjANBglghkgBZQMEAgEFAKCBxzAvBgkqhkiG9w0BCQQxIgQg/DYtWxgRkpTgRcoPwLsqO63jG43j
+DRFcs4c0zcKezswwGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjUw
+NDMwMDM1NDUzWjBcBgkqhkiG9w0BCQ8xTzBNMAsGCWCGSAFlAwQBKjALBglghkgBZQMEARYwCwYJ
+YIZIAWUDBAECMAoGCCqGSIb3DQMHMAsGCSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcN
+AQEBBQAEggEATdLWBPSZHC/rIdRA2w0m+QB7T7dTF12dLFfUp3cMKvwSNYfe5jvL4WP7xyudMjSM
+m0fCHsD2/3WI4ybom66y/fWJU2DSmprpcmJ2leL4FGfMCRY+rcnEv892Ek3nuXGIzmskxRGkDwmc
+cxi4I6X6DD4k4N6yco73ahaTIMY+mWvJQm8IXgnmuQdTC360JUHwwmTsZFbgB2DH0UUntWemvgg2
+DUzS9Zt90+fZ1F853hE3IqCVbw3E53OenR+L3qLVMBFFhI2UqStGx8qUnVDvBfXu9qhSV6BKQ2dI
+/SGuNiftN0WYuB92o+2kT7GCDNUf0TAo8pRlJjKdXQFH9UVANw==
+--0000000000003a631e0633f6e1b2--
