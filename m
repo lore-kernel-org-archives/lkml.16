@@ -1,172 +1,197 @@
-Received: from mta-outp-cfd-1.case.edu (mta-outp-cfd-1.case.edu [129.22.103.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC8325D1FC
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=129.22.103.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038205; cv=pass; b=TZXLtHZIvx2s+uuRL5plItfwoToG64a6IL/caUxlm0PkeG5Y7XOc6DxSK5C24dBzT/mw83t9i5yDnmSRsA8tqlEK14Tl4TNZPjEBVWEDPtDZSu71dZy3rGg9j3X/5KPG3rG7/H9l9R3nuAC7f5HCbSxZZbgeHRxalD848OBUrWE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038205; c=relaxed/simple;
-	bh=EU6XUdX+aqjSGI5nezCzcOSTMPFuEyMvb8G98jawzGk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=eMDzB+XbOPvjC+ATJC37S5d4H7T3pQMxjvOURxp257wzQjGbO9mQGzbZ2Xa11WxBghGb2TlHZsMS+Aa/3DyTvMe8bjD31Drs7rU26RgxXuKk26CYJ1ycO9hedC6P7OA2GDYPvC3MI0a8CYZ/LP5lh1cOvM86G9tTsBTgLtKEnUE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu; spf=pass smtp.mailfrom=case.edu; dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b=WMob1Uuk; arc=pass smtp.client-ip=129.22.103.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=case.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=case.edu
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7930D265614
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:39:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746038382; cv=none; b=XIOG2NvbHyLerhXAOMWLtGsMz22Lqbg7tEIgwHCKppckfb6cfIiEk3cBA96jJgwaslRZv3f1UBfUKAsa8ewLQna9KXYpipikTzAqa7A4uUj/1QumQw35IJkmcKyht3Dja5fPN1G5S/DWj5oKp3cvfjU8e8SzPrpGQh3EY76ld0M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746038382; c=relaxed/simple;
+	bh=uop7LMZYuz+EVPrsb8rncMFAD0a69RO4PcxjXzb4CH0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=auBlN1aNzus+Eu/J5AS9KGhHKz8R4GUhUZCU+6ZPqNSg8yU7snbDF4+Ig5MujHixlRIVqibY34LJc7gbrheQPwDB8H7lwudV/dmSiFCXlBu7t+wdxi5heTfuIhx0cOsEX0Gv1tkgcn/rkq02qP9oxv937c6Hp7hb7nYXCJRbg2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Ju8MzOi0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=case.edu header.i=@case.edu header.b="WMob1Uuk"
-Authentication-Results: mta-outp-cfd-1;
-       spf=pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.69 as permitted sender) smtp.mailfrom=case.edu ;
-       dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case;
-       dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu;
-ARC-Filter: OpenARC Filter v1.0.0 mta-outp-cfd-1.case.edu 692581564
-Authentication-Results: mta-outp-cfd-1; arc=none smtp.remote-ip=129.22.103.228
-ARC-Seal: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta; t=1746038201; cv=none;
-	b=gDTTkMomE2GajE6tnM4Npy2kygmHS/WeKzdtGUKXd9rCoQIgALC8+B2RkK56IBrIV3yWnLdxoDoZ0HajZxsCpFamUwapUOKoJJASm2rGJhoazQ+/BkZ+5nAKFDb8sr+sJoTxBcx823pZ3flbG4OplmMPb15IAEKmjpXE5L0Rf1LE2Y5YWCPNTXClTTy2xidh+ZY29NQHik70qzIgKwEA9qCNdcq9s7EFgFe2GTqOqabx02fVfp7DCwUD76AWplNpg7tXNmRAP214/0UcgHABFTpPI1VGcwaJ+uGVxa1TPeVUBCMljdiaBc4X6Oc+QsnNaJ2ceZLP3F+h5iKKYG5wcw==
-ARC-Message-Signature: i=1; a=rsa-sha256; d=case.edu; s=cwru-mta;
-	t=1746038201; c=relaxed/simple;
-	bh=EU6XUdX+aqjSGI5nezCzcOSTMPFuEyMvb8G98jawzGk=;
-	h=DKIM-Signature:Message-ID:Date:MIME-Version:Subject:To:From:to:
-	 subject:message-id:date:from:mime-version:dkim-signature; b=EAVnsOI+rmIcx2+V28sV+0nPLQRt2XEWxKA/VA/+m0k1mY9FfSh/apgfZqn/bnaTMk8rH3ZuzJ3f0wLM4DA7eBYeukMMx/xJcRGawOGA4VRDeQx/3QZVBAusKkbkLv6H0NIM1nfWAixl2xjFxodaOC7ps1HBkoBDyTFkdn4gTP3MJEFVC+ZR/KBpoOOm32r3Gj7u6Y8ic/ylVGhDDJJPr68eDDr8M773lPuwrXHkD8cZ9SwcCSBLuezPtyMKLRZBaPbnYkbO3ntbUza3yfyHBT8bI95HdIemn7LaFy36uNLlzb2VyAEk+lGJKkUSRUrlQxUMh5nUXZr5y7R9IO0oPA==
-ARC-Authentication-Results: i=1; mta-outp-cfd-1; spf=pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.69 as permitted sender) smtp.mailfrom=case.edu; dkim=pass (Good 2048 bit rsa-sha256 signature) header.d=case.edu header.i=None header.s=g-case; dmarc=pass (p=REJECT sp=Undefined pct=100 dis=NONE) header.from=case.edu
-Received-SPF: Pass (mta-outp-cfd-1.case.edu: domain of case.edu designates 209.85.219.69 as permitted sender) client-ip=209.85.219.69
-Received: from mpv-out-ksl-1.case.edu (mpv-out-ksl-1.case.edu [129.22.103.228])
-	by mta-outp-cfd-1.case.edu (Postfix) with ESMTPS id 692581564
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:36:41 -0400 (EDT)
-Received: from mpv-in-cfd-1.case.edu (EHLO mpv-in-cfd-1.case.edu) ([129.22.103.211])
-	by mpv-out-ksl-1.case.edu (MOS 4.4.8-GA FastPath queued)
-	with ESMTP id DCC26241;
-	Wed, 30 Apr 2025 14:36:41 -0400 (EDT)
-Received: from mail-qv1-f69.google.com (EHLO mail-qv1-f69.google.com) ([209.85.219.69])
-	by mpv-in-cfd-1.case.edu (MOS 4.4.8-GA FastPath queued)
-	with ESMTP id PDU47045;
-	Wed, 30 Apr 2025 14:36:40 -0400 (EDT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8ed78717eso3731506d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=case.edu; s=g-case; t=1746038200; x=1746643000; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:cc:reply-to:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=4A2sHSHRpt5kileLgP7Ygf59P4BM8A8KvqW9VICqQJ8=;
-        b=WMob1UukXzW73wYrbME5SBj3K7wdeURDsWauKblE6OIkwshVOcmvhcifdwFCJONENV
-         3ss1w5x+g0tmVKo4xFUTPE2pCCiCoLe3H4GbCYe0t8EIape7NXi5FNaWIbMIB2yLG/tz
-         hQ1s16gJci1x+/HpH6XpQdD6FiE9BZK00826CNK2pbc3CaElM0yGO4iYijVckVr+m+uT
-         SiJKN9NpR2SKpqVrkGZV7r/HK340iwFiDqE+zq4mmzzEja8wdG+ERQrUcM4j20qLu+78
-         SojBmASWxXpQEmr3eAJiYaxfa3u6qoVOHELrhJVEt19GG5Tg553u0ZDx/MDkOTZDVmqD
-         0y1A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ju8MzOi0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746038379;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IRjxDxDhTYKrorsZixsAP5Kxt917TzYAbdZEFQfMsaE=;
+	b=Ju8MzOi0gVPKwUN/hTOvN/3OabbtNGEatok/8wuPZUgZuMgDAA7JgYEh5PvSRu2iMqi0Iz
+	rovZ0GlXEl5ATxIFWRy89SiybrslUHaBmJs0sZ/9vTd4EdMIWr796NccRxKwhzo4+S3hA4
+	yHxtTTtb6dDbwKbU/k0Bt00izdy0Rps=
+Received: from mail-yw1-f200.google.com (mail-yw1-f200.google.com
+ [209.85.128.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-BxP0yY-2NDW8ELzTYKDARg-1; Wed, 30 Apr 2025 14:39:37 -0400
+X-MC-Unique: BxP0yY-2NDW8ELzTYKDARg-1
+X-Mimecast-MFC-AGG-ID: BxP0yY-2NDW8ELzTYKDARg_1746038377
+Received: by mail-yw1-f200.google.com with SMTP id 00721157ae682-708b13627abso3396557b3.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:39:37 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038200; x=1746643000;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
-         :content-language:subject:cc:reply-to:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4A2sHSHRpt5kileLgP7Ygf59P4BM8A8KvqW9VICqQJ8=;
-        b=Yd6nemCSXmVoiFPMnHymSSRP9j1lecfIEDgEx32G7h7nsfJtMhbinif2YMwEmFPVVC
-         tTJk3nz3WavgOK0zyFkfAZDfZApSvddqiR1sl1pUe4FDWO4IiqBMUzomxlJl7l9x+Y+Z
-         gu9llTCKdCT8FNwFKPgE9ilGI7P4Sgi5ltqaVvrU9XEaeL0OFQWygojqKuURkWrQqSuS
-         5IKsNNlnc9ztPDwS6+6HZIjTeBy0SVc1i+Fi9JrXeT0Pth14SakRPMykel0Htrv6pNR3
-         BdWV7HcYhX6Js176VT/kkTGmrST0MPNZMjxK+jg+9EG6tzzJB0qeGIrAyZ/Y9voryM2J
-         WMRw==
-X-Forwarded-Encrypted: i=1; AJvYcCXphnusEaUQ7hyL7Gp+y5BaDhjruVJQ12jM8fla6zS1vqdOAMCT0TBec43uvLRKZyyo6Im1uc4sXMd2lu4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsDTLSPvZonGTGEWc0WpK/kHQeqGtwH8XHi40DGa290Lws9MWN
-	imiyQItRt5xN7GD34mxlXKmvse33w6/MpyWsM9Yls9On7GhouBvPo77Hi31wIqGqFYfdO4WbdAG
-	5l7SJWaEnN2kFPtE72XfBvOc27BOREwZIbx3MJNAb+Whbx8TKFbtc7LkxCE7mjSg=
-X-Gm-Gg: ASbGncuOKMRMCXeAynpvi6PoDfRa4uN5J9wOzKnp0JTavYi4VZJJxOwyoIbRrEEgL6Z
-	V7sVrvUIxoy6rX5yH8gMJU2eGKWuHT4kAq/jnAxJmZC/wfZse8emwF40CfDYjFSinuvXp0BUFOs
-	N8kDXZIadHi3ygqZ7HNzfGfAP9RxGYpVoHDMuCjyVvbmS5FnlRTWg2sDH0pOxtsndeCEaYUJXuR
-	OVgEvccG+/y0k1aNPl0YNIDgWRNpXWoTKb9RMWMUY9jqtsXqPzGcVQekOP0awOz6A5r3Ypw5Gqj
-	/Ryxt+euCEy1koHuv1fA58atjlaGNmYMNQpqjVs=
-X-Received: by 2002:a05:6214:2608:b0:6d8:ada3:26c9 with SMTP id 6a1803df08f44-6f4fce82c1cmr75631046d6.10.1746038199755;
-        Wed, 30 Apr 2025 11:36:39 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH35qCABhwlYLbQIDwzv5bajwn1aPMXtEgjqFfvGVkAXgxHfM/i/R5Qp8C0mRFyalrWwP4+4w==
-X-Received: by 2002:a05:6214:2608:b0:6d8:ada3:26c9 with SMTP id 6a1803df08f44-6f4fce82c1cmr75630596d6.10.1746038199357;
-        Wed, 30 Apr 2025 11:36:39 -0700 (PDT)
-Received: from [129.22.8.211] (caleb.INS.CWRU.Edu. [129.22.8.211])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe70a07esm11327886d6.57.2025.04.30.11.36.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 11:36:38 -0700 (PDT)
-Message-ID: <b548ee65-3a54-43d7-aa6d-36e31cbf16f9@case.edu>
-Date: Wed, 30 Apr 2025 14:36:37 -0400
+        d=1e100.net; s=20230601; t=1746038377; x=1746643177;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IRjxDxDhTYKrorsZixsAP5Kxt917TzYAbdZEFQfMsaE=;
+        b=IhfEHKVYo7zn43v2JSciNegg1wWNBE6PAI+kThdfeIqnDuSx/yMsSVCX3/QixIR195
+         CEW97QSRgBw1pRq0dxhokQEkgNBzMnmW33BMFi3yyf3wJV4sINnpTZ3a6NfFiEIdQ5av
+         LLGt8TUH239CDQFfQrYM72Y6yWJugQptTNO3Jw07Q0ra3LItSJac5QM71aMSZVbPDV6R
+         sy1TgFv6AidUsUAprvGzBADBWIyuh5QJXDkQW7WQIobKLQW/ZOn+YTLIfNW9VUGaGhkD
+         36c4+MNOeAjO4a2eQbWejadMEXhNw2SHentj5BsJ9DD2QzXgYZgYdcYk5VP0+0yElFuB
+         OF0g==
+X-Forwarded-Encrypted: i=1; AJvYcCW2KsozXnoqaF00VJ1A+UcCW5U/riTbXphaFdRUaWtukPpLqsgV40Hc+0n3VBmPokQCAQmWbXVVJkLzbFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5lRs5EtgBnkGRMHxXJ42I6EoqAEq9WyU25ocRnFz7IpgPNB3I
+	MQTvyU8TpQk57Hcm+p1ZUShFs47rrFRqlnBtb6a9kJAsIk3WdXRlCuHEMhAyz3CPdbV+cuoqj5T
+	S4mekg2gO346k2Cj3I0GIGzUKC+0SrnqaOsWUMoAFLZjEA97KG3EdsYKTnU6w76m7FmRuABP5nA
+	DrEuZE+scp5qn320UAW/gljEDN4CyyW1FWq0mK
+X-Gm-Gg: ASbGnct+GuORbRKVkzB/kXjdQwxeNHBBI3FGvPE3G9cNwZ+aRRJ0rsB2Yf3/X2xSUUJ
+	4bigd3eXyL+Xdy0+ZO5qd2GbCMClkKxNDFB5ejcZDhEIWOvVRVZxhguwFt2LlICi5fjugxnr6nN
+	sZyghpD0M=
+X-Received: by 2002:a05:690c:9:b0:6fd:a226:fb6c with SMTP id 00721157ae682-708abdabf95mr62404287b3.17.1746038377141;
+        Wed, 30 Apr 2025 11:39:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGUG8Gr8pCuMfJMWlcmWUQoisJmUZ1EDMBMinzj6P3MiMpx3S+K06g4TgDXVqU9n7uNHGfUH5de6C068UnlTA0=
+X-Received: by 2002:a05:690c:9:b0:6fd:a226:fb6c with SMTP id
+ 00721157ae682-708abdabf95mr62403917b3.17.1746038376803; Wed, 30 Apr 2025
+ 11:39:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Reply-To: chet.ramey@case.edu
-Cc: chet.ramey@case.edu, Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Etienne Champetier <champetier.etienne@gmail.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Steve French <sfrench@samba.org>, linux-afs@lists.infradead.org,
-        openafs-devel@openafs.org, linux-cifs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] afs, bash: Fix open(O_CREAT) on an extant AFS file in a
- sticky dir
-Content-Language: en-US
-To: Jeffrey E Altman <jaltman@auristor.com>,
-        David Howells <dhowells@redhat.com>
-References: <473bad0c-9e38-4f8b-9939-c70c52890cd2@case.edu>
- <433928.1745944651@warthog.procyon.org.uk>
- <3d19dc03-72aa-46de-a6cc-4426cc84eb51@auristor.com>
- <666533.1746029681@warthog.procyon.org.uk>
- <8f6bd09c-c3d8-4142-938a-3fab5df7bd64@auristor.com>
-From: Chet Ramey <chet.ramey@case.edu>
-Autocrypt: addr=chet.ramey@case.edu; keydata=
- xsDiBEEOsGwRBACFa0A1oa71HSZLWxAx0svXzhOZNQZOzqHmSuGOG92jIpQpr8DpvgRh40Yp
- AwdcXb8QG1J5yGAKeevNE1zCFaA725vGSdHUyypHouV0xoWwukYO6qlyyX+2BZU+okBUqoWQ
- koWxiYaCSfzB2Ln7pmdys1fJhcgBKf3VjWCjd2XJTwCgoFJOwyBFJdugjfwjSoRSwDOIMf0D
- /iQKqlWhIO1LGpMrGX0il0/x4zj0NAcSwAk7LaPZbN4UPjn5pqGEHBlf1+xDDQCkAoZ/VqES
- GZragl4VqJfxBr29Ag0UDvNbUbXoxQsARdero1M8GiAIRc50hj7HXFoERwenbNDJL86GPLAQ
- OTGOCa4W2o29nFfFjQrsrrYHzVtyA/9oyKvTeEMJ7NA3VJdWcmn7gOu0FxEmSNhSoV1T4vP2
- 1Wf7f5niCCRKQLNyUy0wEApQi4tSysdz+AbgAc0b/bHYVzIf2uO2lIEZQNNt+3g2bmXgloWm
- W5fsm/di50Gm1l1Na63d3RZ00SeFQos6WEwLUHEB0yp6KXluXLLIZitEJM0gQ2hldCBSYW1l
- eSA8Y2hldC5yYW1leUBjYXNlLmVkdT7CYQQTEQIAIQIbAwYLCQgHAwIDFQIDAxYCAQIeAQIX
- gAUCRX3FIgIZAQAKCRC7WGnwZOp0q069AKCNDRn+zzN/AHbaynls/Lvq1kH/RQCgkLvF8bDs
- maUHSxSIPqzlGuKWDxbOwE0EQQ6wbxAEAJCukwDigRDPhAuI+lf+6P64lWanIFOXIndqhvU1
- 3cDbQ/Wt5LwPzm2QTvd7F+fcHOgZ8KOFScbDpjJaRqwIybMTcIN0B2pBLX/C10W1aY+cUrXZ
- gXUGVISEMmpaP9v02auToo7XXVEHC+XLO9IU7/xaU98FL69l6/K4xeNSBRM/AAMHA/wNAmRB
- pcyK0+VggZ5esQaIP/LyolAm2qwcmrd3dZi+g24s7yjV0EUwvRP7xHRDQFgkAo6++QbuecU/
- J90lxrVnQwucZmfz9zgWDkT/MpfB/CNRSKLFjhYq2yHmHWT6vEjw9Ry/hF6Pc0oh1a62USdf
- aKAiim0nVxxQmPmiRvtCmcJJBBgRAgAJBQJBDrBvAhsMAAoJELtYafBk6nSr43AAn2ZZFQg8
- Gs/zUzvXMt7evaFqVTzcAJ0cHtKpP1i/4H4R9+OsYeQdxxWxTQ==
-In-Reply-To: <8f6bd09c-c3d8-4142-938a-3fab5df7bd64@auristor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Mirapoint-Received-SPF: 209.85.219.69 mail-qv1-f69.google.com chet.ramey@case.edu 5 none
-X-Mirapoint-Received-SPF: 129.22.103.211 mpv-in-cfd-1.case.edu chet.ramey@case.edu 5 none
-X-Junkmail-Status: score=10/90, host=mpv-out-ksl-1.case.edu
-X-Junkmail-Signature-Raw: score=unknown,
-	refid=str=0001.0A002105.68126DB9.0024,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0,
-	ip=0.0.0.0,
-	so=2016-11-06 16:00:04,
-	dmn=2013-03-21 17:37:32,
-	mode=single engine
-X-Junkmail-IWF: false
+References: <20250428182904.93989-1-npache@redhat.com> <20250428182904.93989-2-npache@redhat.com>
+ <B76CC5A1-D4DC-4E8B-BF5A-DFBEF13E02F5@nvidia.com>
+In-Reply-To: <B76CC5A1-D4DC-4E8B-BF5A-DFBEF13E02F5@nvidia.com>
+From: Nico Pache <npache@redhat.com>
+Date: Wed, 30 Apr 2025 12:39:10 -0600
+X-Gm-Features: ATxdqUFWpWLVzjLTZtwA2dC3DeeBs_qZQ8boE4jqqynD0FM3HxwqQb_YeWEGAHg
+Message-ID: <CAA1CXcAHzLZaiEf+uXPqoOMWyhDsW8D23vtouGWKGdkeSdaTow@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] mm: defer THP insertion to khugepaged
+To: Zi Yan <ziy@nvidia.com>
+Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
+	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, david@redhat.com, 
+	baohua@kernel.org, baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, 
+	willy@infradead.org, peterx@redhat.com, shuah@kernel.org, 
+	wangkefeng.wang@huawei.com, usamaarif642@gmail.com, sunnanyong@huawei.com, 
+	vishal.moola@gmail.com, thomas.hellstrom@linux.intel.com, 
+	yang@os.amperecomputing.com, kirill.shutemov@linux.intel.com, 
+	aarcange@redhat.com, raquini@redhat.com, dev.jain@arm.com, 
+	anshuman.khandual@arm.com, catalin.marinas@arm.com, tiwai@suse.de, 
+	will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, cl@gentwo.org, 
+	jglisse@google.com, surenb@google.com, zokeefe@google.com, 
+	Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, hannes@cmpxchg.org, 
+	rientjes@google.com, mhocko@suse.com, rdunlap@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 4/30/25 1:26 PM, Jeffrey E Altman wrote:
-> On 4/30/2025 12:14 PM, David Howells wrote:
->> Chet Ramey <chet.ramey@case.edu> wrote:
->>
->>> Well, except for CMU's report.
->> Do you know of any link for that?  I'm guessing that is it was 1992, 
->> there may
->> be no online record of it.
->>
->> David
-> 
-> https://groups.google.com/g/gnu.bash.bug/c/6PPTfOgFdL4/m/2AQU-S1N76UJ?hl=en
+On Tue, Apr 29, 2025 at 7:49=E2=80=AFAM Zi Yan <ziy@nvidia.com> wrote:
+>
+> On 28 Apr 2025, at 14:29, Nico Pache wrote:
+>
+> > setting /transparent_hugepages/enabled=3Dalways allows applications
+> > to benefit from THPs without having to madvise. However, the pf handler
+>
+> s/pf/page fault
+>
+> > takes very few considerations to decide weather or not to actually use =
+a
+>
+> s/weather/whether
+>
+> > THP. This can lead to a lot of wasted memory. khugepaged only operates
+> > on memory that was either allocated with enabled=3Dalways or MADV_HUGEP=
+AGE.
+> >
+> > Introduce the ability to set enabled=3Ddefer, which will prevent THPs f=
+rom
+> > being allocated by the page fault handler unless madvise is set,
+> > leaving it up to khugepaged to decide which allocations will collapse t=
+o a
+> > THP. This should allow applications to benefits from THPs, while curbin=
+g
+> > some of the memory waste.
+> >
+> > Co-developed-by: Rafael Aquini <raquini@redhat.com>
+> > Signed-off-by: Rafael Aquini <raquini@redhat.com>
+> > Signed-off-by: Nico Pache <npache@redhat.com>
+> > ---
+> >  include/linux/huge_mm.h | 15 +++++++++++++--
+> >  mm/huge_memory.c        | 31 +++++++++++++++++++++++++++----
+> >  2 files changed, 40 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
+> > index e3d15c737008..57e6c962afb1 100644
+> > --- a/include/linux/huge_mm.h
+> > +++ b/include/linux/huge_mm.h
+> > @@ -48,6 +48,7 @@ enum transparent_hugepage_flag {
+> >       TRANSPARENT_HUGEPAGE_UNSUPPORTED,
+> >       TRANSPARENT_HUGEPAGE_FLAG,
+> >       TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG,
+> > +     TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG,
+>
+> What does INST mean here? Can you add one sentence on this new flag
+> in the commit log to explain what it is short for?
+"INSERT". Someone else commented on the length of this FLAG name. I
+forgot to update it.
+I can shorten it to something like ..DEFER_FLAG or DEFER_PF_FLAG
+>
+>
+> >       TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG,
+> >       TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG,
+> >       TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG,
+> > @@ -186,6 +187,7 @@ static inline bool hugepage_global_enabled(void)
+> >  {
+> >       return transparent_hugepage_flags &
+> >                       ((1<<TRANSPARENT_HUGEPAGE_FLAG) |
+> > +                     (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG) |
+> >                       (1<<TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG));
+> >  }
+> >
+> > @@ -195,6 +197,12 @@ static inline bool hugepage_global_always(void)
+> >                       (1<<TRANSPARENT_HUGEPAGE_FLAG);
+> >  }
+> >
+> > +static inline bool hugepage_global_defer(void)
+> > +{
+> > +     return transparent_hugepage_flags &
+> > +                     (1<<TRANSPARENT_HUGEPAGE_DEFER_PF_INST_FLAG);
+> > +}
+> > +
+> >  static inline int highest_order(unsigned long orders)
+> >  {
+> >       return fls_long(orders) - 1;
+> > @@ -291,13 +299,16 @@ unsigned long thp_vma_allowable_orders(struct vm_=
+area_struct *vma,
+> >                                      unsigned long tva_flags,
+> >                                      unsigned long orders)
+> >  {
+> > +     if ((tva_flags & TVA_IN_PF) && hugepage_global_defer() &&
+> > +                     !(vm_flags & VM_HUGEPAGE))
+> > +             return 0;
+> > +
+> >       /* Optimization to check if required orders are enabled early. */
+> >       if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
+> >               unsigned long mask =3D READ_ONCE(huge_anon_orders_always)=
+;
+> > -
+>
+> This newline should stay, right?
+Yes, I can fix that.
+>
+> The rest looks good to me. Thanks. Acked-by: Zi Yan <ziy@nvidia.com>
+Thank you!
+-- Nico
+>
+> Best Regards,
+> Yan, Zi
+>
 
-Which of course just claims they reported it, but doesn't include the
-report itself.
-
-But Jeffrey's message seems to indicate that IBM addressed this particular
-issue in AFS 3.2.
-
--- 
-``The lyf so short, the craft so long to lerne.'' - Chaucer
-		 ``Ars longa, vita brevis'' - Hippocrates
-Chet Ramey, UTech, CWRU    chet@case.edu    http://tiswww.cwru.edu/~chet/
