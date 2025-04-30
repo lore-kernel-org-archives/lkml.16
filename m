@@ -1,72 +1,72 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544821EF388
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:27:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AA231EF388
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746001664; cv=none; b=DVy4MxN0H9ZyIoOEbfwGkg6qxTdsQOU7/EfGzjnUFWAI3vvI3L/9NMj6Q4vgDfy33b6DN5Yvz1i7tw200q8jkcK8jQmrprJ0fCBoj1wKHmZF9+HGK+O19trPoayJf9WUHnOxZiawn7GNayqFhR+VZQpFnOQNVV7nHQUkCHV/lyU=
+	t=1746001668; cv=none; b=avEKRLo5Ss2TvQnYwnam/1NmIeSsFQCnldKD2TNvIuU8074rQNXuiFF9BIFgH8gzRfCp8LuJ5xPgcKgTOQxx+v7fq0A+F/l/nPH3NA9sT+sQPMcVMcCQ7yCW+osIl121JOUeBVbnEU3R2nHD7R1LpYS+7YVIQbjGZDZGu36j/04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746001664; c=relaxed/simple;
-	bh=qVsS2hUBtqENy+Oubx9DpGdc3RA0lMtgQ25CAEpQvtU=;
+	s=arc-20240116; t=1746001668; c=relaxed/simple;
+	bh=pC6366U9Vxi4MCVI0rp1quj2Je4SIGb4/739P9X10sI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WHpav/M1/PaZPwfK5P+wnmcNzmOCSvr8tGkvoZZ/STiet58mN1KqRDxJmno2FRJw6bHpPHjvzwHdfC6HPNfz2WJoNpJNxCWHQPlO6bRc8IHPp4neQFNA2FX1txx1vnKMsL7msC8CztLk2QemS4deQ/XNnY1ZJpvwxd/dqFb/fd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Alh41VcA; arc=none smtp.client-ip=209.85.128.53
+	 Content-Type:Content-Disposition:In-Reply-To; b=gVvIlZkn7NT6RSbTNJZ4j3Um0KI0JVGct/BtxR1KMZIzw6GBeWXtTcUZM2pmO+sBgX8ccXIt/SDRpaTsm75ZS4/QVUzxh5uJ5m1aS4Tc25qjMSxJWntxD9zeiK+54ED89Os8IVzydc5q97w25mAzNnHJu11UqE8vpgV0hTXKaWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BpV55Hca; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Alh41VcA"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so65059355e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:27:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BpV55Hca"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso411611f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746001660; x=1746606460; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1746001665; x=1746606465; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1mGsDZPklQSrBkLSeSMFUQEvM6CvjwvWAOT3FCKj6DE=;
-        b=Alh41VcAHba6JSo3mD2BqMWSh+WzP0a8CfA/RbQ8zniwxJJUDVF4lTqHuTwM1Q/+Su
-         iGTQu8YQfVE6M9CvoGy7VZ85OneF6wNgNccuw3Kzh+f8AH8Xs/ucSLwYmPbDJ6yfDzIY
-         5Ee12Bf11b8SbMKmHpOVz8u0v66qjNl3donX0gDQiyeyeHJFLC84PfdkJ6vKdlUEYW/R
-         EHFIJXQlQy2kkD5JgGdajP3w0BQTqTnj0zUHWe2Sh4/wp6ut4cDRmIx1arYJBTW6fHAe
-         6fmeoUF0FVfLnPD0hbhScziPB5SYET3bk+xj+PrgATvTbEBCgSm/uWAK08jgysu4e3l5
-         DSwA==
+        bh=LSY65Em9CZe+eeM7wzETHW6baTLUML3bJ9yO/W+LGW4=;
+        b=BpV55Hcao8LJx3USC8dXWGy0jZY0dTNUf1NOyG77FbAJZwFSVYrF6m4t7Sc3nxMOP2
+         gduwBHbW/2CIdoEnPpxOviBUC08AycRD3smxY79htAvGhCls9vg5bYNM02dQ4c+kCyqL
+         YbF9seQjC8WDwilrb0kiB5bPlpfVTxt37UkUH32drVyxhVJTS0hVDg44MVD0Z3NAekAh
+         3ThUhBstwF8QJ5fvZxy8fZ0WJzVtsM8p1kX3v5deaoIfjeNYYpGu0ml9QInH8h/aO6NP
+         AAudKhR7m5zy4UYrlQ03GQOnxHC4+wz7v5Jc1bIME6bm5hqQJOYkcFxLuJxAgt8Ykg9S
+         +fCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746001660; x=1746606460;
+        d=1e100.net; s=20230601; t=1746001665; x=1746606465;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1mGsDZPklQSrBkLSeSMFUQEvM6CvjwvWAOT3FCKj6DE=;
-        b=ozy3CE2MMDbPNU/4Nxo1SRmurEu/HaPgdlJjOKjHA9cH15GpiXGklk7oiCHFR4pmnY
-         tHqig7TUGYUXt3VNrjmtsNmvCbovJp4AGAdjcno2RAkRu6PxPKHEjJhIO/akli1Z6Vrw
-         58mov4A++ejKjzwQdRRzibxpQSl9XZBKZSdibdRsh2Y5BuhRr7+fdN6scz0yo0BYE+2/
-         W+1ZfZ8KideQD1DO5ixjXNgTWH9qHfFa094WlMT93TijHqCnw9nWW4eHgyJ0Af4d7iuQ
-         Klgq9ROnGAWqrkL1pme4AHIiF4TnTDy0JmSi6wmHkLUqWIwM5VvSF7egniL03whi7fWj
-         Sa+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUDXNYtXWqRldUG6InMuu3osqO4gR9C5Xwd9WxfYrg3tcqFZP+hxqLL/+Vs3Ao9cBndA4aBTfbGCCntJyQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAssH6rFR//LOuvlihAVIrXndrMHsJPa+HblxDA0mDs8CGbeSc
-	cMfUMBuBNZB2mu5VoOfCI8mBxM/CmjEBp2y2D+ydqH6JV73NQTkJGoIWMIhY7NI=
-X-Gm-Gg: ASbGncvhB3hNX3earUf68ZeezCR2OjEggfGklVqyQCLs6U2RVGehWM1LuO8nnO7B3rk
-	Nf8qgbBDrFF3MMbomDHRrrMRpDOYj7zSUwwds0JKs5inGde2yd7jLeNRpyhpRYPLwCXNoQhEqRr
-	ZMp3rBivW6CV5a4PDl32OzmN9v6/t6hgjUj8Z6Xxa5/a7BZZp059YnhqlaeaLQhWYj0fPkbrLrQ
-	x+AnIWCll99jucr4RI3CpuRzE7efpxajtC76rXpAJWeyyQiqjjBDQ9YQlZtke4QGObF0bOz40e8
-	+1LKB4zFPR/CWVxUHjsy1uC8CLfMuiuR+xOWJJPtZf2hlw==
-X-Google-Smtp-Source: AGHT+IFirixO8zK1n2Aomk9+LOvvs0gmdVuJyEBLIkX5VxmbuCqSlheIcRnqq6WdgItyXk/d3bhvEQ==
-X-Received: by 2002:a05:600c:3acb:b0:43c:fc00:f94f with SMTP id 5b1f17b1804b1-441b268dfcamr12676025e9.23.1746001660599;
-        Wed, 30 Apr 2025 01:27:40 -0700 (PDT)
+        bh=LSY65Em9CZe+eeM7wzETHW6baTLUML3bJ9yO/W+LGW4=;
+        b=erxwP4hGzULbboU2Bcg4Y/of4AFCSbSS2q13U2MOxeSUV1DnY4pqBiTeAsoPW9lpdv
+         l7T7ySnNPnFkpsBoUhsd1rmt56ShufHInr1GNgJ8Wf3NwbYZI5nQVW2eeWhDslfXpgYg
+         rzFAXim80G4QggQxDWEwEmtcoOmhaAisziyIX8D0BIfkyoZ6wz5LIekXuIpLwu3CewVV
+         PrHfj4WDHAMyrgr9U3oHLKRJ9r8WPwMn0oN2oYM9X8CXMqLjd5IZl92q6/ASEpnA8ODc
+         ZGf8uKhlErc9QRqBlm4XxAVy8PVL6YG4SEE0vmwAHkICrpx6dIQejtqyPDIv7g00J5hc
+         dV/g==
+X-Forwarded-Encrypted: i=1; AJvYcCUu+2touWmDkAajiz++1be17qlqrtLBXbGsXQoSJOibY7r4lYqNa0xGPTgpnLMNrEjYQkITN66Fcz+YxaM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/O5mxlu8liGojZHLlkrPrjBTO2wfLpo0WaxZaFKggBBbz2uMe
+	sWL+wLviOZgJzfyVPg97+TnxJxuH6Y3Xa9JoS2WoG4eccw63tEobaJOxGoKyGwk=
+X-Gm-Gg: ASbGncuxy/KgRFdm6eJX/cBdIJA8woOOsujUcCDj6fMkRdbr9K5MNmtobczx9FOod9J
+	A25oI5LoEaAeWGoIBADoMTDt9U/YICPy0pRMwz20hcp6IqRRHcAPVt4AHVC2mx9ZnCrwC/B00N+
+	eCziaACOuxYspTTN6McfR2et1eD93lHGPZGejlALLcFjw4DP2msROwxSrh5QooNiL+Lz8Kd7tiW
+	QS+GbNubysSaVkQw6rUpwF0ubuOsgEbu/z1G/baPXWzPsKSNpwtz+ZmgfWSHG/y1iX3Td5IuENM
+	URp+RUFoFDgZIW9Z5D3dqQtmV7bSNs/Zv5AoKmYouvmN0w==
+X-Google-Smtp-Source: AGHT+IHBFA+cH5958bx6/B07wZ/+XLQktMK13x4OjzkahXEnks5zyuH0RW3+E62V7jkfN4hmL/NqQQ==
+X-Received: by 2002:a05:6000:18ad:b0:39f:cfc:d520 with SMTP id ffacd0b85a97d-3a08fb52cf0mr1465639f8f.15.1746001665462;
+        Wed, 30 Apr 2025 01:27:45 -0700 (PDT)
 Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441ae3f5949sm33946145e9.1.2025.04.30.01.27.39
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073c8d67esm16491272f8f.17.2025.04.30.01.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:27:40 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:27:36 +0300
+        Wed, 30 Apr 2025 01:27:45 -0700 (PDT)
+Date: Wed, 30 Apr 2025 11:27:42 +0300
 From: Dan Carpenter <dan.carpenter@linaro.org>
 To: Jai Luthra <jai.luthra@ideasonboard.com>
 Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
 	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
 	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] media: i2c: ds90ub960: Fix uninitialized variable in
- ub960_serializer_temp_ramp()
-Message-ID: <e01f2784c6f8e4bc14458f9f4246ac0a8888468c.1746001540.git.dan.carpenter@linaro.org>
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] media: i2c: ds90ub960: Fix uninitialized variable in
+ ub960_rxport_bc_ser_config()
+Message-ID: <e9e8df2c7ee2fdcad0d97562e40572073de02d9e.1746001540.git.dan.carpenter@linaro.org>
 References: <cover.1746001540.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -78,27 +78,27 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <cover.1746001540.git.dan.carpenter@linaro.org>
 
-The "ret" variable is not initialized on the success path.
+The "ret" variable is not initialized on success.  Set it to zero.
 
-Fixes: a05744749600 ("media: i2c: ds90ub9xx: Set serializer temperature ramp")
+Fixes: e2a3b695bc5f ("media: i2c: ds90ub960: Configure serializer using back-channel")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
  drivers/media/i2c/ds90ub960.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
-index 8075bffbac2b..cf104461b9a7 100644
+index cf104461b9a7..ed2cf9d247d1 100644
 --- a/drivers/media/i2c/ds90ub960.c
 +++ b/drivers/media/i2c/ds90ub960.c
-@@ -2058,7 +2058,7 @@ static int ub960_serializer_temp_ramp(struct ub960_rxport *rxport)
- 	u8 temp_dynamic_cfg;
+@@ -2133,7 +2133,7 @@ static int ub960_rxport_bc_ser_config(struct ub960_rxport *rxport)
+ 	struct ub960_data *priv = rxport->priv;
+ 	struct device *dev = &priv->client->dev;
  	u8 nport = rxport->nport;
- 	u8 ser_temp_code;
 -	int ret;
 +	int ret = 0;
  
- 	/* Configure temp ramp only on UB953 */
- 	if (!fwnode_device_is_compatible(rxport->ser.fwnode, "ti,ds90ub953-q1"))
+ 	/* Skip port if serializer's address is not known */
+ 	if (rxport->ser.addr < 0) {
 -- 
 2.47.2
 
