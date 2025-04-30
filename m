@@ -1,149 +1,878 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55CF82DC78E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B445F20C038
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003009; cv=none; b=I5q7OaTmcJKXX/OMHXY+9waedQ35qed0LCGssWO+IACjD5Yyxyy/vuqAX8tb/hkog+ys62oG2nr+31JO2yOqPNn1fxEsDxNzU9KF3j3Tp35xVtZAlLw1PWW1vaEKqUm9qYMJDO95ZNKrENtH3PQ0jq55GUaqGFUj9h7k9EInhqU=
+	t=1746003028; cv=none; b=XXeIpADbxzhagRq+XEqHgQRNjhnD3NRVITEl4ytZmwtvPMX9TwKTeJtNxaNNoWWjL4Geyj0BE+Hg0oMC58MBlHBiAGdvCtcCv5YmK3pG6JPIDK7GS0ZuGhIv2Y2rZHHN6YsJp53yTxjYfSu/NXoRffv7qjuf44kD22+bt+r6WCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003009; c=relaxed/simple;
-	bh=KNpuHzwTaaTYpf7LfrnyBa2FI4gDtfLAyiquhlf2Pro=;
+	s=arc-20240116; t=1746003028; c=relaxed/simple;
+	bh=KZiPh+jRGVVuwEx0FU2/2McJu83o3gk6dXloyQM80/E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uQguTnK7rjG76s+5Vx2jhcgMbWztPBVuEpFNXUjVcOUUrWSo6HYG+6jOmNdOovEH399JBp9+6Q5hKalTO2WjGwnpHloJcia9dYiWjG82T+qPG5eMcGZ06Jf717zGNa9XL7O/FcrFjZ3OdV8WtBl20YcMEBUeEIfOPFuM9S99npM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uci.edu; spf=pass smtp.mailfrom=uci.edu; dkim=pass (2048-bit key) header.d=uci.edu header.i=@uci.edu header.b=mgfhyMeG; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uci.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uci.edu
+	 To:Cc:Content-Type; b=siD2fke+77FUcovTQpyNB0kfpHlTDvdWMcllPalDIJEE/3/e62IgqbOTthkMmpPc3/S29T/xKon+APV7d+etzPptGBMDrWp25kACo/OXvG7zMIfGkP7kX8KfkZ/RrqiT7CZEkYhippsJ8rh9izY+N+qhiWKoNDznOhELjkbBpjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=OVaDr1ZX; arc=none smtp.client-ip=209.85.218.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uci.edu header.i=@uci.edu header.b="mgfhyMeG"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-acacb8743a7so124753666b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:50:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="OVaDr1ZX"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-acb615228a4so138333566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=uci.edu; s=google; t=1746003003; x=1746607803; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1746003023; x=1746607823; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=z1qs81RVT7WGaI5EEDOkNWrLzSI42G5tmDul/p84+M0=;
-        b=mgfhyMeG7AC9qUCK+iducS3K5ToALUjsIljt/6NKaP+fFtcBuT56BQIyUZv4bOjlBd
-         EnwDy05tcCX3QIRZ/zPMp3LKOqF0P+VGgwkPn4rHvZSOVJUXN9xzFQDVTR2B+wHLeQDN
-         PKOW43qr9lqPxSxl8f3Hvw+yT4vXLKFgU5JlJ4LlzVjExDLKXN0eGqlzWG4ZP5iZSzTf
-         LfqqPCbGrg+stWxpuxuuHmDLL/CaKo+QGx6oxy3+oY8xV1VvGP9ebB3Pebp4lIAjgBfx
-         CPWAtk1/8OTN199fHgVjUBIDf0JVur5X9ZkhkKoGpuGmp0DQF3zIa0O+VfKWeZwsZQO0
-         7/wg==
+        bh=iUN6hd/jLVTzUcwZi9qPF7fcgQud5ruYQAAVONaSdcQ=;
+        b=OVaDr1ZXdXMxe+ZHulNa/eWTmGTMi0Wk0M3jC8JlmNsTrO6JMb012hIyOL9Eot/45P
+         CGkb4LwLVmrJnjwlEdveAf9VuPJ2/aG58ECa6g49qots+82n43GtWwWR97x3LXIW4kkh
+         c9XqnSmdMbxfN3IrfsPUyZHPSsakRqUkKsOmmQsql4ANfAohD7JaPgsXa9UVk6IB+Ybq
+         NCAHzb59ZZEGVa1CRsAz4zZPovLt7SwrIqMfeUBlh6a/cQKoYgKc3sVRTy7zQpCfRo07
+         pUqR8dDKBEyqYuTyBfi5m1tCao1tGdOMGf35kgptdF5Nw8bYkSYCEbjJfUezBRzAvQRP
+         Corg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746003003; x=1746607803;
+        d=1e100.net; s=20230601; t=1746003023; x=1746607823;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=z1qs81RVT7WGaI5EEDOkNWrLzSI42G5tmDul/p84+M0=;
-        b=f2RKTzzP+NOw8w/XIVT7KW/3TzGiJIZcdNTamH4iGfmZPr86VMrq2A9RlV1he/AqFd
-         5IcbjnZJbifEec7dPZK3Z9T9UabJWfUfEICTYjlCDUNdL/cExUmNOvYgZM49nulTo9qt
-         z8SMrbomRxuzcxnLJWmVlWuwplUkhRxvGZuSphkOksoJpr6dOD2jxRkCE4LzLV9zNBDN
-         vASl51rmvqztfu/sQ25pKdIU2teVQnmqp1u0cPGWTo9/k/6V3ovxqoKJfb9wskyg7wqU
-         DD7gSql/+4sP+zszRNwJiu100vlUW3SeZriVz+fjDDFAkfU7fER2WQRm/hdfmpfOD8Ft
-         Bedw==
-X-Forwarded-Encrypted: i=1; AJvYcCUh6I7vZEW4l0rCd89ajfhXzn+6Zp1Dp06iqrAsDI/kWX6Mv4WkHu2iJIlbscgspeDdWvHexXPnILiuBpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOICjsRvemWwswiftMEmzA2GqclJJ7vsjEWcj736PExPirzHua
-	WSYbOct86Rj70A/Pp3PAa1kWLLiyNHLHKHG5sVL8dQi5B28kcsJ0UNrIHBHkVvWuJ1Rf2SUAvTA
-	H+ouloYiF86iQ/dUbqT03L7jfMVQQen3INZCqdgPDq0aq1hB4wjucHprt
-X-Gm-Gg: ASbGncu5FdaPK+XES33PgsrsTMzRY85PqfPYulkXDBB47mCIJ2hqP4gU/4UVqNG4IAT
-	nqE5wO9/YrIoFyQnLnr+bq5MTD+4tMudkQ8US3s/E8+A1TPfBYTiShVYMtYOyu6S+IrBN78KXRQ
-	C38wgay+rOaG8KJ2x8BDAZ4NXePwWGGIo1igpr
-X-Google-Smtp-Source: AGHT+IEj2xNmii2aVrB0HPnZcj1cS2DilF+s1D1CmUyT4TXXlXak86RbcnaZ+lF+p2b/bE6q5sm0vkwf9XHDx/ezzxg=
-X-Received: by 2002:a2e:a808:0:b0:30b:a100:7fec with SMTP id
- 38308e7fff4ca-31e7d4d6977mr5091471fa.12.1746002599538; Wed, 30 Apr 2025
- 01:43:19 -0700 (PDT)
+        bh=iUN6hd/jLVTzUcwZi9qPF7fcgQud5ruYQAAVONaSdcQ=;
+        b=L5m/NPe94zULjz3niHXT9pG7bUvw8Ith4k07yY/N25SlZjdl/CnMwo45N7e15N4dqM
+         9akNaFDyCN9Q/U0xj1u6/0S/ajcxGq/YNWfG5/rxXSs4TfMM+1gmOpADQTi/J7meTe9C
+         sB+VQtpGnBeCOTtW60b5oKeV17LI3PmY4a5H4ksm67kx8yxuxVz6XEpHjJZ+sSRPLzPK
+         1FALHWRWBA1SETxN9wsXFQAkosQs35NfHExeVanjyqxiXXgCE7u88t8zLLh2MwoaWkrV
+         zTLb/JzVgKHDjBygyVilGfx0rsBe6n8sLgKwxLIZRh2hxD36849P+qtuAAVFDk9wKTjT
+         SKgA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwv2zE5QK51sRoPr4U34sXHFMllf08rrXbycaYtdBk35vO0orWE435QxDNPXo9NfBqXxpOAOgu08NZ3IY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzdYC2lv9IQSWddXELe1DH+EEiwcxq2N661u34IXp8PJWmqH4Fd
+	k8uVjkqdRVaYIEz8huz6BXS/piI/4qUXX2osqcLCmjQoY8hAPgeMtzRvsm3el5INROxFDE20p01
+	pGKwyqDLwT/nVdKFlcrqvPvBocHyupEKQKKnGVQ==
+X-Gm-Gg: ASbGncvDE6vCTShe2vdrUUIzR08ZrUSlTBR/DykpDNMgEpBxqkx9SeOMHZ+NrBOgyFI
+	bdF6IyHYkQD2Rxn1xcbmaq4uB0RUXeBjhNflxMUtAcQHGh0DUYSe6qCb2xR5am+pgHkCIzxlLJ1
+	mSqipXFkKEaLtgqZkZCCC2
+X-Google-Smtp-Source: AGHT+IEOgcitmnU31xYDLXy9pxn5zGYhgzhPwDo0V/IxZGHT+IXg+K7s9zFmsSJae31Oqki9g5PXRtwtw6mByFE5KLM=
+X-Received: by 2002:a17:906:7307:b0:ac7:3441:79aa with SMTP id
+ a640c23a62f3a-acedf6bd27bmr189832466b.13.1746003023311; Wed, 30 Apr 2025
+ 01:50:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAPXr0uxh0c_2b2-zJF=N8T6DfccfyvOQRX0X0VO24dS7YsxzzQ@mail.gmail.com>
- <aBHgOsqA4qfe7LbN@c757f733ca9e>
-In-Reply-To: <aBHgOsqA4qfe7LbN@c757f733ca9e>
-From: Ezra Khuzadi <ekhuzadi@uci.edu>
-Date: Wed, 30 Apr 2025 01:43:08 -0700
-X-Gm-Features: ATxdqUFr52ls8iRfGl3SJa_g3FJ8AF-6Py3XE-3yWU18Haruwxmc1FYYj3yD3U4
-Message-ID: <CAPXr0uxJg0kMu_N7Gxb14kVdhkFGXO_KbK5RxfAcY9dEA8vrEA@mail.gmail.com>
-Subject: Re: sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
-To: kernel test robot <lkp@intel.com>, sound-dev@vger.kernel.org
-Cc: stable@vger.kernel.org, oe-kbuild-all@lists.linux.dev, 
-	alsa-devel@lists.sourceforge.net, linux-kernel@vger.kernel.org
+References: <20250429151800.649010-1-neelx@suse.com> <CAL3q7H7WPE+26v1uCKa5C=BwcGpUN3OjnaPUkexPGD=mpJbkSA@mail.gmail.com>
+ <CAPjX3FevwHRzyHzgLjcZ8reHtJ3isw3eREYrMvNCPLMDR=NJ4g@mail.gmail.com> <CAL3q7H56LC5ro+oshGaVVCV9Gvxfnz4dLaq6bwVW=t0P=tLUCg@mail.gmail.com>
+In-Reply-To: <CAL3q7H56LC5ro+oshGaVVCV9Gvxfnz4dLaq6bwVW=t0P=tLUCg@mail.gmail.com>
+From: Daniel Vacek <neelx@suse.com>
+Date: Wed, 30 Apr 2025 10:50:12 +0200
+X-Gm-Features: ATxdqUGvXwB-fBMgOInyguiglMnKf9ohZJn3GLM0Jiv3MAFsI-AwEqHiRtleSPM
+Message-ID: <CAPjX3Fe3BZ8OB2ZVMn58pY5E9k9j=uNAmuqM4R1tO=sPvx7-pA@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
+To: Filipe Manana <fdmanana@kernel.org>
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-sound/pci/hda/patch_realtek.c: add quirk for HP Spectre x360 15-eb0xxx
+On Wed, 30 Apr 2025 at 10:34, Filipe Manana <fdmanana@kernel.org> wrote:
+>
+> On Wed, Apr 30, 2025 at 9:26=E2=80=AFAM Daniel Vacek <neelx@suse.com> wro=
+te:
+> >
+> > On Wed, 30 Apr 2025 at 10:06, Filipe Manana <fdmanana@kernel.org> wrote=
+:
+> > >
+> > > On Tue, Apr 29, 2025 at 4:19=E2=80=AFPM Daniel Vacek <neelx@suse.com>=
+ wrote:
+> > > >
+> > > > Even super block nowadays uses nodesize for eb->len. This is since =
+commits
+> > > >
+> > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer(=
+)")
+> > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and=
+ into fs_info")
+> > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
+> > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create=
+_tree_block")
+> > > >
+> > > > With these the eb->len is not really useful anymore. Let's use the =
+nodesize
+> > > > directly where applicable.
+> > > >
+> > > > Signed-off-by: Daniel Vacek <neelx@suse.com>
+> > > > ---
+> > > > [RFC]
+> > > >  * Shall the eb_len() helper better be called eb_nodesize()? Or eve=
+n rather
+> > > >    opencoded and not used at all?
+> > > >
+> > > >  fs/btrfs/accessors.c             |  4 +--
+> > > >  fs/btrfs/disk-io.c               | 11 ++++---
+> > > >  fs/btrfs/extent-tree.c           | 28 +++++++++--------
+> > > >  fs/btrfs/extent_io.c             | 54 ++++++++++++++--------------=
+----
+> > > >  fs/btrfs/extent_io.h             | 11 +++++--
+> > > >  fs/btrfs/ioctl.c                 |  2 +-
+> > > >  fs/btrfs/relocation.c            |  2 +-
+> > > >  fs/btrfs/subpage.c               |  8 ++---
+> > > >  fs/btrfs/tests/extent-io-tests.c | 12 +++----
+> > > >  fs/btrfs/zoned.c                 |  2 +-
+> > > >  10 files changed, 67 insertions(+), 67 deletions(-)
+> > > >
+> > > > diff --git a/fs/btrfs/accessors.c b/fs/btrfs/accessors.c
+> > > > index e3716516ca387..a2bdbc7990906 100644
+> > > > --- a/fs/btrfs/accessors.c
+> > > > +++ b/fs/btrfs/accessors.c
+> > > > @@ -14,10 +14,10 @@ static bool check_setget_bounds(const struct ex=
+tent_buffer *eb,
+> > > >  {
+> > > >         const unsigned long member_offset =3D (unsigned long)ptr + =
+off;
+> > > >
+> > > > -       if (unlikely(member_offset + size > eb->len)) {
+> > > > +       if (unlikely(member_offset + size > eb_len(eb))) {
+> > > >                 btrfs_warn(eb->fs_info,
+> > > >                 "bad eb member %s: ptr 0x%lx start %llu member offs=
+et %lu size %d",
+> > > > -                       (member_offset > eb->len ? "start" : "end")=
+,
+> > > > +                       (member_offset > eb_len(eb) ? "start" : "en=
+d"),
+> > > >                         (unsigned long)ptr, eb->start, member_offse=
+t, size);
+> > > >                 return false;
+> > > >         }
+> > > > diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+> > > > index 3592300ae3e2e..31eb7419fe11f 100644
+> > > > --- a/fs/btrfs/disk-io.c
+> > > > +++ b/fs/btrfs/disk-io.c
+> > > > @@ -190,7 +190,7 @@ static int btrfs_repair_eb_io_failure(const str=
+uct extent_buffer *eb,
+> > > >         for (int i =3D 0; i < num_extent_folios(eb); i++) {
+> > > >                 struct folio *folio =3D eb->folios[i];
+> > > >                 u64 start =3D max_t(u64, eb->start, folio_pos(folio=
+));
+> > > > -               u64 end =3D min_t(u64, eb->start + eb->len,
+> > > > +               u64 end =3D min_t(u64, eb->start + fs_info->nodesiz=
+e,
+> > > >                                 folio_pos(folio) + eb->folio_size);
+> > > >                 u32 len =3D end - start;
+> > > >                 phys_addr_t paddr =3D PFN_PHYS(folio_pfn(folio)) +
+> > > > @@ -230,7 +230,7 @@ int btrfs_read_extent_buffer(struct extent_buff=
+er *eb,
+> > > >                         break;
+> > > >
+> > > >                 num_copies =3D btrfs_num_copies(fs_info,
+> > > > -                                             eb->start, eb->len);
+> > > > +                                             eb->start, fs_info->n=
+odesize);
+> > > >                 if (num_copies =3D=3D 1)
+> > > >                         break;
+> > > >
+> > > > @@ -260,6 +260,7 @@ blk_status_t btree_csum_one_bio(struct btrfs_bi=
+o *bbio)
+> > > >  {
+> > > >         struct extent_buffer *eb =3D bbio->private;
+> > > >         struct btrfs_fs_info *fs_info =3D eb->fs_info;
+> > > > +       u32 nodesize =3D fs_info->nodesize;
+> > > >         u64 found_start =3D btrfs_header_bytenr(eb);
+> > > >         u64 last_trans;
+> > > >         u8 result[BTRFS_CSUM_SIZE];
+> > > > @@ -268,7 +269,7 @@ blk_status_t btree_csum_one_bio(struct btrfs_bi=
+o *bbio)
+> > > >         /* Btree blocks are always contiguous on disk. */
+> > > >         if (WARN_ON_ONCE(bbio->file_offset !=3D eb->start))
+> > > >                 return BLK_STS_IOERR;
+> > > > -       if (WARN_ON_ONCE(bbio->bio.bi_iter.bi_size !=3D eb->len))
+> > > > +       if (WARN_ON_ONCE(bbio->bio.bi_iter.bi_size !=3D nodesize))
+> > > >                 return BLK_STS_IOERR;
+> > > >
+> > > >         /*
+> > > > @@ -277,7 +278,7 @@ blk_status_t btree_csum_one_bio(struct btrfs_bi=
+o *bbio)
+> > > >          * ordering of I/O without unnecessarily writing out data.
+> > > >          */
+> > > >         if (test_bit(EXTENT_BUFFER_ZONED_ZEROOUT, &eb->bflags)) {
+> > > > -               memzero_extent_buffer(eb, 0, eb->len);
+> > > > +               memzero_extent_buffer(eb, 0, nodesize);
+> > > >                 return BLK_STS_OK;
+> > > >         }
+> > > >
+> > > > @@ -883,7 +884,7 @@ struct btrfs_root *btrfs_create_tree(struct btr=
+fs_trans_handle *trans,
+> > > >         btrfs_set_root_generation(&root->root_item, trans->transid)=
+;
+> > > >         btrfs_set_root_level(&root->root_item, 0);
+> > > >         btrfs_set_root_refs(&root->root_item, 1);
+> > > > -       btrfs_set_root_used(&root->root_item, leaf->len);
+> > > > +       btrfs_set_root_used(&root->root_item, fs_info->nodesize);
+> > > >         btrfs_set_root_last_snapshot(&root->root_item, 0);
+> > > >         btrfs_set_root_dirid(&root->root_item, 0);
+> > > >         if (is_fstree(objectid))
+> > > > diff --git a/fs/btrfs/extent-tree.c b/fs/btrfs/extent-tree.c
+> > > > index e0811a86d0cbd..25560a162d93e 100644
+> > > > --- a/fs/btrfs/extent-tree.c
+> > > > +++ b/fs/btrfs/extent-tree.c
+> > > > @@ -2211,7 +2211,7 @@ int btrfs_set_disk_extent_flags(struct btrfs_=
+trans_handle *trans,
+> > > >         extent_op->update_flags =3D true;
+> > > >         extent_op->update_key =3D false;
+> > > >
+> > > > -       ret =3D btrfs_add_delayed_extent_op(trans, eb->start, eb->l=
+en,
+> > > > +       ret =3D btrfs_add_delayed_extent_op(trans, eb->start, eb_le=
+n(eb),
+> > > >                                           btrfs_header_level(eb), e=
+xtent_op);
+> > > >         if (ret)
+> > > >                 btrfs_free_delayed_extent_op(extent_op);
+> > > > @@ -2660,10 +2660,10 @@ int btrfs_pin_extent_for_log_replay(struct =
+btrfs_trans_handle *trans,
+> > > >         if (ret)
+> > > >                 goto out;
+> > > >
+> > > > -       pin_down_extent(trans, cache, eb->start, eb->len, 0);
+> > > > +       pin_down_extent(trans, cache, eb->start, eb_len(eb), 0);
+> > > >
+> > > >         /* remove us from the free space cache (if we're there at a=
+ll) */
+> > > > -       ret =3D btrfs_remove_free_space(cache, eb->start, eb->len);
+> > > > +       ret =3D btrfs_remove_free_space(cache, eb->start, eb_len(eb=
+));
+> > > >  out:
+> > > >         btrfs_put_block_group(cache);
+> > > >         return ret;
+> > > > @@ -3436,13 +3436,14 @@ int btrfs_free_tree_block(struct btrfs_tran=
+s_handle *trans,
+> > > >  {
+> > > >         struct btrfs_fs_info *fs_info =3D trans->fs_info;
+> > > >         struct btrfs_block_group *bg;
+> > > > +       u32 nodesize =3D fs_info->nodesize;
+> > > >         int ret;
+> > > >
+> > > >         if (root_id !=3D BTRFS_TREE_LOG_OBJECTID) {
+> > > >                 struct btrfs_ref generic_ref =3D {
+> > > >                         .action =3D BTRFS_DROP_DELAYED_REF,
+> > > >                         .bytenr =3D buf->start,
+> > > > -                       .num_bytes =3D buf->len,
+> > > > +                       .num_bytes =3D nodesize,
+> > > >                         .parent =3D parent,
+> > > >                         .owning_root =3D btrfs_header_owner(buf),
+> > > >                         .ref_root =3D root_id,
+> > > > @@ -3478,7 +3479,7 @@ int btrfs_free_tree_block(struct btrfs_trans_=
+handle *trans,
+> > > >         bg =3D btrfs_lookup_block_group(fs_info, buf->start);
+> > > >
+> > > >         if (btrfs_header_flag(buf, BTRFS_HEADER_FLAG_WRITTEN)) {
+> > > > -               pin_down_extent(trans, bg, buf->start, buf->len, 1)=
+;
+> > > > +               pin_down_extent(trans, bg, buf->start, nodesize, 1)=
+;
+> > > >                 btrfs_put_block_group(bg);
+> > > >                 goto out;
+> > > >         }
+> > > > @@ -3502,17 +3503,17 @@ int btrfs_free_tree_block(struct btrfs_tran=
+s_handle *trans,
+> > > >
+> > > >         if (test_bit(BTRFS_FS_TREE_MOD_LOG_USERS, &fs_info->flags)
+> > > >                      || btrfs_is_zoned(fs_info)) {
+> > > > -               pin_down_extent(trans, bg, buf->start, buf->len, 1)=
+;
+> > > > +               pin_down_extent(trans, bg, buf->start, nodesize, 1)=
+;
+> > > >                 btrfs_put_block_group(bg);
+> > > >                 goto out;
+> > > >         }
+> > > >
+> > > >         WARN_ON(test_bit(EXTENT_BUFFER_DIRTY, &buf->bflags));
+> > > >
+> > > > -       btrfs_add_free_space(bg, buf->start, buf->len);
+> > > > -       btrfs_free_reserved_bytes(bg, buf->len, 0);
+> > > > +       btrfs_add_free_space(bg, buf->start, nodesize);
+> > > > +       btrfs_free_reserved_bytes(bg, nodesize, 0);
+> > > >         btrfs_put_block_group(bg);
+> > > > -       trace_btrfs_reserved_extent_free(fs_info, buf->start, buf->=
+len);
+> > > > +       trace_btrfs_reserved_extent_free(fs_info, buf->start, nodes=
+ize);
+> > > >
+> > > >  out:
+> > > >         return 0;
+> > > > @@ -4768,7 +4769,7 @@ int btrfs_pin_reserved_extent(struct btrfs_tr=
+ans_handle *trans,
+> > > >                 return -ENOSPC;
+> > > >         }
+> > > >
+> > > > -       ret =3D pin_down_extent(trans, cache, eb->start, eb->len, 1=
+);
+> > > > +       ret =3D pin_down_extent(trans, cache, eb->start, eb_len(eb)=
+, 1);
+> > > >         btrfs_put_block_group(cache);
+> > > >         return ret;
+> > > >  }
+> > > > @@ -5050,6 +5051,7 @@ btrfs_init_new_buffer(struct btrfs_trans_hand=
+le *trans, struct btrfs_root *root,
+> > > >         struct btrfs_fs_info *fs_info =3D root->fs_info;
+> > > >         struct extent_buffer *buf;
+> > > >         u64 lockdep_owner =3D owner;
+> > > > +       u32 nodesize =3D fs_info->nodesize;
+> > > >
+> > > >         buf =3D btrfs_find_create_tree_block(fs_info, bytenr, owner=
+, level);
+> > > >         if (IS_ERR(buf))
+> > > > @@ -5107,16 +5109,16 @@ btrfs_init_new_buffer(struct btrfs_trans_ha=
+ndle *trans, struct btrfs_root *root,
+> > > >                  */
+> > > >                 if (buf->log_index =3D=3D 0)
+> > > >                         btrfs_set_extent_bit(&root->dirty_log_pages=
+, buf->start,
+> > > > -                                            buf->start + buf->len =
+- 1,
+> > > > +                                            buf->start + nodesize =
+- 1,
+> > > >                                              EXTENT_DIRTY, NULL);
+> > > >                 else
+> > > >                         btrfs_set_extent_bit(&root->dirty_log_pages=
+, buf->start,
+> > > > -                                            buf->start + buf->len =
+- 1,
+> > > > +                                            buf->start + nodesize =
+- 1,
+> > > >                                              EXTENT_NEW, NULL);
+> > > >         } else {
+> > > >                 buf->log_index =3D -1;
+> > > >                 btrfs_set_extent_bit(&trans->transaction->dirty_pag=
+es, buf->start,
+> > > > -                                    buf->start + buf->len - 1, EXT=
+ENT_DIRTY, NULL);
+> > > > +                                    buf->start + nodesize - 1, EXT=
+ENT_DIRTY, NULL);
+> > > >         }
+> > > >         /* this returns a buffer locked for blocking */
+> > > >         return buf;
+> > > > diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+> > > > index 20cdddd924852..e4050fd5db285 100644
+> > > > --- a/fs/btrfs/extent_io.c
+> > > > +++ b/fs/btrfs/extent_io.c
+> > > > @@ -76,8 +76,8 @@ void btrfs_extent_buffer_leak_debug_check(struct =
+btrfs_fs_info *fs_info)
+> > > >                 eb =3D list_first_entry(&fs_info->allocated_ebs,
+> > > >                                       struct extent_buffer, leak_li=
+st);
+> > > >                 pr_err(
+> > > > -       "BTRFS: buffer leak start %llu len %u refs %d bflags %lu ow=
+ner %llu\n",
+> > > > -                      eb->start, eb->len, atomic_read(&eb->refs), =
+eb->bflags,
+> > > > +       "BTRFS: buffer leak start %llu refs %d bflags %lu owner %ll=
+u\n",
+> > > > +                      eb->start, atomic_read(&eb->refs), eb->bflag=
+s,
+> > > >                        btrfs_header_owner(eb));
+> > > >                 list_del(&eb->leak_list);
+> > > >                 WARN_ON_ONCE(1);
+> > > > @@ -1746,8 +1746,8 @@ static noinline_for_stack bool lock_extent_bu=
+ffer_for_io(struct extent_buffer *e
+> > > >
+> > > >                 btrfs_set_header_flag(eb, BTRFS_HEADER_FLAG_WRITTEN=
+);
+> > > >                 percpu_counter_add_batch(&fs_info->dirty_metadata_b=
+ytes,
+> > > > -                                        -eb->len,
+> > > > -                                        fs_info->dirty_metadata_ba=
+tch);
+> > > > +                                        -fs_info->nodesize,
+> > > > +                                         fs_info->dirty_metadata_b=
+atch);
+> > > >                 ret =3D true;
+> > > >         } else {
+> > > >                 spin_unlock(&eb->refs_lock);
+> > > > @@ -1953,7 +1953,7 @@ static unsigned int buffer_tree_get_ebs_tag(s=
+truct btrfs_fs_info *fs_info,
+> > > >         rcu_read_lock();
+> > > >         while ((eb =3D find_get_eb(&xas, end, tag)) !=3D NULL) {
+> > > >                 if (!eb_batch_add(batch, eb)) {
+> > > > -                       *start =3D (eb->start + eb->len) >> fs_info=
+->sectorsize_bits;
+> > > > +                       *start =3D (eb->start + fs_info->nodesize) =
+>> fs_info->sectorsize_bits;
+> > > >                         goto out;
+> > > >                 }
+> > > >         }
+> > > > @@ -2020,7 +2020,7 @@ static void prepare_eb_write(struct extent_bu=
+ffer *eb)
+> > > >         nritems =3D btrfs_header_nritems(eb);
+> > > >         if (btrfs_header_level(eb) > 0) {
+> > > >                 end =3D btrfs_node_key_ptr_offset(eb, nritems);
+> > > > -               memzero_extent_buffer(eb, end, eb->len - end);
+> > > > +               memzero_extent_buffer(eb, end, eb_len(eb) - end);
+> > > >         } else {
+> > > >                 /*
+> > > >                  * Leaf:
+> > > > @@ -2056,7 +2056,7 @@ static noinline_for_stack void write_one_eb(s=
+truct extent_buffer *eb,
+> > > >                 struct folio *folio =3D eb->folios[i];
+> > > >                 u64 range_start =3D max_t(u64, eb->start, folio_pos=
+(folio));
+> > > >                 u32 range_len =3D min_t(u64, folio_pos(folio) + fol=
+io_size(folio),
+> > > > -                                     eb->start + eb->len) - range_=
+start;
+> > > > +                                     eb->start + fs_info->nodesize=
+) - range_start;
+> > > >
+> > > >                 folio_lock(folio);
+> > > >                 btrfs_meta_folio_clear_dirty(folio, eb);
+> > > > @@ -2171,7 +2171,7 @@ int btree_write_cache_pages(struct address_sp=
+ace *mapping,
+> > > >                         if (ctx.zoned_bg) {
+> > > >                                 /* Mark the last eb in the block gr=
+oup. */
+> > > >                                 btrfs_schedule_zone_finish_bg(ctx.z=
+oned_bg, eb);
+> > > > -                               ctx.zoned_bg->meta_write_pointer +=
+=3D eb->len;
+> > > > +                               ctx.zoned_bg->meta_write_pointer +=
+=3D fs_info->nodesize;
+> > > >                         }
+> > > >                         write_one_eb(eb, wbc);
+> > > >                 }
+> > > > @@ -2807,7 +2807,6 @@ static struct extent_buffer *__alloc_extent_b=
+uffer(struct btrfs_fs_info *fs_info
+> > > >
+> > > >         eb =3D kmem_cache_zalloc(extent_buffer_cache, GFP_NOFS|__GF=
+P_NOFAIL);
+> > > >         eb->start =3D start;
+> > > > -       eb->len =3D fs_info->nodesize;
+> > > >         eb->fs_info =3D fs_info;
+> > > >         init_rwsem(&eb->lock);
+> > > >
+> > > > @@ -2816,8 +2815,6 @@ static struct extent_buffer *__alloc_extent_b=
+uffer(struct btrfs_fs_info *fs_info
+> > > >         spin_lock_init(&eb->refs_lock);
+> > > >         atomic_set(&eb->refs, 1);
+> > > >
+> > > > -       ASSERT(eb->len <=3D BTRFS_MAX_METADATA_BLOCKSIZE);
+> > > > -
+> > > >         return eb;
+> > > >  }
+> > > >
+> > > > @@ -3505,7 +3502,7 @@ void btrfs_clear_buffer_dirty(struct btrfs_tr=
+ans_handle *trans,
+> > > >                 return;
+> > > >
+> > > >         buffer_tree_clear_mark(eb, PAGECACHE_TAG_DIRTY);
+> > > > -       percpu_counter_add_batch(&fs_info->dirty_metadata_bytes, -e=
+b->len,
+> > > > +       percpu_counter_add_batch(&fs_info->dirty_metadata_bytes, -f=
+s_info->nodesize,
+> > > >                                  fs_info->dirty_metadata_batch);
+> > > >
+> > > >         for (int i =3D 0; i < num_extent_folios(eb); i++) {
+> > > > @@ -3557,8 +3554,8 @@ void set_extent_buffer_dirty(struct extent_bu=
+ffer *eb)
+> > > >                 if (subpage)
+> > > >                         folio_unlock(eb->folios[0]);
+> > > >                 percpu_counter_add_batch(&eb->fs_info->dirty_metada=
+ta_bytes,
+> > > > -                                        eb->len,
+> > > > -                                        eb->fs_info->dirty_metadat=
+a_batch);
+> > > > +                                         eb_len(eb),
+> > > > +                                         eb->fs_info->dirty_metada=
+ta_batch);
+> > > >         }
+> > > >  #ifdef CONFIG_BTRFS_DEBUG
+> > > >         for (int i =3D 0; i < num_extent_folios(eb); i++)
+> > > > @@ -3670,7 +3667,7 @@ int read_extent_buffer_pages_nowait(struct ex=
+tent_buffer *eb, int mirror_num,
+> > > >                 struct folio *folio =3D eb->folios[i];
+> > > >                 u64 range_start =3D max_t(u64, eb->start, folio_pos=
+(folio));
+> > > >                 u32 range_len =3D min_t(u64, folio_pos(folio) + fol=
+io_size(folio),
+> > > > -                                     eb->start + eb->len) - range_=
+start;
+> > > > +                                     eb->start + eb_len(eb)) - ran=
+ge_start;
+> > > >
+> > > >                 bio_add_folio_nofail(&bbio->bio, folio, range_len,
+> > > >                                      offset_in_folio(folio, range_s=
+tart));
+> > > > @@ -3698,8 +3695,8 @@ static bool report_eb_range(const struct exte=
+nt_buffer *eb, unsigned long start,
+> > > >                             unsigned long len)
+> > > >  {
+> > > >         btrfs_warn(eb->fs_info,
+> > > > -               "access to eb bytenr %llu len %u out of range start=
+ %lu len %lu",
+> > > > -               eb->start, eb->len, start, len);
+> > > > +               "access to eb bytenr %llu out of range start %lu le=
+n %lu",
+> > > > +               eb->start, start, len);
+> > > >         DEBUG_WARN();
+> > > >
+> > > >         return true;
+> > > > @@ -3717,8 +3714,8 @@ static inline int check_eb_range(const struct=
+ extent_buffer *eb,
+> > > >  {
+> > > >         unsigned long offset;
+> > > >
+> > > > -       /* start, start + len should not go beyond eb->len nor over=
+flow */
+> > > > -       if (unlikely(check_add_overflow(start, len, &offset) || off=
+set > eb->len))
+> > > > +       /* start, start + len should not go beyond nodesize nor ove=
+rflow */
+> > > > +       if (unlikely(check_add_overflow(start, len, &offset) || off=
+set > eb_len(eb)))
+> > > >                 return report_eb_range(eb, start, len);
+> > > >
+> > > >         return false;
+> > > > @@ -3774,8 +3771,8 @@ int read_extent_buffer_to_user_nofault(const =
+struct extent_buffer *eb,
+> > > >         unsigned long i =3D get_eb_folio_index(eb, start);
+> > > >         int ret =3D 0;
+> > > >
+> > > > -       WARN_ON(start > eb->len);
+> > > > -       WARN_ON(start + len > eb->start + eb->len);
+> > > > +       WARN_ON(start > eb_len(eb));
+> > > > +       WARN_ON(start + len > eb->start + eb_len(eb));
+> > > >
+> > > >         if (eb->addr) {
+> > > >                 if (copy_to_user_nofault(dstv, eb->addr + start, le=
+n))
+> > > > @@ -3866,8 +3863,8 @@ static void assert_eb_folio_uptodate(const st=
+ruct extent_buffer *eb, int i)
+> > > >                 folio =3D eb->folios[0];
+> > > >                 ASSERT(i =3D=3D 0);
+> > > >                 if (WARN_ON(!btrfs_subpage_test_uptodate(fs_info, f=
+olio,
+> > > > -                                                        eb->start,=
+ eb->len)))
+> > > > -                       btrfs_subpage_dump_bitmap(fs_info, folio, e=
+b->start, eb->len);
+> > > > +                                                        eb->start,=
+ fs_info->nodesize)))
+> > > > +                       btrfs_subpage_dump_bitmap(fs_info, folio, e=
+b->start, fs_info->nodesize);
+> > > >         } else {
+> > > >                 WARN_ON(!folio_test_uptodate(folio));
+> > > >         }
+> > > > @@ -3960,12 +3957,10 @@ void copy_extent_buffer_full(const struct e=
+xtent_buffer *dst,
+> > > >         const int unit_size =3D src->folio_size;
+> > > >         unsigned long cur =3D 0;
+> > > >
+> > > > -       ASSERT(dst->len =3D=3D src->len);
+> > > > -
+> > > > -       while (cur < src->len) {
+> > > > +       while (cur < eb_len(src)) {
+> > > >                 unsigned long index =3D get_eb_folio_index(src, cur=
+);
+> > > >                 unsigned long offset =3D get_eb_offset_in_folio(src=
+, cur);
+> > > > -               unsigned long cur_len =3D min(src->len, unit_size -=
+ offset);
+> > > > +               unsigned long cur_len =3D min(eb_len(src), unit_siz=
+e - offset);
+> > > >                 void *addr =3D folio_address(src->folios[index]) + =
+offset;
+> > > >
+> > > >                 write_extent_buffer(dst, addr, cur, cur_len);
+> > > > @@ -3980,7 +3975,6 @@ void copy_extent_buffer(const struct extent_b=
+uffer *dst,
+> > > >                         unsigned long len)
+> > > >  {
+> > > >         const int unit_size =3D dst->folio_size;
+> > > > -       u64 dst_len =3D dst->len;
+> > > >         size_t cur;
+> > > >         size_t offset;
+> > > >         char *kaddr;
+> > > > @@ -3990,8 +3984,6 @@ void copy_extent_buffer(const struct extent_b=
+uffer *dst,
+> > > >             check_eb_range(src, src_offset, len))
+> > > >                 return;
+> > > >
+> > > > -       WARN_ON(src->len !=3D dst_len);
+> > > > -
+> > > >         offset =3D get_eb_offset_in_folio(dst, dst_offset);
+> > > >
+> > > >         while (len > 0) {
+> > > > @@ -4266,7 +4258,7 @@ static int try_release_subpage_extent_buffer(=
+struct folio *folio)
+> > > >                         xa_unlock_irq(&fs_info->buffer_tree);
+> > > >                         break;
+> > > >                 }
+> > > > -               cur =3D eb->start + eb->len;
+> > > > +               cur =3D eb->start + fs_info->nodesize;
+> > > >
+> > > >                 /*
+> > > >                  * The same as try_release_extent_buffer(), to ensu=
+re the eb
+> > > > diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h
+> > > > index 1415679d7f88c..9a842eea47d6d 100644
+> > > > --- a/fs/btrfs/extent_io.h
+> > > > +++ b/fs/btrfs/extent_io.h
+> > > > @@ -16,6 +16,7 @@
+> > > >  #include "messages.h"
+> > > >  #include "ulist.h"
+> > > >  #include "misc.h"
+> > > > +#include "fs.h"
+> > > >
+> > > >  struct page;
+> > > >  struct file;
+> > > > @@ -80,7 +81,6 @@ void __cold extent_buffer_free_cachep(void);
+> > > >  #define INLINE_EXTENT_BUFFER_PAGES     (BTRFS_MAX_METADATA_BLOCKSI=
+ZE / PAGE_SIZE)
+> > > >  struct extent_buffer {
+> > > >         u64 start;
+> > > > -       u32 len;
+> > > >         u32 folio_size;
+> > > >         unsigned long bflags;
+> > > >         struct btrfs_fs_info *fs_info;
+> > > > @@ -263,17 +263,22 @@ void btrfs_readahead_tree_block(struct btrfs_=
+fs_info *fs_info,
+> > > >                                 u64 bytenr, u64 owner_root, u64 gen=
+, int level);
+> > > >  void btrfs_readahead_node_child(struct extent_buffer *node, int sl=
+ot);
+> > > >
+> > > > +static inline u32 eb_len(const struct extent_buffer *eb)
+> > > > +{
+> > > > +       return eb->fs_info->nodesize;
+> > > > +}
+> > >
+> > > Please always add a "btrfs_" prefix to the name of exported functions=
+.
+> >
+> > It's static inline, not exported. But I'm happy just opencoding it
+> > instead. Thanks.
+>
+> Exported in the sense that it's in a header and visible to any C files
+> that include it, not in the sense of being exported with
+> EXPORT_SYMBOL_GPL() for example.
+> This is our coding style convention:
+>
+> https://btrfs.readthedocs.io/en/latest/dev/Development-notes.html#functio=
+n-declarations
+>
+> static functions inside a C file can omit the prefix.
 
-Add subsystem ID 0x86e5 for HP Spectre x360 15-eb0xxx so that
-ALC285_FIXUP_HP_SPECTRE_X360_EB1 (GPIO amp-enable, mic-mute LED and
-pinconfigs) is applied.
+Nah, thanks again. I was not aware of that. Will keep it in mind.
 
-Tested on HP Spectre x360 15-eb0043dx (Vendor 0x10ec0285, Subsys 0x103c86e5=
-)
-with legacy HDA driver and hda-verb toggles:
+Still, it doesn't make sense to me to be honest. I mean specifically
+with this example. The header file is also private to btrfs, no public
+API. Personally I wouldn't differentiate if it's a source or a header
+file. The code can be freely moved around. And with the prefix the
+code would end up more bloated and less readable, IMO. But let's not
+start any flamewars here.
 
-  $ cat /proc/asound/card0/codec#0 \
-      | sed -n -e '1,5p;/Vendor Id:/p;/Subsystem Id:/p'
-  Codec: Realtek ALC285
-  Vendor Id: 0x10ec0285
-  Subsystem Id: 0x103c86e5
-
-  $ dmesg | grep -i realtek
-  [    5.828728] snd_hda_codec_realtek ehdaudio0D0: ALC285: picked fixup
-        for PCI SSID 103c:86e5
-
-Signed-off-by: Ezra Khuzadi <ekhuzadi@uci.edu>
-Cc: stable@vger.kernel.org
-
----
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 877137cb09ac..82ad105e7fa9 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10563,6 +10563,7 @@ static const struct hda_quirk alc269_fixup_tbl[] =
-=3D {
-   SND_PCI_QUIRK(0x103c, 0x86c7, "HP Envy AiO 32", ALC274_FIXUP_HP_ENVY_GPI=
-O),
-+  SND_PCI_QUIRK(0x103c, 0x86e5, "HP Spectre x360 15-eb0xxx",
-ALC285_FIXUP_HP_SPECTRE_X360_EB1),
-   SND_PCI_QUIRK(0x103c, 0x86e7, "HP Spectre x360 15-eb0xxx",
-ALC285_FIXUP_HP_SPECTRE_X360_EB1),
-   SND_PCI_QUIRK(0x103c, 0x86e8, "HP Spectre x360 15-eb0xxx",
-ALC285_FIXUP_HP_SPECTRE_X360_EB1),
-   SND_PCI_QUIRK(0x103c, 0x86f9, "HP Spectre x360 13-aw0xxx",
-ALC285_FIXUP_HP_SPECTRE_X360_MUTE_LED),
-
-On Wed, Apr 30, 2025 at 1:33=E2=80=AFAM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi,
->
-> Thanks for your patch.
->
-> FYI: kernel test robot notices the stable kernel rule is not satisfied.
->
-> The check is based on https://urldefense.com/v3/__https://www.kernel.org/=
-doc/html/latest/process/stable-kernel-rules.html*option-1__;Iw!!CzAuKJ42Guq=
-uVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc5uEQDwV-Q9=
-TeKK7R4THFV7fXQ$
->
-> Rule: add the tag "Cc: stable@vger.kernel.org" in the sign-off area to ha=
-ve the patch automatically included in the stable tree.
-> Subject: sound/pci/hda: add quirk for HP Spectre x360 15-eb0xxx
-> Link: https://urldefense.com/v3/__https://lore.kernel.org/stable/CAPXr0ux=
-h0c_2b2-zJF*3DN8T6DfccfyvOQRX0X0VO24dS7YsxzzQ*40mail.gmail.com__;JSU!!CzAuK=
-J42GuquVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc5uEQ=
-DwV-Q9TeKK7R4SyRLIbeQ$
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://urldefense.com/v3/__https://github.com/intel/lkp-tests/wiki__;!!C=
-zAuKJ42GuquVTTmVmPViYEvSg!PiCmDJsbkP48HY6ady0rbC21rGusuY-IjJ61JqQnp99GdHsbc=
-5uEQDwV-Q9TeKK7R4QdTQyPmg$
->
->
->
+> >
+> > > In this case I don't think adding this helper adds any value.
+> > > We can just do eb->fs_info->nodesize everywhere and in some places we
+> > > already have fs_info in a local variable and can just do
+> > > fs_info->nodesize.
+> > >
+> > > Thanks.
+> > >
+> > > > +
+> > > >  /* Note: this can be used in for loops without caching the value i=
+n a variable. */
+> > > >  static inline int __pure num_extent_pages(const struct extent_buff=
+er *eb)
+> > > >  {
+> > > >         /*
+> > > >          * For sectorsize =3D=3D PAGE_SIZE case, since nodesize is =
+always aligned to
+> > > > -        * sectorsize, it's just eb->len >> PAGE_SHIFT.
+> > > > +        * sectorsize, it's just nodesize >> PAGE_SHIFT.
+> > > >          *
+> > > >          * For sectorsize < PAGE_SIZE case, we could have nodesize =
+< PAGE_SIZE,
+> > > >          * thus have to ensure we get at least one page.
+> > > >          */
+> > > > -       return (eb->len >> PAGE_SHIFT) ?: 1;
+> > > > +       return (eb_len(eb) >> PAGE_SHIFT) ?: 1;
+> > > >  }
+> > > >
+> > > >  /*
+> > > > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> > > > index 68fac77fb95d1..6be2d56d44917 100644
+> > > > --- a/fs/btrfs/ioctl.c
+> > > > +++ b/fs/btrfs/ioctl.c
+> > > > @@ -598,7 +598,7 @@ static noinline int create_subvol(struct mnt_id=
+map *idmap,
+> > > >         btrfs_set_root_generation(root_item, trans->transid);
+> > > >         btrfs_set_root_level(root_item, 0);
+> > > >         btrfs_set_root_refs(root_item, 1);
+> > > > -       btrfs_set_root_used(root_item, leaf->len);
+> > > > +       btrfs_set_root_used(root_item, fs_info->nodesize);
+> > > >         btrfs_set_root_last_snapshot(root_item, 0);
+> > > >
+> > > >         btrfs_set_root_generation_v2(root_item,
+> > > > diff --git a/fs/btrfs/relocation.c b/fs/btrfs/relocation.c
+> > > > index 6287e71ebad5f..5086485a4ae21 100644
+> > > > --- a/fs/btrfs/relocation.c
+> > > > +++ b/fs/btrfs/relocation.c
+> > > > @@ -4352,7 +4352,7 @@ int btrfs_reloc_cow_block(struct btrfs_trans_=
+handle *trans,
+> > > >                         mark_block_processed(rc, node);
+> > > >
+> > > >                 if (first_cow && level > 0)
+> > > > -                       rc->nodes_relocated +=3D buf->len;
+> > > > +                       rc->nodes_relocated +=3D fs_info->nodesize;
+> > > >         }
+> > > >
+> > > >         if (level =3D=3D 0 && first_cow && rc->stage =3D=3D UPDATE_=
+DATA_PTRS)
+> > > > diff --git a/fs/btrfs/subpage.c b/fs/btrfs/subpage.c
+> > > > index d4f0192334936..711792f32e9ce 100644
+> > > > --- a/fs/btrfs/subpage.c
+> > > > +++ b/fs/btrfs/subpage.c
+> > > > @@ -631,7 +631,7 @@ void btrfs_meta_folio_set_##name(struct folio *=
+folio, const struct extent_buffer
+> > > >                 folio_set_func(folio);                             =
+     \
+> > > >                 return;                                            =
+     \
+> > > >         }                                                          =
+     \
+> > > > -       btrfs_subpage_set_##name(eb->fs_info, folio, eb->start, eb-=
+>len); \
+> > > > +       btrfs_subpage_set_##name(eb->fs_info, folio, eb->start, eb_=
+len(eb)); \
+> > > >  }                                                                 =
+     \
+> > > >  void btrfs_meta_folio_clear_##name(struct folio *folio, const stru=
+ct extent_buffer *eb) \
+> > > >  {                                                                 =
+     \
+> > > > @@ -639,13 +639,13 @@ void btrfs_meta_folio_clear_##name(struct fol=
+io *folio, const struct extent_buff
+> > > >                 folio_clear_func(folio);                           =
+     \
+> > > >                 return;                                            =
+     \
+> > > >         }                                                          =
+     \
+> > > > -       btrfs_subpage_clear_##name(eb->fs_info, folio, eb->start, e=
+b->len); \
+> > > > +       btrfs_subpage_clear_##name(eb->fs_info, folio, eb->start, e=
+b_len(eb)); \
+> > > >  }                                                                 =
+     \
+> > > >  bool btrfs_meta_folio_test_##name(struct folio *folio, const struc=
+t extent_buffer *eb) \
+> > > >  {                                                                 =
+     \
+> > > >         if (!btrfs_meta_is_subpage(eb->fs_info))                   =
+     \
+> > > >                 return folio_test_func(folio);                     =
+     \
+> > > > -       return btrfs_subpage_test_##name(eb->fs_info, folio, eb->st=
+art, eb->len); \
+> > > > +       return btrfs_subpage_test_##name(eb->fs_info, folio, eb->st=
+art, eb_len(eb)); \
+> > > >  }
+> > > >  IMPLEMENT_BTRFS_PAGE_OPS(uptodate, folio_mark_uptodate, folio_clea=
+r_uptodate,
+> > > >                          folio_test_uptodate);
+> > > > @@ -765,7 +765,7 @@ bool btrfs_meta_folio_clear_and_test_dirty(stru=
+ct folio *folio, const struct ext
+> > > >                 return true;
+> > > >         }
+> > > >
+> > > > -       last =3D btrfs_subpage_clear_and_test_dirty(eb->fs_info, fo=
+lio, eb->start, eb->len);
+> > > > +       last =3D btrfs_subpage_clear_and_test_dirty(eb->fs_info, fo=
+lio, eb->start, eb_len(eb));
+> > > >         if (last) {
+> > > >                 folio_clear_dirty_for_io(folio);
+> > > >                 return true;
+> > > > diff --git a/fs/btrfs/tests/extent-io-tests.c b/fs/btrfs/tests/exte=
+nt-io-tests.c
+> > > > index 00da54f0164c9..657f8f1d9263e 100644
+> > > > --- a/fs/btrfs/tests/extent-io-tests.c
+> > > > +++ b/fs/btrfs/tests/extent-io-tests.c
+> > > > @@ -342,7 +342,7 @@ static int check_eb_bitmap(unsigned long *bitma=
+p, struct extent_buffer *eb)
+> > > >  {
+> > > >         unsigned long i;
+> > > >
+> > > > -       for (i =3D 0; i < eb->len * BITS_PER_BYTE; i++) {
+> > > > +       for (i =3D 0; i < eb_len(eb) * BITS_PER_BYTE; i++) {
+> > > >                 int bit, bit1;
+> > > >
+> > > >                 bit =3D !!test_bit(i, bitmap);
+> > > > @@ -411,7 +411,7 @@ static int test_bitmap_clear(const char *name, =
+unsigned long *bitmap,
+> > > >  static int __test_eb_bitmaps(unsigned long *bitmap, struct extent_=
+buffer *eb)
+> > > >  {
+> > > >         unsigned long i, j;
+> > > > -       unsigned long byte_len =3D eb->len;
+> > > > +       unsigned long byte_len =3D eb_len(eb);
+> > > >         u32 x;
+> > > >         int ret;
+> > > >
+> > > > @@ -670,7 +670,7 @@ static int test_find_first_clear_extent_bit(voi=
+d)
+> > > >  static void dump_eb_and_memory_contents(struct extent_buffer *eb, =
+void *memory,
+> > > >                                         const char *test_name)
+> > > >  {
+> > > > -       for (int i =3D 0; i < eb->len; i++) {
+> > > > +       for (int i =3D 0; i < eb_len(eb); i++) {
+> > > >                 struct page *page =3D folio_page(eb->folios[i >> PA=
+GE_SHIFT], 0);
+> > > >                 void *addr =3D page_address(page) + offset_in_page(=
+i);
+> > > >
+> > > > @@ -686,7 +686,7 @@ static void dump_eb_and_memory_contents(struct =
+extent_buffer *eb, void *memory,
+> > > >  static int verify_eb_and_memory(struct extent_buffer *eb, void *me=
+mory,
+> > > >                                 const char *test_name)
+> > > >  {
+> > > > -       for (int i =3D 0; i < (eb->len >> PAGE_SHIFT); i++) {
+> > > > +       for (int i =3D 0; i < (eb_len(eb) >> PAGE_SHIFT); i++) {
+> > > >                 void *eb_addr =3D folio_address(eb->folios[i]);
+> > > >
+> > > >                 if (memcmp(memory + (i << PAGE_SHIFT), eb_addr, PAG=
+E_SIZE) !=3D 0) {
+> > > > @@ -703,8 +703,8 @@ static int verify_eb_and_memory(struct extent_b=
+uffer *eb, void *memory,
+> > > >   */
+> > > >  static void init_eb_and_memory(struct extent_buffer *eb, void *mem=
+ory)
+> > > >  {
+> > > > -       get_random_bytes(memory, eb->len);
+> > > > -       write_extent_buffer(eb, memory, 0, eb->len);
+> > > > +       get_random_bytes(memory, eb_len(eb));
+> > > > +       write_extent_buffer(eb, memory, 0, eb_len(eb));
+> > > >  }
+> > > >
+> > > >  static int test_eb_mem_ops(u32 sectorsize, u32 nodesize)
+> > > > diff --git a/fs/btrfs/zoned.c b/fs/btrfs/zoned.c
+> > > > index 9d42bf2bfd746..c7a8cdd87c509 100644
+> > > > --- a/fs/btrfs/zoned.c
+> > > > +++ b/fs/btrfs/zoned.c
+> > > > @@ -2422,7 +2422,7 @@ void btrfs_schedule_zone_finish_bg(struct btr=
+fs_block_group *bg,
+> > > >                                    struct extent_buffer *eb)
+> > > >  {
+> > > >         if (!test_bit(BLOCK_GROUP_FLAG_SEQUENTIAL_ZONE, &bg->runtim=
+e_flags) ||
+> > > > -           eb->start + eb->len * 2 <=3D bg->start + bg->zone_capac=
+ity)
+> > > > +           eb->start + eb_len(eb) * 2 <=3D bg->start + bg->zone_ca=
+pacity)
+> > > >                 return;
+> > > >
+> > > >         if (WARN_ON(bg->zone_finish_work.func =3D=3D btrfs_zone_fin=
+ish_endio_workfn)) {
+> > > > --
+> > > > 2.47.2
+> > > >
+> > > >
