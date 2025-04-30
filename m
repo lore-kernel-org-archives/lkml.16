@@ -1,88 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C1117C21B;
-	Wed, 30 Apr 2025 15:26:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C27C125A2A1;
+	Wed, 30 Apr 2025 15:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746026765; cv=none; b=KHSROh7obxkWLX6Rfd72r+4DIBmR8W03HAq6LHDVVNXIExXob1HhoUXla10X3LWqokzPXKTGqxCMXQGBsgjwwpm/hlnV+3blev1DKoBAhr8xF/lwEXf/JXP6C09hwR1SidkaNx6WhYGg7N26rl/ftvlHLXfZfFgnuVZi1rBHxSg=
+	t=1746026785; cv=none; b=Ayc+HMfNA62bp/+00vsquuRDLI4ZSgoXfpiMcK/picaFUdMD1psstcKoCqXVvg2duOIe0l9l2S6pUuM+D7oVCUrlGCwvSYFW1IqPlDIZTC8eACEPh9VD0hcLIn/HqSqGQ6WiN2InkrDFUlBxoFz+tAPvrIF/9+iu1eJTzuRbo9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746026765; c=relaxed/simple;
-	bh=9BnNSNbGk/SH1Jqts3LNDoiGPJQv2lBeVhQ2pLakZsw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zq7t3SHQCkqiUq5Ka3oZqe7teB2/l88QA5eUu7QkrJzQbOlNEXsHtGNGOzzXB5YsalDNjD09yTz6mPIP67jNeIJkt0o7ts/fYBCpJ607iYAWoL909e/r6aLbzl7sLCMpICsaCaXPejJ7ctIZENUbUUnkP7maHjjOID0zgjFHd/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iM4NQQ9a; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iM4NQQ9a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49966C4CEE7;
-	Wed, 30 Apr 2025 15:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746026764;
-	bh=9BnNSNbGk/SH1Jqts3LNDoiGPJQv2lBeVhQ2pLakZsw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=iM4NQQ9aK4CcuaIjYAyxqodWnUl+aox9OAEYJdvXBTMwtwGmpzFk19Y6IzVhayOF5
-	 RP0a7qLN+VGxIQKn1td/abgVsoTSc+6eJ/sQpcdXyJ+KCj9PgPzj3c7DtakarSxnvV
-	 6uNZU4P666ukUB553+c4yN7mBIEsuCYB9HaF+Zp5/BmoHe4pXtBlHzfaXSolkQVpOz
-	 XG4KUcCIl5szp+HHlw5nc1um/+KJI8qHsw8bqKy2jQE4pO/dN1X8hOBU1pZNS0oU6Z
-	 V4N2f1MzKqHSM9Peo7UiqF298c2ZmKdx/69w61O50Pp6QrRdGvNO/XgFieetKB8vGF
-	 NszNzEM/uon1w==
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: keyrings@vger.kernel.org
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	David Howells <dhowells@redhat.com>,
-	Lukas Wunner <lukas@wunner.de>,
-	Ignat Korchagin <ignat@cloudflare.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	"David S. Miller" <davem@davemloft.net>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Paul Moore <paul@paul-moore.com>,
-	James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	James Bottomley <James.Bottomley@HansenPartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	linux-crypto@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH] KEYS: Reduce smp_mb() calls in key_put()
-Date: Wed, 30 Apr 2025 18:25:53 +0300
-Message-ID: <20250430152554.23646-1-jarkko@kernel.org>
-X-Mailer: git-send-email 2.47.2
+	s=arc-20240116; t=1746026785; c=relaxed/simple;
+	bh=oaXVaoW4eCBfOW1bt+Lp+Ta3/NgC1ne5TojByxlIGWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fXrqdZsEJH7opB7wPtF7E1d09G0kLONsDXEFMJ2ML20dNMe9g3WtAQeS+7ApxZLIMdTNOCkolPSLu3smg0cnGz7NfyzYcDWCF2l8awGAM/d1aFGioRyqKC9Yt2umr6Lq0df04aDe6QWHlL3sQyGGgbswBkncMy8mzmo1DqxV8vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A3E51063;
+	Wed, 30 Apr 2025 08:26:15 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3A8E3F5A1;
+	Wed, 30 Apr 2025 08:26:19 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:26:17 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Cristian Marussi <cristian.marussi@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, <linux-kernel@vger.kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	<linux-arm-kernel@lists.infradead.org>, <arm-scmi@vger.kernel.org>,
+	<james.quinlan@broadcom.com>, <f.fainelli@gmail.com>,
+	<vincent.guittot@linaro.org>, <peng.fan@oss.nxp.com>,
+	<michal.simek@amd.com>, <quic_sibis@quicinc.com>,
+	<dan.carpenter@linaro.org>, <johan@kernel.org>,
+	"Arnd Bergmann" <arnd@kernel.org>,
+	Johan Hovold <johan+linaro@kernel.org>
+Subject: Re: [PATCH v3 2/3] firmware: arm_scmi: Add Quirks framework
+Message-ID: <20250430-efficient-spider-of-criticism-e857bf@sudeepholla>
+References: <20250429141108.406045-1-cristian.marussi@arm.com>
+ <20250429141108.406045-3-cristian.marussi@arm.com>
+ <aBHXHnXA95TwJths@pluto>
+ <868qnhj2yf.wl-maz@kernel.org>
+ <aBIbC15NiqUseZc7@pluto>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBIbC15NiqUseZc7@pluto>
 
-Rely only on the memory ordering of spin_unlock() when setting
-KEY_FLAG_FINAL_PUT under key->user->lock in key_put().
++Arnd
 
-Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
----
- security/keys/key.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On Wed, Apr 30, 2025 at 01:43:55PM +0100, Cristian Marussi wrote:
+> On Wed, Apr 30, 2025 at 12:36:40PM +0100, Marc Zyngier wrote:
+> > On Wed, 30 Apr 2025 08:54:06 +0100,
+> > Cristian Marussi <cristian.marussi@arm.com> wrote:
+> > > 
+> > > On Tue, Apr 29, 2025 at 03:11:07PM +0100, Cristian Marussi wrote:
+> > > > Add a common framework to describe SCMI quirks and associate them with a
+> > > > specific platform or a specific set of SCMI firmware versions.
+> > > > 
+> > > > All the matching SCMI quirks will be enabled when the SCMI core stack
+> > > > probes and after all the needed SCMI firmware versioning information was
+> > > > retrieved using Base protocol.
+> > > > 
+> > > > Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> > > > Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+> > > 
+> > > Hi
+> > > 
+> > > just a quick remarks that a bot spotted the usage of __VA_OPT__ which is
+> > > only available since GCC >= 8.0 :< ... so I will probably revert to use the
+> > > previous, less clean, mechanism to build the NULL terminated array in
+> > > which the compats array WILL HAVE to be explicitly NULL terminated when
+> > > provided (even the empty ones...)
+> > 
+> > See 20250407094116.1339199-1-arnd@kernel.org, which is slated for
+> > 6.16. The TL;DR is that GCC 8.1 and binutils 2.30 should be the
+> > minimal versions from 6.16 onwards.
+> > 
+> > So it's probably not worth using ugly hacks that will eventually be
+> > reverted.
+> 
+> Great news, thanks for the heads-up !
+> 
 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 7198cd2ac3a3..aecbd624612d 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -656,10 +656,12 @@ void key_put(struct key *key)
- 				spin_lock_irqsave(&key->user->lock, flags);
- 				key->user->qnkeys--;
- 				key->user->qnbytes -= key->quotalen;
-+				set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
- 				spin_unlock_irqrestore(&key->user->lock, flags);
-+			} else {
-+				set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
-+				smp_mb(); /* key->user before FINAL_PUT set. */
- 			}
--			smp_mb(); /* key->user before FINAL_PUT set. */
--			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
- 			schedule_work(&key_gc_work);
- 		}
- 	}
+Thanks Marc!
+
+Arnd,
+
+I don't see much discussions on 20250407094116.1339199-1-arnd@kernel.org
+to conclude if you plan to get this for v6.16
+
+We probably can wait to push this $subject after your changes land. But
+it would be good to know your opinion here especially if you are not
+pushing your patches for v6.16
+
 -- 
-2.47.2
-
+Regards,
+Sudeep
