@@ -1,67 +1,102 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA50224FA;
-	Wed, 30 Apr 2025 14:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191AD224FA
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024460; cv=none; b=qo4MBzzdSTyMsUVltzydvqmAGpFv9+bF5gA2cEuTIXj0C5Y3VH8XtmYAqfUOPLiFGsOPKTGIHQuZr+WAYbqXmw0PWbjM82rdrKYOTNsv+olut1XiFMWgrfwb55DN0WlY6o3H3VUy8K8yyvrGcDsK5Eh4jesgY8ULpFxeRmsFFvc=
+	t=1746024473; cv=none; b=BCzqLuA6zLiGOkG71XIT87c+Yb5KchISptw45FTib7s7M8W/+qiyn4JyHyqCtMwyYWTbmv7bqoEk6AyeAes5EvjhM+hxShGy0swaHzA4g8nKqUaChTvzhjUu/JhR/HWaBhqsvaLLS2wRqUi3E75lFvR2FMNrNLI1MnU68kA6Pdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024460; c=relaxed/simple;
-	bh=8Kby3BF9Goa+u8k9qxOdZq2WO9DIL0NJjF87tLz5zeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hw04bmd/m4CBSUQZgdrsqRV+Zbq6pQOGoeCuJW/CMb1q90kq1ZgUwrUz0zjjEVbmz7Ry+SrSIvlGazZVyg8fX+kXzHTks9qCkxaK7W8AIk1goq7uqLnFGhQGLQ+X7YCHebIsctPSj3MMGL5sAki6dx7be8/unJICpJHp8tuAva0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=OF0GYw09; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746024473; c=relaxed/simple;
+	bh=9FbI4iDnwTpTAY+YU9I/kKwfYtr8coFCU2EkaG4Geq8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X2/+ulIGXoTefy4ZADKnsNAhp5wsQWIH9RQdr01T0p6OwAcbVjIZbnS+DrM+ubWvQ4RHNi5Zj11kY7jD+kQrveDhpbqRsbsV1pu34wIHYsxtXs7IwGVTQ4CEh3VP7lasBYnWJmJDB8sAnEaB+EX9+CZ53BihtAcumj1ToGAtbFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P09P+PND; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="OF0GYw09"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746024450;
-	bh=8Kby3BF9Goa+u8k9qxOdZq2WO9DIL0NJjF87tLz5zeo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OF0GYw09mwXW+/AF6xC9bMUzN2ywdOOiQkfxRpk7R8/ttoZhe3IGNKpbP0I4dPMGt
-	 ndet0ENHqF4TXoS+vskRGolwyrnEE+FwiwJx1MG2HCdM0wEDZ74Fr8EYp5ejNvviYk
-	 Xj+sG6RljlA51qNyywAS8EUJPbhESbF3mpiXL9136kVvjTY3hwgIqyTIVrq18Zscpm
-	 xtscdC88iGoNgOSGWgZhOETvcXNajHCCkawE6LQeo/+yj8ATAKNdz7yb6GxlLGT/ZT
-	 SMbcr0h651ImCTq9VS1kxyyA0MT3NsdUzgao/YHqRYHPHsMy5Lf0pkdH+Koh/N7Rg9
-	 8TSyXPhob+cfQ==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P09P+PND"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746024470;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=A0Lp/l1XGF0IIqzu2ayeTTfaG0q1R1kxW5lgjOGrT9Q=;
+	b=P09P+PNDgGM+KbX6QxRypscbxNPwn7s4qN4jD4fZLejqK1S9QfkIU5rnwjDAQf2poE4eZI
+	xI37nuIPUTP9jetJ4zhAmqK0XVSkyiWEBpupsNkg4JhIsNXzs+4k/xHN7Tfqa8Q46tYCUw
+	Ml/DM4mOhvuhGF9oPh/IV6xpRj1fS5E=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-8-xCLWlHYYNmO5ljFxYElYrg-1; Wed,
+ 30 Apr 2025 10:47:49 -0400
+X-MC-Unique: xCLWlHYYNmO5ljFxYElYrg-1
+X-Mimecast-MFC-AGG-ID: xCLWlHYYNmO5ljFxYElYrg_1746024468
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9F7E617E0630;
-	Wed, 30 Apr 2025 16:47:29 +0200 (CEST)
-Message-ID: <5a99252b-d251-4385-bf53-105262b821a4@collabora.com>
-Date: Wed, 30 Apr 2025 16:47:28 +0200
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 720431800373;
+	Wed, 30 Apr 2025 14:47:48 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.226.167])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3784D1954B02;
+	Wed, 30 Apr 2025 14:47:45 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH] rtla: Define _GNU_SOURCE in timerlat_bpf.c
+Date: Wed, 30 Apr 2025 16:46:51 +0200
+Message-ID: <20250430144651.621766-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] rtc: mt6359: Add mt6357 support
-To: Alexandre Mergnat <amergnat@baylibre.com>,
- Eddie Huang <eddie.huang@mediatek.com>, Sean Wang <sean.wang@mediatek.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Matthias Brugger <matthias.bgg@gmail.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <20250428-rtc-mt6357-v1-1-31f673b0a723@baylibre.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Il 28/04/25 16:29, Alexandre Mergnat ha scritto:
-> The MT6357 PMIC contains the same RTC as MT6358 which allows to add
-> support for it trivially by just complementing the list of compatibles.
-> 
-> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+Newer versions of glibc include a definition of struct sched_attr in
+bits/sched.h (included through sched.h which is included by rtla).
+Commit 0eecee340672 ("tools/rtla: fix collision with glibc
+sched_attr/sched_set_attr") has modified the definition of struct
+sched_attr in utils.h, so that it is only applied with older versions of
+glibc that do not define it, in order to prevent build failure.
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+The definition in bits/sched.h depends on _GNU_SOURCE.
+timerlat_bpf.c does not define _GNU_SOURCE, making it fall back to the
+definition in utils.h. The latter has two fields less, leading to
+shifted offsets of struct timerlat_params in timerlat_bpf_init.
+
+Because of the shift, timerlat_bpf_init incorrectly reads
+params->entries as 0 for timerlat-hist and disables the creation of
+histogram maps, causing breakage in BPF sample collection mode:
+
+$ rtla timerlat hist -d 1s
+Error pulling BPF data
+
+Fix the issue by also defining _GNU_SOURCE in timerlat_bpf.c.
+
+Fixes: e34293ddcebd ("rtla/timerlat: Add BPF skeleton to collect samples")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/timerlat_bpf.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/tools/tracing/rtla/src/timerlat_bpf.c b/tools/tracing/rtla/src/timerlat_bpf.c
+index 5abee884037a..0bc44ce5d69b 100644
+--- a/tools/tracing/rtla/src/timerlat_bpf.c
++++ b/tools/tracing/rtla/src/timerlat_bpf.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #ifdef HAVE_BPF_SKEL
++#define _GNU_SOURCE
+ #include "timerlat.h"
+ #include "timerlat_bpf.h"
+ #include "timerlat.skel.h"
+-- 
+2.49.0
 
