@@ -1,104 +1,138 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1051DF75B
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3E631D61AA;
+	Wed, 30 Apr 2025 05:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745990463; cv=none; b=JM1a4pUxP26nNPVmZJVW0C5pFa0FsJCM65Hz1nAkO2nHKq6+INlmPOPj5MrLl8U0osAXAh7I6kBxZEt0y5Oj4oT6GZjiJSRc92HdLOgI2PURl4ZlFhM8uXbJ9f7sCO7Vg0WsoVoqrVymfenXPSyTyNi60YyL4SH5TpDUVOBtRuw=
+	t=1745990700; cv=none; b=Afd0UfN+RNtK55okg8UjgVbb3wvk0ASdnslD8ZaVTQ5uUBBJxDn7Cy3un5PxNBoMcgVrVY2o3A50ilOEb46kewvB8gpsy672UF5E/66RVtPOca4SrTkFxJOcbtnXLsMPMXuIQ55XFkjyFUenb01B+q2qyeMEJPEYxiPyezoC3Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745990463; c=relaxed/simple;
-	bh=3LBZ8CNZY6y9TZGjfZGOceqANuDT2oBaOWkru0fxFQw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NqBvpCgz0ZqsGWTIKF9jP8JZxQk1DSlObGNeFDQOKutspaaRYiaexNpexdDeARDt6cjbV+iGMyqsgrz8wSlzPwJJH7Qqx3l1RtnYuGTfqs/LUaHOpHyAdq0qs6zzpNTb+03K6zlDM9GXOzyzmylvQ4+3DyEioUY/+BDbQzBGkdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nZMCQJZ3; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1745990700; c=relaxed/simple;
+	bh=oPN9HNb7W+WnV8QqZ69WdQtfENQ8uSEUYUOwpqen8z8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rpogZkvZJRXIrieTIW/rPzzsR/0P/Bc12IMYrwM0OkjZYtRw6bFraBkfSwVPUiEaBtvd9twF/YziHPjbv6QSYMx1fu4L4HpAD6wtQeRqUVkYn+Kbv/urukJ8cLMOr+KWrFbzqfLfymcPj3qQFLYL3ALXmK03/WcRs+Fq4VUm0Ks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=mgl7xiw3; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nZMCQJZ3"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39c266c2dd5so7484029f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1745990459; x=1746595259; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EObNhpS6QTdve6kAkH7lX8BP03yhDQRh6hSnvdBfWqw=;
-        b=nZMCQJZ3YHEiKRq9xdUEFaoGqNt69hP3P0w1XYeo9Ti5qpMznMI/wn7CysKlxaKzKs
-         juknxhYTukcAvaVnD0w+9ABsnHGoBw0cSeZQPMsa492Y19Oha7aPjjdNQm0uGwbmEopE
-         /bWZWAJ/AWVypjcStPK2ScZO+PG5JdoamwlmfTJ2rbLtMkv/3g1iKhoGpao7h1uMvz0N
-         bIST50dmml5umjyNLCf+Asec1o4CUYE6usUaqgVEVJT/Kg93FJY2HZMJJ0CVHMlCgckQ
-         Y1i9JAxjiaLxc0wkC6JXNw59AdEbXfVOnWl8/OpmWLeE9iqAU+DPHMR79kkCtC+oGYGy
-         LrAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745990459; x=1746595259;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EObNhpS6QTdve6kAkH7lX8BP03yhDQRh6hSnvdBfWqw=;
-        b=ecDFhKGNmcLwp/j9ezMoqMkcVtEG4Bwh2CjWD0rGcBGcllGI53PHPQN5lR2ZwHxkx9
-         +SYc6oJKTkSEfBvBQqwfuHxNlQdvBcmCsd6uwBjQJOTCWvniUOpuEPPxI0MFCd7TqTAs
-         PxwDCg7T8Ia+nezZ5ZtSmvsc0ZuqWWFaMd5GOln9AWbxSjFBE5LSb4qzlQsI7vp0f28W
-         1hwJtE8rmis+ut3PoIQRXaQHUx+byh+UEe54Pp4krtLqGyNIOeQ/us6hlWi3u6dUME+F
-         IvzpV15JMVWLbFglQrkZfIq6M/wNTmDdNn45q2XdQch6U11ZztLeSkTqFRl+k9ryBTXX
-         hN6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXG2ufkBpk9Kk1gvFTgf5g+YsvYkFNetMxfcZm5QbarH8ktRtfUTu4A51nIrmdNJT1F5pARwjxmSq75DFM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgClfE/yVqNjqZa9UADOOjpHD/ZgTrKjdXZi+C4cieMAnNw0t1
-	2zOM5Ilvnxf/K11UAmjDukCPIcf2rpQx2DKv3KNfuWbk/xNkEV0Q9ZjCDyX7J0w=
-X-Gm-Gg: ASbGncuqWjq/GrcyEqmoCKERJ882U/IszVXMBdn6+UL9OkaKb4n5rvjIPMaPusmolkk
-	ZwexrO4yZOvQyvLLLcLrD+Ff+kzgyOp40MixI77+X0L9Pbe52k7CLCjBsnzefaz/vYfqbkNUX1K
-	4bFd09y7KzxTKut5WMoAoVikGUPgz/YABuOTZ7VOmgS/eW3XoiQcb6hnaiMNpLVzQkVcoR8mVQu
-	K24ikLz++836yHkK1xdsIFaiJ+fIiffxk+BkZp1WB9ImDxpflODhbaPPgoNiRMObJPU3M6Q/Kkn
-	cWBfpKRE+PRFpjp6djFXx/TC5NTJLry6ek6c8FJJcDxWXtjrH2Ex0OI2
-X-Google-Smtp-Source: AGHT+IG3i/sYdfjxVU/5DJKWsNnGTYm+BVMuqTqLUwyXPnfD53W2Wi3SUbcbcnKkL9uToGoA8/2P6Q==
-X-Received: by 2002:a05:6000:2cb:b0:38d:e584:81ea with SMTP id ffacd0b85a97d-3a08f7a04c9mr1444347f8f.45.1745990459186;
-        Tue, 29 Apr 2025 22:20:59 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2bbf29dsm10403475e9.36.2025.04.29.22.20.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Apr 2025 22:20:58 -0700 (PDT)
-Date: Wed, 30 Apr 2025 08:20:54 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, linux-integrity@vger.kernel.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] tpm: remove extraneous space after newline \n
-Message-ID: <c4ee8e82-4021-418e-a822-34e56c7322c9@stanley.mountain>
-References: <20250429163859.823531-1-colin.i.king@gmail.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="mgl7xiw3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=MVWXoYGa4OsAsg4nc8D9qzEcLgq9gyKCVEtwnH3camo=;
+	b=mgl7xiw3BD4JQ+t5cQFS6f2PNQRy4ucAaDsBHK3E4WqYg+aCGvrH1FyyU0IZ5m
+	ycRbfdoxYzSV1T3uxotcecTXeWDIE1Mil5vKaYkD6730CrV0pAgtK6d9OesylZ+c
+	zT4AkoXyN2c1Cm/ZWotOCtOhBjARuckAfBRRXPrX5b0Uo=
+Received: from [10.42.12.155] (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDX01EPtBFodsoXDg--.22173S2;
+	Wed, 30 Apr 2025 13:24:33 +0800 (CST)
+Message-ID: <b8bc6ce7-55eb-4270-b4dc-d6c853fa65ac@163.com>
+Date: Wed, 30 Apr 2025 13:24:31 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429163859.823531-1-colin.i.king@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] usbip: set the dma mask to 64bit default for vhci-driver
+To: Shuah Khan <skhan@linuxfoundation.org>,
+ Greg KH <gregkh@linuxfoundation.org>
+Cc: Christoph Hellwig <hch@infradead.org>, i@zenithal.me,
+ linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, shuah@kernel.org,
+ valentina.manea.m@gmail.com, Zongmin Zhou <zhouzongmin@kylinos.cn>
+References: <3e1f8fab-0155-4ff9-800d-5fa9df88c48c@linuxfoundation.org>
+ <20250422063409.607859-1-min_halo@163.com> <aAdEM0crDfSP9JYf@infradead.org>
+ <4c6660a6-29ce-4b97-b092-8fc15585e52a@163.com>
+ <2025042512-corsage-handpick-bf2a@gregkh>
+ <575ce02c-9128-4098-a852-d9e14f14010e@163.com>
+ <2025042812-sinister-shaping-bded@gregkh>
+ <097ad0fd-db38-4174-8e34-4ceb485e7e23@linuxfoundation.org>
+Content-Language: en-US
+From: Zongmin Zhou <min_halo@163.com>
+In-Reply-To: <097ad0fd-db38-4174-8e34-4ceb485e7e23@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDX01EPtBFodsoXDg--.22173S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxJFWxXry5uw4xJw4kGw45Wrg_yoW5Gw1fpF
+	W3Jay2krs8Kwn2qrnav3W0vF1FyrZ5t34rWrn8Jw18C390qFyavrWDt398CF9Fvr1xK3W2
+	vrWjgFyakFn8uFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UeKZAUUUUU=
+X-CM-SenderInfo: pplqsxxdorqiywtou0bp/1tbi7gM-q2gRqVj1hwAAsD
 
-On Tue, Apr 29, 2025 at 05:38:59PM +0100, Colin Ian King wrote:
-> There is an extraneous space after a \n in a printk statement.
-> Remove it.
-> 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> ---
->  drivers/char/tpm/eventlog/tpm1.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-> index 12ee42a31c71..566f4df58d48 100644
-> --- a/drivers/char/tpm/eventlog/tpm1.c
-> +++ b/drivers/char/tpm/eventlog/tpm1.c
-> @@ -258,7 +258,7 @@ static int tpm1_ascii_bios_measurements_show(struct seq_file *m, void *v)
->  
->  	eventname = kmalloc(MAX_TEXT_EVENT, GFP_KERNEL);
->  	if (!eventname) {
-> -		printk(KERN_ERR "%s: ERROR - No Memory for event name\n ",
-> +		printk(KERN_ERR "%s: ERROR - No Memory for event name\n",
->  		       __func__);
->  		return -EFAULT;
 
-Let's change this to -ENOMEM as well.
-
-regards,
-dan carpenter
+On 2025/4/29 07:07, Shuah Khan wrote:
+> On 4/28/25 04:04, Greg KH wrote:
+>> A: http://en.wikipedia.org/wiki/Top_post
+>> Q: Were do I find info about this thing called top-posting?
+>> A: Because it messes up the order in which people normally read text.
+>> Q: Why is top-posting such a bad thing?
+>> A: Top-posting.
+>> Q: What is the most annoying thing in e-mail?
+>>
+>> A: No.
+>> Q: Should I include quotations after my reply?
+>>
+>> http://daringfireball.net/2007/07/on_top
+>>
+Sorry for that,and thank you for the comment!I've learned it.
+>> On Mon, Apr 28, 2025 at 05:51:08PM +0800, Zongmin Zhou wrote:
+>>> Dear Greg and Shuah,
+>>>
+>>> I found out that the vhci-hcd driver added this virtual device
+>>> as a platform device from the very beginning since 2014.
+>>
+>> Ah, I should have caught it back then, but at the time there really
+>> wasn't another option.
+>>
+>
+>>> I'm just getting in touch with this module and
+>>> don't have a deep understanding of it，shuah should be clearer.
+>
+> faux_device should work fine for this. We do have to test of course.
+>
+> There are several examples of converting  platform device to faux device.
+>
+> 72239a78f9f5b9f05ea4bb7a15b92807906dab71
+> dcd2a9a5550ef556c8fc11601a0f729fb71ead5d
+>
+Ok,I will learn to do it.
+Thank you for your guidance.
+>>
+>> See the recent patches I did converting drivers to use the faux bus
+>> code, it should be pretty simple to do.
+>>
+>>> I don't know if using the faux bus to replace the platform bus can 
+>>> solve the
+>>> problem that the error limitation on max_hw_sectors for usbip device
+>>> since commit d74ffae8b8dd applied.
+>>
+>> That is for the storage driver, not usbip.  As the faux bus does not
+>> have any real dma operations, this should cause it to work properly
+>> given the default values involed, but that's up to you to test to verify
+>> it does just that.  Try it and see!
+>>
+>>> But this change will request user to update kernel version to 
+>>> support faux
+>>> bus.
+>>
+>> That's just a normal kernel update to a newer version, what is wrong
+>> with that?
+>
+> With one difference that the fix depends on faux_device feature - hence
+> we can't apply it to stables. I do think it is the right direction to
+> go to faux_device.
+>
+I just encountered similar users who were using a lower version of the 
+kernel and were unwilling to upgrade.
+But if reach a consensus to  go to faux_device,
+I will try to make the change(converting platform device to faux device 
+for vhci-hcd).
+>>
+>>> This will also be an expensive change to fix the problem?
+>>
+>> Fixing things properly is the correct thing to do in all cases.
+>>
+>
+> Zongmin, do let me know if you are unable to make the change.
+>
+> thanks,
+> -- Shuah
 
