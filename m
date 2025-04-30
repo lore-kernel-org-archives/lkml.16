@@ -1,127 +1,149 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF091DC9B0
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:53:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 535411DC9B0;
+	Wed, 30 Apr 2025 19:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042801; cv=none; b=s4OrSY3kW1LkTH+iCrnZ+ZiEzD26qvhy/9w0iDD4sbzYLkrtVRsfXVmEI2KfldDGuVunCfskMQxYn6L1reW5emTEsn+cfEg+DoEuLFcFigJDF0KDLwvKjGm8O9XY9YHV0vfEs9piWk4onEr6yKeanX+56sQqrNoNW7o8A3wWV08=
+	t=1746042805; cv=none; b=Ln99V6mEDvfOZlEmuFL1BUB0Mb/leWwDPtIiw2xY1MMU5WBW73s/xW9moZoPsDvDDUtCcE/ukHjmbc8KEBtLVHqkAiK/oR9G3vuthuU6aWxlfWkiErlQ3asSmBKMwDVMtgYwUWbJs46pWCXD44L5kgsCat0xeDJL/4m1Zdja638=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042801; c=relaxed/simple;
-	bh=BYVYLOb7g/trPsg04aimiZO3eX+8p1FII3bTfBVJKiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oRB27iCPygg0DYwnj/9KKHUGn0WakRzi7rUJtVa8IVizZALyiW8C+Vm0hh9lvYZW1fHl5+jgMAZWRHGmoTqXwv6VSRuD7td366dxK/9VySXLhMvkL/J0X2OebnVgl8+WmIeDCNyrEF2sU+3edfRlK9Pfgv8ZLUatYoX7S/HGBTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sePEARQn; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746042805; c=relaxed/simple;
+	bh=gqZ1CjwIv4EHK/oTFgyY7+DEJwVrYndqB0zhX+oq5RI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=G+M3UZrFdkmvftVHun0UzgC6ValEZFA16RKwdqtOJgUjNFGbAAop+SxQHGkLM+Gcb+2KYL5+q3qgAGIBrj/bgB7+cDwl5karHCsGlHW/BseYc3p6iHyIKjMI5aOM9lU2hBsQwhQGMf0g0Q4/Urt/+roHglRuO5yVfHP0OmMXYF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FrxWutFO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sePEARQn"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c336fcdaaso3123555ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:53:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746042798; x=1746647598; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sS3+hirRuenFYIB7Pzrup/YFqLZ6iZUt0EDXHvDSPdw=;
-        b=sePEARQnSrbfSNZI9kex87GsRwtE0/dTQeCbwiZZNCQjup9h4F4SpBJ1KuJ8a5n7cr
-         QTIAolZc3wt3u5dCyDHWO+qyR5ANNVj+s1piv/4zvqzmVMmHlqpJCeEZiYkrcUnCXPls
-         ZcBMCPXZg+RxCTop+8A/+edHlF4w5soFrrSfrfpF2yVMjn8HwB/Yj6O2TCtM2HzvDmqk
-         qVRXlvOiIc4YT+4c/jIJ/JWZc5r6a5PUZnsLXzCCLyBub9cTQ1iSQqbOIpPFGK6kneJP
-         z6RVSH41BdZ2xuCtS2qamUfWqSFcn50YsQa2kv1setZimggZXdRA9DRce18i5XwXUUz3
-         BN7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746042798; x=1746647598;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sS3+hirRuenFYIB7Pzrup/YFqLZ6iZUt0EDXHvDSPdw=;
-        b=TAZqaRfMh325HpSjGLSJoEwEsZ6CAfrI681efVQD2CWltA+LlnhR+Sy3FpwRM39z/f
-         CuMTbuo4OpoMX8IBtwSG/QyuxL/wobzZkwbEenUUiCbOQN/3HJn5u+T4JsN+o1oR+c/M
-         E9BcgZ/VTzGYt07MIcb3bWT82dGjc9vQRjdD5v33GsYZ2iA1phGXsLEHQf/wmUENmSah
-         jS0ij6+ff/2T8czh06kdxZp4O988XWJKnn3gQya7a+fRSTFgvSveQ+wq5Fc4Y9cPZysc
-         Z98bwiQoSV43g0NsNrIrIw1wjnVRLCDBLU1NOiakgnd6tYd/xk0C6tQj+823yYu8enVB
-         spwA==
-X-Forwarded-Encrypted: i=1; AJvYcCVclP4TuVM4J0ITomc3vMye3xw55S9k8U62K2mPGZ1iev1Pux+TcE8pcKASRu2LQumKnuL7BSVNVOpEBdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIcaMJWMKDjveRPDoPgCqGlZhR4ea+e2Fq1oWzAsUc8O9y4DRg
-	n/MPzaVIsg9C20ePcOZXoToGJ44DOiZOo1QUUIomRkS/Ys4JEOgE936/+j6qQqYIOI7ig2eUViS
-	mWQ==
-X-Gm-Gg: ASbGncuKc1lJRCMI3fs26knijOqIjv+qnlnCqbNHOiFOCkJ5OqD/HzQRLzTqTA2itdN
-	bvIeRNFx/Ep+j8zpVhi1jXCADHXvgGoAXzB1GVPG4yFZAtWqN9hXX6V9o6H8m7KTy5RGN7xLJVm
-	pxD9D8UNTS0K2S+rrQUIBV1YT5O/hZNVehMw4WJ6VXtQlDnEcLvHD3qdjC1C/CbY8hoFlZMKCia
-	IxsDfk8SRNggU8MI11n1OfuWdamVubj2sdkDsfpNXsDFoPdxzTjWZxegYqBPXPdLSWWcjMp0dSl
-	G7CCHp/DURMCnubjpWSz9ueKLB1u7i/ScZ5R+mJvXCMkRr7C8VqULR5+Ji/nxyzN0f5LBq7DQKQ
-	bHsgDDg==
-X-Google-Smtp-Source: AGHT+IGcs0gQ+kH9gePUq2IzeHDztkv1kvHGzYIx5as0naNDy5hQJ3XvIttYTvlnG7jSfZ8vALUe5Q==
-X-Received: by 2002:a17:903:3d0c:b0:21f:507b:9ad7 with SMTP id d9443c01a7336-22df34ff95fmr71796595ad.25.1746042798140;
-        Wed, 30 Apr 2025 12:53:18 -0700 (PDT)
-Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d76d56sm126604585ad.4.2025.04.30.12.53.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 12:53:17 -0700 (PDT)
-Date: Wed, 30 Apr 2025 12:53:13 -0700
-From: William McVicker <willmcvicker@google.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: joro@8bytes.org, will@kernel.org, Russell King <linux@armlinux.org.uk>,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] amba: Fix driver_managed_dma check
-Message-ID: <aBJ_qfy9cP_m5fSw@google.com>
-References: <20250425133929.646493-1-robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FrxWutFO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF026C4CEEA;
+	Wed, 30 Apr 2025 19:53:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746042804;
+	bh=gqZ1CjwIv4EHK/oTFgyY7+DEJwVrYndqB0zhX+oq5RI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=FrxWutFOC9cJUsdFL8LaPi52dwvvjXO1nq2X/WSPSDHAixjYiWji+vMdjVcJ5thd7
+	 xLA9WAfdS4Q7/NEri36L/vKWzUUlXXiQKZ9n6EbubRN1/+a14HdzghnLDjt7gQBnux
+	 0IXTts8xU3/OdRSvuQbforDjLb5wl4wqvU7Eb1mF/fn9blapl9aHxtKIONeL9URlKg
+	 XJZ7QlhohYHxCRZPlMwyZKvfxNzVj/rWQqp0aDQPwP5futIUvgeHfrGyuhoDjybyGY
+	 ozwNGgynGwrqjFaSFSaRJu4RX5LbniUpVZMNEeQUOHccDugJYx1j+QtJpu49+g+IEt
+	 QgIKRndMlsIuA==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2d4f8c42f49so786790fac.1;
+        Wed, 30 Apr 2025 12:53:24 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV3q2r5yJyo8IVV84OCPk1LnLnjRZNwWkh/V9dNe2WWFKr5FiJrj7kacpLBQUfGRodeKVDjEmxFrCg6URE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3HtGgjOHqymJ69CXjU9qfjeE7EPwYzEgp13OnZ/+JzYOSbrL2
+	IoDe7dhJbSn4G6Zs+UDkr8cDUbEGn+mS5vZ6HBoBkwDRGAToU16eA2/cnYH1jBZCYjpkltI1QFi
+	iSkeqtLSy9g80Yszf3mTjld7ORX4=
+X-Google-Smtp-Source: AGHT+IH3q4EiGyGslpwH0HJ5nabe37gqDbI31XIQ2UrnCT6u7m2HkRASLjRSlIz74wCJrkCAACS/mA5/yXhfOIVW3Ek=
+X-Received: by 2002:a05:6870:95a0:b0:2d5:307f:cc5f with SMTP id
+ 586e51a60fabf-2da8b020e14mr426310fac.12.1746042804078; Wed, 30 Apr 2025
+ 12:53:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250425133929.646493-1-robin.murphy@arm.com>
+References: <20250411113144.1151094-1-sudeep.holla@arm.com>
+In-Reply-To: <20250411113144.1151094-1-sudeep.holla@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 30 Apr 2025 21:53:12 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gOCX5GGS8F6HidNM46wuKmUE5CdSGtxAm2v3-a-s80Og@mail.gmail.com>
+X-Gm-Features: ATxdqUGUVNMHxO4y2wB0ManCGHv-kmnnDPikxM1LO43IIRBXcL1lScsipTWKt7Q
+Message-ID: <CAJZ5v0gOCX5GGS8F6HidNM46wuKmUE5CdSGtxAm2v3-a-s80Og@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ACPI: PCC: Simplify PCC shared memory region handling
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Adam Young <admiyo@os.amperecomputing.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 04/25/2025, Robin Murphy wrote:
-> Since it's not currently safe to take device_lock() in the IOMMU probe
-> path, that can race against really_probe() setting dev->driver before
-> attempting to bind. The race itself isn't so bad, since we're only
-> concerned with dereferencing dev->driver itself anyway, but sadly my
-> attempt to implement the check with minimal churn leads to a kind of
-> TOCTOU issue, where dev->driver becomes valid after to_amba_driver(NULL)
-> is already computed, and thus the check fails to work as intended.
-> 
-> Will and I both hit this with the platform bus, but the pattern here is
-> the same, so fix it for correctness too.
-
-Thanks!
-
-Reviewed-by: Will McVicker <willmcvicker@google.com>
-
-> 
-> Reported-by: Will McVicker <willmcvicker@google.com>
-> Fixes: bcb81ac6ae3c ("iommu: Get DT/ACPI parsing into the proper probe path")
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On Fri, Apr 11, 2025 at 1:31=E2=80=AFPM Sudeep Holla <sudeep.holla@arm.com>=
+ wrote:
+>
+> The PCC driver now handles mapping and unmapping of shared memory
+> areas as part of pcc_mbox_{request,free}_channel(). Without these before,
+> this ACPI PCC opregion driver did handling of those mappings like several
+> other PCC mailbox client drivers.
+>
+> There were redundant operations, leading to unnecessary code. Maintaining
+> the consistency across these driver was harder due to scattered handling
+> of shmem.
+>
+> Just use the mapped shmem and remove all redundant operations from this
+> driver.
+>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Tested-by: Adam Young <admiyo@os.amperecomputing.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 > ---
->  drivers/amba/bus.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
-> index 71482d639a6d..84bc788663e6 100644
-> --- a/drivers/amba/bus.c
-> +++ b/drivers/amba/bus.c
-> @@ -353,7 +353,7 @@ static void amba_shutdown(struct device *dev)
->  
->  static int amba_dma_configure(struct device *dev)
->  {
-> -	struct amba_driver *drv = to_amba_driver(dev->driver);
-> +	const struct device_driver *drv = READ_ONCE(dev->driver);
->  	enum dev_dma_attr attr;
->  	int ret = 0;
->  
-> @@ -365,7 +365,7 @@ static int amba_dma_configure(struct device *dev)
->  	}
->  
->  	/* @drv may not be valid when we're called from the IOMMU layer */
-> -	if (!ret && dev->driver && !drv->driver_managed_dma) {
-> +	if (!ret && drv && !to_amba_driver(drv)->driver_managed_dma) {
->  		ret = iommu_device_use_default_domain(dev);
->  		if (ret)
->  			arch_teardown_dma_ops(dev);
-> -- 
-> 2.39.2.101.g768bb238c484.dirty
-> 
+>  drivers/acpi/acpi_pcc.c | 13 ++-----------
+>  1 file changed, 2 insertions(+), 11 deletions(-)
+>
+> Hi Rafael,
+>
+> This is just resend of the couple of patches that was part of a series [1=
+][2].
+> Only core PCC mailbox changes were merged during v6.15 merge window.
+> So dropping all the maintainer acks and reposting it so that it can
+> be picked up for v6.16 via maintainers tree.
+>
+> [1] https://lore.kernel.org/all/20250313-pcc_fixes_updates-v3-12-019a4aa7=
+4d0f@arm.com/
+> [2] https://lore.kernel.org/all/20250313-pcc_fixes_updates-v3-13-019a4aa7=
+4d0f@arm.com/
+
+Both applied as 6.16 material, thanks!
+
+> diff --git a/drivers/acpi/acpi_pcc.c b/drivers/acpi/acpi_pcc.c
+> index 07a034a53aca..97064e943768 100644
+> --- a/drivers/acpi/acpi_pcc.c
+> +++ b/drivers/acpi/acpi_pcc.c
+> @@ -31,7 +31,6 @@
+>
+>  struct pcc_data {
+>         struct pcc_mbox_chan *pcc_chan;
+> -       void __iomem *pcc_comm_addr;
+>         struct completion done;
+>         struct mbox_client cl;
+>         struct acpi_pcc_info ctx;
+> @@ -81,14 +80,6 @@ acpi_pcc_address_space_setup(acpi_handle region_handle=
+, u32 function,
+>                 ret =3D AE_SUPPORT;
+>                 goto err_free_channel;
+>         }
+> -       data->pcc_comm_addr =3D acpi_os_ioremap(pcc_chan->shmem_base_addr=
+,
+> -                                             pcc_chan->shmem_size);
+> -       if (!data->pcc_comm_addr) {
+> -               pr_err("Failed to ioremap PCC comm region mem for %d\n",
+> -                      ctx->subspace_id);
+> -               ret =3D AE_NO_MEMORY;
+> -               goto err_free_channel;
+> -       }
+>
+>         *region_context =3D data;
+>         return AE_OK;
+> @@ -113,7 +104,7 @@ acpi_pcc_address_space_handler(u32 function, acpi_phy=
+sical_address addr,
+>         reinit_completion(&data->done);
+>
+>         /* Write to Shared Memory */
+> -       memcpy_toio(data->pcc_comm_addr, (void *)value, data->ctx.length)=
+;
+> +       memcpy_toio(data->pcc_chan->shmem, (void *)value, data->ctx.lengt=
+h);
+>
+>         ret =3D mbox_send_message(data->pcc_chan->mchan, NULL);
+>         if (ret < 0)
+> @@ -134,7 +125,7 @@ acpi_pcc_address_space_handler(u32 function, acpi_phy=
+sical_address addr,
+>
+>         mbox_chan_txdone(data->pcc_chan->mchan, ret);
+>
+> -       memcpy_fromio(value, data->pcc_comm_addr, data->ctx.length);
+> +       memcpy_fromio(value, data->pcc_chan->shmem, data->ctx.length);
+>
+>         return AE_OK;
+>  }
+> --
+> 2.34.1
+>
