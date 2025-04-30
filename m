@@ -1,168 +1,176 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BAC2882D4
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82F829C341;
+	Wed, 30 Apr 2025 20:03:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746043281; cv=none; b=bZnlrQ2wOEPfEZAB+bU8cz3uvyfN3lYe6QTwdiDk4mzWSBOcxuAdyJyFbknRUSpQxR1cfwXLfZUZoAeuxloxmTb/kYxscFHRjcmvYaMcfjGbHazIblok0dcZP9p8q9aG+mgSh7RnxnEXQnPsQbcPWtPVPSrQpFvjRY4+6NDeRo4=
+	t=1746043402; cv=none; b=fjWx7GatKQTLf7u1jsryPzIeTJb4XMN79EtHFa1wOs0Vf77qNfHAooX6VdYhRjOcGYNCxgkMdcFabSa/5mOfVzGyUySaDRjj72gwntuieYaxRyMgh6QWwZ4vmffIiQ/d9xw36KMOwFQtDMPihd/M4Sc0A0ZeeKILq7lUSU18kBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746043281; c=relaxed/simple;
-	bh=IeDDCZCEXYK8H15EfdB2ycNez3dvrWyEpkVr1ZAn2zk=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=qWKbfe0yrloYJLPVWLNycmGoUIzI7R9upw6iewmb1zGw4AEWqRfhxq+mbKGIZw37ahmyYFFMrDB9iyIuCqOP8MW5hPxZpOd+PTGQ2v+oanr5/h5WrA/xXQVLXqfA4N1zdQ/RmG68O4mFVARVcIXPR45NftCk4sgeMGVJ4xa699w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MzJa1FTZ; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1746043402; c=relaxed/simple;
+	bh=NwkGTVS0PocVVimFJdrGAK87WACDEWoHwAWZ4ywRzNo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aSeyjcbDgTRtwsw6FA1iASS+TW6inVcbDVATTZAGubWIrORCIDBtEAo6wlxQsEFYZ+8cbl3x7uRM7BnBMSKYsTRUwzemTrkNedleGa3MmznAWUt6dBCJvBWrjXDGMalHi9lzLjshmNTRaGroeV5eBPMqOEFUldkyyQnuJ9N85IY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGXtdOIs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MzJa1FTZ"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-af972dd0cd6so108689a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746043277; x=1746648077; darn=vger.kernel.org;
-        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Q4mgaxp2PNRzYuPFI4nl6JEz+Vc7zbRAR2iy6HA/VcQ=;
-        b=MzJa1FTZ6ItBoLa7fIa419lbBPX1Ftv5Og4yutekEwjf3QdDjF0oM+SRS5qlI9qvOm
-         RANK4l3cOPU7IjuFBjyOopC8wGRDFFtZojdNnUs1Dyf2iq8hyBJKFWFbHD1GLzcO5qYo
-         yJcXW7uhMrtJ5G/GHxZBsuEhQV4nW3U89GWxWf9YvoIvdyJzjbme4JPMWkCDFVah6yUQ
-         QQeMP0I1hBBoDZHlkdg2kCHfrdFTFyBJu4EDY9zqRG4YQPAV1liahGzrUfC3z2VogRX4
-         qOehruOb9hosDdFKIvthMll9jN5yUmODCNnl2QcbV71D8CHKhUyUXjZM3NsLC9dmBxE5
-         j0hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746043277; x=1746648077;
-        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Q4mgaxp2PNRzYuPFI4nl6JEz+Vc7zbRAR2iy6HA/VcQ=;
-        b=LNloFIRCYxovr6wltBu+f31Jv3t3ozMfL+fkIMDJJ8yDH5zn0sjSO523kQ1wD2H/iJ
-         ULPF7YHEZB4Ymqh6BIY44Nxb+jEXAv49ZYpqQyoshtPP8M2bf2g96l7Mf9wzFUfYDarE
-         0JTzUtlE1G2v75pWh6i7/CGIhtwoxuUvZXkFluuPNgZ5vouSJ9Jjk9/5t+z+2ubRZw3i
-         jVkIFWut+8ZMp9aJGRBn5bVh6SdQcflzNGQs1lWV9RKzqAiS+aZa/lxMlZVGsVYP0xJR
-         Q30tpqmw8gnAuEQNRKfp/FTVBC5J3uz3BIohvyKqMphwsjVpUl/8OlFmJckTGg74Vi+l
-         NwHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWXlpouqIVPDWosn3geZwNh/KyHU9MfE6r+AFx1Hf9g1lgw7YypbZth2CAcyjriXQf4yEK27GJmuOq8RBk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJQRbvf7K7oBXrrGcZIRF+VMcXKv97XPgaFgm3VPEuxQqN1j5u
-	PyQZipdf4XLZ6LNS3Gs6pu2xKuPCv+f7DgvggL8+rEcufRwFhrLaJ/IRvwEdoN6OhlZQFpUo5Mc
-	Co3531g==
-X-Google-Smtp-Source: AGHT+IEwy2caukEcTPbu8Rd8PJTVi66QeaVPAWQtLK+ABKf9p00gzD24MAHOci7axAO8NUNJtvFirOvSphhn
-X-Received: from pgbcp11.prod.google.com ([2002:a05:6a02:400b:b0:b15:9c5d:9278])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:900d:b0:1f5:706b:5410
- with SMTP id adf61e73a8af0-20a899070e9mr5395476637.38.1746043276760; Wed, 30
- Apr 2025 13:01:16 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:01:08 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGXtdOIs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 694E4C4CEF5;
+	Wed, 30 Apr 2025 20:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746043401;
+	bh=NwkGTVS0PocVVimFJdrGAK87WACDEWoHwAWZ4ywRzNo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=sGXtdOIsh95cJHlMJ2UvMYNq00VI1k0tUOUT8o+jwmfNBOiBD5Hz43nN12KbD+z1A
+	 WJh8s/CwSa4vKwQyieZf4GpmaGw1DibvLQyYrAcawmxZ5u8T9z5fpOhnCVUKDx5+dZ
+	 VUCHdTS+Xporl7tISdbYNDtETZHm0ffNF9LD5pjz/oMQW9U6LiiJb/wzo4r2Kzxpqm
+	 96whW6qML7A3aFOUj2zlxPbO44i2YU1VeyrmWycr39pjqvd9y977mil+s0iCQeOyIJ
+	 iI3//MkPerjXdl6K5HHd+Jya+nDST2Apv8BzB1DtdRIwJPsdiyloj4TM/MC5VYojRW
+	 cTkLNGVDCXIag==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2da3c5729fcso211955fac.0;
+        Wed, 30 Apr 2025 13:03:21 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU4gRMLN3RKOl6JxnQF+6oEqfrLQeYE1g/a2B3AwNQxLggkJR1NGTrj6xGH7NYf6wITxZ3pPu9evqgH@vger.kernel.org, AJvYcCWRvkUqRnLu6EsX44PE187A2zAUlwGlQeyTSirJw+Ygdd6IoruO0FV3LWE5TN2hlfESb94KSb02+8k=@vger.kernel.org, AJvYcCXLReoQTGWoiYwA0kyOl6+SzSvDWCHCq62P3FeciJWN0aETxhVmgem5Xomtue9Tm5PGlNZ0fgaQ0qxAzfqh@vger.kernel.org
+X-Gm-Message-State: AOJu0YyntJUcnLxZM5FPAD90ULFTkLOFu1wRWxwrDuM3rUo6nWr7Ib+a
+	570SwIAdc+WtlQsBNd48PkLQWfmnpRm8J2v8ODO9OvlEyT/s9X37Rbpl7z859cglO+cQ+Ehe7v1
+	WQg6fTzfyJynX5lDkt+/cI474XQI=
+X-Google-Smtp-Source: AGHT+IGhmLyBRn0IZdPfK6KM97JS9uw2zTeIkkXouEb91STcAV8rAa4Gk6jixae6PbBFOGyZRuGtQUMmrj+NP/8P2CA=
+X-Received: by 2002:a05:6870:71cb:b0:2b3:55b3:e38 with SMTP id
+ 586e51a60fabf-2da69f21b34mr2403838fac.21.1746043400613; Wed, 30 Apr 2025
+ 13:03:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430200108.243234-1-irogers@google.com>
-Subject: [PATCH v1] perf intel-tpebs: Filter non-workload samples
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250411093855.982491-1-zhenglifeng1@huawei.com> <f6904bb1-f41f-4be9-92bb-92fec509a821@amd.com>
+In-Reply-To: <f6904bb1-f41f-4be9-92bb-92fec509a821@amd.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 30 Apr 2025 22:03:09 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0gNZsv+sJ8OweGYE6bFTqD48g3JUJn_kL2m17Q2QX6p1w@mail.gmail.com>
+X-Gm-Features: ATxdqUFlzi9fK4g3MpOxGzQvjbOGdDgFxNB6hIBF5J0ky9zNPfIg6Ulnwvdr2WA
+Message-ID: <CAJZ5v0gNZsv+sJ8OweGYE6bFTqD48g3JUJn_kL2m17Q2QX6p1w@mail.gmail.com>
+Subject: Re: [PATCH v7 0/8] Add functions for getting and setting registers
+ related to autonomous selection in cppc_acpi
+To: Mario Limonciello <mario.limonciello@amd.com>, Lifeng Zheng <zhenglifeng1@huawei.com>
+Cc: lenb@kernel.org, robert.moore@intel.com, viresh.kumar@linaro.org, 
+	gautham.shenoy@amd.com, ray.huang@amd.com, perry.yuan@amd.com, 
+	pierre.gondois@arm.com, sumitg@nvidia.com, acpica-devel@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linuxarm@huawei.com, jonathan.cameron@huawei.com, 
+	zhanjie9@hisilicon.com, lihuisong@huawei.com, cenxinghai@h-partners.com, 
+	hepeng68@huawei.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-If perf is running with a benchmark then we want the retirement
-latency samples associated with the benchmark rather than from the
-system as a whole. Use the workload's PID to filter out samples that
-aren't from the workload or its children.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/intel-tpebs.c | 59 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 58 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-index 7fd6cae1063e..4ad4bc118ea5 100644
---- a/tools/perf/util/intel-tpebs.c
-+++ b/tools/perf/util/intel-tpebs.c
-@@ -3,7 +3,7 @@
-  * intel_tpebs.c: Intel TPEBS support
-  */
- 
+On Fri, Apr 11, 2025 at 8:18=E2=80=AFPM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> On 4/11/2025 4:38 AM, Lifeng Zheng wrote:
+> > The patch series is organized in two parts:
+> >
+> >   - patch 1-6 refactor out the general CPPC register get and set functi=
+ons
+> >     in cppc_acpi.c
+> >
+> >   - patches 7-8 add functions for getting and setting values of auto_se=
+l,
+> >     energy_perf and auto_act_window in cppc_acpi.c
+> >
+> > Changelog:
+> >
+> > v7:
+> >
+> >   - Fix some typos
+> >   - Add check of null pointer in cppc_get_reg_val(),
+> >     cppc_get_auto_act_window() and cppc_get_auto_sel()
+> >   - Replace ternary operator with logical expression in cppc_get_reg_va=
+l()
+> >
+> > v6:
+> >
+> >   - Remove the last patch, will resent it in the future after reaching =
+an
+> >     agreement with Sumit
+> >   - split patch 3 into 2 smaller patches
+> >   - Remove the printing of reg_idx in cppc_get_reg_val() and
+> >     cppc_set_reg_val()
+> >   - Change the logic for determing whether a register is supported in
+> >     cppc_get_reg_val() and cppc_set_reg_val()
+> >
+> > v5:
+> >
+> >   - add more explanation to the commit logs and comments
+> >   - change REG_OPTIONAL from bin to hex
+> >   - split patch 2 into 3 smaller patches
+> >   - remove CPPC_REG_VAL_READ() and CPPC_REG_VAL_WRITE() macros
+> >   - move the modification part in patch 5 into a separate patch
+> >   - rename the sysfs file from "energy_perf" to
+> >     energy_performance_preference_val
+> >
+> > v4:
+> >
+> >   - add REG_OPTIONAL and IS_OPTIONAL_CPC_REG to judge if a cpc register=
+ is
+> >     an optional one
+> >   - check whether the register is optional before CPC_SUPPORTED check i=
+n
+> >     cppc_get_reg_val() and cppc_set_reg_val()
+> >   - check the register's type in cppc_set_reg_val()
+> >   - add macros to generally implement registers getting and setting
+> >     functions
+> >   - move some logic codes from cppc_cpufreq.c to cppc_acpi.c
+> >   - replace cppc_get_auto_sel_caps() by cppc_get_auto_sel()
+> >
+> > v3:
+> >
+> >   - change cppc_get_reg() and cppc_set_reg() name to cppc_get_reg_val()=
+ and
+> >     cppc_set_reg_val()
+> >   - extract cppc_get_reg_val_in_pcc() and cppc_set_reg_val_in_pcc()
+> >   - return the result of cpc_read() in cppc_get_reg_val()
+> >   - add pr_debug() in cppc_get_reg_val_in_pcc() when pcc_ss_id < 0
+> >   - rename 'cpunum' to 'cpu' in cppc_get_reg_val()
+> >   - move some macros from drivers/cpufreq/cppc_cpufreq.c to
+> >     include/acpi/cppc_acpi.h with a CPPC_XXX prefix
+> >
+> > v2:
+> >
+> >   - fix some incorrect placeholder
+> >   - change kstrtoul to kstrtobool in store_auto_select
+> >
+> > ---
+> > Discussions of previous versions:
+> > v1: https://lore.kernel.org/all/20241114084816.1128647-1-zhenglifeng1@h=
+uawei.com/
+> > v2: https://lore.kernel.org/all/20241122062051.3658577-1-zhenglifeng1@h=
+uawei.com/
+> > v3: https://lore.kernel.org/all/20241216091603.1247644-1-zhenglifeng1@h=
+uawei.com/
+> > v4: https://lore.kernel.org/all/20250113122104.3870673-1-zhenglifeng1@h=
+uawei.com/
+> > v5: https://lore.kernel.org/all/20250206131428.3261578-1-zhenglifeng1@h=
+uawei.com/
+> > v6: https://lore.kernel.org/all/20250409065703.1461867-1-zhenglifeng1@h=
+uawei.com/
+> >
+> > Lifeng Zheng (8):
+> >    ACPI: CPPC: Add IS_OPTIONAL_CPC_REG macro to judge if a cpc_reg is
+> >      optional
+> >    ACPI: CPPC: Optimize cppc_get_perf()
+> >    ACPI: CPPC: Rename cppc_get_perf() to cppc_get_reg_val()
+> >    ACPI: CPPC: Extract cppc_get_reg_val_in_pcc()
+> >    ACPI: CPPC: Add cppc_set_reg_val()
+> >    ACPI: CPPC: Refactor register value get and set ABIs
+> >    ACPI: CPPC: Modify cppc_get_auto_sel_caps() to cppc_get_auto_sel()
+> >    ACPI: CPPC: Add three functions related to autonomous selection
+> >
+> >   drivers/acpi/cppc_acpi.c     | 313 +++++++++++++++++++++-------------=
 -
-+#include <api/fs/fs.h>
- #include <sys/param.h>
- #include <subcmd/run-command.h>
- #include <thread.h>
-@@ -121,6 +121,59 @@ static int evsel__tpebs_start_perf_record(struct evsel *evsel)
- 	return ret;
- }
- 
-+static bool is_child_pid(pid_t parent, pid_t child)
-+{
-+	if (parent < 0 || child < 0)
-+		return false;
-+
-+	while (true) {
-+		char path[PATH_MAX];
-+		char line[256];
-+		FILE *fp;
-+
-+new_child:
-+		if (parent == child)
-+			return true;
-+
-+		if (child <= 0)
-+			return false;
-+
-+		scnprintf(path, sizeof(path), "%s/%d/status", procfs__mountpoint(), child);
-+		fp = fopen(path, "r");
-+		if (!fp) {
-+			/* Presumably the process went away. Assume not a child. */
-+			return false;
-+		}
-+		while (fgets(line, sizeof(line), fp) != NULL) {
-+			if (strncmp(line, "PPid:", 5) == 0) {
-+				fclose(fp);
-+				if (sscanf(line + 5, "%d", &child) != 1) {
-+					/* Unexpected error parsing. */
-+					return false;
-+				}
-+				goto new_child;
-+			}
-+		}
-+		/* Unexpected EOF. */
-+		fclose(fp);
-+		return false;
-+	}
-+}
-+
-+static bool should_ignore_sample(const struct perf_sample *sample, const struct tpebs_retire_lat *t)
-+{
-+	pid_t workload_pid = t->evsel->evlist->workload.pid;
-+	pid_t sample_pid = sample->pid;
-+
-+	if (workload_pid < 0 || workload_pid == sample_pid)
-+		return false;
-+
-+	if (!t->evsel->core.attr.inherit)
-+		return true;
-+
-+	return !is_child_pid(workload_pid, sample_pid);
-+}
-+
- static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 				union perf_event *event __maybe_unused,
- 				struct perf_sample *sample,
-@@ -140,6 +193,10 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
- 		mutex_unlock(tpebs_mtx_get());
- 		return -EINVAL;
- 	}
-+	if (should_ignore_sample(sample, t)) {
-+		mutex_unlock(tpebs_mtx_get());
-+		return 0;
-+	}
- 	/*
- 	 * Need to handle per core results? We are assuming average retire
- 	 * latency value will be used. Save the number of samples and the sum of
--- 
-2.49.0.906.g1f30a19c02-goog
+> >   drivers/cpufreq/amd-pstate.c |   3 +-
+> >   include/acpi/cppc_acpi.h     |  30 +++-
+> >   3 files changed, 219 insertions(+), 127 deletions(-)
+> >
+>
+> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
+All patches in the series applied as 6.16 material, thanks!
