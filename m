@@ -1,122 +1,130 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80B7A1AAA0D
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:12:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7081525A355;
+	Wed, 30 Apr 2025 15:15:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746025945; cv=none; b=lSlxE8xSzTzaBoZlpLW+N6ZxW0y0mmEXh80KEnVoU50XM3EnySwIZrPXIU3c4Keh2Z+7Q2+f6+yOKQ7iNT3lXPGJELt6v9zL7FJihDdGt0akA76K3q1aam8OgBbT4/o0ceKDmm7BN5rr2XsACiojj7BC3r96AzIZmTprTfRZAeg=
+	t=1746026125; cv=none; b=P2j0LhvbZjE+U0UEZjhX1KHPR34mqE3ixYrAcDY/LoS3/gkmSJB/T4Mx3CmCucKIwGOCb8J7iWBIs2JuwF5O77wLJdGCJLo27r4HlOTLP7af8cixc6JZvvIpFX15DhGQjSlcP9RowuSVJ6U9KH8KaWvZPUbncRaDbG7W4GOCmHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746025945; c=relaxed/simple;
-	bh=3cycFABzBd9M6b4gkgL4KrEdY8QhVRFmgCnPwxrmyOk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Stb1m6yT/t88nExm2xx/O3RoDutiXATpJXQTKSOysZXR79WupBsbO77HKSZqs+SHMYreIXoXg2LvNyTkFCtJPTRXCfgAntDeVle/9jFUjdg9THCwNDiOdrRPnG9J2K39vokq6sJvNGNVOjVku3sipfsx2QdGj5lFcwi9g+d+kV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=36O17fre; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746026125; c=relaxed/simple;
+	bh=jubYPsJzd+H1RTCRdZIk+1nms8xnduYNChhUwp+FvVk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kDVxeUJCMwnReXlQroz1itsokvM0WZQ3juCG3yGXTA8/G8B6mbULnkHigqeUx0cl5/oLc3eg5BA45bI9DuFuHUbgGR8LM1kWV3/EKmoPiQORGT57oyzElixBgFUxrJ2GjiNA0CjvAySoF9e33StPc1rN2v9JS7vWEQ8fGYt3BE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=mUkVmkxJ; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="36O17fre"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-47681dba807so293321cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746025942; x=1746630742; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yhEh4tvbRMYHNdTjhp8bc+1l+QqiVag0W2z4WqVEcFg=;
-        b=36O17freEVVJUorWMnWXx5lDRDqTOw0ly60tP2p4r4N3to2CyK3Am3fgWPTWPHyvmt
-         uCQXVQQJJBZPy23VoKFuk/B2BU6+hRD2pHmxhpnO7EHZxUiV2FxkQJpiMC9Sf4mIqX6L
-         XOR3ztBGaG6TwjQkzUsMso48XyeX/mx6tmmdj40eOx6uJVDgCKNhHpyDhYl5K3FuAE4o
-         LeMj7vYx5ZaZ3aiG5A9epukKu49Gm5UWfuHGVNqFNptvTu46X4qq72oP+c5we5nUGPdJ
-         EfJc5HbDs0hg8qmu+1vkF4cgR8MTlCi4sEfNyPZ4v2kpbaVc7cm5LAdYf1kJI0JgCmEN
-         Je0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746025942; x=1746630742;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yhEh4tvbRMYHNdTjhp8bc+1l+QqiVag0W2z4WqVEcFg=;
-        b=RxkTTQwoDdUmtuk73tkLUmpYnkpsaI5dHDiXCO4kCy4KtG5TUEc18VEI6UOOJtDER+
-         T+5x2/lNWvZbQP/AKoZiz1tAvXPRnbI/wHr8VSy/vwuFf79/4l7GonxnmEgmSu3NBYEA
-         hV17H9RphiM1BOtCLrZ4gdT9j3sSOygw3ZhAuZ5XgKS81BFVoZN+2d4HTD+GfPj5iKPy
-         RxeV5W8UWXyfAkixzU7CW3wRP6RmSw9M/2RWDv+t6u3nzxjv6XMl/UkM3QZe3e+Q1/7T
-         0v6wcnNAg8K+J2l+1C7ZaHsYT6OSujybR5gD4B6VEsCCu9GxC1Zip4p7aQ1sg9LJ1AFa
-         PRGg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0GevrJmTQ9iyiOgIAygS9hKFYwaw9kki2cRv41Xcf6ts8lKzkJ8cqZr222WOEKphGe13BmRbTmm1pdaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwvprBYyxyDId1vrJY0CkESDpZDeZek92sD0v/2lAMgbXRznE2Z
-	pdvz5v5uIMipv2gL1Z9Ycf1rGOpS2REW9MqN32x5bBkQif3ylWH67PU3uQJ41n71M/cgF9s+s7U
-	hAfcFnpfmRGeV+M8mWI37o+UnjwDFq7mNetDG
-X-Gm-Gg: ASbGncs9cgDhGGVoXaEI3e5kYi/8w81gmyi4fiCVw3Rky/byDUZS0YCUp7BXNY3PHrU
-	Ck9sDR8xsGkaR2DWGrje9N8O6pF2lin2lbUuqPR0xyaznLe3BP/0+Ud5nttoTneW8UnlmbpdI2b
-	g6jdAR0jAEQA2kTVxzHEk0fWY4EdGgeg+oyZZlcNp/rkL0/0e7c3g=
-X-Google-Smtp-Source: AGHT+IFmlpWRvz2HKpk5LKdhm8W/XO9lRRW725KI52RH7XaAa1gsuyJ97GzbXpDX+9WOsXmG+wHKzjnR3JYZPru6i48=
-X-Received: by 2002:a05:622a:1a01:b0:48a:ba32:370 with SMTP id
- d75a77b69052e-48aba322710mr352041cf.10.1746025942178; Wed, 30 Apr 2025
- 08:12:22 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="mUkVmkxJ"
+Received: from [10.137.184.60] (unknown [131.107.1.188])
+	by linux.microsoft.com (Postfix) with ESMTPSA id CF48C204E7ED;
+	Wed, 30 Apr 2025 08:15:17 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF48C204E7ED
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746026118;
+	bh=/aktgTobyPAcbV95qdvhU8MApa9HEEMHftbIxEqr9ho=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=mUkVmkxJTAGRbCxoIVBT7p/2uea4l4yxlym03yNjdLpbUEZCvFsuSZVSXMG//aXxJ
+	 xzfq18AkYXiqv70frdVzYQFWB4W5bCLS9W7RQ3/XqmVnTgr7MWnkCFn/TSvhOOAtZg
+	 TDkhTZUAmW3Qs7BoqNyiegR4GyAsYHzxlNcv6Va0=
+Message-ID: <50dd72d6-6e12-4b0e-954d-5b7e57fd02fb@linux.microsoft.com>
+Date: Wed, 30 Apr 2025 08:15:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
- <20250429-debugfs-rust-v1-2-6b6e7cb7929f@google.com> <2025043006-snowflake-headless-e417@gregkh>
-In-Reply-To: <2025043006-snowflake-headless-e417@gregkh>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Wed, 30 Apr 2025 08:12:09 -0700
-X-Gm-Features: ATxdqUHiJZ8BaCLBuJNRHBSIT3lqotNE34NeBiHm7ND-1AR63rbwktVRylHyOGg
-Message-ID: <CAGSQo01-bQydWgiC-+VRL7ac6v8WG2jwZ5RewPheW-quSQBsow@mail.gmail.com>
-Subject: Re: [PATCH 2/8] rust: debugfs: Bind file creation for long-lived Display
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH hyperv-next v3] x86/hyperv: Fix APIC ID and VP index
+ confusion in hv_snp_boot_ap()
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "apais@microsoft.com" <apais@microsoft.com>,
+ "benhill@microsoft.com" <benhill@microsoft.com>,
+ "bperkins@microsoft.com" <bperkins@microsoft.com>,
+ "sunilmut@microsoft.com" <sunilmut@microsoft.com>,
+ "bp@alien8.de" <bp@alien8.de>,
+ "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+ "decui@microsoft.com" <decui@microsoft.com>,
+ "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
+ "hpa@zytor.com" <hpa@zytor.com>, "kys@microsoft.com" <kys@microsoft.com>,
+ "mikelley@microsoft.com" <mikelley@microsoft.com>,
+ "mingo@redhat.com" <mingo@redhat.com>,
+ "tglx@linutronix.de" <tglx@linutronix.de>,
+ "tiala@microsoft.com" <tiala@microsoft.com>,
+ "wei.liu@kernel.org" <wei.liu@kernel.org>,
+ "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "x86@kernel.org" <x86@kernel.org>
+References: <20250428182705.132755-1-romank@linux.microsoft.com>
+ <SN6PR02MB4157F5E0375016711820D2FBD4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Language: en-US
+From: Roman Kisel <romank@linux.microsoft.com>
+In-Reply-To: <SN6PR02MB4157F5E0375016711820D2FBD4832@SN6PR02MB4157.namprd02.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 5:06=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Apr 29, 2025 at 11:15:56PM +0000, Matthew Maurer wrote:
-> > +    /// Create a file in a DebugFS directory with the provided name, a=
-nd contents from invoking
-> > +    /// [`Display::fmt`] on the provided reference.
-> > +    ///
-> > +    /// # Example
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// let dir =3D Dir::new(c_str!("my_debugfs_dir"), None)?;
->
-> Again, can never fail, so don't check it.
->
-> > +    /// let file =3D dir.display_file(c_str!("foo"), &200)?;
->
-> Again, can never fail, so don't check it.
->
-> And "200" is wrong, did you test these?
 
-How is 200 wrong? This displays the number "200" in a file called
-"foo" in the directory "my_debugfs_dir"?
 
->
->
-> > +    /// # Ok::<(), Error>(())
-> > +    /// ```
-> > +    pub fn display_file<T: Display + Sized>(
-> > +        &self,
-> > +        name: &CStr,
-> > +        data: &'static T,
-> > +    ) -> Result<ARef<Self>> {
->
-> Again, will always succeed, you don't want any checking of Result<>
->
-> thanks,
->
-> greg k-h
+On 4/29/2025 8:42 PM, Michael Kelley wrote:
+> From: Roman Kisel <romank@linux.microsoft.com> Sent: Monday, April 28, 2025 11:27 AM
+>>
+>> To start an application processor in SNP-isolated guest, a hypercall
+>> is used that takes a virtual processor index. The hv_snp_boot_ap()
+>> function uses that START_VP hypercall but passes as VP index to it
+>> what it receives as a wakeup_secondary_cpu_64 callback: the APIC ID.
+>>
+>> As those two aren't generally interchangeable, that may lead to hung
+>> APs if the VP index and the APIC ID don't match up.
+>>
+>> Update the parameter names to avoid confusion as to what the parameter
+>> is. Use the APIC ID to the VP index conversion to provide the correct
+>> input to the hypercall.
+>>
+>> Cc: stable@vger.kernel.org
+>> Fixes: 44676bb9d566 ("x86/hyperv: Add smp support for SEV-SNP guest")
+>> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+>> ---
+>> [V3]
+>> 	- Removed the misleading comment about the APIC ID and VP indices.
+>> 	- Removed the not sufficiently founded if statement that was added
+>> 	  to the previous version of the patch to avoid the O(n) time complexity.
+>> 	  I'll follow up with a separate patch to address that as that pattern
+>> 	  has crept into other places in the code in the AP wakeup path.
+>> 	- Fixed the logging message to use the "VP index" terminology
+>> 	  consistently.
+>>      ** Thank you, Michael! **
+>>
+>> [V2]
+>> 	https://lore.kernel.org/linux-hyperv/20250425213512.1837061-1-romank@linux.microsoft.com/
+>>      - Fixed the terminology in the patch and other code to use
+>>        the term "VP index" consistently
+>>      ** Thank you, Michael! **
+>>
+>>      - Missed not enabling the SNP-SEV options in the local testing,
+>>        and sent a patch that breaks the build.
+>>      ** Thank you, Saurabh! **
+>>
+>>      - Added comments and getting the Linux kernel CPU number from
+>>        the available data.
+>>
+>> [V1]
+>>      https://lore.kernel.org/linux-hyperv/20250424215746.467281-1-romank@linux.microsoft.com/
+>> ---
+>>   arch/x86/hyperv/hv_init.c       | 33 +++++++++++++++++++++++++
+>>   arch/x86/hyperv/hv_vtl.c        | 44 +++++----------------------------
+>>   arch/x86/hyperv/ivm.c           | 22 +++++++++++++++--
+>>   arch/x86/include/asm/mshyperv.h |  6 +++--
+>>   include/hyperv/hvgdk_mini.h     |  2 +-
+>>   5 files changed, 64 insertions(+), 43 deletions(-)
+> 
+> Thanks for fixing the terminology, in addition to fixing the bug that is your original
+> purpose for the patch.
+
+Thanks for your support and feedback :)
+
+> 
+> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+
+-- 
+Thank you,
+Roman
+
