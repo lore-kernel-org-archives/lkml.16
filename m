@@ -1,119 +1,155 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EEF235058
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1B80145A03
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:49:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746049494; cv=none; b=dtMwSRgN9hU09YvQdm2F/m3r8R3Bvd9u2KA1wJEFoM1UARiPp5VJaNNg/+ODOPMb/XuqcS1CJeZcGZSdreXQPcYD4DInsgEAvTR9D8jKRQElnGpxSWiy4dBpKNfan7uaqFt4QDpYEhwZuKsHbdkFr1Co5slpTa9Uw0gu+pAUPxo=
+	t=1746049744; cv=none; b=STuK3v9elzUlaxJCWHvcXGrjtTXBYx+z8tPN5aSShV1RWd2D9SmtsyItQ29zwwvjDq9G2UTwEY0cpdaMlKdhq4NvaqkZlBEUuW+uT/8H9zyhsedsd85k2mpHkvHQfPb6IBMJ9N1aU4HL9XiG/uByxCWNQACElzJN2oMUoVbM5/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746049494; c=relaxed/simple;
-	bh=q4h9txxyVkNdC6jvewm0aNetCP9eOddzybErf3K9z8I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sdJU8Dnu/DLFY+QBPlzVaL6DDjhqJC29jZrEUIcyHnxCO8z7pk12RHzAOTp0JgFdEXu484yBhEUvYjP+Tp35gGLyv7SHyNjBvjsz3GIOIxUmHBGPMvbUvBbxF0sjzpmUonYOwIyrn3SuswAt2xF3apby5D1Ede0p0iPnnWHzTfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UC3w/M3i; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746049744; c=relaxed/simple;
+	bh=G33cNUYQNPb4VluAlZG+0PEJ13EpWDaukj71H+EbXvI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CE3jFr4MRJbnP5nHCLj7jUivvwrwaFFYBPqunB2nh3SsjOYAIgBNLlE197TXlPsr3hp6yMjA8nhLcg/AaKduAAAI6hIZy8HmdNDFyMfPOoc8XTiHrrTTdbwguTTuDpRPH6/fv9NDgjbUVndtMMjEHn8EsIfCAGOOraB1Lm5jkMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XKpLgFYo; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UC3w/M3i"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f632bada3bso1050a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:44:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746049491; x=1746654291; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q4h9txxyVkNdC6jvewm0aNetCP9eOddzybErf3K9z8I=;
-        b=UC3w/M3itmy+QyrLNFj98ZzxR/WzXrfHaLwmix5e106T0Fx/u/h2J1Y6DwMlk3f63Y
-         xdzFZQ76dkNE/9XoJR9kQqrorOe1rtv46K41/aosyizexZhS7cGuzxroRTNtvLrh2Hz+
-         TIwDUv1xbatyA6nYhl6Mng9sNtEtYEWV5/Z2rkiS2+Tnxi+i3/THuvdxBGXGXAVj7wDL
-         F+obEzSH0dFumwpaYam5zo1Iqe7xECVxtGmW+zYebeyqc8jJP777FEc/gMiqhfyyuBzC
-         JCqN/p1Q/KigbCGlH9wUO0vSvdKglxe+ewwxneaMm7pGX7SSV3xP+PCajBlhC3rOpX3r
-         L2ug==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKpLgFYo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746049741;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=H93od5gfQiZ9os9QHpxGC4NNrVZwvxbInacKsWRyTJI=;
+	b=XKpLgFYo3nfsFf+GysfVpQCaU8hZrlmTnTG2TD2+ez5ENAEBrJfI9P7oASkLU+BsiJXTWa
+	ZHK0FM8JCY0QOlo4VJAqmrX31h61ciFZ/K9JMChcW5Aj7qH9Cn0KBAbaGpdJLZ6wtzTE4u
+	oELPUPgXxflI/hnKttddiMDjOdpydXs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-133-j8T5ED9HMFiszkHiKhR-Dw-1; Wed, 30 Apr 2025 17:49:00 -0400
+X-MC-Unique: j8T5ED9HMFiszkHiKhR-Dw-1
+X-Mimecast-MFC-AGG-ID: j8T5ED9HMFiszkHiKhR-Dw_1746049739
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43d00017e9dso1421535e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:49:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746049491; x=1746654291;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q4h9txxyVkNdC6jvewm0aNetCP9eOddzybErf3K9z8I=;
-        b=E4F4dbl6VYYvDWOPRT7wobXYgPBanmrcWlhB1Sv8a4yP+UQXmO7KequUMr6W8//k1C
-         PVaxvQw/yU6XhuG1Ho+TgAXP+FzxBOobUNckqjeth4fwUyc+qBiN4XQOqgbC98wrOD/O
-         V4EZmRRoEYP7l6wu48H3utnTX0JxTMbiUssrRp832WlXQVi2/vq2Yfq733suuXC0K6XM
-         veMo+Dcvq8foTClcT1MheTALpoFQDtrWjmWeQxzu+5yRaOIJA0FdjWZE8+JxXh8pbB0z
-         rPMIQTx/wCygI47ARL/mPBUPKsTHvO6EGk+6dYRtyT9LG9A617h8slvPcNypTCCOqQ9s
-         3OcA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKV/5wPNuspvLz+KVflOxOowAKybBZBBj+TDKkdyCNWJJ3mn7wXMUdIzSPz6Z3589AtXUD/XcGFgNA5no=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRbfuVqnicF/GM7rYM7nan4HcisOG78Byv7b1/cy2J4Z5eB4EI
-	W3W8z7DTwHuypiUUkvxxPuJT2jYl52UGehbIZaK9eI5yZwNqg15btxZXd2R2+9G8NIsgILh0sll
-	ALznBpk0ownZClIXnmZEX6Tml0ON1kUz8q6qu
-X-Gm-Gg: ASbGnctqGrhOgOADtTSTK1RGdJPuAkXnWMrs0pbEL40fd5BCRaSUqBxzNsg/3J4NTdN
-	Ar6JCGq3cAaVV6h3takAnFVri+yxPzJTjzwnkJ+3/2JAEFNdUQXIhUh6ius/wml+P3YyY3TfFrQ
-	wTWTHjhiEvr05f6YLIQ2m3OIvm7OpM0lUBK0kGXxXvR5gorG3O7Es=
-X-Google-Smtp-Source: AGHT+IHa+YOIrnKiFDXDrrt4yu+9fdIONVUCemFPAqVKkKRm3U9fwx/l3LrvAFu7aPljtxYzM7ACp9bkPJ/XkR4pYL0=
-X-Received: by 2002:a50:d556:0:b0:5e6:15d3:ffe7 with SMTP id
- 4fb4d7f45d1cf-5f918c2a177mr8356a12.7.1746049491126; Wed, 30 Apr 2025 14:44:51
- -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746049739; x=1746654539;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H93od5gfQiZ9os9QHpxGC4NNrVZwvxbInacKsWRyTJI=;
+        b=PKn6XXzeQ21jibULEBEkHydNEsFRxNU/o8K6MDN2/HQ7JtjhNQUMNdQGHXzcE2nC8g
+         Fp5jAuYrt1OyzrsN4Q/JxUERMX8y+JcgTlVS6nd5cgmd9eYbmqqTMwDfxsq6KqqlIpr4
+         M4BAGr4Oi1M0Rw8ezPE6ewy3Bj827uYgH0BM2Mk7AUV8ZFpcMWilDt4nz794aEtoSUjZ
+         XyuXTxr724G8gkPMq0GwI4bCFgbzQ6dnCjx2ST+jVRZEW5mJ4ksPWthGQdb7xLx/5U8L
+         WiiIcmrnDaSpGgwKedI+69xpGPLQ/9kQFrJTLOByEVaV6oCI+fmWca42ZSdbZ0pKIfal
+         97Ag==
+X-Gm-Message-State: AOJu0Yyltxfz2eWtJUgY0KQb6Qvt5ZIESPLuau5+I2RkM6UVucXDrm4h
+	JbmZcqKVuupJcA5gMUcQARPXog/Id/luoxCPxpqcCy12yDVXZDHsnNR9bzvVyhuz0BNssUM/zuH
+	1g7wSNEbExYVOZTwM8DQE+vdJNrYTZaAPkulALit4mghD15dqDrLzK4uXOb16Bw==
+X-Gm-Gg: ASbGncuwm3C9kLYvu7d6joybNNCZTEH19uKiFPcyj+daqwXwdFiTPt4I9RtwKGFztaW
+	WEYKu6Y5Ao8QrQ2E3+nsqwc/s5KATNr02omEs6amVW4rXgcytCxvYkJDQCqs/Ynmhc8L6JX/xIo
+	sy2UqpEgUwhL55YGtWmNVnw55wmnQqViZ8lPPNp2oQXX0xrRi3TsqVxnEc4zLaw+Gy/2QSoYE2b
+	dvDFnEP3WWgZvGBxgQbCZSv6wBigoT+Dagi4tsh+yRUU5/bBctsSD2ftxDBWkdqTLiDTvG7nHXs
+	mnKLrlBTHHcLcGyEFrtmG/Ycsyturcv6TfKNUvbS9dIwB6CzcHS7BJLdSZeDGUWLtwtxeN737xm
+	UCvQa9xsTNeVhBRyJIS3z0NCfhySY+xADTxOR2ZQ=
+X-Received: by 2002:a05:6000:2481:b0:391:300f:7474 with SMTP id ffacd0b85a97d-3a093035869mr528911f8f.18.1746049739312;
+        Wed, 30 Apr 2025 14:48:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVJi2ui4UnXOF9lPFE13tViuULg5owU8+pUpdLTPlnCxCSH8706nAUMXYCmV24wEs5UzNWkA==
+X-Received: by 2002:a05:6000:2481:b0:391:300f:7474 with SMTP id ffacd0b85a97d-3a093035869mr528899f8f.18.1746049738997;
+        Wed, 30 Apr 2025 14:48:58 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c745:a500:7f54:d66b:cf40:8ee9? (p200300cbc745a5007f54d66bcf408ee9.dip0.t-ipconnect.de. [2003:cb:c745:a500:7f54:d66b:cf40:8ee9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2bbc62bsm37599585e9.32.2025.04.30.14.48.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 14:48:58 -0700 (PDT)
+Message-ID: <6f75ef86-29fd-41a1-95ba-f42f7c3bd6ce@redhat.com>
+Date: Wed, 30 Apr 2025 23:48:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1746040540.git.lorenzo.stoakes@oracle.com> <f1bf4b452cc10281ef831c5e38ce16f09923f8c5.1746040540.git.lorenzo.stoakes@oracle.com>
-In-Reply-To: <f1bf4b452cc10281ef831c5e38ce16f09923f8c5.1746040540.git.lorenzo.stoakes@oracle.com>
-From: Jann Horn <jannh@google.com>
-Date: Wed, 30 Apr 2025 23:44:15 +0200
-X-Gm-Features: ATxdqUHF1o6EwfzKPJMttuEXJySFho1Hj_S7BrlihxHfp-SM2NszLl-GiZD1uH0
-Message-ID: <CAG48ez04yOEVx1ekzOChARDDBZzAKwet8PEoPM4Ln3_rk91AzQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] mm: introduce new .mmap_proto() f_op callback
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, 
-	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Mike Rapoport <rppt@kernel.org>, Pedro Falcato <pfalcato@suse.de>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] mm/gup: Remove unnecessary check in
+ memfd_pin_folios()
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, Vivek Kasireddy
+ <vivek.kasireddy@intel.com>, Andrew Morton <akpm@linux-foundation.org>
+References: <20250430010059.892632-1-vishal.moola@gmail.com>
+ <20250430010059.892632-2-vishal.moola@gmail.com>
+Content-Language: en-US
+From: David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250430010059.892632-2-vishal.moola@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 9:54=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
-> Provide a means by which drivers can specify which fields of those
-> permitted to be changed should be altered to prior to mmap()'ing a
-> range (which may either result from a merge or from mapping an entirely n=
-ew
-> VMA).
->
-> Doing so is substantially safer than the existing .mmap() calback which
-> provides unrestricted access to the part-constructed VMA and permits
-> drivers and file systems to do 'creative' things which makes it hard to
-> reason about the state of the VMA after the function returns.
->
-> The existing .mmap() callback's freedom has caused a great deal of issues=
-,
-> especially in error handling, as unwinding the mmap() state has proven to
-> be non-trivial and caused significant issues in the past, for instance
-> those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
-> error path behaviour").
->
-> It also necessitates a second attempt at merge once the .mmap() callback
-> has completed, which has caused issues in the past, is awkward, adds
-> overhead and is difficult to reason about.
->
-> The .mmap_proto() callback eliminates this requirement, as we can update
-> fields prior to even attempting the first merge. It is safer, as we heavi=
-ly
-> restrict what can actually be modified, and being invoked very early in t=
-he
-> mmap() process, error handling can be performed safely with very little
-> unwinding of state required.
+On 30.04.25 03:00, Vishal Moola (Oracle) wrote:
+> Commit 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning memfd folios")
+> checks if filemap_get_folios_contig() returned duplicate folios to
+> prevent multiple attempts at pinning the same folio.
+> 
+> Commit 8ab1b1602396 ("mm: fix filemap_get_folios_contig returning batches of identical folios")
+> ensures that filemap_get_folios_contig() returns a batch of distinct folios.
+> 
+> We can remove the duplicate folio check to simplify the code and save
+> 58 bytes of text.
+> 
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
 
-I wonder if this requires adjustments to the existing users of
-call_mmap() that use call_mmap() for forwarding mmap operations to
-some kind of backing file. In particular fuse_passthrough_mmap(),
-which I think can operate on fairly arbitrary user-supplied backing
-files (for context, I think fuse_backing_open() allows root to just
-provide an fd to be used as backing file).
+Acked-by: David Hildenbrand <david@redhat.com>
 
-I guess the easiest approach would be to add bailouts to those if an
-->mmap_proto handler exists for now, and revisit this if we ever want
-to use ->mmap_proto for more normal types of files?
+-- 
+Cheers,
+
+David / dhildenb
+
