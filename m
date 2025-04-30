@@ -1,201 +1,112 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32536158218
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:15:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A65F21C186
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004556; cv=none; b=Zv4ug6J5xSiaKFZiaIdX8IxjDulW6A7GphUmV6EErobWyE1ujZ7YG6/fRaIAbMlmaBjwyc5SDDjs1/KCrCZz4FtHP5u3jzHE4qmDy5nJ3bloV14c2Y0+WSSlTKX5QA4wrWdql9ewSlaV50Y2gjXoDlG5scC0VUy5tvDzvC+dBJA=
+	t=1746004566; cv=none; b=ZHYNc79Wh2sNC90Z7nQocPktnYF379CYLmcHWq92ih3wdlSBYRv83xoWofsVV+h01duyHECFt84Qvt9+EqkvqZ4T7/ivVOUqwqIhKFqv9t/4e4yN5Uzd15yGLUhpasy18NN3ZiZ+XVJ1l4b/ImymuC2aQWSXp1IAHeUgBqb2VtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746004556; c=relaxed/simple;
-	bh=WtneIc0QDfp7DDBdSDxXokPJOzOSITmmPNHBQnSD4cs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbmmHdtKxVhIay9flSfzssYiuY1owA7veuNPs3r3nm/NVf7Ggl++15/U9qH+ylNWX5PvZTdWCERBeJSOxcUugFgbUZptxqAVpG09gysGFxpluPpjMINJz0nZoPaZMgUnlpAsSkgAmJHn7/VxJn1vNHZ/oonIXGRbiEt024FNokg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cTQn8R5Q; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746004566; c=relaxed/simple;
+	bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Fi4ycbh6HLRfYXH3/IQOg+J/st0JDvmRyNetGDxeeASExE0tL93dKLluhioK/zesR/AbIrH3riJyDx6t0EU2WQsvc7jFld/Jlc6l57gJ9a//gYwyemj2nYaiV4qBfHF80cXtCiduj22fODiZQX1mucJDNWLrhBMKOQrUkj3g1pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wht/Sy0N; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cTQn8R5Q"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39c1ef4acf2so5329192f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:15:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wht/Sy0N"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d0a037f97so36417465e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:16:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746004552; x=1746609352; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=iGp+BEJIsu8tiMnSTnVm5SKGOdus+/7Cz1jcp7uu/9c=;
-        b=cTQn8R5Q7G3HjGw/qU212gP76XQx3D3AQWqevQV9Irzo8jD2roHaxf/misjNRu6KLp
-         s+TdkBoZ3fuePN5p7H4SOFOYTO5xKe5OSSkEJTm2TyVCzILIzK8eb0bM65ApmlnJk9xA
-         kck2KrSehPyZAQGtO9TaC3/d/TXALbjhkRS8fcmLVduFJ6YvJ0xuel9831nmiByoaxY4
-         nPCJfo1eY2xd00p7DFWhXxnVm4ahM692ao991SA6Oov/kAZHh1Ium8xlj2n05X4AXEr5
-         cAa6jGoPhi7Sb8JInj9CWwo9sGm/uMByq08SNPikDdDJ75FeGZmN7yKGH5sfKG+kXL/F
-         UOzg==
+        d=google.com; s=20230601; t=1746004563; x=1746609363; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
+        b=wht/Sy0NO7eC7k8OuCLEzj/cVUKtk1rs142d3AjLnBGJ/srJD4Rxk+cclaB01y25TT
+         c+vgakjArTWvPAO/Ot9rs3DZqbgZ/gpefrtd+feh4yhPuWIW4ZTEeAgt+TM8sZ/1bOEU
+         t8k5gr76KkiKEkL+KzARWdoj240q3eWtIDgO9cdxW7PfC0BqBCNWwl+GYjxudjPZZPOL
+         FrctyBTOZd/dAOsyhh37Ed/VVGcIwZaD77bUWJIaTx2cqKVcjHPsTtmJQM/k5RWHGjoz
+         G3kwGGf3GsTtTZi1Bx2FHRLfbNI4XoyuegRm93IxjDn/FcJEEwIylFcCUD87EiPOurxm
+         VR1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746004552; x=1746609352;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iGp+BEJIsu8tiMnSTnVm5SKGOdus+/7Cz1jcp7uu/9c=;
-        b=uqCMIVe3XI4n2196GDwwh6EgnM6pMxTMbwj/uzeJONJgpCbFJbQ8Z3D42gO/ETlATl
-         WuD6bdjgSZF6KfqkBNskazlq8xgizoKwVFMIEaEjxFRKEurl8wG3YFBgvQVnrAbbqphU
-         rvmGyLHjkTr8y7O9nQ/IEPiScde/Qa8pEMtRpMJVMz9iljX/L3cLeK2RfYb0Dj08a6zP
-         txIboVv0rWpYqqt2594i9pdASZKieuam6zCt37/iltjtoeeJG+F5XBHg+rJRWB6gJHWp
-         LRSoP/Hm3LgD/wM4sTbggOHEoUYZbihzlYCWBeHaI8W+k/lil7fsrDPebjbWjwCpSAB2
-         XwOw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhw9U28ehZ5HER/tjdVydg/1ewd54Zej94rpKEOuV5rZvbzICKIEfPmfrzanYZ0ucDTazTxxwUkv1QwAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzodsR2cveGkd76auzmErbAaHbmazYMYnhOSvqAtmKXP9DAQytk
-	UPEHhOeHx/77LTjq9CIrF12xAi3beglGYz94ULPsUHmGHb6UPoHbhAmsR1yOHKw=
-X-Gm-Gg: ASbGnctppRyOPNJVzGMIGX79XoSX2hS1+6m1jEFJqcWDYikx//b3MEPt4jMocFtA3sI
-	0UNnguB92lB1VZN7PCh2la/Atlv81rJgMp4S0zcje5RIXgOwfVqjUdeX3Itr5eGWDNeoolUG8Wj
-	SRDNRrDxiQGq2GzNrnf6vAWfjaeH4Yv5XeEWpza1wYwu+nEb8MKyfwh+/ZCtYFkUiWP1aCd0d7O
-	yKozZ2+k9USCKyxmm16xQt19/sEJ9Wz+xT0Ldsbi8J3tiJB2aSy2IdVwXkjMDq/uG21hQ+UwSkK
-	qAaUg3y12Nx2vm6K3UphfM5C8v7oWCAtXlagF0DezjrepbnB76JQFcsLn6ONHzdJF/izqxZcFIh
-	3Kv4=
-X-Google-Smtp-Source: AGHT+IFkPR//rOgO0Nj6VP0et5o5R5weTdk43Q9O48THz0Bb0Mc82kvtuhKb+SHshn3v5YQdadMBLQ==
-X-Received: by 2002:a05:6000:2284:b0:3a0:8c68:19b7 with SMTP id ffacd0b85a97d-3a08f7985d0mr2116855f8f.3.1746004552519;
-        Wed, 30 Apr 2025 02:15:52 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073cc4025sm16666218f8f.56.2025.04.30.02.15.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 02:15:52 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:15:50 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Pengfei Li <pengfei.li_1@nxp.com>,
-	Marco Felsch <m.felsch@pengutronix.de>, linux-pm@vger.kernel.org,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	ye.li@nxp.com, joy.zou@nxp.com, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH RESEND v6 2/2] thermal: imx91: Add support for i.MX91
- thermal monitoring unit
-Message-ID: <aBHqRu7qmDlXyFeR@mai.linaro.org>
-References: <20250407-imx91tmu-v6-0-e48c2aa3ae44@nxp.com>
- <20250407-imx91tmu-v6-2-e48c2aa3ae44@nxp.com>
- <aAIkAF_AHta8_vuS@mai.linaro.org>
- <aAJtwxBtBX4ofy/o@lizhi-Precision-Tower-5810>
+        d=1e100.net; s=20230601; t=1746004563; x=1746609363;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=LtVhfWiqY+K0Ft9EIwL0Molm/ueKWbCMO2rcHu/Ejug=;
+        b=lxpJJ2aheN+VSG/q4BfYhb2KlhsPPikDcVN+YGGAGwZGi7xEyvE69Pp0QfKeAV2e1X
+         cHoayWrUls3ZxZLoxJdfHEdGIqZ7KFeENuFFK1lCdxdaE3UM9Z4PvulRvPux0gqvOqht
+         Rnqck32DOYEwedot3LE6w6cE30i9cxi58ouZTfr6PDqop6jKJ39ldvOwuWwCTwtDG1YU
+         lgQC9aM6xV+UW65TFN9d+u0GkGJ2nCwl9h6iTGLa6e5Zij4BQMxRgmvDeerfG7JBAA9Y
+         k8IqKCyIdjQafzDknbhEq4gcSpu05TK8MwSfsSNavMRDOjT4AzrjiLN3h0ZTwcLtwS5I
+         JrBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVhgIp6016/EsfRwN/ahcr8wFXQSve3UlpTXtGX1toGcve7N+tKbYIDm/nY5x2S+JtHI5VeoLu5Og3/YE0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTnNe6jDxj/jC9b6mj0gJOFJHXq1OC6LSA7shR0TBdk3XX/WBo
+	8fMYplajtZPZzKb3N3m5cUuBk7ocIg5etY+rX7Q2f1sMn/owxS8B0Cv6gQpNFiWD003jguagitE
+	k048nxTF6/lQPGw==
+X-Google-Smtp-Source: AGHT+IFxhcERQYWAcvbhYHN/OW5FD7v/TzNCgH8DCvMD/GLCXurr03llxmGp+GSubB+keZhqjqEoocx36qx5Vs4=
+X-Received: from wmbeu8.prod.google.com ([2002:a05:600c:81c8:b0:440:59df:376a])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:34c1:b0:43d:db5:7b1a with SMTP id 5b1f17b1804b1-441b263a237mr15978995e9.12.1746004563615;
+ Wed, 30 Apr 2025 02:16:03 -0700 (PDT)
+Date: Wed, 30 Apr 2025 09:16:01 +0000
+In-Reply-To: <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aAJtwxBtBX4ofy/o@lizhi-Precision-Tower-5810>
+Mime-Version: 1.0
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com> <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
+Message-ID: <aBHqUdtkP9uHMdKO@google.com>
+Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
+From: Alice Ryhl <aliceryhl@google.com>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, 
+	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 18, 2025 at 11:20:35AM -0400, Frank Li wrote:
+On Wed, Apr 30, 2025 at 10:36:11AM +0200, Christian Schrefl wrote:
+> `UnsafePinned<T>` is useful for cases where a value might be shared with
+> C code but not directly used by it. In particular this is added for
+> storing additional data in the `MiscDeviceRegistration` which will be
+> shared between `fops->open` and the containing struct.
+>=20
+> Similar to `Opaque` but guarantees that the value is always initialized
+> and that the inner value is dropped when `UnsafePinned` is dropped.
+>=20
+> This was originally proposed for the IRQ abstractions [0] and is also
+> useful for other where the inner data may be aliased, but is always
+> valid and automatic `Drop` is desired.
+>=20
+> Since then the `UnsafePinned` type was added to upstream Rust [1] by Sky
+> as a unstable feature, therefore this patch implements the subset of the
+> upstream API for the `UnsafePinned` type required for additional data in
+> `MiscDeviceRegistration` and in the implementation of the `Opaque` type.
+>=20
+> Some differences to the upstream type definition are required in the
+> kernel implementation, because upstream type uses some compiler changes
+> to opt out of certain optimizations, this is documented in the
+> documentation and a comment on the `UnsafePinned` type.
+>=20
+> The documentation on is based on the upstream rust documentation with
+> minor modifications for the kernel implementation.
+>=20
+> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07=
+DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
+> Link: https://github.com/rust-lang/rust/pull/137043 [1]
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Reviewed-by: Gerald Wisb=C3=B6ck <gerald.wisboeck@feather.ink>
+> Co-developed-by: Sky <sky@sky9.dev>
+> Signed-off-by: Sky <sky@sky9.dev>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
-[ ... ]
-
-> > > +static int imx91_tmu_get_temp(struct thermal_zone_device *tz, int *temp)
-> > > +{
-> > > +	struct imx91_tmu *tmu = thermal_zone_device_priv(tz);
-> > > +	s16 data;
-> > > +	int ret;
-> > > +
-> > > +	ret = pm_runtime_resume_and_get(tmu->dev);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> >
-> > Why using pm_runtime* all over the place ?
-> >
-> > It would make sense to have in the probe/remove functions (or in the set_mode -
-> > enabled / disabled), suspend / resume but the other place it does not make
-> > sense IMO. If the sensor is enabled by the set_mode function and then
-> > pm_runtime_get() is called, then the ref is taken during all the time the
-> > sensor is in use, so others pm_runtime_get / pm_runtime_put will be helpless,
-> > no ?
-> >
-> >
-> > > +	/* DATA0 is 16bit signed number */
-> > > +	data = readw_relaxed(tmu->base + IMX91_TMU_DATA0);
-> > > +	*temp = imx91_tmu_to_mcelsius(data);
-> > > +	if (*temp < IMX91_TMU_TEMP_LOW_LIMIT || *temp > IMX91_TMU_TEMP_HIGH_LIMIT)
-> > > +		ret = -EAGAIN;
-> >
-> > When the measured temperature can be out of limits ?
-> 
-> It is safety check. It may be caused by incorrect calibration data or some
-> glitch at ref voltage.
-
-In which circumstances do that can happen ? At boot time or any time at runtime ?
-
-> > > +	if (*temp <= tmu->high && tmu->enable) {
-> >
-> > I suggest to provide a change in the thermal core to return -EAGAIN if the
-> > thermal zone is not enabled when calling thermal_zone_get_temp() and get rid of the tmu->enable
-> >
-> > > +		writel_relaxed(IMX91_TMU_STAT0_THR1_IF, tmu->base + IMX91_TMU_STAT0 + REG_CLR);
-> > > +		writel_relaxed(IMX91_TMU_CTRL0_THR1_IE, tmu->base + IMX91_TMU_CTRL0 + REG_SET);
-> > > +	}
-> >
-> > For my understanding what are for these REG_CLR and REG_SET in this function?
-> 
-> REG_CLR\REG_SET is offset 8\4 for each register, which used clear\set only
-> some bits without touch other value
-> 
-> 	SET register work as
-> 
-> 	val = readl(reg);
-> 	val |= mask;
->         writel (val, reg);
-> 
-> the benenfit of use CLR/SET register make code simple and it is atomic change
-> one bit.
-
-Actually, I meant what are they for and why are they in the get_temp() function ?
-
-> > > +	pm_runtime_put(tmu->dev);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +
-> > > +static int imx91_tmu_set_trips(struct thermal_zone_device *tz, int low, int high)
-> > > +{
-> > > +	struct imx91_tmu *tmu = thermal_zone_device_priv(tz);
-> > > +	int val;
-> > > +	int ret;
-> > > +
-> > > +	ret = pm_runtime_resume_and_get(tmu->dev);
-> > > +	if (ret < 0)
-> > > +		return ret;
-> > > +
-> > > +	if (high >= IMX91_TMU_TEMP_HIGH_LIMIT)
-> > > +		return -EINVAL;
-> > > +
-> > > +	writel_relaxed(IMX91_TMU_CTRL0_THR1_IE, tmu->base + IMX91_TMU_CTRL0 + REG_CLR);
-> > > +
-> > > +	/* Comparator1 for temperature threshold */
-> > > +	writel_relaxed(IMX91_TMU_THR_CTRL01_THR1_MASK, tmu->base + IMX91_TMU_THR_CTRL01 + REG_CLR);
-> > > +	val = FIELD_PREP(IMX91_TMU_THR_CTRL01_THR1_MASK, imx91_tmu_from_mcelsius(high));
-> > > +	writel_relaxed(val, tmu->base + IMX91_TMU_THR_CTRL01 + REG_SET);
-> > > +
-> > > +	writel_relaxed(IMX91_TMU_STAT0_THR1_IF, tmu->base + IMX91_TMU_STAT0 + REG_CLR);
-> > > +
-> > > +	tmu->high = high;
-> >
-> > Why is 'high' needed?
-> 
-> Need re-enable irq when tempture below high.
-
-You should not need that. There may be something wrong with the
-temperature threshold interrupt routine.
-
-[ ... ]
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
