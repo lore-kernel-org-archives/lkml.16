@@ -1,117 +1,91 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EEC21C17B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395CA21CC7B
 	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746004819; cv=none; b=Feg1Pul4KLYts3QQj3GLg5cutmuPLBg2vgPf0lXlmh98xshquaFKFc9I1YRSA2h/+dC5T0FtI4dFQMFWSNc1w/cYXk61iV/8BlZ+ChMT4a0zSmYsggOKCyuFv09KXp/2DRmZVW9G9IR6cnNx4HsJlgK2eHiLPbGHT9ASjxBJzfM=
+	t=1746004819; cv=none; b=i+fWrf4mwZjoKwlNoP5zAaCgbYZhDrpadBZURkyMa0bliazASASSVjKL8RHwIaJ4SmrFqP9yUV4CNrZN3LF5DazCh3KYcrxOJbhw6xP6PicBitVI2blhfaBqxavLooI7b7qSKk1aJWAVWXgswWPYYvnwHSyehhu8iWNWqRDU+xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746004819; c=relaxed/simple;
-	bh=wPiVAyb4i0INmlrU5d1yJoYnmvXNkJvqm5DWeZRgR8w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SHzeSd1hrTbah2J1/OzODWOoMet9WfDeDLgDSqQk9FLJFZYTbLezLTAMv4mPwqv1pa2n+QrP6WIvBUulOvX9dJNTfWUrC5JBUGmXFOAXd6sqVZTtPuzIKBXNrvVX2gQshsbUeNMuxIKevNjlPdILvM1XonVSLRUWurmkaJjwydE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TlV2k7Hj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6o6yeKl2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Qiv9M4o6F9iqP6pMlCFwJZ3N/vrIv5Ycqg+uNd6EqqYCKpNe8UTapTOA5dPZY7LeV7dWkfZqEKJxpotTMEcjpwa2LjMOS45bVtigw8eqbqm/P7vgTrBJMrbPh/rdfVDHY9I5cVuQjlpCr1rYZen7oHBKtkw0GfmZNohmCrnPSog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=t7yElAxE; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TlV2k7Hj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6o6yeKl2"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746004815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tdw8tH4FhSz345Xupp3UnovvlZsLVACqjoY1xoiC/XI=;
-	b=TlV2k7HjEyUtI111dsE8HdMprDL8k8ChNFqGvZZgGQg5RSs1dNwn7D4/yRXcTOMXqFWVjF
-	gXX4LZhlK6lfTIwtqQzamEYSHqrpaVHq+4I6YdtXGUsJ2OH4+H/95dnj2v934vCKX05Ysr
-	X1NziDjXAgXJ8NJ4dtRiBiQU5nKZrptXTxeP7oJyQX+81UArqmE1KwIcM6OARtKfCwbvWi
-	vBCQVB56SyH7vz9DJ7ldbVmhpe6HJikB5gdRK7aiYgDwdJXHB25aQTkjACsDRcjZaW659p
-	VEGypwiZ1x1CTyb5kvWdlDustiZnSZe6jxDQZVoNQOxJzp1RUr91g+bj+A/tNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746004815;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Tdw8tH4FhSz345Xupp3UnovvlZsLVACqjoY1xoiC/XI=;
-	b=6o6yeKl2GNoHSR63/A4JZRNlkRy1NlvQuK+afR0NPgbHOONIBm3YfS26FUtfSM91EYAB1L
-	7KYJ8WToW5yI3sBg==
-Date: Wed, 30 Apr 2025 11:20:13 +0200
-Subject: [PATCH v2 1/2] arm64: vdso: Work around invalid absolute
- relocations from GCC
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t7yElAxE"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43eed325461so37759725e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746004816; x=1746609616; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
+        b=t7yElAxEpb2DK6ImMDP/9m9hOYR1GxA7iBPossvLxDtq4MaIBsnjlquFyyENVrS7Ix
+         5FLGP3Ha0PIiTlHmJkEsQNYf1Sdi84j+tay89tYyxV+hk6xtnZ/B/fIoImxgmVGjFS6f
+         JoOr1fQ/bRquOTFap95XbXKDGBtNqzYLmU4zoVEVo9+wNRZ6bdrwBftrYDxq/9LhcRQc
+         tXTy+PQ4JFlG2AGQTV3B8/8PJ1w1MFazjcvgMy1zQacsYnkKa+A33FG9hmN6eqv8dXaE
+         9TfckXF9McUiNVzSm6U8nQ4Snk5d557yN69pLBPH7A0HoyXNU9vYPGfWRbLxdsepf4nw
+         krfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746004816; x=1746609616;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=AVEzK1PWr2c4WZ3AbuO3r3fSKBSqH07bVkH+rHQUrqU=;
+        b=qP9KBU/Ckdm1rsp+7stGj5iJ18+71gDZmIzYszbe1P6Vej6zCKrHZ8aC2yFexWD1xz
+         WH+WQTbm4LPJma3gCYdsj2WR3nZFrZgFmSmLi+wF9MLTCJIrXh9CYOe3K9ncdKpzZnap
+         c1W0mfe8IyW719ljIrhG8eNylAFVia5WpagtiQ1JuU9GcJJ4TSUfiJdEgvKY3En14dHz
+         3bRyRcuvurgkNgRj0pphLHGN9dW7IhrcW1EkusYVDCPikB0IFEfBZvSPTq4Ayv5Wv9ba
+         xFJmnBoOoVv8ityzdf/ZE2nzC00z45jvrfeQ9nspNDCH5IHAZxrTEWedFxzVYFhqxmuK
+         dazw==
+X-Forwarded-Encrypted: i=1; AJvYcCXs5nYXY7Qxt1GjSCjpmNoSC4CAL3DDo9BRyThsk8+wKuMzu7qqrFF3DCw2wBqWisFs9A9vyqNicvvnTOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyihTldFp0vXUm82z7qZa9rZX9t1bj4IhSk/rP4BY0JmCd+sQ8X
+	J/1HXaDwc9mI+aDYlH71Xv8dqwd3nHvqrvxGwXH/MsGteVSaA67TJeOzmjGNUa6C0wfUd7DFyCF
+	QDgS84mXaoCH0cw==
+X-Google-Smtp-Source: AGHT+IGoHxc+2SZHxc4L0RgBBwirzugsV5s2XYZKFutlol1D8M28Mep4MPuTr+1AXPcpMDInTumbJB61uQWaboI=
+X-Received: from wrbfu24.prod.google.com ([2002:a05:6000:25f8:b0:399:747a:bfb0])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a5d:64c7:0:b0:39c:1257:c96e with SMTP id ffacd0b85a97d-3a08ff55599mr1167194f8f.58.1746004816651;
+ Wed, 30 Apr 2025 02:20:16 -0700 (PDT)
+Date: Wed, 30 Apr 2025 09:20:14 +0000
+In-Reply-To: <20250430-rust_unsafe_pinned-v2-2-fc8617a74024@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com> <20250430-rust_unsafe_pinned-v2-2-fc8617a74024@gmail.com>
+Message-ID: <aBHrTrdY0dnHZgFb@google.com>
+Subject: Re: [PATCH v2 2/3] rust: implement `Wrapper<T>` for `Opaque<T>`
+From: Alice Ryhl <aliceryhl@google.com>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, 
+	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250430-vdso-absolute-reloc-v2-1-5efcc3bc4b26@linutronix.de>
-References: <20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de>
-In-Reply-To: <20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de>
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, Nam Cao <namcao@linutronix.de>, 
- Anna-Maria Behnsen <anna-maria@linutronix.de>, 
- Thomas Gleixner <tglx@linutronix.de>, Andy Lutomirski <luto@kernel.org>, 
- Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Jan Stancek <jstancek@redhat.com>, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746004814; l=1869;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=wPiVAyb4i0INmlrU5d1yJoYnmvXNkJvqm5DWeZRgR8w=;
- b=OjSnD9IkRXm7nMcxWypWAcqqSkKe9ShzBQuKcW5bcMFfpvC3AHuQDqr8Masw4P8vEGYwKl1sd
- t1dW5bq6bkUCHEYe4JaHZmqp51QRvnIBf/DI/VUZn6OGmSayc6j8mUj
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Transfer-Encoding: quoted-printable
 
-All vDSO code needs to be completely position independent.
-Symbol references are marked as hidden so the compiler emits
-PC-relative relocations.
-However GCC emits absolute relocations for symbol-relative references with
-an offset >= 64KiB. After recent refactorings in the vDSO code this is the
-case in __arch_get_vdso_u_timens_data() with a page size of 64KiB.
+On Wed, Apr 30, 2025 at 10:36:12AM +0200, Christian Schrefl wrote:
+> Moves the implementation for `pin-init` from an associated function
+> to the trait function of the `Wrapper` trait and extends the
+> implementation to support pin-initializers with error types.
+>=20
+> This allows to declare functions that are generic over `Wrapper`
+> types.
+>=20
+> Adds a use for the `Wrapper` trait in `revocable.rs`, to use the new
+> `pin-init` function. This is currently the only usage in the kernel.
+>=20
+> Reviewed-by: Gerald Wisb=C3=B6ck <gerald.wisboeck@feather.ink>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 
-Work around the issue by preventing the optimizer from seeing the offsets.
-
-Reported-by: Jan Stancek <jstancek@redhat.com>
-Closes: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
-Fixes: 83a2a6b8cfc5 ("vdso/gettimeofday: Prepare do_hres_timens() for introduction of struct vdso_clock")
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- arch/arm64/include/asm/vdso/gettimeofday.h | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
-index 92a2b59a9f3df4d20feb483e6d8ebd1d813b7932..3322c7047d84fecae316a2904f1adec0cb458f6f 100644
---- a/arch/arm64/include/asm/vdso/gettimeofday.h
-+++ b/arch/arm64/include/asm/vdso/gettimeofday.h
-@@ -99,6 +99,19 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
- 	return res;
- }
- 
-+#if IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB)
-+static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
-+{
-+	const struct vdso_time_data *ret = &vdso_u_time_data;
-+
-+	/* Work around invalid absolute relocations */
-+	OPTIMIZER_HIDE_VAR(ret);
-+
-+	return ret;
-+}
-+#define __arch_get_vdso_u_time_data __arch_get_vdso_u_time_data
-+#endif /* IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB) */
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* __ASM_VDSO_GETTIMEOFDAY_H */
-
--- 
-2.49.0
-
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
