@@ -1,143 +1,115 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F226D2DC779
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A21961E47B4
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746014455; cv=none; b=JgSUGFAjMAIHtNQsTWhGOUk5+sx07a1Jx4W3kafqVXJ8czK2m0aAm8dGzQdcOX+l7ptfrC5ojPXJ5oB6HCug6tt+StoMZqgJoFpQLRqMpQRQsawkhuF4MHMpLuPSMJbBLj7nu2W4WM/8DC8J/Ezc7LLAXVIExgpE8HT6dzVNhQU=
+	t=1746014686; cv=none; b=Gart6OtT/mVQVuAlSgIYCSLEMCfQCk14H7yI3Fu1Ig7tkEh4bkW6t6dEktsh+cXWfvkO4sdGKfiihQhrseeXbAi233/hWQvjL8uExUx6qSP12y5z9W2T/f8Lb42AFcPqhBIvo+wh5MZJZIKIA6FIAF19zVZ5l3COpoK+et8YxMM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746014455; c=relaxed/simple;
-	bh=8QsjaxLDIv0ISrAdDMHRML8ijQlfkOmaKKvq6LJ0kMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oH/LlCr7B0+zpkNbzKisie/sbuEDaGxhEBsuOXLU5as12wkSRUCmsoS9UNMZex+y8KJscuI1K38J1orFtYVwK+7QHynJ0lPPWBbCLkBoHScNUBWFnZDJMmXmsDtheAGtneJk5AkWsiPa284XRyYD8KnAdPyGFSYHsWXMGZcQGts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LTVXSE08; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746014686; c=relaxed/simple;
+	bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oI1kgghXLQ3rOWYB5zxaHMBjY7gs0t/M9/AwCevk+q2HaqxhGuCaWr0gIkcUv9Fwa/bZwWacRzsrVcjyXoSbztUGnFem1BLq9jGXsuB3NTdvQrf29mV2CYUNo/HjGL1m5XTkQS3GXMs4DJaCxTsTk/wi0PI2kFwHdXcufDnaJYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YqZc4dGS; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LTVXSE08"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cf257158fso40475275e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:00:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YqZc4dGS"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3912d2c89ecso5479616f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:04:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746014452; x=1746619252; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/DCQtpbmnNH8yPwrJGcf1JWJJVtWdng53I7ehlQb2+A=;
-        b=LTVXSE089NquEekVeaRlvJYbo/PRx7eBV7c9vvvkWhCOi5xpQW81huye+NnE0E/E8x
-         KgSGPFPZ0+DmcWvhV6EZh26BqlCWe/DAzImnrcvqSnpO8vre/f1gcK2Iu0rlibPOVxQj
-         unPBJUHKhnNNQpFIuPqHXmKvFnvt3W25Ef/jVrT5dYCRlT6XCEBnHkPnqaOoq1OiqY72
-         5hR3xW7/d6u+JBMIFUNsn/fQp8l2gkxsRAbm8rk4nu/w8G+g9aa2/yV8N4Tv0uNmk2vP
-         98Ctm+YfQ/fNCoi/5WecdfneJcReUMtaMLLumJJ1w7NFJ3M2rYdNrhgQMWtcvCQuHWu5
-         lYJg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746014683; x=1746619483; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
+        b=YqZc4dGS9JJgicN7LUwJ+HOvDnQlEuN4fYj3vIXp3VefP+jYaWIpJWijMiC3e9xs+E
+         zy7EcmUSCKSr2+0jl4UbswxesvLHQMllLruXcOmeY4rz8cbhobj6nIPe7fj69tgnjVWi
+         axp31JY41LE0uNJwZSBsUL79c0wsRr6bQXSEjSEeJA5Er2EuVh5kYTfCVjnZbnDfjyDE
+         FPRJBPHPWnlr9VrVlS7x0ZDqkDl8JOd2wn4dXJovfTe3s8VbXOanf+NcmBGEw/WYADs1
+         Uwpw8MVmSsbJGn98M1GuJQWffK37898z58OA6/D24LCax2TkDMA3BlfEC7RnFEfEJIH6
+         1w7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746014452; x=1746619252;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/DCQtpbmnNH8yPwrJGcf1JWJJVtWdng53I7ehlQb2+A=;
-        b=pWmBOa1JKi582YUlCverTGjMZL3Gtptv0LHLPJUFl6o6cwRBrG64i6WrF1PTgQn5hW
-         qagA4ic5d/LzPExfBEQdv/nqi70LNwPIo5cdm2qF3V/tUVMjhgVU96NDkkGi8Fdl8dBt
-         4R5IZZYe5PFsFU3A/jOOzXWK07L87QP+Lwns+MlIImwt4XYIVQj0ph+XiPnm/HgOiTI2
-         OPrrUSk4mxAbm4zZcukUiJF4VQbB/bDdK4MC70xW/nDMDFrFPSS/IeQ5qYByX16Ragqe
-         CpqRAr38TJE7cRLqGLzeBCgtOZfqVVUrXekhCuGN3BwnF85s9Jezx0MQOQr4xNEfcJ7A
-         DEWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGecFZtAtmCch4isXJtqluGsKhXCA1X8z3Lg3yqMYtqi+kTpfynI8eh4uhgbVXiqaLWivk3lepGK7RO9I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxIkaaJ0hqxuNwHD5nsAzrVD1c2N2TS6W3cmKwsSK3/Cw5e5u/y
-	nQO5M8f20F5D4y+BbyVcGGNKpvciNaEEWVyTBTz7+mrB+jJuqyrO
-X-Gm-Gg: ASbGncuhOelhwMBWqyyKDsXXenUcZm+qhZBCX5bhaxxiL18JBBsO4FjfjTVvd6siYBO
-	dcZpgcvQ96bIlj9Ye2RZBf+mB+SibAC8TErt0Dm5ONRSTgmHgHp4OjmSklW85d7c4IgOivt4fuS
-	ikV//XUfX5RV6817tCGzfFWgBGGVFkFHTUspH2wbfT5mX5TgVaBUH9VYfCPFn/dgCQDCgYNdS6K
-	ICijfaaUkE329dJhCGlyFzAKfEX9LjorC7UotcMPvTkUef9V7PuBF/et+sAM6/WIq4REhdJnham
-	t0Yip6Nom+8X33Li5bkBheo+UrBHBd2aumdZQJT9l2nIVh0nEdv5hwhAdmglMS0aUbeoO4rcdd+
-	+zxI=
-X-Google-Smtp-Source: AGHT+IHdKokDsDAPpxiS26E99ubqRD+quvtP2rRWwTXxF12j2WHpvdyRyJppc7rg/JIjOLn49FAS8A==
-X-Received: by 2002:a05:600c:1c29:b0:440:6a79:6df0 with SMTP id 5b1f17b1804b1-441b268b915mr14159175e9.22.1746014451847;
-        Wed, 30 Apr 2025 05:00:51 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b97288sm23331245e9.6.2025.04.30.05.00.51
+        d=1e100.net; s=20230601; t=1746014683; x=1746619483;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G+5FibWWWLvg7K1gCq7/ZEbzCv/dW8PKVC/LnlsXxO8=;
+        b=HMjrS4mUEEdfbhBWYvAz2GDpCqWKQmkKZrzd4naXeYX1x527C7PaV7eNcx1jPt+SYe
+         81utoD+iSC7SLjKtcBoS674Ln45q0Usf6ZsN8tAb48N3XIX1O1mbCdJf8MLcVhau+7mD
+         cSUdpSP1ZJ11e06Eu6Nj4YSYoyTDwCFXTWGg4Gaf/UEyjJJNbCFtnIGLhy2GJnCs+klE
+         i5C9r63AGQbkwkrUK5uXY1NPeGqYTTRZAF0RUncKatRCEw3J6HifYqKl8ot0H/ucTDDz
+         ZSQ3YG0zzFUa5EFHmXXc4aj5OUkiI+6Sl2pxc/ZMIb/wHqrTQaX8QOrC9hgR5SoOkITb
+         RjHA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8wNEetMah7f4zKhJ+rW/r023dwFiH5OKlO37DGt1PWy4jGBXC5dI0uoH1dyo/7WBJxZYmAQ7tX0aMcx8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykDAPk+5NB31DaYxhF+B9GhaNfgJU6S8kOqUf84mjeog8207Pq
+	oqNj0lK48NjAeoIr7u6D6IE79Amad7kTZe71qA8hxtDiY7zS5cFYETeWNz4mw1g=
+X-Gm-Gg: ASbGncv8w6K5SXkYzNKg+5UrrDSmNZMSuv0G/Yuryc3vfUownYYGMVbynhr0Yl0FEZV
+	I46hD7PE31TsNl139RTDroaVRKKwjwXfxGcSankAuKDGVwr4q6fmLzji5ldX/4vvwhPiQNEjFbW
+	IOyK+4yeiQyNqqrs7hcot9lwhN4fODbaQWYJv7LQ+QP82D8qO2CCRoJgKTE9u4QD2m1sVit+Zgx
+	0VpxX8OsdKjplHBp3IqMJjgNHJ2b001MbCYjVcgRjU91Vs/0B4oyshp8ERiZPG3e0bj0UIPUPur
+	K4e3tookfHhgy7BJLkq++iVJicWE7SesWhZczQUNNHBW13HhFOWBudWKXziqw5x4IjZLwvj2X9+
+	AecoqG8aMQUAqDJxEqw==
+X-Google-Smtp-Source: AGHT+IGd3vdiUTiLVBgnDR5dqhZhw5L0hduc6PSmeXt0yr8SkjJ5vxlE0r/PJfRQd5VE73nzXn2pcA==
+X-Received: by 2002:a05:6000:2510:b0:39c:12ce:6a0 with SMTP id ffacd0b85a97d-3a08f764e8cmr2752357f8f.21.1746014682794;
+        Wed, 30 Apr 2025 05:04:42 -0700 (PDT)
+Received: from localhost (p200300f65f00780800000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f00:7808::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a073e4684csm16797700f8f.76.2025.04.30.05.04.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:00:51 -0700 (PDT)
-Date: Wed, 30 Apr 2025 13:00:50 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Ard Biesheuvel <ardb+git@google.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, phasta@kernel.org, Linus
- Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH] x86/boot: Work around broken busybox truncate tool
-Message-ID: <20250430130050.27be402e@pumpkin>
-In-Reply-To: <CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
-References: <20250424101917.1552527-2-ardb+git@google.com>
-	<aApm-lvBjREPOW47@gmail.com>
-	<CAMj1kXH7Vi8ruqohvRrPM+Dk2vPtyaMUkNRzi0Ak77aq6Q_peg@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+        Wed, 30 Apr 2025 05:04:41 -0700 (PDT)
+Date: Wed, 30 Apr 2025 14:04:38 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: David Lechner <dlechner@baylibre.com>, 
+	Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 0/4] pwm: userspace support
+Message-ID: <suxk5xq2qcr47ltpi37ynh4hov5ppyptwg3q2zpqqbsegz7m6k@r4yrog3uzgby>
+References: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-
-On Thu, 24 Apr 2025 18:39:13 +0200
-Ard Biesheuvel <ardb@kernel.org> wrote:
-
-> On Thu, 24 Apr 2025 at 18:29, Ingo Molnar <mingo@kernel.org> wrote:
-> >
-> >
-> > * Ard Biesheuvel <ardb+git@google.com> wrote:
-> >  
-> > > From: Ard Biesheuvel <ardb@kernel.org>
-> > >
-> > > The GNU coreutils version of truncate, which is the original, accepts a
-> > > % prefix for the -s size argument which means the file in question
-> > > should be padded to a multiple of the given size. This is currently used
-> > > to pad the setup block of bzImage to a multiple of 4k before appending
-> > > the decompressor.
-> > >
-> > > busybux reimplements truncate but does not support this idiom, and
-> > > therefore fails the build since commit
-> > >
-> > >   9c54baab4401 ("x86/boot: Drop CRC-32 checksum and the build tool that generates it")
-> > >
-> > > Work around this by avoiding truncate altogether, and relying on dd to
-> > > perform the padding.
-> > >
-> > > Reported-by: <phasta@kernel.org>
-> > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-> > > ---
-> > > I personally think using a busybox environment for building the kernel
-> > > is a terrible idea, and does not satisfy the build tool requirements
-> > > listed in the documentation. But apparently, it used to work and now it
-> > > doesn't, and the workaround is rather straight-forward.
-> > >
-> > > IOW, I don't care whether this gets applied or not, so I will leave it
-> > > to others to make the argument.  
-> >  
-> > >  quiet_cmd_image = BUILD   $@
-> > > -      cmd_image = cp $< $@; truncate -s %4K $@; cat $(obj)/vmlinux.bin >>$@
-> > > +      cmd_image = (dd if=$< bs=4k conv=sync status=none; cat $(filter-out $<,$(real-prereqs))) >$@  
-> >
-> > So the workaround isn't too terrible, and since someone did trigger the
-> > bug, debugged it and reported it to us, it costs us very little to
-> > apply the workaround and (re-)enable someone's Linux build environment.
-> >  
-> 
-> Indeed.
-> 
-> > Also there's almost no existing usage of 'truncate' within the kernel
-> > build system. Found one only:
-> >
-> >    drivers/firmware/efi/libstub/Makefile.zboot:                  truncate -s $$(hexdump -s16 -n4 -e '"%u"' $<) $@
-> >  
-> 
-> Yeah, and it was me who added that one too :-)
-
-That could be changed to use dd as well - since it defaults to truncating the
-destination at the write offset.
-
-	David
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p7s4k6i3ogher2ir"
+Content-Disposition: inline
+In-Reply-To: <cover.1746010245.git.u.kleine-koenig@baylibre.com>
 
 
+--p7s4k6i3ogher2ir
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v7 0/4] pwm: userspace support
+MIME-Version: 1.0
+
+On Wed, Apr 30, 2025 at 01:55:57PM +0200, Uwe Kleine-K=F6nig wrote:
+> after the feedback I got from David on v7[1] and some internal
+> discussion here comes a new version of the patch.
+
+So given that v7 was the previous revision of this patch set this should
+have been v8. :-\
+
+I hope all the annoyance that results from that fat-fingering is on my
+side only. Sorry.
+
+Best regards
+Uwe
+
+--p7s4k6i3ogher2ir
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgSEdQACgkQj4D7WH0S
+/k6sMAf8DX1WYTAxw7X5OV77oIWpx/9jKPfbrbgkR3iu2ak/bjGZ0oJLf67jjl5B
+pUTToSA88nqW3gvlSGnlnipvncX+lPFDSq4jmj8+tAQR9KAvSwG0bLcZVW24q9M4
+Z6SY2xzmI7yCZto9qRpZQASSaly+ZTUd5iRfZmLTkZVLv8dvP1+/hAncjT3shr+l
+WaRqg+KWbO/VB8I3D/e6XLm/77+mWx2Qe8ne9vKkzElR2MhrnJtgX3HGtfo8Skn+
+fsUSXMiRu2dh1rRPxl81qcjT4hLHagLB6jAfp/Qf7czTfcn5zjZPnaczbuEXSwMd
+S/ILPPAnLYdpiGvEB6a1d5bEdgOjOg==
+=L/3N
+-----END PGP SIGNATURE-----
+
+--p7s4k6i3ogher2ir--
