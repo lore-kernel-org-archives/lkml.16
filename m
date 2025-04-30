@@ -1,74 +1,92 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5652A1DFDA5;
-	Wed, 30 Apr 2025 18:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4471DFDA5;
+	Wed, 30 Apr 2025 18:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039198; cv=none; b=SjGe1dwWL10Za1+tD6/YPrlTKKB0D0FSmS68+QTtrXCjRZWdQg52byk/v9vNBpFVGTdm6/T94IDgbXrCm5ZX2Y6AwrcF4o0STKyUqU2yBc8OONk2hJzRN1gGk57/oB8s6YPuyCNPo0MwC7FISyhY82FKvtlQhKZU95hhQb/1P/s=
+	t=1746039241; cv=none; b=J7ndQoiXAocoY8gMJghaRCuhk3SrO33qtPLc/p64zRPVb7z6gnH2911e+4kva/TIH8U8ulWCTwPTG0cxs/dOu0hNUE7vW9x6+Lgh9wR9t+QtrP+TV8BsgJb0DPSz9FOl/83vXulQEdv6Gn6CgnNvehg/xJrSP4Be2hoexuFJRCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039198; c=relaxed/simple;
-	bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BK8Nye5ydusD/uIEv199jAJFGcG/kBeSC6UZ469QZlLV+AcsUNc94K2/TvGJRv7BS2zPO/oqnVRI7yRaJ2rM+gSdjeGF2HSZf8LhP8DblMtXzSbbfAO3v669HdvH3WgNdgfZSmu3ZJw1g087LWOjx4EqrD94ZHwYaK34BTY6RHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EEMz18tJ; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746039241; c=relaxed/simple;
+	bh=INqp31oPH6YlSTaHcFPVax+oSPwJTWRqHYvfXqiVndg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BZBL1Yd+mbC2qwTxl91WV9i6923oUV8kOTwNHHxmpIFW16B3ED0bn5/KSXzTWW+27x3LgaU+HMtQyzTpmdxkxQF6HvOdrrmOzoJFTdZmshEQP8OemEcEYY6T9v9bKuma7zDgxe1HHhV7xk8WIo6iazDZdn7g/+MV+g409mpDI0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/VUJi0j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EEMz18tJ"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30db2c2c609so1253931fa.3;
-        Wed, 30 Apr 2025 11:53:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746039192; x=1746643992; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
-        b=EEMz18tJeDY1n9ZG1jieT+6X7LSVZGq3zE2U4mxVBBjXdWdo1kCkxDni9LH7oPcPDG
-         eWOOBjsjTdZcH+NoEowCAVEu4Lba82eRMOqQEhfStQcfw72K4p7gsHc/9EEueCKc6tWZ
-         bGJFGFT3EFTUqHFF89fuiVScnjd7s/jJMRdaMECMwQaJ7lXRKogso81/TY5j4LuhiBdg
-         SOeZ6WO2T90KNLt5Gd8E4rDCG9b45OmGWF+Y++qjiD6/NvTbUYFMzgnFWwsF5DazjCZL
-         GaKBq3fO3bayw+wcxUVVd17dqiIEF0hX+x4ev4gzg1PGvcm//9+1SMffF6MT5A9K2Onz
-         7WCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746039192; x=1746643992;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rYjStq2mtn5geEz3C/+mX0Z0g312KHiTyEJTwFxB9gU=;
-        b=dJiaGxqlZYwSbBo2aOXo3DYZTxddrMiX+1ryyEyp6J5hbVFHecxx0Mx7bZxm2CtFuV
-         /suB17G6gnT5X9yjZ5JpxJb5b8VlZ5/1woOIA/1WBFh6H9nXDGJdbL1gY2Xag3708xNg
-         9evRqDHwzKlYVFyMLFp3hFFTMrcPr4eUZ223Qe/BwvOVI1Zk9juGEq8uBMGm1VC9/MC8
-         SiYzVSEVDO4zbp+AnOajRr3Uo05oAYXUEQvcs5VcQdtv89nBtplnk5Wy0VjlED1fdTde
-         qfjk/Kx8OE1kAk8l2CNuB8Rjq7vFP0hqI2xxgP3kLEjnHtrqYSkoRtD7cvuqLXiP8irz
-         yKhg==
-X-Forwarded-Encrypted: i=1; AJvYcCUfNdSS1ElDXose9IySt3eVPM4Isj6/q+eqEixupR0pVYW8qe7xzJRJxIHGlDgoxTSWOg5idEnBGAmjSMI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywbsggp7pCq4sMm46t3pZWEEjUI1Mc4qbcnLicc/U43qKlqlwEB
-	3St2Ya5qT7ZQ2SVlbAUhleKWPZBH31l3KyTp8tEMtT8aRgaFy67y+8CHPtw69aDhTzFFxspnzoS
-	Yt5T+29zLLXXM1xAPrp9duGzaUt4=
-X-Gm-Gg: ASbGnctKVpVxGrOz5AzisvB0snA2lBlNzsaVciJuzLPY6QZ2QPrWeh0yFZcPE0iowlX
-	7R7G+kOEytXYFqQlBllIASLW3BGms/KSUmlSd9zeLQFmzKpzbT9pZRE8VKsrYqD7L6ppt26XxXa
-	iwLYPeeg/Nlvvgygl5L+pOStW9NIJ/VC8pbZtOKQ==
-X-Google-Smtp-Source: AGHT+IE1uQ++FjCkKhQJZ7cMIVgQBJMGgIRP1tpha+mSsq2Dm0WDNf0Bkn1ExNY4pud7CTYClvJ4erGm5XjS95+y6qQ=
-X-Received: by 2002:a2e:ad13:0:b0:30b:c8b1:dd95 with SMTP id
- 38308e7fff4ca-31e6a7f48d1mr18143581fa.22.1746039192182; Wed, 30 Apr 2025
- 11:53:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/VUJi0j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C621C4CEE7;
+	Wed, 30 Apr 2025 18:54:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746039240;
+	bh=INqp31oPH6YlSTaHcFPVax+oSPwJTWRqHYvfXqiVndg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Z/VUJi0jjbbNa+TFHpHtWlZVwRW81Aw+AZNcQwqfjM0xYAwbk76vc+hWuOlN5N3IY
+	 0EEY5IYiA3UMh6Ge/tB4eTU1TmLUVXalcSlSn5lExVVf+xM7Z2FRotV7+yYommlmxx
+	 8wG2bxSAqdYbwjDoIb0l0pA5DGQl9Hd54n3/2aHrOXLno/PAv8jUr7FdKSCz8PZkfV
+	 21UjKaq0th7CFyvnAh3vLAlsbtz6hPbFyne0L0xCjxHW9oZos/yHDgU5H7bGOrqXX/
+	 UrQ3ZpS+hP4ecCwdaCIrv7dwJ69uyBZqFr6zyf1BMYv/qFqb82xuFZlI/tSKnQPRA1
+	 vy+ONWiHeJwLA==
+Date: Wed, 30 Apr 2025 11:53:57 -0700
+From: Kees Cook <kees@kernel.org>
+To: Shuah Khan <skhan@linuxfoundation.org>
+Cc: Willy Tarreau <w@1wt.eu>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
+	Shuah Khan <shuah@kernel.org>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+	Andy Lutomirski <luto@amacapital.net>,
+	Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v3 00/32] kselftest harness and nolibc compatibility
+Message-ID: <202504301153.E2D0C4ED@keescook>
+References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
+ <20250422103612-64ea71dd-d51d-487e-b387-508c372af07c@linutronix.de>
+ <20250422085145.GB14589@1wt.eu>
+ <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4664267.LvFx2qVVIh@rjwysocki.net> <20250430185019.19528-3-tamird@gmail.com>
-In-Reply-To: <20250430185019.19528-3-tamird@gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 30 Apr 2025 11:52:35 -0700
-X-Gm-Features: ATxdqUFjAf8Msr1Cb51650ntnGmG2m9PfkVIDrtXiA26TOGYQ-ZYk_TJzVAhDNk
-Message-ID: <CAJ-ks9kmwpf85tW_R30WmzU=fjB5p6+2vjZvzojsLuu3gFzv8w@mail.gmail.com>
-Subject: Re: [PATCH 0/0] Cover letter only
-To: rjw@rjwysocki.net
-Cc: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	robert.moore@intel.com, saket.dumbre@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
 
-Oops, apologies. Manually replying to an email I wasn't included on
-proved tricky.
+On Thu, Apr 24, 2025 at 02:06:34PM -0600, Shuah Khan wrote:
+> On 4/22/25 02:51, Willy Tarreau wrote:
+> > Hi Thomas,
+> > 
+> > On Tue, Apr 22, 2025 at 10:48:28AM +0200, Thomas Weißschuh wrote:
+> > > Hi,
+> > > 
+> > > On Fri, Apr 11, 2025 at 11:00:24AM +0200, Thomas Weißschuh wrote:
+> > > > Nolibc is useful for selftests as the test programs can be very small,
+> > > > and compiled with just a kernel crosscompiler, without userspace support.
+> > > > Currently nolibc is only usable with kselftest.h, not the more
+> > > > convenient to use kselftest_harness.h
+> > > > This series provides this compatibility by adding new features to nolibc
+> > > > and removing the usage of problematic features from the harness.
+> > > > 
+> > > > The first half of the series are changes to the harness, the second one
+> > > > are for nolibc. Both parts are very independent and should go through
+> > > > different trees.
+> > > 
+> > > I need a few nolibc bits of this series (snprintf() and prep patches) to base
+> > > further patches on. For that I'd like to pick up all the nolibc patches from
+> > > this series through the nolibc tree. They got Acks from Willy.
+> > > 
+> > > Any objections?
+> > 
+> > No objection on my side!
+> > 
+> 
+> Thanks.
+> 
+> Kees, do you have any comments on this series? If you are okay
+> with it, I would like to apply this for next.
+
+Fine by me! :)
+
+-- 
+Kees Cook
