@@ -1,113 +1,127 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE241DE3BE;
-	Wed, 30 Apr 2025 14:21:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39DE225B1EF
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746022863; cv=none; b=WVeq/506iO1B5ct2cU+lae7WvT+g8K1jd3iqVec3OKEeo8eRIeDNFRle6EytMICfmn2BgpwfYQaiPkcM5oxiWY94uer+urc0JbZqoMuqR168anD2eksa2atcKz7YnclvJD30jjcXPlxhW3MfP4SkX4eHrcAQ1HbRdugMQ03sXMM=
+	t=1746022893; cv=none; b=bpQpa4W6jKB/a/K5U3gh2BV3rJJ+dJHSLKPaj/6tdNtp/wEAXlNIgkWPtgstJ4ppVCs4s8RuTjD0XGuUq8DMtrZBXRFxE3GI9zyjbtJPJqOvm0j0aYEIFT0qOzYEXzZx6HnJwAq5QShuLaQHmjWyasHZFtw74wKMkW85mOiSPds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746022863; c=relaxed/simple;
-	bh=UXWimaLZ5rlbWA3qCs+ThqOdPLSxTpPVlEAtkEpyYYo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vo5dIdKQFCYHU3ZBCSvM2Hm8qFnrLgyPfCRCRg03a1/9OPBgdvdW+J6XPSFdJ9pHXeuQf7+VrGzaYwjeEBM4xDPU8hiNZcvNRRrWOptzYNKoppj9kHxYnAivnyPbyewPpUxuVAbZLfs66igadDnBLFFuIN7LOQV6iPpmEwmZs8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jvUccf+L; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746022893; c=relaxed/simple;
+	bh=sQ3uGnHXH5pOVC81pZdY1hVXCJqW8kE2I+Llf8pVa9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=h5fjpCwtm/CH+y9IHPnN/DVgt0UTcpnXikWb7jkgliAuNgmuzk0TU2dKAb40kEvWAeJUxW01J1OHmyORElQNQ02toZvwnxmhjDjx8kPHdFLDpYiUMMRZtvS6mL0Ohos7YFENLN1d2fVNPsmyptJy7aRfV8X0YN7X0xGvJH4Cf5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Mcdb7T1c; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jvUccf+L"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-301a6347494so835611a91.3;
-        Wed, 30 Apr 2025 07:21:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Mcdb7T1c"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-603f54a6cb5so4592803eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 07:21:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746022861; x=1746627661; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sZmQwZmxB+/0iwMhAswU29lyI7OcK6uMy67401DmTrQ=;
-        b=jvUccf+LE946I63TYEsW5uoSBp3K3/M0GMYI/d13sh2N9sFrDQAyFMdxQlaPqfoM18
-         nF+9fjbidVY1Mjsp0sP+48vGkTeIa7MepMJM/N5erFMeaf0FRG+cPqvwZAY9LDK1L5T8
-         3JjPZYZrrBU/R/Wzs0jpYZEMsSlwHLH0p5Y2kkTZf2tJQiUMULvu6+AvFtmAjjVyfkpO
-         2pvbMSNIGfrfaR7EqS/DTLRYuRSn5AwjEXhJRMnAhmRi3RWy0sLiyR5+PqHpyz/HfrSe
-         Psl56ULyYqyAz2mVe30s32oDhwJgha8gfnYIjMqBfy1eATxW49Jzko/hqX4unvvIUlBe
-         c1xg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746022890; x=1746627690; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1J21N20NQgiRAPGKjWxJGQE1CtsIaoc0bg+24VnTew=;
+        b=Mcdb7T1cWn1syaEhX00J6XyY1jUP/9i2FcK2VsRDyh/LmWHlBEh66jQuRTcCIWbL9D
+         eR0ZUgrweVHwnXPDrXOCGpnQfrufRqhx4N8fdOWHKFoz80qQkj22m7+YNVlYKG2nlf5p
+         WyRAszw6eBhW7iHaNLbwbunl2fRBs+hB+lEV0ytBZB95ZUEV3ukAyHgGL5rKWwAuVqrj
+         2zC+YHC9HSJwKqvjkKUN/izO+F9x8q0SUe3f8Mflhfrk/igMlVilOG7mo9vOy/fEHnGA
+         t9FXYKDM2x8UNdCpD0iHglhn1v05Q1ea3C9KxSEUHBfXsFcyuRW2vZdbsopGqzHeIqCP
+         fSxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746022861; x=1746627661;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sZmQwZmxB+/0iwMhAswU29lyI7OcK6uMy67401DmTrQ=;
-        b=V9qTS6Rl8RCFmwCRZZbX0P1hoelTsSW5hhMBmM62psfU/NvDLZgB7tcoL7xquhV+ea
-         a7JK8seC7U9rW0t4HyhrkVX/dMFTgV90PAnCYAuZphVGWkXEhTierbFPxosVDTVirRRJ
-         zr9PjRxDyrE4u6XshfTcGdVnO7s3EL/WZJyYlHrCNiKHrpk/4vstj1gBSNaJtXyq0Rkv
-         GgOJ3xbY/xq57qq2yhKMBErocCsQBJmXue6Qieis1UMy8lJCG2Q46uWeULmhjJZI1C07
-         HRy6uYWixDRpxy5A8HckucuuOAzUIdwC/QqFT6hyVfBnzdHQ7FQ9BvhpmLn3f25NIYbz
-         psGw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9jnoR01WVhTp5GL8VKfD1UWqMZO/XJqVVl5PcrruEry7pY7c/ZxZxXHeqj1s2PfcJRZjI8uS+6hv/JvkbWD4=@vger.kernel.org, AJvYcCViGy0XYH7POkSD3Gn+qYncqE3m598VnbzKQ53G9DN0d+JDuK30G+20eDGDF1enfVUeNQKDkT7CDL0Eusiy@vger.kernel.org
-X-Gm-Message-State: AOJu0YzuHi5j5j5Z9UjsgqA00dd7KSXC5vuNE5MYgx60cVHfSo+rqLoO
-	3YTlZtoB1R7yB499Ynv2C0EnTWu2OtbS9nxK2TLlLHCWu+NgZLpbermgPszBULezPfIqbDdRCdi
-	BBhUDGhGOFobHh7JC+1buSpT18mg=
-X-Gm-Gg: ASbGncsmHHTFQR5O6gj0CcJ4Ji64U6d+hPdljskb8eb4M51pCe72ytnED6js36JBJNA
-	yzKUdR8WCtKNz2Nt9WcN+fThDUesdHU3aVK0KVyZ2CVmpp3110VQmuiPHiv9Z2y2nWDfPwKeoJr
-	WNjR0CJTY4EosttIfblen4DOKw3GxZ13lh
-X-Google-Smtp-Source: AGHT+IHrRGSCtx7yYWpJEIC2bzjI16vhGr+WvXakgytHAWV7umJvxRTzyd+RXip4iCHcc3z9o9KqkLvAU+fqkw7MRxw=
-X-Received: by 2002:a17:90b:1b52:b0:2ee:acea:9ec4 with SMTP id
- 98e67ed59e1d1-30a34a7903fmr1258142a91.3.1746022860936; Wed, 30 Apr 2025
- 07:21:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746022890; x=1746627690;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z1J21N20NQgiRAPGKjWxJGQE1CtsIaoc0bg+24VnTew=;
+        b=oHz6vy8A15iU/RPQ6UGt96e5R8SvNHACUIXBbHBOr+9sqqOPTn77Pv4k0stFHOuVMC
+         w/28YTW2OHiSZY41Ro3kb9g+vmlwjrA5msbq9jvYPs/sd6hr6LsDVdjI7mAZTQrLMpf0
+         BW+xfpzh82m3zmSBdd/CQzt5k0r2gnYYdgLU9mQJpGZZzSjF0dg1BIwUw7VMZIadifA9
+         fOtwY7npJyy5jaR+UJHjdL3lf6m6nmVKiptgDOGvCqlC+fN8ihQNrp+6x/orUO2wM9Av
+         3YKjZpWv+WPTDQPSySoU9hM97LcDfdHjXpIGM25tXTLmmLWhWWIVVPntCrn6uLasPPne
+         tgTw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZdBswiCyx/skmS8pAKwfFkS26pR/oairzMffGkpg5bSUBlgaK4/HgU2o3hREH9olvAuWZ4jiGK3YCIf4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmOI8lpFpJVPupQg3joyXzFeQAIfv7JAMNgSWdCk7AD8BPIFvZ
+	JpsHW6h/+oF//J+geTda594DhgXopqORTIYUHEDCNRAQtTAx9KOfXLGBQQ7aQQU=
+X-Gm-Gg: ASbGnctAKCyF9t4FVrJYgcMAbr4jylSA9p64ZtGnEnEnL3jAKAWojXavuivTzDKVx5R
+	O+7liRK9FX5+gcLjGHqH4QFgnQAljMPy9+jwVyFa2yNcgwoZL6hRTHyfs9FDqxrNDqS+uGPz2UG
+	/AgPnTeKhTthEA4iEpXjDdV/c7vytsEAjQXGDCYqcIEnvPU01oLMyZwS2ItmXUkDx4PcUIHDgwW
+	CZHiYf+FzciJ3782tlmy00leZVbXXZmbT/p+LLU8bE6/X8Jq4qHYOJakwYTOhsHsEnuq9Qfi1SH
+	h9jvsVnH9Ka9PfDciIiMJNeA1zSAyX6USE9ChbYtewas8O65cJ97g59o7+8QKOywRafc9NAL65Y
+	0uOGw6laTEkaz4XGvvaIT94yqgQ==
+X-Google-Smtp-Source: AGHT+IHWCsLcDIxL6ytR5QTqeptmdFdVVO+xqRDcmlgk7+/1KWk02aStJmqcNR/mTszyOY6C7kGxXw==
+X-Received: by 2002:a05:6820:8c9:b0:606:85ad:881 with SMTP id 006d021491bc7-607d40e2902mr1899866eaf.0.1746022890085;
+        Wed, 30 Apr 2025 07:21:30 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:359a:f1e:f988:206a? ([2600:8803:e7e4:1d00:359a:f1e:f988:206a])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607d8dbd96fsm232384eaf.35.2025.04.30.07.21.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 07:21:29 -0700 (PDT)
+Message-ID: <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+Date: Wed, 30 Apr 2025 09:21:28 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <aBHZuejTTKkdnGaZ@stanley.mountain>
-In-Reply-To: <aBHZuejTTKkdnGaZ@stanley.mountain>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 30 Apr 2025 10:20:49 -0400
-X-Gm-Features: ATxdqUEB0H-Jbi4I5kCfhljTEmMnfaxoRCMWULH3c0gZNlkLYq2fJo8Njqfwsus
-Message-ID: <CADnq5_O0CmTSScncQ5kV=BciZdEZ+D_THNEis+Lfy1ENPJ-+pQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amdgpu/userq: remove unnecessary NULL check
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Alex Deucher <alexander.deucher@amd.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Shashank Sharma <shashank.sharma@amd.com>, Sunil Khatri <sunil.khatri@amd.com>, 
-	Arvind Yadav <Arvind.Yadav@amd.com>, 
-	Arunpravin Paneer Selvam <Arunpravin.PaneerSelvam@amd.com>, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
+ documentation
+To: =?UTF-8?Q?Nuno_S=C3=A1?= <noname.nuno@gmail.com>,
+ Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
+ <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 30, 2025 at 4:13=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
-.org> wrote:
->
-> The "ticket" pointer points to in the middle of the &exec struct so it
-> can't be NULL.  Remove the check.
->
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+On 4/30/25 12:40 AM, Nuno Sá wrote:
+> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
+>> From: Angelo Dureghello <adureghello@baylibre.com>
+>>
+>> Add new IIO calibphase_delay documentation.
+>>
+>> The delay suffix is added to specify that the phase, generally in
+>> radiants, is for this case (needed from ad7606) in nanoseconds.
+>>
+>> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
+>> ---
+>>  Documentation/ABI/testing/sysfs-bus-iio | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>
+>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio
+>> b/Documentation/ABI/testing/sysfs-bus-iio
+>> index
+>> 33c09c4ac60a4feec82308461643134f5ba84b66..f233190d48a34882b7fed2d961141cc6bec3ddb2
+>> 100644
+>> --- a/Documentation/ABI/testing/sysfs-bus-iio
+>> +++ b/Documentation/ABI/testing/sysfs-bus-iio
+>> @@ -559,6 +559,26 @@ Description:
+>>  		- a small discrete set of values like "0 2 4 6 8"
+>>  		- a range specified as "[min step max]"
+>>  
+>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
+> 
+> Not sure if I'm too convinced on the _delay suffix
+> 
+Phase is measured in radians, not seconds, so it seems wrong to use it here.
 
-Applied.  Thanks!
+https://en.wikipedia.org/wiki/Phase_(waves)
 
-> ---
->  drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c b/drivers/gpu/drm/=
-amd/amdgpu/amdgpu_userq.c
-> index b0e8098a3988..7505d920fb3d 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_userq.c
-> @@ -631,7 +631,7 @@ amdgpu_userq_validate_bos(struct amdgpu_userq_mgr *uq=
-_mgr)
->                         clear =3D false;
->                         unlock =3D true;
->                 /* The caller is already holding the reservation lock */
-> -               } else if (ticket && dma_resv_locking_ctx(resv) =3D=3D ti=
-cket) {
-> +               } else if (dma_resv_locking_ctx(resv) =3D=3D ticket) {
->                         clear =3D false;
->                         unlock =3D false;
->                 /* Somebody else is using the BO right now */
-> --
-> 2.47.2
->
+And the delay here is with respect to individual samples in a simultaneous
+conversion without regard for a sampling frequency, so I don't see how we could
+convert the time to radians in any meaningful way.
+
