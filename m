@@ -1,147 +1,241 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832D7262807
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84EB92641E2;
+	Wed, 30 Apr 2025 16:44:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031423; cv=none; b=mYBZs4v0UFSjpntbKESDGhI6mHObn0eT6vgIVWegGhfnzckIeECgiXVv2MLyKQSbGNe+YmM3aKy79AKq5RfXY0N0vrGA1nqTdn16edSHxDHTcD4SWekAxApF0JJ9us9I0/1GaSxT48zCo8+n6D9/UvbVtRYqyYzxtXQXVQjx3q8=
+	t=1746031451; cv=none; b=mf9G3FNwsnYmSc7CEPasiyq+ESTEH8XyHE/0a8y752+jXlLhcx3ZWkzTQR3awaFzMDwmMnDEfz/jr9JNXp+Nnr3E/PfR+zNqag4k8WyGFa98ByVXHYf4g17B59Bk9f8LFz603oIqfd6ZRslhRl3D3Tqdfmvfl0vTJjcV/8E2uko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031423; c=relaxed/simple;
-	bh=+UxfhgQiYyfYvQmBeh4IU41/OmeHbMBkc5DfBPIEI3M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=T7wWUgrKqwPNcEi4KfXQ0yVSvfeoZzXEUD9bzTR9KZjHoVLQg7/EPZa+zAHE9IOUFmTE6YDTvsxJ27Pio/6QQCdmPRv0zq8yiH3FMOipuInQS8i0HIwlzfimFMAvEoNpIqHmBmu2xRGbazCX8+k9eWnfAuZHK1HKvS5qw016bpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Jk/Q5dEq; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746031451; c=relaxed/simple;
+	bh=S3qjZUTXyva0KmEUxrdqUlTkUktNeKaOQGn0h0IFgoU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=snM4mrHKU+aJ3adNutpOGTGDtpZosoqKwDhP1izanUeqtNc89fKXOpGAWrXJV5kdjwRb732pl0dvytl8LvzvjMk6LmBlvqXfGMwF/YqSj25dfRBcCjkyxaO89bqw05JGhN4VgQPDZQrlMeO0+W5dHuP8dz34BIhYmB7nXrsURJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i986bSwp; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Jk/Q5dEq"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53U9ABVe000482
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:43:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	m8gechZt1FFMmvPClarUjgPBXpccO8/uIU+IaL+lEqg=; b=Jk/Q5dEqOZ38oUAi
-	Z2vIDqnZXUD9/g843JoICwAxjXU07O14bYND0HsT+FP6uBwthjrCm0eLUZdIA+DG
-	GZdKxpfwtr2bjCtsgE/NmwS/j3Ec0DTWELlQoGA9Ao01AWaHHAqftcgsGf47mnus
-	3tMhdafHp/4R6Kds/yoB/GbIrDgov8qp6wkMcajUDo3jQ0ojnU6kl9adquglgwrt
-	ArxPjtfOEVIws4k6IMw0nOF66WTrcoqjpRbi87p6Te/qYiXCk4c32AWhrqLzhL9N
-	RiaGO01BbuAgxW7Adwge+8smE7G/6zjioni57Q09RxJF3XUKnSl7GkFWLB42Rv/U
-	cYR0kg==
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u72yvk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:43:41 +0000 (GMT)
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-72f3b4c0305so119573b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:43:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i986bSwp"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8fd49b85eso1751806d6.0;
+        Wed, 30 Apr 2025 09:44:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746031448; x=1746636248; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=38HytJ3ptnvrdkyB15yGBsGT1lU1pkC9z7I696Nt/eo=;
+        b=i986bSwpAOWy4A5OyeQhbVLTmuKFhdYeITdTgSeYUbzQefDN6K9Wwmn3OtTAQzh1KV
+         vnwTEaZtzwQM+21pyrTNxggeurLOxuRRccAwbf/h6Yoo00xJYGA2BJysSPuzbsFspyd1
+         uCgX3o5oQyetF0NJTdmX26X4FtgOredmLNerCpqL30de5MTnNdoZbCK+uWaHM/vSQQjX
+         Gx+x+of0xmo//GxENI8aKKdZnt2aijuif+mDJ3RxmDVCttgOG9AjkcROHBCztZLlEOzR
+         P8ttnBHObehhCIjGKn1EK6MGaoxsUqt3eJb+tb6bt9W6AV2cqbN0jV7X7Sb3qRmkbIZI
+         IfjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746031420; x=1746636220;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m8gechZt1FFMmvPClarUjgPBXpccO8/uIU+IaL+lEqg=;
-        b=Q8aHu8RUkQRw/9w8jQEVUwDE/E3MPPUuGL1ss/CvroEPb/JDw2tghKbK1jB/sKI4hq
-         m3lnufMwmL8BJJHdWjJ++4bnGunGSGFq4pBGzbOI8agdTJYqE0lAKIr7ZwERGf/rBl1G
-         N18va6u7CqHkj8X/brRAK4o7kMKvZoC6jiHi6HWelKRYE2K0ZiabsurTMRfZKdg4T5gH
-         VR7j/83BxcRiPjL9OAjML+Hx6nLkAmFl0msCfw7+o46kyJN1V7Q9mKaicc9O/q3aVroo
-         lHHbXMxkMjha4r6Tq3ulPMHmiWTkdyTBw0OBgHRz6l09LAFSxstj9m6LU/VetVt+fTL2
-         uOsw==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ69hYI2Xr3wDacVNlBBcxbXzuFJnbx+x/o0YSeQGQZu1UC9PsaOKuuLDu4rKNN/c9HbjW0t+aaVIvKdQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbuItc9svYaA+4SSV0OCZsCksmepHMZ1mcqkWOLVk+MUNea8K0
-	3RGBgE+WoDwEw330ULE9VTPn6tfzZ2gi/OI+xltmCgX1Gr4rrT5zZ6qc58AvySQjdtUQ1Go8IbH
-	aIJ3xGqZCe1hGW1lBx+DD6I5Y8tiodkkzyzLtqIbcOOFw9lDtksrjUmxTybGJE9A=
-X-Gm-Gg: ASbGnctCVanVwKo0FsZerEuCQmxGS0N2m0obhU3riAeu1LFdi9WPqKdvNS2JMvmKdGb
-	QCQBNvFIZaA3lJHbz0ABuFUm7/Z6yY4fFl7jfLu40Ow1p9qYBuqALFyFAxHNNvurbfA85QUo4vo
-	TKv3pOikEWkYqfMXSIu2VvGoC3n7vbB/ZPNQ4DnK4DpYMEG8vcqeD9huqY3sIYroRIeDcOo3MFQ
-	8m3s32yGhDnSIOrKG+mis/zD1g930+XmlQnajUvY6cBdm3JBvp5e/UINOg+eoPhL8abtVwX2fxS
-	VEMJ9nJqm72eUQhuI69+Rq43K4ordS0LD6kRpdxMi2gjrU0qvgz2
-X-Received: by 2002:a05:6a00:1814:b0:72d:9cbc:730d with SMTP id d2e1a72fcca58-740389c6d3amr5637538b3a.11.1746031420661;
-        Wed, 30 Apr 2025 09:43:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFfvM2n/WCXOQfmCAt6vISRbV46zytVPmlHBi42n3e9/Mr/zp0qmV/V+dD0IhKtXBh3vpZs5w==
-X-Received: by 2002:a05:6a00:1814:b0:72d:9cbc:730d with SMTP id d2e1a72fcca58-740389c6d3amr5637514b3a.11.1746031420328;
-        Wed, 30 Apr 2025 09:43:40 -0700 (PDT)
-Received: from [192.168.1.4] ([122.164.87.156])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a5c25esm1943084b3a.136.2025.04.30.09.43.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 09:43:39 -0700 (PDT)
-Message-ID: <52c249e3-3cf4-492b-a22c-f82caa3bcd73@oss.qualcomm.com>
-Date: Wed, 30 Apr 2025 22:13:34 +0530
+        d=1e100.net; s=20230601; t=1746031448; x=1746636248;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=38HytJ3ptnvrdkyB15yGBsGT1lU1pkC9z7I696Nt/eo=;
+        b=Inm/CjTjd8YY2NN8Dk1sgupcgH12VwjOF5sv7nEjCURaC1RtFcnDHr/dB74dielijx
+         Qbsz8F9vt8UNnMJ9r4CY07RLah1CpuYKKnjgW5bY6JXts2EA4+6fFfRQp2eiPOlZ52nl
+         GZsXW+wtt4gNoonGVBf2E9UGpOE3OUT+3ugTZ6G19kPzVNRsL77JAM2DRmO1GZH3YoI4
+         y0UPK+LVDrkJHfOoQ9QJ6Zy+ZIxuvSa5kduWsHzZDixvVNrqgPMX2bL/7jPUaXwG6U+O
+         NWtJYKHJ9Oj0fbBWPH90IFRXtlbbNPyZOTpXp6ikVG6DTnjCohcGToU+ZC0KAcErZuvJ
+         m2EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWhWU4lDJ5sCaj+wh5TjLb43i8B4SCSKBcEteK1zEOGLHiRnG6HuWqrmBUva7AGO2zv5yy3SMQQqThusnQ=@vger.kernel.org, AJvYcCXFp4fhuuOz0C4fWK0koc4UmLbbM/J8Fp1Hqwp76371QguoO0qKrsC1Rjtexr5Kdl3Rp9CsEHKkQQH4rJDlIdU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7I/pM8zQ74VlCcHomV1gwuWjqK7fN9JxCAGmyYjkLIxkMMql4
+	ogYLNcsLHwo37yST7VEjwuYDROPP0gv45Rbfvr0yhWmrgdddU9Be
+X-Gm-Gg: ASbGncvq13BQrWx0p3jlCObDBD4Kflfyj9G9oOuAquhUWQzGR5/bz/J06TSxRVUEEg+
+	i60XgPCs2JVECB32kz/lvJLXnP3nbqWQ2QdpYPu6MIbsUVO+Ej74js2eDnSN2eUGSMmK9Hvn5RH
+	1choMgmpWHI5ue/97lo150+2eYNgqBkp1Kl9wgHibxegswvxm/KdJgiX7Px8vNFthiI1WeR99zm
+	BeYYBSpLGeFFaoJOZ7A31Lgw01jycVt08cEDMIu1ecOLHFCegOwhnlfZ0B85spDhiGEVFoDAWQZ
+	z/yuaMZUKSxM6NI9fjxx7Q40HQbs00FtPGyN6eV703uPGss0AHXGJBnIUFOb9U0Q6Es4hWJaMnq
+	mvjEN4au5vhHaqSRC6ch+QCZd6aS5CEA=
+X-Google-Smtp-Source: AGHT+IELc3QOsbfJHY5DjiUe35nZBF1IsikBmL2i03eBmvpdCOFlfBPfvtgumFyhHoyl4DJvOxu7GQ==
+X-Received: by 2002:ad4:5ba6:0:b0:6f2:c9e1:8511 with SMTP id 6a1803df08f44-6f4fe1318acmr51772396d6.39.1746031448232;
+        Wed, 30 Apr 2025 09:44:08 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe87e355sm10106626d6.124.2025.04.30.09.44.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 09:44:07 -0700 (PDT)
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 2EDF91200066;
+	Wed, 30 Apr 2025 12:44:07 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Wed, 30 Apr 2025 12:44:07 -0400
+X-ME-Sender: <xms:V1MSaEfHouxbcjBbh0qGSLLRoK4atfd6IqPpASRVYiRyKJZLkE8OfA>
+    <xme:V1MSaGO_wo-gF3IOZnVvKABGJpTT6LZm1Y0G1OWBIswi74JHLq7nYNcDefz8lksCp
+    _9HXPuHoCSRrnxiWA>
+X-ME-Received: <xmr:V1MSaFjHgm4BamVGxJWBgtQIU38VVMrb7GJsSnZoxB3rfF_GKfOiXAo9>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejvdduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggugfgjsehtkeertddt
+    tddunecuhfhrohhmpeeuohhquhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrg
+    hilhdrtghomheqnecuggftrfgrthhtvghrnheptdegheelveffudejffegvdelgffhhfel
+    keeiieefgeevteejvdegveeuffeihefhnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhn
+    rghlihhthidqieelvdeghedtieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpe
+    epghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeduiedp
+    mhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheptghhrhhishhirdhstghhrhgvfhhlse
+    hgmhgrihhlrdgtohhmpdhrtghpthhtohepshhkhiesshhkhielrdguvghvpdhrtghpthht
+    ohepohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnh
+    horhesghhmrghilhdrtghomhdprhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgv
+    thdprhgtphhtthhopegsjhhorhhnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprh
+    gtphhtthhopegsvghnnhhordhlohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthho
+    pegrrdhhihhnuggsohhrgheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlihgtvg
+    hrhihhlhesghhoohhglhgvrdgtohhm
+X-ME-Proxy: <xmx:V1MSaJ9cy-aO-laN1Mz6YmIKt1MsrXCyyY2BWWkEhNvo9wujqR7e-A>
+    <xmx:V1MSaAsOpXoFKQchFFwx1i1ftnxBTnPH3GvlR5X6wFYBgAlJ-R_Dtg>
+    <xmx:V1MSaAF5739Gnydi-LfMq3krcK2hey1sNuaVHrft9PeXgaiCbGf7IA>
+    <xmx:V1MSaPP8Nn3NZ84WlI2DSq_xZ_3zcw2Eg0sIx30H0e93DjU8SBLItQ>
+    <xmx:V1MSaFPSYKqNRhIdgZM6j8zcMLPLJOh-STX0lMJickTwU4bGm4VabyEx>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 30 Apr 2025 12:44:06 -0400 (EDT)
+Date: Wed, 30 Apr 2025 09:44:05 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Gerald =?iso-8859-1?Q?Wisb=F6ck?= <gerald.wisboeck@feather.ink>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	Ralf Jung <post@ralfj.de>
+Subject: Re: [PATCH v2 3/3] rust: use `UnsafePinned` in the implementation of
+ `Opaque`
+Message-ID: <aBJTVWsrqzuasx7W@Mac.home>
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
+ <20250430-rust_unsafe_pinned-v2-3-fc8617a74024@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/2] Reuse the IPQ6018 QUSB2 PHY settings for IPQ5424
-Content-Language: en-US
-To: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
- <kishon@kernel.org>,
-        Dmitry Baryshkov <lumag@kernel.org>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20250415-revert_hs_phy_settings-v3-0-3a8f86211b59@oss.qualcomm.com>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <20250415-revert_hs_phy_settings-v3-0-3a8f86211b59@oss.qualcomm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNDMwMDEyMCBTYWx0ZWRfX8+g4AlCO3n0c /mDxndeNP5gqOmgJM3aqSDhgSRxlzaOYoJCI9F5U1iJBRkk3O9md6E0bZQwbLJ2a33ELln4h3yf 2cW2gpiP3g/Vkj/VIauPTG860dEsYfaqiUe/MZrpbwsWEjtYsaMOMHZcaWoJEQLNoRg83zVHnfO
- Ju9Mg1jZEOyIlNotBkh/5D6KHK1xivryoSl9eaWVKnYENA1/Yb8pTVzogwRUQBEkEXp/qMvWLst clKLyrJNEyVmzX7k7hImFaZ+kSsFRAeLdgNgEoNQZWRXsgIBTuoxqRMfOEMQTeMTc2mD9Rgkgsi SdzTtsYrbq7tc8pnz866qhoR9anvVF+1CqWXZPuTWkmXomfRPXxxzrmpmPeqvdpJ6xMOs1jNY5C
- FFql5bXF5cKO1yNAQPsHme1Hl3a6X/5+JxG1pCT3AQjI8DOpbMdABCS7sJo5yVnP5IsCvhG1
-X-Proofpoint-GUID: -VFsaDSbz5QIjErmua9YtOCq0TiaKFB9
-X-Authority-Analysis: v=2.4 cv=W404VQWk c=1 sm=1 tr=0 ts=6812533d cx=c_pps a=WW5sKcV1LcKqjgzy2JUPuA==:117 a=wj/iefQKNY9P1RSDfSoyGA==:17 a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=ZGpNPYoN0zUfxpdBiG0A:9 a=QEXdDO2ut3YA:10
- a=OpyuDcXvxspvyRM73sMx:22
-X-Proofpoint-ORIG-GUID: -VFsaDSbz5QIjErmua9YtOCq0TiaKFB9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_05,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 spamscore=0
- clxscore=1015 phishscore=0 impostorscore=0 mlxlogscore=767 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2504300120
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-rust_unsafe_pinned-v2-3-fc8617a74024@gmail.com>
 
+[Cc Ralf]
 
-On 4/15/2025 9:52 AM, Kathiravan Thirumoorthy wrote:
-> With the current settings, compliance tests are failing, especially eye
-> diagram (Host High-speed Signal Quality) tests. Reuse the IPQ6018
-> settings, as mentioned in the Hardware Design Document.
->
-> Merge Strategy:
-> --------------
-> Both the patch in the series should be merged together to avoid breaking
-> the USB feature.
-
-
-Gentle Reminder...
-
-
->
-> --
-> Changes in v3:
-> 	- s/complaince/compliance (Mukesh)
-> 	- s/design team/Hardware Design Document (Mukesh)
-> 	- Link to v2: https://lore.kernel.org/r/20250414-revert_hs_phy_settings-v2-0-25086e20a3a3@oss.qualcomm.com
->
-> Changes in V2
-> 	- Splitted the patch into 2 patches, first revert the commit and
-> 	  then reuse the IPQ6018 data (Vinod K)
-> 	- Dropped the R-b tag from Dmitry
-> 	- Link to v1 -
-> 	  https://lore.kernel.org/linux-arm-msm/20250407-revert_hs_phy_settings-v1-1-ec94e316ea19@oss.qualcomm.com/
->
+On Wed, Apr 30, 2025 at 10:36:13AM +0200, Christian Schrefl wrote:
+> This change makes the semantics of the `Opaque` implementation
+> clearer and prepares for the switch to the upstream rust UnsafePinned`
+> type in the future.
+> 
+> `Opaque` still uses `UnsafeCell` even though the kernel implementation
+> of `UnsafePinned` already includes it, since the current upstream
+> version does not.
+> 
+> Reviewed-by: Gerald Wisböck <gerald.wisboeck@feather.ink>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
 > ---
-> Kathiravan Thirumoorthy (2):
->        Revert "phy: qcom-qusb2: add QUSB2 support for IPQ5424"
->        phy: qcom-qusb2: reuse the IPQ6018 settings for IPQ5424
->
->   drivers/phy/qualcomm/phy-qcom-qusb2.c | 27 +--------------------------
->   1 file changed, 1 insertion(+), 26 deletions(-)
-> ---
-> base-commit: b425262c07a6a643ebeed91046e161e20b944164
-> change-id: 20250414-revert_hs_phy_settings-47643d2c75ba
->
-> Best regards,
+>  rust/kernel/types.rs | 29 ++++++++++++-----------------
+>  1 file changed, 12 insertions(+), 17 deletions(-)
+> 
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index f06e8720e012102e5c41e79fd97b0607e927d71c..44d96423a8a6c358bb7ebf12c24fad98e5c2cb61 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -4,12 +4,12 @@
+>  
+>  use core::{
+>      cell::UnsafeCell,
+> -    marker::{PhantomData, PhantomPinned},
+> +    marker::PhantomData,
+>      mem::{ManuallyDrop, MaybeUninit},
+>      ops::{Deref, DerefMut},
+>      ptr::NonNull,
+>  };
+> -use pin_init::{PinInit, Wrapper, Zeroable};
+> +use pin_init::{cast_pin_init, PinInit, Wrapper, Zeroable};
+>  
+>  /// Used to transfer ownership to and from foreign (non-Rust) languages.
+>  ///
+> @@ -308,8 +308,7 @@ fn drop(&mut self) {
+>  /// ```
+>  #[repr(transparent)]
+>  pub struct Opaque<T> {
+> -    value: UnsafeCell<MaybeUninit<T>>,
+> -    _pin: PhantomPinned,
+> +    value: UnsafePinned<UnsafeCell<MaybeUninit<T>>>,
+
+What's the Rust upstream opinion on `&UnsafePinned` vs `&UnsafeCell`?
+Does `&UnsafePinned` provide the same noalias behavior as `&UnsafeCell`?
+
+I'm wondering whether we should just do:
+
+    pub struct Opaque<T> {
+        value: UnsafePinned<MaybeUninit<T>>,
+        _not_sync: PhantomData<UnsafeCell<()>>,
+    }
+
+, instead.
+
+Regards,
+Boqun
+
+>  }
+>  
+>  // SAFETY: `Opaque<T>` allows the inner value to be any bit pattern, including all zeros.
+> @@ -319,16 +318,14 @@ impl<T> Opaque<T> {
+>      /// Creates a new opaque value.
+>      pub const fn new(value: T) -> Self {
+>          Self {
+> -            value: UnsafeCell::new(MaybeUninit::new(value)),
+> -            _pin: PhantomPinned,
+> +            value: UnsafePinned::new(UnsafeCell::new(MaybeUninit::new(value))),
+>          }
+>      }
+>  
+>      /// Creates an uninitialised value.
+>      pub const fn uninit() -> Self {
+>          Self {
+> -            value: UnsafeCell::new(MaybeUninit::uninit()),
+> -            _pin: PhantomPinned,
+> +            value: UnsafePinned::new(UnsafeCell::new(MaybeUninit::uninit())),
+>          }
+>      }
+>  
+> @@ -371,7 +368,7 @@ pub fn try_ffi_init<E>(
+>  
+>      /// Returns a raw pointer to the opaque data.
+>      pub const fn get(&self) -> *mut T {
+> -        UnsafeCell::get(&self.value).cast::<T>()
+> +        UnsafeCell::raw_get(self.value.get()).cast::<T>()
+>      }
+>  
+>      /// Gets the value behind `this`.
+> @@ -384,14 +381,12 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>  }
+>  impl<T> Wrapper<T> for Opaque<T> {
+>      /// Create an opaque pin-initializer from the given pin-initializer.
+> -    fn pin_init<E>(slot: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+> -        Self::try_ffi_init(|ptr: *mut T| {
+> -            // SAFETY:
+> -            //   - `ptr` is a valid pointer to uninitialized memory,
+> -            //   - `slot` is not accessed on error; the call is infallible,
+> -            //   - `slot` is pinned in memory.
+> -            unsafe { PinInit::<T, E>::__pinned_init(slot, ptr) }
+> -        })
+> +    fn pin_init<E>(value_init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+> +        let value_init =
+> +            UnsafePinned::pin_init(UnsafeCell::pin_init(MaybeUninit::pin_init(value_init)));
+> +        // SAFETY: `Opaque<T>` is a `repr(transparent)` wrapper around
+> +        // `UnsafePinned<UnsafeCell<MabeUninit<T>>>` so the memory representation is compatible.
+> +        unsafe { cast_pin_init(value_init) }
+>      }
+>  }
+>  
+> 
+> -- 
+> 2.49.0
+> 
+> 
