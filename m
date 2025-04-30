@@ -1,82 +1,82 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B23326656F
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03A972882C1
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036687; cv=none; b=h2zNMnhw3/XyA3nse4S4Dfc8LvaElBIdYH1uyFQGtQpS9Y+zcT1c5l9nIu0jNhNuMk3Da1nvxYutdO8arUpHt8blpCtBClTcJfy1Rgq8I35IozfyQY4BI/cfsHvHjUrW8y75GkJkvPSjoNjiSpPm/O39VlRuEsw3zpIizbHtNBE=
+	t=1746036689; cv=none; b=DTzCDtHeRlzX+rbs3vbMG8h+zCszmhLccjRteYAjy9vqav0fDJFmJhYeNoWOzVTeSE6+8TOPwM96ZTFCalQ7MUAtBbCAzQUbds6DdEEaevyXXhXlntuu7B9TFi/14UVTf28SAHE7MPUmhAY3o+zEninrAKUAvHDTCgKnH289UVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036687; c=relaxed/simple;
-	bh=CQu6NY+XXCjQ0pDoxIrTBz6qrVh4Glx1z3jLOwt79bY=;
+	s=arc-20240116; t=1746036689; c=relaxed/simple;
+	bh=X5+Ukdg7rvV7208banBi4yu0UKjpHItJx+R1YJoxna4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q0C2gnNC6PpQWjH71bKEMJpBLD9Ft4gOeeHLxBSg5Oz+bPgQYmzGi6sWvAdU1dlG/FXgHzNfa8S/gJcO5z9hYBt35jddtXPnZbp67Ce4IUpJn9vfB/2+nyR5wzT6plei4R0+gM7F0iyQBi01dPoNAoDqUZ5ayhqotP+wMc+ldB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VLnpInnA; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 MIME-Version; b=Ds0sOaEbhgFqzm+npAooLtrLC2ZYerEYCqxR6NIX+37HiMb0u4sYMxtfolMiz7IXEkLkGQP/V9OEaNYkW/CBLn55Qfm/NEcsCBpr3+7iyTm4nNtc9e/CC/F9loR0p9PEBTPVOLVqPBcX+aMbUOHPiOb3t4/KUZSenqbnjpj+8Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jYWcxVEs; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VLnpInnA"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-b0b2d1f2845so107889a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jYWcxVEs"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e900a7ce55so2816136d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746036685; x=1746641485; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ABVuvP5TNG4tVYGMuC//l3k1Ki5yFOjDY70WGpcFOzo=;
-        b=VLnpInnAmXiY75sDp4x75brDKpRp/VGCeuXCb3IeAjhh/V67LOb8l18bihH1iKpEco
-         flNbfgGzco2Ekgw+2mpkIv8PLoDEeXwxYCVg37JyBUPhpfH1U+jlBfNkOwmGbnyLelzb
-         u/K1W/66z76c9ZbuE+DNdGiTRcLbKi9kzNM9tHPAuFVgNiJQdJ8KTNJ8WukGyVt7TYMF
-         oy5NXkjcIFzvle2WO5CmN7glrhzBlrBNudelnDjEIRpv/Z1abyoNTzapY9ukt7OcFR5w
-         QL684UTmmo4bBFWOTiqoF+No9Cttf5vfg0bNHNXRa4O2L9zwckt8V22D7eQ07IHZgV0V
-         ZSSQ==
+        d=gourry.net; s=google; t=1746036687; x=1746641487; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kEWVWC2naWxysqXPj2rk0b5ktFtoGcxHBqlN3kboVV0=;
+        b=jYWcxVEsbDJBnoS5QJ51o+vShg3KBRbOkrQYPMwN3yu+TPIk43b650NfEecd16qZ0c
+         knq6XPHLYzGzGDFy3/bDI76jJDPgJtatt2aQ4GMKb8I0yPYQCLGJQVxOimmjO8Wt9lx0
+         IPbRwtYDTnI7RD0SpXEEU0QxOdl1zyI41ywrUsZryxS7DXeGBqUWJp+8/wpHEOAEv01S
+         hYtHErphWa6cn8urLprX2ZKFkPXrZs0wyRvcxXgQWWVX4Spfo/Ojs8cVQNNfv3V/Fj0A
+         MF0TbsPWLNiOk4GwLCkjnXVnIgSsni43LrrxIughxbj/MEqhJvFnqHQ5rl1XBTbua7Ad
+         72Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036685; x=1746641485;
-        h=content-transfer-encoding:mime-version:reply-to:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ABVuvP5TNG4tVYGMuC//l3k1Ki5yFOjDY70WGpcFOzo=;
-        b=M3hRi3F9Yh8064hEGD5myNuFjJq0H+o3fPPIdAr9zaczSVTH7f1GA74UAjJz/GKNPR
-         cUEWjyO411B9yqNwEbq5vuhQFs8JG7aVY408SuSzONcKKmHMddtakfBzCADV/mq+dWn5
-         7T6KBVLsY+cSxzsolfXDsXK8hBQq3rhcMg5BO98PCOwSFPUs6/E3zpq37sAvEa10eAgT
-         UbISXV78peOvVQdT8ZgSHL++pxRw2VvBEypu2SwKNzEHNzvHrjjp2OCQDV91BbcEHm3R
-         sqd15AHuqxGFMgwTK5C4TgBltgxA9rKNQOOGq0TACgtHq10WeSi7J1zNujM7krG/ebN3
-         E4Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCWexNsuIOiW+BDTc5QqliUa+2vcAbtR6/5i0e5nVcmWIaj8iKiAx79tbh5VgOVHbkkR7qT4xrbHm6sJ9/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZnf0LBeMyrSfbyYc6TOSqGaZQe79Z3xmWMfTKNJ38pzc/T9SS
-	zXifhZPjCuGPABSosv0lVi64cjPqusCkjaJrtkombxYr/ka1pTM8
-X-Gm-Gg: ASbGncvArXKga33eHe/dULns1k1wOz0jM+q3I0WNXC37fwlijaLziteiQTPt9a+wi3q
-	0qXefaHFb1M8aP1LqLakenye26x00LPLJ7j+hMPFgtB0XDSaHj+UGsWn25O9GSmFCLTvoA/JP85
-	mVnlRvMNeTUE+FcLLqZ2zES6o+7s3cdjYgitc5veV5M2UyXcMBeG/jyJ0kpGh4WOfOlRhyWXl1P
-	OmgzS0YlmcETD22H/sDoAQCH/EP9JSqPZA3qCBCVr/AFxIUWu4CGYQCfVf3yPo4qNXgoi3U+4lz
-	yAlpbGkXNDpvHYmXRbNozBPP6p8ZPsow2NMeAHUwR18SDJox6modvUwWto9Ayw==
-X-Google-Smtp-Source: AGHT+IGvk0oJWttNM6c0zFmz2EsnDvT1Lr3GHsue6PfHLv/bA327BK4ptz41QX/l91eCNpM4QRO2Ag==
-X-Received: by 2002:a05:6a21:1583:b0:1f5:6d00:ba05 with SMTP id adf61e73a8af0-20a89a012bcmr5766473637.38.1746036685092;
-        Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
-Received: from KASONG-MC4.tencent.com ([106.37.122.198])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039947976sm1983822b3a.84.2025.04.30.11.11.21
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 30 Apr 2025 11:11:24 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>,
-	Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
+        d=1e100.net; s=20230601; t=1746036687; x=1746641487;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kEWVWC2naWxysqXPj2rk0b5ktFtoGcxHBqlN3kboVV0=;
+        b=sBjvAOSK3+xwL5+kyaGh5YU4Q6e2RA/8CmunAKTN2vZ3fbbK8D6mxfUlQHPfu+iDoj
+         Mu3UdS4V5j5p/C3D4aZfi3uirNTLGeoEeNhkc3qPTAtzAGJQfgDPiRk7vzUdO4X+uTyG
+         2k7nHu8Iu4urR6JxUpwezfiN6CeeWW+iUlOR9E1cpQYwjUR7x8yZwijcMK4UkJubfLJ+
+         tDUmqN6ffRkdGNp6ZIaOeGNPnqf3E7WMVr2wbG+6qqU4KD8XeCLqlEf9pSnYpNl8TTLm
+         q6JCCUXBTy7CwuPDlYDCVfN8o90EyY9+myp6QnzImnYhAJDgsc4DRiIvgnxmuiiAOydA
+         QcXA==
+X-Forwarded-Encrypted: i=1; AJvYcCUpYs449MEwBazUvsELs7crgZHZ8J3qqBoq+9KeQb1pYT98b9xMufkouVUJXRjFzQF49LfeSPk8r1QFzQA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKui46P9xZmH/yqrMEzkJsXqCX7BAnfKuM0JjaiZHL+oiAgtcV
+	dfUErYfSQ8gJdfyUmfflhSHBhqcOog0umS5QP+NPICzjxAk6CFs+Eg5ao68Udgo=
+X-Gm-Gg: ASbGncv8ocukz2f2UpSfgevbdCwYLUBz3ljR5ai/chNh5VFJis3+0RfYS49ndvULtLM
+	sxoqqUDYK3Z4B/dcnGcZF1iioPyjYCBgrPLbEv1w/hViy7YAgiAklUGodlXLeMQwpJgRsd0uwbk
+	8d59T99p/vzXBoOMuCc2DWyYnHXcYol4IZ4HpehCQaDxzSnBPOb+sKBOW0sxwlOnVdzJu4kwNSq
+	rW+TtA5N4JU/wB/fwnkOmArCnSADYP1YANOkSSJv+A6hcMVDlXO466Mm4U0CYzcStVcGY1f3MKz
+	Z49nPfnz6+OzqnzesJslIbJennVSjtHgexHV4Ooor576j4rpQpiHF9dYTbJ67TZc46qNagWY4ns
+	KoTfQLqdrM7k4z0gMGwEdICJMESF6
+X-Google-Smtp-Source: AGHT+IG3vL7CDX13v14KAJlzknmgSXzqC6Sf41KMMOAFk0Ub1O74GkEtzw6Jz1Yr0ZgIjWvJ/mA6mA==
+X-Received: by 2002:a05:6214:d88:b0:6e8:fa72:be4c with SMTP id 6a1803df08f44-6f5090dad94mr4412706d6.1.1746036686871;
+        Wed, 30 Apr 2025 11:11:26 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 11:11:26 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH v3 5/6] mm: move folio_index to mm/swap.h and remove no longer needed helper
-Date: Thu,  1 May 2025 02:10:51 +0800
-Message-ID: <20250430181052.55698-6-ryncsn@gmail.com>
+	kernel-team@meta.com,
+	dave@stgolabs.net,
+	jonathan.cameron@huawei.com,
+	dave.jiang@intel.com,
+	alison.schofield@intel.com,
+	vishal.l.verma@intel.com,
+	ira.weiny@intel.com,
+	dan.j.williams@intel.com,
+	corbet@lwn.net
+Subject: [RFC PATCH v2 15/18] cxl: docs/allocation/hugepages
+Date: Wed, 30 Apr 2025 14:10:45 -0400
+Message-ID: <20250430181048.1197475-16-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430181052.55698-1-ryncsn@gmail.com>
-References: <20250430181052.55698-1-ryncsn@gmail.com>
-Reply-To: Kairui Song <kasong@tencent.com>
+In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
+References: <20250430181048.1197475-1-gourry@gourry.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,149 +85,67 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kairui Song <kasong@tencent.com>
+Add docs on how CXL capacity interacts with CMA and HugeTLB allocation
+interfaces.
 
-There are no remaining users of folio_index() outside the mm subsystem.
-Move it to mm/swap.h to co-locate it with swap_cache_index(), eliminating
-a forward declaration, and a function call overhead.
-
-Also remove the helper that was used to fix circular header dependency
-issue.
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
+Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- include/linux/pagemap.h | 20 --------------------
- mm/gup.c                |  1 +
- mm/memfd.c              |  1 +
- mm/migrate.c            |  1 +
- mm/page-writeback.c     |  1 +
- mm/swap.h               | 18 ++++++++++++++++++
- mm/swapfile.c           |  6 ------
- 7 files changed, 22 insertions(+), 26 deletions(-)
+ .../driver-api/cxl/allocation/hugepages.rst   | 34 +++++++++++++++++++
+ Documentation/driver-api/cxl/index.rst        |  1 +
+ 2 files changed, 35 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/allocation/hugepages.rst
 
-diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-index 0c9aff5ec77f..627cb0338e5d 100644
---- a/include/linux/pagemap.h
-+++ b/include/linux/pagemap.h
-@@ -884,26 +884,6 @@ static inline struct page *grab_cache_page_nowait(struct address_space *mapping,
- 			mapping_gfp_mask(mapping));
- }
- 
--extern pgoff_t __folio_swap_cache_index(struct folio *folio);
--
--/**
-- * folio_index - File index of a folio.
-- * @folio: The folio.
-- *
-- * For a folio which is either in the page cache or the swap cache,
-- * return its index within the address_space it belongs to.  If you know
-- * the page is definitely in the page cache, you can look at the folio's
-- * index directly.
-- *
-- * Return: The index (offset in units of pages) of a folio in its file.
-- */
--static inline pgoff_t folio_index(struct folio *folio)
--{
--	if (unlikely(folio_test_swapcache(folio)))
--		return __folio_swap_cache_index(folio);
--	return folio->index;
--}
--
- /**
-  * folio_next_index - Get the index of the next folio.
-  * @folio: The current folio.
-diff --git a/mm/gup.c b/mm/gup.c
-index f32168339390..91bbf57579f0 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -26,6 +26,7 @@
- #include <asm/tlbflush.h>
- 
- #include "internal.h"
-+#include "swap.h"
- 
- struct follow_page_context {
- 	struct dev_pagemap *pgmap;
-diff --git a/mm/memfd.c b/mm/memfd.c
-index c64df1343059..ab367e61553d 100644
---- a/mm/memfd.c
-+++ b/mm/memfd.c
-@@ -20,6 +20,7 @@
- #include <linux/memfd.h>
- #include <linux/pid_namespace.h>
- #include <uapi/linux/memfd.h>
-+#include "swap.h"
- 
- /*
-  * We need a tag: a new tag would expand every xa_node by 8 bytes,
-diff --git a/mm/migrate.c b/mm/migrate.c
-index f3ee6d8d5e2e..662e5dc44b33 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -50,6 +50,7 @@
- #include <trace/events/migrate.h>
- 
- #include "internal.h"
-+#include "swap.h"
- 
- bool isolate_movable_page(struct page *page, isolate_mode_t mode)
- {
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index 20e1d76f1eba..9ff44b64d3d6 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -41,6 +41,7 @@
- #include <trace/events/writeback.h>
- 
- #include "internal.h"
-+#include "swap.h"
- 
- /*
-  * Sleep at most 200ms at a time in balance_dirty_pages().
-diff --git a/mm/swap.h b/mm/swap.h
-index 6f4a3f927edb..521bf510ec75 100644
---- a/mm/swap.h
-+++ b/mm/swap.h
-@@ -201,4 +201,22 @@ static inline int swap_zeromap_batch(swp_entry_t entry, int max_nr,
- 
- #endif /* CONFIG_SWAP */
- 
-+/**
-+ * folio_index - File index of a folio.
-+ * @folio: The folio.
-+ *
-+ * For a folio which is either in the page cache or the swap cache,
-+ * return its index within the address_space it belongs to.  If you know
-+ * the folio is definitely in the page cache, you can look at the folio's
-+ * index directly.
-+ *
-+ * Return: The index (offset in units of pages) of a folio in its file.
-+ */
-+static inline pgoff_t folio_index(struct folio *folio)
-+{
-+	if (unlikely(folio_test_swapcache(folio)))
-+		return swap_cache_index(folio->swap);
-+	return folio->index;
-+}
+diff --git a/Documentation/driver-api/cxl/allocation/hugepages.rst b/Documentation/driver-api/cxl/allocation/hugepages.rst
+new file mode 100644
+index 000000000000..279970d73a28
+--- /dev/null
++++ b/Documentation/driver-api/cxl/allocation/hugepages.rst
+@@ -0,0 +1,34 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- #endif /* _MM_SWAP_H */
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index b86637cfb17a..9fe58284079d 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -3671,12 +3671,6 @@ struct address_space *swapcache_mapping(struct folio *folio)
- }
- EXPORT_SYMBOL_GPL(swapcache_mapping);
++==========
++Huge Pages
++==========
++
++Contiguous Memory Allocator
++===========================
++CXL Memory onlined as SystemRAM during early boot is eligible for use by CMA,
++as the NUMA node hosting that capacity will be `Online` at the time CMA
++carves out contiguous capacity.
++
++CXL Memory deferred to the CXL Driver for configuration cannot have its
++capacity allocated by CMA - as the NUMA node hosting the capacity is `Offline`
++at :code:`__init` time - which CMA carves out contiguous capacity.
++
++HugeTLB
++=======
++HugeTLB capacity is reserved from the page allocator. Only CXL memory onlined
++as SystemRAM during :code:`__init` and via memory-hotplug can be used via
++HugeTLB.
++
++2MB Huge Pages
++--------------
++All CXL capacity regardless of configuration time or memory zone is eligible
++for use as 2MB huge pages.
++
++1GB Huge Pages
++--------------
++CXL capacity onlined in :code:`ZONE_NORMAL` is eligible for 1GB Gigantic Page
++allocation.
++
++CXL capacity onlined in :code:`ZONE_MOVABLE` is not eligible for 1GB Gigantic
++Page allocation.
+diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
+index a768144698e9..e58d057a16e3 100644
+--- a/Documentation/driver-api/cxl/index.rst
++++ b/Documentation/driver-api/cxl/index.rst
+@@ -48,5 +48,6 @@ that have impacts on each other.  The docs here break up configurations steps.
+    allocation/dax
+    allocation/page-allocator
+    allocation/reclaim
++   allocation/hugepages.rst
  
--pgoff_t __folio_swap_cache_index(struct folio *folio)
--{
--	return swap_cache_index(folio->swap);
--}
--EXPORT_SYMBOL_GPL(__folio_swap_cache_index);
--
- /*
-  * add_swap_count_continuation - called when a swap count is duplicated
-  * beyond SWAP_MAP_MAX, it allocates a new page and links that to the entry's
+ .. only::  subproject and html
 -- 
 2.49.0
 
