@@ -1,112 +1,84 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851912629F;
-	Wed, 30 Apr 2025 08:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A78839F4;
+	Wed, 30 Apr 2025 08:01:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000050; cv=none; b=A1K7Utqmo/z6lFUbmL4tH8IYoZmv2JvVI6x3XS34JgLbsXKt+8O0JcyeMOQ/BqbMyP24vzoc/5GdjAyy264u5ABm/CcaZLSvXdFudSDNkwDM1SerKquqbOShjnyN5EQmZL6AukQHqD3aMADoyhlBS8F356XatE9xnIzMfPEIeck=
+	t=1746000080; cv=none; b=NUJ/iX8xbR/ihOm8t14YK8gVKhIECn6OiyQ9jxnFg84tRpRJSdht6l5fo+kKqlmh3IS1j+7I8EZRHVKBgTvt288EWO2EKXMBihZIRUM4YF3QXvJ7UFLWlUidv4G4AYJYjOWCpxu0XyYCOkIgoVhn9TDEcl02SFIEJObRfLE9+MM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000050; c=relaxed/simple;
-	bh=YmiCW6q7DJwXf/OrdKqtYEugswdEJMRSv9cvj3V7CA0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZDyiXM3P9AiMBexZ0W4zDBQZ42WCu3iw8e2fm40zuZmSfdBXr9BCdbLmf7HDVnupnryxrno6Blgg6zlzakELaCyCrugzvVIVDep9jfqBWbGXUnlOZWpyxxgdn6dCy/MdhtJT8R5FBqdZRO3Q2DGxeoglZT+AxzBQc3fn8i8WJus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rty926Vx; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746000080; c=relaxed/simple;
+	bh=kOLgDW5mAscBzPybxkcT5m7kBv/Z93TCzymRJmIKLfs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jsowh5jX74PeqQ1stuSjhcP0+jBWfo0pJ4s4NzCUAkGNQSGdzHLXEC6nu2BlOOn8DN1xJ4EJK0lUSxNG5HJTGesuWSVAJotkx6BBC3Tzv2xk3VwNXVOvchrZQtAQNxaMS0hD63QsGVeL2VtxhWHPeCOkCubPHUSiD9GW4qBCxxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=qza0LVi/; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rty926Vx"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfe574976so47884935e9.1;
-        Wed, 30 Apr 2025 01:00:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746000047; x=1746604847; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9K6mDCECT8W3Bovw6myYDbhmO8/mbagCIk0F1CteZwg=;
-        b=Rty926VxVvsySFTXWzBpPYm6Ch/Npog9O0cHX1FXuVdGAhfCzq739aS9MFV4G2HzR9
-         tJ0PM6P3/eFu3aZt2/ZWI5JcsolpFn3VwUoh3h3lLpf4vIloYP6C/YIq8O/oEtT7I93+
-         GOigyXbFxdjb0Abd1V4AQYrosLUvkNvi7yqe31nXqx6U/ryqeiSWMf0gm+2j4uG36Ltp
-         l1BY8XKaPF35k1TSjX2oV7IxFdo34Yy9e5F42q4XKCCdd6m9WrToUtHrLSUDLg5xVLHC
-         GaD+QwZjx/4jk6ItwJ3Mu1/GQ4BaLc6vZVrBmf6g60+AiPuj++PLOJ26bLeMK/AIZ2qH
-         /zVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000047; x=1746604847;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9K6mDCECT8W3Bovw6myYDbhmO8/mbagCIk0F1CteZwg=;
-        b=iQme3y4lyDqEN0KjesPFMi0C5D84jtAQiOOwya/8G6blCTZhxYA2RNNXTnKQeYZbkJ
-         wH3yANtnfR7aH5Iuvd3CSXazR1oJ+Fv6sobJX24mAl7t1fedp4PTkdI3ADZJD8CMnVyW
-         3mIqFnatzKd28wpotLtLUlDCw6ribVuMTR6764ST7Px5OkMv68ahn1aL8Rvz+Wx9SSVw
-         6cyeAlX9y2Dw9N2yjmzisOLqJZPcuv6CWUFm006cTvVmO25EB7/Yi4R6r4gTEnTqmZPw
-         rKj6fkpkd8nHQY+g8+8vgKdN2DJNkR+x3TMSdnfdR+kSim5UTdgNAuemV9/ssBe9nnPI
-         +MPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXAaqvYZnmtfK3BW6bTMGCR9v/TnuyMyrODucqc8Ny3ttHnU7Yc3s5P7mVtum4s171EPiYnhqV/naFnEDPjlEo=@vger.kernel.org, AJvYcCXqr81048WROV9veVgua8teQ220zIwZtf7BlB76bOR/e0EJVGAezigFBvQnDh38bO8Z9qSEa+YPA3Dfp4kw@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4ipc0sjLKT2Ex29i2xtsCe7wNFjGYCYK46S1yLqrE9ABBXJoS
-	ZzRZVocUtqFxA5383BtQTjFqhKOL5376naiJLM96hIpvBawcPFGv
-X-Gm-Gg: ASbGncsR1PZc0PtAUfdmqFDT6KT+/8k0Y9Ms7INvdibkL95ux7YQTQ5FvApL/XOJleG
-	f24pz6xg0Q0ZzvbyXPBSyIIawJTqoMwyWcz34c9js/+Gbpq5Degsb8KoA8MhPpnEF9Fd4vo4heA
-	5NBwqC2lntutAGdmhh54LPUN4Xcr4YupObNSIkyySkRfIkjeLkstka6bLNU67z4xs3MLKuTvG/B
-	49fbOO4VTZ7CLhpB7EQ+Mf6Zle4IQ3YrVFHA0KIt5ZuZnMdsa1TTQ7oiAXNNqUW/bPTFAyfZiXN
-	tb2Lx8bIcbTRVm8I4a0vYAovCviBscJ5OtrdAtvJpg==
-X-Google-Smtp-Source: AGHT+IEk1a/o7E5nFPRynA4tKzjO97Pglf5ne9r4g+R9H1XPl6ea21/dzuWLNACGIfTAB9iVw9P43A==
-X-Received: by 2002:a05:600c:a4e:b0:43b:c95f:fd9 with SMTP id 5b1f17b1804b1-441b1f30682mr18772175e9.5.1746000046481;
-        Wed, 30 Apr 2025 01:00:46 -0700 (PDT)
-Received: from localhost ([194.120.133.25])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af2922sm15356535e9.17.2025.04.30.01.00.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:00:46 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] tpm: remove kmalloc failure error message
-Date: Wed, 30 Apr 2025 09:00:37 +0100
-Message-ID: <20250430080037.848396-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="qza0LVi/"
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 35DEE1F969;
+	Wed, 30 Apr 2025 10:01:13 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1746000073;
+	bh=Qwk49apGdChV5JZGiqEylFepdwmcqjzUOJTqLuSzy70=; h=From:To:Subject;
+	b=qza0LVi/m2HVbgsx5wPZ2FtmT7C3PHPi6mEHLul28C5RUkukL9Y99CETWlrSzEmYT
+	 /onAc2BzSyL8esA5FVRV2j2LWwUKd2IWD6u7rXhhzNH0VmmOXFQH2tCikLIi1785PS
+	 VBS7t4lAzvGefP/J42axieMW7vhXTrosZlnRfiYKxjAriW2SRdQRhVehSmDJH5Yrjn
+	 r36yWuEvvaeGKi6TWZs6Fjvddh6La7HD5SL8yBl03FnPLQFfF4uzlku0g2iDcY2em8
+	 S+5AafpdlscJJyxwJRDEC/fQosP+ZFDyeFsR1K/9oePSqI8yxays62bWn5m+tugHYZ
+	 V/w3WsBIFGUYA==
+Date: Wed, 30 Apr 2025 10:01:09 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Francesco Dolcini <francesco@dolcini.it>,
+	Jerome Neanne <jneanne@baylibre.com>,
+	Shree Ramamoorthy <s-ramamoorthy@ti.com>,
+	Mark Brown <broonie@kernel.org>, Nishanth Menon <nm@ti.com>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Liam Girdwood <lgirdwood@gmail.com>, linux-omap@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: tps65219/am62p kernel oops
+Message-ID: <20250430080109.GA65078@francesco-nb>
+References: <aBDSTxALaOc-PD7X@gaggiata.pivistrello.it>
+ <20250429185240.6a7644bf@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429185240.6a7644bf@akair>
 
-The kmalloc failure message is just noise. Remove it and
-replace -EFAULT with -ENOMEM as standard for out of memory
-allocation error returns.
+On Tue, Apr 29, 2025 at 06:52:40PM +0200, Andreas Kemnade wrote:
+> Am Tue, 29 Apr 2025 15:21:19 +0200
+> schrieb Francesco Dolcini <francesco@dolcini.it>:
+> 
+> > Hello all,
+> > while working on adding support in mainline for a new board based on TI
+> > AM62P SoC I noticed the following Kernel Oops.
+> > 
+> > This oops was reproduced running current Linux
+> > master, 6.15.0-rc4+, ca91b9500108d4cf083a635c2e11c884d5dd20ea, but I was able
+> > to reproduce the same with 6.14.4.
+> > 
+> 
+> [...]
+> > [  +0.000022] Call trace:
+> > [  +0.000011]  regulator_notifier_call_chain+0x20/0xa4 (P)
+> > [  +0.000018]  tps65219_regulator_irq_handler+0x34/0x80
+> 
+> wild guessing: maybe because irqdata->rdev is not initalized in
+> _probe()? At least I do not see where it would be initialized.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
+your wild guess seems correct, I'll send a proper patch with your
+suggested-by after doing a couple of more tests, thanks.
 
-V1: remove trailing space after \n
-V2: remove entire message, originally just removed a trailing space
-V3: replace -EFAULT with -ENOMEM
-
----
- drivers/char/tpm/eventlog/tpm1.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-index 12ee42a31c71..773e9e537991 100644
---- a/drivers/char/tpm/eventlog/tpm1.c
-+++ b/drivers/char/tpm/eventlog/tpm1.c
-@@ -257,11 +257,8 @@ static int tpm1_ascii_bios_measurements_show(struct seq_file *m, void *v)
- 	    (unsigned char *)(v + sizeof(struct tcpa_event));
- 
- 	eventname = kmalloc(MAX_TEXT_EVENT, GFP_KERNEL);
--	if (!eventname) {
--		printk(KERN_ERR "%s: ERROR - No Memory for event name\n ",
--		       __func__);
-+	if (!eventname)
- 		return -EFAULT;
--	}
- 
- 	/* 1st: PCR */
- 	seq_printf(m, "%2d ", do_endian_conversion(event->pcr_index));
--- 
-2.49.0
+Francesco
 
