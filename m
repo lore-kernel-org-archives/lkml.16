@@ -1,82 +1,174 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from sender3-pp-f112.zoho.com (sender3-pp-f112.zoho.com [136.143.184.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAE75475E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:36:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745973393; cv=none; b=Zhjspg/4hYnjC4PGjz5Pd1huoYeCXy/wPGwe+MBkrtbKf5wddYCj9XVsG5XmG9p2wKVArUiGYgxgHzTZwt2fT6S38zb5kf5xDD616ksV5mKzf7yJsr2bCSr+sOsBCUv1cSRDPc3lWrwyLnuqggOPDbQSzQSXh6A/VNAmQy6CkdU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745973393; c=relaxed/simple;
-	bh=Cvw2rk+fHlO/5Mkk/7wmXDxGp3gQ6z6Tzsx7/lIRJWo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hlTld2mgZcycwM9lbRJao5/k/xXVXyNb7g5rBmR7S0ShwIsOmPB36LLhMIKSu0VWrxoH9cN8chV6FxOPn2P+AmKAOS2eGVyc44hNIWxlivqU0eNTufJE1kaIXsl7+G5JXE6z7wcYX0DWAVH/2bhwFrpQUWAHFfhwMmSZJjpbz+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ULD/VOkk; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3044B8F64;
+	Wed, 30 Apr 2025 00:36:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.184.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745973400; cv=pass; b=jYbT0PpeUDJz65LzNQ2RltcvXYnJIxtHyVjbIsiK6xfQU9N/fv8Ztx+aUKZiDRvmHiV0i0yQrv/MfjlPLWQxMezYopQBNqDonGVwl+tH2PdM3AKGny99ey1soA3nfX0kKQMUuovw4jYC8jJOEg+vLITUFEdAryWkFWMH4PqB/gs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745973400; c=relaxed/simple;
+	bh=H2dHRjr8U2npcEsj1UU3mQuPoyjOtJP5ZkdkT54aQ3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OeHFfk5jgrnVK2BBOd53jBtsM6lIqFKpKGZl7CQRJzWbDMTW6/ZsVtRehwKtLYnlToZeMNDinweUNdkpvd5afRtiiyuZlLtbJltCzF11QCv1zMirXxz2hRjiAXdkn6gzFl0SvHaqKAKOfJJN6bLSF5hucNm72P7vkv2uBNWqOMU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=kHidoBV9; arc=pass smtp.client-ip=136.143.184.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ULD/VOkk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=gI4dxx5UKaefa5Ks/4aexA2fhT0VDUAd8+rkTZ7LzkI=; b=ULD/VOkkDdHUAl6U
-	ATvy3UosmLZnBWjSoYjNv3UvmofqGc6sjKJX8+BBwDAes/1OHCGC98vl6VV4hJPiLzKdBp19JxvyQ
-	UDRhCS4MNfpfle042ZRv+r6dkkCh2YN0w1DqWrCW0D2IbFYIy8EPfYv5CHQWmvl1YdC64mAeTNl32
-	UUVaPhO4Me7NASS8M8JkYxspbh6YPJcWtED6xXQO+XxE6jFwkkfWc+qMyCejRStD1j1plo+QjB6oq
-	7nG8pCkSY9Y5C4W8dI94NOvGl00wPHALd990Zmg8Cb6qkIt0gTDIrSS92ko/maLEalgMNZv/guDLd
-	Led0teb4kbIRHMNGWA==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1u9vR1-000XjA-32;
-	Wed, 30 Apr 2025 00:36:23 +0000
-From: linux@treblig.org
-To: gregkh@linuxfoundation.org,
-	tglx@linutronix.de,
-	fei1.li@intel.com
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [REPOST PATCH] virt: acrn: Remove unused list 'acrn_irqfd_clients'
-Date: Wed, 30 Apr 2025 01:36:23 +0100
-Message-ID: <20250430003623.313541-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="kHidoBV9"
+ARC-Seal: i=1; a=rsa-sha256; t=1745973383; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=H3JJHypUQOVgdDfIyINlDO+T3T8pgcKK4rpLa8zV/zuMRnzlz+mSSIEp+mTjXQ9rBJ3zTxXGFA5MsqF3hWZ5uleu0tS95dmawJSgCp5YhpP0VSruKGyjqYRVwQi0svLfo8lIcPUbBGAYl6LoTimtU5KhukZgW2T/5WQkCmXp/00=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1745973383; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=hK3/YoAMvoXAZDEfIf/TYO2O6uZpBKymxwJqiOWbu9Y=; 
+	b=c6WQSZFQxMr4+YitII0dvr/8bwvE9itPaUSrjJpDv5ck7f/xH7i43Hjgov0KLJ8HT8A66sbX/oLYS8jBjkf1+JojXuG5eS4E7TNTcLsCg5pQs/eTO/Aw4gVA1Lj390miRa0Hg7l7mvt3ni0DelH+MnlYkagNRYH/OSq/s2s6NVY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745973383;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=hK3/YoAMvoXAZDEfIf/TYO2O6uZpBKymxwJqiOWbu9Y=;
+	b=kHidoBV9B3JKdv7XaNbJE7fEcDHVLTtNG6bqiBqrAKcuwwMRGdZexM6QVTD7oHYo
+	OzU63VKrPxu7BVT+TPZYO7f/OFbKCDu/JcjymeHrvGYuUw2v1AmcEuUIDKEnOBHIejo
+	RjTKk9W3MsARgRXc59zFCFzXxp6tlAfmiIrir3QM=
+Received: by mx.zohomail.com with SMTPS id 1745973381320911.9802408377296;
+	Tue, 29 Apr 2025 17:36:21 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id 476D9180E71; Wed, 30 Apr 2025 02:36:16 +0200 (CEST)
+Date: Wed, 30 Apr 2025 02:36:16 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: t.antoine@uclouvain.be
+Cc: Rob Herring <robh@kernel.org>, 
+	Peter Griffin <peter.griffin@linaro.org>, =?utf-8?B?QW5kcsOp?= Draszik <andre.draszik@linaro.org>, 
+	Tudor Ambarus <tudor.ambarus@linaro.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+	Dimitri Fedrau <dima.fedrau@gmail.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
+Message-ID: <ieh6g5m4oectmje2gowa6rl2blzjuovjpyd3cmbvoql4qn2c7m@2osiwclwxi43>
+References: <20250421-b4-gs101_max77759_fg-v3-0-50cd8caf9017@uclouvain.be>
+ <20250421-b4-gs101_max77759_fg-v3-2-50cd8caf9017@uclouvain.be>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rtpgzvtcmnguzlm6"
+Content-Disposition: inline
+In-Reply-To: <20250421-b4-gs101_max77759_fg-v3-2-50cd8caf9017@uclouvain.be>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.2/245.962.17
+X-ZohoMailClient: External
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-It doesn't look like this was ever used.
+--rtpgzvtcmnguzlm6
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 2/5] power: supply: add support for max77759 fuel gauge
+MIME-Version: 1.0
 
-Build tested only.
+Hi,
 
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-Acked-by: Fei Li <fei1.li@intel.com>
----
-This is a repost of the patch originally posted last in May
-last year as id 20240504174725.93495-1-linux@treblig.org and
-Ack'd by Fei Li on 20th May, in Zkq183IzBA6cV9FE@louislifei-OptiPlex-7090
-No one picked it up.
-(Fixed one typo in the subject line)
+On Mon, Apr 21, 2025 at 08:13:33PM +0200, Thomas Antoine via B4 Relay wrote:
+> From: Thomas Antoine <t.antoine@uclouvain.be>
+>=20
+> The interface of the Maxim MAX77759 fuel gauge has a lot of common with t=
+he
+> Maxim MAX1720x. A major difference is the lack of non-volatile memory
+> slave address. No slave is available at address 0xb of the i2c bus, which
+> is coherent with the following driver from google: line 5836 disables
+> non-volatile memory for m5 gauge.
+>=20
+> Link: https://android.googlesource.com/kernel/google-modules/bms/+/1a68c3=
+6bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c
+>=20
+> Other differences include the lack of V_BATT register to read the battery
+> level. The voltage must instead be read from V_CELL, the lowest voltage of
+> all cells. The mask to identify the chip is different. The computation of
+> the charge must also be changed to take into account TASKPERIOD, which
+> can add a factor 2 to the result.
+>=20
+> Add support for the MAX77759 by taking into account all of those
+> differences based on chip type.
+>=20
+> Do not advertise temp probes using the non-volatile memory as those are
+> not available.
+>=20
+> The regmap was proposed by Andr=E9 Draszik in
+>=20
+> Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a11=
+6.camel@linaro.org/
+>=20
+> Signed-off-by: Thomas Antoine <t.antoine@uclouvain.be>
+> ---
 
- drivers/virt/acrn/irqfd.c | 2 --
- 1 file changed, 2 deletions(-)
+[...] (I actually skipped reviewing big parts here for now)
 
-diff --git a/drivers/virt/acrn/irqfd.c b/drivers/virt/acrn/irqfd.c
-index b7da24ca1475..64d32c8fbf79 100644
---- a/drivers/virt/acrn/irqfd.c
-+++ b/drivers/virt/acrn/irqfd.c
-@@ -16,8 +16,6 @@
- 
- #include "acrn_drv.h"
- 
--static LIST_HEAD(acrn_irqfd_clients);
--
- /**
-  * struct hsm_irqfd - Properties of HSM irqfd
-  * @vm:		Associated VM pointer
--- 
-2.49.0
+>
+> +		ret =3D of_property_read_u32(dev->of_node,
+> +					   "shunt-resistor-micro-ohms", &val);
 
+device_property_read_u32(dev, ...)
+
+> [...]
+> +	ret =3D of_property_read_u32(dev->of_node,
+> +				   "charge-full-design-microamp-hours", &info->charge_full_design);
+> +	if (ret)
+> +		info->charge_full_design =3D 0;
+
+This is not in the DT binding and thus not allowed. Also I will NAK
+adding it to the DT binding, since the following should be used:
+
+Documentation/devicetree/bindings/power/supply/battery.yaml
+
+followed by using power_supply_get_battery_info() in this driver.
+
+Adding this support is probably a good idea, since it allows
+providing all kind of static information from DT and you are
+missing the non-volatile memory part from the existing chip.
+
+Note that the power-supply core will pick up and expose any
+of these properties automatically.
+
+> +	ret =3D max1720x_get_rsense(dev, info, data);
+>  	if (ret)
+> -		return dev_err_probe(dev, ret, "Failed to probe nvmem\n");
+> +		return dev_err_probe(dev, ret, "Failed to get RSense\n");
+
+You can either drop this error print, or the ones in
+max1720x_get_rsense(). No need to print two errors.
+
+Greetings,
+
+-- Sebastian
+
+--rtpgzvtcmnguzlm6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgRcHUACgkQ2O7X88g7
++pr38RAAli3tEyqc3Bn8PtcS0cq4gr4uF1+C324fGggdQXPZ90bAI8CWsbLw8C1b
+0mO8/EYAUUBUXjdX4QT9KdqKm1egLwCS4bj3yujtI7aZtyjWdryxMpwroqfyFqa+
+tdxOlbJdsiQ12m0OFQvM8kUCD7L1JPeXe3HQGrXCu5ZdwnuPTMGog/1QToMIQ6Ga
+c6T8lC7umvxS+HCzBkt7NqEVnRUytsX9z8E8dsF3d1lStyYHNs/7hIdM9naVBjtH
+GThQMIeBhK+VBfh77Qh5HoD4yt9UMw0o05P8ktDg523eWT64y617vPun1fRwkhct
+Zi2nnbiHMO1oEQCVV63DAvyut8qwtBxr9X5Hqfa5AWdea5z8HQmN83SJJq7K7H4G
+dHPdDMSfrHd/djdlOqcWbT3Iddrxh8qcK0z6ED0h7JhS0jseGjSkyUWs9kgAV6QL
+KMTDWiM6qfw62Azq4Wo/koblAhpNXvvWQFYob2QNalIgRTpBImbxO5z0nXcr35Dv
+2xIOsE6kLVYG4CmfrP6+G8lz5PLsiNsH19hBqVFZ7WLxRjpbCv3d8jhDMzSTmItg
+5kPSQnFL9eQBjHFOfOa0Y0Ln9j5ZcVMJdVZNPOATS14o6cxmhCWdTImjoxJc7yHa
+W4MRbTEvhpWVR/w8WlV9zqlhjwTr/xHnJVOrqq3ds5eRjPaUTJ8=
+=aGOF
+-----END PGP SIGNATURE-----
+
+--rtpgzvtcmnguzlm6--
