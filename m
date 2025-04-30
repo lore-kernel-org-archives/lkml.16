@@ -1,169 +1,124 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2067.outbound.protection.outlook.com [40.107.92.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EDB023182C;
-	Wed, 30 Apr 2025 09:25:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746005152; cv=fail; b=o9PcvJnHhoRCvHhocnalzd58Flj1e7JhTsWRJXexqbAC+BddkfEkRI7l2regdVHUdDwj9NVmp7c5dDJznfZOUBx6WnwOphvWfBCYPjkV0ut3W3kOco7XbWCwg6X/Mnb9XvQfwCOvkPYRdrauUW+EfkYcLHVIy0FLNITwdNyL9Gc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746005152; c=relaxed/simple;
-	bh=sAPaGNbmcNaZ2FjSmVeLeKEeXH5DChwSRCnidHOGLMY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fOA/bxsbh/0JadbqAp8nHhFNzfW2cAGf24FogzScq7CUQawYy48091z1AdIdYXdc4Ep9+900k6AJNZ5o74pWevaVsDfDx1BU8mRBHORrw0RrxxmrEmNx7VXjcQGCRrFq6XjE+SxyIsxQ4bADIE+AMRURR6NS2gmFVpPJwq+LDEM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3PE1A6ls; arc=fail smtp.client-ip=40.107.92.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E52231833
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:26:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746005169; cv=none; b=KWmSpiQvIWBCLIVq8c3K/5udlW/tXM5+GX2dHJCIcl58I2Bdxd7ZgpS8gU3p3e3JfYpcQp04iyupH0uUvk2Xs8h3fg8n2v0uHl2/DGQ/SnOBzVESAl2C9FPZfz4T+U0v378O3Pb19Tx8w/5AZrCv9/Un7tmTEiCAeCKiZPDK+LE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746005169; c=relaxed/simple;
+	bh=emeN+xQPR0w2hK/gMUA9tohvwWpJtFpuJ68pOjXXpCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ahezodVzJ/NMI00Nzg9Nn0tt5Blm7U2ioN/0iWPyvaSGYhSV3VZ2Yl2wq9M2Rn3xR9z0iF8QcE7aiYUd1c+0o4sh8fNJMnx6XNbGO/D+jf91tB9dGGs+XDYKbN4UlBlGWzkTNWQQHZbjSSdKK4C/zFos40cBgWG9lMxFO9/62IQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zVPwqDSm; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3PE1A6ls"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FRLfiz84J2WUp3/xb/+nWD8KBZSGciJwXs2yCKgsS6hAY+TnWzHtpaQ2rmYqB3O1HvZqV8Hovton7TUSCtcV7u864du/M/Cf899DFaXez8Wez1pmzGp7K3zUBsdgcON3RGb369dO8SwLGdJUtmDuUhD7bzjQfKbN31OxD9uirtHqRCIdplauDW3EmaOlm/jmR7+/6CjgR+e1Ix+fv6FqS7MeP4z3wX0yvm1JTZXcWJrU3TJO41LuNKeiUjIcdldQXGzQphHKbq5Tp+vUvkMDNOBA06dqQE4Y0hFZspxySn+lbz8H/RKdIverxVfV21PSrD4eQfl8xzskyhwXn2HPDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
- b=cAg2R0exPkCx4tG6gMY7F+NvWipTZJ/hkC0pj4ENUe4nS8qJOZjbrNpBkeuS2pNYEpKNyixKAEzNPMa3p9h1AuTyOndus71kBob2/VVi5vlF16baBYDJcbuh3lpRmctt9Ljt+R3XmCXpcsikt2/e3w6ToRoxGbcypZAOi2h8CwXnt3gq7qcDbsGzLRIH12XOAzH/73F4woCrUsr5JExyKwNmv99TB6hOJhzzF4mIuymSKFjzdsoJAGPQLCMFClsUMsliO8DC1rm4U5ohzP2G3knisU9IXX8LXKnQ5dfOgTRU9mE8QEkrXDVZ3VfHKn9C/yMzurXQt2+kWbLuFc2jDw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nYKH/YcYMcy1gobqFYWWEFylyKrDse4rTF+9j0iuxYU=;
- b=3PE1A6lsOrtFRyD2V1P0ll2/I12aPzkcHoyYf+q4lSbIeA4BYZ5dmdIwcb0ASgHVObyGp8gPbR1/A/eENygmD4QlnxfX9wY1JHKSaFMfsOSudfLQPPNeA7PRhdnZ1n3wYfjD15LHHskG4/os0Pb+nlIcHGosZ+QZLRY6mOUYSaU=
-Received: from CH0PR03CA0398.namprd03.prod.outlook.com (2603:10b6:610:11b::29)
- by DM4PR12MB6567.namprd12.prod.outlook.com (2603:10b6:8:8e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Wed, 30 Apr
- 2025 09:25:46 +0000
-Received: from DS3PEPF000099D8.namprd04.prod.outlook.com
- (2603:10b6:610:11b:cafe::3e) by CH0PR03CA0398.outlook.office365.com
- (2603:10b6:610:11b::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.37 via Frontend Transport; Wed,
- 30 Apr 2025 09:25:46 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- DS3PEPF000099D8.mail.protection.outlook.com (10.167.17.9) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 09:25:46 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 04:25:45 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 04:25:45 -0500
-Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Wed, 30 Apr 2025 04:25:43 -0500
-From: Devendra K Verma <devverma@amd.com>
-To: <devverma@amd.com>
-CC: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<manivannan.sadhasivam@linaro.org>, <michal.simek@amd.com>,
-	<vkoul@kernel.org>
-Subject: [PATCH v2] dmaengine: dw-edma: Add HDMA NATIVE map check
-Date: Wed, 30 Apr 2025 14:55:40 +0530
-Message-ID: <20250430092540.207522-1-devverma@amd.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zVPwqDSm"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so63152495e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:26:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746005165; x=1746609965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gg8+U7uhajg2zvUCUMrdqQmupPgIClRDIQQD6o+TZVs=;
+        b=zVPwqDSmRuMi3bR106aQWcNmF/9pT7OmWcCLzdrkapWRU4aynK1otwdxRjzNkqxGYr
+         hcBx/kNIVNzbS7JBKIsSMeURyceN339+/oSHfPbQwsO87OjCR+ONI83jIEMUiuXiYzwX
+         apUITFwzP1X/HRkS5pOfzJsB7rzFvlswetd4ruCcoghk952CXfVRKNfZlIBr+jrFBZDG
+         KB8U9t1gNfiFd1uUz8wYKa+37VWaa7IfLg3eIL9kK08Q7cK/XsIIdi7ujRzW3oQrwpx/
+         +5fgcecZnYSDIRVhBVbE8Ble0aaMu7He/nBqExI8bKbcz4SsS7LJRWwCIvBLuBwcfdsa
+         bgvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746005165; x=1746609965;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gg8+U7uhajg2zvUCUMrdqQmupPgIClRDIQQD6o+TZVs=;
+        b=h/dmdU+pFumdOQNIZdjYoakaV1UOtwv173fr4Q3NWPHCsYBFQO3EwfAeEtlomala50
+         Mz8qehn+WhHie5mPs+Dbzk+C/6raA9wYpfvt4qs7ZMGKLZAAMkUF+ooHNA17LdPoUmRo
+         1K6c19bfHY19lcWznX9eoLFqgS6/0DjTpal3ZVyv5bSzvMhzVqQyHY3Zu5yEc+f8pXFW
+         F7/bdhkfVaPqxVPDdyZlsgnoSyJEJL4kriFFxQj+awzA//EFokRvAnoWYC0sFWXnNA4a
+         UuKunCsTDF5Q3ErGQ2ouFEQIrGlv+rvUfl83faUDffUf3lqeMeEcNUNKomhKiiIhbMf7
+         8CDg==
+X-Forwarded-Encrypted: i=1; AJvYcCWdcCtO4BLvelnqed8mKXQB0tTPDGht9+hsBfO6fRIsOYMFW/VQGjR6AsTRnHXRegSoxBXh3rO+NbZXQMU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwukkErjbfslinhc1IHmfhbm58paNVV8k3KBfdYcOvdZ1PG+XA1
+	SUcER69Lvbv8creMRGT5rEV/yeS/P/4pT8K2WM7WeCq7IUG4Heh7upZsiwGk1R0=
+X-Gm-Gg: ASbGncsyrPXwoSwPLwDyDfePNFjxDrgCl6iwXc18Uu6fLZD+ykG7O2lLzhHvJC9Iaik
+	Ok41QtxbrF0Nw6nLRQoW669YO9xXSAVU0+a3Py/XTK40mo7vDO5NgJhf5URVL5+bBJ6Jvp4YISf
+	TfFeKkmD/mnaVl5Z0WkOa27AyasLXZhYLMiq1COPRSuYjtlo+8im5gXCpNhtJno4eaNZpXKTujg
+	J3qXEf4gsJ7/5jNDh/Wy0xgunJMKcl706NnG0y9zhY66foLR57qFUReLwxGpP010NUs124jz6JN
+	S81a08Om+Sn4kz5NH1RZJmCOdDSa32Q+RGgCeA2ruiQU8Z7L4B+im9+5DEC+yA6gTLXZw6lC5ph
+	UEvjq
+X-Google-Smtp-Source: AGHT+IGeU+1g/ZzusMepn3Swj4cy0n4ZXYGf5XGELdjXdxHsUaERxZxPSUk0zKSfnUqF6M2pw81X1A==
+X-Received: by 2002:a05:6000:4287:b0:3a0:6b91:fefc with SMTP id ffacd0b85a97d-3a08f7d22d8mr1934468f8f.50.1746005164916;
+        Wed, 30 Apr 2025 02:26:04 -0700 (PDT)
+Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a073c8da58sm16614490f8f.15.2025.04.30.02.26.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 02:26:04 -0700 (PDT)
+Message-ID: <542d80c4-edba-4b5a-a47e-8cb1d76e4c89@linaro.org>
+Date: Wed, 30 Apr 2025 11:26:03 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] thermal: amlogic: Rename Uptat to uptat to follow kernel
+ coding style
+To: Enrique <kike.correo99.f@gmail.com>
+Cc: glaroque@baylibre.com, rafael@kernel.org, rui.zhang@intel.com,
+ lukasz.luba@arm.com, linux-pm@vger.kernel.org,
+ linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <Z-MEZNMLUmj75uxN@debian.debian> <aAImJGYXFDx_q8D_@mai.linaro.org>
+ <CANfmkGDVks5tqgDw0ZvNMxT_vfD8rUKyZZJ4LUK6k637wt7=-A@mail.gmail.com>
+Content-Language: en-US
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+In-Reply-To: <CANfmkGDVks5tqgDw0ZvNMxT_vfD8rUKyZZJ4LUK6k637wt7=-A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS3PEPF000099D8:EE_|DM4PR12MB6567:EE_
-X-MS-Office365-Filtering-Correlation-Id: 916d8079-44b2-4a38-f8d0-08dd87c8fd0b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9ThBRJjLfS4iA4KRoGvi713NJQewZ/CM5Qncj+pr/NqBnjB0SDp4x24orStm?=
- =?us-ascii?Q?cUhFsdfUALr4irey25ETL7KGkYXWt/XdVbwVccOInJeBBKOoWMXFQivkofHI?=
- =?us-ascii?Q?47TMlxck+dadhrMc9RmHbfYFS7Ypyi/ZKwNT8Q30yIuH/pk8FuMQ2/MFFSVf?=
- =?us-ascii?Q?aPFvnRE8+KVaS74z4CNvncCN5ciN2cQ9EcDeKU8blPDEOabn7ggYnW+tS5lV?=
- =?us-ascii?Q?dSzqphQRB5lxJdivVxFeq4j8nZe3mKkfIap4wjd8RwaR8ajBtZLxQlDI5vbu?=
- =?us-ascii?Q?DkJP/CukvMCMgCj2pA19FikYjFoiVpFFS2QxsIgk4Gum+3oKw8k8H6tBMGA8?=
- =?us-ascii?Q?xoMIg9hCoj8im52POAXBSv3GEj1BiDOFbJI9vu7ofhQDJvrIQ+iWLI6V9a/L?=
- =?us-ascii?Q?1VmZACqEgu/jp2uolOT4DaZLmzkwN13Tmp1Ta/+3HWsNIEtER1Gn+Hzr2k/S?=
- =?us-ascii?Q?e4ZEddG+OlefT6rWdiM2ezC0P/I4aSitKWGeRz6fy5kdeAhGYpbGn9oZcS/d?=
- =?us-ascii?Q?MaCK/sKYgi8nnRnY085bspzAWwkrZBqUdyEGY0Exdm85YVslMIR3lfuM14kN?=
- =?us-ascii?Q?ZP6zk04wtMQQ6z1P20xt3q63ufOVQ+p5fzNNxf/+yUC9iV248Ck4MdLbmWqI?=
- =?us-ascii?Q?pIphrM+CcrBiIO+kWExgxqTNLvFVE7Jzo0sTa7/XDqky3n7xiiHTarfqw0cZ?=
- =?us-ascii?Q?hDdopOy0SoDk3RC1ee4u/zbUlRVPBsINP55hkTZrdT5O7Uh6YuCVZ1xb6m4u?=
- =?us-ascii?Q?ISm7hYDTKezeK8qJyzAIguZ9d0lHvJvbRwDigDMV7QzKCzdr4ilJpZE3890B?=
- =?us-ascii?Q?SsBa/a24ch3cWsmmygPkqOaqF1+g3WmUKgxQ1k8nmap1CrnfvYNAnRUyJaFm?=
- =?us-ascii?Q?x71Qy6QE9OEzJbeZIkWBHFO3+Ot2tLX78Y/Ak4AceG0L6d+M3tNi9D90VS1Q?=
- =?us-ascii?Q?DH+Rx/yyn5joTgaCH+SChf6MjRFD5SpVu/kLaX8v06kr9R4xEAwW8xlgO2Nf?=
- =?us-ascii?Q?6VznFqMbfpkZKs1r+YjVeeqx8Yc7VrFzKylemIubD/PYNbrEth4QFx1GGvV0?=
- =?us-ascii?Q?o2JvwB/I9apPtFk0yWhD2RBayjyC3wN2AmUNGidX5L0RbjrS0QsEMFrZ/GGB?=
- =?us-ascii?Q?Mk/sYbKDCRkTDQENd8JFy6ngqRFyTyRnc+UpAdzO4rl5d1MXjpJSSQkb8RY1?=
- =?us-ascii?Q?Bnd59CUKhShHPshAvRtthkQbZESheINNil93zgmGU2wTBXAJ67BfqD07odKN?=
- =?us-ascii?Q?5XmQjVFl5xrtK6XC0lQClirACrqxN26HUczc5RlLDMAfm75d65b1SSlhk8CG?=
- =?us-ascii?Q?1K4gikH4NAO1cf9cyOEaSI+jv9B/rO5+P/W15NlAeGintB9UALKewHP/RA5/?=
- =?us-ascii?Q?xxph2HHYfUbVt9rvco+Vs34WaRLS3WU747XtGYAW+hGZSyU0feGv6RGTKaf8?=
- =?us-ascii?Q?3U3uDA7x5e4fPSwz4yEqYdrl1BhT3dH/oOLK1UhkuzRP6x4nG2KV7DoqycDm?=
- =?us-ascii?Q?4MMXHI2HW/EfJZSiBu4GjRvnuHhoYelTJLay?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 09:25:46.4210
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 916d8079-44b2-4a38-f8d0-08dd87c8fd0b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS3PEPF000099D8.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6567
 
-The HDMA IP supports the HDMA_NATIVE map format as part of Vendor-Specific
-Extended Capability. Added the check for HDMA_NATIVE map format.
-The check for map format enables the IP specific function invocation
-during the DMA ops.
+On 28/04/2025 20:47, Enrique wrote:
+> Hi Daniel,
+> 
+> Thank you for applying my patch! I’m trying to verify where it was merged.
+> Could you confirm if it’s in the `staging-testing` branch or another tree?
+> 
+> Commit hash: 84fe0cc6fddb6afcdca838d80756080f84cf9ecd
 
-Signed-off-by: Devendra K Verma <devverma@amd.com>
----
-Changes in v2
-Addressed the review comments and added the 'Debug info' for
-HDMA_NATIVE in dw_edma_pcie_probe().
----
- drivers/dma/dw-edma/dw-edma-pcie.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+https://git.kernel.org/pub/scm/linux/kernel/git/thermal/linux.git/commit/?h=thermal/linux-next&id=b8e05d5de934c037594f4ad3550b8228da1b9c2d
 
-diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-index 1c6043751dc9..49f09998e5c0 100644
---- a/drivers/dma/dw-edma/dw-edma-pcie.c
-+++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-@@ -136,7 +136,8 @@ static void dw_edma_pcie_get_vsec_dma_data(struct pci_dev *pdev,
- 	map = FIELD_GET(DW_PCIE_VSEC_DMA_MAP, val);
- 	if (map != EDMA_MF_EDMA_LEGACY &&
- 	    map != EDMA_MF_EDMA_UNROLL &&
--	    map != EDMA_MF_HDMA_COMPAT)
-+	    map != EDMA_MF_HDMA_COMPAT &&
-+	    map != EDMA_MF_HDMA_NATIVE)
- 		return;
- 
- 	pdata->mf = map;
-@@ -291,6 +292,8 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
- 		pci_dbg(pdev, "Version:\teDMA Unroll (0x%x)\n", chip->mf);
- 	else if (chip->mf == EDMA_MF_HDMA_COMPAT)
- 		pci_dbg(pdev, "Version:\tHDMA Compatible (0x%x)\n", chip->mf);
-+	else if (chip->mf == EDMA_MF_HDMA_NATIVE)
-+		pci_dbg(pdev, "Version:\tHDMA Native (0x%x)\n", chip->mf);
- 	else
- 		pci_dbg(pdev, "Version:\tUnknown (0x%x)\n", chip->mf);
- 
+> Best regards,
+> Enrique Vazquez
+> 
+> 
+> El vie, 18 abr 2025 a la(s) 4:15 a.m., Daniel Lezcano 
+> (daniel.lezcano@linaro.org <mailto:daniel.lezcano@linaro.org>) escribió:
+> 
+>     On Tue, Mar 25, 2025 at 01:30:44PM -0600, Enrique Isidoro Vazquez
+>     Ramos wrote:
+>      > The variable Uptat uses CamelCase, which violates the kernel's coding
+>      > style that mandates snake_case for variable names. This is a purely
+>      > cosmetic change with no functional impact.
+>      >
+>      > Compilation tested with:
+>      > - checkpatch.pl <http://checkpatch.pl> --strict passed (no new
+>     warnings/errors).
+>      >
+>      > Signed-off-by: Enrique Isidoro Vazquez Ramos
+>     <kike.correo99.f@gmail.com <mailto:kike.correo99.f@gmail.com>>
+>      > ---
+> 
+>     Applied, thanks
+> 
+
+
 -- 
-2.43.0
+<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
