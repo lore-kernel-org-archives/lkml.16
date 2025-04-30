@@ -1,136 +1,78 @@
-Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5BF319C54F;
-	Wed, 30 Apr 2025 07:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033981F30A2;
+	Wed, 30 Apr 2025 07:25:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745997918; cv=none; b=fSMK0o5mzoLBcKL6pAQg9EP6IzcAX23vWWBHLS6d6z2IoaxaYflGCgCihM8Ch2Lt26W0cDTMkVGkW6xBmtaad9x55CaPIPN+sFVq6e8CSJK4l7dTidnq3xCNPSYT1HMlsLVSZwtIs+HqC+t8fp6BJ8xa+88nkKtjputbkHF3hg0=
+	t=1745997945; cv=none; b=fqaBXsOQp66Uim9xrjkeJF2DnKaU36m929ZpoW2xMiF/jKVBp8rOzvPvOAUBN+zTrY+LKW4n1bfXdC+afV5YnY4cDCUH/Vev1WEU+kpq3PNqP+FEHv8kP1LrQzyo3JrvmBbYadNoXoztouvIEUFDbRh78KZCKPhuhigJYchuVYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745997918; c=relaxed/simple;
-	bh=v4oU/GFL+y5QwYuePKkqsRtEJvSwh/W8RdF2iICMAJo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Yb7YUefwU+er0Zd8dUHQRzmoMfzRkUAvXwzADRW3z07kh2QbjUVAMZFLfotbI+sp4p/bEz70dQ22r4G2KsX6V973QsYz/2shBI2G0T/G86SfeORVMTKQ+XtvMutuEQ361G/sHwjO7FWxBPYCl1AgfE+V7XOzmi+ziGERINQC01Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=RsAXGOcv; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1745997945; c=relaxed/simple;
+	bh=ubaqlVCfzznK8NA0TMC5zjpm+9ElhduUD1AiUfUvlmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GPiRayjjb1NnC9CSgNXjpiknDHAYvx0RR2KHLubXvkhYwNfAPcnPl+jzXXIN2CTL5pUArDDuFrMwlOT0Gnw6oFGjC9p3G92IMlZqi5G4A8mqp5A79zN317AhE5Vr1rGKs8ztjveQ8XtGIuYUJl8kOTNHxVunLWK/XArbVLjXxl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoekLzk9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="RsAXGOcv"
-Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53TLZWv9026619;
-	Wed, 30 Apr 2025 09:24:57 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	mMNXiGVHT3EYByl9G4cAVqtYt7CJdPa0zfJuctou39g=; b=RsAXGOcvtG5MYhS+
-	rru5trvRuMubkIcK6u0oQXAofMrzyj79QTwYYJzzwbwVD9t6J+00aLFJH/PwdvA7
-	f9NJQmsyy6ucrBEmyMfKS77MfzUczatFemBIiDp+Weyk+MWeITViBTz+nX2rWvvN
-	4AUxvfFaTDS9CYsiqQJvtm68cFMk9tYPUCAmZydDLHhaXIdEzrhPrqyiNP/N/9rJ
-	4obxzM+9HQu+buVk/2MV32waJxAJjTUQunoDNaMlx99kzZ95CwCW5wmp0YV24NPT
-	pzsS/kE4Hnoc4sXbRWsLf17Yico7FZfQHB4GD+IH8q3+dRxmCIINZtj/0Os04F+C
-	1iM8jQ==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 46b6tmsmeu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 30 Apr 2025 09:24:57 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 597974004A;
-	Wed, 30 Apr 2025 09:23:13 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 080D7A54117;
-	Wed, 30 Apr 2025 09:21:51 +0200 (CEST)
-Received: from [10.48.86.79] (10.48.86.79) by SHFDAG1NODE1.st.com
- (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 09:21:50 +0200
-Message-ID: <bf7eddfa-ca7f-49a6-a3f9-574f2c4fe972@foss.st.com>
-Date: Wed, 30 Apr 2025 09:21:49 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoekLzk9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689D7C4CEE9;
+	Wed, 30 Apr 2025 07:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745997944;
+	bh=ubaqlVCfzznK8NA0TMC5zjpm+9ElhduUD1AiUfUvlmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eoekLzk9b3pSI3wfRQXkoK+YkC7T9GzOioy/a7VPZclg2DMn4NSy0mZTrYEsFfG6u
+	 j+TVy3071KEcevi9hn+vEoWtxdh3n+nFYIUx/l4H7liz4OFiX586shc1HURUAgcMKs
+	 D/YWV3L7aCN0O9KMc3/piJV1fPH/DQdkNSf1lHYYa76nKTa0rP4vmZJnOX1M4nTukm
+	 aVs5mYEJee2c9fYvgA+7huqkvVELuB0pCfpqL/MjHyKHYWI25tkoeYCg43zRNjqkNn
+	 gfO1a20CeMUXQzTOtUF1av8ph3zczrbwBnjVBrbYHmgOxa9jaR0m6K2tq9W9vUkv0J
+	 riec7HKUrT6pA==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uA1pC-0000000088Y-1Y7K;
+	Wed, 30 Apr 2025 09:25:47 +0200
+Date: Wed, 30 Apr 2025 09:25:46 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc: Robert Foss <rfoss@kernel.org>, Todor Tomov <todor.too@gmail.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] media: qcom: camss: vfe: Stop spamming logs with
+ version
+Message-ID: <aBHQejn_ksLyyUm1@hovoldconsulting.com>
+References: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/8] Support STM32h747i-disco board
-To: Dario Binacchi <dario.binacchi@amarulasolutions.com>,
-        <linux-kernel@vger.kernel.org>
-CC: <linux-amarula@amarulasolutions.com>,
-        Amelie Delaunay
-	<amelie.delaunay@foss.st.com>,
-        Conor Dooley <conor+dt@kernel.org>, David
- Jander <david@protonic.nl>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
-        Marc Kleine-Budde
-	<mkl@pengutronix.de>, Marek Vasut <marex@denx.de>,
-        Maxime Coquelin
-	<mcoquelin.stm32@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Roan van Dijk <roan@protonic.nl>, Rob Herring <robh@kernel.org>,
-        Russell King <linux@armlinux.org.uk>, Stephen
- Boyd <sboyd@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
-Content-Language: en-US
-From: Alexandre TORGUE <alexandre.torgue@foss.st.com>
-In-Reply-To: <20250427074404.3278732-1-dario.binacchi@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_02,2025-04-24_02,2025-02-21_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429180828.950219-4-krzysztof.kozlowski@linaro.org>
 
-Hi Dario
+On Tue, Apr 29, 2025 at 08:08:29PM +0200, Krzysztof Kozlowski wrote:
+> Camss drivers spam kernel dmesg with 64 useless messages during boot:
+> 
+>   qcom-camss acb7000.isp: VFE:1 HW Version = 3.0.2
+>   qcom-camss acb7000.isp: VFE:2 HW Version = 2.4.0
+> 
+> All of these messages are the same, so it makes no sense to print same
+> information 32 times.
 
-On 4/27/25 09:43, Dario Binacchi wrote:
-> The series adds support for STM32h747i-disco board
-> 
-> The board includes an STM32H747XI SoC with the following resources:
->   - 2 Mbytes Flash
->   - 1 Mbyte SRAM
->   - LCD-TFT controller
->   - MIPI-DSI interface
->   - FD-CAN
->   - USB 2.0 high-speed/full-speed
->   - Ethernet MAC
->   - camera interface
-> 
-> Detailed information can be found at:
-> https://www.st.com/en/evaluation-tools/stm32h747i-disco.html
-> 
-> 
-> Dario Binacchi (8):
->    ARM: dts: stm32h7-pinctrl: add _a suffix to u[s]art_pins phandles
->    dt-bindings: arm: stm32: add compatible for stm32h747i-disco board
->    ARM: stm32: add a new SoC - STM32H747
->    clk: stm32h7: rename USART{7,8}_CK to UART{7,8}_CK
->    ARM: dts: stm32: add uart8 node for stm32h743 MCU
->    ARM: dts: stm32: add pin map for UART8 controller on stm32h743
->    ARM: dts: stm32: add an extra pin map for USART1 on stm32h743
->    ARM: dts: stm32: support STM32h747i-disco board
-> 
->   .../devicetree/bindings/arm/stm32/stm32.yaml  |   4 +
->   arch/arm/boot/dts/st/Makefile                 |   1 +
->   arch/arm/boot/dts/st/stm32h7-pinctrl.dtsi     |  34 ++++-
->   arch/arm/boot/dts/st/stm32h743.dtsi           |   8 ++
->   arch/arm/boot/dts/st/stm32h743i-disco.dts     |   2 +-
->   arch/arm/boot/dts/st/stm32h743i-eval.dts      |   2 +-
->   arch/arm/boot/dts/st/stm32h747i-disco.dts     | 136 ++++++++++++++++++
->   arch/arm/boot/dts/st/stm32h750i-art-pi.dts    |   6 +-
->   arch/arm/mach-stm32/board-dt.c                |   1 +
->   include/dt-bindings/clock/stm32h7-clks.h      |   4 +-
->   10 files changed, 187 insertions(+), 11 deletions(-)
->   create mode 100644 arch/arm/boot/dts/st/stm32h747i-disco.dts
-> 
+It's even worse then that (several hundred messages during use) and I
+sent fixes for these regressions a few weeks ago:
 
-Series applied on stm32-next. I changed patch 4 commit title according 
-to Krzysztof comment.
+	https://lore.kernel.org/lkml/20250407104828.3833-1-johan+linaro@kernel.org/
+	https://lore.kernel.org/lkml/20250407085125.21325-1-johan+linaro@kernel.org/
 
-Cheers
-Alex
+Unfortunately, it seems Bryan missed that this was a regression that
+should be fixed in 6.15 and only included them in a pull request for 6.16:
+
+	https://lore.kernel.org/all/20250410233039.77093-1-bod@kernel.org/
+
+Bryan, has your PR been merged? Can you try to get my fixes into 6.15
+since this is a regression in 6.15-rc1?
+
+Johan
