@@ -1,89 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EC6525C708;
-	Wed, 30 Apr 2025 14:36:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5141125C708;
+	Wed, 30 Apr 2025 14:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746023773; cv=none; b=MHkoj+JKWoBnYdchs+k7rh8EB0cxqkPPhvlCDjtgzz8AxQd/QFGsLEOVlBE1TPHHGAW2+MzeX9rslK9UfTLVD3KKkZ9NOWt6gtSz6igHnIdz3sriiHZ/Uk+dAGqO2Zpk8fkhVhCs40VsUrYUjsgcM72Do86EEi+pTTd++WmBOHk=
+	t=1746023783; cv=none; b=C2jCJWkzR+XI5i1RPBSU2McPRCMYeQy4y6tw7l/oQJ5eAHPotv1V4uyPb4JYhGJM9NJJXxGz1fi6tAWReCr167HlxPHr4WGfrsCUW5qs9zkp08iQ6U5Kc2r+otrgYht6tKxLpOBHrLEXbUix+Sv+JkJmbKwXxRa9nSKGtvW8rRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746023773; c=relaxed/simple;
-	bh=cKXS0wbgFsKYhv80O7ouzrBxO3wfwf4oihtTeXawYtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ifTt2qqT8Zhxxn1fm07tc/x6nkZCOB0UCpuO3/frXFIZ7oTRNeQjXi/qBOkaxW8SnPDr1FLNKfB3i5FTFK1k2wh/9dC7To/EFvUgXVflQKSkMlNCSXUP/wW5jnHI3NsXXcSkv+zTGjQWB90V05zBXExPutdTNZA4dEkAkTj8pRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WauwNMWt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746023783; c=relaxed/simple;
+	bh=YLKEFV8rgH4V/+vebbcVO9OrrAnJRoWbqECIUtvAdbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Xc/OXoLwr42SSBAJwJDycXUZPXg1KeuaE1lAXa2EBiz5zUTxOi/ATHcJk6Ghwpi+BBRD81DzZ7C3PuSPQ61I+DsAaZBedu3L9KsPmNqVr0ld8wjYvsGwW1FRTQ+7lJFGHhoQJie7XIDxId8aNdwULKoTox1/WzrfbzNuL8ak+EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TrjaQvgQ; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WauwNMWt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DE11C4CEE7;
-	Wed, 30 Apr 2025 14:36:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746023772;
-	bh=cKXS0wbgFsKYhv80O7ouzrBxO3wfwf4oihtTeXawYtw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WauwNMWtUTHe5HHI+QLThurQGREbcqLfHQ18UpVLclxxxtRUkcfqba7LkFfVysHzF
-	 gquw22zFkR4sVoxAjTyUvBDLHEjw/hk2vAnDzHuTQ3yGeuINGQXCkEbDkJcl9uCoNB
-	 SIFrgAKrVUQasWkw7hHuyeJP57p1SUs7vnJBG9BZfQ1ygHpKJMI1AV2lf77VEH7qNL
-	 93U+RVM9TpRi0UZil/z6y7vppSaydNgyMwUWOH1heAH9QW2b5qofbWydsKh/IXeC48
-	 I+4K9y08oLBLT1oUP+qDnBH3GFRTfdjnHTXJOJac4o7Nr+3rOTcqH93G85uveDmGJ7
-	 7et0ESu527O2Q==
-Date: Wed, 30 Apr 2025 09:36:11 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Chaoyi Chen <kernel@airkyi.com>
-Cc: Quentin Schulz <quentin.schulz@cherry.de>,
-	FUKAUMI Naoki <naoki@radxa.com>, linux-rockchip@lists.infradead.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>,
-	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-	devicetree@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Jonas Karlman <jonas@kwiboo.se>, Andrew Lunn <andrew@lunn.ch>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Jianfeng Liu <liujianfeng1994@gmail.com>,
-	Alexey Charkov <alchark@gmail.com>,
-	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
-	Jimmy Hon <honyuenkwun@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm: rockchip: Add rk3399 industry
- evaluation board
-Message-ID: <174602375195.3396795.11425847299435773154.robh@kernel.org>
-References: <20250430074848.539-1-kernel@airkyi.com>
- <20250430074848.539-2-kernel@airkyi.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TrjaQvgQ"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C7EF643A36;
+	Wed, 30 Apr 2025 14:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746023779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZDg+YU+GItE0RyC93E1xIAYPfA47nge0Vs43IZMexRo=;
+	b=TrjaQvgQ+SAQJliqTxD0O3KJ1icfGkr5Yy27dY0DsBvz2PhB7Y7Wc7KMom4LX4IJ67ZBUO
+	EYGu5/yExsY0OPWWJ6BdoF3HLNMOcImsCMtwR6ibNSr0MjgFnpyDEQ20xtRZBGe6SfxcCk
+	hzY0DPirMZLI3HibFtHPTjxxcXbj+qI3hWFDOtuIE9S6QMgbhBjlEnBWnkWesSEnbPzBTY
+	9poI2A7TPHFDHsfcRwSCUGA3MGFdxbx8XjEqhXadQTRFnoFi89HH1JX7hfmXO2XuxWzDWH
+	/5GW2k0e78Xc3cEKAd/q23AdreHQN/oOj7QrXhULFndJLZ+y/NmkUM+qhXJLxg==
+Date: Wed, 30 Apr 2025 16:36:17 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Cosmin Tanislav <demonsingur@gmail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Wolfram Sang
+ <wsa+renesas@sang-engineering.com>, Mauro Carvalho Chehab
+ <mchehab@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Arnd
+ Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-media@vger.kernel.org
+Subject: Re: [PATCH v4 9/9] i2c: atr: add passthrough flag
+Message-ID: <20250430163617.3edeedf2@booty>
+In-Reply-To: <20250428102516.933571-10-demonsingur@gmail.com>
+References: <20250428102516.933571-1-demonsingur@gmail.com>
+	<20250428102516.933571-10-demonsingur@gmail.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430074848.539-2-kernel@airkyi.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeileeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddtpdhrtghpthhtohepuggvmhhonhhsihhnghhurhesghhmrghilhdrtghomhdprhgtphhtthhopehtohhmihdrvhgrlhhkvghinhgvnhesihguvggrshhonhgsohgrrhgurdgtohhmpdhrtghpthhtohepfihsrgdorhgvnhgvs
+ hgrshesshgrnhhgqdgvnhhgihhnvggvrhhinhhgrdgtohhmpdhrtghpthhtohepmhgthhgvhhgrsgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhomhgrihhnrdhgrghnthhoihhssegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehlihhnuhigqdhivdgtsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
+On Mon, 28 Apr 2025 13:25:14 +0300
+Cosmin Tanislav <demonsingur@gmail.com> wrote:
 
-On Wed, 30 Apr 2025 15:48:47 +0800, Chaoyi Chen wrote:
-> From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> Some I2C ATRs can have other I2C ATRs as children. The I2C messages of
+> the child ATRs need to be forwarded as-is if the parent I2C ATR can
+> only do static mapping.
 > 
-> Add devicetree binding for the rk3399 industry evaluation board.
+> In the case of GMSL, the deserializer I2C ATR actually doesn't have I2C
+> address remapping hardware capabilities, but it is able to select which
+> GMSL link to talk to, allowing it to change the address of the
+> serializer.
 > 
-> Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
-> ---
+> The child ATRs need to have their alias pools defined in such a way to
+> prevent overlapping addresses between them, but there's no way around
+> this without orchestration between multiple ATR instances.
 > 
-> (no changes since v1)
+> To allow for this use-case, add a flag that allows unmapped addresses
+> to be passed through, since they are already remapped by the child ATRs.
 > 
->  Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
->  1 file changed, 5 insertions(+)
+> There's no case where an address that has not been remapped by the child
+> ATR will hit the parent ATR.
 > 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
 
+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
-
-Missing tags:
-
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-
+-- 
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
