@@ -1,164 +1,131 @@
-Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BACDB238144
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36672DC791
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746018896; cv=none; b=IX1v7k+Uy4I5z4J7I6WLAdFvdB3I+ypxHcwdM7GxD7ZX7cHPhrpZlLYFC8gOKq2Hxc7/A+fVa5NuCOr4qtcEYcwzEGuPGtbeNNfPhG4JyqDiwYCjFpQ9rhxqjrFZwVjHY2C/R78m0Uh273n+1/fqUZ2gh2BidQFK5HqhTkVbafM=
+	t=1746018935; cv=none; b=PKxIab3/lUtVG/YSnOoYSGFUXahlPAWR+XAWnPcL7Ntrs3TwM2kILK5qOsxI8d4AfluLKJDiTUrrnSyrpYfNqtZXVq7fOOyECHulyrEX1pne5OPbYkvEzFgUrWCirl069mXPElUjDZhLqF0dnD2tC5nCldcXf/xqv6/A4KfJGHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746018896; c=relaxed/simple;
-	bh=5wz2Fr6vpIAmaGJzTU+u+b3SwuPFbTAoUYEIddss4As=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OOL+ybtWGXn38mlBeCnD4unXnVCNsVVGHqPHzVlTBLq5/VRugkXM8KqnX07VIGMKztzP2J6i6a7ErBJl65AQyPsCSPi/OSKoPgfMR/v2Yqp+XDjVaUx6av9Hq6OR25wSR5R5/JLscYApyM4om9fMeF6MT1apUB7kr/5DdjjUQzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=K26iuG03; arc=none smtp.client-ip=91.218.175.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="K26iuG03"
-Date: Wed, 30 Apr 2025 06:14:28 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746018880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xGXCoPebQpBN7d9KiYFtD7+T3Ar2fmtuRlVtn6J5UqE=;
-	b=K26iuG03G/2tOpBPupr8ClbpU5zNWopJDq0PAhEgaELU8dRYdMheVhHr6NTj1zdc3qyIW0
-	6rtFGC0gP0CaewrqmmHxLZvu9x/hPZ+fXqT21/8EomGkxlSBaN4dsJJVWvbcoM+QQebbgN
-	KxD9MnRiaZiCYAx9FLSjMwzDl0VlE3w=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Shakeel Butt <shakeel.butt@linux.dev>
-Cc: Tejun Heo <tj@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	JP Kobryn <inwardvessel@gmail.com>, bpf@vger.kernel.org,
-	linux-mm@kvack.org, cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Meta kernel team <kernel-team@meta.com>
-Subject: Re: [RFC PATCH 3/3] cgroup: make css_rstat_updated nmi safe
-Message-ID: <aBIiNMXIl6vyaNQ6@Asmaa.>
-References: <20250429061211.1295443-1-shakeel.butt@linux.dev>
- <20250429061211.1295443-4-shakeel.butt@linux.dev>
+	s=arc-20240116; t=1746018935; c=relaxed/simple;
+	bh=EPWddZZeioNjTQ5Ffl6LTJ8Xs2kRN8UbXBOyzb+sLvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=n+GDWEUsdqr63cqSeKsfCy+p4HogNy1eySUK7KgDvpM2grttCm/LAZtkzqIJNmxdJepcS1ek5qviXY+Z/oI0adbHuPiwES5moSBdlfOp+m0Zjzqz4Ypd/+9k9joqdjPppDw7cN0k8QTqnGBwby8OiBYfYT+Xahj7AQCHqjk0r78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxIK9qIhJoHDnLAA--.6168S3;
+	Wed, 30 Apr 2025 21:15:22 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by front1 (Coremail) with SMTP id qMiowMCx_cZmIhJoqoKgAA--.14402S2;
+	Wed, 30 Apr 2025 21:15:19 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Huacai Chen <chenhuacai@kernel.org>
+Cc: loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] Enable some configs in loongson3_defconfig
+Date: Wed, 30 Apr 2025 21:15:11 +0800
+Message-ID: <20250430131516.24287-1-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250429061211.1295443-4-shakeel.butt@linux.dev>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMCx_cZmIhJoqoKgAA--.14402S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxAFWxurWfXr4rKryUJrW7WrX_yoW5XF4UpF
+	sI9a13trWrJrsagayDZ3ykWa40qrsxC34DJr4UtrWUZr4Dtryqq3WxtaySyay7X3s3Kr1F
+	qry8G3yUCFsrXagCm3ZEXasCq-sJn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUyEb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4
+	xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v2
+	6r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k20xvY0x0EwI
+	xGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480
+	Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7
+	IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k2
+	6cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+	AFwI0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8j-e5UUUUU==
 
-On Mon, Apr 28, 2025 at 11:12:09PM -0700, Shakeel Butt wrote:
-> To make css_rstat_updated() able to safely run in nmi context, it can
-> not spin on locks and rather has to do trylock on the per-cpu per-ss raw
-> spinlock. This patch implements the backlog mechanism to handle the
-> failure in acquiring the per-cpu per-ss raw spinlock.
-> 
-> Each subsystem provides a per-cpu lockless list on which the kernel
-> stores the css given to css_rstat_updated() on trylock failure. These
-> lockless lists serve as backlog. On cgroup stats flushing code path, the
-> kernel first processes all the per-cpu lockless backlog lists of the
-> given ss and then proceeds to flush the update stat trees.
-> 
-> With css_rstat_updated() being nmi safe, the memch stats can and will be
-> converted to be nmi safe to enable nmi safe mem charging.
-> 
-> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> ---
->  kernel/cgroup/rstat.c | 99 +++++++++++++++++++++++++++++++++----------
->  1 file changed, 76 insertions(+), 23 deletions(-)
-> 
-[..]
-> @@ -153,6 +160,51 @@ __bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
->  
->  		css = parent;
->  	}
-> +}
-> +
-> +static void css_process_backlog(struct cgroup_subsys *ss, int cpu)
-> +{
-> +	struct llist_head *lhead = ss_lhead_cpu(ss, cpu);
-> +	struct llist_node *lnode;
-> +
-> +	while ((lnode = llist_del_first_init(lhead))) {
-> +		struct css_rstat_cpu *rstatc;
-> +
-> +		rstatc = container_of(lnode, struct css_rstat_cpu, lnode);
-> +		__css_rstat_updated(rstatc->owner, cpu);
-> +	}
-> +}
-> +
-> +/**
-> + * css_rstat_updated - keep track of updated rstat_cpu
-> + * @css: target cgroup subsystem state
-> + * @cpu: cpu on which rstat_cpu was updated
-> + *
-> + * @css's rstat_cpu on @cpu was updated. Put it on the parent's matching
-> + * rstat_cpu->updated_children list. See the comment on top of
-> + * css_rstat_cpu definition for details.
-> + */
-> +__bpf_kfunc void css_rstat_updated(struct cgroup_subsys_state *css, int cpu)
-> +{
-> +	unsigned long flags;
-> +
-> +	/*
-> +	 * Speculative already-on-list test. This may race leading to
-> +	 * temporary inaccuracies, which is fine.
-> +	 *
-> +	 * Because @parent's updated_children is terminated with @parent
-> +	 * instead of NULL, we can tell whether @css is on the list by
-> +	 * testing the next pointer for NULL.
-> +	 */
-> +	if (data_race(css_rstat_cpu(css, cpu)->updated_next))
-> +		return;
-> +
-> +	if (!_css_rstat_cpu_trylock(css, cpu, &flags)) {
+This is a small patchset based on 6.15-rc4, each patch is a
+single logical change to better describe the problem and make
+it easier to review.
 
+If the changes make sense, all of them can be squashed into one
+single patch, I think that would be fine as well, let us see if
+other people have concern about it.
 
-IIUC this trylock will only fail if a BPF program runs in NMI context
-and tries to update cgroup stats, interrupting a context that is already
-holding the lock (i.e. updating or flushing stats).
+By the way, I received many compile-time error reports about tools,
+most are related with configs, this is the motivation of this series.
 
-How often does this happen in practice tho? Is it worth the complexity?
+Additionally, I also received one run-time bug report about uprobe,
+but it works fine on my test environment. If somebody can reproduce
+it, please let me know, maybe I am missing something.
 
-I wonder if it's better if we make css_rstat_updated() inherently
-lockless instead.
+1. How to reproduce
 
-What if css_rstat_updated() always just adds to a lockless tree, and we
-defer constructing the proper tree to the flushing side? This should
-make updates generally faster and avoids locking or disabling interrupts
-in the fast path. We essentially push more work to the flushing side.
+(1) Compile and install Tongsuo
 
-We may be able to consolidate some of the code too if all the logic
-manipulating the tree is on the flushing side.
+git clone https://github.com/Tongsuo-Project/Tongsuo.git
+cd Tongsuo && ./config --prefix=/opt/tongsuo -Wl,-rpath,/opt/tongsuo/lib
+make && sudo make install
 
-WDYT? Am I missing something here?
+https://www.tongsuo.net/docs/compilation/source-compilation
 
-> +		css_add_to_backlog(css, cpu);
-> +		return;
-> +	}
-> +
-> +	__css_rstat_updated(css, cpu);
->  
->  	_css_rstat_cpu_unlock(css, cpu, flags, true);
->  }
-> @@ -255,6 +307,7 @@ static struct cgroup_subsys_state *css_rstat_updated_list(
->  
->  	flags = _css_rstat_cpu_lock(root, cpu, false);
->  
-> +	css_process_backlog(root->ss, cpu);
->  	/* Return NULL if this subtree is not on-list */
->  	if (!rstatc->updated_next)
->  		goto unlock_ret;
-> -- 
-> 2.47.1
-> 
+(2) Compile and update kernel
+
+Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
+CONFIG_UPROBE_EVENTS is already set.
+
+(3) Probe "openssl speed sm2"
+
+cd tools/perf && make
+sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
+
+2. My test results
+
+fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
+Added new event:
+  probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /usr/lib64/libcrypto.so.3.2.2)
+
+You can now use it in all perf tools, such as:
+
+	perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep 1
+
+fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
+Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in 10.00s 
+Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify in 9.98s
+...
+                              sign    verify    sign/s verify/s
+ 256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
+
+ Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
+
+                 0      probe_libcrypto:BN_mod_mul_montgomery                                      
+
+      20.007539877 seconds time elapsed
+
+      19.990010000 seconds user
+       0.000000000 seconds sys
+
+Thanks,
+Tiezhu
+
+Tiezhu Yang (5):
+  LoongArch: Clean up loongson3_defconfig
+  LoongArch: Enable tracing infrastructure in defconfig
+  LoongArch: Enable tracing syscalls in defconfig
+  LoongArch: Enable debug information in defconfig
+  LoongArch: Enable kprobe and ftrace in defconfig
+
+ arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
+ 1 file changed, 16 insertions(+), 58 deletions(-)
+
+-- 
+2.42.0
+
