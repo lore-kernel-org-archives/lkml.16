@@ -1,63 +1,63 @@
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B024283FC1
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606592882CD
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036689; cv=none; b=mdAEsJhaOMLAo4ACQ8vHoNUVM2JoGfJ7vd9gxZPINJDCkshOBemnoHTHLPYu8vyRtCDZLQSmogvKsmLPoQCS0RvI02ia472CrFDKyGyeNZUP4KEBA9nzjNlWHrU1mrw3veo794a4nMQTFzro51lpF1PYf8zCglZszafnqmNOMjA=
+	t=1746036691; cv=none; b=CuzQrhO/dumx1WT2mv6OBsR5M2vRppDJLKO8tUaSIieRPjVPSalOggLb2vUdr2GKvnswvsUH0+LBb9XajeF5MNQRxf9bw1bVgGhJyEpe0OBuLnx9LF8EP/MtpJxz2D237/LduzGiH8A6W8jFeSFiR4fGAyZpFHG0vsG4OvfX+Jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036689; c=relaxed/simple;
-	bh=fSoRlnSmuQfl7ZxHPvsaxZElUPVqtO8ei3VkyP+sGlc=;
+	s=arc-20240116; t=1746036691; c=relaxed/simple;
+	bh=iirzwEeYoxznZHJe7vcY27yiljb3AwlzwC5WRq52rLc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=DKm3tiSIttZ1I9p7b4oxgsp/KQHBEhZKwBmdjP5MPKeQoq56hS/W23mUcrePYWX5YCuK7qMsEODE9wGGf7cv4rn9Nxg0Rc1IWNDUQaozM8ok+8yjuGW5uJNf1aECBoCwMec7kFRm5JWgqqP9lXfO+WYzEvz292jF8vJUOuE50Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=fZzCLFlR; arc=none smtp.client-ip=209.85.160.181
+	 MIME-Version; b=D85e0f9TolVXLsuygR92HPh9MOCn1BVZ1mweJefTQhey19JGNHlGsrE+Igjcehf6V7Qomo9ndf5caw6M9Se8+UNbQ+mdJ39BI4J2FNEwTXbB7miGOMwwPS0aoD/kuRl4EF0a/gHuyKG4tl7A5tVOXkUYKjdn2DMb+K9YtF/BMTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=hrnPfHha; arc=none smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="fZzCLFlR"
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-47692b9d059so2516621cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="hrnPfHha"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-4775ce8a4b0so3085271cf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746036685; x=1746641485; darn=vger.kernel.org;
+        d=gourry.net; s=google; t=1746036688; x=1746641488; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Tbt8tCPdtGfAIVOyjjS42F8T26gzOQDX+9RCN/0lBgM=;
-        b=fZzCLFlRj67Mt2er8z5Aw5Q5JVrmDB6JZFA5ZARFksGaSjqrWzcbdj+0fcCv/911dj
-         3FmVCqmjQlO89nzAdJ42VgFaUquyGe7bYwKpK+r0mq2hSjU6ximELepfgKqSUazxZpGW
-         nAA9rRG54GkpIjMlXfv6OHU0PEPcoiUWD5V4CIIP/o0Bnka8L1jK2ryHUHDh+qgE7GAd
-         0Ey7W68nTyJ6BC3CZX6wP2pVvM5Xrfh0lX7HxI8apFpolJ0c8S56J/qGBNQTSeObiOID
-         xXVvI285iWYu75z9hc7sUCxMIP30aZvrYupW3GoHfa/o0d1aDuBy3D9nYkLWjakvQac7
-         CxMg==
+        bh=A39YiB1Z+l6GCsVmrhqArPxiVLmwBB2VQEqP9tXT4Ig=;
+        b=hrnPfHhaQAzbrxbEaJMbYQ9nSMkwK3qabvTrVWPR51RX9eV6xdN4LMIrJNXRu3aLd+
+         R/lU/gXZceDxMVeebN9N0tpY6DyD92BBpzVIuAP61GPU+efI/QzI8VkZpZCv/AP3Lh5b
+         OM3n4RituY+VnxqBZDUgD3jEamKW54F8pMzMd6PIhVonpvEhqb7AZJisAsnaLVJowC0Q
+         l3OmCs0rkOV1GZo13/lJCLsdNbJ9RRJlLNlsc0PhUq98X9gx/AdFV2xYiolpTdW/l3bf
+         V2itiyeNxsAwbWhgNPTSJ15yN7myDiwjkpgYLzCXsyOpQ1oq9cUuzogUaAi4y9HUfOUb
+         9DqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036685; x=1746641485;
+        d=1e100.net; s=20230601; t=1746036688; x=1746641488;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Tbt8tCPdtGfAIVOyjjS42F8T26gzOQDX+9RCN/0lBgM=;
-        b=C9IzWK55irhaMoHaiuhPEt6nbgwMq39d0+gAMFiQzN3aSOHK52lmdE98h8wJcivC6C
-         HOMZkRgJzKY+Gjp5eFTyPUwP+7gAys/TidNXWZzKzfDNNO39BcaTx60PWRTa0yDnF6L1
-         d+JBbdehSgpmXPzuIaIdKqi0+ZK/MKqYs4VVnIa7U3YYuNqf52AZcxvcqEpJSwX+u2QP
-         2j917GdeITqV2bew7s/lRn27cqGyXl4XSmhICfY7oSlw+zZfDuD5LqwdpH+6UDi/kIaB
-         zzzFVvxf0X/g0mK5qylXUSNJ3Y8ZdA/CfoAaHBecZl2neh01RBDrzZZeCP4c5hZlTsRQ
-         7Nrw==
-X-Forwarded-Encrypted: i=1; AJvYcCVMmJnuf7ixsPXsWtFoMw1/54D0+rqSQVFeneIIb6o77W6Vddn2CVi0mEBvjsHKoYQxBSu595RG1mq/uWQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCTWxe4yd+QdSSqq6XM0udJYuy9hKZJbalkC+SXdjzBevNvb8
-	O9OKAZas0ZGm0IjWK8q/53oTKmIbW9Ko1BxW6qeJmnNfnOSa3NpU8i2Eq2jD93A=
-X-Gm-Gg: ASbGnctHHt9SoLIs+jzd4UgXCqaVeSVBo7ZcpyOna+E5FHB4V1l3Kj+HakzCATHE6MV
-	StpvfwMfn4kuWNeX+esxYTpU8UXnGw6IVziEbnqsOZswgbe+fFGus1uVirZ8w6vNKwHG2+nvikm
-	m+9WlTTXhZR2JRKBnlhCiYnoiuvFe0My9IBeiYs90V/6Co59rYM7tXBmpEb4RKMAufFYqrz7T8k
-	NJ/B7RCCtD5WuzfWywnR2SDFDKucLIQmlTF6H992lSzWDURrP/dYqkwE6Ts/DkVYV9Ng855s+jA
-	qY2rFoRy89imvIeZQdvfEjjI6EsuiB53w96aWFqs3ldnXgKTqxPMy1DbRfzDQAxKNTheZk+9rmT
-	s7DnMJUVCEhJmrU1ImmMI3h11C672
-X-Google-Smtp-Source: AGHT+IF7lGDo2V4OWxe67pw6pes0roVjPL60qV8ZkhzEjnVw85shlE47W9reKIhwnUyuTehJMjsREw==
-X-Received: by 2002:a05:622a:4c87:b0:476:739a:5cf3 with SMTP id d75a77b69052e-489e46a4769mr63495651cf.1.1746036685174;
-        Wed, 30 Apr 2025 11:11:25 -0700 (PDT)
+        bh=A39YiB1Z+l6GCsVmrhqArPxiVLmwBB2VQEqP9tXT4Ig=;
+        b=uVvL1y/1V3JIn79G88+7BtHTSOiVny8Pt7o+luXuGd7IS5cvYlL6POrEmEQ26fMnrZ
+         l9nxTXkvugNBAbSN0sWdi4dtELwovilbV7ZRuyURtVzcXRE7fYvOrap2KJVzgH8gJv3v
+         4J5dyRy2vnfbfsDhkhL+itQ+R/U4H2tWadTFfaGBS1vfz0JupfVDHzSIOBl0KAfEp17m
+         zsKTumedUscqSWVcQSGbY894fT0Z+VLdZ3Tck50IIiQWSI6fkN5taYfYIjxXtuP5SHF0
+         YvRdlTc0lodpU6pT2mIsH3xTF3L04x2zKar0wZiokVOAjPa9qSVGg24rd1K+S3QwDmTc
+         8EkA==
+X-Forwarded-Encrypted: i=1; AJvYcCXtpsbuk7pWSCc5l3Fdp/OwrdFLwOGBEj59WF+4rdftAlNaC2VLzNLAWumoTS40m6s5B58U5xiZf4jF8hg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLVH/V1GUAh31fMp7zF5wjD5IZoWYxW0JHmcMdfnoHNQ/y7hKi
+	5FHafJObvHiDrcfQnTrKa0sEf9pd0B6p0mzVi6J93EpTj9M8u9NGlnb5fRRbvPQ=
+X-Gm-Gg: ASbGncs+Mq37OJbmN0YaW290q1xjpfsi/RmHXvbYcZ2jm8RqjeJNLlDmatQPqbXXCFT
+	cSV7jnq3yml7JXR9D+41dnXChfxXO/rwKv/2gjqgSz8skjM3192n9RIALDJ+Dc01NV8Cs4NqMdO
+	qLW2hQQUTgW72BsKYJA2hcwIEDUFsoinMWb+WNQ+ZjsvrneLTUIra0ZcGhWfR0mbkwsAxNSkEPd
+	8TTSiKIa0qoM5Y118LtZZief6Jia6POK3n3WHIv8fQaVILhGX+AEWBezFATB/1UQKQBil2I4wak
+	i/lfCxwu5NwnfWBYNO6Adr9aC4ht2tPzDVV0IwIEx4eml1jQTwZijh2qATIoMI+cWv28xTnI+HA
+	5h/X5TK+Lh4lPCNKohZiFE7Sofg12
+X-Google-Smtp-Source: AGHT+IEjj5fRlO+G4AeYsj9CnMTHgu74PV6/AnY9a7Hyw1zOc1l/ean48c9t9b0uKuyRkKfZm4P+pg==
+X-Received: by 2002:a05:622a:4a17:b0:477:644a:72ec with SMTP id d75a77b69052e-48ae7a20044mr4433871cf.13.1746036688396;
+        Wed, 30 Apr 2025 11:11:28 -0700 (PDT)
 Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.20
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:11:24 -0700 (PDT)
+        Wed, 30 Apr 2025 11:11:28 -0700 (PDT)
 From: Gregory Price <gourry@gourry.net>
 To: linux-cxl@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -71,9 +71,9 @@ Cc: linux-doc@vger.kernel.org,
 	ira.weiny@intel.com,
 	dan.j.williams@intel.com,
 	corbet@lwn.net
-Subject: [RFC PATCH v2 14/18] cxl: docs/allocation/reclaim
-Date: Wed, 30 Apr 2025 14:10:44 -0400
-Message-ID: <20250430181048.1197475-15-gourry@gourry.net>
+Subject: [RFC PATCH v2 16/18] cxl: docs/allocation/tiering
+Date: Wed, 30 Apr 2025 14:10:46 -0400
+Message-ID: <20250430181048.1197475-17-gourry@gourry.net>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
 References: <20250430181048.1197475-1-gourry@gourry.net>
@@ -85,84 +85,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Document a bit about how reclaim interacts with various CXL
-configurations.
+Carve out a space for folks to explain existing tiering mechanisms
+and how CXL capacity interacts with it.
 
 Signed-off-by: Gregory Price <gourry@gourry.net>
 ---
- .../driver-api/cxl/allocation/reclaim.rst     | 51 +++++++++++++++++++
- Documentation/driver-api/cxl/index.rst        |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/driver-api/cxl/allocation/reclaim.rst
+ .../driver-api/cxl/allocation/tiering.rst     | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/driver-api/cxl/allocation/tiering.rst
 
-diff --git a/Documentation/driver-api/cxl/allocation/reclaim.rst b/Documentation/driver-api/cxl/allocation/reclaim.rst
+diff --git a/Documentation/driver-api/cxl/allocation/tiering.rst b/Documentation/driver-api/cxl/allocation/tiering.rst
 new file mode 100644
-index 000000000000..f37c8b1cc3bd
+index 000000000000..623bb23088be
 --- /dev/null
-+++ b/Documentation/driver-api/cxl/allocation/reclaim.rst
-@@ -0,0 +1,51 @@
++++ b/Documentation/driver-api/cxl/allocation/tiering.rst
+@@ -0,0 +1,31 @@
 +.. SPDX-License-Identifier: GPL-2.0
 +
-+=======
-+Reclaim
-+=======
-+Another way CXL memory can be utilized *indirectly* is via the reclaim system
-+in :code:`mm/vmscan.c`.  Reclaim is engaged when memory capacity on the system
-+becomes pressured based on global and cgroup-local `watermark` settings.
++==============
++Memory Tiering
++==============
 +
-+In this section we won't discuss the `watermark` configurations, just how CXL
-+memory can be consumed by various pieces of reclaim system.
++todo
 +
-+Demotion
-+========
-+By default, the reclaim system will prefer swap (or zswap) when reclaiming
-+memory.  Enabling :code:`kernel/mm/numa/demotion_enabled` will cause vmscan
-+to opportunistically prefer distant NUMA nodes to swap or zswap, if capacity
-+is available.
++Memory Tiers
++============
 +
-+Demotion engages the :code:`mm/memory_tier.c` component to determine the
-+next demotion node.  The next demotion node is based on the :code:`HMAT`
-+or :code:`CDAT` performance data.
++todo
 +
-+cpusets.mems_allowed quirk
-+--------------------------
-+In Linux v6.15 and below, demotion does not respect :code:`cpusets.mems_allowed`
-+when migrating pages.  As a result, if demotion is enabled, vmscan cannot
-+guarantee isolation of a container's memory from nodes not set in mems_allowed.
 +
-+In Linux v6.XX and up, demotion does attempt to respect
-+:code:`cpusets.mems_allowed`; however, certain classes of shared memory
-+originally instantiated by another cgroup (such as common libraries - e.g.
-+libc) may still be demoted.  As a result, the mems_allowed interface still
-+cannot provide perfect isolation from the remote nodes.
++Transparent Page Placement
++==========================
 +
-+ZSwap and Node Preference
-+=========================
-+In Linux v6.15 and below, ZSwap allocates memory from the local node of the
-+processor for the new pages being compressed.  Since pages being compressed
-+are typically cold, the result is a cold page becomes promoted - only to
-+be later demoted as it ages off the LRU.
++todo
 +
-+In Linux v6.XX, ZSwap tries to prefer the node of the page being compressed
-+as the allocation target for the compression page.  This helps prevernt
-+thrashing.
-+
-+Demotion with ZSwap
++Data Access MONitor
 +===================
-+When enabling both Demotion and ZSwap, you create a situation where ZSwap
-+will prefer the slowest form of CXL memory by default until that tier of
-+memory is exausted.
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index 2be2855e5870..a768144698e9 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -47,5 +47,6 @@ that have impacts on each other.  The docs here break up configurations steps.
- 
-    allocation/dax
-    allocation/page-allocator
-+   allocation/reclaim
- 
- .. only::  subproject and html
++
++to be updated
++
++References
++----------
++
++- `Self-tuned Memory Tiering RFC prototype and its evaluation <https://lore.kernel.org/all/20250320053937.57734-1-sj@kernel.org/>`_
++- `SK Hynix HMSDK Capacity Expansion <https://github.com/skhynix/hmsdk/wiki/Capacity-Expansion>`_
++- `kernel documentation <https://origin.kernel.org/doc/html/latest/mm/damon/>`_
++- `project website <https://damonitor.github.io/>`_
 -- 
 2.49.0
 
