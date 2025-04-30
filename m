@@ -1,112 +1,74 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3CF6B644;
-	Wed, 30 Apr 2025 21:32:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83561B644;
+	Wed, 30 Apr 2025 21:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746048750; cv=none; b=kxosFpkC25cppDJE+7mXP5op5vH5sbKB6MzYzMUyy5RKkJbvK+TcmBROcgX/K0HPIGBmjh6ZuSDusEV16WzWlLxR221mPJcCZG083BGwiGVTHuhF2B4YVtqRp46sjO/fSdcr28vFCfrcus1F0y3a3miW59T3+CcX+UMWF3xr7rw=
+	t=1746048783; cv=none; b=F3f9bg2SWAbJebpiZV5vWOr3L9jIMLc1qOo6iyUXvK5EkBbd3mm0lMBARa5Pza7bEhl/QxznuGFIOU2TkNcrXNJoXVZau01CsdiP0UhbjXo7FcwBWBxbcPEU1B/3tQEj3srGzj7Ix0fk7rX8Hu5D6YFKr8kx8DCD0Hm9Mnq0D0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746048750; c=relaxed/simple;
-	bh=GOcU6ETcW7W9kdfdXnnlFyD1O9af5HKFC4ilydOZQHU=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=FqZXYwAScxygo2TUShY9DAx8EFWiChNEQYTXlRAK4FDzJbr3wyJ2EtN3bWucxvIV+1SynwkcxCRnyQfAsBaMzaTPkRcmLDxzJtCVomkfxNtwUjGPb+GfVqsbrP7kQOZmMj5V/RgxB1uRO4DUafE5l4KwQR9OWDSkkjf2JKCqkaw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Wu9JSOck; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uUqjExE/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746048783; c=relaxed/simple;
+	bh=VsGVHtp+9q6RGn5BQWuGa91tLEpsT3A6cFMcod1nM8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PRnuBYxwL2kIwfL1nelZgGwBdX0gwfs2L8tHIBXCUUgZBV0zIQdwsDTJUa0BVOTPDg49KwqIelLcvoarsKl11GgM14swnrrjOPYPOxA14+ciBHyU6M8UQfE0w6I9ZCIY6VIeMs2/lTpIK9WCLB9QgpD7UOf9RXh9WhCHK7PEw7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8n0hbSS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Wu9JSOck";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uUqjExE/"
-Date: Wed, 30 Apr 2025 21:32:12 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746048746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RsyaJqhz8MATwW/VM/D7cQ4BbkQFxnchiBO3ELc8uh0=;
-	b=Wu9JSOck37N07ExgzummA/oudlB/4IIi5WK0mQoMZ58i79NV2kRzeJH7dmalgH0uJHIuC7
-	cCTIvG+wSy/5f1wK0iH4aMk1mRGJt5Bcpjf4weeCgAzmk0DhixdD8HHgkatM+iBAUlOBSe
-	HFvQGcxFZ2wmKB0rnIkm92ChjE79CLTxzGsLm8sM1S4V7gBCDmOGTp4aTAYI4eUSyuJ+b9
-	r+VKyJbHl4ndmJoPp7+Bdw+cUmbYZCj5Qsu5v+gqW55Fox2D0wd6tZsNmh6j7z5BoxLvuq
-	2iRDc5SWufNWkVZNLFljO2ziQ2erWITvBDg+48WXQ1Wg5tpnnrjGM7H/HztcZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746048746;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RsyaJqhz8MATwW/VM/D7cQ4BbkQFxnchiBO3ELc8uh0=;
-	b=uUqjExE/yY8I5DK9lqcT8D0+QMWk2ucmL5fm9ArtfMy3L3Azd2vTNESu0Op7ggAd/yRJOM
-	HoSGEZotonBavtCw==
-From: "tip-bot2 for Andrew Jones" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] genirq/msi: Prevent NULL pointer dereference in
- msi_domain_debug_show()
-Cc: Andrew Jones <ajones@ventanamicro.com>,
- Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org, maz@kernel.org
-In-Reply-To: <20250430124836.49964-2-ajones@ventanamicro.com>
-References: <20250430124836.49964-2-ajones@ventanamicro.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8n0hbSS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8A49C4CEE7;
+	Wed, 30 Apr 2025 21:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746048783;
+	bh=VsGVHtp+9q6RGn5BQWuGa91tLEpsT3A6cFMcod1nM8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=M8n0hbSSdpyf1eIRlQ4DZlDTX6/nX9eZuzO5RwegBTytZUR5gsvTB0LhZE3b2zArW
+	 2/atCY8Al5muERExki99lrnsZE5ErgoFDPKO4PsKYJC8zeN3c0NsdG6xF2EKvko4LV
+	 ggqL1QW+jfBfJgQLc8jqwjfKiOi7V2P675phjacsVMCCh/Zqbz4UZ7fjeNUzO7cFqC
+	 JAfarQ2JPYoTIy0nIiFdIWUSKnWWhOOrTZ79VV85VdrEy1c23r0qkScFmu6sTqnLX6
+	 uxTcaXn4wGqf7zul7MtQ/nzfj4fH2yEe5oAZi9Pd0Jes1G+PFdLGWufvLqfpLwQKWa
+	 QhHToo1n4o3WQ==
+Date: Wed, 30 Apr 2025 14:32:59 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
+ warning
+Message-ID: <202504301432.3A737A3B8F@keescook>
+References: <aAwos0mLxneG9R_t@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174604874066.22196.10092979947113967682.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aAwos0mLxneG9R_t@kspp>
 
-The following commit has been merged into the irq/urgent branch of tip:
+On Fri, Apr 25, 2025 at 06:28:35PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> Use the `DEFINE_RAW_FLEX()` helper for on-stack definitions of
+> a flexible structure where the size of the flexible-array member
+> is known at compile-time, and refactor the rest of the code,
+> accordingly.
+> 
+> Also, there is no need to use the DECLARE_FLEX_ARRAY() helper.
+> Replace it with a regular flexible-array member declaration
+> instead.
+> 
+> So, with these changes, fix the following warning:
+> 
+> drivers/scsi/sd.c:3195:50: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 
-Commit-ID:     e6a3fc4f10b872d02e25f83227e725c79b25d893
-Gitweb:        https://git.kernel.org/tip/e6a3fc4f10b872d02e25f83227e725c79b25d893
-Author:        Andrew Jones <ajones@ventanamicro.com>
-AuthorDate:    Wed, 30 Apr 2025 14:48:37 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 30 Apr 2025 23:25:10 +02:00
+Looks good; thanks!
 
-genirq/msi: Prevent NULL pointer dereference in msi_domain_debug_show()
+Reviewed-by: Kees Cook <kees@kernel.org>
 
-irq_domain_debug_show_one() calls msi_domain_debug_show() with a non-NULL
-domain pointer and a NULL irq_data pointer. irq_debug_show_data() calls it
-with a NULL domain pointer.
-
-The domain pointer is not used, but the irq_data pointer is required to be
-non-NULL and lacks a NULL pointer check.
-
-Add the missing NULL pointer check to ensure there is a non-NULL irq_data
-pointer in msi_domain_debug_show() before dereferencing it.
-
-[ tglx: Massaged change log ]
-
-Fixes: 01499ae673dc ("genirq/msi: Expose MSI message data in debugfs")
-Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/all/20250430124836.49964-2-ajones@ventanamicro.com
----
- kernel/irq/msi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 5c8d43c..c05ba7c 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -761,7 +761,7 @@ static int msi_domain_translate(struct irq_domain *domain, struct irq_fwspec *fw
- static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
- 				  struct irq_data *irqd, int ind)
- {
--	struct msi_desc *desc = irq_data_get_msi_desc(irqd);
-+	struct msi_desc *desc = irqd ? irq_data_get_msi_desc(irqd) : NULL;
- 
- 	if (!desc)
- 		return;
+-- 
+Kees Cook
