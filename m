@@ -1,92 +1,100 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1152750F1
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:16:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 320D32638A1;
+	Wed, 30 Apr 2025 18:17:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746037001; cv=none; b=GEvXBKgvaYPzxKjFI3E8UAHgkhY/phVGbBFci9ZYZ7G6FVRsvI0dtE2gHUQulcjnhr0XjdwSh9gkXPriLh8OI27pLTqCWDEfb2be0wx4wrBncRslowc+Ec/lsaUX05w8zK7mj+J0LtNbMYPSqFGWpuiqqWiLczM2u8wTvMOHooM=
+	t=1746037056; cv=none; b=XCMe0u7pgp/GIvjUzJxx5dTc5AobO8ccG0+FNPOYxWMCm2+O7TpuOwL44a/nxkWa6AVQAp7mmJsEtfggoEU1su3Cx08e0CwOFUlibq05b2nbMaU+WVTxEYzHAirxiN9qfNSongk0SDkvkwRbEUhyd6uQmfQLvwVUztFo/QsrKbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746037001; c=relaxed/simple;
-	bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
+	s=arc-20240116; t=1746037056; c=relaxed/simple;
+	bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hey6snBH7IwVYpCvfo6VfECsg7L81cHncPN6+VvyJGnrXHi0cxtrU4Ng96YSpJP9v4PMIOaMpaAVDGDMJ3reiapwWwG2AdNGC3PJiqneI1N7/ykW+UT/ptGKzPtD+Xat+FbIvWGKbvJqi7sT2ogNn9Ql8KSi8L66e6jqCJtq104=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eoNGQ7+S; arc=none smtp.client-ip=209.85.214.174
+	 To:Cc:Content-Type; b=jg0c1nHjtfejQheR9wNFMl8UiVQFiLId3hQ9l4r6cppDJccnxrBAvSWQL0jAtRfrMmYyaf8SjI/m2C9+VCtCzkO++yKU+CiP1Cvq74Dn6vseiF9SqLMo54mttSxJLT02x193r/zt+NWKunwYHchn2dWTY52xU9I2+9MvFha0bBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lghmvSC0; arc=none smtp.client-ip=209.85.218.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eoNGQ7+S"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240b4de10eso224065ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:16:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lghmvSC0"
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ace333d5f7bso17662366b.3;
+        Wed, 30 Apr 2025 11:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746036999; x=1746641799; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746037053; x=1746641853; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
-        b=eoNGQ7+SZM4rlBucKl/0DaYbRi30+E4Bjp5cIjS22O3Onb++0R8yNXhIvpckylWMne
-         UsqOlPcfo5BvpNnnVr+18SsNQ+zxpz82K/XUhvh05WSjFERP4wI5D52T3JQgyskGEOO8
-         puiUtdL35+3ueFO9+BTTMpqVVKoChdyie1HxXuNjzNO6cNV+oZa8aJ9GwVFCu4KhMUNw
-         k45V0P6LCjCn8BijcX81dBzvwi9LrUwebEU7NoC+Ynqz4Ni/TdosiNuDUMh2msREfKBb
-         UcQo4p72QxrYQcVJb1t4rg6slr6ky9vUHTZCr8BsJSvn2WRqcfkBs+8jMPyJR4cWk/Ht
-         IKJg==
+        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
+        b=lghmvSC0wUSxPy12iHEMnkEiJ7LG8p38e2Idel0omhQNPmyFcIGPx21FlDjspImmth
+         N6+VqlCCFe5UF3hBABaWjmTzLjytuTm5GxFPBM0jBNAG9+PsuXDlnEJxiibC9DnhufiY
+         oAweiygZKlMGIo0TFVhwhan3sbh3NfAmvgcbhRuE2+Tq97ywQy7ysnRHLOtaXOKgJ8ZU
+         c2tX9BDewZlEKw5ifD5f0Mhi6N7xswONmLYiAgawHvxDXyAonL9pDcDSgzuYXBaIj+VL
+         Y+IJxeUUzfpepHxcsYBo/N3zkPwwpEjEdTw0wMs19xeTXxsGxengUhKE6bQFX8ux4Lot
+         HvhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036999; x=1746641799;
+        d=1e100.net; s=20230601; t=1746037053; x=1746641853;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=S2zZkE8kYk7DeYMqbaUF/R2UUdCZOiBVgolXvwU4Qzk=;
-        b=rzoPkK8hJyAD2IHoQDcGXO0KR62I7hDWIcliQevEgL0iHF6mZKd4HMBJqumrtDtjr9
-         uVHfj+50NJ4JdlonF7tfysMOv2HHSd4PK4hZ2JosTssPqr20CZpIsldtzhjVpCqrWmGO
-         hWYpC4e0Yg9vbwGZWo9HrTtocns5j/D0UUy+ey/D9oRYTpU02gMpQJG79KxBTw59h6Dp
-         ttJB4xTwGFFd8re17VC1s4qGIB5/FFHNGawwV90jT3vPfokXFgH+kH5NAAmPy34iMT5f
-         pO44hbLF9rlVT2GkA9MELE3lDV4Q2p9enfec8WMmKqfgLkWFqKjcFWlQt7Z52RKX/460
-         WRjA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYYBMXXStLyZabHVXT3CIlRny6qedJcct65UU65XIQ0muvyOLKXSgzhsPv0Lhq+WkkRfHjKhDSNkgtqQM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8HizLDCwbpqsaoDHNz4iar8WOWI2hFAe+Jav/V9DOQGpUprl8
-	OOhOG+61fecakv8PQYjhVyaTwi8pvp+xyEbORW4vr3+SKh31Hbn1a5Q+QJxdeg9ZG2nRTNqnIym
-	Lfv9n3ftWzZntKUKtJ9pWaJg6NnI=
-X-Gm-Gg: ASbGnctTAckIFN6yA50RrWlOU9GMVPOvVs8ZmhG/uSsIYAZuENLbtEP91KYECud+54C
-	1hM8XuJDJBJVGHGokWMWl2Uf6Q7QS5LNfI88yuSC+Ibxd0b+HEBkwcp2bHIOAdXWamgaMAo6EFb
-	WzwZE8u9Rp1KFAUmsBCNIc
-X-Google-Smtp-Source: AGHT+IF1N28ck+ncNtfwPcI+Xrl/j3rXmoy8i7dANTP5Fh1Weylgg5D+MGt+ZyUiTckDw4nsn/uqlyoK2BhO9nWWPw4=
-X-Received: by 2002:a17:903:1b2f:b0:221:751f:dab9 with SMTP id
- d9443c01a7336-22df5835e22mr21391885ad.14.1746036998735; Wed, 30 Apr 2025
- 11:16:38 -0700 (PDT)
+        bh=U/9r/RlDUE17osi9EipJ0WzJSOJjlZesxIFPje0LHOA=;
+        b=gGguWk2VaICOpinilewaGl6kYPN8U0zmB5II6TiINf3+Wwy+tTl9Mog9DsgKYx+CWA
+         FNz/YWgQnRbMG2ojd0FAdrEedwiGKIMHlk4U0T5oUNyGKKdqcSz2ZiCNU+1m2aAyCkzZ
+         SVzQxxaiM//Xy+/WMdLKNCJIT3QoOaIQO6EeLAhmsxZTJfOdMG2lD2Ai2mnU45HenYST
+         RL9KOwIvRB30Ct0GY9d5Z/l+E05vQ8wLpqJU8cnacl7VpYW5Ysw5ce+tf+S5nNem/ND9
+         GJdS6LeCn2OfKWm8Hlo0OZq8IUZISuKGUx7sp8wmn1rxgPoyUWEjdHUENrJsjijKtpFv
+         NVew==
+X-Forwarded-Encrypted: i=1; AJvYcCV1axPaOg21YwxFo3nyfXeQgnEtavGjlOlHznOoOJcIBAGRyGERaTaRoZiWM7yjIbWaO5gtUK0nd6vYgygC@vger.kernel.org, AJvYcCVkQ2BVGjMNDK7LtZCkpoU67VDTL+fjwtQepjNz5zVVNg8CXmoCLzfrr3JDZ/E3q3B3JmKFO2mNnZIh@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyx4SBlBuSweFDm4cqWuR0e0fi8yvaGXJKgD2XY2WIJITxeLAcq
+	iRgJ/KPCeridmWtQjk4xbfhTKz9M8LZnwpNI78X2VORvCUZZe/HzPZJgzth0/e9UXhs0GX/WeUx
+	wGZblJsXrsTQOy4vukYI9JN5NcPZoOVKRyCA=
+X-Gm-Gg: ASbGnctUooKdOSu4sAU5qSfVjEjfzRzeXfUO6NoMC06SrJmpVSedn1Z5KUFAtBzFrIr
+	sJuRbveKNmioYkNdgGwcRLnq77jLCYXK+oD4jzTfv48CwPrYWo6Ns/3lY+WJiDWyI5Rp8iFVK6R
+	6DA09puKdNw1F1SqBoMelEUw==
+X-Google-Smtp-Source: AGHT+IHo7vrjzoHJavBMnKjeuMAIEZNioUuX2F9fOYFlukm++RPIL7DlnzSNXWqD9CisW72t0j+V7ncSPEXQrlmkbuQ=
+X-Received: by 2002:a17:907:96a2:b0:ac7:e366:1eab with SMTP id
+ a640c23a62f3a-acef45a8f8fmr34709266b.48.1746037053266; Wed, 30 Apr 2025
+ 11:17:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430165343.GA1436080@ax162>
-In-Reply-To: <20250430165343.GA1436080@ax162>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Wed, 30 Apr 2025 20:16:25 +0200
-X-Gm-Features: ATxdqUF9QKjnhgdhbv81XkThLwmEAwlHnaUZr3nyNeFy-Sx2UyqWacT6ckzKa1I
-Message-ID: <CANiq72n+0kxXfbnDsjNMH8wUXAPySfnPKx5OCoppotiNye9CVg@mail.gmail.com>
-Subject: Re: Prebuilt LLVM 20.1.4 uploaded
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: llvm@lists.linux.dev, linux-kernel@vger.kernel.org, ojeda@kernel.org
+References: <20250430153239.7137-1-ariel@simulevski.at> <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
+In-Reply-To: <CAHp75VdzqoxKwVhSqHVcnjCyBT1+y+020iTADc0isX-kqDJY8w@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 30 Apr 2025 21:16:57 +0300
+X-Gm-Features: ATxdqUFMwmB3y28A-hm95F8boEEb_jY5iJhskLEEBjLgwXpZVanJzJZ34Jvxles
+Message-ID: <CAHp75Vcc0jX_AXh25sicRJCF1o7au8oOeCkN4GoTUTHyXYQv5g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: tigerlake: Document supported platforms in
+ Kconfig help
+To: Ariel Simulevski <ariel@simulevski.at>
+Cc: andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Guido Trentalancia <guido2022@trentalancia.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 6:53=E2=80=AFPM Nathan Chancellor <nathan@kernel.or=
-g> wrote:
+On Wed, Apr 30, 2025 at 9:14=E2=80=AFPM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+> On Wed, Apr 30, 2025 at 6:32=E2=80=AFPM Ariel Simulevski <ariel@simulevsk=
+i.at> wrote:
 >
-> I have built and uploaded LLVM 20.1.4 to
-> https://mirrors.edge.kernel.org/pub/tools/llvm/.
->
-> If there are any issues found, please let us know via email or
-> https://github.com/ClangBuiltLinux/linux/issues/new, so that we have an
-> opportunity to get them fixed in main and backported before the 20.x
-> series is no longer supported.
+> Technically this is a v2 of the previous patch, but it has been
+> changed a lot, so for _this_ time it's okay to have it still v1. Also
+> note when v2 or any new version of patch is required the changelog
+> must be provided (after the cutter '---' line below).
 
-Tested the x86_64 binaries for Rust x86_64 and arm64:
+On top of that, you forgot to include (all) maintainers of the
+respective code. I recommend using my "smart" script [1] for sending
+patches to the Linux kernel subsystems.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+...
 
-Thanks!
+> With that, waiting for v2.
 
-Cheers,
-Miguel
+
+[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.=
+sh
+
+--=20
+With Best Regards,
+Andy Shevchenko
