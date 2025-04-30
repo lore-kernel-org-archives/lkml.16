@@ -1,102 +1,197 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA7F21B8FE;
-	Wed, 30 Apr 2025 08:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E81219314;
+	Wed, 30 Apr 2025 08:47:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002828; cv=none; b=sn6YgVDIUkMTWgl7Uop8mziH9bcsRQL+lmgblj0nK9AfzPTOfuROwPUlQbx+BUCt9b5dfnv8Ly3edGejoZgXnj0LXbMH36tXCaOFT1DFGkkUtQoEU+Aan/Z1zap0TbK7U+dvzPG53gs3H5SL3XKDRg7VX5a0EbCcXbYcsG40WyE=
+	t=1746002853; cv=none; b=cwSGN86ymxWIHlAUQrOmTzpCUNIbA0VbLXsRTcoyVgsRaw5yIk4SFWhLTdw2SQACU3C2uk6BhkaYrRnamXvy/Nv++a6X2evDHg2j3ci6ebpNWOOOMlrZOMMw0aygD4PqQy0z7J1JJSFkYsjJzZFIidYMl9L2KIdSbyzZ+aWTsBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002828; c=relaxed/simple;
-	bh=oujcGGtTWJdhqn+hsdcintVRbu2G4WyuFYXEHRDX0SI=;
-	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=S92/rkCn05+JfIek7wZdZC13Zk+wn1KiIfxTbzT7NvIf9k/QcCSsOYG0l/yDsWt1YWTu7Qgv/nSxOywk0jHQG+gwBTjMlAOB4dQ/GGyobV8LelIkmf/RWQhRkHbiEsRIY6uPLXlTHgBQducsm1My16NtsAge8QIeMf3yb+8B3c8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [10.20.42.164])
-	by gateway (Coremail) with SMTP id _____8AxDGuD4xFo_PnKAA--.7952S3;
-	Wed, 30 Apr 2025 16:46:59 +0800 (CST)
-Received: from [10.20.42.164] (unknown [10.20.42.164])
-	by front1 (Coremail) with SMTP id qMiowMCxbRt_4xFoD_ifAA--.8231S2;
-	Wed, 30 Apr 2025 16:46:57 +0800 (CST)
-Subject: Re: [PATCH v8 0/5] Add Loongson Security Engine chip driver
-To: Herbert Xu <herbert@gondor.apana.org.au>,
- Huacai Chen <chenhuacai@kernel.org>
-Cc: davem@davemloft.net, peterhuewe@gmx.de, jarkko@kernel.org,
- linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
- linux-crypto@vger.kernel.org, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
- pmenzel@molgen.mpg.de, Lee Jones <lee@kernel.org>
-References: <20250418093506.1349-1-zhaoqunqin@loongson.cn>
- <CAAhV-H608_ddH0g0gyFCZSTVxYHOBqLXrtGYxZ1eoXX6eCcEuA@mail.gmail.com>
- <75bb29fa-6d77-6f95-eec4-ee183190da17@loongson.cn>
- <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
-From: Qunqin Zhao <zhaoqunqin@loongson.cn>
-Message-ID: <6b7385ce-d8ad-1be9-4503-55460f40fe72@loongson.cn>
-Date: Wed, 30 Apr 2025 16:45:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+	s=arc-20240116; t=1746002853; c=relaxed/simple;
+	bh=2V3oi+zTqj6+6yjxoEi2u/vt/w1/hvUqDh25JFcZBjg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vq5+1E8ziDppc22EjA/EVyjGrXjPZDrJrZC92XQ2YAjXJBEZKS0Kobcub16jYIBFfLdAjTFApP7d4lZ3QSXY8JO2uKNmll78nsJzvZogkSC67Jtuf8H0FZamSFwgw/hzJhVyLXD/kkFM10+6IXnHJg2FIOEs6PjbFxgi3u9xJDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZnW0B6JHsz6K9YP;
+	Wed, 30 Apr 2025 16:42:34 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 152FC1402EE;
+	Wed, 30 Apr 2025 16:47:28 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Apr
+ 2025 10:47:27 +0200
+Date: Wed, 30 Apr 2025 09:47:25 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: <admiyo@os.amperecomputing.com>
+CC: Jeremy Kerr <jk@codeconstruct.com.au>, Matt Johnston
+	<matt@codeconstruct.com.au>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
+ Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sudeep Holla
+	<sudeep.holla@arm.com>, Huisong Li <lihuisong@huawei.com>
+Subject: Re: [PATCH net-next v21 1/1] mctp pcc: Implement MCTP over PCC
+ Transport
+Message-ID: <20250430094725.000031ac@huawei.com>
+In-Reply-To: <20250429222759.138627-2-admiyo@os.amperecomputing.com>
+References: <20250429222759.138627-1-admiyo@os.amperecomputing.com>
+	<20250429222759.138627-2-admiyo@os.amperecomputing.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <aBHc2tT2-Duj3_-A@gondor.apana.org.au>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-CM-TRANSID:qMiowMCxbRt_4xFoD_ifAA--.8231S2
-X-CM-SenderInfo: 52kd01pxqtx0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBj9xXoWrKryUWw4DAFWrArW7Gw1ktFc_yoWfZwb_Cw
-	48uFnrGw1DGF4SgFs8Kr129F9FgFZrXF97Z3yIv3yay3s3Zr4jgr4xurnxuw4Syr4DJFs8
-	Zr429rZ3ZryfCosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUbDkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0
-	oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa02
-	0Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1l
-	Yx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI
-	0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC2
-	0s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r4a6rW5MI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JV
-	WxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAI
-	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8uc_3UUUUU==
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
+ frapeml500008.china.huawei.com (7.182.85.71)
+
+On Tue, 29 Apr 2025 18:27:58 -0400
+admiyo@os.amperecomputing.com wrote:
+
+> From: Adam Young <admiyo@os.amperecomputing.com>
+> 
+> Implementation of network driver for
+> Management Control Transport Protocol(MCTP)
+> over Platform Communication Channel(PCC)
+Hi Adam,
+
+> 
+> DMTF DSP:0292
+> https://www.dmtf.org/sites/default/files/standards/documents/\
+> DSP0292_1.0.0WIP50.pdf
+
+Don't line break a link.
+
+Is the WIP status something we should be concerned about?
 
 
-在 2025/4/30 下午4:18, Herbert Xu 写道:
-> On Wed, Apr 30, 2025 at 04:14:40PM +0800, Qunqin Zhao wrote:
->> Sorry to bother you, may i ask is it fine to move  the Security Engine base
->> driver[Patch v8 1/5] to drivers/crypto ?
->>
->> The base driver uses MFD  interface  to register child device(tpm, rng) , as
->> done in
->>
->> "drivers/iio/common/ssp_sensors/ssp_dev.c" and
->> "drivers/firmware/xilinx/zynqmp.c".
->>
->> Thank you, and I look forward to hearing from you.
-> I don't mind at this point in time.  But if this driver were to
-> develop features way outside of the Crypto API in future then I
-> may change my mind.
+> 
+> MCTP devices are specified via ACPI by entries
+> in DSDT/SDST and reference channels specified
+> in the PCCT.  Messages are sent on a type 3 and
+> received on a type 4 channel.  Communication with
+> other devices use the PCC based doorbell mechanism;
+> a shared memory segment with a corresponding
+> interrupt and a memory register used to trigger
+> remote interrupts.
+> 
 
-Hi, Herbert, thanks for your reply.
+Very short wrap.  Convention for patch descriptions tends to be around
+75 chars.
 
-In future it just add child platform devices  name(sm2, sm3, sm4) to 
-"struct  mfd_cell engines".
+> Signed-off-by: Adam Young <admiyo@os.amperecomputing.com>
 
+A couple more trivial things on a final look through from me.
+Obviously the netdev and mctp bits aren't my specialty as I only dip
+into them occasionally, but with that in mind and some concerns
+about possibility for this getting abused as a work around for things
+should have more specific kernel level support...
 
-Hi, Huaci
-
-Let's go via Herbert's crypto tree for the base driver patch under 
-drivers/crypto/loongson/,
-
-What do you think of it?
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
 
-BR, Qunqin.
+> diff --git a/drivers/net/mctp/mctp-pcc.c b/drivers/net/mctp/mctp-pcc.c
+> new file mode 100644
+> index 000000000000..aa5c5701d581
+> --- /dev/null
+> +++ b/drivers/net/mctp/mctp-pcc.c
+> @@ -0,0 +1,305 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * mctp-pcc.c - Driver for MCTP over PCC.
+> + * Copyright (c) 2024, Ampere Computing LLC
+> + */
+> +
+> +/* Implementation of MCTP over PCC DMTF Specification DSP0256
+> + * https://www.dmtf.org/sites/default/files/standards/documents/DSP0256_2.0.0WIP50.pdf
 
->
-> Thanks,
+https://www.dmtf.org/sites/default/files/standards/documents/DSP0256_2.0.0.pdf
+
+Looks to be final version of that doc, but it's not what your title says...
+
+
+
+
+> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct net_device *ndev)
+> +{
+> +	struct mctp_pcc_ndev *mpnd = netdev_priv(ndev);
+> +	struct mctp_pcc_hdr *mctp_pcc_header;
+> +	void __iomem *buffer;
+> +	unsigned long flags;
+> +	int len = skb->len;
+> +	int rc;
+> +
+> +	rc = skb_cow_head(skb, sizeof(*mctp_pcc_header));
+> +	if (rc)
+> +		goto err_drop;
+> +
+> +	mctp_pcc_header = skb_push(skb, sizeof(mctp_pcc_header));
+> +	mctp_pcc_header->signature = cpu_to_le32(PCC_SIGNATURE | mpnd->outbox.index);
+> +	mctp_pcc_header->flags = cpu_to_le32(PCC_CMD_COMPLETION_NOTIFY);
+> +	memcpy(mctp_pcc_header->mctp_signature, MCTP_SIGNATURE,
+> +	       MCTP_SIGNATURE_LENGTH);
+> +	mctp_pcc_header->length = cpu_to_le32(len + MCTP_SIGNATURE_LENGTH);
+> +
+> +	spin_lock_irqsave(&mpnd->lock, flags);
+> +	buffer = mpnd->outbox.chan->shmem;
+> +	memcpy_toio(buffer, skb->data, skb->len);
+> +	rc = mpnd->outbox.chan->mchan->mbox->ops->send_data
+> +		(mpnd->outbox.chan->mchan, NULL);
+
+Not the most readable of line wraps. I'd just go long on this one for readability.
+It's still < 100 chars. Or use a local pointer to outbox chan.
+That will shorten this and at least one other place.
+
+
+	rc = mpnd->outbox.chan->mchan->mbox->ops->send_data(mpnd->outbox.chan->mchan, NULL);
+
+
+> +	spin_unlock_irqrestore(&mpnd->lock, flags);
+> +	if ACPI_FAILURE(rc)
+> +		goto err_drop;
+> +	dev_dstats_tx_add(ndev, len);
+> +	dev_consume_skb_any(skb);
+> +	return NETDEV_TX_OK;
+> +err_drop:
+> +	dev_dstats_tx_dropped(ndev);
+> +	kfree_skb(skb);
+> +	return NETDEV_TX_OK;
+> +}
+
+> +
+> +static acpi_status lookup_pcct_indices(struct acpi_resource *ares,
+> +				       void *context)
+> +{
+> +	struct mctp_pcc_lookup_context *luc = context;
+> +	struct acpi_resource_address32 *addr;
+> +
+> +	if (ares->type != PCC_DWORD_TYPE)
+> +		return AE_OK;
+> +
+> +	addr = ACPI_CAST_PTR(struct acpi_resource_address32, &ares->data);
+> +	switch (luc->index) {
+> +	case 0:
+> +		luc->outbox_index = addr[0].address.minimum;
+Really trivial but as this is a walk of the resources, I'd expect it
+to be conceptually providing one resource per walk iteration.
+As such, is 
+		luc->outbox_index = addr->address.minimum;
+
+more representative of what is going on here than an array look up?
+
+> +		break;
+> +	case 1:
+> +		luc->inbox_index = addr[0].address.minimum;
+> +		break;
+> +	}
+> +	luc->index++;
+> +	return AE_OK;
+> +}
+
 
