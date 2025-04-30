@@ -1,154 +1,84 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA8823182C
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:25:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EF4231830;
+	Wed, 30 Apr 2025 09:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746005121; cv=none; b=K+3AfvUfHrVhSXuAsqImMLKE86HEfvfMbwRrjStwLzPmCpzbZ71zZhxMt4TkEkcUJLUZLZHv8x1QCkN78i1fe4EBywGVQfI0j4HpySrPBf6X5EvWx7+vj1/VQtM2lWniK/W1OlzL8L7M7maaLh6B3rIuFiJcDJaIER/6B2QDo/Q=
+	t=1746005128; cv=none; b=l7jgXSiFhJvu+uI9SyGx6toNg89RwAnn2UubIHIg1RjLJg8/HkbHdR0Fskntwr0IzrPXgm5uKKJSem6VAQ4BXPOQt5LcPOAaOj+F7L+IlEYSVxHT71G/u51ROUDLP8p58KjG74+r4R1def+fSbOl6pbo4FX4qfc5WiLB/JtmAek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746005121; c=relaxed/simple;
-	bh=L/S/cstdhaw0q/9+lapFQUBWguY35JuC/j0+aEzJZXM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QkcmmAVmQ22doFeKOnG/HYy0itv7M++jkrkvTnlwQynZMeIQmk19lvnp/iUdY+ugjer/q3pCVW4rJm3YCsljgmjR2PkC34d/4Kh3u8QCvQi1iNPVy7f+m4tp1LwB5qTTae/S0bRNfUqXyOPAVoTbieHa+PlDnN/t12OOnHm1C2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AoiEfcyx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746005128; c=relaxed/simple;
+	bh=kM42SKktj2dNOf8NBJOfjLlyuoqhDcyMQafUNOjcJ2A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hfy9SRMeOWcgIUq2TUK9PTTUAZKNiJe536QkQFDlkisEpEZVR2l5AJS8vVM/EKVnDOg2FX05synOSBJAPg742NrIKKFk5DuaOiJngpvHfynAroKBzJKft3ZTXysLzNtWKITbRw/MRNDnMCEbUlzxGZVGwrPRurdpphSbWexgUr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fNHWhPow; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AoiEfcyx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746005119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+volEyBef2ye7NUghL7e/PLx9YGoFozJlvYKJwtiFcg=;
-	b=AoiEfcyxZprVaLTx4JiGm8IEKc8ccVShEHSTZzomUFTHhCSgBGzJ3bt7yNDlfRgBJxILri
-	L+PVPKETlnIdyKu6pqL28YDHzF8pliP5SJcSTLXJiRARbZ9BeDdTw1V7khloxXoUKXq2lr
-	zYdr5s4AnjqtaNU8WaL7yg8uJG8Fvbk=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-677-Z5mF4TYpPjOcm2gJr7Qjjg-1; Wed,
- 30 Apr 2025 05:25:14 -0400
-X-MC-Unique: Z5mF4TYpPjOcm2gJr7Qjjg-1
-X-Mimecast-MFC-AGG-ID: Z5mF4TYpPjOcm2gJr7Qjjg_1746005112
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FAF41800980;
-	Wed, 30 Apr 2025 09:25:11 +0000 (UTC)
-Received: from [10.44.33.50] (unknown [10.44.33.50])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3A7E219560A3;
-	Wed, 30 Apr 2025 09:25:06 +0000 (UTC)
-Message-ID: <c6a24765-2b9d-4e64-a139-d2c3ddcc7b89@redhat.com>
-Date: Wed, 30 Apr 2025 11:25:04 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fNHWhPow"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=VAVPiUaHOhMsQmm4unIngcxM+UowNmfVEzLvUrtDK6o=; b=fNHWhPowS2BP6NxIKeLPVNmaGP
+	kSeThhyowLUFeenbgk5mMmyhdKRU36jwAMj6OHWVtEvitS5VJCTpcVm2mLuI6kVjYxO5NusXqsDGM
+	aghdecZvFL+dUTUktvkYo4U714PqlLGkKl3IBRcmWGVxJtEOk4c7AEWcvmKGmeu2//lBg7rSKpofk
+	ZuLbtIF9f1KzAfD8t9DDQKpfRFW8vXlfjaTwXb71sqzwvR5Cc0Ljlp3g7VPxaPcp4z8OI31+mrCQ3
+	wIb+hNsg/fLF67l7N8L/YEV12s/dGJkzpCCymt9bjmE0zG15imy1zMp5B+DR+QWFBI1G4SyncODgi
+	K8cW93wA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uA3gr-0000000Dl1E-2qXN;
+	Wed, 30 Apr 2025 09:25:18 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F1155300642; Wed, 30 Apr 2025 11:25:16 +0200 (CEST)
+Date: Wed, 30 Apr 2025 11:25:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Jean-Baptiste Roquefere <jb.roquefere@ateme.com>,
+	"mingo@kernel.org" <mingo@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
+	Swapnil Sapkal <swapnil.sapkal@amd.com>,
+	Valentin Schneider <vschneid@redhat.com>,
+	"regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+	"stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: IPC drop down on AMD epyc 7702P
+Message-ID: <20250430092516.GJ4439@noisy.programming.kicks-ass.net>
+References: <AA29CA6A-EC92-4B45-85F5-A9DE760F0A92@ateme.com>
+ <4c0f13ab-c9cd-42c4-84bd-244365b450e2@amd.com>
+ <996ca8cb-3ac8-4f1b-93f1-415f43922d7a@ateme.com>
+ <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v5 4/8] mfd: zl3073x: Add support for devlink
- device info
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- Lee Jones <lee@kernel.org>, Kees Cook <kees@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Andrew Morton
- <akpm@linux-foundation.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-hardening@vger.kernel.org
-References: <20250425170935.740102-1-ivecera@redhat.com>
- <20250425170935.740102-5-ivecera@redhat.com>
- <20250429115933.53a1914c@kernel.org>
-Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250429115933.53a1914c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3daac950-3656-4ec4-bbee-7a3bbad6d631@amd.com>
 
-
-
-On 29. 04. 25 8:59 odp., Jakub Kicinski wrote:
-> On Fri, 25 Apr 2025 19:09:31 +0200 Ivan Vecera wrote:
->> +static int zl3073x_devlink_info_get(struct devlink *devlink,
->> +				    struct devlink_info_req *req,
->> +				    struct netlink_ext_ack *extack)
->> +{
->> +	struct zl3073x_dev *zldev = devlink_priv(devlink);
->> +	u16 id, revision, fw_ver;
->> +	char buf[16];
->> +	u32 cfg_ver;
->> +	int rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_ID, &id);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%X", id);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_ID,
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_REVISION, &revision);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%X", revision);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_ASIC_REV,
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u16(zldev, ZL_REG_FW_VER, &fw_ver);
->> +	if (rc)
->> +		return rc;
->> +
->> +	snprintf(buf, sizeof(buf), "%u", fw_ver);
->> +	rc = devlink_info_version_fixed_put(req,
->> +					    DEVLINK_INFO_VERSION_GENERIC_FW,
+On Wed, Apr 30, 2025 at 02:43:00PM +0530, K Prateek Nayak wrote:
+> (+ more scheduler folks)
 > 
-> Are you sure FW version is fixed? Fixed is for unchangeable
-> properties like ASIC revision or serial numbers.
-
-Hmm, should be running. Thanks for pointing out.
-
->> +					    buf);
->> +	if (rc)
->> +		return rc;
->> +
->> +	rc = zl3073x_read_u32(zldev, ZL_REG_CUSTOM_CONFIG_VER, &cfg_ver);
->> +	if (rc)
->> +		return rc;
->> +
->> +	/* No custom config version */
->> +	if (cfg_ver == U32_MAX)
->> +		return 0;
->> +
->> +	snprintf(buf, sizeof(buf), "%lu.%lu.%lu.%lu",
->> +		 FIELD_GET(GENMASK(31, 24), cfg_ver),
->> +		 FIELD_GET(GENMASK(23, 16), cfg_ver),
->> +		 FIELD_GET(GENMASK(15, 8), cfg_ver),
->> +		 FIELD_GET(GENMASK(7, 0), cfg_ver));
->> +
->> +	return devlink_info_version_running_put(req, "cfg.custom_ver", buf);
+> tl;dr
 > 
-> You need to document the custom versions and properties in a driver
-> specific file under Documentation/networking/device_drivers/
+> JB has a workload that hates aggressive migration on the 2nd Generation
+> EPYC platform that has a small LLC domain (4C/8T) and very noticeable
+> C2C latency.
 
-Will add.
+Seems like the kind of chip the cache aware scheduling crud should be
+good for. Of course, it's still early days on that, so it might not be
+in good enough shape to help yet.
 
-Thanks for the review, Jakub.
+But long term, that should definitely be the goal, rather than finding
+ways to make relax_domain hacks available again.
 
-Ivan
 
