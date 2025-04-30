@@ -1,195 +1,185 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2057.outbound.protection.outlook.com [40.107.236.57])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52BCC2111;
-	Wed, 30 Apr 2025 02:46:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.57
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745981173; cv=fail; b=o4tTCjzDJe+YYVnIMAVUCTyFHlFsA9wbzJA7lEuy8sv3qal8+6czSaxL6dM5tGWdq0ADKhZkBAuXuMVy/PaJajZFMlDSirxukzWIAFQh+of5vV/2ppdLG6pSEMTr2yEgPmp6tCu0uBV43BBjZc7gnA9c+cIRMIJpv7KsMpGy4/Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745981173; c=relaxed/simple;
-	bh=TOuZJmorADNCsBsaJCrymLM8Y7/IRZkErt4EDao8ARU=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=NGgQpGKG5ubs0KZtzddQBUPtbP4i7ZjMbpajLoCYb4QbVj0kpC3IKH90Y+A0YWZa3G0GRJe/pStHXJHQ96a8ZhpuxD8FAsgsAVdBQdtJTh3lnMnDEQX4u7+uCmvnHNkRBSv09ZC/g0lJ1ZJ9KnU1+LwRgJmzrnYvMOY1h/rljLY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=dfchNXK6; arc=fail smtp.client-ip=40.107.236.57
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9222111;
+	Wed, 30 Apr 2025 02:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1745981181; cv=none; b=sjnDZX8icW86Tw4+Cv9v2/9QTVmeCKndGf4URaGBtUWJwdoC6Y33EXY1ow/uy+Dcm1GNqNgULNKhCVX5xv170J2nysD29TX19m1JAGjQyJYitn2ZAUUImMJjrKTJWvapDMzqLqXzxhn5KcytqjIooKYIptfNYbLaKXxIrXuOiek=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1745981181; c=relaxed/simple;
+	bh=tZj+fajqPvkq+73cH8tXJlYZvR+o5VeoP5VRKaX/kYA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MB+512tmcvm1Sx1W+CWuE5GUFMU/LwbY3TbX6nOPz0eO3GBQA6ml6JIVeSn6jameT+FQSRL6F2tg1Edh7kAzJdQRa8/uOb2LPcfz8P9krYe2l9VxkakdPbuu0KhPVBoI4YyBWxpWyroMLTSL+fjXgG7SLNQVarTcYfkDGXPyUWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEePr3LU; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="dfchNXK6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=o4qhnz4/GR3RCamVlJtFHpdG7MYq8KAVSYiN0yeXgSOnIutTnB8xiiezwB1A/LWkNUJaUQ7Kmy9pzvzl3TcVfiKpvKSxPU3cfIKe8tptnVBYDuUc2JvrEn/HElOpYtXN6XihoJhqml0s3ehdKIQlWit+JAQ9ciWAfOp+W46mHb1ZdEf4P18PaNrSWt6xQNWJKPnl6VoFVtKjMOYKMLz+mmGY2YqIaJrKoQ4ygD6Rb08L/DNyya+RxZfYlqpqKCVDs5PrQVwSAAX5IfJbiUSOfyg9p2cgcIngPNdXsFcXYvTlu53mTSbxOqNd27IC57e3HA8Bkl1STkjv15RfoTMoyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TOuZJmorADNCsBsaJCrymLM8Y7/IRZkErt4EDao8ARU=;
- b=UFb21uH265zOvMqBtu6HgeRGiKhmsIoX7cgFT8dRmcGhbZpX+kjc54q41WQ1tfqgupyWP1cy0daUuzLL4XxDRMHW/1RbIsNNc7AgqaMvhLTnkhv7zSIo8gUUrkVuBs6Vuz5mrFQAyEQ9fTdQR7HCqjkuBlISA9aYszWQl//b3/R2EfE5/pBJgTAUUO6eVz2Il8DYt6lDKgYGwKY88WeLN8xvAid8Kn+QlJGwuE9y5UWHlIBePrbsekv6ICdrMhMA3NqbRLB8TZPAkpM/K9+c/akrclrVnaLUKgeM8vbHJS2/e/eWgvU5L8GJm861HNwrTrZDQlQ6Z6ZRS+GQwURuWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TOuZJmorADNCsBsaJCrymLM8Y7/IRZkErt4EDao8ARU=;
- b=dfchNXK6Bi4pSQ+T99MIBMS3rh2Ao8o91szM2qgjV7qCdw71bJTdQmzYllgNN4sodZ3xLcL0AFytTkXJqB4ofjZU7mtrOwhyYhYMKUBGEIR4oleygUV8sZIary2XLX92x0sWaHjBGVunnlN/eEvxLm7HnDtF+eCUOLyzOVJXN8lIqHZtBPvadG4QgCLZ4G7hNq5tbQTayKD2MUDG5ctT8tkVrcBYew3L/dbXoHKDa+eqI6WRUdIGRJ2Bwts/2mmoaYM10fdSGYCeM0pb6EpxmfOj/XWlCmASsSyOgSLdnrC2PgDjo5w0S1ttxrB8MH/Mr2gB013w0ZuyqXvmpZikBw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by IA1PR12MB7616.namprd12.prod.outlook.com (2603:10b6:208:427::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 02:46:07 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.012; Wed, 30 Apr 2025
- 02:46:07 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 30 Apr 2025 11:46:04 +0900
-Message-Id: <D9JMO1USPIAB.3TBU959NO7P9M@nvidia.com>
-Cc: <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 0/3] Devres optimization with bound devices
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
- <zhiw@nvidia.com>, <cjia@nvidia.com>, <jhubbard@nvidia.com>,
- <bskeggs@nvidia.com>, <acurrid@nvidia.com>, <joelagnelf@nvidia.com>,
- <ttabi@nvidia.com>, <ojeda@kernel.org>, <alex.gaynor@gmail.com>,
- <boqun.feng@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
- <benno.lossin@proton.me>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
- <tmgross@umich.edu>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250428140137.468709-1-dakr@kernel.org>
-In-Reply-To: <20250428140137.468709-1-dakr@kernel.org>
-X-ClientProxiedBy: TYCPR01CA0063.jpnprd01.prod.outlook.com
- (2603:1096:405:2::27) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEePr3LU"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso4613188f8f.1;
+        Tue, 29 Apr 2025 19:46:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1745981178; x=1746585978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IRoA1hn+ILrnaL3QGiypq6EmGKcTVkU7YdYU9NCLYKU=;
+        b=mEePr3LU84EtC9YaEi9hNKvUJIOZmFmn/Eo0/UTHWk0urD0ylMheKy1GZ/sStSeRil
+         Wr/Ze2udmPdC2hkMCXgDzIhMbmbaAXYZZsMNy7w8wy+OBBeaxWt1Cr84DBR8ezusVBuU
+         ZLFCNo/1oc/1in46B0jp7vAJILjNTltmXIUu+GCq0ra2fBNb2V/uqddrpZlskeMhuGaL
+         v4FF/dJat/j3W5V3/kYT+cqBZrYyQGZA9tMAWKZmX3BNEBhfS6+kC87bcGLlPDGoemNB
+         AymalL4OzLyFD7OUnLHESJWQpxgcUW1+uP5wJY1uVGRIibjmj8AOFGr5rXJdZtHmx6NX
+         m7PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745981178; x=1746585978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IRoA1hn+ILrnaL3QGiypq6EmGKcTVkU7YdYU9NCLYKU=;
+        b=QIC0HTmi6Oek2SC8mdBKTZhgNvxHTX+myGHy1SAQyukzCYyJktwiFFKdSAyHzsDkac
+         NrnhrMJ5U17KybTaDzN/LQYQd4an2UPEhWnIuB7oeywWlVSfyI+K7AI/eEzKPtV4gi0s
+         yhplMj/HNIAxJYMijcgCVa9KXljez4W5CZ4zve4DY0ZAQgPRUjzG0Fwn06wQaR17C96M
+         KG7DBZAG6EGF4HtbjHaSMZg1REEpG/6L65BY2TQ16CEBepGlL84JHFi0DsxQchN94qR6
+         XTJ0SogE/KxDDdOQ9eAOrvLQ0ULNhvxaKKlcfYaqJ5PNjlH84qA/JLY6NQdoMhTWGcyo
+         HgBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9A7LrTxqmLjDqG6bV6iYt/uj3ILLdRLDnsPO50ICpmHUxY3LFPauW+vuQiaTbHxFh+9zjeKNeRSdOZG79@vger.kernel.org, AJvYcCUAMHfQJuGEZB7mxYOdu6Vadi0XK/B1eo+OjDOrf0V8ESkeBjLWSiZoMZbDwALLa3lpCXAk1JEMUnkvNgbbDzEt@vger.kernel.org, AJvYcCUZlK77ziAXzRrY+i/GbiNLWfsIpuagwpFO7xLLhz6Oy2ZGUvaiRHK+Bqghj6LpskFWE6A=@vger.kernel.org, AJvYcCXF5oPIrrV+N3qT/HwrL9y5mnLWFggv+1jh3YhQqllsaSSklTHfkt9M7mZvnU+pgALsaQ4lpKNvz29q+555ueDmK5lq@vger.kernel.org, AJvYcCXTJWr0BEnSX28DlijCVyDsy2dib4Xoen3+inZX5Vclb8NhjNHlAx7o7M/Txk9C7+0M2PvNSC9x@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuIYUPW2sOZtRPKmGs3eB/L0EIVbQrEp6mDK/+4UGIatlqk+cm
+	of36ArkLnoQ/Ly8evwfjrcGBu8qyGE7Ns1oxSjo7Em57Wavq4QNmWM7De2v5D5RPDSruJMIkB4q
+	tLHizz1pDorQ3993cvB5Fx14f83E=
+X-Gm-Gg: ASbGnctKC3FZYpKCl81deylRNJQp/JcqBivd8fVsawLBmGqUGdEEAe9CxJPnBOnHgFG
+	skQBBStPbEkPCZLHEuuEpTbzs2rONk7QTS2WxGlj1291TD3z3lJ2w6n/r5aLbJYvAgd2fFD6vh1
+	PwofZyxQMsEBq0MYyTZESJWCfT14NjOVPt0DlNUw==
+X-Google-Smtp-Source: AGHT+IEseH2I0pUjM+B8W45c5JTdHLZ05e9zXlXFhwq6KjuhDIGYFugjVOnMpqk2DxAdfmZQOfc3MHYNAs8vZ5GnN6A=
+X-Received: by 2002:a5d:64e5:0:b0:391:4bfd:6d5 with SMTP id
+ ffacd0b85a97d-3a08ff5558emr512089f8f.52.1745981177742; Tue, 29 Apr 2025
+ 19:46:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA1PR12MB7616:EE_
-X-MS-Office365-Filtering-Correlation-Id: 04bf9ca3-b95b-4044-6866-08dd8791281d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|10070799003|376014|7416014|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZkY3c1psRllHSDNrTUtmODU2K2hDU0c3bVZpWDNQb3Q0Q3plR2o1akhidEtD?=
- =?utf-8?B?L0ptbExLd05qdkRzeWc5VFFrTCt3Vmg0TTlRZS9SS1paNW1CakwvOTlOMXVK?=
- =?utf-8?B?eG02RzhMeG9GaUs0aUpMUzYzbUZtYnpadDdCZmRnTnQ0OGN3ODVETkJ0bUtv?=
- =?utf-8?B?Z3lwRDRVVzYwY01JSzBSVkhGZUpMZC9wUjYyMGVDdWZsSW9pODYrMWJKY1F0?=
- =?utf-8?B?VTFLNTJhWGZqZ1d5RmMxRFdNdkFOaHkxRjU5WHVqa0NZNTVvTDJmRi9NYnBE?=
- =?utf-8?B?bE95eEo0d21VVkNXM2orV1NUYVBMcmlPbzR2ZUF6akY3VWVMbkhPVXpKaU1B?=
- =?utf-8?B?SmVMb3NjQlRhVU5KY2h6QXhSdXRRcldZTVE3QXFzMkxOZnlyMW1zYVZKbXhl?=
- =?utf-8?B?bjJPN0VERjRWc05QNEQ1SHZ4NlUrbjJ1dVYxQU5PUUFDYXkrbXBwanh3RlR2?=
- =?utf-8?B?U3crVkZYWERWRnhNdm9DV0Y1REVXd0V0WGxsNUR5cFBjTnF4RWphRFFISnFx?=
- =?utf-8?B?TUt3OXQ2bXFGQWswcUlNbUo3Q2c4aUpmb01nQVcrUVdBeis2b3NlTGFPUURx?=
- =?utf-8?B?MlA5RGwvZUtha2VzVm55cjBxWVJlNHplK2Uxc2lnOUNnK1RheTF3TllObFd3?=
- =?utf-8?B?UUdneTBEZURFYkdianU2WFM4R1puSkdPeU9NczMvL0N0c1BWNDFjUWxudStk?=
- =?utf-8?B?M0NyTzlhTGxQR0QrQ3BkMmxEUmdvK1gzRWdTeXpPRlVhUEJRMktBTVFUeWhv?=
- =?utf-8?B?aFE5VmtiK3RITE84Vjl4MkgvVHd6OE1BcVVQblV2TW01cit0b1dSSFNHL0tt?=
- =?utf-8?B?VWcySXdDeit5NnVMczdPTzVaL2lRaDdsRDRicTVQbU02S2VSV3BiQ1NMYXdZ?=
- =?utf-8?B?TUk3YlhPVmFTUzhUbWJTeXUxZkR6cmkrOHdNeDVGcnZZclNLVzYxNUlEYmwx?=
- =?utf-8?B?eExJUnRxd1Mramt2dDEzODliRnRlS3dvL3VmOXp4YTlEWHgrWENNa0NCL2ZC?=
- =?utf-8?B?Uk9xS3lCN3FrV0Zmd1BOaEprTnlzY2ZEYW16L2pQQm1tM3JwL1E3dGVUUExa?=
- =?utf-8?B?c2JwK0lpUUN3TU9UUXd3eVNIdUN5cmVnNW5oMXBUeXZCUEJLR2YrSVpFT2Zy?=
- =?utf-8?B?Yjg3Q3h3QnhaVEoySVc2YVdWNld4a1JSVUFzVXdUUWVLblkvenZnK0xkZmJ4?=
- =?utf-8?B?QWFldmpNN25BQ2VYZUJRdDFRbUp3V1p4cjV2NzU5T1JEbkY1UlFsbnhJSkZZ?=
- =?utf-8?B?djk1cGNFWlhlWXJZbW42YSt0TWdFR1N1MFBoQWFHRnFFZ2hPbVRKbnlDNDhm?=
- =?utf-8?B?Mzk4Mk4vZlc4ZXRGUU9UcWF1TysxeFNtS001alNPbWNtQXZGVklKNXA2V2ZC?=
- =?utf-8?B?Nk44TUF2bFlEOXZjeTd1VldibjNURllOeUg5ME1jVUpaMDZUb2NTTitZTkVs?=
- =?utf-8?B?cDlUUzlZcHpnOXJQUDJPaHFjZjZNRDBsOFV1TVh5dnRRZVU2ZFF0RDc1K0JE?=
- =?utf-8?B?eEZDWGFFV0t4MzhMdHFDcnAxa2JpNFNUbmphdUlrMlUyNW5JTU50bFFuREZH?=
- =?utf-8?B?NXlFTmh0bU9zR3pnR3IrUVNReElTdG9oV0pmQTRCRldqZFA1UXF5RC9KdUI1?=
- =?utf-8?B?UWlxVXdWUGNUVEFiQTRYbDNtZktoRXNzSThzYW1rYlM4T2pqUTI3VVpBQTN4?=
- =?utf-8?B?MUJDYXZCUXRRZE9CcFMxbU95QnpSQ2dlSTBKQzZCc00xRkErVWhuUTErNGJR?=
- =?utf-8?B?cmk1QjNJbkcxVWM0MmFTL3J4d1dUaUU1dDJwdFA0Q2xrYXI3d3ZwOS9XN2tL?=
- =?utf-8?B?d2g0bEltWnBwZ2ZvREkxbnBKRzVwTURuaXJWcGNQUmdDZm1Oa0FPMzNGOWsz?=
- =?utf-8?B?cllpOEFmcEdKZU5nNG9uSlVYakFSdFJLN0oxZ3hJTHNUU2JjTGduYVNCUVBC?=
- =?utf-8?B?NStaQWIycUdIQmI5RExQbXlkNVFPYTRJV3Y0b3l2aUxvVThRZ0RUQU9hakp0?=
- =?utf-8?B?S250eWkwbThnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(376014)(7416014)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a1U5b0hraDZaWERGMnFEVWVnRnBWbmhRa0paL2htcVlwWGlhaVN4M2xqUTdL?=
- =?utf-8?B?VWFUV0xLQXRYUG9SdWdBVEFrYTBTclVTRVFTcXEwY2MvZTYxZjFkZXEyR2dV?=
- =?utf-8?B?L3Zqc0VIMVQ4QkZaWW9YdDBLMmtNd2NiaDRFaVFpNzFYOHFkMGRuREZjMnEw?=
- =?utf-8?B?NCtoMU1zTkJ4bkVFeG10T2l4MHViV3Fpam80Z0JtL0JPc2tsaGJuZVlVZnNm?=
- =?utf-8?B?dFZLb1pJTTBXaEtaeEp3ZjdORnIrWlcra2VwQi9OWENzRklzZjRUY0NGTThD?=
- =?utf-8?B?Q1FkbHk3MmFYMUFxRFhCRjRVQUJCaG8wOGVia3FBdGlSdWtIN0dSbFJSNmlC?=
- =?utf-8?B?MTRCUm1QaDlVd0FtVFA2OEZMdHVRZTF4bzNNWlhRVWg3c1NpMzdNSm5NYzh4?=
- =?utf-8?B?ekdNaXNwYkNPR1JBSkFFUm05Um51a2IrZmxNb1d1V2RYMml6K0Q2R1pCM0c0?=
- =?utf-8?B?QXRES0RmUk1wMkEreXlxMmRCeTl2VmdNcEhLSUxLZXBmbDM3b0MyUnFvenhS?=
- =?utf-8?B?K0JRMXhoRGx3TnF3MGhnMURDSXo4a1g1bkU1Um5YNkdROUF1R1dDRTB3eXov?=
- =?utf-8?B?SHYwNG9sSkQzY1JRdXFyOUptbGxTZkUzM1FEdWx3aTFxN0FZYVJOSEVoSU42?=
- =?utf-8?B?UmNWb1VuVy8xYVpJYVQ3V3hvRGhhZWJuKzd3RHBBdlZHV0ZpRm9Ja0RHNTJp?=
- =?utf-8?B?YWoxS0tOdFN1eHRNS3Z5Y3Rid1RISjhxWDJGVkZSRnh1Rm50ZVF0Z0V1Rklt?=
- =?utf-8?B?RXhlM2xBcVRVOTVPMmxCcGdtcHpOR3FFeVVidGdXQ1R2aXBiVG4wa3MwcHFX?=
- =?utf-8?B?anBwWXlHelhuMEJGSThJUjlEbGZnVHVRZUhBbnN0K3hBenhIZTZickIrbXBY?=
- =?utf-8?B?b2ZJRUJNUGxYU0NPeXdmN0tKTkhkWHloZS83TFZhajhwQ2J3ck5CWXEwN1BD?=
- =?utf-8?B?MnYzZVZaTWdIcFVmMnlhUENUY0NZRmNxMTM0Y1IvSEhWVG5Vc21ucUJMeEpk?=
- =?utf-8?B?bEFQTlhoTkttNnNSaTJTeS9BQWhVODhPajhBS0hkOWN6UWo2Q1l0T0d6dXF1?=
- =?utf-8?B?b1lsbEo5elJhL3E4NWZWRktWRzBqcVA4bzEwWmFTNC9aOU9sUWMzcGpaNklW?=
- =?utf-8?B?NldXZkoxRnBpNnkvbTFNbEpSK1cyUG8wemhWL0k2NU9yZ3VRNVlJWmNxS084?=
- =?utf-8?B?M1pmSFRxMG9vL09XN0JpY1ZwYk1jcC8rWEtpYjZWT1hPQVZPRmdKRm9NTlRJ?=
- =?utf-8?B?Nmw0bDJXcHNEVkovbW5iZnpIcmxCUzc2ZGp2Wjc1LzU4TFdWOERjYUs3NWFS?=
- =?utf-8?B?VUNkKzNKRkc3ZFgzYWhDL25VdSs2cVRMRi9OMzRQcmJTd1ZmMnBhNlZpT2U4?=
- =?utf-8?B?c3lnZDlNeGJMY0t3bDR0RkcyNjlLRzRFclg1QW83TnZNdGVQa1RmUTZlN1VY?=
- =?utf-8?B?SzhqUitHTGg4Q1lrbTExQUR3UWYzTnQzd2U2S3llK2NnN3UwQ1hRWFBCekYw?=
- =?utf-8?B?VFdVekxhRkVvMkZiN3pSd3FyTituTzhNemtLWDcxM0xuTXNxdTdlYytWZlRS?=
- =?utf-8?B?NjIzRmg1SG9MK3lScWpyK0N5N1hIZTdCTnI5ZndmbFlEZGVpYkRzMjhsT2FD?=
- =?utf-8?B?SStpd3owdWFjZGVRL3Y4VDhjY21Fei9lTloyS2FzVDVDMlJGMEFJNkYwZzRP?=
- =?utf-8?B?Ump4S0tUdkJxWFQwWncvcEVYQmxaSDVkeGg2RUJkVnFUZnVXRWtBSWg5ZVBs?=
- =?utf-8?B?RXJTU2pDRDZHWGs0RmFoQmhhT09USEdDS1J5bGZPUTR6ME9xbkw1dlFkVDhF?=
- =?utf-8?B?bzRBZHZ4UkZscFVSY0dwL21nRkZpM1NIT2p6SElBUk9hNDg2U2dZMm1IRDZB?=
- =?utf-8?B?TWtxN3Q3eGErRENtYmFEME5QNml3VVYva1ZuNGUyaEoxeDJSL0FBSVZBbUlu?=
- =?utf-8?B?ZmVOUUgvbzd1L2cvbmtvVVJmNmVpYk9HSi92VVloMkpXbjhLdWw3ampUVk8r?=
- =?utf-8?B?dXBSc3FxM2VPUDBEcGE3ZVpZNjh0OTY3eWNEM3NFdEVPNUhINVUyVVZ1WGVa?=
- =?utf-8?B?QkRMVktTSHR4L3NtY1J0OEZSR0JJWDFMaU1SbmtzSGU0amRhejFlT1ZGNTZ0?=
- =?utf-8?B?emRMaGhzcitIZkhVaXhZT05jUXpBYW8zT1ZGUytzUWtPTnUzL0djY2ZOcnpv?=
- =?utf-8?Q?I5NXt0EnIdrK3DXovh/yr3ffWY3dAoV/QBVWmrKYVAlR?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04bf9ca3-b95b-4044-6866-08dd8791281d
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 02:46:07.3554
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bhsId6DQg81o0zJpi0IvIwla9gH7EEG8Dx7NazE14P/lyNpeDhuXF8HBBOEjMnObT3/qAoIy13TGjub+ke141w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7616
+References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-2-mannkafai@gmail.com>
+In-Reply-To: <20250426160027.177173-2-mannkafai@gmail.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 29 Apr 2025 19:46:05 -0700
+X-Gm-Features: ATxdqUFMquDKYdhGCyZiHIRKlu07tHBastoNqC0uT60dUlJw9_rSYO-AjZ2fBT4
+Message-ID: <CAADnVQ+DF18nKEf9i1RKEQN+ybH+duu7U-91YZDaa_PiqUx17g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 1/4] bpf: Allow get_func_[arg|arg_cnt] helpers in
+ raw tracepoint programs
+To: KaFai Wan <mannkafai@gmail.com>
+Cc: Song Liu <song@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, Eduard <eddyz87@gmail.com>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Matt Bobrowski <mattbobrowski@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+	bpf <bpf@vger.kernel.org>, 
+	linux-trace-kernel <linux-trace-kernel@vger.kernel.org>, 
+	Network Development <netdev@vger.kernel.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Leon Hwang <leon.hwang@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon Apr 28, 2025 at 11:00 PM JST, Danilo Krummrich wrote:
-> This patch series implements a direct accessor for the data stored within
-> a Devres container for cases where we can prove that we own a reference
-> to a Device<Bound> (i.e. a bound device) of the same device that was used
-> to create the corresponding Devres container.
+On Sat, Apr 26, 2025 at 9:00=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
+te:
 >
-> Usually, when accessing the data stored within a Devres container, it is
-> not clear whether the data has been revoked already due to the device
-> being unbound and, hence, we have to try whether the access is possible
-> and subsequently keep holding the RCU read lock for the duration of the
-> access.
+> Adding support to use get_func_[arg|arg_cnt] helpers in raw_tp/tp_btf
+> programs.
 >
-> However, when we can prove that we hold a reference to Device<Bound>
-> matching the device the Devres container has been created with, we can
-> guarantee that the device is not unbound for the duration of the
-> lifetime of the Device<Bound> reference and, hence, it is not possible
-> for the data within the Devres container to be revoked.
+> We can use get_func_[arg|ret|arg_cnt] helpers in fentry/fexit/fmod_ret
+> programs currently. If we try to use get_func_[arg|arg_cnt] helpers in
+> raw_tp/tp_btf programs, verifier will fail to load the program with:
 >
-> Therefore, in this case, we can bypass the atomic check and the RCU read
-> lock, which is a great optimization and simplification for drivers.
+> ; __u64 cnt =3D bpf_get_func_arg_cnt(ctx);
+> 3: (85) call bpf_get_func_arg_cnt#185
+> unknown func bpf_get_func_arg_cnt#185
+>
+> Adding get_func_[arg|arg_cnt] helpers in raw_tp_prog_func_proto and
+> tracing_prog_func_proto for raw tracepoint.
+>
+> Adding 1 arg on ctx of raw tracepoint program and make it stores number o=
+f
+> arguments on ctx-8, so it's easy to verify argument index and find
+> argument's position.
+>
+> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+> ---
+>  kernel/trace/bpf_trace.c | 17 ++++++++++++++---
+>  net/bpf/test_run.c       | 13 +++++--------
+>  2 files changed, 19 insertions(+), 11 deletions(-)
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 52c432a44aeb..eb4c56013493 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1892,6 +1892,10 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, c=
+onst struct bpf_prog *prog)
+>                 return &bpf_get_stackid_proto_raw_tp;
+>         case BPF_FUNC_get_stack:
+>                 return &bpf_get_stack_proto_raw_tp;
+> +       case BPF_FUNC_get_func_arg:
+> +               return &bpf_get_func_arg_proto;
+> +       case BPF_FUNC_get_func_arg_cnt:
+> +               return &bpf_get_func_arg_cnt_proto;
+>         case BPF_FUNC_get_attach_cookie:
+>                 return &bpf_get_attach_cookie_proto_tracing;
+>         default:
+> @@ -1950,10 +1954,16 @@ tracing_prog_func_proto(enum bpf_func_id func_id,=
+ const struct bpf_prog *prog)
+>         case BPF_FUNC_d_path:
+>                 return &bpf_d_path_proto;
+>         case BPF_FUNC_get_func_arg:
+> +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> +                       return &bpf_get_func_arg_proto;
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_=
+proto : NULL;
+>         case BPF_FUNC_get_func_ret:
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_ret_=
+proto : NULL;
+>         case BPF_FUNC_get_func_arg_cnt:
+> +               if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> +                   prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> +                       return &bpf_get_func_arg_cnt_proto;
+>                 return bpf_prog_has_trampoline(prog) ? &bpf_get_func_arg_=
+cnt_proto : NULL;
+>         case BPF_FUNC_get_attach_cookie:
+>                 if (prog->type =3D=3D BPF_PROG_TYPE_TRACING &&
+> @@ -2312,7 +2322,7 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link, =
+u64 *args)
+>  #define REPEAT(X, FN, DL, ...)         REPEAT_##X(FN, DL, __VA_ARGS__)
+>
+>  #define SARG(X)                u64 arg##X
+> -#define COPY(X)                args[X] =3D arg##X
+> +#define COPY(X)                args[X + 1] =3D arg##X
+>
+>  #define __DL_COM       (,)
+>  #define __DL_SEM       (;)
+> @@ -2323,9 +2333,10 @@ void __bpf_trace_run(struct bpf_raw_tp_link *link,=
+ u64 *args)
+>         void bpf_trace_run##x(struct bpf_raw_tp_link *link,             \
+>                               REPEAT(x, SARG, __DL_COM, __SEQ_0_11))    \
+>         {                                                               \
+> -               u64 args[x];                                            \
+> +               u64 args[x + 1];                                        \
+> +               args[0] =3D x;                                           =
+ \
+>                 REPEAT(x, COPY, __DL_SEM, __SEQ_0_11);                  \
+> -               __bpf_trace_run(link, args);                            \
+> +               __bpf_trace_run(link, args + 1);                        \
 
-Thanks, this removes one of my pain points with the way revocable
-resources were accessed and will allow to write drivers in a much more
-natural way.
+This is neat, but what is this for?
+The program that attaches to a particular raw_tp knows what it is
+attaching to and how many arguments are there,
+so bpf_get_func_arg_cnt() is a 5th wheel.
 
-FWIW, the series
+If the reason is "for completeness" then it's not a good reason
+to penalize performance. Though it's just an extra 8 byte of stack
+and a single store of a constant.
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+pw-bot: cr
