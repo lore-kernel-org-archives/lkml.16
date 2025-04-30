@@ -1,197 +1,80 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgau1.qq.com (smtpbgau1.qq.com [54.206.16.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D64235043
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8C21325D;
+	Wed, 30 Apr 2025 09:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.206.16.166
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006793; cv=none; b=EeLg1sQArleYIYmyLEio8ZHR7CjyNXcK2s4/fUCNTkRSskh6CPod0gxCkWmXeROn+dtnL3eCsT4cN2z2hjJ7+1R20hUFIFfClFKIVJgI0Uvy/X6MAoPWMvj6dhzDblqSMXCI5tDmLCmBMhClXAL8PNBqoAUkJo4ec4ZYJT/sBms=
+	t=1746006811; cv=none; b=ff3RYhQwRXTndE/LTmQtJpS3FMcVpFNMUz78GGJfqTW/xPDOHpRXJRkqh+CkLVqSCg1KVw6LR53DyOvY0cgJP9S0TpfUNDXlbDRkiWpZV8kTq27iyh9Z54SSbr3Q4cyx0fF0Khtp7MxaTJuvABXmKGdXCcKZfuPvl1B9ZST7gGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006793; c=relaxed/simple;
-	bh=fe5blfcHEV6p6DqK9EinGD8sn4r9SggUaqP0hbUf4K8=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=N4WbTapRMtxFdVmMuCwGUU8b0Pg2LTd+EnRw/+dty4u/OI/0Obts4LjR2ggshcJmkuJNTKTgDqSTEN+6zLRmcg95wq+z6lKxzjcozY99oXU5llgQ+q8CsCIdDXvVbJvq6gEvtVuIDAoPJ5R26afnCZlWZbEkaw5n6r8Ef9zra1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SGBFb8N4; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SGBFb8N4"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso5119169f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:53:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746006790; x=1746611590; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NQ33tAShH1B9qY7Mvbeo2mk5ktxHALQMW++e/cV2rKM=;
-        b=SGBFb8N4DRyBNiJrBuRtDEGlgeUBRJfqdeZ7WogzDe6qdqCNggOONmkF6n1CEuvgwv
-         FNExrUISxCbTeS5hEOPyYxBO+lzy3BsMJsKxBTILbtSIqIUgYeJIr4Sx94LnN1RN7YUT
-         8+Y3gUcqaFgdzAIqiCuZquGkXLAiULCUxFEj/gwOrTmJZwgxbyGzsHuJDqGBs9QbtZ84
-         xLa122gGfEoZR5qRI81zlJp9gquDsRMLzdC6JRkhH7Sfb8nxOhEMdw4PNctExyjLrHcw
-         aAlfsGK97MuEiXDPHC+U7uEakTZu0D7c9VPoF1BET813E070Cs7Vypp0nbnJkaYuTJjL
-         Lz0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746006790; x=1746611590;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NQ33tAShH1B9qY7Mvbeo2mk5ktxHALQMW++e/cV2rKM=;
-        b=ld1skg5PbTQ+VHGodYjO0rr0Wl2VVxy/bP63EJKhMMjumq0IJUP7Y3utD3QpOAj/ex
-         O9tnudiw+UmIqmtyZ7s7RY4fzHrHAVqaFAb1dQ3EmTwoAh/VwZYCgzmMe1GhhyWhrnWE
-         htcn3Qfsr8aySuTCxSLJnKc3Jh3Iiz9SJ6YRw2HkPvnEsVVjbJ9EJQEk8IaKkhJ9tSQN
-         ynE7ereiqpsv2mlrnmSoleMK7D3R7YeyAK2xv0VW8cO2sStXZW8M76Wf7x1JEsaJGCN7
-         WGGn0aGgEmMLJeZQG7aPML0XrqW1djEJsfZVIl1YwwEx6Vaf2dwsiwSvx4bx6LMoseeP
-         ZTaA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGwVMLprNEhJRmTYc71Y4GjBXhg3LvJlIaTzhyjKxgNiPYDHcXPdcCw/KITKkJJ7sParGDSmuU9D61TIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpCbpZUaZs804JGgwA67k02tj2hIJyzXfFDEEaB7RMcGMUmSHs
-	T/fsB4kuw8o5JhdqjgQqY8I3+djO56eqzPEs+6kkoQ+lIWXPUoJyaeipOsZdp1Q=
-X-Gm-Gg: ASbGncsfknQQXn7VhZ8UCEHzWtI7awtSl9fCuIWYGTyN7YlEy5q5weCAa+BLxdHsXwZ
-	WHLlWFTzBT7k2laSl9HrtoQAhKDyZyLn2/hJZwZXjUJG7omMs2uFcoa+r8F99SrLA9t6gV/2E/O
-	yNWZzyZh/H4AuEMbyY8vkcH0emAM14Rk0KX89x96tKLN7hVtyWMTgDsDmgGI4P5uukGDRAgN90H
-	JLcQgepgpDGvMOkL0PazvK8zTYE/azG51Ahuh+NOa+NCIRYgn9gieN5zQjMZOxayxFYIg8086hd
-	Q/MOuZav77EGvGweVk7cqT2F4Gd7Rgg2SoO6oXoZ+IwHHI68eYKC07BmF1OzMX6N27WSKm6skL0
-	jnxORjkQeUVL9FuQlyw==
-X-Google-Smtp-Source: AGHT+IHmFxBVgaTsAGbGDh4EsUHv+T+0NrbKf322VztbdkbBDNbxxF0eQnDWIUCwiaEeUi/56VbRMA==
-X-Received: by 2002:a5d:59af:0:b0:39f:76:8bc with SMTP id ffacd0b85a97d-3a08f765397mr2097367f8f.17.1746006789750;
-        Wed, 30 Apr 2025 02:53:09 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:b3d6:213c:5c50:7785? ([2a01:e0a:3d9:2080:b3d6:213c:5c50:7785])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073ca4742sm16225841f8f.23.2025.04.30.02.53.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 02:53:09 -0700 (PDT)
-Message-ID: <6ec33d95-ed93-40bb-8ff3-d2e039dcdaa4@linaro.org>
-Date: Wed, 30 Apr 2025 11:53:08 +0200
+	s=arc-20240116; t=1746006811; c=relaxed/simple;
+	bh=JzQpokK6fstc6jMeRyD83tGumvON7WS7NNjqeNY3D98=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PiOHIXUQU1s2qpnkgO3rxnzF8Gbtn5YmlLuUTACFLmYmaND7oK8JEZlpfCTV1sI/SDSQW3w3p7bsiPfJlxO3plEWg0Ur51qd5pv0oEQBAbq1mgkDoP2R+C7eKUsnEEm050TJu6KDjfn4fnpqzPk4sIGWZrFc/o30qpODy+jmeZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn; spf=none smtp.mailfrom=kylinsec.com.cn; arc=none smtp.client-ip=54.206.16.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinsec.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=kylinsec.com.cn
+X-QQ-mid: esmtpsz17t1746006696t61dbbf8b
+X-QQ-Originating-IP: SgdxThapkgx48M+mCvGDLsHXNAQ5atEQrIwqzuEiytg=
+Received: from localhost.localdomain ( [175.9.43.233])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 30 Apr 2025 17:51:34 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 0
+X-BIZMAIL-ID: 11376402698331337444
+From: Zhou Bowen <zhoubowen@kylinsec.com.cn>
+To: Simon Horman <horms@kernel.org>
+Cc: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+	Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH WITHDRAW] amd-xgbe: Add device IDs for Hygon 10Gb ethernet controller
+Date: Wed, 30 Apr 2025 17:49:12 +0800
+Message-Id: <20250430094912.6590-1-zhoubowen@kylinsec.com.cn>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20250416185218.GY395307@horms.kernel.org>
+References: <20250416185218.GY395307@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 2/2] drivers: gpu: drm: panel: Add BOE TD4320
-To: =?UTF-8?B?QmFybmFiw6FzIEN6w6ltw6Fu?= <barnabas.czeman@mainlining.org>,
- Jessica Zhang <quic_jesszhan@quicinc.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org
-References: <20250429-lavender-panel-v2-0-fb467ff81bac@mainlining.org>
- <20250429-lavender-panel-v2-2-fb467ff81bac@mainlining.org>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250429-lavender-panel-v2-2-fb467ff81bac@mainlining.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: esmtpsz:kylinsec.com.cn:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MX+1SEN3H+wAU6OWG1ICS4n58oY0tX6NTu///qtjaJUJiwo52GIvs6DF
+	9/dk+ZURmKVZuGMV87PiB4lP6ZKY9wFG66C6s1hPNg+DfwGKUM1KcJzNs7zZaRVRh1JQjxi
+	yql/D04/+IacHSQB5dwSokfQ3yicOSiVcXrDOOc0MinAjufzULnxzV/Q8R6ndfofuQfgakO
+	TU1FAt1vARXmtz6ebtVhYjq8Lk8xkXalElWiMm62bidzkEoMt4hj3Pyy/wlsGbtI1E+LvRe
+	VpK0KG90czmx+zHE0s6xWblEuxbJ+Q6ZSAXesVpYFuOHS5JxGjQVFVkRf6jG8//Za/hs8NV
+	t+rC/+n2zh/ASxu4dC/BW+DhPPrZVLwf2mvd1nN2b8Ms162Xn5UjFDgrpmWPpu6RFE4rG9p
+	PVCaDAkNnQZQMr78kGjHcc87O5XGkFu8/uYy1ttaPWCFxAQLiXX/h2FMpH2PUwa2zMl66Dv
+	mFObEdwGam9jjeAU+yJkgTDTfF4UghG4MPCMaCaxGokY/jmLOJ23tyBy/vx8KEYcW9ORMc2
+	hhJ19UiARN3pGW3q7zF+jbnP+HyM9Dt2Hj9c2Ru7Afn+0VuGKKWKllehRzwjT57yiho9H5I
+	gKeB8a9BXdjQasCkDAFm086v8JCLRw8oKD3OtWp7oyRt+iQa5xLwa4iTFY8UDFB7+VzV9DJ
+	3XXsgwzzMVpQS2HREbwlDDaouUc90PYOgSoxLcCjRomDnr4bvG0BwcEJt/iQBfAGB/UjlNK
+	5JpA81LLQBuy/pvXMkjc8jBPLrjeKLrLo3SvxzZ+h3hPsOpCmIL+5wQnXzX3py+pBxyq0Rn
+	X+85Ym58hMMNcEweRt7qiAbVtjxmjQFRxmbl5WMfhwp12ZVTiJ40EwNt5BzcITDgWBLYsGq
+	/WNg1eXLc1FDzy543VVhhCMA1XyCjjPODRloFRZpji+SqkywL6suPRNLC7DVMq6gIZZPmx3
+	DVMxgr6U9wJf9dGCByEVd+wIJOwHoF9rOdkT3ntH25ll/c1JWzTV5Wlkb
+X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
+X-QQ-RECHKSPAM: 0
 
-On 29/04/2025 23:33, Barnabás Czémán wrote:
-> Add driver for BOE TD4320 DSI panel, used in Xiaomi Redmi Note 7
-> mobile phone.
-> 
-> Signed-off-by: Barnabás Czémán <barnabas.czeman@mainlining.org>
-> ---
->   drivers/gpu/drm/panel/Kconfig            |   9 ++
->   drivers/gpu/drm/panel/Makefile           |   1 +
->   drivers/gpu/drm/panel/panel-boe-td4320.c | 247 +++++++++++++++++++++++++++++++
->   3 files changed, 257 insertions(+)
+Hi all,
 
-<snip>
+I would like to formally withdraw the following patch due to a possible conflict
+with Hygon product using in the future :
 
-> +
-> +	ctx->dsi = dsi;
-> +	mipi_dsi_set_drvdata(dsi, ctx);
-> +
-> +	dsi->lanes = 4;
-> +	dsi->format = MIPI_DSI_FMT_RGB888;
-> +	dsi->mode_flags = MIPI_DSI_MODE_VIDEO | MIPI_DSI_MODE_VIDEO_BURST |
-> +			  MIPI_DSI_CLOCK_NON_CONTINUOUS;
-> +
-> +	drm_panel_init(&ctx->panel, dev, &boe_td4320_panel_funcs,
-> +		       DRM_MODE_CONNECTOR_DSI);
+Subject: [PATCH] amd-xgbe: Add device IDs for Hygon 10Gb ethernet controller
+Message-ID: <20250415132006.11268-1-zhoubowen@kylinsec.com.cn>
 
-Please switch to devm_drm_panel_alloc()
+Apologies for the confusion and thank you for your understanding.
 
-> +	ctx->panel.prepare_prev_first = true;
-> +
-> +	ret = drm_panel_of_backlight(&ctx->panel);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to get backlight\n");
-> +
-> +	drm_panel_add(&ctx->panel);
-> +
-> +	ret = mipi_dsi_attach(dsi);
-> +	if (ret < 0) {
-> +		drm_panel_remove(&ctx->panel);
-> +		return dev_err_probe(dev, ret, "Failed to attach to DSI host\n");
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void boe_td4320_remove(struct mipi_dsi_device *dsi)
-> +{
-> +	struct boe_td4320 *ctx = mipi_dsi_get_drvdata(dsi);
-> +	int ret;
-> +
-> +	ret = mipi_dsi_detach(dsi);
-> +	if (ret < 0)
-> +		dev_err(&dsi->dev, "Failed to detach from DSI host: %d\n", ret);
-> +
-> +	drm_panel_remove(&ctx->panel);
-> +}
-> +
-> +static const struct of_device_id boe_td4320_of_match[] = {
-> +	{ .compatible = "boe,td4320" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, boe_td4320_of_match);
-> +
-> +static struct mipi_dsi_driver boe_td4320_driver = {
-> +	.probe = boe_td4320_probe,
-> +	.remove = boe_td4320_remove,
-> +	.driver = {
-> +		.name = "panel-boe-td4320",
-> +		.of_match_table = boe_td4320_of_match,
-> +	},
-> +};
-> +module_mipi_dsi_driver(boe_td4320_driver);
-> +
-> +MODULE_AUTHOR("Barnabas Czeman <barnabas.czeman@mainlining.org>");
-> +MODULE_DESCRIPTION("DRM driver for boe td4320 fhdplus video mode dsi panel");
-> +MODULE_LICENSE("GPL");
-> 
-
-Otherwise it looks fine.
-
-Thanks,
-Neil
+---
+Best regards,
+Zhou Bowen
