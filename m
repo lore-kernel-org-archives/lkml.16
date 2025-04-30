@@ -1,116 +1,104 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from 10.mo581.mail-out.ovh.net (10.mo581.mail-out.ovh.net [178.33.250.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B2EEEA8;
-	Thu,  1 May 2025 01:08:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60561211C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.33.250.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746061699; cv=none; b=q+BoPiTizaQ+h04rvzfT8ehQ5naX5b/syAZ1dXdAS5VLqeucq80AzCqhvlx9/ane6mJXJ4sw3wIzqXHJErWtmyPnlDwXfFKNXOnXNkUDTFGMAdkBQ9uEcSgplzmA/bfzucsN6Tdt9LiBZTBEVfak2lxplqxxb2+k7Pt85VGZlWA=
+	t=1746061909; cv=none; b=HDR1DcwyZ8uB638Q+5RJs4F6ryA6mOwifSZsFESAJ90iw5T7pXpTfIwbHLULrCuMmjONVChFW3HIMxCN+9VWBzhgXqex6/neQMCP7sAzsU9KnUhlkMUDKdozU9l03D5yBPKWZyzrpe5oE5/q4Eyuk1Ype4bi34F5NU9BCT7xxyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746061699; c=relaxed/simple;
-	bh=elp5GQjJUxxs6xFp0oVaIfuIwf9JHy3bnbAcxCGwHtQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qtFzh5lYTciO1rqIoIsZ6BkoAM4Fnblocqkre0qCyEHcJ57dvnEvTP+Ns27mTxx2wnopB2y1Xq2K2YBhXDounWwtFZuZjvhjaC3g/xzfEzEWwRy6Is+VK3MlEIG/sNLvafZ9Z2zCN5yOzLmdXD/KU3lTanz2DC0xwirU4uEAKRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ntVgXX02; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746061909; c=relaxed/simple;
+	bh=KVl87mxGkMT3rFt2okoJ89BYbEAONsppjlmmv96ipo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MCjrK8r0gZs6/Gc8e2qtNvAU9y/JwV0ElxMAUr/pVmtJN1kobcx+QklMk0kkNzOFRs7eCkDzktu32YO6WgZTBx6adzfSNsC4EniOmi+lqaeRsqzZgRUJQKpQXsnG3VPMN/3KoVzjeikiv4NMbZ1+TvIdBwDY1lr083jGqDDA6jA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com; spf=pass smtp.mailfrom=3mdeb.com; dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b=Vf9Yo0s1; arc=none smtp.client-ip=178.33.250.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=3mdeb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3mdeb.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ntVgXX02"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGoKHO012269;
-	Thu, 1 May 2025 01:07:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	rfPplkV4+kk+UmnwtmcptadSkNK7L/gXCtp5juv5io4=; b=ntVgXX0261+vbAY8
-	DRG7Gln7RsCFcYxzmx9JbUfRIlx4nJjoxyL16fJH5Yi1d6QhgznteXUnzjeaTJRd
-	00K9kTCIiI1JQdVgbIy2n5lKxoE6stgzt6Tn66RgI0T07ApE9pWakuYd+1CQUheg
-	kH7IjWpOpz1vCmyKFmj9w+9L3xnfHO74yls7D++ePgpbQDDWzAWCO8MEcNFV+RXe
-	FiY7/lnM9P2tnYLKACzVOeOmCTVGB034R5QzFm2Q+P6LYAG7CvQVCU6dlpRarFC1
-	qWDJE+Q7phmvkyq/4P4gHcIeNUsWK1sbEdD81gMcnm9jj9nCmWU4L2OA4UNV13di
-	NHzGUA==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u3v0yc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 01:07:59 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54117wbG014451
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 May 2025 01:07:58 GMT
-Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
- 2025 18:07:57 -0700
-Message-ID: <65ab1bc6-b17a-405d-897b-da17522820dc@quicinc.com>
-Date: Wed, 30 Apr 2025 18:07:56 -0700
+	dkim=pass (2048-bit key) header.d=3mdeb.com header.i=@3mdeb.com header.b="Vf9Yo0s1"
+Received: from director11.ghost.mail-out.ovh.net (unknown [10.108.17.147])
+	by mo581.mail-out.ovh.net (Postfix) with ESMTP id 4Znshh0Xw6z1MGP
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 22:45:24 +0000 (UTC)
+Received: from ghost-submission-5b5ff79f4f-bggcb (unknown [10.111.182.166])
+	by director11.ghost.mail-out.ovh.net (Postfix) with ESMTPS id 9C97E1FE1E;
+	Wed, 30 Apr 2025 22:45:23 +0000 (UTC)
+Received: from 3mdeb.com ([37.59.142.110])
+	by ghost-submission-5b5ff79f4f-bggcb with ESMTPSA
+	id yhGnFgOoEmix+wgAhAnCLA
+	(envelope-from <sergii.dmytruk@3mdeb.com>); Wed, 30 Apr 2025 22:45:23 +0000
+Authentication-Results:garm.ovh; auth=pass (GARM-110S004d3d77194-a22f-47ee-abc9-6b3f4bb4fce5,
+                    7FFE21389DDF989CCD6FB7268846A7FDE11993D7) smtp.auth=sergii.dmytruk@3mdeb.com
+X-OVh-ClientIp:176.111.181.178
+From: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+To: linux-kernel@vger.kernel.org
+Cc: trenchboot-devel@googlegroups.com,
+	Ard Biesheuvel <ardb@kernel.org>
+Subject: [RFC PATCH v2 8/9] x86: AMD changes for EFI stub DRTM launch support
+Date: Thu,  1 May 2025 01:44:50 +0300
+Message-ID: <5c4d5adaa40fc5d5d1bcfef813713040e4df13a4.1746037489.git.sergii.dmytruk@3mdeb.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
+References: <cover.1746037489.git.sergii.dmytruk@3mdeb.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] drm/msm/dp: Account for LTTPRs capabilities
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
-        Dmitry Baryshkov
-	<lumag@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
-        <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@oss.qualcomm.com>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Marijn
- Suijten" <marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        <laurentiu.tudor1@dell.com>, <abel.vesa@linaro.org>,
-        <johan@kernel.org>, Johan Hovold
-	<johan+linaro@kernel.org>
-References: <20250430001330.265970-1-alex.vinarskis@gmail.com>
- <20250430001330.265970-3-alex.vinarskis@gmail.com>
-Content-Language: en-US
-From: Abhinav Kumar <quic_abhinavk@quicinc.com>
-In-Reply-To: <20250430001330.265970-3-alex.vinarskis@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Bv6dwZX5 c=1 sm=1 tr=0 ts=6812c96f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8
- a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=p9MYPHDGo_sz-XGRfLYA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: VEArPc4JIx7eiAnMoFNOXZBUPuloPUQu
-X-Proofpoint-ORIG-GUID: VEArPc4JIx7eiAnMoFNOXZBUPuloPUQu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDAwNiBTYWx0ZWRfX3CYux2kkANWw PB4ZndMlh6Vrz9bjU806nk0aB5edum+H4/qfi32ongLkQE+H93IwSsxlRSm/s2O3uu89ewguofJ njSZXw8ABKIQ5HLNsqlGvheKHnNP8s/jOkPVbs0YsAwxdMHWmW44Ho9NRAg8avMJePBAI+uaoCW
- 9wYrHmrkS0LTt0C9FA+lvBM24V/8/oTPQc+LPyvnl6gGfElngw44VzkAxJ4ELxd/F7PBiOMYuiz 8W4aKYERJHwUmTaD3jmfMB6Raeb/3aDrATAGuD3wfSzh/2S+BblV0+mJpv0P3fe4KA744yXmu3P 2VSany74TxZnQ7ZGWZA4RfXDPkjCofg7CTdAVSbG8CS4Hd0JhlrOHcsgb4VV3xAxnCWie+p5lty
- CmQndizqaaR6Kt2C98w8MMvJMEKwmEPoh1dMXroChXQTZIAksqXUK2yH/0pIPruMofmdvmbI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-04-30_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- mlxlogscore=962 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
- impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010006
+Content-Transfer-Encoding: 8bit
+X-Ovh-Tracer-Id: 12106801701031425260
+X-VR-SPAMSTATE: OK
+X-VR-SPAMSCORE: -100
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieejleefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuqfggjfdpvefjgfevmfevgfenuceurghilhhouhhtmecuhedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredttdenucfhrhhomhepufgvrhhgihhiucffmhihthhruhhkuceoshgvrhhgihhirdgumhihthhruhhkseefmhguvggsrdgtohhmqeenucggtffrrghtthgvrhhnpefhheefheduieelieekfffgfffgfedutdevleevvdfhfffgledvgfdtuddtheefieenucfkphepuddvjedrtddrtddruddpudejiedrudduuddrudekuddrudejkedpfeejrdehledrudegvddruddutdenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepshgvrhhgihhirdgumhihthhruhhkseefmhguvggsrdgtohhmpdhnsggprhgtphhtthhopedupdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdfovfetjfhoshhtpehmohehkedumgdpmhhouggvpehsmhhtphhouhht
+DKIM-Signature: a=rsa-sha256; bh=AxO8+pqA5ngI1PtQlcwGIyLcYBmP10KryNrbaqciCQI=;
+ c=relaxed/relaxed; d=3mdeb.com; h=From; s=ovhmo3617313-selector1;
+ t=1746053124; v=1;
+ b=Vf9Yo0s1C2KgoG9AQQiXV+B9NTnATlsGzRTi6WZWPrqeZoMcGQD0Fu2Xlq+d5W/RmV90Llkf
+ jtzaUah7zMT9LJQSU2/RqQY977e2hoBILMcpGOZD3Ey4Q+znbwSbUSspfx2Qanni7gzdTkFkfCg
+ 3RgR7Vo/2wBdVLl22m8DLQI3wILOQxY99Sc+/6NfAR/EfHE7FeoSiJODKzN9jz9WgBCo4eEuCE5
+ dAu2Xf8FkjVBddfWGqA/DfM9ohy66REskpY6Q7QLI0Y3ngpeI2GktcQudQWnYLKv39tLpcuDFQ6
+ 5U9KqaxSKj12G6LvoC7K7dlqB5RvN3ykry4in9qFfbRqw==
 
+From: Ross Philipson <ross.philipson@oracle.com>
 
+* Only do the TXT setup steps if this is a TXT launch not an SKINIT one.
+* Initialize boot params address for SKINIT.
 
-On 4/29/2025 5:09 PM, Aleksandrs Vinarskis wrote:
-> Take into account LTTPR capabilities when selecting maximum allowed
-> link rate, number of data lines.
-> 
-> Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
-> 
-> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
-> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> Tested-by: Johan Hovold <johan+linaro@kernel.org>
-> Tested-by: Rob Clark <robdclark@gmail.com>
-> ---
->   drivers/gpu/drm/msm/dp/dp_display.c |  5 ++---
->   drivers/gpu/drm/msm/dp/dp_link.h    |  3 +++
->   drivers/gpu/drm/msm/dp/dp_panel.c   | 12 +++++++++++-
->   3 files changed, 16 insertions(+), 4 deletions(-)
-> 
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+Signed-off-by: Sergii Dmytruk <sergii.dmytruk@3mdeb.com>
+---
+ drivers/firmware/efi/libstub/x86-stub.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-Nice!
+diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+index bfa36466a79c..0453be1ba58d 100644
+--- a/drivers/firmware/efi/libstub/x86-stub.c
++++ b/drivers/firmware/efi/libstub/x86-stub.c
+@@ -798,15 +798,21 @@ static bool efi_secure_launch_update_boot_params(struct slr_table *slrt,
+ 						 struct boot_params *boot_params)
+ {
+ 	struct slr_entry_intel_info *txt_info;
++	struct slr_entry_amd_info *skinit_info;
+ 	struct slr_entry_policy *policy;
+ 	bool updated = false;
+ 	int i;
+ 
+ 	txt_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_INTEL_INFO);
+-	if (!txt_info)
+-		return false;
++	if (txt_info)
++		txt_info->boot_params_addr = (u64)boot_params;
++
++	skinit_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_AMD_INFO);
++	if (skinit_info)
++		skinit_info->boot_params_addr = (u64)boot_params;
+ 
+-	txt_info->boot_params_addr = (u64)boot_params;
++	if (!txt_info && !skinit_info)
++		return false;
+ 
+ 	policy = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_ENTRY_POLICY);
+ 	if (!policy)
+-- 
+2.49.0
 
-Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
