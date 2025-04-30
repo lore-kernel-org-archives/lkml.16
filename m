@@ -1,83 +1,87 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 738A227602E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:11:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E186279904;
+	Wed, 30 Apr 2025 18:11:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746036672; cv=none; b=mFgwW8fMSSD4tnmVEiSin7/qZZX1b9KZcyYPxbN4ogButTQbOEo+IvFl+TOivhUxbUTDTTb8Fe70iMFEiFPZwR63zpkclf1Hx+7udrGYlU/erD3xqFue9JH1QTu9IZbpndEtUDMx/aEriEAAwKPSNqIGCb9lI8p3YioI7IVJ0ks=
+	t=1746036674; cv=none; b=Ic7SusCfHJJUNr73VO77fDK5o6id80a/JjYEfS+j0+bKqDbgtrIl9TqbWLy7NX72/yP3IYsalugRoSicUQ1Eq6SKxkIvxSjMGVnbUEyjzpXTYNPgWhEnPL1U/GKY932Pg20rKDgU+MT4Ej/+eCLvC33DhXA41vHUH3LGBpul2Zw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746036672; c=relaxed/simple;
-	bh=ysuz2dbhIUwSeo5TDdeE8cXgy0TSC86HQ4jDAdk8nAw=;
+	s=arc-20240116; t=1746036674; c=relaxed/simple;
+	bh=bjClv6BryTyDpGkWdfsiI+95q6D8k7MY583X7jPAQJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Xo8ma8hb57U6nzYr9oyzlezgZwkm9lYPDrTuGAcE7+dshAbsYM6D3E8uzli89dCuwL2EGxtvPhUbuVS9215lM11H1DCMEWtAausWeG728vYj4elmbRtp9HFBZWyMf1CAtUSZhsAY/pIJiPpQN51HETr56AzKtVNmSx6CbKA6q0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=jBXdzvrm; arc=none smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	 MIME-Version; b=gbhC4XOQ+vj1sM74FVHFFIEUOJ2puv2yPByhiE8oVQLGeVmaZXJS0bUOIlNAeSot1+wJqBwE801ldRYWUR/bjzUtkHf3NU55kTKCkj8LiVbvS44VOlun2VBPIil9+DJ6ByK7t0/94zRpneUaZbAGWDvQDr+KplbLu2pAA8XM2Qc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xyo+JaDQ; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="jBXdzvrm"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-4769b16d4fbso1276431cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:11:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xyo+JaDQ"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so283326b3a.0;
+        Wed, 30 Apr 2025 11:11:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1746036669; x=1746641469; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4wCLWtxPZo+z1qXRRB8VDvRxUJkg0/tm2oCyfTLu558=;
-        b=jBXdzvrmhjYS681cdzRfZOZX8erz+5H7fGiauW0hgRhZ0066NIcnLFRpRIA0A4H+93
-         jJgkH88krYXL00OjBjEgHRC8KpTzQFV0TNYFW7o1LV6jg7ndLFPtWMNd8kBOiHK/zI1Q
-         oboQckc++P355FS5bvh9COUdmsPKV7LQB/3brr98vqpfWZjFqvKV5ds2plR4t3Qa5DwL
-         SM6Jk7AGwkFJr3bANJuJ+DeWwRP5UnSmIM8C4sWwxKpl6+k6f7wPQUGKrIHB+MOV/TSe
-         t0cM5soxi4AjRRpIRowrZPm+QXbaTzr4CQsPEzgM0LZPwmqsSMdefXoHgY24S23NfrxP
-         rPCw==
+        d=gmail.com; s=20230601; t=1746036672; x=1746641472; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
+        b=Xyo+JaDQ9INLleVptVhRQpYuGrBchG8Y8HjZbttORjNEJU+wmOKPtumtPLIhZK2SNw
+         HCp36kmei8v7Ng4kJG6W76qpJJ/8ZpJEr23pQ26K55Bzw0KLFL+KwGOwVJpnBaLsujyO
+         vTginbmmwzUiYsJAzVXabU/gaHoJwV88FbxLd3gTSs2OUgsO/sBglMESAmCvYT3GhOiZ
+         4zrnntzsEPLNZ5fWhT3P1DMslc4HOm/abqONAGsgmVgwK7eNOkqHbCZR7Ker/CGmeTM8
+         WynijBqkyQILuJ46IJJrnLBGN1UWydnN0DNKN6mZZRz1m+qPApyNlfBBnRzbkgvDtfay
+         8w3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746036669; x=1746641469;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4wCLWtxPZo+z1qXRRB8VDvRxUJkg0/tm2oCyfTLu558=;
-        b=vDDYp+YvtH7UorRqQuNdo3a3MMO73TKY5m/3oD9cFGWZiYoMLO1wSZGX8f4dXLRo4F
-         A1+YwSpxTaZpdriJ5hGkW2n+8BdhTfYTcAdsQ6KV7rQW6gkpKZoYsGETzh3vyyReprgv
-         rkemy0VaFhrNOKU5B4BCh1C3gghWjIQpmOQUY4HE3b3Nxsz6Aod2RRk16Z1nOj0owjlQ
-         fGpzCQnLuE2AUJxRCHC8thEhAbF+JVKhAjNhsxon/S0TcKZttu9TlUcHyR9fnx4Hco9x
-         E9fX8FyDa8074cirmUpNkziB2GaDS4J/pyLiDvt0U/kL7t4aHgvUHaUfE5QXwA16W442
-         nA5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXq6wreaIJWvP7TrFyBD0trP6Jq4gv7SXQAf/VpCBDHgvwjzoxLfEA0IDjbY+VRU6NramA4c+Kn2XBl41s=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyj2uzqOsVpinDVKyi0gRqnw1HhVDI8hMwdAE2jiOeM3gRZRwV1
-	ZAFxqt/ivamTCk4hkGBkIX7zbzRJjcFQSFW9eUh5c+HcrCbbK1hBp5eEU44/XE3Dw/TPuVbDWw4
-	U
-X-Gm-Gg: ASbGncvlJiVvQtcPKe6HJmiPlSSa1EORDOeHqIbtzT9BdIRmREVXeRfbLNZR7KH1R2Z
-	tPoFRyx/D1J9LNk34Oqg6ylHsk/aasvsn4zatVOBBxccD7P8LwKSzxiTCbJ6iH/Lb8jjCFnQF0c
-	VNlgJC4kiQRQBxwZ9nm82JZDLWl0EOl9jYUdxoQZy74ZwFcELqU1MncJeQkTfv4dRFVSDxe3H/N
-	Igi9t0VKLbJPbhTvh7UQLD7XFUT5h9tUUnBC++KJzR/Yv8ycw/Vq4ggKw2j6p0vgiJEmnlD6FsA
-	vQ/smZV9wh1J6eyBjrQpZFv3HonrF75BqPPDjsjIegB6tFNef5Ke8lUzS3BPR5mI1RS+eTxNyf2
-	djklBgI9rh+Filu6T/Bgz4AU1r8DM
-X-Google-Smtp-Source: AGHT+IFZXlyw0vAGV8CcwH9mLxar0qE/OpSzEUJceMsLJiqWVmOB/kxElfqTZAE+Wa/7CGDcCw6Uwg==
-X-Received: by 2002:a05:622a:a15:b0:477:6e6a:7cfe with SMTP id d75a77b69052e-489c0be6448mr59562341cf.0.1746036669411;
-        Wed, 30 Apr 2025 11:11:09 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-48a64fe04efsm5897421cf.19.2025.04.30.11.11.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 11:11:09 -0700 (PDT)
-From: Gregory Price <gourry@gourry.net>
-To: linux-cxl@vger.kernel.org
-Cc: linux-doc@vger.kernel.org,
+        d=1e100.net; s=20230601; t=1746036672; x=1746641472;
+        h=content-transfer-encoding:mime-version:reply-to:references
+         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tq3nEj4DUSPSU3dXBHWbYOiByd1+bRHGbfykzSesdrc=;
+        b=xKnRe/WU/xRnGeJuszENZkkQaocUCgFTwVTS6H9WT9zyAwBlNaHqMadDTIGzIu8iTj
+         008xozXxgbOaCVKkBBeFq1zF2w+g2yGFITZZmqUeNhc1t0cI777fCZDvsVe0eNwa709t
+         PwV3BCRbqHXlJB1MCm5qrfBQ6+FwqsbU/erOVWcaCzr3Z9r5szFaKr0WgimY54hnG/9S
+         7mE+eZqB7YzlMzfX5TJruUG2Pq05I0ZtMAB9XKpX1KhMXX+aLU6rslNgEPay/KHSRKiY
+         pD5uET6pcVJlEEDa4p7kXBZaQzGz+QCjo6kNhxktwaCA93wQTeHCtOvJf/N3vSVU86sA
+         BkYA==
+X-Forwarded-Encrypted: i=1; AJvYcCUl36umNva4a++R9DowvZckZyCMVt7smYOPxWZTlcfOPwdTsKZI2t+BZh8e1AXFFTQKcoNPhQoG4Km+YhZf@vger.kernel.org, AJvYcCWv/XYj0iwn/KzfOcugGTLaOoMP9YRjWVmwuy+09rRam+8O+ZKsWzIsLNaeCExMA76qCRsKNnSo0RqX9Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxu6MiOtRExZuz7zwxYmuRNfm4/0RnGcabKhURciy7fG1QXhfG8
+	JZpky7ihTGojYsbvELTxZ7uNhBkwHH3eP688cKd4DucXNn3nldHGj7A98meUfJ3ngQ==
+X-Gm-Gg: ASbGncu/YsGOXdeG+ZxyoeYyxm9TeU/0Dm0kfVZOLQWhiB+QNlZMHF/tEKCWEgXq7uf
+	W9CoI8GWvDlmpYI3LKxTpjwAtQlcFFRbcXyChFZiuIy4ikjdqE36ClYYUB9wiE2LEvlBECPNR+V
+	AjnKw4V6zCHC3jAUmqYeIQ5TJRBioQG1jPFC0nOvdZmmMigAipuRoVhMuvPAQuewPnVcrC6Zk+A
+	Ubb2LoNeYUzVvtlwrELRZqhgx/ebrstRf90cdSaIf/w/NmURwxJZXq6iONK023Zi7jRQgJosBje
+	tct36YmRvNsQBIqeF5z9TlVRhPbnICyAhphr+aKgHaYVgJKAD1wAQ1nflvX8Rg==
+X-Google-Smtp-Source: AGHT+IGPmIR52RvLNc4qp7jBDc7epoAkUWjSXFVEqnCRZkqTXLMSG6UyM8sVIbiZ/MbiNgWOBB70hw==
+X-Received: by 2002:a05:6a20:7f81:b0:1ee:d8c8:4b82 with SMTP id adf61e73a8af0-20a89419b37mr6855342637.31.1746036672506;
+        Wed, 30 Apr 2025 11:11:12 -0700 (PDT)
+Received: from KASONG-MC4.tencent.com ([106.37.122.198])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039947976sm1983822b3a.84.2025.04.30.11.11.07
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 30 Apr 2025 11:11:11 -0700 (PDT)
+From: Kairui Song <ryncsn@gmail.com>
+To: linux-mm@kvack.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Hugh Dickins <hughd@google.com>,
+	Chris Li <chrisl@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
 	linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	dave@stgolabs.net,
-	jonathan.cameron@huawei.com,
-	dave.jiang@intel.com,
-	alison.schofield@intel.com,
-	vishal.l.verma@intel.com,
-	ira.weiny@intel.com,
-	dan.j.williams@intel.com,
-	corbet@lwn.net
-Subject: [RFC PATCH v2 06/18] cxl: docs/linux - overview
-Date: Wed, 30 Apr 2025 14:10:36 -0400
-Message-ID: <20250430181048.1197475-7-gourry@gourry.net>
+	Kairui Song <kasong@tencent.com>,
+	Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>,
+	David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org,
+	Qu Wenruo <wqu@suse.com>
+Subject: [PATCH v3 2/6] btrfs: drop usage of folio_index
+Date: Thu,  1 May 2025 02:10:48 +0800
+Message-ID: <20250430181052.55698-3-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430181048.1197475-1-gourry@gourry.net>
-References: <20250430181048.1197475-1-gourry@gourry.net>
+In-Reply-To: <20250430181052.55698-1-ryncsn@gmail.com>
+References: <20250430181052.55698-1-ryncsn@gmail.com>
+Reply-To: Kairui Song <kasong@tencent.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,141 +90,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add type-3 device configuration overview that explains the probe
-process for a type-3 device from early-boot through memory-hotplug.
+From: Kairui Song <kasong@tencent.com>
 
-Signed-off-by: Gregory Price <gourry@gourry.net>
+folio_index is only needed for mixed usage of page cache and swap
+cache, for pure page cache usage, the caller can just use
+folio->index instead.
+
+It can't be a swap cache folio here.  Swap mapping may only call into fs
+through `swap_rw` but btrfs does not use that method for swap.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
+Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+Reviewed-by: Qu Wenruo <wqu@suse.com>
 ---
- Documentation/driver-api/cxl/index.rst        |   3 +-
- .../driver-api/cxl/linux/overview.rst         | 103 ++++++++++++++++++
- 2 files changed, 105 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/driver-api/cxl/linux/overview.rst
+ fs/btrfs/extent_io.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/driver-api/cxl/index.rst b/Documentation/driver-api/cxl/index.rst
-index 5fa66e668b49..284ac71bf292 100644
---- a/Documentation/driver-api/cxl/index.rst
-+++ b/Documentation/driver-api/cxl/index.rst
-@@ -31,9 +31,10 @@ that have impacts on each other.  The docs here break up configurations steps.
-    platform/example-configs
+diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
+index 197f5e51c474..e08b50504d13 100644
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct folio *folio)
+ 	xa_lock_irq(&folio->mapping->i_pages);
+ 	if (!folio_test_dirty(folio))
+ 		__xa_clear_mark(&folio->mapping->i_pages,
+-				folio_index(folio), PAGECACHE_TAG_DIRTY);
++				folio->index, PAGECACHE_TAG_DIRTY);
+ 	xa_unlock_irq(&folio->mapping->i_pages);
+ }
  
- .. toctree::
--   :maxdepth: 1
-+   :maxdepth: 2
-    :caption: Linux Kernel Configuration
- 
-+   linux/overview
-    linux/access-coordinates
- 
- 
-diff --git a/Documentation/driver-api/cxl/linux/overview.rst b/Documentation/driver-api/cxl/linux/overview.rst
-new file mode 100644
-index 000000000000..f440d79d77d1
---- /dev/null
-+++ b/Documentation/driver-api/cxl/linux/overview.rst
-@@ -0,0 +1,103 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+========
-+Overview
-+========
-+
-+This section presents the configuration process of a CXL Type-3 memory device,
-+and how it is ultimately exposed to users as either a :code:`DAX` device or
-+normal memory pages via the kernel's page allocator.
-+
-+Portions marked with a bullet are points at which certain kernel objects
-+are generated.
-+
-+1) Early Boot
-+
-+  a) BIOS, Build, and Boot Parameters
-+
-+    i) EFI_MEMORY_SP
-+    ii) CONFIG_EFI_SOFT_RESERVE
-+    iii) CONFIG_MHP_DEFAULT_ONLINE_TYPE
-+    iv) nosoftreserve
-+
-+  b) Memory Map Creation
-+
-+    i) EFI Memory Map / E820 Consulted for Soft-Reserved
-+
-+      * CXL Memory is set aside to be handled by the CXL driver
-+
-+      * Soft-Reserved IO Resource created for CFMWS entry
-+
-+  c) NUMA Node Creation
-+
-+    * Nodes created from ACPI CEDT CFMWS and SRAT Proximity domains (PXM)
-+
-+  d) Memory Tier Creation
-+
-+    * A default memory_tier is created with all nodes.
-+
-+  e) Contiguous Memory Allocation
-+
-+    * Any requested CMA is allocated from Online nodes
-+
-+  f) Init Finishes, Drivers start probing
-+
-+2) ACPI and PCI Drivers
-+
-+  a) Detects PCI devices is CXL, marking it for probe by CXL driver
-+
-+3) CXL Driver Operation
-+
-+  a) Base device creation
-+
-+    * root, port, and memdev devices created
-+    * CEDT CFMWS IO Resource creation
-+
-+  b) Decoder creation
-+
-+    * root, switch, and endpoint decoders created
-+
-+  c) Logical device creation
-+
-+    * memory_region and endpoint devices created
-+
-+  d) Devices are associated with each other
-+
-+    * If auto-decoder (BIOS-programmed decoders), driver validates
-+      configurations, builds associations, and locks configs at probe time.
-+
-+    * If user-configured, validation and associations are built at
-+      decoder-commit time.
-+
-+  e) Regions surfaced as DAX region
-+
-+    * dax_region created
-+
-+    * DAX device created via DAX driver
-+
-+4) DAX Driver Operation
-+
-+  a) DAX driver surfaces DAX region as one of two dax device modes
-+
-+    * kmem - dax device is converted to hotplug memory blocks
-+
-+      * DAX kmem IO Resource creation
-+
-+    * hmem - dax device is left as daxdev to be accessed as a file.
-+
-+      * If hmem, journey ends here.
-+
-+  b) DAX kmem surfaces memory region to Memory Hotplug to add to page
-+     allocator as "driver managed memory"
-+
-+5) Memory Hotplug
-+
-+  a) mhp component surfaces a dax device memory region as multiple memory
-+     blocks to the page allocator
-+
-+    * blocks appear in :code:`/sys/bus/memory/devices` and linked to a NUMA node
-+
-+  b) blocks are onlined into the requested zone (NORMAL or MOVABLE)
-+
-+    * Memory is marked "Driver Managed" to avoid kexec from using it as region
-+      for kernel updates
 -- 
 2.49.0
 
