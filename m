@@ -1,147 +1,166 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD60C215073;
-	Wed, 30 Apr 2025 10:10:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0207F23184F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746007839; cv=none; b=NOYMwwDHQqEjC7mxKyxrQqa6HEPBeyXyVWIeFHSP3YNROM7Q8XgAiVaQuAj5wUwBb+CPyHqRNTE77wn6FetvYK+r6OK3Cq2v3ZY4nobYxbu1GlSnrQd+HwJ6FkCvyPGkk1MPNCoz0/cv0MaOhRacUVXFr4kxC39Vg9LmEh/dTYc=
+	t=1746007903; cv=none; b=efUSb77b6QokATQAfq93ucT0wgQkIYN8T5ePD/CP21S2TqWl4vOVEPYRKqblCNia16tLyW23idDaSW99h9XcJJSL0qTnZ4NPsdL7XmMpK2pAtXnnwfwdCNzCFTVaY9R0m8wL237qfpsoVBuQRrbugIfBWavYys6U63PT4NH2Eng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746007839; c=relaxed/simple;
-	bh=A+ai1yi7CyR7wfx6SL6+0B8dv3jNL80Z9qij1S+DR/w=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=athFUztjY7261pvenE6fGGrVpFpPfWp1vsYt5be5hKDNRMCJ/yroQnho5BnrneVlZiZI+YT/9EfTOhSun0qIADNKtAOFTHhpFKG5BfrnEaTte+eb3LY7zF0cxtvRe3DC1D36UyBQf/6Jnvuxx1FTEkqEIg/ne8swKlm/JQMGS1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B7OmusVO; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746007903; c=relaxed/simple;
+	bh=TOwUtRIAV+jPy+YMV8u3gKvjNhsZV6TyG6DxIOrn/1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=molPBnVblaCD6MP3k3722Qdc/9T/9XgyhDeIyqMnDDhYFz++Ar8mVpLc5jQWCHxDzl3lQ7tEGKvgwkkFgEE9PDmd+orgjRDTMww+nM7+HrqzOS/0xgHVw4zndh8uAGtSEKPyhbJh9nLVEKCrGmimTDrWjRtDqJHLEAErW+KVaKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=d41inHLZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B7OmusVO"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-73972a54919so5959023b3a.3;
-        Wed, 30 Apr 2025 03:10:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746007837; x=1746612637; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=A+ai1yi7CyR7wfx6SL6+0B8dv3jNL80Z9qij1S+DR/w=;
-        b=B7OmusVOa1mT6AIKlfvHei9HQpaA1DdCDOgUNYtKQWHz5LQVqNWhdGMmAAI00Hqi/K
-         yNNoX3mBhnsAwAEnggf9EktdXGAH4qGFGTKiBiCIwVg9l/pgPmuRiuUoeY5d9RKuyerm
-         +PiaeaCaRJDoS3mlBDxBdqLSb7ZIXwHnvh3VgH5m0/AoXqToP1LrvBWa8HrQkKw/bHhc
-         cx2xVpN7aKimhIlwlM+Q9nWEuf/L3ojrzEpDlZEeAUk8jM2ee8/0OtC6XuHsvrawUW9+
-         R9SbF6EmQvjWdF77KnPGq1f3LCc86n8U47jJLTT+MulBz/HHq0s6omzK1R4URmN3p3o6
-         WDJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746007837; x=1746612637;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=A+ai1yi7CyR7wfx6SL6+0B8dv3jNL80Z9qij1S+DR/w=;
-        b=fZWy7RmpVnrSNPMExVXhsvnKySzGfN73/Xf5nJnRBN0To3uC7y3RupPH7Tjxwie0R3
-         tI52F8jQPRpK1RACWPFyNHBqGG0vNDKd0Zx0CBX3DEmZvyqmzLJmwMVjrQtYTQJR2XO5
-         InmRWRAvwLF9f5aQZJjiFuSV1Ccy6+3KImocOqI+0jr0ZXZMSg/pemw4RiERjKikIULl
-         LnkO1gMAR1U47wnxn0QaYsm0OkBuTUhHsoIIivZTNwQpI8sT5QaGeqL0uzBLu3fLUKK5
-         OcWO2cV/qcbCZgob0HusxPF3SdLb5KwvOYH6/ablJTxGGonRti8DLcXujFI1dqqu+SWb
-         6CjA==
-X-Forwarded-Encrypted: i=1; AJvYcCW2/kWT4F89+e+QMfGqgirIzciphfb2AFL8oPEeGGPzsWKR+cVLc0SYy711oXm6eDVgkPqEspzkh5vMRNarIAIr0rT9xQ==@vger.kernel.org, AJvYcCWZCtwu1JxWVT2Pk/gCculv97EiPqt08w+bvqah27JrwAQrruJX44IZhofnfVr1AyV1EFrhENoTqL1zqLbG@vger.kernel.org, AJvYcCXstjI4jFXp1lP9rh3wyU16ydM1gqrUXwVleeNu9MJ/vfPGLL/ZQiAWS1WNWAiisV534HO/+Lvsl7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKyMUF3rSi5fYk4EGGtw/1s7ebCs+4phugdU3I6H+w3BBKUzLk
-	2GoXjqKaeCpU6ikd5IOUJpvl8I1zVpAQwWQIfdgb+OgYDy3lQ+AC
-X-Gm-Gg: ASbGncs6GrK5ID+aIpuDFTnmwb2wPARCr66/zT6E/QS9R+4H+oDBVdk8SlTylfrK/4X
-	HYzhgbsZYcLFhsS8bT8zqmtQNfPMhQfYijv3xzsVjh+RjUEQqx8mHUtZmzHJzz2BnO6iIDU3DXF
-	wMaUWUwB7qiXB+TMvSIr+6L570Zn2wIsFdQZzK35ZGlp14EOx9TiewIqZblXr0ZHERCUu3TypZo
-	pXrFsyj3WmiyhvZ/k+xtOoLT03rzpv1EJ5C4Fn9iBT8LqxJR5STvZkdsvHD+ZFgzhKtHYDVq266
-	ga4RwwXVGKCGho52nE/LWAj+vGZTqrXBiYj23ZspxsJtQfcvIRmy4l72g0QU0nbWc0lk0r6i+gQ
-	epGWOpAERL2aOkBqSbOz8oQ+J
-X-Google-Smtp-Source: AGHT+IGDoHYYHKLhr7kiY5AgNFNLBsIJ7/wURocSmLBFOGRvhA0ytCCyy+DmlyLg78Ycp4cMRSvjKA==
-X-Received: by 2002:a05:6a21:1643:b0:1f5:a577:dd24 with SMTP id adf61e73a8af0-20a87d4f3f1mr4083706637.25.1746007836826;
-        Wed, 30 Apr 2025 03:10:36 -0700 (PDT)
-Received: from [127.0.0.1] (108-228-232-20.lightspeed.sndgca.sbcglobal.net. [108.228.232.20])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b15fa80fa97sm10217887a12.51.2025.04.30.03.10.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 03:10:36 -0700 (PDT)
-Date: Wed, 30 Apr 2025 03:10:36 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: ALOK TIWARI <alok.a.tiwari@oracle.com>, Hans de Goede <hdegoede@redhat.com>,
- Armin Wolf <W_Armin@gmx.de>, Jonathan Corbet <corbet@lwn.net>,
- Mario Limonciello <superm1@kernel.org>, Luke Jones <luke@ljones.dev>,
- Xino Ni <nijs1@lenovo.com>, Zhixin Zhang <zhangzx36@lenovo.com>,
- Mia Shao <shaohz1@lenovo.com>, Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 5/6] platform/x86: Add Lenovo WMI Gamezone Driver
-User-Agent: Thunderbird for Android
-In-Reply-To: <1108c3ac-4815-814d-82b0-2ba74311d883@linux.intel.com>
-References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-6-derekjohn.clark@gmail.com> <a18175cc-3513-4621-9d8d-e9556ede1022@oracle.com> <F54435E0-B3F5-4F99-9184-EE4D8D54DBD6@gmail.com> <1108c3ac-4815-814d-82b0-2ba74311d883@linux.intel.com>
-Message-ID: <855BB61E-C9F4-4D1A-8A09-260DAD61E2CD@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d41inHLZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746007900;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=0IopPiKyCnXQE4fNnJ+UK76ut19IbyEAHXIe/thBuxA=;
+	b=d41inHLZuKfuc1sKXMMmypUyYluGtuZa1XmOae7BpFtDgaW9V0zSWXzb4fUErOIILpGX7U
+	IclU2cLr+5n/bTdiNlsFwoOS37Pnya+f0r7RhjzOvxxuMETO3K9k98cbwab2kuQ7bsEJrG
+	WEMOvQSwSLRF0J3gYM/1R6XzRVxBvwk=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-354-2rtPlAYKNmGGq-3dnaLeKg-1; Wed,
+ 30 Apr 2025 06:11:35 -0400
+X-MC-Unique: 2rtPlAYKNmGGq-3dnaLeKg-1
+X-Mimecast-MFC-AGG-ID: 2rtPlAYKNmGGq-3dnaLeKg_1746007893
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 860331956094;
+	Wed, 30 Apr 2025 10:11:32 +0000 (UTC)
+Received: from p16v.luc.cera.cz (unknown [10.44.33.50])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9FD1E1956094;
+	Wed, 30 Apr 2025 10:11:27 +0000 (UTC)
+From: Ivan Vecera <ivecera@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+	Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+	Jiri Pirko <jiri@resnulli.us>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Prathosh Satish <Prathosh.Satish@microchip.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: [PATCH net-next v6 0/8] Add Microchip ZL3073x support (part 1)
+Date: Wed, 30 Apr 2025 12:11:18 +0200
+Message-ID: <20250430101126.83708-1-ivecera@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
+Add support for Microchip Azurite DPLL/PTP/SyncE chip family that
+provides DPLL and PTP functionality. This series bring first part
+that adds the common MFD driver that provides an access to the bus
+that can be either I2C or SPI.
 
+The next part of the series is bringing the DPLL driver that will
+covers DPLL functionality. Another series will bring PTP driver and
+flashing capability via devlink in the MFD driver will follow soon.
 
-On April 30, 2025 12:58:35 AM PDT, "Ilpo J=C3=A4rvinen" <ilpo=2Ejarvinen@l=
-inux=2Eintel=2Ecom> wrote:
->On Tue, 29 Apr 2025, Derek J=2E Clark wrote:
->
->>=20
->>=20
->> On April 28, 2025 9:39:55 PM PDT, ALOK TIWARI <alok=2Ea=2Etiwari@oracle=
-=2Ecom> wrote:
->> >
->> >
->> >On 28-04-2025 06:48, Derek J=2E Clark wrote:
->> >> + * Determine if the extreme thermal mode is supported by the hardwa=
-re=2E
->> >> + * Anything version 5 or lower does not=2E For devices wuth a versi=
-on 6 or
->> >
->> >typo wuth
->> >
->> >> + * greater do a DMI check, as some devices report a version that su=
-pports
->> >> + * extreme mode but have an incomplete entry in the BIOS=2E To ensu=
-re this
->> >> + * cannot be set, quirk them to prevent assignment=2E
->> >> + *
->> >> + * Return: int=2E
->> >
->> >The function returns int=2E
->> >But logically it's returning boolean false, true
->>=20
->> I may have overdone it by removing all bools after the v5 review as I=
-=20
->> interpreted Ilpo's comment to mean I shouldn't return any bool c types=
-=2E=20
->> I'll wait for them to weigh in before changing this back=2E
->
->Hi Derek,
->
->That is certainly a misinterpretation=2E
->
->It's perfectly fine to return bool from a function=2E If there's no good=
-=20
->reason e=2Eg=2E because of some API that requires int return, booleans sh=
-ould=20
->be returned as bool=2E
->
->I was trying to say your kerneldoc said "Return: bool" for a function tha=
-t=20
->returns int=2E Both "bool" and "int" are C types so there was a contradit=
-ion=20
->in that, which is what I tried to point out=2E Please write "boolean" if =
-you=20
->refer to a boolean which is not "bool" typed (but consider what was said=
-=20
->above and if the type too can be changed to bool in that case)=2E
->
+Testing was done by myself and by Prathosh Satish on Microchip EDS2
+development board with ZL30732 DPLL chip connected over I2C bus.
 
-Okay, that makes sense=2E Thanks for the clarification=2E
-- Derek
+Patch breakdown
+===============
+Patch 1 - Common DT schema for DPLL device and pin
+Patch 2 - DT bindings for microchip,zl3073* devices
+Patch 3 - Basic support for I2C, SPI and regmap configuration
+Patch 4 - Devlink device registration and info
+Patch 5 - Helpers for reading and writing register mailboxes
+Patch 6 - Fetch invariant register values used by DPLL/PTP sub-drivers
+Patch 7 - Clock ID generation for DPLL driver
+Patch 8 - Register/create DPLL device cells
+
+---
+v5->v6:
+* fixed devlink info firmware version to be running instead of fixed
+* added documentation for devlink info versions
+v4->v5:
+* fixed DT patches description
+* dropped mailbox API
+* added type-safe register access functions
+* added an ability to protect multi-op accesses
+v3->v4:
+* fixed shortcomings in DT patches
+* completely reworked register access
+* removed a need to manage locking during mailbox accesses by callers
+* regcache switched to maple
+* dev_err_probe() in probe path
+* static mfd cells during sub-devices registration
+
+v1->v3:
+* dropped macros for generating register access functions
+* register access functions are provided in <linux/mfd/zl3073x_regs.h>
+* fixed DT descriptions and compatible wildcard usage
+* reworked regmap locking
+  - regmap uses implicit locking
+  - mailbox registers are additionally protected by extra mutex
+* fixed regmap virtual address range
+* added regmap rbtree cache (only for page selector now)
+* dropped patches for exporting strnchrnul and for supporting mfg file
+  this will be maybe added later
+
+Ivan Vecera (8):
+  dt-bindings: dpll: Add DPLL device and pin
+  dt-bindings: dpll: Add support for Microchip Azurite chip family
+  mfd: Add Microchip ZL3073x support
+  mfd: zl3073x: Add support for devlink device info
+  mfd: zl3073x: Protect operations requiring multiple register accesses
+  mfd: zl3073x: Fetch invariants during probe
+  mfd: zl3073x: Add clock_id field
+  mfd: zl3073x: Register DPLL sub-device during init
+
+ .../devicetree/bindings/dpll/dpll-device.yaml |  76 ++
+ .../devicetree/bindings/dpll/dpll-pin.yaml    |  45 +
+ .../bindings/dpll/microchip,zl30731.yaml      | 115 +++
+ Documentation/networking/devlink/index.rst    |   1 +
+ Documentation/networking/devlink/zl3073x.rst  |  37 +
+ MAINTAINERS                                   |  11 +
+ drivers/mfd/Kconfig                           |  32 +
+ drivers/mfd/Makefile                          |   5 +
+ drivers/mfd/zl3073x-core.c                    | 864 ++++++++++++++++++
+ drivers/mfd/zl3073x-i2c.c                     |  68 ++
+ drivers/mfd/zl3073x-regs.h                    |  54 ++
+ drivers/mfd/zl3073x-spi.c                     |  68 ++
+ drivers/mfd/zl3073x.h                         |  31 +
+ include/linux/mfd/zl3073x-regs.h              |  88 ++
+ include/linux/mfd/zl3073x.h                   | 191 ++++
+ 15 files changed, 1686 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-device.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/dpll-pin.yaml
+ create mode 100644 Documentation/devicetree/bindings/dpll/microchip,zl30731.yaml
+ create mode 100644 Documentation/networking/devlink/zl3073x.rst
+ create mode 100644 drivers/mfd/zl3073x-core.c
+ create mode 100644 drivers/mfd/zl3073x-i2c.c
+ create mode 100644 drivers/mfd/zl3073x-regs.h
+ create mode 100644 drivers/mfd/zl3073x-spi.c
+ create mode 100644 drivers/mfd/zl3073x.h
+ create mode 100644 include/linux/mfd/zl3073x-regs.h
+ create mode 100644 include/linux/mfd/zl3073x.h
+
+-- 
+2.49.0
+
