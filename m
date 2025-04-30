@@ -1,86 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734DE248F50;
-	Wed, 30 Apr 2025 00:17:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 792DD257AC3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:16:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745972221; cv=none; b=r4Q9zh5mXH9o1gPJ0g92WshephWj/OMQHTfcJ+OSjtAnzYPLts+q7A+hUghwD6GwCdkM0jarYLGFXRLdOcFB/9DKgr27I+2L1TqTazpnc55QaMUAhkyy7y/cxiUQXcoRp1DMWKJtOhZI8rFpaym4xLy7xjgQCadmTK7lUz9Ok+I=
+	t=1745972221; cv=none; b=jry8HRLKH4r6Di78pmz8lSgu28sneKw35i7Brjpa9FQHfiKBwGfMJ8p2LfAtFnsvI0P8mztxMlIO9XOcMmJ6NnxsyMu7+Pf7JpOYKr91p1EZFkP/YlDVLLGY4RtbpLZY0ribrkIuHTLY3OV9mxcaW7FFN4yY20E4wlAHHjLnAfw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1745972221; c=relaxed/simple;
-	bh=aK9F9nwIdg1FphfT+Yfjld5zvSum/rAfg7pCxAMkINY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IO7r1IM6+9IRKsvlR9kVKX65JVV7UDkxjVsMwx/Dm1ZGckFMTO+Hvglw/01wbWkRGWP5IbS7/PU33a5tFR92SywjYcatUnRwHa7WNhNY/Dtf+3xpYjCFzMUvy+EHjAW2mLpHSJ1mzDW0P2FcJgC5VYcekY4y1mQx+DBLKlxCWXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f2qmY2zJ; arc=none smtp.client-ip=10.30.226.201
+	bh=blEoqggQsQhRB0qQ2LOUYe1TBy9Har2a+Y7ff8LDB+0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Z4YwOROVW4hPQx2dwnoT/YTt3CqeWUyTeoV3smlvBcb5Yvfs5tFweX+0X6MF1nnXIygYxyUHKo3uv1nU4sUGP6jHmiXlfm7bnC5fMhS+Hb6lsruJN3i0JSUiWqiX6vaVXkw7bBJbw0/O2S5OGhr+CCTcY4s49VnitcSBRrH6w2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=Id0QNXLQ; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f2qmY2zJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643AEC4CEF1;
-	Wed, 30 Apr 2025 00:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745972220;
-	bh=aK9F9nwIdg1FphfT+Yfjld5zvSum/rAfg7pCxAMkINY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=f2qmY2zJxR+ibK/Gxzvt5dyIAIgHEFb0wJlpCM1untRcEPWw80nYDj9aUM9LmQCTO
-	 lZMeo4qtAnYSRYO2HTwMS1dzOLylqleohStMuC5Oyqe5LZdl1JUkNhNHN0jO0Oyz9a
-	 6sQdEs5JxrYXJvueCGqanCFfEGPzCrRPVZGSOYjL/euAFpfKnkp31PCG8JRDf9Neuc
-	 DI8GsQL1+afXp9PUy9ic1RtHK/PbmlWXsZ3CUMCbVbN9SeWZDZACSxiucdE5CGHTcN
-	 OP8Tc+9y5Pd5/+g4+P5Ts4nNF4XLGI8BFtKNj4/adKwW2mNEWt7mEzDuG8CVf8waKs
-	 QMWDPQrJCcIIA==
-Date: Wed, 30 Apr 2025 01:16:56 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Thorsten Blum <thorsten.blum@linux.dev>,
-	kernel-janitors@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] regcache: Use sort()'s default swap() implementation
-Message-ID: <aBFr-OJlWHg5a0Lj@finisterre.sirena.org.uk>
-References: <20250428061318.88859-2-thorsten.blum@linux.dev>
- <edab112f-9449-4862-8f8a-0beae136e0c6@web.de>
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="Id0QNXLQ"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-223fd89d036so83501565ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 17:16:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1745972218; x=1746577018; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YoM38xw3FRuDhuA6RoI5dV9L/poXJy4s4CZPvznw1r4=;
+        b=Id0QNXLQRYRec1btj54qUywqQtsrFOlVB2VJ8tvUCrV11MS5L9mZLj3TDltNf9hs3w
+         JCDcceqEmKCryAGcwjXI8SpZRPTTZXxmrVl/DxD0UgskMxz+W8t+YRYUszB0sgX7QpDD
+         AAJ1vYoTL+IdSZqCPyCoCotiIFHy5CuaYE1Px2c3DBlk6NnxMy3g41o/CtRolDSeeAMl
+         gap9PVTGDDtUg02kOKX5tvgT2raX2XYTb3tLUCbqfmL47ZuwHB96kEPsTAzNNHIlTN3F
+         RdFCdbprXaRGJitLKhUbAOXvB3ZwjELgX6UfUNMOCWJhmFicTxOWeH8XNpogtsUS8IzS
+         yJKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745972218; x=1746577018;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YoM38xw3FRuDhuA6RoI5dV9L/poXJy4s4CZPvznw1r4=;
+        b=enbfRNT4xSVkQYIkDy9jWaGBFIiLEkSuEy8y4JnOmgyiPpVDCKFgtoe73llQsmaKJw
+         4oEGqsQkrToMfp4jdd5Xukd68YAvtksLhyXb+mXIxKlobbrlhoEaExUQ7D5/B4WJqJqk
+         XjDO+5utigD4JHHXXsa3Azs1SZTv/PKh2GgO/xw77EzTLJx3ON75fxUg1rOEPlVQ406w
+         onoASJscRDrWGiDAuR368pNYVxV7I/RnMkqrbf2ojO6Jw1Y0k/R423uGcfDoOarvvyC8
+         nSQVT4BeHNpdnj81ae9lJBFrhB5xnePDtVra5AyYDm7nG68IS9qXbquudsb+/kh38KoH
+         zuVQ==
+X-Gm-Message-State: AOJu0YwlqV3gq5l2eB229krCP3GudTK6g+EpJoDXHYpntW0cDKoy+SuH
+	w7vqx/uP9t7MxrFIoPQbZgr9e+Up88xFrwAMflbaHtS7xfvKd23BOH5w15JWz5E=
+X-Gm-Gg: ASbGncukyR6smb5xBmzyHwzaDHz+XTYJszDHEiphrDeS26W7VWY7I0PdJYhiLhiAEqs
+	hnGuE5TyBFbKYaz4+n3acCzQFL9aALiOzK9wjGHGDbS8SjgnsLZqucDRyp9yLFa0FSDzcA62eNJ
+	E6PZjVhWc9rcEEwar7zvlCoiggOWtWSRQrc6FN+um2WHnRdA2AOiCW9gF6w0pzJJQowBGU12Cp7
+	DDM9ST4lKrAG4bxcR5y/8YHxSHFexdG9YQRVrnZxvRlXdTs9G75z1bCGllptdNfj0QSagtx0SOV
+	xAcq8xmSxMI4DqiSyekkeKZz+o43FoQYu6Hn/Mi+RAdeSPyQs4j7mbGs7v+P5w==
+X-Google-Smtp-Source: AGHT+IF7fFmzr0Exolo8ddNzwFlXEdlIPOmYXnxm/FE/leAyWO24Jew34ww82sryyzesSnaGsJR46w==
+X-Received: by 2002:a17:903:2287:b0:22c:33b2:e410 with SMTP id d9443c01a7336-22df5764831mr7449855ad.2.1745972217666;
+        Tue, 29 Apr 2025 17:16:57 -0700 (PDT)
+Received: from debug.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4d770d6sm109386035ad.17.2025.04.29.17.16.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Apr 2025 17:16:57 -0700 (PDT)
+From: Deepak Gupta <debug@rivosinc.com>
+Date: Tue, 29 Apr 2025 17:16:27 -0700
+Subject: [PATCH v14 10/27] riscv/mm: Implement map_shadow_stack() syscall
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="NFTx9axBbIHKVfre"
-Content-Disposition: inline
-In-Reply-To: <edab112f-9449-4862-8f8a-0beae136e0c6@web.de>
-X-Cookie: Well begun is half done.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250429-v5_user_cfi_series-v14-10-5239410d012a@rivosinc.com>
+References: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
+In-Reply-To: <20250429-v5_user_cfi_series-v14-0-5239410d012a@rivosinc.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Vlastimil Babka <vbabka@suse.cz>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Conor Dooley <conor@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+ Christian Brauner <brauner@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <kees@kernel.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>, 
+ Jann Horn <jannh@google.com>, Conor Dooley <conor+dt@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-arch@vger.kernel.org, 
+ linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ alistair.francis@wdc.com, richard.henderson@linaro.org, jim.shu@sifive.com, 
+ andybnac@gmail.com, kito.cheng@sifive.com, charlie@rivosinc.com, 
+ atishp@rivosinc.com, evan@rivosinc.com, cleger@rivosinc.com, 
+ alexghiti@rivosinc.com, samitolvanen@google.com, broonie@kernel.org, 
+ rick.p.edgecombe@intel.com, rust-for-linux@vger.kernel.org, 
+ Zong Li <zong.li@sifive.com>, Deepak Gupta <debug@rivosinc.com>
+X-Mailer: b4 0.13.0
 
+As discussed extensively in the changelog for the addition of this
+syscall on x86 ("x86/shstk: Introduce map_shadow_stack syscall") the
+existing mmap() and madvise() syscalls do not map entirely well onto the
+security requirements for shadow stack memory since they lead to windows
+where memory is allocated but not yet protected or stacks which are not
+properly and safely initialised. Instead a new syscall map_shadow_stack()
+has been defined which allocates and initialises a shadow stack page.
 
---NFTx9axBbIHKVfre
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch implements this syscall for riscv. riscv doesn't require token
+to be setup by kernel because user mode can do that by itself. However to
+provide compatibility and portability with other architectues, user mode
+can specify token set flag.
 
-On Mon, Apr 28, 2025 at 11:00:46AM +0200, Markus Elfring wrote:
+Reviewed-by: Zong Li <zong.li@sifive.com>
+Signed-off-by: Deepak Gupta <debug@rivosinc.com>
+---
+ arch/riscv/kernel/Makefile  |   1 +
+ arch/riscv/kernel/usercfi.c | 143 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 144 insertions(+)
 
-> Would the following source code formatting become applicable?
->=20
-> +	sort(defaults, ndefaults, sizeof(*defaults), regcache_defaults_cmp, NUL=
-L);
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index 8d186bfced45..3a861d320654 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -125,3 +125,4 @@ obj-$(CONFIG_ACPI)		+= acpi.o
+ obj-$(CONFIG_ACPI_NUMA)	+= acpi_numa.o
+ 
+ obj-$(CONFIG_GENERIC_CPU_VULNERABILITIES) += bugs.o
++obj-$(CONFIG_RISCV_USER_CFI) += usercfi.o
+diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+new file mode 100644
+index 000000000000..0b3bbb41490a
+--- /dev/null
++++ b/arch/riscv/kernel/usercfi.c
+@@ -0,0 +1,143 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2024 Rivos, Inc.
++ * Deepak Gupta <debug@rivosinc.com>
++ */
++
++#include <linux/sched.h>
++#include <linux/bitops.h>
++#include <linux/types.h>
++#include <linux/mm.h>
++#include <linux/mman.h>
++#include <linux/uaccess.h>
++#include <linux/sizes.h>
++#include <linux/user.h>
++#include <linux/syscalls.h>
++#include <linux/prctl.h>
++#include <asm/csr.h>
++#include <asm/usercfi.h>
++
++#define SHSTK_ENTRY_SIZE sizeof(void *)
++
++/*
++ * Writes on shadow stack can either be `sspush` or `ssamoswap`. `sspush` can happen
++ * implicitly on current shadow stack pointed to by CSR_SSP. `ssamoswap` takes pointer to
++ * shadow stack. To keep it simple, we plan to use `ssamoswap` to perform writes on shadow
++ * stack.
++ */
++static noinline unsigned long amo_user_shstk(unsigned long *addr, unsigned long val)
++{
++	/*
++	 * Never expect -1 on shadow stack. Expect return addresses and zero
++	 */
++	unsigned long swap = -1;
++
++	__enable_user_access();
++	asm goto(
++		".option push\n"
++		".option arch, +zicfiss\n"
++		"1: ssamoswap.d %[swap], %[val], %[addr]\n"
++		_ASM_EXTABLE(1b, %l[fault])
++		".option pop\n"
++		: [swap] "=r" (swap), [addr] "+A" (*addr)
++		: [val] "r" (val)
++		: "memory"
++		: fault
++		);
++	__disable_user_access();
++	return swap;
++fault:
++	__disable_user_access();
++	return -1;
++}
++
++/*
++ * Create a restore token on the shadow stack.  A token is always XLEN wide
++ * and aligned to XLEN.
++ */
++static int create_rstor_token(unsigned long ssp, unsigned long *token_addr)
++{
++	unsigned long addr;
++
++	/* Token must be aligned */
++	if (!IS_ALIGNED(ssp, SHSTK_ENTRY_SIZE))
++		return -EINVAL;
++
++	/* On RISC-V we're constructing token to be function of address itself */
++	addr = ssp - SHSTK_ENTRY_SIZE;
++
++	if (amo_user_shstk((unsigned long __user *)addr, (unsigned long)ssp) == -1)
++		return -EFAULT;
++
++	if (token_addr)
++		*token_addr = addr;
++
++	return 0;
++}
++
++static unsigned long allocate_shadow_stack(unsigned long addr, unsigned long size,
++					   unsigned long token_offset, bool set_tok)
++{
++	int flags = MAP_ANONYMOUS | MAP_PRIVATE;
++	struct mm_struct *mm = current->mm;
++	unsigned long populate, tok_loc = 0;
++
++	if (addr)
++		flags |= MAP_FIXED_NOREPLACE;
++
++	mmap_write_lock(mm);
++	addr = do_mmap(NULL, addr, size, PROT_READ, flags,
++		       VM_SHADOW_STACK | VM_WRITE, 0, &populate, NULL);
++	mmap_write_unlock(mm);
++
++	if (!set_tok || IS_ERR_VALUE(addr))
++		goto out;
++
++	if (create_rstor_token(addr + token_offset, &tok_loc)) {
++		vm_munmap(addr, size);
++		return -EINVAL;
++	}
++
++	addr = tok_loc;
++
++out:
++	return addr;
++}
++
++SYSCALL_DEFINE3(map_shadow_stack, unsigned long, addr, unsigned long, size, unsigned int, flags)
++{
++	bool set_tok = flags & SHADOW_STACK_SET_TOKEN;
++	unsigned long aligned_size = 0;
++
++	if (!cpu_supports_shadow_stack())
++		return -EOPNOTSUPP;
++
++	/* Anything other than set token should result in invalid param */
++	if (flags & ~SHADOW_STACK_SET_TOKEN)
++		return -EINVAL;
++
++	/*
++	 * Unlike other architectures, on RISC-V, SSP pointer is held in CSR_SSP and is available
++	 * CSR in all modes. CSR accesses are performed using 12bit index programmed in instruction
++	 * itself. This provides static property on register programming and writes to CSR can't
++	 * be unintentional from programmer's perspective. As long as programmer has guarded areas
++	 * which perform writes to CSR_SSP properly, shadow stack pivoting is not possible. Since
++	 * CSR_SSP is writeable by user mode, it itself can setup a shadow stack token subsequent
++	 * to allocation. Although in order to provide portablity with other architecture (because
++	 * `map_shadow_stack` is arch agnostic syscall), RISC-V will follow expectation of a token
++	 * flag in flags and if provided in flags, setup a token at the base.
++	 */
++
++	/* If there isn't space for a token */
++	if (set_tok && size < SHSTK_ENTRY_SIZE)
++		return -ENOSPC;
++
++	if (addr && (addr & (PAGE_SIZE - 1)))
++		return -EINVAL;
++
++	aligned_size = PAGE_ALIGN(size);
++	if (aligned_size < size)
++		return -EOVERFLOW;
++
++	return allocate_shadow_stack(addr, aligned_size, size, set_tok);
++}
 
-Feel free to ignore Markus, he has a long history of sending
-unhelpful review comments and continues to ignore repeated requests
-to stop.
+-- 
+2.43.0
 
---NFTx9axBbIHKVfre
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgRa/UACgkQJNaLcl1U
-h9CyyQf9GfxP0Cy0bZ97n/ofMRRGMjpH6U3zALBxa2zXqCorH55hSQsEfUQRCfXJ
-UzR/jIdXczE7jdyZEQm+psDrDJegAOkYD2AWrLKF5U417evMcXcusr3chjfX2o4u
-0so9BBw4bpk3PAZMWlv5LadCc7gH/wJDfzPxOO59CO+pWTr3pwIpiotPYx5jDM0u
-KQ/VKWDOGyGXYGEvU+rA71pXDHV1Y+SSF9NehOS9zasrCiYxeXEjVTXABs61sYba
-6vjBWO9eIFXPurZ1fqkK7AbdtTq1UM6TleP293zosRUm+jw+DU9pAjb7OvTktbs9
-qyP6k5NsV9SweDj/sj6uIg2TCvUpyg==
-=siGj
------END PGP SIGNATURE-----
-
---NFTx9axBbIHKVfre--
