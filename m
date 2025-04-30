@@ -1,25 +1,33 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 358411DE4D8
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:37:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52F8E1E990B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745995073; cv=none; b=tEnoLepvUtuj+Ofqnpgj9hw5ZPP/p+rNf9LFIEP8fKq/dIRYyh+VMi1m1nLJTs24PjzBzY2DCX68L0YM0fjf6J0B576fOJBV0ZCOsczbEdkVqKoNyikLtNDmQkPDZiyYx9CeKdHoqcKxwWWOXHrreMFMnI/DOtcLXs+kFwJM/TU=
+	t=1745995075; cv=none; b=I4/Yv8TPJf9P0H9cevQn2s2XOpPXzrBTHAf1wK1tY5zSdBAR4s/wMLva3zYyCERaIhnbpcm+Tha0bzep2YyxGFG6sbOZz30op1PxTA+OUOSzJKAxWTp9SszLo0FWFpPZ00RxKY4K28kgs9f8zYfOZdHa9oEimE9sLbtdisrTprE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745995073; c=relaxed/simple;
-	bh=gTSX0nbMat2cwQzJ1R8ppxB7cbiT11SbAq97jEvMMBY=;
+	s=arc-20240116; t=1745995075; c=relaxed/simple;
+	bh=D0H4SUGrkbfu1ECEDYMsmXH0RkJmSeH8R58c6NJrBCA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OmFoiLaLaqyPK1DIboPca16JA5c0K/cReQsXfFCBzCMOLhp0/fIpeGv8PgBuZJVxK/1KZ9YhybHPsb3lT05wR6g6cGRS0A67KJbjZUIQBek7TRtxsBbyYj9Qukwjs6CGBtS6EE8aXWfWtMqg/NlhyweAhJby3FHoljQeqiTARDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 27FC4106F;
-	Tue, 29 Apr 2025 23:37:44 -0700 (PDT)
-Received: from [10.163.79.251] (unknown [10.163.79.251])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B72F93F66E;
-	Tue, 29 Apr 2025 23:37:41 -0700 (PDT)
-Message-ID: <9687592f-ec04-410f-9fb2-9777edfe1178@arm.com>
-Date: Wed, 30 Apr 2025 12:07:37 +0530
+	 In-Reply-To:Content-Type; b=C9J28XENqsuZhFdqEtNvtOFqz/4pXUuKKeOb3kx8MBai7MB0ajqlPsiLtG4ZAcfeqNQ1uzWcnH9ao2PRsTqp0Ly3b6sZBRqqXWvaMujX7PUHqU+/EDeaXZ94hiUyi8A7FGZSqsZBA7egc7Z+1qdC4RcZ5uG77sraISy77NJyVDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RA0vhVBb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RA0vhVBb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78561C4CEEA;
+	Wed, 30 Apr 2025 06:37:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1745995075;
+	bh=D0H4SUGrkbfu1ECEDYMsmXH0RkJmSeH8R58c6NJrBCA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RA0vhVBbBsWHL6bQYIDmXUo62G6IfYvLF8zfYWq18VIUmAwyvfF6PplhxGLLsiV06
+	 UAzj8Vo4W4Ony2sPkXHwQBkNQPhq7wteirh/DPh6nBY4psshFQu3IPSAUZTexD67/T
+	 rbJKamoJlkkKd+Clor/fq7snlSCe5ji9BeZrm6VvJFCr0RUnpoOxIJ6PaNJ2GiFciF
+	 42ovDTEEfKu8Xnki8+c6QLq9WaWT2iNdCOQGGCYe0Dlfcjsc4FnZzFtL548s1T7v1Z
+	 QYCfnZ3sorytgx9d/cYKhTH0TLp/o0dkj03JGxPW2tdPg8UOJ4eJjCrpU6J5jhl8re
+	 38sNvVFEUFgAA==
+Message-ID: <e9a0abc5-7ee0-4ee1-9e19-37d43a5d41de@kernel.org>
+Date: Wed, 30 Apr 2025 08:37:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -27,191 +35,162 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/7] mm: Optimize mprotect() by batch-skipping PTEs
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, ryan.roberts@arm.com, david@redhat.com,
- willy@infradead.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- catalin.marinas@arm.com, will@kernel.org, Liam.Howlett@oracle.com,
- vbabka@suse.cz, jannh@google.com, anshuman.khandual@arm.com,
- peterx@redhat.com, joey.gouly@arm.com, ioworker0@gmail.com,
- baohua@kernel.org, kevin.brodsky@arm.com, quic_zhenhuah@quicinc.com,
- christophe.leroy@csgroup.eu, yangyicong@hisilicon.com,
- linux-arm-kernel@lists.infradead.org, namit@vmware.com, hughd@google.com,
- yang@os.amperecomputing.com, ziy@nvidia.com
-References: <20250429052336.18912-1-dev.jain@arm.com>
- <20250429052336.18912-3-dev.jain@arm.com>
- <f4a90024-3cc7-4536-84b0-665021d96125@lucifer.local>
+Subject: Re: [patch V2 35/45] genirq/manage: Rework irq_set_irq_wake()
+To: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+References: <20250429065337.117370076@linutronix.de>
+ <20250429065422.128859754@linutronix.de>
 Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <f4a90024-3cc7-4536-84b0-665021d96125@lucifer.local>
+From: Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jirislaby@kernel.org; keydata=
+ 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
+In-Reply-To: <20250429065422.128859754@linutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
+On 29. 04. 25, 8:55, Thomas Gleixner wrote:
+> Use the new guards to get and lock the interrupt descriptor and tidy up the
+> code.
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> 
+> ---
+>   kernel/irq/manage.c |   61 +++++++++++++++++++++++-----------------------------
+>   1 file changed, 28 insertions(+), 33 deletions(-)
+> 
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -845,44 +845,39 @@ static int set_irq_wake_real(unsigned in
+>    */
+>   int irq_set_irq_wake(unsigned int irq, unsigned int on)
+>   {
+> -	unsigned long flags;
+> -	struct irq_desc *desc = irq_get_desc_buslock(irq, &flags, IRQ_GET_DESC_CHECK_GLOBAL);
+> -	int ret = 0;
+> +	int ret = -EINVAL;
+
+Hmm...
+
+> -	if (!desc)
+> -		return -EINVAL;
+> +	scoped_irqdesc_get_and_lock(irq, IRQ_GET_DESC_CHECK_GLOBAL) {
+> +		struct irq_desc *desc = scoped_irqdesc;
+>   
+> -	/* Don't use NMIs as wake up interrupts please */
+> -	if (irq_is_nmi(desc)) {
+> -		ret = -EINVAL;
+> -		goto out_unlock;
+> -	}
+> +		/* Don't use NMIs as wake up interrupts please */
+> +		if (irq_is_nmi(desc))
+> +			return -EINVAL;
+>   
+> -	/* wakeup-capable irqs can be shared between drivers that
+> -	 * don't need to have the same sleep mode behaviors.
+> -	 */
+> -	if (on) {
+> -		if (desc->wake_depth++ == 0) {
+> -			ret = set_irq_wake_real(irq, on);
+> -			if (ret)
+> -				desc->wake_depth = 0;
+> -			else
+> -				irqd_set(&desc->irq_data, IRQD_WAKEUP_STATE);
+> -		}
+> -	} else {
+> -		if (desc->wake_depth == 0) {
+> -			WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
+> -		} else if (--desc->wake_depth == 0) {
+> -			ret = set_irq_wake_real(irq, on);
+> -			if (ret)
+> -				desc->wake_depth = 1;
+> -			else
+> -				irqd_clear(&desc->irq_data, IRQD_WAKEUP_STATE);
+> +		/*
+> +		 * wakeup-capable irqs can be shared between drivers that
+> +		 * don't need to have the same sleep mode behaviors.
+> +		 */
+> +		if (on) {
+> +			if (desc->wake_depth++ == 0) {
+> +				ret = set_irq_wake_real(irq, on);
+> +				if (ret)
+> +					desc->wake_depth = 0;
+> +				else
+> +					irqd_set(&desc->irq_data, IRQD_WAKEUP_STATE);
+> +			}
+
+So in this (imaginary) else branch (i.e. desc->wake_depth++ != 0), you 
+return EINVAL now?
+
+Previously, it was 0 (correctly), if I am looking correctly.
+
+> +		} else {
+> +			if (desc->wake_depth == 0) {
+> +				WARN(1, "Unbalanced IRQ %d wake disable\n", irq);
+
+And here too.
+
+> +			} else if (--desc->wake_depth == 0) {
+> +				ret = set_irq_wake_real(irq, on);
+> +				if (ret)
+> +					desc->wake_depth = 1;
+> +				else
+> +					irqd_clear(&desc->irq_data, IRQD_WAKEUP_STATE);
+> +			}
+>   		}
+>   	}
+> -
+> -out_unlock:
+> -	irq_put_desc_busunlock(desc, flags);
+>   	return ret;
+>   }
+>   EXPORT_SYMBOL(irq_set_irq_wake);
+> 
+> 
+> 
 
 
-On 29/04/25 6:49 pm, Lorenzo Stoakes wrote:
-> Very very very nitty on subject (sorry I realise this is annoying :P) -
-> generally don't need to capitalise 'Optimize' here :>)
-> 
-> Generally I like the idea here. But some issues on impl.
-> 
-> On Tue, Apr 29, 2025 at 10:53:31AM +0530, Dev Jain wrote:
->> In case of prot_numa, there are various cases in which we can skip to the
->> next iteration. Since the skip condition is based on the folio and not
->> the PTEs, we can skip a PTE batch.
->>
->> Signed-off-by: Dev Jain <dev.jain@arm.com>
->> ---
->>   mm/mprotect.c | 27 ++++++++++++++++++++-------
->>   1 file changed, 20 insertions(+), 7 deletions(-)
->>
->> diff --git a/mm/mprotect.c b/mm/mprotect.c
->> index 70f59aa8c2a8..ec5d17af7650 100644
->> --- a/mm/mprotect.c
->> +++ b/mm/mprotect.c
->> @@ -91,6 +91,9 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
->>   	bool toptier;
->>   	int nid;
->>
->> +	if (folio_is_zone_device(folio) || folio_test_ksm(folio))
->> +		return true;
->> +
-> 
-> Hm why not just put this here from the start? I think you should put this back
-> in the prior commit.
-> 
->>   	/* Also skip shared copy-on-write pages */
->>   	if (is_cow_mapping(vma->vm_flags) &&
->>   	    (folio_maybe_dma_pinned(folio) ||
->> @@ -126,8 +129,10 @@ static bool prot_numa_skip(struct vm_area_struct *vma, struct folio *folio,
->>   }
->>
->>   static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
->> -		unsigned long addr, pte_t oldpte, int target_node)
->> +		unsigned long addr, pte_t *pte, pte_t oldpte, int target_node,
->> +		int max_nr, int *nr)
-> 
-> Hate this ptr to nr.
-> 
-> Why not just return nr, if it's 0 then skip? Simple!
-> 
->>   {
->> +	const fpb_t flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>   	struct folio *folio;
->>   	int ret;
->>
->> @@ -136,12 +141,16 @@ static bool prot_numa_avoid_fault(struct vm_area_struct *vma,
->>   		return true;
->>
->>   	folio = vm_normal_folio(vma, addr, oldpte);
->> -	if (!folio || folio_is_zone_device(folio) ||
->> -	    folio_test_ksm(folio))
->> +	if (!folio)
->>   		return true;
->> +
-> 
-> Very nitty, but stray extra line unless intended...
-> 
-> Not sure why we can't just put this !folio check in prot_numa_skip()?
-
-Because we won't be able to batch if the folio is NULL.
-
-I think I really messed up by having separate patch 1 and 2. The real 
-intent of patch 1 was to do batching in patch 2 *and* not have insane 
-indentation. Perhaps I should merge them, or completely separate them 
-logically, I'll figure this out.
-
-> 
->>   	ret = prot_numa_skip(vma, folio, target_node);
->> -	if (ret)
->> +	if (ret) {
->> +		if (folio_test_large(folio) && max_nr != 1)
->> +			*nr = folio_pte_batch(folio, addr, pte, oldpte,
->> +					      max_nr, flags, NULL, NULL, NULL);
-> 
-> So max_nr can <= 0 too? Shouldn't this be max_nr > 1?
-> 
->>   		return ret;
-> 
-> Again x = fn_return_bool(); if (x) { return x; } is a bit silly, just do if
-> (fn_return_bool()) { return true; }.
-> 
-> If we return the number of pages, then this can become really simple, like:
-> 
-> I feel like maybe we should abstract the folio large handling here, though it'd
-> be a tiny function so hm.
-> 
-> Anyway assuming we leave it in place, and return number of pages processed, this
-> can become:
-> 
-> if (prot_numa_skip(vma, folio, target_node)) {
-> 	if (folio_test_large(folio) && max_nr > 1)
-> 		return folio_pte_batch(folio, addr, pte, oldpte, max_nr, flags,
-> 				NULL, NULL, NULL);
-> 	return 1;
-> }
-> 
-> Which is neater I think!
-> 
-> 
->> +	}
->>   	if (folio_use_access_time(folio))
->>   		folio_xchg_access_time(folio,
->>   			jiffies_to_msecs(jiffies));
->> @@ -159,6 +168,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   	bool prot_numa = cp_flags & MM_CP_PROT_NUMA;
->>   	bool uffd_wp = cp_flags & MM_CP_UFFD_WP;
->>   	bool uffd_wp_resolve = cp_flags & MM_CP_UFFD_WP_RESOLVE;
->> +	int nr;
->>
->>   	tlb_change_page_size(tlb, PAGE_SIZE);
->>   	pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
->> @@ -173,8 +183,10 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   	flush_tlb_batched_pending(vma->vm_mm);
->>   	arch_enter_lazy_mmu_mode();
->>   	do {
->> +		nr = 1;
->>   		oldpte = ptep_get(pte);
->>   		if (pte_present(oldpte)) {
->> +			int max_nr = (end - addr) >> PAGE_SHIFT;
-> 
-> Not a fan of open-coding this. Since we already provide addr, why not just
-> provide end as well and have prot_numa_avoid_fault() calculate it?
-> 
->>   			pte_t ptent;
->>
->>   			/*
->> @@ -182,8 +194,9 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   			 * pages. See similar comment in change_huge_pmd.
->>   			 */
->>   			if (prot_numa &&
->> -			    prot_numa_avoid_fault(vma, addr,
->> -						  oldpte, target_node))
->> +			    prot_numa_avoid_fault(vma, addr, pte,
->> +						  oldpte, target_node,
->> +							  max_nr, &nr))
->>   					continue;
->>
->>   			oldpte = ptep_modify_prot_start(vma, addr, pte);
->> @@ -300,7 +313,7 @@ static long change_pte_range(struct mmu_gather *tlb,
->>   				pages++;
->>   			}
->>   		}
->> -	} while (pte++, addr += PAGE_SIZE, addr != end);
->> +	} while (pte += nr, addr += nr * PAGE_SIZE, addr != end);
-> 
-> This is icky, having 'nr' here like this.
-> 
-> But alternatives might be _even more_ icky (that is advancing both on
-> prot_numa_avoid_fault() so probably we need to keep it like this.
-> 
-> Maybe more a moan at the C programming language tbh haha!
-> 
-> 
->>   	arch_leave_lazy_mmu_mode();
->>   	pte_unmap_unlock(pte - 1, ptl);
->>
->> --
->> 2.30.2
->>
-
+-- 
+js
+suse labs
