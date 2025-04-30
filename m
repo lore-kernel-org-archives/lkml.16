@@ -1,190 +1,106 @@
-Received: from esa12.hc1455-7.c3s2.iphmx.com (esa12.hc1455-7.c3s2.iphmx.com [139.138.37.100])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0204A2DC775;
-	Wed, 30 Apr 2025 01:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=139.138.37.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D7C1754B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745976634; cv=none; b=NElzRwO+Ng/sM8sd/yXWxpYAyqOl4edU7R63MF8F00oU4WsHVIDCXsO7tndbcWRQKRigwEcOwzz+DYX8+RlG1xjmrkxDYi9Ql5Dh+qahtXuEvP7iK2hFInd1Qrnut6SaDmhgB+Bv1hHk3VnznqogMtG6/js4BW0boCxSCbhUW/Q=
+	t=1745976820; cv=none; b=nsQV38IvJRLmAi+tooygjfnNnEScne2jZzLTP+yZepgrTzXkBGVZiA5v15wHfS5usYsazxo+LdtxxuQqaho0eC+tZVg4FdViNuiL71aJX4CqXACOAqYEb81Q+PWmqtOPyDLAiRS7C7xV68OJULiNViixePIUr2bXAl1/1U+rrRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745976634; c=relaxed/simple;
-	bh=u5ZyN8SzOBT5hAHJ1lMX9Syyf7NZL+fhlUK/ToIs5QY=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=BzrcB69TDV/1rVQV3VjOUvUFRs96AxPkYdU1XOJrB0ILT1YLlun9QiKRwR4KTNfNNM8rp+0PmCr8Z6/l0kFTzrB6DXFD77IeRFYDxyCfRu0sIjFAHZdUEjMWJ98E69+uz31xYTbKxFF9ddVyTTk8yxN08OFQxapB9IixZxlenEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com; spf=pass smtp.mailfrom=fujitsu.com; dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b=VGjVbim1; arc=none smtp.client-ip=139.138.37.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fujitsu.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fujitsu.com
+	s=arc-20240116; t=1745976820; c=relaxed/simple;
+	bh=RALBKsGG2upzcguTIS+A+PDnBRNe6/TeULsuaKzmBck=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=adYeRAKs1TZb+3xKaIyPGHfc9xDZDEqzDTIFJbx7I7ySoIYb70AodowKybFIOk/gQi+80TLXb0xPyNX2VYQuEe0cOd1SajjkoydpY4y9x/FjUXA2vhpNv3OuLuc5k6FNHCIW6sk6gCoocgDrGjs8c0CgZK1XNd5+rfWHDQvoFOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dq0d75DR; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fujitsu.com header.i=@fujitsu.com header.b="VGjVbim1"
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=fujitsu.com; i=@fujitsu.com; q=dns/txt; s=fj2;
-  t=1745976632; x=1777512632;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=u5ZyN8SzOBT5hAHJ1lMX9Syyf7NZL+fhlUK/ToIs5QY=;
-  b=VGjVbim1kfEkmM6qRL6f5u1MJMBMdsSprJsCASPnrNdgd1qXflZZOUk2
-   Jzn+cO1tUHD6hhK+JxvvpkIpc/4Na8gyiGvppDu4MFRrnTc7vh96GG2HS
-   CCaYm5AFu2k2ZiIS7J208ZPxhyKnylsw8ghaoHCMNfh4ySk1bUclMxre5
-   VoOxzwwMYMb/yLZPqm9RrScSBlIhviAzkSWxtcnUQdtjuW0yPOhXitDfy
-   UhA6afK0EFLknnQH6RVjaUyaKBWX82LTv/ogfMRqyQJ7zHmw/gUtdSI2N
-   EmBwRsMuyzZGaeupbEqJCRRJ1jS6Mfa5o4z9ZxVik4G/wiScHQQU+jxpm
-   g==;
-X-CSE-ConnectionGUID: gX7J6P1IQ06FkkXfXCiq6w==
-X-CSE-MsgGUID: AoZqcz9kTaC68y2XCd4xHw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="176955983"
-X-IronPort-AV: E=Sophos;i="6.15,250,1739804400"; 
-   d="scan'208";a="176955983"
-Received: from unknown (HELO yto-r2.gw.nic.fujitsu.com) ([218.44.52.218])
-  by esa12.hc1455-7.c3s2.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 10:29:20 +0900
-Received: from yto-m1.gw.nic.fujitsu.com (yto-nat-yto-m1.gw.nic.fujitsu.com [192.168.83.64])
-	by yto-r2.gw.nic.fujitsu.com (Postfix) with ESMTP id 9BE3D96743;
-	Wed, 30 Apr 2025 10:29:18 +0900 (JST)
-Received: from edo.cn.fujitsu.com (edo.cn.fujitsu.com [10.167.33.5])
-	by yto-m1.gw.nic.fujitsu.com (Postfix) with ESMTP id 5A43ECFA5A;
-	Wed, 30 Apr 2025 10:29:18 +0900 (JST)
-Received: from iaas-rpma.. (unknown [10.167.135.44])
-	by edo.cn.fujitsu.com (Postfix) with ESMTP id 4EB271A0071;
-	Wed, 30 Apr 2025 09:29:17 +0800 (CST)
-From: Li Zhijian <lizhijian@fujitsu.com>
-To: linux-cxl@vger.kernel.org
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	linux-kernel@vger.kernel.org,
-	Li Zhijian <lizhijian@fujitsu.com>
-Subject: [RFC PATCH] cxl: Allow reprogramming misconfigured hdm decoders
-Date: Wed, 30 Apr 2025 09:29:15 +0800
-Message-Id: <20250430012915.295136-1-lizhijian@fujitsu.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dq0d75DR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1745976815;
+	bh=RALBKsGG2upzcguTIS+A+PDnBRNe6/TeULsuaKzmBck=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dq0d75DROVnQzBqyTJRPBxU66weJ/K5BbTOij8qCsb4kit0RZTQjUVRYnZLS4dxC5
+	 n/Cb/gODpGUXUbyP9OSS3hirK+DmZeWrYxmQT2/Os8JVO00OMNFJ6gJ4VndPJjp9RB
+	 jIMho8YeE0mp0pjyE55HqvTTqJFEenpIkIrLD+wRFviavenQwSE6M6wAkvVy5jpImT
+	 IAZQVVV9ieiGg44k2nNFvY0ZR/VrcfVK/imJaL53o+29m8THBIc+bVQ7M8w0348y5M
+	 siM8k1LNUUpdTItctXe5Tqz/PKgXdkQtWmShe0jb3H2xHUFIVsstHt89C+zZSiJ1zm
+	 dwvB+wIrPSFaw==
+Received: from [192.168.50.250] (unknown [171.76.80.110])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: vignesh)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48C2D17E049F;
+	Wed, 30 Apr 2025 03:33:32 +0200 (CEST)
+Message-ID: <a94b065d-408b-47d6-8e60-1c61dccdb790@collabora.com>
+Date: Wed, 30 Apr 2025 07:03:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] drm/ci: uprev mesa
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Daniel Stone <daniel@fooishbar.org>, dri-devel@lists.freedesktop.org,
+ daniels@collabora.com, helen.fornazier@gmail.com, airlied@gmail.com,
+ simona.vetter@ffwll.ch, robdclark@gmail.com, guilherme.gallo@collabora.com,
+ sergi.blanch.torne@collabora.com, valentine.burley@collabora.com,
+ lumag@kernel.org, quic_abhinavk@quicinc.com, mripard@kernel.org,
+ maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
+ linux-kernel@vger.kernel.org
+References: <20250328110239.993685-1-vignesh.raman@collabora.com>
+ <20250328110239.993685-4-vignesh.raman@collabora.com>
+ <CAPj87rOPHqLaFn3r4rkeMMrQ=OSRQUJ2LLrQ4ZDE6eA1S6zybw@mail.gmail.com>
+ <3a3107d4-cc59-42ff-b3f8-2280a357208b@collabora.com>
+ <4cac94b9-2445-458c-a39f-5eb72537d6f6@collabora.com>
+ <rrrquzr4k64e6b74g4foio7z4pltfx3oxrqbrrw5w3frlmyzkd@x45yj42sgplt>
+Content-Language: en-US
+From: Vignesh Raman <vignesh.raman@collabora.com>
+In-Reply-To: <rrrquzr4k64e6b74g4foio7z4pltfx3oxrqbrrw5w3frlmyzkd@x45yj42sgplt>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-During kernel booting, CXL drivers will attempt to construct the CXL region
-according to the pre-programed(firmware provisioning) HDM decoders.
+Hi Dmitry,
 
-This construction process will fail for some reasons, in this case, the
-userspace cli like ndctl/cxl cannot destroy nor create regions upon the
-existing decoders.
+On 29/04/25 23:51, Dmitry Baryshkov wrote:
+> On Thu, Apr 03, 2025 at 11:29:55AM +0530, Vignesh Raman wrote:
+>> Hi Daniel,
+>>
+>> On 28/03/25 17:29, Vignesh Raman wrote:
+>>> Hi Daniel,
+>>>
+>>> On 28/03/25 17:06, Daniel Stone wrote:
+>>>> Hi Vignesh,
+>>>>
+>>>> On Fri, 28 Mar 2025 at 11:03, Vignesh Raman
+>>>> <vignesh.raman@collabora.com> wrote:
+>>>>> The current s3cp implementation does not work anymore after the
+>>>>> migration, and instead of fixing it and propagating the fix down to us,
+>>>>> it's simpler to directly use curl. Uprev mesa [1][2] to adapt these
+>>>>> changes. Also replace broken s3cp command with a curl wrapper call in
+>>>>> drm-ci.
+>>>>
+>>>> Thanks a lot for fixing this. Sorry the fallout has been so bad.
+>>>>
+>>>> You can also upgrade ci-templates to get an s3cp which works again.
+>>>
+>>> Thanks for fixing this. Will use the latest ci-templates and test it.
+>>
+>> We need to update mesa to use the latest ci-templates and then uprev mesa in
+>> drm-ci. I will send this in a separate series after fixing it in mesa.
+> 
+> Vignesh, Daniel, any updates on this? Currently drm/ci is broken both in
+> master and in drm-misc.
+> 
 
-Introuce a new flag CXL_DECODER_F_NEED_RESET tell the driver to reset
-the decoder during `cxl destroy-region regionN`, so that region can be
-create again after that.
+mesa-ci is updated to use s3cp and drop the s3_upload, which is a curl 
+wrapper. These patches were merged this week and I will uprev mesa in 
+drm-ci to get s3cp working. I will send update to this series.
 
-Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
----
-Cover letter is here.
+Regards,
+Vignesh
 
-Hi all,
-
-Previously, we encountered a CXL device with differing IG between the device
-and its USP, which resulted in the driver’s failure to automatically
-complete the creation of the region, and user cannot create/destroy region
-after this failure.
-
-Although this IG issue has been ignored in the new kernel [1], I realized
-that if there was an error in firmware provisioning the HDM decoders, the
-user might not be able to destroy the unfinished region and recreate it.
-This is because certain components related to this region are in an
-inconsistent state, preventing the CXL tool from operating on it.
-
-This implies that the OS administrator cannot reconfigure the CXL device,
-which is largely contrary to user expectations. I am keen to hear your
-thoughts on this matter.
-
-A modified QEMU [2] is able to limitly program the HDM decoders to inject some
-wrong decoder configurations.
-
-[1] https://lore.kernel.org/lkml/20250402232552.999634-1-gourry@gourry.net/
-[2] https://github.com/zhijianli88/qemu/tree/program-decoder
-
----
----
- drivers/cxl/core/hdm.c       | 4 +++-
- drivers/cxl/core/region.c    | 6 ++++--
- drivers/cxl/cxl.h            | 3 ++-
- tools/testing/cxl/test/cxl.c | 1 +
- 4 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/cxl/core/hdm.c b/drivers/cxl/core/hdm.c
-index 70cae4ebf8a4..afbbda780d4d 100644
---- a/drivers/cxl/core/hdm.c
-+++ b/drivers/cxl/core/hdm.c
-@@ -559,7 +559,8 @@ int cxl_dpa_free(struct cxl_endpoint_decoder *cxled)
- 			dev_name(&cxled->cxld.region->dev));
- 		return -EBUSY;
- 	}
--	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE) {
-+	if (cxled->cxld.flags & CXL_DECODER_F_ENABLE &&
-+	    !(cxled->cxld.flags & CXL_DECODER_F_NEED_RESET)) {
- 		dev_dbg(dev, "decoder enabled\n");
- 		return -EBUSY;
- 	}
-@@ -918,6 +919,7 @@ static void cxl_decoder_reset(struct cxl_decoder *cxld)
- 	up_read(&cxl_dpa_rwsem);
- 
- 	cxld->flags &= ~CXL_DECODER_F_ENABLE;
-+	cxld->flags &= ~CXL_DECODER_F_NEED_RESET;
- 
- 	/* Userspace is now responsible for reconfiguring this decoder */
- 	if (is_endpoint_decoder(&cxld->dev)) {
-diff --git a/drivers/cxl/core/region.c b/drivers/cxl/core/region.c
-index c3f4dc244df7..d025e892d07d 100644
---- a/drivers/cxl/core/region.c
-+++ b/drivers/cxl/core/region.c
-@@ -2096,7 +2096,8 @@ static int cxl_region_detach(struct cxl_endpoint_decoder *cxled)
- 	p = &cxlr->params;
- 	get_device(&cxlr->dev);
- 
--	if (p->state > CXL_CONFIG_ACTIVE) {
-+	if (p->state > CXL_CONFIG_ACTIVE ||
-+	    cxled->cxld.flags & CXL_DECODER_F_NEED_RESET) {
- 		cxl_region_decode_reset(cxlr, p->interleave_ways);
- 		p->state = CXL_CONFIG_ACTIVE;
- 	}
-@@ -3434,7 +3435,8 @@ int cxl_add_to_region(struct cxl_port *root, struct cxl_endpoint_decoder *cxled)
- 		if (device_attach(&cxlr->dev) < 0)
- 			dev_err(&cxlr->dev, "failed to enable, range: %pr\n",
- 				p->res);
--	}
-+	} else
-+		cxled->cxld.flags |= CXL_DECODER_F_NEED_RESET;
- 
- 	put_device(region_dev);
- out:
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index be8a7dc77719..60fae072bbcf 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -331,7 +331,8 @@ int cxl_dport_map_rcd_linkcap(struct pci_dev *pdev, struct cxl_dport *dport);
- #define CXL_DECODER_F_TYPE3 BIT(3)
- #define CXL_DECODER_F_LOCK  BIT(4)
- #define CXL_DECODER_F_ENABLE    BIT(5)
--#define CXL_DECODER_F_MASK  GENMASK(5, 0)
-+#define CXL_DECODER_F_NEED_RESET    BIT(6)
-+#define CXL_DECODER_F_MASK  GENMASK(6, 0)
- 
- enum cxl_decoder_type {
- 	CXL_DECODER_DEVMEM = 2,
-diff --git a/tools/testing/cxl/test/cxl.c b/tools/testing/cxl/test/cxl.c
-index 1c3336095923..5dac454ca0e2 100644
---- a/tools/testing/cxl/test/cxl.c
-+++ b/tools/testing/cxl/test/cxl.c
-@@ -709,6 +709,7 @@ static void mock_decoder_reset(struct cxl_decoder *cxld)
- 			"%s: out of order reset, expected decoder%d.%d\n",
- 			dev_name(&cxld->dev), port->id, port->commit_end);
- 	cxld->flags &= ~CXL_DECODER_F_ENABLE;
-+	cxld->flags &= ~CXL_DECODER_F_NEED_RESET;
- }
- 
- static void default_mock_decoder(struct cxl_decoder *cxld)
--- 
-2.27.0
 
