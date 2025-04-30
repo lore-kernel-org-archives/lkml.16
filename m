@@ -1,360 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E902213E79;
-	Wed, 30 Apr 2025 08:03:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E78020DD4E
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000221; cv=none; b=AZRZs9EJWTRlZucYYpW9c8yAgC8I0ni9NCp0eYVufjsj/9iJUir2rD7G4yhOYqg4LNO830oA6i8vSbPNYicV82F+2qBqLDxGBpnVRi/BCgrLjkQYWhnO0PzUOIz6gJ2lDLNldEB4KT7wNF49aQihROnzZmD2TSHTH6XiIW/zrz0=
+	t=1746000233; cv=none; b=oEdQk+7X0YScfrCywzCkJWgxaf8yytt9YIxqB5rUCbBi0MGX6914QuqC2RfqA9eJgKgg3FIKSAQawbDsnHo9uHMDsfvMOvxElZ0T4IPskg5JKcyNmLBEAxRhzT+KfdsZJHdIX9yFrC13liVTdIwBzrPetocMsIC8LKgcwXJwMMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000221; c=relaxed/simple;
-	bh=6drvUTZA3XtBOUMIg3nWg1p34cXvyVA8kv/Z5HSimH0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=LqhbWbFoGYuDKDyWmfq49Ee0fC0qN6Gjl191QY8me8vFMyMGknCLHQrA+WqHXAc9bVpJYV+TLCJa2x4OAcUxCRWsknGnLNBdy18nneCQWOFGofpR/8dKlsNn4DwW+XG4bmX4dG+OrwXi0nHfCHl7oEoc/atZbF7bGCU0/sevGX4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=I/YKKXJB; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746000233; c=relaxed/simple;
+	bh=yDswBP+Kr+vPdFZzARL0WBNze344sfihA/wkyU8QgCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Yi7zuFUDyKHJM60n1tqVBXUtqqq4ti54dEr8lGDgRhmEg1U9NqKPbmP424ptCOC8ZpDA32mH0pfDZHYA2FPBQvTmd/LmG9SNERkA8b/Ysg2eOAQJ4Jn/E7uk3e5kByVkTgStougeYraXhzUUtCNK71/5EGZjMRnUENQG3DubSyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lIbr+7CD; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I/YKKXJB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746000219; x=1777536219;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=6drvUTZA3XtBOUMIg3nWg1p34cXvyVA8kv/Z5HSimH0=;
-  b=I/YKKXJB9NjV9SDjwxBfe/t11yhvUTUfATA9buvjBa1gYKn/wslSO6mX
-   jld3QNgQqwsFtMUHldBSWC+PKW2QMbYsbmmZezZaRhj6/oVZVse6Nacr3
-   BqxWcX/I33YclDBopsiJYKzb4jkxbPjZjdOpO33jkQbYK5xdQQmFEDw9W
-   UTyhS9e3SY3KsBUFpD5vU1VvSEDZnL2T3tIE+mGBXFSm2pcjv1dN0Vony
-   kavGhJC/ZIcZjRfqmt3mMajC1v/W1g8fd+7lNvltRoLUauQjfvxq4T0eb
-   amEfOYVtmfPrvHDxEm5a/lB2QMGwFGWMuA1ynI0AGqyH25GMwjP7mW2Ba
-   w==;
-X-CSE-ConnectionGUID: uxoPJhkFTEiLfFm/Rnv4cg==
-X-CSE-MsgGUID: NUG+vlogTX2vvw6sUFAntw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="46765194"
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="46765194"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:03:38 -0700
-X-CSE-ConnectionGUID: NdU+fwu2SgiA6jQQ8luuWg==
-X-CSE-MsgGUID: 4pl1v2KVRbmYb3k3a9C1Ug==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="139233702"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:03:33 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 30 Apr 2025 11:03:30 +0300 (EEST)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, bhelgaas@google.com, 
-    manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org, 
-    robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com, 
-    linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v10 3/6] PCI: Refactor capability search into common
- macros
-In-Reply-To: <20250429125036.88060-4-18255117159@163.com>
-Message-ID: <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
-References: <20250429125036.88060-1-18255117159@163.com> <20250429125036.88060-4-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIbr+7CD"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so43120495e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:03:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746000230; x=1746605030; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PAFg7e7QoI/NIhOM4U0ox4at7LqC43f8tqWtCVElvxY=;
+        b=lIbr+7CD3u5jFcrGbeQKmRxB1i+YkwIr34DFjuy5NoQtInCiMf1X8xjGyPZlhJdijG
+         cmCQ2cF/y6yRo/efKL/DVSQWCfE4Infp1YW0tE7oHF6pWY+1IkabQck9SLtm0igyxfga
+         vl0HVXidin0ydFsITHQLSdLTstVlbhoaXBFdIoRtgBC8QXmrP38iFNFTXa5uYWEsCN36
+         Y9Bx1xiCFeQSNMT7KbvhiJIp7X8d/Ap/SlfR6R/mm/8OvKfi90ZKM0qC1/iI7AkSZl3d
+         DZK/NZFIIRUk8NGOe7ekHbdzokaFXNx1moDShEd3Ffi4QlyVtHijhQToqrvTiaOxCDxh
+         g39w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746000230; x=1746605030;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PAFg7e7QoI/NIhOM4U0ox4at7LqC43f8tqWtCVElvxY=;
+        b=Fpm6em5zB3aVz7jKUPb5IeY0083ZvV+0dnISzUBY6hUzNEh7lqnSRkSeF7dC+ZKOG9
+         6QMqaOVmrA6RcdGvE6y1K3wN/xiThRNb9+gxyazVt5GV5Du8qDBHPK7NUVD2+Y8X0cX5
+         TPPq+CwOuxNeTucFgOKJDLEzEubKebG3O31nuNik5TTd4+dO/a1kHVyWrjklODxuD7tf
+         zuJcwu/ftL7ce9MIfX3qzQVg1n+OZ5gTaiLuf6gHvp3OxwA8vsVlxFZ2QwIvCu5SRZeB
+         Z8molIuOei5xOPxxg4i8sM3EUF2IAJ3YFl8nzt5sH7KOL0gruMF3BSE9gcBFemJTBExu
+         CFmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWEWcw/AFN/P/gBUOViZ9UVvhtp8D7WQzAbszsCZvvnwsO+sDSh65ZAUba3Js21JTlWbqqtuZJlfUBtSSI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAxkygDa36OGZ5vrRvQJOyYA2jnThhF0Z731iaIdUxwZJY2Agf
+	qOOop1rjKJdrmRQV74kueN1CqIbCFqRISMN+ynpVbpM/V2WySbpfye78d4Ww99Q=
+X-Gm-Gg: ASbGnct0E3R+mnU3RGbJ6gbd90IC4ZtECAjJM99segnieduImeXtlNX3iG00BUdqLMY
+	ApZdukYjnB8xBZRXIAhj9PdBY0SnMWSb2M5yrBqq3O7wMoEGAJ9oLX3RaoVg70peBKoJNQuH45w
+	gpOe8mYFiAQUgc37l0m5WmrjApowskqUkaTD8zSCnlKivPlq2V+zXi0/wEeuNcSx+ZiWRY6Ar6k
+	N2TEj3F8wHovlgDOrVNVN1fWIrOsdu4EIP0wfVEEGMN2BKBYDD40JLZRPo9KeHJ9dPq7BHxJ2rn
+	Okkfh817JTyXjXLVnFZtcgtqZo1Ef7mReItFC4UydO2MMA==
+X-Google-Smtp-Source: AGHT+IFi58B/opSrTiSCQEZcXK3JMBecxGa6PyaQe84wc8+j1ywljyVjJeAqD6J4qh7EoSFT1wKxSA==
+X-Received: by 2002:a05:600c:4ec6:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-441b2635482mr12037525e9.6.1746000229687;
+        Wed, 30 Apr 2025 01:03:49 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af2922sm15458155e9.17.2025.04.30.01.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 01:03:49 -0700 (PDT)
+Date: Wed, 30 Apr 2025 11:03:46 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Marcus Folkesson <marcus.folkesson@gmail.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] drm/st7571-i2c: Fix IS_ERR() vs NULL checks in probe()
+Message-ID: <aBHZYgPPPYY-J8Vd@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Tue, 29 Apr 2025, Hans Zhang wrote:
+The devm_kzalloc() function returns NULL on failure, not error pointers.
+Also printing an error message for kmalloc() failures is against kernel
+style so just return -ENOMEM without printing a message.  (Kmalloc
+already prints a message).
 
-> The PCI Capability search functionality is duplicated across the PCI core
-> and several controller drivers. The core's current implementation requires
-> fully initialized PCI device and bus structures, which prevents controller
-> drivers from using it during early initialization phases before these
-> structures are available.
-> 
-> Move the Capability search logic into a header-based macro that accepts a
-> config space accessor function as an argument. This enables controller
-> drivers to perform Capability discovery using their early access
-> mechanisms prior to full device initialization while sharing the
-> Capability search code.
-> 
-> Convert the existing PCI core Capability search implementation to use this
-> new macro.
-> 
-> The macros now implement, parameterized by the config access method. The
+Fixes: 4b35f0f41ee2 ("drm/st7571-i2c: add support for Sitronix ST7571 LCD controller")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ drivers/gpu/drm/tiny/st7571-i2c.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-This sentence is incomplete (and sounds pretty much duplicated 
-information anyway).
-
-> PCI core functions are converted to utilize these macros with the standard
-> pci_bus_read_config accessors.
-
-This info is duplicated.
-
-> Controller drivers can later use the same
-> macros with their early access mechanisms while maintaining the existing
-> protection against infinite loops through preserved TTL checks.
-> 
-> The ttl parameter was originally an additional safeguard to prevent
-> infinite loops in corrupted config space.  However, the
-> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
-> Removing redundant ttl handling simplifies the interface while maintaining
-> the safety guarantee. This aligns with the macro's design intent of
-> encapsulating TTL management.
-> 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
-> Changes since v9:
-> - None
-> 
-> Changes since v8:
-> - The patch commit message were modified.
-> ---
->  drivers/pci/pci.c | 70 +++++---------------------------------
->  drivers/pci/pci.h | 86 +++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 95 insertions(+), 61 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 1c29e8f20cb5..8a1f47e8f5cc 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -9,7 +9,6 @@
->   */
->  
->  #include <linux/acpi.h>
-> -#include <linux/align.h>
->  #include <linux/kernel.h>
->  #include <linux/delay.h>
->  #include <linux/dmi.h>
-> @@ -31,7 +30,6 @@
->  #include <asm/dma.h>
->  #include <linux/aer.h>
->  #include <linux/bitfield.h>
-> -#include <uapi/linux/pci_regs.h>
->  #include "pci.h"
->  
->  DEFINE_MUTEX(pci_slot_mutex);
-> @@ -426,35 +424,16 @@ static int pci_dev_str_match(struct pci_dev *dev, const char *p,
->  }
->  
->  static u8 __pci_find_next_cap_ttl(struct pci_bus *bus, unsigned int devfn,
-> -				  u8 pos, int cap, int *ttl)
-> +				  u8 pos, int cap)
->  {
-> -	u8 id;
-> -	u16 ent;
-> -
-> -	pci_bus_read_config_byte(bus, devfn, pos, &pos);
-> -
-> -	while ((*ttl)--) {
-> -		if (pos < PCI_STD_HEADER_SIZEOF)
-> -			break;
-> -		pos = ALIGN_DOWN(pos, 4);
-> -		pci_bus_read_config_word(bus, devfn, pos, &ent);
-> -
-> -		id = FIELD_GET(PCI_CAP_ID_MASK, ent);
-> -		if (id == 0xff)
-> -			break;
-> -		if (id == cap)
-> -			return pos;
-> -		pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, ent);
-> -	}
-> -	return 0;
-> +	return PCI_FIND_NEXT_CAP_TTL(pci_bus_read_config, pos, cap, bus,
-> +				     devfn);
->  }
->  
->  static u8 __pci_find_next_cap(struct pci_bus *bus, unsigned int devfn,
->  			      u8 pos, int cap)
->  {
-> -	int ttl = PCI_FIND_CAP_TTL;
-> -
-> -	return __pci_find_next_cap_ttl(bus, devfn, pos, cap, &ttl);
-> +	return __pci_find_next_cap_ttl(bus, devfn, pos, cap);
->  }
->  
->  u8 pci_find_next_capability(struct pci_dev *dev, u8 pos, int cap)
-> @@ -555,42 +534,11 @@ EXPORT_SYMBOL(pci_bus_find_capability);
->   */
->  u16 pci_find_next_ext_capability(struct pci_dev *dev, u16 start, int cap)
->  {
-> -	u32 header;
-> -	int ttl;
-> -	u16 pos = PCI_CFG_SPACE_SIZE;
-> -
-> -	/* minimum 8 bytes per capability */
-> -	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> -
->  	if (dev->cfg_size <= PCI_CFG_SPACE_SIZE)
->  		return 0;
->  
-> -	if (start)
-> -		pos = start;
-> -
-> -	if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
-> -		return 0;
-> -
-> -	/*
-> -	 * If we have no capabilities, this is indicated by cap ID,
-> -	 * cap version and next pointer all being 0.
-> -	 */
-> -	if (header == 0)
-> -		return 0;
-> -
-> -	while (ttl-- > 0) {
-> -		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> -			return pos;
-> -
-> -		pos = PCI_EXT_CAP_NEXT(header);
-> -		if (pos < PCI_CFG_SPACE_SIZE)
-> -			break;
-> -
-> -		if (pci_read_config_dword(dev, pos, &header) != PCIBIOS_SUCCESSFUL)
-> -			break;
-> -	}
-> -
-> -	return 0;
-> +	return PCI_FIND_NEXT_EXT_CAPABILITY(pci_bus_read_config, start, cap,
-> +					    dev->bus, dev->devfn);
->  }
->  EXPORT_SYMBOL_GPL(pci_find_next_ext_capability);
->  
-> @@ -650,7 +598,7 @@ EXPORT_SYMBOL_GPL(pci_get_dsn);
->  
->  static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
->  {
-> -	int rc, ttl = PCI_FIND_CAP_TTL;
-> +	int rc;
->  	u8 cap, mask;
->  
->  	if (ht_cap == HT_CAPTYPE_SLAVE || ht_cap == HT_CAPTYPE_HOST)
-> @@ -659,7 +607,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
->  		mask = HT_5BIT_CAP_MASK;
->  
->  	pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn, pos,
-> -				      PCI_CAP_ID_HT, &ttl);
-> +				      PCI_CAP_ID_HT);
->  	while (pos) {
->  		rc = pci_read_config_byte(dev, pos + 3, &cap);
->  		if (rc != PCIBIOS_SUCCESSFUL)
-> @@ -670,7 +618,7 @@ static u8 __pci_find_next_ht_cap(struct pci_dev *dev, u8 pos, int ht_cap)
->  
->  		pos = __pci_find_next_cap_ttl(dev->bus, dev->devfn,
->  					      pos + PCI_CAP_LIST_NEXT,
-> -					      PCI_CAP_ID_HT, &ttl);
-> +					      PCI_CAP_ID_HT);
->  	}
->  
->  	return 0;
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 5e1477d6e254..79cd6402ba8d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -2,7 +2,9 @@
->  #ifndef DRIVERS_PCI_H
->  #define DRIVERS_PCI_H
->  
-> +#include <linux/align.h>
->  #include <linux/pci.h>
-> +#include <uapi/linux/pci_regs.h>
->  
->  struct pcie_tlp_log;
->  
-> @@ -91,6 +93,90 @@ bool pcie_cap_has_rtctl(const struct pci_dev *dev);
->  int pci_bus_read_config(void *priv, unsigned int devfn, int where, u32 size,
->  			u32 *val);
->  
-> +/* Standard Capability finder */
-> +/**
-> + * PCI_FIND_NEXT_CAP_TTL - Find a PCI standard capability
-> + * @read_cfg: Function pointer for reading PCI config space
-> + * @start: Starting position to begin search
-> + * @cap: Capability ID to find
-> + * @args: Arguments to pass to read_cfg function
-> + *
-> + * Iterates through the capability list in PCI config space to find
-> + * the specified capability. Implements TTL (time-to-live) protection
-> + * against infinite loops.
-> + *
-> + * Returns: Position of the capability if found, 0 otherwise.
-> + */
-> +#define PCI_FIND_NEXT_CAP_TTL(read_cfg, start, cap, args...)		\
-> +({									\
-> +	int __ttl = PCI_FIND_CAP_TTL;					\
-> +	u8 __id, __found_pos = 0;					\
-> +	u8 __pos = (start);						\
-> +	u16 __ent;							\
-> +									\
-> +	read_cfg(args, __pos, 1, (u32 *)&__pos);			\
-> +									\
-> +	while (__ttl--) {						\
-> +		if (__pos < PCI_STD_HEADER_SIZEOF)			\
-> +			break;						\
-> +									\
-> +		__pos = ALIGN_DOWN(__pos, 4);				\
-> +		read_cfg(args, __pos, 2, (u32 *)&__ent);		\
-
-You seem to have dropped the return value checks?
-
-> +									\
-> +		__id = FIELD_GET(PCI_CAP_ID_MASK, __ent);		\
-> +		if (__id == 0xff)					\
-> +			break;						\
-> +									\
-> +		if (__id == (cap)) {					\
-> +			__found_pos = __pos;				\
-> +			break;						\
-> +		}							\
-> +									\
-> +		__pos = FIELD_GET(PCI_CAP_LIST_NEXT_MASK, __ent);	\
-> +	}								\
-> +	__found_pos;							\
-> +})
-> +
-> +/* Extended Capability finder */
-> +/**
-> + * PCI_FIND_NEXT_EXT_CAPABILITY - Find a PCI extended capability
-> + * @read_cfg: Function pointer for reading PCI config space
-> + * @start: Starting position to begin search (0 for initial search)
-> + * @cap: Extended capability ID to find
-> + * @args: Arguments to pass to read_cfg function
-> + *
-> + * Searches the extended capability space in PCI config registers
-> + * for the specified capability. Implements TTL protection against
-> + * infinite loops using a calculated maximum search count.
-> + *
-> + * Returns: Position of the capability if found, 0 otherwise.
-> + */
-> +#define PCI_FIND_NEXT_EXT_CAPABILITY(read_cfg, start, cap, args...)		\
-> +({										\
-> +	u16 __pos = (start) ?: PCI_CFG_SPACE_SIZE;				\
-> +	u16 __found_pos = 0;							\
-> +	int __ttl, __ret;							\
-> +	u32 __header;								\
-> +										\
-> +	__ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;		\
-> +	while (__ttl-- > 0 && __pos >= PCI_CFG_SPACE_SIZE) {			\
-> +		__ret = read_cfg(args, __pos, 4, &__header);			\
-> +		if (__ret != PCIBIOS_SUCCESSFUL)				\
-> +			break;							\
-> +										\
-> +		if (__header == 0)						\
-> +			break;							\
-> +										\
-> +		if (PCI_EXT_CAP_ID(__header) == (cap) && __pos != start) {	\
-> +			__found_pos = __pos;					\
-> +			break;							\
-> +		}								\
-> +										\
-> +		__pos = PCI_EXT_CAP_NEXT(__header);				\
-> +	}									\
-> +	__found_pos;								\
-> +})
-> +
->  /* Functions internal to the PCI core code */
->  
->  #ifdef CONFIG_DMI
-> 
-
+diff --git a/drivers/gpu/drm/tiny/st7571-i2c.c b/drivers/gpu/drm/tiny/st7571-i2c.c
+index dc410ec41baf..eec846892962 100644
+--- a/drivers/gpu/drm/tiny/st7571-i2c.c
++++ b/drivers/gpu/drm/tiny/st7571-i2c.c
+@@ -908,16 +908,14 @@ static int st7571_probe(struct i2c_client *client)
+ 	st7571->hwbuf = devm_kzalloc(&client->dev,
+ 				     (st7571->nlines * st7571->ncols * st7571->bpp) / 8,
+ 				     GFP_KERNEL);
+-	if (IS_ERR(st7571->hwbuf))
+-		return dev_err_probe(&client->dev, PTR_ERR(st7571->hwbuf),
+-				     "Failed to allocate intermediate buffer\n");
++	if (!st7571->hwbuf)
++		return -ENOMEM;
+ 
+ 	st7571->row = devm_kzalloc(&client->dev,
+ 				   (st7571->ncols * st7571->bpp),
+ 				   GFP_KERNEL);
+-	if (IS_ERR(st7571->row))
+-		return dev_err_probe(&client->dev, PTR_ERR(st7571->row),
+-				     "Failed to allocate row buffer\n");
++	if (!st7571->row)
++		return -ENOMEM;
+ 
+ 	ret = st7571_mode_config_init(st7571);
+ 	if (ret)
 -- 
- i.
+2.47.2
 
