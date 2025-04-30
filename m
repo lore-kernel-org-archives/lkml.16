@@ -1,151 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5166120C472;
-	Wed, 30 Apr 2025 08:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B6721A447;
+	Wed, 30 Apr 2025 08:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002135; cv=none; b=noCAz2BiL5lule5sVWvDy/FnajOvk0z+pEuAJlT4RohB2OJZQwYFTTmJQ1u99rxbKCl1sMFX51fGeP1G64G4x/dr9VfumoeTicK194XdjuncW52PkpIfN+7oe94OPSPQHD0DLO4d4/07eQJUvwL21q6SE/OiB0dOVC7SswY+eaU=
+	t=1746002138; cv=none; b=URGmjTSTpp2sE4NJO/cRHvX4kfC6IBXFSALNKg8kYbUVzpx6TJUhoWsZXCLFwX6vlaK2/3069LMAxr6QRKGd8ZnZULOHaHSvBEgr00uXDlWUCSnLiGMDD4Ii/hqDE8+QhbXcwTFx9jTKF1T1H5wRouPZoBiNcyU512Mh7pIm4QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002135; c=relaxed/simple;
-	bh=W+FK0k6Y1DqaaIqcm9kwWjYuf7rcTjsiKie9eptYe0g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pXlJtKfuCBB3g68+D0OuOpAzyyhHVxtVWiMAa7PxexjSMMqnic3uEH3oFTyr/GbLBUcA4BPD9lNb4E6aX+N0yR9uD4qxAE0HzmY13Ttk0n27pOCCfvXWI/2jhmXFs5x6+PB4VrTeeqfuZ/AHmEtAMiSUNgzhN8+UCZk+0ISTeL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Mwxz42J3; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1746002138; c=relaxed/simple;
+	bh=lp2kLG8XQZUWdd8RuhDARxZ1LX3wqTCY+gVpOwpUw2M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=hrg0XhcyRs+Fe8c4WhnUTdJAR2WYRrbELbqwdM7mVghuq6Gn3+phk0B2cbmGDKM0mxiNlshfYwtmkZ40Z6HqRREa09j/f2xBYDzZdA5swglW1w5H+WYSA9C3F96Id6/0R0BH06lS4yuzw/Joz8GuVTpl3mgFC2K/Ta1BU9j/RnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHUBIDew; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Mwxz42J3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHUBIDew"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746002133; x=1777538133;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=W+FK0k6Y1DqaaIqcm9kwWjYuf7rcTjsiKie9eptYe0g=;
-  b=Mwxz42J3QWZ8ViFMmQx3awbE1aa0U+jK8H0iuzQdiDxV4z2ZS+xU4TJN
-   b+IlhIaEd31hj445sT3BJxWfp2l6VCo9kJ1PbzaJlIe90PpVnTAVaYh8M
-   qr+LIWAgROWB9FS9UVAxghiSEjT4/5wRRIXOf89DxYHA3pdwaPRbJTAV7
-   SJDjD7J/Y0yzXRAqzMk072TfXKUH0G/yjk3hDvNJTyLBuGUs8NUJFkXVX
-   LtbdMb+gPs1BXGNN+azDEACxOd0VsCG4ezHXWOY5IT0Vvv9K3POOWMW4r
-   Pep1qVNxzj30AHrUK2ytHDEOuCdv/YBTU34W6Fb+UG9ua66EbmCqCi+Z9
-   w==;
-X-CSE-ConnectionGUID: K3r/oUmUT3uiG7Ovjktk/Q==
-X-CSE-MsgGUID: VjHOKi8VTv+AyYfeIX5kPg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="51471156"
+  t=1746002138; x=1777538138;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=lp2kLG8XQZUWdd8RuhDARxZ1LX3wqTCY+gVpOwpUw2M=;
+  b=GHUBIDew7aMENa9islLufHLZU1OhntahbxY98Jpeuy0dBf3bBEhEUW2A
+   Qo1nveI1TG+szdh843JZitpH2SB7mu10I4JQc2GgjTDU9yEN8z2L90L54
+   +pYJatDipfgW6FJy1sjtVnTLiof1tzFxEo8vsVy3rU1Odqf97jB/qKNgU
+   1X9Y1ni2dME83IJ/T/zKUdB8pXVn8oXPxMxWFbolgoa26y2SW0GVQztmO
+   j+T4qPoBfxDmVoN0+ciBiOjEXGpF0odGmx1UZMY5J5bpgrD776VY4qOZU
+   FLuLfeMsdsHQKRcYquyCxMV2IgEpdWP0z7Tb+hkQW021RByx9yQle0lTw
+   A==;
+X-CSE-ConnectionGUID: 8rOyqwaFQ0Sxq6e/hCBMQw==
+X-CSE-MsgGUID: rzPH7mnnQZajTak9UgiycQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47534106"
 X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="51471156"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:35:32 -0700
-X-CSE-ConnectionGUID: OGr1YDR/QwSzSeMXOgFSDQ==
-X-CSE-MsgGUID: FowCmlJ4St6RnoWA0URrdw==
+   d="scan'208";a="47534106"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:35:37 -0700
+X-CSE-ConnectionGUID: 14GVnVnfRDCAk5tXbPRSgQ==
+X-CSE-MsgGUID: ePVJ2zgjQSSMdagW/RanMA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
-   d="scan'208";a="138872218"
-Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:35:29 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id AF7BF11F7E7;
-	Wed, 30 Apr 2025 11:35:24 +0300 (EEST)
-Date: Wed, 30 Apr 2025 08:35:24 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Benjamin Mugnier <benjamin.mugnier@foss.st.com>
-Cc: Sylvain Petinot <sylvain.petinot@foss.st.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-media@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] media: i2c: Add driver for ST VD55G1 camera sensor
-Message-ID: <aBHgzJ64pv0z2QAX@kekkonen.localdomain>
-References: <20250407-b4-vd55g1-v6-0-1850f18b1f24@foss.st.com>
- <20250407-b4-vd55g1-v6-2-1850f18b1f24@foss.st.com>
- <aBCxpuppB6L-Ft2c@kekkonen.localdomain>
- <70f7bc9b-4533-4c8e-a792-aad9a0b7a6d4@foss.st.com>
- <aBC_gx8vFNWLacgB@kekkonen.localdomain>
- <622301ae-0973-4cdb-936c-3152afdbfb46@foss.st.com>
+   d="scan'208";a="165001559"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.97])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 01:35:33 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To: Lukas Wunner <lukas@wunner.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Keith Busch <kbusch@kernel.org>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 1/1] PCI: Fix lock symmetry in pci_slot_unlock()
+Date: Wed, 30 Apr 2025 11:35:26 +0300
+Message-Id: <20250430083526.4276-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <622301ae-0973-4cdb-936c-3152afdbfb46@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Benjamin,
+The commit a4e772898f8b ("PCI: Add missing bridge lock to
+pci_bus_lock()") made the lock function to call depend on
+dev->subordinate but left pci_slot_unlock() unmodified creating locking
+asymmetry compared with pci_slot_lock().
 
-On Wed, Apr 30, 2025 at 10:23:22AM +0200, Benjamin Mugnier wrote:
-> Hi Sakari,
-> 
-> On 4/29/25 14:01, Sakari Ailus wrote:
-> > Hi Benjamin,
-> > 
-> > On Tue, Apr 29, 2025 at 01:29:39PM +0200, Benjamin Mugnier wrote:
-> >>>> +static int vd55g1_check_csi_conf(struct vd55g1 *sensor,
-> >>>> +				 struct fwnode_handle *endpoint)
-> >>>> +{
-> >>>> +	struct i2c_client *client = sensor->i2c_client;
-> >>>> +	struct v4l2_fwnode_endpoint ep = { .bus_type = V4L2_MBUS_CSI2_DPHY };
-> >>>> +	u8 n_lanes;
-> >>>> +	int ret;
-> >>>> +
-> >>>> +	ret = v4l2_fwnode_endpoint_alloc_parse(endpoint, &ep);
-> >>>> +	if (ret)
-> >>>> +		return -EINVAL;
-> >>>> +
-> >>>> +	/* Check lanes number */
-> >>>> +	n_lanes = ep.bus.mipi_csi2.num_data_lanes;
-> >>>> +	if (n_lanes != 1) {
-> >>>> +		dev_err(&client->dev, "Sensor only supports 1 lane, found %d\n",
-> >>>> +			n_lanes);
-> >>>> +		ret = -EINVAL;
-> >>>> +		goto done;
-> >>>> +	}
-> >>>> +
-> >>>> +	/* Clock lane must be first */
-> >>>> +	if (ep.bus.mipi_csi2.clock_lane != 0) {
-> >>>> +		dev_err(&client->dev, "Clock lane must be mapped to lane 0\n");
-> >>>> +		ret = -EINVAL;
-> >>>> +		goto done;
-> >>>> +	}
-> >>>> +
-> >>>> +	/* Handle polarities in sensor configuration */
-> >>>> +	sensor->oif_ctrl = (ep.bus.mipi_csi2.lane_polarities[0] << 3) |
-> >>>> +			   (ep.bus.mipi_csi2.lane_polarities[1] << 6);
-> >>>> +
-> >>>> +	/* Check the link frequency set in device tree */
-> >>>> +	if (!ep.nr_of_link_frequencies) {
-> >>>> +		dev_err(&client->dev, "link-frequency property not found in DT\n");
-> >>>> +		ret = -EINVAL;
-> >>>> +		goto done;
-> >>>> +	}
-> >>>> +	if (ep.nr_of_link_frequencies != 1) {
-> >>>> +		dev_err(&client->dev, "Multiple link frequencies not supported\n");
-> >>>> +		ret = -EINVAL;
-> >>>> +		goto done;
-> >>>
-> >>> Please check the link frequency matches with what the driver supports,
-> >>> using e.g. v4l2_link_freq_to_bitmap().
-> >>>
-> >>
-> >> Are you referring to checks performed in in vd55g1_prepare_clock_tree()
-> >> ? Keep in mind it will change a bit with Laurent's comments though.
-> >> The sensor supports a range of frequencies therefore I chose to check it
-> >> manually instead of v4l2_link_freq_to_bitmap().
-> > 
-> > Ok, that's fine then. But please check this results to the frequency that
-> > was requested, currently it may be off AFAIR.
-> > 
-> 
-> As far as I understand it should be fine in v7, could you have a look
-> once sent ?
+Move pci_dev_unlock() inside an else branch to match the logic in
+pci_slot_lock().
 
-There's still no check the PLL configuration produces the requested
-frequency, is there? Or maybe I missed it?
+Fixes: a4e772898f8b ("PCI: Add missing bridge lock to pci_bus_lock()")
+Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+---
+ drivers/pci/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 4d7c9f64ea24..26507aa906d7 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5542,7 +5542,8 @@ static void pci_slot_unlock(struct pci_slot *slot)
+ 			continue;
+ 		if (dev->subordinate)
+ 			pci_bus_unlock(dev->subordinate);
+-		pci_dev_unlock(dev);
++		else
++			pci_dev_unlock(dev);
+ 	}
+ }
+ 
+
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
 -- 
-Regards,
+2.39.5
 
-Sakari Ailus
