@@ -1,55 +1,55 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BC0275855
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6062A26B0B6
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746035474; cv=none; b=uMx/vG525c7Ba6Wz5uNcy1e/jYYpM3NphAkc9FIgTadDaB9WZh1UGDfqh/DU3H0z2coo3Msrn2wy1aIDfetp9BAE/ehWXneiLATiL6N42tj6e9OBoEQjsTuDqV6MTBXcQ8Glu1RX/VOFfv9cA1jK7Pz/J8xBrMowhokBKfz+kaE=
+	t=1746035478; cv=none; b=EmmcBTDRUyKqUy91g/atlc3lIBL7YFMM1BMBxBx+PDpAywvmf/W56eiMa86HWDYKj0Tj1dnF/kOKwHf8eNOO3DYMF8f+1lh9WZ66gJvoS+nl/jyJW5pZb1UNSc4/RG1rwagHpRov4rkW3YafpbLBo+AHWe4t7G6j3Uqx3f8h9aw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746035474; c=relaxed/simple;
-	bh=VzQZhE0elrXS34SExt1i/beojdWdOOg7H1NOF7AFJ24=;
+	s=arc-20240116; t=1746035478; c=relaxed/simple;
+	bh=Y3D+HeelZHUbj722B9+EEIFwYk/UcruDD4c+xdB3tPw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NUSNL14hcN2yeoFH+Rj/nQDc44jP9sUQwGH8aLS3dnwzH8AbO31jG9vFbR/MppLtZiPelK837hKFtbF7wOD0NNemCCic1gKBnJ8OW3djPMjCqpLY2l5dXpsP5XzxKwrKi9Y2J90898pC6/M2RRrkNQEWqJXTOxRXlCj6DqPfpWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wbnhcYvy; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=XN+Zh0eewn/CeOO7kTRYR5apDSIjaCRZHCC2Ia4j2bbuZfeoz7jRectdWM64yitlEg0AgtTUbc6N7WgHCZLorJzqOzFp+ziRteAz9NVG+yaXJtH6jA90K3EHSUuviciItiSB0cUiQRCWHVV5tw7cBrDs+F9VtHuEEBOzNHikcbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Pd7EaaHM; arc=none smtp.client-ip=209.85.214.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wbnhcYvy"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-736b431ee0dso137242b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Pd7EaaHM"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-227ed471999so733955ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 10:51:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746035472; x=1746640272; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746035475; x=1746640275; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l37BKjYgmTS4La7ggY9yiyQcQdvs2tGcaNKDcUTY85o=;
-        b=wbnhcYvybqveJNUmiD+aLeNBzXFUfyX1w5VHEHZO9DdAE73EC9akdfamYEKxwk/8sP
-         JGEbZy+l90qJC8fGNwIFNNKcZpsGo4gS5LUkKjz3F+wRsutQCxEZO82tiGilTNKEZUCa
-         xAN/qy/pXtaKn5GWQwyk3RVNSoAeeauPfVuBy+YoCOmSYFclPeKD3o3h3BI59O9IeMPn
-         4kw9N/+kGoqywfBlrmj62ADmX+b/J/MefwYift41at5Lg3Px8TBP4Dkuy2EjXrVj0lUH
-         4mq/M6gy0cqpmMuBlstkLCvB6cqhpj9RKDruZgcRFEeJsdljvwzeHuX9OQqB+/lbv5PG
-         PUqw==
+        bh=TZlmxX2xoyYFq1ODXrK6/XcfYk4sIZR3JZBZG1kQdeM=;
+        b=Pd7EaaHMYKvQIDO27JAKLQoCSfG72K3Ibqiyq3z7movTTwcQ8rBHIpiZOeeUhn8+z1
+         Fc/aqYKG4Raeuwh9cn84p3mkGe4VGBzSiICS8ki9Qq8MuP79GX6gat9+R48R4TvXgK/H
+         zkLx1/+o9WEUzFEuT8cYDy0dhWirQNT8FDMSzildhYyDKsX8hgA0RhEN+ax5bXsNu+jF
+         QWwG3ErGCffrlYp8fwB+74tnlOLt+HhMyt19+7CaeOplJ0fO8UrqAK1GAbzlNj4BF2cp
+         tnUHxori5J1ULMbwKFEf/4rV9YA2ip0AGz34mn1PE4GzHe/FU3RT/xENbEKgKesdnrPv
+         UlHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746035472; x=1746640272;
+        d=1e100.net; s=20230601; t=1746035475; x=1746640275;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=l37BKjYgmTS4La7ggY9yiyQcQdvs2tGcaNKDcUTY85o=;
-        b=dQdXq/h8A28qcwkqUy53xTSU/5hMCgBacR+xnX1yiGTlQNVTPRlHJb0MCAug0Xvvyz
-         D7+v/xRfBFk1yGtsHDxcjAF8+RH/5OeQaIoizVCD1KUFduOi1agO00ZXWSAyh5B8XRbL
-         ckeiT5A3wC2JJHYpKOujVb8GhcLV9Ky7p50xmaRA60HVQQmQu7fHRt4oByMmcTHLsu2Q
-         OcgqXzPdyWSHEjiU6fnymOyCPjy7dfVWJd4+EVbZwPbvh8DGyCU2+riUWIvqRmDQJru7
-         SXROwA5Ux16W3YXLL83a462gS71qXJN1t5S7JMeyPq+06bZjswMFEcji4qSwvGSpNljL
-         n4gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWDBzpM3//CTg+My3uqKnngfUVKPkVYvaYM2UrSkLouwMhwmaqJTTWYm1pnlipsr8dpUsIfpimwmFRjG7Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbENL8KetTDGGsmpnrAhqXj5U60b6JZCBzQGw8Q5tvQiRVxkah
-	srLLhFyHDoCGy4DH9slKVXcX+2G6D50Z7EmRAN0jFEnuoIWdujUxrD2D/AVPeswtA9lD5YwwI3T
-	xyw0taw==
-X-Google-Smtp-Source: AGHT+IEhkBU03JFJxZaZHJ3QPl/LFRcRXHgfBy5CcgazJaWzCjMkfX2AXQNHrPAAKAmwy/2QTqQCF6e/woC0
-X-Received: from pfbfa19.prod.google.com ([2002:a05:6a00:2d13:b0:737:30c9:fe46])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:78e:b0:1f3:26e5:55bc
- with SMTP id adf61e73a8af0-20a89afb7c7mr5297458637.42.1746035471854; Wed, 30
- Apr 2025 10:51:11 -0700 (PDT)
-Date: Wed, 30 Apr 2025 10:49:55 -0700
+        bh=TZlmxX2xoyYFq1ODXrK6/XcfYk4sIZR3JZBZG1kQdeM=;
+        b=t56FZm+4Qc1HkU45C4m/Q2o/k8QBM1gSLEDNIpAmlW4IDQuZ0pM7HPa1cuQSHu7Nbz
+         2E2CQqQgEyMLVhZZhn6CkbWfB4/di+sG/28+he93eZEc7Ap1VQIJPq9qkH9T7qhIOngD
+         KuPAuxFdStf73GVAqDDjsRlUQqiEDNcRA7PzVnLedPMHUhxcKo4q4QE5kgdA2oAUtJFp
+         iRHjUrPvJ8AElpzbtdfxTjldafpBsm6AbMLtDXRdR1DuHk8DEg1DaNl3CArkigzuIWLZ
+         HNJsgWFz2RILNYAxsbZuH+ioc6cpLH4uhaeF3s2nqFsbD9mPbHmQln5V2R2BELP8d9o9
+         /70g==
+X-Forwarded-Encrypted: i=1; AJvYcCWqtyLlYFNttnwkP0mofdHIbWfJ3k2UGYlX+fGNf3MR2qO0tKrVkdOCWGx4Xt3zsf0As+Kax9GaVfHN2Ew=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVVYFNRNt8z2PfBPg64IsVqoTm0UJ7IyVUkho30kCE/XLkCRSf
+	bHB+UsAcc/onWQK89sZsgdl+7yuGT4yENjP9KkQNU7c4Ok281aeXxtnfays+0YINSUrQwb1cI3r
+	khItw/A==
+X-Google-Smtp-Source: AGHT+IGTl/0MRt+DgDNAUuYugWnKJZds1hQoM1nSd1eYiKimwIiKclutS+1wetnNSbh/OGTZQZOUhIBYkuPV
+X-Received: from pjbst3.prod.google.com ([2002:a17:90b:1fc3:b0:301:4260:4d23])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f86:b0:2fe:a8b1:7d8
+ with SMTP id 98e67ed59e1d1-30a33355ff6mr5623948a91.25.1746035475516; Wed, 30
+ Apr 2025 10:51:15 -0700 (PDT)
+Date: Wed, 30 Apr 2025 10:49:57 -0700
 In-Reply-To: <20250430175036.184610-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430175036.184610-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <20250430175036.184610-8-irogers@google.com>
-Subject: [PATCH v2 07/47] tools lib: Silence -Wshorten-64-to-32 warnings
+Message-ID: <20250430175036.184610-10-irogers@google.com>
+Subject: [PATCH v2 09/47] tools subcmd: Silence -Wshorten-64-to-32 warnings
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -114,109 +114,165 @@ changing the sign of a result, for example, truncation to return an
 int to fit a sort routine. Silence the warning by making the implicit
 truncation explicit.
 
+Move mput_char out of header file to its only use in help.c, while
+changing its argument types.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/lib/api/fs/fs.c | 4 ++--
- tools/lib/bitmap.c    | 2 +-
- tools/lib/string.c    | 6 +++---
- tools/lib/vsprintf.c  | 6 +++---
- 4 files changed, 9 insertions(+), 9 deletions(-)
+ tools/lib/subcmd/help.c          | 28 ++++++++++++++++------------
+ tools/lib/subcmd/help.h          |  6 ------
+ tools/lib/subcmd/parse-options.c | 16 ++++++++--------
+ 3 files changed, 24 insertions(+), 26 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index edec23406dbc..2c4677901de9 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -349,7 +349,7 @@ int filename__read_str(const char *filename, char **buf, size_t *sizep)
- {
- 	struct io io;
- 	char bf[128];
--	int err;
-+	ssize_t err;
- 
- 	io.fd = open(filename, O_RDONLY);
- 	if (io.fd < 0)
-@@ -363,7 +363,7 @@ int filename__read_str(const char *filename, char **buf, size_t *sizep)
- 	} else
- 		err = 0;
- 	close(io.fd);
--	return err;
-+	return (int)err;
+diff --git a/tools/lib/subcmd/help.c b/tools/lib/subcmd/help.c
+index 8561b0f01a24..555b91ada0f9 100644
+--- a/tools/lib/subcmd/help.c
++++ b/tools/lib/subcmd/help.c
+@@ -125,13 +125,11 @@ static void get_term_dimensions(struct winsize *ws)
+ 	ws->ws_col = 80;
  }
  
- int filename__write_int(const char *filename, int value)
-diff --git a/tools/lib/bitmap.c b/tools/lib/bitmap.c
-index 51255c69754d..7491bf174e92 100644
---- a/tools/lib/bitmap.c
-+++ b/tools/lib/bitmap.c
-@@ -32,7 +32,7 @@ size_t bitmap_scnprintf(unsigned long *bitmap, unsigned int nbits,
- 			char *buf, size_t size)
+-static void pretty_print_string_list(struct cmdnames *cmds, int longest)
++static void pretty_print_string_list(struct cmdnames *cmds, size_t longest)
  {
- 	/* current bit is 'cur', most recently seen range is [rbot, rtop] */
--	unsigned int cur, rbot, rtop;
-+	size_t cur, rbot, rtop;
- 	bool first = true;
- 	size_t ret = 0;
+-	int cols = 1, rows;
+-	int space = longest + 1; /* min 1 SP between words */
++	size_t cols = 1, rows, max_cols;
++	size_t space = longest + 1; /* min 1 SP between words */
+ 	struct winsize win;
+-	int max_cols;
+-	int i, j;
  
-diff --git a/tools/lib/string.c b/tools/lib/string.c
-index 3126d2cff716..638e75b63538 100644
---- a/tools/lib/string.c
-+++ b/tools/lib/string.c
-@@ -182,7 +182,7 @@ char *strreplace(char *s, char old, char new)
- 	return s;
+ 	get_term_dimensions(&win);
+ 	max_cols = win.ws_col - 1; /* don't print *on* the edge */
+@@ -140,12 +138,12 @@ static void pretty_print_string_list(struct cmdnames *cmds, int longest)
+ 		cols = max_cols / space;
+ 	rows = (cmds->cnt + cols - 1) / cols;
+ 
+-	for (i = 0; i < rows; i++) {
++	for (size_t i = 0; i < rows; i++) {
+ 		printf("  ");
+ 
+-		for (j = 0; j < cols; j++) {
+-			unsigned int n = j * rows + i;
+-			unsigned int size = space;
++		for (size_t j = 0; j < cols; j++) {
++			size_t n = j * rows + i;
++			int size = (int)space;
+ 
+ 			if (n >= cmds->cnt)
+ 				break;
+@@ -180,7 +178,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
+ 					 const char *path,
+ 					 const char *prefix)
+ {
+-	int prefix_len;
++	size_t prefix_len;
+ 	DIR *dir = opendir(path);
+ 	struct dirent *de;
+ 	char *buf = NULL;
+@@ -194,7 +192,7 @@ static void list_commands_in_dir(struct cmdnames *cmds,
+ 	astrcatf(&buf, "%s/", path);
+ 
+ 	while ((de = readdir(dir)) != NULL) {
+-		int entlen;
++		size_t entlen;
+ 
+ 		if (!strstarts(de->d_name, prefix))
+ 			continue;
+@@ -250,10 +248,16 @@ void load_command_list(const char *prefix,
+ 	exclude_cmds(other_cmds, main_cmds);
  }
  
--static void *check_bytes8(const u8 *start, u8 value, unsigned int bytes)
-+static void *check_bytes8(const u8 *start, u8 value, size_t bytes)
++static void mput_char(char c, size_t num)
++{
++	while (num--)
++		putchar(c);
++}
++
+ void list_commands(const char *title, struct cmdnames *main_cmds,
+ 		   struct cmdnames *other_cmds)
  {
- 	while (bytes) {
- 		if (*start != value)
-@@ -206,7 +206,7 @@ void *memchr_inv(const void *start, int c, size_t bytes)
- {
- 	u8 value = c;
- 	u64 value64;
--	unsigned int words, prefix;
-+	size_t words, prefix;
+-	unsigned int i, longest = 0;
++	size_t i, longest = 0;
  
- 	if (bytes <= 16)
- 		return check_bytes8(start, value, bytes);
-@@ -216,7 +216,7 @@ void *memchr_inv(const void *start, int c, size_t bytes)
- 	value64 |= value64 << 16;
- 	value64 |= value64 << 32;
+ 	for (i = 0; i < main_cmds->cnt; i++)
+ 		if (longest < main_cmds->names[i]->len)
+diff --git a/tools/lib/subcmd/help.h b/tools/lib/subcmd/help.h
+index 355c066c8d49..258b3a143cbc 100644
+--- a/tools/lib/subcmd/help.h
++++ b/tools/lib/subcmd/help.h
+@@ -14,12 +14,6 @@ struct cmdnames {
+ 	} **names;
+ };
  
--	prefix = (unsigned long)start % 8;
-+	prefix = (size_t)start % 8;
- 	if (prefix) {
- 		u8 *r;
+-static inline void mput_char(char c, unsigned int num)
+-{
+-	while(num--)
+-		putchar(c);
+-}
+-
+ void load_command_list(const char *prefix,
+ 		struct cmdnames *main_cmds,
+ 		struct cmdnames *other_cmds);
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 555d617c1f50..add46b81a131 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -201,7 +201,7 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 		return 0;
  
-diff --git a/tools/lib/vsprintf.c b/tools/lib/vsprintf.c
-index 8780b4cdab21..62028a5eea7e 100644
---- a/tools/lib/vsprintf.c
-+++ b/tools/lib/vsprintf.c
-@@ -8,7 +8,7 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
-        int i = vsnprintf(buf, size, fmt, args);
-        ssize_t ssize = size;
+ 	case OPTION_SET_UINT:
+-		*(unsigned int *)opt->value = unset ? 0 : opt->defval;
++		*(unsigned int *)opt->value = unset ? 0 : (unsigned int)opt->defval;
+ 		return 0;
  
--       return (i >= ssize) ? (ssize - 1) : i;
-+       return (i >= ssize) ? (int)(ssize - 1) : i;
- }
- 
- int scnprintf(char * buf, size_t size, const char * fmt, ...)
-@@ -21,7 +21,7 @@ int scnprintf(char * buf, size_t size, const char * fmt, ...)
-        i = vsnprintf(buf, size, fmt, args);
-        va_end(args);
- 
--       return (i >= ssize) ? (ssize - 1) : i;
-+       return (i >= ssize) ? (int)(ssize - 1) : i;
- }
- 
- int scnprintf_pad(char * buf, size_t size, const char * fmt, ...)
-@@ -40,5 +40,5 @@ int scnprintf_pad(char * buf, size_t size, const char * fmt, ...)
- 		buf[i] = 0x0;
+ 	case OPTION_SET_PTR:
+@@ -256,12 +256,12 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 			return 0;
+ 		}
+ 		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
+-			*(int *)opt->value = opt->defval;
++			*(int *)opt->value = (int)opt->defval;
+ 			return 0;
+ 		}
+ 		if (get_arg(p, opt, flags, &arg))
+ 			return -1;
+-		*(int *)opt->value = strtol(arg, (char **)&s, 10);
++		*(int *)opt->value = (int)strtol(arg, (char **)&s, 10);
+ 		if (*s)
+ 			return opterror(opt, "expects a numerical value", flags);
+ 		return 0;
+@@ -272,14 +272,14 @@ static int get_value(struct parse_opt_ctx_t *p,
+ 			return 0;
+ 		}
+ 		if (opt->flags & PARSE_OPT_OPTARG && !p->opt) {
+-			*(unsigned int *)opt->value = opt->defval;
++			*(unsigned int *)opt->value = (unsigned int)opt->defval;
+ 			return 0;
+ 		}
+ 		if (get_arg(p, opt, flags, &arg))
+ 			return -1;
+ 		if (arg[0] == '-')
+ 			return opterror(opt, "expects an unsigned numerical value", flags);
+-		*(unsigned int *)opt->value = strtol(arg, (char **)&s, 10);
++		*(unsigned int *)opt->value = (unsigned int)strtol(arg, (char **)&s, 10);
+ 		if (*s)
+ 			return opterror(opt, "expects a numerical value", flags);
+ 		return 0;
+@@ -770,9 +770,9 @@ static void print_option_help(const struct option *opts, int full)
+ 		break;
  	}
  
--	return (i >= ssize) ? (ssize - 1) : i;
-+	return (i >= ssize) ? (int)(ssize - 1) : i;
- }
+-	if (pos <= USAGE_OPTS_WIDTH)
+-		pad = USAGE_OPTS_WIDTH - pos;
+-	else {
++	if (pos <= USAGE_OPTS_WIDTH) {
++		pad = (int)(USAGE_OPTS_WIDTH - pos);
++	} else {
+ 		fputc('\n', stderr);
+ 		pad = USAGE_OPTS_WIDTH;
+ 	}
 -- 
 2.49.0.906.g1f30a19c02-goog
 
