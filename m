@@ -1,49 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0662580D5;
-	Wed, 30 Apr 2025 16:58:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED3A190676;
+	Wed, 30 Apr 2025 16:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746032319; cv=none; b=ZGkRNzD0CMzqdKNj6305bwpAHVO8Rkcs1DT7/bkmskp0MlJCvDWUEuZDGYoM1nGUIVexb/kr3X2xHw1Si18MeQsN536w+V+OrJHNHxTEzekMGSxbSHN79bww8jSf8MRM2bLnesMMa2/AOYLTBTTveas+ca/dLHTBRbOzbFA9N98=
+	t=1746032330; cv=none; b=clhBcH60POzKkdgmq2/Qf83yuqroZh2hW98HYCkZ8EwFeD5nLIetHlI3IYORkEhSj5u5eHkx8qt+w8vLtKLPUMdQ6eEaSMrfRO2+fSeVSPqZ7LOLHGlPb9SQXC4KqUKhradz21S5I9X72szrJG1zTn3WCchxszLS7e8cSltmq94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746032319; c=relaxed/simple;
-	bh=IHQZr7lGpJ8t+/rizich5GtpDGJI9PPkZu7s7u3vswc=;
+	s=arc-20240116; t=1746032330; c=relaxed/simple;
+	bh=KbNoo8IuXKgkWpm6XiUqHyCkzgi2Y5PoLRe84tOlwAA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiaOskkIS/Gt99CVJJcLjuRW+OqHmNxSN4YnRArfIqLltRom3BWsp4uEhdkFFZ6NnIY2I27a55vDK9Zdc1bTGws0zofaKlUvxoMbr/6lfc8OaEnCqMNQSIReDlr7y0sN9lgXmfwx1Imc8iu/FJGl5gEuHkRFc+fPj9qDWVa2v6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZYMuPA/R; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3G5ermMFpvkDD7XlD03oWgL2LqWUG2Cg33S0oJecVdCHXPh5NdTaIxe4gCjwYiRfAMiZA47I8ZDTLnbE7tt8czWavnPmNpx3zmDADWO9HfO0lWBkDx0NzC0c/UxnOFkZ0e9MBLvH6pTIzH+XDeZcvTq2q43ALrHjkdaJ6NEs1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gJgSmQL3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZYMuPA/R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3997C4CEE7;
-	Wed, 30 Apr 2025 16:58:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746032318;
-	bh=IHQZr7lGpJ8t+/rizich5GtpDGJI9PPkZu7s7u3vswc=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gJgSmQL3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53919C4CEE7;
+	Wed, 30 Apr 2025 16:58:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746032330;
+	bh=KbNoo8IuXKgkWpm6XiUqHyCkzgi2Y5PoLRe84tOlwAA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZYMuPA/RVFgMtF2HaxEoiV2z99ULz9jUdl4H9+s4mkl6V5HX8ga42F5F+J+05e0aA
-	 VehGldG9vaZJ9Fk8QiwevxnHh5ZJqadZUlS/XA3Y6UJlXSW5uIjfU+tbm5Sl81UOow
-	 lDQrJWnMURmvg1WZrjLvtMPeVKIXD63WygPrxzgGgq/7y3JYIClEf6v+qKr7EK9YCw
-	 UjxEHsu+Axs+3MMyh1CJ8g46RrEoNq+WcF5vA+flMTKWh5TiBx7cJ0wEgu24cHtq0b
-	 jkLucjOfsNfyMrO6k1xyscLYtz6JfYM0fX9kyqHhzPnFFcFPMOLn8pSfxZ/CxfBAPL
-	 +asX4HqaTiysg==
-Date: Wed, 30 Apr 2025 09:58:36 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Joe Mario <jmario@redhat.com>,
-	Stephane Eranian <eranian@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Santosh Shukla <santosh.shukla@amd.com>,
-	Ananth Narayan <ananth.narayan@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>
-Subject: Re: [PATCH v4 1/4] perf amd ibs: Add Load Latency bits in raw dump
-Message-ID: <aBJWvAQc0wF6EV9g@google.com>
-References: <20250429035938.1301-1-ravi.bangoria@amd.com>
- <20250429035938.1301-2-ravi.bangoria@amd.com>
+	b=gJgSmQL3PEHgOBv+tqynMPpReBjxDR0nmy13htO/qBvlNxrN/P9XDsgHlCq4KBh40
+	 P+3WASGL14uiwG0OTNmFe3nomkOdnbLszeW6m5Hkl4QCV0raTp1ceq5D1Vn95gkJNR
+	 vbLiD66gtJu21icCwQd52v2ZjDoOkjeGRj+iz+dc=
+Date: Wed, 30 Apr 2025 18:58:46 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 1/8] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <2025043059-unlined-plausible-644e@gregkh>
+References: <20250429-debugfs-rust-v1-0-6b6e7cb7929f@google.com>
+ <20250429-debugfs-rust-v1-1-6b6e7cb7929f@google.com>
+ <2025043021-plaza-grip-2916@gregkh>
+ <CAGSQo00Kg2QV56LYFg6nRY+yS2KtiVAPaggKaKFCdprjBfXCcA@mail.gmail.com>
+ <2025043022-travesty-slicing-2089@gregkh>
+ <CAGSQo00nE+n41ehYdAuE1XrJmLZJNLEhKYee6qfF0Gp7b0X5Cw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,102 +52,76 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250429035938.1301-2-ravi.bangoria@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGSQo00nE+n41ehYdAuE1XrJmLZJNLEhKYee6qfF0Gp7b0X5Cw@mail.gmail.com>
 
-Hello,
-
-On Tue, Apr 29, 2025 at 03:59:35AM +0000, Ravi Bangoria wrote:
-> IBS OP PMU on Zen5 supports Load Latency filtering. Decode and dump Load
-> Latency filtering related bits into perf script raw dump.
+On Wed, Apr 30, 2025 at 08:31:29AM -0700, Matthew Maurer wrote:
+> On Wed, Apr 30, 2025 at 8:23 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Apr 30, 2025 at 08:10:44AM -0700, Matthew Maurer wrote:
+> > > On Wed, Apr 30, 2025 at 5:06 AM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Tue, Apr 29, 2025 at 11:15:55PM +0000, Matthew Maurer wrote:
+> > > > > The basic API relies on `dput` to prevent leaks. Use of `debugfs_remove`
+> > > > > is delayed until the more full-featured API, because we need to avoid
+> > > > > the user having an reference to a dir that is recursively removed.
+> > > > >
+> > > > > Signed-off-by: Matthew Maurer <mmaurer@google.com>
+> > > >
+> > > > First off, many thanks for doing this.  I like this in general, but I
+> > > > have loads of specific questions/comments.  Don't take that as a
+> > > > criticism of this feature, I really want these bindings to be in the
+> > > > tree and work hopefully better/cleaner than the userspace ones do.
+> > > >
+> > > > First off, the main "rule" of debugfs is that you should NEVER care
+> > > > about the return value of any debugfs function.  So much so that the C
+> > > > side hides errors almost entirely where possible.  I'd like to see this
+> > > > carried through to the Rust side as well, but I think you didn't do that
+> > > > for various "traditional" reasons.
+> > >
+> > > Sure, I mostly had to do error checking because I was using an
+> > > `ARef<Dir>` to represent a directory, which meant that the underlying
+> > > directory needed to be a valid pointer. Given that you've said that
+> > > the returned `dentry *` should never be used as an actual `dentry`,
+> > > only as an abstract handle to a DebugFS object, that requirement goes
+> > > away, and I can remove the error handling code and always successfully
+> > > return a `Dir`, even in cases where an error has occurred.
+> >
+> > Great!
+> >
+> > Except when debugfs is not enabled, then what are you going to return?
+> > The same structure, or an error?
+> >
+> > I'd vote for the same pointer to the structure, just to make it more
+> > obvious that this is a totally opaque thing and that no caller should
+> > ever know or care if debugfs is working or even present in the system.
+> >
+> > Note that some drivers will want to save a bit of space if debugfs is
+> > not enabled in the build, so be prepared to make the binding work
+> > somehow that way too.  Can you have an "empty" object that takes no
+> > memory?  Or is this too overthinking things?
 > 
-> Also add oneliner example in the perf-amd-ibs man page.
+> Based on what you've expressed, I think what makes sense is:
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
->  tools/perf/Documentation/perf-amd-ibs.txt |  9 +++++++++
->  tools/perf/util/amd-sample-raw.c          | 14 ++++++++++++--
->  2 files changed, 21 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-> index 2fd31d9d7b71..55f80beae037 100644
-> --- a/tools/perf/Documentation/perf-amd-ibs.txt
-> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
-> @@ -85,6 +85,15 @@ System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Zen4 onwar
->  
->  	# perf record -e ibs_op/cnt_ctl=1,l3missonly=1/ -c 100000 -a
->  
-> +System-wide profile, cycles event, sampling period: 100000, LdLat filtering (Zen5
-> +onward)
-> +
-> +	# perf record -e ibs_op/ldlat=128/ -c 100000 -a
-> +
-> +	Supported load latency threshold values are 128 to 2048 (both inclusive).
+> * Initial patch will always return the same `Dir`, just sometimes it
+> will be a wrapper around a pointer that is an error code, and
+> sometimes it will be a useful `dentry` pointer. This will match the
+> current behavior of C code to my understanding.
 
-What happens if user gives an out of range value?
+Great.
 
+> * Follow-up (probably still in this series) will check
+> `CONFIG_DEBUG_FS`, and if it's off, will just make `Dir` into a ZST,
+> and just discard the pointer. This would be an improvement upon the C
+> interface, because drivers would get the shrinkage without needing to
+> add conditionals on `CONFIG_DEBUG_FS` in their own driver.
 
-> +	Latency value which is a multiple of 128 incurs a little less profiling
-> +	overhead compared to other values.
-> +
->  Per process(upstream v6.2 onward), uOps event, sampling period: 100000
->  
->  	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -p 1234
-> diff --git a/tools/perf/util/amd-sample-raw.c b/tools/perf/util/amd-sample-raw.c
-> index 9d0ce88e90e4..ac34b18ccc0c 100644
-> --- a/tools/perf/util/amd-sample-raw.c
-> +++ b/tools/perf/util/amd-sample-raw.c
-> @@ -19,6 +19,7 @@
->  
->  static u32 cpu_family, cpu_model, ibs_fetch_type, ibs_op_type;
->  static bool zen4_ibs_extensions;
-> +static bool ldlat_cap;
->  
->  static void pr_ibs_fetch_ctl(union ibs_fetch_ctl reg)
->  {
-> @@ -78,14 +79,20 @@ static void pr_ic_ibs_extd_ctl(union ic_ibs_extd_ctl reg)
->  static void pr_ibs_op_ctl(union ibs_op_ctl reg)
->  {
->  	char l3_miss_only[sizeof(" L3MissOnly _")] = "";
-> +	char ldlat[sizeof(" LdLatThrsh __ LdLatEn _")] = "";
+You're going to have to check CONFIG_DEBUG_FS anyway for this series,
+otherwise things aren't going to build properly, so this sounds like a
+great way to handle that.
 
-Shouldn't it reserve 4 characters for the threshold since it can be up
-to 2048?
+thanks,
 
->  
->  	if (zen4_ibs_extensions)
->  		snprintf(l3_miss_only, sizeof(l3_miss_only), " L3MissOnly %d", reg.l3_miss_only);
->  
-> -	printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d\n",
-> +	if (ldlat_cap) {
-> +		snprintf(ldlat, sizeof(ldlat), " LdLatThrsh %2d LdLatEn %d",
-
-Here, it would be %4d.
-
-Thanks,
-Namhyung
-
-
-> +			 reg.ldlat_thrsh, reg.ldlat_en);
-> +	}
-> +
-> +	printf("ibs_op_ctl:\t%016llx MaxCnt %9d%s En %d Val %d CntCtl %d=%s CurCnt %9d%s\n",
->  		reg.val, ((reg.opmaxcnt_ext << 16) | reg.opmaxcnt) << 4, l3_miss_only,
->  		reg.op_en, reg.op_val, reg.cnt_ctl,
-> -		reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt);
-> +		reg.cnt_ctl ? "uOps" : "cycles", reg.opcurcnt, ldlat);
->  }
->  
->  static void pr_ibs_op_data(union ibs_op_data reg)
-> @@ -331,6 +338,9 @@ bool evlist__has_amd_ibs(struct evlist *evlist)
->  	if (perf_env__find_pmu_cap(env, "ibs_op", "zen4_ibs_extensions"))
->  		zen4_ibs_extensions = 1;
->  
-> +	if (perf_env__find_pmu_cap(env, "ibs_op", "ldlat"))
-> +		ldlat_cap = 1;
-> +
->  	if (ibs_fetch_type || ibs_op_type) {
->  		if (!cpu_family)
->  			parse_cpuid(env);
-> -- 
-> 2.43.0
-> 
+greg k-h
