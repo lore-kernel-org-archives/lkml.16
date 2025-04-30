@@ -1,143 +1,132 @@
-Received: from unicorn.mansr.com (unicorn.mansr.com [81.2.72.234])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BAE1ADC69;
-	Wed, 30 Apr 2025 16:45:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.2.72.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7238A2627FC;
+	Wed, 30 Apr 2025 16:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746031541; cv=none; b=dt9C1wVhaws1gGvczbRI+u9ougS4aoYxA8/+MhPXmWYR157urX0mid2Eq4XsFRwmwpR2JC/Ar/XlHDm0eQCoas7FCnh2xvvKeJec4kvgcOX/J62DZBuHrtC7hmSL0RN+/netoZQB99jTKFJ3M5Gtsvv8e1QjGe8b21dNYbx+SEc=
+	t=1746031543; cv=none; b=hlbFb1klKwxSODwxcldOSAbe3LcTc/rcXq/xA0tG4Ls7OjzLF7KRkEah8D/pqPGlmjAD56qIsjCZ5xq/K+orXaxSHzQiIPswpOt9OClJj5JrMmgW8nWIoaOAt21OFPI7uEeVIFM10AaNriLNihvdgQO8V5bALPQ4DIrHw50fVx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746031541; c=relaxed/simple;
-	bh=7lWr4OMbkRSnBUxwM3XWJdY3O2AMAYEwZJRX+iFrkGY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XCKTl/p4a8OqmEOifJ8X6Hy5Bun3q6ntHAM803jr8RAX31SPqwhynnifHmQOFLeEeRIkHHA4rVt3UO9VrkND2FmREdp8UG/B5uban8ZWhP2JAw8MdWCNyK2kokrhOpPi/sJEyWhCtaHV7c47BwFsc/QzZnCLxX+g7Um8wRDf/jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com; spf=pass smtp.mailfrom=mansr.com; arc=none smtp.client-ip=81.2.72.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mansr.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mansr.com
-Received: from raven.mansr.com (raven.mansr.com [IPv6:2001:8b0:ca0d:1::3])
-	by unicorn.mansr.com (Postfix) with ESMTPS id 86AD315366;
-	Wed, 30 Apr 2025 17:37:26 +0100 (BST)
-Received: by raven.mansr.com (Postfix, from userid 51770)
-	id 761F921A3DA; Wed, 30 Apr 2025 17:37:26 +0100 (BST)
-From: Mans Rullgard <mans@mansr.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-serial@vger.kernel.org
-Subject: [PATCH] tty: serial: 8250_omap: fix tx with dma
-Date: Wed, 30 Apr 2025 17:37:09 +0100
-Message-ID: <20250430163709.15850-1-mans@mansr.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1746031543; c=relaxed/simple;
+	bh=YRFeOE2SvEpVpyHUyxI/7ubZqIxqK3KMU4XzCZOjQhw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eW9kQkSBo/N0ysHSp855Jy0wgFB9JlxxCrCHKzCp3/8VuN94pPOj9PgwDWAY/bV4Js4emcvCj7HufThy7nKG2ATCa6MDogdPdNtpStl+UL5lv2hX+l/x90Nv9OKALkm6qJUpfe/247lpmnW5T4ERmJha9quGwfqRZnGMuhN1fz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X6TgGSw5; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X6TgGSw5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746031540; x=1777567540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YRFeOE2SvEpVpyHUyxI/7ubZqIxqK3KMU4XzCZOjQhw=;
+  b=X6TgGSw5IvMRySNfuMp06XkqZJsHa2y8K1xExAN5pDeHcsTjNIa+1Q3f
+   f+CQRsOE+5DLvwbqHuTUiemWPgO1lbjy3a9LRuuOGJqWUiEHy/cCcCIKq
+   YhiltBkp2i3mzr3pm/TPgE29TIFXIdNQpFbUoF2VJIs67PZgmKh2CYv9a
+   4vwK/8F2EMQGMis4q/4q1eo+RxdwMJliqcgqDJsfym7Nom/0ci+xXvmV8
+   jKZ5h3kjewgehEL04Q9V655SbckMjIvMPrZYzqy69gg0p07pgDyRHRQir
+   pXKqaWKB+FmDxsc6Ya65JWXMIGG5u2kAGpil9ipkqh3Dw0vEip4emYDwO
+   Q==;
+X-CSE-ConnectionGUID: Gemo4/aoQliaqG0HSHwzNw==
+X-CSE-MsgGUID: 16XeW3LPRV6WZQNC+KPjFQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="57900346"
+X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
+   d="scan'208";a="57900346"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 09:45:39 -0700
+X-CSE-ConnectionGUID: FRYk2KNrTwGYffzVPt4jkA==
+X-CSE-MsgGUID: dXoFU1mgRlq9kWHXKov/dA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,252,1739865600"; 
+   d="scan'208";a="134108205"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 30 Apr 2025 09:45:35 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAAYu-0003cH-2Q;
+	Wed, 30 Apr 2025 16:45:32 +0000
+Date: Thu, 1 May 2025 00:45:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Jeff Johnson <jjohnson@kernel.org>,
+	Jeff Hugo <jeff.hugo@oss.qualcomm.com>,
+	Youssef Samir <quic_yabdulra@quicinc.com>,
+	Matthew Leung <quic_mattleun@quicinc.com>,
+	Yan Zhen <yanzhen@vivo.com>, Kunwu Chan <chentao@kylinos.cn>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Dr. David Alan Gilbert" <linux@treblig.org>,
+	Troy Hanson <quic_thanson@quicinc.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	kernel@collabora.com, Carl Vanderlip <quic_carlv@quicinc.com>,
+	Sumit Garg <sumit.garg@kernel.org>, mhi@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
+	ath12k@lists.infradead.org
+Subject: Re: [PATCH v3] bus: mhi: host: don't free bhie tables during
+ suspend/hibernation
+Message-ID: <202505010037.1PMLamw8-lkp@intel.com>
+References: <20250429122351.108684-1-usama.anjum@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429122351.108684-1-usama.anjum@collabora.com>
 
-Commit 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-introduced two errors in the TX DMA handling for 8250_omap.
+Hi Muhammad,
 
-Firstly, kfifo_dma_out_prepare_mapped() needs a scatterlist with two
-entries whereas only one is provided.  The same error was fixed for
-8250_dma in 59449c9dbdaa ("tty: serial: 8250_dma: use sgl with 2 nents
-to take care of buffer wrap").
+kernel test robot noticed the following build warnings:
 
-Secondly, when the OMAP_DMA_TX_KICK flag is set, one byte is pulled from
-the kfifo and emitted directly in order to start the DMA.  This is done
-without updating DMA tx_size which leads to uart_xmit_advance() called
-in the DMA complete callback advancing the kfifo by one too much.
+[auto build test WARNING on ath/ath-next]
+[also build test WARNING on next-20250430]
+[cannot apply to mani-mhi/mhi-next char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus staging/staging-testing staging/staging-next staging/staging-linus usb/usb-testing usb/usb-next usb/usb-linus linus/master v6.15-rc4]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-In practice, transmitting N bytes has been seen to result in the last
-N-1 bytes being sent repeatedly.
+url:    https://github.com/intel-lab-lkp/linux/commits/Muhammad-Usama-Anjum/bus-mhi-host-don-t-free-bhie-tables-during-suspend-hibernation/20250429-202649
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git ath-next
+patch link:    https://lore.kernel.org/r/20250429122351.108684-1-usama.anjum%40collabora.com
+patch subject: [PATCH v3] bus: mhi: host: don't free bhie tables during suspend/hibernation
+config: arm64-randconfig-002-20250430 (https://download.01.org/0day-ci/archive/20250501/202505010037.1PMLamw8-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505010037.1PMLamw8-lkp@intel.com/reproduce)
 
-This change fixes both problems.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505010037.1PMLamw8-lkp@intel.com/
 
-Fixes: 1788cf6a91d9 ("tty: serial: switch from circ_buf to kfifo")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
----
- drivers/tty/serial/8250/8250_omap.c | 35 +++++++++++++++--------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index f1aee915bc02..84a2f013015e 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -1152,9 +1152,11 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
- 	struct omap8250_priv		*priv = p->port.private_data;
- 	struct tty_port			*tport = &p->port.state->port;
- 	struct dma_async_tx_descriptor	*desc;
--	struct scatterlist sg;
-+	struct scatterlist *sg;
-+	struct scatterlist sgl[2];
- 	int skip_byte = -1;
- 	int ret;
-+	int i;
- 
- 	if (dma->tx_running)
- 		return 0;
-@@ -1173,16 +1175,6 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
- 		return 0;
- 	}
- 
--	sg_init_table(&sg, 1);
--	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
--					   UART_XMIT_SIZE, dma->tx_addr);
--	if (ret != 1) {
--		serial8250_clear_THRI(p);
--		return 0;
--	}
--
--	dma->tx_size = sg_dma_len(&sg);
--
- 	if (priv->habit & OMAP_DMA_TX_KICK) {
- 		unsigned char c;
- 		u8 tx_lvl;
-@@ -1207,7 +1199,7 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
- 			ret = -EBUSY;
- 			goto err;
- 		}
--		if (dma->tx_size < 4) {
-+		if (kfifo_len(&tport->xmit_fifo) < 4) {
- 			ret = -EINVAL;
- 			goto err;
- 		}
-@@ -1216,12 +1208,19 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
- 			goto err;
- 		}
- 		skip_byte = c;
--		/* now we need to recompute due to kfifo_get */
--		kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, &sg, 1,
--				UART_XMIT_SIZE, dma->tx_addr);
- 	}
- 
--	desc = dmaengine_prep_slave_sg(dma->txchan, &sg, 1, DMA_MEM_TO_DEV,
-+	sg_init_table(sgl, ARRAY_SIZE(sgl));
-+
-+	ret = kfifo_dma_out_prepare_mapped(&tport->xmit_fifo, sgl, ARRAY_SIZE(sgl),
-+					   UART_XMIT_SIZE, dma->tx_addr);
-+
-+	dma->tx_size = 0;
-+
-+	for_each_sg(sgl, sg, ret, i)
-+		dma->tx_size += sg_dma_len(sg);
-+
-+	desc = dmaengine_prep_slave_sg(dma->txchan, sgl, ret, DMA_MEM_TO_DEV,
- 			DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
- 	if (!desc) {
- 		ret = -EBUSY;
-@@ -1248,8 +1247,10 @@ static int omap_8250_tx_dma(struct uart_8250_port *p)
- err:
- 	dma->tx_err = 1;
- out_skip:
--	if (skip_byte >= 0)
-+	if (skip_byte >= 0) {
- 		serial_out(p, UART_TX, skip_byte);
-+		p->port.icount.tx++;
-+	}
- 	return ret;
- }
- 
+>> drivers/bus/mhi/host/pm.c:1246:6: warning: no previous prototype for function 'mhi_power_down_unprepare_keep_dev' [-Wmissing-prototypes]
+    1246 | void mhi_power_down_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
+         |      ^
+   drivers/bus/mhi/host/pm.c:1246:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+    1246 | void mhi_power_down_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
+         | ^
+         | static 
+   1 warning generated.
+
+
+vim +/mhi_power_down_unprepare_keep_dev +1246 drivers/bus/mhi/host/pm.c
+
+  1245	
+> 1246	void mhi_power_down_unprepare_keep_dev(struct mhi_controller *mhi_cntrl)
+  1247	{
+  1248		mhi_cntrl->bhi = NULL;
+  1249		mhi_cntrl->bhie = NULL;
+  1250	
+  1251		mhi_deinit_dev_ctxt(mhi_cntrl);
+  1252	}
+  1253	
+
 -- 
-2.49.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
