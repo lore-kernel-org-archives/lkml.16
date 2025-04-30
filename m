@@ -1,297 +1,89 @@
-Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01CF1320F
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 02:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DEE9320F;
+	Wed, 30 Apr 2025 02:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745979988; cv=none; b=HUp46nmw0ADtbcRrPc9c0zYWIPnalW/mYNODgVxBUNRy+dhb3KCN7wGSffVDJDKRGR2U45H7zmMTC+6UEYvGoKCT8+wUnk6ga1oqXiXhrgA/18AXNZXCHnFYFlmSUdumXbCcoQRrticLFYCIwJ9AUsMj3KCj2keWWRBMAQTEKjc=
+	t=1745980050; cv=none; b=chbfn+ciz2S/NNpeDQU7sWo5GQUL+1Mx96qwGD0KGtnJracKI9FTy3AdYEzbWx+7Ws+BHhC9bDaWW5lHDoQd1dZj4svPJh7BrlmkImHJkrFy+6ZQvM+nyL8LySUlsl7jM1h/f3xHRr30zCXwCoZHbLGbcr8RPDkMaeLEjEZMcJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745979988; c=relaxed/simple;
-	bh=FU/0E30Iy0/GFEuaDNkojSeh+9ROwkD/Vfb8glrcJiE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=lUsnqJldOJtLzYiECnvd3BEk4oROOosdPO+kv0nHRBpFPnN4dmxMmILpbkT9FgMjWSQtFByTGa6qhvpPA1t3wBEfHX+1PN4nneGp06yT1BChVrAjw0+sHnq1Svkv0tgPFu+4//ujUM5nVzmx4EvzztL3V1Vh62iYXkAGFpOBcRw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85b3a6c37e2so657408239f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 19:26:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1745979986; x=1746584786;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=+WI3UpbHGKkclhOy4vJJJk1p5KgjlUeDzhsQXSFt86I=;
-        b=gzv9ypKUPv/EJPPdnHfCntcN+pNU0nLduWX429zU0IiBEkQhWfLytaCLCxFOSZBokd
-         YCUmvIF+U/n0Oe+AXp8XPHmseoAVPf8O5YOtN2qBfiOP33IBauil94WUiqvw0ZeAq/lh
-         2kVViliLL/I7OcuqYQjL3V5FLJj+5zbXZj9nKnwvjuHZ38Mi2EWsOECVgbVPnRLF3X/Z
-         UTBaiwYy0hb19gjsqvuD8FNpXkd+w3FdE2uqhO0hlv/aLNrasarfUk4C4udF4ne/mPvs
-         7X37ne3OSGf2+Wa/UY0U1d7cgcdXZH5x74oRRP8Y5ZecD125JlyoCXmrXpA5fRK64f3I
-         /NYA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFR+A2w/pyr1CQ5XYijUu+WPug7+vHlKJD4SRdnmC08FGxmyg/LOXdbPn9t85aB6I/z0ZsIBH1JvlrUFs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNnonf5pPlyQGDQ5IPrQh5IIfFGlD/MYvTJSDdE+lNyS50J0ln
-	wXrzOnS1yIm9gaa2yzocJ1sEDsyApXlWgknHh/XQF/MKs7VNsi/TSH8KSG7RTQgT8651dz0RKqU
-	G9dzGB6zxbJH+ap4LknyoVYqOpoYKRZgfsUC+yjTQnMvcD8xsjTQD1N0=
-X-Google-Smtp-Source: AGHT+IHq+4KAVE88/PdN5D0CQcJYgbGp8ARrv+sIQ/JtgZwURXnWDZ9gGAdt8A/jBYXJzHTQxBJcVuSTHPKDR6hgLGbf+63vzTx7
+	s=arc-20240116; t=1745980050; c=relaxed/simple;
+	bh=MjSwpfkrbJam/CzzxFxRbha1wbLDcDn5jLZbOSmWQ6I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rNh2/gfuWb7mRXT7x5F9yeaeHnoOBMOR+MoktakHUJxh4uvCv9oHI7s1fV/P1j9ViVJF8CRgNuFtwANlPLq0i6wf8sJv0lC49CQWOMfPq+oIA72LwJDq12Fb/ZjHkO/y/EcUKJikXEE+3K0H7S5db9rhlZQZRsKWKO/Zyc472aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Vieyc26V; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Vieyc26V"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=k4QjAmh83yMZNLzUuAj1J5f4WZGw3kbBWCArSRYks8c=; b=Vieyc26VLhqz4zWnYRj3rYoyQj
+	H0zpuIjmCDGV04Csn9F7DAzFr4VMNjSPrC0ttYmpV9ePC4GcLW04Gh2LQ1DfIxlqp8R2aL3ipQgqS
+	Hoxj4/7XIQ9SP8MYTw9J6YxFRkgAmoixnyakr025Cu5UwmrQd+FkzC7jHq9Sv7Lbup88SHAX/kJOO
+	gCZMT32Dh2FRvOwZvUtHvMWVDl4ZzRtgK+7mmLDbkUAE5fgD6/s5zMPyYWMNXS2Dyy648liRupOcp
+	RncktiF2kCxxXhDi4UksWk66YNHf90reaqkRJHJIrq0moVeglYppY4Tl1LsVfkb0I0T9xlkGgF+Dz
+	KZjeX6Og==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1u9xAJ-0028rg-2e;
+	Wed, 30 Apr 2025 10:27:16 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 30 Apr 2025 10:27:15 +0800
+Date: Wed, 30 Apr 2025 10:27:15 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [v3 PATCH 00/13] Architecture-optimized SHA-256 library API
+Message-ID: <aBGKg5bq0zLkhy3-@gondor.apana.org.au>
+References: <cover.1745816372.git.herbert@gondor.apana.org.au>
+ <20250429165749.GC1743@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:401b:b0:85b:538e:1faf with SMTP id
- ca18e2360f4ac-86495e80421mr215375739f.7.1745979986092; Tue, 29 Apr 2025
- 19:26:26 -0700 (PDT)
-Date: Tue, 29 Apr 2025 19:26:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <68118a52.050a0220.39e3a1.0cab.GAE@google.com>
-Subject: [syzbot] [nilfs?] possible deadlock in __nilfs_error (3)
-From: syzbot <syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com>
-To: konishi.ryusuke@gmail.com, linux-kernel@vger.kernel.org, 
-	linux-nilfs@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429165749.GC1743@sol.localdomain>
 
-Hello,
+On Tue, Apr 29, 2025 at 09:57:49AM -0700, Eric Biggers wrote:
+>
+> To be clear, the objections I have on your v2 patchset still hold.  Your
+> unsolicited changes to my patches add unnecessary complexity and redundancy,
+> make the crypto_shash API even harder to use correctly, and also break the build
+> for several architectures.  If you're going to again use your maintainer
+> privileges to push these out anyway over my objections, I'd appreciate it if you
+> at least made your dubious changes as incremental patches using your own
+> authorship so that they can be properly reviewed/blamed.
 
-syzbot found the following issue on:
+Well the main problem is that your patch introduces a regression
+in the shash sha256 code by making its export format differ from
+other shash sha256 implementations (e.g., padlock-sha).
 
-HEAD commit:    ca91b9500108 Merge tag 'v6.15-rc4-ksmbd-server-fixes' of g..
-git tree:       upstream
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=172188d4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a42a9d552788177b
-dashboard link: https://syzkaller.appspot.com/bug?extid=00f7f5b884b117ee6773
-compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a00a70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114b8774580000
+So your first patch cannot stand as is.  What I could do is split up
+the first patch so that the lib/crypto sha stuff goes in by itself
+followed by a separate patch replacing the crypto/sha256 code.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8f91302b28da/disk-ca91b950.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/99926b0845ed/vmlinux-ca91b950.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/ace62028a7c9/bzImage-ca91b950.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/5c8198c5e35a/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/a89d3d8742e8/mount_3.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=12dabb74580000)
+> Please also note that I've sent a v4 which fixes the one real issue that my v1
+> patchset had: https://lore.kernel.org/r/20250428170040.423825-1-ebiggers@kernel.org
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+00f7f5b884b117ee6773@syzkaller.appspotmail.com
+Yes I've seen it but it still has the same issue of changing the
+shash sha256 export format.
 
-NILFS (loop0): vblocknr = 23 has abnormal lifetime: start cno (= 4294967298) > current cno (= 3)
-NILFS error (device loop0): nilfs_bmap_propagate: broken bmap (inode number=4)
-======================================================
-WARNING: possible circular locking dependency detected
-6.15.0-rc4-syzkaller-00021-gca91b9500108 #0 Not tainted
-------------------------------------------------------
-segctord/5821 is trying to acquire lock:
-ffff88814d79f090 (&nilfs->ns_sem){++++}-{4:4}, at: nilfs_set_error fs/nilfs2/super.c:92 [inline]
-ffff88814d79f090 (&nilfs->ns_sem){++++}-{4:4}, at: __nilfs_error+0x1ca/0x4b0 fs/nilfs2/super.c:141
-
-but task is already holding lock:
-ffff88814d79f2a0 (&nilfs->ns_segctor_sem){++++}-{4:4}, at: nilfs_transaction_lock+0x253/0x4c0 fs/nilfs2/segment.c:357
-
-which lock already depends on the new lock.
-
-
-the existing dependency chain (in reverse order) is:
-
--> #6 (&nilfs->ns_segctor_sem){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_read+0x46/0x2e0 kernel/locking/rwsem.c:1524
-       nilfs_transaction_begin+0x365/0x710 fs/nilfs2/segment.c:221
-       nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       wp_page_shared mm/memory.c:3688 [inline]
-       do_wp_page+0x2626/0x5760 mm/memory.c:3907
-       handle_pte_fault mm/memory.c:6013 [inline]
-       __handle_mm_fault+0x1028/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-       do_user_addr_fault+0xa81/0x1390 arch/x86/mm/fault.c:1337
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #5 (sb_internal#2){.+.+}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_intwrite include/linux/fs.h:1966 [inline]
-       nilfs_transaction_begin+0x268/0x710 fs/nilfs2/segment.c:218
-       nilfs_page_mkwrite+0x8b0/0xc20 fs/nilfs2/file.c:95
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       wp_page_shared mm/memory.c:3688 [inline]
-       do_wp_page+0x2626/0x5760 mm/memory.c:3907
-       handle_pte_fault mm/memory.c:6013 [inline]
-       __handle_mm_fault+0x1028/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-       do_user_addr_fault+0xa81/0x1390 arch/x86/mm/fault.c:1337
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #4 (sb_pagefaults){.+.+}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       percpu_down_read include/linux/percpu-rwsem.h:52 [inline]
-       __sb_start_write include/linux/fs.h:1783 [inline]
-       sb_start_pagefault include/linux/fs.h:1948 [inline]
-       nilfs_page_mkwrite+0x21e/0xc20 fs/nilfs2/file.c:57
-       do_page_mkwrite+0x14a/0x310 mm/memory.c:3287
-       wp_page_shared mm/memory.c:3688 [inline]
-       do_wp_page+0x2626/0x5760 mm/memory.c:3907
-       handle_pte_fault mm/memory.c:6013 [inline]
-       __handle_mm_fault+0x1028/0x5380 mm/memory.c:6140
-       handle_mm_fault+0x2d5/0x7f0 mm/memory.c:6309
-       do_user_addr_fault+0xa81/0x1390 arch/x86/mm/fault.c:1337
-       handle_page_fault arch/x86/mm/fault.c:1480 [inline]
-       exc_page_fault+0x68/0x110 arch/x86/mm/fault.c:1538
-       asm_exc_page_fault+0x26/0x30 arch/x86/include/asm/idtentry.h:623
-
--> #3 (vm_lock){++++}-{0:0}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __vma_enter_locked+0x182/0x380 mm/memory.c:6473
-       __vma_start_write+0x1e/0x120 mm/memory.c:6497
-       vma_start_write include/linux/mm.h:829 [inline]
-       mprotect_fixup+0x571/0x9b0 mm/mprotect.c:670
-       setup_arg_pages+0x53a/0xaa0 fs/exec.c:780
-       load_elf_binary+0xb7a/0x27b0 fs/binfmt_elf.c:1019
-       search_binary_handler fs/exec.c:1778 [inline]
-       exec_binprm fs/exec.c:1810 [inline]
-       bprm_execve+0x999/0x1440 fs/exec.c:1862
-       kernel_execve+0x8f0/0x9f0 fs/exec.c:2028
-       try_to_run_init_process+0x13/0x60 init/main.c:1385
-       kernel_init+0xad/0x1d0 init/main.c:1513
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
--> #2 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       __might_fault+0xcc/0x130 mm/memory.c:7151
-       _copy_to_iter+0xf3/0x15a0 lib/iov_iter.c:184
-       copy_page_to_iter+0xa7/0x150 lib/iov_iter.c:362
-       copy_folio_to_iter include/linux/uio.h:198 [inline]
-       filemap_read+0x78d/0x11d0 mm/filemap.c:2753
-       blkdev_read_iter+0x30a/0x440 block/fops.c:809
-       new_sync_read fs/read_write.c:489 [inline]
-       vfs_read+0x4cd/0x980 fs/read_write.c:570
-       ksys_read+0x145/0x250 fs/read_write.c:713
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #1 (&sb->s_type->i_mutex_key#7){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:867 [inline]
-       set_blocksize+0x23b/0x500 block/bdev.c:203
-       sb_set_blocksize block/bdev.c:224 [inline]
-       sb_min_blocksize+0x119/0x210 block/bdev.c:239
-       init_nilfs+0x43/0x690 fs/nilfs2/the_nilfs.c:710
-       nilfs_fill_super+0x8f/0x650 fs/nilfs2/super.c:1060
-       nilfs_get_tree+0x4f4/0x870 fs/nilfs2/super.c:1228
-       vfs_get_tree+0x8f/0x2b0 fs/super.c:1759
-       do_new_mount+0x24a/0xa40 fs/namespace.c:3884
-       do_mount fs/namespace.c:4224 [inline]
-       __do_sys_mount fs/namespace.c:4435 [inline]
-       __se_sys_mount+0x317/0x410 fs/namespace.c:4412
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
--> #0 (&nilfs->ns_sem){++++}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3166 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3285 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
-       __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       nilfs_set_error fs/nilfs2/super.c:92 [inline]
-       __nilfs_error+0x1ca/0x4b0 fs/nilfs2/super.c:141
-       nilfs_bmap_convert_error fs/nilfs2/bmap.c:35 [inline]
-       nilfs_bmap_propagate+0x108/0x130 fs/nilfs2/bmap.c:332
-       nilfs_collect_file_data+0x4f/0xd0 fs/nilfs2/segment.c:589
-       nilfs_segctor_apply_buffers+0x161/0x330 fs/nilfs2/segment.c:1010
-       nilfs_segctor_scan_file+0x68e/0x8e0 fs/nilfs2/segment.c:1059
-       nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1254 [inline]
-       nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
-       nilfs_segctor_do_construct+0x1d46/0x6970 fs/nilfs2/segment.c:2122
-       nilfs_segctor_construct+0x17b/0x690 fs/nilfs2/segment.c:2478
-       nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
-       nilfs_segctor_thread+0x6f7/0xe00 fs/nilfs2/segment.c:2700
-       kthread+0x70e/0x8a0 kernel/kthread.c:464
-       ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
-       ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
-
-other info that might help us debug this:
-
-Chain exists of:
-  &nilfs->ns_sem --> sb_internal#2 --> &nilfs->ns_segctor_sem
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&nilfs->ns_segctor_sem);
-                               lock(sb_internal#2);
-                               lock(&nilfs->ns_segctor_sem);
-  lock(&nilfs->ns_sem);
-
- *** DEADLOCK ***
-
-1 lock held by segctord/5821:
- #0: ffff88814d79f2a0 (&nilfs->ns_segctor_sem){++++}-{4:4}, at: nilfs_transaction_lock+0x253/0x4c0 fs/nilfs2/segment.c:357
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 5821 Comm: segctord Not tainted 6.15.0-rc4-syzkaller-00021-gca91b9500108 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2079
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2211
- check_prev_add kernel/locking/lockdep.c:3166 [inline]
- check_prevs_add kernel/locking/lockdep.c:3285 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3909
- __lock_acquire+0xaac/0xd20 kernel/locking/lockdep.c:5235
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5866
- down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
- nilfs_set_error fs/nilfs2/super.c:92 [inline]
- __nilfs_error+0x1ca/0x4b0 fs/nilfs2/super.c:141
- nilfs_bmap_convert_error fs/nilfs2/bmap.c:35 [inline]
- nilfs_bmap_propagate+0x108/0x130 fs/nilfs2/bmap.c:332
- nilfs_collect_file_data+0x4f/0xd0 fs/nilfs2/segment.c:589
- nilfs_segctor_apply_buffers+0x161/0x330 fs/nilfs2/segment.c:1010
- nilfs_segctor_scan_file+0x68e/0x8e0 fs/nilfs2/segment.c:1059
- nilfs_segctor_collect_blocks fs/nilfs2/segment.c:1254 [inline]
- nilfs_segctor_collect fs/nilfs2/segment.c:1547 [inline]
- nilfs_segctor_do_construct+0x1d46/0x6970 fs/nilfs2/segment.c:2122
- nilfs_segctor_construct+0x17b/0x690 fs/nilfs2/segment.c:2478
- nilfs_segctor_thread_construct fs/nilfs2/segment.c:2586 [inline]
- nilfs_segctor_thread+0x6f7/0xe00 fs/nilfs2/segment.c:2700
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Remounting filesystem read-only
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
