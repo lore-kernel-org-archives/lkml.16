@@ -1,192 +1,157 @@
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19336225A29
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D034545;
+	Wed, 30 Apr 2025 23:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746055421; cv=none; b=uAhspbXE/3+YlNbw2RqHQ9QaXXX/AmehDoEwuFJWFmPc2OpcTiENmefXMZsqKPTGb+yAaDa2iY+xIGDh7Yp9G41Tl5C2/H5TCQ9+g1vJ/OhhcCVeLIkS5zh7tBTYwrpbkw1BCISb2qH99wzKrK0y+R0gPMiXVi/w3gdQFv8i5JY=
+	t=1746055455; cv=none; b=aZExynqsFIQAHSxlltXuy6D/KzZAyLKuqm8irW0b+tUdLeHvAcgnFar2LFGshhEN9UX2G9HXe7z9gYiQJy4MIE/BdR70pwoiBzBaIyQSLgd9dE9RWTGIRMSsXzaXcmRLmOmz6aqm7jtiF6+sQQ7AH9lB5Ub3617bv+65HrK5T4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746055421; c=relaxed/simple;
-	bh=fW8tqN4Jv0Q+XFS4iJls5dMAoxcext+fi+pfBSiD7ng=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AmuH03Oy94w9yvgHay/rD1sHi53tfk6yfEE7YfK3l+cLO9ZHJbwoQN4M7SilHL+azXaIOpUZFhj0oSHiLlwB2N3MYndB8jsbTgYlzM62aV/bo3layzpdjmqnG38sdi0UTHeb/ZteZ4xgtZdtV0DCuhQobT8ADUv+lBwg0l7mRE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QDra5OEZ; arc=none smtp.client-ip=209.85.217.52
+	s=arc-20240116; t=1746055455; c=relaxed/simple;
+	bh=tc20sQFbQ8SUugz2cW6mF+BRvDm6qDynr07fAX7iz0w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEz7BYBWLE6kXWs5DaBWuEBpKqaWoIv97ug+2IuLEnsHzWe24e8BmaFDzkPGanX+ylM7RwwtChD50xRQKchLy+HWB4CEVWTxNZaEJ50RrmWIvgcoPoPqlL1kQHaFeJIdXtAqNtDgX9IRzF3ucq1t3PNQYObtB7vSlDh/i2ySU9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BmIbHHp1; arc=none smtp.client-ip=209.85.219.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QDra5OEZ"
-Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4c4e1f16833so125352137.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:23:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BmIbHHp1"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8fa1f99a6so568756d6.3;
+        Wed, 30 Apr 2025 16:24:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746055419; x=1746660219; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0OmrzXzEkAyXUbOIVvM9SLB44UQDkpWd3Om5I77M2ZA=;
-        b=QDra5OEZANZQLM1N6V+KWocSyeLX3R32WUe4Nwx4cA6Y+Iara1b3ufEdpuQUUbCqXs
-         H16hOUjQwSlQUaVI/MLxwIW4vRoKU44W3wc5nKW4Y5BVMgxH7EHaSB4YsRnPfT3RtLed
-         nZesqDiaZiQ81PhS2pZLgxsD5TATXjR9q8ahFdRtQ0SP7O4tyq6HS9gbIJhlzsUMtBRu
-         rw5mev+UQMH8prPUXGz9l/nkuVy7lHnkdac0MNFtEmLV3Om9ARVqESZLA30/k7WAWyiU
-         2rtz7WKsXM5fovIgdHGEAKRX4SPbxw68fCfTcxS61s9gCj85XDpLeQWCnJqRBsS6Frdr
-         MQuw==
+        d=gmail.com; s=20230601; t=1746055452; x=1746660252; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=s7OGUFsBaaFGDg5Er+LmFFX/Hm+5kapCAxsBx1islgk=;
+        b=BmIbHHp1cq5UuF8hKVcWQa4DSvkCwZqksHSKSPu+ofkFgzBowZ1EOneANmnZLMRU3/
+         ytlyHVr0yeUbsrH2stv21OxA6SuTRVQ7VvX5K3xd5Z7KtuGI09gemjuXgo5QpLKfD/1W
+         bOCh8XxUuUhimUZgpDm3Y+Bx9/LMi1mMNzdIcIWGo4EHkYZueF8gZ1Xh9jptxFvX7Gey
+         MoKaMkFXWGF57c8S9fnFQmM85ZKAF755m4FOEAxRy/KAER+58vHcTUqDRKf5+6doaxoO
+         IcbR6M9k6rW0bTNfYWllQ67Kuzwu34ejldHig0FUr+UuAW8W/AgMHFQtFaWI6ULcrmvB
+         hMzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746055419; x=1746660219;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0OmrzXzEkAyXUbOIVvM9SLB44UQDkpWd3Om5I77M2ZA=;
-        b=WsLXQB2yCt9TWeiDj2NTtIqzlcYvSMuypNcVX4uf3Tc0Dv0a/5wOyuy2IVDAhnY/31
-         KqKfmCD2G8LYGBJRcsNhRVh8D4kLOg8Zhr/qCTAxsN1O2GtI6Q5+bIZiYIg4BXiHVMs6
-         wAjJt8Hv/IQojcYMTTnwn0qAsgQtP68GTtWvndCsjD3ztkSiPssNtJ/QnRXN6on/lRwA
-         s98IX639URsI2DMfAuTGAlTut/9Eilf2ta0lAop+l+w6sYtq7W569OfrVHTww+iho5vL
-         H64Rdbitxn/TR/uOpUPWx2XoA68NYKWxDJaFbAGvQm8YgsBHWcXAf2ygfRShWbgeG2Bz
-         A7zg==
-X-Forwarded-Encrypted: i=1; AJvYcCXg4bMohK3r9rYPGfoy/0mfB4/ufXGVA32wN/TBwN+ExjqZitARpHgtUtwU3Mpxn3wVcu9St4+q0nwQmws=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEv5bruwxx32VK9jcNMmjFxblB9c03K9baOteYvlmoTvuRWEKB
-	WnO4xSVtkYm+qEVNAh8OdnwbAaH1of4ycavsF7zIZCD2vzbMKVFPzjHCEbEnTn9jIZERDGeZD6D
-	ruQqvKl3g5NnZCrXimH4HidjXw2M=
-X-Gm-Gg: ASbGncuUT3c/zMFWy42JtZlmLvHV/R79V4KM9/juh1ysWInNacPsrDpujp0T/Tdz/W1
-	evpRd4Hx5fNL1L9q2QAc5aZYMugM6UKrM/39wLI6xy/toFb0mC43eSuRPuChpDLnKRvGuxE5rD+
-	eBS8ZCE1GeghFIE4n3X1JT0Q==
-X-Google-Smtp-Source: AGHT+IE7JauPCct1OezqTmytM8EWwdhVjXt1NEP5XW3RIBdyV1yN9KvK9Pz0JOeeAaZyy8Px65LDJR71czPsZaXoglk=
-X-Received: by 2002:a05:6102:5124:b0:4c5:5aba:94bb with SMTP id
- ada2fe7eead31-4dae8f23dd0mr233021137.3.1746055418782; Wed, 30 Apr 2025
- 16:23:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746055452; x=1746660252;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s7OGUFsBaaFGDg5Er+LmFFX/Hm+5kapCAxsBx1islgk=;
+        b=WpioTyRcOJlywqOczrvrJm0H9CiyCPE78P1r8AaeKAeysQYoZbEAAL+H0+TPO+ZZ/2
+         /sw5H/somKKvbsw9I5F+Knwk2URK/2SpbTwTxtleQBTGgynSlqtZQX7zSXLoEq2iZreK
+         l3d4JnNQgzPO9Oigt+ihEX9JgyI6gu5EjamLCwUp/2jDc29GUZ9FYtzDdWeQg0IYZv/r
+         D9A2J/jPDR981IFrYbQne6wWQHkvmSyP3MQrQcCHgbjlRGDX1Prau7bqZybyvhwong4d
+         qwF3Q09q98fIzHWTQoOSoPtCP7tyY+eaHTKTSMEESKeD6BqyhJ61M9Hv7pC1z/F9Uo4O
+         8uGA==
+X-Forwarded-Encrypted: i=1; AJvYcCUHw/PZxZJGn1WxtAlhaQmsLzde1172NOWYBBx8DJC6LeYdrt6YGJuelNv6PgdC6FpwG4rjZcw+l2Hs@vger.kernel.org, AJvYcCV45BRUS7g0U79dy8dhAs+Kij/jzFWOhSvCQgVeRW++a2JtXbUVN0snlPkPcPanmzEn/y0+0xzjZW9aIA==@vger.kernel.org, AJvYcCVUBZnDp0u5r+IFOPtDejw8N6TZWhJuAa/7sawgKEE8cTG1MCTKiGjhxTu2bXRwARvdP9DDllMIp5F9@vger.kernel.org, AJvYcCWqsIEHDrk4CT3ujRsvS/3n2d6llxNDnSgroFzQxN9EU74kwjPaW4UlWFeM1C6dLhTMWHboXWVRRflYD9G3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1Yhm1BEaQy0tpwfyeZ2G8nIwMP9a9frd4e+5uV//HARWyZKxb
+	D3RMmH6yVhO3xal/G8hciwU/ngilrD42B8y7FOE43MiQCCarIl/j
+X-Gm-Gg: ASbGnctbG7t8Rg64O1+h/fqHgHvwjsXuDjoIWv2GcZvg/0Fwmn6+VhBsHUufIu+ndrF
+	Dnxsyis1erF2XuTH9BYZrkFbhEh+BihpCX9LGfzEe1v0YjrKyZYNYUInK5vFwNAfwnGv5AXMSmp
+	dNLWbzPz82ZyZAlj97p8j08KLsGidHxJxfpaLilRYAsiI8YeF04tjjh9jdf+xIWZ/j+lKuX0GGO
+	vm9T9ops1gKoeNA0WpVz6KDQSxlUodesAwLaWvimqXAtuM4kZBDtIjh7aw6zipzt3bHV/xspnc+
+	ZytdfsqeO8EwPADUsFNbmAouJm1a+W42OS/jNMxNwJ6AGnjVl7mvhvmSAkpfFA==
+X-Google-Smtp-Source: AGHT+IE862y0az6oFJm+4yszQuxoFzydInMLM/t6RNobxLsJwfhPlRYUITfUdSu7uC4z2pLnEi2Tmw==
+X-Received: by 2002:ad4:5c46:0:b0:6f2:af37:d877 with SMTP id 6a1803df08f44-6f4ff314cacmr27311246d6.3.1746055452367;
+        Wed, 30 Apr 2025 16:24:12 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe6abe85sm14170276d6.25.2025.04.30.16.24.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 16:24:12 -0700 (PDT)
+Date: Wed, 30 Apr 2025 20:24:06 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, andy@kernel.org, nuno.sa@analog.com,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com
+Subject: Re: [PATCH v6 05/11] iio: adc: ad7768-1: add regulator to control
+ VCM output
+Message-ID: <aBKxFuKFYDWdDlh7@JSANTO12-L01.ad.analog.com>
+Reply-To: CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <8a04f8f1e9c14d57b1db2f38a8433a0367c0c9dd.1745605382.git.Jonathan.Santos@analog.com>
+ <CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tencent_C263C0783702591C464F887E3D3C496E6B08@qq.com>
- <CAGsJ_4wWK6B8GSc=cxPGnPU0Jt_o0YB55yk4+VNOm_hY_iditA@mail.gmail.com>
- <d8228c02-b5c0-47cd-927f-9054d412c7ea@redhat.com> <CAGsJ_4zn158TQV7Nc+vK-kmu6S4kOiFSZyUO7aK9dhwhrEq2cw@mail.gmail.com>
- <f34bf704-6eb1-4591-ad0e-93641a2f1ad4@redhat.com>
-In-Reply-To: <f34bf704-6eb1-4591-ad0e-93641a2f1ad4@redhat.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Thu, 1 May 2025 11:23:27 +1200
-X-Gm-Features: ATxdqUFcmXOHxnyLrPU_ykfxI146Uen-N5xkEBAR_CmnpLVzybV8jY0hpCY5RT4
-Message-ID: <CAGsJ_4y5QB7UTD3Mvwqib-c6DYkKCP_9V1s9eVoXLZGx+A5ObA@mail.gmail.com>
-Subject: Re: [PATCH] mm: remove useless code
-To: David Hildenbrand <david@redhat.com>
-Cc: Feng Lee <379943137@qq.com>, akpm@linux-foundation.org, ryan.roberts@arm.com, 
-	libang.li@antgroup.com, peterx@redhat.com, maobibo@loongson.cn, 
-	lance.yang@linux.dev, anshuman.khandual@arm.com, trivial@kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vciw_ivdKFsqo=FML64zUL_cDCzjuhmdVC3V_Whnatqwg@mail.gmail.com>
 
-On Tue, Apr 29, 2025 at 1:59=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 28.04.25 13:03, Barry Song wrote:
-> > On Mon, Apr 28, 2025 at 7:17=E2=80=AFPM David Hildenbrand <david@redhat=
-.com> wrote:
-> >>
-> >> On 27.04.25 10:22, Barry Song wrote:
-> >>> On Sun, Apr 27, 2025 at 2:16=E2=80=AFPM Feng Lee <379943137@qq.com> w=
-rote:
-> >>>>
-> >>>> Remove unused conditional macros.
-> >>>>
-> >>>> Signed-off-by: Feng Lee <379943137@qq.com>
-> >>>> ---
-> >>>>    include/linux/pgtable.h | 2 --
-> >>>>    1 file changed, 2 deletions(-)
-> >>>>
-> >>>> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> >>>> index b50447ef1c92..47c5a54b7551 100644
-> >>>> --- a/include/linux/pgtable.h
-> >>>> +++ b/include/linux/pgtable.h
-> >>>> @@ -1164,9 +1164,7 @@ static inline void arch_swap_restore(swp_entry=
-_t entry, struct folio *folio)
-> >>>>    }
-> >>>>    #endif
-> >>>>
-> >>>> -#ifndef __HAVE_ARCH_PGD_OFFSET_GATE
-> >>>>    #define pgd_offset_gate(mm, addr)      pgd_offset(mm, addr)
-> >>>> -#endif
-> >>>
-> >>> Do you know who else had pgd_offset_gate() before except ia64?
-> >>>
-> >>> /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
-> >>>      resides in the kernel-mapped segment, hence we use pgd_offset_k(=
-)
-> >>>      here.  */
-> >>> #define pgd_offset_gate(mm, addr) pgd_offset_k(addr)
-> >>>
-> >>> btw, do we still
-> >>> need pgd_offset_gate() given that nobody needs it now?
-> >>>
-> >>>      1   1168  include/linux/pgtable.h <<GLOBAL>>
-> >>>                #define pgd_offset_gate(mm, addr) pgd_offset(mm, addr)
-> >>>
-> >>>      2   1112  mm/gup.c <<get_gate_page>>
-> >>>                pgd =3D pgd_offset_gate(mm, address);
-> >>>
-> >>
-> >> Right, we should just remove pgd_offset_gate() completely in this patc=
-h
-> >> and simply make the single caller use pgd_offset().
+On 04/28, Andy Shevchenko wrote:
+> On Mon, Apr 28, 2025 at 3:13 AM Jonathan Santos
+> <Jonathan.Santos@analog.com> wrote:
 > >
-> > Yes, exactly. The original patch doesn=E2=80=99t seem to be appropriate=
-.
+> > The VCM output voltage can be used as a common-mode voltage within the
+> > amplifier preconditioning circuits external to the AD7768-1.
 > >
-> >>
-> >> I think we can even do:
-> >>
-> >> diff --git a/mm/gup.c b/mm/gup.c
-> >> index 84461d384ae2b..05dd87ccce155 100644
-> >> --- a/mm/gup.c
-> >> +++ b/mm/gup.c
-> >> @@ -1106,10 +1106,7 @@ static int get_gate_page(struct mm_struct *mm,
-> >> unsigned long address,
-> >>           /* user gate pages are read-only */
-> >>           if (gup_flags & FOLL_WRITE)
-> >>                   return -EFAULT;
-> >> -       if (address > TASK_SIZE)
-> >> -               pgd =3D pgd_offset_k(address);
-> >> -       else
-> >> -               pgd =3D pgd_offset_gate(mm, address);
-> >> +       pgd =3D pgd_offset(address);
-> >>           if (pgd_none(*pgd))
-> >>                   return -EFAULT;
-> >>           p4d =3D p4d_offset(pgd, address);
-> >>
-> >> Unless I am missing something important :)
-> >
-> > Technically, it appears to be correct. However, it seems that
-> > pgd_offset_k is primarily used to improve readability by
-> > distinguishing between kernel space and user space?
->
-> Yeah, but this is GUP ... ("user") ... looks like that check/handling
-> was in there ever since git happened.
->
-> get_gate_vma() only exists on x86-64 and uml.
->
-> I wonder if that could ever actually reside > TASK_SIZE such that we
-> would even need that.
-
-I assume that reside > TASK_SIZE can only be true on IA64?
-
- /* Look up a pgd entry in the gate area.  On IA-64, the gate-area
-      resides in the kernel-mapped segment, hence we use pgd_offset_k()
-      here.  */
-#define pgd_offset_gate(mm, addr) pgd_offset_k(addr)
-
-Since IA64 is dead, is the code also dead? It seems we can safely move
-forward with the approach you're proposing.
-
->
-> But this whole gate stuff is confusing ... IIRC it's a single VMA shared
-> by all processes, and not actually linked in the maple tree etc.
->
-> --
-> Cheers,
->
-> David / dhildenb
+> > This change allows the user to configure VCM output using the regulator
+> > framework.
+> 
+> ...
+> 
+> >  #include <linux/gpio/consumer.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/module.h>
+> > +#include <linux/of.h>
+> 
+> Why?
 >
 
-Thanks
-Barry
+I was using of_match_ptr() before, but forgot to remove it, sorry.
+
+> >  #include <linux/regmap.h>
+> >  #include <linux/regulator/consumer.h>
+> > +#include <linux/regulator/driver.h>
+> 
+> ...
+> 
+> > +static int ad7768_vcm_enable(struct regulator_dev *rdev)
+> > +{
+> > +       struct iio_dev *indio_dev = rdev_get_drvdata(rdev);
+> > +       struct ad7768_state *st = iio_priv(indio_dev);
+> > +       int ret, regval;
+> 
+> > +       if (!indio_dev)
+> > +               return -EINVAL;
+> 
+> Isn't it a dead code? Or i.o.w. under which circumstances can this be true?
+> Ditto for other functions with the same check.
+> 
+
+Yes, you're right. Since I defined the driver data below, there was no
+need for the check.
+
+> > +       if (!iio_device_claim_direct(indio_dev))
+> > +               return -EBUSY;
+> > +
+> > +       /* To enable, set the last selected output */
+> > +       regval = AD7768_REG_ANALOG2_VCM(st->vcm_output_sel + 1);
+> > +       ret = regmap_update_bits(st->regmap, AD7768_REG_ANALOG2,
+> > +                                AD7768_REG_ANALOG2_VCM_MSK, regval);
+> > +       iio_device_release_direct(indio_dev);
+> > +
+> > +       return ret;
+> > +}
+> 
+> ...
+> 
+> > +       return clamp(val, 1, (int)rdev->desc->n_voltages) - 1;
+> 
+> No explicit castings in min/max/clamp, please. This may lead to subtle
+> mistakes. Also, don't forget to include minmax.h.
+> 
+
+Okay, thanks.
+
+> -- 
+> With Best Regards,
+> Andy Shevchenko
