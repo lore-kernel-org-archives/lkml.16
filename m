@@ -1,104 +1,113 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3992DC791;
-	Wed, 30 Apr 2025 14:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D27A32DC791;
+	Wed, 30 Apr 2025 14:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746024716; cv=none; b=DevUgGK2M+J1UV0ND7yrRXPhNlWuMWee8x0N72fh1akoQVkK/4N1q7emRj8rwdDE5H9KWEtzeHryC7Bt/McdE4STccDF6CjAe4BIcyhDsLJSIET/kSNmaXFvnqED40aZapqsNE83T8NfXnq1GmNSJb2rGvN6l7H4gGp8p1Fuwas=
+	t=1746024765; cv=none; b=a30GkhikXIJVtBztRGH3XkIxET6aB8R/1pVHrrEJ2QovbpNCEwXmcHIAqWdVuW7AJKxQsjD9epk8pTIATx+NxXwqXKXeHHy06toFVtMbyki+06pSzi/vwJs9NO37wQwC//uySrvFgdvFq0Akh1KNJ2iFcvJlQcgGnuPyGoE2N+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746024716; c=relaxed/simple;
-	bh=ANvnHXXLsM2HHt2X59/E8B7LKSskGxwtvY+ASlMHa0M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KUXfcBJmNawdLEpsH0VhT8wN2o06DKGnp/nS2KlU3C+J1Zm3NsI9klpTVUxkZEP7sUfYtlKNtIXC+ZutOvh7JcCzHgrGdpjQVn8Fk2iu2Lanu4uxRLtDDI8ukcCFayC1uB/gbJGpvPqmbt1LQk7r8JwnKkcLvl5o6QKDFA1aJTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sg4ND/rY; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746024765; c=relaxed/simple;
+	bh=DqfSgVABBGrSLDg2s1B7t16DNFFluwHJ8LLyzrEjwUI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=dziXSlyLAgMxqD3Ldd+YZYJKdyt6rdhiOtxMi6G0dmJtBTB2Rl48Xh/qxk++VixoIzJoY7skx0SD8ph0otyZcKjrbrfpZ7vNIba0YWWYlzSntyIBAOfi/p8Aw2O5MruwW28nRmdvXwsKlVg+F0CcDIQlK+k0xmgtSTnkn/7/O54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net; spf=pass smtp.mailfrom=fluxnic.net; dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b=HhuEzmMB; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CzC7jZdI; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fluxnic.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fluxnic.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sg4ND/rY"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4768f90bf36so83731151cf.0;
-        Wed, 30 Apr 2025 07:51:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746024713; x=1746629513; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=khLP39BEbjSp5OxOSY1cE6o564PDLjgx1FqwEwzCaKo=;
-        b=Sg4ND/rY8mGW2wU1deaaq2EBswhBugWIRIUeacuILcVFrVFqtzqs7kxJnGnx71FMQR
-         O6XG0/HpBSGrP9f3bfcM30ca1W1EMLsvCjPuWIfgJwPs3ULm05duE1YetadNHugOdVcY
-         ATDX06cCDSH/yHl4k26rrD5cei4AcTbTqnYLb2viTx5yoRQzS9Ox9SoRefds7k7lzoyg
-         a/dNv02dEARo/J2DAkttiP4p3NZjtO3qCKUzoNjdJlxHPeZuJ03csyvzzgHv1lf2/UVR
-         pdfsA1KwWF597L6jNDDJgAxfdGLAndcZq8lIV8BRq5aRRXGZxpAMtuQcj7FLAJS5DS0F
-         gORw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746024713; x=1746629513;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=khLP39BEbjSp5OxOSY1cE6o564PDLjgx1FqwEwzCaKo=;
-        b=nSm49mWX2f6yZOK/EVi/qRUgHMNApk9sq64M0oD3VFTJUVpqBvsyD+Dlj9qT9k1wAV
-         zwD7ojJstpaM/X23y2yIMfim6LM/jn+MkJSUqb3LVvTDbMzMaBxXx/7PXUUsdhujYAN5
-         AaEympWA7I3wRyt2g8wmOv839I0PKHSueQkm3m2lepmLeI+ctkKgs3mPBtz76vhFRJK2
-         0BUHk8Zza+yVBoee++r117+DULYFhhdt+26gVlAayHdDex39NVodDonX2CRefYM6VXGa
-         Ch82zdya1/ACHkUWJHhqDFkTTHjcYMRXkPTNuFrQ6GZ5ytZmL+FwrG3o1uM8tD0t5Bxs
-         IOfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVJSIoC7WkWFTC9ZbdDsMfjBHDZyF66xA8wIL4K2C5Nf8i5QbNfTzXYFERisaiwo9ZpXwYZWoQv@vger.kernel.org, AJvYcCW+10B2sQO4nTgxNiJ2IR/JbGShi2cBIr1+FGzXWKlQpkT4al98YLfhd3Ai/a6W+THy6tdlGhbnMeBOGBRL@vger.kernel.org, AJvYcCXaAyi22Li2rrpdcRzG5CDmtu/Qk/957Ckqhi/0ksTuJNAdIDHNVSQDTJ9RmC6SJ+SSd3aMN4853MCE@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzpTspXhQEMqxh3nPMiQJD8cRMLed4GoMl0n7Kj3KJjvQGke+Y
-	5rz4TUY8sE9Su0OF/lxaNFmlmVnYk9NNAywZowEMy9Vap5ALYzeE8pEmkyR/oj1jkdfNRQ4HAZn
-	Q5JdPUjxeHC+PR2zVeA8x61FtEsTSVjRVD+hJlKUH
-X-Gm-Gg: ASbGncv3vlEVR6S7m9EtafeVkBIBi4eDBiXUqOH74EdDsQhifL0PDlEy12zRP0y1agL
-	h4NA53lkErP9gwqSwGIyzF91nMYcvN5MhzLGn3ziF4+vWkYzqcV3k6Wkorjx2iXQ24TZRQ1nsXP
-	FByk9Fithrya1NWNT42r4tgHR6yV4GTxTe8i1QGrOF5Y3KXbzBawyRlA==
-X-Google-Smtp-Source: AGHT+IEKc/pO4ycFj+V8i2s/1L594kwA2Gdb2sAylgWPbU3n+ww3m+g7WIpxkisXNDK8wuk/OCrcHDMU8zMho4EQ4MI=
-X-Received: by 2002:a05:622a:4187:b0:477:6f28:3eb7 with SMTP id
- d75a77b69052e-489e44b5a51mr49674381cf.3.1746024713459; Wed, 30 Apr 2025
- 07:51:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="HhuEzmMB";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CzC7jZdI"
+Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 9C40625401F3;
+	Wed, 30 Apr 2025 10:52:41 -0400 (EDT)
+Received: from phl-frontend-02 ([10.202.2.161])
+  by phl-compute-06.internal (MEProxy); Wed, 30 Apr 2025 10:52:41 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fluxnic.net; h=
+	cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1746024761; x=1746111161; bh=KoXlEHKE9g
+	NyoZYWrnpH30uGodhBmHO2937ZdEmrIPE=; b=HhuEzmMBrx9bw8IglEthSj47lB
+	mmsq2thCawGpfP6d5cOGh7VET8Oi+OSE41K1SqPoBJSAb2Z6Q/RUyFCSZOoSYsNo
+	vcgHFhxsdt5bAwoMevghMr/JeDC9GcFdjgKuTYmlLCVit9vh1Ed07qFHfY9xEGUJ
+	HkHIvTSWuFBUlQhSgxXkXQKmkTapCD62EuM1gDQ8GdmK1FZnZVE0dmIlqoOanSeE
+	LM1NkD2BDNG23RT0YLCPU9cWz9CIQRiEi4ZmFIfmGZLE+1/fCaAzo3T0/mlBAbfp
+	jXNWr26o+HpnlAf+7bWqRkGyilcYwa/osBFQxv/MPb2TqKbQZEeCi9iptpmg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746024761; x=1746111161; bh=KoXlEHKE9gNyoZYWrnpH30uGodhBmHO2937
+	ZdEmrIPE=; b=CzC7jZdI2wowZjH8Uplkb+2IxovqpFSQNvDvgTkDhxiWpp0V0UW
+	H6oeKkTJweavclaRwM7Rzia29PVdatBmRf34kT5BDggbUfSTucThlMKH3y+NenES
+	5na8UlFyBBU6gTqfbj2B4Czcso74ntQWxqh//1rSsBuZFTOcldokCauJ8+Yz8NZe
+	0WMBGAAbv0LzyD3saU5iuh4Fj7JiKS5o8nwxQuuAAvHXj/XRoIOtDKisNWh//dsp
+	gIAjgig+LID4hBMPEDpE7Lvvy/+OQC6aNNhJwiXv534ZlNJLdIH4+SRo9a4Q9TkR
+	fK46/NUlFWbTda1sjcU5mtnjjX2l6/VyWNA==
+X-ME-Sender: <xms:OTkSaNoZKYbTPyscDZbYBUXLdURncUYxUnIsdP-o4WHKEduos9NlQQ>
+    <xme:OTkSaPr5pzVHtvfwP1MgW_23mbz0y5c--hw-tkHGTk6DvyXLpsD9LRHDXsqRT4p6X
+    zTC7P9lkHG2mKm3oIQ>
+X-ME-Received: <xmr:OTkSaKNj9Pjivtqrv7TNzPleidY4oonOjeVMIz2BR990Wd6W4yTDf0WAtHuSh3YWdC5iaBxk8Xa0zkSOALJ6UQ0XtBPuL7xsfkjnhsX8nKEodQlPVg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeileekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevufgjkfhfgggtsehttdertddttddv
+    necuhfhrohhmpefpihgtohhlrghsucfrihhtrhgvuceonhhitghosehflhhugihnihgtrd
+    hnvghtqeenucggtffrrghtthgvrhhnpefgvedvhfefueejgefggfefhfelffeiieduvdeh
+    ffduheduffekkefhgeffhfefveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmh
+    epmhgrihhlfhhrohhmpehnihgtohesfhhluhignhhitgdrnhgvthdpnhgspghrtghpthht
+    ohepiedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepsghrghhlsegsghguvghvrd
+    hplhdprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphht
+    thhopegsrghrthhoshiirdhgohhlrghsiigvfihskhhisehlihhnrghrohdrohhrghdprh
+    gtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgt
+    phhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhsvghrihgrlhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:OTkSaI5Kugqnlnn4MVAEs1rIHM90sjuTScGsqkDSTVVblZv7fxRyfw>
+    <xmx:OTkSaM4WeQuMjyV_v4jQfGTUrAbRoOJc6LgAFNEmtelCH0iJgaO1-g>
+    <xmx:OTkSaAhm2tfRfRYRbiDPnlfXuyTfIjafABL2M_l4O6av0XPYelCjNg>
+    <xmx:OTkSaO4yppF62XEMYkGsnTpU6cRI_yoCfyDjLq6cZqJ9t-_7jKJsUw>
+    <xmx:OTkSaPIjIvoZ6EmjHhAAPOyHq-AtMEYzDrRPfFK-jwGlfxFLalmCojlb>
+Feedback-ID: i58514971:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 30 Apr 2025 10:52:41 -0400 (EDT)
+Received: from xanadu (xanadu.lan [192.168.1.120])
+	by yoda.fluxnic.net (Postfix) with ESMTPSA id 961EE117534F;
+	Wed, 30 Apr 2025 10:52:40 -0400 (EDT)
+Date: Wed, 30 Apr 2025 10:52:40 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+    Jiri Slaby <jirislaby@kernel.org>, 
+    Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+    linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Subject: Re: [PATCH] vt: add new dynamically generated files to .gitignore
+In-Reply-To: <sq7527p1-9218-r845-605n-2p419s2650s5@onlyvoer.pbz>
+Message-ID: <47np2on4-875o-21r2-p707-rr3rp30s82rq@syhkavp.arg>
+References: <20250430122917.72105-1-brgl@bgdev.pl> <sq7527p1-9218-r845-605n-2p419s2650s5@onlyvoer.pbz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-rhine-binding-v2-1-4290156c0f57@gmail.com> <236a2ace-24ca-421f-82e8-a2d3910730c7@kernel.org>
-In-Reply-To: <236a2ace-24ca-421f-82e8-a2d3910730c7@kernel.org>
-From: Alexey Charkov <alchark@gmail.com>
-Date: Wed, 30 Apr 2025 18:51:43 +0400
-X-Gm-Features: ATxdqUHo5BlXS1S6bG3pKo3phkXPn6pPaAqcL5Z1mpGc7fhpdiLuN2IJZZ-TQMg
-Message-ID: <CABjd4YzpkJTh2v-EzZemSgK6iwwsJJ=4sxpQ7-0vxeQby=1KaA@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: net: via-rhine: Convert to YAML
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-On Wed, Apr 30, 2025 at 5:25=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 30/04/2025 12:42, Alexey Charkov wrote:
-> > Rewrite the textual description for the VIA Rhine platform Ethernet
-> > controller as YAML schema, and switch the filename to follow the
-> > compatible string. These are used in several VIA/WonderMedia SoCs
-> >
-> > Signed-off-by: Alexey Charkov <alchark@gmail.com>
-> > ---
-> > Changes in v2:
-> > - Dropped the update to MAINTAINERS for now to reduce merge conflicts
-> >   across different trees
-> > - Split out the Rhine binding separately from the big series affecting
-> >   multiple subsystems unnecessarily (thanks Rob)
-> > - Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-4-f9a=
-f689cdfc2@gmail.com/
-> > ---
->
-> You should have net-next prefix (see maintainer-netdev).
+On Wed, 30 Apr 2025, Nicolas Pitre wrote:
 
-Duly noted, thank you Krzysztof!
+> On Wed, 30 Apr 2025, Bartosz Golaszewski wrote:
+> 
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > 
+> > Add new dynamically generated headers to the local .gitignore.
+> > 
+> > Fixes: b11a041179e7 ("vt: introduce gen_ucs_width_table.py to create ucs_width_table.h")
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Reviewed-by: Nicolas Pitre <npitre@baylibre.com>
 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Actually, the fixed commit should be the one titled `vt: move UCS tables 
+to the "shipped" form`. And, unless Greg pushes the revert of the 
+initial series upstream, the commit hash is likely to change too.
 
-Best regards,
-Alexey
+
+Nicolas
