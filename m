@@ -1,149 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E865A2DC797;
-	Wed, 30 Apr 2025 15:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B2EB52609EC;
+	Wed, 30 Apr 2025 15:50:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028183; cv=none; b=hlNkxJl3w3aduz53ltqUwVJENMOhVsXoLfw6UgP2Eb1NLVhcJ4xq38Nugw2tyeasCz9T53aHTp2VHF6r774Zn8yYANmfQM7gzrKf99EOXfA8R1JETSR3Yk5CtOmALjvxFqugi03AIrxXDda4w423mv2S3oYmaXoO11Ga/HBWojo=
+	t=1746028244; cv=none; b=lSqzzW3jvBaq+Qn0vyNnQwtyvNmYOA7zfrsDs9bLsWb7JwoD8REPlqx6Vnh1J57HkPIaH9DYaRsnJcgxCDmcPQ89Fr+XbetlpPTJT4IjJeuw3to/A6vqRCo4u5Fby1br5liGHeRXtV/G60WxoMxh+iLttzxfpA2O61OFPiY0vbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028183; c=relaxed/simple;
-	bh=jbN75Y77ia3DaPmLil5WAcGzaZgfrTs67v8JYHeLyFY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ulhlpMZEF0md3NFO6yMwYYb6YqBVeKV1q3+9kR8a+DlKDGaVfub2yKY6EpEnjQnFiccEWuyykFigB5CxR/ROPc69EtKO7KDnXCcz4s6pgNKpVbZj8hV2Q75NpdYr+XLVSoQ6NWHYq0eRjH5gMNnYYogbVZHvs79TkPnqqEGkaGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ILkRzJmx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746028244; c=relaxed/simple;
+	bh=/W2Ic4tKA97M9bMUtoPjZi1J8CCbti4QeU2swqC2iFA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qiesdVmciqVx4olfkPSHVhmP3gHcOB95/ToY4fI7XXQqodcWhmPppL5UC9/5rkGQ/X02IqADaNdngXrYAkJVgxW55f4AynHos5uLnLf1pAKoIttbVeeY76Mxk4bTPlseefFy0D7PZ/3ObsSX74ybZPWOuGMtgjVJOUyUBQwWciw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=iNpPjjLD; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ILkRzJmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB48DC4CEE7;
-	Wed, 30 Apr 2025 15:49:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028182;
-	bh=jbN75Y77ia3DaPmLil5WAcGzaZgfrTs67v8JYHeLyFY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ILkRzJmxPdFObsI9MPCYwxX97C4pY7WZMUG69FkF2voL4XquCgdJqXarl/qXSmdsT
-	 lIE+AMd4Db+DvmeQIlqNoL1xbfIFeUiYZIWEMhbbxTe6T82fBtJQVkcfuwBWzs9vnZ
-	 2v1VvzarKWKk6kHsUF7YLUq8XDSco1Hy7lT0Owon3EWnk74hfL0VsyDxC1CugjAZrz
-	 0KhAuvpzMf2pXyQG4H3hQtLNkWpqyEAMtY8aiDijMy3p5zSKqi5zD7Nsuw/CecffIl
-	 Y+CFLFQ5Ck/om6P0AA0xzbTrnH45tDY2ptwuSj3T2Ag4pWXq1iPlboUxdMmHpjZus1
-	 pT5EdHo2bLaXg==
-Date: Wed, 30 Apr 2025 18:49:37 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Naveen N Rao <naveen@kernel.org>,
-	Nicholas Piggin <npiggin@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-integrity@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Sumit Garg <sumit.garg@kernel.org>, linux-kernel@vger.kernel.org,
-	Jason Gunthorpe <jgg@ziepe.ca>
-Subject: Re: [PATCH v3 4/4] tpm/tpm_svsm: support TPM_CHIP_FLAG_SYNC
-Message-ID: <aBJGkSil1YAzSXsg@kernel.org>
-References: <20250414145653.239081-1-sgarzare@redhat.com>
- <20250414145653.239081-5-sgarzare@redhat.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="iNpPjjLD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=2ipwuktyL4IYrX9QXx/qInbelFH4y7kMFN28HkTAvhQ=;
+	b=iNpPjjLDz6EdD5R4/9fK8E9OmIw40897IJyzAwoAG6brClDAePPB9KPJS73B2M
+	c0SHXHZutwDtPNHUe6B0CgkUR0tpBlNMv7gGtA7xm5cANRMrnczaV72BCfGPMHLD
+	+GjKsGThSkDkIjK/b9dBHaLdcRVst7yvq0x3MBUBcSkR4=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnt_CXRhJok9OzDQ--.16197S2;
+	Wed, 30 Apr 2025 23:49:43 +0800 (CST)
+Message-ID: <96f0f689-5fa1-40b1-9381-41dbd4836ad6@163.com>
+Date: Wed, 30 Apr 2025 23:49:42 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250414145653.239081-5-sgarzare@redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 3/6] PCI: Refactor capability search into common
+ macros
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com,
+ manivannan.sadhasivam@linaro.org, kw@linux.com, cassel@kernel.org,
+ robh@kernel.org, jingoohan1@gmail.com, thomas.richard@bootlin.com,
+ linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+References: <20250429125036.88060-1-18255117159@163.com>
+ <20250429125036.88060-4-18255117159@163.com>
+ <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <df929c0d-f318-023e-cf7d-97a2b344f6fc@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnt_CXRhJok9OzDQ--.16197S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kw1fWryxWr4ktF4kuw48WFg_yoW8CFy8pF
+	y8Aw4aya1DKay3Ca4DZa18XFyaq393CrW7Wrn8Jw1FqFs09F9aqr4rKa1rAFW2kr95A3W2
+	qrWYqFyUA3WUCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UVMKtUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/xtbBDxM-o2gSP2WsegAAs2
 
-On Mon, Apr 14, 2025 at 04:56:53PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
-> 
-> This driver does not support interrupts, and receiving the response is
-> synchronous with sending the command.
-> 
-> So we can set TPM_CHIP_FLAG_SYNC to support synchronous send() and
-> return responses in the same buffer used for commands. This way we
-> don't need to implement recv() op.
-> 
-> Keep using the same pre-allocated buffer to avoid having to allocate
-> it for each command. We need the buffer to have the header required by
-> the SVSM protocol and the command contiguous in memory.
-> 
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 
-Similar comments, and a bit redundancy does not matter i.e., they can
-have pretty much the same explanation.
 
-> ---
->  drivers/char/tpm/tpm_svsm.c | 27 +++++++++++----------------
->  1 file changed, 11 insertions(+), 16 deletions(-)
+On 2025/4/30 16:03, Ilpo Järvinen wrote:
+> On Tue, 29 Apr 2025, Hans Zhang wrote:
 > 
-> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> index d3ca5615b6f7..db1983072345 100644
-> --- a/drivers/char/tpm/tpm_svsm.c
-> +++ b/drivers/char/tpm/tpm_svsm.c
-> @@ -25,38 +25,32 @@ struct tpm_svsm_priv {
->  	void *buffer;
->  };
->  
-> -static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len,
-> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t cmd_len,
->  			 size_t buf_size)
->  {
->  	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
->  	int ret;
->  
-> -	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, len);
-> +	ret = svsm_vtpm_cmd_request_fill(priv->buffer, 0, buf, cmd_len);
->  	if (ret)
->  		return ret;
->  
->  	/*
->  	 * The SVSM call uses the same buffer for the command and for the
-> -	 * response, so after this call, the buffer will contain the response
-> -	 * that can be used by .recv() op.
-> +	 * response, so after this call, the buffer will contain the response.
-> +	 *
-> +	 * Note: we have to use an internal buffer because the device in SVSM
-> +	 * expects the svsm_vtpm header + data to be physically contiguous.
->  	 */
-> -	return snp_svsm_vtpm_send_command(priv->buffer);
-> -}
-> -
-> -static int tpm_svsm_recv(struct tpm_chip *chip, u8 *buf, size_t len)
-> -{
-> -	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
-> +	ret = snp_svsm_vtpm_send_command(priv->buffer);
-> +	if (ret)
-> +		return ret;
->  
-> -	/*
-> -	 * The internal buffer contains the response after we send the command
-> -	 * to SVSM.
-> -	 */
-> -	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, len);
-> +	return svsm_vtpm_cmd_response_parse(priv->buffer, buf, buf_size);
->  }
->  
->  static struct tpm_class_ops tpm_chip_ops = {
->  	.flags = TPM_OPS_AUTO_STARTUP,
-> -	.recv = tpm_svsm_recv,
->  	.send = tpm_svsm_send,
->  };
->  
-> @@ -85,6 +79,7 @@ static int __init tpm_svsm_probe(struct platform_device *pdev)
->  
->  	dev_set_drvdata(&chip->dev, priv);
->  
-> +	chip->flags |= TPM_CHIP_FLAG_SYNC;
->  	err = tpm2_probe(chip);
->  	if (err)
->  		return err;
-> -- 
-> 2.49.0
+>> The PCI Capability search functionality is duplicated across the PCI core
+>> and several controller drivers. The core's current implementation requires
+>> fully initialized PCI device and bus structures, which prevents controller
+>> drivers from using it during early initialization phases before these
+>> structures are available.
+>>
+>> Move the Capability search logic into a header-based macro that accepts a
+>> config space accessor function as an argument. This enables controller
+>> drivers to perform Capability discovery using their early access
+>> mechanisms prior to full device initialization while sharing the
+>> Capability search code.
+>>
+>> Convert the existing PCI core Capability search implementation to use this
+>> new macro.
+>>
+>> The macros now implement, parameterized by the config access method. The
+> 
+> This sentence is incomplete (and sounds pretty much duplicated
+> information anyway).
 > 
 
-BR, Jarkko
+Dear Ilpo,
+
+Thank you very much for pointing out my problems patiently. These will 
+be deleted.
+
+>> PCI core functions are converted to utilize these macros with the standard
+>> pci_bus_read_config accessors.
+> 
+> This info is duplicated.
+> 
+
+Will delete.
+
+>> Controller drivers can later use the same
+>> macros with their early access mechanisms while maintaining the existing
+>> protection against infinite loops through preserved TTL checks.
+>>
+>> The ttl parameter was originally an additional safeguard to prevent
+>> infinite loops in corrupted config space.  However, the
+>> PCI_FIND_NEXT_CAP_TTL macro already enforces a TTL limit internally.
+>> Removing redundant ttl handling simplifies the interface while maintaining
+>> the safety guarantee. This aligns with the macro's design intent of
+>> encapsulating TTL management.
+
+Best regards,
+Hans
+
