@@ -1,56 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014F443172;
-	Wed, 30 Apr 2025 23:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36ED043172;
+	Wed, 30 Apr 2025 23:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746056193; cv=none; b=rqivZ4eaaOdG7B/+jpnxiZ20sb3YXkWcsANw3a6kOMbSAGDvxpUdf+rQejwbf5IP2X3fXGCF1IjoaDfHSI8BTr9ZINQRKEaTsGcEjS+WGxWsRLRVqcjYXDhcO5f1gkBeTxC4biOKpggM4pJxfUH0an1J/bCUFFwizEev/Dn/mEQ=
+	t=1746056242; cv=none; b=gwlEPQ5g+gEj+eob0/iaavNac28Jp3wA5RT9c4AgpplTprEqq1v7GjqcEmTAYiRF8ib5h01HaVh8sld4dsH+LgxiT+CmP5OZOupZFLBhx6u9cYncG+EqxwDWCBY9Jn0/KGUNVhNMJTsU+uB8k+nYjUZRgx8Fn8q8L92yAg7AYps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746056193; c=relaxed/simple;
-	bh=36vVnkisvY+P4AlYmBbiWrdIm1AmGftJI8nb13UOMIs=;
+	s=arc-20240116; t=1746056242; c=relaxed/simple;
+	bh=B970KZDsXmpyPOq0E5Oh6oE/Vo+fufArxrI9navEPuk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ckyisrv8o7AEDn0r6R7ZRM9/5a0B8kQnv9IadHjPsko5zEL2oLTlq2hjdp6tyUEK011rB1bq8wfMI7k5LN/+SfjoDBdTHPtwSqZT5NLhcdiy4ZatY+r6jv3TJVmoXBws04B7iBWXY77YdR3+Bl1JwmbEcGDNCJLa8AafURs31Bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tft/RG+V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y3LwcR5ZeJQG9nzPIfUFnwKSwr5pkhvJHARnEtyyLX5MdLav569ca0ysaD33Fa4UupN8oPRg79J28+BpvpmNzRfK3Rj2DexAXIhEurP70Qp1oiG7ERgpQNXXWO8eWB7nfJWm2+R7O0doE6pw9IED1pTWOR0QAJbXrIyjtvTAlYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dGRFC65G; arc=none smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tft/RG+V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B85C4CEE7;
-	Wed, 30 Apr 2025 23:36:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746056192;
-	bh=36vVnkisvY+P4AlYmBbiWrdIm1AmGftJI8nb13UOMIs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tft/RG+VvpzRbHBXNM4V2si4qStApdUywL7XwbOQKw+UciKGIoo3JMgdOGV/2G8Zz
-	 2Xhv7aCDX1IJrhQ+kUjsmIaH9gaQD8S0rT0AphmJr8rPnZBRImy83Q+FcR66mnutK7
-	 mL4pK/TnMgXXP5xW1h/ZS69KJAcQ8H1wZPSR5Y4CPtQtOPXUr+6xBCTz24rxeB7o93
-	 venh/5kFEPEtQIbFpzHZLgCTbTairBOSYiAfkkcVhIjasf9V3j2Hs3x6rfl2Vjb9v2
-	 5g2WwdlfiffavGYQ46gC6/eVYUEvOMfUK1QU4yFGMOTGZ66VZRixf7LcDoEDwT60Xq
-	 HqUIva96mxNWQ==
-Date: Wed, 30 Apr 2025 20:36:29 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	Jean-Philippe Romain <jean-philippe.romain@foss.st.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	Brendan Gregg <brendan@intel.com>, gabriel.munoz@intel.com,
-	matthew.olson@intel.com, brandon.kammerdiener@intel.com,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 0/4] Add support for a DRM tool like PMU
-Message-ID: <aBKz_Tg-s20Qsv6k@x1>
-References: <20250403202439.57791-1-irogers@google.com>
- <CAP-5=fXkayZ7pj+EctOtSBiTcGuyi6SHm9c5RZ3HyyPYcot9zA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dGRFC65G"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-476a2b5dffcso745721cf.3;
+        Wed, 30 Apr 2025 16:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746056238; x=1746661038; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QrJlWH+zIFXdSZX5AezxsKUSnRhp9kKWsYHOhzctSM0=;
+        b=dGRFC65GDNvZXwyTNpU3moOiE+tWF3Dhis+yoprtp4nIbnoWxZ2dC80kWCjNBlLIrk
+         4YLgruxkqmtHNbeQD9ZgDmElzlHi1wtQzSEQrxvYL2EBH0+qn0B2LtBaJfxrP3Iac2OB
+         14TMmoO5McSU2FUPjVuRAENajMdYZTP6Y+UtdK7wcdJ1WOEPGVBmxosCo5luLU0Ihx2E
+         jG+6pV12YtG0lt+bNLP4sSSlNIdkwtI9OtuFiTxL0W0dXxOjNXRnVe2JOEwPT7xLsyvE
+         IErF8zc3PUjpejD4oOk5ivyu4xY1J/MugTG8Wa1QMHuzdBIc+C4/YhMHyIWrGwByO+xD
+         BGVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746056238; x=1746661038;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:reply-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QrJlWH+zIFXdSZX5AezxsKUSnRhp9kKWsYHOhzctSM0=;
+        b=C5d+UGdt34xqIU0+J+aYdoc665rN0jOk7sIRt5YxMfuMzbnm51uaO+rA2J8FMcUM2G
+         kAEZ8w4EN2k/YtC/1U7peV2toGIhJk5AZfpQroeMrfJuCwIPzjGHNSoS9vi0rTeE7Lel
+         ECHT/H+AjJ0FEvPLhaRn2TKT/EAeiQkCFNzPRkXxSbp+Y9nB6qi6zaslWki1tMQAnFfd
+         4rMTABM+rKM2/wpYJbN2lLVaR+GDfIxiNTfFuJnOa/gYuGMyOOtPy1mPp7yP5+lYWts5
+         kJy0NBSVQA61eyTUZ6Z1OgUU7ibb6G+Jgi4lXMQlKfM0zxg/Vslmdz7YGqSyr77WI5Zl
+         6xqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJ83SBl+n5C+Geba5bud/DbisIXpkkgU442R3LZWKPVwTS2KMXTzAvLp2UhYI5mKz129vt8N1p8XCG@vger.kernel.org, AJvYcCV9rsVIzQUK/Oz+sBGFZjEM6DQhuK/bgmL5yEWC9LaCGyYX86QGTlFWGAMmJjvpoK37AOrQY+q+UchcRg==@vger.kernel.org, AJvYcCVb/yLaZ1379Rqq4lqVfFnTBrDKRM5Ys6n2gTFTMXtnvRaHF47ojoljJ40vCYzlFsW3qJqDj5Ld5KA0cuwP@vger.kernel.org, AJvYcCWxi5JgSsCAEP0ia1fP2tHOdYTL8zrw//VS1ByL2AmDJqMskEKKuKT8J03h6PWqWFCGGdaBs0sjy80K@vger.kernel.org
+X-Gm-Message-State: AOJu0YzsmoYU/H1Rm6r7rF1Hu5NqWzJCkokM9P73jteR2/2duCCZ/xab
+	dmZX6aSLJD/sOsNZBOF79Uc6l+UFDXn6LPmwutHRfEs+sf8T1IJFJ0dJwci9
+X-Gm-Gg: ASbGncuJHoDlqkfXYTWlarW51Iwpjh9pdBwIY/NG8bqnXgklhtHKUyZs3WLkLXLjHqI
+	8Fmuk4Q948fxVKuoxKx1NTkde1lKIiljGzkpdiUzWulb8CPDJ/tOEIWgzT3PxFF0exhqFKxznJ4
+	+XS1tQfaUuMbyoGMyXGd3O5PxRYuDDFeZqZDb3mdgGFIKlRKTCf2NnLZsQAIL0MbSxoVVrQ4qXl
+	WWBPtVY0/8eaaQHGsbVK/pNteQuRbmztUSoQQd92Pc62iT2xn6NfHhZG+VvTMVVyV1dH9BCFlt1
+	XVqvJy7DsL6i0OzBBOqmnbpwCAWUxH2S8hihT3gNn1T4uePhUAT2nohxhLFO1g==
+X-Google-Smtp-Source: AGHT+IHVkPU+rQ+imsB2Nyk1HVkqj3rX+OoC/8PwmiLa4C1LnGUCpXLf5tu6vTNNBgwvnyJHbf+meQ==
+X-Received: by 2002:ac8:5d50:0:b0:477:e9f:7530 with SMTP id d75a77b69052e-489e61ec118mr27075391cf.12.1746056237788;
+        Wed, 30 Apr 2025 16:37:17 -0700 (PDT)
+Received: from JSANTO12-L01.ad.analog.com ([189.121.203.94])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f4fe85e6dasm13998606d6.108.2025.04.30.16.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 16:37:17 -0700 (PDT)
+Date: Wed, 30 Apr 2025 20:37:11 -0300
+From: Jonathan Santos <jonath4nns@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Jonathan Santos <Jonathan.Santos@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Sergiu Cuciurean <sergiu.cuciurean@analog.com>, andy@kernel.org,
+	nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, lgirdwood@gmail.com,
+	broonie@kernel.org, dlechner@baylibre.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v6 06/11] iio: adc: ad7768-1: Add GPIO controller support
+Message-ID: <aBK0J8yriQy3BcN5@JSANTO12-L01.ad.analog.com>
+Reply-To: CAHp75VdbD4HTonEZT8O-3bsqQ70_XRnZd7vS7gdyrG2gKYBHPA@mail.gmail.com
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <2a8a327e589703ee53dbfb5190d20680ac3b350f.1745605382.git.Jonathan.Santos@analog.com>
+ <CAHp75VdbD4HTonEZT8O-3bsqQ70_XRnZd7vS7gdyrG2gKYBHPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,61 +85,147 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fXkayZ7pj+EctOtSBiTcGuyi6SHm9c5RZ3HyyPYcot9zA@mail.gmail.com>
+In-Reply-To: <CAHp75VdbD4HTonEZT8O-3bsqQ70_XRnZd7vS7gdyrG2gKYBHPA@mail.gmail.com>
 
-On Wed, Apr 30, 2025 at 08:21:59AM -0700, Ian Rogers wrote:
-> On Thu, Apr 3, 2025 at 1:24 PM Ian Rogers <irogers@google.com> wrote:
+On 04/28, Andy Shevchenko wrote:
+> On Mon, Apr 28, 2025 at 3:13 AM Jonathan Santos
+> <Jonathan.Santos@analog.com> wrote:
 > >
-> > DRM clients expose information through usage stats as documented in
-> > Documentation/gpu/drm-usage-stats.rst (available online at
-> > https://docs.kernel.org/gpu/drm-usage-stats.html). Add a tool like
-> > PMU, similar to the hwmon PMU, that exposes DRM information.
-
-Looks useful, I'll try to review and test tomorrow, but most probably
-Friday, as tomorrow is labour day in this part of the world.
-
-- Arnaldo
- 
-> I'm reminded by Brendan Gregg's new blog:
-> https://www.brendangregg.com/blog/2025-05-01/doom-gpu-flame-graphs.html
-> that this is still outstanding. The patches also reduce some directory
-> scanning for the hwmon "PMU", they are in Google's tree:
-> https://github.com/googleprodkernel/linux-perf/blob/google_tools_master/tools/perf/util/drm_pmu.c
+> > The AD7768-1 has the ability to control other local hardware (such as gain
+> > stages),to power down other blocks in the signal chain, or read local
+> > status signals over the SPI interface.
+> >
+> > Add direct mode conditional locks in the gpio callbacks to prevent register
+> > access when the device is in buffered mode.
+> >
+> > This change exports the AD7768-1's four gpios and makes them accessible
+> > at an upper layer.
 > 
-> Thanks,
-> Ian
+> ...
 > 
-> > v3: Minor tweak to the test so the skip (exit 2) doesn't trigger the
-> >     trap cleanup.
-> >
-> > v2: Add support to only scan hwmon and drm PMUs if the event or PMU
-> > wildcard can match. Add a test as requested by Namhyung. Add file
-> > comments.
-> >
-> > v1:
-> > https://lore.kernel.org/lkml/20250211071727.364389-1-irogers@google.com/
-> >
-> > Ian Rogers (4):
-> >   perf parse-events: Avoid scanning PMUs that can't contain events
-> >   perf parse-events: Avoid scanning PMUs that can't match a wildcard
-> >   perf drm_pmu: Add a tool like PMU to expose DRM information
-> >   perf tests: Add a DRM PMU test
-> >
-> >  tools/perf/tests/shell/drm_pmu.sh |  78 ++++
-> >  tools/perf/util/Build             |   1 +
-> >  tools/perf/util/drm_pmu.c         | 689 ++++++++++++++++++++++++++++++
-> >  tools/perf/util/drm_pmu.h         |  39 ++
-> >  tools/perf/util/evsel.c           |   9 +
-> >  tools/perf/util/parse-events.c    |  30 +-
-> >  tools/perf/util/pmu.c             |  15 +
-> >  tools/perf/util/pmu.h             |   4 +-
-> >  tools/perf/util/pmus.c            | 101 ++++-
-> >  tools/perf/util/pmus.h            |   2 +
-> >  10 files changed, 952 insertions(+), 16 deletions(-)
-> >  create mode 100755 tools/perf/tests/shell/drm_pmu.sh
-> >  create mode 100644 tools/perf/util/drm_pmu.c
-> >  create mode 100644 tools/perf/util/drm_pmu.h
-> >
-> > --
-> > 2.49.0.504.g3bcea36a83-goog
-> >
+> > +#include <linux/gpio.h>
+> 
+> No way. This header must not be in any of the code. (Yes, there are
+> leftovers in the kernel, but work is ongoing to clean that up)
+> 
+
+Sorry about that, will fix it.
+
+> > +#include <linux/gpio/driver.h>
+> >  #include <linux/gpio/consumer.h>
+> 
+> >  #include <linux/kernel.h>
+> 
+> And since you are doing the big series for the driver, please drop
+> this header and replace it (if required) with what is used. No driver
+> code should use kernel.h.
+> 
+
+Sure, noted.
+
+> >  #include <linux/module.h>
+> 
+> ...
+> 
+> > struct ad7768_state {
+> 
+> >         struct regulator_dev *vcm_rdev;
+> >         unsigned int vcm_output_sel;
+> >         struct clk *mclk;
+> > +       struct gpio_chip gpiochip;
+> >         unsigned int mclk_freq;
+> >         unsigned int samp_freq;
+> >         struct completion completion;
+> 
+> Btw, have you run `pahole`? Is this the best place for a new field in
+> accordance with its output?
+> 
+
+I didn't, but I am going to use it.
+
+> ...
+> 
+> > +static int ad7768_gpio_set(struct gpio_chip *chip, unsigned int offset, int value)
+> > +{
+> > +       struct iio_dev *indio_dev = gpiochip_get_data(chip);
+> > +       struct ad7768_state *st = iio_priv(indio_dev);
+> > +       unsigned int val;
+> > +       int ret;
+> > +
+> > +       if (!iio_device_claim_direct(indio_dev))
+> > +               return -EBUSY;
+> > +
+> > +       ret = regmap_read(st->regmap, AD7768_REG_GPIO_CONTROL, &val);
+> > +       if (ret)
+> > +               goto err_release;
+> > +
+> > +       if (val & BIT(offset))
+> > +               ret = regmap_update_bits(st->regmap, AD7768_REG_GPIO_WRITE,
+> > +                                        BIT(offset), value << offset);
+> 
+> And if value happens to be > 1?
+> Also consider the use of regmap_assign_bits().
+> 
+
+ok!
+
+> > +err_release:
+> > +       iio_device_release_direct(indio_dev);
+> > +
+> > +       return ret;
+> > +}
+> 
+> ...
+> 
+> > +static int ad7768_gpio_init(struct iio_dev *indio_dev)
+> > +{
+> > +       struct ad7768_state *st = iio_priv(indio_dev);
+> > +       int ret;
+> > +
+> > +       ret = regmap_write(st->regmap, AD7768_REG_GPIO_CONTROL,
+> > +                          AD7768_GPIO_UNIVERSAL_EN);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       st->gpiochip = (struct gpio_chip) {
+> 
+> > +               .label = "ad7768_1_gpios",
+> 
+> What is '_1' for?
+> Also, what will happen if the device has two or more such ADCs
+> installed? Will they all provide _the same_ label?!
+> 
+
+the '_1' is because the part name is 'ad7768-1'.
+Most of similar devices only define a static name, but I could use the
+reg field, if you beleive it is better.
+
+> > +               .base = -1,
+> > +               .ngpio = 4,
+> > +               .parent = &st->spi->dev,
+> > +               .can_sleep = true,
+> > +               .direction_input = ad7768_gpio_direction_input,
+> > +               .direction_output = ad7768_gpio_direction_output,
+> > +               .get = ad7768_gpio_get,
+> > +               .set_rv = ad7768_gpio_set,
+> > +               .owner = THIS_MODULE,
+> > +       };
+> > +
+> > +       return devm_gpiochip_add_data(&st->spi->dev, &st->gpiochip, indio_dev);
+> > +}
+> 
+> ...
+> 
+> > +       /* Only create a Chip GPIO if flagged for it */
+> > +       if (device_property_read_bool(&st->spi->dev, "gpio-controller")) {
+> > +               ret = ad7768_gpio_init(indio_dev);
+> > +               if (ret < 0)
+> 
+> Why ' < 0'?
+> 
+> > +                       return ret;
+> > +       }
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
