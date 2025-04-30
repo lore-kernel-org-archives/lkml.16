@@ -1,170 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277171E4110;
-	Wed, 30 Apr 2025 08:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28A21E4110;
+	Wed, 30 Apr 2025 08:56:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003353; cv=none; b=D7xXwzU68rXHSE0cwPQkLlZXF3NHD9D5uXWVIPhETYRD5T+GM+5/IXTPPOypAInLZMceIsEMe4sTJwvfj/m7Xbma/PQvJotTf/BFOS8/FPL969LncoP2uuR919DhVhoKSS8hhSgI2JRegN4o9No9IFpKwfNm3lLenElCGCIyCI0=
+	t=1746003394; cv=none; b=mGpA9V1oTMb7VP8CB3B1Vbmb+9tuC/iToEGVaPeTYua/QOAoT3mynH2ThS9JHKdUPqwiYsTuSOW37j90xMoAo2Z8NAmFicm6mCJOZmpProvgLNtFIhRzD+aP2IxSXUudYCgEtoHNm9FkmH6jCONn2aonay7TCuU6uXma6qR+sco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003353; c=relaxed/simple;
-	bh=xJSCsiMDZtliKUeMolwZ4YJOBTCwMnJKsGuYigXuz80=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICZ2mmaYwlby9scIPUIazs3qfkOOw84mPpaNo9bTq4Dnsfffq1GOL2WuFosd4C/h8WzS6dCJiShE9RpzdZLN8aTxyflU+6h+tOyN8WYMZY56CphI21eyZrbSAXmJro+FHrz1zbph8SoBz9xhkkRGxBOfKyW2IOnFDF6okSpDqOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI1+81mj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746003394; c=relaxed/simple;
+	bh=t0sNMjfpZFZ/tkTiw1mOgfiMQQ17CSRGsWtVuNG7b3M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=quHky3MPSp1AKqwIrQhJkv3iH6XstEsJMV5qNivB+Kul9JE3d7bP9eS9v71Hne6mwywR35Pg1K8iJfkJzgTVheUevCIWeEyRxsf5ELPwjQsV1Ic+UQlzBj3mSTvIOiXCMn5bsf0JRM/xsbEwxtfvQGqnCeky4je2TZ/Do6ExeiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9z1rL7c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI1+81mj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F93C4CEEC;
-	Wed, 30 Apr 2025 08:55:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9z1rL7c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6A8C4CEE9;
+	Wed, 30 Apr 2025 08:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746003353;
-	bh=xJSCsiMDZtliKUeMolwZ4YJOBTCwMnJKsGuYigXuz80=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LI1+81mjJXx23UKkeUU42/jgvJ0TacUjkeoQJ09A6EuBGvNiFLjDZU8n8Hmdyimtw
-	 nFOc0P4neTQgPtilp1PoVwE6XhA1tkA0qW3nJSnFcgB9kRxxhD2GYJR59POLppBHLf
-	 fpIXuyVkeihmh3+RF3qAi8vGaJSR8SEz81RdoGhGyoQXvRX75eM9ltt+3jktJ3hY6j
-	 W3RXh228Dy5hbwHNWI5v+3FAEtm43bgY3WDUhZn3U/0hpzNEje7+unz8fcempxxely
-	 mLecdZcVRmXHhs9B5eL22UyOYK7FSrj+0dMScbHs3GfsGD4w9AMIOPPY3DQHOKOfZu
-	 KyQj5g2Ul0wAg==
-Date: Wed, 30 Apr 2025 09:55:45 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jacob Keller <jacob.e.keller@intel.com>
-Cc: Larysa Zaremba <larysa.zaremba@intel.com>,
-	intel-wired-lan@lists.osuosl.org,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Jiri Pirko <jiri@resnulli.us>,
-	Tatyana Nikolova <tatyana.e.nikolova@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Lee Trager <lee@trager.us>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Sridhar Samudrala <sridhar.samudrala@intel.com>,
-	Michal Swiatkowski <michal.swiatkowski@linux.intel.com>,
-	Mateusz Polchlopek <mateusz.polchlopek@intel.com>,
-	Ahmed Zaki <ahmed.zaki@intel.com>, netdev@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Karlsson, Magnus" <magnus.karlsson@intel.com>,
-	Emil Tantilov <emil.s.tantilov@intel.com>,
-	Madhu Chittim <madhu.chittim@intel.com>,
-	Josh Hay <joshua.a.hay@intel.com>,
-	Milena Olech <milena.olech@intel.com>, pavan.kumar.linga@intel.com,
-	"Singhai, Anjali" <anjali.singhai@intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH iwl-next v2 01/14] virtchnl: create
- 'include/linux/intel' and move necessary header files
-Message-ID: <20250430085545.GT3339421@horms.kernel.org>
-References: <20250424113241.10061-1-larysa.zaremba@intel.com>
- <20250424113241.10061-2-larysa.zaremba@intel.com>
- <20250428161542.GD3339421@horms.kernel.org>
- <10fd9a4b-f071-47eb-bdde-13438218aee9@intel.com>
+	s=k20201202; t=1746003394;
+	bh=t0sNMjfpZFZ/tkTiw1mOgfiMQQ17CSRGsWtVuNG7b3M=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=c9z1rL7cXAvea45Uyb1S7z/e1pr/opZE+xb/RnFZg415G2WHkhlO79SJESttOR1cK
+	 alsnzzGFp1a9vglABQHYufpsaENCJReoJKYvw3rW1P07pDyxuhNrJB9Hv2whY1zbkQ
+	 LICYFqpXcVDuBQXUuZxsqmjbQ+nrxekwNLz3cOk6+qM0ZRCJqUkckAW6wgYSduieV9
+	 ssF00vMrT6XJMDO/lH4XtKFB/rYrLyqyMyHBWtbEx/dBET/flRENE5zKIJC/8UvaQb
+	 iwDi3/lzR6+L0I0gWgGd0oGK8yAmKjVqEXuMz/y1bjUX5VRloiKFKN34tDJQpBNAgH
+	 CepiUEM7FPWfA==
+From: Lee Jones <lee@kernel.org>
+To: Pavel Machek <pavel@kernel.org>, linux-kernel@vger.kernel.org, 
+ linux-leds@vger.kernel.org, Lee Jones <lee@kernel.org>
+Cc: jacek.anaszewski@gmail.com
+In-Reply-To: <20250424144544.1438584-1-lee@kernel.org>
+References: <20250424144544.1438584-1-lee@kernel.org>
+Subject: Re: (subset) [PATCH 1/1] leds: Provide skeleton KUnit testing for
+ the LEDs framework
+Message-Id: <174600339289.3131178.10970055458890624899.b4-ty@kernel.org>
+Date: Wed, 30 Apr 2025 09:56:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <10fd9a4b-f071-47eb-bdde-13438218aee9@intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-510f9
 
-On Tue, Apr 29, 2025 at 11:47:58AM -0700, Jacob Keller wrote:
+On Thu, 24 Apr 2025 15:45:38 +0100, Lee Jones wrote:
+> Apply a very basic implementation of KUnit LED testing.
 > 
+> More tests / use-cases will be added steadily over time.
 > 
-> On 4/28/2025 9:15 AM, Simon Horman wrote:
-> > On Thu, Apr 24, 2025 at 01:32:24PM +0200, Larysa Zaremba wrote:
-> >> From: Victor Raj <victor.raj@intel.com>
-> >>
-> >> Move intel specific header files into new folder
-> >> include/linux/intel.
-> >>
-> >> Suggested-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> >> Reviewed-by: Sridhar Samudrala <sridhar.samudrala@intel.com>
-> >> Signed-off-by: Victor Raj <victor.raj@intel.com>
-> >> Signed-off-by: Larysa Zaremba <larysa.zaremba@intel.com>
-> >> ---
-> >>  MAINTAINERS                                                 | 6 +++---
-> >>  drivers/infiniband/hw/irdma/i40iw_if.c                      | 2 +-
-> >>  drivers/infiniband/hw/irdma/main.h                          | 2 +-
-> >>  drivers/infiniband/hw/irdma/osdep.h                         | 2 +-
-> >>  drivers/net/ethernet/intel/i40e/i40e.h                      | 4 ++--
-> >>  drivers/net/ethernet/intel/i40e/i40e_client.c               | 2 +-
-> >>  drivers/net/ethernet/intel/i40e/i40e_common.c               | 2 +-
-> >>  drivers/net/ethernet/intel/i40e/i40e_prototype.h            | 2 +-
-> >>  drivers/net/ethernet/intel/i40e/i40e_txrx.c                 | 2 +-
-> >>  drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.h          | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf.h                      | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf_common.c               | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf_main.c                 | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf_prototype.h            | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf_txrx.c                 | 2 +-
-> >>  drivers/net/ethernet/intel/iavf/iavf_types.h                | 4 +---
-> >>  drivers/net/ethernet/intel/iavf/iavf_virtchnl.c             | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice.h                        | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice_common.h                 | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice_idc_int.h                | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice_txrx_lib.c               | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice_vf_lib.h                 | 2 +-
-> >>  drivers/net/ethernet/intel/ice/ice_virtchnl.h               | 2 +-
-> >>  drivers/net/ethernet/intel/idpf/idpf.h                      | 2 +-
-> >>  drivers/net/ethernet/intel/idpf/idpf_txrx.h                 | 2 +-
-> >>  drivers/net/ethernet/intel/libie/rx.c                       | 2 +-
-> >>  include/linux/{net => }/intel/i40e_client.h                 | 0
-> >>  include/linux/{net => }/intel/iidc.h                        | 0
-> >>  include/linux/{net => }/intel/libie/rx.h                    | 0
-> >>  include/linux/{avf => intel}/virtchnl.h                     | 0
-> >>  .../ethernet/intel/idpf => include/linux/intel}/virtchnl2.h | 0
-> >>  .../intel/idpf => include/linux/intel}/virtchnl2_lan_desc.h | 0
-> >>  32 files changed, 29 insertions(+), 31 deletions(-)
-> >>  rename include/linux/{net => }/intel/i40e_client.h (100%)
-> >>  rename include/linux/{net => }/intel/iidc.h (100%)
-> >>  rename include/linux/{net => }/intel/libie/rx.h (100%)
-> >>  rename include/linux/{avf => intel}/virtchnl.h (100%)
-> >>  rename {drivers/net/ethernet/intel/idpf => include/linux/intel}/virtchnl2.h (100%)
-> >>  rename {drivers/net/ethernet/intel/idpf => include/linux/intel}/virtchnl2_lan_desc.h (100%)
-> >>
-> >> diff --git a/MAINTAINERS b/MAINTAINERS
-> >> index 657a67f9031e..2e2a57dfea8f 100644
-> >> --- a/MAINTAINERS
-> >> +++ b/MAINTAINERS
-> >> @@ -11884,8 +11884,8 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/next-queue.git
-> >>  F:	Documentation/networking/device_drivers/ethernet/intel/
-> >>  F:	drivers/net/ethernet/intel/
-> >>  F:	drivers/net/ethernet/intel/*/
-> >> -F:	include/linux/avf/virtchnl.h
-> >> -F:	include/linux/net/intel/iidc.h
-> >> +F:	include/linux/intel/iidc.h
-> >> +F:	include/linux/intel/virtchnl.h
-> > 
-> > I'm not sure that I understand the motivation for moving files out of
-> > include/linux/net, but I guess the answer is that my suggestion, which
-> > would be to move files into include/linux/net, is somehow less good.
-> > 
-> > But if file are moving out of include/linux/net then I think it would
-> > make sense to make a corresponding update to NETWORKING DRIVERS.
-> > 
-> > Also, include/linux/intel, does feel a bit too general. These files
-> > seem to relate to NICs (of some sort of flavour or another). But Intel
-> > does a lot more than make NICs.
-> > 
+> CMD:
+>   tools/testing/kunit/kunit.py run --kunitconfig drivers/leds
 > 
-> 'include/linux/net/intel' seems fine to me. I agree with moving
-> virtchnl.h there since it is quite clear that any historical ambitions
-> about AVF being vendor agnostic are long dead, so having it in its own
-> 'non-intel' folder is silly.
-> 
-> Strictly speaking, I think the goal of moving the files is due to the
-> fact that a lot of the core ixd code is not really network layer but
-> instead PCI layer.
+> [...]
 
-Sure. I was more thinking out loud in my previous email than requesting any
-action. Thanks for filling in my understanding of the situation.
+Applied, thanks!
 
-But could we please consider updating NETWORKING DRIVERS so
-that get_maintainers.pl can help people to CC netdev and it's maintainers
-as appropriate?
+[1/1] leds: Provide skeleton KUnit testing for the LEDs framework
+      commit: 72a3aadde656a6df096221c3d7fecb76ccb5619f
+
+--
+Lee Jones [李琼斯]
+
