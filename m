@@ -1,140 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC1FC25DAEB;
-	Wed, 30 Apr 2025 13:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8562325B670
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:54:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746021122; cv=none; b=RIk9q12YwaL+GcQIJyYYB1gHqDAmYfZvpK4vhrSavcqY0xgyra9AghM1GWIvgZlChm38OtxgTR5uUjsYjacBC++tHE5vg6dEFINV8aToWUS6WHvBU1hgEb0wa1QF6U8WHfLWQZQP3B2GKUE6spBqkGOnywcMw9I2GtR2YVsaIgI=
+	t=1746021273; cv=none; b=IS9nucD7qbUddbu41QNd6Qk6ltYj4zY6botVhP+t5WDPavOF9y+kKSszhAJUL5XSBpFap940n/P7bopqlrWemR0y01Ilq+URcR97XK8tEuFQ63jEXzeoJ8rZ+vlf15JSTRyzuD3ZyEUNYqE0qyGfsag0vSgs/NTnfoJg48eQqvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746021122; c=relaxed/simple;
-	bh=xf1uFp/EVSDzohAXpVq0ni+m7CYH2QXJJpG3H9J9ivg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EXFeyGwg03/Hv+T/YC7BsJlEl2Si9B2FzlJZKg+EPAPUVHLIXdfuOaJR8EDOIkuF/h5ZUqh7+4w4h1J1vZhXnF06OrX5MjqGvX5ftdb6NE7ON0Cy+nP4YasuuDhu9jRh1dlBVEYJNozasDU4pnLH9NuoYxGN/yRUX4N10M4GPSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FDrZ5ylV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746021273; c=relaxed/simple;
+	bh=+GJ+mcytht5RHFH5sFNK2hh3cx3cNAAJFcvtzh/Ue+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=htj6ElLekUNL18bCqjVoApihnIh8R61XBb8RJ8txAN6EibsRAsOyBw0s+gSZMSWC7mpqgjBue9UxGeXAhmE9jpJQLcUXKx+svTmz4TeZQD/0pjQeAPcobrrpglJcAfL1Ekx/hLUczTEp+yYByJwV0HH+ChGxf0BqXJFNswMs9JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A7IGLlDy; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FDrZ5ylV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260B7C4CEEB;
-	Wed, 30 Apr 2025 13:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746021122;
-	bh=xf1uFp/EVSDzohAXpVq0ni+m7CYH2QXJJpG3H9J9ivg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FDrZ5ylVhgyEL2WIZLvXJRJH+61d9KI0jJI03lZum2EuNfKXzS610Xq0f4/u/gMe2
-	 tXMBZVomy6mEmBEVXIqOqEOzWIMTe/2H6/a+LyMNU5AhW7nFAZmy9ySN1zPH8Dcuy+
-	 OQD0dHPHIBDEwvoBkK5XtFLiqoGGHg9jhw5NsKPK9sa9SVLy7MBHY7lTuR17JwVpZn
-	 4XTUoYBCv7QIZ3NfWdaQ9+J6G9MTXPz17fZoZzuRKXUEZyQuD7e63xuaiE026fk38w
-	 dYU7Idi8aZMUIfUxLu8CoMAwOKCMiIWtrPupaMCobbh7HHOxNNtNw7ZYcuxSusjUil
-	 y7qhhXi7Oci4g==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1uA7r3-000000001Lh-2fnM;
-	Wed, 30 Apr 2025 15:52:05 +0200
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	Sibi Sankar <quic_sibis@quicinc.com>,
-	Marc Zyngier <maz@kernel.org>,
-	arm-scmi@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] firmware: arm_scmi: quirk: force perf level get fastchannel
-Date: Wed, 30 Apr 2025 15:51:46 +0200
-Message-ID: <20250430135146.5154-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A7IGLlDy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746021272; x=1777557272;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+GJ+mcytht5RHFH5sFNK2hh3cx3cNAAJFcvtzh/Ue+c=;
+  b=A7IGLlDyy7SwFxG+wTqr0yndrcsGwp3peYpvmKeEfrnsRsuXJLK3JW5s
+   MIUAGJ5bxBxG6ba8ylWkDn/+EIiRBbtE7UWA9DDQ0iroh8bhopSPcvV5Z
+   RTYhYaE4JiULAVIGGOqPH7DdIKlv5Ll4GGLzWi+Pws+tYbMrAc1Q+Zee8
+   3SrJeDqTGkfOL6rgKB/S/34bel0OSJN4mqedEdfZNyzQ/sUNhyiSdTlsT
+   EZrQV2UzOb5ePexWuWJuot7GHBkvu5Wf3Y3UXyHBUTnvAZdyEhuO+9fB0
+   I7hBaWIfNDVgaDOlERjswtOuGMQL/aRsn1SZBGdmlNkaxAsxt42Uehndh
+   w==;
+X-CSE-ConnectionGUID: dAjUob9JQnWagefplPEBuQ==
+X-CSE-MsgGUID: 522AZxeFRC6xMAYYnIgpZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="46797780"
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="46797780"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 06:54:31 -0700
+X-CSE-ConnectionGUID: ShR5iyuYRPaeh23kF7+0FQ==
+X-CSE-MsgGUID: dhgYcC0PRJKaHJGlgc06jQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,251,1739865600"; 
+   d="scan'208";a="134073500"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 30 Apr 2025 06:54:28 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id D43B69F; Wed, 30 Apr 2025 16:54:26 +0300 (EEST)
+Date: Wed, 30 Apr 2025 16:54:26 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: "Miao, Jun" <jun.miao@intel.com>
+Cc: "Li, Zhiquan1" <zhiquan1.li@intel.com>, 
+	"Hansen, Dave" <dave.hansen@intel.com>, "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"x86@kernel.org" <x86@kernel.org>, "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"mingo@redhat.com" <mingo@redhat.com>, "bp@alien8.de" <bp@alien8.de>, "Du, Fan" <fan.du@intel.com>
+Subject: Re: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE
+ was not successful
+Message-ID: <fpu3a5x5zhvm7n6sus5533bnub6ynf6lwvsibxhxoozeoeitxu@5vd7k75x4pzw>
+References: <20250429143114.1724280-1-jun.miao@intel.com>
+ <20250429143114.1724280-2-jun.miao@intel.com>
+ <b138cb84-3a34-40b3-a23d-6ff3708dae6b@intel.com>
+ <a0676c7b-9e6d-4af4-87d5-f822ab247730@intel.com>
+ <sdczrx3z55vbf4jxbedjpccpdmz7h7ukhhiwrwblpozwyrqssv@ljszzrxvgoxr>
+ <PH7PR11MB8455BCD71320C0C081C29AEB9A832@PH7PR11MB8455.namprd11.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PH7PR11MB8455BCD71320C0C081C29AEB9A832@PH7PR11MB8455.namprd11.prod.outlook.com>
 
-The Qualcomm SCP firmware in X1E machines like the Lenovo ThinkPad T14s
-does not set the FastChannel supported attribute bit for PERF_LEVEL_GET
-but crashes when falling back to regular messaging.
+On Wed, Apr 30, 2025 at 11:10:32AM +0000, Miao, Jun wrote:
+> >
+> >On Wed, Apr 30, 2025 at 10:15:05AM +0800, Zhiquan Li wrote:
+> >>
+> >> On 2025/4/29 22:50, Dave Hansen wrote:
+> >> > On 4/29/25 07:31, Jun Miao wrote:
+> >> >> REDUCE_VE can only be enabled if x2APIC_ID has been properly
+> >> >> configured with unique values for each VCPU.  Check if VMM has
+> >> >> provided an activated topology configuration first as it is the
+> >> >> prerequisite of REDUCE_VE and ENUM_TOPOLOGY, so move it to
+> >> >> reduce_unnecessary_ve().  The function
+> >> >> enable_cpu_topology_enumeration() was very little and can be
+> >> >> integrated into reduce_unnecessary_ve().
+> >> >
+> >> > Isn't this just working around VMM bugs? Shouldn't we just panic as
+> >> > quickly as possible so the VMM config gets fixed rather than adding kludges?
+> >>
+> >>
+> >> Now failed to virtualize these two cases will cause TD VM regression
+> >> vs legacy VM.  Do you mean the panic will just for the #VE caused by
+> >> CPUID leaf 0x2? Or both (+ VMM not configure topology) will panic?
+> >>
+> >> Currently the most customer's complaints come from the CPUID leaf 0x2
+> >> not virtualization, and most of access come from user space.  Is it
+> >> appropriate for such behavior directly cause a guest kernel panic?
+> >
+> >The appropriate behavior would be to fix VMM to configure APIC IDs correctly and
+> >use TDX module that supports REDUCE_VE.
+> >
+> 
+> Yes, I completely agree with your point to fix VMM APIC IDs.
+> The idea here is only to avoid this panic by using the guest component even when the host is incomplete.
+> And thereby improving the robustness of the kernel code. Moreover, even if the VMM becomes complete later, the adjusted logic will continue to adapt still. (^v^) 
 
-Use the new SCMI quirk framework to force FastChannel initialisation for
-this implementation.
+VIRT_CPUID2 was introduced as stop gap until REDUCE_VE is landed. I don't
+see a point in getting it enabled at this stage. REDUCE_VE covers much
+more broken corner cases. CPUID 0x2 is just the most prominent one because
+of glibc bug.
 
-Note that we can add an upper bound on the version matching when we
-learn which version has a fix (or limit matching using a SoC compatible
-string in the unlikely event that always enabling FC causes trouble
-somewhere).
-
-Link: https://lore.kernel.org/lkml/Z4Dt8E7C6upVtEGV@hovoldconsulting.com/
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
-
-This one depends on the new SCMI quirk framework:
-
-	https://lore.kernel.org/lkml/20250429141108.406045-1-cristian.marussi@arm.com/	
-
-Johan
-
-
- drivers/firmware/arm_scmi/driver.c | 8 ++++++++
- drivers/firmware/arm_scmi/quirks.c | 2 ++
- drivers/firmware/arm_scmi/quirks.h | 1 +
- 3 files changed, 11 insertions(+)
-
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 6a18670ea261..eb6bec39c02d 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -1900,6 +1900,13 @@ struct scmi_msg_resp_desc_fc {
- 	__le32 db_preserve_hmask;
- };
- 
-+#define QUIRK_PERF_FC_FORCE						\
-+	({								\
-+		if (pi->proto->id == SCMI_PROTOCOL_PERF &&		\
-+		    message_id == 0x8 /* PERF_LEVEL_GET */)		\
-+			attributes |= BIT(0);				\
-+	})
-+
- static void
- scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
- 			     u8 describe_id, u32 message_id, u32 valid_size,
-@@ -1920,6 +1927,7 @@ scmi_common_fastchannel_init(const struct scmi_protocol_handle *ph,
- 
- 	/* Check if the MSG_ID supports fastchannel */
- 	ret = scmi_protocol_msg_check(ph, message_id, &attributes);
-+	SCMI_QUIRK(perf_level_get_fc_force, QUIRK_PERF_FC_FORCE);
- 	if (ret || !MSG_SUPPORTS_FASTCHANNEL(attributes)) {
- 		dev_dbg(ph->dev,
- 			"Skip FC init for 0x%02X/%d  domain:%d - ret:%d\n",
-diff --git a/drivers/firmware/arm_scmi/quirks.c b/drivers/firmware/arm_scmi/quirks.c
-index 120ac933ed2e..48bf45b8bcf9 100644
---- a/drivers/firmware/arm_scmi/quirks.c
-+++ b/drivers/firmware/arm_scmi/quirks.c
-@@ -168,6 +168,7 @@ struct scmi_quirk {
- 
- /* Global Quirks Definitions */
- DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL);
-+DEFINE_SCMI_QUIRK(perf_level_get_fc_force, "Qualcomm", NULL, "0x20000-");
- 
- /*
-  * Quirks Pointers Array
-@@ -177,6 +178,7 @@ DEFINE_SCMI_QUIRK(clock_rates_triplet_out_of_spec, NULL, NULL, NULL);
-  */
- static struct scmi_quirk *scmi_quirks_table[] = {
- 	__DECLARE_SCMI_QUIRK_ENTRY(clock_rates_triplet_out_of_spec),
-+	__DECLARE_SCMI_QUIRK_ENTRY(perf_level_get_fc_force),
- 	NULL
- };
- 
-diff --git a/drivers/firmware/arm_scmi/quirks.h b/drivers/firmware/arm_scmi/quirks.h
-index 7fdc496c94c7..a71fde85a527 100644
---- a/drivers/firmware/arm_scmi/quirks.h
-+++ b/drivers/firmware/arm_scmi/quirks.h
-@@ -47,5 +47,6 @@ static inline void scmi_quirks_enable(struct device *dev, const char *vend,
- 
- /* Quirk delarations */
- DECLARE_SCMI_QUIRK(clock_rates_triplet_out_of_spec);
-+DECLARE_SCMI_QUIRK(perf_level_get_fc_force);
- 
- #endif /* _SCMI_QUIRKS_H */
 -- 
-2.49.0
-
+  Kiryl Shutsemau / Kirill A. Shutemov
