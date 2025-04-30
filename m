@@ -1,121 +1,103 @@
-Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4BF1E2853;
-	Wed, 30 Apr 2025 05:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC521531F9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:34:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745991198; cv=none; b=ZZDTkwl8gLbzNcb0HYDgrdW/KnFAx8tAI3gEGoSwaVUkShBC07bDZFBpzHK1Zd18yTd7ut6qWdlu1JHg9dJBbeoFoArsU62+U/vIL0609B3sxRgzjwqsO1qcKup6K3BbQG9cudbECA5/9fbApqs0npUtBfHBV7wek9J4hV1OvJA=
+	t=1745991275; cv=none; b=i6SRziEwWldxFjgQroTw18VqQRtd9Te6FE6m2io28gqH0kkl4AWbXIPqPpIThcokg0aUcWyYEWE7YXlQM4lw11C2XppHmubs/11nnF0/fRX45RqdT7pDRbXc4FSf1TqOYY/KvIgMG5Pok5MlFHR30x9OTXZuy4mVT8N91zNHHno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745991198; c=relaxed/simple;
-	bh=KQtVVkxqKgq++RrOtQPY3AP4zXz78fWySFRMQ+WV2cw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DYY6T/AjO6SSqB1ZQYw7CMDUw5JHVBqScC21/uictsg5qw4XDfMDS0d7sUrz3iF+5ndr2NSgOUFldM5Ks3EFSYHJ4wXQLwqzQbYIt1UJqK12xBUnvCKtCVNFPzEfadJnI2MpLscMphuTrUxPVf6IMIJVtaWWlupQZzp/cNbO15w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
-Received: from [127.0.0.1] (unknown [116.232.147.253])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dlan)
-	by smtp.gentoo.org (Postfix) with ESMTPSA id D62F4342FF8;
-	Wed, 30 Apr 2025 05:33:10 +0000 (UTC)
-From: Yixun Lan <dlan@gentoo.org>
-Date: Wed, 30 Apr 2025 13:32:07 +0800
-Subject: [PATCH v3 5/5] arm64: dts: allwinner: t527: add EMAC0 to Avaota-A1
- board
+	s=arc-20240116; t=1745991275; c=relaxed/simple;
+	bh=92lUes7XM/q5xT2OTQHGxPHhNKCZGbe9vSaSuuTkEHo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ihhb6H02hZdC/E8L7axmfK8FXogYGiNbUWrVlPRiahRY4JFQIkfhf2kKtgA6WC4+1dVHMdy/6QyuDAj4/lxSUMgtVEvV4CylEpWwo8ThZx43KsiU4wXn6YyzC8PjhlbIp10uSVfbqyaa0D6JE1ELHZ+N5mR7jcY0Ta2Q2hB6TCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VoOzcVQY; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jiayanli.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VoOzcVQY"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b1f71ae2181so800819a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 29 Apr 2025 22:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1745991274; x=1746596074; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=557JNh3sFFdDHMdmAyQM/4hu66WvgSD9XL23VhL/2Os=;
+        b=VoOzcVQYyKQGI5mfzLtuIKFjHtKcDLhgeNn6XIfiwbrv7axgYMvIZWSTeQJq1ocUHg
+         PrT9na3fBnKfIE23DZFFIfJwkT4mrIO5Lz8w38CZZSdnqsY0YtnChg2rKYZq+qF1isad
+         Xwade86NGATNIb3qRo9d6U5Jk2W6tDKv2ve6PNabnjs6INWcKYb0W20qQQY/Jf/HBLWd
+         LV0453FWgGQkhSxWM7LwSAaR3hgSOMZB9scnDh38dQRI6dVRradpEuzgHIMzU0Pevh9c
+         U7rD3fCvmlxw+rbx6Guk9vIQpyvXcoMK8OhOrDGDA0giv2BsGEw5NtalNpa2jX26Aq3l
+         VkTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1745991274; x=1746596074;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=557JNh3sFFdDHMdmAyQM/4hu66WvgSD9XL23VhL/2Os=;
+        b=HI7/wn89o+3yhx+tIJftR5gcJ6W7tCGfDAIsdEUciZq1EnIA8bRBw44/DkGJApBfGU
+         Gg5Cw6zfI5LYlqIDPjLbxMLiwwKhJzuWZNB8qNlYl0JXCosaMj1UUMHTu6ngLjRFasxC
+         /JYyYJilWOCRlo3MMJm6eXe8BB8rOMOIccjZ6KCUCj/2JpeW3Vib5NEJmFOAP8JPBGjd
+         uExuPQshhGPKss+drcBsQJ1ieAhZ4KA3sQQjvkmr5eodLpczW5HgBhirc1rX54VYP8Sv
+         zRAa5QwlfM58irJPYCOsSVcJrEmRus/B2O2UMNcMvT9S+znWcDts1rVqdp5opRU+4YqB
+         IC7A==
+X-Forwarded-Encrypted: i=1; AJvYcCWCrd5aZPNoEj+LPOpttmXSBy0rERKRa87nCtSnVAHaKnOxlwVP6G4yYKHSqyQrnOkX6OwkE/weFQwmomY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPyTWsF+bDdbO891/0obWZ9ykngEOceXa5k4PMDexwJoy5JyYW
+	/IgxgW8TldGh1rWK9SGc7OTEVjXGiI2wrLZwXOz4BQfott1BVBx4KwxQP/oeKJ5bVoGab+PQ4D/
+	ykCwceUyLlg==
+X-Google-Smtp-Source: AGHT+IHyp3akB1mNS8cV1sqfraK817e8968UBZwcda1kNq+ouEKeH1y7xVUyRHGRrBBCY02F3b+ySsZR3GhSjA==
+X-Received: from pjp11.prod.google.com ([2002:a17:90b:55cb:b0:2ff:6132:8710])
+ (user=jiayanli job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:2dc3:b0:2ee:ee5e:42fb with SMTP id 98e67ed59e1d1-30a332f6f5bmr2706350a91.13.1745991273730;
+ Tue, 29 Apr 2025 22:34:33 -0700 (PDT)
+Date: Wed, 30 Apr 2025 05:34:24 +0000
+In-Reply-To: <2.49.0.901.g37484f566f-goog>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250430-01-sun55i-emac0-v3-5-6fc000bbccbd@gentoo.org>
-References: <20250430-01-sun55i-emac0-v3-0-6fc000bbccbd@gentoo.org>
-In-Reply-To: <20250430-01-sun55i-emac0-v3-0-6fc000bbccbd@gentoo.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
- Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: Andre Przywara <andre.przywara@arm.com>, 
- Corentin Labbe <clabbe.montjoie@gmail.com>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Yixun Lan <dlan@gentoo.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1431; i=dlan@gentoo.org;
- h=from:subject:message-id; bh=KQtVVkxqKgq++RrOtQPY3AP4zXz78fWySFRMQ+WV2cw=;
- b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoEbXxaftpe1NJ9cfpRt022XLIsXHhvqeP/+lrN
- m3gmTKPy3uJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaBG18V8UgAAAAAAuAChp
- c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
- CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277dNvEACeKULnlu5Zk1MfpK
- yFz42975F08U5nXUWjXpJ+dsJ+loBIeJ/f2vkvtVqTj89Rm7vG3CLPPpjS7Oy7EEumMogyINsP5
- q9F8GateiqiLR7QU5FsoaB90gavEActY7+USEUqEE5UmFxuRX6AhhKG6aUy8VVkyiPokgkptcvB
- pz3pPsyg22fBo3Tz4TBVp7O9TyJLGvW+++BPewKoc0PFPUOlcarVraKMm+I+9uAwLsgGSjL0hz5
- Ka6uCcZVQf6VpkUMBfoVj+CqUfbrLAdrMs2SUgxUC2QwMLKRtthXF41CKYSSrVtw/isObSgBPPw
- 932xGk//aOyGX4mEYRTttXm5mgFUnB84/y6N/s8FrVUK0/+y1fVSqi0MnX1NsGa/LOsQn4+CBWs
- NhThpLovc21IjaVakM3bgkL2QzGKfOmA6e/Qek4c3Iq78GGNJ8WccjktK1I/+uWer/4FUePaRQL
- +I0IPjaTSFiG4Qkgv/0NJUFcMSO5R9J3ddEwFLjyuEzOUk/3L3OkPBevxnUN8uTBrYa13Yq3QLu
- puGs9vF+R+41UZFqAOl3nAsQmUwHqY5XGusqKXaDukMAK6Uh3iFENHt7saULfWyY/J4MLu5oP82
- mITBKX8eCawg617cCed6gQvKRtTJWR5aXcV4d880ZlDm2eJIdFSZW2+Db43GwT+/CXJg==
-X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
- fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
+Mime-Version: 1.0
+References: <2.49.0.901.g37484f566f-goog>
+X-Mailer: git-send-email 2.49.0.901.g37484f566f-goog
+Message-ID: <20250430053424.77438-1-jiayanli@google.com>
+Subject: [PATCH v2] x86/microcode/amd: fix the return value when microcode has
+ no update
+From: Annie Li <jiayanli@google.com>
+To: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Annie Li <jiayanli@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Avaota A1 board, the EMAC0 connect to an external RTL8211F-CG PHY,
-which features a 25MHz crystal, and using PH8 pin as PHY reset.
+In commit 6f059e634dcd("x86/microcode: Clarify the late load logic"), the
+return value is UCODE_OK if the load is up-to-date in amd platform, which
+leads to load_late_locked() returning -EBADFD.
 
-Signed-off-by: Yixun Lan <dlan@gentoo.org>
+Add UCODE_OK in switch case to avoid this error.
+
+Fixes: 6f059e634dcd ("x86/microcode: Clarify the late load logic")
+Signed-off-by: Annie Li <jiayanli@google.com>
 ---
-I don't own this board, only compose this patch according to the
-schematics. Let me know if it works.
----
- .../boot/dts/allwinner/sun55i-t527-avaota-a1.dts      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+Changelog since v1:
+- Change the return value back to UCODE_OK and adding a switch case
+  about UCODE_OK.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-t527-avaota-a1.dts b/arch/arm64/boot/dts/allwinner/sun55i-t527-avaota-a1.dts
-index 85a546aecdbe149d6bad10327fca1fb7dafff6ad..4524a195e86d20089cc35610495424ed2dec7e95 100644
---- a/arch/arm64/boot/dts/allwinner/sun55i-t527-avaota-a1.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-t527-avaota-a1.dts
-@@ -12,6 +12,7 @@ / {
- 	compatible = "yuzukihd,avaota-a1", "allwinner,sun55i-t527";
- 
- 	aliases {
-+		ethernet0 = &emac0;
- 		serial0 = &uart0;
- 	};
- 
-@@ -64,6 +65,24 @@ &ehci1 {
- 	status = "okay";
- };
- 
-+&emac0 {
-+	phy-mode = "rgmii-id";
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-supply = <&reg_dcdc4>;
-+
-+	allwinner,tx-delay-ps = <100>;
-+	allwinner,rx-delay-ps = <300>;
-+
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	ext_rgmii_phy: ethernet-phy@1 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <1>;
-+	};
-+};
-+
- &mmc0 {
- 	vmmc-supply = <&reg_cldo3>;
- 	cd-gpios = <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_DOWN)>; /* PF6 */
+ arch/x86/kernel/cpu/microcode/core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
+diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+index b3658d11e7b69..2309321cf6a19 100644
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -686,6 +686,8 @@ static int load_late_locked(void)
+ 		return load_late_stop_cpus(true);
+ 	case UCODE_NFOUND:
+ 		return -ENOENT;
++	case UCODE_OK:
++		return 0;
+ 	default:
+ 		return -EBADFD;
+ 	}
 -- 
-2.49.0
+2.49.0.901.g37484f566f-goog
 
