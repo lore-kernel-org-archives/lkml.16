@@ -1,82 +1,71 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 277C125DD0A
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:48:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0DE19C556;
+	Wed, 30 Apr 2025 15:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028106; cv=none; b=MCtGK0RasCknWsxY1ge8caX0ea71CmMFQ1IB2c95YaVnH+k0t3h5uivizNBIXrKopF8DhPdHTMmCDVNKML8rXxM+l0fZ7aJBLJBJJ/TEOz73+F57nNGRGjWvUhhXQ5bCGrzdwLhUmx4pTsqXcxY+ih3SqZvRbkEkqJsSYiC13qM=
+	t=1746028136; cv=none; b=MLHXAm0E+Db0xJrN8iCMx5Ik6WCzhVJmJJTo1WbXxWis3K/ZJy2VqZdSDAv6TkRUTBBau8MdgGsgRAkCQwo3oBQ4SHdShkTNPw+PBCUrXKWg87H0CgQCHDyiK32dtQSNcu2xYWbeg7ZPo+PSRE3LiDlRwcdJSw4LgwW1bdhKGfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028106; c=relaxed/simple;
-	bh=Al4ck2ArHd3tJW/ig/tHE2D09hj/Hq28Bq1uNYgGVQs=;
+	s=arc-20240116; t=1746028136; c=relaxed/simple;
+	bh=EpdyxGfmIGM/4y2DbJ0OMYH/LxyVa4jnB71F6fCAjiI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YAR53rfPzI2FV4lDSNBpw6kjtR7TBOECjSY8jJvd/tQRsWi8BrdzkwwLl+rHj+Ro5TpoXUrXRKDPBniiMjv8mCVXi+Ew7EwY3Ueu0PWYyR50bH4MfciwZVdOfb1jeKuG4fj2m0DyxGmsCDWOK+LhnkIYMwHmDcKsirQcwZ8h2rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38DB01063;
-	Wed, 30 Apr 2025 08:48:17 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C61703F5A1;
-	Wed, 30 Apr 2025 08:48:22 -0700 (PDT)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: Mike Leach <mike.leach@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Suzuki.Poulose@arm.com,
-	leo.yan@arm.com,
-	James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
+	 MIME-Version; b=nWzzrJC5T/nU23zFegdOt1rEOXJ72x+kSHvsh4XHWJC+OqKv8CQ5DFa07J03TrEqiutZCm2va03FREmXZwe9HR9OczL0ffmu/Jh0S0ymiAUfxz5khN4rM1ospx+GtZTclw9xrRhfa55PeAQNdPGhlijnqoS1bW8Rav7D1xz0XZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hV+RSHRO; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hV+RSHRO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9A5C4CEE7;
+	Wed, 30 Apr 2025 15:48:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746028136;
+	bh=EpdyxGfmIGM/4y2DbJ0OMYH/LxyVa4jnB71F6fCAjiI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hV+RSHROe8y9M6TG3n4UqKL/GYMH1zRzLtVqgegLtW/9lsNUn95NlSrItfc+bHfEA
+	 n6sO+hDAlFxcucIpRcjeVICiOWRHXxa49nhV+LMzqYVJmW33k+83cTJCT/wVz5UUgW
+	 REjzRljhm9OKHR/UuT3XiaBKSqHiFO6CA7J8ulboqXfBMCpLjB8gUnwMEEl48iaOzW
+	 Cek2zPGuf8n4TXhCcOTB710jnn8VmpCApsSFjPxJLIO2exXSmrIRFdtu3zbhJ4d+Dh
+	 aIzN0U/QBkV/rGKqbQ4BvKQhunAMKyJtamk2Zh2ZknUjpueb6PBzNAqaXHEsYfBmy8
+	 8XZI5WBXktHCQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: naresh.kamboju@linaro.org
+Cc: anders.roxell@linaro.org,
+	aou@eecs.berkeley.edu,
+	arnd@arndb.de,
+	dan.carpenter@linaro.org,
 	linux-kernel@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	Yeoreum Yun <yeoreum.yun@arm.com>
-Subject: Re: [PATCH v4 0/7] coresight: Clear self hosted claim tag on probe
-Date: Wed, 30 Apr 2025 16:48:14 +0100
-Message-ID: <174602806438.102450.17012321873232714214.b4-ty@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250325-james-coresight-claim-tags-v4-0-dfbd3822b2e5@linaro.org>
-References: <20250325-james-coresight-claim-tags-v4-0-dfbd3822b2e5@linaro.org>
+	linux-riscv@lists.infradead.org,
+	lkft-triage@lists.linaro.org,
+	llvm@lists.linux.dev,
+	masahiroy@kernel.org,
+	namcao@linutronix.de,
+	nathan@kernel.org,
+	palmer@dabbelt.com,
+	regressions@lists.linux.dev
+Subject: Re: next-20250422: arch/riscv/kernel/vdso/vdso.so.dbg: dynamic relocations are not supported
+Date: Wed, 30 Apr 2025 17:48:45 +0200
+Message-ID: <20250430154845.795993-1-ojeda@kernel.org>
+In-Reply-To: <CA+G9fYtN2ie+YtK3H9mrQ5QqrSCFGGjVbtJcfiYX0oHMVWMn9w@mail.gmail.com>
+References: <CA+G9fYtN2ie+YtK3H9mrQ5QqrSCFGGjVbtJcfiYX0oHMVWMn9w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
+On Wed, 23 Apr 2025 20:15:45 +0530 Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+>
+> build errors with clang
+> ld.lld: error: version script assignment of 'LINUX_4.15' to symbol
+> '__vdso_getrandom' failed: symbol not defined
+> llvm-nm: error: arch/riscv/kernel/compat_vdso/compat_vdso.so.dbg: No
+> such file or directory
 
-On Tue, 25 Mar 2025 11:58:45 +0000, James Clark wrote:
-> I've gotten stuck a few times with unusable Coresight after a warm boot
-> due to lingering claim tags, especially when testing the Coresight
-> panic patchsets.
-> 
-> This change does some tidy ups, adds some debug messages and clears the
-> self hosted claim tag on probe. The last two commits are unrelated
-> tidyups but they touch some of the same functions so to avoid extra
-> conflicts I'm including them here.
-> 
-> [...]
+I have also been seeing this too in my Rust-enabled builds for a few
+days at least.
 
-Applied, thanks!
+Thanks!
 
-[1/7] coresight: Convert tag clear function to take a struct csdev_access
-      https://git.kernel.org/coresight/c/fc7fed6f
-[2/7] coresight: Only check bottom two claim bits
-      https://git.kernel.org/coresight/c/a4e65842
-[3/7] coresight: Add claim tag warnings and debug messages
-      https://git.kernel.org/coresight/c/a244a18c
-[4/7] coresight: etm3x: Convert raw base pointer to struct coresight access
-      https://git.kernel.org/coresight/c/a1b0e77c
-[5/7] coresight: Clear self hosted claim tag on probe
-      https://git.kernel.org/coresight/c/7cd63686
-[6/7] coresight: Remove inlines from static function definitions
-      https://git.kernel.org/coresight/c/48a5126b
-[7/7] coresight: Remove extern from function declarations
-      https://git.kernel.org/coresight/c/e6e6b692
-
-Best regards,
--- 
-Suzuki K Poulose <suzuki.poulose@arm.com>
+Cheers,
+Miguel
