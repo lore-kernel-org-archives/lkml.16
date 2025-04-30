@@ -1,114 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877382620D1
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8011DE884;
+	Wed, 30 Apr 2025 16:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746028869; cv=none; b=WrypGSQ1DZMVQI1s3z+bSQ5xdeaCxi2u1TQUje0oTrdlfdNROydUAs0H+XsYHb46wB0wl/Dpxe3KZAFYDUhvRnOTObNSG3Q8TkJen2RD+WQeFr7/x4KgOLGUxzYaAr0MUkkf4fDLJqmCLTWO4/J48ApUEIfniZVQ8UyDfpng5Ro=
+	t=1746029041; cv=none; b=uwuRp5Kr1CHJJ67TEz5tKvgpN8tolZHHi0+oICKvwfu6tHFx5HPQ5XFv2gfyeB1LP6cDpdDab1NmCpM8/ZRaE5LtNgmw4bVLzsn2pVlp8NvqmxPPQNiwO/Eeep267TKO/59HtiHFGxedDEkbHjsW7e1FybUiwq+JP2PnFiuO+Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746028869; c=relaxed/simple;
-	bh=ztJ1qVRMMagag+wC13p4HUDW3suqzL28jWsWXtbMhdA=;
+	s=arc-20240116; t=1746029041; c=relaxed/simple;
+	bh=DPAfK9Q4sCaXcWduwdjcJsXJ+HPSXe59br4DCXmhWiY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f+ABKI9PhvAgU46EIjVsmahLdStRQzGjPIBZrJyJu+8BMjubIs82l08bdKCgSyC1L4Qu9ZBDG24kfSHuNBNG0irJuZJdm+tYefsttrw/IaomCjVrPXUOOGJUU1r2dzR/scLR/8vcWIReJz4WLCdk+XquCg2gCLALG5maZ8eCEOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gujX5eAg; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1ir8HqovnPBCP2eiDbrGqyIh9rrFwkXNSHtFVsIpio7yxT0sB8Nt3RYpK26pC0edA/eOIGnyU/TGYuc3ccGfEAUuc+8w4BeU/30InJhMwY2Oao6WolB59XcRroCpIq+o5ANN1drHa+7wjeSftFx19s6ZMaKXpumVD/KEjrLRyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB8gqRen; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gujX5eAg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CCFEC4CEE7;
-	Wed, 30 Apr 2025 16:01:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB8gqRen"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB12C4CEE7;
+	Wed, 30 Apr 2025 16:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746028869;
-	bh=ztJ1qVRMMagag+wC13p4HUDW3suqzL28jWsWXtbMhdA=;
+	s=k20201202; t=1746029040;
+	bh=DPAfK9Q4sCaXcWduwdjcJsXJ+HPSXe59br4DCXmhWiY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gujX5eAgPtuIvqEnE34MKXNf+8PCCp9YbP4hBEWgAg8YGfmBlMzUbmrAVgd+8qfcF
-	 mEG65l+HeJGEv/U05DS3np+tMbYsB3yUiJfS6iguKEgGkbXRlSdEF6ifgoKhWOaeCe
-	 G9FKwq2C9G4EcIbeXF6LTHsVTcoP1QW7ajgKUeRyZEHXhrjbogFvwQ9Awm1CujvcaI
-	 nTMbws2ozut/JZDk8YWmodmZu7UV+7OKMpXLvVjJgmybtP4gOVL73ItBtR34BoR9Pk
-	 HiTQEB1/Yw5PXK1TgRbBv9oSii0HTHSgi3f4YwgYE+HgKcvwQgjaOGMFTPUFFe8ftF
-	 2IK9cp+3jBYww==
-Date: Wed, 30 Apr 2025 09:01:06 -0700
-From: Keith Busch <kbusch@kernel.org>
-To: Daniel Wagner <dwagner@suse.de>
-Cc: Guenter Roeck <linux@roeck-us.net>, Hannes Reinecke <hare@suse.de>,
-	Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	James Smart <james.smart@broadcom.com>,
-	Shinichiro Kawasaki <shinichiro.kawasaki@wdc.com>,
-	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] nvme: only allow entering LIVE from CONNECTING state
-Message-ID: <aBJJQoOBhaXj7P36@kbusch-mbp>
-References: <20250214-nvme-fc-fixes-v1-0-7a05d557d5cc@kernel.org>
- <20250214-nvme-fc-fixes-v1-1-7a05d557d5cc@kernel.org>
- <0134ea15-8d5f-41f7-9e9a-d7e6d82accaa@roeck-us.net>
- <cb46aa83-8033-4d64-a3c7-420172c3f3f5@flourine.local>
- <9763c4cf-8ca5-45d4-b723-270548ca1001@suse.de>
- <aBEW4W40ZelIXfs2@kbusch-mbp>
- <253e0551-d4d7-4ffe-8842-daecf1f6c753@roeck-us.net>
- <aBEdkUky_-bfgISv@kbusch-mbp>
- <8121b8d6-2b30-4086-b2fb-bce354f203dc@flourine.local>
+	b=sB8gqRen/dKesCrMZ6b3LK2oW9nUTerb+KD1rlAXjWjsIGuML16EiwsBJWf2v5lMQ
+	 x2SVVOsEhflg3XE5klKm2Gh02zz/L1JExr5Kb0GoUt3r3k//S2hnHkczxPYzQl5spf
+	 ze3O/s1+21z3BwVk8azzIrg4MK4eutIa1HQkLKKHHcwU6W7n+NK5Eso+b5p2X7HWG4
+	 +4UVR32EGGnhyknvHpID6s79hoPFkGEjNb+uyXWTbpuTapvHLq0yU1XHgZsMK+dga1
+	 Xk2lzbN+RBi7JiQC2/wIYMWVWljuqsGZFwgXreinh2XQUIPJo44gxeG1cfh+95nEB5
+	 dYFOylyiPmMlw==
+Date: Wed, 30 Apr 2025 17:03:56 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Ard Biesheuvel <ardb+git@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, palmer@dabbelt.com
+Subject: Re: [PATCH v2 3/4] Kbuild: Create intermediate vmlinux build with
+ relocations preserved
+Message-ID: <20250430-bronze-unsuited-3f47ce46d8d2@spud>
+References: <20250311110616.148682-6-ardb+git@google.com>
+ <20250311110616.148682-9-ardb+git@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/hDT1Nf/m/YMr9zi"
+Content-Disposition: inline
+In-Reply-To: <20250311110616.148682-9-ardb+git@google.com>
+
+
+--/hDT1Nf/m/YMr9zi
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8121b8d6-2b30-4086-b2fb-bce354f203dc@flourine.local>
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2025 at 08:43:04AM +0200, Daniel Wagner wrote:
-> On Tue, Apr 29, 2025 at 11:42:25AM -0700, Keith Busch wrote:
-> > On Tue, Apr 29, 2025 at 11:23:25AM -0700, Guenter Roeck wrote:
-> > > On 4/29/25 11:13, Keith Busch wrote:
-> > > > On Mon, Apr 28, 2025 at 03:21:18PM +0200, Hannes Reinecke wrote:
-> > > > > > diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-> > > > > > index b502ac07483b..d3c4eacf607f 100644
-> > > > > > --- a/drivers/nvme/host/core.c
-> > > > > > +++ b/drivers/nvme/host/core.c
-> > > > > > @@ -4493,7 +4493,8 @@ static void nvme_fw_act_work(struct work_struct *work)
-> > > > > >                   msleep(100);
-> > > > > >           }
-> > > > > > 
-> > > > > > -       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
-> > > > > > +       if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_CONNECTING) ||
-> > > > > > +           !nvme_change_ctrl_state(ctrl, NVME_CTRL_LIVE))
-> > > > > >                   return;
-> > > > > > 
-> > > > > >           nvme_unquiesce_io_queues(ctrl);
-> > > > > 
-> > > > > I would rather have a separate state for firmware activation.
-> > > > > (Ab-)using the 'RESETTING' state here has direct implications
-> > > > > with the error handler, as for the error handler 'RESETTING'
-> > > > > means that the error handler has been scheduled.
-> > > > > Which is not true for firmware activation.
-> > > > 
-> > > > But the point of having firmware activation set the state to RESETTING
-> > > > was to fence off error handling from trying to schedule a real reset.
-> > > > The fw activation work schedules its own recovery if it times out, but
-> > > > we don't want any other recovery action or user requested resets to
-> > > > proceed while an activation is still pending.
-> > > 
-> > > Not only that; there are various checks against NVME_CTRL_RESETTING
-> > > sprinkled through the code. What is the impact of introducing a new state
-> > > without handling all those checks ?
-> > 
-> > Good point, bad things will happen if these checks are not updated to
-> > know about the new state. For example, nvme-pci will attempt aborting IO
-> > or disabling the controller on a timeout instead of restarting the timer
-> > as desired.
-> > 
-> > Can we just revert the commit that prevented the RESETTING -> LIVE
-> > transtion for now?
-> 
-> Unfortunately, it will break the FC error handling again(*). The
-> simplest fix is right above, add the transition from RESETTING to
-> CONNECTING and then to LIVE, IMO.
++CC Palmer
 
-Gotcha, yes, that looks like the simplest fix for the current release
-then. We need to be careful with adding new states, so we can revisit
-Hannes' suggestion for 6.16 if we really want to split this.
+On Tue, Mar 11, 2025 at 12:06:20PM +0100, Ard Biesheuvel wrote:
+> From: Ard Biesheuvel <ardb@kernel.org>
+>=20
+> The imperative paradigm used to build vmlinux, extract some info from it
+> or perform some checks on it, and subsequently modify it again goes
+> against the declarative paradigm that is usually employed for defining
+> make rules.
+>=20
+> In particular, the Makefile.postlink files that consume their input via
+> an output rule result in some dodgy logic in the decompressor makefiles
+> for RISC-V and x86, given that the vmlinux.relocs input file needed to
+> generate the arch-specific relocation tables may not exist or be out of
+> date, but cannot be constructed using the ordinary Make dependency based
+> rules, because the info needs to be extracted while vmlinux is in its
+> ephemeral, non-stripped form.
+>=20
+> So instead, for architectures that require the static relocations that
+> are emitted into vmlinux when passing --emit-relocs to the linker, and
+> are subsequently stripped out again, introduce an intermediate vmlinux
+> target called vmlinux.unstripped, and organize the reset of the build
+> logic accordingly:
+>=20
+> - vmlinux.unstripped is created only once, and not updated again
+> - build rules under arch/*/boot can depend on vmlinux.unstripped without
+>   running the risk of the data disappearing or being out of date
+> - the final vmlinux generated by the build is not bloated with static
+>   relocations that are never needed again after the build completes.
+>=20
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 
-If you send the simple fix as a formal patch, please add my review and
-the "Fixes:" tag.
+Delayed report since I have been slacking on my testing, but looks like
+this has broken boot for me on riscv (mpfs-icicle-kit), no output after
+"Starting kernel", defconfig should be:
+https://raw.githubusercontent.com/ConchuOD/riscv-env/refs/heads/dev/conf/de=
+fconfig
+Toolchain is llvm 16. LMK if there's some salient info missing.
 
-Reviewed-by: Keith Busch <kbusch@kernel.org>
+Cheers,
+Conor.
+
+--/hDT1Nf/m/YMr9zi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBJJ7AAKCRB4tDGHoIJi
+0u+1AQDPrrfqcbFPHqZrRFANd8o5/dFFHmqp6Ivtzk5hJyBP7QEAh3L/HgSEy3Tq
+UwujlNrETQdTL4U1YRjv9pEHtOSz7Q8=
+=S5i4
+-----END PGP SIGNATURE-----
+
+--/hDT1Nf/m/YMr9zi--
