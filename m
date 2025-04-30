@@ -1,451 +1,196 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2067.outbound.protection.outlook.com [40.107.220.67])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE661221555;
-	Wed, 30 Apr 2025 21:57:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746050269; cv=fail; b=D83MpaHyVasLyyPoIqHJlRtNmSJmvf6fp2tiLKEPEt3deCC0120XZJYmg+yh8o3xmp5Qw9YL9GF2/f/4tkHL8KHDwX6X46KpyElYUJF6W4qDAeiH7TEcPldRPJ7MhsHBCsMoQ4HLD2DuJAyyOSGNwdOoUr23TPdYImKOrIKJ+5w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746050269; c=relaxed/simple;
-	bh=b1kSzbFJH2o+3vFiTWlDzqSFGAQj8+H4WMsarXupggE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uW0I5D+krS3p7m8/dhYFdkbWjhGkBmgfP18eOR3dimnlEJvrm+4AxSM22BQVQPZrYzRa7wWd15RAngedBSWcMFHN8s6fw+kDcUNOlzNqimJ5WTZxZnsBNR9QtQbO7ZlKZoBU526xeNCjGfhq3J93gDyC6mwmTP7k6brbBMmZm+0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=xthJ72mO; arc=fail smtp.client-ip=40.107.220.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04D922157F
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746050301; cv=none; b=opTkGwSQ15AMswDsvVbU6N4dWwCVSru3ihO421slpVzfFgRvs4JC9HZkSm3dE7ACYMPKbi82CVshdM+rGyfm6oILZJo52Z1dBayt+YcMziR7F6vjKiALGkaJmwvoZEhVK/3mSRmikpYM5rXd7Jf1B8+sBuOhFWl6TvHvqN3Hjtw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746050301; c=relaxed/simple;
+	bh=OSlLfiT7oPSVW0Vhu/WXB7k0cz6UDEiznLAGwSMZ3m4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=poyHuOYe/Xp0LA8AfLS2Woz+QK69SD+HLNKd9QH4hbKkxWZ89o7dRQ5+D5fCFlIX2bpoQZyAig4QtOwz/G40a0GJOJctbQtZjEpj9P6QP8UclANHxWB8IP590I33OW4R6V/qTSmCWN1tVu81TY5QC1Hlrm4xZUkyr5iCwTu65cM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HoX5RiQG; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="xthJ72mO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Equ232I09xscowv1M4dPN0Z/KVKL6gUnbKDChmR0pqMSWKFLi8VYKY68647t5cBYbLOLr0In+bEU3ZgvqZncwKChWz+yzWPtN980dsUSAzvgckh+f+9abWpryBv7Q3pdCTdq43sQX0qPe/3ZQ/8lkAuGeDg6JuS/ewaaKElJhByqhEEBfebfnDO3GOyQrkj7wG/SQrLoC/ZWXZemLirbPuaX2vcBQoWNOaRHWJQqQP9aP496AnlhMtl63d0Vqc209kQDPXrJn8I9SwEBswe1YmVAgp9iohTyzUjcUG1ajRB2CxkSIB0UErS+OXtwMoqwFt/VgcccQ8ty5Mo4j8j3EA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=D3A4U/UKjkwNkzwA7/soheVLpl5WnjquoOuCc/bc4Jc=;
- b=DsNfKxGe7qiHKCWmWRAaCze+n/+n81JN/ynWw4ldYynbpl2Qyz17fb4KfdWYVxUN+oJCtAusED9696l6fVQaiXrigTGBw7FDNnOrNdL3figXw/Zn7eFLTnQzvVpYzUke7zTV5xpq802nR9c+3SRn4EysJINlnG/Qm4njL1V26aeJkefsXuytoNVi5w19G0eB3/MxcFxDzFbcaYdINF+wI54yAA6bTL67zDM+Pk8QMmvdtoD1YTBdlL/uYZryMqe5itBpHqJd3lfgbkMMzLc5Up9wofepGCvtUkULh+gVJDwiC2Wi0jf1IUMSUGN0+r/4vql5gfZoU6ri5lsPROuNxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linutronix.de smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=D3A4U/UKjkwNkzwA7/soheVLpl5WnjquoOuCc/bc4Jc=;
- b=xthJ72mOEBvLJg4LSqJfvhKYLa9TpigtK7YNh07evd0pViBRtZLfYDQ1MkZZlRcbYk5M3dQuI5UvJdlOVrQ+RhnZDvNjejYiN0VFpOIjnoGZYK5gMNb9IG3htKs8hyLVjSf384lcIKFTZD4vrw+AbqOcrSNZmoAk2XHZ2lGBHME=
-Received: from MW4PR03CA0210.namprd03.prod.outlook.com (2603:10b6:303:b8::35)
- by MN2PR12MB4253.namprd12.prod.outlook.com (2603:10b6:208:1de::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
- 2025 21:57:42 +0000
-Received: from SJ5PEPF000001E9.namprd05.prod.outlook.com
- (2603:10b6:303:b8:cafe::6e) by MW4PR03CA0210.outlook.office365.com
- (2603:10b6:303:b8::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.36 via Frontend Transport; Wed,
- 30 Apr 2025 21:57:42 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF000001E9.mail.protection.outlook.com (10.167.242.197) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Wed, 30 Apr 2025 21:57:41 +0000
-Received: from ethanolx7e2ehost.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 30 Apr
- 2025 16:57:40 -0500
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-To: <tglx@linutronix.de>, <mingo@redhat.com>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <bp@alien8.de>, <thomas.lendacky@amd.com>, <hpa@zytor.com>
-CC: <kees@kernel.org>, <michael.roth@amd.com>, <nikunj@amd.com>,
-	<seanjc@google.com>, <ardb@kernel.org>, <gustavoars@kernel.org>,
-	<sgarzare@redhat.com>, <stable@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
-	<kexec@lists.infradead.org>, <linux-coco@lists.linux.dev>
-Subject: [PATCH v4] x86/sev: Don't touch VMSA pages during kdump of SNP guest memory
-Date: Wed, 30 Apr 2025 21:57:30 +0000
-Message-ID: <20250430215730.369777-1-Ashish.Kalra@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HoX5RiQG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746050298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=ZAaCJDVeUqC/iRZsZzcfKKZg/z12nJeHt7AWXEHu+W8=;
+	b=HoX5RiQGLIidIw2Md4LUVntAS+IRVwQ14lphCL6SCDI3d0j6spTYADveqJHh9TLg+2n0tZ
+	q6ZrSFdEnyLmF08P9ulidUf4VkqFFgZVjaODpSOQ9xyzhhzIaecaGFBsoaMQ4cv5+GMJ++
+	kHyJbjSjb0CDthtY5V0lHFibkQnHCAw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-391-m9JwZXUjO3mnGQO35otclQ-1; Wed, 30 Apr 2025 17:58:17 -0400
+X-MC-Unique: m9JwZXUjO3mnGQO35otclQ-1
+X-Mimecast-MFC-AGG-ID: m9JwZXUjO3mnGQO35otclQ_1746050296
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39130f02631so76024f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:58:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746050296; x=1746655096;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ZAaCJDVeUqC/iRZsZzcfKKZg/z12nJeHt7AWXEHu+W8=;
+        b=AmLXgAkmtFFs+Ko6qDjA6r/bBJKd3kfH6PHc1Z82m+S4SX522dtzdoEcJwH8KZDD9k
+         Zu1eCScVdHQeV2HslYq5Sv0NTOM1nC388Nlw1Ib+b/wWxXcGcE5lmnTU7u+KATdVoy1W
+         O4H16xog2D94XFSE9j23wu+fUmV/yzohQ5ugCCE88Kbnak09MHmwb9eSsEbh0jo68mAY
+         b4zADQiMgT8JglJMB7WxKGU7mJPsi4NFTeqiXNSqHPOHiIvA1JUNFkYvCDWTvRKfs+bx
+         lsBHcg2zHSttuTs1fvNAbi7fEew+TDPgltVL9C7ZNYPEfWqXzQP4SkNQH+96mLM4RVL4
+         x42w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5LxzWx5lQDLxrajMNmIcErksmI9kHqHKpJFQwIJoZ40v40LKJPxzkcKEEeAl4u3wCaT2ZFQ+HjNC8dp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjGJ1fbNy3RvnSQ4oWleangwD7XhyMoHOnYrepLgINu09YZWoN
+	FIMbuvWu120DirIQ/drzIECCocPVH8tM7Ru/jgwDJE6y5LtbFqMAQC35xSzroqXo7xv8yUIMR4L
+	5smg1/nhsDsRc5qYzYNIvEwlZ0vCxOoZy6431yZK2xYF1q34l6fjGWWMaycm+eg==
+X-Gm-Gg: ASbGncuYb/toDAw7yX8TSgSuurkXi7niovmKrzK+3tnO1w6ZuACJ9DbMZyruvu6QiDv
+	2HnwBMaG90bvyzQLCgot1loSuA4Fy+Vxo7f7XNV21ZlN+y0Y9XWe8hwzq1BYNk0FSVW1rtCntTH
+	+tHMte6Ybr8X3DFenDX5jM0h5IwubAqxy7HDnVxPSeeDzP1cSEYpG51m+KG0elxenWMJEqz/nFQ
+	qrWlHLWP/Tz9VJRjSd6nMFdP146BWQZ8M9mT0UJidpk8JEyOh+OUlS3b/qAsTJxSH8EDMCYP1WU
+	6wJgNs0zroW6QXXVcT8zAi5HOA9KRG9A563wdgJk0g==
+X-Received: by 2002:a5d:64a5:0:b0:39f:efb:c2f6 with SMTP id ffacd0b85a97d-3a094053655mr72097f8f.33.1746050296029;
+        Wed, 30 Apr 2025 14:58:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIUfs9wV073mQDXRyQLoTF/v/RVuHpOr0Qx8MhdARsvRHVgQY3znuEKqA1Jf53XmKmX6ViRw==
+X-Received: by 2002:a5d:64a5:0:b0:39f:efb:c2f6 with SMTP id ffacd0b85a97d-3a094053655mr72076f8f.33.1746050295698;
+        Wed, 30 Apr 2025 14:58:15 -0700 (PDT)
+Received: from [192.168.3.141] (p4ff231f0.dip0.t-ipconnect.de. [79.242.49.240])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e5d264sm18470464f8f.95.2025.04.30.14.58.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 14:58:15 -0700 (PDT)
+Message-ID: <7ab1743b-8826-44e8-ac11-283731ef51e1@redhat.com>
+Date: Wed, 30 Apr 2025 23:58:14 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF000001E9:EE_|MN2PR12MB4253:EE_
-X-MS-Office365-Filtering-Correlation-Id: b0b6c51d-d30e-471d-b069-08dd883207f7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?uIrmsnsog8m+9unhHCIjscUWwE/BBUmPdJRyVmK7mD4JVf8X355Vm2b2eRE2?=
- =?us-ascii?Q?yiaOphn1DjfCmJLjolVTrJ3uweZz7LReK1HKPHSWP7gwkq6gPg2mKqvdJZ76?=
- =?us-ascii?Q?PRXJs4bJt3NhdBxNlEuPMDXQhuUkKLysx2ClM4V9k5oIwMOooYgUi0gadFRu?=
- =?us-ascii?Q?MLlVod6+A2Cc4kwv7XTtMY16b0e6ENX27RyxYfEOGdQ3EcQKMYAmPSBJV1LK?=
- =?us-ascii?Q?F/6edpJB/K6XdtFARRQqgRL8mCx6IsjwuSMfMaBryndebLeuYbdFXjP0rmiU?=
- =?us-ascii?Q?tCuQWhx8Ffb5CpqbpTTFAc3+Az9rXg4NzEUmVuBKC5uUt1k0gneTPPBJHe6s?=
- =?us-ascii?Q?ocXbbVspCDhqN0LSjgfGfRUMvpGr4W/pL6hQbGBg7SfqJop3KNsa1i/968lb?=
- =?us-ascii?Q?1TxRld4YBGhCSAGCULxV53dOnvvrl5B5Y+MGPLfX5wCvoSTYb5ds/uKgIQAa?=
- =?us-ascii?Q?Voswc+5V61uJWYrxZKMqOvzddvcw2/MP/s8z6HmHAq7JOo93KQEPtrAmMQmU?=
- =?us-ascii?Q?meraCmUmZKg5dkwl/fL4QD/pzR2dyteOmiFApdYbfrDVJEhLjOOKdKm1AgDE?=
- =?us-ascii?Q?8goIC+x8SfsyT2B8+u1EfhjOtxBlkBbzYxKOOHQcsUpL2GAA4G6wBW5rk956?=
- =?us-ascii?Q?7pJBfmp1HRAX53Z/qHzyyy0mqM6p/v8Tce50HKOJU0S+W6scoqG9biRgp6cn?=
- =?us-ascii?Q?GBTqaYqoEVxG8uVADFMj3+uIiHwgmQA6W/vN1NetzNTvTQSXR9sCXLYil9Ol?=
- =?us-ascii?Q?KJBn1X08DHp79lF9CoN92unAcUevqJCp7izboroUPHd+mJZ75KH+CT+ImAci?=
- =?us-ascii?Q?+KitC0e6mwkAXrljX4Xu1m5RUBuroWkbkp36kIgnMjd+dpwCvSlHzRFkOFHa?=
- =?us-ascii?Q?F/d9cvZUGksGWA2EzNe5I5utUWNzVzS4GxY2/utzxpcvGrEh2Nc7a+o6aK3u?=
- =?us-ascii?Q?sab92vSIJ3aIBcCk3l0vOvPHB7foXrvu1tFelkc99+tK4cxcTlsRn8HYzIqr?=
- =?us-ascii?Q?1ipCeROWfMwx2RTjU8+PGW1ykyRJi6NHMhmAevMNVKcK5PaCOsBOqkYf7cMc?=
- =?us-ascii?Q?H0q9icC8gjF5hGzKPb0DOTPkwPOkxEhAL3zyYRuOpn6Fhlr/8oCnbD6TtrTn?=
- =?us-ascii?Q?W70yF7FDEzBtlJN1JnR6qtT3vsiZUmtO7D+BlL0SVFg9D28PfKP9RMNCSYvT?=
- =?us-ascii?Q?Z4aIqJyEC7GL09fvzsWv6bt/S+Xogx6wE36trmavQtM3stUiSoY20rk38Jip?=
- =?us-ascii?Q?Y5npnGp4dAzCqCUOc/b9N+K/JDlH1q4nGhoWE7YHmKYEkXqMPfzUnCLRfJNq?=
- =?us-ascii?Q?GP5lI8WF6Z6dpst14RqWA/Z3qv2UMGiHgoYgBYgE1cHzFThCwpgtGOabp/7V?=
- =?us-ascii?Q?B5qg5ffo5lYz+o+dhXqPJ+sE00YYgnbSQ+2odk54ps2fdJNJDMcwdo860nh2?=
- =?us-ascii?Q?MY5zy15POGSAgA7BE2+GjHY0FZARf2FNL59lhJP8kcSadktDOjan58Mx3VrI?=
- =?us-ascii?Q?3v+/14GKE2qe4UVUR/U81dP2iGDl69kgdcVE?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014)(7416014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 21:57:41.8486
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0b6c51d-d30e-471d-b069-08dd883207f7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF000001E9.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4253
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/3] mm: introduce new .mmap_proto() f_op callback
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+ Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+ Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@kernel.org>
+References: <cover.1746040540.git.lorenzo.stoakes@oracle.com>
+ <f1bf4b452cc10281ef831c5e38ce16f09923f8c5.1746040540.git.lorenzo.stoakes@oracle.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <f1bf4b452cc10281ef831c5e38ce16f09923f8c5.1746040540.git.lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+On 30.04.25 21:54, Lorenzo Stoakes wrote:
+> Provide a means by which drivers can specify which fields of those
+> permitted to be changed should be altered to prior to mmap()'ing a
+> range (which may either result from a merge or from mapping an entirely new
+> VMA).
+> 
+> Doing so is substantially safer than the existing .mmap() calback which
+> provides unrestricted access to the part-constructed VMA and permits
+> drivers and file systems to do 'creative' things which makes it hard to
+> reason about the state of the VMA after the function returns.
+> 
+> The existing .mmap() callback's freedom has caused a great deal of issues,
+> especially in error handling, as unwinding the mmap() state has proven to
+> be non-trivial and caused significant issues in the past, for instance
+> those addressed in commit 5de195060b2e ("mm: resolve faulty mmap_region()
+> error path behaviour").
+> 
+> It also necessitates a second attempt at merge once the .mmap() callback
+> has completed, which has caused issues in the past, is awkward, adds
+> overhead and is difficult to reason about.
+> 
+> The .mmap_proto() callback eliminates this requirement, as we can update
+> fields prior to even attempting the first merge. It is safer, as we heavily
+> restrict what can actually be modified, and being invoked very early in the
+> mmap() process, error handling can be performed safely with very little
+> unwinding of state required.
+> 
+> Update vma userland test stubs to account for changes.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-When kdump is running makedumpfile to generate vmcore and dumping SNP
-guest memory it touches the VMSA page of the vCPU executing kdump which
-then results in unrecoverable #NPF/RMP faults as the VMSA page is
-marked busy/in-use when the vCPU is running and subsequently causes
-guest softlockup/hang.
 
-Additionally other APs may be halted in guest mode and their VMSA pages
-are marked busy and touching these VMSA pages during guest memory dump
-will also cause #NPF.
+I really don't like the "proto" terminology. :)
 
-Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-of guest mode and then clear the VMSA bit on their VMSA pages.
+[yes, David and his naming :P ]
 
-If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-ensure that makedumpfile excludes that page while dumping guest memory.
+No, the problem is that it is fairly unintuitive what is happening here.
 
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Cc: stable@vger.kernel.org
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/coco/sev/core.c | 244 +++++++++++++++++++++++++--------------
- 1 file changed, 158 insertions(+), 86 deletions(-)
+Coming from a different direction, the callback is trigger after 
+__mmap_prepare() ... could we call it "->mmap_prepare" or something like 
+that? (mmap_setup, whatever)
 
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index dcfaa698d6cf..d35fec7b164a 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -877,6 +877,102 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
- }
- 
-+static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
-+{
-+	bool create = event == SVM_VMGEXIT_AP_CREATE;
-+	struct ghcb_state state;
-+	unsigned long flags;
-+	struct ghcb *ghcb;
-+	int ret = 0;
-+
-+	local_irq_save(flags);
-+
-+	ghcb = __sev_get_ghcb(&state);
-+
-+	vc_ghcb_invalidate(ghcb);
-+
-+	if (create)
-+		ghcb_set_rax(ghcb, vmsa->sev_features);
-+
-+	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-+	ghcb_set_sw_exit_info_1(ghcb,
-+				((u64)apic_id << 32)	|
-+				((u64)snp_vmpl << 16)	|
-+				event);
-+	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-+
-+	sev_es_wr_ghcb_msr(__pa(ghcb));
-+	VMGEXIT();
-+
-+	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-+	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-+		pr_err("SNP AP %s error\n", (create ? "CREATE" : "DESTROY"));
-+		ret = -EINVAL;
-+	}
-+
-+	__sev_put_ghcb(&state);
-+
-+	local_irq_restore(flags);
-+
-+	return ret;
-+}
-+
-+static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
-+{
-+	int ret;
-+
-+	if (snp_vmpl) {
-+		struct svsm_call call = {};
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+
-+		call.caa = this_cpu_read(svsm_caa);
-+		call.rcx = __pa(va);
-+
-+		if (make_vmsa) {
-+			/* Protocol 0, Call ID 2 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
-+			call.rdx = __pa(caa);
-+			call.r8  = apic_id;
-+		} else {
-+			/* Protocol 0, Call ID 3 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
-+		}
-+
-+		ret = svsm_perform_call_protocol(&call);
-+
-+		local_irq_restore(flags);
-+	} else {
-+		/*
-+		 * If the kernel runs at VMPL0, it can change the VMSA
-+		 * bit for a page using the RMPADJUST instruction.
-+		 * However, for the instruction to succeed it must
-+		 * target the permissions of a lesser privileged (higher
-+		 * numbered) VMPL level, so use VMPL1.
-+		 */
-+		u64 attrs = 1;
-+
-+		if (make_vmsa)
-+			attrs |= RMPADJUST_VMSA_PAGE_BIT;
-+
-+		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-+	}
-+
-+	return ret;
-+}
-+
-+static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
-+{
-+	int err;
-+
-+	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
-+	if (err)
-+		pr_err("clear VMSA page failed (%u), leaking page\n", err);
-+	else
-+		free_page((unsigned long)vmsa);
-+}
-+
- static void set_pte_enc(pte_t *kpte, int level, void *va)
- {
- 	struct pte_enc_desc d = {
-@@ -973,6 +1069,65 @@ void snp_kexec_begin(void)
- 		pr_warn("Failed to stop shared<->private conversions\n");
- }
- 
-+/*
-+ * Shutdown all APs except the one handling kexec/kdump and clearing
-+ * the VMSA tag on AP's VMSA pages as they are not being used as
-+ * VMSA page anymore.
-+ */
-+static void shutdown_all_aps(void)
-+{
-+	struct sev_es_save_area *vmsa;
-+	int apic_id, this_cpu, cpu;
-+
-+	this_cpu = get_cpu();
-+
-+	/*
-+	 * APs are already in HLT loop when enc_kexec_finish() callback
-+	 * is invoked.
-+	 */
-+	for_each_present_cpu(cpu) {
-+		vmsa = per_cpu(sev_vmsa, cpu);
-+
-+		/*
-+		 * The BSP or offlined APs do not have guest allocated VMSA
-+		 * and there is no need to clear the VMSA tag for this page.
-+		 */
-+		if (!vmsa)
-+			continue;
-+
-+		/*
-+		 * Cannot clear the VMSA tag for the currently running vCPU.
-+		 */
-+		if (this_cpu == cpu) {
-+			unsigned long pa;
-+			struct page *p;
-+
-+			pa = __pa(vmsa);
-+			/*
-+			 * Mark the VMSA page of the running vCPU as offline
-+			 * so that is excluded and not touched by makedumpfile
-+			 * while generating vmcore during kdump.
-+			 */
-+			p = pfn_to_online_page(pa >> PAGE_SHIFT);
-+			if (p)
-+				__SetPageOffline(p);
-+			continue;
-+		}
-+
-+		apic_id = cpuid_to_apicid[cpu];
-+
-+		/*
-+		 * Issue AP destroy to ensure AP gets kicked out of guest mode
-+		 * to allow using RMPADJUST to remove the VMSA tag on it's
-+		 * VMSA page.
-+		 */
-+		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
-+		snp_cleanup_vmsa(vmsa, apic_id);
-+	}
-+
-+	put_cpu();
-+}
-+
- void snp_kexec_finish(void)
- {
- 	struct sev_es_runtime_data *data;
-@@ -987,6 +1142,8 @@ void snp_kexec_finish(void)
- 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
- 		return;
- 
-+	shutdown_all_aps();
-+
- 	unshare_all_memory();
- 
- 	/*
-@@ -1008,51 +1165,6 @@ void snp_kexec_finish(void)
- 	}
- }
- 
--static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
--{
--	int ret;
--
--	if (snp_vmpl) {
--		struct svsm_call call = {};
--		unsigned long flags;
--
--		local_irq_save(flags);
--
--		call.caa = this_cpu_read(svsm_caa);
--		call.rcx = __pa(va);
--
--		if (make_vmsa) {
--			/* Protocol 0, Call ID 2 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
--			call.rdx = __pa(caa);
--			call.r8  = apic_id;
--		} else {
--			/* Protocol 0, Call ID 3 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
--		}
--
--		ret = svsm_perform_call_protocol(&call);
--
--		local_irq_restore(flags);
--	} else {
--		/*
--		 * If the kernel runs at VMPL0, it can change the VMSA
--		 * bit for a page using the RMPADJUST instruction.
--		 * However, for the instruction to succeed it must
--		 * target the permissions of a lesser privileged (higher
--		 * numbered) VMPL level, so use VMPL1.
--		 */
--		u64 attrs = 1;
--
--		if (make_vmsa)
--			attrs |= RMPADJUST_VMSA_PAGE_BIT;
--
--		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
--	}
--
--	return ret;
--}
--
- #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
- #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
- #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
-@@ -1084,24 +1196,10 @@ static void *snp_alloc_vmsa_page(int cpu)
- 	return page_address(p + 1);
- }
- 
--static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
--{
--	int err;
--
--	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
--	if (err)
--		pr_err("clear VMSA page failed (%u), leaking page\n", err);
--	else
--		free_page((unsigned long)vmsa);
--}
--
- static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- {
- 	struct sev_es_save_area *cur_vmsa, *vmsa;
--	struct ghcb_state state;
- 	struct svsm_ca *caa;
--	unsigned long flags;
--	struct ghcb *ghcb;
- 	u8 sipi_vector;
- 	int cpu, ret;
- 	u64 cr4;
-@@ -1215,33 +1313,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	}
- 
- 	/* Issue VMGEXIT AP Creation NAE event */
--	local_irq_save(flags);
--
--	ghcb = __sev_get_ghcb(&state);
--
--	vc_ghcb_invalidate(ghcb);
--	ghcb_set_rax(ghcb, vmsa->sev_features);
--	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
--	ghcb_set_sw_exit_info_1(ghcb,
--				((u64)apic_id << 32)	|
--				((u64)snp_vmpl << 16)	|
--				SVM_VMGEXIT_AP_CREATE);
--	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
--
--	sev_es_wr_ghcb_msr(__pa(ghcb));
--	VMGEXIT();
--
--	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
--	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
--		pr_err("SNP AP Creation error\n");
--		ret = -EINVAL;
--	}
--
--	__sev_put_ghcb(&state);
--
--	local_irq_restore(flags);
--
--	/* Perform cleanup if there was an error */
-+	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
- 	if (ret) {
- 		snp_cleanup_vmsa(vmsa, apic_id);
- 		vmsa = NULL;
+Maybe mmap_setup and vma_setup_param? Just a thought ...
+
+
+In general (although it's late in Germany), it does sound like an 
+interesting approach.
+
+How feasiable is it to remove ->mmap in the long run, and would we maybe 
+need other callbacks to make that possible?
+
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
