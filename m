@@ -1,33 +1,33 @@
 Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB52475CF;
-	Wed, 30 Apr 2025 10:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90137248F51;
+	Wed, 30 Apr 2025 10:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746008918; cv=none; b=shRdRtew3Qo6H+pRrYbfg1uc6GsWbLDmMaZm7/Xv0+jr+FiLAFODjPFlOjpjk7DSAPIrXvmbPVlgU+mdCt38Z1z0E/oQ0/RRFbzeudgJCtYjYdvErs19eIEuCaMyhU/ptEURn8vGwAeX/JTSx6H/YEwFjzjiyZB8Jo/Q5P4nE4I=
+	t=1746008918; cv=none; b=sNQ8Y/1P2fHCT8tS0c5xRTVIyBufyjX6DzDvkdSrg9Z9YHImBsVYzFR5gaOrpiPQHiHhZTpBuIHmS5UXwnht9hHX1TSzeHkOhY6NHeQKMxYStsku+EE5d7RvEoBrtOqbKCJeyT6d/HRIQ638cbB9TH+0Hno3MXOaS+pe53t2nEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746008918; c=relaxed/simple;
-	bh=C5rvVeKqeUkRLGbNHfCFJIpJ42dQ4YDHmj7yGBP5ZVE=;
+	bh=9Ijb9t1QiGIM6pW0TriGyVW90zZ2i2/K8VtNZG1c/Kw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GtCAhSrvyX9a9NVo+9oSwzQGgHbqxckaJIKINwvqTS91mtGh0ESswYw/NFlCfxj2+TvnUXtjtv7oKE7N3b+Oy6qVl81e/2DpsoQpkyRQYkJbSIQzh6qu7aJpSpgW/WRZcA51DVN2V1IJNzapP5OA0VGvaGTOddWrJtk4hS/+SXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=sbBVgzvE; arc=none smtp.client-ip=217.194.8.81
+	 MIME-Version; b=KDF9grDrzoH1C1TrNAL9MZ1gZd2pzpoOCchmHR8HpqYUoQCsXFYv+zPhtkgxDqFQPrVGsHu4hGlNm960QQ1Y6Tc9B6cekGFEdvBVE/n6YYtgQU5NMa3Eyb+kEZ6F45bfZzsXwjLImIsEKNbOZqi2bPl7GNS65y1AgP6I1s+U5hU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=Vs2p7jy/; arc=none smtp.client-ip=217.194.8.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="sbBVgzvE"
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="Vs2p7jy/"
 Received: from francesco-nb.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id CFCC41FB3F;
-	Wed, 30 Apr 2025 12:28:32 +0200 (CEST)
+	by mail11.truemail.it (Postfix) with ESMTPA id 5C10F1FA23;
+	Wed, 30 Apr 2025 12:28:33 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
 	s=default; t=1746008913;
-	bh=wRV+emgq8zbpmBJoh7YAMSDAG/BYbb2ZG/S+7QhvtW0=; h=From:To:Subject;
-	b=sbBVgzvE4cqa4m+MnevY7G41J6bhQlQ21zI8jWnblc04DKPLPD7zvmeEXCTfrMbuP
-	 W/oZ9aWyuWEhpbP8ZROeaaOcL1KA7GLpFZCiyEgnv0wsxx/RFmV3dRvHMPTtP4xBvM
-	 E5139NotIw8HHUIsIDGGzSZqbFDgPcHLqisjeciH2Sn51o1+noEzPK0ms1nQYbJyRd
-	 8Azd8EAo9gXziWYKJKq/bZBhtZwLaY0Voy5aysMyvE6MDz8CQ9T5qA3TWCS+UQ5Mmh
-	 ar+Sj7kkH6BtaGUTCFXXgJZRISF/NB6SVSIgynRgH3BGWKhRy8wyKLqayx9VeHp58I
-	 d1pdjmpw1yYuA==
+	bh=5XsaBFqhPY2vKoLBmdbLXcfXaOqRM92NgpJ6ZPR/1bg=; h=From:To:Subject;
+	b=Vs2p7jy/uicWAVPKqMTzxYdKGFB3RWQ3ZQ50XA+X9JFuEJ3RZpxnCC1EQidUpmgi5
+	 gWw78gegrECuljFZ4He6PFyCctSvsRg8V1L8KVvr3ZUo7JT+slwPDGXYObQnJY+t7A
+	 TWCHSZeeupTLbaYqTOdVlyix7SC3l1+zcN0b+T3nyASzPKE07zSqE7k4LM0YBaWiRv
+	 0I7+un4sE64/er1VmlwjZn+osTrQ4WYM2qn0agMgZuy88ikoUcjqIlToSreABOA0fN
+	 8G6zh3cHF75x9MP1J7wtL+EP7wP2suu7RXKIyNJCjF5MRV3twSB4GIS2/1+4smtjqz
+	 v+iZYJzz5eITw==
 From: Francesco Dolcini <francesco@dolcini.it>
 To: Nishanth Menon <nm@ti.com>,
 	Vignesh Raghavendra <vigneshr@ti.com>,
@@ -39,9 +39,9 @@ Cc: Francesco Dolcini <francesco.dolcini@toradex.com>,
 	linux-arm-kernel@lists.infradead.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v1 4/6] arm64: dts: ti: am62p-verdin: add mallow
-Date: Wed, 30 Apr 2025 12:28:13 +0200
-Message-Id: <20250430102815.149162-5-francesco@dolcini.it>
+Subject: [PATCH v1 5/6] arm64: dts: ti: am62p-verdin: add yavia
+Date: Wed, 30 Apr 2025 12:28:14 +0200
+Message-Id: <20250430102815.149162-6-francesco@dolcini.it>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250430102815.149162-1-francesco@dolcini.it>
 References: <20250430102815.149162-1-francesco@dolcini.it>
@@ -55,50 +55,51 @@ Content-Transfer-Encoding: 8bit
 
 From: Francesco Dolcini <francesco.dolcini@toradex.com>
 
-Add support for Verdin AM62P mated with Verdin Mallow carrier board.
+Add support for Verdin AM62P mated with Verdin Yavia carrier board.
 
 Link: https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am62p
-Link: https://www.toradex.com/products/carrier-board/mallow-carrier-board
+Link: https://www.toradex.com/products/carrier-board/yavia
 Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
 ---
  arch/arm64/boot/dts/ti/Makefile               |   2 +
- .../boot/dts/ti/k3-am62p-verdin-mallow.dtsi   | 213 ++++++++++++++++++
- .../ti/k3-am62p5-verdin-nonwifi-mallow.dts    |  22 ++
- .../dts/ti/k3-am62p5-verdin-wifi-mallow.dts   |  22 ++
- 4 files changed, 259 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-mallow.dts
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts
+ .../boot/dts/ti/k3-am62p-verdin-yavia.dtsi    | 219 ++++++++++++++++++
+ .../dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts |  22 ++
+ .../dts/ti/k3-am62p5-verdin-wifi-yavia.dts    |  22 ++
+ 4 files changed, 265 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts
+ create mode 100644 arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts
 
 diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-index 436f71f22ade..52e24a31793a 100644
+index 52e24a31793a..d719d5f57877 100644
 --- a/arch/arm64/boot/dts/ti/Makefile
 +++ b/arch/arm64/boot/dts/ti/Makefile
-@@ -37,8 +37,10 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
- dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
+@@ -38,9 +38,11 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-dahlia.dtb
  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-dev.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-mallow.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-mallow.dtb
++dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-nonwifi-yavia.dtb
  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-wifi-dahlia.dtb
  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-wifi-dev.dtb
-+dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-wifi-mallow.dtb
+ dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-wifi-mallow.dtb
++dtb-$(CONFIG_ARCH_K3) += k3-am62p5-verdin-wifi-yavia.dtb
  
  # Common overlays for SK-AM62* family of boards
  dtb-$(CONFIG_ARCH_K3) += k3-am62x-sk-csi2-ov5640.dtbo
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi b/arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi
 new file mode 100644
-index 000000000000..37c0b9da82da
+index 000000000000..b7423a774dc5
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62p-verdin-mallow.dtsi
-@@ -0,0 +1,213 @@
++++ b/arch/arm64/boot/dts/ti/k3-am62p-verdin-yavia.dtsi
+@@ -0,0 +1,219 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +/*
 + * Copyright 2025 Toradex
 + *
-+ * Common dtsi for Verdin AM62P SoM on Mallow carrier board
++ * Common dtsi for Verdin AM62P SoM on Yavia carrier board
 + *
 + * https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am62p
-+ * https://www.toradex.com/products/carrier-board/mallow-carrier-board
++ * https://www.toradex.com/products/carrier-board/yavia
 + */
 +
 +#include <dt-bindings/leds/common.h>
@@ -114,9 +115,11 @@ index 000000000000..37c0b9da82da
 +		pinctrl-0 = <&pinctrl_qspi1_clk_gpio>,
 +			    <&pinctrl_qspi1_cs_gpio>,
 +			    <&pinctrl_qspi1_io0_gpio>,
-+			    <&pinctrl_qspi1_io1_gpio>;
++			    <&pinctrl_qspi1_io1_gpio>,
++			    <&pinctrl_qspi1_io2_gpio>,
++			    <&pinctrl_qspi1_io3_gpio>;
 +
-+		/* SODIMM 52 - USER_LED_1_RED */
++		/* SODIMM 52 - LD1_RED */
 +		led-0 {
 +			color = <LED_COLOR_ID_RED>;
 +			function = LED_FUNCTION_DEBUG;
@@ -124,7 +127,7 @@ index 000000000000..37c0b9da82da
 +			gpios = <&main_gpio0 0 GPIO_ACTIVE_HIGH>;
 +		};
 +
-+		/* SODIMM 54 - USER_LED_1_GREEN */
++		/* SODIMM 54 - LD1_GREEN */
 +		led-1 {
 +			color = <LED_COLOR_ID_GREEN>;
 +			function = LED_FUNCTION_DEBUG;
@@ -132,20 +135,36 @@ index 000000000000..37c0b9da82da
 +			gpios = <&main_gpio0 11 GPIO_ACTIVE_HIGH>;
 +		};
 +
-+		/* SODIMM 56 - USER_LED_2_RED */
++		/* SODIMM 56 - LD1_BLUE */
 +		led-2 {
-+			color = <LED_COLOR_ID_RED>;
++			color = <LED_COLOR_ID_BLUE>;
 +			function = LED_FUNCTION_DEBUG;
-+			function-enumerator = <2>;
++			function-enumerator = <1>;
 +			gpios = <&main_gpio0 3 GPIO_ACTIVE_HIGH>;
 +		};
 +
-+		/* SODIMM 58 - USER_LED_2_GREEN */
++		/* SODIMM 58 - LD2_RED */
 +		led-3 {
-+			color = <LED_COLOR_ID_GREEN>;
++			color = <LED_COLOR_ID_RED>;
 +			function = LED_FUNCTION_DEBUG;
 +			function-enumerator = <2>;
 +			gpios = <&main_gpio0 4 GPIO_ACTIVE_HIGH>;
++		};
++
++		/* SODIMM 60 - LD2_GREEN */
++		led-4 {
++			color = <LED_COLOR_ID_GREEN>;
++			function = LED_FUNCTION_DEBUG;
++			function-enumerator = <2>;
++			gpios = <&main_gpio0 5 GPIO_ACTIVE_HIGH>;
++		};
++
++		/* SODIMM 62 - LD2_BLUE */
++		led-5 {
++			color = <LED_COLOR_ID_BLUE>;
++			function = LED_FUNCTION_DEBUG;
++			function-enumerator = <2>;
++			gpios = <&main_gpio0 6 GPIO_ACTIVE_HIGH>;
 +		};
 +	};
 +};
@@ -178,6 +197,8 @@ index 000000000000..37c0b9da82da
 +&main_gpio0 {
 +	pinctrl-names = "default";
 +	pinctrl-0 = <&pinctrl_pcie_1_reset>,
++		    <&pinctrl_qspi1_cs2_gpio>,
++		    <&pinctrl_qspi1_dqs_gpio>,
 +		    <&pinctrl_gpio_5>,
 +		    <&pinctrl_gpio_6>,
 +		    <&pinctrl_gpio_7>,
@@ -189,7 +210,7 @@ index 000000000000..37c0b9da82da
 +	status = "okay";
 +
 +	temperature-sensor@4f {
-+		compatible = "ti,tmp1075";
++		compatible = "ti,tmp75c";
 +		reg = <0x4f>;
 +	};
 +
@@ -217,21 +238,7 @@ index 000000000000..37c0b9da82da
 +
 +/* Verdin SPI_1 */
 +&main_spi1 {
-+	pinctrl-0 = <&pinctrl_main_spi1>,
-+		    <&pinctrl_main_spi1_cs0>,
-+		    <&pinctrl_qspi1_cs2_gpio>;
-+	cs-gpios = <0>, <&main_gpio0 12 GPIO_ACTIVE_LOW>;
 +	status = "okay";
-+
-+	tpm@1 {
-+		compatible = "infineon,slb9670", "tcg,tpm_tis-spi";
-+		reg = <1>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_qspi1_dqs_gpio>;
-+		interrupt-parent = <&main_gpio0>;
-+		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
-+		spi-max-frequency = <18500000>;
-+	};
 +};
 +
 +/* Verdin UART_3, used as the Linux console */
@@ -304,18 +311,18 @@ index 000000000000..37c0b9da82da
 +&wkup_uart0 {
 +	status = "okay";
 +};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-mallow.dts b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-mallow.dts
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts
 new file mode 100644
-index 000000000000..52823874eadc
+index 000000000000..c27bda794b51
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-mallow.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-nonwifi-yavia.dts
 @@ -0,0 +1,22 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +/*
 + * Copyright 2025 Toradex
 + *
 + * https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am62p
-+ * https://www.toradex.com/products/carrier-board/mallow-carrier-board
++ * https://www.toradex.com/products/carrier-board/yavia
 + */
 +
 +/dts-v1/;
@@ -323,27 +330,27 @@ index 000000000000..52823874eadc
 +#include "k3-am62p5.dtsi"
 +#include "k3-am62p-verdin.dtsi"
 +#include "k3-am62p-verdin-nonwifi.dtsi"
-+#include "k3-am62p-verdin-mallow.dtsi"
++#include "k3-am62p-verdin-yavia.dtsi"
 +
 +/ {
-+	model = "Toradex Verdin AM62P on Mallow Board";
-+	compatible = "toradex,verdin-am62p-nonwifi-mallow",
++	model = "Toradex Verdin AM62P on Yavia Board";
++	compatible = "toradex,verdin-am62p-nonwifi-yavia",
 +		     "toradex,verdin-am62p-nonwifi",
 +		     "toradex,verdin-am62p",
 +		     "ti,am62p5";
 +};
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts
+diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts
 new file mode 100644
-index 000000000000..e35851451cd4
+index 000000000000..25e0842bc905
 --- /dev/null
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-mallow.dts
++++ b/arch/arm64/boot/dts/ti/k3-am62p5-verdin-wifi-yavia.dts
 @@ -0,0 +1,22 @@
 +// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +/*
 + * Copyright 2025 Toradex
 + *
 + * https://www.toradex.com/computer-on-modules/verdin-arm-family/ti-am62p
-+ * https://www.toradex.com/products/carrier-board/mallow-carrier-board
++ * https://www.toradex.com/products/carrier-board/yavia
 + */
 +
 +/dts-v1/;
@@ -351,11 +358,11 @@ index 000000000000..e35851451cd4
 +#include "k3-am62p5.dtsi"
 +#include "k3-am62p-verdin.dtsi"
 +#include "k3-am62p-verdin-wifi.dtsi"
-+#include "k3-am62p-verdin-mallow.dtsi"
++#include "k3-am62p-verdin-yavia.dtsi"
 +
 +/ {
-+	model = "Toradex Verdin AM62P WB on Mallow Board";
-+	compatible = "toradex,verdin-am62p-wifi-mallow",
++	model = "Toradex Verdin AM62P WB on Yavia Board";
++	compatible = "toradex,verdin-am62p-wifi-yavia",
 +		     "toradex,verdin-am62p-wifi",
 +		     "toradex,verdin-am62p",
 +		     "ti,am62p5";
