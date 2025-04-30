@@ -1,191 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32C0113FEE;
-	Wed, 30 Apr 2025 19:22:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2274C13FEE;
+	Wed, 30 Apr 2025 19:23:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746040925; cv=none; b=QDEaGh487nv9MFYPRILFmEfaiHE5/daK5zmNlnpWz8tw6NifMzPQDNRDUGfbdA6NWeglFzO6q+KNnJak90Yn9818TImW1cHjL9J8ylzCUxymmE8FziyE+ku0Y63mvufMMMNLukOAdKDjfSeeiwF3Wd45sKWDOUoma8sXHreNjZc=
+	t=1746040997; cv=none; b=jMl73iM+hzI5yUCxoPvaNmA6OQiX7WJnencPiknprKChyGJ0an7umgm2QH13SoW/dx9ucJL7wMeswZ0SLOmXKvEjmLrGjvkFgg9xoGU9uiuLBYAmZbsZti781EJY/84vbkxJT0cYQ3zsTk/YIk6njZWRNlBsbBRQNDaiqvsBvmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746040925; c=relaxed/simple;
-	bh=YnTUDOH754pyg5CnYeSKoG0Rnpk8PAiwR8OZw83lcZU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Ca4WEo3TsHoM3+Gp0Oc+vIEFpjBeTmCnmECRwiudMEdLbZhFyxPeG/y8m8xwew0yn5i0RdGovplmNrUPDe63guXsxd9QVHJqRULd/0Fb0CQccaTKh7UWYOIzgVtGMQXB67B9ZrbUaMey57x4aks5xOVq40ln36cXG1HoBhgIERQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/7Yt/GW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746040997; c=relaxed/simple;
+	bh=qKVf2uWtAWkcLqWXv30hNFM5h1+cdnihKyt11hHc+hg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B9aOvdXEbx2jJQ1XDWrR1XawnQwynDbnzusPTLgnQaACt/2H+mRt16k+X3zNF4nuWk9hHvE/ingzUHbnA6g8sT968+4che8M8PHIUUPizDRwvKMuJL3gkAGuOdZ9jLPvVI+9lvME0PRJiMzrhCGLt+uOuZNey1wcucPahoFEueg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LC75ruCj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/7Yt/GW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B0CBC4CEE7;
-	Wed, 30 Apr 2025 19:22:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LC75ruCj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA801C4CEEA;
+	Wed, 30 Apr 2025 19:23:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746040924;
-	bh=YnTUDOH754pyg5CnYeSKoG0Rnpk8PAiwR8OZw83lcZU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=U/7Yt/GW0d5lbiHz/ZYcv7bp9irYk96FjgG6rPrFQ5wVYNPwlshQECrk3GDVau5uO
-	 YCsFmyP+n0jtfvXQC3kkPPfJAdOhnG4VwFWEU9bmQWFCzzls/6Zd5+38o8aeU8CdB0
-	 29mmmT4PT1HDjER4EM3vK5YOJK5hYF6PE/d3OO6Cb05KHNwiCnjduGHGOu9/SUN38n
-	 ydt4eRy/gWXRBYZzasn1lMsvUhYKHxhFa5l8itZbED5xTsMV1HaOhkul2gYzEhYXac
-	 W7unjFix0ix9kv/kpzvb7ONQyyrDIyDNoaDeI+qIMac6xgC35b465pAeqXOxVfmBLu
-	 Y50xWajN1Fz+w==
-Date: Wed, 30 Apr 2025 13:22:01 -0600
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-To: Kent Overstreet <kent.overstreet@linux.dev>
-Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-hardening@vger.kernel.org
-Subject: [PATCH v2][next] bcachefs: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <aBJ4WVcvHv9sD1K6@kspp>
+	s=k20201202; t=1746040997;
+	bh=qKVf2uWtAWkcLqWXv30hNFM5h1+cdnihKyt11hHc+hg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LC75ruCjBH4uMwAGgzNxoB/8wwIOVVlA94h/AVRzIYXV//1sf1HC21L7Q934nFS7H
+	 xwuCJP0pdBJ4xWajj3CchWwl+EakLPHMnlDUPfvGUGqzv/ukd36JepttJK+iTmaLFd
+	 dULOX24Oz5Ef8errz0xeelJQaBqVDHFE7Jx6XYXxlao43hEWIge5yuMmPnO7gTUMvT
+	 IzP2ecs4Vv/78L3DmyfHuLzeBHE7krmZNkCldqv4ZD46xNBERLKgAJKk6C3gCwMmB0
+	 AyfexQkzAUzC/SROESUN37BA+Rsc0gzxTYQK9tNnzmb27LlCn5jQNwoift6Xnan9+s
+	 7VnPj82TIMToQ==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2d522f699bcso151041fac.2;
+        Wed, 30 Apr 2025 12:23:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUSvXm54CCcvLiPmP/w4ef2XMDQtKmLglLBPnle2oNgExinnawf9tEwd9FMxx+dIdxbwgSp2CLkXXI=@vger.kernel.org, AJvYcCUqRQc9qOLxPvjZ+0HbGPHOcYivt7KGsCrAj8VJIJGCecf3BzeDkr9z0J0hC7K4Maja6TFAUUgCNJkYwWg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3T6fmvlstSCLhLS9XgWuyNdAVdU/5kYswQPw7UN1HKHslGLpL
+	DItMdqISPgxcU0JKq7Zl/O0iJ6iRF0dB/r/rPDY2SF1ei0ba+ZfYImABHBdKUSxAR7VObwbfOC5
+	hxROJvAdbRV0I95usBrRjajPLW/g=
+X-Google-Smtp-Source: AGHT+IHUI53IjqhLZsoXIyntYPJj60++S86bTyvBt+MxGDWfXCH4PkyX07o7wwNCWcSsFqFn39gXAo2z0Y7G4R96d30=
+X-Received: by 2002:a05:6871:7411:b0:2d6:6639:52d9 with SMTP id
+ 586e51a60fabf-2da6d21df4bmr2159551fac.32.1746040996276; Wed, 30 Apr 2025
+ 12:23:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <3344336.aeNJFYEL58@rjwysocki.net> <2649447.Lt9SDvczpP@rjwysocki.net>
+ <61cd69f5-6790-4480-8fe7-77ef763ed82b@arm.com>
+In-Reply-To: <61cd69f5-6790-4480-8fe7-77ef763ed82b@arm.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Wed, 30 Apr 2025 21:23:04 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0h=wR464YqDEesnm3QscJ4UBy8CX0ixZV6QsY0DS22E8A@mail.gmail.com>
+X-Gm-Features: ATxdqUEKeMYWqWS1_ddAWAHbKbg2c8smMMVFYd6PIHbsAluPm-bSN46sfBJtq1w
+Message-ID: <CAJZ5v0h=wR464YqDEesnm3QscJ4UBy8CX0ixZV6QsY0DS22E8A@mail.gmail.com>
+Subject: Re: [RFT][PATCH v1 5/8] PM: EM: Introduce em_adjust_cpu_capacity()
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, Lukasz Luba <lukasz.luba@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	Morten Rasmussen <morten.rasmussen@arm.com>, Vincent Guittot <vincent.guittot@linaro.org>, 
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+	Pierre Gondois <pierre.gondois@arm.com>, Christian Loehle <christian.loehle@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
--Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-getting ready to enable it, globally.
+On Sun, Apr 27, 2025 at 4:07=E2=80=AFPM Dietmar Eggemann
+<dietmar.eggemann@arm.com> wrote:
+>
+> On 16/04/2025 20:06, Rafael J. Wysocki wrote:
+> > From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > Add a function for updating the Energy Model for a CPU after its
+> > capacity has changed, which subsequently will be used by the
+> > intel_pstate driver.
+> >
+> > An EM_PERF_DOMAIN_ARTIFICIAL check is added to em_adjust_new_capacity()
+> > to prevent it from calling em_compute_costs() for an "artificial" perf
+> > domain with a NULL cb parameter which would cause it to crash.
+> >
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
+> > ---
+> >
+> > v0.3 -> v1:
+> >      * Added R-by from Lukasz.
+> >
+> > ---
+> >  include/linux/energy_model.h |    2 ++
+> >  kernel/power/energy_model.c  |   28 ++++++++++++++++++++++++----
+> >  2 files changed, 26 insertions(+), 4 deletions(-)
+> >
+> > --- a/include/linux/energy_model.h
+> > +++ b/include/linux/energy_model.h
+> > @@ -179,6 +179,7 @@
+> >  int em_dev_update_chip_binning(struct device *dev);
+> >  int em_update_performance_limits(struct em_perf_domain *pd,
+> >               unsigned long freq_min_khz, unsigned long freq_max_khz);
+> > +void em_adjust_cpu_capacity(unsigned int cpu);
+> >  void em_rebuild_sched_domains(void);
+> >
+> >  /**
+> > @@ -405,6 +406,7 @@
+> >  {
+> >       return -EINVAL;
+> >  }
+> > +static inline void em_adjust_cpu_capacity(unsigned int cpu) {}
+> >  static inline void em_rebuild_sched_domains(void) {}
+> >  #endif
+> >
+> > --- a/kernel/power/energy_model.c
+> > +++ b/kernel/power/energy_model.c
+> > @@ -698,10 +698,12 @@
+> >  {
+> >       int ret;
+> >
+> > -     ret =3D em_compute_costs(dev, em_table->state, NULL, pd->nr_perf_=
+states,
+> > -                            pd->flags);
+> > -     if (ret)
+> > -             goto free_em_table;
+> > +     if (!(pd->flags & EM_PERF_DOMAIN_ARTIFICIAL)) {
+>
+> This looks weird to me. How can an artificial EM ever have a non-ZERO
+> em_data_callback here?
+>
+> There is already EM_PERF_DOMAIN_ARTIFICIAL specific handling in
+> em_compute_costs(). Which probably works well for the
+> em_create_perf_table() call-site.
 
-Refactor a couple of structs that contain flexible arrays in the
-middle by replacing them with unions.
+Yes, but that one doesn't pass a NULL cb pointer to it.
 
-So, with these changes, fix the following warnings:
+> Will there be cases for Hybrid CPU EM's in which 'em_max_perf !=3D
+> cpu_capacity':
 
-fs/bcachefs/disk_accounting.c:429:51: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-fs/bcachefs/ec_types.h:8:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+When the capacity is updated, the EM needs to be updated accordingly,
+which is why the new function is being added.
 
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
-Changes in v2:
- - Use a union instead of DEFINE_FLEX().
- - Address an additional -Wflex-array-member-not-at-end warning.
+> em_adjust_new_capacity()
+>
+>   if (em_max_perf =3D=3D cpu_capacity)
+>     return
+>
+>   em_recalc_and_update()
+>     em_compute_costs()
+>
+> so that em_compute_costs() might be called?
+>
+> Maybe:
+>
+> @@ -233,11 +237,17 @@ static int em_compute_costs(struct device *dev,
+> struct em_perf_state *table,
+>         unsigned long prev_cost =3D ULONG_MAX;
+>         int i, ret;
+>
+> +       if (!cb && (flags & EM_PERF_DOMAIN_ARTIFICIAL))
+> +               return 0;
+>
+> is somehow clearer in this case?
 
-v1:
- - Link: https://lore.kernel.org/linux-hardening/aBF5udHEHwWvmWJw@kspp/
-
- fs/bcachefs/disk_accounting.c | 12 +++++++-----
- fs/bcachefs/ec_types.h        |  7 ++++---
- fs/bcachefs/journal_io.c      |  6 +++---
- fs/bcachefs/journal_reclaim.c |  2 +-
- 4 files changed, 15 insertions(+), 12 deletions(-)
-
-diff --git a/fs/bcachefs/disk_accounting.c b/fs/bcachefs/disk_accounting.c
-index 7be71952425c..2dcccf1edbb9 100644
---- a/fs/bcachefs/disk_accounting.c
-+++ b/fs/bcachefs/disk_accounting.c
-@@ -287,7 +287,7 @@ static inline bool accounting_to_replicas(struct bch_replicas_entry_v1 *r, struc
- 
- static int bch2_accounting_update_sb_one(struct bch_fs *c, struct bpos p)
- {
--	struct bch_replicas_padded r;
-+	union bch_replicas_padded r;
- 	return accounting_to_replicas(&r.e, p)
- 		? bch2_mark_replicas(c, &r.e)
- 		: 0;
-@@ -361,7 +361,7 @@ static int __bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accoun
- int bch2_accounting_mem_insert(struct bch_fs *c, struct bkey_s_c_accounting a,
- 			       enum bch_accounting_mode mode)
- {
--	struct bch_replicas_padded r;
-+	union bch_replicas_padded r;
- 
- 	if (mode != BCH_ACCOUNTING_read &&
- 	    accounting_to_replicas(&r.e, a.k->p) &&
-@@ -425,10 +425,12 @@ int bch2_fs_replicas_usage_read(struct bch_fs *c, darray_char *usage)
- 
- 	percpu_down_read(&c->mark_lock);
- 	darray_for_each(acc->k, i) {
--		struct {
-+		union {
-+			u8 bytes[struct_size_t(struct bch_replicas_usage, r.devs,
-+					       BCH_BKEY_PTRS_MAX)];
- 			struct bch_replicas_usage r;
--			u8 pad[BCH_BKEY_PTRS_MAX];
- 		} u;
-+		u.r.r.nr_devs = BCH_BKEY_PTRS_MAX;
- 
- 		if (!accounting_to_replicas(&u.r.r, i->pos))
- 			continue;
-@@ -627,7 +629,7 @@ static int bch2_disk_accounting_validate_late(struct btree_trans *trans,
- 
- 	switch (acc->type) {
- 	case BCH_DISK_ACCOUNTING_replicas: {
--		struct bch_replicas_padded r;
-+		union bch_replicas_padded r;
- 		__accounting_to_replicas(&r.e, acc);
- 
- 		for (unsigned i = 0; i < r.e.nr_devs; i++)
-diff --git a/fs/bcachefs/ec_types.h b/fs/bcachefs/ec_types.h
-index 06144bfd9c19..809446c78951 100644
---- a/fs/bcachefs/ec_types.h
-+++ b/fs/bcachefs/ec_types.h
-@@ -4,9 +4,10 @@
- 
- #include "bcachefs_format.h"
- 
--struct bch_replicas_padded {
-+union bch_replicas_padded {
-+	u8				bytes[struct_size_t(struct bch_replicas_entry_v1,
-+							    devs, BCH_BKEY_PTRS_MAX)];
- 	struct bch_replicas_entry_v1	e;
--	u8				pad[BCH_BKEY_PTRS_MAX];
- };
- 
- struct stripe {
-@@ -28,7 +29,7 @@ struct gc_stripe {
- 	u16			block_sectors[BCH_BKEY_PTRS_MAX];
- 	struct bch_extent_ptr	ptrs[BCH_BKEY_PTRS_MAX];
- 
--	struct bch_replicas_padded r;
-+	union bch_replicas_padded r;
- };
- 
- #endif /* _BCACHEFS_EC_TYPES_H */
-diff --git a/fs/bcachefs/journal_io.c b/fs/bcachefs/journal_io.c
-index 58e3983d860a..7c09a3c109ab 100644
---- a/fs/bcachefs/journal_io.c
-+++ b/fs/bcachefs/journal_io.c
-@@ -1404,7 +1404,7 @@ int bch2_journal_read(struct bch_fs *c,
- 	}
- 
- 	genradix_for_each(&c->journal_entries, radix_iter, _i) {
--		struct bch_replicas_padded replicas = {
-+		union bch_replicas_padded replicas = {
- 			.e.data_type = BCH_DATA_journal,
- 			.e.nr_devs = 0,
- 			.e.nr_required = 1,
-@@ -1632,7 +1632,7 @@ static CLOSURE_CALLBACK(journal_write_done)
- 	closure_type(w, struct journal_buf, io);
- 	struct journal *j = container_of(w, struct journal, buf[w->idx]);
- 	struct bch_fs *c = container_of(j, struct bch_fs, journal);
--	struct bch_replicas_padded replicas;
-+	union bch_replicas_padded replicas;
- 	u64 seq = le64_to_cpu(w->data->seq);
- 	int err = 0;
- 
-@@ -2055,7 +2055,7 @@ CLOSURE_CALLBACK(bch2_journal_write)
- 	closure_type(w, struct journal_buf, io);
- 	struct journal *j = container_of(w, struct journal, buf[w->idx]);
- 	struct bch_fs *c = container_of(j, struct bch_fs, journal);
--	struct bch_replicas_padded replicas;
-+	union bch_replicas_padded replicas;
- 	unsigned nr_rw_members = dev_mask_nr(&c->rw_devs[BCH_DATA_journal]);
- 	int ret;
- 
-diff --git a/fs/bcachefs/journal_reclaim.c b/fs/bcachefs/journal_reclaim.c
-index 66bfb95f1ea4..0acaf20f2181 100644
---- a/fs/bcachefs/journal_reclaim.c
-+++ b/fs/bcachefs/journal_reclaim.c
-@@ -953,7 +953,7 @@ int bch2_journal_flush_device_pins(struct journal *j, int dev_idx)
- 	seq = 0;
- 	spin_lock(&j->lock);
- 	while (!ret) {
--		struct bch_replicas_padded replicas;
-+		union bch_replicas_padded replicas;
- 
- 		seq = max(seq, journal_last_seq(j));
- 		if (seq >= j->pin.back)
--- 
-2.43.0
-
+This would work, but I prefer my version because it does one check
+less and it does the check directly in em_recalc_and_update(), so it
+is clear that this doesn't call em_compute_costs() for artificial PDs
+at all.
