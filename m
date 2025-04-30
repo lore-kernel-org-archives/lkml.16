@@ -1,53 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80E8A1DA5F;
-	Wed, 30 Apr 2025 00:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962A429D0B
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 00:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745971718; cv=none; b=bDnDMDL5qwDWRY2tftdELmchX4OXci/bAP04z1Tp4TSrzAtY2Kgpkq0nVvqL6YuQ7/615lMK/bWTjEO2KnCpXh4YWaWTyeayO0NIZlsIePz6humLXwLkpm8zDoTW25VE+NSm9AHFlMVr/TUbecNuzF3agADRN/JtxSwGoc9n45s=
+	t=1745971767; cv=none; b=M5MhAYdXIeCzCkR3Ezee/beMT/cPd7IQjMFzIvTEVaOb0MLlxe0QU1SJNen/i/Y+S0dLN8zIp6mbbq1T2ghB7UWoQTWrP/6RgZX1dvSvZ1HNkWF8wE+BBreium/pSlxKVAg6bMm9qgyV8Wg2lbWp1LESTC3/xK8XoOMkvcf587A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745971718; c=relaxed/simple;
-	bh=dx7P+R9PB1dmUgAtd+luccp+t59oxVb+zJy/W2y6J9U=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jRMEefT5zHnd5YUXarLT+L8x77aMiSe8ScT4jP/kUrbClR33JyNPspfAvoogNMuEUZYePVwM1R7tkTS6jhY7CmP97yB1UJTELpyTb98h3YCofZiDeM9KpBhziuWSMLN+7giuu9fPlf/EsphnzU59DQF/E+iOZ3KDCZApSWPDJ1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=VlLxqEtf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745971767; c=relaxed/simple;
+	bh=nWIRVXNziIXV8U6vS6Ynr/rXvc0HzMyqYPWLe66JFJ4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ylbw9cqMHvDzEqlSYhI6Ts2knKSXIWrAIToaq0iv6t85gNI0YsiPlJlsJymqD8TLkIRist3eyABu/OefJINJYbSQm4ivIqMOPPBerh8WHkYquL7tfoKkb04maVuwPDUlhPG4mWcYYcP9TQaZEaeV2qBm8PYnTG2p88pD5EL57LU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NmK+1lKl; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="VlLxqEtf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9855BC4CEE3;
-	Wed, 30 Apr 2025 00:08:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-	s=korg; t=1745971718;
-	bh=dx7P+R9PB1dmUgAtd+luccp+t59oxVb+zJy/W2y6J9U=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=VlLxqEtfaxvhdaSdxESr7mYnlUNxhB/KeoWQWnSl4EAwVd0nBdZei++vmTndMJOIR
-	 cAxWUNBtRDCeNnWst2L60Ram/TfBbyJFY5QaBpdjoQz7xhq8hjJT0w0z1pTOTM6ISf
-	 KfJbjuuDLzltrT3m6GO2t11skpIApnSVAIGGUDWY=
-Date: Tue, 29 Apr 2025 17:08:36 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>, Daniel Axtens
- <dja@axtens.net>, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- kasan-dev@googlegroups.com, linux-s390@vger.kernel.org,
- stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from
- atomic context
-Message-Id: <20250429170836.bcd25bcbe25d4f3d436d9e39@linux-foundation.org>
-In-Reply-To: <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
-References: <cover.1745940843.git.agordeev@linux.ibm.com>
-	<573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NmK+1lKl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1745971764;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5lJzIa8zN478vM1h2v+0aBrpsB1V2UdrD0VW9ycWo8Y=;
+	b=NmK+1lKl0p405lqYmRcScskdRgpfSvyaHiw2MyUxqXtzUt2KImMhVlChuGYrLb0QrkBp9O
+	oqE3dqXUoK3WK5DjJ7goUr6CsmB9J40VleDoxwwEIKE9rBFS9GuPz1Dn/m1hnANOtWJQVO
+	zDDtqKUOICXo0vUPnU/SpMRrjPuIoNs=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-465-qBZhgEgIOvWeqh89gKFP4g-1; Tue,
+ 29 Apr 2025 20:09:23 -0400
+X-MC-Unique: qBZhgEgIOvWeqh89gKFP4g-1
+X-Mimecast-MFC-AGG-ID: qBZhgEgIOvWeqh89gKFP4g_1745971762
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A8099180056F;
+	Wed, 30 Apr 2025 00:09:21 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.13])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4A1E919560A3;
+	Wed, 30 Apr 2025 00:09:17 +0000 (UTC)
+Date: Wed, 30 Apr 2025 08:09:13 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Uday Shankar <ushankar@purestorage.com>
+Cc: Shuah Khan <shuah@kernel.org>, linux-block@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] selftests: ublk: kublk: build with -Werror iff
+ WERROR!=0
+Message-ID: <aBFqKZFAqwc5dEYl@fedora>
+References: <20250429-ublk_selftests-v2-0-e970b6d9e4f4@purestorage.com>
+ <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250429-ublk_selftests-v2-1-e970b6d9e4f4@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Tue, 29 Apr 2025 18:08:41 +0200 Alexander Gordeev <agordeev@linux.ibm.com> wrote:
+On Tue, Apr 29, 2025 at 04:41:03PM -0600, Uday Shankar wrote:
+> Compiler warnings can catch bugs at compile time; thus, heeding them is
+> usually a good idea. Turn warnings into errors by default for the kublk
+> build so that anyone making changes is forced to heed them. Compiler
+> warnings can also sometimes produce annoying false positives, so provide
+> a flag WERROR that the developer can use as follows to have the build
+> and selftests run go through even if there are warnings:
+> 
+> make WERROR=0 TARGETS=ublk kselftest
 
-> +	__memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
+I thought WERROR is 0 default, but actually the default value is 1.
 
-pfn_to_virt() exists only in riscv, s390, m68k, loongarch and microblaze.
+Just tried gcc 14/15 and clang 18/20, looks everything works fine.
+
+For kernel selftests, I guess the usual way is to do it explicitly
+by passing 'make -C tools/testing/selftests TARGETS=ublk'.
+
+Even though the build fails for people who is running the test on purpose,
+or doling whole kernel selfests, they still can:
+
+- report the failure
+
+- skip ublk test by adding 'SKIP_TARGETS=ublk' to command line
+
+Also this ways has been used by perf, lib/api, lib/subcmd and lib/sysmbol in
+linux kernel tools/, so I feel the change should be doable, but let Jens decide
+if it is fine to pass -Werror at default:
+
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+Otherwise, it still can be enabled conditionally with default off.
+
+
+Thanks,
+Ming
+
