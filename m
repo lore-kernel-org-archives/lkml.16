@@ -1,92 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC4471DFDA5;
-	Wed, 30 Apr 2025 18:54:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F27D52DC791
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746039241; cv=none; b=J7ndQoiXAocoY8gMJghaRCuhk3SrO33qtPLc/p64zRPVb7z6gnH2911e+4kva/TIH8U8ulWCTwPTG0cxs/dOu0hNUE7vW9x6+Lgh9wR9t+QtrP+TV8BsgJb0DPSz9FOl/83vXulQEdv6Gn6CgnNvehg/xJrSP4Be2hoexuFJRCA=
+	t=1746039277; cv=none; b=JDqkYpB0V7A1D29SxKrQ+0zeBhl8h2bu5e4P7sJX9Wudbw6DbO2/7f9NjC4o4kJbQ8WcdcRHz1iRhJFYpRckQ7kjZIGkOXDSMMsJmojg4g5IP52OmMEU7yOiMjSgMD78eTu9iiYxVv3t9mNub3oxslf+zLM2LiiCovDVSI1hecI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746039241; c=relaxed/simple;
-	bh=INqp31oPH6YlSTaHcFPVax+oSPwJTWRqHYvfXqiVndg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BZBL1Yd+mbC2qwTxl91WV9i6923oUV8kOTwNHHxmpIFW16B3ED0bn5/KSXzTWW+27x3LgaU+HMtQyzTpmdxkxQF6HvOdrrmOzoJFTdZmshEQP8OemEcEYY6T9v9bKuma7zDgxe1HHhV7xk8WIo6iazDZdn7g/+MV+g409mpDI0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z/VUJi0j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746039277; c=relaxed/simple;
+	bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mdjoxy1cvqG33zN3nGlu9bFfJ39+XkXsesAYkfe9KxI1wrWdO6Wn7DnRF+/qmLI0EWTxOAO6WWxuyhBv8pJG34zPwtknelrUrdMGwUkeMZa7JNvGGwysKjeOOZ5FrSrlPtgC1BEMqqoZ8baSCX7Px9qtKHK4mp8a98OuVQ07IAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=D2wJB7hP; arc=none smtp.client-ip=209.85.166.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z/VUJi0j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C621C4CEE7;
-	Wed, 30 Apr 2025 18:54:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746039240;
-	bh=INqp31oPH6YlSTaHcFPVax+oSPwJTWRqHYvfXqiVndg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z/VUJi0jjbbNa+TFHpHtWlZVwRW81Aw+AZNcQwqfjM0xYAwbk76vc+hWuOlN5N3IY
-	 0EEY5IYiA3UMh6Ge/tB4eTU1TmLUVXalcSlSn5lExVVf+xM7Z2FRotV7+yYommlmxx
-	 8wG2bxSAqdYbwjDoIb0l0pA5DGQl9Hd54n3/2aHrOXLno/PAv8jUr7FdKSCz8PZkfV
-	 21UjKaq0th7CFyvnAh3vLAlsbtz6hPbFyne0L0xCjxHW9oZos/yHDgU5H7bGOrqXX/
-	 UrQ3ZpS+hP4ecCwdaCIrv7dwJ69uyBZqFr6zyf1BMYv/qFqb82xuFZlI/tSKnQPRA1
-	 vy+ONWiHeJwLA==
-Date: Wed, 30 Apr 2025 11:53:57 -0700
-From: Kees Cook <kees@kernel.org>
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: Willy Tarreau <w@1wt.eu>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>,
-	Shuah Khan <shuah@kernel.org>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v3 00/32] kselftest harness and nolibc compatibility
-Message-ID: <202504301153.E2D0C4ED@keescook>
-References: <20250411-nolibc-kselftest-harness-v3-0-4d9c0295893f@linutronix.de>
- <20250422103612-64ea71dd-d51d-487e-b387-508c372af07c@linutronix.de>
- <20250422085145.GB14589@1wt.eu>
- <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="D2wJB7hP"
+Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-861d7a09c88so5250539f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:54:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1746039274; x=1746644074; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
+        b=D2wJB7hPvnhW2nOAd8QTcG6IrKcLABrBZDSW/oi0LT0l6ucTbFNd+BzGVhkFpydtvj
+         0iIV4I6ZpybIa/I+ShxTpLgSXsDZX5s6rcmSHLh/lIy72vW4FGucOWEXCPYjKxdx+BVS
+         IRzQylVWxMGXvJditySYJv5yb3LYHmcpobReQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746039274; x=1746644074;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=865Cx2t3kUvgFLSb2R6Pw9pfJWtPTvNHqrmNxnLnDT8=;
+        b=YFKF2A0VbHNQAQPpMJGnTVRe0erawxo3k+U2zX+4ITXJgN7OOBKewCixLrUW8nFauN
+         2WL7eSX4xU8KwJCEZSwiSBfBRcHih2P36MGlePg1VVFSoFpwkkJG7t6391E1L1hgB9Sk
+         95yy4fVSCzBX17mj+4XNWSzaSRoLuOfxAN0ItdYSQNKpopRFB+X09dUxB0sGUPMFUB78
+         CC520h4F/rufNSfDjv+h8u5T1RbWFAgrNZ6zoLyknGIOBxhwj5Cl7z1sDlNnIIyJsepy
+         be6Pko2e/NHBMxRMs2/j925tA1H3vJqXam51i760UUIwG2v/phJteUoebHNNAnonCiqN
+         bupQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJIxWriiDKc6uQWg21FJdJ3S9B9AK3+Goao9ssmfAc3WjbVE+S7mmHLCEozbXJYsijCHx6M94c0JCX0Qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy28Ag/czhxhRmwzfN+ax/8M3giTi/YPoXRi0xUCTLq3/MQA7/X
+	fvyD49yRL2ifGONDGB0Rs/wGmvtGqd1S5P+FooBpydBHYQxz8mTtJrvai7p6M2o=
+X-Gm-Gg: ASbGncvaz2+IVSupEmY3w6xGZxJ/4dM8NkwXU7zdq5SH2LM6o6QeRHyMv3gkqe0h0qE
+	1wkCoZSB2DdW0Dcyxo8TTQZKUu6FHcIv+iLoXBZ/9mgaN8Xwwbf764gx4esHjT8pSHwzwiAIjU7
+	031K+i8jzoOYbILR0WHN+OFCSj4rhsMzaQDAebh1KI6PMYdaF0r7LwAfL5B7Nh44+h2h+uCEETY
+	/RHSz8RXetfW38ejKepN/BSPlGGGJv+YyW6b/qX+FaU62f/2zluE9rhHP1HmkopRuVbU+gjbBrE
+	1Z+Ma7J88xyx+5n1CHsQrIZvo7lmRbuWCiqO4Po2GSB3+pJhRcBmtG1GOCXBUQ==
+X-Google-Smtp-Source: AGHT+IE9D9dHDIH8+xKtHJUGmzEQO0mhEEj08arKdlDwswO8uWorHYe0lGPtYSS7JWukag+pUyvaug==
+X-Received: by 2002:a05:6602:36ca:b0:861:1ba3:3e50 with SMTP id ca18e2360f4ac-864a2051d04mr59173839f.0.1746039273897;
+        Wed, 30 Apr 2025 11:54:33 -0700 (PDT)
+Received: from [192.168.1.14] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-8648c19572bsm81370839f.37.2025.04.30.11.54.33
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 11:54:33 -0700 (PDT)
+Message-ID: <a0ae3ab9-14e2-4ec4-ac7e-a9ad59955df4@linuxfoundation.org>
+Date: Wed, 30 Apr 2025 12:54:32 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7bb64160-103c-4882-a69b-9bc054e62db8@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] docs: fix spelling mistakes in HID documentation
+To: Ankit Chauhan <ankitchauhan2065@gmail.com>, linux-kernel@vger.kernel.org
+Cc: linux-kernel-mentees@lists.linuxfoundation.org
+References: <20250430062412.54133-1-ankitchauhan2065@gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20250430062412.54133-1-ankitchauhan2065@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Apr 24, 2025 at 02:06:34PM -0600, Shuah Khan wrote:
-> On 4/22/25 02:51, Willy Tarreau wrote:
-> > Hi Thomas,
-> > 
-> > On Tue, Apr 22, 2025 at 10:48:28AM +0200, Thomas Weißschuh wrote:
-> > > Hi,
-> > > 
-> > > On Fri, Apr 11, 2025 at 11:00:24AM +0200, Thomas Weißschuh wrote:
-> > > > Nolibc is useful for selftests as the test programs can be very small,
-> > > > and compiled with just a kernel crosscompiler, without userspace support.
-> > > > Currently nolibc is only usable with kselftest.h, not the more
-> > > > convenient to use kselftest_harness.h
-> > > > This series provides this compatibility by adding new features to nolibc
-> > > > and removing the usage of problematic features from the harness.
-> > > > 
-> > > > The first half of the series are changes to the harness, the second one
-> > > > are for nolibc. Both parts are very independent and should go through
-> > > > different trees.
-> > > 
-> > > I need a few nolibc bits of this series (snprintf() and prep patches) to base
-> > > further patches on. For that I'd like to pick up all the nolibc patches from
-> > > this series through the nolibc tree. They got Acks from Willy.
-> > > 
-> > > Any objections?
-> > 
-> > No objection on my side!
-> > 
-> 
-> Thanks.
-> 
-> Kees, do you have any comments on this series? If you are okay
-> with it, I would like to apply this for next.
+On 4/30/25 00:24, Ankit Chauhan wrote:
+> This commit fixes spelling mistakes in the HID documentation:
 
-Fine by me! :)
+The change log has to read in imperative mood:
 
--- 
-Kees Cook
+"Fix spelling mistakes in the HID documentation" is the right
+phrasing.
+
+Make sure to send the patch to maintainers. You have to send
+the patch to everybody get_maintainer.pl tell you to.
+
+thanks,
+-- Shuah
