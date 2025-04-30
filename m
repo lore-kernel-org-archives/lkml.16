@@ -1,171 +1,248 @@
-Received: from mail-0201.mail-europe.com (mail-0201.mail-europe.com [51.77.79.158])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E82D20E323;
-	Wed, 30 Apr 2025 11:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.77.79.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D7E2B9A9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746013138; cv=none; b=cLh8S1NBhionbKAk7ZzEURv4MNtPWa4fnBItdXBeuOLin+kMsq+NP6cPdDL7p0gx5aw8G6vWikqakT4d41jd8JqhuhehAlOvQTmlVp1xr+pa6kbO+/PyYlp5ikyriApXxew2H2tn+NRboIjOU7lG6Vhz68y26gShJemf90D9Qgo=
+	t=1746013206; cv=none; b=ic7zgwMJ70H+7Ui9brOj+sMzlp+dZBM5APhnWwmlxlEHCZ6Cjf0m0Rp+nwcixRHZyayAr4OU8A3M3n5zxrj+/zR8DtBpM/Ee4EOd2zvxVOgjyvA6r3HxMgeooNllzpg5vu5jOzeqiiR1dwWLrw9YeMtFnxobbv02dqtOoJfISXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746013138; c=relaxed/simple;
-	bh=9AnckJCG6gd1plf0Q0XYwEs3W0fyuV9EhX+8WgPI8dY=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r92SOV1DQnc4qa+2oBvKih63H1P336AoIXMN+hmd0ORykvo22bEyGPa5vmvku+YkM1cxy+WSpWD0VV1ifl58KsJIkfEz2+kKjCg8kwTS/x1KbHK+BPpH7up9Vx4uNR6ZwZBHvoC1kybTSVRhjWrW+XF67oK7KvYGpWp9azMCqXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me; spf=pass smtp.mailfrom=pm.me; dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b=gmNk0Q7Z; arc=none smtp.client-ip=51.77.79.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=pm.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pm.me
+	s=arc-20240116; t=1746013206; c=relaxed/simple;
+	bh=keoLtY0ClvPPjGIwINcGj7HgHhBF8AtBoEsqH+2vw4w=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=o/LWDfqxxfEQfPxlf+N6/Lf38IZnC7ApQ45LrYtmBWX5iBFBW28CgNy8npfkeNzBplPOkZEofWaMOUy4UnbHZ2pm+q8YjerRXXh7snGMoH2b5kZP6TsEka1LR9CnaR7m5gCNqfmtFieZr1CEcmUk4Dt2wnhiEWZLvX7oxaLZhBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=km2VeUkX; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pm.me header.i=@pm.me header.b="gmNk0Q7Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pm.me;
-	s=protonmail3; t=1746013120; x=1746272320;
-	bh=0EFiUKiTKgq2MElHwvfQI4NNLvqB0a2OzXcjGOEO/JI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=gmNk0Q7Z4Lxs8myur9amEAaLwgd9ZASNPABKiyNQQtR12y8ovsNrLHbYxVZNgVpS4
-	 Jo48d5IhlI1Ga3xjRAc7gWe33ZmQzcLY5f5xTDpdn/g0oIeEm3yxHbgcMrtv0bl+hU
-	 YJuD2LTjjtaXoUejq/Hw49BR2qEAKye2f3xlA7VroJi/eI4sfF+bqy9f0iA8TVaDNb
-	 pZkQA0KRhKyDs7WJrt6QFvBUcmh1rGT7SDrf6gXdM9lVkCtmmPWjkLU/nymdEyhOW5
-	 UUvYudnL4WtCcZKgAS8XntCAKW0Xpt/McLtMlZzgg1JFeIYLsRksdYM0vjxyKUjTmI
-	 gtFqwuh56Ru/A==
-Date: Wed, 30 Apr 2025 11:38:33 +0000
-To: Mingyen Hsieh <Mingyen.Hsieh@mediatek.com>
-From: fossben@pm.me
-Cc: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Allan Wang <Allan.Wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION][BISECTED][STABLE] MT7925: mDNS and IPv6 broken in kernel 6.14.3 and above
-Message-ID: <Rc4t9joagJOAMRwFdiBdsR7ohouSCoRfWEle0muAuVQPREi2e33ZAua7v2-KYJ918HB3BXifBKZ9tn0DZ16wih1ASQgRjH95uqlnBSA-hnM=@pm.me>
-In-Reply-To: <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-References: <EmWnO5b-acRH1TXbGnkx41eJw654vmCR-8_xMBaPMwexCnfkvKCdlU5u19CGbaapJ3KRu-l3B-tSUhf8CCQwL0odjo6Cd5YG5lvNeB-vfdg=@pm.me> <f73dec60b60dd7bb3be40c1feefbe223c7afe19b.camel@mediatek.com>
-Feedback-ID: 134317997:user:proton
-X-Pm-Message-ID: 2e01ae79f045946943168e8916213d6d7fbf7a62
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="km2VeUkX"
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id F115E3F2A9
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 11:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1746013200;
+	bh=Czegh8cwsRC1992QA7zOdLzmcoA2LPWmJVr38XiyDEw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version;
+	b=km2VeUkXT68sfX7KieAKyXQCnBFptuDZExHj5wlLfKSOUD0N3vYlFpLVI4vO4KiFo
+	 ZI/SDv4Ols0Fq63gwQ0FgKIWEqV+ePmpyg2RSDsQm9O0HhIPVgtrQa7Olj7nZ2FwUq
+	 8tFyNdhlJj5KtQXBz/kxqVbt7L1Rqrqj4ChvCBzzbLLvomELBOZwvDjG2AXpCqYRNa
+	 wI46l4N4wYv9hobTWh6S/KyKOl5ZJI5aE5G+2RshdkPnd9SSMkr7ccxq9vzqNA07u9
+	 gqNdM+2UxL/1QwAnFnmJnkmwX0d8RTfs06uy0BWPzowaW4jsR4bof20+TUp3Arlrvw
+	 PwxMXrx1LbirA==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-ac2aa3513ccso521477566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 04:40:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746013200; x=1746618000;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Czegh8cwsRC1992QA7zOdLzmcoA2LPWmJVr38XiyDEw=;
+        b=tYnVF5LJ44iyEp6s4yf4vxP/dOUWE7A+cHtX5jze2gGTcjqI40vYr+5cvLImWtn6Zs
+         fOKr2Rw5gOXa6vyiP+JhBX7GvNgl5uxo6jN9WYhSWg/hlaJETZdc6XS1kXkuDJlb47tI
+         c0APhjLi/lfD1m301vzHMQV4iUQSr/Npd/ETmSAxlrdYlDgaLvCA/17bn5H+cG2H19By
+         Oa74/wDkihKyEiCOukoWAbJn9wsVTvYrPZaaRSuqYgm6/AUUIws+JWXnLwcXHaEbAloe
+         cFvBTmR+SacldDZu5fDM0nXTrUgxU1hzEAiIfOyEi5Loctur+YBgAf6DfhFY3doPTAhQ
+         H4Zw==
+X-Forwarded-Encrypted: i=1; AJvYcCWfwDEWsuPxdmKEVIvrFOSetodfllRzOXy4qts9cYLBVz/58fUztwMTiSHntQqllH4vvm83PFVVhNn9kn0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjwEtgQnvvTMUfT8j8Zr2THEuienSyhFKNHbM6N3qvAVPPrLK/
+	MOB/rDDxmguHwA1VS3qXDbbf9UBaD3YHRMYRbsiPMo6DZ9iCq1EjDzrvJF3+eWCv/38VYTwpnI8
+	rerwGji+snOy9J9iXheFwB7pQRKluLhU+2GVKm3IdKFjjW1yzQaW70lqYlLhgVIOr8Vm10Ve/pe
+	0q2A==
+X-Gm-Gg: ASbGnctGPWEUKTWo32gRq9/C4r86d50GdU6xrNXED5w0kRR3lKyXwXqWc/ieTvIHCLn
+	OcFntgNNTlC39u3d/NAfPSVKo/2Fyb56OOFE2t7LRxq50urpP3Fgbj4XIdrjX4vVZx+Tlo/rGIv
+	3VaC6eOUzxehvJNJIWrqqM/xG0F59CwTTX7ivyJqWGy7fhFj7QqYe7Wgaa7Cq5IA184u3LsfFZY
+	a5Pp6+breDFHMePfJ7TmhWIxiWQ1z4YCs1kMLuHT7kvFLtq2VuUH0DzBBSiEADX0SzBVAaLP8nZ
+	lNPBiDRAtibKYbq/7iFEnxUbUncadFbL
+X-Received: by 2002:a17:906:f58f:b0:ac4:5f1:a129 with SMTP id a640c23a62f3a-acedc5d0772mr310942466b.15.1746013200476;
+        Wed, 30 Apr 2025 04:40:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHwGN7zPSr1vWN8boTb1dQr3YrLPCs0tsLJqWnnJxAwwideDbsjRmhwrhmWzrvFSqwMK2QihQ==
+X-Received: by 2002:a17:906:f58f:b0:ac4:5f1:a129 with SMTP id a640c23a62f3a-acedc5d0772mr310939566b.15.1746013200018;
+        Wed, 30 Apr 2025 04:40:00 -0700 (PDT)
+Received: from deep-thought.gnur.de ([95.89.205.15])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6eda7affsm915636866b.170.2025.04.30.04.39.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 04:39:59 -0700 (PDT)
+Message-ID: <43933af22cdbff81e75a07461b29b91afacedadc.camel@canonical.com>
+Subject: Re: [PATCH v2 3/3] coredump: hand a pidfd to the usermode coredump
+ helper
+From: Benjamin Drung <benjamin.drung@canonical.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: linux-fsdevel@vger.kernel.org, Oleg Nesterov <oleg@redhat.com>, Luca
+ Boccassi <luca.boccassi@gmail.com>, Lennart Poettering
+ <lennart@poettering.net>, Daan De Meyer	 <daan.j.demeyer@gmail.com>, Mike
+ Yuan <me@yhndnzj.com>, Zbigniew =?UTF-8?Q?J=C4=99drzejewski-Szmek?=	
+ <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org
+Date: Wed, 30 Apr 2025 13:39:58 +0200
+In-Reply-To: <20250425-erbschaft-nummer-8ddbe420ae22@brauner>
+References: <20250414-work-coredump-v2-0-685bf231f828@kernel.org>
+	 <20250414-work-coredump-v2-3-685bf231f828@kernel.org>
+	 <ee1263a1bcb7510f2ec7a4c34e5c64b3a1d21d7a.camel@canonical.com>
+	 <20250425-eskapaden-regnen-4534af2aef11@brauner>
+	 <e1ee6aba07c367b9518fe3fab1dd71c418e3446a.camel@canonical.com>
+	 <20250425-erbschaft-nummer-8ddbe420ae22@brauner>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
 
-Hi Yen,
-
-Here are the reproduction steps.
-
-I have two Arch Linux machines:
-    (A) one PC (hostname: arch-desktop) connected to the network via MT7925=
- wifi
-    (B) one NAS box (hostname: arch-nas) connected to the network via Intel=
- I225-V ethernet
-
-Both machines are running 6.14.4 and have Avahi + nss-mdns enabled accordin=
-g to the Arch Wiki: https://wiki.archlinux.org/title/Avahi#Hostname_resolut=
-ion
-
-Both machines also have systemd-resolved configured in stub resolver mode b=
-ut with MulticastDNS=3Dno to avoid conflicting with Avahi. Bug is reproduci=
-ble without systemd-resolved as well, but I am listing it here for complete=
-ness.
-
-Steps:
-1. On arch-desktop, attempt to `ping arch-nas.local`.
-2. Ping will fail to go through with message: `ping: arch-nas.local: Name o=
-r service not known`
-3. Downgrade arch-desktop to 6.14.2 or below.
-4. `ping arch-nas.local` again.
-5. Ping should go through on IPv6 or IPv4. My network has IPv6 enabled so i=
-t usually uses an IPv6 local address.
-
-For the issue where the MT7925 wifi is unable to grab an IPv6 address, I be=
-lieve it occurs when there's no active DHCP lease. Usually happens in the m=
-orning when I turn on my PC. If I downgrade to 6.14.2, it will immediately =
-grab a lease. Switching back to 6.14.4 retains that address for a while unt=
-il I encounter it again next morning.
-
-Thanks for looking into this!
-Ben
-
-On Wednesday, April 30th, 2025 at 1:48 AM, Mingyen Hsieh <Mingyen.Hsieh@med=
-iatek.com> wrote:
-
-> On Wed, 2025-04-30 at 01:14 +0000, fossben@pm.me wrote:
+On Fri, 2025-04-25 at 18:49 +0200, Christian Brauner wrote:
+> On Fri, Apr 25, 2025 at 02:03:34PM +0200, Benjamin Drung wrote:
+> > On Fri, 2025-04-25 at 13:57 +0200, Christian Brauner wrote:
+> > > On Fri, Apr 25, 2025 at 01:31:56PM +0200, Benjamin Drung wrote:
+> > > > Hi,
+> > > >=20
+> > > > On Mon, 2025-04-14 at 15:55 +0200, Christian Brauner wrote:
+> > > > > Give userspace a way to instruct the kernel to install a pidfd in=
+to the
+> > > > > usermode helper process. This makes coredump handling a lot more
+> > > > > reliable for userspace. In parallel with this commit we already h=
+ave
+> > > > > systemd adding support for this in [1].
+> > > > >=20
+> > > > > We create a pidfs file for the coredumping process when we proces=
+s the
+> > > > > corename pattern. When the usermode helper process is forked we t=
+hen
+> > > > > install the pidfs file as file descriptor three into the usermode
+> > > > > helpers file descriptor table so it's available to the exec'd pro=
+gram.
+> > > > >=20
+> > > > > Since usermode helpers are either children of the system_unbound_=
+wq
+> > > > > workqueue or kthreadd we know that the file descriptor table is e=
+mpty
+> > > > > and can thus always use three as the file descriptor number.
+> > > > >=20
+> > > > > Note, that we'll install a pidfd for the thread-group leader even=
+ if a
+> > > > > subthread is calling do_coredump(). We know that task linkage has=
+n't
+> > > > > been removed due to delay_group_leader() and even if this @curren=
+t isn't
+> > > > > the actual thread-group leader we know that the thread-group lead=
+er
+> > > > > cannot be reaped until @current has exited.
+> > > > >=20
+> > > > > Link: https://github.com/systemd/systemd/pull/37125 [1]
+> > > > > Tested-by: Luca Boccassi <luca.boccassi@gmail.com>
+> > > > > Signed-off-by: Christian Brauner <brauner@kernel.org>
+> > > > > ---
+> > > > >  fs/coredump.c            | 59 ++++++++++++++++++++++++++++++++++=
+++++++++++----
+> > > > >  include/linux/coredump.h |  1 +
+> > > > >  2 files changed, 56 insertions(+), 4 deletions(-)
+> > > > >=20
+> > > > > diff --git a/fs/coredump.c b/fs/coredump.c
+> > > > > index 9da592aa8f16..403be0ff780e 100644
+> > > > > --- a/fs/coredump.c
+> > > > > +++ b/fs/coredump.c
+> > > > > @@ -43,6 +43,9 @@
+> > > > >  #include <linux/timekeeping.h>
+> > > > >  #include <linux/sysctl.h>
+> > > > >  #include <linux/elf.h>
+> > > > > +#include <linux/pidfs.h>
+> > > > > +#include <uapi/linux/pidfd.h>
+> > > > > +#include <linux/vfsdebug.h>
+> > > > > =20
+> > > > >  #include <linux/uaccess.h>
+> > > > >  #include <asm/mmu_context.h>
+> > > > > @@ -60,6 +63,12 @@ static void free_vma_snapshot(struct coredump_=
+params *cprm);
+> > > > >  #define CORE_FILE_NOTE_SIZE_DEFAULT (4*1024*1024)
+> > > > >  /* Define a reasonable max cap */
+> > > > >  #define CORE_FILE_NOTE_SIZE_MAX (16*1024*1024)
+> > > > > +/*
+> > > > > + * File descriptor number for the pidfd for the thread-group lea=
+der of
+> > > > > + * the coredumping task installed into the usermode helper's fil=
+e
+> > > > > + * descriptor table.
+> > > > > + */
+> > > > > +#define COREDUMP_PIDFD_NUMBER 3
+> > > > > =20
+> > > > >  static int core_uses_pid;
+> > > > >  static unsigned int core_pipe_limit;
+> > > > > @@ -339,6 +348,27 @@ static int format_corename(struct core_name =
+*cn, struct coredump_params *cprm,
+> > > > >  			case 'C':
+> > > > >  				err =3D cn_printf(cn, "%d", cprm->cpu);
+> > > > >  				break;
+> > > > > +			/* pidfd number */
+> > > > > +			case 'F': {
+> > > > > +				/*
+> > > > > +				 * Installing a pidfd only makes sense if
+> > > > > +				 * we actually spawn a usermode helper.
+> > > > > +				 */
+> > > > > +				if (!ispipe)
+> > > > > +					break;
+> > > > > +
+> > > > > +				/*
+> > > > > +				 * Note that we'll install a pidfd for the
+> > > > > +				 * thread-group leader. We know that task
+> > > > > +				 * linkage hasn't been removed yet and even if
+> > > > > +				 * this @current isn't the actual thread-group
+> > > > > +				 * leader we know that the thread-group leader
+> > > > > +				 * cannot be reaped until @current has exited.
+> > > > > +				 */
+> > > > > +				cprm->pid =3D task_tgid(current);
+> > > > > +				err =3D cn_printf(cn, "%d", COREDUMP_PIDFD_NUMBER);
+> > > > > +				break;
+> > > > > +			}
+> > > > >  			default:
+> > > > >  				break;
+> > > > >  			}
+> > > > >=20
+> > > >=20
+> > > > I tried this change with Apport: I took the Ubuntu mainline kernel =
+build
+> > > > https://kernel.ubuntu.com/mainline/daily/2025-04-24/ (that refers t=
+o
+> > > > mainline commit e54f9b0410347c49b7ffdd495578811e70d7a407) and appli=
+ed
+> > > > these three patches on top. Then I modified Apport to take the
+> > > > additional `-F%F` and tested that on Ubuntu 25.04 (plucky). The res=
+ult
+> > > > is the coredump failed as long as there was `-F%F` on
+> > >=20
+> > > I have no clue what -F%F is and whether that leading -F is something
+> > > specific to Apport but the specifier is %F not -F%F. For example:
+> > >=20
+> > >         > cat /proc/sys/kernel/core_pattern
+> > >         |/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %F
+> > >=20
+> > > And note that this requires the pipe logic to be used, aka "|" needs =
+to
+> > > be specified. Without it this doesn't make sense.
 > >=20
-> > External email : Please do not click links or open attachments until
-> > you have verified the sender or the content.
+> > Apport takes short option parameters. They match the kernel template
+> > specifiers. The failing pattern:
 > >=20
+> > $ cat /proc/sys/kernel/core_pattern=20
+> > > /usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -F%F -- %=
+E
 > >=20
-> > Hello all,
+> > Once I drop %F Apport is called without issues:
 > >=20
-> > After upgrading to 6.14.3 on my PC with a MT7925 chip, I noticed that
-> > I could no longer ping *.local addresses provided by Avahi. In
-> > addition, I also noticed that I was not able to get a DHCP IPv6
-> > address from my router, no matter how many times I rebooted the
-> > router or reconnected with NetworkManager.
-> >=20
-> > Reverting to 6.14.2 fixes both mDNS and IPv6 addresses immediately.
-> > Going back to 6.14.3 immediately breaks mDNS again, but the IPv6
-> > address will stay there for a while before disappearing later,
-> > possibly because the DHCP lease expired? I am not sure exactly when
-> > it stops working.
-> >=20
-> > I've done a kernel bisect between 6.14.2 and 6.14.3 and found the
-> > offending commit that causes mDNS to fail:
-> >=20
-> > commit 80007d3f92fd018d0a052a706400e976b36e3c87
-> > Author: Ming Yen Hsieh <mingyen.hsieh@mediatek.com>
-> > Date:=C2=A0=C2=A0 Tue Mar 4 16:08:50 2025 -0800
-> >=20
-> > =C2=A0=C2=A0=C2=A0 wifi: mt76: mt7925: integrate *mlo_sta_cmd and *sta_=
-cmd
-> >=20
-> > =C2=A0=C2=A0=C2=A0 commit cb1353ef34735ec1e5d9efa1fe966f05ff1dc1e1 upst=
-ream.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Integrate *mlo_sta_cmd and *sta_cmd for the MLO firm=
-ware.
-> >=20
-> > =C2=A0=C2=A0=C2=A0 Fixes: 86c051f2c418 ("wifi: mt76: mt7925: enabling M=
-LO when the
-> > firmware supports it")
-> >=20
-> > =C2=A0drivers/net/wireless/mediatek/mt76/mt7925/mcu.c | 59 ++++--------=
----
-> > --------------------------------------------
-> > =C2=A01 file changed, 4 insertions(+), 55 deletions(-)
-> >=20
-> > I do not know if this same commit is also causing the IPv6 issues as
-> > testing that requires quite a bit of time to reproduce. What I do
-> > know with certainty as of this moment is that it definitely breaks in
-> > kernel 6.14.3.
-> >=20
-> > I've attached my hardware info as well as dmesg logs from the last
-> > working kernel from the bisect and 6.14.4 which exhibits the issue.
-> > Please let me know if there's any other info you need.
-> >=20
-> > Thanks!
-> > Benjamin Xiao
+> > $ cat /proc/sys/kernel/core_pattern=20
+> > > /usr/share/apport/apport -p%p -s%s -c%c -d%d -P%P -u%u -g%g -- %E
 >=20
-> Hi,
->=20
-> Thanks for reporting this issue, we will aim into this.
->=20
-> Can you provide me with your testing steps?
->=20
-> Best Regards,
-> Yen.
->=20
-> ************* MEDIATEK Confidentiality Notice
->  ********************
-> The information contained in this e-mail message (including any
-> attachments) may be confidential, proprietary, privileged, or otherwise
-> exempt from disclosure under applicable laws. It is intended to be
-> conveyed only to the designated recipient(s). Any use, dissemination,
-> distribution, printing, retaining or copying of this e-mail (including it=
-s
-> attachments) by unintended recipient(s) is strictly prohibited and may
-> be unlawful. If you are not an intended recipient of this e-mail, or beli=
-eve
->=20
-> that you have received this e-mail in error, please notify the sender
-> immediately (by replying to this e-mail), delete any and all copies of
-> this e-mail (including any attachments) from your system, and do not
-> disclose the content of this e-mail to any other person. Thank you!
+> Youm must have CONFIG_DEBUG_VFS=3Dy enabled where we trample the pidfs
+> file we just allocated. It's a debug only assert. I've removed it now
+> and pushed it to vfs-6.16.coredump. Can you either try with that or
+> simply unset CONFIG_DEBUG_VFS and retest.
+
+Yes, the Ubuntu mainline builds have CONFIG_DEBUG_VFS=3Dy set. I tried
+your vfs-6.16.coredump and it works. Thanks.
+
+--=20
+Benjamin Drung
+Debian & Ubuntu Developer
