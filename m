@@ -1,142 +1,97 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta038.useast.a.cloudfilter.net (omta038.useast.a.cloudfilter.net [44.202.169.37])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C881D20E032;
-	Wed, 30 Apr 2025 19:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37420E032
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 19:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746042420; cv=none; b=uwJj11wuSG49TkLxLqOL4X9mg7ZP38plzHun0Kk36UfBGk0S/OgTcfxaFf4kCBgMNTRRuXCwCphZYXJM1YNysxiTQS4cLshs0IbjXT1jL4ss4O/AG4/dzSjT+26imPBnHDY8RhnBgEfjXoB+bRYHH58gYxPH0velR9//Q8QjLAQ=
+	t=1746042439; cv=none; b=kReAxrIwjRN/ACxVetaz9w+SoLErvL6fXdAWx94miWN9YbmmojHdn6XPAsFzoUfiQ14qph5Y7ldwxq7uPxdulW+jq1pEbEs1s8xW33wRCCkosPCHd56r90B4UZjx/AGIGN40C3L8k9iTwZO6LxrKyNtUSwI1vYRULlGPMr5ogXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746042420; c=relaxed/simple;
-	bh=9LtxQBPKOiUjXtlTHWPxFOjZNz4jsv5g8e0uGwjCZfI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RhyqICbUrCmGl4iWrex0lhGfzDuKyfpfFxs6PC2U2T8FqSoF2TlTbqU0uTAHkH6a62Lmx3Hd5c2GfHbepneuMLBfRmrqiHz0Nxoc/Ms+Oy8qBpyOL9Z7WuTE3w17KU0uuAEx4zCAc/lDpniWiMWRQX8VW2tcKvFi4AqNVBHWQos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUEJUPA1; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746042439; c=relaxed/simple;
+	bh=rZMBHrZhnFOIs/GKEWTOf+qqgNTCxbQ6a+81ctNfUNU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=raqn7KpTtzcwPam98+sEOXhAQD1dIGbvShXdeMkqJYY+cP5674he/baSS9FYJrJrB7E0x2P6cGVWcTBEiL/9jNik0vy3L5RgUXiA5e38Q3y31l7jtJ5CauubkzOj/WrWgx/ZAE4BmoQDircijgQm/Gao8aCxokts5y+ML1hStZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=dmeWlgMz; arc=none smtp.client-ip=44.202.169.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUEJUPA1"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39149bccb69so105978f8f.2;
-        Wed, 30 Apr 2025 12:46:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746042417; x=1746647217; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=221neJIU1ejQ3qf8VHMblePVKbx+mBZh8+ACZ1QYRxg=;
-        b=RUEJUPA1bSUBBZ4HRvlW1WRPkeV1cmEn+q0j2RIkqw1QHaZNfqanVoOoWmNwL5VqZ9
-         2jeGFzEI47OXZ6Z+vwpMRhHkbW7wtyG5uIfaUTXb86qHy4W7ftztOcnAlXCHL+plcrcG
-         cRcu7YPfuu8VZrZEGMdvLaiTxkaAmIpwehnZqtgUZnWaGmndhMW9B4EGaAn8h9s84qBM
-         VrnT0N//dVhuVNpPfJpdDesqG1+I5hFK25gZskLwdtyvxv0wE1cccZWzQUmXQyNzsmXZ
-         fTMTyCbuTdr1NpGccc5wFGrY6XE1xvSCCuV2P8/smOZkzz33N7K6hmBzTDs7yp8LhsFA
-         TWWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746042417; x=1746647217;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=221neJIU1ejQ3qf8VHMblePVKbx+mBZh8+ACZ1QYRxg=;
-        b=tJ0To90VMRFOlG+bO0q0yeaRwG1nyQgZ5REnb3sUD7qL2A+zJMKIygRrx4EdvMIufM
-         huTNljG81ZB8fif17LILLl3BOZ/Eu2vVafaQ5WVEtlfjVt+ZYrTr5j79wfsr+tliu3Tg
-         ZCpCzntjXaWARgQFuW/GYKPXqy9znEVeXJLRW1Kdz7EXNRMcHsL287G0jHYbudNjHLKf
-         hvgkwggYc1RoCtt5bYYScQM1a7d9qTWXX/FoouG7xMPJJGXk4MAzxqcsXPBd25+b8q2I
-         fe9tgzmHie0b3pkxVvClw2YuUGlwEdaG26wPgTH5uR+T7NDNtvbEA0TcMe6z91bq5V/m
-         tioA==
-X-Forwarded-Encrypted: i=1; AJvYcCV4E4QcGhcAUc9BDlx0zJEn8ku0HhZ2G+fV4YiVg8iD2yHw7MAVqFS/dwNA8TzB5E0CgUudLyKZtHT5XOOn@vger.kernel.org, AJvYcCV7DqstczHyVx9ECjxagQIOhVUg7qJliwUMjeWXofVKty3agZRiu6Vaz/t2YPm1TRrTLP/PAKXqR9M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzxtxAArIoT8Mh1+yLif9BjXqY79HdJ0WtR5Go1rjxVsWH9/Cr
-	UvRGCgrB47DwCbrh1vh59iOAVp0QM9rEpOfUmfBolrR/rtQkXxzGnO7Z2uQS
-X-Gm-Gg: ASbGncvCEbbLF7NhEIEim6S6dWwX/1MYMatOwySPS8qjUZ4ELaQPMeJcabvTdNmQNyd
-	wzdJCYnGOR3LasNqrvazRNReF4BNao6rgJK88FISL47om8Kzoz1q6WrWZNBRHl24QgC947MAMqT
-	D6ZFfQ7QndTwg7YKfIVWxBDcYbx7QcVa5L7/72NXIJWYUPYBtZjRZ5NADKOhZ+U+doy/FPQkSCE
-	SvJZo4pNNPoKH9yrEULdq6/VHKu+cgRCNvrVEi1nQxGWYOZc5M22BaEvRudq4af3k004QYRxf4e
-	1itfHxgX1qixyqOg8S4u9W8UXgphI5CItqB9YIBEq3Ns2CsCohVK/7PqMaO17CruXnt3VNpCkM4
-	=
-X-Google-Smtp-Source: AGHT+IFqdejLBnkd9J3TsRgL/QFN+1GBCgffUsVhPYHdn7SILN/NvpuykFboLuGaK2KpbWOmv6ufXw==
-X-Received: by 2002:a5d:5887:0:b0:3a0:6c62:8169 with SMTP id ffacd0b85a97d-3a08f770be0mr4571395f8f.25.1746042416998;
-        Wed, 30 Apr 2025 12:46:56 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:c5ac:bf15:f358:81a8])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a073e46517sm17861646f8f.71.2025.04.30.12.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 12:46:56 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v9 2/2] i2c: riic: Recover from arbitration loss
-Date: Wed, 30 Apr 2025 20:46:47 +0100
-Message-ID: <20250430194647.332553-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="dmeWlgMz"
+Received: from eig-obgw-5006a.ext.cloudfilter.net ([10.0.29.179])
+	by cmsmtp with ESMTPS
+	id AAp5uOBIQiuzSADOmuOOYW; Wed, 30 Apr 2025 19:47:16 +0000
+Received: from gator4166.hostgator.com ([108.167.133.22])
+	by cmsmtp with ESMTPS
+	id ADOluRekwW4jOADOmuifrC; Wed, 30 Apr 2025 19:47:16 +0000
+X-Authority-Analysis: v=2.4 cv=UNHbHjfy c=1 sm=1 tr=0 ts=68127e44
+ a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
+ a=IkcTkHD0fZMA:10 a=XR8D0OoHHMoA:10 a=7T7KSl7uo7wA:10
+ a=nXsU5qcrRgWmc-VP2AYA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=rZMBHrZhnFOIs/GKEWTOf+qqgNTCxbQ6a+81ctNfUNU=; b=dmeWlgMz6G6zXCPBYFiRD+4rtU
+	3iR0nNQWlD8tkIqek5wLtiSDtkG5JgSMD0A21zlTW1lHRoFxmypSGpA6ylsvMPI+q6V65BGO27GEn
+	MXtf2hc/33osF/0jiEeblKx4gUlF0ipPo0yucnfg887oWtimnR7nwyxuirjU6gA5AQ4o7voNkaC1A
+	xSdtaqHMKOQIBwrWteidDWFCRZVi6vOoI+2UrDQnyVV4Xk8BuKmudXJJ644CTYZfUQ/GG7swwfNoE
+	iqAQxAOVc5Zd+8vkKOw87Te9fUYVUXvuhMl9H6QyiJ1OdjxenF8CU5rhAce22W0X6HkQ6tiZYNVty
+	Ru3GyvvQ==;
+Received: from [177.238.17.151] (port=37764 helo=[192.168.0.101])
+	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <gustavo@embeddedor.com>)
+	id 1uADOk-00000002wuX-3ONN;
+	Wed, 30 Apr 2025 14:47:15 -0500
+Message-ID: <ff411eb8-0321-488a-8e5e-14f426943697@embeddedor.com>
+Date: Wed, 30 Apr 2025 13:47:09 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2][next] bcachefs: Avoid -Wflex-array-member-not-at-end
+ warnings
+To: Kent Overstreet <kent.overstreet@linux.dev>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <aBJ4WVcvHv9sD1K6@kspp>
+ <zn74qlanwd3b4wmyecn7ostb6i42ceycaa2myijimfsrs3eglc@tsgoa3zbe6ue>
+Content-Language: en-US
+From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+In-Reply-To: <zn74qlanwd3b4wmyecn7ostb6i42ceycaa2myijimfsrs3eglc@tsgoa3zbe6ue>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 177.238.17.151
+X-Source-L: No
+X-Exim-ID: 1uADOk-00000002wuX-3ONN
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:37764
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 14
+X-Org: HG=hgshared;ORG=hostgator;
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfKWoav5zkK7bLzFYN7BdIYv5oKhtxnVhjeY408ztj1rrYy5/EYmOTrBl7YGRa4MXHBhlaazFj1Tkie84jDPe1JvhGf4MCwKqBysgn3clu6QzkZTVpR2x
+ TZA2yAqh4uIVStw5MZ4LyW5ooTRUj9N5vMSmQ9OQ56KfNPR5ZEvqGXuqcL2Ha+wXRvuG/uwzXB7U5itMDOztZ3fbs1y906pOR8AlMbAq9sHEv+874P5jv1JB
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Applied. Presumably you only need this in 6.16?
 
-Add support for detecting arbitration loss in the RIIC controller. For
-certain slave devices, it was observed that after I2C recovery, the
-transmission triggered an arbitration loss. To handle this, initiate
-the I2C recovery sequence and retry the transfer.
+Yes - there's no hurry.
 
-This ensures reliable communication in scenarios where arbitration
-loss may occur after recovery.
+Thanks
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/i2c/busses/i2c-riic.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
-index 740e53bdb2a9..86404d2df244 100644
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -79,6 +79,7 @@
- #define ICIER_SPIE	BIT(3)
- 
- #define ICSR2_NACKF	BIT(4)
-+#define ICSR2_AL	BIT(1)
- 
- #define ICBR_RESERVED	GENMASK(7, 5) /* Should be 1 on writes */
- 
-@@ -180,6 +181,7 @@ static int riic_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 
- 	reinit_completion(&riic->msg_done);
- 
-+retry:
- 	riic_writeb(riic, 0, RIIC_ICSR2);
- 
- 	for (i = 0, start_bit = ICCR2_ST; i < num; i++) {
-@@ -193,8 +195,14 @@ static int riic_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[], int num)
- 		riic_writeb(riic, start_bit, RIIC_ICCR2);
- 
- 		time_left = wait_for_completion_timeout(&riic->msg_done, riic->adapter.timeout);
--		if (time_left == 0)
-+		if (time_left == 0) {
-+			if (riic_readb(riic, RIIC_ICSR2) & ICSR2_AL) {
-+				ret = i2c_recover_bus(&riic->adapter);
-+				if (!ret)
-+					goto retry;
-+			}
- 			riic->err = -ETIMEDOUT;
-+		}
- 
- 		if (riic->err)
- 			break;
--- 
-2.49.0
+-Gustavo
 
