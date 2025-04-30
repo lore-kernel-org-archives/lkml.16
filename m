@@ -1,227 +1,211 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9148525A331;
-	Wed, 30 Apr 2025 12:33:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CD025B1F6;
+	Wed, 30 Apr 2025 12:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746016422; cv=none; b=rbH6i0qSrad/14dB+UudIVA8H71V0TDppCtREVp0tdBafAvrLFSZBHmMoA1VhLB09H1QtCfL8Ydj2RNgolTP+KGAe/2PqB/6eKvux0tyC45B4rAtXcDlEbZXuuF55YdmbLhmsD0rFh9fAuNhibD5HY2yzl97X/EgQrCv2Jtmfok=
+	t=1746016425; cv=none; b=qB7VkN5LUYbgSNgUpa2B3g+hMhB8xAvhw+kWrt99xCaJtmNSHZh9I/S6UXdt1u1lJjM8pt0ddXvIsTA2wph/LG2IMRv+dNLLxrYLnh20qGZx5dlY+xhsIaXCJTXfsEC1AzqazbQMb797Tkd2JdpTbVVa1hgGjYDsr5hhiPK3cbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746016422; c=relaxed/simple;
-	bh=AMHriJWtg25hnFA/So3L/EOWUqqACE2Z4o1uB6xjZeA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S8mVpcOiQ30vyTmEjRwA57t5PVVyLf24qgxbizQ6hHehkE8SVBge4eLRgZes9Dy0XYbDsvlIenpVpykHJaPC6JJsOxGzo+68IRdGeH0U8CPRaTEd+7C8K17/AVuZPLEMIahQ8H+4Xm2gmOmRtLRazIGufbP5Q36sRLGnDpGZ91k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ex5VHu3J; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746016425; c=relaxed/simple;
+	bh=CYlvTWDWhOgSaAty4rTheIQ+iS6Dm1BlS+jESU4cLTU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qds+/qvAlWOTPMs7OeiPcBoYN4AIHKLHXGCxhMkbeHhbrG8XLh1VBYZz6WsltYN10c5yqXczVz2CDMZhZOHga6KmlKgGnJ+mx1Opqv8q4rgxceH9tT8s2EWhdR1apjKSegPXbWkSLWiPwBcjKrH5dKhdsp3tQb89azEYK4D4Zmo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ej07RYaB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ex5VHu3J"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-736c3e7b390so7291927b3a.2;
-        Wed, 30 Apr 2025 05:33:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746016420; x=1746621220; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nvhhvpDOxzlX5SAkLZgkSUnI6uZuO15oKBiHsWrIAXo=;
-        b=Ex5VHu3Js3meZ6q6qVE6afZ3leFHXcitpzQ/u5Gozb3Nn9RT2bcAa360peSh0myCP4
-         USNXxNXu4avrsr37XxVqHSiHTd15fo58ya2sfVEU3w68IEXg5yXnZnNShEAmkDFuerVO
-         e/l2cb0ye6qm0dlT7hKcRjwieQPEvgg27WIwr+YX4d5UHICqekWLRAAhFK16MRyPC+19
-         2j9rI7EuKiDnm9RPJWXnv063g0G8/s348ttIT7NaVEOJGTDVF7wfXQGW8ANA8MaO7aFz
-         3TdEAwi1Bf6a5PYVeXlh8Bii7GiBT8jx4XpPoIO2z1dDjaYM9a6hxffCX5LsEc0oXKrf
-         CrZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746016420; x=1746621220;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nvhhvpDOxzlX5SAkLZgkSUnI6uZuO15oKBiHsWrIAXo=;
-        b=hy54TzmRUOFYb6Upao9ZjwO7FYGsU0xZIDBXHQvXF/wMwmM/7f/seYMwDXKxacCnmo
-         nvdUm5sf/Gerz7TKJQ5X7GIvu83kL4RCWWcOp2eHRyP2JL63652hlE3vmmPQ+rN12q0U
-         csgQ4Asop4R+wC8pMkwLjYS3EahWsQQgYWU41fOR/Vla7tsW7O7ZHcAcVMzT1y0m/S3X
-         GKpxtyJ9IcyowgtuWgfcHFxvn5D3Z2V3Qwj/ElJmERbQNjE4n4vcwg1j439FlOBZijpw
-         xExl4AZGlJUojzKsYTvnZPdOPob/xtYHNLcDGcoyN5D9UsH5D9t7GjiyBXx74Ha5dEPi
-         pCSg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmvSJQlKbYj7uGbYkkQjYLIt82KSMXoRLC31x1GwuxwNJS/5mQ0kjDolFR0ox8nnEyIJ18tSMpnIA=@vger.kernel.org, AJvYcCVM8Wpnf85heD/WbM7Hl01MKbICaD+geG51FzNkflVyfVHwtrIn8C4xHxnhl8f3syw3mHPkoEWliUQ/DkI=@vger.kernel.org, AJvYcCW8tUtdX0igdfcSnJNwYXXCll6ZR6TVU3bqpz4byUZFjUn8yZ/mWgBSsrRQG/eEBhSDBjwvMbV7BAaFajXObvwilpQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZBXhzuzzgsObBnsT/9qoAyjPvg+3rtW5WA8FmwtCneYx4HX6T
-	YQ0l/W3u5yKPsT6+xD9es7sk4J95z0PRJVrhzTN+lmgWGag0ffl1
-X-Gm-Gg: ASbGnctHRDZA1/9Xf/1aSvXq6DS9xfMV78Vwvnnb3t7ICPJu8E+u9bFdSKbacpwJX4e
-	P0Whr2Tg9YgTco11WDQToc0AAjN+eIMfYVG8cFgs/Gns88Gb0vx2ZK2OojrMV9iHxZHAQuw3MtB
-	f5f8LTK9t/ZCKMqWrLweK6Qs2gqQQz36/p+inaHvwnQL6xGqcu++ceZa2NtwFDFjccOSThpWfKI
-	dAodXT6B5cRomKM/2zKmnsZuB28i7uRGE/j2P5ODvjnzEHM4UbaE279ND5D4X2y+ujvhzsNb1bc
-	HqO2sEo/E1OxS/SkwCqfCxLVPE1RlH5hVhfP9Vt0d273UFanMJhcvg==
-X-Google-Smtp-Source: AGHT+IE32P919fQ5R/hcnyijMUiuE0NQgTE1aYia66YLx8XCG3ZA9kGC6cfX4skbXBq1rJ+lGp2Cug==
-X-Received: by 2002:a05:6a00:1496:b0:730:75b1:7219 with SMTP id d2e1a72fcca58-740389cb685mr3926486b3a.12.1746016419699;
-        Wed, 30 Apr 2025 05:33:39 -0700 (PDT)
-Received: from localhost.localdomain ([110.44.101.8])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a62e23sm1522627b3a.147.2025.04.30.05.33.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 05:33:38 -0700 (PDT)
-From: Anand Moon <linux.amoon@gmail.com>
-To: Bartlomiej Zolnierkiewicz <bzolnier@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>,
-	Lukasz Luba <lukasz.luba@arm.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-pm@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-samsung-soc@vger.kernel.org (open list:SAMSUNG THERMAL DRIVER),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/SAMSUNG S3C, S5P AND EXYNOS ARM ARCHITECTURES),
-	linux-kernel@vger.kernel.org (open list),
-	llvm@lists.linux.dev (open list:CLANG/LLVM BUILD SUPPORT:Keyword:\b(?i:clang|llvm)\b)
-Cc: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCH v6 2/4] thermal/drivers/exynos: Use devm_clk_get_enabled() helpers
-Date: Wed, 30 Apr 2025 18:02:58 +0530
-Message-ID: <20250430123306.15072-3-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250430123306.15072-1-linux.amoon@gmail.com>
-References: <20250430123306.15072-1-linux.amoon@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ej07RYaB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7211AC4CEE9;
+	Wed, 30 Apr 2025 12:33:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746016425;
+	bh=CYlvTWDWhOgSaAty4rTheIQ+iS6Dm1BlS+jESU4cLTU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ej07RYaBPnSgRT4rQciY+84QnmXBjw42Y5B0ot7gAr3j0265bSs7jsb0/K9jEA+Q8
+	 A+grj75Arf2GoSPQ31LJbADZ6G+2ouaByOPimfTO1nbD7pZ8NWGwTjKHOJimt8zS4N
+	 re3NeH0bbnXwMec0v+qoH++nVMF/ahAxoompySeNZ4dJlx6gyGmMV2aKQbHBvw9fCL
+	 pgODU3EdT6ATfPw74/vER8DcUASxAajBD74UXwS+bRDupd+dMesOhu+o4ueY8N9f2z
+	 /6tIgQZGY5KnyQYXvrqtFG/I68WrziuagzjyxDG4clYoCMaeyA9JsCQsZ/Sc2KpJjx
+	 yMujGNnKAGxuw==
+Date: Wed, 30 Apr 2025 14:33:42 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	Johan Hovold <johan@kernel.org>, Sebastian Reichel <sre@kernel.org>, linux-pwm@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
+Message-ID: <5urcec625u3jva5kyf7bztehqijfhztmo4op25joqyt7gl6kjt@5tn2fbot3fri>
+References: <20250226-pwm-bl-read-back-period-from-hw-v1-1-ccd1df656b23@linaro.org>
+ <xltamao27utfrsax2pc6mh5tthanmrqszz4k7gyw3knqkm24xp@4tydmhfh6g4j>
+ <Z8BjiRjLin8jTE8j@linaro.org>
+ <rplq65h5k7kfu7anwhuh3w6lmwtm47lzeruofon4ilsxkhogjl@6k7nmeotjidd>
+ <Z8CX3vr1xuaKT38m@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2ysdmqcj2sl7kjzl"
+Content-Disposition: inline
+In-Reply-To: <Z8CX3vr1xuaKT38m@linaro.org>
 
-Use devm_clk_get_enabled() helper instead of calling devm_clk_get() and
-then clk_prepare_enable(). It simplifies the error handling and makes
-the code more compact.
 
-Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-v6: New patch as per Daniel request.
----
- drivers/thermal/samsung/exynos_tmu.c | 77 ++++++++--------------------
- 1 file changed, 20 insertions(+), 57 deletions(-)
+--2ysdmqcj2sl7kjzl
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH RFC] backlight: pwm_bl: Read back PWM period from provider
+MIME-Version: 1.0
 
-diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
-index 04517d52afbd..aa0726b33c84 100644
---- a/drivers/thermal/samsung/exynos_tmu.c
-+++ b/drivers/thermal/samsung/exynos_tmu.c
-@@ -1036,65 +1036,41 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	data->clk = devm_clk_get(dev, "tmu_apbif");
-+	data->clk = devm_clk_get_enabled(dev, "tmu_apbif");
- 	if (IS_ERR(data->clk))
--		return dev_err_probe(dev, PTR_ERR(data->clk), "Failed to get clock\n");
--
--	ret = clk_prepare(data->clk);
--	if (ret) {
--		dev_err(dev, "Failed to get clock\n");
--		return ret;
--	}
--
--	switch (data->soc) {
--	case SOC_ARCH_EXYNOS5420_TRIMINFO:
--		data->clk_sec = devm_clk_get(dev, "tmu_triminfo_apbif");
--		if (IS_ERR(data->clk_sec)) {
--			ret = dev_err_probe(dev, PTR_ERR(data->clk_sec),
--					    "Failed to get clk_sec clock\n");
--			goto err_clk;
--		}
--		ret = clk_prepare(data->clk_sec);
--		if (ret) {
--			dev_err(dev, "Failed to prepare clk_sec clock\n");
--			goto err_clk_sec;
--		}
--		break;
--	case SOC_ARCH_EXYNOS5433:
--	case SOC_ARCH_EXYNOS7:
--		data->sclk = devm_clk_get(dev, "tmu_sclk");
--		if (IS_ERR(data->sclk)) {
--			ret = dev_err_probe(dev, PTR_ERR(data->sclk), "Failed to get sclk\n");
--			goto err_clk;
--		} else {
--			ret = clk_prepare_enable(data->sclk);
--			if (ret) {
--				dev_err(dev, "Failed to enable sclk\n");
--				goto err_clk;
--			}
--		}
--		break;
--	default:
--		break;
-+		return dev_err_probe(dev, PTR_ERR(data->clk),
-+				     "Failed to get clock\n");
-+
-+	if (data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO) {
-+		data->clk_sec = devm_clk_get_enabled(dev, "tmu_triminfo_apbif");
-+		if (IS_ERR(data->clk_sec))
-+			return dev_err_probe(dev, PTR_ERR(data->clk_sec),
-+					     "Failed to get clk_sec clock\n");
-+	} else if (data->soc == SOC_ARCH_EXYNOS5433 ||
-+		   data->soc == SOC_ARCH_EXYNOS7) {
-+		data->sclk = devm_clk_get_enabled(dev, "tmu_sclk");
-+		if (IS_ERR(data->sclk))
-+			return dev_err_probe(dev, PTR_ERR(data->sclk),
-+					     "Failed to get sclk\n");
- 	}
- 
- 	ret = exynos_tmu_initialize(pdev);
- 	if (ret) {
- 		dev_err(dev, "Failed to initialize TMU\n");
--		goto err_sclk;
-+		return ret;
- 	}
- 
- 	data->tzd = devm_thermal_of_zone_register(dev, 0, data,
- 						  &exynos_sensor_ops);
- 	if (IS_ERR(data->tzd)) {
--		ret = dev_err_probe(dev, PTR_ERR(data->tzd), "Failed to register sensor\n");
--		goto err_sclk;
-+		return dev_err_probe(dev, PTR_ERR(data->tzd),
-+				     "Failed to register sensor\n");
- 	}
- 
- 	ret = exynos_thermal_zone_configure(pdev);
- 	if (ret) {
- 		dev_err(dev, "Failed to configure the thermal zone\n");
--		goto err_sclk;
-+		return ret;
- 	}
- 
- 	ret = devm_request_threaded_irq(dev, data->irq, NULL,
-@@ -1104,30 +1080,17 @@ static int exynos_tmu_probe(struct platform_device *pdev)
- 					dev_name(dev), data);
- 	if (ret) {
- 		dev_err(dev, "Failed to request irq: %d\n", data->irq);
--		goto err_sclk;
-+		return ret;
- 	}
- 
- 	exynos_tmu_control(pdev, true);
--	return 0;
- 
--err_sclk:
--	clk_disable_unprepare(data->sclk);
--err_clk_sec:
--	clk_unprepare(data->clk_sec);
--err_clk:
--	clk_unprepare(data->clk);
- 	return ret;
- }
- 
- static void exynos_tmu_remove(struct platform_device *pdev)
- {
--	struct exynos_tmu_data *data = platform_get_drvdata(pdev);
--
- 	exynos_tmu_control(pdev, false);
--
--	clk_disable_unprepare(data->sclk);
--	clk_unprepare(data->clk);
--	clk_unprepare(data->clk_sec);
- }
- 
- #ifdef CONFIG_PM_SLEEP
--- 
-2.49.0
+Hello Abel,
 
+On Thu, Feb 27, 2025 at 06:50:38PM +0200, Abel Vesa wrote:
+> On 25-02-27 16:51:15, Uwe Kleine-K=F6nig wrote:
+> > On Thu, Feb 27, 2025 at 03:07:21PM +0200, Abel Vesa wrote:
+> > > On 25-02-26 17:34:50, Uwe Kleine-K=F6nig wrote:
+> > > > On Wed, Feb 26, 2025 at 05:31:08PM +0200, Abel Vesa wrote:
+> > > > > The current implementation assumes that the PWM provider will be =
+able to
+> > > > > meet the requested period, but that is not always the case. Some =
+PWM
+> > > > > providers have limited HW configuration capabilities and can only
+> > > > > provide a period that is somewhat close to the requested one. This
+> > > > > simply means that the duty cycle requested might either be above =
+the
+> > > > > PWM's maximum value or the 100% duty cycle is never reached.
+> > > >=20
+> > > > If you request a state with 100% relative duty cycle you should get=
+ 100%
+> > > > unless the hardware cannot do that. Which PWM hardware are you usin=
+g?
+> > > > Which requests are you actually doing that don't match your expecta=
+tion?
+> > >=20
+> > > The PWM hardware is Qualcomm PMK8550 PMIC. The way the duty cycle is
+> > > controlled is described in the following comment found in lpg_calc_fr=
+eq
+> > > of the leds-qcom-lpg driver:
+> > >=20
+> > > /*
+> > >  * The PWM period is determined by:
+> > >  *
+> > >  *          resolution * pre_div * 2^M
+> > >  * period =3D --------------------------
+> > >  *                   refclk
+> > >  *
+> > >  * Resolution =3D 2^9 bits for PWM or
+> > >  *              2^{8, 9, 10, 11, 12, 13, 14, 15} bits for high resolu=
+tion PWM
+> > >  * pre_div =3D {1, 3, 5, 6} and
+> > >  * M =3D [0..7].
+> > >  *
+> > >  * This allows for periods between 27uS and 384s for PWM channels and=
+ periods between
+> > >  * 3uS and 24576s for high resolution PWMs.
+> > >  * The PWM framework wants a period of equal or lower length than req=
+uested,
+> > >  * reject anything below minimum period.
+> > >  */
+> > >=20
+> > > So if we request a period of 5MHz, that will not ever be reached no m=
+atter what config
+> > > is used. Instead, the 4.26 MHz is selected as closest possible.
+> >=20
+> > The trace in the other mail thread suggest that you asked for a period
+> > of 5 ms, not 5 MHz. And that results in a period of 4.26 ms.
+>=20
+> OK. So unit is ms. Got it.
+>=20
+> >=20
+> > > Now, the pwm_bl is not aware of this limitation and will request duty=
+ cycle values that
+> > > go above 4.26MHz.
+> >=20
+> > It requests .period =3D 5 ms + .duty_cycle =3D 5 ms. This is fine, and
+> > according to the trace this results in both values becoming 4.26 ms in
+> > real life. Seems fine to me.
+>=20
+> Right, but as I keep trying to explain is that, the consumer keeps
+> asking for duty cycles that go over the 4.26ms, which is the period that
+> the provider decided it can do instead of 5ms.
+
+I see no problem here. Yes, requests are not implemented exactly in
+general, but there is no way around that. For some use-cases the picked
+configuration is sensible, for others less so. There is also no way
+around that.
+
+> > > > > This could be easily fixed if the pwm_apply*() API family would a=
+llow
+> > > > > overriding the period within the PWM state that's used for provid=
+ing the
+> > > > > duty cycle. But that is currently not the case.
+> > > >=20
+> > > > I don't understand what you mean here.
+> > >=20
+> > > What I was trying to say is that the PWM generic framework currently =
+doesn't
+> > > allow overriding the PWM state's period with one provided by the cons=
+umer,
+> > > when calling pwm_apply_might_sleep().
+> >=20
+> > Either I still don't understand what you want, or that is impossible or
+> > useless. If you target .period =3D 5 ms and the hardware can only do 4.=
+26
+> > ms, why would you want to override period to 5 ms?
+>=20
+> Meaning the consumer should become aware of the period the provider can
+> do before asking for a duty cycle.=20
+
+There is pwm_round_waveform_might_sleep() that you could use. Downside
+is that is currently only works for two lowlevel drivers.
+
+> If you look at the other mail thread, the trace there shows the
+> following sequence for every new backlight update request:
+>=20
+> 1. pwm_apply with consumer's period (5ms)
+> 2. pwm_get reads the provider's period (4.25ms)=20
+>    - which is what the provider is able to do instead of 5ms
+> 3. pwm_apply (due to debug) which uses the state from 2.
+> 4. pwm_get reads back exactly as 2.
+>=20
+> So we can ignore 3 and 4 for now as they are there due to debug,
+> but the step 1 still requests a value over the 4.26ms (5ms),
+> which in the provider will translate to a pwm value higher than allowed
+> by the selected configuration.
+
+The lowlevel driver sees the request e.g.
+
+	.period =3D 5000
+	.duty_cycle =3D 4600
+
+and is supposed to implement (I guess)
+
+	.period =3D 4260
+	.duty_cycle =3D 4260
+
+=2E I don't see a technical problem here (apart from you being unlucky
+about the choice made?).
+
+Best regards
+Uwe
+
+--2ysdmqcj2sl7kjzl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmgSGKQACgkQj4D7WH0S
+/k44Rwf/aNKxkT+yPlC4Q8XTXzFe99nZwAn4OVpAe8qXQ6H3PeeU4CGPHDxPomi5
+QPpT0x53dWtJbk0qe9vr6fs6smmhN0w/kIVCaBj1eRUYKQdPnAE0lmPz01njPeM1
+1ASwQxqhOS2ikZHvwgm7hZlXee5nW39R6Fdx/aC/8ff+Xiv+wk283f8aXQwFaYv8
+C6W9z98zQ/51YZpmDATg6K9tD0uhMwfYsO5sikUNdZFv6rNosqzcd5DX+lQGE1ud
+SxUJprwiGIgi/sy0Yhy3JKAYK4+ktk27E+j+VX8qi2lsrLWqtvT54eulUcRX+tAj
+5ra7VKQWNbSMFO38wT6AIB3z3uzI7g==
+=B4w0
+-----END PGP SIGNATURE-----
+
+--2ysdmqcj2sl7kjzl--
