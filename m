@@ -1,195 +1,122 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C721C259CBB
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 12:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6936A24728A;
+	Wed, 30 Apr 2025 12:14:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746015163; cv=none; b=OK6WZ2n8qS0PcMf7f8FzSCgpnxFuG3CF1nfeJ4k5FtVBWRhxmzqSCThjH0W8IwQabiv6UzibHFz+EV5iUL6gi4x+g1O5qkSX5p9Qx5MBiSI36ZiXt/oiEBVnwlnbzag9PxenQNuXk+fjbnimo/yXsw56G4YHxFKjWxXlWlYsK4Y=
+	t=1746015251; cv=none; b=mAOshULqI3aQTwdgqomxfhzuycHEuM2P88cKxdtTAiGB07KiuuxL1wmallnoMSWsbZSHEeUX7Z0T9+5AC5fvoAuKmYDJFd3ue//Y1u44DIOsgMPV5MAA/+cbRxOHRZaZrPztgMWdIDm51E6I/ok3FhfK9Xpe/cbcph2IjI6HVuU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746015163; c=relaxed/simple;
-	bh=QiFE57zyx6kmjXiSN4/oHw9/UfRS+tfM4wy66RCOdrs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OjX8JI31jUzVpZfBhJ/f3YlxEdG1ZazZ2Hgr1LTlLZFoqBcOMwQI2K4h32pjzGlpcy5d2J+Ky9bWAj+ElFPrUYUqMR6N8bV/n5i+0Sno3R9NxnQV1uow7jyKMUJbTReajSopVcnJ7doFaMB1bVMLrt7oiCxFm8Jypg86Gube6HA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=C+3JpQdK; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C+3JpQdK"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac25d2b2354so1094853266b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 05:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746015160; x=1746619960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bw5vuERICCQaAaztVYNub3Fq870dmKKXz2A+Vw1GzLE=;
-        b=C+3JpQdKyNMU8tqXWq7fJIrOosbPBqu2wn6HfO8ikS3fZ4SaxiWaXlKwYQjWcVqxvW
-         2gB0cQzz8QS7sUBJC7tC0vhQ+SBt2BA9zBXPC9bOUNHY7Gx8iRAPi+M0FI7lFybaZ5e9
-         H7x98Feuv1BAu7CLMGl0QSzgwPdzxbYMngUUsetIBBq/xyTq66mTTiJXr+gmd+FTnIzk
-         HUF/lCcE7209kXTYQMlim30My/3LYXtTHGnVVI0LnUK7LAZkLbx5F3120OGN/jHpRHmm
-         IZsCipzGyDzwT2BE/wRU81CLO+1uMYkb292sRlDpYpvjFULMDwPUvp4FyPQmRYGFWDS8
-         nNFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746015160; x=1746619960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bw5vuERICCQaAaztVYNub3Fq870dmKKXz2A+Vw1GzLE=;
-        b=Ki7FagO9kOVWTH1QJlnSZPJdfUGfuZlQnNFuUbbcbsxjW/Rb9i3Z9GRxcyXwKydd8G
-         ILdyzKAhg3BQdeqgQocblA32+QzLjEanEt6ANA7ZkoFyGG2/mBoRwajTwYB8qhwZJfaT
-         fRl8/5iIr+P51SFeYl5X3Qx4XTuLDhi3Vh1s08o5L6vonToOB03lnz5ueKGxk2B/Ph1n
-         pjDT4oW8a9hXEZ5evA8BkTk1zo7LGest2RHZksfR47ZVSe5TnWYdOPmo46f+ttxtPH2H
-         6IlB/NSIMt5ZfMhXUTV0YsKiml3JhztK34ViRuArE/AeZ7An84172EHS3w34LJHaYNZ3
-         CUDg==
-X-Forwarded-Encrypted: i=1; AJvYcCXEr6C+0pAmMs5gFH6Ni5s55nhBYgm+2SNSoKug/U0qb46CUjVTYcg74Qw+s1Qp9pVRuRigS5LP4r15Co4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhSagWkEl8L0kGMGY6N68Fd0QNW2N3bAX2wFKui+BXrhyx/Vjo
-	dlfINYRn/XWFQw8JpawMG93PA2gTNBrI7x/k8CwJXjji8MAX5MxApw+dWOL0ABKKknPt3jojzHq
-	Z08A7+yGJcmQ7iTfPpaPEBM2kwfGzs1GsXmDPnQ==
-X-Gm-Gg: ASbGncuKSfBrv7ZScIUiXAeFskAK54eRcrxnxAXCozqpp+Szv+QZiPrJ5GV1f//2AGN
-	bMuEAsj66WC5uA2Plfa3uiMFZp+jrdXQKpClEPe9i7KZiGip6IbKYNEccwcJvzCd+Iiib7/qk2d
-	eHje6AqFho2hmDBUhPUHnk7gVCGz59avaUxwjE4s242KmTTlRn7kKpMg==
-X-Google-Smtp-Source: AGHT+IEBVMXhh9O68BsmwiGuVRDwFqgaRwRx3WWJWKtbEdBnrWBtuHEntXm1t41yUiPtsDukCLWcJeDZW/ap4XicZtU=
-X-Received: by 2002:a17:907:7d86:b0:ac7:3817:d8da with SMTP id
- a640c23a62f3a-acedc762e3bmr301811066b.52.1746015159919; Wed, 30 Apr 2025
- 05:12:39 -0700 (PDT)
+	s=arc-20240116; t=1746015251; c=relaxed/simple;
+	bh=LiBOXVSo3YvRCvgf0MEGE0OBC6pt4z+3BeVByew1hq0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CEsmS6S/Yzcsf1iSzrTw+QgJwtHl3H0mSOC/8CHE/VpJmnbp2fYgGr/iPZ2auvsHO54p16wDcJLFPbfvKYO0tFavxqxzNRPcN4Mq7ZLwdm9cpwdio7TtJqjyOMy37h/O/OiCoOpzhwySbMkG/oDY1y7wiNw2itPW8OwQPVUSq1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC502C4CEE9;
+	Wed, 30 Apr 2025 12:14:08 +0000 (UTC)
+Message-ID: <6fc17824-8442-4b97-8a8a-8a593dfd98cc@xs4all.nl>
+Date: Wed, 30 Apr 2025 14:14:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com> <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
-In-Reply-To: <CAHUa44E_JZdYnGrReP0zWCP1wdu2BdJ9DSZZ3a2OiobRj61ThQ@mail.gmail.com>
-From: Rouven Czerwinski <rouven.czerwinski@linaro.org>
-Date: Wed, 30 Apr 2025 14:12:28 +0200
-X-Gm-Features: ATxdqUGnAbXl5wqnE5WEVJ_UQiM-RMiem7NwvrC5SiRxCziM9qBoRHZIDqAo6Pc
-Message-ID: <CAK8z29XWCujUdLXcHz075+xcix8HV2Mp3EtxxX9GB7vGjwi3HA@mail.gmail.com>
-Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit kernels
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Jann Horn <jannh@google.com>, Sumit Garg <sumit.garg@kernel.org>, 
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] media: i2c: lt6911uxe: Fix Kconfig dependencies:
+To: Arnd Bergmann <arnd@arndb.de>, Dongcheng Yan <dongcheng.yan@intel.com>,
+ Arnd Bergmann <arnd@kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ "laurent.pinchart" <laurent.pinchart@ideasonboard.com>,
+ Umang Jain <umang.jain@ideasonboard.com>, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250314154738.3983798-1-arnd@kernel.org>
+ <ecb959fe-69e3-4265-9e4b-326bff421153@intel.com>
+ <3bb730a9-5d8a-41c6-8a27-e099561b5890@app.fastmail.com>
+ <0eb40ff7-7123-477f-a477-6d537195346b@xs4all.nl>
+ <9586ec8a-ea48-4586-89f1-3ff118809223@app.fastmail.com>
+Content-Language: en-US, nl
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Autocrypt: addr=hverkuil@xs4all.nl; keydata=
+ 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
+In-Reply-To: <9586ec8a-ea48-4586-89f1-3ff118809223@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi,
+On 30/04/2025 13:21, Arnd Bergmann wrote:
+> On Tue, Mar 18, 2025, at 14:51, Hans Verkuil wrote:
+>> On 3/17/25 11:32, Arnd Bergmann wrote:
+>>> On Mon, Mar 17, 2025, at 11:17, Yan, Dongcheng wrote:
+>>>
+>>>> So I remove this select flag and passed lkp build test in patch v7.
+>>>> But now it encounters build error again, I'm curious why...
+>>>
+>>> I don't currently get any more build errors with my patch
+>>> added in, and I think this should be sufficient. Can you forward
+>>> me the errors and config you get with my patch?
+>>
+>> FYI: I plan to take Arnd's patch tomorrow to be in time for the merge window.
+>>
+>> If more issues are found, then they can be on top later.
+> 
+> Not sure what happened: I see that my patch was in next-20250424
+> and earlier but is now missing again, so the link failure returned.
+> 
+> It was in git://linuxtv.org/media-ci/media-pending.git at the
+> time along with two more patches that are now also missing:
+> 
+> d51adf038ebe media: cec: tda9950: add back i2c dependency
+> 118b34092e37 media: i2c: lt6911uxe: add two selects to Kconfig
+> 0dce5b44bd38 media: platform: synopsys: VIDEO_SYNOPSYS_HDMIRX should depend on ARCH_ROCKCHIP
+> 
+>       Arnd
 
-On Wed, 30 Apr 2025 at 13:53, Jens Wiklander <jens.wiklander@linaro.org> wr=
-ote:
->
-> On Mon, Apr 28, 2025 at 3:06=E2=80=AFPM Jann Horn <jannh@google.com> wrot=
-e:
-> >
-> > The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
-> > 32-bit kernels: Multiplying a user-provided 32-bit value with the
-> > size of a structure can wrap around on such platforms.
-> >
-> > Fix it by using saturating arithmetic for the size calculation.
-> >
-> > This has no security consequences because, in all users of
-> > TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
-> > for wrapping.
-> >
-> > Signed-off-by: Jann Horn <jannh@google.com>
-> > ---
-> > Note that I don't have a test device with a TEE; I only compile-tested
-> > the change on an x86-64 build.
-> > ---
-> >  drivers/tee/tee_core.c | 11 ++++++-----
-> >  1 file changed, 6 insertions(+), 5 deletions(-)
->
-> Looks good, I'm picking up this.
->
-> Thanks,
-> Jens
->
-> >
-> > diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> > index d113679b1e2d..acc7998758ad 100644
-> > --- a/drivers/tee/tee_core.c
-> > +++ b/drivers/tee/tee_core.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/fs.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/module.h>
-> > +#include <linux/overflow.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/tee_core.h>
-> >  #include <linux/uaccess.h>
-> > @@ -19,7 +20,7 @@
-> >
-> >  #define TEE_NUM_DEVICES        32
-> >
-> > -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
-> > +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x=
-)))
-> >
-> >  #define TEE_UUID_NS_NAME_SIZE  128
-> >
-> > @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_contex=
-t *ctx,
-> >         if (copy_from_user(&arg, uarg, sizeof(arg)))
-> >                 return -EFAULT;
-> >
-> > -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf=
-.buf_len)
-> > +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params))=
- !=3D buf.buf_len)
-> >                 return -EINVAL;
-> >
-> >         if (arg.num_params) {
-> > @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx=
-,
-> >         if (copy_from_user(&arg, uarg, sizeof(arg)))
-> >                 return -EFAULT;
-> >
-> > -       if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) !=3D buf=
-.buf_len)
-> > +       if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params))=
- !=3D buf.buf_len)
-> >                 return -EINVAL;
-> >
-> >         if (arg.num_params) {
-> > @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *=
-ctx,
-> >         if (get_user(num_params, &uarg->num_params))
-> >                 return -EFAULT;
-> >
-> > -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) !=3D buf.b=
-uf_len)
-> > +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) !=
-=3D buf.buf_len)
-> >                 return -EINVAL;
-> >
-> >         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KE=
-RNEL);
-> > @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *=
-ctx,
-> >             get_user(num_params, &uarg->num_params))
-> >                 return -EFAULT;
-> >
-> > -       if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_=
-len)
-> > +       if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) >=
- buf.buf_len)
-> >                 return -EINVAL;
-> >
-> >         params =3D kcalloc(num_params, sizeof(struct tee_param), GFP_KE=
-RNEL);
-> >
-> > ---
-> > base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-> > change-id: 20250428-tee-sizecheck-299d5eff8fc7
-> >
-> > --
-> > Jann Horn <jannh@google.com>
-> >
+I believe Mauro is working on preparing a PR for 6.15 with these patches.
+They are here:
 
-I ran this through the arm32 qemu virt machine to test my new development s=
-etup,
-so:
+https://git.linuxtv.org/media-ci/media-pending.git/log/?h=fixes
 
-Tested-by: Rouven Czerwinski <rouven.czerwinski@linaro.org>
+Regards,
 
-Best regards,
-Rouven
+	Hans
