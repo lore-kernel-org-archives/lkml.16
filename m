@@ -1,197 +1,100 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42E81219314;
-	Wed, 30 Apr 2025 08:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105E520D505
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002853; cv=none; b=cwSGN86ymxWIHlAUQrOmTzpCUNIbA0VbLXsRTcoyVgsRaw5yIk4SFWhLTdw2SQACU3C2uk6BhkaYrRnamXvy/Nv++a6X2evDHg2j3ci6ebpNWOOOMlrZOMMw0aygD4PqQy0z7J1JJSFkYsjJzZFIidYMl9L2KIdSbyzZ+aWTsBI=
+	t=1746002866; cv=none; b=LTFo2OGVEkvOHtE5MymlvgSZQ3lVLIO7wm7kFdsbzbVBDY1r6vA5OkDMd5AWDOveqsJFkmpdtCgoh9Fd4lbZz4/eSnytWfrmEUIgHCQIIkueJhf8FY6BA2lNKvAGtmKq3+WS3t5BY/TRRTwvQBTvSY0n/4YWPVD05hbko/KH6TE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002853; c=relaxed/simple;
-	bh=2V3oi+zTqj6+6yjxoEi2u/vt/w1/hvUqDh25JFcZBjg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Vq5+1E8ziDppc22EjA/EVyjGrXjPZDrJrZC92XQ2YAjXJBEZKS0Kobcub16jYIBFfLdAjTFApP7d4lZ3QSXY8JO2uKNmll78nsJzvZogkSC67Jtuf8H0FZamSFwgw/hzJhVyLXD/kkFM10+6IXnHJg2FIOEs6PjbFxgi3u9xJDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZnW0B6JHsz6K9YP;
-	Wed, 30 Apr 2025 16:42:34 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 152FC1402EE;
-	Wed, 30 Apr 2025 16:47:28 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 30 Apr
- 2025 10:47:27 +0200
-Date: Wed, 30 Apr 2025 09:47:25 +0100
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: <admiyo@os.amperecomputing.com>
-CC: Jeremy Kerr <jk@codeconstruct.com.au>, Matt Johnston
-	<matt@codeconstruct.com.au>, Andrew Lunn <andrew+netdev@lunn.ch>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, "Jakub
- Kicinski" <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Sudeep Holla
-	<sudeep.holla@arm.com>, Huisong Li <lihuisong@huawei.com>
-Subject: Re: [PATCH net-next v21 1/1] mctp pcc: Implement MCTP over PCC
- Transport
-Message-ID: <20250430094725.000031ac@huawei.com>
-In-Reply-To: <20250429222759.138627-2-admiyo@os.amperecomputing.com>
-References: <20250429222759.138627-1-admiyo@os.amperecomputing.com>
-	<20250429222759.138627-2-admiyo@os.amperecomputing.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1746002866; c=relaxed/simple;
+	bh=pkk4FnwFjZbg+KuXgTwOxKB73qBogdOwMrt/pQB1i8o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gt+NUooVl+fFIW2qvgoKTJ2DrBAe0hML+7/upWCSvdnk7o2KtQP4Q9Y2lre/uCyMzbqLAU3Dmv9ykZLgWVWH+F7Dwp4Imhf5/1OpZ9zc2cEQcWXJCCLOjtxzdQvNqV2aOgWjmI8mA6BOiqjPXYITDA+ldSD70GxnnRcOnWh7mUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mPMKmzsN; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mPMKmzsN"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so8070741fa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746002863; x=1746607663; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yr3vymS/gup0DlCuygO2tVK9TIK2xinHjdJneX0gB48=;
+        b=mPMKmzsNAsOgfw/fU/+j8ThtLpO/5At4w6jmSV0s218XOhJ3xzHJ/1nxUogsmiRSLK
+         YdHIMXc8tp9YWGe96LK4hgwIUN3StpKZACEJlnj7bJ6hZYCBzCQKEjCmqzbzX0XfLqme
+         XylUAvsj/m4x1tfE2UqBNvKSgc3oQTewDmXvqOlaOcRe5LVVFsrAlqN4ipS7jXtDK9CI
+         HBZbvNLKFLKPCAYXp/4+R3lu1+y7fQVn7O92SQgO95zjghxpIL58Dz+st19KXg+as7iB
+         X+MNkbHRo5aatM7pEV+6FzdU3wuM39b/tMfnzmjehTk5GWmas/cSBnUNfSgD7vU8t2NP
+         FDfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746002863; x=1746607663;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yr3vymS/gup0DlCuygO2tVK9TIK2xinHjdJneX0gB48=;
+        b=XOdZ9Oej8tikSW6m2b8ufZUIgqAPK+0Yb39Vtv+j/8V1rY8f8pkZ0QkvbmX5mo2bJr
+         4Nx7gc4zRmJleztX1DZ0EGIBd+2E6e0RWAO/ymijeNVeFaWYAAUlhasKBq9z6leyrhDw
+         FOItP0tQhdpbMVEL0eKwBJ+pzd2pbzVqLamsBvPoAN5GnQNUfocomzkEHjL3Kr6ZPUNY
+         r/IHyMogTHGn1ou/2hG3fV1B/pmUYoLmvXzYPW3HPK2L1rkoPQDFlIVdrXrXj8+SqgRL
+         wUg4kpPiQUXdosSTs/lbOZ6WzQWyjDSPrsVuvxRUDPHlwvG28z+ZUA49OA3/GMxQJngy
+         +nRA==
+X-Forwarded-Encrypted: i=1; AJvYcCUJqlR7oDLL/+Ojx/8EljKkwg/ui6OOyXPwqev3HnBDVH7Q73KyBvwgvhwwXDr3S1LKKsQ6lrsIR8o+qbI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxvk4hzCMp5PhSmefkVlaknR6RhP2D5NB+XPNOakt3F+mBeFNrt
+	jpadxAvSpDyNOEn75uwJAak5Pg16jRXIfSuegyhik30AeMHVeInh/W/Fh9iRrATE4NwDLROeCPx
+	EkfAO3U7rcMpgrE8IhKM7AL9GmOkoPQlLDaBmc2wbgsLYV9fZ
+X-Gm-Gg: ASbGncvrFa2hgUolp/fC/8L9SYDLvWsVIfy0gxcvncwdtgqxP7Cu8Kr4SDiWXid7sij
+	uunN52/DqDcUHrcYCoUZAuChWH0Kvoc7JLu9/ez5EUqLvntZcA8w/+/Y8eLxse1SSTqb2cM6gW1
+	Njlxh0Yqx+KsX93iEM0ATWtg==
+X-Google-Smtp-Source: AGHT+IHpp2NWMXBPtPmK+nwFyhBtZNA2vTr8wwH2QoJMNsLq4Gpf5YQeAvTFVW+tFyTNW4iV9HptwjcCEVW6Oahyl44=
+X-Received: by 2002:a05:651c:54a:b0:309:20da:6188 with SMTP id
+ 38308e7fff4ca-31e7cff0c78mr7933041fa.6.1746002863004; Wed, 30 Apr 2025
+ 01:47:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500011.china.huawei.com (7.191.174.215) To
- frapeml500008.china.huawei.com (7.182.85.71)
+References: <20250430175001.4d12e01f@canb.auug.org.au> <4386227a-3dc9-42c4-9cc1-827dad1556be@kernel.org>
+In-Reply-To: <4386227a-3dc9-42c4-9cc1-827dad1556be@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 30 Apr 2025 10:47:32 +0200
+X-Gm-Features: ATxdqUH8wc4eV2JI38qs8w_0ktGCGFATczhejqgAF5f1Rqzi-aVwrIV_qYeISlk
+Message-ID: <CACRpkdaxTJ96hpJqs=xWVD4gSLdgc=m9uq+rbJKrJL+jgC645g@mail.gmail.com>
+Subject: Re: linux-next: duplicate patch in the pinctrl-samsung tree
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 29 Apr 2025 18:27:58 -0400
-admiyo@os.amperecomputing.com wrote:
+On Wed, Apr 30, 2025 at 10:29=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+> On 30/04/2025 09:50, Stephen Rothwell wrote:
+> > Hi all,
+> >
+> > The following commit is also in the pinctrl tree as a different commit
+> > (but the same patch):
+> >
+> >   0a5b9be31f78 ("pinctrl: samsung: use new GPIO line value setter callb=
+acks")
+> >
+> > This is commit
+> >
+> >   9e4c444755b1 ("pinctrl: samsung: use new GPIO line value setter callb=
+acks")
+> >
+>
+> Thanks, I will drop mine.
 
-> From: Adam Young <admiyo@os.amperecomputing.com>
-> 
-> Implementation of network driver for
-> Management Control Transport Protocol(MCTP)
-> over Platform Communication Channel(PCC)
-Hi Adam,
+Thanks Krzysztof, my bad I didn't think about splitting the series across
+submaintainers, I should have. I hope this doesn't collide with anything
+in your tree.
 
-> 
-> DMTF DSP:0292
-> https://www.dmtf.org/sites/default/files/standards/documents/\
-> DSP0292_1.0.0WIP50.pdf
-
-Don't line break a link.
-
-Is the WIP status something we should be concerned about?
-
-
-> 
-> MCTP devices are specified via ACPI by entries
-> in DSDT/SDST and reference channels specified
-> in the PCCT.  Messages are sent on a type 3 and
-> received on a type 4 channel.  Communication with
-> other devices use the PCC based doorbell mechanism;
-> a shared memory segment with a corresponding
-> interrupt and a memory register used to trigger
-> remote interrupts.
-> 
-
-Very short wrap.  Convention for patch descriptions tends to be around
-75 chars.
-
-> Signed-off-by: Adam Young <admiyo@os.amperecomputing.com>
-
-A couple more trivial things on a final look through from me.
-Obviously the netdev and mctp bits aren't my specialty as I only dip
-into them occasionally, but with that in mind and some concerns
-about possibility for this getting abused as a work around for things
-should have more specific kernel level support...
-
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-
-> diff --git a/drivers/net/mctp/mctp-pcc.c b/drivers/net/mctp/mctp-pcc.c
-> new file mode 100644
-> index 000000000000..aa5c5701d581
-> --- /dev/null
-> +++ b/drivers/net/mctp/mctp-pcc.c
-> @@ -0,0 +1,305 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * mctp-pcc.c - Driver for MCTP over PCC.
-> + * Copyright (c) 2024, Ampere Computing LLC
-> + */
-> +
-> +/* Implementation of MCTP over PCC DMTF Specification DSP0256
-> + * https://www.dmtf.org/sites/default/files/standards/documents/DSP0256_2.0.0WIP50.pdf
-
-https://www.dmtf.org/sites/default/files/standards/documents/DSP0256_2.0.0.pdf
-
-Looks to be final version of that doc, but it's not what your title says...
-
-
-
-
-> +static netdev_tx_t mctp_pcc_tx(struct sk_buff *skb, struct net_device *ndev)
-> +{
-> +	struct mctp_pcc_ndev *mpnd = netdev_priv(ndev);
-> +	struct mctp_pcc_hdr *mctp_pcc_header;
-> +	void __iomem *buffer;
-> +	unsigned long flags;
-> +	int len = skb->len;
-> +	int rc;
-> +
-> +	rc = skb_cow_head(skb, sizeof(*mctp_pcc_header));
-> +	if (rc)
-> +		goto err_drop;
-> +
-> +	mctp_pcc_header = skb_push(skb, sizeof(mctp_pcc_header));
-> +	mctp_pcc_header->signature = cpu_to_le32(PCC_SIGNATURE | mpnd->outbox.index);
-> +	mctp_pcc_header->flags = cpu_to_le32(PCC_CMD_COMPLETION_NOTIFY);
-> +	memcpy(mctp_pcc_header->mctp_signature, MCTP_SIGNATURE,
-> +	       MCTP_SIGNATURE_LENGTH);
-> +	mctp_pcc_header->length = cpu_to_le32(len + MCTP_SIGNATURE_LENGTH);
-> +
-> +	spin_lock_irqsave(&mpnd->lock, flags);
-> +	buffer = mpnd->outbox.chan->shmem;
-> +	memcpy_toio(buffer, skb->data, skb->len);
-> +	rc = mpnd->outbox.chan->mchan->mbox->ops->send_data
-> +		(mpnd->outbox.chan->mchan, NULL);
-
-Not the most readable of line wraps. I'd just go long on this one for readability.
-It's still < 100 chars. Or use a local pointer to outbox chan.
-That will shorten this and at least one other place.
-
-
-	rc = mpnd->outbox.chan->mchan->mbox->ops->send_data(mpnd->outbox.chan->mchan, NULL);
-
-
-> +	spin_unlock_irqrestore(&mpnd->lock, flags);
-> +	if ACPI_FAILURE(rc)
-> +		goto err_drop;
-> +	dev_dstats_tx_add(ndev, len);
-> +	dev_consume_skb_any(skb);
-> +	return NETDEV_TX_OK;
-> +err_drop:
-> +	dev_dstats_tx_dropped(ndev);
-> +	kfree_skb(skb);
-> +	return NETDEV_TX_OK;
-> +}
-
-> +
-> +static acpi_status lookup_pcct_indices(struct acpi_resource *ares,
-> +				       void *context)
-> +{
-> +	struct mctp_pcc_lookup_context *luc = context;
-> +	struct acpi_resource_address32 *addr;
-> +
-> +	if (ares->type != PCC_DWORD_TYPE)
-> +		return AE_OK;
-> +
-> +	addr = ACPI_CAST_PTR(struct acpi_resource_address32, &ares->data);
-> +	switch (luc->index) {
-> +	case 0:
-> +		luc->outbox_index = addr[0].address.minimum;
-Really trivial but as this is a walk of the resources, I'd expect it
-to be conceptually providing one resource per walk iteration.
-As such, is 
-		luc->outbox_index = addr->address.minimum;
-
-more representative of what is going on here than an array look up?
-
-> +		break;
-> +	case 1:
-> +		luc->inbox_index = addr[0].address.minimum;
-> +		break;
-> +	}
-> +	luc->index++;
-> +	return AE_OK;
-> +}
-
-
+Yours,
+Linus Walleij
