@@ -1,122 +1,92 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA6D521B9E7
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 973ED17BEBF
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 15:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027178; cv=none; b=r+bMFqYsiOxaVr/cCgYiJRLfP5IV+OgBNI8ek9uFrxkV37qpImr2iLA4T5JlUA5lF7jowQhDmMw4Ft5FtSHPzTnfY+l4hNdKgUYMmLkAaqWO7z1CYjKH6MLCCdPgKjQDH5wDNQ/sUVepfUekiT2X1d2/pHg/xiOGSaH+7FZzayE=
+	t=1746027181; cv=none; b=URoQexWj9e7nJnz+FYzvIV9p+L1TPLL3GzRVlcSZk82CQ68/kutWrY5188Zyi0McMW73vE1lHM4CbwKs6yh2Kmvuk2lO30yxn2aeXEE90/Rz7N0evkEK/MECMA9SGGFc4OPhsRXAlCG9cS41LIWyKAnejAlBomwGXEavKx4N5GI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027178; c=relaxed/simple;
-	bh=/JDey4FU4P0QUZ3U1QjVg4P2FtVicPr9lHY9lypG6dI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oru7eFjBZVWi8vtNUb6/rDkeUOHpYr6WFCHOgpDFZyG0NsI+xRPxYm/WzbOTv1v8B+1BaazsPF70MA18GFIfT4cg1z3EiYtKsEIYHgGKGNQBETojJAqVMJO6MAc7DcuMNSDDjZrV/kovFE16/4BC8EFdq5m4gUyteLKpeSKGzak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=simulevski.at; spf=pass smtp.mailfrom=simulevski.at; dkim=pass (2048-bit key) header.d=simulevski.at header.i=@simulevski.at header.b=Cyq7OFlq; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=simulevski.at
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=simulevski.at
+	s=arc-20240116; t=1746027181; c=relaxed/simple;
+	bh=enakpdYLIgVX/IhzgAVByjZqfZ/9xensiv8Vz61Ea5M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=enz0yfFbkwtpR1VW29EGTcR0J7CDNz+Poc9ilir88XUROVWmnm5BKEQ58YlfWrjxVrZ5O/85oB+LpwUF5obLaJ6y3tU8GI/lJsdOyEHZ1Hc7PaAHBwitRyQA+1BchUFRY9MFQAVWwzCiJLYILgFlGFxJz0rtWlJSOQprmyOuBEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Fi8laK2a; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=simulevski.at header.i=@simulevski.at header.b="Cyq7OFlq"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e61d91a087so21463a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:32:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=simulevski.at; s=google; t=1746027175; x=1746631975; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2yW4IzDdMLC+ISL10lrfjeXQ0u1JQS4Zd6C+Vb5vP0E=;
-        b=Cyq7OFlq8yzdAPhZaMoB+mLZim1kjxQuWd0YTzb6V5i+td+yhqkAu0F7yGr/keF/0u
-         hF9AoBz0Mny9s9YzLsIx5bh0iQKb7qpAQG1LyC3t3GYJhdDj+fd9i3wsssmGz7hS9nbD
-         nW4cKLyFWNLMYvuTuaTHi7DM/4bXnwTf29yxYr9HQZJq7vZfLjti4KiJvP8ovYPmrvdG
-         i/VoPTWee181TA/ZmlQXyisZ2E2rtT6MuwYso72dweeIAQ6SBD0Oglq3pE5O+sbRiOBl
-         FpYPlu+575eU/oAqcS8A6p0DmB26rrpGzsBXToS5KtL1k6/3vpPvg1uiOjJDXU5pHOTj
-         1NPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746027175; x=1746631975;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2yW4IzDdMLC+ISL10lrfjeXQ0u1JQS4Zd6C+Vb5vP0E=;
-        b=CY8sQkzcaq3gELUVWz2zHn9fAh+OSzgVRcFdMzU7pSp8fiS+HrcMZ0fWu4bVweSchM
-         VhJHc9cQel48a6Xtk57FkVwvYLIulsedrlVDh5o452c/IInOSpLyD8WqYktvTVIJyXm1
-         K8uv4ksQVzV//UN8LFLCtkaj7ujO795UWqAWtF42n+pxLJ0xYZEIN16rJ1yr/hD6pEg3
-         25kEfjHWhxE0qkVAJ5RFZ5bMPNTfrLAqVaQHAXm7IMLZnVCHwLf4NWga7WpO6Nhr9cqj
-         hICvkFmlCVQTtCXGV8f5R1RFWeUt9fyfdeB6N9UIUNOBOU5s4HB3ISd7lUq05It2WAuM
-         OfoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNFrbQhzFmo7Kw4NovDpyhxADqqypQbYqz26byfD0YFjb0E6QYZfu/SQZFyAFVui4rJ70eb19J32RWMxY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOv93H7tn3d4QOzsoMb4IYjZhglpWxNYlbvpJO567DVer/WTdb
-	2dOP93NsRq2U+X9gXv4N+9LpidEMX0X9eEnlGwnxEPvEkDRf3UovjzfnCc5v8dQtSIg5MAQgknl
-	U1BQ=
-X-Gm-Gg: ASbGnctz+EuJPnnoN6Tl1OOhz0WqCgGsLO+XzpjJ6nwuArRM7b7PAJGYMLWmZUtW71b
-	33FYkrcuFOmJVQ2Ord+oh4ikTqw13LRpa6ECrEunnCUJ4HhQahow5N250AS3nckniiRMg+jvObD
-	hna2E4722w6BHjDhqWnsWEiGTVQ9/f+1q0y7sxJ9Du+MOKOBawx4Dv8bV9X7SwMWmZ89i08kUkj
-	mMYvAgV6uNGCWdvK8GT4uEIrBrOxivdqqNwgPEi+Mhs2u07ZhDX/VVeuFPoh9l+wIQu1qM64DnL
-	Aaa11vwjfWrxkLs+it+eDcl68z+Z8CnXqHPKP5xNs38NPaZ8nGqQJOHq
-X-Google-Smtp-Source: AGHT+IEL5/+RsQSF7TYc17i2auHKOvrGNCSMLsnS0CnF7H7Qhjv7jm1RqolFT3S6nwkdOoxrpFsV2Q==
-X-Received: by 2002:a05:6402:240a:b0:5f8:e853:1f8 with SMTP id 4fb4d7f45d1cf-5f8e853020bmr1076156a12.17.1746027174936;
-        Wed, 30 Apr 2025 08:32:54 -0700 (PDT)
-Received: from fedora.home.simulevski.at ([91.65.134.65])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5f701106bcbsm8670914a12.10.2025.04.30.08.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 08:32:54 -0700 (PDT)
-From: Ariel Simulevski <ariel@simulevski.at>
-To: andy@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Ariel Simulevski <ariel@simulevski.at>,
-	Guido Trentalancia <guido2022@trentalancia.com>
-Subject: [PATCH] pinctrl: tigerlake: Document supported platforms in Kconfig help
-Date: Wed, 30 Apr 2025 17:32:39 +0200
-Message-ID: <20250430153239.7137-1-ariel@simulevski.at>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Fi8laK2a"
+Date: Wed, 30 Apr 2025 08:32:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746027167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T4LQSg4lPMDLS8aZTjD/aS4EZY1NoY2jqFkETsR9szI=;
+	b=Fi8laK2aqqJxcv76DgkLpMtMZEZmfKxIE5IPcSi9L2Au1Ihy+WVIBa4rJq8gLCYbU57e4L
+	TLNKdpvQkfkSS8VWG0nTvOhdSkiEVfeX6DFJ+SFUCdvJ6Y0qYxJOXj4o6HSO1kmzdiczf3
+	F5ttkLxXgD1jLAbhrAQ5+8LM66So18I=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jakub Kicinski <kuba@kernel.org>, 
+	Eric Dumazet <edumazet@google.com>, Soheil Hassas Yeganeh <soheil@google.com>, linux-mm@kvack.org, 
+	cgroups@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH] memcg: multi-memcg percpu charge cache
+Message-ID: <dieeei3squ2gcnqxdjayvxbvzldr266rhnvtl3vjzsqevxkevf@ckui5vjzl2qg>
+References: <20250416180229.2902751-1-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250416180229.2902751-1-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-The Tiger Lake pinctrl driver is also used by some Alder Lake platforms
-that reuse the same GPIO IP blocks.
+Andrew, please find another fix/improvements for this patch below.
 
-Update the Kconfig help texts for both drivers to document supported
-platforms and clarify when CONFIG_PINCTRL_TIGERLAKE may be required.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+Date: Wed, 30 Apr 2025 08:28:23 -0700
+Subject: [PATCH] memcg: multi-memcg percpu charge cache - fix 4
 
-Supported platforms:
-  - Tiger Lake (all variants)
-  - Alder Lake-P
+Add comment suggested by Michal and use DEFINE_PER_CPU_ALIGNED instead
+of DEFINE_PER_CPU suggested by Vlastimil.
 
-Reported-by: Guido Trentalancia <guido2022@trentalancia.com>
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=220056
-Signed-off-by: Ariel Simulevski <ariel@simulevski.at>
+Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
 ---
- drivers/pinctrl/intel/Kconfig | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ mm/memcontrol.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/intel/Kconfig b/drivers/pinctrl/intel/Kconfig
-index 248c2e558ff3..f1114828457d 100644
---- a/drivers/pinctrl/intel/Kconfig
-+++ b/drivers/pinctrl/intel/Kconfig
-@@ -54,6 +54,9 @@ config PINCTRL_ALDERLAKE
- 	  This pinctrl driver provides an interface that allows configuring
- 	  of Intel Alder Lake PCH pins and using them as GPIOs.
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 5a07e0375254..b877287aeb11 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1775,6 +1775,10 @@ void mem_cgroup_print_oom_group(struct mem_cgroup *memcg)
+ 	pr_cont(" are going to be killed due to memory.oom.group set\n");
+ }
  
-+	  Some platforms may reuse GPIO IP blocks from earlier generations
-+	  and require CONFIG_PINCTRL_TIGERLAKE instead.
-+
- config PINCTRL_BROXTON
- 	tristate "Intel Broxton pinctrl and GPIO driver"
- 	select PINCTRL_INTEL
-@@ -161,5 +164,11 @@ config PINCTRL_TIGERLAKE
- 	  This pinctrl driver provides an interface that allows configuring
- 	  of Intel Tiger Lake PCH pins and using them as GPIOs.
- 
-+	  Also used on some Alder Lake platforms that share compatible GPIO IP.
-+
-+	  Supported platforms:
-+	    - Tiger Lake (all variants)
-+	    - Alder Lake-P
-+
- source "drivers/pinctrl/intel/Kconfig.tng"
- endmenu
++/*
++ * The value of NR_MEMCG_STOCK is selected to keep the cached memcgs and their
++ * nr_pages in a single cacheline. This may change in future.
++ */
+ #define NR_MEMCG_STOCK 7
+ struct memcg_stock_pcp {
+ 	local_trylock_t stock_lock;
+@@ -1791,7 +1795,7 @@ struct memcg_stock_pcp {
+ 	unsigned long flags;
+ #define FLUSHING_CACHED_CHARGE	0
+ };
+-static DEFINE_PER_CPU(struct memcg_stock_pcp, memcg_stock) = {
++static DEFINE_PER_CPU_ALIGNED(struct memcg_stock_pcp, memcg_stock) = {
+ 	.stock_lock = INIT_LOCAL_TRYLOCK(stock_lock),
+ };
+ static DEFINE_MUTEX(percpu_charge_mutex);
 -- 
-2.49.0
+2.47.1
 
