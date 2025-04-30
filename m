@@ -1,129 +1,100 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B9226C3A9;
-	Wed, 30 Apr 2025 18:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C551F1EEA46;
+	Wed, 30 Apr 2025 18:41:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746038467; cv=none; b=UyIoNXTJRet8VuwomZOwlqTsReseHS4cnUME8ULrGTXuYFNHWJEeX/ZNcmCOrNSARY9/nwCayEWSflFJ+79sFM+ViIleKCj7X1MoDq+rj+BAvjDHE2pX2eueko6JOpOZ4stpiw66l5ypjrPp7kEPgvpo9T/CVrztoJ3gD7k7zCU=
+	t=1746038469; cv=none; b=hgnosO6Ys2IXOAW0G762Td8J3uuuEO6/4oi7V4Tj2Cai5pSkwkaxlLF1rFxsId1HNiy+zZ2kSvU/Fk+KUaywIVVZwWx33zzW/bW1NrwlUIBQKDaZXmazwYGdVxhbUcJit0b0Y04nz0Nek7d/cHRLH6C7R/ciEq+/uTZs4Uw4uRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746038467; c=relaxed/simple;
-	bh=dO5xtNhi2RZ6dwIbWLUIYOG3mwkQ1Mbn9K6tUJsApy0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vz8+Pm1h9tAWvN3jdUYhXThZTzuMAIuewAQCFJEFApaKrcvQZgfNqOGVJH/45GW++MfHY7Rprj8Lr5J2+AcAZwWihPXh2BK16907B5oGmQ6Z0Tssda6+Hh747LAwjpBKfNMeYWxEg/QoJ2nxncuzrz7ZxnujgUdz9R4nr4398HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NuqcxUiG; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746038469; c=relaxed/simple;
+	bh=UUaUf856tNZAGw81fKnd/07euuyb4/etbgnyEOv5oJo=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=FRDl8zL0619xkLQiGkmBwJ7rmFTzpac9Y1CI21+RFOvceCMGR+mGMqAxZ0f4gYfTkJWR0aXWU5/aj7cAtGQcGWBXSfQI4YUWL8f9XGueQ8NhObJlchfYPvAZVG3dX8uBtRVd6e8g1LzIEgFKNaBONOgXx55QPhmXSBWjp1IEp4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JVoFUfom; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sUPsLz26; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NuqcxUiG"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d91db4f0c3so896465ab.3;
-        Wed, 30 Apr 2025 11:41:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746038465; x=1746643265; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1yQROOQ/8z6J39sRh6FPaOmwmRuzULCDCO82suAr8rs=;
-        b=NuqcxUiGU0liRIqu6uI3eBo4T5tEAomJooHSGjhVbU+EE+V+M2tJgp3G0ynqU/jDVE
-         drm5PNH0AF+rzEikSNzYlaLJ+MusFOZvU4pLrk4gEMLNZIQEiRC29WGuE4C4EDYOe3+p
-         8FZ8lno3c9/gYAM+qDC5szKK53hv80iwBiSiKtS4ZEKJ4dcD/BqrAQJYAztVzwlhHn5X
-         O31GL1DQZ4c41bW7YlbAmTk/NGJ6F2wa2QUV4UjWqsAFWj8fdKedq0xvF/BUHsqIscXb
-         F54W5sBLmm+9rxpkQjE/mOMHwhhang7mUhRgsgkiF4rDhjmGrwYmW07zyIra/PDF/gzV
-         ZIyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746038465; x=1746643265;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1yQROOQ/8z6J39sRh6FPaOmwmRuzULCDCO82suAr8rs=;
-        b=Iu6qDS+jsbwqLIFi2fJ2bKZ7n39PlDrh8OcI3aUaLkK+PSZt0i2xPny9WU8cyDv7Qh
-         IqS278py0eq6jBLcWO1sJoNFqc/fMrTUg/SJePsbsl0vBdGlSj8HGdZtio26jaKK6GK8
-         NNr6kh3tjifbIH6Ms2XIVzBmR8MvVua8DLN+fB5B2EjFxg9CbjAdFwdK+qarPeRsVauN
-         ChF+mu0IrU/3lm2U6l+f2GybOSyBVibhafUlRtb7dLaTNkXCd5N9YleZd7fRucb2vUpv
-         XGqjajK/TF4BajhzrB8i2rZJ2SPlWvDpnQFvYc5K6UIioku2htPtNTF2q8VjmC949mXQ
-         TqWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV5dPo7VaogOwzGH/gvvOmHZt+1pabxBQIAS+s1e2Kpzi1yn1PIy5XBXn0UtWl80dIYlDU/VlFoNSrnSyI2@vger.kernel.org, AJvYcCV9eWRfE9Woml8QthN87eguwlIjz8Peci5WNqIPHRw+GaXC/pAq3cCwAxYsSurnGt5HcrZTb7ZZEU3l@vger.kernel.org, AJvYcCVPiGRsXASthKYfUNIrCPqCs/3t6+EdJ08wZInykAOCQuPiH+qb8todhvAyTJFRO51vj9L9ZuIL1anccinmOw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzADStVcfeC0+771Pa1RnheYymZEH4azfh3LC8WUi8d0jFOzHjs
-	84sSWcPIx9tXq+dLRBW3zMaPnD/nJkv+9dUvDlVe7yUl6ICHwMbca/w5V8A+C1mZ3UeLw+OpDHL
-	fE4VzSP+21d/pEmm88801UCHVmek=
-X-Gm-Gg: ASbGncsDi1oGiyVPJkKk/lG0HG5dquVmJc71HAJf1qvcIuXtG1lYAZrnWmsOELBfnoX
-	SUKpYDpqhIz8ddXIPCx7zfIIWtdZdBgw3l6R7t8gDRgNUGL1/2V24ze2/F3W6eVEZ4dkSCt4ENY
-	AbNTL8jcfpWYRKUUqwXL0KFz0L4sajkRL3Vxv0DklTSA52pKAeNG2p/RZ0
-X-Google-Smtp-Source: AGHT+IFTdYx2S7PP1ynBVe1/hJjTgkjcofHeE73M1127jD1qw/zLNvWGom/8dxEIbGmOMMDuyfAlou5W4HGP5Ex5D8w=
-X-Received: by 2002:a05:6e02:1a89:b0:3d8:1fe7:4439 with SMTP id
- e9e14a558f8ab-3d967ffec05mr40542955ab.17.1746038465168; Wed, 30 Apr 2025
- 11:41:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JVoFUfom";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sUPsLz26"
+Date: Wed, 30 Apr 2025 18:40:59 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746038465;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1YiyyK53NvchIwLWDuCGfxT8rJhhzOXbrWtHsJAKspA=;
+	b=JVoFUfomSFpLmnzQoNZR0IeTE9U/YChqFPq9mlScfOMpvZGr2ihkHLY1EE9GFjkSoLBsuX
+	l1H2FqMHJlMyTsMauO4+amikYm5xndkyy7f9dKG3x+JO8iriT8byWC9ho5PqPetPBy7j61
+	Mb05rI5k5PpfLB6HtEfVkPP2leISqqC9NT0tny1OJncvbCLwmslg5r8wNAsPvfZ5HRcNBg
+	ljJOqbMsFa7d21FfLjcs8bZX2p1desOQvLnCBqbjhw3x7dlSvEGZDkWxtXfNJmDLxM8gxJ
+	tNuiQvYvUwmDpCAuNGPgomXmzcornDjMcyZ0bokFLFrp+qTZZSUzZQvQ1H5VRA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746038465;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1YiyyK53NvchIwLWDuCGfxT8rJhhzOXbrWtHsJAKspA=;
+	b=sUPsLz26ZUMf7xw4mc2lSzwI7HLEoBIB8Z5S+SijJLPLUaZzCKKIWI3EgvKB6UuI5hvCPY
+	KLAAuGNOGVScrxCQ==
+From: "tip-bot2 for Ruben Wauters" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cleanups] x86/CPU/AMD: Replace strcpy() with strscpy()
+Cc: Ruben Wauters <rubenru09@aol.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250429230710.54014-1-rubenru09@aol.com>
+References: <20250429230710.54014-1-rubenru09@aol.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
- <20250228-a623-gpu-support-v2-5-aea654ecc1d3@quicinc.com> <e22daaae-57fc-4523-b594-87d202d255f3@oss.qualcomm.com>
- <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com> <41df5398-79f6-484a-8ad3-f3488eb1b71c@oss.qualcomm.com>
- <hpfqpvkex3dtj6ieosce4phukodnoidh55vxpujyekoehhotqn@l434nae5gzdi> <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
-In-Reply-To: <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
-From: Rob Clark <robdclark@gmail.com>
-Date: Wed, 30 Apr 2025 11:40:53 -0700
-X-Gm-Features: ATxdqUFWSHnqCPWBHWWul9jKnD6RyuizSS6isEVI5YuIqPMbYwvAOXoUXQvDslk
-Message-ID: <CAF6AEGvGEshZbSmmLZMXGiCjRdDJLa7EKN-gviw4oxcapMKN+Q@mail.gmail.com>
-Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
-	Akhil P Oommen <quic_akhilpo@quicinc.com>, Sean Paul <sean@poorly.run>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Abhinav Kumar <quic_abhinavk@quicinc.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Jie Zhang <quic_jiezh@quicinc.com>, Rob Clark <robdclark@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174603846015.22196.17079142660288754024.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 3:39=E2=80=AFAM Konrad Dybcio
-<konrad.dybcio@oss.qualcomm.com> wrote:
->
-> On 4/29/25 2:17 PM, Dmitry Baryshkov wrote:
-> > On Mon, Apr 28, 2025 at 11:19:32PM +0200, Konrad Dybcio wrote:
-> >> On 4/28/25 12:44 PM, Akhil P Oommen wrote:
-> >>> On 4/14/2025 4:31 PM, Konrad Dybcio wrote:
-> >>>> On 2/27/25 9:07 PM, Akhil P Oommen wrote:
-> >>>>> From: Jie Zhang <quic_jiezh@quicinc.com>
-> >>>>>
-> >>>>> Add gpu and gmu nodes for qcs8300 chipset.
-> >>>>>
-> >>>>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
-> >>>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
-> >>>>> ---
-> >>>>
-> >>>> [...]
-> >>>>
-> >>>>> +         gmu: gmu@3d6a000 {
-> >>>>> +                 compatible =3D "qcom,adreno-gmu-623.0", "qcom,adr=
-eno-gmu";
-> >>>>> +                 reg =3D <0x0 0x03d6a000 0x0 0x34000>,
-> >>>>
-> >>>> size =3D 0x26000 so that it doesn't leak into GPU_CC
-> >>>
-> >>> We dump GPUCC regs into snapshot!
-> >>
-> >> Right, that's bad.. the dt heuristics are such that each region
-> >> is mapped by a single device that it belongs to, with some rare
-> >> exceptions..
-> >
-> > It has been like this for most (all?) GMU / GPUCC generations.
->
-> Eeeeh fine, let's keep it here and fix it the next time (tm)
+The following commit has been merged into the x86/cleanups branch of tip:
 
-Maybe it would be reasonable to add a comment about this _somewhere_?
-(Bindings doc?)  I feel like this confusion has come up before.  Maybe
-it is a bit "ugly" but since gmu is directly banging on gpucc, it
-doesn't seem completely inappropriate.
+Commit-ID:     003f144ca04621e598fc1c5c4ce0a851cddfe104
+Gitweb:        https://git.kernel.org/tip/003f144ca04621e598fc1c5c4ce0a851cddfe104
+Author:        Ruben Wauters <rubenru09@aol.com>
+AuthorDate:    Wed, 30 Apr 2025 00:03:59 +01:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Wed, 30 Apr 2025 19:32:36 +02:00
 
-BR,
--R
+x86/CPU/AMD: Replace strcpy() with strscpy()
+
+strcpy() is deprecated due to issues with bounds checking and overflows.
+Replace it with strscpy().
+
+Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250429230710.54014-1-rubenru09@aol.com
+---
+ arch/x86/kernel/cpu/amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 2b36379..0feb717 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -643,7 +643,7 @@ static void init_amd_k8(struct cpuinfo_x86 *c)
+ 	}
+ 
+ 	if (!c->x86_model_id[0])
+-		strcpy(c->x86_model_id, "Hammer");
++		strscpy(c->x86_model_id, "Hammer");
+ 
+ #ifdef CONFIG_SMP
+ 	/*
