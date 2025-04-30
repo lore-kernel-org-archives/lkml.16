@@ -1,358 +1,180 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PNYPR01CU001.outbound.protection.outlook.com (mail-centralindiaazolkn19010003.outbound.protection.outlook.com [52.103.68.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 012E825DB08
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 13:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746020900; cv=none; b=dHLaJ3SsUsDXVgIO7K+jKYL1grIcH1waXoPFIuadOJtOhET+ntgI4YAJ7ssNKEIsIAIzJDLc/v2UesnZUbahhe9IhKHTS65ru8ChiE++835sJSSGm/sa7vWlmIDPyPRfhfadn3glVBNlcgbRCFzOIPNwe2f3K5AZRMJn8Ki7C+4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746020900; c=relaxed/simple;
-	bh=6lS+RfIIKCrBcRjbxZAPQ+ncH94JPR+qjqAlZ/S0peA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t9zI5bVcbB218yW9Exn+NUohvYtRwlCwywQW4HcKUtf7EkLYjg/LWL0Nj3lzqUu4U9XZicgSn6xf0MBOVXLDEETsWbXOQ4kcSRk6Flmth9TqM+wbBK0dyidmWyVr6GMhKuSLi66W65XVlIIC5nOnesX66UyVjgCKLIAjBs8Cu/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ipDYuJds; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220D81D6DBC;
+	Wed, 30 Apr 2025 13:49:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.68.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746020964; cv=fail; b=mRzq1K7LCuW/1TrL96xqvxtoko/5WNyiMk0JTs4hfbTG00dnZcijWk0VZ738xYaT2J0IWzVQgu+cKE5Vu7Wmza0t2YXdznKdGVZBNzZGINrcecL3uDJRetIkCzY2oN0TOkUqVanp3pKIMSTyNm8eRgKRK5kP82cAktnvdrJwStM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746020964; c=relaxed/simple;
+	bh=KcfcRniNO9jW+D7o49zosQQlZhqoSOfXsHJjebNTDZ4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=sHInvWvrWk4w/VJBn2NyMPbGM5+TO4HDITL3H9Mpq7sL5oWOQqWdaXG/YQB4BO62+HPy1A2Wmlmx8ld2zwJQZeRCTMAJaeZgpSoMenherHHob7dNUZT9wLxPTXyokG+PZoRhW1POiCUkkxn3JVlhJH4qjfod8CDFIYjhd/E066M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com; spf=pass smtp.mailfrom=live.com; dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b=I+mqYdfX; arc=fail smtp.client-ip=52.103.68.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=live.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=live.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipDYuJds"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac25520a289so1164381866b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 06:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746020895; x=1746625695; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z75LjcWryjhXEgrOiG6WwRVzqb4M8o9TQ5+ml4Wiq/g=;
-        b=ipDYuJdsOvP052q1WD4DynGhbpE+6tXf4mVlC+nAzFi6X6/Gf0caLaiU2ts9wpHP0t
-         jfPPjQZut8KQXIz8qX6/4K4eQFjxCeybc4TJr9roYKedOgdNGT1G8vTtK3PYlMS743dt
-         9JvgFXDvQnLhect2UEbE2yUIumvDu4ZY5Y6lUg2xoB3RtfmWp1xxqZA9dPmqC3S9YUAG
-         NAblMHYakiQAnXhp3oAXJozpD1getetWviMBaih/nxmWEgNaoP/jvjtTrRmYqOiJ6TcC
-         u6ULnVpe0xV50vfSJcD6+EkBRijOG85cNw+xN6nEJuSWoig71+4aWFeKhV6x5Dkr5pN4
-         QFug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746020895; x=1746625695;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z75LjcWryjhXEgrOiG6WwRVzqb4M8o9TQ5+ml4Wiq/g=;
-        b=A/IrIjj6sTCQ9LUnoDyNsV4ugk0iMVQxDH2pEPGXqenmamQbX6o6hUXmO3QEv8/ozR
-         S7yncBKdsqXT3awPyeiJo7tLIHIg51di4N3TpqlTJu+CAOEoYbXHsUO1mYI9SqPxmIje
-         sv4vh0WQqBC7/so/x4Bb5RXJvULFTTRpKv59N+fLecT/5aHfC5LWUnsp7yPrGs2ONVPx
-         ASfOtX9QYJ37VRDRKCdXnd2+oO0hSSuGOgK5rG+f/t+3tbVtWiNHLiIembt1a6cpzei6
-         a+CSv9PIRr4ylaIwXps9546WKm4ASqGO+/3qogNPhF3V1e9lml5oxi4+XbqXwNhTwRtk
-         eJOw==
-X-Forwarded-Encrypted: i=1; AJvYcCWU7si33sv/EvZEfsOYWjY9rS43A+Wbw5x0iTxx1i+PzDxxsq/PvKRDInhsYXcTbDpRbudks1MrD8OgZKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxfFvzIIf1OJoohfNZOB/dO2QPmbZKFcF+mJx6Y+I3SPiXXB4U
-	IB7dOAYGU/EM1u+us0uINFDyQjzRNUmtCLDSVWi2UbLOvFjoxCRK1WmwMrGJPY1YN8z+dMrdtnY
-	lsaJzaCl+otSj9m28TG+Vlw5k58Q=
-X-Gm-Gg: ASbGncuFgkpKi/UKfNRfiF+w3WCBbLM0+zuoSe0omr4g+TK60s/+Aji+AU32qQNd+24
-	UJWy+p5mRjYkH/Jn3DNX6V/CRJj0APWalnVBrBzsIqW4dBzoYHwhBhSAfYgLW8bqo1UAUTORIG4
-	rQuOcw+HdIvLCF1PwUybxH4JM=
-X-Google-Smtp-Source: AGHT+IHumecNI7r+PuC8pc8zkvdAU+nckxYX+X6l8RtRmEUVb9At4V5mcbJI9h5TmnpgroAqPCKeLj5hlsWPkRULfO8=
-X-Received: by 2002:a17:907:1c15:b0:ace:3643:1959 with SMTP id
- a640c23a62f3a-acedc574f17mr368750066b.7.1746020894723; Wed, 30 Apr 2025
- 06:48:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=live.com header.i=@live.com header.b="I+mqYdfX"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VDP8d/znBX/sh0L6WNTu47Q5nKR0ze00m1+958DaH+I3eMZuNceggGsnNFT1PqJwv/4TdBJB/syyKShTlj8qTlYN7jmQahlufATsKY2DClN5P+ursoBWJGNFLmv03DLz2L8uaSB4Ybr1WuGwbFSWcU+j8ysqs0BO544tcu9XP9iR0ZMD0mhu1LMXcApdRvT7RgZOh90DejikLmO3U9TCr4I0DIatPQQX4Vbfglr3L6LadbIwluFv9dtgj/CKHz6hGhTaArer5mRlqvpgPHHmZt/jWKov/HKhs+ZTMkVnECGc0GFsSaMJAj0AA6JsARh8ntUxGxeGlOjVcnbpzNvVlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GQmywkyZpSKK3o4C2QvdTL43/zCMcp8rZJLXS/1lM6U=;
+ b=NUKLOkXS+uFH5oKrGG4FE1BI+rcVJLEPUh2h0VmzBPm1t1ifTRk4mKIOvUYsvflawj7Ld2E0TVWxMt623Ik2vdeQIXloLUodZhX1OqY/VGw51Qb+jvdliNjC+01876EkQ4aTitQbQY4IAsQvLjjf4nfYgy1Y19qIi86BtxxBLbwfrD6SJayRss83UB6FIX9hzVf9otcPntfl8yPfnEJif0oJFic0k4bKREVWw5PmwQuTvZp+0vflRfs+KR7wNznvwJZQK3qO2dSFIMmUQfti2bWGeshmGLNttiZE2p/SwYJ2T45S5im5NA49R1Lap65nRkcZqSx3UmQpXBtnA6LuSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
+ dkim=none; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=live.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GQmywkyZpSKK3o4C2QvdTL43/zCMcp8rZJLXS/1lM6U=;
+ b=I+mqYdfXyzjW5H59+VhEc/Zj/vYXbcDDpMAqFTB9HgIxWSOwew1lTKGycYelllOlajYh5MWRqwrZj/q/NvEr+Wtx27WENXTBn5bo9zOh79Ds2LRbYJ+k4UCr7zQxlo/Mi+ndnFU2h82kKXdC25r8uRrgEtmshB44hyzG3zsiYFJbwoiRyboLTl7th5gCfLwrAJvIotBNT/BhDQ4TmFF4BSET1A7nGU4RRD16pU3+s/2UgqutF4XoxF25Jrmbr3eTS0TVtCeVfL/H0jwy5kPSuzUuM4Yaf6ZSKTJjYR3EIL8AF0jtIEjbuOHZQlfy+Ihf9QmVKD4Ead97YYK3Jhg8hw==
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:f7::14)
+ by PN1PPF3C75D558E.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c04:1::40e) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Wed, 30 Apr
+ 2025 13:49:12 +0000
+Received: from PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77]) by PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ ([fe80::324:c085:10c8:4e77%5]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 13:49:12 +0000
+Message-ID:
+ <PN3PR01MB959760B89BF7E4B43852700CB8832@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Date: Wed, 30 Apr 2025 19:19:08 +0530
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3] checkpatch: remove %p4cn
+To: pmladek@suse.com
+Cc: admin@kodeit.net, airlied@redhat.com, akpm@linux-foundation.org,
+ alyssa@rosenzweig.io, andriy.shevchenko@linux.intel.com, apw@canonical.com,
+ asahi@lists.linux.dev, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+ dwaipayanray1@gmail.com, geert@linux-m68k.org, joe@perches.com,
+ kees@kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@rasmusvillemoes.dk, lukas.bulwahn@gmail.com, marcan@marcan.st,
+ mripard@kernel.org, rostedt@goodmis.org, senozhatsky@chromium.org,
+ simona@ffwll.ch, sven@svenpeter.dev, tamird@gmail.com, tzimmermann@suse.de
+References: <20250428123132.578771-1-pmladek@suse.com>
+ <PN3PR01MB95971954FC5E026C59B6F8EDB8802@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Language: en-US
+From: Aditya Garg <gargaditya08@live.com>
+In-Reply-To: <PN3PR01MB95971954FC5E026C59B6F8EDB8802@PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0106.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:276::6) To PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:f7::14)
+X-Microsoft-Original-Message-ID:
+ <5cbfbbb2-3bb5-4edc-ac1d-51655a9da0ec@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250325133954.3699535-1-liwei.song.lsong@gmail.com>
- <20250331161542.3040005-1-liwei.song.lsong@gmail.com> <87jz73v1th.fsf@bootlin.com>
-In-Reply-To: <87jz73v1th.fsf@bootlin.com>
-From: liwei song <liwei.song.lsong@gmail.com>
-Date: Wed, 30 Apr 2025 21:48:03 +0800
-X-Gm-Features: ATxdqUE3n3npR7e7kDOqRM0e0PnPOcNwfRtNMUkbYYUYZrV9SwshVSp66u66bCY
-Message-ID: <CAND4H7dz94Gsi_tXSQmLNme9uROnouOUwuCX9BW_+RCc2ZFDqA@mail.gmail.com>
-Subject: Re: [PATCH v2] mtd: core: add sync between read/write and unbind device
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: RichardWeinberger <richard@nod.at>, VigneshRaghavendra <vigneshr@ti.com>, 
-	TudorAmbarus <tudor.ambarus@linaro.org>, PratyushYadav <pratyush@kernel.org>, 
-	MichaelWalle <mwalle@kernel.org>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PN3PR01MB9597:EE_|PN1PPF3C75D558E:EE_
+X-MS-Office365-Filtering-Correlation-Id: cd32337b-cef1-48a9-0814-08dd87edca31
+X-MS-Exchange-SLBlob-MailProps:
+	bHQ38DpbEWCos0A2Q6z4vr+EGiiqRFMXmuzFuHFIZL5s8B2bvhAQlwieWYQFOif4tQel1we0hoGD8sG01CkGRKqr7kqN8s6sPGMtsJBPt2KkUyLC3eDOsv/AG+CuJT7ZELXcKKD5VYznSRKV5MzCylwuhTVAvQ5SwWI8haCQvQZbsf8edjxUi8GLQs9R+VAH62PBt1rus8C/ZFB1dN9OvcCGAxwaNpentg6M26DsR7W9n/xNO9cUVz8v3YUVE0axTBzisAMcI3mbFkOH+PUr+1U+e3K4fqFPlUh8mEW0AUJw3gBLhV8Lb45+ObdN84g4MMw2dU1i+ZVfvh6hnZjEdOymzxSdcuiwn3G5tNmcBuT/9NYb05aePzyJJ3nvdp8RzGfjo/xJZhQMSErBAn/PR7PrKqde0YXV/KHtols/bQiRjMxmB/g1F/baqNNyJWi51MX2/GcAbAGr+l81blxADlvSd+blq6UI8TTNVFrE+mKNarwHI9LVQBFYOr820tJ5IZgurqDexujdAuAqkofOfXjY2l7ppgohC41GjLG5ZJBMVg4hepdJnLGB5pLgrzhUzh/rn0FD3XiW9ilj5DjQzacBvC4uy78kqFndHxSekaaLCaKP7Uq93qPpraDJH6B0ZfrCXZ4U5F4C8KuuAyivyOUc+XJhp8cCfACE2eAPKSSynOdVr37IeA==
+X-Microsoft-Antispam:
+	BCL:0;ARA:14566002|19110799003|461199028|6090799003|8060799006|7092599003|5072599009|15080799006|440099028|3412199025;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MFUvaEhZS1luQkZNVnVONlE4UVU0MnBTcWtDL1I4dUlBSlIxVU8yT3V4SDRs?=
+ =?utf-8?B?Y2ZoK24vNmRCRG4zTWw3S2NtelcrRU5qSTROaVlVU1NXSWpQYmFpOWJ2MGpt?=
+ =?utf-8?B?NFdubmMxeUFlZXlCaTFPcTBrZDB0ZzJWZ3N6N0dvN0pjR1VrMEh6c3NzSlZn?=
+ =?utf-8?B?ZEhodnF0VlpseWZQc2dHMi92ZWNQclpkeDR3RlpVV3E1REVUbDRSRWRjSG5S?=
+ =?utf-8?B?b2NBTUtpM3Q0U0Yxb3oyUFp0NSs3WTJRMHNoRGJraDhDUGtnM1J4U0lCc1Zz?=
+ =?utf-8?B?QkFBSWwvNGJMTS9WcDZtZXB0d2JmOVFRcHo5Vkg0Z1VJZHYwZWIxSmRqVDJX?=
+ =?utf-8?B?Y2NwRVJDYk50bTNWNUh3Sm1mYzZrRjFZTVZCNFBBKytJTHh3TzBMVTBhVHJa?=
+ =?utf-8?B?ZDBEbkw5T1JiajJlQXAwdW5KNytRcXBGNGFOWjhadDdyalBvcGlQMTVYUzJq?=
+ =?utf-8?B?ak93YkdxbXByQU5CVm5RcXVpeElodkxjbmR5U0RGb2FaMXpoaEtKN1RlNVhk?=
+ =?utf-8?B?N1d2ZUZjTW8zRDRzZ3RndnBlWWZYanExbHh4QlB2UE5ZZWdvMEdTNlJIZjlV?=
+ =?utf-8?B?Z25QYVFubGR3UEFZd2FJTlVUZS9oU0hMa0FNeGdVSHl1dGQ5RUxuZUx5Qklq?=
+ =?utf-8?B?aHlsWVhPUDR4VUxQWHpIQkYyRVBMM3o5N1FSN3FJN1VBQ0JrTk5oNjkzNFM5?=
+ =?utf-8?B?akF6YWRXbGhidDFlR3JPZ0RQckUyUncwZTBxWFBDYWNKYXJBSktzQXI1dDJX?=
+ =?utf-8?B?aXBmRVEybW9IV0REN293Vm02MWNsOC9VZzBnUDZaSVJ2aHRud2VCVXVJc2FC?=
+ =?utf-8?B?clh6ZnBVVjRDb20yU3JrR1ovZ2ZaZjBvWUtkZWZad3IrczhJdDlBckZ0VWJR?=
+ =?utf-8?B?TGYzTmdkV1Nsb1V6WGQyczU5NVEzeWVNTFV1dVIvNndTTWdDZWNKRTM4SWI1?=
+ =?utf-8?B?YUFPUERXcE1tUHFSMXZjUUlndGMrV05JT0JsMXVVdXZyRlVwSEt4SXF3eWc4?=
+ =?utf-8?B?OGRpVURsZzQ4NnJ5d21ORVdpR1k0ODVZSmtnTzZnL0xSTjBhdzN0OHhuSlBa?=
+ =?utf-8?B?ZkpkOGVrMXpBalVUVTRMWldqRlF3bUJSazZOMW5uekRxMmFxR3FUd20vS2tV?=
+ =?utf-8?B?cjFaV2hpcEVrSDB0RFFUVVJ1Vkp5TjRPRXFYOTkyMGZQOVVhMndZQmZJK0Vy?=
+ =?utf-8?B?U0VvL0FYb2EyK2lHdFNZZDJVYlI5TXFrUENobkcrYjVvamxNWENueCsyamE0?=
+ =?utf-8?B?RERZaTBjdUFyQWpSMTdjaldObjluQ3NZRGdhVkdhRW4vbXZzRXBQc3ZZVS9L?=
+ =?utf-8?B?V1VRaG40TXJwUkdPMi8rTWhrbExrR1VzbVovMVBWL2hGQmRCd2hRck44Nmh4?=
+ =?utf-8?B?b2VpOU11bE52RStYaU9yOTdUcWkyTERTSloyQlkrV1psUmI5WWUzR3VsMm9p?=
+ =?utf-8?B?Tmw4ZHZwS25YS3YvODE1MHQwUjRLYmcxUnB2WlVGUFdRMUpYUXQrRGIxbGNC?=
+ =?utf-8?B?UVFGYzJ2Y2hBYy9aZUFDNkIwcFFTS2tsa0VnSHVnTTk0cXdhNm5Gam1uN3d5?=
+ =?utf-8?B?Q3IvUT09?=
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cUFkUW9ySTJ1Q0tkQVBaOEViaUxrK0tmRlI3ZW5pLzFYMXhYbTFMeG9ZeFVq?=
+ =?utf-8?B?eUExRHE5NmRGZkJTUGxPVDc1VklXT3dMZStFTUxCOEp6Y2pJRlBZOGlvMjlp?=
+ =?utf-8?B?TEFVWnRJM1hVaXdZTFNKUWpOa0J1TjlpSW1DeGNObFhiQTFER2xNY1ZUcVhS?=
+ =?utf-8?B?NVE2dERpRUl4Yng3bVlwVkNMRVR0NDhWNWh4ekdMY1RnMjBoU2RoTldjd3Nu?=
+ =?utf-8?B?dkJ3dEd1MzBVT2NIWkhoM0VkNFljdWorSlU3YjNCdC84NGNJSjhicUFkTVAv?=
+ =?utf-8?B?Q2dRbUxKbmZ0aG1CVTR3L3FvdDBnVDN5UnFCLzd4MlY4aUUwTEN2aGVZYVEz?=
+ =?utf-8?B?YklVOFRFRGV2TGxCMWh6M3N2aWljVE9NZ29hKzhtUnVwdE1JVWxmcERJT3lp?=
+ =?utf-8?B?YmFEWHlKOSs1VTFLeXQ1RWFhbDArSzZxaVZseDdXMHB0UWE1UVpqazQ4dEg4?=
+ =?utf-8?B?d0JxdjFVRmZOZGloTytvdTNZUEduMTdldUs5RUVSNy9LNm55b0U2Z1RCS2tk?=
+ =?utf-8?B?Tk9CaXZMVUNQQUpPZm0wWlBER3kvMHlFZ2FtdSttTFNhK3Q0SHdsQTFobWJt?=
+ =?utf-8?B?SS90TkNYcmVhYnVlUzVBWWxiU1B6Z1Nueld2TWFxc2gwSWZPMnozckRnbC9q?=
+ =?utf-8?B?VzRQdDUzS2pmQnRaTFVScnUyaFE4YzhJUElDdzJrRi9DcE94clpwQVpnaW1N?=
+ =?utf-8?B?U29RQUdqYkhIYXFKVHRkdCtwL1diUEs5ampla1BtdmJuOEtmakhKdTkvaGlo?=
+ =?utf-8?B?MHErTGxoOExzdnZ1YzF6U0Yrb0oxUE9oVGFrR0l6WURyOEZxYlcxcWFsR2Fs?=
+ =?utf-8?B?L3pVcXBqeDhiNk1FZ0Z2Qk1BSTZ2WUIzcitRTVdPMjdoMkgwMDFRcVl4bDha?=
+ =?utf-8?B?SEZPU0RVVXMvdHhTMCtYWTZqdWwvUG1KRHI2OE9RVlpteWRkMERqeU92V3Rm?=
+ =?utf-8?B?bTFERGxVZ2tWQXF1WXB4ZXZOZmt5dWJIMUlmc1MyOVJoaHJwYWhYU1RYL3FT?=
+ =?utf-8?B?d1RQcEZHS0RXTHlvZWw2YTZTMVRzbFFGMzArbFRJbzN5UzMwQ01KQXcvaFR1?=
+ =?utf-8?B?NDlLNTRLWW4wRkZhZ1FPTjArME5GMTFVZWs1RTJUMWdsUGRsY2JJcHp0Z3FT?=
+ =?utf-8?B?c3NBSFVSenRGbnVZbUxyUGtvQ3VwNlkzL29wTzdBcTFjZ283T1FaRWd4cUdC?=
+ =?utf-8?B?STB2aHI4bGZWeEl3aWdBbE5jUjJ4YVdjcWg5MStXK2M0RTJYeGlpR2FJNVBw?=
+ =?utf-8?B?aHhGVmdNZnNGVnNERVRCWHRmaHFQTnNyRHpqSy9BQlBsa0ROd0JwQlA0c3hW?=
+ =?utf-8?B?TW1SYmhEZ2JyU1NPWlNHYnkrancyTHR1NnQwd0hyQzdyZkpEbVhXME4zTHBR?=
+ =?utf-8?B?V2hyRDhHRDFjUkRyaUhaelV4SWhnOXdGSzNvZGxGc2tKdE1ER1IxRDdnWHpU?=
+ =?utf-8?B?b2J5b0VaNlB1bVRsNS8yTjk3enpvS1BKTG9XVHFDRUZpYXVpUEF4WC9nT1Fj?=
+ =?utf-8?B?NjFta3poVUtldVFQVlE3K0FzQitkYm93QlJwN0hWOVl0M1AvTU9wUENlNGdO?=
+ =?utf-8?B?VXRHSHhYMU5HU0VDaXlPa1ludFZQYnhtZ0crdVhoOEdjYkhVU0pnSFBldjk1?=
+ =?utf-8?B?RHJkVzdndW9VUFdBMzFDWkpBa3RQWjl3anBOQ3IvcXZ5c2lnSUV3U3NVdFoy?=
+ =?utf-8?B?dUtlT2V4dkV4c1FodDdVMWd0aktncU9UODZYSFlaZktRS3ZWc1dlamtNTEUr?=
+ =?utf-8?Q?UGPa+nD9FpNvqhe0P0=3D?=
+X-OriginatorOrg: sct-15-20-7719-20-msonline-outlook-ae5c4.templateTenant
+X-MS-Exchange-CrossTenant-Network-Message-Id: cd32337b-cef1-48a9-0814-08dd87edca31
+X-MS-Exchange-CrossTenant-AuthSource: PN3PR01MB9597.INDPRD01.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 13:49:12.7976
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
+	00000000-0000-0000-0000-000000000000
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PN1PPF3C75D558E
 
-Hi Miqu=C3=A8l,
+%p4cn was recently removed and replaced by %p4chR in vsprintf. So,
+remove the check for %p4cn from checkpatch.pl.
 
-On Tue, Apr 29, 2025 at 3:55=E2=80=AFPM Miquel Raynal <miquel.raynal@bootli=
-n.com> wrote:
->
-> Hello Liwei,
->
-> On 01/04/2025 at 00:15:20 +08, Liwei Song <liwei.song.lsong@gmail.com> wr=
-ote:
->
-> > When unbind mtd device or qspi controller with a high frequency
-> > reading to /dev/mtd0 device, there will be Calltrace as below:
-> >
-> > $ while true; do cat /dev/mtd0 >/dev/null; done &
-> > $ echo ff8d2000.spi  > /sys/bus/platform/drivers/cadence-qspi/unbind
-> >
-> > Internal error: synchronous external abort: 0000000096000210 [#1] PREEM=
-PT SMP
-> > Modules linked in:
-> > CPU: 3 UID: 0 PID: 466 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+=
- #1
-> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-> > pc : cqspi_indirect_read_execute.isra.0+0x188/0x330
-> > lr : cqspi_indirect_read_execute.isra.0+0x21c/0x330
-> > Call trace:
-> >  cqspi_indirect_read_execute.isra.0+0x188/0x330 (P)
-> >  cqspi_exec_mem_op+0x8bc/0xe40
-> >  spi_mem_exec_op+0x3e0/0x478
-> >  spi_mem_no_dirmap_read+0xa8/0xc8
-> >  spi_mem_dirmap_read+0xdc/0x150
-> >  spi_nor_read_data+0x120/0x198
-> >  spi_nor_read+0xf0/0x280
-> >  mtd_read_oob_std+0x80/0x98
-> >  mtd_read_oob+0x9c/0x168
-> >  mtd_read+0x6c/0xd8
-> >  mtdchar_read+0xdc/0x288
-> >  vfs_read+0xc8/0x2f8
-> >  ksys_read+0x70/0x110
-> >  __arm64_sys_read+0x24/0x38
-> >  invoke_syscall+0x5c/0x130
-> >  el0_svc_common.constprop.0+0x48/0xf8
-> >  do_el0_svc+0x28/0x40
-> >  el0_svc+0x30/0xd0
-> >  el0t_64_sync_handler+0x144/0x168
-> >  el0t_64_sync+0x198/0x1a0
-> > Code: 927e7442 aa1a03e0 8b020342 d503201f (b9400321)
-> > ---[ end trace 0000000000000000 ]---
-> >
-> > Or:
-> > $ while true; do cat /dev/mtd0 >/dev/null; done &
-> > $ echo spi0.0 > /sys/class/mtd/mtd0/device/driver/unbind
-> >
-> > Unable to handle kernel paging request at virtual address 0000000000001=
-2e8
-> > Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> > Modules linked in:
-> > CPU: 2 UID: 0 PID: 459 Comm: cat Not tainted 6.14.0-rc7-yocto-standard+=
- #1
-> > Hardware name: SoCFPGA Stratix 10 SoCDK (DT)
-> > pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=3D--)
-> > pc : spi_mem_exec_op+0x3e8/0x478
-> > lr : spi_mem_exec_op+0x3e0/0x478
-> > Call trace:
-> >  spi_mem_exec_op+0x3e8/0x478 (P)
-> >  spi_mem_no_dirmap_read+0xa8/0xc8
-> >  spi_mem_dirmap_read+0xdc/0x150
-> >  spi_nor_read_data+0x120/0x198
-> >  spi_nor_read+0xf0/0x280
-> >  mtd_read_oob_std+0x80/0x98
-> >  mtd_read_oob+0x9c/0x168
-> >  mtd_read+0x6c/0xd8
-> >  mtdchar_read+0xdc/0x288
-> >  vfs_read+0xc8/0x2f8
-> >  ksys_read+0x70/0x110
-> >  __arm64_sys_read+0x24/0x38
-> >  invoke_syscall+0x5c/0x130
-> >  el0_svc_common.constprop.0+0x48/0xf8
-> >  do_el0_svc+0x28/0x40
-> >  el0_svc+0x30/0xd0
-> >  el0t_64_sync_handler+0x144/0x168
-> >  el0t_64_sync+0x198/0x1a0
-> > Code: f9400842 d63f0040 2a0003f4 f94002a1 (f9417437)
-> > ---[ end trace 0000000000000000 ]---
-> >
-> > when unbind is running, the memory allocated to qspi controller and
-> > mtd device is freed during unbinding, but open/close and reading device
-> > are still running, if the reading process get read lock and start
-> > excuting, there will be above illegal memory access. This issue also
-> > can be repruduced on many other platforms like ls1046 and nxpimx8 which
-> > have qspi flash.
-> >
-> > In this patch, register a spi bus notifier which will be called before
-> > unbind process freeing device memory, add a new member mtd_event_remove
-> > to block mtd open/read, then waiting for the running task to be finishe=
-d,
-> > after that, memory is safe to be free.
-> >
-> > Signed-off-by: Liwei Song <liwei.song.lsong@gmail.com>
-> > ---
-> >
-> > Hi Maintainer,
-> >
-> > This is an improved patch compared with the original one:
-> > (https://patchwork.ozlabs.org/project/linux-mtd/patch/20250325133954.36=
-99535-1-liwei.song.lsong@gmail.com/),
-> > This v2 patch move notifier to spi-nor to avoid crash other types of fl=
-ash.
-> > now this patch only aim at fixing nor-flash "bind/unbind while reading"=
- calltrace,
-> > but for other types of flash like nand also have this issue.
->
-> While I agree with the observation and also the conclusion of adding
-> some kind of notifier, I'd like to understand the rationale behind
-> choosing to fix only spi-nor in v2? If any spi memory registered in the
+Fixes: 37eed892cc5f ("vsprintf: Use %p4chR instead of %p4cn for reading data in reversed host ordering")
+Signed-off-by: Aditya Garg <gargaditya08@live.com>
+---
+v2: Add specific check for %p4chR as suggested by Joe Perches.
+v3: Remove blank lines from the tag block.
 
-My original plan is to fix nand in another patch if the idea of this
-patch is acceptable,
-but after some investigation, it also can be done in this patch together,
-because for nand device, the existing driver will call
-mtd_device_unregister() directly to remove
-device when unbinding, new adding "mtd_event_remove" can be set there, and =
-check
-"mtd_event_remove" in mtd_read(), on my board exist below call trace:
+ scripts/checkpatch.pl | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-for nand unbind:
-mtd_device_unregister+0x50/0x90
-denali_remove+0x58/0x108
-denali_dt_remove+0x24/0x88
-platform_remove+0x34/0x80
-device_remove+0x54/0x90
-device_release_driver_internal+0x1d4/0x238
-device_driver_detach+0x20/0x38
-unbind_store+0xbc/0xc8
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 44e233b6f..d5bde8322 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -6891,7 +6891,7 @@ sub process {
+ 					    ($extension eq "f" &&
+ 					     defined $qualifier && $qualifier !~ /^w/) ||
+ 					    ($extension eq "4" &&
+-					     defined $qualifier && $qualifier !~ /^c[hnlbc]/)) {
++					     defined $qualifier && $qualifier !~ /^c(?:[hlbc]|hR)$/)) {
+ 						$bad_specifier = $specifier;
+ 						last;
+ 					}
+-- 
+2.49.0
 
-for nand read:
-denali_dma_xfer+0x140/0x218
-denali_read_page+0x5c/0x3c0
-nand_read_oob+0x2b4/0x8a0
-mtd_read_oob_std+0x60/0x98
-mtd_read_oob+0x9c/0x168
-mtd_read+0x6c/0xb0
-mtdchar_read+0xdc/0x288
-
-for spi_nor read:
-cqspi_exec_mem_op+0x8d4/0xfbc
-spi_mem_exec_op+0x3dc/0x45c
-spi_mem_no_dirmap_read+0xa0/0xc0
-spi_mem_dirmap_read+0xdc/0x144
-spi_nor_read_data+0x114/0x180
-spi_nor_read+0xbc/0x164
-mtd_read_oob_std+0x80/0x90
-mtd_read_oob+0x8c/0x150
-mtd_read+0x6c/0xb0
-mtdchar_read+0xdc/0x2a0
-
-
-> mtd subsystem is subject to this failure, we should find a generic
-> approach (or if it's too difficult, at least have the fix in both
-> spi nor and spi nand). Looking at your implementation, maybe it could
-> fit in spi-mem (I'm not sure).
-
-Thanks for your suggestion, I will have a try to move the code there.
-
-
->
-> ...
->
-> > +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-> > +                                     unsigned long event, void
-> > *data);
->
-> I believe spi nor maitainers would prefer to avoid forward declarations.
-
-Got it, thanks, will drop this kind of declaration.
-
->
-> > +
-> >  /**
-> >   * spi_nor_get_cmd_ext() - Get the command opcode extension based on t=
-he
-> >   *                      extension type.
-> > @@ -1191,6 +1195,9 @@ static int spi_nor_prep(struct spi_nor *nor)
-> >       if (nor->controller_ops && nor->controller_ops->prepare)
-> >               ret =3D nor->controller_ops->prepare(nor);
-> >
-> > +     if (nor->mtd.mtd_event_remove)
-> > +             return -ENODEV;
-> > +
-> >       return ret;
-> >  }
->
-> ...
->
-> > +static int spi_nor_remove_notifier_call(struct notifier_block *nb,
-> > +                                 unsigned long event, void *data)
-> > +{
-> > +     struct device *dev =3D data;
-> > +     struct spi_device *spi;
-> > +     struct spi_mem *mem;
-> > +     struct spi_nor *nor;
-> > +
-> > +     if (!of_match_device(spi_nor_of_table, dev))
-> > +             return 0;
-> > +
-> > +     switch (event) {
-> > +     case BUS_NOTIFY_DEL_DEVICE:
-> > +     case BUS_NOTIFY_UNBIND_DRIVER:
-> > +             spi =3D to_spi_device(dev);
-> > +             mem =3D spi_get_drvdata(spi);
-> > +             if (!mem)
-> > +                     return NOTIFY_DONE;
-> > +             nor =3D spi_mem_get_drvdata(mem);
-> > +
-> > +             mutex_lock(&nor->lock);
-> > +             nor->mtd.mtd_event_remove =3D true;
-> > +             mutex_unlock(&nor->lock);
-> > +             msleep(300);
->
-> What is this sleep for?
-
-The sleep is to wait the process which already got the lock and
-running in reading
-routine can be finished before memory is released, show in below scenario:
-
-without sleep:
---------------------------------------------------------------------
-mtd.mtd_event_remove =3D false;
-                                                            reading start;
-mtd.mtd_event_remove =3D true;
-release memory
-                                                            reading end;
---------------------------------------------------------------------
-
-with sleep:
--------------------------------------------------------------------
-mtd.mtd_event_remove =3D false;
-                                                           reading start;
-mtd.mtd_event_remove =3D true;
-sleep() start
-                                                           reading end;
-sleep() end
-release memory
--------------------------------------------------------------------
-
-
->
-> > +
-> > +             break;
-> > +     }
-> > +
-> > +     return NOTIFY_DONE;
-> > +}
-> > +
-> >  /*
-> >   * REVISIT: many of these chips have deep power-down modes, which
-> >   * should clearly be entered on suspend() to minimize power use.
-> > diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> > index 8d10d9d2e830..134bfa6fcf76 100644
-> > --- a/include/linux/mtd/mtd.h
-> > +++ b/include/linux/mtd/mtd.h
-> > @@ -290,6 +290,7 @@ struct mtd_info {
-> >       /* Kernel-only stuff starts here. */
-> >       const char *name;
-> >       int index;
-> > +     bool mtd_event_remove;
->
-> No need to repeat 'mtd' here, you are already in the mtd_info structure,
-> so mtd->mtd_event_remove would be redundant.
-
-Got it, will remove the "mtd" prefix.
-
-Thanks,
-Liwei.
-
-
->
-> >       /* OOB layout description */
-> >       const struct mtd_ooblayout_ops *ooblayout;
->
-> Thanks,
-> Miqu=C3=A8l
