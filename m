@@ -1,55 +1,55 @@
 Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63D7F2609D0
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD864264630
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:27:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746030449; cv=none; b=bXUmiH5FL7dkO+S7/a+tzku2/GPXA5c/CliOrHN5UePAAtx/ZUP7RDztXs6SFVRIko8iLivytmpjqcyWUwmdrHL0k+Q9bLh1S9wV8rfTmL4Jqe55GDfS23hbygc2fy5tKHKe/V5n8sKRMCLtNk9yu578eNQ5hZpBGKi0fzBGFWQ=
+	t=1746030451; cv=none; b=QFZ23IF5OB4KRKF3IXw3xRkj6Rn7/tqTvC7zyVEVD0OwjYG4aeBoo4N4Qpzi7+q+EYPP5B/Bzmk2GF+upr0Pb0ZY49QeNSTOH3kSaFe0gd9PVXS4hvuKK6BBFA2aagdjmUV7CKsC+oKrARpVRXE99gFXdfCnZCphGkpwQWW1T40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746030449; c=relaxed/simple;
-	bh=nrCPdU0q/z+UhkgAcPbUE7M11/Gu6PDUNNKarNUhmLU=;
+	s=arc-20240116; t=1746030451; c=relaxed/simple;
+	bh=GTOg1ysfEG4bdpGS4A571FfqA9HLp7EmYpGHSBXrIcY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=NGnNwtBDKH3BpdfOc8KHL75flTe7YxxSjJHn4VdQ1D2ifKXTSqN+vBurwCFODwluTH9Qw1//cpOQk/3jZ1BnIdDlnPaBITwyqce1/zOOCj5iPfcgKmR1fIUt99BKk/gGHeM59NQeZyyAjR8qasiBAlzLQPwtRgFSFcfLRvLPIYo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FptyM7F4; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=QMySTZfj84GNnUKwrShitDjAD9zO2o60214BnuabdjIUJPvLDHDvWrw68vpO+GHlevqTznFG0m99ga5A0Ugmiy5lAbI72g6sVdPlknz3yq4FJXQh1LkPgV+y59ygcNEvB91OQEkEaWtpTD53zcC3zruYZJsRRA5q8cYwAV+NOe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vKLphjPp; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FptyM7F4"
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-39141ffa913so3602203f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:27:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vKLphjPp"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-391492acb59so3522888f8f.3
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 09:27:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746030446; x=1746635246; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746030448; x=1746635248; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Cc1UFbHiSntYShVPXAcoplaHQWwRkP8Qvo8LnShWWI=;
-        b=FptyM7F4xhy7vDjwYbcoDCzbSjUWJ5ShzjEhPu/pEYOanJD5k1YS2DLzlESU9GarUx
-         s/KD3v1Od4U88xZWX1DSpmkO9rO5jffRhqYxWxGPdK95AhDvg4HdqnzV0Pz5pB0pwGpx
-         M6yZTFC2NChL+yskF20JyS9WmQRc64gqIZhSRgtyX+ysGeKLPotf1uIJ7xd1De15LpSk
-         OolYk6weiM6XNnQbzbIhJfhoM55dHGJJQYKgebW5pVjJby0OX+eXTs/dIDfA2bkqkXB1
-         aLq+Gk6gy6W7oMY7LH9B4wLMC9aBkHO1uIGzpKzYawWMr8ZtRHAkWBQXVxp5c7rZtiUo
-         Gwlg==
+        bh=003i/GX+SMhbEk8JM6zOLdGB+5OhPHak3AuWaDpYHh0=;
+        b=vKLphjPpkJwmvyo6uVzwsAZvNYttTXkLB+3D/sdywk0oVYVLfDJyypfL9qAFNda8AR
+         wWxD53uC3XuHuFH2rOD3xoEci56Rka7JDR/CLvPnkYYF7wvyp65rBWzcu2LZx/nGhaZt
+         FcoXoEevE+4tXgn0YWDyRG5cG2AbcxgB3d00bC26Pyctk6avGljZHG4ahP28owfFS6XX
+         35csbwwQMRUXTz5oBG7NOUzEDIABeMiIqZjG1XgHHjYUJXVCcglUfhHu2NkSd+Y8/lNp
+         galwgB8BTFhGIGFZ85TDBXu8hzDPX79Kf++AWVrYz2XQ2zcSD5xKomBuv/GhSV9/pIlR
+         CJRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746030446; x=1746635246;
+        d=1e100.net; s=20230601; t=1746030448; x=1746635248;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/Cc1UFbHiSntYShVPXAcoplaHQWwRkP8Qvo8LnShWWI=;
-        b=o8LHqVzm9VOeytHRXhtiTZpE2Jv1EPAWtuvD7X12W0I3e4TZTcQ6roqZiQhmE+uV1R
-         MCGI2KHlKzaqlbwHilpk44jWKgbFF8rqO2bl21uKeLQ0DMMiRvHJVH2qJhTIWJ71Vg8b
-         PrfrxY9DNXX2dumLcw2+6gze34DXuITGUHH4IU9I1MKuz6yyDEGE0Mt3HqTWfjFzX1HV
-         RBQXvV2TAv3WoMmIjLo2lNnc3GlPbJ1TIrWiyAFWIP/wnnn1exK8L4gTMpRcewWD194k
-         XJtUapwDhO0vKHe+0O0oFBNOqRKYYS9avcuVCN3tR56/AtCmak6qVkHaGe0KowPtppHy
-         WwJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUrRYmv3Iwl+mQw0U8TjiTPhLV2YXD5aWBaaHN2HQbumgRLJ1BstAE76SJE5xYtsB9Tz6zikLL3UbTGOKI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwGWqn9UWihSnBEfvJgaJyHkbJsRjIWXfUg3fktrlf4TL195Dyn
-	CFTg2dRHBeu758MXhjek0lteT6p8Dje6KkVtxuHWMrLq3bsfEQJ4h/pbGcLuVstQAJU9vUfQ2BH
-	FohGrBpeHmw==
-X-Google-Smtp-Source: AGHT+IHDzYZhWgLNGxcyelrM4O2AAV3CEZWXJdSJ7SeEaiIFmtJryw2vi0tu8g2u+0VnUpRP7QxKQEtc5Ig7EQ==
-X-Received: from wrbfu6.prod.google.com ([2002:a05:6000:25e6:b0:39a:bcee:e7a1])
+        bh=003i/GX+SMhbEk8JM6zOLdGB+5OhPHak3AuWaDpYHh0=;
+        b=dy91BoHv/z0U6I1UpcufXfuNbAKSf2d95MtEFDZIEsXRCwpPCU2cVFjbnq34tGwvf3
+         /2GqLWdmrd8XVgw51MLU4CxPhAn3+DSFNsQcmOGmubKzfQ1PBuOgKKCy28liJ/jxz8cH
+         BVWl3Bm/DPOyohqqdh5q3FvVCXeLm2Xu/uOVISh5Dv4ge18T3nWv2f/wjI4BWjBNbmgb
+         68ykDx81VZepV5MWPJ8zaV2D4ipJekbTQOzWbRr/N5MHxsKyWABwAuQSNPTViAZeRdcf
+         U+hBoUElQWXEJB/kUhDg3uK67EsjNTYFdkcjzimIyne3B1gbJBfb2tTMrajHVTP9BYGW
+         lZVw==
+X-Forwarded-Encrypted: i=1; AJvYcCVZWY4hfS8Nw7edF5c4WfZ5/j7vpvC0jX1hgq7JzHX195iRwqbdZf+6rTC07+nWsWqoijJFkF8g0rvwtM8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbIHohOZW7nDcsa8O477hRUqvZu0bDmY0preKNPQrpgDVMwLak
+	FRyRIUWY+s1lA54TLNOMxUE62JAJhXrzvHNaab0IjC0+HaQhAT4IOLoREK/HoOV48irZiFYCra2
+	7Vc1PWuvUUQ==
+X-Google-Smtp-Source: AGHT+IFmvlkwLxNmZ9CSFJVW5lMLHM9FQhYVBrEhGonj9gK38XYoJ6Wzk9kIHfgZWiH30GqYlq6Z8FTj6W6gdg==
+X-Received: from wryv6.prod.google.com ([2002:a5d:59c6:0:b0:391:4999:778e])
  (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:420e:b0:3a0:847d:8326 with SMTP id ffacd0b85a97d-3a08f777d82mr3895576f8f.25.1746030445844;
- Wed, 30 Apr 2025 09:27:25 -0700 (PDT)
-Date: Wed, 30 Apr 2025 16:27:08 +0000
+ 2002:a05:6000:3107:b0:3a0:7af3:843f with SMTP id ffacd0b85a97d-3a08f761185mr3815578f8f.19.1746030448153;
+ Wed, 30 Apr 2025 09:27:28 -0700 (PDT)
+Date: Wed, 30 Apr 2025 16:27:09 +0000
 In-Reply-To: <20250430162713.1997569-1-smostafa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250430162713.1997569-1-smostafa@google.com>
 X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
-Message-ID: <20250430162713.1997569-2-smostafa@google.com>
-Subject: [PATCH v2 1/4] arm64: Introduce esr_is_ubsan_brk()
+Message-ID: <20250430162713.1997569-3-smostafa@google.com>
+Subject: [PATCH v2 2/4] ubsan: Remove regs from report_ubsan_failure()
 From: Mostafa Saleh <smostafa@google.com>
 To: kvmarm@lists.linux.dev, kasan-dev@googlegroups.com, 
 	linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org, 
@@ -75,45 +75,74 @@ Cc: will@kernel.org, maz@kernel.org, oliver.upton@linux.dev,
 	Mostafa Saleh <smostafa@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Soon, KVM is going to use this logic for hypervisor panics,
-so add it in a wrapper that can be used by the hypervisor exit
-handler to decode hyp panics.
+report_ubsan_failure() doesn't use argument regs, and soon it will
+be called from the hypervisor context were regs are not available.
+So, remove the unused argument.
 
 Signed-off-by: Mostafa Saleh <smostafa@google.com>
+Acked-by: Kees Cook <kees@kernel.org>
 ---
- arch/arm64/include/asm/esr.h | 5 +++++
- arch/arm64/kernel/traps.c    | 2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/traps.c | 2 +-
+ arch/x86/kernel/traps.c   | 2 +-
+ include/linux/ubsan.h     | 4 ++--
+ lib/ubsan.c               | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/esr.h b/arch/arm64/include/asm/esr.h
-index e4f77757937e..350f02bf437d 100644
---- a/arch/arm64/include/asm/esr.h
-+++ b/arch/arm64/include/asm/esr.h
-@@ -440,6 +440,11 @@ static inline bool esr_is_cfi_brk(unsigned long esr)
- 	       (esr_brk_comment(esr) & ~CFI_BRK_IMM_MASK) == CFI_BRK_IMM_BASE;
- }
- 
-+static inline bool esr_is_ubsan_brk(unsigned long esr)
-+{
-+	return (esr_brk_comment(esr) & ~UBSAN_BRK_MASK) == UBSAN_BRK_IMM;
-+}
-+
- static inline bool esr_fsc_is_translation_fault(unsigned long esr)
- {
- 	esr = esr & ESR_ELx_FSC;
 diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
-index 529cff825531..224f927ac8af 100644
+index 224f927ac8af..9bfa5c944379 100644
 --- a/arch/arm64/kernel/traps.c
 +++ b/arch/arm64/kernel/traps.c
-@@ -1145,7 +1145,7 @@ int __init early_brk64(unsigned long addr, unsigned long esr,
- 		return kasan_handler(regs, esr) != DBG_HOOK_HANDLED;
- #endif
+@@ -1118,7 +1118,7 @@ static struct break_hook kasan_break_hook = {
  #ifdef CONFIG_UBSAN_TRAP
--	if ((esr_brk_comment(esr) & ~UBSAN_BRK_MASK) == UBSAN_BRK_IMM)
-+	if (esr_is_ubsan_brk(esr))
- 		return ubsan_handler(regs, esr) != DBG_HOOK_HANDLED;
- #endif
- 	return bug_handler(regs, esr) != DBG_HOOK_HANDLED;
+ static int ubsan_handler(struct pt_regs *regs, unsigned long esr)
+ {
+-	die(report_ubsan_failure(regs, esr & UBSAN_BRK_MASK), regs, esr);
++	die(report_ubsan_failure(esr & UBSAN_BRK_MASK), regs, esr);
+ 	return DBG_HOOK_HANDLED;
+ }
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 9f88b8a78e50..4b5a7a1a8dde 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -351,7 +351,7 @@ static noinstr bool handle_bug(struct pt_regs *regs)
+ 	case BUG_UD1_UBSAN:
+ 		if (IS_ENABLED(CONFIG_UBSAN_TRAP)) {
+ 			pr_crit("%s at %pS\n",
+-				report_ubsan_failure(regs, ud_imm),
++				report_ubsan_failure(ud_imm),
+ 				(void *)regs->ip);
+ 		}
+ 		break;
+diff --git a/include/linux/ubsan.h b/include/linux/ubsan.h
+index d8219cbe09ff..c843816f5f68 100644
+--- a/include/linux/ubsan.h
++++ b/include/linux/ubsan.h
+@@ -3,9 +3,9 @@
+ #define _LINUX_UBSAN_H
+ 
+ #ifdef CONFIG_UBSAN_TRAP
+-const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type);
++const char *report_ubsan_failure(u32 check_type);
+ #else
+-static inline const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
++static inline const char *report_ubsan_failure(u32 check_type)
+ {
+ 	return NULL;
+ }
+diff --git a/lib/ubsan.c b/lib/ubsan.c
+index cdc1d31c3821..17993727fc96 100644
+--- a/lib/ubsan.c
++++ b/lib/ubsan.c
+@@ -25,7 +25,7 @@
+  * The mappings of struct SanitizerKind (the -fsanitize=xxx args) to
+  * enum SanitizerHandler (the traps) in Clang is in clang/lib/CodeGen/.
+  */
+-const char *report_ubsan_failure(struct pt_regs *regs, u32 check_type)
++const char *report_ubsan_failure(u32 check_type)
+ {
+ 	switch (check_type) {
+ #ifdef CONFIG_UBSAN_BOUNDS
 -- 
 2.49.0.967.g6a0df3ecc3-goog
 
