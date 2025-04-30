@@ -1,77 +1,116 @@
-Received: from vps.xff.cz (vps.xff.cz [195.181.215.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9532425B660;
-	Wed, 30 Apr 2025 13:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.181.215.36
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 164A325B1E0;
+	Wed, 30 Apr 2025 13:25:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746019521; cv=none; b=dOM/A2hYrO7omvSKKR9I7BGYsD6p+iZ6N+HYd4cQvzvuWi3O9wEWKfYirahcv9AQtowMFafEWg6MTELY8pR8a0PrmredKHFn7sHHUW28EOJwSypVUfnaapW6hhyoZQntyB05t5HOiryMdAb2490ns5gNjYUiuxUQlrv/MJsHFqM=
+	t=1746019540; cv=none; b=Ap7T6mxbkn9U3yF8/FYOs+anv2bgUkUK+QwK2+VjLKvSkB4rFmOj+FnDOaHvGvfqEbbiX6W9UraRCgBOF6t+F+gxylJELH1lDMHvJlfnixLR95790WB1S736VKSU64fIhjvAjHrkR+49IlWdlJq7McNY3V1fzNvQ18+I5I2tg78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746019521; c=relaxed/simple;
-	bh=4xI2FfC5QlPZbaJ/Nrm4Yb/G1IL+bmRQYl1R67NObQg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VSkdzNhAFYzQ/prXMzxyxNYtLZXNld/2gk3paDcPpW5JZv9qS4lspyWyC8djk0HW6m5Pq+U5JCTMd1ZsAvWkON5DL/9Ao3T6rqLgmaa0LDwHj3p2H8yLXTT0KbgmkHPo1EkcUIZXA6S5IzmmVXZtRSUMIb1PdaMEQmciaMMPW2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz; spf=pass smtp.mailfrom=xff.cz; dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b=qhqwZ2Tr; arc=none smtp.client-ip=195.181.215.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=xff.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xff.cz
+	s=arc-20240116; t=1746019540; c=relaxed/simple;
+	bh=/LI7JX8DlnvmPnG1T214t1rd+I4m1oR6VQ1Rjq4IYCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qso4Nk+QGRfkDlZl6yZohfHJPCEWyT9PQBBtGqwoYGzpM2TIfl/vYPJJxIct7VgO3txlhNyMwNplPTQ8o53ULCQ6eF5LKXrRvjr9497/ESekRfGhOci4t8U5MWjOe/VAuBTrdgxOMBHh7RJswY9m1D/TMek3adIH0y2EuXH7qjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IbozTqVv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=xff.cz header.i=@xff.cz header.b="qhqwZ2Tr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=xff.cz; s=mail;
-	t=1746019509; bh=4xI2FfC5QlPZbaJ/Nrm4Yb/G1IL+bmRQYl1R67NObQg=;
-	h=Date:From:To:Cc:Subject:X-My-GPG-KeyId:References:From;
-	b=qhqwZ2Tr6yYbE8THGIChkynfpQgSVDWZ8434EZ8KObNzHDSp2urS9IdxtUrVzyDkP
-	 KLxKQ+TKIEYSkQPPUU0w6XwjfWDVHsow2A0HP4ogRu5pdDTFUMLjBz9KpiljevYFoN
-	 wu9aFCMROJEnjkhcAZ13ESymcKSw2HI8QzYETmk8=
-Date: Wed, 30 Apr 2025 15:25:08 +0200
-From: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>
-To: Ping-Ke Shih <pkshih@realtek.com>
-Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH rtw-next v3 2/2] wifi: rtw89: Fix inadverent sharing of
- struct ieee80211_supported_band data
-Message-ID: <bbxt6utodrn7ihxoaenv5elwh4gerlkglmzjfkctimwob5srzx@fe4lsb2aaa5l>
-Mail-Followup-To: =?utf-8?Q?Ond=C5=99ej?= Jirman <megi@xff.cz>, 
-	Ping-Ke Shih <pkshih@realtek.com>, 
-	"linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-X-My-GPG-KeyId: EBFBDDE11FB918D44D1F56C1F9F0A873BE9777ED
- <https://xff.cz/key.txt>
-References: <20250429122916.1734879-1-megi@xff.cz>
- <20250429122916.1734879-3-megi@xff.cz>
- <7b2405f82b8f4b879d10453dde55a7f3@realtek.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IbozTqVv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E5FAC4CEE9;
+	Wed, 30 Apr 2025 13:25:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746019539;
+	bh=/LI7JX8DlnvmPnG1T214t1rd+I4m1oR6VQ1Rjq4IYCw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IbozTqVvpONNMXNPqrfg9ujLON906ST+28hSSXAnGfSGwk6Dzz+n6vJOaU0gy999P
+	 KDe27uKRN6mZPeqn6+I2bQyfp3oYPt/XvYNI2RPdW5FksA4IIWtIJm1PFVHhX4Ych4
+	 6eLHc3qe+8IQLhcjgFgfd7fnOGZeKldTuutqnJ6q+/Nd6CIy9fksAHw/ElYBGCnnBG
+	 3+DA8NojftWXsiv0T3JAVS1KfU4Ap6rFBCnAcKB9sgf451FtA+03OfOwsM7Cjfys0G
+	 Pltuu9MbDAGL73cdMduU5Lkz+Z1RsdA8HG5KwEe2VjFjViYct3qrVGZ0qI0a1OpxaU
+	 emTa8/eMn0GKQ==
+Message-ID: <236a2ace-24ca-421f-82e8-a2d3910730c7@kernel.org>
+Date: Wed, 30 Apr 2025 15:25:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b2405f82b8f4b879d10453dde55a7f3@realtek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] dt-bindings: net: via-rhine: Convert to YAML
+To: Alexey Charkov <alchark@gmail.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250430-rhine-binding-v2-1-4290156c0f57@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
+ cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
+ JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
+ gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
+ J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
+ NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
+ BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
+ vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
+ Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
+ TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
+ S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
+ FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
+ QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
+ gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
+ /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
+ iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
+ VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
+ 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
+ xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
+ eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
+ AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
+ MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
+ Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
+ MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
+ OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
+ GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
+ 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
+ YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
+ 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
+ BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
+ JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
+ 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
+ YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
+ Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
+ ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
+ vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
+ oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
+ lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
+ t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
+ uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
+ 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
+ 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
+In-Reply-To: <20250430-rhine-binding-v2-1-4290156c0f57@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 12:16:47AM +0000, Ping-Ke Shih wrote:
-> Ondřej Jirman <megi@xff.cz> wrote:
-> > 
-> > Internally wiphy writes to individual channels in this structure,
-> > so we must not share one static definition of channel list between
-> > multiple device instances, because that causes hard to debug
-> > breakage.
-> > 
-> > For example, with two rtw89 driven devices in the system, channel
-> > information may get incoherent, preventing channel use.
-> > 
-> > Signed-off-by: Ondrej Jirman <megi@xff.cz>
+On 30/04/2025 12:42, Alexey Charkov wrote:
+> Rewrite the textual description for the VIA Rhine platform Ethernet
+> controller as YAML schema, and switch the filename to follow the
+> compatible string. These are used in several VIA/WonderMedia SoCs
 > 
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
-> 
-> Thanks for your prompt work. :-)
+> Signed-off-by: Alexey Charkov <alchark@gmail.com>
+> ---
+> Changes in v2:
+> - Dropped the update to MAINTAINERS for now to reduce merge conflicts
+>   across different trees
+> - Split out the Rhine binding separately from the big series affecting
+>   multiple subsystems unnecessarily (thanks Rob)
+> - Link to v1: https://lore.kernel.org/all/20250416-wmt-updates-v1-4-f9af689cdfc2@gmail.com/
+> ---
 
-You're welcome. I like rtw89 supported cards very much for my home AP. I'm
-glad I'll now be able to use multitudes of them in one router. :-D
+You should have net-next prefix (see maintainer-netdev).
 
-Thanks for upstreaming and maintaining the Linux driver. My AP has been
-working solidly for me since the driver gained AP support, which is
-great, especially given how much development it's receiving.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
-	o.
+Krzysztof
