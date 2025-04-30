@@ -1,113 +1,119 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6341F2A8D0;
-	Wed, 30 Apr 2025 08:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06BB219302;
+	Wed, 30 Apr 2025 08:34:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746002087; cv=none; b=LQKHbzKHXGmGLbUGcLc95dKvIK+yA8S1DwN9ElPTXZdQYfRFa8lst6uyaafCIyS+Fw/s80S+9tiYF9Nj1P4Ga1TslfUnvp+ul2P7nsVrgkszsFd8OXFC3BeEzWoIBqUzWhpI8ZmsZXp+K1a9cqFmSxY1J3B9hAyOm8GXDYcAkIA=
+	t=1746002096; cv=none; b=ApWRz4MU6qoOr3RR/jgJkuINc7WmLvw6NNzzv5H8xcXHl2VYLfD7Wu7Y+8pmf9sMXmIPR5k0fHs7qWl3jiOK6i6f3zjbTJ1hpsevtE2K5CfhhYk0pAvZV+4QMCsJyWNDEjZK2yU6h0H5DUHbdP+LGS1oQiiPTYlvW1vB1Zn1aRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746002087; c=relaxed/simple;
-	bh=UnYWe9kS0tbtlW+ZD6CrLdA8tcTFve6dkf/Mz8gxI1s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=T7w+LbJ2DpVRvQF55U/+5ppnreK7ZfOjBngKtXwpMNTpBd7CgKBk8sSG1kMap8fhsQ+f04vdKG81tdQhhpL12aNWZv4e4GyVSA1unKj6G6oG1+OYODPZGM8ZifUrhMr8HZ0LyQmZi2vBSgBJTivH6U7nDXX2Ob+y1tFlBqrGIu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NES86Moc; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746002096; c=relaxed/simple;
+	bh=QDO0Es7F76467cgQLZCHDxN8oWt7wTYwDWMEm8JMfXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RI/JAENgG9e3OsLOkJg/AEiakHS45h2S9flo70TvHG5lRsIPIVWhACTbHbXDGdxDfPsMJkIoCG9GESjrl2haK1auSCIKKS+QA3SrEPef3a0AjcFXoVOLbNNJcuKcHMlJ+tbZFS3gwukhF4SzY6/B3ql5RHrlsxyq3ZXRyRmDHXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=jjzrUXNX; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NES86Moc"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43690d4605dso53301125e9.0;
-        Wed, 30 Apr 2025 01:34:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746002083; x=1746606883; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OMUYWfUGXzGMBrrk4yB89sthiGGaTwLPzgNP1Z3b+8Y=;
-        b=NES86MoccYEC1GU+mwUNnEZfPMEhB5UGxrN7qIrfkoBDXUDZGW10YtSBxUvWoFnmXd
-         ZNn6KngOmJqaEKUUQXn3Ydp8HbQUslc3IuX7Z4ohne47BdZbLkRW4VkIyHExZQJVdDZ0
-         Nlk8f1+5SlOph70A/JT2AiupxA6e4fjFIEnu64BnwGREM+pwQoAI97fXLYpguKotVkKU
-         seQtv72g27pPtY82YgyLiNZiRBeuB14h010Xr9ViHGeMmD5JGKWbfHhutHjMxIlcu1ZS
-         tIQSZG4qiURXefRRpvkd8wTIfdN68QfzphGBPdI89oId2DxtBOiF/bOZuqg46hSkJ4il
-         jECA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746002083; x=1746606883;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OMUYWfUGXzGMBrrk4yB89sthiGGaTwLPzgNP1Z3b+8Y=;
-        b=T/2QznYY77VZ06uBT+7zpGJbZFFITuKecX1YcH7BMu1uhUlfbM+EZmmhWHI26IkCoc
-         mzwvT+ERXIe36IEZWirB+jOIUpGcnzXPeNMzbN6QfDHUxH5k7g31fgOTJXnTHgXElWRC
-         Y2kX3pTPGLjgshCtQWjyyzFeqVf5M+1gXpF3O+bJo53szbJVYnrzwZ8ZuQE9Hw0p9RBU
-         pyMQs7uPG4YyxxknrX3ekdNxdrQ7xrOQ8zBCBx+dU0nhHaJ2xzx4E/GcS6Y+faKC/Bxq
-         J9jEetoGr2T3WFGEW8ljl0NyAoFkVeTHw4Rzr7H0yO7A8MOWdrfyCfN9g4UpDDiQYTei
-         dmcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUM31Nw9f6EzEHlSm5Xvta17wFWNkeva5qXYZdTnQ+FsofGopsvImIe/hiILmuETeS3+0d3W8+5/+Ka0jzn@vger.kernel.org, AJvYcCXBVvoKNDLKMTp1crAwZgd+uU7DmRrKu4Bdmc+fjb15vpa8ReEk9nY3LcPYJ12EthKXcUZsx7bll5TC5Z39E+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLRCjLY2Ay4o+uUTKxuMkbPinYZDkp58ap3uG31KkBq9VD+Uri
-	Rk3VcN4WVkjPTv1TzILFnXgOljwP5Ogsh2ud8bU8TFPccM//nGvF
-X-Gm-Gg: ASbGnct5u/BKENCGihD/YBKytN4JmIXpXBG1ZJ9Gllt09CaQwLHmHC3HxKZMfsfhnnD
-	dEFRg5zaLvLwlA7ZcF2nWHe0D7pZk4vAdeqqBMFN5CokwU0cVA9UyMm/FZmUf8EoNeEh/S++VHv
-	Tov52l1mX+aUP8LxAkx5U8y4/arIHm5nIyYv4ctQ4l2gFs9GK8X6zZr5+LNW/Yt5gmKtSVjGz9d
-	ie4bkPGcYdDurY08MEAlCl+Vb+uDjzkrYZOpREkWWkvvNcs6gYY2HHsidxIuZVq1PLewxKgkJO8
-	9RuAkThLCAKclIXwLzn5Ya/IKfzdWkqTxl68opwjsw==
-X-Google-Smtp-Source: AGHT+IEQMS/RL4C5UdU30+j5/UxnzZDQOdloHncizZ181zgcG4olTGvWOXNWY8o3mrgUKo2UMzbnPg==
-X-Received: by 2002:a05:600c:19cc:b0:43c:e7a7:1e76 with SMTP id 5b1f17b1804b1-441b2634d59mr13824145e9.1.1746002083636;
-        Wed, 30 Apr 2025 01:34:43 -0700 (PDT)
-Received: from localhost ([194.120.133.25])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2b97293sm16222245e9.2.2025.04.30.01.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:34:43 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	linux-integrity@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next][V4] tpm: remove kmalloc failure error message
-Date: Wed, 30 Apr 2025 09:34:35 +0100
-Message-ID: <20250430083435.860146-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="jjzrUXNX"
+Received: from mail.ideasonboard.com (unknown [IPv6:2401:4900:1c30:5bed:77da:addd:ba0d:73db])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 423B6AF;
+	Wed, 30 Apr 2025 10:34:46 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746002086;
+	bh=QDO0Es7F76467cgQLZCHDxN8oWt7wTYwDWMEm8JMfXY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jjzrUXNXPV793Jo+NunyIOp6tMFaAXr2TQSoY0/FsSkFRxdnwY9azpnwrNt/iAAcm
+	 Nv5flGhXd8YKMuSWd+/lhjuvq85TmniPuniDEtI9WoAwRON0VZO4KWKDDIOeaBnaIq
+	 bPSqxX/+9xpHihUjMiOlbieMOsSZIyixq3RIFTwc=
+Date: Wed, 30 Apr 2025 14:04:48 +0530
+From: Jai Luthra <jai.luthra@ideasonboard.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] media: i2c: ds90ub960: Fix uninitialized variable in
+ ub960_serializer_temp_ramp()
+Message-ID: <lwxi27a537rmzvu7fj3nnsyik5cvrgasxrtwtxkjho7wohuk5e@xoshmwsm2lpn>
+References: <cover.1746001540.git.dan.carpenter@linaro.org>
+ <e01f2784c6f8e4bc14458f9f4246ac0a8888468c.1746001540.git.dan.carpenter@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vvnyg4oyqz2votsd"
+Content-Disposition: inline
+In-Reply-To: <e01f2784c6f8e4bc14458f9f4246ac0a8888468c.1746001540.git.dan.carpenter@linaro.org>
 
-The kmalloc failure message is just noise. Remove it and
-replace -EFAULT with -ENOMEM as standard for out of memory
-allocation error returns.
 
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
-V1: remove trailing space after \n
-V2: remove entire message, originally just removed a trailing space
-V3: replace -EFAULT with -ENOMEM
-V4: send correct fix for V3, actually return -ENOMEM
----
+--vvnyg4oyqz2votsd
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/3] media: i2c: ds90ub960: Fix uninitialized variable in
+ ub960_serializer_temp_ramp()
+MIME-Version: 1.0
 
- drivers/char/tpm/eventlog/tpm1.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+Hi Dan,
 
-diff --git a/drivers/char/tpm/eventlog/tpm1.c b/drivers/char/tpm/eventlog/tpm1.c
-index 12ee42a31c71..e7913b2853d5 100644
---- a/drivers/char/tpm/eventlog/tpm1.c
-+++ b/drivers/char/tpm/eventlog/tpm1.c
-@@ -257,11 +257,8 @@ static int tpm1_ascii_bios_measurements_show(struct seq_file *m, void *v)
- 	    (unsigned char *)(v + sizeof(struct tcpa_event));
- 
- 	eventname = kmalloc(MAX_TEXT_EVENT, GFP_KERNEL);
--	if (!eventname) {
--		printk(KERN_ERR "%s: ERROR - No Memory for event name\n ",
--		       __func__);
--		return -EFAULT;
--	}
-+	if (!eventname)
-+		return -ENOMEM;
- 
- 	/* 1st: PCR */
- 	seq_printf(m, "%2d ", do_endian_conversion(event->pcr_index));
--- 
-2.49.0
+On Apr 30, 2025 at 11:27:36 +0300, Dan Carpenter wrote:
+> The "ret" variable is not initialized on the success path.
+>=20
+> Fixes: a05744749600 ("media: i2c: ds90ub9xx: Set serializer temperature r=
+amp")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/media/i2c/ds90ub960.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/i2c/ds90ub960.c b/drivers/media/i2c/ds90ub960.c
+> index 8075bffbac2b..cf104461b9a7 100644
+> --- a/drivers/media/i2c/ds90ub960.c
+> +++ b/drivers/media/i2c/ds90ub960.c
+> @@ -2058,7 +2058,7 @@ static int ub960_serializer_temp_ramp(struct ub960_=
+rxport *rxport)
+>  	u8 temp_dynamic_cfg;
+>  	u8 nport =3D rxport->nport;
+>  	u8 ser_temp_code;
+> -	int ret;
+> +	int ret =3D 0;
 
+Oops, thanks for the fix.
+
+Reviewed-By: Jai Luthra <jai.luthra@ideasonboard.com>
+
+> =20
+>  	/* Configure temp ramp only on UB953 */
+>  	if (!fwnode_device_is_compatible(rxport->ser.fwnode, "ti,ds90ub953-q1"))
+> --=20
+> 2.47.2
+>=20
+
+--=20
+Thanks,
+Jai
+
+--vvnyg4oyqz2votsd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmgR4KcACgkQQ96R+SSa
+cUUApA/+Pa9yO82BvZbfB4xs9wi2A/RFJVMFtXtV18uX6oxyXPX9qzEAkBZ+QM63
+Z6uEuVKrwC7aNaIUyr7ohE+m7qCcazTFiqgXzCM1CfeuSzmrweuvKtB0p0TDSHbw
+yWVvKqVb4b90JPEBLEo4TmQPzjmDGyj1tU6QtRZisPfu4Dl72gumPKh06bcm3bwT
+/6bM3gkwq6//fRAzJQePwmJBoXIYRdnJB65hNlhf8W7e7o8h3+fiLg3kJ9Gwvsj+
+YmscV/MFlVgevybc7D785ia+l7WKjFxoy+Oi6Ni3oj6UYWKcJYiBNB1qmDtYRYSE
+KtxCpR5zwyoQF7BynCEK2g0gWIk+OcrvKvNVT4y8NkI6AkWxLDmJ19SqFIfvWM38
+q0nycpVyKqQC7Yya5YahLAjBjr1CQWH9E5VkAQd9YmLlhpcGo6VPsmYQEEueLhvx
+14qNYMOBie9sHRsfcFMCME45BmfoX0/G1GJSBMiTBMLVxAAp7JYlB6OabPiBVYcq
+RVVnK3ioVvCGuNT0jYkAM2ujjXITJ00wS4RwIMZu7mDe2ysequc9rtLItJaAGYAK
+Gj50BjPk5Xvw/xungsdLvbP82Od3vGnUEKGSP9zzWA7k0nJ0GwVEGZzC1tYtiXxR
+CIul3wdzwg3RvEWRb2L5LC1e8jtrP4mhxjTYHQLolwwmuQLebtA=
+=41U/
+-----END PGP SIGNATURE-----
+
+--vvnyg4oyqz2votsd--
