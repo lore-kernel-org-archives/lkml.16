@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2F0241AAC
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB04C1428E7
 	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:05:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745975127; cv=none; b=cpASn1Qe3/cMOC05fR4/QEhpZWII9CO7r1fNG3CO94o2u4KuGmfvzDLIcH69CrA+votal7vEtNinBPeILYaU3Xb5NBzmb/pTwrtfG4MNigW5G1Gxz4pdFpttMgW+/AeDPAEDAYwN18aWumGEjChv+K5XluLJ8Zg/dGD6I5SHMBw=
+	t=1745975129; cv=none; b=mZkEBZwW+j0UrBmPONKgIJpKRdnfx1UeI4vmApVNB0y6e5+H11hIKEYdLzukD3/RNV7Dn+G+FVYCl06xGQ4yrx/FeINQkKfqJeANygUvkyby2N4qqx+SIKC4i8Je/ObyDCm3QcvLAwsi/YYo5pwyu1mvfvwJC6N9VU/Ee9F1gw8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745975127; c=relaxed/simple;
-	bh=NCii0AygsQ7t/hzmWNQsffMOxKXMFGYLlumd3Gn7O9s=;
+	s=arc-20240116; t=1745975129; c=relaxed/simple;
+	bh=JP4VCGxb2YnnLFOMJL/zztqr+/zmTsrBpCccs3bYkwQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lpmF6Uuqr/c1Nk00frBKN4LYBx2V/2IAhovjAQT//LOhMm+WPIDUli/fIyZJniXLCJ1ggkXAhB4GNHrgD1RMASB6pr67QRkNuLYgGR2P25sfa521nG2At4ss8JiwWa0X7K2uVAcSy9HH30HY8oB4CAbeDW4S/N0m1KzCXWhrdqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q27b/DA2; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=swQ06uYJZcjyOqIJEH1hKyWeIfdPWqdNduD6YF+TlRcP0z9xo46cfizgbZJGJSvMH1FSuXU1lAzV0WviUIhXXllN7kwbswg0mcMYNpEPaLHwudFGbjqkUptmG0xyDh6PB0K+t6Kuct4p8qLVG2st3YaPZqXw1TTmAKDydCG/ouI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czv3lorS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q27b/DA2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D876C4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czv3lorS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8296EC4AF09;
 	Wed, 30 Apr 2025 01:05:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1745975127;
-	bh=NCii0AygsQ7t/hzmWNQsffMOxKXMFGYLlumd3Gn7O9s=;
+	bh=JP4VCGxb2YnnLFOMJL/zztqr+/zmTsrBpCccs3bYkwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q27b/DA2L68ZFp80NHX0Cpuf7QxNXmW6PXrwrGwXEdQ4pReA+bU2TTG9GH4gRtCS3
-	 lozfkTEW+zrY6C4oyPDbsxU5+5khX7JRt85tODrQBP5SXyv17vO7P/jGmrSNWcKzFK
-	 Xw2+g1qsnssvOy7RAaD5kQAvJhlck3l41K5TxogSPUI+NwBsaTh+1pRlucmMxLShik
-	 dBmMYRQwVuypD4+oun+TswTyHxz6VAnxC9deMUBrxeCK6UWLkp6NIV6M70uMZA7OVf
-	 zcSF7zs/aS4BSGKft9O2XvyV1U0l/5H51w1WeLjzxlb5HGd0ILKCUbf5+s/xdh3Qo2
-	 lCSMl1v+SoTqQ==
+	b=czv3lorSzyIcEuTPMQ9N19WesE6W4jVrEFhcPB+bgSTQMffEM3H3R2TMJnNPBnox/
+	 W+2qwMfirqyDRLtYuYhmRLrXsDrkPQVScoQGvMDmghz5uTjCinYCR5n7vaDBY9b+sA
+	 SiSD51GY+V3kzp8VNW+IvkofW8kHuIRsoKUgjX5MQAy4ORg9/PDQSqaUxVHWzQiV1O
+	 HuXb/Ey60YvS0LeS7tam0ON5GeUyb2Ln/uJJ7fEXFk/KuWGMxYmynYd48OWLtmwujW
+	 4RUCnjvQeF8DvHToqgnhjVNZDyCF7VAXrSiviVCLhxPPdejOKv9Nlybvya4+mMyqdS
+	 0M/jbaYwu2GrQ==
 Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id CE475CE112C; Tue, 29 Apr 2025 18:05:25 -0700 (PDT)
+	id E0505CE122D; Tue, 29 Apr 2025 18:05:25 -0700 (PDT)
 From: "Paul E. McKenney" <paulmck@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: kernel-team@meta.com,
@@ -42,9 +42,9 @@ Cc: kernel-team@meta.com,
 	Bjorn Helgaas <bhelgaas@google.com>,
 	Karolina Stolarek <karolina.stolarek@oracle.com>,
 	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v4 14/20] ratelimit: Avoid atomic decrement under lock if already rate-limited
-Date: Tue, 29 Apr 2025 18:05:18 -0700
-Message-Id: <20250430010524.3614408-14-paulmck@kernel.org>
+Subject: [PATCH v4 20/20] ratelimit: Drop redundant accesses to burst
+Date: Tue, 29 Apr 2025 18:05:24 -0700
+Message-Id: <20250430010524.3614408-20-paulmck@kernel.org>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
 References: <b0883f20-c337-40bb-b564-c535a162bf54@paulmck-laptop>
@@ -56,20 +56,14 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, if the lock is acquired, the code unconditionally does
-an atomic decrement on ->rs_n_left, even if that atomic operation is
-guaranteed to return a limit-rate verdict.  A limit-rate verdict will
-in fact be the common case when something is spewing into a rate limit.
-This unconditional atomic operation incurs needless overhead and also
-raises the spectre of counter wrap.
-
-Therefore, do the atomic decrement only if there is some chance that
-rates won't be limited.
+Now that there is the "burst <= 0" fastpath, for all later code, burst
+must be strictly greater than zero.  Therefore, drop the redundant checks
+of this local variable.
 
 Link: https://lore.kernel.org/all/fbe93a52-365e-47fe-93a4-44a44547d601@paulmck-laptop/
 Link: https://lore.kernel.org/all/20250423115409.3425-1-spasswolf@web.de/
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+Cc: Petr Mladek <pmladek@suse.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Kuniyuki Iwashima <kuniyu@amazon.com>
 Cc: Mateusz Guzik <mjguzik@gmail.com>
@@ -77,35 +71,31 @@ Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: Sergey Senozhatsky <senozhatsky@chromium.org>
 ---
- lib/ratelimit.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ lib/ratelimit.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/lib/ratelimit.c b/lib/ratelimit.c
-index a7aaebb7a7189..ab8472edeb1d2 100644
+index dcc063af195eb..859c251b23ce2 100644
 --- a/lib/ratelimit.c
 +++ b/lib/ratelimit.c
-@@ -103,13 +103,16 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
- 		}
- 	}
- 	if (burst) {
--		int n_left;
-+		int n_left = atomic_read(&rs->rs_n_left);
- 
- 		/* The burst might have been taken by a parallel call. */
--		n_left = atomic_dec_return(&rs->rs_n_left);
--		if (n_left >= 0) {
--			ret = 1;
--			goto unlock_ret;
-+
-+		if (n_left > 0) {
-+			n_left = atomic_dec_return(&rs->rs_n_left);
-+			if (n_left >= 0) {
-+				ret = 1;
-+				goto unlock_ret;
-+			}
- 		}
+@@ -58,7 +58,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
+ 	 * the current lock owner is just about to reset it.
+ 	 */
+ 	if (!raw_spin_trylock_irqsave(&rs->lock, flags)) {
+-		if (READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED && burst &&
++		if (READ_ONCE(rs->flags) & RATELIMIT_INITIALIZED &&
+ 		    atomic_read(&rs->rs_n_left) > 0 && atomic_dec_return(&rs->rs_n_left) >= 0)
+ 			ret = 1;
+ 		goto nolock_ret;
+@@ -90,7 +90,7 @@ int ___ratelimit(struct ratelimit_state *rs, const char *func)
  	}
  
+ 	/* Note that the burst might be taken by a parallel call. */
+-	if (burst && atomic_read(&rs->rs_n_left) > 0 && atomic_dec_return(&rs->rs_n_left) >= 0)
++	if (atomic_read(&rs->rs_n_left) > 0 && atomic_dec_return(&rs->rs_n_left) >= 0)
+ 		ret = 1;
+ 
+ unlock_ret:
 -- 
 2.40.1
 
