@@ -1,134 +1,141 @@
-Received: from r9103.ps.combzmail.jp (r9103.ps.combzmail.jp [49.212.47.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1A3205519
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.212.47.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1747B214232
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746055807; cv=none; b=YnWkIzfVKoFJ3QCwTH4ye10O5Gse+veN5QOib72xEIdWm8uZMme40yEInDeyPBiOqqeKneYpSDKsAFT52jDzM3si8BSbSmvwaHM4CIZ7zPk5RRlcjkx4/gLJi0/T1b/09+MKnY2erEtamvSCvvS7RgoimdIKFWiMQhUFGiiFmHQ=
+	t=1746055879; cv=none; b=O0AHiSvO2XUfMTTiIWbtgDzsQ8cmkl5KRmr8VIGSDu47AdIxVs8zRfhe11rsr4wKMwH+Z+dDQ4BJCY2B3bwUpB9JVd/M6YeH2urzx3pehyzkcKJxJXlZAtRX/STNR4NYej6uUbOdT2i6awJwt9nIOuTwFDsFDk9/ibY9xukWmS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746055807; c=relaxed/simple;
-	bh=gwjJnRumWoLvNj3qviV1ZTAGA6bs3bwLKkqb7/fEMIw=;
-	h=To:From:Subject:Mime-Version:Content-Type:Message-Id:Date; b=rFW131dJCJVt6v2ydCxaPUtk98WufU/nKHt5frKhWMzE5++BjOIkuM8gnODG48uZC8eXf0JIEC43RtDHtGlMfFms9MOBT05Ptj9z0b2C79/CA01ZV1x9nyKyxF/0yVFDDp4vku/Fb91pk8UMWedU/49NpqJeas/yBDS6sNWTKFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=japan-kaigo-s.jp; spf=pass smtp.mailfrom=magerr.combzmail.jp; arc=none smtp.client-ip=49.212.47.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=japan-kaigo-s.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=magerr.combzmail.jp
-Received: by r9103.ps.combzmail.jp (Postfix, from userid 99)
-	id CDA6118887A; Thu,  1 May 2025 08:08:53 +0900 (JST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 r9103.ps.combzmail.jp CDA6118887A
-To: linux-kernel@vger.kernel.org
-From: =?ISO-2022-JP?B?GyRCRnxLXDJwOG4lNyU5JUYlYBsoQg==?= <info@japan-kaigo-s.jp>
-X-Ip: 3084061826515111
-X-Ip-source: k85gj7e448dnsa87u0p6gd
-Precedence: bulk
-List-Unsubscribe-Post: List-Unsubscribe=One-Click
-Subject: =?ISO-2022-JP?B?RkMbJEJKZz04GyhCIBskQj83NSwxRBsoQg==?=
- =?ISO-2022-JP?B?GyRCNkgkTiQkJGkkSiQkSyxMZDc/JE5NfUh+TUYlNSE8GyhC?=
- =?ISO-2022-JP?B?GyRCJVMlORsoQg==?=
+	s=arc-20240116; t=1746055879; c=relaxed/simple;
+	bh=yD3qheyPyJxLQOVC87vkI+yAdZWmU4D1zU4Z3sUtGsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FIPH08UJS/GwYlHjijaHIoCuAsSqx1sgdSN+JosLhuIisAgcqdx2v8ICu7jKeIO2BckAhC/C81sTk0D1fnDru6IUCUXm2cIknN+HGYFeWj8AD3fHM5j1iFCLyzJeGuH/pXq5QLhCbqo8j73HGk3wopRQKng5fEj+xFMabAs0rgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Gd6XIC1e; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Gd6XIC1e"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-736aaeed234so448820b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746055876; x=1746660676; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7kkJOaWRkAsIP/ls9ASqGbXAxOgOs1WU+P/bZPko4NY=;
+        b=Gd6XIC1ehog3xZBMoRH22G/Fd0fFNtVrX7xdut0cdkoEkDA6yNz2omuxrjbBDTqhtw
+         albZrgP+A5nZImakrO6ZuMLVZAnzOIyoE7KX8eG+7UubBXQSb9lTlF+i4QxERaqSSnuZ
+         oxDWYgXzRDvh3eenr/eEpdmL0xHPJ/W3ZYoo4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746055876; x=1746660676;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7kkJOaWRkAsIP/ls9ASqGbXAxOgOs1WU+P/bZPko4NY=;
+        b=tBepoTC6ba0pjzaVQnnETpPfN2XfpeSsIuzGpyjxbaCmy1qz6E2B+uNyDm22ZRj9pf
+         OyoiFpjQuvJzZ+e1NSGwsduRVVocg4AsvCiJ/yGuQRuxpd4ivCBDDctmLAykWKKidNlt
+         aT9ryVI0/p4b2UD9w1sdWQ3gi9BN3bkAG3MRK6r5fWcj103UJRaFWYx8jTVKsq967uE6
+         JgAToVudOoztPDbmi+PberCX/t6bw8LB5dIDFU7Ud/FdF4tmqhji98lMcKkmKj2enaAd
+         G6+zdvXYjflKyAJZhtMrrtbIYOZFa+qWK0HOcgc9Sep/gVy2g40PEgZblNyE2wFcS2GT
+         8Lug==
+X-Gm-Message-State: AOJu0YxqrUUvL3OozspNSpwxgo7LTrtY186Lf762ZoCVqql8INC6GBY3
+	IIQ6CNps8THweDhpZ/+sABYevyqaUcUR89wXA3RTDyX5PZIIwFjpcZx/zM1hKHcx23/x+ydmARQ
+	=
+X-Gm-Gg: ASbGncsHxWSZiULR4jxBl0WvIwSwxrpahy1hJ0SpbSF181fMIKne2n7QY05GZH/jFHo
+	YYVLdsPY7t+8t3+vPMnSyFxvEy7b9QeJEV5fiGesSaP48D9GJx/mBgh0TkEB+jguA0+/5JwlVgs
+	aQqmqy/9j5Lx9AI6f0110Is4AgonzK3B0wU4FGyVV4VQD2CruV16bJHOND1gSdNSOhKr4GkU6Yt
+	M8z72ZTuQcKzUc4I5Nwiigx+z5mF1vf8RwR69qTQ8jXQZ+lxJzexsx1rqrtI6ifrDE4cKKqjBc+
+	bGUqCplyRukYWb5Onip+ronVRbx/VmmgkwJ/R7D6T4T8M4uxbv22lNpR0kv93zF1ncZt8wAOS40
+	I/FxT12tn
+X-Google-Smtp-Source: AGHT+IGn/1f5fVo9UAqigFTuvhU2ZWjHNOeNzjX3e9wrqMBloTE9loZYKlPBMdJ7be7YIqOCEx6JuQ==
+X-Received: by 2002:a05:6a20:c6cb:b0:1ee:8435:6b69 with SMTP id adf61e73a8af0-20bd6656eebmr521239637.1.1746055876380;
+        Wed, 30 Apr 2025 16:31:16 -0700 (PDT)
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com. [209.85.214.181])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a5ffecsm2368080b3a.143.2025.04.30.16.31.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 16:31:15 -0700 (PDT)
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22438c356c8so3884835ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:31:15 -0700 (PDT)
+X-Received: by 2002:a17:90b:562d:b0:301:98fc:9b2f with SMTP id
+ 98e67ed59e1d1-30a41cfc2e0mr915708a91.1.1746055874808; Wed, 30 Apr 2025
+ 16:31:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-2022-jp
-Content-Transfer-Encoding: 7bit
-X-MagazineId: e487
-X-uId: 6763263937485961543963171016
-X-Sender: CombzMailSender
-X-Url: http://www.combzmail.jp/
-Message-Id: <20250430231920.CDA6118887A@r9103.ps.combzmail.jp>
-Date: Thu,  1 May 2025 08:08:53 +0900 (JST)
+MIME-Version: 1.0
+References: <wpwd7rit6t4mnu6kdqbtsnk5bhftgslio6e2jgkz6kgw6cuvvr@xbfswsczfqsi>
+ <CAD=FV=Xp7zOQ2iEVf896P074RW911F-e2Qa36deD0e8fWksFBA@mail.gmail.com>
+ <u7ek3ccya4c3c4rteliskjjfczpmrt4vmqo5c6kjdotxdgitn7@ko24dpb35pq4>
+ <CAD=FV=Wc9TnDg6vDb8r5A8dT9TvOzU2kNSKi_6TzTtb0ka=8jA@mail.gmail.com> <nchsanp7nc7nqy3kqlu7c5iwvfj6vmrkqbxyjxmoc5eq3dthjk@fusw4pm52auq>
+In-Reply-To: <nchsanp7nc7nqy3kqlu7c5iwvfj6vmrkqbxyjxmoc5eq3dthjk@fusw4pm52auq>
+From: Doug Anderson <dianders@chromium.org>
+Date: Wed, 30 Apr 2025 16:31:02 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U4PdTgRsxJ3HVRRQEZAPHinKxhUE9FpKDOnv=nDQo3KQ@mail.gmail.com>
+X-Gm-Features: ATxdqUFKrr33v60MdJ7VLJEtzDzKpshe0mGaGV2WsW8O5fvBduy-dvNn_PfNeFQ
+Message-ID: <CAD=FV=U4PdTgRsxJ3HVRRQEZAPHinKxhUE9FpKDOnv=nDQo3KQ@mail.gmail.com>
+Subject: Re: PROBLEM: AST2500 BMC video output disabled by reboot (regression)
+To: Nick Bowler <nbowler@draconx.ca>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-　
-　　―　新規開拓の営業活動はいりません　―
-　
-　
-　　提携福祉施設からの依頼が殺到して、
-　　拠点不足になっている「訪問型 理美容サービス」の
-　　フランチャイズ加盟店を募集しています。
-　
-◆…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─◇
-　
-　　〜 加盟店へ、提携福祉施設を紹介する制度があります 〜
-　
-　　訪問型の理美容サービス
-　　Kami Bito（髪人）
-　　フランチャイズシステム説明会
-　
-　　―　理美容の資格・業界経験が無い方を、歓迎しています！　―
-　
-　
-　 ◯  日　程　：　5月9日（金）13:00〜14:00
+Hi,
 
-　 ◯ 開催方式 ：　オンライン
+On Wed, Apr 30, 2025 at 10:52=E2=80=AFAM Nick Bowler <nbowler@draconx.ca> w=
+rote:
+>
+> > > To clarify, there is no boot failure.  There is just no video output
+> > > after rebooting.  I can then boot Linux again by any method that work=
+s
+> > > without being able to see the screen, and then everything is fine onc=
+e
+> > > I do that.
+> >
+> > Super weird. So every other boot works?
+>
+> On a new/broken kernel, every time I run "reboot" the video turns off
+> when Linux does whatever it does to make the system restart.
+>
+> The video comes on again if I manage to boot it up again.
+>
+> The problem is that I have to do that without using the screen.  So I
+> can boot Linux via the serial port, or via the BMC web interface, or
+> by just typing on the keyboard without seeing what is happening.
 
-　 ◯  費　用　：　無料
+Ohhhhhh! I was assuming that your problem looked like this:
 
-　 ◯  対　象　：　法人／個人事業主　どちらでも可（未経験、歓迎です）
+1. Boot up Linux, video works.
 
+2. Type "reboot" and the system boots back to Linux w/ no video.
 
-　          　　　　　▼詳細・申込▼
-　　　　　https://kami-bito-fcseminar.jp/250509/
+3. Log into Linux via UART or ssh and type "reboot". System boots back
+to Linux and video works.
 
+...and then if you repeat steps #2 and #3 it keeps alternating with
+Linux having video and not having video.
 
-　　　　　　　　　　  ◇　主　催　◇
-　　　　　　　　日本介護システム株式会社
+It sounds like instead what you're saying is that you're typing
+"reboot" and then booting into some other operating system / BIOS and
+the video doesn't work in that other (non-Linux) environment. Is that
+right?
 
-◆…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─…─◇
+If I (finally) got it right, then I'm not really sure what to suggest.
+It would sure seem like a bug in the other OS/BIOS. We could possibly
+land the revert you have. I'd imagine it's papering over the bug, but
+it's no real skin off my teeth. As a test, I'd imagine that if you
+turned the screen off via commandline (I never really do this, but a
+search turns up [1]) and then reboot with the screen off then I'd
+imagine you run into the same trouble with or without the patch. Is
+that true?
 
+FWIW: The original incentive for adding all the shutdown calls (aside
+from the fact that it's documented that they should be there) was to
+make sure embedded panels shutdown properly. It looks as if no
+embedded panels will really be used with this driver anyway.
 
-いつもお世話になります。
-
-
-この度、訪問型の理美容サービスのフランチャイズ加盟店を
-募集する説明会を開催しますのでご案内申し上げます。
-
-
-　□　訪問型の理美容サービスとは？　□
-
-　　　高齢や病気、ケガ、障がいなどの事情で、
-　　　外出が難しい方のご自宅や介護施設などに出張訪問し、
-　　　カットを中心とした理美容をご提供するサービスです。
-
-
-私たち日本介護システム株式会社がフランチャイズ展開する「KamiBito（髪人）」は
-全国4,300以上の提携福祉施設に対してサービスを提供しています。
-
-
-「KamiBito」は現在、北海道から沖縄県まで100拠点以上の体制で
-対応していますが、提携福祉施設からの依頼が殺到しており、
-まだまだ拠点が不足しているためフランチャイズ加盟店を募集しています。
-
-
-事業を始めるにあたって、オーナー様に理美容の資格・業界経験が無くても問題ありません。
-
-
-私たちフランチャイズ運営本部が、理美容師のスタッフ採用を
-サポートしますのでオーナー様はマネジメントに専念していただけます。
-
-
-さらに開業後は軌道に乗りやすいように、既存の提携施設案件だけでなく、
-本部が更に提携施設の新規開拓営業を行い、フランチャイズ加盟店に
-ご紹介する制度もございます。
-
-
-初期投資／収益性／回収期間／本部からのサポート制度など、
-説明会で詳しくお伝えしますのでご興味がある方はこの機会にご参加ください。
-
-
-　          　　　　　▼詳細・申込▼
-　　　　　https://kami-bito-fcseminar.jp/250509/
-
-
-***********************************************************************
-ご案内不要な方には大変失礼しました。
-配信停止のお手続きは下記URLにて承っています。
-▼配信停止フォーム▼
-　https://kami-bito-fcseminar.jp/mail/
-
-***********************************************************************
-日本介護システム株式会社
-大阪市中央区本町1-5-7 西村ビル5F
-TEL:080-7475-9111（セミナー事務局 担当直通）
-***********************************************************************
+[1] https://www.baeldung.com/linux/cli-monitor-turn-on-off
