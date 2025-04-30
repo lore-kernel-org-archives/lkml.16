@@ -1,111 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8011DE884;
-	Wed, 30 Apr 2025 16:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43AE61DE884
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 16:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746029041; cv=none; b=uwuRp5Kr1CHJJ67TEz5tKvgpN8tolZHHi0+oICKvwfu6tHFx5HPQ5XFv2gfyeB1LP6cDpdDab1NmCpM8/ZRaE5LtNgmw4bVLzsn2pVlp8NvqmxPPQNiwO/Eeep267TKO/59HtiHFGxedDEkbHjsW7e1FybUiwq+JP2PnFiuO+Wo=
+	t=1746029078; cv=none; b=FgXwS1PY1PKD+BUzLjNVrM2ePh54HC9ZXZlTVN+MKIdGLlUHujmH9CyKqOz7KKF5oR1nTsxn8rre6qoukR4g9yrwD2kXZbQ3z3aKocyuqIbftZGzXAfNVrH2WALwz0fybq5bx9RtFfD7mTK4Ag+aAlCMriTr0nli3CUMlhjmOPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746029041; c=relaxed/simple;
-	bh=DPAfK9Q4sCaXcWduwdjcJsXJ+HPSXe59br4DCXmhWiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i1ir8HqovnPBCP2eiDbrGqyIh9rrFwkXNSHtFVsIpio7yxT0sB8Nt3RYpK26pC0edA/eOIGnyU/TGYuc3ccGfEAUuc+8w4BeU/30InJhMwY2Oao6WolB59XcRroCpIq+o5ANN1drHa+7wjeSftFx19s6ZMaKXpumVD/KEjrLRyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sB8gqRen; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746029078; c=relaxed/simple;
+	bh=zRy7kkX/2tAa/YmE02cejl5pM77vcWhcz1pP4RJhRQA=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cbga9+1hxoDi3guvAr58tRMoKz5UjWRxdfI+DAGO/RoYRUGbHGivZ6qDonKJVUTeuRAWKuzStobY/y2TxSZ2vwOPC4qcCgq0QsclO7J1zq7U1nzKWe3Gtpd821RBU49EVBjP+OCwhCGGfgPJu/Oidlo8r3oVKx2xJqqRjNDZ6Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BPeKN4LJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6MDg3x0g; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BPeKN4LJ; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=6MDg3x0g; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sB8gqRen"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EB12C4CEE7;
-	Wed, 30 Apr 2025 16:03:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746029040;
-	bh=DPAfK9Q4sCaXcWduwdjcJsXJ+HPSXe59br4DCXmhWiY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sB8gqRen/dKesCrMZ6b3LK2oW9nUTerb+KD1rlAXjWjsIGuML16EiwsBJWf2v5lMQ
-	 x2SVVOsEhflg3XE5klKm2Gh02zz/L1JExr5Kb0GoUt3r3k//S2hnHkczxPYzQl5spf
-	 ze3O/s1+21z3BwVk8azzIrg4MK4eutIa1HQkLKKHHcwU6W7n+NK5Eso+b5p2X7HWG4
-	 +4UVR32EGGnhyknvHpID6s79hoPFkGEjNb+uyXWTbpuTapvHLq0yU1XHgZsMK+dga1
-	 Xk2lzbN+RBi7JiQC2/wIYMWVWljuqsGZFwgXreinh2XQUIPJo44gxeG1cfh+95nEB5
-	 dYFOylyiPmMlw==
-Date: Wed, 30 Apr 2025 17:03:56 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Ard Biesheuvel <ardb+git@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Ingo Molnar <mingo@kernel.org>, palmer@dabbelt.com
-Subject: Re: [PATCH v2 3/4] Kbuild: Create intermediate vmlinux build with
- relocations preserved
-Message-ID: <20250430-bronze-unsuited-3f47ce46d8d2@spud>
-References: <20250311110616.148682-6-ardb+git@google.com>
- <20250311110616.148682-9-ardb+git@google.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BPeKN4LJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6MDg3x0g";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BPeKN4LJ";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="6MDg3x0g"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 065A321222;
+	Wed, 30 Apr 2025 16:04:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746029075; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n7CgZf6CEVloLW4YC4oh+syHmDeEvABJZ7UoBnBwZdQ=;
+	b=BPeKN4LJHLPKOuev1EjDx9g/0CX/GCdjGz9jEdF3e/frBMbh37CdMxrN/nBbiFYPyZJ36d
+	bX49lhdIhvgHqWgspCx/MiIdD29atC5HNVPzIp6eTULjEQfrCm+sU8JIbiFefM9pYl0rQR
+	dZ2NmJvkvbnEh/EJM//c/mFqAgLIt00=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746029075;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n7CgZf6CEVloLW4YC4oh+syHmDeEvABJZ7UoBnBwZdQ=;
+	b=6MDg3x0gXaj9E7Dhvxc21rE/mFMbEONDa+Bemrk8ap9/rnKxWy9Q2t3PKdM/RYvzTI4zkY
+	XHII6YekfuNxGgAg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BPeKN4LJ;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=6MDg3x0g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1746029075; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n7CgZf6CEVloLW4YC4oh+syHmDeEvABJZ7UoBnBwZdQ=;
+	b=BPeKN4LJHLPKOuev1EjDx9g/0CX/GCdjGz9jEdF3e/frBMbh37CdMxrN/nBbiFYPyZJ36d
+	bX49lhdIhvgHqWgspCx/MiIdD29atC5HNVPzIp6eTULjEQfrCm+sU8JIbiFefM9pYl0rQR
+	dZ2NmJvkvbnEh/EJM//c/mFqAgLIt00=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1746029075;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=n7CgZf6CEVloLW4YC4oh+syHmDeEvABJZ7UoBnBwZdQ=;
+	b=6MDg3x0gXaj9E7Dhvxc21rE/mFMbEONDa+Bemrk8ap9/rnKxWy9Q2t3PKdM/RYvzTI4zkY
+	XHII6YekfuNxGgAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CA900139E7;
+	Wed, 30 Apr 2025 16:04:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 8KEfMBJKEmhLJwAAD6G6ig
+	(envelope-from <tiwai@suse.de>); Wed, 30 Apr 2025 16:04:34 +0000
+Date: Wed, 30 Apr 2025 18:04:34 +0200
+Message-ID: <87cyctd4a5.wl-tiwai@suse.de>
+From: Takashi Iwai <tiwai@suse.de>
+To: Chris Chiu <chris.chiu@canonical.com>
+Cc: perex@perex.cz,
+	tiwai@suse.com,
+	kailang@realtek.com,
+	linux-sound@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ALSA: hda/realtek - Add more HP laptops which need mute led fixup
+In-Reply-To: <20250430101843.150833-1-chris.chiu@canonical.com>
+References: <20250430101843.150833-1-chris.chiu@canonical.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="/hDT1Nf/m/YMr9zi"
-Content-Disposition: inline
-In-Reply-To: <20250311110616.148682-9-ardb+git@google.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-Rspamd-Queue-Id: 065A321222
+X-Spam-Level: 
+X-Spamd-Result: default: False [-5.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_CONTAINS_FROM(1.00)[];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,canonical.com:email]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -5.51
+X-Spam-Flag: NO
+
+On Wed, 30 Apr 2025 12:18:43 +0200,
+Chris Chiu wrote:
+> 
+> More HP EliteBook with Realtek HDA codec ALC3247 and combined CS35L56
+> Amplifiers need quirk ALC236_FIXUP_HP_GPIO_LED to fix the micmute LED.
+> 
+> Signed-off-by: Chris Chiu <chris.chiu@canonical.com>
+
+Thanks, applied now.
 
 
---/hDT1Nf/m/YMr9zi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-+CC Palmer
-
-On Tue, Mar 11, 2025 at 12:06:20PM +0100, Ard Biesheuvel wrote:
-> From: Ard Biesheuvel <ardb@kernel.org>
->=20
-> The imperative paradigm used to build vmlinux, extract some info from it
-> or perform some checks on it, and subsequently modify it again goes
-> against the declarative paradigm that is usually employed for defining
-> make rules.
->=20
-> In particular, the Makefile.postlink files that consume their input via
-> an output rule result in some dodgy logic in the decompressor makefiles
-> for RISC-V and x86, given that the vmlinux.relocs input file needed to
-> generate the arch-specific relocation tables may not exist or be out of
-> date, but cannot be constructed using the ordinary Make dependency based
-> rules, because the info needs to be extracted while vmlinux is in its
-> ephemeral, non-stripped form.
->=20
-> So instead, for architectures that require the static relocations that
-> are emitted into vmlinux when passing --emit-relocs to the linker, and
-> are subsequently stripped out again, introduce an intermediate vmlinux
-> target called vmlinux.unstripped, and organize the reset of the build
-> logic accordingly:
->=20
-> - vmlinux.unstripped is created only once, and not updated again
-> - build rules under arch/*/boot can depend on vmlinux.unstripped without
->   running the risk of the data disappearing or being out of date
-> - the final vmlinux generated by the build is not bloated with static
->   relocations that are never needed again after the build completes.
->=20
-> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-
-Delayed report since I have been slacking on my testing, but looks like
-this has broken boot for me on riscv (mpfs-icicle-kit), no output after
-"Starting kernel", defconfig should be:
-https://raw.githubusercontent.com/ConchuOD/riscv-env/refs/heads/dev/conf/de=
-fconfig
-Toolchain is llvm 16. LMK if there's some salient info missing.
-
-Cheers,
-Conor.
-
---/hDT1Nf/m/YMr9zi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBJJ7AAKCRB4tDGHoIJi
-0u+1AQDPrrfqcbFPHqZrRFANd8o5/dFFHmqp6Ivtzk5hJyBP7QEAh3L/HgSEy3Tq
-UwujlNrETQdTL4U1YRjv9pEHtOSz7Q8=
-=S5i4
------END PGP SIGNATURE-----
-
---/hDT1Nf/m/YMr9zi--
+Takashi
