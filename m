@@ -1,86 +1,118 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E516288CC;
-	Wed, 30 Apr 2025 02:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1601C5F10;
+	Wed, 30 Apr 2025 02:44:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745981048; cv=none; b=o131H/w1nK7tUlYAH7ZPzrXvk9Rjbl9uedRsNlnluIPh5YWlJlCjiV1t1fa3CQIMcBPU369E9UQHwbMbD319VpyKcoeTQRrlghlvyluULJa6fXhR2FRMmu3ZasMV6Nqerpnt6syGhA9w5IhPYz2DdlFhe+4STp3gzBGZ1ZaclMA=
+	t=1745981081; cv=none; b=ITZEybG8DUm+HqCRUvGnPY/zJ8Z2bRwDoUs3Qx6w0eIdvFkY+93aTiMfD1jFLeJ5jWTS6CCkCxT1H2sk6EmB/OU/DqUPqd6UXVUSkJ+kJuYseDUDivcvx13RpGG938f0wictQQRtzN2yj/bhWSeJuCWKF0Z1G1H/SX8m54hjAIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745981048; c=relaxed/simple;
-	bh=ZH8vXkEAnQXMIA7Jipu3JJx8Fr/AAiDgW97m9wY7+pM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cqr6Gp1Vy24HtmZQg/bMDpFHbcA8DIkCBwPC5YepRMQZBoXX2yzmqWrwctTLcvpzj6WSmwZFmWQGZ0S0eIQgdl+db3/L0VVuIqvM/qqFGuxsjlzzBkB018/QBcpxHv8tsfgJA4g3ihEIEJngPAkYXAejkSO74S0OX2oHdFo1uoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=slhfLJxH; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1745981081; c=relaxed/simple;
+	bh=J+J35anbmnrnMyVjMxvi3WhdrFRIMNrtrGsd33Rriz4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=XfAf3KZRNpKdJR1jhV7VIvVrAaoofkdG30KxFgu3QyN8r9aimTtFcxGrMz4RwCScf9+bDL0UjK9jWylEXoDFKhwh1jo77G5DY1qVwBHJmFcJ8z+nyYKP60Y6KFnfQQ4GeIOaPgKPmznzGPEFzsfCbiWQfF7wGpcjOKKKG9b/b2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=C7naWY54; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="slhfLJxH"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=m9QkBZZevuauHxVFsy3Xp8pLr99dnXjzdN0XHxuFEuE=; b=slhfLJxHOtOfQ65Qhl8JSbPCcb
-	XqkmyPT58SSpWJ7pD9KS7SxPajdJZ4dHGDlXKtXsR8gTS6XQAFgAP6ZYpFU3rKnoW0/9byyYAwJ/R
-	GD8f4Zg1TqF0P+e9AlHd9q6ggqDu+W9ZGp/7BGKVyH2/DYezWwEWFFHvPjZcG89v4s+4o/5l4DTdz
-	uzFd2vqfrtvbZbuCXjHrgZ39HSV2EJU71upABqo3N09RZ1o6SSudTUB2KoCSfytn0eM8ufQZC7TW2
-	SvSbDJ9gOEk9vkgraa8eIcRuXVysE5xkBgpzhM8QKW8NjaqdOEP80zLQHXmMTMUbtTJecf2EHL+D6
-	4WxmKkyA==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1u9xQU-0028z1-2i;
-	Wed, 30 Apr 2025 10:43:59 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Wed, 30 Apr 2025 10:43:58 +0800
-Date: Wed, 30 Apr 2025 10:43:58 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [v3 PATCH 00/13] Architecture-optimized SHA-256 library API
-Message-ID: <aBGObifCORhrBXz1@gondor.apana.org.au>
-References: <cover.1745816372.git.herbert@gondor.apana.org.au>
- <20250429165749.GC1743@sol.localdomain>
- <aBGKg5bq0zLkhy3-@gondor.apana.org.au>
- <20250430023849.GA275186@sol.localdomain>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="C7naWY54"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1745981075;
+	bh=3wqzx6kzxn2d3pLgU76Ab9T5xbNZ4uAOQwc26w5fXzE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=C7naWY54bCQ0idAKSZPQDjdJbCmS4nVLoPK1o1s7l6v/9L37QOcUWD3GsLp25GLAA
+	 1sZ28go6O3OvFAsjo2ZdhshC5OiL+jNLSIa4We9YT4sUi09cxZbHeuO8pOhNpUXCqD
+	 YOJtrm59XfGCUdOzGZfrUyw+Y6OsOzggawHHJm0fBILuYAQjGwAEwC3E0WA7cYmHew
+	 Vv/hszy7PujAZR+vFWhuy1f8RcoP03T1VQykFUqfo0SM2FNI+vu0Ws+OxyAk8tJYW2
+	 +IQWZ6h3REkVbjV8YwyVJFWv9NYHb9MU5y3iAB7OP9MPMsrHf9EVU9kVhzs11ReN6g
+	 lexF1is3mWz4A==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZnM361fPkz4wcr;
+	Wed, 30 Apr 2025 12:44:34 +1000 (AEST)
+Date: Wed, 30 Apr 2025 12:44:33 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+ <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: Networking <netdev@vger.kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: duplicate patches in the bluetooth tree
+Message-ID: <20250430124433.6b432a10@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430023849.GA275186@sol.localdomain>
+Content-Type: multipart/signed; boundary="Sig_/+=FxjpuO3HXJl_P+.ZmgCqM";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On Tue, Apr 29, 2025 at 07:38:49PM -0700, Eric Biggers wrote:
->
-> Nothing requires that the export formats be consistent, but also the fact that
-> padlock-sha uses a weird format in the first place is an artificial problem that
-> you introduced just a couple weeks ago.  And even if we *must* use the same
-> format as padlock-sha, that can be done by using your crypto_sha256_export_lib
-> and crypto_sha256_import_lib, without all your other changes.
+--Sig_/+=FxjpuO3HXJl_P+.ZmgCqM
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-That was just the reason of why I can't take your first patch as
-is and then add my changes as incremental patches.
+Hi all,
 
-I do still want to bypass the partial block handling in lib/crypto.
+The following commits are also in the net tree as different commits
+(but the same patches):
 
-But alright I will do it like this:
+  60b82ca5d6bc ("Bluetooth: L2CAP: copy RX timestamp to new fragments")
+  ac1f44f12090 ("Bluetooth: btintel_pcie: Add additional to checks to clear=
+ TX/RX paths")
+  e0af21b30c82 ("Bluetooth: btmtksdio: Do close if SDIO card removed withou=
+t close")
+  04c96a7ace25 ("Bluetooth: btmtksdio: Check function enabled before doing =
+close")
+  a9d1f7313df5 ("Bluetooth: btusb: avoid NULL pointer dereference in skb_de=
+queue()")
+  16b4f97defef ("Bluetooth: btintel_pcie: Avoid redundant buffer allocation=
+")
+  c3b6a7cfa98c ("Bluetooth: hci_conn: Fix not setting timeout for BIG Creat=
+e Sync")
+  58ddd115fe06 ("Bluetooth: hci_conn: Fix not setting conn_timeout for Broa=
+dcast Receiver")
 
-Patch 1 is just your existing patch + my export/import functions.
+These are commits
 
-Then I will add the rest of my changes as incremental patches.
+  3908feb1bd7f ("Bluetooth: L2CAP: copy RX timestamp to new fragments")
+  1c7664957e4e ("Bluetooth: btintel_pcie: Add additional to checks to clear=
+ TX/RX paths")
+  0b6d58bc6ea8 ("Bluetooth: btmtksdio: Do close if SDIO card removed withou=
+t close")
+  07e90048e356 ("Bluetooth: btmtksdio: Check function enabled before doing =
+close")
+  0317b033abcd ("Bluetooth: btusb: avoid NULL pointer dereference in skb_de=
+queue()")
+  d1af1f02ef86 ("Bluetooth: btintel_pcie: Avoid redundant buffer allocation=
+")
+  024421cf3992 ("Bluetooth: hci_conn: Fix not setting timeout for BIG Creat=
+e Sync")
+  6d0417e4e1cf ("Bluetooth: hci_conn: Fix not setting conn_timeout for Broa=
+dcast Receiver")
 
+in the net tree.
+
+--=20
 Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Stephen Rothwell
+
+--Sig_/+=FxjpuO3HXJl_P+.ZmgCqM
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgRjpEACgkQAVBC80lX
+0Gy81wf+N2Mlxf8oHs+Tkwv2gbJ6l12mOduR7SubPnIwWDDYknVR9zBipr5nd951
+Sl/KHPgtGq4g6UkWUpE9ttc8Y1BzZlufu6JjOdG4XnkZYyZC8gv5BkqKp2T32CzK
+FDEx91I+7WjH+m05HlG5GcTXMJufFUtbQKSkRLhgth5MrnbgOP90GDknGn1tZzo0
+cWZvcsyQZ9YySZNVMXAENYTjiOZ5PUm9EJ0ckPOvAJUPu+rDoJTHRhi5tSK3deei
+LbiKE4sg/6Ao8NngWIE90ZNbxTYnoFLammxhSIqdodX3AlXjmsMtiagPwmaSAfGp
+/a+u7eNoJN/trgNiWvwgFsAFPoX/9Q==
+=0301
+-----END PGP SIGNATURE-----
+
+--Sig_/+=FxjpuO3HXJl_P+.ZmgCqM--
