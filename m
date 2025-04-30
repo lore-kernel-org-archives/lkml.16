@@ -1,118 +1,167 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E78020DD4E
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C30E21129C
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746000233; cv=none; b=oEdQk+7X0YScfrCywzCkJWgxaf8yytt9YIxqB5rUCbBi0MGX6914QuqC2RfqA9eJgKgg3FIKSAQawbDsnHo9uHMDsfvMOvxElZ0T4IPskg5JKcyNmLBEAxRhzT+KfdsZJHdIX9yFrC13liVTdIwBzrPetocMsIC8LKgcwXJwMMI=
+	t=1746000240; cv=none; b=Y3XmZNrBL6bUoudedHdmwOKoyleBY44NAgtnZMvy2sbRxTKdV+pZR+1JLh3DVmTN9YSnD0vMCXu8xAedKAQQwdsaxrWlxDcftlST1pGuWHfPQB7FCIPlQo/Ti/QEAJq1X31M89GhDDWJoki7Q6APl7zCMpGk+537YPUGgtB0dTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746000233; c=relaxed/simple;
-	bh=yDswBP+Kr+vPdFZzARL0WBNze344sfihA/wkyU8QgCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Yi7zuFUDyKHJM60n1tqVBXUtqqq4ti54dEr8lGDgRhmEg1U9NqKPbmP424ptCOC8ZpDA32mH0pfDZHYA2FPBQvTmd/LmG9SNERkA8b/Ysg2eOAQJ4Jn/E7uk3e5kByVkTgStougeYraXhzUUtCNK71/5EGZjMRnUENQG3DubSyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lIbr+7CD; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746000240; c=relaxed/simple;
+	bh=jZK0QLebtMfOcEUm0h/6bxVrX1rTU7CIc+iZJypo1N8=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
+	 Content-Type:References; b=JwuzgxxQ8DTIqZ9I/KR9sw4k4jiar+ciRg1n0BCMOT3gLyuDSicHd2n08ZHF8KDjAjSpNAp0uKg2YcJbLO9Tbid/rNay/oLJjl72MkPU1Kw51LfBcY3dbv1iFhxd0Ex3pkYnmgvuM0+k6zhj/zLm2mPdrpRIuuRc7OdpTZlNYG8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=SbzC+k1y; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lIbr+7CD"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43edecbfb46so43120495e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:03:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746000230; x=1746605030; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PAFg7e7QoI/NIhOM4U0ox4at7LqC43f8tqWtCVElvxY=;
-        b=lIbr+7CD3u5jFcrGbeQKmRxB1i+YkwIr34DFjuy5NoQtInCiMf1X8xjGyPZlhJdijG
-         cmCQ2cF/y6yRo/efKL/DVSQWCfE4Infp1YW0tE7oHF6pWY+1IkabQck9SLtm0igyxfga
-         vl0HVXidin0ydFsITHQLSdLTstVlbhoaXBFdIoRtgBC8QXmrP38iFNFTXa5uYWEsCN36
-         Y9Bx1xiCFeQSNMT7KbvhiJIp7X8d/Ap/SlfR6R/mm/8OvKfi90ZKM0qC1/iI7AkSZl3d
-         DZK/NZFIIRUk8NGOe7ekHbdzokaFXNx1moDShEd3Ffi4QlyVtHijhQToqrvTiaOxCDxh
-         g39w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746000230; x=1746605030;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PAFg7e7QoI/NIhOM4U0ox4at7LqC43f8tqWtCVElvxY=;
-        b=Fpm6em5zB3aVz7jKUPb5IeY0083ZvV+0dnISzUBY6hUzNEh7lqnSRkSeF7dC+ZKOG9
-         6QMqaOVmrA6RcdGvE6y1K3wN/xiThRNb9+gxyazVt5GV5Du8qDBHPK7NUVD2+Y8X0cX5
-         TPPq+CwOuxNeTucFgOKJDLEzEubKebG3O31nuNik5TTd4+dO/a1kHVyWrjklODxuD7tf
-         zuJcwu/ftL7ce9MIfX3qzQVg1n+OZ5gTaiLuf6gHvp3OxwA8vsVlxFZ2QwIvCu5SRZeB
-         Z8molIuOei5xOPxxg4i8sM3EUF2IAJ3YFl8nzt5sH7KOL0gruMF3BSE9gcBFemJTBExu
-         CFmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWEWcw/AFN/P/gBUOViZ9UVvhtp8D7WQzAbszsCZvvnwsO+sDSh65ZAUba3Js21JTlWbqqtuZJlfUBtSSI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAxkygDa36OGZ5vrRvQJOyYA2jnThhF0Z731iaIdUxwZJY2Agf
-	qOOop1rjKJdrmRQV74kueN1CqIbCFqRISMN+ynpVbpM/V2WySbpfye78d4Ww99Q=
-X-Gm-Gg: ASbGnct0E3R+mnU3RGbJ6gbd90IC4ZtECAjJM99segnieduImeXtlNX3iG00BUdqLMY
-	ApZdukYjnB8xBZRXIAhj9PdBY0SnMWSb2M5yrBqq3O7wMoEGAJ9oLX3RaoVg70peBKoJNQuH45w
-	gpOe8mYFiAQUgc37l0m5WmrjApowskqUkaTD8zSCnlKivPlq2V+zXi0/wEeuNcSx+ZiWRY6Ar6k
-	N2TEj3F8wHovlgDOrVNVN1fWIrOsdu4EIP0wfVEEGMN2BKBYDD40JLZRPo9KeHJ9dPq7BHxJ2rn
-	Okkfh817JTyXjXLVnFZtcgtqZo1Ef7mReItFC4UydO2MMA==
-X-Google-Smtp-Source: AGHT+IFi58B/opSrTiSCQEZcXK3JMBecxGa6PyaQe84wc8+j1ywljyVjJeAqD6J4qh7EoSFT1wKxSA==
-X-Received: by 2002:a05:600c:4ec6:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-441b2635482mr12037525e9.6.1746000229687;
-        Wed, 30 Apr 2025 01:03:49 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-441b2af2922sm15458155e9.17.2025.04.30.01.03.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 01:03:49 -0700 (PDT)
-Date: Wed, 30 Apr 2025 11:03:46 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Marcus Folkesson <marcus.folkesson@gmail.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] drm/st7571-i2c: Fix IS_ERR() vs NULL checks in probe()
-Message-ID: <aBHZYgPPPYY-J8Vd@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="SbzC+k1y"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250430080349epoutp0146940e16c395a5bdd24e09e56c299df4~7CfVLehBJ1065410654epoutp01c
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 08:03:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250430080349epoutp0146940e16c395a5bdd24e09e56c299df4~7CfVLehBJ1065410654epoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1746000229;
+	bh=r0lzQPeD0TToeRVN66QVOhI3MZ56kDdIBrvCu7NCmjw=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=SbzC+k1yEJFb3FK3TVjh7wn2XicZsCZfGw1ZNk7kucXn4PPDG1tXuXG/OxWgmqsYe
+	 TE8TsWWS5PtMgQN+686m4uAk8agDj10Fi/4U7Ut5A5EZ8SHRKN5jQLyX4J1ZAVgSom
+	 ublS/E1Y1P9vFa04/dxP5Es8HKYhqKeKdZ9qxEbQ=
+Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250430080348epcas5p29f981d5f79ac379b9a4e6f0e2eb20ea3~7CfUTQvmo1973919739epcas5p26;
+	Wed, 30 Apr 2025 08:03:48 +0000 (GMT)
+Received: from epcas5p2.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZnV7Q6z4Yz3hhT4; Wed, 30 Apr
+	2025 08:03:46 +0000 (GMT)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250430080346epcas5p1ab9a54e2a451f0c273606be005a4c6a8~7CfSCb2ba3050630506epcas5p1v;
+	Wed, 30 Apr 2025 08:03:46 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20250430080346epsmtrp2074fbc2854c58cfe9b1c566da8a38641~7CfSBjNNW2131021310epsmtrp23;
+	Wed, 30 Apr 2025 08:03:46 +0000 (GMT)
+X-AuditID: b6c32a29-55afd7000000223e-d4-6811d9622a01
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	6A.08.08766.269D1186; Wed, 30 Apr 2025 17:03:46 +0900 (KST)
+Received: from INBRO002756 (unknown [107.122.3.168]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20250430080344epsmtip1b5735d0f9aba6e2aeb8b6cb5da022a0e~7CfQAw4_x2209522095epsmtip1w;
+	Wed, 30 Apr 2025 08:03:43 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Pritam Manohar Sutar'" <pritam.sutar@samsung.com>, <krzk@kernel.org>,
+	<s.nawrocki@samsung.com>, <cw00.choi@samsung.com>,
+	<mturquette@baylibre.com>, <sboyd@kernel.org>, <sunyeal.hong@samsung.com>
+Cc: <linux-samsung-soc@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<rosa.pila@samsung.com>, <dev.tailor@samsung.com>, <faraz.ata@samsung.com>,
+	"'stable'" <stable@kernel.org>
+In-Reply-To: <20250428115049.2064955-1-pritam.sutar@samsung.com>
+Subject: RE: [PATCH] clk: samsung: correct clock summary for hsi1 block
+Date: Wed, 30 Apr 2025 13:33:42 +0530
+Message-ID: <0b1b01dbb9a6$65bdd150$313973f0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQJRzV9wh12IZchi0K7svot8vU81fQE18kpXssYBMwA=
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDIsWRmVeSWpSXmKPExsWy7bCSnG7STcEMg9/veC2uf3nOanFvxzJ2
+	i2s3FrJbnD+/gd1i0+NrrBYfe+6xWlzeNYfNYsb5fUwWF0+5Wjy7t4LN4svPB8wWh9+0s1r8
+	u7aRxeLT+QtsFk3L1jM58Hu8v9HK7rFpVSebx+Yl9R59W1YxenzeJBfAGsVlk5Kak1mWWqRv
+	l8CV0fLgJmvBBdGKudM72BsYfwl2MXJySAiYSFxqXMfUxcjFISSwm1Hi97UbzBAJaYnrGyew
+	Q9jCEiv/PWeHKHrOKLH0wX1GkASbgK7EjsVtbCAJEYErjBLTfn8Fq2IWaGOSWN7fDdUykVHi
+	8Ov5LCAtnAIOEnOezgfbISzgLnFl60U2EJtFQFXi+7TvYPt4BSwlPq3uYIGwBSVOznwCZjML
+	aEv0PmxlhLDlJba/nQN1q4LEz6fLWEFsEQEriU1zVjND1IhLvDx6hH0Co/AsJKNmIRk1C8mo
+	WUhaFjCyrGKUTC0ozk3PLTYsMMxLLdcrTswtLs1L10vOz93ECI5QLc0djNtXfdA7xMjEwXiI
+	UYKDWUmEd0ONYIYQb0piZVVqUX58UWlOavEhRmkOFiVxXvEXvSlCAumJJanZqakFqUUwWSYO
+	TqkGpun7XDb48dduknCdL5646P2NxUnu5o/O5+iuznJ1VDzwsf3nZ3X9BttSgScmN3mu/mz5
+	9uMeo6Te9rTWRL+Vas9tAlN+Tl80/WhXBee74Msls6YETJ/6ZeH6RP61E1doxIb+UxQ+bl7c
+	Y1Vy86SDcmnel6wfHh+KKy/6fXncc35qiKzJaiEbjQvhTrHh2+dqV9YHbnxY6xjxrmuz6R25
+	OX3HXyt4mR1u63qZPyvLoL5wYYlBt4jgNa5jvWr7Q79+6Tl6dPKWcEH94hW712aHCs1iMQie
+	emTB3Kkb/NUaOE9OLxVYlXY4tXSyQVfVSweTKsc7x79adwp8NrVavYdlTwKXtFzIV1Mje812
+	1ahKJZbijERDLeai4kQAVdW7wj8DAAA=
+X-CMS-MailID: 20250430080346epcas5p1ab9a54e2a451f0c273606be005a4c6a8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+cpgsPolicy: CPGSC10-542,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250428114053epcas5p450f97a4b8e41a1b06606e695e8c19f5f
+References: <CGME20250428114053epcas5p450f97a4b8e41a1b06606e695e8c19f5f@epcas5p4.samsung.com>
+	<20250428115049.2064955-1-pritam.sutar@samsung.com>
 
-The devm_kzalloc() function returns NULL on failure, not error pointers.
-Also printing an error message for kmalloc() failures is against kernel
-style so just return -ENOMEM without printing a message.  (Kmalloc
-already prints a message).
+Hi Pritam
 
-Fixes: 4b35f0f41ee2 ("drm/st7571-i2c: add support for Sitronix ST7571 LCD controller")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/gpu/drm/tiny/st7571-i2c.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+> -----Original Message-----
+> From: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> Sent: Monday, April 28, 2025 5:21 PM
+> To: krzk@kernel.org; s.nawrocki@samsung.com; cw00.choi@samsung.com;
+> alim.akhtar@samsung.com; mturquette@baylibre.com; sboyd@kernel.org;
+> sunyeal.hong@samsung.com
+> Cc: linux-samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
+> arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> rosa.pila@samsung.com; dev.tailor@samsung.com;
+> faraz.ata@samsung.com; Pritam Manohar Sutar
+> <pritam.sutar@samsung.com>; stable <stable@kernel.org>
+> Subject: [PATCH] clk: samsung: correct clock summary for hsi1 block
+> 
+> When debugfs is mounted to check clk_summary, 'mout_hsi1_usbdrd_user'
+> shows 400Mhz instead of 40Mhz. Snippet of the clock summary is given as
+> below
+> 
+> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
+>   mout_hsi1_usbdrd_user     0 0 0 400000000 0 0 50000 Y ...
+>     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
+> 
+> Hence corrected the clk-tree for the cmu_hsi1 & the corrected clock
+> summary is as mentioned below.
+> 
+May be just " correct the clk_tree by adding correct clock patent for
+mout_hsi1_usbdrd_user "
 
-diff --git a/drivers/gpu/drm/tiny/st7571-i2c.c b/drivers/gpu/drm/tiny/st7571-i2c.c
-index dc410ec41baf..eec846892962 100644
---- a/drivers/gpu/drm/tiny/st7571-i2c.c
-+++ b/drivers/gpu/drm/tiny/st7571-i2c.c
-@@ -908,16 +908,14 @@ static int st7571_probe(struct i2c_client *client)
- 	st7571->hwbuf = devm_kzalloc(&client->dev,
- 				     (st7571->nlines * st7571->ncols * st7571->bpp) / 8,
- 				     GFP_KERNEL);
--	if (IS_ERR(st7571->hwbuf))
--		return dev_err_probe(&client->dev, PTR_ERR(st7571->hwbuf),
--				     "Failed to allocate intermediate buffer\n");
-+	if (!st7571->hwbuf)
-+		return -ENOMEM;
- 
- 	st7571->row = devm_kzalloc(&client->dev,
- 				   (st7571->ncols * st7571->bpp),
- 				   GFP_KERNEL);
--	if (IS_ERR(st7571->row))
--		return dev_err_probe(&client->dev, PTR_ERR(st7571->row),
--				     "Failed to allocate row buffer\n");
-+	if (!st7571->row)
-+		return -ENOMEM;
- 
- 	ret = st7571_mode_config_init(st7571);
- 	if (ret)
--- 
-2.47.2
+see: https://www.kernel.org/doc/html/latest/process/submitting-patches.html
+
+> dout_shared2_div4           1 1 0 400000000 0 0 50000 Y ...
+>   mout_clkcmu_hsi1_usbdrd   0 0 0 400000000 0 0 50000 Y ...
+>     dout_clkcmu_hsi1_usbdrd 0 0 0 40000000  0 0 50000 Y ...
+>       mout_hsi1_usbdrd_user 0 0 0 40000000  0 0 50000 Y ...
+> 
+> Fixes: 485e13fe2fb6 ("clk: samsung: add top clock support for ExynosAuto
+> v920 SoC")
+> Cc: stable <stable@kernel.org>
+> Signed-off-by: Pritam Manohar Sutar <pritam.sutar@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynosautov920.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/clk/samsung/clk-exynosautov920.c
+> b/drivers/clk/samsung/clk-exynosautov920.c
+> index dc8d4240f6de..b0561faecfeb 100644
+> --- a/drivers/clk/samsung/clk-exynosautov920.c
+> +++ b/drivers/clk/samsung/clk-exynosautov920.c
+> @@ -1393,7 +1393,7 @@ static const unsigned long hsi1_clk_regs[]
+> __initconst = {
+>  /* List of parent clocks for Muxes in CMU_HSI1 */
+>  PNAME(mout_hsi1_mmc_card_user_p) = {"oscclk",
+> "dout_clkcmu_hsi1_mmc_card"};
+>  PNAME(mout_hsi1_noc_user_p) = { "oscclk", "dout_clkcmu_hsi1_noc" };
+> -PNAME(mout_hsi1_usbdrd_user_p) = { "oscclk",
+> "mout_clkcmu_hsi1_usbdrd" };
+> +PNAME(mout_hsi1_usbdrd_user_p) = { "oscclk",
+> "dout_clkcmu_hsi1_usbdrd"
+> +};
+>  PNAME(mout_hsi1_usbdrd_p) = { "dout_tcxo_div2",
+> "mout_hsi1_usbdrd_user" };
+> 
+>  static const struct samsung_mux_clock hsi1_mux_clks[] __initconst = {
+> --
+> 2.34.1
+
 
