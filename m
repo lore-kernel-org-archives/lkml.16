@@ -1,741 +1,217 @@
-Received: from sender4-of-o50.zoho.com (sender4-of-o50.zoho.com [136.143.188.50])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 244762DC79D;
-	Wed, 30 Apr 2025 01:42:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A27028DB3
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 01:43:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.17
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745977358; cv=pass; b=MHqylSpsLzqU6Kar40yUNumzK3lmFXp2TQfCid5lBsugJ+B4imiB2TXSLskGI3x7jRF5X12qUDkaMVdCHF1CtemjyJwbj25AgX64gZP1FskUXrn9Pd5t9NqywEdPsd5pmcOK3x14+dvtOOh3Tmtg2nrp271TuJ0OqSVY3v1OFzs=
+	t=1745977419; cv=fail; b=DsYtesY5ntK/USnKy+U+aJQrbgDPiXkgX4KHu6DtWm6Ds7PPzSCT1FtmKltwNMwa/YSo/eGHdkeLWx7c1T5MzgG0e6If5vOj1Zv3lFf4FJ8QkleNflsUS+1EUczRzY45+ZhcYT45Pa/V90hyrAX0vXZ/Fpo73GMKrfa402yAh50=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745977358; c=relaxed/simple;
-	bh=80Wce/TJ0EfBaI5XkKuJJomnoqApQfnai9qLRJl/858=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dAu1jJWdK3U5uWwk5vgpj2iOhxoNgATZUfrlikHRS+K4Hf5SAtgY1w5ZmLijRQipDIrYhj4YqNJo6zk7UN2dGFFzQ0nCj6FWyUYk26Y/0TqBHCErZvB+IIbbEPCDRVZoCQyHOCXQ2oqzMcx4W9xUn0RcZRUaKJOI/fG9JqYYGqA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com; spf=pass smtp.mailfrom=apertussolutions.com; dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b=fx82opzQ; arc=pass smtp.client-ip=136.143.188.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=apertussolutions.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apertussolutions.com
+	s=arc-20240116; t=1745977419; c=relaxed/simple;
+	bh=QBKl5kf0AgqFqDseIGdmheytErEdc0M5Fk4by80TGD4=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HyFc4X6ydHlwuJa2tV9SEJRcI1Mc6keSfj55EUH3W/xH3NjrFnCR8geyB9s7cHg2XMyKYsdc8nYBgfkEnhMcHw4hVWbKsva8VYbFQfWV7sGvU/pj2pzh9VFqnShAK6DVZLDLI3MQJKuFWuzeO1H4jzxKiWL977FrSUJ7ZrHp8FQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VasraSZP; arc=fail smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=apertussolutions.com header.i=dpsmith@apertussolutions.com header.b="fx82opzQ"
-ARC-Seal: i=1; a=rsa-sha256; t=1745977259; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=cEmMBxndzSVd7OvztmbdX2jTVoT0khc84/CQ1s40YnxLgj7UU/k4K01oAFiHgCyUQnSc5WjzJ4j9t+F+qeicLcCP0FtbfEGMsCMc9XxvpICtI7i9+eEx1jZCn55RA3S0J4kgpPZGucsahl6rXyn1NGDbvwQ2vcGLGHiNGActRh8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1745977259; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=; 
-	b=OZynF2npinIsNyog/tusiKLBgLFWkBnOaDEMXuOnNAlgdcwRrV0qlxq1Z8zpQri/jHzleSxG/OVmHw1d7LSeSeHkRrvpy9jW+QbZBYd0pHUTnr7vaPgto4FvH4s5b4R+Qpadt8yUmcJO6oAltXGT7kBCzmtX9C91uj+OUN/OfSc=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=apertussolutions.com;
-	spf=pass  smtp.mailfrom=dpsmith@apertussolutions.com;
-	dmarc=pass header.from=<dpsmith@apertussolutions.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1745977259;
-	s=zoho; d=apertussolutions.com; i=dpsmith@apertussolutions.com;
-	h=Message-ID:Date:Date:MIME-Version:Subject:Subject:To:To:Cc:Cc:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=TJoZQ2p31nLOqEvAJVPjPhI+B+yCxFIzT2smc52XK8s=;
-	b=fx82opzQpA21QiQmLU4q/kLJFWcygEgQWdUvve2Q+0jdTPvVEJHnsvkXvpD8EwGJ
-	SNixJcvxKAUt2o4YzFkkSG4auJENrnZaNGlVXFPAKD8qCJcZ3+sQMTMGEvkSBqHCHpJ
-	wpkZWgeSVqN8o8iEW2EOn96k25y6HmlXzYWVa+Kg=
-Received: by mx.zohomail.com with SMTPS id 1745977255108733.3900332082078;
-	Tue, 29 Apr 2025 18:40:55 -0700 (PDT)
-Message-ID: <077163e1-b7e1-4bc9-8294-e557cc7bd78d@apertussolutions.com>
-Date: Tue, 29 Apr 2025 21:40:51 -0400
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VasraSZP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1745977415; x=1777513415;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=QBKl5kf0AgqFqDseIGdmheytErEdc0M5Fk4by80TGD4=;
+  b=VasraSZPL9cyl936E1P+9aSIQxcoCZaAWAXDshbwQ3ZSOKbWYUatYvTZ
+   YSH+dSLnSO+KnxtlHZLTFTREit1ZIQBCsYl1PD/wlo2L8z0q/e0vun1Re
+   TXqu8wpycjdceAbeGSzPVAF11WLlLOeULqbPQPKyHJBuSWfl7kttfJrsf
+   /tWUTHMCZGueA+Zc0voGjmsyT9G7StIHR2q1o+2KvIVyc6Z8InmedpYAC
+   73Ly/BxTtaKMDKx823huRrbMQtR15uZv9woqDEtcEzYzjVyflZuyeSHGf
+   21OVK3L4IgBW9Lo0bsipa2QuKMlW8q3Ug34v3s4qFSjdIE+Aabg9v50Tw
+   g==;
+X-CSE-ConnectionGUID: RXv0bZ1XRCG7yKw1Pxtq0A==
+X-CSE-MsgGUID: jIz5nGXQTxCj5ufZAya/VA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11418"; a="47502475"
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="47502475"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 18:43:31 -0700
+X-CSE-ConnectionGUID: +dSBpoyXQHm2PlpNt34/Tg==
+X-CSE-MsgGUID: 5S9evQfHSyCpyc4nXONyQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,250,1739865600"; 
+   d="scan'208";a="134929323"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Apr 2025 18:39:51 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 29 Apr 2025 18:39:46 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 29 Apr 2025 18:39:46 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.172)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 29 Apr 2025 18:39:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=A76NAV0izhbLTljeTZmIIZCVgkSKiVM0/mpgLqJDtbZgfynogUrcxxR0walR5BmTp7OnRneco/ibJXBhAESt07R5pAvxftv5IbK5xkAGtRMT9hTPo6TcwreMczAgUxg8O6TNWZwmFOItIpkQnbt1Xml4Z9me4ZkTL+Brzxd1Daj/m3vOBFDe/DwcvUAPOum2/91lp0PFewLl/XGcZF6usjW6eWiZQYFQekXk+tZogAKsBRWdb9dQVIB14GXdbaHAfmNbcGxJrQcGBEA7K5ApWtrtM+GcQuBbK6Hn4dZyFx3u2g7YKVdJx8IT8Le2wCA49AlHiLg1WO1MzSnUrCAc7A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5nVuB1foeaEZGSvlWUx9iJY3P6bOBWiArDZmZPOJUro=;
+ b=e/D1Cl2TScwEJ6OFuh2UIUeKUtzg1mRNhYl+ZgmuLg+5LP7Gx8azMA2YHuFpvOUSW27ps2wZ+OvCeAn32tkuUHJAv6KgKoVsAIRMbtKh4lQqSiv9Uat0HBxLavsOMSI639AfewPl/W/jQLDnxf5MOPWHmLqCHnsW7JWh91dE0RPaIvGcKA9DhzLmM2fEPEpGhq42GhQ4s1SSfJyUMhCptL1RVLcYCggj5ygec0UFYKvQLxHbXvGEy5jrtFRXwIMJmMdkCrF2yA/cYWwMy3yogoB5b16125Eyw8UZdx6ZqRXhHaScvFncfCczeMryWAiF2JWNbCNSQTbDdfY2eyZBBA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from LV8PR11MB8488.namprd11.prod.outlook.com (2603:10b6:408:1e7::18)
+ by SJ5PPF7DCFBC32A.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::839) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Wed, 30 Apr
+ 2025 01:39:41 +0000
+Received: from LV8PR11MB8488.namprd11.prod.outlook.com
+ ([fe80::554d:de93:ab26:ae1f]) by LV8PR11MB8488.namprd11.prod.outlook.com
+ ([fe80::554d:de93:ab26:ae1f%7]) with mapi id 15.20.8678.028; Wed, 30 Apr 2025
+ 01:39:41 +0000
+Message-ID: <a0676c7b-9e6d-4af4-87d5-f822ab247730@intel.com>
+Date: Wed, 30 Apr 2025 10:15:05 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [V2 PATCH] x86/tdx: add VIRT_CPUID2 virtualization if REDUCE_VE
+ was not successful
+To: Dave Hansen <dave.hansen@intel.com>, Jun Miao <jun.miao@intel.com>,
+	<kirill.shutemov@linux.intel.com>, <dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <linux-coco@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, "Du, Fan" <fan.du@intel.com>
+References: <20250429143114.1724280-1-jun.miao@intel.com>
+ <20250429143114.1724280-2-jun.miao@intel.com>
+ <b138cb84-3a34-40b3-a23d-6ff3708dae6b@intel.com>
+From: Zhiquan Li <zhiquan1.li@intel.com>
+Content-Language: en-US
+In-Reply-To: <b138cb84-3a34-40b3-a23d-6ff3708dae6b@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SG2PR02CA0021.apcprd02.prod.outlook.com
+ (2603:1096:3:17::33) To CH3PR11MB8465.namprd11.prod.outlook.com
+ (2603:10b6:610:1bc::19)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 18/19] x86: Secure Launch late initcall platform
- module
-Content-Language: en-US
-To: Andy Lutomirski <luto@amacapital.net>,
- Ross Philipson <ross.philipson@oracle.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
- linux-integrity@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-crypto@vger.kernel.org, kexec@lists.infradead.org,
- linux-efi@vger.kernel.org, iommu@lists.linux.dev, tglx@linutronix.de,
- mingo@redhat.com, bp@alien8.de, hpa@zytor.com, dave.hansen@linux.intel.com,
- ardb@kernel.org, mjg59@srcf.ucam.org, James.Bottomley@hansenpartnership.com,
- peterhuewe@gmx.de, jarkko@kernel.org, jgg@ziepe.ca, nivedita@alum.mit.edu,
- herbert@gondor.apana.org.au, davem@davemloft.net, corbet@lwn.net,
- ebiederm@xmission.com, dwmw2@infradead.org, baolu.lu@linux.intel.com,
- kanth.ghatraju@oracle.com, andrew.cooper3@citrix.com,
- trenchboot-devel@googlegroups.com
-References: <20250421162712.77452-1-ross.philipson@oracle.com>
- <20250421162712.77452-19-ross.philipson@oracle.com>
- <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
-From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
-Autocrypt: addr=dpsmith@apertussolutions.com; keydata=
- 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
-In-Reply-To: <CALCETrVayuzp7fstavHkx99eieUCNj3=Zt8D=WOqMnmeT6DKmQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR11MB8488:EE_|SJ5PPF7DCFBC32A:EE_
+X-MS-Office365-Filtering-Correlation-Id: d180d691-e5f4-4af3-00f7-08dd8787dffe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RjZ3WDZZVlkrZE16d0tUMUlpMW9LOENGVHQ3NkhCN1ZPSitXdkhiYTM2WVFj?=
+ =?utf-8?B?K2MwQW4xWHQ4MVg1WkNTeEF1V1FtYU0wR2JuQVRtRkdhMHFldDZFeHl1d2Zp?=
+ =?utf-8?B?empWU1kxblIwak9VMVpob3JnWm1TU1EwU1RsczZWdEw4bUZydDVDR0cvQ2Nx?=
+ =?utf-8?B?N3RSdEtORDhBNUlRVGtaOFEyNlgvemtmY1dwNDJHc2dSdGp1RG1CNTEwYXJQ?=
+ =?utf-8?B?clZPM0x5TzV3Z2JPd29uT2pWRVlKMnRHMlRPZVNVUkhlZGwyNFVvQjRvRElk?=
+ =?utf-8?B?cjhEdWNsL0lhQ3lxUHFKYmNYZWJaRDd4R01TL0VBTVFOUllDOXA3RG05aTVD?=
+ =?utf-8?B?WTE0TFFRZ1hqZHBvS1VlS1dSdjFOMklBRzIwTGhPYUJFOWFwK0NOQUxKVTEz?=
+ =?utf-8?B?UmxvbXhTWUJrZjFvbmlCM3ZCcTIrSElrRTE0RGg5K05SVnZxcWxJOXB2ZEky?=
+ =?utf-8?B?aVNFNG1FZU8wazRUbmtPMG5xR2lEcG5LSlBsUDZlbTJLS0FxbzA0VjZDV01W?=
+ =?utf-8?B?UDJzZjY1c3NKT2YwM3FzU1lSdUg3ZXdzTWkwNC9ha2ZsL3l0V1FmN0VVbEZF?=
+ =?utf-8?B?QlkrMXIvaERvRFhzL2NWSkJUVUVublRsQ2hPYkJrbkZoSzVBTEZaRHo2Sjc0?=
+ =?utf-8?B?SDRGdGRxdUdmOGRCRk41Z3hhZ3ozK0xGRkNTWXM5TDN2SXRnZ3crbmdXNURu?=
+ =?utf-8?B?TlkvZVRGVVpGMFdTYVA1ZTVXbE9XMzFpMzEwL0ZQNmd4aU12ajlaZ21yK3Fx?=
+ =?utf-8?B?SFYzVytkU3NwRHV6NUJBY1hBUitDMUg1ZXhHNG9DY09zVmV4RWkwaUNJME1I?=
+ =?utf-8?B?UmJ5M1BENzYvZlFIYTZJZzg0TXY2YlZtNlVSUmVLdkRITlFpT1Bkc1kvZTNz?=
+ =?utf-8?B?M2M5K1Z4ZHZrZlYzcHEraUxYMzc1NlpaY3RiWDhIeTdUcmlnd2t4SXVzMFI4?=
+ =?utf-8?B?MHNoRzRuNUl2V21wcEUrZ1dqeWNxcEloRzhyeHlzWmZ2V1lHYkNhS0hXQTY2?=
+ =?utf-8?B?cm0zNDJ0b2hjRzF1T0RIYTRlc1NGenQrR3E3VUtNQzhVVFp4enJTckRRTG04?=
+ =?utf-8?B?ZGNQWWRKMTFVMmNKTzVHM1NCUWFxUDV3bmFVeWc4a3NCTnFyTnNGYk8rYlUz?=
+ =?utf-8?B?VUtnMTJwRVNvN0V4ZnpGcXV2ekJ6M2ZQODd3bzVSSmozSGpJWkVpNm5yd01M?=
+ =?utf-8?B?SVNES2l2c0hzdm9qOG1lUE5mYllzVi8wVWJFa3NOZ0k2eE00RmEwaHNiSVZU?=
+ =?utf-8?B?SUtpT1g3YzN1NW1OSTNyakUwelFXYzB3ZWdlOFFQYXY4cFcvVzQ4TzZNOWRl?=
+ =?utf-8?B?eXZlUExlVUUwMHppMHd0cUN2ZFppdlJJcExLVkx4emFCaC8rellCY3h0cEhm?=
+ =?utf-8?B?UWF1TTNWamFUQ0Q2WlV0bkNNcTNGNktyTnBuV0MwS3hTOW0wL2ZrSjZudHRN?=
+ =?utf-8?B?SUpSQW9Ic3kzYmYvM1RHVDYrR0R4NmtJbitybEpGUkpQWG5wRXBhRW1nVXV5?=
+ =?utf-8?B?ci9yNHdNS2kxSVFsNTRCeGpra1p3NVlKOVZ2YmdlRXJjT3hlQnJUR0NjaExW?=
+ =?utf-8?B?OXRxd0hhY2pNUzZTTk5NK2ZmRmlBc2xYaGJrVk0yOStyMk9zMlA1RXNNWW5I?=
+ =?utf-8?B?REI4SjZUQ3laY3kxekF2OVNoMFkrNExxcEhRbE5xWUsxVW1LQzdqOWc3NnJZ?=
+ =?utf-8?B?eEtyWlYrREJBVFpWckMxWGVDRjF4SXhWcWc3L0ZGZ3F4WW9RQkVGUWpnd3lY?=
+ =?utf-8?B?UDg5RWd6eEdZSitKTHBHWGlRZzZJL2RxZ0U2TnZTZ1ZhNk1xWC91ck15LzBN?=
+ =?utf-8?B?bTd4d1FZMGFrN2xQa1BzNmR4UTBicGp6ZzJRTXNUZ3Z5N1AwV2NXZm9MMEs4?=
+ =?utf-8?B?Y3NvT28vcmwxQVlKM1dPOFZiTHRqNW9rb0QxbXlIcVhYM1E9PQ==?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR11MB8488.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c0g3ZFExWHUraVNIMHRWOCtSUm10dGlOL25EanE0bnloQ29rRVE5WGtoNGx5?=
+ =?utf-8?B?aXU0NTBMYnBoT29rV21kSE1GTFovbFdzQ2Q1NWZjcmZEL0MwL1VMejExOUow?=
+ =?utf-8?B?ei8wV0I3MC9HeTJBNjVTRjkzLzUxZWQveHM2Ly9udUdsTk01UWNBVUZDMVRo?=
+ =?utf-8?B?UTJ2WU94dEZ3ckx6bkUxaCtLSUQ5N1dtck4rSzdTaUhDai8yNUZXWU9VUFJ2?=
+ =?utf-8?B?ZlRQL29OcjRBNlY3cmttYnFhZW5LclVlUVcxNU8wSHhKS2s0cG5ucys4YmZG?=
+ =?utf-8?B?TnJiYWhZSDJ4WHlZWmFOOEM2VzMydDdYRXhiSXloZitPbE5XdHk0eWVmaFcx?=
+ =?utf-8?B?eVBvSWx2TU14NTRXU1AzaUpZOTdDYTNFaWlQSVdSZURuZE1xejNYSGVhNUVU?=
+ =?utf-8?B?QVpGNThqRUh6cXcrQ2h5MUovQUlhdVJjVUpIRFBZWTVyTERud3k5R1c4YUdK?=
+ =?utf-8?B?aTlNSzA3blA0RlpZb3FXTEpPakZnOUZjYWZ3YmNqaEM4alFVZXNxZ3pxNnFy?=
+ =?utf-8?B?bk1aSC9TeGxGWnBWMkhyQlNXNVB2SzBXK1JvK3BkT25kaFFZN2dyVGlrVVBW?=
+ =?utf-8?B?M2NMSkh0WXhEckZSY0E0dDU1QVpreW9pN1J0U2JDU2VmaE11dXJXRmV4OExv?=
+ =?utf-8?B?WkxuWUM4c1dYdzNHa3BoTXpEVDh3VzhvQU14L3hMOTN6WjlwVVpWTzRROFFw?=
+ =?utf-8?B?a1lSVWE0RFRlcTBlRk5ZanMxZDZ0di9nZVRCVWNPcVNJWEgrdy8ySzhVWjZ6?=
+ =?utf-8?B?Skp2M0d6eDZqTGVnT3Nha1IrWEVyUE1vM04zMEtReTFNV3JmSkV4ZCsyNExB?=
+ =?utf-8?B?ZEdRclQ0UGtDalJLclYzZC95QnNmSW5xeVZSQnNYQTJVa0JDR2pyaUNEOWlv?=
+ =?utf-8?B?bmM0Tk1uS3RkMWpWOHFYL0h6OXJ0NlRFTUpNQi9NRjdIY3lPTDNxWmh5MCtm?=
+ =?utf-8?B?WmJpMmM0K1JyVGhpVCt3MlBVMDQvRkNWRmRrQXc0djJJZUNndWtGYzlMeGNl?=
+ =?utf-8?B?UzM2RVJXdzVpdFZidFZnS2R3azB5Y2RubHppazhvZXUrQkFUejV0VmdpYjgv?=
+ =?utf-8?B?RzEzK0lVZnR5eTRZUWlTb2lHMFBFWjdDRUM2bnFITFltVVY5NmJ4aDNCRXNE?=
+ =?utf-8?B?T21nUWxJUjdvZFBqQmxrVEFMSVNxamVEVXQwckNiQkx5cjdGakxpbjFyc01v?=
+ =?utf-8?B?cDdoRUFhNXo3UjJyYWJ6cWJHYy9xUTJkV016eld0cGJmUDF1Y2l4TTRBWnVW?=
+ =?utf-8?B?WlY2d09YbFpKY0IrU2xVbXZyY0pBU3NSYTlWMFlubXlXa28xNmgraVdoMmtr?=
+ =?utf-8?B?dko4Z1U3UmxPMEpPT0VUa3BkR1V4bGEzeDdsR1JtRkN6MGFVK2NqUHc1OVI0?=
+ =?utf-8?B?OWJmU2hkV3FveVZUcUt5d2hscFo3eHg4MUdvNm81eFExdGx3Q2c0Q29kc3hh?=
+ =?utf-8?B?ZHp6dEhNUDIyOXdCNTRlb2V3eE0zNzRGdkwvb1oxa1N3ZzRQRm5QdWdZcCtN?=
+ =?utf-8?B?T1lxOVF6Y0pHNjlmYlNjQ0cxT0hrc2g2ZmRxVVpLNjlTc2V4SEhvZFppaFhQ?=
+ =?utf-8?B?cEtrS0RZS0tQRWFObWlVR0hRc3BwQ3UwZEtnaiszOEsxa09BUHNYZGYzMlJZ?=
+ =?utf-8?B?aGc2aDhRRkg5eXhtR010MmF6NWN6SzVBME1SdmRMakR2b3J4QjNxQ3M4WCtZ?=
+ =?utf-8?B?ZFZaVk1aR2t2UGtzYWliUmhxS0JrVGFXR1I3MGtHejVIc2NWN3IvQWUwL1M2?=
+ =?utf-8?B?ZXRjRmZrS3VmTUdyUU5ETkxlRi9JU1l1aFM1eXNVL0RheXB4bjFJWmo5N1JR?=
+ =?utf-8?B?UFRUTjJoYktNbEdWb1BZZzdsV1dxVENyQm1GaFJvNzM2WUl1TG94KzJtYmYy?=
+ =?utf-8?B?NmppSDhhdVkreUkzV1hvYWlPalljV3A3c2ZXdjk4ZUZ1ZnpCcWhvcTBERS9W?=
+ =?utf-8?B?OGM1ZHhkUm1TbFVCZUlWUFVlUXEyalRiblhVUitiK2FZZUV6SDdiL0Ntc1Zi?=
+ =?utf-8?B?UDlHbTJHNEtVcjJEZTlaakV0UUdOS1hHNFJONFJ1S01PWlVsdjVMajEzYklG?=
+ =?utf-8?B?WVF3TkJHSkdLekF5SWRjQnUwWTZDWWhMcVF0T0R1MmdJalZtaWpFVEZzdlJ1?=
+ =?utf-8?Q?BaI2GVH8Zd/B5Y7F044ZMd6UW?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d180d691-e5f4-4af3-00f7-08dd8787dffe
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR11MB8465.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Apr 2025 01:39:41.4522
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3TKUPQguv+knT65bzvVshImLD/Eu+5VFnUGIv0U1fmMaCLmeI6hFYThVYRvaA34k6sTHv53tFXrwCTHNFjyy2g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF7DCFBC32A
+X-OriginatorOrg: intel.com
 
-On 4/28/25 13:38, Andy Lutomirski wrote:
->> On Apr 21, 2025, at 9:36 AM, Ross Philipson <ross.philipson@oracle.com> wrote:
->>
->> ﻿From: "Daniel P. Smith" <dpsmith@apertussolutions.com>
->>
->> The Secure Launch platform module is a late init module. During the
->> init call, the TPM event log is read and measurements taken in the
->> early boot stub code are located. These measurements are extended
->> into the TPM PCRs using the mainline TPM kernel driver.
+
+On 2025/4/29 22:50, Dave Hansen wrote:
+> On 4/29/25 07:31, Jun Miao wrote:
+>> REDUCE_VE can only be enabled if x2APIC_ID has been properly configured
+>> with unique values for each VCPU.  Check if VMM has provided an activated
+>> topology configuration first as it is the prerequisite of REDUCE_VE and
+>> ENUM_TOPOLOGY, so move it to reduce_unnecessary_ve().  The function
+>> enable_cpu_topology_enumeration() was very little and can be
+>> integrated into reduce_unnecessary_ve().
 > 
-> I read through some of the TPM and TXT docs, and I haven’t found a
-> clear explanation of exactly what gets hashed into which PCR.  (Mostly
-> because the docs are full of TXT-specific terms.)
+> Isn't this just working around VMM bugs? Shouldn't we just panic as
+> quickly as possible so the VMM config gets fixed rather than adding kludges?
 
 
-For Intel TXT, the general approach is detailed in section 1.10.2 of the 
-TXT Software Development Guide[1]. I point you at the Detail and 
-Authorities Usage section because the ability to do Legacy Usage has 
-been unavailable for some time.
+Now failed to virtualize these two cases will cause TD VM regression vs
+legacy VM.  Do you mean the panic will just for the #VE caused by CPUID
+leaf 0x2? Or both (+ VMM not configure topology) will panic?
 
-In section 1.10.2.1, the dialogue explains how and what the initial 
-measurement is into PCR17. After that is Table 1, which provides a 
-listing of all the measurements the ACM could make before starting the 
-MLE. Just as an FYI, on Gen 9 and later, the STM measurement will be 
-present and will be the hash of the PPAM module.[2]
+Currently the most customer's complaints come from the CPUID leaf 0x2
+not virtualization, and most of access come from user space.  Is it
+appropriate for such behavior directly cause a guest kernel panic?
 
-Section 1.10.2.2 gives a similar treatment to PCR18.
-
-[1] 
-https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
-[2] 
-https://www.intel.com/content/dam/www/central-libraries/us/en/documents/drtm-based-computing-whitepaper.pdf
-
-
-> But I’m really struggling to understand how the security model ends up
-> being consistent with this late_initcall thing. We measure some state
-> into the event log, and then we do a whole bunch of things (everything
-> from the very beginning of loading the kernel proper to the whenever
-> in the late_initcall stage this code runs), and then we actually
-> extend the PCRs.  It seems to me that this may involve a whole lot of
-> crossing fingers that an attacker can’t find a way to get the kernel
-> to execute code that changes the event log in memory prior to
-> extending PCRs such that attacker-controlled values get written.  Even
-> if the design is, in principle, sound, the attack surface seems much,
-> much larger than it deserves to be.
-
-
-There is a more fundemental flaw to your scenario, but before covering 
-that, consider what measurements could be tampered with that are made by 
-the setup kernel:
-
-  - Kernel Setup Data
-  - TrenchBoot's SLRT
-  - Boot Params
-  - Command line
-  - EFI Memory Map
-  - EFI configuration items, populated by efi-stub (currently unused)
-  - External Ramdisk
-
-Outside of the case of an external ramdisk, the attacker can only 
-pretend valid configuration data was passed to it.
-
-Correct me if I am wrong, but I don't think that is what is bothering 
-you. You are either concerned with one of two cases here. Either you are 
-concerned that the attacker may be able to hide the loading of a corrupt 
-kernel or that the attacker can corrupt the kernel after loading. In the 
-first case, the answer is no; the attacker cannot. The kernel and the 
-initrd if it was packed in the kernel are measured and sent to the TPM 
-by the ACM running in cache-as-ram before execution begins.
-
-The second case is the flawed scenario, a strawman, if you will. This is 
-a runtime-integrity problem that is outside the scope/protections of 
-load-time-integrity solutions such as SRTM and DRTM. If the correct 
-kernel was loaded and measured, but an attacker already has a position 
-in the system that they can corrupt the kernel before the user-space 
-init process can be run, then they already won. The attacker is in fact 
-already in a more superior position in the system that would not be 
-detected or exposed by when config data measurements are sent to the TPM.
-
-
-> Is there some reason for all this complexity instead of extending the
-> PCRs at the early stage when the measurements are taken?
-
-
-We did have TPM logic in the setup kernel at one point. Within their 
-rights, the TPM maintainers took the position that the only TPM 
-interface logic should be the existing driver. If we wanted to interface 
-with the TPM, we must #include the existing code into the setup kernel. 
-The problem is that the mainline TPM driver uses mainline kernel 
-features not present in the setup kernel.
-
-v/r,
-dps
-
->>
->> The platform module also registers the securityfs nodes to allow
->> access to TXT register fields on Intel along with the fetching of
->> and writing events to the late launch TPM log.
->>
->> Signed-off-by: Daniel P. Smith <dpsmith@apertussolutions.com>
->> Signed-off-by: garnetgrimm <grimmg@ainfosec.com>
->> Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
->> ---
->> arch/x86/kernel/Makefile   |   1 +
->> arch/x86/kernel/slmodule.c | 508 +++++++++++++++++++++++++++++++++++++
->> 2 files changed, 509 insertions(+)
->> create mode 100644 arch/x86/kernel/slmodule.c
->>
->> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
->> index a7ca7ca16174..bed87b1c49a2 100644
->> --- a/arch/x86/kernel/Makefile
->> +++ b/arch/x86/kernel/Makefile
->> @@ -83,6 +83,7 @@ obj-$(CONFIG_IA32_EMULATION)    += tls.o
->> obj-y                += step.o
->> obj-$(CONFIG_INTEL_TXT)        += tboot.o
->> obj-$(CONFIG_SECURE_LAUNCH)    += slaunch.o
->> +obj-$(CONFIG_SECURE_LAUNCH)    += slmodule.o
->> obj-$(CONFIG_ISA_DMA_API)    += i8237.o
->> obj-y                += stacktrace.o
->> obj-y                += cpu/
->> diff --git a/arch/x86/kernel/slmodule.c b/arch/x86/kernel/slmodule.c
->> new file mode 100644
->> index 000000000000..64010bac038c
->> --- /dev/null
->> +++ b/arch/x86/kernel/slmodule.c
->> @@ -0,0 +1,508 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Secure Launch late validation/setup, securityfs exposure and finalization.
->> + *
->> + * Copyright (c) 2025 Apertus Solutions, LLC
->> + * Copyright (c) 2025 Assured Information Security, Inc.
->> + * Copyright (c) 2025, Oracle and/or its affiliates.
->> + */
->> +
->> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
->> +
->> +#include <linux/fs.h>
->> +#include <linux/init.h>
->> +#include <linux/linkage.h>
->> +#include <linux/mm.h>
->> +#include <linux/io.h>
->> +#include <linux/uaccess.h>
->> +#include <linux/security.h>
->> +#include <linux/memblock.h>
->> +#include <linux/tpm.h>
->> +#include <asm/segment.h>
->> +#include <asm/sections.h>
->> +#include <crypto/sha2.h>
->> +#include <linux/slr_table.h>
->> +#include <linux/slaunch.h>
->> +
->> +/*
->> + * The macro DECLARE_TXT_PUB_READ_U is used to read values from the TXT
->> + * public registers as unsigned values.
->> + */
->> +#define DECLARE_TXT_PUB_READ_U(size, fmt, msg_size)            \
->> +static ssize_t txt_pub_read_u##size(unsigned int offset,        \
->> +        loff_t *read_offset,                    \
->> +        size_t read_len,                    \
->> +        char __user *buf)                    \
->> +{                                    \
->> +    char msg_buffer[msg_size];                    \
->> +    u##size reg_value = 0;                        \
->> +    void __iomem *txt;                        \
->> +                                    \
->> +    txt = ioremap(TXT_PUB_CONFIG_REGS_BASE,                \
->> +            TXT_NR_CONFIG_PAGES * PAGE_SIZE);        \
->> +    if (!txt)                            \
->> +        return -EFAULT;                        \
->> +    memcpy_fromio(&reg_value, txt + offset, sizeof(u##size));    \
->> +    iounmap(txt);                            \
->> +    snprintf(msg_buffer, msg_size, fmt, reg_value);            \
->> +    return simple_read_from_buffer(buf, read_len, read_offset,    \
->> +            &msg_buffer, msg_size);                \
->> +}
->> +
->> +DECLARE_TXT_PUB_READ_U(8, "%#04x\n", 6);
->> +DECLARE_TXT_PUB_READ_U(32, "%#010x\n", 12);
->> +DECLARE_TXT_PUB_READ_U(64, "%#018llx\n", 20);
->> +
->> +#define DECLARE_TXT_FOPS(reg_name, reg_offset, reg_size)        \
->> +static ssize_t txt_##reg_name##_read(struct file *flip,            \
->> +        char __user *buf, size_t read_len, loff_t *read_offset)    \
->> +{                                    \
->> +    return txt_pub_read_u##reg_size(reg_offset, read_offset,    \
->> +            read_len, buf);                    \
->> +}                                    \
->> +static const struct file_operations reg_name##_ops = {            \
->> +    .read = txt_##reg_name##_read,                    \
->> +}
->> +
->> +DECLARE_TXT_FOPS(sts, TXT_CR_STS, 64);
->> +DECLARE_TXT_FOPS(ests, TXT_CR_ESTS, 8);
->> +DECLARE_TXT_FOPS(errorcode, TXT_CR_ERRORCODE, 32);
->> +DECLARE_TXT_FOPS(didvid, TXT_CR_DIDVID, 64);
->> +DECLARE_TXT_FOPS(e2sts, TXT_CR_E2STS, 64);
->> +DECLARE_TXT_FOPS(ver_emif, TXT_CR_VER_EMIF, 32);
->> +DECLARE_TXT_FOPS(scratchpad, TXT_CR_SCRATCHPAD, 64);
->> +
->> +/*
->> + * Securityfs exposure
->> + */
->> +struct memfile {
->> +    char *name;
->> +    void *addr;
->> +    size_t size;
->> +};
->> +
->> +static struct memfile sl_evtlog = {"eventlog", NULL, 0};
->> +static void *txt_heap;
->> +static struct txt_heap_event_log_pointer2_1_element *evtlog21;
->> +static DEFINE_MUTEX(sl_evt_log_mutex);
->> +static struct tcg_efi_specid_event_head *efi_head;
->> +
->> +static ssize_t sl_evtlog_read(struct file *file, char __user *buf,
->> +                  size_t count, loff_t *pos)
->> +{
->> +    ssize_t size;
->> +
->> +    if (!sl_evtlog.addr)
->> +        return 0;
->> +
->> +    mutex_lock(&sl_evt_log_mutex);
->> +    size = simple_read_from_buffer(buf, count, pos, sl_evtlog.addr,
->> +                       sl_evtlog.size);
->> +    mutex_unlock(&sl_evt_log_mutex);
->> +
->> +    return size;
->> +}
->> +
->> +static ssize_t sl_evtlog_write(struct file *file, const char __user *buf,
->> +                   size_t datalen, loff_t *ppos)
->> +{
->> +    ssize_t result;
->> +    char *data;
->> +
->> +    if (!sl_evtlog.addr)
->> +        return 0;
->> +
->> +    /* No partial writes. */
->> +    result = -EINVAL;
->> +    if (*ppos != 0)
->> +        goto out;
->> +
->> +    data = memdup_user(buf, datalen);
->> +    if (IS_ERR(data)) {
->> +        result = PTR_ERR(data);
->> +        goto out;
->> +    }
->> +
->> +    mutex_lock(&sl_evt_log_mutex);
->> +    if (evtlog21)
->> +        result = tpm2_log_event(evtlog21, sl_evtlog.addr,
->> +                    sl_evtlog.size, datalen, data);
->> +    else
->> +        result = tpm_log_event(sl_evtlog.addr, sl_evtlog.size,
->> +                       datalen, data);
->> +    mutex_unlock(&sl_evt_log_mutex);
->> +
->> +    kfree(data);
->> +out:
->> +    return result;
->> +}
->> +
->> +static const struct file_operations sl_evtlog_ops = {
->> +    .read = sl_evtlog_read,
->> +    .write = sl_evtlog_write,
->> +    .llseek    = default_llseek,
->> +};
->> +
->> +struct sfs_file {
->> +    const char *name;
->> +    const struct file_operations *fops;
->> +};
->> +
->> +#define SL_TXT_ENTRY_COUNT    7
->> +static const struct sfs_file sl_txt_files[] = {
->> +    { "sts", &sts_ops },
->> +    { "ests", &ests_ops },
->> +    { "errorcode", &errorcode_ops },
->> +    { "didvid", &didvid_ops },
->> +    { "ver_emif", &ver_emif_ops },
->> +    { "scratchpad", &scratchpad_ops },
->> +    { "e2sts", &e2sts_ops }
->> +};
->> +
->> +/* sysfs file handles */
->> +static struct dentry *slaunch_dir;
->> +static struct dentry *event_file;
->> +static struct dentry *txt_dir;
->> +static struct dentry *txt_entries[SL_TXT_ENTRY_COUNT];
->> +
->> +static long slaunch_expose_securityfs(void)
->> +{
->> +    long ret = 0;
->> +    int i;
->> +
->> +    slaunch_dir = securityfs_create_dir("slaunch", NULL);
->> +    if (IS_ERR(slaunch_dir))
->> +        return PTR_ERR(slaunch_dir);
->> +
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        txt_dir = securityfs_create_dir("txt", slaunch_dir);
->> +        if (IS_ERR(txt_dir)) {
->> +            ret = PTR_ERR(txt_dir);
->> +            goto remove_slaunch;
->> +        }
->> +
->> +        for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++) {
->> +            txt_entries[i] = securityfs_create_file(
->> +                        sl_txt_files[i].name, 0440,
->> +                        txt_dir, NULL,
->> +                        sl_txt_files[i].fops);
->> +            if (IS_ERR(txt_entries[i])) {
->> +                ret = PTR_ERR(txt_entries[i]);
->> +                goto remove_files;
->> +            }
->> +        }
->> +    }
->> +
->> +    if (sl_evtlog.addr) {
->> +        event_file = securityfs_create_file(sl_evtlog.name, 0440,
->> +                            slaunch_dir, NULL,
->> +                            &sl_evtlog_ops);
->> +        if (IS_ERR(event_file)) {
->> +            ret = PTR_ERR(event_file);
->> +            goto remove_files;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +
->> +remove_files:
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        while (--i >= 0)
->> +            securityfs_remove(txt_entries[i]);
->> +        securityfs_remove(txt_dir);
->> +    }
->> +
->> +remove_slaunch:
->> +    securityfs_remove(slaunch_dir);
->> +
->> +    return ret;
->> +}
->> +
->> +static void slaunch_teardown_securityfs(void)
->> +{
->> +    int i;
->> +
->> +    securityfs_remove(event_file);
->> +    if (sl_evtlog.addr) {
->> +        memunmap(sl_evtlog.addr);
->> +        sl_evtlog.addr = NULL;
->> +    }
->> +    sl_evtlog.size = 0;
->> +
->> +    if (slaunch_get_flags() & SL_FLAG_ARCH_TXT) {
->> +        for (i = 0; i < ARRAY_SIZE(sl_txt_files); i++)
->> +            securityfs_remove(txt_entries[i]);
->> +
->> +        securityfs_remove(txt_dir);
->> +
->> +        if (txt_heap) {
->> +            memunmap(txt_heap);
->> +            txt_heap = NULL;
->> +        }
->> +    }
->> +
->> +    securityfs_remove(slaunch_dir);
->> +}
->> +
->> +static void slaunch_intel_evtlog(void __iomem *txt)
->> +{
->> +    struct slr_entry_log_info *log_info;
->> +    struct txt_os_mle_data *params;
->> +    struct slr_table *slrt;
->> +    void *os_sinit_data;
->> +    u64 base, size;
->> +
->> +    memcpy_fromio(&base, txt + TXT_CR_HEAP_BASE, sizeof(base));
->> +    memcpy_fromio(&size, txt + TXT_CR_HEAP_SIZE, sizeof(size));
->> +
->> +    /* now map TXT heap */
->> +    txt_heap = memremap(base, size, MEMREMAP_WB);
->> +    if (!txt_heap)
->> +        slaunch_txt_reset(txt, "Error failed to memremap TXT heap\n",
->> +                  SL_ERROR_HEAP_MAP);
->> +
->> +    params = (struct txt_os_mle_data *)txt_os_mle_data_start(txt_heap);
->> +
->> +    /* Get the SLRT and remap it */
->> +    slrt = memremap(params->slrt, sizeof(*slrt), MEMREMAP_WB);
->> +    if (!slrt)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MAP);
->> +    size = slrt->size;
->> +    memunmap(slrt);
->> +
->> +    slrt = memremap(params->slrt, size, MEMREMAP_WB);
->> +    if (!slrt)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MAP);
->> +
->> +    log_info = slr_next_entry_by_tag(slrt, NULL, SLR_ENTRY_LOG_INFO);
->> +    if (!log_info)
->> +        slaunch_txt_reset(txt, "Error failed to memremap SLR Table\n",
->> +                  SL_ERROR_SLRT_MISSING_ENTRY);
->> +
->> +    sl_evtlog.size = log_info->size;
->> +    sl_evtlog.addr = memremap(log_info->addr, log_info->size,
->> +                  MEMREMAP_WB);
->> +    if (!sl_evtlog.addr)
->> +        slaunch_txt_reset(txt, "Error failed to memremap TPM event log\n",
->> +                  SL_ERROR_EVENTLOG_MAP);
->> +
->> +    memunmap(slrt);
->> +
->> +    /* Determine if this is TPM 1.2 or 2.0 event log */
->> +    if (memcmp(sl_evtlog.addr + sizeof(struct tcg_pcr_event),
->> +            TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
->> +        return; /* looks like it is not 2.0 */
->> +
->> +    /* For TPM 2.0 logs, the extended heap element must be located */
->> +    os_sinit_data = txt_os_sinit_data_start(txt_heap);
->> +
->> +    evtlog21 = tpm2_find_log2_1_element(os_sinit_data);
->> +
->> +    /*
->> +     * If this fails, things are in really bad shape. Any attempt to write
->> +     * events to the log will fail.
->> +     */
->> +    if (!evtlog21)
->> +        slaunch_txt_reset(txt, "Error failed to find TPM20 event log element\n",
->> +                  SL_ERROR_TPM_INVALID_LOG20);
->> +
->> +    /* Save pointer to the EFI SpecID log header */
->> +    efi_head = (struct tcg_efi_specid_event_head *)(sl_evtlog.addr + sizeof(struct tcg_pcr_event));
->> +}
->> +
->> +static void slaunch_tpm2_extend_event(struct tpm_chip *tpm, void __iomem *txt,
->> +                      struct tcg_pcr_event2_head *event)
->> +{
->> +    u16 *alg_id_field = (u16 *)((u8 *)event + sizeof(*event));
->> +    struct tpm_digest *digests;
->> +    u8 *dptr;
->> +    int ret;
->> +    u32 i;
->> +
->> +    /*
->> +     * Early SL code ensured the TPM algorithm information passed via
->> +     * the log is valid. Small sanity check here.
->> +     */
->> +    if (event->count != efi_head->num_algs)
->> +        slaunch_txt_reset(txt, "Event digest count mismatch with event log\n",
->> +                  SL_ERROR_TPM_EVENT_COUNT);
->> +
->> +    digests = kzalloc(efi_head->num_algs * sizeof(*digests), GFP_KERNEL);
->> +    if (!digests)
->> +        slaunch_txt_reset(txt, "Failed to allocate array of digests\n",
->> +                  SL_ERROR_GENERIC);
->> +
->> +    for (i = 0; i < event->count; i++) {
->> +        dptr = (u8 *)alg_id_field + sizeof(u16);
->> +
->> +        /* Setup each digest for the extend */
->> +        digests[i].alg_id = efi_head->digest_sizes[i].alg_id;
->> +        memcpy(&digests[i].digest[0], dptr,
->> +            efi_head->digest_sizes[i].digest_size);
->> +
->> +        alg_id_field = (u16 *)((u8 *)alg_id_field + sizeof(u16) +
->> +                efi_head->digest_sizes[i].digest_size);
->> +    }
->> +
->> +    ret = tpm_pcr_extend(tpm, event->pcr_idx, digests);
->> +    if (ret) {
->> +        pr_err("Error extending TPM20 PCR, result: %d\n", ret);
->> +        slaunch_txt_reset(txt, "Failed to extend TPM20 PCR\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +    }
->> +
->> +    kfree(digests);
->> +}
->> +
->> +static void slaunch_tpm2_extend(struct tpm_chip *tpm, void __iomem *txt)
->> +{
->> +    struct tcg_pcr_event *event_header;
->> +    struct tcg_pcr_event2_head *event;
->> +    int start = 0, end = 0, size;
->> +
->> +    event_header = (struct tcg_pcr_event *)(sl_evtlog.addr +
->> +                        evtlog21->first_record_offset);
->> +
->> +    /* Skip first TPM 1.2 event to get to first TPM 2.0 event */
->> +    event = (struct tcg_pcr_event2_head *)((u8 *)event_header + sizeof(*event_header) +
->> +                           event_header->event_size);
->> +
->> +    while ((void  *)event < sl_evtlog.addr + evtlog21->next_record_offset) {
->> +        size = __calc_tpm2_event_size(event, event_header, false);
->> +        if (!size)
->> +            slaunch_txt_reset(txt, "TPM20 invalid event in event log\n",
->> +                      SL_ERROR_TPM_INVALID_EVENT);
->> +
->> +        /*
->> +         * Marker events indicate where the Secure Launch early stub
->> +         * started and ended adding post launch events. As they are
->> +         * encountered, switch the event type to NO_ACTION so they
->> +         * ignored in when the event log is processed since they are
->> +         * not really measurements.
->> +         */
->> +        if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
->> +            event->event_type = NO_ACTION;
->> +            end = 1;
->> +            break;
->> +        } else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
->> +            event->event_type = NO_ACTION;
->> +            start = 1;
->> +            goto next;
->> +        }
->> +
->> +        if (start)
->> +            slaunch_tpm2_extend_event(tpm, txt, event);
->> +
->> +next:
->> +        event = (struct tcg_pcr_event2_head *)((u8 *)event + size);
->> +    }
->> +
->> +    if (!start || !end)
->> +        slaunch_txt_reset(txt, "Missing start or end events for extending TPM20 PCRs\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +}
->> +
->> +static void slaunch_tpm_extend(struct tpm_chip *tpm, void __iomem *txt)
->> +{
->> +    struct tpm_event_log_header *event_header;
->> +    struct tcg_pcr_event *event;
->> +    struct tpm_digest digest;
->> +    int start = 0, end = 0;
->> +    int size, ret;
->> +
->> +    event_header = (struct tpm_event_log_header *)sl_evtlog.addr;
->> +    event = (struct tcg_pcr_event *)((u8 *)event_header +
->> +                sizeof(*event_header));
->> +
->> +    while ((void  *)event < sl_evtlog.addr + event_header->next_event_offset) {
->> +        size = sizeof(*event) + event->event_size;
->> +
->> +        /*
->> +         * See comments in slaunch_tpm2_extend() concerning these special
->> +         * event types.
->> +         */
->> +        if (event->event_type == TXT_EVTYPE_SLAUNCH_END) {
->> +            event->event_type = NO_ACTION;
->> +            end = 1;
->> +            break;
->> +        } else if (event->event_type == TXT_EVTYPE_SLAUNCH_START) {
->> +            event->event_type = NO_ACTION;
->> +            start = 1;
->> +            goto next;
->> +        }
->> +
->> +        if (start) {
->> +            memset(&digest.digest[0], 0, TPM_MAX_DIGEST_SIZE);
->> +            digest.alg_id = TPM_ALG_SHA1;
->> +            memcpy(&digest.digest[0], &event->digest[0],
->> +                   SHA1_DIGEST_SIZE);
->> +
->> +            ret = tpm_pcr_extend(tpm, event->pcr_idx, &digest);
->> +            if (ret) {
->> +                pr_err("Error extending TPM12 PCR, result: %d\n", ret);
->> +                slaunch_txt_reset(txt, "Failed to extend TPM12 PCR\n",
->> +                          SL_ERROR_TPM_EXTEND);
->> +            }
->> +        }
->> +
->> +next:
->> +        event = (struct tcg_pcr_event *)((u8 *)event + size);
->> +    }
->> +
->> +    if (!start || !end)
->> +        slaunch_txt_reset(txt, "Missing start or end events for extending TPM12 PCRs\n",
->> +                  SL_ERROR_TPM_EXTEND);
->> +}
->> +
->> +static void slaunch_pcr_extend(void __iomem *txt)
->> +{
->> +    struct tpm_chip *tpm;
->> +    int rc;
->> +
->> +    tpm = tpm_default_chip();
->> +    if (!tpm)
->> +        slaunch_txt_reset(txt, "Could not get default TPM chip\n",
->> +                  SL_ERROR_TPM_INIT);
->> +
->> +    rc = tpm_chip_set_locality(tpm, 2);
->> +    if (rc)
->> +        slaunch_txt_reset(txt, "Could not set TPM chip locality 2\n",
->> +                  SL_ERROR_TPM_INIT);
->> +
->> +    if (evtlog21)
->> +        slaunch_tpm2_extend(tpm, txt);
->> +    else
->> +        slaunch_tpm_extend(tpm, txt);
->> +}
->> +
->> +static int __init slaunch_module_init(void)
->> +{
->> +    void __iomem *txt;
->> +
->> +    /* Check to see if Secure Launch happened */
->> +    if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
->> +        (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
->> +        return 0;
->> +
->> +    txt = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
->> +              PAGE_SIZE);
->> +    if (!txt)
->> +        panic("Error ioremap of TXT priv registers\n");
->> +
->> +    /* Only Intel TXT is supported at this point */
->> +    slaunch_intel_evtlog(txt);
->> +    slaunch_pcr_extend(txt);
->> +    iounmap(txt);
->> +
->> +    return slaunch_expose_securityfs();
->> +}
->> +
->> +static void __exit slaunch_module_exit(void)
->> +{
->> +    slaunch_teardown_securityfs();
->> +}
->> +
->> +late_initcall(slaunch_module_init);
->> +__exitcall(slaunch_module_exit);
->> --
->> 2.39.3
->>
-
+Thanks,
+Zhiquan
