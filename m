@@ -1,182 +1,143 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A191122A7E3
-	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67A8296FA2
+	for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 21:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746047311; cv=none; b=cja6ZGcIFY3rBZdu5zCMEhoWm+CMIbPaJa3K4FtXeT/pQhRbxnUsttYvp6T6bQ9PamdCNyACKkQggyt+0BeeTX2ntjsozscyNzVCksf/C1P761vJWAy2IQh7+E50WtAJ/ZIN0lGkRptTJvSP4uToEW00w4hnH2pYAS/MtUNioaU=
+	t=1746047321; cv=none; b=tJ9n47t2JNn2i5f+fLBQnJW+LSDY+Xgo3w7MEVBaWjL6bUpMZ4SMchxgWpz2RfbKFFJlCcsNGLiDK0P6JtVf3iPmyTgyDH4FIs8szgcs1qXbgd7+KkPC2fk2f51hUXxV9oA+oTeX3gYVWeEyD06uZ7LIWF4fNk6MxCm1ARLhS+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746047311; c=relaxed/simple;
-	bh=/n6J6p/kYlfXs9g3AL90pF00gHuw03vUedzRYFzCSMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PVHOEZAthmIowOR1Wr2ZT2f4quD4is8pAlAUWpkohWSc3NW+nXGgIYahnAeit+gDBRn9I1gJGqAOBjxMqzT9/OJmN+kesAfGMGp/46QMUlBSK/qMgQA5Nrhk5RknU4WdLw17nzIRTr0qj0OOKxgrr3d+8+uId068VpXGms5F4aE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Git5eqQi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Git5eqQi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746047308;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Zf75Wi3ZWE/mWR/ajf5F8uvVnkwMZAW0yZvw06r6h3g=;
-	b=Git5eqQi/z2cVb7YuyCqPCYjxN1Mg5tk1PHP6KnjjrFdcyaPGpk23j417SNxHgR2yfJ8Vz
-	Et9OuUnWlIUOAAnlBpXZz1jEGFQ9CuhRdVA/ZsCdSzI7WcKGiQAKoMuiy2BNaiQwEP93wO
-	rtjbAJxgIniVNSo7C6ChNEPUQ6VC8W8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-15-bomchxBfOlqlP6uNRjHilg-1; Wed, 30 Apr 2025 17:08:26 -0400
-X-MC-Unique: bomchxBfOlqlP6uNRjHilg-1
-X-Mimecast-MFC-AGG-ID: bomchxBfOlqlP6uNRjHilg_1746047306
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43ea256f039so1526725e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:08:26 -0700 (PDT)
+	s=arc-20240116; t=1746047321; c=relaxed/simple;
+	bh=KaoNy/FCo//u2p7C9jfhJCjfObgsW/hQ6A6OtjnWw1o=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Lvjo7CtqKw3Bl2eG2wrRYIMkfviw8oLdJjjaLvsDaCrPV8DezmRLG8JPAyCZIiHP9MKfsPlwh5LtiLxPxmNrFzX+bqJp0TgL8bfHhdlqV+2vgWh5mNN12JlE+4o8wgLBgy3xzuWovyF1LqrLyKXY/tLMfrscwuDlqc4bn7yHn3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b4dc23f03so54023039f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 14:08:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746047306; x=1746652106;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Zf75Wi3ZWE/mWR/ajf5F8uvVnkwMZAW0yZvw06r6h3g=;
-        b=Xn56YGEVoSFRiOV9lID7kncWTM2EnaruRcr4vIhHtJIZhLtTsy9UizLP1WqfPTWlti
-         dAsjiniOEw3pCjte5LFHnCNnYysqh14Swf3CGiDRxBEH8WjAQF7O+8RwydDt7lOcavC4
-         9/snRfc3wzSZBhj1auWegV0kUeaPjO3emRFg5Z70WO5wxlhRStJBSED0S6YTEYthjqSY
-         3niwMIINJllM3uSZDNvSwb8jfLRz5GKeSfnXpk6EgNG0+7d5qZB/060QUWEIhAfqrqyw
-         DN/G79okelYsmRJVSuhC3y34o4Fmiw4aHijgks2G3j6u1VnxhkXWjyAgGNUVB8wmaDQD
-         owDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWfxaJI/y5O5d0ce7Uh8j29gxPBdEFWKaM6UWSKQYwI7OfJCsLRfnCIJKswdusX21SSinuwMRPrhsvnPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaL4Fn/TKYgvbEbVmaTYfvVr6682cbs7ksygX5hsdxJffUawpa
-	6jmkhHbH11pYJ6mnwHsISKLKIp0b218bVRZXhLPZvAeToQgg1yH31H3obN7dxrjHmjl8eoN5R9p
-	3SzceMBfTeKmozjBF+x7JgRKsFX41BtL9QJMrAFHz66Pj3zZyMr89L9hGcYw+Yw==
-X-Gm-Gg: ASbGnctZK7c34Jb+A8EvQHnFJKCAG4s8Wu2qIGtzc6avHWanC7hih0Y7NmwkIRiQngH
-	lDai9s4T/vpppi/xPbBzZd7jxUkWdgSLWW/JGu9nnvYvpY5fjcXOInbGVvIzg5wUOCgsjVwBy3C
-	QMdHkyQ8zZZ8s0tE55YLiirFkUxh384Q+PRUFQP5Ym1kK1DrUd2gvtWz99lXIAQjm4p7h4ZNTQr
-	gQDNaf0LGwpmLVV6CTPFROThWupHsadBSuf/VyZKokdXbPuFdOne+oZ17qIpjRnnlrds7CiqAOH
-	rvXjhy6TolVafvaQWaEiVA7vVMuUt2XYwMq6UWv4SExTrOJQWxHnEhbwStGVlyIhj6zuIBhLKvM
-	FOn1AmXp/aFLpdE1oftuIJ+qEo19vvELU09eOnzw=
-X-Received: by 2002:a05:6000:2af:b0:3a0:8af9:f379 with SMTP id ffacd0b85a97d-3a094003b02mr12347f8f.0.1746047305830;
-        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFEh2kIvvrmMWEfDRj9ATD8PLw6GQnjab2hqVipDv6tY3UvlIRVoqYxbhRVvgkhSMRGShw2KQ==
-X-Received: by 2002:a05:6000:2af:b0:3a0:8af9:f379 with SMTP id ffacd0b85a97d-3a094003b02mr12334f8f.0.1746047305525;
-        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c745:a500:7f54:d66b:cf40:8ee9? (p200300cbc745a5007f54d66bcf408ee9.dip0.t-ipconnect.de. [2003:cb:c745:a500:7f54:d66b:cf40:8ee9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a07a5ed2e0sm15523808f8f.39.2025.04.30.14.08.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 14:08:25 -0700 (PDT)
-Message-ID: <97e55ba8-2627-47ec-9707-71b039b07d26@redhat.com>
-Date: Wed, 30 Apr 2025 23:08:23 +0200
+        d=1e100.net; s=20230601; t=1746047319; x=1746652119;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QTnMBaJFXK5ga1w9SxnRQaZ8GQQawtec3V6B5CkklOY=;
+        b=EjJNAbkYonSt5ktfqJGRD9+/uUR2PWHhGmB7BjnzghJ9GXDmzQo+wjzRPENyXCNXM5
+         yFmcO/XK4gHFrWNtYDLN6JFcJmXrUb3feCf5sz1FXOKI/0QTk/giFXO8kJz45E+ZG2C5
+         psiPzecStTRvj6DJtHO/2xg+tE5oSthATt5nfQ+Rgg3SQx8sA8HpBEo173sLCEgefD6E
+         jc4uvfw+52H7+iWSUoeHnJ/zNwSWoRpIbRVLEq3otGWVhvJDwFd0394VwF6X+RrPkvnU
+         a6hIKCOm9rrfVjsK9QZJV2zOd/7hS5cQSQhJkmu2ZPnmMMXRFCsBBeHF/XkwM8A24Jgy
+         Qgaw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8Lxv2Z7CLSnF9zMHEJIkFQQbnMQGcljGBkPo/3XajCaxphVEJnPt9rv72tKx3UrhkRw3rqJaWdVfMZPc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ0rsHZoRU0IHvxv1U0ZGjc0ZCXPqdhPBNQZ/Z8gpr9a56ni0N
+	tWb+1+7fObVPp/FzltwtubS3U9pohwq397zlGypg2YROTil3/Szh/bTIikNzK05QhK75uYaISG9
+	ESEXHRp3CBJ9n9uUiIz8jR/JoiFlsWg8asXE6fsehxD17qt5BcMlyX2k=
+X-Google-Smtp-Source: AGHT+IGJ44fCHhwr8RnQeFoGarLHxtw7eCyEBy13uem7qWN4GRxqc5+oI83n9w+JmrD/iZwLYf7pctFtT/HldQ2NKbvS+VwG/IyK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
-To: Kairui Song <kasong@tencent.com>, linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Matthew Wilcox <willy@infradead.org>, Hugh Dickins <hughd@google.com>,
- Chris Li <chrisl@kernel.org>, Yosry Ahmed <yosryahmed@google.com>,
- "Huang, Ying" <ying.huang@linux.alibaba.com>, Nhat Pham <nphamcs@gmail.com>,
- Johannes Weiner <hannes@cmpxchg.org>, linux-kernel@vger.kernel.org,
- Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
- David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
- Qu Wenruo <wqu@suse.com>
-References: <20250430181052.55698-1-ryncsn@gmail.com>
- <20250430181052.55698-3-ryncsn@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250430181052.55698-3-ryncsn@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:380b:b0:3d9:3adb:e589 with SMTP id
+ e9e14a558f8ab-3d9676b65e8mr54987485ab.4.1746047318725; Wed, 30 Apr 2025
+ 14:08:38 -0700 (PDT)
+Date: Wed, 30 Apr 2025 14:08:38 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68129156.050a0220.3a872c.0009.GAE@google.com>
+Subject: [syzbot] [jfs?] UBSAN: shift-out-of-bounds in dbSplit (3)
+From: syzbot <syzbot+4c1966e88c28fa96e053@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 30.04.25 20:10, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
-> 
-> folio_index is only needed for mixed usage of page cache and swap
-> cache, for pure page cache usage, the caller can just use
-> folio->index instead.
-> 
-> It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` but btrfs does not use that method for swap.
-> 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
-> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Qu Wenruo <wqu@suse.com>
-> ---
->   fs/btrfs/extent_io.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-> index 197f5e51c474..e08b50504d13 100644
-> --- a/fs/btrfs/extent_io.c
-> +++ b/fs/btrfs/extent_io.c
-> @@ -3509,7 +3509,7 @@ static void btree_clear_folio_dirty_tag(struct folio *folio)
->   	xa_lock_irq(&folio->mapping->i_pages);
->   	if (!folio_test_dirty(folio))
->   		__xa_clear_mark(&folio->mapping->i_pages,
-> -				folio_index(folio), PAGECACHE_TAG_DIRTY);
-> +				folio->index, PAGECACHE_TAG_DIRTY);
->   	xa_unlock_irq(&folio->mapping->i_pages);
->   }
->   
+Hello,
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+syzbot found the following issue on:
 
--- 
-Cheers,
+HEAD commit:    f1a3944c860b Merge tag 'bpf-fixes' of git://git.kernel.org..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d550d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
+dashboard link: https://syzkaller.appspot.com/bug?extid=4c1966e88c28fa96e053
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1250a270580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14d550d4580000
 
-David / dhildenb
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-f1a3944c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/fbe8c2bb0602/vmlinux-f1a3944c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/b4268e0ec733/bzImage-f1a3944c.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/10b2c382300e/mount_0.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=14f49d74580000)
 
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4c1966e88c28fa96e053@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+------------[ cut here ]------------
+UBSAN: shift-out-of-bounds in fs/jfs/jfs_dmap.c:2629:11
+shift exponent 110 is too large for 32-bit type 'int'
+CPU: 0 UID: 0 PID: 5303 Comm: syz-executor956 Not tainted 6.15.0-rc3-syzkaller-00283-gf1a3944c860b #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+ __ubsan_handle_shift_out_of_bounds+0x386/0x410 lib/ubsan.c:492
+ dbSplit+0x1f8/0x200 fs/jfs/jfs_dmap.c:2629
+ dbAdjCtl+0x34c/0xa20 fs/jfs/jfs_dmap.c:2521
+ dbAllocDmap fs/jfs/jfs_dmap.c:2032 [inline]
+ dbAllocNear+0x2ee/0x3d0 fs/jfs/jfs_dmap.c:1243
+ dbAlloc+0x933/0xba0 fs/jfs/jfs_dmap.c:828
+ ea_write+0x374/0xdd0 fs/jfs/xattr.c:232
+ ea_put fs/jfs/xattr.c:619 [inline]
+ __jfs_setxattr+0xa01/0x1120 fs/jfs/xattr.c:792
+ __jfs_xattr_set+0xda/0x170 fs/jfs/xattr.c:941
+ __vfs_setxattr+0x439/0x480 fs/xattr.c:200
+ __vfs_setxattr_noperm+0x12d/0x660 fs/xattr.c:234
+ vfs_setxattr+0x16b/0x2f0 fs/xattr.c:321
+ do_setxattr fs/xattr.c:636 [inline]
+ filename_setxattr+0x274/0x600 fs/xattr.c:665
+ path_setxattrat+0x364/0x3a0 fs/xattr.c:713
+ __do_sys_lsetxattr fs/xattr.c:754 [inline]
+ __se_sys_lsetxattr fs/xattr.c:750 [inline]
+ __x64_sys_lsetxattr+0xbf/0xe0 fs/xattr.c:750
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fdaa19996b9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fffe3d43d28 EFLAGS: 00000246 ORIG_RAX: 00000000000000bd
+RAX: ffffffffffffffda RBX: 0000200000000200 RCX: 00007fdaa19996b9
+RDX: 0000000000000000 RSI: 0000200000000200 RDI: 0000200000000040
+RBP: 00002000000000c0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000200000000040
+R13: 0031656c69662f2e R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+---[ end trace ]---
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
