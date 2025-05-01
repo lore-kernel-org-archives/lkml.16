@@ -1,139 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832C9215193
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B50B0215179;
+	Thu,  1 May 2025 17:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746120491; cv=none; b=NLOjVcZmLEp2MOmGzhV2ugtopEkDTZWZ0rnbz35hOH4fqQh23WLLS9P4L+GobDZRtElDHCYvpyEi5obOvyjxlV11UdIjr0CLTvcZ0IYsq3NXLTjOdDQWFovnjNHKRFB9bdjDNnRLw4VeXT5RCjiwBugp/+eXhpmWbEsKA0VvKas=
+	t=1746120528; cv=none; b=eZ9M6quCY19flP+qZLlhlBxSlgbMYuZCBRo1kFmc0SQ4U7FHxudKOSaHzbJ/liDE3TNvfndxTHmJYygkxM1XGUshjxJuf5MrrJ1DScgiU05wYnMg94GyYzFMmdRYMnPgcrXEAQNYiogGDBkTqq33jkvmVWuQlTpAYLpPjllwIyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746120491; c=relaxed/simple;
-	bh=TmEpM1C7T+c713907hNJRvHZP/y6y/JUuntk3Bs3CPk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VvX73D/IwQ32oQ5LGA72sDyZkcgCt84iFKeor+5qeecKPXGsyInniBob+HvWn9eqLBtyoQlaekg83bG36/BH8wiNrbiUEbL/Opk0RZAHTkx3JlUMo5Mt4t2q4B4Lf/iw64Myw9YTT2NOtQlFWiOIE/MYJBq80AvG+QSr7Rl78HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gmr5LoSL; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746120528; c=relaxed/simple;
+	bh=ZKcuaFW2oPn0jqodDr0XtTaRO5hQX0tUhd25Cdcl2zI=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=FWfVp7VcEXpwQzObm8LB2ipwvdOOtC193Efok5iy3aAibRwjYtg9dWjJKT1MxHavKkD81zFt7V7s+ZzrYUVeFykw6miELkuzWAvDWthA5X+9d6E6Zzie8vrBI7yRH+iv9w7FUHxqZIn/Vut+9qRIkVSh1TC0egXlmRc7HvVr8YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GA3IgpZJ; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gmr5LoSL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746120490; x=1777656490;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TmEpM1C7T+c713907hNJRvHZP/y6y/JUuntk3Bs3CPk=;
-  b=Gmr5LoSLzE8rUEesjVS+KUC6CppCJWAMVW8E9nShcVIhCXbddys5MB53
-   9xRA1auVfQuTjPX7cHtqPzUBvUeRWKWopaxT4OT9LQhm5QuH0ZZF7ufdD
-   coVasS+echUi0/qGQoD0Z70E1yXOh6bZMVoVPoM3Hc9EHrhNRw7EM7dgR
-   zDdWapE2+1URytKoCwj6e15i27qgBmDoRhWsApRDe1ICtw5m9VTf0zqdr
-   r4Wrk+5YphE8c7ihHAGfmPUDDmk55tg46wqwr9/xAqJfYdK/9jdReSnGm
-   AMjk2ykBjniAJlOQ2qnF5IlPuVdBJ8CKt9GbHXxmP4TCaqulS7L1Jqhy0
-   w==;
-X-CSE-ConnectionGUID: q2r6oxmlRVCgYhW5K61CEA==
-X-CSE-MsgGUID: qAva0i9WRa2+uNayggQhVg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47516274"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47516274"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:28:09 -0700
-X-CSE-ConnectionGUID: IGWHYLdiSfCbI74vRs2gmQ==
-X-CSE-MsgGUID: Ksv9379MTSe8MItJjSCJUQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="139244404"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.124.220.24]) ([10.124.220.24])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:28:08 -0700
-Message-ID: <615afc41-2044-46ab-b171-4c9e039e11ff@intel.com>
-Date: Thu, 1 May 2025 10:28:05 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GA3IgpZJ"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7394945d37eso1153942b3a.3;
+        Thu, 01 May 2025 10:28:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746120526; x=1746725326; darn=vger.kernel.org;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7gk0ol3/wv1Ndo/6VMxze6mTl31v+JnNdZPKIadRxVM=;
+        b=GA3IgpZJdbHvpfw8j6xuxwWNA8kB6CeOeno6bUDXEztTc86QidXbEtGuxORTWHaplp
+         Lzw0ZpmvlzVr421+KtjctWj6g4YQfDlpZtsvcpZTbV25lK7X5Bixxot3iO0pSP8iBKPl
+         znySmG6jtCA462jVK56SSYPy2TCADKqK9OnjFjev5lBg7blzdsgHrMH2fHKI1Tulom00
+         l653i9luFQnUMBjAedSQwsEBtWJRp3B3kg8BD7PNOjzi1M0uvU6mipMtb5AM0cQI4vlY
+         5yz9OjIFddpMAKLUTzdmCD20ntix9fMuj890+0HvQbF6jFLaij7twLrDe45QeqqOFvxd
+         b9GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746120526; x=1746725326;
+        h=to:references:message-id:content-transfer-encoding:cc:date
+         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7gk0ol3/wv1Ndo/6VMxze6mTl31v+JnNdZPKIadRxVM=;
+        b=YwPdQoAWKcIO1h/Mg0IIaw1/YHfYANtesI/0EiwALcA4/Je3m0GkhBD9SRpxt08Ilh
+         uRzkBH+dbicjP+z7yAekfsY63ijG3dCLd374iNUoiEWtXl1S2vuG2zygC1bYDJhBgcYN
+         xDzEDkOUNulGucGGhAdWy0c7gKfoPVFyfPobOdjrxBOtg2WlytvAi1m8h96RQIGgqnCt
+         M+7Ea84h8gIemEbYXcYbnpV+IKqWelzQlDP8Ayh5bwGiAfJ+YxNb2DzI8mD3hUBIs/s0
+         Y5swNs+YnFP1ZNDSkSYxOTXUwVwoy3vWeLMSiBj7EsVxXYgtL7zwuH7aH9Pk7x8jQ5i+
+         RQNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU585SftOf+USaLf7KxRy/dLPJYJYSlj61KXrAj4T1nVedK/Kz9+l7xAOuEl3kWOTucMGKhfoCjuzP/Lp2k@vger.kernel.org, AJvYcCWqZQG4+YEctdZEO5cfe66lpz6VgTR6F0oKe0mvhSiBxcUbwreGpXFeypH0eq7oTtdU/PEeXJKgWFS6EY+srw==@vger.kernel.org, AJvYcCXQrfhfysVGU7vaNX4EdmQDUP6l007jdMW0z5e11w1NqP35aI8KKPDs9edEKxxhg0lFKyejf+LNh8/oLwfJI2S8@vger.kernel.org
+X-Gm-Message-State: AOJu0YwctxS5FO0Wf+RE7J0CHyPWD6mr7jeoP9fpWTWsWvLgtXuuODpu
+	VAo2I20TL9QnJjeo6IGFad35sJCEesxYf4G6W54eZGFPwTAqpQYKGCP/Cw==
+X-Gm-Gg: ASbGncvPj0I4Z9uVX7MBjCkyT5Pc44+DaJPBItxRKXIjMD88mpuWallMAuco3uooeJY
+	3M3vwihb/ywMY6OkERVKTJdrawWypeAaXeluAWeMiIYougDTIcSzGsoWY5ChCzvP+k763nQQKpi
+	4fnvzBwsuDx6Og97HygYbWaJNlECWNUmVWP3jOn5x2BvQ509nb6IGUPbDL0NaERceytuF2gYRqO
+	Dw4BPdefzZ8YJGheLXR5RM9TYmlRfC46yCCf5KBwunh/qEaLVuMJGb5J/XGhr9Y3KB1aV3+ISnZ
+	H7MEx8CkTxnDjB3XUa1U/0FM
+X-Google-Smtp-Source: AGHT+IEgg7uXTQ3WUEXhJXM8v3+QeUxJpI0i4LZui8mpkQ/mbC8oIZwbu+WgLDu6v+KCE7SlcmbSvw==
+X-Received: by 2002:a05:6a20:2d1f:b0:1f5:8d3b:e294 with SMTP id adf61e73a8af0-20ba70f1ee4mr5342966637.16.1746120525853;
+        Thu, 01 May 2025 10:28:45 -0700 (PDT)
+Received: from smtpclient.apple ([2402:d0c0:11:86::1])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1f9d4799e0sm1013074a12.14.2025.05.01.10.28.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 May 2025 10:28:44 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 3/5] x86/tdx: Add tdx_mcall_extend_rtmr() interface
-To: Cedric Xing <cedric.xing@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- Dionna Amalie Glaze <dionnaglaze@google.com>,
- Guorui Yu <guorui.yu@linux.alibaba.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Dan Middleton <dan.middleton@linux.intel.com>,
- Mikko Ylinen <mikko.ylinen@linux.intel.com>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20250424-tdx-rtmr-v5-0-4fe28ddf85d4@intel.com>
- <20250424-tdx-rtmr-v5-3-4fe28ddf85d4@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250424-tdx-rtmr-v5-3-4fe28ddf85d4@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
+Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
+ bch2_xattr_validate
+From: Alan Huang <mmpgouride@gmail.com>
+In-Reply-To: <aBOtxplvvpgHed7o@archlinux>
+Date: Fri, 2 May 2025 01:28:28 +0800
+Cc: kent.overstreet@linux.dev,
+ Thorsten Blum <thorsten.blum@toblux.com>,
+ Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+ Nathan Chancellor <nathan@kernel.org>,
+ Bill Wendling <morbo@google.com>,
+ Kees Cook <kees@kernel.org>,
+ regressions@lists.linux.dev,
+ linux-bcachefs@vger.kernel.org,
+ linux-hardening@vger.kernel.org,
+ LKML <linux-kernel@vger.kernel.org>,
+ ardb@kernel.org,
+ ojeda@kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D9967EB7-7F4D-4122-9470-DB14700FD906@gmail.com>
+References: <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
+ <ZxB-uh1KzfD4ww2a@archlinux> <20241017165522.GA370674@thelio-3990X>
+ <ZxWvcAPHPaRxp9UE@archlinux> <20241021192557.GA2041610@thelio-3990X>
+ <ZxpIwkfg9_mHO3lq@archlinux> <20241025011527.GA740745@thelio-3990X>
+ <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
+ <Zxu4yhmxohKEJVSg@archlinux> <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
+ <aBOtxplvvpgHed7o@archlinux>
+To: Jan Hendrik Farr <kernel@jfarr.cc>
+X-Mailer: Apple Mail (2.3826.500.181.1.5)
 
-On 4/24/25 13:12, Cedric Xing wrote:
-> The TDX guest exposes one MRTD (Build-time Measurement Register) and four
-> RTMR (Run-time Measurement Register) registers to record the build and boot
-> measurements of a virtual machine (VM). These registers are similar to PCR
-> (Platform Configuration Register) registers in the TPM (Trusted Platform
-> Module) space. This measurement data is used to implement security features
-> like attestation and trusted boot.
-> 
-> To facilitate updating the RTMR registers, the TDX module provides support
-> for the `TDG.MR.RTMR.EXTEND` TDCALL which can be used to securely extend
-> the RTMR registers.
-> 
-> Add helper function to update RTMR registers. It will be used by the TDX
-> guest driver in enabling RTMR extension support.
 
-Thank you for revising the changelogs to make the underlying purpose of
-this series more clear.
+Thanks,
+Alan
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+
+
+> On May 2, 2025, at 01:22, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
+>=20
+>>=20
+>> I wonder if the __counted_by(x_name_len) in struct bch_xattr is =
+needed, since there is also a value after x_name.
+>=20
+> Wait a minute. Are you saying that the value with length x_val_len
+> is behind the name (of length x_name_len) at the end of the struct.
+> So essentially the flexible array member x_name has a length of
+> x_name_len + x_val_len and contains both the name and value?
+
+Yes.
+
+>=20
+> If that's the case:
+>=20
+> 1. that's not at all clear from the struct definition
+> 2. __counted_by(x_name_len) is not correct in that case
+>=20
+
+Both clang and gcc say:
+
+    =E2=80=A2 p->array has at least p->count number of elements =
+available all the time.=20
+
+Note the at least here. Though I think the counted_by is misleading =
+here.
+
+>=20
+> Best Regards
+> Jan
+
