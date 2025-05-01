@@ -1,141 +1,234 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DB621129D;
-	Thu,  1 May 2025 09:00:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CD3288DA;
+	Thu,  1 May 2025 09:01:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746090008; cv=none; b=c3cApOEXix8phcUA5JnSGw8pYSRQAObBz8uTjqEY5q6jFSIas9XKraxr/y65qcjkAwaX1u+RShiBx+nTc5CBt+016l2Gd12n3EykwX0GkgJMUs5kjl6rbmn19ZE9/0/qjaCzZvTX8G7MiLU2v8kmhqeWtSq5yES8hMypbhbbeuE=
+	t=1746090077; cv=none; b=YsWnm78CekiZ6WU1dZWEbRHMZfqOSdXELzPcbR3dHE/bWQ/jZXFeclmDeY4iT/95gOePPYZin7UiEiWdNZAAPtazsxzBMOfQoGA3DV9Wpze808TixF/5ZgOGMdPBlxy7IVPxRzh1Lx1C1s6xnnVK773w4G8O4yYdeUGwdOFIr5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746090008; c=relaxed/simple;
-	bh=LeQASK9/I52gng7uxzpZlaxkXy9CNffjpfRzp80OH34=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEocQDOje2u/8RNo2VOAEnvxsKb2fQ4BG0H5XIJjgLBlPDyjqplz5hm4QUGVrNrLjKA3lM6NQWRb2/RXnKCDzZ0mi7Lkb1MI0vapH4bdynwzFRnD0u3ReLeYrYuILqvHNMvxmfoJ25Mq1FWwwue4yCsfeRo0vnzP9tB8QzOV6VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TFoLMRA8; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746090077; c=relaxed/simple;
+	bh=0ipCz+7spt358RxGlpu6/Gs/l2WCej4idcL1gnVdSJQ=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ItaD3RpXpy+0Sxd0k0oA8TCwC0mH3axRpWRH2AvCP0NBOTJ58/wIgk/ulaoIdfc0gAVvb+deYdGfsRN7MjMMO4t8/iN0+EGTVNC/q8gmUYba9opvxJ/3R4m/GIqHKefE4vzMhleOFbTRxsMfwwMAYEV86I6QYm45YK7xhHU9hMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNQg6Cu+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TFoLMRA8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=/tZiJb6N356eMBa/jJoMPt7lfhTjOew0ChRJTLsc8rQ=; b=TFoLMRA8NSfKAZOaHCGUin+2Zd
-	6mAzBd86Y3TLXO2N3a3eHIJvyZw+c7Or4fKCUF4w26oduI1cKDQVxKyJfYgYw2RPW4qgP6U8lqPn8
-	0O/i0uwBmmhWA/HaR4O92RXA60r+l0wt7x9mW02DSSgju3ENKhFMNdq9laCPAO35KyZt7eh9mUFxW
-	I0sSB/3HhRNdGtlLKSD+94GpRdMJvb81vuUwp7s8LKaqEqu7+JUK9DdBiGnnLbSfCG0X+PqvCDDWn
-	YNFTV4MvggOKh/XVsY7kt2CgIA85+Z0yK5KaWIhka2aXKpiF/BesAaw0BKA3PIzhz+1RvEuTpjc58
-	jwkvKHtg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAPlm-0000000H35U-13UN;
-	Thu, 01 May 2025 08:59:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6BA0D30057C; Thu,  1 May 2025 10:59:49 +0200 (CEST)
-Date: Thu, 1 May 2025 10:59:49 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Michael Kelley <mhklinux@outlook.com>
-Cc: "x86@kernel.org" <x86@kernel.org>,
-	"kys@microsoft.com" <kys@microsoft.com>,
-	"haiyangz@microsoft.com" <haiyangz@microsoft.com>,
-	"wei.liu@kernel.org" <wei.liu@kernel.org>,
-	"decui@microsoft.com" <decui@microsoft.com>,
-	"tglx@linutronix.de" <tglx@linutronix.de>,
-	"mingo@redhat.com" <mingo@redhat.com>,
-	"bp@alien8.de" <bp@alien8.de>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"hpa@zytor.com" <hpa@zytor.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"kees@kernel.org" <kees@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	"gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-	"jpoimboe@kernel.org" <jpoimboe@kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-	"samitolvanen@google.com" <samitolvanen@google.com>,
-	"ojeda@kernel.org" <ojeda@kernel.org>
-Subject: Re: [PATCH v2 12/13] x86_64,hyperv: Use direct call to hypercall-page
-Message-ID: <20250501085949.GS4439@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <20250430112350.335273952@infradead.org>
- <SN6PR02MB41577ED2C4E29F25B82548D7D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNQg6Cu+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1F59C4CEE3;
+	Thu,  1 May 2025 09:01:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746090077;
+	bh=0ipCz+7spt358RxGlpu6/Gs/l2WCej4idcL1gnVdSJQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=cNQg6Cu+kQg5EPbQth2cRgzIBbVR1eku6Lz+MlysAKVS9AI+1KotmybKncV2WG2Xu
+	 ViX/+dmEmvRW7YqG7H2j609iGPMGEX52nxqFen23vLlu7FkQwXVxMbSoCnQP4D4PN3
+	 AxZ9o1IO9T8FXnJA9FLBbyuE6ofTjL35QPT8YZVHFsa9qJAv62F/apH/Bi8g7xMwuP
+	 zJ5YiWqBuXTKFBO1SRcyMNewVo+6SMSwDSIkdWtmg/CZ1NcGq9b1ngS/PYjdQ1vz+8
+	 P+VtYLG8329ixEwUOpwFKuJXFAADXYxEDdCJdcNVk8drtle2mFtnSu3/RDXi8Y0ljI
+	 Tvu0+MYnIJJsA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uAPn7-00AWwq-GZ;
+	Thu, 01 May 2025 10:01:14 +0100
+Date: Thu, 01 May 2025 10:01:13 +0100
+Message-ID: <8634doiu1y.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 20/22] irqchip/gic-v5: Add GICv5 ITS support
+In-Reply-To: <aBIjvPVe/SWzOyd9@lpieralisi>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+	<20250424-gicv5-host-v2-20-545edcaf012b@kernel.org>
+	<86a57yhv1h.wl-maz@kernel.org>
+	<aBIjvPVe/SWzOyd9@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR02MB41577ED2C4E29F25B82548D7D4822@SN6PR02MB4157.namprd02.prod.outlook.com>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Thu, May 01, 2025 at 02:36:26AM +0000, Michael Kelley wrote:
-> From: Peter Zijlstra <peterz@infradead.org> Sent: Wednesday, April 30, 2025 4:08 AM
-> > @@ -528,8 +546,8 @@ void __init hyperv_init(void)
-> >  	if (hv_isolation_type_tdx() && !ms_hyperv.paravisor_present)
-> >  		goto skip_hypercall_pg_init;
-> > 
-> > -	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1, VMALLOC_START,
-> > -			VMALLOC_END, GFP_KERNEL, PAGE_KERNEL_ROX,
-> > +	hv_hypercall_pg = __vmalloc_node_range(PAGE_SIZE, 1, MODULES_VADDR,
-> > +			MODULES_END, GFP_KERNEL, PAGE_KERNEL_ROX,
+On Wed, 30 Apr 2025 14:21:00 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Curiosity question (which I forgot ask about in v1):  Is this change so that the
-> hypercall page kernel address is "close enough" for the direct call to work from
-> built-in code and from module code?  Or is there some other reason?
+> On Wed, Apr 30, 2025 at 10:12:58AM +0100, Marc Zyngier wrote:
+> > On Thu, 24 Apr 2025 11:25:31 +0100,
+> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 
-No, you nailed it. Because we want to do a direct CALL, the hypercall
-page must be in the disp32 range relative to the call site. The module
-address space ensures this.
+[...]
 
-> >  			VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
-> >  			__builtin_return_address(0));
-> >  	if (hv_hypercall_pg == NULL)
-> > @@ -567,27 +585,9 @@ void __init hyperv_init(void)
-> >  		wrmsrl(HV_X64_MSR_HYPERCALL, hypercall_msr.as_uint64);
-> >  	}
+> > > 
+> > > +void gicv5_irs_syncr(void)
+> > > +{
+> > > +	struct gicv5_irs_chip_data *irs_data;
+> > > +	u32 syncr;
+> > > +
+> > > +	irs_data = list_first_entry_or_null(&irs_nodes,
+> > > +					    struct gicv5_irs_chip_data, entry);
+> > > +	if (WARN_ON(!irs_data))
+> > > +		return;
+> > > +
+> > > +	syncr = FIELD_PREP(GICV5_IRS_SYNCR_SYNC, 1);
+> > > +	irs_writel_relaxed(irs_data, syncr, GICV5_IRS_SYNCR);
+> > > +
+> > > +	gicv5_irs_wait_for_op(irs_data->irs_base, GICV5_IRS_SYNC_STATUSR,
+> > > +			      GICV5_IRS_SYNC_STATUSR_IDLE);
+> > > +}
+> > > +
 > > 
-> > -skip_hypercall_pg_init:
-> > -	/*
-> > -	 * Some versions of Hyper-V that provide IBT in guest VMs have a bug
-> > -	 * in that there's no ENDBR64 instruction at the entry to the
-> > -	 * hypercall page. Because hypercalls are invoked via an indirect call
-> > -	 * to the hypercall page, all hypercall attempts fail when IBT is
-> > -	 * enabled, and Linux panics. For such buggy versions, disable IBT.
-> > -	 *
-> > -	 * Fixed versions of Hyper-V always provide ENDBR64 on the hypercall
-> > -	 * page, so if future Linux kernel versions enable IBT for 32-bit
-> > -	 * builds, additional hypercall page hackery will be required here
-> > -	 * to provide an ENDBR32.
-> > -	 */
-> > -#ifdef CONFIG_X86_KERNEL_IBT
-> > -	if (cpu_feature_enabled(X86_FEATURE_IBT) &&
-> > -	    *(u32 *)hv_hypercall_pg != gen_endbr()) {
-> > -		setup_clear_cpu_cap(X86_FEATURE_IBT);
-> > -		pr_warn("Disabling IBT because of Hyper-V bug\n");
-> > -	}
-> > -#endif
+> > Only the ITS code is using this function. Why isn't it in the ITS code
+> > as a static helper?
 > 
-> Nit: With this IBT code removed, the #include <asm/ibt.h> at the top
-> of this source code file should be removed.
+> I'd need to make irs_nodes global.
 
-Indeed so.
+You could simply have a helper returning the first IRS node. Not a big
+deal anyway.
 
-> 
-> > +	hv_set_hypercall_pg(hv_hypercall_pg);
-> > 
-> > +skip_hypercall_pg_init:
-> >  	/*
-> >  	 * hyperv_init() is called before LAPIC is initialized: see
-> >  	 * apic_intr_mode_init() -> x86_platform.apic_post_init() and
-> > 
-> > 
-> 
-> The nit notwithstanding,
-> 
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+[...]
 
-Thanks!
+> > > +	/*
+> > > +	 * Need to determine how many entries there are per L2 - this is based
+> > > +	 * on the number of bits in the table.
+> > > +	 */
+> > > +	events_per_l2_table = BIT(l2_bits);
+> > > +	complete_tables = num_events / events_per_l2_table;
+> > > +	final_span = order_base_2(num_events % events_per_l2_table);
+> > > +
+> > > +	for (i = 0; i < num_ents; i++) {
+> > > +		size_t l2sz;
+> > > +
+> > > +		span = i == complete_tables ? final_span : l2_bits;
+> > > +
+> > > +		itt_l2 = kcalloc(BIT(span), sizeof(*itt_l2), GFP_KERNEL);
+> > > +		if (!itt_l2) {
+> > > +			ret = -ENOMEM;
+> > > +			goto out_free;
+> > > +		}
+> > 
+> > You are allocating a bunch of 64bit pointers. So the alignment is
+> > BIT(span + 3) or ARCH_KMALLOC_MINALIGN, whichever is the largest.
+> 
+> Right, at least 8 bytes.
+> 
+> > > +
+> > > +		its_dev->itt_cfg.l2.l2ptrs[i] = itt_l2;
+> > > +
+> > > +		l2sz = BIT(span) * sizeof(*itt_l2);
+> > > +
+> > > +		if (its->flags & ITS_FLAGS_NON_COHERENT)
+> > > +			dcache_clean_inval_poc((unsigned long)itt_l2,
+> > > +					       (unsigned long)itt_l2 + l2sz);
+> > > +
+> > > +		val = (virt_to_phys(itt_l2) & GICV5_ITTL1E_L2_ADDR_MASK) |
+> > > +		       FIELD_PREP(GICV5_ITTL1E_SPAN, span)		 |
+> > > +		       FIELD_PREP(GICV5_ITTL1E_VALID, 0x1);
+> > 
+> > GICV5_ITTL1E_L2_ADDR_MASK starts at bit 12.
+> 
+> No, it starts at bit 3.
+
+Ah, you're absolutely right. I looked at the IST version...
+
+[...]
+
+> > > +{
+> > > +	struct gicv5_its_dev *its_dev;
+> > > +	int ret;
+> > > +
+> > > +	its_dev = gicv5_its_find_device(its, dev_id);
+> > > +	if (!IS_ERR(its_dev)) {
+> > > +		pr_debug("A device with this DeviceID (0x%x) has already been registered.\n",
+> > > +			 dev_id);
+> > > +
+> > > +		if (nvec > its_dev->num_events) {
+> > > +			pr_debug("Requesting more ITT entries than allocated\n");
+> > > +			return ERR_PTR(-ENXIO);
+> > > +		}
+> > > +
+> > > +		its_dev->shared = true;
+> > > +
+> > > +		return its_dev;
+> > 
+> > I really think we shouldn't even consider the silliness of
+> > non-transparent bridges this time around. That's a terrible system
+> > design, and it leads to all sorts of lifetime madness -- the GICv3
+> > driver is a testament to it. Modern systems with GICv5 should not have
+> > to deal with this nonsense.
+> 
+> I am not sure we can remove this path for the IWB - even if we model it
+> as an MBIgen.
+
+Why? The IWB is (or rather should be) seen as a device. The fact that
+it is itself an interrupt controller is am independent issue.
+
+> With Sascha and Tim we tested this code path, I am not sure it would
+> work if a driver with a wired IRQ connected to an IWB free an IRQ and
+> the ITS device representing the IWB is not shared.
+
+I don't think freeing the IRQ from the end-point perspective should
+have any effect on the IWB. At probe time, the IWB should grab all the
+LPIs it needs, publish them as part of the wired domain attached to
+its fwnode, and be done with it
+
+[...]
+
+> > > +static int gicv5_its_irq_domain_activate(struct irq_domain *domain,
+> > > +					 struct irq_data *d, bool reserve)
+> > > +{
+> > > +	struct gicv5_its_dev *its_dev = irq_data_get_irq_chip_data(d);
+> > > +	u16 event_id;
+> > > +	u32 lpi;
+> > > +
+> > > +	event_id = FIELD_GET(GICV5_ITS_HWIRQ_EVENT_ID, d->hwirq);
+> > > +	lpi = d->parent_data->hwirq;
+> > > +
+> > > +	return gicv5_its_alloc_event(its_dev, event_id, lpi);
+> > 
+> > Huh. This looks wrong. Allocating the event really should happen at
+> > alloc time, not at activate time, because the endpoint driver doesn't
+> > really expect this to fail for any reason other than a gross bug.
+> > 
+> > activate should allow the translation to take place, but not rely on
+> > allocating events. Compare with GICv3, which only issues the MAPTI
+> > command at activate time.
+> 
+> I am not "allocating an event" (well, then you would say "learn how to
+> name your functions" and you are right), I am writing the ITT table for
+> an eventid that was preallocated before, so basically, apart from
+> paranoia checks, this is the MAPTI equivalent.
+
+Feels like *a lot* of paranoia checks, most of which should not be
+possible by construction. You can also get rid of num_mapped_events,
+which is clearly some debug stuff.
+
+And yes, this function can do with a bit of renaming.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
