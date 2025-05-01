@@ -1,125 +1,278 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9503D6A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:52:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4333987;
+	Thu,  1 May 2025 23:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143536; cv=none; b=oYa+7Zc6ONeS+nzQmYw735sLlvkPygMZUa20DfcQVA5xS4aLhOtg7bUBMDOsZ2+9xAFcX8uZzqbdDS+x0csfxxi9mN/g8XTv+/V8+px1R7SgAGyG5uWOh8BsAgSnQPDkNWumpL62Abn2M39ExnTZjxQo6ThfVeLsfVxJP2vHFKY=
+	t=1746143795; cv=none; b=GCGdNNKB2KKen87DRRnPoF5Nn9+h8SwCSp6zeByrFHvEFzgXgZKFE9KDHn6joajZ67CZYvl/PpU27gnOgekTURYpSDBccY4wnM1ke4n2Usuf2JrEpRy1G3B9/uuEieFkaFO6CoAN8HYZt9lQL3sOREwZHJr89dUHYNUUl0SYTG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143536; c=relaxed/simple;
-	bh=OQUWGEVgZ+PDwRlv2+NEZXwr26U7U2Avy7r6dUmpfsM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V3Jb8kxDX8zsoK3S8iyfSMg//xr5JtKBS5hsLhiqxo45pYg395BWW+My0YlWMzmmWRUfum7h8omutpQudYMo5/LRcMgLRDNiE4yiZgQsHyUJrLhbm42a6ekb/kwomXpy+yhFx31mfkBXCnvUzqC66t+QJHr/1xSM28UiXizwFp4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=REeP7MMl; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746143795; c=relaxed/simple;
+	bh=22QTplWOYTRI6XYyal6CZnasrfKacMUm9YeXDusUySo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fUk1OnARD1Qj5gvxGUeWcWiRFB6xinzLRPI3pJajOf7bbZunfjXkxCr1b1FbnGgkIBm8fg4HQRUL1RavoMtQe/wOXNAEB13R8W6Tpu+2Kf8wzJGll+bzF9YUM9soxMY7QPqAt4ISq5PIwrUN/+QVJnyZ0qkNhRD7kZWxDc+fDbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJvFdFtP; arc=none smtp.client-ip=209.85.218.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="REeP7MMl"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-606668f8d51so933898eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:52:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJvFdFtP"
+Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-acb415dd8faso214426466b.2;
+        Thu, 01 May 2025 16:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746143532; x=1746748332; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OyKraObEURHCA1O3iED2hm26WFNl7Mw0i9SjHNz0w2M=;
-        b=REeP7MMlFo7US1ZJSgBq7bHwmHkgBvv4kJWSJEEGdjsPFn1Cl/PMzgSONIoZFzcyui
-         XuclwF7FWsPFrE/u9HJpD/o2rBv2tdnN9M09RYJB6f/MkOWAKvBht4fmAnNo/HbXyRcs
-         BN0i5u4ppYom9ENaokt90KouYOHNKjFedy3/Pwo0oevVJTyWGswvwud/d221GRmi5eYF
-         UFiWt09anE6iX5YT1aeFCM4WhAT1rKmGQrcAgtDetKp1lJyN09/jp3+aktQWNUnexjy+
-         7+TmKSkmlRpd/HarVtF57kMnKiNRB/427S3QCoEAo6Q/Qsy2kptUkw4iVSLSScPw9qnT
-         HyOg==
+        d=gmail.com; s=20230601; t=1746143791; x=1746748591; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IpqcdB5HKLcvCClWag1YAOoCR5dOaM4sia0jSQ91WTc=;
+        b=HJvFdFtPpKRkUHN8FYiq19LesHdBtm5/m5fxiozVxKpCRDNKOAqvNoEEgJfZnEmDW9
+         64uHNqxSZw3ZNUlUp2ExcemN3alHFraEPrlaJIRvUdR2e5xJtuLoP09zawT7PizdQLR/
+         umD5rEVZMjxTv9Ub6+rsuJ4D5y/nN2B9pvAkp1rI2AZ+Iy4txhmNcdmJazPiR/bcm4T+
+         xU+WFXQgEURxToXlgO8wDEqYiohgd4qFTrdWdogCDYxnAFWAWFFDs3r0JcifXoAhZR6z
+         +p6prN+5tZtGGUVtMwto1SHCAwYUdOYe8kXtbUzeauxXxHetI0LKxDg+cFipZoahc8ci
+         rIsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746143532; x=1746748332;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OyKraObEURHCA1O3iED2hm26WFNl7Mw0i9SjHNz0w2M=;
-        b=mpMTDFKFGSjK6PbBDv+97sFTc54ywTeQz55KKa+WBn0pw2eXCRhnfFD49MdbdPG+UF
-         J/6/7vA0dBJtIBuZ0DSoGXLo09hLTrxLUIRBsUgxC7BiF7FDqOsbsfSB6/siXMwtGMpl
-         zitDQzph9LY7GveWtC1piHPNPgHRf2X14LNf3e73WaD3MpDetsLb4ZCdeatm7k74dKW7
-         TVwddGvblwexLXu7PPghTCJ1P+7C4KhQiWazFV5F+puY/IMUQmUdGFIxbm5JAmP5w84+
-         byXtHJVGrwgHPVs77HB60wy8dylvoZyjK4k7KOQdAxON0Asa4nNFHsahGUBJ2EzhC1Bj
-         oHXA==
-X-Forwarded-Encrypted: i=1; AJvYcCXsnfPzWGtGQAACU+ytx5l3thrqLLp8kDfuqcKHaIuxkKmYBfXYuCikuFoS7vXaWYKpTgBWd/9qIuXOGUs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwbIxlThwYDU8JIAi9sPASSFWKo2Euwnz3biRXeS9CZ+xIYdnwz
-	xRhTaMYhvZ2m2RsknuXpuVbeQ5dc97sqdMogXW0UlxCBC3rT5AnS1x7tCGohhk4=
-X-Gm-Gg: ASbGncseyBRqSzM6vN6sXViCEL0NHCetW7w8xBcpBQolZzd2a4qp1ij8p0qFaEWJZOG
-	KJOYeQbs2LMfiESib2bfxZdSICnV9zG7gsJajr9XT82/Vp62cLoYWNcHsbx9c3CrDutl47I/qbH
-	S9n0Y6bgAoEeX9Wl6hiG8DqhnZFWYzIeWdX/mhhFItvCv8uQS3FU5Z8DMc6Vc7yapUja8grQBOZ
-	tGn+ZsLLpxIMNd2XbvBvNLl41FNBwKOY4+emNiWPBrtloX0MiDE9FaYTcL6BAxmJerxNpKXZYoF
-	TwSn1PkzmtmugTBb04sAueM86yDCtCQh6dPBtMcHn+CLas/FFlYGph0y1WkSKgPjaR+3m9FooZZ
-	y54wTVDeGmKwZwa2M6Q==
-X-Google-Smtp-Source: AGHT+IG9i0SjqJNmrxwyVXWssfn4FV7bVAFVBFFYBmbJlnOnDNrSJ9/S9igAW+PRB5scHigMaDiLuA==
-X-Received: by 2002:a05:6820:17c:b0:604:ac85:abe2 with SMTP id 006d021491bc7-607e1fde107mr2462578eaf.3.1746143532034;
-        Thu, 01 May 2025 16:52:12 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7d11e1bsm324509eaf.10.2025.05.01.16.52.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 16:52:10 -0700 (PDT)
-Message-ID: <741acf06-72b8-41e6-88ef-048273c3da26@baylibre.com>
-Date: Thu, 1 May 2025 18:52:08 -0500
+        d=1e100.net; s=20230601; t=1746143791; x=1746748591;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IpqcdB5HKLcvCClWag1YAOoCR5dOaM4sia0jSQ91WTc=;
+        b=LuQh/Fxo5Me05RIQ12pA7J1Io9Cq7CJG3QaDx8dczkkf9l1S9a2JOE5tfHGHJSu8cl
+         11Gs3SVRyCUdYFXSWxSsxxhGaWimeQNe6G9YXbqboohy2gOW9pDxPoTPRuwQ9C24AgET
+         QbV1beQGmgT5g0/UDTNgHcvgDTkFG9RXJMxf04CNPkGhGoi2G3WXlntXFuLGgFEs3qtR
+         bI2VyF9c3d+7UTjiuOT+k4+RZxFp1r9PB7/PbJSipa9Wxc3RRvHZDJ7XR8bLTXfbjVBK
+         DPcExMos7GzHMXri/ZU1RERb857xpMZLi2xSb3FRHQ0dKvZ2pMh6MWpyfv/8lAPy9lFr
+         gCaw==
+X-Forwarded-Encrypted: i=1; AJvYcCVPebe14FEqwWp8lafJ/cu31w7R5XT9OJIWQhWH0V2vr47+d5YYIhcL1QerEs7xALozSro=@vger.kernel.org, AJvYcCVjD38l2+/S1Xy8f1W1zFdvA6rKWsXLTdQNgM7uNXe/Ic1qa+2fNKr48tazkAJzlH7EO7sNLKUl/qrUWjOs@vger.kernel.org, AJvYcCXUuI3LEvHQ5VDIbVAe6MIJh+yYdv24cvakyBVCh+40WY9alTRK4R1EmuQ0qxera82AlHPaFwMVhY0KrVnE8+4X@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDAN840A3UnFzOZ5tSIkapEMK3tZTuoOsJh0Vtt+Awrz+taYVM
+	kPLycNa4jSQFDJPztw/OE8OGj0ZFZ93QAu3T3n5EMZU17fGGI88sxOYHXP5mh/H7flmQgwjknlY
+	clZk9fJPExAFMNra4vU+FzAuPPBA=
+X-Gm-Gg: ASbGncvRTwp0yag92YzTRHwoMQpt2VdMNbTS53YeXyVFifTk/aiLm67cj2/A0ABxkCM
+	8QI1S+fN3AKZ1GjJNefyIPQDiiiD5lFgqsVNMWLfqF1DGgJtkOXEACi0A9P6jE5/KGRbfpU27Ep
+	0XBr9VBkN1tVSul0V3H2eDamhjr4/EEDnj79vPoVq6hiEWw5jlUtSv4Q==
+X-Google-Smtp-Source: AGHT+IE8rFYVy5AEV69cNgB7LjR9j9JDMd63wN3Vtcz9MvmQSCvUFlM2VwRHa8i1gy3jD9Ei18VDPKGcCjJ/nJCaAQ0=
+X-Received: by 2002:a17:907:a587:b0:ac7:3912:5ea5 with SMTP id
+ a640c23a62f3a-ad17af80715mr93822666b.58.1746143791303; Thu, 01 May 2025
+ 16:56:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] HID: sensor-hub: Fix typo and improve documentation for
- sensor_hub_remove_callback()
-To: chelsy ratnawat <chelsyratnawat2001@gmail.com>
-Cc: jikos@kernel.org, jic23@kernel.org, srinivas.pandruvada@linux.intel.com,
- bentiss@kernel.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
- <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
- <CAOeBcHOw6CHbY6W+wAWvYsm_CGRMCgt_BLSV65X=rnhuU1r1hw@mail.gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <CAOeBcHOw6CHbY6W+wAWvYsm_CGRMCgt_BLSV65X=rnhuU1r1hw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <20250501073603.1402960-9-luis.gerhorst@fau.de>
+In-Reply-To: <20250501073603.1402960-9-luis.gerhorst@fau.de>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Fri, 2 May 2025 01:55:54 +0200
+X-Gm-Features: ATxdqUGuoTBKs9l0zhe3Yzsic4wyHg46bSXEHmrxNhmAcDg2gPFfcMFHEjWXEc4
+Message-ID: <CAP01T76kOixPct5cOPHGKubFWSbSS7ztEnZc02v2wWGPOUYRCQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 08/11] bpf: Fall back to nospec for Spectre v1
+To: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
+	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org, 
+	Maximilian Ott <ott@cs.fau.de>, Milan Stephan <milan.stephan@fau.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/1/25 6:33 PM, chelsy ratnawat wrote:
-> Hi, 
+On Thu, 1 May 2025 at 10:00, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
+>
+> This implements the core of the series and causes the verifier to fall
+> back to mitigating Spectre v1 using speculation barriers. The approach
+> was presented at LPC'24 [1] and RAID'24 [2].
+>
+> If we find any forbidden behavior on a speculative path, we insert a
+> nospec (e.g., lfence speculation barrier on x86) before the instruction
+> and stop verifying the path. While verifying a speculative path, we can
+> furthermore stop verification of that path whenever we encounter a
+> nospec instruction.
+>
+> A minimal example program would look as follows:
+>
+>         A = true
+>         B = true
+>         if A goto e
+>         f()
+>         if B goto e
+>         unsafe()
+> e:      exit
+>
+> There are the following speculative and non-speculative paths
+> (`cur->speculative` and `speculative` referring to the value of the
+> push_stack() parameters):
+>
+> - A = true
+> - B = true
+> - if A goto e
+>   - A && !cur->speculative && !speculative
+>     - exit
+>   - !A && !cur->speculative && speculative
+>     - f()
+>     - if B goto e
+>       - B && cur->speculative && !speculative
+>         - exit
+>       - !B && cur->speculative && speculative
+>         - unsafe()
+>
+> If f() contains any unsafe behavior under Spectre v1 and the unsafe
+> behavior matches `state->speculative &&
+> error_recoverable_with_nospec(err)`, do_check() will now add a nospec
+> before f() instead of rejecting the program:
+>
+>         A = true
+>         B = true
+>         if A goto e
+>         nospec
+>         f()
+>         if B goto e
+>         unsafe()
+> e:      exit
+>
+> Alternatively, the algorithm also takes advantage of nospec instructions
+> inserted for other reasons (e.g., Spectre v4). Taking the program above
+> as an example, speculative path exploration can stop before f() if a
+> nospec was inserted there because of Spectre v4 sanitization.
+>
+> In this example, all instructions after the nospec are dead code (and
+> with the nospec they are also dead code speculatively).
+>
+> On x86_64, this depends on the following property of lfence [3]:
+>
+>         An LFENCE instruction or a serializing instruction will ensure that no
+>         later instructions execute, even speculatively, until all prior
+>         instructions complete locally. [...] Inserting an LFENCE instruction
+>         after a bounds check prevents later operations from executing before
+>         the bound check completes.
+>
+> Regarding the example, this implies that `if B goto e` will not execute
+> before `if A goto e` completes. Once `if A goto e` completes, the CPU
+> should find that the speculation was wrong and continue with `exit`.
+>
+> If there is any other path that leads to `if B goto e` (and therefore
+> `unsafe()`) without going through `if A goto e`, then a nospec will
+> still be needed there. However, this patch assumes this other path will
+> be explored separately and therefore be discovered by the verifier even
+> if the exploration discussed here stops at the nospec.
+>
+> This patch furthermore has the unfortunate consequence that Spectre v1
+> mitigations now only support architectures which implement BPF_NOSPEC.
+> Before this commit, Spectre v1 mitigations prevented exploits by
+> rejecting the programs on all architectures. Because some JITs do not
+> implement BPF_NOSPEC, this patch therefore may regress unpriv BPF's
+> security to a limited extent:
+>
+> * The regression is limited to systems vulnerable to Spectre v1, have
+>   unprivileged BPF enabled, and do NOT emit insns for BPF_NOSPEC. The
+>   latter is not the case for x86 64- and 32-bit, arm64, and powerpc
+>   64-bit and they are therefore not affected by the regression.
+>   According to commit a6f6a95f2580 ("LoongArch, bpf: Fix jit to skip
+>   speculation barrier opcode"), LoongArch is not vulnerable to Spectre
+>   v1 and therefore also not affected by the regression.
+>
+> * To the best of my knowledge this regression may therefore only affect
+>   MIPS. This is deemed acceptable because unpriv BPF is still disabled
+>   there by default. As stated in a previous commit, BPF_NOSPEC could be
+>   implemented for MIPS based on GCC's speculation_barrier
+>   implementation.
+>
+> * It is unclear which other architectures (besides x86 64- and 32-bit,
+>   ARM64, PowerPC 64-bit, LoongArch, and MIPS) supported by the kernel
+>   are vulnerable to Spectre v1. Also, it is not clear if barriers are
+>   available on these architectures. Implementing BPF_NOSPEC on these
+>   architectures therefore is non-trivial. Searching GCC and the kernel
+>   for speculation barrier implementations for these architectures
+>   yielded no result.
+>
+> * If any of those regressed systems is also vulnerable to Spectre v4,
+>   the system was already vulnerable to Spectre v4 attacks based on
+>   unpriv BPF before this patch and the impact is therefore further
+>   limited.
+>
+> As an alternative to regressing security, one could still reject
+> programs if the architecture does not emit BPF_NOSPEC (e.g., by removing
+> the empty BPF_NOSPEC-case from all JITs except for LoongArch where it
+> appears justified). However, this will cause rejections on these archs
+> that are likely unfounded in the vast majority of cases.
+>
+> In the tests, some are now successful where we previously had a
+> false-positive (i.e., rejection). Change them to reflect where the
+> nospec should be inserted (using __xlated_unpriv) and modify the error
+> message if the nospec is able to mitigate a problem that previously
+> shadowed another problem (in that case __xlated_unpriv does not work,
+> therefore just add a comment).
+>
+> Define SPEC_V1 to avoid duplicating this ifdef whenever we check for
+> nospec insns using __xlated_unpriv, define it here once. This also
+> improves readability. PowerPC can probably also be added here. However,
+> omit it for now because the BPF CI currently does not include a test.
+>
+> Briefly went through all the occurrences of EPERM, EINVAL, and EACCESS
+> in the verifier in order to validate that catching them like this makes
+> sense.
+>
+> [1] https://lpc.events/event/18/contributions/1954/ ("Mitigating
+>     Spectre-PHT using Speculation Barriers in Linux eBPF")
+> [2] https://arxiv.org/pdf/2405.00078 ("VeriFence: Lightweight and
+>     Precise Spectre Defenses for Untrusted Linux Kernel Extensions")
+> [3] https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/runtime-speculative-side-channel-mitigations.html
+>     ("Managed Runtime Speculative Execution Side Channel Mitigations")
+>
+> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+> Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+> Cc: Maximilian Ott <ott@cs.fau.de>
+> Cc: Milan Stephan <milan.stephan@fau.de>
+> ---
 
-Watch out for HTML mail! The mailing list and other automated tools will reject
-it, so some people won't see the whole conversation.
+The patches from here on look good in general, I will ack after taking
+another look later.
 
-> Thanks for the feedback. Regarding your comments:
-> 
-> On Thu, May 1, 2025 at 12:47 AM David Lechner <dlechner@baylibre.com <mailto:dlechner@baylibre.com>> wrote:
-> 
->     On 4/30/25 1:23 PM, Chelsy Ratnawat wrote:
->     > Fixed a typo in "registered" and improved grammar for better readability
->     > and consistency with kernel-doc standards. No functional changes.
->     >
->     > Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com <mailto:chelsyratnawat2001@gmail.com>>
->     > ---
->     >  include/linux/hid-sensor-hub.h | 7 ++++---
->     >  1 file changed, 4 insertions(+), 3 deletions(-)
->     >
->     > diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
->     > index c27329e2a5ad..5d2ac79429d4 100644
->     > --- a/include/linux/hid-sensor-hub.h
->     > +++ b/include/linux/hid-sensor-hub.h
->     > @@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
->     >  /**
->     >  * sensor_hub_remove_callback() - Remove client callbacks
-> 
->     This says "callbacks", so is it possible to have more than one registered at a
->     time?
-> 
->    
->    Regarding the use of "callback" instead of "callbacks", what I understand is- 
->    - The function `sensor_hub_register_callback()` ensures that only one callback is registered for each `(hsdev, usage_id)` pair. If another callback is registered for the same `(hsdev, usage_id)`, it returns `-EINVAL`.
->    - Therefore, `sensor_hub_remove_callback()` is designed to remove that single registered callback for a given `(hsdev, usage_id)` pair. The function does not need to handle multiple callbacks for the same pair, as only one
->      callback is registered at a time. 
->     
->    Please let me know if my understanding is correct, or if you have any additional feedback or suggestions.
+I had a more high-level question though.
+Back when all of this surfaced, compiler folks came up with another
+solution, to rely on Intel's guarantee that conditional moves are not
+predicted.
 
-Based on the reply from Srinivas, it sounds like you understand correctly.
+if (condition) {
+   mask = !condition ? 0UL : ~0UL; // CMOVcc
+   ptr &= mask;
+   x = *ptr;
+}
 
+In case the condition being true in the speculative domain leads to
+problems, the speculative domain will just read from NULL and not leak
+sensitive data.
+The assumption is that cost of instrumentation in speculative domain <
+completely stalling it until prior instructions are done using lfence.
+So speculation is still helpful when the branch is not mispredicted.
+Now I imagine it's not fun to do such analysis in the verifier (I've
+tried), but theoretically we could break it down into emitting
+bytecode from the compiler side, and lifting the compiler to do it for
+us, and ensuring the end result produced is sane (by still following
+speculative paths) from the verifier.
 
+You talk about this in the paper and in the presentation as future work.
+My question is mainly whether you considered implementing this, if
+yes, what made you choose a nospec barrier over something like above?
+Was it the complexity of realizing this during verification?
+Are there any implications of reading from NULL that would cause problems?
+Also, did you characterize how much difference it could make?
+The drop in SCTP throughput seems to suggest so, since CPU-bound
+computation was moved into the program.
+Otherwise most programs mostly defer to helpers for heavy lifting.
+Not that it was as fast as a helper would be, even without nospec, but still.
+
+Also a bit sad we don't split the program into BBs already, which
+could help reduce your mitigation's cost + plus also reduce cost of
+instruction patching (unrelated).
+
+Anyway, all that said, this is valuable stuff, so I was just curious.
