@@ -1,59 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B2B6FB9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 08:44:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AE61D90C8
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 08:50:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746089046; cv=none; b=L6QtSnc9KxvvHf/fUiRjpGhkN/iEkfA6oJ9kYrKr3lYxY9fZxwAMufcXlpsjEFxUNlHFjfyVkfcwhTdDoiy9pxJvGrwQDw17hy3jo0NvJV3LrVzgREb8B1SWAWKNU2/+62787U6N7bZ/5Nplsi7YrjevUr8nrSdZmzVtmDVV+KA=
+	t=1746089428; cv=none; b=XZ2++yEZy3P7+yiGmH0rgV7fQB5v2l/A5hJG2RkccXar0trUhYl+BK2pkNkd8LrNxYUUW56kebrqdpHVyq2ko6HK8/ex1VwaW6sNTTRBXM0JAV5maExpPA6+PMnqknE0QvNIK9CRpmYvE4tgHEBn+9PtyZtigZXcVxjERrZRlcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746089046; c=relaxed/simple;
-	bh=HgTtfiDeuL6k7LMFHyYmTH2TP3r+gys9yzE/2vgGPa4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=gU0XWXY9sIAW6AeY6+8qyHfg+uwfAo/s7X8uQ+BWAkiyq2Uy1sjPUaeVQI5v1U3pW3aE9fp/sBXCNDuVep4GK7DkAWZ3GTPQbH9dRRMQzoKiOmbF+0qy6naeBph9UYvA43tg/8/2YwmBEYEjRmK0FUvTLO/iqQODYbYzjiI2y7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IHtdCxXq; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746089428; c=relaxed/simple;
+	bh=nxO2KECHyHyMFH/HMDoyJvxCzvgc1DV8+CQcb9wuWN8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jmXnDtJL7ZdPMRVaWd1Z0wqeGEjwterAJPEdppvs3IcUZCQdWN6y0pRln+TaC3OFjZWpEhgJecZEHmairnO5VeF4wPaQIm/PhnOzUyToF1VVIwwQcRLsHpO1Ckz62efkeTp2GalU1DhPYnR9NMy0E8kQ/Jyo8UGsLbMpsNoMjbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p6orWX5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QntaoXpy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p6orWX5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QntaoXpy; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IHtdCxXq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746089042; x=1777625042;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=HgTtfiDeuL6k7LMFHyYmTH2TP3r+gys9yzE/2vgGPa4=;
-  b=IHtdCxXqbDsR/yI8Z5JW6qzFB/TjBgh1DF26nm2u/NqNYxyEAz9ubJNP
-   ilgquUaV5SFYO3iLFCOWEGqyke/EIboj/V4nCDJt0xEJJ/4KO1VpF8sQE
-   oRdUD3A7iyaMhqMV34VR6kv3ZowzhIm4FKLSPuagIRbVNiz3/AFJjcnW7
-   aAGmBaLj9JTALRWhfHVCDBSPk1cCH+RuDQDtJmzeYUEXHaQPqJ56R1z3f
-   77j8+qxtjoQLZZs3XG3UWL5WPX3UECAl/KKakSkZ1zalMhZKv4EvoIXjY
-   GXakoB6Z+3qX3oQQx1MFI3t1t3qpAgkrpAnBOTjN3rVFEAw6fnwBo75qn
-   w==;
-X-CSE-ConnectionGUID: MwfJO3q/QNmvyg/wakXF4w==
-X-CSE-MsgGUID: HNquuMnmS5qDOx2TgcrwMA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="58421257"
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="58421257"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 01:44:01 -0700
-X-CSE-ConnectionGUID: j4UxDwk2TZGtiVI7M+4p/A==
-X-CSE-MsgGUID: nTo45WULRUizIFL4JwGGZQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="139518676"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 01 May 2025 01:43:59 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAPWO-00043x-1W;
-	Thu, 01 May 2025 08:43:56 +0000
-Date: Thu, 1 May 2025 16:43:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: arch/arm64/boot/dts/marvell/armada-7040-db.dtb: usb@500000
- (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode',
- 'iommus' were unexpected)
-Message-ID: <202505011646.uykt4V3l-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p6orWX5I";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QntaoXpy";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p6orWX5I";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QntaoXpy"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B8211F388;
+	Thu,  1 May 2025 08:50:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746089419;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
+	b=p6orWX5IrPomBFqQP3tyGwqXRDqAHdN89S6uPu8QinFYCTWfZ3k0WJ3hg2EWriU0LzHPDO
+	8KHynGzipMcBSDv6J85bnfUuw72WBWZTZcmZA8l6jMTj7N1gK04+iKXURnhZgIsmNZhsde
+	Ir80m3EhBSd+DzVbsYbn43oop7VBnHc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746089419;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
+	b=QntaoXpyGckBRK9h3U6A7HPb9az9ovf0QpcDepuVPTnft6nHBf2tYH06Bz4mYt/fVf+zBc
+	rnj8BaZ3oC4sWxAw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=p6orWX5I;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QntaoXpy
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1746089419;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
+	b=p6orWX5IrPomBFqQP3tyGwqXRDqAHdN89S6uPu8QinFYCTWfZ3k0WJ3hg2EWriU0LzHPDO
+	8KHynGzipMcBSDv6J85bnfUuw72WBWZTZcmZA8l6jMTj7N1gK04+iKXURnhZgIsmNZhsde
+	Ir80m3EhBSd+DzVbsYbn43oop7VBnHc=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1746089419;
+	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
+	 cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
+	b=QntaoXpyGckBRK9h3U6A7HPb9az9ovf0QpcDepuVPTnft6nHBf2tYH06Bz4mYt/fVf+zBc
+	rnj8BaZ3oC4sWxAw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3403213931;
+	Thu,  1 May 2025 08:50:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kWQwDMs1E2h8DwAAD6G6ig
+	(envelope-from <dsterba@suse.cz>); Thu, 01 May 2025 08:50:19 +0000
+Date: Thu, 1 May 2025 10:50:13 +0200
+From: David Sterba <dsterba@suse.cz>
+To: Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+	Matthew Wilcox <willy@infradead.org>,
+	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
+	David Hildenbrand <david@redhat.com>,
+	Yosry Ahmed <yosryahmed@google.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
+	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	linux-btrfs@vger.kernel.org, Qu Wenruo <wqu@suse.com>
+Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
+Message-ID: <20250501085013.GL9140@suse.cz>
+Reply-To: dsterba@suse.cz
+References: <20250430181052.55698-1-ryncsn@gmail.com>
+ <20250430181052.55698-3-ryncsn@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,588 +98,61 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20250430181052.55698-3-ryncsn@gmail.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
+X-Rspamd-Queue-Id: 5B8211F388
+X-Spam-Score: -4.21
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.21 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	HAS_REPLYTO(0.30)[dsterba@suse.cz];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	REPLYTO_ADDR_EQ_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[kvack.org,linux-foundation.org,infradead.org,google.com,kernel.org,redhat.com,linux.alibaba.com,gmail.com,cmpxchg.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com];
+	RCVD_COUNT_TWO(0.00)[2];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
+	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:mid,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,infradead.org:email,suse.com:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   4f79eaa2ceac86a0e0f304b0bab556cca5bf4f30
-commit: 93868d5f39530a0521e7ee63305b7b856cac2182 dt-bindings: usb: generic-xhci: Allow dma-coherent
-date:   8 weeks ago
-config: arm64-randconfig-052-20250428 (https://download.01.org/0day-ci/archive/20250501/202505011646.uykt4V3l-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
-dtschema version: 2025.3.dev21+ge6ea659
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505011646.uykt4V3l-lkp@intel.com/reproduce)
+On Thu, May 01, 2025 at 02:10:48AM +0800, Kairui Song wrote:
+> From: Kairui Song <kasong@tencent.com>
+> 
+> folio_index is only needed for mixed usage of page cache and swap
+> cache, for pure page cache usage, the caller can just use
+> folio->index instead.
+> 
+> It can't be a swap cache folio here.  Swap mapping may only call into fs
+> through `swap_rw` but btrfs does not use that method for swap.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
+> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
+> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+> Reviewed-by: Qu Wenruo <wqu@suse.com>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505011646.uykt4V3l-lkp@intel.com/
-
-dtcheck warnings: (new ones prefixed by >>)
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-7k-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-7040-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-db.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-7k-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-7040-mochabin.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: lte_reset: $nodename:0: 'lte_reset' does not match '-hog(-[0-9]+)?$'
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-hog.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: wlan_disable: $nodename:0: 'wlan_disable' does not match '-hog(-[0-9]+)?$'
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-hog.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: lte_disable: $nodename:0: 'lte_disable' does not match '-hog(-[0-9]+)?$'
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-hog.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cpm-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-clearfog-gt-8k.dtb: cp1 (simple-bus): $nodename:0: 'cp1' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cps-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
->> arch/arm64/boot/dts/marvell/armada-8040-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-db.dtb: cp0-usb3-0-phy (usb-nop-xceiv): '#phy-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/usb/usb-nop-xceiv.yaml#
---
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cpm-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cps-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/config-space@f4000000/spi@700680/flash@0: failed to match any schema with compatible: ['st,w25q32']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cpm-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cps-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'iommus' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/config-space@f4000000/spi@700680/flash@0: failed to match any schema with compatible: ['st,w25q32']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-mcbin-singleshot.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cpm-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/interrupt-controller@1e0000/interrupt-controller@50: failed to match any schema with compatible: ['marvell,cp110-icu-sei']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: system-controller@440000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,armada-8k-cps-pinctrl']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('iommus' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/armada-8040-puzzle-m801.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9130-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-db-B.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9131-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-db-B.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/config-space@f6000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/config-space@f6000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/config-space@f6000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-db.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/config-space@f6000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/config-space@f6000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db.dtb: /cp2/pcie@f6600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/config-space@f6000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/config-space@f6000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/config-space@f6000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/config-space@f6000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/config-space@f6000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: pca9555@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
-   	from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-db-B.dtb: /cp2/pcie@f6600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: usb@500000 (marvell,armada-8k-xhci): 'phys' is a dependency of 'phy-names'
-   	from schema $id: http://devicetree.org/schemas/phy/phy-consumer.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: usb@510000 (marvell,armada-8k-xhci): 'phys' is a dependency of 'phy-names'
-   	from schema $id: http://devicetree.org/schemas/phy/phy-consumer.yaml#
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/ac5x-rd-carrier-cn9131.dtb: pca953x@21 (nxp,pca9555): 'pinctrl-0' is a dependency of 'pinctrl-names'
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges', 'sim-select-hog' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'vbus-supply' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
->> arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9130-cf-base.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode', 'vbus-supply' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
->> arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9130-cf-pro.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges', 'm2-full-card-power-off-hog', 'pcie0-0-w-disable-hog' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@41 (nxp,pca9536): 'gpio-controller' is a required property
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@41 (nxp,pca9536): '#gpio-cells' is a required property
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-pca95xx.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: rtc@68 (st,m41t83): Unevaluated properties are not allowed ('reset-gpios' was unexpected)
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges', 'm2-full-card-power-off-hog-0', 'm2-full-card-power-off-hog-1' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9131-cf-solidwan.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/config-space@f2000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges', 'pwm-tacho-irq-hog' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/config-space@f2000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/config-space@f2000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: usb@510000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/config-space@f2000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/config-space@f2000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/pcie@f2600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/pcie@f2620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp0/pcie@f2640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/config-space@f4000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/config-space@f4000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/config-space@f4000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/config-space@f4000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/config-space@f4000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/pcie@f4600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/pcie@f4620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp1/pcie@f4640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: cp2 (simple-bus): $nodename:0: 'cp2' does not match '^([a-z][a-z0-9\\-]+-bus|bus|localbus|soc|axi|ahb|apb)(@.+)?$'
-   	from schema $id: http://devicetree.org/schemas/simple-bus.yaml#
---
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/config-space@f6000000/system-controller@440000/clock: failed to match any schema with compatible: ['marvell,cp110-clock']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@100 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges', 'm2-wwan-reset-hog' were unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: gpio@140 (marvell,armada-8k-gpio): Unevaluated properties are not allowed ('gpio-ranges' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/gpio/gpio-mvebu.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/config-space@f6000000/system-controller@440000/pinctrl: failed to match any schema with compatible: ['marvell,cp115-standalone-pinctrl']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: system-controller@400000 (syscon): compatible: ['syscon', 'simple-mfd'] is too short
-   	from schema $id: http://devicetree.org/schemas/mfd/syscon-common.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/config-space@f6000000/system-controller@400000/thermal-sensor@70: failed to match any schema with compatible: ['marvell,armada-cp110-thermal']
->> arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: usb@500000 (marvell,armada-8k-xhci): Unevaluated properties are not allowed ('dr_mode' was unexpected)
-   	from schema $id: http://devicetree.org/schemas/usb/generic-xhci.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/config-space@f6000000/spi@700600: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/config-space@f6000000/spi@700680: failed to match any schema with compatible: ['marvell,armada-380-spi']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: crypto@800000 (inside-secure,safexcel-eip197b): 'dma-coherent' does not match any of the regexes: 'pinctrl-[0-9]+'
-   	from schema $id: http://devicetree.org/schemas/crypto/inside-secure,safexcel.yaml#
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/pcie@f6600000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/pcie@f6620000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-   arch/arm64/boot/dts/marvell/cn9132-clearfog.dtb: /cp2/pcie@f6640000: failed to match any schema with compatible: ['marvell,armada8k-pcie', 'snps,dw-pcie']
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+The patch is from a series but seems to be independent. I'd like to take
+it through the btrfs tree unless you have other work that depends on it.
