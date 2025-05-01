@@ -1,51 +1,51 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A0C1EC5
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 11:15:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 483AB132103
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 11:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746098136; cv=none; b=Jl2a3JHctlgEyXchbRZR27fXfhQnuZCqMbmoetMxil7XicjpeqYwxeCESCbfUE20K4M5XatJSRpYn04/BcV33XfmBTeIvgt20lg/of3l+qhGzjGqWrXHFlZ1ru803feN0NWy3EZlNNhSb+LzJYOXSH1600Y0t3MpgWC+lSriHts=
+	t=1746098136; cv=none; b=Dy6zMpFjjeEnyOSEivnRQpS6hyLraK/zgXjaHWb1g7RRk/Fai+If8oIkdQQJtVyPvfDiswF6OoTLa334xffTcUIAUHVoFb/XEzSGGxmYCGNqIfxD2ix3V42hSw1sloax0xxM4SVWMKoYpSsFA6h5YI+JVFmUGFX2npqNAmr0VqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746098136; c=relaxed/simple;
-	bh=HfYmV26FgnTt04PVF4jjki/yie5n1YWzt+JcQ2Pae7U=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ciNT0rGwThKBx97p5DrmLoDWQ+0QrF4B4kPb4OmbHQ8VdvIIFeJkfZ+Zi5KCngrvJfVaM6NYXRDm0BW9OAqYRVqyutLaGt2zJKDcCt5YdK+SUg4MdyS2t1B82Aw3ML5c9RitfebgE1Slz8eMM+BXgfH5WQTVjaDGRr3mSr11pu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+	bh=6si4bwMTyNg9XFuzkNj4+7zAaldEWCOxtzHwQDH4rdM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=NujOX2WbXHhCLYZN1VavCqXIJbjgCqGljZibn0Va+136h5LwikkIu0pscCVOk05715BupALO0Q+YQl49MJAiHT5I0nfTRPuMJwEaJhbCN7YjCbOJZr6ae1HZS1fcgdZU2iGPR2qXzYNi1bjbcgQ9HqhvqfH9B6dB4KrQPpMa+WY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d8dd0c9143so13446705ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 04:15:34 -0700 (PDT)
+Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85dad58e80fso219486139f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 04:15:35 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1746098134; x=1746702934;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2V0s1pgtJHSE9wqQW/OwlUPcwO/vYFoDmb+3YSftYxg=;
-        b=xQBdyyu5mHiGdU+wJYpfPztveRRwQE/5yF5uYN+B53WEAIONUqumgjootL5fdRwTRj
-         EaZ98nLREzyrnGGXkPlMv7hTx3w3Ij6f2PHMu6ELY9FsciLydoCE+z4hZqDDkfmK+FiL
-         46PlnzN2qai8yEFADZ8wjeaDGEXdygzg02XUpLKRZxjtdR9pquseZPneK1797GBid9ax
-         4i5N9WpazgrqwjYU9MVlzkBbJX4b9UBjpC0Miw4mPGuIbThjCLaqjZ/3Tw5dCPUENdtq
-         7Jk7MmML6/n5TGjsV6laIvtpsWogYmOTra/mtfUhYSKXJMYaIJOsBIeZcgpcJ9r4FZa5
-         lofw==
-X-Forwarded-Encrypted: i=1; AJvYcCVjqTezz2jxNUE2r6s9ez7b3cBnrT1Uzi2s3M5jtnS1ZxMVeLnTMD0T6WzwSCeWP0n8a3dxnNpg6FUHsZ4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhNG0OVkowqUV7RYToZms0Oekp8tMKv/3JHhP2/Nk0lahaq8cw
-	FssL6TgKXruwr7HO9cHvqRkHEXV1KKxcv86GZdrcquERDxRvYC35myobjIJTxCtiGrUqaQvNYzz
-	CxWPiWyJ1WHMAcemviJYwnEZfArzC0tBF4mKj36nK22tPJHML7aoEsm8=
-X-Google-Smtp-Source: AGHT+IHonOfHpP5MZOdlqgVcIeE9FlZO4d6JZ3BDdp5KDONBJLJOF/2fNqWptp6KT9+D+KJRwpCgnNsmohPvx8dpVolIwtg1osug
+        bh=LoUmlDq7AI/086IvXltVC6q/6CNGeKisLsJdMYbrqng=;
+        b=J1fi39Z5b3Fi5w/cuelSJB4XqKRy5kiOYruZNZq///V/AJxNSrKE5AKKSvLLF66f7j
+         1VPn1ZRUAEYHYnB65cR0hvVYmd/JeWCDNhIofmGPOPxIVAhcFMr/2fiw4635ZpYSMLaL
+         rRz/2voqQPbQN2c1v1OEodKxXKIKAZJ/QRA7rTdY5suDQEF3I20+ikD09z3JI3dLG5X+
+         vmo9vm6c0D2d9ddriR9hiEEZ4g7pZyU2BWF/ZIfADFKFPPz4wO3Df7zbZ2oHC0bIEpxR
+         b4WiuZzeBPiU59ELxPFiTJ/jqP3Jv1WTAyPyg/gnpCFbttBP6Nrqkt1VL86OKeQ2ez4z
+         RUWg==
+X-Forwarded-Encrypted: i=1; AJvYcCX5b37Ln3m7fWorqAGDqbH8ObzEBYY53d5XlnzyL1Rl880SJEmUcDcYnMhiA9SnlU7i+4OeD77bdt76oOI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyvy/UtYA4AOkeTfu8APS7M79f15+9snu5iDRzJdXi1idAkhpaj
+	vpUoXOfrI5ejogT+Rv64H9S85ZHXxKXewWcggLs7zjG9ZmK/czCbKjPPbxrRpVuoxHVk6GTTMzK
+	LiMXSlXy4DCauzT8UMHTdwU0veXuJu31kB+vspF6kZ6AVQOY/0DAUjmw=
+X-Google-Smtp-Source: AGHT+IEA5wrX/+eXqQmZ008i0MpjHTrbzUPmpKrPPgBEHz1xEZ+mosVEXCLIeY+0jx5fWJ/K/6gKAREH9dZ2krJUqT4NpO+Fb5T1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d91:b0:3d9:666f:486d with SMTP id
- e9e14a558f8ab-3d9702672eemr25892835ab.15.1746098134220; Thu, 01 May 2025
+X-Received: by 2002:a05:6e02:1f05:b0:3d8:1cba:1854 with SMTP id
+ e9e14a558f8ab-3d970198c59mr31300525ab.1.1746098134443; Thu, 01 May 2025
  04:15:34 -0700 (PDT)
 Date: Thu, 01 May 2025 04:15:34 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681357d6.050a0220.14dd7d.000b.GAE@google.com>
-Subject: [syzbot] [net?] WARNING in ipv6_addr_prefix
-From: syzbot <syzbot+9596c1b9df18e0ae7261@syzkaller.appspotmail.com>
+Message-ID: <681357d6.050a0220.14dd7d.000c.GAE@google.com>
+Subject: [syzbot] [net?] UBSAN: array-index-out-of-bounds in ipv6_addr_prefix
+From: syzbot <syzbot+e4eec4b8584ac3f936e5@syzkaller.appspotmail.com>
 To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
 	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
 	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
@@ -57,12 +57,12 @@ syzbot found the following issue on:
 
 HEAD commit:    5565acd1e6c4 Merge git://git.kernel.org/pub/scm/linux/kern..
 git tree:       net-next
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=1178cecc580000
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=12f19574580000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=2e3745cb659ef5d9
-dashboard link: https://syzkaller.appspot.com/bug?extid=9596c1b9df18e0ae7261
+dashboard link: https://syzkaller.appspot.com/bug?extid=e4eec4b8584ac3f936e5
 compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122efd9b980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e99574580000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10207fcf980000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f19574580000
 
 Downloadable assets:
 disk image: https://storage.googleapis.com/syzbot-assets/80798769614c/disk-5565acd1.raw.xz
@@ -70,51 +70,49 @@ vmlinux: https://storage.googleapis.com/syzbot-assets/435ecb0f1371/vmlinux-5565a
 kernel image: https://storage.googleapis.com/syzbot-assets/7790d5f923b6/bzImage-5565acd1.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+9596c1b9df18e0ae7261@syzkaller.appspotmail.com
+Reported-by: syzbot+e4eec4b8584ac3f936e5@syzkaller.appspotmail.com
 
-UDPLite6: UDP-Lite is deprecated and scheduled to be removed in 2025, please contact the netdev mailing list
 ------------[ cut here ]------------
-memcpy: detected field-spanning write (size 898) of single field "pfx->in6_u.u6_addr8" at ./include/net/ipv6.h:614 (size 16)
-WARNING: CPU: 0 PID: 5838 at ./include/net/ipv6.h:614 ipv6_addr_prefix+0x124/0x1d0 include/net/ipv6.h:614
-Modules linked in:
-CPU: 0 UID: 0 PID: 5838 Comm: syz-executor414 Not tainted 6.15.0-rc3-syzkaller-00557-g5565acd1e6c4 #0 PREEMPT(full) 
+UBSAN: array-index-out-of-bounds in ./include/net/ipv6.h:616:21
+index 16 is out of range for type 'const __u8[16]' (aka 'const unsigned char[16]')
+CPU: 0 UID: 0 PID: 5837 Comm: syz-executor401 Not tainted 6.15.0-rc3-syzkaller-00557-g5565acd1e6c4 #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-RIP: 0010:ipv6_addr_prefix+0x124/0x1d0 include/net/ipv6.h:614
-Code: cc e8 70 eb af f7 c6 05 b8 a8 59 05 01 90 b9 10 00 00 00 48 c7 c7 a0 86 7d 8c 4c 89 fe 48 c7 c2 c0 8d 7d 8c e8 4d 4a 74 f7 90 <0f> 0b 90 90 e9 33 ff ff ff e8 3e eb af f7 44 89 e6 48 c7 c7 c0 53
-RSP: 0018:ffffc90003eb7920 EFLAGS: 00010246
-RAX: 8f8f704687b6a900 RBX: ffff8880337f5c50 RCX: ffff88803326da00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
-RBP: 0000000000000000 R08: ffffc90003eb7607 R09: 1ffff920007d6ec0
-R10: dffffc0000000000 R11: fffff520007d6ec1 R12: 0000000000000382
-R13: 1ffff920007d6f4e R14: ffffc90003eb7a84 R15: 0000000000000382
-FS:  0000555594768380(0000) GS:ffff8881260b2000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000055d1681c9000 CR3: 0000000078e3e000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
  <TASK>
- ip6_route_info_create+0x5cc/0xa70 net/ipv6/route.c:3810
- ip6_route_add+0x29/0x2f0 net/ipv6/route.c:3902
- ipv6_route_ioctl+0x35c/0x480 net/ipv6/route.c:4539
- inet6_ioctl+0x219/0x280 net/ipv6/af_inet6.c:577
- sock_do_ioctl+0xd9/0x300 net/socket.c:1190
- sock_ioctl+0x576/0x790 net/socket.c:1311
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:906 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:892
+ dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+ ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+ __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+ ipv6_addr_prefix+0x145/0x1d0 include/net/ipv6.h:616
+ ip6_route_info_create+0x629/0xa70 net/ipv6/route.c:3814
+ ip6_route_mpath_info_create net/ipv6/route.c:5393 [inline]
+ ip6_route_multipath_add net/ipv6/route.c:5519 [inline]
+ inet6_rtm_newroute+0x578/0x1c70 net/ipv6/route.c:5710
+ rtnetlink_rcv_msg+0x7cc/0xb70 net/core/rtnetlink.c:6955
+ netlink_rcv_skb+0x219/0x490 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x758/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x219/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
  do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fa5ecea7369
+RIP: 0033:0x7fc65575d369
 Code: 48 83 c4 28 c3 e8 37 17 00 00 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff70ec1b18 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fff70ec1ce8 RCX: 00007fa5ecea7369
-RDX: 0000200000000340 RSI: 000000000000890b RDI: 0000000000000003
-RBP: 00007fa5ecf1a610 R08: 0000000000000000 R09: 00007fff70ec1ce8
+RSP: 002b:00007fff8937e028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fff8937e1f8 RCX: 00007fc65575d369
+RDX: 0000000000000000 RSI: 0000200000000000 RDI: 0000000000000003
+RBP: 00007fc6557d0610 R08: 0000000000000000 R09: 00007fff8937e1f8
 R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000001
-R13: 00007fff70ec1cd8 R14: 0000000000000001 R15: 0000000000000001
+R13: 00007fff8937e1e8 R14: 0000000000000001 R15: 0000000000000001
  </TASK>
+---[ end trace ]---
 
 
 ---
