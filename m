@@ -1,117 +1,167 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33EFE235069
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 19:50:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2ADD235047;
+	Thu,  1 May 2025 19:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129008; cv=none; b=kCG/KCOgDc0ITlFD8M8n2UFZE1gpc0dBP82EgtfMckaa2M8E/2ERzVC/Lh7qsBXiwoIFCGItKBVlHUSSSw/cOLtwbuCdCPQqGaFUA/8t4SIg2u22HgV8mZzdVoILGmrbc/EFPZ1trd/s/V6JO7uA47Sr8RtvpqNXVU9YdHOIlMk=
+	t=1746129030; cv=none; b=X1YexFui4b9fmJtIJogqsJ9rhFcGnrTRsz4tleIrfN8n94zVMZ7UJt03AYN9Q+Cj8r73VkmXkbEXBoujz9YqkX9+C3r15s6d4fFEOBzb+Uf9b3GEGipML7XGrhbxl4HeOhruC40zwELy2hgwvQiMMtJ+53Dd6LrUXfigZhSvvZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129008; c=relaxed/simple;
-	bh=2+apnvaLBiIzvCpdS7UmoaeaZD+fLMfXuixakTq8zyk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ttDioLIlvsytTqqdKAzQrIBi6oyk4mf7UYMWtJorXkwtJS7uE51njZyLk47ebeVLe8+XlX6y7eQ3DTaXuAb13o3Pq3JFkXP0mdfU/5EvAgfYB+aX9dMY3LQijkNgW7/9OBAlWV5VxNyM5/G8gic3G/Tk3aArCg+wI8ThUylVj10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bpFTZwi5; arc=none smtp.client-ip=209.85.214.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746129030; c=relaxed/simple;
+	bh=9RoNPI+kBpr/xIAzqLITkYQ3U2KM3NrSldLJ4O4+PC0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohl20UZUBo84Cj7cYz5OASbEn/us+e5y3qWMd8Fb0CWpVgdhfvQ1a675Vm6WX3GMHUD+GsS/I0dXwzS7r+JXzXKU2PeDEBPJvGlBRfsNZKVf80OfjN9kzmiGzPuagsp+tvi63LTd6LBHUITJFXltrCYZ4y8o53n3682RmurRS7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J3VGFk5X; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bpFTZwi5"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-22406ee0243so9864025ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 12:50:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746129006; x=1746733806; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WkPY+IyOhaPmE7ksJuei+YjVRdCjQvuKQAGefphhn0=;
-        b=bpFTZwi50S7LXvNlzOnQyeJuZ3GZGCohxBKXiVlskaDx/TglZ6YLxjgD5TbjwYg2OT
-         1vnxEC0B8DsTpdb983vd5QpSGyvSbLC+SNQAxp8ng66soqc2wq0fCcsGFI6hxHs1iPsX
-         p6MBNFfFmKMNp7tYdpNqwiVKJV6PwAupUIwgbPKsb0jPIy+mbE9O1ypO/6nKS7xyh7dX
-         HITdMRVW9o6/OpFntqpsZTb5khSgDcbAZYj9DQUNo7vIaUhCJjD9BRz8MGLn36u6tGAH
-         PjM2TOBNxUJf6KbK49spwKpvFHGv46S3Sxg07b2CeQjefTHSNjsFUN/tr3nNPhfNPmGr
-         AWpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746129006; x=1746733806;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5WkPY+IyOhaPmE7ksJuei+YjVRdCjQvuKQAGefphhn0=;
-        b=Cvs9A/76anGOEEl+ws+0nda9roY127SVPmtCNhZavhnYuI5Sgc4rP2uZEr4WuKuSe6
-         YZUBAZwcgGLVjXyXruj4lhb9wPoWQzVFEhTT07CPMGW/JRw3aeDAsBZoYyWTVDCV4KI5
-         dj90l8dWLrEQyb/aWGmTjUnNCcH0VHPenzA15gcYJybD0Nze7wQpVH6Sk4SGsjSlp6FE
-         ziDXnZB4Sc4DQKkItbK/bZ7yMM1mKWXlQ2aQbSRF83+FOf4Sam0CslVzNJtRPYVYxDLl
-         4mx1RByjo5lYJfsk/9WUmsktwVgg/F8VcgWgC/5Pdf6+uQiIp4LDHAKI1MuSoJb72zT8
-         Oa+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUPmGDWoA43BdcA4ws1GaiEHzOqQJyCcJMGLi390dC6RPXnux09WRaeLs+E6dgdNLjV+z2EIEQYLPAxs70=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIKQOPXTNq8OT9db+VyslSxkI47zckDVHEGZA3CtF8+4w5csXH
-	rZ+/vmxBaWW0OrJoMXo+W880VcK2AqPATuPwGVZNUc3D4wZ7HbtLeCt09Lso6tiPGzvhrfRwsVJ
-	KiA==
-X-Google-Smtp-Source: AGHT+IHPnH1hW0IfvKQ+lBW/azDi6UujtOpIW5dmyw0EC5ljOGt6t59+v/zFX71H5UcxugE1fcSMml30hc0=
-X-Received: from pjbsq5.prod.google.com ([2002:a17:90b:5305:b0:308:6685:55e6])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:cf0c:b0:21f:2ded:76ea
- with SMTP id d9443c01a7336-22e103b4341mr4441965ad.36.1746129006451; Thu, 01
- May 2025 12:50:06 -0700 (PDT)
-Date: Thu, 1 May 2025 12:50:04 -0700
-In-Reply-To: <20250501124646.GC4356@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J3VGFk5X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746129029; x=1777665029;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=9RoNPI+kBpr/xIAzqLITkYQ3U2KM3NrSldLJ4O4+PC0=;
+  b=J3VGFk5X91dyWAJa1SNFli5UjrxPV0Z1VG23XMUkptlKvgF3T4yn5pCx
+   JWiQDXMj41AJcnliTLiY1pw4jVrMon5rKhKE+oaNgyX+dXp2P5FdOSJAP
+   ETio0VFCMJ0RyRn1TPPX8nrewIMOtMcaO9fhQ8H9RxYpL4qN56OKe7ugU
+   JQJI2+a+N9FYuJSYXLjdAJCFdqI1vb9sFLJEdv2g68/deCCgj3c2CZhkh
+   AuCAK5H6+wg56XNJOwcSROr5ymkZs9ztbrJL6G0r5sOO/yFEV7gSEd2Xj
+   WXkUJ6DAYYBp9SSLAZjWx57rc8O9pwu6NX/Zs7f2R3/gqPAhKjg0FZJzL
+   w==;
+X-CSE-ConnectionGUID: bhxExtwWSYee8HrKZ5NbqA==
+X-CSE-MsgGUID: GMTgRhpBRB6ZrDpAdYRDmg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47901150"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="47901150"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 12:50:28 -0700
+X-CSE-ConnectionGUID: iDbJK2u9SF6NDYMBjGFTjQ==
+X-CSE-MsgGUID: LdBwbA50RUKCYfaMFrpm5g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="139276610"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 01 May 2025 12:50:24 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAZvK-0004M7-28;
+	Thu, 01 May 2025 19:50:22 +0000
+Date: Fri, 2 May 2025 03:50:15 +0800
+From: kernel test robot <lkp@intel.com>
+To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, dlechner@baylibre.com,
+	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com
+Subject: Re: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and
+ RTD sensors
+Message-ID: <202505020345.iJUIBTwt-lkp@intel.com>
+References: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <cover.1729073310.git.lorenzo.stoakes@oracle.com>
- <c083817403f98ae45a70e01f3f1873ec1ba6c215.1729073310.git.lorenzo.stoakes@oracle.com>
- <a3778bea-0a1e-41b7-b41c-15b116bcbb32@linuxfoundation.org>
- <a6133831-3fc3-49aa-83c6-f9aeef3713c9@lucifer.local> <5b0b8e1e-6f50-4e18-bf46-39b00376c26e@nvidia.com>
- <20250501114235.GP4198@noisy.programming.kicks-ass.net> <20250501124646.GC4356@noisy.programming.kicks-ass.net>
-Message-ID: <aBPQbNlccOPoS5Nu@google.com>
-Subject: Re: [PATCH v3 3/3] selftests: pidfd: add tests for PIDFD_SELF_*
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: John Hubbard <jhubbard@nvidia.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Shuah Khan <skhan@linuxfoundation.org>, Christian Brauner <christian@brauner.io>, 
-	Shuah Khan <shuah@kernel.org>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Vlastimil Babka <vbabka@suse.cz>, pedro.falcato@gmail.com, 
-	linux-kselftest@vger.kernel.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Oliver Sang <oliver.sang@intel.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
 
-On Thu, May 01, 2025, Peter Zijlstra wrote:
-> On Thu, May 01, 2025 at 01:42:35PM +0200, Peter Zijlstra wrote:
-> > On Wed, Oct 16, 2024 at 07:14:34PM -0700, John Hubbard wrote:
-> > > Peter Zijlstra's "NAK NAK NAK" response [1] last year was the most
-> > > colorful, so I'll helpfully cite it here. :)
-> > 
-> > Let me re-try this.
-> > 
-> > This is driving me insane. I've spend the past _TWO_ days trying to
-> > build KVM selftests and I'm still failing.
-> > 
-> > This is absolute atrocious crap and is costing me valuable time.
-> > 
-> > Please fix this fucking selftests shit to just build. This is unusable
-> > garbage.
-> 
-> So after spending more time trying to remember how to debug Makefiles (I
-> hate my life), I found that not only do I need this headers shit, the
-> kvm selftests Makefile is actively broken if you use: make O=foo
-> 
-> -INSTALL_HDR_PATH = $(top_srcdir)/usr
-> +INSTALL_HDR_PATH = $(top_srcdir)/$(O)/usr
-> 
-> 
-> And then finally, I can do:
-> 
-> make O=foo headers_install
-> make O=foo -C tools/testing/selftests/kvm/
+Hi Marcelo,
 
-This doesn't actually work either, because for whatever reason, the selftests
-infrastructure uses OUTPUT, not O, for the output directory.
+kernel test robot noticed the following build warnings:
 
-And the whole top_srcdir crud doesn't work if O/OUTPUT is completely out-of-tree,
-e.g. I use absolute paths that have nothing to do with the source tree.
+[auto build test WARNING on 1c2409fe38d5c19015d69851d15ba543d1911932]
 
-I am more than happy to support any cleanup of KVM selftests, but I've more or
-less given up myself because so much of the ugliness is inhereted from selftests.
-I've resorted to hacked wrappers to make it work for my setup.  E.g. I force
-KHDR_INCLUDES and INSTALL_HDR_PATH so that make doesn't try to grab usr/ files
-from the source tree.
+url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250428-222010
+base:   1c2409fe38d5c19015d69851d15ba543d1911932
+patch link:    https://lore.kernel.org/r/3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt%40analog.com
+patch subject: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and RTD sensors
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20250502/202505020345.iJUIBTwt-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505020345.iJUIBTwt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505020345.iJUIBTwt-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/iio/adc/ad4170.c: In function 'ad4170_setup_current_src.isra':
+>> drivers/iio/adc/ad4170.c:1881:29: warning: 'current_src' is used uninitialized [-Wuninitialized]
+    1881 |                 current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK, pin);
+         |                             ^~
+   drivers/iio/adc/ad4170.c:1875:22: note: 'current_src' was declared here
+    1875 |         unsigned int current_src, i, j;
+         |                      ^~~~~~~~~~~
+
+
+vim +/current_src +1881 drivers/iio/adc/ad4170.c
+
+  1869	
+  1870	static int ad4170_setup_current_src(struct ad4170_state *st,
+  1871					    struct fwnode_handle *child,
+  1872					    struct ad4170_setup *setup, u32 *exc_pins,
+  1873					    int num_exc_pins, int exc_cur, bool ac_excited)
+  1874	{
+  1875		unsigned int current_src, i, j;
+  1876		int ret;
+  1877	
+  1878		for (i = 0; i < num_exc_pins; i++) {
+  1879			unsigned int pin = exc_pins[i];
+  1880	
+> 1881			current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK, pin);
+  1882			current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_VAL_MSK, exc_cur);
+  1883	
+  1884			for (j = 0; j < AD4170_NUM_CURRENT_SRC; j++) {
+  1885				/*
+  1886				 * Excitation current chopping is configured in pairs.
+  1887				 * If current chopping configured and the first end of
+  1888				 * the current source pair has already been assigned,
+  1889				 * skip to the next pair of output currents.
+  1890				 */
+  1891				if (ac_excited && j % 2 != 0)
+  1892					continue;
+  1893	
+  1894				if (st->cur_src_pins[j] == AD4170_CURRENT_SRC_DISABLED) {
+  1895					st->cur_src_pins[j] = pin;
+  1896					break;
+  1897				}
+  1898			}
+  1899			if (j == AD4170_NUM_CURRENT_SRC)
+  1900				return dev_err_probe(&st->spi->dev, -EINVAL,
+  1901						     "Failed to setup IOUT at pin %u\n",
+  1902						     pin);
+  1903	
+  1904			ret = regmap_write(st->regmap, AD4170_CURRENT_SRC_REG(j),
+  1905					   current_src);
+  1906			if (ret)
+  1907				return ret;
+  1908		}
+  1909	
+  1910		if (ac_excited && num_exc_pins > 1) {
+  1911			unsigned int exc_cur_pair;
+  1912	
+  1913			if (st->cur_src_pins[0] == exc_pins[0])
+  1914				exc_cur_pair = 1;
+  1915			else
+  1916				exc_cur_pair = 2;
+  1917	
+  1918			/*
+  1919			 * Configure excitation currents chopping.
+  1920			 * Chop two pairs if using four excitation currents.
+  1921			 */
+  1922			setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_IEXC_MSK,
+  1923						  num_exc_pins == 2 ? exc_cur_pair : 3);
+  1924		}
+  1925	
+  1926		return 0;
+  1927	}
+  1928	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
