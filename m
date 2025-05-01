@@ -1,120 +1,116 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6EE1EB5FA
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B2EEEA8;
+	Thu,  1 May 2025 01:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746061509; cv=none; b=NaLNkY9ootgcFX/VOQNB3M4C6kacdFZfDnhNWYdN/vucU6PgZh2Dx+wdaH8MGzRfcWruXn6u2uELvnO3ljvfvVV+AG5H+sdjh7NIrkE1YAebhmXElEHYUUQSxx8+qjzKDwuuKADuzkJnkISfylBtYgRrPgXf+oWbnNOLQiu1eYU=
+	t=1746061699; cv=none; b=q+BoPiTizaQ+h04rvzfT8ehQ5naX5b/syAZ1dXdAS5VLqeucq80AzCqhvlx9/ane6mJXJ4sw3wIzqXHJErWtmyPnlDwXfFKNXOnXNkUDTFGMAdkBQ9uEcSgplzmA/bfzucsN6Tdt9LiBZTBEVfak2lxplqxxb2+k7Pt85VGZlWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746061509; c=relaxed/simple;
-	bh=Qz+FqJ8/BCWLX/x147Js0nV8H0QqmqxrG1bXp3vVvVU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kaJDM7UJf4khfekur2xmsSNQnlCmL2JtAFKepLobLA+fFJCVXjj5wExZHTJgygBfyh1eIXiM3eiDHP2NYFzxkYoe2Ecvbm0Eof0bkDt4T81RTyJMKjWX1UjQOVqnOVo+psyn0EeZ6XzIn45XSlXuxLABF6EjAbZLJ4QuSNvva7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=TGGa5h3C; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1746061699; c=relaxed/simple;
+	bh=elp5GQjJUxxs6xFp0oVaIfuIwf9JHy3bnbAcxCGwHtQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=qtFzh5lYTciO1rqIoIsZ6BkoAM4Fnblocqkre0qCyEHcJ57dvnEvTP+Ns27mTxx2wnopB2y1Xq2K2YBhXDounWwtFZuZjvhjaC3g/xzfEzEWwRy6Is+VK3MlEIG/sNLvafZ9Z2zCN5yOzLmdXD/KU3lTanz2DC0xwirU4uEAKRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ntVgXX02; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="TGGa5h3C"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
-	:Subject; bh=tqh/nkQtiITS5axq2YgCjKqZg6ygTRV+qeDMgtW8F+U=; b=TGGa5h3C4i85hRsU
-	QsTn0RrGdU7+v9uWZq67JHu/oeBIiYAF9gdu6Kwyw5d7nnFUxgfdsB1vz3XbqEQMUM1Rt1g07UXZo
-	IrZmLbMfWE3EwOimChTQgs0m7Wi9V8kyzgFbVFCRgFkyTZJ2NN918TYK2IHntuNS6ypcOHOkkgh1P
-	KyctJaMH/wthFhPgPyFiHza5hEyZQRSm0WCx2Mp+fcXYPwMdVcu8rA/3LBBRNFOmXOFtRNxWHRZDf
-	S2DuDHecQUWqpUo/Jfjyzz6QV4EIRcmxDbYCYBZwQAUSh2e5qwZBruv+KBe6SOnWDOlSr1UUXrBUY
-	zPY/lSbwWPuV4CHjTg==;
-Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
-	by mx.treblig.org with esmtp (Exim 4.96)
-	(envelope-from <linux@treblig.org>)
-	id 1uAIMJ-000ooN-1m;
-	Thu, 01 May 2025 01:05:03 +0000
-From: linux@treblig.org
-To: akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	"Dr. David Alan Gilbert" <linux@treblig.org>
-Subject: [PATCH] lib/oid_registry.c: Remove unused sprint_OID
-Date: Thu,  1 May 2025 02:05:02 +0100
-Message-ID: <20250501010502.326472-1-linux@treblig.org>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ntVgXX02"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGoKHO012269;
+	Thu, 1 May 2025 01:07:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	rfPplkV4+kk+UmnwtmcptadSkNK7L/gXCtp5juv5io4=; b=ntVgXX0261+vbAY8
+	DRG7Gln7RsCFcYxzmx9JbUfRIlx4nJjoxyL16fJH5Yi1d6QhgznteXUnzjeaTJRd
+	00K9kTCIiI1JQdVgbIy2n5lKxoE6stgzt6Tn66RgI0T07ApE9pWakuYd+1CQUheg
+	kH7IjWpOpz1vCmyKFmj9w+9L3xnfHO74yls7D++ePgpbQDDWzAWCO8MEcNFV+RXe
+	FiY7/lnM9P2tnYLKACzVOeOmCTVGB034R5QzFm2Q+P6LYAG7CvQVCU6dlpRarFC1
+	qWDJE+Q7phmvkyq/4P4gHcIeNUsWK1sbEdD81gMcnm9jj9nCmWU4L2OA4UNV13di
+	NHzGUA==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u3v0yc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 01:07:59 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 54117wbG014451
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 1 May 2025 01:07:58 GMT
+Received: from [10.71.110.123] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
+ 2025 18:07:57 -0700
+Message-ID: <65ab1bc6-b17a-405d-897b-da17522820dc@quicinc.com>
+Date: Wed, 30 Apr 2025 18:07:56 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/4] drm/msm/dp: Account for LTTPRs capabilities
+To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+        Dmitry Baryshkov
+	<lumag@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <freedreno@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, <dmitry.baryshkov@oss.qualcomm.com>
+CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        "Marijn
+ Suijten" <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <laurentiu.tudor1@dell.com>, <abel.vesa@linaro.org>,
+        <johan@kernel.org>, Johan Hovold
+	<johan+linaro@kernel.org>
+References: <20250430001330.265970-1-alex.vinarskis@gmail.com>
+ <20250430001330.265970-3-alex.vinarskis@gmail.com>
+Content-Language: en-US
+From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+In-Reply-To: <20250430001330.265970-3-alex.vinarskis@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=Bv6dwZX5 c=1 sm=1 tr=0 ts=6812c96f cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=pGLkceISAAAA:8
+ a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=p9MYPHDGo_sz-XGRfLYA:9 a=QEXdDO2ut3YA:10 a=zgiPjhLxNE0A:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: VEArPc4JIx7eiAnMoFNOXZBUPuloPUQu
+X-Proofpoint-ORIG-GUID: VEArPc4JIx7eiAnMoFNOXZBUPuloPUQu
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDAwNiBTYWx0ZWRfX3CYux2kkANWw PB4ZndMlh6Vrz9bjU806nk0aB5edum+H4/qfi32ongLkQE+H93IwSsxlRSm/s2O3uu89ewguofJ njSZXw8ABKIQ5HLNsqlGvheKHnNP8s/jOkPVbs0YsAwxdMHWmW44Ho9NRAg8avMJePBAI+uaoCW
+ 9wYrHmrkS0LTt0C9FA+lvBM24V/8/oTPQc+LPyvnl6gGfElngw44VzkAxJ4ELxd/F7PBiOMYuiz 8W4aKYERJHwUmTaD3jmfMB6Raeb/3aDrATAGuD3wfSzh/2S+BblV0+mJpv0P3fe4KA744yXmu3P 2VSany74TxZnQ7ZGWZA4RfXDPkjCofg7CTdAVSbG8CS4Hd0JhlrOHcsgb4VV3xAxnCWie+p5lty
+ CmQndizqaaR6Kt2C98w8MMvJMEKwmEPoh1dMXroChXQTZIAksqXUK2yH/0pIPruMofmdvmbI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-04-30_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=962 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505010006
 
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-sprint_OID() was added as part of 2012's
-commit 4f73175d0375 ("X.509: Add utility functions to render OIDs as
-strings")
 
-but hasn't been used.
+On 4/29/2025 5:09 PM, Aleksandrs Vinarskis wrote:
+> Take into account LTTPR capabilities when selecting maximum allowed
+> link rate, number of data lines.
+> 
+> Fixes: 72d0af4accd9 ("drm/msm/dp: Add support for LTTPR handling")
+> 
+> Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Signed-off-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+> Tested-by: Johan Hovold <johan+linaro@kernel.org>
+> Tested-by: Rob Clark <robdclark@gmail.com>
+> ---
+>   drivers/gpu/drm/msm/dp/dp_display.c |  5 ++---
+>   drivers/gpu/drm/msm/dp/dp_link.h    |  3 +++
+>   drivers/gpu/drm/msm/dp/dp_panel.c   | 12 +++++++++++-
+>   3 files changed, 16 insertions(+), 4 deletions(-)
+> 
 
-Remove it.
+Nice!
 
-Note that there's also 'sprint_oid' (lower case) which is used
-in a lot of places; that's left as is except for fixing its
-case in a comment.
-
-Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
----
- include/linux/oid_registry.h |  1 -
- lib/oid_registry.c           | 25 +------------------------
- 2 files changed, 1 insertion(+), 25 deletions(-)
-
-diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
-index 6f9242259edc..6de479ebbe5d 100644
---- a/include/linux/oid_registry.h
-+++ b/include/linux/oid_registry.h
-@@ -151,6 +151,5 @@ enum OID {
- extern enum OID look_up_OID(const void *data, size_t datasize);
- extern int parse_OID(const void *data, size_t datasize, enum OID *oid);
- extern int sprint_oid(const void *, size_t, char *, size_t);
--extern int sprint_OID(enum OID, char *, size_t);
- 
- #endif /* _LINUX_OID_REGISTRY_H */
-diff --git a/lib/oid_registry.c b/lib/oid_registry.c
-index fe6705cfd780..9b757a117f09 100644
---- a/lib/oid_registry.c
-+++ b/lib/oid_registry.c
-@@ -117,7 +117,7 @@ int parse_OID(const void *data, size_t datasize, enum OID *oid)
- EXPORT_SYMBOL_GPL(parse_OID);
- 
- /*
-- * sprint_OID - Print an Object Identifier into a buffer
-+ * sprint_oid - Print an Object Identifier into a buffer
-  * @data: The encoded OID to print
-  * @datasize: The size of the encoded OID
-  * @buffer: The buffer to render into
-@@ -173,26 +173,3 @@ int sprint_oid(const void *data, size_t datasize, char *buffer, size_t bufsize)
- 	return -EBADMSG;
- }
- EXPORT_SYMBOL_GPL(sprint_oid);
--
--/**
-- * sprint_OID - Print an Object Identifier into a buffer
-- * @oid: The OID to print
-- * @buffer: The buffer to render into
-- * @bufsize: The size of the buffer
-- *
-- * The OID is rendered into the buffer in "a.b.c.d" format and the number of
-- * bytes is returned.
-- */
--int sprint_OID(enum OID oid, char *buffer, size_t bufsize)
--{
--	int ret;
--
--	BUG_ON(oid >= OID__NR);
--
--	ret = sprint_oid(oid_data + oid_index[oid],
--			 oid_index[oid + 1] - oid_index[oid],
--			 buffer, bufsize);
--	BUG_ON(ret == -EBADMSG);
--	return ret;
--}
--EXPORT_SYMBOL_GPL(sprint_OID);
--- 
-2.49.0
-
+Reviewed-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
