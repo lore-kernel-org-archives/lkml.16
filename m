@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456891A238C;
-	Thu,  1 May 2025 14:09:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9DC1DE8A3;
+	Thu,  1 May 2025 14:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746108592; cv=none; b=Iz1GvL8Sn1GMKgdBmO3XNSuTcw4RBhxpunJJYt6yUXqXJXyFvra/2m7+PwyBvrn49hVU8lJMdZ7mTaC9a4uJqos8fQP+r71tm+c53eiWkuNhFGJqC8k/W8g0BGJzRBta4TyAwom0xrvJWQayoo6FyXFwoczY5FFgJgqFZsQxjqo=
+	t=1746108595; cv=none; b=kPYlihI/MRTt7C3naPEq45YzJL7b4oA0yPHdhz6801/Yvr311Jw+u6UJ9yxgdaYhB116Fy1TWMm0PlRGkjUeZI7Ef0Ag6dkf/snzV5DbG8sVRfypDbZZpnyDPc/9fgXoP5O8X7qNj/TVjjKNzFdBOG8oEl33G6u5GcCgRAO8tQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746108592; c=relaxed/simple;
-	bh=CF13hRABM8ip6XS/EPSkYDPCeIAZdV3HdE2DhLNrjwE=;
+	s=arc-20240116; t=1746108595; c=relaxed/simple;
+	bh=w6CIXgt7nx6Z0oqg6zEu5gS7IZY4p89aV0ZH5/vmAxw=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=hxsNbPZjpfQxS9KqyR6A8Kicz1g4uch4PI5yUGrJGCjcY8OuMPMGqegTrqye7V6F8llUTG2fDmEDt8g9AsvucRb5wpkP8tpLCMTrk5ILNS1DxwtHO0WT4xJ/+vEcjE5ZVXfifVxgW3QZ+Dnagfz6OwuwD6QOlPizjD1FWdocn4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODgtYAQ6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=oBWAnFV1i2woKtFZWViyRTCSmYXuSm1YG00otuqXBntwoBBCY2fEmGaW5yRFtKpBI6N9FplIWvO6+VPXZ5XVxUyWA3icGnoOr0FPg03YYQud34Uxnr8U7dkPawc8e6SrmrC4OZ3IMccBcHEb8NKNdHcbC238jOsqxZzmBRBRt5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ujoo5b8e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODgtYAQ6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A30A5C4CEE3;
-	Thu,  1 May 2025 14:09:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ujoo5b8e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0987C4CEEE;
+	Thu,  1 May 2025 14:09:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746108591;
-	bh=CF13hRABM8ip6XS/EPSkYDPCeIAZdV3HdE2DhLNrjwE=;
+	s=k20201202; t=1746108594;
+	bh=w6CIXgt7nx6Z0oqg6zEu5gS7IZY4p89aV0ZH5/vmAxw=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ODgtYAQ6ERLANNXtS0sfh6C+l5SCNPjuPwKI1QunWR+mmC2Bx3flsdBx9EMMKf+DB
-	 yHE1QIdt9JdHZ1XjcOV2huoX1O82NeEGoRAF4s8cQ98z2msRCKN73S7ZaujIboBiLb
-	 jHXLzA071+yqacmDgVQTBhd1xUFd5vYFuhJQjmCn0EYZhJ0H9Wj017PjH/nRhp9r5s
-	 2TDILa8WR54lwB2hCr0JhlwQ2+u6qwwggMyxGl4oo6tYoNdvEFROSouQCMAucYxqyf
-	 IxoDLGpLi5kuDksT2M88yyTZBtpUPzEIMBOv8NHuU69IyOpkxxZ/bJNy5am0Z12q3B
-	 E6R77SaJAI8xw==
+	b=Ujoo5b8evjzKvboC3q0CyiEUlH4nqHxTgA/OU4fKY6ms8rBAyd1CI2Nakbx55u+i4
+	 Ueke15w2D31AYYC3+sPAEvWODGJZX/1uJ3mRi0M/0zDgIDU5yuSVXpfUJH89gXpefk
+	 I4WE58wio8HUpjhH2QIHl8HCv+EoHsJqY2gpjvvDykqz8MU2qhtVRw+sFAUdWGA/Sm
+	 l9pH2LlJ0oPlgfnnpiB4t9ybFBrNrbKrxFs0zWz06n+cqtROq9GslQg8zKrrwaRZI7
+	 4jREUMvzYaiWEGdxKTsNWfX3axnGtiv/dWTDGI9oe6dx91Gxl5/zmTnHe26JbqwfwN
+	 Dzy6i7/UMJI7w==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB02F3822D59;
-	Thu,  1 May 2025 14:10:31 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAFD13822D59;
+	Thu,  1 May 2025 14:10:34 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,41 +37,44 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs
- operations
+Subject: Re: [PATCH v3] net: use sock_gen_put() when sk_state is TCP_TIME_WAIT
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <174610863076.2990404.16647937333615810041.git-patchwork-notify@kernel.org>
-Date: Thu, 01 May 2025 14:10:30 +0000
-References: <20250429073320.33277-1-maimon.sagi@gmail.com>
-In-Reply-To: <20250429073320.33277-1-maimon.sagi@gmail.com>
-To: Sagi Maimon <maimon.sagi@gmail.com>
-Cc: jonathan.lemon@gmail.com, vadim.fedorenko@linux.dev,
- richardcochran@gmail.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, sagi.maimon@adtran.com
+ <174610863349.2990404.8599127748454819839.git-patchwork-notify@kernel.org>
+Date: Thu, 01 May 2025 14:10:33 +0000
+References: <20250429020412.14163-1-shiming.cheng@mediatek.com>
+In-Reply-To: <20250429020412.14163-1-shiming.cheng@mediatek.com>
+To: Shiming Cheng <shiming.cheng@mediatek.com>
+Cc: edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, lena.wang@mediatek.com,
+ jibin.zhang@mediatek.com
 
 Hello:
 
 This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 29 Apr 2025 10:33:20 +0300 you wrote:
-> From: Sagi Maimon <sagi.maimon@adtran.com>
+On Tue, 29 Apr 2025 09:59:48 +0800 you wrote:
+> From: Jibin Zhang <jibin.zhang@mediatek.com>
 > 
-> On Adva boards, SMA sysfs store/get operations can call
-> __handle_signal_outputs() or __handle_signal_inputs() while the `irig`
-> and `dcf` pointers are uninitialized, leading to a NULL pointer
-> dereference in __handle_signal() and causing a kernel crash. Adva boards
-> don't use `irig` or `dcf` functionality, so add Adva-specific callbacks
-> `ptp_ocp_sma_adva_set_outputs()` and `ptp_ocp_sma_adva_set_inputs()` that
-> avoid invoking `irig` or `dcf` input/output routines.
+> It is possible for a pointer of type struct inet_timewait_sock to be
+> returned from the functions __inet_lookup_established() and
+> __inet6_lookup_established(). This can cause a crash when the
+> returned pointer is of type struct inet_timewait_sock and
+> sock_put() is called on it. The following is a crash call stack that
+> shows sk->sk_wmem_alloc being accessed in sk_free() during the call to
+> sock_put() on a struct inet_timewait_sock pointer. To avoid this issue,
+> use sock_gen_put() instead of sock_put() when sk->sk_state
+> is TCP_TIME_WAIT.
 > 
 > [...]
 
 Here is the summary with links:
-  - [v2] ptp: ocp: Fix NULL dereference in Adva board SMA sysfs operations
-    https://git.kernel.org/netdev/net/c/e98386d79a23
+  - [v3] net: use sock_gen_put() when sk_state is TCP_TIME_WAIT
+    https://git.kernel.org/netdev/net/c/f920436a4429
 
 You are awesome, thank you!
 -- 
