@@ -1,307 +1,172 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A034822E3F0;
-	Thu,  1 May 2025 01:57:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E54B35893;
+	Thu,  1 May 2025 01:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746064680; cv=none; b=oUzkhBpfW3nabqh4B4P+WbLuM+kZXwUn4wqMCynQ9FpIzmxMlWzHNHnoVyoL4ElZuXczweKNE6RT96NkkzzCt+gpyaxedI9fkSpiI/+1JM3nswTQ6/fhWlP1a8xLbhRCO9JBnHIveKT/NOcZQNYpHUZIRlpkFhoto85yow9E8TU=
+	t=1746064716; cv=none; b=WzC7LsYfG+knPw30NFUo7/3KpQ7GGGE0TwF32jS6SKCfxxoEWjrr6pqZCnwGiN8NZ79X0YS4STD5HtwT69PE+1B8R5O1VOVjZmYLSaGlF5yxM5aUHEeV37d8ISW/yMo4WkDFv2GMf5dPRU/s7en19zQw408GKU87wb3gEEmgbKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746064680; c=relaxed/simple;
-	bh=/Ah4B3NAr+Kc927n6CgMEs8gtOCzYDo9eWib5uzVPDE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ozjt7GbSCaEUUQx36Ny31q7ohS22nWEwK8NxXDQJkEHLC9xrd/zIJyYoNDVEND7OUuHUXwWEfaVXwNiUCIc3ZUfi3G679cbXgRKCXIhqLkorw2BC2RdwePaTK0boUnEUSzvNGHlXrWrff//jWKBlnIpyl7qSZSuQ3CNfcHqbFks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEBzk1/T; arc=none smtp.client-ip=209.85.215.171
+	s=arc-20240116; t=1746064716; c=relaxed/simple;
+	bh=58Mw4Mgy5Lw8zwl4hrtuAwNYbFkwzUDGKfPeXfOthcs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VBgIMZG2KdyNQrQ+2rb80DLQrjw0A0WrHk3WwRydgbtDy5JWPutDViJ4M/58W0oldq4FRL7XS6kWgNwGSJg4QUirf6meUDV5eNG3TiL+DdP/lJNPJXlfOaUeUpxm+SCbSe2jOlOK5ZE6RvgyoEeczArwh1uqScd2WshBSnuzrp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LHvJYapr; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEBzk1/T"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af59c920d32so338961a12.0;
-        Wed, 30 Apr 2025 18:57:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHvJYapr"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b98acaadso499431b3a.1;
+        Wed, 30 Apr 2025 18:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746064678; x=1746669478; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=h3HdnQQ7Lh7tqptK4W9tkQbnlg3dmorsc2Pl8mD4q/M=;
-        b=HEBzk1/TLOMP3NoyIG1eGG6uGbdf/ixPuUupqC1Imwi2aeLBqC0tK6M9kzDGe5xWh6
-         4Ww3MQREaghEa0BdSUghQBrXM3o+7ptBJvu09B57bysevz7gwkygo6+0cWitbiAwRKkb
-         1Y9Q/1uR6VAqfb2svfowHhadRGi8dXU+MHJV6OB8URi61SPQ+jVekH3Jld7pC85el2Vx
-         PhGRPcse22CX+ClynwXOktph3UR04yb2py7VmL0fXdua75RmQYdR9IfEbV9bRxwK4pMO
-         yp3J3ycUB9j0KGLmVqsc8k46jM/wYMJ01+Yu0C0p1wfT4WoWdr16ZQD1mkfXbIsPUZ52
-         urXA==
+        d=gmail.com; s=20230601; t=1746064713; x=1746669513; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ch97n5XALhY0tN6phWrpbON+THybZhdH+0oi8/ViNDA=;
+        b=LHvJYapr/7TGz4RZhkvnl8PX752EjJ15jm9e+MUfWVuC71HfDBBLrmFjD7kLOKXUH2
+         v1XZCcVWgSjgz9U6mpYVOfRvZv7I4vOKkUrJwMc21GIrSjNHZDMHVMpmOjvcyOWz8iiP
+         dDBWcV+Bzw2HwJ5OwWBx8yLAzt22m2LJ6eC+oxftnRsMZ2zEEL9vJwDMqHzxgkhyRb1K
+         H6Vrp7qds6z2U54Y70cc/o4Yarp23MLYv4hnwsUDIZJ/s62mb9R9zKS7t6MDdI5pkCuX
+         jrwt59Hqf+lo+YF/L2rPf8hiHGAiiK/wnqA8nInTbkPBV5sanMCAN7qmLtOMCvOAthvO
+         Cttg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746064678; x=1746669478;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746064713; x=1746669513;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=h3HdnQQ7Lh7tqptK4W9tkQbnlg3dmorsc2Pl8mD4q/M=;
-        b=HqMofHR0IIa9CMh8IXoZvUZyoil8CoXbnLSEs2QHsd12yyV/D2+Pj8kNG1qsP84Hhl
-         +Fk18SjA7GsPOgkYLA+CIa1DECreccCSafDZdZFZekdIr7NWiipxsrs8ixYnmg+58XD2
-         6t3uKg5uhp5CC/JU299+Y+XeXUv6DlDy8cWJe8qdNESxwLCxW+0gURDy2mM5def5zqK9
-         Vhq58sOKLGpaHjJqWrzyhBe9i4fhKg+TbORXJb8UR/Hph5bQc52Wl2Q0buzKCw6v0EjL
-         HcQ+ymvuvRVwCX20HGUlhyLLtL+ZfWc8bACjlrgmpNwYESWErtnwmCuRf+0G5z9BxjRJ
-         H+Iw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFKp0hx/iJBjfPdDrB7VFO/0DOYVb54p/PrDhx19ZHFsIpR0iV0GpzzKcYnBCK96KcBbdS0rXG+Eal+r0=@vger.kernel.org, AJvYcCWNxvGoInWuM1it7FTAuwODzx43mzwEuv3zxF8yTC8FrSbs5JBLpsVPC+vChWXN2rXJxxtv9Lq/EL9L@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya28jq/yqLjijAsQ63I+anBYtFcQ6t608ONOULqCvCqCUylvky
-	WMkYXEI4UkTDIhMbhPTs+JNL2/Kk0WdwdEOkRXhbzsNqBgXChmFx
-X-Gm-Gg: ASbGncvjrQangqcbnYnhXjQ9z4yHcM9Ik4Mx2/O96DEXVmgv5/NREom9xx0tal02rBL
-	OO7wXEhre9DWuWJwj5ZGk+446SKf1/aun8bvx90P2OO0jXRYVO14iaFMcixMxAoEEs8g9Gmt4yw
-	94/wo/yPZbTzZF9NZ4RJHvbyBtWsLAWNIQt/hIqhN0kNK16FS5+M2INSJMdgcPCEueAKCPt2nTV
-	yd1YykzpzY3F9QYgJc19SJTBARv+RnWp1anXjXD3WBcTa/YbYrC0rpvkSN4jOxWNAERKkwfy9S0
-	TQQC6O5xOfTFi1carTlFAs77rPZQ3h4cooQK4edzLWXp/E1k9bhNfFk=
-X-Google-Smtp-Source: AGHT+IF2WAQ6u6BUakZzN4fH3Qie907SR8WIaTRHAciW0cHWcMbgl7LsGYCK5MbNO946abRXqL8u9A==
-X-Received: by 2002:a17:90b:578b:b0:2fc:ec7c:d371 with SMTP id 98e67ed59e1d1-30a41cfc306mr1391942a91.3.1746064677565;
-        Wed, 30 Apr 2025 18:57:57 -0700 (PDT)
-Received: from [192.168.0.69] ([159.196.5.243])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480ea0dsm2405977a91.37.2025.04.30.18.57.52
+        bh=ch97n5XALhY0tN6phWrpbON+THybZhdH+0oi8/ViNDA=;
+        b=UfYyPX8/4ew0icpIO7VoTl8ZiiNrRu08QprnPr2qzk2iLRsNbUaaAqcjdGEpDFH+pn
+         rXc+aZ40KMcCnxz5268fchUmNCy2+OAArm4u1jMdiRWuHwo2GQq6UXmKUj9yOlCGZd2k
+         edwN7N1swUXvay0z1rNFH6pKsk3Z21J7Xp6L//RdO4mV/t2W7Hb0TtgITqxViWC9g1ZX
+         3mgS2IahRhlE7K264pwR+VbbqP3HUr6g91EJas2uwI40IZ6MK5w6Vek+Pd9fQjRDV12J
+         HndiMeidC8z4fWEuKbVQuYsKgObyFdrQOZxBx9klyBCuUp60r3k4c/f0hoY2utPAVxss
+         WlBw==
+X-Gm-Message-State: AOJu0Yya9RfE/IaVv1Vi12pmSo4C3iqQTFLFgw9q91uWKGf8MaPLnftD
+	JmN+c7Vv/Yf2b3vC5AbGNaXqnCPf9S49BeAMStCZF2IrlSY2I2386AiwQasy
+X-Gm-Gg: ASbGncs0E+G+SUSUnaumf1CxJ7wzd11WDzhikb1v67j2CVOHWeqGGq/W9NriX00Ywoh
+	97kjnj3QvegnHMfNS7qkYfq98uaZrd70xVjwvOhocB1w7o8rTWaB9ANhszR/ZkTliJ58yMWbBgT
+	peWC4+0fuiwDQDVe7FyXOMiQ16nwC3ls11xBA7IBXqKJWPwQLQbGp4r3Bsulg8uudSNU8uAdFG9
+	ngZOarsY2r4MacyJZHfbLYg8BnKgjq66OitSGjHFMX+qbsLxs+tOL2W0o5oTERwqcoxvJYWPdb/
+	QRpP3LniNrLi0RKmScW288vXpppOTicONqLFJIHCddgwOxduHjynRlaNlB8SiYEL/JB7EkoRfWq
+	OI5N6M3YfRPsghBsw08LMK+H2nOCd
+X-Google-Smtp-Source: AGHT+IHQjXDzs7wJcnk6gZjEJ81KaQC8moIvMcFsuq5WUzmeTCbV9Hn2MLC5dKt6PwqdvuMJlNX6WQ==
+X-Received: by 2002:a05:6a00:130d:b0:736:3be3:3d77 with SMTP id d2e1a72fcca58-74038a84f32mr8064055b3a.16.1746064713411;
+        Wed, 30 Apr 2025 18:58:33 -0700 (PDT)
+Received: from mew.. (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-740398f97e6sm2441652b3a.36.2025.04.30.18.58.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 18:57:56 -0700 (PDT)
-From: Wilfred Mallawa <wilfred.opensource@gmail.com>
-Date: Thu, 01 May 2025 11:57:39 +1000
-Subject: [PATCH v2] PCI: dwc: Add support for slot reset on link down event
+        Wed, 30 Apr 2025 18:58:33 -0700 (PDT)
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+To: rust-for-linux@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	a.hindborg@samsung.com,
+	boqun.feng@gmail.com,
+	frederic@kernel.org,
+	lyude@redhat.com,
+	tglx@linutronix.de,
+	anna-maria@linutronix.de,
+	jstultz@google.com,
+	sboyd@kernel.org,
+	ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	chrisi.schrefl@gmail.com,
+	arnd@arndb.de,
+	linux@armlinux.org.uk
+Subject: [PATCH v1] rust: time: Avoid 64-bit integer division
+Date: Thu,  1 May 2025 10:58:18 +0900
+Message-ID: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-b4-pci_dwc_reset_support-v2-1-d6912ab174c4@wdc.com>
-X-B4-Tracking: v=1; b=H4sIABPVEmgC/4XPTW7DIBAF4KtYsy4VBmOwV71HFVn8DA1SE1wgT
- qPIdw8hm+66fGh4880dMqaAGebuDgm3kEM818DeOrBHff5CElzNwCgTdOCUmIGsNizuapeEGcu
- SL+saUyFOMuqM9kaihvp9TejDb6v+PLxywp9L3VBej2B0RmLj6RTK3FElOadKGTGORiimuKe+Z
- 7WOe+HMqCc9OeQU/soqtLloQyFpIpK/YyGSU+O17HWdmDcOT8Ix5BLTrR279c3w/11bT3riRzH
- oZ9/ExMfV2ffKhsO+7w9/6N5AQQEAAA==
-X-Change-ID: 20250430-b4-pci_dwc_reset_support-d720dbafb7ea
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Heiko Stuebner <heiko@sntech.de>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Niklas Cassel <cassel@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, 
- Alistair Francis <alistair@alistair23.me>, linux-pci@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-rockchip@lists.infradead.org, 
- Wilfred Mallawa <wilfred.mallawa@wdc.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746064672; l=7785;
- i=wilfred.mallawa@wdc.com; s=20250430; h=from:subject:message-id;
- bh=fQbwUUTN1gpul4279z5HHNPBrxwyTc+m4i94uBkh6VE=;
- b=7NSdJlp2U95ab1vI4/p/BCj6VkXTEmSaUc41LRhFtY64AYcBWmncQYGWuEogibsCLEgxrjoN5
- 9wV/Fc4Sa0RDLtSAo+g5gDBtuxIOeI0fQPAWLSBcOTHYi8tQfdAdPKT
-X-Developer-Key: i=wilfred.mallawa@wdc.com; a=ed25519;
- pk=DpjNSsEpzUYRunwCxBmAJ/fv9YKUmAPOIoBDL0qeAQU=
+Content-Transfer-Encoding: 8bit
 
-From: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Avoid 64-bit integer division that 32-bit architectures don't
+implement generally. This uses ktime_to_ms() and ktime_to_us()
+instead.
 
-The PCIe link may go down in cases like firmware crashes or unstable
-connections. When this occurs, the PCIe slot must be reset to restore
-functionality. However, the current driver lacks link down handling,
-forcing users to reboot the system to recover.
+The timer abstraction needs i64 / u32 division so C's div_s64() can be
+used but ktime_to_ms() and ktime_to_us() provide a simpler solution
+for this timer abstraction problem. On some architectures, there is
+room to optimize the implementation of them, but such optimization can
+be done if and when it becomes necessary.
 
-This patch implements the `reset_slot` callback for link down handling
-for DWC PCIe host controller. In which, the RC is reset, reconfigured
-and link training initiated to recover from the link down event.
+One downside of calling the C's functions is that the as_micros/millis
+methods can no longer be const fn. We stick with the simpler approach
+unless there's a compelling need for a const fn.
 
-This patch by extension fixes issues with sysfs initiated bus resets.
-In that, currently, when a sysfs initiated bus reset is issued, the
-endpoint device is non-functional after (may link up with downgraded link
-status). With this patch adding support for link down recovery, a sysfs
-initiated bus reset works as intended. Testing conducted on a ROCK5B board
-with an M.2 NVMe drive.
-
-Signed-off-by: Wilfred Mallawa <wilfred.mallawa@wdc.com>
+Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
 ---
-Hey all,
+ rust/helpers/helpers.c |  1 +
+ rust/helpers/time.c    | 13 +++++++++++++
+ rust/kernel/time.rs    | 10 ++++++----
+ 3 files changed, 20 insertions(+), 4 deletions(-)
+ create mode 100644 rust/helpers/time.c
 
-This patch builds ontop of [1] to extend the reset slot support for the
-DWC PCIe host controller. Which implements link down recovery support
-for the DesignWare PCIe host controller by adding a `reset_slot` callback.
-This allows the system to recover from PCIe link failures without requiring a reboot.
-
-This patch by extension improves the behavior of sysfs-initiated bus resets.
-Previously, a `reset` issued via sysfs could leave the endpoint in a
-non-functional state or with downgraded link parameters. With the added
-link down recovery logic, sysfs resets now result in a properly reinitialized
-and fully functional endpoint device. This issue was discovered on a
-Rock5B board, and thus testing was also conducted on the same platform
-with a known good M.2 NVMe drive.
-
-Thanks!
-
-[1] https://lore.kernel.org/all/20250417-pcie-reset-slot-v3-0-59a10811c962@linaro.org/
----
-Changes in v2:
-- In the reset_slot callback, use clk_bulk_disable_unprepare() to
-  disable clks.
-- If dw_pcie_start_link() fails, goto deinit procedure
-- Skip error checking for dw_pcie_wait_for_link(), as the link may come
-  up later.
-- Fixup alignment.
-- Link to v1: https://lore.kernel.org/r/20250430-b4-pci_dwc_reset_support-v1-1-f654abfa7925@wdc.com
----
- drivers/pci/controller/dwc/Kconfig            |  1 +
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 88 ++++++++++++++++++++++++++-
- 2 files changed, 87 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index d9f0386396edf66ad0e514a0f545ed24d89fcb6c..878c52de0842e32ca50dfcc4b66231a73ef436c4 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -347,6 +347,7 @@ config PCIE_ROCKCHIP_DW_HOST
- 	depends on OF
- 	select PCIE_DW_HOST
- 	select PCIE_ROCKCHIP_DW
-+	select PCI_HOST_COMMON
- 	help
- 	  Enables support for the DesignWare PCIe controller in the
- 	  Rockchip SoC (except RK3399) to work in host mode.
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index 3c6ab71c996ec1246954f52a9454c8ae67956a54..9e68761fd6d106a6e2bf14635b6d19d53cb019b9 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -23,6 +23,8 @@
- #include <linux/reset.h>
- 
- #include "pcie-designware.h"
-+#include "../../pci.h"
-+#include "../pci-host-common.h"
- 
- /*
-  * The upper 16 bits of PCIE_CLIENT_CONFIG are a write
-@@ -83,6 +85,9 @@ struct rockchip_pcie_of_data {
- 	const struct pci_epc_features *epc_features;
- };
- 
-+static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-+				       struct pci_dev *pdev);
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 1e7c84df7252..2ac088de050f 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -34,6 +34,7 @@
+ #include "spinlock.c"
+ #include "sync.c"
+ #include "task.c"
++#include "time.c"
+ #include "uaccess.c"
+ #include "vmalloc.c"
+ #include "wait.c"
+diff --git a/rust/helpers/time.c b/rust/helpers/time.c
+new file mode 100644
+index 000000000000..0a5d1773a07c
+--- /dev/null
++++ b/rust/helpers/time.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
 +
- static int rockchip_pcie_readl_apb(struct rockchip_pcie *rockchip, u32 reg)
- {
- 	return readl_relaxed(rockchip->apb_base + reg);
-@@ -256,6 +261,7 @@ static int rockchip_pcie_host_init(struct dw_pcie_rp *pp)
- 					 rockchip);
- 
- 	rockchip_pcie_enable_l0s(pci);
-+	pp->bridge->reset_slot = rockchip_pcie_rc_reset_slot;
- 
- 	return 0;
- }
-@@ -455,6 +461,11 @@ static irqreturn_t rockchip_pcie_rc_sys_irq_thread(int irq, void *arg)
- 	dev_dbg(dev, "PCIE_CLIENT_INTR_STATUS_MISC: %#x\n", reg);
- 	dev_dbg(dev, "LTSSM_STATUS: %#x\n", rockchip_pcie_get_ltssm(rockchip));
- 
-+	if (reg & PCIE_LINK_REQ_RST_NOT_INT) {
-+		dev_dbg(dev, "hot reset or link-down reset\n");
-+		pci_host_handle_link_down(pp->bridge);
-+	}
++#include <linux/ktime.h>
 +
- 	if (reg & PCIE_RDLH_LINK_UP_CHGED) {
- 		if (rockchip_pcie_link_up(pci)) {
- 			dev_dbg(dev, "Received Link up event. Starting enumeration!\n");
-@@ -536,8 +547,8 @@ static int rockchip_pcie_configure_rc(struct platform_device *pdev,
- 		return ret;
- 	}
- 
--	/* unmask DLL up/down indicator */
--	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED, 0);
-+	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
-+	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
- 	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
- 
- 	return ret;
-@@ -688,6 +699,79 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int rockchip_pcie_rc_reset_slot(struct pci_host_bridge *bridge,
-+				       struct pci_dev *pdev)
++s64 rust_helper_ktime_to_us(const ktime_t kt)
 +{
-+	struct pci_bus *bus = bridge->bus;
-+	struct dw_pcie_rp *pp = bus->sysdata;
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct rockchip_pcie *rockchip = to_rockchip_pcie(pci);
-+	struct device *dev = rockchip->pci.dev;
-+	u32 val;
-+	int ret;
-+
-+	dw_pcie_stop_link(pci);
-+	rockchip_pcie_phy_deinit(rockchip);
-+	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-+
-+	ret = reset_control_assert(rockchip->rst);
-+	if (ret)
-+		return ret;
-+
-+	ret = rockchip_pcie_phy_init(rockchip);
-+	if (ret)
-+		goto disable_regulator;
-+
-+	ret = reset_control_deassert(rockchip->rst);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = rockchip_pcie_clk_init(rockchip);
-+	if (ret)
-+		goto deinit_phy;
-+
-+	ret = pp->ops->init(pp);
-+	if (ret) {
-+		dev_err(dev, "Host init failed: %d\n", ret);
-+		goto deinit_clk;
-+	}
-+
-+	/* LTSSM enable control mode */
-+	val = HIWORD_UPDATE_BIT(PCIE_LTSSM_ENABLE_ENHANCE);
-+	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_HOT_RESET_CTRL);
-+
-+	rockchip_pcie_writel_apb(rockchip, PCIE_CLIENT_RC_MODE, PCIE_CLIENT_GENERAL_CON);
-+
-+	ret = dw_pcie_setup_rc(pp);
-+	if (ret) {
-+		dev_err(dev, "Failed to setup RC: %d\n", ret);
-+		goto deinit_clk;
-+	}
-+
-+	/* unmask DLL up/down indicator and hot reset/link-down reset irq */
-+	val = HIWORD_UPDATE(PCIE_RDLH_LINK_UP_CHGED | PCIE_LINK_REQ_RST_NOT_INT, 0);
-+	rockchip_pcie_writel_apb(rockchip, val, PCIE_CLIENT_INTR_MASK_MISC);
-+
-+	ret = dw_pcie_start_link(pci);
-+	if (ret)
-+		goto deinit_clk;
-+
-+	/* Ignore errors, the link may come up later */
-+	dw_pcie_wait_for_link(pci);
-+	dev_dbg(dev, "Slot reset completed\n");
-+	return ret;
-+
-+deinit_clk:
-+	clk_bulk_disable_unprepare(rockchip->clk_cnt, rockchip->clks);
-+deinit_phy:
-+	rockchip_pcie_phy_deinit(rockchip);
-+disable_regulator:
-+	if (rockchip->vpcie3v3)
-+		regulator_disable(rockchip->vpcie3v3);
-+
-+	return ret;
++	return ktime_divns(kt, NSEC_PER_USEC);
 +}
 +
- static const struct rockchip_pcie_of_data rockchip_pcie_rc_of_data_rk3568 = {
- 	.mode = DW_PCIE_RC_TYPE,
- };
++s64 rust_helper_ktime_to_ms(const ktime_t kt)
++{
++	return ktime_divns(kt, NSEC_PER_MSEC);
++}
+diff --git a/rust/kernel/time.rs b/rust/kernel/time.rs
+index a8089a98da9e..e3008f6324ea 100644
+--- a/rust/kernel/time.rs
++++ b/rust/kernel/time.rs
+@@ -228,13 +228,15 @@ pub const fn as_nanos(self) -> i64 {
+     /// Return the smallest number of microseconds greater than or equal
+     /// to the value in the [`Delta`].
+     #[inline]
+-    pub const fn as_micros_ceil(self) -> i64 {
+-        self.as_nanos().saturating_add(NSEC_PER_USEC - 1) / NSEC_PER_USEC
++    pub fn as_micros_ceil(self) -> i64 {
++        // SAFETY: It is always safe to call `ktime_to_us()` with any value.
++        unsafe { bindings::ktime_to_us(self.as_nanos().saturating_add(NSEC_PER_USEC - 1)) }
+     }
+ 
+     /// Return the number of milliseconds in the [`Delta`].
+     #[inline]
+-    pub const fn as_millis(self) -> i64 {
+-        self.as_nanos() / NSEC_PER_MSEC
++    pub fn as_millis(self) -> i64 {
++        // SAFETY: It is always safe to call `ktime_to_ms()` with any value.
++        unsafe { bindings::ktime_to_ms(self.nanos) }
+     }
+ }
 
----
-base-commit: 08733088b566b58283f0f12fb73f5db6a9a9de30
-change-id: 20250430-b4-pci_dwc_reset_support-d720dbafb7ea
-prerequisite-change-id: 20250404-pcie-reset-slot-730bfa71a202:v3
-prerequisite-patch-id: 2dad85eb26838d89569b12c19d70f392fa592667
-prerequisite-patch-id: 6238a682bd8e9476e5911b7a59263c3fc618d63e
-prerequisite-patch-id: a01300083e94a67ea7c8bfcde320081d90b384d4
-prerequisite-patch-id: ff711f65cf9926374646b76cd38bdd823d576764
-prerequisite-patch-id: a5ee9d4b728b80d32844c5108a5b453eaa4f653f
-
-Best regards,
+base-commit: 679185904972421c570a1c337a8266835045012d
 -- 
-Wilfred Mallawa <wilfred.mallawa@wdc.com>
+2.43.0
 
