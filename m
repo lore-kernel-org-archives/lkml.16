@@ -1,223 +1,108 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF692594;
-	Thu,  1 May 2025 18:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31C9A44C7C;
+	Thu,  1 May 2025 18:28:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746123780; cv=none; b=FOcV/QxD9Xa0iBkoEZIY8S8OCVWtihR1rMDz5fQmoZNvH6nltS7Bvj7Ot02MABuuR5MSYZNXyNn09Wh2xWk9NSZaKce7HHOQQFQ4nd1jXs0/Bl+wcCX2f/gpr1i35A8xB5TnpVOHzGWhMNUIPV0wOsam4QbU0riJC9OaoUJaEG4=
+	t=1746124084; cv=none; b=gdIKwj0EiD0+ervycmpqcYrTGPR+CzZYr7k2rFen/6W797ZHvxPTua+O6jUgxI52ee72mBQOzxeZXUNbsTPOXcnsi0frnEiPB4Os77D4i0VxMmN2fdA1+rchr5itM9Dl4vPJMwao4UADQEJfPUqQwLn1nXOJ96IsCKt9kdToR2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746123780; c=relaxed/simple;
-	bh=ohnFrUmn3P2nrSp6z/go7hgYROwr7dUgd9JnY36lk2w=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=P/ypD9V/9/W3nJZRdA40Dfr61NYp+b2cG7KLrBJ/eFqJZ/h420bQlv0timTpDN3QpyGD0daUyyEyY/c3rBqo/Op0Eqxv29aH+EjrMqRWNbcoxgmCNKQ4l0n+zLRqz5uXCEFzWIB+AuJWn4ddin6NNtdidT8Kv4J34MOyaBdW+h4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aufbs/s6; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746124084; c=relaxed/simple;
+	bh=OvPMEuQ46il3TskZUAK4+nulnbCgpZ4Cd2OcQ/G8dps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=H6zJ1QB7HV1mok5BGErweYn7yTjQOHLZPwkBjClwmomzi0wsPnX9ZZ424UjUvFZNMudnb7iwvt0egXMGvATA8IxF3Z9JFJrc5a6VA/VDWGBKmvOgHBm2OLYV8F5IAW5/EPpuixQ2WL3x/0yx95mbQ3PXMIPosJC442RLm4Tu5w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=SomsQhRW; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aufbs/s6"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2279915e06eso14897435ad.1;
-        Thu, 01 May 2025 11:22:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="SomsQhRW"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43ed8d32a95so10173855e9.3;
+        Thu, 01 May 2025 11:28:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746123778; x=1746728578; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Z13IR4R41ZVDKU1pxRT6lsZi2hufZ9axj9XzCLqdM7o=;
-        b=aufbs/s62dbVuxp6a+uESF3HKpVHkyJc2nPGvyZ0N1wMf/yXKCb6EfeTOa1vXP1j6N
-         eHT+ugPRQQKqvzsPf8/UKvwSF1mX05EESV/KsUc64zS1w7Q8EDBwzRtIQmRkOP5Sj3A7
-         qc5alm+y1+YTAMYFrd2oAAZC+aRLVSHiQ08IKsSYPKKuAv2//RxcNqHqaZMBMZhHgfnS
-         FBugfkT/n5/MqIl5dC9YIQQgO2KwSPoNgflURq21k75eIkrXenfWlim4XAfGUbYP+nSC
-         mt6Z1hy+voT+9eDbiEzL7eWi5JbOWdx7ZU0IzQhgR2sRGzsd1UlNItMM3lpc5X3Fbqsm
-         X9Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746123778; x=1746728578;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=googlemail.com; s=20230601; t=1746124081; x=1746728881; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z13IR4R41ZVDKU1pxRT6lsZi2hufZ9axj9XzCLqdM7o=;
-        b=PanMoqiciAo56uN1ewAFLZNwp4WlJ4krT4Gro8JN0AU1kqVNORCj9MtU/xpN6LY//+
-         L04lzWMktc7Ns6pLLNmCfE4EFpdwbTTdxyo3yDMi9yGmTf6ugcrok0KCd8po1Tjrcr7+
-         unnMOfqimRrqaHjpBrKqWZlvAeFCtarX5R40h4xZcxIADRIfHoBiFLlVvYGu9O+XnA65
-         +w9UTXHHKLEe5aem6g1wK3ux1f2q1+UDSPLXjzngFerraJKPwy6wPGXDXo3qClGMFSi1
-         ykKKhvghN1qRUxQDbhn9wv05z+rA1qmp0mQExf+/TyeuX9OBceEShte3G3B6MM8KFX54
-         +YlA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIY9OwadfVvv5eQ5ZpexZNExh6rHmc2h3Kxxwa7XPXO0t9GdxOeC1eZd5wr/rWL9TSPRr0nBLonod1Gf6G@vger.kernel.org, AJvYcCWog7RDh6QGay3RbM7uEogilDUsvxXstzKzXu8ZRzIbITyGVXI3CGFNiLiRkBtg6vfstR3edYwJEbL+jWA/FYVt@vger.kernel.org, AJvYcCXe3ckk5GE9KJZBc1zc0cR9nou7mxxEv87cT7CSy3YdnbogyM+d4bsjjVB1a7ezdZTDrmY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywje4hVaqmlPUZUwl0CuOVRia/80plsxujVv+GGO9BUkJPxNIvw
-	63T05GiZ2tCx0MzX2ZKEvGdV4UyI+ebZq87BORSCuQxcn5zf/snP
-X-Gm-Gg: ASbGncsesMx1uHa9Jx9VYswzdDCpvT/1N8W5wN/eRuaDt5qmgIdlj7YyQ3i+9MmDbjd
-	f42jdlG47WaeaE5NR4n6YeuJoAvoc6A+m9GGa2HAhngyrlJf3Nnj6t0QUOI30dOyFBie2lyyzkO
-	wp9JnGn/Guy1jfEnYEP7k1J+XoNKaK2wFov7sS2/eUvm/rSxluUFglkWboln7aDRfWw2UAG6o+B
-	bn1w0jwrce00alKoikNTVnTtjWFS+ZPScEDiVKWZNLjjVLSAEn6AKToFenYMgcbAEL1lKhsb+ms
-	sZsh3TzhO1Cdg+eiDdAMTVuq1Mp8WjozKFPn
-X-Google-Smtp-Source: AGHT+IGda6qWln6BFDTM/Gkb68xMR5bi/oz/Rn8j/Adql6uM3+Sv7uKX/O5J0YwlaSlwXSdspZWvYQ==
-X-Received: by 2002:a17:902:da90:b0:22c:3294:f038 with SMTP id d9443c01a7336-22e1034037emr552815ad.18.1746123777577;
-        Thu, 01 May 2025 11:22:57 -0700 (PDT)
-Received: from [192.168.0.56] ([38.34.87.7])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bc7b0aasm9869405ad.169.2025.05.01.11.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 11:22:56 -0700 (PDT)
-Message-ID: <15294d369d94cf005c9aa722967e5ddb1fa8cee3.camel@gmail.com>
-Subject: Re: [PATCH bpf-next v3 02/11] bpf: Move insn if/else into
- do_check_insn()
-From: Eduard Zingerman <eddyz87@gmail.com>
-To: Luis Gerhorst <luis.gerhorst@fau.de>, Alexei Starovoitov
- <ast@kernel.org>,  Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
- <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,  Song Liu
- <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, John Fastabend	
- <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev	 <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
- <jolsa@kernel.org>,  Puranjay Mohan <puranjay@kernel.org>, Xu Kuohai
- <xukuohai@huaweicloud.com>, Catalin Marinas	 <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Hari Bathini	 <hbathini@linux.ibm.com>,
- Christophe Leroy <christophe.leroy@csgroup.eu>,  Naveen N Rao
- <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Michael
- Ellerman	 <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Mykola
- Lysenko	 <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, Henriette Herzog	
- <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
- Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen
- <mrpre@163.com>, Matan Shachnai <m.shachnai@gmail.com>,  Dimitar Kanaliev
- <dimitar.kanaliev@siteground.com>, Shung-Hsi Yu <shung-hsi.yu@suse.com>,
- Daniel Xu <dxu@dxuuu.xyz>, 	bpf@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-kernel@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, 	linux-kselftest@vger.kernel.org
-Cc: Maximilian Ott <ott@cs.fau.de>, Milan Stephan <milan.stephan@fau.de>
-Date: Thu, 01 May 2025 11:22:53 -0700
-In-Reply-To: <20250501073603.1402960-3-luis.gerhorst@fau.de>
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
-	 <20250501073603.1402960-3-luis.gerhorst@fau.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+        bh=ziO8mDy17x0ZX+4RdFsifgUHBBZZisRMepgvXhKJJxg=;
+        b=SomsQhRWcgXMa06GtEB3VBPF35ciky+D5Q++GYr4lQWlB2UAy782E+ZyFbleM4YQ5m
+         bChP1+/YLgmX+VTEXFmv1eBsV+d633Xom+kP5Kj8Fj4pXm6FCJSlcqa5X8n1v8g9xHr5
+         bneJcekSYgoeZrJxYcia4K7qo2oJKZf5joRDLVn/YEoB5IhZLnOuVBmyl41JuE4ULIuW
+         EHzZmAX0+dn4trBzLKqMnDLH6YLm7iwQpccTwmXN8HY1YKtgMNwuX1QbELc8Jc7NN1oM
+         75biBkjtRb7ix22g7u1J+M//nYzTGxpk/rgbIUNUUvXBoBZihh5TEr+4DLuVozWZqQ6l
+         Ef0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746124081; x=1746728881;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ziO8mDy17x0ZX+4RdFsifgUHBBZZisRMepgvXhKJJxg=;
+        b=CE7Wt/uAXBZo5FM7CVf0/KU4gqHoaDXNtclipiK5nRnqde6TAxEGRPuEVtnyEbOeZ3
+         thU8pwEhHKVGq2I4r0ENK/Y+WB72cb3+MfdG88Xa7C/vNEY91+Ch7tPkYR/R2p66/PLt
+         VcobZpkGDWfctRdECm1c35NUHGqjqM5i9TPR7FPQCr/O8PKZEbvcltehYtzzmaDBI/a8
+         z8H/3sUhGKCLbITcVCME2+3qtPy3lu+ico2yOLpUJ3KtKXPJ5fBJiq9LfJdGZlc8ynTS
+         3OgWEvCfAWTAE5Yb0EJTJg0gRUjaSnI/3jBopopHl/PH+dLuwCkhXLwgJfVn94/e4Be1
+         QtRw==
+X-Forwarded-Encrypted: i=1; AJvYcCUf4NH/DfKSTzJSsqxrMJDMHXG7jBn2xRrauGqYUinUS8W8Bhct60e2D8eUVtZ88nYEkRtTuzdU@vger.kernel.org, AJvYcCW81p5wlr0O5lPmeJuGoMACWeEpfo94VEYFlCn30jFZP+1T7I7maSsRQ8Kj1vcbm903f7uEzPQ1knkiPn0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwT89NtIppfqqaQBjbeZM70scGHl/znbJ56DwvX5fY13VGJeWCD
+	Zcm13oZLzLBD+ZlgzMu19Sgl0iSYG0Pij73yueAC62wPiR6n1D0=
+X-Gm-Gg: ASbGncufGbXzoseTAQVAh/rnGdKVR+bptgI21u8Zj8vAKV91UIYthtmLyXTMDLUew0m
+	/H28lh5BCSj1MsR98F6IXilxC5INmu5PWSJGNuoIru/TuKk4q7GxKMCulaIuVL+hnxpFC+T/MNu
+	Aq2/wpGbwSAc77KK5H6NTrf4faBn+6dDSbuknTj0zu44odH3CoruVAqz3IHHWHcjCTG/W6DdhsD
+	gGlqW6IHgHisIUPSeQZ8eIvChnapun0n7FFhIwy8v2S/01WKoK6llVh+douR1zIPdAz9qGG//yj
+	l9Mu/7kYW5a1vEPIMmIAXce2FGz4ip4nCR0uhqhNxsfgHGGa3D+WWthjtpLrgeS8NKgz7S3XIt+
+	VPfDie5i+TuqXS82Mdw==
+X-Google-Smtp-Source: AGHT+IE0vFV95HheCkKVFzX8joqpHJeWx/EZFT2IHqGfh47jshQk7bRn/7pHku68lkBSbrioTy7maA==
+X-Received: by 2002:a05:600c:c89:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-441b7017eddmr29576555e9.9.1746124081319;
+        Thu, 01 May 2025 11:28:01 -0700 (PDT)
+Received: from [192.168.1.3] (p5b2b4589.dip0.t-ipconnect.de. [91.43.69.137])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a468e3sm1475143f8f.36.2025.05.01.11.27.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 11:28:00 -0700 (PDT)
+Message-ID: <704e57d4-ba2e-4afa-9351-cc5496f7030c@googlemail.com>
+Date: Thu, 1 May 2025 20:27:58 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.6 000/196] 6.6.89-rc2 review
+Content-Language: de-DE
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250501081437.703410892@linuxfoundation.org>
+From: Peter Schneider <pschneider1968@googlemail.com>
+In-Reply-To: <20250501081437.703410892@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-05-01 at 09:35 +0200, Luis Gerhorst wrote:
-> This is required to catch the errors later and fall back to a nospec if
-> on a speculative path.
->=20
-> Eliminate the regs variable as it is only used once and insn_idx is not
-> modified in-between the definition and usage.
->=20
-> Still pass insn simply to match the other check_*() functions. As Eduard
-> points out [1], insn is assumed to correspond to env->insn_idx in many
-> places (e.g, __check_reg_arg()).
->=20
-> Move code into do_check_insn(), replace
-> * "continue" with "return 0" after modifying insn_idx
-> * "goto process_bpf_exit" with "return PROCESS_BPF_EXIT"
-> * "do_print_state =3D " with "*do_print_state =3D "
->=20
-> [1] https://lore.kernel.org/all/293dbe3950a782b8eb3b87b71d7a967e120191fd.=
-camel@gmail.com/
->=20
-> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> Acked-by: Henriette Herzog <henriette.herzog@rub.de>
-> Cc: Maximilian Ott <ott@cs.fau.de>
-> Cc: Milan Stephan <milan.stephan@fau.de>
-> ---
+Am 01.05.2025 um 10:18 schrieb Greg Kroah-Hartman:
+> This is the start of the stable review cycle for the 6.6.89 release.
+> There are 196 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Except two notes below, I think this patch looks good.
-Thank you, this is a good refactoring.
+Just like rc1, rc2 builds, boots and works fine on my 2-socket Ivy Bridge Xeon E5-2697 v2 
+server. No dmesg oddities or regressions found.
 
-[...]
+Tested-by: Peter Schneider <pschneider1968@googlemail.com>
 
-> +static int do_check_insn(struct bpf_verifier_env *env, struct bpf_insn *=
-insn,
-> +			 bool *do_print_state)
-> +{
 
-[...]
+Beste Grüße,
+Peter Schneider
 
-> +	} else if (class =3D=3D BPF_ST) {
-> +		enum bpf_reg_type dst_reg_type;
-> +
-> +		if (BPF_MODE(insn->code) !=3D BPF_MEM ||
-> +		    insn->src_reg !=3D BPF_REG_0) {
-> +			verbose(env, "BPF_ST uses reserved fields\n");
-> +			return -EINVAL;
-> +		}
-> +		/* check src operand */
-> +		err =3D check_reg_arg(env, insn->dst_reg, SRC_OP);
-> +		if (err)
-> +			return err;
-> +
-> +		dst_reg_type =3D cur_regs(env)[insn->dst_reg].type;
+-- 
+Climb the mountain not to plant your flag, but to embrace the challenge,
+enjoy the air and behold the view. Climb it so you can see the world,
+not so the world can see you.                    -- David McCullough Jr.
 
-Implicitly relying on `insn =3D=3D &env->prog->insnsi[env->cur_idx]`
-is weird. Still think that `insn` parameter should be dropped and
-computed inside this function instead.
-
-> +
-> +		/* check that memory (dst_reg + off) is writeable */
-> +		err =3D check_mem_access(env, env->insn_idx, insn->dst_reg,
-> +				       insn->off, BPF_SIZE(insn->code),
-> +				       BPF_WRITE, -1, false, false);
-> +		if (err)
-> +			return err;
-> +
-> +		err =3D save_aux_ptr_type(env, dst_reg_type, false);
-> +		if (err)
-> +			return err;
-> +	} else if (class =3D=3D BPF_JMP || class =3D=3D BPF_JMP32) {
-
-[...]
-
-> +		} else if (opcode =3D=3D BPF_EXIT) {
-> +			if (BPF_SRC(insn->code) !=3D BPF_K ||
-> +			    insn->imm !=3D 0 ||
-> +			    insn->src_reg !=3D BPF_REG_0 ||
-> +			    insn->dst_reg !=3D BPF_REG_0 ||
-> +			    class =3D=3D BPF_JMP32) {
-> +				verbose(env, "BPF_EXIT uses reserved fields\n");
-> +				return -EINVAL;
-> +			}
-> +process_bpf_exit_full:
-
-Nit: since we are refactoring I'd extract this as a function instead of got=
-o.
-
-> +			/* We must do check_reference_leak here before
-> +			 * prepare_func_exit to handle the case when
-> +			 * state->curframe > 0, it may be a callback function,
-> +			 * for which reference_state must match caller reference
-> +			 * state when it exits.
-> +			 */
-> +			err =3D check_resource_leak(env, exception_exit, !env->cur_state->cur=
-frame,
-> +						  "BPF_EXIT instruction in main prog");
-> +			if (err)
-> +				return err;
-> +
-> +			/* The side effect of the prepare_func_exit which is
-> +			 * being skipped is that it frees bpf_func_state.
-> +			 * Typically, process_bpf_exit will only be hit with
-> +			 * outermost exit. copy_verifier_state in pop_stack will
-> +			 * handle freeing of any extra bpf_func_state left over
-> +			 * from not processing all nested function exits. We
-> +			 * also skip return code checks as they are not needed
-> +			 * for exceptional exits.
-> +			 */
-> +			if (exception_exit)
-> +				return PROCESS_BPF_EXIT;
-> +
-> +			if (env->cur_state->curframe) {
-> +				/* exit from nested function */
-> +				err =3D prepare_func_exit(env, &env->insn_idx);
-> +				if (err)
-> +					return err;
-> +				*do_print_state =3D true;
-> +				return 0;
-> +			}
-> +
-> +			err =3D check_return_code(env, BPF_REG_0, "R0");
-> +			if (err)
-> +				return err;
-> +			return PROCESS_BPF_EXIT;
-
-[...]
-
+OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
+Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
+https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
