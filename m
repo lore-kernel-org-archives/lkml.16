@@ -1,448 +1,231 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2049.outbound.protection.outlook.com [40.107.94.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C99827814C;
-	Thu,  1 May 2025 12:59:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746104391; cv=none; b=DTDRMPuGz6+AygMQUKlp8uOkjb33GFFiDeyTLCbsM1tb+uNmg3J8Y8gXNhOu4vW9uNjEHl/iKgla5B6rBiLYeHymZKvQD/x+gUImLUmn/6K43St68Tp+8UUnUou1y5zgU/i21zLDBsk2C01QoK4NZzL25nsMWVX/WWECcw5HjFM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3657277817;
+	Thu,  1 May 2025 12:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.49
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746104391; cv=fail; b=csPNrUpJzJWJj5IpT+rA3axyJyfgwIpkwqKN+Ip1Z81MSvnOcsZaO0upwGAeRpuutpzGsjTUy9TWn+DrPXsyF63EU22kojoltKcvy46+/5G/8ijmFZRyBrOOYU3Iv908fyZSDmKIhwls/9nt9+iJpPdaEtHc+XawChe6Og9Qqe4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746104391; c=relaxed/simple;
-	bh=LkvWrEo5B39cVkpRV7s6Z1Rq1/YJBkmZGbMIUQAxJ4A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GFXkn0a2UkFb1hJCgAHzqxSNEZSa3mw33OS0YbtakpknnF02hP1Kk0vIOvPokOjaJYJvXPah34aDeYB/Ww3WTYNGp0tw5UZJrJMcJDzciQioyuPssXVSEgKoXvZR1ytKo7fQ7IM0Zk+Nl4xJoNfuC5Zx2Ssk1IER5Xc78dZX7cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j5kZtoeQ; arc=none smtp.client-ip=10.30.226.201
+	bh=gAHg78OyfwNNG6OM+aqO4PmC6dYu9W19fruHfTOqPFo=;
+	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
+	 To:Cc:MIME-Version; b=auky6t5umDOD4Uj+mM1QVSSL8a/59FuUFpJqjIF30Fv0HuOl3ew+9kk3C74FiiWsKSIXR8UHdhq9/tPqZjvnEoMfLx5qIQ6Q3zJltK9m1ajTJDcKB9Dtlh8EnWoBeXYiehX1NnZIuze0Di9UE3fZNfSWc9+KGeJAtukvUrAajvs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PM9mD3it; arc=fail smtp.client-ip=40.107.94.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j5kZtoeQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A2E8C4CEF0;
-	Thu,  1 May 2025 12:59:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746104390;
-	bh=LkvWrEo5B39cVkpRV7s6Z1Rq1/YJBkmZGbMIUQAxJ4A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j5kZtoeQ2bSFg4yaD6Y+JOXzeVK6UvpZAwxGH2nS9brn9+2EEOhFQF7f6qMEF4Jw0
-	 LZ1XTja2hskseyTqKSN/xaFRj58O/mg4EqtUnzFY9BHYPH4D4H7TWxL0EYmLfk1Nkd
-	 i9x3PkxuYWHd2qOYzSaCk6XAefnsmUk5RKdWx82HPrd8Tdh+MxLn6Kd6mKoyK05Sxj
-	 djGY3yzl+qlj662W4WzApxEJPat1nUI20ElrcHyypSKO+TmQKI9CUi25R/DxDeX/nv
-	 MTL7MQ9jGarXqrbWF20oWUu7gu/nKwJC4HXmmSsKI4hNN3Dso3XFOfM6GE75S0zSFl
-	 2uHLyFokAFGvQ==
-Date: Thu, 1 May 2025 13:59:43 +0100
-From: Lee Jones <lee@kernel.org>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
-Message-ID: <20250501125943.GN1567507@google.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PM9mD3it"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XFC6dxSg+2O6eA8WQVMixe9pKQxTsr06IJseYglhdkNq+4eAiFnEK5eKdObuCLdGpHTUziHR7Rs1IxLYmC9p9pf2VPL53a0JF31LZfQLsc/P0+WJLOrGs0oERk1hucoENyhPCaX4Xg0yO6Vl+oRq1bZcxj3Xtepu5ai2PyGtLKGE3EkaeQuufXqi8OZtownKDADBDQHhRXquMN1jjFehaYFcJllfWS2HX6N1T3MLJUhlnQiRkUmq8r6xuSAAiEnMavSZt7Xy/XinVHOP1YfGw55RPPxc/h5oyNPxcE/2Uga/f2s8hgaitdBgm/9utKEFHzTL1lGKEpVr/PZAR7vQ2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sNe1eG/UDCoJfhHQgczXk0h/qIrCF5U8YolVwgx3mT4=;
+ b=DEoAg/pAAc8o8pRFpIc8qIla/6hKlF4/kMmnBncZ5vqysCt/Ycky0+ilfBXj1JQAGVeaq85GmMa7BOAxupYzYgG0dbK3F2vOMJigVyQabYCM8dXgvGLjECuKAvrFo++O6WDRMA5CgEtxu07hwCRf/ufenBdMzg72tHMAkzyAKc6R/1XKpV99ZThZiWg+YBzyRVl1ZFWCT1RnKmZXPZ9qwFQ1gJgqC8Pg7rXYapp854wWFhKyKsUeoTGXuTg2VkPqOXD7E+rZmFndO2cwNQ8BB0UM360x1xJv6T1dWoKF4hQIOAxHRdXCQrnPAHr7lZDM7ZDiDiP6BszCHiP2Lb0y6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=sNe1eG/UDCoJfhHQgczXk0h/qIrCF5U8YolVwgx3mT4=;
+ b=PM9mD3it9kfMaJ0VON+2MhGHmfZWA6IgMugI0ns88JXXh/qLkujWG6Nh9MQLw2GpLRclFuNmSNszjOyYC71FnleIoeclR8svQ6lXk+AaE5Ym3ldMzRfjBQEIbCerCB4wcdWSD7TfuZK0NYLvDYvkYJrh7ulq9lm4278k64DpoPR82xl5E/No966om/55Rsq/BVNL+mMW/T8R4JUH4DaMg7xiXe/TiKU8dsJAhRSjpwmbVnAKF6DcvunDLml3tFWUiLEZ9D0+aMXwrtrddRP8o4hiDd5K37I3SSflsXl3zZseSa40OxUwyguQjGNP1GgXf2pfZJYytrE2mwEbSrUlJA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by LV2PR12MB5919.namprd12.prod.outlook.com (2603:10b6:408:173::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Thu, 1 May
+ 2025 12:59:46 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.012; Thu, 1 May 2025
+ 12:59:46 +0000
+From: Alexandre Courbot <acourbot@nvidia.com>
+Date: Thu, 01 May 2025 21:58:35 +0900
+Subject: [PATCH v2 17/21] rust: num: Add an upward alignment helper for
+ usize
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
+References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+In-Reply-To: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Jonathan Corbet <corbet@lwn.net>
+Cc: John Hubbard <jhubbard@nvidia.com>, Ben Skeggs <bskeggs@nvidia.com>, 
+ Joel Fernandes <joelagnelf@nvidia.com>, Timur Tabi <ttabi@nvidia.com>, 
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Alexandre Courbot <acourbot@nvidia.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: TYCPR01CA0195.jpnprd01.prod.outlook.com
+ (2603:1096:400:2b0::17) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|LV2PR12MB5919:EE_
+X-MS-Office365-Filtering-Correlation-Id: 127d071e-070e-4dde-9c49-08dd88b00c53
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|10070799003|366016|1800799024|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?S3hjZ2VOV3RGdmdIQWczMlJpcUpMYnorbU9qeUk1VHJybExBMVlrMHY0V3FY?=
+ =?utf-8?B?WUlyMEorOFhNb0xKY1JoTkM3UE8zZFUrNlg4bHlvYzVRa2dWcFQ5Y3pwVjgz?=
+ =?utf-8?B?RjdaSnVwMVA4Z1IyVng4N0UzYXhMV0NvK2FvdEl2SzRxOWhRUEZLNzlCVHl3?=
+ =?utf-8?B?a2lCYWsrcTlzRzZzT0QxWVNJQnZNTVVvVlJhdE9ta1NjNlBRUmRkdjUwWkN1?=
+ =?utf-8?B?Y2ZPNzZJWFlTM3hiejhYdlBDRDkyQjl0Q3lQaXBhaXNkc0ZPWHFSVDVQMU5X?=
+ =?utf-8?B?aVhhSTVwbEpORTR5MEFoNWpNVjk5K0JBZXkwVWlNOFhjYjhYYTZzMTdjMnMv?=
+ =?utf-8?B?YjNVVGgwNnIzOHlYZVhQTmdYaFF6dGE0dE1LaEU4QWhkTVJFQlBaUk1BZVMy?=
+ =?utf-8?B?d3hrclFBb25sOWhNTG1Jangvckx5d1U3ZEZ5T29aRXhVSXV0bDM4T2o4L3Ns?=
+ =?utf-8?B?Wm0rTFJYQTRhNUpLQlhLM3h5Q2dNRnc5MGxtMk1yc1hVRFVVRnF1QTZwM28r?=
+ =?utf-8?B?b1A2cEg1clNwY1FIV0tkaTVJUkJPRWdBNEYzU1JxMmt3RzhiMmtrT2pObkNh?=
+ =?utf-8?B?YnlPbFJZVlY5K2h4NkUrYk9ydDFmVFhZY2VmbjluUUlRNGhVTTViUmVaOTc1?=
+ =?utf-8?B?NUpFSFIyVWZwalZXSDZBK3l6UmZYZ1FxMTYvWklhR2Z5QUlkM3ZsZjZVNTU5?=
+ =?utf-8?B?YVpOZ3lkRkQ5dFBjZFdxYnpsYndMOFI0Z3AvN1lQV3NGK2pSaFJWRkkrZDRQ?=
+ =?utf-8?B?eGlwSkFaU3I3Skx0YjdsbytNWk8xbXdSaGpDVGpMN3V4Y2FzOFVjTFFaL2Zj?=
+ =?utf-8?B?MU1EMDBDOWMwWm42d3M1dXZPd0lBUmlVMHYyYUxwWS90eXpsTit6UllVZ3Bj?=
+ =?utf-8?B?VDUrRkZLbmtQbTBEYkxPRkI5TDJ1bUZjNXpZVU9QQ2pueHREc21TUmpJVHJ1?=
+ =?utf-8?B?QWs4cS9SYkQzdWY4OWJtRFpGaWNESmtHZ1V5cWkwRnJTMGJyU1BON20vc3lU?=
+ =?utf-8?B?RHhMYVM0a1NEcXVnVlFkMUZJOTJxdmZpTTRIdGRqTVpLakVTUkdxWTF0QnRQ?=
+ =?utf-8?B?RGhNTG9IWDZUZUgzZ2RyQVV4OW1VZWZ5R0xQNTE4N09RRWFtaW1OeWIrajdW?=
+ =?utf-8?B?SDlBWmd1ci9nc2ExWmlaUzI0UGxsZnRvbzA1bDhQUHo0U0hqSEtDejZNMGJa?=
+ =?utf-8?B?UXhQMS85RnpMQkVJRTdIcmtWZ3RJTE5Xb0JJbGZYS3ZSbEdpc3hjTFUrWm9D?=
+ =?utf-8?B?eUxyNjdBN3BOeGsrZldSWVpKS1BFVzFFdEsrTnpJVU5XNzgwejBCTGx1bjVQ?=
+ =?utf-8?B?SVNUWVEvc1lDd3hLTjNwcEJqektkbDlPN1JTWTVwYVZ1eFMxQmVsYUNOOTdy?=
+ =?utf-8?B?dWhvNWRiZUpvejRzNmtRNUo1VE8vZHlpeEJ5ekMrNndyZllNRDRlakRIcWJ2?=
+ =?utf-8?B?UHViQ3JoTVZwcXo4QzdXZnNlZFBVQngxYWg0YnlZZWt4ZE5WWVFRZ05lcllH?=
+ =?utf-8?B?Sm0xTVJyYkpHRUVXSzd6MTBkTUg1WkN1dTFWZFd4OWx5WDVvS0xqNmNCSGg2?=
+ =?utf-8?B?d1RBSDdIYlF3S09RSGtCcWRVUjl0dUd0ODVSSnRCUWM5R2xzRDVsRXBMYUhz?=
+ =?utf-8?B?Z1FuMnlPbDc4TERuUWF2NXFJVUUrdXdHZUk3cU0raFJTU2xCS0lkNWM5aGFL?=
+ =?utf-8?B?ZGFLVSsxL1V3VFFpU21jMHBPZEc5ZDFXU2xWMWk4TUZCeEw4bzlFZGNGRThZ?=
+ =?utf-8?B?ZllxL0JaUzZmT3cxdmZzcjZETXVaUzdYOUlEMzVDNFJmT3MyRDNFeFdFTTJ3?=
+ =?utf-8?B?RmpOYnltYjc3ejJuY3BIQzl0Q085RGR2akp3ZW1HMmYrTkZvU0xGUFJubnZp?=
+ =?utf-8?B?SE9EV1dhY3ZuMllNaVcyVi95NG8zWE1YL3l0OHNqZDFlY2s3WVR6SXVQUkE1?=
+ =?utf-8?B?QnZYTFZoT2NKOXBhWVIwb052ZlljRlQ5YWZsejlZVnVuZEM3WWl0Y05JeWhR?=
+ =?utf-8?B?TFpXZHFmYWl3PT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UHZGYXJRYlJrVVVkNHFCZTZLczhOM2Fla2wwdWJ0bERzbGVSUGVxWTBOakhj?=
+ =?utf-8?B?amo5L2NvR3FBMUdLL1R3S2Y1OHlrSitNUmhrcDZCRUgzS0pGMUVzbXRmSWEv?=
+ =?utf-8?B?ZTFBK0VNNHd0Q1BBS2s2SHJKa21ESHNiTEx2dUZvNXNZc1pSRUdPZUt5TDVp?=
+ =?utf-8?B?aCtja200WExlTzg4MEptblRaSGtHWDNOY3dUTmR6WlRXdVhqaG1hQ2FOYll0?=
+ =?utf-8?B?UUdPL1BkTHl4RElHd09sWDZhU3lDWE52TkRPbUQyVDBBNzQ4VGttZlpxbDI4?=
+ =?utf-8?B?SzFndmJVbFJ1OWhQOHVYYnFYUmFJUVdUeVhZUFpYQ2hnYUI5eDN6OVF6N2NX?=
+ =?utf-8?B?V3A3a3FTRFFDaWxtMUJhb2VxaVdiVS9VcVJvbElXWVpSMS9LOE1wcFlrM05L?=
+ =?utf-8?B?TkNzZTNpZEZHaytLUVZMZ014Nk5RNU5GNzNLMmZ6aWozQTVEazIzSlNycVVF?=
+ =?utf-8?B?R1NORjhCRFhTbFA5NjhETjcyeGhIVUd5WlRxUEx3STU5dVFmM1gxc3BQUEpQ?=
+ =?utf-8?B?V0NsaXg4dHFvcEJHQWFzRGdxVmREc2U1QzhmeDd1TndqMm5DdzhyR1NCMk9W?=
+ =?utf-8?B?b3RmeFA4Zk40N2szdDJ6MlFsbXB5T05wMVlKSnpMaFBUQkhwdDRlLyttVmp5?=
+ =?utf-8?B?QjJ1QnJkWjhEMzVrWkVEbjl2eUxaQjRhN1d3Znh5ekNQRmFlcS84SjcvVkwv?=
+ =?utf-8?B?NVBrUGdQTUIwajJsbVpzWUJTK1VWS2J1SlM0QWxFM0RwL0kzWjVwbVdCWnF2?=
+ =?utf-8?B?b2M2bTBic2JtcjBacEloM0U3RWN2bFAzTU42VmVpWG1MTEtkRURUTTk1WWZh?=
+ =?utf-8?B?cnRrRkxXSkZKelRMck8rYkNMUW1vWEdQYVppM3JJcXpIWGhVUDIwclZoYzBX?=
+ =?utf-8?B?Y2ZWQ2RCVzZldHcrOHFKWVBLYUx6Zi9ibkVZODVGSENOOElHUkc2T0t2L1hq?=
+ =?utf-8?B?eVFWaHF2TjI2bGZMbUhMOWdOVGNEZm04MXNmUUJNUXdNcEE4alcrdDc5Qklo?=
+ =?utf-8?B?c3p6VUpFQllzTlZGVzdmWTMyY24rck5SRy9HR2QyRENUcnlycGZMR3RtZ01Q?=
+ =?utf-8?B?bWZhSGUyOVFXWnA4RG8ybG80NVk1b210aE9HUnVPWjY5RktLeG9YMXBTa0c0?=
+ =?utf-8?B?cUM2K0NCdVRiLzBvL211YU8xU1NoV3Vsc3pSRUJKdmE2aE42aVRlMEZ4VVM0?=
+ =?utf-8?B?TkNIUnBhT0pOcm9Zd3dZSmZVWm8ySHVKaXhlZ1ZYWkJQZEY2M0V0QnByOVBp?=
+ =?utf-8?B?UmZIUUcrak9qUlRYRTdiazhqb2hEbmlzb3pCY1d1WmhxaUp1ZDI4M3hYaDdo?=
+ =?utf-8?B?cjhXM29oMG40a0NqeFd6d0NUSHljTkh5dzFZMVpjVUJpYlorb29rZmtVYmRZ?=
+ =?utf-8?B?T3A1ampldFlMYzExZmRHVVhDckM4ak8xWUFuK1p2OFZ0U055UWoyYk9TK1Z6?=
+ =?utf-8?B?VDJsaE84TnlYa0lidmlOSzZSSnBwa1JNQ0UxektiT2N5UURuSHFTcEtIZGVF?=
+ =?utf-8?B?ZHVNWVZxakNpTTdOUHJuZ1FKdCtaTFkrSW9aUmJKVnVPSzhxNFkzM05jMk1s?=
+ =?utf-8?B?VDJvZEZWUkdhOWpqM3RyUnNqOHFVWmh3cWxOKzIwajJXY2RRRHloc3lybUN2?=
+ =?utf-8?B?OEVCL1o5RVJ5RzIxQmJwUm9YNU9TRTFpZFJVVnk3OVVaY29nVUxzM2MzQ0JE?=
+ =?utf-8?B?T3JPdzZvUUdYcHpCVlFkdXZ5eG9OZ0FBNzBKSGt3cVVHbC91WDM0SU9Oc0dS?=
+ =?utf-8?B?NC9NWWdsRHFrdXVtamlIaWxvOFB5Q0FDWlpiSGl2T2RiZmlVM0FUK1hMUG9q?=
+ =?utf-8?B?WGkwM1hqK0szQXlSc0l5eStzMFdEc0xLSnV2aHowL3dDWWpYU2FJM0N0ZUU1?=
+ =?utf-8?B?ZElQSmFrSUtiU2FmMjFNaHo1dzVnU01XRVZTZXFBR00zYlZPVGdCaDliNlVh?=
+ =?utf-8?B?R0JvaE5FLzUxVlExclFLVTMrYkJtMk14S3c0aFZ5VVVzMkNkVnBTcDkxdWF1?=
+ =?utf-8?B?bkpldG9ITXJPOGtTQjVLK2VFeW1pTkQ5NmVCRDA5dW8rVEZGa2s5ZHcxV1Vn?=
+ =?utf-8?B?cGE1YVB4anU4dnZyVWp6NlNseXFJOWZlVnZDMlR3Ry9OblRjYzRMdHB2VUo2?=
+ =?utf-8?B?K2pSUjZsK2pNbEJZbnZ1S0NmdG5SZkRHOE9rZTV4L09PNG10TFF5dDlBNFNJ?=
+ =?utf-8?Q?SBD0p75jxLJrVz3I+cdEpTdiO/OOITj9hBKnRhgzvAKi?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 127d071e-070e-4dde-9c49-08dd88b00c53
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 12:59:46.0931
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nnGi/dsFJt8pmkblw1JRNLSyy7ix4FG3DScjTWBc3BqMoGFPvfULD7MUEQiT2V3o1lXP8mh7aMqIuHxXvK2Kfg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5919
 
-On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
+From: Joel Fernandes <joelagnelf@nvidia.com>
 
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> 
-> Add core driver to support MAX7360 i2c chip, multi function device
-> with keypad, GPIO, PWM, GPO and rotary encoder submodules.
-> 
-> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> ---
->  drivers/mfd/Kconfig         |  14 ++++
->  drivers/mfd/Makefile        |   1 +
->  drivers/mfd/max7360.c       | 184 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/max7360.h | 109 ++++++++++++++++++++++++++
->  4 files changed, 308 insertions(+)
+This will be used in the nova-core driver where we need to upward-align
+the image size to get to the next image in the VBIOS ROM.
 
-Getting there.  Couple of nits.  Last push!
+[acourbot@nvidia.com: handled conflicts due to removal of patch creating
+num.rs]
 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 22b936310039..c2998c6ce54c 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -2422,5 +2422,19 @@ config MFD_UPBOARD_FPGA
->  	  To compile this driver as a module, choose M here: the module will be
->  	  called upboard-fpga.
->  
-> +config MFD_MAX7360
-> +	tristate "Maxim MAX7360 I2C IO Expander"
-> +	depends on I2C
-> +	select MFD_CORE
-> +	select REGMAP_I2C
-> +	select REGMAP_IRQ
-> +	help
-> +	  Say yes here to add support for Maxim MAX7360 device, embedding
-> +	  keypad, rotary encoder, PWM and GPIO features.
-> +
-> +	  This driver provides common support for accessing the device;
-> +	  additional drivers must be enabled in order to use the functionality
-> +	  of the device.
-> +
->  endmenu
->  endif
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 948cbdf42a18..add9ff58eb25 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -162,6 +162,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
->  obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
->  
->  obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
-> +obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
->  obj-$(CONFIG_MFD_MAX77541)	+= max77541.o
->  obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
->  obj-$(CONFIG_MFD_MAX77650)	+= max77650.o
-> diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
-> new file mode 100644
-> index 000000000000..9a223a9b409d
-> --- /dev/null
-> +++ b/drivers/mfd/max7360.c
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Maxim MAX7360 Core Driver
-> + *
-> + * Copyright 2025 Bootlin
-> + *
-> + * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> + */
-> +
-> +#include <linux/array_size.h>
-> +#include <linux/bits.h>
-> +#include <linux/delay.h>
-> +#include <linux/device/devres.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/mfd/max7360.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/types.h>
-> +
-> +static const struct mfd_cell max7360_cells[] = {
-> +	{
-> +		.name           = "max7360-pinctrl",
-> +	},
+Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+---
+ rust/kernel/lib.rs |  1 +
+ rust/kernel/num.rs | 21 +++++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-All of these single line entries should be placed on a single line.
-
-	{ .name = "max7360-pinctrl" },
-	{ .name = "max7360-pwm" },
-
-If ordering is not important.  Please group them.
-
-> +	{
-> +		.name           = "max7360-pwm",
-> +	},
-> +	{
-> +		.name           = "max7360-gpo",
-> +		.of_compatible	= "maxim,max7360-gpo",
-> +	},
-> +	{
-> +		.name           = "max7360-gpio",
-> +		.of_compatible	= "maxim,max7360-gpio",
-> +	},
-> +	{
-> +		.name           = "max7360-keypad",
-> +	},
-> +	{
-> +		.name           = "max7360-rotary",
-> +	},
-> +};
-> +
-> +static const struct regmap_range max7360_volatile_ranges[] = {
-> +	{
-> +		.range_min = MAX7360_REG_KEYFIFO,
-> +		.range_max = MAX7360_REG_KEYFIFO,
-> +	}, {
-> +		.range_min = MAX7360_REG_I2C_TIMEOUT,
-> +		.range_max = MAX7360_REG_RTR_CNT,
-> +	},
-> +};
-
-Use regmap_reg_range()
-
-> +static const struct regmap_access_table max7360_volatile_table = {
-> +	.yes_ranges = max7360_volatile_ranges,
-> +	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
-> +};
-> +
-> +static const struct regmap_config max7360_regmap_config = {
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +	.max_register = MAX7360_REG_PWMCFG(MAX7360_PORT_PWM_COUNT - 1),
-> +	.volatile_table = &max7360_volatile_table,
-> +	.cache_type = REGCACHE_MAPLE,
-> +};
-> +
-> +static int max7360_mask_irqs(struct regmap *regmap)
-> +{
-> +	struct device *dev = regmap_get_device(regmap);
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/*
-> +	 * GPIO/PWM interrupts are not masked on reset: as the MAX7360 "INTI"
-> +	 * interrupt line is shared between GPIOs and rotary encoder, this could
-> +	 * result in repeated spurious interrupts on the rotary encoder driver
-> +	 * if the GPIO driver is not loaded. Mask them now to avoid this
-> +	 * situation.
-> +	 */
-> +	for (unsigned int i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
-> +		ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-> +					MAX7360_PORT_CFG_INTERRUPT_MASK,
-> +					MAX7360_PORT_CFG_INTERRUPT_MASK);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to write max7360 port configuration");
-
-MAX7360
-
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* Read GPIO in register, to ACK any pending IRQ. */
-> +	ret = regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
-> +	if (ret)
-> +		dev_err(dev, "Failed to read gpio values: %d\n", ret);
-
-GPIO
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int max7360_reset(struct regmap *regmap)
-> +{
-> +	struct device *dev = regmap_get_device(regmap);
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, MAX7360_REG_GPIOCFG, MAX7360_GPIO_CFG_GPIO_RST);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to reset GPIO configuration: %x\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regcache_drop_region(regmap, MAX7360_REG_GPIOCFG, MAX7360_REG_GPIO_LAST);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to drop regmap cache: %x\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_write(regmap, MAX7360_REG_SLEEP, 0);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to reset autosleep configuration: %x\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = regmap_write(regmap, MAX7360_REG_DEBOUNCE, 0);
-> +	if (ret)
-> +		dev_err(dev, "Failed to reset GPO port count: %x\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static int max7360_probe(struct i2c_client *client)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
-> +	if (IS_ERR(regmap))
-> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regmap\n");
-
-dev_err_ptr_probe()
-
-> +
-> +	ret = max7360_reset(regmap);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to reset device\n");
-> +
-> +	/* Get the device out of shutdown mode. */
-> +	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
-> +				MAX7360_GPIO_CFG_GPIO_EN,
-> +				MAX7360_GPIO_CFG_GPIO_EN);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to enable GPIO and PWM module\n");
-> +
-> +	ret = max7360_mask_irqs(regmap);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
-> +
-> +	ret = devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-> +				   max7360_cells, ARRAY_SIZE(max7360_cells),
-> +				   NULL, 0, NULL);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to register child devices\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id max7360_dt_match[] = {
-> +	{ .compatible = "maxim,max7360" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, max7360_dt_match);
-> +
-> +static struct i2c_driver max7360_driver = {
-> +	.driver = {
-> +		.name = "max7360",
-> +		.of_match_table = max7360_dt_match,
-> +	},
-> +	.probe = max7360_probe,
-> +};
-> +module_i2c_driver(max7360_driver);
-> +
-> +MODULE_DESCRIPTION("Maxim MAX7360 I2C IO Expander core driver");
-> +MODULE_AUTHOR("Kamel Bouhara <kamel.bouhara@bootlin.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
-> new file mode 100644
-> index 000000000000..b1d4cbee2385
-> --- /dev/null
-> +++ b/include/linux/mfd/max7360.h
-> @@ -0,0 +1,109 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +
-> +#ifndef __LINUX_MFD_MAX7360_H
-> +#define __LINUX_MFD_MAX7360_H
-> +
-> +#include <linux/bits.h>
-> +
-> +#define MAX7360_MAX_KEY_ROWS		8
-> +#define MAX7360_MAX_KEY_COLS		8
-> +#define MAX7360_MAX_KEY_NUM		(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
-> +#define MAX7360_ROW_SHIFT		3
-> +
-> +#define MAX7360_MAX_GPIO		8
-> +#define MAX7360_MAX_GPO			6
-> +#define MAX7360_PORT_PWM_COUNT		8
-> +#define MAX7360_PORT_RTR_PIN		(MAX7360_PORT_PWM_COUNT - 1)
-> +
-> +/*
-> + * MAX7360 registers
-> + */
-> +#define MAX7360_REG_KEYFIFO		0x00
-> +#define MAX7360_REG_CONFIG		0x01
-> +#define MAX7360_REG_DEBOUNCE		0x02
-> +#define MAX7360_REG_INTERRUPT		0x03
-> +#define MAX7360_REG_PORTS		0x04
-> +#define MAX7360_REG_KEYREP		0x05
-> +#define MAX7360_REG_SLEEP		0x06
-> +
-> +/*
-> + * MAX7360 GPIO registers
-> + *
-> + * All these registers are reset together when writing bit 3 of
-> + * MAX7360_REG_GPIOCFG.
-> + */
-> +#define MAX7360_REG_GPIOCFG		0x40
-> +#define MAX7360_REG_GPIOCTRL		0x41
-> +#define MAX7360_REG_GPIODEB		0x42
-> +#define MAX7360_REG_GPIOCURR		0x43
-> +#define MAX7360_REG_GPIOOUTM		0x44
-> +#define MAX7360_REG_PWMCOM		0x45
-> +#define MAX7360_REG_RTRCFG		0x46
-> +#define MAX7360_REG_I2C_TIMEOUT		0x48
-> +#define MAX7360_REG_GPIOIN		0x49
-> +#define MAX7360_REG_RTR_CNT		0x4A
-> +#define MAX7360_REG_PWMBASE		0x50
-> +#define MAX7360_REG_PWMCFGBASE		0x58
-> +
-> +#define MAX7360_REG_GPIO_LAST		0x5F
-> +
-> +#define MAX7360_REG_PWM(x)		(MAX7360_REG_PWMBASE + (x))
-> +#define MAX7360_REG_PWMCFG(x)		(MAX7360_REG_PWMCFGBASE + (x))
-> +
-> +/*
-> + * Configuration register bits
-> + */
-> +#define MAX7360_FIFO_EMPTY		0x3f
-> +#define MAX7360_FIFO_OVERFLOW		0x7f
-> +#define MAX7360_FIFO_RELEASE		BIT(6)
-> +#define MAX7360_FIFO_COL		GENMASK(5, 3)
-> +#define MAX7360_FIFO_ROW		GENMASK(2, 0)
-> +
-> +#define MAX7360_CFG_SLEEP		BIT(7)
-> +#define MAX7360_CFG_INTERRUPT		BIT(5)
-> +#define MAX7360_CFG_KEY_RELEASE		BIT(3)
-> +#define MAX7360_CFG_WAKEUP		BIT(1)
-> +#define MAX7360_CFG_TIMEOUT		BIT(0)
-> +
-> +#define MAX7360_DEBOUNCE		GENMASK(4, 0)
-> +#define MAX7360_DEBOUNCE_MIN		9
-> +#define MAX7360_DEBOUNCE_MAX		40
-> +#define MAX7360_PORTS			GENMASK(8, 5)
-> +
-> +#define MAX7360_INTERRUPT_TIME_MASK	GENMASK(4, 0)
-> +#define MAX7360_INTERRUPT_FIFO_MASK	GENMASK(7, 5)
-> +
-> +#define MAX7360_PORT_CFG_INTERRUPT_MASK		BIT(7)
-> +#define MAX7360_PORT_CFG_INTERRUPT_EDGES	BIT(6)
-> +#define MAX7360_PORT_CFG_COMMON_PWM		BIT(5)
-> +
-> +/*
-> + * Autosleep register values
-> + */
-> +#define MAX7360_AUTOSLEEP_8192MS	0x01
-> +#define MAX7360_AUTOSLEEP_4096MS	0x02
-> +#define MAX7360_AUTOSLEEP_2048MS	0x03
-> +#define MAX7360_AUTOSLEEP_1024MS	0x04
-> +#define MAX7360_AUTOSLEEP_512MS		0x05
-> +#define MAX7360_AUTOSLEEP_256MS		0x06
-> +
-> +#define MAX7360_GPIO_CFG_RTR_EN		BIT(7)
-> +#define MAX7360_GPIO_CFG_GPIO_EN	BIT(4)
-> +#define MAX7360_GPIO_CFG_GPIO_RST	BIT(3)
-> +
-> +#define MAX7360_ROT_DEBOUNCE		GENMASK(3, 0)
-> +#define MAX7360_ROT_DEBOUNCE_MIN	0
-> +#define MAX7360_ROT_DEBOUNCE_MAX	15
-> +#define MAX7360_ROT_INTCNT		GENMASK(6, 4)
-> +#define MAX7360_ROT_INTCNT_DLY		BIT(7)
-> +
-> +#define MAX7360_INT_INTI		0
-> +#define MAX7360_INT_INTK		1
-> +
-> +#define MAX7360_INT_GPIO		0
-> +#define MAX7360_INT_KEYPAD		1
-> +#define MAX7360_INT_ROTARY		2
-> +
-> +#define MAX7360_NR_INTERNAL_IRQS	3
-> +
-> +#endif
-> 
-> -- 
-> 2.39.5
-> 
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index ab0286857061d2de1be0279cbd2cd3490e5a48c3..be75b196aa7a29cf3eed7c902ed8fb98689bbb50 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -67,6 +67,7 @@
+ pub mod miscdevice;
+ #[cfg(CONFIG_NET)]
+ pub mod net;
++pub mod num;
+ pub mod of;
+ pub mod page;
+ #[cfg(CONFIG_PCI)]
+diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
+new file mode 100644
+index 0000000000000000000000000000000000000000..953c6ab012601efb3c9387b4b299e22233670c4b
+--- /dev/null
++++ b/rust/kernel/num.rs
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Numerical and binary utilities for primitive types.
++
++/// A trait providing alignment operations for `usize`.
++pub trait UsizeAlign {
++    /// Aligns `self` upwards to the nearest multiple of `align`.
++    fn align_up(self, align: usize) -> usize;
++}
++
++impl UsizeAlign for usize {
++    fn align_up(mut self, align: usize) -> usize {
++        self = (self + align - 1) & !(align - 1);
++        self
++    }
++}
++
++/// Aligns `val` upwards to the nearest multiple of `align`.
++pub const fn usize_align_up(val: usize, align: usize) -> usize {
++    (val + align - 1) & !(align - 1)
++}
 
 -- 
-Lee Jones [李琼斯]
+2.49.0
+
