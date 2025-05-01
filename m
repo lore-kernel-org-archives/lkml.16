@@ -1,144 +1,108 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1A920DD51
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:39:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AF1520DD51;
+	Thu,  1 May 2025 16:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746117556; cv=none; b=arWksJCCH++QxL3utODTMsNnPO64q4+biEkg4BbTdj0JFqxNIT+FWXJrJGXS8lYkqU5fI6F5wgb4nphEpP/I/+xI/cAI3YkqFB4wn9CCGmgSmmY7CSbQS3x3H/D4XYWzCHa5tFjduQpPkWob17sPbN257EeB9E8dx4gnF8iLnAY=
+	t=1746117562; cv=none; b=JzkHfrR8Qn/qla/9x3HOZj63ERbzJsBTW+el+wxVpAEHD2pgFBRjUj3cGJdnJy1IiXphvC6On6plgvBOTMJlamLSTtUSVUTc/TSVy4o827dcA9cnwVhb+vF/YgDtOko1uU6nwfp+t54R162o6xz4e92NZ7Br64JfRjEWf7FeLW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746117556; c=relaxed/simple;
-	bh=OhXqVvV2jok1I00N0CwDqLUrzDi937D39pRWFVrmM+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=klpXyPT/B92fnA8lAjYilaKaxv2O8Y/mmc3xmHl5+NPxqs/YfT0mb/rb4KMxWGFdSPkXu2SodeoJQO5t3dlmuBirBMPR4FZxQOIDjAXAV3uH+s6Jynk4BwYnw607DFfMQS27Q8RG61K1OUMefhaalAP0KIeSyXJfBHX1YzEL1M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=b9ym1hJ9; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746117562; c=relaxed/simple;
+	bh=FkwuUMFCd2sL7fD34oCB1Ek3AWYdosfZO9gGoOfRj08=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=AXlrL4V1mAsrMfwq3SmZPGLYpKnxcGW20pLsD5eh5aoQUuctJhDpxLFMIcp19n+VrQAIb1AiVprBq2azd0ngvvaDiZzzVMKhkSWk3EOYuqFLhgdoJLzqaxZqh0FXAfZ5+nDbShh9ibArnV4BIj/C9+C8dvqhY1DOMi2cRR93Rzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CgBwjRpR; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b9ym1hJ9"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cee550af2so1781645e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:39:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CgBwjRpR"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2255003f4c6so13637455ad.0;
+        Thu, 01 May 2025 09:39:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746117552; x=1746722352; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=blFO9nj94W2sQqi74hSHTooSl7uV3ZKhQoJ+90nLCFw=;
-        b=b9ym1hJ9ZEoxqmJcQCERKbT7ORXyjEnJY1Z6q+NHeXPwVZSAeKno5CuFuVkBogi12P
-         7HGV7koORLkmb90SOMigUZnNVnJriJ1ae0pK2zsQI0H7b7q/Mn1EhAlLKQ8lY0aesU7x
-         kq7ldRX727s/Y3Z61fYqj6T7ip2r5hajsmp1XlNie46rHe7vU37LFDARGHuoJKO2hKA2
-         9FqyHrrbnVKRsI+yXRiFmgiUv2s2InNkcvT8GjT5PPxgs8vtywP+6coMvJexe6KpxSAC
-         r0gXZvrHYmdLxIFhJSvtg866f9chBA3StvNBOb1+LbLHWogMwKw4iGhaaWO0XLBvN1Pu
-         yI0g==
+        d=gmail.com; s=20230601; t=1746117560; x=1746722360; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TZdpeaEefEtsI5U4bsRp7ztRh4qRfGNOADZjn1xJAfk=;
+        b=CgBwjRpR1kBpJnZEj24hd3Ci0Cn3OX6TvaavqdJuvVab1EHs53St71ig/GaV0FvaC7
+         HOjuYwoPQPFD/KXo7772G+iVGGwMsM5QDCHa6/jX68X0axj3rQivjsApanwQyxpBiMEm
+         TwmIOVmwxGjzdRQX7r8IW9PCBM1Zb0W0jK8UKTYR5o3Z3jktYnfcLYIpZopaiKW62NzK
+         XXXRvs0O8qgq164hgnhoRZ1gLxMFp+jMpcmpedXoru8Cbu6Pl94CTloEfYGul0f38PKw
+         GHzOr/7Th/zwaqwrIGILozdFBNOk+YD3aYMsUFubc3vs7F4ndj/3ajRhUGstT/pZFNLA
+         pJLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746117552; x=1746722352;
-        h=content-transfer-encoding:in-reply-to:autocrypt:content-language
-         :from:references:cc:to:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746117560; x=1746722360;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=blFO9nj94W2sQqi74hSHTooSl7uV3ZKhQoJ+90nLCFw=;
-        b=uo+IiiABNj0U67drNm1eOpijLP/V+OxbVDTmBGnvy4WBLmrR9Cen8gSgxITlPkGA1q
-         5TMRtQD3T0U7KCDc0eAww2kFUrdoQPcCZjXFPNxcPmqQpjAF4Fo8AXo0Lts5Qov29l+W
-         Vq+5MPDSZZOCe6+fQ8ZGq3Qovf3rKRT5h6tVc4zCXQIGJGdGFNletzOtMBgZWN3GQVw/
-         iq9EM0tSCE+ruhizYZNHkiO9NKJTDcLYCd0SXxRvqEYnRuqRcCQt7maIJj/4YSjHMIQv
-         lBqcsbPnjUB26mNIw4h0qVdaTXxvVt4P5xvNc0/64aYGA7azCRe0YZLCM8/zbFppFk1Y
-         QJig==
-X-Forwarded-Encrypted: i=1; AJvYcCWezV04VEKMbhdv4p29Rd+UAmKsAM7u4tDFXsznZ+BTGAQvOKA4pbSq0cp0bIsLhLV0GmnfPXsQMIpCrRY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz13O2/Scyr+bmOnV6YkvGNzC0N3dntAi/0YrULeqLmciR04bnt
-	DCRiZ6rGN4dfdoTbIE3LV3U4a5irmYI0akABQXVZT9wHarRyUrbmj2ag08TOr9A=
-X-Gm-Gg: ASbGncu7sXYM17Qg6HVf+uzjMfxMI9T9Tr81pJVP7fp7SzcKKU1rhMY754Kalxyr8nQ
-	yNuza59wuqJBx9L23v/E9HZX4F/BT9TYISOqQ5N9kH36BKoQqYLSFp6v+JCH6ufhvTJwvNkcJg+
-	OkQuN32s77rkY8EjGdonktZw8Q4DdYQQWphNQTtPiP1gQp5+zJF36VaazjSho8dyv1uGxYXO4vd
-	y77PY/OiLaFtwk9598TIimeQpFEH8EN68XzgubvNqGy72ZEvrC/hClGV11iKuHm4kbLwFB7Kboq
-	0Z4K0LvzsJ3gfQJ7kmJIUweOrq5pXTFWgER5Cbt2Mdhud++3gAKVyNL6OabwWXyeaMTO3A==
-X-Google-Smtp-Source: AGHT+IFHLM3Gn90P1rxzB0WphTkEncIZiEbe/YA5FpOViIqbhpj9J1eXj04iTVLfCmwcAEk/SUFj8Q==
-X-Received: by 2002:a05:600c:46c5:b0:43d:745a:5a49 with SMTP id 5b1f17b1804b1-441b2dea5cbmr25205735e9.4.1746117552581;
-        Thu, 01 May 2025 09:39:12 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ed4f5sm17693655e9.18.2025.05.01.09.39.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 09:39:11 -0700 (PDT)
-Message-ID: <53e51779-1e05-48d9-971a-efe8f907e12e@linaro.org>
-Date: Thu, 1 May 2025 18:39:10 +0200
+        bh=TZdpeaEefEtsI5U4bsRp7ztRh4qRfGNOADZjn1xJAfk=;
+        b=aRX4FXTrapfTvt5T3tgWdKY9QUQEUaYy3j9eApHfpiirRGQVy104+O0f3s9eHEIZJ6
+         UP3mE+IVf1mOakJiq/o4yZqKbh21CnYoICZ4t6c+tibYauzZtWOFODjuHs0OYG06NKEJ
+         Faz+yrp5rfZN16uLvLx1vqXQdZ+g/s1w4VZauf3hP3JoFxE9ndXc0dcnTMdSsSy8sh5V
+         ljVuWD4SoJZc5cKviIje9JkQVB3GZUbg1JMkzEBH8x/Q1cPFSXGrZ2y7avGkQidr8lEG
+         LdT8yH8SdwJNXtoj1GBepO3EtCYIsNUVwSv9wEyLJVoJxC8JvXo1vHCJT8jd1oHFnZez
+         vsXw==
+X-Forwarded-Encrypted: i=1; AJvYcCX/w/Z3mC9Y/kiEsc2cfCH796QQiEGYwlQZBxvacvtLoOJJuVOH+sNeKy14rLC9Irzv/0VOh1zgTVnoMLpEuPMw@vger.kernel.org, AJvYcCXcd3YgZqIzR2i4whBl/cvSWyHZVBzpDCtsYc3mgqsMfmhuaJRc3wdLKCHNGCxLepbZGL0hgYUb5v54Z58=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYROGGrqwsQR6XJFnW4wUMvDo4XgHa8DEygNyvJiHtSxYkPRLb
+	z1H/tMDCoUXytsuqQbi6gMiteumlwKIG/dXizbzPe+BtXSGL5to=
+X-Gm-Gg: ASbGncuQiucgCR1JAJWUPceJYY979lu6gLICQzbrjkTHTAnvcu29pC20PF4RfrHIKNW
+	2ElG5JyCsJ9EGa3TvqpvwtwwL9CDIxJ/t6F1pOS4Hu/BudbtLpSP0nDNwAlcoyAJ5IqMiLMd1xt
+	pXAp5fgK9qJvJyz12fBssqNnewFijST0NoC+crUSjbC1CRFHig075w0NSlNhNDLdI2eiNEeR0Lq
+	TuPnmqOTjqd9Hvmc7FJp0fpTRzb9GoBU7JQ5WwROay8tU/0BtQsCb5KBEce3/ChFuHzjLrgWpWY
+	ztQv/lqSm0pSDw2KmkZ3f1Vm8l5IkzvM7cRcht99cX6Zmbo0OQ==
+X-Google-Smtp-Source: AGHT+IFcwEYNw1wVY/04aDP3XIHmVYZkBEqwaQakpwHu+5ab04JpJku3qjLTtv6yJLXJHjahlvlAfA==
+X-Received: by 2002:a17:902:ea0a:b0:220:e9ac:e746 with SMTP id d9443c01a7336-22e0865c0c9mr54769345ad.53.1746117560161;
+        Thu, 01 May 2025 09:39:20 -0700 (PDT)
+Received: from debian.ujwal.com ([223.185.132.49])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bc6e678sm8797525ad.132.2025.05.01.09.39.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 09:39:19 -0700 (PDT)
+From: Ujwal Kundur <ujwal.kundur@gmail.com>
+To: akpm@linux-foundation.org,
+	peterx@redhat.com,
+	shuah@kernel.org
+Cc: linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ujwal Kundur <ujwal.kundur@gmail.com>
+Subject: [PATCH 0/4] selftests/mm/uffd: refactor global variables
+Date: Thu,  1 May 2025 22:08:23 +0530
+Message-Id: <20250501163827.2598-1-ujwal.kundur@gmail.com>
+X-Mailer: git-send-email 2.20.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND v2 0/3] iommu: omap: Simplify few things
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Yong Wu <yong.wu@mediatek.com>,
- Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
-References: <20250501-syscon-phandle-args-iommu-v2-0-5a3cab296972@linaro.org>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20250501-syscon-phandle-args-iommu-v2-0-5a3cab296972@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 01/05/2025 18:36, Krzysztof Kozlowski wrote:
-> Changes in v2:
-> - Combine patches #1 and #2, add dev_err_probe() and drop the comment
->   (resolving Robin's comment)
-> - New patch: iommu: mtk_iommu_v1: Simplify by dropping local 'mtk_mapping' variable
-> - Rb tag
-> - Link to resend of v1: https://lore.kernel.org/r/20250212-syscon-phandle-args-iommu-v1-0-c3fab486b426@linaro.org
-> - Link to v1: https://lore.kernel.org/r/20250111-syscon-phandle-args-iommu-v1-0-3767dee585a6@linaro.org
-> 
-> Few code simplifications without functional impact.  Not tested on
-> hardware.
+This patchset refactors non-composite global variables into a common
+struct that can be initialized and passed around per-test instead of
+relying on the presence of global variables.
 
-I forgot to drop the subject prefix from b4 - this is not a resend, just
-v2. Apologies.
+This allows:
+- Better encapsulation
+- Debugging becomes easier -- local variable state can be viewed per
+  stack frame, and we can more easily reason about the variable
+  mutations
 
-Best regards,
-Krzysztof
+Patch 1 needs to be applied first and can be followed by any of the
+other patches.
+I've ensured that the tests are passing locally (or atleast have the
+same output as the code on master).
+
+Ujwal Kundur (4):
+  selftests/mm/uffd: Refactor non-composite global vars into struct
+  selftests/mm/uffd: Swap global vars with global test options
+  selftests/mm/uffd: Swap global variables with global test opts
+  selftests/mm/uffd: Swap global variables with global test opts
+
+ tools/testing/selftests/mm/uffd-common.c     | 269 +++++-----
+ tools/testing/selftests/mm/uffd-common.h     |  78 +--
+ tools/testing/selftests/mm/uffd-stress.c     | 226 ++++----
+ tools/testing/selftests/mm/uffd-unit-tests.c | 523 ++++++++++---------
+ tools/testing/selftests/mm/uffd-wp-mremap.c  |  23 +-
+ 5 files changed, 591 insertions(+), 528 deletions(-)
+
+-- 
+2.20.1
+
