@@ -1,74 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA681F1516;
-	Thu,  1 May 2025 11:18:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF27EC5
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 11:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746098287; cv=none; b=ktvgt1XdvCWKrdRBSShsdN0VFIQNnJIh+lePWAjOfVYthsnS9HtzqxV2eMTdiDqFTOdguKVOTISbUv2Psjfe+hYZxJIcavK92oVWARMvTU9ZiqK2D2izpqSElc2CAqwyB2r1ZMR9Lxv3VnFvsRh71HyQLGpj7mZJqkrGDV0rO6U=
+	t=1746098396; cv=none; b=M8cdfRw1Jo7pjrTR2CP9iUNWwJKeKWTGYzAPZln9Bz1NP47j2vN15FQ2039g0bisjqL7PXal15ZgFpmX17XesEnSosSVefIfPj2V0zC4VbyWMtbnhMxAKKnAmUZFEKm0tHckzoZTXM4CwVo5v65I2haHcO7EKx/3m8EofRzDaJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746098287; c=relaxed/simple;
-	bh=M+TEHKrX1ITU5RxyRfhfDldVttVCWJHNyt+W5XTDOhY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NF/OBPBZbXrGCSLZxp8uUdXc42Yxq4jrPzz/krBVU1Al0hMQIrQs8rC9IC5UaG7JtaorEwlneQ4Fns8OxoCGFy4bIC8eJ+cVCKkmfcWZ3dT+L/5u9c32FwDw0uua62OeK/geXmpPefei31AGZq1WtuD6BX0g+uqDNhSPniB/VnE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZwGFe3k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746098396; c=relaxed/simple;
+	bh=VWrPNBfHhg9wD68gOl+G+XtNQrLgb/BS81MyvDrmVkg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K9MKmTrrFCLAoc2hyLasgnVY3Oh5Fb9oEEFlemqIEna2DU2uleK+XMBt5GDd+J/BjXr+i2Onp7nO7Av5l3d35ilozGK9uh8fQ1rq8utlolPZXNTN1SeXzLWcCQlX1RLwgsu4W4oz/+SGH8XzzBylDUpbUtC2faN4bf74hCWFcOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VVWj9gL+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZwGFe3k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE149C4CEE3;
-	Thu,  1 May 2025 11:18:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VVWj9gL+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B816C4CEE3;
+	Thu,  1 May 2025 11:19:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746098287;
-	bh=M+TEHKrX1ITU5RxyRfhfDldVttVCWJHNyt+W5XTDOhY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=RZwGFe3kcccqu3t0IVRYGKOGspinPsZKk882EEh49/sh5YgQM84oTJU1Bd/ncwP6q
-	 pYmoc7CgojNHXaKQRhDEAgz/uycDRnoQ90Ir5xwZip3IaoQBmH5FmE1qSrtwZPfMSE
-	 c9q6nOSD/Y8oz3c7vPYSbzWTgaIjSP6oPOYz8qFZuJ36FJNvSOoHXEmdgvfoH9s61e
-	 u59tDUF/pr7hPUgd18c0gMpE1TcIUcSp6ikuDHetaE8R24qjFfoaKSkdqqxKx4r6Gk
-	 /DFi3RINn8t3fHxvr3UmW5ZfekRW/jWEDnlsWkgXWVQwMiupXTf8k8c0GllyPkeEyA
-	 yBGmlY0blnRhw==
+	s=k20201202; t=1746098396;
+	bh=VWrPNBfHhg9wD68gOl+G+XtNQrLgb/BS81MyvDrmVkg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VVWj9gL+oi75yY2yMuZJvAw0bsu2XGPDYyOEnCVO8NBWt4x2vi1zxnd18xDxyWE19
+	 7VC+a0cZxFxWjX1jXe4V+nTP7eC3zHIfunWZJsHxSE2KVHdsKavoqp8Ux4NeoiqQLT
+	 rHMnU04RqYbp3SR5I45E6IZpzTYHebj3/2lp7V2TOcaImbA7r1xWcMcpY9sdeyaT7y
+	 ngY8HPVu6S7olz5I8UVbh3GUFw32wH7EVzXwTsZ2CFApVciU0JEmxF2dJMfxCsOlF3
+	 37ntf/2tlyNUy+aNXDxb7+GApfSHXWkF2o8vk0emx1LXboIfu3jWRKxkbKjaMkaxyx
+	 UVCm2iYs8H0dg==
+Date: Thu, 1 May 2025 12:19:52 +0100
 From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org, krzk@kernel.org, alim.akhtar@samsung.com, 
- s.nawrocki@samsung.com, m.szyprowski@samsung.com, ideal.song@samsung.com, 
- beomho.seo@samsung.com, Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <cover.1745247209.git.christophe.jaillet@wanadoo.fr>
-References: <cover.1745247209.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: [PATCH v2 0/3] mfd: exynos-lpass: Fix some error handling
- paths
-Message-Id: <174609828442.3756623.12093382132101705631.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 12:18:04 +0100
+To: "Colin King (gmail)" <colin.i.king@gmail.com>
+Cc: Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: mfd: adp5585: add support for key events
+Message-ID: <20250501111952.GG1567507@google.com>
+References: <7a6d0a8a-aa14-488e-9072-0bbafaa84e5e@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-39345
+In-Reply-To: <7a6d0a8a-aa14-488e-9072-0bbafaa84e5e@gmail.com>
 
-On Mon, 21 Apr 2025 17:00:32 +0200, Christophe JAILLET wrote:
-> This serie fixes several issues related to error handling paths in
-> drivers/mfd/exynos-lpass.c.
+On Thu, 01 May 2025, Colin King (gmail) wrote:
+
+> Hi,
 > 
-> I've split it in 3 patches to ease review, but it could be merge in only
-> 1 patch if preferred.
+> I noticed that there is an issue with the naming of device tree property in
+> the commit:
 > 
-> Patch 1: Fix a leak in the error handling path of the probe. It should
-> be straighforward. This patch is already R-b.
+> commit f674cea99d03199a4fc9a96c68149b8804053f80
+> Author: Nuno Sá <nuno.sa@analog.com>
+> Date:   Tue Apr 15 15:49:26 2025 +0100
 > 
-> [...]
+>     mfd: adp5585: add support for key events
+> 
+> 
+> There is a property named "rst-passtrough-enable", should that be in fact
+> "rst-passthrough-enable"? (an h is missing)
 
-Applied, thanks!
+Why not send a patch like you usually do?
 
-[1/3] mfd: exynos-lpass: Fix an error handling path in exynos_lpass_probe()
-      commit: 8cc4952d1e8618eff474dc7154c6537db88178df
-[2/3] mfd: exynos-lpass: Avoid calling exynos_lpass_disable() twice in exynos_lpass_remove()
-      commit: cb931849ec1e71900eb54d0a377ae30e0bcfcffa
-[3/3] mfd: exynos-lpass: Fix another error handling path in exynos_lpass_probe()
-      commit: f408e20757afa3d8c719a8a804cd2c83262514dd
-
---
+-- 
 Lee Jones [李琼斯]
-
