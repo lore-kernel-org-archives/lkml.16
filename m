@@ -1,253 +1,108 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5276B23C4F1;
-	Thu,  1 May 2025 19:56:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425FD210185;
+	Thu,  1 May 2025 19:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129378; cv=none; b=r8tlrrA9HW503l2Zj8cC0LRH9AQLWFvX+mNl+msZu+orzL1oGqQ/xjiaAT3/R4xuYW8zgd0Hx5K4XcnJhOvKUJy61yD/2IW1xaEghYb5mhqVxfSxTORMgNI3sBpGNwknJgbebfSE4LMYFakM1i8zLNnRfuIjxjaw5Zx+Kyn/5Bs=
+	t=1746129549; cv=none; b=KvKsZQiQ9K7jN0rIng/dlMoQbC3DNGU6rHWRMiVa5/YArqxXCetkvvE5gg6ylh9NDzWivrUQ9fn7nsCqXggN+/01zXrBb1KkLdi79ANa6zrbONtP18jgkszMD69/B7/pC5EMPvK3Nff0skg7tjFJQMc6MuQnApgqGoK8cKqy32I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129378; c=relaxed/simple;
-	bh=f616yrOSy1JlqMAl6xMN5xGmnBssOqtti51vKKOA0CM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YTpMVnpxwgIovR2VqZVh9TR65p3lxHELheYFwbFZJiq7jeax7v9wxcsaxSvYXjvMN7LAw1QD7D47Qos6DNt7pp+lVSXYPOYuKrb/MiNeUHPRMK+LcI/ZWAIcdK3+ly6bq4R0CB+IKl7/jv6z38qUwc3eumhjuuRE7VLnyyrFmxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=m7md2BkW; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746129549; c=relaxed/simple;
+	bh=qfTlTJQGG2XSqogUY1DZu7IdChhNVaR9ezmWG9lLMXQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=EGg7xoTjzLKb2ADQ2iOjRMs1a9sL1eFNl79rwmtdKl7taV2n1ml5OYDN/hlcyxkKM77IsF4xTCX1GZambnLG8vKj1QnJe/Cr646G1RDWvz6uTRRAxLJ6DkIjW5pDN69nloRABN792LO/jAkCBhNDBnXtVpabgUOzKUSVAV4PgMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXHMcXJ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="m7md2BkW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746129374;
-	bh=f616yrOSy1JlqMAl6xMN5xGmnBssOqtti51vKKOA0CM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=m7md2BkW2DHpZt4+nsAq0kOCuce+O/vkMXlaXvuPfxq9vfZiNkBpFA64WOpu4Q+nG
-	 0wZboUJeboZqO9Sfcy3oD385sUD0o/pjxp72wFAG0CWfHK49wfge9soS6FNCwxSve2
-	 Q8mDJYLAzAcZKHuieSxMCqkHssYiCNwJAi/yikT3n66/d3rcEWt5/eAfgmumAOkfh4
-	 N/X7GElDOUrWLOBvyH2GLSBu4joF0SGmbSebK8RhPUPlbt78vz3nm2Xgv9IPGfwt2F
-	 VtbUH3XgwQhCun2mC3y/eVvqdDs0Pqo7fGsIg1vFSJVp8Wr7rSRevzPzTfglQI+3L4
-	 F9HmTGtraAUtQ==
-Received: from [192.168.13.3] (unknown [IPv6:2606:6d00:17:8242::c73])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4837D17E1503;
-	Thu,  1 May 2025 21:56:13 +0200 (CEST)
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Date: Thu, 01 May 2025 15:55:50 -0400
-Subject: [PATCH v10 4/4] media: rkvdec: h264: Support High 10 and 4:2:2
- profiles
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXHMcXJ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95685C4CEE3;
+	Thu,  1 May 2025 19:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746129548;
+	bh=qfTlTJQGG2XSqogUY1DZu7IdChhNVaR9ezmWG9lLMXQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RXHMcXJ/CVJNpiYSXeH9hd0NhukZQ0YbIfhHUQ9bUf8UsCKCJpw9QUuAsKjM48W+U
+	 aKTVg7Mp9xjWsWYoym/QmIqLtlguFtrntMagOnJgUK5vOy1JDmfQfCjr5cG6NwGG3k
+	 EmNToIIbK6Gesv+WFft1zF75SZTwRMPvTWKAekHVUtf8ob60xpCiCqadXj/9TAZtxW
+	 4IoMdieCq2HH8tN5Z6KGyxwsVVpAB3qJrH1/AlwMlHLcuvfLXwSkk6tB2ZbA4xkB/a
+	 OUedXstMfKHkDooG52FX1CjvMeRI+mcFLW48qnKw8dFJr8fSsvk+jNAZor28xk0a90
+	 I7lKpnhJLaMOw==
+From: Kees Cook <kees@kernel.org>
+To: =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] drm/ttm: Silence randstruct warning about casting struct file
+Date: Thu,  1 May 2025 12:59:03 -0700
+Message-Id: <20250501195859.work.107-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-4-c380ba452108@collabora.com>
-References: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-0-c380ba452108@collabora.com>
-In-Reply-To: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-0-c380ba452108@collabora.com>
-To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Nicolas Dufresne <nicolas.dufresne@collabora.com>, kernel@collabora.com, 
- Jonas Karlman <jonas@kwiboo.se>, 
- Christopher Obbard <christopher.obbard@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1852; i=kees@kernel.org; h=from:subject:message-id; bh=qfTlTJQGG2XSqogUY1DZu7IdChhNVaR9ezmWG9lLMXQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnCl9qespsdPX+92CDPwOL8dRlXifu5LYJ3XO+s+pe+0 sJ73aKlHaUsDGJcDLJiiixBdu5xLh5v28Pd5yrCzGFlAhnCwMUpABOJfMHw33PJoX+Kx9lD306x qyqa8eOzsa5h3sVLVzdv1bHSun4muoiRYd/9lVrPStM3WW+KE+Cycfl75eqEKxV3L3/lnuv00tv 4PBsA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-From: Jonas Karlman <jonas@kwiboo.se>
+Casting through a "void *" isn't sufficient to convince the randstruct
+GCC plugin that the result is intentional. Instead operate through an
+explicit union to silence the warning:
 
-Add support and enable decoding of H264 High 10 and 4:2:2 profiles.
+drivers/gpu/drm/ttm/ttm_backup.c: In function 'ttm_file_to_backup':
+drivers/gpu/drm/ttm/ttm_backup.c:21:16: note: randstruct: casting between randomized structure pointer types (ssa): 'struct ttm_backup' and 'struct file'
+   21 |         return (void *)file;
+      |                ^~~~~~~~~~~~
 
-Decoded CAPTURE buffer width is aligned to 64 pixels to accommodate HW
-requirement of 10-bit format buffers, fixes decoding of all the 4:2:2
-and 10bit 4:2:2 flusters tests except two stream that present some
-visual artifacts.
-
-- Hi422FREXT17_SONY_A
-- Hi422FREXT19_SONY_A
-
-The get_image_fmt() ops is implemented to select an image format
-required for the provided SPS control, and returns RKVDEC_IMG_FMT_ANY
-for other controls.
-
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Tested-by: Christopher Obbard <chris.obbard@collabora.com>
-Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Fixes: e7b5d23e5d47 ("drm/ttm: Provide a shmem backup implementation")
+Signed-off-by: Kees Cook <kees@kernel.org>
 ---
- drivers/staging/media/rkvdec/rkvdec-h264.c | 37 ++++++++++++++++++++++-------
- drivers/staging/media/rkvdec/rkvdec.c      | 38 +++++++++++++++++++++++-------
- drivers/staging/media/rkvdec/rkvdec.h      |  3 +++
- 3 files changed, 60 insertions(+), 18 deletions(-)
+Cc: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+Cc: Christian Koenig <christian.koenig@amd.com>
+Cc: Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>
+Cc: Matthew Brost <matthew.brost@intel.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Matthew Auld <matthew.auld@intel.com>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: David Airlie <airlied@gmail.com>
+Cc: Simona Vetter <simona@ffwll.ch>
+Cc: <dri-devel@lists.freedesktop.org>
+---
+ drivers/gpu/drm/ttm/ttm_backup.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/rkvdec/rkvdec-h264.c b/drivers/staging/media/rkvdec/rkvdec-h264.c
-index 8bce8902b8dda39bb2058c8504bd52ccae6b4204..d14b4d173448dbcce4ab978a83806064b100ca24 100644
---- a/drivers/staging/media/rkvdec/rkvdec-h264.c
-+++ b/drivers/staging/media/rkvdec/rkvdec-h264.c
-@@ -1027,24 +1027,42 @@ static int rkvdec_h264_adjust_fmt(struct rkvdec_ctx *ctx,
- 	return 0;
+diff --git a/drivers/gpu/drm/ttm/ttm_backup.c b/drivers/gpu/drm/ttm/ttm_backup.c
+index 93c007f18855..626af1de562f 100644
+--- a/drivers/gpu/drm/ttm/ttm_backup.c
++++ b/drivers/gpu/drm/ttm/ttm_backup.c
+@@ -18,7 +18,13 @@ static struct file *ttm_backup_to_file(struct ttm_backup *backup)
+ 
+ static struct ttm_backup *ttm_file_to_backup(struct file *file)
+ {
+-	return (void *)file;
++	/* Explicit union instead of a cast to make randstruct ignore us. */
++	union {
++		struct file *file;
++		struct ttm_backup *backup;
++	} u;
++	u.file = file;
++	return u.backup;
  }
  
-+static enum rkvdec_image_fmt rkvdec_h264_get_image_fmt(struct rkvdec_ctx *ctx,
-+						       struct v4l2_ctrl *ctrl)
-+{
-+	const struct v4l2_ctrl_h264_sps *sps = ctrl->p_new.p_h264_sps;
-+
-+	if (ctrl->id != V4L2_CID_STATELESS_H264_SPS)
-+		return RKVDEC_IMG_FMT_ANY;
-+
-+	if (sps->bit_depth_luma_minus8 == 0) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_8BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_8BIT;
-+	} else if (sps->bit_depth_luma_minus8 == 2) {
-+		if (sps->chroma_format_idc == 2)
-+			return RKVDEC_IMG_FMT_422_10BIT;
-+		else
-+			return RKVDEC_IMG_FMT_420_10BIT;
-+	}
-+
-+	return RKVDEC_IMG_FMT_ANY;
-+}
-+
- static int rkvdec_h264_validate_sps(struct rkvdec_ctx *ctx,
- 				    const struct v4l2_ctrl_h264_sps *sps)
- {
- 	unsigned int width, height;
- 
--	/*
--	 * TODO: The hardware supports 10-bit and 4:2:2 profiles,
--	 * but it's currently broken in the driver.
--	 * Reject them for now, until it's fixed.
--	 */
--	if (sps->chroma_format_idc > 1)
--		/* Only 4:0:0 and 4:2:0 are supported */
-+	if (sps->chroma_format_idc > 2)
-+		/* Only 4:0:0, 4:2:0 and 4:2:2 are supported */
- 		return -EINVAL;
- 	if (sps->bit_depth_luma_minus8 != sps->bit_depth_chroma_minus8)
- 		/* Luma and chroma bit depth mismatch */
- 		return -EINVAL;
--	if (sps->bit_depth_luma_minus8 != 0)
--		/* Only 8-bit is supported */
-+	if (sps->bit_depth_luma_minus8 != 0 && sps->bit_depth_luma_minus8 != 2)
-+		/* Only 8-bit and 10-bit is supported */
- 		return -EINVAL;
- 
- 	width = (sps->pic_width_in_mbs_minus1 + 1) * 16;
-@@ -1190,4 +1208,5 @@ const struct rkvdec_coded_fmt_ops rkvdec_h264_fmt_ops = {
- 	.stop = rkvdec_h264_stop,
- 	.run = rkvdec_h264_run,
- 	.try_ctrl = rkvdec_h264_try_ctrl,
-+	.get_image_fmt = rkvdec_h264_get_image_fmt,
- };
-diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
-index f7eb67520ab0edd9ac1da3d0daf2af1bc6d37a09..3367902f22de3415d3040ae3ae28e7a3f38e910c 100644
---- a/drivers/staging/media/rkvdec/rkvdec.c
-+++ b/drivers/staging/media/rkvdec/rkvdec.c
-@@ -186,9 +186,10 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
- 	{
- 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
- 		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
--		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
-+		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_422_INTRA,
- 		.cfg.menu_skip_mask =
--			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED) |
-+			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_HIGH_444_PREDICTIVE),
- 		.cfg.def = V4L2_MPEG_VIDEO_H264_PROFILE_MAIN,
- 	},
- 	{
-@@ -203,11 +204,23 @@ static const struct rkvdec_ctrls rkvdec_h264_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_h264_ctrl_descs),
- };
- 
--static const struct rkvdec_decoded_fmt_desc rkvdec_h264_vp9_decoded_fmts[] = {
-+static const struct rkvdec_decoded_fmt_desc rkvdec_h264_decoded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_NV12,
- 		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
- 	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV15,
-+		.image_fmt = RKVDEC_IMG_FMT_420_10BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV16,
-+		.image_fmt = RKVDEC_IMG_FMT_422_8BIT,
-+	},
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV20,
-+		.image_fmt = RKVDEC_IMG_FMT_422_10BIT,
-+	},
- };
- 
- static const struct rkvdec_ctrl_desc rkvdec_vp9_ctrl_descs[] = {
-@@ -230,21 +243,28 @@ static const struct rkvdec_ctrls rkvdec_vp9_ctrls = {
- 	.num_ctrls = ARRAY_SIZE(rkvdec_vp9_ctrl_descs),
- };
- 
-+static const struct rkvdec_decoded_fmt_desc rkvdec_vp9_decoded_fmts[] = {
-+	{
-+		.fourcc = V4L2_PIX_FMT_NV12,
-+		.image_fmt = RKVDEC_IMG_FMT_420_8BIT,
-+	},
-+};
-+
- static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 	{
- 		.fourcc = V4L2_PIX_FMT_H264_SLICE,
- 		.frmsize = {
--			.min_width = 48,
-+			.min_width = 64,
- 			.max_width = 4096,
--			.step_width = 16,
-+			.step_width = 64,
- 			.min_height = 48,
- 			.max_height = 2560,
- 			.step_height = 16,
- 		},
- 		.ctrls = &rkvdec_h264_ctrls,
- 		.ops = &rkvdec_h264_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_decoded_fmts),
-+		.decoded_fmts = rkvdec_h264_decoded_fmts,
- 		.subsystem_flags = VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF,
- 	},
- 	{
-@@ -259,8 +279,8 @@ static const struct rkvdec_coded_fmt_desc rkvdec_coded_fmts[] = {
- 		},
- 		.ctrls = &rkvdec_vp9_ctrls,
- 		.ops = &rkvdec_vp9_fmt_ops,
--		.num_decoded_fmts = ARRAY_SIZE(rkvdec_h264_vp9_decoded_fmts),
--		.decoded_fmts = rkvdec_h264_vp9_decoded_fmts,
-+		.num_decoded_fmts = ARRAY_SIZE(rkvdec_vp9_decoded_fmts),
-+		.decoded_fmts = rkvdec_vp9_decoded_fmts,
- 	}
- };
- 
-diff --git a/drivers/staging/media/rkvdec/rkvdec.h b/drivers/staging/media/rkvdec/rkvdec.h
-index e466a2753ccfc13738e0a672bc578e521af2c3f2..9a9f4fced7a184b952d341d75c7faedaa75163d6 100644
---- a/drivers/staging/media/rkvdec/rkvdec.h
-+++ b/drivers/staging/media/rkvdec/rkvdec.h
-@@ -80,6 +80,9 @@ struct rkvdec_coded_fmt_ops {
- enum rkvdec_image_fmt {
- 	RKVDEC_IMG_FMT_ANY = 0,
- 	RKVDEC_IMG_FMT_420_8BIT,
-+	RKVDEC_IMG_FMT_420_10BIT,
-+	RKVDEC_IMG_FMT_422_8BIT,
-+	RKVDEC_IMG_FMT_422_10BIT,
- };
- 
- struct rkvdec_decoded_fmt_desc {
-
+ /*
 -- 
-2.49.0
+2.34.1
 
