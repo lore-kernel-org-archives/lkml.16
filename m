@@ -1,122 +1,123 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52165126BF1
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B5D21B90B;
+	Thu,  1 May 2025 23:43:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143010; cv=none; b=tjn591esxLALJW3VtmI+t/qOAICqU0/HYXND7J4dbnT1fY2qNe6FQLX4VzHx0jUjzedhzXtg3DaEhgVxt9qK6m3lGEUmkTeI8MV9qWbBeWCluvAU8kaabwCOZ0fam6wVSXDrmYkojj8FcFYgaI7+BeL5qTxMY5yWjqTK0Nk7Xs8=
+	t=1746143021; cv=none; b=WWcj4X0AwpX5QMeHL8bPAYch1fP1KuDoDoh9njN6p/v9n5oHPSA15sJI6IY4EqqBbdvq0zWUSQeXEVhUe3v4/5b47mFF5WSTCnchd4sIVDFixjrYyTmMS4syHG6I42vCOCJrKsgQRTkU2F6J2jQ455o4dwgWHgQyNlfkTlINRbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143010; c=relaxed/simple;
-	bh=LJeygKu5mHmOAOI3gZeCfs0LPY3zr83xk0QBYX1alwQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kAJSLx1/DLeNiKRYvz8x1o8K/O4KD0MuhDZSNBpCm2SRjsJdXluRJ1jPJbx06k/nDcgAbF9AwBiw+J9itVyr7eezhVtCEX+ETxQ6beGFNoi7fLnZyRyQjpLrsfMI0VFKUZxPEmFEVX06pmSbOxTcLXTV7XZ6fiJQDQzpUpsC9Bg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ZeZQc/XF; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1746143021; c=relaxed/simple;
+	bh=nLAsd5GSdVN9zKoXT91AxBNtMuRg3WxVOfOoRjJiQck=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IKgDXHW/JR6YkFdB0Y1PZPfJRdZw8N3jhP43YhdvjaJen8AZQyuEszplEw6GVQA5FU79Js45fF12gJuCH3qVLrU6XReAEK5WoVmgF4I6Xff2ZtUBA4OwFZr//6uaRB5Ktb/pr0oWZ4zYhzge/6Q9W4Dm/8DTKtpm6fkNfNXx4dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=JQfzeLGL; arc=none smtp.client-ip=72.21.196.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZeZQc/XF"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-224341bbc1dso19559095ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:43:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JQfzeLGL"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1746143008; x=1746747808; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K5FrPv63jwWfhhvTHhfDuGFNw9Ttdhrto3UgvIsqqoY=;
-        b=ZeZQc/XFKp90iWnTRaBtu68UzDM9wciN6bf3HG9XZLzHdavKnjDNHHEeYliJDbm95D
-         MWiedHPs48A19aw04EimOFcSTrONRnCw7D4UBOD3ddgedFoRfS5Wz9eetc6CvuzdhOt6
-         BB3zw0L23T+q/A/A3PUuUPwAWm64lTUvfRh4s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746143008; x=1746747808;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K5FrPv63jwWfhhvTHhfDuGFNw9Ttdhrto3UgvIsqqoY=;
-        b=ouIKl9WkHlMyXVB6O8i6WoaP7C6tugKf5xwJw/+BSeobJRFsXOdh6Vvig2rJohMkkm
-         pv0RCndSLmU5VCYqT5SUKvjPCCGt1uiL1AW4lTp4MIydY104y6A2rQ1ezFrsBkQh2Rq7
-         LpRj/jwoUIm43Xo5G8J382jZrAszMmvC1o/ZtgKyzuij8xsx0PnNjcAAHoo0fme1oYza
-         Or7zdH/BGadJdmRXMLwumOXLKZB1h3RiTWOaAnHZrIo5TmPG8lRUBeMRF8/9ENxtXbd4
-         ZhfN/M4cuiq56aolgVaFts4erbbsSubpE1m5iZjW4bsb48+rz37spCQFDJnF9ManDpFf
-         gjlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWbEgjqsQbVVHfGA8p7hVf8VkXid/pVb23MzWXs5OiG3TG+601YVp/m4as1ZOZvbRXRRrOeKWzVoHImTOU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9sZVWimv0xG0jC//dnzdW1B5mKJ6ubbY0XB7374Cb7CoEaks1
-	N2otHxB9nsNVP/FxpfFgZdvbt1eztsVi350gPib4YGo/MfZhDesJABYfWZ7SHcZCs1SRkVY20iN
-	deA==
-X-Gm-Gg: ASbGncsoUofAHsja6dbzpqaU4aI8jADOdjxm1mKsQ+aPnTGfgpKAD0IjvEkl3rOKOBj
-	yw1Kp9tBPybNXxlR/ZY3kfUr54R7WIT9ObTOcFOTKVQDRcalCD5yJ1Ect9TmU2AT5hO0m6M234t
-	K/j3UBhc/6I5yPmwQJi95npUZDLGMH2MJg7fUn2yZgPA4nXCL5KRvVAmDJPz6QEVbp7ImW1Rszw
-	SQ2ds5wPesFhT9RD7y2yV3u6tfTQvoHAGhvPHsh0n4OSi5X4GVleA/W0LiL3gTF7NBWh3BGvQpN
-	abdzpFlOI/82aJ2o5Tzq7T4YpatOOuqrZa59EmLd8SIU
-X-Google-Smtp-Source: AGHT+IFQ+eFJISk1X+wHgQcGsTaOq4jBwZEpP6zyVc7S8BKjYFMNDUlhhgOV35hdjqLKAaxJEnRlrQ==
-X-Received: by 2002:a17:90b:57e8:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-30a4e596186mr1352147a91.10.1746143008503;
-        Thu, 01 May 2025 16:43:28 -0700 (PDT)
-Received: from google.com ([2401:fa00:8f:203:7255:67a0:34ee:5b40])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3482a35csm4245166a91.44.2025.05.01.16.43.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 16:43:27 -0700 (PDT)
-Date: Fri, 2 May 2025 08:43:22 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, linux-mm@kvack.org, 
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
-	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Igor Belousov <igor.b@beldev.am>, Minchan Kim <minchan@kernel.org>, 
-	Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH v4] mm: add zblock allocator
-Message-ID: <uducoj43wg46d756fxbgdwsnql4kff5if6psuly75qfimk44yg@vbu3cf2ealjn>
-References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
- <aAdzjdv674Jn6G63@Asmaa.>
- <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
- <aBIXJrbxCmYSoCuz@Asmaa.>
- <c612aff8-1b07-43aa-b909-f555da511da2@konsulko.se>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746143020; x=1777679020;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=SVVIXsRBiNGC5/+e/CeOhQZlrKYSsltgQ/G0Xe1FZXM=;
+  b=JQfzeLGLd41mzembaG/et4fSmSo0uZagLxJqC0KKC5UcTIEu0VxNb2Vy
+   PM+oUFLET7J2ADkFodJaJ3x5j7cqmIkMRQqnEPhcQZQp0RXtiNTFljEsv
+   Ac4iGn+1CmZcUI4FNvVE+Wqnn3wShRydGMVCtvPLsMhUcXmkIjU2I36d+
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.15,254,1739836800"; 
+   d="scan'208";a="488237012"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 23:43:35 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:6136]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.105:2525] with esmtp (Farcaster)
+ id e8b08c5e-f1bd-46be-a9b2-4ca9a932d8b8; Thu, 1 May 2025 23:43:33 +0000 (UTC)
+X-Farcaster-Flow-ID: e8b08c5e-f1bd-46be-a9b2-4ca9a932d8b8
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 23:43:33 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.41) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 23:43:30 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <syzbot+9596c1b9df18e0ae7261@syzkaller.appspotmail.com>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<syzkaller-bugs@googlegroups.com>, <kuniyu@amazon.com>
+Subject: Re: [syzbot] [net?] WARNING in ipv6_addr_prefix
+Date: Thu, 1 May 2025 16:43:13 -0700
+Message-ID: <20250501234322.55091-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <681357d6.050a0220.14dd7d.000b.GAE@google.com>
+References: <681357d6.050a0220.14dd7d.000b.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c612aff8-1b07-43aa-b909-f555da511da2@konsulko.se>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D041UWB002.ant.amazon.com (10.13.139.179) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On (25/05/01 14:41), Vitaly Wool wrote:
-[..]
-> Bottom line, ending up with a lot of blocks each containing a single object
-> is not a real life scenario.
+From: syzbot <syzbot+9596c1b9df18e0ae7261@syzkaller.appspotmail.com>
+Date: Thu, 01 May 2025 04:15:34 -0700
+> Hello,
+> 
+> syzbot found the following issue on:
+> 
+> HEAD commit:    5565acd1e6c4 Merge git://git.kernel.org/pub/scm/linux/kern..
+> git tree:       net-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=1178cecc580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=2e3745cb659ef5d9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=9596c1b9df18e0ae7261
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=122efd9b980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15e99574580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/80798769614c/disk-5565acd1.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/435ecb0f1371/vmlinux-5565acd1.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/7790d5f923b6/bzImage-5565acd1.xz
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+9596c1b9df18e0ae7261@syzkaller.appspotmail.com
+> 
+> UDPLite6: UDP-Lite is deprecated and scheduled to be removed in 2025, please contact the netdev mailing list
+> ------------[ cut here ]------------
+> memcpy: detected field-spanning write (size 898) of single field "pfx->in6_u.u6_addr8" at ./include/net/ipv6.h:614 (size 16)
+> WARNING: CPU: 0 PID: 5838 at ./include/net/ipv6.h:614 ipv6_addr_prefix+0x124/0x1d0 include/net/ipv6.h:614
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 5838 Comm: syz-executor414 Not tainted 6.15.0-rc3-syzkaller-00557-g5565acd1e6c4 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+> RIP: 0010:ipv6_addr_prefix+0x124/0x1d0 include/net/ipv6.h:614
+> Code: cc e8 70 eb af f7 c6 05 b8 a8 59 05 01 90 b9 10 00 00 00 48 c7 c7 a0 86 7d 8c 4c 89 fe 48 c7 c2 c0 8d 7d 8c e8 4d 4a 74 f7 90 <0f> 0b 90 90 e9 33 ff ff ff e8 3e eb af f7 44 89 e6 48 c7 c7 c0 53
+> RSP: 0018:ffffc90003eb7920 EFLAGS: 00010246
+> RAX: 8f8f704687b6a900 RBX: ffff8880337f5c50 RCX: ffff88803326da00
+> RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
+> RBP: 0000000000000000 R08: ffffc90003eb7607 R09: 1ffff920007d6ec0
+> R10: dffffc0000000000 R11: fffff520007d6ec1 R12: 0000000000000382
+> R13: 1ffff920007d6f4e R14: ffffc90003eb7a84 R15: 0000000000000382
+> FS:  0000555594768380(0000) GS:ffff8881260b2000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 000055d1681c9000 CR3: 0000000078e3e000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  ip6_route_info_create+0x5cc/0xa70 net/ipv6/route.c:3810
+>  ip6_route_add+0x29/0x2f0 net/ipv6/route.c:3902
+>  ipv6_route_ioctl+0x35c/0x480 net/ipv6/route.c:4539
+>  inet6_ioctl+0x219/0x280 net/ipv6/af_inet6.c:577
 
-Why not?  What if the data patterns do not favor compressible objects?
-E.g. what if the distribution of compressed objects looks like this (a real
-zsmalloc stats):
+This will fix it.
+https://lore.kernel.org/netdev/20250501005335.53683-1-kuniyu@amazon.com/
 
-size-class   objs-allocated
----------------------------
-...
-1904         3315
-1920         3468
-1936         3515
-2048         25816
-2144         22363
-2160         3230
-2176         3075
-2192         2990
-2224         5665
-2272         8118
-2304         5040
-2336         4529
-2384         6132
-2400         1768
-2448         4825
-2512         5135
-2560         2944
-2592         1562
-2624         1512
-2720         3813
-2832         3315
-2864         820
-...
+so speculatively:
 
-Notice tenth of thousands of 2048-2144 bytes objects.  zsmalloc size
-classes are fundamentally independent of each other and, hence, of
-the compressed objects distribution: the lack of objects, or even
-"the absence of" for that matter, in size-class 256 does not change
-a thing for size-class 2048.  This is a very important property.
+#syz fix: ipv6: Restore fib6_config validation for SIOCADDRT.
