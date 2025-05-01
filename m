@@ -1,234 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CD3288DA;
-	Thu,  1 May 2025 09:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913F8288DA;
+	Thu,  1 May 2025 09:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746090077; cv=none; b=YsWnm78CekiZ6WU1dZWEbRHMZfqOSdXELzPcbR3dHE/bWQ/jZXFeclmDeY4iT/95gOePPYZin7UiEiWdNZAAPtazsxzBMOfQoGA3DV9Wpze808TixF/5ZgOGMdPBlxy7IVPxRzh1Lx1C1s6xnnVK773w4G8O4yYdeUGwdOFIr5Y=
+	t=1746090162; cv=none; b=ukugDtMKYmpz6zFpOF3Wj/WUnA2x4CkIK8vTMwT/jPGNYRgHsk4N7MKerIazVzNuubMdBgbJwwL6eGhHN/kU3QUAeT0wb4qZvKyfthnvf+tf2nuRgFF7jmrirZ4zS2+NFVw71j8P5IE5UXlY0zENjo2avVoOLF95UFgogAi437o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746090077; c=relaxed/simple;
-	bh=0ipCz+7spt358RxGlpu6/Gs/l2WCej4idcL1gnVdSJQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ItaD3RpXpy+0Sxd0k0oA8TCwC0mH3axRpWRH2AvCP0NBOTJ58/wIgk/ulaoIdfc0gAVvb+deYdGfsRN7MjMMO4t8/iN0+EGTVNC/q8gmUYba9opvxJ/3R4m/GIqHKefE4vzMhleOFbTRxsMfwwMAYEV86I6QYm45YK7xhHU9hMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNQg6Cu+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746090162; c=relaxed/simple;
+	bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nSZ0mXzlSebT3ClZN/y89embbYU/5wrInqoCl7+GPcQycxz3XERkb+LCGu47/MZyb6DdGd6hVeKGn9P8YhhObdijfy+D0/LEuCprAZLyBwcJKXNIGzf9pGhzEeoLBosaWC2ke+Ocj02Whn7v5qi26qfkjvfE+3CmoMEiX3kSEzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnbXBwOM; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNQg6Cu+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1F59C4CEE3;
-	Thu,  1 May 2025 09:01:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746090077;
-	bh=0ipCz+7spt358RxGlpu6/Gs/l2WCej4idcL1gnVdSJQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=cNQg6Cu+kQg5EPbQth2cRgzIBbVR1eku6Lz+MlysAKVS9AI+1KotmybKncV2WG2Xu
-	 ViX/+dmEmvRW7YqG7H2j609iGPMGEX52nxqFen23vLlu7FkQwXVxMbSoCnQP4D4PN3
-	 AxZ9o1IO9T8FXnJA9FLBbyuE6ofTjL35QPT8YZVHFsa9qJAv62F/apH/Bi8g7xMwuP
-	 zJ5YiWqBuXTKFBO1SRcyMNewVo+6SMSwDSIkdWtmg/CZ1NcGq9b1ngS/PYjdQ1vz+8
-	 P+VtYLG8329ixEwUOpwFKuJXFAADXYxEDdCJdcNVk8drtle2mFtnSu3/RDXi8Y0ljI
-	 Tvu0+MYnIJJsA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAPn7-00AWwq-GZ;
-	Thu, 01 May 2025 10:01:14 +0100
-Date: Thu, 01 May 2025 10:01:13 +0100
-Message-ID: <8634doiu1y.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 20/22] irqchip/gic-v5: Add GICv5 ITS support
-In-Reply-To: <aBIjvPVe/SWzOyd9@lpieralisi>
-References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
-	<20250424-gicv5-host-v2-20-545edcaf012b@kernel.org>
-	<86a57yhv1h.wl-maz@kernel.org>
-	<aBIjvPVe/SWzOyd9@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnbXBwOM"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3087a70557bso103655a91.2;
+        Thu, 01 May 2025 02:02:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746090161; x=1746694961; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
+        b=nnbXBwOMhXMrEXrBeNTISwAS6ST4BnjV2QAvaOVYCQq+f+4eJCi7H/binaLrD2/vgR
+         bXV6amjZP7Lv/T3JCNQ20y5zukDL+ea/awojUR/DmC1/83mEWTauXnUpKlfPdQwttt1m
+         mpRLTyF1odkmK1Um0/+BIwp+vQ8HiEshYhQN7P7v77AgfAvz67HQKONeUW1TpKPoYIK9
+         T9TSRlLdWTU05SaJyiikS+WSWB5eVfNrLxU5H5iO0ljCHES5B52XkSCxgb4p/+bhvPSm
+         gSDYXctIWCNr/iis8wnbqj5cH4gx5Tuk9fjipNs/mGCplBjA5DqAUQVsLmTizqeg+wnm
+         57dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746090161; x=1746694961;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
+        b=JsjAKR2Bf2Vg7E9AMytnkv0JcxFGxJeOn6QVieuwHvjHjYqUTKGZIpx8d/4cYnDtj/
+         sIyBOt7SobA3GsiqXL6ZEXNqDSeSmvzrpEaNkIsWmyHn7G/ndm96Vjg+lpRYoBv/Odse
+         0zNpTwjeZrdn9wnnx9/Y+QRRlsnZ1TzFB1TWRI9GvRpU6hHtFaU8WjfW0Vrty7t5xhBe
+         zQoZF9w1HqeKYVgjg+N4v94JKZaoUbUQSa2miyI5PVUZxnvHAYJddrW4HkrZLXQcyFUN
+         kxesY0CRuhgdw3CgUoXkscyg9BKyU5QVTOM04DI+azJ8DM5zPnsK0vxsDPDDgw1Oz3AT
+         8O4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWtccOdG2MHrp7S7hOn4jGk74NmzB6Vkj6RunaupGPB1oDj3THOLw01XZ/k+eI8zSenInOrGo+AIV+TiQ==@vger.kernel.org, AJvYcCWy5fDWOl/WH9hDvOrOjWUxoUiaFBZ4m2+3f/g+tpnZNtSqel+PJunZlo1qL3Q24PV/vetCJLqWF9jkN4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwaPBk+DFRErQVUh9rmklzPZy7qCz9m7xVu07o1HLUCNCrd0KsS
+	JdbZpqK+IRGpWU2ICkcGttRpdMB5LaOYrNxIbN/u38f/XxbNstSUIbrOKY2lfD6o5ChAbxOlXWj
+	+j24wNxyEE49Wqrs2VFtYmyalB69Ajl9L
+X-Gm-Gg: ASbGncsIQAnJy0HUK+fT5edl6T66itacfYEwbrdh/7Mxsn6fWc3oHYemXzl8LkqNR5L
+	RPfjlIPpw22F3qW6kbWTvOK05peQ5h2yZAAJP+av8jNqNc0uyp4hCI0PvbeyrmgQz0S1vRM2oDo
+	o32lKgtp5q/uKxW/yzZv4BLA==
+X-Google-Smtp-Source: AGHT+IEynVgXqKj5wZVHQcpTrOK/PaP7IjU+M8WWkEwyezewAJ/95tFY/SF3e+V0ZQ4tVFSzEQucR66JpGlNyr2Ib+U=
+X-Received: by 2002:a17:90b:3e8b:b0:2fe:7f51:d2ec with SMTP id
+ 98e67ed59e1d1-30a348d7896mr3408670a91.0.1746090160627; Thu, 01 May 2025
+ 02:02:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <tAJ0jyptJ0jLaRp9siDw8y2iw3S7GeuC05Uncum-qihlIKfCfEVhQbGNuTengQ0kWpnNp7OoTITxbEdf6nDTCw==@protonmail.internalid>
+ <20250428203943.51dd39d5@canb.auug.org.au> <877c344gmp.fsf@kernel.org>
+ <20250429174451.42a368af@canb.auug.org.au> <CANiq72kSReDcMU=eezmgsREL5+1FSnq9_VuEd-8AtU86W6UoNA@mail.gmail.com>
+ <20250501183210.639f9abf@canb.auug.org.au>
+In-Reply-To: <20250501183210.639f9abf@canb.auug.org.au>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 1 May 2025 11:02:27 +0200
+X-Gm-Features: ATxdqUHvvEUmhRCQrVIDL7rvOu76D-SwIoD7BSOceuJajlu_iOzhimfMuCLMWks
+Message-ID: <CANiq72kgPJvGpgUuXE3owxMc5zFuK=wXgmSM5nyKZf8u8+jtEw@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the rust-xarray tree
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
+	Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 30 Apr 2025 14:21:00 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> On Wed, Apr 30, 2025 at 10:12:58AM +0100, Marc Zyngier wrote:
-> > On Thu, 24 Apr 2025 11:25:31 +0100,
-> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Thu, May 1, 2025 at 10:32=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
+.au> wrote:
+>
+> I will try to remember to run 'make rustfmtcheck' whenever I do a merge
+> fix up on rust code.
+>
+> (hmmm, no leading tab characters - who knew :-))
 
-[...]
+Thanks! :)
 
-> > > 
-> > > +void gicv5_irs_syncr(void)
-> > > +{
-> > > +	struct gicv5_irs_chip_data *irs_data;
-> > > +	u32 syncr;
-> > > +
-> > > +	irs_data = list_first_entry_or_null(&irs_nodes,
-> > > +					    struct gicv5_irs_chip_data, entry);
-> > > +	if (WARN_ON(!irs_data))
-> > > +		return;
-> > > +
-> > > +	syncr = FIELD_PREP(GICV5_IRS_SYNCR_SYNC, 1);
-> > > +	irs_writel_relaxed(irs_data, syncr, GICV5_IRS_SYNCR);
-> > > +
-> > > +	gicv5_irs_wait_for_op(irs_data->irs_base, GICV5_IRS_SYNC_STATUSR,
-> > > +			      GICV5_IRS_SYNC_STATUSR_IDLE);
-> > > +}
-> > > +
-> > 
-> > Only the ITS code is using this function. Why isn't it in the ITS code
-> > as a static helper?
-> 
-> I'd need to make irs_nodes global.
+(If you run `make rustfmt`, i.e. without the `check` at the end, it
+will apply the changes directly).
 
-You could simply have a helper returning the first IRS node. Not a big
-deal anyway.
-
-[...]
-
-> > > +	/*
-> > > +	 * Need to determine how many entries there are per L2 - this is based
-> > > +	 * on the number of bits in the table.
-> > > +	 */
-> > > +	events_per_l2_table = BIT(l2_bits);
-> > > +	complete_tables = num_events / events_per_l2_table;
-> > > +	final_span = order_base_2(num_events % events_per_l2_table);
-> > > +
-> > > +	for (i = 0; i < num_ents; i++) {
-> > > +		size_t l2sz;
-> > > +
-> > > +		span = i == complete_tables ? final_span : l2_bits;
-> > > +
-> > > +		itt_l2 = kcalloc(BIT(span), sizeof(*itt_l2), GFP_KERNEL);
-> > > +		if (!itt_l2) {
-> > > +			ret = -ENOMEM;
-> > > +			goto out_free;
-> > > +		}
-> > 
-> > You are allocating a bunch of 64bit pointers. So the alignment is
-> > BIT(span + 3) or ARCH_KMALLOC_MINALIGN, whichever is the largest.
-> 
-> Right, at least 8 bytes.
-> 
-> > > +
-> > > +		its_dev->itt_cfg.l2.l2ptrs[i] = itt_l2;
-> > > +
-> > > +		l2sz = BIT(span) * sizeof(*itt_l2);
-> > > +
-> > > +		if (its->flags & ITS_FLAGS_NON_COHERENT)
-> > > +			dcache_clean_inval_poc((unsigned long)itt_l2,
-> > > +					       (unsigned long)itt_l2 + l2sz);
-> > > +
-> > > +		val = (virt_to_phys(itt_l2) & GICV5_ITTL1E_L2_ADDR_MASK) |
-> > > +		       FIELD_PREP(GICV5_ITTL1E_SPAN, span)		 |
-> > > +		       FIELD_PREP(GICV5_ITTL1E_VALID, 0x1);
-> > 
-> > GICV5_ITTL1E_L2_ADDR_MASK starts at bit 12.
-> 
-> No, it starts at bit 3.
-
-Ah, you're absolutely right. I looked at the IST version...
-
-[...]
-
-> > > +{
-> > > +	struct gicv5_its_dev *its_dev;
-> > > +	int ret;
-> > > +
-> > > +	its_dev = gicv5_its_find_device(its, dev_id);
-> > > +	if (!IS_ERR(its_dev)) {
-> > > +		pr_debug("A device with this DeviceID (0x%x) has already been registered.\n",
-> > > +			 dev_id);
-> > > +
-> > > +		if (nvec > its_dev->num_events) {
-> > > +			pr_debug("Requesting more ITT entries than allocated\n");
-> > > +			return ERR_PTR(-ENXIO);
-> > > +		}
-> > > +
-> > > +		its_dev->shared = true;
-> > > +
-> > > +		return its_dev;
-> > 
-> > I really think we shouldn't even consider the silliness of
-> > non-transparent bridges this time around. That's a terrible system
-> > design, and it leads to all sorts of lifetime madness -- the GICv3
-> > driver is a testament to it. Modern systems with GICv5 should not have
-> > to deal with this nonsense.
-> 
-> I am not sure we can remove this path for the IWB - even if we model it
-> as an MBIgen.
-
-Why? The IWB is (or rather should be) seen as a device. The fact that
-it is itself an interrupt controller is am independent issue.
-
-> With Sascha and Tim we tested this code path, I am not sure it would
-> work if a driver with a wired IRQ connected to an IWB free an IRQ and
-> the ITS device representing the IWB is not shared.
-
-I don't think freeing the IRQ from the end-point perspective should
-have any effect on the IWB. At probe time, the IWB should grab all the
-LPIs it needs, publish them as part of the wired domain attached to
-its fwnode, and be done with it
-
-[...]
-
-> > > +static int gicv5_its_irq_domain_activate(struct irq_domain *domain,
-> > > +					 struct irq_data *d, bool reserve)
-> > > +{
-> > > +	struct gicv5_its_dev *its_dev = irq_data_get_irq_chip_data(d);
-> > > +	u16 event_id;
-> > > +	u32 lpi;
-> > > +
-> > > +	event_id = FIELD_GET(GICV5_ITS_HWIRQ_EVENT_ID, d->hwirq);
-> > > +	lpi = d->parent_data->hwirq;
-> > > +
-> > > +	return gicv5_its_alloc_event(its_dev, event_id, lpi);
-> > 
-> > Huh. This looks wrong. Allocating the event really should happen at
-> > alloc time, not at activate time, because the endpoint driver doesn't
-> > really expect this to fail for any reason other than a gross bug.
-> > 
-> > activate should allow the translation to take place, but not rely on
-> > allocating events. Compare with GICv3, which only issues the MAPTI
-> > command at activate time.
-> 
-> I am not "allocating an event" (well, then you would say "learn how to
-> name your functions" and you are right), I am writing the ITT table for
-> an eventid that was preallocated before, so basically, apart from
-> paranoia checks, this is the MAPTI equivalent.
-
-Feels like *a lot* of paranoia checks, most of which should not be
-possible by construction. You can also get rid of num_mapped_events,
-which is clearly some debug stuff.
-
-And yes, this function can do with a bit of renaming.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Cheers,
+Miguel
