@@ -1,62 +1,62 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE402609C0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E63D264F99
 	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:30:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135046; cv=none; b=YCcQUJEIZB2UHPVWnPwDarRMKaMWntq8N+5ymiYyPt0oYNBZ6w6lfuLJk7lP+u+LXMDgVovyJRtfj9R8EhiOSYnjyRcZULRnRzlT62FQn/7sbvpCIuDMb+doIslHpE7mGBcw5kbom4lrWwZ5tZyvR+PtPVmGKFt/6BL5Z5pi3q4=
+	t=1746135048; cv=none; b=t7RJgs9aq/WjHOSccUknUHmY/1NB9th/Yo1ljKUkBXaujGJvaSS0k15niiPQmgQerG/V0rM0NN6ji2+npZLELnVE6X1p0HH3Zf6M1iy5qeGBp6l6YLhh5otnpd/7u79oP87+BHrW7z2wPIWzafw7zWETB2wuzPz6ql6MfXs8S5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135046; c=relaxed/simple;
-	bh=fVYrTnV4596MY4xP2V30U8n3S+cujdL2K1rYUrXul6I=;
+	s=arc-20240116; t=1746135048; c=relaxed/simple;
+	bh=PIRMpgNUFY1ik0z+6dnUMY6vtFlnqbFG//tKiGZLUfY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vFJxj24SlqExP4r2U6iWnk7JLd6VT1CwA5tiz4diX+7iV8ah7raOIsDPnwZ+Fy2k/9FdZtvzzcWBJZOnBPW2qPJIGlE3dpBQPalwZ2TFcuont0sTyPWo2DSERuc0k4Ku8q07YFIEn6wVMD7jQKN3LaJmVBuffvs0OcSwyYFUkgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mL7VUtc1; arc=none smtp.client-ip=209.85.208.51
+	 MIME-Version; b=WazWGMjWNR+ZHCHriOXVUfgyEE5+VwD/2UMO4fl2phN9V3ltmjd1/gch0VM8u2nM1d1VN1Bj6le7vtlBwGOuQpE1T/wa/N8qKq3NeL6/oOscqZgqRQTRNnNrUuHUwbsNr0jM5sneZhhlb78Lnugvxlkxbr2YZn7Ru+N/zeL+d+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JhRH8g4f; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mL7VUtc1"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5f624291db6so2055824a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:30:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JhRH8g4f"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2aeada833so268888266b.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:30:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746135043; x=1746739843; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746135042; x=1746739842; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=++LiMK+jPbWovw+5sDKphiLRP3X5ThooPqXEgIEf/wU=;
-        b=mL7VUtc1hJDGct4hruBRLUWC6KaFyqK0/hNxFvd1JifgfvPYOa5X5/NJHAWcTBLyoE
-         pWPyMaHWD7A0VkMSLBNBqpN/1zk4GewOQzHXuZRk2SEsYpAwZTE9B3Kf7xDtAsa7JfAT
-         SsTBpl3SGQV3TEUC6tb5MgG7BIkNPNAyB0RrATHZ0kbIezRuf7rW4C0U4UCPMGu0zjPA
-         Q48fMyv7IlC+bDXIntqrpTbTM4XU9AEaJikEdTk/MDJMiYWzM6EaPXy7lYHMewxmt8vX
-         G9E7Tz+saqHfEfqy08UYNaa69pWBeFZ88CnlxRNvUpykogV3ZNSFI84AGtzhnUjLxPd0
-         fqrw==
+        bh=vx2BnNbw+H6yRd92Qc87LVyrq8/WbAmAtW8W0e6klY4=;
+        b=JhRH8g4figt7IXiRCwbQHbt413wnNO8vMzyBW0zA8tO+mHanQGmTfwIDF5i6kyKY7O
+         J6mehj/VbzyaEFw/A8cP9LHPckfjnud5RiaerXWzxeZ+9uasArQaZrJ6vJQnp4YY0b5G
+         eQZ6OO5xh5DudgIvcWztQwi3HWnuM/6mB1EM5ohzE520BrEU5xebwtt2mDGB6zIMBmEy
+         HIM//0A1z20lEwqRisJCUv1Pm2sqpTvoHxj0JBgc7+/ky9lrDD4TCx8PqgCBVZ5eDdU+
+         dKDpEwOsJ1vK1h1jxGozu1HytNvdCWjLGWaKgLf1ahDYuGP3rtxTFVTWScazGmVkesPa
+         LMCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746135043; x=1746739843;
+        d=1e100.net; s=20230601; t=1746135042; x=1746739842;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=++LiMK+jPbWovw+5sDKphiLRP3X5ThooPqXEgIEf/wU=;
-        b=sljf/KT47Nb2k0Bb1sOBN+Q4TZ1PT0KNWXfHlZUg2rbNu28aJ/QMY5c4IC3lkgjMJj
-         4yNXmetlNzVmSN3joOY4ysQPxusF5AnTBoJN5EVuRbM5wFCn+AXs9TlVV/zNz57N1/F0
-         9CCqWfo5E1EPhjMxoFZwU1IOfef9d3cMdtc4Kydtc8gfy5WhstbxF64Xu01eLz8yTUOS
-         kH3Dcv55vpwx6KCY0mM8BvU9965jiRf5TDj/QCvBheauKXL7fBB49vATRaIUOwv1+Np6
-         8eCWE8iQEgVWPKuiPYZvSKmAVacyfsMhU8W6e+3kMdPKB9lB9SKkTwJCtVcgdy00HNg8
-         nrxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVEAzCRdri+lIMeXF9UJ3pxxgI6fihEpibz9xNObXdDPKx3tQimEg2PXoRXtMgwBl6p0GcDWjHO1daG80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWiwBoNS9Kc5Dsue2olGNnpiPlMcw83st6MO2S42XmeslJYouU
-	LjkcnwkFPPFE6OAKWH0owYhxkQ+SG+7+2wY6YRP2spAPiL4uVtoW
-X-Gm-Gg: ASbGncuqnoU/3bxeAi5MHoD1T7svdfTCkWjcaZtt9gU4REPl7LXcFkT2hIBZSW6utyv
-	cfAcm2K13rIOhA+n4NjSFujRSlNt5tWu5xgL6Gj0udQtc1i4J73tKkPAMFwkscYJwX9gDYi9ASV
-	eBk5S+OKi4EkC63t7VZaHR7mNRBGENIG66ksPWyayLNmA17SQHZYP25IcyU7WoKh5CcpRVeFkKt
-	eJGEtRWQKVo2BjnZeT8mcSqfqUQYYoFoeTJlYtjUy8ZoubuFsrqYEWYFr+f5r8SEbiXSrxoG5fj
-	IXdNYhIuajhm97dn3R1PtDq7vgtJQ8C0NqnJmNVIlKa3CFlaoEzaXyNqi+zl0GtCSrwBvFlJZJI
-	Yo998+vu5dtGoicULLWzdR9rTP+y7pijJ3uAHpsF6bqEmZ912r9gZtTeFprIPOrk8TVlTWwiL2v
-	/kig==
-X-Google-Smtp-Source: AGHT+IHGzNWQi9IaRBS+T9Q4dLFoyLyqFwYD3k3LrzonB4SsYe0hPBZHiar4FKK9vFlty1E8tA4Wvw==
-X-Received: by 2002:a17:906:478a:b0:ac3:8537:904e with SMTP id a640c23a62f3a-ad17af78ffbmr62529666b.49.1746135042771;
+        bh=vx2BnNbw+H6yRd92Qc87LVyrq8/WbAmAtW8W0e6klY4=;
+        b=KFdRKbe6QKqPTlaUOfp6SFnYKLxq50ytVkbMFPw2PPA8NOpxO5KF3suWTEA2KToTGW
+         eYum4ge+mbdaUhtceB672ppXAvELDDVw05xCY6Ekl82QgTnh6UXX6Y9nRgKu3BJklzdT
+         H84JfQZ0tnPMK+qSMq9qg/7WJ/ssg2H3bv1FCCELD17X2FMw41quhfJaRcC0OwYyr9v+
+         gm1qqce42RBMReW2ttEPg5URTJnnzA04cL62Yl35ucii9OEKknoiXxByD7qJ+Bgx6wRi
+         Pw/uQIyppxz86V516qilont//autaKRpwCwB3L1PMfmgE9jth8mUc2ob0CXHvDnBfM9T
+         Ze2w==
+X-Forwarded-Encrypted: i=1; AJvYcCVYoahGCIyIfaY46WBhW7pznZAo5LxLPwvh60Pbx8zQASJdjfYGQD9YF6Nd5NRYUXlHkGQv5+nu6ij5IqA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSKC+LpB0aowrLcdxf5sw2QKaJpU5Ewlact+YfypaWu02zD9d5
+	sRaJDptD/Su9PjCWedyIU7xCGLsoTMWSgMmtDmWEcliK/FiHKfOj
+X-Gm-Gg: ASbGncs+evNxzN2kKLGoRyCMx8S2w2wp34zf2VSREOkqX6hUdzxLT3U/PkMsqVIbA8I
+	Bnr5LOZPkcJVK7DDaRhwlP02ptR8Q2b5qBMwzmWLGpWZsAKaJnm1/Gncj8SDiF8S1pNu68um7pY
+	wd0DTpfEYDkdGeY/OtlmFLO0jMGNXlSyS5Us4M8FODQGQbZwNDaaBJ8N2PdYhdXKFwTcuMFdZ1H
+	NwBOqrK5O/Q8NLNBbZbJprO8ZlIJdr0bUdehmaOlznNiMN3QIGfdBG3qnXtaaWYu25qXaPb9GyD
+	qC89HOvfnFm+x397dTTNlru45R7ZGK80fBPmV3WHGXbO/Dpx8vuPNxKgXiwIwG1IiLHeDIDt27G
+	Qf/DEuF+aw5Wi/oY2V1FTo6Ax5WycYkru68Oj2wC6VNLrU3YpV8VIWOX2djinCHkDHcCVAHA0OH
+	avXw==
+X-Google-Smtp-Source: AGHT+IFUJ5z+Wf6tRCevsNbth9+n/iTFmf2xbNXBAm07ufdrNRRQKVTPwyzOkjqVkNpgNVJZHDRMRQ==
+X-Received: by 2002:a17:907:1c0d:b0:abf:174b:8ca6 with SMTP id a640c23a62f3a-aceff056cd2mr321833866b.27.1746135042337;
         Thu, 01 May 2025 14:30:42 -0700 (PDT)
 Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-41fd-2957-14cb-eff7.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:41fd:2957:14cb:eff7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da560a63sm96466866b.139.2025.05.01.14.30.42
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da560a63sm96466866b.139.2025.05.01.14.30.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 01 May 2025 14:30:42 -0700 (PDT)
 From: Thomas Andreatta <thomasandreatta2000@gmail.com>
@@ -66,9 +66,9 @@ Cc: gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
 	linux-staging@lists.linux.dev,
 	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 6/8] Staging: gpib: Updated return type for `request_system_control`
-Date: Thu,  1 May 2025 23:30:35 +0200
-Message-Id: <066ffcdbdefc54557c690c0c5a663695c198897b.1746133676.git.thomas.andreatta2000@gmail.com>
+Subject: [PATCH 5/8] Staging: gpib: Updated return type for `ines_request_system_control`
+Date: Thu,  1 May 2025 23:30:34 +0200
+Message-Id: <226a7f00f7a5a332808aa4d058b000deb5b20c92.1746133676.git.thomas.andreatta2000@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
 References: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
@@ -80,53 +80,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Function `ni_usb_request_system_control` used by
-`request_system_control` now returns int.
-Reinstated return values by removing comments from previously
-commented-out return statements.
+Updated the functions used by ines_request_system_control to return int.
+Currently there's no possible return errors in the functions due to them
+being former void function, for this reason they all return success (0).
 
 Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
 ---
- drivers/staging/gpib/ni_usb/ni_usb_gpib.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/staging/gpib/ines/ines_gpib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-index 9f1b9927f025..a41e4f472d89 100644
---- a/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-+++ b/drivers/staging/gpib/ni_usb/ni_usb_gpib.c
-@@ -1049,7 +1049,7 @@ static int ni_usb_go_to_standby(struct gpib_board *board)
- 	return 0;
+diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
+index d93eb05dab90..2ca1b8659ab4 100644
+--- a/drivers/staging/gpib/ines/ines_gpib.c
++++ b/drivers/staging/gpib/ines/ines_gpib.c
+@@ -441,11 +441,12 @@ int ines_go_to_standby(struct gpib_board *board)
+ 	return nec7210_go_to_standby(board, &priv->nec7210_priv);
  }
  
--static void ni_usb_request_system_control(struct gpib_board *board, int request_control)
-+static int ni_usb_request_system_control(struct gpib_board *board, int request_control)
+-void ines_request_system_control(struct gpib_board *board, int request_control)
++int ines_request_system_control(struct gpib_board *board, int request_control)
  {
- 	int retval;
- 	struct ni_usb_priv *ni_priv = board->private_data;
-@@ -1059,7 +1059,7 @@ static void ni_usb_request_system_control(struct gpib_board *board, int request_
- 	unsigned int ibsta;
+ 	struct ines_priv *priv = board->private_data;
  
- 	if (!ni_priv->bus_interface)
--		return; // -ENODEV;
-+		return -ENODEV;
- 	usb_dev = interface_to_usbdev(ni_priv->bus_interface);
- 	if (request_control) {
- 		writes[i].device = NIUSB_SUBDEV_TNT4882;
-@@ -1091,12 +1091,12 @@ static void ni_usb_request_system_control(struct gpib_board *board, int request_
- 	retval = ni_usb_write_registers(ni_priv, writes, i, &ibsta);
- 	if (retval < 0) {
- 		dev_err(&usb_dev->dev, "register write failed, retval=%i\n", retval);
--		return; // retval;
-+		return retval;
- 	}
- 	if (!request_control)
- 		ni_priv->ren_state = 0;
- 	ni_usb_soft_update_status(board, ibsta, 0);
--	return; // 0;
+ 	nec7210_request_system_control(board, &priv->nec7210_priv, request_control);
 +	return 0;
  }
  
- //FIXME maybe the interface should have a "pulse interface clear" function that can return an error?
+ void ines_interface_clear(struct gpib_board *board, int assert)
 -- 
 2.34.1
 
