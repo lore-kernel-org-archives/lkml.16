@@ -1,128 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE477257443;
-	Thu,  1 May 2025 22:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2E26257443;
+	Thu,  1 May 2025 22:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746137824; cv=none; b=npq5avYebltwTwaZm0ZXxdlU6zlcBL/0+yKA6R+9oT2Bazyj8lx7h1tjcxXnRo86eeus7ZMKvZbsprk7a87PwcN3LWxXgtsTYbDI1IK+bx4YM09qstRsh3IwKxz3Lec9lXOheP7e9tqBjWxJcQ83JSWHGaBJRLcCeqsSGtSzFEs=
+	t=1746138049; cv=none; b=qLqgEoiOzgn57UwgJ6kxOVTPLG0Lctt9eSYNoMqrpa91+PJQoozor/gAhaLfb+6XcyMyYEV73Wn5Re/8SH+duJWeJZCIR4VsJqWzyLT1GiwN2o4crWRITK4RZ8pMMrgfQ0ZkQnkeEfv9u//dOA9a3ciAKzEuYccW8X/Id7UeAAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746137824; c=relaxed/simple;
-	bh=Itg065LhDRorZA0J2NZH60yb7a1hVcb/Bdr1CPrif8o=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Kv5FmT2IXmkvTY2zQ3zJyUKYgRoyJbtDGr9ifdW6vqVQaujHJHyFDfeluvYVi3pVI9sIndIkED5uH2NxVRsLC4nlrfKDC2aYbKK2kCiOBUWH4MYymW6CqzwCiCnA55o/Unx/sAbHdOE0GBgorDRv7VAxOtSLTn5axMLimZ8NYzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVYY4Wq/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746138049; c=relaxed/simple;
+	bh=1AmadBefipFkm2t5cTF5kth76uzgreH9cgyFcs5ft4Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vlua1IiVt3RUNelmg60PDYipCNvBQpKhUVR5EmMGJasZUXHp/5eXeNaDOywaKQPaXADpTt7+rCuiLNcT45W/vGqhqaKez2D8nVSusNrECqd7yQdJ7NzwJTKsG5YVt2lUZl4+w3jOYNs8XMD67i604k/D7FHpTuq//euLK0wZFCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bIrWVDoc; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVYY4Wq/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF444C4CEE3;
-	Thu,  1 May 2025 22:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746137824;
-	bh=Itg065LhDRorZA0J2NZH60yb7a1hVcb/Bdr1CPrif8o=;
-	h=Subject:From:Reply-To:To:Cc:Date:In-Reply-To:References:From;
-	b=uVYY4Wq/Jpjp51lQc9DMyTjTYvlMlbqDuLsTWw/GRWDqn0ovLeyr6KypSDqiJopYo
-	 GT1r51Fpd604DW6Zs9CsY1Ix9pJ2PTIgfagSHTSaQCpVEvuN0gRuC11nANTPYp3IhG
-	 nHUIfr4iIhQXmFUW/3ilX9v7kXVdbSkjT9E3h6gakyJ9JOcMb7XzZfc5p69fVXETWi
-	 lwKqixu6BNSWUjqBiwe/7/7GqznWlPVjMkhvQ3LG/AnrSlCxo+jFUQ+TQXa/i0peAf
-	 35y/uMRs2J00kq7cIlKpMkR7Kvh2/J2QRUKyZyqUIzGJ++XQu3iR+F63g5f4OTOaA4
-	 tJyWxhStvmsdQ==
-Message-ID: <3ba81b7f7859de8ac64e4cf07cc5aa21c3850ae9.camel@kernel.org>
-Subject: Re: [PATCH 1/3] ASoC: amd: acp: Fix NULL pointer deref on acp
- resume path
-From: Niklas Schnelle <niks@kernel.org>
-Reply-To: niks@kernel.org
-To: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>, 
-	broonie@kernel.org, alsa-devel@alsa-project.org
-Cc: Vijendar.Mukunda@amd.com, Basavaraj.Hiregoudar@amd.com, 
-	Sunil-kumar.Dommati@amd.com, syed.sabakareem@amd.com,
- mario.limonciello@amd.com,  Liam Girdwood <lgirdwood@gmail.com>, Jaroslav
- Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <u.kleine-koenig@baylibre.com>, Greg KH
- <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, "open
- list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..."	
- <linux-sound@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Date: Fri, 02 May 2025 00:16:59 +0200
-In-Reply-To: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
-References: <20250425060144.1773265-1-venkataprasad.potturu@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bIrWVDoc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746138048; x=1777674048;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1AmadBefipFkm2t5cTF5kth76uzgreH9cgyFcs5ft4Y=;
+  b=bIrWVDocpZXYNtpzbaQloe3nsKZPywYuzkV+wWVZaHQL92SKezUC/XXm
+   zmJcDAuLL8ommcIEfv3vemBxVHRekoku/QwvZr33OnT7lMsq7twhW7l1l
+   GJvSP5ZcFwTyVCZWYJ+7XK7zS9wCW/YQj9O5rqxigkyzuDTRQOwRuIZvx
+   njzTkHmLXCR8IxNGj7s5pbCJBq+XK2/sKjQuYbFojCXD1V8F9gtk4qFMR
+   +TGTeeGte35lrNaOFX4lE2/jrtJsrVpdBX9u4pQV1u7fr4w2ZN0dDqKdm
+   LcCx/iJ1Fp2cM7/AzSxCzHp48muD0X75bMl+85WsD8AEe1qr8zh5n3vN5
+   w==;
+X-CSE-ConnectionGUID: eOUSpBb6Q2CxdBZn/waa/g==
+X-CSE-MsgGUID: uAgs/a/zRJq+1xAFqpNw0w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="59188991"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="59188991"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 15:20:47 -0700
+X-CSE-ConnectionGUID: dyUqDNu+Teuks2Ci5uxPQQ==
+X-CSE-MsgGUID: YmC/jWunR1uDvH081srsMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="134441553"
+Received: from ettammin-desk.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.38])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 15:20:44 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id EC3471201E4;
+	Fri,  2 May 2025 01:20:41 +0300 (EEST)
+Date: Thu, 1 May 2025 22:20:41 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Sylvain Petinot <sylvain.petinot@foss.st.com>
+Cc: benjamin.mugnier@foss.st.com, mchehab@kernel.org, robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tomm.merciai@gmail.com
+Subject: Re: [PATCH v6 2/2] media: i2c: Add driver for ST VD56G3 camera sensor
+Message-ID: <aBPzucFjWvN8crSs@kekkonen.localdomain>
+References: <20250427193050.23088-1-sylvain.petinot@foss.st.com>
+ <20250427193050.23088-3-sylvain.petinot@foss.st.com>
+ <aBCosy0h83UMNvSI@kekkonen.localdomain>
+ <f496004b-8301-4f7b-85cc-f2f82bc94060@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f496004b-8301-4f7b-85cc-f2f82bc94060@foss.st.com>
 
-On Fri, 2025-04-25 at 11:31 +0530, Venkata Prasad Potturu wrote:
-> update chip data using dev_get_drvdata(dev->parent) instead of
-> dev_get_platdata(dev).
->=20
-> BUG: kernel NULL pointer dereference, address: 0000000000000010
-> Call Trace:
->  <TASK>
->  ? __pfx_platform_pm_resume+0x10/0x10
->  platform_pm_resume+0x28/0x60
->  dpm_run_callback+0x51/0x1a0
->  device_resume+0x1a6/0x2b0
->  dpm_resume+0x168/0x230
->=20
-> Fixes: e3933683b25e ("ASoC: amd: acp: Remove redundant acp_dev_data struc=
-ture")
->=20
-> Signed-off-by: Venkata Prasad Potturu <venkataprasad.potturu@amd.com>
+Hi Sylvain,
 
-This is the first time I see an empty line between the Fixes and the
-Signed-off-by tags. I checked checkpatch.pl --strict and that doesn't
-complain, but I'm curious now, is that a subsystem thing since you have
-it in all 3 patches?
+On Wed, Apr 30, 2025 at 04:19:14PM +0200, Sylvain Petinot wrote:
+> > > +static int vd56g3_subdev_init(struct vd56g3 *sensor)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	/* Init remaining sub device ops */
+> > > +	sensor->sd.internal_ops = &vd56g3_internal_ops;
+> > > +	sensor->sd.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> > > +	sensor->sd.entity.ops = &vd56g3_subdev_entity_ops;
+> > > +
+> > > +	/* Init source pad */
+> > > +	sensor->pad.flags = MEDIA_PAD_FL_SOURCE;
+> > > +	sensor->sd.entity.function = MEDIA_ENT_F_CAM_SENSOR;
+> > > +	ret = media_entity_pads_init(&sensor->sd.entity, 1, &sensor->pad);
+> > > +	if (ret) {
+> > > +		dev_err(sensor->dev, "Failed to init media entity : %d", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/* Init controls */
+> > > +	ret = vd56g3_init_controls(sensor);
+> > > +	if (ret) {
+> > > +		dev_err(sensor->dev, "Controls initialization failed %d", ret);
+> > > +		goto err_media;
+> > > +	}
+> > > +
+> > > +	/* Init vd56g3 struct : default resolution + raw8 */
+> > > +	sensor->sd.state_lock = sensor->ctrl_handler.lock;
+> > > +	ret = v4l2_subdev_init_finalize(&sensor->sd);
+> > > +	if (ret) {
+> > > +		dev_err(sensor->dev, "subdev init error: %d", ret);
+> > > +		goto err_ctrls;
+> > > +	}
+> > > +
+> > > +	return vd56g3_update_controls(sensor);
+> > 
+> > You're not holding the control handler's lock in the above call.
+> 
+> If your comment is related to the fact that 'vd56g3_update_controls() can
+> fail and that we do not free control handler not cleanup media entity, it's
+> fixed in V7.
 
-> ---
->  sound/soc/amd/acp/acp-rembrandt.c | 2 +-
->  sound/soc/amd/acp/acp-renoir.c    | 2 +-
->  sound/soc/amd/acp/acp63.c         | 2 +-
->  sound/soc/amd/acp/acp70.c         | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->=20
---- snip ---
-> index 6d5f5ade075c..217b717e9beb 100644
-> --- a/sound/soc/amd/acp/acp70.c
-> +++ b/sound/soc/amd/acp/acp70.c
-> @@ -182,7 +182,7 @@ static void acp_acp70_audio_remove(struct platform_de=
-vice *pdev)
-> =20
->  static int acp70_pcm_resume(struct device *dev)
->  {
-> -	struct acp_chip_info *chip =3D dev_get_platdata(dev);
-> +	struct acp_chip_info *chip =3D dev_get_drvdata(dev->parent);
->  	struct acp_stream *stream;
->  	struct snd_pcm_substream *substream;
->  	snd_pcm_uframes_t buf_in_frames;
+It's not. The access to the control handler is serialised by a mutex and
+you're not holding that mutex whilst calling vd56g3_update_controls() here.
+The same issue exists in accessing sub-device state.
 
-Hi Venkata,
+...
 
-Yesterday I ran into what I believe is the issue fixed by this patch on
-my very recently acquired Framework 13 with a Ryzen AI 340. While I was
-still bisecting this I found a thread[0] of Jacek Luczak having
-bisected this and the revert at least solved the suspend issue for me
-too, though I was still getting a sound subsystem related crash[2] that
-looked related so was waiting for a proper fix. As a side note you
-might want to consider adding a Reported-by tag from Jacek.
+> > > +	ret = vd56g3_parse_dt(sensor);
+> > > +	if (ret)
+> > > +		return dev_err_probe(dev, ret, "Failed to parse Device Tree.");
+> > 
+> > No need for the trailing dot in these messages. Same elsewhere.
+> 
+> You're right, Fixed in V7.
+> I took the opportunity to harmonize the error messages (Capital letter, no
+> space before ':', no trailing dot, missing '\n').
 
-I had mentioned this on the Framework forums[1] where Mario Limonciello
-helpfully pointed me at this series. I just tried your series on top of
-v6.15-rc4 and suspend now works. I also haven't seen the other crash I
-was still getting with just the revert from the previous thread. And
-sound still works too. So feel free to add, or ignore, my:
+Ack, sounds good!
 
-Tested-by: Niklas Schnelle <niks@kernel.org>
+-- 
+Regards,
 
-Thanks,
-Niklas
-
-
-[0] https://lore.kernel.org/lkml/CADDYkjR0JG_JTQeQMAvUJvtb9RxFH6_LzV2Fr_1cn=
-qPTgV_Z8w@mail.gmail.com/
-[1] https://community.frame.work/t/regression-framework-13-ryzen-340-doesnt=
--wake-from-suspend-on-v6-15-rc4-works-fine-on-v6-14-4/68514
-[2] https://pastebin.com/pR54sve3
+Sakari Ailus
