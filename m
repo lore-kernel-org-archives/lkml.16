@@ -1,129 +1,59 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93949201262
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D7933C9;
+	Thu,  1 May 2025 15:25:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746112980; cv=none; b=t64PRr/2GGfu6NxRpeQAHM25gPtQf8i6DZLFe1/woBK40ZmWIYVqK6z7qY6PPU8OaDwQMbrJ9w6QhVWkIK4s46cr04qaPf85ehCxzkvutt4lo0e2SVukafv3j/fGHQlAHHYpxkK0hdtrm/vtsmz2TEw5UxcQMzC36Y28bWqT/Oc=
+	t=1746113118; cv=none; b=uLYUmqVxRE3akpnYTdrcMQuRdij6KD3mtgFu+9qxFfN1pTGyEkqVf4iYNNmhvjh9rbI2fLz7sBCjEGN53x2f/0E61P9Kov0IiIIu/qRiaQONqlR0lZ5U/82LMUhc55rNuMcrR8guKEmgHa2YHYBavdVPlj0YEWegB7YYHCG9z5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746112980; c=relaxed/simple;
-	bh=GnwsPoOxW8mCGc7CAgjoDtFw8dTWra4gUIbWL5YCLUs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=i5+XVT26ILzqqpxUuwW5B+/9ZfXU1dorNV3q9MZmnScFOZP51wSpVQb3BFc4rBpM7UgQ4yJ6l4fg1+w4k/hnlXDVGnNLbx0A8jD692sYguMyktp0DSGKRbJoVVaQZPe7tz4TrA0vQOxlCDGBun7o7cUn2oWxfVhLnSyWDKwQQuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RqqwQegs; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jackmanb.bounces.google.com
+	s=arc-20240116; t=1746113118; c=relaxed/simple;
+	bh=loo+Slr2A+pXdv7N1jw+wAJL5btGqCUSbVMFSMoTyKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZEH+lKOfqFQ0c1vGuWXGx/nECjTvs5JP4LklcwzDtCJyziVsg+aW3BVfoR6gcTT5TR4fwkk0V8iP1/sYIH0tj0ldH4NXOJCG5+zOd4jGWpSggRErjPxMCZ44RpItR61mcoLDddA9kJ1fS+8cZYnk36jGdUuJmvYixHv0moxydvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ik23JtSB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RqqwQegs"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43eed325461so4605055e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 08:22:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746112977; x=1746717777; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wm8HDKzWcPs/ZOJ7u1MGp3oUtkY4RQR0TPLRQCBj5DQ=;
-        b=RqqwQegsrWLsB1Yvk3XF6QMZObcZSJzZhmHOuynYxfAjO0oGplp27iKhLgAVcrPz0j
-         eWMVzCG9CejZi9x3NWPUhr1TIByngtnippTREg9TBe5WYJhV3hDngP2L9u/C0y4L+KM4
-         6ze5N6b7zDXBq/JS27TtKUGHyfcbNWTSmaEekY8HKP6pJFEwbRZsR/kH6YXFGC/5IjH3
-         e4vPZeITPxnOaDhMNWzPBrX1Dg0AwW+aEKY1dKZXOvoGEdTtmtU4GGb86piX/Aad55Da
-         /uynSSrFWN5ORTZPS8H/O00MqgO+KM9d5s2rBmL1yeW0ZzXXRC2PVlV1F/jK3ifRzbqF
-         xs4g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746112977; x=1746717777;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wm8HDKzWcPs/ZOJ7u1MGp3oUtkY4RQR0TPLRQCBj5DQ=;
-        b=OxjXtYT3iIEL+y0wYn6FxrhpdVVKB8qLv8WpyhAQI9T21RQloA4E52hvwSynz8Cqwm
-         9sp7RINDLDPTni2DR0re4ZBKQPc31vHjWFK9HxWiJ5mgrkTH9c9gH0W02L93V1ybFDV1
-         aohlMkkND9jVJkq6/2YedS0/B4xCpbtjHChjhlfEvNv11uKGJPkGos7lduMSoaviMWGN
-         VNuTEZdkgo094DA/rGSxZw/MA+6Ssr2ArOUGi7q6hc5RetxJbDVs9fvqSZYdWnDObUr4
-         +ZugUNdt9NVjdl5tVDltC4EwV4nlVkSe7prlCskKmTjnUWYWKaayqy0ufL/iFwaTFTdw
-         di8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWa24irCmGTiWp0gfzb7MLzIuT4rkn+uLIGo07iFCC27cWf9RcTaaasvEotyfICrR9N6LQVFRiof6afj/s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzY/DfB1sLliQ4pV63heNylXpxiH0YPzUVAT5LsWXhPNypO65v3
-	uqAIvSFfvuOS4AQyAW0LCJoPgSb7lWgtvnm2wnss5vga//Q99wbEgPkFSRoSyv5cSVHTsZh1a7l
-	yUUSLuRkKfw==
-X-Google-Smtp-Source: AGHT+IG1H8EWFmTdy9mXUfcCJxQBprr6abVa1X9treBvRrD020Cub+yFF9voa0K8UUVl5WCrL4gH+SDc7+SKLQ==
-X-Received: from wmbel14.prod.google.com ([2002:a05:600c:3e0e:b0:440:5f8a:667c])
- (user=jackmanb job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:4ec6:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-441b2635482mr61130455e9.6.1746112976936;
- Thu, 01 May 2025 08:22:56 -0700 (PDT)
-Date: Thu, 01 May 2025 15:22:55 +0000
-In-Reply-To: <20250501150229.GU4439@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ik23JtSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD940C4CEE3;
+	Thu,  1 May 2025 15:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746113117;
+	bh=loo+Slr2A+pXdv7N1jw+wAJL5btGqCUSbVMFSMoTyKY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ik23JtSBwkvFFRZ8PYjE6Sl1GflZbhWiYyqfmWUw90eIlTSRm+fmqNqjB05owIw2D
+	 awHP36bC81dog9e9g+t8QU9JfU8t1iRxQRtBeBfUE4TqrYL6rNswHjq8mFTlkBUPz3
+	 Y9Tf6xnvTJRWbb+m1YxFBjppvs8aByIJ27ilES9TyPSy6IJcLfvdlcKh93oMnpisgs
+	 nc0xei3cfwZkxp3yEvcYPF2X/3mleXUrVVg+AFaXMso74VDJ2PrzbE3+j+oSBch0IS
+	 iZxW05NKmLcWXCgiXDM8PZsdLipCXWoiBV14qgrL6c551Ja2iEf7RGMK+px3498rVr
+	 cnv8HvwS1x9AA==
+Date: Thu, 1 May 2025 16:25:13 +0100
+From: Simon Horman <horms@kernel.org>
+To: linux@treblig.org
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+	pabeni@redhat.com, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] strparser: Remove unused __strp_unpause
+Message-ID: <20250501152513.GB3339421@horms.kernel.org>
+References: <20250501002402.308843-1-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
- <20250429123504.GA13093@lst.de> <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com> <20250501150229.GU4439@noisy.programming.kicks-ass.net>
-X-Mailer: aerc 0.20.0
-Message-ID: <D9KXE2YX8R2M.3L7Q6NVIXKPE9@google.com>
-Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce CONFIG_NO_AUTO_INLINE
-From: Brendan Jackman <jackmanb@google.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Christoph Hellwig <hch@lst.de>, <chenlinxuan@uniontech.com>, 
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Sagi Grimberg <sagi@grimberg.me>, 
-	Andrew Morton <akpm@linux-foundation.org>, Yishai Hadas <yishaih@nvidia.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, 
-	Kevin Tian <kevin.tian@intel.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Peter Huewe <peterhuewe@gmx.de>, Jarkko Sakkinen <jarkko@kernel.org>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Vlastimil Babka <vbabka@suse.cz>, 
-	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Juergen Gross <jgross@suse.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>, 
-	"H. Peter Anvin" <hpa@zytor.com>, <linux-nvme@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>, <kvm@vger.kernel.org>, 
-	<virtualization@lists.linux.dev>, <linux-integrity@vger.kernel.org>, 
-	<linux-kbuild@vger.kernel.org>, <llvm@lists.linux.dev>, 
-	Winston Wen <wentao@uniontech.com>, <kasan-dev@googlegroups.com>, 
-	<xen-devel@lists.xenproject.org>, Changbin Du <changbin.du@intel.com>, 
-	Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501002402.308843-1-linux@treblig.org>
 
-On Thu May 1, 2025 at 3:02 PM UTC, Peter Zijlstra wrote:
-> On Thu, May 01, 2025 at 02:19:47PM +0000, Brendan Jackman wrote:
->> On Tue Apr 29, 2025 at 12:35 PM UTC, Christoph Hellwig wrote:
->> > On Tue, Apr 29, 2025 at 12:06:04PM +0800, Chen Linxuan via B4 Relay wrote:
->> >> This series introduces a new kernel configuration option NO_AUTO_INLINE,
->> >> which can be used to disable the automatic inlining of functions.
->> >> 
->> >> This will allow the function tracer to trace more functions
->> >> because it only traces functions that the compiler has not inlined.
->> >
->> > This still feels like a bad idea because it is extremely fragile.
->> 
->> Can you elaborate on that - does it introduce new fragility?
->
-> given it needs to sprinkle __always_inline around where it wasn't needed
-> before, yeah.
+On Thu, May 01, 2025 at 01:24:02AM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> The last use of __strp_unpause() was removed in 2022 by
+> commit 84c61fe1a75b ("tls: rx: do not use the standard strparser")
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Right, I guess I just wouldn't have associated that with the word
-"fragility", but that's a reasonable complaint!
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-> Also, why would you want this? function tracer is already too much
-> output. Why would you want even more?
-
-Yes, tracing every function is already too noisy, this would make it
-even more too-noisy, not sure "too noisy" -> "way too noisy" is a
-particularly meaningful degradation.
-
-Whereas enlarging the pool of functions that you can _optionally target_
-for tracing, or nice reliable breakpoints in GDB, and disasm that's
-easier to mentally map back to C, seems like a helpful improvement for
-test builds. Personally I sometimes spam a bunch of `noinline` into code
-I'm debugging so this seems like a way to just slap that same thing on
-the whole tree without dirtying the code, right?
-
-Not that I have a strong opinion on the cost/benefit here, but the
-benefit seems nonzero to me.
