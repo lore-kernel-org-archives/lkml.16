@@ -1,43 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3E643169;
-	Thu,  1 May 2025 15:40:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9A733C9;
+	Thu,  1 May 2025 15:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746114000; cv=none; b=IDS09T1zB5RwQIhxe8xKLBcLA6+STrFnxsQ/vsULoGDCiRiD2q3DDaweSHqZrPWFBfnCgPF4s1+a3xz9gLiRug0rPb5R4sr+ZFAqpK3EPSobTN/WPLj/NDbW0BmPbhvZHs+yoN3ZHox51gXEDtu/Aw3EmRYgHDEYExFgQRaZUEc=
+	t=1746114094; cv=none; b=XvWWKZhA67OKOOjZ8mgv2SCnfotzb3+uLYEH22RkLR6ARRtzsINxgYViqdKcwDClmihFCaip3b8n1U1c8UQ3BYyBLV358QDgH/pvYDozxatQvhes602dsCJS972eQTaChwYYa0JqoTBjx3DKGQdG0qjgvWfb/Qmd0qRNKSAw8vI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746114000; c=relaxed/simple;
-	bh=hrEAEh3lq2I1Ox4b0R8U5WmZ/jstKflCKSTnRsjFyIk=;
+	s=arc-20240116; t=1746114094; c=relaxed/simple;
+	bh=wCcIZ2HaYnn6wpdRf+mldkvw+Bpb6dXIPcM7KQdQj2g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BBeH1TLDjwq3Qpe/X8EyYVua1+ty+UeNhZ8XInlF04RizHKazEHAKMZcxEbV94b5C0Zqfi9VVkoaFtU8l/zMeTvB/mL1VB0ICwIvk8bIK7WZ4MfnNBUtO7UVA3e+N2UFnYsEnVqMITLOy7cxO+2zHqaoVwY8yYeHeHwkwYN0a74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZQVRT0jO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=di+JLubsco3SxjVmspga4ujL523BA6irwwtUdN0K6sq1dSc76jboUjnyKoNW6YE7NrRcZQoeE7FxeMpF5laNwXIDbzF50AGEqAPaeu02kkv8B+OBIIRS91I8Ct1rXt0MzQitozudFRlDw9pi+6A5vYS/GyMlkxHS2+1BOtV6gjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=puT/iB0T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZQVRT0jO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54047C4CEEE;
-	Thu,  1 May 2025 15:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746114000;
-	bh=hrEAEh3lq2I1Ox4b0R8U5WmZ/jstKflCKSTnRsjFyIk=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="puT/iB0T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA081C4CEED;
+	Thu,  1 May 2025 15:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746114094;
+	bh=wCcIZ2HaYnn6wpdRf+mldkvw+Bpb6dXIPcM7KQdQj2g=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZQVRT0jO92x91XAng6qJVW4fWv4ftom/ULEadbNbvwGouP/j7FbvI29H1Hx0owQOq
-	 Xe3P9sz3HwOSTrQmByzJl2pG3kIflELRFKm+q6fMy2FFCqHPdzdVlrmIja7Pdcu/yX
-	 BL3qRXGHX+D1PHOD7EEWwwm+hOWg5hALdewj3Kns0/jpDLK5b5sOxzulLTkgHXaK5r
-	 n1LDfNuzQIDxcJB0U29fXDvmQbXoBCXrA3qMrpT+tDCSnV/kgIiDxe5bhg+fPH7n/1
-	 GopzIjUQmaS8Dcmz2YdhJgSstitJezfUd0RGpDR64kAej7REUUQG2KamjBQicvGzsV
-	 Nse7cEIi8V71w==
-Date: Thu, 1 May 2025 16:39:56 +0100
-From: Simon Horman <horms@kernel.org>
-To: Ruben Wauters <rubenru09@aol.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] ipv4: ip_tunnel: Replace strcpy use with strscpy
-Message-ID: <20250501153956.GC3339421@horms.kernel.org>
-References: <20250501012555.92688-1-rubenru09.ref@aol.com>
- <20250501012555.92688-1-rubenru09@aol.com>
+	b=puT/iB0TXxZlw1Mqx0/IwwBNAGdK8Z9h7ZR90Zp68nLI06qe65AoqtooC4+C+XTFO
+	 VqG/DwHqdjG50SiMZsQA4z9zvwF4uIaRquPU+d9KtsKaFBGjSXu4NlWlYMbPfKkU0D
+	 x9c1dV/Qu2B8MFk5L5n4qhPfQkJED7oFeGFIL0sw=
+Date: Thu, 1 May 2025 17:41:31 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: RD Babiera <rdbabiera@google.com>
+Cc: heikki.krogerus@linux.intel.com, badhri@google.com,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] usb: typec: tcpm: apply vbus before data bringup in
+ tcpm_src_attach
+Message-ID: <2025050116-hardy-twins-913e@gregkh>
+References: <20250429234743.3749129-2-rdbabiera@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,51 +41,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250501012555.92688-1-rubenru09@aol.com>
+In-Reply-To: <20250429234743.3749129-2-rdbabiera@google.com>
 
-On Thu, May 01, 2025 at 02:23:00AM +0100, Ruben Wauters wrote:
-> Use of strcpy is decpreated, replaces the use of strcpy with strscpy as
-> recommended.
+On Tue, Apr 29, 2025 at 11:47:42PM +0000, RD Babiera wrote:
+> This patch fixes Type-C compliance test TD 4.7.6 - Try.SNK DRP Connect
+> SNKAS.
 > 
-> I am aware there is an explicit bounds check above, however using
-> strscpy protects against buffer overflows in any future code, and there
-> is no good reason I can see to not use it.
-
-Thanks, I agree. This patch doesn't buy us safety. But it doesn't lose
-us anything. And allows the code to move towards best practice.
-
-One thing I notices is that this change is is inconsistent with the call to
-the 3-argument variant of strscpy a few lines above - it should also be hte
-2-argument version. Maybe that could be changed too. Maybe in a
-separate patch.
-
-It is customary when making such changes to add a note that
-strscpy() was chosen because the code expects a NUL-terminated string
-without zero-padding. (Which is the case due to the call to strcat().)
-Perhaps you could add some text to the commit message of v2 of this patch?
-
-> Signed-off-by: Ruben Wauters <rubenru09@aol.com>
-
-Reviewed-by: Simon Horman <horms@kernel.org>
-
+> tVbusON has a limit of 275ms when entering SRC_ATTACHED. Compliance
+> testers can interpret the TryWait.Src to Attached.Src transition after
+> Try.Snk as being in Attached.Src the entire time, so ~170ms is lost
+> to the debounce timer.
+> 
+> Setting the data role can be a costly operation in host mode, and when
+> completed after 100ms can cause Type-C compliance test check TD 4.7.5.V.4
+> to fail.
+> 
+> Turn VBUS on before tcpm_set_roles to meet timing requirement.
+> 
+> Fixes: f0690a25a140 ("staging: typec: USB Type-C Port Manager (tcpm)")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: RD Babiera <rdbabiera@google.com>
+> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
 > ---
->  net/ipv4/ip_tunnel.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-> index 3913ec89ad20..9724bbbd0e0a 100644
-> --- a/net/ipv4/ip_tunnel.c
-> +++ b/net/ipv4/ip_tunnel.c
-> @@ -247,7 +247,7 @@ static struct net_device *__ip_tunnel_create(struct net *net,
->  	} else {
->  		if (strlen(ops->kind) > (IFNAMSIZ - 3))
->  			goto failed;
-> -		strcpy(name, ops->kind);
-> +		strscpy(name, ops->kind);
->  		strcat(name, "%d");
->  	}
->  
-> -- 
-> 2.48.1
-> 
-> 
+>  drivers/usb/typec/tcpm/tcpm.c | 34 +++++++++++++++++-----------------
+>  1 file changed, 17 insertions(+), 17 deletions(-)
+
+Does not apply to my tree, can you rebase against usb-next and resend?
+
+thanks,
+
+greg k-h
