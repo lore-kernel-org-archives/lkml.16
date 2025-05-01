@@ -1,86 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BC422172C;
-	Thu,  1 May 2025 12:08:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB759221DA2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 12:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746101321; cv=none; b=psmgUwBlxLToDe+MF2Vh+wf5GaK/yycblWgXUqyIHhnPfLZqdS6Xr2O+Yzljvji667MxfnGUbkeEVz+ObBavOnngbwm1Mb7Vxylaitkm+cm1agCPuwgKSpfhHR3e4j4eYsBTknmkAk673uTrMLzTY99pWkDwTv1JjK3SiX+Tk60=
+	t=1746101514; cv=none; b=Jh06D3QKpJeVGAfXmjUY0RKF90ZRPtkONBPuvQeDKpumRTYsTO8C1xy9AfV2M/ZjRbRGQql6A2DuiVINTNVFUd+wXLOqNRswOW3jp9hA34tA23fb9pzQpfG1UwsxxsbKEn3u3fwElQ+rHvkS5Ho4273BijWp4+I6F7RNyAlB/U4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746101321; c=relaxed/simple;
-	bh=u2MmEqJy/SJZoUoRB2qEBCQqBQSZGn/luJwgJregaE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NDXelrE4YdAPN9sBRdFJyto2YuZD9w1N5Q5hXoEZpVly9F90rsKoo+uQKlbkfDpu+g+cRFCPOpFUWIDfRELrk+kzzT94BN3E16xlcaDBoEaPyPzwxY9PvIpLsqIevKssKIzZxHKHEtbB9gB7UY5zqi79bwWAyfvtUskgBHdzUFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=in9IcdMp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746101514; c=relaxed/simple;
+	bh=wMY6a5JVtMVNqd+zboKr9weNYAp9jdaWkZVBqmq5ecQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=es38ySb3spi3XLjAYKntqKQe0v1OkW4hyyjtfkdryu9G2rW6o6OEiWxgf2XTgroIJ4Vg1rtLP/hZJfIhcyRmSqmJCsz4WdYTL8uZaj4fgmNEsj6MJEwMb2Vo+LiXDlJyjNp0KG3dimVJczzQtv0PJ0spkj4NZKaS35IkDAmjuQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=y1UxYlaX; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="in9IcdMp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE69CC4CEE3;
-	Thu,  1 May 2025 12:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746101320;
-	bh=u2MmEqJy/SJZoUoRB2qEBCQqBQSZGn/luJwgJregaE4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=in9IcdMpfhe1hDjD9Zf4yYrA/+389dvoDD6ReE7b/+uVxibs3RHTKfw5S3zRYS7X2
-	 d+aC2epahwAN5Z0dF2CVZOb1EBY0bRiyKG3tV400CONg0UHAnda0oSaKx/cxjOK+qi
-	 iZa21cIBUHzSfMQJOoZm/sKPeKGBnn2frIkUCM7M=
-Date: Thu, 1 May 2025 14:08:37 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	linux-tegra@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.15 000/368] 5.15.181-rc2 review
-Message-ID: <2025050129-pantyhose-stereo-569f@gregkh>
-References: <20250501081459.064070563@linuxfoundation.org>
- <76ee0569-5d39-4bb4-a3c2-f222ca17c0f7@rnnvmail203.nvidia.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="y1UxYlaX"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 541CBUv03609279
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 07:11:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746101490;
+	bh=W/es5kXjus6Ekazfj83lp0bz1sYjjqkTHx/HVlsYj6I=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=y1UxYlaXzCGL1G2FPgzgWKAf4Dm4z5Lwh/lBIzn8EJfh88T5ssPpWciuyRVqL1XUa
+	 semLOIUZsH4k0gA506mSlsZc0ft4OkKaWRRkvOBHDypiuNPKn9pol8wTtuhiPK5aJx
+	 3E2ngGEMQxSAOYA0QCjdVGvFMt8AIwKzk/0rdLhI=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 541CBUGh094941
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 1 May 2025 07:11:30 -0500
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
+ May 2025 07:11:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 1 May 2025 07:11:29 -0500
+Received: from [10.24.72.182] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.72.182])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 541CBOx9052473;
+	Thu, 1 May 2025 07:11:25 -0500
+Message-ID: <01b43a16-cffa-457f-a2e1-87dd27869d18@ti.com>
+Date: Thu, 1 May 2025 17:41:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76ee0569-5d39-4bb4-a3c2-f222ca17c0f7@rnnvmail203.nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] drm/bridge: ti-sn65dsi86: Enable HPD functionality
+To: Max Krummenacher <max.oss.09@gmail.com>,
+        Doug Anderson
+	<dianders@chromium.org>
+CC: "Kumar, Udit" <u-kumar1@ti.com>, <andrzej.hajda@intel.com>,
+        <neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+        <Laurent.pinchart@ideasonboard.com>, <dri-devel@lists.freedesktop.org>,
+        <tomi.valkeinen@ideasonboard.com>, <jonas@kwiboo.se>,
+        <jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+        <mripard@kernel.org>, <tzimmermann@suse.de>, <airlied@gmail.com>,
+        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>
+References: <20250424105432.255309-1-j-choudhary@ti.com>
+ <3f44ec0b-216c-4534-a6de-7b17929cb9e1@ti.com>
+ <CAD=FV=WytPZCF-jcWFgXoAOoXOV61bw2_ftJbdbWZviHQqap5w@mail.gmail.com>
+ <aBMs0ubSip7MAtMQ@toolbox>
+Content-Language: en-US
+From: Jayesh Choudhary <j-choudhary@ti.com>
+In-Reply-To: <aBMs0ubSip7MAtMQ@toolbox>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Thu, May 01, 2025 at 04:07:27AM -0700, Jon Hunter wrote:
-> On Thu, 01 May 2025 10:18:10 +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.15.181 release.
-> > There are 368 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Sat, 03 May 2025 08:13:53 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.181-rc2.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests passing for Tegra ...
-> 
-> Test results for stable-v5.15:
->     10 builds:	10 pass, 0 fail
->     28 boots:	28 pass, 0 fail
->     101 tests:	101 pass, 0 fail
-> 
-> Linux version:	5.15.181-rc2-g85e697938eb0
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
->                 tegra194-p3509-0000+p3668-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
-> Tested-by: Jon Hunter <jonathanh@nvidia.com>
+Hello Max,
 
-Great, thanks for the quick turn-around!
+On 01/05/25 13:42, Max Krummenacher wrote:
+> On Mon, Apr 28, 2025 at 02:15:12PM -0700, Doug Anderson wrote:
+> Hello Jayesh,
+> 
+>> Hi,
+>>
+>> On Thu, Apr 24, 2025 at 6:32 PM Kumar, Udit <u-kumar1@ti.com> wrote:
+>>>
+>>> Hello Jayesh,
+>>>
+>>> On 4/24/2025 4:24 PM, Jayesh Choudhary wrote:
+>>>> For TI SoC J784S4, the display pipeline looks like:
+>>>> TIDSS -> CDNS-DSI -> SN65DSI86 -> DisplayConnector -> DisplaySink
+>>>> This requires HPD to detect connection form the connector.
+>>>> By default, the HPD is disabled for eDP. So enable it conditionally
+>>>> based on a new flag 'keep-hpd' as mentioned in the comments in the
+>>>> driver.
+>>>>
+>>>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+>>>> ---
+>>>>
+>>>> Hello All,
+>>>>
+>>>> Sending this RFC patch to get some thoughts on hpd for sn65dsi86.
+>>>>
+>>>> Now that we have a usecase for hpd in sn65dsi86, I wanted to get
+>>>> some comments on this approach to "NOT DISABLE" hpd in the bridge.
+>>>> As the driver considers the eDP case, it disables hpd by default.
+>>>> So I have added another property in the binding for keeping hpd
+>>>> functionality (the name used is still debatable) and used it in
+>>>> the driver.
+>>>>
+>>>> Is this approach okay?
+>>>> Also should this have a "Fixes" tag?
+>>>
+>>>>
+>>>>    .../bindings/display/bridge/ti,sn65dsi86.yaml      |  6 ++++++
+>>>>    drivers/gpu/drm/bridge/ti-sn65dsi86.c              | 14 +++++++++-----
+>>>>    2 files changed, 15 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+>>>> index c93878b6d718..5948be612849 100644
+>>>> --- a/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+>>>> +++ b/Documentation/devicetree/bindings/display/bridge/ti,sn65dsi86.yaml
+>>>> @@ -34,6 +34,12 @@ properties:
+>>>>          Set if the HPD line on the bridge isn't hooked up to anything or is
+>>>>          otherwise unusable.
+>>>>
+>>>> +  keep-hpd:
+>>>> +    type: boolean
+>>>> +    description:
+>>>> +      HPD is disabled in the bridge by default. Set it if HPD line makes
+>>>> +      sense and is used.
+>>>> +
+>>>
+>>> Here are my suggestions
+>>>
+>>> 1) use interrupt in binding as optional instead of keep-hpd
+>>>
+>>> 2) use interrupt field (if present to enable of disable HPD functions in
+>>> driver)
+>>
+>> Officially we've already got a "no-hpd" specified in the device tree.
+>> You're supposed to be specifying this if HPD isn't hooked up. It would
+>> be best if we could use that property if possible. If we think that
+>> using the lack of "no-hpd" will break someone then we should be
+>> explicit about that.
+>>
+>> I'd also note that unless you've figured out a way to turn off the
+>> awful debouncing that ti-sn65dsi86 does on HPD that using HPD (at
+>> least for initial panel power on) only really makes sense for when
+>> we're using ti-sn65dsi86 in "DP" mode. For initial eDP panel poweron
+>> it was almost always faster to just wait the maximum delay of the
+>> panel than to wait for ti-sn65dsi86 to finally report that HPD was
+>> asserted.
+>>
+>> I could also note that it's possible to use the ti-sn65dsi86's "HPD"
+>> detection even if the interrupt isn't hooked up, so I don't totally
+>> agree with Udit's suggestion.
+>>
+>> I guess the summary of my thoughts then: If you want to enable HPD for
+>> eDP, please explain why in the commit message. Are you using this to
+>> detect "panel interrupt"? Somehow using it for PSR? Using it during
+>> panel power on? If using it for panel power on, have you confirmed
+>> that this has a benefit compared to using the panel's maximum delay?
+>>
+>> -Doug
+> 
+> I'm working on a similar issue where the bridge is used to provide a
+> connector to a display port monitor and hot pluging would be needed.
+> 
+> Related, but not the issue here: We have two display outputs and the
+> reported connected display without an actual monitor to report a
+> video mode then confuses the system to also not use the second display.
+> 
+> As I already have a solution which fixes my issue, hopefully not
+> affecting the eDP use case a proposed that here:
+> 
+> https://lore.kernel.org/all/20250501074805.3069311-1-max.oss.09@gmail.com/
+> 
+
+I was also planning to use connector type for conditionally setting the
+HPD_DISABLE bit. But I see that renesas uses sn65dsi86 bridge
+(arch/arm64/boot/dts/renesas/r8a779h0-gray-hawk-single.dts and two more
+platforms) connected to mini-dp-connector which also had the connector
+type DRM_MODE_CONNECTOR_DisplayPort.
+
+After your changes, their platform will also get affected.
+I would assume that even their platform needs HPD functionality. They
+should also be getting "always connected" state for that connector.
+But I don't see any reported issues for their platform.
+
+As Doug proposed, we can use no-hpd in other platforms and not keep it
+in our platforms.
+
+(I will test your patch on TI platform.)
+
+Warm Regards,
+Jayesh
+
+
+> Regards,
+> Max
