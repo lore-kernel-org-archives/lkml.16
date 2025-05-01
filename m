@@ -1,80 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0D2AD24;
-	Thu,  1 May 2025 14:32:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB13AD24;
+	Thu,  1 May 2025 14:32:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746109926; cv=none; b=eFswnBL22iUlQERoAl8NLmdBO62bw7Wcz7TTIatuMMW49tA0Enrvmfji5rE9bkYBa1kETNveh+TTQ7u2Pjsi1MIceUhy0dMZzxPm+JmwoJBdaa/0t1VQmqF64hxc7z6ZqUc7lsZ54rySFp/7zElWGaW+n6Ck6DPdyU0ZNdfzHCI=
+	t=1746109973; cv=none; b=IDeAECUeCkR2TsFcEYcWkfoZfx6uYihZj0o3JblaqQ+Y1+Lw07252SktoHmayEJy1Pt3T7ZLQNewfsUsKr4qAQ9pKuipZ8fpOSjP4/TEvnst6mUNye5DTUMwpfk4Qtf+V2gfKMX0B4Q61hSMzljE1CPA+mgqmWS8gHZKgajbg+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746109926; c=relaxed/simple;
-	bh=LdsVNnkJrHoLXbSbUPMDpxSQ6NufQT5IcMdgtFRep4k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uwi2780Mh/IySLr1LF5Day2kyZkHLd7mIXC0MRWDkxTD6/jiEfC1qA9Fy4cJb9SKm12SyYmjfLPXA11JEIpI6tNoxyeGuDnSQHk/W2xFuktNvW7+BAdVzv14iYfpwfWTzczon9FFRzuuGOaRQnd7SfFA28LwXqsgfz+8hBNMWsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWLMTJMZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746109973; c=relaxed/simple;
+	bh=ChU0LnGye3/sKTfBYj0v3uZsJYxV4lwJzxdMPJHVNdw=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ugq9vn3t4VuF6q1VOqL+IHJL0bKa/G1VtbFyNaWDhrKLk49TKiYeWZOz835Wve0MZOcIBs978tmZF2PaSaUNWJW1/kIcJOD1AlPjXnjaBtHZW6Ti78oseqLqOoBKMD2cbwNc+V1AtQ5/PcDk00jfUFZXPkyEX7skn4ylWYKq0Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzdD4tdW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWLMTJMZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D622BC4CEE3;
-	Thu,  1 May 2025 14:32:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzdD4tdW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC572C4CEE3;
+	Thu,  1 May 2025 14:32:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746109924;
-	bh=LdsVNnkJrHoLXbSbUPMDpxSQ6NufQT5IcMdgtFRep4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FWLMTJMZOZ3qliqI4m2QyJHE0D+y0U3OZ+gBzsurwZ/3G4nS9NbINvQOlQXViPEGL
-	 195xHGu2sz2XFr93Vv/u/0u5I8C2HCBQzlau1qDVYAOpmJJ3BI/kFm4cu+vTSMmLVA
-	 +kmHG0roQT8PvEWjgbllblXYuwCKyhWtGg3NzhoBZY+KvWr4e1KIrRGahTO4YKQuGF
-	 gHyAuFSMnIh0au3LcKoUatsxfiUntGIYJfPPnmvf7g2fU4cPRKbTGv3C0SXXdHvzEd
-	 LvIF2U/zV8HMer+dy/qL5vkhBc08C5pG79Mrk2H7INdino9x970zi8vhaitw1npsBV
-	 uluww+Bp0YuTQ==
-Date: Thu, 1 May 2025 15:31:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: neil.armstrong@linaro.org, quic_jesszhan@quicinc.com,
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-	tzimmermann@suse.de, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, quentin.schulz@cherry.de,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Allow port dt-property on two leadtek dsi displays
-Message-ID: <20250501-groove-decode-7c02f67c8752@spud>
-References: <20250430082850.244199-1-heiko@sntech.de>
+	s=k20201202; t=1746109973;
+	bh=ChU0LnGye3/sKTfBYj0v3uZsJYxV4lwJzxdMPJHVNdw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=tzdD4tdWov6bTcHQjRH/3i/YplItQFfWojku1jIYAZEPAeyKWG/GlIwYUo0D3OmEn
+	 omyuAVWcjzTzM8/a3GEeToqhJkb2pUPjnOohvN5NHlrV+CWtW2EsfQzySMbqfH/E2M
+	 Ft0wYaR2a7NxL3Kw9kz6fYk8ArNGAuMMgEYJ6BKelaKjM8jGOYrqyoSH8EN+B/loLb
+	 vzLdYLMhlgPYuWkMAKbraZLtYbWhtiphlnphtBOCTdzas37rkhi2ZqB7/l1mfKh6sI
+	 qBS7FkmuwjN66QAbvL1s74uaz/tuOnKqbZ++h9f2klvBBncgNG7GrGWquGsGxfj5Vu
+	 q+0lsmAfC5/Qw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uAUy3-00AbJY-00;
+	Thu, 01 May 2025 15:32:51 +0100
+Date: Thu, 01 May 2025 15:32:49 +0100
+Message-ID: <86seloh04u.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Sascha Bischoff <sascha.bischoff@arm.com>,
+	Timothy Hayes <timothy.hayes@arm.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 15/22] arm64: Disable GICv5 read/write/instruction traps
+In-Reply-To: <20250424-gicv5-host-v2-15-545edcaf012b@kernel.org>
+References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
+	<20250424-gicv5-host-v2-15-545edcaf012b@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Vv97M0+otrzJGnBd"
-Content-Disposition: inline
-In-Reply-To: <20250430082850.244199-1-heiko@sntech.de>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
+On Thu, 24 Apr 2025 11:25:26 +0100,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+> 
+> GICv5 trap configuration registers value is UNKNOWN at reset.
+> 
+> Initialize GICv5 EL2 trap configuration registers to prevent
+> trapping GICv5 instruction/register access upon entering the
+> kernel.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Marc Zyngier <maz@kernel.org>
+> ---
+>  arch/arm64/include/asm/el2_setup.h | 45 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+> index ebceaae3c749b84395c9c5eccf0caf874697ad11..1e362bb3b042d51fff15a7c2abc73842930b275a 100644
+> --- a/arch/arm64/include/asm/el2_setup.h
+> +++ b/arch/arm64/include/asm/el2_setup.h
+> @@ -165,6 +165,50 @@
+>  .Lskip_gicv3_\@:
+>  .endm
+>  
+> +/* GICv5 system register access */
+> +.macro __init_el2_gicv5
+> +	mrs_s	x0, SYS_ID_AA64PFR2_EL1
+> +	ubfx	x0, x0, #ID_AA64PFR2_EL1_GCIE_SHIFT, #4
+> +	cbz	x0, .Lskip_gicv5_\@
+> +
+> +	mov	x0, #(1 << ICH_HFGITR_EL2_GICRCDNMIA_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICRCDIA_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDDI_SHIFT		| \
+> +		      1 << ICH_HFGITR_EL2_GICCDEOI_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDHM_SHIFT		| \
+> +		      1 << ICH_HFGITR_EL2_GICCRDRCFG_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDPEND_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDAFF_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDPRI_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDDIS_SHIFT	| \
+> +		      1 << ICH_HFGITR_EL2_GICCDEN_SHIFT)
 
---Vv97M0+otrzJGnBd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please write this as:
 
-On Wed, Apr 30, 2025 at 10:28:48AM +0200, Heiko Stuebner wrote:
-> Working on an upcoming board dts, I noticed a dtc check warning
-> about the port node and at the same time the kernel-test-robot
-> noticed the same warning with a overlay I added recently.
->=20
-> So allow the port node in the binding of two leadtek displays
-> to fix that.
+	mov	x0, #(ICH_HFGITR_EL2_GICRCDNMIA	| \
+		      ICH_HFGITR_EL2_GICRCDIA	| \
+		      ICH_HFGITR_EL2_GICCDDI	| \
+		      ICH_HFGITR_EL2_GICCDEOI	| \
+		      ICH_HFGITR_EL2_GICCDHM	| \
+		      ICH_HFGITR_EL2_GICCRDRCFG	| \
+		      ICH_HFGITR_EL2_GICCDPEND	| \
+		      ICH_HFGITR_EL2_GICCDAFF	| \
+		      ICH_HFGITR_EL2_GICCDPRI	| \
+		      ICH_HFGITR_EL2_GICCDDIS	| \
+		      ICH_HFGITR_EL2_GICCDEN)
 
+which has the exact same effect, and is consistent with other uses in
+this file.
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
+Thanks,
 
---Vv97M0+otrzJGnBd
-Content-Type: application/pgp-signature; name="signature.asc"
+	M.
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBOF3wAKCRB4tDGHoIJi
-0omYAP41/ajL1HV2bP3vX446tkfOhX4TMOtMoa2YlBB84At9wgEAvxkF9+TChQ7r
-YhDexXpjgmdSgVJ8yXv6eSalclm7Kgc=
-=0TIm
------END PGP SIGNATURE-----
-
---Vv97M0+otrzJGnBd--
+-- 
+Without deviation from the norm, progress is not possible.
