@@ -1,78 +1,94 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE7711BF37;
-	Thu,  1 May 2025 15:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764CE1BF37;
+	Thu,  1 May 2025 15:56:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746114981; cv=none; b=En4LM/eF8DW3yS+DETj18wFLmwCdsv3isNX/BArPyLb3dzGwUkrEA6cr29azPd/0CKDax9amggy1yhs3V4VtYjc/dY+hzZ6TDaEVT01o+b6bEt3CepKt9o1yVh9B8eV3JjRjxnE15fvw9yNS+ErbJqtvEmYtnQQKRnfuYvWPOek=
+	t=1746114988; cv=none; b=fOy+TWYYB/hGQ/IKe1fJoO/IGrLXCKt/CD1toOvyu1JLmWkGdPMLXhQzffR/e7QAMWJw5pg7Gbx94SqTTd3w5gUGBDGfFprTFNaIjdoFiMZnYsYUSklesJOErzHH4oOqIFwjJAn3Xqd/5hUc8rPVx9AUcLkUbY3CqRVwVlzQ/WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746114981; c=relaxed/simple;
-	bh=Q0rI3Ix5bKbL3oXvzTrIX1mYZLSUqs3Li6p9AXMr1cg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdWuUma+gs7UpUycLRXZNxZQUjm5EHCbhuIMxOhaHfKWj/3MJAgaibEh8mqZeWCkw2KyrmYnM/dGkLtQXp4QOk2FVKoA88iYGAkFiapQF428FnP34qZoiSG68ngtXBEkdIKkIju1Gt4O1G88ehEydg8wrsKBpWpytneCBSBBAyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bhJrT6nX; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746114988; c=relaxed/simple;
+	bh=H1fNj/CakZBvpJsUCy07rk5bya3VmD17bPcA2zPX7iI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ccws/4qcI7kN9iCbDkXZVRKuN05bNLudiaepgDSEJNJgiUG4+4OpFi+5CGB9eDzCbpeyzkLk7YBP4MoK9U5N30UR6xck8g+SMRFEHwYNtjptd1KGaIBbmmdDibE+SX4JhbnnVZZmZlpgC3qxq3K+RVnHoggi/PmuZOkrnpa0il0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y5bZ6jtm; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bhJrT6nX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=zTjgeh/y5NGBu1mrW+W0Jg2XIh99/pQSz8ZxlAYIlW8=; b=bhJrT6nXBQWvb48rdqzWBiycvh
-	2NVLX2Y38i8ecaxv1yDgPLivqRVxsvZDUMplcSuQ9IuaZXrPS1q8zbTE/4m86DivGyJtcbW1UblZ0
-	6NH3gzsybTuwtaritDRKIyf05mtszgoo/ob9Nq+gjXJbK5PFj/7AT3ed+ystg67I3vep5QvZDvy+g
-	2I0NQXBlzR/CzNoahyn897LRhLmXfUgBouJq9kPLNE9msXZijQJ/O7aSPpUNHgOuXiH5tAQYNhbRH
-	VefmDdWBsbB4uvqwGnh18DpPoCEw3dv4CNTvPQdWWKQu2COF0vNoZG951pGL7AoJM3AnXCO2iY0AZ
-	9IoUSViQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uAWGa-0000000E3Q7-1uZz;
-	Thu, 01 May 2025 15:56:04 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EE9FC300642; Thu,  1 May 2025 17:56:03 +0200 (CEST)
-Date: Thu, 1 May 2025 17:56:03 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-	ardb@kernel.org, kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, linux-hyperv@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-	linux-efi@vger.kernel.org, samitolvanen@google.com,
-	ojeda@kernel.org
-Subject: Re: [PATCH v2 13/13] objtool: Validate kCFI calls
-Message-ID: <20250501155603.GE4356@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <20250430112350.443414861@infradead.org>
- <u4v64j3wgdml5zkij43lcksknhpoaqs3jmrm5udejrg75dl2ny@x4jexlz64amd>
- <20250430190328.GO4439@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y5bZ6jtm"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6673225e9.0;
+        Thu, 01 May 2025 08:56:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746114985; x=1746719785; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jUtziZ6CdgJPkUUTKYy83P04/OdvunL1Qfhe4qlBO24=;
+        b=Y5bZ6jtm55UsTohxqV7x6SLgGZHXL+SvxGZsc0DBcSE2oTi0rL1C5Daff8cuKUGSiF
+         oDbXnJORaMCd//iivbqR7ukLqPCEpbwK8knOavmGEOFydmP/E/CrYv4j1z3Ylj3hmusQ
+         M/cnX8tGmdl848kk83nTEX4ONlrpJa1f6uc9hgTawAdxHj30mEdW3bSShapg+4LKYsoL
+         p0hKG8n2Fg4b5qBFgv3/hcXj1KYzm/IbXI7yXrJCjtydCI/OIYB5TMf5a6wuW9YXb8Ko
+         6jhVipIQAi4lm1ZTM+zusiVZs2LzzWU8mScZX/fWr+Okk2IssHFG/b9rgiwsSv/Cwrmv
+         HtXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746114985; x=1746719785;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jUtziZ6CdgJPkUUTKYy83P04/OdvunL1Qfhe4qlBO24=;
+        b=owvcZhhmlFypBnYtjI7zmbahP1i208vNl+ouqLtdA24S7pK16Owz10GhbLghKKgoFl
+         t6fDZxGY1sZUFjYexuuus3zgnXKAfY5NDIALuh7BC0llf9+FNEFlVO3MIvMHE8dqfiqD
+         74069srDIiNcuL2Cm+hF08gF5fTBsRpT8HOgw8FnJoR4x3sZPiQ9fPU8brRUgU9X0+wy
+         ZSSESBSszSrqubTSoEG9d+rpVFREM4/0TPQLsLPWzj1VFzMp/mVTnNFsf/IGgcZhIJNS
+         1N57uzcivLv6TWpAqlFdeHU8xVw9TUhJ7x7P7uFRP9MF9jlewy/83LrMomHsFrDCmdsb
+         6J6w==
+X-Forwarded-Encrypted: i=1; AJvYcCUrf78VvsCJXF+yRItHUWIGbopturyNl8Lc0mK8I2DZ3A1S6Jw3jtiNY4WzyOg4Of+zdk/bu4b0COUo@vger.kernel.org, AJvYcCVyHIvi7KaSdAGy1XXe5RmNRm9DwK8xdL1L5d0a3TNXs2Ge9A3XWXAgIOZALIsXratGc7mc7hEhszHFPJI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfQCi8pBgAh2b59LxQUH+kv6O4HgcbvR6XN13JSReQ6QIY0a9a
+	AiqX9akCR4LdMI0uqSj6Rwq9QBAyPpjzu6dWax+4ghcWLLor89cp
+X-Gm-Gg: ASbGncv4PQHqZKM5o3ZsX47xWLr7HZql51vGO/TglND3jlTp9R+95mX6bINsvr6F+Va
+	xv5Es/rZIdfBVartZVT5aDVtp3oohphAqRka7vIgdCcBYTbD7oC+rfreEIOyyjZxnk5Xcxf3dhr
+	kEYhv7rL75JK0lgVIufym34wU6FEOmiuPwb0+spKB4KFsxSVqTJDua1ybCvaZH9rKVzYIJsvk1u
+	oELc9xeL/ZgI1n71CdMX7NXClOqBkoOHbGSW4aZfcrC2z2hTQvL5J3V0z50dqy8sMM0fL7cuOZZ
+	P8AflNEzU+bsu7pgQdiI0uE6CEV0s1GMUwEpzg==
+X-Google-Smtp-Source: AGHT+IETeYrIGjejYMYYwg9fuX5TFzLcyAJxcf0oW+2E2LtWOD14TYWU9Jhme1v9ggIySPIqV/QOvw==
+X-Received: by 2002:a05:600c:3e1a:b0:43d:174:2668 with SMTP id 5b1f17b1804b1-441b715a687mr25533195e9.0.1746114984606;
+        Thu, 01 May 2025 08:56:24 -0700 (PDT)
+Received: from pc.. ([197.232.62.211])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89ee37dsm16226065e9.22.2025.05.01.08.56.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 08:56:23 -0700 (PDT)
+From: Erick Karanja <karanja99erick@gmail.com>
+To: manivannan.sadhasivam@linaro.org,
+	kw@linux.com
+Cc: kishon@kernel.org,
+	bhelgaas@google.com,
+	linux-pci@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	julia.lawall@inria.fr,
+	Erick Karanja <karanja99erick@gmail.com>
+Subject: [PATCH 0/2] Use scoped_guard to safely manage mutex locking
+Date: Thu,  1 May 2025 18:56:10 +0300
+Message-ID: <cover.1746114596.git.karanja99erick@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430190328.GO4439@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 30, 2025 at 09:03:29PM +0200, Peter Zijlstra wrote:
+This change replaces manual mutex locking/unlocking with scoped_guard
+to ensure mutexes are always released safely, even in the presence of
+early returns or errors. It simplifies control flow and eliminates the
+need for explicit goto-based cleanup blocks.
 
-> > > +	list_for_each_entry(insn, &file->retpoline_call_list, call_node) {
-> > > +		struct symbol *sym = insn->sym;
-> > > +
-> > > +		if (sym && sym->type == STT_FUNC && !sym->nocfi) {
-> > > +			struct instruction *prev =
-> > > +				prev_insn_same_sym(file, insn);
-> > > +
-> > > +			if (!prev || prev->type != INSN_BUG) {
-> > > +				WARN_INSN(insn, "no-cfi indirect call!");
-> > > +				warnings++;
-> > 
-> > Do we not care about indirect calls from !STT_FUNC?
+Erick Karanja (2):
+  PCI: endpoint: Replace manual mutex handling with scoped_guard()
+  PCI: endpoint: Use scoped_guard for manual mutex lock/unlock
 
-I extended to also cover STT_NOTYPE, no additional warns.
+ drivers/pci/endpoint/functions/pci-epf-mhi.c | 358 +++++++++----------
+ drivers/pci/endpoint/pci-epc-core.c          |  53 ++-
+ 2 files changed, 190 insertions(+), 221 deletions(-)
+
+-- 
+2.43.0
+
