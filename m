@@ -1,664 +1,201 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E5F20B807
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746114309; cv=fail; b=nGWiXFr5uffcMOj20BpoVsB+/qs4L/5mxED86sn8z169MkhsDqrxx0IcwobMa+qL1OEmwywDcFKJ4Fl1XWXeAgiVBuLOPngHNGk4TM9VlOi6W7D1zK2yB0wClp8Rwm4OuUTKgywrX7YA+btLSHNJDaqxfxR3jdWrAoQDmJKET64=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746114309; c=relaxed/simple;
-	bh=YGWVErSMU18vDkLZtC7SHRmAKR8gnZw6nfdnTv6fxCU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Chxf0o+6NbKXRfb5HStABei70/jjxms8ya2rDN+ShyRRz53m72rxcz7+vrrNjoLuSQdWQRvFlXEOZ2lE7yvYpUGm7GoJ8HsStPbwxFucuwcbqFXPFjBMn3jSwNDzOG8ysaIj2sL/Rz6PQCCMDnOZdrnTg8432RLUeDzpW640g3U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B60ojS3R; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1041BF37
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:49:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746114562; cv=none; b=GtlI/Bfj6QX6WrRAA3h30o1ChUUa6ck0LHQNwKObBCBf9d0rfeIry8qQuNMoVvk8qKwS1X1suIF96C/uAeXIwWqR+erq8b9CuiAKoALwN6Dr/ChWQWjPKbJcD4dEgczofg5LNq943gQzxAknd2TgzAZpl7KxOi6tFLyvnboIP6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746114562; c=relaxed/simple;
+	bh=3HKIVnPDQ9OEKCweD1mvGi7LavbypPCv6RQLPe4WJn4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=osnBgCc1kshwNCZ8b1763xFw/lXjiCbMX/CnYED+sklzAbFVilCGAu1hNkuqQaczj719JQ9pfslxNARBomo/5i1V77WJoI1dAAHZxQOFxWg9QDTtzMNrHLwQlg5uLZyIrkrzEIjagvj8YDw3l25B7TpqlKh3OsufSh0RoIcuqS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=L0bnZDrP; arc=none smtp.client-ip=209.85.166.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B60ojS3R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746114307; x=1777650307;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=YGWVErSMU18vDkLZtC7SHRmAKR8gnZw6nfdnTv6fxCU=;
-  b=B60ojS3Rpqz22Mae11dP4xLXpoiAR3I8d1orSZO8wYNf5zdnOIUitYMX
-   WzK7qiHZZoZuBgEB3doo+ljyjudo72WyLCGCq4Z/PIDci0Gqo7WGrKPbr
-   oUG+NzU3AnKnEdRNRlyCci5oxz8gTeLkkmBBrJSPz0FwUN6NihjgtiyZV
-   25d85yJrn67o5jVMIGPJWcowXCR83Tk9EZISPPyc6/gMoCfBMfLgUGiko
-   xZTRChLR8jrki+tPKHLoHcGoe4qJWatMp1k/Qqmfw2r9mBy+CTiEiTpSb
-   1Xk9YQTnUXl6nIQ2Ly89aJNv/5tsgVs8mRjyak2K8EOQRrLiwGl0a2pXF
-   Q==;
-X-CSE-ConnectionGUID: bQSoAMt7TFy5H3C8ZJCqiQ==
-X-CSE-MsgGUID: BCI0UMRxT7aNZCy6Cq7OOQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47670459"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47670459"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 08:45:06 -0700
-X-CSE-ConnectionGUID: J8MENkevRpCrpbh1o0grLQ==
-X-CSE-MsgGUID: s45ATng6T76RiQjztk1MYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="157638164"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 08:45:05 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 1 May 2025 08:45:04 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 08:45:04 -0700
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 1 May 2025 08:45:03 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=EMhD1fTXFGcc2/4ytYiYsfmoiJ8TtCUvCrUbv7X5ineGT2dVvuBYIvJRkZbpV5SsULCB8ESyu2UkOiKi0g8uokxPCMbMZL4yDQ997J7CAw1ozDTOVxH5vaJDVhXCp2d1djNSKQiYWWOKjH8j1r1URLJJGGN9b0tNoTftxDw1C/FQ50B2j5bwZBxcqzhcqD25o6ocpBdJCh3fstUFL2ob7Ntz2aymw7PondVG6ufoaCSHMFZ0FvLA5Ifea/M+DC26hGrhJBdEkGDdBz8ohSlUyBPUtASguJhnZpOEKRP5BOwf+y5T93zhanH8jGF/cBj9MbxGde0DGC0HX6TjA1QIWg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NXkR6EcIjS/tihJWuFCrz83AVuJIN3J37XDlAltmUTY=;
- b=lfcT45/NH/SN2fBmp+jJwF3jrqZBA2chiF+R34N4AmcFrovafEzP+umYRFqfsESdRIT8ju8w7T1InoN8qON0Uvnh0T7Hha7hY1OxyDukFJXwpKf97F6GZE8JV798B9Ta4WCbcWw7RTiXZXRlNiMgPR5GXEQ2IkrgHG9qp4zjeVEnzPi60QbnkuNODVLBhhmu+oT42wEXI3w2vZ0Iu0BiUchYKEIedCQvkWIiSocCsc9Bo8ivxTzGCt5WDnaaBW/8r+MxNlvuxEqwESYEdlYXRREMZ2Vf4nVW1b+I/v45SMIIqdGxqZ1m4StrtvpOzAnWvRX/je3kkiLXy8YTw62Y3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com (2603:10b6:930:c6::19)
- by SJ1PR11MB6202.namprd11.prod.outlook.com (2603:10b6:a03:45b::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Thu, 1 May
- 2025 15:44:47 +0000
-Received: from CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563]) by CYYPR11MB8430.namprd11.prod.outlook.com
- ([fe80::76d2:8036:2c6b:7563%4]) with mapi id 15.20.8699.012; Thu, 1 May 2025
- 15:44:47 +0000
-Date: Thu, 1 May 2025 11:44:40 -0400
-From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-To: Badal Nilawar <badal.nilawar@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Jason Gunthorpe <jgg@nvidia.com>, Saeed Mahameed
-	<saeedm@nvidia.com>, onathan Cameron <Jonathan.Cameron@huawei.com>, "Simona
- Vetter" <simona.vetter@ffwll.ch>, Dave Airlie <airlied@gmail.com>,
-	<linux-kernel@vger.kernel.org>
-CC: <intel-xe@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<anshuman.gupta@intel.com>, <alexander.usyskin@intel.com>,
-	<gregkh@linuxfoundation.org>, <daniele.ceraolospurio@intel.com>
-Subject: Re: [RFC 9/9] {fwctl,drm}/xe/pcode: Introduce xe_pcode_fwctl
-Message-ID: <aBOW6KblghsmwI_1@intel.com>
-References: <20250429160956.1014376-1-badal.nilawar@intel.com>
- <20250429160956.1014376-10-badal.nilawar@intel.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429160956.1014376-10-badal.nilawar@intel.com>
-X-ClientProxiedBy: MW2PR2101CA0033.namprd21.prod.outlook.com
- (2603:10b6:302:1::46) To CYYPR11MB8430.namprd11.prod.outlook.com
- (2603:10b6:930:c6::19)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L0bnZDrP"
+Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so209265ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 08:49:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746114560; x=1746719360; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B61it6scwYY34x7zwdbk+FyL53fYrJ6lieiu0DvGpsE=;
+        b=L0bnZDrPYTrKA2oaHa9R8ZGDxMM6O8GQ5cXIRoTd9ZpbqzFaUk4Y54YCG90ezPbfCG
+         TO1PNoBi2Ym5SGhfppSbYkmNmXGvk4nkuhwouyXjC8AWaCASCZA57F5UNz/MC1yvYrOv
+         51ZtqNmBl4fh8VliNe79+FdYbnC85Xjy/xTrTU0n6jS8Jp9C2B+DscKQ7wHx1SV9wKQJ
+         8ZuIJtmzI3CGiQocqR7FTeLjEeF/WVzMoQrRfkyi8YQXwRyYc7xOu8gmhkJd6ge1bY37
+         nE4j4Wy00m4TOLDam0VLdSameFHs9xW/chqoAxtEeKG+D0gQOV76lf561Y6EQ2+L1k4x
+         NYCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746114560; x=1746719360;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B61it6scwYY34x7zwdbk+FyL53fYrJ6lieiu0DvGpsE=;
+        b=F2CqUXMlenRzwD7vaDzgfYs/bquqXHdyh+ZRP9BMI4glnJwFPXmZibAgi1GETNAvJI
+         FEGwN2JVbK+hcxIf6A8G8FP0AGr2hhc2t8LhVm7nBwQi0nz+cMl75UGuPEC6Hj3nsuW4
+         j9NEviIaO4dk/QmiSsZwHCvuT/tMqSQc7jUCCI1fh97H6Ye98rtMehbIMpi+TNDPQy3R
+         loG7L24jICv5C6qkd/CwuLn421itpAR2Fyw/FhEoZ3L+nIp8rM+sYbH1pamPylZ096hB
+         HPD00sFv610ZVpvC7QBjmW0y4sm0ipAbWFrKsKTxin12zqE+nQT1hnlkt0WFJRAQtE1O
+         U0VA==
+X-Forwarded-Encrypted: i=1; AJvYcCXv3QsW5zALgK+GToZb7TC+Bdm8llcAVm5ZoIHeBfpyf8KpXwH0o4ori1T6i56rFp6p9JH5HyONv57yCgI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJzY/cwo/tHBJXYagvm2U8IJkMu5T30D/kQjX9AAeUr9VduCeE
+	paM3WMC91GGebFvTFhLCekBrGkHycJJxCIVFInjFd2EDUpgeKO3dUBLQpKI9rY1BFCHUoN2IK9/
+	mXPCjmAVltlcAfsDCaQCzucrm8A0Zc0Q73jce
+X-Gm-Gg: ASbGncvbYcD1/xIqpBNU4XV0RBB4nhSHSzkzxITT0h4gRSrrLtMzi67DYNukb41e2AW
+	hZdQbDhDJO26bJ4MLPLxlMrN8RuR5Cg06QWTkF5xfzHi87kAah4Dgv+Gx0qTN4Z+OlKYa0oOvAW
+	8ruadisLElyJGcAg1/aln44y/lVZW+XBO92q6LjUY1BvpfiXQI0Iw=
+X-Google-Smtp-Source: AGHT+IE7pBElH8T1s8JI1VwtyernK2V6bzN/KH8RUTWDX7XmmiYtthCh5W/qK19YYDCmOQTsLLavP7Kt7KPUitaxRdk=
+X-Received: by 2002:a92:ca47:0:b0:3d9:66ba:1ab7 with SMTP id
+ e9e14a558f8ab-3d96f21344amr3585695ab.10.1746114559459; Thu, 01 May 2025
+ 08:49:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CYYPR11MB8430:EE_|SJ1PR11MB6202:EE_
-X-MS-Office365-Filtering-Correlation-Id: cbd0d078-f879-45e6-61e6-08dd88c719d3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
-X-Microsoft-Antispam-Message-Info: =?iso-8859-1?Q?ecojfPhz3CFy6oJGKo/b+DTkGoyjD8KhyslSCTzuJslvqA2gklHxo6+edG?=
- =?iso-8859-1?Q?bAc7Wtok+RROf82PtX0OdDY5V/1jMgTfx8dBPqQV+pqF2YMH58xz5rJHc7?=
- =?iso-8859-1?Q?CcWb/rn/A+O/7GHIFEjRT1KTAL0pwiEnugpm7NtV0VtlffwoRfdx090ltw?=
- =?iso-8859-1?Q?HDOF7+aNYRsyxlvmTA79/XCDNGA2GaFYrH00xXhJFtWZe+8RkXEd8wgaZZ?=
- =?iso-8859-1?Q?8/IEAGL+4PiFHl+ZWQNz0wLySPCBmbeSF+fQP7Ru9YHtbZoO5DNe6R4taF?=
- =?iso-8859-1?Q?5Y58AcrgqGQgS0L3/puqU4jkeiOl7PjI4WBmm6JAulCdyMKhJQLaBPSoiU?=
- =?iso-8859-1?Q?mQFjxISNp79APjMfIQIMHg5/pvMopGNaC4e3eWy1X2zUQZAAqrtyRx0d5S?=
- =?iso-8859-1?Q?tpplUSoKVIeQfX2+fIUGHyOuIPvKVh+LjLzpkilDWduv9Au/SrIcrVob7F?=
- =?iso-8859-1?Q?wM+eWcwLUPAFD0hKnGxOasjpoIS30IaTJwlKpFlo7ePFh+GYE9OvcXii9M?=
- =?iso-8859-1?Q?A/23+PBpRV3r+C10L6Zhhm1ofWkbB62ndqEnUQIROkWHUFZIY/KL4oGe0i?=
- =?iso-8859-1?Q?b4rdjN2sMBBp3CNH7Cpwn6/f4Rg/YiQuGq5GRK+qoRYDidoxL3x7nEJwmU?=
- =?iso-8859-1?Q?Ba1d200P3qU1NS59nenjUaSv+s/dAF8UZKT1REdiIqSnWq/G3IoHGqQego?=
- =?iso-8859-1?Q?NRmYHClDAW61fuvEURsLxAhde0y+tNM91Dhf4tcJ5Tzbo5+2kqjDcYsDgT?=
- =?iso-8859-1?Q?NCFyfDqzoEMsAygmLCLdeHNuabrL1vJ402xLYzdH1hjmd9jgL8/cHl/nxf?=
- =?iso-8859-1?Q?284sMC4iHmBoWpYxzz67fdND302jkQ7UXHOwBJg84aYeZaw3C/WPZbVbGJ?=
- =?iso-8859-1?Q?/Rn0dof04zxUYKw+c5HSg63vH/noAuVKdX4ujBf5N2vVFp9t/PCBDBeTh5?=
- =?iso-8859-1?Q?prryhPchytmHIfS6EXa58dfZDlW5HsE4WY67il/wKbjKjBYYUdjCbKRm5V?=
- =?iso-8859-1?Q?w1MZ+FHAmbP4hVAQOohM5J4bm6q4tZkHlnInwcmbSKvU9y7+BnOI/k7u3m?=
- =?iso-8859-1?Q?PRyvSeX8I+XxyWkv+LMSKILMNObJO9HcKSF7E/W9n13at8jLdetFAzcAb/?=
- =?iso-8859-1?Q?HZPsQsYR3NdJ2LjcAIv0M543t56jTmzCAHtOQwDoSJQHmaPkxQ4OWyid+X?=
- =?iso-8859-1?Q?XAKD7um39Rczk/E2Qf5aCJeSZ5IJUGNyC4hspkbRtAQ8TaTEqwixPetxNe?=
- =?iso-8859-1?Q?CzheWsBRJlSk2qF2WD7lXSWpWPOCwhfmiHYdAPR6URpjGtj+GEKQ8bbPL4?=
- =?iso-8859-1?Q?b09LmcO96EP0OEfrfIuim2ZUhM4B3dRV62sGPXgkzFF/tTQad1ikKKlRxF?=
- =?iso-8859-1?Q?akcS0lDhgS5pm7rHlvFdTHDcAdz2+bQ0LcM067nz7kjZNhqqobY1OdSvIc?=
- =?iso-8859-1?Q?9WVf9x7gPDXCDPMuw5Tx1tNoOAFvwacCzbSzXiLvH7Pjn8wvGzkjnBmqNH?=
- =?iso-8859-1?Q?4=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CYYPR11MB8430.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?ZQnHLTBJqNI555WcagBIJDNkn9BKUUN1uoVar21/UWCy6P9nHMn3GtGLmR?=
- =?iso-8859-1?Q?qrO6DyRfKCKhuJxLtJRCyzZ918hquryXVd+W9bZ9/XRAer5bLplTmrDMZb?=
- =?iso-8859-1?Q?LfkQRhOMbffWy5uazov4dJtuSDcDU0Y5zyWUUr1noV5De7bsB0waSLjIPe?=
- =?iso-8859-1?Q?zkzYsUswfe/bVmuki8xSQPSrdY9hrq59hDnvi22A6UfZ/lg4gZld1ofXXJ?=
- =?iso-8859-1?Q?dgPalOX4mCurFBKvnp/oe3hSADnoCq9WeKI337MaPLVlwj+xAp/J5r9BM4?=
- =?iso-8859-1?Q?dLxpdmilx9np3Xud4e+Y4xz/A6U1xGN3CPgfWPWgOSOjMOe00oBtbJT/72?=
- =?iso-8859-1?Q?H7a3X4/XHDrDeJsI3w6npw02myHlHKyfUgvq6KwxEIvwncsGfVdkd/ratL?=
- =?iso-8859-1?Q?/5tZ7BCSW2zL7yGL5JtL2JRUV1FJmoCsulTwYU6NpsW+OVLsmhx4Xp2vKw?=
- =?iso-8859-1?Q?bMbWlKBSqhM+nGM5FIsS2ehC5ufKR2UxJ6CTcbQFZOceP17i2/2a5Kqht/?=
- =?iso-8859-1?Q?NEnAnS/JC8nqyQ8mYwdK2dyfNJBNyJH8pEnuBmj43s9xQ8Wv7qte2xQe0l?=
- =?iso-8859-1?Q?GdFgKetoFXdcrDUuCfy4GL5t65XjLDyLLJJsKdtn4LYChR0b1Z4IT+qI76?=
- =?iso-8859-1?Q?n3n2ait24Y4lyWzzmnvD0mqOHjPgg26RmFMC+OlRB3N49DAtJNq4YnkFEU?=
- =?iso-8859-1?Q?hvtO/Tda1MJGEkXW3qBG30eN4UKyNdDjgEb4Jvz+FxX6uXbezc1ZDEioP6?=
- =?iso-8859-1?Q?a+a+Q3j38LKwdqr7H+RKrRWbtFogJPa4NF9SdRvWMIGwn9ftXOS5lQ3Kau?=
- =?iso-8859-1?Q?d1QQgU78bQHYrB74NLMPZHSGT9M1TqYSBxP/rM9RecFapCxKRTcHN3tyM6?=
- =?iso-8859-1?Q?sGjHbVZi0DINtMt3jHQSu3LJGzktPbnATDakg6DQippXMqxfcUC3Ss+DYq?=
- =?iso-8859-1?Q?sMj/jRFsliFy7ZL1geAZleig5N5gi+7bvSsQf4y9wxVPSvRgOLAB6GyMa8?=
- =?iso-8859-1?Q?omrOyzTvOOvjl0vdbbisxj6v+iEk5F+RPaXgddwbnTQK8kkDaBoidLTFPX?=
- =?iso-8859-1?Q?JgwPmONePe26WYYf31ZJW1ShXmvDK7IJbhdQGldlNqfrLRg8QFVAtR7NP5?=
- =?iso-8859-1?Q?YM1+eHaTbIKyZ+bCC6dbf1z0lHHwg7APF2sHQCMADIWhGkn6vu0p9VmkDQ?=
- =?iso-8859-1?Q?Ko++9el6Fwr4zYtjPDAmYX4Q1Sh1PsWavuxn0jrCzn/SIDvc9zvBFWleYZ?=
- =?iso-8859-1?Q?n+woo5/GhIM4/KVNi3Vo26N7snLUaqqm2jP2O2f3kq3X/ypSuSw9YPVd9d?=
- =?iso-8859-1?Q?KspihxAZ6ddx4MAetOziL2jBLEg3TWoBECicZ/WvZ+jgrPj5r2AoMbQiO+?=
- =?iso-8859-1?Q?784+E48S1Rid51ZNr9o4A6tddgm2rQ2xwwW1WipWWSOgfi6NyKy6ktGXXM?=
- =?iso-8859-1?Q?qkw7vAMs3m4Aexr3UdqWJmcc+sVIcl3VNCOfs/vU6qLIeIwAfKwIpHw47W?=
- =?iso-8859-1?Q?AIIAsJkg8FIahpIVz4hFB4n581IM3TjG+/CoixaCPtJS96sLZOZ4EdFpct?=
- =?iso-8859-1?Q?JP2xJzF+123TC0opA5mSoGHralEzdcoS0X2O8+EpYFzGobbs/L+O3UZiHn?=
- =?iso-8859-1?Q?NE6+JLcBLnbc+p5EdXEXtUopFsLj+Esuh9K+a/8vsS5Ja+SqmkJZioiw?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: cbd0d078-f879-45e6-61e6-08dd88c719d3
-X-MS-Exchange-CrossTenant-AuthSource: CYYPR11MB8430.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 15:44:47.2399
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n02u2HRpdk0XxC5aZlUmkJt2Ep6PBy+wb/1rE16e4fIc63Vq0PA3KOVsbHducJ5Gn+NMh52jQSCvQtCoJwRREw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ1PR11MB6202
-X-OriginatorOrg: intel.com
+References: <20250501093633.578010-1-gautam@linux.ibm.com> <20250501093633.578010-4-gautam@linux.ibm.com>
+In-Reply-To: <20250501093633.578010-4-gautam@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 1 May 2025 08:49:08 -0700
+X-Gm-Features: ATxdqUHBwK_l4-FbEaeqBNUJ7dPx7nAhGNUc9NCG8l8rw9-A97bRM4npOofxd7s
+Message-ID: <CAP-5=fX1qodprWrwK7yq2WYZNnLtiEe_rjvw0aJ7gXY2ma+Hzw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] perf python: Add evlist close and next methods
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 29, 2025 at 09:39:56PM +0530, Badal Nilawar wrote:
-> From: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> 
-> Xe PCODE FWCTL implements the generic FWCTL IOCLTs to allow limited
-> access from user space (as admin) to some very specific PCODE
-> Mailboxes only related to hardware configuration.
-> 
-> PCODE is a Firmware in Intel GPUs which is the main responsible
-> component for power and thermal aspects of the Intel GPUs.
-> 
-> Each different Intel GPU came with different PCODE versions with
-> different mailboxes and different needs. In the lack of an unified
-> interface, the per platform sysfs entries at the device level is
-> trending to grow, to allow admins to control different aspects of
-> the Hardware.
-> 
-> In this first experiment, xe_pcode_fwctl only adds support for the
-> Battlemage late-binding firmware information.
-> 
-> Late-binding is the name given to 2 other new auxiliary firmware
-> blobs that for now lives in the Flash like PCODE, but that soon
-> it is coming to linux-firmware.git: Fan-controller and
-> Voltage-regulator. Then, PCODE provides some mailboxes where the
-> status of both late-binding firmware can be queried as specified
-> in the documentation that is added along with the new uAPI here.
-> 
-> RFC IMPORTANT NOTE:
-> ===================
-> Admins will need to query this information. This code here aims
-> to be used by Level0-Sysman and/or Intel XPU Manager directly
-> from user space. But following the drm upstream rules, the
-> userspace code will need to be ready before we can consider
-> getting this patch merged!
-> 
-> Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
+On Thu, May 1, 2025 at 2:37=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.co=
+m> wrote:
+>
+> Add support for the evlist close and next methods. The next method
+> enables iterating over the evsels in an evlist.
+>
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
 > ---
->  Documentation/userspace-api/fwctl/index.rst |   1 +
->  drivers/gpu/drm/xe/Kconfig                  |   1 +
->  drivers/gpu/drm/xe/Makefile                 |   1 +
->  drivers/gpu/drm/xe/xe_pci.c                 |   5 +
->  drivers/gpu/drm/xe/xe_pcode_fwctl.c         | 218 ++++++++++++++++++++
->  drivers/gpu/drm/xe/xe_pcode_fwctl.h         |  13 ++
->  include/uapi/fwctl/fwctl.h                  |   1 +
->  include/uapi/fwctl/xe_pcode.h               |  80 +++++++
->  8 files changed, 320 insertions(+)
->  create mode 100644 drivers/gpu/drm/xe/xe_pcode_fwctl.c
->  create mode 100644 drivers/gpu/drm/xe/xe_pcode_fwctl.h
->  create mode 100644 include/uapi/fwctl/xe_pcode.h
-> 
-> diff --git a/Documentation/userspace-api/fwctl/index.rst b/Documentation/userspace-api/fwctl/index.rst
-> index 316ac456ad3b..186f8cf17583 100644
-> --- a/Documentation/userspace-api/fwctl/index.rst
-> +++ b/Documentation/userspace-api/fwctl/index.rst
-> @@ -12,3 +12,4 @@ to securely construct and execute RPCs inside device firmware.
->     fwctl
->     fwctl-cxl
->     pds_fwctl
-> +   xe_pcode_fwctl
+>  tools/perf/util/python.c | 47 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>
+> diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+> index 5a4d2c9aaabd..599cb37600f1 100644
+> --- a/tools/perf/util/python.c
+> +++ b/tools/perf/util/python.c
+> @@ -1163,6 +1163,16 @@ static PyObject *pyrf_evlist__open(struct pyrf_evl=
+ist *pevlist,
+>         return Py_None;
+>  }
+>
+> +static PyObject *pyrf_evlist__close(struct pyrf_evlist *pevlist)
+> +{
+> +       struct evlist *evlist =3D &pevlist->evlist;
+> +
+> +       evlist__close(evlist);
+> +
+> +       Py_INCREF(Py_None);
+> +       return Py_None;
+> +}
+> +
+>  static PyObject *pyrf_evlist__config(struct pyrf_evlist *pevlist)
+>  {
+>         struct record_opts opts =3D {
+> @@ -1202,6 +1212,31 @@ static PyObject *pyrf_evlist__enable(struct pyrf_e=
+vlist *pevlist)
+>         return Py_None;
+>  }
+>
+> +static PyObject *pyrf_evlist__next(struct pyrf_evlist *pevlist,
+> +                                  PyObject *args, PyObject *kwargs)
+> +{
+> +       struct evlist *evlist =3D &pevlist->evlist;
+> +       PyObject *py_evsel;
+> +       struct perf_evsel *pevsel;
+> +       struct evsel *evsel;
+> +       struct pyrf_evsel *next_evsel =3D PyObject_New(struct pyrf_evsel,=
+ &pyrf_evsel__type);
+> +       static char *kwlist[] =3D { "evsel", NULL };
+> +
+> +       if (!PyArg_ParseTupleAndKeywords(args, kwargs, "O", kwlist,
+> +                                        &py_evsel))
+> +               return NULL;
+> +
+> +       pevsel =3D (py_evsel =3D=3D Py_None) ? NULL : &(((struct pyrf_evs=
+el *)py_evsel)->evsel.core);
+> +       pevsel =3D perf_evlist__next(&(evlist->core), pevsel);
+> +       if (pevsel !=3D NULL) {
+> +               evsel =3D container_of(pevsel, struct evsel, core);
+> +               next_evsel =3D container_of(evsel, struct pyrf_evsel, evs=
+el);
+> +               return (PyObject *) next_evsel;
+> +       }
+> +
+> +       return Py_None;
+> +}
+> +
 
-I just noticed that I forgot to actually include this file and add to
-the MAINTAINERS list under xe.
-
-But the important part which is the documentation itself is inside
-the include/uapi/fwctl/xe_pcode.h
-
-For the record, the missing file is:
-$ cat Documentation/userspace-api/fwctl/xe_pcode_fwctl.rst
-.. SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-
-==================
-fwctl drm/xe pcode
-==================
-
-.. kernel-doc:: drivers/gpu/drm/xe/xe_pcode_fwctl.c
-   :doc: XE PCODE FWCTL
-
-uAPI
-====
-
-.. kernel-doc:: include/uapi/fwctl/xe_pcode.h
-   :internal:
-
-.. kernel-doc:: include/uapi/fwctl/xe_pcode.h
-   :doc: Late Binding Commands
-
-
-Also cc'ing FWCTL and DRM maintainers and LKML to ensure we get the proper
-feedback on this first attempt of using the fwctl with xe.
+Thanks for this! Have you looked at the existing iteration support?
+There's an example here:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next#n26
+```
+    for ev in evlist:
+        ev.sample_type =3D ev.sample_type & ~perf.SAMPLE_IP
+        ev.read_format =3D 0
+```
+In the next patch you have:
+```
+        evsel =3D evlist.next(None)
+        while evsel !=3D None:
+            counts =3D evsel.read(0, 0)
+            print(counts.val, counts.ena, counts.run)
+            evsel =3D evlist.next(evsel)
+```
+I believe the former looks better. It also isn't clear to me if next
+belongs on evlist or evsel.
 
 Thanks,
-Rodrigo.
+Ian
 
-> diff --git a/drivers/gpu/drm/xe/Kconfig b/drivers/gpu/drm/xe/Kconfig
-> index a8cc1876a24f..ee77039b9256 100644
-> --- a/drivers/gpu/drm/xe/Kconfig
-> +++ b/drivers/gpu/drm/xe/Kconfig
-> @@ -45,6 +45,7 @@ config DRM_XE
->  	select AUXILIARY_BUS
->  	select HMM_MIRROR
->  	select INTEL_MEI_LATE_BIND
-> +	select FWCTL
->  	help
->  	  Experimental driver for Intel Xe series GPUs
->  
-> diff --git a/drivers/gpu/drm/xe/Makefile b/drivers/gpu/drm/xe/Makefile
-> index 6de291a21965..c1f3b2e2da5f 100644
-> --- a/drivers/gpu/drm/xe/Makefile
-> +++ b/drivers/gpu/drm/xe/Makefile
-> @@ -86,6 +86,7 @@ xe-y += xe_bb.o \
->  	xe_pat.o \
->  	xe_pci.o \
->  	xe_pcode.o \
-> +	xe_pcode_fwctl.o \
->  	xe_pm.o \
->  	xe_preempt_fence.o \
->  	xe_pt.o \
-> diff --git a/drivers/gpu/drm/xe/xe_pci.c b/drivers/gpu/drm/xe/xe_pci.c
-> index 882398e09b7e..222e75c7427e 100644
-> --- a/drivers/gpu/drm/xe/xe_pci.c
-> +++ b/drivers/gpu/drm/xe/xe_pci.c
-> @@ -27,6 +27,7 @@
->  #include "xe_module.h"
->  #include "xe_pci_sriov.h"
->  #include "xe_pci_types.h"
-> +#include "xe_pcode_fwctl.h"
->  #include "xe_pm.h"
->  #include "xe_sriov.h"
->  #include "xe_step.h"
-> @@ -868,6 +869,10 @@ static int xe_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	if (err)
->  		goto err_driver_cleanup;
->  
-> +	err = xe_pcode_fwctl_init(xe);
-> +	if (err)
-> +		goto err_driver_cleanup;
-> +
->  	drm_dbg(&xe->drm, "d3cold: capable=%s\n",
->  		str_yes_no(xe->d3cold.capable));
->  
-> diff --git a/drivers/gpu/drm/xe/xe_pcode_fwctl.c b/drivers/gpu/drm/xe/xe_pcode_fwctl.c
-> new file mode 100644
-> index 000000000000..d6443aa4a60a
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_pcode_fwctl.c
-> @@ -0,0 +1,218 @@
-> +// SPDX-License-Identifier: MIT
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#include "xe_pcode_fwctl.h"
-> +
-> +#include <linux/fwctl.h>
-> +#include <uapi/fwctl/xe_pcode.h>
-> +
-> +#include "xe_device.h"
-> +#include "xe_pcode_api.h"
-> +#include "xe_pcode.h"
-> +#include "xe_pm.h"
-> +
-> +/**
-> + * DOC: XE PCODE FWCTL
-> + *
-> + * Xe PCODE FWCTL implements the generic FWCTL IOCLTs to allow limited access
-> + * from user space (as admin) to some very specific PCODE Mailboxes.
-> + *
-> + * User space first needs to issue the ```FWCTL_INFO``` ioctl and check for the
-> + * capability flag, which will indicate which group of Mailboxes commands are
-> + * supported on that current running firmware.
-> + *
-> + * After verifying the availability of the desired Mailbox command,
-> + * ```FWCTL_RPC``` needs to be issued with in and out parameter both using
-> + * pointers to a ```struct fwctl_rpc_xe_pcode``` allocated by userspace.
-> + * In and out length needs to be sizeof(struct fwctl_rpc_xe_pcode).
-> + *
-> + * Any command that is not listed in the include/uapi/fwctl/xe_pcode.h or not
-> + * supported by the running firmware, will return ERR_PTR(-EBADMSG).
-> + *
-> + * Example:
-> + *
-> + * .. code-block:: C
-> + *
-> + *  struct fwctl_info_xe_pcode xe_pcode_info;
-> + *
-> + *  struct fwctl_info info = {
-> + *           .size = sizeof(struct fwctl_info),
-> + *           .flags = 0,
-> + *           .out_device_type = 0,
-> + *           .device_data_len = sizeof(struct fwctl_info_xe_pcode),
-> + *           .out_device_data = (__aligned_u64) &xe_pcode_info,
-> + *   };
-> + *
-> + *   fd = open("/dev/fwctl/fwctl0", O_RDWR);
-> + *   if (fd < 0) {
-> + *       perror("Failed to open /dev/fwctl/fwctl0");
-> + *       return -1;
-> + *   }
-> + *
-> + *   if (ioctl(fd, FWCTL_INFO, &info)) {
-> + *           perror("ioctl(FWCTL_INFO) failed");
-> + *           close(fd);
-> + *           return -1;
-> + *   }
-> + *
-> + *   if (xe_pcode_info.uctx_caps & FWCTL_XE_PCODE_LATEBINDING) {
-> + *           struct fwctl_rpc_xe_pcode rpc_in = {
-> + *                   .command = PCODE_CMD_LATE_BINDING,
-> + *                   .param1 = PARAM1_GET_CAPABILITY_STATUS,
-> + *           };
-> + *
-> + *           struct fwctl_rpc_xe_pcode rpc_out = {0};
-> + *
-> + *           struct fwctl_rpc rpc = {
-> + *                   .size = sizeof(struct fwctl_rpc),
-> + *                   .scope = FWCTL_RPC_CONFIGURATION,
-> + *                   .in_len = sizeof(struct fwctl_rpc_xe_pcode),
-> + *                   .out_len = sizeof(struct fwctl_rpc_xe_pcode),
-> + *                   .in = (__aligned_u64) &rpc_in,
-> + *                   .out = (__aligned_u64) &rpc_out,
-> + *           };
-> + *
-> + *           if (ioctl(fd, FWCTL_RPC, &rpc)) {
-> + *                   perror("ioctl(FWCTL_RPC) failed");
-> + *                   close(fd);
-> + *                   return -1;
-> + *           }
-> + *
-> + */
-> +
-> +struct xe_pcode_fwctl_dev {
-> +	struct fwctl_device fwctl;
-> +	struct xe_device *xe;
-> +};
-> +
-> +DEFINE_FREE(xe_pcode_fwctl, struct xe_pcode_fwctl_dev *, if (_T) fwctl_put(&_T->fwctl))
-> +
-> +static int xe_pcode_fwctl_uctx_open(struct fwctl_uctx *uctx)
-> +{
-> +	struct xe_pcode_fwctl_dev *fwctl_dev =
-> +		container_of(uctx->fwctl, struct xe_pcode_fwctl_dev, fwctl);
-> +	struct xe_device *xe = fwctl_dev->xe;
-> +
-> +	xe_pm_runtime_get(xe);
-> +
-> +	return 0;
-> +}
-> +
-> +static void xe_pcode_fwctl_uctx_close(struct fwctl_uctx *uctx)
-> +{
-> +	struct xe_pcode_fwctl_dev *fwctl_dev =
-> +		container_of(uctx->fwctl, struct xe_pcode_fwctl_dev, fwctl);
-> +	struct xe_device *xe = fwctl_dev->xe;
-> +
-> +	xe_pm_runtime_put(xe);
-> +}
-> +
-> +static void *xe_pcode_fwctl_info(struct fwctl_uctx *uctx, size_t *length)
-> +{
-> +	struct xe_pcode_fwctl_dev *fwctl_dev =
-> +		container_of(uctx->fwctl, struct xe_pcode_fwctl_dev, fwctl);
-> +	struct xe_device *xe = fwctl_dev->xe;
-> +	struct fwctl_info_xe_pcode *info;
-> +
-> +	info = kzalloc(sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (xe->info.platform == XE_BATTLEMAGE)
-> +		info->uctx_caps = FWCTL_XE_PCODE_LATEBINDING;
-> +
-> +	*length = sizeof(*info);
-> +
-> +	return info;
-> +}
-> +
-> +static bool xe_pcode_fwctl_rpc_validate(struct fwctl_rpc_xe_pcode *rpc,
-> +					enum fwctl_rpc_scope scope)
-> +{
-> +	u32 mbox = PCODE_MBOX(rpc->command, rpc->param1, rpc->param2);
-> +
-> +	if (mbox == PCODE_MBOX(PCODE_CMD_LATE_BINDING,
-> +			       PARAM1_GET_CAPABILITY_STATUS, 0))
-> +		return scope == FWCTL_RPC_CONFIGURATION;
-> +
-> +	if (mbox == PCODE_MBOX(PCODE_CMD_LATE_BINDING,
-> +			       PARAM1_GET_VERSION_LOW, 0))
-> +		return (rpc->data0 == DATA0_TYPE_FAN_CONTROLLER ||
-> +			rpc->data0 == DATA0_TYPE_VOLTAGE_REGULATOR) &&
-> +			scope == FWCTL_RPC_CONFIGURATION;
-> +
-> +	return false;
-> +}
-> +
-> +static void *xe_pcode_fwctl_rpc(struct fwctl_uctx *uctx,
-> +				enum fwctl_rpc_scope scope,
-> +				void *in, size_t in_len, size_t *out_len)
-> +{
-> +	struct xe_pcode_fwctl_dev *fwctl_dev =
-> +		container_of(uctx->fwctl, struct xe_pcode_fwctl_dev, fwctl);
-> +	struct xe_tile *root_tile = xe_device_get_root_tile(fwctl_dev->xe);
-> +	struct fwctl_rpc_xe_pcode *rpc = in;
-> +	int err;
-> +
-> +	if (in_len != sizeof(struct fwctl_rpc_xe_pcode) ||
-> +	    *out_len != sizeof(struct fwctl_rpc_xe_pcode))
-> +		return ERR_PTR(-EMSGSIZE);
-> +
-> +	if (!xe_pcode_fwctl_rpc_validate(rpc, scope))
-> +		return ERR_PTR(-EBADMSG);
-> +
-> +	err = xe_pcode_read(root_tile, PCODE_MBOX(rpc->command,
-> +						  rpc->param1,
-> +						  rpc->param2),
-> +			    &rpc->data0,
-> +			    &rpc->data1);
-> +	if (err)
-> +		return ERR_PTR(err);
-> +
-> +	return rpc;
-> +}
-> +
-> +static const struct fwctl_ops xe_pcode_fwctl_ops = {
-> +	.device_type = FWCTL_DEVICE_TYPE_XE_PCODE,
-> +	.uctx_size = sizeof(struct fwctl_uctx),
-> +	.open_uctx = xe_pcode_fwctl_uctx_open,
-> +	.close_uctx = xe_pcode_fwctl_uctx_close,
-> +	.info = xe_pcode_fwctl_info,
-> +	.fw_rpc = xe_pcode_fwctl_rpc,
-> +};
-> +
-> +static void xe_pcode_fwctl_fini(void *dev)
-> +{
-> +	struct fwctl_device *fwctl = dev;
-> +
-> +	fwctl_unregister(fwctl);
-> +	fwctl_put(fwctl);
-> +}
-> +
-> +int xe_pcode_fwctl_init(struct xe_device *xe)
-> +{
-> +	struct xe_pcode_fwctl_dev *fwctl_dev __free(xe_pcode_fwctl) =
-> +		fwctl_alloc_device(xe->drm.dev, &xe_pcode_fwctl_ops,
-> +				   struct xe_pcode_fwctl_dev, fwctl);
-> +	int err;
-> +
-> +	/* For now xe_pcode_fwctl supports only Late-Binding commands on BMG */
-> +	if (xe->info.platform != XE_BATTLEMAGE)
-> +		return -ENODEV;
-> +
-> +	if (!fwctl_dev)
-> +		return -ENOMEM;
-> +
-> +	fwctl_dev->xe = xe;
-> +
-> +	err = fwctl_register(&fwctl_dev->fwctl);
-> +	if (err)
-> +		return err;
-> +
-> +	return devm_add_action_or_reset(xe->drm.dev, xe_pcode_fwctl_fini,
-> +					&fwctl_dev->fwctl);
-> +}
-> +
-> +MODULE_IMPORT_NS("FWCTL");
-> diff --git a/drivers/gpu/drm/xe/xe_pcode_fwctl.h b/drivers/gpu/drm/xe/xe_pcode_fwctl.h
-> new file mode 100644
-> index 000000000000..67386d7bf2ea
-> --- /dev/null
-> +++ b/drivers/gpu/drm/xe/xe_pcode_fwctl.h
-> @@ -0,0 +1,13 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#ifndef _XE_PCODE_FWCTL_H_
-> +#define _XE_PCODE_FWCTL_H_
-> +
-> +struct xe_device;
-> +
-> +int xe_pcode_fwctl_init(struct xe_device *xe);
-> +
-> +#endif
-> diff --git a/include/uapi/fwctl/fwctl.h b/include/uapi/fwctl/fwctl.h
-> index 716ac0eee42d..9e7e84aef791 100644
-> --- a/include/uapi/fwctl/fwctl.h
-> +++ b/include/uapi/fwctl/fwctl.h
-> @@ -45,6 +45,7 @@ enum fwctl_device_type {
->  	FWCTL_DEVICE_TYPE_MLX5 = 1,
->  	FWCTL_DEVICE_TYPE_CXL = 2,
->  	FWCTL_DEVICE_TYPE_PDS = 4,
-> +	FWCTL_DEVICE_TYPE_XE_PCODE = 5,
+
+>  static PyMethodDef pyrf_evlist__methods[] =3D {
+>         {
+>                 .ml_name  =3D "all_cpus",
+> @@ -1221,6 +1256,12 @@ static PyMethodDef pyrf_evlist__methods[] =3D {
+>                 .ml_flags =3D METH_VARARGS | METH_KEYWORDS,
+>                 .ml_doc   =3D PyDoc_STR("open the file descriptors.")
+>         },
+> +       {
+> +               .ml_name  =3D "close",
+> +               .ml_meth  =3D (PyCFunction)pyrf_evlist__close,
+> +               .ml_flags =3D METH_NOARGS,
+> +               .ml_doc   =3D PyDoc_STR("close the file descriptors.")
+> +       },
+>         {
+>                 .ml_name  =3D "poll",
+>                 .ml_meth  =3D (PyCFunction)pyrf_evlist__poll,
+> @@ -1263,6 +1304,12 @@ static PyMethodDef pyrf_evlist__methods[] =3D {
+>                 .ml_flags =3D METH_NOARGS,
+>                 .ml_doc   =3D PyDoc_STR("Enable the evsels in the evlist.=
+")
+>         },
+> +       {
+> +               .ml_name  =3D "next",
+> +               .ml_meth  =3D (PyCFunction)pyrf_evlist__next,
+> +               .ml_flags =3D METH_VARARGS | METH_KEYWORDS,
+> +               .ml_doc   =3D PyDoc_STR("Return next evsel")
+> +       },
+>         { .ml_name =3D NULL, }
 >  };
->  
->  /**
-> diff --git a/include/uapi/fwctl/xe_pcode.h b/include/uapi/fwctl/xe_pcode.h
-> new file mode 100644
-> index 000000000000..8df6db34e5ce
-> --- /dev/null
-> +++ b/include/uapi/fwctl/xe_pcode.h
-> @@ -0,0 +1,80 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright © 2025 Intel Corporation
-> + */
-> +
-> +#ifndef _UAPI_FWCTL_XE_PCODE_H_
-> +#define _UAPI_FWCTL_XE_PCODE_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct fwctl_info_xe_pcode - FWCTL Information struct for Xe PCODE
-> + *
-> + * @uctx_caps:  bitmap of available capabilities:
-> + *  - %FWCTL_XE_PCODE_LATEBINDING - Command to configure Late Bind FW such as
-> + * Fan Controller and Voltage Regulator
-> + * @rsvd: Reserved for future usage or flags
-> + */
-> +struct fwctl_info_xe_pcode {
-> +	__u32 uctx_caps;
-> +	__u32 rsvd[3];
-> +};
-> +
-> +#define FWCTL_XE_PCODE_LATEBINDING	(1 << 0)
-> +
-> +/**
-> + * struct fwctl_rpc_xe_pcode - FWCTL Remote Procedure Calls for Xe PCODE
-> + */
-> +struct fwctl_rpc_xe_pcode {
-> +	/** @command: The main Mailbox command */
-> +	__u8 command;
-> +	/** @param1: A subcommand or a parameter of the main command */
-> +	__u16 param1;
-> +	/** @param2: A parameter of a subcommand or a subsubcommand */
-> +	__u16 param2;
-> +	/** @data0: The first 32 bits of data. In general data-in as param */
-> +	__u32 data0;
-> +	/** @data1: The other 32 bits of data. In general data-out */
-> +	__u32 data1;
-> +	/** @pad: Padding the uAPI struct - Must be 0. Not sent to firmware */
-> +	__u8 pad[3];
-> +};
-> +
-> +/**
-> + * DOC: Late Binding Commands
-> + *
-> + * FWCTL info.uctx_caps: FWCTL_XE_PCODE_LATEBINDING
-> + * FWCTL rpc.scope: FWCTL_RPC_CONFIGURATION
-> + *
-> + * Command	0x5C - LATE_BINDING
-> + * Param1	0x0 - GET_CAPABILITY_STATUS
-> + * Param2	0
-> + * Data in	None
-> + * Data out:
-> + *
-> + *  - Bit0: ate binding for V1 Fan Tables is supported.
-> + *  - Bit3: Late binding for VR parameters.
-> + *  - Bit16: Late binding done for V1 Fan tables
-> + *  - Bit17: Late binding done for power co-efficients.
-> + *  - Bit18: Late binding done for V2 Fan tables
-> + *  - Bit19: Late binding done for VR Parameters
-> + *
-> + * Command	0x5C - LATE_BINDING
-> + * Param1	0x1 - GET_VERSION_LOW
-> + * Param2	0
-> + * Data in - conveys the Type of the Late Binding Configuration:
-> + *
-> + *  - FAN_CONTROLLER = 1
-> + *  - VOLTAGE_REGULATOR = 2
-> + *
-> + * Data out - Lower 32 bits of Version Number for Late Binding configuration
-> + *            that has been applied successfully.
-> + */
-> +#define PCODE_CMD_LATE_BINDING		0x5C
-> +#define  PARAM1_GET_CAPABILITY_STATUS	0x0
-> +#define  PARAM1_GET_VERSION_LOW		0x1
-> +#define   DATA0_TYPE_FAN_CONTROLLER	1
-> +#define   DATA0_TYPE_VOLTAGE_REGULATOR	2
-> +
-> +#endif /* _UAPI_FWCTL_XE_PCODE_H_ */
-> -- 
-> 2.34.1
-> 
+>
+> --
+> 2.49.0
+>
