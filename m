@@ -1,124 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E8B19F12D;
-	Thu,  1 May 2025 22:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51B5419F12D;
+	Thu,  1 May 2025 22:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746139905; cv=none; b=C2wOwQX/VF83A7HVvY9r7FCPvkiBJKNBYSZbKO63qpKpn232B9sVkcHs7iwFOGPuxiEzc/HJy9leb2SWKdyM91nSygYoSNJTXUD3FlvkHy9JqlH5IZ8J/u+XYnrTYlXrF7zaH6bZ7w+yWXvlNT0WetNkttOD+beeerz0lcJqltU=
+	t=1746140020; cv=none; b=bXDnW1AxXI5kwODRcPeEpk5iSLLXSAarvPnMeQSv9kH8ew2GvFo4rz3t/7M8tGSPkE+bElmNyGaLif+dsi4CufNBxTSLSObhvb8OcdrIFtYhtorOzpZh/NDsAhRTNG7hfDizGJx7LlJkCK0N4R4BK3220utxoLI4pXEcLwndy/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746139905; c=relaxed/simple;
-	bh=+oCrPHzWEd3OsrgdwKeMqFcqum2RPmv4g8GLwXAvWpw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=iyhf4jF1dfqQg526TKnTnfWrAMxdx7Fsyl3JHh0L2RcXvwvu6Ocef3yjxIdakUjodPXC+eBHzK9ZR4IJCS8JHvqoIrfXYqMWFxObg0hg4y+GbCAP2DyCJ6tzfsJpGc0CjsAmleYf6Nt1GjnPntQQqBSBc3DYaR+zsQWVQLRFFoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jA1E8Ynm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746140020; c=relaxed/simple;
+	bh=LzpyyA9nvJ9KfgxcnFn2gIppzdEF/Hh1NEPWOMyIHEQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aelyaTKYWKs3xOTLCO/2aCKTEJJ+HWJlrxLLqUr/URZQ4nqiQstW9Nl6SOUdaHWeNOv0MTDXY/wTefioL/BddxLyDyYn65QKi3Bq71GItcRfikfudvS7cBtRBw67mya3b63Osvv/3J4daTSeK3O3o1T2PGlq9l7cPIzuMJuLSzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=kM7YWd1j; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jA1E8Ynm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC83C4CEE3;
-	Thu,  1 May 2025 22:51:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746139905;
-	bh=+oCrPHzWEd3OsrgdwKeMqFcqum2RPmv4g8GLwXAvWpw=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=jA1E8Ynm9/Sj/6UoDmvKIlptyXZX8XkdV8jsF374aUVkVahd6jwrUn+YRRCQ6lxl7
-	 EAX8ohVg0yiuWXbDLZ6NcV6oKkaMCVtGEQs/aS1DfjclUqaXzrUjuAAGMKKppuFht4
-	 bQgB+S9XNWj5f8JgjG2l+e4+kbazoB++xu/N3k9DJU89T+W6qpLpcahGkszuFL33eM
-	 1w++3sLetiSqWhpxtnOql8Nfeag/SlbwwZo6oNHh1BPjpSN8xSc16hgHZo/TpNgzwK
-	 k6eqgeQMLLvHq+b/QJUcOfOqqWwWXhmQpCY0ky4XGf/0C0s4bL5XlwUU60Y8DC4D5/
-	 kyLZ3BLF2Vfyg==
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kM7YWd1j"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746140013;
+	bh=yKt6ttpV4oy7zty/L39csJcuo6k1Taa5k2LUEtFks4o=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kM7YWd1jykwTAE8+F/+uAm/u95etcv+QRtTXxcEvipYIo0KpyC5+KHAqyFtCEHvs9
+	 GxGP1LJdKHTFWP9plZSwryASW+nkYqy8qrL9+ugvJ/231Hqr0md2C6CVk/XUVhYIn7
+	 WVNtdDF5UeJ1OlHFk4kZWrg/VJrhzJD8o3C5Ld2BydpyHBFZupiZDpun2nUdmSoWc5
+	 GdS29Y1ctPU+nM4UnI0jrXU9jz6BAoc78RK9WDcwKyBx4ROHgCS2YLpJvQeK9mDIED
+	 wYuJJC83xfb+YN1i2BZnm92AbIU2xByI+oMsUdqyy5fLg+PSJRwbEB+0Wg5Kue382h
+	 uu7rSdUgVekOA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZpTqb5pmlz4x2g;
+	Fri,  2 May 2025 08:53:29 +1000 (AEST)
+Date: Fri, 2 May 2025 08:53:27 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <skhan@linuxfoundation.org>, "Paul
+ E. McKenney" <paulmck@kernel.org>, linux-next@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: linux-next: Addition of the nolibc tree
+Message-ID: <20250502085327.2e5be3f8@canb.auug.org.au>
+In-Reply-To: <6d906909-99ae-4934-901b-983ad7d3cbda@t-8ch.de>
+References: <6d906909-99ae-4934-901b-983ad7d3cbda@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/eJNUadBoRgNz=uMn8j/5u4=";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+
+--Sig_/eJNUadBoRgNz=uMn8j/5u4=
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 00:51:40 +0200
-Message-Id: <D9L6XO6T7JEU.CK47C5BOQ0NG@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Christian Schrefl" <chrisi.schrefl@gmail.com>, "Sky" <sky@sky9.dev>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>,
- "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, =?utf-8?q?Gerald_Wisb=C3=B6ck?=
- <gerald.wisboeck@feather.ink>
-X-Mailer: aerc 0.20.1
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
- <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
- <D9JVKYI3LL5L.2SFOJMSK91HLA@kernel.org>
- <d433986a-fdad-4859-b8bf-080a18158189@gmail.com>
- <D9L1TI5NVKJU.361JFPWMLDWN4@kernel.org>
- <7bc9f839-a69a-4819-ba6d-36eadd8776b3@gmail.com>
-In-Reply-To: <7bc9f839-a69a-4819-ba6d-36eadd8776b3@gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-On Thu May 1, 2025 at 9:11 PM CEST, Christian Schrefl wrote:
-> On 01.05.25 8:51 PM, Benno Lossin wrote:
->> On Wed Apr 30, 2025 at 7:30 PM CEST, Christian Schrefl wrote:
->>> On 30.04.25 11:45 AM, Benno Lossin wrote:
->>>> On Wed Apr 30, 2025 at 10:36 AM CEST, Christian Schrefl wrote:
->>>>> +/// This implementation works because of the "`!Unpin` hack" in rust=
-c, which allows (some kinds of)
->>>>> +/// mutual aliasing of `!Unpin` types. This hack might be removed at=
- some point, after which only
->>>>> +/// the `core::pin::UnsafePinned` type will allow this behavior. In =
-order to simplify the migration
->>>>> +/// to future rust versions only this polyfill of this type should b=
-e used when this behavior is
->>>>> +/// required.
->>>>> +///
->>>>> +/// In order to disable niche optimizations this implementation uses=
- [`UnsafeCell`] internally,
->>>>> +/// the upstream version however will not. So the fact that [`Unsafe=
-Pinned`] contains an
->>>>> +/// [`UnsafeCell`] must not be relied on (Other than the niche block=
-ing).
->>>>
->>>> I would make this last paragraph a normal comment, I don't think we
->>>> should expose it in the docs.
->>>
->>> I added this as docs since I wanted it to be a bit more visible,
->>> but I can replace the comment text (about `UnsafeCell`) with this parag=
-raph
->>> and drop it from the docs if you want.
->>=20
->> I think we shouldn't talk about these implementation details in the
->> docs.
+Hi Thomas,
+
+On Thu, 1 May 2025 18:30:14 +0200 Thomas Wei=C3=9Fschuh <linux@weissschuh.n=
+et> wrote:
 >
-> Alright, what do you think of:
->
-> // As opposed to the upstream Rust type this contains a `PhantomPinned`` =
-and `UnsafeCell<T>`
+> Hi Stephen,
+>=20
+> could you add the nolibc tree to linux-next?
+> git://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git#for=
+-next
+>=20
+> It replaces the nolibc tree from Shuah.
+> git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git#n=
+olibc
 
-There are two '`' after PhantomPinned.
+Done from today.  I have kept the same contacts.
 
-> // - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<=
-T>`
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
 
-s/ a / an /
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
 
-I find the phrasing 'avoid needing <negative impl>' a bit weird, I'd
-just say "`PhantomPinned` to ensure the struct always is `!Unpin` and
-thus enables the `!Unpin` hack".
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
 
-If you have a link to somewhere that explains that hack, then I'd also
-put it there. I forgot if it's written down somewhere.
-
-> //   Required to use the `!Unpin hack`.
-> // - In order to disable niche optimizations this implementation uses `Un=
-safeCell` internally,
-> //   the upstream version however currently does not. This will most like=
-ly change in the future
-> //   but for now we don't expose this in the documentation, since adding =
-the guarantee is simpler
-> //   than removing it. Meaning that for now the fact that `UnsafePinned` =
-contains an `UnsafeCell`
-> //   must not be relied on (Other than the niche blocking).
-
----
+--=20
 Cheers,
-Benno
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/eJNUadBoRgNz=uMn8j/5u4=
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgT+2cACgkQAVBC80lX
+0Gy5iQgAkYtioycNfPW/4x6p8PCtefFSjMMykJXpZt5M+kBkvoEJ0HjpBDRhHjo5
+bszbMFnOC9mo6YNJb3Gwid4FdHSryiKBfN6vt/OGKPKgj8Fu9fj8Tts7/hsyvKSu
+UdLUU4X7eLtofTdcaYwEUkJ8QnjEUzWZ9hUHqmFygGF7iTA9BskTnnIx/HzMJWmC
+3pjTVB5KT4qtNLcCsjypapr9Vke1SkhT0A66QyEiWoOO6sRSRiTp3iJJ5R/MLH2a
+7yjZ9DsNF7DrjSlhWHGc3D4c1kna6xf0xEcOsiMXhRju9Xq7zlZgVtg17IEMtCmB
+sD0mru5+t4QqL1jdTdoLOJChjAfGRg==
+=EWzO
+-----END PGP SIGNATURE-----
+
+--Sig_/eJNUadBoRgNz=uMn8j/5u4=--
