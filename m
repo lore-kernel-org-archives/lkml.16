@@ -1,64 +1,43 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29F117405A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 10:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1BF7405A
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 10:42:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746096145; cv=none; b=Ttn+akES3KzvRu98egDer/pZ8jFdfb2WRZRH5bM0fKibvJAtJBDOhaBXDDYBf9pa+H/1v62MlMkQ21H3gZ5Psk2PDKA6KJ78k9AxQFfdsVYR6PVefEPcc2/hzWs+BRcXd1moyU5bTL8ednjsus8m17Oy9qUfZqNSU/aZ2IJ9t0M=
+	t=1746096147; cv=none; b=tRXXsbmsJQZGlAjpbF/roaotRwxHzMsNbXrlm1hYSZsATc8LUX3jaabvXhIVaBRhL97i5uixaJYzptbDXUkuMR88dILM+rFlUJSA5bGor4uZixw5dkPXEEGT1dRjPavl57tAH8yWTy1G0edFSdm6Qx1UqQ0S4nrZgZmWUL0fxjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746096145; c=relaxed/simple;
-	bh=mybtwAHUCt1+RJrPHko4tTrPUoyxkIyYXMT7DGOMCWo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qp39fpJqbhOr8moL+iDERlwdOsX8sQyf0QkJIm9VqksBcftV1FBpbwJ9Ydr67ilasphrJVMT5tBIY4xd/1k+a/PJlnPgkXTZsntHkyrPuSA3m6yJ1THPC/A7Xp6WCX1OX4Pm1itujYgSV4oLsk8dVeMdZc+DtHi39Q/0LvvTJXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA08B106F;
-	Thu,  1 May 2025 03:42:15 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E776B3F673;
-	Thu,  1 May 2025 03:42:21 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] coresight: etm4x: Remove redundant claim register setting
-Date: Thu,  1 May 2025 11:42:16 +0100
-Message-Id: <20250501104216.2375126-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746096147; c=relaxed/simple;
+	bh=K9/2wk7X6g/zFFcBv3ArB8dQVBngplBfKOhnASXyWuw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MqWNEU4wjzyYt7xgKzkrwGVv0cWQtGgWCCcjz7fYc4xVyeMq2wmd/3mYH/iNnfZQkWki0OdzUJLfv/3Imox99z8D1IcnOfkqGMqbSpFxW3vdiIfTsS73W/GGryzp1BKFl7deL7csEIQttoJ/xYDfFuyyZxOq2hKOwVh63CaMLRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4288EC4CEED;
+	Thu,  1 May 2025 10:42:26 +0000 (UTC)
+Date: Thu, 1 May 2025 11:42:23 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Luiz Capitulino <luizcap@redhat.com>
+Cc: lcapitulino@gmail.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	david@redhat.com
+Subject: Re: [PATCH 3/3] mm: kmemleak: mark variables as __read_mostly
+Message-ID: <aBNQDybcsttFxUsP@arm.com>
+References: <cover.1746046744.git.luizcap@redhat.com>
+ <4016090e857e8c4c2ade4b20df312f7f38325c15.1746046744.git.luizcap@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4016090e857e8c4c2ade4b20df312f7f38325c15.1746046744.git.luizcap@redhat.com>
 
-The claim register is set twice in the restore flow; remove the
-duplicate operation.
+On Wed, Apr 30, 2025 at 04:59:47PM -0400, Luiz Capitulino wrote:
+> The variables kmemleak_enabled and kmemleak_free_enabled are read in the
+> kmemleak alloc and free path respectively, but are only written to if/when
+> kmemleak is disabled.
+> 
+> Signed-off-by: Luiz Capitulino <luizcap@redhat.com>
 
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- drivers/hwtracing/coresight/coresight-etm4x-core.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-index 5c20ed4cf4ed..228317991ec2 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-@@ -1958,8 +1958,6 @@ static void __etm4_cpu_restore(struct etmv4_drvdata *drvdata)
- 	if (drvdata->numvmidc > 4)
- 		etm4x_relaxed_write32(csa, state->trcvmidcctlr0, TRCVMIDCCTLR1);
- 
--	etm4x_relaxed_write32(csa, state->trcclaimset, TRCCLAIMSET);
--
- 	if (!drvdata->skip_power_up)
- 		etm4x_relaxed_write32(csa, state->trcpdcr, TRCPDCR);
- 
--- 
-2.34.1
-
+Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
