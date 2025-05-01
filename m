@@ -1,95 +1,57 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96731E9B07;
-	Thu,  1 May 2025 20:44:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6F92AD3E;
+	Thu,  1 May 2025 20:45:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132246; cv=none; b=ej/Hh74azyKbU9hERbt1wUCgNqnraETAWSaHcXQkhmNXQTCJYTw0LGlC57OdYu7L3Xy3rHSVOWKVeRsTeFCzVx3RHttQcODcV5THeXCSLioINjdz9PtEAGxPNQGrzSUV0OHBVIRcdVq87GVcOk6YJBlDLOWtl4V9MzIC+txUB8Y=
+	t=1746132313; cv=none; b=NBqSq5bYbd7NPqZYsWN8F+2KtKfMSuwBHYKH06Evkgj9lisQifUWuLSb6zRY0puk289+hsel7QyeU4hgdIucxi1KrDvmjzYg/ef/rCOzgo+6qYbRrp1vO+O7aE5wm2uiQldssnYp/qqjD9AKF8iUpo9O7GrHHFg2goum18dOGLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132246; c=relaxed/simple;
-	bh=+bcEEHO7cmBx0tkqXSmRjumWAGStNG0clgyqUo4+AVg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QW8Y2I7WNlnkSTiIipek3EDjAOUgyRhhLRARRC8tj9O9GrwQCOUIInUGg1TCGHLHyHC4CuamADOk44fDKZNy65+xSvPe8jGjs/x+UWLKcDVntLMDz2VyBQS2ef2uMDyw6PuMVEPDeqUvF+irdguexrj2UGVpYK0+SNCcRe/94ZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BevXe5wb; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BevXe5wb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4601C4CEE3;
-	Thu,  1 May 2025 20:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746132245;
-	bh=+bcEEHO7cmBx0tkqXSmRjumWAGStNG0clgyqUo4+AVg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BevXe5wbVtTTTNyREagLUzH2GKbrqlBm8pbAjPxE1yiC8Tt1JS4YFubBjO9VtLuUT
-	 6s3Uw6DbbJlZ5ze0LWH9tFdeY0fiMkxIpAd5lKz9Jgl+tjZkboG2/tnDdNTjliMBq/
-	 0IyHfW8wIvpQoS/eGYH0fKuYpgV2DjAdzxctfERwkoKvp7Ys61sSASydtV2b1GOsI5
-	 xCEDH3IcODjqvVNBNnk9JLmG6oiIaMwFGLgMrrBv/enPSkHdr1tcMNIx7qIm6a7fYw
-	 p78lS/YFwgejBwCSpD/AseH1CwNXH99t9A441XMeEtlL5DfxnZURRptSQuksjAOX0C
-	 dJsDkUntDve7w==
-Message-ID: <e1e1fa75-e9c2-4ae7-befb-f3910a349a9f@kernel.org>
-Date: Thu, 1 May 2025 14:44:03 -0600
+	s=arc-20240116; t=1746132313; c=relaxed/simple;
+	bh=SkHAXjZq2+6VSbEyv1UkUsQpOBRQP8lTzgtiG4/lWmM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Llu744B9dXb1UVSsq6dvzODN63rmlfqPuqDp++j9ZbXZlCT4jG9Yh/3+LVAKIjbHR8Arzp0JGulfufa/2/LtdyQyGrDlM5/e2okJfr0q0wKnujtkGRA17kZgFy+rFBUsux4QbCgplVKxO7N3w19zMoNox2moueoCX9ohQPDEwX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55B52C4CEE3;
+	Thu,  1 May 2025 20:45:12 +0000 (UTC)
+Received: by venus (Postfix, from userid 1000)
+	id 3744B180F5E; Thu, 01 May 2025 22:45:10 +0200 (CEST)
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250430055114.11469-1-clamor95@gmail.com>
+References: <20250430055114.11469-1-clamor95@gmail.com>
+Subject: Re: [PATCH v6 0/2] power: supply: Add support for Maxim MAX8971
+ charger
+Message-Id: <174613231020.58629.10397388869365937631.b4-ty@collabora.com>
+Date: Thu, 01 May 2025 22:45:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [syzbot] [net?] UBSAN: array-index-out-of-bounds in
- ip6_rt_copy_init
-Content-Language: en-US
-To: Kees Cook <kees@kernel.org>
-Cc: syzbot <syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com>,
- davem@davemloft.net, edumazet@google.com, elver@google.com,
- horms@kernel.org, justinstitt@google.com, kuba@kernel.org,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
- syzkaller-bugs@googlegroups.com
-References: <68135796.050a0220.14dd7d.0008.GAE@google.com>
- <202505011302.9C8E5E4@keescook>
-From: David Ahern <dsahern@kernel.org>
-In-Reply-To: <202505011302.9C8E5E4@keescook>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-On 5/1/25 2:12 PM, Kees Cook wrote:
-> static int ip6_rt_type_to_error(u8 fib6_type)
-> {
->         return fib6_prop[fib6_type];
-> }
-> 
-> Perhaps some kind of type confusion, as this is being generated through
-> ip6_rt_init_dst_reject(). Is the fib6_type not "valid" on a reject?
 
-fib6_result is initialized to 0 in ip6_pol_route and no setting of
-fib6_type should be > RTN_MAX.
+On Wed, 30 Apr 2025 08:51:12 +0300, Svyatoslav Ryhel wrote:
+> The MAX8971 is a compact, high-frequency, high-efficiency
+> switch-mode charger for a one-cell lithium-ion (Li+) battery.
+> 
 
-> 
-> The reproducer appears to be just absolutely spamming netlink with
-> requests -- it's not at all obvious to me where the fib6_type is even
-> coming from. I think this is already only reachable on the error path
-> (i.e. it's during a "reject", it looks like), so the rt->dst.error is
-> just being set weird.
-> 
-> This feels like it's papering over the actual problem:
+Applied, thanks!
 
-yes, if fib6_type is > than RTN_MAX we need to understand where that is
-happening.
+[1/2] dt-bindings: power: supply: Document Maxim MAX8971 charger
+      commit: c5a0a64c1222cd2bfab3ae4227caba2f1c0499f5
+[2/2] power: supply: Add support for Maxim MAX8971 charger
+      commit: 60cd40eee4f4f57e88bd5dd03f299eb9e17c73e5
 
-> 
-> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> index 96f1621e2381..fba51a42e7ac 100644
-> --- a/net/ipv6/route.c
-> +++ b/net/ipv6/route.c
-> @@ -1092,6 +1092,8 @@ static const int fib6_prop[RTN_MAX + 1] = {
->  
->  static int ip6_rt_type_to_error(u8 fib6_type)
->  {
-> +	if (fib6_type > RTN_MAX)
-> +		return -EINVAL;
->  	return fib6_prop[fib6_type];
->  }
->  
-> 
-> -Kees
-> 
+Best regards,
+-- 
+Sebastian Reichel <sebastian.reichel@collabora.com>
 
