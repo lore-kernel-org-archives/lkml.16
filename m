@@ -1,106 +1,142 @@
-Received: from sonic315-55.consmr.mail.gq1.yahoo.com (sonic315-55.consmr.mail.gq1.yahoo.com [98.137.65.31])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A39EEA8
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.65.31
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E82F3E;
+	Thu,  1 May 2025 01:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746062774; cv=none; b=aG6wisrUvEI+a8rNuaNM2bCmSRjbKzbX4Pm9Sc5Uk7CQLAQ6UhftzzVQJQyVgpl9+eKWjdAiLBIdp+mIdDGIor4Xq1o1Uo0DRtSndkal3a6yo1pWWkW6JLRpyH8rvSA+Jxh7a4v9yAZLFKalYjDQPkTBrPpL5VVQe/0MsoiW6tU=
+	t=1746062903; cv=none; b=BwMhjZDL9w3clTmHUZ4EtuozjbEXDqcY8uwtctXRzZcJY5aNghDMf5781fuWn5Bv7YnwsMzWffMclXpTQeV6FP7cqSjmcL7AbCwYyVzB8edRrV6tpO+t4A2HetHjJdTcqYiNdGQLzWq23KMNTAh55kydEaxBUlQv2Fbw91zyn6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746062774; c=relaxed/simple;
-	bh=OeZH0Muv7Ldy5AWKX4jCD4LKhjF3jJInxW5JAoTxAWI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:References; b=UTgNk7eZGKgiIann9gEMt2qyzdsG3xw6kIcfR5HLf4ow5KdR51Cpf2DRX9tMh4pjX0hL/52iFU2XFkDNDqRsdUsjMNGa+fUhFY2hjCUKyuaRryi3yjijQBFGk8pxZQ2/GNGy5sVLcJoExr/hPpRY4UV+JztLM8K1vWFfmYvn9X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=gyqn7DAj; arc=none smtp.client-ip=98.137.65.31
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
+	s=arc-20240116; t=1746062903; c=relaxed/simple;
+	bh=KM37b4s9Rfq9uTncM+K031EOHXQvnfMvyDPfM/D8BnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bHhWGwbFsh6+q9JzH89W4HSp/768AAjKZR35pMnChSK0ihToztmcs7+GJZ+ncNZMVsVsHkspzWPm58f+26MOjgWVzr4WbfRZmM2rJfSbyMMJJQun2lHdZkAnDjnf7RZSPh5y3qXSxhq8k9AndbcfRr8a8nfsXBXTPoZiXuVncC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2ljSetv; arc=none smtp.client-ip=209.85.210.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="gyqn7DAj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1746062766; bh=2qOVDS2lpahuPfBH9S7MMHyJPh0Glup6HXXgGrMGq18=; h=From:To:Cc:Subject:Date:References:From:Subject:Reply-To; b=gyqn7DAjdfzC6KvlYbQoOfItYUEL34WZvE8lz5IAS1QiwMZ7oiBke3prF685JUQOY3sjwqJ4SzsaM5Dw9bcZIb+UbQ2FPk+JnbG5tiesQoyDbJRUwUv/qTVHZisnFW9hVQRRgiXRt67VYcEu/kOKxsZOwQdPoNY2cE/dIrc19CU21nstUdW7ijpyY9sC0gwP3KlHaNBPlMAQMy5ZKwEQa4H7AkmyDFd2a1werzCK8f6lyF/p6gpikyI8wBCBjX2AcSNJklNT84DNxj551w6SjE8jGJaExFEW7aZesIEH1Y8MvdCcfnc6zbS4J4QPV+DWLQMJIKjINO5EGhQJflJBXA==
-X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746062766; bh=FcAC+EwbgVzLOUplo/JFH8W42b5rMPacZ+Up2KOQZmX=; h=X-Sonic-MF:From:To:Subject:Date:From:Subject; b=K7a8UKshjXoskkauGu6e3CMPhaVRS0qnypS/QsnsXE+tAKBnKvHpNMTgYpXEGj9Jnogeqpd5cnir157GT5Kb/thacI4biNYDT0ZRlkNm7qQlOXC9lIN7Dxh2sOFflETg6xpidvCCxwuuXSGxwPZYp3XcenbAKjV+pJHBT6At55a2M+8W2gcjgfI2AXQOo+QyG6LqhpsyHYSXatR+NKmVQYV2AiZqbrx+4jqaRy6DiBlleKuN2WkemNkQp0BJTrpLJVt4szUV11HU8/pnMz/kKcBYuxFl2OfhFIfDlnrklw2dUl2d4wCf9P6DoDorxPjlE581Xr6lrIoHR7VLTjfHYQ==
-X-YMail-OSG: EaQGMkYVM1n7hz3utXLbdklkpazZgco_nxmn3E7YPhig2d7nU4ZhAgQ0Z1arA0l
- x65yltfNPIaiFr8TTNmK.0hilj7ZuPRIs2BTT1qXupixf3S8t50x8p8KUw6EHzUf6vmq1JIMYEq6
- zDc6WSfjgjfInAYepqjLIRjRJjYm0muNCiG9ujcmph5vIEbvoe8Vgm5M_TbWHocN5qbg12bJcwqg
- nHf2gGdJdSIQKPaokTmwflgmni2ChOcwkSimU8M6c2TDJgNBpTK7fTWyiDSD0KQv_Oyd4ThfEwrf
- BMlQIFg4gklTj9g9idk.na3DO2sHoAFW_OnTi6QT11Jb7ApA79HHuQf22.073uHXreelUXccJgDi
- iJ7SX9QuW7cV.Bo4ptzDOvut81QD6mKl6eGHKAW1Ll78uhJm4EqBuVQqb5DxBhiFhRGp4plrQd5V
- C9dkzYX19gwN9XpSifv1RqArJqRhgmFm3GJinsK3mx5zPwXuE00c4Mr5R6yHA.NeXwPxWG0Lhdmf
- NRcPMMDvveDpxrozB_2PjtISBmmlWOkIwFIQIE_ANGMDkkwZGDXQglQ6HbdDLWK92T6l6cLKMZVs
- HCvpSC3rxVV_hS6I4Tw8aw1yIuWUj9l6FEUpz8CDXbX9XArpH9hVhTXrkgLbXZ0DzqBrgWX2aiQE
- D9Z5HKp568YBzHsmEp_IpU1Ylyl0Hjxee1jK0A71E2qjd2L28UByNsF6Vp8V8rWaOkTMWUbaiLSb
- ReeHMLa9C_BKBkhXB8yFpoIcfctDhQc6tSdYdWj.1MMRfti9xLZoabjmM3VR_tKENZvyx2zovgV3
- XCLBZAWcsMFwqVfCr53atud5EexTdK6.S9xXKh4Ak4.AEImL0WSLw7LrKdA275F3Sh3ycaNZJHL6
- Zo.tKVNtVC5r4XA55HSY2sQAX6sbcpKePTCPDiSppx9XPWiJQBE2eO9uA4oNPhGGSHz2PdDRAneH
- CE_nsS8Gxzl4_qVQmCSCbBvK3JgLs_95mnzcfP4IhvhYFUZQVZ4Lkfqdg1IVFfF55YRUoBc08DtK
- Tq7x9bvK.RaWTRfLFJuE6DkBrqdqW3UcdubtP64KD_1OQeGBEsHwMbljZ1A_Oa1vZBpm7ZOLmf9n
- RNpq16MJtDa3AD2NtPaPpatZA0c9iGbQkbhdBZzBvJYruDbHsHOghiKq_M5YKV14GX.FDJILmuIg
- UfpTdId5M10vehocjw8BKzkxSrSiI.Niv2WOhoTr8rT9ztH0CRy7q0LEH4UXJ9Bj931EO31ywpWJ
- VC2LDg7l15lsoCNH.DxPr9wOwBbtqfzkNDO18EJs3xYgmZjh3k8JfG8UeiEIjFYZ.obJHQjB56Pp
- TLcffQOYcJ2X6e1dbIMqg29WdJ0kS2w3fsfF.0gpXV5Wo7a4Cnpiy6z5GHS3p2aEJ31qiSm66NTw
- b03OMzvl..eqfASTkypUJ1kNGNpqjBAs0vGx4SrX36r7wINYEOyQs7yvZhkKaEMlGZl4P3idBpVy
- 4BzpmOwzNiBtgmLvIagGpXpmIjKyljfGqdiC2QTSS8VV4aHoc8qK5EaBLpcF69d2iJa6MtOnBJpp
- T229T0SBzHLkN7ONUslDyf7Uzini0_jQ_qLNtyYg4FHEj5_DkSynuBNBLf.kkEgQFHTqO2pRY5Yl
- JZmPVJHd75ufYZDlDABYMev7vPZGTykNUzdWxHByfovaPshsg4UCzp1lC8EPgSmr1CKMEghleD_g
- 3aHDRwjLZb0UdpeTzphRkBE5UT.Yd5bOYEqraWpICZI.RiZjjX6ymyv.5mh2BN0sSyU_4.Kqqj_9
- pQeOKASRXWHSc6kZBxBqBG2I024j1KpDXXX3VX75g7.z.r8F0AIM5yz.MmYHW_x0aAzFUmHecc.K
- Cvm9cuwdtqP_I0_FZ4esDXXJsfYHgoutNtJWnTOxo8u9AZ7Kqvx.Si8GrVt_BGlXdv_WPXE.geHN
- rfrEk.Y8XVgVuI_2DSXi47yP5niTZe57tO0EcYuWiSEasAFTWQfWqaaCCz053VQeEEaBb0Uusrsv
- EmMb2jq7ma32jZ4gGWbCqDoEbU_40B75wBkm38QZ4Ycm3IF7rc4IkHmyZdzh68_X1AzeyapJYgXY
- dOvU0dNq6uSXZJvidexVVNaakb7DSYEKQMwQuQedKAN7MML_SEO5YAucWJM._WHK66LAyFVv3Okg
- rq7X3dPWCktQNspdy27i5kR7f5c0bayGfYVwaLa.Nta2grDEAIkyeV5.Eru1.O8NxeVO__5Y4Ibv
- 31PTAyjhxhNDcpPqvRPR6T3qemGr.UbPv.o1EGQAbVLMxLb2p3s81QSW8FVZK2lyyIhss
-X-Sonic-MF: <rubenru09@aol.com>
-X-Sonic-ID: 5f964ade-b994-451d-9795-77102c814f47
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic315.consmr.mail.gq1.yahoo.com with HTTP; Thu, 1 May 2025 01:26:06 +0000
-Received: by hermes--production-ir2-858bd4ff7b-vtq9f (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID f513c98fde2aa8d8aaefd5ac53283f60;
-          Thu, 01 May 2025 01:26:04 +0000 (UTC)
-From: Ruben Wauters <rubenru09@aol.com>
-To: "David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Ruben Wauters <rubenru09@aol.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] ipv4: ip_tunnel: Replace strcpy use with strscpy
-Date: Thu,  1 May 2025 02:23:00 +0100
-Message-ID: <20250501012555.92688-1-rubenru09@aol.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2ljSetv"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b82c8230aso133071a34.2;
+        Wed, 30 Apr 2025 18:28:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746062900; x=1746667700; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BHAiAriL0a3M+j0yvGSbbT4kExDsM2lRnxLYoNjxlDc=;
+        b=h2ljSetvn2wc+AS28R401PPCTWGL+57rL5eDCMDtPsPlE5shmsnuyf9n/cuidIWF3d
+         tNXoCDRJvwAB6jyoN7p8Yk9zBq6roEBHfFZpUZJuWoMigY7ToR0PGrWlKo6uAVUI5LfI
+         1T8xZlewElXOEBDJe4+8lljXmch99ciHt8TBV2N0m9R3gWh+3+ALAqD7mW7crc5ryZCp
+         XdvWQjIJcDH9lpERt03UBcaAlYgXc2PlUjZTpOV2CWyQzFjBPJ8lNLB+Tz8dKcwe7mVe
+         zMEmte1ofCPsX3uNWHnd/uYdVOo7Er71IPBFv/EzbdzWk6lmf3cB5XiLOHE3TvOSh2qk
+         dtrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746062900; x=1746667700;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BHAiAriL0a3M+j0yvGSbbT4kExDsM2lRnxLYoNjxlDc=;
+        b=g9oeSZL8a4vCQWMdWSbdJYTm8EN6haCZ34YE/B00xgGJo21wAC1qVeqN2DzCTq0vaM
+         nJp9jzIrlcGl9BgsAuFOFDbrAr+m3Qv3eTTMtYGljdXeDcp4a1L8XgwBIhKuiTu5pDQl
+         EucFyt89tP5Q59iddKbNdfVgb1GNym1yu2wPxQShZnEejdc7T3fJDGWHtsqrmAgS3+8g
+         rjCED0FotByeovKhQ3Oxjue4wP0zkpZ8xl+sIsG8137pvL7TVeLk+8SPDzFer0lrwsRF
+         xiROr20Gmdjde98LZqwtauL3qhiolQD3w297a4km3mtIwCEpsApbLWhXSPa8UcTI1GzI
+         Gegg==
+X-Forwarded-Encrypted: i=1; AJvYcCXt+dKLt2bNQdz1Zj1OGMxxcFvWqMokVuaxFOHW0NrD+fSyLPjTcpJhqcXrPH8cgIYzrI1EFd40Xg==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0bO8Ogy8M10NU9YxIu3lCRzVWLUjJqC/Wh1FAC9NAbPjqU6+f
+	ZSivGeFur5GNT7RKvcDmKVUWRQOXC+myeTF8Q0+ugBZFmxpakFz8z/MSK0AE
+X-Gm-Gg: ASbGnctihJz48JURjhz4AfzOonJYIncHT8nWb8dgTPT4a4DITKECfK7w1zMIswblUXP
+	IjhH5ol0lMCB84IuRF72+yRhRVgrn/pdvCVedRr1InYxsu/kkpxH3uAFA87nXgLgATSdbt3+4fz
+	LeOJL9oJjWHXLRLtDNCruwPiiGoff16pgqJ1GxnBXZIT0V0a123dv/OPnpHc592RpOu1sLO+g+V
+	8/6gx6FMQ49lxuULgaqV2GqMiuNBNzE4DGssylX2yvhCyTdAimvn843a+EaBrXMIqEC6bOdDPFx
+	qdB0uLFLW10v+20SzQsdl2a3xHOF0bKTlbQm2kcwylnjeeK+7U4HXC+G
+X-Google-Smtp-Source: AGHT+IHxAh2FrqMqOg+Ig8XkRa1V1Q9oJXMfJkVlifPapgGOdJB/+slk7jZRlzWqP/CkL1v/dP9gbw==
+X-Received: by 2002:a05:6830:6f85:b0:72b:9a2e:7828 with SMTP id 46e09a7af769-731c0aab0eemr3791355a34.28.1746062900643;
+        Wed, 30 Apr 2025 18:28:20 -0700 (PDT)
+Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
+        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-7308b31214bsm1119027a34.57.2025.04.30.18.28.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 18:28:20 -0700 (PDT)
+Message-ID: <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
+Date: Wed, 30 Apr 2025 20:28:19 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-References: <20250501012555.92688-1-rubenru09.ref@aol.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] cpufreq: intel_pstate: Use CPPC to get scaling
+ factors
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+ Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+References: <1923452.tdWV9SEqCh@rjwysocki.net>
+ <8476313.T7Z3S40VBb@rjwysocki.net>
+Content-Language: en-US
+From: Russell Haley <yumpusamongus@gmail.com>
+In-Reply-To: <8476313.T7Z3S40VBb@rjwysocki.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Use of strcpy is decpreated, replaces the use of strcpy with strscpy as
-recommended.
 
-I am aware there is an explicit bounds check above, however using
-strscpy protects against buffer overflows in any future code, and there
-is no good reason I can see to not use it.
+On 12/5/24 5:39 AM, Rafael J. Wysocki wrote:
 
-Signed-off-by: Ruben Wauters <rubenru09@aol.com>
----
- net/ipv4/ip_tunnel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> +	 * Compute the perf-to-frequency scaling factor for the given CPU if
+> +	 * possible, unless it would be 0.
+> +	 */
+> +	if (!cppc_get_perf_caps(cpu, &cppc_perf) &&
+> +	    cppc_perf.nominal_perf && cppc_perf.nominal_freq)
+> +		return div_u64(cppc_perf.nominal_freq * KHZ_PER_MHZ,
+> +			       cppc_perf.nominal_perf);
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index 3913ec89ad20..9724bbbd0e0a 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -247,7 +247,7 @@ static struct net_device *__ip_tunnel_create(struct net *net,
- 	} else {
- 		if (strlen(ops->kind) > (IFNAMSIZ - 3))
- 			goto failed;
--		strcpy(name, ops->kind);
-+		strscpy(name, ops->kind);
- 		strcat(name, "%d");
- 	}
- 
--- 
-2.48.1
+I think this exposed a firmware bug on ARL. I have a Core Ultra 265K,
+and two of the E-cores report 33 for nominal_perf, while the others
+report 46. They all report 3300 for nominal_freq.
 
+The result is that the kernel thinks these two E-cores are capable of
+6.5 GHz.
+
+> grep . /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_max_freq
+/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_max_freq:5500000
+/sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_max_freq:5400000
+/sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq:5500000
+/sys/devices/system/cpu/cpu8/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu9/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu10/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu11/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu12/cpufreq/cpuinfo_max_freq:6500000 # wow
+/sys/devices/system/cpu/cpu13/cpufreq/cpuinfo_max_freq:6500000 # amazing
+/sys/devices/system/cpu/cpu14/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu15/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu16/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu17/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu18/cpufreq/cpuinfo_max_freq:4600000
+/sys/devices/system/cpu/cpu19/cpufreq/cpuinfo_max_freq:4600000
+
+Hopefully you have the ear of someone on the firmware team so that a
+ticket can be created for this.
+
+In Phoronix discussion, users have reported seeing this on both ASRock
+and MSI motherboards:
+
+https://www.phoronix.com/forums/forum/hardware/processors-memory/1541981-intel-core-ultra-9-285k-arrow-lake-performance-on-linux-has-improved-a-lot-since-launch?p=1543676#post1543676
+
+----------
+
+Also, this may be related... I can't set scaling_max_freq to odd
+multiples of 100 MHz, only even. Checking with:
+
+    x86_energy_perf_policy &| grep -i req
+
+reveals that some values of max are being skipped. Setting manually with
+
+    x86_energy_perf_policy --cpu 0-7 --hwp-max 76
+
+allows the odd multiples to be accessed. Integer division issue somewhere?
