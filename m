@@ -1,102 +1,137 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F193E2EAE5;
-	Thu,  1 May 2025 13:38:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0778E199934;
+	Thu,  1 May 2025 13:42:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746106705; cv=none; b=CbHOhOov4DPiOJ7CI4tCvVP/2r/gFkul0Fy9V0lbF2FAJpKWd+jhPCdpSGGdzlOkI8B9pVI8ncBDKUD3gXWAvglLP3swWaCkQw5VkZjMCKcECMpi+Sdf+nfkHQyUdpWJS5gskWJCmjlSOCMd+qZbOAaawKvEd8+Kl2xuRb7zL3c=
+	t=1746106922; cv=none; b=tATpJfYWzSIQ/5kHfLZZduchHNxyRpQQoU01eL8PaP+5f8WLUee8dcFyZjeR03jiMC+8eLByJM0IR8fBQogXKsvaAwUaat4P1w8vKWI/qt6E2rI5ssqjvAZshYObd6FVTnfJyOeZLML23KhVhGEwGMUFvbDp74GQQSIjz54m6WE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746106705; c=relaxed/simple;
-	bh=8jls0qWQUdp2+5lB14At3M1sZB6vPtFKeEreLhlj9qE=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jGm8wzyRfJXSqhwEGF3rQS6msa03sH3ScVjIfXPx9Nr/31HtAVDSAu4mhHD8IB1KZj1msHrsJ892dKXPljkE3xLMOvWGNE1ObSYVvUpi8jb13GRwk0zHcT27uHd4JWu/pouSni4GQfMvIUfXS1iIJUMbB+5BMSsN/Za6T6ScwsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MYB2pSKM; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746106922; c=relaxed/simple;
+	bh=Kj/tTIVj+YbmZAeGhD45xGA77N5aCHiVWUmsTJOf5Y4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dTRkBog/0EY4Jzq0Qps6hEWcaTAHsIfeUZjFCRPE/4mrOYgSzXYCU6u4+pfYyBFxk43fPUVveHukucB55GcGGvWTGTK2UlqZBBX8fPZQz64DcS0uwHgKL77tr8Md8b18I6C6xIqkDXOo07lB2izLmQNkdnN8LQ1bWnrSmllAucw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Q9FCL2T2; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MYB2pSKM"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so893091a12.2;
-        Thu, 01 May 2025 06:38:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746106703; x=1746711503; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8jls0qWQUdp2+5lB14At3M1sZB6vPtFKeEreLhlj9qE=;
-        b=MYB2pSKMXvGRSAtDIrVMyM2tovZXkMHXHRv5fB/c16XMDiprUhDBuEgonvjhclrWb1
-         Ldjazc5HxDplYYmwfaukh8DK+ck6ADzQJ6LIVxFMDWB+jHFpssGwYZsWjxpBZ+A2CtqA
-         NdgTSwtaSvSKRD1RoE4iQRgw4Yx4nWFm3Wt0TEsr5MtM79CDSJAak8JteMoxAG6o/lKC
-         1+bvmfgsZyIVBJqJzP0dZ/G9aDyTh6EbR0VBHmjG98ovTVqvMh/wusD5mv3UB5S1qmVl
-         3CbKxvh+wYc6sf/U+i7iTnnULtjZdbbrYiOPZ0Eg0rhUZFddaLYhpRRRR49LVUbevzhb
-         aOCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746106703; x=1746711503;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=8jls0qWQUdp2+5lB14At3M1sZB6vPtFKeEreLhlj9qE=;
-        b=cyaoW3fh9TWVbDVmLIxDjYEIJvBzZ4h3+5YgLewqTw8DkJi1HWHzZ+vjRLpEGzoVzF
-         QnvWunEJlsn84/39tvsIlBsQHKLqY0+cqiQM95pvswEfNx+3bO5TcLKC2ClpBxVpMzZ4
-         FXkRYrOpXiHvAl0ZbOyMUS6RsDNxDpFA7taraOvq8jaEipOlAgYnjNNBM1DvZigbjVGA
-         E/1YZJ5QtxbSp5J6U/aFHQiVoDzgNXSnIXiZLYIESDtQw5dUGmbUQUTZZftXklqDUb1B
-         K2ITisv9DtVF5EA/iB4BtAcYPgjP7YMI4f5zd7IY2XOdeJlonV5Mn55/9gS2DFj+Fqah
-         E8Yg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSXP2myfVyhQITLuyL3Bng42sS+LCvqfRirJfsNJzmuSu15g/yQAANv0luMkGpuD8G8bGbGFoszkxNLocRwSo=@vger.kernel.org, AJvYcCVMAFa2wyE2eDb3uhes3KagrK0csrH4hKle8vKP7IcVCkgGGE7w0bDCYRHfj4UjCAT55y7btL85e7AnQEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRST/dcNr0fwil6LvmyyLCzL2D1c+BhzXJx0FFbBeJ/fBrII2U
-	DwtNKlD4gBXU31aZFw+FgXtLiPJ+23YX1hGIV7c4zSVn9qz1hWNl
-X-Gm-Gg: ASbGncsF5pYvvFZCXzfkRp0SBQ+N92aHHMnP6FNJWGc3O5a+UnvlZixHLaCEDygbMMx
-	SZonUDHU2XrXaihKkSiy9oNsaA1iMms9rUUWbLW1EdSdP8XZyhdvFkFwRZ+2dFnF3gPyhkI0QfA
-	4z5BhXcHV2N2u7KheyDlItp398uksrI5yzB4sWQjOimpExn/IRkFeu5u8aWiW1TKd02FHN+Jiqc
-	o54Tn5Vv4f7feCXixLA0t1r/5tVyV3esQzd74kGlNJxSCiwyGkYl7kI8Oxmf7kdZVDf0yKqlH2Q
-	bWnDl1Y+8dHl5UgWBiCpZjqlLze6JsUCuqOXnHMbgD/f3XTha7fJwovyE/JJRs/6TatRJnAdCsa
-	decfB9ejWFQxQPr5HDcRDDxY=
-X-Google-Smtp-Source: AGHT+IEOyrBC6CSEFDbo1zaQsu5fNDs0XVnQqfz8Y2v6dmdVFzouE6YD1S6rTMYXCPJfXkXg+v921A==
-X-Received: by 2002:a17:903:3d06:b0:21f:dbb:20a6 with SMTP id d9443c01a7336-22e041089a4mr50264955ad.33.1746106703039;
-        Thu, 01 May 2025 06:38:23 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bc7b350sm6309785ad.196.2025.05.01.06.38.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 06:38:22 -0700 (PDT)
-Date: Thu, 01 May 2025 22:38:08 +0900 (JST)
-Message-Id: <20250501.223808.669243726185352431.fujita.tomonori@gmail.com>
-To: boqun.feng@gmail.com
-Cc: miguel.ojeda.sandonis@gmail.com, fujita.tomonori@gmail.com,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- a.hindborg@samsung.com, frederic@kernel.org, lyude@redhat.com,
- tglx@linutronix.de, anna-maria@linutronix.de, jstultz@google.com,
- sboyd@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
- gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
- aliceryhl@google.com, tmgross@umich.edu, chrisi.schrefl@gmail.com,
- arnd@arndb.de, linux@armlinux.org.uk
-Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <aBN2MMaxGrvhF08W@Mac.home>
-References: <aBNzIp9UF7GZVYLs@Mac.home>
-	<CANiq72m8RfL5g9kmAhZdZZbrpDschrXf1yJVvkWmvMzdnMaSvA@mail.gmail.com>
-	<aBN2MMaxGrvhF08W@Mac.home>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q9FCL2T2"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=xowpOTNHZuGO7hdiOZBA1ktd0ANINI9wdxjSaNfAYr4=; b=Q9FCL2T2yxtlsZmsHNZUwJ8del
+	DL8laA78CDwP4h6JIEK8DYCPbAEn5jqEbbLSZWIhOKuDrIy1I6OqTo9KD9RydEXs9LtTQP7JwdVeq
+	4saOXLHsvs5AkFnJ22A0h3WN+8CgiXYNQ/0f8sG5/dYNuYkLxnqAaR+vvCg/5l2w8jZZCo7FHKQiW
+	f288JWqa60gzVN2mzNjAgCr3QbhjMXdNy9WwPnwoi3VTWwB8wMrcCtefnZGM/Bk0zwdWtETejY/nF
+	8yoxbchPCJPBA6ar0KmslCX7gVXF+rtiSA7clAWpkSlgnj6PDZkABXJr1Y2KN+tXGm4cSTkn3K4kE
+	LaXMEXvg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1uAUAJ-0000000E13k-38FL;
+	Thu, 01 May 2025 13:41:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 2B30630035E; Thu,  1 May 2025 15:41:27 +0200 (CEST)
+Date: Thu, 1 May 2025 15:41:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Borislav Petkov <bp@alien8.de>,
+	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Alexander Potapenko <glider@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Andre Przywara <andre.przywara@arm.com>, x86@kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>, kvm-riscv@lists.infradead.org,
+	Atish Patra <atishp@atishpatra.org>, Ingo Molnar <mingo@redhat.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, kvmarm@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Sebastian Ott <sebott@redhat.com>, Shusen Li <lishusen2@huawei.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v4 2/5] arm64: KVM: use mutex_trylock_nest_lock when
+ locking all vCPUs
+Message-ID: <20250501134126.GT4439@noisy.programming.kicks-ass.net>
+References: <20250430203013.366479-1-mlevitsk@redhat.com>
+ <20250430203013.366479-3-mlevitsk@redhat.com>
+ <864iy4ivro.wl-maz@kernel.org>
+ <20250501111552.GO4198@noisy.programming.kicks-ass.net>
+ <861pt8ijpv.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=utf-8
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <861pt8ijpv.wl-maz@kernel.org>
 
-T24gVGh1LCAxIE1heSAyMDI1IDA2OjI1OjA0IC0wNzAwDQpCb3F1biBGZW5nIDxib3F1bi5mZW5n
-QGdtYWlsLmNvbT4gd3JvdGU6DQoNCj4gT24gVGh1LCBNYXkgMDEsIDIwMjUgYXQgMDM6MjI6MDBQ
-TSArMDIwMCwgTWlndWVsIE9qZWRhIHdyb3RlOg0KPj4gT24gVGh1LCBNYXkgMSwgMjAyNSBhdCAz
-OjEy4oCvUE0gQm9xdW4gRmVuZyA8Ym9xdW4uZmVuZ0BnbWFpbC5jb20+IHdyb3RlOg0KPj4gPg0K
-Pj4gPiAgICAgICAgICNbY2ZnKENPTkZJR19BUk0pXQ0KPj4gPiAgICAgICAgIGZuIG5zX3RvX21z
-KG5zOiBpNjQpIC0+IGk2NCB7DQo+PiA+DQo+PiA+ICAgICAgICAgI1tjZmcobm90KENPTkZJR19B
-Uk0pKV0NCj4+ID4gICAgICAgICBmbiBuc190b19tcyhuczogaTY0KSAtPiBpNjQgew0KPj4gDQo+
-PiBJIHRoaW5rIGBjZmdgcyBtYXkgYmUgYmV0dGVyIGluc2lkZSwgaS5lLiBhcyBsb2NhbCBhcyBy
-ZWFzb25hYmx5DQo+PiBwb3NzaWJsZSwgc28gdGhhdCB3ZSBzaGFyZSBlLmcuIHNpZ25hdHVyZSBh
-cyB3ZWxsIGFzIGFueSBhdHRyaWJ1dGVzDQo+PiBhbmQgZG9jcy4NCj4+IA0KPiANCj4gRmFpciBl
-bm91Z2guDQoNCkknbGwgZ28gd2l0aCB0aGUgZm9sbG93aW5nLg0KDQojW2lubGluZV0NCnB1YiBm
-biBhc19taWxsaXMoc2VsZikgLT4gaTY0IHsNCiAgICAjW2NmZyhDT05GSUdfQVJNKV0NCiAgICAv
-LyBTQUZFVFk6IEl0IGlzIGFsd2F5cyBzYWZlIHRvIGNhbGwgYGt0aW1lX3RvX21zKClgIHdpdGgg
-YW55IHZhbHVlLg0KICAgIHVuc2FmZSB7DQogICAgICAgIGJpbmRpbmdzOjprdGltZV90b19tcyhz
-ZWxmLmFzX25hbm9zKCkpDQogICAgfQ0KDQogICAgI1tjZmcobm90KENPTkZJR19BUk0pKV0NCiAg
-ICB7DQogICAgICAgIHNlbGYuYXNfbmFub3MoKSAvIE5TRUNfUEVSX01TRUMNCiAgICB9DQp9DQo=
+On Thu, May 01, 2025 at 01:44:28PM +0100, Marc Zyngier wrote:
+> On Thu, 01 May 2025 12:15:52 +0100,
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> > 
+> > > > + */
+> > > > +int kvm_trylock_all_vcpus(struct kvm *kvm)
+> > > > +{
+> > > > +	struct kvm_vcpu *vcpu;
+> > > > +	unsigned long i, j;
+> > > > +
+> > > > +	kvm_for_each_vcpu(i, vcpu, kvm)
+> > > > +		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
+> > 
+> > This one includes an assertion that kvm->lock is actually held.
+> 
+> Ah, cunning. Thanks.
+> 
+> > That said, I'm not at all sure what the purpose of all this trylock
+> > stuff is here.
+> > 
+> > Can someone explain? Last time I asked someone said something about
+> > multiple VMs, but I don't know enough about kvm to know what that means.
+> 
+> Multiple VMs? That'd be real fun. Not.
+> 
+> > Are those vcpu->mutex another class for other VMs? Or what gives?
+> 
+> Nah. This is firmly single VM.
+> 
+> The purpose of this contraption is that there are some rare cases
+> where we need to make sure that if we update some global state, all
+> the vcpus of a VM need to see, or none of them.
+> 
+> For these cases, the guarantee comes from luserspace, and it gives the
+> pinky promise that none of the vcpus are running at that point. But
+> being of a suspicious nature, we assert that this is true by trying to
+> take all the vcpu mutexes in one go. This will fail if a vcpu is
+> running, as KVM itself takes the vcpu mutex before doing anything.
+> 
+> Similar requirement exists if we need to synthesise some state for
+> userspace from all the individual vcpu states.
+
+Ah, okay. Because x86 is simply doing mutex_lock() instead of
+mutex_trylock() -- which would end up waiting for this activity to
+subside I suppose.
+
+Hence the use of the killable variant I suppose, for when they get tired
+of waiting.
+
+If all the architectures are basically doing the same thing, it might
+make sense to unify this particular behaviour. But what do I know.
+
+
