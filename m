@@ -1,99 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3FB229B28;
-	Thu,  1 May 2025 19:44:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B55A231827;
+	Thu,  1 May 2025 19:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746128698; cv=none; b=CBKKU0mD+We7Sxymhu1u/DKEt5+Omv5AQ5rbgkTB1vaFywloLAnpx7b247edqjV3C/ER7/Tm0aSEyt1OOSTcFBaEzcBz1K9sSyClQw1Caouq598fn5udhZjIetHopD5E5HNyg63GSojqAOwyQwohv6seYsFbRPxvcARjih9KOrk=
+	t=1746128909; cv=none; b=Cu4D+U6iujYmvS41JlCvM/duU8eBzQYLtrpBSSIbOaQButOMcc47xm4ygEKgwXyBEoVtvJJhFMSrmGYVoytTNzPzPRCLt7YTxwqlAf7J3a+rWKDRdfEA3sMqdSNmpE4gbGHDyHPsXhK7ZEqej1G54tbtKw0ms5bIUIUE2JJg0Lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746128698; c=relaxed/simple;
-	bh=HpxDL6ZEq/oUohRZHvp0vdmMaJS85URSzY0FtPADCTw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rFy0WdK8zydlVi68PvfID3vgkpZEEcageteCDYAkGpTVCqeA0GFaiKdepPfSKTRMnyum56RvEnCeFzxONO12Sxp304KyMcxDmmy73BL1gvVLv9uLEXVrkIQHbL4EzjepmgwAii9jxyGTAHub83V2L5NMCEwGF24529k7i0N+B0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701CAC4CEE9;
-	Thu,  1 May 2025 19:44:57 +0000 (UTC)
-Date: Thu, 1 May 2025 15:45:03 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
-Cc: paulcacheux@gmail.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: fix race when creating trace probe log error
- message
-Message-ID: <20250501154503.2308f177@gandalf.local.home>
-In-Reply-To: <20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com>
-References: <20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746128909; c=relaxed/simple;
+	bh=nDhsL2XJXp4sGdblMuXDz6J+s9arRNEgRYmTCyaexrQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GVgNfLo6k+qP90pXbP0axSWdIG3gRZLS2sGq/4NWqbzKcU34y68Knk740D7/7ovbS1z1zrozMlPiY6bOeQdYb5FI3o73NhIYhmoDqLWOZiZx5BxNTVwmoEEK1jFHWCIYzYC9iKr23W53yP5Q3wI9BlXeDmMzLsCr0GWteltCI9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YzGLO6k6; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YzGLO6k6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18920C4CEE4;
+	Thu,  1 May 2025 19:48:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746128909;
+	bh=nDhsL2XJXp4sGdblMuXDz6J+s9arRNEgRYmTCyaexrQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=YzGLO6k68UgR7+Nm00Bh3qiCYfJLGugqXN0nydwslcnTbRQL7jRNxuzYJwO2DL7nK
+	 tHUMwOWxVi1ZKRa2ONDBvRpY102ZaOxwW9yk5t/bA8XU+tunCUjcDlk8Ppu8wFPrjl
+	 Dgg8S9wTYSoCLPhnubONMUhq9GsPhbW9rywFw9abiBJSL2odSdcNE1vHRv2v7J3WYv
+	 2L/b7w6RDqK74h2pUhfLslnjBiTmu20VeiBLr7gvF/QWCRGBemHxRtXP9ezSWhuHtA
+	 H9K8FiJZyqPPWhr1XJufYGW/3/v3JjLJsKLseg6/XHAxH8v3giC3W5Kazz0jQ7/7Ac
+	 k0RbRd9Ap4Ykg==
+From: Kees Cook <kees@kernel.org>
+To: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Kees Cook <kees@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Justin Stitt <justinstitt@google.com>,
+	Marco Elver <elver@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	kasan-dev@googlegroups.com
+Subject: [PATCH 0/3] Detect changed compiler dependencies for full rebuild
+Date: Thu,  1 May 2025 12:48:15 -0700
+Message-Id: <20250501193839.work.525-kees@kernel.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1927; i=kees@kernel.org; h=from:subject:message-id; bh=nDhsL2XJXp4sGdblMuXDz6J+s9arRNEgRYmTCyaexrQ=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnCFxh2/PXlvaehL1H6dc75Bx/zNktbhx09/FdmltqcI 0HqoR7HO0pZGMS4GGTFFFmC7NzjXDzetoe7z1WEmcPKBDKEgYtTACYy4wAjw2mV5XtjyvZEd0dd O3P41KcpP2eIZ6esbruk8vGX2Bsf0ekMf4WEFA8eXy5n9yd9Q8DhFWJR9nNPKmfrP4owctS5oT/ 5IgMA
+X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
+Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Apr 2025 20:33:13 +0200
-Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
+Hi,
 
-> From: Paul Cacheux <paulcacheux@gmail.com>
+This is my attempt to introduce dependencies that track the various
+compiler behaviors that may globally change the build that aren't
+represented by either compiler flags nor the compiler version
+(CC_VERSION_TEXT). Namely, this is to detect when the contents of a
+file the compiler uses changes. We have 3 such situations currently in
+the tree:
 
-Sorry for the late reply, I just noticed this patch.
+- If any of the GCC plugins change, we need to rebuild everything that
+  was built with them, as they may have changed their behavior and those
+  behaviors may need to be synchronized across all translation units.
+  (The most obvious of these is the randstruct GCC plugin, but is true
+  for most of them.)
 
-> 
-> When creating a trace probe a global variable is modified and this
-> data used when an error is raised and the error message generated.
-> 
-> Modification of this global variable is done without any lock and
-> multiple trace operations will race, causing some potential issues
-> when generating the error.
-> 
-> This commit moves away from the global variable and passes the
-> error context as a regular function argument.
-> 
-> Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
-> 
-> Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
-> ---
-> As reported in [1] a race exists in the shared trace probe log
-> used to build error messages. This can cause kernel crashes
-> when building the actual error message, but the race happens
-> even for non-error tracefs uses, it's just not visible.
-> 
-> Reproducer first reported that is still crashing:
-> 
->   # 'p4' is invalid command which make kernel run into trace_probe_log_err()
->   cd /sys/kernel/debug/tracing
->   while true; do
->     echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
->     echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
->     echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
->   done;
-> 
-> The original email suggested to use a mutex or to allocate the
-> trace_probe_log on the stack. The mutex can cause performance
-> issues, and require high confidence in the correctness of the
-> current trace_probe_log_clear calls. This patch implements
-> the stack solution instead and passes a pointer to using
-> functions.
-> 
-> [1] https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawei.com/T/
+- If the randstruct seed itself changes (whether for GCC plugins or
+  Clang), the entire tree needs to be rebuilt since the randomization of
+  structures may change between compilation units if not.
 
-Honestly, I don't like either approach.
+- If the integer-wrap-ignore.scl file for Clang's integer wrapping
+  sanitizer changes, a full rebuild is needed as the coverage for wrapping
+  types may have changed, once again cause behavior differences between
+  compilation units.
 
-What could be done is wrap the internals of the function in a mutex so they
-are not re-entrant (using guard(mutex)). If two error codes are happening
-together, just let it get corrupted. There should never be two additions at
-the same time, and if the admin is doing that then they deserve what they
-get.
+The best way I found to deal with this is to use a -include argument
+for each of the above cases, which causes fixdep to pick up the file and
+naturally depend on it causing the build to notice any date stamp changes.
+Each case updates its .h file when its internal dependencies change.
 
-I don't care if the error log gets garbage if there's multiple accesses at
-the same time. The fix should only prevent it from crashing.
+-Kees
 
--- Steve
+Kees Cook (3):
+  gcc-plugins: Force full rebuild when plugins change
+  randstruct: Force full rebuild when seed changes
+  integer-wrap: Force full rebuild when .scl file changes
 
+ include/linux/vermagic.h     |  1 -
+ scripts/Makefile.gcc-plugins |  2 +-
+ scripts/Makefile.randstruct  |  3 ++-
+ scripts/Makefile.ubsan       |  1 +
+ scripts/basic/Makefile       | 20 +++++++++++++++-----
+ scripts/gcc-plugins/Makefile |  8 ++++++++
+ 6 files changed, 27 insertions(+), 8 deletions(-)
 
--- Steve
+-- 
+2.34.1
 
