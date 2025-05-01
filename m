@@ -1,106 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DF5235069;
-	Thu,  1 May 2025 19:53:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F015B236421;
+	Thu,  1 May 2025 19:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129229; cv=none; b=tVKVT0ckchcf3hUEcRsO7ioFYLL06F9jSNf2wFvzUadRQJhz0nru+dC9HuUULT0kCzyuNPqTSgrAoL4tzAsn15Azef8QV9cxD13QMBZEorpLydbh6Ns5r9YIBT8+X3uuBi1rjOmNQHXEx+MANjQtt/s7XswLhqc6veznZEEdLng=
+	t=1746129373; cv=none; b=haFsAAZtyplkPcQzfNZiWQzoy1oAyyku3cDM5RDEV8OdDVOPSZolCUxXYP25aK9LiKiLxyXS6FQWJq+TH8zq0cZ7blaRpdE5VKlrwj+i2gn3TWz+gqj5o8ANINLCLyTTX1XhsLxPq382VA9+QApn4iVGrhlgc876o4I02EN9cOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129229; c=relaxed/simple;
-	bh=yseky+6nMqu8zW66EyDaMuMbkyGJiRf5HJSmPi71rhU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kxvumCUXWqVG1nFGNyeRj2KmGQjZy2Ju2cdEvff3/eTAAOwCGbwQMvMhRbaIsK4oUA5xCJr6FWecADDD2lQjSC/jaz9++U75V7PCF3T4mK/t6VHhxdgxe9RTfW/P6k7sApxfU9TdhiFacMRST5tG/ciNDtRFmIAf0zM77PyRxdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvxxJahx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746129373; c=relaxed/simple;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=M9faY1DRu2Q8wrlxt7/ic7DnP6losVEh5708On6loZt6J50AjQG9N26xi+3cWs8g4KZJyeoZ1vyg1YI/AxU2LVgwR4Aq+vYbu/P9UpZmmEmSrp7VGYcQrZJ0iHnRdlqDupDKqLm2uTa7R4k5Sf0NwTBrzki2quWlC2EKzprhIag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ga8zr9RB; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvxxJahx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE4BC4CEE3;
-	Thu,  1 May 2025 19:53:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746129229;
-	bh=yseky+6nMqu8zW66EyDaMuMbkyGJiRf5HJSmPi71rhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FvxxJahxj98DdcATmX2NuCi1yRRapON+UkQuq2EiTPHM66kagvudZv0QRTYPgb1bo
-	 tpTeKwW86JGfmy9YzQLp8bkghVS7xDB3GtIRJO6tJxE8ofebqIsY88kvldxgEXhOuG
-	 jN0xaG0APqnaXZA6oGT7uM80Ejk8Rfw73E9Z74BMt/pAUKybG97jyNyRgUwb7qB4rI
-	 1XiNEbIDwlwzjEucfPcx8yQcWqfJd9KI6RvIwXddeMZoKtv5jJ7VXEg/q5MBQQhRJo
-	 178cgoqG/UlzaBM/sic9EjAZ7QdiWh6dk8SmGzav4BSf1NZIIFZv/nvWKISh6BLkUI
-	 m17w/bJ4ZMKsg==
-Date: Thu, 1 May 2025 12:53:48 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: Christoph Hellwig <hch@lst.de>
-Cc: John Garry <john.g.garry@oracle.com>, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org,
-	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: Re: [PATCH v9 05/15] xfs: ignore HW which cannot atomic write a
- single block
-Message-ID: <20250501195348.GH25675@frogsfrogsfrogs>
-References: <20250425164504.3263637-1-john.g.garry@oracle.com>
- <20250425164504.3263637-6-john.g.garry@oracle.com>
- <20250429122105.GA12603@lst.de>
- <20250429144446.GD25655@frogsfrogsfrogs>
- <20250430125906.GB834@lst.de>
- <20250501162216.GB25675@frogsfrogsfrogs>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ga8zr9RB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746129370;
+	bh=mznnJHuLbKpYgm+SG5uyUsVWXj7gHH37CxevZHUxBVI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=ga8zr9RBEQIyf6R40Aq8GvMyPwBilJndqvio72z2GNMPjLu1QNeJV17UjpTM9Bk2E
+	 O4Sfb3MwllDCATa7SFRDWW7crfQSdR8YcehO7Rkh1xzn4y8OIdqPT22uR5wn3IB1zJ
+	 SRBA7kVJlLupZHuM5QGHBaphA/orETX+v5X07i7/dtNV4PvfHh5SdJ+Rp1NDkVedRs
+	 xvJY8Na55kGb3b3PO3OzP4nUEp/Gr/FtWtqFU4/wJSq6yc0XALLMfMBEgu08fYB2uQ
+	 asskki3NcA/aQ2q0SSPW++po2VDBEcqnhGJV4EmTFInnPzNedZRlfSSUgPIGV8Fodl
+	 bvApNx+eSnFzg==
+Received: from [192.168.13.3] (unknown [IPv6:2606:6d00:17:8242::c73])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 000D617E03BF;
+	Thu,  1 May 2025 21:56:08 +0200 (CEST)
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Date: Thu, 01 May 2025 15:55:47 -0400
+Subject: [PATCH v10 1/4] media: rkvdec: h264: Limit minimum profile to
+ constrained baseline
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501162216.GB25675@frogsfrogsfrogs>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-1-c380ba452108@collabora.com>
+References: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-0-c380ba452108@collabora.com>
+In-Reply-To: <20250501-b4-rkvdec_h264_high10_and_422_support-v10-0-c380ba452108@collabora.com>
+To: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
+ linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>, kernel@collabora.com, 
+ Sebastian Fricke <sebastian.fricke@collabora.com>
+X-Mailer: b4 0.14.2
 
-On Thu, May 01, 2025 at 09:22:16AM -0700, Darrick J. Wong wrote:
-> On Wed, Apr 30, 2025 at 02:59:06PM +0200, Christoph Hellwig wrote:
-> > On Tue, Apr 29, 2025 at 07:44:46AM -0700, Darrick J. Wong wrote:
-> > > > So this can't be merged into xfs_setsize_buftarg as suggeted last round
-> > > > instead of needing yet another per-device call into the buftarg code?
-> > > 
-> > > Oh, heh, I forgot that xfs_setsize_buftarg is called a second time by
-> > > xfs_setup_devices at the end of fill_super.
-> > 
-> > That's actually the real call.  The first is just a dummy to have
-> > bt_meta_sectorsize/bt_meta_sectormask initialized because if we didn't
-> > do that some assert in the block layer triggered.  We should probably
-> > remove that call and open code the two assignments..
-> > 
-> > > I don't like the idea of merging the hw atomic write detection into
-> > > xfs_setsize_buftarg itself because (a) it gets called for the data
-> > > device before we've read the fs blocksize so the validation is
-> > > meaningless and (b) that makes xfs_setsize_buftarg's purpose less
-> > > cohesive.
-> > 
-> > As explained last round this came up I'd of course rename it if
-> > we did that.  But I can do that later.
-> 
-> <nod> Would you be willing to review this patch as it is now and either
-> you or me can just tack a new cleanup patch on the end?  I tried writing
-> a patch to clean this up, but ran into questions:
-> 
-> At first I thought that the xfs_setsize_buftarg call in
-> xfs_alloc_buftarg could be replaced by open-coding the bt_meta_sector*
-> assignment, checking that bdev_validate_blocksize is ok, and dropping
-> the sync_blockdev.
-> 
-> Once we get to xfs_setup_devices, we can call xfs_setsize_buftarg on the
-> three buftargs, and xfs_setsize_buftarg will configure the atomic writes
-> geometry.
-> 
-> But then as I was reading the patch, it occurred to me that at least for
-> the data device, we actually /do/ want that sync_blockdev call so that
-> any dirty pagecache for the superblock actually get written to disk.
-> Maybe that can go at the end of xfs_open_devices?  But would it be
-> preferable to sync all the devices prior to trying to read the primary
-> sb?  I don't think there's a need, but maybe someone else has a
-> different viewpoint?
+From: Sebastian Fricke <sebastian.fricke@collabora.com>
 
-Eh, since John posted a V10 I'll just tack my new patches on the end of
-that so everyone can look at them.
+Neither the hardware nor the kernel API support FMO/ASO features
+required by the full baseline profile. Therefore limit the minimum
+profile to the constrained baseline profile explicitly.
 
---D
+Suggested-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+Signed-off-by: Sebastian Fricke <sebastian.fricke@collabora.com>
+Signed-off-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+---
+ drivers/staging/media/rkvdec/rkvdec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/media/rkvdec/rkvdec.c
+index dd7e57a902640d363d26be887cb535c2668d5b15..65c6f1d07a493e017ae941780b823d41314a49b8 100644
+--- a/drivers/staging/media/rkvdec/rkvdec.c
++++ b/drivers/staging/media/rkvdec/rkvdec.c
+@@ -150,7 +150,7 @@ static const struct rkvdec_ctrl_desc rkvdec_h264_ctrl_descs[] = {
+ 	},
+ 	{
+ 		.cfg.id = V4L2_CID_MPEG_VIDEO_H264_PROFILE,
+-		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_BASELINE,
++		.cfg.min = V4L2_MPEG_VIDEO_H264_PROFILE_CONSTRAINED_BASELINE,
+ 		.cfg.max = V4L2_MPEG_VIDEO_H264_PROFILE_HIGH,
+ 		.cfg.menu_skip_mask =
+ 			BIT(V4L2_MPEG_VIDEO_H264_PROFILE_EXTENDED),
+
+-- 
+2.49.0
+
