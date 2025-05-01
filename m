@@ -1,129 +1,177 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55AC8221FA9;
-	Thu,  1 May 2025 11:24:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78A81ACA;
+	Thu,  1 May 2025 11:30:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746098652; cv=none; b=KzoGDrnSo4/EQo90gxXjQDkHt5u9LwoLeG3jKMlhnQTz3129mr9ilCvQKDa7TaGN6uXfLTccS418f/GkbpigiyWwo47esi3CCXq/DXBqF9fH4yr6FCI6ffpecAZTuhn/vvXI5YJ0p1BDFLHH4OQ9zUvb7AGXi8qc4CWvmdME6VQ=
+	t=1746099026; cv=none; b=q/phHaoLVi+ArPW73KBj2hlFHfkB8It3P+9+Y9q+UK3VaLZBdRlqu7ECrFEav6SeT5Y8guc6hrrwFb4k4yivjKqobBXzRiGUT+UXgfhOBa2F5Rh04bgxB7md+Df22Nprq50nEDiXzp90W0PxhkXz/yILhe3pJVnwzURXNYQ2uhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746098652; c=relaxed/simple;
-	bh=J7kijETQ2asEm+lK4uKe63fSwqBXyFmQ3v5eEz8FXwo=;
+	s=arc-20240116; t=1746099026; c=relaxed/simple;
+	bh=4Ds19eHlJOGqn/h+KCCqyUDgAqgoR57GRgX2HX9SGBU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hMT/GgRWwjvgJeFQPGdc0rnrwz47WdixEMLR+EwPQCl4oYWkjWaimrqfdR2rSxMPIxl/SRnR4dpacYOIWepRcsNoepNrrn1M/OSYVNb7BOi4LutCFKoF0JvpMy2XiB1UhAH8lAqEd+woo62d3YCcEv6VEYuNMmzzRparUH3s3qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=TVMZGo0I; arc=none smtp.client-ip=212.227.17.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+	 Content-Type:Content-Disposition:In-Reply-To; b=PA3mqfPUc7sDWo/QSyNzxsW91w17N8X4SGsdviosY+d4LRjpm0DMoIQiuadamuzX1H7cyxyzeCoEG9SLkpt48jaK6pZWRVQiemAQrgQ30YyDAsZywenLaNVqMIyDH88x5ULYwW5S0+28OfyzE5HxWzcIB6e2tPslSdkqCYAY1+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCiLuN/X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="TVMZGo0I"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1746098641; x=1746703441; i=christian@heusel.eu;
-	bh=hAjMdzaURmZllwIbYvh5tG3QTpVTx7txDeFWtmQfcZc=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=TVMZGo0IuHR0vp+52X6w4HXwmVM16H5arLpEXBJW1378E8MuxHfGhrKs/tTbiP8b
-	 F+u71cdmy/v6S2o22tQT/B1ZhH1fX9lD7+28LmYymYC+oZpTjW9b+X3GlY5gbiePn
-	 hO+4T7zKXeyUGQgr7csU8RmNalUA7ssSMUUadcO1mR4zEzlb87yqzEx2OZWe40d7r
-	 ydtTYFM+PU+U5MPUrplR84VoG2zbAmPMamP4fKZjHVy7VWcZf9UX36PVqH69s/Ube
-	 I6vi36H/MWJtq2nTnz0ya7w4wY+JoYiN4XB8cYGWBJiKn9XLE2f9JXvFB20DJ+tA4
-	 RAGdgh2qoERioeQgmA==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([94.31.75.247]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Ml6du-1uvvAC1kzs-00qZ9e; Thu, 01 May 2025 13:09:12 +0200
-Date: Thu, 1 May 2025 13:09:10 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.14 000/311] 6.14.5-rc1 review
-Message-ID: <04f1b7d6-affb-46bf-bb94-020f013e431e@heusel.eu>
-References: <20250429161121.011111832@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCiLuN/X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C89C4CEE3;
+	Thu,  1 May 2025 11:30:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746099024;
+	bh=4Ds19eHlJOGqn/h+KCCqyUDgAqgoR57GRgX2HX9SGBU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qCiLuN/X5b/t9vQjE+BPMTfWeVTVNWppPRGWMXGz1QYWfVei4ruxhBCKgxlkEsIXH
+	 WeuV0UIwCoYczwrt4ff3Ot2ahwCB+WNP4hqa8HKv1jJt/3SckhuXAaoCkOZA0zUdVO
+	 /JvHpUij4J8XG1bJOzMYQlKCdzk+ZRXD1ugP5SQSfyZ5zl5vL/MD3nCsTZeq8dIgp6
+	 EuReO/HKqSxD2WNjwrD3ycryCDXdPbBxJO0t95NJr/AFGC8d9ZN9wYTkTBCUwD1qOy
+	 Y56psZYV18q9z7h/X/f0EXgHZmM2f6rXfTblPz6mXFDNw2Pl549HbFTmQM6TkzJaM/
+	 seYzFMlq0dqOQ==
+Date: Thu, 1 May 2025 13:30:20 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 5/7] rust: alloc: add Vec::retain
+Message-ID: <aBNbTL2dIOFQq8yG@pollux>
+References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
+ <20250429-vec-methods-v4-5-dad4436ff82d@google.com>
+ <aBJPHUDYBGyAgUNf@pollux>
+ <aBNWlC6uSOiFrQDL@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="jxvcqh6kinmdq26q"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250429161121.011111832@linuxfoundation.org>
-X-Provags-ID: V03:K1:l0dFvFXonn9aZ0DS7ojFGSZhcRkTDiLEEVC608hIClhlzOcRBO5
- n14VgP2kq1f3qLBf8ZZbljUWOxbpFKWa8JLcl8+eKwOdHmUEiNFBK5s6r5EynRuibgCmQ+/
- 7bjuGoMPCPScy35Uk0QhyRjHI/9VXwuEn8lCHeZ4ARgTXGdAgNnRCTzRWD8VhhwQKoUO3hD
- Ci0bv5O9ImP0RII4a1jTg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:m+YhlqJMfDE=;m/ee0N/uHLyGg3BpWBvL3vMdeSt
- xe/CGgjPvccWFaQhlu8AYWYLo7Tv5HkCK8euSCHjD2hAysq/s6WFwjM3sjQGrB2lUiuSm+scf
- 8S0SkipfIEnvHADo+2iDni7zNeq+nlxrY2dGWObFiQ228jZNRMC1lHtbYJUTiEBTa/y+6u9rz
- uz8nYlAurS3eKFHRCG3E0KjOys/PwGcfjGsHD7QY9XAPjbEPJbpokCfHjjUAR7qcNIM6dTGMG
- iLPtyMFwHYxU/zwvjLGihUiTx/85M+K+kEu0BL1v+r+z/rHmoVEvyK413FPyA3nS02braDXF/
- +77FhxzgGmMFDE9aFoA15JuvNa3sdwNsQJoKil1OhG79ztw26BNi2GSVb+81Ti4RPY/sZsz6t
- xfg1LIop/UH6PPU8fzr0o+QBNPqIA+6+dMcYXbGkZuHwJB/01X6Oo1D/pRZH3sMugUKQXdJQS
- S2fBD+1cVhzfeOSdkFmaF5PnW3Q0Xj/oK+rNjDUtFihLPly1OgoByag9r4IZLt4oO+pbdSMef
- +F/geDlC1MKUOOM/4mA3zwrCPDw89226AHclNQUvtEx7/wWW5vA59EJjhAMqmRKhn1yEuzzAD
- Ius/rMs2g5H77KdNvjLag0PaaUx5f5wn8x7drr+yKAz/ilhqmrUDwXYRUHp1T3x0DPuv9Pzjx
- YCjNj0Es8h3GSdCfWP02NfRWNTGeA1pMynxGrovWQO7QXxuF/iuMO7hm/M1oRtDnQRiEfN7QS
- IiKrxFIGSaNQ4pgxblLQRCgXvww3FtAZrf7Jk/Ley74MrZ2Aowdnr4BbJcUU9rd5q34ygHxgS
- 45V+9Elr0Woz2Rjvn3ZtSV0vo9ntKSPsTE5pm3Hrq3TEfTVzTe5Gi9PxdZVR0tzIju6Z7q2wk
- 0vEa5mRz9WLSeb4hKHZ9mlY5Q3Si0mrDAvT+T6s64zPRd/p2fjXMiZqhuhLU96qXBKbwmdENP
- rN4MpUAi5sWhho1fQBdMqHa9wQUn2NYEqnc2pbqw4+sN38OF1SrdN2BWy5dCPovYJXx+An2tD
- uLol3IP23XAIzAHX96mccEVsyz33FIFjV8wqzfFMddsld8X/5PxLS5jhPBTXsX3f2KgetOXNa
- BOYnLUWEeIVVpafbYDWz9ceBMonKJNuxyW1z74+xlfOIn8rnQjDpmO2zn9DL4cM0+HRIO2M5W
- of5Qybxujddib1l9Nz4FkWDT2JDLcfQkNTulBiS2T52+5utVcwguEiF83w79Y+fHNKitUoeJ3
- 8FpqA2omzIip+kg1XuS1sTw/9YGi2mufVCvRdQskAX9yCJgGt3y61h5HZ6FniAPFvnQLiovvp
- rDlgULS/HwZ4PjfHLk0uslTUorxBOXSmCuk6Yn2HSnvsPqPpJDJd9JAPKm6/PFPB3ByR12dP3
- qIjCLQ5SpBHk710aS5xiiiMMnzUb0tzhM3GdkUcU7SGIi0jU4zE5EFzZFtpDgWBHLYUaFNxxC
- v+WS6DbrxXnIU1/sUxBK2edyloao=
+In-Reply-To: <aBNWlC6uSOiFrQDL@google.com>
 
+On Thu, May 01, 2025 at 11:10:12AM +0000, Alice Ryhl wrote:
+> On Wed, Apr 30, 2025 at 06:26:05PM +0200, Danilo Krummrich wrote:
+> > On Tue, Apr 29, 2025 at 02:44:25PM +0000, Alice Ryhl wrote:
+> > > This adds a common Vec method called `retain` that removes all elements
+> > > that don't match a certain condition. Rust Binder uses it to find all
+> > > processes that match a given pid.
+> > >
+> > > The stdlib retain method takes &T rather than &mut T and has a separate
+> > > retain_mut for the &mut T case. However, this is considered an API
+> > > mistake that can't be fixed now due to backwards compatibility. There's
+> > > no reason for us to repeat that mistake.
+> > >
+> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+> > > ---
+> > >  rust/kernel/alloc/kvec.rs | 72 +++++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 72 insertions(+)
+> > >
+> > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+> > > index 72bc743ec88bf7b91a0a1ffd9f830cfe4f983ffd..357f5a37c7b1d15b709a10c162292841eed0e376 100644
+> > > --- a/rust/kernel/alloc/kvec.rs
+> > > +++ b/rust/kernel/alloc/kvec.rs
+> > > @@ -608,6 +608,29 @@ pub fn drain_all(&mut self) -> DrainAll<'_, T> {
+> > >              elements: elems.iter_mut(),
+> > >          }
+> > >      }
+> > > +
+> > > +    /// Removes all elements that don't match the provided closure.
+> > > +    ///
+> > > +    /// # Examples
+> > > +    ///
+> > > +    /// ```
+> > > +    /// let mut v = kernel::kvec![1, 2, 3, 4]?;
+> > > +    /// v.retain(|i| *i % 2 == 0);
+> >
+> > NIT: What about making this `v.retain(|&mut i| i % 2 == 0)`?
+> >
+> > > +    /// assert_eq!(v, [2, 4]);
+> > > +    /// # Ok::<(), Error>(())
+> > > +    /// ```
+> > > +    pub fn retain(&mut self, mut f: impl FnMut(&mut T) -> bool) {
+> > > +        let mut num_kept = 0;
+> > > +        let mut next_to_check = 0;
+> > > +        while let Some(to_check) = self.get_mut(next_to_check) {
+> > > +            if f(to_check) {
+> > > +                self.swap(num_kept, next_to_check);
+> > > +                num_kept += 1;
+> > > +            }
+> > > +            next_to_check += 1;
+> > > +        }
+> > > +        self.truncate(num_kept);
+> > > +    }
+> > >  }
+> > >
+> > >  impl<T: Clone, A: Allocator> Vec<T, A> {
+> > > @@ -1130,3 +1153,52 @@ fn drop(&mut self) {
+> > >          }
+> > >      }
+> > >  }
+> > > +
+> > > +#[macros::kunit_tests(rust_kvec_kunit)]
+> > > +mod tests {
+> > > +    use super::*;
+> > > +    use crate::prelude::*;
+> > > +
+> > > +    #[test]
+> > > +    fn test_kvec_retain() {
+> >
+> > Can we have this return a Result, like doctests can do?
+> 
+> I get warning when I try that:
+> 
+> warning: unused `core::result::Result` that must be used
+>     --> rust/kernel/alloc/kvec.rs:1232:1
+>      |
+> 1232 | #[macros::kunit_tests(rust_kvec_kunit)]
+>      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>      |
+>      = note: this `Result` may be an `Err` variant, which should be handled
+>      = note: `#[warn(unused_must_use)]` on by default
+>      = note: this warning originates in the attribute macro `macros::kunit_tests`
+>              (in Nightly builds, run with -Z macro-backtrace for more info)
 
---jxvcqh6kinmdq26q
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 6.14 000/311] 6.14.5-rc1 review
-MIME-Version: 1.0
+Yes, I'm aware, I tried playing with that myself. I really meant the question as
+I wrote, not as "Can you please change that?". :-) Sorry for the confusion.
 
-On 25/04/29 06:37PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.14.5 release.
-> There are 311 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> Anything received after that time might be too late.
->=20
+> > > +        /// Verify correctness for one specific function.
+> > > +        #[expect(clippy::needless_range_loop)]
+> > > +        fn verify(c: &[bool]) {
+> > > +            let mut vec1: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
+> > > +            let mut vec2: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
+> > > +
+> > > +            for i in 0..c.len() {
+> > > +                vec1.push_within_capacity(i).unwrap();
+> > > +                if c[i] {
+> > > +                    vec2.push_within_capacity(i).unwrap();
+> > > +                }
+> > > +            }
+> > > +
+> > > +            vec1.retain(|i| c[*i]);
+> > > +
+> > > +            assert_eq!(vec1, vec2);
+> >
+> > Don't we have macros around kunit_assert!() and kunit_assert_eq() outside of
+> > doctests (i.e. dedicated kunit tests)?
+> >
+> > I much prefer their output over the kernel panic we get with the "normal"
+> > asserts, unwraps, etc.
+> >
+> > Consistently sticking to the same output on failure makes it easier to catch and
+> > easier to setup CI environments.
+> 
+> The documentation for those macros says "Public but hidden since it
+> should only be used from generated tests." so I don't think I'm supposed
+> to use them.
 
-Tested-by: Christian Heusel <christian@heusel.eu>
+Same here, that's more a fundamental question, rather than something for you to
+change right away.
 
-Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
-Steam Deck (LCD variant) aswell as a Framework Desktop.
+I really like the way doctests implement the assert macros and how they appear
+in the kernel log compared to panics through the "real" assert ones, unwraps,
+etc.
 
---jxvcqh6kinmdq26q
-Content-Type: application/pgp-signature; name="signature.asc"
+I also think that avoiding things that directly panic in doctests (i.e. example
+code) is the correct thing to do. For KUnit tests it's probably less important,
+since they don't directly serve as sample code.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmgTVlYACgkQwEfU8yi1
-JYVMXxAA48Su0UkecFjj05X9O4K57WK4IjMqZFb24rPCaXwdG+51KfEKIl+TZalh
-FiQk4sWL5LgF08f6pEoAMBRG4B7X0J81IUi5Ik86O5UvrrC1wN80/qn8/QTn0BS2
-uD4VdPckhA8CZjo/I0VP5ZFK/tdKGJUeXGXvYB0GPO+B6IWqietuH0hfpGVbIPZr
-aINLSX6AMb2vrrwA4/33QCt/dRcMy/46Egjr35js8v/dG3hROVsY31ufa51+BeBw
-oFedreV0E9Qt7hXsgmOrchgaCvYM7UahTi6R+EITdjnSdb2nXUJLrBkBc2MTo66u
-1R3u+eQIIRFLoJLbL/GO0ZUvfQ9BWwLMypTblJEK+w4efgAfki4hiQmDq/AldSyn
-QIXDN12l9uAG9eYRiVwGiWTAoxNJCtOUsYQhzrKla9aNVuMin1WPklBMLE0Ac7mX
-9ytcjQld5WsBMVbC5DjXhqlEwfNdK1xY/TltieTfWghnRGVrp15a7vy3AVRBlOvx
-ztqDvRHkxiimgd1ZUv8kKMc6NbOYaukUzMPniISibSIs/fq5NZFFRDgjmQU+QALj
-hSKMi6TplDqPoTGlI8SjC7+m4JqQU5uhRJeCW9ytnzLXjwP4ZaMX/bywFqOxF6Wi
-WGJ+XR9w7gbXu2jZ0cQm5urU/ql637oKNYEAFnEKdWHKNMj5Svg=
-=Heyc
------END PGP SIGNATURE-----
-
---jxvcqh6kinmdq26q--
+So, I wonder what's our take on that. Do we want to have KUnit and doctests
+aligned? I think that'd be a good thing.
