@@ -1,205 +1,386 @@
-Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0BC020AF98;
-	Thu,  1 May 2025 17:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746119059; cv=none; b=Dp/DAbjadQ+/g16YUB/QdKkDoIC0cJ2wf55RnWTjuMMt2/R24BLlk1wCNM9Wdk9OxXrngFrvAGeIyS8s/D+sFMkoFMxgC5Y6A6jseUaZTuu7LqpW1iPfWv7pjpcGNavbuXMwVOQbifqe38/cDo1qjCAVJAtcYZE0O2XjMCC6MoY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746119059; c=relaxed/simple;
-	bh=v5SDWro0TJzIb2mbIpfFToKsFwnljBb/D4Hlq7DtHY4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tsP49OKKa4fPCg/LsDn2VpqQSc2fQIqnrEXG1rKw+J3BDNshyUR5cpmmznoMHYfF1HYztokt4VWsgEPG0M1vHxVp8NmRmnyADgHAO9valIqi4htiyiTgm9rv5c1Uk5IPpfOHAnyRdv3M22YYobj/y6kQU3eTABkF0ZToIz4CKFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=TykRutXo; arc=none smtp.client-ip=45.141.101.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F7E219E93
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:04:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746119078; cv=fail; b=HNBCfLroC4itvcUGzeJQyiNT251EjKMGtdqA1wA7aD1KVuZyl04HcIJHBePT0KWKpZeHRvDfq67Dtvs9S/KbVMIBr05izUsugDyaGtTB5aB1pYUjolr6H2YMOr3txwbNmARe5KJltSLhkFF70HQE1Ir7iIKw4W1se9yCMFXjYfc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746119078; c=relaxed/simple;
+	bh=nbDixhLEodbA8DCGXX6Cuur8s673o35m1L4K6WZp1yk=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HF9Oo8PqLCNRirB2kDBk+Jm/mZx8+szwqZto1ve8lLJeURWktior6TqoxNRd4wb2OGV9VKKDevrr8ZbDEhNTdnU5feG1oF3MKs9NYts3PbbU1j5lsbDG73VN4fferKisqaQMFDcUdL725EalAypHQW2HX2I/cBQO2CC+Oz1yT0A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m6Ewh35P; arc=fail smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="TykRutXo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1746119052; bh=v5SDWro0TJzIb2mbIpfFToKsFwnljBb/D4Hlq7DtHY4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TykRutXoTftdPWC5AqQ+dnTPB4m2frxrHruTzUXPsGTDp5NTQ9wnLs47zMU9bX+4o
-	 wdI9vAXScoTPiqKblPdgkBYFRlsSp5I8PE9l5b1vU4Jk/4IUlZtnYWT5J7t0Q0uGkE
-	 hzseSfydKw7+t9ovTKtHoT/wl43jCnDEgEgrpSVPrdY4VPA7drE/+mh/dzfcNAR2mw
-	 YgIrEK6Tf2mgd8ctNqfdaywxJGS7zPejyYg9eAlnVQG7FO0nLwnR4XYHFOH7fsRVjo
-	 xoOFzEypXnrT/S8DYh6GgcwFAQMmHvy6A2masl0DiI8j/RsZ2R/D3/oekzFCYlYSKh
-	 qzdwKSJhnDqNw==
-Received: from authenticated-user (box.trvn.ru [45.141.101.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id AF330C90B;
-	Thu,  1 May 2025 22:04:11 +0500 (+05)
-From: Nikita Travkin <nikita@trvn.ru>
-Date: Thu, 01 May 2025 22:03:45 +0500
-Subject: [PATCH 5/5] arm64: dts: qcom: x1e/x1p: Add EL2 overlay for WoA
- devices
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m6Ewh35P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746119076; x=1777655076;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=nbDixhLEodbA8DCGXX6Cuur8s673o35m1L4K6WZp1yk=;
+  b=m6Ewh35Pm9r0VbJsRPYruDbXDwvJkbZYBuz5yb2AqOzx4yh1umFbWNTA
+   df4Xtda23jLqf7U2lWoANZ0ks2P9jImQBiGrheGDZYEZ7/7QvLa3+rfXk
+   wXRIC59/WCmtjPm5N+aFBuJB10BcdkMVPuH8KbEFcmPqVJaxtYtaNLqhp
+   RlbLq2bVcfmZANiiDoAgLarm/rgRRHchnsVAzOrNMJW/td03xj4ZAWLE/
+   zvuAnG2ceddkfMRMOyRURgoowzsnUmo+1LPW+HBlpZzkv91gb8xt1lWG6
+   WLtzhQBvVZtPBP6b9nAGMisA10lN3fbp57DcKIHT3lgjr2UTN6IAJqJu7
+   w==;
+X-CSE-ConnectionGUID: SFtPtTaLSzOVSVcqu7nI5g==
+X-CSE-MsgGUID: Dmx7kVLNQgirlbpXzu0EWg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58460634"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="58460634"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:04:35 -0700
+X-CSE-ConnectionGUID: EIuEjUfnTq+0Hz3A0bwVvA==
+X-CSE-MsgGUID: M0SB+8YKQRKFNIrgNFzirw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="134936576"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:04:35 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 1 May 2025 10:04:34 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 10:04:34 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.42) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 1 May 2025 10:04:30 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nOezotJx7BFtYFweFTnHd1mxlfkIEYH/lKDd8VxksbSmH9TejTe8LZmA1Zfpr6+JG2xUONNhIA7KXskHHBo+IcAmDTU9HcHXp3lwOKFkB8NJ5JaxOIgMgPKGKtmrXJnJzflzgmrMFCIca+py1qJE+6KgqacR7GaQE6tYftqp9vSbLe9HlZQwUOgh7iFuMT4RnoNJ0LXgRqq7Zk9HxJaW85AAhTi3GENnmYfMFKRb5AOmTAx+xTMfd/JY0LHDestupsknEH21Bn4w6nwIu0rL9qO53N9TriVfQKjk0xMX452Ycwm6utBAZjt2tV7FXPLwY7mF3SOLdYC38TtoGx2lqQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=YLvTxpu4pL9EbHbPAisaGIajIwWsBAS0vN2UEHuq8Jk=;
+ b=ThlPuR3MvzyJUvzJ4WvoRJg6fP38IiciVFBqoP+/rvMeXsFWlOQ2CeDc6LcLbpZJ29yIxFQ+ouhQ2qqQlTvt8idj+kALD4dSQie368IWKXtTE8RaGD5jvAnFq5IlJU5qEbzyskFdba+zoMJYydlD1YrArSla2arqrI70jRCJ5r1qmlTCsy1UxmYCxrv1xDX3xMuzT8d8ztVlqgjyxpfMDsBwDZrC8Aesrg1ajVOipMkG3ZH45zdTLd+rYqJ/Zp515sNASt+CWECmZeFnKGgKgmddsFmqL1/ByI09vnLwz4J3detv2eYDOryHCJENFsE4TrM/bVQhFzP55GLOXbRUCA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by DM3PPFE50071912.namprd11.prod.outlook.com (2603:10b6:f:fc00::f57) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Thu, 1 May
+ 2025 17:04:13 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%3]) with mapi id 15.20.8699.022; Thu, 1 May 2025
+ 17:04:13 +0000
+Message-ID: <ac19ac7e-e230-4310-9b70-b9d57ee4439e@intel.com>
+Date: Thu, 1 May 2025 10:04:10 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 08/27] x86/resctrl: Expand the width of domid by
+ replacing mon_data_bits
+To: James Morse <james.morse@arm.com>, <x86@kernel.org>,
+	<linux-kernel@vger.kernel.org>
+CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>, Babu Moger
+	<Babu.Moger@amd.com>, <shameerali.kolothum.thodi@huawei.com>, "D Scott
+ Phillips OS" <scott@os.amperecomputing.com>, <carl@os.amperecomputing.com>,
+	<lcherian@marvell.com>, <bobo.shaobowang@huawei.com>,
+	<tan.shaopeng@fujitsu.com>, <baolin.wang@linux.alibaba.com>, Jamie Iles
+	<quic_jiles@quicinc.com>, Xin Hao <xhao@linux.alibaba.com>,
+	<peternewman@google.com>, <dfustini@baylibre.com>, <amitsinght@marvell.com>,
+	David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+	"Dave Martin" <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>, Shanker
+ Donthineni <sdonthineni@nvidia.com>, <fenghuay@nvidia.com>, Tony Luck
+	<tony.luck@intel.com>
+References: <20250425173809.5529-1-james.morse@arm.com>
+ <20250425173809.5529-9-james.morse@arm.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <20250425173809.5529-9-james.morse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW3PR06CA0017.namprd06.prod.outlook.com
+ (2603:10b6:303:2a::22) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-sc-el2-overlays-v1-5-9202e59e3348@trvn.ru>
-References: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
-In-Reply-To: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, cros-qcom-dts-watchers@chromium.org
-Cc: Marc Zyngier <maz@kernel.org>, 
- Jens Glathe <jens.glathe@oldschoolsolutions.biz>, 
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5777; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=v5SDWro0TJzIb2mbIpfFToKsFwnljBb/D4Hlq7DtHY4=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBoE6mEO6CuH2+N8BMC3AkrEGDFJAOzZj3Hc2AEM
- qSPZvLaqxGJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCaBOphAAKCRBDHOzuKBm/
- dc9GD/90bWvMlLBH0lLAyzEzwoGB6tZUguOoZ3UZ75Y+mrIXXPnVpPmGlLC8/KgJ3U79oiwFiYR
- YvAzAo+nKrhgf6TmKZ+Ft/eA2YLXZauVQ67qcX0XxnZJIEf7a6aZC8lrd+PmYP4+LdsARh7suKs
- WvOEl/weyXS2IkGWkYRLv6iQufxpM2YddleN3SsL3SjJBMeaHllNffGLvESeibXItB8bOJPuPr9
- 8DUs7TiLT7mvfEfUOpOE4RYV0jn+p63DI/9bKvETl3xsTZ84K8d5QKbz8QWczfCO/VYPdSpFNQj
- J+1sgxFiCQXiQhLCdQENc0tq12bxwcjHxXJ1pJ80AmJaJBq/ZqbSSOoVKJ2EGl62qEJv+ZD4Jgj
- h3pyXv2Ji78YEBrXQ2WQASro3w+y1Pubh7tT0uD8gv8zDCC/ILP5wXZzyZeYq9oKO7UkXSdPe01
- YJ8NDoXAqQUQSRh2Aw9gv3/FERASzrrxhy5BXq1A3b2d85/5x2PR/wH9e5EZZNmbf+TWHOebzpT
- JtxTIuK9f8EYsLW+MK1iYmxbWIUWTnKtW6rtm2ZETdC0q+nKZif7/2R3Ve1QG6B4q+OxPWdNEbx
- cAdQDWU+dRnA88ExQpCJ+Q32HGo3ZVpAl75YC1n4B9GTNUhik0ybmTlzjA/OUvvkGN1Cv/qwjYd
- HLJgpklV1jOS0HQ==
-X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
- fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DM3PPFE50071912:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f640c59-cad0-4acc-ba9e-08dd88d232ae
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?SEtPcEoxNlR5S0ZVWVdBTkNKcU5oYysyVWxQazh0WnV5N2JJZ3BBLzhZNzVq?=
+ =?utf-8?B?Unp4NlYwWkJObmxmOFl5amR1Z1lZbVBiMFdWSkNsaDlIeXFQOVlGekR6bllS?=
+ =?utf-8?B?Sm5laktEdG9hVVpNU0xZekRybC9POXZjU2h0SkZmVHFZQnhEVmtuY1hNMHBP?=
+ =?utf-8?B?UlBWUmRLbnNGUmZqdWlZYmN5VDBKTnFGdWZUVjFJdG4zZ2g2SjF3RWdSQmdj?=
+ =?utf-8?B?dFdJY0pjT0NQSEZMQ1RZS2lUTm92NGF1Tm5haGNzTGozbHlUZGozd0syZHpB?=
+ =?utf-8?B?Y0xrSlBsby9QMUtZSzVCRXB6c3hqTXZmZjNxa2hDQWhVRU85ZjE1dExEWGxh?=
+ =?utf-8?B?VlJzYmVLUGZvaVJuWlJkUS9Fc2lZZm5uL1hOS01KTUMwTkZpK0RRNjJVU1g2?=
+ =?utf-8?B?NW1wMUx5bHpsVU8rU1g4ellhS3pWNmVYTW4vWlI5SkZwdE9mWmFkYzA0WEQz?=
+ =?utf-8?B?MnRwUmJENTdRVFhkNzB0ejJhbFlkbzhpbTVURmFhWW1HQkcwVkxuN1pBR3dK?=
+ =?utf-8?B?M3l6MzRyVDA0TmMzcVNqbjBZaWRUK29KY3BXRHNxR1FhZzAzVFBUdlU2MnR6?=
+ =?utf-8?B?Zm10c1lrbGtBL0w5Y0wrTEIzQm9xWjZDSTIxMFMydVRrUWo4ZTZEb1pFSmRo?=
+ =?utf-8?B?REk3a1dENW0xbjBsYnpCeGtuaHRmQUxOYTBnUG90aEV0RTV4Uk82SHN4L3BQ?=
+ =?utf-8?B?MWVCWjEzRjZNcFg2czFTY29QSVMxckxxMEVnOU5GOTRrT1loVFRGLzBrNG5X?=
+ =?utf-8?B?UHVhY0lUbVdPbnlVcDE5SGJXSXFrOGxCakM4c1ZDdy9OWEJRUnJVUnRMR2lI?=
+ =?utf-8?B?Ymc2cVoxTGFuT0dmaWxmaVJ2dzh1RG1idWIvMDdXSW1Bb3oxYXJxVXk1c2p4?=
+ =?utf-8?B?d29JVVJCalRZZFFveC9VTHhwWDlvTUV0aVlDMmgyUkNESnpmOVI4eUR5UWdV?=
+ =?utf-8?B?aEp0TUtFQ1VHRXVYMVlmWnp5RW1GaFRxb1pDVHpTTWJaUFNZU0VEcktxdHcr?=
+ =?utf-8?B?VkFla1ovTXRzVHZmd3F5TkVJclV1ZzMyQWFIZm5BYVZDZ2hZQW5UQzdLZkRx?=
+ =?utf-8?B?V0xmbFZmUjlaRnJSYUNodERjQmNxWU5zNFN3NWpSWEZZcnhVcHBFa3Y5WlJG?=
+ =?utf-8?B?c3dMdjhxajlPTGpWUU9Sa2xBK2NuQUZZQ0ZRSzFtejJ1eVFjeFNER1hsSzBG?=
+ =?utf-8?B?cy9oQ0psTjR2bG9scjJlQXMvU0cxUTZhajY1V2U0ZlVXcnBSem5HYlQ1V2lK?=
+ =?utf-8?B?bkhZYUxkOWNiUGhnNVFablpQNDEyTXJ3NWhzdXBxVmtNQXJWWXpRckcxSHNW?=
+ =?utf-8?B?akQrUEdFbWw1ZUw4bEJ0RVM1L05TcDEvL2VWSStvWmNkbUZ2K2UwM0diMEI3?=
+ =?utf-8?B?YlBLQjJMVERycCtESWpVNE8wZGJwSXd5a2g3Mml3RmJ4SDEzUlJrcXZLNDdU?=
+ =?utf-8?B?UzUydnlDeUI3c0pudlE4Q0ZWMTV1MHN6Vmc1ZEhQSjVGL241MVNObUw4L3ZB?=
+ =?utf-8?B?YnhhaHFJbnY0Y0ZNVjArdFVld0QwNlYwN2p1K1F3WnNXdjZycndDYUYzdndK?=
+ =?utf-8?B?dVVaK1orQnhzd2pNSUpub0d1MFMzcm0xNzhVekhZU0xHRGora2RiVTRqMGxx?=
+ =?utf-8?B?L1FLeGtGdEh4RWZ4NTdaOTlJOUJ5bnordW5YcEh3MUwyd3JRMnFpbWtuOWRu?=
+ =?utf-8?B?S09ja1VyTmR2MFlZeko4enQzQXhWbEJpV29jaFhVSFBHMVYyb0xhZWozWXFO?=
+ =?utf-8?B?REM0cHUvcG1wdzVGRi9HRVFTUUFnOTZNZDlURVRzenZmaFU5d3duenVLVFNX?=
+ =?utf-8?B?b1dmQW9YNkw0a1FPSUFBUml5WEJOT1oyRUJNSDg4SDlHRlpaZUVyRjMrbnZK?=
+ =?utf-8?B?NlVEZ1JEbG5lL1o2dzc0Zi9QSVNLZkx1OGlDejc5VTBFU1JmbmFOb1hobTNi?=
+ =?utf-8?Q?p5ksFvww9Ug=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QVlld25CakhXeWgyLy84dWh5L1lBaHlXanFBVG0xN0lJKzAwbHdlRlBpSmw4?=
+ =?utf-8?B?VUs1ODZOYytmam1pTFJ6QlZuZG41bER0OC9YdTVxV2JtL3JFL05qblVwN1k3?=
+ =?utf-8?B?OW55QVFxZUJpWHlLQXhKSzVaeFRmVUZkbVRrZlk0UGI5Q1ZPN2ZjM2ppYitJ?=
+ =?utf-8?B?TSsrWmpsalMwbXdEWTlNOG84T2JPOEE3MkhEeUFUS0JncEEzWG1LSW43RFY3?=
+ =?utf-8?B?NkxxRDFMOTZHZFBZVFp3TG9FMjBJTVNPNzREbUUwNXdnSWxrS0I3MHREckRu?=
+ =?utf-8?B?YStkSFZzNjBQRzduaU95RWdQcEtOOGtBcyt5Mno3WGtHNE40L3ZpeXFFakZr?=
+ =?utf-8?B?a2YvSFZNOWVGdkJEOEVOaWVRM3d2bmdRa0hRckJuT0JsN0RTZGJKb2xBcVgy?=
+ =?utf-8?B?M3IwQkhtUHJhNSs2aE5Hc1FBdmZkR0s2T3lVSC9iNk94NDhUbWxKbTcrSm1T?=
+ =?utf-8?B?Z2ZBNHJXWm53d2dLOElEc0dNNVg4cDRSOUhKQkpCZ01iT2NyejBySUlmNXIr?=
+ =?utf-8?B?eS9EdFdhcDVwQjJ6UFBPWTBzQXA4d25IeTVlaWl3dEY5cHdYWXVXY0poQklX?=
+ =?utf-8?B?QjBjMWwxOHpySXZLNlVqelM4cmpYY05xeE5jMytTT2xreDYxYTZJUU9qeW9U?=
+ =?utf-8?B?UnQwRDdjZUU4OG9jUVM5eTFiMkkrNWZXaHVuZ3piY3EzL2J3aGxnaTV4SzU5?=
+ =?utf-8?B?MlJmT2VIb0VIYzJESEZtVnFvOU5DQlZ5RGVVS3QrZ3Vtb2wxVng5d2duaWdm?=
+ =?utf-8?B?Vm9DdUVuT2JIR0RTWDZlRkp2WE1UVEVFL25yVVhvaE5oREpDRTcwaGJHSzNK?=
+ =?utf-8?B?SnE3WFlsa1Nta1RJOUc3U1E1RE5EdjgzTG9BbkViK2kzak5XaFFHeVZCV0ln?=
+ =?utf-8?B?WVI4WGJzUHJMdDhubEROcWNJRmNnN0JoMmtERWQvZGNLbkRFckJvOEJJcE9D?=
+ =?utf-8?B?Y0p2RHJ3SWFBMVovejhlbmR5U1ZENnRtc00vaUg5UzJDTVVHeSt1bGZWTVV1?=
+ =?utf-8?B?NFlJSktBWWZwTC94NHpyUE42Vy8xK09yeU5CRmZGTUw3ZmxkOEs2MUlNRUwr?=
+ =?utf-8?B?aG9MeVRrWGd4UnpPYnpiYXRtblByQnJyaDl6NE9nbkQ0YUhWcjRNd1BqL3Vz?=
+ =?utf-8?B?OTdKaDRuWit0ZzRBYzRXbWs4U3dFUTlGa2lLazVKM2IybnFhTWo5bVhUMDhy?=
+ =?utf-8?B?WElYWDIxcWpBbm9hWW91ZlVXMWExeEhibldnc2lFM3pHQTZMSFYrdzdYdVhX?=
+ =?utf-8?B?ckVCcFpFeEN6eHJHSEtaK05Ram5MVmNMQkJZeU1LbDJTZzlQb0FQR2hOU3Qx?=
+ =?utf-8?B?bk8xUkEyOEpvTWpLU25DN3FGOWxiRHZLUEZCYUJZL01NRXM3TUQ0dEZsVHAv?=
+ =?utf-8?B?djFUa2pyTWcwUEo5MjRzQUo0d1ZBTXVIMEV4WS9YMi9ETDJ5NWxBY0hXclZn?=
+ =?utf-8?B?NEtwbFM5bXN4bDFQaDhBR1lFaXFFVGVQZXZzKzFUNmtHRlhIMG5xbGxlQ3pQ?=
+ =?utf-8?B?MjdiSTR2MFEyVUkvdkNaeTY0WXlGUXFvS2RaZlhtY0NSR0tmby9FYnAxcHRk?=
+ =?utf-8?B?bkxvOE42RkZvNW9ZT1pOUU5QS2ttbGxNUGtjZ0FqN2lucHZ3RHpucldMcFZm?=
+ =?utf-8?B?S1FzRkJYTUtNb0lvcW9XdVlYbGdUcjFxV2JUK0U4eGc3MXIzMG1ZdCtYRGFj?=
+ =?utf-8?B?OXc5bUtLUVFUb0toVG5FL28rUUZ0cVpzZllkU0xIRFIrMHUxaXlBMm0yVG1L?=
+ =?utf-8?B?SnRzekk0ZnVrVlo1QllHQ05BRDU2TnZ4eEdJcjlvM1AyNS82OEtHNXRBblZN?=
+ =?utf-8?B?UVI4bS90V2dlZk1lQ2ErUkxEVW5GSnpCVUV0VHUwc0V0VFIyQnFiYlE4S1Vp?=
+ =?utf-8?B?Nyt1OStPWFl4Sk1iTHc5dE96M1owNnNXRUhnV0RzdnlrQ1pjZGpDYlJ0djRm?=
+ =?utf-8?B?RUtxdHUzSFBoRnlWaE9mWnY0MldNNDhXNE10eUlmaDFHOXIyc3pKQmtjdUh3?=
+ =?utf-8?B?MVJWWUhDNEdmL2pCTE9VeVF6bmIyYTJlb2lXZkVyRjBmTy9nbGpXbEFqaCtD?=
+ =?utf-8?B?MnBxQ2c5MXY4Q1c4V1JWOTBEY1MwYk9ydzIvMlgwNjFYWTh6OFR4eDZLZ3Ev?=
+ =?utf-8?B?VjcwR085aU9FdlQyR1dsOWswZ0xxbkUvckc5NUhiSWg1Wk5tdU1Va2VlcW5y?=
+ =?utf-8?B?V1E9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f640c59-cad0-4acc-ba9e-08dd88d232ae
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 17:04:13.2881
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9JEsu6Tj/2IofdspqU0lDECDOcqkCEwLhN59bXcZxLn1DitG551qlXti5jMc1Ue9XpTqfYJiTRPtp6ScOcnwd+iK1xwoQjMIH7jrBqk1ybo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPFE50071912
+X-OriginatorOrg: intel.com
 
-WoA devices using x1e/x1p use android firmware to boot, which notably
-includes Gunyah hypervisor. This means that, so far, Linux-based OS
-could only boot in EL1 on those devices.
+Hi James,
 
-However Windows can replace Gunyah upon boot with it's own hypervisor,
-and with the use of tools such as "slbounce", it's possible to do the
-same for Linux-based OS, in which case some modifications to the DT are
-necessary to facilitate the absence of Gunyah services.
+On 4/25/25 10:37 AM, James Morse wrote:
+> ---
+>  arch/x86/kernel/cpu/resctrl/ctrlmondata.c | 19 ++++--
+>  arch/x86/kernel/cpu/resctrl/internal.h    | 39 ++++++-----
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 79 +++++++++++++++++++++--
+>  3 files changed, 103 insertions(+), 34 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> index 0a0ac5f6112e..159972c3fe73 100644
+> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> @@ -667,7 +667,7 @@ int rdtgroup_mondata_show(struct seq_file *m, void *arg)
+>  	u32 resid, evtid, domid;
 
-Add a EL2-specific DT overlay and apply it to x1e/x1p WoA devices to
-create -el2.dtb for each of them alongside "normal" dtb.
+I was expecting this to look differently after reading 
+https://lore.kernel.org/lkml/a9008c2d-e83d-4bc6-8197-0753666a7ec2@arm.com/
 
-Signed-off-by: Nikita Travkin <nikita@trvn.ru>
----
- arch/arm64/boot/dts/qcom/Makefile      | 36 +++++++++++++++++---------
- arch/arm64/boot/dts/qcom/x1-el2.dtso   | 46 ++++++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/qcom/x1e80100.dtsi |  2 +-
- 3 files changed, 71 insertions(+), 13 deletions(-)
+I believe u32 was used for resid, evtid, and domid because of how they
+used to be initialized from the bitfield within the union. With the switch to
+a struct that now has the proper types these can also use proper types.
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index 12d9ed1129b4e83146e561910aca9fc3718b0820..4300b29397c6a0087e5c5909d756d733f308d373 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -299,15 +299,27 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8650-qrd.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8750-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8750-qrd.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e001de-devkit.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s-oled.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus15.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-qcp.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-crd.dtb
-+x1e001de-devkit-el2-dtbs	:= x1e001de-devkit.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e001de-devkit.dtb x1e001de-devkit-el2.dtb
-+x1e78100-lenovo-thinkpad-t14s-el2-dtbs	:= x1e78100-lenovo-thinkpad-t14s.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s.dtb x1e78100-lenovo-thinkpad-t14s-el2.dtb
-+x1e78100-lenovo-thinkpad-t14s-oled-el2-dtbs	:= x1e78100-lenovo-thinkpad-t14s-oled.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e78100-lenovo-thinkpad-t14s-oled.dtb x1e78100-lenovo-thinkpad-t14s-oled-el2.dtb
-+x1e80100-asus-vivobook-s15-el2-dtbs	:= x1e80100-asus-vivobook-s15.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-asus-vivobook-s15.dtb x1e80100-asus-vivobook-s15-el2.dtb
-+x1e80100-crd-el2-dtbs	:= x1e80100-crd.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-crd.dtb x1e80100-crd-el2.dtb
-+x1e80100-dell-xps13-9345-el2-dtbs	:= x1e80100-dell-xps13-9345.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-dell-xps13-9345.dtb x1e80100-dell-xps13-9345-el2.dtb
-+x1e80100-hp-omnibook-x14-el2-dtbs	:= x1e80100-hp-omnibook-x14.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-hp-omnibook-x14.dtb x1e80100-hp-omnibook-x14-el2.dtb
-+x1e80100-lenovo-yoga-slim7x-el2-dtbs	:= x1e80100-lenovo-yoga-slim7x.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-lenovo-yoga-slim7x.dtb x1e80100-lenovo-yoga-slim7x-el2.dtb
-+x1e80100-microsoft-romulus13-el2-dtbs	:= x1e80100-microsoft-romulus13.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus13.dtb x1e80100-microsoft-romulus13-el2.dtb
-+x1e80100-microsoft-romulus15-el2-dtbs	:= x1e80100-microsoft-romulus15.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-microsoft-romulus15.dtb x1e80100-microsoft-romulus15-el2.dtb
-+x1e80100-qcp-el2-dtbs	:= x1e80100-qcp.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1e80100-qcp.dtb x1e80100-qcp-el2.dtb
-+x1p42100-crd-el2-dtbs	:= x1p42100-crd.dtb x1-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= x1p42100-crd.dtb x1p42100-crd-el2.dtb
-diff --git a/arch/arm64/boot/dts/qcom/x1-el2.dtso b/arch/arm64/boot/dts/qcom/x1-el2.dtso
-new file mode 100644
-index 0000000000000000000000000000000000000000..7a818045ef098b44632df45253d32e31c5c7aeed
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/x1-el2.dtso
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: BSD-3-Clause
-+
-+/*
-+ * x1 specific modifications required to boot in EL2.
-+ */
-+
-+/dts-v1/;
-+/plugin/;
-+
-+/* We can't and don't need to use zap shader in EL2 as linux can zap the gpu on it's own. */
-+&gpu_zap_shader {
-+	status = "disabled";
-+};
-+
-+/*
-+ * When running under Gunyah, this IOMMU is controlled by the firmware,
-+ * however when we take ownership of it in EL2, we need to configure
-+ * it properly to use PCIe.
-+ */
-+&pcie3 {
-+	iommu-map = <0 &pcie_smmu 0x30000 0x10000>;
-+};
-+
-+&pcie4 {
-+	iommu-map = <0 &pcie_smmu 0x40000 0x10000>;
-+};
-+
-+&pcie5 {
-+	iommu-map = <0 &pcie_smmu 0x50000 0x10000>;
-+};
-+
-+&pcie6a {
-+	iommu-map = <0 &pcie_smmu 0x60000 0x10000>;
-+};
-+
-+&pcie_smmu {
-+	status = "okay";
-+};
-+
-+/*
-+ * The "SBSA watchdog" is implemented in software in Gunyah
-+ * and can't be used when running in EL2.
-+ */
-+&sbsa_watchdog {
-+	status = "disabled";
-+};
-diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-index 7a3e75294be545a719f3543a8b874900f7c78f99..c04a2615ca77629b27fbd6fd98f1a25a3b6697db 100644
---- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-@@ -8163,7 +8163,7 @@ frame@1780d000 {
- 			};
- 		};
- 
--		watchdog@1c840000 {
-+		sbsa_watchdog: watchdog@1c840000 {
- 			compatible = "arm,sbsa-gwdt";
- 			reg = <0 0x1c840000 0 0x1000>,
- 			      <0 0x1c850000 0 0x1000>;
+	enum resctrl_res_level resid;
+	enum resctrl_event_id evtid;
+	int domid;
 
--- 
-2.49.0
+This highlights that the incorrect type propagated from rdtgroup_mondata_show()
+to mon_event_read() where its "int evtid" parameter should also be
+"enum resctrl_event_id evtid", which is a good complement to patch #14
+that fixes the type used by functions called by mon_event_read().
+
+>  	struct rdtgroup *rdtgrp;
+>  	struct rdt_resource *r;
+> -	union mon_data_bits md;
+> +	struct mon_data *md;
+>  	int ret = 0;
+>  
+>  	rdtgrp = rdtgroup_kn_lock_live(of->kn);
+
+
+> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> index 36a862a4832f..954dc391fc33 100644
+> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> @@ -103,27 +103,26 @@ struct mon_evt {
+>  };
+>  
+>  /**
+> - * union mon_data_bits - Monitoring details for each event file.
+> - * @priv:              Used to store monitoring event data in @u
+> - *                     as kernfs private data.
+> - * @u.rid:             Resource id associated with the event file.
+> - * @u.evtid:           Event id associated with the event file.
+> - * @u.sum:             Set when event must be summed across multiple
+> - *                     domains.
+> - * @u.domid:           When @u.sum is zero this is the domain to which
+> - *                     the event file belongs. When @sum is one this
+> - *                     is the id of the L3 cache that all domains to be
+> - *                     summed share.
+> - * @u:                 Name of the bit fields struct.
+> + * struct mon_data - Monitoring details for each event file.
+> + * @list:            Member of the global @mon_data_kn_priv_list list.
+> + * @rid:             Resource id associated with the event file.
+> + * @evtid:           Event id associated with the event file.
+> + * @sum:             Set when event must be summed across multiple
+> + *                   domains.
+> + * @domid:           When @sum is zero this is the domain to which
+> + *                   the event file belongs. When @sum is one this
+> + *                   is the id of the L3 cache that all domains to be
+> + *                   summed share.
+> + *
+> + * Pointed to by the kernfs kn->priv field of monitoring event files.
+> + * Readers and writers must hold rdtgroup_mutex.
+>   */
+> -union mon_data_bits {
+> -	void *priv;
+> -	struct {
+> -		unsigned int rid		: 10;
+> -		enum resctrl_event_id evtid	: 7;
+> -		unsigned int sum		: 1;
+> -		unsigned int domid		: 14;
+> -	} u;
+> +struct mon_data {
+> +	struct list_head	list;
+> +	enum resctrl_res_level	rid;
+> +	enum resctrl_event_id	evtid;
+> +	int			domid;
+> +	bool			sum;
+>  };
+>  
+
+Thank you.
+
+>  /**
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index eccdfcb1a6f5..7ef5cf0c4d1d 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -45,6 +45,12 @@ LIST_HEAD(rdt_all_groups);
+>  /* list of entries for the schemata file */
+>  LIST_HEAD(resctrl_schema_all);
+>  
+> +/*
+> + * List of struct mon_data containing private data of event files for use by
+> + * rdtgroup_mondata_show(). Protected by rdtgroup_mutex.
+> + */
+> +static LIST_HEAD(mon_data_kn_priv_list);
+> +
+>  /* The filesystem can only be mounted once. */
+>  bool resctrl_mounted;
+>  
+> @@ -3093,6 +3099,63 @@ static void rmdir_all_sub(void)
+>  	kernfs_remove(kn_mondata);
+>  }
+>  
+> +/**
+> + * mon_get_kn_priv() - Get the mon_data priv data for this event.
+> + *
+> + * The same values are used across the mon_data directories of all control and
+> + * monitor groups for the same event in the same domain. Keep a list of
+> + * allocated structures and re-use an existing one with the same values for
+> + * @rid, @domid, etc.
+> + *
+> + * @rid:    The resource id for the event file being created.
+> + * @domid:  The domain id for the event file being created.
+> + * @mevt:   The type of event file being created.
+> + * @do_sum: Whether SNC summing monitors are being created.
+> + */
+> +static struct mon_data *mon_get_kn_priv(int rid, int domid,
+
+"int rid" -> "enum resctrl_res_level rid"
+
+> +					struct mon_evt *mevt,
+> +					bool do_sum)
+> +{
+> +	struct mon_data *priv;
+> +
+> +	lockdep_assert_held(&rdtgroup_mutex);
+> +
+> +	list_for_each_entry(priv, &mon_data_kn_priv_list, list) {
+> +		if (priv->rid == rid && priv->domid == domid &&
+> +		    priv->sum == do_sum && priv->evtid == mevt->evtid)
+> +			return priv;
+> +	}
+> +
+> +	priv = kzalloc(sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return NULL;
+> +
+> +	priv->rid = rid;
+> +	priv->domid = domid;
+> +	priv->sum = do_sum;
+> +	priv->evtid = mevt->evtid;
+> +	list_add_tail(&priv->list, &mon_data_kn_priv_list);
+> +
+> +	return priv;
+> +}
+> +
+> +/**
+> + * mon_put_kn_priv() - Free all allocated mon_data structures.
+> + *
+> + * Called when resctrl file system is unmounted.
+> + */
+> +static void mon_put_kn_priv(void)
+> +{
+> +	struct mon_data *priv, *tmp;
+> +
+> +	lockdep_assert_held(&rdtgroup_mutex);
+> +
+> +	list_for_each_entry_safe(priv, tmp, &mon_data_kn_priv_list, list) {
+> +		list_del(&priv->list);
+> +		kfree(priv);
+> +	}
+> +}
+> +
+>  static void resctrl_fs_teardown(void)
+>  {
+>  	lockdep_assert_held(&rdtgroup_mutex);
+
+Reinette
 
