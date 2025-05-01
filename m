@@ -1,91 +1,169 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D7322541F;
-	Thu,  1 May 2025 04:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E7AD58;
+	Thu,  1 May 2025 04:27:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746073390; cv=none; b=TCVkJCZjQCL2Ylxqj9QUtj+DSSosUUiAWK+UkJN85EQ93y3ZiPeLMwv9e2qMMx7WgBKluXP3lwjkq6NBivrSx7sQxq9zzYtNgi/J8yQcirMCZRMJZC9Pb3mRXyVgenKT6cEO5kIFfr8kdkPEmHdqN2iyuREj1cmly3fFMUXQv9A=
+	t=1746073661; cv=none; b=U4EGi8UYJ1Rx1m6/mQCcwpcObwLNFmQ+bcJAUkrSLt0I0bkyRxvA4t+f9J0lCD96wlGWCg6nY5zoFWaBT8sxusERIBSAyaZyZlhusPpQ5tQPTLxnYdEMhiv+SeKWsWzl09DpOmvTF4SViwMeLXzeuLxmAMfJiieBDWnSIAxiuSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746073390; c=relaxed/simple;
-	bh=rWzjgVEuyGHkGE033EzJp7s4hafpsCW3nF3tFps8nTQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ovdQCMA2e/h7YG+3K+Ch5FPbrmuTnv5Sq/fjWEaQczrfUkhddDzqZb224RotaTTx9Okk10wtQI/4gTwheVd4ltemV0R7LgvBkZt8jzAnBfFKRDt5maHnARU8n0+TPzINmfhlmlkCDCkPzVg5S/glDx8JpYt0+WetX0TLk/5soL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VRjzVZC3; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746073661; c=relaxed/simple;
+	bh=wm2uoskBjcmJ5xq4YXyrUz3AWluHN+lK7mFqlsXzPSI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FLJD4yL2NX3a+ee/0l2T1xal3Mkv2l96Tu64cChhUhEhWmQ6KKNRpuUrPwDaQp1OTTbgQz9xQIiG4bBkjsB+LNQa1Ti8QNO0YHmTc/LabtbEu22BhafQd8oZs7ToN7tfqUY34wffUtzfVdylsuo6LYpiMBFxQFH8X2Q700HEXzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=aMP3Jy8a; arc=none smtp.client-ip=207.171.188.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VRjzVZC3"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22435603572so6014985ad.1;
-        Wed, 30 Apr 2025 21:23:08 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aMP3Jy8a"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746073388; x=1746678188; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WqLAUJZtyX+jJiSNCAAuy/58V+wF4ZqMOguGaDhSIyY=;
-        b=VRjzVZC39GjNd5q9Wl94qodUDH1TEDzTHIS/L2D8sDmJtK1b0YKIuXp+zy5JAFQio6
-         P9TKpoMcEu4FQV73bo4K30E5mhD1D/+gsPzIaB0vNAfL2jeeH/mnm3ez1dfcab2VlOL6
-         0QPC4Pr3xlPkO79KUCgiL1ZM/vWDXg/uIGp1i9NgmHcaBg5lY2PIsrPVReq+8+uRo4bL
-         ZbIMipIwrYjD5d0DBwMdth8OEY4Y1QOsfha/dWx8e2FLInjtRri57KfqiILx2DGwXpFV
-         g/2QK8GGyMppBnIJAtVvkeASF2d6mYROZty/7DtPYuW5WqAupoghxMIz0aYy7eAb013r
-         DjJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746073388; x=1746678188;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WqLAUJZtyX+jJiSNCAAuy/58V+wF4ZqMOguGaDhSIyY=;
-        b=eiVUBR/6tcHUzb9L9SBFpcBTdrXwBAi8hzWDVHdwS98W7f6heGpKxvolPyUuyBM/CW
-         HrrGtF56t2IUpP4/6Ro3wM4njCV0wXm48W9iLeWwEpnCd/EiaEvYoTF0EjVVlzyaE95o
-         6rwVD+0ta0yzvpvpsJoWuVAxpX2ZVsslgYIBJ5El/Uk5j3YDkaS1S/+S/B3Xd75z/2PT
-         WbHaCz/UmrfQ+nfiu0BktGs8KqbCNM/XUNb/e7YBg2CrCE6omNxf32IZo8PIBv5uIHys
-         sD0wroX5ztCjjYzIfE8fOQbJ8EuL/X/995eQlZYhLDbqm3D3WN6EiVH/TzlbxouTSLNp
-         zARA==
-X-Forwarded-Encrypted: i=1; AJvYcCVR0lZnUHwvtKo7NBOki37+4GMT681/1viSbzFccMRDBTFb/jGDW2cu6X9r+ArTb3ZOpyF9zeB8aShc@vger.kernel.org, AJvYcCX3K5otIeHr+GZPswrqqR7FYTmrYBLXpaYU7/NH+f0ywNKl6ltGKrGaFs79bEzE5UfGKVnPVxA/kYKxJEY=@vger.kernel.org, AJvYcCXtmQGzyp6cddWW9QYRm/6N3gJZBsqtmOKjPxf/8pn4ZvLr7rRZHxaRh4d7N2878hdzxnXOnE+q5e6R+Kcn@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc7We8vCTOX6nGXAaZ+RkTFevI3SvLbBuvjaaJtnN1SN6bF8oU
-	xdnuRY74N0nGuruE5ZJzigRIpaTzyTue5AtkYxWHttAr1Nb225Wp
-X-Gm-Gg: ASbGncuvg1INqC5XCUwETzlUdcfzXe1BXae0tgNCANBWHxlzQuT7x2+DW6EpikPYln+
-	SPJbBznTK5JXjSETBP+A4mMaQ9lca8UQAXh6a+cXMN7BP8R80Scvk76UE1/88VWi4Fyo1NeBh4y
-	pNbmxH2Zljbr0niNIaWOumFLCd2Of/9mq68pmCy3qLCZvkMlFdcIhWh/uVu+E2eleiNkNv8v/EG
-	S1ikHw15GRo7zCQA3E4vXJOL94OfMSBUhsR3UCLEB6CjY4yUdRt63x0O3M2miwRMDtomdU4Gd1B
-	IUd6TMh4NSjhohCSTXRoKBn6iX3Pn21Tj1FQO40Rlg==
-X-Google-Smtp-Source: AGHT+IHtGfnLfkHmfknSPWfZLj2cCh3PuK4QKc4uhZspTTRfFeT++PxKg+DoA1uD1JSOGgFWcVzVvA==
-X-Received: by 2002:a17:903:41ce:b0:224:1935:fb7e with SMTP id d9443c01a7336-22e0842bd83mr17812325ad.24.1746073388308;
-        Wed, 30 Apr 2025 21:23:08 -0700 (PDT)
-Received: from google.com ([2620:15c:9d:2:bda7:836a:d9fa:ac5d])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db4dbcb88sm130961695ad.64.2025.04.30.21.23.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 21:23:07 -0700 (PDT)
-Date: Wed, 30 Apr 2025 21:23:05 -0700
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To: Ian Ray <ian.ray@gehealthcare.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] Input: snvs_pwrkey - support power-off-time-sec
-Message-ID: <zwapgp7uerwvbb45nzkeaitzldcwzq4znbmqmlblckpzm5qc4u@3rnqwadsbjki>
-References: <20250315093455.1100-1-ian.ray@gehealthcare.com>
- <20250315093455.1100-3-ian.ray@gehealthcare.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746073660; x=1777609660;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=dLcL67+O3gdWGHtlIunDL8NWJWKO9aINTCEgtB1sDsM=;
+  b=aMP3Jy8azOcNS1SjijmRlUtPsq9H2dhqyzrkbovF07M/SJARs1S5+Frt
+   GfYcXmJtD5/XoN5x5sk+4cudKNHsQbBb1dHVsCFcJyaM+nPqMO/H1Im6e
+   Xjl4IF3zU5HV4wLZHg93LTlNYUu+RLnmuM7HBABY2ql7OGhy6HkFUdgxF
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
+   d="scan'208";a="15368904"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 04:27:34 +0000
+Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:50737]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
+ id f4ae1998-50aa-4fe2-9700-d7b1c72e7189; Thu, 1 May 2025 04:27:33 +0000 (UTC)
+X-Farcaster-Flow-ID: f4ae1998-50aa-4fe2-9700-d7b1c72e7189
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 04:27:33 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 04:27:27 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <airlied@gmail.com>, <akpm@linux-foundation.org>, <andrew@lunn.ch>,
+	<davem@davemloft.net>, <dri-devel@lists.freedesktop.org>,
+	<edumazet@google.com>, <horms@kernel.org>, <intel-gfx@lists.freedesktop.org>,
+	<jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<nathan@kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<qasdev00@gmail.com>, <rodrigo.vivi@intel.com>, <simona@ffwll.ch>,
+	<tursulin@ursulin.net>, <tzimmermann@suse.de>
+Subject: Re: [PATCH v6 08/10] net: add symlinks to ref_tracker_dir for netns
+Date: Wed, 30 Apr 2025 21:26:47 -0700
+Message-ID: <20250501042719.81002-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <0c4e532ed8b58f8253a14f8ed59d93523a096f16.camel@kernel.org>
+References: <0c4e532ed8b58f8253a14f8ed59d93523a096f16.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250315093455.1100-3-ian.ray@gehealthcare.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D046UWB001.ant.amazon.com (10.13.139.187) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Sat, Mar 15, 2025 at 11:34:55AM +0200, Ian Ray wrote:
-> The power-off time is configured in LPCR[17:16] BTN_PRESS_TIME:
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 30 Apr 2025 21:07:20 -0700
+> On Wed, 2025-04-30 at 20:50 -0700, Kuniyuki Iwashima wrote:
+> > From: Jeff Layton <jlayton@kernel.org>
+> > Date: Wed, 30 Apr 2025 20:42:40 -0700
+> > > On Wed, 2025-04-30 at 20:07 -0700, Kuniyuki Iwashima wrote:
+> > > > From: Jeff Layton <jlayton@kernel.org>
+> > > > Date: Wed, 30 Apr 2025 19:59:23 -0700
+> > > > > On Wed, 2025-04-30 at 14:29 -0700, Kuniyuki Iwashima wrote:
+> > > > > > From: Jeff Layton <jlayton@kernel.org>
+> > > > > > Date: Wed, 30 Apr 2025 08:06:54 -0700
+> > > > > > > After assigning the inode number to the namespace, use it to create a
+> > > > > > > unique name for each netns refcount tracker with the ns.inum value in
+> > > > > > > it, and register a symlink to the debugfs file for it.
+> > > > > > > 
+> > > > > > > init_net is registered before the ref_tracker dir is created, so add a
+> > > > > > > late_initcall() to register its files and symlinks.
+> > > > > > > 
+> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > > > ---
+> > > > > > >  net/core/net_namespace.c | 28 +++++++++++++++++++++++++++-
+> > > > > > >  1 file changed, 27 insertions(+), 1 deletion(-)
+> > > > > > > 
+> > > > > > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> > > > > > > index 008de9675ea98fa8c18628b2f1c3aee7f3ebc9c6..6cbc8eabb8e56c847fc34fa8ec9994e8b275b0af 100644
+> > > > > > > --- a/net/core/net_namespace.c
+> > > > > > > +++ b/net/core/net_namespace.c
+> > > > > > > @@ -763,12 +763,38 @@ struct net *get_net_ns_by_pid(pid_t pid)
+> > > > > > >  }
+> > > > > > >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
+> > > > > > >  
+> > > > > > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> > > > > > > +static void net_ns_net_debugfs(struct net *net)
+> > > > > > > +{
+> > > > > > > +	ref_tracker_dir_symlink(&net->refcnt_tracker, "netns-%u-refcnt", net->ns.inum);
+> > > > > > > +	ref_tracker_dir_symlink(&net->notrefcnt_tracker, "netns-%u-notrefcnt", net->ns.inum);
+> > > > > > 
+> > > > > > Could you use net->net_cookie ?
+> > > > > > 
+> > > > > > net->ns.inum is always 1 when CONFIG_PROC_FS=n.
+> > > > > 
+> > > > > My main use-case for this is to be able to match the inode number in
+> > > > > the /proc/<pid>/ns/net symlink with the correct ref_tracker debugfs
+> > > > > file. Is there a way to use the net_cookie to make that association?
+> > > > 
+> > > > It's roundabout, but  net_cookie can be retrieved by creating a
+> > > > random socket in the netns and calling setsockopt(SO_NETNS_COOKIE).
+> > > > 
+> > > > Ido proposed a handy ip-netns subcommand here, and I guess it will
+> > > > be implemented soon(?)
+> > > > https://lore.kernel.org/netdev/1d99d7ccfc3a7a18840948ab6ba1c0b5fad90901.camel@fejes.dev/
+> > > 
+> > > For the cases where I was looking at netns leaks, there were no more
+> > > processes in the container, so there was no way to enter the container
+> > > and spawn a socket at that point.
+> > 
+> > Then how do you get net->ns.inum ?
+> > 
 > 
->  * b00:  5 seconds (SoC default)
->  * b01: 10 seconds
->  * b10: 15 seconds
->  * b11: PMIC is not disabled
+> In my case, I was looking at /sys/kernel/debug/sunrpc/rpc_xprt/*/info.
+> That also displays net->ns.inum in the same format. When I was
+> originally working on this, the problem I was chasing was due to stuck
+> RPC transports (rpc_xprt).
+
+Thanks for the info.
+
+Prefarably the debugfs should also display netns_cookie instaed of inum,
+and the change is acceptable as the debugfs is not uAPI.
+
+Then we don't need to expose possibly non-unique value just for historical
+reason.
+
+
 > 
-> Signed-off-by: Ian Ray <ian.ray@gehealthcare.com>
-
-Applied with formatting changes, thank you.
-
--- 
-Dmitry
+> 
+> > 
+> > > 
+> > > The point of the symlinks is to have a way to easily identify what
+> > > you're tracking. NAME_MAX is 255. We could do something like this
+> > > instead:
+> > > 
+> > >    snprintf(..., "netns-%u-%llx-refcnt", net->ns.inum, net->net_cookie);
+> > > 
+> > > Obviously the inums would all be 1 when PROC_FS=n, but the cookies
+> > > would be unique. Would that work?
+> > 
+> > This works, but depending on the question above, there's no point in
+> > using inum ?
+> 
+> Having the inum is definitely useful to me, particularly since the
+> net_cookie would be pretty useless for the problems I've been chasing.
+>  
+> I'll plan to respin this to include the net_cookie though, since that
+> would disambiguate the names when PROC_FS=n. It might also turn out to
+> be useful for someone, once there is a way to fetch the net_cookie from
+> userland. 
+> -- 
