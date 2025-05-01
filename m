@@ -1,129 +1,256 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562583D6A;
-	Thu,  1 May 2025 16:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D3E81EA7C6;
+	Thu,  1 May 2025 16:20:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746116174; cv=none; b=fD/59Qii+wv2cVBaUxx7K63RV6qSJ2P+cHJJLBrci/mJvY3nuJY/YRjgsjuXN8nHIFGsCif9mRlxQivxr4S1C8FMmX7qW2kh8duw/VPe591+9NSIS4B62z6TN/e6OF2dQf7x1swvdQLYFV4daCKD4JtMEEA4DBhRe+ee3cQYYxY=
+	t=1746116422; cv=none; b=nHKWFNxAjaoGeecy0OZOoWmfvR6lTsSCtGNF61Krer6v7hTJC8BSAXc1wwpYu0kEYTUQhSQKmSBJZwoG6iNjbv5httN752sTfSeYUNx8S2yWiH1Z7U2c8fgGmHJW/FEiJ7+GCVr5T4cEHvoYK1Ls63KC5fTv+HwEWx91bcY1iX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746116174; c=relaxed/simple;
-	bh=68WD7LAngpU8BrmhTtDG4Cffchmjc7fJ7Z8I1OciBtw=;
-	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q4VRj98VhSc3z/Kwlxg+vFgG2TQyZxdIToh/nNTQykBp8K7ZUir8bNSnzy0lIAWFwJvg7U4u7JWBvthzjfMDXKHqbbjKpoUvN55+wVBgKzGQiv3rVgnvz6ew5Ri5sMo77f5qgDxGjEiYEvHjBSnhZ3O8VhWY21nYwsSsm0G6vSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=HqI8NTZg; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+	s=arc-20240116; t=1746116422; c=relaxed/simple;
+	bh=0WdEZAHYRN7xKQ7Usp85cXY+ysmZrzFqY+HZd+niGkg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sTTL/8/B22SlJbRq8xKgKo0HBREWrBA3zqmIxksbGg39xzVsNFXj+oCV9ymRxJMQVWV3pOnI5Add1OT7mqsmJFUnicr/UvfKjXGCQrzvkCSSiuv1ZmOY4yUQeTw1IUc6pKltx4RcygjaZ2skNqTBffaR2qIb8D6jykRycwH8b2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gf8pRYB9; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="HqI8NTZg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gf8pRYB9"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acbb85ce788so237266966b.3;
+        Thu, 01 May 2025 09:20:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746116172; x=1777652172;
-  h=from:to:cc:date:message-id:references:in-reply-to:
-   content-id:content-transfer-encoding:mime-version:subject;
-  bh=68WD7LAngpU8BrmhTtDG4Cffchmjc7fJ7Z8I1OciBtw=;
-  b=HqI8NTZgnZGCMs9Z8/bhZBTFD1VfpKBoVDW+COegMhr1qSvkU7lEvIfv
-   A/Ba9Tzq1fM3wxGRhhzBQuJNID92KqGFxRycliOjZQcnikpA+bqSsD2U1
-   G14g72RP28MUAcoFt/iHjvDmEYLQiPQ+PZZoHtmklgQJHc6Rg1JT/onV5
-   U=;
-X-IronPort-AV: E=Sophos;i="6.15,254,1739836800"; 
-   d="scan'208";a="88886624"
-Subject: Re: EEVDF regression still exists
-Thread-Topic: EEVDF regression still exists
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:16:10 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:27702]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.41.121:2525] with esmtp (Farcaster)
- id 283e62a4-dd8d-48b5-a701-5daaa4902eb2; Thu, 1 May 2025 16:16:09 +0000 (UTC)
-X-Farcaster-Flow-ID: 283e62a4-dd8d-48b5-a701-5daaa4902eb2
-Received: from EX19D002UWA003.ant.amazon.com (10.13.138.235) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 16:16:08 +0000
-Received: from EX19D016UWA004.ant.amazon.com (10.13.139.119) by
- EX19D002UWA003.ant.amazon.com (10.13.138.235) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 16:16:08 +0000
-Received: from EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0]) by
- EX19D016UWA004.ant.amazon.com ([fe80::92ec:e30c:889c:c2c0%5]) with mapi id
- 15.02.1544.014; Thu, 1 May 2025 16:16:08 +0000
-From: "Prundeanu, Cristian" <cpru@amazon.com>
-To: K Prateek Nayak <kprateek.nayak@amd.com>, Peter Zijlstra
-	<peterz@infradead.org>
-CC: "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com>, "Saidi, Ali"
-	<alisaidi@amazon.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-	"Blake, Geoff" <blakgeof@amazon.com>, "Csoma, Csaba" <csabac@amazon.com>,
-	"Doebel, Bjoern" <doebel@amazon.de>, Gautham Shenoy <gautham.shenoy@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, Joseph Salisbury
-	<joseph.salisbury@oracle.com>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-tip-commits@vger.kernel.org"
-	<linux-tip-commits@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>
-Thread-Index: AQHbuU8Zth8BPweWAUWz5H5EpP8DD7O7MGMA//+vIgCAAK8gAIACE5kA
-Date: Thu, 1 May 2025 16:16:07 +0000
-Message-ID: <CFA24C6D-8BC4-490D-A166-03BDF3C3E16C@amazon.com>
-References: <20250429213817.65651-1-cpru@amazon.com>
- <20250429215604.GE4439@noisy.programming.kicks-ass.net>
- <82DC7187-7CED-4285-85FC-7181688CD873@amazon.com>
- <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
-In-Reply-To: <f241b773-fca8-4be2-8a84-5d3a6903d837@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <484B6C8D7F1B3F4A8E437F24A6B4BA6E@amazon.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20230601; t=1746116419; x=1746721219; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uOmy2E0oN5vjJ0You/8n6Z0Pmepb4FK1Hw7LfqptwBg=;
+        b=gf8pRYB9FqIeCOtlPLUnFKMJvGhJ6IZ/K3uv8EiYU55vLL962UnryZ/ejUZ0SXBNtm
+         rTE6zzlAueQI//R+QwSAUKfZjltGsnlyChfS1/WzO//S9u2wfEQYlAJ8mMa1QS961NdP
+         6NeDASfU5MG9LLQd67tW49BwTyaNU8zJUKwrBoc2BBP6kXRHF1ES/UjzQG+HlHy5U+y/
+         V4DIliMjF72hzx8+I4aj3W4yORE9pzdeR7pAQXvZ3lfibbJWwS4yok2cxtFjYlR65qTJ
+         SHoBXRFP6By4ZVeJ5y2ym8pFbiZy+DedLBrg3u6xnkUeb9TjmE0+8yARaEd1hKP8IDdH
+         rknA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746116419; x=1746721219;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uOmy2E0oN5vjJ0You/8n6Z0Pmepb4FK1Hw7LfqptwBg=;
+        b=Wh/0Lf9y0PrD8ZYUHLmjJjLSXtIGsgVDcHjA1/toUbEMrmPEWlojzcVJdutCvps4x/
+         4ulVV5ve37VjGY83eIXr0GIqdhtHKIrat/oobjT2sQRklD7nU4+PASdtnCo2f2+1cYAh
+         NUjrSuQGfM5lfx2d+oiHI+1sjeUF1jKe+2mYVBuma7euTuGbkby6KHsQMD0ZBcsOu6Ru
+         bHk+G9zkC7NzRhBUSRWc2eFnjj/yqIYRnRI+bw9H1ffa9wV+n7malRoz5Ve8ptl28lOw
+         R7bLEgLIVBRBaZTicJ+8T/FNCYGJBqRjI/Yc88mIrM0JnMVwIODqpJP0ngGowebHKlxY
+         QIYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVUX+BlsVQS1OrZAveFLFFMS/m8yHXFMnpvNE0/p4bu0SIR54oavLBIC5iDjV/jUOZNlVrK5V/ZdLCLHRGr@vger.kernel.org, AJvYcCWBrJ9qZgRtub/BjVLsU6xUAZU6xcJCsk0V73sdVJGxtdASWHPp7q8Q2lFn0bLhVPXn5/Q49zvyQzriA6pg@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoZ1Coga+TG6YjQeeYK1sTPcQ6osoKg6CZiBexe/nV2I3Lfu96
+	XrakIB5AFYwBd9tQdO+f0W9BAx07ZGi2/vzSp6KL/TGdxCEUnW7W
+X-Gm-Gg: ASbGncsQHfnhcWcU6DdME+U189fkBnGIpxhziMGEQCw50gwQejtLZQPjpTLeJPZlIX6
+	MWJa7wHtV0bHL2fTPvltzj6ydZyAsWj26+QbdzaXoN2j5NImIZoLSBQn3+DbnClcG+SDzhrszNV
+	32IBZ6YS/n5a3YiKkUZCHQGE4V7A2fa7EVeXmDlYRCNgr0Yhbw3nDUq8577LP5a+rGKZid+63Eh
+	zSTzWSmW9BIg64Zv2rI7iQgh2fhIagSdkIZUXek8ViiNwfzbYEuVrCpqZaz+1sY5IByiUrzHpYO
+	9GTBqV3YHiwFCsbd3zkidz7tBONWcOww5Purpjf6r0kx85s4sutdnTle/eKMc8MHlNK2pw==
+X-Google-Smtp-Source: AGHT+IHzfi4VSpxpv+pztKx4Lp0PesbOchWTJcGKA3qJLKG6pRrja2Nh+1nKve5gcaP5v06HJrjpXg==
+X-Received: by 2002:a17:907:6d28:b0:abf:7453:1f1a with SMTP id a640c23a62f3a-acef450d143mr416290066b.36.1746116418313;
+        Thu, 01 May 2025 09:20:18 -0700 (PDT)
+Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-ad0c70d3a7bsm60970066b.25.2025.05.01.09.20.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 09:20:17 -0700 (PDT)
+From: Gabor Juhos <j4g8y7@gmail.com>
+Date: Thu, 01 May 2025 18:19:16 +0200
+Subject: [PATCH next] spi: spi-qpic-snand: validate user/chip specific ECC
+ properties
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250501-qpic-snand-validate-ecc-v1-1-532776581a66@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAOfE2gC/x3MQQqDMBBG4avIrDsQMwjiVaSLNPmrAzLaREQQ7
+ 27o8lu8d1FBVhQamosyDi26WkX7aijOwSawpmryzneucy3/No1cLFjiIyyawg5GjCy9fAQi8NJ
+ TrbeMr57/80iGc6f3fT9cPBVCbwAAAA==
+X-Change-ID: 20250501-qpic-snand-validate-ecc-383b3e33e238
+To: Mark Brown <broonie@kernel.org>, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, 
+ Md Sadre Alam <quic_mdalam@quicinc.com>, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Cc: linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gabor Juhos <j4g8y7@gmail.com>
+X-Mailer: b4 0.14.2
 
-SGkgUHJhdGVlaywNCg0K77u/T24gMjAyNS0wNC0yOSwgMjI6MzMsICJLIFByYXRlZWsgTmF5YWsi
-IDxrcHJhdGVlay5uYXlha0BhbWQuY29tIDxtYWlsdG86a3ByYXRlZWsubmF5YWtAYW1kLmNvbT4+
-IHdyb3RlOg0KDQo+Pj4+IEhlcmUgYXJlIHRoZSBsYXRlc3QgcmVzdWx0cyBmb3IgdGhlIEVFVkRG
-IGltcGFjdCBvbiBkYXRhYmFzZSB3b3JrbG9hZHMuDQo+Pj4+IFRoZSByZWdyZXNzaW9uIGludHJv
-ZHVjZWQgaW4ga2VybmVsIDYuNiBzdGlsbCBwZXJzaXN0cyBhbmQgZG9lc24ndCBsb29rDQo+Pj4+
-IGxpa2UgaXQgaXMgaW1wcm92aW5nLg0KPj4+DQo+Pj4gV2VsbCwgSSB3YXMgdW5kZXIgdGhlIGlt
-cHJlc3Npb24gaXQgaGFkIGFjdHVhbGx5IGJlZW4gc29sdmVkIDotKA0KPj4+DQo+Pj4gTXkgdW5k
-ZXJzdGFuZGluZyBmcm9tIHRoZSBsYXN0IHJvdW5kIHdhcyB0aGF0IFByYXRlZWsgYW5kIGNvIGhh
-ZCBpdA0KPj4+IHNvcnRlZCAtLSB3aXRoIHRoZSBjYXZlYXQgYmVpbmcgdGhhdCB5b3UgaGFkIHRv
-IHN0aWNrIFNDSEVEX0JBVENIIGluIGF0DQo+Pj4gdGhlIHJpZ2h0IHBsYWNlIGluIE15U1FMIHN0
-YXJ0IHNjcmlwdHMgb3Igc29tZXN1Y2guDQo+Pg0KPj4gVGhlIHN0YXRlbWVudCBpbiB0aGUgcHJl
-dmlvdXMgdGhyZWFkIFsxXSB3YXMgdGhhdCB1c2luZyBTQ0hFRF9CQVRDSCBpbXByb3Zlcw0KPj4g
-cGVyZm9ybWFuY2Ugb3ZlciBkZWZhdWx0LiBXaGlsZSB0aGF0IHN0aWxsIGhvbGRzIHRydWUsIGl0
-IGlzIGFsc28gZXF1YWxseSB0cnVlDQo+PiBhYm91dCB1c2luZyBTQ0hFRF9CQVRDSCBvbiBrZXJu
-ZWwgNi41Lg0KPj4NCj4+IFNvLCB3aGVuIHdlIGNvbXBhcmUgNi41IHdpdGggcmVjZW50IGtlcm5l
-bHMsIGJvdGggdXNpbmcgU0NIRURfQkFUQ0gsIHRoZQ0KPj4gcmVncmVzc2lvbiBpcyBzdGlsbCB2
-aXNpYmxlLiAoUHJldmlvdXNseSwgd2Ugb25seSBjb21wYXJlZCBTQ0hFRF9CQVRDSCB3aXRoDQo+
-PiA2LjUgZGVmYXVsdCwgbGVhZGluZyB0byB0aGUgd3JvbmcgY29uY2x1c2lvbiB0aGF0IGl0J3Mg
-YSBmaXgpLg0KPg0KPiBQLlMuIEFyZSB0aGUgbnVtYmVycyBmb3IgdjYuMTUtcmM0ICsgU0NIRURf
-QkFUQ0ggY29tcGFyYWJsZSB0byB2Ni41DQo+IGRlZmF1bHQ/DQoNClNDSEVEX0JBVENIIGRvZXMg
-aW1wcm92ZSB0aGUgcGVyZm9ybWFuY2UgYm90aCBvbiA2LjUgYW5kIG9uIDYuMTIrOyBpbiBteSAN
-CnRlc3RpbmcsIDYuMTItU0NIRURfQkFUQ0ggZG9lcyBub3QgcXVpdGUgcmVhY2ggdGhlIDYuNS1k
-ZWZhdWx0ICh3aXRob3V0DQpTQ0hFRF9CQVRDSCkgcGVyZm9ybWFuY2UuIEJlc3QgY2FzZSAoNi4x
-NS1yYzMtU0NIRURfQkFUQ0gpIGlzIC0zLjYlLCBhbmQNCndvcnN0IGNhc2UgKDYuMTUtcmM0LVND
-SEVEX0JBVENIKSBpcyAtNy4wJSB3aGVuIGNvbXBhcmVkIHRvIDYuNS4xMy1kZWZhdWx0Lg0KDQoo
-UGxlYXNlIGtlZXAgaW4gbWluZCB0aGF0IHRoZSB0YXJnZXQgaXNuJ3QgdG8gZ2V0IFNDSEVEX0JB
-VENIIHRvIHRoZSBzYW1lDQpsZXZlbCBhcyA2LjUtZGVmYXVsdDsgaXQncyB0byByZXNvbHZlIHRo
-ZSByZWdyZXNzaW9uIGZyb20gNi41LWRlZmF1bHQgdG8NCjYuNisgZGVmYXVsdCwgYW5kIGZyb20g
-Ni41LVNDSEVEX0JBVENIIHRvIDYuNisgU0NIRURfQkFUQ0gpLg0KDQo+IE9uZSBtb3JlIGN1cmlv
-dXMgcXVlc3Rpb246IERvZXMgY2hhbmdpbmcgdGhlIGJhc2Ugc2xpY2UgdG8gYSBsYXJnZXINCj4g
-dmFsdWUgKHNheSA2bXMpIGluIGNvbmp1bmN0aW9uIHdpdGggc2V0dGluZyBTQ0hFRF9CQVRDSCBv
-biB2Ni4xNS1yYzQNCj4gYWZmZWN0IHRoZSBiZW5jaG1hcmsgcmVzdWx0IGluIGFueSB3YXk/DQoN
-CkkgcmVyYW4gNi4xNS1yYzQsIHdpdGggYm90aCAzbXMgKGRlZmF1bHQpIGFuZCA2bXMuIFRoZSBs
-YXJnZXIgYmFzZSBzbGljZQ0Kc2xpZ2h0bHkgaW1wcm92ZXMgcGVyZm9ybWFuY2UsIG1vcmUgZm9y
-IFNDSEVEX0JBVENIIHRoYW4gZm9yIGRlZmF1bHQuDQoNCjZtcyBjb21wYXJlZCB0byAzbXMgc2Ft
-ZSBrZXJuZWwgKG5vdCBjb21wYXJlZCB0byA2LjUpOg0KDQpLZXJuZWwgICAgICAgICAgICAgICB8
-IFRocm91Z2hwdXQgfCBMYXRlbmN5DQotLS0tLS0tLS0tLS0tLS0tLS0tLS0rLS0tLS0tLS0tLS0t
-Ky0tLS0tLS0tLQ0KNi4xNS1yYzQgZGVmYXVsdCAgICAgfCAgKzEuMSUgICAgIHwgIC0xLjMlDQo2
-LjE1LXJjNCBTQ0hFRF9CQVRDSCB8ICArMi45JSAgICAgfCAgLTIuNyUNCg0KRnVsbCBkZXRhaWxz
-LCByZXBvcnRzIGFuZCBkYXRhOg0KaHR0cHM6Ly9naXRodWIuY29tL2F3cy9yZXByby1jb2xsZWN0
-aW9uL2Jsb2IvbWFpbi9yZXByb3MvcmVwcm8tbXlzcWwtRUVWREYtcmVncmVzc2lvbi9yZXN1bHRz
-LzIwMjUwNDMwL1JFQURNRS5tZA0KKFRoZXNlIHBlcmYgZmlsZXMgYWxsIGhhdmUgdGhlIHNhbWUg
-c2NoZWRzdGF0IHZlcnNpb24sIGhvcGVmdWxseSAicGVyZg0Kc2NoZWQgc3RhdHMgZGlmZiIgd29y
-a2VkIGJldHRlciB0aGlzIHRpbWUpLg0KDQotQ3Jpc3RpYW4NCg0K
+The driver only supports 512 bytes ECC step size and 4 bit ECC strength
+at the moment, however it does not reject unsupported step/strength
+configurations. Due to this, whenever the driver is used with a flash
+chip which needs stronger ECC protection, the following warning is shown
+in the kernel log:
+
+  [    0.574648] spi-nand spi0.0: GigaDevice SPI NAND was found.
+  [    0.635748] spi-nand spi0.0: 256 MiB, block size: 128 KiB, page size: 2048, OOB size: 128
+  [    0.649079] nand: WARNING: (null): the ECC used on your system is too weak compared to the one required by the NAND chip
+
+Although the message indicates that something is wrong, but it often gets
+unnoticed, which can cause serious problems. For example when the user
+writes something into the flash chip despite the warning, the written data
+may won't be readable by the bootloader or by the boot ROM. In the worst
+case, when the attached SPI NAND chip is the boot device, the board may not
+be able to boot anymore.
+
+Also, it is not even possible to create a backup of the flash, because
+reading its content results in bogus data. For example, dumping the first
+page of the flash gives this:
+
+  # hexdump -C -n 2048 /dev/mtd0
+  00000000  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000040  0f 0f 0f 0f 0f 0f 0f 0d  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  00000050  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  000001c0  0f 0f 0f 0f ff 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  000001d0  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000200  0f 0f 0f 0f f5 5b ff ff  0f 0f 0f 0f 0f 0f 0f 0f  |.....[..........|
+  00000210  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  000002f0  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 1f 0f 0f  |................|
+  00000300  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  000003c0  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f ff 0f 0f 0f  |................|
+  000003d0  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000400  0f 0f 0f 0f 0f 0f 0f 0f  e9 74 c9 06 f5 5b ff ff  |.........t...[..|
+  00000410  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  000005d0  0f 0f 0f 0f ff 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  000005e0  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000600  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f c6 be 0f c3  |................|
+  00000610  e9 74 c9 06 f5 5b ff ff  0f 0f 0f 0f 0f 0f 0f 0f  |.t...[..........|
+  00000620  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000770  0f 0f 0f 0f 8f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  00000780  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000800
+  #
+
+Doing the same by using the downstream kernel results in different output:
+
+  # hexdump -C -n 2048 /dev/mtd0
+  00000000  0f 0f 0f 0f 0f 0f 0f 0f  0f 0f 0f 0f 0f 0f 0f 0f  |................|
+  *
+  00000800
+  #
+
+This patch adds some sanity checks to the code to prevent using the driver
+with unsupported ECC step/strength configurations. After the change, probing
+of the driver fails in such cases:
+
+  [    0.655038] spi-nand spi0.0: GigaDevice SPI NAND was found.
+  [    0.659159] spi-nand spi0.0: 256 MiB, block size: 128 KiB, page size: 2048, OOB size: 128
+  [    0.669138] qcom_snand 79b0000.spi: only 4 bits ECC strength is supported
+  [    0.677476] nand: No suitable ECC configuration
+  [    0.689909] spi-nand spi0.0: probe with driver spi-nand failed with error -95
+
+This helps to avoid the aforementioned hassles until support for 8 bit ECC
+strength gets implemented.
+
+Fixes: 7304d1909080 ("spi: spi-qpic: add driver for QCOM SPI NAND flash Interface")
+Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+---
+Marked for next because it depends on commit f48d80503504 ("spi: spi-qpic-snand:
+use kmalloc() for OOB buffer allocation").
+---
+ drivers/spi/spi-qpic-snand.c | 42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/spi/spi-qpic-snand.c b/drivers/spi/spi-qpic-snand.c
+index d0e4f49cd89b977a64fc529aebbae36409efed0f..88f8fa98687fa292861d46648872135aa7fad80f 100644
+--- a/drivers/spi/spi-qpic-snand.c
++++ b/drivers/spi/spi-qpic-snand.c
+@@ -249,9 +249,11 @@ static const struct mtd_ooblayout_ops qcom_spi_ooblayout = {
+ static int qcom_spi_ecc_init_ctx_pipelined(struct nand_device *nand)
+ {
+ 	struct qcom_nand_controller *snandc = nand_to_qcom_snand(nand);
++	struct nand_ecc_props *reqs = &nand->ecc.requirements;
++	struct nand_ecc_props *user = &nand->ecc.user_conf;
+ 	struct nand_ecc_props *conf = &nand->ecc.ctx.conf;
+ 	struct mtd_info *mtd = nanddev_to_mtd(nand);
+-	int cwperpage, bad_block_byte;
++	int cwperpage, bad_block_byte, ret;
+ 	struct qpic_ecc *ecc_cfg;
+ 
+ 	cwperpage = mtd->writesize / NANDC_STEP_SIZE;
+@@ -260,11 +262,39 @@ static int qcom_spi_ecc_init_ctx_pipelined(struct nand_device *nand)
+ 	ecc_cfg = kzalloc(sizeof(*ecc_cfg), GFP_KERNEL);
+ 	if (!ecc_cfg)
+ 		return -ENOMEM;
++
++	if (user->step_size && user->strength) {
++		ecc_cfg->step_size = user->step_size;
++		ecc_cfg->strength = user->strength;
++	} else if (reqs->step_size && reqs->strength) {
++		ecc_cfg->step_size = reqs->step_size;
++		ecc_cfg->strength = reqs->strength;
++	} else {
++		/* use defaults */
++		ecc_cfg->step_size = NANDC_STEP_SIZE;
++		ecc_cfg->strength = 4;
++	}
++
++	if (ecc_cfg->step_size != NANDC_STEP_SIZE) {
++		dev_err(snandc->dev,
++			"only %u bytes ECC step size is supported\n",
++			NANDC_STEP_SIZE);
++		ret = -EOPNOTSUPP;
++		goto err_free_ecc_cfg;
++	}
++
++	if (ecc_cfg->strength != 4) {
++		dev_err(snandc->dev,
++			"only 4 bits ECC strength is supported\n");
++		ret = -EOPNOTSUPP;
++		goto err_free_ecc_cfg;
++	}
++
+ 	snandc->qspi->oob_buf = kmalloc(mtd->writesize + mtd->oobsize,
+ 					GFP_KERNEL);
+ 	if (!snandc->qspi->oob_buf) {
+-		kfree(ecc_cfg);
+-		return -ENOMEM;
++		ret = -ENOMEM;
++		goto err_free_ecc_cfg;
+ 	}
+ 
+ 	memset(snandc->qspi->oob_buf, 0xff, mtd->writesize + mtd->oobsize);
+@@ -279,8 +309,6 @@ static int qcom_spi_ecc_init_ctx_pipelined(struct nand_device *nand)
+ 	ecc_cfg->bytes = ecc_cfg->ecc_bytes_hw + ecc_cfg->spare_bytes + ecc_cfg->bbm_size;
+ 
+ 	ecc_cfg->steps = 4;
+-	ecc_cfg->strength = 4;
+-	ecc_cfg->step_size = 512;
+ 	ecc_cfg->cw_data = 516;
+ 	ecc_cfg->cw_size = ecc_cfg->cw_data + ecc_cfg->bytes;
+ 	bad_block_byte = mtd->writesize - ecc_cfg->cw_size * (cwperpage - 1) + 1;
+@@ -338,6 +366,10 @@ static int qcom_spi_ecc_init_ctx_pipelined(struct nand_device *nand)
+ 		ecc_cfg->strength, ecc_cfg->step_size);
+ 
+ 	return 0;
++
++err_free_ecc_cfg:
++	kfree(ecc_cfg);
++	return ret;
+ }
+ 
+ static void qcom_spi_ecc_cleanup_ctx_pipelined(struct nand_device *nand)
+
+---
+base-commit: a7f035c2c72496cf7ac34bfaa8c289e0d4c45836
+change-id: 20250501-qpic-snand-validate-ecc-383b3e33e238
+
+Best regards,
+-- 
+Gabor Juhos <j4g8y7@gmail.com>
+
