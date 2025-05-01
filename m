@@ -1,131 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F32265631;
-	Thu,  1 May 2025 08:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673991E8855;
+	Thu,  1 May 2025 08:19:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746087573; cv=none; b=pAWcWfo9Xa9n6L5IpcUHzyTG3iOzBQR2apSso5g5XXWdzRH+6p34A/GBozn4pVcDAXvW8XZ6+VKJRFcvh4mtujpNYUOO+g9+cjMR7sD6ztPovdCawduCxT5tTUu5Z7bylQNbEpxJtlQU17HofJ36ZkHY9GEkfF0FyU4BIh4GKKY=
+	t=1746087588; cv=none; b=WXTtOKjfmK9SVhnRZaoL8Ek0hVBemcE9opAK4DV0tGCj3oq0jlaVd8W9d5wh7i47fHazYYxxmtf4bGbcxnZrWfizHNkomP2Su4c2xLHPsdKKDsU7lOrADshWim07uDzcyYNR1/xAiFHTTs25V7y+pDfVML6x1ByyqpQspL8AqQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746087573; c=relaxed/simple;
-	bh=0BH3ciCfuZ0knwyAOCd0nOJ6sgV/JlonC0enoP5+gn0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mUcpjsR46eAkXr7BkU4MjFJ+hwByNZ+Jgnr2vIkg1/mT5eEt1AupiAB3qDhl6GLCn0YzEjbsUncSzPzc1vNMnjyCkDI4WLn3RRu/jeGKiY0VmeW5dKL7jmebszFEO7byGc/GT0D43frqRVtPSwAGTMzTNVC6+WKUsr1pY/GzQzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rnW7nMG0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746087588; c=relaxed/simple;
+	bh=z201K7ut7H2joVvShGidrYo64tbBBJEvnIlX8ihy38U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f2SN1+q9LyzVzDB8V/1WQ8IIh4E/FWnrnAIVIhnfI9tWc4SYMjn4fuxG0KnBRtSvXqqwOrktOgtznSBj4QO01Vb9HmTVK2ezSWbJMMs8AKnjFXyHATzHZDlkvcE/obF9IWpKMs/k5R6tZ/Gvjsk1C6vrYGrZWITKEsIa52Y7ymI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VHGSKB2u; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rnW7nMG0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B7CEC4CEED;
-	Thu,  1 May 2025 08:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746087572;
-	bh=0BH3ciCfuZ0knwyAOCd0nOJ6sgV/JlonC0enoP5+gn0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rnW7nMG0AWHMcGYkAG+cmhO23kkBt5miwVyC37B6SZpcqPm6aYDFVfzkgrEQXtyzS
-	 VdQt19PRlrTzC4mrA9OPLZ4vASXV29hODmAoOXcAVb7caw+MfRT4Ofl7o0UYgNO/N/
-	 JzZc62wz5tN8l+xmFwlvUchMDvB8OqfIQRGVJXH0Iqxy8KK9Er4uX1lWx4u39rdXnM
-	 Hjk4QrmqpMlCmcIx3sUawsBjIivni+Rby3nnR3K6LE8PkNgEUIcuJN1McPyBbBN2DP
-	 uEIIKSWSBeKGHwd6p3dWnhJe6nnKI0yzjbr0MU7GzfYQi7Z5emWkuUAe+JCyiTabGm
-	 pBeaaFRc2qxrA==
-From: Lee Jones <lee@kernel.org>
-To: lee@kernel.org,
-	Pavel Machek <pavel@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: bettyzhou@google.com,
-	ynaffit@google.com,
-	tkjos@google.com,
-	jacek.anaszewski@gmail.com
-Subject: [PATCH 3/3] leds: led-test: Provide tests for the lookup and get infrastructure
-Date: Thu,  1 May 2025 09:19:13 +0100
-Message-ID: <20250501081918.3621432-3-lee@kernel.org>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-In-Reply-To: <20250501081918.3621432-1-lee@kernel.org>
-References: <20250501081918.3621432-1-lee@kernel.org>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VHGSKB2u"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A53D340E0238;
+	Thu,  1 May 2025 08:19:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VufDa6gF_ClS; Thu,  1 May 2025 08:19:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1746087578; bh=KSdtnJ2K6SKvY5JM8I86ZBE4uu5b2/R/NMYpHDkO/b4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VHGSKB2uPHuim0838tafAvFBiatBzEIO0febpFQCut2FPI31JKOny5MGuzKTg4Qci
+	 /w1PRN/uY8rGRw6yagX0iozYTMrGWr7sIh6URpmyJA+noDrpJEMGvX9AW0lJhmLjL8
+	 eH0IqFwplTTLAy2JOnMGNXMsU4bAZRtF1bWg4Jb75KTYm1VgpUZY0/PUkEJvppK1KV
+	 HhYw6PZK91IFhnMJccmCY4RBohzaJg3OLkJw22VQkCFBwWmObCxjEyvIBTg5+6Q1e0
+	 uf6LZ2bDXynNzlWmlH87jO8+0DcIu/3TRn7D0xCoRQoB2frfC/HDDHA4d89x94RoNj
+	 PXYy2gnv8okdpSCh9lfCIYwQ7nPv6sh1TzSLBeBqACt2xgCBCy28J8LVA7F8Qw/l/R
+	 dnhD6GzY41TACKFrASmSZLTKZhzfXuKX7AUXeHuQL/DL5vX8ooF/N87q7Xv7gNAq9o
+	 5e1M6QnCg2u5/Zl1RZ2EaUA92WVn2E6uBouYeflzaYfkE2BZmnyfPKwdaiJU0ZSeUC
+	 nbWuDH1bEuC4LPXKeiTZlRGPDFyppqOMa5ms37ZwYZ3hFmiUDU3OJoF9NxQF53BMGh
+	 4lhdeQHhqP1zLc9do9zz40mPVdeZxbxT6aLBCYgSlIeC2TkTek81SE/LwYn9B5P+Zx
+	 6e23GqelAJ79fRu2qJxlVYPU=
+Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A217B40E01CF;
+	Thu,  1 May 2025 08:19:25 +0000 (UTC)
+Date: Thu, 1 May 2025 10:19:18 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>,
+	Patrick Bellasi <derkling@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Josh Poimboeuf <jpoimboe@redhat.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Patrick Bellasi <derkling@matbug.net>,
+	Brendan Jackman <jackmanb@google.com>,
+	David Kaplan <David.Kaplan@amd.com>,
+	Michael Larabel <Michael@michaellarabel.com>
+Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
+Message-ID: <20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local>
+References: <20250214201005.GBZ6-jHUff99tmkyBK@fat_crate.local>
+ <20250215125307.GBZ7COM-AkyaF8bNiC@fat_crate.local>
+ <Z7LQX3j5Gfi8aps8@Asmaa.>
+ <20250217160728.GFZ7NewJHpMaWdiX2M@fat_crate.local>
+ <Z7OUZhyPHNtZvwGJ@Asmaa.>
+ <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local>
+ <f16941c6a33969a373a0a92733631dc578585c93@linux.dev>
+ <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local>
+ <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local>
+ <aBKzPyqNTwogNLln@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aBKzPyqNTwogNLln@google.com>
 
-This API allows providers to offer an specific LED to be looked-up by a
-consumer.  Consumers are then able to describe the aforementioned LED
-and take a reference on it.
+On Wed, Apr 30, 2025 at 04:33:19PM -0700, Sean Christopherson wrote:
+> Eww.  That's quite painful, and completely disallowing enable_virt_on_load is
+> undesirable, e.g. for use cases where the host is (almost) exclusively running
+> VMs.
 
-For convenience, we're testing both sides of the API in just one test
-function here.  In reality, both the provider and the consumer would be
-logistically orthogonal.
+I wanted to stay generic... :-)
 
-CMD:
-  tools/testing/kunit/kunit.py run --kunitconfig drivers/leds
+> Best idea I have is to throw in the towel on getting fancy, and just maintain a
+> dedicated count in SVM.
+> 
+> Alternatively, we could plumb an arch hook into kvm_create_vm() and kvm_destroy_vm()
+> that's called when KVM adds/deletes a VM from vm_list, and key off vm_list being
+> empty.  But that adds a lot of boilerplate just to avoid a mutex+count.
 
-RESULTS:
-  [16:38:57] Configuring KUnit Kernel ...
-  [16:38:57] Building KUnit Kernel ...
-  Populating config with:
-  $ make ARCH=um O=.kunit olddefconfig
-  Building with:
-  $ make all compile_commands.json scripts_gdb ARCH=um O=.kunit --jobs=20
-  [16:39:02] Starting KUnit Kernel (1/1)...
-  [16:39:02] ============================================================
-  Running tests with:
-  $ .kunit/linux kunit.enable=1 mem=1G console=tty kunit_shutdown=halt
-  [16:39:03] ===================== led (2 subtests) =====================
-  [16:39:03] [PASSED] led_test_class_register
-  [16:39:03] [PASSED] led_test_class_add_lookup_and_get
-  [16:39:03] ======================= [PASSED] led =======================
-  [16:39:03] ============================================================
-  [16:39:03] Testing complete. Ran 2 tests: passed: 2
-  [16:39:03] Elapsed time: 6.255s total, 0.001s configuring, 5.131s building, 1.106s running
+FWIW, that was Tom's idea.
 
-Signed-off-by: Lee Jones <lee@kernel.org>
----
- drivers/leds/led-test.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+> +static void svm_srso_add_remove_vm(int count)
+> +{
+> +	bool set;
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> +		return;
+> +
+> +	guard(mutex)(&srso_lock);
+> +
+> +	set = !srso_nr_vms;
+> +	srso_nr_vms += count;
+> +
+> +	WARN_ON_ONCE(srso_nr_vms < 0);
+> +	if (!set && srso_nr_vms)
+> +		return;
 
-diff --git a/drivers/leds/led-test.c b/drivers/leds/led-test.c
-index bc85e4513745..ddf9aa967a6a 100644
---- a/drivers/leds/led-test.c
-+++ b/drivers/leds/led-test.c
-@@ -57,8 +57,37 @@ static void led_test_class_register(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, ret, -EEXIST);
- }
- 
-+static void led_test_class_add_lookup_and_get(struct kunit *test)
-+{
-+	struct led_test_ddata *ddata = test->priv;
-+	struct led_classdev *cdev = &ddata->cdev, *cdev_get;
-+	struct device *dev = ddata->dev;
-+	struct led_lookup_data lookup;
-+	int ret;
-+
-+	/* First, register a LED class device */
-+	cdev->name = "led-test";
-+	ret = devm_led_classdev_register(dev, cdev);
-+	KUNIT_ASSERT_EQ(test, ret, 0);
-+
-+	/* Then make the LED available for lookup */
-+	lookup.provider = cdev->name;
-+	lookup.dev_id = dev_name(dev);
-+	lookup.con_id = "led-test-1";
-+	led_add_lookup(&lookup);
-+
-+	/* Finally, attempt to look it up via the API - imagine this was an orthogonal driver */
-+	cdev_get = devm_led_get(dev, "led-test-1");
-+	KUNIT_ASSERT_FALSE(test, IS_ERR(cdev_get));
-+
-+	KUNIT_EXPECT_STREQ(test, cdev_get->name, cdev->name);
-+
-+	led_remove_lookup(&lookup);
-+}
-+
- static struct kunit_case led_test_cases[] = {
- 	KUNIT_CASE(led_test_class_register),
-+	KUNIT_CASE(led_test_class_add_lookup_and_get),
- 	{ }
- };
- 
+So instead of doing this "by-foot", I would've used any of those
+atomic_inc_return() and atomic_dec_and_test() and act upon the value when it
+becomes 0 or !0 instead of passing 1 and -1. Because the count is kinda
+implicit...
+
+But yeah, not a biggie - that solves the issue too.
+
+Thanks!
+
 -- 
-2.49.0.906.g1f30a19c02-goog
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
