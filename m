@@ -1,193 +1,120 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E4922FDF1;
-	Thu,  1 May 2025 03:52:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A946E1EA7FF;
+	Thu,  1 May 2025 03:58:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746071546; cv=none; b=iBB1dTw/I6z65WI4+5o2Qz8cgy9DXnwv3w66NxhWsjlwLOOcp+A6kqCS+K7Amt0SLTxUV20k6kXdOqoeCTNN20tCfX5SCf9Y1wMQh0Nhb/+uO/UpuDAcUeoWz08sRbWMPpKVDuY0pZAlxGkBRCgDbIgqagD3mqFJL9Tpc+sX6MI=
+	t=1746071921; cv=none; b=Dbe4pfcHDkbbWpzMa7zqzForI6t97DUGTh2+bGad3circqPi9qlgRplDRQVlJg05ZIuVEmqR3DCKTJ8UJ8Ch/mEVTJEA8DPa1Xi1HiX3Ne419M/16avZ8uHXyG2ZrpaA4zuUluCK36pUixYldoZolbbmkz7zgOUEAwFGs56wPZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746071546; c=relaxed/simple;
-	bh=39IOGPGemYqMgPsgi7Xt8KWzR7zEQRPrG3lVcmjfL64=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MEgmndEX15V7VSuo3riSItg/zzQMLO5DWgjwHYh8FVJQRo3ANI0Im7GcbnI3ZvKIGyJtHLYePa/gUgpzCi3QneR/LWbMAt/Mq5u9cPVQZQxyXFe6bsVI++3PULfN54zelrSdjRuzBg1b7Rerkh1+6M6bmi7p13HoYSa6aQdNEzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pUrl7qfO; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746071921; c=relaxed/simple;
+	bh=G2aJ3pAbgLg5NHkEUdxI0e6wMcaBaf0HBWVsr9BnEks=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sYCuUQKW/XRoW0sS3B4MbiwVGOjNhwX7dquBDMWVNT7UvazE3vPv2uv/FFBL+tRpXape/CWjSaL4qtIsE2RRF5hZ+d0+Zpmrdi4HNwrgPA59bQN4km+ffIGLNKfVyGuvaqlqqsapx7lsGZe1Q978qKfamtQWIJaEkN34oOkVh18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=fKIgAsS2; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pUrl7qfO"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746071532;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=x4IzOhxyRF1krYhh7iapiMZajQWSUqZZCDSXkt0jpIQ=;
-	b=pUrl7qfOqIBEI9lkJOE1EDQxJHigOA1j/ASbnBX9B0Xs3oHPH1cTHTiBTNrnKODyPgHF6p
-	veHPla/BOFnVJjmBTLkdlPu7Q8OSfdOJta+FVpbllfRsVXZ5RXzz4EKD9/PDgt2mNQKG0b
-	ni1EeXpopA6zawTiG1Sewva6gvS7z1s=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: netdev@vger.kernel.org
-Cc: Jiayuan Chen <jiayuan.chen@linux.dev>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	David Ahern <dsahern@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
-Date: Thu,  1 May 2025 11:51:08 +0800
-Message-ID: <20250501035116.69391-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="fKIgAsS2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746071912;
+	bh=4n11SxoWN0YILonn/vSdJNJ6QM9m2hutHhrMAwj0avE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=fKIgAsS2Oxnr7oRq0yLcqDOegGofhFteL0CLFYuHgqzG9ZDVc/qGvlJ2WpcrUuYB/
+	 kEZqiNECFVSetGxYCl5GxGYWXh0R37SDtTCPBGxjOx88BT2nu7bOXimloSmOzbeWWf
+	 9vmvUr5ivWfzbBOM2gmgxQrYl/ozXQOuz7d5dd9yT6F+8Cdyos+gx2aJ0oTDYlyVFZ
+	 gWnSZFSpe1Jt41IYgswA7bZLxR0JCzegXn6k8Q3du177iu88AFafjVFSTFHfc9+Ums
+	 LvjSKKuAwGakV1Ngrl+icgWgWVdcejd9dDKjzFvjBVR/x3RAOzZx5IbHU9CE0Lb23R
+	 geeFtsB+Uw2zw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zp0dy5rpzz4wyR;
+	Thu,  1 May 2025 13:58:30 +1000 (AEST)
+Date: Thu, 1 May 2025 13:58:27 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Ingo Molnar <mingo@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, "Rafael J. Wysocki"
+ <rafael.j.wysocki@intel.com>, Srinivas Pandruvada
+ <srinivas.pandruvada@linux.intel.com>
+Subject: linux-next: manual merge of the tip tree with the pm tree
+Message-ID: <20250501135827.214fac1f@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: multipart/signed; boundary="Sig_/QK4ZxLifvzrnrQVIqsgEjSA";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-For some services we are using "established-over-unconnected" model.
+--Sig_/QK4ZxLifvzrnrQVIqsgEjSA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-'''
-// create unconnected socket and 'listen()'
-srv_fd = socket(AF_INET, SOCK_DGRAM)
-setsockopt(srv_fd, SO_REUSEPORT)
-bind(srv_fd, SERVER_ADDR, SERVER_PORT)
+Hi all,
 
-// 'accept()'
-data, client_addr = recvmsg(srv_fd)
+Today's linux-next merge of the tip tree got a conflict in:
 
-// create a connected socket for this request
-cli_fd = socket(AF_INET, SOCK_DGRAM)
-setsockopt(cli_fd, SO_REUSEPORT)
-bind(cli_fd, SERVER_ADDR, SERVER_PORT)
-connect(cli, client_addr)
-...
-// do handshake with cli_fd
-'''
+  drivers/cpufreq/intel_pstate.c
 
-This programming pattern simulates accept() using UDP, creating a new
-socket for each client request. The server can then use separate sockets
-to handle client requests, avoiding the need to use a single UDP socket
-for I/O transmission.
+between commit:
 
-But there is a race condition between the bind() and connect() of the
-connected socket:
-We might receive unexpected packets belonging to the unconnected socket
-before connect() is executed, which is not what we need.
-(Of course, before connect(), the unconnected socket will also receive
-packets from the connected socket, which is easily resolved because
-upper-layer protocols typically require explicit boundaries, and we
-receive a complete packet before creating a connected socket.)
+  ac4e04d9e378 ("cpufreq: intel_pstate: Unchecked MSR aceess in legacy mode=
+")
 
-Before this patch, the connected socket had to filter requests at recvmsg
-time, acting as a dispatcher to some extent. With this patch, we can
-consider the bind and connect operations to be atomic.
+from the pm tree and commit:
 
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
----
- include/linux/udp.h      |  1 +
- include/uapi/linux/udp.h |  1 +
- net/ipv4/udp.c           | 13 ++++++++++---
- net/ipv6/udp.c           |  5 +++--
- 4 files changed, 15 insertions(+), 5 deletions(-)
+  c435e608cf59 ("x86/msr: Rename 'rdmsrl()' to 'rdmsrq()'")
 
-diff --git a/include/linux/udp.h b/include/linux/udp.h
-index 895240177f4f..8d281a0c0d9d 100644
---- a/include/linux/udp.h
-+++ b/include/linux/udp.h
-@@ -42,6 +42,7 @@ enum {
- 	UDP_FLAGS_ENCAP_ENABLED, /* This socket enabled encap */
- 	UDP_FLAGS_UDPLITE_SEND_CC, /* set via udplite setsockopt */
- 	UDP_FLAGS_UDPLITE_RECV_CC, /* set via udplite setsockopt */
-+	UDP_FLAGS_STOP_RCV, /* Stop receiving packets */
- };
- 
- struct udp_sock {
-diff --git a/include/uapi/linux/udp.h b/include/uapi/linux/udp.h
-index edca3e430305..bb8e0a749a55 100644
---- a/include/uapi/linux/udp.h
-+++ b/include/uapi/linux/udp.h
-@@ -34,6 +34,7 @@ struct udphdr {
- #define UDP_NO_CHECK6_RX 102	/* Disable accepting checksum for UDP6 */
- #define UDP_SEGMENT	103	/* Set GSO segmentation size */
- #define UDP_GRO		104	/* This socket can receive UDP GRO packets */
-+#define UDP_STOP_RCV	105	/* This socket will not receive any packets */
- 
- /* UDP encapsulation types */
- #define UDP_ENCAP_ESPINUDP_NON_IKE	1 /* unused  draft-ietf-ipsec-nat-t-ike-00/01 */
-diff --git a/net/ipv4/udp.c b/net/ipv4/udp.c
-index f9f5b92cf4b6..764d337ab1b3 100644
---- a/net/ipv4/udp.c
-+++ b/net/ipv4/udp.c
-@@ -376,7 +376,8 @@ static int compute_score(struct sock *sk, const struct net *net,
- 
- 	if (!net_eq(sock_net(sk), net) ||
- 	    udp_sk(sk)->udp_port_hash != hnum ||
--	    ipv6_only_sock(sk))
-+	    ipv6_only_sock(sk) ||
-+	    udp_test_bit(STOP_RCV, sk))
- 		return -1;
- 
- 	if (sk->sk_rcv_saddr != daddr)
-@@ -494,7 +495,7 @@ static struct sock *udp4_lib_lookup2(const struct net *net,
- 
- 			result = inet_lookup_reuseport(net, sk, skb, sizeof(struct udphdr),
- 						       saddr, sport, daddr, hnum, udp_ehashfn);
--			if (!result) {
-+			if (!result || udp_test_bit(STOP_RCV, result)) {
- 				result = sk;
- 				continue;
- 			}
-@@ -3031,7 +3032,9 @@ int udp_lib_setsockopt(struct sock *sk, int level, int optname,
- 		set_xfrm_gro_udp_encap_rcv(up->encap_type, sk->sk_family, sk);
- 		sockopt_release_sock(sk);
- 		break;
--
-+	case UDP_STOP_RCV:
-+		udp_assign_bit(STOP_RCV, sk, valbool);
-+		break;
- 	/*
- 	 * 	UDP-Lite's partial checksum coverage (RFC 3828).
- 	 */
-@@ -3120,6 +3123,10 @@ int udp_lib_getsockopt(struct sock *sk, int level, int optname,
- 		val = udp_test_bit(GRO_ENABLED, sk);
- 		break;
- 
-+	case UDP_STOP_RCV:
-+		val = udp_test_bit(STOP_RCV, sk);
-+		break;
-+
- 	/* The following two cannot be changed on UDP sockets, the return is
- 	 * always 0 (which corresponds to the full checksum coverage of UDP). */
- 	case UDPLITE_SEND_CSCOV:
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 7317f8e053f1..55896a78e94b 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -137,7 +137,8 @@ static int compute_score(struct sock *sk, const struct net *net,
- 
- 	if (!net_eq(sock_net(sk), net) ||
- 	    udp_sk(sk)->udp_port_hash != hnum ||
--	    sk->sk_family != PF_INET6)
-+	    sk->sk_family != PF_INET6 ||
-+	    udp_test_bit(STOP_RCV, sk))
- 		return -1;
- 
- 	if (!ipv6_addr_equal(&sk->sk_v6_rcv_saddr, daddr))
-@@ -245,7 +246,7 @@ static struct sock *udp6_lib_lookup2(const struct net *net,
- 
- 			result = inet6_lookup_reuseport(net, sk, skb, sizeof(struct udphdr),
- 							saddr, sport, daddr, hnum, udp6_ehashfn);
--			if (!result) {
-+			if (!result || udp_test_bit(STOP_RCV, result)) {
- 				result = sk;
- 				continue;
- 			}
--- 
-2.47.1
+from the tip tree.
 
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/cpufreq/intel_pstate.c
+index 25830e5d76e8,2fc619ba6309..000000000000
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@@ -598,10 -598,7 +598,10 @@@ static bool turbo_is_disabled(void
+  {
+  	u64 misc_en;
+ =20
+ +	if (!cpu_feature_enabled(X86_FEATURE_IDA))
+ +		return true;
+ +
+- 	rdmsrl(MSR_IA32_MISC_ENABLE, misc_en);
++ 	rdmsrq(MSR_IA32_MISC_ENABLE, misc_en);
+ =20
+  	return !!(misc_en & MSR_IA32_MISC_ENABLE_TURBO_DISABLE);
+  }
+
+--Sig_/QK4ZxLifvzrnrQVIqsgEjSA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgS8WMACgkQAVBC80lX
+0GwqQQgAji7W2d/lW1dfKsKfDPnBPWidJohW3z41s1EIRI9+FudLVKZJXd9pxJWW
+mZYIT00s8Xgz0mt2Vlv87MU2tFanXh/e+3v7ojVgeGhrM/NeXcwM0+cfyIpuj/m2
+Jvnx8PTlBg4U3/iSiYifAorXERvmbK6gangInEWNJ0xkp0cV9ls7KVRn2zG2/kTo
+vLxsdYVgVSA47mcD3RKVVONQJJYqDiIphmY6lFQ7E0kYUCyjYLjegPDObMiHUcwG
+rfnRJP5lQOfstULzPNtuG9/9Rsu8wzrh6GCa2cxxo/eFXWSUGyb7sF5hzfGK3V4P
+zi5RT7suqEuopCKW6o+eg4PHw3J7Qw==
+=sh4e
+-----END PGP SIGNATURE-----
+
+--Sig_/QK4ZxLifvzrnrQVIqsgEjSA--
