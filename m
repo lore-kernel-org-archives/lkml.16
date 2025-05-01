@@ -1,138 +1,111 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D11D7202F67
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41321EA7C6;
+	Thu,  1 May 2025 15:03:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746111735; cv=none; b=cUg+6ws77U3RP91cok/6hE+pZu0xWqnh5QTDdQsy4lTImLmv0kbiZUFdAwQ1SuCaEXWdrB4urMt/4dn0m6LlMe4mhjpSOg3Jmel1KrOop8Bv5ExIetX3xxB5ZnoCqOeJMMEXiGuIaxeRror9Hv4kzXCKInHBbu6MMmvP4B/NVIM=
+	t=1746111791; cv=none; b=A1NB3QJuSlt0AQJcIAzD5Glj4GSf98aU4GhqvCEBi9zz/UQ/v3vlbQl75P/LWG3EFuuXHRy2XnBKrZ6KQF3tIKpxURGOumJ3nyWyqS8zTo/GUqEeWFwZEbsjq0wo17l0W7GFY8VJkuQhXmsw1/P6PMMZKcSwRKirm3FTa4ylEus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746111735; c=relaxed/simple;
-	bh=B3v13NXCER5k3tKhwX7vqb0mye7ltzvO1U+oUASNdgU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bAAPETVn3VRriHaUusDpU3he5noJHQHcOZxhSg2aADaufhDisqcg6HsQF2McbwLOarFlEPY4e5qBIcRrDbXtTG76N2Fipw6ScmxiTQUhT+mGgT9SvhI4etW5USNr+mY5YCjh7CVqRIo/gpFuaFowOdmnr07Vn8JG9WQf+gZ0g7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cJZzoNfK; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746111791; c=relaxed/simple;
+	bh=4ySaPdEMd4+Vb4yQ+0YUSkKNLjFLCkYhYBoAAExMs3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mkA40cvOe/OtEv8hBUGlPDxu68SZALFpXB3HobIqYdNeHwgSfoTWLTJZ5JUaYhONFPxWvst8EFgVOjLN10UQWtklOi2tY02YJ5IR9q9NZJ1UFQwpGz/Bl1d7ChOcc8FtSc0eCQ0qGX8rybZc9CV1WKY1Ja0eSpow47+EvI3u3GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QE9K7S0F; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cJZzoNfK"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d4ff56136so1499795e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 08:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746111732; x=1746716532; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0Z1CSMjo4bwXac777IKPq+E/WNf0vRomoDLRk/F823M=;
-        b=cJZzoNfKaFVs6Wa631fHAnHWOWAi9tKBcGDVbS7PCUwViKCuPJ6mw81yJWwjhxjP7I
-         GzpLWXRPuurO5a9CKsGQVBD5gFO20r5wziwHOAMIhBjCTaGvvmxrRGskZn8NmFsAGRqb
-         PiMBPpaePBnbC0n0wLuH1/Y8jUICHDOJPP9q+GclCkrq9GtV2yhg804ykRTJU9qpGzIr
-         H86xd3uqLPjnQoNFc2TCH/3no813MUhZRClYrlVzUFcm7/Ntg1EBFwrzjFYzNfLTQ9eb
-         nnlWJZEnPNmrAa7t9szWIB9Z1E+On8v9iuTZpSxcbge0NPSBYuWCzkUtLTiITUHjQgcH
-         GTuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746111732; x=1746716532;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0Z1CSMjo4bwXac777IKPq+E/WNf0vRomoDLRk/F823M=;
-        b=OC+AgpETu6bQjCCu4p69uPItM+/oH1IlFNIaFenhUD7RpSQnTN+XG4jYW26cfq4fpj
-         xhL3SbXMghz8oAf8d9dVAUT1zGr8J16ozAyjenD4jmNahNIN/FzfAmyiF6S6Ax1o+kiW
-         +o3H6tmG+VvjjYKCVMajC7eTtptYoZj7BIhGZ7Cj0C4VZY8V6FRvW0wmXn9QtXiJGbSp
-         QU6eoGzogBfjxY6++Os2kLgA660lgxGgJqf84ucF0tXk1lPHXbbyM6to1815XNTIRq8d
-         /v8q2zDMBOD3Fk8nuuGme7/9I3cMbGNHKnzx2oxRJbCyr7cX3v93QYlCEn0rhj8Wtn2J
-         nl5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXIHrP+nkMarlkBAsWiBrzaES4doFJrravgyzz8CDpV1GsFco+uy2LR2i0H9O4qo4sPT3mkMPwhjCKdL5Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGRYR8+qu0kIxGt8qnVVdXabLha203HDqP4naRxgmwIpdyepxu
-	7zZk44Suu+77VY0AyNBxJWJAXWILyhReojQYO2dCxd7I5ZcIdWJlmsChYadnIqg=
-X-Gm-Gg: ASbGnct9mKxcwtaF/AhNO6QsBVKMSWBmucWeKiyYyHQYTwsjny8A7/q+bqzPMUie2Cm
-	XYxWIUYCqmgXqI9NQrmFGBMLaaf3a7/aOy2x8NFF5TvxEFPGzOmYoF/hmliMPnaG91e3Xhx0BRA
-	JQ4iL8InwQGnYZD9pc7uilrdvsCoXxity+P6bVuQc/UHw/HP8prEFtMOf26oe6l9+IHsHn4mjbW
-	76NsUKdY2tDXZpbkfSxSRMdGp4poUh3359eyuOzWYvsjVUm6HIvAQrAFH0pDWCIOKLoNi3Bv5DL
-	Ow+j7oAq+cZQyXcQplERjrbyYOB66ks39C6xXBygnRa6/8mLMJVO99F9AMw=
-X-Google-Smtp-Source: AGHT+IE0ENZdHGkQvgGoH2mnDKlJJ809LkSCtAMhmB4rpgM9Z08EWOHgpBqjUop6OrvJ3Ac5c98Akg==
-X-Received: by 2002:a05:6000:1846:b0:3a0:75ff:261f with SMTP id ffacd0b85a97d-3a094178fb0mr816964f8f.11.1746111731899;
-        Thu, 01 May 2025 08:02:11 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a4702csm1033190f8f.40.2025.05.01.08.02.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 08:02:11 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 01 May 2025 17:02:01 +0200
-Subject: [PATCH v2 3/3] spi: cadence-quadspi: Assume device could match via
- platform
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QE9K7S0F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=SknNweDJMYv6Cc7JXUCuginAJHi4T0ZKllMpOn1Yf9A=; b=QE9K7S0FqJXdRMiI2MUQfyFVKN
+	zJkaOZZAvX0UK9xBOJnD6xr1oo4dLko0vESRIIkP4sjHHPxZkleb2D8Zai321exEYA2JJr82ElX7s
+	y72vsCa48dbNhj3sR2u6AvvpDc6GUftTpqrd7fLDiVr8l4ZJcPOvCc/B4Kso/X5VwtY001koeorb7
+	w0lpR1LpdbzQwtNNGzQXqNnli6Sbl3pH+QAdCVePhkf3FUFd/ngVNiv41q8dPOdm8t1mbTM/UmJ5P
+	NuryBBTCcNBBOjT/+JRWnUfQQL+DhMwA+igl0308JTBNEPRBnnqN+OImNHFtw2Imib6YH9ERSKUcP
+	cmUpe09A==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAVQk-00000000oH8-33tB;
+	Thu, 01 May 2025 15:02:30 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 1B7DC30072F; Thu,  1 May 2025 17:02:30 +0200 (CEST)
+Date: Thu, 1 May 2025 17:02:29 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Brendan Jackman <jackmanb@google.com>
+Cc: Christoph Hellwig <hch@lst.de>, chenlinxuan@uniontech.com,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Peter Huewe <peterhuewe@gmx.de>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Dmitry Vyukov <dvyukov@google.com>,
+	Andrey Konovalov <andreyknvl@gmail.com>,
+	Juergen Gross <jgross@suse.com>,
+	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kvm@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-integrity@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	llvm@lists.linux.dev, Winston Wen <wentao@uniontech.com>,
+	kasan-dev@googlegroups.com, xen-devel@lists.xenproject.org,
+	Changbin Du <changbin.du@intel.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce
+ CONFIG_NO_AUTO_INLINE
+Message-ID: <20250501150229.GU4439@noisy.programming.kicks-ass.net>
+References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
+ <20250429123504.GA13093@lst.de>
+ <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-n-smatch-fixes-v2-3-d2ad9c1f2e67@linaro.org>
-References: <20250501-n-smatch-fixes-v2-0-d2ad9c1f2e67@linaro.org>
-In-Reply-To: <20250501-n-smatch-fixes-v2-0-d2ad9c1f2e67@linaro.org>
-To: Mark Brown <broonie@kernel.org>, 
- Nicolas Ferre <nicolas.ferre@microchip.com>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>, 
- Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
- David Rhodes <david.rhodes@cirrus.com>, 
- Richard Fitzgerald <rf@opensource.cirrus.com>
-Cc: linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
- patches@opensource.cirrus.com, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1483;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=B3v13NXCER5k3tKhwX7vqb0mye7ltzvO1U+oUASNdgU=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE4zs9gNikiLaGr7Pqc78Xp2+VrLMMAjp88bwS
- hB6yBtxryWJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBOM7AAKCRDBN2bmhouD
- 11VpD/wNiGdprHFBTqCt2CnLkmyOfWKabgzUmeNPQie00KzOgJVHUUjWU4fQaeI30mVt9rfpu10
- llp9+NafbiQoqC/9fHr8ckF1T8bTk0UxAAmqyeIoxupKtWuT8SpFRVhzfWUWaxuAzgzji3dPDHK
- ljhiroQ5K9bYLCIjJ3DMJe2ajG458Q2H7Hj2Pgm0oyGZP6zVIA7fnv4p26E2xOIBkGaZWo57pFe
- bjmmIUqrklHrbwgPT9JjxthHgNtY9wYmOEietCJq06B9o3ATCvBI8OsvrP2VaachROYBHaEKiM8
- 9kifoZWrIGLKbeMbGnJwami0uAWC1TckkzhDv7mVsqLKfToy9rFkSof7/756aD555PbJ9WQ55WJ
- ctyJMPc/lNwv7/qwagVd5gAb0lMZ3MWpgS+ZwEW4JQADcjC/B2Qvl2z8S05COKdPgBV8VaX7Y8p
- UuPfvFDlcmfyuy9ehhlRV3iO/nErNWoZK3M5rfTS/3jBgM2xcLy3CkdJ6+r6Ec2DJBVGtKG65Tu
- Tg87N0s6R+JDC6j2EAjrHOK2giHvXT23YzVbekBecuiJUBmydauJwxTtDQmzpDRFbWz0cB9v+ti
- 5xN+x7ArX5Zwm4w2++0vpqUKE32Jr1CVH3vNQcABVwPWPvo6bd0gkioWh9nKgr83W+A39JkCwYD
- 09YLX6LPBaP50/g==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
 
-Driver has only of_device_id table, however it also has MODULE_ALIAS()
-for platform name, thus assume there is a configuration where this can
-be loaded outside of OF system.  In such case of_device_get_match_data()
-will return NULL, which is already checked in one place of probe()
-function but not in the other, leading to Smatch warning:
+On Thu, May 01, 2025 at 02:19:47PM +0000, Brendan Jackman wrote:
+> On Tue Apr 29, 2025 at 12:35 PM UTC, Christoph Hellwig wrote:
+> > On Tue, Apr 29, 2025 at 12:06:04PM +0800, Chen Linxuan via B4 Relay wrote:
+> >> This series introduces a new kernel configuration option NO_AUTO_INLINE,
+> >> which can be used to disable the automatic inlining of functions.
+> >> 
+> >> This will allow the function tracer to trace more functions
+> >> because it only traces functions that the compiler has not inlined.
+> >
+> > This still feels like a bad idea because it is extremely fragile.
+> 
+> Can you elaborate on that - does it introduce new fragility?
 
-  drivers/spi/spi-cadence-quadspi.c:1942 cqspi_probe() error: we previously assumed 'ddata' could be null (see line 1885)
+given it needs to sprinkle __always_inline around where it wasn't needed
+before, yeah.
 
-Driver should be consistent, so assume device can be matched via
-platform bus and of_device_get_match_data() can indeed return NULL.
-This is also possible with malformed DTS on OF-platform: no unit address
-and device node name matching driver name.
+Also, why would you want this? function tracer is already too much
+output. Why would you want even more?
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/spi/spi-cadence-quadspi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-index c90462783b3f9f05e477d337ab4187224992c0a0..fe0f122f07b0206e80cf89bd031106bf8051c789 100644
---- a/drivers/spi/spi-cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1949,7 +1949,7 @@ static int cqspi_probe(struct platform_device *pdev)
- 
- 	host->num_chipselect = cqspi->num_chipselect;
- 
--	if (ddata->quirks & CQSPI_SUPPORT_DEVICE_RESET)
-+	if (ddata && (ddata->quirks & CQSPI_SUPPORT_DEVICE_RESET))
- 		cqspi_device_reset(cqspi);
- 
- 	if (cqspi->use_direct_mode) {
-
--- 
-2.45.2
 
