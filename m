@@ -1,56 +1,59 @@
 Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E01F1944F;
-	Thu,  1 May 2025 07:29:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14DB27510B;
+	Thu,  1 May 2025 07:30:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746084600; cv=none; b=egOpPRy7d0wDvI4I4akV+jdhLxAZmPpOeAxs2Ag2OCKGBMr/DzZdCt8flog7fbuIAL7WRF5t2fa2IpQl3/+N3/WRo51ltjw9UMTAFPwRQF3t77ygasUNezYAOh7PBvJLejYi8YJVf9XCGK8gzHTzKxuZWFmsumdNsKqis48wUpE=
+	t=1746084604; cv=none; b=FSXTm89JxUKKTS7eeXgcDGgvznTfjSy82+6uXX9JmXJROteZiFbdo1ONybj7UaPdmePeUJ9+weFSgf3PejqJtU91mbNFtnt0Fy6igDSTutE50qJDO22MtlwPEtOXvi0GFR1v59ANWuwACWGwc56DapY0RdBr4HLQzoqOiC75wDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746084600; c=relaxed/simple;
-	bh=mCi+Y5sU53KixNav9bVI5qkwBWVNWOO6HjX8F20WFrI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Iwo5x8WnPtMLaVmYs4fiOe2fQmwhyoLJ8edwHNYvdXYJYro8a/QuFK8byDGbrNGd4QRyNhuZvnyt6GFt3Ub3M+wx5PaGeBnw/EZgMbCee0w6wyqNCYpaUQEo/YwH+hTKMf22qPh4ZW7glBHcCL/43Mpqx54g6xVp3WQASZqogcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=CA+R8Ie4; arc=none smtp.client-ip=198.47.19.246
+	s=arc-20240116; t=1746084604; c=relaxed/simple;
+	bh=qmJzK1KsFbjxFaviZGe+X3O14b1NctKbwqRyJwKzkzU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LA57Et3ivZDJzRBWTmiOcgvYviMrQnWyXqC8jpfDUxib1nr3UVi3kArUmpl8ui9SnGkwmIEVD5teoj/Oa1ZkYVDDdKdtqTqS1TSLMHy5VECjvjzHQ/HBnfMosVfz4RDvdghOzlerGeYyRHiWgcFcApUGeC2Cr/kJ8hUSdlmmZ54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wXc/nkaJ; arc=none smtp.client-ip=198.47.19.246
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="CA+R8Ie4"
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5417TohX4160577
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wXc/nkaJ"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5417TviN4160581
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 1 May 2025 02:29:50 -0500
+	Thu, 1 May 2025 02:29:57 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746084590;
-	bh=pz6DuHsBQP2Lu67I6tzYBvTySwyfcVWJmFrJgbkPkr8=;
-	h=From:To:CC:Subject:Date;
-	b=CA+R8Ie4csJpihIAOecGuNRzdbeHeRspUM2iW5rQH2mfeayYPGHw8dgt6JNLDh9yS
-	 DI1rnsGbhDL8I2Y4t1Rz5ZPOORGfVbVQmhWzSuY6BtvsgCaay0pEbvFyrAEyOHlJEn
-	 adK/UXBZtYLzpKdS1kXnff0Q0fykY8XccFQiczJA=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5417Tobc059010
+	s=ti-com-17Q1; t=1746084597;
+	bh=Du7fmxFaT2Dho3YcT2SozYDlmnXc97lplTOiOtsjxW4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=wXc/nkaJB+jSltMUiiT6YwAkhWrjXnRGMqAQG7WiY2e2BkdpWCVWMi1ixG5TR9qHE
+	 SsRuNepqFoH/ChO90c1xVAgbH5iWM6Nxan26f4G5gH/i7GgsQdkxWIFkNBUxuzLkk7
+	 i7njFak3BI+iCP3haFfzWvLwiXtZpPKUIXT3Blpk=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5417TvLA119713
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 1 May 2025 02:29:50 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+	Thu, 1 May 2025 02:29:57 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
- May 2025 02:29:49 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ May 2025 02:29:57 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 1 May 2025 02:29:49 -0500
+ Frontend Transport; Thu, 1 May 2025 02:29:56 -0500
 Received: from localhost (ula0502350.dhcp.ti.com [172.24.227.38])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5417TnA4007282;
-	Thu, 1 May 2025 02:29:49 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5417TuHa102658;
+	Thu, 1 May 2025 02:29:56 -0500
 From: Paresh Bhagat <p-bhagat@ti.com>
 To: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>
 CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
         <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>
-Subject: [PATCH 0/3] Add support for AM62D2 SoC and EVM
-Date: Thu, 1 May 2025 12:59:20 +0530
-Message-ID: <20250501072923.1262414-1-p-bhagat@ti.com>
+Subject: [PATCH 1/3] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
+Date: Thu, 1 May 2025 12:59:21 +0530
+Message-ID: <20250501072923.1262414-2-p-bhagat@ti.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250501072923.1262414-1-p-bhagat@ti.com>
+References: <20250501072923.1262414-1-p-bhagat@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,37 +64,64 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch series adds support for the AM62D2 SoC and its evaluation
-module (EVM) board. The AM62D2 SoC is a high-performance Digital
-Signal Processing (DSP) device with a quad-core Cortex-A53 cluster,
-dual Cortex-R5F cores, and a Cx7 DSP core with Matrix Multiplication
-Accelerator (MMA). It features a range of peripherals, including
-multichannel audio serial ports, Ethernet, UARTs, SPI, I2C, USB, and
-more.
+The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
+targeted for applications needing high-performance Digital Signal
+Processing. It is used in applications like automotive audio systems,
+professional sound equipment, radar and radio for aerospace, sonar in
+marine devices, and ultrasound in medical imaging. It also supports
+precise signal analysis in test and measurement tools.
 
-The EVM board is a low-cost, expandable platform designed for the AM62D2
-SoC, having 4GB LPDDR4 RAM, Gigabit Ethernet expansion connectors, audio
-jacks, USB ports, and more.
+Some highlights of AM62D2 SoC are:
 
-This patch series includes a new device tree source (DTS) file, updates
-in device tree bindings and pin control header file.
+* Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster.
+  Dual/Single core variants are provided in the same package to allow
+  HW compatible designs.
+* One Device manager Cortex-R5F for system power and resource management,
+  and one Cortex-R5F for Functional Safety or general-purpose usage.
+* DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
+  single core C7x.
+* 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
+  which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
+  and TDM Audio inputs and outputs.
+* Integrated Giga-bit Ethernet switch supporting up to a total of two
+  external ports with TSN capable to enable audio networking features such
+  as, Ethernet Audio Video Bridging (eAVB) and Dante.
+* 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
+  controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
+  peripherals.
+* Dedicated Centralized Hardware Security Module with support for secure
+  boot, debug security and crypto acceleration and trusted execution
+  environment.
+* One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
+* Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
 
-Bootlog: https://gist.github.com/paresh-bhagat12/1757cc54a39f1baf883341af2a383db6
-Tech Ref Manual: https://www.ti.com/lit/pdf/sprujd4
-Schematics: https://www.ti.com/lit/zip/sprcal5
+This adds dt bindings for TI's AM62D2 family of devices.
 
-Paresh Bhagat (3):
-  dt-bindings: arm: ti: Add bindings for AM62D2 SoC
-  arm64: dts: ti: Add pinctrl entries for AM62D2 family of SoCs
-  arm64: dts: ti: Add support for AM62D2-EVM
+More details about the SoCs can be found in the Technical Reference Manual:
+https://www.ti.com/lit/pdf/sprujd4
 
- .../devicetree/bindings/arm/ti/k3.yaml        |   6 +
- arch/arm64/boot/dts/ti/Makefile               |   3 +
- arch/arm64/boot/dts/ti/k3-am62d2-evm.dts      | 449 ++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-pinctrl.h           |   3 +
- 4 files changed, 461 insertions(+)
- create mode 100644 arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
+Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+---
+ Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
+diff --git a/Documentation/devicetree/bindings/arm/ti/k3.yaml b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+index 18f155cd06c8..3183089dcfbf 100644
+--- a/Documentation/devicetree/bindings/arm/ti/k3.yaml
++++ b/Documentation/devicetree/bindings/arm/ti/k3.yaml
+@@ -31,6 +31,12 @@ properties:
+           - const: phytec,am62a-phycore-som
+           - const: ti,am62a7
+ 
++      - description: K3 AM62D2 SoC and Boards
++        items:
++          - enum:
++            - ti,am62d2-evm
++          - const: ti,am62d2
++
+       - description: K3 AM62P5 SoC and Boards
+         items:
+           - enum:
 -- 
 2.34.1
 
