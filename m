@@ -1,925 +1,314 @@
-Received: from out.smtpout.orange.fr (out-71.smtpout.orange.fr [193.252.22.71])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE177211276
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF25A224B12;
+	Thu,  1 May 2025 17:13:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746119571; cv=none; b=Cb1/2Tn1hz68d5ELNzLw9VFLOmy9zGl4FH2hvT4p7mhRonCf3fyVV0ZgpqkY6v4nilJbNQXySgWjjEJh1jdkuaKSNmLJeheJhNglxE2soJ58fEKFlDx9eDPaVfPKoPrSBhoS+sdBpE70BFhph5LPArF/VVS3rRFfYa3RcEgTiac=
+	t=1746119582; cv=none; b=VClkQqEFGMVQQ2EiY1NmTq2NFh8jS4PF/b8+Ld1JMrLFsP5DMUSKojTWfnBNzC41l6+bshUnbzP3Epw5DkLeTkxN/POd6urbhDvzCn3FxrgLB6wc7+6YhNoj5mfZCgcdSSOPQ7RN8Ew9N+Ij1Fh9XeP+TSD97+2DHRmCvMpFOKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746119571; c=relaxed/simple;
-	bh=znTNgKuM+Kdh11nx2cOz5b0jCGawNhIe749uOoquAx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cTw5EkEqILQ3MpGqhuuO8R3FwHrosbVF1R4yMkozQ1EsUztsjRTCrQdmrsq5wUj7SGr+aE3aamDFi9Kr7cTxyL7BoX+C1Za7wCjlGjS8mmYC7zDE+7RNH6yN1N3k3w3hLtFlRpiETfl8rsh4D0Srm4Rpbwrqe/uMTRTS1ya59vA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=LZQMsr/5; arc=none smtp.client-ip=193.252.22.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746119582; c=relaxed/simple;
+	bh=QDoeIx3cj12+oYgTT+5jfbH8MrY186jvvXKAi3a3HsI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Glcap/WViCQCHvumdtsNTXkHX68Xc5u5SJm8HL4wqCbKEt31FDEFMl4vcqF2fpgNIr/HBHybfbf/G2CdtCm2UqAH9/OQdx8ZhVJoNdP0hyH6Coi1/9k+aTMd75CfZfWPKkp3tYkEB+AVfxyR11EAN5u0okLXie5X5qrMU2iCLhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvpNdMQF; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="LZQMsr/5"
-Received: from localhost.localdomain ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id AXSRuCuCtBFkWAXSbug8ng; Thu, 01 May 2025 19:12:38 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746119558;
-	bh=qOcy8AYkmX/zFRzaT77fMnpxYpCHiP9nmYslGcl2M2A=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=LZQMsr/5qgDHNiDxi6ifYLO9aUEkxq+pe2bob5u7PsyvcDNSD6MdOeIydBr5M3Ayh
-	 zmqJJjmUOOaj1lhgcEZNJbUbeteTbKPKU2yxIvsQnFF4sYvVkMjgT6I7H47EaEaons
-	 95DOaLupQplUGVxdBOn3O4GajU+0CxF4nI6vgVQp1zCaZ2govH1Rok737jONQaY7Gt
-	 myX6zjjkdei1/U5uwWq1ERgyWQbO6rXHTL3d5tKr1GkRwFmC6NBR1z7C4bgsdw7zkH
-	 TjT5NJI92Gp13uIAHG3V3Yv8L2nKQE8l64PB63STOUpgsXIiBa9bwm/rgMfCy0zsSS
-	 xU5A2AKLpKjig==
-X-ME-Helo: localhost.localdomain
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Thu, 01 May 2025 19:12:38 +0200
-X-ME-IP: 124.33.176.97
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Oliver Hartkopp <socketcan@hartkopp.net>,
-	linux-can@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Subject: [PATCH v2] can: dev: add struct data_bittiming_params to group FD parameters
-Date: Fri,  2 May 2025 02:12:10 +0900
-Message-ID: <20250501171213.2161572-2-mailhol.vincent@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvpNdMQF"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf680d351so12364225e9.0;
+        Thu, 01 May 2025 10:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746119579; x=1746724379; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlHHbc5+ml6sPmEKiUUZJGlD/QUxB9ALkFtouoIfjNg=;
+        b=AvpNdMQFCmzTo5WArM1CesKy2eprWQCWvddmxm6vJXWTXbKCOFw2PnhcdFgfXivghD
+         9+SJmHPvFHCLqRzDkKOyjGMhXWUVru4l2rB5cgZqAmdf4x3a0MCtXIpHaGjtL8NNWGiN
+         337pD/NqCUMQWwJArRuEmtYqCsjZyO6MlHrHZfTKQA4hOiCR9e2xzVl5WZ0DqK0wR2NA
+         WXAddFuCiEOI2IGQbMShgiv1ZKysF3nS2FS+2E/0CQuQT5iCSvth3OZUUYH3/acuXKwn
+         ST4eyQ12bxWGR+5d1MoTOjWw7Bmw0Ar8PKlGiqnYteyjab/LJ9obUMPA90VZXY13xfJB
+         +ARQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746119579; x=1746724379;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZlHHbc5+ml6sPmEKiUUZJGlD/QUxB9ALkFtouoIfjNg=;
+        b=Qk2i4RTYIDW+gRbT0N1UwuzWOzw7SaoDPbyKPnHCYkqtwjgCZCYnMnY8cO0fOmKwzI
+         dOvewCfqa0fMvEZLRxVMgCxb3yGgWtOdarhWOQasQ4jyoPftGey3EkLRlB2PF+o5UqcT
+         sozyJaGg9+9sDPmZbDqk2Z+H1cvqGqU4qPvdx9+IWUf/U+4XTxq/JbAIWiuAJjW2UlZL
+         25BtxqFIsegajSL95ND1teCmEW+lL2lsQ8uYyPI3WMT+psHbsdLLtqFHQiPGF8JWpMR1
+         drG9PcqvbWNVTtJPluNoqqpuO5qbuGr09ouQue53kowtXVUOEqrxACIai+7kFMO1HAu9
+         sGFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYFyXGbozfZZTdtuGkwzD+Qnq707EI2o74pk7lFwrUh7uJNFYxYkktKb8YJgJOSzQhPx3Q3/PHzJFB8dlQ3Q==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCl785PlkjMmU4vONIJaqFU0XiVMjrvaXMQHizDdkz3tKKq8K7
+	Y9E1YhSU8G3+hmMwiKZnNjj9dIpxeS2xt4ueTRvXanL//z99BvRJ
+X-Gm-Gg: ASbGncsAc/dbUDnYIu6/IGZDXhB0mOeRo9etbbuR6r1zi1PrWk3xTbUUbIKOWCiSFZ/
+	SO0u6xF/E9omxCHdrMnZQ7GNT6AQPF3uKMx3cO231kJHs5ZunXJAKxIPEz89pHmbAyhQ9SNfGPk
+	qRQMhTNGrpVvTbzezwlWzB1z1CollOD0hBVAdUhVnZa9ISoKBspPnfQfuBvekgEHe+yVaL8VYV8
+	takUi+7YyV18vzYRrUXWhTw9CV/A3T4KqwjXarA3qSrmZPukno+StDkmBwQXhRLNMmHjVCr6a9L
+	1d7Wqfc8jommnTulAkZZk4rQYDDiKxok1CUv+umhk7USAoln7aBzvg==
+X-Google-Smtp-Source: AGHT+IGcXSdHg2HJQYNHP6oKCpJrNvY9UmPbAbusOzRBHoxuieydlL/Krp09qHR9skqPF4gt/PYS9g==
+X-Received: by 2002:a05:6000:438a:b0:3a0:7c91:4aaf with SMTP id ffacd0b85a97d-3a094058b54mr2496196f8f.19.1746119578675;
+        Thu, 01 May 2025 10:12:58 -0700 (PDT)
+Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a3e04asm1340788f8f.18.2025.05.01.10.12.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 10:12:58 -0700 (PDT)
+Message-ID: <22f6f12b-d002-4ada-834e-00ef0073bd9e@gmail.com>
+Date: Thu, 1 May 2025 19:12:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=38660; i=mailhol.vincent@wanadoo.fr; h=from:subject; bh=znTNgKuM+Kdh11nx2cOz5b0jCGawNhIe749uOoquAx0=; b=owGbwMvMwCV2McXO4Xp97WbG02pJDBnCq3OvftL9mcSubpo/z5kx1LPL5MjTb937TK85ty/zi Aq4l/2ro5SFQYyLQVZMkWVZOSe3Qkehd9ihv5Ywc1iZQIYwcHEKwEQ8NjMy3HR7bHXe6lbzQ+57 69xFWdbXB945IP7g+6kdVu4P/nbUlzIybFy0NmVDfbRoSoek1C7xR/vDl0cuC5heqOi5SWLniQ5 OVgA=
-X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp; fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
+To: Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ Ralf Jung <post@ralfj.de>
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
+ <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
+Content-Language: en-US, de-DE
+From: Christian Schrefl <chrisi.schrefl@gmail.com>
+In-Reply-To: <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is a preparation patch for the introduction of CAN XL.
+On 30.04.25 10:36 AM, Christian Schrefl wrote:
+> `UnsafePinned<T>` is useful for cases where a value might be shared with
+> C code but not directly used by it. In particular this is added for
+> storing additional data in the `MiscDeviceRegistration` which will be
+> shared between `fops->open` and the containing struct.
+> 
+> Similar to `Opaque` but guarantees that the value is always initialized
+> and that the inner value is dropped when `UnsafePinned` is dropped.
+> 
+> This was originally proposed for the IRQ abstractions [0] and is also
+> useful for other where the inner data may be aliased, but is always
+> valid and automatic `Drop` is desired.
+> 
+> Since then the `UnsafePinned` type was added to upstream Rust [1] by Sky
+> as a unstable feature, therefore this patch implements the subset of the
+> upstream API for the `UnsafePinned` type required for additional data in
+> `MiscDeviceRegistration` and in the implementation of the `Opaque` type.
+> 
+> Some differences to the upstream type definition are required in the
+> kernel implementation, because upstream type uses some compiler changes
+> to opt out of certain optimizations, this is documented in the
+> documentation and a comment on the `UnsafePinned` type.
+> 
+> The documentation on is based on the upstream rust documentation with
+> minor modifications for the kernel implementation.
+> 
+> Link: https://lore.kernel.org/rust-for-linux/CAH5fLgiOASgjoYKFz6kWwzLaH07DqP2ph+3YyCDh2+gYqGpABA@mail.gmail.com [0]
+> Link: https://github.com/rust-lang/rust/pull/137043 [1]
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> Reviewed-by: Gerald Wisböck <gerald.wisboeck@feather.ink>
+> Co-developed-by: Sky <sky@sky9.dev>
+> Signed-off-by: Sky <sky@sky9.dev>
+> Signed-off-by: Christian Schrefl <chrisi.schrefl@gmail.com>
+> ---
+>  init/Kconfig                       |   3 +
+>  rust/kernel/lib.rs                 |   1 +
+>  rust/kernel/types.rs               |   6 ++
+>  rust/kernel/types/unsafe_pinned.rs | 115 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 125 insertions(+)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index 63f5974b9fa6ea3f5c92203cedd1f2f82aa468a1..727d85d2b59f555f1c33103bb78698551a41e7ca 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -140,6 +140,9 @@ config LD_CAN_USE_KEEP_IN_OVERLAY
+>  config RUSTC_HAS_COERCE_POINTEE
+>  	def_bool RUSTC_VERSION >= 108400
+>  
+> +config RUSTC_HAS_UNSAFE_PINNED
+> +	def_bool RUSTC_VERSION >= 108800
+> +
+>  config PAHOLE_VERSION
+>  	int
+>  	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index de07aadd1ff5fe46fd89517e234b97a6590c8e93..c08f0a50f1d8db95799478caa8e85558a1fcae8d 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -17,6 +17,7 @@
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_dyn))]
+>  #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
+> +#![cfg_attr(CONFIG_RUSTC_HAS_UNSAFE_PINNED, feature(unsafe_pinned))]
+>  #![feature(inline_const)]
+>  #![feature(lint_reasons)]
+>  // Stable in Rust 1.82
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 9d0471afc9648f2973235488b441eb109069adb1..705f420fdfbc4a576de1c4546578f2f04cdf615e 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -253,6 +253,9 @@ fn drop(&mut self) {
+>  ///
+>  /// [`Opaque<T>`] is meant to be used with FFI objects that are never interpreted by Rust code.
+>  ///
+> +/// In cases where the contained data is only used by Rust, is not allowed to be
+> +/// uninitialized and automatic [`Drop`] is desired [`UnsafePinned`] should be used instead.
+> +///
+>  /// It is used to wrap structs from the C side, like for example `Opaque<bindings::mutex>`.
+>  /// It gets rid of all the usual assumptions that Rust has for a value:
+>  ///
+> @@ -578,3 +581,6 @@ pub enum Either<L, R> {
+>  /// [`NotThreadSafe`]: type@NotThreadSafe
+>  #[allow(non_upper_case_globals)]
+>  pub const NotThreadSafe: NotThreadSafe = PhantomData;
+> +
+> +mod unsafe_pinned;
+> +pub use unsafe_pinned::UnsafePinned;
+> diff --git a/rust/kernel/types/unsafe_pinned.rs b/rust/kernel/types/unsafe_pinned.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..5a200aac30792bf71098087aee0fd9d2d51c468f
+> --- /dev/null
+> +++ b/rust/kernel/types/unsafe_pinned.rs
+> @@ -0,0 +1,115 @@
+> +// SPDX-License-Identifier: Apache-2.0 OR MIT
+> +
+> +//! The contents of this file partially come from the Rust standard library, hosted in
+> +//! the <https://github.com/rust-lang/rust> repository, licensed under
+> +//! "Apache-2.0 OR MIT" and adapted for kernel use. For copyright details,
+> +//! see <https://github.com/rust-lang/rust/blob/master/COPYRIGHT>.
+> +//!
+> +//! This file provides a implementation / polyfill of a subset of the upstream
+> +//! rust `UnsafePinned` type.
+> +
+> +use core::{cell::UnsafeCell, marker::PhantomPinned};
+> +use pin_init::{cast_pin_init, PinInit, Wrapper};
+> +
+> +/// This type provides a way to opt-out of typical aliasing rules;
+> +/// specifically, `&mut UnsafePinned<T>` is not guaranteed to be a unique pointer.
+> +///
+> +/// However, even if you define your type like `pub struct Wrapper(UnsafePinned<...>)`, it is still
+> +/// very risky to have an `&mut Wrapper` that aliases anything else. Many functions that work
+> +/// generically on `&mut T` assume that the memory that stores `T` is uniquely owned (such as
+> +/// `mem::swap`). In other words, while having aliasing with `&mut Wrapper` is not immediate
+> +/// Undefined Behavior, it is still unsound to expose such a mutable reference to code you do not
+> +/// control! Techniques such as pinning via [`Pin`](core::pin::Pin) are needed to ensure soundness.
+> +///
+> +/// Similar to [`UnsafeCell`], [`UnsafePinned`] will not usually show up in
+> +/// the public API of a library. It is an internal implementation detail of libraries that need to
+> +/// support aliasing mutable references.
+> +///
+> +/// Further note that this does *not* lift the requirement that shared references must be read-only!
+> +/// Use [`UnsafeCell`] for that.
 
-CAN FD and CAN XL uses similar bittiming parameters. Add one level of
-nesting for all the CAN FD parameters. Typically:
+[CC Ralf]
 
-  priv->can.data_bittiming;
+Ralf has replied to me on Github that this will most likely change [0]. How should this be handled?
 
-becomes:
+I would fine with submitting a patch once it changes on the rust side (possibly waiting until the
+feature is close to stabilization). I think it is better to only add this guarantee later as it
+will be easier to remove unnecessary `UnsafeCell`s than it would be to later add them back in ever
+case where they would be needed (in case rust doesn't change `UnsafePinned` to act like `UnsafeCell`).
 
-  priv->can.fd.data_bittiming;
+Also see to the tracking issue [1] for the reason why `UnsafeCell` behavior is most likely required.
 
-This way, the CAN XL equivalent (to be introduced later) would be:
+[0]: https://github.com/rust-lang/rust/issues/125735#issuecomment-2842926832
+[1]: https://github.com/rust-lang/rust/issues/137750
 
-  priv->can.xl.data_bittiming;
+Cheers
+Christian
 
-Add the new struct data_bittiming_params which contains all the data
-bittiming parameters, including the TDC and the callback functions.
-
-This done, update all the CAN FD drivers to make use of the new
-layout.
-
-Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
-Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
----
-The CAN XL series is still blocked because of lack of information on
-the PWMS and PWML calculations, c.f.:
-
-  https://lore.kernel.org/linux-can/68e8c449-a6ab-4958-af3c-852ece2694c2@wanadoo.fr/
-
-Regardless, the above patch will be needed at some time. And instead
-of constantly rebasing it, I would rather have it merged early.
-
-The other CAN XL preparation patches target a smaller subset of the
-tree and rebasing those is not an issue.
-
-** Changelog **
-
-v1 -> v2:
-
-  - add Oliver's Acked-by tag
-  - rebase on top of:
-
-      [PATCH v5] can: mcp251xfd: fix TDC setting for low data bit rates
-      Link: https://lore.kernel.org/linux-can/20250430161501.79370-1-kelsey@vpprocess.com/T/#u
-
-  Link: https://lore.kernel.org/linux-can/20250320144154.56611-2-mailhol.vincent@wanadoo.fr/
-
-since the "can: netlink: add CAN XL" RFC series:
-
-  - cherry pick the first patch
-  - rebase it on net-next/main
-
-  Link: https://lore.kernel.org/linux-can/20241110155902.72807-16-mailhol.vincent@wanadoo.fr/
-
-@Marc, I am out for the next two weeks. I will be able to answer my
-emails, but I will not be able to send signed patches. This is why I
-am sending this in advance.
----
- drivers/net/can/ctucanfd/ctucanfd_base.c      |  8 +-
- drivers/net/can/dev/dev.c                     | 12 +--
- drivers/net/can/dev/netlink.c                 | 74 +++++++++----------
- drivers/net/can/flexcan/flexcan-core.c        |  4 +-
- drivers/net/can/ifi_canfd/ifi_canfd.c         | 10 +--
- drivers/net/can/kvaser_pciefd.c               |  6 +-
- drivers/net/can/m_can/m_can.c                 |  8 +-
- drivers/net/can/peak_canfd/peak_canfd.c       |  6 +-
- drivers/net/can/rcar/rcar_canfd.c             |  4 +-
- .../net/can/rockchip/rockchip_canfd-core.c    |  4 +-
- .../can/rockchip/rockchip_canfd-timestamp.c   |  2 +-
- .../net/can/spi/mcp251xfd/mcp251xfd-core.c    | 10 +--
- drivers/net/can/usb/esd_usb.c                 |  6 +-
- drivers/net/can/usb/etas_es58x/es58x_core.c   |  4 +-
- drivers/net/can/usb/etas_es58x/es58x_fd.c     |  6 +-
- drivers/net/can/usb/gs_usb.c                  |  8 +-
- drivers/net/can/usb/kvaser_usb/kvaser_usb.h   |  2 +-
- .../net/can/usb/kvaser_usb/kvaser_usb_core.c  |  6 +-
- drivers/net/can/usb/peak_usb/pcan_usb_core.c  |  6 +-
- drivers/net/can/xilinx_can.c                  | 16 ++--
- include/linux/can/dev.h                       | 28 ++++---
- 21 files changed, 117 insertions(+), 113 deletions(-)
-
-diff --git a/drivers/net/can/ctucanfd/ctucanfd_base.c b/drivers/net/can/ctucanfd/ctucanfd_base.c
-index f65c1a1e05cc..bf6398772960 100644
---- a/drivers/net/can/ctucanfd/ctucanfd_base.c
-+++ b/drivers/net/can/ctucanfd/ctucanfd_base.c
-@@ -275,7 +275,7 @@ static int ctucan_set_bittiming(struct net_device *ndev)
- static int ctucan_set_data_bittiming(struct net_device *ndev)
- {
- 	struct ctucan_priv *priv = netdev_priv(ndev);
--	struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 
- 	/* Note that dbt may be modified here */
- 	return ctucan_set_btr(ndev, dbt, false);
-@@ -290,7 +290,7 @@ static int ctucan_set_data_bittiming(struct net_device *ndev)
- static int ctucan_set_secondary_sample_point(struct net_device *ndev)
- {
- 	struct ctucan_priv *priv = netdev_priv(ndev);
--	struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	int ssp_offset = 0;
- 	u32 ssp_cfg = 0; /* No SSP by default */
- 
-@@ -1358,12 +1358,12 @@ int ctucan_probe_common(struct device *dev, void __iomem *addr, int irq, unsigne
- 	priv->ntxbufs = ntxbufs;
- 	priv->dev = dev;
- 	priv->can.bittiming_const = &ctu_can_fd_bit_timing_max;
--	priv->can.data_bittiming_const = &ctu_can_fd_bit_timing_data_max;
-+	priv->can.fd.data_bittiming_const = &ctu_can_fd_bit_timing_data_max;
- 	priv->can.do_set_mode = ctucan_do_set_mode;
- 
- 	/* Needed for timing adjustment to be performed as soon as possible */
- 	priv->can.do_set_bittiming = ctucan_set_bittiming;
--	priv->can.do_set_data_bittiming = ctucan_set_data_bittiming;
-+	priv->can.fd.do_set_data_bittiming = ctucan_set_data_bittiming;
- 
- 	priv->can.do_get_berr_counter = ctucan_get_berr_counter;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK
-diff --git a/drivers/net/can/dev/dev.c b/drivers/net/can/dev/dev.c
-index 5ec3170b896a..ea8c807af4d8 100644
---- a/drivers/net/can/dev/dev.c
-+++ b/drivers/net/can/dev/dev.c
-@@ -404,8 +404,8 @@ int open_candev(struct net_device *dev)
- 
- 	/* For CAN FD the data bitrate has to be >= the arbitration bitrate */
- 	if ((priv->ctrlmode & CAN_CTRLMODE_FD) &&
--	    (!priv->data_bittiming.bitrate ||
--	     priv->data_bittiming.bitrate < priv->bittiming.bitrate)) {
-+	    (!priv->fd.data_bittiming.bitrate ||
-+	     priv->fd.data_bittiming.bitrate < priv->bittiming.bitrate)) {
- 		netdev_err(dev, "incorrect/missing data bit-timing\n");
- 		return -EINVAL;
- 	}
-@@ -543,16 +543,16 @@ int register_candev(struct net_device *dev)
- 	if (!priv->bitrate_const != !priv->bitrate_const_cnt)
- 		return -EINVAL;
- 
--	if (!priv->data_bitrate_const != !priv->data_bitrate_const_cnt)
-+	if (!priv->fd.data_bitrate_const != !priv->fd.data_bitrate_const_cnt)
- 		return -EINVAL;
- 
- 	/* We only support either fixed bit rates or bit timing const. */
--	if ((priv->bitrate_const || priv->data_bitrate_const) &&
--	    (priv->bittiming_const || priv->data_bittiming_const))
-+	if ((priv->bitrate_const || priv->fd.data_bitrate_const) &&
-+	    (priv->bittiming_const || priv->fd.data_bittiming_const))
- 		return -EINVAL;
- 
- 	if (!can_bittiming_const_valid(priv->bittiming_const) ||
--	    !can_bittiming_const_valid(priv->data_bittiming_const))
-+	    !can_bittiming_const_valid(priv->fd.data_bittiming_const))
- 		return -EINVAL;
- 
- 	if (!priv->termination_const) {
-diff --git a/drivers/net/can/dev/netlink.c b/drivers/net/can/dev/netlink.c
-index f1db9b7ffd4d..a36842ace084 100644
---- a/drivers/net/can/dev/netlink.c
-+++ b/drivers/net/can/dev/netlink.c
-@@ -141,7 +141,7 @@ static int can_tdc_changelink(struct can_priv *priv, const struct nlattr *nla,
- {
- 	struct nlattr *tb_tdc[IFLA_CAN_TDC_MAX + 1];
- 	struct can_tdc tdc = { 0 };
--	const struct can_tdc_const *tdc_const = priv->tdc_const;
-+	const struct can_tdc_const *tdc_const = priv->fd.tdc_const;
- 	int err;
- 
- 	if (!tdc_const || !can_tdc_is_enabled(priv))
-@@ -179,7 +179,7 @@ static int can_tdc_changelink(struct can_priv *priv, const struct nlattr *nla,
- 		tdc.tdcf = tdcf;
- 	}
- 
--	priv->tdc = tdc;
-+	priv->fd.tdc = tdc;
- 
- 	return 0;
- }
-@@ -228,10 +228,10 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
- 			dev->mtu = CANFD_MTU;
- 		} else {
- 			dev->mtu = CAN_MTU;
--			memset(&priv->data_bittiming, 0,
--			       sizeof(priv->data_bittiming));
-+			memset(&priv->fd.data_bittiming, 0,
-+			       sizeof(priv->fd.data_bittiming));
- 			priv->ctrlmode &= ~CAN_CTRLMODE_TDC_MASK;
--			memset(&priv->tdc, 0, sizeof(priv->tdc));
-+			memset(&priv->fd.tdc, 0, sizeof(priv->fd.tdc));
- 		}
- 
- 		tdc_mask = cm->mask & CAN_CTRLMODE_TDC_MASK;
-@@ -312,16 +312,16 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
- 		 * directly via do_set_bitrate(). Bail out if neither
- 		 * is given.
- 		 */
--		if (!priv->data_bittiming_const && !priv->do_set_data_bittiming &&
--		    !priv->data_bitrate_const)
-+		if (!priv->fd.data_bittiming_const && !priv->fd.do_set_data_bittiming &&
-+		    !priv->fd.data_bitrate_const)
- 			return -EOPNOTSUPP;
- 
- 		memcpy(&dbt, nla_data(data[IFLA_CAN_DATA_BITTIMING]),
- 		       sizeof(dbt));
- 		err = can_get_bittiming(dev, &dbt,
--					priv->data_bittiming_const,
--					priv->data_bitrate_const,
--					priv->data_bitrate_const_cnt,
-+					priv->fd.data_bittiming_const,
-+					priv->fd.data_bitrate_const,
-+					priv->fd.data_bitrate_const_cnt,
- 					extack);
- 		if (err)
- 			return err;
-@@ -333,7 +333,7 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
- 			return -EINVAL;
- 		}
- 
--		memset(&priv->tdc, 0, sizeof(priv->tdc));
-+		memset(&priv->fd.tdc, 0, sizeof(priv->fd.tdc));
- 		if (data[IFLA_CAN_TDC]) {
- 			/* TDC parameters are provided: use them */
- 			err = can_tdc_changelink(priv, data[IFLA_CAN_TDC],
-@@ -346,17 +346,17 @@ static int can_changelink(struct net_device *dev, struct nlattr *tb[],
- 			/* Neither of TDC parameters nor TDC flags are
- 			 * provided: do calculation
- 			 */
--			can_calc_tdco(&priv->tdc, priv->tdc_const, &dbt,
-+			can_calc_tdco(&priv->fd.tdc, priv->fd.tdc_const, &dbt,
- 				      &priv->ctrlmode, priv->ctrlmode_supported);
- 		} /* else: both CAN_CTRLMODE_TDC_{AUTO,MANUAL} are explicitly
- 		   * turned off. TDC is disabled: do nothing
- 		   */
- 
--		memcpy(&priv->data_bittiming, &dbt, sizeof(dbt));
-+		memcpy(&priv->fd.data_bittiming, &dbt, sizeof(dbt));
- 
--		if (priv->do_set_data_bittiming) {
-+		if (priv->fd.do_set_data_bittiming) {
- 			/* Finally, set the bit-timing registers */
--			err = priv->do_set_data_bittiming(dev);
-+			err = priv->fd.do_set_data_bittiming(dev);
- 			if (err)
- 				return err;
- 		}
-@@ -394,7 +394,7 @@ static size_t can_tdc_get_size(const struct net_device *dev)
- 	struct can_priv *priv = netdev_priv(dev);
- 	size_t size;
- 
--	if (!priv->tdc_const)
-+	if (!priv->fd.tdc_const)
- 		return 0;
- 
- 	size = nla_total_size(0);			/* nest IFLA_CAN_TDC */
-@@ -404,17 +404,17 @@ static size_t can_tdc_get_size(const struct net_device *dev)
- 	}
- 	size += nla_total_size(sizeof(u32));		/* IFLA_CAN_TDCO_MIN */
- 	size += nla_total_size(sizeof(u32));		/* IFLA_CAN_TDCO_MAX */
--	if (priv->tdc_const->tdcf_max) {
-+	if (priv->fd.tdc_const->tdcf_max) {
- 		size += nla_total_size(sizeof(u32));	/* IFLA_CAN_TDCF_MIN */
- 		size += nla_total_size(sizeof(u32));	/* IFLA_CAN_TDCF_MAX */
- 	}
- 
- 	if (can_tdc_is_enabled(priv)) {
- 		if (priv->ctrlmode & CAN_CTRLMODE_TDC_MANUAL ||
--		    priv->do_get_auto_tdcv)
-+		    priv->fd.do_get_auto_tdcv)
- 			size += nla_total_size(sizeof(u32));	/* IFLA_CAN_TDCV */
- 		size += nla_total_size(sizeof(u32));		/* IFLA_CAN_TDCO */
--		if (priv->tdc_const->tdcf_max)
-+		if (priv->fd.tdc_const->tdcf_max)
- 			size += nla_total_size(sizeof(u32));	/* IFLA_CAN_TDCF */
- 	}
- 
-@@ -442,9 +442,9 @@ static size_t can_get_size(const struct net_device *dev)
- 	size += nla_total_size(sizeof(u32));			/* IFLA_CAN_RESTART_MS */
- 	if (priv->do_get_berr_counter)				/* IFLA_CAN_BERR_COUNTER */
- 		size += nla_total_size(sizeof(struct can_berr_counter));
--	if (priv->data_bittiming.bitrate)			/* IFLA_CAN_DATA_BITTIMING */
-+	if (priv->fd.data_bittiming.bitrate)			/* IFLA_CAN_DATA_BITTIMING */
- 		size += nla_total_size(sizeof(struct can_bittiming));
--	if (priv->data_bittiming_const)				/* IFLA_CAN_DATA_BITTIMING_CONST */
-+	if (priv->fd.data_bittiming_const)			/* IFLA_CAN_DATA_BITTIMING_CONST */
- 		size += nla_total_size(sizeof(struct can_bittiming_const));
- 	if (priv->termination_const) {
- 		size += nla_total_size(sizeof(priv->termination));		/* IFLA_CAN_TERMINATION */
-@@ -454,9 +454,9 @@ static size_t can_get_size(const struct net_device *dev)
- 	if (priv->bitrate_const)				/* IFLA_CAN_BITRATE_CONST */
- 		size += nla_total_size(sizeof(*priv->bitrate_const) *
- 				       priv->bitrate_const_cnt);
--	if (priv->data_bitrate_const)				/* IFLA_CAN_DATA_BITRATE_CONST */
--		size += nla_total_size(sizeof(*priv->data_bitrate_const) *
--				       priv->data_bitrate_const_cnt);
-+	if (priv->fd.data_bitrate_const)			/* IFLA_CAN_DATA_BITRATE_CONST */
-+		size += nla_total_size(sizeof(*priv->fd.data_bitrate_const) *
-+				       priv->fd.data_bitrate_const_cnt);
- 	size += sizeof(priv->bitrate_max);			/* IFLA_CAN_BITRATE_MAX */
- 	size += can_tdc_get_size(dev);				/* IFLA_CAN_TDC */
- 	size += can_ctrlmode_ext_get_size();			/* IFLA_CAN_CTRLMODE_EXT */
-@@ -468,8 +468,8 @@ static int can_tdc_fill_info(struct sk_buff *skb, const struct net_device *dev)
- {
- 	struct nlattr *nest;
- 	struct can_priv *priv = netdev_priv(dev);
--	struct can_tdc *tdc = &priv->tdc;
--	const struct can_tdc_const *tdc_const = priv->tdc_const;
-+	struct can_tdc *tdc = &priv->fd.tdc;
-+	const struct can_tdc_const *tdc_const = priv->fd.tdc_const;
- 
- 	if (!tdc_const)
- 		return 0;
-@@ -497,8 +497,8 @@ static int can_tdc_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 		if (priv->ctrlmode & CAN_CTRLMODE_TDC_MANUAL) {
- 			tdcv = tdc->tdcv;
- 			err = 0;
--		} else if (priv->do_get_auto_tdcv) {
--			err = priv->do_get_auto_tdcv(dev, &tdcv);
-+		} else if (priv->fd.do_get_auto_tdcv) {
-+			err = priv->fd.do_get_auto_tdcv(dev, &tdcv);
- 		}
- 		if (!err && nla_put_u32(skb, IFLA_CAN_TDC_TDCV, tdcv))
- 			goto err_cancel;
-@@ -564,14 +564,14 @@ static int can_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 	     !priv->do_get_berr_counter(dev, &bec) &&
- 	     nla_put(skb, IFLA_CAN_BERR_COUNTER, sizeof(bec), &bec)) ||
- 
--	    (priv->data_bittiming.bitrate &&
-+	    (priv->fd.data_bittiming.bitrate &&
- 	     nla_put(skb, IFLA_CAN_DATA_BITTIMING,
--		     sizeof(priv->data_bittiming), &priv->data_bittiming)) ||
-+		     sizeof(priv->fd.data_bittiming), &priv->fd.data_bittiming)) ||
- 
--	    (priv->data_bittiming_const &&
-+	    (priv->fd.data_bittiming_const &&
- 	     nla_put(skb, IFLA_CAN_DATA_BITTIMING_CONST,
--		     sizeof(*priv->data_bittiming_const),
--		     priv->data_bittiming_const)) ||
-+		     sizeof(*priv->fd.data_bittiming_const),
-+		     priv->fd.data_bittiming_const)) ||
- 
- 	    (priv->termination_const &&
- 	     (nla_put_u16(skb, IFLA_CAN_TERMINATION, priv->termination) ||
-@@ -586,11 +586,11 @@ static int can_fill_info(struct sk_buff *skb, const struct net_device *dev)
- 		     priv->bitrate_const_cnt,
- 		     priv->bitrate_const)) ||
- 
--	    (priv->data_bitrate_const &&
-+	    (priv->fd.data_bitrate_const &&
- 	     nla_put(skb, IFLA_CAN_DATA_BITRATE_CONST,
--		     sizeof(*priv->data_bitrate_const) *
--		     priv->data_bitrate_const_cnt,
--		     priv->data_bitrate_const)) ||
-+		     sizeof(*priv->fd.data_bitrate_const) *
-+		     priv->fd.data_bitrate_const_cnt,
-+		     priv->fd.data_bitrate_const)) ||
- 
- 	    (nla_put(skb, IFLA_CAN_BITRATE_MAX,
- 		     sizeof(priv->bitrate_max),
-diff --git a/drivers/net/can/flexcan/flexcan-core.c b/drivers/net/can/flexcan/flexcan-core.c
-index 6d80c341b26f..06d5d35fc1b5 100644
---- a/drivers/net/can/flexcan/flexcan-core.c
-+++ b/drivers/net/can/flexcan/flexcan-core.c
-@@ -1226,7 +1226,7 @@ static void flexcan_set_bittiming_cbt(const struct net_device *dev)
- {
- 	struct flexcan_priv *priv = netdev_priv(dev);
- 	struct can_bittiming *bt = &priv->can.bittiming;
--	struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	struct flexcan_regs __iomem *regs = priv->regs;
- 	u32 reg_cbt, reg_fdctrl;
- 
-@@ -2239,7 +2239,7 @@ static int flexcan_probe(struct platform_device *pdev)
- 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_FD |
- 			CAN_CTRLMODE_FD_NON_ISO;
- 		priv->can.bittiming_const = &flexcan_fd_bittiming_const;
--		priv->can.data_bittiming_const =
-+		priv->can.fd.data_bittiming_const =
- 			&flexcan_fd_data_bittiming_const;
- 	} else {
- 		priv->can.bittiming_const = &flexcan_bittiming_const;
-diff --git a/drivers/net/can/ifi_canfd/ifi_canfd.c b/drivers/net/can/ifi_canfd/ifi_canfd.c
-index c86b57d47085..2eeee65f606f 100644
---- a/drivers/net/can/ifi_canfd/ifi_canfd.c
-+++ b/drivers/net/can/ifi_canfd/ifi_canfd.c
-@@ -669,7 +669,7 @@ static void ifi_canfd_set_bittiming(struct net_device *ndev)
- {
- 	struct ifi_canfd_priv *priv = netdev_priv(ndev);
- 	const struct can_bittiming *bt = &priv->can.bittiming;
--	const struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	const struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	u16 brp, sjw, tseg1, tseg2, tdc;
- 
- 	/* Configure bit timing */
-@@ -1000,10 +1000,10 @@ static int ifi_canfd_plat_probe(struct platform_device *pdev)
- 
- 	priv->can.clock.freq = readl(addr + IFI_CANFD_CANCLOCK);
- 
--	priv->can.bittiming_const	= &ifi_canfd_bittiming_const;
--	priv->can.data_bittiming_const	= &ifi_canfd_bittiming_const;
--	priv->can.do_set_mode		= ifi_canfd_set_mode;
--	priv->can.do_get_berr_counter	= ifi_canfd_get_berr_counter;
-+	priv->can.bittiming_const = &ifi_canfd_bittiming_const;
-+	priv->can.fd.data_bittiming_const = &ifi_canfd_bittiming_const;
-+	priv->can.do_set_mode = ifi_canfd_set_mode;
-+	priv->can.do_get_berr_counter = ifi_canfd_get_berr_counter;
- 
- 	/* IFI CANFD can do both Bosch FD and ISO FD */
- 	priv->can.ctrlmode = CAN_CTRLMODE_FD;
-diff --git a/drivers/net/can/kvaser_pciefd.c b/drivers/net/can/kvaser_pciefd.c
-index cf0d51805272..4022eb2e1a7d 100644
---- a/drivers/net/can/kvaser_pciefd.c
-+++ b/drivers/net/can/kvaser_pciefd.c
-@@ -856,7 +856,7 @@ static int kvaser_pciefd_set_bittiming(struct kvaser_pciefd_can *can, bool data)
- 	struct can_bittiming *bt;
- 
- 	if (data)
--		bt = &can->can.data_bittiming;
-+		bt = &can->can.fd.data_bittiming;
- 	else
- 		bt = &can->can.bittiming;
- 
-@@ -991,9 +991,9 @@ static int kvaser_pciefd_setup_can_ctrls(struct kvaser_pciefd *pcie)
- 		spin_lock_init(&can->lock);
- 
- 		can->can.bittiming_const = &kvaser_pciefd_bittiming_const;
--		can->can.data_bittiming_const = &kvaser_pciefd_bittiming_const;
-+		can->can.fd.data_bittiming_const = &kvaser_pciefd_bittiming_const;
- 		can->can.do_set_bittiming = kvaser_pciefd_set_nominal_bittiming;
--		can->can.do_set_data_bittiming = kvaser_pciefd_set_data_bittiming;
-+		can->can.fd.do_set_data_bittiming = kvaser_pciefd_set_data_bittiming;
- 		can->can.do_set_mode = kvaser_pciefd_set_mode;
- 		can->can.do_get_berr_counter = kvaser_pciefd_get_berr_counter;
- 		can->can.ctrlmode_supported = CAN_CTRLMODE_LISTENONLY |
-diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
-index 884a6352c42b..66e3d8e576ac 100644
---- a/drivers/net/can/m_can/m_can.c
-+++ b/drivers/net/can/m_can/m_can.c
-@@ -1372,7 +1372,7 @@ static int m_can_set_bittiming(struct net_device *dev)
- {
- 	struct m_can_classdev *cdev = netdev_priv(dev);
- 	const struct can_bittiming *bt = &cdev->can.bittiming;
--	const struct can_bittiming *dbt = &cdev->can.data_bittiming;
-+	const struct can_bittiming *dbt = &cdev->can.fd.data_bittiming;
- 	u16 brp, sjw, tseg1, tseg2;
- 	u32 reg_btp;
- 
-@@ -1738,7 +1738,7 @@ static int m_can_dev_setup(struct m_can_classdev *cdev)
- 		if (err)
- 			return err;
- 		cdev->can.bittiming_const = &m_can_bittiming_const_30X;
--		cdev->can.data_bittiming_const = &m_can_data_bittiming_const_30X;
-+		cdev->can.fd.data_bittiming_const = &m_can_data_bittiming_const_30X;
- 		break;
- 	case 31:
- 		/* CAN_CTRLMODE_FD_NON_ISO is fixed with M_CAN IP v3.1.x */
-@@ -1746,13 +1746,13 @@ static int m_can_dev_setup(struct m_can_classdev *cdev)
- 		if (err)
- 			return err;
- 		cdev->can.bittiming_const = &m_can_bittiming_const_31X;
--		cdev->can.data_bittiming_const = &m_can_data_bittiming_const_31X;
-+		cdev->can.fd.data_bittiming_const = &m_can_data_bittiming_const_31X;
- 		break;
- 	case 32:
- 	case 33:
- 		/* Support both MCAN version v3.2.x and v3.3.0 */
- 		cdev->can.bittiming_const = &m_can_bittiming_const_31X;
--		cdev->can.data_bittiming_const = &m_can_data_bittiming_const_31X;
-+		cdev->can.fd.data_bittiming_const = &m_can_data_bittiming_const_31X;
- 
- 		niso = m_can_niso_supported(cdev);
- 		if (niso < 0)
-diff --git a/drivers/net/can/peak_canfd/peak_canfd.c b/drivers/net/can/peak_canfd/peak_canfd.c
-index 28f3fd805273..77292afaed22 100644
---- a/drivers/net/can/peak_canfd/peak_canfd.c
-+++ b/drivers/net/can/peak_canfd/peak_canfd.c
-@@ -624,7 +624,7 @@ static int peak_canfd_set_data_bittiming(struct net_device *ndev)
- {
- 	struct peak_canfd_priv *priv = netdev_priv(ndev);
- 
--	return pucan_set_timing_fast(priv, &priv->can.data_bittiming);
-+	return pucan_set_timing_fast(priv, &priv->can.fd.data_bittiming);
- }
- 
- static int peak_canfd_close(struct net_device *ndev)
-@@ -813,12 +813,12 @@ struct net_device *alloc_peak_canfd_dev(int sizeof_priv, int index,
- 	/* complete now socket-can initialization side */
- 	priv->can.state = CAN_STATE_STOPPED;
- 	priv->can.bittiming_const = &peak_canfd_nominal_const;
--	priv->can.data_bittiming_const = &peak_canfd_data_const;
-+	priv->can.fd.data_bittiming_const = &peak_canfd_data_const;
- 
- 	priv->can.do_set_mode = peak_canfd_set_mode;
- 	priv->can.do_get_berr_counter = peak_canfd_get_berr_counter;
- 	priv->can.do_set_bittiming = peak_canfd_set_bittiming;
--	priv->can.do_set_data_bittiming = peak_canfd_set_data_bittiming;
-+	priv->can.fd.do_set_data_bittiming = peak_canfd_set_data_bittiming;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
- 				       CAN_CTRLMODE_LISTENONLY |
- 				       CAN_CTRLMODE_3_SAMPLES |
-diff --git a/drivers/net/can/rcar/rcar_canfd.c b/drivers/net/can/rcar/rcar_canfd.c
-index aa3df0d05b85..7b7eb0df0d72 100644
---- a/drivers/net/can/rcar/rcar_canfd.c
-+++ b/drivers/net/can/rcar/rcar_canfd.c
-@@ -1304,7 +1304,7 @@ static void rcar_canfd_set_bittiming(struct net_device *dev)
- 	struct rcar_canfd_channel *priv = netdev_priv(dev);
- 	struct rcar_canfd_global *gpriv = priv->gpriv;
- 	const struct can_bittiming *bt = &priv->can.bittiming;
--	const struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	const struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	u16 brp, sjw, tseg1, tseg2;
- 	u32 cfg;
- 	u32 ch = priv->channel;
-@@ -1783,7 +1783,7 @@ static int rcar_canfd_channel_probe(struct rcar_canfd_global *gpriv, u32 ch,
- 
- 	if (gpriv->fdmode) {
- 		priv->can.bittiming_const = &rcar_canfd_nom_bittiming_const;
--		priv->can.data_bittiming_const =
-+		priv->can.fd.data_bittiming_const =
- 			&rcar_canfd_data_bittiming_const;
- 
- 		/* Controller starts in CAN FD only mode */
-diff --git a/drivers/net/can/rockchip/rockchip_canfd-core.c b/drivers/net/can/rockchip/rockchip_canfd-core.c
-index 7107a37da36c..1a8630f399cd 100644
---- a/drivers/net/can/rockchip/rockchip_canfd-core.c
-+++ b/drivers/net/can/rockchip/rockchip_canfd-core.c
-@@ -118,7 +118,7 @@ static void rkcanfd_chip_set_work_mode(const struct rkcanfd_priv *priv)
- 
- static int rkcanfd_set_bittiming(struct rkcanfd_priv *priv)
- {
--	const struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	const struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	const struct can_bittiming *bt = &priv->can.bittiming;
- 	u32 reg_nbt, reg_dbt, reg_tdc;
- 	u32 tdco;
-@@ -899,7 +899,7 @@ static int rkcanfd_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, priv);
- 	priv->can.clock.freq = clk_get_rate(priv->clks[0].clk);
- 	priv->can.bittiming_const = &rkcanfd_bittiming_const;
--	priv->can.data_bittiming_const = &rkcanfd_data_bittiming_const;
-+	priv->can.fd.data_bittiming_const = &rkcanfd_data_bittiming_const;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
- 		CAN_CTRLMODE_BERR_REPORTING;
- 	priv->can.do_set_mode = rkcanfd_set_mode;
-diff --git a/drivers/net/can/rockchip/rockchip_canfd-timestamp.c b/drivers/net/can/rockchip/rockchip_canfd-timestamp.c
-index 43d4b5721812..fa85a75be65a 100644
---- a/drivers/net/can/rockchip/rockchip_canfd-timestamp.c
-+++ b/drivers/net/can/rockchip/rockchip_canfd-timestamp.c
-@@ -39,7 +39,7 @@ static void rkcanfd_timestamp_work(struct work_struct *work)
- 
- void rkcanfd_timestamp_init(struct rkcanfd_priv *priv)
- {
--	const struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	const struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	const struct can_bittiming *bt = &priv->can.bittiming;
- 	struct cyclecounter *cc = &priv->cc;
- 	u32 bitrate, div, reg, rate;
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-index 34d5cbef6ccd..a27161bddc35 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-@@ -518,7 +518,7 @@ static int mcp251xfd_chip_timestamp_init(const struct mcp251xfd_priv *priv)
- static int mcp251xfd_set_bittiming(const struct mcp251xfd_priv *priv)
- {
- 	const struct can_bittiming *bt = &priv->can.bittiming;
--	const struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	const struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	u32 tdcmod, val = 0;
- 	int err;
- 
-@@ -591,8 +591,8 @@ static int mcp251xfd_set_bittiming(const struct mcp251xfd_priv *priv)
- 		tdcmod = MCP251XFD_REG_TDC_TDCMOD_DISABLED;
- 
- 	val = FIELD_PREP(MCP251XFD_REG_TDC_TDCMOD_MASK, tdcmod) |
--		FIELD_PREP(MCP251XFD_REG_TDC_TDCV_MASK, priv->can.tdc.tdcv) |
--		FIELD_PREP(MCP251XFD_REG_TDC_TDCO_MASK, priv->can.tdc.tdco);
-+	      FIELD_PREP(MCP251XFD_REG_TDC_TDCV_MASK, priv->can.fd.tdc.tdcv) |
-+	      FIELD_PREP(MCP251XFD_REG_TDC_TDCO_MASK, priv->can.fd.tdc.tdco);
- 
- 	return regmap_write(priv->map_reg, MCP251XFD_REG_TDC, val);
- }
-@@ -2095,8 +2095,8 @@ static int mcp251xfd_probe(struct spi_device *spi)
- 	priv->can.do_set_mode = mcp251xfd_set_mode;
- 	priv->can.do_get_berr_counter = mcp251xfd_get_berr_counter;
- 	priv->can.bittiming_const = &mcp251xfd_bittiming_const;
--	priv->can.data_bittiming_const = &mcp251xfd_data_bittiming_const;
--	priv->can.tdc_const = &mcp251xfd_tdc_const;
-+	priv->can.fd.data_bittiming_const = &mcp251xfd_data_bittiming_const;
-+	priv->can.fd.tdc_const = &mcp251xfd_tdc_const;
- 	priv->can.ctrlmode_supported = CAN_CTRLMODE_LOOPBACK |
- 		CAN_CTRLMODE_LISTENONLY | CAN_CTRLMODE_BERR_REPORTING |
- 		CAN_CTRLMODE_FD | CAN_CTRLMODE_FD_NON_ISO |
-diff --git a/drivers/net/can/usb/esd_usb.c b/drivers/net/can/usb/esd_usb.c
-index 03ad10b01867..27a3818885c2 100644
---- a/drivers/net/can/usb/esd_usb.c
-+++ b/drivers/net/can/usb/esd_usb.c
-@@ -1098,7 +1098,7 @@ static int esd_usb_3_set_bittiming(struct net_device *netdev)
- 	const struct can_bittiming_const *data_btc = &esd_usb_3_data_bittiming_const;
- 	struct esd_usb_net_priv *priv = netdev_priv(netdev);
- 	struct can_bittiming *nom_bt = &priv->can.bittiming;
--	struct can_bittiming *data_bt = &priv->can.data_bittiming;
-+	struct can_bittiming *data_bt = &priv->can.fd.data_bittiming;
- 	struct esd_usb_3_set_baudrate_msg_x *baud_x;
- 	union esd_usb_msg *msg;
- 	u16 flags = 0;
-@@ -1218,9 +1218,9 @@ static int esd_usb_probe_one_net(struct usb_interface *intf, int index)
- 		priv->can.clock.freq = ESD_USB_3_CAN_CLOCK;
- 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_FD;
- 		priv->can.bittiming_const = &esd_usb_3_nom_bittiming_const;
--		priv->can.data_bittiming_const = &esd_usb_3_data_bittiming_const;
-+		priv->can.fd.data_bittiming_const = &esd_usb_3_data_bittiming_const;
- 		priv->can.do_set_bittiming = esd_usb_3_set_bittiming;
--		priv->can.do_set_data_bittiming = esd_usb_3_set_bittiming;
-+		priv->can.fd.do_set_data_bittiming = esd_usb_3_set_bittiming;
- 		break;
- 
- 	case ESD_USB_CANUSBM_PRODUCT_ID:
-diff --git a/drivers/net/can/usb/etas_es58x/es58x_core.c b/drivers/net/can/usb/etas_es58x/es58x_core.c
-index 71f24dc0a927..db1acf6d504c 100644
---- a/drivers/net/can/usb/etas_es58x/es58x_core.c
-+++ b/drivers/net/can/usb/etas_es58x/es58x_core.c
-@@ -2059,8 +2059,8 @@ static int es58x_init_priv(struct es58x_device *es58x_dev,
- 
- 	can->bittiming_const = param->bittiming_const;
- 	if (param->ctrlmode_supported & CAN_CTRLMODE_FD) {
--		can->data_bittiming_const = param->data_bittiming_const;
--		can->tdc_const = param->tdc_const;
-+		can->fd.data_bittiming_const = param->data_bittiming_const;
-+		can->fd.tdc_const = param->tdc_const;
- 	}
- 	can->bitrate_max = param->bitrate_max;
- 	can->clock = param->clock;
-diff --git a/drivers/net/can/usb/etas_es58x/es58x_fd.c b/drivers/net/can/usb/etas_es58x/es58x_fd.c
-index 84ffa1839bac..d924b053677b 100644
---- a/drivers/net/can/usb/etas_es58x/es58x_fd.c
-+++ b/drivers/net/can/usb/etas_es58x/es58x_fd.c
-@@ -427,12 +427,12 @@ static int es58x_fd_enable_channel(struct es58x_priv *priv)
- 
- 	if (tx_conf_msg.canfd_enabled) {
- 		es58x_fd_convert_bittiming(&tx_conf_msg.data_bittiming,
--					   &priv->can.data_bittiming);
-+					   &priv->can.fd.data_bittiming);
- 
- 		if (can_tdc_is_enabled(&priv->can)) {
- 			tx_conf_msg.tdc_enabled = 1;
--			tx_conf_msg.tdco = cpu_to_le16(priv->can.tdc.tdco);
--			tx_conf_msg.tdcf = cpu_to_le16(priv->can.tdc.tdcf);
-+			tx_conf_msg.tdco = cpu_to_le16(priv->can.fd.tdc.tdco);
-+			tx_conf_msg.tdcf = cpu_to_le16(priv->can.fd.tdc.tdcf);
- 		}
- 
- 		conf_len = ES58X_FD_CANFD_CONF_LEN;
-diff --git a/drivers/net/can/usb/gs_usb.c b/drivers/net/can/usb/gs_usb.c
-index 3ccac6781b98..bb6335278e46 100644
---- a/drivers/net/can/usb/gs_usb.c
-+++ b/drivers/net/can/usb/gs_usb.c
-@@ -728,7 +728,7 @@ static int gs_usb_set_bittiming(struct net_device *netdev)
- static int gs_usb_set_data_bittiming(struct net_device *netdev)
- {
- 	struct gs_can *dev = netdev_priv(netdev);
--	struct can_bittiming *bt = &dev->can.data_bittiming;
-+	struct can_bittiming *bt = &dev->can.fd.data_bittiming;
- 	struct gs_device_bittiming dbt = {
- 		.prop_seg = cpu_to_le32(bt->prop_seg),
- 		.phase_seg1 = cpu_to_le32(bt->phase_seg1),
-@@ -1300,8 +1300,8 @@ static struct gs_can *gs_make_candev(unsigned int channel,
- 		/* The data bit timing will be overwritten, if
- 		 * GS_CAN_FEATURE_BT_CONST_EXT is set.
- 		 */
--		dev->can.data_bittiming_const = &dev->bt_const;
--		dev->can.do_set_data_bittiming = gs_usb_set_data_bittiming;
-+		dev->can.fd.data_bittiming_const = &dev->bt_const;
-+		dev->can.fd.do_set_data_bittiming = gs_usb_set_data_bittiming;
- 	}
- 
- 	if (feature & GS_CAN_FEATURE_TERMINATION) {
-@@ -1381,7 +1381,7 @@ static struct gs_can *gs_make_candev(unsigned int channel,
- 		dev->data_bt_const.brp_max = le32_to_cpu(bt_const_extended.dbrp_max);
- 		dev->data_bt_const.brp_inc = le32_to_cpu(bt_const_extended.dbrp_inc);
- 
--		dev->can.data_bittiming_const = &dev->data_bt_const;
-+		dev->can.fd.data_bittiming_const = &dev->data_bt_const;
- 	}
- 
- 	can_rx_offload_add_manual(netdev, &dev->offload, GS_NAPI_WEIGHT);
-diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb.h b/drivers/net/can/usb/kvaser_usb/kvaser_usb.h
-index 078496d9b7ba..f6c77eca9f43 100644
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb.h
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb.h
-@@ -137,7 +137,7 @@ struct kvaser_usb_net_priv {
-  * @dev_set_mode:		used for can.do_set_mode
-  * @dev_set_bittiming:		used for can.do_set_bittiming
-  * @dev_get_busparams:		readback arbitration busparams
-- * @dev_set_data_bittiming:	used for can.do_set_data_bittiming
-+ * @dev_set_data_bittiming:	used for can.fd.do_set_data_bittiming
-  * @dev_get_data_busparams:	readback data busparams
-  * @dev_get_berr_counter:	used for can.do_get_berr_counter
-  *
-diff --git a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
-index dcb0bcbe0565..daf42080f942 100644
---- a/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
-+++ b/drivers/net/can/usb/kvaser_usb/kvaser_usb_core.c
-@@ -592,7 +592,7 @@ static int kvaser_usb_set_data_bittiming(struct net_device *netdev)
- 	struct kvaser_usb_net_priv *priv = netdev_priv(netdev);
- 	struct kvaser_usb *dev = priv->dev;
- 	const struct kvaser_usb_dev_ops *ops = dev->driver_info->ops;
--	struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	struct kvaser_usb_busparams busparams;
- 	int tseg1 = dbt->prop_seg + dbt->phase_seg1;
- 	int tseg2 = dbt->phase_seg2;
-@@ -842,8 +842,8 @@ static int kvaser_usb_init_one(struct kvaser_usb *dev, int channel)
- 	priv->can.ctrlmode_supported |= dev->card_data.ctrlmode_supported;
- 
- 	if (priv->can.ctrlmode_supported & CAN_CTRLMODE_FD) {
--		priv->can.data_bittiming_const = dev->cfg->data_bittiming_const;
--		priv->can.do_set_data_bittiming = kvaser_usb_set_data_bittiming;
-+		priv->can.fd.data_bittiming_const = dev->cfg->data_bittiming_const;
-+		priv->can.fd.do_set_data_bittiming = kvaser_usb_set_data_bittiming;
- 	}
- 
- 	netdev->flags |= IFF_ECHO;
-diff --git a/drivers/net/can/usb/peak_usb/pcan_usb_core.c b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-index 59f7cd8ceb39..117637b9b995 100644
---- a/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-+++ b/drivers/net/can/usb/peak_usb/pcan_usb_core.c
-@@ -770,7 +770,7 @@ static int peak_usb_set_data_bittiming(struct net_device *netdev)
- 	const struct peak_usb_adapter *pa = dev->adapter;
- 
- 	if (pa->dev_set_data_bittiming) {
--		struct can_bittiming *bt = &dev->can.data_bittiming;
-+		struct can_bittiming *bt = &dev->can.fd.data_bittiming;
- 		int err = pa->dev_set_data_bittiming(dev, bt);
- 
- 		if (err)
-@@ -954,8 +954,8 @@ static int peak_usb_create_dev(const struct peak_usb_adapter *peak_usb_adapter,
- 	dev->can.clock = peak_usb_adapter->clock;
- 	dev->can.bittiming_const = peak_usb_adapter->bittiming_const;
- 	dev->can.do_set_bittiming = peak_usb_set_bittiming;
--	dev->can.data_bittiming_const = peak_usb_adapter->data_bittiming_const;
--	dev->can.do_set_data_bittiming = peak_usb_set_data_bittiming;
-+	dev->can.fd.data_bittiming_const = peak_usb_adapter->data_bittiming_const;
-+	dev->can.fd.do_set_data_bittiming = peak_usb_set_data_bittiming;
- 	dev->can.do_set_mode = peak_usb_set_mode;
- 	dev->can.do_get_berr_counter = peak_usb_adapter->do_get_berr_counter;
- 	dev->can.ctrlmode_supported = peak_usb_adapter->ctrlmode_supported;
-diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-index 436c0e4b0344..3f2e378199ab 100644
---- a/drivers/net/can/xilinx_can.c
-+++ b/drivers/net/can/xilinx_can.c
-@@ -481,7 +481,7 @@ static int xcan_set_bittiming(struct net_device *ndev)
- {
- 	struct xcan_priv *priv = netdev_priv(ndev);
- 	struct can_bittiming *bt = &priv->can.bittiming;
--	struct can_bittiming *dbt = &priv->can.data_bittiming;
-+	struct can_bittiming *dbt = &priv->can.fd.data_bittiming;
- 	u32 btr0, btr1;
- 	u32 is_config_mode;
- 
-@@ -517,10 +517,10 @@ static int xcan_set_bittiming(struct net_device *ndev)
- 		btr0 = dbt->brp - 1;
- 		if (can_tdc_is_enabled(&priv->can)) {
- 			if (priv->devtype.cantype == XAXI_CANFD)
--				btr0 |= FIELD_PREP(XCAN_BRPR_TDCO_MASK, priv->can.tdc.tdco) |
-+				btr0 |= FIELD_PREP(XCAN_BRPR_TDCO_MASK, priv->can.fd.tdc.tdco) |
- 					XCAN_BRPR_TDC_ENABLE;
- 			else
--				btr0 |= FIELD_PREP(XCAN_2_BRPR_TDCO_MASK, priv->can.tdc.tdco) |
-+				btr0 |= FIELD_PREP(XCAN_2_BRPR_TDCO_MASK, priv->can.fd.tdc.tdco) |
- 					XCAN_BRPR_TDC_ENABLE;
- 		}
- 
-@@ -1967,22 +1967,22 @@ static int xcan_probe(struct platform_device *pdev)
- 		goto err_free;
- 
- 	if (devtype->cantype == XAXI_CANFD) {
--		priv->can.data_bittiming_const =
-+		priv->can.fd.data_bittiming_const =
- 			&xcan_data_bittiming_const_canfd;
--		priv->can.tdc_const = &xcan_tdc_const_canfd;
-+		priv->can.fd.tdc_const = &xcan_tdc_const_canfd;
- 	}
- 
- 	if (devtype->cantype == XAXI_CANFD_2_0) {
--		priv->can.data_bittiming_const =
-+		priv->can.fd.data_bittiming_const =
- 			&xcan_data_bittiming_const_canfd2;
--		priv->can.tdc_const = &xcan_tdc_const_canfd2;
-+		priv->can.fd.tdc_const = &xcan_tdc_const_canfd2;
- 	}
- 
- 	if (devtype->cantype == XAXI_CANFD ||
- 	    devtype->cantype == XAXI_CANFD_2_0) {
- 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_FD |
- 						CAN_CTRLMODE_TDC_AUTO;
--		priv->can.do_get_auto_tdcv = xcan_get_auto_tdcv;
-+		priv->can.fd.do_get_auto_tdcv = xcan_get_auto_tdcv;
- 	}
- 
- 	priv->reg_base = addr;
-diff --git a/include/linux/can/dev.h b/include/linux/can/dev.h
-index 23492213ea35..492d23bec7be 100644
---- a/include/linux/can/dev.h
-+++ b/include/linux/can/dev.h
-@@ -38,6 +38,17 @@ enum can_termination_gpio {
- 	CAN_TERMINATION_GPIO_MAX,
- };
- 
-+struct data_bittiming_params {
-+	const struct can_bittiming_const *data_bittiming_const;
-+	struct can_bittiming data_bittiming;
-+	const struct can_tdc_const *tdc_const;
-+	struct can_tdc tdc;
-+	const u32 *data_bitrate_const;
-+	unsigned int data_bitrate_const_cnt;
-+	int (*do_set_data_bittiming)(struct net_device *dev);
-+	int (*do_get_auto_tdcv)(const struct net_device *dev, u32 *tdcv);
-+};
-+
- /*
-  * CAN common private data
-  */
-@@ -45,16 +56,11 @@ struct can_priv {
- 	struct net_device *dev;
- 	struct can_device_stats can_stats;
- 
--	const struct can_bittiming_const *bittiming_const,
--		*data_bittiming_const;
--	struct can_bittiming bittiming, data_bittiming;
--	const struct can_tdc_const *tdc_const;
--	struct can_tdc tdc;
--
-+	const struct can_bittiming_const *bittiming_const;
-+	struct can_bittiming bittiming;
-+	struct data_bittiming_params fd;
- 	unsigned int bitrate_const_cnt;
- 	const u32 *bitrate_const;
--	const u32 *data_bitrate_const;
--	unsigned int data_bitrate_const_cnt;
- 	u32 bitrate_max;
- 	struct can_clock clock;
- 
-@@ -77,14 +83,12 @@ struct can_priv {
- 	struct delayed_work restart_work;
- 
- 	int (*do_set_bittiming)(struct net_device *dev);
--	int (*do_set_data_bittiming)(struct net_device *dev);
- 	int (*do_set_mode)(struct net_device *dev, enum can_mode mode);
- 	int (*do_set_termination)(struct net_device *dev, u16 term);
- 	int (*do_get_state)(const struct net_device *dev,
- 			    enum can_state *state);
- 	int (*do_get_berr_counter)(const struct net_device *dev,
- 				   struct can_berr_counter *bec);
--	int (*do_get_auto_tdcv)(const struct net_device *dev, u32 *tdcv);
- };
- 
- static inline bool can_tdc_is_enabled(const struct can_priv *priv)
-@@ -114,11 +118,11 @@ static inline bool can_tdc_is_enabled(const struct can_priv *priv)
-  */
- static inline s32 can_get_relative_tdco(const struct can_priv *priv)
- {
--	const struct can_bittiming *dbt = &priv->data_bittiming;
-+	const struct can_bittiming *dbt = &priv->fd.data_bittiming;
- 	s32 sample_point_in_tc = (CAN_SYNC_SEG + dbt->prop_seg +
- 				  dbt->phase_seg1) * dbt->brp;
- 
--	return (s32)priv->tdc.tdco - sample_point_in_tc;
-+	return (s32)priv->fd.tdc.tdco - sample_point_in_tc;
- }
- 
- /* helper to define static CAN controller features at device creation time */
--- 
-2.49.0
+> +///
+> +/// This type blocks niches the same way [`UnsafeCell`] does.
+> +///
+> +/// # Kernel implementation notes
+> +///
+> +/// This implementation works because of the "`!Unpin` hack" in rustc, which allows (some kinds of)
+> +/// mutual aliasing of `!Unpin` types. This hack might be removed at some point, after which only
+> +/// the `core::pin::UnsafePinned` type will allow this behavior. In order to simplify the migration
+> +/// to future rust versions only this polyfill of this type should be used when this behavior is
+> +/// required.
+> +///
+> +/// In order to disable niche optimizations this implementation uses [`UnsafeCell`] internally,
+> +/// the upstream version however will not. So the fact that [`UnsafePinned`] contains an
+> +/// [`UnsafeCell`] must not be relied on (Other than the niche blocking).
+> +// As opposed to the upstream Rust type this contains a `PhantomPinned`` and `UnsafeCell<T>`
+> +// - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<T>`
+> +//      Required to use the `!Unpin hack`.
+> +// - `UnsafeCell<T>` instead of T to disallow niche optimizations,
+> +//     which is handled in the compiler in upstream Rust
+> +#[repr(transparent)]
+> +pub struct UnsafePinned<T: ?Sized> {
+> +    _ph: PhantomPinned,
+> +    value: UnsafeCell<T>,
+> +}
+> +
+> +impl<T> UnsafePinned<T> {
+> +    /// Constructs a new instance of [`UnsafePinned`] which will wrap the specified value.
+> +    ///
+> +    /// All access to the inner value through `&UnsafePinned<T>` or `&mut UnsafePinned<T>` or
+> +    /// `Pin<&mut UnsafePinned<T>>` requires `unsafe` code.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn new(value: T) -> Self {
+> +        UnsafePinned {
+> +            value: UnsafeCell::new(value),
+> +            _ph: PhantomPinned,
+> +        }
+> +    }
+> +}
+> +impl<T: ?Sized> UnsafePinned<T> {
+> +    /// Get read-only access to the contents of a shared `UnsafePinned`.
+> +    ///
+> +    /// Note that `&UnsafePinned<T>` is read-only if `&T` is read-only. This means that if there is
+> +    /// mutation of the `T`, future reads from the `*const T` returned here are UB! Use
+> +    /// [`UnsafeCell`] if you also need interior mutability.
+> +    ///
+> +    /// [`UnsafeCell`]: core::cell::UnsafeCell
+> +    ///
+> +    /// ```rust,no_build
+> +    /// use kernel::types::UnsafePinned;
+> +    ///
+> +    /// unsafe {
+> +    ///     let mut x = UnsafePinned::new(0);
+> +    ///     let ptr = x.get(); // read-only pointer, assumes immutability
+> +    ///     x.get_mut_unchecked().write(1);
+> +    ///     ptr.read(); // UB!
+> +    /// }
+> +    /// ```
+> +    ///
+> +    /// Note that the `get_mut_unchecked` function used by this example is
+> +    /// currently not implemented in the kernel implementation.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn get(&self) -> *const T {
+> +        self.value.get()
+> +    }
+> +
+> +    /// Gets a mutable pointer to the wrapped value.
+> +    ///
+> +    /// The difference from `get_mut_pinned` and `get_mut_unchecked` is that this function
+> +    /// accepts a raw pointer, which is useful to avoid the creation of temporary references.
+> +    ///
+> +    /// These functions mentioned here are currently not implemented in the kernel.
+> +    #[inline(always)]
+> +    #[must_use]
+> +    pub const fn raw_get_mut(this: *mut Self) -> *mut T {
+> +        this as *mut T
+> +    }
+> +}
+> +
+> +impl<T> Wrapper<T> for UnsafePinned<T> {
+> +    fn pin_init<E>(init: impl PinInit<T, E>) -> impl PinInit<Self, E> {
+> +        // SAFETY: `UnsafePinned<T>` has a compatible layout to `T`.
+> +        unsafe { cast_pin_init(init) }
+> +    }
+> +}
+> 
 
