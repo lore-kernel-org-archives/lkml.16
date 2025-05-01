@@ -1,317 +1,297 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C451E991D;
-	Thu,  1 May 2025 21:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22BC1F151C;
+	Thu,  1 May 2025 21:33:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135208; cv=none; b=Aj7IqoWP/FpDkJxQQNX9ZWkG7NU9uYIlXpF4r+oOxbWhEFt/6jbX8FQ3T9v3CwoA8H1OIKrO/7hxZJ3bCyIgfBlkgPAB1VDus/LslV5cPjIHjqZ4BwzzYh8TLxowWdO9vfLT6oejZ+v2VtsMbn1Y6qbFmQbtRY9xcLv08YKacw0=
+	t=1746135240; cv=none; b=YtVeuIVtoE8RkfemephhZjQjaHliTrZdV7GKP4p0TyHCGP9gSEFuIaHYyZYAJd3Vvt8HyKB7KqAKvqNL27R1viaJLAZZfjGLphAntI25sBGgEhaKxKeeKvJ5+1PjextdrcmexlNgSIIkpkr9i/cpgJ9LAkXRA+6Oypjf1r7Gy1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135208; c=relaxed/simple;
-	bh=eDx405B4Ic1EnVGuT3bxKCdkxQUhKBjKbxLtKAAD3+w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uarduqHxGEutEF6qGlBxTEXSUOZ+6cRX2jxjKH5NUnVSJMUSvkGzqwvdr6KeUD9dH1YcWgc/bLmp53iOl2FKiHzkwM/SHxwgxE6kjrW9gGpHYyGZq1ya13reg8WZtyO+eio6OcfLpzLMOjl7rf0YEHJh27jURpZOLdbiDBjEiZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BFoeGz6V; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746135240; c=relaxed/simple;
+	bh=MJ41/j8bpvaKo0HV0EhEkS4sZ3w9r/QdKBwub0mVVWk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QJMfOZh3aR0Hs1gXQx0I+9lozCqx7eNyaXGOs++mmEpGupLDXbWRK61Jya7U9kx2Pr7bJnlQZ9BTfBoQDYQ6YnkJ1b3LIyiIQqYvpbDkQibL18oe9zx09HXUZWN9cuoaMCxsG7V1O/G9/HCqbYFRS+yXr45WFxPH5/+QNSAZ1Go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B5ly+rZ0; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BFoeGz6V"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2cca475546fso766056fac.1;
-        Thu, 01 May 2025 14:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746135206; x=1746740006; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9YA+qomxqJgtRO9zeFhIcAGnsoMeaZH+uAlZOjHclfk=;
-        b=BFoeGz6Vzi2N5UExi/eBgoPF9qWOdqaIPileD2dxeENhcxx+mXLlr9K1hxNS4TV69Y
-         9z90zilmUD3ipMV02Gd8+Gj36tVbcLLaqIjDPalEdnjodt/XJ9lJzSXUGVtlHkf7G4Kx
-         BcBHdeq2nha7onRFpPT2teptsOWovXFFi4ilFaz96+p7feaJkOzrP7uhW/NP2kA7qeoo
-         tHoiglloEi0Bpi+hFohsT1In8IklMGL3D3kXmnVtGiRWP3yrv1uYccmepwr52ywUs2iK
-         Rbl6FdUMVAEbViqw3M3B62ADx3OJe+M/2dx/JcZzF5sqFIhWfieAozsWxvv/AkpVDmQt
-         lFTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746135206; x=1746740006;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9YA+qomxqJgtRO9zeFhIcAGnsoMeaZH+uAlZOjHclfk=;
-        b=BgMtyZUpLChzYoT0s9fMhkBhylNP4PD78ObZgY7UyC0HhKaWIxrmUFTUPe53sr9mpx
-         QOzYiW374lbZa4Mhuydz46FBdf/NjwBgz+e6CvZw3tiYwT0soePCNeGevIoD1QExsAdo
-         ESwvTNgQGsYQRTdJM0uiO+j3rEPzD0Dp/pEjcD8F0UiJefACpWvbMQD5jHnRLuf9LRQq
-         +uGJeOu0jO+ky/hFUM6b6FyfvrMUlsM2BZscHgNk3wL5o7Tu7uQQ7QI3enjGfqtD56zn
-         l9evQ1bij0F30LFaw33c+HP3V7SkLkcZEc9edAHaDwM/sOdXN72cEoYmiHYtDbpr0UQd
-         KS9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWgFJkRXaPmhipKa8G9BetCfoOEMo4c/LKyFOoIftLBghrv2MWXqyGvpDsI6ym4kLAl/JOw1fI3yg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJSzeK7hTF0jAdAscWFxB1VdXH2XZB5H/sJEWpIicIcvRQXEiQ
-	sfFdQPQLxBnBgEWixoH2+8W2butwoYeaEf4nkAlOMlUvSw/zBfTWxHxSPU0b
-X-Gm-Gg: ASbGncudaZ8g1zWY4QFfTu2vQXgNVVBmWmvTtJVEB9igrC1lGxgCjAwpsSNXdHxOFfR
-	QdixYuEx4CemKeAkBaBZhI8RRVu2qD2sDaZkgVtlZOGdwfMoaAwd7Hv9fteED2niZJfjfm00uQm
-	4zOgIZKB3QLBne1kml7Q25gGJbs7F43kmBGJox5viFbUqwvXa2YqSblu1mCiQHcaKUF+Nvnw81r
-	iONcb2qjP5cMHqgYKl1d7974GBZ55Utc9CteBgg/44W2nS1USol4sz/TW0KWHcstyNBlxEh+vy6
-	HtxUJ/c0MhP9ioTBuEIzpg6d0UK0yGxxIfw1S0CLyIYRsytcTGIK+k9w
-X-Google-Smtp-Source: AGHT+IGWbFkNkNzAeNv7tIYHv8Gx1fyT4D+BtizLMlgL37BqTu5VcJujaU5vfOoJaQRA+FbplTv+vA==
-X-Received: by 2002:a05:6870:d685:b0:2bc:6675:2043 with SMTP id 586e51a60fabf-2dab2fe27d7mr257088fac.14.1746135206040;
-        Thu, 01 May 2025 14:33:26 -0700 (PDT)
-Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
-        by smtp.googlemail.com with ESMTPSA id 006d021491bc7-607e7cab6d8sm285152eaf.4.2025.05.01.14.33.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 14:33:25 -0700 (PDT)
-Message-ID: <ac0e5571-15b2-4b7a-adc9-84bbca96cbf3@gmail.com>
-Date: Thu, 1 May 2025 16:33:24 -0500
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B5ly+rZ0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746135238; x=1777671238;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=MJ41/j8bpvaKo0HV0EhEkS4sZ3w9r/QdKBwub0mVVWk=;
+  b=B5ly+rZ0YTyngXW1M/ysLpmMuGqX3NaDMozyrafNqDQrxb+hyurAfR+m
+   IWRApiCOS0l/pJ/jVnuPl7jTg+Oqb12oyGqGwe8tolka8St/of9B0l6TQ
+   /eNJlxInujdLc9YIiVHZ8hKyMJ5TCZU4/AfiAzTb00+5cXi1tP6NVHLZt
+   rqpTASuxP+QnC6wo8h2jh4O4FbrVJ8NXE/0ZwCqvGsRZxXjbcrzGKDoC2
+   QjgUqTIeX6kiNYp/3S2W4POD8TalADtVg3IkVc1MEJ585h+fTFCM9eQEs
+   NgGE03Km6CBzLf6mfzVdL2SXJF0vbS95X6Wdo+R2UEXSvZAewI9c6Cpi4
+   A==;
+X-CSE-ConnectionGUID: p2d5SUSJS5ej0/0hARmM5w==
+X-CSE-MsgGUID: /OJKUs81T8yTajIegb5QtQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47829707"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="47829707"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 14:33:57 -0700
+X-CSE-ConnectionGUID: F8wQRuLNTAWrT0Ov51Y8Eg==
+X-CSE-MsgGUID: /qhBleJETD2qEdsgvLYhCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="135462245"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 01 May 2025 14:33:52 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAbXS-0004Oz-1u;
+	Thu, 01 May 2025 21:33:50 +0000
+Date: Fri, 2 May 2025 05:33:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: oushixiong1025@163.com, Sumit Semwal <sumit.semwal@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: Re: [PATCH 1/3] dma-buf: add flags to skip map_dma_buf() for some
+ drivers
+Message-ID: <202505020434.7EfUIAjh-lkp@intel.com>
+References: <20250430085658.540746-1-oushixiong1025@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] cpufreq: intel_pstate: Use CPPC to get scaling
- factors
-To: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <1923452.tdWV9SEqCh@rjwysocki.net>
- <8476313.T7Z3S40VBb@rjwysocki.net>
- <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
- <b1bc2569b0da4c6749e896eee0fdf0af97c18fea.camel@linux.intel.com>
-Content-Language: en-US
-From: Russell Haley <yumpusamongus@gmail.com>
-In-Reply-To: <b1bc2569b0da4c6749e896eee0fdf0af97c18fea.camel@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430085658.540746-1-oushixiong1025@163.com>
+
+Hi,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on jic23-iio/togreg]
+[also build test WARNING on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus usb/usb-testing usb/usb-next usb/usb-linus xen-tip/linux-next linus/master v6.15-rc4]
+[cannot apply to tegra/for-next drm-xe/drm-xe-next rmk-arm/drm-armada-devel rmk-arm/drm-armada-fixes next-20250430]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/oushixiong1025-163-com/drm-prime-Support-importing-DMA-BUF-without-sg_table/20250430-170136
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+patch link:    https://lore.kernel.org/r/20250430085658.540746-1-oushixiong1025%40163.com
+patch subject: [PATCH 1/3] dma-buf: add flags to skip map_dma_buf() for some drivers
+config: arc-randconfig-002-20250501 (https://download.01.org/0day-ci/archive/20250502/202505020434.7EfUIAjh-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505020434.7EfUIAjh-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505020434.7EfUIAjh-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/dma-buf/dma-buf.c:908: warning: Function parameter or struct member 'skip_map' not described in 'dma_buf_dynamic_attach'
+>> drivers/dma-buf/dma-buf.c:996: warning: Function parameter or struct member 'skip_map' not described in 'dma_buf_attach'
 
 
-On 5/1/25 12:13 PM, srinivas pandruvada wrote:
-> Hi Russell,
-> 
-> 
-> On Wed, 2025-04-30 at 20:28 -0500, Russell Haley wrote:
->>
->> On 12/5/24 5:39 AM, Rafael J. Wysocki wrote:
->>
->>> +	 * Compute the perf-to-frequency scaling factor for the
->>> given CPU if
->>> +	 * possible, unless it would be 0.
->>> +	 */
->>> +	if (!cppc_get_perf_caps(cpu, &cppc_perf) &&
->>> +	Â Â Â  cppc_perf.nominal_perf && cppc_perf.nominal_freq)
->>> +		return div_u64(cppc_perf.nominal_freq *
->>> KHZ_PER_MHZ,
->>> +			Â Â Â Â Â Â  cppc_perf.nominal_perf);
->>
-> Can you dump the output of
-> 
->  grep -r . /sys/devices/system/cpu/cpu*/acpi_cppc/
-> 
-> Thanks,
-> Srinivas
+vim +908 drivers/dma-buf/dma-buf.c
 
-Running microcode 0x117, CSME firmware 19.0.5.1948, shipped in BIOS 3.04
-on an ASRock Z890 Pro-A Wifi motherboard:
+84335675f2223c drivers/dma-buf/dma-buf.c Simona Vetter    2021-01-15   817  
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   818  /**
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   819   * DOC: locking convention
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   820   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   821   * In order to avoid deadlock situations between dma-buf exports and importers,
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   822   * all dma-buf API users must follow the common dma-buf locking convention.
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   823   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   824   * Convention for importers
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   825   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   826   * 1. Importers must hold the dma-buf reservation lock when calling these
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   827   *    functions:
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   828   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   829   *     - dma_buf_pin()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   830   *     - dma_buf_unpin()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   831   *     - dma_buf_map_attachment()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   832   *     - dma_buf_unmap_attachment()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   833   *     - dma_buf_vmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   834   *     - dma_buf_vunmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   835   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   836   * 2. Importers must not hold the dma-buf reservation lock when calling these
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   837   *    functions:
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   838   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   839   *     - dma_buf_attach()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   840   *     - dma_buf_dynamic_attach()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   841   *     - dma_buf_detach()
+e3ecbd21776f1f drivers/dma-buf/dma-buf.c Maíra Canal      2023-02-23   842   *     - dma_buf_export()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   843   *     - dma_buf_fd()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   844   *     - dma_buf_get()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   845   *     - dma_buf_put()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   846   *     - dma_buf_mmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   847   *     - dma_buf_begin_cpu_access()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   848   *     - dma_buf_end_cpu_access()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   849   *     - dma_buf_map_attachment_unlocked()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   850   *     - dma_buf_unmap_attachment_unlocked()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   851   *     - dma_buf_vmap_unlocked()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   852   *     - dma_buf_vunmap_unlocked()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   853   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   854   * Convention for exporters
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   855   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   856   * 1. These &dma_buf_ops callbacks are invoked with unlocked dma-buf
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   857   *    reservation and exporter can take the lock:
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   858   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   859   *     - &dma_buf_ops.attach()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   860   *     - &dma_buf_ops.detach()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   861   *     - &dma_buf_ops.release()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   862   *     - &dma_buf_ops.begin_cpu_access()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   863   *     - &dma_buf_ops.end_cpu_access()
+8021fa16b7ec0a drivers/dma-buf/dma-buf.c Dmitry Osipenko  2023-05-30   864   *     - &dma_buf_ops.mmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   865   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   866   * 2. These &dma_buf_ops callbacks are invoked with locked dma-buf
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   867   *    reservation and exporter can't take the lock:
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   868   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   869   *     - &dma_buf_ops.pin()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   870   *     - &dma_buf_ops.unpin()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   871   *     - &dma_buf_ops.map_dma_buf()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   872   *     - &dma_buf_ops.unmap_dma_buf()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   873   *     - &dma_buf_ops.vmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   874   *     - &dma_buf_ops.vunmap()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   875   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   876   * 3. Exporters must hold the dma-buf reservation lock when calling these
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   877   *    functions:
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   878   *
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   879   *     - dma_buf_move_notify()
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   880   */
+ae2e7f28a170c0 drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   881  
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   882  /**
+85804b70cca68d drivers/dma-buf/dma-buf.c Simona Vetter    2020-12-11   883   * dma_buf_dynamic_attach - Add the device to dma_buf's attachments list
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   884   * @dmabuf:		[in]	buffer to attach device to.
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   885   * @dev:		[in]	device to be attached.
+6f49c2515e2258 drivers/dma-buf/dma-buf.c Randy Dunlap     2020-04-07   886   * @importer_ops:	[in]	importer operations for the attachment
+6f49c2515e2258 drivers/dma-buf/dma-buf.c Randy Dunlap     2020-04-07   887   * @importer_priv:	[in]	importer private pointer for the attachment
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   888   *
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   889   * Returns struct dma_buf_attachment pointer for this attachment. Attachments
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   890   * must be cleaned up by calling dma_buf_detach().
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   891   *
+85804b70cca68d drivers/dma-buf/dma-buf.c Simona Vetter    2020-12-11   892   * Optionally this calls &dma_buf_ops.attach to allow device-specific attach
+85804b70cca68d drivers/dma-buf/dma-buf.c Simona Vetter    2020-12-11   893   * functionality.
+85804b70cca68d drivers/dma-buf/dma-buf.c Simona Vetter    2020-12-11   894   *
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   895   * Returns:
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   896   *
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   897   * A pointer to newly created &dma_buf_attachment on success, or a negative
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   898   * error code wrapped into a pointer on failure.
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   899   *
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   900   * Note that this can fail if the backing storage of @dmabuf is in a place not
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   901   * accessible to @dev, and cannot be moved to a more suitable place. This is
+2904a8c1311f02 drivers/dma-buf/dma-buf.c Simona Vetter    2016-12-09   902   * indicated with the error code -EBUSY.
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   903   */
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   904  struct dma_buf_attachment *
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   905  dma_buf_dynamic_attach(struct dma_buf *dmabuf, struct device *dev,
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   906  		       const struct dma_buf_attach_ops *importer_ops,
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   907  		       void *importer_priv, bool skip_map)
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26  @908  {
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   909  	struct dma_buf_attachment *attach;
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   910  	int ret;
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   911  
+d1aa06a1eaf5f7 drivers/base/dma-buf.c    Laurent Pinchart 2012-01-26   912  	if (WARN_ON(!dmabuf || !dev))
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   913  		return ERR_PTR(-EINVAL);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   914  
+4981cdb063e3e9 drivers/dma-buf/dma-buf.c Christian König  2020-02-19   915  	if (WARN_ON(importer_ops && !importer_ops->move_notify))
+4981cdb063e3e9 drivers/dma-buf/dma-buf.c Christian König  2020-02-19   916  		return ERR_PTR(-EINVAL);
+4981cdb063e3e9 drivers/dma-buf/dma-buf.c Christian König  2020-02-19   917  
+db7942b6292306 drivers/dma-buf/dma-buf.c Markus Elfring   2017-05-08   918  	attach = kzalloc(sizeof(*attach), GFP_KERNEL);
+34d84ec4881d13 drivers/dma-buf/dma-buf.c Markus Elfring   2017-05-08   919  	if (!attach)
+a9fbc3b73127ef drivers/base/dma-buf.c    Laurent Pinchart 2012-01-26   920  		return ERR_PTR(-ENOMEM);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   921  
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   922  	attach->dev = dev;
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   923  	attach->dmabuf = dmabuf;
+09606b5446c25b drivers/dma-buf/dma-buf.c Christian König  2018-03-22   924  	if (importer_ops)
+09606b5446c25b drivers/dma-buf/dma-buf.c Christian König  2018-03-22   925  		attach->peer2peer = importer_ops->allow_peer2peer;
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   926  	attach->importer_ops = importer_ops;
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   927  	attach->importer_priv = importer_priv;
+2ed9201bdd9a8e drivers/base/dma-buf.c    Laurent Pinchart 2012-01-26   928  
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   929  	if (dmabuf->ops->attach) {
+a19741e5e5a9f1 drivers/dma-buf/dma-buf.c Christian König  2018-05-28   930  		ret = dmabuf->ops->attach(dmabuf, attach);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   931  		if (ret)
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   932  			goto err_attach;
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   933  	}
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   934  	dma_resv_lock(dmabuf->resv, NULL);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   935  	list_add(&attach->node, &dmabuf->attachments);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   936  	dma_resv_unlock(dmabuf->resv);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   937  
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   938  	/* When either the importer or the exporter can't handle dynamic
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   939  	 * mappings we cache the mapping here to avoid issues with the
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   940  	 * reservation object lock.
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   941  	 */
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   942  	if (dma_buf_attachment_is_dynamic(attach) !=
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   943  	    dma_buf_is_dynamic(dmabuf)) {
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   944  		dma_resv_lock(attach->dmabuf->resv, NULL);
+809d9c72c2f83e drivers/dma-buf/dma-buf.c Dmitry Osipenko  2022-10-17   945  		if (dma_buf_is_dynamic(attach->dmabuf)) {
+7e008b02557cce drivers/dma-buf/dma-buf.c Christian König  2021-05-17   946  			ret = dmabuf->ops->pin(attach);
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   947  			if (ret)
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   948  				goto err_unlock;
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   949  		}
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   950  
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   951  		if (!skip_map) {
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   952  			struct sg_table *sgt;
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   953  
+84335675f2223c drivers/dma-buf/dma-buf.c Simona Vetter    2021-01-15   954  			sgt = __map_dma_buf(attach, DMA_BIDIRECTIONAL);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   955  			if (!sgt)
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   956  				sgt = ERR_PTR(-ENOMEM);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   957  			if (IS_ERR(sgt)) {
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   958  				ret = PTR_ERR(sgt);
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   959  				goto err_unpin;
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   960  			}
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   961  			attach->sgt = sgt;
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   962  			attach->dir = DMA_BIDIRECTIONAL;
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   963  		}
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   964  		dma_resv_unlock(attach->dmabuf->resv);
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   965  	}
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   966  
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   967  	return attach;
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   968  
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   969  err_attach:
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   970  	kfree(attach);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   971  	return ERR_PTR(ret);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   972  
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   973  err_unpin:
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   974  	if (dma_buf_is_dynamic(attach->dmabuf))
+7e008b02557cce drivers/dma-buf/dma-buf.c Christian König  2021-05-17   975  		dmabuf->ops->unpin(attach);
+bb42df4662a447 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   976  
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   977  err_unlock:
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   978  	dma_resv_unlock(attach->dmabuf->resv);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   979  
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   980  	dma_buf_detach(dmabuf, attach);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   981  	return ERR_PTR(ret);
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   982  }
+cdd30ebb1b9f36 drivers/dma-buf/dma-buf.c Peter Zijlstra   2024-12-02   983  EXPORT_SYMBOL_NS_GPL(dma_buf_dynamic_attach, "DMA_BUF");
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   984  
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   985  /**
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   986   * dma_buf_attach - Wrapper for dma_buf_dynamic_attach
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   987   * @dmabuf:	[in]	buffer to attach device to.
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   988   * @dev:	[in]	device to be attached.
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   989   *
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   990   * Wrapper to call dma_buf_dynamic_attach() for drivers which still use a static
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   991   * mapping.
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   992   */
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03   993  struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   994  					  struct device *dev,
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   995  					  bool skip_map)
+15fd552d186cb0 drivers/dma-buf/dma-buf.c Christian König  2018-07-03  @996  {
+8935ae05eee351 drivers/dma-buf/dma-buf.c Shixiong Ou      2025-04-30   997  	return dma_buf_dynamic_attach(dmabuf, dev, NULL, NULL, skip_map);
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26   998  }
+cdd30ebb1b9f36 drivers/dma-buf/dma-buf.c Peter Zijlstra   2024-12-02   999  EXPORT_SYMBOL_NS_GPL(dma_buf_attach, "DMA_BUF");
+d15bd7ee445d07 drivers/base/dma-buf.c    Sumit Semwal     2011-12-26  1000  
 
-> /sys/devices/system/cpu/cpu0/acpi_cppc/feedback_ctrs:ref:127316207577 del:142876300546
-> /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu0/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu0/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu0/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu0/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu1/acpi_cppc/feedback_ctrs:ref:30806048910 del:37298826546
-> /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu1/acpi_cppc/highest_perf:88
-> /sys/devices/system/cpu/cpu1/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu1/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu1/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu1/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu1/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu2/acpi_cppc/feedback_ctrs:ref:30104856912 del:37149315858
-> /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu2/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu2/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu2/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu2/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu2/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu2/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu3/acpi_cppc/feedback_ctrs:ref:28864792476 del:36395338959
-> /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu3/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu3/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu3/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu3/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu3/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu3/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu4/acpi_cppc/feedback_ctrs:ref:29591299374 del:35708084379
-> /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu4/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu4/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu4/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu4/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu4/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu4/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu5/acpi_cppc/feedback_ctrs:ref:27347351382 del:35000915045
-> /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu5/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu5/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu5/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu5/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu5/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu5/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu6/acpi_cppc/feedback_ctrs:ref:28117737882 del:34854014824
-> /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu6/acpi_cppc/highest_perf:87
-> /sys/devices/system/cpu/cpu6/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu6/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu6/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu6/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu6/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu7/acpi_cppc/feedback_ctrs:ref:29586359166 del:36871078184
-> /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_nonlinear_perf:36
-> /sys/devices/system/cpu/cpu7/acpi_cppc/highest_perf:88
-> /sys/devices/system/cpu/cpu7/acpi_cppc/nominal_freq:3900
-> /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu7/acpi_cppc/guaranteed_perf:63
-> /sys/devices/system/cpu/cpu7/acpi_cppc/nominal_perf:62
-> /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu7/acpi_cppc/reference_perf:62
-> /sys/devices/system/cpu/cpu7/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu8/acpi_cppc/feedback_ctrs:ref:28808115336 del:32798153181
-> /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu8/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu8/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu8/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu8/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu8/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu8/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu9/acpi_cppc/feedback_ctrs:ref:28808446524 del:32557156736
-> /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu9/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu9/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu9/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu9/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu9/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu9/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu10/acpi_cppc/feedback_ctrs:ref:28466858472 del:32126528930
-> /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu10/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu10/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu10/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu10/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu10/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu10/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu11/acpi_cppc/feedback_ctrs:ref:30158667240 del:34095663687
-> /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu11/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu11/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu11/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu11/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu11/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu11/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu12/acpi_cppc/feedback_ctrs:ref:29056752036 del:33047611525
-> /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu12/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu12/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu12/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu12/acpi_cppc/nominal_perf:33
-> /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu12/acpi_cppc/reference_perf:39
-> /sys/devices/system/cpu/cpu12/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu13/acpi_cppc/feedback_ctrs:ref:28868999796 del:32974873909
-> /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu13/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu13/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu13/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu13/acpi_cppc/nominal_perf:33
-> /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu13/acpi_cppc/reference_perf:39
-> /sys/devices/system/cpu/cpu13/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu14/acpi_cppc/feedback_ctrs:ref:32754342192 del:33580705618
-> /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu14/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu14/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu14/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu14/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu14/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu14/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu15/acpi_cppc/feedback_ctrs:ref:30756411036 del:33232643243
-> /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu15/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu15/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu15/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu15/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu15/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu15/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu16/acpi_cppc/feedback_ctrs:ref:29430330384 del:32848376143
-> /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu16/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu16/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu16/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu16/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu16/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu16/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu17/acpi_cppc/feedback_ctrs:ref:29997814080 del:33374419073
-> /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu17/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu17/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu17/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu17/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu17/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu17/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu18/acpi_cppc/feedback_ctrs:ref:28312400376 del:32285787922
-> /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu18/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu18/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu18/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu18/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu18/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu18/acpi_cppc/wraparound_time:18446744073709551615
-> /sys/devices/system/cpu/cpu19/acpi_cppc/feedback_ctrs:ref:28316604732 del:32229146887
-> /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_nonlinear_perf:21
-> /sys/devices/system/cpu/cpu19/acpi_cppc/highest_perf:65
-> /sys/devices/system/cpu/cpu19/acpi_cppc/nominal_freq:3300
-> /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_freq:0
-> /sys/devices/system/cpu/cpu19/acpi_cppc/guaranteed_perf:47
-> /sys/devices/system/cpu/cpu19/acpi_cppc/nominal_perf:46
-> /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_perf:1
-> /sys/devices/system/cpu/cpu19/acpi_cppc/reference_perf:54
-> /sys/devices/system/cpu/cpu19/acpi_cppc/wraparound_time:18446744073709551615
-
-Thanks,
-
-Russell
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
