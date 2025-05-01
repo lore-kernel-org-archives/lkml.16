@@ -1,322 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6BF12AE7F;
-	Thu,  1 May 2025 10:15:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0BE21CA1E;
+	Thu,  1 May 2025 10:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746094532; cv=none; b=rUT19FdOs/qJ9K4OENVO5saY8HhiyBnPBJm7UD5rVYCu6HlMOZjEqS4wLMU1vYPrwTPctN++XjLWvOxTT9hTbP32zGUmyqArnI+FOlTNsJiunvZfOsrXMN5ha/1lvTro3Q7SgEmJKKCxqOrFYsc/OOgwWLmI7Mv62W80jotq334=
+	t=1746094532; cv=none; b=E7imRZd9WMKo6INfhkv/nf0aMoCH3bsgpMCTJjcAttF1y1ZroRHj4mjQJfNyB25kbY5tClWT8MrK87UfiJVnfulj62+PGqfnCvBmPh6aZQ7UUpq5ewi08pbOqUYY0M63dLHxQ2hH3kinlNAK79vn4GQfWcuxnx01vLkSq59ufpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746094532; c=relaxed/simple;
-	bh=Mt+tu6h8Fn8zaIxxJwvEwJw+Do65UIevysaXbL1IyVo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=GiXMnvSEdyXQ4E2LAJvebq6kSTD4XrE1gpSMgIiRj4bCpUEZ0R5umVlcXAOFzdCSugSW3gEUmT6Rl9IUj3m51p606q09mp0TAIo1EZzepYN00iaMg++yN+AKJExr3lcj5Ejo9FDgCqjLmlwUuuk80khMFuG6+60QnebzDzG/i5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9lCnu/C; arc=none smtp.client-ip=10.30.226.201
+	bh=6QKF3fB3RX26/3Dk9AwJ8Y4/KCM66LJAXLJCokz4X5c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IIJLfHJ71cTWnXCjij/9SH4lv3MzEBxN7lOUjOV8fq1Ch2CKqPjaTkWkFupFgmzgQbTWiKkKx3LxBlvANL2YYDNYj2xW1/2unXeMVF4MyRdgt9rcBb3g1ElSErrWRdpC2OsOXbPHavEdUMZ5gA1yQ2agZvNSMeT0NkwYzq8uCCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=qgCJERm1; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9lCnu/C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9383C4CEE3;
-	Thu,  1 May 2025 10:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746094531;
-	bh=Mt+tu6h8Fn8zaIxxJwvEwJw+Do65UIevysaXbL1IyVo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=B9lCnu/CENZtVqdHnADsBLiE1r7lK7j7FbRlvbt2crKRJEXjcV9H7A7p0qxjTjg64
-	 vQCjvTG4ucUkCJBL17n9zSHTvQZKs8/VKFHkkj6cJmHSWlhZmPH/jYhNBgvzn9QR60
-	 BqmmaYEyVReLdJ8sAbbfuHxNRV3zKjctL/9DZ7S5uHcJf1PPwirP4WpDky4pwxSh5v
-	 f6zX7dl6yRmaXDKWSbTAOfMfhHgu9i7CUVuDsLmwSyzkTlEyaO0VSWkT5u/tS8pMS2
-	 zKgjFmfSu33ZvnNqH5PUGzPQhzoB7yOyKgOrMhmIisrz56uT6H4CWTqxamCIinuFn1
-	 wqADPDY9iY/ng==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Thu, 01 May 2025 12:14:37 +0200
-Subject: [PATCH v6 2/3] rust: configfs: add a sample demonstrating configfs
- usage
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="qgCJERm1"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=kZveVjehfrVJREXjRbtBsdkHaE/Ro5K5wi3P3q+ApkQ=; b=qgCJERm12Ev1Bz71+iYUfn2tu8
+	Z9yVoxzkoI2P9LyRBfor7+EuFEWf76T/89EnyncHM/FvHwOSf9J/n5gFmYdL/ZWEnQYdeo/uNV5Kr
+	kjOfWSri6WczIKCTyO7Ja8GXJRuX+QH4J4np94Y+0qzmr1TeWv4pl7EF1ZVCVFTZOVMCm+WkxGTOJ
+	4KDfXjb7gsugzPyTClfebvGXDxsCBWGnpjkuNliqFvro7E/2eNMm/UAMHt0hdBCNRuN5Xj8FlxqDR
+	3Tp+mN2h4rg6cJWQ9OQhdUF24G+byjenxUyrwNO0PZ2ANOtXnf/MM/zWAyY75uKy5aAuwhZLelYlw
+	YW7KJTVQ==;
+Received: from 179-125-79-234-dinamico.pombonet.net.br ([179.125.79.234] helo=quatroqueijos)
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256) (Exim)
+	id 1uAQvT-001T7e-Rp; Thu, 01 May 2025 12:15:16 +0200
+Date: Thu, 1 May 2025 07:15:09 -0300
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <aBNJrYN1ThMwsLYT@quatroqueijos>
+References: <20250501164501.0fc0ab68@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-configfs-v6-2-66c61eb76368@kernel.org>
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
-In-Reply-To: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
- Fiona Behrens <me@kloenk.dev>, 
- Charalampos Mitrodimas <charmitro@posteo.net>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Breno Leitao <leitao@debian.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7356; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=Mt+tu6h8Fn8zaIxxJwvEwJw+Do65UIevysaXbL1IyVo=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoE0moOQKTvAE/pdjjNWhlno3KlcHdo4QFWTElQ
- SOC4q+frAyJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaBNJqAAKCRDhuBo+eShj
- dx+RD/0ZDuoAOLECT1FbyVsEJj1GVgFd1dicREu+KiM3Eg9mclxtW64eTKCtblyG1MskfqxO/9j
- EEefdZxjLGCJXa3/tWsNxjSpyxQrdLTB6Y6sjW1xdCN1kJJ3rvNanPvJSgbtzXbYf87ayGqm2Uy
- TOPy+1ybu/8vxPcORFPSb7gWAcYLElYuc4FeaGe5iEFwNGrCietclD5NC8kwhLpfgKOiyw9Cd0H
- n2oymyJeH6hj/9DKeb+D2BiViq40EKeGdvoWfCpYVUDpO2GH8s5BoRrgPsoT+UYYOlYc/4ZzUbl
- NvflXb+zM2jMGpoHBJMdF4SkH/B6klUGeGSR1ZqyfFrDGvbGc9hEKjkpWWQhGKyEFgFQwOgPtyw
- +4AsugFqWzYNAM1NNCImDQOUg0F0NdrUrKZnI8tPxtNNOqscZuHJb84z6hiRXq3R4ruW+FOOLPa
- qZWay1DK+uttzn5lE5iv4uQNCASKM1wwnnwZaGdsb67DfhskfVMO3dU4oF4hbXTvH2cVYrL8p49
- ESlu08Vg1q41oE89UhNqtyHr3awMGc0QSqv4bT6YTZUAXalMpp8qDSk6dfKoyKX6Lo9fQBy4LFI
- qORfBjqwRiJEfn2S3My8/HG/dB71zXbF7iL5U2W4dcOE4K/B7MaaJaE1PhEkWG9smw+LgZZH4Yt
- GXLzRkdd+CxVNiA==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501164501.0fc0ab68@canb.auug.org.au>
 
-Add a sample to the samples folder, demonstrating the intended use of the
-Rust configfs API.
+On Thu, May 01, 2025 at 04:45:01PM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the char-misc tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> ld: warning: discarding dynamic section .glink
+> ld: warning: discarding dynamic section .plt
+> ld: linkage table error against `__kunit_do_failed_assertion'
+> ld: stubs don't match calculated size
+> ld: can not build stubs: bad value
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_minor':
+> misc_minor_kunit.c:(.text+0x180): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x1e4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x240): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_twice':
+> misc_minor_kunit.c:(.text+0x3e8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x458): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x4c4): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_find_minors':
+> misc_minor_kunit.c:(.text+0xb3c): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xbac): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xc1c): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xc88): undefined reference to `kunit_log_append'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_name':
+> misc_minor_kunit.c:(.text+0xee4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0xf40): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0xf90): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_error':
+> misc_minor_kunit.c:(.text+0x11b4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x1210): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x1264): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x0): undefined reference to `kunit_binary_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x8): undefined reference to `kunit_fail_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x10): undefined reference to `kunit_unary_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_can_open':
+> misc_minor_kunit.c:(.init.text+0xc0): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x134): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_static_basic':
+> misc_minor_kunit.c:(.init.text+0x25c): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x2b4): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict_reverse':
+> misc_minor_kunit.c:(.init.text+0x408): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x414): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0x46c): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x4d8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x530): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x590): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x5e4): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.init.text+0x63c): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict':
+> misc_minor_kunit.c:(.init.text+0x7a0): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0x7f8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x85c): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_basic':
+> misc_minor_kunit.c:(.init.text+0x994): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x9ec): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision_reverse':
+> misc_minor_kunit.c:(.init.text+0xb20): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0xba8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xc00): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xc64): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xcc0): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision':
+> misc_minor_kunit.c:(.init.text+0xe30): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0xe98): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xea4): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0xf04): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xfac): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x1058): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_only_range':
+> misc_minor_kunit.c:(.init.text+0x1174): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0x1200): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x1248): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x12ec): undefined reference to `__kunit_do_failed_assertion'
+> 
+> Caused by commit
+> 
+>   20acf4dd46e4 ("char: misc: make miscdevice unit test built-in only")
+> 
+> $ grep CONFIG_KUNIT .config
+> CONFIG_KUNIT=m
+> CONFIG_KUNIT_DEBUGFS=y
+> CONFIG_KUNIT_FAULT_TEST=y
+> CONFIG_KUNIT_TEST=m
+> CONFIG_KUNIT_EXAMPLE_TEST=m
+> CONFIG_KUNIT_ALL_TESTS=m
+> CONFIG_KUNIT_DEFAULT_ENABLED=y
+> CONFIG_KUNIT_AUTORUN_ENABLED=y
+> $ grep CONFIG_TEST_MINOR .config
+> $ 
+> 
+> I have used the char-misc tree from next-20250428 again.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
 
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+This should fix it. I am sorry for still breaking all these builds. I have
+tested this with the ppc64_defconfig (though that had required me to "fix" a
+couple of warnings-turned-to-errors under arch/powerpc/). As I am trying to fix
+this quickly, I haven't checked other configs. Again, I am sorry for the trouble.
+
+Greg, I understand this may have caused you concern about merging this. Let
+me know if you want to apply the fix below and have me submit it properly
+or if we should wait for another cycle before applying a v5 after further
+testing.
+
+Cascardo.
+
+
+From 9e3150cb663e17b748cce6373c2f2b491a14b1a3 Mon Sep 17 00:00:00 2001
+From: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Date: Wed, 30 Apr 2025 08:30:47 -0300
+Subject: [PATCH] char: misc: make miscdevice unit test require CONFIG_KUNIT=y
+
+Otherwise, it allows for CONFIG_KUNIT=m, and that leads to build failures
+like:
+
+ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_minor':
+misc_minor_kunit.c:(.text+0x180): undefined reference to `__kunit_do_failed_assertion'
+ld: misc_minor_kunit.c:(.text+0x1e4): undefined reference to `__kunit_do_failed_assertion'
+ld: misc_minor_kunit.c:(.text+0x240): undefined reference to `__kunit_do_failed_assertion'
+ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_twice':
+misc_minor_kunit.c:(.text+0x3e8): undefined reference to `__kunit_do_failed_assertion'
+ld: misc_minor_kunit.c:(.text+0x458): undefined reference to `__kunit_do_failed_assertion'
+ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x4c4): more undefined references to `__kunit_do_failed_assertion' follow
+ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_find_minors':
+misc_minor_kunit.c:(.text+0xb3c): undefined reference to `kunit_log_append'
+ld: misc_minor_kunit.c:(.text+0xbac): undefined reference to `kunit_log_append'
+ld: misc_minor_kunit.c:(.text+0xc1c): undefined reference to `kunit_log_append'
+ld: misc_minor_kunit.c:(.text+0xc88): undefined reference to `kunit_log_append'
+
+[...]
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Closes: https://lore.kernel.org/linux-next/20250501164501.0fc0ab68@canb.auug.org.au/
+Fixes: 45f0de4f8dc3 ("char: misc: add test cases")
+Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
 ---
- samples/rust/Kconfig          |  11 +++
- samples/rust/Makefile         |   1 +
- samples/rust/rust_configfs.rs | 192 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 204 insertions(+)
+ lib/Kconfig.debug | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-index cad52b7120b5..be491ad9b3af 100644
---- a/samples/rust/Kconfig
-+++ b/samples/rust/Kconfig
-@@ -10,6 +10,17 @@ menuconfig SAMPLES_RUST
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 0117b852bd13..4049851e5115 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -2513,7 +2513,7 @@ config TEST_IDA
  
- if SAMPLES_RUST
- 
-+config SAMPLE_RUST_CONFIGFS
-+	tristate "Configfs sample"
-+	depends on CONFIGFS_FS
-+	help
-+	  This option builds the Rust configfs sample.
-+
-+	  To compile this as a module, choose M here:
-+	  the module will be called rust_configfs.
-+
-+	  If unsure, say N.
-+
- config SAMPLE_RUST_MINIMAL
- 	tristate "Minimal"
+ config TEST_MISC_MINOR
+ 	bool "miscdevice KUnit test" if !KUNIT_ALL_TESTS
+-	depends on KUNIT
++	depends on KUNIT=y
+ 	default KUNIT_ALL_TESTS
  	help
-diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-index c6a2479f7d9c..b3c9178d654a 100644
---- a/samples/rust/Makefile
-+++ b/samples/rust/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
- obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+= rust_driver_faux.o
-+obj-$(CONFIG_SAMPLE_RUST_CONFIGFS)		+= rust_configfs.o
- 
- rust_print-y := rust_print_main.o rust_print_events.o
- 
-diff --git a/samples/rust/rust_configfs.rs b/samples/rust/rust_configfs.rs
-new file mode 100644
-index 000000000000..9c0989072a8f
---- /dev/null
-+++ b/samples/rust/rust_configfs.rs
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+//! Rust configfs sample.
-+
-+use kernel::alloc::flags;
-+use kernel::c_str;
-+use kernel::configfs;
-+use kernel::configfs_attrs;
-+use kernel::new_mutex;
-+use kernel::page::PAGE_SIZE;
-+use kernel::prelude::*;
-+use kernel::sync::Mutex;
-+
-+module! {
-+    type: RustConfigfs,
-+    name: "rust_configfs",
-+    author: "Rust for Linux Contributors",
-+    description: "Rust configfs sample",
-+    license: "GPL",
-+}
-+
-+#[pin_data]
-+struct RustConfigfs {
-+    #[pin]
-+    config: configfs::Subsystem<Configuration>,
-+}
-+
-+#[pin_data]
-+struct Configuration {
-+    message: &'static CStr,
-+    #[pin]
-+    bar: Mutex<(KBox<[u8; PAGE_SIZE]>, usize)>,
-+}
-+
-+impl Configuration {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {
-+            message: c_str!("Hello World\n"),
-+            bar <- new_mutex!((KBox::new([0; PAGE_SIZE], flags::GFP_KERNEL)?, 0)),
-+        })
-+    }
-+}
-+
-+impl kernel::InPlaceModule for RustConfigfs {
-+    fn init(_module: &'static ThisModule) -> impl PinInit<Self, Error> {
-+        pr_info!("Rust configfs sample (init)\n");
-+
-+        // Define a subsystem with the data type `Configuration`, two
-+        // attributes, `message` and `bar` and child group type `Child`. `mkdir`
-+        // in the directory representing this subsystem will create directories
-+        // backed by the `Child` type.
-+        let item_type = configfs_attrs! {
-+            container: configfs::Subsystem<Configuration>,
-+            data: Configuration,
-+            child: Child,
-+            attributes: [
-+                message: 0,
-+                bar: 1,
-+            ],
-+        };
-+
-+        try_pin_init!(Self {
-+            config <- configfs::Subsystem::new(
-+                c_str!("rust_configfs"), item_type, Configuration::new()
-+            ),
-+        })
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Configuration {
-+    type Child = Child;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<Child>, Error>> {
-+        // Define a group with data type `Child`, one attribute `baz` and child
-+        // group type `GrandChild`. `mkdir` in the directory representing this
-+        // group will create directories backed by the `GrandChild` type.
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<Child>,
-+            data: Child,
-+            child: GrandChild,
-+            attributes: [
-+                baz: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(name.try_into()?, tpe, Child::new()))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show message\n");
-+        let data = container.message;
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<1> for Configuration {
-+    type Data = Configuration;
-+
-+    fn show(container: &Configuration, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show bar\n");
-+        let guard = container.bar.lock();
-+        let data = guard.0.as_slice();
-+        let len = guard.1;
-+        page[0..len].copy_from_slice(&data[0..len]);
-+        Ok(len)
-+    }
-+
-+    fn store(container: &Configuration, page: &[u8]) -> Result {
-+        pr_info!("Store bar\n");
-+        let mut guard = container.bar.lock();
-+        guard.0[0..page.len()].copy_from_slice(page);
-+        guard.1 = page.len();
-+        Ok(())
-+    }
-+}
-+
-+// `pin_data` cannot handle structs without braces.
-+#[pin_data]
-+struct Child {}
-+
-+impl Child {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::GroupOperations for Child {
-+    type Child = GrandChild;
-+
-+    fn make_group(&self, name: &CStr) -> Result<impl PinInit<configfs::Group<GrandChild>, Error>> {
-+        // Define a group with data type `GrandChild`, one attribute `gz`. As no
-+        // child type is specified, it will not be possible to create subgroups
-+        // in this group, and `mkdir`in the directory representing this group
-+        // will return an error.
-+        let tpe = configfs_attrs! {
-+            container: configfs::Group<GrandChild>,
-+            data: GrandChild,
-+            attributes: [
-+                gc: 0,
-+            ],
-+        };
-+
-+        Ok(configfs::Group::new(
-+            name.try_into()?,
-+            tpe,
-+            GrandChild::new(),
-+        ))
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for Child {
-+    type Data = Child;
-+
-+    fn show(_container: &Child, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show baz\n");
-+        let data = c"Hello Baz\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-+
-+// `pin_data` cannot handle structs without braces.
-+#[pin_data]
-+struct GrandChild {}
-+
-+impl GrandChild {
-+    fn new() -> impl PinInit<Self, Error> {
-+        try_pin_init!(Self {})
-+    }
-+}
-+
-+#[vtable]
-+impl configfs::AttributeOperations<0> for GrandChild {
-+    type Data = GrandChild;
-+
-+    fn show(_container: &GrandChild, page: &mut [u8; PAGE_SIZE]) -> Result<usize> {
-+        pr_info!("Show grand child\n");
-+        let data = c"Hello GC\n".to_bytes();
-+        page[0..data.len()].copy_from_slice(data);
-+        Ok(data.len())
-+    }
-+}
-
+ 	  Kunit test for miscdevice API, specially its behavior in respect to
 -- 
 2.47.2
-
 
