@@ -1,126 +1,77 @@
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6282254850;
-	Thu,  1 May 2025 05:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FEE2609F5;
+	Thu,  1 May 2025 05:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746076326; cv=none; b=XXMDqz/UIiS9tfTBo6Rsmrrkrli/S9OxYXJgD8W4cGG+8gYnRpoxgz+7YWu/Rnm6exCcDlFUuMRCF1WONZUscbMHBE+rdm24DTFDW6T0Lca9ahv7ODsUrULsEDvFuUB3aeeYCsHMXqJu4vJw1Qr+EsjPny7tJ4tIXStSXp+NwR0=
+	t=1746076760; cv=none; b=pidi2MtsVe2cL5d4bjJc5MLXnZ3D7bDTOtOzPeLt9neG53yW8lzxiEdL/nkdGwgMBlZXHExMBRckl65a2G+ZPZPqbMZqyWVGhe/tzMuwSm1Ffh5G0s7LSQXVUTAwrKS1VxacTrq4t5/WsqwmsrUcB7y1XqTrsoXDLmuTYkGkEqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746076326; c=relaxed/simple;
-	bh=y+e4LNh0a+mZT7KuvkuNN9QKvyqkFkWCWi3RGovQ0vs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N7BNBWK/ybWUDlvJpC29hSe7R6CXIMB/xT+dF/bDVc+87ugyG4bC4k3B9wP7txkCCxbx+46qHIL7g7SMU03QZUuCbFnOdHg887lrTylDy8b/+1ug+pJKfSqlUs3cAZAMkBGbKJicUbwvhmvuHFOCRL9vrlFcEXqfx0ugTZS/tJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499c5d9691so696123e87.2;
-        Wed, 30 Apr 2025 22:12:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746076321; x=1746681121;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Ajprlg+s4993P4LGMO5ZNBmeiTXr19klHoz0G+I0WL0=;
-        b=Xs6a/sHYCLt1eEDiNm70dqmOH1OF5N+pdokgK+IVj5jORJ0M5gzQUkBtEna9QNo6bi
-         V8EDR1RjEBL+w7cl40zYt+bEMGD6cbs59RW/k8kPaeoCuPqgDh2it+0jduaFOYiJvOam
-         C2+5LLiB4boB8bMgXLyAy41Ekw0CgERm9G2cVuwnx8jaWXXXvh5MmanpFGPXcMcK3WJJ
-         HdpgQftP1n156iTAdKWPF48csxk1vl7pVJqaUfF/Vgloiw50I06na45WC+JiUtWYRym9
-         iwhRyktBExu4UxqaPHCEBtc3FbBGfWEnsw0OsE4KnnUawbb4WtITRuzjAyCtc/8Ddodo
-         1b7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVsmJyAf5IXit6sxz85rPyXxUnkfZDefvZiwuHFG1uJjptld+syqejTzAy+eIZQqoDGjAvcVcBzS1w=@vger.kernel.org, AJvYcCXcr6UFPN2rA1AWTORfGFDCnsyqvepYugwMjb9uNetGVXjxZYFAq8aBZraajjYCHSDbeguD39kUQlRny68b@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywh0rECCE2aEvqiugd/qi9b0dwlTzq5BzNauSwPjyHEvrKduf9Z
-	/xEixUwWpOE3JiBua9ZXaVrJ91HHZ5681XOB2/H71lGrrOdxGMzo2PIApOJb
-X-Gm-Gg: ASbGnct+5A9JEXUvPVoBjOuOEsvQBTdY0fTv7Mcc8IiHfKcAMpDyi7WcJLxXPDiYUSW
-	a+C4MneM3VGrrzUCm7Tpayyhwac01Hmz6d4BY/ABfakltIVsASp4ZsvqczrYsMXFq42Y/oAxQXB
-	Ug4YB8qnT7p4YlIZ1wDS2hMaFOyCLKqjQqD+ug/oHHbfxS9ZyCOR6PnuXUyElnf6P8Gnem+QVRv
-	dCLtLcS8P3IzsjhQp9oAsjFZ9sXlzTZoZEkcZL3P8c7+6B/2qGkxM6MlBbhq+NEBK0mvIWMS0lM
-	YNnnEnDIbHYeq532cniUIHldU1GfkxOEhD4Rtakb8BtksN/+1rHzfU6eQXKGgkbLf0CpHxEJDw=
-	=
-X-Google-Smtp-Source: AGHT+IHQpf/txFEjzIrYixAnzD5ArltZhszSSQYM6RvveV/aco54vqUOtGIlB0Jq0FQoo6DrpGvnAQ==
-X-Received: by 2002:a05:6512:ac2:b0:549:5b54:2c5b with SMTP id 2adb3069b0e04-54ea726d028mr354168e87.24.1746076320405;
-        Wed, 30 Apr 2025 22:12:00 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea7647defsm92553e87.214.2025.04.30.22.11.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 22:11:59 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30eef9ce7feso4943361fa.0;
-        Wed, 30 Apr 2025 22:11:59 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCW22NvpDnfFZBNgz93GXEROb/P6XavKL+UiNUwpRNB/oB5cH+eWoikTcIhgNpnZhE/suzPXjfMPT7k=@vger.kernel.org, AJvYcCX+4kpB1Ka7uOHW+VFomJaE7Gd+zf6PDUxIZkZ8NoZHv1r43Io/VLbFfuXLqZk9KHZHczw83tPTUHyBPeNS@vger.kernel.org
-X-Received: by 2002:a2e:a902:0:b0:309:23ea:5919 with SMTP id
- 38308e7fff4ca-31f950cc7admr4279341fa.31.1746076319318; Wed, 30 Apr 2025
- 22:11:59 -0700 (PDT)
+	s=arc-20240116; t=1746076760; c=relaxed/simple;
+	bh=kB2nu9oQJWAumIVhwpNu9VX/9t+OVZ610msYAY5hvK4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aSu7cagTTZdJAFXavms4C1cqt3I3PVYZvjKjl90Jripw2Nf+fvUkqOIQLP8hOIwKQ6MOlKBbVE6RjY9Ib3JJF0eJnMyNrOSHE14OFfK2Gz3Ntk3W8ww8WhdsSBQz5e0KmkTp4DcHbBkUAegPJ0l3nu0pj7PJz/yTa0XFegvC6CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ORsTUm+3; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ORsTUm+3"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=9t5+R7MBB1CitzsoU7qrOUojn4639+WchyM4zx0d4j4=; b=ORsTUm+3tDs7MqOLXniwLbTENu
+	6p8Ijou3tB4FtepjWe3F1A6W8IvySh95cZdbo6AzTOgys1fAFOnLjgZl/ixeJAU3uP78oydLi8D//
+	yAax6cWpNxoAHYpOezO8beaYeuGHP68V4qdyQTdAirltbeZ3K5W1HWRLRdTu1DRHvIhqGACuMLtsD
+	L4/ELm9xRzxjZE9uSzRBsLPKu384XEncFgdp8RWbWcWOQIo8DOJNbz9+cCdkKdgpDc51jJ2r9y5VI
+	V7Wcl+IDdkPoN5XAqV8kKx2r8DlOwoCrwVYtmf6WPYNYB7nm6jKdpr5Y35dDNgam3PekRDwUujufp
+	tuz3w6FQ==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uAMK4-002SVz-1M;
+	Thu, 01 May 2025 13:19:01 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 01 May 2025 13:19:00 +0800
+Date: Thu, 1 May 2025 13:19:00 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Eric Biggers <ebiggers@kernel.org>
+Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 00/12] crypto: sha256 - Use partial block API
+Message-ID: <aBMERARvCQsl-5iN@gondor.apana.org.au>
+References: <cover.1745992998.git.herbert@gondor.apana.org.au>
+ <20250430174543.GB1958@sol.localdomain>
+ <aBLMi5XOQKJyJGu-@gondor.apana.org.au>
+ <20250501022617.GA65059@sol.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430095325.477311-1-andre.przywara@arm.com>
-In-Reply-To: <20250430095325.477311-1-andre.przywara@arm.com>
-Reply-To: wens@csie.org
-From: Chen-Yu Tsai <wens@csie.org>
-Date: Thu, 1 May 2025 13:11:31 +0800
-X-Gmail-Original-Message-ID: <CAGb2v65-YTLbzwxE_X31+Rc76FA+POjEejCCAhYbMxge3175KA@mail.gmail.com>
-X-Gm-Features: ATxdqUHTuNPlh61n7f8lB4pnNO-UYTl-k-uXFS9Jz53D2xoCXFTQKPt4GQyFAJU
-Message-ID: <CAGb2v65-YTLbzwxE_X31+Rc76FA+POjEejCCAhYbMxge3175KA@mail.gmail.com>
-Subject: Re: [PATCH] clk: sunxi-ng: fix order of arguments in clock macro
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
-	linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501022617.GA65059@sol.localdomain>
 
-On Wed, Apr 30, 2025 at 5:53=E2=80=AFPM Andre Przywara <andre.przywara@arm.=
-com> wrote:
+On Wed, Apr 30, 2025 at 07:26:17PM -0700, Eric Biggers wrote:
 >
-> When introducing the SUNXI_CCU_MP_DATA_WITH_MUX_GATE_FEAT macro, the orde=
-r
-> of the last two arguments was different between the users and the
-> definition: features became flags and flags became features.
->
-> This just didn't end up in a desaster yet because most users ended up
+> Interesting approach -- pushing out misguided optimizations without data, then
+> demanding data for them to be reverted.  It's obviously worse for
+> len % 64 < 56 for the reason I gave, so this is a waste of time IMO.  But since
+> you're insisting on data anyway, here are some quick benchmarks on AMD Zen 5
+> (not going to bother formatting into a table):
+> 
+> Before your finup "optimization":
 
-                               ^ typo?
-
-Will fix when applying.
-
-ChenYu
-
-> passing 0 for both arguments, and other clocks (for the new A523 SoC) are
-> not yet used.
->
-> Swap the order of the arguments in the definition, so that users stay
-> untouched.
->
-> Fixes: cdbb9d0d09db ("clk: sunxi-ng: mp: provide wrappers for setting fea=
-ture flags")
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> ---
->  drivers/clk/sunxi-ng/ccu_mp.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu_mp.h b/drivers/clk/sunxi-ng/ccu_mp.=
-h
-> index b35aeec70484d..8fc7fdb7ef494 100644
-> --- a/drivers/clk/sunxi-ng/ccu_mp.h
-> +++ b/drivers/clk/sunxi-ng/ccu_mp.h
-> @@ -109,8 +109,7 @@ struct ccu_mp {
->                                              _mshift, _mwidth,          \
->                                              _pshift, _pwidth,          \
->                                              _muxshift, _muxwidth,      \
-> -                                            _gate, _features,          \
-> -                                            _flags)                    \
-> +                                            _gate, _flags, _features)  \
->         struct ccu_mp _struct =3D {                                      =
- \
->                 .enable =3D _gate,                                       =
- \
->                 .m      =3D _SUNXI_CCU_DIV(_mshift, _mwidth),            =
- \
-> --
-> 2.25.1
->
->
+Thanks, I'll revert to the single-block version.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
