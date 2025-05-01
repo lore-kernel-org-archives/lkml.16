@@ -1,115 +1,103 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E4E4263C73
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC1C224253;
+	Thu,  1 May 2025 23:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746142126; cv=none; b=qhXpkN7F0yiI0rAUvWzjZ754D4s0SUmQxjujdnysvYrOdIeioJ/JhCWpvDXF+PbfQP9XmOUa4ifYuUidnqzcaFW3J++fjWk/fbRMGplMNhjw3o5pQpUQKDaJz04/cXbxHCbpU9TOh6Q4zbUyWmW6ZLGHs5Ncp/U5jmQdULEhAtk=
+	t=1746142137; cv=none; b=EsoxmkUN6vlMtVb7g0FZ8WuF2krL2I6kSs+Ooj2U6RI6/tlaXt7WVPGX7vgh+rJSXA0fHBS69MNZjW0gwx+SAnZX1L45efHbd+ZryEtmxs3ZPocmN67ot3tQ6vZAFpSyH/ZGlE4AVdrewYlS6jdgwaYqlHoD3sqGk7lNVhQJrbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746142126; c=relaxed/simple;
-	bh=TVZv1wE6IMiopn+lPutQ2XmVSkz9PSPheYWfp32DhNE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PaMfvTg4904FWRwvQkn6Db1xkPa6XZpjYMRblJpjiHdZtDuJhGe2+A4VKHv4xQfpuOCFTPFId4395s1K+7wQiQxWa/VHfuXESV2SaofSfywMZEx3v/1kChcAiytHNc7HlxXc850nX9B1jAzuXbXeB+hf9fZ+1b3EO/TxjeNOJFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=QSnE0H0O; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746142137; c=relaxed/simple;
+	bh=p7fQDBwKEOcAhP8WL8RWsj0IlpjWdHFNxvJgQ/mzSkY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AeyZv/X8C5jYkjpN0UvjacDxpk7J/Rv9K0ImBy5O0DOhZMfkP8sXmZ4Tu8tqn19Ve+6q7dedBpQ5Nx46FIVAyqIvLs/fNL4jWbIK2SM+pQaF1PJAT03aYd7ZOvBrCV0dhDZvsp8rpZUiOv/Yz/8DfHVPEm0/3/tAM3mTsBIglEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=KQHA7qqr; arc=none smtp.client-ip=5.135.140.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="QSnE0H0O"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so2443668a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:28:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746142122; x=1746746922; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xLQxE0ZAajilS9LJlCgVNxjKesNL8CM31Y1I/hwFDe0=;
-        b=QSnE0H0OwC2DbChwFEn4cyMQfVCp/NiKXnjRN1st7ayUdIevTmtF5xG3zXZp5183NE
-         U4UT1A8U0vCrGIu8kHVL/mPofZIPXp8Xdhc9wcJXIZHTJDR/Iba0m1wWpVBhFDtDWuOO
-         bxreso+Mu9lxdxZ0EgF7f3v8paD++Ovi8w51s=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746142122; x=1746746922;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xLQxE0ZAajilS9LJlCgVNxjKesNL8CM31Y1I/hwFDe0=;
-        b=BSUKO4mCI5hsCXB9O3DnFePUnplmopGTSQzFbP6bNo2sPO8BHqsbwKOTXCzuk93tpc
-         n1XFhdaBPuhqkWe+4cjoBOvcmeStgmvJiBjwIGWjQd08xPeMwVsplbJsE52KEeQLyN55
-         eZ1JqCo/akQuMd8fKJitj0NuU6F/niBHZQwwvxNq4MdXYxRQJx0l/jn4GoyrMGV3+tDI
-         Td4N+ElfCtjMD1ACEvv04E8P1ofSvCrLrzGRH0ahRZmxG0h+g2rRFSOuBPeAQFCXuRk3
-         r1vW+I+BUyvKi5NPDvfv7Ckul1jAk1+Cpm/HLWQ5DlaULXs87XnqXIEJvDD+WNztYWv3
-         GoiA==
-X-Forwarded-Encrypted: i=1; AJvYcCXav7DLdDbLC9OO51P+K17ZsdJ6B1SUSv1NXEBFWXyBtIml+C1Y4GIKyxjSxoGcvTOeSNHkt6eWrm30jr8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAGH5QF8IAaKn/iduKojm9nQvhn/+H4gSdmEP2ZFCBdO8nXA7f
-	v1L2PzkwknH/YI9HLmhpNoT+eZiHs4FCzu2eflvODGlpJd9xCBhv+tfv5LkbcdroUt2K6HrMNS2
-	Lqyo=
-X-Gm-Gg: ASbGncvzMK6pSGBoQdbWoXVAKlDxLeY6roktfJWDWJOJwqAuWZrJxFHo18h06RjZFUr
-	NptT+rf0LNgVl8MNlmDPQNoXFpusq8jTsfRZ38xrk/A5/596YN0bFxfbKf2kaqiNt+IVizkNfxJ
-	1XoPVVbejAUBR6G3arPKN/kQj9TpNv4vQbO0w45WtjPm+c/OuFAYqPLklsL6ucm+1XWbdCVpVpH
-	cbs3XRgSo8rwtuX285iVRL1112SZT4wYG2AhPaqYlq8NM0k7V3UzvAz7Zx4IdieqDIMbOrDdWqI
-	vufkepZqmrjyyUCmbPoQEJIEvGPHGl2oEDnhiuxVRT3Q5o50O6PWvMY+NbTxqzWYKf96GesJq41
-	8k4dbXfAbR1xak1qV2DL6Lkev4A==
-X-Google-Smtp-Source: AGHT+IGFMrQJfbg7Sn7gkBCt9dxz8Qc57hO5NQq3ZVTS4cfqZvZqa2NtbcHt+y13Z5LpEG19Q9Pk3A==
-X-Received: by 2002:a17:907:1999:b0:acb:b966:3a8f with SMTP id a640c23a62f3a-ad17af47f9fmr79102466b.39.1746142122500;
-        Thu, 01 May 2025 16:28:42 -0700 (PDT)
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com. [209.85.218.43])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da55af28sm109417966b.125.2025.05.01.16.28.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 16:28:41 -0700 (PDT)
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ace94273f0dso309079066b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:28:41 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXjI2w5Ba7bwnsgZcx3iKR1ySBxh4veS0/8NdDBWJAujARjvbM+mR1f99+FA3uLJ/xiIQa8n+w0UvLM/1U=@vger.kernel.org
-X-Received: by 2002:a17:907:86ab:b0:ac1:df32:ac27 with SMTP id
- a640c23a62f3a-ad17afb8ab0mr88710966b.53.1746142121345; Thu, 01 May 2025
- 16:28:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="KQHA7qqr"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1BFCFA11FA;
+	Fri,  2 May 2025 01:28:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
+	t=1746142126; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=SSd/d4oY5sG6sC71AfIyUCv5ZFIzJDqINK1IEBxHgyM=;
+	b=KQHA7qqrzWIoGBrgdbwVBkhPFK6dFDJdgj9AlXCRn4K4Ipu1O7Le9kptGyv4IeoPOsCzo7
+	vmfzOwn6zpV+kBRJ/f7JiZUEmAHOW5FRTovCRrFlNKaN+iNlUulFLKWVrEO+EUEbb56a45
+	fSvxcwe49iPADNHPLQtOyULMaxYy/DeTwvAwMQ+Rb/RIxLogV1x6bJUEK0T11MPZWUxZWf
+	7rYKVsxt/cOmvGrQ7EhP1qpSHeWf2Wbq5V8bqt0Q2SCtS9mhlZfynaezAdDvJAxVnRni4C
+	/JSdfTsN+hl8rzDHIRe27bQu0nSXudRgnV6Dluuu5s0qHWbjUev7NhZji9YAYA==
+Message-ID: <47aae905-1a89-44aa-a31f-6cbfc0eb6726@cjdns.fr>
+Date: Fri, 2 May 2025 01:28:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org> <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
-In-Reply-To: <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 1 May 2025 16:28:25 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com>
-X-Gm-Features: ATxdqUGTUyHgnV_iTiKt6DDkeUKklvk9V4X7Te2h_qX7brrmy-_kNjuWcrlAGLY
-Message-ID: <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] include/linux/typecheck.h: Zero initialize dummy variables
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
-	stable@vger.kernel.org, Linux Kernel Functional Testing <lkft@linaro.org>, 
-	Marcus Seyfarth <m.seyfarth@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v4 1/7] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU
+ Timer
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de,
+ daniel.lezcano@linaro.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.larsson@genexis.eu,
+ linux-mediatek@lists.infradead.org
+References: <20250430133433.22222-1-cjd@cjdns.fr>
+ <20250430133433.22222-2-cjd@cjdns.fr>
+ <20250501-ludicrous-idealistic-camel-7bf8aa@kuoka>
+Content-Language: en-US
+From: Caleb James DeLisle <cjd@cjdns.fr>
+In-Reply-To: <20250501-ludicrous-idealistic-camel-7bf8aa@kuoka>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Thu, 1 May 2025 at 16:00, Nathan Chancellor <nathan@kernel.org> wrote:
+
+On 01/05/2025 12:58, Krzysztof Kozlowski wrote:
+> On Wed, Apr 30, 2025 at 01:34:27PM GMT, Caleb James DeLisle wrote:
+>> Add device tree bindings for the so-called high-precision timer (HPT)
+>> in the EcoNet EN751221 SoC.
+>>
+>> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+>> ---
+>>   .../bindings/timer/econet,en751221-timer.yaml | 80 +++++++++++++++++++
+>>   1 file changed, 80 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+>>
+> What changed? Nothing explains dropping the tag.
+
+
+Sorry I lost track of it, I will re-send with it attached again.
+
+Thanks,
+
+Caleb
+
+
 >
-> +({     type __dummy = {}; \
-> +       typeof(x) __dummy2 = {}; \
-
-I'm actually surprised that this doesn't cause warnings in itself.
-
-The types in question are not necessarily compound types, and can be
-simple types like 'int'.
-
-The fact that you can write
-
-       int x = {};
-
-without the compiler screaming bloody murder about that insanity blows
-my mind, but it does seem to be valid C (*).
-
-How long has that been valid? Because this is certainly new to the
-kernel, and sparse does complain about this initializer.
-
-So honestly, this will just cause endless sparse warnings instead. I
-think disabling this warning for now is likely the right thing to do.
-
-                Linus
-
-(*) Yes, the empty initializer is new in C23, but we've used that in
-the kernel for non-scalar objects for a long time.
+> <form letter>
+> This is a friendly reminder during the review process.
+>
+> It looks like you received a tag and forgot to add it.
+>
+> If you do not know the process, here is a short explanation:
+> Please add Acked-by/Reviewed-by/Tested-by tags when posting new
+> versions of patchset, under or above your Signed-off-by tag, unless
+> patch changed significantly (e.g. new properties added to the DT
+> bindings). Tag is "received", when provided in a message replied to you
+> on the mailing list. Tools like b4 can help here. However, there's no
+> need to repost patches *only* to add the tags. The upstream maintainer
+> will do that for tags received on the version they apply.
+>
+> Please read:
+> https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
+>
+> If a tag was not added on purpose, please state why and what changed.
+> </form letter>
+>
+> Best regards,
+> Krzysztof
+>
+>
