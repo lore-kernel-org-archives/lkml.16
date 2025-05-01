@@ -1,91 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1745826B2D1;
-	Thu,  1 May 2025 06:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66CEB230BF2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 06:44:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746081489; cv=none; b=HtnCfPL5TtK6YDymI9bi189KluKIzWH+/DaPBOScHX9Ic0dF6+HTeMWOg8mmNaYKNZhULqdCVSN43EXXC39tMUC68BKNykGcm3gs1uiFAvB28SCjKYO1GXN2tRsrBPXjICjTFOwBrxufoN12YO6xluVQzNajTBunFzL0xAVMlnQ=
+	t=1746081848; cv=none; b=N6sFoeP+XTM1+K1/duax9/BDDk9w4NTkqt6fXUab5XBrqFpXVKpFIyLKLbUxFPLfh1fRAjooxQPpcPtjkeoOGFzRyttl/u5noUCcyymTPxAntNFwIRkaLPQnKMtgw5uUJfumawnn5ZUlqFzsrwZAsJ8vkF0+8Lq01L5rVZ36/uU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746081489; c=relaxed/simple;
-	bh=BxYHRgqo6sF5s2lWJReP5r3jXnxwGusOpZHnYswQvP0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=E5hIc9qtnDJSAnOw0oFL8eogV1OzYCkQwX54aGFqCkhr6UD2RZvQgRqddpxiH1zw50Ym/ubvrN6qkH1y2IlFAVaxvHrq6Oa2UZKI6t6S5fSmljSRXMnMyQoYpvXJBslqu+d1yvDwfjdxbGBloR0PgY8hKCeeoPOjk4SYXVcUqRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pmq/aucx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746081848; c=relaxed/simple;
+	bh=XQdOzQ/IWIZAPHH/V16CjfRIpKxGpe21Cf8rGR8kS/g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=NLlTVVR3YQSDopCTBgGi7R+GG5qToztMzQeX3ZZAMNxBcjkdhnsHEVGICDiKsDk76Psz9MaUURRJai733GOvgsOZxdTYoSvUdMp0X+NVPW5pk36qYxvKRrG01CiElREVeGsVMkUqI7tpRjUjDUfZBBXHJPFUSHWo2GIsBHrSqxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=hsP4OaLx; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pmq/aucx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070A8C4CEEE;
-	Thu,  1 May 2025 06:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746081488;
-	bh=BxYHRgqo6sF5s2lWJReP5r3jXnxwGusOpZHnYswQvP0=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Pmq/aucxBfWOa71NLT9xf9s0UQoi0AxefSMtUlbPbepiM67E5qV4bXSjM8+I3iLxr
-	 D8GpRhYPzplHt6NYi8EW/P6E4714ZPCE3WJz/uSZB9FXt1FUfxsO+5cgEnNJMtAPxD
-	 lt7uPIBEK6pRgQ1yxzSYcrcI9SwpzhnM68BC9BcfYJtdUDaDEq08qDtnr7/jZ9x7Ie
-	 6IaD+zio5D7N8/btVOuWykLZkaZGGEIs8wfrXrGK+p5hhe6ISpG8Xinxio2Xqmwsl3
-	 EdtdD5VBvfYojINjggKkVIM8ddn7Kr4TOUY7qUyUdjFAVG5axFLWddI1kYIbq5ZGPo
-	 KK8c8lrg/GKqA==
-From: Mark Brown <broonie@kernel.org>
-To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>, 
- Bard Liao <yung-chuan.liao@linux.intel.com>, 
- =?utf-8?q?P=C3=A9ter_Ujfalusi?= <peter.ujfalusi@linux.intel.com>, 
- Stefan Binding <sbinding@opensource.cirrus.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, 
- patches@opensource.cirrus.com
-In-Reply-To: <20250430103134.24579-1-sbinding@opensource.cirrus.com>
-References: <20250430103134.24579-1-sbinding@opensource.cirrus.com>
-Subject: Re: [PATCH v1 0/2] ASoC: intel/sdw_utils: Add volume limits to
- CS35L56 and CS42L43 speakers
-Message-Id: <174608148648.4032397.4518824895651750245.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 15:38:06 +0900
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hsP4OaLx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=AAfXW
+	sEd5uWoquOBBEcG/ZJ7DJq02VNrQQYiqnWq1nI=; b=hsP4OaLxGluUj99d+mZ4F
+	ZWkr8nBeEugXNZOUaQ2ZT01hI8RHTRMZqiTFvFX26d4+ZtqJpAXFxo08tHpd7tpM
+	VWekiveI6n3Xlkirm6L/EUYbhjcutcKcrsmRL1CPyJLxnH7UAQjzQ68HqovWJye9
+	W9iHy0JmYGgaPx1kcMCg1k=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g1-0 (Coremail) with SMTP id _____wCHtnsNGBNoXyLXDg--.28203S4;
+	Thu, 01 May 2025 14:43:29 +0800 (CST)
+From: oushixiong1025@163.com
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Sean Paul <sean@poorly.run>,
+	Jocelyn Falempe <jfalempe@redhat.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	Shixiong Ou <oushixiong@kylinos.cn>
+Subject: [PATCH 3/3] drm/udl: use DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS
+Date: Thu,  1 May 2025 14:43:24 +0800
+Message-Id: <20250501064324.398650-3-oushixiong1025@163.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250501064324.398650-1-oushixiong1025@163.com>
+References: <20250501064324.398650-1-oushixiong1025@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c25d1
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wCHtnsNGBNoXyLXDg--.28203S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFyUuFWrZrW7KFyxXw4kXrb_yoW8WrWDpF
+	4fC34IkrWIqF4ktF4fAa1xAa45Ca1xGaySgr4xJwna9wn5Cw1kJa45JFyFyasFyry7AF1a
+	yF1vyryj9F40yF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j8txhUUUUU=
+X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXQdAD2gTE+xLHQABsG
 
-On Wed, 30 Apr 2025 11:31:18 +0100, Stefan Binding wrote:
-> Both CS35L56 and CS42L43 have maximum volumes above 0dB.
-> However, for many use cases, this can cause distorted audio, depending
-> various factors, such as other signal-processing elements in the chain,
-> for example if the audio passes through a gain control before reaching
-> the amp or the signal path has been tuned for a particular maximum
-> gain in the amp.
-> 
-> [...]
+From: Shixiong Ou <oushixiong@kylinos.cn>
 
-Applied to
+Import dmabuf without mapping its sg_table to avoid issues likes:
+   udl 2-1.4:1.0: swiotlb buffer is full (sz: 2097152 bytes), total 65536 (slots), used 1 (slots)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+---
+ drivers/gpu/drm/udl/udl_drv.c | 19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
-Thanks!
-
-[1/2] ASoC: intel/sdw_utils: Add volume limit to cs42l43 speakers
-      commit: 02b44a2b2bdcee03cbb92484d31e9ca1b91b2a38
-[2/2] ASoC: intel/sdw_utils: Add volume limit to cs35l56 speakers
-      commit: d5463e531c128ff1b141fdba2e13345cd50028a4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
+diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+index 05b3a152cc33..8107549b12e5 100644
+--- a/drivers/gpu/drm/udl/udl_drv.c
++++ b/drivers/gpu/drm/udl/udl_drv.c
+@@ -49,22 +49,6 @@ static int udl_usb_reset_resume(struct usb_interface *interface)
+ 	return drm_mode_config_helper_resume(dev);
+ }
+ 
+-/*
+- * FIXME: Dma-buf sharing requires DMA support by the importing device.
+- *        This function is a workaround to make USB devices work as well.
+- *        See todo.rst for how to fix the issue in the dma-buf framework.
+- */
+-static struct drm_gem_object *udl_driver_gem_prime_import(struct drm_device *dev,
+-							  struct dma_buf *dma_buf)
+-{
+-	struct udl_device *udl = to_udl(dev);
+-
+-	if (!udl->dmadev)
+-		return ERR_PTR(-ENODEV);
+-
+-	return drm_gem_prime_import_dev(dev, dma_buf, udl->dmadev);
+-}
+-
+ DEFINE_DRM_GEM_FOPS(udl_driver_fops);
+ 
+ static const struct drm_driver driver = {
+@@ -72,8 +56,7 @@ static const struct drm_driver driver = {
+ 
+ 	/* GEM hooks */
+ 	.fops = &udl_driver_fops,
+-	DRM_GEM_SHMEM_DRIVER_OPS,
+-	.gem_prime_import = udl_driver_gem_prime_import,
++	DRM_GEM_SHMEM_SIMPLE_DRIVER_OPS,
+ 	DRM_FBDEV_SHMEM_DRIVER_OPS,
+ 
+ 	.name = DRIVER_NAME,
+-- 
+2.17.1
 
