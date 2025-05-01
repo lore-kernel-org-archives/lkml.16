@@ -1,115 +1,146 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BDB7083A;
-	Thu,  1 May 2025 20:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132944; cv=none; b=SKNYjEG0A4TdBRRX1JAdt2V0O6TpTjdxjc3M2n+0JJJiBdQSLA8FQLmsmyJmpOqDDUqYhg9lN1sm10n75Ca2+lMbAuO1Ki4sbk+yVYoVJxwtiOEDzsK2vzppu04+npV6RyQmLAFvYubnKj3PVOxqdzeoyhFP1VsEZ/rroXO33eQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132944; c=relaxed/simple;
-	bh=I+dEedf1pTJyAwoEmIwbwG0wBXM+8Q+YWSy8/oH3exQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PfH3juIrRI8H92q9286l3l4JMo1qqNEErlzivpbBxksGsRmrXssyHRE/m/TkCX41vlnWz6S5rOXrxdswM+bFBNBNqR9BHCkLGibImNdXmPuvoOaCqppsJ3fA8v90NS1GjYznDGsE1HfU0imCjhtzi8PJ7ItN/YDwWF0wsuSvhEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKhXoJPk; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 800807083A;
+	Thu,  1 May 2025 20:56:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746132986; cv=pass; b=q84Jr4b191sBhC6Vp7o0ZYl1Docrh9v4rm0FB0a/5SovQFQA7T6FLPBnIzl2rtRVVycgU3WDWz/ggB6jbTSiH90EI4nemyolHJAzdbAhyG2cBJRH6IIpk8fOq8roq5o+6lTPs8T6PUKI0IHYXlpHFE+ytA7Rpbu3JCEodIoPjvY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746132986; c=relaxed/simple;
+	bh=AR2u9y7Zv7hlFqpjIItjRa1RagopaWPRRRrh8lVvNpU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=guVYYAneETTuNDMi4mxAyiEnLYQybbYGeqZeOqiNhewJT1oMKeYRIlD+WURdcVns3QMmXCcOmbp3UXe47tNqXIuHCzBVSHIe5TP9Z9JiEoCf4cs+CWlCrbaAjGiDlsZboiaOPWlvvFT4y6Dh2ljESnrz+QC6W8sMAzTnxeXDCmI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=SvZDX8gz; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKhXoJPk"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso1599667a91.3;
-        Thu, 01 May 2025 13:55:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746132943; x=1746737743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
-        b=RKhXoJPk2TMB4+b295fSUerabPW4ZT2nMP3GZcRRQfmlG3iiBX7jJjU0gA748y5PQz
-         EXhWq7SYGPvcv75HLE+sFMojxP5wPTihZQsF5YkOGKIssLnBtK+yproa63Am6ptrA4v2
-         2fx0XxKG3W2E9YVSWLfMwJW8/KL2NQFfLGca8AWVAeuWVPoZ1QCsoROq5uN5STXlkqZT
-         YwJvJSYp08dfKdShbI32u1DnNgwfhgqFYdhf++omusVGFAY5GPiGWWJiS2BJ6q48yrG+
-         8apvLXre8RnjTmu9JdFNoIZR8v73fz1/n4xeIZVVqzD+6lcH/aN1q0ImK/7Ema601EQi
-         ug7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746132943; x=1746737743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
-        b=CTjebm9+gUHAUbLHMYuTDuJpPKaSUf2JGG3YOq5F9E4I/b8WbrxAoEyeWiWHnMtI08
-         slcg5srcj4TTnvARZkLypZtbFmuzKUpWuAP1mzPP2WqzpV+tKx9prEdnqDjPos5Wm9e9
-         tR4BI4xzPmRKxNJS9q5oG7+L7lA+gWsA4J78plcaseGEr5M0l37hKLV065HiNnAPtwNg
-         8rExIBIDR4edy7mb913CkLuy6rePOqtvWdhK4jtSmpL6dsZQuHF9SwhBELG7zFWzo5BT
-         VBTMqJQ+DEZk7QVwNqkrFkd51AW/rka3tLWYxGS7fBgavolH+RgexCwAtZjf2g7WGP3c
-         Y4zA==
-X-Forwarded-Encrypted: i=1; AJvYcCUNQJQskmmjRLrxHfguRrWBPR9W6yeJovn/yyggEDylgVfKrEb+amF7lxOYlUDJiQLKeQEBGlbL8W8LREkAHFM/@vger.kernel.org, AJvYcCVL1J5tcx8ai2ly420lRXAoOpYnfUdQE5hH902jSz5qUr1iU4t5hzIgZ92K8J6nXESiIUSKzeacoNIfMGpPXCIqapsf@vger.kernel.org, AJvYcCVsjWQBzxSMID+rCBil9Xq6nPXfCtR2p4ZIHnSJ7/aDxlT9rFtzkYdu8FaMqzFTEcTg8sc=@vger.kernel.org, AJvYcCWfZc2vyd+HYAQ6HYfLmdQgCCmikLob54sWnQJi3b9JJW9Js+cS3liCAGg6h6R0JgsWBAOmRtu5iNdbjDPA@vger.kernel.org, AJvYcCWiWWEc4Ft2tLUI7ZgJi2/lTNCJt7ndkb7+nV8qw6ZNcKLROKKMuhUwa2xxdN9KeAz0Hyei9Mqj@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnURbIPrW4rFByusZ5MwKKEt2js2ve8gZZPtpnMBvgv+Gx3PHx
-	PLwZ8IOqazXPl6YS2SD4TPglzKhcyZ129y5hmBj/o/7UlLcjSzr3A+Kj75FPoP4Zhrvpiwqj21S
-	HHVe5FeFtEZZxQKQv1HkkZB3X6dc=
-X-Gm-Gg: ASbGncsI6LUkHgmRAz7jW7KLYKRqZakgbLCCQaplwcCAQACy6ZNKF4yslwdOk7gbCnW
-	3r3DOXQINn41EdV8KcXR9n0aFuBYKcMFp/gHZAk+31jbAGK3YCe8orGwKHf0mCPSv090Aq3+LY1
-	YPv2jjCkQKG/l8y84/c6ZsiWx2N2JT/uPvZZJIKA==
-X-Google-Smtp-Source: AGHT+IGh50s+zJtysu2S6f9XjTktMRBtIt9lP5pMNu2Xa/D/taBoYtZM0t3nGA+Oq3ZGw2IWtnMnbRD+96VEn4T3D6k=
-X-Received: by 2002:a17:90b:5252:b0:309:f407:5ad1 with SMTP id
- 98e67ed59e1d1-30a4e5aa540mr917882a91.14.1746132942788; Thu, 01 May 2025
- 13:55:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="SvZDX8gz"
+ARC-Seal: i=1; a=rsa-sha256; t=1746132968; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=XyBwA2cWdi1P70N+md17Q742vFmDU5KMChNzmxKcQ5uGvMeO2r3LqNip1zfGwyqPKVxkczMFjOOqWbROPWJqYyzhuECJYFnPbG/CjaFnCzB8QnIPTDwtUSIpuE6tWVIrI8wJ3hfvBO3TR9nYKT9vioQB5j+pvCM73OjWBkbV15g=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746132968; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=dem3C+jxF8AzWRWAu3zu7Fy2SHhp8Gs9jIjyJ3leCHA=; 
+	b=hzkFncqyJGzfk5w7bi3Flu0fNMfHGOrPTrSKb38CiuZmKWSvkJIZ2PXlD28iJ4I/kPfpVd0gT5JXcN1/c4BKlp7k3tbeN2+/ibUdhxqsd9r8AS3gtN819s1OTk6ymaEoRLTSmXvCDwrDxba3u6alpwe/hoQwBKJMN0qI76Tru2k=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
+	dmarc=pass header.from=<sebastian.reichel@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746132968;
+	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
+	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
+	bh=dem3C+jxF8AzWRWAu3zu7Fy2SHhp8Gs9jIjyJ3leCHA=;
+	b=SvZDX8gz4I7J691UmxZFxCeT4qZJJAaPkS47PzrIdQCqxeavihxI8e0diwYMOa0D
+	MfNN8C3Jw+/UV7/yAiq4v3XKEDnHA6TOEjyFinfz1m7f86ZZv3jn0RekfsK5xm13YEC
+	yky7xLzQbjYzd3prz8Ee/bTTVpdVBk7rVF/3Kalk=
+Received: by mx.zohomail.com with SMTPS id 1746132965654478.26179095762257;
+	Thu, 1 May 2025 13:56:05 -0700 (PDT)
+Received: by venus (Postfix, from userid 1000)
+	id C1253180F5C; Thu, 01 May 2025 22:55:59 +0200 (CEST)
+Date: Thu, 1 May 2025 22:55:59 +0200
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
+	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>, Guenter Roeck <groeck@chromium.org>, 
+	Matti Vaittinen <mazziesaccount@gmail.com>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
+	Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
+Subject: Re: [PATCH v9 1/7] power: Extend power_on_reason.h for upcoming
+ PSCRR framework
+Message-ID: <rru5zkm7mp3zk43oobf2opljqts5hhp2lszlci4cjlnijcdb5w@ws2ibs7bi5zm>
+References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
+ <20250422085717.2605520-2-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-3-mannkafai@gmail.com>
-In-Reply-To: <20250426160027.177173-3-mannkafai@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 1 May 2025 13:55:30 -0700
-X-Gm-Features: ATxdqUG7m5lxLrm2WirOZ_o4hAMDhe7XKZ74AQNZzGPIJbnzyR-uo9LZrBb5eSk
-Message-ID: <CAEf4BzZM_SrdpjnVr9ytAm_hpAW-WEvZ2EptAqwut_1jeAmyzA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 2/4] bpf: Enable BPF_PROG_TEST_RUN for tp_btf
-To: KaFai Wan <mannkafai@gmail.com>
-Cc: song@kernel.org, jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, mattbobrowski@google.com, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	horms@kernel.org, mykolal@fb.com, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, leon.hwang@linux.dev
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="f3qpswvixtgt5nq6"
+Content-Disposition: inline
+In-Reply-To: <20250422085717.2605520-2-o.rempel@pengutronix.de>
+X-Zoho-Virus-Status: 1
+X-Zoho-Virus-Status: 1
+X-Zoho-AV-Stamp: zmail-av-1.4.2/246.120.57
+X-ZohoMailClient: External
+
+
+--f3qpswvixtgt5nq6
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v9 1/7] power: Extend power_on_reason.h for upcoming
+ PSCRR framework
+MIME-Version: 1.0
 
-On Sat, Apr 26, 2025 at 9:01=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
-te:
->
-> Add .test_run for tp_btf. Use the .test_run for raw_tp.
+Hi,
 
-Hm... so now you'll be able to pass arbitrary values as pointers to
-kernel structs (e.g., arbitrary u64 as struct task_struct * pointer),
-not sure this is a good idea...
-
->
-> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+On Tue, Apr 22, 2025 at 10:57:11AM +0200, Oleksij Rempel wrote:
+> Prepare for the introduction of the Power State Change Reason Recorder
+> (PSCRR)  framework by expanding the power_on_reason.h header. This
+> extension includes new power-on reasons:
+> - POWER_ON_REASON_OVER_CURRENT for over-current conditions.
+> - POWER_ON_REASON_REGULATOR_FAILURE for regulator failures.
+> - POWER_ON_REASON_OVER_TEMPERATURE for over temperature situations.
+> - POWER_ON_REASON_EC_PANIC for EC panics
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  net/bpf/test_run.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-> index 8cb285187270..8c901ec92341 100644
-> --- a/net/bpf/test_run.c
-> +++ b/net/bpf/test_run.c
-> @@ -690,6 +690,9 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
->         int b =3D 2, err =3D -EFAULT;
->         u32 retval =3D 0;
->
-> +       if (prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
-> +               return bpf_prog_test_run_raw_tp(prog, kattr, uattr);
-> +
->         if (kattr->test.flags || kattr->test.cpu || kattr->test.batch_siz=
-e)
->                 return -EINVAL;
->
-> --
-> 2.43.0
->
+
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+
+-- Sebastian
+
+> changes v6:
+> - add POWER_ON_REASON_EC_PANIC
+> - s/POWER_ON_REASON_OVERTEMPERATURE/POWER_ON_REASON_OVER_TEMPERATURE
+> ---
+>  include/linux/power/power_on_reason.h | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/include/linux/power/power_on_reason.h b/include/linux/power/=
+power_on_reason.h
+> index 95a1ec0c403c..bf9501792696 100644
+> --- a/include/linux/power/power_on_reason.h
+> +++ b/include/linux/power/power_on_reason.h
+> @@ -15,5 +15,9 @@
+>  #define POWER_ON_REASON_XTAL_FAIL "crystal oscillator failure"
+>  #define POWER_ON_REASON_BROWN_OUT "brown-out reset"
+>  #define POWER_ON_REASON_UNKNOWN "unknown reason"
+> +#define POWER_ON_REASON_OVER_CURRENT "over current"
+> +#define POWER_ON_REASON_REGULATOR_FAILURE "regulator failure"
+> +#define POWER_ON_REASON_OVER_TEMPERATURE "over temperature"
+> +#define POWER_ON_REASON_EC_PANIC "EC panic"
+> =20
+>  #endif /* POWER_ON_REASON_H */
+> --=20
+> 2.39.5
+>=20
+
+--f3qpswvixtgt5nq6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgT398ACgkQ2O7X88g7
++poODA/+P7FvkFQQd5YQ0EFcybmyfdJYNfvG/Q+i4Zy5OHDoI/L97Qk+DbbO64Ps
+Crvia5WKqP3sW2P9B3EgmMJyTd1nQ0NP8R8sL0IVjEmOiGbmfq1onltvBhNuO+66
+uoCxL470Ouicmkfkpi1ho5uCEM9hePuwtnTEe+zfegzyC7vYz+n3wL5Z+c3xJpO2
+NYj8QVb4CMwtbIYUScHITbcW2LYY9xYFRgJKIgP+Xk7ELAXOiG+vUvmScCshhJQR
+AE9uzIek1snK1qPoTllWRA+cGwIU+NPnMrTgTTPctKJyAmM640zm9XPE8pw1m989
+LFpOZAsDdSU/lkCESvqoLJ303u+ZuqbyH1nQopyqrJ6kGlmlbY0S+clkq7khMfkJ
+sgzlK9ArG2MKsnaNAF5FUeLbUhUW7giRgJ9BHldMfjBClhnuptGjkYPN8ZSV705q
+NtaBhTAIbMu9Bv//Y5D8CrDkfx+/ifNgPFbRDt1qUkp/S2Ze3tBPXo5V4lqyk7l+
+4x7tNaocMh/WGRhz9TAuNRCVj8c/4sHiWjz5bXvhnCCDY25+Zs9rjh3QmsuMxXV4
+MygeatSC78KO7HXy292UgNbumhJiQ8uVI8zwI9WscMugWEobzhjXkLoJ+5VsIHOQ
+IXGYzSSpSbN7pInOsScdHgMp6LJ06s09h6Y/0Segk7FMY0/0i5g=
+=CFUI
+-----END PGP SIGNATURE-----
+
+--f3qpswvixtgt5nq6--
