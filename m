@@ -1,208 +1,220 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9942609D2
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:12:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746133933; cv=none; b=kBvp+8cfNwbYzxqGhGRXVKI20NSqPSI1eP16q/H6RbmZQt9xFKnU3M47KF/yflbmNM4e3YMhcK0pbjNOHRCOX0gxAmFodX1avVdAGNEQNiym5MtqXMcLGJP8tbz5mlOUcOWpB1R5Lh2hUeu6Nx7nYRRDfTHcS0unckcQIPcKqpw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746133933; c=relaxed/simple;
-	bh=/Eb23qJBhyHlMhuJZd/Tff5w9BO6SQY+7OdWqtn+OBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=X9weIX1G+09bARzCCDd1Gkes/NjA9KdKUVC7pwqcRXuNnnTltau94irSaKgYmf1a4p7cHa7phOahB7g+iaOFyklVPDWzTOm6QoKhxzL11yuG74JQDJhBT8ysff4c4yKAMkPX2tJgudq10ENjA/nbsq/q4NufFikbiMR/2lR/BL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3gBx1c6u; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DE820125D
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:17:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746134246; cv=fail; b=VYH/PSnf3lBfb0IbEKczlG9ZOvSFbxBTFgdSr4AnfLUFD2rzMG+VD0aHyMiBqI09pS0rTXoOPWouel4oyDw+fgMSCBp+fHazXBE6ziYjNgJiSHNoWBTVJWDrM8hjavb55sj/j/csGSGf5o/uvJfYyZh9h2hgWFD8AUEWkECng0k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746134246; c=relaxed/simple;
+	bh=2XtBMM5nXtOunvZqnwbYX0e/OijkGc0AzzJKkGB9BW8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=uxLKIOpeZ2pprWTSDzdJopbViJFXbYtStRCBSBXYexHPfMOYQiN+kZntJQC8aAWpxaK93NFg6A5QP4iUyAEj6Zyb7hiMLznJ9hYKF9VSBhFwXsMXHBjQr9uGJdwQxBopJ83jf50SahlTmZKZGP4vDQ9snYpmmTtuVnn27jvHWU0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XCp6tPzm; arc=fail smtp.client-ip=40.107.243.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3gBx1c6u"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d91a45d148so11255ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746133931; x=1746738731; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WCZkInUa43XvzVkTgrWtsmIIL8E2slTp2+RlsbLPc/E=;
-        b=3gBx1c6uPJa/Cgpao7mkxSf1S1AiJ+rSyqZ6duNiWjsrr3akQXFCskUdR90rpqBgyf
-         8vpgrJEwsuDW02zLQKs5t/4BzK6drhZel/zBuWd3tRYCQW9acc6IgKFrzdeBynxkt8uY
-         TTmvQDnzJK6TDXIpnNQjpzVuL4gH0I1Q0YZxhn2P6MyIPW3ArG1mA7k1lVfCCpLIRedD
-         GSj6uvBqUKqOGP8ZaqUlLkglcgpSnEI93ZMViPuYXhhlseZpNJCD/fwWCZ/uB8cixHNE
-         Brgv6dLWZM63zqmlX4IbPlRgaVTlAjqERAITfSwAaVmcTE1I16PEIYbDSqkZIGj6B1UL
-         qy+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746133931; x=1746738731;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WCZkInUa43XvzVkTgrWtsmIIL8E2slTp2+RlsbLPc/E=;
-        b=hcRPAtqAnWB+VZ2Le7VEDmFvjKLf65IDip02haB8KcYzuaf1jtEN5wj/nqf+1jUIEb
-         e7b4rCdteg7G88ARAeJXbKotoTc17yn2F96m9kTybs416zU2BUZl2Bqb3pjn+BAPCYIS
-         VGrqIdzoIxVzCcoUJ2kZnCEt/yz/8vA42/qk9zAUtNrCRPBh5ZEpRrp5CIBmfnyIr8bb
-         TrRMVnm3h8U86aB0i7LlKbaYMM+K5N6vG9vhKyFzQC6Jmj3CVgPs7o2SdPL3Fm7XVAlU
-         8m4v7b31GF5bTBJip9qF38wg3g4ckF4Yb9BYo0n3shMMA1ZaeYIjbiYPph5nFZnKOyio
-         3g2A==
-X-Forwarded-Encrypted: i=1; AJvYcCUp+96WdNSIZiBoVikLk/qxkfMshii1v8ZhN7+XLG4A0+gIwwxRUa3vM0dOczSebthRHR+ymZWjRSoy7XU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8eu5IKUh3qSIf4Of7bJNMwV/275dknslRyUupX/2GGJ1bhqoy
-	5r1UXPyKWCNbSCdxL1wr2JtuhaW1srb+wvyQZMSH/clAfM88qJfWSMfAoUT5hCMd1/Mcpe/Yf/o
-	FhlkEU3o4VG6ADmlawP9DEpCBIrMqeusu6z3P
-X-Gm-Gg: ASbGncs09X7Rvqv/dk4Fol1pJHs9lI6tuwx0gmeJhBTSr2nfMr5vudb/vzu9TVHpJqD
-	p5ciRMUAHpmgzZ5MNGlGJRDWyWgz6x3DP0hsxNeLSgTf/4SE1vXTov5hJzRDMzxHBHNA6SX8+b4
-	y1hVZ9ebqJsNOoAPU3kTwPVHPNh3gxTjsjUbI7sh5dv0mq2cKSXokqmnd2Yf3XxQ==
-X-Google-Smtp-Source: AGHT+IE99CKIC22IVzgDs015sHGpd/5BSYT3SVvkHXeo8sNfxIPZdJFCnU5B2adsGYjONhE7TymIKB+d0HAj2pTW8Zw=
-X-Received: by 2002:a92:cdae:0:b0:3d9:6cb3:d6d2 with SMTP id
- e9e14a558f8ab-3d96f22d89dmr4887205ab.4.1746133930728; Thu, 01 May 2025
- 14:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XCp6tPzm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=pAr7TGxIBSyi2GFstM8WQGY0QoQ0w3pckWABVtT/O0sqtiN1ud0PKL6nnw+f9gOsmhNVkHGsQObgynd0WBzuwyPTGcqfwxTqxtSAaMh/YIbfHqbiDLoITN+XfYkqBh8HWo701r1gQGZMqy2MwpnrNN1yZ3CO837PWrK/MP60fwb9TONOBHFHtI+MnXOtLUuzrn4Mnr1HfoVosJseQca0zWWCt6G1kSUpkCww8BD4VnJeiIIKlJJo9+ALklmAybmeKFVXH+N3JL7sAbIsM8cB6+18mkk0PWXeIfLr+f50EhqF+WWDlYPhgdzIL6rCGjWPc2604HY/AlLi6trJGVn0zg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o3R+EKN7FBDD9Km5t61vJyc7EEijUBVdZ0Z4Foe244E=;
+ b=rZ7NDHH7JD4bEogiWMaPC/eZynbr9hzVazZ2k7d7ruiySV8feSa+guHDzz3kuJv4vTVbqDdHx2KXmebE4xHPs2WSNK3N1hrJwdufm/vjr7X8AudjRRhKuMAf7oZjYZWxVV/C65SbJRrrD/SbZ0fCgiM/UQFxVXnFCDu2525N/m4hRbhFF8zNELeJye94S6HhqBZBOmRfXlSDmWIgja7NqCIU8/H+qJG/uKnTpkHQfAHZAh5p8psRIxS44EtH/cAUrmZSzGcq1mL/1HAhfAee0KHC5zCgFTQD0+AkOnS37riDbgJJbuTmHQOWMeNKyrl+Xvfi7C+Z9nzapL6k4jC5Cw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o3R+EKN7FBDD9Km5t61vJyc7EEijUBVdZ0Z4Foe244E=;
+ b=XCp6tPzmvVQo9wViYt+qcwsKDQ1ZI9ARngR/EyTcjtOmWkZk7gFfq+QdQL5mFp20VeiRjvL1TQC8LwQQQDgGhM7KMJ0JoznUOvXWgrl2/3uWITx//hzvB3Rjgvm2aZvHDBPgAy2FPQJWM9Xe4S0vj9ATkrGWefjqCaChwjvexccgunyQ6uZ4xHFShysJM6jIUUVVtfjgOJvX++qNKKCvj2pJ4zCZSZ30rlSoBFLoGfxqLyzrkRyWeNlD/U1LJ31TP1SZG1j7JakRgDGBOrykLgMJQer48IcCrqJr1Tkn8tyj8+RmmWREbcGPHrhxyNv0xs8z2ZhO+TMiid5M88X0QA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com (2603:10b6:5:42::28) by
+ CH3PR12MB8935.namprd12.prod.outlook.com (2603:10b6:610:169::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Thu, 1 May
+ 2025 21:17:22 +0000
+Received: from DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2]) by DM6PR12MB2667.namprd12.prod.outlook.com
+ ([fe80::bd88:b883:813d:54a2%4]) with mapi id 15.20.8699.019; Thu, 1 May 2025
+ 21:17:21 +0000
+Message-ID: <a68503e9-cd88-4c24-a049-7f3da18b9b00@nvidia.com>
+Date: Thu, 1 May 2025 14:17:19 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 10/27] x86/resctrl: Add 'resctrl' to the title of the
+ resctrl documentation
+To: James Morse <james.morse@arm.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Reinette Chatre <reinette.chatre@intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
+ Babu Moger <Babu.Moger@amd.com>, shameerali.kolothum.thodi@huawei.com,
+ D Scott Phillips OS <scott@os.amperecomputing.com>,
+ carl@os.amperecomputing.com, lcherian@marvell.com,
+ bobo.shaobowang@huawei.com, tan.shaopeng@fujitsu.com,
+ baolin.wang@linux.alibaba.com, Jamie Iles <quic_jiles@quicinc.com>,
+ Xin Hao <xhao@linux.alibaba.com>, peternewman@google.com,
+ dfustini@baylibre.com, amitsinght@marvell.com,
+ David Hildenbrand <david@redhat.com>, Rex Nie <rex.nie@jaguarmicro.com>,
+ Dave Martin <dave.martin@arm.com>, Koba Ko <kobak@nvidia.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ Reinette Chatre <reinette.chartre@intel.com>
+References: <20250425173809.5529-1-james.morse@arm.com>
+ <20250425173809.5529-11-james.morse@arm.com>
+Content-Language: en-US
+From: Fenghua Yu <fenghuay@nvidia.com>
+In-Reply-To: <20250425173809.5529-11-james.morse@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0020.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c0::25) To DM6PR12MB2667.namprd12.prod.outlook.com
+ (2603:10b6:5:42::28)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430171534.132774-1-irogers@google.com> <20250430171534.132774-5-irogers@google.com>
- <20250501210729.60558b33@pumpkin> <CAP-5=fXrhsZYJwjJzqb-zMg+UoC-bKoYCjstq8yD9wHNCfbS5g@mail.gmail.com>
- <20250501212659.7e642411@pumpkin>
-In-Reply-To: <20250501212659.7e642411@pumpkin>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 14:11:59 -0700
-X-Gm-Features: ATxdqUFxaht-zoWQknlLFZvQ7KKBfBCHWsnBwcRW0qV3e-0LXiEzKSMCN1_1aBg
-Message-ID: <CAP-5=fVjAR0g=wN8sWetHoNWdoDVGNoKb8d8UdwxF_te=wmMLA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] math64: Silence a clang -Wshorten-64-to-32 warning
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>, 
-	Jacob Keller <jacob.e.keller@intel.com>, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6PR12MB2667:EE_|CH3PR12MB8935:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d48cc92-e0cf-442a-5f66-08dd88f58fb8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?cVA5dHUxeGNqUVpYZjhHNi9hQUlsWUZyN3A3ME43SGYzVlkwSFZTb1ZaWTFX?=
+ =?utf-8?B?eVNrZHZyU20xbXlQZDJIeDhzT211cXNoUkFHR1piMGZFVWZDTm9KZis4Vzkx?=
+ =?utf-8?B?Q2UzNVpUcVd2K1p1MjQwRjVXZjhmR0MrdkMwMDVGcWtwNlcrOU9NRjVOMG4w?=
+ =?utf-8?B?dzAyYTFtN0lXTzFnY1lHeEFRRkNuS3o0emVMb09BNHdta2xzQ2RIbmlxcUNh?=
+ =?utf-8?B?V1d4VnAzQm9BNDBEWW9jUFJGbkMyOEF5MmpBVWdzMzN3QjRmckRuQ2t5Q2E5?=
+ =?utf-8?B?VXpTMVdZeTFNTzI0U2drMk12RE1IbU1QVlBJaHQ1MlNaaWZNdjNTMlNLT1Ri?=
+ =?utf-8?B?eU5ma0ovN3Q3bGRobU5ZWUNkUCttRTZ1bTFsYnE5SVlZekYwa2RpT3lyd1o3?=
+ =?utf-8?B?NlRmL1BtbGtPd3lKNmx2eHg1eUFpUlpUdDhPb2NZRVBtRFNVL2Jya2NsMHAv?=
+ =?utf-8?B?aHNqeXB5QWVieU13WkhvWDc5VmliTXFSWC9IbnIwSlk1OGRHWEJmKzhrcS9T?=
+ =?utf-8?B?RktuQlpFWjJqL0pPZTlRUEJ3MllxZGtjSk9CNVEzY0FONzVKU2RDSkNVaXJa?=
+ =?utf-8?B?VWlWZWZvdEhwTlYxZUdxQjlUN2VaeXNSM3JjcVJzQStOY3hFVGk4djZpU3RF?=
+ =?utf-8?B?K0pGK0ZMTHBVR3J1OXV1YzZJczAyYkVQVEgwQWtZaUVVZWh3a1JuYVZaTXBL?=
+ =?utf-8?B?UmloNDdHdUhqRXJSanZSS1VqV1NJRXJwQ29CdjBVRWhvLzJHMTAydWk3dlVn?=
+ =?utf-8?B?YnFqWUZhMEdLTVk1b0tmaWNnOHVOakVFb0trOHJnTU1IUlNYTng4bDUyYWkx?=
+ =?utf-8?B?Z2pRWmdHc3ZGM3hzZ1hmVmx4d1NLOXNFNXlzcEZvT0hpMkVkaFl0Q1lJSFRn?=
+ =?utf-8?B?WkMxaHF6dmhFVW0vMnVURk1CS2ZkZGxxWWZVQmdBbDQ2V0lkSzZQTTA2T3Rn?=
+ =?utf-8?B?TWJKR2ttd1QzZVY2NlM0NjM1WDBHQVpZbFBEamJIU05yaHJUNkc0ZWV5UW0r?=
+ =?utf-8?B?OU81cnBkVEsxRzV0RnZJUFNHWFdqUDA4d1V3OGRJQ2g4amtQTDhCUHJNK2ph?=
+ =?utf-8?B?ZEFxTjBCa3BtREprRlRMKzlQZUlrWlplb0RwdU9uNk5OOGU0ME02NHVyQUJs?=
+ =?utf-8?B?Q2lDQ0ViUVhUSzV2eDFCVVhNRW5NUHRZNzJ4eDdYcmRSdElBeU01eUx1Y1Br?=
+ =?utf-8?B?MmM5a1poMGdkRklSNXB5S25NTXo4b0tMbVpYR3doY1MzMVRWaVB2aGF3U2Ny?=
+ =?utf-8?B?SUdZd2hlNjRFNWpWWWROVmpTd0pWTlJnOW0wUFBIUHcvL1MzV2N1SzhRUHdS?=
+ =?utf-8?B?SU5mM2dCRWRhRi9wVmc0bGRTdWI3aFcvWG5sZ0V3Qk9EODZ4Z3M4aVNZQXdl?=
+ =?utf-8?B?WXI2ZEdIa2QvSitUeVNCMDljUGxKWW1OVmRFSDBNbHRES2dpWVZaZWtXWlZa?=
+ =?utf-8?B?aUhYcVNpRTJYWUFwRnlkSDZZUmVsVStxTXQ0N0xQU0ZlNU9VbFArM2h5TWMv?=
+ =?utf-8?B?eXFiWmxxaEhHa1RzWW8vNk9BdFdhK1k1dFBIdkRmRkRoK2oxbGpON1lJSlZM?=
+ =?utf-8?B?eHJ1amo2M3RGUmR3VDEraGdXd0tmdW4yeWpjU3NxNEROTlE3YzRLSkVJRW0w?=
+ =?utf-8?B?S3hOYys3WG5oSWp4U0kwMzdtZk45c3Q5dVVjVnYwVjc3RnVPUVJpMlZtVGtz?=
+ =?utf-8?B?RDYwNmVTOHdzUCtuSkM1QjV3WTl4bnVlSXE1aTRxQVo3Y04zcVJ3U0o1Y005?=
+ =?utf-8?B?eFJoWGd2ZWtpbG4zZTJiOU8zQ0hLVU5mQzE0RURjdmtQYUIyTGZLNjdYaWVK?=
+ =?utf-8?B?ejRhem4zV0FXaVN5WmFFc21USkJIbXRXUVRQTnFUTm5vNlFhd01xZU84WTlQ?=
+ =?utf-8?B?UURubzhQSFlKZWR1a0IvUXVaU0JOUmlQZjlIanY5MThZVXQvZFhBV0lRVFVD?=
+ =?utf-8?Q?uM3Vfan4vqM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB2667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QmtuTFM5OTFJcjZJTW0xaDFaZjZLK2UyUk1QWllrTWJwdXpQb1YzL3hDLzNF?=
+ =?utf-8?B?bEdNOWFXbjVtelJRYUxtZFdzRGtBVHlTNGJOS0RTakw3VmZSWE1ienVDdEN6?=
+ =?utf-8?B?ZzhaYTJmZllaN1pGUUtMZkEvRS9hMHVRVVlVNW54T3BEL1A4YzVycnFHZmIz?=
+ =?utf-8?B?M0lCaDYvYnpCYm1pdGdMOEJtV1RNTGhydmcwNlBnU0xmRDFORTZCRW9kVGlX?=
+ =?utf-8?B?d0V6V252dGhGbHhhZnlGUUx3UlE4RS9YaTF6eG13VFVFQ3dZdWZoL1RCU2lK?=
+ =?utf-8?B?L2ptdTdwSll6SzBmaEVobnBVOFl6eWZhY3Jkdk5NQmxTM1BHa3hKbFBhRVBT?=
+ =?utf-8?B?WjNZVXhtb21PQXprZVM1aTk5eTkvSitORmhFTWVTOVBCU3lhb3hFL0o4dmtv?=
+ =?utf-8?B?LzdrNHhiV3VhNmdENGJ1bVBqTEYydU5UNVhoSmd5d3B4VDZxblpsRDVuVG5n?=
+ =?utf-8?B?OE9ZMTNqOTJJTEtPQTErZzlyQTJxZWRGNFVaWE9xelc1cWZ0ckFYN2JIQWth?=
+ =?utf-8?B?a082OVpFZWNPaDdpSDJBdVdMd09TYWZybG1MOG8yMzhwTy9panFYZnp1QWhz?=
+ =?utf-8?B?a2RhRGFlV3ROL1lxQXlud0FzblZhQVRTUmJSeVN6TGptcG4zQmdrMzVSQkEz?=
+ =?utf-8?B?a2RvVGpTN3pmZlVtZDAzUVpmRDRjOTREN1J0TXNXbk1qNlg2d0dTMEpoRGpX?=
+ =?utf-8?B?TERGdXhweU54R0FOZjlYeGt6Y0JjSkJ0VnlMTytjWXViQjFxaWlieHAwNHR1?=
+ =?utf-8?B?OEhGZm9NQVBOTE00OGR2MnN0YkN5Rnp2WkRTWFN6SFlaa1NmUERBWEdTNjdP?=
+ =?utf-8?B?U1BmL3YxdlgvTWJyeWNNdEFjSDJ1cGNwdXR1ZVF0NnA0TEhvUEtFMjAybUxm?=
+ =?utf-8?B?K0R2ZjBieS9xMkZkM3ZOYnNLZjJVaWcxWmVxM2VkZkJLNGVJdlhsKzlHVmZi?=
+ =?utf-8?B?UzZPNWxRN0kxSG95L3p1U09taFIwa0tFOEhrdkg0NExSYzh4eHJpU1F5UndB?=
+ =?utf-8?B?Y3psVjVsempkZEF0cnJPcTdoL2xWdW5XR05jYUZYR20xdlBLZ0dWMzFjVHhR?=
+ =?utf-8?B?UGZ2aTRuZkt1aU40b2ptOHNlQ3hEYzBFQ0IxV25COGtiYXQyTEQzbVZ6L3Vl?=
+ =?utf-8?B?bTRFckZYNnlGay9hTG9MM2MvaXVFeWZ6dUxyS3d5RG1CQnFNazUxTnQ5YU1s?=
+ =?utf-8?B?S0N6c1BXVnI4WTByWHlzbXpyL2o4NE12ZERydnJGd1hwU1gvaUZ2SWNrcGk2?=
+ =?utf-8?B?ZU5rYWk3VWxGdnp5QzE0UjlMTjgweUdjdmRJYmdhOGpvc1htQ05YaEdqdWw1?=
+ =?utf-8?B?OUxhekFYbjB6a3htdFpPQTZyRWNjUFpPc2l2MlIvWndFMEV0bkdJYWd0RkFk?=
+ =?utf-8?B?ZjU4Y0xZT1d4QjNrY3BmbWRqRUhjQ3ptaE5aVW1tMEpTejNBbC9OMTMwWnll?=
+ =?utf-8?B?b0VNQmFnU0RZdG9ldDFqa0hmWTA1NEYrRDRBTlhoc3hlNmZUY1lkc3pWRG5L?=
+ =?utf-8?B?bitqZXc2S3IyQU52N1k5L1NWV1U5R3FHZnhSdWN6eEg5U1QzUytqaEVDZlNF?=
+ =?utf-8?B?dC83L3Y3ZWhwNDJzUW9OOXpOUmdYQ3lKRjJZbnlKbFJTdTVKSjQzYWUvNm1i?=
+ =?utf-8?B?N0F0QnpBeGdadTV4SzR1dFRlNkZTS2MrbitYbXJncFJUREQ2RDBXN3BUV1pj?=
+ =?utf-8?B?ei9BelZzVkJjRXJYby9lNnpFbEdGZFZaaEJyd3RXZFZVcGVBdm9xcWZydHJh?=
+ =?utf-8?B?NWNKbVlvcVZlaUxhWUppOU04b3lOZUR2cFlYQkFrSGVQdUNoZmlJaUhDRnNs?=
+ =?utf-8?B?QUphTGRjMHU1dWhQNUVncDJxYW9yWlJ5NmNFb0RZaDBQa0RHV3JKWHpXR29M?=
+ =?utf-8?B?YnVUSjFZNUhxY1hNUkVhSzlBbUtMNG5LbHdHZS9OYnU3cWVMS0tjL05HZVk2?=
+ =?utf-8?B?STRqblNNL1Z2eWtvRHgwdW4vaHc1YitOSDdrV3JSendjakhIU2QyN0I0NU9W?=
+ =?utf-8?B?aGF5djhKVE5tdzh3WmF3YktzN3RlSTFjdVZvczhxeERpbE41aWttbTRMdVY0?=
+ =?utf-8?B?UnZYZ1NMbUR2Ny9YY3p6NU1oZlRUUGFObzRnRWkzcU9xMU1UOUliOVBQUXk5?=
+ =?utf-8?Q?gHqLAj7Sr+g7KsMqn9nN4FQKc?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d48cc92-e0cf-442a-5f66-08dd88f58fb8
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB2667.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 21:17:21.8106
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: hf+SmSeeA1BrpDMRJZZOjY2Lf3Tg4TXt3W3JNIk09zues7OV/XGSlAdy4I6f71V4couhIVa/TyUf2qcK0dELpA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8935
 
-On Thu, May 1, 2025 at 1:27=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
+
+On 4/25/25 10:37, James Morse wrote:
+> The resctrl documentation is titled "User Interface for Resource Control
+> feature".
 >
-> On Thu, 1 May 2025 13:15:30 -0700
-> Ian Rogers <irogers@google.com> wrote:
+> Once the documentation follows the code in a move to the filesystem, this
+> appears in the list of filesystems, but doesn't contain the name of the
+> filesystem, making it hard to find.
 >
-> > On Thu, May 1, 2025 at 1:07=E2=80=AFPM David Laight
-> > <david.laight.linux@gmail.com> wrote:
-> > >
-> > > On Wed, 30 Apr 2025 10:15:33 -0700
-> > > Ian Rogers <irogers@google.com> wrote:
-> > >
-> > > > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > > > inadvertent truncation. In some instances this truncation can lead =
-to
-> > > > changing the sign of a result, for example, truncation to return an
-> > > > int to fit a sort routine. Silence the warning by making the implic=
-it
-> > > > truncation explicit. This isn't to say the code is currently incorr=
-ect
-> > > > but without silencing the warning it is hard to spot the erroneous
-> > > > cases.
-> > >
-> > > Except that the extra casts make the reader think something 'extra'
-> > > is going on.
-> > > For readability you want as few casts as possible.
-> >
-> > Agreed except when not having the cast can introduce bugs which is why
-> > the cast is always required in other languages. Consider in Java:
-> > ```
-> > class a {
-> >   public static void main(String args[]) {
-> >      long x =3D args.length;
-> >      int y =3D x;
-> >  }
-> > }
-> > $ javac a.java
-> > a.java:4: error: incompatible types: possible lossy conversion from lon=
-g to int
-> >      int y =3D x;
-> >              ^
-> > 1 error
+> Add 'resctrl' to the title.
 >
-> I'm not a java expert, but I suspect it has 'softer' type conversions
-> for integers than C casts.
+> Suggeted-by: Reinette Chatre <reinette.chartre@intel.com>
+s/Suggeted-by/Suggested-by/
+> Signed-off-by: James Morse <james.morse@arm.com>
 
-Sorry I don't understand what you're saying. Java certainly has bugs
-in this area which is why I've written checkers like:
-https://errorprone.info/bugpattern/BadComparable
-For code similar to:
-```
-s32 compare(s64 a, s64 b) { return (s32)(a - b); }
-```
-where the truncation is going to throw away the sign of the subtract
-and is almost certainly a bug. This matches the bugs that are fixed in
-this patch series for the perf code, in particular an issue on ARM
-that Leo Yan originally provided the fix for:
-https://lore.kernel.org/lkml/20250331172759.115604-1-leo.yan@arm.com/
+Reviewed-by: Fenghua Yu <fenghuay@nvidia.com>
 
-> I've been badly bitten by C casts that make code compile when it really
-> shouldn't, or incorrectly mask off high bits.
-> There are actually loads of them in the Linux kernel.
-> As well as all the dubious min_t(u16,...) there are the (__force ...)
-> where the compiler shouldn't see a cast at all (it is for sparse).
-
-Are you arguing for or against checks here? It seems to be about
-casts. I'm not getting you.
-
-> > ```
-> > Having -Wshorten-64-to-32 enabled for building with clang would allow
-> > possible mistakes to be spotted, but that's not currently possible
-> > without wading through warnings that this series cleans up.
-> >
-> > I also don't really think anyone will be confused about the purpose of
-> > the cast in something like:
-> > ```
-> > al =3D (u32)a;
+> ---
+> Changes since v8:
+>   * This patch is new.
+> ---
+>   Documentation/arch/x86/resctrl.rst | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> And no one is confused by what the code is doing without the cast.
+> diff --git a/Documentation/arch/x86/resctrl.rst b/Documentation/arch/x86/resctrl.rst
+> index 6768fc1fad16..c7949dd44f2f 100644
+> --- a/Documentation/arch/x86/resctrl.rst
+> +++ b/Documentation/arch/x86/resctrl.rst
+> @@ -1,9 +1,9 @@
+>   .. SPDX-License-Identifier: GPL-2.0
+>   .. include:: <isonum.txt>
+>   
+> -===========================================
+> -User Interface for Resource Control feature
+> -===========================================
+> +=====================================================
+> +User Interface for Resource Control feature (resctrl)
+> +=====================================================
+>   
+>   :Copyright: |copy| 2016 Intel Corporation
+>   :Authors: - Fenghua Yu <fenghua.yu@intel.com>
 
-Someone who saw that `a` was 64-bit may assume from the assignment
-that `al` were also 64-bit. The cast is making explicit that you want
-to throw away bits after the bottom 32, so I'd disagree.
+Thanks.
 
-> We live with the 'integer to pointer of differ size' warning,
-> but even that was only really useful 30 years ago and is well
-> past its 'best before' date.
+-Fenghua
 
-You want C to be weakly typed more than it is? Not sure and it seems
-we've drifted far from the topic of the patch series.
-
-Thanks,
-Ian
-
->         David
->
-> > ```
-> >
-> > Thanks,
-> > Ian
-> >
-> > >         David
-> > >
-> > >
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > ---
-> > > >  include/linux/math64.h | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/include/linux/math64.h b/include/linux/math64.h
-> > > > index 6aaccc1626ab..f32fcb2a2331 100644
-> > > > --- a/include/linux/math64.h
-> > > > +++ b/include/linux/math64.h
-> > > > @@ -179,7 +179,7 @@ static __always_inline u64 mul_u64_u64_shr(u64 =
-a, u64 mul, unsigned int shift)
-> > > >  #ifndef mul_u64_u32_shr
-> > > >  static __always_inline u64 mul_u64_u32_shr(u64 a, u32 mul, unsigne=
-d int shift)
-> > > >  {
-> > > > -     u32 ah =3D a >> 32, al =3D a;
-> > > > +     u32 ah =3D a >> 32, al =3D (u32)a;
-> > > >       u64 ret;
-> > > >
-> > > >       ret =3D mul_u32_u32(al, mul) >> shift;
-> > >
->
