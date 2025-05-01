@@ -1,59 +1,61 @@
-Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545FA230BFD;
-	Thu,  1 May 2025 04:43:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC53623183A;
+	Thu,  1 May 2025 04:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746074621; cv=none; b=A2NKFHtBdljy10BSXrvd0y7mVawdCpp5n+DDsviiJP/H8XN3CEga+BVGfaoPf70z+6OpyMEnDHQwpVGlrpG46IikfDK6jNbXiGVqtPGsWGEfEmpdPKHskPwdooBMkJbqLNSFQmkwrUb8hC1C9UafqKaVvK57ZLLklvSENzmb79A=
+	t=1746074622; cv=none; b=lNlO5vxecSEw8Foiapy6kkjQBZX2qAPKQsZnVqlls1XgQmQlgsev0G65BJ7XwjFeUkkl1mDHDyHvb9d7WNXI7/lMtUxg4Rw8zYW528LPZyMMp18Ngpa+Cvt6UVrI9Ft5Xctll6pCufjKuqbA+6yax4OQgW7odbgt1Cpi1227zxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746074621; c=relaxed/simple;
-	bh=FJMIZAAlsRBCDZIUUWk6FiHiAllsWImKRgkb2mx31Tw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mSG1hKfIhMKtKrQrsElP0QJCUXi8qeEr6fQaE0fF6rzcNxeMaXXRvf4hZQhsEJt89VgyqF31+x3iZ3+OnlanU2aNze/PgYAoPzpjqgay9xZSQdLWkhlh2DOv75ZLZJTIdhR4Z0PGyYjwRjjTLg1/gYCqe1q9L9Np70R/mYbBL0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=fDapGKHo; arc=none smtp.client-ip=207.171.188.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746074622; c=relaxed/simple;
+	bh=5FPWhBm4X1OTS7xp/ARoIaRaAOjl3Qg4OzcTMaWFyI4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VUbB4mfvMfHQqIAiFBC46m7jZ3pJE0+dMi2yTjsg/Omz0O8cqwOSFQCgo0UrIGblBVvPV3tHTEr2VU0v1xptig5vf2Lh3PzRPjc/CnABOM6/nMRuhbugt/V/tlJd9drLQT79jpuKyx9OMWxPF4+/mVpieM6eeFc+Dv1aXwkRW4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=QKGR4Pxf; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fDapGKHo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746074620; x=1777610620;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nmWVsEqVJv451jTaseIeYwxvxKSGxFUAPewNfehCRt4=;
-  b=fDapGKHoTVq3CO5WEwd5lB8lShsCdFglQ0/S7q/ksnOOn2zW5+0+MugO
-   1vLRBSOAbHcTiTfjqgNRRCriAne4hpP80KWvQQTPVq0Hfg8RWd4R1STXn
-   D74oq4Bmvo0kjZ6cVS1aYz5m53WIHLjYlqLYexQWGGujvKEQ4awv0pUvT
-   w=;
-X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
-   d="scan'208";a="820675791"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 04:43:34 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:40716]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
- id f5294a6a-507c-4dca-b1cc-456173d24f3b; Thu, 1 May 2025 04:43:33 +0000 (UTC)
-X-Farcaster-Flow-ID: f5294a6a-507c-4dca-b1cc-456173d24f3b
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 04:43:32 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 04:43:29 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jiayuan.chen@linux.dev>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-kselftest@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <shuah@kernel.org>, <willemdebruijn.kernel@gmail.com>
-Subject: Re: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
-Date: Wed, 30 Apr 2025 21:42:24 -0700
-Message-ID: <20250501044321.83028-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250501035116.69391-1-jiayuan.chen@linux.dev>
-References: <20250501035116.69391-1-jiayuan.chen@linux.dev>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="QKGR4Pxf"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0045D25BE2;
+	Thu,  1 May 2025 06:43:39 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id JfSt8HToqoqj; Thu,  1 May 2025 06:43:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746074617; bh=5FPWhBm4X1OTS7xp/ARoIaRaAOjl3Qg4OzcTMaWFyI4=;
+	h=From:To:Subject:Date:In-Reply-To:References;
+	b=QKGR4Pxfm0vsKev0STRjYqRyiJ8pNwuwFVM6ciHT2RNlpoihDYk9bNbiGoARAhpht
+	 aPX6ItGqtNvkbrIrBE9bt6tD8MX/xyI1vtHqbxuwJsso0RkEjoSOubiD8o+USMhmCE
+	 lGVOmx1D3SuWKJoOiwy4Xt4A/xB0Qxpa5ZBCOepcMusW/Pz9b/FIPVnRPU/rVxMyd6
+	 nXKygsbiRtUZOlL3ZBw0AWUt22gmStI152FX7wQh1qvmCrksYj7d+A2idlaibEvDnu
+	 WhCLwB3Vvr2xabHmEZ4vzEpPboN0qahKRfnkg2kO8xhwDw0wNIFfJMVuN/3bfQrEVi
+	 2Y9zzAtyOZtZg==
+From: Yao Zi <ziyao@disroot.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [PATCH 1/4] dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+Date: Thu,  1 May 2025 04:42:37 +0000
+Message-ID: <20250501044239.9404-3-ziyao@disroot.org>
+In-Reply-To: <20250501044239.9404-2-ziyao@disroot.org>
+References: <20250501044239.9404-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,53 +63,29 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-Date: Thu,  1 May 2025 11:51:08 +0800
-> For some services we are using "established-over-unconnected" model.
-> 
-> '''
-> // create unconnected socket and 'listen()'
-> srv_fd = socket(AF_INET, SOCK_DGRAM)
-> setsockopt(srv_fd, SO_REUSEPORT)
-> bind(srv_fd, SERVER_ADDR, SERVER_PORT)
-> 
-> // 'accept()'
-> data, client_addr = recvmsg(srv_fd)
-> 
-> // create a connected socket for this request
-> cli_fd = socket(AF_INET, SOCK_DGRAM)
-> setsockopt(cli_fd, SO_REUSEPORT)
-> bind(cli_fd, SERVER_ADDR, SERVER_PORT)
-> connect(cli, client_addr)
-> ...
-> // do handshake with cli_fd
-> '''
-> 
-> This programming pattern simulates accept() using UDP, creating a new
-> socket for each client request. The server can then use separate sockets
-> to handle client requests, avoiding the need to use a single UDP socket
-> for I/O transmission.
-> 
-> But there is a race condition between the bind() and connect() of the
-> connected socket:
-> We might receive unexpected packets belonging to the unconnected socket
-> before connect() is executed, which is not what we need.
-> (Of course, before connect(), the unconnected socket will also receive
-> packets from the connected socket, which is easily resolved because
-> upper-layer protocols typically require explicit boundaries, and we
-> receive a complete packet before creating a connected socket.)
-> 
-> Before this patch, the connected socket had to filter requests at recvmsg
-> time, acting as a dispatcher to some extent. With this patch, we can
-> consider the bind and connect operations to be atomic.
+CTCISZ Technology Co., LTD. is a company specializing in designing of
+embedded systems. Document the vendor prefix.
 
-SO_ATTACH_REUSEPORT_EBPF is what you want.
+Link: http://www.ctcisz.com/
+Signed-off-by: Yao Zi <ziyao@disroot.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The socket won't receive any packets until the socket is added to
-the BPF map.
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 86f6a19b28ae..02f35e583948 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -344,6 +344,8 @@ patternProperties:
+     description: Guangzhou China Star Optoelectronics Technology Co., Ltd
+   "^csq,.*":
+     description: Shenzen Chuangsiqi Technology Co.,Ltd.
++  "^ctcisz,.*":
++    description: CTCISZ Technology Co.,Ltd.
+   "^ctera,.*":
+     description: CTERA Networks Intl.
+   "^ctu,.*":
+-- 
+2.49.0
 
-No need to reinvent a subset of BPF functionalities.
