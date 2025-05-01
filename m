@@ -1,55 +1,69 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0C219F12D;
-	Thu,  1 May 2025 10:30:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5CCA145A03;
+	Thu,  1 May 2025 10:33:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746095452; cv=none; b=YatIm8qL2hVfqlbKPZozFlPvKoxnth9c0UOtVMdgOLQK0ha0TrkXNtnwCIqXCwnzJo8AwsJTciNsoS4Bl7KskbYp4i8E425uWglHDUpQwP/kP7rV3PFg/JEmm+s6Uo967SNaJgTf1zASyIVFgkIJOa3KwTxn1sWelikuPNRaSM4=
+	t=1746095635; cv=none; b=MQ4maOTK0Yy2s07ES4NOR0pKoqqN3ULyrB8evrC/QV23PZ2CoHhwkBDwHhtc5j0o1MhTK+ewB56LI87hDbX5PywCLb4pEzDIJYLBzmqJMK5xSVsfh2bw0G9cy5ebTdGi/2ooqZJHqBEBR1L5/H+CuUpT+WU2Yp5K3HR/lG5lmUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746095452; c=relaxed/simple;
-	bh=XpbBawKWzBBuqs88Kn7OkQDVDvLjqX6HXmxzkGJ0WRo=;
+	s=arc-20240116; t=1746095635; c=relaxed/simple;
+	bh=X6UR650SqjHCyahtjHRoHLJWzg+YRrp5P85X9aePAJY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lzqVKVD96cuZrkrae9UFCXuoXd0pF+eU6NzhrX0eyKbOr69fHDm54f6tbNKEYjoW3jSs+Omz1xkvprGsQyX87QfindU8SA/e1KI3iHj3jiHVvZogfPpfqmWFm/LMDHcHiFlPkzeqE8sdOLwcfrAI0spu7iIWt5Q1s8f2i/8mGFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=crvnWNJn; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=O9AseHg8HNxl32JDvIKsFLxEUQhIzmfZSzhOTtIiAXv50SkbGyyLHnzd950gai+LAN15BqpXgzTqM2HRNcp2gZGqAwVLZQ51mthpRrGY4bXUg6LA+Tr/Cd+nmZ8wZyCeNA8/K/GlV7X3Y1NHB6eQVFXPlXosdYW+1pB8bkuRzcQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LIK19x1B; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="crvnWNJn"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=EhR7ZzIBi89ApjQaqgEu2V5WiXEmzHjGGhYf5bYe5UA=; b=crvnWNJnqfvrBzvDW0OoZAttgL
-	rD1X7HYMrlHz8S5qoPuWFzKNpqaUuIZUJ6s+fBt0OM0oip0dfeFvCLJpXZFIetf5pdi7tqYsUJeaR
-	sDsixYqsc5ADh1iMmr2TnxHStJxyQKW5zOi8RsaxERbmiWv7FD1Vy7Y1FcY+aSXEy5hzJ1CY+aMjG
-	pHOUiJbmB68i9atReeyLxaOIKywhUuzSUG5r4In77D9U7iaV7FBhSn6NXGOuFzYk1d5kKRsedgxSc
-	ITBB+y/zeCiIiMd5bCUGRUBSQMZ/lz1RLTPNswYdF+J/ulovCBqWBexm66xmvYGgrDwHyYqSQp8l2
-	0kolHYEQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uARBf-0000000Dy9Q-04Yc;
-	Thu, 01 May 2025 10:30:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 56531300642; Thu,  1 May 2025 12:30:38 +0200 (CEST)
-Date: Thu, 1 May 2025 12:30:38 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
-	wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-	seanjc@google.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250501103038.GB4356@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LIK19x1B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746095633; x=1777631633;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=X6UR650SqjHCyahtjHRoHLJWzg+YRrp5P85X9aePAJY=;
+  b=LIK19x1B9uOqVY7STXK+Z4biUkMFj6BonLAC8n44wgdad8YPiUMDY3MQ
+   xOu+7THMuhyIokYE411+I1FBHd/D/UMJxCk56etkzvYvCXv2lRflVFDcN
+   h+IJFYmSdUVx28nAcXs1set7T1EN44frEkZIUixvcaQzlS8abgAIG0lWO
+   AdjCUEhzgMRZnnGiqlqos9og2IPNC7V2eo4JCJ2kkdNrbdeN7S+BnR7b3
+   0svmcL7jqv0WbfWPw0oDkgMsmCdlUlB4197vyKkXqhD8hAA95awko+bFx
+   WIX7XpBipfL6NNMEIobanVbDP8aKOm2E7nZel4ODCF5Rr91x77yALhwKg
+   Q==;
+X-CSE-ConnectionGUID: 95WIXLUuROG7Fb2TP63cZw==
+X-CSE-MsgGUID: 5krX5IgERMGXqVs4v9R25g==
+X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="70266716"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="70266716"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 03:33:52 -0700
+X-CSE-ConnectionGUID: GFVwQs/WS9WyCnQPuxzS9A==
+X-CSE-MsgGUID: 9/8z731hQXmpMAACsa26tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="134878633"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 01 May 2025 03:33:47 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAREe-00046b-2d;
+	Thu, 01 May 2025 10:33:44 +0000
+Date: Thu, 1 May 2025 18:32:50 +0800
+From: kernel test robot <lkp@intel.com>
+To: Claudiu <claudiu.beznea@tuxon.dev>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	saravanak@google.com, p.zabel@pengutronix.de
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	claudiu.beznea@tuxon.dev, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 1/8] soc: renesas: r9a08g045-sysc: Add max reg offset
+Message-ID: <202505011843.2uKgWFN0-lkp@intel.com>
+References: <20250430103236.3511989-2-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,23 +72,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250430103236.3511989-2-claudiu.beznea.uj@bp.renesas.com>
 
-On Wed, Apr 30, 2025 at 09:06:00PM +0200, Peter Zijlstra wrote:
-> On Wed, Apr 30, 2025 at 07:24:15AM -0700, H. Peter Anvin wrote:
-> 
-> > >KVM has another; the VMX interrupt injection stuff calls the IDT handler
-> > >directly.  Is there an alternative? Can we keep a table of Linux functions
-> > >slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
-> 
-> > We do have a table of handlers higher up in the stack in the form of
-> > the dispatch tables for FRED. They don't in general even need the
-> > assembly entry stubs, either.
-> 
-> Oh, right. I'll go have a look at those.
+Hi Claudiu,
 
-Right, so perhaps the easiest way around this is to setup the FRED entry
-tables unconditionally, have VMX mandate CONFIG_FRED and then have it
-always use the FRED entry points.
+kernel test robot noticed the following build errors:
 
-Let me see how ugly that gets.
+[auto build test ERROR on pci/next]
+[also build test ERROR on pci/for-linus geert-renesas-devel/next geert-renesas-drivers/renesas-clk robh/for-next arm64/for-next/core linus/master v6.15-rc4 next-20250430]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Claudiu/soc-renesas-r9a08g045-sysc-Add-max-reg-offset/20250430-183951
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20250430103236.3511989-2-claudiu.beznea.uj%40bp.renesas.com
+patch subject: [PATCH 1/8] soc: renesas: r9a08g045-sysc: Add max reg offset
+config: arm64-randconfig-003-20250501 (https://download.01.org/0day-ci/archive/20250501/202505011843.2uKgWFN0-lkp@intel.com/config)
+compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project f819f46284f2a79790038e1f6649172789734ae8)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505011843.2uKgWFN0-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505011843.2uKgWFN0-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/soc/renesas/r9a08g045-sysc.c:23:3: error: field designator 'max_register_offset' does not refer to any field in type 'const struct rz_sysc_init_data'
+      23 |         .max_register_offset = 0xe28,
+         |         ~^~~~~~~~~~~~~~~~~~~~~~~~~~~
+   1 error generated.
+
+
+vim +23 drivers/soc/renesas/r9a08g045-sysc.c
+
+    20	
+    21	const struct rz_sysc_init_data rzg3s_sysc_init_data __initconst = {
+    22		.soc_id_init_data = &rzg3s_sysc_soc_id_init_data,
+  > 23		.max_register_offset = 0xe28,
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
