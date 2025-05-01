@@ -1,98 +1,75 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B132A19A297;
-	Thu,  1 May 2025 12:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 107441EFFA3;
+	Thu,  1 May 2025 12:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746102006; cv=none; b=uwZgTAHwb4oRq6auk21UojxrrfaSjvZ0IzrCpp7t8zM0XJBSOPXgNj0AGEbO5MSGdb0JzsTD1iCPtumV46IUFXKL2shn46fX03nnz6jLf8YwmPoYyNw9knzuWiELh+Y/HbmNC69FLrS9LDGQApPfyt+sw+mlEZ4Q53tHF3/o/R0=
+	t=1746102137; cv=none; b=jKXvTuC3rw38wJKdILQ5d7QWR78TEpDZ/oGJlx/NkU4nXyHJNr0zNSC4GGE6pgEzcjRvDArfnq0Qe8kUbFIdkjVJbCXMJVeOrjeNi4CI7E9ZszGZcYENK3S+Ef0W49gwotb8boAw0qN6Jt0LxPLRTE6B3cg/jg9r9S9mR5VCRv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746102006; c=relaxed/simple;
-	bh=60c+pQ6r6f+Wq3lh6SDLNhyioqjLH3NhDUCZ1hf7iWc=;
+	s=arc-20240116; t=1746102137; c=relaxed/simple;
+	bh=mxKifamzzXncn/QsKCHnl10Bc/4VPOAAX/UPUk14YDM=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gifkncxb0rhmqnswzZ2l8WWAUvxDK68urU90viJ/fKb08qAKk9uQrzMkvdcOF+/9yOZYcgaMKHtck2ZlSqK1k5cX56Hpymwq8adtPC9IndR5ZXJR6wRi2aBM+dDkffYwIVsC9RZyRa+8sPZebaSeGuJUPbrKEX/uP5adurHxvvw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=XOY8vm+d; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XOY8vm+d"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746102000;
-	bh=60c+pQ6r6f+Wq3lh6SDLNhyioqjLH3NhDUCZ1hf7iWc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XOY8vm+daAKgPc7R8RM86F5vBOBMVuRmS+1dRHDNZDu4wfZ0ln9VlSm0xAEyYfLcL
-	 bCJvMMXvtHhZbtzK3RUUPQ4JNeiWxassAJL28BQJ9Q+uinOGLkiFjiilzXI4VxEyKZ
-	 oRA91fg0FbHSrbIKgUHG8BoDlE0wlwW73C/2nIbSYsl+6XPr7fPz0HOutx7xFOFEuf
-	 R31LTw9MDmCPzOd3p6wsxN8Pcggpfr3+3vtfYjEUh6ND5rMP4mGEIi6bLhh774ie+v
-	 gIIVxMGnp8OKR5gxVRah8qrX008bCTz3piAinaxkRC3MsdBxkzVKvjoKUygt1kecin
-	 xRrdN4RmpW2/Q==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZpCmc0Sh4z4wbX;
-	Thu,  1 May 2025 22:20:00 +1000 (AEST)
-Date: Thu, 1 May 2025 22:19:58 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Tamir Duberstein
- <tamird@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the rust-xarray tree
-Message-ID: <20250501221958.00788306@canb.auug.org.au>
-In-Reply-To: <CAKohponC_E9Ah4wXNNg0YVSo0UuRn+hNq+hxjrccbjeNKWH6Rw@mail.gmail.com>
-References: <20250430202315.62bb1c1b@canb.auug.org.au>
-	<2xUHqc3nyQdHW2SNbAQvQwy1mR4qz-vdR0UF8fVwFvm-rDtaJmhOUqJJvNWkneTh1XD58UlvoBT3umKbMjNlYw==@protonmail.internalid>
-	<20250430104234.dmwnn5ih232kfk4z@vireshk-i7>
-	<87selo1xdh.fsf@kernel.org>
-	<CAKohponC_E9Ah4wXNNg0YVSo0UuRn+hNq+hxjrccbjeNKWH6Rw@mail.gmail.com>
+	 MIME-Version:Content-Type; b=Yt1He6noRm8YwAGww4AL2IfVCahfUeK7gRUNhlDu8uaw7eQ2zDOLj2HtokzY5P6kQUXnKcDxHKXfeYEQIcTdGZGDDP+0yxhJr0zPgO9RmAPiqxgYbpgfVLFOss4kcHANL8Xi4yPGFVs6NOc9bY03dzgPfKVES0t4zObBFDo+56w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C169F1D14;
+	Thu,  1 May 2025 05:22:07 -0700 (PDT)
+Received: from donnerap.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 12B663F673;
+	Thu,  1 May 2025 05:22:13 -0700 (PDT)
+Date: Thu, 1 May 2025 13:22:11 +0100
+From: Andre Przywara <andre.przywara@arm.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel
+ Holland <samuel@sholland.org>, <linux-clk@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-sunxi@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] clk: sunxi-ng: fix order of arguments in clock macro
+Message-ID: <20250501132211.0310ae49@donnerap.manchester.arm.com>
+In-Reply-To: <174610166405.2974716.1586244113913047340.b4-ty@csie.org>
+References: <20250430095325.477311-1-andre.przywara@arm.com>
+	<174610166405.2974716.1586244113913047340.b4-ty@csie.org>
+Organization: ARM
+X-Mailer: Claws Mail 3.18.0 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/5y3UajIK3eaGjWOkZUeL+M=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/5y3UajIK3eaGjWOkZUeL+M=
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi Viresh,
+On Thu, 1 May 2025 20:14:24 +0800
+Chen-Yu Tsai <wens@csie.org> wrote:
 
-On Thu, 1 May 2025 15:54:01 +0530 Viresh Kumar <viresh.kumar@linaro.org> wr=
-ote:
->
-> On Thu, 1 May 2025 at 15:45, Andreas Hindborg <a.hindborg@kernel.org> wro=
-te:
->=20
-> > I might add tags. =20
->=20
-> That won't change the SHA for the commits, so I can safely rebase over
-> your patches.
+Hi,
 
-Tags like "Acked-by" etc in the commit message will change the SHA.
+> On Wed, 30 Apr 2025 10:53:25 +0100, Andre Przywara wrote:
+> > When introducing the SUNXI_CCU_MP_DATA_WITH_MUX_GATE_FEAT macro, the order
+> > of the last two arguments was different between the users and the
+> > definition: features became flags and flags became features.
+> > 
+> > This just didn't end up in a desaster yet because most users ended up
+> > passing 0 for both arguments, and other clocks (for the new A523 SoC) are
+> > not yet used.
+> > 
+> > [...]  
+> 
+> Applied to clk-fixes-for-6.15 in git@github.com:linux-sunxi/linux-sunxi.git, thanks!
 
---=20
+thanks for that, but the URL here is not correct, is it? Should be the
+kernel.org repo instead? Saw this already in other "applied" emails.
+
 Cheers,
-Stephen Rothwell
+Andre
 
---Sig_/5y3UajIK3eaGjWOkZUeL+M=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
+> 
+> [1/1] clk: sunxi-ng: fix order of arguments in clock macro
+>       commit: 4a9c3c3215491f25bc66d615faa921c814b1a479
+> 
+> Best regards,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgTZu4ACgkQAVBC80lX
-0GzFFwf8DpM34EgWwCJB1MFelIO0FKsEAK/Tg1l3KYlCdWirgKD/Azzbzmd9drJ2
-5765PqvnH1yoGL4sRuuVu6Sr1tBFCr+9xTKbHcEFqw6oHNwRFwID1ey6cXuKZ+YC
-YtTLflRKFcULZclwl8p8VUiY66uZnhTiz0T0l9SvRHvmZAU7i8B93lRzjWR7Rf10
-eWK7JkLq/2tWq+wWLbFPu/eF+5Q8Ztq/5Afkox9ofnZjt6iK6YpyVqx7r4Da5n5k
-M5+Z4j1LQ9cpkMjKK+t6cbcGvff34Tdi3iAdqBSddxY0Bwv/ix8sdZHjuGn1HnU/
-OhOYyueXyEHoI0sYoZuvUHYk1sEjEw==
-=+2Iz
------END PGP SIGNATURE-----
-
---Sig_/5y3UajIK3eaGjWOkZUeL+M=--
