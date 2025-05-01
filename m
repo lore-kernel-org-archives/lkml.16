@@ -1,80 +1,115 @@
-Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A456B1CA84
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.66
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492771CA84;
+	Thu,  1 May 2025 14:06:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746108154; cv=none; b=d6goYXKiXLEMNTBmtfCIVUHKlulRQgxNEox2JdDQ2/sVpwv8v3RPeDLWXj+ZOT5sJjheL3QRIopChVYNseDECxOdVHfkERRqmz1/yNS4mO5JJ/gZ+lpwtBT+tYqcxqw5nikOyWKpcISQ9pF4EaIaiGAFYllJnoKiJ0zXIML+3ns=
+	t=1746108381; cv=none; b=fLQ3XOmCxsl2rzLhm/3FghzG7hXhQBl80CmRF6DwsPmQA4ulbxydbSUVRT8wlTFxrviMzxYKmm8bAz7CRT/LVlTAtVRPfQc5kE0lPTPpDAHsaS5KZGroEMKaocCz1nAWXPdHvBMRzjRUBCC2c7T6HaWnoVY8aMM9g++a2sEnGe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746108154; c=relaxed/simple;
-	bh=yLfkEC+HJVrswyhnBDKP/tNM/Op3VG40khYCfWbYgsY=;
+	s=arc-20240116; t=1746108381; c=relaxed/simple;
+	bh=zo+fkCf2SqBoVaTG78Z0dFmSpLZzqvYGNlXUbGvns2A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nHetA6aGiMMuwpwSaPUma8UvrDDgW1OX8PuyXuWx7IYZa9DNThpWHuRBIdbUnvILS3mK+gjU2zjPiQ6wfd6jCCVvft4xYRmMcoNTb8hYmAEhvAoxSY6tdxUJC8BXBO/55hMBkYwXkRn6z7U6Q4654BqQN9L6/sYuFb5R3L6VX6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=y68lxEsk; arc=none smtp.client-ip=209.85.219.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=MWg/jrYpmy/EVxUououKMffgYLOSJWIHdbF+KqXk1yLseu2P6/QIs8vSYgDA3FRdAKIOhZWL4TF7EAWmxMnpQsDpr5KZaKhpOaio6FgvTOH81avJYVkuRYbjQLCR0FBzruZREmdRjHrea7hRr05O28hTXnMvTvj073o+9FucIIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLxwmuJ6; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="y68lxEsk"
-Received: by mail-qv1-f66.google.com with SMTP id 6a1803df08f44-6ecfbf8fa76so14985846d6.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:02:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLxwmuJ6"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c9677cd6d7so119191085a.3;
+        Thu, 01 May 2025 07:06:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1746108151; x=1746712951; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746108379; x=1746713179; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wsPTvIUlonTz6aoFURvjc48QUmCzpcROb/H1/P6AxH4=;
-        b=y68lxEskeUCv88H11H2TsfKsn/FNz2xVaOtwJwM6rpIlP7ofBr/JrATzTpKvANlvEq
-         A5Kou4Ju1HFI4dv0CYOeVlpxX1AUlgQ5NEsSEC5lMSwpGPaan/G9eHjMi46SApZk/oIy
-         poyHkt95fNqk4j5Y4Dkla7xgaqLHC2HqoRm2RArDj9taa7/BBNeDA7iBDMMgJx90+d+t
-         4iEKlMifZTSVXU/fCoGsf+0zEwFCowfxBpTr6HzTUe1HKNYxpR4T0BVrCcHdR3GLqsjh
-         L9nMV72g9dsnq8anyA/MgrtBvbglWpCNUuSKDVrbVsEd0WBlfJuQQvXQR0M6v/U/K/L7
-         ddPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746108151; x=1746712951;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wsPTvIUlonTz6aoFURvjc48QUmCzpcROb/H1/P6AxH4=;
-        b=aNMlzC5Z8cZqdYT6ivBJqCKRRVjUYcRoZ8D7HXZvBT7fZ/0I/CvicYeCKb4JZBX2QZ
-         zNjs5QXB4Z1X7ec0n4pTdFTCTq3x+C8ZihY4pGK3e8H3CwCEZkvKO5CCPJygHUJae6rY
-         jzRAtl+ABqFwwWqkI3Fhr2TbRyZjrA12AJq9eoLbuTCC0R+pQmJ3tby5kmgT8ZDa+4gF
-         SmF/u17/Pu7GpJ837K2Rbzwr88/Kw14vC6O7Odw3ZJir4V5RV04rGERXxzpft3/O9EJe
-         zAOCj/kvjlMUERxD4tIhLHgPtlSoEvpFtUNrN4Ajz6AL2VspdYqqDje4RumZVBxqIgbi
-         dHFw==
-X-Forwarded-Encrypted: i=1; AJvYcCUD0clRC1lTHUxrqlzrxL+WzPoRYsHprhYSxYWaa/UncWEOhJ9KXlnR+3TPA59dK13/1HpJiQRZFdIN8+Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzMW024Esvy0qAI7UmJKMBqDDXzfuxkB501UPtsmn/wNBr7uelG
-	VPutsEab9oe5/sTPgjhhB4L8ZC8pNIAbs1PDvGu/WHgJmej98/tvPy61TbV2NT4=
-X-Gm-Gg: ASbGnctz9tSJtuc5mWQ3zQUB00pRwWUpF3V5OFXjaJJmqXRnGChg/6cN/X3W77C7lw1
-	mGjjKt/qniIv/La2EcAIMZKemv4I7oZJ9xTZ1IlsmE9EkNDgoXy4K+5B8mY71o/edsT6IKVxogx
-	c+yW9lRQfWcbMKclCublR8WYbhGROGzZO97AjI/hB6EBMyv9nMgcy5+aG3Aq6bBwbs/wFl8As2h
-	PMjzGbDWc49Xf8e0NPjJFdLucPzKC4d/3NmmSa3Pn7IG7qg+aLOaqNz9ikreggURV5F3CNhIzsz
-	SiTrZPt9R2ywe2+Sqm6ZfhfMUYLF/1R6nwx5IGYQH+4NJdWnxw==
-X-Google-Smtp-Source: AGHT+IHMMzdAha+mSe5FENeDnuJbBSEZwl1rV0kTSW+UDo/woOhAYywdrFjkvAnvanulduGVihb2gQ==
-X-Received: by 2002:a05:6214:1306:b0:6e4:3eb1:2bdb with SMTP id 6a1803df08f44-6f4fe1357c5mr100135346d6.43.1746108151086;
-        Thu, 01 May 2025 07:02:31 -0700 (PDT)
-Received: from localhost ([2603:7000:c01:2716:365a:60ff:fe62:ff29])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6f50f3b058dsm4858996d6.4.2025.05.01.07.02.30
+        bh=HYFuKMDmua0uc07etgafAGSuIjbEHGD1lpAMVLq4nGE=;
+        b=RLxwmuJ65M1uXSwUaaGq3kL/QHrBoucVBgQx3sCP9DWGd1a2CJDO6I7AQ6P8LLK8Ab
+         KPO+FvNcICUBnnLnE4mDR+MFQC3RTdC46SzuaI2OHThTSN2EcP8ly8Mi7MNtm3OH2k8f
+         23WweExyiZpUJRSD5GJAljwiRNm0TyKVJG+5s49JVj2yzE/8cfIca1+/Zf1y0elGZ+uM
+         SkeuCbf0zwfxaNOlwCarDALncE/tInL5Y71JGXtdLMIaQByWzJkckyqwoFOF9IzZng4f
+         Rx3fEMVj9soY9KF6VK2rte6+AHUP+EibFLhX37NpuqqWS2NoM8Zrv1lJjCbzS2gm45gt
+         bdDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746108379; x=1746713179;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HYFuKMDmua0uc07etgafAGSuIjbEHGD1lpAMVLq4nGE=;
+        b=iZH0f1qfJk3XKO0+UQGmgmTIqOY7HMHH2Wn/aZGLh5Xa22Wtz60YvOQ6oNf1WeOx//
+         O6lqGrjdPabd7GsdY4OprHOBlvvjTdr2aZD102xC0RdBN3i7FMgPjNIvq1uMDBLQ1GzO
+         PArR+JNhz8RvBgDHTeRbdvY8zQL+I3gJVP5lbTQFDVNBJ90pReIBhSWxCdRPiNr40K//
+         jR3kbcnKspVyfviAqIgpkqqmCoX+J8CRGsAK0awy5pMx9FzEZEgagactGpmWg6jWxIjk
+         Q0O9fN/zk8/7ux8V2ou+HrA/H7LCH84+GD4bGa5yxmU4BitD/8d1aOJxuNAHNAbTVdVJ
+         1PGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVdlOr2BjNEhReQU8lBxZJZYg+idV6Sad8Qn20NnffqgyuaBV8a6aXsejQvMnsxFTLROAG1chunu2MqNJy5qn4=@vger.kernel.org, AJvYcCXy3SUB5cdBIZ25DDF8OMiKoZSiq3W+p9WT+1ecIHO8p9QiqBXuqwfyXpGlQDYYUJkNAOOPo7KOWK7zh24=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyN4ftS6GrMgYingD6hPiCHrf/E1JS6Io0d46YZkvU65xJsNXE8
+	SvNC9Y02nPzQkA8n83xR/UbOp1kub+o6pI2J9C2LM7iuyBBy34KZ
+X-Gm-Gg: ASbGncvMHi7poSdwRmM8O7SL/66LS+Z9GhB/k/a+hB8ahvntDS5eH1AIuamNHZggHV+
+	pKCpcd/fm3dYAVgM1FzfkttomknOMhvvEd3fcmMGqt8MTZ9ozA9nPBTWV6Q65mnScojDf8RFCrA
+	LvZeK55p6vbZ7wvkX3iq6g1mxEaDP/r+A2JL2lo6UAFT8GjZvvWreF28+2EETichBREXe2KHLHT
+	iMCdMeWCza+9NqJwqBltpSvw/YWszkshG8Gk4ki1VFjYQ8hAOkPvyO9me4Ywdehju426pnSGhtu
+	l5YpOAfP4xSO+lLNKeZUhUOkWAR5HpZEekxe43jKh2OH3Atvuztf91uyydUWcxtCHGOr9ZzuMY+
+	aBAKfP6kQ8H/QTFaSUt92MkyoEojWq01eJvTbfk2n8g==
+X-Google-Smtp-Source: AGHT+IHXBpacgQotFRwe8jX2L0DsKZBymrJLAErzVHZlkn2203j+y+Qzjj9IOYt8zY7TMDIlzj8uAw==
+X-Received: by 2002:a05:620a:4587:b0:7c7:a604:d28e with SMTP id af79cd13be357-7cacefa104amr288853685a.33.1746108378839;
+        Thu, 01 May 2025 07:06:18 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23b5f5csm46115785a.10.2025.05.01.07.06.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 07:02:30 -0700 (PDT)
-Date: Thu, 1 May 2025 10:02:26 -0400
-From: Johannes Weiner <hannes@cmpxchg.org>
-To: Qun-Wei Lin <qun-wei.lin@mediatek.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Nhat Pham <nphamcs@gmail.com>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Minchan Kim <minchan@kernel.org>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Casper Li <casper.li@mediatek.com>,
-	Chinwen Chang <chinwen.chang@mediatek.com>,
-	Andrew Yang <andrew.yang@mediatek.com>,
-	James Hsu <james.hsu@mediatek.com>, Barry Song <21cnbao@gmail.com>
-Subject: Re: [PATCH] mm: Add Kcompressd for accelerated memory compression
-Message-ID: <20250501140226.GE2020@cmpxchg.org>
-References: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
+        Thu, 01 May 2025 07:06:18 -0700 (PDT)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C2DF9120006A;
+	Thu,  1 May 2025 10:06:17 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Thu, 01 May 2025 10:06:17 -0400
+X-ME-Sender: <xms:2X8TaEJyQTDTMAUejX40SduQfH_yN3BUNe7ZcLSuhjxv9LGi0fGm-w>
+    <xme:2X8TaEIOUzFGqtS6OLQgD3Aygdy0GKKd70r3BEKjBcmCqM0mU9JEbNFc5zGTi5ae-
+    v9EnifomZpvg2Yeyw>
+X-ME-Received: <xmr:2X8TaEu2ZPc3GaSVxn4iyyOZbr08VE-6nrY88rL3J9LfjVNtOz72QI4D>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieeljeejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeehudfgudffffetuedtvdehueevledvhfel
+    leeivedtgeeuhfegueevieduffeivdenucevlhhushhtvghrufhiiigvpedtnecurfgrrh
+    grmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgr
+    lhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppe
+    hgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvddupdhm
+    ohguvgepshhmthhpohhuthdprhgtphhtthhopehfuhhjihhtrgdrthhomhhonhhorhhise
+    hgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphht
+    thhopehruhhsthdqfhhorhdqlhhinhhugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprh
+    gtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopegrrdhhihhnuggsohhrghesshgrmhhsuhhnghdrtghomhdprhgtphhtth
+    hopehfrhgvuggvrhhitgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhihuhguvges
+    rhgvughhrghtrdgtohhmpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidrug
+    gvpdhrtghpthhtoheprghnnhgrqdhmrghrihgrsehlihhnuhhtrhhonhhigidruggv
+X-ME-Proxy: <xmx:2X8TaBZssC22g9jB-vKRSqP3pxkAhA-CkYIjB7jAzZFYnOsLdXiDaw>
+    <xmx:2X8TaLaNxenHjRmotLvOYg0-fcGGw9dQ9OB2IzNQjv4lAXdZNvIoTQ>
+    <xmx:2X8TaNB2Hf8boWn0AogU31jCohDNUXjKrZCwBPuvraLPCmnZchocww>
+    <xmx:2X8TaBYIqHJEzHx8yBG99vBBI3TVYpf3D2rnwHdjlriuOSdLLnGVOw>
+    <xmx:2X8TaDoCyFlx_p3AoIBRksG57hE_G99TI_dOPfyq2dtjvJwNGtw4Usxy>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 May 2025 10:06:16 -0400 (EDT)
+Date: Thu, 1 May 2025 07:06:15 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: arnd@arndb.de, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, a.hindborg@samsung.com,
+	frederic@kernel.org, lyude@redhat.com, tglx@linutronix.de,
+	anna-maria@linutronix.de, jstultz@google.com, sboyd@kernel.org,
+	ojeda@kernel.org, alex.gaynor@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	aliceryhl@google.com, tmgross@umich.edu, chrisi.schrefl@gmail.com,
+	linux@armlinux.org.uk
+Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
+Message-ID: <aBN_10lV7DCdR5iE@Mac.home>
+References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+ <aBNojspyH5dHsuOm@Mac.home>
+ <aBNrJgLFpswcgOEK@Mac.home>
+ <20250501.224815.1854649062185419020.fujita.tomonori@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,76 +118,21 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250430082651.3152444-1-qun-wei.lin@mediatek.com>
+In-Reply-To: <20250501.224815.1854649062185419020.fujita.tomonori@gmail.com>
 
-On Wed, Apr 30, 2025 at 04:26:41PM +0800, Qun-Wei Lin wrote:
-> This patch series introduces a new mechanism called kcompressd to
-> improve the efficiency of memory reclaiming in the operating system.
+On Thu, May 01, 2025 at 10:48:15PM +0900, FUJITA Tomonori wrote:
+> On Thu, 1 May 2025 05:37:58 -0700
+> Boqun Feng <boqun.feng@gmail.com> wrote:
 > 
-> Problem:
->   In the current system, the kswapd thread is responsible for both scanning
->   the LRU pages and handling memory compression tasks (such as those
->   involving ZSWAP/ZRAM, if enabled). This combined responsibility can lead
->   to significant performance bottlenecks, especially under high memory
->   pressure. The kswapd thread becomes a single point of contention, causing
->   delays in memory reclaiming and overall system performance degradation.
+> > Btw, I think you're missing the Suggested-by tag from Arnd, of course if
+> > Arnd is not against it.
 > 
-> Solution:
->   Introduced kcompressd to handle asynchronous compression during memory
->   reclaim, improving efficiency by offloading compression tasks from
->   kswapd. This allows kswapd to focus on its primary task of page reclaim
->   without being burdened by the additional overhead of compression.
+> I'll submit v2 tomorrow, including Suggested-by tag from you and Arnd.
 > 
-> In our handheld devices, we found that applying this mechanism under high
-> memory pressure scenarios can increase the rate of pgsteal_anon per second
-> by over 260% compared to the situation with only kswapd. Additionally, we
-> observed a reduction of over 50% in page allocation stall occurrences,
-> further demonstrating the effectiveness of kcompressd in alleviating memory
-> pressure and improving system responsiveness.
-
-Yes, I think parallelizing this work makes a lot of sense.
-
-> Co-developed-by: Barry Song <21cnbao@gmail.com>
-> Signed-off-by: Barry Song <21cnbao@gmail.com>
-> Signed-off-by: Qun-Wei Lin <qun-wei.lin@mediatek.com>
-> Reference: Re: [PATCH 0/2] Improve Zram by separating compression context from kswapd - Barry Song
->            https://lore.kernel.org/lkml/20250313093005.13998-1-21cnbao@gmail.com/
-> ---
->  include/linux/mmzone.h |  6 ++++
->  mm/mm_init.c           |  1 +
->  mm/page_io.c           | 71 ++++++++++++++++++++++++++++++++++++++++++
->  mm/swap.h              |  6 ++++
->  mm/vmscan.c            | 25 +++++++++++++++
->  5 files changed, 109 insertions(+)
+> Please let me know if you're not okay with being included in the tag.
 > 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 6ccec1bf2896..93c9195a54ae 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -23,6 +23,7 @@
->  #include <linux/page-flags.h>
->  #include <linux/local_lock.h>
->  #include <linux/zswap.h>
-> +#include <linux/kfifo.h>
->  #include <asm/page.h>
->  
->  /* Free memory management - zoned buddy allocator.  */
-> @@ -1398,6 +1399,11 @@ typedef struct pglist_data {
->  
->  	int kswapd_failures;		/* Number of 'reclaimed == 0' runs */
->  
-> +#define KCOMPRESS_FIFO_SIZE 256
-> +	wait_queue_head_t kcompressd_wait;
-> +	struct task_struct *kcompressd;
-> +	struct kfifo kcompress_fifo;
 
-The way you implemented this adds time-and-space overhead even on
-systems that don't have any sort of swap compression enabled.
+Sounds good! Thanks for the hard work! ;-)
 
-That seems unnecessary. There is an existing method for asynchronous
-writeback, and pageout() is naturally fully set up to handle this.
-
-IMO the better way to do this is to make zswap_store() (and
-zram_bio_write()?) asynchronous. Make those functions queue the work
-and wake the compression daemon, and then have the daemon call
-folio_end_writeback() / bio_endio() when it's done with it.
+Regards,
+Boqun
