@@ -1,80 +1,52 @@
-Received: from mail.toke.dk (mail.toke.dk [45.145.95.4])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686E420D516;
-	Thu,  1 May 2025 16:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.145.95.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1EA881ACA;
+	Thu,  1 May 2025 16:30:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746117006; cv=none; b=H4rXIA7DcSPOTw8ysKzPz5w4Ri/jUADDDutqRwq219pyYkNJS5CNJm8nCPAvniA7pvm+2l04lc+ld/DmOkty1h2ft1uruY+I0pgZtWdv8akB4JkeOVsZIVx6k442jpf4Kp7yffXBVIZJC2aeyZy9daFfrEw5DK2VvNejP9kzueg=
+	t=1746117027; cv=none; b=K0mxBCr86oe99TWkidqsROAIlsXr9DWAU4EKZkMtsDvLL5OcKbhpLx4VqgH/SZR+t16f8319SqFR4PPK1Zeyp6GWiMFPe3gudIlGj2PNrZRd1Aeb13QJX1ZNSrVsYWUuWR57s/cFr0OVtaAeTGKhLrIWkfM7AluIDKoqblNrTnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746117006; c=relaxed/simple;
-	bh=hNZfYFFtAr2xHt90ZdfXgjZK8UcYhDMKV8t3YTODBWo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RwrrpE9Uyic7QzEGpBLGqfHgwBULSBM+99G7d1jqHYS52Zjv9nfMWZd7yFK/ay9+J55c+5pmKiGRbhbbzjPxbIjz09PZEwW/P12D6dGWjY0CHatiXHhms5KCEmoF1Of4UB9815+DCNKmSReHg9mgmDwg4x5tv9L77VUzYYXrf/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk; spf=pass smtp.mailfrom=toke.dk; dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b=li1W4gmN; arc=none smtp.client-ip=45.145.95.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=toke.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=toke.dk
+	s=arc-20240116; t=1746117027; c=relaxed/simple;
+	bh=V9OJ+gty3Q+XpdbCmIYmJS5z8jsP1u2Ixn/zet+/qV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=VBA8QuvIOU1XtPKb75/wi9W2sr8JzZRzYVuTQWRLNVcedubJUNBTCO4TuQXg7EfWX029YU6F932ipF5qljcmxfEfNDlfDBgNRuEzhVbjWNlSE6DjdirIfpKU6qAyDNbE2MtmYX8K78eBU+qLDYljDoHuCH+YTspvoz3iiymIj54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=tm8BMc+A; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=toke.dk header.i=@toke.dk header.b="li1W4gmN"
-From: Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@toke.dk>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=toke.dk; s=20161023;
-	t=1746116442; bh=hNZfYFFtAr2xHt90ZdfXgjZK8UcYhDMKV8t3YTODBWo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=li1W4gmNEOZXw7qZPbl2GyNKGbS7Qt01EHKXqgUDAT0g1m6WiRfIzmzbwQnNRUgnO
-	 t6tN8jHiS7NQ00RkQ6XLGB/JOtWjEjxcCVvtBPFqaUvnCemFSxepf/irq7jcRThJs9
-	 Ng6kVmubrp0bDAA83PkBWjXpF6hl7+zHtTgw7hqFvgE1zqXF05DX5/UuPExNUs6rXh
-	 T9bSHtXSGDCsaNYfdD5YjHdG0uvRkExq/VmKB1M5bLsLYmxJIJBAAH0bknRkq0kwIm
-	 tv34LbQrRoYJC7LRbAlekYfx6RXKcH3ls+boB65JrNVkK0KegLESdL/tvEVHwNEw/9
-	 xP+B9YzpY6y/A==
-To: Rosen Penev <rosenp@gmail.com>
-Cc: linux-wireless@vger.kernel.org, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv2] wifi: ath9k: ahb: do ioremap resource in one step
-In-Reply-To: <CAKxU2N_3mcv7e2i8Z_b0+oQUXxMmpKH1eGvEZiwcRxx8HKYDwg@mail.gmail.com>
-References: <20250421040044.44887-1-rosenp@gmail.com>
- <87ldrsjrvp.fsf@toke.dk>
- <CAKxU2N_3mcv7e2i8Z_b0+oQUXxMmpKH1eGvEZiwcRxx8HKYDwg@mail.gmail.com>
-Date: Thu, 01 May 2025 18:20:42 +0200
-X-Clacks-Overhead: GNU Terry Pratchett
-Message-ID: <87o6wc5mlh.fsf@toke.dk>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="tm8BMc+A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1746117016;
+	bh=V9OJ+gty3Q+XpdbCmIYmJS5z8jsP1u2Ixn/zet+/qV0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=tm8BMc+AsuhyyAdVX1reoVxmarTQirBjuIZ/kUvwLD1ySg/1exdcNm5vO2wEDUWeR
+	 pIQ866eNH3NsyAvnt6TA8UYsrpzPyIy82x80yeXXToSOtG9Vj9X0UVOJ5xV9GHA+/p
+	 AjB9+XGoUnG8jjsOufWO41lWaneTXsy6oi5JQr/0=
+Date: Thu, 1 May 2025 18:30:14 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Willy Tarreau <w@1wt.eu>, Shuah Khan <skhan@linuxfoundation.org>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: linux-next: Addition of the nolibc tree
+Message-ID: <6d906909-99ae-4934-901b-983ad7d3cbda@t-8ch.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Rosen Penev <rosenp@gmail.com> writes:
+Hi Stephen,
 
-> On Tue, Apr 22, 2025 at 5:35=E2=80=AFAM Toke H=C3=B8iland-J=C3=B8rgensen =
-<toke@toke.dk> wrote:
->>
->> Rosen Penev <rosenp@gmail.com> writes:
->>
->> > Simplifies probe slightly and adds extra error codes.
->> >
->> > Switching from devm_ioremap to the platform variant ends up calling
->> > devm_request_mem_region, which reserves the memory region for the
->> > various wmacs. Per board, there is only one wmac and after some fairly
->> > thorough analysis, there are no overlapping memory regions between wma=
-cs
->> > and other devices on the ahb.
->> >
->> > Tested on a TP-Link Archer C7v2.
->> >
->> > Signed-off-by: Rosen Penev <rosenp@gmail.com>
->> > ---
->> >  v2: remove wrong devm irq conversion.
->> >  drivers/net/wireless/ath/ath9k/ahb.c | 13 +++----------
->> >  1 file changed, 3 insertions(+), 10 deletions(-)
->>
->> Is there any benefit from this other than code simplification? Because,
->> TBH, I'm not sure saving 7 lines of code is worth the risk of changing
->> something we know works already...
-> It's the same API calls fundamentally. This change has already been
-> done treewide across various drivers.
+could you add the nolibc tree to linux-next?
+git://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git#for-next
 
-Hmm, alright, let's give it a shot...
+It replaces the nolibc tree from Shuah.
+git://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git#nolibc
 
--Toke
+
+Thanks,
+Thomas
