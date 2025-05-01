@@ -1,120 +1,160 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23B9B1A314A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC09B19F101
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746106580; cv=none; b=gI+bm52gQkv4slflNXhkA0ZkrNUpWZIz6NKGATdCpijt81jEjZCbc/uMVIXqXRtfpchxXsWqch6IZpW1YsEttQlm3vRa1wGFPCnonXLw38+g3nacV+EKK6KbXV0yQlNjW0BNOOOuP+32IvyvBM4no8+sPDvb4zHWfr4/fFMyPvQ=
+	t=1746106628; cv=none; b=YKQdXTWP2d3ByZi70bkepI4ACNMuIkQ1cfg6ZwSxpUg26Ik97pdBtdDxKCiaUS7kS23eZBhSOC3UJ/OHqFm1VKpTwuc4+0N7q8JxEfPjxyzAFnwk26YevABUoYh+YJC4+lX2zrzeHynmZfp8dA7DBYfDJk1IPgFvQWo2sHDGEkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746106580; c=relaxed/simple;
-	bh=fr8LlzXOX1DDJ3UKB4yXhV7JJkyml63H3YQLUXm/grs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LB9Ba42W/DtgRryARSlG+C9MblfGuVAvqmwB6LjkYT+aJtZvJ+VaxWNDFp/wmHm8b0oWe1/RuXPdmaF4gq/8T6D6yfPPT5XSlIF66nAJmGx8O+/Oex1BqK/7fb346SGCZJozgYxk+bEIKE8cB4IdxldzN2sBAA4C2ZaJVRNlN2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org; spf=none smtp.mailfrom=brainfault.org; dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b=Nmax+CAQ; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brainfault.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=brainfault.org
+	s=arc-20240116; t=1746106628; c=relaxed/simple;
+	bh=9MNpS1gJG0qyHRf2FJfHx17kDP9N8N1hNQWavkpaHFU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S4t7aeR0aKkbpKOfhqFGdmnDZPjMnKcffC/LjiO13XHaKi/txn1+Mc0N32NXatjhAgHU/C39W17ZA5LuuM2p+eRvH+7Z8b2FtBV1YVUMVy0JTCGP3Myl9MXNiM5emIudexSvcNf0hXMUt+P9Jcsh20U7R8xQATMGn8YYdRBiIjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=k9WLwoj8; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20230601.gappssmtp.com header.i=@brainfault-org.20230601.gappssmtp.com header.b="Nmax+CAQ"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d9327d0720so7344615ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 06:36:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="k9WLwoj8"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-39bf44be22fso664513f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 06:37:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20230601.gappssmtp.com; s=20230601; t=1746106577; x=1746711377; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R5HbFwwkJF2Y2R1Vbj0ljcnhgzUV/rgTcfz1KnrFhCo=;
-        b=Nmax+CAQD2omOzlkuMUvXJ2NitDOMGG+9XPZyvZjH+Gpb7NPmVKXLKJxjX6+UPumZK
-         4J+iWgyVq3u5F9dd31/B0kQDC3pADSWcSWr+eYdTYWiPg7Cjic0AfteEj1nAn61sy1qb
-         BDGUaiPPsgJduY/Mfe/iTJPbSavP3yj2JGiASCxO4G2te5ydNq5AOUDR3E3wZ+fLN4bv
-         g3olmQUMsn/QGEohWiTaYdb4qik6AWDQKUMBu2JuFh8Uma4AKt0phgbqO44+SL9Ll+28
-         YZS7DMqn8PrxqNDWrOo9aC9jkKpshaDSjF2+YlwpUtLXNA0vDhwMleyL1jrCXuiUznrX
-         joog==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746106624; x=1746711424; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IVJu0wRzEXe69H/pIntKvn73bqLsL3OYyEuqMHp/wd0=;
+        b=k9WLwoj8R6Lwcqz8gF+6ASnsAu/MSALdgx9WrG7GAztAPHAXuifA36BrtNaEqwNeVx
+         jOq98QYeOogpKM+RxgPfn6qEvZj1ONay/gPPMjP2Pd4oSoF1RH2zXRObgZ+zxxlIWphv
+         p52Zi/mNOV8CU6hsCN/AA745wOP9JhcFPWv275wbTTtim9xK/Bi2RN6wnDEDxDGUZ877
+         n30rzLFy3iik00p05fObBKweioObXk51GzGOc0yM5bYb20wVUVilW289iEorJhrK+YWa
+         gKOe9rxYja73bfLTAtoPU84KWztj33O+8pUtdRxz4XXDtWu829kwto1QwN3Eyhy3Naex
+         9U6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746106577; x=1746711377;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R5HbFwwkJF2Y2R1Vbj0ljcnhgzUV/rgTcfz1KnrFhCo=;
-        b=o4uvgHsKkFiGt2WqQKG151cKOcB1VnLtGQeqQSvmG5mvQntxTiWLFfLdFX36bYv9hk
-         O7tBbzyYhsSR61svgVOjyc7euyJX0HGzLMBDbqiY5mWiaTyTbx8SRqY2S8JdPuxACcCt
-         4/rHIvCj7EDPWzbefHYFgARjrXnqumw9Qpu5Edwr+uv9glugHuMCPpTBw0FTbc/167Df
-         +QKMs5l5V4AJNeZCi8mylZKQBb0gjQnRroTotZM2s7wa4qlcC80B0GCUqLpMP3wV3zez
-         Ixv3SCIR3gLXqOfvJ4aqIc6JcdinGAuoo2wjnoQWrmeI/lti+uTT+u+dTfnPcJXkSXo/
-         Pkvg==
-X-Forwarded-Encrypted: i=1; AJvYcCXSu4GyaKSAbEMNZkVaeJB1MMgmAxHi175VhiZHDzfIgfsHXDoFWCMnK7BbqmEjiaqJAc3DZa/0m//bfbM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0VJG93vVo+/7M3OC2R+ifF4YGmN8mGNWobCIFWz1yePFD58H4
-	b0svp75lmQmxkZ8jM3h+XWEwURrArgwgFBIpBGYgVUHkeqzuU5RsB7zEX7ro3UgdGHUCled+SbR
-	2kKGuMPcn0rvUk10tBNBkMreL4HRXynXkrRw47A==
-X-Gm-Gg: ASbGncuo/cnB0uo+zSflLGT8TaqB6LufpXPQicgdex19VUtuVHY8HNTiCMG2uWKPXQf
-	c5KpXb7+0k3iE7b48aE58aZgDpolsdq5s4SW1c9/fVQEjVZD9TX4MGruJJQ8Jb5pj3Wl60cbxJt
-	nxmDw3KlyU/B+oEetogTun4Q==
-X-Google-Smtp-Source: AGHT+IHY7gd5DfteiMffTuTR2BB5tAOFnK6ac9kV3ASNuI57T6S+/lfY0TuUH0M3Tjf2aq1tEUdaJ7qOsG8AOHYTWno=
-X-Received: by 2002:a05:6e02:1b0b:b0:3d5:eb14:9c85 with SMTP id
- e9e14a558f8ab-3d9676c6669mr79049245ab.6.1746106577095; Thu, 01 May 2025
- 06:36:17 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746106624; x=1746711424;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IVJu0wRzEXe69H/pIntKvn73bqLsL3OYyEuqMHp/wd0=;
+        b=kxy+/p9wnDoapAo69SQ8oYoj4Yt8mDasSm75BzMjZBdSTZ4qatMH8E5RrwEVAWpLuf
+         O8znr+ucy74C/0t2FA7NXp/57XMmkFQZ/iVjxfAzOEPmVnkAXLve708A3fEjSUmDw02s
+         ERmQvh95z3uNxUvYK8eEnjgaD9X8HsVEwHIWgCfmp0dnW8Sul/z8+uU0YTSW9bRlUGAk
+         Kmds5aVnz6jymfjDZ9FCfPVZMpUC7ywgjWw/zasNsk/CzguIGexbT5/0NMw+gxXwVOTf
+         msqfkzGeH0vLIIyJlP4JaRCpipmkj38/szBLNMq2nDOkwpXaLCgQFD5RIGZ025L/6tHz
+         KA6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUxSrlmj7tcUEOf49n9OnA7m2z12CGQvBP08BwDLWBvp6Yj45VbJ/Xc8IVdWEOjmVSSAVfG9gayhAFrTxA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YylhmEPR8247ypYktd+A/6ZvvItALJPqyPGbbIUcUi5SroXL4XM
+	MokdJBCcHyywBZbgudVxZ247Oz6OqBXHxohT50EehodksVqQyPc3wP9j+TcfDAA=
+X-Gm-Gg: ASbGncvAMj38IENRZX/pR7lAfwjTgd2romCUIEM/+1p1S3sb+h9WKzF0MeqA8vrPP7s
+	U1jVeLOsa7GebNBYMgXUmDJM+zvl64D9lKRy1kGa4H19NxFjk6M8J2XGmkoFRhV9HVDiUmZumu0
+	Bsq+zvQw4H9wHPMo3q3qDaizCccRnSHHpXVLz0rqj4jNqAqkpETzXFonyMhOsPDLV6lj8sSLogJ
+	3Yl7aJUc/UDNpfwY90b56zZ75ErMOcAUHc6HJ3IpRl5oC0MIPu4b8W83u+tL8vYBNkeGIL0SDHW
+	6IfX8+3u5pprTr15XxcXFVx7Om7BfKzD2udqnHxlC4gn5rQCiOWKBB6FJdHy84Aviq/2V+KtE1z
+	NqBWcnfY=
+X-Google-Smtp-Source: AGHT+IGdPBuoaPeINXPNqsaOhchsX0XkfzRa1+uOWIy0i9ZUyGPNCW3n5dd65l40+aOPl7d3QgDt+g==
+X-Received: by 2002:a5d:5f44:0:b0:3a0:8465:43 with SMTP id ffacd0b85a97d-3a093073423mr2527425f8f.43.1746106624153;
+        Thu, 01 May 2025 06:37:04 -0700 (PDT)
+Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a88250sm843781f8f.80.2025.05.01.06.37.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 06:37:03 -0700 (PDT)
+Date: Thu, 1 May 2025 15:35:52 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, 
+	Lars-Peter Clausen <lars@metafoo.de>, Michael Hennerich <Michael.Hennerich@analog.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/5] iio: adc: ad7606: add gain calibration support
+Message-ID: <y6hss7bo25hiwzzplbbhmdodpmqbgpkarqvemn3tn3fig26tb2@753sxtygndaz>
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
+ <0677db3c-9c36-4f34-93c0-5c53d702c4bd@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-kvm_selftest_improve-v3-0-eea270ff080b@rivosinc.com>
-In-Reply-To: <20250430-kvm_selftest_improve-v3-0-eea270ff080b@rivosinc.com>
-From: Anup Patel <anup@brainfault.org>
-Date: Thu, 1 May 2025 19:06:06 +0530
-X-Gm-Features: ATxdqUElPYmtqqRS47Feed2BMb796DJHZOR_NiIu4niYbEKvJ9Q_aHmmUyE0IV4
-Message-ID: <CAAhSdy0UAnmNHWNJBysuH93Mok5_AQB88uy0nHuiumpfGgiJfQ@mail.gmail.com>
-Subject: Re: [PATCH v3 0/3] RISC-V KVM selftests improvements
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Atish Patra <atishp@atishpatra.org>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Andrew Jones <ajones@ventanamicro.com>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0677db3c-9c36-4f34-93c0-5c53d702c4bd@baylibre.com>
 
-On Wed, Apr 30, 2025 at 1:46=E2=80=AFPM Atish Patra <atishp@rivosinc.com> w=
-rote:
+On 29.04.2025 17:46, David Lechner wrote:
+> On 4/29/25 8:06 AM, Angelo Dureghello wrote:
+> > From: Angelo Dureghello <adureghello@baylibre.com>
+> > 
+> 
+> ...
+> 
+> > +static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
+> > +					struct iio_chan_spec *chan)
+> > +{
+> > +	struct ad7606_state *st = iio_priv(indio_dev);
+> > +	unsigned int num_channels = st->chip_info->num_adc_channels;
+> > +	struct device *dev = st->dev;
+> > +	int ret;
+> > +
+> > +	device_for_each_child_node_scoped(dev, child) {
+> > +		int reg, r_gain;
+> > +
+> > +		ret = fwnode_property_read_u32(child, "reg", &reg);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		/* channel number (here) is from 1 to num_channels */
+> > +		if (reg < 1 || reg > num_channels) {
+> > +			dev_warn(dev, "invalid ch number (ignoring): %d\n", reg);
+> > +			continue;
+> > +		}
+> > +
+> > +		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
+> > +					       &r_gain);
+> 
+> Instead of...
+> 
+> > +		if (ret)
+> > +			return ret;
+> 
+> ... we need:
+> 
+> 		if (ret == -EINVAL)
+> 			r_gain = 0;
+> 		else if (ret)
+> 			return ret;
+> 
+> Otherwise driver fails to probe if adi,rfilter-ohms is missing.
 >
-> This series improves the following tests.
-> 1. Get-reg-list : Adds vector support
-> 2. SBI PMU test : Distinguish between different types of illegal exceptio=
-n
->
-> The first patch is just helper patch that adds stval support during
-> exception handling.
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
-> ---
-> Changes in v3:
-> - Dropped the redundant macros and rv32 specific csr details.
-> - Changed to vcpu_get_reg from __vcpu_get_reg based on suggestion from Dr=
-ew.
-> - Added RB tags from Drew.
-> - Link to v2: https://lore.kernel.org/r/20250429-kvm_selftest_improve-v2-=
-0-51713f91e04a@rivosinc.com
->
-> Changes in v2:
-> - Rebased on top of Linux 6.15-rc4
-> - Changed from ex_regs to pt_regs based on Drew's suggestion.
-> - Dropped Anup's review on PATCH1 as it is significantly changed from las=
-t review.
-> - Moved the instruction decoding macros to a common header file.
-> - Improved the vector reg list test as per the feedback.
-> - Link to v1: https://lore.kernel.org/r/20250324-kvm_selftest_improve-v1-=
-0-583620219d4f@rivosinc.com
->
-> ---
-> Atish Patra (3):
->       KVM: riscv: selftests: Align the trap information wiht pt_regs
->       KVM: riscv: selftests: Decode stval to identify exact exception typ=
-e
->       KVM: riscv: selftests: Add vector extension tests
 
-Queued this series for Linux-6.16.
+Correct, i changed this before sending and could not catch it.
+But not totally sure of applying a 0.
+We are here after chip reset. So conceptually, would not apply any default,
+ince it is already set after reset. What about:
 
-Thanks,
-Anup
+		if (ret == -EINVAL)
+			contnue;
+		else if (ret)
+			return ret;
+ 
+> > +
+> > +		if (r_gain < AD7606_CALIB_GAIN_MIN ||
+> > +		    r_gain > AD7606_CALIB_GAIN_MAX)
+> > +			return -EINVAL;
+> > +
+> 
+> Also, return dev_err_probe() on the returns above would have made debugging
+> easier.
+> 
+ack
+
+> > +		/* Chan reg is 1-based index. */
+> > +		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
+> > +					  r_gain / AD7606_CALIB_GAIN_STEP);
+> > +		if (ret)
+> > +			return ret;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
