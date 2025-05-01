@@ -1,133 +1,73 @@
-Received: from fout-b1-smtp.messagingengine.com (fout-b1-smtp.messagingengine.com [202.12.124.144])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED861BF37;
-	Thu,  1 May 2025 15:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CEA120C009
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746115152; cv=none; b=hPKrMBNB/GYNwxOyBrlkRJ0pBh6JKOhXtP2adfW0KQfQK0/UDMtjliRcqUYbhfav23Xr0ahiA+Oa/4Tb6MUdTXeZ32X7zM3OlUCkirhnTXx1qPCiADKqbaDVsCcSG6X/4xMTA9h48XyryO0UGbpXAZY3+v13DdPQfMDkb9e50UQ=
+	t=1746115176; cv=none; b=F5oyfmbHI2rGi/MOcYDNvX3V/er2Y/efhjyaBWVAwQzFbpAGnnGT5OhCtF1jw8/U9dxQif0d99p02kWv8NGB7EQiYEi28lT7m85u7JPUhrhVbzqI0EQg8cGRWgsClE3eygdS9E8BQ7UI3M6TXWSdcmI/Xj3k1EXq5iA64Z3ereI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746115152; c=relaxed/simple;
-	bh=VLD7XIoD5ReEFcrucrl4apHEsDnocbY1koqmkGjrqzI=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZGfC5uQyBfLbpb36r2E8QYglNNgidc69odi4z0TA5yMUf94nWFxiXN4IdvHlMUrkCw1gVfkiQAPnb16VvhHX0rGMb13XqQRGDtE759IZxDo2jRuPuMPvsaE+JOnxJj+WY/qIGBhqOgQU/cYQgHhiF4AT9jqzPOR0egoh5uDBai8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz; spf=pass smtp.mailfrom=dxuuu.xyz; dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b=cBpesFUx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=kDYazz0g; arc=none smtp.client-ip=202.12.124.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=dxuuu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dxuuu.xyz
+	s=arc-20240116; t=1746115176; c=relaxed/simple;
+	bh=HZSRVVBvflRgEm7LLPG39xeX0J21l9UgDp4LOyxD5xY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZdUU4jtCOGQdMVyEf6B7IharXQTrCs6ptYfqq1cb+mt5o2JJ/QG/WNWhhf+jVZURBtAuT3UqgbzaN7R+YftQY6iCn/ZuEco5WMzAJsB2cv3D/1Y/YcIluIIOMUc8M8svuBQCd6YjvmOmBLaUzssflCbvpnwDy4dOXMVOW8i6u98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QqZ+oOBu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="cBpesFUx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kDYazz0g"
-Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
-	by mailfout.stl.internal (Postfix) with ESMTP id 4B80D1140211;
-	Thu,  1 May 2025 11:59:08 -0400 (EDT)
-Received: from phl-imap-08 ([10.202.2.84])
-  by phl-compute-02.internal (MEProxy); Thu, 01 May 2025 11:59:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm2; t=1746115148;
-	 x=1746201548; bh=P86Ohs1P8SRKraqsep0iM5Yj8o6Xx1WvCw4YHG9svg8=; b=
-	cBpesFUxaz35VLgm3m1KLq26nTfeI0q1EHxsP2VlI3m8DHgIN1iZTI8uAlI6Ay6g
-	FCXFhK/+FxI0xChhVi6/5gmlD6C0yfBUjxM00GOw6O39Q/27dSwLx9vYNsjj9bld
-	SyN6nnxb9yb0J6qqGHDIQ2hJeeKzopyNKz8cLoC1NkV8cIWRBDLNidO6xEKa0Bpj
-	R5EIIa3CaRCkKdi0/UsW9EXwSDOnRJ9+FgDn8OEFxQ5iMBKZHQ/Q/z8jEKmTQjuB
-	ICS2D6n1wLlj2REqwHAjY6FDi7QrvKzNTf0iJPRDpY2xosJ+RZVdpun1jUpp8wWC
-	J8f8oflTiYGSkk0dTmbVIw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=1746115148; x=
-	1746201548; bh=P86Ohs1P8SRKraqsep0iM5Yj8o6Xx1WvCw4YHG9svg8=; b=k
-	DYazz0g6aKRC/z8NfoPGU+KkdcC62v8J0u+xl6oTsY24t1Rsw+8E/IYhKcC5wJnO
-	Cji5EXYwamcTlYQI55jx2FKTgZD/YrfrRLqAr3lMjKjxsBAmLSEORM1bksvP29IM
-	BL/RRSTsp3eUHVjpMH3ZzAaCSmMHPR+RjNyNNwYNzvD9PVwrsCRvOF8iN+n5Exe4
-	WmGhUEH0Ns1Kc4Gb83rQqbWEUUYI8PcfDuP8Nh7XZ6LqxxK152jQf9+/H9FYQy/0
-	vCXFtp0/0N8YkdI13fp7gV+ErhyxgdTtOCMOM7bAlQ79vIT34eIDscSwyvCCIykD
-	Ssx+IXL6mon3wvGTBiOpQ==
-X-ME-Sender: <xms:S5oTaInsvDTIj9-N1IsiVcsYDWfVTa4aDt7LeNcoM3yJGB1OMok-rA>
-    <xme:S5oTaH3oNVWRY_wg_K1dhi84O1Ej7BkeH6GaNt0rJTMW1yTA4h73SQrSNlwHNPb-r
-    cDuwni6DJNiSUSZoQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedttddtucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdlfeehmdenucfjughrpefoggffhffv
-    vefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdffrghnihgvlhcuighufdcuoe
-    gugihusegugihuuhhurdighiiiqeenucggtffrrghtthgvrhhnpeegleeifffhudduueek
-    hfeifefgffegudelveejfeffueekgfdtledvvdeffeeiudenucevlhhushhtvghrufhiii
-    gvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegugihuuhhurdighiiipdhn
-    sggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheprghrnh
-    gusegrrhhnuggsrdguvgdprhgtphhtthhopehmhihkohhlrghlsehfsgdrtghomhdprhgt
-    phhtthhopehsughfsehfohhmihgthhgvvhdrmhgvpdhrtghpthhtohepvgguugihiiekje
-    esghhmrghilhdrtghomhdprhgtphhtthhopehjohhhnhdrfhgrshhtrggsvghnugesghhm
-    rghilhdrtghomhdprhgtphhtthhopehhrgholhhuohesghhoohhglhgvrdgtohhmpdhrtg
-    hpthhtohepuggrnhhivghlsehiohhgvggrrhgsohigrdhnvghtpdhrtghpthhtoheplhhm
-    sgesihhsohhvrghlvghnthdrtghomhdprhgtphhtthhopegrnhgurhhiiheskhgvrhhnvg
-    hlrdhorhhg
-X-ME-Proxy: <xmx:S5oTaGqjcGfV9TrE7Kfky634s-JRoD6U6GoZpxcRb3ztJhj0dY89RQ>
-    <xmx:S5oTaEk8YhSeiDXcB1J2g0mhPoRjbK5vKjNsPXfzI7WOopDBbVZbHg>
-    <xmx:S5oTaG0FjQ16RRYs3xXu4uaYRht9-jYl9ferVGnyxrB32NcWcduBYQ>
-    <xmx:S5oTaLvZTX-3klhyGctryRehyXRO2A3wxJvNmVIJBp18WavEzcBKlA>
-    <xmx:TJoTaMuFENA3JfsvHkLNs8Gyi5He84zRZcEAHwzpet835-v-VST1daqA>
-Feedback-ID: i6a694271:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 54FA918A006B; Thu,  1 May 2025 11:59:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QqZ+oOBu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9392DC4CEED;
+	Thu,  1 May 2025 15:59:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746115175;
+	bh=HZSRVVBvflRgEm7LLPG39xeX0J21l9UgDp4LOyxD5xY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QqZ+oOBuoOUzFY1FYJlpCm1Zg97GlAeb+vWz26JVO1SvCq9Scnu5HgsY1dGbUL6Nk
+	 S1oF4rC6OKzfTFOfgEDXg+Ib6mqAnpIKRfZA5AWth2pi0hef2CuvUm24DRvyLMTbmp
+	 /2+tL26GAsyJqKD5/t7VFKkwH8eYHIXWi6+dlbok=
+Date: Thu, 1 May 2025 17:59:32 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/6] cdx: MAINTAINERS: Explicitly mention Greg who
+ handles patches
+Message-ID: <2025050158-tingly-doubling-9795@gregkh>
+References: <20250430-cdx-clean-v2-0-7dbfda9364a9@linaro.org>
+ <20250430-cdx-clean-v2-6-7dbfda9364a9@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T7116480ff90ddb52
-Date: Thu, 01 May 2025 08:58:46 -0700
-From: "Daniel Xu" <dxu@dxuuu.xyz>
-To: "Lorenz Bauer" <lmb@isovalent.com>, "Arnd Bergmann" <arnd@arndb.de>,
- "Alexei Starovoitov" <ast@kernel.org>,
- "Daniel Borkmann" <daniel@iogearbox.net>,
- "Andrii Nakryiko" <andrii@kernel.org>,
- "Martin KaFai Lau" <martin.lau@linux.dev>,
- "Eduard Zingerman" <eddyz87@gmail.com>, "Song Liu" <song@kernel.org>,
- "Yonghong Song" <yonghong.song@linux.dev>,
- "John Fastabend" <john.fastabend@gmail.com>, "KP Singh" <kpsingh@kernel.org>,
- "Stanislav Fomichev" <sdf@fomichev.me>, "Hao Luo" <haoluo@google.com>,
- "Jiri Olsa" <jolsa@kernel.org>, "Mykola Lysenko" <mykolal@fb.com>,
- "Shuah Khan" <shuah@kernel.org>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
- "bpf@vger.kernel.org" <bpf@vger.kernel.org>, linux-kselftest@vger.kernel.org
-Message-Id: <ec03896b-feac-4fa5-a213-7e9f57e15f72@app.fastmail.com>
-In-Reply-To: <20250501-vmlinux-mmap-v1-0-aa2724572598@isovalent.com>
-References: <20250501-vmlinux-mmap-v1-0-aa2724572598@isovalent.com>
-Subject: Re: [PATCH bpf-next 0/2] Allow mmap of /sys/kernel/btf/vmlinux
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430-cdx-clean-v2-6-7dbfda9364a9@linaro.org>
 
-On Thu, May 1, 2025, at 7:28 AM, Lorenz Bauer wrote:
-> I'd like to cut down the memory usage of parsing vmlinux BTF in ebpf-go.
-> With some upcoming changes the library is sitting at 5MiB for a parse.
-> Most of that memory is simply copying the BTF blob into user space.
-> By allowing vmlinux BTF to be mmapped read-only into user space I can
-> cut memory usage by about 75%.
-
-Cool! Maybe teach libbpf to use this as well? So everyone else can pick up
-the win transparently.
-
->
-> Signed-off-by: Lorenz Bauer <lmb@isovalent.com>
+On Wed, Apr 30, 2025 at 08:41:34PM +0200, Krzysztof Kozlowski wrote:
+> Patches for CDX bus drivers are applied by Greg Kroah-Hartman, so list
+> him in the maintainers entry because otherwise contributors would be
+> surprised their patches got lost.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
-> Lorenz Bauer (2):
->       btf: allow mmap of vmlinux btf
->       selftests: bpf: add a test for mmapable vmlinux BTF
->
->  include/asm-generic/vmlinux.lds.h                  |  3 +-
->  kernel/bpf/sysfs_btf.c                             | 25 ++++++-
->  tools/testing/selftests/bpf/prog_tests/btf_sysfs.c | 79 ++++++++++++++++++++++
->  3 files changed, 104 insertions(+), 3 deletions(-)
-> ---
-> base-commit: 38d976c32d85ef12dcd2b8a231196f7049548477
-> change-id: 20250501-vmlinux-mmap-2ec5563c3ef1
->
-> Best regards,
-> -- 
-> Lorenz Bauer <lmb@isovalent.com>
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index b2c3be5f6131432647dd01f22bbf4bf1c8bde9e6..505d7d45ad7d1c007e89a555264ff8cbeaf6e1f4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1008,6 +1008,7 @@ F:	Documentation/devicetree/bindings/w1/amd,axi-1wire-host.yaml
+>  F:	drivers/w1/masters/amd_axi_w1.c
+>  
+>  AMD CDX BUS DRIVER
+> +M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+Sorry, but no, I'm not the maintainer of this driver.  It's up to the
+maintainer(s) of it to send me the patches on to be merged, it is not up
+to me to maintain the code at all.
+
+thanks,
+
+greg k-h
