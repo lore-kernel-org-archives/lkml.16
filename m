@@ -1,227 +1,134 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E351822370A;
-	Thu,  1 May 2025 06:45:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782A5264A7E
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 06:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746081909; cv=none; b=giL3fj17kytvDw1bvPbLMy3sAAXPjg8OvFeXgarZdJ5YRrg0qxbKWaVkGiqCmfCkOP+e/E1kJItehrvx/5WE4JhT+a/Dw7GizRLR8+5cx29/weFw4FAzdP4lPtJl1kukMJ/RNzPWvkWhdjaSeyd1Ayjv64wZyhxvceVLEKR1zrg=
+	t=1746082160; cv=none; b=X9VlK2uksO3yd6MPKuZT0j/j9zIrawZfY1I/jAV65W11L7ozmV6w5Yw/YsbdW+GNk3xZ+lRQJKJtRZ6dRKF6jKi+MEqmj5Vknu7TJ/exBFcYJPXcMRarXd0VI5nG/KqncQQUyw4GVhMTXgKPfZAV3srud4osZGwdZTqyuXjAwrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746081909; c=relaxed/simple;
-	bh=G0DxN7e6fMBq+qk6B8GyqPihEuNsJMh/NRAiK3D5VAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=OdtZ3OECp+e6rkGQuob10bivkUjvNl/XmtgeiPaLIoBDONStfPGVzOsgMBgVAkPZ4+vz7cF/uVdevMCsCl581l5x94dr+XFi/dB6p45mPfhyYl37fVaMcR1YAhJtekTQsdnEs802k+NhTLOpm3FqOWrSEuWLsmdf0cyFiAShZYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=LZj2b8EM; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746082160; c=relaxed/simple;
+	bh=yM8BRFHXQ57lwyVkMBlhdAM+Q5zCu+0Nhquu24Prusg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cZMY0j3khR3EbwxKhrYFxT1HFjOfVGoADAB2Q9Bq1e4v1UwsSmt2GePDYOgHr9ihpbOcjLgzaSS7nGG2mtJr1a9JqP2D/QBioBpdnU0Yos/4ukvYC4H5ZewZsGQ4f6YOXr/PtB0dTCwJlYVmTcvDvHhNptwsVZ02FMdzR5A0trM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=CMW2KJMM; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LZj2b8EM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746081902;
-	bh=EKR6928l8SK3XEtduPxqShXjaIocUqqWCeRyRUWAPYw=;
-	h=Date:From:To:Cc:Subject:From;
-	b=LZj2b8EMrYFBKX/D/NnriycoiazEiPUXNoZuO7Lxnh5X3tF9wVKZdZKGb0sOXOCFH
-	 CCXVDNDfKuf25nh495ZXeGrXRMANmXjoGnMjSrcOcDdAEcgIvIa5ZTG8LdDnPINzDE
-	 Et0esSaw4YOKyYjob/YtqiWypZ/Z/zMLcceXpLz6DqI9HzFzoeAara1LnKS8qifVQk
-	 OMwJwKV/UdGHDse0iJ9rLi0Qj7/b6Ly/fALxqJ9tyPMehKfwM90Lnvwo8CduKN90d7
-	 YiiWEhXJrFQVFDOjO1IcBxsDNFlpHoUBnVp3a+Gf02btQrD66mgsI87OXGFN/gqE98
-	 q5glUk06vdvwA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zp4L55RL0z4wyk;
-	Thu,  1 May 2025 16:45:01 +1000 (AEST)
-Date: Thu, 1 May 2025 16:45:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thadeu Lima de Souza
- Cascardo <cascardo@igalia.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build failure after merge of the char-misc tree
-Message-ID: <20250501164501.0fc0ab68@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="CMW2KJMM"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso999795a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 23:49:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1746082155; x=1746686955; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qLUosvBbF3U4VM5lbGixDzvfiX0alERKsKLS31xYB2c=;
+        b=CMW2KJMMrweV8lOLH01MdcylBZl567fZVfFgVZiZPgLCXdd3SX5U6KWazDHw4sTq5c
+         H9QxLnBiw1qYhvlPJ1iZA1jOn3/U/dBn4vH9Q3OhFru/tT16ps8ZLFyinHvqdsH9TyXD
+         0PZVxBp34LO3SDL3BPduAqNd3cDwZ827gdtU1eS8JdQV1vStBfqIsGX3W1hI88kmWSXF
+         TPyKVD5DDmMuQ5YH2787LDmiZDmbPDSYEyyqkav5D80D1v+W8X5g8cNMqf6VJpVlhacO
+         WEWrHbvuvK8IPfrEpHqK6OFcsH4Q4MOmm+qC/D6ND/jJRkLkVIWQCzE8aVNLTWfTQ5DR
+         yGow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746082155; x=1746686955;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qLUosvBbF3U4VM5lbGixDzvfiX0alERKsKLS31xYB2c=;
+        b=pA68SlEhs1WR/ZOX5XI5HtpKz61tqHEooxwvxP9NoxVW6ofje0jwBqjYhC+y+GsY5J
+         ocC6tAkMr9FqhNVlE2tUBRbaquBJQmBTgpkwDBgoqk47Fmfhp2QYZG2QmezuP1YhmYAO
+         WPETyECsXBhFxZIglyVgQe8zWLEabTUikVUucT5fPNH9R4KEtRpE4ZZvC688CVxkJoW6
+         q7/qGSsKQJpt/tC63dF7nfA3cznH6EhB5VL/G3M+YEKTW0Dys8Ai91O1NTnYpER/HcLP
+         jYlfKozYKJASLGDDDLRLgjKAp3EqZOUyIBR1sshLKbeNqsbDiJ7k74Ztkz1Gy7gjbmVA
+         rTsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXe3y4kCp/vx/BjPTfKfulmJjHqjRLEAP9YWjcfRKMEG9muMA8VGGbTsT0vsqbz41XTNtw3DbgcGsWf9so=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxLv9TjXtpjXN+tkMbzrzA379qSwDYAgbnxA66ExxnYJl4gosb
+	wTTZY4C1P/gcEEU4YHe2b6EtJhVwaXnpaVK+Vs5zsiL4CSr8QMDsDwreL3mfV8A=
+X-Gm-Gg: ASbGncvNpSW2oor9Ls19WULa5mP1BRYT8sV2OR1V+Nv9AIAdbXcR2xx6qXke2ZkGbBf
+	Pmotu+QvN1egZkE5oXuJWYjdpcFDxU+LUQhVfgsA8qqNfiMNcOc+WgU4+6kRkJJZdYugxM7Au32
+	OLLUGOUHgFU0xIvkZL/sn9RszQEULiFuAN5oDg6KkoToP2h2zS/jddsoZp8yDef6mv0r9C5yo0P
+	TCmjV2aA1YbKKkkxoFflQXSBonK8mR0i6tF+O21BXfeaYew4rLR2EUCj3VHXEHY4Rc1yPNeXC6E
+	dZC4/oqnkzQmVFnWgF6HOJZm3hgrbcHASMg4PrOHp4D2OHtQMsqXhBnECXBwU5/eXy8vfIYtM7R
+	l1wY=
+X-Google-Smtp-Source: AGHT+IEzySfUrfmZ2ok73P0GUsMuvaw7yUrPtZVotDDbR6BQlXgasH9wezf9EguddjotsVyoCoHkOQ==
+X-Received: by 2002:a17:907:96a0:b0:ac7:eece:17d6 with SMTP id a640c23a62f3a-acefbb1747amr137034566b.17.1746082154701;
+        Wed, 30 Apr 2025 23:49:14 -0700 (PDT)
+Received: from [100.64.0.4] (31-151-138-250.dynamic.upc.nl. [31.151.138.250])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6ecf8cc1sm1005486066b.89.2025.04.30.23.49.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 23:49:14 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Thu, 01 May 2025 08:48:47 +0200
+Subject: [PATCH v2 1/5] ASoC: dt-bindings: qcom,q6afe: Document q6usb
+ subnode
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/.bciGh+nVEZN2IVtT=uA+Xv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250501-fp4-usb-audio-offload-v2-1-30f4596281cd@fairphone.com>
+References: <20250501-fp4-usb-audio-offload-v2-0-30f4596281cd@fairphone.com>
+In-Reply-To: <20250501-fp4-usb-audio-offload-v2-0-30f4596281cd@fairphone.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>, 
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Wesley Cheng <quic_wcheng@quicinc.com>, 
+ Stephan Gerhold <stephan.gerhold@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-usb@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-sound@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
 
---Sig_/.bciGh+nVEZN2IVtT=uA+Xv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Document the subnode for Q6USB, used for USB audio offloading.
 
-Hi all,
+Cc: Wesley Cheng <quic_wcheng@quicinc.com>
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ Documentation/devicetree/bindings/sound/qcom,q6afe.yaml | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-After merging the char-misc tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.yaml b/Documentation/devicetree/bindings/sound/qcom,q6afe.yaml
+index 297aa362aa54ab41a956b3ceda73d4c7027d72a7..268f7073d7972da2ef46d36264c0f7d8f648071b 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6afe.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.yaml
+@@ -29,6 +29,12 @@ properties:
+     unevaluatedProperties: false
+     description: Qualcomm DSP audio ports
+ 
++  usbd:
++    type: object
++    $ref: /schemas/sound/qcom,q6usb.yaml#
++    unevaluatedProperties: false
++    description: Qualcomm DSP USB audio ports
++
+ required:
+   - compatible
+   - dais
+@@ -64,5 +70,12 @@ examples:
+                     qcom,sd-lines = <0 1 2 3>;
+                 };
+             };
++
++            usbd {
++                compatible = "qcom,q6usb";
++                #sound-dai-cells = <1>;
++                iommus = <&apps_smmu 0x180f 0x0>;
++                qcom,usb-audio-intr-idx = /bits/ 16 <2>;
++            };
+         };
+     };
 
-ld: warning: discarding dynamic section .glink
-ld: warning: discarding dynamic section .plt
-ld: linkage table error against `__kunit_do_failed_assertion'
-ld: stubs don't match calculated size
-ld: can not build stubs: bad value
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_mi=
-nor':
-misc_minor_kunit.c:(.text+0x180): undefined reference to `__kunit_do_failed=
-_assertion'
-ld: misc_minor_kunit.c:(.text+0x1e4): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: misc_minor_kunit.c:(.text+0x240): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_twice':
-misc_minor_kunit.c:(.text+0x3e8): undefined reference to `__kunit_do_failed=
-_assertion'
-ld: misc_minor_kunit.c:(.text+0x458): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x4c4): more =
-undefined references to `__kunit_do_failed_assertion' follow
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_find_minors':
-misc_minor_kunit.c:(.text+0xb3c): undefined reference to `kunit_log_append'
-ld: misc_minor_kunit.c:(.text+0xbac): undefined reference to `kunit_log_app=
-end'
-ld: misc_minor_kunit.c:(.text+0xc1c): undefined reference to `kunit_log_app=
-end'
-ld: misc_minor_kunit.c:(.text+0xc88): undefined reference to `kunit_log_app=
-end'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_na=
-me':
-misc_minor_kunit.c:(.text+0xee4): undefined reference to `__kunit_do_failed=
-_assertion'
-ld: misc_minor_kunit.c:(.text+0xf40): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: misc_minor_kunit.c:(.text+0xf90): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_er=
-ror':
-misc_minor_kunit.c:(.text+0x11b4): undefined reference to `__kunit_do_faile=
-d_assertion'
-ld: misc_minor_kunit.c:(.text+0x1210): undefined reference to `__kunit_do_f=
-ailed_assertion'
-ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x1264): more=
- undefined references to `__kunit_do_failed_assertion' follow
-ld: drivers/misc/misc_minor_kunit.o:(.toc+0x0): undefined reference to `kun=
-it_binary_assert_format'
-ld: drivers/misc/misc_minor_kunit.o:(.toc+0x8): undefined reference to `kun=
-it_fail_assert_format'
-ld: drivers/misc/misc_minor_kunit.o:(.toc+0x10): undefined reference to `ku=
-nit_unary_assert_format'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_can_open':
-misc_minor_kunit.c:(.init.text+0xc0): undefined reference to `__kunit_do_fa=
-iled_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x134): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_static_basic=
-':
-misc_minor_kunit.c:(.init.text+0x25c): undefined reference to `__kunit_do_f=
-ailed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x2b4): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict_rev=
-erse':
-misc_minor_kunit.c:(.init.text+0x408): undefined reference to `__kunit_do_f=
-ailed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x414): undefined reference to `__kunit_=
-abort'
-ld: misc_minor_kunit.c:(.init.text+0x46c): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x4d8): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x530): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x590): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x5e4): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.init.text+0x63c): =
-more undefined references to `__kunit_do_failed_assertion' follow
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict':
-misc_minor_kunit.c:(.init.text+0x7a0): undefined reference to `__kunit_abor=
-t'
-ld: misc_minor_kunit.c:(.init.text+0x7f8): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x85c): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_basi=
-c':
-misc_minor_kunit.c:(.init.text+0x994): undefined reference to `__kunit_do_f=
-ailed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x9ec): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision_re=
-verse':
-misc_minor_kunit.c:(.init.text+0xb20): undefined reference to `kunit_kmallo=
-c_array'
-ld: misc_minor_kunit.c:(.init.text+0xba8): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0xc00): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0xc64): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0xcc0): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision':
-misc_minor_kunit.c:(.init.text+0xe30): undefined reference to `kunit_kmallo=
-c_array'
-ld: misc_minor_kunit.c:(.init.text+0xe98): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0xea4): undefined reference to `__kunit_=
-abort'
-ld: misc_minor_kunit.c:(.init.text+0xf04): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0xfac): undefined reference to `__kunit_=
-do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x1058): undefined reference to `__kunit=
-_do_failed_assertion'
-ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_only=
-_range':
-misc_minor_kunit.c:(.init.text+0x1174): undefined reference to `kunit_kmall=
-oc_array'
-ld: misc_minor_kunit.c:(.init.text+0x1200): undefined reference to `__kunit=
-_do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x1248): undefined reference to `__kunit=
-_do_failed_assertion'
-ld: misc_minor_kunit.c:(.init.text+0x12ec): undefined reference to `__kunit=
-_do_failed_assertion'
+-- 
+2.49.0
 
-Caused by commit
-
-  20acf4dd46e4 ("char: misc: make miscdevice unit test built-in only")
-
-$ grep CONFIG_KUNIT .config
-CONFIG_KUNIT=3Dm
-CONFIG_KUNIT_DEBUGFS=3Dy
-CONFIG_KUNIT_FAULT_TEST=3Dy
-CONFIG_KUNIT_TEST=3Dm
-CONFIG_KUNIT_EXAMPLE_TEST=3Dm
-CONFIG_KUNIT_ALL_TESTS=3Dm
-CONFIG_KUNIT_DEFAULT_ENABLED=3Dy
-CONFIG_KUNIT_AUTORUN_ENABLED=3Dy
-$ grep CONFIG_TEST_MINOR .config
-$=20
-
-I have used the char-misc tree from next-20250428 again.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/.bciGh+nVEZN2IVtT=uA+Xv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgTGG0ACgkQAVBC80lX
-0GxPVQf/VHM/+LsZTS3RqeVAHoWLXsNhCCfPuLg9dCMRWqMULQsJZzhBrjxUbn9c
-sONmBUS25nA1HSZwX1aQay6aPij1DDPX1o/mb7ufp+g6iAvP7r/zacPGTnK2crI4
-P1L4OQWpPVtGUQuwnx9xGUcPkz2trwMRYT3JL6RiMTGQ10PeXK+RwR+kK4kqYo8o
-QP+cARUnRDTqf/FaXed4QsULA8l+XMImpSjT5qHcX3fVXBp6WewZkOsCmRZXJqTj
-afZ8RsNGJLAHTjtyj7MtCyyGOJb3U01JUg51WrcfOJMKsy5Nit7C58fZLsB/Mbd+
-31mIHqw2Fcoom8hV0rRtVYI/cagZ3Q==
-=uGf2
------END PGP SIGNATURE-----
-
---Sig_/.bciGh+nVEZN2IVtT=uA+Xv--
