@@ -1,170 +1,146 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2373E1EA90;
-	Thu,  1 May 2025 12:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FAE1EFFA3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 12:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746102887; cv=none; b=lmBLhwi7wpu7JmmdqzBr71h5F8CUDfJ37bE/IZTxVeG2M324/gwnQ3vOB6XFRR+Ec1NuK9BXEuwSEdmLJqX0TrRDjrbu5lIE0KRulacVQECEHzdTv0nH/5A/joEuFaUk7lDIxH1GxFjBP7CerDBpy9Uo3rRlYGG+l3QBlREyCsI=
+	t=1746102898; cv=none; b=mN3FQajQF7c40PAj9R9rHvDODCvvkwuCqkpav939nHHp2NUw4RRpchY7yqEIJp1e4FtymWtlDJeEN+1IZfsJjLDIkSGA/g/gOuyutgbVyu3BWkQ9He6H7fu8dG7GdEI97V/VGNXLckMcJkOksByafEDhMZfAYPsY+S1HBzDpHpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746102887; c=relaxed/simple;
-	bh=5/47oM652hn/79kxkr3QT8Z0GJypWAqZvYJH2zuujRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A3IfZBeJTuoMSjiPylINc5ctZ+y4cGXI8iAIxeapKLn1ULb3rfEHYG+95s/qwP1tYtRuTh3fFI5NNA8oGUn6FA+8bJsouSKTWe/jI4u+O3OEkUMj/yuBQmrVSdWRVit0Ev9DgUfPVeAq+jCX0YHkigFs/3eN4UUAILY1LfND42Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJnQviWh; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746102898; c=relaxed/simple;
+	bh=G/RoUkwRiQOXSxv59xARYxUagM8QnADLC3A1IwKkiow=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S5AjDaJ4NAXX5dbi/p0YVPLda0iu7ioHQaVH7Mh7Mmu6ZGmkKGxuWoqsiUQxLIphztoBW4Rkb2Pnb3N+QbUJe2uzc1MMmHWhC1IX8yDdCGLd7goqtDMlG4PeMmg6x7Hdea3WZ/QboomGGmb44SHG6Kcx0K1Oll9Se8szinpXcMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ihA8sECS; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJnQviWh"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-309f3bf23b8so1148770a91.3;
-        Thu, 01 May 2025 05:34:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ihA8sECS"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ee57c0b8cso714306f8f.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 05:34:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746102885; x=1746707685; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=9NV21R/zc5PuT2I2keLkWswBwHpgakQpo6sbiCsHEjo=;
-        b=HJnQviWhBNgAwdnvf0lLokd4d5tfRLP2IqhUV5i8uRud+eq1/H4L43lzuuZ1ISUpYR
-         2TChI7NYBvF4jzcXLcOPRQ5H+5aYgWD/E/jP7YYaSPpNESTLz0iN7AjiwW1zc2B2MKBE
-         n1NwOe60THAE11YdWjM25SJaQYWN/sRZKP0QyOPULHIxI6cgD9F3vAia/oxf9pvbFc+u
-         TjISNvdcx/Ku59wpouns0IUYS2pepPAXEy4kKlW4xafyAUdQPzxVFzfdN9TdW2+RPZvk
-         2SieNkCyFVgTSLecPlD70n+hQGbMj3eJbE40ny2mOgIaV+m9G3aEYlZm9zWoq77vFZ79
-         l2Rw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746102894; x=1746707694; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YPiLjAi9V3LXrkyU6HTBrDXuzWqvSmJyUjh3f1X0IeI=;
+        b=ihA8sECSaXXezSez7u0E8+0uPxU4bItflTyv6QgSsrgJpN3mkLtAQHnL+jBRsSXjfD
+         sjCuQpAIdU7Tw+pI3jkNwrfEK0W5KiUit10FIKdIbAqpudCg8tsl1RxxAH3kemupXR7u
+         BKGaN8a/yvyWBrio22dYuUmhEOkwDEGMjgfVkxZmiFkdnc1A6UmodzLNRBErAzbGZXAF
+         bStJ6lKgo0/5zFH+o2CxCy/OqgQbCLnx44a7kI21jOUTB1UfJBJR863O97xa7R1xG8MI
+         Akkiuu3Nw+UQkaAku9GpN4a4+IohP4pVKHTV8H/Cd995YTkzX9RXcmYpPmVY4FCcReUj
+         soNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746102885; x=1746707685;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9NV21R/zc5PuT2I2keLkWswBwHpgakQpo6sbiCsHEjo=;
-        b=AEdGHlfkTfZf0saL6BM0hJImXHU/aOsBLO9OwXt2F3dqSnelyvSlsqUyZNEBhpzV4Z
-         bUKhd6JQR0mXArQyLX0lXf/w+PwMQArxPHCkVdF9xUrtPWjT8B73VLVH6tyf0Z/Lc5UN
-         lLznU6dHY1GZvWKSdWREZCtHPUdVuAbNyau+oJJyFVza3cAoqCXJN8dCjwYjYFl3keRB
-         tJHyTxsIZiKPumR+uvan0/Bod2O2T879BSrV+bx861GBMDaCbnHAQ+C6yE6dio85i5rV
-         6iZAxfojVsoaZQGBKQm+ytA+gbNbVwTszhP+kX3l71UA352puQOzmjAj4WLbv1nK0ktU
-         bauw==
-X-Forwarded-Encrypted: i=1; AJvYcCVXZRk/8NkjZM3klq2ctvyvLBRrjF2vWAooYqNWeDbXB+x9/0RnyplJGkEYkZF8wleFi0X1kkygckA6Btyd@vger.kernel.org, AJvYcCWVKNv81/+T31kx+NM4rH+o57wHbC5+ji6hQD8CXk2+OiVJO7wF/HioOlaP9b/SqgXDyjjA00v3zec3Hg==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuUGD+kTC43ZD91Qv/UUYK1hDpqgYzFyW1RVJSsibUz+iizken
-	w0OjG1UVlOK5lTL7UulQBjSTbaoVhzyom2ay9D2OdrRPfeYQMB6n
-X-Gm-Gg: ASbGncsyQQLLwJhS0bURElYKgiOi/Y4vbc9FsBX07uAmF55LF0kyoZYhKAKLLbCPMj5
-	lBdxlxRQlXDHSHfQxb1cGnWcYdMLKPo07gb9kAabOxJC/OZ2xZJsueA0YINmVkZnu1p6x9kQ3R2
-	SS+y4d33Xk0lC/nVszuxNSL57dSPE4Xki5pWyOAmYwt2sUy2RHfzQovMuOtF/ScriNtNMj0eS5N
-	wC3qPe9DzGyR8oYy/lvxOXgyR1FMe9lp3mxyqdRTMyyAoZOB66fNw2yGbUW/gOSuKxdwnrT5fSX
-	5Nqb6Y7RNzcrCToMat95hhdMoMAld16YLJxMR7NulUUL/AX++pMbG8isxzjEdyEGgloVGgQGYQS
-	PpQmmf9MMNegeWg==
-X-Google-Smtp-Source: AGHT+IEnQGcndxaGD6Yafmcj4g+I7fwdfOqb1Itql8MMJVBaPkwsGQLl+wQHPp2bvW8Dsgrk16zgog==
-X-Received: by 2002:a17:90b:2247:b0:2ff:52e1:c49f with SMTP id 98e67ed59e1d1-30a34467cbfmr8555216a91.26.1746102885196;
-        Thu, 01 May 2025 05:34:45 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4747749dsm739921a91.18.2025.05.01.05.34.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 05:34:44 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <1e5fc32c-04dd-46b1-8943-03fd9370bfdc@roeck-us.net>
-Date: Thu, 1 May 2025 05:34:43 -0700
+        d=1e100.net; s=20230601; t=1746102894; x=1746707694;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YPiLjAi9V3LXrkyU6HTBrDXuzWqvSmJyUjh3f1X0IeI=;
+        b=BTH8WN34ImcABv17ec4AwiaAZ4lVF9kb9XKTXAmqNr09WFBI7enNmJ74bdHbza5gk4
+         MpeF5duT7GC2BLzC3aaKc0KUz5iF0rXQ45WCFXACZUotmANO6Xuz+FdlGQsNtOnk5lBX
+         RIn02KBKnq6gbz9Dd6oEPXp1I6IPb4UL7nla6XlYhnpLQ9gh0Y6HZKlxleV51OzP3CpD
+         a566vltfphycDmZIDtW4dBpTQ5xYorP9YDODkLLML0bDOmcQmWXtsyxuj/ImSDrnvmPQ
+         4V28GqAPSOhCEeFoXD9mAC7g/n4ebNArVJq+i8a0pp3Xm5M8RIvrb9m1rTt4VGF6hmDE
+         n0OA==
+X-Forwarded-Encrypted: i=1; AJvYcCVyvIaE+1J3BEgu9OVNQGmPle/dnYj/WI2LbN8GqXJp59KWG9T8X+ih5G4d6wdeLcYtg6LBPnZZNRcDJaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypQ944whFw1XjZrjweAPzPTJSFrvnmuBHMcDZGedMcfpuuJeR0
+	H4dYrIvwq3BgoorId3Rfks2B/VEn9EXYlD0OBVBXoQ54NqcfnKCjQbYhJazxU6g=
+X-Gm-Gg: ASbGncuoDXJ6/X8IuUPWizqNPf1Z4oikqVTa9DXBqAGEiw3uYxGy63DmP3GWr16iqj1
+	OF6DyqEN5s7hWVQIfhbqD3sUVjst5Gp6pDRQ+b5mimmZf1Ge8JFu6PBVFmXRJSMqrLaaBAOpCke
+	v1cM9CX3WxjVnffLIi/6Ri3YO1NDdI2C+hamuDygey9TZBDxBW3X+8LwdpYnqqw51DFe2+rANCF
+	CUvZ2RSf+Kgd0ZfFNWa/jXRp5Dqyin9KLTi+cMLTw+9PJNSaBkPdBM+BSL5vs9bm71EutfWC3OZ
+	uBRTGEzrSfItOT67sXLN0BIcIQFEp9pkMDjbytloeK3tQNHKAz2aUf63uJEgQ00bXhi8A/0wYrR
+	TvDJTMvM=
+X-Google-Smtp-Source: AGHT+IEIbbf/OZuD+Zj46a1YVLMU7rprN2/0xvSeZWv1bKsLNfcqHiG2P4WlaJMEjA6SHfzilU5zzQ==
+X-Received: by 2002:a5d:598c:0:b0:39c:dfa:d33e with SMTP id ffacd0b85a97d-3a09404c7e8mr1529963f8f.23.1746102894180;
+        Thu, 01 May 2025 05:34:54 -0700 (PDT)
+Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a3df91sm745593f8f.9.2025.05.01.05.34.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 05:34:53 -0700 (PDT)
+Date: Thu, 1 May 2025 14:33:42 +0200
+From: Angelo Dureghello <adureghello@baylibre.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Andy Shevchenko <andy@kernel.org>, 
+	Nuno =?utf-8?B?U8Oh?= <noname.nuno@gmail.com>, Jonathan Cameron <jic23@kernel.org>, 
+	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 1/5] Documentation: ABI: IIO: add calibphase_delay
+ documentation
+Message-ID: <jvhwdzmruov3je7qvsncn4naxg2cbbset27vr6tfjl3fumw7es@v3ho7m6iwaqp>
+References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
+ <20250429-wip-bl-ad7606-calibration-v1-1-eb4d4821b172@baylibre.com>
+ <4645ae3e0c3bb1ada9d4cadce77b64fe5e651596.camel@gmail.com>
+ <070b269c-c536-49c5-a11d-7e23653613f9@baylibre.com>
+ <aBI3eUPirZEXpZgG@smile.fi.intel.com>
+ <896023ae-c279-4201-a7a8-dfd9b33fe0e5@baylibre.com>
+ <7fe18625-3a25-40c8-bfb7-a7a22a3eccff@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] hwmon: (asus-ec-sensors) add WARN_ONCE() on invalid
- sensor index
-To: Eugene Shalygin <eugene.shalygin@gmail.com>
-Cc: Alexei Safin <a.safin@rosa.ru>, Jean Delvare <jdelvare@suse.com>,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- lvc-project@linuxtesting.org
-References: <20250425200051.2410-1-a.safin@rosa.ru>
- <CAB95QATm-iNJokfcSxpen3YBbx6xNUrecELD44squoaqCQ-b7w@mail.gmail.com>
- <8dec9c47-d13d-4e59-b1ca-fcb9e3beccbd@roeck-us.net>
- <CAB95QAT4JJFYiXviJB78KELFnsitDj=Zb3EM_1F8uqiRHMwBhw@mail.gmail.com>
- <38c7114e-3ea0-4f4b-bb12-5715c992656a@roeck-us.net>
- <CAB95QASErsOGibQ1+kB2LjNr-v3-KS86w8KvGLurB67D_4Bt4Q@mail.gmail.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <CAB95QASErsOGibQ1+kB2LjNr-v3-KS86w8KvGLurB67D_4Bt4Q@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7fe18625-3a25-40c8-bfb7-a7a22a3eccff@baylibre.com>
 
-On 5/1/25 01:07, Eugene Shalygin wrote:
-> On Wed, 30 Apr 2025 at 06:13, Guenter Roeck <linux@roeck-us.net> wrote:
+On 30.04.2025 10:04, David Lechner wrote:
+> On 4/30/25 9:56 AM, David Lechner wrote:
+> > On 4/30/25 9:45 AM, Andy Shevchenko wrote:
+> >> On Wed, Apr 30, 2025 at 09:21:28AM -0500, David Lechner wrote:
+> >>> On 4/30/25 12:40 AM, Nuno Sá wrote:
+> >>>> On Tue, 2025-04-29 at 15:06 +0200, Angelo Dureghello wrote:
+> >>>>> From: Angelo Dureghello <adureghello@baylibre.com>
+> >>>>>
+> >>>>> Add new IIO calibphase_delay documentation.
+> >>>>>
+> >>>>> The delay suffix is added to specify that the phase, generally in
+> >>>>> radiants, is for this case (needed from ad7606) in nanoseconds.
+> >>
+> >> ...
+> >>
+> >>>>> +What:		/sys/bus/iio/devices/iio:deviceX/in_voltageY_calibphase_delay
+> >>>>
+> >>>> Not sure if I'm too convinced on the _delay suffix
+> >>>>
+> >>> Phase is measured in radians, not seconds, so it seems wrong to use it here.
+> >>>
+> >>> https://en.wikipedia.org/wiki/Phase_(waves)
+> >>>
+> >>> And the delay here is with respect to individual samples in a simultaneous
+> >>> conversion without regard for a sampling frequency, so I don't see how we could
+> >>> convert the time to radians in any meaningful way.
+> >>
+> >> And how this delay is aplicable to the phase in the hardware? Sounds to me that
+> >> HW has some meaningful way of such a conversion?
+> >>
+> > 
+> > It is a calibration to account for a phase difference between two input signals.
+> > This is a simultaneous sampling ADC, so all channels normally sample at exactly
+> > the same time. This phase delay calibration factor can introduce a small delay
+> > on an individual channel so that it starts it's conversion some microseconds
+> > after the others.
+> > 
+> > There is a nice diagram here:
+> > 
+> > https://www.analog.com/media/en/technical-documentation/data-sheets/ad7606c-18.pdf#%5B%7B%22num%22%3A113%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C34%2C594%2C0%5D
+> > 
+> > To convert the phase delay to a phase angle and back would require also knowing
+> > the frequency of the input voltage signals.
 > 
->>> Thanks for the explanation! I'm still not convinced that such a
->>> generic error message (without the type and channel) can be of great
->>
->> Feel free to suggest a better one. Maybe I misunderstood your earlier
->> concerns, but it seemed to me that you objected to having a message
->> in the first place, not to its contents.
-> 
-> The only two conditions I can imaging to trigger the log message are
-> hardware and/or firmware change and RAM instability. In both cases the
-> message is not helpful: for the hardware change case I would need
-> sensor type and channel, for the RAM-related cases I would need to
-> know how often the problem repeats itself. Neither is possible with
-> this log message, and therefore I'd rather log every time and with
-> sensor type and channel.
-> 
+> Maybe calling it "conversion delay" would make more sense? Since the phase part
+> of it is really referring to the application rather than to what we are actually
+> adjusting.
 
-The message would only be expected if there is some programming error,
-where is_visible does not correctly disable non-existing sensors.
-That is the situation the messages try to catch.
+Are there examples of a phase calibration in iio ? Becouse apply a radians 
+calibration seems complicated and maybe non approrpiate for non-periodic 
+signals as often used in real world applications.
 
-You do have an excellent point, though: The messages should display the
-sensor type and channel. As for logging it every time: No, because _if_
-there is a programming error it would clog the log, so once is enough
-to tell "something is wrong with the code, fix it". The same is actually
-true if the hardware changes "under the hood".
+So another viable idea could be to use a IIO_CHAN_INFO_CALIBDELAY instead.
 
-Regarding RAM errors: Those won't be caught by checks like this. You'd have
-to litter the whole kernel with checks at almost every line of code
-to even have a remote chance to catch problems like bit flips. Even
-then you'd still not catch cases where the code itself is changed.
-Even trying to catch that would be futile.
-
-Thanks,
-Guenter
-
+Regards,
+angelo
