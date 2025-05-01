@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A6FF2DC781;
-	Thu,  1 May 2025 10:54:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E872F221FB8;
+	Thu,  1 May 2025 10:54:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746096841; cv=none; b=guRpAELvDd+xCYYfyX76QZLrQytV/hdQ+s7XfnqHtvFhqUjMhHBTD2pzbp2UNnlqWl95XkvnH8RA4XSSdI3FKf6Ledr5bpIlTzvQr8D4ERsky6zm1FRIjxM8WGgQLqNyXz5wnk9+yT/zkU3rmpoo4rY7Z+RZeUqARHwdxjzERSE=
+	t=1746096858; cv=none; b=qA0xe4j73fRdzK5adq1gkLnnszj8cSusMRN6JYd8C++6GWRy5vQnm2SSf85AE4iGYr1RTUYNKiHrOOwo/1CABpkerYNE0VyP7tHbXGxmLxbODYA8LQPIDkWOgR3/gzRpIzPciNr7c1eBl9fT+xjtNiBceAvLlIv49dNFspzv0SA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746096841; c=relaxed/simple;
-	bh=3F1QaUqergxIwoSRODx5I4zuHF1ykDMQ5RNYJyubHYM=;
+	s=arc-20240116; t=1746096858; c=relaxed/simple;
+	bh=Hfz/23rGAMML0a7O9TaLQl2mVIkvw2UCBufIDzgmuos=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ATaevzMKLI/8Kza6WiQMuEdsc4YQtSGyFTaXga3rSMH7ev4YMxieC5gB9TeMYgHDzuyN8EwqcUZ3+xpeMOeFtS1KRh8ExQ00P8Q2jqHpvuGLBN2zRnHkdcxERcH5kgeQqPFzb8lnZuEJQ7H74Il5/EFdWm0zzWcfKRBodEGh3ZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2AkVrvm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fSGyWuET90JuC5rikR593CQUcTcEPkO5yhIwMlv42tSnT4tjQsSGqZONpfmC/TymPgdgVEP1XWuz+jvnPd/9lnrH1j7p4vHMpjN/04hbMs9nCagG+5cUiyAuA2KaZu352amF/+YooHgNYVLuqNeQFaUUskJav8EyqWzDnu4Beoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0IWWatD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2AkVrvm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5DA2C4CEE3;
-	Thu,  1 May 2025 10:53:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0IWWatD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5FDCC4CEE3;
+	Thu,  1 May 2025 10:54:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746096840;
-	bh=3F1QaUqergxIwoSRODx5I4zuHF1ykDMQ5RNYJyubHYM=;
+	s=k20201202; t=1746096857;
+	bh=Hfz/23rGAMML0a7O9TaLQl2mVIkvw2UCBufIDzgmuos=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=U2AkVrvmWULRYs0F3LqM1qekL3QiC9eattSMbP1DnIEau0JZ888rIy8mQK+16WCoV
-	 nxp/y6JFwIjKqkuKvcU5i5+SjJIx2G7Dw1RSH8deocTH0K/fyo6YABPEtaetbibthD
-	 QxjhVAB3LqLjzOUIlntXNTD+0gaItE40Y1gtB2838Is5kHAxp8J6jEgAGMdxy52e6Q
-	 0jn5jVYPFHNJkM9tNKSnODfl3MmBnE7/yOkSkcukAiwIL8AUC53sM1O4zdXKs8WefM
-	 m8FtubmfZd5zFr1OGfiQfxwHk+JDNnDhBoYaSMrXI10wLpEfdiiTR/R0yfKqaPhT1v
-	 X8YcXduqsmXpA==
-Message-ID: <b59900fb-8ef9-402d-9621-690d9401c32a@kernel.org>
-Date: Thu, 1 May 2025 12:53:53 +0200
+	b=L0IWWatDTnv9kVrfEksZ8V8rPOa88n6g8AKF2fLVoLfi6/jS3Xzs4jAjXSpbT5Vv0
+	 mY5S0ezH8tufI/n08Os2c26e8yALUTFhGB1hAhhV3pczzl1PCMlvqq9eb+gFVx8FJx
+	 0bzEHJHMkOLaQxyNu8h762hlZe4k05KSbGcZViCwHrmqzgNhRcMJJQN5+XGKyfB0sm
+	 ggQ5Gec0MaGAGijCLOyPHJv2sHez2dZso0fxWuslufEv87Z6XD2kUBoJ0H6SeWlQNo
+	 EtjID92XMSSOBcLWcs7xf/cLx2Q3bnLg3GO8BWl8VqT2mqWiPlTPLdcI1w+hRgPjJ+
+	 hWmcKqBgA4wWQ==
+Message-ID: <f26cb79c-bb91-44ff-87b5-ca240ec7ad80@kernel.org>
+Date: Thu, 1 May 2025 12:54:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] dt-bindings: vendor-prefixes: Add CTCISZ Technology
- Co., LTD.
+Subject: Re: [PATCH 2/4] dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
 To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
  <conor+dt@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
@@ -49,7 +48,7 @@ To: Yao Zi <ziyao@disroot.org>, Rob Herring <robh@kernel.org>,
  linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
  Mingcong Bai <jeffbai@aosc.io>, Kexy Biscuit <kexybiscuit@aosc.io>
 References: <20250501044239.9404-2-ziyao@disroot.org>
- <20250501044239.9404-3-ziyao@disroot.org>
+ <20250501044239.9404-4-ziyao@disroot.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -95,16 +94,14 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20250501044239.9404-3-ziyao@disroot.org>
+In-Reply-To: <20250501044239.9404-4-ziyao@disroot.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 01/05/2025 06:42, Yao Zi wrote:
-> CTCISZ Technology Co., LTD. is a company specializing in designing of
-> embedded systems. Document the vendor prefix.
-> 
-> Link: http://www.ctcisz.com/
-> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> Ninenine Pi is an Loongson 2K0300-based development board produced by
+> CTCISZ. Features include,
+
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
