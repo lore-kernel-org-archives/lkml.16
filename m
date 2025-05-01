@@ -1,59 +1,41 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F378653365;
-	Thu,  1 May 2025 00:31:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17DD935893;
+	Thu,  1 May 2025 00:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746059493; cv=none; b=TjKi0lY8uZcP2wKRKtgqPoxXRHar6TBkcENo/bF1yTYiijlp7AukKp2Dc/RXoaDhBnRc1OQdS0nmuLIHoqdY5XxxU04dCKqFj9YIOkqZcvX5YczZlcC9E3+N/sFuO3povy+3byVZFBLlp7YzER64DkljzXa/VA7eH3GIFve8hVc=
+	t=1746059517; cv=none; b=beioNcYDMxydkDcR6ALbLsjGrAzjTSssrf1Sq4IN4JR2e7xGz4J8FbrEOaSL8ZLewK1Y6GdU5buRaEzCVGw5UpCmXG4keFM+zVKX0RCDJ/x1dRjN7aZ3eyLiNNcpxWBqvWJBCIJiMKiYZ19dhwjtGBYjhmQz6KhL+3xZy7lRM24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746059493; c=relaxed/simple;
-	bh=rl1FDHVGHUrVmjB/Hve1Su6EGMKlnkzzN/XniVB/oWo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=obK+e6Mkb9yxNsCmjp11G99XlSpVGh2reKLaEwYTgEqYJUxRplk/RfTqkYL31FePcWO58/b1immR9HuRwh/u1pYPAt8G9vTman8r/J03spGCWy35SXH1J+6zM1LCEwpFXhYjuJ0Xbn4Sj2yWoTg6Oalu6Jq9uF5DGtImfQNqtjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=KrJaFAYu; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746059517; c=relaxed/simple;
+	bh=2lveSxjfFkBq6zfkWnzSsFQ1wGsQtjRTg3Iba7lZMhQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r+JswkUOW912YBj3r4cXOALkYV8gj/9Mkk1UQDlviUy/v/QykDl+F/IRjJgt/e48I85h38zuRZu7kjBsHgggrllpakftR9d6nq6C48NK4DXk+MUqQrh8kFKtcdJxtBH2OHAQlGABJIYtVbN6AcGqWYcwcuHglBcUIJM1qppF8AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=gFqDjBOQ; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KrJaFAYu"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5410VDIY3512346
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 30 Apr 2025 19:31:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746059473;
-	bh=uDS0OCdhY4JbwsMlVZ9q0ISV0TqgbRByeSMH8N+QwPI=;
-	h=From:To:CC:Subject:Date;
-	b=KrJaFAYuf+g+8Q3V5tP51sTeId+SBMyBdrasr34FBjRmnzsxtrVrU3w9FRyJaaeUs
-	 hTN2vJiUBp4emmG11RJtVSVl+arTFchpc5s83VRxtp4wVnaPl9LbaIoNr+0Mtti6/q
-	 GrwIStD7xgqJaQu8Pc2HGwv2BQFw7MINvwFMIgo4=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5410VDj3014734
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 30 Apr 2025 19:31:13 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 30
- Apr 2025 19:31:13 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 30 Apr 2025 19:31:13 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5410VDaC044266;
-	Wed, 30 Apr 2025 19:31:13 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Kevin Hilman <khilman@baylibre.com>
-CC: Jiri Slaby <jirislaby@kernel.org>,
-        Andy Shevchenko
-	<andriy.shevchenko@linux.intel.com>,
-        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
-        Hari Nagalla <hnagalla@ti.com>
-Subject: [PATCH RFC 0/2] Introduce PRU UART driver
-Date: Wed, 30 Apr 2025 19:31:11 -0500
-Message-ID: <20250501003113.1609342-1-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="gFqDjBOQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=8UPzLciHp4xNWmOLyriQyNsSYRyqmykzSDKFvr9TTJ8=; b=gFqDjBOQvaE1VdoK
+	2OmPz8yIXenxtzHX6LQ3JLtpqcvMKITw7W6NGBG6UKmRZ0QgPpsSBZUECgJQLOywHexJKRonobXUi
+	x3UALqe6bAVfebU/HD9u+bW+WCIXhAnoaQwoKGMEhfDpoNs0l7DA+Y/MDDA17b5tMC+GshYB9Pdhb
+	HiqRXaba9D1xXU7WmMXA/pVYhfLgSFrVrt62OnLtwzwcBCb20tnmcQ56vGI1YIeXpRBXT/s5JK75o
+	3OztjZ6ZklnY/lwcvv7UIpqdjy9s4498AM9R7KAOP9zSkQytmtquv4BMKEtambv++2Gt/Mmq74NGo
+	ApoZQTnxv1ByQ36S7A==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uAHqC-000od7-2E;
+	Thu, 01 May 2025 00:31:52 +0000
+From: linux@treblig.org
+To: kuba@kernel.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [RFC net-next] strparser: Remove unused strp_process
+Date: Thu,  1 May 2025 01:31:50 +0100
+Message-ID: <20250501003150.309583-1-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -62,34 +44,92 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch series is sent as an RFC to get some initial comments
-on the PRU UART driver.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-The ICSSM modules on am64x SoC and the PRUSS module on am62 SoC or am335x
-SoCs have a UART sub-module. This patch series introduces the driver and the
-corresponding binding documentation for this sub-module.
+strp_process() was addded in 2017 in
+commit bbb03029a899 ("strparser: Generalize strparser")
 
-The DTS patches for adding PRU nodes and enabling PRU UART will be added
-in a later v1 version of the series if accepted.
+but never used.
 
-This driver has been previously tested on the following boards:
-am64x SK, am62x SK, and am335x SK boards.
+Remove it.
 
-Bin Liu (2):
-  dt-bindings: serial: add binding documentation for TI PRUSS UART
-  serial: 8250: Add PRUSS UART driver
+....but, hmm I'm not sure how much other cleanup needs doing,
+there's still a comment in strp_init() referencing strp_process
+and it makes me think there might be other code handling the
+'general mode' which strp_process seems to have been added for.
 
- .../bindings/serial/ti,pruss-uart.yaml        |  54 +++++
- drivers/tty/serial/8250/8250_pruss.c          | 213 ++++++++++++++++++
- drivers/tty/serial/8250/Kconfig               |  10 +
- drivers/tty/serial/8250/Makefile              |   1 +
- 4 files changed, 278 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/ti,pruss-uart.yaml
- create mode 100644 drivers/tty/serial/8250/8250_pruss.c
+Suggestions?
 
+Dave
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ Documentation/networking/strparser.rst | 12 ------------
+ include/net/strparser.h                |  3 ---
+ net/strparser/strparser.c              | 13 -------------
+ 3 files changed, 28 deletions(-)
+
+diff --git a/Documentation/networking/strparser.rst b/Documentation/networking/strparser.rst
+index 8dc6bb04c710..e7729915d7a1 100644
+--- a/Documentation/networking/strparser.rst
++++ b/Documentation/networking/strparser.rst
+@@ -81,18 +81,6 @@ Functions
+ 
+      ::
+ 
+-	int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
+-			 unsigned int orig_offset, size_t orig_len,
+-			 size_t max_msg_size, long timeo)
+-
+-    strp_process is called in general mode for a stream parser to
+-    parse an sk_buff. The number of bytes processed or a negative
+-    error number is returned. Note that strp_process does not
+-    consume the sk_buff. max_msg_size is maximum size the stream
+-    parser will parse. timeo is timeout for completing a message.
+-
+-    ::
+-
+ 	void strp_data_ready(struct strparser *strp);
+ 
+     The upper layer calls strp_tcp_data_ready when data is ready on
+diff --git a/include/net/strparser.h b/include/net/strparser.h
+index 0ed73e364faa..cc64e9d8c9e9 100644
+--- a/include/net/strparser.h
++++ b/include/net/strparser.h
+@@ -163,8 +163,5 @@ void strp_check_rcv(struct strparser *strp);
+ int strp_init(struct strparser *strp, struct sock *sk,
+ 	      const struct strp_callbacks *cb);
+ void strp_data_ready(struct strparser *strp);
+-int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
+-		 unsigned int orig_offset, size_t orig_len,
+-		 size_t max_msg_size, long timeo);
+ 
+ #endif /* __NET_STRPARSER_H_ */
+diff --git a/net/strparser/strparser.c b/net/strparser/strparser.c
+index d946bfb424c7..2cd9c39910a5 100644
+--- a/net/strparser/strparser.c
++++ b/net/strparser/strparser.c
+@@ -314,19 +314,6 @@ static int __strp_recv(read_descriptor_t *desc, struct sk_buff *orig_skb,
+ 	return eaten;
+ }
+ 
+-int strp_process(struct strparser *strp, struct sk_buff *orig_skb,
+-		 unsigned int orig_offset, size_t orig_len,
+-		 size_t max_msg_size, long timeo)
+-{
+-	read_descriptor_t desc; /* Dummy arg to strp_recv */
+-
+-	desc.arg.data = strp;
+-
+-	return __strp_recv(&desc, orig_skb, orig_offset, orig_len,
+-			   max_msg_size, timeo);
+-}
+-EXPORT_SYMBOL_GPL(strp_process);
+-
+ static int strp_recv(read_descriptor_t *desc, struct sk_buff *orig_skb,
+ 		     unsigned int orig_offset, size_t orig_len)
+ {
 -- 
 2.49.0
 
