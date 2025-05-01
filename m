@@ -1,156 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1F41EEE6;
-	Thu,  1 May 2025 12:44:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86B392253FD;
+	Thu,  1 May 2025 12:45:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746103472; cv=none; b=TYB8Ab9/nImi3fNlgZJwT5oB9ezMX2TJko4+gypc5rGac0jsFtglwdvq+CsSCoJNg7Gzld2BhTzYx4/bWPCfu0xB3K1A2I31czdTyaI4v/NVIIL4540JlC2TbttfJg2sUyfCfOXYL5WqJ/7Tl+Mp2OMGbTo/d19M5v82cmyz+lY=
+	t=1746103502; cv=none; b=WC+bzhkCIX2UAzlOARPZTuZcQhSMmmPnwqzJMb6T4aMCFuQ94hd6SG9ThTSmlBxJwOj+hwKapVxtGuEXj6MvOVxZcX92iqZn3QQdDddR3qpuKoGPer444PMPxmffdAoqoMs4ZXSW/YUE9Tofo31O0exknaqByFX7UV3yM9TrFxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746103472; c=relaxed/simple;
-	bh=WPG4ItA0UQzz9G5Wed/nsDRuYNB8SmpWf7d7wvrM4Ig=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=m4KkZO0oOO/Jti5Zem06Qr98h6IAgcCBcJHvhXe9mW5g4sMB3CJRxQkj5FcSKzgogT32VqyV7/7VXx4eRfVAz9RMJxy+i0ovQyKz+tx8wDci4i9wvfP0oTyGeyPYFs0wbtXFhJj+CtG7uszdg2+rbs4Sgo3RIdy3RbwzQ7ui2hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxDjMdGB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746103502; c=relaxed/simple;
+	bh=QKMTwiIEsJGFLzMOxm3KyHZoz9uomV6Tnu1SO/dioxM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CRTVayc6VAbmXHPOJv3Bs3dy74ZzFySxramr4pv71ALeSA6idKLGEne6LQCfTvV5Cv65jMGpTbBMmjvibgLtwZ02ykATD9x/RHXCIFl8AhO3a6W63wuCWwuBRfI42niR05uGFs+sT/7aFEvGsGzJmFVgWPZfDkH20wyFBu4jWEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UTf3gk1K; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxDjMdGB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D40FC4CEE3;
-	Thu,  1 May 2025 12:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746103472;
-	bh=WPG4ItA0UQzz9G5Wed/nsDRuYNB8SmpWf7d7wvrM4Ig=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QxDjMdGBaO7OILE121xxXL/ZOnOaqCLtEBXhMWqkB+3PJ/81e/MmSvY1wUToCrhj4
-	 o09UND4kIgR1FXBbOv/55FCd/OzVBwRgoBGOKRqd4tO9c5cjsRV1GlGty2ybIey98M
-	 Lg+nMO5pZgEPqvPhdAFXoifIaxQoyNf5AIQ+1z0cDZWJ9kRunCBuAPEBO/FXXum7lW
-	 W1LmcTN82A52L8g5iIa5Ucd/iUs8WO+yyP/I650zIl0luAwZDGv+aVLdfXY2xUanJs
-	 d03TuxAlnXfTT8Rtp+TeEMdJfupvUktoh6E1sLRqamQNoOxsDebivNk/cK+bAp+RnI
-	 Bf6br0mFislfA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uATHB-00AZcw-3q;
-	Thu, 01 May 2025 13:44:29 +0100
-Date: Thu, 01 May 2025 13:44:28 +0100
-Message-ID: <861pt8ijpv.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Potapenko <glider@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Andre Przywara <andre.przywara@arm.com>,
-	x86@kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	kvm-riscv@lists.infradead.org,
-	Atish Patra <atishp@atishpatra.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	kvmarm@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v4 2/5] arm64: KVM: use mutex_trylock_nest_lock when locking all vCPUs
-In-Reply-To: <20250501111552.GO4198@noisy.programming.kicks-ass.net>
-References: <20250430203013.366479-1-mlevitsk@redhat.com>
-	<20250430203013.366479-3-mlevitsk@redhat.com>
-	<864iy4ivro.wl-maz@kernel.org>
-	<20250501111552.GO4198@noisy.programming.kicks-ass.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UTf3gk1K"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8640d43f5e0so80605939f.0;
+        Thu, 01 May 2025 05:45:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746103499; x=1746708299; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=QKMTwiIEsJGFLzMOxm3KyHZoz9uomV6Tnu1SO/dioxM=;
+        b=UTf3gk1KIDIomD49D5y9iTH84A/POp19ycIHIqZCOQbA08SFKsL/A8lwBgkX05Uf5J
+         BvohtAb36TCX4Kac1g7l7bY3uyjWo8hLzd7jxIDZ5VDGQpfti5FUMmbmwPgL4Dh6dTZv
+         PLrxf/MI5peyYHwckBreQfWHbFbQVQehQvB1fvKU7bkks7pNrGdZ3/XFuDPSOJ/h1BwZ
+         9869t4/PmRBpp6ajJLOXUF2D7LeftESj0XcBUngfJV6B+ktntPjhpVhp5Fv6udwJPLEp
+         Z+B0QqBENp5SDiFpTCHoMF/++27z+lI10qCBdrn1wB22h+BFcFVIqd+klCBJEcOuFbie
+         RtpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746103500; x=1746708300;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QKMTwiIEsJGFLzMOxm3KyHZoz9uomV6Tnu1SO/dioxM=;
+        b=YvzYxfHeHWGLu/ISJa8yif3p/KzeCQhL0a2v/3bYTXQ+L+EmWeltImeO80L3Fc+f11
+         hF994Zh0qBSdn46gf/IiOfoG5suJ4KdjzN/7lBed1vzTuW39ptstUEgVyxahhqMg+SBN
+         3KaCwFbK3EjeS9A6dHJblqhqhsBnXCkdSIkUC3hnks/1JZ/ZKpALWJL8kqm4sddaXIad
+         jx7VNJknfGxTq/0d4DTj4lQ//Pi05q5FCXl8IY4Rq4pwsWYdBEQnhOuODAa3vJVTuwjY
+         Vdsnri7hcRWkjDxoPG51Be08B9aToQyZIRpoh6Y4S3xIjA/ryZD+fZttrzA4wFx+yL0s
+         RAMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUKunX0iSga8Ma84pCD4ORFgNepmKxTe0nuvu+TkdzTfss7SXYH93qruWa12gincLOJk3WOuYKTDZYaug==@vger.kernel.org, AJvYcCUjvg06PbGemcGE7NuyKg3fqxNFnIcpVS/99e0P5TO6rasVo3mCcX4HVOw+fLFFgKpWJCD6w8e1RKaqdtk2@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrOmKMWXAz1ZQPXcQRPgd+655vY4vqAnq6DPdFwGgvKV091Fef
+	VSSoSzAjSNURuabnRhU5DaMcUBNG8mufVfviz8fpI0f2VwHC96VqL2f4hlQHydfRja48pdF7hfo
+	usBDKug7ZXdzOmeU65I/LlZoTr8Q=
+X-Gm-Gg: ASbGncugFfUhKfiiB4cJtul0FYNJpl45qnGM1rAL9u/Fc6qaIsbw9GxosTHl6nIMxxp
+	I4UGPD+qSwzhJ/y0tzPGwHhbwcAj8tiSOQ8Q0fo01J+3EeGDtejH+6iocK9GPFeNnDk91lgOvis
+	Z+Dale19MQaFdEdQGaNr1LEW4jpJVaUjvBfEgbeWMBsSSWHSWn1rv40w==
+X-Google-Smtp-Source: AGHT+IEoIlQuzwtCK9CN1q8fmd9BsjDzk9j05eb0BG++LrJGjMoq0gvDeKEJcBKjptuWQPARgPl5+RibVhiYEbL//Lk=
+X-Received: by 2002:a05:6602:4a08:b0:861:628f:2d2b with SMTP id
+ ca18e2360f4ac-864a33889d1mr368032539f.1.1746103499702; Thu, 01 May 2025
+ 05:44:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: peterz@infradead.org, mlevitsk@redhat.com, kvm@vger.kernel.org, linux-riscv@lists.infradead.org, jiangkunkun@huawei.com, longman@redhat.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, bhelgaas@google.com, boqun.feng@gmail.com, bp@alien8.de, aou@eecs.berkeley.edu, anup@brainfault.org, paul.walmsley@sifive.com, suzuki.poulose@arm.com, palmer@dabbelt.com, alex@ghiti.fr, glider@google.com, oliver.upton@linux.dev, andre.przywara@arm.com, x86@kernel.org, joey.gouly@arm.com, tglx@linutronix.de, kvm-riscv@lists.infradead.org, atishp@atishpatra.org, mingo@redhat.com, jingzhangos@google.com, hpa@zytor.com, dave.hansen@linux.intel.com, kvmarm@lists.linux.dev, will@kernel.org, keisuke.nishimura@inria.fr, sebott@redhat.com, lishusen2@huawei.com, pbonzini@redhat.com, rdunlap@infradead.org, seanjc@google.com, yuzenghui@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+References: <20250425200051.2410-1-a.safin@rosa.ru> <CAB95QATm-iNJokfcSxpen3YBbx6xNUrecELD44squoaqCQ-b7w@mail.gmail.com>
+ <8dec9c47-d13d-4e59-b1ca-fcb9e3beccbd@roeck-us.net> <CAB95QAT4JJFYiXviJB78KELFnsitDj=Zb3EM_1F8uqiRHMwBhw@mail.gmail.com>
+ <38c7114e-3ea0-4f4b-bb12-5715c992656a@roeck-us.net> <CAB95QASErsOGibQ1+kB2LjNr-v3-KS86w8KvGLurB67D_4Bt4Q@mail.gmail.com>
+ <1e5fc32c-04dd-46b1-8943-03fd9370bfdc@roeck-us.net>
+In-Reply-To: <1e5fc32c-04dd-46b1-8943-03fd9370bfdc@roeck-us.net>
+From: Eugene Shalygin <eugene.shalygin@gmail.com>
+Date: Thu, 1 May 2025 14:44:48 +0200
+X-Gm-Features: ATxdqUHrkiF4YmBR0wjOhrH4quo0zYC4OEL115_6oBV9Z9613-E7jJGLbdrBhhc
+Message-ID: <CAB95QATpPN_jGK7HvwqeWSPU9f15x26j66K2sUDk0pf5b=4NBw@mail.gmail.com>
+Subject: Re: [PATCH v2] hwmon: (asus-ec-sensors) add WARN_ONCE() on invalid
+ sensor index
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Alexei Safin <a.safin@rosa.ru>, Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 01 May 2025 12:15:52 +0100,
-Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > + */
-> > > +int kvm_trylock_all_vcpus(struct kvm *kvm)
-> > > +{
-> > > +	struct kvm_vcpu *vcpu;
-> > > +	unsigned long i, j;
-> > > +
-> > > +	kvm_for_each_vcpu(i, vcpu, kvm)
-> > > +		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
-> 
-> This one includes an assertion that kvm->lock is actually held.
+On Thu, 1 May 2025 at 14:34, Guenter Roeck <linux@roeck-us.net> wrote:
 
-Ah, cunning. Thanks.
+> You do have an excellent point, though: The messages should display the
+> sensor type and channel. As for logging it every time: No, because _if_
+> there is a programming error it would clog the log, so once is enough
+> to tell "something is wrong with the code, fix it". The same is actually
+> true if the hardware changes "under the hood".
 
-> That said, I'm not at all sure what the purpose of all this trylock
-> stuff is here.
-> 
-> Can someone explain? Last time I asked someone said something about
-> multiple VMs, but I don't know enough about kvm to know what that means.
+But WARM_ONCE() can not behave the way we want, as far as I
+understand, printing a single warning for each sensor type and
+channel, can it?
 
-Multiple VMs? That'd be real fun. Not.
+> Regarding RAM errors: Those won't be caught by checks like this. You'd have
+> to litter the whole kernel with checks at almost every line of code
+> to even have a remote chance to catch problems like bit flips. Even
+> then you'd still not catch cases where the code itself is changed.
+> Even trying to catch that would be futile.
 
-> Are those vcpu->mutex another class for other VMs? Or what gives?
+I already had a bug report (race condition in this driver, another log
+message in the code) that kept me puzzled until the user reported that
+it was caused by a malfunctioning RAM module.
 
-Nah. This is firmly single VM.
-
-The purpose of this contraption is that there are some rare cases
-where we need to make sure that if we update some global state, all
-the vcpus of a VM need to see, or none of them.
-
-For these cases, the guarantee comes from luserspace, and it gives the
-pinky promise that none of the vcpus are running at that point. But
-being of a suspicious nature, we assert that this is true by trying to
-take all the vcpu mutexes in one go. This will fail if a vcpu is
-running, as KVM itself takes the vcpu mutex before doing anything.
-
-Similar requirement exists if we need to synthesise some state for
-userspace from all the individual vcpu states.
-
-If the global locking fails, we return to userspace with a middle
-finger indication, and all is well. Of course, this is pretty
-expensive, which is why it is only done in setup phases, when the VMM
-configures the guest.
-
-The splat this is trying to address is that when you have more than 48
-vcpus in a single VM, lockdep gets upset seeing up to 512 locks of a
-similar class being taken.
-
-Disclaimer: all the above is completely arm64-specific, and I didn't
-even try to understand what other architectures are doing.
-
-HTH,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Eugene
