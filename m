@@ -1,167 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2ADD235047;
-	Thu,  1 May 2025 19:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D2114BFA2;
+	Thu,  1 May 2025 19:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129030; cv=none; b=X1YexFui4b9fmJtIJogqsJ9rhFcGnrTRsz4tleIrfN8n94zVMZ7UJt03AYN9Q+Cj8r73VkmXkbEXBoujz9YqkX9+C3r15s6d4fFEOBzb+Uf9b3GEGipML7XGrhbxl4HeOhruC40zwELy2hgwvQiMMtJ+53Dd6LrUXfigZhSvvZw=
+	t=1746129107; cv=none; b=qlts5tjCeKICwNto+g3bi/Iohsy99Wn8E75n/nFUh3xQdHNKcrfRn39UQUQJoVX3PV42v5YYcJMM6/vtjIwa0M8yFV6p2ZVPDrgFoq/8Cn1aZr2mWBjRXWMsPEMGaavkjDmiJmZziDup6SwJXblnhFEf2j50Wo4wMImtzF94q9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129030; c=relaxed/simple;
-	bh=9RoNPI+kBpr/xIAzqLITkYQ3U2KM3NrSldLJ4O4+PC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ohl20UZUBo84Cj7cYz5OASbEn/us+e5y3qWMd8Fb0CWpVgdhfvQ1a675Vm6WX3GMHUD+GsS/I0dXwzS7r+JXzXKU2PeDEBPJvGlBRfsNZKVf80OfjN9kzmiGzPuagsp+tvi63LTd6LBHUITJFXltrCYZ4y8o53n3682RmurRS7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J3VGFk5X; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746129107; c=relaxed/simple;
+	bh=h5EaA3VYNdY85kolMxFMOR2dzJyUo6BJHKJnsp377hg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=HO0SqbuL9V7fl8I5AxA0mNCzBwULU/I8ZlB89GHnAFwk6jrBtuCpqqRvcEkgRubPxY5puvbDPX932/UFPLSgPEyAQU9YY0J/QOWXrGUkVPBBfbsLrexDhhpP8vLcjGekxujq/r24QM555mjT3HPMv9VpZNe6ew25hPH/zzMuMf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9bPucCF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J3VGFk5X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746129029; x=1777665029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9RoNPI+kBpr/xIAzqLITkYQ3U2KM3NrSldLJ4O4+PC0=;
-  b=J3VGFk5X91dyWAJa1SNFli5UjrxPV0Z1VG23XMUkptlKvgF3T4yn5pCx
-   JWiQDXMj41AJcnliTLiY1pw4jVrMon5rKhKE+oaNgyX+dXp2P5FdOSJAP
-   ETio0VFCMJ0RyRn1TPPX8nrewIMOtMcaO9fhQ8H9RxYpL4qN56OKe7ugU
-   JQJI2+a+N9FYuJSYXLjdAJCFdqI1vb9sFLJEdv2g68/deCCgj3c2CZhkh
-   AuCAK5H6+wg56XNJOwcSROr5ymkZs9ztbrJL6G0r5sOO/yFEV7gSEd2Xj
-   WXkUJ6DAYYBp9SSLAZjWx57rc8O9pwu6NX/Zs7f2R3/gqPAhKjg0FZJzL
-   w==;
-X-CSE-ConnectionGUID: bhxExtwWSYee8HrKZ5NbqA==
-X-CSE-MsgGUID: GMTgRhpBRB6ZrDpAdYRDmg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47901150"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47901150"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 12:50:28 -0700
-X-CSE-ConnectionGUID: iDbJK2u9SF6NDYMBjGFTjQ==
-X-CSE-MsgGUID: LdBwbA50RUKCYfaMFrpm5g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="139276610"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa005.fm.intel.com with ESMTP; 01 May 2025 12:50:24 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAZvK-0004M7-28;
-	Thu, 01 May 2025 19:50:22 +0000
-Date: Fri, 2 May 2025 03:50:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, jic23@kernel.org, lars@metafoo.de,
-	Michael.Hennerich@analog.com, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, marcelo.schmitt1@gmail.com
-Subject: Re: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and
- RTD sensors
-Message-ID: <202505020345.iJUIBTwt-lkp@intel.com>
-References: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9bPucCF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CAAC4CEE3;
+	Thu,  1 May 2025 19:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746129107;
+	bh=h5EaA3VYNdY85kolMxFMOR2dzJyUo6BJHKJnsp377hg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=p9bPucCFym0ouSDo518c/ovDHLqJJstQ4vL0N+9izjgaTZdgxOiFf5RIKJugz9cck
+	 1CX28D/Yrjv0aulm5NuoROgX+dm6wPa1FLezst2Bo1KAdTJILhK62u3+QvQ65eSezj
+	 +ckctRUo3Ya7yu4JYFeWP1cOWsvL6HRarAsY/Q/6l6jjDmY16XLJunNjtLXH35XUGY
+	 hgOKLde84eJ2RvKlxPRSiUVIJkwTzGgtydZVWc0BtWUvAeKF73N7pPl9mLiYNxuA5q
+	 kSY/FHlvienFolCsZBBIX7I8hkKf1ldzdgOhdEB031ofvunb7FlF283HOsxlkUzxcd
+	 4YToc8umN/Hgw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
+ <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
+ <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
+ <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+In-Reply-To: <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Thu, 01 May 2025 21:26:24 +0200")
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
+	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+	<87msbw1s9e.fsf@kernel.org>
+	<86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
+	<CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+	<87h62419r5.fsf@kernel.org>
+	<FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
+	<CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Thu, 01 May 2025 21:51:29 +0200
+Message-ID: <87bjsc154u.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Marcelo,
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
-kernel test robot noticed the following build warnings:
+> On Thu, May 1, 2025 at 8:11=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
+l.org> wrote:
+>>
+>> But why does that matter? Anything in the commit message after the cut
+>> is dropped when applying the patch, right?
+>
+> Yes, but it is not common to add a newline there. I mentioned it
+> because it looked odd, no worries.
+>
+>> I might not have the full picture, but it is my understanding that
+>> while `const fn` are evaluated in const context when called from const
+>> context, they _may_ be called from non-const context, and then they are
+>> evaluated in non-const context if their arguments are not const [1].
+>> They are not guaranteed to be evaluated in const context.
+>>
+>> So my thinking is that down the road, refactoring of this code may cause
+>> the `AttributeList::add` to be called in a way so that it is not
+>> evaluated in const context, and then the `assert` would be evaluated at
+>> run time. With `build_error` we would get an error during build.
+>
+> No, it will always be evaluated at compile-time (if it is evaluated at al=
+l).
+>
+> Please see again the links I provided. There is no `const fn` in the
+> example I provided, and yet it is a build error.
+>
+> From your link, it is clear `const` blocks are a const context, which
+> are always evaluated at compile time:
+>
+>     Certain forms of expressions, called constant expressions, can be
+>     evaluated at compile time.
+>
+>     In const contexts, these are the only allowed expressions, and are
+>     always evaluated at compile time.
+>
+>     A const context is one of the following: (...) A const block
+>
+> And from mine, it mentions that it is guaranteed to be evaluated if
+> execution reaches that point and that such evaluation would happen at
+> compile time:
+>
+>     A const block is a variant of a block expression whose body
+>     evaluates at compile-time instead of at runtime.
+>
+>     If the const block expression is executed at runtime, then the
+>     constant is guaranteed to be evaluated, even if its return value is
+>     ignored:
+>
+>         fn foo<T>() -> usize {
+>             // If this code ever gets executed, then the assertion has
+>             // definitely been evaluated at compile-time.
+>             const { assert!(std::mem::size_of::<T>() > 0); }
+>             // Here we can have unsafe code relying on the type being
+>             // non-zero-sized.
+>             /* ... */
+>             42
+>         }
+>
+> That example they give is precisely about using a `const` block for
+> guaranteeing something that unsafe code relies on.
+>
+> I hope that helps.
 
-[auto build test WARNING on 1c2409fe38d5c19015d69851d15ba543d1911932]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Marcelo-Schmitt/dt-bindings-iio-adc-Add-AD4170/20250428-222010
-base:   1c2409fe38d5c19015d69851d15ba543d1911932
-patch link:    https://lore.kernel.org/r/3687a9e0a479aef9736ad557b341ed2e7d4f5756.1745841276.git.marcelo.schmitt%40analog.com
-patch subject: [PATCH v2 7/7] iio: adc: ad4170: Add support for weigh scale and RTD sensors
-config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20250502/202505020345.iJUIBTwt-lkp@intel.com/config)
-compiler: powerpc64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505020345.iJUIBTwt-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505020345.iJUIBTwt-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   drivers/iio/adc/ad4170.c: In function 'ad4170_setup_current_src.isra':
->> drivers/iio/adc/ad4170.c:1881:29: warning: 'current_src' is used uninitialized [-Wuninitialized]
-    1881 |                 current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK, pin);
-         |                             ^~
-   drivers/iio/adc/ad4170.c:1875:22: note: 'current_src' was declared here
-    1875 |         unsigned int current_src, i, j;
-         |                      ^~~~~~~~~~~
+Ah - I understand. I missed that you wrapped the assert in a const
+block, a quite important bit =F0=9F=A4=A6 Thanks for explaining!
 
 
-vim +/current_src +1881 drivers/iio/adc/ad4170.c
+Best regards,
+Andreas Hindborg
 
-  1869	
-  1870	static int ad4170_setup_current_src(struct ad4170_state *st,
-  1871					    struct fwnode_handle *child,
-  1872					    struct ad4170_setup *setup, u32 *exc_pins,
-  1873					    int num_exc_pins, int exc_cur, bool ac_excited)
-  1874	{
-  1875		unsigned int current_src, i, j;
-  1876		int ret;
-  1877	
-  1878		for (i = 0; i < num_exc_pins; i++) {
-  1879			unsigned int pin = exc_pins[i];
-  1880	
-> 1881			current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_PIN_MSK, pin);
-  1882			current_src |= FIELD_PREP(AD4170_CURRENT_SRC_I_OUT_VAL_MSK, exc_cur);
-  1883	
-  1884			for (j = 0; j < AD4170_NUM_CURRENT_SRC; j++) {
-  1885				/*
-  1886				 * Excitation current chopping is configured in pairs.
-  1887				 * If current chopping configured and the first end of
-  1888				 * the current source pair has already been assigned,
-  1889				 * skip to the next pair of output currents.
-  1890				 */
-  1891				if (ac_excited && j % 2 != 0)
-  1892					continue;
-  1893	
-  1894				if (st->cur_src_pins[j] == AD4170_CURRENT_SRC_DISABLED) {
-  1895					st->cur_src_pins[j] = pin;
-  1896					break;
-  1897				}
-  1898			}
-  1899			if (j == AD4170_NUM_CURRENT_SRC)
-  1900				return dev_err_probe(&st->spi->dev, -EINVAL,
-  1901						     "Failed to setup IOUT at pin %u\n",
-  1902						     pin);
-  1903	
-  1904			ret = regmap_write(st->regmap, AD4170_CURRENT_SRC_REG(j),
-  1905					   current_src);
-  1906			if (ret)
-  1907				return ret;
-  1908		}
-  1909	
-  1910		if (ac_excited && num_exc_pins > 1) {
-  1911			unsigned int exc_cur_pair;
-  1912	
-  1913			if (st->cur_src_pins[0] == exc_pins[0])
-  1914				exc_cur_pair = 1;
-  1915			else
-  1916				exc_cur_pair = 2;
-  1917	
-  1918			/*
-  1919			 * Configure excitation currents chopping.
-  1920			 * Chop two pairs if using four excitation currents.
-  1921			 */
-  1922			setup->misc |= FIELD_PREP(AD4170_MISC_CHOP_IEXC_MSK,
-  1923						  num_exc_pins == 2 ? exc_cur_pair : 3);
-  1924		}
-  1925	
-  1926		return 0;
-  1927	}
-  1928	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+
