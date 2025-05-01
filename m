@@ -1,115 +1,110 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C7326FD99
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 07:52:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4DAC1D89E3;
+	Thu,  1 May 2025 07:52:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746085928; cv=none; b=T5Km7rBMgQc7m/95iVlWe2PmsBJoC2EEYr4hkPTbOJ9EwbWIsA7apmOTT8z7PdEoG/TKd3fivgV/yCsZ32cW672ntdYA1hjiHzlqbFb8OrzIsQ3dXmCsUDhY+eUzu17K2u5SMZc5qUJEyNnKJUr5RquglLWWfa2GpAUM2BbJJZU=
+	t=1746085938; cv=none; b=NgSrYotWZDwQkADSmY0LRiLpWdO0D9mwtAz6tau+wlP8Qy5LBtmCKh5GCeBu2EaJJhNV+2qhJdUxzFS7mr71O1kq83lvD5RYdmcKesPSWpIxwXRlL7YUJhKchzisZXsowFWrgzyPkYMNrJ4riePQwUD0LtSPNoqAmyxJesjco0o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746085928; c=relaxed/simple;
-	bh=RYrfcBn6bwSuscQ7eGMhE71CnAk+Cjw4sPM/hJA1Lvk=;
+	s=arc-20240116; t=1746085938; c=relaxed/simple;
+	bh=izlfaK1RNQxEYzP8Zd0NG4A9sGlEsEUuEPRhVTxZof4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwt9futi7+Xiu3SDMsLjfbXR80nQXcc3jkICZ5cXSrJMj8hqa898ImYJjRcJFEhnuaxhpt/hzqXXIILgnL2hg/VbblsSE6nTtL+Uowb05CReTdU9qBG5+DTd+wzyRqVJ2YccSbwStaQeY2RY980sibM3aD4KFtvf/z7BXYg3UYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=VIiPvImm; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLqUtlYXTdWgpNOfWyTzVWVltyRxTwqi7jUoDyukAB8jpdY3Eb87Zj1aMxOZOKmiT7GqmhKTyp/1oyB+TMUa9uhoTieSSvwueilO3nUB0jWnjOSVFfSkvtOSb2zv3GShTPizIsWqOAT5Zil3XgbV6UK88IdClrc2gskAVNNHoaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=XPAPcku4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="VIiPvImm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=RYrf
-	cBn6bwSuscQ7eGMhE71CnAk+Cjw4sPM/hJA1Lvk=; b=VIiPvImmFVdj3w1urimV
-	yHX6XjFruwMx1XN3yj8ee93CPwmKObJwf1AX4GDcb5sCG5NyF1fptIJAntgipZNp
-	piGdQOXugNZ0d7oKURlUVGXfGqcKXrDRmF07wlDWGdfUifCRxxhAkirRcHAanAmP
-	81g//1i+v2XTyba7+TF4rgebOKScQfQC+br8Mp7KL16whPsVxJFYOJ4n7ofUzhl+
-	JyyKHOIVnkWExkHLCn/HEHdCPtZXYCgrp8C7eshmZgjbHjfV5luuY6kYcBISq4Vp
-	dDgEhBd51cax/CFA+Nd2pyRcYAm3sLNNE2sJgGzUXPSpHr1kIeLni3ZOxY6tmBoJ
-	Xg==
-Received: (qmail 978370 invoked from network); 1 May 2025 09:51:58 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 May 2025 09:51:58 +0200
-X-UD-Smtp-Session: l3s3148p1@cXfmTg40FL0gAwDPXxyAAIlRla1HkD11
-Date: Thu, 1 May 2025 09:51:57 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v9 1/2] i2c: riic: Implement bus recovery
-Message-ID: <aBMoHST5o-H4BvkO@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250430194647.332553-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="XPAPcku4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81035C4CEE3;
+	Thu,  1 May 2025 07:52:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746085938;
+	bh=izlfaK1RNQxEYzP8Zd0NG4A9sGlEsEUuEPRhVTxZof4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XPAPcku4K99G3AWbOuL5gAw5Og8AZPeXtYEz1rZTNolwRbHFA8uNiE1WG8U3BNwuB
+	 SM7rRHY/For/nWBNfaIiZlA+qWxQp3B7qUrKmxCxdZw2FYaVq7KnHW+4cztD1WaDec
+	 osskfBBXmvaYYuxiJalPNCs1shvwvnm39mw0KG7s=
+Date: Thu, 1 May 2025 09:52:15 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
+Message-ID: <2025050157-various-octane-094c@gregkh>
+References: <20250429161051.743239894@linuxfoundation.org>
+ <aBKrKvYpCKWcoOGI@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xKjuJX1DCffYbtLH"
-Content-Disposition: inline
-In-Reply-To: <20250430194647.332553-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
-
-
---xKjuJX1DCffYbtLH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aBKrKvYpCKWcoOGI@finisterre.sirena.org.uk>
 
-On Wed, Apr 30, 2025 at 08:46:46PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->=20
-> Implement I2C bus recovery support for the RIIC controller by making use
-> of software-controlled SCL and SDA line manipulation. The controller allo=
-ws
-> forcing SCL and SDA levels through control bits, which enables generation
-> of manual clock pulses and a stop condition to free a stuck bus.
->=20
-> This implementation wires up the bus recovery mechanism using
-> i2c_generic_scl_recovery and provides get/set operations for SCL and SDA.
->=20
-> This allows the RIIC driver to recover from bus hang scenarios where SDA
-> is held low by a slave.
->=20
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, May 01, 2025 at 07:58:50AM +0900, Mark Brown wrote:
+> On Tue, Apr 29, 2025 at 06:41:48PM +0200, Greg Kroah-Hartman wrote:
+> > This is the start of the stable review cycle for the 6.1.136 release.
+> > There are 167 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> 
+> This breaks NFS boot on the Raspberry Pi 3+, the same issue appears in
+> 5.15.  We don't appear to get any incoming traffic:
+> 
+>   Begin: Waiting up to 180 secs for any network device to become available ... done.
+>   IP-Config: enxb827eb57f534 hardware address b8:27:eb:57:f5:34 mt[   16.127316] lan78xx 1-1.1.1:1.0 enxb827eb57f534: Link is Down
+>   u 1500 DHCP
+>   [   16.840932] brcmfmac: brcmf_sdio_htclk: HT Avail timeout (1000000): clkctl 0x50
+>   IP-Config: no response after 2 secs - giving up
+>   IP-Config: enxb827eb57f534 hardware address b8:27:eb:57:f5:34 mtu 1500 DHCP
+> 
+> There was a similar issue in mainline last release, I can't remember the
+> exact fix though.
+> 
+> A bisect identifies "net: phy: microchip: force IRQ polling mode for
+> lan88xx" as the problematic commit.
+> 
+> # bad: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] Linux 5.15.181-rc1
+> # good: [f7347f4005727f3155551c0550f4deb9c40b56c2] Linux 5.15.180
+> git bisect start 'c77e7bf5aa741c165e37394b3adb82bcb3cd9918' 'f7347f4005727f3155551c0550f4deb9c40b56c2'
+> # test job: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] https://lava.sirena.org.uk/scheduler/job/1340356
+> # bad: [c77e7bf5aa741c165e37394b3adb82bcb3cd9918] Linux 5.15.181-rc1
+> git bisect bad c77e7bf5aa741c165e37394b3adb82bcb3cd9918
+> # test job: [9599afaa6d1a303c39918a477f76fe8cc9534115] https://lava.sirena.org.uk/scheduler/job/1340569
+> # good: [9599afaa6d1a303c39918a477f76fe8cc9534115] KVM: arm64: Always start with clearing SVE flag on load
+> git bisect good 9599afaa6d1a303c39918a477f76fe8cc9534115
+> # test job: [714307f60a32bfc44a0767e9b0fc66a841d2b8f6] https://lava.sirena.org.uk/scheduler/job/1340691
+> # good: [714307f60a32bfc44a0767e9b0fc66a841d2b8f6] kmsan: disable strscpy() optimization under KMSAN
+> git bisect good 714307f60a32bfc44a0767e9b0fc66a841d2b8f6
+> # test job: [db8fb490436bd100da815da4e775b51b01e42df2] https://lava.sirena.org.uk/scheduler/job/1341008
+> # bad: [db8fb490436bd100da815da4e775b51b01e42df2] s390/sclp: Add check for get_zeroed_page()
+> git bisect bad db8fb490436bd100da815da4e775b51b01e42df2
+> # test job: [4757e8122001124752d7854bec726a61c60ae36a] https://lava.sirena.org.uk/scheduler/job/1341258
+> # bad: [4757e8122001124752d7854bec726a61c60ae36a] USB: storage: quirk for ADATA Portable HDD CH94
+> git bisect bad 4757e8122001124752d7854bec726a61c60ae36a
+> # test job: [1f079f1c5fcf13295fc1b583268cc53c80492cfb] https://lava.sirena.org.uk/scheduler/job/1341360
+> # good: [1f079f1c5fcf13295fc1b583268cc53c80492cfb] tipc: fix NULL pointer dereference in tipc_mon_reinit_self()
+> git bisect good 1f079f1c5fcf13295fc1b583268cc53c80492cfb
+> # test job: [cee5176a98accc550585680213f71d1d307a2e9a] https://lava.sirena.org.uk/scheduler/job/1341449
+> # good: [cee5176a98accc550585680213f71d1d307a2e9a] virtio_console: fix missing byte order handling for cols and rows
+> git bisect good cee5176a98accc550585680213f71d1d307a2e9a
+> # test job: [5e9fff164f2e60ade9282ee30ad3293eb6312f0e] https://lava.sirena.org.uk/scheduler/job/1341692
+> # bad: [5e9fff164f2e60ade9282ee30ad3293eb6312f0e] drm/amd/display: Fix gpu reset in multidisplay config
+> git bisect bad 5e9fff164f2e60ade9282ee30ad3293eb6312f0e
+> # test job: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] https://lava.sirena.org.uk/scheduler/job/1341795
+> # bad: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] net: phy: microchip: force IRQ polling mode for lan88xx
+> git bisect bad ecc30d7f041daf7de7d0d554ebeeaec1a0870e53
+> # test job: [40dc7515d0b13057d576610a8dd23ccb42d4259f] https://lava.sirena.org.uk/scheduler/job/1341924
+> # good: [40dc7515d0b13057d576610a8dd23ccb42d4259f] net: selftests: initialize TCP header and skb payload with zero
+> git bisect good 40dc7515d0b13057d576610a8dd23ccb42d4259f
+> # first bad commit: [ecc30d7f041daf7de7d0d554ebeeaec1a0870e53] net: phy: microchip: force IRQ polling mode for lan88xx
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Thanks for the bisection, I'll go drop this from 5.15.y and 6.1.y now.
 
-
---xKjuJX1DCffYbtLH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgTKBoACgkQFA3kzBSg
-KbbfwQ/+N6mNRwrLqA5m7Eo4cF+AGhkMcrrHE032M7A1zkCwXt6YKhO/M14uIPjS
-i5x799kmSjYWPhGCerVlLmjjGB+94NzK73nHQUPT9nI3+V37MKPRTWPq16wEX3Tp
-qrq8tkjfF4J0zfYZzuuQg2ukxtTyc0iUnEdJlJhPEs8aWJALU8AAnNXRQuN9d+MF
-YrZMnk1uLlKfbEOtJpDvABSFYZfJcHKYdXyh8hYxzCi6sSU8p0kWpPC6AZhX4Oa6
-b5YlEQqDKUeEI89UAgJhx5VFCZNmFQUhkyd2y9hA2UtRPXH2qqnufDXWHySYRsDe
-fgqKQrYa1+KyBMb0pYpRabdrrpPNLkd4VLnWF0C8/dhPnX15HDdHpvRINC4iHcdw
-0ymbL8aO3xil8EEO4sIih8YS8AoRTfqrk+tp28e57Ba42aprnNiVsNFWDYXdtOrf
-8JhoDzYBYG1G6jiqx/Xd7jN3sj5gJzBhzoSenz3bTPe9S1zLRqW3lCFnaiGms/PJ
-U0KL4boX+qKrQXHep+DmfJMXd1nZi1nUrpKycqQc9DtekEg7YYEobrl5SHuatuGS
-56FxUEl9xrifgC3I9dlvwyoV7YCruJkgyuYBesv5oZpVzXr5mb0eMT+817TwyJY8
-LfgMhCwCjWePBWl8kfweal7YrE1yil1ewxJPraLCuJkTiAw6tnU=
-=nDl4
------END PGP SIGNATURE-----
-
---xKjuJX1DCffYbtLH--
+greg k-h
