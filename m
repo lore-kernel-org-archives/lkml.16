@@ -1,94 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A9EE2EAE5;
-	Thu,  1 May 2025 13:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA0D2DC797;
+	Thu,  1 May 2025 13:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746107231; cv=none; b=g4xlM0JIXO5GdZEHIOXNrsuKZb01KctbPbi6NgAV615v7ztdZbQdcp0ut2devj+R8i6IYYb+wqnV1foiKHke+znY3TPpnpubYroHYjYhOOt0CYKYd4pfIeYoRuhyUYzbbcSbfJuy9HlOzC7C/saxNrKe6AFI/aIFwFe8VdQzjFY=
+	t=1746107313; cv=none; b=Yez7ijsKeFcTiR4DWl3WCFBJWZKgHIuLAQK/q+H71AR/Vql9facfgspEwakl6oFsWjonPoYqDjjzJpgQSz0Lfj0wBRvrZBHM4qFlJvzKy0VFoWnbMj/MhwhSwKimVZisBu6euQ6OdwXiFQOnM67mqBHO06NWBYwC8rZcyXY8IEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746107231; c=relaxed/simple;
-	bh=/a/p0KgdgwXQOmdA8fU5VhnO2KALgr9NefxVSc2NBkg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kSWqzOZzkJwldWMN9l1knpmhfkB/8ZRU94J9CNcezpSQQVLDrIzipRxGn1IW9qJZdMRaNXrfS2C3Q4jdGdTxgh3tZajuLEwK3oq5XN5yhViKA4wk3jVY7inFJ8NEu5IPJe0Mo/2Bkjg5Dote2tTD5/KrvKOVtiLO+YNHbK5PsFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BC701CC4;
-	Thu,  1 May 2025 06:47:01 -0700 (PDT)
-Received: from [10.1.37.71] (Suzukis-MBP.cambridge.arm.com [10.1.37.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B0E5E3F5A1;
-	Thu,  1 May 2025 06:47:05 -0700 (PDT)
-Message-ID: <9efc4db0-4264-4e8f-881e-2656c22a8b3e@arm.com>
-Date: Thu, 1 May 2025 14:47:04 +0100
+	s=arc-20240116; t=1746107313; c=relaxed/simple;
+	bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=bVUtI/iA0poTPtXDLQ/FCe7E5RZuyakBJ7X7Zytclx/2b8uyrQkTb75uvN+aehnXOhK/VX43ca/0qQhxInIS5/jNGrto3OINUEJ2Tf6HW2NUvFevYJPocsM0BAnLpnTetEe3DIYqNlfjElPxqvfxhhcj/mYupc64jBekIYNDesk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJLemkXX; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJLemkXX"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224191d92e4so8995045ad.3;
+        Thu, 01 May 2025 06:48:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746107311; x=1746712111; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
+        b=EJLemkXXdii3qDuRUZqfHf9WDZk3TvboLeBXeRZg6zsENUNgD16ewtDIQOjXuQbJ28
+         pKdnaTVKTmffl4MxFevuV1XsUPArFO4C2wVaILnlTam4b0EJtQKssKj70QuP0FIeku5I
+         9Beuh6kvYbMrsf0xh0g3YV2frbbXnUbyqk0T+23Hcm75khrFcyMKQHUj32OVKEVI3Uve
+         JUmb9nT9HUc1HMtAgPewa2XNU7rb1Myydx41TlN/8qo51sWQPc6VCY3n/eEtWrsixOXL
+         mNrK+4t/6HxhJCw8VwMQC4jW/AxEyAg2o7O2Zz/bJFFGgthi5zbFzM9Hlh3hkV68aTgJ
+         1HJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746107311; x=1746712111;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
+        b=lQKMrx0wpODrBjW78O9yVg8flio4e4cmuzaIryn8vVs6TTwtiHW+ImIhW1G6EvE8Eu
+         UvZM9GgVMkXN9MQPrxct/x9YPc2Gj7Ahoudbx4R68SAbKZbeIgt9JDhvKMkKT5lxgJFQ
+         5xV5Vf5nsVPjXBLv0I6ZFjB6yGA0zQWi8mBq7cuSTBxb8dSTExA8IAXbAd2ir3NOpari
+         SBXBC6uJYWEIqDPVIvWt8sOHWv2DwvkvS26FWvFNOpDf8k6ug4XVz3Tp5/mTfnuGZ2oh
+         hopJFQfTIVvIqSFPqqXrikXSvfqVbc/MCZmitjf6iTOKhIpUKNiQ9kaSo7aF+8bCYHGv
+         Xbew==
+X-Forwarded-Encrypted: i=1; AJvYcCV9J6K0t7SVn2iOZjp5l8mBfgrRn2ABzc5qhRwa8+R5bUrvDG6O2/lh4zCIh1o+S8oLRbxWOXdT4wF/vXNU1n8=@vger.kernel.org, AJvYcCWa5CAv3kSWEnNFqTNIgxpiE8sGOZ10xLMuIQ+fgs5ejc3ffOWZa5MA5rRFSldgHRRjNn2SGEEKGRbY0aU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDhzCZC/Q/Le29mFG0t4X9upu7zAEjNBwG3BAIwWCjcOSqOqpI
+	m+lbE5acAr5mekQK5cb2nw2vmueEGcKu4weKVleTB90iu1ZbtDvp
+X-Gm-Gg: ASbGnctnMk+ne0hg34pWexOtCsSE4Dtz393ZrKtc4QcFkAZBXkDBNc/nV70pmoHrm/5
+	DiNFvIRSZeDje+IFq4EXTfi/+pkOfHSy6z6YfrgyviqOU9eH4EsR19fhFLX+jnEvPMepfdvdvFX
+	W676KV6jWrJtENtukG7IphiIVQ2UazToXhfGuDrmoe4ZUdZ5zDpQlkK2+WtDhiqdenKzv06QL8Q
+	vTnCcOcYLvsI28SllXDK2rssP9Ok3UD0H7ALH3cTjyUkUH3g7yD9KIylg5UiykPoFfx0CEznYUH
+	Cg/ZTnUHb+3m3CgNMUvx8I2PaAvlR0EKA7y5+Ai2ceFB+djFf9JjhHKVcniyJe4lqCWdZAZIgwp
+	y81rklcY3sRnxathZeo/0C5E=
+X-Google-Smtp-Source: AGHT+IHD6FHplSlj+pposMi4tXExEB+p1rqckTm7xQAXIQisRcsjAh2vlhK2tDw6V5JuAKLnpQD4bw==
+X-Received: by 2002:a17:903:2f82:b0:21f:45d:21fb with SMTP id d9443c01a7336-22df5764477mr96937625ad.3.1746107311076;
+        Thu, 01 May 2025 06:48:31 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bb0f39csm6597495ad.96.2025.05.01.06.48.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 06:48:30 -0700 (PDT)
+Date: Thu, 01 May 2025 22:48:15 +0900 (JST)
+Message-Id: <20250501.224815.1854649062185419020.fujita.tomonori@gmail.com>
+To: boqun.feng@gmail.com, arnd@arndb.de
+Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, a.hindborg@samsung.com, frederic@kernel.org,
+ lyude@redhat.com, tglx@linutronix.de, anna-maria@linutronix.de,
+ jstultz@google.com, sboyd@kernel.org, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, aliceryhl@google.com, tmgross@umich.edu,
+ chrisi.schrefl@gmail.com, linux@armlinux.org.uk
+Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <aBNrJgLFpswcgOEK@Mac.home>
+References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+	<aBNojspyH5dHsuOm@Mac.home>
+	<aBNrJgLFpswcgOEK@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/43] arm64: RME: Define the user ABI
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-7-steven.price@arm.com>
- <35a91f8c-cdf6-4595-9ed2-c792a8e9d679@arm.com>
- <961bd6f8-2c0c-47d7-991d-aab7d247ffa8@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <961bd6f8-2c0c-47d7-991d-aab7d247ffa8@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-On 01/05/2025 14:31, Steven Price wrote:
-> On 28/04/2025 09:58, Suzuki K Poulose wrote:
->> Hi Steven
->>
->> On 16/04/2025 14:41, Steven Price wrote:
->>> There is one (multiplexed) CAP which can be used to create, populate and
->>> then activate the realm.
->>>
->>> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>> Changes since v7:
->>>    * Add documentation of new ioctls
->>>    * Bump the magic numbers to avoid conflicts
->>> Changes since v6:
->>>    * Rename some of the symbols to make their usage clearer and avoid
->>>      repetition.
->>> Changes from v5:
->>>    * Actually expose the new VCPU capability (KVM_ARM_VCPU_REC) by bumping
->>>      KVM_VCPU_MAX_FEATURES - note this also exposes KVM_ARM_VCPU_HAS_EL2!
->>> ---
->>>    Documentation/virt/kvm/api.rst    | 70 +++++++++++++++++++++++++++++++
+On Thu, 1 May 2025 05:37:58 -0700
+Boqun Feng <boqun.feng@gmail.com> wrote:
 
->>
->> May be rephrase it to:
->>
->> No changes can be made to Realm's memory (including the IPA state). No
->> new VCPUs can be created after this step.
-> 
-> I was attmepting to include that CONFIG_REALM cannot be called. How about:
-> 
-> 	Request the RMM to activate the realm. No
-> 	changes can be made to the Realm's memory,
-> 	IPA state or configuration parameters.  No
-> 	new VCPUs can be created after this step.
+> Btw, I think you're missing the Suggested-by tag from Arnd, of course if
+> Arnd is not against it.
 
-Looks good to me, cheers
+I'll submit v2 tomorrow, including Suggested-by tag from you and Arnd.
 
-Suzuki
-
+Please let me know if you're not okay with being included in the tag.
