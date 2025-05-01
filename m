@@ -1,160 +1,117 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A3DA212B0C;
-	Thu,  1 May 2025 08:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B22DC770;
+	Thu,  1 May 2025 08:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746087874; cv=none; b=AFdkslGgpWSAD+983hui0aZcdHkyrEb7BWg3SUiS0UMIMt0MF9VVAeL+8UHlvqxxBvixeKzNuvvAokeVCVwzrzS6TXAtd4e3/j7rq755BWO/KqxJ41dyI5jFYwzRumMLKej1dH5EXrwYt1ArmmluoB5waP6X1Zwdbe5FtWeSWQc=
+	t=1746088076; cv=none; b=rowdQGgQ68g6N5i+K7QENLPKnjYWcupM8aPl8gNBxKrN3yH2UgLUEs4LwFxsQy+ecCCrJoSbB30wHg0AceSXgN6L5HpW8GiHZD1DMn1bqixP3YfoEbjyAERegofD7RhdIdtVypAkkVGRWHezs8XspwTVmbU67dS9QtbxQLCbiyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746087874; c=relaxed/simple;
-	bh=3ABLzi/lLQ26rQL8HDrPKItTlwAYim7PvtzNE2gnkZI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=W/hD9ts4o/wo72qmxIN6NWbt80osmoXeOcW9SV5022ytEjcmYr88qJpwUZ5SfL775gUbDVwpcYSyTzJ7/dHXQf8WXdgkXpckdJej88nzWPlcL0HUP5XTubVJxFXF4ln2rSCxhUAzsrETwwNkWR1e2mz8A4wbBEENg5RPPQi1kWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=f3n6399/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746088076; c=relaxed/simple;
+	bh=DIRp7PCO2q81pcfAhNFooEuVcja7gndPQjMS3ZpawtY=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=edkbCxZ2FaOptwXrBp2uYWuCuSQntrCGEtqKJg3GSDeZzeqk6/wikdIGzyvkhkVk9/3HJCtG10XFkfydYvpEGxCUO6SsBHamTi+lNwRinIjYJhixmmqj0BJD2kXPiL+cc7xHHtw8LYKof/VuUmCCfZdoPTmA1r9r0sbfif2Wktg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdlRCrUM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="f3n6399/"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UH0g0f032419;
-	Thu, 1 May 2025 08:24:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	sH+t6MzbalCm27yOzAfAIpTNjVM7JE7AXjL8HMtWmpQ=; b=f3n6399/NtavcLt/
-	y1IrBYKijc4k9srOTL+NCSPZubEMVxiQcIifJr2LcxzzS8w026xS/sfPdg9BDQC0
-	0dBe2N+CpOlY81sRGPtDqMNpOY/1e/TXFaVdG1aJ6Er6ViJNcjiliDc8C7ytwPHd
-	Gb4mFb5leceeZ4tCgYnUGixJQ4utqETD6UnVJ3c0q6VM2vxoGAGqrRqDH5UIJ4Mq
-	N4Eo+WZN48dd37BTiGLRFzUF2CNwfB515NirARxxkmYjX4ZF3z3yRRRFGn6xNKoN
-	Ptpk/YKjakLNxK0x9PQ0ap8Y7zZoiyx76Crmi/zmEEXCvb1gUtfU30vIL9BJIrqh
-	zqK9ug==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u2csew-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 08:24:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5418OFiZ011215
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 May 2025 08:24:15 GMT
-Received: from [10.216.32.231] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 1 May 2025
- 01:24:05 -0700
-Message-ID: <b56384b8-952a-4831-a004-527739240266@quicinc.com>
-Date: Thu, 1 May 2025 13:54:02 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdlRCrUM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800E4C4CEE3;
+	Thu,  1 May 2025 08:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746088075;
+	bh=DIRp7PCO2q81pcfAhNFooEuVcja7gndPQjMS3ZpawtY=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=kdlRCrUMmhE/tpd3yMnCUQ8nqFZey2KO2cjBF/eRRiX7S7tIBNUvPpONHiNjtp0Jw
+	 B3y0ddPIIL5h9wwXGQ9ORHG+J9rQeGilBbUOKKoX4iu/59rIZEAnup83l3Mdlrog0j
+	 haFWGO7+2NbfFDawZSIKTGd95wYawI4fdGk8jBEyL0uV4WZGwJ+AaI6gVLp51uq6Ce
+	 bswu/fX8jr/Uo+9LBf9DJs9mFhVah3+xuv5ho2wZzUDv9Ub1zudwGIgRfRV2p6sD3K
+	 IlzdE+73rrDDkwgXh3h0uxSA8vWF1/9iUXCzsxTfpmc+Rxhy7rUC2IHUKg0unU/7Gx
+	 KbLQJCgkOn/sg==
+Date: Thu, 01 May 2025 03:27:53 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/6] arm64: dts: qcom: qcs8300: Add gpu and gmu nodes
-To: Rob Clark <robdclark@gmail.com>,
-        Konrad Dybcio
-	<konrad.dybcio@oss.qualcomm.com>
-CC: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Sean Paul
-	<sean@poorly.run>, Konrad Dybcio <konradybcio@kernel.org>,
-        Abhinav Kumar
-	<quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, Jie Zhang
-	<quic_jiezh@quicinc.com>,
-        Rob Clark <robdclark@chromium.org>
-References: <20250228-a623-gpu-support-v2-0-aea654ecc1d3@quicinc.com>
- <20250228-a623-gpu-support-v2-5-aea654ecc1d3@quicinc.com>
- <e22daaae-57fc-4523-b594-87d202d255f3@oss.qualcomm.com>
- <aa8ebd50-683b-4043-9494-5675a2d9a01e@quicinc.com>
- <41df5398-79f6-484a-8ad3-f3488eb1b71c@oss.qualcomm.com>
- <hpfqpvkex3dtj6ieosce4phukodnoidh55vxpujyekoehhotqn@l434nae5gzdi>
- <f1fcf9fb-3be2-4097-a372-a76bfba6043e@oss.qualcomm.com>
- <CAF6AEGvGEshZbSmmLZMXGiCjRdDJLa7EKN-gviw4oxcapMKN+Q@mail.gmail.com>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <CAF6AEGvGEshZbSmmLZMXGiCjRdDJLa7EKN-gviw4oxcapMKN+Q@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: XTGYoI7GyN-kac9E-BB3tqq3wu2kIjxA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA2MyBTYWx0ZWRfXxp6+ELivpQnm jQmQh4TKW6E+tfhyJQoAOMJ6MwGJw7zvEGS7iysUNFnJf9b10JRn+rs72hXRDmSTGNYeQro8iZi mZZu6qu65uIV3YiMwG78hN8xCYr+alQe9RVB5/fpqoczcKi/l3JYXjqX74pAbm+aW1Yma2raJIT
- FH94A/NNOy7Iot5rbUkfv6UftlmJ8rRQey42cpNWSLtzBzhjDxdEUrI6440W2gr8WNFPH28+12a NbqnRJ5RBvri2AJajrUrYk3v3kf8oR36GgOYZTuKg95wnjGX0k6RArqukbYoNyCD5CQKRwFMJYF huLKuj0Wqx0Oh33voLc/hv8DYCRNSTkCckezA1sPIHVIURrThnBzZn6yKbCPbTGIsNyyf6T6G6k
- WcsEYF3cL89A9jidcwsXgBVQy1jgo799PXXpjcwjjuSyJtwinrQV/R+IwzVTSVfkCq7cC04U
-X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=68132fb0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=FmNOPqEYIOC0Gsmc1zEA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: XTGYoI7GyN-kac9E-BB3tqq3wu2kIjxA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_02,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=986 phishscore=0
- mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
- clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010063
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org, v-singh1@ti.com, 
+ vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, afd@ti.com, 
+ conor+dt@kernel.org, nm@ti.com, praneeth@ti.com, devicetree@vger.kernel.org, 
+ khasim@ti.com, kristo@kernel.org
+To: Paresh Bhagat <p-bhagat@ti.com>
+In-Reply-To: <20250501072923.1262414-2-p-bhagat@ti.com>
+References: <20250501072923.1262414-1-p-bhagat@ti.com>
+ <20250501072923.1262414-2-p-bhagat@ti.com>
+Message-Id: <174608807383.1458182.1498162135150593654.robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
 
-On 5/1/2025 12:10 AM, Rob Clark wrote:
-> On Wed, Apr 30, 2025 at 3:39 AM Konrad Dybcio
-> <konrad.dybcio@oss.qualcomm.com> wrote:
->>
->> On 4/29/25 2:17 PM, Dmitry Baryshkov wrote:
->>> On Mon, Apr 28, 2025 at 11:19:32PM +0200, Konrad Dybcio wrote:
->>>> On 4/28/25 12:44 PM, Akhil P Oommen wrote:
->>>>> On 4/14/2025 4:31 PM, Konrad Dybcio wrote:
->>>>>> On 2/27/25 9:07 PM, Akhil P Oommen wrote:
->>>>>>> From: Jie Zhang <quic_jiezh@quicinc.com>
->>>>>>>
->>>>>>> Add gpu and gmu nodes for qcs8300 chipset.
->>>>>>>
->>>>>>> Signed-off-by: Jie Zhang <quic_jiezh@quicinc.com>
->>>>>>> Signed-off-by: Akhil P Oommen <quic_akhilpo@quicinc.com>
->>>>>>> ---
->>>>>>
->>>>>> [...]
->>>>>>
->>>>>>> +         gmu: gmu@3d6a000 {
->>>>>>> +                 compatible = "qcom,adreno-gmu-623.0", "qcom,adreno-gmu";
->>>>>>> +                 reg = <0x0 0x03d6a000 0x0 0x34000>,
->>>>>>
->>>>>> size = 0x26000 so that it doesn't leak into GPU_CC
->>>>>
->>>>> We dump GPUCC regs into snapshot!
->>>>
->>>> Right, that's bad.. the dt heuristics are such that each region
->>>> is mapped by a single device that it belongs to, with some rare
->>>> exceptions..
->>>
->>> It has been like this for most (all?) GMU / GPUCC generations.
->>
->> Eeeeh fine, let's keep it here and fix it the next time (tm)
+
+On Thu, 01 May 2025 12:59:21 +0530, Paresh Bhagat wrote:
+> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
+> targeted for applications needing high-performance Digital Signal
+> Processing. It is used in applications like automotive audio systems,
+> professional sound equipment, radar and radio for aerospace, sonar in
+> marine devices, and ultrasound in medical imaging. It also supports
+> precise signal analysis in test and measurement tools.
 > 
-> Maybe it would be reasonable to add a comment about this _somewhere_?
-> (Bindings doc?)  I feel like this confusion has come up before.  Maybe
-> it is a bit "ugly" but since gmu is directly banging on gpucc, it
-> doesn't seem completely inappropriate.
-
-That's right. This is a shared region between Linux clk driver and GMU
-firmware's clock driver.
-
--Akhil.
-
+> Some highlights of AM62D2 SoC are:
 > 
-> BR,
-> -R
+> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster.
+>   Dual/Single core variants are provided in the same package to allow
+>   HW compatible designs.
+> * One Device manager Cortex-R5F for system power and resource management,
+>   and one Cortex-R5F for Functional Safety or general-purpose usage.
+> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
+>   single core C7x.
+> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
+>   which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
+>   and TDM Audio inputs and outputs.
+> * Integrated Giga-bit Ethernet switch supporting up to a total of two
+>   external ports with TSN capable to enable audio networking features such
+>   as, Ethernet Audio Video Bridging (eAVB) and Dante.
+> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
+>   controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
+>   peripherals.
+> * Dedicated Centralized Hardware Security Module with support for secure
+>   boot, debug security and crypto acceleration and trusted execution
+>   environment.
+> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
+> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
+> 
+> This adds dt bindings for TI's AM62D2 family of devices.
+> 
+> More details about the SoCs can be found in the Technical Reference Manual:
+> https://www.ti.com/lit/pdf/sprujd4
+> 
+> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+
+My bot found errors running 'make dt_binding_check' on your patch:
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/arm/ti/k3.yaml:37:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
+
+dtschema/dtc warnings/errors:
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250501072923.1262414-2-p-bhagat@ti.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
