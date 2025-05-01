@@ -1,159 +1,142 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D552B126BF1;
-	Thu,  1 May 2025 23:38:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C318621B90B
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746142729; cv=none; b=BBunp8O2/A7lDx3KTsa8/XvUWaKha7vBkellXyqDzW7T2eVHXvo/EoiygdIgif9Sex5CK87lIc8WRq36MPqsR+SzbACekMDg2+qIIlUBabJQHppQokwbYu5ZtSFNk0JkaYbV8E4SXSnGv7Kof8SPzoh2RWnJIQrvBL58Xk7PptU=
+	t=1746142874; cv=none; b=EuctPEEdhreUXiUJ82pDtplw9O3LC/9svDjZihT6zbMwzXXm77tKDqAMws/QHlwqsc6oK24Y5fwfugxtEChgH19KOsS7agZHhdMu+8pwRB5wHhuU0VbTgz5vXkxa4syEKfvxy3p0Him50CXiv/yNoigJqYxwoOSJWWnK9nK2z7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746142729; c=relaxed/simple;
-	bh=x4NIPcW2t8+Po2GtxjiAe77L6lbRw7MsrE1vNe8TtY0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jb6t6jIVCsUu83nRgJ+dJlsBHH3HLGbRZudV4UJgKIH9AgjXvYluBlfQZWzvAazkQpeWa47i1hK6eZ7trd4GCUPPxhT+5JCUQSNDBEx8vYgkVrCNSbnqs6cgy43zc9+6axvG2Cl0q+PLax1TRWvPtJ8koYiQCJYP53z2k/bJc9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AFKWetlW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746142874; c=relaxed/simple;
+	bh=O1p8exRu3VMRQ2hGBvCPd1h54+d+kCb4Jo0XlGndlr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=uhAjvnzLjMRrUS4z3/sBNuywg/sLVQy92I2qG4wIrFaAbfjUPJOOzYeGRIlFarIlHvq1+HMb/+DQ4DZrGyAMvlC8pWxjG4u87+LiKMD13ZAq3wRYIb5IaxwUjHIJaynHyX47XPUj9ZBU/h2U+STT/sO0Wy9U0MsjLEAZsTPB/k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xlqy66UA; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AFKWetlW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-39ee682e0ddso827081f8f.1;
-        Thu, 01 May 2025 16:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746142726; x=1746747526; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BgTw89Bn8iJJMWWcnciPTntefLN6JrxJBEGd602vq3k=;
-        b=AFKWetlW8h2tQUR1vgG1fKCmW6RXMLsL8ezeUSdAhiPsyOF7hizQNUY3rh0ocCStR+
-         pE82iYHQICCLKuqT8J3zvCQUxI5CbtLKjf3SMYXZDWeYQoeMzyT504ZUsrqlTSXNLVIA
-         R1+JyubhcQeJta1feq0Ouba9Vk+w24ZAhN//F6L8bmEwhCByhPc+vscMRBNbiZJWpcHp
-         Yd+aM4KlgfcI4f0hpDOwx1SC1C5G19T1cBbZB9mdnt3V99A3ZW/QVbPHRuXdxjBt2jdX
-         UVz245BSeu5rhG5IwmpmhMuh5PuuikbsFKckceW8nLxhxtFT8miCzQq6uCMbRPGUezbT
-         R8gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746142726; x=1746747526;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BgTw89Bn8iJJMWWcnciPTntefLN6JrxJBEGd602vq3k=;
-        b=lwD/dld7V/5Ke/LI4TBclaxJKx9d7DvZP05nBr/IAgswGGaue4YRgsSA/dX8PkXMAc
-         y43g1ECsp9s4MmmXNh98VKHjo3Nm/ljoG4C6JIzUCVMyrOhEoSxCiYwretju2u1ElxWn
-         O3jcKdrSG+gy1wMfjZ2SC2yQvcw5r2Tr73Jkox5GEGnCLnAje5O9jALw4IpLpfeBgG6V
-         NwfAAwLe5hTZ/vkVFY4R7chWi+hMBDSq95yu6D1O+QRDYmt9PQk41tV4FFqQX6nUthNN
-         49jAtPBi1MA26Q+Y9YanyT4GJOjEwoGGv9OyHu9fWAfCn9MRDlw5NncTssMjeaD6nxBe
-         H7kA==
-X-Forwarded-Encrypted: i=1; AJvYcCUy3YF2jNC+49jLqNF7SUrg/iM0soOVuTTPTTXejASiBgX5Lk2hG5LNNb3OIJdMKa2QjE4lEtXGZQO5yzgi26k=@vger.kernel.org, AJvYcCXTF4OChWfXK0HRhE6y6o54tayQ2Xi/AsazH6JqwBphrikKgJ1NrS0dT2/tYf1O03fClQt8LgOsnkqxwhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPnE1JX5OlDS+PF4GJ8BkxCQSHhvrsJfxljjo2XKyP4rVFBwFR
-	oKq1DNc5Av12iSFfeh6TPZFtkLfHmrOWoAigk87WkW0syu2MN6J8
-X-Gm-Gg: ASbGncvV2/ZMxjqSUogT6hWgv2kwsM3aXDdKHpjvBG4lL3k9jvI+uF62M3e8Qu6V5lJ
-	StNebueAdp+cmTHenruEXV3crJtmlrGBa0XZrVQl5oP8yuk1PZGDHE6D5azoxlVj00yARgH4sL8
-	ZvFkWLPY38rygDvzZLj7m/dxppFU4ViyY+7UHpbfbPaozlX37XrIZC1Z7ivEcEKThZpJS5oizSh
-	KiDsspPN63rmDixx/NlH+3bqqlf5dJJK0SKSMdsq+uz1vQ4z6+mYhtUkGe620UdGSTy7ARgkXIv
-	gv7WBvFgU0PUvQvq80bMrEIrdNmgGDogvFyzVmKEdgZ+Sylq8zEswSBWqmuMdPGT
-X-Google-Smtp-Source: AGHT+IGGLKRWLKqNHsCAhWo8MFEupNx7xPLyU3TVmOnryIbKhbOKnvbipwShUUdf44Pi9DvOCz147Q==
-X-Received: by 2002:a05:6000:2cf:b0:390:fbcf:56be with SMTP id ffacd0b85a97d-3a099a8597emr338736f8f.0.1746142725929;
-        Thu, 01 May 2025 16:38:45 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae0ce2sm525797f8f.16.2025.05.01.16.38.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 16:38:45 -0700 (PDT)
-Message-ID: <d770162d-a271-48da-82f5-a2e38ae03c57@gmail.com>
-Date: Fri, 2 May 2025 01:38:43 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xlqy66UA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746142872; x=1777678872;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=O1p8exRu3VMRQ2hGBvCPd1h54+d+kCb4Jo0XlGndlr0=;
+  b=Xlqy66UAKFDS8Q7XDAY8/COfLJsi81Wc4CqZioCsUN/jIlaw2hBPiVqN
+   ZecLclJztWfA5yQcO7+ECYGp7ACRvNOUSrx8Im3zeHIsNfnyRM4Y4wnlw
+   ONqFJhMFwXF1DcdLt4sOrnihcPO88Lws0sH00ORFHjUE/YefxmkV9De38
+   g0SEt0Q3Z5JvXa6dqIapRh8u0upTTnB5/ckQQ3GW6eM+lcyR87fJ9olq8
+   IBVy1oHy/gNJ61kU1x9sueiGUHsqNh0AfIFaJP59FMJp+VRSrlZHnLvag
+   Oa89y5J2ZMS12JzSDoeKcVYVg3M2gOXOQdmg0eeazyJD9z/3ykwTE+fZb
+   w==;
+X-CSE-ConnectionGUID: jGdZaCJmSRGTNNZ69cyhHQ==
+X-CSE-MsgGUID: txBi2aq5Rg+NheUh53L4ag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="70330474"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="70330474"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:41:12 -0700
+X-CSE-ConnectionGUID: IalpYmibQ7uRIph/Tsmd1w==
+X-CSE-MsgGUID: 8iVtwPZeQqikCjsdfO/j2w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="135035341"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 01 May 2025 16:41:09 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uAdWd-0004Rb-2Q;
+	Thu, 01 May 2025 23:41:07 +0000
+Date: Fri, 2 May 2025 07:40:08 +0800
+From: kernel test robot <lkp@intel.com>
+To: Michael Ellerman <mpe@ellerman.id.au>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Madhavan Srinivasan <maddy@linux.ibm.com>
+Subject: arch/powerpc/kvm/book3s_xive.c:357:41: sparse: sparse: incorrect
+ type in initializer (different base types)
+Message-ID: <202505020704.ohBUEBYk-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
-To: Boqun Feng <boqun.feng@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: FUJITA Tomonori <fujita.tomonori@gmail.com>,
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- Andreas Hindborg <a.hindborg@samsung.com>,
- Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Anna-Maria Gleixner <anna-maria@linutronix.de>,
- John Stultz <jstultz@google.com>, Stephen Boyd <sboyd@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>,
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
- Russell King <linux@armlinux.org.uk>
-References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
- <aBNojspyH5dHsuOm@Mac.home>
- <20250501.220717.849589327730222635.fujita.tomonori@gmail.com>
- <aBNzIp9UF7GZVYLs@Mac.home> <aBN1BzCawU0a9Nx9@Mac.home>
- <cbbeca76-7a7a-425b-9cdd-8da778b6d8a1@app.fastmail.com>
- <aBP9yvWnB66qJeRh@Mac.home>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <aBP9yvWnB66qJeRh@Mac.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 02.05.25 1:03 AM, Boqun Feng wrote:
-> On Thu, May 01, 2025 at 05:11:44PM +0200, Arnd Bergmann wrote:
->> On Thu, May 1, 2025, at 15:20, Boqun Feng wrote:
->>> On Thu, May 01, 2025 at 06:12:02AM -0700, Boqun Feng wrote:
->>>> On Thu, May 01, 2025 at 10:07:17PM +0900, FUJITA Tomonori wrote:
->>>>> On Thu, 1 May 2025 05:26:54 -0700
->>>>> Boqun Feng <boqun.feng@gmail.com> wrote:
->>>>>
->>>>>> On Thu, May 01, 2025 at 10:58:18AM +0900, FUJITA Tomonori wrote:
->>>>>>> Avoid 64-bit integer division that 32-bit architectures don't
->>>>>>> implement generally. This uses ktime_to_ms() and ktime_to_us()
->>>>>>> instead.
->>>>>>>
->>>>>>> The timer abstraction needs i64 / u32 division so C's div_s64() can be
->>>>>>> used but ktime_to_ms() and ktime_to_us() provide a simpler solution
->>>>>>> for this timer abstraction problem. On some architectures, there is
->>>>>>> room to optimize the implementation of them, but such optimization can
->>>>>>> be done if and when it becomes necessary.
->>>>>>>
->>>>>>
->>>>>> Nacked-by: Boqun Feng <boqun.feng@gmail.com>
->>>>>>
->>>>>> As I said a few times, we should rely on compiler's optimization when
->>>>>> available, i.e. it's a problem that ARM compiler doesn't have this
->>>>>> optimization, don't punish other architecture of no reason.
->>
->> What is Arm specific here? I'm not aware of the compiler doing anything
-> 
-> Because Arm is the only 32bit architecture that selects CONFIG_HAVE_RUST
-> for non-UML cases, i.e. this is the only 32bit architecture that has
-> this problem. If your point is we should do this for all 32bit
-> architectures, then I won't disagree. Just s/CONFIG_ARM/CONFIG_32BIT
-> then.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
+commit: 0305292f17bc1f4fc66a24a8dd1a5e047673c02d powerpc/io: Use generic raw accessors
+date:   9 weeks ago
+config: powerpc64-randconfig-r122-20250501 (https://download.01.org/0day-ci/archive/20250502/202505020704.ohBUEBYk-lkp@intel.com/config)
+compiler: powerpc64-linux-gcc (GCC) 10.5.0
+reproduce: (https://download.01.org/0day-ci/archive/20250502/202505020704.ohBUEBYk-lkp@intel.com/reproduce)
 
-I would be for using `CONFIG_32BIT` since from what I understand this
-applies to all 32bit architectures. It feels a bit weird to single out
-arm just because it is the only one that currently has rust support.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505020704.ohBUEBYk-lkp@intel.com/
 
-Cheers
-Christian
+sparse warnings: (new ones prefixed by >>)
+   arch/powerpc/kvm/book3s_xive.c:51:15: sparse: sparse: cast to restricted __be16
+>> arch/powerpc/kvm/book3s_xive.c:357:41: sparse: sparse: incorrect type in initializer (different base types) @@     expected restricted __be64 [usertype] qw1 @@     got unsigned long long @@
+   arch/powerpc/kvm/book3s_xive.c:357:41: sparse:     expected restricted __be64 [usertype] qw1
+   arch/powerpc/kvm/book3s_xive.c:357:41: sparse:     got unsigned long long
+>> arch/powerpc/kvm/book3s_xive.c:701:57: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected unsigned long long [usertype] value @@     got restricted __be64 [usertype] w01 @@
+   arch/powerpc/kvm/book3s_xive.c:701:57: sparse:     expected unsigned long long [usertype] value
+   arch/powerpc/kvm/book3s_xive.c:701:57: sparse:     got restricted __be64 [usertype] w01
+>> arch/powerpc/kvm/book3s_xive.c:702:32: sparse: sparse: incorrect type in argument 1 (different base types) @@     expected unsigned int [usertype] value @@     got restricted __be32 [usertype] xive_cam_word @@
+   arch/powerpc/kvm/book3s_xive.c:702:32: sparse:     expected unsigned int [usertype] value
+   arch/powerpc/kvm/book3s_xive.c:702:32: sparse:     got restricted __be32 [usertype] xive_cam_word
+>> arch/powerpc/kvm/book3s_xive.c:774:49: sparse: sparse: incorrect type in assignment (different base types) @@     expected restricted __be64 [usertype] w01 @@     got unsigned long long @@
+   arch/powerpc/kvm/book3s_xive.c:774:49: sparse:     expected restricted __be64 [usertype] w01
+   arch/powerpc/kvm/book3s_xive.c:774:49: sparse:     got unsigned long long
 
-> 
-> Regards,
-> Boqun
-> 
->> different from the other 32-bit architectures, though most are missing
->> an optimized __arch_xprod_64() and fall back to slightly worse code
->> from the asm-generic version.
->>
->>> Copy-paste errors:
->>>
->>> 	    unsafe { bindings::ktime_to_ms(ns) }
->>>
->>>> 	}
->>>>
->>>> 	#[cfg(not(CONFIG_ARM))]
->>>> 	fn ns_to_ms(ns: i64) -> i64 {
->>>> 	    self.as_nanos() / NSEC_PER_MSEC
->>>
->>> 	    ns / NSEC_PER_MSEC
->>
->> I'm sure this is still broken on all 32-bit targets.
->>
->>      Arnd
+vim +357 arch/powerpc/kvm/book3s_xive.c
 
+5af50993850a48b Benjamin Herrenschmidt 2017-04-05  335  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  336  static unsigned long xive_vm_h_ipoll(struct kvm_vcpu *vcpu, unsigned long server)
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  337  {
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  338  	struct kvmppc_xive_vcpu *xc = vcpu->arch.xive_vcpu;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  339  	u8 pending = xc->pending;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  340  	u32 hirq;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  341  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  342  	pr_devel("H_IPOLL(server=%ld)\n", server);
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  343  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  344  	xc->stat_vm_h_ipoll++;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  345  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  346  	/* Grab the target VCPU if not the current one */
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  347  	if (xc->server_num != server) {
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  348  		vcpu = kvmppc_xive_find_server(vcpu->kvm, server);
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  349  		if (!vcpu)
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  350  			return H_PARAMETER;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  351  		xc = vcpu->arch.xive_vcpu;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  352  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  353  		/* Scan all priorities */
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  354  		pending = 0xff;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  355  	} else {
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  356  		/* Grab pending interrupt if any */
+b22af9041927075 Alexey Kardashevskiy   2022-05-09 @357  		__be64 qw1 = __raw_readq(xive_tima + TM_QW1_OS);
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  358  		u8 pipr = be64_to_cpu(qw1) & 0xff;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  359  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  360  		if (pipr < 8)
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  361  			pending |= 1 << pipr;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  362  	}
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  363  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  364  	hirq = xive_vm_scan_interrupts(xc, pending, scan_poll);
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  365  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  366  	/* Return interrupt and old CPPR in GPR4 */
+0e85b7df9cb0c65 Jordan Niethe          2023-09-14  367  	kvmppc_set_gpr(vcpu, 4, hirq | (xc->cppr << 24));
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  368  
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  369  	return H_SUCCESS;
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  370  }
+b22af9041927075 Alexey Kardashevskiy   2022-05-09  371  
+
+:::::: The code at line 357 was first introduced by commit
+:::::: b22af9041927075b82bcaf4b6c7a354688198d47 KVM: PPC: Book3s: Remove real mode interrupt controller hcalls handlers
+
+:::::: TO: Alexey Kardashevskiy <aik@ozlabs.ru>
+:::::: CC: Michael Ellerman <mpe@ellerman.id.au>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
