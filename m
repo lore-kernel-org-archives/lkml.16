@@ -1,172 +1,74 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B71122FAC3
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810A11DB13A
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129723; cv=none; b=nEPKADpyVN4e0U7TIF/9Ou+51ojErANxdgKk6UXgAx/h4eCAM4ohgDWsFrNEO2GPypOqm+EhdbC4Mg3EEuOuOS1Dbxoy6EptWI59N4N7huBtTWRe8MgtJ8bImNQInx4eED0iYHVc1rgDqZ2mY1N77FutNolxCldFCNKyhZTmG+s=
+	t=1746129918; cv=none; b=MAKGGiVSaJOvo3pIWbtOdts/0rA6DpA6h0FdFpu86FPtN+PUIKvTmidJu9GzEjiDn28oMi5Tj/4/eZt/nJ+BpNk1OxGvUOt1sZQm9wgE6bmuuf7m/HJ84IIXmx5jSR3M0lXfY7R/Ct0bavyPowColyRv8fO6jec3iD75+VKYOE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129723; c=relaxed/simple;
-	bh=hqOzvq9hMBH/9S3dZCaj6b8IzSWfiFtV9ykpUOZoLUU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YypdlUOdTjRIJIOAu6Yfe2rWMmPVTFcEB418lZeyOMLcK6UgOwY95OJncKGKbHkj/JfDnEgYXv6zTlDJI4KekVXcblu0LpaAzdu2UN/ni7oGYzVmXZySKXEWFAtUS3oWXv61kYA1mffuDn3cYh/h0t7WoGTS58fc7abfXFka/rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUZXR+Sx; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746129918; c=relaxed/simple;
+	bh=26KLM5dZRQ3NJjBdM1DhkpkwsRdAzHVwQwn315ygHgk=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=E10RLAGof+7dXj29yMGuA90iDW+7zEfn1NYHyZR+N3NsUPaQC62ZOx8mNih0S8SonjjEeSZLfOg8n/NBYNbe/RPHTFQ5m8R4wbTLZx3UbeV4QRY0kBpoNAWuy5xa0q4W3IN8f2PkqRJzlOrSbaa7tMWWdFNjR2S/C1aIY8v3vFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=D7l+MFer; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUZXR+Sx"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso7832325e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:02:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746129720; x=1746734520; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qw8sWllG6mUqgwvbsy2xT7usun9qvN+EL2eeXDknNyY=;
-        b=RUZXR+SxEZxsvOM4QRZz4r6Esi5QshT74K8GQ5m6SkzP8zZp/YR2xPfMDoDX0JoUdn
-         w/a/Yhq+EgCNz5WK2kQHDSUQKRwYgG8+uXGUmPeQDMepPNT4z9xvOOi2JPrh0GwWIj4U
-         iv8NUcw4Y6Q3n0dR8vxnHLsTLuVib0z7MOhq4gGfSGZdk7M/PDpenGtN5BJSPo2OuR5T
-         vQixSN0o5EVXv8zFco9uApSgTzVwsEG4eE7bc4h1PefyTDtVYOszevtKf+9T+SYL8JtT
-         0JtH06JboQsG3bEJOeUhF/WZhJgfSocpvumyfiQBQO1QboZxfe8u8OBd+HV0Hb/d7oFS
-         qFFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746129720; x=1746734520;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qw8sWllG6mUqgwvbsy2xT7usun9qvN+EL2eeXDknNyY=;
-        b=Sjxm5bdQfdh+TKKAFn35zNu+6kz87Le+jZnJ5hWreI++EL8vir74ATuwPbuyPVWNUC
-         5ziXUZikt7uFfC85cALjIEEa5/yGW5e/HvTrO8VVN2ThiCnxNKW+IMECH59sWUX2v/up
-         +o/vUh2ZoPtBV+PdwlmnO6uoI+q5uvQh2y268HN6zMuun6s7yx9NVgB054nVi4SYVj0O
-         QjkGGaOP46AAdgjxhtFyEkOnoSGIbI1ReIdbV0yDQlyBpf+gHw/oLi1dLW8Dy1xAE9sM
-         mXk4iJ7BGDtL2OiNeQwoLzQoJWiZIXtTbGZTyM+SeNMknHA+X+tQzclBkSJbrgEVP2rK
-         gE6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVTQGH+0QzxmjMGByHjCtJt+/4C46eAAm8ItpbbQ+R+9Rya5/28ao0ZPN4oOWUzOnzSjdH3zWRxVL9UpRw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwY8AouLJh4QHGliUpJv4jqXTGMNUSlQrWysK/DLdpui8i9KEx6
-	3vUe9FcQw3hprVR0ukdYQoA4icmdSQocAM70PPRoxWx3+sdpmvQ9MkgxFA==
-X-Gm-Gg: ASbGncv5w3OndbcVlZi75Ca4EDJiZsx2zFsIaNkjZOMTxynoDOoGm92cGGxLRU3eJho
-	zrr/6ROy1pcXM26XBC4q9a2Ym2MDFcrhN7Y5fSkwsJqUMEgH9n7sr577Kps4rTKbPUqg94QfaTI
-	QUCyEA0TNgaVOTLtH9YCk4dS4cvz362Cd72EawDqgllDkfM2OGQjGA2Xs5hfmDb8trKRTRKi0ON
-	1i/2yRk56M24OplkJ4QOGzBWB2k8k+qtnQhJXF9IpAAxY4bXnOpd7s2CqfuFqlSdNweROYeq/EE
-	wnsba8SqUVFtxBTdedwXsi2gjZzyH7ognev4T++St4362Tj5YbuF9rMY3c7zMc9DaiQ7xRQ4j1E
-	giHE=
-X-Google-Smtp-Source: AGHT+IE5LWE3ytNc9YINM16DWIm610BeRRonqCniOHPyNXdGUvw7nM9ANnneGmjycXx79Q1G3siPZA==
-X-Received: by 2002:a05:600c:350e:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-441bbe2c815mr1506535e9.0.1746129719929;
-        Thu, 01 May 2025 13:01:59 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10083sm92350f8f.62.2025.05.01.13.01.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 13:01:59 -0700 (PDT)
-Date: Thu, 1 May 2025 21:01:58 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Jann Horn <jannh@google.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, Sumit Garg
- <sumit.garg@kernel.org>, op-tee@lists.trustedfirmware.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit
- kernels
-Message-ID: <20250501210158.5b2c86a7@pumpkin>
-In-Reply-To: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
-References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="D7l+MFer"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1746129905; x=1746389105;
+	bh=KW982IgOoBOOp3BAl/UFrj9WOFU9ekJ0484lkiUFlcI=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector:
+	 List-Unsubscribe:List-Unsubscribe-Post;
+	b=D7l+MFerQ2IyiZvseotrVpK9WKLI4Vx3lNoh/3o3MZBUpoC37Zwy09SscI/g80UUY
+	 kHCJItdTGsoxXny9qWrpua/J9U3TukAVt3uKGQ9+Ew5uxubjxDR3Wbm0IMrf3dKx3H
+	 qWKq92CreXbNmSSWOYY8u/T81sR4yfz+6+WKerr8VTKpvHPzOMZc2I6wEFqvQYLb/R
+	 YgnEsSn0GbAiXbk4TYIGdTR+on62117J3vVfvqJ5P/EIwTDfukwNwfgM4T9SmHIcAm
+	 GIlTCZMPZlI5IgaVZL/bl+fg2ljZ+Ibz9zC+ppwGBt81tU0MD8nydvq70guBjb+gqb
+	 E1O2DWtWldnxg==
+Date: Thu, 01 May 2025 20:05:00 +0000
+To: gregkh@linuxfoundation.org, arnd@arndb.de, linux-kernel@vger.kernel.org
+From: Roxana Nicolescu <nicolescu.roxana@protonmail.com>
+Cc: markgross@kernel.org, skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
+Subject: [PATCH] char: tlclk: Fix correct sysfs directory path for tlclk
+Message-ID: <20250501200457.18506-1-nicolescu.roxana@protonmail.com>
+Feedback-ID: 136600343:user:proton
+X-Pm-Message-ID: 066c63416cf39cec242c32130da7e333f07a70be
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 28 Apr 2025 15:06:43 +0200
-Jann Horn <jannh@google.com> wrote:
+The tlckl driver does not create a platform device anymore. It was
+recently changed to use a faux device instead. Therefore the sysfs path
+has changed from /sys/devices/platform/telco_clock to
+/sys/devices/faux/telco_clock.
 
-> The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
-> 32-bit kernels: Multiplying a user-provided 32-bit value with the
-> size of a structure can wrap around on such platforms.
-> 
-> Fix it by using saturating arithmetic for the size calculation.
+Fixes: 72239a78f9f5 ("tlclk: convert to use faux_device")
+Signed-off-by: Roxana Nicolescu <nicolescu.roxana@protonmail.com>
+---
+ drivers/char/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Why not just add a sanity check on 'num_params' after it is read.
-Max is 31 (1024-32)/32), but any sane limit will do because of
-the buf.buf_len test.
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index 8fb33c90482f..ae6196760556 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -404,7 +404,7 @@ config TELCLOCK
+ =09  configuration of the telecom clock configuration settings.  This
+ =09  device is used for hardware synchronization across the ATCA backplane
+ =09  fabric.  Upon loading, the driver exports a sysfs directory,
+-=09  /sys/devices/platform/telco_clock, with a number of files for
++=09  /sys/devices/faux/telco_clock, with a number of files for
+ =09  controlling the behavior of this hardware.
+=20
+ source "drivers/s390/char/Kconfig"
+--=20
+2.34.1
 
-	David
-
-> 
-> This has no security consequences because, in all users of
-> TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
-> for wrapping.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
-> ---
-> Note that I don't have a test device with a TEE; I only compile-tested
-> the change on an x86-64 build.
-> ---
->  drivers/tee/tee_core.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
-> index d113679b1e2d..acc7998758ad 100644
-> --- a/drivers/tee/tee_core.c
-> +++ b/drivers/tee/tee_core.c
-> @@ -10,6 +10,7 @@
->  #include <linux/fs.h>
->  #include <linux/idr.h>
->  #include <linux/module.h>
-> +#include <linux/overflow.h>
->  #include <linux/slab.h>
->  #include <linux/tee_core.h>
->  #include <linux/uaccess.h>
-> @@ -19,7 +20,7 @@
->  
->  #define TEE_NUM_DEVICES	32
->  
-> -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
-> +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x)))
->  
->  #define TEE_UUID_NS_NAME_SIZE	128
->  
-> @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
->  	if (copy_from_user(&arg, uarg, sizeof(arg)))
->  		return -EFAULT;
->  
-> -	if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) != buf.buf_len)
-> +	if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) != buf.buf_len)
->  		return -EINVAL;
->  
->  	if (arg.num_params) {
-> @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx,
->  	if (copy_from_user(&arg, uarg, sizeof(arg)))
->  		return -EFAULT;
->  
-> -	if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) != buf.buf_len)
-> +	if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) != buf.buf_len)
->  		return -EINVAL;
->  
->  	if (arg.num_params) {
-> @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *ctx,
->  	if (get_user(num_params, &uarg->num_params))
->  		return -EFAULT;
->  
-> -	if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) != buf.buf_len)
-> +	if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) != buf.buf_len)
->  		return -EINVAL;
->  
->  	params = kcalloc(num_params, sizeof(struct tee_param), GFP_KERNEL);
-> @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *ctx,
->  	    get_user(num_params, &uarg->num_params))
->  		return -EFAULT;
->  
-> -	if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_len)
-> +	if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) > buf.buf_len)
->  		return -EINVAL;
->  
->  	params = kcalloc(num_params, sizeof(struct tee_param), GFP_KERNEL);
-> 
-> ---
-> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-> change-id: 20250428-tee-sizecheck-299d5eff8fc7
-> 
 
