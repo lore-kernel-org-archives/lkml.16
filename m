@@ -1,94 +1,154 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA0D2DC797;
-	Thu,  1 May 2025 13:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A41F125DF
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:50:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746107313; cv=none; b=Yez7ijsKeFcTiR4DWl3WCFBJWZKgHIuLAQK/q+H71AR/Vql9facfgspEwakl6oFsWjonPoYqDjjzJpgQSz0Lfj0wBRvrZBHM4qFlJvzKy0VFoWnbMj/MhwhSwKimVZisBu6euQ6OdwXiFQOnM67mqBHO06NWBYwC8rZcyXY8IEg=
+	t=1746107437; cv=none; b=qVxnbnAZKy9KwwZSxggxT2nZOVj9a/gZMEkQ6nBAmxYMh3nyHVrytXMM44ywc+DA4SVNcweshnZMLkXsfxtEtXDd6yvJKVLkh64ORcFLtJclCD8ewMLCNikmuViO9fqRNrFVe8ZafDNqceyGdEZL72jBnkTJBRw78yviNjA3QnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746107313; c=relaxed/simple;
-	bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
-	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bVUtI/iA0poTPtXDLQ/FCe7E5RZuyakBJ7X7Zytclx/2b8uyrQkTb75uvN+aehnXOhK/VX43ca/0qQhxInIS5/jNGrto3OINUEJ2Tf6HW2NUvFevYJPocsM0BAnLpnTetEe3DIYqNlfjElPxqvfxhhcj/mYupc64jBekIYNDesk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EJLemkXX; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746107437; c=relaxed/simple;
+	bh=ZlHULZ+NCsoXsmseXOQbIkLIvisxgSdKvWPo53A7XPc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TcTvR6X4YafS6RdiBOIlOiBpHwXS9oqokYw5c4X3tKTVxZSahsEVhdu7+5+zyiCOzy2m/XnT6K67CZ8a4FuReODSZRsVw6bVldnn+2kCnCdoALBOUs57cSuWOXdlrRy2F+OM+ZleGN/6wU6KwUtW4GoGJDk6eKGS7ycPciFQZ2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rZmlaKlx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EJLemkXX"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-224191d92e4so8995045ad.3;
-        Thu, 01 May 2025 06:48:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746107311; x=1746712111; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
-        b=EJLemkXXdii3qDuRUZqfHf9WDZk3TvboLeBXeRZg6zsENUNgD16ewtDIQOjXuQbJ28
-         pKdnaTVKTmffl4MxFevuV1XsUPArFO4C2wVaILnlTam4b0EJtQKssKj70QuP0FIeku5I
-         9Beuh6kvYbMrsf0xh0g3YV2frbbXnUbyqk0T+23Hcm75khrFcyMKQHUj32OVKEVI3Uve
-         JUmb9nT9HUc1HMtAgPewa2XNU7rb1Myydx41TlN/8qo51sWQPc6VCY3n/eEtWrsixOXL
-         mNrK+4t/6HxhJCw8VwMQC4jW/AxEyAg2o7O2Zz/bJFFGgthi5zbFzM9Hlh3hkV68aTgJ
-         1HJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746107311; x=1746712111;
-        h=content-transfer-encoding:mime-version:references:in-reply-to:from
-         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=R48o6InsWBzLg3/gHZhEhR7WnY27CmLaFxbrPQ7yoic=;
-        b=lQKMrx0wpODrBjW78O9yVg8flio4e4cmuzaIryn8vVs6TTwtiHW+ImIhW1G6EvE8Eu
-         UvZM9GgVMkXN9MQPrxct/x9YPc2Gj7Ahoudbx4R68SAbKZbeIgt9JDhvKMkKT5lxgJFQ
-         5xV5Vf5nsVPjXBLv0I6ZFjB6yGA0zQWi8mBq7cuSTBxb8dSTExA8IAXbAd2ir3NOpari
-         SBXBC6uJYWEIqDPVIvWt8sOHWv2DwvkvS26FWvFNOpDf8k6ug4XVz3Tp5/mTfnuGZ2oh
-         hopJFQfTIVvIqSFPqqXrikXSvfqVbc/MCZmitjf6iTOKhIpUKNiQ9kaSo7aF+8bCYHGv
-         Xbew==
-X-Forwarded-Encrypted: i=1; AJvYcCV9J6K0t7SVn2iOZjp5l8mBfgrRn2ABzc5qhRwa8+R5bUrvDG6O2/lh4zCIh1o+S8oLRbxWOXdT4wF/vXNU1n8=@vger.kernel.org, AJvYcCWa5CAv3kSWEnNFqTNIgxpiE8sGOZ10xLMuIQ+fgs5ejc3ffOWZa5MA5rRFSldgHRRjNn2SGEEKGRbY0aU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDhzCZC/Q/Le29mFG0t4X9upu7zAEjNBwG3BAIwWCjcOSqOqpI
-	m+lbE5acAr5mekQK5cb2nw2vmueEGcKu4weKVleTB90iu1ZbtDvp
-X-Gm-Gg: ASbGnctnMk+ne0hg34pWexOtCsSE4Dtz393ZrKtc4QcFkAZBXkDBNc/nV70pmoHrm/5
-	DiNFvIRSZeDje+IFq4EXTfi/+pkOfHSy6z6YfrgyviqOU9eH4EsR19fhFLX+jnEvPMepfdvdvFX
-	W676KV6jWrJtENtukG7IphiIVQ2UazToXhfGuDrmoe4ZUdZ5zDpQlkK2+WtDhiqdenKzv06QL8Q
-	vTnCcOcYLvsI28SllXDK2rssP9Ok3UD0H7ALH3cTjyUkUH3g7yD9KIylg5UiykPoFfx0CEznYUH
-	Cg/ZTnUHb+3m3CgNMUvx8I2PaAvlR0EKA7y5+Ai2ceFB+djFf9JjhHKVcniyJe4lqCWdZAZIgwp
-	y81rklcY3sRnxathZeo/0C5E=
-X-Google-Smtp-Source: AGHT+IHD6FHplSlj+pposMi4tXExEB+p1rqckTm7xQAXIQisRcsjAh2vlhK2tDw6V5JuAKLnpQD4bw==
-X-Received: by 2002:a17:903:2f82:b0:21f:45d:21fb with SMTP id d9443c01a7336-22df5764477mr96937625ad.3.1746107311076;
-        Thu, 01 May 2025 06:48:31 -0700 (PDT)
-Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bb0f39csm6597495ad.96.2025.05.01.06.48.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 06:48:30 -0700 (PDT)
-Date: Thu, 01 May 2025 22:48:15 +0900 (JST)
-Message-Id: <20250501.224815.1854649062185419020.fujita.tomonori@gmail.com>
-To: boqun.feng@gmail.com, arnd@arndb.de
-Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org, a.hindborg@samsung.com, frederic@kernel.org,
- lyude@redhat.com, tglx@linutronix.de, anna-maria@linutronix.de,
- jstultz@google.com, sboyd@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
- benno.lossin@proton.me, aliceryhl@google.com, tmgross@umich.edu,
- chrisi.schrefl@gmail.com, linux@armlinux.org.uk
-Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
-From: FUJITA Tomonori <fujita.tomonori@gmail.com>
-In-Reply-To: <aBNrJgLFpswcgOEK@Mac.home>
-References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
-	<aBNojspyH5dHsuOm@Mac.home>
-	<aBNrJgLFpswcgOEK@Mac.home>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rZmlaKlx"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541BpWQb012535;
+	Thu, 1 May 2025 13:50:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=dW7yXo
+	tJ5JJMgbND4WWIFNhnLrNHj8Z10JnYgPaxEgA=; b=rZmlaKlxgGgROfTZGs1rdu
+	y1+1/ewiSFxRsWV7fdt9JF7LcSpdF2r8R/BmIlz6fvRMTNMOpGia2vCOHhN7c+BD
+	CnP8Mf+YKtwxSy7gok7rzSVC7uaHpMbH5KRMmaHbrS/Dz38AMA3QoBjYk0h2dWh8
+	dYXUsEdtseyfLoQ8E9DVcy4BZ0y8cc2XSuJaiezuCTxS3IkH1dksbmxlwM2wup7V
+	8WsjuIR/adj98coV1VEGFtE0FEnzDdFMxEKLTi8qz1rXJWAmEujfVxXKwaqohwj6
+	GQr8C5AuMbKbuIN4Y4SUBvUEccS+J9o+sLzCoIZB7kdiX5Ef+ipXpPhdzdkK1hhA
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds8xdn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:50:07 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 541DgKPb029465;
+	Thu, 1 May 2025 13:50:07 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds8xde-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:50:07 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 541DJPUM031677;
+	Thu, 1 May 2025 13:50:06 GMT
+Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tudev6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:50:06 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 541Do5Mv31654464
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 13:50:05 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8364158059;
+	Thu,  1 May 2025 13:50:05 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 06BA558057;
+	Thu,  1 May 2025 13:50:01 +0000 (GMT)
+Received: from [9.39.16.182] (unknown [9.39.16.182])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 May 2025 13:50:00 +0000 (GMT)
+Message-ID: <3abcf12a-af48-4f38-815e-ec03c2c87c60@linux.ibm.com>
+Date: Thu, 1 May 2025 19:19:59 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] driver/base: Remove unused functions
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
+ <273649393600cb33ac3eec0e9a523c2d1853a47c.1745852397.git.donettom@linux.ibm.com>
+ <aBHVsd21j45c2tjA@localhost.localdomain>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <aBHVsd21j45c2tjA@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=afZhnQot c=1 sm=1 tr=0 ts=68137c0f cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=tsmrSC5bzuhJV2bgmnUA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: Xf_VxRrExIGKcAJQo60jGH5LABgjDN6l
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDEwMyBTYWx0ZWRfX6lVWDbXxmGVN LO5lamxApDlLVFnjaQ5OFf5P7lfbRiA1MagywDb2CcWSxzAzoI433BzhHREaePXk+zki1c8dEHG vqtVTqIraj2KM7KeqBFzgMAHD75nGjgs5Ktc3CkqsFrrPCAgBOoXHUS5nXsDkjPC+cEASlUM8OQ
+ 3aYJDkY5QejVcl4r5zvN1iHdIapEh5sxn4UxD9iovg/zPPVmxx83yb52SY6ytNeYy8ajyf5wRV3 3OJriLnZawGKKUp7b2TtL83ZcqIe62Y3XlSYO/lK7MW46VT64PXBJm8OFtfnpwof4yvnpPDLsfA rAdS2yM850rf+Wn+RRKnu8CzVaOJE+kB76Phq+AmDuwxpdaOAyYCv8yWgPy8j+NzsjL10EJyRUC
+ Kyz9tlE+w8vRYb9TKV5OBlEqi1OgdiS3Yhil4tk/ze/mi5sRbYp1kPEyI5XJvd2YcqrWdtnA
+X-Proofpoint-GUID: 0rUkFalVoEIpUnNt1zUxojPQJ_VwUgzt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
+ mlxlogscore=806 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505010103
 
-On Thu, 1 May 2025 05:37:58 -0700
-Boqun Feng <boqun.feng@gmail.com> wrote:
 
-> Btw, I think you're missing the Suggested-by tag from Arnd, of course if
-> Arnd is not against it.
+On 4/30/25 1:18 PM, Oscar Salvador wrote:
+> On Mon, Apr 28, 2025 at 10:33:47PM +0530, Donet Tom wrote:
+>> The functions register_mem_block_under_node_early and get_nid_for_pfn
+>> are not used, as register_memory_blocks_under_node_early is now used
+>> to register memory blocks during early boot. Therefore, these unused
+>> functions have been removed.
+>>
+>> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+>> ---
+>>   drivers/base/node.c | 54 +--------------------------------------------
+>>   1 file changed, 1 insertion(+), 53 deletions(-)
+> ...
+>
+>> @@ -895,10 +846,7 @@ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+>>   {
+>>   	walk_memory_blocks_func_t func;
+>>   
+>> -	if (context == MEMINIT_HOTPLUG)
+>> -		func = register_mem_block_under_node_hotplug;
+>> -	else
+>> -		func = register_mem_block_under_node_early;
+>> +	func = register_mem_block_under_node_hotplug;
+>>   
+>>   	walk_memory_blocks(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn - start_pfn),
+>>   			   (void *)&nid, func);
+> So we have now:
+>
+> register_memory_blocks_under_node - wrt. hotplug
+> register_memory_blocks_under_node_early - wrt. boot
+>
+> AFAICS, we can drop the 'context' parameter from this function because
+> we do not need it anymore, right? The functions that get called
+> eventually, register_mem_block_under_node_hotplug() and
+> register_mem_block_under_node_early(), already know its context and pass
+> it on to do_register_memory_block_under_node().
 
-I'll submit v2 tomorrow, including Suggested-by tag from you and Arnd.
+Hi Oscar
 
-Please let me know if you're not okay with being included in the tag.
+Yes we can drop 'context' parameter.  I will add this change in next version.
+
+Thanks
+Donet
+
+
+>
+>
