@@ -1,130 +1,127 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F17919D06B
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03D91922F6
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746107460; cv=none; b=aI6RbERW+Sqy88f8n1GgqwZo+qVLc6H/94hMH/UeoDZGGMbdtKuHvhzuos2Tsd937ji4uE1IMI08PvwfOQhuuuHnbrubfcv5mq0RLVt378szRffYzzV9fbpKhDBOTVRZenqmkyIio6J43cOaMQu30IapNcjNl/CZqgt9M6x69l8=
+	t=1746107529; cv=none; b=uGxoIbhIRx7VDA8ILUkxTiuOtlc8C0eKGhKzvZLrAv+7QPgO+Ue21KJxezcYYjlWQmcAG5fZ4aBam5+CGncpm+WG8O5jwD1NBw6GfV1j5ONgkWpbP262Xf1czRBZTuBL/ymEOjUv7JTKf0/pNleqNTWpVist+8JyJeZSdYjWW4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746107460; c=relaxed/simple;
-	bh=3S2ZpOURBmPgdkON47FakSSexpUR54q6fL0CBQ8Af3I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQgDaDJm1tMFIMDuL1KB2yMbwg0y79TlL6zX1pdGR2MzHkqCesKrddEQV4VFRU1LQ3U/HMuXiyMSsryumRPJbAA5gihcKIK9S07yo0YAh2zSMS8Tf/iUyvf3t7KFMewkMSZcFfxbaR4ldxA+rN7zKAnrXr5R9NimbjigF8rqXf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=vgnU+EcW; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746107529; c=relaxed/simple;
+	bh=TBF9cHqvsBBjMo+hOAdT/xXFYkhNbU6400lnc2ENgSA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HIAlBfWPOgC1UnWl7d7apCCyFQB6UD1bn0igWKxB/x8QPLRpY+sRZK9dOuTFE0DKjBznzhqQBogWH7sNJK54VwvcgfflkXu+4UOMt1Ele0/3/HjuGjSUhHZvNyY8xFOnKu/zWNzyY4OMQwVvzLIUcueaUKvuggUlWfPjv5BTBeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GppSX8kX; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="vgnU+EcW"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so3553295e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 06:50:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746107456; x=1746712256; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zruKVRDRscyVarFUye9F0wOJCzPUiyyhJYtA+dpYCeQ=;
-        b=vgnU+EcW5tJK8ImxTmCLn3xRp9ZKyW1CpdkXojWMYnrCILvRhitmJYOOTW5iPw1Cw1
-         qkW8BUwAwQpOPK0wdlTiCefJd2ntpe4ilWDXDD9HTKbcZavyJqEPazltzpqdzp68xH2I
-         Fqd9SnFS8EOCSeR+/1VUKz+QTFBje2aAJfu6601D3lZSDYfS0nw6vligl87G+bs6cAIO
-         Q2mpBf4sAdivzTHn8lFBCafLzH+vJWOlxBcrGpw86sNc/1w6AaI8+ieS1y5btPKBWd/O
-         0Lw/FUZCqLkmDwXmj4T3aXN+Rn9O7QvTYBa8WWOdBOKfANAKPqRbAa2AjgNeZQUrgin7
-         TFOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746107456; x=1746712256;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zruKVRDRscyVarFUye9F0wOJCzPUiyyhJYtA+dpYCeQ=;
-        b=ScgZED/mj+ZoeYKxzupCihTZwS0xu70muTSJqiz8Me3WAl1P7TL35jKtnIPJ2ScJaD
-         b9dBzmfchbH9AMhkFvJdXnlaz2m9SF8G5VVEnwXg/Y/hGZUlri12c2OpirC4Nb5kw6mG
-         ZhnQRd2rVUbrMQBA7cvC+e5fRboiPtyYcld+0ku0QkazrfWFkE0xKT/QRZn2rz7Z3MNf
-         i2YP9nc0ZSUAuC7PviHoW6i17nr5O6qMhz/kw51KIPd5OzfBWR9hFqst5PsrrMXMUA3Z
-         nsbNneOWnG2xuKku39XXQRAI3wI2cd3P5jelnio6nxEiT57p+KxiUPlLPqDfJ1ggSoHN
-         IDDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzl9KuL7oIu/Dow+rhJeySJz5uu77+9H503dV3wQnJOVsPl+JoON/3VOKCqDMX8RRCh/JYWI4xctSTjxA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+HSkksC1vFRtdnt38l2H6a/qQ66qG9yGm/eqeTyR0VmpZXIql
-	a+aTd3s+Wq/TCCM6wUsSLfSjRskCvrBvrAWqa3O1YiIPnlQnFP2kGcARWJEAE8w=
-X-Gm-Gg: ASbGncsTJB1jKn1B7Pbd07Ejg9Tz6L4OT9ZXaJNHkv1DfdkMbos41vMjnIbZRjsFGjB
-	pZzArJAAqIcU36mykFFV2VhdqEOfrt/s968zHkU7bBeujadKh70HyYB+t9lQ6dpY1SlusOaa4Xq
-	8TvnQW1fmRelMiK8lF7MY49GsMQfYLz9uPe6DJcLMOEAmg07Ardp5cOzsS1zvxPTwoGxLqL/WRZ
-	Pt+gpy+qLrEDRh/TK28TkQajU8iidkRSwvBWZgb/QcG5oqECcg9JQ8BVcfzzlZkCD5tghenXaqi
-	vx3u+N6wEz9zsrY0losHR40pp7tKkJYUqnOYxMi9fwM3mAggux8flUkh6GGmnng0NJAFwN8Win4
-	4spS5JG4=
-X-Google-Smtp-Source: AGHT+IHupedOPMOM0/qcAF0IPZeZXqgUOFSKpReFgbOJMXAFwMjiMXlEwXf+hlUk6b7Aa4h8TEFLmQ==
-X-Received: by 2002:a05:600c:502a:b0:43d:609:b305 with SMTP id 5b1f17b1804b1-441b6500698mr29167515e9.17.1746107456371;
-        Thu, 01 May 2025 06:50:56 -0700 (PDT)
-Received: from archlinux (host-87-8-31-78.retail.telecomitalia.it. [87.8.31.78])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441ad8149afsm48670895e9.0.2025.05.01.06.50.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 06:50:54 -0700 (PDT)
-Date: Thu, 1 May 2025 15:49:44 +0200
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 5/5] iio: adc: ad7606: add gain calibration support
-Message-ID: <okavvmsyg6jpdleye5e5oxg2cwwgkr42f6wlq2dlsswrzxkpnq@66apz7uva5eg>
-References: <20250429-wip-bl-ad7606-calibration-v1-0-eb4d4821b172@baylibre.com>
- <20250429-wip-bl-ad7606-calibration-v1-5-eb4d4821b172@baylibre.com>
- <CAHp75VfBrodRH0gW8teULNSt3f_uJA0Ze+P+YOTKLhtec84-3Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GppSX8kX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746107526;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D7Og0tNFd6K52qkvPJcrj4sxsIAm+zhBLcJjT2wd0Ho=;
+	b=GppSX8kXXxs+5J4Ad2Wp3MkWDI2xGvrLiWU42kum0uABmEmh4UWwn6Kz2ZSMDnPYcCdTdp
+	AyVDFdufoVcjuoKrCbQwaxUJlmu2XcA1Rxmrm94rIlZ/ZMSqTxKWJr98+0F1znkaCsZbc6
+	aY0LulqoRygPin2kUtL32D9XWgVrNnY=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-nJJNEWtTOJa3lZu8ag0sgA-1; Thu,
+ 01 May 2025 09:52:04 -0400
+X-MC-Unique: nJJNEWtTOJa3lZu8ag0sgA-1
+X-Mimecast-MFC-AGG-ID: nJJNEWtTOJa3lZu8ag0sgA_1746107522
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4CC541800990;
+	Thu,  1 May 2025 13:52:02 +0000 (UTC)
+Received: from [10.44.32.102] (unknown [10.44.32.102])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7DF311956094;
+	Thu,  1 May 2025 13:51:55 +0000 (UTC)
+Message-ID: <5eefb009-f920-4954-9ef9-4a00791e3129@redhat.com>
+Date: Thu, 1 May 2025 15:51:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VfBrodRH0gW8teULNSt3f_uJA0Ze+P+YOTKLhtec84-3Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v6 8/8] mfd: zl3073x: Register DPLL sub-device
+ during init
+To: Lee Jones <lee@kernel.org>
+Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
+ Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
+ Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
+ "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Andy Shevchenko <andy@kernel.org>, Michal Schmidt <mschmidt@redhat.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20250430101126.83708-1-ivecera@redhat.com>
+ <20250430101126.83708-9-ivecera@redhat.com>
+ <20250501132201.GP1567507@google.com>
+Content-Language: en-US
+From: Ivan Vecera <ivecera@redhat.com>
+In-Reply-To: <20250501132201.GP1567507@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 30.04.2025 01:34, Andy Shevchenko wrote:
-> On Tue, Apr 29, 2025 at 4:08 PM Angelo Dureghello
-> <adureghello@baylibre.com> wrote:
-> >
-> > From: Angelo Dureghello <adureghello@baylibre.com>
-> >
-> > Add gain calibration support, using resistor values set on devicetree,
-> > values to be set accordingly with ADC external RFilter, as explained in
-> > the ad7606c-16 datasheet, rev0, page 37.
-> >
-> > Usage example in the fdt yaml documentation.
+
+On 01. 05. 25 3:22 odp., Lee Jones wrote:
+> On Wed, 30 Apr 2025, Ivan Vecera wrote:
 > 
-> ...
+>> Register DPLL sub-devices to expose the functionality provided
+>> by ZL3073x chip family. Each sub-device represents one of
+>> the available DPLL channels.
+>>
+>> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+>> ---
+>> v4->v6:
+>> * no change
+>> v3->v4:
+>> * use static mfd cells
+>> ---
+>>   drivers/mfd/zl3073x-core.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
+>>
+>> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
+>> index 050dc57c90c3..3e665cdf228f 100644
+>> --- a/drivers/mfd/zl3073x-core.c
+>> +++ b/drivers/mfd/zl3073x-core.c
+>> @@ -7,6 +7,7 @@
+>>   #include <linux/device.h>
+>>   #include <linux/export.h>
+>>   #include <linux/math64.h>
+>> +#include <linux/mfd/core.h>
+>>   #include <linux/mfd/zl3073x.h>
+>>   #include <linux/module.h>
+>>   #include <linux/netlink.h>
+>> @@ -755,6 +756,14 @@ static void zl3073x_devlink_unregister(void *ptr)
+>>   	devlink_unregister(ptr);
+>>   }
+>>   
+>> +static const struct mfd_cell zl3073x_dpll_cells[] = {
+>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 0),
+>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
+>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
+>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
+>> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
+>> +};
 > 
-> > +#define AD7606_CALIB_GAIN_MIN  0
-> > +#define AD7606_CALIB_GAIN_STEP 1024
-> > +#define AD7606_CALIB_GAIN_MAX  65536
->
-Hi Andy,
- 
-> Are those values in decimal in the datasheet?
-> It looks to me something like
+> What other devices / subsystems will be involved when this is finished?
 > 
-> _MAX = (64 * _STEP)
-> 
-> but is it for real? Usually values are limited by the amount of bits
-> in the HW, here it spans over 65 steps, i.e. 7 bits would be needed...
-> Confusing.
->
+PHC/PTP driver and in future GPIO controller.
 
-true, thanks,
-there must be a typo in the datasheet that says 0 to 65536 with a
-step of 1024 with 6 bits. Only 0 to 63 are possbile here.
+I'm adding here only DPLL for now as it is finished and ready
+(part2)... PTP driver is now in progress and GPIO is in planning phase.
 
-step 0 = 0
-step 63 = 64512
- 
-Will fix that.
+Ivan
 
-Regards,
-angelo
-
-> -- 
-> With Best Regards,
-> Andy Shevchenko
