@@ -1,64 +1,64 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF8322687C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:30:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 228A6261594
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:30:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135045; cv=none; b=c9vmTpSwo5qPG7c+It3MjX+2NPjdLe+BaSWw43bAtYuk3kFDy5Sk8qULEVkss2xLpFiO2wAnrKBFf+UPC13C4WBb2c9BpiUKxAXktfGXp5sUUVBYL/T+3oZ6rlvGaOdFgiIsDpbESeUuZw0fresIeCHQkTOER/+VPq3Ih8YD4/A=
+	t=1746135046; cv=none; b=IER06iqs/+ymoDo0j/WLgsR3HS5dCc+11X4NnJ5BJewmflUpwNejby5zdbF5ElC+oOgmgzk7K4Uilwvg0XWwqKK+BhU1TVYVZvCa59MB9DvcxSy5siTq2k5tHvuVsEiTiwZ+pm+8xCao6n1VrmjJpwkwjEde/uiuGhGqkVmyItM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135045; c=relaxed/simple;
-	bh=WRHPFkMvhTVOHzTeZ4uUE9Rh7DS+jKs9WFZFam3kfBk=;
+	s=arc-20240116; t=1746135046; c=relaxed/simple;
+	bh=gOapckKc/P6PZfyll16dMvfDX1mJ/ZFGM/QRiaIG5MM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gdf7Z55up3EAsjJK3I3ppJt1EYABGA+SgEvd36AOt1i3XF1vMQL2+b4eqH3losFp9k9h9Qp9o2y4o74aMOlKCwSPf/iM8djhtNn2wmYbaFGEmV2xvF8BdsOCoSsVAFSRfKj96dehDGz2f5yGYkyClxTWmn3iHsYueB6AVzYPMhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f7Bj6Dvc; arc=none smtp.client-ip=209.85.218.44
+	 MIME-Version; b=byJOh8RsKv57AZi3elSPWtmJiEjTx5c+bm92CxUlPmMaePzzdqpNi0k61SOmKe/+KdKTe29Tqq94kZmMqNV0i+hcZP9g5BQC97HqW4uFW+vdT6XZ9hc7UvCSElH/azHodQpLjt/MV24tZ4MIzOSqdGXpPE5zlY1AdTywytRiG1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2NeYrJS; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f7Bj6Dvc"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-acb2faa9f55so167184566b.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:30:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2NeYrJS"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac7bd86f637so456902766b.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:30:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746135042; x=1746739842; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746135043; x=1746739843; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dKyg0ozNzm7//cxSIfxO1lKoXW2Qa2IHKu5mo6o02A4=;
-        b=f7Bj6Dvc9P0VugjbyOtkTRFMrDcuGdEYyat8YQlvhuXhbignZeSRcP25PQd6mKfWaW
-         e2GTEWHWBk26PW06icW0BAUbrbgJShEeEyX8Bh0obJVsAwbHmtMljK8q6UoftXNq0N4O
-         ipSU8xfOlQfzZuse15Qkn32Qyvdec+M8V79fnwL0LErJAlXw0em3GUPR1oOi/V0lEtOP
-         8BqPMKnkxs9Cuv2+sFirlfZFrby2Xy70mS1Y+pz0eoGq79IbYadhCs5bO9n4kodtk0K/
-         B3attceD4uONLaMZcdK2NU+feiNjjzxV3MZMqZFhlPQAqfj1KHizoAeEatd2IR90ZNUk
-         ZBeA==
+        bh=Rrcl/JpeQTu+NIHhF4Pb+87UlDs4MN4JYFVInV4UtgY=;
+        b=F2NeYrJSW/Hzl1wnXlhGHYYwaQXsGWR98+HacZo1JiqgWb1ALOvc1wJkNJs2AVyRxL
+         OCE/S5kRQtUyUvZjpWakYl1NopnknZUyYoJHZykjonk1ZIURg5lPp2IVSI3jDRCsGvqh
+         uzrKlbL4lWyGHpXME9EAdXY7+Ax1pFvt6usIprwnvNvNNuS81GXXkpxeKw3ncFht832V
+         6b7jDD10Wd3i8vLwkVVW+Y00QJjz91a/6tYYgxkIp/gPdlw206rJ4eVE+x1ISHCDo81o
+         lpSuQlhON1MGo7ghnihyTaUbMVBlWhY7WMNuk2b7g+QFrDjxfTj6x8jHtU5Bnm2KNf6a
+         9XKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746135042; x=1746739842;
+        d=1e100.net; s=20230601; t=1746135043; x=1746739843;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dKyg0ozNzm7//cxSIfxO1lKoXW2Qa2IHKu5mo6o02A4=;
-        b=PXPpxNLGmyRXOhr5lCmrXp8q5DjyhxizSRuPxTKgY8Fo3TNGnFIWZRiRjZ6qIHWGFv
-         +rppGX4D2PxlhArxbDS6rsx+XTu8GUrK6z4v1v7Kqb5EDSPeYPlvPXMmlGZqwzF4r4A1
-         uAtBB1iE+fl6HWPxAHJuWAem90HvffPcbOk8D1Yp7p1KUUerKVoa6vZ6q4anO2mS0heN
-         nb16CL/Nen5EBgAYVAX6VFuDKSbSxL2NLuXmAxqf/7LB/DAe9eNmgd8Jyzts61L92jU6
-         JfM9aZY9+/htL1E97JYzdaIHVEl/wo1TszSB3BYHvZOWiPwKVLZ+gHjwn7gGJgNkc2QU
-         CdiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXLmNKEgWpYxLrmGiSVKfjb03jPq0JuWtTwNgtpX7dGKCLHy0d12NiVWzC21+YO62axbHIJ/Ga97DbeSpw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdD38Y9kfYL3QQB26DE2gSpz1oHQ9kMNxlOgRrOIWfOW9g8yv/
-	HHsYAI8vyAaObx3wWDkQQQqYFbd2FV6avHMIoQYTpfbIexUB6/vh
-X-Gm-Gg: ASbGncu006XT96HixvUqmKHjagNZFyPMJqsd8vgxvjlhWSlGaN8l45MvD21aPMcd0FM
-	NHFGracyou+54vhvPTIsNTu9pjowmv9jKiCHAsjVP1QYprfaz2KxY6XsAZx5pfkCSDp6o/ROezL
-	LR5J6wXhq0vweH0GEgsYBEbDQiN5uD72kl0Lb/kwpc0drPy0YaNHi02kxPqvmrW/tqJ+Kq1JyRo
-	sTfdHQGLu48AQ4vrqpxv/9Q5E9NcQ4r1VSkSRjbxkuUpwm3Sn9c61lQHJHKP44OO/L2abVPH+M4
-	9lIjCDav/h1ahA8FglmOSIAujaq4vm7GP3FHacM4GCp+yfsyuo0JQEVbFC9ixwngBkWe8TJ0oLC
-	hhh0XFJx3NdXMc+S8aXQpxJAHNVA1Jafa810z9r6ssRxaouvHJgkKBZKyA3L8VmjFFZS6/cSWhN
-	bXZA==
-X-Google-Smtp-Source: AGHT+IExT/aJg9WflitW+HrLoVfCe6NetKKbdMQo2X2dLvCty6EdFqJWUP+btRX5BimHTUasCsz8rg==
-X-Received: by 2002:a17:907:9719:b0:ac6:b811:e65b with SMTP id a640c23a62f3a-ad17adf4cf2mr59008166b.36.1746135041895;
-        Thu, 01 May 2025 14:30:41 -0700 (PDT)
+        bh=Rrcl/JpeQTu+NIHhF4Pb+87UlDs4MN4JYFVInV4UtgY=;
+        b=AXyqLitXery75u5P8LqqiKA+e9Rq64AZ4AO+nqK4/pLZLTrQY8VCRhihl7Etih40rX
+         Qu54kE0O9iQnoLMeI8HkImUnLTk2sce4W1xrnweqIYSYM1tOoiTTT7jMSaGscMNHrG+G
+         RiJozDQvuLJNwdvyWqwOGqC2KJRmt41WGpkKoX8/VmOTN29zpirsRmjRTBHWZd9TBGWz
+         jf2RPg3U67m56BjADqddK+I3ahAh4GTawg2klLv/f6tbzX6zuL1ln0ulFHNZLHnXoBYy
+         SlJDFe9seyoCzTeKflVtahnMSxpMbTtN+8S1uDgVOsKQVKiMXg6ICy4BjlCu5R6j1/ny
+         gEWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWVBL2BlVXroeHkJGWiR5Wyw3YfcAisJJvSENHYxnAYRqoSBbiYqXLrS5bA1E7X1rb6rovyqTAbu5KXGA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhSR67AvzvMTfMJmlAnFnJrGTzw8o3vEgySSLQBxIIRf0jLgUt
+	iEE80KnLztlrQ6C+VFmDZTINPzyJFOwNVc1b4d0MkEF28CiuJGSN
+X-Gm-Gg: ASbGncva7af/gH+f51D6L8WzUBxQk2IMi+wJSLW2ND/Idn+/B46cFHvLDIRaCNGcZH7
+	gkPB8vy6oK8bY5krR0m+DtCJgS0p0BxAyO24Hr47BZglNCzfCCltiFahE7UyFj5qt62x0AKyW4S
+	Wb3Ljs6+woGDd9iwvGgh4m1dx8JOQ9iurPdR8GLu1XWIuwrMP8byjsfyVKHxFnE+7NybMYVHqNw
+	WFuLF8MM8At2Xej01FIkNiPNXi22ncnOCcFV2ZCmN6D43slcDupuMwjEVwcJDurPkAzkMf519YW
+	iF1IIKxg9qpERPTFv1QAeprBKUOIpkdWEi24e+ERT5VIn5W3tvuFE6eNkYbdVTGkCRLUq6HZ/kB
+	JowXuuPnCCX61RmPVALfQJUIy8cH3+PvDQjLJ4cRB4uvn9ZkdkEpRBnX5DLTbjF9P6flpkg4aSR
+	XRPQ==
+X-Google-Smtp-Source: AGHT+IEYu91JG9uDqTUFxmBZwv6866gZbhwuIT22bemmqPxLeyzNfO6CuJoLuTH/Vh7aEJacJErv/Q==
+X-Received: by 2002:a17:907:a42:b0:aca:c6d5:1dde with SMTP id a640c23a62f3a-acefed69a43mr341279166b.8.1746135043207;
+        Thu, 01 May 2025 14:30:43 -0700 (PDT)
 Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-41fd-2957-14cb-eff7.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:41fd:2957:14cb:eff7])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da560a63sm96466866b.139.2025.05.01.14.30.41
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da560a63sm96466866b.139.2025.05.01.14.30.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 14:30:41 -0700 (PDT)
+        Thu, 01 May 2025 14:30:43 -0700 (PDT)
 From: Thomas Andreatta <thomasandreatta2000@gmail.com>
 X-Google-Original-From: Thomas Andreatta <thomas.andreatta2000@gmail.com>
 To: dpenkler@gmail.com
@@ -66,9 +66,9 @@ Cc: gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
 	linux-staging@lists.linux.dev,
 	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 4/8] Staging: gpib: Updated return type `ines_request_system_control`
-Date: Thu,  1 May 2025 23:30:33 +0200
-Message-Id: <9639f86fd160a5ea49f12d4f18da2c599d59e701.1746133676.git.thomas.andreatta2000@gmail.com>
+Subject: [PATCH 7/8] Staging: gpib: `request_system_control` error handling in resume
+Date: Thu,  1 May 2025 23:30:36 +0200
+Message-Id: <87afefe2ba2fca9f09ffd66fb8ba8e1e5c3c1404.1746133676.git.thomas.andreatta2000@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
 References: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
@@ -80,26 +80,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update `ines_request_system_control` type from void to int.
+Function `agilent_82357a_driver_resume` now handles the return value of
+`agilent_82357a_request_system_control` unlocking and returning error in case
+of failure.
 
 Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
 ---
- drivers/staging/gpib/ines/ines.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/gpib/agilent_82357a/agilent_82357a.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/gpib/ines/ines.h b/drivers/staging/gpib/ines/ines.h
-index ff27f055a0ff..a82b9cd93129 100644
---- a/drivers/staging/gpib/ines/ines.h
-+++ b/drivers/staging/gpib/ines/ines.h
-@@ -46,7 +46,7 @@ int ines_accel_write(struct gpib_board *board, uint8_t *buffer, size_t length,
- int ines_command(struct gpib_board *board, uint8_t *buffer, size_t length, size_t *bytes_written);
- int ines_take_control(struct gpib_board *board, int synchronous);
- int ines_go_to_standby(struct gpib_board *board);
--void ines_request_system_control(struct gpib_board *board, int request_control);
-+int ines_request_system_control(struct gpib_board *board, int request_control);
- void ines_interface_clear(struct gpib_board *board, int assert);
- void ines_remote_enable(struct gpib_board *board, int enable);
- int ines_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits);
+diff --git a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
+index ce2d3850ba31..4fdf6d42f63e 100644
+--- a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
++++ b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
+@@ -1625,7 +1625,13 @@ static int agilent_82357a_driver_resume(struct usb_interface *interface)
+ 			return retval;
+ 		}
+ 		// set/unset system controller
+-		agilent_82357a_request_system_control(board, board->master);
++		retval = agilent_82357a_request_system_control(board, board->master);
++		if (retval) {
++			dev_err(&usb_dev->dev, "failed to request system control in resume, retval=%i\n",
++				retval);
++			mutex_unlock(&agilent_82357a_hotplug_lock);
++			return retval;
++		}
+ 		// toggle ifc if master
+ 		if (board->master) {
+ 			agilent_82357a_interface_clear(board, 1);
 -- 
 2.34.1
 
