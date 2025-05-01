@@ -1,144 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A73821C18D;
-	Thu,  1 May 2025 21:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A56720C01C;
+	Thu,  1 May 2025 21:28:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746134813; cv=none; b=BVvrB0yVK2yJCPpC2e36u3hG9hYIhpegQrEv6KLqjWDkcYunyNJ/V7MXfFeLjzfYuO8Sgv6rfMWoGaKbJP9psRj1RJB+IzSP2OJJpKbvaPAcrnHLTH/Ib2gqPf0coe1UsOsmZ8BM7fU9d7DzLXNt4gp1VAG7ZXBMhExICsWtNc0=
+	t=1746134906; cv=none; b=op2uB8LnHfWfZv+12SCt3UaVi+einM/q6uIa6VPbJoRds9ZmMK9nguNSmYR36eAGIEjJrr6r38NPbbLVqV7hE6BKGnTQVQITqqRWjZewKUrIyWeUT39EnWivjIXYJUo2Atnx32pBfujlBkvc3WsoRGMag2QNiWNOU0JWGiH3AJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746134813; c=relaxed/simple;
-	bh=5a6iYKMZP0e8zdYj8kunSotenfvp2hS2NChe9i2pkIk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6ATrWsqURFLLhmhIRP/Y1ig3Dy5Hrk1Ev4vgorJo0bEobL1ZCHUL73QHSLQZxcKSNW0/uZ7TrcXjx7F6doum7wL1KaCwYZPlbYpmvICBqp7/QtPqYeIwKQa3ClBKbG8KIBDFpwu3E1gsc5vqNZcDYX8Il2Twir6Z1x3CAIUnAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2JXC1RU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746134906; c=relaxed/simple;
+	bh=605cJofwZF2Yh2+AsDgGAjAP/+kAhRpYSptcLHnt1HI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=su5Bp2CYfrpqteDTzQJE4dy0Cre5H4kQkGkCJqz8AjUSelhESzNWBzWglquQWO6iEAmuMKzDB0JwszzcmhjxBx0TSyZMTkuZbzLpNLUD2NKgyC5hMZiVMNb4UBFgRxXRvhNuW5C9m0M/bDIVyR6ATn8f0DMT1hTy8s+GYnDk9oQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ePizqRaw; arc=none smtp.client-ip=209.85.216.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2JXC1RU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A452DC4CEE3;
-	Thu,  1 May 2025 21:26:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746134812;
-	bh=5a6iYKMZP0e8zdYj8kunSotenfvp2hS2NChe9i2pkIk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=b2JXC1RU/MAlATfUJiGcr2iai8Qz0pZL74Fku2wXAYRo54BJa2BykzgDrZ6df/Cb4
-	 ovehe37wCJ75lzNzMa3qm3bgvytpg/FN3+KQVkksNl80e6nOE6lP/a3msBnGory+sy
-	 vNrqWwyjsS19iCtbCRLRIupC2bH1fX+vYqAtYIOnrR92Va9xEe9JyJ3lRkZ8kR4TMK
-	 YkL2YB3VL8qGQhNI12oIylvV18x2Mh4pAg3EpdpWP5cakS+spveNB9jqeRBFf+xem3
-	 W/BZMPJkQ8zSDZjmVD/orS7psM9CQTtkIpSXecqnDrfRdzd7v4e/bVVN53Ddf9f6Z2
-	 LnLHgkKRn0fLQ==
-Date: Thu, 1 May 2025 23:26:46 +0200
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-Message-ID: <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
- <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
- <aAehVOlj-W5kVyW3@krava>
- <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ePizqRaw"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3032a9c7cfeso154313a91.1;
+        Thu, 01 May 2025 14:28:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746134904; x=1746739704; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=605cJofwZF2Yh2+AsDgGAjAP/+kAhRpYSptcLHnt1HI=;
+        b=ePizqRawRerZQSbTGwU4VQezjaTImrzXT3Mzt7qBB2LThEad121hs9WmhWuIQSieAS
+         VSHhxbVX50oN0ICjJ/r3cq7Duyhxa7DwqnnUuwH0Ow37zpYknBJqcGlJShh0PQ5SJF5e
+         Mf7/lHMEv/iCoOuQtcnyandmWKFltD3VNOJS/VNf3iK+khiKr2W3sch8YsGMEuV5tuNW
+         B/yhUOYocAHMPoHK2Ez1M5sJ0GKtLaLH59O1VJWXj5Eyo9h6A0oNkWOwW+6pa1hDhxi4
+         qZxySWfZZF7geSO7eyCKGF9u0aWeNrORNKprrmedtiiSUb2wT9rm0GzlyuwSZaSvlRxI
+         Vz5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746134904; x=1746739704;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=605cJofwZF2Yh2+AsDgGAjAP/+kAhRpYSptcLHnt1HI=;
+        b=Q08YS0eoAsCvlEH/j4ZUmG56Ia4IX8qTP2rf4ohjn7HB/dvsB2T7ALG0sPnhXwncqz
+         KUtPmwGvinRcAchn9dlUXc6wNoGzPSF/no5ZSFVlfm3EzFSBmHkE8+DbP6AuAxmC3sut
+         WRtIkGnIlMY2cIB9pPl2VsT7VTiZ7qPnfrmVpfN3dOGT7RDqlE/zsuERQA7brNP8OWbo
+         NGDCep3WCt8m8D7JPpEcD2TlRgdTYLsW5JdRzejeT6w3HRWq7/ETLuNjojPDY4EPUvU4
+         D9nPvwGMIe+9sb1X1F+vyIfLMEoRfhzjPEyqzkg1MntWTM52ZbpbsLbU1Ti5Jmd5s3JX
+         SN2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW/OZtn2R1fxpElqvmGytIff1O4fILjoNtOfmWkpxOUSFGe/2kATbo8AvQ8EOoupWbeASnSyaLIDAh4GBA=@vger.kernel.org, AJvYcCXkdDNyD3yDEP8Dsvsf00au9AbDV3oVCTPSQBxBs/P9VaTmwtXj5flaXU2urb/AfkMhe4I9zm4IoZQnXPwuW3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/DfPcR1jiBlzSStFN+i2rSGBadx19+fMfKXP7Rf5TJtldpKTw
+	PV/edcKGa67qPPu8//RmqjzKp7SPXrwptg2wwYDc63SMHh5BdgBdJauyPa3xe6IKW0cfpcSBlZx
+	ZroX+3426PuXbici5uW6KeDFm3FU=
+X-Gm-Gg: ASbGncujyKaN8BHGKATL+JOZIFVdSW4TQWRrFbiSInRoUiE5JD+Gzx1ssyIDYv4yN4N
+	F7bpp/BQPrlPs8xoSod/5lBFchm1MDmJ5/iX0t5eTS72XaSIFv/6M7PFPNf8MgnHBHZBx+c8Jwr
+	H+uMGlk14oSGDWdGpm+7kzlZ7OHQEo1BJB
+X-Google-Smtp-Source: AGHT+IGi+2DdQTaYueO6+nHZPlGj9gbHL0EUu/2kUhIa9+btPbRNXJllCrW/6X3tii93OItGqLGRaYQMbA91c1kv3RY=
+X-Received: by 2002:a17:90b:1642:b0:2ee:f59a:94d3 with SMTP id
+ 98e67ed59e1d1-30a4e3f01e9mr398188a91.0.1746134904286; Thu, 01 May 2025
+ 14:28:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gzestemhmsuve7zo"
-Content-Disposition: inline
-In-Reply-To: <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
-
-
---gzestemhmsuve7zo
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+ <20250501-configfs-v6-1-66c61eb76368@kernel.org> <ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+ <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+ <87msbw1s9e.fsf@kernel.org> <86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
+ <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+ <87h62419r5.fsf@kernel.org> <FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
+ <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com> <87bjsc154u.fsf@kernel.org>
+In-Reply-To: <87bjsc154u.fsf@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 1 May 2025 23:28:12 +0200
+X-Gm-Features: ATxdqUE4ehUxDxCshNJBlGTuG37ycuOAfHWYd6xHU0XQaMK7_2afIBYOTDc_3ZA
+Message-ID: <CANiq72=SD9ogr+RpPK7E+cFmn2qAVu+MBCoChdp8-hw7JFu6zA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Joel Becker <jlbec@evilplan.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Fiona Behrens <me@kloenk.dev>, 
+	Charalampos Mitrodimas <charmitro@posteo.net>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	Breno Leitao <leitao@debian.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-From: Alejandro Colomar <alx@kernel.org>
-To: Jiri Olsa <olsajiri@gmail.com>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, x86@kernel.org, Song Liu <songliubraving@fb.com>, 
-	Yonghong Song <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, 
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, 
-	David Laight <David.Laight@aculab.com>, Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <thomas@t-8ch.de>, 
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
- <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
- <aAehVOlj-W5kVyW3@krava>
- <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
-MIME-Version: 1.0
-In-Reply-To: <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
 
-Hi Jiri,
+On Thu, May 1, 2025 at 9:51=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> Ah - I understand. I missed that you wrapped the assert in a const
+> block, a quite important bit =F0=9F=A4=A6 Thanks for explaining!
 
-On Tue, Apr 22, 2025 at 10:45:41PM +0200, Alejandro Colomar wrote:
-> On Tue, Apr 22, 2025 at 04:01:56PM +0200, Jiri Olsa wrote:
-> > > > +is an alternative to breakpoint instructions
-> > > > +for triggering entry uprobe consumers.
-> > >=20
-> > > What are breakpoint instructions?
-> >=20
-> > it's int3 instruction to trigger breakpoint (on x86_64)
->=20
-> I guess it's something that people who do that stuff understand.
-> I don't, but I guess your intended audience will be okay with it.  :)
->=20
-> > > The pages are almost identical.  Should we document both pages in the
-> > > same page?
-> >=20
-> > great, I was wondering this was an option, looks much better
-> > should we also add uprobe link, like below?
->=20
-> Yep, sure.  Thanks for the reminder!
+Ah -- that explains it. Yeah, your calls to `add` were from const
+contexts, which explains what you were trying to say.
 
-=46rom what I see, I should not yet merge the patch, right?  The kernel
-code is under review, right?
+You're welcome!
 
-
-Have a lovely night!
-Alex
-
->=20
->=20
-> Have a lovely night!
-> Alex
->=20
-> --=20
-> <https://www.alejandro-colomar.es/>
-
-
-
---=20
-<https://www.alejandro-colomar.es/>
-
---gzestemhmsuve7zo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEES7Jt9u9GbmlWADAi64mZXMKQwqkFAmgT5xYACgkQ64mZXMKQ
-wqldaw/9GeFsRHndA9QnooP0EUAvXo9kh1+Pbs4G0ivMw/9tK4gffq+VxVykad5s
-27u3Ue739vh+GQJTkYGR6RL0I9AxSWF38DGGCXbXLvpPT+ALjT4NxvcbP+RXAK62
-yg05eKcniviBTMmDkFp0nX5Zr81UQeIGfjE68CKvL2AlwXOn56VcUeTuRcLXiRAS
-wtWWHmvlJ+TRGNqNaLU7bAxxeJSeZau5XkngB72Kc/1M1Z1X42yadwthEH2bZC7r
-XdnC0/+TS5A5K4t1ylp/MBp7gwnxy4Nv29fpt2mlxVexHg9MB12m32Jk9VsVPBOG
-JTJ4Q+XGASjbxqd331zNQKcA7zfrdr602Yf5Rs1wNTNV/ia/AQqL5ReMd+I36bcr
-7hNb4ychE2344hgKdOr2s8y7NLKBogCdcrWqSBldiQLZ7sAllcZfXQngiSQ4wqyI
-1TXoV1tFBJ3Bg8Ec9iDJITPp7KcHhY34C1lurGTjQWny+ONpqoSDTTdoyb5+9gk5
-+Ryed603G7J5pT2P+GCaqH9s5L63ZeAqx1ayFTmndnqRDh3yFI5SbqiqjxRkWk93
-IM0GZmvgfxjWbBaP5Hl51Ki1NcHptXsuVNKMsJO4aSpMUJTdzbmHdRZJVSMBnJDq
-suv2SaQMze4oAkrSlN8BwE5tbIqbs6558UVH+z0IbwO5vbI89QI=
-=oQPl
------END PGP SIGNATURE-----
-
---gzestemhmsuve7zo--
+Cheers,
+Miguel
