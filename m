@@ -1,123 +1,140 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E7220C461
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 03:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1CB194080;
+	Thu,  1 May 2025 03:51:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746071447; cv=none; b=c2l06qro264/eXUeJYAWwqGVh9nsbdiz7ThA6jWnYdipBFbQ03gwx/mZq4Gs3hc8+Uz+YrgFX1k131mi1yROx757mNPgsA1r30N/ON64AwAg8o/VTkJGCSn73h4aUHGbd/jKHwg0ypgFnCCrDBZeUW/r4ZQfOYQ4ddVuJWQpkm4=
+	t=1746071493; cv=none; b=SXOXZjXGAM0Hz54mEy/GpaINdjL2NI/izjZWRLopSj9Tff4I7qpdofR7ePD1JEjJy6H9Sm8ZFO+PBUF6nwUfsIea56SGHjb3+18U4U09F3Ajp25/+9EaDrONBoIexHZGIynkSr2L83OC6i65/+zVuLTTILlYMiRWRNBtmXE1k+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746071447; c=relaxed/simple;
-	bh=2dAVFnoSWIkTOqjHfYENLB8pzU1NdvuV0xq8Gvel9G0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gejz3FMwUc2p2UZR71bpqU/CBKKqaT6zjLpC7ulf516MN132iNFaMWxhZSNUHsagWYs/unM7K5c/L+QlmYDdoIkuk2UHL9uQBanug0/MJFRuyidb+kJBBaeFgY1HYc8+Y5pXZl3NN5LpfCiFVTxIfggX5mGRciytZag/KR7ndls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IQWibwIc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746071493; c=relaxed/simple;
+	bh=KVlMb35ubI+FQLca5L5hYJe3JN5pCP4/Z8oYHZx0BoA=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HPnkfBsQFNs7DCGkl5ON8pdGUhk262ZTp9qMZ2Q/vA9LE69p7kFBPT0O29vNuYZo4SP/nx/FYNUFnabvpjlqlmP3QLCqAVaiO/qX/MJfDV8cXiHvS43E4O6WEe5T6rlYMr1ubnth0CtvvI8g4CfT3zLU+kIjFiLBA1vD9t+gy5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Uog9HKG9; arc=none smtp.client-ip=99.78.197.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IQWibwIc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746071444;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xu+Kf0+DFCNXRO2ndZGA8xUx9TD/werA57XUeiFDww0=;
-	b=IQWibwIcdfF/tz6XEWtD69Y1E/jrvkb0eq6SmtQgm9vHB40Dx3kTY6bgi/7VmTXnLwLtdX
-	O5EnP7FCTnfsFxF38MrkTFgB0XNUmimQMjEia4geXwnjptjzG9yGqQ6ns15Jej8fjhOHhY
-	Lagw9xCQvOAg30I/L/5WGh3xgWRkNFU=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-588-sWKdeu_uNCeex5-yQdzDmA-1; Wed, 30 Apr 2025 23:50:41 -0400
-X-MC-Unique: sWKdeu_uNCeex5-yQdzDmA-1
-X-Mimecast-MFC-AGG-ID: sWKdeu_uNCeex5-yQdzDmA_1746071441
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-736c1ea954fso360569b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:50:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746071441; x=1746676241;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xu+Kf0+DFCNXRO2ndZGA8xUx9TD/werA57XUeiFDww0=;
-        b=voupL4Iq9cy5IWCiQi8xwTsMJUBJ9GT5g7z6qsbiEXT+n9e/QCTnpB6Jl6SMq6i8k5
-         HfTW1lNSIszUrTSPS9LgaUGUltI4X+wsD9Yx6xgsV2SrdBfRar9GNH/QsupBEqAVV11W
-         feGRWhK8LMItlOUqbK4UgzKkJTHF8+gwA0y+LxD2Kk/3ZHh9p01DRXhAqFt0vq2Z9ceW
-         Mh/2pNf4NBjIsAsxO9rd8Ka/LYLcaPwFAN6d1aU6OVHpxylNm50qbKwphWHSe5KyLPmr
-         oSjgQt7Yo9G+Et9Dr7uhFPfMLIPXL/DTMQmrT7ngQV3bQpixf9xx2vucC1VPntCg79tZ
-         otjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXYHrwgQNqfjXmYfW21tUbFUaLM9s6zyobzQfN1ajnNYjZ80COoooF9viFC482jcOnhnB1k7hr8Jo9qzD4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG96sj5AznoMvSPOmqkVaJb4/KAfFG6P3x3P4d+DBoL6ZOQCyZ
-	q8Zb+0WC26HwtYJ977QBcfm2yvpnOfRxFd9CsZEbhkadJkQEELL1rnTiCFVC6YyfmOQqfiVWr7o
-	UilSicsgoo+SBxF1tTWRkhOTu+xBk76c48RIODGZq06LFRy1Q4XocgRckRYJHFQ==
-X-Gm-Gg: ASbGnctaWWO6WWk/Z4fWpUrlBAs4W2bJZbSy1mUi+YzIKUViWIvvWO5wVvtZQ3lYue2
-	jFseG+KP4XS/Q/EViWUI/kwV9KS/uoGHNcXIiZv3fj3Fui0955YaWIjhOrjgMN4+leGDpVYxDCk
-	mIGKJVOwywQMc/XWD5Jah/2+w7ixPlRTw+gYg5vcluaFqTekNi6x2aGf2ku2LfEQoKZdCWpyLf6
-	UWkL55XN1QAOVDarvkQxq5yyLRQIlueFRumy3HcIbw7QmEPXjJzwvcMVti+ku9GN6dMe24VlrVY
-	vxtqx/zZ9KM2
-X-Received: by 2002:a05:6a00:2da3:b0:736:a82a:58ad with SMTP id d2e1a72fcca58-7404923a33dmr1298195b3a.15.1746071440946;
-        Wed, 30 Apr 2025 20:50:40 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF+2TUVWiAQRNStfJKlXXyrEy8i+Rkh7KlouLhbtQWVsBfOICdI6sUfx8nwE+QueIaBYA6F7Q==
-X-Received: by 2002:a05:6a00:2da3:b0:736:a82a:58ad with SMTP id d2e1a72fcca58-7404923a33dmr1298168b3a.15.1746071440658;
-        Wed, 30 Apr 2025 20:50:40 -0700 (PDT)
-Received: from [192.168.68.51] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a2e5ccsm2541439b3a.110.2025.04.30.20.50.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 20:50:40 -0700 (PDT)
-Message-ID: <87f40de1-dd3b-43e2-aa67-8d7b6288acf8@redhat.com>
-Date: Thu, 1 May 2025 13:50:31 +1000
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Uog9HKG9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746071492; x=1777607492;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=ieN6Uufg5eN4Yl9eD7qnOlPh9TDKaa21BdQlQv6AVLs=;
+  b=Uog9HKG9oX89jZ0z8OkNZc5M8dq/NqX+UWudZm4ypCdF8Xgv+I6koDWe
+   DHiXHw9KVj8ExIkn2F8W/oX4aKC5JJsBUBJ4APhwfkj8bf0N+8F2OYrSa
+   OlgsLsdGA6J/0TlgEUtktoTS9clpazhlv9APdSh1pOE85dkzAFqD38Sww
+   M=;
+X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
+   d="scan'208";a="45594019"
+Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
+  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 03:51:30 +0000
+Received: from EX19MTAUWC001.ant.amazon.com [10.0.21.151:42164]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.114:2525] with esmtp (Farcaster)
+ id 7bc7e118-2ba3-4338-9316-07c9580be08c; Thu, 1 May 2025 03:51:29 +0000 (UTC)
+X-Farcaster-Flow-ID: 7bc7e118-2ba3-4338-9316-07c9580be08c
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWC001.ant.amazon.com (10.250.64.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 03:51:28 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 03:51:23 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <airlied@gmail.com>, <akpm@linux-foundation.org>, <andrew@lunn.ch>,
+	<davem@davemloft.net>, <dri-devel@lists.freedesktop.org>,
+	<edumazet@google.com>, <horms@kernel.org>, <intel-gfx@lists.freedesktop.org>,
+	<jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<nathan@kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<qasdev00@gmail.com>, <rodrigo.vivi@intel.com>, <simona@ffwll.ch>,
+	<tursulin@ursulin.net>, <tzimmermann@suse.de>
+Subject: Re: [PATCH v6 08/10] net: add symlinks to ref_tracker_dir for netns
+Date: Wed, 30 Apr 2025 20:50:49 -0700
+Message-ID: <20250501035115.76182-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cf11e228dfa247476a498a37f88a96d8e0e2585c.camel@kernel.org>
+References: <cf11e228dfa247476a498a37f88a96d8e0e2585c.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 38/43] arm64: RME: Configure max SVE vector length for
- a Realm
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-39-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250416134208.383984-39-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D045UWC001.ant.amazon.com (10.13.139.223) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On 4/16/25 11:42 PM, Steven Price wrote:
-> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 30 Apr 2025 20:42:40 -0700
+> On Wed, 2025-04-30 at 20:07 -0700, Kuniyuki Iwashima wrote:
+> > From: Jeff Layton <jlayton@kernel.org>
+> > Date: Wed, 30 Apr 2025 19:59:23 -0700
+> > > On Wed, 2025-04-30 at 14:29 -0700, Kuniyuki Iwashima wrote:
+> > > > From: Jeff Layton <jlayton@kernel.org>
+> > > > Date: Wed, 30 Apr 2025 08:06:54 -0700
+> > > > > After assigning the inode number to the namespace, use it to create a
+> > > > > unique name for each netns refcount tracker with the ns.inum value in
+> > > > > it, and register a symlink to the debugfs file for it.
+> > > > > 
+> > > > > init_net is registered before the ref_tracker dir is created, so add a
+> > > > > late_initcall() to register its files and symlinks.
+> > > > > 
+> > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > > > ---
+> > > > >  net/core/net_namespace.c | 28 +++++++++++++++++++++++++++-
+> > > > >  1 file changed, 27 insertions(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> > > > > index 008de9675ea98fa8c18628b2f1c3aee7f3ebc9c6..6cbc8eabb8e56c847fc34fa8ec9994e8b275b0af 100644
+> > > > > --- a/net/core/net_namespace.c
+> > > > > +++ b/net/core/net_namespace.c
+> > > > > @@ -763,12 +763,38 @@ struct net *get_net_ns_by_pid(pid_t pid)
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
+> > > > >  
+> > > > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> > > > > +static void net_ns_net_debugfs(struct net *net)
+> > > > > +{
+> > > > > +	ref_tracker_dir_symlink(&net->refcnt_tracker, "netns-%u-refcnt", net->ns.inum);
+> > > > > +	ref_tracker_dir_symlink(&net->notrefcnt_tracker, "netns-%u-notrefcnt", net->ns.inum);
+> > > > 
+> > > > Could you use net->net_cookie ?
+> > > > 
+> > > > net->ns.inum is always 1 when CONFIG_PROC_FS=n.
+> > > 
+> > > My main use-case for this is to be able to match the inode number in
+> > > the /proc/<pid>/ns/net symlink with the correct ref_tracker debugfs
+> > > file. Is there a way to use the net_cookie to make that association?
+> > 
+> > It's roundabout, but  net_cookie can be retrieved by creating a
+> > random socket in the netns and calling setsockopt(SO_NETNS_COOKIE).
+> > 
+> > Ido proposed a handy ip-netns subcommand here, and I guess it will
+> > be implemented soon(?)
+> > https://lore.kernel.org/netdev/1d99d7ccfc3a7a18840948ab6ba1c0b5fad90901.camel@fejes.dev/
 > 
-> Obtain the max vector length configured by userspace on the vCPUs, and
-> write it into the Realm parameters. By default the vCPU is configured
-> with the max vector length reported by RMM, and userspace can reduce it
-> with a write to KVM_REG_ARM64_SVE_VLS.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes since v6:
->   * Rename max_vl/realm_max_vl to vl/last_vl - there is nothing "maximum"
->     about them, we're just checking that all realms have the same vector
->     length
-> ---
->   arch/arm64/kvm/guest.c |  3 ++-
->   arch/arm64/kvm/rme.c   | 42 ++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 44 insertions(+), 1 deletion(-)
-> 
+> For the cases where I was looking at netns leaks, there were no more
+> processes in the container, so there was no way to enter the container
+> and spawn a socket at that point.
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
+Then how do you get net->ns.inum ?
 
+
+> 
+> The point of the symlinks is to have a way to easily identify what
+> you're tracking. NAME_MAX is 255. We could do something like this
+> instead:
+> 
+>    snprintf(..., "netns-%u-%llx-refcnt", net->ns.inum, net->net_cookie);
+> 
+> Obviously the inums would all be 1 when PROC_FS=n, but the cookies
+> would be unique. Would that work?
+
+This works, but depending on the question above, there's no point in
+using inum ?
