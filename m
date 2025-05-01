@@ -1,62 +1,41 @@
-Received: from mail-io1-f49.google.com (mail-io1-f49.google.com [209.85.166.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from 190-102-104-130.static.hvvc.us (190-102-104-130.static.hvvc.us [190.102.104.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E6013FEE
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 00:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D432DC76A;
+	Thu,  1 May 2025 00:42:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=190.102.104.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746060019; cv=none; b=VosNWsbvq+hfkD93OFa1UtW1zMySjF5QHf/RFN9Tjx6ayCxLOyB6dchqAL4GMS9He/nYPp0PJImgQkIHAlrMkj7TLpfbJEEGS6PuSBOlxwCi/0QNlpbd/igPQOXXeXHf5HTuZ2HOWExd+EdYTfM7831BpvKCSxO+bU4PDrQpvEY=
+	t=1746060170; cv=none; b=tuscNq0B+yrrDOWwNCIbZa3slP8kGYncT4DzLMaKtNm8ymy+UU/5PHNsHJajjsAzoxofP8GJKGMBP8AOq8UI9g6mpmZ0XahNYqh4AovmDoB1UxIs9B1IQnw1UzmVdcRHnoo7RzJ98AUVZSu2KMyee2i9PEY7Uc0iadk2KBid3sA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746060019; c=relaxed/simple;
-	bh=552tRLcpTCtKGHW+KggBdoahEXInHzfBOErT/0f9miI=;
+	s=arc-20240116; t=1746060170; c=relaxed/simple;
+	bh=u4vJQ4EZ7iai23ImD/isLw1H0LAlB+6YXgwnpaLZ3LI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ru5KQoEK1TuQSXh55LRWemOKrk7d6J6vitFzPWPJYc7gN2p0TgrQ4/CcLFELowHupYP0TXzodVOlVA+Yv/XG3VbpYAVqzw+JiP5irVbX7Gw9Ha52H+feKWeQsMtakmxNfTzg5OdP+H4mzBimpDwBBBZXU7+BLTwKq246ZoKlIC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IchzMFys; arc=none smtp.client-ip=209.85.166.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=cydih3+oYTt/2AbhZL2awCS7LZli9mV7NO5odWfZBGq9WpoR/68KmiEjjiteECTSUegmyu28zelevvFrrxvJK3k91TWhnLt/FRolIHttDelgHa0V/2tEy2oUaaw4WR1u2QQTaTfw1SSVYb5d6MD8Isxk2oB4rj4Wc1AuXlMEoik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=MichaelLarabel.com; spf=pass smtp.mailfrom=MichaelLarabel.com; dkim=pass (2048-bit key) header.d=michaellarabel.com header.i=@michaellarabel.com header.b=TBHZzxEk; arc=none smtp.client-ip=190.102.104.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=MichaelLarabel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=MichaelLarabel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IchzMFys"
-Received: by mail-io1-f49.google.com with SMTP id ca18e2360f4ac-864a071b44bso12969439f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 17:40:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1746060016; x=1746664816; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=81Imi5jthw6ckQVVKqp6SOrhZOqAy++fKyUkHYMDBAM=;
-        b=IchzMFyszbG/A9A5vnpws5289Upz7M2m+B/HnlR++20oh1bvghL48p30A+exeFm7kT
-         Tb5Iqta9u8svgegF9sJLjGLfrHJ7YELMUIEv3UKdY54VCaaGqVZ6dINmGbeXgYAFs5EP
-         +ExrYufMLuu2v3Osk6auJ+0S+ybzU98ydS42E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746060016; x=1746664816;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=81Imi5jthw6ckQVVKqp6SOrhZOqAy++fKyUkHYMDBAM=;
-        b=Iwu119FBpZxX+a7hKS/da5ukJmKYNe0/kc76ioh+Zb0o2+JjFWMObTztUanvFMwe9r
-         5K16YXT8iT75uAqI7lIxGBIwimsljlChw+7LXDx0WI3RenVzMGT60z2Xxcfs5cY8Q5Is
-         KfUUxP8k9ztZR6LpXrpO6rlqqQfVz1s4blneej4gvXTidikon0pQdPNFhWDsKomJb3U1
-         dC6ty4vnMN+kWOIM5b+C+MpB5VW/B5xcEiNdyuVCaPemrCryd+F3MLe/AISLD4U3Wd5F
-         cRB2osqh9kAbS9piOhi3tkl+fNPt/IP8smanlTq8wAk8WM6Zu7NT/ajDbFKiN7aWLa+5
-         vuqw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0SJnpApeNCMZgK91WN15RVPudeT8B04FfbfEMpDgtG+ZtgKCiudi0awC+ua2aN33H0W3c+n6AG4W1yr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxvasJgnS+rBcNC47LbMrFm19/LwD6a1GI2Ux5xN3SmcUehANJz
-	IoKBDrDWtsy4Ng4xx1RyRpzuVU1hM+GevmtLkRew/YHTGqSreHrTbx7/DEzWKo3O5//ZIGMZj7R
-	o
-X-Gm-Gg: ASbGnctqwAqZElpoinPqxyYupDzj97xvlomCIOIBG+g6YBCMU8yCV5bJVg+QctJW7go
-	BOKO0Ua6Pcl+4GXeyEG41Sn0aOFbzGW+VfDRsQYANBDms6/VME9ai+ymc8gp3NozkypjIf2mfWr
-	tvSRIrFH4nFfboqqdZalStBJwlSDefVIHHYR2ApkJgIReNwFl3OxrVkWAOFwJh67DK3dMKWRhTs
-	Y4zgMUKYpel1QyzmBJDimG8usGT+PpM1PSQdihE5u6hRLFGV4TPWcBbYj52Ktz0yO9UjMCSjLVR
-	f8ghWkSoNsYUW7JkNfq5DzoaZ7vCk1isr61kxfqOG2gIdCFgNbjQ+P9+qkx2YA==
-X-Google-Smtp-Source: AGHT+IEqgjRflu+1J1ow23/oxPjAJWAFmuKPdOwmbO4yPHSPfoz6dXuQvghS/4uINgdSWOrZCkv2pg==
-X-Received: by 2002:a05:6602:36ca:b0:861:1ba3:3e50 with SMTP id ca18e2360f4ac-864a2051d04mr182168439f.0.1746060016528;
-        Wed, 30 Apr 2025 17:40:16 -0700 (PDT)
-Received: from [192.168.1.14] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f862e0fcbdsm995927173.5.2025.04.30.17.40.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 17:40:15 -0700 (PDT)
-Message-ID: <949a6ddc-4663-4b41-9f08-a3c0d07307af@linuxfoundation.org>
-Date: Wed, 30 Apr 2025 18:40:14 -0600
+	dkim=pass (2048-bit key) header.d=michaellarabel.com header.i=@michaellarabel.com header.b="TBHZzxEk"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=michaellarabel.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=i406TcAVK4oHfTBiQVuIG6fpRh1d2CwOIn57JcmD2t8=; b=TBHZzxEkzhP0kxBLNhqzJj03ov
+	ofin/3HUYNC0r764L3oWWzLjEjna9XbsitXcDQQuCd/sA6t0pDek24UqNx84roZBS3Q/x4DD4Pth2
+	i/Farhpq71L7+4x/U8soGE9mf8zFKuBSzNuluRmuMuEJoROqCUnM4uoKdhgX7lGcxDuW/wA6rONYA
+	PnR+Swl73x7fEeCGfNC91FkenF723aTxXVVJIyGlVJ5b6jK1UXT6Iiz+boeApZnGYP78MNuy6qogY
+	Rp5SfXCFWMzYR2dezj2uQRklWRGPfkM+BpsEg7dWOODz1leVME8fxyk0hT7cC1nFSh3CDH77FWMcB
+	M/uN5g4g==;
+Received: from c-24-15-38-32.hsd1.in.comcast.net ([24.15.38.32]:10274 helo=[192.168.1.194])
+	by milan.phoronix.com with esmtpsa  (TLS1.3) tls TLS_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <Michael@MichaelLarabel.com>)
+	id 1uAI0e-00000007LE3-2Pmv;
+	Wed, 30 Apr 2025 20:42:39 -0400
+Message-ID: <cc95ac1d-b4ad-4c15-825d-aea09f605e21@MichaelLarabel.com>
+Date: Wed, 30 Apr 2025 19:42:33 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,51 +43,185 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] kunit: add tips to clean source tree to build help
- message
-To: David Gow <davidgow@google.com>
-Cc: brendan.higgins@linux.dev, rmoar@google.com, corbet@lwn.net,
- linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
- workflows@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1745965121.git.skhan@linuxfoundation.org>
- <dc8f4035a8d493be9ddc0e868a3ffd67626cca00.1745965121.git.skhan@linuxfoundation.org>
- <CABVgOSnKPPLH9BASOZ0b3mMOUuiVXxsdXQcoQqyTKd5UYONpUQ@mail.gmail.com>
- <4d1acc28-3645-461a-97e3-316563f468e0@linuxfoundation.org>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <4d1acc28-3645-461a-97e3-316563f468e0@linuxfoundation.org>
+Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
+To: Sean Christopherson <seanjc@google.com>, Borislav Petkov <bp@alien8.de>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Patrick Bellasi
+ <derkling@google.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Josh Poimboeuf <jpoimboe@redhat.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Patrick Bellasi <derkling@matbug.net>, Brendan Jackman
+ <jackmanb@google.com>, David Kaplan <David.Kaplan@amd.com>
+References: <20250213175057.3108031-1-derkling@google.com>
+ <20250214201005.GBZ6-jHUff99tmkyBK@fat_crate.local>
+ <20250215125307.GBZ7COM-AkyaF8bNiC@fat_crate.local> <Z7LQX3j5Gfi8aps8@Asmaa.>
+ <20250217160728.GFZ7NewJHpMaWdiX2M@fat_crate.local> <Z7OUZhyPHNtZvwGJ@Asmaa.>
+ <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local>
+ <f16941c6a33969a373a0a92733631dc578585c93@linux.dev>
+ <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local>
+ <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local>
+ <aBKzPyqNTwogNLln@google.com>
+Content-Language: en-CA
+From: Michael Larabel <Michael@MichaelLarabel.com>
+In-Reply-To: <aBKzPyqNTwogNLln@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - milan.phoronix.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - MichaelLarabel.com
+X-Get-Message-Sender-Via: milan.phoronix.com: authenticated_id: michael@michaellarabel.com
+X-Authenticated-Sender: milan.phoronix.com: michael@michaellarabel.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
-On 4/30/25 15:25, Shuah Khan wrote:
-> On 4/29/25 21:54, David Gow wrote:
->> On Wed, 30 Apr 2025 at 06:27, Shuah Khan <skhan@linuxfoundation.org> wrote:
+
+On 4/30/25 6:33 PM, Sean Christopherson wrote:
+> On Tue, Apr 29, 2025, Borislav Petkov wrote:
+>> On Tue, Feb 18, 2025 at 12:13:33PM +0100, Borislav Petkov wrote:
+>>> So,
 >>>
->>> Add tips to clean source tree to build help message. When user run
->>> kunit.py after building another kernel for ARCH=foo, it is necessary
->>> to run 'make ARCH=foo mrproper' to remove all build artifacts generated
->>> during the build. In such cases, kunit build could fail.
+>>> in the interest of finally making some progress here I'd like to commit this
+>>> below (will test it one more time just in case but it should work :-P). It is
+>>> simple and straight-forward and doesn't need an IBPB when the bit gets
+>>> cleared.
 >>>
->>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->>> ---
+>>> A potential future improvement is David's suggestion that there could be a way
+>>> for tracking when the first guest gets started, we set the bit then, we make
+>>> sure the bit gets set on each logical CPU when the guests migrate across the
+>>> machine and when the *last* guest exists, that bit gets cleared again.
+>> Well, that "simplicity" was short-lived:
 >>
->> Thanks for doing this.
->>
->> This looks good to me, save for the issue below.
->>
->> I do wonder whether there's a more general fix we can do in the
->> makefiles, but I'm not sure how that'd have to work. Maybe by storing
->> the architecture used somewhere and amending the error based on that,
->> or hacking around the specific x86_64/UML incompatibilities. But let's
->> go ahead with this fix regardless.
-> 
-> I agree the right fix is to see if kunit.py can suggest the right arch
-> to clean. I will take a look at that.
+>> https://www.phoronix.com/review/linux-615-amd-regression
+> LOL.
+>
+>> Sean, how about this below?
+> Eww.  That's quite painful, and completely disallowing enable_virt_on_load is
+> undesirable, e.g. for use cases where the host is (almost) exclusively running
+> VMs.
+>
+> Best idea I have is to throw in the towel on getting fancy, and just maintain a
+> dedicated count in SVM.
+>
+> Alternatively, we could plumb an arch hook into kvm_create_vm() and kvm_destroy_vm()
+> that's called when KVM adds/deletes a VM from vm_list, and key off vm_list being
+> empty.  But that adds a lot of boilerplate just to avoid a mutex+count.
+>
+> I haven't tested on a system with X86_FEATURE_SRSO_BP_SPEC_REDUCE, but did verify
+> the mechanics by inverting the flag.
 
-It is an easy change to the main Makefile. Will send the patch tomorrow.
-We won't need the documentation and help message changes with the main
-Makefile change.
 
-thanks,
--- Shuah
+Testing this patch on the same EPYC Turin server as my original tests, I 
+can confirm that on a clean boot without any VMs running, the 
+performance is back to where it was on v6.14. :)
+
+Thanks,
+
+Michael
+
+
+>
+> --
+> From: Sean Christopherson <seanjc@google.com>
+> Date: Wed, 30 Apr 2025 15:34:50 -0700
+> Subject: [PATCH] KVM: SVM: Set/clear SRSO's BP_SPEC_REDUCE on 0 <=> 1 VM count
+>   transitions
+>
+> Set the magic BP_SPEC_REDUCE bit to mitigate SRSO when running VMs if and
+> only if KVM has at least one active VM.  Leaving the bit set at all times
+> unfortunately degrades performance by a wee bit more than expected.
+>
+> Use a dedicated mutex and counter instead of hooking virtualization
+> enablement, as changing the behavior of kvm.enable_virt_at_load based on
+> SRSO_BP_SPEC_REDUCE is painful, and has its own drawbacks, e.g. could
+> result in performance issues for flows that are sensity to VM creation
+> latency.
+>
+> Fixes: 8442df2b49ed ("x86/bugs: KVM: Add support for SRSO_MSR_FIX")
+> Reported-by: Michael Larabel <Michael@michaellarabel.com>
+> Closes: https://www.phoronix.com/review/linux-615-amd-regression
+> Signed-off-by: Sean Christopherson <seanjc@google.com>
+> ---
+>   arch/x86/kvm/svm/svm.c | 39 +++++++++++++++++++++++++++++++++------
+>   1 file changed, 33 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> index d5d0c5c3300b..fe8866572218 100644
+> --- a/arch/x86/kvm/svm/svm.c
+> +++ b/arch/x86/kvm/svm/svm.c
+> @@ -607,9 +607,6 @@ static void svm_disable_virtualization_cpu(void)
+>   	kvm_cpu_svm_disable();
+>   
+>   	amd_pmu_disable_virt();
+> -
+> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> -		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+>   }
+>   
+>   static int svm_enable_virtualization_cpu(void)
+> @@ -687,9 +684,6 @@ static int svm_enable_virtualization_cpu(void)
+>   		rdmsr(MSR_TSC_AUX, sev_es_host_save_area(sd)->tsc_aux, msr_hi);
+>   	}
+>   
+> -	if (cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> -		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+> -
+>   	return 0;
+>   }
+>   
+> @@ -5032,10 +5026,42 @@ static void svm_vcpu_deliver_sipi_vector(struct kvm_vcpu *vcpu, u8 vector)
+>   	sev_vcpu_deliver_sipi_vector(vcpu, vector);
+>   }
+>   
+> +static DEFINE_MUTEX(srso_lock);
+> +static int srso_nr_vms;
+> +
+> +static void svm_toggle_srso_spec_reduce(void *set)
+> +{
+> +	if (set)
+> +		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+> +	else
+> +		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+> +}
+> +
+> +static void svm_srso_add_remove_vm(int count)
+> +{
+> +	bool set;
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> +		return;
+> +
+> +	guard(mutex)(&srso_lock);
+> +
+> +	set = !srso_nr_vms;
+> +	srso_nr_vms += count;
+> +
+> +	WARN_ON_ONCE(srso_nr_vms < 0);
+> +	if (!set && srso_nr_vms)
+> +		return;
+> +
+> +	on_each_cpu(svm_toggle_srso_spec_reduce, (void *)set, 1);
+> +}
+> +
+>   static void svm_vm_destroy(struct kvm *kvm)
+>   {
+>   	avic_vm_destroy(kvm);
+>   	sev_vm_destroy(kvm);
+> +
+> +	svm_srso_add_remove_vm(-1);
+>   }
+>   
+>   static int svm_vm_init(struct kvm *kvm)
+> @@ -5061,6 +5087,7 @@ static int svm_vm_init(struct kvm *kvm)
+>   			return ret;
+>   	}
+>   
+> +	svm_srso_add_remove_vm(1);
+>   	return 0;
+>   }
+>   
+>
+> base-commit: f158e1b145f73aae1d3b7e756eb129a15b2b7a90
+> --
