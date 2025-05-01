@@ -1,100 +1,97 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0AB21362;
-	Thu,  1 May 2025 14:45:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8E11362;
+	Thu,  1 May 2025 14:47:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746110715; cv=none; b=qxjNlWuC3vM0kCdI/XM9cIqnWWIBZ/3eRmxUPozbn/u9HUytNA4hHz6+fzU7tXKiWGG5xSIxZzJOeVSy8T6d0XnncMO6IeRh201wmeaD7Ny9YkwPjdLkrdZ3A9ERtLDJS0la7uKC+2AkkdW0FAvbteL5uhSpOcw2r2DLKIR3d8c=
+	t=1746110864; cv=none; b=MW+LLhoUizzaKpQDubvNRzbYCX4B2XY7Y1YxcD7k/PYyhHVUOnitrOAnu0IC9nTShiQWS5vX+JzVzkRRpRgMD7dTFfCesw9iQmJQPu03pLShILEIDviS4XOV5UCMAozQqCaT5ZHxDrAI3uAUoHK2X1cnBrarYSQEIfwZ8LbwSZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746110715; c=relaxed/simple;
-	bh=MX70R5qPsfWN7vxQk7uLTqtc2qhE2pX88q+5UFPDCD8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mLKHX5VdXegNsX2+2xfrnLzsnFmECymjFmDw0FJk1uGfqIn9lYXrcc9MzYUWxhSyvWev6cjgnHWCRI4HChCeNEOUfaHNW+9bX/1fDcIexPmCvtlUGvNZdFqfSIWNqbavW15xVUCGQnE1zk5boe++E9i4qPA6FlI6gc9KkL4s2G0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=cT1FwcLr; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+	s=arc-20240116; t=1746110864; c=relaxed/simple;
+	bh=rx9dpJQAn32YPiRcOKoaENDMtIstk9odnIzJQtw8S4U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mqakXQ2CI1GS1bsP/NW1ERZuyKjk2By21oLKal/Qj2LKYXzmrexzQ0qgAqBEsDm0eVXW0+I23F2GBZCc95R8Cis1A3K5yjKvZuePL10hFy2HOFqOo9hPvcdcW8ESknI10OEplS+D/CqG7RaNbgHbdVP6kLxxZ3HmG9ncCe+GyGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WJSE9Ij9; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cT1FwcLr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ScPmgBC8PfQMdSp/4s7cQBxvsXeTUFa41CdsXzvcv/I=; b=cT1FwcLrsesNlO2TAolL/XpPqT
-	jzCIxeOn/r3wO2PKVdTCeas0VWT0TM877kShlZ4JxVwZ998C9GmX8IKknFAMVYoIoHif+iFBv7Bbd
-	Aog26vcpg99lzCdI8KMVLiQycZUR0KPRJrU9jY6amQH1Ug+g+o9XyKQzqfgKR+Fwvda2e54C83fsH
-	sbekSn8d4zztPLX173cxX8EDZ0rkJAydftEDTMfnZXtlwPUhRtY9leHwBIaSx2kC2i7HHg5aW3uwF
-	Bpw3ofYVY/xG5RivvwVBZWlKs2Rwj6Mw2dC6xR4bRXwdP8qcZoZjw9uDarT8t/RGiaHusMfqhVSr+
-	eHi1fU4w==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAVA1-0000000Fzzw-1KWy;
-	Thu, 01 May 2025 14:45:13 +0000
-Date: Thu, 1 May 2025 07:45:13 -0700
-From: Christoph Hellwig <hch@infradead.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] scsi: sd: Avoid -Wflex-array-member-not-at-end
- warning
-Message-ID: <aBOI-cmnvqMjV0yX@infradead.org>
-References: <aAwos0mLxneG9R_t@kspp>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WJSE9Ij9"
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 541ElYbt3637973
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 09:47:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746110854;
+	bh=z0w/UXsVt0Lshm8wHvoGxfcccGwZssXaLpQf3r7A6A0=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=WJSE9Ij9cQ/revMWAsnAo8a6tiLns6Hox6sYdTj3mK0jyMCBwlWW9u283VwnLbySj
+	 cqZRxldIBIUkD7Al8HdDm0TtiPDF7h/BhIz2VqcTxwaEK1eqiUs+DKUlBLTQ//2/HI
+	 dJOkoswiZCVjjP3awjpTM7jJFCUEgx+4inA2/+v0=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 541ElYFw058719
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 1 May 2025 09:47:34 -0500
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 1
+ May 2025 09:47:34 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Thu, 1 May 2025 09:47:34 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 541ElYhI104710;
+	Thu, 1 May 2025 09:47:34 -0500
+Message-ID: <406ae5d2-9a4a-47be-9663-d746d9661f1f@ti.com>
+Date: Thu, 1 May 2025 09:47:34 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aAwos0mLxneG9R_t@kspp>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/2] Introduce PRU UART driver
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Kevin Hilman <khilman@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>, <linux-serial@vger.kernel.org>,
+        Hari Nagalla
+	<hnagalla@ti.com>
+References: <20250501003113.1609342-1-jm@ti.com>
+ <2025050103-graduate-anteater-e6f6@gregkh>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <2025050103-graduate-anteater-e6f6@gregkh>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Yikes.  This is way to ugly to live.  Just remove the silly flex
-array entirely and everyone is better off:
+Hi Greg,
 
-diff --git a/drivers/scsi/scsi_proto_test.c b/drivers/scsi/scsi_proto_test.c
-index c093389edabb..2fc5c6523184 100644
---- a/drivers/scsi/scsi_proto_test.c
-+++ b/drivers/scsi/scsi_proto_test.c
-@@ -30,14 +30,6 @@ static void test_scsi_proto(struct kunit *test)
- 	KUNIT_EXPECT_EQ(test, get_unaligned_be16(&ss.s.stream_identifier),
- 			0x1234);
- 	KUNIT_EXPECT_EQ(test, ss.s.rel_lifetime + 0, 0x3f);
--
--	static const union {
--		struct scsi_stream_status_header h;
--		u8 arr[sizeof(struct scsi_stream_status_header)];
--	} sh = { .arr = { 1, 2, 3, 4, 0, 0, 5, 6 } };
--	KUNIT_EXPECT_EQ(test, get_unaligned_be32(&sh.h.len), 0x1020304);
--	KUNIT_EXPECT_EQ(test, get_unaligned_be16(&sh.h.number_of_open_streams),
--			0x506);
- }
- 
- static struct kunit_case scsi_proto_test_cases[] = {
-diff --git a/drivers/scsi/sd.c b/drivers/scsi/sd.c
-index 950d8c9fb884..3f6e87705b62 100644
---- a/drivers/scsi/sd.c
-+++ b/drivers/scsi/sd.c
-@@ -3215,7 +3215,7 @@ static bool sd_is_perm_stream(struct scsi_disk *sdkp, unsigned int stream_id)
- 		return false;
- 	if (get_unaligned_be32(&buf.h.len) < sizeof(struct scsi_stream_status))
- 		return false;
--	return buf.h.stream_status[0].perm;
-+	return buf.s.perm;
- }
- 
- static void sd_read_io_hints(struct scsi_disk *sdkp, unsigned char *buffer)
-diff --git a/include/scsi/scsi_proto.h b/include/scsi/scsi_proto.h
-index aeca37816506..bc8f2b2226be 100644
---- a/include/scsi/scsi_proto.h
-+++ b/include/scsi/scsi_proto.h
-@@ -349,7 +349,6 @@ struct scsi_stream_status_header {
- 	__be32 len;	/* length in bytes of stream_status[] array. */
- 	u16 reserved;
- 	__be16 number_of_open_streams;
--	DECLARE_FLEX_ARRAY(struct scsi_stream_status, stream_status);
- };
- 
- static_assert(sizeof(struct scsi_stream_status_header) == 8);
+On 5/1/25 12:18 AM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 30, 2025 at 07:31:11PM -0500, Judith Mendez wrote:
+>> This patch series is sent as an RFC to get some initial comments
+>> on the PRU UART driver.
+>>
+>> The ICSSM modules on am64x SoC and the PRUSS module on am62 SoC or am335x
+>> SoCs have a UART sub-module. This patch series introduces the driver and the
+>> corresponding binding documentation for this sub-module.
+>>
+>> The DTS patches for adding PRU nodes and enabling PRU UART will be added
+>> in a later v1 version of the series if accepted.
+>>
+>> This driver has been previously tested on the following boards:
+>> am64x SK, am62x SK, and am335x SK boards.
+> 
+> Why is this "RFC"?  What needs to be done to make it something that you
+> actually feel works properly and should be merged?
+
+Nothing needs to be done IMO, the only reason it was sent as an RFC is
+to get initial thoughts/issues that anyone might have with the driver
+before sending v1.
+
+If none, I will go ahead and send v1. Thanks for your attention Greg.
+
+~ Judith
+
