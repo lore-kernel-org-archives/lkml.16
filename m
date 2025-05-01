@@ -1,91 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 324F3218AB9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96DA1F03C9
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:18:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746123189; cv=none; b=ZRxfhT6kezU0ROZARAuFRmdXGXX0KrrjvlkD8/XeYHrYXHZUwLj6cL5rcvg4ci8yd/eBweZCMIIgJcB0G6lqfhqO2uiCzdCZgAcDwAIO0sYVv8GauNsj+OppvWUAnTSlx7mPXyvTgXFJxrA1Q0YgJ6St1Q6IZcRX9kwkMngt2GU=
+	t=1746123513; cv=none; b=NXj3RqAGQZPJEJqsUw56YNOCK+qZqQD+5Tbsq9kfCnPoV09ktZpBKwKa1FnBHl7Rr8F4zWDMDnqAs0SQ9Q2tg2fbjtJR4LX1c51cQMMq3YTulgDy3zRf/LRcnSptC9QBRMubacxh+8aiHRS5KIMjnA4GSiyBHmxJojApRgJikAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746123189; c=relaxed/simple;
-	bh=orKMMdq9gN1Uy0eUdHFXvJY2/aFW9UG8f5Jw9EztR+0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YQ3qv/cnDqM92EsegoL6Eluhgc0fMWy8OopeW8ujYRSQ2rz4NdV3velKx1wtY+6/XgQa+mO5tE4+Mps9GPcRq5Muk79UUBrzHKxp0PlOpFnM0H+bASt9xqZUDTewWfFxf0UBCWGrFE2mLjJCJD9xTDRkBx5W1/9xveKHHImzgvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R/tSD/l+; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746123513; c=relaxed/simple;
+	bh=Bs65hmBerDzw86WHcuc6JfzqzQ0LGwVtKANJRqGPlxw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SsBCXAZEx6RvEXxg/k+6RN37r1ckoxdASLFo7TiIqicyR0um0/D0bsLOdL/nNVwq4yapT8I4+YoQG5h9uPgK+lgOA97gPJqHmler487fd8CKUMfv4rajgq643/gXxzRqb5gqX7IqYW2MiwFJ5W9on1BLsx+6/Ag5q2wOfsWvwFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cDWsfJo0; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R/tSD/l+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746123186;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=orKMMdq9gN1Uy0eUdHFXvJY2/aFW9UG8f5Jw9EztR+0=;
-	b=R/tSD/l+XfqiG9mLXUuDD+n9pioQB9PGVaZuEfWtZ3PMbtJOohlwexZWHFHqCMmCN9zeNQ
-	8+1+aOT3TdIvg6NM5EQCqwl6xoS0jYVVyjzPom9IZpUQAw3mXG78cB4lf0tclMsbrxgs3h
-	tpIphh2tMPc0aHn1uKzIV5TC0u1riWE=
-Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
- [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-193-zYZaPd7ROdK9oYzZuLncjw-1; Thu, 01 May 2025 14:13:05 -0400
-X-MC-Unique: zYZaPd7ROdK9oYzZuLncjw-1
-X-Mimecast-MFC-AGG-ID: zYZaPd7ROdK9oYzZuLncjw_1746123184
-Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so880301a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 11:13:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cDWsfJo0"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cee550af2so1929355e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 11:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746123510; x=1746728310; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=C/UMJQK0fDPFna6VgYR5otfjgezyEmqdwAo+cCcx8Gs=;
+        b=cDWsfJo09kgn5BR1GSNs4UNnKs4n97/87Z/Cg5NNfk+ESkXHlThSfxH1U3Vr77KVD1
+         uTd7cGsYiOX4TK2yvTxk+MZ3YYpkb4Eo/zbPLiZ9wNhHe+DuD3YiKoMYS+l7VCHHKX8W
+         UHDXF4nbBG9jccGlWEyzxucgNpREfUqtN2gG987cDKYxxJaN1joNj0eVp9vil8g7XEn2
+         FsdxFKw3JoiTU8PcN58AONDAJDj14dl92nu5tw6IdMIgeOdnUv94l02J71bb4E1eykVs
+         nEWD5htJY/SV+nOMPmKaL2AkY7cr5e3+/jydlhjj156iletSZqlTpB+JCbdIOcQ3Hsyj
+         d7Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746123184; x=1746727984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=orKMMdq9gN1Uy0eUdHFXvJY2/aFW9UG8f5Jw9EztR+0=;
-        b=ZUG5hTtkNdIDf0jxLOnVZR/GkgoT0DYwDVDFIB6MZZHpkRg7vaV9PhfrcW3LUL8pKU
-         HGSxXJTragEMTZPwiMZNQ6FLMMkZSWlvblyZhlBe7PknOqQoEfHUQQlmEyQjrkoC4Mbn
-         xeDQFN4h9Ujg7omZm59e+GXSQIhX7liG1nGUW5ZxXhKr8BF2Lp/IhMPYkkrgtRsmVzs9
-         RIfqBnCpzm9tFLEezOQoaWXIjWr9w/88PQTSYJQ3HyP9+eqHJRmaK3rPl+XJRjvFn4Xs
-         9aKdC03wLwN1lBUASvQ2lDXk10M5hvvYywcCxFDz1oc9ZavuENrUGL4g0UbecZ2lBAcZ
-         YPDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7RxXx5CisQ+L46ZUUNEAAQ+Ia7+5u6kg2EFgxpW1HImOfiY7st+j2LG63jMxcOJ53D36fjwk2jpWHKjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBXA9WZqkYn60HQGmCCBMJrKercxFQtcmH7PbWUQih6pskjAu/
-	+9Lp2zRJwmri3WbO4q8tPUmu5TCbhuHGW13v56j4wA3XH6SmY/OUDCIm64k0u6pjl8GbKQjkPwH
-	bfGIHjmTutA+BfeX2jULvITEUNDw95xNcwiPSUsAro59BVr9hYogRpfBw5/lQ1I8UZ31nUKjPJX
-	AIiLYYD3wCJgGb/OgYiNsfkxSSg9tsxdnOqVo1
-X-Gm-Gg: ASbGncuiFdvFOFdNaI9Kz6SFx0cGfWVNjHmnuy5/yu+LSEcmPa4zEEmSI5Gzp+OdIDG
-	WaWiRMMh14W2wWxViLYtuxCgWgOxtUhSR6YqIeH859d28hIh+40zEUKtW4PiHARaTRU50GV2rc5
-	9D220CCusO156nVGFB9zCZH2OAeSs=
-X-Received: by 2002:a05:6402:2712:b0:5f7:2893:a6a4 with SMTP id 4fb4d7f45d1cf-5f9193c8ceemr3025577a12.13.1746123183802;
-        Thu, 01 May 2025 11:13:03 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFzw1qAMlPTeCyAI2DAnaT/0znUw7Y0kh1s/V5jH+CzIvUHnnt20FZtg5X6HDdIHPTx/IhQPG4wRtra2vetY2I=
-X-Received: by 2002:a05:6402:2712:b0:5f7:2893:a6a4 with SMTP id
- 4fb4d7f45d1cf-5f9193c8ceemr3025554a12.13.1746123183440; Thu, 01 May 2025
- 11:13:03 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746123510; x=1746728310;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=C/UMJQK0fDPFna6VgYR5otfjgezyEmqdwAo+cCcx8Gs=;
+        b=AfxBa+2FbzDjCUquJhkxliqlx3B3FPRE8r/bl+dpqOGeQYzdvHI7WJRBezd72HmVDI
+         7vDzUOd9ScOeYKLka7wW7KibXgNKFbesJJeegtPd6tDV7aNIxLKlO5iy7dw0F4pf70ss
+         FesUPGydXyjfqktj1L+WhNpklzz6BTP+pT+nYn4iRcNEF04F8bkMbzKdeRsIMQYfv942
+         WCSHSBnA29QLI027y/B6njKSDKcnvNiNEg/JKYNBAlB1LNV8CMsH5uk8KfUL1K1OkTV6
+         PEpSx76F1iF14phOHMHTe//nOJiU8iU4laDfgflJK0fQJQ9ZC/VbLF0uv+ANT0lBoBZI
+         E9hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBilr1bPiU75FLwThsuJ1UtdTN1rnP2LThVfUBhTvwrC/AnNz0eiGChCV6dACtQ4Znk6k/yMtLeiBbcIo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyjgOBoJ5XZ+aJ/Er51fVD5SQ7LNQs5KvKStXMp7tQHY6PiVfWc
+	zNKIrEui8+eYI1XcdEc6Wunf8JsTw6QL6kaab67pJFOP+L2LOgN64iF/12H/jMU=
+X-Gm-Gg: ASbGncsQ1fDo2Y2x9HEw4Qjoe5lUq/ZBFxzMX1MFwhcja+0FZaBJjrMIMoI32I1HEXp
+	aBH69CbIzvN4YJ8qzo23lT0ZN0NgTftStycdSLFWs/LQM4YgCC9ml/66LQLUqR8L8oFY6uMNtPY
+	IoEJ6C0XLXy5eUf7IHsaU5739qEatvSmTNe+4mZeY1EwUBWd3cUf4qEXdZsDLO33nldbWjeGVnU
+	7lOtWxiAZOVFSG8TuBC2mEV6cTsetf+cVBwM7Y1TkIRFDtOK5mOpCX+3X48Mza1eeg19cct2IMp
+	UbbO5G+fSQJCsAjWfsAag93Dw0PqP0zIC7WKnbgkBWqUvzZ37Q==
+X-Google-Smtp-Source: AGHT+IHIEo+ZAu1k9D4WsfxJ/FXqeihHwzbmWF84AvD4XscMnqNtzTlfERKxnMsBfMPW4udchgmQjQ==
+X-Received: by 2002:a05:600c:c13:b0:439:930a:58a6 with SMTP id 5b1f17b1804b1-441b2dfb921mr26362435e9.8.1746123510017;
+        Thu, 01 May 2025 11:18:30 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b28dadsm66947615e9.40.2025.05.01.11.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 11:18:29 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Mircea Caprioru <mircea.caprioru@analog.com>,
+	Peter Rosin <peda@axentia.se>,
+	linux-kernel@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2] mux: adgs1408: fix Wvoid-pointer-to-enum-cast warning
+Date: Thu,  1 May 2025 20:18:20 +0200
+Message-ID: <20250501181819.164207-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127170251.744751-1-costa.shul@redhat.com>
- <20250227200623.60f20571@gandalf.local.home> <CAP4=nvQXaFmemBeW8U3U9zTMK0gVYvp23gfq_6ALsBJPTXt9Uw@mail.gmail.com>
- <20250303150351.28007ad1@gandalf.local.home> <CAP4=nvQ9pXYtihL7HTTRK=EzUEubtWbxDr78JswksSo-wa7zYw@mail.gmail.com>
- <CAP4=nvTCVLa5MzBbJVz=S_ZiDoJ2hY-8fM+uRnGgumi0sFivWA@mail.gmail.com>
- <20250304121053.06b84874@gandalf.local.home> <20250501104251.46c2e1fb@gandalf.local.home>
-In-Reply-To: <20250501104251.46c2e1fb@gandalf.local.home>
-From: Costa Shulyupin <costa.shul@redhat.com>
-Date: Thu, 1 May 2025 21:12:27 +0300
-X-Gm-Features: ATxdqUF1UicCo53Lzxl87-4gQodTQGBOAsSCzXPl1dl8uCilZuvNe0SaqkbpGhw
-Message-ID: <CADDUTFzQuwVCXO=BDhx8pXLo3Z-3sQMfw1-wHtB95i4wWuuv=Q@mail.gmail.com>
-Subject: Re: [PATCH v1] rtla: Save trace when option `--trace` is specified
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1054; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=Bs65hmBerDzw86WHcuc6JfzqzQ0LGwVtKANJRqGPlxw=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE7rr52rnbp6J10hjkoCkTBnbws299vlnojR5b
+ tMyhIcjrHCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBO66wAKCRDBN2bmhouD
+ 11NUEACJRat7dfQhKRLOKvPe2J7Fbg3zCopIC7s0WKOWA4iG8DmhHWjxOI+l84kugo3I4Zd0Mke
+ 2JnDwn6R+nNejHBKc5UyTNBYeMh188of/kP8IvR3vb5nDH2J65pLwPXbH3Est1ucDA9y0j/0mLY
+ O/5Qrr4FhnLksHLlgV1WQeOP4Ld6GI6B3zEetXZupXhLwDmOJA+ficbJEZZt8oX4H0/wPNJTDMl
+ A6oyWVOg+ab05Z5l+81IRLfBq/szZjytyedRqaHsjxwhtd6x05erAVBJJRvMIgNrDmgMKouAkDm
+ agDRDVFjwkFe3Ti+zOCMRRzuHczzOnwdQHHIZP6s70x+2mjTJh4fzpAuOTnIukV4dVqEDqhu3ce
+ uMy7DBD18k5ltSqyLcAe9mlA485gY0JQZRlpb27YV+NTbM4txmg1NMWTYMnqlimKNo7EKCGXeQo
+ mDEJj7QqoCxdAOLKnUR3JnfovNEv67LS5xN2Koh7uO1nwpUpZgvImKzVLZcd3qWU3TmIAx5JUlF
+ WmzqaL1f6wSAwN95ErQDONQhdsBTUufOWkjNgAAeV9rHyRXkPzox7NRRgogXO+ewg7dg9KlplC7
+ Yw61SMstL1P1nfFC+jJoPA4x0+x/iweVsB6mtUJmfpCExCQWKTCU3dgJYMweTxPU2RvMnXmdkIp ioLisIwKuvFeGqg==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
-On Thu, 1 May 2025 at 17:51, Steven Rostedt <rostedt@goodmis.org> wrote:
-> I just noticed that this patch was never applied. Is it still something t=
-o add?
-No, it=E2=80=99s no longer needed =E2=80=94 we can drop it.
-Costa
+'chip_id' is an enum, thus cast of pointer on 64-bit compile test with
+W=1 causes:
+
+  adgs1408.c:63:12: error: cast to smaller integer type 'enum adgs1408_chip_id' from 'const void *' [-Werror,-Wvoid-pointer-to-enum-cast]
+
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+---
+
+Changes in v2:
+1. Use kernel_ulong_t instead of uintptr_t
+2. Rebase
+
+Patch from 2023:
+Link: https://lore.kernel.org/r/20230810095822.123181-1-krzysztof.kozlowski@linaro.org
+---
+ drivers/mux/adgs1408.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mux/adgs1408.c b/drivers/mux/adgs1408.c
+index 5386cfedcb06..5eaf07d09ac9 100644
+--- a/drivers/mux/adgs1408.c
++++ b/drivers/mux/adgs1408.c
+@@ -59,7 +59,7 @@ static int adgs1408_probe(struct spi_device *spi)
+ 	s32 idle_state;
+ 	int ret;
+ 
+-	chip_id = (enum adgs1408_chip_id)spi_get_device_match_data(spi);
++	chip_id = (kernel_ulong_t)spi_get_device_match_data(spi);
+ 
+ 	mux_chip = devm_mux_chip_alloc(dev, 1, 0);
+ 	if (IS_ERR(mux_chip))
+-- 
+2.45.2
 
