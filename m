@@ -1,145 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2069.outbound.protection.outlook.com [40.107.93.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF85DDA9;
-	Thu,  1 May 2025 00:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746060765; cv=none; b=VLarwB9w/vj3Pb1B9NoJlAQYfK4Q8wiDDH3ZZs1mgjj92bBtMcn5oIslREU6B5C3ae3Kk0wB27KyTF93hKzad5EM4sES4TLgMIA/19dGN+w7uKVFTIwmY9QOYbxfj/GGLyTw+XEZ+1WxxJ8BAFLPNpdkjwdrymuj3Mb2yKKVFKg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746060765; c=relaxed/simple;
-	bh=LDZGBQNcsIA064rbXGgXPhU7sqWZ/3CVEUVEmDe0AWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QuAz5k+o1/vNgNYwYhfWfxQXWgxWKlGXI8YaLtbq8JxSp3blSHfND0rHLj+5EkgWjnosHMiaXMWGHNSEKhCMmNGwZhElliEdzxHQlv/PWJPaIknJs747/y8GO+Di3OJuQN6x2wGLABbQ3cxu6wVQ1k6JkGxU1sCC9Q2OXLA7jig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NWOzK+4+; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A1120EB;
+	Thu,  1 May 2025 00:54:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.69
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746060896; cv=fail; b=JJrYywCA8LOtpLNXiZVuYumDbMD5b4T/HGodiSV6p24JMQl6O8DIaex0F8LGwWxs5q26MpKq9DYnWpcXBiF2N7qRbLZyCAzjgXudWaAzMxN1uwklGNbq0xK0i+dYH4nKzz0riUptmFLSBd7GKov6pE+C3W0gT2rHVo9ES+Cxff0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746060896; c=relaxed/simple;
+	bh=AlAQbKU1JUROLn0OsNg1qC3HGVb80iAdkTdVuNui8uI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rrNM/JfEAnBMXdEPLM0uwQqlfnwQhEDFXu9T9P96Um8uV1ByZheBA/QrG/ymIAtSJytnMqOTFYPR9+FusjAtlgWe82GTmgtZhWeUOgGSL1fN8gMvDL/Hc9j1Fmj/JO4YwhU6k9r2fX+hp0MNhaZoCkJ/DxbXJWcuKey6483I3NU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NZTwtEdI; arc=fail smtp.client-ip=40.107.93.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NWOzK+4+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746060763; x=1777596763;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LDZGBQNcsIA064rbXGgXPhU7sqWZ/3CVEUVEmDe0AWY=;
-  b=NWOzK+4+0EV0TywmcqeK54rO4ZABA54AGBnQZiFiE5BxSywUkrczciYh
-   K/J06zm0ei6oBFaKWny4J5Jd3nUTEKhKzq4kbWsZyeXVUhgUgNciU+D+L
-   ouIgPym9uXsbk0MtBb35tOFJm/kmYDtW0Rnl6167CvmyYHWGCXB4VI80R
-   3WNm4kGZAAweN0tm4x4P4atygPG7QG7fctQQHlg8t7haEjnwKpJKKhCV9
-   ZDt0wfQzr5NxFpTj1m7jKQN85MYWtjyaGS6n7VbPZ3QpPpg9CjZwQyokG
-   ygrqDvJYN4FqYL94Od6uQ4odoiunRO+fOA04eRpQxm6STscb41XDoxhAL
-   g==;
-X-CSE-ConnectionGUID: cvQlpOefRO2a492bEr3MCg==
-X-CSE-MsgGUID: kRC+hE4oSw6yttcYWHxltg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="59102541"
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="59102541"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 17:52:42 -0700
-X-CSE-ConnectionGUID: CZ7wJ0HsTry5iIOxqydNWQ==
-X-CSE-MsgGUID: FivrNy4gQVOiBEzlJsy6KQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="165336468"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 30 Apr 2025 17:52:39 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAIAH-0003s5-0L;
-	Thu, 01 May 2025 00:52:37 +0000
-Date: Thu, 1 May 2025 08:51:46 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Daniel Axtens <dja@axtens.net>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-s390@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from
- atomic context
-Message-ID: <202505010807.0tj4Krnz-lkp@intel.com>
-References: <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NZTwtEdI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K3PH9Mymxaq5XiM5njVsl+iZ7yTmrUsbm+AoUG0TMltXY89klAngIw9Ychj/Qxe/c9Cz8zIRR8ECddcdHU6UuNLAmz7rTWRwKE1AZdTI3T88zBRX86zq0jxbOCZpR1DWaTytlTVVN3Nagngf2hnWuSm7+l9uSyACjh8swB6JeIukg+LMNrgu6rQgIbU0UbBIHXc40//Sv3u1mGZkwswSjprUPd+PCC9L9/yvi/pVwoz/erXcuTyBpKrnRvAbU1L5NVjMK7OnEw8maL5oRBSq7kJcJm+zlqfLEY4E6bwCLn0DLp/btQl1JlT3y/rBDvAYu57XaXn7+E42cr3o9Yh0Ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hvilShwMKmOhEtxT64Icd0+dLsetgu0O5uyiJDBA1Kg=;
+ b=speXgSh3XJ9UoFwh2yv3WVeiNFujWrVLixHX5a54b3XQKU+VAH1WW8/2neFpv3iMT6QXNd10hjNoH83Sl5RZ5HcwGlWMhB5b6t6xZvOczKMzNcqyw6XmppKQEhFxZDa0Ykdm7l9tKkwqPPffYs+9YXpOBGXQi2wgBfmMYhVKbEoGmusNXHmNaJ8rYVtHB4f30nevEkhv5ntOGAcLxJgUc+BiGwakWg5m4TbeZRx0ZNyh2vsQpZMyqtF56/wrJ3vQn6TLsqBhcZ62d+x3L8EYFPaTuLtGey1R9lNTa/A40w2Xud3gXBDLY32R3y29YjouZOr+SbbxBljRVA4ANJlySA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hvilShwMKmOhEtxT64Icd0+dLsetgu0O5uyiJDBA1Kg=;
+ b=NZTwtEdIgc833u7B+tOx+Tcy0LyN+M5Qzr7fkGtYBTiAkYr9u0hG2ZYEPHLpqklmzbKjgbeUHGusxOc4BWeVRVbvnvjZqP9mWq9hBuSTWEVnXbGluLkTq4JDE3RAgPr5WOS9W36nbBSMXNvd6L9aeR6B4xAchcx9P1s5v+5zA0ZAZBMisKwCXVMnrz4gVMw53VrEqya7ZXHmmJ40jEOiPFmvRYwpcN/ORRDz2Df1vzl2iZEDmzaaNkJsPds5lm4VZleMM/9abOd/a6oq7mnrPNiPeFgr6fCFduA9GWA4VLpytj1GqUW+MLh3dFemPfM8axsnq2bc05jG3LapqYgMTw==
+Received: from SA9P223CA0006.NAMP223.PROD.OUTLOOK.COM (2603:10b6:806:26::11)
+ by PH7PR12MB6667.namprd12.prod.outlook.com (2603:10b6:510:1a9::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 1 May
+ 2025 00:54:48 +0000
+Received: from SA2PEPF00001508.namprd04.prod.outlook.com
+ (2603:10b6:806:26:cafe::16) by SA9P223CA0006.outlook.office365.com
+ (2603:10b6:806:26::11) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.33 via Frontend Transport; Thu,
+ 1 May 2025 00:54:48 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SA2PEPF00001508.mail.protection.outlook.com (10.167.242.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Thu, 1 May 2025 00:54:48 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 30 Apr
+ 2025 17:54:45 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Wed, 30 Apr 2025 17:54:45 -0700
+Received: from Asurada-Nvidia (10.127.8.14) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 30 Apr 2025 17:54:43 -0700
+Date: Wed, 30 Apr 2025 17:54:41 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: Pranjal Shrivastava <praan@google.com>
+CC: <jgg@nvidia.com>, <kevin.tian@intel.com>, <corbet@lwn.net>,
+	<will@kernel.org>, <bagasdotme@gmail.com>, <robin.murphy@arm.com>,
+	<joro@8bytes.org>, <thierry.reding@gmail.com>, <vdumpa@nvidia.com>,
+	<jonathanh@nvidia.com>, <shuah@kernel.org>, <jsnitsel@redhat.com>,
+	<nathan@kernel.org>, <peterz@infradead.org>, <yi.l.liu@intel.com>,
+	<mshavit@google.com>, <zhangzekun11@huawei.com>, <iommu@lists.linux.dev>,
+	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-tegra@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <patches@lists.linux.dev>,
+	<mochs@nvidia.com>, <alok.a.tiwari@oracle.com>, <vasant.hegde@amd.com>
+Subject: Re: [PATCH v2 21/22] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aBLGUby2dIiYCe7S@Asurada-Nvidia>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <b81b2332f793a9ffccc528d821f2ed3ac051f9e0.1745646960.git.nicolinc@nvidia.com>
+ <aBKdMaFLPFJYegIS@google.com>
+ <aBKmk6PNFreeyfLh@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
+In-Reply-To: <aBKmk6PNFreeyfLh@Asurada-Nvidia>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SA2PEPF00001508:EE_|PH7PR12MB6667:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b930f59-710a-474a-22b0-08dd884ac5e6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|7416014|376014|1800799024|30052699003|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jn6dCGp051Z8XcnHtzGRmDo376T+yPyqMZZD0PxCtRwXjmL9eR1UbYxcA2F5?=
+ =?us-ascii?Q?iVVWpk/6GZtwWdKJX5DdPzNx7pdiL1fUKL6MJP8aOS+brnB0RGrfEgpa0mod?=
+ =?us-ascii?Q?rpN1nAR7PtzHaNLalUGaHrnpUzThTVGCycrC7ksJvnEh7gVjF4MqQaFyjq1X?=
+ =?us-ascii?Q?WAxfnRAfr3yGUzapXT9UJeytVyMbOTSHBCYWnqLfgozTrW244pHbp9FjisIU?=
+ =?us-ascii?Q?uxbalxf449cvbBlhtT+uDWcYMxeiaQI+e3kAcEqHaff/SJKn5tXT85NSrCGt?=
+ =?us-ascii?Q?u66MrC8py3DlFiTnBcHrW/szkvYQa+41hEVA7WLI9jggY9JkDuNlphin5iBx?=
+ =?us-ascii?Q?kFBSkVuB1og6S5wlF4u12DZ88Q7JJqAJ7BQj1w9Kb23YWhsDikC/3wNnItFg?=
+ =?us-ascii?Q?Q2otdfpmm3I/30mj6/qcDCCJv4VRjlcHiYBbx3y1+U4jKQWEvruJxnG46fVW?=
+ =?us-ascii?Q?wJsimLrnZpQAh6kiSD2A3ahyfIU6DRijEYBeWGebexJxHcO4FL41CJiEhx7K?=
+ =?us-ascii?Q?7QDXe9WGTvc8gYcaiFHvx1QmD2PbFHGBZbKMEF+q9igOB0qaMDSOq/LPk8qr?=
+ =?us-ascii?Q?Mbp8nbEwAxkHyvWBsSBIHrrLS3lyCN5IPAMYocQ8DLCMNM/UP2hoz3dMw02g?=
+ =?us-ascii?Q?Ps7R32Tlj2Fjl1BG8ikhSUyRTqoLSwrXLSjush8LC3WOn2jLTkOorhDE7TD0?=
+ =?us-ascii?Q?Jjl0yQ7+L8tF2rukNN5n+SkYRVg3NGbyUEyNvm9Ut1UAZzIqxHi2XEIwGLq1?=
+ =?us-ascii?Q?wtmzi1rdJIEp2V15nbl4vUML7vcb7Qmqq50x5TOrDDIVqzVzHN0s7ZFb2XjU?=
+ =?us-ascii?Q?5uFXDRcuo7IAboTJLsOvn0TTQSCkXKpvyUeQcT0GWgEx/MpLoyemGCc7CnzG?=
+ =?us-ascii?Q?pOtHTfQgzmlLV9HHm8yK24Yh2m1n70DWnNgFnw0GK5ywg9ykUkFQ8cehvJPR?=
+ =?us-ascii?Q?99+oJuygiA0xeP35OfARsYJPNM5PnaH3yhlSXBh1N2bJGepuPEyLZxVSmQmX?=
+ =?us-ascii?Q?Jl27KUcdwteaqyhunPF4KKJsmcbX8O+0lGvlOvPYpb7jsqAnb3MytBqVDWSB?=
+ =?us-ascii?Q?RbO3SDYtxd4+QLq3QHGaEk3c6wS8AGZtckTW+2n7aS1fwVnMR2o8JiLWSGkn?=
+ =?us-ascii?Q?rnkcEhpeubWaW/jz7Q7jwmUBijk94swtOKD39eVPatMcaRUFR7SfcI/C2blH?=
+ =?us-ascii?Q?nIi79I22RZIUJQrNIV7luPMpxsLsFrDL5pjbi/0luMhgx0my7BWfHvjiNmlD?=
+ =?us-ascii?Q?f1boTtCDRctZBdQKk6+P9rEXzmiLDwzr4WhYcgmB7QK4vMpMLKFNxbQy0Q0Z?=
+ =?us-ascii?Q?6tqPaAEFzEmIjffNYt3EG7PeRgIVuExgMUJD8Y3ngKVHr1QeUgXXfC/lLv12?=
+ =?us-ascii?Q?LxjYrdnba7SVIa4PM/MHWpz6wPCPeKyy/k1kmJDOGA6pEOaMWXWoIWDf0TlG?=
+ =?us-ascii?Q?Ud2ih5YgSDqKUGcmlkMkkMda4/PLaNY7kn1hV1YeWMR5anaA7DszpP1delu+?=
+ =?us-ascii?Q?xIWLlgOV8NCIjvqWcgirlMAp4qz6mEcQC3X3?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(7416014)(376014)(1800799024)(30052699003)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 00:54:48.4660
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b930f59-710a-474a-22b0-08dd884ac5e6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00001508.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6667
 
-Hi Alexander,
+On Wed, Apr 30, 2025 at 03:39:22PM -0700, Nicolin Chen wrote:
+> On Wed, Apr 30, 2025 at 09:59:13PM +0000, Pranjal Shrivastava wrote:
+> > >  enum iommu_viommu_type {
+> > >  	IOMMU_VIOMMU_TYPE_DEFAULT = 0,
+> > >  	IOMMU_VIOMMU_TYPE_ARM_SMMUV3 = 1,
+> > > +	IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV = 2,
+> > > +};
+> > 
+> > This is a little confusing.. I understand that we need a new viommu type
+> > to copy the new struct iommu_viommu_tegra241_cmdqv b/w the user & kernel
+> > 
+> > But, in a previous patch (Add vsmmu_alloc impl op), we add a check to
+> > fallback to the standard type SMMUv3, if the impl_ops->vsmmu_alloc 
+> > returns -EOPNOTSUPP:
+> > 
+> > 	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
+> > 		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> > 			master->smmu, s2_parent, ictx, viommu_type, user_data);
+> > 	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
+> > 		if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
+> > 			return ERR_PTR(-EOPNOTSUPP);
+> > 		/* Fallback to standard SMMUv3 type if viommu_type matches */
+> > 		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
+> > 					     &arm_vsmmu_ops);
+> > 
+> > Now, if we'll ALWAYS try to allocate an impl-specified vsmmu first, even
+> > when the viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3, we are anyways
+> > going to return back from the impl_ops->vsmmu_alloc with -EOPNOTSUPP.
+> 
+> That's not necessarily true. An impl_ops->vsmmu_alloc can support
+> IOMMU_VIOMMU_TYPE_ARM_SMMUV3 potentially, e.g. an impl could just
+> toggle a few special bits in a register and return a valid vsmmu
+> pointer.
+> 
+> It doesn't work like this with VCMDQ as it supports its own type,
+> but for the long run I think we should pass in the standard type
+> to impl_ops->vsmmu_alloc too.
+> 
+> > Then we'll again check if the retval was -EOPNOTSUPP and re-check the
+> > viommu_type requested.. which seems a little counter intuitive.
+> 
+> It's just prioritizing the impl_ops->vsmmu_alloc. Similar to the
+> probe, if VCMDQ is missing or encountering some initialization
+> problem, give it a chance to fallback to the standard SMMU.
 
-kernel test robot noticed the following build errors:
+I changed to this and it should be clear now:
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on linus/master v6.15-rc4 next-20250430]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
++       /* Prioritize the impl that may support IOMMU_VIOMMU_TYPE_ARM_SMMUV3 */
++       if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
++               vsmmu = master->smmu->impl_ops->vsmmu_alloc(
++                       master->smmu, s2_parent, ictx, viommu_type, user_data);
++       if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
++               /* Otherwise, allocate an IOMMU_VIOMMU_TYPE_ARM_SMMUV3 here */
++               if (viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
++                       vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu,
++                                                    core, &arm_vsmmu_ops);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Gordeev/kasan-Avoid-sleepable-page-allocation-from-atomic-context/20250430-001020
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev%40linux.ibm.com
-patch subject: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from atomic context
-config: x86_64-buildonly-randconfig-001-20250501 (https://download.01.org/0day-ci/archive/20250501/202505010807.0tj4Krnz-lkp@intel.com/config)
-compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505010807.0tj4Krnz-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505010807.0tj4Krnz-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> mm/kasan/shadow.c:313:11: error: call to undeclared function 'pfn_to_virt'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     313 |         __memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-         |                  ^
-   mm/kasan/shadow.c:313:11: note: did you mean 'fix_to_virt'?
-   include/asm-generic/fixmap.h:30:38: note: 'fix_to_virt' declared here
-      30 | static __always_inline unsigned long fix_to_virt(const unsigned int idx)
-         |                                      ^
->> mm/kasan/shadow.c:313:11: error: incompatible integer to pointer conversion passing 'int' to parameter of type 'void *' [-Wint-conversion]
-     313 |         __memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-         |                  ^~~~~~~~~~~~~~~~
-   arch/x86/include/asm/string_64.h:23:22: note: passing argument to parameter 's' here
-      23 | void *__memset(void *s, int c, size_t n);
-         |                      ^
-   2 errors generated.
-
-
-vim +/pfn_to_virt +313 mm/kasan/shadow.c
-
-   299	
-   300	static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
-   301					      void *_data)
-   302	{
-   303		struct vmalloc_populate_data *data = _data;
-   304		struct page *page;
-   305		unsigned long pfn;
-   306		pte_t pte;
-   307	
-   308		if (likely(!pte_none(ptep_get(ptep))))
-   309			return 0;
-   310	
-   311		page = data->pages[PFN_DOWN(addr - data->start)];
-   312		pfn = page_to_pfn(page);
- > 313		__memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-   314		pte = pfn_pte(pfn, PAGE_KERNEL);
-   315	
-   316		spin_lock(&init_mm.page_table_lock);
-   317		if (likely(pte_none(ptep_get(ptep))))
-   318			set_pte_at(&init_mm, addr, ptep, pte);
-   319		spin_unlock(&init_mm.page_table_lock);
-   320	
-   321		return 0;
-   322	}
-   323	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks
+Nicolin
