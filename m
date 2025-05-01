@@ -1,169 +1,173 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011059.outbound.protection.outlook.com [52.101.70.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A85259CAC
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 06:22:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746080557; cv=none; b=ZNNGp5xtFRjwDzwQ7kgipHU3XmZMfXrwvtoWNlJsKT2svT7qY35mlSwfzTYJHz0aaVeoQupzaglZmBAdor/1boDdZDnoFtfITjqGz9E/+zOvIhQJ/7GytuIyuAFHtLC1xR1Xo5vV8w0sfDSMu+VZH5xaPRBB9dVjjquwJavb3f0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746080557; c=relaxed/simple;
-	bh=D4LMMZVUvWgTthgOdYiEWmA7Ak8ZBcN3AHcfBQngo3A=;
-	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
-	 In-Reply-To:References; b=GLAjY/2i0uyl7mLCyZLDtOk3Sd0wlDwmACkJRPyQPRICJ/mjs6vOsr4IKGmMhGHL+6xpqSpcmpnjp15oM9B6HqbsLfqze/AU2FhPy3d1RReSBH1Rlmx6GRE84N3ItzRSZMZOhhuM2mVtZa6+Kay9VzrV64QJTI0trI+J5d9sEjo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F2enR2Ph; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B0746E;
+	Thu,  1 May 2025 06:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746081198; cv=fail; b=XF6dKuupRQLieDibJclxZtKrJmtH2QNj6qnRXhE5ZzLYaORcMnHg+QJxQ8iyZYjJcnQ5xtZr+YvlsPE9ah4P+tdncjXMypIwsE5OsM21cSx3WxCknFofZr7k7INtDtGUQTJen4Nj7J6HDGDJJq9wib7vfpXV5QTs9XNNRAf10QA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746081198; c=relaxed/simple;
+	bh=N9hs/MD+N9ZH9j27WQfuyZpZziipm7SYY2r8a62QrpQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rM5UYYfQcx+Mzj0yJLj0erKnACjJ9Y8CAg2YPQ0c0McSd50QFYgNimV+yZdKlEjsvTeIzlP0lnhcrNOgH6iAzC5nOCf5eio+Lg35RZay0dNxrjJ9UdRHHGK+r5fNxrcepOl2TlCipZVVBuBD5ggikmpX3wlnVUhsIhadL40Wio8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com; spf=fail smtp.mailfrom=mt.com; dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b=wIP6HMAw; arc=fail smtp.client-ip=52.101.70.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mt.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=mt.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F2enR2Ph"
+	dkim=pass (2048-bit key) header.d=mt.com header.i=@mt.com header.b="wIP6HMAw"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ph5U4dDc19LXsWgkENgDyiGT4HgRpLUqaZDvlUmSmyxH3Flk5NBOESBiVNhjv8Nb69nYjNWEoYxVZAFH/87oF4M9x7z/J8w8YeEG29VQMSjcKdLgF77y9a3yrmiBHpQOWKaD1pXFstXICSb8ekPGcW5hKWjSEXP862u52I9KRUy4F/ihhDr1TRBuMJg/h8iKM2MA2N5CETcuH0p3wY9kg1M6kJL9eh/60IA/ge9S8z6xokSopRipVJ+/0kKrvJQm7X2PyEnpMuoUYeuRDy/l/lHYbl6IUKTHah56eOgi184OVSfDfHKHpO4TpiuMPktzFno6FkQ21NnWcdNO8Sq6sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=EHU8HZnqAgFAYqATd9B+8zt82ZGVUbrmbRPgOgJugAU=;
+ b=xIO10t7qftR5PoCaqnN2RREetwJxSzKQ1phqoxmkoH16LAgLuJTMdnMewXWmEFqpjA5u3DAt9kMOKSR8Fw62AF5RCUy5UiK7Ukit0yIAP9TPCxY0bYXb6zxip2DlJf+Fhx88AASN8SaSmuz4Gv8eimQo2sDVBG8Llag5Te9NeNDMe9o7d0wUwT44aDIBDQls7MWJJmc3Clcl+D01Lagb5wQIA31gT8OUh60x07AKho7d4ZLWD/c7QAjaOiUnzXdtw/sB18c+IS7iG8bZQA4E4/Yhe73G7D+Qu6wHIQMfS36nfRV3hK20Oc8vu1yqJ0wMhAJZTRAVNWxmY3kZfunSzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mt.com; dmarc=pass action=none header.from=mt.com; dkim=pass
+ header.d=mt.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mt.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EHU8HZnqAgFAYqATd9B+8zt82ZGVUbrmbRPgOgJugAU=;
+ b=wIP6HMAwq9gVY1qs5EPoif62+b4Bf52Q3oYPYHPyyf/bBbr4g8MLayU0r8hyaXUWoLf5HfSTIcAhTTs84lADK33CDbyKGzW80DfFu81lU0Q8IjgJM4OoPDFd7ReQnYmdcv5gaxccGvZNHi4koztbEB5tp42JasUy63PkFFjUvK2m7X0ZXuVuCPqr59o8thzcU2zQfpnqz2j9MxNd9xIbtqhFMJsY8tYQAblLO2Vt7WsSQIGaoyOrsOCqjb7HT2mot+wqgpleFr5Ycevs5uIQmr+g0IUJ9lKhsYc1GNJ8MHg+IRrw1pnlQR8xAjj1WHj6qMYx6kDa3I69uIbGQe8IDA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mt.com;
+Received: from VI1PR03MB6285.eurprd03.prod.outlook.com (2603:10a6:800:137::14)
+ by DU0PR03MB9590.eurprd03.prod.outlook.com (2603:10a6:10:421::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Thu, 1 May
+ 2025 06:33:12 +0000
+Received: from VI1PR03MB6285.eurprd03.prod.outlook.com
+ ([fe80::e290:ebac:cbe4:198a]) by VI1PR03MB6285.eurprd03.prod.outlook.com
+ ([fe80::e290:ebac:cbe4:198a%6]) with mapi id 15.20.8699.021; Thu, 1 May 2025
+ 06:33:11 +0000
+From: Markus Burri <markus.burri@mt.com>
+To: linux-kernel@vger.kernel.org
+Cc: Markus Burri <markus.burri@mt.com>,
+	Nuno Sa <nuno.sa@analog.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	linux-iio@vger.kernel.org,
+	Markus Burri <markus.burri@bbv.ch>
+Subject: [PATCH v1] iio: backend: fix out-of-bound write
+Date: Thu,  1 May 2025 08:32:40 +0200
+Message-Id: <20250501063240.25295-1-markus.burri@mt.com>
+X-Mailer: git-send-email 2.39.5
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MI1P293CA0009.ITAP293.PROD.OUTLOOK.COM (2603:10a6:290:2::6)
+ To VI1PR03MB6285.eurprd03.prod.outlook.com (2603:10a6:800:137::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746080543;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yjChiQ9PgUc2a1/7cJEmrsrWFH7Apodvn16ltR0juPY=;
-	b=F2enR2Ph/xphEnIbT/WgtKidoT3a8MaDaJsGQGsuhwKH19ULsfSOZicpGsTIiN52Ton9O6
-	uTZyAs29HxDUmGNGeYAqDRGkJ/3bhkaoiYEbj7INOJmZGO/5Gyz2yZb8tnpLEhC7zy+PzD
-	T9TlFBYKT0i3u4tsSSVfyh5t1HcuoOw=
-Date: Thu, 01 May 2025 06:22:17 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Message-ID: <1f4d3fb4eed397e346efb3ef597e29204e5a2f4b@linux.dev>
-TLS-Required: No
-Subject: Re: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
-To: "Kuniyuki Iwashima" <kuniyu@amazon.com>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
- horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
- pabeni@redhat.com, shuah@kernel.org, willemdebruijn.kernel@gmail.com
-In-Reply-To: <20250501044321.83028-1-kuniyu@amazon.com>
-References: <20250501035116.69391-1-jiayuan.chen@linux.dev>
- <20250501044321.83028-1-kuniyu@amazon.com>
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: VI1PR03MB6285:EE_|DU0PR03MB9590:EE_
+X-MS-Office365-Filtering-Correlation-Id: cb004e7a-2b37-4b80-8e9a-08dd887a0b50
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?c5T3SZx2W9R98iFLhC5M6m0A4fMuqt+jY98Ns2l1zJurr3ixzhka89cMkM4V?=
+ =?us-ascii?Q?1KKaay4FlMbOdLnWx1EHFc7CToyFGvzhOPIturpvNtV5YtaLBQ8gTn/gG2/3?=
+ =?us-ascii?Q?rpOZzcS90wMTBXO4l01XP7CxDN57SmDvT+4X9cGGxiuQo2jKKTR8o6pB100y?=
+ =?us-ascii?Q?1Mi0y4b0ylKd4C4r0nDAxur//lfcLXomhCTfuch6EeNUPHz6Gq1L477r0XRz?=
+ =?us-ascii?Q?Xya95f2geYRGHVyn0V7hUINMUxz1y+2BPtlxM8PZTexbZkmYzW6JSnSS719+?=
+ =?us-ascii?Q?vN9mJYgns0TMc+o89y9g1hXUMuEQxhX5pNFzWbWPv3naHI3UMBbPSxSbgKVB?=
+ =?us-ascii?Q?+LqmgpR0aZBct1hd5CdSiVtx3zeMU1i6hSdELoYrFacoMco51RV7Lc9F7H5S?=
+ =?us-ascii?Q?39KCSh6ruByP2Th+VlnwvnGC9pcOsCdkxd/deIAYhohEwZgwOHlQhV5yMytq?=
+ =?us-ascii?Q?svV+0SmIxdfahy+w/03M6qKOWndG0GussOCYUNBOMD7/Nt+esEf1iNwVW6Md?=
+ =?us-ascii?Q?XBTnD19rvZQ7koVn67dC7teI8Bd/2sz8RFC+ph3N4wYRigmq3haKSuJhJds+?=
+ =?us-ascii?Q?Em+tj6kDOIUYDZszMhnfwCTd++iTNYw33X7XjQnQ5WqJU8zyFOcK3uPSafu3?=
+ =?us-ascii?Q?fPL2ZVo52Sv2duDMyjLQZAd2AQfJ0ubGua/QfhiSa8RkVhvf1GgldiLwLqcu?=
+ =?us-ascii?Q?5A+7F1ri9DhZA8MTdlhv/WP2EfvShSjNxCNVkTEqU2X9/1r2+jSsHywRGlT+?=
+ =?us-ascii?Q?QNUyzRUdhfOGR8bSc4YOg2IdZ3F/3xiOr+uoPNI84sYjezESeCl8+Z8XaHMD?=
+ =?us-ascii?Q?m3YFi9AAbdc8dxBanTxfrc+EEA3klG4FVv3emN1ETa1qB0IGnKjXVHKEv8Sh?=
+ =?us-ascii?Q?2CyHyFJkjGqJcJflHfKrV5UZILzeJ1uz3b4K5+G/w81h+gXCbxO+sxvVCjQP?=
+ =?us-ascii?Q?FA0ipq2Uh5UmnSSPQ5Dc7xeYeADndrHkAnPwmzvqiYJWCtS8NVZNnmcq808D?=
+ =?us-ascii?Q?Hh1TS9btOEoWvSXjG3QVudkY+dHv0MVv3orcQ6CYR0AIdEvgQttXexI672zP?=
+ =?us-ascii?Q?EeurlxyiybpYc6AZU4qHgK8RKGZB72QCNRMBB5sGuX/q/RQu0n00CoLTtz1k?=
+ =?us-ascii?Q?2Fiuf+eGP1p7d6gu/TLPPJpS1yQoAIZ6E6z3psOC3S0oHqZHea1uHW54rYHP?=
+ =?us-ascii?Q?cD929MyE4qdaQPvbrfRrBWcRGPfx56yYvXauFbXR0N8whPP3rKyHlGHfiZ3R?=
+ =?us-ascii?Q?5KOdD5/yT5YgpQuNeeRi9Cm+hiwGGvB7UXnBH8rs23pR9KqgpFo0C4O63tpi?=
+ =?us-ascii?Q?bPBOa8Q2jhdmpT3vF0+D0BYYnUTM4x89mVNl0+buYP1tjZtJYhKPjs5Q3WUH?=
+ =?us-ascii?Q?xZBm+5Q5Cd6HzwCfpWU21iJ03fHOxIBtto8iWe3xVIwIG5cHfSO89xr2LazC?=
+ =?us-ascii?Q?BO0XnZ0BLXyuA8R/omZBKN8k6IMiH6djjHDWGKHp8Mn1kRCI2imESw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR03MB6285.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZF68gbK/63trOfK3fbj6AHw+n8QDtKESPi7FJhf2MvW4JdibAHrU4YnyiLXp?=
+ =?us-ascii?Q?vNAoY/ou+Mbf2vznck+v/z+M9qDk5dCvVriNRwZFU2YuzeXKP03FCvj1CXQD?=
+ =?us-ascii?Q?0JmTDAz0+6e1lAFL2205FNcXJCSH201NW8uZMxv+aUxQXaDWCNkhKtANtLD/?=
+ =?us-ascii?Q?TG7JwqaRIjDIfTrlI4LD/LVk1dHN/gJ26A7AfRaJRwOcUpGZpU01+1KJ9iIN?=
+ =?us-ascii?Q?ZY+m27QZhEn8wmu975Ios6s5MoS0TimudI9uphr95FZhd57y200w1jL+XsMK?=
+ =?us-ascii?Q?ZRzmkFvjs9InP2fHDpH+pHyS7/s62x7rcHx0GbIdPK/ilk/vDndVd/cvG2IT?=
+ =?us-ascii?Q?JPH4zJnytJMPwHdx3kr0mTtBwRfKPM82ujoTh3ZVKFXnskuJlBpeMoCuka72?=
+ =?us-ascii?Q?xrhx1+yDcdCPzMSkXw3QWkjf8aGchxu1Gj9HoGXVl1ZWg0cKRC3AQsCYBzAl?=
+ =?us-ascii?Q?3uwz+O6flmK/9ibmdeccssx0FUyTNXh+wok32vr21ZZrelFIWrsfvHp6/ao1?=
+ =?us-ascii?Q?3cMCaEY+AGLSrQ9HLz8C/zFeDSYV5pMaICZ27grh8ZnBu6FYsQVOrnH6cUh9?=
+ =?us-ascii?Q?3eg59PtRY3Mujn0soYYhWuBr56zWVrlp8lIfMWzjHWruBVWBz8US2IGZFfGE?=
+ =?us-ascii?Q?xnic3765qqIqcdF+8rORdALIMCi0JBzdmthgbpGT+n40XHJvL//nssl2csZ5?=
+ =?us-ascii?Q?BXr5SaQYTzUWekLP82lTRON1lmXPuwrrih7QFmFoa7ys92ZCHu7vAEWGbdZ1?=
+ =?us-ascii?Q?L2YzwvA6CG1pZ16BYVOy3Qn6FtWFIo8MTmKBbZW0L4/NJTexu+b1C5sdgBM3?=
+ =?us-ascii?Q?bHhobTJD7UVzMp+37H68Y4QDpENPZAPTqQgNZnvEsl7b+0c6RnW2Ete9L8df?=
+ =?us-ascii?Q?3OZdGv97FWrWMJsQ3s80kZG/3jNxCqXpitgUncbWjid22oLWDmn7JAU3LdHt?=
+ =?us-ascii?Q?0Fd6E33xo8zyVGmS5cnzWHGt0QnMT9d4DY3KLCAb3KcjxIMAp8PRKKOqhGhz?=
+ =?us-ascii?Q?fI2/dY0g3VH/lIs84SErzoaJ14X9mcuKQC1ZnhuIe6vniAUsyvdHyruyvmrD?=
+ =?us-ascii?Q?JHCJiPy5q8QthxONSQUOBzc1Kl+okuzLLfVB4zpMiLg92g56YDxD/pl+k95P?=
+ =?us-ascii?Q?zV8D/fPk5cPGP7s1rZzqetrpkBdWXMyRkrS1apqoCOgbg5W60ufyeqQ5pKo/?=
+ =?us-ascii?Q?f7mZLujLfF+Ts3X8x1kYlJXLxysQ+imqzoRCK02YWvSXWdJeKvWQc8mPpGLQ?=
+ =?us-ascii?Q?+1n0kM8RIUW5mQKzH1OXWDiwMHxbQEGMdH5QJiIk4LeSE3xCDcTA7+Ye1bCS?=
+ =?us-ascii?Q?0qaOomupEejZWjxQxWT3rIL87B8MaAzOqWPJFozEish/UmJAGQ+NdQwZY+hb?=
+ =?us-ascii?Q?CN45CvXeMXXk7K44m6kJn68K4rkSRF8wXd+Kce7Zo5KJn25nZsNR95krMfYX?=
+ =?us-ascii?Q?oOIK0+x4oK/Z5xMNrmNapHPn8wDJZFCW5zmmA7oPvmE5JNLMp5QV0ap8oyej?=
+ =?us-ascii?Q?8NJFmSLU4/RmNHNoisvirnQHh8RhMX9+DwFKF0zsK38t5L/rfU18kgOiBFjI?=
+ =?us-ascii?Q?TBCSrLPFuXCNpiK0a2ZfRX72UqluyoJJM2Mn4UwR?=
+X-OriginatorOrg: mt.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cb004e7a-2b37-4b80-8e9a-08dd887a0b50
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR03MB6285.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 06:33:11.5097
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fb4c0aee-6cd2-482f-a1a5-717e7c02496b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jDyUIC/B4tFOg/1Sn2bSmD+y30PtVt6aOaIGQG/DoEEV0oBgK0D58RJtjAyo/Ks66AwCySZwt41jZATRZDHgZQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR03MB9590
 
-2025/5/1 12:42, "Kuniyuki Iwashima" <kuniyu@amazon.com> wrote:
+The buffer is set to 80 character. If a caller write more characters,
+count is truncated to the max available space in "simple_write_to_buffer".
+But afterwards a string terminator is written to the buffer at offset count
+without boundary check. The zero termination is written OUT-OF-BOUND.
 
->=20
->=20From: Jiayuan Chen <jiayuan.chen@linux.dev>
->=20
->=20Date: Thu, 1 May 2025 11:51:08 +0800
->=20
->=20>=20
->=20> For some services we are using "established-over-unconnected" model=
-.
-> >=20
->=20>=20=20
->=20>=20
->=20>  '''
-> >=20
->=20>  // create unconnected socket and 'listen()'
-> >=20
->=20>  srv_fd =3D socket(AF_INET, SOCK_DGRAM)
-> >=20
->=20>  setsockopt(srv_fd, SO_REUSEPORT)
-> >=20
->=20>  bind(srv_fd, SERVER_ADDR, SERVER_PORT)
-> >=20
->=20>=20=20
->=20>=20
->=20>  // 'accept()'
-> >=20
->=20>  data, client_addr =3D recvmsg(srv_fd)
-> >=20
->=20>=20=20
->=20>=20
->=20>  // create a connected socket for this request
-> >=20
->=20>  cli_fd =3D socket(AF_INET, SOCK_DGRAM)
-> >=20
->=20>  setsockopt(cli_fd, SO_REUSEPORT)
-> >=20
->=20>  bind(cli_fd, SERVER_ADDR, SERVER_PORT)
-> >=20
->=20>  connect(cli, client_addr)
-> >=20
->=20>  ...
-> >=20
->=20>  // do handshake with cli_fd
-> >=20
->=20>  '''
-> >=20
->=20>=20=20
->=20>=20
->=20>  This programming pattern simulates accept() using UDP, creating a =
-new
-> >=20
->=20>  socket for each client request. The server can then use separate s=
-ockets
-> >=20
->=20>  to handle client requests, avoiding the need to use a single UDP s=
-ocket
-> >=20
->=20>  for I/O transmission.
-> >=20
->=20>=20=20
->=20>=20
->=20>  But there is a race condition between the bind() and connect() of =
-the
-> >=20
->=20>  connected socket:
-> >=20
->=20>  We might receive unexpected packets belonging to the unconnected s=
-ocket
-> >=20
->=20>  before connect() is executed, which is not what we need.
-> >=20
->=20>  (Of course, before connect(), the unconnected socket will also rec=
-eive
-> >=20
->=20>  packets from the connected socket, which is easily resolved becaus=
-e
-> >=20
->=20>  upper-layer protocols typically require explicit boundaries, and w=
-e
-> >=20
->=20>  receive a complete packet before creating a connected socket.)
-> >=20
->=20>=20=20
->=20>=20
->=20>  Before this patch, the connected socket had to filter requests at =
-recvmsg
-> >=20
->=20>  time, acting as a dispatcher to some extent. With this patch, we c=
-an
-> >=20
->=20>  consider the bind and connect operations to be atomic.
-> >=20
->=20
-> SO_ATTACH_REUSEPORT_EBPF is what you want.
->=20
->=20The socket won't receive any packets until the socket is added to
->=20
->=20the BPF map.
->=20
->=20No need to reinvent a subset of BPF functionalities.
->
+Add a check that the given buffer is smaller then the buffer to prevent.
 
-I think this feature is for selecting one socket, not filtering out certa=
-in
-sockets.
+Fixes: 035b4989211d ("iio: backend: make sure to NULL terminate stack buffer")
+Signed-off-by: Markus Burri <markus.burri@mt.com>
+---
+ drivers/iio/industrialio-backend.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Does this mean that I need to first capture all sockets bound to the same
-port, and then if the kernel selects a socket that I don't want to receiv=
-e
-packets on, I'll need to implement an algorithm in the BPF program to
-choose another socket from the ones I've captured, in order to avoid
-returning that socket?
+diff --git a/drivers/iio/industrialio-backend.c b/drivers/iio/industrialio-backend.c
+index a43c8d1bb3d0..3878bd698c98 100644
+--- a/drivers/iio/industrialio-backend.c
++++ b/drivers/iio/industrialio-backend.c
+@@ -155,6 +155,9 @@ static ssize_t iio_backend_debugfs_write_reg(struct file *file,
+ 	ssize_t rc;
+ 	int ret;
+ 
++	if (count >= sizeof(buf))
++		return -ENOSPC;
++
+ 	rc = simple_write_to_buffer(buf, sizeof(buf) - 1, ppos, userbuf, count);
+ 	if (rc < 0)
+ 		return rc;
 
-This looks like it completely bypasses the kernel's built-in scoring
-logic. Or is expanding BPF_PROG_TYPE_SK_REUSEPORT to have filtering
-capabilities also an acceptable solution?
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+-- 
+2.39.5
+
