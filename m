@@ -1,84 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41E0179C0;
-	Thu,  1 May 2025 09:09:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A131C79C0
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 09:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746090559; cv=none; b=pHDdpmSo9nNv+Z+iiwTvELfYGa48uKldKQiKdI1QEpj5zXiQmoR4lhzs1Cg8poQ5TPQ3ekGbq0u1AZJLiEe2I3TdNuBroH66pHhtdQ8o+l6MEOiTC8K1F3wgb00FSsgAKGxa6wiy6f2nKmGLZePa9PLpVYeDkjXOeJnVNjXb83w=
+	t=1746090678; cv=none; b=jXpW0MWK/Ekf1FwWH0Elr92m1FUYGLUK/b8APJQIX9p/lK8ZLt3Hoh4o72CI5EU1lb/obICelfEgAlGqCU+dQqIswz7VyjxkmJu+wtnNFT6NH/SGE3M/zdUJj11ciCVvMInOMnI/hsdyuQOok14oXzJfDAmJqgVZSy7Ct7B3Nt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746090559; c=relaxed/simple;
-	bh=Ab2Fh2ilzC5IU7gqXpYNCm4x+QzBsCpAZEaO3S+BdKc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hxrxpmHXjK/xkXNH3X5ghYJtr5aNeqU1O658Wnh/zxqkdr0dob+29pYOsF8CNosP2h3niT1MBO+5C9/6WnaiWPMnVChV6C5N0ypWmn+o4lLa4b8rA7pWt6F3cvqv42An0pIMcIf4FH5TOtsabMATExrEy/0FOIce+REBcpVLSLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c7nrNs3t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746090678; c=relaxed/simple;
+	bh=rMGiYZrb+VOtZjeGlqq99efTDqotpC1jT2TKbiFQb6s=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=Qgle7Qku85K8tOUdlvf/hCtcW5HGT0WFx/YhjXhvHGgStkJN75JETpRptxNv4UWhWvH150BzMkY6tQMKjoJ17sEjqqL65g/yfaeHmSeDaCXFgZShgBOkoAo6ugPQ9GFhl/ctE0txwpBojPGjl8gcZdp+udhL3evZ/VXSBz01730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GGvnXpKO; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c7nrNs3t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ABDAC4CEE3;
-	Thu,  1 May 2025 09:09:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746090558;
-	bh=Ab2Fh2ilzC5IU7gqXpYNCm4x+QzBsCpAZEaO3S+BdKc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=c7nrNs3tbpCki4FheEGOTdohY/wkrwSqL6TUMrwd6jLLdStbV/3RqErns4Qty6Db+
-	 8ltaB7n1dTK76PYbri3Po9ZVUUWfxy7aVTcLD6pNP4nlsPJqrQf9+Uhvm4B/Y3yRS4
-	 joDuG+WxWAMiMrYsYpPhGtYhljYOvfAEynKiWFU7RTBgkIThwIQBd34M10YkrPLib5
-	 YDsy1DzajSoztuICNrtqPuSRT8HBbwV0Yrq10aKuV4jTQMM1aZBr9o18p7jRt6rA7F
-	 1rp9oCXCbkfoj4UAZe+0blotSyTjenvL2BroaVTd11+IDgRjowDAd5PKrrb4AdvPI0
-	 WJD0rkLb5QADQ==
-Date: Thu, 1 May 2025 10:09:13 +0100
-From: Lee Jones <lee@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/2] firmware: exynos-acpm: clients (PMIC, clocks, etc.)
- will become children
-Message-ID: <20250501090913.GA3627101@google.com>
-References: <20250327-acpm-children-v1-0-0afe15ee2ff7@linaro.org>
- <174530898122.9276.5071475909293812602.b4-ty@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGvnXpKO"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-acb94bf7897so11444266b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 02:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746090674; x=1746695474; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=rMGiYZrb+VOtZjeGlqq99efTDqotpC1jT2TKbiFQb6s=;
+        b=GGvnXpKOv0XBoocUeCZCWo3e2khWydnkBpEJ7wwEDevgpoOmahhTdR6BcP9F9YbLBQ
+         e+cDebkX2nhAluZNOqIlqGSnZKaQ0TZw4j4nymsolj8DpKQzX515OCEaxG/bK9brOrPz
+         kvGAuK5/gl16vnMMCZ5efpXfRZlRZemDKY+z7PbKuGeVSZCNqfGNQBjQ5y+iphWYz4UL
+         RGD8hGzRc7pzPt7IRB9jqNu+W6q1GwsNYltJPvYl2yL0sqw4kNh6RN3HvS8T0EFLYfuw
+         fZSH+Z3jZKPcSXfhYqa3fNs3nPF1xClF1IIEO5ryIAhgYpBSt0VjiANhOoElkLjwjggK
+         /gZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746090674; x=1746695474;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rMGiYZrb+VOtZjeGlqq99efTDqotpC1jT2TKbiFQb6s=;
+        b=swwoV3/PUk16bj1y4ZILAmQiGgkG41wmpQCVbM63a1HLXNh1o1X/AkTWlqRmJOONI+
+         Unb/kZgxEVndqLbXgGHPQk7/lQASR1Ok4oaAkpqrmuX33CQL4O4EgWU9MvpBwhavsw5v
+         zY3JADiwAg7QgkFCCkusnelQnoFqgrzRT9VLLG8ZZ5Ym/uGRsZnOk+liFBiCCuE+LIfz
+         jDEf4x3B4inCAw+2BZZGSpjCGcU/owXLk60yfLUmMmwLsdeTqkZ5uP9wVrUcfDTj51ox
+         2obreiPIdmIeVvUA1ve4kT9iWs2aZZ6Fo9x3wdPXEQ/9T7cF4G24MbSixA9UYKBtFJ/E
+         K+jw==
+X-Gm-Message-State: AOJu0Ywwo/uKNy9enxwhg421xgfVBoTlz94RLZzwFcbwj/xBTCArRP2n
+	6zPCrrXjaKx+7jKe2vvgHwUqy2nxqXco7itxlD24UF6msSxEFiz9v9kFU1UAdG2byA48En/dpbG
+	oIeZOoMRQsSmyKZfz7jwyH5UdfXT7orVhDag=
+X-Gm-Gg: ASbGnctjo/fsB6EPs3Xcjfxd0FhdN0CGVcChI+pErTizH2p8m+X4O9CfcTBBZfPaiQl
+	yBCPXXR1JfI0dIPII9kmyuHri32p2igcK2VUvZ2Fv6podEXDGouYnvlAkTpQ2cjOz5jC85HAnGy
+	kfjJTFdCkfxDvJr4iVlSTEPgVjRF/vq3M0Zz4bHGQesOJ2dCIG+saV78hLFZJsg5Bm7N4=
+X-Google-Smtp-Source: AGHT+IH/oB+BrmmPxkMklZigrToSHy2oChn66esIeGPe2RfW2hJk0s+vzcDMW/cVmNeCXAIouoqTQAS3Wdq3LePtyUg=
+X-Received: by 2002:a17:907:9809:b0:acb:6081:1507 with SMTP id
+ a640c23a62f3a-acee24b461fmr195844666b.10.1746090674499; Thu, 01 May 2025
+ 02:11:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <174530898122.9276.5071475909293812602.b4-ty@linaro.org>
+From: Vikram R <gvikramr11@gmail.com>
+Date: Thu, 1 May 2025 14:41:03 +0530
+X-Gm-Features: ATxdqUFcoBYTqsPN3u0LqJtbaIEXnZkSUBOq-28UkOwbh90BSSUnTwcZgm271YA
+Message-ID: <CAB0YHExYP7hHb4e_zZGxDdjj6=m0nQJb49vVh+dUUnCbFzSTrg@mail.gmail.com>
+Subject: =?UTF-8?Q?=5BANN=5D_ASIOS_=E2=80=93_Open=2DSource_AI=2DNative_Operating_Syst?=
+	=?UTF-8?Q?em_Built_on_Ubuntu_=E2=80=93_Seeking_Kernel_Contributors?=
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 22 Apr 2025, Krzysztof Kozlowski wrote:
+Hello Kernel Developers,
 
-> 
-> On Thu, 27 Mar 2025 12:54:26 +0000, André Draszik wrote:
-> > ACPM clients (PMIC, clocks, etc.) will be modeled as children of the
-> > ACPM interface.
-> > 
-> > This necessitates two changes in this driver:
-> > * child platform_devices from device tree need to be populated here
-> > * child drivers will need to be able to get the ACPM handle via a
-> >   struct device_node, not via a DT property name
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/2] firmware: exynos-acpm: populate devices from device tree data
->       https://git.kernel.org/krzk/linux/c/636baba9489a634c956d6f02076af6bc1725c132
-> [2/2] firmware: exynos-acpm: introduce devm_acpm_get_by_node()
->       https://git.kernel.org/krzk/linux/c/a8dc26a0ec43fd416ca781a8030807e65f71cfc5
+I=E2=80=99m reaching out to introduce ASIOS, an open-source AI-native
+operating system built on Ubuntu. ASIOS is designed to optimize AI
+workloads and is intended to support the next generation of AI
+systems, from deep learning models to quantum computing.
 
-Can this be made available for other subsystems to pull from please?
+We are looking for contributors to help build the foundation of ASIOS.
+ASIOS represents a new class of operating system designed from the
+ground up for AI workloads. Our vision is to provide a foundational
+infrastructure layer that supports increasingly sophisticated AI
+systems =E2=80=93 from today=E2=80=99s deep learning applications to tomorr=
+ow=E2=80=99s more
+advanced cognitive architectures.
 
-Without it MFD is currently broken.
+We welcome contributions from the Linux kernel development community
+to help us shape the future of AI-first operating systems.
 
-Ref: https://lore.kernel.org/all/fd11ee67a3d51aef6305c477b140d911da0b2af4.camel@linaro.org/
+Whether you=E2=80=99re a seasoned pro or just getting started, there=E2=80=
+=99s a place
+for you in ASIOS: Code contributions, Documentation, Testing, Ideas
+and feedback.
 
--- 
-Lee Jones [李琼斯]
+How to Get Involved:
+
+- GitHub Organization Link: `https://github.com/asi-os`
+
+- Discord Link: `https://discord.gg/rWuU7cWU4E`
+
+We look forward to collaborating with the Linux kernel development
+community to build the future of AI computing.
+
+
+
+Best regards,
+Vikram Karlex R
+Founder & CEO | KarLex AI, Inc.
+`https://asios.ai` | `https://karlex.ai`
