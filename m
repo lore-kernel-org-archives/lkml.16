@@ -1,131 +1,171 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 191A418DB16
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E0E31C1F22
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746115393; cv=none; b=s1frhHMAKvuo/9RbT/UQ99fNQ3wCOm4jiM/LkxC8hjwSMJbMgPD1CuFknkoZgwjOrIAHWTq12qd2zBwZnroeEQ7WhxMilyMPocTzv6tex1l4/Mf7VHj5m0yAxy1EBSARMueM4+zmr0uAh+gUP3lCepMzBS+p/EvlSjW35fYJCzA=
+	t=1746115497; cv=none; b=sVzevk8vGIJBFQCYbW4C4ncqwT6J3UVeK84J17AUsxdiPazvcsGTTcnzRsIBz+KsAVH7kynedJlus8mYbK658DtVI1Eqpn1lFzkyDVpcAY7tIbvOF4RznbTcUkhyaAt3zk5Ooo4VjI/h+sSoARS3M90t/ZBT4AcKO6AInSnpGgo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746115393; c=relaxed/simple;
-	bh=m+FCO+Av4kHpHPJtHKk5uNp6Z3tQxMV5Nq9W+3Ol5uA=;
+	s=arc-20240116; t=1746115497; c=relaxed/simple;
+	bh=82VYoGanBHmMKD+zKutqvwq+pxtO6cUO1QPjiyXbmg8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KwZS6C3cYIthCWM2Efr9Kjd7rTGSC64XQorACp8MTSckjy7eoDp6Pzlf93f08AX4uqYKvHpJ4UwjFWNm4uV66ruTLJFPGKOyzDKecArAroaHeCeEnKHdVowORTG+SspLZSDLh3T8RUdVlPxl0SwdCHsrO3dcuy6FMCxm2nDQItw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E4MfapSf; arc=none smtp.client-ip=209.85.208.49
+	 To:Cc:Content-Type; b=YMtqCB/2Oe254dfWe9WaqNoffW5rrxWTsh4+U60UjiHykXyS5ieoLCGt8Rwhr35qu70R0AFL/qKxy8WdvDIOOH/y5iHDuAZbuY5U0QCqv0A1ihYdnSJkHC8GW+N1HJVHuiAq2em8mu8ScQJgsixp61VXpzi075cd8CWvlTJNMzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jFd4qPEc; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E4MfapSf"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so8479a12.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:03:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFd4qPEc"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so211615ab.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746115390; x=1746720190; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746115494; x=1746720294; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=O0BhQ95eFCkHuf2CLc+ykMuQ6mFJY28TqqhucXbsaD0=;
-        b=E4MfapSfXxAyHvvX5PmC7H7ilTB+/eHqnq5njOOG3rlejRddwLHLteqaJTckZpy9sN
-         nOxzDbpEYmLoKAA/dNiIeKDxGDHnutpw1/HwTNNoQU52wTokrY6fsWEurpWDTNXuJ7Ip
-         oXZJwa7pabVYgZ5GuwkbjHrgU7Cs/aJfhuNyfFOnwJFREOjAxVO7uv8RFnqvX8u2nZ/y
-         fCJBLNkW1jK6nSgHxhYrv/PTXE9AxKDQ8BogdJZ/1Utu/kf0an5y7dXkXki8PnCH164S
-         JndzxpUovUIH9f6cpDf3ztf+br8emCBCw0fWmRVS8H0em/B4dSDIoMk8E1oT8Hd5+E+z
-         YcSw==
+        bh=dw9w2gM7Za/XAYHcqHX5DQhreqsNkxW8bgiGG9Upjus=;
+        b=jFd4qPEc/tzaBxdRnH7AXXl+mSWyLYv0Bir6u5i2RJIMscT8xczqVQ4nX8hYCJBrKl
+         NZIJFyLu8baMil2kB59FlyouyaSOch2vZ71WBKrw72pZX0VYQXc9GWlQGy+v1AtCTd+U
+         5m/XMPFwp4hBI9cpfvkTunecDO7iw8BFFOskstoNFbKLxs63E+BiERI8X4VsJvZ3cCsz
+         moszuKlBRa0IIEtJpGcwzyEgmK+ODG61wKGjRpjVe6Z82IFUDgmnJf7IbSeneG7/za+2
+         CqTqWgGn5Ct291PGi+BO4xmbRRiCrRvIycOvkMBNSbe+4sCXVDB4UPrgvD7+aDtc4IwJ
+         IpXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746115390; x=1746720190;
+        d=1e100.net; s=20230601; t=1746115494; x=1746720294;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O0BhQ95eFCkHuf2CLc+ykMuQ6mFJY28TqqhucXbsaD0=;
-        b=UcjdJ+zkL4F/yQM4eCLBzXqZVhJQjcKvxb4NgrFeIj3yrWvISXTqcZT0DsCVy3rDEw
-         NINiYvwAvmfOQ63AQb2wstaqKd+qkLc2QQ+uUJz38YTesmpCCf/qfK45uwPEAUCWILRp
-         8KLhyFKhWO/rGpYZCYAIewFXIz2Sblt/cW+EL96y6dctZh2KLxhxAz7kJCWa/5qXVt/1
-         0LvLoaq9skBET9Xa0oA2XQ64T7YeVSjLT6WQzlKjROhCHbe5/J/e6pFvO18gz3G21dQD
-         J5sOTxhWgrdR3JLSGMLtwRNIGqzfy+gpRaI+i3L2htNOZIiUBN4F8NL2Wbg8jBvTfpE3
-         IX5Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUKqcCRB0/J3/uhxoKW2F4v51qVAZS6FlK1Bllis5+pKT4yMSLxYGOSAs+yLy6tEUuLsnDLuT15QvTp1l8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQoL0ASqGCQEICNr/OGmpNAyGmMyjj1+csN7Bq7k6G5y5VIi+o
-	Wx5FkU80waILoNcwK9U9kHdQOfYluTw5Qo2nvqZcuAkpSzkcUwpL6yYX8GDMd3sKa3/1M2qwYYb
-	uQxfEbOwxacwoJq1L63V2IFCI+KoQuCoGnxgE
-X-Gm-Gg: ASbGncuo07P1fRyYzjn9ErZSr0u0j/hri6xffUsC+/+arGKJ3sV0ZZFyFXZslhTaxES
-	1jqnPoshIuPXbrwZ2v+g6re+hDGvED6j2QqsW+ce+0L9qmnXrQI9NfiuZApiBGdaJtVnb7b+FO0
-	LI+lz4Ik30iXjbRQXnpktu3iklWw9wppozm4YGqZ1iqfqGc9yOZnte
-X-Google-Smtp-Source: AGHT+IEW/SA2JtUr+blXCey8yLJ4t4R/1W4cd2StqAa1QMCl7xBxPUAkLE/i37/vYyWWFwLxirdm8M9ypruJ7TYuaUs=
-X-Received: by 2002:a50:c018:0:b0:5f7:f888:4cb5 with SMTP id
- 4fb4d7f45d1cf-5f918c08662mr75474a12.1.1746115390061; Thu, 01 May 2025
- 09:03:10 -0700 (PDT)
+        bh=dw9w2gM7Za/XAYHcqHX5DQhreqsNkxW8bgiGG9Upjus=;
+        b=wSJ4hghbNP+LRrGs8xRdfshs5rzt7T+Ia6l6/dfqOWBOUXSPsLHhNpgbg8qj/9KfTr
+         0Rjauo997RAL1iP8pjdUwTNKk5P2s7HzvTS6DecibTufgeB8CHN87VpE8XfFHZTHOgLp
+         Zs2zqypYZ8s73Ba3Pp3ej6mUvsQsNV3B7sQ2XpP7IBEeph8aVl9Rz9eSeQpPmjOE/WjR
+         rS75XkdOYfPlT7+jRxPgeFbGa/vnz26gH1o6+e09+Lyxrdk456hOpqA5mXcfJX7A9mfj
+         AVz4kJd7S4uj5HfSInlI3kgkE04McStJH60iJZlUmjmmwq3oHDM8oZF3CRau3O6Q31LM
+         g/5A==
+X-Forwarded-Encrypted: i=1; AJvYcCW3qS96ZQIvxfsSCOwYzbKztdn4643Oa8I6TCAQMOi1SKjZ5Rjt4eSa3jY2hGYeq9N6FFaqvFJMNHDsuP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4U8hLMII00wqgv7Y7Q+ItXVmCgHHzjL+c6Nb1tT9oi8DucBwY
+	5RXgqVp+hMOj3t/IeZHeAs+OjBe+Nyos8nCVp3pkeLQA+ZnSZ12jt/3lNMR0o0N87+l3zGyA4YN
+	cdYhxm7Yi4FJ1MKPm5NtPGz7cPkqsihNJ4BvU
+X-Gm-Gg: ASbGncuJ97S0M/MOiP7Vg9835y651zoUff4a2EN11GlHcwz52Ik+mB+s7RJ5/QcS9KN
+	pNXKRskwLc3BpcYkFsUrm16jhsm/QgKLHfBPX/GKTMoEL5iFzXhpoCC5iDKD8IU5gMtpFaRUasZ
+	VR4pf7iPkkCe6LpSh2vxbCJn9r2P4R79KUYQArjovYqYbwSotJuAE=
+X-Google-Smtp-Source: AGHT+IFsDgSlGJBGSU3EmVMTwCk+Q9hVho2Lgb0k963xjGE2WEJiBEwDTf5Ex5Kh8AXqpui1LdLUci71cTD8ung2gRY=
+X-Received: by 2002:a05:6e02:1d93:b0:3d5:e202:6f05 with SMTP id
+ e9e14a558f8ab-3d96f2f41a3mr3525725ab.18.1746115494129; Thu, 01 May 2025
+ 09:04:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-debugfs-rust-v2-0-2e8d3985812b@google.com>
- <20250430-debugfs-rust-v2-1-2e8d3985812b@google.com> <aBNKEewhCP8jRIZL@pollux>
-In-Reply-To: <aBNKEewhCP8jRIZL@pollux>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Thu, 1 May 2025 09:02:58 -0700
-X-Gm-Features: ATxdqUEDFCt-sMq0pzV8lmt12d1rAero7bLyoYrA2gYeUgZ4ZjyObw6mkPjCAqM
-Message-ID: <CAGSQo01O8DFe1+APM2cYYFT_4ROKrbTQpNmozYk3NQwYc3Zv2Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] rust: debugfs: Bind DebugFS directory creation
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
+References: <20250501093633.578010-1-gautam@linux.ibm.com> <20250501093633.578010-5-gautam@linux.ibm.com>
+In-Reply-To: <20250501093633.578010-5-gautam@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 1 May 2025 09:04:43 -0700
+X-Gm-Features: ATxdqUEs-So4unwD5FSM6EjUg_ZEy2zCiZhayjjAQfBNeZneWkbdLMCrzPsrSQ4
+Message-ID: <CAP-5=fW2--aUG9=14R8fqSEJQN-D3PATTwU15czWVsQidA51bA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] perf python: Add counting.py as example for counting
+ perf events
+To: Gautam Menghani <gautam@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	maddy@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 1, 2025 at 3:16=E2=80=AFAM Danilo Krummrich <dakr@kernel.org> w=
-rote:
+On Thu, May 1, 2025 at 2:37=E2=80=AFAM Gautam Menghani <gautam@linux.ibm.co=
+m> wrote:
 >
-> On Wed, Apr 30, 2025 at 11:31:56PM +0000, Matthew Maurer wrote:
-> >
-> > +    /// Create a DebugFS subdirectory.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// {
-> > +    ///    let parent =3D Dir::new(c_str!("parent"));
-> > +    ///    // parent exists in DebugFS here.
-> > +    ///    let child =3D parent.subdir(c_str!("child"));
-> > +    ///    // parent/child exists in DebugFS here.
-> > +    /// }
-> > +    /// // Neither exist here.
-> > +    /// ```
-> > +    pub fn subdir(&self, name: &CStr) -> Self {
-> > +        Self::create(name, Some(self))
-> > +    }
+> Add counting.py - a python version of counting.c to demonstrate
+> measuring and reading of counts for given perf events.
 >
-> I think this should return a new type (SubDir), which is a transparent wr=
-apper
-> of Dir and dereferences to Dir.
+> Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+> ---
+>  tools/perf/python/counting.py | 41 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100755 tools/perf/python/counting.py
 >
-> Subsequently, we can remove Dir::keep() implement SubDir::keep() instead.=
- This
-> ensures that we can never call keep() on the root directory, which would =
-always
-> be a bug.
-1. If the code in question is builtin rather than a module, discarding
-this without tearing it down may not be a bug.
-2. Users could always write `core::mem::forget()`, so this will always
-be reachable (even if we decide to remove `::keep` to make it harder
-to choose).
->
-> As an alternative to the Deref impl, you can also implement
-> `From<SubDir> for Dir`, such that a SubDir can either be "kept" or conver=
-ted to
-> a Dir. Probably, that's even better.
+> diff --git a/tools/perf/python/counting.py b/tools/perf/python/counting.p=
+y
+> new file mode 100755
+> index 000000000000..0c58907bd8bf
+> --- /dev/null
+> +++ b/tools/perf/python/counting.py
+> @@ -0,0 +1,41 @@
+> +#!/usr/bin/env python3
+> +# SPDX-License-Identifier: GPL-2.0
+> +# -*- python -*-
+> +# -*- coding: utf-8 -*-
+> +
+> +import perf
+> +
+> +def main():
+> +        cpus =3D perf.cpu_map()
+> +        thread_map =3D perf.thread_map(-1)
+> +        evlist =3D perf.evlist(cpus, thread_map)
+> +
+> +        evsel1 =3D perf.evsel(type =3D perf.TYPE_SOFTWARE,
+> +                 config =3D perf.COUNT_SW_CPU_CLOCK,
+> +                 read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf.F=
+ORMAT_TOTAL_TIME_RUNNING,
+> +                 disabled=3D1)
+> +        evlist.add(evsel1)
+> +
+> +        evsel2 =3D perf.evsel(type =3D perf.TYPE_SOFTWARE,
+> +                 config =3D perf.COUNT_SW_TASK_CLOCK,
+> +                 read_format =3D perf.FORMAT_TOTAL_TIME_ENABLED | perf.F=
+ORMAT_TOTAL_TIME_RUNNING,
+> +                 disabled=3D1)
+> +        evlist.add(evsel2)
 
-Yes, this was the "extra type complexity" I referenced in the cover
-letter that I was considering doing. I think that probably what I'll
-do for v3 is to have both the `Deref` *and* `From` implementation, so
-that `SubDir` still automatically gets all of `Dir`s stuff, since your
-later `File` comment convinces me we can't just have everything be
-`Dir`.
+Nice example! Would this be better as:
+```
+    cpus    =3D perf.cpu_map()
+    threads =3D perf.thread_map(-1)
+    evlist =3D perf.parse_events("cpu-clock,task-clock", cpus, threads)
+```
+If you run `perf stat -vv -e 'cpu-clock,task-clock' .. ` you can
+double check the perf event attribute bits. For example in
+tracepoint.py we remove the SAMPLE_IP:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/python/tracepoint.py?h=3Dperf-tools-next#n27
+
+> +
+> +        evlist.open()
+> +        evlist.enable()
+> +
+> +        count =3D 100000
+> +        while count > 0:
+> +            count -=3D 1
+> +
+> +        evlist.disable()
+> +        evsel =3D evlist.next(None)
+> +        while evsel !=3D None:
+> +            counts =3D evsel.read(0, 0)
+
+Rather than just reading on the first CPU and thread, perhaps change
+to iterate over the cpus and threads? Something like:
+```
+    for evsel in evlist:
+        for cpu in cpus:
+            for thread in threads:
+                counts =3D evsel.read(cpu, thread)
+                print(f"For {evsel} read val=3D{counts.val}
+enable=3D{counts.ena} run =3D{counts.run}")
+```
+
+Thanks,
+Ian
+
+> +            print(counts.val, counts.ena, counts.run)
+> +            evsel =3D evlist.next(evsel)
+> +        evlist.close()
+> +
+> +if __name__ =3D=3D '__main__':
+> +    main()
+> --
+> 2.49.0
+>
