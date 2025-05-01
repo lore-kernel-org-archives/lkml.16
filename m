@@ -1,204 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9735343169;
-	Thu,  1 May 2025 13:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE6019CC28;
+	Thu,  1 May 2025 13:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746106049; cv=none; b=fC9vjEqvbnuKAUWA4osOdsEQZk4Cvuf2tNe1eSpMYy/62F08vUL1k76cD8wub3T5SeNUmJXyEhKZEj6xw2FA6EW/lzTSF0n+F7FghmkcSQBQdf4pjdf/aCQPDgUE8P2xOdBqpGWtdWEvay4/cfejIWEocdPefpQEYtpbDF9me34=
+	t=1746106103; cv=none; b=tdT2fkQ7vW9DTF+qC4720O83HyKsBgjkGq8NFOG1T2gpposqoAEHPC5nmbqodSnT7nRFQ7CvZM3NVbU+OWNH2vHU97vHGeI9dLKHgmQcNYNjmoztJLavRy1gMO5tXEjDf6r93pRu5W3jRWI3K7Bn/j8kmtVmbtVBSuDC6D87RnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746106049; c=relaxed/simple;
-	bh=XZOtGvFpQuPk4qS9S49TphW8pCE5YjyTml1GRyh3X7g=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DtPLLS1nejGVVBe7cYwEpEW2oxEeRTFgPNNXGRKW7fT5CaFainRjON1mMYS4AgvrM8c8qOd7MGnOUdInEXj4fEVricYOCyJpxc1wnxo6+CQIP33uH4Wa0xT3vr+4+/Lsv3OGJT2Dp/YlLZiySlz1DUt87+qlm+ftn3bWr8KptXc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGSJSLer; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746106103; c=relaxed/simple;
+	bh=F6FjD13/keN8NO/5Qu/i0HT0YcjHnwJPal7ZjR61JJ4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z0XFJerBDjf4Yd19pfI6tTLiDNVzl8ueRgcdFy3pFD6LBP6R4sL3hwhAtD50lRba/k0TwON5rIkgrnzkJw+JWWlX2Yp0MDzVPIxx73eAaLl4LNRl6Ot3qkl+3Aup2W6FT8OmvvRtxGsKrKJFB3YatnNlTMZzBon2CqeQmZUQKr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=RD6jBeYd; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGSJSLer"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9404C4CEEE;
-	Thu,  1 May 2025 13:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746106049;
-	bh=XZOtGvFpQuPk4qS9S49TphW8pCE5YjyTml1GRyh3X7g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZGSJSLernzq3MLvNqJBCcFgJw1aCJTQ0FGRvi+rVgMHAOAN8teIVdXxMTjyLMKqxX
-	 RAHKaM2WeS4K8CJtSYALhz/E1XsM9r62HLsXoWOZCmEgObxtXS6Ab+1EIK+Q4t+9Hy
-	 LIXK9y8tfnTu89HS43/aHPvBH0ovQf3Hd2a5sevcmfKTVqiUddnKQcubE4Iq6WZJzc
-	 zTD2/zSvzuTGreeNnOsYDf2CYzP84gPl3eBEt8e0JXj4mmo86PVMQ2pW7sbWwGb8Id
-	 zSdflALNmbDCUzABGvdNPdIQNBDdSnpPcdca/2aO8GcQ6UAyxBmy1pB5vgW64Z+WlW
-	 3peyBV4e0q3DQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uATwl-00AaCC-0e;
-	Thu, 01 May 2025 14:27:27 +0100
-Date: Thu, 01 May 2025 14:27:26 +0100
-Message-ID: <86y0vgh35t.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
-In-Reply-To: <aBIlOrqLtbB5e7B/@lpieralisi>
-References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
-	<20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
-	<867c31j20i.wl-maz@kernel.org>
-	<aBIlOrqLtbB5e7B/@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="RD6jBeYd"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=5pF0zRMnxqpAZiQDV2tjp1OzcmcfhmgifjwYB3Den84=; b=RD6jBeYdyI6NdHc8c+BcRx6sC1
+	wYRv+O8cKAFHt/LDHeN6Qf0L2jJiSGAtBvMTFUJaYubq+l2HSoQ5YZQ9weBPv8PGy0OyVrlqXAXUb
+	DlQ10tPQVsfUPBnm8N2YjE/kN7gWGxY533Hv4snOu4o1pOWN8EP0eGwhOz2cw0IdbTc/F0xpOBXUq
+	7EWoYgdB7XoQ5FofLvL9ESHj7ShhmDlZigg6QZ92lbq98encWmo9U9w4KhM168tkMpWnZk1XNEilB
+	6ceAZewhyyJKZe6sZSgy1rIHlnScM+ig7Fnl9ldZIfVbB9jhuuYxr1BCIT5hN+rRJueA43s5Lhp/B
+	N63Gh5+A==;
+Received: from i53875bbc.versanet.de ([83.135.91.188] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uATxY-0001u3-Vx; Thu, 01 May 2025 15:28:17 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Kever Yang <kever.yang@rock-chips.com>
+Cc: linux-rockchip@lists.infradead.org,
+ Finley Xiao <finley.xiao@rock-chips.com>,
+ Kever Yang <kever.yang@rock-chips.com>, devicetree@vger.kernel.org,
+ ulf.hansson@linaro.org, Rob Herring <robh@kernel.org>,
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 6/7] arm64: dts: rockchip: add core dtsi for RK3562 Soc
+Date: Thu, 01 May 2025 15:28:16 +0200
+Message-ID: <47204993.fMDQidcC6G@diego>
+In-Reply-To: <20250415051855.59740-7-kever.yang@rock-chips.com>
+References:
+ <20250415051855.59740-1-kever.yang@rock-chips.com>
+ <20250415051855.59740-7-kever.yang@rock-chips.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, 30 Apr 2025 14:27:22 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> On Wed, Apr 30, 2025 at 12:57:01PM +0100, Marc Zyngier wrote:
-> > On Thu, 24 Apr 2025 11:25:32 +0100,
-> > Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> > > 
-> > > The GICv5 architecture implements the Interrupt Wire Bridge (IWB) in
-> > > order to support wired interrupts that cannot be connected directly
-> > > to an IRS and instead uses the ITS to translate a wire event into
-> > > an IRQ signal.
-> > > 
-> > > An IWB is a special ITS device with its own deviceID; upon probe,
-> > > an IWB calls into the ITS driver to allocate DT/ITT tables for its
-> > > events (ie wires).
-> > > 
-> > > An IWB is always associated with a single ITS in the system.
-> > > 
-> > > An IWB is connected to an ITS and it has its own deviceID for all
-> > > interrupt wires that it manages; the IWB input wire number is
-> > > exposed to the ITS as an eventID. This eventID is not programmable
-> > > and therefore requires special handling in the ITS driver.
-> > > 
-> > > Add an IWB driver in order to:
-> > > 
-> > > - Probe IWBs in the system and allocate ITS tables
-> > > - Manage IWB IRQ domains
-> > > - Handle IWB input wires state (enable/disable)
-> > > - Add the required IWB IRQchip representation
-> > > - Handle firmware representation to Linux IRQ translation
-> > > 
-> > > Co-developed-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> > > Signed-off-by: Sascha Bischoff <sascha.bischoff@arm.com>
-> > > Co-developed-by: Timothy Hayes <timothy.hayes@arm.com>
-> > > Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> > > Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Cc: Marc Zyngier <maz@kernel.org>
-> > > ---
-> > >  drivers/irqchip/Makefile         |   2 +-
-> > >  drivers/irqchip/irq-gic-v5-its.c |  68 ++++++--
-> > >  drivers/irqchip/irq-gic-v5-iwb.c | 356 +++++++++++++++++++++++++++++++++++++++
-> > >  drivers/irqchip/irq-gic-v5.c     |   2 +
-> > >  drivers/irqchip/irq-gic-v5.h     |  28 +++
-> > >  5 files changed, 437 insertions(+), 19 deletions(-)
-> > > 
-> > > diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> > > index 4280395e3bdff7858102f0b4eaaea1121cace52f..7bfb2369fbe494a64b72308d95ae33de93c6b8c6 100644
-> > > --- a/drivers/irqchip/Makefile
-> > > +++ b/drivers/irqchip/Makefile
-> > > @@ -37,7 +37,7 @@ obj-$(CONFIG_ARM_GIC_V3_ITS)		+= irq-gic-v3-its.o irq-gic-v4.o
-> > >  obj-$(CONFIG_ARM_GIC_V3_ITS_FSL_MC)	+= irq-gic-v3-its-fsl-mc-msi.o
-> > >  obj-$(CONFIG_PARTITION_PERCPU)		+= irq-partition-percpu.o
-> > >  obj-$(CONFIG_ARM_GIC_V5)		+= irq-gic-v5.o irq-gic-v5-irs.o
-> > > -obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o
-> > > +obj-$(CONFIG_ARM_GIC_V5_ITS)		+= irq-gic-v5-its.o irq-gic-v5-iwb.o
-> > >  obj-$(CONFIG_HISILICON_IRQ_MBIGEN)	+= irq-mbigen.o
-> > >  obj-$(CONFIG_ARM_NVIC)			+= irq-nvic.o
-> > >  obj-$(CONFIG_ARM_VIC)			+= irq-vic.o
-> > > diff --git a/drivers/irqchip/irq-gic-v5-its.c b/drivers/irqchip/irq-gic-v5-its.c
-> > > index da349b4709cc5ec8978859237838f039389ca4a1..b5eb4dbfe2296dc6620889eb9291b542cae4aeb6 100644
-> > > --- a/drivers/irqchip/irq-gic-v5-its.c
-> > > +++ b/drivers/irqchip/irq-gic-v5-its.c
-> > > @@ -786,9 +786,8 @@ static struct gicv5_its_dev *gicv5_its_find_device(struct gicv5_its_chip_data *i
-> > >  	return dev ? dev : ERR_PTR(-ENODEV);
-> > >  }
-> > >  
-> > > -static struct gicv5_its_dev *gicv5_its_alloc_device(
-> > > -				struct gicv5_its_chip_data *its, int nvec,
-> > > -				u32 dev_id)
-> > > +struct gicv5_its_dev *gicv5_its_alloc_device(struct gicv5_its_chip_data *its,
-> > > +					     int nvec, u32 dev_id, bool is_iwb)
-> > >  {
-> > >  	struct gicv5_its_dev *its_dev;
-> > >  	int ret;
-> > > @@ -815,6 +814,7 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
-> > >  	its_dev->device_id = dev_id;
-> > >  	its_dev->num_events = nvec;
-> > >  	its_dev->num_mapped_events = 0;
-> > > +	its_dev->is_iwb = is_iwb;
-> > >  
-> > >  	ret = gicv5_its_device_register(its, its_dev);
-> > >  	if (ret) {
-> > > @@ -827,9 +827,11 @@ static struct gicv5_its_dev *gicv5_its_alloc_device(
-> > >  
-> > >  	/*
-> > >  	 * This is the first time we have seen this device. Hence, it is not
-> > > -	 * shared.
-> > > +	 * shared, unless it is an IWB that is a shared ITS device by
-> > > +	 * definition, its eventids are hardcoded and never change - we allocate
-> > > +	 * it once for all and never free it.
-> > 
-> > I'm not convinced the IWB should be treated differently from any other
-> > device. Its lifetime is not tied to its inputs, so all that's needed
-> > is to probe it, get a bunch of interrupts, and that's about it.
-> 
-> I need to check again how this works for devices requesting wires
-> from an IWB if we don't allow ITS device sharing.
+Hi Kever,
 
-There is no sharing. Each IWB has its own devid, and the endpoint
-drivers don't have to know about anything ITS related.
+Am Dienstag, 15. April 2025, 07:18:54 Mitteleurop=C3=A4ische Sommerzeit sch=
+rieb Kever Yang:
+> From: Finley Xiao <finley.xiao@rock-chips.com>
+>=20
+> RK3562 is a Soc from Rockchip, which embedded with quad
+> ARM Cortex-A53.
+>=20
+> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> ---
+>=20
+> Changes in v4:
+> - remove gmac and otp nodes
+>=20
+> Changes in v3:
+> - remove i2c/serial/spi alias
+> - add soc node
+>=20
+> Changes in v2:
+> - remove grf in cru
+> - Update some properties order
+>=20
 
-> 
-> > The other thing is that the IWB really is a standalone thing. It
-> > shouldn't have its fingers in the ITS code, and should only rely on
-> > the core infrastructure to get its interrupts.
-> > 
-> > As much as I dislike it, the MBIGEN actually provides a decent example
-> > of how this could be structured.
-> 
-> We wrote that code already, I should have posted it. An MBIgen can
-> programme the eventids it sents to the ITS, an IWB can't. So yes,
-> I can make an IWB MBIgen like but the ITS code has to know it is
-> allocating an IRQ for an IWB - one way or another, the eventids
-> are not programmable.
+> +	soc {
+> +		compatible =3D "simple-bus";
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <2>;
+> +		ranges;
+> +
+> +		scmi_shmem: scmi-shmem@10f000 {
+> +			compatible =3D "arm,scmi-shmem";
+> +			reg =3D <0x0 0x0010f000 0x0 0x100>;
+> +		};
 
-They are not programmable on the MBIGEN either, despite what the code
-does. Everything on this HW is hardcoded.
+the scmi shmem is not a soc-device, but instead a piece of main memory.
+We recently fixed that for example for the rk3588 [0], so please follow
+along for this new soc.
 
-> I will try to post a v3 with the code in it so that I can get flamed
-> and find a solution to this niggle.
+Thanks a lot
+Heiko
 
-Nobody is flaming you, Lorenzo. We're just trying to get to a point
-where the code is in a good enough shape to be merged.
 
-Thanks,
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.gi=
+t/commit/?id=3D8ecd096d018be8a6bd3bd930f3a41a85db66a67d
 
-	M.
 
--- 
-Without deviation from the norm, progress is not possible.
