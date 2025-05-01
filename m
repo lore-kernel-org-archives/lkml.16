@@ -1,105 +1,150 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B09522D7BD;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 172A225A623;
 	Thu,  1 May 2025 09:37:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746092239; cv=none; b=hQOoE92H3irXgd2sAqpwt11VhZcscDpF3/Md/keR+2wmKJaFSs/JBzKF3q51fhF1bURA0usRldPolZEb0pE9upOs9DsX3fS0kK/KHHInCg51UlMWYHFDgjvgHj+zw79lzd3tgjXxRyT27yKXfGCQeaE19anGcrpjz5jc0QD/9nM=
+	t=1746092241; cv=none; b=JSamMCa578K519b1fA9LLPey+Alx6kbdOz6fGAbXmYXN7M2yaHyZ9CX1FHQBaJ7o5NJWDpD4VpPTiSSn4COUzFx/zfj34X2ZiH0YyWWOuSMPMtBIgbWzyNAESZD89aEEXl4GGTeZxHOCWAnEmrtwShnssiHSOzlD/IHbyRtk9oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746092239; c=relaxed/simple;
-	bh=7HkpmBy4uOXtgP/kfZ+4ul+zjnVdkK+uvMav1IDO7GE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLcrIVq3PvnWwrGrFc09nwjNlAguwnfROoxw1U2zBY7qUDfPx6E9b+oif/H4tP8HQ9Z2lpJIokYI43b85shqLKG4R/WGwBIz2IpvFijIPEJaOkHtpfcfKHOEQsGpaem9G83JPmr6td9+IybErO1D75DcbweTycKDcXc0N2wh7gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aK1Q1Mcd; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746092241; c=relaxed/simple;
+	bh=bbBhhl4DNZvNM0i/8eTCvJERerffvAeyCojBFgOwd1A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=r0iKQHbyarx0NcAVf7JwsTWm/jP0tnfVvm8DhKWdueRWvu5RXQ6aoG0LkXPANzUkRj8SxWT1AicR6XGmnoYC7APaRkA1lBgL05G+yh8KJpdg7goCv8Y0jhzkOS5Q7bG8zJeloDyVC/H+/fo5QPaPnYS2cArd246B2FnTpsBhHf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=GtiEwDTP; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aK1Q1Mcd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746092236; x=1777628236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7HkpmBy4uOXtgP/kfZ+4ul+zjnVdkK+uvMav1IDO7GE=;
-  b=aK1Q1Mcdw884lCDiNc5dnvs39bceZSH/pIXSeAX5EjYBX8TJ04i7nVqp
-   45FfuQ99lBBoPiPZPITb4a7mHskWyY+YeA0Rbrk6ddPMuWUc+EWX6lSnX
-   dLIFxmbxoFEn+on6nJd8L5uMhN44miPaXAofKI+pQl48OCA8LXEAip4PP
-   QiqQcVHrtxkmB4tk0vlSIPjzOkb+m+/pN7T8shpVAou4zpl78ff6qufJY
-   19/10b5pFl75JpxJjX/iloPT4ylGuiudFx/sK/Yc/URbBKxRDSCOat7SG
-   p/B1TonittlYSln2Lvw7WHrDtKJAJoK4fMlqn7oEkL3M+uOAnIOAxV2/9
-   w==;
-X-CSE-ConnectionGUID: StTCXCWHSuaQWuHRbs+4OQ==
-X-CSE-MsgGUID: gpI9amrDSzKFPoDR7/2FMw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="47672299"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47672299"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 02:37:15 -0700
-X-CSE-ConnectionGUID: +oETbooFSmyuPuIsABmWhA==
-X-CSE-MsgGUID: A8hsURclRcGMFwsZ1uWTrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="171577908"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 01 May 2025 02:37:14 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAQLv-00045B-1z;
-	Thu, 01 May 2025 09:37:11 +0000
-Date: Thu, 1 May 2025 17:37:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexey Charkov <alchark@gmail.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Alexey Charkov <alchark@gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: i2c: i2c-wmt: Convert to YAML
-Message-ID: <202505011756.SZDFqCew-lkp@intel.com>
-References: <20250430-vt8500-i2c-binding-v2-1-0cf22d0c2d42@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="GtiEwDTP"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5416RHAr006425;
+	Thu, 1 May 2025 09:37:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=/zbH5yG2+qt9ridWK
+	zgS1saNGmlvuCWVCOT2OJatMvA=; b=GtiEwDTPD6W0sMXCtmK0T68tLiZ2l1aO6
+	IntIOZ1OZwcy2tZiRWKM9TjL8syvzwzLNJgns3IaRxttzfkBxsKF776teQaa+oq4
+	WdmXgK1cTLd7L12sJy0dy0gbq30zTud4BCcjcsDUzFJM6fYJhASb19B2WuDiFPMK
+	IgrNrcvycnh2M1uC7OJUNo/f+ZxSCyv9tvnFJilpoc73ek4xoNCZQAg6IM4mLvXH
+	1eglRBJjgmuIb50puaiXGh3U4u6zTCbi27VA6JVmIISNATChR3iVsvdhkC969rJZ
+	G6gxDpRsrORNWfsZrtiOCiAyqQKc81G7ozNbkvW+fwd4Dpx4l0PSw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjwh2m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:37:08 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 5419b7Z5008331;
+	Thu, 1 May 2025 09:37:07 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46bhsjwh2f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:37:07 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 54161E2v001803;
+	Thu, 1 May 2025 09:37:06 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469bamv4tv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 09:37:06 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 5419b27A33161596
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 09:37:02 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7B5F120043;
+	Thu,  1 May 2025 09:37:02 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 292EB20040;
+	Thu,  1 May 2025 09:36:59 +0000 (GMT)
+Received: from li-c6426e4c-27cf-11b2-a85c-95d65bc0de0e.ibm.com.com (unknown [9.124.221.47])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 May 2025 09:36:58 +0000 (GMT)
+From: Gautam Menghani <gautam@linux.ibm.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com
+Cc: Gautam Menghani <gautam@linux.ibm.com>, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org, maddy@linux.ibm.com
+Subject: [PATCH 2/4] perf python: Add evsel read method
+Date: Thu,  1 May 2025 15:06:28 +0530
+Message-ID: <20250501093633.578010-3-gautam@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250501093633.578010-1-gautam@linux.ibm.com>
+References: <20250501093633.578010-1-gautam@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-vt8500-i2c-binding-v2-1-0cf22d0c2d42@gmail.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=dcuA3WXe c=1 sm=1 tr=0 ts=681340c4 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=X_mIwdbuNq69S7QoM7cA:9
+X-Proofpoint-GUID: h4ru7CCXZwuzE6Uftp_WzlM9p-KAp_cg
+X-Proofpoint-ORIG-GUID: TpC0e04OfMIYWfWtF1xK0WcZ3AB4qi7A
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA3MiBTYWx0ZWRfX5vgj7UUC3geP DMVRSI7Hw6V5xZwH16Hct5UoRRDHsumgnU695E6988wfSjUnz2C5CXfCZobxOyXe9qml+tTOA4Y IvBZ1jh85vMO7J6UykpSIc9g6bzdh8N9lDd8ufnGss2XTu+NKtmJql51+4MDlujCQq3wCndSYFd
+ fdTiV5qOOBigOAC7OflBJfzF6eDO45wVsiO+VlKcr7VRGCfz4JGuD1OGqcAg1D2POtQpad14tac Jh7nS0SRV6X4CXL2m1wED8rTSlrwSNmr3sBPdMGD8uwSVoXwUT7anvvYTPpwv1oK5mI6ntfXD3K x1GfEqjTSvvN4Y/jvM3LDc8GFrPJIlyA66e7+PRmwQgbRtNkuSrYR6+Qjwn+SaXSMyYbanf2PEl
+ V3TspllsJCfaAfS2kQaHsOxptAKipJVzbdPvobkEfS4IyRNsR1N0Na5TvM4TOVhiG0F5H+wt
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_03,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
+ spamscore=0 impostorscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 lowpriorityscore=0
+ clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505010072
 
-Hi Alexey,
+Add the evsel read method to enable reading counter data for the
+given evsel from python.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Gautam Menghani <gautam@linux.ibm.com>
+---
+ tools/perf/util/python.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-[auto build test WARNING on 0af2f6be1b4281385b618cb86ad946eded089ac8]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexey-Charkov/dt-bindings-i2c-i2c-wmt-Convert-to-YAML/20250430-183538
-base:   0af2f6be1b4281385b618cb86ad946eded089ac8
-patch link:    https://lore.kernel.org/r/20250430-vt8500-i2c-binding-v2-1-0cf22d0c2d42%40gmail.com
-patch subject: [PATCH v2] dt-bindings: i2c: i2c-wmt: Convert to YAML
-reproduce: (https://download.01.org/0day-ci/archive/20250501/202505011756.SZDFqCew-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505011756.SZDFqCew-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/i2c/i2c-wmt.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
-   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
-   make[1]: *** [Makefile:1801: htmldocs] Error 2
-   make: *** [Makefile:248: __sub-make] Error 2
-
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index 011ee2e27797..5a4d2c9aaabd 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -867,6 +867,23 @@ static PyObject *pyrf_evsel__open(struct pyrf_evsel *pevsel,
+ 	return Py_None;
+ }
+ 
++static PyObject *pyrf_evsel__read(struct pyrf_evsel *pevsel,
++				  PyObject *args, PyObject *kwargs)
++{
++	struct evsel *evsel = &pevsel->evsel;
++	int cpu_map_idx = 0, thread = 0;
++	struct perf_counts_values counts;
++	struct pyrf_counts_values *count_values = PyObject_New(struct pyrf_counts_values,
++							       &pyrf_counts_values__type);
++
++	if (!PyArg_ParseTuple(args, "ii", &cpu_map_idx, &thread))
++		return NULL;
++
++	perf_evsel__read(&(evsel->core), cpu_map_idx, thread, &counts);
++	count_values->values = counts;
++	return (PyObject *)count_values;
++}
++
+ static PyObject *pyrf_evsel__str(PyObject *self)
+ {
+ 	struct pyrf_evsel *pevsel = (void *)self;
+@@ -885,6 +902,12 @@ static PyMethodDef pyrf_evsel__methods[] = {
+ 		.ml_flags = METH_VARARGS | METH_KEYWORDS,
+ 		.ml_doc	  = PyDoc_STR("open the event selector file descriptor table.")
+ 	},
++	{
++		.ml_name  = "read",
++		.ml_meth  = (PyCFunction)pyrf_evsel__read,
++		.ml_flags = METH_VARARGS | METH_KEYWORDS,
++		.ml_doc	  = PyDoc_STR("read counters")
++	},
+ 	{ .ml_name = NULL, }
+ };
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
