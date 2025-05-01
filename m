@@ -1,79 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2BD26FD8B;
-	Thu,  1 May 2025 23:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9503D6A
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:52:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143358; cv=none; b=nrBqlnmY76hVrmCFURosC08U5xAWqy0BET03N7aS6J2SN9HDI1zDqHzEaYQFJS0aHI0s4nORKIx6yXODivwxJGOMxCPHHE9iV6H4exwgD1NzXB9GnE++t8LHEbJYaz/vbUb/2VVDr/Hkg5MqRtyM+RnhuaZ+DwhC+/fQI0Dou7c=
+	t=1746143536; cv=none; b=oYa+7Zc6ONeS+nzQmYw735sLlvkPygMZUa20DfcQVA5xS4aLhOtg7bUBMDOsZ2+9xAFcX8uZzqbdDS+x0csfxxi9mN/g8XTv+/V8+px1R7SgAGyG5uWOh8BsAgSnQPDkNWumpL62Abn2M39ExnTZjxQo6ThfVeLsfVxJP2vHFKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143358; c=relaxed/simple;
-	bh=oBb30km4rgKn4We1YO6LEEYryPCsN9axqOjf65m6cV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YxG2Hn4MQZgOxfr1eVGdkX7HgtfP3wHOEFXHlLcTU5Dr0IriLPn9Mq07NOTZTHeM+L6VR45Nz/+C67O8BSlj4R2D4AwC2smUi6xIBCgtvxyZnMPVdY+xaT11hb6vdRD+Z897xHDByw8BnJYSWfgp16A42uqNvhL+ksffKQB4s5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dsr2AkHa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746143536; c=relaxed/simple;
+	bh=OQUWGEVgZ+PDwRlv2+NEZXwr26U7U2Avy7r6dUmpfsM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V3Jb8kxDX8zsoK3S8iyfSMg//xr5JtKBS5hsLhiqxo45pYg395BWW+My0YlWMzmmWRUfum7h8omutpQudYMo5/LRcMgLRDNiE4yiZgQsHyUJrLhbm42a6ekb/kwomXpy+yhFx31mfkBXCnvUzqC66t+QJHr/1xSM28UiXizwFp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=REeP7MMl; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dsr2AkHa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83409C4CEED;
-	Thu,  1 May 2025 23:49:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746143354;
-	bh=oBb30km4rgKn4We1YO6LEEYryPCsN9axqOjf65m6cV4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Dsr2AkHaUNLtlqO3Grbv5Rh/u8s8h80+GON71LhmZjrpojXzovUSv4b4g+w6lBWkV
-	 55V3QLUfZD2fcFYSza2TxHUFzJ5A0SiDS3j68+vyr7hh/Al3+z8sEDZunMNkdUghLQ
-	 qdOgeTd8+w+aYvUthj9TTfBI/jE/cxMtZie9HgTeubAuC5FLsKZGVROANb6xuslCQ3
-	 hF3qNtD65MwY5yAjZZOLaNo8PmRIsibLgWNLSeehpU43q10qbvTZHYT9qgnsfHTdsl
-	 vajS7mk/6OjI4Ln5khTAIc9AXi9JwbuH04ztxwA97YFuaXbHv8Y5Egk0gyxxkpYCsN
-	 c2iWSCDrsS60A==
-Date: Thu, 1 May 2025 16:49:11 -0700
-From: Kees Cook <kees@kernel.org>
-To: Ryan Roberts <ryan.roberts@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Ali Saidi <alisaidi@amazon.com>, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] binfmt_elf: Move brk for static PIE even if ASLR disabled
-Message-ID: <202505011633.82A962A7@keescook>
-References: <20250425224502.work.520-kees@kernel.org>
- <ad6b492c-cf5e-42ec-b772-52e74238483b@arm.com>
- <202504301207.BCE7A96@keescook>
- <a6696d0f-3c5a-46a8-8d38-321292dac83d@arm.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="REeP7MMl"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-606668f8d51so933898eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:52:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746143532; x=1746748332; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OyKraObEURHCA1O3iED2hm26WFNl7Mw0i9SjHNz0w2M=;
+        b=REeP7MMlFo7US1ZJSgBq7bHwmHkgBvv4kJWSJEEGdjsPFn1Cl/PMzgSONIoZFzcyui
+         XuclwF7FWsPFrE/u9HJpD/o2rBv2tdnN9M09RYJB6f/MkOWAKvBht4fmAnNo/HbXyRcs
+         BN0i5u4ppYom9ENaokt90KouYOHNKjFedy3/Pwo0oevVJTyWGswvwud/d221GRmi5eYF
+         UFiWt09anE6iX5YT1aeFCM4WhAT1rKmGQrcAgtDetKp1lJyN09/jp3+aktQWNUnexjy+
+         7+TmKSkmlRpd/HarVtF57kMnKiNRB/427S3QCoEAo6Q/Qsy2kptUkw4iVSLSScPw9qnT
+         HyOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746143532; x=1746748332;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OyKraObEURHCA1O3iED2hm26WFNl7Mw0i9SjHNz0w2M=;
+        b=mpMTDFKFGSjK6PbBDv+97sFTc54ywTeQz55KKa+WBn0pw2eXCRhnfFD49MdbdPG+UF
+         J/6/7vA0dBJtIBuZ0DSoGXLo09hLTrxLUIRBsUgxC7BiF7FDqOsbsfSB6/siXMwtGMpl
+         zitDQzph9LY7GveWtC1piHPNPgHRf2X14LNf3e73WaD3MpDetsLb4ZCdeatm7k74dKW7
+         TVwddGvblwexLXu7PPghTCJ1P+7C4KhQiWazFV5F+puY/IMUQmUdGFIxbm5JAmP5w84+
+         byXtHJVGrwgHPVs77HB60wy8dylvoZyjK4k7KOQdAxON0Asa4nNFHsahGUBJ2EzhC1Bj
+         oHXA==
+X-Forwarded-Encrypted: i=1; AJvYcCXsnfPzWGtGQAACU+ytx5l3thrqLLp8kDfuqcKHaIuxkKmYBfXYuCikuFoS7vXaWYKpTgBWd/9qIuXOGUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbIxlThwYDU8JIAi9sPASSFWKo2Euwnz3biRXeS9CZ+xIYdnwz
+	xRhTaMYhvZ2m2RsknuXpuVbeQ5dc97sqdMogXW0UlxCBC3rT5AnS1x7tCGohhk4=
+X-Gm-Gg: ASbGncseyBRqSzM6vN6sXViCEL0NHCetW7w8xBcpBQolZzd2a4qp1ij8p0qFaEWJZOG
+	KJOYeQbs2LMfiESib2bfxZdSICnV9zG7gsJajr9XT82/Vp62cLoYWNcHsbx9c3CrDutl47I/qbH
+	S9n0Y6bgAoEeX9Wl6hiG8DqhnZFWYzIeWdX/mhhFItvCv8uQS3FU5Z8DMc6Vc7yapUja8grQBOZ
+	tGn+ZsLLpxIMNd2XbvBvNLl41FNBwKOY4+emNiWPBrtloX0MiDE9FaYTcL6BAxmJerxNpKXZYoF
+	TwSn1PkzmtmugTBb04sAueM86yDCtCQh6dPBtMcHn+CLas/FFlYGph0y1WkSKgPjaR+3m9FooZZ
+	y54wTVDeGmKwZwa2M6Q==
+X-Google-Smtp-Source: AGHT+IG9i0SjqJNmrxwyVXWssfn4FV7bVAFVBFFYBmbJlnOnDNrSJ9/S9igAW+PRB5scHigMaDiLuA==
+X-Received: by 2002:a05:6820:17c:b0:604:ac85:abe2 with SMTP id 006d021491bc7-607e1fde107mr2462578eaf.3.1746143532034;
+        Thu, 01 May 2025 16:52:12 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7d11e1bsm324509eaf.10.2025.05.01.16.52.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 16:52:10 -0700 (PDT)
+Message-ID: <741acf06-72b8-41e6-88ef-048273c3da26@baylibre.com>
+Date: Thu, 1 May 2025 18:52:08 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a6696d0f-3c5a-46a8-8d38-321292dac83d@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] HID: sensor-hub: Fix typo and improve documentation for
+ sensor_hub_remove_callback()
+To: chelsy ratnawat <chelsyratnawat2001@gmail.com>
+Cc: jikos@kernel.org, jic23@kernel.org, srinivas.pandruvada@linux.intel.com,
+ bentiss@kernel.org, linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
+ <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
+ <CAOeBcHOw6CHbY6W+wAWvYsm_CGRMCgt_BLSV65X=rnhuU1r1hw@mail.gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <CAOeBcHOw6CHbY6W+wAWvYsm_CGRMCgt_BLSV65X=rnhuU1r1hw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 01, 2025 at 12:03:32PM +0100, Ryan Roberts wrote:
-> I agree, as long as COMPAT_BRK is not set (which is the common case IFAICT).
-> When COMPAT_BRK is enabled, I think you are breaking the purpose of that
-> Kconfig? Perhaps it's not a real-world problem though...
+On 5/1/25 6:33 PM, chelsy ratnawat wrote:
+> Hi, 
 
-When you turned off ASLR, what mechanism did you use? Personality or
-randomize_va_space=0?
+Watch out for HTML mail! The mailing list and other automated tools will reject
+it, so some people won't see the whole conversation.
 
-> > It's possible it could break running the loader directly against some
-> > libc5-based binaries. If this turns out to be a real-world issue, we can
-> > find a better solution (perhaps pre-allocating a large brk).
+> Thanks for the feedback. Regarding your comments:
 > 
-> But how large is large enough...
+> On Thu, May 1, 2025 at 12:47 AM David Lechner <dlechner@baylibre.com <mailto:dlechner@baylibre.com>> wrote:
+> 
+>     On 4/30/25 1:23 PM, Chelsy Ratnawat wrote:
+>     > Fixed a typo in "registered" and improved grammar for better readability
+>     > and consistency with kernel-doc standards. No functional changes.
+>     >
+>     > Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com <mailto:chelsyratnawat2001@gmail.com>>
+>     > ---
+>     >  include/linux/hid-sensor-hub.h | 7 ++++---
+>     >  1 file changed, 4 insertions(+), 3 deletions(-)
+>     >
+>     > diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-sensor-hub.h
+>     > index c27329e2a5ad..5d2ac79429d4 100644
+>     > --- a/include/linux/hid-sensor-hub.h
+>     > +++ b/include/linux/hid-sensor-hub.h
+>     > @@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct hid_sensor_hub_device *hsdev,
+>     >  /**
+>     >  * sensor_hub_remove_callback() - Remove client callbacks
+> 
+>     This says "callbacks", so is it possible to have more than one registered at a
+>     time?
+> 
+>    
+>    Regarding the use of "callback" instead of "callbacks", what I understand is- 
+>    - The function `sensor_hub_register_callback()` ensures that only one callback is registered for each `(hsdev, usage_id)` pair. If another callback is registered for the same `(hsdev, usage_id)`, it returns `-EINVAL`.
+>    - Therefore, `sensor_hub_remove_callback()` is designed to remove that single registered callback for a given `(hsdev, usage_id)` pair. The function does not need to handle multiple callbacks for the same pair, as only one
+>      callback is registered at a time. 
+>     
+>    Please let me know if my understanding is correct, or if you have any additional feedback or suggestions.
 
-Right -- Chrome has a 500MB brk on my laptop. :P Or with randomization
-off, it could allocate to the top of the mmap space just to keep
-"future" mmap allocations from landing in any holes...
+Based on the reply from Srinivas, it sounds like you understand correctly.
 
-> Perhaps it is safer to only move the brk if !IS_ENABLED(CONFIG_COMPAT_BRK) ?
-> Then wait to see if there are any real-world COMPAT_BRK users that hit the issue?
 
-Yeah, that might be the best middle-ground.
-
--- 
-Kees Cook
