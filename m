@@ -1,59 +1,80 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2CD1F3FE8
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:44:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF42204098
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135898; cv=none; b=d6K2J2a+n6WJYtLc0okMa79qDBZFjWcQ3KXyLRaAG6X7mVgR2qr/iPK0T+09lE2CKlQcLoFPDNbGqT8lyQti/VKanus0Svnphg42jrpdKBJEd5anxsvHkoY2aaMjBTQQmujCUbrSgRe3jEwPzJH3c6OxPXDmnST8Rh/gORqgXTo=
+	t=1746135920; cv=none; b=EimjokUaMAJcC0E7AqIb8+izH1Ighbh9KBzM9oUsehOlk/RniYe1PZHqYNuPsm9hs8yXKA41p5Ca2ZsCwvt1WJjbjPDZ1ESufi+jtUTXwVfyYumbgMAnUWoG+Bi3v1WH6yPtgbGoKu7xsSMYOwZPn4LUQWpOwYu72qUaKxXo7dI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135898; c=relaxed/simple;
-	bh=yGjshj8wxW0jivMiKqB0gosdGnwo02IqG2xpbGt+hrs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=MEj+hrceo/2XtNqzMcM1GRHvNrPcG4ZhRDvcLajrTrrFoZHcZ6aVMRz0RG66VAdb0vNc5vIb+m7PkY5pXIRPVrMxkv6MdaKUhqps6z6aOabZ5x8teIR/RQqNUNBJ+fV8GxPgc1ZLd6KBhtAtETAYpZunWVya3ibXOKNx+eL2bt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IPuEJX8F; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746135920; c=relaxed/simple;
+	bh=1ET9KP8RClNAfd6IrcF68azgez6qvv9QSbmxMQKduHc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QPb6hVMPDFyWqFj2kgGm6zRAPVtnMlAcWe2EPgTFgoQxymYGY8wADNPy7J90f5ShhfI+oqN8Rs4TMbDwSJDLckrLm0d4Vo3wf2fQdYjL+WTv2ony2ozFmEgEX6k4VyiEDlaQJbsrwYk/CWLgt4wMFy5sKYNUv53S636WD3WiM7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SGdzWzKI; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IPuEJX8F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746135896; x=1777671896;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=yGjshj8wxW0jivMiKqB0gosdGnwo02IqG2xpbGt+hrs=;
-  b=IPuEJX8Fte7QD5f12PO7v12Uc6TJ4Xc2mjHoMWC5RsX5FBJAMhc2H7wu
-   Y5HfrS6vcZ/iHD6kye3DbkR8F2Mep9zn5NJDtzKwTNMF0ZCZ6XBQzby4i
-   +ixZRLQqNakocowAcpCnqRrgIvrxto5C2KwyCEh6U++txsC3W4DMaRsrj
-   PADNoWhMoum4oEAz13V9ZYvjQBqx7Cj60aKbYxC8zGVFEe+6FrrzR+Oys
-   lxOJutgXdpeqCxztX2ilFYnDi6DM16qvwndTwiNlQ89sORJ+JshA933YR
-   bj6tNdpTC5xKAMj8bzNElADDwedxKYAoJKmSePs25mSWVvDj3kni9Hmz0
-   Q==;
-X-CSE-ConnectionGUID: Kupdga1NQjK8P3z71fQMFg==
-X-CSE-MsgGUID: K4O7L3ndSJ26avc9hEkOkA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47701591"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47701591"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 14:44:55 -0700
-X-CSE-ConnectionGUID: nwMQFfcgSAKbFKDHCojJSA==
-X-CSE-MsgGUID: Zx0zoC+xRjaQSUEOOWnhGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="139631294"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 01 May 2025 14:44:54 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAbi7-0004PJ-26;
-	Thu, 01 May 2025 21:44:51 +0000
-Date: Fri, 2 May 2025 05:44:09 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Sam Protsenko <semen.protsenko@linaro.org>
-Subject: drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive
- writing between 1 and 3 bytes into a region of size 2
-Message-ID: <202505020532.1swRDgpF-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SGdzWzKI"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2263428c8baso17585ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:45:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746135917; x=1746740717; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vDl1IZro28hdfrXTqI+ublfVfpbjZSHTo0z7wnsFXgQ=;
+        b=SGdzWzKIBG7U4E/uq6apsXkEdNeUSLUV4bYodU0PpCqfhhpREUJsKBA3x4dXV787ld
+         WJXxmQxvirMgDLf9j5Ewypl7WsZYJFv/YdwIN5koXj7oIc4tRb/u9Usvv1QFUCG73sxi
+         H0nmLXGqpp2FLAgrJDwW4s1G1cgrz4cjjfmhTxNLRsk2YJ3qPUoqY02YUgvw8eZW3HSS
+         goItuyOPC+NTLY4XH3wYE4MPEUcKIWA4dXrRKqIQYCbYloR8+AtMVUkZtKp6u8UMnfHZ
+         JzgEVfNnwhIe9jeG9jwOF3NgBSa0uXaGPYi9+07epYWtjV0E39sJEeWVUN8hlTP6rjFK
+         lWrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746135917; x=1746740717;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vDl1IZro28hdfrXTqI+ublfVfpbjZSHTo0z7wnsFXgQ=;
+        b=dBZYxEPeW+1t/2SWmgwAT8pQmK/WKUwHbK1mNbbQnFG4L4aS5SHv5SaqC2jU+7hy7o
+         38pHDiZo3GTVfFHivtDBRC33Be/hqon7Sm/Z7xRtEznNKAdSVy9UqxjiTSW63NFclLb6
+         c51p3ASDZvN7FVm0xJ8SsgJdIOnVNi8InVwN52csow+0JSITmxnL5w2z/bhFYr8RSf9i
+         qvLWy3lwJNGHo9Ex4A65baA0udA08pkCAHOOXLz1HOGglw5ttUKZ1kAJ+tzjIIjjHO8W
+         a1GmszIvg3Xgqa4tDbfTAR5gH3Tpiv7gzobOJh4OK7Wr5HqODT/bnIQ6e2fkZyU3TMKO
+         g6Nw==
+X-Forwarded-Encrypted: i=1; AJvYcCWGqNn+B1FepHEwFRBP5O4FxZvUGs2WOVdVKwFYWyso8Y4uh5ZWyVanw9FSRHQWu8miOCcGkgenX2OgEIc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzvbjaNeIyGr8gvVThy4dxy2O9445E8icJC0CaiBBVMd4EDuNd
+	KCR+6Vqvx6sRQMSnUvOkn3Ar8d6OAp+9VO2otqlWmZFD9q9AJcE71Fl3Ygraiw==
+X-Gm-Gg: ASbGncstzupne/nkDeTmUqFUZFir7Q3w/DH5mGOQxQ5KGZyeFRKl6ke39mFmRBy8k4n
+	5jkzmxcx3JhHLf9Gd2dQM9QnJGK4QvxJ4E5UoG/EMOiKb8cxb6xtYZeHH7gQ8HA+0VKKQcoLWjS
+	vqVI8Fd9duFuIP0x3Js1j+vZeh4qK4+BTRT8zc4izEbxPO02pHgqstVIRAZFrV6QFz3iNE30OxT
+	b+fkMf5F3hz/SvZ8ZFaPO3j3jWjKH8BkoOySS1bXrZjeD+1J57gklCzWdI/XtS1WRQkwrhMVVYC
+	nQWjEhHk5gT1x6eaM3BOoiNFgf32mIeYS89sCgybpvvFDYSLo6FtjAPhhYUp3AYzCTz/6upo
+X-Google-Smtp-Source: AGHT+IFDO4aRxK7rdDiW3OLELFztZLzjuq4Em6bvp1QVNrSWDT0ZuSyTrNqpv/ttZNis0GC3pYd4Tg==
+X-Received: by 2002:a17:902:dac7:b0:216:5e53:d055 with SMTP id d9443c01a7336-22e0798903bmr3390015ad.9.1746135917077;
+        Thu, 01 May 2025 14:45:17 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa85e4ab2sm133113a12.55.2025.05.01.14.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 14:45:16 -0700 (PDT)
+Date: Thu, 1 May 2025 21:45:05 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 21/22] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aBPrYXixWhFRkM7q@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <b81b2332f793a9ffccc528d821f2ed3ac051f9e0.1745646960.git.nicolinc@nvidia.com>
+ <aBKdMaFLPFJYegIS@google.com>
+ <aBKmk6PNFreeyfLh@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,133 +83,220 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <aBKmk6PNFreeyfLh@Asurada-Nvidia>
 
-Hi Tudor,
+On Wed, Apr 30, 2025 at 03:39:15PM -0700, Nicolin Chen wrote:
+> On Wed, Apr 30, 2025 at 09:59:13PM +0000, Pranjal Shrivastava wrote:
+> > On Fri, Apr 25, 2025 at 10:58:16PM -0700, Nicolin Chen wrote:
+> > > The CMDQV HW supports a user-space use for virtualization cases. It allows
+> > > the VM to issue guest-level TLBI or ATC_INV commands directly to the queue
+> > > and executes them without a VMEXIT, as HW will replace the VMID field in a
+> > > TLBI command and the SID field in an ATC_INV command with the preset VMID
+> > > and SID.
+> > > 
+> > > This is built upon the vIOMMU infrastructure by allowing VMM to allocate a
+> > > VINTF (as a vIOMMU object) and assign VCMDQs (vCMDQ objects) to the VINTF.
+> > > 
+> > > So firstly, replace the standard vSMMU model with the VINTF implementation
+> > > but reuse the standard cache_invalidate op (for unsupported commands) and
+> > > the standard alloc_domain_nested op (for standard nested STE).
+> > > 
+> > > Each VINTF has two 64KB MMIO pages (128B per logical vCMDQ):
+> > >  - Page0 (directly accessed by guest) has all the control and status bits.
+> > >  - Page1 (trapped by VMM) has guest-owned queue memory location/size info.
+> > > 
+> > > VMM should trap the emulated VINTF0's page1 of the guest VM for the guest-
+> > > level VCMDQ location/size info and forward that to the kernel to translate
+> > > to a physical memory location to program the VCMDQ HW during an allocation
+> > > call. Then, it should mmap the assigned VINTF's page0 to the VINTF0 page0
+> > > of the guest VM. This allows the guest OS to read and write the guest-own
+> > > VINTF's page0 for direct control of the VCMDQ HW.
+> > > 
+> > > For ATC invalidation commands that hold an SID, it requires all devices to
+> > > register their virtual SIDs to the SID_MATCH registers and their physical
+> > > SIDs to the pairing SID_REPLACE registers, so that HW can use those as a
+> > > lookup table to replace those virtual SIDs with the correct physical SIDs.
+> > > Thus, implement the driver-allocated vDEVICE op with a tegra241_vintf_sid
+> > > structure to allocate SID_REPLACE and to program the SIDs accordingly.
+> > > 
+> > > This enables the HW accelerated feature for NVIDIA Grace CPU. Compared to
+> > > the standard SMMUv3 operating in the nested translation mode trapping CMDQ
+> > > for TLBI and ATC_INV commands, this gives a huge performance improvement:
+> > > 70% to 90% reductions of invalidation time were measured by various DMA
+> > > unmap tests running in a guest OS.
+> > > 
+> > 
+> > The write-up is super helpful to understand how the HW works from a high
+> > level. Thanks for explaining this well! :) 
+> > 
+> > I'm curious to know the DMA unmap tests that were run for perf?
+> 
+> tools/testing/selftests/dma/dma_map_benchmark.c
+> 
 
-FYI, the error/warning still remains.
+Ahh okay.. I thought it was something else. I guess it's worth posting
+some comparitive results in the cover letter if you prefer.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
-commit: 6e1e48b6ef2613ff4c28a34f7a57c29a4367ad87 tty: serial: samsung: shrink the clock selection to 8 clocks
-date:   1 year, 3 months ago
-config: csky-randconfig-r053-20231127 (https://download.01.org/0day-ci/archive/20250502/202505020532.1swRDgpF-lkp@intel.com/config)
-compiler: csky-linux-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505020532.1swRDgpF-lkp@intel.com/reproduce)
+> > >  /**
+> > >   * struct iommu_hw_info_arm_smmuv3 - ARM SMMUv3 hardware information
+> > >   *                                   (IOMMU_HW_INFO_TYPE_ARM_SMMUV3)
+> > >   *
+> > > - * @flags: Must be set to 0
+> > > - * @impl: Must be 0
+> > > + * @flags: Combination of enum iommu_hw_info_arm_smmuv3_flags
+> > > + * @impl: Implementation-defined bits when the following flags are set:
+> > > + *        - IOMMU_HW_INFO_ARM_SMMUV3_HAS_TEGRA241_CMDQV
+> > > + *          Bits[15:12] - Log2 of the total number of SID replacements
+> > > + *          Bits[07:04] - Log2 of the total number of vCMDQs per vIOMMU
+> > > + *          Bits[03:00] - Version number for the CMDQ-V HW
+> > 
+> > Nit: It seems that we deliberately chose not to reveal `NUM_VINTF_LOG2`
+> > to the user-space. If so, maybe we shall mark those bitfields as unused
+> > or reserved for clarity? Bits[11:08] - Reserved / Unused (even 31:16).
+> 
+> I think it should have been there, but kernel should just report 0.
+>                  Bits[11:08] - Log2 of the total number of virtual interface
+> 
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505020532.1swRDgpF-lkp@intel.com/
+Ack.
 
-All warnings (new ones prefixed by >>):
+> > >   * @idr: Implemented features for ARM SMMU Non-secure programming interface
+> > >   * @iidr: Information about the implementation and implementer of ARM SMMU,
+> > >   *        and architecture version supported
+> > > @@ -952,10 +965,28 @@ struct iommu_fault_alloc {
+> > >   * enum iommu_viommu_type - Virtual IOMMU Type
+> > >   * @IOMMU_VIOMMU_TYPE_DEFAULT: Reserved for future use
+> > >   * @IOMMU_VIOMMU_TYPE_ARM_SMMUV3: ARM SMMUv3 driver specific type
+> > > + * @IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV: NVIDIA Tegra241 CMDQV Extension for SMMUv3
+> > >   */
+> > >  enum iommu_viommu_type {
+> > >  	IOMMU_VIOMMU_TYPE_DEFAULT = 0,
+> > >  	IOMMU_VIOMMU_TYPE_ARM_SMMUV3 = 1,
+> > > +	IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV = 2,
+> > > +};
+> > 
+> > This is a little confusing.. I understand that we need a new viommu type
+> > to copy the new struct iommu_viommu_tegra241_cmdqv b/w the user & kernel
+> > 
+> > But, in a previous patch (Add vsmmu_alloc impl op), we add a check to
+> > fallback to the standard type SMMUv3, if the impl_ops->vsmmu_alloc 
+> > returns -EOPNOTSUPP:
+> > 
+> > 	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
+> > 		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> > 			master->smmu, s2_parent, ictx, viommu_type, user_data);
+> > 	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
+> > 		if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
+> > 			return ERR_PTR(-EOPNOTSUPP);
+> > 		/* Fallback to standard SMMUv3 type if viommu_type matches */
+> > 		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
+> > 					     &arm_vsmmu_ops);
+> > 
+> > Now, if we'll ALWAYS try to allocate an impl-specified vsmmu first, even
+> > when the viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3, we are anyways
+> > going to return back from the impl_ops->vsmmu_alloc with -EOPNOTSUPP.
+> 
+> That's not necessarily true. An impl_ops->vsmmu_alloc can support
+> IOMMU_VIOMMU_TYPE_ARM_SMMUV3 potentially, e.g. an impl could just
+> toggle a few special bits in a register and return a valid vsmmu
+> pointer.
+> 
+> It doesn't work like this with VCMDQ as it supports its own type,
+> but for the long run I think we should pass in the standard type
+> to impl_ops->vsmmu_alloc too.
+> 
 
-   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_set_termios':
->> drivers/tty/serial/samsung_tty.c:1391:48: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                                                ^~
-   In function 's3c24xx_serial_getclk',
-       inlined from 's3c24xx_serial_set_termios' at drivers/tty/serial/samsung_tty.c:1492:9:
-   drivers/tty/serial/samsung_tty.c:1391:34: note: directive argument in the range [0, 254]
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                                  ^~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c:1391:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
-    1391 |                 sprintf(clkname, "clk_uart_baud%d", cnt);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c: In function 's3c24xx_serial_init_port':
-   drivers/tty/serial/samsung_tty.c:1789:49: warning: '%d' directive writing between 1 and 3 bytes into a region of size 2 [-Wformat-overflow=]
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                                                 ^~
-   In function 's3c24xx_serial_enable_baudclk',
-       inlined from 's3c24xx_serial_init_port' at drivers/tty/serial/samsung_tty.c:1895:8:
-   drivers/tty/serial/samsung_tty.c:1789:35: note: directive argument in the range [0, 254]
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                                   ^~~~~~~~~~~~~~~~~
-   drivers/tty/serial/samsung_tty.c:1789:17: note: 'sprintf' output between 15 and 17 bytes into a destination of size 15
-    1789 |                 sprintf(clk_name, "clk_uart_baud%d", clk_num);
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+That makes sense. I only considered CMDQV. Thanks for the clarification!
 
+> > Then we'll again check if the retval was -EOPNOTSUPP and re-check the
+> > viommu_type requested.. which seems a little counter intuitive.
+> 
+> It's just prioritizing the impl_ops->vsmmu_alloc. Similar to the
+> probe, if VCMDQ is missing or encountering some initialization
+> problem, give it a chance to fallback to the standard SMMU.
+> 
 
-vim +1391 drivers/tty/serial/samsung_tty.c
+Ack.
 
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1372  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1373  static unsigned int s3c24xx_serial_getclk(struct s3c24xx_uart_port *ourport,
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1374  			unsigned int req_baud, struct clk **best_clk,
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1375  			u8 *clk_num)
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1376  {
-97a6cfe8115b04 drivers/tty/serial/samsung_tty.c Krzysztof Kozlowski 2022-03-08  1377  	const struct s3c24xx_uart_info *info = ourport->info;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1378  	struct clk *clk;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1379  	unsigned long rate;
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1380  	unsigned int baud, quot, best_quot = 0;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1381  	char clkname[MAX_CLK_NAME_LENGTH];
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1382  	int calc_deviation, deviation = (1 << 30) - 1;
-6e1e48b6ef2613 drivers/tty/serial/samsung_tty.c Tudor Ambarus       2024-01-19  1383  	u8 cnt;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1384  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1385  	for (cnt = 0; cnt < info->num_clks; cnt++) {
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1386  		/* Keep selected clock if provided */
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1387  		if (ourport->cfg->clk_sel &&
-7d31676a8d91dd drivers/tty/serial/samsung_tty.c Jonathan Bakker     2020-05-08  1388  			!(ourport->cfg->clk_sel & (1 << cnt)))
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1389  			continue;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1390  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24 @1391  		sprintf(clkname, "clk_uart_baud%d", cnt);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1392  		clk = clk_get(ourport->port.dev, clkname);
-7cd88831feb03c drivers/tty/serial/samsung.c     Kyoungil Kim        2012-05-20  1393  		if (IS_ERR(clk))
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1394  			continue;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1395  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1396  		rate = clk_get_rate(clk);
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1397  		if (!rate) {
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1398  			dev_err(ourport->port.dev,
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1399  				"Failed to get clock rate for %s.\n", clkname);
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1400  			clk_put(clk);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1401  			continue;
-a9c09546e903f1 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1402  		}
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1403  
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1404  		if (ourport->info->has_divslot) {
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1405  			unsigned long div = rate / req_baud;
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1406  
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1407  			/* The UDIVSLOT register on the newer UARTs allows us to
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1408  			 * get a divisor adjustment of 1/16th on the baud clock.
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1409  			 *
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1410  			 * We don't keep the UDIVSLOT value (the 16ths we
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1411  			 * calculated by not multiplying the baud by 16) as it
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1412  			 * is easy enough to recalculate.
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1413  			 */
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1414  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1415  			quot = div / 16;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1416  			baud = rate / div;
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1417  		} else {
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1418  			quot = (rate + (8 * req_baud)) / (16 * req_baud);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1419  			baud = rate / (quot * 16);
-090f848da00008 drivers/serial/samsung.c         Ben Dooks           2008-12-12  1420  		}
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1421  		quot--;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1422  
-f3710f5e9e1a68 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1423  		calc_deviation = abs(req_baud - baud);
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1424  
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1425  		if (calc_deviation < deviation) {
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1426  			/*
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1427  			 * If we find a better clk, release the previous one, if
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1428  			 * any.
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1429  			 */
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1430  			if (!IS_ERR(*best_clk))
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1431  				clk_put(*best_clk);
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1432  			*best_clk = clk;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1433  			best_quot = quot;
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1434  			*clk_num = cnt;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1435  			deviation = calc_deviation;
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1436  		} else {
-832e231cff4761 drivers/tty/serial/samsung_tty.c Christophe JAILLET  2023-06-10  1437  			clk_put(clk);
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1438  		}
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1439  	}
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1440  
-5f5a7a5578c588 drivers/tty/serial/samsung.c     Thomas Abraham      2011-10-24  1441  	return best_quot;
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1442  }
-b497549a035c2a drivers/serial/samsung.c         Ben Dooks           2008-07-03  1443  
+> > > +	/*
+> > > +	 * @length must be a power of 2, in range of
+> > > +	 *   [ 32, 1 ^ (idr[1].CMDQS + CMDQ_ENT_SZ_SHIFT) ]
+> > > +	 */
+> > 
+> > Nit: 2 ^ (idr[1].CMDQS + CMDQ_ENT_SZ_SHIFT) to match the comment in uapi
+> 
+> Alok pointed it out too. Fixed.
+> 
 
-:::::: The code at line 1391 was first introduced by commit
-:::::: 5f5a7a5578c5885201cf9c85856f023fe8b81765 serial: samsung: switch to clkdev based clock lookup
+Thanks! I had only skimmed through Alok's comments and felt he only
+pointed it out in the uapi and not here. Sorry for overlooking that :)
 
-:::::: TO: Thomas Abraham <thomas.abraham@linaro.org>
-:::::: CC: Kukjin Kim <kgene.kim@samsung.com>
+> > > +	vcmdq = iommufd_vcmdq_alloc(viommu, struct tegra241_vcmdq, core);
+> > > +	if (!vcmdq)
+> > > +		return ERR_PTR(-ENOMEM);
+> > > +
+> > > +	/*
+> > > +	 * HW requires to unmap LVCMDQs in descending order, so destroy() must
+> > > +	 * follow this rule. Set a dependency on its previous LVCMDQ so iommufd
+> > > +	 * core will help enforce it.
+> > > +	 */
+> > > +	if (prev) {
+> > > +		ret = iommufd_vcmdq_depend(vcmdq, prev, core);
+> > > +		if (ret)
+> > > +			goto free_vcmdq;
+> > > +	}
+> > > +	vcmdq->prev = prev;
+> > > +
+> > > +	ret = tegra241_vintf_init_lvcmdq(vintf, index, vcmdq);
+> > > +	if (ret)
+> > > +		goto free_vcmdq;
+> > > +
+> > > +	dev_dbg(cmdqv->dev, "%sallocated\n",
+> > > +		lvcmdq_error_header(vcmdq, header, 64));
+> > > +
+> > > +	tegra241_vcmdq_map_lvcmdq(vcmdq);
+> > > +
+> > > +	vcmdq->cmdq.q.q_base = q_base & VCMDQ_ADDR;
+> > > +	vcmdq->cmdq.q.q_base |= log2size;
+> > > +
+> > > +	ret = tegra241_vcmdq_hw_init_user(vcmdq);
+> > > +	if (ret)
+> > > +		goto free_vcmdq;
+> > > +	vintf->lvcmdqs[index] = vcmdq;
+> > > +
+> > > +	return &vcmdq->core;
+> > > +free_vcmdq:
+> > > +	iommufd_struct_destroy(viommu->ictx, vcmdq, core);
+> > > +	return ERR_PTR(ret);
+> > 
+> > Are we missing an undepend here?
+> 
+> Right. The iommufd_struct_destroy doesn't invoke obj->ops.abort().
+> 
+> The whole revert flow is wonky, missing all the unmap/deinit steps.
+> 
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Right.
+
+> > > +static void tegra241_vintf_destroy_vdevice(struct iommufd_vdevice *vdev)
+> > > +{
+> > > +	struct tegra241_vintf_sid *vsid =
+> > > +		container_of(vdev, struct tegra241_vintf_sid, core);
+> > > +	struct tegra241_vintf *vintf = vsid->vintf;
+> > > +
+> > > +	writel_relaxed(0, REG_VINTF(vintf, SID_REPLACE(vsid->idx)));
+> > > +	writel_relaxed(0, REG_VINTF(vintf, SID_MATCH(vsid->idx)));
+> > 
+> > Just a thought: Should these be writel to avoid races?
+> > Although I believe all user-queues would be free-d by this point?
+> 
+> Yea. They should be. I will change them.
+> 
+
+Ack.
+
+> Thanks
+> Nicolin
+
+Thanks
+Praan
