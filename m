@@ -1,55 +1,38 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FEE2609F5;
-	Thu,  1 May 2025 05:19:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68562609F5;
+	Thu,  1 May 2025 05:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746076760; cv=none; b=pidi2MtsVe2cL5d4bjJc5MLXnZ3D7bDTOtOzPeLt9neG53yW8lzxiEdL/nkdGwgMBlZXHExMBRckl65a2G+ZPZPqbMZqyWVGhe/tzMuwSm1Ffh5G0s7LSQXVUTAwrKS1VxacTrq4t5/WsqwmsrUcB7y1XqTrsoXDLmuTYkGkEqs=
+	t=1746076812; cv=none; b=RIK3clEUFJO5gL9qyi1Dvp3p6uDq6I0veCpozJ8zm6aOkeJ31NjjuEZlz0UXE405pjplyDpcKor8GkU1kz2/W4sH9oxRCetXtkBGVsf4CSfon3NLPgeIDt8qLQhUdwKLA2/KfuDkkE4ZINTKmQjkcv3o0DXemy+ax3LwzyJrl04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746076760; c=relaxed/simple;
-	bh=kB2nu9oQJWAumIVhwpNu9VX/9t+OVZ610msYAY5hvK4=;
+	s=arc-20240116; t=1746076812; c=relaxed/simple;
+	bh=SD2YZveBQSiM3ORkc+0l2DqG126xuniIbMcJ5Fep+cg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aSu7cagTTZdJAFXavms4C1cqt3I3PVYZvjKjl90Jripw2Nf+fvUkqOIQLP8hOIwKQ6MOlKBbVE6RjY9Ib3JJF0eJnMyNrOSHE14OFfK2Gz3Ntk3W8ww8WhdsSBQz5e0KmkTp4DcHbBkUAegPJ0l3nu0pj7PJz/yTa0XFegvC6CU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=ORsTUm+3; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	 Content-Type:Content-Disposition:In-Reply-To; b=qTlO73IgRXtrbzVx9la+n793xjLnX7FrhuKYQAb+EoJi3wqT4W5xv0rjTsGW4GUos1ntJw/2UnvecSrmiEUPgMSb7YqgQbtYcCrLPIiE3BaJeD0ZVKiDmkHqltmXIRnllxDT7mea/hTIQYv8JXh+itGKymdKAgio9mNN5jsuVXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=zfPQ0Uks; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="ORsTUm+3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=9t5+R7MBB1CitzsoU7qrOUojn4639+WchyM4zx0d4j4=; b=ORsTUm+3tDs7MqOLXniwLbTENu
-	6p8Ijou3tB4FtepjWe3F1A6W8IvySh95cZdbo6AzTOgys1fAFOnLjgZl/ixeJAU3uP78oydLi8D//
-	yAax6cWpNxoAHYpOezO8beaYeuGHP68V4qdyQTdAirltbeZ3K5W1HWRLRdTu1DRHvIhqGACuMLtsD
-	L4/ELm9xRzxjZE9uSzRBsLPKu384XEncFgdp8RWbWcWOQIo8DOJNbz9+cCdkKdgpDc51jJ2r9y5VI
-	V7Wcl+IDdkPoN5XAqV8kKx2r8DlOwoCrwVYtmf6WPYNYB7nm6jKdpr5Y35dDNgam3PekRDwUujufp
-	tuz3w6FQ==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1uAMK4-002SVz-1M;
-	Thu, 01 May 2025 13:19:01 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 01 May 2025 13:19:00 +0800
-Date: Thu, 1 May 2025 13:19:00 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Eric Biggers <ebiggers@kernel.org>
-Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
-	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 00/12] crypto: sha256 - Use partial block API
-Message-ID: <aBMERARvCQsl-5iN@gondor.apana.org.au>
-References: <cover.1745992998.git.herbert@gondor.apana.org.au>
- <20250430174543.GB1958@sol.localdomain>
- <aBLMi5XOQKJyJGu-@gondor.apana.org.au>
- <20250501022617.GA65059@sol.localdomain>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="zfPQ0Uks"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D02AC4CEE3;
+	Thu,  1 May 2025 05:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746076809;
+	bh=SD2YZveBQSiM3ORkc+0l2DqG126xuniIbMcJ5Fep+cg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=zfPQ0Uks2IK2009Fc7pWSTrhIfNidB6KK/7YC+cJkmyWzZb+/w6T7Rq/NksFDPYW0
+	 LcfawarKNUpo6zDIkSInGjgs0KU+F5K7VOQYGfGC3mhgmy5W4ztJirj11Vq5iZB6AL
+	 vB97OI4Q9tBC1c37+J8kjxszDEWg/LdeOfKACOdA=
+Date: Thu, 1 May 2025 07:18:27 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Judith Mendez <jm@ti.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Jiri Slaby <jirislaby@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+	Hari Nagalla <hnagalla@ti.com>
+Subject: Re: [PATCH RFC 0/2] Introduce PRU UART driver
+Message-ID: <2025050103-graduate-anteater-e6f6@gregkh>
+References: <20250501003113.1609342-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,20 +41,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250501022617.GA65059@sol.localdomain>
+In-Reply-To: <20250501003113.1609342-1-jm@ti.com>
 
-On Wed, Apr 30, 2025 at 07:26:17PM -0700, Eric Biggers wrote:
->
-> Interesting approach -- pushing out misguided optimizations without data, then
-> demanding data for them to be reverted.  It's obviously worse for
-> len % 64 < 56 for the reason I gave, so this is a waste of time IMO.  But since
-> you're insisting on data anyway, here are some quick benchmarks on AMD Zen 5
-> (not going to bother formatting into a table):
+On Wed, Apr 30, 2025 at 07:31:11PM -0500, Judith Mendez wrote:
+> This patch series is sent as an RFC to get some initial comments
+> on the PRU UART driver.
 > 
-> Before your finup "optimization":
+> The ICSSM modules on am64x SoC and the PRUSS module on am62 SoC or am335x
+> SoCs have a UART sub-module. This patch series introduces the driver and the
+> corresponding binding documentation for this sub-module.
+> 
+> The DTS patches for adding PRU nodes and enabling PRU UART will be added
+> in a later v1 version of the series if accepted.
+> 
+> This driver has been previously tested on the following boards:
+> am64x SK, am62x SK, and am335x SK boards.
 
-Thanks, I'll revert to the single-block version.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Why is this "RFC"?  What needs to be done to make it something that you
+actually feel works properly and should be merged?
+
+thanks,
+
+greg k-h
