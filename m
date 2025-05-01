@@ -1,272 +1,269 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2078.outbound.protection.outlook.com [40.107.95.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEC933987;
-	Thu,  1 May 2025 23:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143828; cv=fail; b=qa8SAznpfLTjDhm+5uxOs+iosMhjgWiV0ViY2KVsHXDI8ffIeK+fUeiCQBFR/H2AVO/ci/VSOE7lbOuH26ZUMnpCNKm7zTdPGNOg9GxnNQohZGc/Q7npt9/F37W99bE0qah32wBQUZyID3R2RPeGzj7UxGis8vGdykA3A61UWis=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143828; c=relaxed/simple;
-	bh=HaazbME43M6tB1iG5pJlYz43hmdwh61OhkFeOTgBnOo=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=NXmBNZLf96FR9ZWZ2nOXgxNPXhxAX6m26g+TrATqgncYFHj/pb2XlA6Q9h5YKw7jgwmkRH8nW8f0im8XVsKbvZaQGRGLVwSl6ZoxCAe3Zvs2KerZfdkldeEu+MBvvnNCg6vGeAOSBAzChsABKP2p+URDtEmYhdX5QWbU8fokf00=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Iz0nfdP; arc=fail smtp.client-ip=40.107.95.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED1792609EC;
+	Thu,  1 May 2025 23:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746143918; cv=none; b=nUVb9EVigPg7mKDrYn23zKfsaoOosIsHKTOQGZm9UQoHGBXpfBuAFquDUZFHryrF7DlWk6glvnSe8VyzSGcx4pXCPO+zo3RXjr3bQBExn4za0wVLKAqmzit61pd4F7g+ZPyxd2ekJMxb1pD9aaXwmvDy51+0CsopQmnvVA9OkwI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746143918; c=relaxed/simple;
+	bh=HAHwLaAzx4ZbdiMXM1+psW/QTXDMEoyo+ipEXG8FSq8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=opkdl1kXNknU9lVaeSTWNG7XDyFeWrbGvzNKG1i3zl21SErscRMDPFbKP9rOOBlbq9o+fa+T9JyfvuKwbj1Z/qKZybwdccz91O/HTJg0CASTtP3Cn4P2veNO4ocmln5W9zQUSjUmY9ZtEtkIJT4wqkUB/Gw/HOVHqaBOvK2owkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=pV3Wcwux; arc=none smtp.client-ip=220.197.31.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Iz0nfdP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=puq/t9eQsXD5NUE5uc3PxkZK+eoztO/wGwTUl34FCBRXXlEhxVqxRBvgQn/rFxgh2JXKeFn9q4rIwukbPTOCsegdIFSRiG1VcJ25WKjSYlje77gX3nrldXWYy69XllrbsTUyGZkjjniW6VV05qKVGaymTytOlo6uNXBIJjkb+DlIflSgknreln8mm7EiAQckkI1yS8w0Mstbt+eUx+9udLHlPATQ6YxbHhZYSxhSxV0EtDxeURQvtP2DCVGzU5xn8fjVFl6DqM7mCBiWxzq6aKeVkkDB8uRXdGBXo2v/hCe7vGTZPTmTa/sy/stjQZJ2a/Nak5c90EcZyDaGhy8oKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3vWecc5xVBpX6ngVzLO6G4scdsjbC6dmV9eULon0zJg=;
- b=AwfI9+CAisyeyammHrekCGHE0vWQTGf+YOXeUGrzFUokLxAvQWkCnt4Rk81Pt6YTVPoJVE70UeTFZKRDGrLjhfxMXS8FUzSWl8uNTnDVlvg7kgq+yfviNbimFx0HUsgHmcWbgcr1G/HZiAT18pVJVfbbyikmPrtPy8MU+dNmN05MQkiU2CxNot2cYZ5LHFkB3RsnmkAlXIOVoxMetxNKYtouDrTVb2G3okJ7FHkuBOYZJ7lWtCUi3TUMoFaB2nXEcsseSyxhvcw/x9rjfbqiq/v/+VitdqLcJWPqvKnL0dBZfOszZ1GBdwvZPaH9jBjfCOZ+WiGDt5HIWVnDmO9mqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3vWecc5xVBpX6ngVzLO6G4scdsjbC6dmV9eULon0zJg=;
- b=1Iz0nfdPhLJNqKZhyfUyPVQ8sYzRGkkOI1jo1U55HDSKSZSegKTt0//QUIZN30NU8DNyuvGfzdL1U6yL0qe3RUR/c08Tkdo+FMr05bE8pLcTea3++xVgKnXPV6E3omnZVAq21ibtEYNLxDI7EiXGwKcr2FMPe21V+H6lvO8F2n4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com (2603:10b6:610:69::11)
- by CH1PPFF5B95D789.namprd12.prod.outlook.com (2603:10b6:61f:fc00::62a) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Thu, 1 May
- 2025 23:56:58 +0000
-Received: from CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d]) by CH2PR12MB4956.namprd12.prod.outlook.com
- ([fe80::fa2c:c4d3:e069:248d%3]) with mapi id 15.20.8699.019; Thu, 1 May 2025
- 23:56:58 +0000
-Message-ID: <ab09cbdb-8e30-4720-8ca5-66488922db33@amd.com>
-Date: Thu, 1 May 2025 18:56:54 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: tanmay.shah@amd.com
-Subject: Re: [PATCH v2 0/4] of: Common "memory-region" parsing
-From: Tanmay Shah <tanmay.shah@amd.com>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>,
- "Rob Herring (Arm)" <robh@kernel.org>,
- Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
- Daniel Baluta <daniel.baluta@nxp.com>,
- Iuliana Prodan <iuliana.prodan@nxp.com>, "Andrew F. Davis" <afd@ti.com>
-Cc: Saravana Kannan <saravanak@google.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Patrice Chotard <patrice.chotard@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250423-dt-memory-region-v2-v2-0-2fbd6ebd3c88@kernel.org>
- <CANLsYkxKHhCHYrbAGzQ48QGpL_DbuLnX3=ppmpyu0vjuuvvODg@mail.gmail.com>
- <8c8e9362-c116-4a80-bcb7-a44df68e0bfc@amd.com>
-Content-Language: en-US
-In-Reply-To: <8c8e9362-c116-4a80-bcb7-a44df68e0bfc@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN7P222CA0018.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:124::27) To CH2PR12MB4956.namprd12.prod.outlook.com
- (2603:10b6:610:69::11)
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="pV3Wcwux"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=gllwsGzDq3jA2ddJFMfVgZDKSyUZMTwmjn+v8MWPgFs=;
+	b=pV3WcwuxAwQjvXI0yJprGBllAHQ2IhNer84LSLhnlwjDqhQeP2g45GWMA5AObS
+	do+MDTgFNvlonjcUUAlYomq1tjcsW5F3Ys/h/n4K6KZi8bg+eLvKrM6YeCzUaVp+
+	3hIryzlltAVw+8lk+7/hcQfTiSM6PKzN0qer+13DZgiRY=
+Received: from [192.168.0.109] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wCH3iOHChRothmhDw--.5760S2;
+	Fri, 02 May 2025 07:58:01 +0800 (CST)
+Message-ID: <395042eb-3986-45c1-88c1-482b750303c7@163.com>
+Date: Fri, 2 May 2025 07:57:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB4956:EE_|CH1PPFF5B95D789:EE_
-X-MS-Office365-Filtering-Correlation-Id: f17d7588-4623-42a6-6ac5-08dd890bdb70
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b1MzR2VRWUVwNExtdyt6ZjVtUWhYRFhxNzQvY2pPUjlhYm9JS2l0S3RZMmRm?=
- =?utf-8?B?bUhTdGs5Mm5WVUpkRElEWmxHY3ZqUzMyMzlreDBmQ3ptRlNnUU1ncE5udnps?=
- =?utf-8?B?Nk9pekQzNnJzTXhyRldSVGtqM0tEZ3laVXQvdXJuMit5c3RENFIvV3lDRUJE?=
- =?utf-8?B?OVRhMWRaTUcwNWNjL0NLd3IzRVFBL2x2a2lNc1BoWHdpNlZQQTBRejZJR3JR?=
- =?utf-8?B?M2w1ckxCRGw1eU5LclNMWWFsWGlZKzEzaWZZMjNWeTM2NUVhcWt1WHhUTnBU?=
- =?utf-8?B?Nzg5ZERIcnB3Yno3clEwRmYzd0M4enRaanJtVFZpRkNQZ2ZTcitkdkFtNnJn?=
- =?utf-8?B?Sjc4R2xMNUREcXZOUzBrSllUK1VOaSt2Z0pkMVFhcFFSeEh3bDB5N0FySFNJ?=
- =?utf-8?B?RHpFUFZpaVA3aVlJbitWK0ZSdVpvUjVacTIvcEFvMHFOZXR6em1valZUKzVr?=
- =?utf-8?B?SjhJWnpDeXR5bTdiV1IzTnlmTUdDOEdSeEE4ejcwc3FrekZTd05HNktLb2tt?=
- =?utf-8?B?MVRSNmdPeitUY2lnVUxkc3FYbmFiL056dlBieG00RHJTc1IraGZGVE13UldB?=
- =?utf-8?B?dkJIMlBGZVVIYkV5MHhNWVBrZElkcjFPbXNvOS9zY3pWY3pEKzBraG1YSnVu?=
- =?utf-8?B?S3hlTzBJUS90dDdqdXlhM0d4VjlTZTRUYzUwU0ppbnJNRkREUUZYMGJWNFZu?=
- =?utf-8?B?bWVHY21rZHd6a1FDNUpzQ1BqQy9CVjBxMFltc1MyTTJmL0RzVGFjN3M4T3pM?=
- =?utf-8?B?VUhRTXU0dWVUQndGY01FUGxCVVZUaTFGOUM2ZU9UdWlOR2p2QzQyZGtmVU1w?=
- =?utf-8?B?NkRPcHBFNDdYYXNSRTVSV2Y5N3pSRnowNThPcFE4UGlQWWp4dElXV2szK1dP?=
- =?utf-8?B?ZytEY3l5cFhiVmFYQm1hZDZveTNqdG83ZktNUXNmMGFjRWVNOGZ1dTJBTkxs?=
- =?utf-8?B?YmQyRHpUNUpUbzduT1lQL25Ga2RicVpQYjYwRVpRT0RhczdXVk1Nc2l0ZTBj?=
- =?utf-8?B?WnZQTmdEYW5yU3kxY1diOXJMRWo2bnJhTE9IMFZmbFRzc0Z2aGRlcU1kY1Vv?=
- =?utf-8?B?Y0YwY1htVVNONEwyRmNMYTZoUWs5ZEVjdWlUTTBqL1BSWEFEMWwwWDNqSmRh?=
- =?utf-8?B?ZEUzSjNrK1EwSGIyU3RYQ3lWbVJVUzllM1B0ci9ueWdDR3lmaVlEVzNpY2JL?=
- =?utf-8?B?TkZCdUtNbCt3RnZoWWs2UjczV01pUHR1LzFERVFhV2trRW9NTEkzSUhaUlMr?=
- =?utf-8?B?TFpDait2YTAwQ0xMdzVuMjBmMm5MT1E4dTVtWE9qOFI5SzN3eTZwQ3N4YzEv?=
- =?utf-8?B?VXd0Q1FGRGFUaXpEN3BwT3RWbFdZUW5HZDRyRUpNeTdvT2VWNkJId1U2ZTQ1?=
- =?utf-8?B?K1FrZDJLT0h1dUVGbGtTNWNsR3hhcFYxMTRaY3pBK1FqVmp5dHlmNWQ1d0FY?=
- =?utf-8?B?ZmFHQXppdGRuVWxpT1NKMVhhSzF3WG1ZbHROM3BIdXBNUHBuYXVFU2dvMDFF?=
- =?utf-8?B?eEFoTkRnWkpUU0Y1Y1BaV1RNOXFIdzNHaDJpNjJFWXpLdzVRYUFRS2V2RzNH?=
- =?utf-8?B?eFdWQTlXWWY3empvTHlOdGVHUlU1TkQzMUEzSVMvUXMyaHJZbXFUT3pmVVFQ?=
- =?utf-8?B?Q2libm5UamszdzNYSUJLbDZiSEUydExvNGxxQmt1MkhmWGV5enJxakhIMWJH?=
- =?utf-8?B?bWQ1c1RQVEpuT1RlZjZXTzRjOXQxbjdCSzBCME5Tb2lXQU82YzMwai8zZmtu?=
- =?utf-8?B?N3VUdjlHZVNtV2xSSWo5SVZiQ05UMjQ2bFBEMnFCR1NFc0xrazlaR2dwZkR1?=
- =?utf-8?B?Y2o1b04yYXRvLzJzZUxETHA2SDRsWkJpK3hjSVlkNmJyV3h2eFh3ZTQ5QitG?=
- =?utf-8?B?NHNVQ1JQa1h2cW5Xd08zRTF1dG55SHBHOHQ3TWZVc3BOeTdOUGF6R01RdHRX?=
- =?utf-8?Q?TtRCP60T5KQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4956.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TUFiYk84cXJTTTVjbXJ0NVRXeDM2aFV0ZjJiVnNtNjZZb2h5TDRuZVRzeTVr?=
- =?utf-8?B?LzNySXUwK2JTam5VNHJLOG9GZmI2VHRkbnROUDZEQ0NpL1JOcE5yMUxueWZs?=
- =?utf-8?B?QUx3WFNMclY0S3RiaGJPWnlOajVrR1JzUDgvdVdJMC8xZGNJd3E5OUZEcjEx?=
- =?utf-8?B?NEdSd1NkRTNXdVpOdWFpSjlyVzlYOEtET04xWnFQcXkwT0U3RlB5TVgyREhJ?=
- =?utf-8?B?TytjL1F4aTNIdCtad1dmemRuWjJtL1gxTFpnbklWZHZIRUp2RFNhTy9aQTNX?=
- =?utf-8?B?cVVleFhNUmtOZmhVVzIwVTNzcCt4ckM1UmlWN2I1OWJEUW51TVZYK2RMamMr?=
- =?utf-8?B?REZDL09tcSt5ZVZMUjBCY1dGNEc1Vm1rTXdCbnJlcEQ3MWd1QUd1ZmdvQ1Zk?=
- =?utf-8?B?L1BKNFExMDkxUkYzOGc1WWk2SFcwbjVQMU5WeU8wZFVkcGFQZDc1aE81bFVw?=
- =?utf-8?B?MkxvTHV0aDh0bk5nL0s5aXZ6ZkNISkNvVDlQT1ViRWJ1cTBpVFJDUlhjQ0dU?=
- =?utf-8?B?ZDFvV2F6ZFdRUE0wVlhIZ0x5em8yV05IaXhYa0xQYndBcWx0cllLYlF5bkcv?=
- =?utf-8?B?MHRQK3J5STRHNytUeEhsUnNaOGFQd29scmhzbkRwS3VWMXFvZk93ODNhSE1a?=
- =?utf-8?B?eXZQbnpqQVpXUmo4UnhyeS8ySVlzbGp6bTNoQ1dqTzJCUkRrdnRzbTZ6NXRF?=
- =?utf-8?B?TmFqZGxhd2dRdUFVRHlMbVJBTFkzbm5wenhyMkNDT0oyME5PcnpadTVuejQ1?=
- =?utf-8?B?ZGw4S2ZxaTIxRWF2dkYrNGZhVGhyMWZDTnpuVllYdW9vcTNrN0drQnpsd29k?=
- =?utf-8?B?SVdMUjA0YXl3Qi9PaktIY0NIcnd2dG5hWUQvbVlycFhDb0VEdGNYUjNETGc2?=
- =?utf-8?B?aFdBUUFVRkFFUkRxY1JXZFRFbG9Gc2dhM2g0Q3BOdnNreUMwemZTcmVTOGNp?=
- =?utf-8?B?ZWNRMEtSRTJKZzZzSUZrTjN6NEtZczFKMUtMdVZQdHZEdXBNdzlYbENjYy9p?=
- =?utf-8?B?aUFJYUhJbGF2Nmo3Snk1dTVoUDRYM215YThJb3BWaXFVRlB5eGIrMHVXTzZF?=
- =?utf-8?B?cHppeUxuQ1Y5Q1V2NE9yTUJyM1owbnc4Skx1cE1OWHVuK0FqWEZwZWwrVkV4?=
- =?utf-8?B?SUVGcFlDZFVaa0FqZUVaNURzcU8rV0xxQVQrakFwNXptcCtTZVFObGFHSENQ?=
- =?utf-8?B?bmw0Y2UzZzRXdUpzV0x6Yk1vc1NxaDY1RnkxaEZ0TzQ2d3hmNHYwVEx6MU5K?=
- =?utf-8?B?eGtWY0IxNUN2cGV1a0Y0TENjTjZsNnJHd3JVVWpaNXdCWGFwampxUVFIUXhm?=
- =?utf-8?B?MnBkTE0vYnpLbWp4ZTd0Mk9BMFZvbS9OVmtJemJVK2wvT2I1cUxVWUNaNmtk?=
- =?utf-8?B?RnF1Rm1JTTY5d243Yi84N3NFYk1HMUd3ZXBsYWxINGlCOVZtRUwrMEpudTFX?=
- =?utf-8?B?azQ1R2R4TmRCc0hPWDRQUXR5MEdyNHFjTVNmNUc0Y1NWYVVhMGErLy9UY1dD?=
- =?utf-8?B?dkNnWjd0anQzRFVVY283bHlhTXM3eEJxVGUrWjFyd3FvdDRKSGhSWDZYUTgx?=
- =?utf-8?B?YkRDeS9LbGUvWlc3eG9iNjZ0bkF3ZCtoemVDazRIbWVJMSs3RTcveWJXZm5E?=
- =?utf-8?B?blhKaVl3b1M5cm1iR1dqN3AwMEFocVpDSGc4MldYYkhINFRQVEF4T3NqQXlM?=
- =?utf-8?B?cTd6WXRjQUZqK0ZBTUc3NHpkQ2tlRWtzN1RWN2FJZkFTS2d3N0V2TGl2TWly?=
- =?utf-8?B?NzZIV0tRQU5XYitSSkpFbFRBcGpQTGY3dWoyUThNRlBseGRPa1A3dXJEdG5p?=
- =?utf-8?B?dVkyZ1JtVWtweFVZYnY5dVlJejdlNjRUOTBNTGJvdlJXck9tMVhDNElwQjBk?=
- =?utf-8?B?b1hCWGxMZXE2bXJqdUhvR2lEeUlWUE55ME11VEtrczlxVVlLd3pwL0RxRmVq?=
- =?utf-8?B?WU5CUjFuU2hWZDQ0QUVuT0Z6QmVwSW1wM1B5VTF6MFhXZFRwMHBwN0FYVHl5?=
- =?utf-8?B?UmQ1dnRuSC8wd09yQVU3M1JOYjNkclBMa3E3TTMwZ0JEM3RnYmVCeE5odmlQ?=
- =?utf-8?B?aVdmOUxSa1A2MTJrUlZleDFKV1ZjVHU3N0NTTnBCdGJUR2ZzcVJzZHJsRlNr?=
- =?utf-8?Q?uURVfDPbSGE3eIA8OYokk5eNc?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f17d7588-4623-42a6-6ac5-08dd890bdb70
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4956.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 23:56:57.8250
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uwNpcm27+iXMVbZ1LXLosPFvnJP//CiBZWpmvskof6c6ZFS4sBs4tYxAEk/kclCf
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFF5B95D789
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/2] Implement concurrent buffered write with folio
+ lock
+To: Dave Chinner <david@fromorbit.com>
+Cc: cem@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Chi Zhiling <chizhiling@kylinos.cn>
+References: <20250425103841.3164087-1-chizhiling@163.com>
+ <aBGFfpyGtYQnK411@dread.disaster.area>
+ <040637ad-54ac-4695-8e49-b4a3c643b056@163.com>
+ <aBK2HAnoRacuO0CO@dread.disaster.area>
+Content-Language: en-US
+From: Chi Zhiling <chizhiling@163.com>
+In-Reply-To: <aBK2HAnoRacuO0CO@dread.disaster.area>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wCH3iOHChRothmhDw--.5760S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW3AF1xur1fXF4fJr1Duw1rWFg_yoW3Jw1kpF
+	ZYkasrGr4kXr18ur4kt3Wjvr15Kw4IgrW7Cr15Wwn7Zwn8Xr12qr1IvFyF9FWjvrsav3yq
+	vF4jk348Z345AaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U20PhUUUUU=
+X-CM-SenderInfo: hfkl6xxlol0wi6rwjhhfrp/xtbBgB1AnWgT+uzbEgAAsk
 
-
-
-On 5/1/25 10:44 AM, Tanmay Shah wrote:
-> Hi Mathieu,
-> 
-> I tested this patchset on top of recent for-next branch. I don't see 
-> issue on AMD-xlnx ZynqMP platform. With this:
-> 
-> Tested-by: Tanmay Shah <tanmay.shah@amd.com>
-> 
-
-Hi Mathieu,
-
-Looks like I said it too soon. Firmware loading works with this series, 
-but RPMsg doesn't work. I am debugging further and will provide inputs 
-once I find bug on xlnx_r5_remoteproc driver.
-
-Please ignore above TB for now.
-
-Thanks,
-Tanmay
-
-> On 4/24/25 9:14 AM, Mathieu Poirier wrote:
->> Arnaud, Daniel, Iuliana, Andrew and Tanmay - please test this patchset
->> on the platforms you are working on.
+On 2025/5/1 07:45, Dave Chinner wrote:
+> On Wed, Apr 30, 2025 at 05:03:51PM +0800, Chi Zhiling wrote:
+>> On 2025/4/30 10:05, Dave Chinner wrote:
+>>> On Fri, Apr 25, 2025 at 06:38:39PM +0800, Chi Zhiling wrote:
+>>>> From: Chi Zhiling <chizhiling@kylinos.cn>
+>>>>
+>>>> This is a patch attempting to implement concurrent buffered writes.
+>>>> The main idea is to use the folio lock to ensure the atomicity of the
+>>>> write when writing to a single folio, instead of using the i_rwsem.
+>>>>
+>>>> I tried the "folio batch" solution, which is a great idea, but during
+>>>> testing, I encountered an OOM issue because the locked folios couldn't
+>>>> be reclaimed.
+>>>>
+>>>> So for now, I can only allow concurrent writes within a single block.
+>>>> The good news is that since we already support BS > PS, we can use a
+>>>> larger block size to enable higher granularity concurrency.
+>>>
+>>> I'm not going to say no to this, but I think it's a short term and
+>>> niche solution to the general problem of enabling shared buffered
+>>> writes. i.e. I expect that it will not exist for long, whilst
 >>
->> Thanks,
->> Mathieu
+>> Hi, Dave,
 >>
->> On Wed, 23 Apr 2025 at 13:42, Rob Herring (Arm) <robh@kernel.org> wrote:
->>>
->>> While there's a common function to parse "memory-region" properties for
->>> DMA pool regions, there's not anything for driver private regions. As a
->>> result, drivers have resorted to parsing "memory-region" properties
->>> themselves repeating the same pattern over and over. To fix this, this
->>> series adds 2 functions to handle those cases:
->>> of_reserved_mem_region_to_resource() and of_reserved_mem_region_count().
->>>
->>> I've converted the whole tree, but just including remoteproc here as
->>> it has the most cases. I intend to apply the first 3 patches for 6.16
->>> so the driver conversions can be applied for 6.17.
->>>
->>> A git tree with all the drivers converted is here[1].
->>>
->>> v2:
->>> - Fix of_dma_set_restricted_buffer() to maintain behavior on warning msg
->>> - Export devm_ioremap_resource_wc()
->>> - Rework handling of resource name to drop unit-address from name as it
->>>    was before.
->>> - Link to v1:
->>>    https://lore.kernel.org/all/20250317232426.952188-1-robh@kernel.org
->>>
->>> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/ 
->>> memory-region
->>>
->>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
->>> ---
->>> Rob Herring (Arm) (4):
->>>        of: reserved_mem: Add functions to parse "memory-region"
->>>        of: Simplify of_dma_set_restricted_buffer() to use 
->>> of_for_each_phandle()
->>>        devres: Export devm_ioremap_resource_wc()
->>>        remoteproc: Use of_reserved_mem_region_* functions for 
->>> "memory-region"
->>>
->>>   drivers/of/device.c                       | 31 +++++-------
->>>   drivers/of/of_reserved_mem.c              | 80 ++++++++++++++++++++ 
->>> +++++++++++
->>>   drivers/remoteproc/imx_dsp_rproc.c        | 45 +++++++----------
->>>   drivers/remoteproc/imx_rproc.c            | 68 ++++++++++ 
->>> +---------------
->>>   drivers/remoteproc/qcom_q6v5_adsp.c       | 24 ++++------
->>>   drivers/remoteproc/qcom_q6v5_mss.c        | 60 ++++++++---------------
->>>   drivers/remoteproc/qcom_q6v5_pas.c        | 69 +++++++++ 
->>> +----------------
->>>   drivers/remoteproc/qcom_q6v5_wcss.c       | 25 ++++------
->>>   drivers/remoteproc/qcom_wcnss.c           | 23 ++++-----
->>>   drivers/remoteproc/rcar_rproc.c           | 36 ++++++--------
->>>   drivers/remoteproc/st_remoteproc.c        | 41 ++++++++--------
->>>   drivers/remoteproc/stm32_rproc.c          | 44 ++++++++---------
->>>   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 +++++------
->>>   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 28 +++++------
->>>   drivers/remoteproc/ti_k3_r5_remoteproc.c  | 28 +++++------
->>>   drivers/remoteproc/xlnx_r5_remoteproc.c   | 51 ++++++++------------
->>>   include/linux/of_reserved_mem.h           | 26 ++++++++++
->>>   lib/devres.c                              |  1 +
->>>   18 files changed, 339 insertions(+), 369 deletions(-)
->>> ---
->>> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
->>> change-id: 20250423-dt-memory-region-v2-a2b15caacc63
->>>
->>> Best regards,
->>> -- 
->>> Rob Herring (Arm) <robh@kernel.org>
->>>
+>> Yes, it's a short-term solution, but it's enough for some scenarios.
+>> I would also like to see better idea.
+>>
+>>> experience tells me that adding special cases to the IO path locking
+>>> has a fairly high risk of unexpected regressions and/or data
+>>> corruption....
+>>
+>> I can't say there is definitely no data corruption, but I haven't seen
+>> any new errors in xfstests.
 > 
+> Yeah, that's why they are "unexpected regressions" - testing looks
+> fine, but once it gets out into complex production workloads....
+> 
+>> We might need to add some assertions in the code to check for the risk
+>> of data corruption, not specifically for this patch, but for the current
+>> XFS system in general. This would help developers avoid introducing new
+>> bugs, similar to the lockdep tool.
+> 
+> I'm not sure what you invisage here or what problems you think we
+> might be able to catch - can you describe what you are thinking
+> about here?
+
+I'm just say it casually.
+
+I mean, is there a way to check for data corruption risks, rather than
+waiting for it to happen and then reporting an error? Just like how
+lockdep detects deadlock risks in advance.
+
+I guess not.
+
+> 
+>>>> These ideas come from previous discussions:
+>>>> https://lore.kernel.org/all/953b0499-5832-49dc-8580-436cf625db8c@163.com/
+>>>
+>>> In my spare time I've been looking at using the two state lock from
+>>> bcachefs for this because it looks to provide a general solution to
+>>> the issue of concurrent buffered writes.
+>>
+>> In fact, I have tried the two state lock, and it does work quite well.
+>> However, I noticed some performance degradation in single-threaded
+>> scenarios in UnixBench (I'm not sure if it's caused by the memory
+>> barrier).
+> 
+> Please share the patch - I'd like to see how you implemented it and
+> how you solved the various lock ordering and wider IO serialisation
+> issues. It may be that I've overlooked something and your
+> implementation makes me aware of it. OTOH, I might see something in
+> your patch that could be improved that mitigates the regression.
+
+I think I haven't solved these problems.
+
+The lock order I envisioned is IOLOCK -> TWO_STATE_LOCK -> MMAP_LOCK ->
+ILOCK, which means that when releasing IOLOCK, TWO_STATE_LOCK should
+also be released first, including when upgrading IOLOCK_SHARED to
+IOLOCK_EXCL. However, I didn't do this.
+
+I missed this part, and although I didn't encounter any issues in the
+xfstests, this could indeed lead to a deadlock.
+
+
+Besides this, is there anything else I have missed?
+
+
+
+The patch is as follows, though it's not helpful
+
+diff --git a/fs/xfs/xfs_file.c b/fs/xfs/xfs_file.c
+index 3e7448c2a969..573e31bfef3f 100644
+--- a/fs/xfs/xfs_file.c
++++ b/fs/xfs/xfs_file.c
+@@ -36,6 +36,17 @@
+
+  static const struct vm_operations_struct xfs_file_vm_ops;
+
++#define TWO_STATE_LOCK(ip, state)		\
++	xfs_two_state_lock(&ip->i_write_lock, state)
++
++#define TWO_STATE_UNLOCK(ip, state)		\
++	xfs_two_state_unlock(&ip->i_write_lock, state)
++
++#define buffered_lock(inode)	TWO_STATE_LOCK(inode, 0)
++#define buffered_unlock(inode)	TWO_STATE_UNLOCK(inode, 0)
++#define direct_lock(inode)	TWO_STATE_LOCK(inode, 1)
++#define direct_unlock(inode)	TWO_STATE_UNLOCK(inode, 1)
++
+  /*
+   * Decide if the given file range is aligned to the size of the 
+fundamental
+   * allocation unit for the file.
+@@ -263,7 +274,10 @@ xfs_file_dio_read(
+  	ret = xfs_ilock_iocb(iocb, XFS_IOLOCK_SHARED);
+  	if (ret)
+  		return ret;
++	direct_lock(ip);
+  	ret = iomap_dio_rw(iocb, to, &xfs_read_iomap_ops, NULL, 0, NULL, 0);
++	direct_unlock(ip);
++
+  	xfs_iunlock(ip, XFS_IOLOCK_SHARED);
+
+  	return ret;
+@@ -598,9 +612,13 @@ xfs_file_dio_write_aligned(
+  		xfs_ilock_demote(ip, XFS_IOLOCK_EXCL);
+  		iolock = XFS_IOLOCK_SHARED;
+  	}
++
++	direct_lock(ip);
+  	trace_xfs_file_direct_write(iocb, from);
+  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
+  			   &xfs_dio_write_ops, 0, NULL, 0);
++	direct_unlock(ip);
++
+  out_unlock:
+  	if (iolock)
+  		xfs_iunlock(ip, iolock);
+@@ -676,9 +694,11 @@ xfs_file_dio_write_unaligned(
+  	if (flags & IOMAP_DIO_FORCE_WAIT)
+  		inode_dio_wait(VFS_I(ip));
+
++	direct_lock(ip);
+  	trace_xfs_file_direct_write(iocb, from);
+  	ret = iomap_dio_rw(iocb, from, &xfs_direct_write_iomap_ops,
+  			   &xfs_dio_write_ops, flags, NULL, 0);
++	direct_unlock(ip);
+
+  	/*
+  	 * Retry unaligned I/O with exclusive blocking semantics if the DIO
+@@ -776,9 +796,11 @@ xfs_file_buffered_write(
+  	if (ret)
+  		goto out;
+
++	buffered_lock(ip);
+  	trace_xfs_file_buffered_write(iocb, from);
+  	ret = iomap_file_buffered_write(iocb, from,
+  			&xfs_buffered_write_iomap_ops);
++	buffered_unlock(ip);
+
+  	/*
+  	 * If we hit a space limit, try to free up some lingering preallocated
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index 52210a54fe7e..a8bc8d9737c4 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -114,6 +114,7 @@ xfs_inode_alloc(
+  	spin_lock_init(&ip->i_ioend_lock);
+  	ip->i_next_unlinked = NULLAGINO;
+  	ip->i_prev_unlinked = 0;
++	two_state_lock_init(&ip->i_write_lock);
+
+  	return ip;
+  }
+diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
+index b91aaa23ea1e..9a8c75feda16 100644
+--- a/fs/xfs/xfs_inode.h
++++ b/fs/xfs/xfs_inode.h
+@@ -8,6 +8,7 @@
+
+  #include "xfs_inode_buf.h"
+  #include "xfs_inode_fork.h"
++#include "xfs_lock.h"
+
+  /*
+   * Kernel only inode definitions
+@@ -92,6 +93,8 @@ typedef struct xfs_inode {
+  	spinlock_t		i_ioend_lock;
+  	struct work_struct	i_ioend_work;
+  	struct list_head	i_ioend_list;
++
++	two_state_lock_t	i_write_lock;
+  } xfs_inode_t;
+
+  static inline bool xfs_inode_on_unlinked_list(const struct xfs_inode *ip)
+
+
+
+Thanks
+
+> 
+>> Since single-threaded bufferedio is still the primary read-write mode,
+>> I don't want to introduce too much impact in single-threaded scenarios.
+> 
+> I mostly don't care that much about small single threaded
+> performance regressions anywhere in XFS if there is some upside for
+> scalability or performance. We've always traded off single threaded
+> performance for better concurrency and/or scalability in XFS (right
+> from the initial design choices way back in the early 1990s), so I
+> don't see why we'd treat a significant improvement in buffered IO
+> concurrency any differently.
+> 
+> -Dave.
 
