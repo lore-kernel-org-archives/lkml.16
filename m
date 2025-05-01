@@ -1,114 +1,120 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702291E5B7E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6EE1EB5FA
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:05:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746061504; cv=none; b=se2ydKBWcKFTNQLwsn7FHoHtPlXyI7/qcNutIYXB30el35h5YLwGoIDaP3yog8kSdrrorrUvSVYIOjr16WErSEforkPDftoVXXiICtr9zbuNphuHb6Jb/Lk3KCNQCsKk6EHZTjtejHcojfYniKHOClMKnbbVApgelaZ8shchwVM=
+	t=1746061509; cv=none; b=NaLNkY9ootgcFX/VOQNB3M4C6kacdFZfDnhNWYdN/vucU6PgZh2Dx+wdaH8MGzRfcWruXn6u2uELvnO3ljvfvVV+AG5H+sdjh7NIrkE1YAebhmXElEHYUUQSxx8+qjzKDwuuKADuzkJnkISfylBtYgRrPgXf+oWbnNOLQiu1eYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746061504; c=relaxed/simple;
-	bh=WMl28Lmu+2TczryI0+p8liM6J7TY6ZIfB94iMb+TTfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MNJwdgtW7hVNaP7xjXr9wtZTHatXP5h5WiQew7vGmOzQjpkab3F5KSAi5EQRTSnHeoxbTTXBm/Q8FA/VyvYBYadenximoH4VdQQ1s7N6HGvi0T3qG4eXjTb5N1gJciDjRaoo/Y5WKc4JIyIAMbXy3URtkNPeheSvHk8FNssQnfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Z5tJBsCe; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746061509; c=relaxed/simple;
+	bh=Qz+FqJ8/BCWLX/x147Js0nV8H0QqmqxrG1bXp3vVvVU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kaJDM7UJf4khfekur2xmsSNQnlCmL2JtAFKepLobLA+fFJCVXjj5wExZHTJgygBfyh1eIXiM3eiDHP2NYFzxkYoe2Ecvbm0Eof0bkDt4T81RTyJMKjWX1UjQOVqnOVo+psyn0EeZ6XzIn45XSlXuxLABF6EjAbZLJ4QuSNvva7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=TGGa5h3C; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Z5tJBsCe"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id B8EEC25D64;
-	Thu,  1 May 2025 03:04:54 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id z5JDQRzBTFpD; Thu,  1 May 2025 03:04:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746061494; bh=WMl28Lmu+2TczryI0+p8liM6J7TY6ZIfB94iMb+TTfs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Z5tJBsCe9xHmfY09Yh2wjCyaryrltJGkptjJWqi+RC3jXb02u/hjN6++tBnO/mpdW
-	 RxeNiZqagFcBwSGiu3WeKyLI6zcqD0cDe5DGsYn4BhotbEO+sofPL3xgGQH3D/NJCz
-	 oDSdFqvRXdolrQ8WGxC164aRSsEQ5LAWA1DQz3g+XgkRVPKcC58m3F2fG2S2ZPDYEC
-	 /fSKPzEc6zGTt1/9BBnLCfN676FmWLbcA884k/kTGm+j/uEjnowXqlZP+GB/bKtgdu
-	 3WUBxpVmt7ZTW1Dzzx319YiH9AYJJXJJJRq6thPRHTwpl64aE7TjLkWFHJoXmWotBJ
-	 MkjoMpgeolLDw==
-Date: Thu, 1 May 2025 01:04:20 +0000
-From: Yao Zi <ziyao@disroot.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: WANG Xuerui <kernel@xen0n.name>, Thomas Gleixner <tglx@linutronix.de>,
-	Tianyang Zhang <zhangtianyang@loongson.cn>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: Re: [PATCH] LoongArch: Use a fallback CPU model when IOCSR-based
- model probing fails
-Message-ID: <aBLIlNAWLbZ1hBv0@pie>
-References: <20250430054042.24333-2-ziyao@disroot.org>
- <CAAhV-H7t8NJYEA=JqSVVFPRZauuqc4pyj6bgNCDRjWcDqR2dqg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="TGGa5h3C"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=tqh/nkQtiITS5axq2YgCjKqZg6ygTRV+qeDMgtW8F+U=; b=TGGa5h3C4i85hRsU
+	QsTn0RrGdU7+v9uWZq67JHu/oeBIiYAF9gdu6Kwyw5d7nnFUxgfdsB1vz3XbqEQMUM1Rt1g07UXZo
+	IrZmLbMfWE3EwOimChTQgs0m7Wi9V8kyzgFbVFCRgFkyTZJ2NN918TYK2IHntuNS6ypcOHOkkgh1P
+	KyctJaMH/wthFhPgPyFiHza5hEyZQRSm0WCx2Mp+fcXYPwMdVcu8rA/3LBBRNFOmXOFtRNxWHRZDf
+	S2DuDHecQUWqpUo/Jfjyzz6QV4EIRcmxDbYCYBZwQAUSh2e5qwZBruv+KBe6SOnWDOlSr1UUXrBUY
+	zPY/lSbwWPuV4CHjTg==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uAIMJ-000ooN-1m;
+	Thu, 01 May 2025 01:05:03 +0000
+From: linux@treblig.org
+To: akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH] lib/oid_registry.c: Remove unused sprint_OID
+Date: Thu,  1 May 2025 02:05:02 +0100
+Message-ID: <20250501010502.326472-1-linux@treblig.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H7t8NJYEA=JqSVVFPRZauuqc4pyj6bgNCDRjWcDqR2dqg@mail.gmail.com>
 
-On Wed, Apr 30, 2025 at 03:48:25PM +0800, Huacai Chen wrote:
-> Hi, Yao Zi,
-> 
-> On Wed, Apr 30, 2025 at 1:41 PM Yao Zi <ziyao@disroot.org> wrote:
-> >
-> > Reading vendor and cpuname IOCSRs yields 0x258000fff00 instead of
-> > human-readable model strings on Loongson 2K0300 SoC, which messes up
-> > format of /proc/cpuinfo since it represents as an empty string.
-> CPUNAME IOCSR is filled by firmware and readed by kernel. If you read
-> some garbage, that means you need to modify your firmware.
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Thanks for the hint, I'll take a look in my firmware instead.
+sprint_OID() was added as part of 2012's
+commit 4f73175d0375 ("X.509: Add utility functions to render OIDs as
+strings")
 
-> And if there is completely no CPUNAME register, you need to fill it by
-> FDT, see init_cpu_fullname() in arch/loongarch/kernel/env.c.
-> 
-> Huacai
+but hasn't been used.
 
-Best regards,
-Yao Zi
+Remove it.
 
-> >
-> > Let's consider IOCSR-based model probing fails if the result model is an
-> > empty string. A fallback model name is set in such cases.
-> >
-> > Signed-off-by: Yao Zi <ziyao@disroot.org>
-> > ---
-> >  arch/loongarch/kernel/cpu-probe.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/loongarch/kernel/cpu-probe.c b/arch/loongarch/kernel/cpu-probe.c
-> > index fedaa67cde41..785513d43696 100644
-> > --- a/arch/loongarch/kernel/cpu-probe.c
-> > +++ b/arch/loongarch/kernel/cpu-probe.c
-> > @@ -270,12 +270,13 @@ static inline void cpu_probe_loongson(struct cpuinfo_loongarch *c, unsigned int
-> >         if (!cpu_has_iocsr)
-> >                 return;
-> >
-> > -       if (!__cpu_full_name[cpu])
-> > -               __cpu_full_name[cpu] = cpu_full_name;
-> > -
-> >         *vendor = iocsr_read64(LOONGARCH_IOCSR_VENDOR);
-> >         *cpuname = iocsr_read64(LOONGARCH_IOCSR_CPUNAME);
-> >
-> > +       if (!__cpu_full_name[cpu])
-> > +               __cpu_full_name[cpu] = cpu_full_name[0] ? cpu_full_name :
-> > +                                                         "Loongson-Unknown";
-> > +
-> >         config = iocsr_read32(LOONGARCH_IOCSR_FEATURES);
-> >         if (config & IOCSRF_CSRIPI)
-> >                 c->options |= LOONGARCH_CPU_CSRIPI;
-> > --
-> > 2.49.0
-> >
-> >
+Note that there's also 'sprint_oid' (lower case) which is used
+in a lot of places; that's left as is except for fixing its
+case in a comment.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+---
+ include/linux/oid_registry.h |  1 -
+ lib/oid_registry.c           | 25 +------------------------
+ 2 files changed, 1 insertion(+), 25 deletions(-)
+
+diff --git a/include/linux/oid_registry.h b/include/linux/oid_registry.h
+index 6f9242259edc..6de479ebbe5d 100644
+--- a/include/linux/oid_registry.h
++++ b/include/linux/oid_registry.h
+@@ -151,6 +151,5 @@ enum OID {
+ extern enum OID look_up_OID(const void *data, size_t datasize);
+ extern int parse_OID(const void *data, size_t datasize, enum OID *oid);
+ extern int sprint_oid(const void *, size_t, char *, size_t);
+-extern int sprint_OID(enum OID, char *, size_t);
+ 
+ #endif /* _LINUX_OID_REGISTRY_H */
+diff --git a/lib/oid_registry.c b/lib/oid_registry.c
+index fe6705cfd780..9b757a117f09 100644
+--- a/lib/oid_registry.c
++++ b/lib/oid_registry.c
+@@ -117,7 +117,7 @@ int parse_OID(const void *data, size_t datasize, enum OID *oid)
+ EXPORT_SYMBOL_GPL(parse_OID);
+ 
+ /*
+- * sprint_OID - Print an Object Identifier into a buffer
++ * sprint_oid - Print an Object Identifier into a buffer
+  * @data: The encoded OID to print
+  * @datasize: The size of the encoded OID
+  * @buffer: The buffer to render into
+@@ -173,26 +173,3 @@ int sprint_oid(const void *data, size_t datasize, char *buffer, size_t bufsize)
+ 	return -EBADMSG;
+ }
+ EXPORT_SYMBOL_GPL(sprint_oid);
+-
+-/**
+- * sprint_OID - Print an Object Identifier into a buffer
+- * @oid: The OID to print
+- * @buffer: The buffer to render into
+- * @bufsize: The size of the buffer
+- *
+- * The OID is rendered into the buffer in "a.b.c.d" format and the number of
+- * bytes is returned.
+- */
+-int sprint_OID(enum OID oid, char *buffer, size_t bufsize)
+-{
+-	int ret;
+-
+-	BUG_ON(oid >= OID__NR);
+-
+-	ret = sprint_oid(oid_data + oid_index[oid],
+-			 oid_index[oid + 1] - oid_index[oid],
+-			 buffer, bufsize);
+-	BUG_ON(ret == -EBADMSG);
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(sprint_OID);
+-- 
+2.49.0
+
