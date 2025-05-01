@@ -1,82 +1,94 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1E6224AEE
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 07:48:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBCE18641;
+	Thu,  1 May 2025 07:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746085697; cv=none; b=KargUTnYQUV+ki7BV6mQULUYeMPbfm/l5ZS4aCFWQH71/h/u5WfCJ91ZTLY0f4PAhVk7wYxkz57D+TA0595lle43Ed7J9L5DT3y1qalE+5FnTAeyb14X0XmN5eJ1cayDz3GvBqECtPsbZD+WrQN1mtadTc9GD3EZfgFjWAtijsc=
+	t=1746085708; cv=none; b=EUdJWHenpMQC2otm3fvWvaupAMYwOrShcS8yn78hKsqwjAlN3K+rYEbSxFp/1wzkpn23kLGXs+B+A1joZKO3xNsNIUwHYADfYKQyyiuaYFM4nkzgT40/VhDoPCvfSoevZOTLSLAP+YivwP37+L8s/guFMIbSBm2yicMitnVIVHw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746085697; c=relaxed/simple;
-	bh=jtrbo0MjP6Q9FCmKZBuyNrIPLHUfBduBm7HadRHbpBc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z27Q9BqpS1CLc3jpZwZJb8ZkkfekqRFcgOoMxpI54GnBgvIkHYfytDcRl0iEO78uvSSeD3xlw2ZLCFi57oz8xS/FGTbMWjZctpYb5+/3Cr51KC7ovl3kjJwGyF1NsHT0ovZZeNFyj3ll617CXr5GCJD0982yePsTIEvxht1MAhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aA0sPc6G; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746085708; c=relaxed/simple;
+	bh=brUGLvZEs++6wLvCNNOG7rVsnqLnFxn2n8az5V+kYkU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=GTqsYjx2r6tWA/9GpqNjJYRmeYlmUEmPhMNFH/DiHjySq2ejbaIDGyXBlxcgbiF27VlXMUaUEDHJeekJAjJGp2WGBA0bN23KU1ex229GZfb8m7/ADwiAy6nCVS6fDMl2Cc4+ufq6jbIZh/NQOPonSpTj9dpqIrEHur1bJJ3dbFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=GU6OaxPb; arc=none smtp.client-ip=131.188.11.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aA0sPc6G"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39c30d9085aso376968f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 00:48:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746085693; x=1746690493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AJWiwWvxqq8d8lvRpGDBO58dLDaqXemoi28sZ0Dk2XU=;
-        b=aA0sPc6GiycQP9cUrs/xRCdCsqhdE2T2yB8aXFFF5Aq9QmKrSKPOVLlDLKFiP2Uhf9
-         wMLd7NPldLXPKs4w4FHIhOyBPwjkgleu+Ph5YaRRZIizn2aaQa//UF0wmB4sUiKjckUn
-         yMZGpSmMkeiCAytcIqsQutLBo15SMtdVOLubio1P04tyx9128Q5g1Xjcl8bsF9cFnL2/
-         Kwjknbnn5StGwRj1nvf1sDY9OsR8d8Do3hlrmnWkAmgVYheglL5DpikU5csiOMk9Vkvf
-         BAhdwowgpyTZ7ZbFlGAFspAolo5B/abq2jLTGd4+ZJKr7rXFjnZICtstUqjQIGZoE5oo
-         rhpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746085693; x=1746690493;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AJWiwWvxqq8d8lvRpGDBO58dLDaqXemoi28sZ0Dk2XU=;
-        b=MrEss8b6MKsX5sLHKne+ulNs8jrDitTR70Y2i655JOpLhj0XE/R3CdFaUvb2Mp9547
-         qNO/TG+uZ12T09f5RYLhUn/GmHPpR35g1ztwFknnFw+ITgWkGcAUSQMC5/JOxCkZaSIx
-         1d8GcLM3MRAieqftV6yUH8gVW0IhO03rEk9bGsDXsBHuLG+B4LKdUWR0+jOPAu2vXJEI
-         aZ1y2rDD5n/6U7GHvu6irNYqT0HlGhWuPxqWtVYmkBg+QWkBhSM0GIR6Czc40fdR2VKM
-         NR66yHLCuY8rPHXQdpntfV3Mc02NZk61jR1m6ayz8cB6gApa9ai7fCWasGeh7f7Yjr9U
-         lpLA==
-X-Forwarded-Encrypted: i=1; AJvYcCXMgUVmNXiyTWeFWtPXd1fDdtXAtOGgqdqCEjhb3DWIy9ofbrsYC+S/S/4+fVGjFeEyaTpdNYkHjH9BDY4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz6RPeP3RNua9MEMV88LRihDhjXhNcNYas4TE+SaVvMBlhRgJnG
-	saBouzwEZmZNtPwcds9O8RaaYXS+rLpY4gQ+PPvYdjJJyHcYEEd7
-X-Gm-Gg: ASbGnct2dudlp6tiyNlIEH+bp9NdUghseffw4qri/E6BOUEJfdg9iaY+EXUN5oG9Eqj
-	uZElVHo6Zzm9qHbBwhfuQcKVf4JSk+zLPe39cOSAKrrkKGTeenW1INqwGRPjqgX55TKjdGG2xH3
-	++MyRCDChcLVYoJLcr+XOumTLEJH/jaXdsIHMJ3rbwXhE24PyYDJ6pT0ZIZ9zOKmcjC5T3TgROo
-	F8vfpEy9TjA7+ibOnS20ZlCopsvWQy/i/SXu1e1Frgwbl3NKiPsBzWqBISWx5MyL8mhqxAkPeq2
-	0wK0D90V3pCs6TCl0gAjufjjuw1hAC9VBXuQBsZUqx6ktoLzHeabGHl+JeD0LAmPerDbUz4ZjV8
-	lawUyJsId
-X-Google-Smtp-Source: AGHT+IFonP9yjdjJlEqRjKEzvecQ1TsMwjxuqrSVVBU38WOngG09cHfKoUQKO+cVhPag+ri7nI+zGQ==
-X-Received: by 2002:a5d:5f8d:0:b0:391:47d8:de3d with SMTP id ffacd0b85a97d-3a093035627mr1350025f8f.16.1746085693264;
-        Thu, 01 May 2025 00:48:13 -0700 (PDT)
-Received: from toolbox.int.toradex.com (31-10-206-125.static.upc.ch. [31.10.206.125])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a8ed95sm114535f8f.94.2025.05.01.00.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 00:48:13 -0700 (PDT)
-From: max.oss.09@gmail.com
-To: max.krummenacher@toradex.com,
-	Jayesh Choudhary <j-choudhary@ti.com>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Douglas Anderson <dianders@chromium.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Simona Vetter <simona@ffwll.ch>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] drm/bridge: ti-sn65dsi86: Use HPD in a DP use case
-Date: Thu,  1 May 2025 09:48:02 +0200
-Message-ID: <20250501074805.3069311-1-max.oss.09@gmail.com>
-X-Mailer: git-send-email 2.42.0
+	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="GU6OaxPb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
+	t=1746085704; bh=0Pu9rHLu+wQI/d+zKWBJoaB5ShQT0yttj33DmrGvKIY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
+	 Subject;
+	b=GU6OaxPbrdxAiiihdkKp7RS+GqJhi3h1zwYaSEZ0zbWQ8c1423FfKYx77N4AuN0Wk
+	 MaEB0ckZH9eKutBKS3jgB3Ha4HKL/X7OHqyQvfHC5U8RNbfCsapOgR2zz2z1uv9Ig5
+	 N7R2rUq0YmY/g91HngbMWfuJAJ7ty9a9d1RD/CKLebw3iST/1MrV3v/lSRUiz5zGW3
+	 6xlOxfRkKewHuYSj7g7zoGWRxQxl2VNJ706A6IYlVkamtmzExQF6tmX1xQG3P9ik+W
+	 YW6jY3gNwika4C81cj5rO6rwsbS5IVo0KN391JrzKs0H9KqO3jIbHciWrzwyUZFjVL
+	 gJLdD5Iv0lT0Q==
+Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zp5lD2znrz8ssD;
+	Thu,  1 May 2025 09:48:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
+X-RRZE-Flag: Not-Spam
+X-RRZE-Submit-IP: 2001:9e8:3636:a700:12b2:e53f:6cbc:f48c
+Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3636:a700:12b2:e53f:6cbc:f48c])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: U2FsdGVkX1/54KqmiSgcn6S5Oa0/ZGbqM5On5wTcHfI=)
+	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zp5l85rWJz8sjW;
+	Thu,  1 May 2025 09:48:20 +0200 (CEST)
+From: Luis Gerhorst <luis.gerhorst@fau.de>
+To: Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Puranjay Mohan <puranjay@kernel.org>,
+	Xu Kuohai <xukuohai@huaweicloud.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Hari Bathini <hbathini@linux.ibm.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Luis Gerhorst <luis.gerhorst@fau.de>,
+	Henriette Herzog <henriette.herzog@rub.de>,
+	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
+	Cupertino Miranda <cupertino.miranda@oracle.com>,
+	Jiayuan Chen <mrpre@163.com>,
+	Matan Shachnai <m.shachnai@gmail.com>,
+	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
+	Daniel Xu <dxu@dxuuu.xyz>,
+	bpf@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-kselftest@vger.kernel.org
+Cc: Maximilian Ott <ott@cs.fau.de>,
+	Milan Stephan <milan.stephan@fau.de>
+Subject: [PATCH bpf-next v3 04/11] bpf: Return -EFAULT on internal errors
+Date: Thu,  1 May 2025 09:35:55 +0200
+Message-ID: <20250501073603.1402960-5-luis.gerhorst@fau.de>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250501073603.1402960-1-luis.gerhorst@fau.de>
+References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,68 +97,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Max Krummenacher <max.krummenacher@toradex.com>
+This prevents us from trying to recover from these on speculative paths
+in the future.
 
-The bridge driver currently disables handling the hot plug input and
-relies on a always connected eDP panel with fixed delays when the
-panel is ready.
-
-If one uses the bridge for a regular display port monitor this
-assumption is no longer true.
-If used with a display port monitor change to keep the hot plug
-detection functionality enabled and change to have the bridge working
-during runtime suspend to be able to detect the connection state.
-
-Note that if HPD_DISABLE is set the HPD bit always returns connected
-independent of the actual state of the hot plug pin. Thus
-currently bridge->detect() always returns connected.
-
-Signed-off-by: Max Krummenacher <max.krummenacher@toradex.com>
-
+Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Reviewed-by: Eduard Zingerman <eddyz87@gmail.com>
+Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+Cc: Maximilian Ott <ott@cs.fau.de>
+Cc: Milan Stephan <milan.stephan@fau.de>
 ---
+ kernel/bpf/verifier.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
- drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-index 01d456b955ab..c7496bf142d1 100644
---- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-+++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-@@ -333,9 +333,11 @@ static void ti_sn65dsi86_enable_comms(struct ti_sn65dsi86 *pdata)
- 	 * If HPD somehow makes sense on some future panel we'll have to
- 	 * change this to be conditional on someone specifying that HPD should
- 	 * be used.
-+	 * Only disable HDP if used for eDP.
- 	 */
--	regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG, HPD_DISABLE,
--			   HPD_DISABLE);
-+	if (pdata->bridge.type == DRM_MODE_CONNECTOR_eDP)
-+		regmap_update_bits(pdata->regmap, SN_HPD_DISABLE_REG,
-+				   HPD_DISABLE, HPD_DISABLE);
- 
- 	pdata->comms_enabled = true;
- 
-@@ -357,6 +359,10 @@ static int __maybe_unused ti_sn65dsi86_resume(struct device *dev)
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(dev);
- 	int ret;
- 
-+	if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort &&
-+	    pdata->comms_enabled)
-+		return 0;
-+
- 	ret = regulator_bulk_enable(SN_REGULATOR_SUPPLY_NUM, pdata->supplies);
- 	if (ret) {
- 		DRM_ERROR("failed to enable supplies %d\n", ret);
-@@ -386,6 +392,9 @@ static int __maybe_unused ti_sn65dsi86_suspend(struct device *dev)
- 	struct ti_sn65dsi86 *pdata = dev_get_drvdata(dev);
- 	int ret;
- 
-+	if (pdata->bridge.type == DRM_MODE_CONNECTOR_DisplayPort)
-+		return 0;
-+
- 	if (pdata->refclk)
- 		ti_sn65dsi86_disable_comms(pdata);
- 
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index d0975169134a..9c921867f77f 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -11667,7 +11667,7 @@ static int check_helper_call(struct bpf_verifier_env *env, struct bpf_insn *insn
+ 				verbose(env, "verifier internal error:");
+ 				verbose(env, "func %s has non-overwritten BPF_PTR_POISON return type\n",
+ 					func_id_name(func_id));
+-				return -EINVAL;
++				return -EFAULT;
+ 			}
+ 			ret_btf = btf_vmlinux;
+ 			ret_btf_id = *fn->ret_btf_id;
+@@ -15261,12 +15261,12 @@ static int adjust_reg_min_max_vals(struct bpf_verifier_env *env,
+ 	if (WARN_ON_ONCE(ptr_reg)) {
+ 		print_verifier_state(env, vstate, vstate->curframe, true);
+ 		verbose(env, "verifier internal error: unexpected ptr_reg\n");
+-		return -EINVAL;
++		return -EFAULT;
+ 	}
+ 	if (WARN_ON(!src_reg)) {
+ 		print_verifier_state(env, vstate, vstate->curframe, true);
+ 		verbose(env, "verifier internal error: no src_reg\n");
+-		return -EINVAL;
++		return -EFAULT;
+ 	}
+ 	err = adjust_scalar_min_max_vals(env, insn, dst_reg, *src_reg);
+ 	if (err)
 -- 
-2.42.0
+2.49.0
 
