@@ -1,39 +1,39 @@
 Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3753442A87;
-	Thu,  1 May 2025 17:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3758D194C75;
+	Thu,  1 May 2025 17:12:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746119565; cv=none; b=T3STYtm88u5cVGUu6FDJZQqO79FYRI9hxxPjsvmqNNM31kIaF9MxzwFtRCVJVK2r3QuEvxXlI+JO6rDYqpXdSzJoIwQI7faFQdgiNP9ToaQ+lo2b+xGV4NkCXMwHitggB5utqXf45wSdvp7xQZfydARF+UoMOMSiHlQSpcJ2nbc=
+	t=1746119566; cv=none; b=OXbxc2RadwQnDkJjc0nD0jXq3btlk9tJntjrJKbBSBSklb70sqbtT/3d1gupKCGDRzTgpxoS2oW2jS5uljdEEop5UXteQcCVJudK3MWmv4EL6KBA0hM3QpDqy2ZuizMpwFKoDFw1qr6gpeH3Srt/K/B3yjKH1B0CRj7Z+2+PaAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746119565; c=relaxed/simple;
-	bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
+	s=arc-20240116; t=1746119566; c=relaxed/simple;
+	bh=yZ5AUrLf7fwFTnXazjJiDVbDwXh8gK863PfsGEF+COE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CZACycD8GOZ6BSO26B7+zbqBEVnTWSlQNcK20WEY6qpNIDwyR54YN5jUnNaH0zIoWH5zEb9kH4HeEXSTOEUB3p+XXV/mtPKZFpHiu1hYHeW64HLxDKdjlTKtuorV3wWOb1Sten2Jz9yuuTfXTHh1l4IfIubNjLvNPHxp2zoenXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=o3lCjki4; arc=none smtp.client-ip=45.141.101.25
+	 In-Reply-To:To:Cc; b=WdVrZR4pQiDCrCHqx7+IPgCrKuzLDWUEi4wCEmgnWrYXbiWmseUnJY+cIh1UdPIQhAX7jfgFuYCXOFwZZ9gkIHWY4yMgQ0ml3luCvOcu9+IOh+iASn14L2AFhDyLKUQeU1nZO5UEg2ikZ768iuEcFp4SVIU8eH332pzKm0xk2/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=Zxp74pjs; arc=none smtp.client-ip=45.141.101.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="o3lCjki4"
+	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="Zxp74pjs"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1746119047; bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
+	t=1746119050; bh=yZ5AUrLf7fwFTnXazjJiDVbDwXh8gK863PfsGEF+COE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=o3lCjki4eLSgC9pdGX0mDQuFqwFNEVNPDYrQXSrvDbpwf7JI7o1RIfV9cU2GBj5pc
-	 9rH6Hkt7cRmBXmChTaTMHgGcHsfckmEYe1X/spCzhZHFfBqWG/irzykl3N1QqIWBbY
-	 yD/N+HC4M3be8zryHsgCPp17GY2mvUR+DFU5ENRHxBv3BNBu5W5q6JxwKJfuGu772f
-	 ttcT8ZXTVMzii+gwGWBDLSbBJCtlkD30jCZ6AztzuFb2ZCgZMVRG5RLWAOxpuWMkX+
-	 GQfFSY6x5lpB/oLSizwJB/VoeMv398g8TmgQ2F4B0pzSzU3IEptUfkpqBuMI9h7J8X
-	 fxTW4oIKuC8HQ==
+	b=Zxp74pjsUXf2IwPqaqxSXmFBDlGU4ozvIwodwqs5783kXcoWe9wQvHeECp+MXR3dD
+	 GKAyB7+lgKHulM5ttgnAXwa9uhW/QQbhAPTZgTPWbTjdDQClob6pEjihElsngvRG3t
+	 E8btU+ai3faDH60hSVVUn5CYaMblOH1i9srqKtvVn0+hWntborKAzF8h0k+j3Q4NId
+	 CUozT6KfyejLINPOJDafHm93Si5Hs2qa0ZC0fUrSJ3EJa7d60mKKbfhvnx6Vwv0e13
+	 oTjLA7j9Pf0go5QvHHvRbsOfIGoV89a8jOSjqxKtfouLNusWM4eUVMXssdhA7cuQSA
+	 sy6R5T9UuQWNw==
 Received: from authenticated-user (box.trvn.ru [45.141.101.25])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id 29B75C8F7;
-	Thu,  1 May 2025 22:04:06 +0500 (+05)
+	by box.trvn.ru (Postfix) with ESMTPSA id E5374C8FE;
+	Thu,  1 May 2025 22:04:08 +0500 (+05)
 From: Nikita Travkin <nikita@trvn.ru>
-Date: Thu, 01 May 2025 22:03:41 +0500
-Subject: [PATCH 1/5] arm64: dts: qcom: sc7180: Add EL2 overlay for WoA
+Date: Thu, 01 May 2025 22:03:43 +0500
+Subject: [PATCH 3/5] arm64: dts: qcom: sc8280xp: Add EL2 overlay for WoA
  devices
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,7 +43,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-sc-el2-overlays-v1-1-9202e59e3348@trvn.ru>
+Message-Id: <20250501-sc-el2-overlays-v1-3-9202e59e3348@trvn.ru>
 References: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
 In-Reply-To: <20250501-sc-el2-overlays-v1-0-9202e59e3348@trvn.ru>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -54,24 +54,24 @@ Cc: Marc Zyngier <maz@kernel.org>,
  Jens Glathe <jens.glathe@oldschoolsolutions.biz>, 
  linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Nikita Travkin <nikita@trvn.ru>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2416; i=nikita@trvn.ru;
- h=from:subject:message-id; bh=PsJs2on36RmRejiUBvCHrDrk5iO37M0LIWA8gc5UU+g=;
- b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBoE6mDnTq+s4NK7u5SFmEUEhmgVoQ73l6Dyhigd
- sAE53ie10iJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCaBOpgwAKCRBDHOzuKBm/
- dT0iEACUbB46U0x9F8/TNXUNcEDSN5xE2tAAXAWWQLAK0GGMdl1UZJBcr4d/+yqIkgXnEA5E+2O
- mwK2jxys46l4JnNftbDXeWCRNMzlpHvpbng+7MjcSD7JWONp9AzpjrJrNI9h03Roifya0m5AeSO
- +i3mzdFeOmqdRWIGDr+OJ2yCEY2P4ZGYAMsqpHSpx2HYAcBl8mHMe7AQwUdaWRk1ExJLl8GfDlX
- ADuo4eyYuthra9CApd2LwNimsTnPeLPAQ0i1AT8B9j5su6QmwA/S7SoIvTlG5PpxK90XwwWtPbv
- QmD6AeU8hm2m5ge/HJ4V4/Y+QmuqFgZvv/DtIVtQKWl/flfnO2b0/JgZZ2QQvw311HsvHKmQtZl
- a8eUGE1YM1p+TMtzDV3DKpD7Uo07C245Eb0gmrlWRHESOn5n+d6aP8XienduMOx7fz82sr+Dk5P
- NRB5uUR2Fpfh/cnUs0UdykEYeinb2y2x0/j5N1pm3/Wunfq8w4iUimYL9J1zWXszn5rjEBMttmC
- WXxB4V9ANYDYaV4yIisggOZo4U61jIg2pVIZnRuoKPdyZKDrIiS2NUXodiEfRYuFTsGC2fFQe1w
- mZ5Y3MmN28WDz8T0G7GuDWLO7wgd5NOzUJ8R+F1do8TlN+o9opeK4hZDwxBtGoAeNxTH+97AdY7
- dy1vQRORgq0uMNw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3816; i=nikita@trvn.ru;
+ h=from:subject:message-id; bh=yZ5AUrLf7fwFTnXazjJiDVbDwXh8gK863PfsGEF+COE=;
+ b=owEBbQKS/ZANAwAIAUMc7O4oGb91AcsmYgBoE6mDkn6tWsK2fq7ykFuBJcmiv52VPXsz5sCvn
+ sC2u9tHUdqJAjMEAAEIAB0WIQTAhK9UUj+qg34uxUdDHOzuKBm/dQUCaBOpgwAKCRBDHOzuKBm/
+ db3WEACApheWJc6oJN279nxcP/Kow2qxj+HDKox9GnGGY/tDD1MMNe3DklYRC94JO4F5zEvNnCP
+ zXIefpL1nRPjiwl+MseouZvSEZDHN0J+2xoNU/Lb5lJszFs1xjrgAebc+RZkpku/UZD3UsXmAal
+ hpTd4byB6Mr/BwkvDrb4vXNX+d0w3FZNB37xhbcqQtBkaVOQMzSxQkxRKaLXCmWpov8AwWxY7RE
+ UlKM4GdHWJzOtKTQyswbF8w6KDc4jUsbxkBAy7EnY9+CJc5kQI35Lic6juV+osaSWGlwBrCXuoE
+ /hU+Xf3/pNDXQojtK2J07fxowf7/oBEbMcFUdMSLQid1l1Se0H1schBPWz7+mCBUo4JL/ajP7H9
+ kAFrXDCTCdu12e/WZYYbMC3daLXbaY6oqkrKyHRFvjfOwZaAyCAUwYqIZyMNmjS1yvJ4Xi4LL1g
+ rku5y9GiXUhKjqSMfeJ3zVxvqJW7Cytz1CoGf0QL+0yImEbk6s4oy46SHKkpfC5+xDr1xqGJyhc
+ 297lRm6tBIqrVuJuEcCyljF1ikvCYNLOiZzcUou2xAOYDXhPi14iMk2N20ul/OeRmT0qXszWXxU
+ pzvyPfEQScMNjbzlOV62gu/Q5Yoe9JzNw5fPBSy+zzzHAKv2gjQKLq4miDo3OOC+1MhOxah28qT
+ zC2NONiuJhYLyxA==
 X-Developer-Key: i=nikita@trvn.ru; a=openpgp;
  fpr=C084AF54523FAA837E2EC547431CECEE2819BF75
 
-WoA devices using sc7180 use android firmware to boot, which notably
+WoA devices using sc8280xp use android firmware to boot, which notably
 includes QHEE hypervisor. This means that, so far, Linux-based OS could
 only boot in EL1 on those devices.
 
@@ -80,39 +80,51 @@ with the use of tools such as "slbounce", it's possible to do the same
 for Linux-based OS, in which case some modifications to the DT are
 necessary to facilitate the absence of QHEE services.
 
-Add a EL2-specific DT overlay and apply it to sc7180 WoA devices to
+Add a EL2-specific DT overlay and apply it to sc8280xp WoA devices to
 create -el2.dtb for each of them alongside "normal" dtb.
 
 Signed-off-by: Nikita Travkin <nikita@trvn.ru>
 ---
- arch/arm64/boot/dts/qcom/Makefile        |  3 ++-
- arch/arm64/boot/dts/qcom/sc7180-el2.dtso | 22 ++++++++++++++++++++++
- 2 files changed, 24 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/Makefile          | 15 ++++++----
+ arch/arm64/boot/dts/qcom/sc8280xp-el2.dtso | 44 ++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index adb4d026bcc4b24d73de92e204db8d525b0770e6..06da6f6791d69f56bafc3dad3e721c9ff2a1a68a 100644
+index 06da6f6791d69f56bafc3dad3e721c9ff2a1a68a..12d9ed1129b4e83146e561910aca9fc3718b0820 100644
 --- a/arch/arm64/boot/dts/qcom/Makefile
 +++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -138,7 +138,8 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sa8295p-adp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8540p-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sa8775p-ride-r3.dtb
--dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb
-+sc7180-acer-aspire1-el2-dtbs	:= sc7180-acer-aspire1.dtb sc7180-el2.dtbo
-+dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-acer-aspire1.dtb sc7180-acer-aspire1-el2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-idp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sc7180-trogdor-coachz-r1-lte.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sc7180-el2.dtso b/arch/arm64/boot/dts/qcom/sc7180-el2.dtso
+@@ -205,11 +205,16 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sc7280-idp2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc7280-crd-r3.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc8180x-lenovo-flex-5g.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sc8180x-primus.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-crd.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-huawei-gaokun3.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-lenovo-thinkpad-x13s.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-microsoft-arcata.dtb
+-dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-microsoft-blackrock.dtb
++sc8280xp-crd-el2-dtbs	:= sc8280xp-crd.dtb sc8280xp-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-crd.dtb sc8280xp-crd-el2.dtb
++sc8280xp-huawei-gaokun3-el2-dtbs	:= sc8280xp-huawei-gaokun3.dtb sc8280xp-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-huawei-gaokun3.dtb sc8280xp-huawei-gaokun3-el2.dtb
++sc8280xp-lenovo-thinkpad-x13s-el2-dtbs	:= sc8280xp-lenovo-thinkpad-x13s.dtb sc8280xp-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-lenovo-thinkpad-x13s.dtb sc8280xp-lenovo-thinkpad-x13s-el2.dtb
++sc8280xp-microsoft-arcata-el2-dtbs	:= sc8280xp-microsoft-arcata.dtb sc8280xp-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-microsoft-arcata.dtb sc8280xp-microsoft-arcata-el2.dtb
++sc8280xp-microsoft-blackrock-el2-dtbs	:= sc8280xp-microsoft-blackrock.dtb sc8280xp-el2.dtbo
++dtb-$(CONFIG_ARCH_QCOM)	+= sc8280xp-microsoft-blackrock.dtb sc8280xp-microsoft-blackrock-el2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sda660-inforce-ifc6560.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm450-lenovo-tbx605f.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= sdm450-motorola-ali.dtb
+diff --git a/arch/arm64/boot/dts/qcom/sc8280xp-el2.dtso b/arch/arm64/boot/dts/qcom/sc8280xp-el2.dtso
 new file mode 100644
-index 0000000000000000000000000000000000000000..49a98676ca4db270ecb55e8f801d0800ef9e4def
+index 0000000000000000000000000000000000000000..25d1fa4bc2055e67db0508aa09c8a8bd7fa01687
 --- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sc7180-el2.dtso
-@@ -0,0 +1,22 @@
++++ b/arch/arm64/boot/dts/qcom/sc8280xp-el2.dtso
+@@ -0,0 +1,44 @@
 +// SPDX-License-Identifier: BSD-3-Clause
 +
 +/*
-+ * sc7180 specific modifications required to boot in EL2.
++ * sc8280xp specific modifications required to boot in EL2.
 + */
 +
 +/dts-v1/;
@@ -125,11 +137,33 @@ index 0000000000000000000000000000000000000000..49a98676ca4db270ecb55e8f801d0800
 +	};
 +};
 +
-+/* Venus can be used in EL2 if booted similarly to ChromeOS devices. */
-+&venus {
-+	video-firmware {
-+		iommus = <&apps_smmu 0x0c42 0x0>;
-+	};
++/*
++ * When running under QHEE, this IOMMU is controlled by the firmware,
++ * however when we take ownership of it in EL2, we need to configure
++ * it properly to use PCIe.
++ */
++&pcie2a {
++	iommu-map = <0 &pcie_smmu 0x20000 0x10000>;
++};
++
++&pcie2b {
++	iommu-map = <0 &pcie_smmu 0x30000 0x10000>;
++};
++
++&pcie3a {
++	iommu-map = <0 &pcie_smmu 0x40000 0x10000>;
++};
++
++&pcie3b {
++	iommu-map = <0 &pcie_smmu 0x50000 0x10000>;
++};
++
++&pcie4 {
++	iommu-map = <0 &pcie_smmu 0x60000 0x10000>;
++};
++
++&pcie_smmu {
++	status = "okay";
 +};
 
 -- 
