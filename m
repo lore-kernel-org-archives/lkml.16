@@ -1,126 +1,138 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E150944F;
-	Thu,  1 May 2025 10:02:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C4B4266B50;
+	Thu,  1 May 2025 10:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746093724; cv=none; b=GWikWBu8bj3LyzMc5R2xIr7G6EEtngmRMijVZaPTq5Mf8/IODJS4v0SYsyPmYfktF5MugmeyPco0OTa1md7m4SXRMEdPk1Ffe+sAaECcVzvefL843AWp5KjnLDC8bYy/XQSI312Cl3lfM7HyAVAXa1iCnriMPYF1RifHzl9Ttw8=
+	t=1746093726; cv=none; b=XwZbvYg6weHCGUf6C+YqaOaU7FsQ92tDtLDzeQtRviDPNs2BSTPwN8NJl/KpPs4Ybf1at9o+SDaPWWZWICg6bbTTaTI6WqMxCzf8P63U4LCuX/HzVAb9WgLeT9R+6XGBzVTxyXji9MtrPXtZ0IUrc8ofD2a+Axxrp1sviQ5bfYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746093724; c=relaxed/simple;
-	bh=/TtrDcnI3jGwmYe99ghaQbY6F5wrZGqA98bdnfjCyNA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H0dkGRRCsXaR//6T1iRPqlhoqYRQJ6k8giDAGkmNo2YRV3O90j4h9sN3g9fqD/Rvda4L+NBQyN628QpqxcHHKkw475/LtUzj/twGynTnFfBKFqb2LF+Jw/Ig5sWrYR7O7BzrsSwW1krzbhXysv3nSDXJbeBnacF2k0/brJxweWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E5J1kff1; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746093726; c=relaxed/simple;
+	bh=kJrhm7Ly5+HdUXfcfP9m6N/UKeX0GohHs8Zj/Awy8SU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s+HWZ+JhNdDEVPbf+KV3CsxGHzbzHNupG5d/pt2pfefoyXlwhGZwO15R7dZxdYEd9c94VgF1UKON55N/yzy9s1C64oMQ86x24eOa8zB2zfkok4mMFXNMBlks4JkxUOD5mdmF3krwFi+chEeP6nbodDrruZrQXyUq70EPPMjIOeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VcL3K7Sa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E5J1kff1"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-b0db0b6a677so718397a12.2;
-        Thu, 01 May 2025 03:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746093722; x=1746698522; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1+yshCywKiuZ4tPT9Q/qTWdnzUIcRTdbJjvFlNDsvV4=;
-        b=E5J1kff1zjR4Ol3H6Pc/6S/wbXI6I40ZwTHl4B67DfQ3hL3D+Owift4iELye1wnvJK
-         rjaWR44minLLq8wd/1Gnpnvdxf5aNWQBEqAJQO54JgpddNJsK/e1h2ujD+TmSvUwJ0x2
-         TmWJ1LCF1R/ZNCZfnC93pObaeOR8dfXggwinkf8O1uSdPKbZCzDGNRKQUSOF5dyhVZMB
-         /mzStx/gKcgb7uolYxWDtmWzFot/jRpXVxB8ACH8E3cOvoMEu9NaTWLkPVlOV13d5W+3
-         a2AceabraDUdpHI21d8nlnnzT0+jLrgoKvJX064Vz3uuG8K+qDBMCS5TvA3sA+fBtoho
-         dlFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746093722; x=1746698522;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1+yshCywKiuZ4tPT9Q/qTWdnzUIcRTdbJjvFlNDsvV4=;
-        b=GhQ4byyUwBA2o/LkdBGpZEz5EskPNp1c0F+OCWOoerS08QBDgBpYdGPXr0aKVE+nfI
-         HBKhhisdgwBoXupNpOPTOaTkAjimK5Kn0/hzWWUCNReNF34S+NE5A3eHsNzpRtryuuOu
-         EYPHpFycVymyLpOLpX1FG6Q9TXmdFutAUYSpdqte/0kxxCm3ZOmk4Rkclp0ZfLl9QZyv
-         YVoJp106JEaAol5h8/rLQbJlOdjoprg09eU69u6uripByHLH4hAtBSUOlF3mizYHFJhJ
-         Q+0pjvkFQxcQXLHQqXGjCgqprJpruM4ICLEoAOuSsWLQ+8K8fswfdpd8n6yWBNI6MpKy
-         E8zA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUnLUv5VwL10S+hgUmQjZ3RgIEI/GJViMWOjxl6Dph3WARnT5ZtUt8jvKyI/4DBYsOmnqTJez6XpOhg5rJ@vger.kernel.org, AJvYcCXsRYKKfVbStnok/8tzowvxMdUMN6pvgczp7r8ZO+/wC7PAch/LTvZFwBjB9bv8EQrmLuYj+O/R3ZTE@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSn3cEB+hEv/1bhpd/1RM6vDqOIyC/rlkLCIQPaSDD0oLy0nP4
-	Kdv+/sg+vR3IERW1DCYzgClSv9be9ph2WGxgz8jzgI1QHZA5LwQ07Det7oNPRTI=
-X-Gm-Gg: ASbGncswhW7G/DaxFnIt/c04aUQeGtcsgOpbNUrNpOcYXHjP7pFrUlCLYOo7+Go9fGf
-	adtcQbNs6V8L4qatqb4AroQe8tzSHqcer0Sjlca12KL+uOOPOWnkr7tqXbRk2IkzbJPoY9fxynW
-	BDZ/ExGxcEXGcLk8k1YTR6TaYAiNrGTq8Y1v/y6GK7/+9dI3ILbm/1lacq/IhQZwLi0E97e8WeS
-	IxZ0Zql+naOyfBbDWhDtxo4aha+4PZDIKBD+ypKbMzUnSfhJpGpAvCNcd9XW9uj0MkyxcG7Tnyg
-	wUSUdiSKXZ0M0ScuOkgNtBCi23wfJ545oSrZlIMjl2MJ+9+xqf22nh6tUw==
-X-Google-Smtp-Source: AGHT+IFu5AO8aNSqxiixa8qxvLmhOycEFHviXNKuVoxC5raQFq7tT19VVYCPESFTZIqnVbPDXN9fDw==
-X-Received: by 2002:a17:90b:51c1:b0:2fe:b735:87da with SMTP id 98e67ed59e1d1-30a3f908513mr4201362a91.0.1746093722467;
-        Thu, 01 May 2025 03:02:02 -0700 (PDT)
-Received: from debian.domain.name ([2401:4900:1c45:13dc:af05:2012:1f6c:ed34])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a47476120sm472477a91.13.2025.05.01.03.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 03:02:02 -0700 (PDT)
-From: Sayyad Abid <sayyad.abid16@gmail.com>
-To: linux-iio@vger.kernel.org
-Cc: sayyad.abid16@gmail.com,
-	jic23@kernel.org,
-	lars@metafoo.de,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dlechner@baylibre.com,
-	nuno.sa@analog.com,
-	javier.carrasco.cruz@gmail.com,
-	olivier.moysan@foss.st.com,
-	gstols@baylibre.com,
-	tgamblin@baylibre.com,
-	alisadariana@gmail.com,
-	eblanc@baylibre.com,
-	antoniu.miclaus@analog.com,
-	andriy.shevchenko@linux.intel.com,
-	stefan.popa@analog.com,
-	ramona.gradinariu@analog.com,
-	herve.codina@bootlin.com,
-	tobias.sperling@softing.com,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 4/5] MAINTAINERS: add entry for TI ADS1262 ADC driver
-Date: Thu,  1 May 2025 15:30:42 +0530
-Message-Id: <20250501100043.325423-5-sayyad.abid16@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250501100043.325423-1-sayyad.abid16@gmail.com>
-References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VcL3K7Sa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F0A2C4CEE4;
+	Thu,  1 May 2025 10:02:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746093726;
+	bh=kJrhm7Ly5+HdUXfcfP9m6N/UKeX0GohHs8Zj/Awy8SU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=VcL3K7SarTQDqYIj4/i31thiTTzcDni46NsYoUB9OVYjwj02YG7vU7ikJKAGtZTbv
+	 6U++YQrSi+PDX1mpF7mlQBpbcpFq9IfM5RUQAd7zVCYAwNwewijS1T+Y0TCun3WVz0
+	 4j0XbDikDg65a13osOz3VYoQt90ZP8z5qnSFNXnZsj5eoiRZ3E4nzWTBnmpcJzrcLt
+	 U/CfHLegk0cgJBIqcNj7mZFhFXzBhvN9Xunrlsq+A31/bzqDqkYqUYetIILXrjAHvl
+	 Qd5BDwyHaYD/h8ZVrmyqkhmazdyKC6NQ1KHvPluMoh5DycDwEDwOXEXRTDljGbSJVf
+	 ivJdQNwkqKwqQ==
+Message-ID: <f84a544c-2ca4-4a84-a90f-4c94146c11b7@kernel.org>
+Date: Thu, 1 May 2025 12:02:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] firmware: exynos-acpm: clients (PMIC, clocks, etc.)
+ will become children
+To: Lee Jones <lee@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>,
+ Alim Akhtar <alim.akhtar@samsung.com>,
+ =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>,
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <20250327-acpm-children-v1-0-0afe15ee2ff7@linaro.org>
+ <174530898122.9276.5071475909293812602.b4-ty@linaro.org>
+ <20250501090913.GA3627101@google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250501090913.GA3627101@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Add a new MAINTAINERS section for the TI ADS1262 ADC driver, which includes
-the main source file and the device tree binding documentation.
+On 01/05/2025 11:09, Lee Jones wrote:
+> On Tue, 22 Apr 2025, Krzysztof Kozlowski wrote:
+> 
+>>
+>> On Thu, 27 Mar 2025 12:54:26 +0000, André Draszik wrote:
+>>> ACPM clients (PMIC, clocks, etc.) will be modeled as children of the
+>>> ACPM interface.
+>>>
+>>> This necessitates two changes in this driver:
+>>> * child platform_devices from device tree need to be populated here
+>>> * child drivers will need to be able to get the ACPM handle via a
+>>>   struct device_node, not via a DT property name
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [1/2] firmware: exynos-acpm: populate devices from device tree data
+>>       https://git.kernel.org/krzk/linux/c/636baba9489a634c956d6f02076af6bc1725c132
+>> [2/2] firmware: exynos-acpm: introduce devm_acpm_get_by_node()
+>>       https://git.kernel.org/krzk/linux/c/a8dc26a0ec43fd416ca781a8030807e65f71cfc5
+> 
+> Can this be made available for other subsystems to pull from please?
+> 
+> Without it MFD is currently broken.
+> 
+> Ref: https://lore.kernel.org/all/fd11ee67a3d51aef6305c477b140d911da0b2af4.camel@linaro.org/
+> 
 
-Signed-off-by: Sayyad Abid <sayyad.abid16@gmail.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Yeah, I will prepare you a stable tag.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3cbf9ac0d83f..10b2e9293a99 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -24187,6 +24187,13 @@ S:	Supported
- F:	Documentation/devicetree/bindings/iio/adc/ti,ads7924.yaml
- F:	drivers/iio/adc/ti-ads7924.c
- 
-+TI ADS1262 ADC DRIVER
-+M:	Sayyad Abid <sayyad.abid16@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
-+F:	drivers/iio/adc/ads1262.c
-+
- TI AM437X VPFE DRIVER
- M:	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>
- L:	linux-media@vger.kernel.org
--- 
-2.39.5
+While this wasn't clearly expressed when sending the patch? There is
+some "prerequisite" note in cover letter but what does that mean? What
+does the contributor expect from maintainers?
 
+
+Best regards,
+Krzysztof
