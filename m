@@ -1,196 +1,206 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A7CDC2ED;
-	Thu,  1 May 2025 01:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23EF8C2ED
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746062148; cv=none; b=o4fhCOOrQfB2N39rxf0ldNgvY7xCzRQ4HsRZsFC3DZqjdarSQXi6BvrM2LTqohXjnFB6s8lhLUrewqP8Jg8FtK8eArhj0DXqUsZ+t1GrLXa9pZ7dEgKflLrODsjwAOFm+IRDGlEHDvdzcJcz+PWk7bT6jtwGZ30RgIVy9zz2OSM=
+	t=1746062329; cv=none; b=NiMJ2xUfPCXUA909IoKUV8ZjpuIw/l+EAN6ooZnJsjMUs29lGt+SoCdii2VLaxWvzU9w7Wl6XsZrsR/mSmpHxBi8FeMWg2o2ZwpHvgvdhY/DKlWev9/1uqix+QzxewByOioUWpgvz/IfegE3IlhOm+0vmxRgPcBvyR4RS/UrRrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746062148; c=relaxed/simple;
-	bh=Ok4vU94d1XxDWWHt42q8ybBt9TQVvQaQ+RROQvVHq8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sv72iwzldC7T+3zi+vnKPf1izBcoPTL/sprC9IPDNEOeTOHDU/iyjkhvwNWQn6DDoafiU+avRV4xr7+1Vj+EXtAjdTreiyi0J5jBhbw049fw06FI86ki14vPvK0wbwuNoW8CeRBSMaSldIaFzbeJ6hJJ+mbDURDZ/jxaIUTsn0o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kSpWVJG+; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746062329; c=relaxed/simple;
+	bh=rG6iKEeoRQ6NI+R5qJVRftEdS5F8vFrCop/0Wg1lkSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i5RLalJqSPUMOzyxY/FAMJlhQfnLnXhX54IZwvqId4WA2bhoauQlo54wow+jMC3uaKE4Mi5az7Oborf69qZYoYOwPTOGZa6KfITVOfWdWD+v3dUz2WF7DUgwnzaZEEZtxfo3XbPobAlw3HbyFczak68Arr7Dm3AABIQ52P2LTUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RbfkZFaz; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kSpWVJG+"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UGpQkR021321;
-	Thu, 1 May 2025 01:15:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GhVDqE0B9Bpr5apMvnfQKRAQ/2j088Db9RmH6AOhqbs=; b=kSpWVJG+m3Ny/tw4
-	fTll299ucraaVmD3nq85b3tH88V0frziR+EB8rgJ1wnQtuJRLJIxJZx5Q2bfwp/5
-	Xbn6WmltriWD3sRBFvCW4aHTf7hHqH73dLMMSb+TZ0xQDCb506fgt9KhitUXpUpC
-	anQ3gTPRfL5jhLB5/Vvjf+SWOgDYVwqJ2BsrcVKuHNkjwE48aUQMgmfCHOZTZCfe
-	5wmsBIuoQ+RG+07dYTBBKo7MOWusembHHaiLtmzkfBlPysrzq2JmSQdoZ4PyZD7l
-	8Hr08fJUjwwvTnr0eLkR1wN/RURvgrEBztEJcK88JZpW2URME/JKFh4qSBrbAAMv
-	55AXng==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u743r6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 01:15:19 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5411FIWJ030790
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 May 2025 01:15:18 GMT
-Received: from [10.110.26.79] (10.80.80.8) by nasanex01b.na.qualcomm.com
- (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 30 Apr
- 2025 18:15:16 -0700
-Message-ID: <94da79ca-5c32-4744-bc57-3a03a3c8379d@quicinc.com>
-Date: Wed, 30 Apr 2025 18:15:14 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RbfkZFaz"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac7bd86f637so296280566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746062326; x=1746667126; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=buwUSlS7iEVrH/m6Xzic7WPuufqccacCKhokCKCBl2w=;
+        b=RbfkZFazAc4i9IO8+uBFSdbKw7wvlAQGaqKW5Lq2yxLmNOFzD0eT3ikWN2BzuAR+1D
+         Qy4JIjP/Q6xxas7/K6Dk0/doJ5lezTYyrxZlNJnZZ9rKVjB/FjOb/9QUhf6ie35JLGS7
+         Q8r3T5rM/3A+VLQssQdt0S/U4rif3TBB1btsF1c4JxW42hgpifxlKhhOB5NElGyFPJgW
+         LHgi9VxritWmoCMJTlhy3edKfUSQknZQMFXNKPNqwzPHpaa7BrvaAy4lWCc/NNxce1yL
+         Z3ZznO0oaWCkEtyulOLGzi0qd/O5+yAOR+68a7u0vqOZ4xBDEsbphCGRDaRqiQ0JiNnm
+         iH3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746062326; x=1746667126;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :reply-to:message-id:subject:cc:to:from:date:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=buwUSlS7iEVrH/m6Xzic7WPuufqccacCKhokCKCBl2w=;
+        b=frmcFfoH+rPNCzkynmsYMIySYOWymEDJIPSuxtXr3Cn/aK5EQ5033XAdyuBJpKCr3i
+         vxDx1HNXeMCuDF0CLbtt3XDtpsFm1rTJEu124+J2fY4nYt6pvnSlm8lL69YVwPSx7E+A
+         YsO1SSotjXARFmHRrdlXSH/IrP3YRFDqHpjM0GIP1/lufjYyMJjBwaL9zeJlQKYNJbDD
+         Ot4Bc63mFFSHhwEG+49cbYgik7yon5EEmMb9X3tT/Q7Zl7VYhyxPGS+KuO05BsCxY/d6
+         cnSi24ezY7bRUCh3cyod/DvwCUVT5oihuSmlLttE8XbDoYzr4CeWBU8mz34n650a72UY
+         eVQA==
+X-Forwarded-Encrypted: i=1; AJvYcCW+bAXwLmloAruwk790wcNsJxhzaZF+jnBT3ZGUO6k/lIBzuuAgjQWZDpHUuyO1mQYOZlSYfYtNskM1J38=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwlzgG4Vq7HWyid75aRdIzYNBsCTMrChZjv2ML0oRUj26yi6RBO
+	WPU1P6+OdZ+yC9Lhh7NYeWBxKA3mUBm+KgZ00x62pqgtOs3yVTdM
+X-Gm-Gg: ASbGncsyjDRLvebANYe93jtcpfV8LlhoiTSJ60dryc2AnR3+FBqr92QcQE6C/37eOBl
+	GyoMiy+Tr4ggroBxIEF302qt9hpljzWyQmtoPoJrsJJIvYmJ/zyyns+DQxrEdamSpQ0TQYX+N7Z
+	ef2yr6GxAHvl1kIbn7u/+/ZYrqRV7KO1HVVJq0BaLgT8HbAipVkGQZiKkz+Ntk3jY+GnORcBPme
+	eLFFi3pd72u9hS1AHAupGvBXAVatWu6JEr5pA76ewfj0fXCbu7ohOM+Df9CrUzxuQyPajQagE9n
+	/jTsQwEthKPSLUfwBeEQ8j3wZtJZ3OLD/Y4rYNNLHDv0mzvu6iQ=
+X-Google-Smtp-Source: AGHT+IHQdFsCgwAedDrVKruzmw1YWcu3XgOYfrqpDjIFjH+NnJt/gdX6kuCX5txwMnFkkN3KXxmypA==
+X-Received: by 2002:a17:906:7092:b0:ac7:81b0:62c9 with SMTP id a640c23a62f3a-aceff3c3c61mr33880766b.20.1746062326124;
+        Wed, 30 Apr 2025 18:18:46 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6edafec7sm988202666b.165.2025.04.30.18.18.45
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 30 Apr 2025 18:18:45 -0700 (PDT)
+Date: Thu, 1 May 2025 01:18:45 +0000
+From: Wei Yang <richard.weiyang@gmail.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Pedro Falcato <pfalcato@suse.de>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH v2 01/10] mm/mremap: introduce more mergeable mremap
+ via MREMAP_RELOCATE_ANON
+Message-ID: <20250501011845.ktbfgymor4oz5sok@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <cover.1745307301.git.lorenzo.stoakes@oracle.com>
+ <87e668d54927bb4ccdb7d374275e0662de667697.1745307301.git.lorenzo.stoakes@oracle.com>
+ <20250430004703.63rumj4znewlbc2h@master>
+ <8c052822-5365-4178-8e06-ecd4f917cf8a@lucifer.local>
+ <20250430154119.a5ljf5t5tutqzim5@master>
+ <ae3717ca-42e7-49a6-99f9-73a4c0be70f9@lucifer.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/10] drm/msm/dsi/phy: add configuration for SAR2130P
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Rob Clark
-	<robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Dmitry
- Baryshkov" <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
-        Marijn Suijten
-	<marijn.suijten@somainline.org>,
-        David Airlie <airlied@gmail.com>, "Simona
- Vetter" <simona@ffwll.ch>,
-        Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Kuogee Hsieh <quic_khsieh@quicinc.com>,
-        Krishna Manikandan
-	<quic_mkrishn@quicinc.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Will Deacon <will@kernel.org>, Robin Murphy
-	<robin.murphy@arm.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <iommu@lists.linux.dev>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
-References: <20250418-sar2130p-display-v5-0-442c905cb3a4@oss.qualcomm.com>
- <20250418-sar2130p-display-v5-7-442c905cb3a4@oss.qualcomm.com>
-Content-Language: en-US
-From: Jessica Zhang <quic_jesszhan@quicinc.com>
-In-Reply-To: <20250418-sar2130p-display-v5-7-442c905cb3a4@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDAwOCBTYWx0ZWRfX2DJr6WLc0edV I4UAvc3yot50l6XraxRL/48fmG1pohIk6ZF0BNE0PsZkOLa57/myXFJhvutcIjA96mFLUrToUUl 3r5gG4oanNcY2kX9+m/IruaZ3m+5BFTtNyNYz+bqO/qgH1DuHkEs/9okS+xanaAyDcyPpamubTZ
- 3C71obBj5nsrxGDN/DT0J6bLoge6dB5WmhPFHEzq0pE28Tk/kYy3iPoZ7bmZJgnOvtiC2esFM1M uzrn4JV/+5A5NAWiAhzG8LcCTnemf7JTGAnPCelcCep5nfJ3Cki9VmnTw59SYUHooIqw56c+BFT Jzc4i1wyIROkoHHygQbneBPs05q0/da6sk+YI4HjIyqqligfYsL1XyoYze5hbkS1KmGHPIOVEkL
- VLzjkZJ7o879cxpuF13/jJM2Yh/PLEb+nOLnIE8Wbs0y5XzDWObJy49RwodzhmksSD4GLdXu
-X-Proofpoint-GUID: i4KL4M6P_4CsjhTj2vgnrh6O15uMeXR1
-X-Proofpoint-ORIG-GUID: i4KL4M6P_4CsjhTj2vgnrh6O15uMeXR1
-X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=6812cb27 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8 a=WWvJJprN3eueWNfT7O0A:9
- a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_01,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010008
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ae3717ca-42e7-49a6-99f9-73a4c0be70f9@lucifer.local>
+User-Agent: NeoMutt/20170113 (1.7.2)
 
+On Wed, Apr 30, 2025 at 05:07:40PM +0100, Lorenzo Stoakes wrote:
+>On Wed, Apr 30, 2025 at 03:41:19PM +0000, Wei Yang wrote:
+>> On Wed, Apr 30, 2025 at 02:15:24PM +0100, Lorenzo Stoakes wrote:
+>> >On Wed, Apr 30, 2025 at 12:47:03AM +0000, Wei Yang wrote:
+>> >> On Tue, Apr 22, 2025 at 09:09:20AM +0100, Lorenzo Stoakes wrote:
+>> >> [...]
+>> >> >+bool vma_had_uncowed_children(struct vm_area_struct *vma)
+>> >> >+{
+>> >> >+	struct anon_vma *anon_vma = vma ? vma->anon_vma : NULL;
+>> >> >+	bool ret;
+>> >> >+
+>> >> >+	if (!anon_vma)
+>> >> >+		return false;
+>> >> >+
+>> >> >+	/*
+>> >> >+	 * If we're mmap locked then there's no way for this count to change, as
+>> >> >+	 * any such change would require this lock not be held.
+>> >> >+	 */
+>> >> >+	if (rwsem_is_locked(&vma->vm_mm->mmap_lock))
+>> >> >+		return anon_vma->num_children > 1;
+>> >>
+>> >> Hi, Lorenzo
+>> >>
+>> >> May I have a question here?
+>> >
+>> >Just ask the question.
+>> >
+>>
+>> Thanks.
+>>
+>> My question is the function is expected to return true, if we have forked a
+>> vma from this one, right?
+>>
+>> IMO there are cases when it has one forked child and anon_vma->num_children == 1,
+>> which means folios are not exclusively mapped. But the function would return
+>> false.
+>>
+>> Or maybe I misunderstand the logic here.
+>
+>I mean, it'd be helpful if you delineated which cases these were?
+>
 
+Sorry, I should be more specific.
 
-On 4/18/2025 12:50 AM, Dmitry Baryshkov wrote:
-> From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> 
-> Qualcomm SAR2130P requires slightly different setup for the DSI PHY. It
-> is a 5nm PHY (like SM8450), so supplies are the same, but the rest of
-> the configuration is the same as SM8550 DSI PHY.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>Presumably you're thiking of something like:
+>
+>1. Process 1: VMA A is established. num_children == 1 (self-reference is counted).
+>2. Process 2: Process 1 forks, VMA B references A, a->num_children++
+>3. Process 3: Process 2 forks, VMA C is established (maybe you think b->num_children++?)
 
-Reviewed-by: Jessica Zhang <quic_jesszhan@quicinc.com>
+Maybe this is the key point. Will explain below at ***.
 
-> ---
->   drivers/gpu/drm/msm/dsi/phy/dsi_phy.c     |  2 ++
->   drivers/gpu/drm/msm/dsi/phy/dsi_phy.h     |  1 +
->   drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c | 23 +++++++++++++++++++++++
->   3 files changed, 26 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> index c0bcc68289633fd7506ce4f1f963655d862e8f08..a58bafe9fe8635730cb82e8c82ec1ded394988cd 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-> @@ -581,6 +581,8 @@ static const struct of_device_id dsi_phy_dt_match[] = {
->   	  .data = &dsi_phy_7nm_cfgs },
->   	{ .compatible = "qcom,dsi-phy-7nm-8150",
->   	  .data = &dsi_phy_7nm_8150_cfgs },
-> +	{ .compatible = "qcom,sar2130p-dsi-phy-5nm",
-> +	  .data = &dsi_phy_5nm_sar2130p_cfgs },
->   	{ .compatible = "qcom,sc7280-dsi-phy-7nm",
->   	  .data = &dsi_phy_7nm_7280_cfgs },
->   	{ .compatible = "qcom,sm6375-dsi-phy-7nm",
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> index 1925418d9999a24263d6621299cae78f1fb9455c..1ed08b56e056094bc0096d07d4470b89d9824060 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.h
-> @@ -59,6 +59,7 @@ extern const struct msm_dsi_phy_cfg dsi_phy_7nm_8150_cfgs;
->   extern const struct msm_dsi_phy_cfg dsi_phy_7nm_7280_cfgs;
->   extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8350_cfgs;
->   extern const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs;
-> +extern const struct msm_dsi_phy_cfg dsi_phy_5nm_sar2130p_cfgs;
->   extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs;
->   extern const struct msm_dsi_phy_cfg dsi_phy_4nm_8650_cfgs;
->   
-> diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> index a92decbee5b5433853ed973747f7705d9079068d..cad55702746b8d35949d22090796cca60f03b9e1 100644
-> --- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> +++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_7nm.c
-> @@ -1289,6 +1289,29 @@ const struct msm_dsi_phy_cfg dsi_phy_5nm_8450_cfgs = {
->   	.quirks = DSI_PHY_7NM_QUIRK_V4_3,
->   };
->   
-> +const struct msm_dsi_phy_cfg dsi_phy_5nm_sar2130p_cfgs = {
-> +	.has_phy_lane = true,
-> +	.regulator_data = dsi_phy_7nm_97800uA_regulators,
-> +	.num_regulators = ARRAY_SIZE(dsi_phy_7nm_97800uA_regulators),
-> +	.ops = {
-> +		.enable = dsi_7nm_phy_enable,
-> +		.disable = dsi_7nm_phy_disable,
-> +		.pll_init = dsi_pll_7nm_init,
-> +		.save_pll_state = dsi_7nm_pll_save_state,
-> +		.restore_pll_state = dsi_7nm_pll_restore_state,
-> +		.set_continuous_clock = dsi_7nm_set_continuous_clock,
-> +	},
-> +	.min_pll_rate = 600000000UL,
-> +#ifdef CONFIG_64BIT
-> +	.max_pll_rate = 5000000000UL,
-> +#else
-> +	.max_pll_rate = ULONG_MAX,
-> +#endif
-> +	.io_start = { 0xae95000, 0xae97000 },
-> +	.num_dsi_phy = 2,
-> +	.quirks = DSI_PHY_7NM_QUIRK_V5_2,
-> +};
-> +
->   const struct msm_dsi_phy_cfg dsi_phy_4nm_8550_cfgs = {
->   	.has_phy_lane = true,
->   	.regulator_data = dsi_phy_7nm_98400uA_regulators,
-> 
+>4. Unmap vma B, oops, a->num_children == 1 but it still has C!
+>
+>But that won't happen, as VMA C will be referencing a->anon_vma, so in reality
+>a->anon_vma->num_children == 3, then after unmap == 2.
+>
 
+The case here could be handled well, I am thinking a little different one.
+
+Here is the case I am thinking about. If my understanding is wrong, please
+correct me.
+
+	a                  VMA A
+	+-----------+      +-----------+
+	|           | ---> |         av| == a
+	+-----------+      +-----------+
+	             \
+	              \
+	              |\   VMA B
+	              | \  +-----------+
+	              |  > |         av| == b
+	              |    +-----------+
+	              \
+	               \   VMA C
+	                \  +-----------+
+	                 > |         av| == c
+	                   +-----------+
+
+1. Process 1: VMA A is established, num_children == 1
+2. Process 2: Process 1 forks, a->num_children++ and b->num_children == 0
+3. Process 3: Process 2 forks, b->num_children++ => b->number_children == 1
+
+If vma_had_uncowed_children(VMA B), we would check b->number_children and
+return false since it is not greater than 1. But we do have a child process 3.
+
+***
+
+Come back the b->num_children. After re-read your example, I guess this is the
+key point. In anon_vma_fork(), we do anon_vma->parent->num_children++. So when
+fork VMA C, we increase b->num_children instead of a->num_children.
+
+To verify this, I did a quick test in my test cases in
+test_fork_grand_child[1]. I see b->num_children is increased to 1 after C is
+forked. Will reply in that thread and hope that would be helpful to
+communicate the case.
+
+Well, if I am not correct, feel free to correct me :-)
+
+[1]: http://lkml.kernel.org/r/20250429090639.784-3-richard.weiyang@gmail.com
+
+>References to the originally faulted-in anon_vma is propagated through the
+>forks.
+>
+>anon_vma logic is tricky, one of many reasons I want to (significantly) rework
+>it.
+>
+>Though sadly there is a lot of _essential_ complexity, I do think we can do
+>better.
+>
+
+-- 
+Wei Yang
+Help you, Help me
