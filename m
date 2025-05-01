@@ -1,369 +1,257 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72A1C2ED;
-	Thu,  1 May 2025 02:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290FDC2ED;
+	Thu,  1 May 2025 02:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746066419; cv=none; b=lG4fLLjL6AJLQZ10RofLJ0Uj0HY2c31xeCacGJ4t8P1Kd2PdpLPgMLUDXlhOpqhrxLOQ393SZVZOkiKw6i01tN+qB/y/YkK6ElOtlJ3HLlZUFo7bKBYQNK7asHtGQp9wacCpwEFlRCtfLVKcghh2kP2284ftw+a2Obo55A9mXk4=
+	t=1746066494; cv=none; b=MOrGS3h/yUR6laHgm7MC6zgyIkqChJwMYyxhPXIfF8e0M5JFPN+hxL5P7L55V9fYhJ4kjLaRGi575dqasT93qBu6drdzMAzl1kvmenuvpRewpIkQikepA+xFPGuHij4/IvdZDpcjy9DIPZIfXyGP5Xus0ocq3bPhmtxhAUQRxsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746066419; c=relaxed/simple;
-	bh=EFrvP0jW5mht/7/5ka9ai18SxKTSXPrfcHN5RFHFpJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BSnV97YkXPdeEvX9Fp0FVCsK3t/Ryv3bJ6GopnweV6RbP4Gy0VBYHCmXm/PUXdXeF74Hgih46jlhiBksxl+FQwBbJ1YNlIW79V2Kl8wnpH0RRL68ebJ2TUDkLde26QNjb8NIsk/8PmwAhZFeTmX6Okx7lfFUgIzxAUvJ+adwTno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQ76sJoC; arc=none smtp.client-ip=209.85.210.170
+	s=arc-20240116; t=1746066494; c=relaxed/simple;
+	bh=KS3jY52pNk1u+R98uW2AGXONrX6SST8hjjbpixLZpKE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ehk+KIFAObSEiyUBMC8TdxL46hXiQb/jqno7F5CG+MQ1xN07YTOR/brwZszimXUdr+OszmUULTO03bPYlGTW1MXpf9LEmrvh0calvP/8xqm5WdohfTVxX8jjUGtfyfnGtBXfLpKro/0mCRqlk7SHjy3rUw7JBQioEaya4GR/r/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ng1gdj+m; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQ76sJoC"
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-736c1cf75e4so506730b3a.2;
-        Wed, 30 Apr 2025 19:26:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ng1gdj+m"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7376e311086so812058b3a.3;
+        Wed, 30 Apr 2025 19:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746066417; x=1746671217; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=AsXSjpDlzlHMcY/o57YlDKr908Ffiw47tWoUmfnrKkA=;
-        b=BQ76sJoC84GrNn8pZK9yJ8hoWBlgdkv6UT49gCWNItCs3sXBwcHlTswUMGkHrq/D39
-         K/sBYXz5rOAaY5W4V4oNE3DzH5n7YItxH5qF0VjL2lhWYBSuAM9EfV5v6E9UiwKnNMTd
-         Pne2o32XCHMTcB5EkQcaFgwGRqpHzx4hmDky3qMwWfONn7pR3HbeiZdnFGpCF/68wHOO
-         Hscaxo9yKlZVqCVds3U84gMpIWcsXWLynp86DC7sc9WcB6eAuHC64Kx6dxPtV7mWwI8k
-         F8pASiIEcbsqbEauCtlLmB5OrUT6IvnyaXL0VsA2G/DnCs0XMEAalNyMsvBEQ7bbnNBw
-         IwmQ==
+        d=gmail.com; s=20230601; t=1746066492; x=1746671292; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wuDFqbRXFCtvuYfSRoxmShCxI97f/W/BJry3BtFDZOg=;
+        b=ng1gdj+mqFN6tP4buTJ9CHnczTLYgek1GopixjC4+sZun7SgWoAB0shdGNofnKlG2I
+         K78/8g8fF6cV0Lx2Lrwmup8Nc7Le/IqQD9Q1Gy89p0i5Q6zDLrWy1IB8/LK2kpT2WY61
+         GVHlqdQ3tXnnSjoc+sRp0J0bc2r27C7wiepYfLR9I5KHMLdd3A39kmmD6P7AFeIuEBWw
+         UX+Ub4n6bu1Bho+W6kA910vdU9EOsk0xNBAT+NxXp4NChhIOOopXsEW5PfxJM1Yo1BZN
+         KnbtE4pEvGTnvRTI4vLxBhI8g1jxIhDq3tj6MIFpb2E2CNIFco15ws4dzlhrjl7T5P6N
+         F2kQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746066417; x=1746671217;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AsXSjpDlzlHMcY/o57YlDKr908Ffiw47tWoUmfnrKkA=;
-        b=L/0AgrBh7xJoD/PTEcyYW6Q9xsHrKx2WUlAKb8VXJBaO6Lw4VOJtc2AK54QrcMiBZT
-         va16APLzvN1fOS/3xQ78WZvr170ZBLeBdf/zH/LVau5rpo1C71pTj8QIOSNXFmofeGJt
-         0dGyyvWgDr1U3CQvylpqYfnGZBtqPV5uYsdmDBWUSlfYwgg6oBV9U5xRuodPCKrLS9uk
-         hvDxZydN2sfyIIyUq/UPLyFGVslg5jzw3Vnfw6A7JjlzIJPHwONTgN0wBqrA/plgXQai
-         7GNWAOkZuqTDRPNlD7ZWksKHr/xu8PxR28hpF26A0C0dvtKRSZDWPbnKLLtVasCBQ5Vl
-         2hZA==
-X-Forwarded-Encrypted: i=1; AJvYcCUKwokwEylBzsLdUvCXUlbRylNr/ITdKrduzxV6aw/y0xAq02/uBhgDfN6s6LCoV/7jMCL02VtqrCpbyHgf@vger.kernel.org, AJvYcCUP8OangwZgQUZ8S9CPHXBJZt6fN3zqVcGyGwVQzVxbvc5e9VZhV2LC3EsNGTO8qc2DPGaajIWy@vger.kernel.org, AJvYcCVNwSiHihI4E3hB734qbTATK1CiJOBF0wCziiq9itugm29xjeS0O6Mi8LtMrPoUDBTE7vM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+2RerZ3NhSis2LaROP94DHhbgv1DdZQ773287yu5Vl1UmNw5C
-	I6RRhdvtA7fNW53E6DNfMXSYCw2VXwQx5FCaZw6xWqWQ3PIXPnY=
-X-Gm-Gg: ASbGncsxt6hUQlqzlOdQsLqd4tvts8jHWntFSpqoTs7zNPWOWTSxdtOkejK81oo5MNY
-	cn/6kh/AkQikthDnqaRE8YYliqUgp1r6AvP3xKpGVeWNV4xYL+Eo1PB2JOWaFwFbZEzdwLit4+j
-	qVYr21NfY7t9EpJExmiTlZkEZrVn4YB2jIjUIU8V0LUWAUzIewB8atrnakMmbF3+zdEU6UvRXod
-	qhRxdZYiVWb6MNsiXNSB8ZuqjLiEDrz5P42qmLW9fi0AyY5s7eIwFEv5NC9O3XbjyOlkQkbF88t
-	8MuMnqx/oRSZJFyRUM7KA1S4vpVkVDjctwPuNU6z+J/B4jPmdZhPSyDhFOCpVr8u47C5dwOlDjo
-	=
-X-Google-Smtp-Source: AGHT+IHageym6EE6fYnAYRcUHcoYDxmY9WXdc6BGW3qvOSPrgg/ll6IlGx4aOLb3zbRmQiANzWaflA==
-X-Received: by 2002:a05:6a00:10ce:b0:73e:2dca:f91b with SMTP id d2e1a72fcca58-74049255508mr1115872b3a.18.1746066416690;
-        Wed, 30 Apr 2025 19:26:56 -0700 (PDT)
-Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
-        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-74039a94845sm2537281b3a.170.2025.04.30.19.26.55
+        d=1e100.net; s=20230601; t=1746066492; x=1746671292;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wuDFqbRXFCtvuYfSRoxmShCxI97f/W/BJry3BtFDZOg=;
+        b=JKLjYpiR3AWjiSUxffEgwLVhX9rWSH75z94m0mmMD847JLen/w7BZn7UZyV/6BJYa8
+         0OXVsZCUREKw3l0SzxIe2IYICfYzkPklr4skdjIe99tBQmmEbPeayikICP6dzXi2pQJu
+         ixJYGldvI/9VM/k6ajvRMkuagYKCpWjw2V5X7U8ZYnZPy+2BxSAZkOyxaiEoVXqpaswf
+         CkSd6WzNmhw/kk+/B6M30+pwiiDRwq5vVpqdM+8Pu9yFotiUwn3WRrWbEenw0Dz4tJDh
+         m36N0pVyRbEZFEt46oOwEK2QLKQsLgUSQNAb5WBtrYkH6qrRU/5/s96raANyY1hj0bpT
+         LCcA==
+X-Forwarded-Encrypted: i=1; AJvYcCU/Xo5O7PCS3KsElsUYukjP7vyxR2+Ziq8E+j8SFMV8yXTn7LidTJ4DG6cVvAUiy2XVKX7cL0ROonVJ7MiBkZn1tA==@vger.kernel.org, AJvYcCU8ygDXWaStrv3WFadbkXHMsH8WttQDawPgbt6C2jY9o2Bn8N3jb+4vcCvYl6mmrjopey5DNB4QNeFDkKo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOpVNH3PRwmiiUc0gdCFyyepd7bxZGQu/oLqrf0UfqW9s+VbW5
+	dCDI8zKcPnEXPc1f3rlVZAEyYU3pHqRZQo4UzkY1qvnSTCifqkMA
+X-Gm-Gg: ASbGncu3jMSeHUqwfaowlEiafqC7ixCqHQInB0JyIk8XStNdAIGmyKxjYmb+Zm1I+9X
+	4GhOebe9JZhDxuFs3TDdbRV1YFg0GmPm7ixbUqy+S0fhzlSeHzyM483j1Yi0qQKfpzTf7u24peo
+	JCe3X29U5TWNN1jB3Tc4uaUG7kUHKOO9KuwZPh66RImusOy8YnEJy4K6nrqOg0fNNY+lOZ58B+z
+	z8ntsFVQlIbCqh0VEq+VgEHC0DWVbm6UyU6DWVBijGTWroOjK0AqisICxQQqVV+OTvJYQvYto0T
+	Jw3geRVNC3acL/NdhUGGdXWGlAu9hcSRpStzMvbdvObzdUj/fqN6ErX1Q/5VA2Trf536s9VDQi3
+	gCRqYoflcyMng9D58yFhR
+X-Google-Smtp-Source: AGHT+IHSUuYkAEPRGmBH60fgQ/qhdV9lXL7ezCt14vJXCVSitBPDLh7ivb0/DiM4akorhIqk6GPFbg==
+X-Received: by 2002:a05:6a00:4653:b0:736:4b85:ee05 with SMTP id d2e1a72fcca58-740491e5825mr1164872b3a.11.1746066492303;
+        Wed, 30 Apr 2025 19:28:12 -0700 (PDT)
+Received: from howard-ubuntu.lan (c-73-202-46-50.hsd1.ca.comcast.net. [73.202.46.50])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a8fbe7sm2459599b3a.160.2025.04.30.19.28.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 19:26:56 -0700 (PDT)
-Date: Wed, 30 Apr 2025 19:26:55 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] xdp: Add helpers for head length, headroom,
- and metadata length
-Message-ID: <aBLb79yyDErh9IS1@mini-arch>
-References: <20250430201120.1794658-1-jon@nutanix.com>
- <aBKReJUy2Z-JQwr4@mini-arch>
- <32FB9CF5-E5BB-4912-B76D-53971C6B6F98@nutanix.com>
- <aBLPtszlDe74yTlk@mini-arch>
- <3D448771-8354-46D0-BDFF-449FE1BD1B59@nutanix.com>
+        Wed, 30 Apr 2025 19:28:11 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: mingo@redhat.com,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	peterz@infradead.org,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	gautam@linux.ibm.com,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
+Date: Wed, 30 Apr 2025 19:27:58 -0700
+Message-ID: <20250501022809.449767-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <3D448771-8354-46D0-BDFF-449FE1BD1B59@nutanix.com>
 
-On 05/01, Jon Kohler wrote:
-> 
-> 
-> > On Apr 30, 2025, at 9:34 PM, Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> > 
-> > !-------------------------------------------------------------------|
-> >  CAUTION: External Email
-> > 
-> > |-------------------------------------------------------------------!
-> > 
-> > On 05/01, Jon Kohler wrote:
-> >> 
-> >> 
-> >>> On Apr 30, 2025, at 5:09 PM, Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> >>> 
-> >>> !-------------------------------------------------------------------|
-> >>> CAUTION: External Email
-> >>> 
-> >>> |-------------------------------------------------------------------!
-> >>> 
-> >>> On 04/30, Jon Kohler wrote:
-> >>>> Introduce new XDP helpers:
-> >>>> - xdp_headlen: Similar to skb_headlen
-> >>>> - xdp_headroom: Similar to skb_headroom
-> >>>> - xdp_metadata_len: Similar to skb_metadata_len
-> >>>> 
-> >>>> Integrate these helpers into tap, tun, and XDP implementation to start.
-> >>>> 
-> >>>> No functional changes introduced.
-> >>>> 
-> >>>> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> >>>> ---
-> >>>> v1->v2: Integrate feedback from Willem
-> >>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.kernel.org_project_netdevbpf_patch_20250430182921.1704021-2D1-2Djon-40nutanix.com_&d=DwIBaQ&c=s883GpUCOChKOHiocYtGcg&r=NGPRGGo37mQiSXgHKm5rCQ&m=9pdxzQszX_M0K3gEPeYOyMZZYSkRR8IMvxslS8320Eoctk58y-ELCdZ5iaryF2GH&s=J-ILB7E9VQ_plo0hyjEtzGzjy6G0_o4MMMmmE_z8vvc&e= 
-> >>>> 
-> >>>> drivers/net/tap.c |  6 +++---
-> >>>> drivers/net/tun.c | 12 +++++------
-> >>>> include/net/xdp.h | 54 +++++++++++++++++++++++++++++++++++++++++++----
-> >>>> net/core/xdp.c    | 12 +++++------
-> >>>> 4 files changed, 65 insertions(+), 19 deletions(-)
-> >>>> 
-> >>>> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-> >>>> index d4ece538f1b2..a62fbca4b08f 100644
-> >>>> --- a/drivers/net/tap.c
-> >>>> +++ b/drivers/net/tap.c
-> >>>> @@ -1048,7 +1048,7 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
-> >>>> struct sk_buff *skb;
-> >>>> int err, depth;
-> >>>> 
-> >>>> - if (unlikely(xdp->data_end - xdp->data < ETH_HLEN)) {
-> >>>> + if (unlikely(xdp_headlen(xdp) < ETH_HLEN)) {
-> >>>> err = -EINVAL;
-> >>>> goto err;
-> >>>> }
-> >>>> @@ -1062,8 +1062,8 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
-> >>>> goto err;
-> >>>> }
-> >>>> 
-> >>>> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
-> >>>> - skb_put(skb, xdp->data_end - xdp->data);
-> >>>> + skb_reserve(skb, xdp_headroom(xdp));
-> >>>> + skb_put(skb, xdp_headlen(xdp));
-> >>>> 
-> >>>> skb_set_network_header(skb, ETH_HLEN);
-> >>>> skb_reset_mac_header(skb);
-> >>>> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> >>>> index 7babd1e9a378..4c47eed71986 100644
-> >>>> --- a/drivers/net/tun.c
-> >>>> +++ b/drivers/net/tun.c
-> >>>> @@ -1567,7 +1567,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
-> >>>> dev_core_stats_rx_dropped_inc(tun->dev);
-> >>>> return err;
-> >>>> }
-> >>>> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
-> >>>> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
-> >>>> break;
-> >>>> case XDP_TX:
-> >>>> err = tun_xdp_tx(tun->dev, xdp);
-> >>>> @@ -1575,7 +1575,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
-> >>>> dev_core_stats_rx_dropped_inc(tun->dev);
-> >>>> return err;
-> >>>> }
-> >>>> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
-> >>>> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
-> >>>> break;
-> >>>> case XDP_PASS:
-> >>>> break;
-> >>>> @@ -2355,7 +2355,7 @@ static int tun_xdp_one(struct tun_struct *tun,
-> >>>>      struct xdp_buff *xdp, int *flush,
-> >>>>      struct tun_page *tpage)
-> >>>> {
-> >>>> - unsigned int datasize = xdp->data_end - xdp->data;
-> >>>> + unsigned int datasize = xdp_headlen(xdp);
-> >>>> struct tun_xdp_hdr *hdr = xdp->data_hard_start;
-> >>>> struct virtio_net_hdr *gso = &hdr->gso;
-> >>>> struct bpf_prog *xdp_prog;
-> >>>> @@ -2415,14 +2415,14 @@ static int tun_xdp_one(struct tun_struct *tun,
-> >>>> goto out;
-> >>>> }
-> >>>> 
-> >>>> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
-> >>>> - skb_put(skb, xdp->data_end - xdp->data);
-> >>>> + skb_reserve(skb, xdp_headroom(xdp));
-> >>>> + skb_put(skb, xdp_headlen(xdp));
-> >>>> 
-> >>>> /* The externally provided xdp_buff may have no metadata support, which
-> >>>> * is marked by xdp->data_meta being xdp->data + 1. This will lead to a
-> >>>> * metasize of -1 and is the reason why the condition checks for > 0.
-> >>>> */
-> >>>> - metasize = xdp->data - xdp->data_meta;
-> >>>> + metasize = xdp_metadata_len(xdp);
-> >>>> if (metasize > 0)
-> >>>> skb_metadata_set(skb, metasize);
-> >>>> 
-> >>>> diff --git a/include/net/xdp.h b/include/net/xdp.h
-> >>>> index 48efacbaa35d..044345b18305 100644
-> >>>> --- a/include/net/xdp.h
-> >>>> +++ b/include/net/xdp.h
-> >>>> @@ -151,10 +151,56 @@ xdp_get_shared_info_from_buff(const struct xdp_buff *xdp)
-> >>>> return (struct skb_shared_info *)xdp_data_hard_end(xdp);
-> >>>> }
-> >>>> 
-> >>>> +/**
-> >>>> + * xdp_headlen - Calculate the length of the data in an XDP buffer
-> >>>> + * @xdp: Pointer to the XDP buffer structure
-> >>>> + *
-> >>>> + * Compute the length of the data contained in the XDP buffer. Does not
-> >>>> + * include frags, use xdp_get_buff_len() for that instead.
-> >>>> + *
-> >>>> + * Analogous to skb_headlen().
-> >>>> + *
-> >>>> + * Return: The length of the data in the XDP buffer in bytes.
-> >>>> + */
-> >>>> +static inline unsigned int xdp_headlen(const struct xdp_buff *xdp)
-> >>>> +{
-> >>>> + return xdp->data_end - xdp->data;
-> >>>> +}
-> >>>> +
-> >>>> +/**
-> >>>> + * xdp_headroom - Calculate the headroom available in an XDP buffer
-> >>>> + * @xdp: Pointer to the XDP buffer structure
-> >>>> + *
-> >>>> + * Compute the headroom in an XDP buffer.
-> >>>> + *
-> >>>> + * Analogous to the skb_headroom().
-> >>>> + *
-> >>>> + * Return: The size of the headroom in bytes.
-> >>>> + */
-> >>>> +static inline unsigned int xdp_headroom(const struct xdp_buff *xdp)
-> >>>> +{
-> >>>> + return xdp->data - xdp->data_hard_start;
-> >>>> +}
-> >>>> +
-> >>>> +/**
-> >>>> + * xdp_metadata_len - Calculate the length of metadata in an XDP buffer
-> >>>> + * @xdp: Pointer to the XDP buffer structure
-> >>>> + *
-> >>>> + * Compute the length of the metadata region in an XDP buffer.
-> >>>> + *
-> >>>> + * Analogous to skb_metadata_len().
-> >>>> + *
-> >>>> + * Return: The length of the metadata in bytes.
-> >>>> + */
-> >>>> +static inline unsigned int xdp_metadata_len(const struct xdp_buff *xdp)
-> >>> 
-> >>> I believe this has to return int, not unsigned int. There are places
-> >>> where we do data_meta = data + 1, and the callers check whether
-> >>> the result is signed or sunsigned.
-> >> 
-> >> The existing SKB APIs are the exact same return type (I copied them 1:1),
-> >> but I have a feeling that we’re never intending these values to either A) be
-> >> negative and/or B) wrap in strange ways?
-> >> 
-> >>> 
-> >>>> +{
-> >>>> + return xdp->data - xdp->data_meta;
-> >>>> +}
-> >>>> +
-> >>>> static __always_inline unsigned int
-> >>>> xdp_get_buff_len(const struct xdp_buff *xdp)
-> >>>> {
-> >>>> - unsigned int len = xdp->data_end - xdp->data;
-> >>>> + unsigned int len = xdp_headlen(xdp);
-> >>>> const struct skb_shared_info *sinfo;
-> >>>> 
-> >>>> if (likely(!xdp_buff_has_frags(xdp)))
-> >>>> @@ -364,8 +410,8 @@ int xdp_update_frame_from_buff(const struct xdp_buff *xdp,
-> >>>> int metasize, headroom;
-> >> 
-> >> Said another way, perhaps this should be unsigned?
-> >> 
-> >>>> 
-> >>>> /* Assure headroom is available for storing info */
-> >>>> - headroom = xdp->data - xdp->data_hard_start;
-> >>>> - metasize = xdp->data - xdp->data_meta;
-> >>>> + headroom = xdp_headroom(xdp);
-> >>>> + metasize = xdp_metadata_len(xdp);
-> >>>> metasize = metasize > 0 ? metasize : 0;
-> >>> 
-> >>> ^^ like here
-> >> 
-> >> Look across the tree, seems like more are unsigned than signed
-> > 
-> > The ones that are unsigned are either calling xdp_data_meta_unsupported
-> > explicitly (and it does > to check for this condition, not signed math)
-> > or are running in the drivers that are guaranteed to have metadata
-> > support (and, hence, always have data_meta <= data).
-> > 
-> >> These ones use unsigned:
-> >> xdp_convert_zc_to_xdp_frame
-> > 
-> > This uses xdp_data_meta_unsupported
-> > 
-> >> veth_xdp_rcv_skb
-> >> xsk_construct_skb
-> >> bnxt_copy_xdp
-> >> i40e_build_skb
-> >> i40e_construct_skb_zc
-> >> ice_build_skb (this is u8)
-> >> ice_construct_skb_zc
-> >> igb_build_skb
-> >> igb_construct_skb_zc
-> >> igc_build_skb
-> >> igc_construct_skb
-> >> igc_construct_skb_zc
-> >> ixgbe_build_skb
-> >> ixgbe_construct_skb_zc
-> >> ixgbevf_build_skb
-> >> mvneta_swbm_build_skb
-> >> mlx5e_xsk_construct_skb
-> >> mana_build_skb
-> >> stmmac_construct_skb_zc
-> >> bpf_prog_run_generic_xdp
-> > 
-> > These run in the drivers that support metadata (data_meta <= data)
-> > 
-> >> xdp_get_metalen
-> > 
-> > This uses xdp_data_meta_unsupported
-> > 
-> >> These ones are regular int:
-> >> xdp_build_skb_from_buff
-> >> xdp_build_skb_from_zc
-> >> xdp_update_frame_from_buff
-> >> tun_xdp_one
-> >> build_skb_from_xdp_buff
-> > 
-> > These can be called from the drivers that support and don't support 
-> > the metadata, so have to (correctly) use int.
-> > 
-> >> Perhaps a separate patch to convert the regulars to unsigned,
-> >> thoughts?
-> > 
-> > Take a look at xdp_set_data_meta_invalid and xdp_data_meta_unsupported.
-> > There are cases where xdp->data - xdp->data_meta is -1 (and the callers
-> > check for this condition), we can't use unsigned unconditionally
-> > (unless we use xdp_data_meta_unsupported).
-> 
-> Ah! Good catch, and thank you for helping me to understand that,
-> I appreciate it. About to turn in for the evening, will wait for any more
-> comments and I’m happy to send out a v3.
-> 
-> One thought is that I stumbled upon xdp_get_metalen in filter.c. I wonder it
-> would make sense to pirate that logic and move it into xdp.h? That might be
-> a simply solution here that would allow us to keep unsigned like SKB API?
-> 
-> Happy to take feedback either way. 
+As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
 
-I'd keep it signed for now, we don't have to match skb interfaces.
-In theory it should generate better code (one conditional jmp vs two in
-the unsigned case):
-- https://godbolt.org/z/xdh7fPxrz
-- https://godbolt.org/z/5dvPoGxqd
+Currently, off-cpu samples are dumped when perf record is exiting. This
+results in off-cpu samples being after the regular samples. This patch
+series makes possible dumping off-cpu samples on-the-fly, directly into
+perf ring buffer. And it dispatches those samples to the correct format
+for perf.data consumers.
+
+Before:
+```
+     migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  ffffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+            perf  770116 [001] 27981.041375:          1    cycles:P:  ffffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041377:          1    cycles:P:  ffffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+            perf  770116 [001] 27981.041379:      51611    cycles:P:  ffffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+     migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  ffffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+     migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  ffffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+
+sshd  708098 [000] 18446744069.414584:     286392 offcpu-time: 
+	    79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+	    585690935cca [unknown] (/usr/bin/sshd)
+```
+
+After:
+```
+            perf  774767 [003] 28178.033444:        497           cycles:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+            perf  774767 [003] 28178.033445:     399440           cycles:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+         swapper       0 [001] 28178.036639:  376650973           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+         swapper       0 [003] 28178.182921:  348779378           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+    blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
+
+
+    blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time: 
+	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+	    7fff24e862d8 [unknown] ([unknown])
+
+
+         swapper       0 [000] 28178.463253:  195945410           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+     dbus-broker     412 [002] 28178.464855:  376737008           cycles:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+```
+
+Changes in v16:
+ - Add Tested-by from Gautam and Acked-by from Namhyung.
+ - Rebase on the perf-tools-next branch.
+ - Edit the commit message of patch 10.
+ - Fix a bug caused by the type change of struct perf_cpu.
+ - Rename test_offcpu_over_thresh() to test_offcpu_above_thresh().
+
+Changes in v15:
+ - Fix workload recording bug pointed out by Arnaldo.
+ - Rename struct stack to struct __stack as suggested by Arnaldo.
+ - Delete the extra offcpu workload now that recording workload is fixed,
+   use 'sleep 1' for testing instead.
+ - Add more tests for the off-cpu-thresh option.
+
+Changes in v14:
+ - Change the internal off_cpu_thresh_us to off_cpu_thresh_ns, i.e. use
+   nsec instead of usec
+
+Changes in v13:
+ - Move the definition of 'off_cpu_thresh_ns' to the same commit as
+   dumping off-cpu samples in BPF, and give off_cpu_thresh_ns a default
+   value before the --off-cpu-thresh option is parsed.
+
+Changes in v12:
+ - Restore patches' bisectability, because the ordering of patches has
+   changed.
+ - Change 'us = ms * 1000' to 'us = ms * USEC_PER_MSEC'
+
+Changes in v11:
+ - Modify the options used in the off-cpu tests, as I changed the unit
+   of the off-cpu threshold to milliseconds.
+
+Changes in v10:
+ - Move the commit "perf record --off-cpu: Add --off-cpu-thresh option"
+   to where the direct sample feature is completed.
+ - Make --off-cpu-thresh use milliseconds as the unit.
+
+Changes in v9:
+ - Add documentation for the new option '--off-cpu-thresh', and include
+   an example of its usage in the commit message
+ - Set inherit in evsel__config() to prevent future modifications
+ - Support off-cpu sample data collected by perf before this patch series
+
+Changes in v8:
+ - Make this series bisectable
+ - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
+   to offcpu_thresh_ns for clarity
+ - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
+   for future use' commit
+ - Correct spelling mistakes in the commit message (s/is should be/should be/)
+ - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
+   if block
+ - Add some comments to off-cpu test
+ - Delete an unused variable 'timestamp' in off_cpu_dump()
+
+Changes in v7:
+ - Make off-cpu event system-wide
+ - Use strtoull instead of strtoul
+ - Delete unused variable such as sample_id, and sample_type
+ - Use i as index to update BPF perf_event map
+ - MAX_OFFCPU_LEN 128 is too big, make it smaller.
+ - Delete some bound check as it's always guaranteed
+ - Do not set ip_pos in BPF
+ - Add a new field for storing stack traces in the tstamp map
+ - Dump the off-cpu sample directly or save it in the off_cpu map, not both
+ - Delete the sample_type_off_cpu check
+ - Use __set_off_cpu_sample() to parse samples instead of a two-pass parsing
+
+Changes in v6:
+ - Make patches bisectable
+
+Changes in v5:
+ - Delete unnecessary copy in BPF program
+ - Remove sample_embed from perf header, hard code off-cpu stuff instead
+ - Move evsel__is_offcpu_event() to evsel.h
+ - Minor changes to the test
+ - Edit some comments
+
+Changes in v4:
+ - Minimize the size of data output by perf_event_output()
+ - Keep only one off-cpu event
+ - Change off-cpu threshold's unit to microseconds
+ - Set a default off-cpu threshold
+ - Print the correct error message for the field 'embed' in perf data header
+
+Changes in v3:
+ - Add off-cpu-thresh argument
+ - Process direct off-cpu samples in post
+
+Changes in v2:
+ - Remove unnecessary comments.
+ - Rename function off_cpu_change_type to off_cpu_prepare_parse
+
+Howard Chu (10):
+  perf evsel: Expose evsel__is_offcpu_event() for future use
+  perf record --off-cpu: Parse off-cpu event
+  perf record --off-cpu: Preparation of off-cpu BPF program
+  perf record --off-cpu: Dump off-cpu samples in BPF
+  perf evsel: Assemble offcpu samples
+  perf record --off-cpu: Disable perf_event's callchain collection
+  perf script: Display off-cpu samples correctly
+  perf record --off-cpu: Dump the remaining samples in BPF's stack trace
+    map
+  perf record --off-cpu: Add --off-cpu-thresh option
+  perf test: Add direct off-cpu tests
+
+ tools/perf/Documentation/perf-record.txt |   9 ++
+ tools/perf/builtin-record.c              |  33 +++++++
+ tools/perf/builtin-script.c              |   4 +-
+ tools/perf/tests/shell/record_offcpu.sh  |  71 ++++++++++++++
+ tools/perf/util/bpf_off_cpu.c            | 119 ++++++++++++++---------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c   |  98 ++++++++++++++++++-
+ tools/perf/util/evsel.c                  |  41 +++++++-
+ tools/perf/util/evsel.h                  |   2 +
+ tools/perf/util/off_cpu.h                |   3 +-
+ tools/perf/util/record.h                 |   1 +
+ 10 files changed, 324 insertions(+), 57 deletions(-)
+
+-- 
+2.45.2
+
