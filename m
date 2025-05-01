@@ -1,144 +1,99 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9BC171CD
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 19:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE3FB229B28;
+	Thu,  1 May 2025 19:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746128695; cv=none; b=MQSr/ff0hTEen5DRvAYX/i6WwHSvHkB6NB6sHdCrWz14D9bXzxJ4Sr7TUgkGgXi/KrSMFkEW4a3xINI0fQYCpOQ0bkl83O74ExfMPsS32WaGN4w+6U04yupqxPcgPAGZhEYY4rnDhWXXs++WeMOwsfgkvF73JUI5s23LJpv9ru0=
+	t=1746128698; cv=none; b=CBKKU0mD+We7Sxymhu1u/DKEt5+Omv5AQ5rbgkTB1vaFywloLAnpx7b247edqjV3C/ER7/Tm0aSEyt1OOSTcFBaEzcBz1K9sSyClQw1Caouq598fn5udhZjIetHopD5E5HNyg63GSojqAOwyQwohv6seYsFbRPxvcARjih9KOrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746128695; c=relaxed/simple;
-	bh=mnKKNGFyUO8w+4qxXpO6NVJeqhx/DOdnHV6ARi1fHPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EF8vFJwSk2N2rUsrFYKdfqm+bVXmJjDNVc5bZnObr9NgtiN3YulRB6KU2RQVMJcZis7e7C5BZb02GzovjxSleBB0szKv7gIQbJSdr4VS9VlvfDhL2recBoIiPuaqovqK6pIsi11ByUZecpmDtMrLz7jJ+c5NVtnnBC8EQ173YcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=hSnBMiQS; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="hSnBMiQS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=WtAU
-	QG5Ocn4Ukv9zlKxSH4ggJXIwR0N75Q99e79Yin4=; b=hSnBMiQSEKwVLNhztEwF
-	3t3K9kxjSzbjq2raZMEe97KtRMA2P4AdgcD8hqmPW3PjNQroWJ6pRwNH5nGyVjEq
-	FmK0m2zYNmi+3M06qibMNdjfgatSIyEmBz44AVrMmnS+CjSNo1JvYKHB8av790fg
-	1kFX2iLk/FYI1gv0/JmKVN7OZUN3ja+30NcTT3rNIJ4IwW4MZDDEhotl5gTxc4YU
-	4JDGc8KiPR/OuJeVLRlJfbYuNkVt+Tn74Go3rCUEod93bcW8JZMvpL7tzwBMl4Cn
-	A4Iv+eee3PozO28rH5ZEhgoC4pEFI9h/qUUvTtiaKE6E+0JLxczW44RCRAo4hnu9
-	oQ==
-Received: (qmail 1153633 invoked from network); 1 May 2025 21:44:47 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 May 2025 21:44:47 +0200
-X-UD-Smtp-Session: l3s3148p1@1TweRBg0oN0ujnsd
-Date: Thu, 1 May 2025 21:44:46 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH v9 2/2] i2c: riic: Recover from arbitration loss
-Message-ID: <aBPPLkmrYwSpNp6z@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>,
-	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20250430194647.332553-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <aBKFWxIRaa4W7TDf@shikoro>
- <CA+V-a8v5qFC+uxzC8Qw4F3M1XSFnVq90MWxbvmiRks=ZbkzZjw@mail.gmail.com>
- <aBMpjKtQYYB-teNt@shikoro>
- <CA+V-a8t8AApJTgF8Zc3w+JjAu6yPvzUEgTo0g+1H+6GhvJUdbA@mail.gmail.com>
+	s=arc-20240116; t=1746128698; c=relaxed/simple;
+	bh=HpxDL6ZEq/oUohRZHvp0vdmMaJS85URSzY0FtPADCTw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rFy0WdK8zydlVi68PvfID3vgkpZEEcageteCDYAkGpTVCqeA0GFaiKdepPfSKTRMnyum56RvEnCeFzxONO12Sxp304KyMcxDmmy73BL1gvVLv9uLEXVrkIQHbL4EzjepmgwAii9jxyGTAHub83V2L5NMCEwGF24529k7i0N+B0Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 701CAC4CEE9;
+	Thu,  1 May 2025 19:44:57 +0000 (UTC)
+Date: Thu, 1 May 2025 15:45:03 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
+Cc: paulcacheux@gmail.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
+ Desnoyers <mathieu.desnoyers@efficios.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: fix race when creating trace probe log error
+ message
+Message-ID: <20250501154503.2308f177@gandalf.local.home>
+In-Reply-To: <20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com>
+References: <20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="faLuQdkgOFz/iIk7"
-Content-Disposition: inline
-In-Reply-To: <CA+V-a8t8AApJTgF8Zc3w+JjAu6yPvzUEgTo0g+1H+6GhvJUdbA@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+
+On Tue, 22 Apr 2025 20:33:13 +0200
+Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
+
+> From: Paul Cacheux <paulcacheux@gmail.com>
+
+Sorry for the late reply, I just noticed this patch.
+
+> 
+> When creating a trace probe a global variable is modified and this
+> data used when an error is raised and the error message generated.
+> 
+> Modification of this global variable is done without any lock and
+> multiple trace operations will race, causing some potential issues
+> when generating the error.
+> 
+> This commit moves away from the global variable and passes the
+> error context as a regular function argument.
+> 
+> Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
+> 
+> Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
+> ---
+> As reported in [1] a race exists in the shared trace probe log
+> used to build error messages. This can cause kernel crashes
+> when building the actual error message, but the race happens
+> even for non-error tracefs uses, it's just not visible.
+> 
+> Reproducer first reported that is still crashing:
+> 
+>   # 'p4' is invalid command which make kernel run into trace_probe_log_err()
+>   cd /sys/kernel/debug/tracing
+>   while true; do
+>     echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
+>     echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
+>     echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
+>   done;
+> 
+> The original email suggested to use a mutex or to allocate the
+> trace_probe_log on the stack. The mutex can cause performance
+> issues, and require high confidence in the correctness of the
+> current trace_probe_log_clear calls. This patch implements
+> the stack solution instead and passes a pointer to using
+> functions.
+> 
+> [1] https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawei.com/T/
+
+Honestly, I don't like either approach.
+
+What could be done is wrap the internals of the function in a mutex so they
+are not re-entrant (using guard(mutex)). If two error codes are happening
+together, just let it get corrupted. There should never be two additions at
+the same time, and if the admin is doing that then they deserve what they
+get.
+
+I don't care if the error log gets garbage if there's multiple accesses at
+the same time. The fix should only prevent it from crashing.
+
+-- Steve
 
 
---faLuQdkgOFz/iIk7
-Content-Type: multipart/mixed; boundary="x5L95JmzpuD0L5NN"
-Content-Disposition: inline
+-- Steve
 
-
---x5L95JmzpuD0L5NN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-
-> From 10=C2=B5s to 50=C2=B5s, the clock pulses are part of the recovery se=
-quence.
-
-Ahh, that explains. I thought this was all after the recovery.
-
-> Around 55=C2=B5s, the transfer function starts attempting to send data
-> hence the clock pulse.
-
-The short SCL spike around 55us is still strange. However, we might
-violate t:buf time between STOP and START. Can you please try the
-attached WIP patch?
-
-> The slave device is versa clock geberator 5P35023 (exact part number
-> on SMARC RZ/G2L 5P35023B-629NLGI)
-
-Hmm, G3S has a versa clock generator as well. But I can't find a way to
-wire GPIO lines to RIIC1 or I2C_PM.
-
-
---x5L95JmzpuD0L5NN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=buf
-Content-Transfer-Encoding: quoted-printable
-
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 7ad1ad5c8c3f..42058c789f3f 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -278,6 +278,8 @@ int i2c_generic_scl_recovery(struct i2c_adapter *adap)
- 		}
- 	}
-=20
-+	ndelay(RECOVERY_NDELAY / 2);
-+
- 	/* If we can't check bus status, assume recovery worked */
- 	if (ret =3D=3D -EOPNOTSUPP)
- 		ret =3D 0;
-
---x5L95JmzpuD0L5NN--
-
---faLuQdkgOFz/iIk7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgTzyYACgkQFA3kzBSg
-KbYb6g//cjsuZlboo7q6XgI773+cQbtUobkeVe8nQq07XQAbBXjY1Y8COfRGvd4M
-NEpaExCKxsTHnpUmMbsCWxn3yjsXndRYeROO2pYmDqbvzlDkVSGDVVT5uv43aoGO
-Pb3//LREZ+Yek8/aQ8Xs1DtiA49dHJpJPRizdsUr7IyKR3NWtZqs4gdWHGL9ByTu
-Or2fq+ioBzQAPPRBYYyAYnbEwsDK6zULzDgtOZqSzmqqU7l/CAfjt8EcFjubAz85
-r5IL0jQJp/3sP6fNRd9ZLben9mmWh+pl5b4uBU3ub0hZIX3TxUNOqaIiuUxF9sZC
-cv9bcMgr04sF6am4LHgAkqDnPikzZBoofT4DYtrhfK3Lblq9RhLUnULJocfgnFj9
-eBZdrgcWfjxToDCxCACGgJRm+CinQmqY6Uy/mJ0ecI0eC9B8LYm6G5FnHhLcrJhW
-sw6J+fRtY4rKdE2lg8gW3N/6AMxW3v0n4QeL9G4qfDDn5mnxs+S7vndU5fgwgzZq
-P7/I4oFqcKlqUKDw5FU9kHUKmK5d9u/ad706fN9CcOZjyo1fo8jGn98o5i3gJVve
-zdEGvwtguJsn7EZxqB8jydqOZ/f2FqGsPX+4sUuDqoXD3Qk7SsFuXuKL3kM5Zl+Z
-zy12HuAw4r8U2QoloStvhyIMfjGDkGzBEKJcGYDuEggcKI90Atg=
-=4/FD
------END PGP SIGNATURE-----
-
---faLuQdkgOFz/iIk7--
