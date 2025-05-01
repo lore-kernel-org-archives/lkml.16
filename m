@@ -1,115 +1,90 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58097B674;
-	Thu,  1 May 2025 20:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977C11F582F
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:34:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746131606; cv=none; b=rditBOViW3CXIopBRsgZ99uXP08+EFMRqU9iRkdB6ofFzudXlU1mfzKHW8BYBEFUy+krHpoYyNVYi5eqH5JCTCJMemOjVsX2o4ifm9xiwhsZoBk91DgIHP40L+7A0MjpZwZDjU8cHmiXX0GnDttiEUZUhW3O+KtO80sDhaKrs2g=
+	t=1746131681; cv=none; b=H2HAD1YWZ8ldy4dmyjqMDqBB/hL9e5I0FinnkJHu6LCLxeS8/l24RpTzIDFSGeZ0FZECLrQWWqAeFHcT/eTgp80B5pXXv3Nil/Jn5zY8YETOWU24u88mWY072o4MauNytNlB41qJFTBhsdNQRqAsfyE6UJp1kr5/oNI8FkPHzZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746131606; c=relaxed/simple;
-	bh=/2t7LuQIYbD3dpPBTrSOGwU7/eeSHO10yiPCPagvWTE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kluSOdaonqK/ngMLlSs/sVg/h30TU1UZoLEpTTVfhQqAimkzQxttzDIIFQzQieHTvlVinZ/g1WQPfqCDoTKX+XfwUD/qygYgJbs2rffTzdpxcqsNxLUhUnQ2s6h/u+a4mtyvqR8dPiABOivgmS1GLSktIPbXHv7owMsIMxT0rgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvDLjiT5; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746131681; c=relaxed/simple;
+	bh=8pF1wWpVwTMd7z0FTKQe8nYgw+2TdAxHhQ+Tcw3TpA8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PbHEkikwxMtjTuWPRg/etB91dRoYtfsMRKm7uMYFYJAWBR5+y4lxBWNH1LeyA34OvFjfEpyPeQ+MjI0pNliEqiCJ+pHUtXIR/EyTdVrFn/YzmcubEAUdHpgFao+s3vIKHNMNpVZxn0z/MuDiCIwGgryfcD1NRtQkm0wtdCzdcns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=suVW45fC; arc=none smtp.client-ip=209.85.161.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvDLjiT5"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c0e0bc733so1202252f8f.1;
-        Thu, 01 May 2025 13:33:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="suVW45fC"
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60402c94319so927486eaf.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:34:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746131602; x=1746736402; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=JXedPWzR0RWF5bLPFtldD29i8ddEmiaxTMB0XkP+rbc=;
-        b=DvDLjiT51YEgd/of7xGQUCqAJBJNKmtfy0s8M8WzGtaZUSSQ/ABVXyzaN6GQbdScbf
-         h3oNdZvzUiJoc3DfF4CW3zE/ME/EdSxpqu6pc/LRLsPuGc6Xb8TP84w9JiXqSuDH4ojY
-         DYFB8/x4zeSDJEWno+WuiZrGQ8wKDN3e9npKewkyAp7TwXfgM7HeaeLgLnAhsI7OqcuH
-         rM7J9RCXz+rLaLWhBTUEsKB1RLIYSRrmDI1YaOIckc2h6l7QO4jMyU93mIGuCUs3e38P
-         RH5N1/wWZxL+e+BQ5gWs2Cprn6/Y3gjo5JUGr2zyHoEe9SxkAlfxHC/jXzLy557sTmI/
-         C5tQ==
+        d=linaro.org; s=google; t=1746131678; x=1746736478; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=s2/TuQL3kQKm2Ps4XEUaXLRCzG1Av6dinL8AdUC/eeo=;
+        b=suVW45fC2QAOMX2j/ERCAKJ4AkCkIlmTD19KOe9xxQduwjhLEWOOrSmugompilQfyL
+         mYToKXYBINzSUwB7suMoA9wwgAzCTejNCKdtbnHdJ7kbOVCDmugy6FxMD2uQmhYpz+dI
+         yk6u+MUYxZ5WRc4svO+JX91J92X9c6NZw6bEpCNrfpgU6B6oi7mARNe83mbg1mehSiuz
+         ydoU9mzIV0JCRtUud89C51cN5zEajESLmRUi1ZDqwJJZxczWjvZ26h1kl9N5VRK25X4P
+         pWtSeIo8Wk+V+CT7q1acuD4fl/30T7Urtbq+qkMLcCkj4yNA/hgbrXUIqf873o26/puG
+         UGmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746131602; x=1746736402;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1746131678; x=1746736478;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=JXedPWzR0RWF5bLPFtldD29i8ddEmiaxTMB0XkP+rbc=;
-        b=ufSDdcTE9iosl2C4rp+MwFoECQSz5sZY/r+opcqQfHbJDVYGTsGuYVXindY81yRzor
-         3VZHVYChWw2TOnpjlx+bkSNCIuFeeGrNUnbZUl82f8XIMMhS4PU6X2WFg/QBRbVtAMUs
-         mR/NRjJPvjaUP9miIxhtBZs3FZx+XqzQbvXRlEXW2LdVAeD8T6+5jlKRx3v5eQJbHcJi
-         0rSN3w1cHT1PrHEyR9FBIPpabU0XyFJ1ru0tHrRUlGWgtQxfguBXcAQf7Q88qbZXVLOi
-         5C0M3nkrudd9203DRdcU9lXAnfWOQ3NfSL6utx4GRI4xmpGQILExr7Rv1me9KsYL4cI2
-         nNMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV25PbbpuEcbvOR/VatmXgnU2q9cZKtaSy6zXfWcYPm0AJWbGt2AxOnsxz1nsDQvNjxILCUzMxMNJentTue@vger.kernel.org, AJvYcCX14ICLktqxxtimguAt5eYRJH1pilHaD6uVpHgylyB399+vSZPoyVEeyYBDrLrdWkFKf+1xceM+fy4D@vger.kernel.org, AJvYcCXcZkByzx5FTd26gDm7RWRqy2moi5O0uajBy9a51ps1oPa5j66rxCuUMsClZ3CjKUvwtODMSKX+YMCH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS2xkmfnOTSLC3qGI3DJOboi2xg8NNMmDF+uBEPeu6epSKDj2v
-	juRxZl59b3NU0EwCRPQxX2Dte00TZ91+OqCVLzTSmfoD3SIhsdmb
-X-Gm-Gg: ASbGncs3Kv/jTPvWp68KPDqJNAsj8n4IbCVRo5NensnePnSYnZgEooZvQa/K8RZvstW
-	USCebZd1p6wj2TKG5o7YguinI7k4tlMkIdzkn4waUrTdVLKswQ533unB4MHKheUO0YPdAgp9tBt
-	TJWlFgM3OiEiOrfyvOEpNH8D8rTilEbZOhP8w3XJjXXQnb1keBLT8JDlggV+lJamn9V/6zsk2I/
-	sWPFZhBXqeDxpyRu0e3GJe1uuUvJ/4KiJREw1FdHrJLaZZjJtD/FbNDdpETk8NKfmwEvzqnRTqI
-	Ys5EQIQwNCEEpRB0ITrpiwu2ABRKs5N2rHg27N2XtLxseJ9i+hKT/AWgGz7/HQxw
-X-Google-Smtp-Source: AGHT+IFGyG/qv4mmy5rvpksMU2PDIUwjBXsC8/JIlTgclujNcpO4cvR6tKZfQKoPAqehvg+huI4Alw==
-X-Received: by 2002:a05:6000:1867:b0:39c:e0e:bb46 with SMTP id ffacd0b85a97d-3a099ad3478mr160848f8f.4.1746131602298;
-        Thu, 01 May 2025 13:33:22 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:f0e:4490:d947:2c92])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099ae7b09sm165768f8f.48.2025.05.01.13.33.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 13:33:21 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] dt-bindings: i2c: renesas,riic: Document RZ/V2N (R9A09G056) support
-Date: Thu,  1 May 2025 21:33:10 +0100
-Message-ID: <20250501203310.140137-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        bh=s2/TuQL3kQKm2Ps4XEUaXLRCzG1Av6dinL8AdUC/eeo=;
+        b=ZbxlW0PebnwDu+kxiVRwe8/fzBT8nuPJCoY1Wv9IPLtMsme7GHCgJGAALL1vFmULls
+         7wkRDM1O1jxHhAfsc/jjP5zML1qMtEhgeaJ0ilnnHTyKq7C9Yfsd2wCNG8L2bN9WaTl2
+         jl8BvoLYkRmVsrL608Ls4GUkZ45iiFdJpapJoH7bMWl1ktu2Kuf9C6BPUr2M0k0vBupO
+         itmkPoq6wn4kq0RgxCdw0qc29N0E5IGIaU0RO/FWGw6qn/wYUZuihjCmJjJrn3Cuaiig
+         ywriegxpBide8huFJzw1T6g0+UDteeVXmM3ofd2N9RS271uVLDKO/omqthiCwl8mGvUN
+         pI8g==
+X-Forwarded-Encrypted: i=1; AJvYcCU8cuj1FSKRLh24zWX4vFFdDLbgZB+losqp2POsusIp1GtHXrixM9sGqSenSGkrfjuSDGWvRvn/iyIN9CA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1/EuQs0lWyuiLxlQRvt4M9wKRYZlYJNA2gJ9zVHCZA7GnfW9m
+	HuEO/7Y0C19updMPdr573nOoH9fnoLrxk51zO2jnqB7rphryLP+aP07izrvoDDRL5eWDJ1E/CP3
+	oe/IcfJRuZcMAhfUP7hvwV3QIM2SOqP5d1HMn0A==
+X-Gm-Gg: ASbGncuWukAg1aNlY8YVxCqbMZ+aw3ETufaE169e6nAq3bVwj46pasZVgG1MENQe7oC
+	fZ0yPk4Nrz4dC6H5x1vV/KeV0mcLTTI2q1eaBDrJqANw8UP7TYFZGtae9XAsR5Gr+QgSTGRtCeZ
+	jUCv6BTq/hhRENiR4AjbXprA==
+X-Google-Smtp-Source: AGHT+IF6bq7NXLJi5546fpk08Q9+VHouk/Ivf8VOZeleLm+nJv5PjsAxN/cnoxBRn6+mutu/ZCv+/Az9E+zhUFk9998=
+X-Received: by 2002:a05:6871:7419:b0:2d4:d820:6d82 with SMTP id
+ 586e51a60fabf-2dab3313467mr143467fac.26.1746131678613; Thu, 01 May 2025
+ 13:34:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
+ <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-5-1bcc44fb1d55@linaro.org>
+In-Reply-To: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-5-1bcc44fb1d55@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Thu, 1 May 2025 21:34:27 +0100
+X-Gm-Features: ATxdqUG_Q1uY69qq7IbymtjMCwucexqjDWrXAetFETrm0a0bcDxzCmS7-g07qNE
+Message-ID: <CADrjBPrRmQKvuTMZXAF+gVgMzkDs1=9LkwrW7CHGVEYG8c8bsg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] soc: samsung: exynos-pmu: enable CPU hotplug
+ support for gs101
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Alim Akhtar <alim.akhtar@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, willmcvicker@google.com, 
+	kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Hi folks,
 
-Document support for the I2C Bus Interface (RIIC) found on the Renesas
-RZ/V2N (R9A09G056) SoC. The RIIC IP is identical to that on RZ/V2H(P),
-so `renesas,riic-r9a09g057` will be used as a fallback compatible,
-enabling reuse of the existing driver without changes.
+[..]
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- Documentation/devicetree/bindings/i2c/renesas,riic.yaml | 1 +
- 1 file changed, 1 insertion(+)
+> +
+> +       regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
+> +       regmap_write(pmu_context->pmuintrgen, GS101_GRP2_INTR_BID_CLEAR,
+> +                    reg & mask);
 
-diff --git a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
-index 1b7fed232642..cc39511a49d6 100644
---- a/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
-+++ b/Documentation/devicetree/bindings/i2c/renesas,riic.yaml
-@@ -29,6 +29,7 @@ properties:
-           - enum:
-               - renesas,riic-r9a08g045   # RZ/G3S
-               - renesas,riic-r9a09g047   # RZ/G3E
-+              - renesas,riic-r9a09g056   # RZ/V2N
-           - const: renesas,riic-r9a09g057   # RZ/V2H(P)
- 
-       - const: renesas,riic-r9a09g057   # RZ/V2H(P)
--- 
-2.49.0
+I just spotted a typo here in this patch, it should be
+GS101_GRP1_INTR_BID_CLEAR. I'll send an updated version.
 
+Peter.
