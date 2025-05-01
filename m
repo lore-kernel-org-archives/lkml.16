@@ -1,320 +1,172 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461F9227EBB
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B71122FAC3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129667; cv=none; b=Yr1b5S+H9jyMWTN4uYFCyzu73CBDW3OSBVcglvbOkAk7yUHIwkO5CgN0kQTe+Wd119MOnIpbUQjEVbBrsuURrNxdOf7RicqrNcQhHGicOfICxvCRbONR936nYpJ1SQdyB/cciTgyCP4YtgOOhtUAGN4E6Pjd/Dqfr6bJv2tUcRI=
+	t=1746129723; cv=none; b=nEPKADpyVN4e0U7TIF/9Ou+51ojErANxdgKk6UXgAx/h4eCAM4ohgDWsFrNEO2GPypOqm+EhdbC4Mg3EEuOuOS1Dbxoy6EptWI59N4N7huBtTWRe8MgtJ8bImNQInx4eED0iYHVc1rgDqZ2mY1N77FutNolxCldFCNKyhZTmG+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129667; c=relaxed/simple;
-	bh=nT7irAcoMOVxGb/NBWDrICmDUO4Fi9T4Q/+UPfHwJHI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QyTB69gKWXZXa3BXNFsP5YsQimjm6TZ7wcRR5hX6iPbE5POPw+jDZwB9cY9atVvx5pImbVGRBFtoFAMzwRZhTryTPGZMFiSdLBIclUAFCxKmwRoX7PHOSKjirtEsK0SI1pxjBp1zg9W3JWYWPMaxwsyxANALlhResQ5hNCVyGRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=E87/lPnX; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746129723; c=relaxed/simple;
+	bh=hqOzvq9hMBH/9S3dZCaj6b8IzSWfiFtV9ykpUOZoLUU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YypdlUOdTjRIJIOAu6Yfe2rWMmPVTFcEB418lZeyOMLcK6UgOwY95OJncKGKbHkj/JfDnEgYXv6zTlDJI4KekVXcblu0LpaAzdu2UN/ni7oGYzVmXZySKXEWFAtUS3oWXv61kYA1mffuDn3cYh/h0t7WoGTS58fc7abfXFka/rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RUZXR+Sx; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E87/lPnX"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d44cb27ef4so3175ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:01:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RUZXR+Sx"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso7832325e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:02:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746129664; x=1746734464; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1746129720; x=1746734520; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VbGNADYFS0ijgDCzvqqK/aLm8mIJOEH7Kfr1J76MSj0=;
-        b=E87/lPnX3+rbB+FJMoRpALb/cruAjVJKF+oW+MVXFDCva6odULkpVLd3XPaLaG3q5r
-         jlfOJEkhBbSjrlRj/BjueR1+puyxVNLeorrQh7XyJjqjfyNG98O19973PfJIS8uIylac
-         kmk+I0cUGtacvIR7WtywtMHldI7IwkR390TeEQNvVfgYZGcPQCNF/bENIIM1WHPF/WMG
-         qKgx8HItSEMPimv/KilJPez2ZD3UW1Zsyg4ufF2PSJjupSaceEDcj1dWuqTTJl5MJzhy
-         XlyAMk0AYyJ3+zE7T5yl+RbuUzJwAp8tnvtphnBWy8qmqBVbD3ICllyV7V/I3LrxQtBV
-         ABSQ==
+        bh=Qw8sWllG6mUqgwvbsy2xT7usun9qvN+EL2eeXDknNyY=;
+        b=RUZXR+SxEZxsvOM4QRZz4r6Esi5QshT74K8GQ5m6SkzP8zZp/YR2xPfMDoDX0JoUdn
+         w/a/Yhq+EgCNz5WK2kQHDSUQKRwYgG8+uXGUmPeQDMepPNT4z9xvOOi2JPrh0GwWIj4U
+         iv8NUcw4Y6Q3n0dR8vxnHLsTLuVib0z7MOhq4gGfSGZdk7M/PDpenGtN5BJSPo2OuR5T
+         vQixSN0o5EVXv8zFco9uApSgTzVwsEG4eE7bc4h1PefyTDtVYOszevtKf+9T+SYL8JtT
+         0JtH06JboQsG3bEJOeUhF/WZhJgfSocpvumyfiQBQO1QboZxfe8u8OBd+HV0Hb/d7oFS
+         qFFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746129664; x=1746734464;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1746129720; x=1746734520;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VbGNADYFS0ijgDCzvqqK/aLm8mIJOEH7Kfr1J76MSj0=;
-        b=AfEJGYIMqiVaPBvTWml52N6pggFZ5fu6Qqy/ROoAYCpI8lksPsv9BL2qnv/RPwqS7u
-         SfZjPEIU+9BtJkxfBm8jljR+R+Ad8LOQVasEw3ynpswD5wGG1nJJXgs6s1P7tGZgvd7S
-         AeOFVf6rV5aliQQIBxLOzMqwgJsQT8ik173U1tgm+h4TybOln8jlG/HwMd7kOUd7WP6O
-         q0M99crtFX8ShoKY8F/8h07M7oKtWUjWkhGo40IE6OdRPO62hkudel6lzjK7NIiurlGM
-         iwsgZThm3Sa7yjACg6nrM9RjPqRlsGVlp4dYsUgS8JOXLK5egBRGHSMTZdqyHKI2GiTS
-         CiBw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCQgb7wLDcnZ4omF3YUAizRYQEKE+vPynV0lU9DVmY2yRcw0/7voCqAHi02uOo12jnY21WdYdytgU05zs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbvyEIJ8BwUoz+tC279lggsfm46PCIU2mDrEEJbo0jNkJxZvPA
-	nVlm26jyekgrFV9O2hk0I/kb9GN5DW16FcqKdhm/doz5GIbzaPNbVF40vrMPreyqyJXJ/clCquO
-	CEY/P3SiBGyHis9Q19T4cLQxUy1U+u48iPTRA
-X-Gm-Gg: ASbGncuLl4s39DeZfhLym3wTVS9oRNHQB/PBT+ZafvRt0Z+zaR1W86jFykv8bvmUflX
-	2p71hf19Lh9YBmadkAy5qEVZV1Vjz6Hj7PulWRfUFuL3QJwaAxA3JVM7iDYdrKME3ymgVzfnGHM
-	+SQ3lxTIlLC8bMI06u+WgHGGKDD/8hOh/Fmz8DRIOuQi9NRU0IcOM=
-X-Google-Smtp-Source: AGHT+IGqKuhWOTauNjNyIlB24t+gYyxpSL6jy+DSqXmrJ9FLRCU+opH/3b7S5WP3C6dqiPo9MDbBzzSXY5lRDYWOmj0=
-X-Received: by 2002:a05:6e02:1f85:b0:3cf:f8c0:417a with SMTP id
- e9e14a558f8ab-3d96f1464a4mr5191135ab.0.1746129663955; Thu, 01 May 2025
- 13:01:03 -0700 (PDT)
+        bh=Qw8sWllG6mUqgwvbsy2xT7usun9qvN+EL2eeXDknNyY=;
+        b=Sjxm5bdQfdh+TKKAFn35zNu+6kz87Le+jZnJ5hWreI++EL8vir74ATuwPbuyPVWNUC
+         5ziXUZikt7uFfC85cALjIEEa5/yGW5e/HvTrO8VVN2ThiCnxNKW+IMECH59sWUX2v/up
+         +o/vUh2ZoPtBV+PdwlmnO6uoI+q5uvQh2y268HN6zMuun6s7yx9NVgB054nVi4SYVj0O
+         QjkGGaOP46AAdgjxhtFyEkOnoSGIbI1ReIdbV0yDQlyBpf+gHw/oLi1dLW8Dy1xAE9sM
+         mXk4iJ7BGDtL2OiNeQwoLzQoJWiZIXtTbGZTyM+SeNMknHA+X+tQzclBkSJbrgEVP2rK
+         gE6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVTQGH+0QzxmjMGByHjCtJt+/4C46eAAm8ItpbbQ+R+9Rya5/28ao0ZPN4oOWUzOnzSjdH3zWRxVL9UpRw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY8AouLJh4QHGliUpJv4jqXTGMNUSlQrWysK/DLdpui8i9KEx6
+	3vUe9FcQw3hprVR0ukdYQoA4icmdSQocAM70PPRoxWx3+sdpmvQ9MkgxFA==
+X-Gm-Gg: ASbGncv5w3OndbcVlZi75Ca4EDJiZsx2zFsIaNkjZOMTxynoDOoGm92cGGxLRU3eJho
+	zrr/6ROy1pcXM26XBC4q9a2Ym2MDFcrhN7Y5fSkwsJqUMEgH9n7sr577Kps4rTKbPUqg94QfaTI
+	QUCyEA0TNgaVOTLtH9YCk4dS4cvz362Cd72EawDqgllDkfM2OGQjGA2Xs5hfmDb8trKRTRKi0ON
+	1i/2yRk56M24OplkJ4QOGzBWB2k8k+qtnQhJXF9IpAAxY4bXnOpd7s2CqfuFqlSdNweROYeq/EE
+	wnsba8SqUVFtxBTdedwXsi2gjZzyH7ognev4T++St4362Tj5YbuF9rMY3c7zMc9DaiQ7xRQ4j1E
+	giHE=
+X-Google-Smtp-Source: AGHT+IE5LWE3ytNc9YINM16DWIm610BeRRonqCniOHPyNXdGUvw7nM9ANnneGmjycXx79Q1G3siPZA==
+X-Received: by 2002:a05:600c:350e:b0:43c:e478:889 with SMTP id 5b1f17b1804b1-441bbe2c815mr1506535e9.0.1746129719929;
+        Thu, 01 May 2025 13:01:59 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10083sm92350f8f.62.2025.05.01.13.01.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 13:01:59 -0700 (PDT)
+Date: Thu, 1 May 2025 21:01:58 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Jann Horn <jannh@google.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, Sumit Garg
+ <sumit.garg@kernel.org>, op-tee@lists.trustedfirmware.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit
+ kernels
+Message-ID: <20250501210158.5b2c86a7@pumpkin>
+In-Reply-To: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
+References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501184143.873536-1-thomas.falcon@intel.com>
-In-Reply-To: <20250501184143.873536-1-thomas.falcon@intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 13:00:52 -0700
-X-Gm-Features: ATxdqUE5xfxc7WcplfFQMIyTj7qjV2GnFDv3a4A_FPaFhgm8Z5dnRUBvdn2vWbE
-Message-ID: <CAP-5=fXorDgm-oJS9kC6cxCEvS9-Gz5Uh_5V4MtzCYV3pXAxCA@mail.gmail.com>
-Subject: Re: [PATCH] perf top: populate PMU capabilities data in perf_env
-To: Thomas Falcon <thomas.falcon@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 1, 2025 at 11:42=E2=80=AFAM Thomas Falcon <thomas.falcon@intel.=
-com> wrote:
->
-> Calling perf top with brach filters enabled on Intel hybrid CPU's
-> with branch counter event logging support results in a segfault.
->
-> $ ./perf top -e '{cpu_core/cpu-cycles/,cpu_core/event=3D0xc6,umask=3D0x3,=
-\
->         frontend=3D0x11,name=3Dfrontend_retired_dsb_miss/}' -j any,counte=
-r
-> perf: Segmentation fault
-> -------- backtrace --------
-> ./perf() [0x55f460]
-> /lib64/libc.so.6(+0x1a050) [0x7fd8be227050]
-> ./perf() [0x57b4a7]
-> ./perf() [0x561e5a]
-> ./perf() [0x604a81]
-> ./perf() [0x4395b5]
-> ./perf() [0x601732]
-> ./perf() [0x439bc1]
-> ./perf() [0x5d35b3]
-> ./perf() [0x43936c]
-> /lib64/libc.so.6(+0x70ba8) [0x7fd8be27dba8]
-> /lib64/libc.so.6(+0xf4b8c) [0x7fd8be301b8c]
+On Mon, 28 Apr 2025 15:06:43 +0200
+Jann Horn <jannh@google.com> wrote:
 
-Thanks Thomas. Could you generate this backtrace in GDB? I did write a
-patch to symbolize backtraces like this:
-https://lore.kernel.org/lkml/20250313052952.871958-2-irogers@google.com/
-Sadly without any reviewed tags and unmerged - the code calls routines
-that malloc so it isn't strictly sound if say the backtrace was needed
-from a SEGV in the malloc implementation, it is nicely
-self-referencing the perf APIs, ..
+> The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
+> 32-bit kernels: Multiplying a user-provided 32-bit value with the
+> size of a structure can wrap around on such platforms.
+> 
+> Fix it by using saturating arithmetic for the size calculation.
 
-> The cause is that perf_env__find_br_cntr_info tries to access a
-> null pointer pmu_caps in the perf_env struct. Presumably this would
-> also be an issue when using the cpu_pmu_caps structure available for
-> homogeneous core CPU's.
+Why not just add a sanity check on 'num_params' after it is read.
+Max is 31 (1024-32)/32), but any sane limit will do because of
+the buf.buf_len test.
 
-I'm a little confused in the top code, we have the global perf_env
-being used and one in the session:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n649
-```
-ret =3D evlist__tui_browse_hists(top->evlist, help, &hbt, top->min_percent,
-      &top->session->header.env, !top->record_opts.overwrite);
-```
-and the global perf_env:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/builtin-top.c?h=3Dperf-tools-next#n1641
-```
-status =3D perf_env__read_cpuid(&perf_env);
-```
+	David
 
-I kind of wish we didn't have the global one as what's the deal with
-ownership with it.
-
-> Fix this by populating cpu_pmu_caps and pmu_caps structures with
-> values from sysfs when calling perf top with branch stack sampling
-> enabled.
-
-I wonder if we could encounter similar problems from say a perf script
-handling live data and so some kind of lazy initialization should be
-employed. It is hard to say without seeing the backtrace.
-
-Thanks,
-Ian
-
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> 
+> This has no security consequences because, in all users of
+> TEE_IOCTL_PARAM_SIZE(), the subsequent kcalloc() implicitly checks
+> for wrapping.
+> 
+> Signed-off-by: Jann Horn <jannh@google.com>
 > ---
->  tools/perf/builtin-top.c |   8 +++
->  tools/perf/util/env.c    | 114 +++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/env.h    |   1 +
->  3 files changed, 123 insertions(+)
->
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 1061f4eebc3f..c2688e4ef3c4 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1729,6 +1729,14 @@ int cmd_top(int argc, const char **argv)
->         if (opts->branch_stack && callchain_param.enabled)
->                 symbol_conf.show_branchflag_count =3D true;
->
-> +       if (opts->branch_stack) {
-> +               status =3D perf_env__read_core_pmu_caps(&perf_env);
-> +               if (status) {
-> +                       pr_err("PMU capability data is not available\n");
-> +                       goto out_delete_evlist;
-> +               }
-> +       }
-> +
->         sort__mode =3D SORT_MODE__TOP;
->         /* display thread wants entries to be collapsed in a different tr=
-ee */
->         perf_hpp_list.need_collapse =3D 1;
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index 36411749e007..37ed6dc52cf3 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -416,6 +416,120 @@ static int perf_env__read_nr_cpus_avail(struct perf=
-_env *env)
->         return env->nr_cpus_avail ? 0 : -ENOENT;
->  }
->
-> +static int __perf_env__read_core_pmu_caps(struct perf_pmu *pmu,
-> +                                         int *nr_caps, char ***caps,
-> +                                         unsigned int *max_branches,
-> +                                         unsigned int *br_cntr_nr,
-> +                                         unsigned int *br_cntr_width)
-> +{
-> +       struct perf_pmu_caps *pcaps =3D NULL;
-> +       char *ptr, **tmp;
-> +       int ret =3D 0;
-> +
-> +       *nr_caps =3D 0;
-> +       *caps =3D NULL;
-> +
-> +       if (!pmu->nr_caps)
-> +               return 0;
-> +
-> +       *caps =3D zalloc(sizeof(char *) * pmu->nr_caps);
-> +       if (!*caps)
-> +               return -ENOMEM;
-> +
-> +       tmp =3D *caps;
-> +       list_for_each_entry(pcaps, &pmu->caps, list) {
-> +
-> +               if (asprintf(&ptr, "%s=3D%s", pcaps->name, pcaps->value) =
-< 0) {
-> +                       ret =3D -ENOMEM;
-> +                       goto error;
-> +               }
-> +
-> +               *tmp++ =3D ptr;
-> +
-> +               if (!strcmp(pcaps->name, "branches"))
-> +                       *max_branches =3D atoi(pcaps->value);
-> +
-> +               if (!strcmp(pcaps->name, "branch_counter_nr"))
-> +                       *br_cntr_nr =3D atoi(pcaps->value);
-> +
-> +               if (!strcmp(pcaps->name, "branch_counter_width"))
-> +                       *br_cntr_width =3D atoi(pcaps->value);
-> +       }
-> +       *nr_caps =3D pmu->nr_caps;
-> +       return 0;
-> +error:
-> +       while (tmp-- !=3D *caps)
-> +               free(*tmp);
-> +       free(*caps);
-> +       *caps =3D NULL;
-> +       *nr_caps =3D 0;
-> +       return ret;
-> +}
-> +
-> +int perf_env__read_core_pmu_caps(struct perf_env *env)
-> +{
-> +       struct perf_pmu *pmu =3D NULL;
-> +       struct pmu_caps *pmu_caps;
-> +       int nr_pmu =3D 0, i =3D 0, j;
-> +       int ret;
-> +
-> +       nr_pmu =3D perf_pmus__num_core_pmus();
-> +
-> +       if (!nr_pmu)
-> +               return -ENODEV;
-> +
-> +       if (nr_pmu =3D=3D 1) {
-> +               pmu =3D perf_pmus__scan_core(NULL);
-> +               if (!pmu)
-> +                       return -ENODEV;
-> +               ret =3D perf_pmu__caps_parse(pmu);
-> +               if (ret < 0)
-> +                       return ret;
-> +               return __perf_env__read_core_pmu_caps(pmu, &env->nr_cpu_p=
-mu_caps,
-> +                                                     &env->cpu_pmu_caps,
-> +                                                     &env->max_branches,
-> +                                                     &env->br_cntr_nr,
-> +                                                     &env->br_cntr_width=
-);
-> +       }
-> +
-> +       pmu_caps =3D zalloc(sizeof(*pmu_caps) * nr_pmu);
-> +       if (!pmu_caps)
-> +               return -ENOMEM;
-> +
-> +       while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
-> +               if (perf_pmu__caps_parse(pmu) <=3D 0)
-> +                       continue;
-> +               ret =3D __perf_env__read_core_pmu_caps(pmu, &pmu_caps[i].=
-nr_caps,
-> +                                                    &pmu_caps[i].caps,
-> +                                                    &pmu_caps[i].max_bra=
-nches,
-> +                                                    &pmu_caps[i].br_cntr=
-_nr,
-> +                                                    &pmu_caps[i].br_cntr=
-_width);
-> +               if (ret)
-> +                       goto error;
-> +
-> +               pmu_caps[i].pmu_name =3D strdup(pmu->name);
-> +               if (!pmu_caps[i].pmu_name) {
-> +                       ret =3D -ENOMEM;
-> +                       goto error;
-> +               }
-> +               i++;
-> +       }
-> +
-> +       env->nr_pmus_with_caps =3D nr_pmu;
-> +       env->pmu_caps =3D pmu_caps;
-> +
-> +       return 0;
-> +error:
-> +       for (i =3D 0; i < nr_pmu; i++) {
-> +               for (j =3D 0; j < pmu_caps[i].nr_caps; j++)
-> +                       free(pmu_caps[i].caps[j]);
-> +               free(pmu_caps[i].caps);
-> +               free(pmu_caps[i].pmu_name);
-> +       }
-> +       free(pmu_caps);
-> +       return ret;
-> +}
-> +
->  const char *perf_env__raw_arch(struct perf_env *env)
->  {
->         return env && !perf_env__read_arch(env) ? env->arch : "unknown";
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index d90e343cf1fa..135a1f714905 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -152,6 +152,7 @@ struct btf_node;
->
->  extern struct perf_env perf_env;
->
-> +int perf_env__read_core_pmu_caps(struct perf_env *env);
->  void perf_env__exit(struct perf_env *env);
->
->  int perf_env__kernel_is_64_bit(struct perf_env *env);
-> --
-> 2.49.0
->
+> Note that I don't have a test device with a TEE; I only compile-tested
+> the change on an x86-64 build.
+> ---
+>  drivers/tee/tee_core.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+> index d113679b1e2d..acc7998758ad 100644
+> --- a/drivers/tee/tee_core.c
+> +++ b/drivers/tee/tee_core.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/fs.h>
+>  #include <linux/idr.h>
+>  #include <linux/module.h>
+> +#include <linux/overflow.h>
+>  #include <linux/slab.h>
+>  #include <linux/tee_core.h>
+>  #include <linux/uaccess.h>
+> @@ -19,7 +20,7 @@
+>  
+>  #define TEE_NUM_DEVICES	32
+>  
+> -#define TEE_IOCTL_PARAM_SIZE(x) (sizeof(struct tee_param) * (x))
+> +#define TEE_IOCTL_PARAM_SIZE(x) (size_mul(sizeof(struct tee_param), (x)))
+>  
+>  #define TEE_UUID_NS_NAME_SIZE	128
+>  
+> @@ -487,7 +488,7 @@ static int tee_ioctl_open_session(struct tee_context *ctx,
+>  	if (copy_from_user(&arg, uarg, sizeof(arg)))
+>  		return -EFAULT;
+>  
+> -	if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) != buf.buf_len)
+> +	if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) != buf.buf_len)
+>  		return -EINVAL;
+>  
+>  	if (arg.num_params) {
+> @@ -565,7 +566,7 @@ static int tee_ioctl_invoke(struct tee_context *ctx,
+>  	if (copy_from_user(&arg, uarg, sizeof(arg)))
+>  		return -EFAULT;
+>  
+> -	if (sizeof(arg) + TEE_IOCTL_PARAM_SIZE(arg.num_params) != buf.buf_len)
+> +	if (size_add(sizeof(arg), TEE_IOCTL_PARAM_SIZE(arg.num_params)) != buf.buf_len)
+>  		return -EINVAL;
+>  
+>  	if (arg.num_params) {
+> @@ -699,7 +700,7 @@ static int tee_ioctl_supp_recv(struct tee_context *ctx,
+>  	if (get_user(num_params, &uarg->num_params))
+>  		return -EFAULT;
+>  
+> -	if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) != buf.buf_len)
+> +	if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) != buf.buf_len)
+>  		return -EINVAL;
+>  
+>  	params = kcalloc(num_params, sizeof(struct tee_param), GFP_KERNEL);
+> @@ -798,7 +799,7 @@ static int tee_ioctl_supp_send(struct tee_context *ctx,
+>  	    get_user(num_params, &uarg->num_params))
+>  		return -EFAULT;
+>  
+> -	if (sizeof(*uarg) + TEE_IOCTL_PARAM_SIZE(num_params) > buf.buf_len)
+> +	if (size_add(sizeof(*uarg), TEE_IOCTL_PARAM_SIZE(num_params)) > buf.buf_len)
+>  		return -EINVAL;
+>  
+>  	params = kcalloc(num_params, sizeof(struct tee_param), GFP_KERNEL);
+> 
+> ---
+> base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+> change-id: 20250428-tee-sizecheck-299d5eff8fc7
+> 
+
