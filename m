@@ -1,116 +1,176 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+Received: from mail-io1-f80.google.com (mail-io1-f80.google.com [209.85.166.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291F8224AE1;
-	Thu,  1 May 2025 19:07:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9B25215191
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 19:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746126462; cv=none; b=E/BWVB8BSdPzHNie+dF2bukjq6OFCPZJaPoqo0UTaMjKqUaIz4/UARELiHDTjei51Me7Ax651hI5gB6xgMUj6t8tb+8DwPs9ZF8Snz78B0Yg1bacX/E/Q30HPnqFO4DYqlGBZFikbAgiJAhgTdbc9fO4TRv6lxhPxK9xmTxzT30=
+	t=1746126514; cv=none; b=aKT6RjLaLPMfX7qWXFsgpNBTIdmX+J+hxZ+jXG7BTdXW7XsYqsvT5pkOC5p4cKjkfx36UCeI/9nKBc5npmKZNlXYeSTl1oz9Wr9PWnDS6HUUTPfcleH3H5BpMVZ//qW9FjfEdEko3f3ogIK53RGA8BC3VOswhqO6d/rIcm6l9UM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746126462; c=relaxed/simple;
-	bh=YXKPVxRR7Upwwq5LKZvZEYOzYl8UfelO+cPhSJKCGp4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MLwtpFBh+nM6H4yMAofChvznPIXz09OpeNjLQ6zX3SWxAawZ42COmx32jDBsnat+rPL9Gdgt/COlfF6JIMcxW1pkGvBc26EzQ4AJY+PNVEKOXbTGJCQsSR8WQO0Fy7dyF/P6+vahbiOAc+xRS6UTJ/BxObpVSTI+6DOnJpApHkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dzydkw8o; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dzydkw8o"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac7bd86f637so437002766b.1;
-        Thu, 01 May 2025 12:07:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746126459; x=1746731259; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qsp9CaqkI2nnPLo+C7isQc9cYVKQaKUwpPDF4hWhLBE=;
-        b=Dzydkw8oe0zA2qq+AEJuUMC2BMe68TM+uoaJBq9pdiDKYKY8NHPQByUGUf59GUPsTm
-         mKn0PbfxQKKM1UhON43qFHmJFDlW91ueVd7FYSUYWj++eJ+qhu/Azx9wNIIMdp06W+Z0
-         lWKUmkjJAb0OF5n0S41vSWLJYe7YkXxjOySYroFlzroje2rdV14CPuh/2uhrOjIfl6ht
-         RTBuzaJPIylNtVfDOtPPCuN4EAw8Fdj6F8j5qU6CWFYmhZn91bh1gS1ueShCZwicrsV3
-         XBIAZCeBYaMD4LkosZKXO5kUMmMh3BaPl8rrhWZP+ZWfYMjYbRCjK5V95ZPLC++H2NQJ
-         Bukg==
+	s=arc-20240116; t=1746126514; c=relaxed/simple;
+	bh=hRXMGmdX4sI8PQPsecBDBIMgkvQACYqlRhAyIet5RHE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iBCnn3nVDhhjqbey3XqEUTBuJJi4V9erV1YxPvW8z1ud1coXbp/+Hniq7xv0UNWyM70TTMX/JirXzwlZsJfuBxcAMTsOW+M7LntnnX8Yj6NMptHz5yTX0oY9JjepecL2twL0OSLZ+7vJFhmjvyo53FzpyPxnlMzdFwjOZ17v5Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f80.google.com with SMTP id ca18e2360f4ac-85dad56a6cbso192720939f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 12:08:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746126459; x=1746731259;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Qsp9CaqkI2nnPLo+C7isQc9cYVKQaKUwpPDF4hWhLBE=;
-        b=nYPu2SqeSzlNyR1uoc/r0XTDoWsGyf3bWMLhxSzDEsGJ77eOCfJt2wWf2hjw8FqBoC
-         k5mcs1FE3YWnPaSggzgJOqQoS4zDhXIyoIXFXc3TN/ufQzHoFktp878bKB4G7+iG6kTw
-         csr+A7UwWlbpNg7CSi9YZy8zdyr/eGbasvm/AXuupDs4boBQJMDwuyQ8dQ/v9DugBLuJ
-         KUSAKXLweVHz5fuEgWQRrxTyfO9TSBeMbdzVk+uHnYOL2RuC8bDGhitnVYEyNZDZ1Q4R
-         ErYW+yjRxBJVeqRjSg3vDg1EaFNgeEFpKpYXax022MmHWg4j4i6u1ZnoaZWNj1ugq3l6
-         QvXg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3gQFbeB9+xvZYOZKcsx8L+anS9O/pVb6cBCGM+U36iA460H6O0lOcS+ry1Jp6ZoOC8nmUbwHKNUUffDha@vger.kernel.org, AJvYcCVPXGk3dUly3vbyvDv7d3bpPOwW8sL21YIsWOJsNcwcbIQVCGZ/hzV0KsJ1yWXJP/3j+pEzjWqAiTMPzeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK4bI1bzsc7JPUIinysN2TZ6KtxiTic8Q2NQR2mrt9307wmYy2
-	GS8TiA6KjXAP+qV6S5/ME8/QpAVsNTU+wAg4vUHpw0dmzVcvNK05
-X-Gm-Gg: ASbGncs5WTlo6wWUOh9lgn+9PTKroQOoE3vyzgYuQ8EYqGCfVxWIct+h87eXYlZcS+b
-	xLXgi+PuPCUzdYz2Dib+mGXxdtiqwbQMhrWIlI3b1NK+C29ZG0D2opbyClgE7AYSObmAMr0w+4O
-	05kJEQVdlaYduvPv47eW5GCLK3m/Sbf7I+MvsDb9Lffh7qiQrB5+28KOWDm57760b0XiY4uNs8U
-	rMBGtmvyQtpi3Ztj8AhFSNFGMLKXtdEhQXUC+Yb5a0ZeojkZFcfRqzzTsHVDFT30ZZ16t6dJ8tj
-	FRw6aHhVVBXPkJr9oHr2O5y2H/tYio5pV1uuVC0ELE6Hd0VelsgSorenBy4/V3AK/JEB
-X-Google-Smtp-Source: AGHT+IFPbjdkqPWUcDwWn3gcKgKCDuCT59+nrEo/GOkvbNTeX+sbsXL7iBibXH8JV2ff9RTUgMaADg==
-X-Received: by 2002:a17:906:4fc5:b0:aca:c67d:eac0 with SMTP id a640c23a62f3a-acefe63defemr318866466b.0.1746126459184;
-        Thu, 01 May 2025 12:07:39 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:2f0e:c50a:8800:cf9e:ee0b:4a01:37f6])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0c70c6917sm80349266b.4.2025.05.01.12.07.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 12:07:38 -0700 (PDT)
-From: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-To: clabbe.montjoie@gmail.com,
-	herbert@gondor.apana.org.au,
-	davem@davemloft.net,
-	linux-crypto@vger.kernel.org
-Cc: wens@csie.org,
-	jernej.skrabec@gmail.com,
-	samuel@sholland.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Ovidiu Panait <ovidiu.panait.oss@gmail.com>
-Subject: [PATCH 2/2] crypto: sun8i-ce-hash - use pm_runtime_resume_and_get()
-Date: Thu,  1 May 2025 22:06:51 +0300
-Message-ID: <20250501190651.3863582-2-ovidiu.panait.oss@gmail.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250501190651.3863582-1-ovidiu.panait.oss@gmail.com>
-References: <20250501190651.3863582-1-ovidiu.panait.oss@gmail.com>
+        d=1e100.net; s=20230601; t=1746126511; x=1746731311;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FKP0lSrriF9M2Hik4O8+o4MWhOfGEa/NCauFRhbmwFo=;
+        b=igPqBUXARlNe1njki9fImhe5v/Z4qxVlrsWZ8JyJ1PAuFvAjKOaE7DFszsnWg+KIZI
+         DsyhB6QchTsGsNXPzyEn2F8jXTm/Ip1chCCgN6xhJ7cov1HXE+m7Avx+nCqK5CpvyCfQ
+         XkKz0outB7rklv3G66KO1ifQMXGf2QoNh555mMBz2D3Evs0utWVjH1EUv4iX7tFNbxSM
+         z+HwCVjDJ2wbAcfajjADWMtEDUCgGQmheuRcd8oFcbDa7spRKgMxt9knTgqH6Zc8nwkh
+         iWrMTF0TiJB2jLrYFbQ0in9/tsootGT28xq4Si+wN2vb6QxwcRCcLyHVnxOODWT3/nsA
+         MrrA==
+X-Forwarded-Encrypted: i=1; AJvYcCU8BVuXwELwgBZkEgRXSju+C2sLIddz/EIpfYsLf6by7LGgy/gin2Pw1PglfZCQbCcxMKHgNz4CB6pOFo0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm++Vb5NLnrazVexulLVhI8BUS/acSF4N/tkaz1Jeq2oJPcR/Y
+	CmzlYXlHEMMNg36SAbnfRaXvvBqvLyNiZO3NEZLE1M6XMGKNUY+Ah42MsaJagmNzIg/cOrsdaVN
+	QShNs1qR6NjWEd4sicG/+D9k+AD+pYmFy0oYQUZ8i6tD/cXhYPjoHHh4=
+X-Google-Smtp-Source: AGHT+IEKiWNk1mXSSHpM3FyNvmEXp5QK823Fw7T2826WsGtZPwsVPjsueu214zge0quVLGWXKXz5EE1fPib6+7boPeWql/E6Kmq3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:b46:b0:3d9:43fe:8e49 with SMTP id
+ e9e14a558f8ab-3d97c1ade2bmr804945ab.8.1746126510880; Thu, 01 May 2025
+ 12:08:30 -0700 (PDT)
+Date: Thu, 01 May 2025 12:08:30 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6813c6ae.050a0220.53db9.0001.GAE@google.com>
+Subject: [syzbot] [gfs2?] stack segment fault in gfs2_glock_dq
+From: syzbot <syzbot+e0dbe53de58ffe4a5f31@syzkaller.appspotmail.com>
+To: agruenba@redhat.com, gfs2@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Replace pm_runtime_get_sync() usage with pm_runtime_resume_and_get() to
-simplify error handling.
+Hello,
 
-This is recommended in the documentation of pm_runtime_get_sync().
+syzbot found the following issue on:
 
-Signed-off-by: Ovidiu Panait <ovidiu.panait.oss@gmail.com>
+HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17231270580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=90837c100b88a636
+dashboard link: https://syzkaller.appspot.com/bug?extid=e0dbe53de58ffe4a5f31
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17f34374580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10a31270580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-5bc10186.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3a2f39285e07/vmlinux-5bc10186.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/2a37a55f34fb/bzImage-5bc10186.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/21cc0a3e6bd7/mount_0.gz
+  fsck result: OK (log: https://syzkaller.appspot.com/x/fsck.log?x=13f34374580000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e0dbe53de58ffe4a5f31@syzkaller.appspotmail.com
+
+gfs2: fsid=syz:syz.0: first mount done, others may mount
+gfs2: fsid=syz:syz.0: Error 10 writing to journal, jid=0
+Oops: stack segment: 0000 [#1] SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5304 Comm: syz-executor172 Not tainted 6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+RIP: 0010:gfs2_glock_dq+0x60/0xb20 fs/gfs2/glock.c:1657
+Code: 4c 89 ff e8 12 2c 37 fe 4c 89 64 24 28 4c 89 7c 24 30 4d 8b 2f 4d 8d 7d 10 4c 89 fd 48 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <80> 7c 05 00 00 74 08 4c 89 ff e8 e1 2b 37 fe 49 8b 45 10 48 89 44
+RSP: 0018:ffffc9000d357c20 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: dffffc0000000000 RCX: ffff88801e8a8000
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffc9000d357d00
+RBP: 0000000000000002 R08: ffff888042107a3b R09: 1ffff11008420f47
+R10: dffffc0000000000 R11: ffffed1008420f48 R12: 1ffff92001a6afa2
+R13: 0000000000000000 R14: ffffc9000d357d00 R15: 0000000000000010
+FS:  00007feba52726c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000000000 CR3: 000000003fd8e000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ gfs2_glock_dq_uninit+0x25/0xb0 fs/gfs2/glock.c:1723
+ gfs2_seek_data+0x16c/0x240 fs/gfs2/inode.c:2133
+ gfs2_llseek+0x1a4/0x240 fs/gfs2/file.c:75
+ vfs_llseek fs/read_write.c:387 [inline]
+ ksys_lseek fs/read_write.c:400 [inline]
+ __do_sys_lseek fs/read_write.c:410 [inline]
+ __se_sys_lseek fs/read_write.c:408 [inline]
+ __x64_sys_lseek+0x14c/0x1e0 fs/read_write.c:408
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xf6/0x210 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7feba52bd689
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 81 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007feba5272218 EFLAGS: 00000246 ORIG_RAX: 0000000000000008
+RAX: ffffffffffffffda RBX: 00007feba537c648 RCX: 00007feba52bd689
+RDX: 0000000000000003 RSI: 0000000002000005 RDI: 0000000000000008
+RBP: 00007feba537c640 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007feba5349028
+R13: 0031656c69662f2e R14: 0000200000000240 R15: 0000200000000140
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:gfs2_glock_dq+0x60/0xb20 fs/gfs2/glock.c:1657
+Code: 4c 89 ff e8 12 2c 37 fe 4c 89 64 24 28 4c 89 7c 24 30 4d 8b 2f 4d 8d 7d 10 4c 89 fd 48 c1 ed 03 48 b8 00 00 00 00 00 fc ff df <80> 7c 05 00 00 74 08 4c 89 ff e8 e1 2b 37 fe 49 8b 45 10 48 89 44
+RSP: 0018:ffffc9000d357c20 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: dffffc0000000000 RCX: ffff88801e8a8000
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffc9000d357d00
+RBP: 0000000000000002 R08: ffff888042107a3b R09: 1ffff11008420f47
+R10: dffffc0000000000 R11: ffffed1008420f48 R12: 1ffff92001a6afa2
+R13: 0000000000000000 R14: ffffc9000d357d00 R15: 0000000000000010
+FS:  00007feba52726c0(0000) GS:ffff88808d6cc000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007feba52f9090 CR3: 000000003fd8e000 CR4: 0000000000352ef0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	4c 89 ff             	mov    %r15,%rdi
+   3:	e8 12 2c 37 fe       	call   0xfe372c1a
+   8:	4c 89 64 24 28       	mov    %r12,0x28(%rsp)
+   d:	4c 89 7c 24 30       	mov    %r15,0x30(%rsp)
+  12:	4d 8b 2f             	mov    (%r15),%r13
+  15:	4d 8d 7d 10          	lea    0x10(%r13),%r15
+  19:	4c 89 fd             	mov    %r15,%rbp
+  1c:	48 c1 ed 03          	shr    $0x3,%rbp
+  20:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  27:	fc ff df
+* 2a:	80 7c 05 00 00       	cmpb   $0x0,0x0(%rbp,%rax,1) <-- trapping instruction
+  2f:	74 08                	je     0x39
+  31:	4c 89 ff             	mov    %r15,%rdi
+  34:	e8 e1 2b 37 fe       	call   0xfe372c1a
+  39:	49 8b 45 10          	mov    0x10(%r13),%rax
+  3d:	48                   	rex.W
+  3e:	89                   	.byte 0x89
+  3f:	44                   	rex.R
+
+
 ---
- drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-index ba13fb75c05d..bef44f350167 100644
---- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-+++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-hash.c
-@@ -65,12 +65,11 @@ int sun8i_ce_hash_init_tfm(struct crypto_ahash *tfm)
- 		       crypto_ahash_driver_name(op->fallback_tfm),
- 		       CRYPTO_MAX_ALG_NAME);
- 
--	err = pm_runtime_get_sync(op->ce->dev);
-+	err = pm_runtime_resume_and_get(op->ce->dev);
- 	if (err < 0)
- 		goto error_pm;
- 	return 0;
- error_pm:
--	pm_runtime_put_noidle(op->ce->dev);
- 	crypto_free_ahash(op->fallback_tfm);
- 	return err;
- }
--- 
-2.48.1
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
