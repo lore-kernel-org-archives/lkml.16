@@ -1,166 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic306-47.consmr.mail.gq1.yahoo.com (sonic306-47.consmr.mail.gq1.yahoo.com [98.137.68.110])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C47224B0F;
-	Thu,  1 May 2025 17:13:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B51AF21B9D9
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=98.137.68.110
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746119585; cv=none; b=SsAMxnIF93po3ruKl6NGqKP33wRJkC1dx79fMaCccpU1COO53pjeBohuQSbn55VCwodFUQU3KcD6ap6Pka7jAqixtQU7zgWF255ffGA/Wcdok+mjx4sa+Mivu1EvNaxPYqLPZjJaaF74icQHFg6ogN3jm/6QFjMgCLpDVZTZXOg=
+	t=1746119609; cv=none; b=LJm7nW8K46wslN3DxQ0XXCsw5tYycRUoviKED/1TR88GfEFRX/PS1tyCIXLKEviiiozhfuf4aoquyF6n4uwKMuN403qWWSf3TH77LemJQKN+wX/6gAfXd0iYaREsEGzEgxZw0TEdGk3//FfIF5Sxkt0Gs6jBTriN7g9QEHTYnjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746119585; c=relaxed/simple;
-	bh=RDw5fe1I0wGfFFQ4oBh704MLHi+i2x088h5hMiXy21I=;
+	s=arc-20240116; t=1746119609; c=relaxed/simple;
+	bh=xua9ecA9uOH1ZKFWYBtLLFa5jd5NF90sNfqHgAU3Yys=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DwNXR3jLG3DIE5INexa50gK2ERF5lPOSDPFduy2zaKPdq1oes2t3bYBaZmsl0lRT9PvpOIhUKviEWrto70ozsbHvmMDnBJ7fJLYDSBxdrZJ1KANDMLWAoydWxKTw973PV1o6rMpdQs7Zo5xBE41DUFluw8RioTmbvdk4FISNUJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=laA0+eyi; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:MIME-Version; b=Y7XrlvWIUNNt11i38lrQc5PsRuHEDscKb04aXjsHQCnk1NHjiF8I6xtlW5wrNMi0Yx95HO4ek4BpAHXzn+jAzfYFU9lPThXUDMoKr6PthI5K4Xutzc9VUAZHrJjpc47pPHbxX9Wul1leBR74zUHnOY6FwDNMnKTKzzLiKwff1nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com; spf=pass smtp.mailfrom=aol.com; dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b=lCcqbEFL; arc=none smtp.client-ip=98.137.68.110
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=aol.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aol.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="laA0+eyi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746119583; x=1777655583;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=RDw5fe1I0wGfFFQ4oBh704MLHi+i2x088h5hMiXy21I=;
-  b=laA0+eyiaLCsNvsLXOJq1pBaAx1mwgTTEZ6turBvlf4/TxXa11RpCXHN
-   EzRZcEMlJzYVyYBBzuA52ESUzBi3JqsbdMjaPsR1nCPHFHScPPlvUHGnB
-   EqjBJZ7pg6IcRGOaKlKKIre5s62DrokKzf+1iwIy3CwIe68FEBMrl40hj
-   AG64B+7j5p2S9O7ZMATkgY4v6AefF7WpSqyBouKHBuxjYLmXE9mAM59Mk
-   pfK1whkm11Fegc5nDa40PIUerJuJxETEi09UFuRJQcQ4BvtIhxcKF0kuj
-   j6xghZPazhfhr89FjHIaNW+eNhuVDy4FXS/pI+wHqkI5bfgrt6zte+cLb
-   w==;
-X-CSE-ConnectionGUID: lSAFwQ/tR9CLCJ9kM0bOYw==
-X-CSE-MsgGUID: ZWapRcxhRuyDB1JOacZfXQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="59184158"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="59184158"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:13:03 -0700
-X-CSE-ConnectionGUID: ZuNpnD1hSgKdTNFPaoN6qA==
-X-CSE-MsgGUID: 75dm0u2JTGyPt/2rvc/HYg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="134961176"
-Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.85])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:13:02 -0700
-Message-ID: <b1bc2569b0da4c6749e896eee0fdf0af97c18fea.camel@linux.intel.com>
-Subject: Re: [PATCH v1 1/2] cpufreq: intel_pstate: Use CPPC to get scaling
- factors
-From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
-To: Russell Haley <yumpusamongus@gmail.com>, "Rafael J. Wysocki"
-	 <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>
-Date: Thu, 01 May 2025 10:13:01 -0700
-In-Reply-To: <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
-References: <1923452.tdWV9SEqCh@rjwysocki.net>
-	 <8476313.T7Z3S40VBb@rjwysocki.net>
-	 <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
-Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
- keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
- YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
- y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
- NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
- GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
- TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
- oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
- AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
- b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
- AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
- oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
- UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
- ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
- wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
- NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
- J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
- oOfCQxricddC
+	dkim=pass (2048-bit key) header.d=aol.com header.i=@aol.com header.b="lCcqbEFL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1746119607; bh=/jjMGaEnE1Ry14S3SzWAh78pho9oZMXc91gZh0sWC48=; h=Subject:From:To:Cc:Date:In-Reply-To:References:From:Subject:Reply-To; b=lCcqbEFLeMawddZ7tOotnY4ofDUj3Bh9fnto02kQFl03iL09e7S3409JgrOZkbWg3cKmf4j73FOhFIab6W+NhxqlN+J2YcNM+om0Gkc1gFoY9uVoUt1K3Y1XlA7nr4AjDu8wE0HH+ElLbiZZ3V51fJG4fV4vmxtKF1DaJQyOeWYp6ngrTe9d6Sfm9Ky3CM7E1dd+1V3swerbSmhVujSt7oJUUGUprt9RyudeRY+9SR9EFa+EQ7BMV0fBdUYrNg43PVAZS5zYb0tCKEUpyqCLhk+Hig51hyEcO9sGSZbiHr6Uy5Fmh6ZnbZQR1du19sdNZJHm2HiphHCZwYShUXVsmQ==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746119607; bh=/nvhQgnJF7Wm7ug1B03CVV1cFY0q08rTJm3inovn08X=; h=X-Sonic-MF:Subject:From:To:Date:From:Subject; b=cp+myEtnkSl2YeiXX1AJG6LZ3aSKaQgxUprlQd4FsKRskZZkpJICvn7WjbsqgmTwpDIfFjJLxPGk3VKK5JuAumh6KgtphEqjmMQzu5aDcMYqt/BUEdo1K5aEyLfTG0UFYtH9KhuIGgvStzoMgMRMHtBcual2ssElZCIJGo2dANZ8ow4VgtSW8yTIef3ZMO5xF1dvf8+l5YQVmshCcV98gwySAmi5N8bbcVts7xuH+cMzEXrzBVv6tyGRKumm/yM0EACLnWs44Q/iJGmQo4aRDbCp62cE+l7BGciLV9SPs4EheUoQNtRaBJPMYI2Wi6kCYTkeYE+io+XKdZCyezDwyA==
+X-YMail-OSG: JzintLoVM1ns4FF2qHrX.ROUv6_KzPwxz7scSRXlIUGI_73_RWCN6sfKvccSUOS
+ gkurrwEoSNasDVWc3Ne6y.JhuJW84O4POJ4iKWahvUgmAoJcm2MOXJTj6l68fIO09.mB9T6w_Sv_
+ prmwbtZWwi5.Oola2ysYVbpsUSKdNiwyFUfPfnPRRXbi9Ee.19l1VZ4KhukR_no3_CNRizTQaao.
+ kkZfEjyv5HTlJqYQy8SVVtTrNCwbg_SBNSdXNEayZgEXMUsrf9.vbd1MF_MX_hIQfhPCJm0SQUaw
+ Bgq3ftgoYhrwHfpdi76kSCCdAl.ivHgkbZN2WUhmcL4kigWXnCv86pZLWvJc.tE7aoGOQkShF1uB
+ tDC2Wa4Dmtu2rP8tlLMKQQyZGIMCyFnscUidvuSkc1jibYA28Zkqb.okKSqP3n8.2o0IXTYYNg1A
+ 6pj2BG3_QP4RK1Kl1CxhEB91d1TkV2tP4WDiZn2G0D9WCMgHQlpgyuxs.PiO1gA31Efh5MOBfhT1
+ deNTcSSc2D.wlQyA3nZJLPZSKnsROt1w9shS85KZ.DFWxhiHxaeF9_TZn6e9ZY8gfGXSoW8w1Tsl
+ Ln8Cm1PeGNdkwQqzoOYVmluy1AF6W2uC_T4EakgVTiKDwaX5tQEOlzh85DDB3RN8NbPlrz_WqAkC
+ Id1d8F2mJ4rK9u9HtUu51VfHv5h.jCR3r_9dO9oXWaDh3bifi_uaQ.UQVrprB8THQKPyfdwxOzVG
+ _mkRku2hC2_l9KQgBDoDI9G0xiRUKiZV6kYEcr9ShT7VeC72I25t3Epx2H9_O1seuqPkj3qYEKnR
+ nNA_8WX1q91aCsoOuTiCwRasHfL8lf1wOc3UTba4E9ZKuyqgh_1HOlLH2mqNqay2ld3Pvko3isWr
+ KaWNg8sZnuFNKuLlt0a1Yxt7b3nzrw_Y27lITUa3XNZih2nTtL_rNBNDPDCdd2e531Sq.TTgt_yB
+ N_gSfJ_5TevOhjlrmR5LAOCLYnniuHpxg4Im9CLR0Tfb499eMF7U_2JWCpGDLs6Nb0Ya8kJvVhcY
+ jyvnlCiRHquvwuhQWkypE1C7B525zcUES_7oA7GOUfLJijMnVC8Ij89XaeYYhnJDgdgAS0GyihGi
+ 8PrP4_uvCucU4hB5e13Pl5.NQLBFf9rj6j7VVnuK8myqAcWh3LZ59htmY.yYpF_FlmoFY7n4vzHM
+ Y2DgDGbgDwqKvLWDH8uN65igntL.u73zxSh_zn6kmnVnuo7E2AvoeFHW9M7yfEqtT86733xtBtla
+ CJ2K3.T9GwyP.ftOi22XUEFCWBXsIDUuQKYQBxQ7EJwlOn5BJLvnZselvSC49yTSA59Cakh7AZb3
+ hi6uNNjxngAaVaaLQaPFr38tklJjvWepqEAu_T2Jiu3FqMGUWgjXM3e.XhLwhsg.VC9rsuR3oF7B
+ 61VELbGDIr6pDYTzb61k7a6QbJ6fr9qPE.TPoN5AF85.wjREm_C58o8lWDvvRIn.X5Of4YPArxX4
+ BThLpIw2ZiJjNV7p0hrQoFBeG0NNsARNKHXBDPmpq_qK49SrRZH9mpjsblTL0c.7PwVKhV8ZUhsz
+ 1ci0QwzsFHKdMMf7EZQpJ0NyN6l2M.86iDqbu85xpIK4Gm5UcPTcSbQADo6GVdmVxvizw6j7vTv4
+ NqRZaEBDkL0TArLIFRssy_5bzgcRcPPbwvuQib27jE7SWjBFQ4TeJrhBJuuf.vVWwHTdtjq03ASk
+ Z2uuwob.vcpL.tRpwCDYv4hullVgOOCTTm20Xfc_WOaGloL1I__XTIL7mzxFvwRu4d8ekvc1EeLx
+ jV8sRrY3DfDeXrPhAabhMaYGZEVAeAHf5H_tdwLfv.WxBgGHLCSLKTZvc80e9iQqEi5PjKtVjVxY
+ FrHUmJODbDnc68hAC8KQ5jzgX_GVwyP8qmZTVgh51fSQ55auwAV3PnPCRtAZS8an1VZmlitFYF_Q
+ KQo2oz04IbHusKlWEaZ4zP9PbkLJ6ihn3EDE3gGZCUp4UuQRbC7_e4hk2RRvjhaRikvLcN5sqOVH
+ KNiykeX7mSrB04dtfe3jAfYnaTl_zrSz2._z8Ik3nLzXWY9SoZCvjipFaQVzgqORdKhKvoemLFBY
+ NY3Du8a_7nfI.gJNMyd.thEhbmRODNqCE7rceKua3Bvh9jQFgh8E1M84uHCk4_U5MraePyQPtxI8
+ 4KpprTcL2jGwFhTBs4qNkFa0RYN26AoIzAAoorh7lTBlARGU5jLpu4uztUxdHEgIU_lnNNRcNEOP
+ hFxFmwxbHTXSmfmMzf8gsTA4n75niXB6sQvd3Kv6vyb6Hf719nNNuBtrh3Sgemu_6K7qsyU3e.an
+ r_uTr.zQMRMKJJiXqv.FB5lDKsdF2IEa8jMdyofY58g--
+X-Sonic-MF: <rubenru09@aol.com>
+X-Sonic-ID: 3a23b236-684f-4e7d-a6ab-1b61d00bba40
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic306.consmr.mail.gq1.yahoo.com with HTTP; Thu, 1 May 2025 17:13:27 +0000
+Received: by hermes--production-ir2-858bd4ff7b-mfhj2 (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 96a77f014c5b7fe0938726d43e9f2542;
+          Thu, 01 May 2025 16:51:11 +0000 (UTC)
+Message-ID: <9fab7b2389d43e0800024a431bd7736f22062f06.camel@aol.com>
+Subject: Re: [PATCH net-next] ipv4: ip_tunnel: Replace strcpy use with
+ strscpy
+From: Ruben Wauters <rubenru09@aol.com>
+To: Simon Horman <horms@kernel.org>
+Cc: "David S. Miller" <davem@davemloft.net>, David Ahern
+ <dsahern@kernel.org>,  Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Thu, 01 May 2025 17:51:08 +0100
+In-Reply-To: <20250501153956.GC3339421@horms.kernel.org>
+References: <20250501012555.92688-1-rubenru09.ref@aol.com>
+	 <20250501012555.92688-1-rubenru09@aol.com>
+	 <20250501153956.GC3339421@horms.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Mailer: WebService/1.1.23772 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.aol
 
-Hi Russell,
+On Thu, 2025-05-01 at 16:39 +0100, Simon Horman wrote:
+> On Thu, May 01, 2025 at 02:23:00AM +0100, Ruben Wauters wrote:
+> > Use of strcpy is decpreated, replaces the use of strcpy with
+> > strscpy as
+> > recommended.
+> >=20
+> > I am aware there is an explicit bounds check above, however using
+> > strscpy protects against buffer overflows in any future code, and
+> > there
+> > is no good reason I can see to not use it.
+>=20
+> Thanks, I agree. This patch doesn't buy us safety. But it doesn't
+> lose
+> us anything. And allows the code to move towards best practice.
+>=20
+> One thing I notices is that this change is is inconsistent with the
+> call to
+> the 3-argument variant of strscpy a few lines above - it should also
+> be hte
+> 2-argument version. Maybe that could be changed too. Maybe in a
+> separate patch.
 
 
-On Wed, 2025-04-30 at 20:28 -0500, Russell Haley wrote:
->=20
-> On 12/5/24 5:39 AM, Rafael J. Wysocki wrote:
->=20
-> > +	 * Compute the perf-to-frequency scaling factor for the
-> > given CPU if
-> > +	 * possible, unless it would be 0.
-> > +	 */
-> > +	if (!cppc_get_perf_caps(cpu, &cppc_perf) &&
-> > +	=C2=A0=C2=A0=C2=A0 cppc_perf.nominal_perf && cppc_perf.nominal_freq)
-> > +		return div_u64(cppc_perf.nominal_freq *
-> > KHZ_PER_MHZ,
-> > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cppc_perf.nominal_perf);
->=20
-Can you dump the output of
+I can remove the size parameter from the above strscpy to make it
+consistent in v2.
 
- grep -r . /sys/devices/system/cpu/cpu*/acpi_cppc/
+> It is customary when making such changes to add a note that
+> strscpy() was chosen because the code expects a NUL-terminated string
+> without zero-padding. (Which is the case due to the call to
+> strcat().)
+> Perhaps you could add some text to the commit message of v2 of this
+> patch?
 
-Thanks,
-Srinivas
+Apologies, I wasn't aware of this, I can add the text to v2.
 
-> I think this exposed a firmware bug on ARL. I have a Core Ultra 265K,
-> and two of the E-cores report 33 for nominal_perf, while the others
-> report 46. They all report 3300 for nominal_freq.
->=20
-> The result is that the kernel thinks these two E-cores are capable of
-> 6.5 GHz.
->=20
-> > grep . /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_max_freq
-> /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_max_freq:5500000
-> /sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_max_freq:5400000
-> /sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq:5500000
-> /sys/devices/system/cpu/cpu8/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu9/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu10/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu11/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu12/cpufreq/cpuinfo_max_freq:6500000 # wow
-> /sys/devices/system/cpu/cpu13/cpufreq/cpuinfo_max_freq:6500000 #
-> amazing
-> /sys/devices/system/cpu/cpu14/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu15/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu16/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu17/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu18/cpufreq/cpuinfo_max_freq:4600000
-> /sys/devices/system/cpu/cpu19/cpufreq/cpuinfo_max_freq:4600000
->=20
-> Hopefully you have the ear of someone on the firmware team so that a
-> ticket can be created for this.
->=20
-> In Phoronix discussion, users have reported seeing this on both
-> ASRock
-> and MSI motherboards:
->=20
-> https://www.phoronix.com/forums/forum/hardware/processors-memory/1541981-=
-intel-core-ultra-9-285k-arrow-lake-performance-on-linux-has-improved-a-lot-=
-since-launch?p=3D1543676#post1543676
->=20
-> ----------
->=20
-> Also, this may be related... I can't set scaling_max_freq to odd
-> multiples of 100 MHz, only even. Checking with:
->=20
-> =C2=A0=C2=A0=C2=A0 x86_energy_perf_policy &| grep -i req
->=20
-> reveals that some values of max are being skipped. Setting manually
-> with
->=20
-> =C2=A0=C2=A0=C2=A0 x86_energy_perf_policy --cpu 0-7 --hwp-max 76
->=20
-> allows the odd multiples to be accessed. Integer division issue
-> somewhere?
->=20
+Just a point of clarification I wanted to ask, for v2 of the patch,
+should I include the Reviewed-by tag below? or should I remove it as
+there has been changes?
 
+
+> > Signed-off-by: Ruben Wauters <rubenru09@aol.com>
+>=20
+> Reviewed-by: Simon Horman <horms@kernel.org>
+>=20
+> > ---
+> > =C2=A0net/ipv4/ip_tunnel.c | 2 +-
+> > =C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
+> > index 3913ec89ad20..9724bbbd0e0a 100644
+> > --- a/net/ipv4/ip_tunnel.c
+> > +++ b/net/ipv4/ip_tunnel.c
+> > @@ -247,7 +247,7 @@ static struct net_device
+> > *__ip_tunnel_create(struct net *net,
+> > =C2=A0	} else {
+> > =C2=A0		if (strlen(ops->kind) > (IFNAMSIZ - 3))
+> > =C2=A0			goto failed;
+> > -		strcpy(name, ops->kind);
+> > +		strscpy(name, ops->kind);
+> > =C2=A0		strcat(name, "%d");
+> > =C2=A0	}
+> > =C2=A0
+> > --=20
+> > 2.48.1
+> >=20
+> >=20
+Ruben Wauters
