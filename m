@@ -1,119 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83F41EB5E3;
-	Thu,  1 May 2025 14:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7240D191F6A
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:16:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746108949; cv=none; b=CsYx7tA8jH3gx1ZTWXxCix/xR8AJk2JBLbpXWim1wV89d+s8uLzOwiAWpE+qyI+VmAFX2GgXp2Oi8hp4Ad8EQO9UTKqtMiJJjYuAxbqh1G/LieomVEM1b1Pny4LwcWJdE15WvIBsvICONRlXMBwYmO7+SekPrh6AwdvwdiD6QoU=
+	t=1746109006; cv=none; b=C9sj8ZoUyleHqyzhOyUBH+Ne/ljV2j6LI3z9XLXtZWdRywRWFUTlq4ackgbvnkzh1sa+qFcjBOjEb9WSLqdZTI9GQJI4jGh4JOHK+dHc+WkezcdZqRkKF0WnZYMJXoewQsANErEphUOWgss2ejKhn4AF3Yws3evq5wMcYPEtpho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746108949; c=relaxed/simple;
-	bh=1nOlq6ghOjjU/aPiN73OkFKaq0mCidAfYeEyCm9Uf/c=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KY93pZ+XmsPe/2J8n7oKhIaCp71dyiiQU3X1NR7JxQKHTDcSQZ4JVnxBIzVTv4WB0pPyJhXlhacxwy7YCzVAzD1oI5uba7SVG2JOc4fVeW/W1bcQvaYnWmsCZPZH4aejguyZaBhSPNmbusazq/GmbK4v9db+8qWpgZp2UQf+fmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=emkfsgyP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746109006; c=relaxed/simple;
+	bh=j5318m9W6gx9LdmB8iOipKQED2D4klFe6dI9Bxzwyac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ktyQdmeZRBd/NVsb2LKewkjyBCVREgXF/oskMhbD16JQP8/XUWjANboPrxyAR10vpitsqD/d1NhplBe1uhPqlCey1sH0m50Zra+O7+yP5aaF0MyLlxZOXCGV7dkllR5lLyYAx0jCDDKKRe95M65JCVMj+VFg7IFq4y1GxKKYB8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PqglJWgH; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="emkfsgyP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79654C4CEE3;
-	Thu,  1 May 2025 14:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746108949;
-	bh=1nOlq6ghOjjU/aPiN73OkFKaq0mCidAfYeEyCm9Uf/c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=emkfsgyPoPoSWyMrc0hiZTuc1So10KqEGBTHeq7xiB7WyCR52Bjb99nHdHYFmr58K
-	 q/QOAVGPtSQ0ZdfKUsA/G0ZZXLo6E6TKWJzMfiC1WZcbfrCEDUmDq8h+aZEo8rU6/E
-	 fwNg0gXMatPTNKRTJrRWt6sWpfA4FTmDh5A0z/xTko3LvP8BjlLOT74HfMc88zOotk
-	 xZB5uIAejM0lzroKQdngOAcmH1XthTo4rdO9NfK9qZ2nYIDu6kxsTlSe5srk32MKVD
-	 +VIVfUJbS8KHjNpTVW7ZXI9hOdtb1y3IDNGGR8qf1IH2tpB2LuTAe6LESxiHv25nbV
-	 yW1cFqW67wW9Q==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAUhX-00Ab1W-IH;
-	Thu, 01 May 2025 15:15:47 +0100
-Date: Thu, 01 May 2025 15:15:46 +0100
-Message-ID: <86tt64h0x9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 21/22] irqchip/gic-v5: Add GICv5 IWB support
-In-Reply-To: <aBJO9GEyb+0t6W6u@lpieralisi>
-References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
-	<20250424-gicv5-host-v2-21-545edcaf012b@kernel.org>
-	<867c31j20i.wl-maz@kernel.org>
-	<aBJO9GEyb+0t6W6u@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PqglJWgH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746109003;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hh+psC7IriBNgbVFATZKlPoKU4gpMxFOg5Sx9dcAY8Y=;
+	b=PqglJWgH6Ll88Mb0b1GhwygOUkUNZLeU8gMW847d+fp0WX9t+WqUARlt5KDw+gUSWrLq00
+	euWbm63NE/vCDmyMyV5HX2YPmpPZMS3l3cqb7JGmhYznrPKddcEhLJ4C0WIuZmOg0i8t0z
+	bC4q8EtlyXBV36KRGU8kA6yp0HCPSpg=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-136-sF9_ZQ0rMNevXd7rBJsFJg-1; Thu, 01 May 2025 10:16:42 -0400
+X-MC-Unique: sF9_ZQ0rMNevXd7rBJsFJg-1
+X-Mimecast-MFC-AGG-ID: sF9_ZQ0rMNevXd7rBJsFJg_1746109001
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac6caf952d7so103529866b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:16:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746109001; x=1746713801;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hh+psC7IriBNgbVFATZKlPoKU4gpMxFOg5Sx9dcAY8Y=;
+        b=NkpiMOtsRS1yk0S3aJNe+ibk2zvTFLOkedYwuMPGO26NnWTF/JtUld64d1gY1W4OD2
+         W/i2YgvUJDtzsSK7DagKp8keoLCQ0a9I4ooznpNvzQ92PuOOHNKnbRJ/j+VsbC46sxyY
+         reiQxsUD/xeQeWAmPvHw3tMZ6493A595BdYKkNTQ/pXJEDTtUy/vPkevRShs4G1vh+Fr
+         8/z15fMLfw/YBw7SlblDCS5lhFLJ1IKdVFK/drzb/VUQsEr5V8gCmTQix4C5fkUeCbu5
+         FIuCezCFgd6A0KsAjQYKtD8pck0x959Y6AbVyLHngJbwpfhsyruFH5qqGzfiCR7Dc/1S
+         PAyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXYDO0fXs4rsH6QkqqGyuKO/RFgV0S5SUy2IP9IlVuRU8zfxlMh5+6shRru4zD2mi5nzY9BWy5K/UXxn8w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZivf6+SM9Df4clF4aPRYxFMpfJWrBTgkV0qms3JiBVfIpkVOl
+	3dVlHPtW4ZQ8l+7cmDTR3lmvUbHdAJpEgrkMFdwYWtz5RRdlmkMYlxlQPVtyG+Mfd3YMLS4rX4M
+	b0Wilos1WPuQ4hneC+2GTH1tEJHEeQQmks9S3kapcLS38K7ZZqaApUAUTm1XUmw==
+X-Gm-Gg: ASbGncvgl2C54Ay+EmqLsosFNKAoGqLuRfFNtEJ63hEcw3NJ4W1ruL8BAuHcWPglg+t
+	yRdIqySA9roy+nVGbFVjKpGwpTW3lPKTInZsn+NMom3wGcNWiBvBin/jsd+syT3+qNsE23Pg/V9
+	9ihTS6dd0EyrF21qhziGplHIZz8hCiqpQbqASFSdltuMLl14aJx5UPSEP5dVFH3yK7fraFr2e9o
+	rJD278z9gzmLmAZNCmxHdznp73ISbTfxgTBNAEjYknOxurv6frrHbh4MAhA1/gT8ZUiEpuuy1oh
+	kgX4FxVoRmSZDO9lI2ajzULvXWhiA91mJfs7CEeqIdI5KAci3Ty+gTRhLdUoXrNJBa+aoTvTL3x
+	Lz5UDNZxik28F1v7W+ILFmN4o8RNDiXqsrNvEcswtzO6Mt11wBHSndZWcI4Ndbg==
+X-Received: by 2002:a17:907:3da8:b0:ace:dd27:7c68 with SMTP id a640c23a62f3a-acef49a523amr286268966b.46.1746109000784;
+        Thu, 01 May 2025 07:16:40 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IERxZ6UQgY7nJnQihqgXO4g35TCN9e9LK+eXe6+W9Ewkl+z5FgYaucMhPyRZQ4ao8P7tj61SQ==
+X-Received: by 2002:a17:907:3da8:b0:ace:dd27:7c68 with SMTP id a640c23a62f3a-acef49a523amr286267266b.46.1746109000405;
+        Thu, 01 May 2025 07:16:40 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da516a9dsm45118166b.122.2025.05.01.07.16.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 07:16:39 -0700 (PDT)
+Message-ID: <4200c8b5-ec1b-49f4-b530-9067b1dc22c2@redhat.com>
+Date: Thu, 1 May 2025 16:16:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] staging: media: Remove duplicate NULL tests on a
+ value in pci
+To: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>,
+ outreachy@lists.linux.dev, julia.lawall@inria.fr
+Cc: gregkh@linuxfoundation.org, linux-staging@lists.linux.dev,
+ linux-kernel@vger.kernel.org, andy@kernel.org, mchehab@kernel.org,
+ sakari.ailus@linux.intel.com
+References: <cover.1743685415.git.abrahamadekunle50@gmail.com>
+ <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <26990d4a9d4419f9d4155a40595bc213acb671a0.1743685415.git.abrahamadekunle50@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 30 Apr 2025 17:25:24 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+Hi,
+
+On 3-Apr-25 3:26 PM, Abraham Samuel Adekunle wrote:
+> When a value has been tested for NULL in an expression, a
+> second NULL test on the same value in another expression
+> is unnecessary when the value has not been assigned NULL.
 > 
-> I wrote a diff against the heavily reworked series in progress I have,
-> (so it does not apply on v2 - headers moved) with what I came up with
-> for the IWB MBIgen like. It works - it removes lots of boilerplate code
-> but there is a hack we never really liked in:
+> Remove unnecessary duplicate NULL tests on the same value that
+> has previously been NULL tested.
 > 
-> gicv5_its_msi_prepare()
+> Found by Coccinelle
 > 
-> that is, using the OF compatible string to detect if we are an IWB or not.
+> Signed-off-by: Abraham Samuel Adekunle <abrahamadekunle50@gmail.com>
 
-You shouldn't need that. The MSI_FLAG_USE_DEV_FWNODE should be a good
-enough indication that this is something of interest, and that ends-up
-in the .init_dev_msi_info() callback.
+Thank you for your patch.
 
-> If we are, we use the msi_alloc_info_t->hwirq to define the LPI eventid,
-> basically the IWB wire, if not we just allocate an eventid available from
-> the device bitmap.
+I have merged this in my media-atomisp branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/hansg/linux.git/log/?h=media-atomisp
+
+And this patch will be included in my next
+pull-request to Mauro (to media subsystem maintainer)
+
+Regards,
+
+Hans
+
+
+
+
+> ---
+>  drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Other than that (and being forced to provide an IWB irqchip.irq_write_msi_msg()
-> pointer even if the IWB can't write anything otherwise we dereference
-> NULL) this works.
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> index e176483df301..0abac820299a 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_gmin_platform.c
+> @@ -1292,7 +1292,7 @@ static int gmin_get_config_dsm_var(struct device *dev,
+>  	 * if it founds something different than string, letting it
+>  	 * to fall back to the old code.
+>  	 */
+> -	if (cur && cur->type != ACPI_TYPE_STRING) {
+> +	if (cur->type != ACPI_TYPE_STRING) {
+>  		dev_info(dev, "found non-string _DSM entry for '%s'\n", var);
+>  		ACPI_FREE(obj);
+>  		return -EINVAL;
 
-Not even MBIGEN allows you to change the event. If you really want to
-ensure things are even tighter, invent a MSI_FLAG_HARDCODED_MSG flag,
-and pass that down the prepare path.
-
-> Is there a better way to implement this ? I would post this code with
-> v3 but instead of waiting I thought I could inline it here, feel free
-> to ignore it (or flame me if it is a solved problem I failed to spot,
-> we need to find a way for the IWB driver to pass the "fixed event" info
-> to the ITS - IWB eventIDs are hardwired it is not like the MBIgen where
-> the irq_write_msi_msg() callback programs the wire-to-eventid
-> translation in HW).
-
-It's *exactly* the same. And see above for a potential explicit
-solution. The empty irq_write_msi_msg() is not a problem. It's
-actually pretty clean, given how the whole thing works.
-
-Please fold this into your v3, and we'll take it from there.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
