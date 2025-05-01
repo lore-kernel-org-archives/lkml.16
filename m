@@ -1,216 +1,303 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9101F3FE2;
-	Thu,  1 May 2025 20:40:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB6E1F3FE2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:41:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132015; cv=none; b=a5xJyhkeLHZcajtw6y/TC+wdlnMSCsUdUcOW8FobLa1lf+mflE72bzTiwoithi9a4WGOFtKTgXWyoa9R3htAlB9AfJkZ/IlTgpU422m6owAHmf75wawJIyRkl9SGRLyubUZ1B9OozAoBfgWhGlLJCub6I2XureU8mJo0Dp9/4IM=
+	t=1746132089; cv=none; b=o8TXG46lcznLvinvNF3gFxeuvpOcFSNr3e4xaD0W6BWJ8XVWH6AIG4DmZbPPL/aQvSb011NTRY7vK/eEB0rukM6rUL1jRpcA3TXqupZPMoLRPxm++kfommbc2hnOeVPX+hsGe/W0JlkvPOLznuJ/oEYKLvgCHAuiAflzQFiDjsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132015; c=relaxed/simple;
-	bh=mpngZCwtqJFf9YonHiFbMeeI6hPHrVb3HHhdqWpxPxM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qlgk9lGAOqheafDKVHk9M/nbJxLIxQYYs5RPu1LLwqpCBReHZ3I8vjFJUZgj++QVX4ZtGklTZ+83Wm0V26lkJZu6YILY6wVMKe9f+SCPGYxpdmrnxs1iD1DikcpqtgXeFkYaD8NeNX8QKGCuGh7DXFtIMSJIOFllk6BwWU5e0IE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=In+dGAYF; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746132089; c=relaxed/simple;
+	bh=ZluM+82HYwqbswiIyD/2FaM5UbGgIj1w9ThrLFQLkQ8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NFnZyYl3BBiCzXyozGfvkykKn0d3kqrivYFck7WLup4evMG5Qpzcgvz5y/B2KoKJYt9ERellwBwLjmSrD73GfmX0sf+hwXjxei6LkDE3SE6JIcDMUXBgdWCi9ck3aX6VNXhy0qna3nKblQm6MpJpuYuZN7siQ+yUIRR2ZCXS1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RVaJBMDu; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="In+dGAYF"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39efc1365e4so555185f8f.1;
-        Thu, 01 May 2025 13:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746132012; x=1746736812; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=YROZyOkE+RaFyNeUnTjXvKAzg9wijNdW4xywU98p6mo=;
-        b=In+dGAYFSBMWGX+KdkntcaxFBPFLzdEFv9Vx7kvPC3Eozb6RYyAJrkkQNGZEwS+LYK
-         la/W5a8BeLY+eLqnkHVweqbrVu5KcCTbjvNE42Eke4TGsmxSjF3fZ+Tx9G9ZfycNIVsp
-         Nk7Pdbg51ujW/mTNs1nQKgB9OPDNs0JjbcXOxQEjgEaZhWyRgfytE9/Wfyh+0GHCgga1
-         sH+6t7yOe4vpMDbmQ4R3XUoSr5lUcuxdK1SgnP0to5Pa/w095vOd8pw9nJpW/SVxj3iQ
-         O9f0MTCDrXwYxGpJI0Tr1ygM/lrz+COElH5shEPErWbV2VgJ9kMx6I5LfiRBcNsvV7sm
-         y02A==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RVaJBMDu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746132084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hDh6BZdRx6SbbMEEDIPz7yPlA5iRhs5NfAPHn1HWJJw=;
+	b=RVaJBMDulqvwvkvQx+M9pdj51gOmkEoVwCfCm90agcQd+bnaRr9JJA6H96yrU0EplI+jo/
+	g3OqoBbO9stUxRmaAVuXyvWYGDpcHmFOUQI+uawvfXdwEk/Hbwd/IxhDyXh7JJjSYWcIlY
+	p7m/MUAYgCEAE0MdHroI5bHNFt5QQn0=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-316-zMlP1EyHOIqozPRDYnpN1A-1; Thu, 01 May 2025 16:41:23 -0400
+X-MC-Unique: zMlP1EyHOIqozPRDYnpN1A-1
+X-Mimecast-MFC-AGG-ID: zMlP1EyHOIqozPRDYnpN1A_1746132083
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7cabd21579eso110544485a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:41:23 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746132012; x=1746736812;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YROZyOkE+RaFyNeUnTjXvKAzg9wijNdW4xywU98p6mo=;
-        b=fZ500FsF6VW1naAfwG6tItssp64/Ne8H80ZqhKUBGTenpnoSYfW+xa2vzWDL1cbOTT
-         +pwuELhdpdHOlpclnDLbZoBNC/SL+9i+M+LObaHcMT1iWhb51SPEj9KDJWKWD23xvniG
-         aSvfcOs6DOyDLF8uciylzCyMpEI0XnlSpVCVGhw3srFmOzsxdRqIczpUqEfuWzGKOKxn
-         CugfpMdYwuEVkKvIo3A9CCVAjRRToUt1BF5nRiGkULTkxSSPupS6Z9f9wEQsGoQB/PZl
-         qcCuRZ5pWvI2nz91oc2mvd91Rx1MX8tO0L8wkBNjIV7u705Z+gswVssmYbC04r370lxS
-         nuLA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBJEKdJyGGIPSuIugzddk3MDq6RKUL4VmLT8jZpfrZto2cJfMObuuleFgSfOQkBvKEwoLZtCadrO4iL7s1@vger.kernel.org, AJvYcCUNtsvUb6a7NKhz/ib+2goGlZ0lKv5SE70NIOc1PDgUwBJ629ab/4Tn07MUBpA98qhqJH8U76NuRKg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPst2xHNijvOiUztmO/MTTxAnILvmMFuiKfRMkRfS24MzItKXi
-	H+pk2+1T6/V8o6hTAEWCPivgPhFXpMaehGkoYIoVAWLHuexCGmAT
-X-Gm-Gg: ASbGnctxEmxz8nggftg6tQCv71oByqA0rFwQEAuwswnH9CPgpySGifoCC+Pe2Vvu543
-	3YQjhT1KH3htfU5Ek0uaozTv3GRamghbkVl+UmD/t0Snjhkz0ZEjRpLNQt8t+xDo1V9oOUwEkJA
-	rUV4yFBPWM544WRnWX6Gue31H2Cyr5imtTmwGbYJKPI9/GODNd+dlN4f/rdeqcEHoYEg5EjVdMp
-	Cba1XBmZ8OZGuKaKZbIxtlw0s9f421Cx/7pOf6VvUhsCRz8W9U7/5VNKUEHIqf+9oD6BS2P/O/o
-	/ICZ45Ejh30hboKeYCK2ccd4h1SBmExFJbr3jcyIvZ6aWZFkoJpVawheKhkAoOR/2gDiaLbPgeU
-	=
-X-Google-Smtp-Source: AGHT+IE1jA1xgxLG32fzSHaWs61R8osF+VteUCXk2DJOKdA15i6GvZN8NDX0nhqABiETFsYOK+eA7w==
-X-Received: by 2002:a05:6000:1acd:b0:3a0:880a:144f with SMTP id ffacd0b85a97d-3a099ad1bc7mr168792f8f.6.1746132011680;
-        Thu, 01 May 2025 13:40:11 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:f0e:4490:d947:2c92])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10013sm164588f8f.65.2025.05.01.13.40.11
+        d=1e100.net; s=20230601; t=1746132083; x=1746736883;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=hDh6BZdRx6SbbMEEDIPz7yPlA5iRhs5NfAPHn1HWJJw=;
+        b=To9hpGDbGhCZu0LhyvUySCE/5h+j43IHjhJCVzRKYiRBmTZklKfLFgYnQv5hvErgnt
+         wnbwk+/S4tnGCkkIxS+tkAts1e/0Rf7W/0P1c7aTb+LsI0FBMreeQeNF1IRKcymF3bY5
+         vuH5HMtQQr0+4dWMrch2vKUNyRpMhBLM5xlGu2NXmgwRaUtNzqLgOVbkyxQXwCTBDTxT
+         9Sc5jNt7phT4h/QrCebsUoJ6aUj3O6B48sVA5SuFaFcLwaDJuA04zy6jHqD+DNAoracB
+         K3m0K1vOKOf+rdis5I4nqX0T76hFaYmrZ7/K1HW3FoZKimeCVO7KnOT+WclDUTk6IRNS
+         PGCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVrW/myhNVMunPTL3zWLiRbWImuWUFAD3S2kjgyw7X6kSpiaxFwd8B3JF7B/pa8czlqWFXm4yyrWfBhYpY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLihxMsSNYFA88zO2qG/GTz9vjeKJY4OJA36faFNsNcl23zKGw
+	jV1lsLd3gakZrpSCFDNGXPJkNfJS6E6adAvaEwTL2r7uV2pX798wAoQTdk+HgQ3NspZcXVDrvQG
+	ThiljPIPCWB4LtALVelgqiZRAkE49ez/gWHUXIM5CKbUs7rwyg5wFdhyX1sTHeg==
+X-Gm-Gg: ASbGncsDR8GaMedrFeiu4bfehjZVopthZggX5F4C7uxGI0HH5xBrElb9df7wV5Gh6cZ
+	EW7S0cACewPSJstVma4M5mwhEP7qz5/M3uk7/wxxW/qxrJ8RyRXOzcWUeTg728KUwjacBNBwac8
+	wwkgKS2Jikx+S2N3KyP/TMkQbGOT2wF4cFQuOqllpQuJ1f/YeG1smOWVuWbZWWF9m+rI96vDJEJ
+	4BELlYzpTI7uw9uwqv7aP2MWkYism/vWTWI2LGeN63LacWqwWny7400ZvSzqv5C+VnTBjeBI9kY
+	N69xcgVRPcVRwal1IanzUZIcfIEu4F5xH1PBYRyxgUoI8AB5/sXWa3+OwoQ=
+X-Received: by 2002:a05:620a:4449:b0:7c5:79c6:645d with SMTP id af79cd13be357-7cad5b2e27emr57532185a.11.1746132082820;
+        Thu, 01 May 2025 13:41:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFsabKjC2otznGEEqKo8X7z7SA1slbiHHBrdbKLBLDW/ocQgBJR4T/mXNdryiQbbDuhpRBQyQ==
+X-Received: by 2002:a05:620a:4449:b0:7c5:79c6:645d with SMTP id af79cd13be357-7cad5b2e27emr57529985a.11.1746132082442;
+        Thu, 01 May 2025 13:41:22 -0700 (PDT)
+Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23b5c0csm89171685a.3.2025.05.01.13.41.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 13:40:11 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-i2c@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v10] i2c: riic: Implement bus recovery
-Date: Thu,  1 May 2025 21:40:03 +0100
-Message-ID: <20250501204003.141134-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
+        Thu, 01 May 2025 13:41:22 -0700 (PDT)
+Message-ID: <2b1ec570a37992cdfa2edad325e53e0592d696c8.camel@redhat.com>
+Subject: Re: [PATCH 3/3] x86: KVM: VMX: preserve host's
+ DEBUGCTLMSR_FREEZE_IN_SMM while in the guest mode
+From: mlevitsk@redhat.com
+To: Sean Christopherson <seanjc@google.com>
+Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
+ Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+ linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Date: Thu, 01 May 2025 16:41:21 -0400
+In-Reply-To: <aAgpD_5BI6ZcCN29@google.com>
+References: <20250416002546.3300893-1-mlevitsk@redhat.com>
+	 <20250416002546.3300893-4-mlevitsk@redhat.com>
+	 <aAgpD_5BI6ZcCN29@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Tue, 2025-04-22 at 16:41 -0700, Sean Christopherson wrote:
+> On Tue, Apr 15, 2025, Maxim Levitsky wrote:
+> > Pass through the host's DEBUGCTL.DEBUGCTLMSR_FREEZE_IN_SMM to the guest
+> > GUEST_IA32_DEBUGCTL without the guest seeing this value.
+> >=20
+> > Note that in the future we might allow the guest to set this bit as wel=
+l,
+> > when we implement PMU freezing on VM own, virtual SMM entry.
+> >=20
+> > Since the value of the host DEBUGCTL can in theory change between VM ru=
+ns,
+> > check if has changed, and if yes, then reload the GUEST_IA32_DEBUGCTL w=
+ith
+> > the new value of the host portion of it (currently only the
+> > DEBUGCTLMSR_FREEZE_IN_SMM bit)
+>=20
+> No, it can't.  DEBUGCTLMSR_FREEZE_IN_SMM can be toggled via IPI callback,=
+ but
+> IRQs are disabled for the entirety of the inner run loop.  And if I'm som=
+ehow
+> wrong, this change movement absolutely belongs in a separate patch.
+>=20
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/svm/svm.c |  2 ++
+> >  arch/x86/kvm/vmx/vmx.c | 28 +++++++++++++++++++++++++++-
+> >  arch/x86/kvm/x86.c     |  2 --
+> >  3 files changed, 29 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+> > index cc1c721ba067..fda0660236d8 100644
+> > --- a/arch/x86/kvm/svm/svm.c
+> > +++ b/arch/x86/kvm/svm/svm.c
+> > @@ -4271,6 +4271,8 @@ static __no_kcsan fastpath_t svm_vcpu_run(struct =
+kvm_vcpu *vcpu,
+> >  	svm->vmcb->save.rsp =3D vcpu->arch.regs[VCPU_REGS_RSP];
+> >  	svm->vmcb->save.rip =3D vcpu->arch.regs[VCPU_REGS_RIP];
+> > =20
+> > +	vcpu->arch.host_debugctl =3D get_debugctlmsr();
+> > +
+> >  	/*
+> >  	 * Disable singlestep if we're injecting an interrupt/exception.
+> >  	 * We don't want our modified rflags to be pushed on the stack where
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index c9208a4acda4..e0bc31598d60 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -2194,6 +2194,17 @@ static u64 vmx_get_supported_debugctl(struct kvm=
+_vcpu *vcpu, bool host_initiated
+> >  	return debugctl;
+> >  }
+> > =20
+> > +static u64 vmx_get_host_preserved_debugctl(struct kvm_vcpu *vcpu)
+>=20
+> No, just open code handling DEBUGCTLMSR_FREEZE_IN_SMM, or make it a #defi=
+ne.
+> I'm not remotely convinced that we'll ever want to emulate DEBUGCTLMSR_FR=
+EEZE_IN_SMM,
+> and trying to plan for that possibility and adds complexity for no immedi=
+ate value.
 
-Implement I2C bus recovery support for the RIIC controller by making use
-of software-controlled SCL and SDA line manipulation. The controller allows
-forcing SCL and SDA levels through control bits, which enables generation
-of manual clock pulses and a stop condition to free a stuck bus.
+Hi,
 
-This implementation wires up the bus recovery mechanism using
-i2c_generic_scl_recovery and provides get/set operations for SCL and SDA.
+The problem here is a bit different: we indeed are very unlikely to emulate=
+ the
+DEBUGCTLMSR_FREEZE_IN_SMM but however,=C2=A0when I wrote this patch I was s=
+ure that this bit is=C2=A0
+mandatory with PMU version of 2 or more,=C2=A0 but looks like it is optiona=
+l after all:
 
-This allows the RIIC driver to recover from bus hang scenarios where SDA
-is held low by a slave.
+"
+Note that system software must check if the processor supports the IA32_DEB=
+UGCTL.FREEZE_WHILE_SMM
+control bit. IA32_DEBUGCTL.FREEZE_WHILE_SMM is supported if IA32_PERF_CAPAB=
+IL-
+ITIES.FREEZE_WHILE_SMM[Bit 12] is reporting 1. See Section 20.8 for details=
+ of detecting the presence of
+IA32_PERF_CAPABILITIES MSR."
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
----
-v9->v10:
-- Fixed the order of defining ICCR1_SDAO and ICCR1_SCLO
-- Added Reviewed-by and Tested-by tags
+KVM indeed doesn't set the bit 12 of IA32_PERF_CAPABILITIES.
 
-v8>->v9:
-- Dropped Tested-by and Reviewed-by tags from patch 1/2
-- Updated commit message
+However, note that the Linux kernel silently sets this bit without checking=
+ the aforementioned capability=C2=A0
+bit and ends up with a #GP exception, which it silently ignores.... (I chec=
+ked this with a trace...)
 
-v7->v8:
-- Included Acks from Andy and Fabrizio.
+This led me to believe that this bit should be unconditionally supported,
+meaning that KVM should at least fake setting it without triggering a #GP.
 
-v6->v7:
-- https://lore.kernel.org/all/20250203143511.629140-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+Since that is not the case, I can revert to the simpler model of exclusivel=
+y using GUEST_IA32_DEBUGCTL=C2=A0
+while hiding the bit from the guest, however I do vote to keep the guest/ho=
+st separation.
 
-v2->v6:
-- Included RB and TB from Claudiu.
+>=20
+> > +{
+> > +	/*
+> > +	 * Bits of host's DEBUGCTL that we should preserve while the guest is
+> > +	 * running.
+> > +	 *
+> > +	 * Some of those bits might still be emulated for the guest own use.
+> > +	 */
+> > +	return DEBUGCTLMSR_FREEZE_IN_SMM;
+> >=20
+> >  u64 vmx_get_guest_debugctl(struct kvm_vcpu *vcpu)
+> >  {
+> >  	return to_vmx(vcpu)->msr_ia32_debugctl;
+> > @@ -2202,9 +2213,11 @@ u64 vmx_get_guest_debugctl(struct kvm_vcpu *vcpu=
+)
+> >  static void __vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data)
+> >  {
+> >  	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> > +	u64 host_mask =3D vmx_get_host_preserved_debugctl(vcpu);
+> > =20
+> >  	vmx->msr_ia32_debugctl =3D data;
+> > -	vmcs_write64(GUEST_IA32_DEBUGCTL, data);
+> > +	vmcs_write64(GUEST_IA32_DEBUGCTL,
+> > +		     (vcpu->arch.host_debugctl & host_mask) | (data & ~host_mask));
+> >  }
+> > =20
+> >  bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host=
+_initiated)
+> > @@ -2232,6 +2245,7 @@ bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu=
+, u64 data, bool host_initiated
+> >  	return true;
+> >  }
+> > =20
+> > +
+>=20
+> Spurious newline.
+>=20
+> >  /*
+> >   * Writes msr value into the appropriate "register".
+> >   * Returns 0 on success, non-0 otherwise.
+> > @@ -7349,6 +7363,7 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, bo=
+ol force_immediate_exit)
+> >  {
+> >  	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> >  	unsigned long cr3, cr4;
+> > +	u64 old_debugctl;
+> > =20
+> >  	/* Record the guest's net vcpu time for enforced NMI injections. */
+> >  	if (unlikely(!enable_vnmi &&
+> > @@ -7379,6 +7394,17 @@ fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu, b=
+ool force_immediate_exit)
+> >  		vmcs_write32(PLE_WINDOW, vmx->ple_window);
+> >  	}
+> > =20
+> > +	old_debugctl =3D vcpu->arch.host_debugctl;
+> > +	vcpu->arch.host_debugctl =3D get_debugctlmsr();
+> > +
+> > +	/*
+> > +	 * In case the host DEBUGCTL had changed since the last time we
+> > +	 * read it, update the guest's GUEST_IA32_DEBUGCTL with
+> > +	 * the host's bits.
+> > +	 */
+> > +	if (old_debugctl !=3D vcpu->arch.host_debugctl)
+>=20
+> This can and should be optimized to only do an update if a host-preserved=
+ bit
+> is toggled.
 
-v1->v2:
-- Used single register read to check SDA/SCL lines
----
- drivers/i2c/busses/i2c-riic.c | 53 +++++++++++++++++++++++++++++++++--
- 1 file changed, 51 insertions(+), 2 deletions(-)
+True, I will do this in the next version.
 
-diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
-index d7dddd6c296a..23375f7fe3ad 100644
---- a/drivers/i2c/busses/i2c-riic.c
-+++ b/drivers/i2c/busses/i2c-riic.c
-@@ -52,6 +52,8 @@
- #define ICCR1_ICE	BIT(7)
- #define ICCR1_IICRST	BIT(6)
- #define ICCR1_SOWP	BIT(4)
-+#define ICCR1_SCLO	BIT(3)
-+#define ICCR1_SDAO	BIT(2)
- #define ICCR1_SCLI	BIT(1)
- #define ICCR1_SDAI	BIT(0)
- 
-@@ -151,11 +153,11 @@ static int riic_bus_barrier(struct riic_dev *riic)
- 	ret = readb_poll_timeout(riic->base + riic->info->regs[RIIC_ICCR2], val,
- 				 !(val & ICCR2_BBSY), 10, riic->adapter.timeout);
- 	if (ret)
--		return ret;
-+		return i2c_recover_bus(&riic->adapter);
- 
- 	if ((riic_readb(riic, RIIC_ICCR1) & (ICCR1_SDAI | ICCR1_SCLI)) !=
- 	     (ICCR1_SDAI | ICCR1_SCLI))
--		return -EBUSY;
-+		return i2c_recover_bus(&riic->adapter);
- 
- 	return 0;
- }
-@@ -439,6 +441,52 @@ static int riic_init_hw(struct riic_dev *riic)
- 	return 0;
- }
- 
-+static int riic_get_scl(struct i2c_adapter *adap)
-+{
-+	struct riic_dev *riic = i2c_get_adapdata(adap);
-+
-+	return !!(riic_readb(riic, RIIC_ICCR1) & ICCR1_SCLI);
-+}
-+
-+static int riic_get_sda(struct i2c_adapter *adap)
-+{
-+	struct riic_dev *riic = i2c_get_adapdata(adap);
-+
-+	return !!(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI);
-+}
-+
-+static void riic_set_scl(struct i2c_adapter *adap, int val)
-+{
-+	struct riic_dev *riic = i2c_get_adapdata(adap);
-+
-+	if (val)
-+		riic_clear_set_bit(riic, ICCR1_SOWP, ICCR1_SCLO, RIIC_ICCR1);
-+	else
-+		riic_clear_set_bit(riic, ICCR1_SOWP | ICCR1_SCLO, 0, RIIC_ICCR1);
-+
-+	riic_clear_set_bit(riic, 0, ICCR1_SOWP, RIIC_ICCR1);
-+}
-+
-+static void riic_set_sda(struct i2c_adapter *adap, int val)
-+{
-+	struct riic_dev *riic = i2c_get_adapdata(adap);
-+
-+	if (val)
-+		riic_clear_set_bit(riic, ICCR1_SOWP, ICCR1_SDAO, RIIC_ICCR1);
-+	else
-+		riic_clear_set_bit(riic, ICCR1_SOWP | ICCR1_SDAO, 0, RIIC_ICCR1);
-+
-+	riic_clear_set_bit(riic, 0, ICCR1_SOWP, RIIC_ICCR1);
-+}
-+
-+static struct i2c_bus_recovery_info riic_bri = {
-+	.recover_bus = i2c_generic_scl_recovery,
-+	.get_scl = riic_get_scl,
-+	.set_scl = riic_set_scl,
-+	.get_sda = riic_get_sda,
-+	.set_sda = riic_set_sda,
-+};
-+
- static const struct riic_irq_desc riic_irqs[] = {
- 	{ .res_num = 0, .isr = riic_tend_isr, .name = "riic-tend" },
- 	{ .res_num = 1, .isr = riic_rdrf_isr, .name = "riic-rdrf" },
-@@ -495,6 +543,7 @@ static int riic_i2c_probe(struct platform_device *pdev)
- 	adap->algo = &riic_algo;
- 	adap->dev.parent = dev;
- 	adap->dev.of_node = dev->of_node;
-+	adap->bus_recovery_info = &riic_bri;
- 
- 	init_completion(&riic->msg_done);
- 
--- 
-2.49.0
+>=20
+> > +		__vmx_set_guest_debugctl(vcpu, vmx->msr_ia32_debugctl);
+>=20
+> I would rather have a helper that explicitly writes the VMCS field, not o=
+ne that
+> sets the guest value *and* writes the VMCS field.
+
+>=20
+> The usage in init_vmcs() doesn't need to write vmx->msr_ia32_debugctl bec=
+ause the
+> vCPU is zero allocated, and this usage doesn't change vmx->msr_ia32_debug=
+ctl.
+> So the only path that actually needs to modify vmx->msr_ia32_debugctl is
+> vmx_set_guest_debugctl().
+
+
+But what about nested entry? nested entry pretty much sets the MSR to a val=
+ue given by the guest.
+
+Also technically the intel_pmu_legacy_freezing_lbrs_on_pmi also changes the=
+ guest value by emulating what the real hardware does.
+
+Best regards,
+	Maxim Levitsky
+
+
+>=20
+> > +
+> >  	/*
+> >  	 * We did this in prepare_switch_to_guest, because it needs to
+> >  	 * be within srcu_read_lock.
+> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> > index 844e81ee1d96..05e866ed345d 100644
+> > --- a/arch/x86/kvm/x86.c
+> > +++ b/arch/x86/kvm/x86.c
+> > @@ -11020,8 +11020,6 @@ static int vcpu_enter_guest(struct kvm_vcpu *vc=
+pu)
+> >  		set_debugreg(0, 7);
+> >  	}
+> > =20
+> > -	vcpu->arch.host_debugctl =3D get_debugctlmsr();
+> > -
+> >  	guest_timing_enter_irqoff();
+> > =20
+> >  	for (;;) {
+> > --=20
+> > 2.26.3
+> >=20
 
