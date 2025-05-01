@@ -1,278 +1,272 @@
-Received: from mail-ej1-f65.google.com (mail-ej1-f65.google.com [209.85.218.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2078.outbound.protection.outlook.com [40.107.95.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C4333987;
-	Thu,  1 May 2025 23:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.65
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143795; cv=none; b=GCGdNNKB2KKen87DRRnPoF5Nn9+h8SwCSp6zeByrFHvEFzgXgZKFE9KDHn6joajZ67CZYvl/PpU27gnOgekTURYpSDBccY4wnM1ke4n2Usuf2JrEpRy1G3B9/uuEieFkaFO6CoAN8HYZt9lQL3sOREwZHJr89dUHYNUUl0SYTG8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143795; c=relaxed/simple;
-	bh=22QTplWOYTRI6XYyal6CZnasrfKacMUm9YeXDusUySo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fUk1OnARD1Qj5gvxGUeWcWiRFB6xinzLRPI3pJajOf7bbZunfjXkxCr1b1FbnGgkIBm8fg4HQRUL1RavoMtQe/wOXNAEB13R8W6Tpu+2Kf8wzJGll+bzF9YUM9soxMY7QPqAt4ISq5PIwrUN/+QVJnyZ0qkNhRD7kZWxDc+fDbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HJvFdFtP; arc=none smtp.client-ip=209.85.218.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AEC933987;
+	Thu,  1 May 2025 23:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.78
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746143828; cv=fail; b=qa8SAznpfLTjDhm+5uxOs+iosMhjgWiV0ViY2KVsHXDI8ffIeK+fUeiCQBFR/H2AVO/ci/VSOE7lbOuH26ZUMnpCNKm7zTdPGNOg9GxnNQohZGc/Q7npt9/F37W99bE0qah32wBQUZyID3R2RPeGzj7UxGis8vGdykA3A61UWis=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746143828; c=relaxed/simple;
+	bh=HaazbME43M6tB1iG5pJlYz43hmdwh61OhkFeOTgBnOo=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=NXmBNZLf96FR9ZWZ2nOXgxNPXhxAX6m26g+TrATqgncYFHj/pb2XlA6Q9h5YKw7jgwmkRH8nW8f0im8XVsKbvZaQGRGLVwSl6ZoxCAe3Zvs2KerZfdkldeEu+MBvvnNCg6vGeAOSBAzChsABKP2p+URDtEmYhdX5QWbU8fokf00=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=1Iz0nfdP; arc=fail smtp.client-ip=40.107.95.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HJvFdFtP"
-Received: by mail-ej1-f65.google.com with SMTP id a640c23a62f3a-acb415dd8faso214426466b.2;
-        Thu, 01 May 2025 16:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746143791; x=1746748591; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IpqcdB5HKLcvCClWag1YAOoCR5dOaM4sia0jSQ91WTc=;
-        b=HJvFdFtPpKRkUHN8FYiq19LesHdBtm5/m5fxiozVxKpCRDNKOAqvNoEEgJfZnEmDW9
-         64uHNqxSZw3ZNUlUp2ExcemN3alHFraEPrlaJIRvUdR2e5xJtuLoP09zawT7PizdQLR/
-         umD5rEVZMjxTv9Ub6+rsuJ4D5y/nN2B9pvAkp1rI2AZ+Iy4txhmNcdmJazPiR/bcm4T+
-         xU+WFXQgEURxToXlgO8wDEqYiohgd4qFTrdWdogCDYxnAFWAWFFDs3r0JcifXoAhZR6z
-         +p6prN+5tZtGGUVtMwto1SHCAwYUdOYe8kXtbUzeauxXxHetI0LKxDg+cFipZoahc8ci
-         rIsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746143791; x=1746748591;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IpqcdB5HKLcvCClWag1YAOoCR5dOaM4sia0jSQ91WTc=;
-        b=LuQh/Fxo5Me05RIQ12pA7J1Io9Cq7CJG3QaDx8dczkkf9l1S9a2JOE5tfHGHJSu8cl
-         11Gs3SVRyCUdYFXSWxSsxxhGaWimeQNe6G9YXbqboohy2gOW9pDxPoTPRuwQ9C24AgET
-         QbV1beQGmgT5g0/UDTNgHcvgDTkFG9RXJMxf04CNPkGhGoi2G3WXlntXFuLGgFEs3qtR
-         bI2VyF9c3d+7UTjiuOT+k4+RZxFp1r9PB7/PbJSipa9Wxc3RRvHZDJ7XR8bLTXfbjVBK
-         DPcExMos7GzHMXri/ZU1RERb857xpMZLi2xSb3FRHQ0dKvZ2pMh6MWpyfv/8lAPy9lFr
-         gCaw==
-X-Forwarded-Encrypted: i=1; AJvYcCVPebe14FEqwWp8lafJ/cu31w7R5XT9OJIWQhWH0V2vr47+d5YYIhcL1QerEs7xALozSro=@vger.kernel.org, AJvYcCVjD38l2+/S1Xy8f1W1zFdvA6rKWsXLTdQNgM7uNXe/Ic1qa+2fNKr48tazkAJzlH7EO7sNLKUl/qrUWjOs@vger.kernel.org, AJvYcCXUuI3LEvHQ5VDIbVAe6MIJh+yYdv24cvakyBVCh+40WY9alTRK4R1EmuQ0qxera82AlHPaFwMVhY0KrVnE8+4X@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDAN840A3UnFzOZ5tSIkapEMK3tZTuoOsJh0Vtt+Awrz+taYVM
-	kPLycNa4jSQFDJPztw/OE8OGj0ZFZ93QAu3T3n5EMZU17fGGI88sxOYHXP5mh/H7flmQgwjknlY
-	clZk9fJPExAFMNra4vU+FzAuPPBA=
-X-Gm-Gg: ASbGncvRTwp0yag92YzTRHwoMQpt2VdMNbTS53YeXyVFifTk/aiLm67cj2/A0ABxkCM
-	8QI1S+fN3AKZ1GjJNefyIPQDiiiD5lFgqsVNMWLfqF1DGgJtkOXEACi0A9P6jE5/KGRbfpU27Ep
-	0XBr9VBkN1tVSul0V3H2eDamhjr4/EEDnj79vPoVq6hiEWw5jlUtSv4Q==
-X-Google-Smtp-Source: AGHT+IE8rFYVy5AEV69cNgB7LjR9j9JDMd63wN3Vtcz9MvmQSCvUFlM2VwRHa8i1gy3jD9Ei18VDPKGcCjJ/nJCaAQ0=
-X-Received: by 2002:a17:907:a587:b0:ac7:3912:5ea5 with SMTP id
- a640c23a62f3a-ad17af80715mr93822666b.58.1746143791303; Thu, 01 May 2025
- 16:56:31 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="1Iz0nfdP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=puq/t9eQsXD5NUE5uc3PxkZK+eoztO/wGwTUl34FCBRXXlEhxVqxRBvgQn/rFxgh2JXKeFn9q4rIwukbPTOCsegdIFSRiG1VcJ25WKjSYlje77gX3nrldXWYy69XllrbsTUyGZkjjniW6VV05qKVGaymTytOlo6uNXBIJjkb+DlIflSgknreln8mm7EiAQckkI1yS8w0Mstbt+eUx+9udLHlPATQ6YxbHhZYSxhSxV0EtDxeURQvtP2DCVGzU5xn8fjVFl6DqM7mCBiWxzq6aKeVkkDB8uRXdGBXo2v/hCe7vGTZPTmTa/sy/stjQZJ2a/Nak5c90EcZyDaGhy8oKA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3vWecc5xVBpX6ngVzLO6G4scdsjbC6dmV9eULon0zJg=;
+ b=AwfI9+CAisyeyammHrekCGHE0vWQTGf+YOXeUGrzFUokLxAvQWkCnt4Rk81Pt6YTVPoJVE70UeTFZKRDGrLjhfxMXS8FUzSWl8uNTnDVlvg7kgq+yfviNbimFx0HUsgHmcWbgcr1G/HZiAT18pVJVfbbyikmPrtPy8MU+dNmN05MQkiU2CxNot2cYZ5LHFkB3RsnmkAlXIOVoxMetxNKYtouDrTVb2G3okJ7FHkuBOYZJ7lWtCUi3TUMoFaB2nXEcsseSyxhvcw/x9rjfbqiq/v/+VitdqLcJWPqvKnL0dBZfOszZ1GBdwvZPaH9jBjfCOZ+WiGDt5HIWVnDmO9mqw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3vWecc5xVBpX6ngVzLO6G4scdsjbC6dmV9eULon0zJg=;
+ b=1Iz0nfdPhLJNqKZhyfUyPVQ8sYzRGkkOI1jo1U55HDSKSZSegKTt0//QUIZN30NU8DNyuvGfzdL1U6yL0qe3RUR/c08Tkdo+FMr05bE8pLcTea3++xVgKnXPV6E3omnZVAq21ibtEYNLxDI7EiXGwKcr2FMPe21V+H6lvO8F2n4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH2PR12MB4956.namprd12.prod.outlook.com (2603:10b6:610:69::11)
+ by CH1PPFF5B95D789.namprd12.prod.outlook.com (2603:10b6:61f:fc00::62a) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.31; Thu, 1 May
+ 2025 23:56:58 +0000
+Received: from CH2PR12MB4956.namprd12.prod.outlook.com
+ ([fe80::fa2c:c4d3:e069:248d]) by CH2PR12MB4956.namprd12.prod.outlook.com
+ ([fe80::fa2c:c4d3:e069:248d%3]) with mapi id 15.20.8699.019; Thu, 1 May 2025
+ 23:56:58 +0000
+Message-ID: <ab09cbdb-8e30-4720-8ca5-66488922db33@amd.com>
+Date: Thu, 1 May 2025 18:56:54 -0500
+User-Agent: Mozilla Thunderbird
+Reply-To: tanmay.shah@amd.com
+Subject: Re: [PATCH v2 0/4] of: Common "memory-region" parsing
+From: Tanmay Shah <tanmay.shah@amd.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>,
+ "Rob Herring (Arm)" <robh@kernel.org>,
+ Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>,
+ Daniel Baluta <daniel.baluta@nxp.com>,
+ Iuliana Prodan <iuliana.prodan@nxp.com>, "Andrew F. Davis" <afd@ti.com>
+Cc: Saravana Kannan <saravanak@google.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Bjorn Andersson <andersson@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Patrice Chotard <patrice.chotard@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Chen-Yu Tsai <wens@kernel.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ linux-arm-msm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20250423-dt-memory-region-v2-v2-0-2fbd6ebd3c88@kernel.org>
+ <CANLsYkxKHhCHYrbAGzQ48QGpL_DbuLnX3=ppmpyu0vjuuvvODg@mail.gmail.com>
+ <8c8e9362-c116-4a80-bcb7-a44df68e0bfc@amd.com>
+Content-Language: en-US
+In-Reply-To: <8c8e9362-c116-4a80-bcb7-a44df68e0bfc@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN7P222CA0018.NAMP222.PROD.OUTLOOK.COM
+ (2603:10b6:806:124::27) To CH2PR12MB4956.namprd12.prod.outlook.com
+ (2603:10b6:610:69::11)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <20250501073603.1402960-9-luis.gerhorst@fau.de>
-In-Reply-To: <20250501073603.1402960-9-luis.gerhorst@fau.de>
-From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Date: Fri, 2 May 2025 01:55:54 +0200
-X-Gm-Features: ATxdqUGuoTBKs9l0zhe3Yzsic4wyHg46bSXEHmrxNhmAcDg2gPFfcMFHEjWXEc4
-Message-ID: <CAP01T76kOixPct5cOPHGKubFWSbSS7ztEnZc02v2wWGPOUYRCQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 08/11] bpf: Fall back to nospec for Spectre v1
-To: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
-	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
-	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
-	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
-	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
-	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org, 
-	Maximilian Ott <ott@cs.fau.de>, Milan Stephan <milan.stephan@fau.de>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB4956:EE_|CH1PPFF5B95D789:EE_
+X-MS-Office365-Filtering-Correlation-Id: f17d7588-4623-42a6-6ac5-08dd890bdb70
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?b1MzR2VRWUVwNExtdyt6ZjVtUWhYRFhxNzQvY2pPUjlhYm9JS2l0S3RZMmRm?=
+ =?utf-8?B?bUhTdGs5Mm5WVUpkRElEWmxHY3ZqUzMyMzlreDBmQ3ptRlNnUU1ncE5udnps?=
+ =?utf-8?B?Nk9pekQzNnJzTXhyRldSVGtqM0tEZ3laVXQvdXJuMit5c3RENFIvV3lDRUJE?=
+ =?utf-8?B?OVRhMWRaTUcwNWNjL0NLd3IzRVFBL2x2a2lNc1BoWHdpNlZQQTBRejZJR3JR?=
+ =?utf-8?B?M2w1ckxCRGw1eU5LclNMWWFsWGlZKzEzaWZZMjNWeTM2NUVhcWt1WHhUTnBU?=
+ =?utf-8?B?Nzg5ZERIcnB3Yno3clEwRmYzd0M4enRaanJtVFZpRkNQZ2ZTcitkdkFtNnJn?=
+ =?utf-8?B?Sjc4R2xMNUREcXZOUzBrSllUK1VOaSt2Z0pkMVFhcFFSeEh3bDB5N0FySFNJ?=
+ =?utf-8?B?RHpFUFZpaVA3aVlJbitWK0ZSdVpvUjVacTIvcEFvMHFOZXR6em1valZUKzVr?=
+ =?utf-8?B?SjhJWnpDeXR5bTdiV1IzTnlmTUdDOEdSeEE4ejcwc3FrekZTd05HNktLb2tt?=
+ =?utf-8?B?MVRSNmdPeitUY2lnVUxkc3FYbmFiL056dlBieG00RHJTc1IraGZGVE13UldB?=
+ =?utf-8?B?dkJIMlBGZVVIYkV5MHhNWVBrZElkcjFPbXNvOS9zY3pWY3pEKzBraG1YSnVu?=
+ =?utf-8?B?S3hlTzBJUS90dDdqdXlhM0d4VjlTZTRUYzUwU0ppbnJNRkREUUZYMGJWNFZu?=
+ =?utf-8?B?bWVHY21rZHd6a1FDNUpzQ1BqQy9CVjBxMFltc1MyTTJmL0RzVGFjN3M4T3pM?=
+ =?utf-8?B?VUhRTXU0dWVUQndGY01FUGxCVVZUaTFGOUM2ZU9UdWlOR2p2QzQyZGtmVU1w?=
+ =?utf-8?B?NkRPcHBFNDdYYXNSRTVSV2Y5N3pSRnowNThPcFE4UGlQWWp4dElXV2szK1dP?=
+ =?utf-8?B?ZytEY3l5cFhiVmFYQm1hZDZveTNqdG83ZktNUXNmMGFjRWVNOGZ1dTJBTkxs?=
+ =?utf-8?B?YmQyRHpUNUpUbzduT1lQL25Ga2RicVpQYjYwRVpRT0RhczdXVk1Nc2l0ZTBj?=
+ =?utf-8?B?WnZQTmdEYW5yU3kxY1diOXJMRWo2bnJhTE9IMFZmbFRzc0Z2aGRlcU1kY1Vv?=
+ =?utf-8?B?Y0YwY1htVVNONEwyRmNMYTZoUWs5ZEVjdWlUTTBqL1BSWEFEMWwwWDNqSmRh?=
+ =?utf-8?B?ZEUzSjNrK1EwSGIyU3RYQ3lWbVJVUzllM1B0ci9ueWdDR3lmaVlEVzNpY2JL?=
+ =?utf-8?B?TkZCdUtNbCt3RnZoWWs2UjczV01pUHR1LzFERVFhV2trRW9NTEkzSUhaUlMr?=
+ =?utf-8?B?TFpDait2YTAwQ0xMdzVuMjBmMm5MT1E4dTVtWE9qOFI5SzN3eTZwQ3N4YzEv?=
+ =?utf-8?B?VXd0Q1FGRGFUaXpEN3BwT3RWbFdZUW5HZDRyRUpNeTdvT2VWNkJId1U2ZTQ1?=
+ =?utf-8?B?K1FrZDJLT0h1dUVGbGtTNWNsR3hhcFYxMTRaY3pBK1FqVmp5dHlmNWQ1d0FY?=
+ =?utf-8?B?ZmFHQXppdGRuVWxpT1NKMVhhSzF3WG1ZbHROM3BIdXBNUHBuYXVFU2dvMDFF?=
+ =?utf-8?B?eEFoTkRnWkpUU0Y1Y1BaV1RNOXFIdzNHaDJpNjJFWXpLdzVRYUFRS2V2RzNH?=
+ =?utf-8?B?eFdWQTlXWWY3empvTHlOdGVHUlU1TkQzMUEzSVMvUXMyaHJZbXFUT3pmVVFQ?=
+ =?utf-8?B?Q2libm5UamszdzNYSUJLbDZiSEUydExvNGxxQmt1MkhmWGV5enJxakhIMWJH?=
+ =?utf-8?B?bWQ1c1RQVEpuT1RlZjZXTzRjOXQxbjdCSzBCME5Tb2lXQU82YzMwai8zZmtu?=
+ =?utf-8?B?N3VUdjlHZVNtV2xSSWo5SVZiQ05UMjQ2bFBEMnFCR1NFc0xrazlaR2dwZkR1?=
+ =?utf-8?B?Y2o1b04yYXRvLzJzZUxETHA2SDRsWkJpK3hjSVlkNmJyV3h2eFh3ZTQ5QitG?=
+ =?utf-8?B?NHNVQ1JQa1h2cW5Xd08zRTF1dG55SHBHOHQ3TWZVc3BOeTdOUGF6R01RdHRX?=
+ =?utf-8?Q?TtRCP60T5KQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB4956.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TUFiYk84cXJTTTVjbXJ0NVRXeDM2aFV0ZjJiVnNtNjZZb2h5TDRuZVRzeTVr?=
+ =?utf-8?B?LzNySXUwK2JTam5VNHJLOG9GZmI2VHRkbnROUDZEQ0NpL1JOcE5yMUxueWZs?=
+ =?utf-8?B?QUx3WFNMclY0S3RiaGJPWnlOajVrR1JzUDgvdVdJMC8xZGNJd3E5OUZEcjEx?=
+ =?utf-8?B?NEdSd1NkRTNXdVpOdWFpSjlyVzlYOEtET04xWnFQcXkwT0U3RlB5TVgyREhJ?=
+ =?utf-8?B?TytjL1F4aTNIdCtad1dmemRuWjJtL1gxTFpnbklWZHZIRUp2RFNhTy9aQTNX?=
+ =?utf-8?B?cVVleFhNUmtOZmhVVzIwVTNzcCt4ckM1UmlWN2I1OWJEUW51TVZYK2RMamMr?=
+ =?utf-8?B?REZDL09tcSt5ZVZMUjBCY1dGNEc1Vm1rTXdCbnJlcEQ3MWd1QUd1ZmdvQ1Zk?=
+ =?utf-8?B?L1BKNFExMDkxUkYzOGc1WWk2SFcwbjVQMU5WeU8wZFVkcGFQZDc1aE81bFVw?=
+ =?utf-8?B?MkxvTHV0aDh0bk5nL0s5aXZ6ZkNISkNvVDlQT1ViRWJ1cTBpVFJDUlhjQ0dU?=
+ =?utf-8?B?ZDFvV2F6ZFdRUE0wVlhIZ0x5em8yV05IaXhYa0xQYndBcWx0cllLYlF5bkcv?=
+ =?utf-8?B?MHRQK3J5STRHNytUeEhsUnNaOGFQd29scmhzbkRwS3VWMXFvZk93ODNhSE1a?=
+ =?utf-8?B?eXZQbnpqQVpXUmo4UnhyeS8ySVlzbGp6bTNoQ1dqTzJCUkRrdnRzbTZ6NXRF?=
+ =?utf-8?B?TmFqZGxhd2dRdUFVRHlMbVJBTFkzbm5wenhyMkNDT0oyME5PcnpadTVuejQ1?=
+ =?utf-8?B?ZGw4S2ZxaTIxRWF2dkYrNGZhVGhyMWZDTnpuVllYdW9vcTNrN0drQnpsd29k?=
+ =?utf-8?B?SVdMUjA0YXl3Qi9PaktIY0NIcnd2dG5hWUQvbVlycFhDb0VEdGNYUjNETGc2?=
+ =?utf-8?B?aFdBUUFVRkFFUkRxY1JXZFRFbG9Gc2dhM2g0Q3BOdnNreUMwemZTcmVTOGNp?=
+ =?utf-8?B?ZWNRMEtSRTJKZzZzSUZrTjN6NEtZczFKMUtMdVZQdHZEdXBNdzlYbENjYy9p?=
+ =?utf-8?B?aUFJYUhJbGF2Nmo3Snk1dTVoUDRYM215YThJb3BWaXFVRlB5eGIrMHVXTzZF?=
+ =?utf-8?B?cHppeUxuQ1Y5Q1V2NE9yTUJyM1owbnc4Skx1cE1OWHVuK0FqWEZwZWwrVkV4?=
+ =?utf-8?B?SUVGcFlDZFVaa0FqZUVaNURzcU8rV0xxQVQrakFwNXptcCtTZVFObGFHSENQ?=
+ =?utf-8?B?bmw0Y2UzZzRXdUpzV0x6Yk1vc1NxaDY1RnkxaEZ0TzQ2d3hmNHYwVEx6MU5K?=
+ =?utf-8?B?eGtWY0IxNUN2cGV1a0Y0TENjTjZsNnJHd3JVVWpaNXdCWGFwampxUVFIUXhm?=
+ =?utf-8?B?MnBkTE0vYnpLbWp4ZTd0Mk9BMFZvbS9OVmtJemJVK2wvT2I1cUxVWUNaNmtk?=
+ =?utf-8?B?RnF1Rm1JTTY5d243Yi84N3NFYk1HMUd3ZXBsYWxINGlCOVZtRUwrMEpudTFX?=
+ =?utf-8?B?azQ1R2R4TmRCc0hPWDRQUXR5MEdyNHFjTVNmNUc0Y1NWYVVhMGErLy9UY1dD?=
+ =?utf-8?B?dkNnWjd0anQzRFVVY283bHlhTXM3eEJxVGUrWjFyd3FvdDRKSGhSWDZYUTgx?=
+ =?utf-8?B?YkRDeS9LbGUvWlc3eG9iNjZ0bkF3ZCtoemVDazRIbWVJMSs3RTcveWJXZm5E?=
+ =?utf-8?B?blhKaVl3b1M5cm1iR1dqN3AwMEFocVpDSGc4MldYYkhINFRQVEF4T3NqQXlM?=
+ =?utf-8?B?cTd6WXRjQUZqK0ZBTUc3NHpkQ2tlRWtzN1RWN2FJZkFTS2d3N0V2TGl2TWly?=
+ =?utf-8?B?NzZIV0tRQU5XYitSSkpFbFRBcGpQTGY3dWoyUThNRlBseGRPa1A3dXJEdG5p?=
+ =?utf-8?B?dVkyZ1JtVWtweFVZYnY5dVlJejdlNjRUOTBNTGJvdlJXck9tMVhDNElwQjBk?=
+ =?utf-8?B?b1hCWGxMZXE2bXJqdUhvR2lEeUlWUE55ME11VEtrczlxVVlLd3pwL0RxRmVq?=
+ =?utf-8?B?WU5CUjFuU2hWZDQ0QUVuT0Z6QmVwSW1wM1B5VTF6MFhXZFRwMHBwN0FYVHl5?=
+ =?utf-8?B?UmQ1dnRuSC8wd09yQVU3M1JOYjNkclBMa3E3TTMwZ0JEM3RnYmVCeE5odmlQ?=
+ =?utf-8?B?aVdmOUxSa1A2MTJrUlZleDFKV1ZjVHU3N0NTTnBCdGJUR2ZzcVJzZHJsRlNr?=
+ =?utf-8?Q?uURVfDPbSGE3eIA8OYokk5eNc?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f17d7588-4623-42a6-6ac5-08dd890bdb70
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB4956.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 23:56:57.8250
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uwNpcm27+iXMVbZ1LXLosPFvnJP//CiBZWpmvskof6c6ZFS4sBs4tYxAEk/kclCf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH1PPFF5B95D789
 
-On Thu, 1 May 2025 at 10:00, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
->
-> This implements the core of the series and causes the verifier to fall
-> back to mitigating Spectre v1 using speculation barriers. The approach
-> was presented at LPC'24 [1] and RAID'24 [2].
->
-> If we find any forbidden behavior on a speculative path, we insert a
-> nospec (e.g., lfence speculation barrier on x86) before the instruction
-> and stop verifying the path. While verifying a speculative path, we can
-> furthermore stop verification of that path whenever we encounter a
-> nospec instruction.
->
-> A minimal example program would look as follows:
->
->         A = true
->         B = true
->         if A goto e
->         f()
->         if B goto e
->         unsafe()
-> e:      exit
->
-> There are the following speculative and non-speculative paths
-> (`cur->speculative` and `speculative` referring to the value of the
-> push_stack() parameters):
->
-> - A = true
-> - B = true
-> - if A goto e
->   - A && !cur->speculative && !speculative
->     - exit
->   - !A && !cur->speculative && speculative
->     - f()
->     - if B goto e
->       - B && cur->speculative && !speculative
->         - exit
->       - !B && cur->speculative && speculative
->         - unsafe()
->
-> If f() contains any unsafe behavior under Spectre v1 and the unsafe
-> behavior matches `state->speculative &&
-> error_recoverable_with_nospec(err)`, do_check() will now add a nospec
-> before f() instead of rejecting the program:
->
->         A = true
->         B = true
->         if A goto e
->         nospec
->         f()
->         if B goto e
->         unsafe()
-> e:      exit
->
-> Alternatively, the algorithm also takes advantage of nospec instructions
-> inserted for other reasons (e.g., Spectre v4). Taking the program above
-> as an example, speculative path exploration can stop before f() if a
-> nospec was inserted there because of Spectre v4 sanitization.
->
-> In this example, all instructions after the nospec are dead code (and
-> with the nospec they are also dead code speculatively).
->
-> On x86_64, this depends on the following property of lfence [3]:
->
->         An LFENCE instruction or a serializing instruction will ensure that no
->         later instructions execute, even speculatively, until all prior
->         instructions complete locally. [...] Inserting an LFENCE instruction
->         after a bounds check prevents later operations from executing before
->         the bound check completes.
->
-> Regarding the example, this implies that `if B goto e` will not execute
-> before `if A goto e` completes. Once `if A goto e` completes, the CPU
-> should find that the speculation was wrong and continue with `exit`.
->
-> If there is any other path that leads to `if B goto e` (and therefore
-> `unsafe()`) without going through `if A goto e`, then a nospec will
-> still be needed there. However, this patch assumes this other path will
-> be explored separately and therefore be discovered by the verifier even
-> if the exploration discussed here stops at the nospec.
->
-> This patch furthermore has the unfortunate consequence that Spectre v1
-> mitigations now only support architectures which implement BPF_NOSPEC.
-> Before this commit, Spectre v1 mitigations prevented exploits by
-> rejecting the programs on all architectures. Because some JITs do not
-> implement BPF_NOSPEC, this patch therefore may regress unpriv BPF's
-> security to a limited extent:
->
-> * The regression is limited to systems vulnerable to Spectre v1, have
->   unprivileged BPF enabled, and do NOT emit insns for BPF_NOSPEC. The
->   latter is not the case for x86 64- and 32-bit, arm64, and powerpc
->   64-bit and they are therefore not affected by the regression.
->   According to commit a6f6a95f2580 ("LoongArch, bpf: Fix jit to skip
->   speculation barrier opcode"), LoongArch is not vulnerable to Spectre
->   v1 and therefore also not affected by the regression.
->
-> * To the best of my knowledge this regression may therefore only affect
->   MIPS. This is deemed acceptable because unpriv BPF is still disabled
->   there by default. As stated in a previous commit, BPF_NOSPEC could be
->   implemented for MIPS based on GCC's speculation_barrier
->   implementation.
->
-> * It is unclear which other architectures (besides x86 64- and 32-bit,
->   ARM64, PowerPC 64-bit, LoongArch, and MIPS) supported by the kernel
->   are vulnerable to Spectre v1. Also, it is not clear if barriers are
->   available on these architectures. Implementing BPF_NOSPEC on these
->   architectures therefore is non-trivial. Searching GCC and the kernel
->   for speculation barrier implementations for these architectures
->   yielded no result.
->
-> * If any of those regressed systems is also vulnerable to Spectre v4,
->   the system was already vulnerable to Spectre v4 attacks based on
->   unpriv BPF before this patch and the impact is therefore further
->   limited.
->
-> As an alternative to regressing security, one could still reject
-> programs if the architecture does not emit BPF_NOSPEC (e.g., by removing
-> the empty BPF_NOSPEC-case from all JITs except for LoongArch where it
-> appears justified). However, this will cause rejections on these archs
-> that are likely unfounded in the vast majority of cases.
->
-> In the tests, some are now successful where we previously had a
-> false-positive (i.e., rejection). Change them to reflect where the
-> nospec should be inserted (using __xlated_unpriv) and modify the error
-> message if the nospec is able to mitigate a problem that previously
-> shadowed another problem (in that case __xlated_unpriv does not work,
-> therefore just add a comment).
->
-> Define SPEC_V1 to avoid duplicating this ifdef whenever we check for
-> nospec insns using __xlated_unpriv, define it here once. This also
-> improves readability. PowerPC can probably also be added here. However,
-> omit it for now because the BPF CI currently does not include a test.
->
-> Briefly went through all the occurrences of EPERM, EINVAL, and EACCESS
-> in the verifier in order to validate that catching them like this makes
-> sense.
->
-> [1] https://lpc.events/event/18/contributions/1954/ ("Mitigating
->     Spectre-PHT using Speculation Barriers in Linux eBPF")
-> [2] https://arxiv.org/pdf/2405.00078 ("VeriFence: Lightweight and
->     Precise Spectre Defenses for Untrusted Linux Kernel Extensions")
-> [3] https://www.intel.com/content/www/us/en/developer/articles/technical/software-security-guidance/technical-documentation/runtime-speculative-side-channel-mitigations.html
->     ("Managed Runtime Speculative Execution Side Channel Mitigations")
->
-> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-> Acked-by: Henriette Herzog <henriette.herzog@rub.de>
-> Cc: Maximilian Ott <ott@cs.fau.de>
-> Cc: Milan Stephan <milan.stephan@fau.de>
-> ---
 
-The patches from here on look good in general, I will ack after taking
-another look later.
 
-I had a more high-level question though.
-Back when all of this surfaced, compiler folks came up with another
-solution, to rely on Intel's guarantee that conditional moves are not
-predicted.
+On 5/1/25 10:44 AM, Tanmay Shah wrote:
+> Hi Mathieu,
+> 
+> I tested this patchset on top of recent for-next branch. I don't see 
+> issue on AMD-xlnx ZynqMP platform. With this:
+> 
+> Tested-by: Tanmay Shah <tanmay.shah@amd.com>
+> 
 
-if (condition) {
-   mask = !condition ? 0UL : ~0UL; // CMOVcc
-   ptr &= mask;
-   x = *ptr;
-}
+Hi Mathieu,
 
-In case the condition being true in the speculative domain leads to
-problems, the speculative domain will just read from NULL and not leak
-sensitive data.
-The assumption is that cost of instrumentation in speculative domain <
-completely stalling it until prior instructions are done using lfence.
-So speculation is still helpful when the branch is not mispredicted.
-Now I imagine it's not fun to do such analysis in the verifier (I've
-tried), but theoretically we could break it down into emitting
-bytecode from the compiler side, and lifting the compiler to do it for
-us, and ensuring the end result produced is sane (by still following
-speculative paths) from the verifier.
+Looks like I said it too soon. Firmware loading works with this series, 
+but RPMsg doesn't work. I am debugging further and will provide inputs 
+once I find bug on xlnx_r5_remoteproc driver.
 
-You talk about this in the paper and in the presentation as future work.
-My question is mainly whether you considered implementing this, if
-yes, what made you choose a nospec barrier over something like above?
-Was it the complexity of realizing this during verification?
-Are there any implications of reading from NULL that would cause problems?
-Also, did you characterize how much difference it could make?
-The drop in SCTP throughput seems to suggest so, since CPU-bound
-computation was moved into the program.
-Otherwise most programs mostly defer to helpers for heavy lifting.
-Not that it was as fast as a helper would be, even without nospec, but still.
+Please ignore above TB for now.
 
-Also a bit sad we don't split the program into BBs already, which
-could help reduce your mitigation's cost + plus also reduce cost of
-instruction patching (unrelated).
+Thanks,
+Tanmay
 
-Anyway, all that said, this is valuable stuff, so I was just curious.
+> On 4/24/25 9:14 AM, Mathieu Poirier wrote:
+>> Arnaud, Daniel, Iuliana, Andrew and Tanmay - please test this patchset
+>> on the platforms you are working on.
+>>
+>> Thanks,
+>> Mathieu
+>>
+>> On Wed, 23 Apr 2025 at 13:42, Rob Herring (Arm) <robh@kernel.org> wrote:
+>>>
+>>> While there's a common function to parse "memory-region" properties for
+>>> DMA pool regions, there's not anything for driver private regions. As a
+>>> result, drivers have resorted to parsing "memory-region" properties
+>>> themselves repeating the same pattern over and over. To fix this, this
+>>> series adds 2 functions to handle those cases:
+>>> of_reserved_mem_region_to_resource() and of_reserved_mem_region_count().
+>>>
+>>> I've converted the whole tree, but just including remoteproc here as
+>>> it has the most cases. I intend to apply the first 3 patches for 6.16
+>>> so the driver conversions can be applied for 6.17.
+>>>
+>>> A git tree with all the drivers converted is here[1].
+>>>
+>>> v2:
+>>> - Fix of_dma_set_restricted_buffer() to maintain behavior on warning msg
+>>> - Export devm_ioremap_resource_wc()
+>>> - Rework handling of resource name to drop unit-address from name as it
+>>>    was before.
+>>> - Link to v1:
+>>>    https://lore.kernel.org/all/20250317232426.952188-1-robh@kernel.org
+>>>
+>>> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/ 
+>>> memory-region
+>>>
+>>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+>>> ---
+>>> Rob Herring (Arm) (4):
+>>>        of: reserved_mem: Add functions to parse "memory-region"
+>>>        of: Simplify of_dma_set_restricted_buffer() to use 
+>>> of_for_each_phandle()
+>>>        devres: Export devm_ioremap_resource_wc()
+>>>        remoteproc: Use of_reserved_mem_region_* functions for 
+>>> "memory-region"
+>>>
+>>>   drivers/of/device.c                       | 31 +++++-------
+>>>   drivers/of/of_reserved_mem.c              | 80 ++++++++++++++++++++ 
+>>> +++++++++++
+>>>   drivers/remoteproc/imx_dsp_rproc.c        | 45 +++++++----------
+>>>   drivers/remoteproc/imx_rproc.c            | 68 ++++++++++ 
+>>> +---------------
+>>>   drivers/remoteproc/qcom_q6v5_adsp.c       | 24 ++++------
+>>>   drivers/remoteproc/qcom_q6v5_mss.c        | 60 ++++++++---------------
+>>>   drivers/remoteproc/qcom_q6v5_pas.c        | 69 +++++++++ 
+>>> +----------------
+>>>   drivers/remoteproc/qcom_q6v5_wcss.c       | 25 ++++------
+>>>   drivers/remoteproc/qcom_wcnss.c           | 23 ++++-----
+>>>   drivers/remoteproc/rcar_rproc.c           | 36 ++++++--------
+>>>   drivers/remoteproc/st_remoteproc.c        | 41 ++++++++--------
+>>>   drivers/remoteproc/stm32_rproc.c          | 44 ++++++++---------
+>>>   drivers/remoteproc/ti_k3_dsp_remoteproc.c | 28 +++++------
+>>>   drivers/remoteproc/ti_k3_m4_remoteproc.c  | 28 +++++------
+>>>   drivers/remoteproc/ti_k3_r5_remoteproc.c  | 28 +++++------
+>>>   drivers/remoteproc/xlnx_r5_remoteproc.c   | 51 ++++++++------------
+>>>   include/linux/of_reserved_mem.h           | 26 ++++++++++
+>>>   lib/devres.c                              |  1 +
+>>>   18 files changed, 339 insertions(+), 369 deletions(-)
+>>> ---
+>>> base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+>>> change-id: 20250423-dt-memory-region-v2-a2b15caacc63
+>>>
+>>> Best regards,
+>>> -- 
+>>> Rob Herring (Arm) <robh@kernel.org>
+>>>
+> 
+
