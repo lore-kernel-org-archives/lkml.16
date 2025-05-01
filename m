@@ -1,54 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C186C23183C;
-	Thu,  1 May 2025 07:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF4E1C5F18;
+	Thu,  1 May 2025 07:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746083917; cv=none; b=N4dCyTAi7FzYFTknkpy0Au8XgR2hKBWFURpGKPRS/teVXzy6IL+S6Dww7iS3wZDEfrLHNN3sNGriYXOnmdWHVGhhiHRtFVm6zD9C1AHdAe8V0jf5Jlhz+NxneKZ7LNP4Ub2cPZqYALobVy5sdCzMh415noqp+jHpocQaKafkPDo=
+	t=1746084418; cv=none; b=BeTBpmC/wmOj8ancfxmRRMs9l5EX3fYyFW38by8v/yDvguM5YEtjimQQrGuOuApt6w3e4vmeXrqKCFGoIDhC7PltJq2MWqgD/i6C63yp8r++PSkbqtQ+SMNAqu79hWbw8kw7elFIuoiaoIxu4AfX1uZW9sTzNkiJ4hc/aTFk3jU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746083917; c=relaxed/simple;
-	bh=su7Ol8QR1fuFy/VFNGr36BLKigm4/e1vZx94ZJZJg38=;
+	s=arc-20240116; t=1746084418; c=relaxed/simple;
+	bh=fcj+/Q5zGgxsksc0D9GAz9SDbZi8WyrwNoMU1x+Xhew=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MZhuhOu117thaXJQZkTJ/e61FAj0NVkae/MZcg6O++mknv3TD2g+Rb4E2CUbsuqZQxCOQRTM/m4LA/Te33m7MoG0VRdxc9/HDftU6VuxsRrwfX4yH9LRLRiXIF0YeOfYpE/djRnr0gC9n+xLhBrAF92DY+fVn20WzetdWpfZMi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rPJcbEsX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mEEEKf9uvBhFMlp5+lafiaIt2/3d+VbjC8vmtIhaQH8uWv2HUC2DI49gK1+MngD6kR7BmKqa82kyxfpjlDQDxt3luNqNvTSn+8niAWJsKsqk8Vn9AlsKF3fubi+UpBDhS71f64EDwE3NvguoIPNqJQjQ4dNL147EenehRqluRMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=dbx6B/So; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IqcIlZkN; arc=none smtp.client-ip=202.12.124.147
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rPJcbEsX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF92C4CEE3;
-	Thu,  1 May 2025 07:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746083916;
-	bh=su7Ol8QR1fuFy/VFNGr36BLKigm4/e1vZx94ZJZJg38=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rPJcbEsXhGMC0dq469bmaLlkkVmpTUn3Tb0S6zGu3+bqDNRihHhQAt0pboiT/Bfnn
-	 oDLbw5I2ui5R8d5zxjLUmtpyyQ/Ql3Q2drqkJMJTROy9N0EmaHutplO2D6U4sEAGcu
-	 61EjbwYysFa7sycvpKmbswX/b8m0KRwA739rNN6k=
-Date: Thu, 1 May 2025 09:18:32 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Matthew Rosato <mjrosato@linux.ibm.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	clang-built-linux <llvm@lists.linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
-	io-uring@vger.kernel.org, virtualization@lists.linux.dev,
-	Halil Pasic <pasic@linux.ibm.com>,
-	Eric Farman <farman@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
-Message-ID: <2025050118-glade-lunchroom-927f@gregkh>
-References: <20250429161051.743239894@linuxfoundation.org>
- <CA+G9fYuNjKcxFKS_MKPRuga32XbndkLGcY-PVuoSwzv6VWbY=w@mail.gmail.com>
- <c8e88c29-e1bb-4845-a362-dc352d690508@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="dbx6B/So";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IqcIlZkN"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfout.stl.internal (Postfix) with ESMTP id 38D1011400AA;
+	Thu,  1 May 2025 03:26:52 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-09.internal (MEProxy); Thu, 01 May 2025 03:26:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1746084412; x=1746170812; bh=W76LNGNS3h
+	vL31AWYD9+djiTqQgfbDOoIsUIrg+PvUA=; b=dbx6B/SoNtQ6qk4nK4dWRH2WMI
+	MfRKU5gNCb1ok7jzenNRWOBl5bGiWK8HtRnSkz6inGFQZdSOZlIPwHaT6SAXfcyY
+	GFx8d5btzOu44gjH8lkuC3t8Lg21uveB/EnptREd33dWvtyhFtdN+JV1iAHKfePb
+	QtRnc41K0yI5cFyuhMnyqJcdqTJGoR5lV70tOd6NKm/rpf5kZ0PmcOY+UIzCJWfd
+	MYC3bFPK4NBhg9H8XSbvDjk/IH0QwRnRxYwZf4qlNglXiWP3ySBTNEYR7tCcqfZF
+	l0KEGu6gTP+bwz34lw1kdRXxa3uB17JAFtYsVvVay3umrmOX0akk6CqsSc9g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746084412; x=1746170812; bh=W76LNGNS3hvL31AWYD9+djiTqQgfbDOoIsU
+	Irg+PvUA=; b=IqcIlZkNTWvlGeFUHjIbon5PSZ2vmruLW/jSYFxmKqu0wsEK8UG
+	AryQugThg9r9FK/FOWIlZDh95BZ8+20pxyt4qmj4Bn/j3/XTGGS72QszB8kQIeU8
+	UWGxvLZ5KwFL/q6M2Pc7Qu6ZJh5BNGhu24ASe9a9qzBxrq5SDXbC3nknmR+c6H5e
+	3/+POjLkyp7IlP33iAoJrgGLqPrMXpH8ztwGa4xVyhi2Rw4/PLpwj+nwut45jeTk
+	dyn8wcOHNqpLbV4q1jq241VRjfr9x2Uo5wZRHmPvTpbUCC1FWqX8GxWja/S4Udxc
+	F6tiDXnmQzBZT3pTymJtvNm4u+cF2pnTi7w==
+X-ME-Sender: <xms:OyITaK0ei2r5tnsxSGYklx6i3klQeqD6lRp_dfEUPsbnHUl2zZhBqA>
+    <xme:OyITaNGZPfBtW7aabcVieJh0fqM1Vkhn6d_UeqiZmunTQ_fh9DofVA9e3XC2zSCMi
+    sdW6YQlVyEtxQ>
+X-ME-Received: <xmr:OyITaC6ceKQJ6p553oqxiX1oxdb_4MLd6McEiCoy5dm3hCvGqELNLunRt80xnw0n1c-z9gWlcGDgQ5-jaVZzMEnX7L6NV74>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieekleejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
+    hupdhrtghpthhtoheprghrnhgusegrrhhnuggsrdguvgdprhgtphhtthhopegtrghstggr
+    rhguohesihhgrghlihgrrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:OyITaL0_94YbBCbOOy9jEwKKLEpSPXn-wolmCFO3jz85l6CilCdkig>
+    <xmx:OyITaNG1CX96IN0rYphWPJxiWdEPvvFtKv6Uvsr-ljlCcxSvnKZSJg>
+    <xmx:OyITaE_MDizsDCeCeagVIP3SSRZWb2exXEXRUBJLCGW2kAYzKSnxOQ>
+    <xmx:OyITaCmJTVsJGbr8zasU8_OcveiK9mhHp0wGmWyjcfIgT19bg_3ngg>
+    <xmx:PCITaIlpqF5vcIMjH-Q7ftI05C6tMsmKZgVU3fmogj6N5uPBUhDfkb5f>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 May 2025 03:26:51 -0400 (EDT)
+Date: Thu, 1 May 2025 09:26:50 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Thadeu Lima de Souza Cascardo <cascardo@igalia.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <2025050127-finally-unraveled-2402@gregkh>
+References: <20250501164501.0fc0ab68@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,78 +87,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c8e88c29-e1bb-4845-a362-dc352d690508@linux.ibm.com>
+In-Reply-To: <20250501164501.0fc0ab68@canb.auug.org.au>
 
-On Wed, Apr 30, 2025 at 11:54:49AM -0400, Matthew Rosato wrote:
+On Thu, May 01, 2025 at 04:45:01PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> > 2)
-> > Regressions on s390 with defconfig builds with gcc-13, gcc-8 and
-> > clang-20 and clang-nightly toolchains on the stable-rc 6.1.136-rc1.
-> > 
-> > * s390, build
-> >   - clang-20-defconfig
-> >   - clang-nightly-defconfig
-> >   - gcc-13-allmodconfig
-> >   - gcc-13-defconfig
-> >   - gcc-8-defconfig-fe40093d
-> > 
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducibility? Yes
-> > 
-> ...
-> > drivers/s390/virtio/virtio_ccw.c:88:9: error: unknown type name 'dma64_t'
-> >    88 |         dma64_t queue;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c:95:9: error: unknown type name 'dma64_t'
-> >    95 |         dma64_t desc;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c:99:9: error: unknown type name 'dma64_t'
-> >    99 |         dma64_t avail;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c:100:9: error: unknown type name 'dma64_t'
-> >   100 |         dma64_t used;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c:109:9: error: unknown type name 'dma64_t'
-> >   109 |         dma64_t summary_indicator;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c:110:9: error: unknown type name 'dma64_t'
-> >   110 |         dma64_t indicator;
-> >       |         ^~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_drop_indicator':
-> > drivers/s390/virtio/virtio_ccw.c:370:25: error: implicit declaration
-> > of function 'virt_to_dma64'; did you mean 'virt_to_page'?
-> > [-Werror=implicit-function-declaration]
-> >   370 |                         virt_to_dma64(get_summary_indicator(airq_info));
-> >       |                         ^~~~~~~~~~~~~
-> >       |                         virt_to_page
-> > drivers/s390/virtio/virtio_ccw.c:374:28: error: implicit declaration
-> > of function 'virt_to_dma32'; did you mean 'virt_to_page'?
-> > [-Werror=implicit-function-declaration]
-> >   374 |                 ccw->cda = virt_to_dma32(thinint_area);
-> >       |                            ^~~~~~~~~~~~~
-> >       |                            virt_to_page
-> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_setup_vq':
-> > drivers/s390/virtio/virtio_ccw.c:552:45: error: implicit declaration
-> > of function 'u64_to_dma64' [-Werror=implicit-function-declaration]
-> >   552 |                 info->info_block->l.queue = u64_to_dma64(queue);
-> >       |                                             ^~~~~~~~~~~~
-> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_find_vqs':
-> > drivers/s390/virtio/virtio_ccw.c:654:9: error: unknown type name 'dma64_t'
-> >   654 |         dma64_t *indicatorp = NULL;
-> >       |         ^~~~~~~
-> > cc1: some warnings being treated as errors
+> After merging the char-misc tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
 > 
-> The virtio_ccw errors are caused by '[PATCH 6.1 033/167] s390/virtio_ccw: fix virtual vs physical address confusion'
+> ld: warning: discarding dynamic section .glink
+> ld: warning: discarding dynamic section .plt
+> ld: linkage table error against `__kunit_do_failed_assertion'
+> ld: stubs don't match calculated size
+> ld: can not build stubs: bad value
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_minor':
+> misc_minor_kunit.c:(.text+0x180): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x1e4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x240): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_twice':
+> misc_minor_kunit.c:(.text+0x3e8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x458): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x4c4): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_find_minors':
+> misc_minor_kunit.c:(.text+0xb3c): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xbac): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xc1c): undefined reference to `kunit_log_append'
+> ld: misc_minor_kunit.c:(.text+0xc88): undefined reference to `kunit_log_append'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_name':
+> misc_minor_kunit.c:(.text+0xee4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0xf40): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0xf90): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_error':
+> misc_minor_kunit.c:(.text+0x11b4): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.text+0x1210): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x1264): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x0): undefined reference to `kunit_binary_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x8): undefined reference to `kunit_fail_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o:(.toc+0x10): undefined reference to `kunit_unary_assert_format'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_can_open':
+> misc_minor_kunit.c:(.init.text+0xc0): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x134): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_static_basic':
+> misc_minor_kunit.c:(.init.text+0x25c): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x2b4): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict_reverse':
+> misc_minor_kunit.c:(.init.text+0x408): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x414): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0x46c): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x4d8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x530): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x590): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x5e4): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.init.text+0x63c): more undefined references to `__kunit_do_failed_assertion' follow
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict':
+> misc_minor_kunit.c:(.init.text+0x7a0): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0x7f8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x85c): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_basic':
+> misc_minor_kunit.c:(.init.text+0x994): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x9ec): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision_reverse':
+> misc_minor_kunit.c:(.init.text+0xb20): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0xba8): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xc00): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xc64): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xcc0): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision':
+> misc_minor_kunit.c:(.init.text+0xe30): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0xe98): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xea4): undefined reference to `__kunit_abort'
+> ld: misc_minor_kunit.c:(.init.text+0xf04): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0xfac): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x1058): undefined reference to `__kunit_do_failed_assertion'
+> ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_only_range':
+> misc_minor_kunit.c:(.init.text+0x1174): undefined reference to `kunit_kmalloc_array'
+> ld: misc_minor_kunit.c:(.init.text+0x1200): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x1248): undefined reference to `__kunit_do_failed_assertion'
+> ld: misc_minor_kunit.c:(.init.text+0x12ec): undefined reference to `__kunit_do_failed_assertion'
 > 
-> Picking the following 2 dependencies would resolve the build error:
+> Caused by commit
 > 
-> 1bcf7f48b7d4 s390/cio: use bitwise types to allow for type checking
-> 8b19e145e82f s390/cio: introduce bitwise dma types and helper functions
+>   20acf4dd46e4 ("char: misc: make miscdevice unit test built-in only")
+> 
+> $ grep CONFIG_KUNIT .config
+> CONFIG_KUNIT=m
+> CONFIG_KUNIT_DEBUGFS=y
+> CONFIG_KUNIT_FAULT_TEST=y
+> CONFIG_KUNIT_TEST=m
+> CONFIG_KUNIT_EXAMPLE_TEST=m
+> CONFIG_KUNIT_ALL_TESTS=m
+> CONFIG_KUNIT_DEFAULT_ENABLED=y
+> CONFIG_KUNIT_AUTORUN_ENABLED=y
+> $ grep CONFIG_TEST_MINOR .config
+> $ 
+> 
+> I have used the char-misc tree from next-20250428 again.
 
-I'm just going to drop all of these now and wait for a tested series to
-be sent.
-
-thanks,
+Ugh, ok, I'm just going to revert these changes from my tree again.
+Sorry about this.
 
 greg k-h
