@@ -1,66 +1,71 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF6F268FF9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3726265607
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:30:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746142245; cv=none; b=Y0sVkfnC8HCvueJTIFycxqkMf8mBVxWrz185BWYEDSBMIRmnro0s7WrfRuG6lmC/V61QNiPi6vWW8nPOGFrCJUBcM2aodSLhUdu+n4dF/KhStRIPqRnFxOtp5mb55pTjQGP7BbQj+fU8iz7AcXuBImwy6jg3vfbPAZE20FgplDE=
+	t=1746142257; cv=none; b=oK6JP0F8t5sxY9j7CuMRJvQ2NtYcPVT0sv+K90PX6UbL2RQhUkhVmJsm4ZG/gsv0ExctrpC5UbR7zwKszZ2TXkRUq2iVJS9rBpokowpHsuQIbbWozcRll84iQeBYWRsqWGuhUYLn4orA7JG1hI+Mq8SZML5PHxn4TJV4T+ckHaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746142245; c=relaxed/simple;
-	bh=jTns9oIgif3VO77ABK+VfD8XlPhogUFLl51PFlle0ZM=;
+	s=arc-20240116; t=1746142257; c=relaxed/simple;
+	bh=xVGEn53VMIadoPNtpTXYP9w2q/1FWFt4j5ySM3+Il+k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oiEhIsr6pWa3Y3he6p6k2ge/3CO6uWDAiYYlt33+2KYVPpkkClewdubovqUdov32pNGXNV9bz0ePex4legfzOv7DpWiaLk31CEXa/xASpwnpOSBuVnUf0BaNB30j5UzC6FpgOsAEeKBaP16a6Uy3FSweiNIPXMFkG9pEklcOe9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=R9XONA6C; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	 In-Reply-To:Content-Type; b=p/40ihSnYgZR5zFzEbgv8Pn7DkrRrjeyU9RuzM6j5MH4mwZR7SGZc9BCCFWu1Gh0DlGAsin1ophDjm7YhlQD9ogXuhOKhgAdCb7TTdymwULeyH4kICqBU3JvmX9iP1/lQ+ciEaqNqluA7OFhD6tEYJ4CQ3Ih51NWt2sf2+aDS6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CUNTGs3r; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="R9XONA6C"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72b82c8230aso446303a34.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:30:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746142242; x=1746747042; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KoA2UkN8oISoIkKyQZHvDSAzDe460fqLh62H4z/B99c=;
-        b=R9XONA6CrGiyjO7ObhkDw67P6qD5PNtu+7Pr4pLQodewg7N72z0tr03KNLgqy2cEaF
-         w+WsCEl3ghFpV+dLOhEIU1bNjwHUUuTehuBEC+XkbGyZ72x4itvMBy+WHz2tAEruFHdp
-         nrK/7EyNKzNXbr/Y7XN3+VC6yl5CEW/MTn9czBe8ZboJlUcFnfGMWw0hN3c1OSBsN1cn
-         2KpFsXSpNmIQyHdsFyJfjGrT1duIta1sPZRSdubwMyw9egcOqA2sxl2dmxpcX15YMk2c
-         qJzT9Cc0qCiwSFd4edzCfzSAcPP/Fv+D7wDaBmWUVdlTfTruhZ/6Om4tVhyz1DYgoVc0
-         CiCQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CUNTGs3r"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746142254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V61xkxPc38oYjgZEUT4lB2Jdszj4oz3OEIRZu6N5HPs=;
+	b=CUNTGs3r4VrwR//lImqk2Lgrr+aIoFJduIe8NWCd2Ml1yplw519Ubqu+2Y8Y632c84BsGJ
+	ZvK+p3nxNh4f4/sHpOMfjjk5SA2PwVMqILkChy+O83t2IUL3Lr+JRW7xIYyk7e5WtZKmtH
+	B70O31qY+YMSdzCdB8t1q8qtmVUvLbE=
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com
+ [209.85.215.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-596-6QlYB_5yMC-EDMzyHRqKXQ-1; Thu, 01 May 2025 19:30:53 -0400
+X-MC-Unique: 6QlYB_5yMC-EDMzyHRqKXQ-1
+X-Mimecast-MFC-AGG-ID: 6QlYB_5yMC-EDMzyHRqKXQ_1746142252
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-af8d8e0689eso1577724a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:30:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746142242; x=1746747042;
-        h=content-transfer-encoding:in-reply-to:content-language:from
+        d=1e100.net; s=20230601; t=1746142252; x=1746747052;
+        h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KoA2UkN8oISoIkKyQZHvDSAzDe460fqLh62H4z/B99c=;
-        b=QT0+8x7e0HtvG6Rm0bSPO6DgUZ3ibZ9j4lyNC1VKnmSdMjiuaTnnRsmzVJEKpJMMtF
-         FbTajVOsduAGvaC6zMlTGu13xYYm/tFHgkDzokdNxPMxxDetUYDy4EUGjmJGTsvnG5Du
-         Bd1OxLiI4W0VHtwvBKDEfCq4PZxlChryE3ZvrDQP5nmXkos0lL8yhTV+ES8HSUF1zT89
-         RgT5zwzAk3zVQeLxN9Ev+wvja2lwhbbbWuaddPhksSEWbzZdhk+9BPtBPbyio1r2xod2
-         oAGBGSKfvET41Cwsq0KG62J97f9dljaRGnO942BJvHncPPEvS+Lr8nO3n/p6nMXnjUp2
-         prng==
-X-Forwarded-Encrypted: i=1; AJvYcCUadK8G26SScvUXWLUucnhkJ6fA3MJHZkJnUHKhr+tY4fBRWOabCd82gNuGeVLj/CfcRxPRqMTvo1UALYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxVmSuxClG1bgskfwEVSrUmBgiERVJE/w1FJQEXh/z8MpIWK7A7
-	Ks17HG9Q2d4c2yx88x8CmFjutNyh8zhNrmLb4OWEaDmBJdvDzbEnzOlrcXWhJHKESTfelHRV+SJ
-	5
-X-Gm-Gg: ASbGncsLlfvBLqvLJYTvpCt1rlt1wQNiBrvTdX4st7jQGgfqeIauv03wW2KYJ4VyBdP
-	bSaxTKhPvgoPJW3QOODAJi7blB2N+RcXBy7RA0pWiTuw+bgM7GBtr1k0HN8kqFckIQdHk6+662C
-	hi3lWEdDpet1CI/KKXrKFQQLbt7f5qHTBUBSO1WmRtbsbOmXV6hUVfJYebJazznrW7/w7l8nXg1
-	vxkjhQSGVxq/RDUop+mE8klD20oCi+tw0O6cLhYNPW+3FsLeNUS9eVGaZsZbcgxf0RBeh4lfmF5
-	uBamkJIrgXJ2qrKnl205bxFz8e99N01mAUjB2EeU/Bv9r4m5GaSo37M0n3fiRY02eSF71xchpt5
-	uo6S9EA4Nuw6K1KEBvQ==
-X-Google-Smtp-Source: AGHT+IHQutzKltF40eIlfzs0UsiBrITbt6d9rQunGgbvkTDcSJntFVMQ2ABf1f0PkqpxkIpQy9UQIg==
-X-Received: by 2002:a05:6830:64c9:b0:727:4576:36f9 with SMTP id 46e09a7af769-731da0dad83mr582244a34.3.1746142241804;
-        Thu, 01 May 2025 16:30:41 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-731d350a04csm300686a34.68.2025.05.01.16.30.41
+        bh=V61xkxPc38oYjgZEUT4lB2Jdszj4oz3OEIRZu6N5HPs=;
+        b=jhz5AI7TYZZFL3Qgr0f3VE6E+veYSRCBb4zn72Q23DA9BAEOHb9eJCmXCGQIV/GsyW
+         zCatNkM91e29rPRu6xnij9DfRpot7j9ZlPVut9CwuWgyKlCl1xZuAeVmUtZ0PEJ4kBIi
+         f633RpyfSpr997BkAzzlDLe+I10/6vW6zJ2gn9p86r+8Kw6VJLIQJ61CE+Y+8Q86Ka+0
+         LTxbPOv0xWW5ApsXZnClF6GtrBzO/dTmLk/VerpYI2Zj8/o/D7SjnDZPUyxj18tgK2jG
+         /vjrfCYZz1N8er/l2lBzkhHHrAA2Dx0QdDYBK13/XVJhpMTWJQtq5pYb3h1B2oXI6Zyu
+         aejQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXFkORWIQ8nUxj9hfn2VQy34XkDIx2ekJ0RiN0jBsSysXSjpMSm53uNM+yyK5bwRp/jIym6yjXXE6iOELM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyesPuGSFrNVFMYpnSGe5lPeifCOfTFYso+VjtZZiokYgSLoAiY
+	PFrwwlHg4VlJgUMXoHqmq+26Tu6ll8jWKEkg4aXorMqBA0ZcDc2Qq2WeVqtJGFHLHbB5Yhwxvnp
+	TLNU1ZpRHXZL9HR+XX8/iVmB1dViO2YbDpOoZIjGoQoVU4MkjzApePnU3bau19g==
+X-Gm-Gg: ASbGnctHQriU/Wekf0irBT0cIOb3+8JW8JoGApmz1ArIhEM9A/7GrKfxjVIVmz5hNY8
+	AjVc0SNw5bi5Om/uqH0Ih1VVJtF/5aMwB3kegWxI8e7NU1nswgZKnZvRWC7ElJlTUakTWA2ZISW
+	Ev5GjTRYnwD82cboWW/lPG9RJiLXyjVUsGsO4ZM205NgIXD5vq3SFf93yeZxBge7gC61oe+xjaX
+	JEBaocehiGl5v+dYl42T0rIeZXh+l6/wv/hEuCspqGNf0VemRtYfT0bcIwzclFi0AJyBw1KC5jO
+	nYGrpy3IByGE
+X-Received: by 2002:a05:6a20:394d:b0:1f3:2c55:8d8a with SMTP id adf61e73a8af0-20cde952da6mr1047592637.12.1746142252567;
+        Thu, 01 May 2025 16:30:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF2dZAV7HsuZ8oKI3zYsiz7ja1Xpp36L3rGRrA0ckr87PI6dc2juV/UWU2b7kcpP5iRZnp7dw==
+X-Received: by 2002:a05:6a20:394d:b0:1f3:2c55:8d8a with SMTP id adf61e73a8af0-20cde952da6mr1047551637.12.1746142252156;
+        Thu, 01 May 2025 16:30:52 -0700 (PDT)
+Received: from [192.168.68.51] ([180.233.125.65])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa82422e0sm228551a12.13.2025.05.01.16.30.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 16:30:41 -0700 (PDT)
-Message-ID: <a355a23e-03d4-4f1e-977f-adab632c7c5c@baylibre.com>
-Date: Thu, 1 May 2025 18:30:40 -0500
+        Thu, 01 May 2025 16:30:51 -0700 (PDT)
+Message-ID: <6799bc5f-cc4a-446e-b47b-1cbabbc0b518@redhat.com>
+Date: Fri, 2 May 2025 09:30:42 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,36 +73,134 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] HID: sensor-hub: Fix typo and improve documentation
- for sensor_hub_remove_callback()
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>, jic23@kernel.org,
- srinivas.pandruvada@linux.intel.com, bentiss@kernel.org
-Cc: linux-input@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
- <20250501231931.1865276-1-chelsyratnawat2001@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
+Subject: Re: [PATCH v8 39/43] arm64: RME: Provide register list for
+ unfinalized RME RECs
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-40-steven.price@arm.com>
 Content-Language: en-US
-In-Reply-To: <20250501231931.1865276-1-chelsyratnawat2001@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250416134208.383984-40-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 5/1/25 6:19 PM, Chelsy Ratnawat wrote:
-> Changes in v2:
->  - Improved the kernel-doc comment for sensor_hub_remove_callback().
->  - Changed "Gyro" to "gyro".
->  - Changed "usage ID" to "usage_id" for consistency with kernel-doc
->    style.
->  - Updated the comment to state that only one callback can be removed
->    per (usage_id, hsdev) pair.
+On 4/16/25 11:42 PM, Steven Price wrote:
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 > 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> KVM_GET_REG_LIST should not be called before SVE is finalized. The ioctl
+> handler currently returns -EPERM in this case. But because it uses
+> kvm_arm_vcpu_is_finalized(), it now also rejects the call for
+> unfinalized REC even though finalizing the REC can only be done late,
+> after Realm descriptor creation.
+> 
+> Move the check to copy_sve_reg_indices(). One adverse side effect of
+> this change is that a KVM_GET_REG_LIST call that only probes for the
+> array size will now succeed even if SVE is not finalized, but that seems
+> harmless since the following KVM_GET_REG_LIST with the full array will
+> fail.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Steven Price <steven.price@arm.com>
 > ---
+>   arch/arm64/kvm/arm.c   | 4 ----
+>   arch/arm64/kvm/guest.c | 9 +++------
+>   2 files changed, 3 insertions(+), 10 deletions(-)
+> 
 
-Normally people put the changes here below the --- rather than putting it in
-the commit message.
+With below comment addressed.
 
-Patch part looks good though.
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-Reviewed-by: David Lechner <dlechner@baylibre.com>
+> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> index 4780e3af1bb9..eaa60ba6d97b 100644
+> --- a/arch/arm64/kvm/arm.c
+> +++ b/arch/arm64/kvm/arm.c
+> @@ -1832,10 +1832,6 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>   		if (unlikely(!kvm_vcpu_initialized(vcpu)))
+>   			break;
+>   
+> -		r = -EPERM;
+> -		if (!kvm_arm_vcpu_is_finalized(vcpu))
+> -			break;
+> -
+>   		r = -EFAULT;
+>   		if (copy_from_user(&reg_list, user_list, sizeof(reg_list)))
+>   			break;
+> diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+> index dd379aba31bb..1288920fc73d 100644
+> --- a/arch/arm64/kvm/guest.c
+> +++ b/arch/arm64/kvm/guest.c
+> @@ -671,12 +671,9 @@ static unsigned long num_sve_regs(const struct kvm_vcpu *vcpu)
+>   {
+>   	const unsigned int slices = vcpu_sve_slices(vcpu);
+>   
+> -	if (!vcpu_has_sve(vcpu))
+> +	if (!vcpu_has_sve(vcpu) || !kvm_arm_vcpu_sve_finalized(vcpu))
+>   		return 0;
+>   
+> -	/* Policed by KVM_GET_REG_LIST: */
+> -	WARN_ON(!kvm_arm_vcpu_sve_finalized(vcpu));
+> -
+>   	return slices * (SVE_NUM_PREGS + SVE_NUM_ZREGS + 1 /* FFR */)
+>   		+ 1; /* KVM_REG_ARM64_SVE_VLS */
+>   }
+
+KVM_REG_ARM64_SVE_VLS is exposed even SVE isn't finalized. See set_sve_vls() where
+it's required that SVE isn't finalized, or -EPERM is returned. So this would be
+something like below:
+
+	if (!vcpu_has_sve(vcpu))
+		return 0;
+
+	if (!kvm_arm_vcpu_sve_finalized(vcpu))
+		return 1;	/* KVM_REG_ARM64_SVE_VLS */
+
+	return slices * (SVE_NUM_PREGS + SVE_NUM_ZREGS + 1 /* FFR */)
+		+ 1; /* KVM_REG_ARM64_SVE_VLS */
+
+> @@ -692,8 +689,8 @@ static int copy_sve_reg_indices(const struct kvm_vcpu *vcpu,
+>   	if (!vcpu_has_sve(vcpu))
+>   		return 0;
+>   
+> -	/* Policed by KVM_GET_REG_LIST: */
+> -	WARN_ON(!kvm_arm_vcpu_sve_finalized(vcpu));
+> +	if (!kvm_arm_vcpu_sve_finalized(vcpu))
+> +		return -EPERM;
+>   
+>   	/*
+>   	 * Enumerate this first, so that userspace can save/restore in
+
+Since KVM_REG_ARM64_SVE_VLS can be exposed before the vCPU is finalized, it'd better to
+move the check after the followup block where KVM_REG_ARM64_SVE_VLS index is copied
+to user space.
+
+	/*
+          * Enumerate this first, so that userspace can save/restore in
+          * the order reported by KVM_GET_REG_LIST:
+          */
+         reg = KVM_REG_ARM64_SVE_VLS;
+         if (put_user(reg, uindices++))
+                 return -EFAULT;
+         ++num_regs;
+
+	if (!kvm_arm_vcpu_sve_finalized(vcpu))
+		return num_regs;
+
+Thanks,
+Gavin
+	
 
