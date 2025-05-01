@@ -1,203 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2039C158545;
-	Thu,  1 May 2025 03:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73DBB158545
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 03:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746070967; cv=none; b=KNfaBvBuh3qycJ/WP3z9gjp2KU53tJUSHoWR5OAqAM9N0r/ZuTxI/syrGrI2Gn6tWM5yqOYsAFeiYCY1FyVnDtyu28tocBco4Ab5mPzpuiGd29yznLgEOUa4UXtCt9GiZnHpRgJi4CfOJ575bRJJo2S9DeDE1kQXBHFP9E5qQGQ=
+	t=1746070981; cv=none; b=jTtdxIk9hReorPIm750vEb4J4rQDRFI2gghjXDAuiIBDYCZ5SbF0WHju3Lt9+hPDHN1ujMZFzY5C5QHstXVdjdPti6zFjj0qHhRP8Pn2v/Q6dYZSjdhSABmT0M8Lt78xLPAeXH+NRuleoUf1jSqDxgAp1LTpXx6NoIgc552jNiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746070967; c=relaxed/simple;
-	bh=7jmVOUcRXRPmjJVN1jDwaPUHBPlWafpG3aqZqLzYwBI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=QkLstzH7ixP6ZfeqdxK3B3fza/Z7wgKV8kB89EOV0LWF8klXRui9qoQ21vfYWYbv2fuX8zNFzgGV5XWP+0kOVW473L0AiEA4KNMiZ1l5vixQEnPwba5r/k46zDqChCV12GIX3rjAXoHi38MmOzu3uo8KC2yVjwWdNGRxWOrDOcc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcQlRpm3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746070981; c=relaxed/simple;
+	bh=rCfk93JTwE7IksYYV61B6JuTCbu+HHdPHtJEQpV6aCY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IVhmNICZxq/dbkPLOZCJr7rTMnLXxzXcf+BYqnmrocWeBB7GOm3wZH62KPZyJ9F18YFlqNExLX8VYGrVk8aLjZ5tWWZMGn0x76B7urhR1ZjQP8+AJRLIVrVHsjok0Fr0cG2XJmsdfDoGIRjrqi0bcXwibxEczgKieyiH9jbN2XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XKyAFHF9; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcQlRpm3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95994C4CEE3;
-	Thu,  1 May 2025 03:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746070966;
-	bh=7jmVOUcRXRPmjJVN1jDwaPUHBPlWafpG3aqZqLzYwBI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=bcQlRpm3LE9u7oMVkEzP8yaZqPPeBsoWXa5h7b0d4KtvJ97YDLG/FqRpxW3BXoo/9
-	 9Qd6XLaggUfun8GI/JpmHJn1pMmocs/B5bEMi20uq1lzjvveSH8IaSixdXmSB0o7jz
-	 22d+HMZ2Uxja23qBlfCcxamIgBm+xbi04GEnlIZxWaVzpEx0HtORjK1i7CxEKaK0QC
-	 knsR8BcNPDt9wP1LbiS9hL1FYXzmp+Clfb/0EgpVA6QcLbmStKyrnSV5MsbDSlhEhV
-	 xb1zqF/G3C61XtPVrVQwzse/RqkB9IiXUjll75/MF/NyYQU/zjW89uuDGcJ4Nrxije
-	 ABhQiqwrHPfSA==
-Message-ID: <cf11e228dfa247476a498a37f88a96d8e0e2585c.camel@kernel.org>
-Subject: Re: [PATCH v6 08/10] net: add symlinks to ref_tracker_dir for netns
-From: Jeff Layton <jlayton@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: airlied@gmail.com, akpm@linux-foundation.org, andrew@lunn.ch, 
-	davem@davemloft.net, dri-devel@lists.freedesktop.org, edumazet@google.com, 
-	horms@kernel.org, intel-gfx@lists.freedesktop.org,
- jani.nikula@linux.intel.com, 	joonas.lahtinen@linux.intel.com,
- kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	maarten.lankhorst@linux.intel.com, mripard@kernel.org, nathan@kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, qasdev00@gmail.com, 
-	rodrigo.vivi@intel.com, simona@ffwll.ch, tursulin@ursulin.net,
- tzimmermann@suse.de
-Date: Wed, 30 Apr 2025 20:42:40 -0700
-In-Reply-To: <20250501031900.71399-1-kuniyu@amazon.com>
-References: <c0ccfad35ce8b990fc691814bb3d830b66845ded.camel@kernel.org>
-	 <20250501031900.71399-1-kuniyu@amazon.com>
-Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
- keydata=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
- QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XKyAFHF9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746070978;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JC4AbsVCdLJ1p7UYeSXewTdrjDsKeZ54RhtL8jSgmm0=;
+	b=XKyAFHF9nx6GM9PE/5EOToUqSFaTdxXqVR5E/bRfighZzyGzYUiPdbqFUjozPFIUyjOC5k
+	2v7FwUx5pMpUlfZzBHpx/yW4rRykPg7eg5EzRblAFCNneJ+l+Br5Sui7D0PcKA7zmmgDse
+	g+Y7G5QSCm+NMjkhrt2nvW9zZJVXxtQ=
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com
+ [209.85.214.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-477-TFLxfsq_MJKO6aROAfRTQg-1; Wed, 30 Apr 2025 23:42:56 -0400
+X-MC-Unique: TFLxfsq_MJKO6aROAfRTQg-1
+X-Mimecast-MFC-AGG-ID: TFLxfsq_MJKO6aROAfRTQg_1746070975
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2242ce15cc3so6363355ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:42:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746070975; x=1746675775;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JC4AbsVCdLJ1p7UYeSXewTdrjDsKeZ54RhtL8jSgmm0=;
+        b=V7w68srZlJQxTqsfLq53SgiSc67Vqi4C9700w4h+qj9ejNGtsz+nGkrxi/OHEp0S8t
+         CnPV9OCNHa3lNM5YiMLqF6lBL/i+2CtLdcnJZZ3KIGQJT2oDTKpOCmW24jPmFFU6gIOF
+         mACLQQcAPjlxbqUXBGT+M63r2GNAMNnc18oJ5vdSmUptVC7A2iDxP7F/gpJMMwGME3fe
+         3hfT4tf2iTmpU8WneXzD+fd3H7JdLN/IA7dd1qWopleepWGdH8vpArlXOm7qNJumh6N3
+         uD8qqKdxHWKMl3ctSCxfUpStC5DizzYo1EE2YXzRGViJYt0fCt2w6U8SN1hF7OrynZm+
+         bHJg==
+X-Forwarded-Encrypted: i=1; AJvYcCWs+PHg5HcLbrVc4wi+aXvjWSaWlGBzjeH9NAMKq0jNsQkl+7gDkZ1xU+pO29Ct2pZjBXjQwSUke52Vnnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwsydNCWched61ZQDPoGAcaqvrPX+10i1zqQ7dfFhqTq4OVOkXk
+	gP79sqSnsT4HSyYF3ao7LIKGDLfoztSPqSscvkq4jeuDwo6IUivSTWc3soIhA9Q4n1FZ+zDOyqL
+	oNXQwkrMGUoouAnSPuFWk0q65pUZHbo0NpgcgLRn+nssbC50panuhVdowzUUg+A==
+X-Gm-Gg: ASbGncukGMaxjMIzFqwcoqoSgtFxuQnkgoF/YJNenhrcYcToVWOLyDQ1a7pEs/6XMV3
+	o4Ol3hJbV1oYNLt2YKv4J/238+gJfTkh6ZTZv5QzO6kh79ybzWhpZS9jpXEY15mTUFu01+3rrME
+	VVUfKjy+Ipoxf81FOL9vuOelnv2K8eVJcLxbsT/+rQLaLo+tRzEmhO9I24MxRS62irfw/zYh0sP
+	L7hkHxYMWm9NW4jvX7fzOqIjjBKdIz3VdA5+6rlkKK1GhTmNmQHgGUDswEiOuAXXQUeaU/UeDti
+	MhkehGk5U6kt
+X-Received: by 2002:a17:902:f548:b0:21f:4649:fd49 with SMTP id d9443c01a7336-22e0863efbfmr14694035ad.49.1746070975362;
+        Wed, 30 Apr 2025 20:42:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE6XeA16VOaq6zL1nFcqHpvVwTJjX64McCuJNjLU9eHJvxIX6JXOCTvpbcT/Z0Dp6bPnFYLIg==
+X-Received: by 2002:a17:902:f548:b0:21f:4649:fd49 with SMTP id d9443c01a7336-22e0863efbfmr14693805ad.49.1746070975009;
+        Wed, 30 Apr 2025 20:42:55 -0700 (PDT)
+Received: from [192.168.68.51] ([180.233.125.65])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22db5102b03sm130327715ad.194.2025.04.30.20.42.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 30 Apr 2025 20:42:54 -0700 (PDT)
+Message-ID: <f61ef14b-9a51-48c5-b88e-518461c988cb@redhat.com>
+Date: Thu, 1 May 2025 13:42:46 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 36/43] arm64: RME: Initialize PMCR.N with number
+ counter supported by RMM
+To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
+ kvmarm@lists.linux.dev
+Cc: Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
+ Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
+ Alexandru Elisei <alexandru.elisei@arm.com>,
+ Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
+ linux-coco@lists.linux.dev,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
+ <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
+References: <20250416134208.383984-1-steven.price@arm.com>
+ <20250416134208.383984-37-steven.price@arm.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <20250416134208.383984-37-steven.price@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, 2025-04-30 at 20:07 -0700, Kuniyuki Iwashima wrote:
-> From: Jeff Layton <jlayton@kernel.org>
-> Date: Wed, 30 Apr 2025 19:59:23 -0700
-> > On Wed, 2025-04-30 at 14:29 -0700, Kuniyuki Iwashima wrote:
-> > > From: Jeff Layton <jlayton@kernel.org>
-> > > Date: Wed, 30 Apr 2025 08:06:54 -0700
-> > > > After assigning the inode number to the namespace, use it to create=
- a
-> > > > unique name for each netns refcount tracker with the ns.inum value =
-in
-> > > > it, and register a symlink to the debugfs file for it.
-> > > >=20
-> > > > init_net is registered before the ref_tracker dir is created, so ad=
-d a
-> > > > late_initcall() to register its files and symlinks.
-> > > >=20
-> > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > ---
-> > > >  net/core/net_namespace.c | 28 +++++++++++++++++++++++++++-
-> > > >  1 file changed, 27 insertions(+), 1 deletion(-)
-> > > >=20
-> > > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> > > > index 008de9675ea98fa8c18628b2f1c3aee7f3ebc9c6..6cbc8eabb8e56c847fc=
-34fa8ec9994e8b275b0af 100644
-> > > > --- a/net/core/net_namespace.c
-> > > > +++ b/net/core/net_namespace.c
-> > > > @@ -763,12 +763,38 @@ struct net *get_net_ns_by_pid(pid_t pid)
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
-> > > > =20
-> > > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
-> > > > +static void net_ns_net_debugfs(struct net *net)
-> > > > +{
-> > > > +	ref_tracker_dir_symlink(&net->refcnt_tracker, "netns-%u-refcnt", =
-net->ns.inum);
-> > > > +	ref_tracker_dir_symlink(&net->notrefcnt_tracker, "netns-%u-notref=
-cnt", net->ns.inum);
-> > >=20
-> > > Could you use net->net_cookie ?
-> > >=20
-> > > net->ns.inum is always 1 when CONFIG_PROC_FS=3Dn.
-> >=20
-> > My main use-case for this is to be able to match the inode number in
-> > the /proc/<pid>/ns/net symlink with the correct ref_tracker debugfs
-> > file. Is there a way to use the net_cookie to make that association?
->=20
-> It's roundabout, but  net_cookie can be retrieved by creating a
-> random socket in the netns and calling setsockopt(SO_NETNS_COOKIE).
->=20
-> Ido proposed a handy ip-netns subcommand here, and I guess it will
-> be implemented soon(?)
-> https://lore.kernel.org/netdev/1d99d7ccfc3a7a18840948ab6ba1c0b5fad90901.c=
-amel@fejes.dev/
+On 4/16/25 11:41 PM, Steven Price wrote:
+> From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> 
+> Provide an accurate number of available PMU counters to userspace when
+> setting up a Realm.
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Steven Price <steven.price@arm.com>
+> ---
+>   arch/arm64/include/asm/kvm_rme.h | 1 +
+>   arch/arm64/kvm/pmu-emul.c        | 3 +++
+>   arch/arm64/kvm/rme.c             | 5 +++++
+>   3 files changed, 9 insertions(+)
+> 
 
-For the cases where I was looking at netns leaks, there were no more
-processes in the container, so there was no way to enter the container
-and spawn a socket at that point.
+Reviewed-by: Gavin Shan <gshan@redhat.com>
 
-The point of the symlinks is to have a way to easily identify what
-you're tracking. NAME_MAX is 255. We could do something like this
-instead:
-
-   snprintf(..., "netns-%u-%llx-refcnt", net->ns.inum, net->net_cookie);
-
-Obviously the inums would all be 1 when PROC_FS=3Dn, but the cookies
-would be unique. Would that work?
-
->=20
-> >=20
-> > If there isn't, and ns.inum is always 1 with procfs is disabled, we
-> > could just skip adding the symlink when CONFIG_PROC_FS=3Dn.
-
---=20
-Jeff Layton <jlayton@kernel.org>
