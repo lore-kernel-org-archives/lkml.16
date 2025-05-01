@@ -1,187 +1,362 @@
-Received: from mail-io1-f79.google.com (mail-io1-f79.google.com [209.85.166.79])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A62F1EBA1E
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.79
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746110383; cv=none; b=B4brTqP2PqW+1aq4EiGNqfkzoB2it9AkRaaCxJ15wZUaF6tuFeLTVq+dP1K9c5FB5l1d9SnxZ4wmHB4ri8mVqz6N8xM/VW8yHl6xkVc5vzHb5Fek0bUHiKfFU+pVkjuYfcwfgEfDYykjr5Sy+TqzbCFlolb0JMqBv8UTDldBEQc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746110383; c=relaxed/simple;
-	bh=cC4tLYskR/r25N8KWrIkgV2lt01GX7Wp9gCrh7yaAmE=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iCPiFP/rnlVIkSJcb8+gJ6uKoGOVWyh6gSO/wzhSmsYGvqPuX72UMF9tLaVtg90hQ56OR5I+PJCipOexTFG/jf0cJ3QNng2WxXm+NqQ7E10WBb4J30wGDCSNNnA/bFpmTsnRHzV0VJMOVWAk/8Tc2KiHFvUYtR1VIg92jlMVD/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f79.google.com with SMTP id ca18e2360f4ac-85b53875729so225907439f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:39:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746110381; x=1746715181;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tDtHLTOgANglhZWMZnH1KuDkSzqNaY2KqFec35jXMMA=;
-        b=evUv6n0C9tPScn8SMbRijX05NQheQEtx4dSj+paG6uMtVi5LdYuh/1dFJKwMgWrdQp
-         JGeaQki9gOpECtMdnZJQI4K7h3P4U73QRon1ZYGrrlojgnewTQYTQzHWpx10kKiXavG8
-         71uT42+5Rr1F72IaLusRtQeotiexpUSiBDIc6OMTRkECKXaQ5D3a/N9wLqcHqq4VqZmY
-         +tVNdsKRM9jIK31aNjpCE/HTCfG/0oGOkn4lcNgmNbvPFgd6kz0Z3CP1vbn/7+DAJHwI
-         CmLfcAVyPgsoEvcx5Tpc9m+XTwdgBBLp9k90PRt6283n4sShLkP76oXYbk7id19y6TqO
-         y82Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUoK3o2Lwr2EDTO+bhZwiVpJ4HmXEs3CgWnJ3VidEIc7YkJaLQFUSdpfMYxl1YSCEd2CmVYpQn5Dt0K+30=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbHZF0+ivuyWV5sfzxZPvts0BJdzMDZk6VJVzD3NLHH5c9hSng
-	TEBRNEVDM1/OvYPEiUcQ96UqwSh7IDhhz+7ZZrXkxYIGnzNabJvuaCHAdVMKIe6rGM+9hwdelt8
-	25RBwz0Lqq5qp4hevo7XRbK0lCvQcoz/6SJGYhFgOWXiOwOd/76kNQqE=
-X-Google-Smtp-Source: AGHT+IEiMaEHO6bk+FEv3HTEUEsMBnz0eGZO5nBDJ6l53i5oZ3bJ3TDkuUeKuPcgmfwHyd9LLSUXjnXSQpvYn+7ZNUcBpQeJAQ9m
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3342E1EBA1E;
+	Thu,  1 May 2025 14:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746110486; cv=fail; b=nWDv2dxG8NMmV07SJsWPMOIkA+RAHXiQXkJ0tTZ1tpLDM37kLRHxvm6Bw0vUNVlw4d+0Ej2neOtDImvo2w3G8tu66K+tQQ11wkZsSr64Zr/wvnoNWByggpdGr4ZRc88ykiQ7I2iizP/MUN44vRoDuj4L/3erFrwvVq89q2ocaQA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746110486; c=relaxed/simple;
+	bh=qH3dkz0j53zU4/qFuQw47+f/t4FOeM+jKyuJ7BoNCCo=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=scmft2H+QgkT1HnuIOjWaIaSbZm2dm4T+94wAXM4GR6qgDVzKIMNKn5xi+7LbWda6/acgrx33VTumNoWE+FCHhifYcbzLfaAGxp10oYgpHJ/xs8qyMAG3GnVxfvxHoPtxB3neKdUZEH88zBWAadNnci6sfZyg/SGbHHghJv+8VE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XVcLRWT/; arc=fail smtp.client-ip=40.107.244.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XVcLRWT/"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jZjZgg+ZF8ZHAZqXMPjEIkb2/crzMKLu+CPJJvMj5KXJBN8Y0rRY6Faf34wEWnah++C20PRg6za/EUV7bN3rG0TZaZAnPvC1Ee867pgRfZsJMPH+JxMZzaqShHpsi+ZOKZI9HoNDYZS4CoYhefE97IUwBep/rbvewAH4T2anwDLnRBQvw4oXmpvOdFoBTvf3GnxO3Spagl9/0iIvxb+XiUsf04BcgE/DvDyDBYIHhI2uf+nY6uw/XCtTKfvO3Mis06ngepr0Vm/G56iwxzSsRfc+yhlK0ZbCtG+at3h1oFPEwftU7bUkNrpOIf/GmG19buCkN1O5UCFi2GYiFQSJmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BMB/8Ow2UR/Spr9fvu7R3LuoT3bHMaAKen9E5h15/+M=;
+ b=GbrMsfWTK2xgmOynwHo4N8P770FlDjzeEmkzlXwPQkO9+4AqDCZypf8hh1KyhyfYPJ+1NeujR9MxM9SxqPi8TJN99HsNEjSBm29kMLqw0i/w7SAGXIGdMk+8MXOhhDC2cqwLo1d9D7n3o3ARa7GEfnc0KeM4B0E1EOJACzQZYd5jf6UjdC4Yxfxq/BPyUuBviJbji9LOlGh0OY6GwxJYz1GzesyWhLz06wy6dV+io2ugd8w63d00/y3EY6JUGAxHqU2b0QTJVsTicL5UQWYM1kbb1z2dIb03NN9YkiWeyve3cR650RZxoz4mHGzaaL6FF0Yat9x1ugIALBzzTyP2MQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BMB/8Ow2UR/Spr9fvu7R3LuoT3bHMaAKen9E5h15/+M=;
+ b=XVcLRWT/e0OIUWK9hwEtUh4Jm9Fi0W9KHB1Qg8io8V8NWD9Qt1DzDfp8ldmCWBFwSAFSZ+iCArbZ1g3881EADJcfCB9tV97TavdkqCXy9jXXvCjJkNqesFRwO92QD0ESYCQms/Y2U65YXTVSdiDxfKM0HZRT1tHo2rHbzQHN4c/EBmPzl7AIC2Xx1fJAP/bzd74+5zqLXTeeWh4rtYbZIu62BxOwv7B0/02QLcjdxt0nvzH6ZbF2GqSMNC97wwkGvX00lbEeDV5NcbdGRwznJDikJzAR7KA4flaG9UzIQSVMc3x7FuvFHzq5tdk0D0eRn96HfTfNb1noYVrrvwNg6Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by IA0PR12MB8253.namprd12.prod.outlook.com (2603:10b6:208:402::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 1 May
+ 2025 14:41:19 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%3]) with mapi id 15.20.8699.021; Thu, 1 May 2025
+ 14:41:19 +0000
+Message-ID: <f18a9db5-d2e4-4f14-bfa1-dd6542d3d733@nvidia.com>
+Date: Thu, 1 May 2025 10:41:12 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 15/21] gpu: nova-core: add falcon register definitions
+ and base code
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Jonathan Corbet <corbet@lwn.net>, John Hubbard <jhubbard@nvidia.com>,
+ Ben Skeggs <bskeggs@nvidia.com>, Timur Tabi <ttabi@nvidia.com>,
+ Alistair Popple <apopple@nvidia.com>, linux-kernel@vger.kernel.org,
+ rust-for-linux@vger.kernel.org, nouveau@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org
+References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+ <20250501-nova-frts-v2-15-b4a137175337@nvidia.com>
+ <20250501135234.GA687268@joelnvbox> <D9KW0GBF05DI.CYOUTQ2TD1XD@nvidia.com>
+Content-Language: en-US
+From: Joel Fernandes <joelagnelf@nvidia.com>
+In-Reply-To: <D9KW0GBF05DI.CYOUTQ2TD1XD@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0005.namprd05.prod.outlook.com
+ (2603:10b6:a03:33b::10) To SN7PR12MB8059.namprd12.prod.outlook.com
+ (2603:10b6:806:32b::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:168a:b0:3d5:8103:1a77 with SMTP id
- e9e14a558f8ab-3d9701de3abmr37175595ab.1.1746110381090; Thu, 01 May 2025
- 07:39:41 -0700 (PDT)
-Date: Thu, 01 May 2025 07:39:41 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <681387ad.050a0220.14dd7d.0013.GAE@google.com>
-Subject: [syzbot] [net?] KASAN: global-out-of-bounds Read in __find_rr_leaf (2)
-From: syzbot <syzbot+15cc51ab13a8d9e2adfe@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN7PR12MB8059:EE_|IA0PR12MB8253:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6998d31c-ef73-4ccb-9c1a-08dd88be3c2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|7416014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ajVvT1RaekFtemt4MzBMQnQzRlNIWklZME5LOFhFUU9POGwzYWNlSnVHS2hU?=
+ =?utf-8?B?NlkwMkt0dHFZVUdUbGIzSm5FUVM2c2N0NFBmTnMvZm8zSkZBL2diU2NIZkhs?=
+ =?utf-8?B?S2UyZzhRSElYUk5vM0lMVFBMdkd6ZWg3eEtpeFZVQ20wc3pzNnpiaVhuei9k?=
+ =?utf-8?B?NUZDRWZOSWJQSHdpcTA2M1VDVWNWWFJyZkJwa0gyRDNvaVdIVlpiK1Iyanl6?=
+ =?utf-8?B?aDRyamNxcHg2ZnpyVWxMTFAxd1p6YlZwd0FpcnE2VC9oQzVTTW5ZY0JoVXRC?=
+ =?utf-8?B?c2lydUxJR3pHN25zaGxHeFY1ZFMrRGRoN0gzSG5aVU1KRnhVTU5OcERWOUZT?=
+ =?utf-8?B?Mm1CQjRMRkVjZ2dyRml1bndDWnA5c3U2N0hibWliWkFaS0RJNWFNTC9HOG1u?=
+ =?utf-8?B?a1BLM0JBUFJHQ1E5aEVkeHlvSFkwdVlpUFl0citjVkVGL21lcnppTDJDNEdy?=
+ =?utf-8?B?eDF5aEl1UkpqK2hLeFdLaU9HcUZ6WWp4VzNNaHp4V3M2WjNURjBEeUU4aUIw?=
+ =?utf-8?B?d0h1WGVmbzdncUh2cjdqYm4rYXpjQjlWaVRMcUExRHRIcnducEgrRUdjQWE4?=
+ =?utf-8?B?S0JjTW8rbFZ4VEUveEY2MnFqQWlsM0JJWE9VaDdBb3VOVFNDSGZpN05BT29i?=
+ =?utf-8?B?QW1NZ0ZLM1hMNldRc2ZDNnQyNTdhZS9XV084ZVRzWkhSNm5kNTBmNUtNZEJX?=
+ =?utf-8?B?QkllQWxsRjdUU1pXR1BYRzNMa1NwQ3VlN1pwR2pJa0ZqaDhXZ01yK1V5dldj?=
+ =?utf-8?B?RGhuY3N6cXlXSW5kNHZkQVh0Qjh6ZUlMeWZCV3VvYnFGTXQ4K3VrRHozMmNs?=
+ =?utf-8?B?RUp4K0FtbExOeWx1Ym5JNDRVSkM4eVJ4c1RsdzMzZnlKYTFKTStWYklSWnFv?=
+ =?utf-8?B?U1NCTjhGQ2MyS2NnbzJsV2JldVc5UlpyK3lNRElpSi9Kc3ZjWHg4bkJOYWhx?=
+ =?utf-8?B?U2pTei9jMVdBLy8vYzczOEIxaEJONU1SZXFXUE5VZEl4R203bkhGZU8xNkpI?=
+ =?utf-8?B?TWU4Q3JId3BSbU81UUdFWnRvbldMZlh2M2tzbGZybUtLeWZ2azkzUXNaZVln?=
+ =?utf-8?B?ZU1EaWRFZHNneTZJdmxObUgwTFFSTE1MQy9OMmhmb01PRmFDSmpYS3FCcGNs?=
+ =?utf-8?B?Mno0YkQvMGpVUWtrd3lRTUtPbVJaRGZDeFFyS2FucGNFNE9ERUIzZ0lLNTUy?=
+ =?utf-8?B?cDNyR1p1ME56QXRKZTR5NHhwdjJqQnJzek41dDRhbWc3N3dTaVFkSm56M3NV?=
+ =?utf-8?B?cHd6dUZsSGtwT3dIdE1sbkJVN1R5KzV6NENYeWM5RkZLcXNwWHFEdG0wT3NU?=
+ =?utf-8?B?T0hBMEhZSFRCQUMvL2FXUXh0dXV2TFhjWnpGc3BQMEVzNmVaaTVYV205djZI?=
+ =?utf-8?B?bDNUdHBOSmd4REpyT1FrUFVBSG9zNVk2ZFh0ek9MSlNBNzQrR3ZBYUgrQ3p5?=
+ =?utf-8?B?Mm1jMm01M0x3ckVhNzJKTmRhSXRlNGt4dGdNT25CY2YzNnkzajdtS1N4MXp2?=
+ =?utf-8?B?YlpzY2xUaGk2elJ5VHl1bkVYT0UrZWdGSmE3MWJ2a2RoeFBZVG5CQXp0bndT?=
+ =?utf-8?B?ME9VSGY1K1RpMnJpNFhRZWtSdHBkbjFDR3ZJU1hwMm1Ba1I5NHh1RDNtRDZM?=
+ =?utf-8?B?bENWQitWdGF5T3dYUzNNY05acHhVZytZdVZvRVhlUjBwWThPS2xmbnlVZHNq?=
+ =?utf-8?B?empiMlVsQ0U4YVdwMVBPTitFVVNRRGlaQ3NTS2craE1DWkFmTDhlQUZIUmdU?=
+ =?utf-8?B?M0psamhHc0d5MXRiVGhycUU4QzVZeW13L1RScmhhUFZEZTBMbnBYK3NYUFpV?=
+ =?utf-8?B?U1hKL2dSUFVCQUhQU0ZWQlY0VFRnNW5rRGN5QkNJY2Y2Wlcrb01QZk1wVUZX?=
+ =?utf-8?B?ZkE5cUt1QW9SQWZoTWVCVXd5aTlkak55c3Z1U2lxaXBMNEJkek9NcXdxcjUy?=
+ =?utf-8?Q?2yjeeGL+vjM=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dzFTNWI5K045OEV5czJQMktXeGt6eWZtMnJsdFc1c0ZPZjU5eFVmaGMrVWhD?=
+ =?utf-8?B?QWMvcFpQREpzY21XVHE5a1NVd0MyaWpacHRrM3J3NXF5SlZOWVFTbVZSS1hL?=
+ =?utf-8?B?bXBzcDdJbnFET0dyLy9tNTlPazIzakRVMEdoMEdyeGJ6UHJzc2J4QitpQ1FN?=
+ =?utf-8?B?S2hJa21yMHlQc0Y3VjVpOWpKWGJ3eU5jWXhOTUZ4blJybWlGR1I0M2dZemVB?=
+ =?utf-8?B?eTJ4Z1pmQlF2allTQ0tMcEhJNitYa01JMFcyQnRrWkkrV2ZNWkZDd3FCQTNq?=
+ =?utf-8?B?WHNLRXhxcUR4M0tEOUd5aTFWQXlsbDd4ZS8wamZJdVVDWStLQjFsUVlPaG5x?=
+ =?utf-8?B?Qk1EbXZ3NHEzUkFvalgrRlcvS2huNHBkZlpOU01MOVBDT2loZnNHVktHTjdr?=
+ =?utf-8?B?dVE5VGtBSU1NOStzb0tYY0wzU2g5QUluOGlmNmFDSHh6WmU0eXJXZlhCL0k5?=
+ =?utf-8?B?NS9BK1hCYzZCZnp0Qjk4R3NzWDFOZ3dodFF2Z3MwTXdLQnFUaEVVeEp4ekVV?=
+ =?utf-8?B?c1IyQzg1ZnlhT2RCQUhKQmdDMS9sSUc5Y1V3bFZXa3lkNnpVdStJNVV1VElj?=
+ =?utf-8?B?UFdjQ2ZmYmtiTDB0RXFZTjRlZUx5NjFsdnZycG42Tnl0elpYNy9NaXVwT3Zy?=
+ =?utf-8?B?SnF2MU5VU0tTTVhVSnU3TkhGdTVseCtDOGZlS1lROUVqeVdZYVd3enlFd0hB?=
+ =?utf-8?B?V1N0UEhCalQvZXhxcWlCczdSU294TjZmLzNHMXBxbzJEVzZxdWlGQmh3aWRB?=
+ =?utf-8?B?ai82bTRCVGdHeDcyVGd6eEdkWnVuTTg4M2tYTFJJd2ljejVpS1VTdk5taFZv?=
+ =?utf-8?B?bkhOUjlTN2MvTWNXMVltN3FXZ1ZsejB1di90cmRoaGlBRU4wcm5ieGhPbHF1?=
+ =?utf-8?B?TmE3OTlJaDVWcVdLQUF2bUUxR0dPUnVNVlJtVUMxQUwxUGVBOXJOczVCdXlK?=
+ =?utf-8?B?NmRxb2NpMHZxZDRKYm1TU05ITTF5enVBUUh3bVFVSTRFbklJTitKTC9SS29H?=
+ =?utf-8?B?c1ZPMnNsdlVWWFcycXpHbnQycUdCQXVrQ3ZUcjIzSDBNcWd4Q0VDR2tVMU5U?=
+ =?utf-8?B?NFE3b0Q0ekRUeGlqV05aMzV3NzVLNUY3bkQ3OGFsMXZUWG9wSEpUK3V6d2J1?=
+ =?utf-8?B?NGltZmI2bkpoVGc4SDNrWjlnU2YvTHh6bm9XbVZ1bm5QUWdpRWhNbG1YMXJ1?=
+ =?utf-8?B?Z2lIOTIxVU5ZczBuTVNBNlU3T1dkRnZKd1FucVNTTytRVUFXVzQyejdMem1I?=
+ =?utf-8?B?RG5Bek02bTErR3M5UExuRVp6MWVPSUFnWWRWWnQwU3greFVEcktQdHlISlF0?=
+ =?utf-8?B?Z0lDVXlxZmEyQ2VCV29ZanV2dVVJdlVrVXlRWUkxQkpxVk9qZFpyNXdhLysv?=
+ =?utf-8?B?WkdIRGt1N2RkcW55WmFJT000SXRBMkFVemErR3NnT1dzMVNMTzJOam04Q29V?=
+ =?utf-8?B?em5RV2lRNFJWUmJENm0zU01GeGltSUlSbVA2alljSkZzZWJncElMVVZydG0z?=
+ =?utf-8?B?aFFQU0UyRm42ZDlNUjhpbC96aUkvaHpqNHZRbVEzY3JvRjJkWE1XZG8rUUtp?=
+ =?utf-8?B?WHRTVzNCZm9vb0NoZXBSZit5QlozSnFnQlo5VDB1Z1FTTnRMelFRRlVyOHh5?=
+ =?utf-8?B?ZVNtQ2VERkVOUGFYZEFYcTRhdXJmNnQrV0FwM2tpNS9qVkFXbUErWmhGb3JC?=
+ =?utf-8?B?NjRsR2tLYXd3TjZCUGdCSjJESkVtU2cwYWVkeTFzTHp0elFpbFRRUEhvS294?=
+ =?utf-8?B?VVBQaUk0djZoS3ZHMWx6eEpyTHRTbHpoOWxKTWpiRHVSblNWZ1pIaUtmaFFQ?=
+ =?utf-8?B?cXcxY29rL3BuQzdIS3RpUWZSMWhXaU43UG9mTW5DUllZQUU1L29tRytsaUNB?=
+ =?utf-8?B?M3c2Z1NNcHp4cXQxQnVEQ0o5ZGlhaVRzQzVIYVZDai92em1NZCtiVFRPbHM5?=
+ =?utf-8?B?L1VqTmhtNXEzZzRMaFV3bXNxZ2FOTG1MRFkrY0RjZXAwbTdDSGxlZVFPSWJH?=
+ =?utf-8?B?YXZSRzg0VE9PMHZYVkErNnlOMlZuM3Z0eFlhaXVjN2t3UmM2eGM3eGtzVWdK?=
+ =?utf-8?B?aUxldFFqcnFpSjc3NEpwbUsrcjdKbDV1dDRkVUhJZWpKY1I1NVNvTTBrRTRy?=
+ =?utf-8?B?VUpXQ1pFMVh3eEpCTVdYNTBvd1VjNG80V0U0REpJM3N6Y3pJcEl4cGljTWtr?=
+ =?utf-8?B?dXc9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6998d31c-ef73-4ccb-9c1a-08dd88be3c2d
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 14:41:19.2742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SinyjSQ8gvGjJQz0+mnZs5+ZM3RfLf6thC24AR85qMiI3FNKz6ooDWLlAx7f69XXvAdTi4TDi7NyFNe1q7FMqg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8253
 
-Hello,
+On 5/1/2025 10:18 AM, Alexandre Courbot wrote:
+[..]
+>> On Thu, May 01, 2025 at 09:58:33PM +0900, Alexandre Courbot wrote:
+>>> Add the common Falcon code and HAL for Ampere GPUs, and instantiate the
+>>> GSP and SEC2 Falcons that will be required to boot the GSP.
+>>>
+>>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>>> ---
+>>>  drivers/gpu/nova-core/falcon.rs           | 546 ++++++++++++++++++++++++++++++
+>>>  drivers/gpu/nova-core/falcon/gsp.rs       |  25 ++
+>>>  drivers/gpu/nova-core/falcon/hal.rs       |  55 +++
+>>>  drivers/gpu/nova-core/falcon/hal/ga102.rs | 115 +++++++
+>>>  drivers/gpu/nova-core/falcon/sec2.rs      |   8 +
+>>>  drivers/gpu/nova-core/gpu.rs              |  11 +
+>>>  drivers/gpu/nova-core/nova_core.rs        |   1 +
+>>>  drivers/gpu/nova-core/regs.rs             | 125 +++++++
+>>>  drivers/gpu/nova-core/util.rs             |   1 -
+>>>  9 files changed, 886 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/nova-core/falcon.rs b/drivers/gpu/nova-core/falcon.rs
+>>> new file mode 100644
+>>> index 0000000000000000000000000000000000000000..7cae45645e548bab5b85cb53880898cedbae778a
+>>> --- /dev/null
+>>> +++ b/drivers/gpu/nova-core/falcon.rs
+>>> @@ -0,0 +1,546 @@
+>>> +// SPDX-License-Identifier: GPL-2.0
+>>> +
+>>> +//! Falcon microprocessor base support
+>>> +
+>>> +// To be removed when all code is used.
+>>> +#![expect(dead_code)]
+>>> +
+>>> +use core::time::Duration;
+>>> +use hal::FalconHal;
+>>> +use kernel::bindings;
+>>> +use kernel::device;
+>>> +use kernel::devres::Devres;
+>>> +use kernel::prelude::*;
+>>> +use kernel::sync::Arc;
+>>> +
+>>> +use crate::driver::Bar0;
+>>> +use crate::gpu::Chipset;
+>>> +use crate::regs;
+>>> +use crate::util;
+>>> +
+>>> +pub(crate) mod gsp;
+>>> +mod hal;
+>>> +pub(crate) mod sec2;
+>>> +
+>>> +/// Revision number of a falcon core, used in the [`crate::regs::NV_PFALCON_FALCON_HWCFG1`]
+>>> +/// register.
+>>> +#[repr(u8)]
+>>> +#[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+>>> +pub(crate) enum FalconCoreRev {
+>>> +    #[default]
+>>> +    Rev1 = 1,
+>>> +    Rev2 = 2,
+>>> +    Rev3 = 3,
+>>> +    Rev4 = 4,
+>>> +    Rev5 = 5,
+>>> +    Rev6 = 6,
+>>> +    Rev7 = 7,
+>>> +}
+>>> +
+>>> +impl TryFrom<u8> for FalconCoreRev {
+>>> +    type Error = Error;
+>>> +
+>>> +    fn try_from(value: u8) -> core::result::Result<Self, Self::Error> {
+>>> +        use FalconCoreRev::*;
+>>> +
+>>> +        let rev = match value {
+>>> +            1 => Rev1,
+>>> +            2 => Rev2,
+>>> +            3 => Rev3,
+>>> +            4 => Rev4,
+>>> +            5 => Rev5,
+>>> +            6 => Rev6,
+>>> +            7 => Rev7,
+>>> +            _ => return Err(EINVAL),
+>>> +        };
+>>> +
+>>> +        Ok(rev)
+>>> +    }
+>>> +}
+>>> +
+>>> +/// Revision subversion number of a falcon core, used in the
+>>> +/// [`crate::regs::NV_PFALCON_FALCON_HWCFG1`] register.
+>>> +#[repr(u8)]
+>>> +#[derive(Debug, Default, Copy, Clone, PartialEq, Eq, PartialOrd, Ord)]
+>>> +pub(crate) enum FalconCoreRevSubversion {
+>>> +    #[default]
+>>> +    Subversion0 = 0,
+>>> +    Subversion1 = 1,
+>>> +    Subversion2 = 2,
+>>> +    Subversion3 = 3,
+>>> +}
+>>> +
+>>> +impl TryFrom<u8> for FalconCoreRevSubversion {
+>>> +    type Error = Error;
+>>> +
+>>> +    fn try_from(value: u8) -> Result<Self> {
+>>> +        use FalconCoreRevSubversion::*;
+>>> +
+>>> +        let sub_version = match value & 0b11 {
+>>> +            0 => Subversion0,
+>>> +            1 => Subversion1,
+>>> +            2 => Subversion2,
+>>> +            3 => Subversion3,
+>>> +            _ => return Err(EINVAL),
+>>> +        };
+>>> +
+>>> +        Ok(sub_version)
+>>> +    }
+>>> +}
+>>> +
+>>> +/// Security model of a falcon core, used in the [`crate::regs::NV_PFALCON_FALCON_HWCFG1`]
+>>> +/// register.
+>>> +#[repr(u8)]
+>>> +#[derive(Debug, Default, Copy, Clone)]
+>>> +pub(crate) enum FalconSecurityModel {
+>>> +    /// Non-Secure: runs unsigned code without privileges.
+>>> +    #[default]
+>>> +    None = 0,
+>>> +    /// Low-secure: runs unsigned code with some privileges. Can only be entered from `Heavy` mode.
+>>
+>> This is not true. Low-secure is also (has to be) signed and the signatures
+>> are verified by High-secure code. I can/will go fix that up in my follow-up doc
+>> patches.
+> 
+> True, but contrary to HS code, the signature in the LS code is not a
+> hardware (or rather boot ROM) requirement - it's just that the HS code
+> decides to implement this policy and you could very well have a HS
+> loader that loads some code and switches to LS without further
+> verification. The point being that you cannot enter LS mode directly and
+> need to go through a HS loader first.
+> 
+> Nonetheless, you are right that in practice the HS code will not switch
+> to LS without due verification, and my use of "unsigned" is confusing.
+> Let me reword this.
 
-syzbot found the following issue on:
+Thanks, I wonder if there is any current example of such unsigned LS code. IIUC,
+all the LS code is either coming from either the VBIOS or the firmware binaries,
+both of which can be modified/re-flashed. Since LS still has some privileges, it
+means that it is a bit of security issue. I think you're right though, in theory
+LS can be run unverified but I'd think it is atypical.
 
-HEAD commit:    7a13c14ee59d Merge tag 'for-6.15-rc4-tag' of git://git.ker..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14d5e39b980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4d6290f49c6ebe48
-dashboard link: https://syzkaller.appspot.com/bug?extid=15cc51ab13a8d9e2adfe
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
+>>
+>>> +/// Returns a boxed falcon HAL adequate for the passed `chipset`.
+>>> +///
+>>> +/// We use this function and a heap-allocated trait object instead of statically defined trait
+>>> +/// objects because of the two-dimensional (Chipset, Engine) lookup required to return the
+>>> +/// requested HAL.
+>>> +///
+>>> +/// TODO: replace the return type with `KBox` once it gains the ability to host trait objects.
+>>> +pub(crate) fn create_falcon_hal<E: FalconEngine + 'static>(
+>>> +    chipset: Chipset,
+>>> +) -> Result<Arc<dyn FalconHal<E>>> {
+>>> +    let hal = match chipset {
+>>> +        Chipset::GA102 | Chipset::GA103 | Chipset::GA104 | Chipset::GA106 | Chipset::GA107 => {
+>>> +            Arc::new(ga102::Ga102::<E>::new(), GFP_KERNEL)? as Arc<dyn FalconHal<E>>
+>>
+>> I am guessing macro-fication of this did not pan out? i.e. I think we
+>> discussed:
+>> 1. Seeing if we can reduce/get rid of Arc in favor of static allocation.
+>> 2. Simplify the chain of GAxx | GAyy..
+>> But nothing that cannot be done as a follow-up improvement..
+> 
+> Yeah, my macro-fu is still lacking it seems. ^_^;
 
-Unfortunately, I don't have any reproducer for this issue yet.
+:-D. It may or may not be worth complicating it though, but I was considering in
+the future, to minimize the number of places that need to be modified (and thus
+more possible room for errors) for new chipset additions.
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-7a13c14e.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5fc0ea9b1119/vmlinux-7a13c14e.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/cbd619ca4f7e/bzImage-7a13c14e.xz
+>> (Also it is a bit weird that the namespace for chipsets for > GA10x is
+>> ga102::GA102::). Example, Chipset::GA104 uses the HAL in Ga102).
+> 
+> It is a convention since Nouveau (but I believe OpenRM as well?) to name
+> a HAL after the chipset with the lowest number when subsequent chipsets
+> can also use it.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+15cc51ab13a8d9e2adfe@syzkaller.appspotmail.com
+Ah ok! Maybe worth a documentation comment somewhere as well? Or maybe not. ;-)
 
-==================================================================
-BUG: KASAN: global-out-of-bounds in fib6_check_expired include/net/ip6_fib.h:270 [inline]
-BUG: KASAN: global-out-of-bounds in __find_rr_leaf+0xbcb/0xe00 net/ipv6/route.c:843
-Read of size 4 at addr ffffffff9af7fbc4 by task kworker/3:4/5983
+thanks,
 
-CPU: 3 UID: 0 PID: 5983 Comm: kworker/3:4 Not tainted 6.15.0-rc4-syzkaller-00051-g7a13c14ee59d #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: mld mld_ifc_work
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xc3/0x670 mm/kasan/report.c:521
- kasan_report+0xe0/0x110 mm/kasan/report.c:634
- fib6_check_expired include/net/ip6_fib.h:270 [inline]
- __find_rr_leaf+0xbcb/0xe00 net/ipv6/route.c:843
- find_rr_leaf net/ipv6/route.c:899 [inline]
- rt6_select net/ipv6/route.c:934 [inline]
- fib6_table_lookup+0x7b3/0xa30 net/ipv6/route.c:2230
- ip6_pol_route+0x1cc/0x1230 net/ipv6/route.c:2266
- pol_lookup_func include/net/ip6_fib.h:616 [inline]
- fib6_rule_lookup+0x536/0x720 net/ipv6/fib6_rules.c:120
- ip6_route_input_lookup net/ipv6/route.c:2335 [inline]
- ip6_route_input+0x662/0xc00 net/ipv6/route.c:2631
- ip6_rcv_finish_core.constprop.0+0x1a0/0x5d0 net/ipv6/ip6_input.c:66
- ip6_list_rcv_finish.constprop.0+0x20f/0xb50 net/ipv6/ip6_input.c:130
- ip6_sublist_rcv net/ipv6/ip6_input.c:319 [inline]
- ipv6_list_rcv+0x339/0x450 net/ipv6/ip6_input.c:353
- __netif_receive_skb_list_ptype net/core/dev.c:5930 [inline]
- __netif_receive_skb_list_core+0x556/0x950 net/core/dev.c:5977
- __netif_receive_skb_list net/core/dev.c:6029 [inline]
- netif_receive_skb_list_internal+0x752/0xdb0 net/core/dev.c:6120
- netif_receive_skb_list net/core/dev.c:6172 [inline]
- netif_receive_skb_list+0x4d/0x4b0 net/core/dev.c:6162
- ieee80211_rx_napi+0x384/0x410 net/mac80211/rx.c:5443
- ieee80211_rx include/net/mac80211.h:5179 [inline]
- ieee80211_handle_queued_frames+0xd5/0x130 net/mac80211/main.c:441
- tasklet_action_common+0x281/0x400 kernel/softirq.c:829
- handle_softirqs+0x216/0x8e0 kernel/softirq.c:579
- do_softirq kernel/softirq.c:480 [inline]
- do_softirq+0xb2/0xf0 kernel/softirq.c:467
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
- __dev_queue_xmit+0x8ab/0x43e0 net/core/dev.c:4656
- dev_queue_xmit include/linux/netdevice.h:3350 [inline]
- neigh_resolve_output net/core/neighbour.c:1512 [inline]
- neigh_resolve_output+0x53a/0x940 net/core/neighbour.c:1492
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0xaeb/0x2020 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:215 [inline]
- ip6_finish_output+0x3f9/0x1360 net/ipv6/ip6_output.c:226
- NF_HOOK_COND include/linux/netfilter.h:303 [inline]
- ip6_output+0x1f9/0x540 net/ipv6/ip6_output.c:247
- dst_output include/net/dst.h:459 [inline]
- NF_HOOK include/linux/netfilter.h:314 [inline]
- NF_HOOK include/linux/netfilter.h:308 [inline]
- mld_sendpack+0x9e9/0x1220 net/ipv6/mcast.c:1868
- mld_send_cr net/ipv6/mcast.c:2169 [inline]
- mld_ifc_work+0x740/0xca0 net/ipv6/mcast.c:2702
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-The buggy address belongs to the variable:
- binder_deferred_list+0x24/0x40
-
-The buggy address belongs to the physical page:
-page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1af7f
-flags: 0xfff00000002000(reserved|node=0|zone=1|lastcpupid=0x7ff)
-raw: 00fff00000002000 ffffea00006bdfc8 ffffea00006bdfc8 0000000000000000
-raw: 0000000000000000 0000000000000000 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-page_owner info is not present (never set?)
-
-Memory state around the buggy address:
- ffffffff9af7fa80: f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9
- ffffffff9af7fb00: f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9 00 f9 f9 f9
->ffffffff9af7fb80: f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9 00 00 f9 f9
-                                           ^
- ffffffff9af7fc00: f9 f9 f9 f9 00 f9 f9 f9 f9 f9 f9 f9 00 00 00 00
- ffffffff9af7fc80: 00 00 00 00 00 00 00 00 00 00 00 f9 f9 f9 f9 f9
-==================================================================
+ - Joel
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
