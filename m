@@ -1,52 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD8E2DC76D;
-	Thu,  1 May 2025 11:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C0421C9F0;
+	Thu,  1 May 2025 11:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746100178; cv=none; b=QRVes6Ibylj55qLTePCtjmyuKKgFbxBDB95BaIYDxWAdtIzp0qlcjSvVVWXy+XeMdNNBy4RDV8eeBN/JCcQWjErlEKGHgjU9Q35nFBdH/K2cQqtOsbZif/QnAbDZ0emF41s8daptTmIHtLB+K0LBZNIxZRuQEYTlADPvZHnN1sM=
+	t=1746100483; cv=none; b=uGPYPOMqd456Z2OJ9jgUV5wKvGBazwn/jUrC0KIDIGeKq/J9PWlFC974FXoPXfkP9Ss2+a90s7J2Cc8n/Bdl0pS2ITcsK4udeZP5LJIEpxaonkSECDVYasiT0awsNbmlpoqUPW3AERfs8QjAjXGRlM7+NPHCg/QxFnKC0kfGd/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746100178; c=relaxed/simple;
-	bh=FTxRP/NnhPU5ICm8D7Ow5D8WYpEp0BGoUoIw9tq6zRE=;
+	s=arc-20240116; t=1746100483; c=relaxed/simple;
+	bh=L2jvwE9yLRhV5ty6dNZhqgMl4gYvE9YEZ/JInACmAd0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KVrkb3sc8ex2ZcZ2i9mN5fHdX7So5g5mgs7K7D6G2FjFY8OdduHwNMCo56vdpAg7mOJEiIbIS8ucq/0rg2QmxKliFGlWDp9SOoIcRiMJpeYt/I7fOMhQTwbP0S7JeGUW+dnqPcyGdEGTGw6ght96EoR1EFJscY5Xe2TvYSoDnTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u7biSUC9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ASFjUUQsjE5trq6pNp6OJaDmfDNGJhNCLbpl/j5oEe4xYWV1+kK2GZ7qzKd39KxSCQC749moNTRrINb55LBjUSv+x6ysVzH7tAHgrWiRbyhwOgMrZQnEyB6r9hZdK47YEIwuVHQFduF2Q+aWZCD0TfGi8s5A1qi3efSH4MY+1EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DWlLSBCO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u7biSUC9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B567AC4CEE3;
-	Thu,  1 May 2025 11:49:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DWlLSBCO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C28DC4CEE3;
+	Thu,  1 May 2025 11:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746100177;
-	bh=FTxRP/NnhPU5ICm8D7Ow5D8WYpEp0BGoUoIw9tq6zRE=;
+	s=k20201202; t=1746100482;
+	bh=L2jvwE9yLRhV5ty6dNZhqgMl4gYvE9YEZ/JInACmAd0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u7biSUC90d0iurJoQdGw/mhEIxzn2WC1jyuPfbexApRPFHI5LH1eKc+ylGYrFqkVQ
-	 e8NvnwS1/wNGEVkdiz/233X45/rQDBvZRbyE0arJTV0ZcI3Pa+KDgDeZUhfyQVEh4q
-	 HpF1fu9rfIxFwI/VioUSE+ouKAymUZhHrIflRk12fopd8edCxI1WqyzS4v6bKZ2A7+
-	 2FqH21nDu+x1MSqZwzpXoJj1w8l8eyUdAqHO+L3eMVshZpgfGkVN2VJEHbWCa186W+
-	 AxZXKYDAicejeRAsiIKHLS59+H7Rl45JCkGroI0PgEGkmteSIribnilTMYvCZ6RQNp
-	 8nWuKpsJZeA3g==
-Date: Thu, 1 May 2025 13:49:34 +0200
+	b=DWlLSBCOuxlZFO/eyKUaOOTDO/JHeegmqGVYQGHWc7dIpAWJ3z9CJ7dao8T/paBds
+	 qPVDb2STkNWNW8iN9oJof1dKpZXrUn0oKj2ar1oZHprzNiPqBSnCHzvGbmqkrtlWYV
+	 zXxUXDM2zxy0zJDKJ5bU4SOzt4CHY0g7Uty++KzTTdVxE1b1aJu91Jx1aeja47JgTm
+	 nhaxdcvO/NdKxFIR747s6EAyqeKv9UgyFl8fZezzwr2SyMPotgErwnYiP902Ww5SmZ
+	 X4B0tSvMyzOBsl+gxk/zjmdnBgoHuzF/6JueAb8j/SXatua92iSwtsTe7abRWY4JbL
+	 82KUOHhMT9AFg==
+Date: Thu, 1 May 2025 13:54:40 +0200
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Michael Riesch <michael.riesch@collabora.com>
-Cc: Mehdi Djait <mehdi.djait@linux.intel.com>, 
-	Maxime Chevallier <maxime.chevallier@bootlin.com>, =?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>, 
-	Gerald Loacker <gerald.loacker@wolfvision.net>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
-	Kever Yang <kever.yang@rock-chips.com>, Nicolas Dufresne <nicolas.dufresne@collabora.com>, 
-	Sebastian Reichel <sebastian.reichel@collabora.com>, Collabora Kernel Team <kernel@collabora.com>, 
-	Paul Kocialkowski <paulk@sys-base.io>, Alexander Shiyan <eagle.alexander923@gmail.com>, 
-	Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
-	Michael Riesch <michael.riesch@wolfvision.net>
-Subject: Re: [PATCH v6 04/13] media: dt-bindings: add rockchip rk3568 vicap
-Message-ID: <20250501-tidy-bittern-of-genius-ed375e@kuoka>
-References: <20240220-rk3568-vicap-v6-0-d2f5fbee1551@collabora.com>
- <20240220-rk3568-vicap-v6-4-d2f5fbee1551@collabora.com>
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Michael Turquette <mturquette@baylibre.com>, 
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-clk@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, 
+	Alvin =?utf-8?Q?=C5=A0ipraga?= <alsi@bang-olufsen.dk>
+Subject: Re: [PATCH v4 2/3] dt-bindings: clock: add TI CDCE6214 binding
+Message-ID: <20250501-stirring-groovy-ringtail-47efe1@kuoka>
+References: <20250430-clk-cdce6214-v4-0-9f15e7126ac6@pengutronix.de>
+ <20250430-clk-cdce6214-v4-2-9f15e7126ac6@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,22 +46,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240220-rk3568-vicap-v6-4-d2f5fbee1551@collabora.com>
+In-Reply-To: <20250430-clk-cdce6214-v4-2-9f15e7126ac6@pengutronix.de>
 
-On Wed, Apr 30, 2025 at 11:15:53AM GMT, Michael Riesch wrote:
-> From: Michael Riesch <michael.riesch@wolfvision.net>
+On Wed, Apr 30, 2025 at 11:01:35AM GMT, Sascha Hauer wrote:
+> The CDCE6214 is a Ultra-Low Power Clock Generator With One PLL, Four
+> Differential Outputs, Two Inputs, and Internal EEPROM. This patch adds
+> the device tree binding for this chip.
+
+BTW, a nit:
+
+"Add device tree binding for the CDCE6214, an Ultra ......"
+
+so you won't use "This patch" and make everyting one simple sentence.
+
 > 
-> Add documentation for the Rockchip RK3568 Video Capture (VICAP) unit.
-> 
-> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
-> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
 > ---
->  .../bindings/media/rockchip,rk3568-vicap.yaml      | 170 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 171 insertions(+)
+>  .../devicetree/bindings/clock/ti,cdce6214.yaml     | 155 +++++++++++++++++++++
+>  include/dt-bindings/clock/ti,cdce6214.h            |  25 ++++
+>  2 files changed, 180 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
+> new file mode 100644
+> index 0000000000000..d4a3a3df9ceb9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/ti,cdce6214.yaml
+> @@ -0,0 +1,155 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/ti,cdce6214.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: TI CDCE6214 programmable clock generator with PLL
+> +
+> +maintainers:
+> +  - Sascha Hauer <s.hauer@pengutronix.de>
+> +
+> +description: >
+> +  Ultra-Low Power Clock Generator With One PLL, Four Differential Outputs,
+> +  Two Inputs, and Internal EEPROM
+> +
+> +  https://www.ti.com/product/CDCE6214
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,cdce6214
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 1
+> +    maxItems: 2
+> +
+> +  clock-names:
+> +    minItems: 1
+> +    maxItems: 1
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+No improvements, this should be 2.
 
-Best regards,
-Krzysztof
+
+> +    items:
+> +      enum: [ priref, secref ]
+
+This can be simpler - and you need to keep the order:
+
+
+  minItems: 1
+  items:
+    - enum: [ priref, secref ]
+    - const: secref
+
+    Best regards,
+    Krzysztof
 
