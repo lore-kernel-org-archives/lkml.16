@@ -1,58 +1,59 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6998F4C79;
-	Thu,  1 May 2025 04:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545FA230BFD;
+	Thu,  1 May 2025 04:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746074618; cv=none; b=KjMSBzPexghmd2DvaWlKk5rEnBXlB0bDoqUzmE74+mAAVyPwDeGV4uMy4pu9qlzPbPhkDkoM9XaDCXLCgg4bjrtF2gvhhP6/GWEIaCjoltsMpqK0l76Fgioj/x4X6mLphAdBB9vsm/4ncCMHaMxBY/ULCJkeCp3RZX+ygLE+d4o=
+	t=1746074621; cv=none; b=A2NKFHtBdljy10BSXrvd0y7mVawdCpp5n+DDsviiJP/H8XN3CEga+BVGfaoPf70z+6OpyMEnDHQwpVGlrpG46IikfDK6jNbXiGVqtPGsWGEfEmpdPKHskPwdooBMkJbqLNSFQmkwrUb8hC1C9UafqKaVvK57ZLLklvSENzmb79A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746074618; c=relaxed/simple;
-	bh=4JkwcjE5GPk9uPDAK84KvKHdAkJ6Hc+IvsTERslfTjY=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Yl/ODclr1i8+29i7DgNt97ZVr4/55VUbL4ub8gAe8wsJz1fq5Qh1iOq8rs3mPPhH0hyS8kwu3Dxu+kiBYz5b4ogaxzeYrjwVaGyVETRAaoi90TvsxKRn8jdke7w0b9GOVVIvnevyMb6ooHWFvv+aGv+dsx39G77sxVxP1wIbABQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=j09EE/4Z; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746074621; c=relaxed/simple;
+	bh=FJMIZAAlsRBCDZIUUWk6FiHiAllsWImKRgkb2mx31Tw=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mSG1hKfIhMKtKrQrsElP0QJCUXi8qeEr6fQaE0fF6rzcNxeMaXXRvf4hZQhsEJt89VgyqF31+x3iZ3+OnlanU2aNze/PgYAoPzpjqgay9xZSQdLWkhlh2DOv75ZLZJTIdhR4Z0PGyYjwRjjTLg1/gYCqe1q9L9Np70R/mYbBL0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=fDapGKHo; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="j09EE/4Z"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 0D0C825DDC;
-	Thu,  1 May 2025 06:43:33 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id 3ud8Ui2_EBSQ; Thu,  1 May 2025 06:43:32 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746074612; bh=4JkwcjE5GPk9uPDAK84KvKHdAkJ6Hc+IvsTERslfTjY=;
-	h=From:To:Subject:Date;
-	b=j09EE/4ZxBp2Fl/fj12zjVXyBQ+uye8GyjmVdKfFJd4jKLZbAcpkb9wg/KGtTD2l2
-	 ora8UneQELBXkv69vXUTALhhEyL8ppSk97mxpVAl5mx7v/XA8PNkGX4f41SpvteWD1
-	 OCgWgOXtW0I4NbnvsmyQN6VbX4xRk8NdPfqL0ZmS7lWE4MpXlmHTKn6NiI2fS2DxXJ
-	 QjsJ/lMaSFydzWxlH0fSY449CAyrGWeohAfpjv73ptABMpdIyELadvGLL72sqJPX8j
-	 sEhNZnNEWZL70gdTLKwXME8s2jQqEg1d6TO62LxUB8xCrI9r+87h8DWm7DtxNiYQuk
-	 hRxZuLGKfXYcw==
-From: Yao Zi <ziyao@disroot.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	WANG Xuerui <kernel@xen0n.name>,
-	Yao Zi <ziyao@disroot.org>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Junhao Xie <bigfoot@classfun.cn>,
-	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Binbin Zhou <zhoubinbin@loongson.cn>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	loongarch@lists.linux.dev,
-	Mingcong Bai <jeffbai@aosc.io>,
-	Kexy Biscuit <kexybiscuit@aosc.io>
-Subject: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
-Date: Thu,  1 May 2025 04:42:36 +0000
-Message-ID: <20250501044239.9404-2-ziyao@disroot.org>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fDapGKHo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746074620; x=1777610620;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=nmWVsEqVJv451jTaseIeYwxvxKSGxFUAPewNfehCRt4=;
+  b=fDapGKHoTVq3CO5WEwd5lB8lShsCdFglQ0/S7q/ksnOOn2zW5+0+MugO
+   1vLRBSOAbHcTiTfjqgNRRCriAne4hpP80KWvQQTPVq0Hfg8RWd4R1STXn
+   D74oq4Bmvo0kjZ6cVS1aYz5m53WIHLjYlqLYexQWGGujvKEQ4awv0pUvT
+   w=;
+X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
+   d="scan'208";a="820675791"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 04:43:34 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:40716]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
+ id f5294a6a-507c-4dca-b1cc-456173d24f3b; Thu, 1 May 2025 04:43:33 +0000 (UTC)
+X-Farcaster-Flow-ID: f5294a6a-507c-4dca-b1cc-456173d24f3b
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 04:43:32 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 04:43:29 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jiayuan.chen@linux.dev>
+CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<horms@kernel.org>, <kuba@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-kselftest@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>, <shuah@kernel.org>, <willemdebruijn.kernel@gmail.com>
+Subject: Re: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
+Date: Wed, 30 Apr 2025 21:42:24 -0700
+Message-ID: <20250501044321.83028-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250501035116.69391-1-jiayuan.chen@linux.dev>
+References: <20250501035116.69391-1-jiayuan.chen@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,35 +61,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D031UWC003.ant.amazon.com (10.13.139.252) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
-2K0300 SoC and various peripherals. The vendor prefix and the board are
-documented and basic SoC/board devicetrees are added.
+From: Jiayuan Chen <jiayuan.chen@linux.dev>
+Date: Thu,  1 May 2025 11:51:08 +0800
+> For some services we are using "established-over-unconnected" model.
+> 
+> '''
+> // create unconnected socket and 'listen()'
+> srv_fd = socket(AF_INET, SOCK_DGRAM)
+> setsockopt(srv_fd, SO_REUSEPORT)
+> bind(srv_fd, SERVER_ADDR, SERVER_PORT)
+> 
+> // 'accept()'
+> data, client_addr = recvmsg(srv_fd)
+> 
+> // create a connected socket for this request
+> cli_fd = socket(AF_INET, SOCK_DGRAM)
+> setsockopt(cli_fd, SO_REUSEPORT)
+> bind(cli_fd, SERVER_ADDR, SERVER_PORT)
+> connect(cli, client_addr)
+> ...
+> // do handshake with cli_fd
+> '''
+> 
+> This programming pattern simulates accept() using UDP, creating a new
+> socket for each client request. The server can then use separate sockets
+> to handle client requests, avoiding the need to use a single UDP socket
+> for I/O transmission.
+> 
+> But there is a race condition between the bind() and connect() of the
+> connected socket:
+> We might receive unexpected packets belonging to the unconnected socket
+> before connect() is executed, which is not what we need.
+> (Of course, before connect(), the unconnected socket will also receive
+> packets from the connected socket, which is easily resolved because
+> upper-layer protocols typically require explicit boundaries, and we
+> receive a complete packet before creating a connected socket.)
+> 
+> Before this patch, the connected socket had to filter requests at recvmsg
+> time, acting as a dispatcher to some extent. With this patch, we can
+> consider the bind and connect operations to be atomic.
 
-I've successfully booted into console with vendor U-Boot, a bootlog
-could be obtained here[1]. DTB and initramfs must be built into the
-kernel as the vendor bootloader cannot pass them and upstream U-Boot
-support for LoongArch is still WIP.
+SO_ATTACH_REUSEPORT_EBPF is what you want.
 
-Thanks for your time and review.
+The socket won't receive any packets until the socket is added to
+the BPF map.
 
-[1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
-
-Yao Zi (4):
-  dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
-  dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
-  LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
-  LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
-
- .../bindings/loongarch/loongson.yaml          |   5 +
- .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
- arch/loongarch/boot/dts/Makefile              |   1 +
- arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
- .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
- 5 files changed, 246 insertions(+)
- create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
- create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts
-
--- 
-2.49.0
-
+No need to reinvent a subset of BPF functionalities.
