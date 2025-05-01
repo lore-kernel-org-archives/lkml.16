@@ -1,152 +1,152 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AA6218AC4
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 10:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5AF821ABB6;
+	Thu,  1 May 2025 10:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746095752; cv=none; b=QD+Xj002FWWr7tZHs51+3dLfGjS7u/ugxK34FL4uwVpd4ZSivNljjgJ2ybkHVn+Jflqh7viuwThRSZI9gB6JXrvQzIvbCrMDPsq+AA0y/QjhsRJ0xtE3FNGqlDXoeP4FZzAQ5ARhv7CQQQyc2/YyYr3ocETgHkC1XYUayPA6Wtc=
+	t=1746095836; cv=none; b=J/Rs9EckG8Axrfdmj0eeY1D/l1oWqIBAVt3vqghkI4WIIVt370oFtO5q69GaHTXmHAIqn7bjKDD/622RmelnPsnR2zVrxMXWXz+7li6PIeu1u6OkllpT0HoEqa7TsZ796QiOAU4s4N7jeDRq2dr2i541sv2RKVTMntuGey5HSRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746095752; c=relaxed/simple;
-	bh=vNYmWvhVJQY/AqblF9NK9uhqlpRYbUIbtdpo5XR+1to=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=COsqiVh5HTlPWtLOKIMyJl/+dyTAhUvFFXBOo8E1YK1p6+0rkMjKj9YcBv1XJ2EPLJT8vDTDY/cN0qolusRjTWJ1k2GSY5nroLLU5mhwW5Z+bZpEzP4IMqXEwPVM6Gpq27sx0nQ5/jv4pDR00Y6D5yjFjJv2A2yK8tlR+Ow2Ul8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iui+N/gd; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746095836; c=relaxed/simple;
+	bh=8FjT+J+heVMHLdc5H4GZwvSsz5gfVyl7k4HW7LHxfaM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LyKNa8tJM82/s7i7W/dm6aBoCVG3WSbmBD6CrtRBzVgjRIGC+WBrL9f8l7D76CR6eM9fCX2xdEB9CBOsDKoL/AM8oAjmptDgUrLmltpZEsGeCNFXrpQtOE6ExkJVG8/AiVrBiYxXQIKActlrTVZ8LU1P68yDkc7gryFQP9CSnl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KUDDaWgm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iui+N/gd"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf825f46bso1023945e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 03:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746095748; x=1746700548; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0JnUeJrEz2QMwYoW3OD7Syx9Jdxy3i/s9a5E6cIdqNg=;
-        b=Iui+N/gd7U27Ge1BGBruaX96YwUsclq1Rt6A1fHQBf62la3S1tg9nek6Q6MI4XLlCs
-         Q/vxKx66riqPXerNZwVYxFAwodgLoN7rT7YP/0vUNv2yGKW3Xb3fE/FQdy7UbL9tLGcv
-         tWA8JWubZvUnuZY50w+frn9ckU/ZksN484YGJio2FxIpiYFe/djSrFDA8y2ayUB7DrmE
-         eAolAvo7kWfXWHSs9F3pPD4smaeGeCAkrOO1UHq3RGNGXpMpEVfcQ4Zi+eSVm1/501Rf
-         Riw9l5VpWQ7tcUyrqWMSXhwvmD9YxpW1DIgsCuYc7Kt+qDz/BinG4851nZbgEzxnyC3a
-         YW5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746095748; x=1746700548;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0JnUeJrEz2QMwYoW3OD7Syx9Jdxy3i/s9a5E6cIdqNg=;
-        b=g3KQU5WJP51G3/SPMW6koh6QG8EjejwlwBE/JYHANfmqU/Eoh0uXuHVXbNhoiuIEFl
-         +ZcOGzGqTGE6SURrSs+KKf8d0L/lkOXsO3C7XAcVx20/J21rnrRlGctYsX2GF2Y44osb
-         ef1to485o8wvjk1DLxFob+v44/yqFe9h2I7eKD5x4UB+9JZap54+CFRXiIt87VB9fb0A
-         Li7bFPRKTpmyLg93knvRmnIuZ993/gaOBm+5x54TCL4LDk0AUkZJwXkVeUqcokBCSUfr
-         KVXFpWVRPjsu2qZSPNVJixy7nTvVSbNNMhgPrQ+0/dFSn9mC2I5f28SbGPRheMx8HhgC
-         e2QA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGsgMu5qIHIEltUKvURNDSi5jtJrAm/kqFA3yLR205QuGuhJ0XW2MjEQWsfkVh61yZs8QDnkuP1prM51I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhsyFAQqqJXqwXHfqlaSTZ/ucUu9mk6jB6ypLZ7rdWLhqtPhPg
-	0UJl8UMVmeJVDMCsQYOn1pWDU0yrjiY3FoaOfaPYKJ4HSz1hdsmfPrIX9R8zvBY=
-X-Gm-Gg: ASbGncvbUAqPCxXPdjOyQq5JLgU+3Ff6vgcSF6jcdnTevwybIv6kuFEMPgXskuSrCsv
-	LY8J9WOKHu07FuxFiU6gpuwRxWVS+QAa8Fd1TiZNdI1hYh04nzHkjVRxf/HiW1SEeAu0JwmayWd
-	gcfk3zV1NDEEQ2vNH1AUGgDxtgAGMyJqXjYOmqoPo9OFLQ3tiwmBIrUL1I18pcnSk4gFRyusquj
-	dvu4qKS+n4+IoOJ3K5LcfbVJ9K24obycAR7uTwRDj7f2PzdRvhkeggvOH1U7U++oipH8xIDljlB
-	HXc+o+VRwK5xOxYnBt/1Q/f93EiMmYHKbh7nbdlofv39vs104A==
-X-Google-Smtp-Source: AGHT+IHpYbP0/kmTUa86knuxCp0uPFuqoZHphNnA+x+8xxOAP7htntUULz8OHSqI0KW/OuRv2E6e8g==
-X-Received: by 2002:a5d:59ab:0:b0:3a0:7119:cefa with SMTP id ffacd0b85a97d-3a0900a0a99mr1574177f8f.16.1746095748358;
-        Thu, 01 May 2025 03:35:48 -0700 (PDT)
-Received: from kuoka.. ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a88218sm486646f8f.78.2025.05.01.03.35.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 03:35:47 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Arnd Bergmann <arnd@arndb.de>,
-	soc@lists.linux.dev,
-	Lee Jones <lee@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Peter Griffin <peter.griffin@linaro.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [GIT PULL] samsung: drivers for v6.16
-Date: Thu,  1 May 2025 12:35:41 +0200
-Message-ID: <20250501103541.13795-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KUDDaWgm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01725C4CEE3;
+	Thu,  1 May 2025 10:37:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746095836;
+	bh=8FjT+J+heVMHLdc5H4GZwvSsz5gfVyl7k4HW7LHxfaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KUDDaWgmuwHMXd2SMAgb5nAcgOPYyUL+On6Fd/24W7Rn0v8gZTMTFYKO6bXaCG1Ti
+	 d8QmYkLU+ZNmwS+H08DxDwNOc/spdy5iORGiLc7ttl7CKpUoRcv1OWObRudl+JlyR9
+	 UmqvsV4ldxuq3H04Gh4WIXLKjFV3HlHUUNCIoxyDbAxNBJYAfYcpvtMfo6AVZysNnQ
+	 NdNusZroGJ2Tfvp/+JwTXhQiUhFvtzMn/ZyY31bby8DrwS7UZYL905pRf/ZbmEr1RI
+	 LHxjbMcz1fLkjlZYBRBgFpbZey9IwtkDDYSqrpeWS1vJjud/MT1rTQbOyp5Ea3QL1F
+	 gOFSusPjZQHIQ==
+Date: Thu, 1 May 2025 12:37:10 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v2 2/4] rust: debugfs: Bind file creation for long-lived
+ Display
+Message-ID: <aBNO1rMcAwo-TNWQ@pollux>
+References: <20250430-debugfs-rust-v2-0-2e8d3985812b@google.com>
+ <20250430-debugfs-rust-v2-2-2e8d3985812b@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2160; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=vNYmWvhVJQY/AqblF9NK9uhqlpRYbUIbtdpo5XR+1to=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE059ULjeHoIezM1OAEcRIkI9/eVyLkGHFQs+g
- 7rpEZaMWx2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBNOfQAKCRDBN2bmhouD
- 12nUD/9GGensklaBc7M71nRyVAyLRtoLji6ft/Ict9H+mJZDnuu0b8HD7g+Bd8cQXxq/QEfpTpU
- 3eZ2eHhGVRZjLwvIl29slEjPUmSCfJt0/FwGAvs4CS0S4J4Cz/NiemKpg/4e8Eew6EF40LceTHj
- 4nZkclCbJ9W5znA6QdShYnsvijNEOLhZQsCNNSEQqIfXdzpnozs/QhftGoV9hT4tAqLSVU2f6Hn
- jmsyfqT4JENOwsmtDN8j9YQYOrs3vGAKzcOcUDfiFbQ8DDWfVE7F1LRzzUR7XfQ/JoplAGqJv5w
- 98STFW/3tbErQKmmTxGmJRd7k5b5s81O8DH2VR+kFZ41Iaz7bH5ui2cPJ3ollez7MA8bbP3yZT1
- sZR7s6lOYvLV4sNQ/1v0+JoMkc9F4S2fl3NO3Bm65SW2K9Nu7QGVotAkKCYTLasz0ifE8Rady64
- oPew0HeOVHkHLteSdmusZZmR/o+dlbVXsmqIFZ93b6xs/cb03KGr1uRj8YiVf4swVqTa4zpG/a8
- oNbXpNyOht6RernZ4dKaL93ynESVArjwMoLvKetKMbM7DOXbqThhhUDSABqUfRc4LpEZzAk90FW
- M9IRpcYQOZn2KX/e38M8x0F9wQBL0fY6A9Bk93WsBf7nV/8QLoAgsFBey9UQvZl6Kn7GIBFNNFh fsgUW3E/TP11+PA==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430-debugfs-rust-v2-2-2e8d3985812b@google.com>
 
-Hi Lee,
-That's the stable tag for you to base MFD patches on top.
+On Wed, Apr 30, 2025 at 11:31:57PM +0000, Matthew Maurer wrote:
+> Allows creation of files for references that live forever and lack
+> metadata through the `Display` implementation.
+> 
+> The reference must live forever because we do not have a maximum
+> lifetime for the file we are creating.
+> 
+> The `Display` implementation is used because `seq_printf` needs to route
+> through `%pA`, which in turn routes through Arguments. A more generic
+> API is provided later in the series, implemented in terms of this one.
+> 
+> Signed-off-by: Matthew Maurer <mmaurer@google.com>
+> ---
+>  rust/kernel/debugfs.rs | 102 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+> 
+> diff --git a/rust/kernel/debugfs.rs b/rust/kernel/debugfs.rs
+> index b533ab21aaa775d4e3f33caf89e2d67ef85592f8..87de94da3b27c2a399bb377afd47280f65208d41 100644
+> --- a/rust/kernel/debugfs.rs
+> +++ b/rust/kernel/debugfs.rs
+> @@ -7,6 +7,7 @@
+>  //! C header: [`include/linux/debugfs.h`](srctree/include/linux/debugfs.h)
+>  
+>  use crate::str::CStr;
+> +use core::fmt::Display;
+>  
+>  /// Handle to a DebugFS directory.
+>  // INVARIANT: The wrapped pointer will always be NULL, an error, or an owned DebugFS `dentry`
+> @@ -121,6 +122,47 @@ fn as_ptr(&self) -> *mut bindings::dentry {
+>      pub fn keep(self) {
+>          core::mem::forget(self)
+>      }
+> +
+> +    /// Create a file in a DebugFS directory with the provided name, and contents from invoking
+> +    /// [`Display::fmt`] on the provided reference.
+> +    ///
+> +    /// # Examples
+> +    ///
+> +    /// ```
+> +    /// # use kernel::c_str;
+> +    /// # use kernel::debugfs::Dir;
+> +    /// let dir = Dir::new(c_str!("my_debugfs_dir"));
+> +    /// dir.display_file(c_str!("foo"), &200).keep();
+> +    /// // "my_debugfs_dir/foo" now contains the number 200.
+> +    /// ```
+> +    pub fn display_file<T: Display + Sized>(&self, name: &CStr, data: &'static T) -> Self {
+> +        // SAFETY:
+> +        // * `name` is a NUL-terminated C string, living across the call, by CStr invariant
+> +        // * `parent` is a live dentry since we have a reference to it
+> +        // * `vtable` is all stock `seq_file` implementations except for `open`.
+> +        //   `open`'s only requirement beyond what is provided to all open functions is that the
+> +        //   inode's data pointer must point to a `T` that will outlive it, which we know because
+> +        //   we have a static reference.
+> +        // * debugfs_create_file_full either returns an error code or a legal dentry pointer, so
+> +        //   `Self::from_ptr` is safe to call here.
+> +        #[cfg(CONFIG_DEBUG_FS)]
+> +        unsafe {
+> +            Self::from_ptr(bindings::debugfs_create_file_full(
+> +                name.as_char_ptr(),
+> +                0o444,
+> +                self.as_ptr(),
+> +                data as *const _ as *mut _,
+> +                core::ptr::null(),
+> +                &<T as DisplayFile>::VTABLE,
+> +            ))
+> +        }
+> +        #[cfg(not(CONFIG_DEBUG_FS))]
+> +        {
+> +            // Mark parameters used
+> +            let (_, _) = (name, data);
+> +            Self()
+> +        }
+> +    }
 
+Analogous to SubDir, this should be a new type, such that we can't leak the root
+directory. Also, methods like subdir() don't really make sense for a file, no?
 
-Hi Arnd,
-Please pull it as regular drivers pull. Note this will be also shared with MFD
-tree.
+Besides that, don't we also need a separate type for a file to be able to attach
+non-static data anyways? I.e. something like:
 
-Best regards,
-Krzysztof
+	#[cfg(CONFIG_DEBUG_FS)]
+	struct File<T> {
+	   dentry: *mut bindings::dentry,
+	   data: T,
+	}
 
+	#[cfg(not(CONFIG_DEBUG_FS))]
+	struct File<T> {
+	   _p: PhantomData<T>,
+	}
 
-The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
-
-  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-6.16
-
-for you to fetch changes up to 2c2e5e908ea2b53aa0d21fbfe4d1dab527a7703e:
-
-  firmware: exynos-acpm: Correct kerneldoc and use typical np argument name (2025-04-25 11:41:03 +0200)
-
-----------------------------------------------------------------
-Samsung SoC drivers for v6.16
-
-Several improvements to Exynos ACPM (Alive Clock and Power Manager)
-driver:
-1. Handle communication timeous better.
-2. Avoid sleeping, so users (PMIC) can still transfer during system
-   shutdown.
-3. Fix reading longer messages from them firmware.
-4. Deferred probe improvements.
-5. Model the user of ACPM - PMIC - a as child device and export
-   devm_acpm_get_by_node() for such use case.
-
-----------------------------------------------------------------
-André Draszik (6):
-      firmware: exynos-acpm: use ktime APIs for timeout detection
-      firmware: exynos-acpm: allow use during system shutdown
-      dt-bindings: firmware: google,gs101-acpm-ipc: add PMIC child node
-      firmware: exynos-acpm: fix reading longer results
-      firmware: exynos-acpm: silence EPROBE_DEFER error on boot
-      firmware: exynos-acpm: introduce devm_acpm_get_by_node()
-
-Krzysztof Kozlowski (1):
-      firmware: exynos-acpm: Correct kerneldoc and use typical np argument name
-
-Tudor Ambarus (1):
-      firmware: exynos-acpm: populate devices from device tree data
-
- .../bindings/firmware/google,gs101-acpm-ipc.yaml   | 35 +++++++++++++
- drivers/firmware/samsung/exynos-acpm-pmic.c        | 16 +++---
- drivers/firmware/samsung/exynos-acpm.c             | 58 +++++++++-------------
- .../linux/firmware/samsung/exynos-acpm-protocol.h  |  6 ++-
- 4 files changed, 70 insertions(+), 45 deletions(-)
+I'm not exactly sure how v1 did this; I haven't had time to look at v1 before v2
+was posted. I seems like v1 relied on a separate structure storing the data,
+which also held a reference to the corresponding dentry or something along those
+lines?
