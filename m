@@ -1,157 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1241EA7EB;
-	Thu,  1 May 2025 03:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81314C80;
+	Thu,  1 May 2025 03:32:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746069817; cv=none; b=KJRVvnymHv8eh5em3pls5kv38b+yKTtkgF9tfkOSNNe8gpGC04o00jAU8IY+qOijQGVtTUQKKHLiYv7JbV7zbD4WUiJXSdXeZGrvyqby5IMymNiVrCubxY4rtVJXB/sAy+NTuKQ5PjRwZ47KAQUmMmkuj2M//8KpLVW+l6MCUKk=
+	t=1746070342; cv=none; b=oUgdpqxUH3w8/Bvp04HZqB2vOWCexAr2mgiH73CXkMu9nwIMQZkuQT2HR0/Qq8rV4mFq4s7ZQfKO9SVDIXWn+0L9v0H0GKY/KvHx9o8n3syRAQeM1bwqfIPLjJ1i5if7OfGU+kYY0lo2r2CaW2dz9YyT3eNoCiOAx3SgxTQSE5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746069817; c=relaxed/simple;
-	bh=+19Gu4Iri61NQgs4mYjOXwJD8OBz2QH6Z2pnFSvbIio=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f/IlsHxrXXPvgalApx86+wUA2U9aBOoejTEV0W9TKLFIwPDTuXTnxvvZM0pcVGvAZB1GpyPKR9eO3ImjOFSLPFR4Fd33QRt8+36Ol333cOh+yLExovpktBFd1CUPg+/LdmqMb9f7xUBKUUjkdkO3FRpm1ioqXCImEtAopm88Jz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Fc2tq5XS; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746070342; c=relaxed/simple;
+	bh=fRMZdEm7fOJ8v4QMbXUj8vea++1ipKTKHFyioNAwYaw=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=g6MQ8LVDfaOgm/TSzMNveFKiDlVwGiuQJwcDZwc0NLeS3AAWTA4PNHdOGFlvi+Dsp4jivWgzB3K9+5TTZ3oFfhOetDX89hP7Tv2cfQholjVdcc2TnPavjnqWRMHyXlzAgOF6txjZ0rzOqmxElVXv1Od5PBLaWPXuMiI2ZtQA8CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=fail (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cq5CnQfu reason="signature verification failed"; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fc2tq5XS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746069815; x=1777605815;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+19Gu4Iri61NQgs4mYjOXwJD8OBz2QH6Z2pnFSvbIio=;
-  b=Fc2tq5XSc7X6HDg/W3sAfkMStwmaMT9JSybwTK++07ruaGulYMWUsFw5
-   zXXJzK7gOGpV0dxEY1+M2NVabwudocXl2fjkz8CnEZXGT6cdQh9hvhhD+
-   WSUES9bkFT5gL3Phb/LMJ5ojTiBvr4i0iDda/NE/nfAzQ0xm9LXT1dXek
-   PHlI0j4363XMp9vhzsKUVk5Np6qZnDYs3MUttq49BoNpVnLDzFnD9WyTq
-   XU47bQtLiBscZ9Bla348GF23f+pAXjAYQYzDVz00GmoDlPrWVyjVtjM/4
-   CoXdKAzG//jgh3ayuH0+QKbqdQk8j/PsTcdyEexFAfquNq8oGqrFTPZXa
-   g==;
-X-CSE-ConnectionGUID: Icp82iTlRamBWVHYfAGqdw==
-X-CSE-MsgGUID: UViyNnK/SeCA5m9wIREmeQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11419"; a="73136881"
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="73136881"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Apr 2025 20:23:34 -0700
-X-CSE-ConnectionGUID: PQUWvfaJS/ybTMOZlBwt6w==
-X-CSE-MsgGUID: JoGepA1fTjuYCerjhxy0+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,253,1739865600"; 
-   d="scan'208";a="134034716"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa009.jf.intel.com with ESMTP; 30 Apr 2025 20:23:31 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAKWG-0003vp-1K;
-	Thu, 01 May 2025 03:23:28 +0000
-Date: Thu, 1 May 2025 11:22:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Alexander Gordeev <agordeev@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	Daniel Axtens <dja@axtens.net>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Linux Memory Management List <linux-mm@kvack.org>,
-	linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-	linux-s390@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from
- atomic context
-Message-ID: <202505010957.08s1jPkF-lkp@intel.com>
-References: <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cq5CnQfu"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 5413W3Ga1206913
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Wed, 30 Apr 2025 20:32:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 5413W3Ga1206913
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746070325;
+	bh=wZ8hCQkM3wsEnq2HUgkkQULMcmqkfBTaRw1XvFt2KG4=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Cq5CnQfumMQgV/QuJlPOpMFFl3/hdCSTtri7CsWNwhcJ78uojh9NbSgAJPCeA5CCi
+	 kzL0HT7n4URyLjbruVPu/4HLsSkEsmpdiSg9gg7H+CQ+Fz8ghHX3WcINt3y3/SnoLz
+	 gzIQZrq/S1ru3Wb+nQMlHk8ynljGXBi2xcchb4uv+UryTVux1VIoziPxS9g/iYt/TS
+	 pxjT+Z7UZeyEWMj84CTHl1ABDIie/2+IGzJFs7topZwUZiCZNzJhqPouYyEfNs65wl
+	 KwqjRGbO6xjeHrbYaTnyLdx7Hl1FdLip3zqj1BSeNJ/koUkur53dJFz6YBdofU2VOD
+	 esZ+xdGZIuyjQ==
+Date: Wed, 30 Apr 2025 20:32:03 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+CC: "Theodore Ts'o" <tytso@mit.edu>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+User-Agent: K-9 Mail for Android
+In-Reply-To: <CAHk-=wgwuu5Yp0Y-t_U6MoeKmDbJ-Y+0e+MoQi7pkGw2Eu9BzQ@mail.gmail.com>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip> <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com> <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp> <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com> <20250425195910.GA1018738@mit.edu> <d87f7b76-8a53-4023-81e2-5d257c90acc2@zytor.com> <CAHk-=wgwuu5Yp0Y-t_U6MoeKmDbJ-Y+0e+MoQi7pkGw2Eu9BzQ@mail.gmail.com>
+Message-ID: <114E260B-7AC4-4F5D-BBC4-60036CC7188F@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev@linux.ibm.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Alexander,
+On April 30, 2025 8:12:20 PM PDT, Linus Torvalds <torvalds@linux-foundation=
+=2Eorg> wrote:
+>On Wed, 30 Apr 2025 at 19:48, H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
+>>
+>> It is worth noting that Microsoft has basically declared their
+>> "recommended" case folding (upcase) table to be permanently frozen (for
+>> new filesystem instances in the case where they use an on-disk
+>> translation table created at format time=2E)  As far as I know they hav=
+e
+>> never supported anything other than 1:1 conversion of BMP code points,
+>> nor normalization=2E
+>
+>So no crazy '=C3=9F' matches 'ss' kind of thing? (And yes, afaik that's
+>technically wrong even in German, but afaik at least sorts the same in
+>some locales)=2E
+>
+>Because yes, if MS basically does a 1:1 unicode translation with a
+>fixed table, that is not only "simpler", I think it's what we should
+>strive for=2E
+>
+>Because I think the *only* valid reason for case insensitive
+>filesystems is "backwards compatibility", and given that, it's
+>_particularly_ stupid to then do anything more complicated and broken
+>than the thing you're trying to be compatible with=2E
+>
+>I hope to everything holy that nobody ever wants to be compatible with
+>the absolute garbage that is the OSX HFS model=2E
+>
+>Because the whole "let's actively corrupt names into something that is
+>almost, but not exactly, NFD" stuff is just some next-level evil
+>stuff=2E
+>
+>            Linus
+>
 
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on akpm-mm/mm-everything]
-[also build test WARNING on linus/master v6.15-rc4 next-20250430]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Gordeev/kasan-Avoid-sleepable-page-allocation-from-atomic-context/20250430-001020
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/573a823565734e1eac3aa128fb9d3506ec918a72.1745940843.git.agordeev%40linux.ibm.com
-patch subject: [PATCH v3 1/1] kasan: Avoid sleepable page allocation from atomic context
-config: x86_64-buildonly-randconfig-002-20250501 (https://download.01.org/0day-ci/archive/20250501/202505010957.08s1jPkF-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250501/202505010957.08s1jPkF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505010957.08s1jPkF-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   mm/kasan/shadow.c: In function 'kasan_populate_vmalloc_pte':
-   mm/kasan/shadow.c:313:18: error: implicit declaration of function 'pfn_to_virt'; did you mean 'fix_to_virt'? [-Werror=implicit-function-declaration]
-     313 |         __memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-         |                  ^~~~~~~~~~~
-         |                  fix_to_virt
->> mm/kasan/shadow.c:313:18: warning: passing argument 1 of '__memset' makes pointer from integer without a cast [-Wint-conversion]
-     313 |         __memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-         |                  ^~~~~~~~~~~~~~~~
-         |                  |
-         |                  int
-   In file included from arch/x86/include/asm/string.h:5,
-                    from arch/x86/include/asm/cpuid/api.h:10,
-                    from arch/x86/include/asm/cpuid.h:6,
-                    from arch/x86/include/asm/processor.h:19,
-                    from arch/x86/include/asm/cpufeature.h:5,
-                    from arch/x86/include/asm/thread_info.h:59,
-                    from include/linux/thread_info.h:60,
-                    from include/linux/spinlock.h:60,
-                    from arch/x86/include/asm/pgtable.h:19,
-                    from include/linux/pgtable.h:6,
-                    from include/linux/kasan.h:37,
-                    from mm/kasan/shadow.c:14:
-   arch/x86/include/asm/string_64.h:23:22: note: expected 'void *' but argument is of type 'int'
-      23 | void *__memset(void *s, int c, size_t n);
-         |                ~~~~~~^
-   cc1: some warnings being treated as errors
-
-
-vim +/__memset +313 mm/kasan/shadow.c
-
-   299	
-   300	static int kasan_populate_vmalloc_pte(pte_t *ptep, unsigned long addr,
-   301					      void *_data)
-   302	{
-   303		struct vmalloc_populate_data *data = _data;
-   304		struct page *page;
-   305		unsigned long pfn;
-   306		pte_t pte;
-   307	
-   308		if (likely(!pte_none(ptep_get(ptep))))
-   309			return 0;
-   310	
-   311		page = data->pages[PFN_DOWN(addr - data->start)];
-   312		pfn = page_to_pfn(page);
- > 313		__memset(pfn_to_virt(pfn), KASAN_VMALLOC_INVALID, PAGE_SIZE);
-   314		pte = pfn_pte(pfn, PAGE_KERNEL);
-   315	
-   316		spin_lock(&init_mm.page_table_lock);
-   317		if (likely(pte_none(ptep_get(ptep))))
-   318			set_pte_at(&init_mm, addr, ptep, pte);
-   319		spin_unlock(&init_mm.page_table_lock);
-   320	
-   321		return 0;
-   322	}
-   323	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I suspect the NFD bit in HFS comes from the use of decomposed characters i=
+n the 8-bit character systems of MacOS Classic=2E
