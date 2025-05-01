@@ -1,102 +1,135 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E78921C9E5
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10DE22DC799;
+	Thu,  1 May 2025 18:11:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746123088; cv=none; b=cuhA04AdktCsofjOKupJ+H3/Gu4EenId0QROKNd9NOS+vAUYMNcHcN/y0ArGNAW2SzAFIL5hG6B9csZ6QbgzY2SmeeuAIOnaeX2pxNgbXddf+GWgNaUljHIJ+r/+iIlRB3vqWs3JymaNU+C6em7nJNTo6WikCTNggr7PjCi9S9U=
+	t=1746123118; cv=none; b=b/66dC+Od99gIF+azWyEkxA2nLP3OIuvc4XcnAOZ1omCzC39cXlWqueF7SE59Y0lKkeKQzU88c2Z55R4ylwSd0gF6BKYz+9dpEL5rmAWG5lco8B9AnIgnZagSilQlYA16oqUNI2RpNUxf7+4blfGGiRydEpgI74O/eB4rLeA6tM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746123088; c=relaxed/simple;
-	bh=n2hdrzkozFdUt75+CFb0KwrxNnR9IhTGVsPXZ6VJ5AQ=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=u2FzJ3pBad8nvQ+VOR+yAeN8NV0yUoX7ryNxPCPkRqlf+XK5yxCUvLGQJVWBQxDHERvjM70mWRF9xfSqooOpkuY5tKnGOLwp4/6EAUT6lVYi1h7BAV9F98k3C8NV1M6E1K126Rispf5MTFCgYYsmK3Vi8pkhhX+kTIJZ/QPHhVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z254Mk3u; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746123118; c=relaxed/simple;
+	bh=gOk61yHjfCCGWRmwY9cwrxs+cpgZNAfK4hq0p8qNcq8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fuXrrEkJhlKlyyepXrdTJDRKi6Tl07ymqdMTxEyzHyF+JimD5mtn8sM5rAfd6fgz3nHLiGKZMZVtIIHmxdqIU2kl0roPQlZhBFM3p7RON6E40s5gtFw+t5WEkXSOZWHpAfl8GQEeZjIwYTcbo10lMU4OFoTsm4NCNPUaOddo7Pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyWdcO59; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z254Mk3u"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2254e0b4b79so19705325ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 11:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746123086; x=1746727886; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9t400dGVqKpa0aJ5NF/wqCMTUOEugJbXa0Ak07h82mM=;
-        b=Z254Mk3u/zSGMbaP17a1gwGX7Qdl9VC6nX+mkYtasNPHNMV3pMncjHl7X7Y+f0q13t
-         O9BsWhcyp1DP2DIjpZfxfU+rgVDW7vIWkhsS4moraAyu/L9AqFXOp1KrGqjYrEAHLH6I
-         +O9SB+sO9AIDtpLJQmBXXRbz2SXjvNaB2tWMQD7KwTbLZgDHr4ROxtTGIuwknXnPsB29
-         kK88O1MiOop6HUPYHT5Y68UvHTg4UCy5vO9W/rR9l+pofSY37zocqYsXv+LDcpgjEboL
-         1GsZNr00hOjL3jLJHohjNuB0sdQGsASGd/LBFZa26ehY2Luy1vsurXdcqnHzqVZC0xGN
-         wRjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746123086; x=1746727886;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9t400dGVqKpa0aJ5NF/wqCMTUOEugJbXa0Ak07h82mM=;
-        b=lLEcWb7dsqrUAYQkxDzJGKzPw2VpF9PnOABa5Nfvjz/uRTIeCg09pGy6fnS7n43SCf
-         XH79Rui9G1H/S8FYQ7iefH8nOoBdxUTasu2DTfd9S0RsXTcPSdigaJ2MYD6lknYm6W9+
-         KEtR4xDis2F/YbP3ZvUQq9Sg0yG9+3Yb9wfmEqkWzViLFdLeQIBLGpQ9g5CZE/UuZCOY
-         9ApOwWOuTRP7PQNBgONRHV+/6XpCkNWJNvm9mOkTb+baLzqxxT1AIxLzCl1rV99v4YV7
-         +Pe0pjd4fRKGn3ZhCmKMEoXt1oYhhxYd3K2n8MqKd124spgtXYWVb9AsTY1iOJRBckZp
-         vMxg==
-X-Forwarded-Encrypted: i=1; AJvYcCWboWRaFsYz901vfgdXAsnbd9mQQxd13a+eMd3V/KdOCEb5vu8PKgC0MpmHZj6W5XMn9WDR2cS0seoRfak=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx8CWaW9hFyqt25ELMPz//d6kHhtOuOL2nM2X0bz4GO7+53jiJr
-	pUnyID7bg3T/YtKqrHWZLpXgInIAgXbRab1U/lxIaJOwg68tQA4rOo3em6nHlvs=
-X-Gm-Gg: ASbGncsejCs4dx8BXGZ9jo8QBfm85HoqDx1aAhioHhG6l+FVl+khM97AsGYLFUtdxfO
-	z1iR5lyH/iUmCGpWnvGxj96cHCiM6vkiWE82W5DnTXxJP26f12IdW8URUn81QjbOr2KQffxRq1O
-	ckjLDjB2jrYnIIEouP9BjzZoNw0gcyb7alPX4Ja+9bzh2JNEQSYeNQsjvFIDvg7ZOFXgxoSKLL/
-	ed/FzVFTYmm/E5WFjE7wPcG1MR7JmoweigVbwGo4K3Cx8XceWR404rpIthI4opBJZZp5fCCi+QA
-	d7gMhXoj/hP6IHmMSqKp0oo7B1H3k3pkU5RDjqo=
-X-Google-Smtp-Source: AGHT+IHS7iGdpbnvZSPtibrutAPiNsrIFRXMmGkTFO74ZmAaMQXJuegvR8E/cjr6fvB47F0IN/BmvQ==
-X-Received: by 2002:a17:903:1b2d:b0:223:f408:c3f7 with SMTP id d9443c01a7336-22e102cd9bbmr970795ad.16.1746123085925;
-        Thu, 01 May 2025 11:11:25 -0700 (PDT)
-Received: from localhost ([97.126.182.119])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bc6d528sm9783865ad.137.2025.05.01.11.11.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 11:11:25 -0700 (PDT)
-From: Kevin Hilman <khilman@baylibre.com>
-To: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
- linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, 
- Roger Quadros <rogerq@kernel.org>, Rob Herring <robh@kernel.org>, 
- linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Conor Dooley <conor+dt@kernel.org>, Andreas Kemnade <andreas@kemnade.info>
-In-Reply-To: <20250427052735.88133-1-andreas@kemnade.info>
-References: <20250427052735.88133-1-andreas@kemnade.info>
-Subject: Re: [PATCH v3 0/2] ARM: dts: omap4: panda: TiWilink improvements
-Message-Id: <174612308508.158405.11020603792617275281.b4-ty@baylibre.com>
-Date: Thu, 01 May 2025 11:11:25 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyWdcO59"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4DA5C4CEE3;
+	Thu,  1 May 2025 18:11:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746123117;
+	bh=gOk61yHjfCCGWRmwY9cwrxs+cpgZNAfK4hq0p8qNcq8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=dyWdcO59KUZfhqJh1CQgA50ra3P0WZEUracgFCwtmjexUjKOdc3z583w2/qkBzqiM
+	 PYKQ8t+PXBv2/2CvrC6JBjp5eF8KbqAvxLENb8ILCviVfemyI5Y07J2ddoy8fJeNx3
+	 YmSfR4UP4wtFV+tKptz/HLmcHMUTDM4WfHmBxGmP/malpO8WpNt9phuzVdH5xYHMV2
+	 rVylZ0GWqJ9q5qr4demQfu27OpwgAQrXp3cII+bl/bH0zH2CJt5sYJkGDipi22zm+A
+	 phknxEisK7FfupAUz2jSx3gxxIpF4CPLHMgk48b7BAY5yvrzDGccpNYQqiyn264jqI
+	 cg7Y0ztns70pg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
+ <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
+ <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
+ <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+In-Reply-To: <CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Thu, 01 May 2025 16:08:11 +0200")
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
+	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+	<87msbw1s9e.fsf@kernel.org>
+	<86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
+	<CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Thu, 01 May 2025 20:11:42 +0200
+Message-ID: <87h62419r5.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.3-dev-94c79
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
-On Sun, 27 Apr 2025 07:27:33 +0200, Andreas Kemnade wrote:
-> Add proper definitions for 32k clock and enable bluetooth
-> everywhere.
-> 
-> Changes:
-> v3:
->   - better commit message to describe what the clocks are for
-> 
-> [...]
+> On Thu, May 1, 2025 at 1:32=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
+l.org> wrote:
+>>
+>> The one just before the cut?
+>
+> Both.
 
-Applied, thanks!
+But why does that matter? Anything in the commit message after the cut
+is dropped when applying the patch, right?
 
-[1/2] ARM: dts: omap4: panda: fix resources needed for Wifi
-      commit: 1132bb4df2375ae4a2303068c6f5fc62bc63b870
-[2/2] ARM: dts: omap4: panda: cleanup bluetooth
-      commit: a2db9bbcf64a43c8347625dca9ca0927bb444d43
+>
+>> Thanks. Would be nice with a lint for missed intra-doc links.
+>
+> Definitely -- I filled it a while back:
+>
+>     https://github.com/rust-lang/rust/issues/131510
+>
+>> Clippy gets mad if we move it up. Because rustfmt wants the unsafe block
+>> to a new line:
+>
+> Yeah, then it is one of the cases I was referring to. In that case, it
+> is fine, but please indent the safety comment to match the `unsafe`
+> block.
+
+OK. rustfmt does not seem to care about this though.
+
+>
+>> The reason I choose build_error is that if this should somehow end up
+>> being evaluated in non-const context at some point, I want the build to
+>> fail if the condition is not true. I don't think I get that with assert?
+>
+> I am not sure what you mean. My understanding is that `const` blocks,
+> if execution reaches them, are always evaluated at compile-time (they
+> are a const context):
+>
+>     https://doc.rust-lang.org/reference/expressions/block-expr.html#const=
+-blocks
+>
+> e.g.
+>
+>     https://godbolt.org/z/h36s3nqWK
+>
+> We are lucky to have Gary with us, since he stabilized this particular
+> language feature, so he can correct us! :)
+
+I might not have the full picture, but it is my understanding that
+while `const fn` are evaluated in const context when called from const
+context, they _may_ be called from non-const context, and then they are
+evaluated in non-const context if their arguments are not const [1].
+They are not guaranteed to be evaluated in const context.
+
+So my thinking is that down the road, refactoring of this code may cause
+the `AttributeList::add` to be called in a way so that it is not
+evaluated in const context, and then the `assert` would be evaluated at
+run time. With `build_error` we would get an error during build.
+
+But I should probably use `build_assert` instead of the conditional with
+`build_error`.
+
 
 Best regards,
--- 
-Kevin Hilman <khilman@baylibre.com>
+Andreas Hindborg
+
+
+[1] https://doc.rust-lang.org/reference/const_eval.html#r-const-eval.const-=
+expr.list
 
