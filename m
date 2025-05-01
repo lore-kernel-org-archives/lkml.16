@@ -1,111 +1,99 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41321EA7C6;
-	Thu,  1 May 2025 15:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E79B1FBC8C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:03:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746111791; cv=none; b=A1NB3QJuSlt0AQJcIAzD5Glj4GSf98aU4GhqvCEBi9zz/UQ/v3vlbQl75P/LWG3EFuuXHRy2XnBKrZ6KQF3tIKpxURGOumJ3nyWyqS8zTo/GUqEeWFwZEbsjq0wo17l0W7GFY8VJkuQhXmsw1/P6PMMZKcSwRKirm3FTa4ylEus=
+	t=1746111816; cv=none; b=FtK6PwP/nfA1PRrrvY8w/wtIyuiSGHJR/LRa3xong6uH3+pXAYoBKyswolQysMOdFLaIyHZpKIb61AMa5mZ+V9QRyUCxXvPUQ9ym+svBVESTto/FwRNluwnO89ATv8/I2Qtla1KIebLYutTNPBh2QRSbiTbmO5d1/+5uskEowmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746111791; c=relaxed/simple;
-	bh=4ySaPdEMd4+Vb4yQ+0YUSkKNLjFLCkYhYBoAAExMs3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mkA40cvOe/OtEv8hBUGlPDxu68SZALFpXB3HobIqYdNeHwgSfoTWLTJZ5JUaYhONFPxWvst8EFgVOjLN10UQWtklOi2tY02YJ5IR9q9NZJ1UFQwpGz/Bl1d7ChOcc8FtSc0eCQ0qGX8rybZc9CV1WKY1Ja0eSpow47+EvI3u3GE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QE9K7S0F; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746111816; c=relaxed/simple;
+	bh=5I05M87lMsen1AVruQRQa7haeFtJa3I9f6fonpf0LFM=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=Z9b8AUNXSM/dizuBqygtCxbAXvyXClOG/eYlXw4/OG12uwvL+S0UsD5muw1euoHcoK7678ipwPyVEWrBVgFV8V4ktElCqgCwPt4Ydoox0hzZ1JqLhdao/s3LelMEtKLc1i77v6hHHawQxqztt5zDO4oxUMfsRsx5jcknKshfdX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--derkling.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yYexDwAq; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--derkling.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QE9K7S0F"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=SknNweDJMYv6Cc7JXUCuginAJHi4T0ZKllMpOn1Yf9A=; b=QE9K7S0FqJXdRMiI2MUQfyFVKN
-	zJkaOZZAvX0UK9xBOJnD6xr1oo4dLko0vESRIIkP4sjHHPxZkleb2D8Zai321exEYA2JJr82ElX7s
-	y72vsCa48dbNhj3sR2u6AvvpDc6GUftTpqrd7fLDiVr8l4ZJcPOvCc/B4Kso/X5VwtY001koeorb7
-	w0lpR1LpdbzQwtNNGzQXqNnli6Sbl3pH+QAdCVePhkf3FUFd/ngVNiv41q8dPOdm8t1mbTM/UmJ5P
-	NuryBBTCcNBBOjT/+JRWnUfQQL+DhMwA+igl0308JTBNEPRBnnqN+OImNHFtw2Imib6YH9ERSKUcP
-	cmUpe09A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAVQk-00000000oH8-33tB;
-	Thu, 01 May 2025 15:02:30 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 1B7DC30072F; Thu,  1 May 2025 17:02:30 +0200 (CEST)
-Date: Thu, 1 May 2025 17:02:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Brendan Jackman <jackmanb@google.com>
-Cc: Christoph Hellwig <hch@lst.de>, chenlinxuan@uniontech.com,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Yishai Hadas <yishaih@nvidia.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
-	Kevin Tian <kevin.tian@intel.com>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas.schier@linux.dev>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Andrey Konovalov <andreyknvl@gmail.com>,
-	Juergen Gross <jgross@suse.com>,
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, virtualization@lists.linux.dev,
-	linux-integrity@vger.kernel.org, linux-kbuild@vger.kernel.org,
-	llvm@lists.linux.dev, Winston Wen <wentao@uniontech.com>,
-	kasan-dev@googlegroups.com, xen-devel@lists.xenproject.org,
-	Changbin Du <changbin.du@intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH RFC v3 0/8] kernel-hacking: introduce
- CONFIG_NO_AUTO_INLINE
-Message-ID: <20250501150229.GU4439@noisy.programming.kicks-ass.net>
-References: <20250429-noautoinline-v3-0-4c49f28ea5b5@uniontech.com>
- <20250429123504.GA13093@lst.de>
- <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yYexDwAq"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d007b2c79so6213545e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 08:03:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746111813; x=1746716613; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=cH0TZFJk2T1RX75J4QRephYBY3SFDgf8QsJqbeDrxmg=;
+        b=yYexDwAqVIR7AZzE/cHQHeSNuozGHjrmXX6/MV9A5p6GpuqXVR9QCN91efOsHeF4gv
+         G98Ji9hiNsJcK3i5YCBtbmZSdoBIL+sS0cxiQcY5WqNN3JPIHqX3L1MTmgvFQFLO/sdz
+         hgEWlHG2jPHwaF0br1gefCAupeXR5HAn6ac592VfGg2DK2gzQXbDp/NoQQeI2DrXHRzX
+         hf2u1+ITOjtE8EbDfUSjqjVXx4srSV0yAUQ5AwTRK+JTkdsQUT/OignoVd7utyCJ84D4
+         ahsVvLPAKWB2hjJVYJdzbnMDlYQ42Qcu/wKGpf4RC/0TPzTzqtiwiPTAxmypI0ufOool
+         iZFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746111813; x=1746716613;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cH0TZFJk2T1RX75J4QRephYBY3SFDgf8QsJqbeDrxmg=;
+        b=cjHTIoxRKEuWfRZhb1uWhDZmxlURcfLJdvSmw8bUfo7ibW5Gk6+UiNljmvdIb239wb
+         dm89J3Yd7KnwdBxB8eJ+voQUyTvpxuoMTF+HzYgJBTGzGFmyiKujt5qRcm5A3ZLZRLj1
+         SQPRtDYCUZNNt0XXDv0hOT7jZl/HDvorihWxe7Her1s6atRfjT+0UDgklyTFnM6ZeFLg
+         9bOjjZS0hQgFUQMjivdbVmJkfOj1Lm8gpaW7scNihmtsEcjwPtEGToTZqwXwg5+k4QOU
+         agZrfMgWpCludwJ3iJmfQksoJs/3KIaW3hWUgLvcDsSjqdXe+t+A8RwOresw64KSMM1y
+         WIHA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmU1hL58DNXsi8/Dyvlvx4RM2F2B0k/XGj7m3IxLXfapJzZNcMsodD/5ITri9HmaV2/1pTshBfQXimXOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb++MS31iTQYnS27ATxypnvAFBYTzg7LaFdnkifHCCZKNoUfzl
+	rtwf57pY+I56auFFP7tiXfNuUXC/7AzzC4sBauGDAoaN6JQ1ACuzdyVQcGD0DhbHBmojKFC59Tj
+	jb7NyfZwtKQ==
+X-Google-Smtp-Source: AGHT+IEoHar4kKZLCcwzgzPXKYmS3cfrlnjEoUXh4L1DN3kWbEUElUFiikgocxBnbt6mXNBc7VuzqYOZJrp/fw==
+X-Received: from wmbhj22.prod.google.com ([2002:a05:600c:5296:b0:43d:5828:13ee])
+ (user=derkling job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1d28:b0:43c:ec0a:ddfd with SMTP id 5b1f17b1804b1-441b1f2f093mr47352155e9.6.1746111813739;
+ Thu, 01 May 2025 08:03:33 -0700 (PDT)
+Date: Thu,  1 May 2025 15:03:23 +0000
+In-Reply-To: 20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D9KW1QQR88EY.2TOSTVYZZH5KN@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.967.g6a0df3ecc3-goog
+Message-ID: <20250501150323.2242232-1-derkling@google.com>
+Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
+From: Patrick Bellasi <derkling@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Sean Christopherson <seanjc@google.com>, Yosry Ahmed <yosry.ahmed@linux.dev>, 
+	Patrick Bellasi <derkling@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Josh Poimboeuf <jpoimboe@redhat.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, 
+	kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Patrick Bellasi <derkling@matbug.net>, Brendan Jackman <jackmanb@google.com>, 
+	David Kaplan <David.Kaplan@amd.com>, Michael Larabel <Michael@michaellarabel.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 01, 2025 at 02:19:47PM +0000, Brendan Jackman wrote:
-> On Tue Apr 29, 2025 at 12:35 PM UTC, Christoph Hellwig wrote:
-> > On Tue, Apr 29, 2025 at 12:06:04PM +0800, Chen Linxuan via B4 Relay wrote:
-> >> This series introduces a new kernel configuration option NO_AUTO_INLINE,
-> >> which can be used to disable the automatic inlining of functions.
-> >> 
-> >> This will allow the function tracer to trace more functions
-> >> because it only traces functions that the compiler has not inlined.
-> >
-> > This still feels like a bad idea because it is extremely fragile.
+> On Wed, Apr 30, 2025 at 04:33:19PM -0700, Sean Christopherson wrote:
+> > Eww.  That's quite painful, and completely disallowing enable_virt_on_load is
+> > undesirable, e.g. for use cases where the host is (almost) exclusively running
+> > VMs.
 > 
-> Can you elaborate on that - does it introduce new fragility?
+> I wanted to stay generic... :-)
+> 
+> > Best idea I have is to throw in the towel on getting fancy, and just maintain a
+> > dedicated count in SVM.
+> > 
+> > Alternatively, we could plumb an arch hook into kvm_create_vm() and kvm_destroy_vm()
+> > that's called when KVM adds/deletes a VM from vm_list, and key off vm_list being
+> > empty.  But that adds a lot of boilerplate just to avoid a mutex+count.
+> 
+> FWIW, that was Tom's idea.
 
-given it needs to sprinkle __always_inline around where it wasn't needed
-before, yeah.
+FWIW, this could be helpful for ASI as well going forward, i.e. the set of ASI
+driven mitigations could be different whether there are VMs on a system or not,
+because the attack vectors are different.
 
-Also, why would you want this? function tracer is already too much
-output. Why would you want even more?
+So, having a first class and properly defined mechanisms to know if there are
+effectively VMs running on a system would be generically convenient.
 
+But maybe that's something we can work on later on?
 
+Best,
+Patrick
