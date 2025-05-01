@@ -1,188 +1,144 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DBAE2E401;
-	Thu,  1 May 2025 11:16:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400982E401
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 11:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746098175; cv=none; b=IUf00eHMg5l4SBJgRlxUDQjYrrpxuzk90jpDPUzj0I6zuL8oCPlqlWb8YJCE0btHk7WqIh82gfeP1Kvxj7ZBPjJAI2bd30GHQgKF2uLmKoGXdp3divG0v9AWKiZQGF0etG8YY0rRhIxEoMaaWaxYTZLjegzOkTJ5+39PSDAHSp0=
+	t=1746098199; cv=none; b=NEnPxkc+CCvCkS6PKCa5+YchP/BynPnf8pzerGv9mvLCBKu5ks75FrWdW+rB1PtKk0F6OlareJSKuSvF5WusunE30nHAXc/IIr3TxRwE/k0bQDvsXWyxyZIgAdUiAvSO2Wo5pTnmhmsn2unQ8YFno6XSex3fTwLYOmKNofxTjf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746098175; c=relaxed/simple;
-	bh=SwSSX+bWsYo0Krc0eYqwPhxxTVgwr3IwX+8zNKHF+tk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NHYbCJTXS8KKa0jhJLdXzAwBn5VPubrGK/TIsKEr1baqSDq+LF+SaY8qC8LOmkIUNu4PCH0r7vT1wE7v2HPCoSHV5Qfr7X2e9BVMOEVutvxBjVo6SFI04yW2J1KLfuLQmBfczBiWbw7eY3hekbJlUZo5tPU3g4AfM7xg28teebo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=T9/U85yA; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T9/U85yA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=fDTwHpsnK1HXZhn01AWF6PLmK/DHwvlEcCJKIgKSjwU=; b=T9/U85yA6hIvoLlv4HtdStuKjP
-	k6a+M4OL1L8OrIa901hPNKwtI82kA7+N0hMBR4zoBE4E7d8nz+08o7P3Hqnf+luSVJtZHm26QDQeL
-	coxvHFky9Ql49FikfAU1SxOAuXLIYDOauM3z0FBIQq3Tir7getueoC3bLogxKBsh1TJEEzkYqaO8h
-	09XEiOWi3RGIS1ZNaoLTFMCQegpfBzn1q8vB4AjvsBn0X+A1YyCqSj+RKU0GwXh7padrqDdihLm6T
-	B92bH9jqwkkHgnw/yI9KSsUvXa44Jpy90QMruIl10CIFHO3WayAfe9wLnVOvJZd0v+25QAZwAnm2U
-	0sx7Dndw==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uARtR-0000000HaXn-0gzL;
-	Thu, 01 May 2025 11:15:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id A2CD8300230; Thu,  1 May 2025 13:15:52 +0200 (CEST)
-Date: Thu, 1 May 2025 13:15:52 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Marc Zyngier <maz@kernel.org>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>, kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Waiman Long <longman@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Borislav Petkov <bp@alien8.de>,
-	Albert Ou <aou@eecs.berkeley.edu>, Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Potapenko <glider@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Andre Przywara <andre.przywara@arm.com>, x86@kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>, kvm-riscv@lists.infradead.org,
-	Atish Patra <atishp@atishpatra.org>, Ingo Molnar <mingo@redhat.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, kvmarm@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>, Shusen Li <lishusen2@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v4 2/5] arm64: KVM: use mutex_trylock_nest_lock when
- locking all vCPUs
-Message-ID: <20250501111552.GO4198@noisy.programming.kicks-ass.net>
-References: <20250430203013.366479-1-mlevitsk@redhat.com>
- <20250430203013.366479-3-mlevitsk@redhat.com>
- <864iy4ivro.wl-maz@kernel.org>
+	s=arc-20240116; t=1746098199; c=relaxed/simple;
+	bh=I++a0t3+Rl8fUzdoS3SV+0OrrhVGilPTQlRtbES/Mrs=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=o9Hgw/ZGPjcrlELnhdUgoJ+7FONt8cPNkdr2EoSiD9XGYE0tOuA3vnTYNhPNAKz4Xx1155UZ6U+nzHgS2POv1uaYLwjEdtgMi30u/2oIBkox1FsBgSNwc5qP4RJ2ZbeL9DG5D7+qei2rzyg+032XPTJFaNKl2TpJajESXel8C20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d43541a706so7330025ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 04:16:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746098197; x=1746702997;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WJLGUG4iLInQ/D3odsfbaIKpUryuvWoS3MpipcaoHQE=;
+        b=fqcJXXpPiQDeyECJzp47rfCMua/SvU1JT84xztSqTZ1NjVVDD1BnTUo8Z+2P8+GXMs
+         i3ePd3bTHsxbnfzsYoPGDHVntgdIZ5o4nUJN3h19KBZ+DnEqTLpALJrpxOGPou0RsYDv
+         vVFckZE4JKnfq2tN/8KBtfGhbkmZEw/v9sXwHQzHCbBv/wgpqACL6WxkIFyGXYmC57TY
+         bq2DYxhly1dTpbG3Zpe4+qo2B1UTb6uYtXIZB8KzvEAtXLEl5noF1zPYv03kE4bHDS59
+         BJDbb467brQC/6iiW9BqEOpm5ZBJE4ZPZlrirfy1MrfQL3uV3qSTPXn0ZBlA1NZIjAxx
+         rNhg==
+X-Forwarded-Encrypted: i=1; AJvYcCVwVxVqDt16XHx1xGJQvAhb8j5/yKAna0FCmZ/2tzTWBUspdivn0V40taHSX5OQwmz79LVCz4NwYYpyRNg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwmwKYNU4yTkfuI9babCiCQen8298eOVpjnkUUPrjOlLdHSiaE0
+	I0dT/CYAYTUdKgIPxgawWsaNkSOJjeB7kaqY+DPiL4mU+dZz626Z71wS8Xs8M3EBa0empbuqzHr
+	U5q87O5EIlPwSCODD+UmB+1hRFKgBaONZOI9pG4nr2s1a+Ct5VUdsSXM=
+X-Google-Smtp-Source: AGHT+IG9K8WOrkufEOH9DrP8lMVAsJtn15VEV17W8fw+GqqGRMkAx/TAFYzoI9XWkt66axHeeciyGXYjbrh8oKDpRa1GaMLE4IpO
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <864iy4ivro.wl-maz@kernel.org>
+X-Received: by 2002:a05:6e02:2206:b0:3d2:aa73:7b7a with SMTP id
+ e9e14a558f8ab-3d9701e4da5mr24991275ab.12.1746098197408; Thu, 01 May 2025
+ 04:16:37 -0700 (PDT)
+Date: Thu, 01 May 2025 04:16:37 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <68135815.050a0220.3a872c.000e.GAE@google.com>
+Subject: [syzbot] [net?] upstream test error: KMSAN: uninit-value in mctp_dump_addrinfo
+From: syzbot <syzbot+e76d52dadc089b9d197f@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, horms@kernel.org, 
+	jk@codeconstruct.com.au, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	matt@codeconstruct.com.au, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, May 01, 2025 at 09:24:11AM +0100, Marc Zyngier wrote:
-> nit: in keeping with the existing arm64 patches, please write the
-> subject as "KVM: arm64: Use ..."
-> 
-> On Wed, 30 Apr 2025 21:30:10 +0100,
-> Maxim Levitsky <mlevitsk@redhat.com> wrote:
-> 
-> [...]
-> 
-> > 
-> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> > index 68fec8c95fee..d31f42a71bdc 100644
-> > --- a/arch/arm64/kvm/arm.c
-> > +++ b/arch/arm64/kvm/arm.c
-> > @@ -1914,49 +1914,6 @@ int kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
-> >  	}
-> >  }
-> >  
-> > -/* unlocks vcpus from @vcpu_lock_idx and smaller */
-> > -static void unlock_vcpus(struct kvm *kvm, int vcpu_lock_idx)
-> > -{
-> > -	struct kvm_vcpu *tmp_vcpu;
-> > -
-> > -	for (; vcpu_lock_idx >= 0; vcpu_lock_idx--) {
-> > -		tmp_vcpu = kvm_get_vcpu(kvm, vcpu_lock_idx);
-> > -		mutex_unlock(&tmp_vcpu->mutex);
-> > -	}
-> > -}
-> > -
-> > -void unlock_all_vcpus(struct kvm *kvm)
-> > -{
-> > -	lockdep_assert_held(&kvm->lock);
-> 
-> Note this assertion...
-> 
-> > -
-> > -	unlock_vcpus(kvm, atomic_read(&kvm->online_vcpus) - 1);
-> > -}
-> > -
-> > -/* Returns true if all vcpus were locked, false otherwise */
-> > -bool lock_all_vcpus(struct kvm *kvm)
-> > -{
-> > -	struct kvm_vcpu *tmp_vcpu;
-> > -	unsigned long c;
-> > -
-> > -	lockdep_assert_held(&kvm->lock);
-> 
-> and this one...
-> 
-> > -
-> > -	/*
-> > -	 * Any time a vcpu is in an ioctl (including running), the
-> > -	 * core KVM code tries to grab the vcpu->mutex.
-> > -	 *
-> > -	 * By grabbing the vcpu->mutex of all VCPUs we ensure that no
-> > -	 * other VCPUs can fiddle with the state while we access it.
-> > -	 */
-> > -	kvm_for_each_vcpu(c, tmp_vcpu, kvm) {
-> > -		if (!mutex_trylock(&tmp_vcpu->mutex)) {
-> > -			unlock_vcpus(kvm, c - 1);
-> > -			return false;
-> > -		}
-> > -	}
-> > -
-> > -	return true;
-> > -}
-> > -
-> >  static unsigned long nvhe_percpu_size(void)
-> >  {
-> >  	return (unsigned long)CHOOSE_NVHE_SYM(__per_cpu_end) -
-> 
-> [...]
-> 
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 69782df3617f..834f08dfa24c 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -1368,6 +1368,40 @@ static int kvm_vm_release(struct inode *inode, struct file *filp)
-> >  	return 0;
-> >  }
-> >  
-> > +/*
-> > + * Try to lock all of the VM's vCPUs.
-> > + * Assumes that the kvm->lock is held.
-> 
-> Assuming is not enough. These assertions have caught a number of bugs,
-> and I'm not prepared to drop them.
-> 
-> > + */
-> > +int kvm_trylock_all_vcpus(struct kvm *kvm)
-> > +{
-> > +	struct kvm_vcpu *vcpu;
-> > +	unsigned long i, j;
-> > +
-> > +	kvm_for_each_vcpu(i, vcpu, kvm)
-> > +		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
+Hello,
 
-This one includes an assertion that kvm->lock is actually held.
+syzbot found the following issue on:
 
-That said, I'm not at all sure what the purpose of all this trylock
-stuff is here.
+HEAD commit:    b4432656b36e Linux 6.15-rc4
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=173ea374580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=f944a52db88df992
+dashboard link: https://syzkaller.appspot.com/bug?extid=e76d52dadc089b9d197f
+compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
 
-Can someone explain? Last time I asked someone said something about
-multiple VMs, but I don't know enough about kvm to know what that means.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/26fcd648d1b5/disk-b4432656.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/25ce9039317e/vmlinux-b4432656.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/387f0baa5e6e/bzImage-b4432656.xz
 
-Are those vcpu->mutex another class for other VMs? Or what gives?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e76d52dadc089b9d197f@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in mctp_dump_addrinfo+0x208/0xac0 net/mctp/device.c:128
+ mctp_dump_addrinfo+0x208/0xac0 net/mctp/device.c:128
+ rtnl_dump_all+0x3ec/0x5b0 net/core/rtnetlink.c:4380
+ rtnl_dumpit+0xd5/0x2f0 net/core/rtnetlink.c:6824
+ netlink_dump+0x97b/0x1690 net/netlink/af_netlink.c:2309
+ __netlink_dump_start+0x716/0xd60 net/netlink/af_netlink.c:2424
+ netlink_dump_start include/linux/netlink.h:340 [inline]
+ rtnetlink_dump_start net/core/rtnetlink.c:6853 [inline]
+ rtnetlink_rcv_msg+0x1262/0x14b0 net/core/rtnetlink.c:6920
+ netlink_rcv_skb+0x54a/0x680 net/netlink/af_netlink.c:2534
+ rtnetlink_rcv+0x35/0x40 net/core/rtnetlink.c:6982
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0xed5/0x1290 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x10b3/0x1250 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+ __sys_sendto+0x590/0x710 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0x130/0x200 net/socket.c:2183
+ x64_sys_call+0x3c0b/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:45
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Uninit was created at:
+ slab_post_alloc_hook mm/slub.c:4167 [inline]
+ slab_alloc_node mm/slub.c:4210 [inline]
+ kmem_cache_alloc_node_noprof+0x818/0xf00 mm/slub.c:4262
+ kmalloc_reserve+0x13c/0x4b0 net/core/skbuff.c:577
+ __alloc_skb+0x347/0x7d0 net/core/skbuff.c:668
+ alloc_skb include/linux/skbuff.h:1340 [inline]
+ netlink_alloc_large_skb+0xa5/0x280 net/netlink/af_netlink.c:1187
+ netlink_sendmsg+0xaea/0x1250 net/netlink/af_netlink.c:1858
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x330/0x3d0 net/socket.c:727
+ __sys_sendto+0x590/0x710 net/socket.c:2180
+ __do_sys_sendto net/socket.c:2187 [inline]
+ __se_sys_sendto net/socket.c:2183 [inline]
+ __x64_sys_sendto+0x130/0x200 net/socket.c:2183
+ x64_sys_call+0x3c0b/0x3db0 arch/x86/include/generated/asm/syscalls_64.h:45
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xd9/0x1b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+CPU: 0 UID: 0 PID: 5447 Comm: dhcpcd Not tainted 6.15.0-rc4-syzkaller #0 PREEMPT(undef) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
