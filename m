@@ -1,129 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f193.google.com (mail-pg1-f193.google.com [209.85.215.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE607D515;
-	Thu,  1 May 2025 04:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D521DF98D;
+	Thu,  1 May 2025 04:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746072930; cv=none; b=E2/1r+in7+ayXs4tTYpPwy/JHhiIPKfIcI6OHcEbwU9OA6Z/HUcOEzFqLTQeGn/BCtr6YQWt5fey0PFDaqgy+r3S6zqOH/TONyx8iUZnvnQC91sCDHAnbS7XJSSEl31bRDQOqItbdqFhl9/wWeHhuKwuFpkSoltklZf5YQR/oDQ=
+	t=1746072958; cv=none; b=QZ+iG03z/rSWSOUo7zwGWfa4arRaccNbcD4qngceHcWTEetp6BMetSzyyrBA8oUPUh6RiFD7WNE4QKfDF+Z7TzF1eqA33AiPo+/Sbqgg1T8cvcl8fpxkzfX8Z7psborcHW+i+9SPrN1g2uvC1Y3FeQUebt1ETu8Y//Ngky4m8Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746072930; c=relaxed/simple;
-	bh=buPxZBousmKo9OStYdQccta50qsdElaO21GDRbmAvRM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=j8f3NlNzGpfi9THWM5lG2jtumWN4DaHdyeVd2D7oWjsjym0g9hMQT3a1dqpDvTg1EzsEiCrvojzrvCq2gnv1sZVXICXUrWrFA4hoJuAfLHk8ec0ERFqXeeiVnP7OJ34UveNUEXzProcrU83VtLaFVmwo8KsnT1XSNFymUMAfW30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBZCO0Ep; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746072958; c=relaxed/simple;
+	bh=geH6V48P/zVTAmN4U2a/Rf8voMJ08N5ZCdRLj5h0yYs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=S2ZuWa1pNPBtlr1NeIJ6rW3HvffzfIULsN7U6Cc3ceHrT/2hLKwr8Qh8/1PokMWNcp+chuEsppY/LIgkpYRS1FvF6Q6fp/zJRGHYKStruoP7rg6Ar/V1L2ZKKaQM2ynly82v+b4igaGUWoV0xKnL6qTahIWDTkKvj+cBih8WUeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AvyryrNj; arc=none smtp.client-ip=209.85.215.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBZCO0Ep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B70EC4CEE3;
-	Thu,  1 May 2025 04:15:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746072930;
-	bh=buPxZBousmKo9OStYdQccta50qsdElaO21GDRbmAvRM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=JBZCO0Epyf9CUJvXNT6QWXd3n4pi9p3rcEMdewXPrnqGzzklEUGcnDXzZRV7L1HeL
-	 8FIDuSgNsvI6QpztWAGvRmuBXo2TWuHKRSlbkmQ3ku4rvvH+Sl8Ufx2kK7enAyt5CR
-	 7RzyuMg0UnjjggKqkFVr6oXALWcz6OKu199mtGEf5GimXR6WWvpkkG7sOaL1TwHHWx
-	 J8K4RIWfE7siz/n3gZv8zlV4qPLjFKKKvl8X3p5WzaauD73TOaULb6vMGJNMqjBt2Q
-	 qGms6AITyQmABxeHM4tH/KEEm+praYVNqavldOYi0EOSdqDwwZMiPrQPiOpzVFskvc
-	 LnPVTKF0Df0iQ==
-Date: Wed, 30 Apr 2025 23:15:28 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AvyryrNj"
+Received: by mail-pg1-f193.google.com with SMTP id 41be03b00d2f7-af9925bbeb7so395674a12.3;
+        Wed, 30 Apr 2025 21:15:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746072956; x=1746677756; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=joXCGnOLEZovFd4Cq/aH1We34Qnzyjp4Ndw1KlcoW0I=;
+        b=AvyryrNjbUw7e9rMayF+poeXOP+ZsDaNkG/I/buIpLRVboJ9ee07+J02qwmUrdwdmY
+         o+20dF4XaPb9NuhYFyPJR5As0z/OYxzHK0X2gtI5XacB2r6jFeWj4QMCMDoc2ydH3iHp
+         Ct+TqS4IdcsYY7spRtEO8YDNxv5Al606fL6JjnoEJwHJIKiPF1/M0ohAUjn7JkYNuy7M
+         WAB+5HbWHffyVzdO+rQymDvbhiWP+eaDC31cCsfSIx1bnYyJb3j2mPw3ERWhBV+SnI2T
+         VWR+28EGUkOmKDb4X+Ckef2eBSeX5kIBTQMVeqh/uTOXe/7vvugTXqc28eMH1MDbN/T6
+         8HjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746072956; x=1746677756;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=joXCGnOLEZovFd4Cq/aH1We34Qnzyjp4Ndw1KlcoW0I=;
+        b=RXf92qwjQ6eMginrvGh32q3foZgbVBgapLGQLnObMerQVGUGwHC3tumkhDbbBcqwGZ
+         ltLJgZOoS27OoE0SIm4SP7zmbUsYpd4qpo2ro1PDUsPfzrw1YogJUlHU3Ql3zmEvktJ7
+         LwK6h2udKWoCuragn5IEGJ6KqslfVIFueIqWYbP7fS2YPH+CjEA3/kd48qD7/XNrCE0J
+         qwm4aCTcbWFEA/A8ieVMzQpJN3NPLOUjWfL6/VJJiWQk4NX066VJjCOv4K10yCjuSn0q
+         BMHHeVudvH81sSr0k2TiY1RuTKEJ9GPUF/TkxQgtzc+LkzLWBnj8XSFHSayZ8MbWrqd8
+         yezA==
+X-Forwarded-Encrypted: i=1; AJvYcCW3T2rqX/IKYAxC/Se1gtn2MY6zkFSqgr9OJ97wKavQKcjDY4Pn4JznxMD638jqOJJhNNvYwrvEa2aILa5r@vger.kernel.org, AJvYcCWsaM4v31YP65mmvHmTO+OB4b/u8np9aicanwQgSV8u4eZZS6v5LCEojC5Juqz+KOFp9HI8cgcU589oyBnt@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNLeDxw1qePOLFZWEcYkFiSHoDmbRkByoBB8W4i8Mny5V9hWJ4
+	idilMKFlCOJGce9C/g9kWuBNwZhy52KAv4LnE6mwvtO6S08dVtP8AM75m0+o
+X-Gm-Gg: ASbGnctCqeHai38syZkN1T/biqgDb/Srzj8nT9Dc+tupBCKLE1uczVsuOwyU0zuEJMd
+	/8XIXf+Eub+AQweLv4gV312tTJvFjF73ZP1mZqMwRosQbAxFBgdXNfOlbB624DSqno64/URrIwE
+	YlZAIGldMlZlVr5/qQvZj/Ha+HSj5uY+NRJBV2BlZ8JToY+B3OcnN0347LsWCKVkfm+cNon7L4M
+	UFXOrBFDnO2+aHuep4Q4dY8L2aoU2ZifvPNM6OFDZZdPxJ2VIqvJfetRgpH1UbbXC/FI9Bfzd6o
+	QGRZGohLZsTAB39QzWmi5nLphilyAiakw76HI4wfWNxnUVRd1aRxog==
+X-Google-Smtp-Source: AGHT+IFrVUrrdjXtX28HF5q+Y5KrvFqxCG/XexHXBL6W9sDunZDSHv9kPRBMKLDWiJcck0lgchVi/g==
+X-Received: by 2002:a17:902:f685:b0:224:abb:92c with SMTP id d9443c01a7336-22e0425a178mr22826855ad.50.1746072955794;
+        Wed, 30 Apr 2025 21:15:55 -0700 (PDT)
+Received: from localhost.localdomain ([193.203.214.57])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a34a3bcf1sm2571247a91.37.2025.04.30.21.15.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 21:15:55 -0700 (PDT)
+From: xu.xin.sc@gmail.com
+X-Google-Original-From: xu.xin16@zte.com.cn
+To: xu.xin16@zte.com.cn
+Cc: akpm@linux-foundation.org,
+	david@redhat.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	wang.yaxin@zte.com.cn,
+	yang.yang29@zte.com.cn
+Subject: [PATCH v2 6/9] memcontrol: add ksm_profit in cgroup/memory.ksm_stat
+Date: Thu,  1 May 2025 04:15:49 +0000
+Message-Id: <20250501041549.3324472-1-xu.xin16@zte.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250501120854885LyBCW0syCGojqnJ8crLVl@zte.com.cn>
+References: <20250501120854885LyBCW0syCGojqnJ8crLVl@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
- linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
- Shawn Guo <shawnguo@kernel.org>, linux-kernel@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-In-Reply-To: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
-References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
-Message-Id: <174607289976.949416.5265834490992116431.robh@kernel.org>
-Subject: Re: [PATCH 0/6] mfd: simple-mfd-i2c: add QIXIS CPLD support
+Content-Transfer-Encoding: 8bit
 
+From: xu xin <xu.xin16@zte.com.cn>
 
-On Wed, 30 Apr 2025 18:36:28 +0300, Ioana Ciornei wrote:
-> The MDIO mux on the LX2160AQDS, LX2162AQDS and LS1028AQDS boards never
-> worked in mainline. The DT files were submitted initially as-is, and
-> there is a downstream driver for the QIXIS CPLD device:
-> https://github.com/nxp-qoriq/linux/blob/lf-6.12.y/drivers/soc/fsl/qixis_ctrl.c
-> 
-> Since the HW works with the already existing
-> driver/mfd/similar-mfd-i2c.c driver, extend the list of compatible
-> strings to also cover these 3 new boards, instead of trying to upstream
-> a duplicate driver.
-> 
-> This patch set also adapts the DT nodes for each of the affected boards
-> so that we match on the new compatible strings.
-> 
-> The last patch describes the two on-board RGMII PHYs found on the
-> LX2160AQDS boards which make use of the MDIO bus found behind the CPLD
-> driven MDIO mux.
-> 
-> Ioana Ciornei (5):
->   dt-bindings: mfd: add bindings for QIXIS CPLD
->   mfd: simple-mfd-i2c: add compatible string for Layerscape QIXIS CPLD
->   arm64: dts: lx2160a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
->     driver
->   arm64: dts: lx2162a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
->     driver
->   arm64: dts: lx2160a-qds: add the two on-board RGMII PHYs
-> 
-> Vladimir Oltean (1):
->   arm64: dts: ls1028a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
->     driver
-> 
->  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  9 +--
->  .../boot/dts/freescale/fsl-lx2160a-qds.dts    | 28 +++++++-
->  .../boot/dts/freescale/fsl-lx2162a-qds.dts    |  8 ++-
->  drivers/mfd/simple-mfd-i2c.c                  |  3 +
->  5 files changed, 103 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
-> 
-> --
-> 2.25.1
-> 
-> 
-> 
+Users can obtain ksm_profit of a cgroup just by:
 
+/ # cat /sys/fs/cgroup/memory.ksm_stat
+ksm_rmap_items 76800
+ksm_zero_pages 0
+ksm_merging_pages 76800
+ksm_profit 309657600
 
-My bot found new DTB warnings on the .dts files added or changed in this
-series.
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+---
+ mm/memcontrol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-are fixed by another series. Ultimately, it is up to the platform
-maintainer whether these warnings are acceptable or not. No need to reply
-unless the platform maintainer has comments.
-
-If you already ran DT checks and didn't see these error(s), then
-make sure dt-schema is up to date:
-
-  pip3 install dtschema --upgrade
-
-
-This patch series was applied (using b4) to base:
- Base: attempting to guess base-commit...
- Base: tags/next-20250429 (exact match)
-
-If this is not the correct base, please add 'base-commit' tag
-(or use b4 which does this automatically)
-
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250430153634.2971736-1-ioana.ciornei@nxp.com:
-
-arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dtb: fpga@66 (fsl,lx2160a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml#
-arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dtb: fpga@66 (fsl,ls1028a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml#
-arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dtb: fpga@66 (fsl,lx2162a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml#
-
-
-
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 9569d32944e3..8ab21420ebb8 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4394,6 +4394,7 @@ struct memcg_ksm_stat {
+ 	unsigned long ksm_rmap_items;
+ 	long ksm_zero_pages;
+ 	unsigned long ksm_merging_pages;
++	long ksm_profit;
+ };
+ 
+ static int evaluate_memcg_ksm_stat(struct task_struct *task, void *arg)
+@@ -4406,6 +4407,7 @@ static int evaluate_memcg_ksm_stat(struct task_struct *task, void *arg)
+ 		ksm_stat->ksm_rmap_items += mm->ksm_rmap_items;
+ 		ksm_stat->ksm_zero_pages += mm_ksm_zero_pages(mm);
+ 		ksm_stat->ksm_merging_pages += mm->ksm_merging_pages;
++		ksm_stat->ksm_profit += ksm_process_profit(mm);
+ 		mmput(mm);
+ 	}
+ 
+@@ -4421,6 +4423,7 @@ static int memcg_ksm_stat_show(struct seq_file *m, void *v)
+ 	ksm_stat.ksm_rmap_items = 0;
+ 	ksm_stat.ksm_zero_pages = 0;
+ 	ksm_stat.ksm_merging_pages = 0;
++	ksm_stat.ksm_profit = 0;
+ 
+ 	/* summing all processes'ksm statistic items of this cgroup hierarchy */
+ 	mem_cgroup_scan_tasks(memcg, evaluate_memcg_ksm_stat, &ksm_stat);
+@@ -4428,6 +4431,7 @@ static int memcg_ksm_stat_show(struct seq_file *m, void *v)
+ 	seq_printf(m, "ksm_rmap_items %lu\n", ksm_stat.ksm_rmap_items);
+ 	seq_printf(m, "ksm_zero_pages %ld\n", ksm_stat.ksm_zero_pages);
+ 	seq_printf(m, "ksm_merging_pages %ld\n", ksm_stat.ksm_merging_pages);
++	seq_printf(m, "ksm_profit %ld\n", ksm_stat.ksm_profit);
+ 
+ 	return 0;
+ }
+-- 
+2.15.2
 
 
