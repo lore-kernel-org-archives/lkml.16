@@ -1,153 +1,146 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D4B5221295;
-	Thu,  1 May 2025 23:21:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746141683; cv=pass; b=qvMkshsjFO14SnkEVK+yiSPVqEYoKd1LADl3ZEuipjQTtXzf2mmBRO8Z2W99MvBgnvPgFQZRyyKQ/sg6lXsN+CtS9ryofg7gniIwN8iLhs3EX0IM9j1daQj+xAGEMd2vdo1JjFEFpQttzWZBrr26lPM7wKQdoHoF1AtOncBKV6k=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746141683; c=relaxed/simple;
-	bh=uW+bsOuKdxvM7b8YNXA5qBQmYFbmwZ8+SaFhCS1lotY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=afdLPFmhsrJLsUrlJ1QjZ792W+ugYSaObeBFXr7VmSbofWI1i8iATIgcds+cr7x9J+OO2jrUJp1c8U1UmI0gbih19cAupf2RaEVVPK22Lp4h51SuEYsXJSAOqCGYV5J9yiZaSkg2UcFEQQeq7wjS92D5ptQvPa+qs0DWKqsZK1M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=JZTtcEPB; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0911B2367AD;
+	Thu,  1 May 2025 23:21:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746141699; cv=none; b=DGXG5w07ZmyVBOii91vdBw6mWyRyHBVKKD0V2Gbza7uMAQQXgEZnvK00cGbazoarGk6runnuvSoeCxMprVzcdoof6lV4QpSi1u3us12exUBQ/imKw+0sYyqvXKvQfJHQp3Gux/RFNEl46bUlCsFg97nNwk9XQ2MBA1TvuEtloQw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746141699; c=relaxed/simple;
+	bh=MOV+78+NdAm1UlS9xfW1wnoYdX4nXR76p3LYpax7HYs=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=RmektIwhsNtx9C3I9PhlS0yh68nLg5oepP/PZBQiRU4QALG1DojWGlz7AzNQHcPqKlp4SNN84u4Y1v6TkavQ+oFChtPHAfT63YiTIPeEVenUp5NyYmIOvtKHETqG8Z2p9sD4n1voR1DbjN73+Uom9hcsrx/cBGedlI085gDhLzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TV+xpoZi; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="JZTtcEPB"
-ARC-Seal: i=1; a=rsa-sha256; t=1746141658; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=O+TVLAodYcBWlQ9HGX3cAV2Zuh9KdXk1PDyLygUHpoS1JNlFOvcReVeY086bZthqVyLI6J3xqIyOWZEFyO1MN/UARE7Bhtsy/V3PPgLiCAyIAi1TqJVUuWTwruhHagA9ptsy5QooyiEShepMnxRRb3eUogph+QKbg9Mqo7BU4hw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746141658; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=qnPXZeTJSNYPr9STVQr9IHGeAwSe5nqN3NqW6dQCoqQ=; 
-	b=nTZc8qtRAl6REjDocdy/Xt68XylO6gj1Z5ThnDs9Sho3wFRZ81OjHKNsMYkVsOBpSixqi1sSZT+yGQD7+uWiCe79hbU9Ea3iXlxBosz2aNJbSCjsqgRPsD6FPG94j5wJdaQ4uCr0rhv9X1PlWjhphfkNBdLEPmwLIsXCeD3OXjU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746141658;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=qnPXZeTJSNYPr9STVQr9IHGeAwSe5nqN3NqW6dQCoqQ=;
-	b=JZTtcEPB1DySe2yvEyTtafIZiWUIcDn862uZW8py1BTy6OXURw57Rh4WF4FnyozW
-	Kj3vgxqX2AgHHS745Gr5F4/8J8ACSBSbX3yFEZcRzXXVPLSY7TlhbWYvQ82mTiOOVUP
-	aO53cVaa1JsQl8hzlOUrq8YKyH2xYD2WA0+U3y+c=
-Received: by mx.zohomail.com with SMTPS id 1746141656431362.86708838265554;
-	Thu, 1 May 2025 16:20:56 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 7D923180CEF; Fri, 02 May 2025 01:20:50 +0200 (CEST)
-Date: Fri, 2 May 2025 01:20:50 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>, Guenter Roeck <groeck@chromium.org>, 
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v9 3/7] power: reset: Introduce PSCR Recording Framework
- for Non-Volatile Storage
-Message-ID: <bumx6ma3kjanapwaf3oc3mdjnekatvc2cmavt6secfkaapgjpz@kouqjidbl47k>
-References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
- <20250422085717.2605520-4-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TV+xpoZi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746141698; x=1777677698;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=MOV+78+NdAm1UlS9xfW1wnoYdX4nXR76p3LYpax7HYs=;
+  b=TV+xpoZiuf5N6smFUx9nxmZi01gTgr5jk7ayj3vB+OXmawlRQ0pnG9eJ
+   zedn6DLLT62xk6yetPwUb6qgyBPq5ReKRKwdmrP8DG1U30S7M+RztXsNk
+   76F0LX7zJl0pNvqlmwP1n6oRAeGarIP9uSwE4VjCjAg81pBBlxer9ZLEP
+   TglSPJxyhBG13RuJcp4UdhmVM+PtfHZF5QdV5/1lZrm4WAI+KWWIDY5Wu
+   FWl71fgB1E/a6TKj92XN44CaQr8noFAZwRKovW1e67i0rNz/l8VjLfo5z
+   xbiVUskY/TEKWg4NwNIGLfuHnSsIJ0qTSYpRL4i0qtJALP4HSCGyy/WyK
+   Q==;
+X-CSE-ConnectionGUID: 5OHNYxebQg2qRdW98VNiLA==
+X-CSE-MsgGUID: gAS5a5ksR4uSzwdexXorvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47965745"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="47965745"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:21:37 -0700
+X-CSE-ConnectionGUID: 1T+DrkojSQiT3QOiAyBrHQ==
+X-CSE-MsgGUID: qp2gfHl/TKyLmiDn08+raw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="139647025"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.85])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:21:37 -0700
+Message-ID: <3717e8d0bfc058739b3333931ba6c39d55d2d383.camel@linux.intel.com>
+Subject: Re: [PATCH] HID: sensor-hub: Fix typo and improve documentation for
+ sensor_hub_remove_callback()
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: David Lechner <dlechner@baylibre.com>, Chelsy Ratnawat
+	 <chelsyratnawat2001@gmail.com>, jikos@kernel.org, jic23@kernel.org, 
+	bentiss@kernel.org
+Cc: linux-input@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 01 May 2025 16:21:36 -0700
+In-Reply-To: <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
+References: <20250430182300.122896-1-chelsyratnawat2001@gmail.com>
+	 <1f8de7bd-7049-4933-82e3-8ce71685998e@baylibre.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vpofsupfti7jzmi7"
-Content-Disposition: inline
-In-Reply-To: <20250422085717.2605520-4-o.rempel@pengutronix.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/246.120.57
-X-ZohoMailClient: External
 
-
---vpofsupfti7jzmi7
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 3/7] power: reset: Introduce PSCR Recording Framework
- for Non-Volatile Storage
-MIME-Version: 1.0
-
-Hi,
-
-On Tue, Apr 22, 2025 at 10:57:13AM +0200, Oleksij Rempel wrote:
-> This commit introduces the Power State Change Reasons Recording (PSCRR)
-> framework. It provides a generic mechanism to store shutdown or reboot
-> reasons, such as under-voltage, thermal events, or software-triggered
-> actions, into non-volatile storage.
+On Wed, 2025-04-30 at 14:17 -0500, David Lechner wrote:
+> On 4/30/25 1:23 PM, Chelsy Ratnawat wrote:
+> > Fixed a typo in "registered" and improved grammar for better
+> > readability
+> > and consistency with kernel-doc standards. No functional changes.
+> >=20
+> > Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> > ---
+> > =C2=A0include/linux/hid-sensor-hub.h | 7 ++++---
+> > =C2=A01 file changed, 4 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/include/linux/hid-sensor-hub.h b/include/linux/hid-
+> > sensor-hub.h
+> > index c27329e2a5ad..5d2ac79429d4 100644
+> > --- a/include/linux/hid-sensor-hub.h
+> > +++ b/include/linux/hid-sensor-hub.h
+> > @@ -130,10 +130,11 @@ int sensor_hub_register_callback(struct
+> > hid_sensor_hub_device *hsdev,
+> > =C2=A0/**
+> > =C2=A0* sensor_hub_remove_callback() - Remove client callbacks
 >=20
-> PSCRR is primarily intended for systems where software is able to detect
-> a power event in time and store the reason=E2=80=94typically when backup =
-power
-> (e.g., capacitors) allows a short window before shutdown. This enables
-> reliable postmortem diagnostics, even on devices where traditional storage
-> like eMMC or NAND may not survive abrupt power loss.
+> This says "callbacks", so is it possible to have more than one
+> registered at a
+> time?
+
+This removes only one. So "callback" will be correct.
+
+Thanks,
+Srinivas
+
+
 >=20
-> In its current form, PSCRR focuses on software-reported reasons. However,
-> the framework is also designed with future extensibility in mind and could
-> serve as a central frontend for exposing hardware-reported reset reasons
-> from sources such as PMICs, watchdogs, or SoC-specific registers.
+> > =C2=A0* @hsdev:	Hub device instance.
+> > -* @usage_id:	Usage id of the client (E.g. 0x200076 for Gyro).
+> > +* @usage_id:	Usage id of the client (e.g. 0x200076 for Gyro).
 >=20
-> This version does not yet integrate such hardware-based reporting.
+> should we also make gyro lower-case?
+>=20
+> > =C2=A0*
+> > -* If there is a callback registred, this call will remove that
+> > -* callbacks, so that it will stop data and event notifications.
+> > +* Removes a previously registered callback for the given usage ID.
+> > +* Once removed, the client will no longer receive data or event
+> > +* notifications.
+>=20
+> I like the revised wording, but possibly looses some clarity that
+> could be
+> fixed with:
+>=20
+> Removes a previously registered callback(s), if any, for the given
+> usage ID.
+>=20
+> As above, not sure if singular or plural callbacks is correct.
+>=20
+> > =C2=A0*/
+> > =C2=A0int sensor_hub_remove_callback(struct hid_sensor_hub_device
+> > *hsdev,
+> > =C2=A0			u32 usage_id);
+>=20
 
-This adds quite some complex code for a very specific problem while
-mostly ignoring the common case of hardware reported reasons. I think
-having at least one hardware-reported reasons (e.g. WDOG) is mandatory
-to make sure the framework can really handle it.
-
-I also see you extended power_on_reason.h and included it here, but
-don't actually use the defined strings at all. Also you create the
-new enum, but don't handle the existing reasons and just add the new
-codes you need instead of making sure things are properly in-sync :(
-
-> [...]
-
-> +struct pscrr_core {
-> +	struct mutex lock;
-> +	struct pscrr_backend *backend;
-> +	/* Kobject for sysfs */
-> +	struct kobject *kobj;
-> +	struct notifier_block reboot_nb;
-> +} g_pscrr =3D {
-> +	.lock =3D __MUTEX_INITIALIZER(g_pscrr.lock),
-> +};
-
-Apart from the highlevel problems I have with this:
-
-g_pscrr can be static
-
--- Sebastian
-
---vpofsupfti7jzmi7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgUAcIACgkQ2O7X88g7
-+prEFA//cMaV+DNnS+CPOdI+6NkHvEUttYDcm7/2fUHnyTszy+VBdXxi202dw7iU
-O2azdHoIeBq3uckvA5cazOXGTK1UeRhbTDseLQFw0MT70Ln+aMpGq0X8gzKiCF+G
-DBbeZVlAoGXoq89x2YgwF001rbiP5yx+LMcKTg5ZT0Jq1ct+lEoHWoujA79ZTmZ7
-Qc7xWyY+Rh474BEAX/lV2uL78ULzasc0mDA+2EFyvl55fcvTz0L093FuIOkAxTGF
-jnHERboAqXPx5VSuXnE3BbrHbF8t2dI0cHcekpIgMyl5jM9T7BNzXpqXKBhUtZLU
-7/5sbdoXF70DapT0TeX3LtviZooNLeIM+Qi3a9SYceFdT+dt9BMHLvQmCzLoakRr
-172aHFGhnSxG82bWbcfMFXwlVjVjr+ugXNhY7Dck9qX6hGmZy1meLDi/3HYPpIQJ
-U3281eeJdcOpqcBtyPuv7hoiLSboX47CCaS4LeF0kYl7V9vjd72RtoHv77ZTxCvM
-oLSNx4+Rucb+KjiAiinuB/CN/0ZGkfOUlOoz0F4LM/8WRNUpffYFYZpkzDJ/kKqR
-90eIVYkohev+o86oTpqBGCp5U6WsoApsbxS1UpJN13oagHg2x+BnNEVoLPm9pwcJ
-sXOVmFq6DF9GW7D53oCuh/ylgfOnncb8V9oEDZz0u7mrpQGAQMY=
-=9Wdf
------END PGP SIGNATURE-----
-
---vpofsupfti7jzmi7--
