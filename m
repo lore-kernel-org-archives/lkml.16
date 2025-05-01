@@ -1,152 +1,140 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06021E260D
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:15:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E46420F085;
+	Thu,  1 May 2025 20:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746130544; cv=none; b=j+h0yBu4fToPKECJpAvEfNhIQc6BTm+Lk4hLsuZFrzbtlUxtqvSFRkLdxTGciGQFjrPzTG5KLumEZhiGI1lW8I30scNNsFJBVYT5OcqCI7T3Rz/PUBYgwz+SQSgSjoF1XcwG8cGSG2lokSj7p2z/eB6gWkQZfKVEYYaEbnI9kVQ=
+	t=1746130598; cv=none; b=SYq1oQri8zkmuaBojkwrM9LpOXzmHrVr6N7TfTtMqSdvAEWRJQEU8qasI3EeGbFmBI5JMwFpEtpjD3uv024pUhTxDVpU1xDgohgmK9K+KZCp4gP0qwdehvXMKAaRA+GAYx1tk8KNZEwxJ1b1AM7I4w/R073yAOvyN5ptAB5wsPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746130544; c=relaxed/simple;
-	bh=FEQPFMqC2aSqAO0+LCL7aLTH7lQASLanG1HCrQJCXiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tC6hwudFqvTCosBq1A4trfya6IDRz5PslWp2OWXpO/iWABQoOAnRCVWYJ4zZBjF+an4PNTJ0KlaIA+MNggh3xHV5JOSGtm5MEzi1ubjX6VQYD6GmpMGSNkTQ39REOOlhz+iVeqOlyGWs2D6p9lDE9AYlWRGRZS2QFUe2YkroH28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ivCLPNI9; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746130598; c=relaxed/simple;
+	bh=KoIajoRz9IIzv7lT16of5mH6bxXX5L+gMybdGmXBBSQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=RblZdPdPTTQILDbrdEvmY4fH0gzK430T0EJukINciXf6yIkGiX6JrY/0zV7XV8eRGGypG4M36DbfyHPeXUXtnF+ImGnWQd5nHfPl5q4TKKyk7BbjamAsn5aBWDnLqfc973vYPMLvj9yZZU7JZvw7koGjyMWVFabksgneIv2RMMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSCOLayy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ivCLPNI9"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3d8c4222fc9so33145ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:15:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746130542; x=1746735342; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fsgFo/RejhPC8ntitgtfydngcD4MvQ2F4ZVpjB7CD0k=;
-        b=ivCLPNI975WK1UN1npB5I6kKC/DarhCPbGwI8uW6AhCBQ9Z6FcxSeXsYpCHBsN5uug
-         ys4CJ5LnQ/hFPosjv0B+wBH1nIcSYy+6IHxDWbyqMYFWs6TU4Id27QlkVkwyRb6O5LRI
-         NtJR2d51+tGe6NFrvrs3yDJVw/MonE4amprIgX9qBwq/e6kxyrdfOBKq8087pq85u5k0
-         GQs90qXfWrhrv8oNIxMFiJlqZE/xJejKbtr+dKvmE4NFq48qsLhgoixcwPKglEMw0W25
-         YT2UriMydwTrBvfZnm3Vp78XBXwY2BYVq9Kqvuityc+x+cvDE0ZDWmrp3WTZLVYwTY3f
-         scPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746130542; x=1746735342;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fsgFo/RejhPC8ntitgtfydngcD4MvQ2F4ZVpjB7CD0k=;
-        b=nhMs+OsdH3NfhQTu7FuimFAAKMNshyUN1qjqcZlj2DPjYEuCzGLXaOgV0BUqxJMFIC
-         vmJfkfFKCLwMqHRs53Sy/DSUv06aExwSVNkI3QFQmM1dC/3B/7aZGX1tupL34FsI5kk+
-         RzEyJkIoj7jBYpYpwLII6tvQioJI2z1Ns7t8RownuQvlzyc5rk1+tdPLK3J5ja/zURZu
-         Pnz5MAJckCudWGC6ZlRZEt470LEvMkDGcygMz3dXSHoGScl8Hv5lB8UxM2z2xwvxVCO0
-         QdJNEb5Mgs6vmCvHLhgXmpEcjMpBfrEIbdKc3k4zrRfSOsIM1rcmSly8fX6kCuGDAU1v
-         U4zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX/1XwNqxs8H9ikXW0sBf4Mmy1vVEz+8mvPz7H7p3yg1As0faZ8HwvkAu2xmblYoY/0MiL9TFj5dLZ80Q4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFOIHmmy5PwLkvKaAwxq1cfruJzv4Tl9wG0R9OZHFp6Bg1fNUv
-	d4W+9PKXclhq1RNw3HfVBILBBVFkU5tV8hkB2HVJDL6VO/5lBjTJuLV0B1deYDkMEuv/7gU2aMJ
-	pGVIeZ+LzAQFM4td0gnDa49l/IGZEskI3lhnw
-X-Gm-Gg: ASbGncvsTIEQj8ROg7z1LeVRlcH5EwdmZF6WaAgs4v9bjMCQAeHAFQVYe0s5cnmZo5I
-	1OpBOD/1waQBqmcombUq0m+ErttFtZQmMK3jiO5GsFN7IT7XyN7W389g/oRWnJEVQvkqaLbPN3s
-	e9K4DWLqsEZDoYEBQmMf4QyJrZztqhmfFL37Hbk7PYf5EV8e2Gc8Y=
-X-Google-Smtp-Source: AGHT+IGexfc/fZhfpYElfZIWeUZ/mWRcKXSby/mukAKUwR/YGvuJbqqmXJrKBpRTecHo8TIfYhvpJv/OrpWwn+7OPV8=
-X-Received: by 2002:a05:6e02:749:b0:3d9:36bd:8c59 with SMTP id
- e9e14a558f8ab-3d970168792mr3865215ab.9.1746130541633; Thu, 01 May 2025
- 13:15:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSCOLayy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4F42C4CEE3;
+	Thu,  1 May 2025 20:16:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746130597;
+	bh=KoIajoRz9IIzv7lT16of5mH6bxXX5L+gMybdGmXBBSQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=cSCOLayyPXHMXW6DFbd4VTZPc3lActGhKMtSSoII+zQsqJjKi2NFi+Fk8YWgA8GqC
+	 5h3WXxQRPwGtI0WoleXbD6cvgQEtlKJfKzJRXZK648EwHI3v23Rfxnn2PKJD+fzhOJ
+	 K15uPciAYyslWymvlf/U1LwvmGKSejYbV9IU1wNgx117X7AAywqOwOGUwAEw/k7hkg
+	 ly1EqeZNy1WAw3SVRczv5/ioOybmbBDf78di1aNQlbvqgTrpXkymNE/4fxATrkY508
+	 zzQZ07w2wHcz0mvzZZDHr/nAFFPGTf+W1axo3+D2Jgbc9X9sFu77oVENr9crrut4LW
+	 p3loHmdDpBIGw==
+Date: Thu, 1 May 2025 15:16:36 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	saravanak@google.com, p.zabel@pengutronix.de,
+	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH 4/8] dt-bindings: PCI: renesas,r9a08g045s33-pcie: Add
+ documentation for the PCIe IP on Renesas RZ/G3S
+Message-ID: <20250501201636.GA776341@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430171534.132774-1-irogers@google.com> <20250430171534.132774-5-irogers@google.com>
- <20250501210729.60558b33@pumpkin>
-In-Reply-To: <20250501210729.60558b33@pumpkin>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 13:15:30 -0700
-X-Gm-Features: ATxdqUGiib1N4S2UorD2RWA-lOkt4hHY0zEinkBd0HTa1nh7ilOIujgC_soxr-I
-Message-ID: <CAP-5=fXrhsZYJwjJzqb-zMg+UoC-bKoYCjstq8yD9wHNCfbS5g@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] math64: Silence a clang -Wshorten-64-to-32 warning
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Yury Norov <yury.norov@gmail.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Arnd Bergmann <arnd@arndb.de>, Nathan Chancellor <nathan@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Jakub Kicinski <kuba@kernel.org>, 
-	Jacob Keller <jacob.e.keller@intel.com>, linux-arch@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, Leo Yan <leo.yan@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430103236.3511989-5-claudiu.beznea.uj@bp.renesas.com>
 
-On Thu, May 1, 2025 at 1:07=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Wed, 30 Apr 2025 10:15:33 -0700
-> Ian Rogers <irogers@google.com> wrote:
->
-> > The clang warning -Wshorten-64-to-32 can be useful to catch
-> > inadvertent truncation. In some instances this truncation can lead to
-> > changing the sign of a result, for example, truncation to return an
-> > int to fit a sort routine. Silence the warning by making the implicit
-> > truncation explicit. This isn't to say the code is currently incorrect
-> > but without silencing the warning it is hard to spot the erroneous
-> > cases.
->
-> Except that the extra casts make the reader think something 'extra'
-> is going on.
-> For readability you want as few casts as possible.
+On Wed, Apr 30, 2025 at 01:32:32PM +0300, Claudiu wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> The PCIe IP available on the Renesas RZ/G3S complies with the PCI Express
+> Base Specification 4.0. It is designed for root complex applications and
+> features a single-lane (x1) implementation. Add documentation for it.
+> The interrupts, interrupt-names, resets, reset-names, clocks, clock-names
+> description were obtained from the hardware manual.
 
-Agreed except when not having the cast can introduce bugs which is why
-the cast is always required in other languages. Consider in Java:
-```
-class a {
-  public static void main(String args[]) {
-     long x =3D args.length;
-     int y =3D x;
- }
-}
-$ javac a.java
-a.java:4: error: incompatible types: possible lossy conversion from long to=
- int
-     int y =3D x;
-             ^
-1 error
-```
-Having -Wshorten-64-to-32 enabled for building with clang would allow
-possible mistakes to be spotted, but that's not currently possible
-without wading through warnings that this series cleans up.
+> +        pcie@11e40000 {
+> +            compatible = "renesas,r9a08g045s33-pcie";
+> +            reg = <0 0x11e40000 0 0x10000>;
+> +            ranges = <0x03000000 0 0x30000000 0 0x30000000 0 0x8000000>;
+> +            dma-ranges = <0x42000000 0 0x48000000 0 0x48000000 0 0x8000000>;
+> +            bus-range = <0x0 0xff>;
+> +            clocks = <&cpg CPG_MOD R9A08G045_PCI_ACLK>,
+> +                     <&cpg CPG_MOD R9A08G045_PCI_CLKL1PM>;
+> +            clock-names = "aclk", "clkl1pm";
+> +            resets = <&cpg R9A08G045_PCI_ARESETN>,
+> +                     <&cpg R9A08G045_PCI_RST_B>,
+> +                     <&cpg R9A08G045_PCI_RST_GP_B>,
+> +                     <&cpg R9A08G045_PCI_RST_PS_B>,
+> +                     <&cpg R9A08G045_PCI_RST_RSM_B>,
+> +                     <&cpg R9A08G045_PCI_RST_CFG_B>,
+> +                     <&cpg R9A08G045_PCI_RST_LOAD_B>;
+> +            reset-names = "aresetn", "rst_b", "rst_gp_b", "rst_ps_b",
+> +                          "rst_rsm_b", "rst_cfg_b", "rst_load_b";
 
-I also don't really think anyone will be confused about the purpose of
-the cast in something like:
-```
-al =3D (u32)a;
-```
+Could this be structured in a way that separates the shared Root
+Complex properties from the ones that are specific to the Root Port?
+I know the current hardware only supports a single Root Port, but I
+think we should plan to be able to support multiple Root Ports.
 
-Thanks,
-Ian
-
->         David
->
->
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  include/linux/math64.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/math64.h b/include/linux/math64.h
-> > index 6aaccc1626ab..f32fcb2a2331 100644
-> > --- a/include/linux/math64.h
-> > +++ b/include/linux/math64.h
-> > @@ -179,7 +179,7 @@ static __always_inline u64 mul_u64_u64_shr(u64 a, u=
-64 mul, unsigned int shift)
-> >  #ifndef mul_u64_u32_shr
-> >  static __always_inline u64 mul_u64_u32_shr(u64 a, u32 mul, unsigned in=
-t shift)
-> >  {
-> > -     u32 ah =3D a >> 32, al =3D a;
-> > +     u32 ah =3D a >> 32, al =3D (u32)a;
-> >       u64 ret;
-> >
-> >       ret =3D mul_u32_u32(al, mul) >> shift;
->
+> +            interrupts = <GIC_SPI 395 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 396 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 397 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 398 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 399 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 405 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 406 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 407 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 408 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 409 IRQ_TYPE_LEVEL_HIGH>,
+> +                         <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
+> +            interrupt-names = "int_serr", "int_serr_cor", "int_serr_nonfatal",
+> +                              "int_serr_fatal", "axi_err_int", "inta_rc",
+> +                              "intb_rc", "intc_rc", "intd_rc",
+> +                              "intmsi_rc", "int_link_bandwidth", "int_pm_pme",
+> +                              "dma_int", "pcie_evt_int", "msg_int",
+> +                              "int_all";
+> +            #interrupt-cells = <1>;
+> +            interrupt-map-mask = <0 0 0 7>;
+> +            interrupt-map = <0 0 0 1 &pcie_intx 0>, /* INT A */
+> +                            <0 0 0 2 &pcie_intx 1>, /* INT B */
+> +                            <0 0 0 3 &pcie_intx 2>, /* INT C */
+> +                            <0 0 0 4 &pcie_intx 3>; /* INT D */
+> +            device_type = "pci";
+> +            num-lanes = <1>;
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            power-domains = <&cpg>;
+> +            renesas,sysc = <&sysc>;
+> +            vendor-id = <0x1912>;
+> +            device-id = <0x0033>;
+> +
+> +            pcie_intx: legacy-interrupt-controller {
+> +                interrupt-controller;
+> +                #interrupt-cells = <1>;
+> +                #address-cells = <0>;
+> +                interrupt-parent = <&gic>;
+> +                interrupts = <GIC_SPI 400 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 402 IRQ_TYPE_LEVEL_HIGH>,
+> +                             <GIC_SPI 403 IRQ_TYPE_LEVEL_HIGH>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.43.0
+> 
