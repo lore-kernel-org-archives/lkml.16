@@ -1,62 +1,96 @@
-Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013052.outbound.protection.outlook.com [40.107.159.52])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887D31D5CFE;
-	Thu,  1 May 2025 07:01:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D77F72AD32;
+	Thu,  1 May 2025 07:01:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746082889; cv=fail; b=DkSxs6cok71hTXvFpIrcyMWLUOig02U/IShggfBg7TDK5L3PUOZuWLbHYogWhDX89/kGB8fYceVlgETcYSanyq0ixZ7wvMJwiDxyB/v2xBPlpF3zov9CWJSuvYZ42mmZp+31GUdkt+WfES2eVxKW028DbVgT1ewYdECq7GC3DD8=
+	t=1746082888; cv=fail; b=Kq+Ko73o5HFEROcUJhDRjqaCHHK80G7EzLzoauU5jtA/2ibP8kJq32LA2kb7kSYyqhyGLvf6HdNmCdlxHPo7Y8P3RetaNS7LF5sZjYt3F5dHzsY5QE2GWLjB2j8yIzEuTvHEonipvhfLIc9anpzrjAujK9+WH+v4/EGqTGFJBf4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746082889; c=relaxed/simple;
-	bh=Z1f4QXWbEqD/czbzvKZpPlK56z77w3+e0vhDoC/t0XA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=MdgMW3NaHRl6/sV8qrX9xXWdMM03mltNqf9TUiMulLlYcbrAlMHgmSqTxvnCPDCp4UI0KDBw/INN86GTMwDETKYdeffD3my808pgxlQghOkgF7odesMfVtGD1M01ARodh00WjCXYOIQvG3cwargh2RRE9bCyUuDl65YKK4Ooqw4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=J065EsS5; arc=fail smtp.client-ip=40.107.159.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1746082888; c=relaxed/simple;
+	bh=JIzakwjcvZsi+c9o2lxAsb6sR7kSOQMKL6IIP11c6ts=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=JFCHGIh3ZDJnoY72x4gL5jT52AqLmBhko7G4SUrSENb/Y7TEQUTAahdfKzeMjT5G3s1+mLIjIMwSmhLbaajjoldStedkLo6olQZUTE4tTdGU5d9pw5mOXKjvMQ0cmqlMhCCN710gH2AHSdc5UB4O4IYExHhP1/Lt8KQPcG/uWAI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=U8Q2tfRS; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=oENtXCf2; arc=fail smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="J065EsS5"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="U8Q2tfRS";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="oENtXCf2"
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 53UKwNvd021255;
+	Thu, 1 May 2025 07:00:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=0zS+X1gZ/nfDK90gRHbHDx4tDHooBGcfOKrzY+Ckmg8=; b=
+	U8Q2tfRS2kk89zneEtEjymNMfVOYSkw+3J3d6aWoB0JH/gcxDWHLoun4gYIwe5Ou
+	7sfp5k+tn0//E608sQfrE7dQy/tpMvJuTlyhcpRiW2ysjoMtjVIkJ35e4bPiZ8Iw
+	YEur0mqi3/XLfFwz/fFtCvRnHsuV9xzsaJNAm49iWg/IvmuoJSAw3Tf62YEwOzOM
+	/TSHXdclNCgyJ8LAvSYz9QnZLmQ06EpXGgmERLph3uytI1i1SyVwKw9ePo/s80uY
+	Qbocb7cNhxqSZaCZNmpF/PItrCJXaHkBlSsuWSslVi8jEtihEr38hsvQ4aYIm/08
+	mFy3NAMxs2XAavd4stOZiA==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6utamn2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 01 May 2025 07:00:24 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 54169U9v013866;
+	Thu, 1 May 2025 07:00:23 GMT
+Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazlp17011029.outbound.protection.outlook.com [40.93.14.29])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 468nxc9kt7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 01 May 2025 07:00:23 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Bl1857Y1fXkPipcI4rZODsYM9i+n3/MLXu83qBXRJfZNEItKTDvH65Xu6yMwFj9vFFYsXOw4GDm0lSWJ/W4OY+P9Hh7qysKyHqqPMYTR2BTmwNno62nWxOIl62GJ2vitHPymGd4FRQD9R/6lxM3iZojrDkic4yatfkJ5PUtftl+S60hgap53G0Uu8AG6HifLXRY6Y3clkDfpezO9F0nUR332zZ3Ftl8bRFSh5mskkYVT86DD0Pdw+y/Eha3fPixweKaYwlH+R1lV+blLHrKR6yNE7jRIdt5Ps6j7cqfvdd5ESBv0gkjOWhVw1FwcaYbro5rvResIPG7+KbZ8Z3zxeQ==
+ b=oDQEB55nUZmhG1JE19yzWP+E119MNLGGeKPPVgyBcSj9A+EJUYFzds1R/QUGxn9HAAECeQWnON60ehU+YMtwPHxd4pk9vp04WGX4amtSzeY7HH0ZBwhHe3oqfoq1F2drhAtX+DYalxP05X4v60pM8JogzSGUo7B0s4rEGhPn1b2U2cMXuMvKufXZ3L19dKwxK9WkiL3djjS0qW9tL7VqDQC/7/t/fe6b9NqFolBUJYYHeHrUob7Hw/Wd+qBxDbWy/97nCLZOiK1B3DurcY6/tcqhXUvv5kcvQHoNAhFoUVR6CaKhOfOYDzWlTjjGD/2M1LhuUsJYW58h5IUrM5z71Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=HD0bjDZudLjLh9XR3iIC9M2RrNF16VDTvMEZ2MwcN8Y=;
- b=cZ3nNkkCyIhdugKNN5xRjnBG1cWS2vgvXHV8Epxdw/K4vWrDcs6Vemrg+47h8SH18AJj1bt52AdMhBRF0bvh6lOD20keYMu0eWWYIAsUs7fA5hIlVwUlyIm1hEBxmnT3rc2hzGZKrJlSKN58Udb2J3Btd1kwwcRLKi5OjHDBQI/Rg5LvC9ixuEIuWVAIE6Rb0MhC85ASVO4B1G7P5f40YlZjZnzER1XpmD7e0TKx6Hn5kskQd42Bl+hcvxdalcDz0cUEBvKtylh/V5XcBjQE1g5BOJvr1Xs2ha20cxbl7rX0H1XFl3BOGwQw/aolLVKRvJJg4ULRsOt4C9zf10JAPA==
+ bh=0zS+X1gZ/nfDK90gRHbHDx4tDHooBGcfOKrzY+Ckmg8=;
+ b=zI6uP7mwHTyy7Eaz8Yf4iJ/xlreVsN+ezJwNX3EaBTdxw2apU/U0nM73wxXgV1P8u20DxvMKRY9bZ1JAc5A6Otw9hLvVcTf48VHmlgVUcEsWE59taowHMXaBN4BpNEIEDWJ/8LMa9fSmegI7atYWcCxtWh9HMY109XuPOGkPJ41koCHdJYl+qcgY3gT5FmlKEMf3q99/PLDKlWQnUFXH0Vi54Wq5YicUmvsvBFwXaqNt9MYfJEFeG3uhllltqwYylXyM9qLeeG4XfYvIyFfyINoIkoeCGWT/igJ8CI3CTM7XEZzV1jqMd2hGK6gChO2gIxIg3pLL0PiwzCIFpOenPg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HD0bjDZudLjLh9XR3iIC9M2RrNF16VDTvMEZ2MwcN8Y=;
- b=J065EsS5Pqb3QbaQKyPcuWMF3ZAgBvQenH8QPTtH4IVslHa60Dj5fYyCNOREq04bsaz/OF91QAfYy8Vu2QJj0lfrS/5lcwqkL8/lGs08NWW2Q0k621lJrPiOaMKLqD99R48TXmmWFRRFAL397LdTBcePjU/SdZ0C10jLSOUHH03BHOVnX4GeeRglIEOuljcQASM1+A1jVDLKImPqQwd8JMrJXEa5OX2LPIpuUSqXAsc/h2A5nPio6sOjuSeDsNZY9P1Twqv/i/QXWbxvYcxIfw3QkSSacXQDxh4w+FhVxWexXaS2C1vUWDugCgeLnh7npYRsGJALs3KzbqV00QnpGg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com (2603:10a6:20b:42f::6)
- by GVXPR04MB10921.eurprd04.prod.outlook.com (2603:10a6:150:227::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 1 May
- 2025 07:01:23 +0000
-Received: from AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e]) by AS8PR04MB8868.eurprd04.prod.outlook.com
- ([fe80::b317:9c26:147f:c06e%3]) with mapi id 15.20.8699.019; Thu, 1 May 2025
- 07:01:23 +0000
-Date: Thu, 1 May 2025 10:01:20 +0300
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Lee Jones <lee@kernel.org>, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>, 
-	linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
-Subject: Re: [PATCH 0/6] mfd: simple-mfd-i2c: add QIXIS CPLD support
-Message-ID: <kjpv6qum4myjipq4opqsynnyycjxjdw3nl4eksp2gtoiryvvq5@2fs7joeenkde>
-References: <20250430153634.2971736-1-ioana.ciornei@nxp.com>
- <174607289976.949416.5265834490992116431.robh@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <174607289976.949416.5265834490992116431.robh@kernel.org>
-X-ClientProxiedBy: AM0PR06CA0101.eurprd06.prod.outlook.com
- (2603:10a6:208:fa::42) To AS8PR04MB8868.eurprd04.prod.outlook.com
- (2603:10a6:20b:42f::6)
+ bh=0zS+X1gZ/nfDK90gRHbHDx4tDHooBGcfOKrzY+Ckmg8=;
+ b=oENtXCf2gFqfzeLOXkNfA9swA4pkTfKN3o+YHkBYrmjdIczWh6Qz/vBMo0nd1+8Iva1fN29JEYuLBP6Q4PdJcigsgYmy4dl8hRW+V6gjRxlcBpMQ3f3FxFZMHJcay1YMZInTokis19vRZ1Tgg/YJHdtbbpEygdWckkMXvdYRk7k=
+Received: from DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
+ (2603:10b6:f:fc00::d1f) by SJ2PR10MB7826.namprd10.prod.outlook.com
+ (2603:10b6:a03:56b::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.33; Thu, 1 May
+ 2025 07:00:19 +0000
+Received: from DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
+ ([fe80::2072:7ae5:a89:c52a]) by DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
+ ([fe80::2072:7ae5:a89:c52a%3]) with mapi id 15.20.8678.033; Thu, 1 May 2025
+ 07:00:18 +0000
+Message-ID: <9a6402ca-ce63-430b-b60b-1a36971e37e4@oracle.com>
+Date: Thu, 1 May 2025 00:00:15 -0700
+User-Agent: Betterbird (macOS/Intel)
+Subject: Re: [PATCH v3] sched/numa: add statistics of numa balance task
+ migration
+To: Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, Jonathan Corbet <corbet@lwn.net>,
+        Mel Gorman <mgormanmgorman@suse.de>, Michal Hocko <mhocko@kernel.org>,
+        Michal Koutny <mkoutny@suse.com>, Muchun Song <muchun.song@linux.dev>,
+        Roman Gushchin <roman.gushchin@linux.dev>,
+        Shakeel Butt <shakeel.butt@linux.dev>,
+        "Chen, Tim C" <tim.c.chen@intel.com>, Aubrey Li <aubrey.li@intel.com>,
+        cgroups@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, K Prateek Nayak <kprateek.nayak@amd.com>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20250430103623.3349842-1-yu.c.chen@intel.com>
+Content-Language: en-US
+From: Libo Chen <libo.chen@oracle.com>
+In-Reply-To: <20250430103623.3349842-1-yu.c.chen@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PH7P220CA0094.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:510:32d::30) To DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
+ (2603:10b6:f:fc00::d1f)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,161 +98,305 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR04MB8868:EE_|GVXPR04MB10921:EE_
-X-MS-Office365-Filtering-Correlation-Id: a3ae38bc-cae8-43d3-9898-08dd887dfb78
+X-MS-TrafficTypeDiagnostic: DS4PPF5ADB4ADFC:EE_|SJ2PR10MB7826:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3607cf98-26a6-4942-5cfc-08dd887dd543
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|13003099007;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?GmwxDOGZiYYww+MPYwbAnAxtVtKVmwGfB/9IrZaQ6OfbUMKbMj7LBILteaf0?=
- =?us-ascii?Q?PL1rXLgt3MpzcXiSF4lk4qq6LCAKaFjI+uzggMqeYu5eV0EOnE29kCD8b2E1?=
- =?us-ascii?Q?TSmjVu63u7ZAmLmnpZ+FuKonyHCj3FppfJmb8GmmKas4PBkUwqlBhrenVumX?=
- =?us-ascii?Q?AK8S0IzJrQsIAP+7uvCPWcD2JYlMdqvHPjx0twPrEGftMV4ZegBkwocLnHHQ?=
- =?us-ascii?Q?kggNbrdvbtqqVl89sp6QqiTwIJUiNz/OSuwqz/C4DdrqPGCsyzwO/Y3JUMB7?=
- =?us-ascii?Q?2Oe+dk8BvmKNkxkjzDN5g9Vxdb07CSxoBNd9k90HHaluGBo4dgoT7FoGSael?=
- =?us-ascii?Q?3tdlHr3pPadHUxdpcS2+6fcfUBr1z1g3n8Vulh25+zcmslJWP7h8NywDTFTQ?=
- =?us-ascii?Q?bBTvgeb9nRtpcgNkqgnFIyG6eF6KH/3rELfI+Ol8E9Ee5eKdhr6/79yoFJFh?=
- =?us-ascii?Q?e+S8024Oeb0P2h65VbBGjKRpFVQ2HMrsU1LOS14h3ixgvaONWvJ0Wd1vHump?=
- =?us-ascii?Q?ujIqZtgveD+1TwNNZderbGTns4BGsZoG/P6Bh7Syg2KpLcX2Y2ihbNfuGEVo?=
- =?us-ascii?Q?QzCc1TESgXiIOr706KNeAxaCKjkk4GcqOBoYo5RCflWufLuJU2Q7779YyJA+?=
- =?us-ascii?Q?QbbgyaodwZVDqfTXrB+Qz91Ps27tVvk+IEZDc5OKC/b43u5Z3BTiLJNMR46E?=
- =?us-ascii?Q?f/0GcSHFKR+FIewo2YuST+Fc2aAVMpRYlJ1G62Ya4tkDwcwG3jqSwGg6es2x?=
- =?us-ascii?Q?eX+6EbRP3NcutOIg9J6vG0aRoa9iMEjhltMB5FLx1PlnKdv9DArmDduR985X?=
- =?us-ascii?Q?4XHQo958Zfb0nKEQm53E2KChxAYtaZvn4u6nZpx2eQSDo4OizaC+Ga9lT5Vd?=
- =?us-ascii?Q?AHpqILKYIT87OJrQkLmSbJ033ca1894ELDaZRL1TWx4tm8xevOXNYwkv6Xfi?=
- =?us-ascii?Q?ruAOJCOSDJ1m8KyanSVui91kdGLxJJVtZdn9+7tuBSzHsVZwr4MCM3lQukZe?=
- =?us-ascii?Q?jLLX+z1xZvj1gXqhO0hwc4GuylpXFf632cSBGmF60HbQOkFCZEpwUmujE3P5?=
- =?us-ascii?Q?sZoONJ9Aagpt1pOGHcSRkEer6XGfV5v+/53dW/kuufrhI7P1CHIJtuDQmzjp?=
- =?us-ascii?Q?Oj0EVOTGUl+ECswH1gBUSq4p2xwvB6KaFYzauAv+c1wiYD4jpSm+sHOJp3Ti?=
- =?us-ascii?Q?UbFPrIx3b43jhFwumnO3L4YZwFbvrtaWmSPhmgX2l6K/UM29ZpPWFfTI9HIs?=
- =?us-ascii?Q?bOO9l8ZtfN4gurBj8S5YbgjTysAJgA1S6OYVnubZjxN7cjbU34dEaUEkl8Vp?=
- =?us-ascii?Q?WYqTsEPc0cXxZLv78F5jVlFY9m0vJSRG3EFpslTMU2CQG7p1Ff5O3Go2iR9f?=
- =?us-ascii?Q?x2IDPTKfysHpEJDlwwJMudVyzW3Rnc6ZqVZXuDqA576RMJwNyDlwIhntcOg8?=
- =?us-ascii?Q?FM3NQ+d8nxI=3D?=
+	=?utf-8?B?bnpibWtjaUpsYjNNUkJFNndJMjlkeklCVElMbXVTdXpOeXRxVnN6em9JMnJs?=
+ =?utf-8?B?TkRkN0YyRGtHVlFMTGdZMXE3R1BtREkwbElhZXJCdlEyN0Y2M2kycFNRbFRY?=
+ =?utf-8?B?d3NVR3lJMEpiMUIrRDZlR3l5QmhHckRPeVRqVENwVjFqVThHNG53a0VnbDBY?=
+ =?utf-8?B?dkUyTDIwVm14K3MxbXdKSTNMRUdlTmM4WnQzQ3J1bDlZMUkvNXM1OGJRZ0xj?=
+ =?utf-8?B?WEZ6dDBHUGRQLzFMQnBTalJhdzNoc1JnU3VndXZTTDVkYkZzOU9UdytaVWdk?=
+ =?utf-8?B?L05sUmROQ2VzUVhsRDhKZytDOHJuNm1vcUZIWjRWbDVPaXpmc2o0WGhCMlh1?=
+ =?utf-8?B?MVUvbHg3RDZzZ1JCT2FWb1FPRHYxdmNVbndaeGZNSU8wbFpCZ2RGSGkzKzZQ?=
+ =?utf-8?B?eUhPcEZ2VllIdXNLNG9ob1FYMzVsakU4bFluZ0ZiSWRWS3F4Zy81ZlZjR08w?=
+ =?utf-8?B?OHNxK2xDU2tuZk5UcXF1NlBvQUtQTTZVT05BY0M4eGMvdnJkeGViL3FSUmtq?=
+ =?utf-8?B?ZjZEY05FYXE3T2s5NHk2eWh6N092Ull1TEE4RldnU3l5bGNtRDhJdko3TWw0?=
+ =?utf-8?B?NDdoQUx2UURvTFpqSklxTEh3SzVjcXpkTXphZW9KY1Q3QnNjZGVwelBYN0R4?=
+ =?utf-8?B?L3VhQlppRGR4NERmdlNJSC9qRkdJNjAydms0MzdjeGoxWGNCRHN5cy9BYnNP?=
+ =?utf-8?B?RFloNnViSjJFY2l0V0tnNXY3Vkh5SktuRmdsWVBtZHJBOXBjd3Ixdm9JU2I5?=
+ =?utf-8?B?UlRxY1hlOXN3TjZKc2tBblI2L3JMWTE5UTdEbC9NSS9idytXWjlPcTNWMFQy?=
+ =?utf-8?B?Skd2TkFWWlRjMFNqbXMvQVRpZXBPM2FkdDFCZFhRSGhLNjlhVGpuS21Jb0hi?=
+ =?utf-8?B?aitDdkN6b1AwRDZmd3VQV3pEQVZkV2pHLzN1cUNTZWRnc1BOTVJ2bWJmVEZ0?=
+ =?utf-8?B?cVNWWS9KRGJtRU53S09QcGVlZVRqU0Q2Q0kyODFDTGVsQ0U2N0VGS09nQmpW?=
+ =?utf-8?B?dTc4Ty9mL1JaeUU0STFFazY0eDhZR0tCK1hrZ3dVbVc5Qk11dXJpS0w3QWty?=
+ =?utf-8?B?WFlSa1kyQzU5UXNraU12UEMyTW85Tk1zOThIUnNVTmkxN1RTZ2FoT1lXOWZt?=
+ =?utf-8?B?R3RzdTZSalE5YVlWcEZWekdEY2NlcTR5QTlTNjZ0SkRXUTJVMGlHYUgzbkgr?=
+ =?utf-8?B?REVLaWFPUUduQ1M3RmxjalAvNGVPdEVoaUxOQ250Vm01ck93VENXNHF2bGlP?=
+ =?utf-8?B?bngzRzJSQlZleVVkblVtZUtSN0M0ZVVCL05LeVA1SGFzajNIU3o4S2RnSTB6?=
+ =?utf-8?B?TlYwUHF5R2hqTE5SZU56cmtXRlZBUlZEeUdzVDRrRi9HZm8xTW1Zcnpzb1Fw?=
+ =?utf-8?B?cTFkZ0RsZTZ2K3M1QmdpRkUrZmFnTmlzVjRDZVlYNExIVlhyb1dxTlo4YXhx?=
+ =?utf-8?B?NnVva2RhUHRTMXRNdW5jU2V2bjdHaTRQTkRURDQwYkxyQjV5S0VYdWlhdEFS?=
+ =?utf-8?B?WER2Z2pFZG44a0ZOUUY4c3h5a1lvN3JWaUkrODVVVzVGNk9rdVBBNzlLRE15?=
+ =?utf-8?B?d2JnOXhKS3pMV2pOSlBnRGJ1M0xRcS9pTDcySHZFSXliR0xBKzdpa1ZhYTVu?=
+ =?utf-8?B?SllaRVVoRFd6d3dac1JtOGM3TWhSVks4OGNienNBcDZ2RFFGNHhWWmdKQWgz?=
+ =?utf-8?B?NEFEZEtGOU9KbmM5ZCtRM0M4MWhNcWdVVHIwYjNOWGUyVkYwSWo2d1Zjd09L?=
+ =?utf-8?B?eFQ1eWtYL3g1dHIrNzFIK2RFRTkyQnhUYzJGY2k5MC9VZEVUcjRHanlDbjE1?=
+ =?utf-8?B?dldscDlYMndBNzQvalJUdEN5UFYrNlNDVldUcW40d0JFRjRGYXFTVVdXQ1hV?=
+ =?utf-8?B?QjBFY3lQV1c0S3FocUFCUzgyeW1YSUFrOUxlTC9OaGNTMWJuZ1ZjMFI5SWNB?=
+ =?utf-8?Q?hL5h9EajGGM=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR04MB8868.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(13003099007);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS4PPF5ADB4ADFC.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Bq4+2wFJgqfYORCnu/WbL5cN6zLKnTBjOwhkr/5ERF/WVJE0fo2dZF7tch7F?=
- =?us-ascii?Q?o6ZnzCkXBOkOOGa9VN0Gtdli/d0Lw5kktNywm5T35NS/pPH62LIVCsnk5JBh?=
- =?us-ascii?Q?fL72HGtbsFPwaZpTB2trvThOHgiIZr1W4lbVRXyFhrtTTTjFiiy/oAglEc1w?=
- =?us-ascii?Q?iqAljQ9LzLVxrcWBcQidwys8sXpzLTdj7brEcwElU9UDI2C3TSYM3QIwxAoD?=
- =?us-ascii?Q?qaP6uY1fNchINhPoHm0URrfWnKX+OyGSM4297xB8/alsWZNxy64kLW1KvuPo?=
- =?us-ascii?Q?eDZhzx/i1ansW+fHV8Eo/VmmT/c8l4K3Wf1r05ds3EGlQE6nllA7WXeICBQi?=
- =?us-ascii?Q?U5hBk2kaAJo+rwo1GNozZ7dSrPCVHo24tTpHeCIyYu8WKlaO14tLTN1GXzAS?=
- =?us-ascii?Q?hVmc9DkvExsYdx0LFfu1t/5uC0ZH+Uk5qtMDvgEmG1HwwUZ760GzDnvNoUGO?=
- =?us-ascii?Q?mNdHoRGQ2lJ8xEhLEe0e2f/+pBHX3ldOQmXNlqajz2CRJOavuhdiWY7wx2S8?=
- =?us-ascii?Q?fZGGhGLfe6zE1BQgDdQzGQHPpq/lDRvY3sGHoe0iAgCkAia08J3dKj7H6pX2?=
- =?us-ascii?Q?PeyptZiLS3uLZ5iFEfGScVr2MWzGcoysc0edrscHUjlFAoqMeRrecTWyFCI/?=
- =?us-ascii?Q?L328dqGW7tTnE6UdPDUb1ZLz6TcvPzKHyUcceywcYon9CcR+NIJcgGiir1Ph?=
- =?us-ascii?Q?LltaOEKqSoCRRZqmbHK5t7/C043laKnMJCSXftJNeC5m7aQl63Ju/sRzHgXj?=
- =?us-ascii?Q?YLYL+ESbCIAlTfafZBI5sK7d1VGkPMi1CtvkNt3lpjR5HPjlimw/MTHrIsan?=
- =?us-ascii?Q?dpprLggjgmF1ASzNRUjFI6UEzLMX1tJuyvW2aj2tAwqVuTqRUGLTktLtkeUV?=
- =?us-ascii?Q?i9SuzxPSdXJCjrjSQhLr162tm6RU9J9/PcBc63Nxp2DtG3G8mfvf29w7bR8y?=
- =?us-ascii?Q?UL+CdzpgpxYEiSiOWT10017g2PNt/oWWLF0nHtefEp/uyUEZ7L6rdT26wesP?=
- =?us-ascii?Q?Vggd4qyl83r5GKDD3iohyZLclGmD5PffXqw6Tz5tWKR46ePj9m7+jk5S2j8I?=
- =?us-ascii?Q?IxEWoAZKnpNRwfRfzf+yPas1kqYsXtIb0y+apvAmQMSf9OS5ppY+WRescNCb?=
- =?us-ascii?Q?rsvoYrJ74qydVT7T/RutA7WEECmng83h9Mk2twctc3+Z5Qed9WwoHN53UhdK?=
- =?us-ascii?Q?3HyOcza+EgIvMeS+yvmsaCyKE+6YQNQCafyLCnhD4YnpWs45ZLkjARByfIQF?=
- =?us-ascii?Q?kuej9zS4WAZP0ZDrX4RIo0MALdLBRX8s9pYQz0NerT4Lce4wJCwfjyxWbdPb?=
- =?us-ascii?Q?QINaSEGiwm02oLQlqNpG13kflEGziVPAiBU8uvsO5WX8IQgtOdIhU6Bzl6EK?=
- =?us-ascii?Q?wR2ZxegK3qoSEp/LhBjFEHZd64NNVhIVTwXbTO9guDlbK+vPSEVRu7VeHZzo?=
- =?us-ascii?Q?PqPtdls5LmonM5CqTwhyqJNf3spOeMgrWJPRPaUSjofUy1+aIsgfaUMkG7Wq?=
- =?us-ascii?Q?3Bxiqb83j9tYqsvUn885RvIQIcBkxOS61QvVdUsAXazdOG6TmQVxyabRxlbU?=
- =?us-ascii?Q?NVkWuzALqkD9j35nyFryjIffh785LNYlsy6Dqhev?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a3ae38bc-cae8-43d3-9898-08dd887dfb78
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR04MB8868.eurprd04.prod.outlook.com
+	=?utf-8?B?SDNieGxGeWlKdEljZ1B5em5KWHdmeDBmdVZoOTNwS3l0QndMajMvWFdjZzNT?=
+ =?utf-8?B?dFRFMnFWNE45bnh6UnI5R3ZtRzE0NHZtVEN4QUhvOEtrVVBQMzlDUzJUdDRs?=
+ =?utf-8?B?ZzhuUStBS0xFYmlnSGhkckg3TDBpVUUwcEc3dVVYUGFQV3hZUFg3NjZNRVM1?=
+ =?utf-8?B?VjNoQ1hPRlBoU3d2RTVoSWVsRytKN2xrbjltOWpjTExqTkpkaERSQi9jem9E?=
+ =?utf-8?B?eG9LcXlGUThYVlV6Rm5XOGcrWUxyQXUyaUhkSTg5TG5rc3hHeXpGRkVETU94?=
+ =?utf-8?B?OVp6bFVDOTRPeERxTis3Z2MzWjB3Z2RaZlR3MEFjZlQwR3plUkg0aFg3U0Y3?=
+ =?utf-8?B?T3EraW5RTDNmczlDbklRVy9BTFNjUlZqSndTTVhpSG90WUVCU2NwM3RyL1BM?=
+ =?utf-8?B?UG5IT0IrRFNsVnc2Y1d2Z2J1bUwzekpEc3p3MjVIMTU4cVpURExVak9DRHZh?=
+ =?utf-8?B?MFF2Y3JXWlBhQ2VzdTJJeHh6dksvWlJGQ2wyS0RPN0V2OC9UbGQzcnowWXQ1?=
+ =?utf-8?B?RlNuWERlSlVmbjFTbnpSQVBOVFNhdk9nMHdyK1F0SGo5NHorWGpYUm1meGV4?=
+ =?utf-8?B?K2V3YmF1TkJXdzg0d25Od2V0bXRpZ0ZYbHhvc0lGK0RhUktDQlVuWUZnTU1E?=
+ =?utf-8?B?RVp3bnRVZzFsdXQ2dS85d0puMGc3M05UcklRTWNiZEZzemNyeW5GaTZxVFdU?=
+ =?utf-8?B?ZTVUYVJjaFhxUjR1UUpNK3VpbDQvblZGN3NndWlWdWI2N2VMNGNxOUNGNTYr?=
+ =?utf-8?B?OCtCRmJteDd3d3NrZHl5UEMrZmhLa1JHaFFOUkJYZCs3Z2xQblJOUWk1MnhW?=
+ =?utf-8?B?dXl3SkZHdFlBYS9Cb3k4Vks1YUhTbitzZDY5alROa0tPZzNwd1FHOFhQTzBr?=
+ =?utf-8?B?NWZyWmMxQVZwMVcxN05aeU9LT3h5TWNaMHFzRCttKytCQU83bU82UW8rUVFu?=
+ =?utf-8?B?L2JnYzlkY3pvWjFzWkppakJFN0RLR3BUTlNtcll0c1RqVDBWUE4zbEpBWWMy?=
+ =?utf-8?B?cU94YWtKTG9TVTNzeWp6a2FkVGJXTndDRFdOR1NyZzdLdHZLVXF4Wms5cnhj?=
+ =?utf-8?B?aVRObzJIbUhJNFdYUFEzRENUYXl0cjYrOGNTQXBibThSdHlNd3dhajNTY1ov?=
+ =?utf-8?B?cHFFRGxlWHlmRjRVSEJyMWc3dHlIb2kzR2U5L1BRZlJCaEpWTDZlMkJjM2l3?=
+ =?utf-8?B?MGRRLzFDN2EwRmp4S3lwOFRSUDM4RjJxa0Qyc09LR3hjUTVsYTNOVXlUV0t2?=
+ =?utf-8?B?ODZzdUN5YkY0VTVROW03YU9ja3FlRHRnZFBNbk9OTitWRVVsdGZtQVpqNkQ4?=
+ =?utf-8?B?YmgvOEdpaXlUNis4dXhETnFMY1BCVmFyZFhTWDQ4NUtNMDdicHhnT1lzN1hH?=
+ =?utf-8?B?d1l6bFpyTUwvcUlTMVBobXBzbm5OakplQWtFK2JZL2xXMjJRR3dtTm5GUTFh?=
+ =?utf-8?B?SVlSTVB2YVJvR2taQm0yWkd1NkJIY1prQXQxWC9PK2c1RWNrVXVTa3dvei96?=
+ =?utf-8?B?OEpxaDJscjRRc2liUTBzcy9nRTkwdGZzcVFUenc3UElqQ1p2ZzduTnhzdXlH?=
+ =?utf-8?B?R29vWndGWEZYSVViYnhZd1FRQXV1OHc3VVJReUtwOFlkV0E2bjJuTXpOSmNw?=
+ =?utf-8?B?ek5kSkJCcVJBWjJXU2tRMWJWdXVYTWY3bExLUzJheHlGT2ZrMnhzeHQvaU8v?=
+ =?utf-8?B?SmdScElGYXViYTI5YWxnNW5JSVZ3a2pBMEJwa0tlNzg5Z2NIRXZTWXRjOEM4?=
+ =?utf-8?B?VUVOOHZVdThyZnNmK2dTaE1OWmtYTWlqWG1Fam9WZ0FzUUJGaUJjVVk0OU9p?=
+ =?utf-8?B?a1dqaDdGcHlYbVQrLzlmczRvV3F4MHAzVXdGZG5RcFdIeTd1SXpUc0pyRmNI?=
+ =?utf-8?B?YmNyVktpZmtvM3hodnRzMHM3bVBwd0xkQ0NucFJ1L2MrektjZ2hRc0dQSGRM?=
+ =?utf-8?B?SmVEbkh3eXhQWmFuNnRPU0I2REZuSW42Vzl6ckUrVXdZVERWRGtWYVE4NDlI?=
+ =?utf-8?B?ZkMvREdJczVjL05Wck9HMUNGNlNaYjF2ZjJ5NGRLT1Q0NmtwSGJadEdyVVpW?=
+ =?utf-8?B?R2MxS2cvQ1d1WXFHc3pHbTU3M1g2N3J6L2dpZWZYOUR0Y3R4ZVVXR1d6UFIz?=
+ =?utf-8?Q?1jCa3XbUyWRneRsiemdbiDYlF?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	A4ABOB/Q+EKnT0aUp7O6INgg1zSMi5wOXAPzsv/mmQBHLLNNK2HA5QM3S3q8pdBJkfDoOpH149FTEuHQuzIvlQYTcYxmHs/kt0ZAhv6TAXGFrsPke7GpaGnPZO/aIq2FqQnJOjvVJyXy/mtWJi71lHA72V/gd5sUWKGuwDxB2G4D3KbGRSU0vec9F09MySo5ZwUOTQaO3UnVY01qVAReO5gAhkl8AkP9tgNti/lC2FgGiNF+aK/r1HvZD3T3x2bUJUmPnmtUfaYGCiZdfiLii3i/bJXzpWqXptIMB9cmIPfjOotJThF0E6ZXaLX6oWWV2/OmrUBKXmwSpaRIFbqtiT4jQcgBkJ61jKeD6Da16NnCxrDt3Cp0zSl3SGPVLpGpUrzWITruulHCvMBl5rjxm1ujBUilINVSMjL/paBn6DRGEb1Am9kiO0hzuj6J0nVoc4xiQeW5PsfeHNWBuq2nZsPBn2H44Cpg7IY+3RzH7NWJPWA4F3GBkQLJw+myi/NlSetQTAEqd+K2CV5hGWb7Zkk6wFy2OujTwZGtJ4ZNzn02YP+kMGFYbDhmCTLizpNkhGSil6KCHauNGCKYbT7BWmHJu+ZSKAmcTNm5tymT0HY=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3607cf98-26a6-4942-5cfc-08dd887dd543
+X-MS-Exchange-CrossTenant-AuthSource: DS4PPF5ADB4ADFC.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 07:01:23.2313
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 07:00:18.9197
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OoQkR3RLUasOD0ksi8E7ErFWvGSuS6LDc7BdWhkJaYnoDP7bEyZrDVOgio5gUtt9GU0xUhlLSzKP/15lY5GIUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB10921
+X-MS-Exchange-CrossTenant-UserPrincipalName: ixKYG4N1/aDqRyijiXGFVpA3R448oj0fX3h3jsPhASBXeBXmwfbRMB8HXwCPSISNk7gRR93Co+1ck94F8qq7Wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR10MB7826
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_02,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 mlxlogscore=999 suspectscore=0 mlxscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2504070000
+ definitions=main-2505010051
+X-Proofpoint-GUID: UgEapqtfWXPN8JIGsP0929FKxX3TYipD
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA1MSBTYWx0ZWRfX8dRibJ8XmHs2 GzGiyKcZbiIRisJ38E8ciw4R/OkxbV3WzeuSH+HW8HL4uyEOqPTzg79a31h0eGitME/cHbPTJfM TqXhxtuHVhYLdPzDpzzOm/DwU2c4z2sd3J4C4pNmSwZSvXEGWjoyEkjoUGfY21WiEVE7ZOCPz01
+ m9ASxgt9IzmFVbG/QhqSuXhCF+l+rE6ZZnSXjFy121VnQAJEwZL5StAJxE3xHZ0/4SX3K9uQvX9 QTPbynN+55StcPIeDbqTondAjOe2L/g12LugijY0Didzta9c40WSjA6Sba7UBtpzsmVUd//BkrJ iX6CQPfkwupJqQtOD0A9xi/y4L0IZmszvPAYDlwfVP24fAGPeI/9RCzvynrmRxWJfk2obLWn3VQ
+ dqVkc0Boh0UuF4H7tWfujvVrsQNmjN+upqL3QkawXhARg0Dag4tkceVtsHBGfCEsI4JSOXWc
+X-Authority-Analysis: v=2.4 cv=ZuHtK87G c=1 sm=1 tr=0 ts=68131c08 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=zd2uoN0lAAAA:8 a=VnNF1IyMAAAA:8 a=JfrnYn6hAAAA:8 a=QyXUC8HyAAAA:8 a=0HtfRG4N_MvV5BcoYjgA:9 a=QEXdDO2ut3YA:10 a=1CNFftbPRP8L7MoqJWF3:22
+X-Proofpoint-ORIG-GUID: UgEapqtfWXPN8JIGsP0929FKxX3TYipD
 
-On Wed, Apr 30, 2025 at 11:15:28PM -0500, Rob Herring (Arm) wrote:
-> 
-> On Wed, 30 Apr 2025 18:36:28 +0300, Ioana Ciornei wrote:
-> > The MDIO mux on the LX2160AQDS, LX2162AQDS and LS1028AQDS boards never
-> > worked in mainline. The DT files were submitted initially as-is, and
-> > there is a downstream driver for the QIXIS CPLD device:
-> > https://github.com/nxp-qoriq/linux/blob/lf-6.12.y/drivers/soc/fsl/qixis_ctrl.c
-> > 
-> > Since the HW works with the already existing
-> > driver/mfd/similar-mfd-i2c.c driver, extend the list of compatible
-> > strings to also cover these 3 new boards, instead of trying to upstream
-> > a duplicate driver.
-> > 
-> > This patch set also adapts the DT nodes for each of the affected boards
-> > so that we match on the new compatible strings.
-> > 
-> > The last patch describes the two on-board RGMII PHYs found on the
-> > LX2160AQDS boards which make use of the MDIO bus found behind the CPLD
-> > driven MDIO mux.
-> > 
-> > Ioana Ciornei (5):
-> >   dt-bindings: mfd: add bindings for QIXIS CPLD
-> >   mfd: simple-mfd-i2c: add compatible string for Layerscape QIXIS CPLD
-> >   arm64: dts: lx2160a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
-> >     driver
-> >   arm64: dts: lx2162a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
-> >     driver
-> >   arm64: dts: lx2160a-qds: add the two on-board RGMII PHYs
-> > 
-> > Vladimir Oltean (1):
-> >   arm64: dts: ls1028a-qds: make the QIXIS CPLD use the simple-mfd-i2c.c
-> >     driver
-> > 
-> >  .../bindings/mfd/fsl,qixis-i2c.yaml           | 65 +++++++++++++++++++
-> >  .../boot/dts/freescale/fsl-ls1028a-qds.dts    |  9 +--
-> >  .../boot/dts/freescale/fsl-lx2160a-qds.dts    | 28 +++++++-
-> >  .../boot/dts/freescale/fsl-lx2162a-qds.dts    |  8 ++-
-> >  drivers/mfd/simple-mfd-i2c.c                  |  3 +
-> >  5 files changed, 103 insertions(+), 10 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/fsl,qixis-i2c.yaml
-> > 
-> > --
-> > 2.25.1
-> > 
-> > 
-> > 
-> 
-> 
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
-> 
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
-> 
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
-> 
->   pip3 install dtschema --upgrade
-> 
-> 
-> This patch series was applied (using b4) to base:
->  Base: attempting to guess base-commit...
->  Base: tags/next-20250429 (exact match)
-> 
-> If this is not the correct base, please add 'base-commit' tag
-> (or use b4 which does this automatically)
-> 
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250430153634.2971736-1-ioana.ciornei@nxp.com:
-> 
-> arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dtb: fpga@66 (fsl,lx2160a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> 	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
-> arch/arm64/boot/dts/freescale/fsl-ls1028a-qds.dtb: fpga@66 (fsl,ls1028a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> 	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
-> arch/arm64/boot/dts/freescale/fsl-lx2162a-qds.dtb: fpga@66 (fsl,lx2162a-qds-qixis-i2c): 'mux-controller@54' does not match any of the regexes: '^pinctrl-[0-9]+$'
-> 	from schema $id: http://devicetree.org/schemas/mfd/fsl,qixis-i2c.yaml
+Hi Chen Yu
 
-Sorry for this, my bad. I only run dt_binding_check and didn't see any
-errors because the example was not the correct one.
+On 4/30/25 03:36, Chen Yu wrote:
+> On systems with NUMA balancing enabled, it is found that tracking
+> the task activities due to NUMA balancing is helpful. NUMA balancing
+> has two mechanisms for task migration: one is to migrate the task to
+> an idle CPU in its preferred node, the other is to swap tasks on
+> different nodes if they are on each other's preferred node.
+> 
+> The kernel already has NUMA page migration statistics in
+> /sys/fs/cgroup/mytest/memory.stat and /proc/{PID}/sched,
+> but does not have statistics for task migration/swap.
+> Add the task migration and swap count accordingly.
+> 
+> The following two new fields:
+> 
+> numa_task_migrated
+> numa_task_swapped
+> 
+> will be displayed in both
+> /sys/fs/cgroup/{GROUP}/memory.stat and /proc/{PID}/sched
+> 
 
-I will fix this in v2.
+Both stats show up in expected places, but I notice they are also in
+/proc/vmstat and are always 0. 
 
-Ioana
+I think you may have to add count_vm_numa_event() in migrate_task_to()
+and __migrate_swap_task() unless there is a way to not show both stats
+in /proc/vmstat.
+
+
+> Introducing both pertask and permemcg NUMA balancing statistics helps
+> to quickly evaluate the performance and resource usage of the target
+> workload. For example, the user can first identify the container which
+> has high NUMA balance activity and then narrow down to a specific task
+> within that group, and tune the memory policy of that task.
+> In summary, it is plausible to iterate the /proc/$pid/sched to find the
+> offending task, but the introduction of per memcg tasks' Numa balancing
+> aggregated  activity can further help users identify the task in a
+> divide-and-conquer way.
+> 
+> Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+> Tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+> ---
+> v2->v3:
+> Remove unnecessary p->mm check because kernel threads are
+> not supported by Numa Balancing. (Libo Chen)
+> v1->v2:
+> Update the Documentation/admin-guide/cgroup-v2.rst. (Michal)
+> ---
+>  Documentation/admin-guide/cgroup-v2.rst | 6 ++++++
+>  include/linux/sched.h                   | 4 ++++
+>  include/linux/vm_event_item.h           | 2 ++
+>  kernel/sched/core.c                     | 7 +++++--
+>  kernel/sched/debug.c                    | 4 ++++
+>  mm/memcontrol.c                         | 2 ++
+>  mm/vmstat.c                             | 2 ++
+>  7 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/cgroup-v2.rst b/Documentation/admin-guide/cgroup-v2.rst
+> index 1a16ce68a4d7..d346f3235945 100644
+> --- a/Documentation/admin-guide/cgroup-v2.rst
+> +++ b/Documentation/admin-guide/cgroup-v2.rst
+> @@ -1670,6 +1670,12 @@ The following nested keys are defined.
+>  	  numa_hint_faults (npn)
+>  		Number of NUMA hinting faults.
+>  
+> +	  numa_task_migrated (npn)
+> +		Number of task migration by NUMA balancing.
+> +
+> +	  numa_task_swapped (npn)
+> +		Number of task swap by NUMA balancing.
+> +
+>  	  pgdemote_kswapd
+>  		Number of pages demoted by kswapd.
+>  
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index f96ac1982893..1c50e30b5c01 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -549,6 +549,10 @@ struct sched_statistics {
+>  	u64				nr_failed_migrations_running;
+>  	u64				nr_failed_migrations_hot;
+>  	u64				nr_forced_migrations;
+> +#ifdef CONFIG_NUMA_BALANCING
+> +	u64				numa_task_migrated;
+> +	u64				numa_task_swapped;
+> +#endif
+>  
+
+This one is more of personal preference. I understand they show up only if
+you turn on schedstats, but will it be better to put them in sched_show_numa()
+so they will be printed out next to other numa stats such as numa_pages_migrated?
+
+@@ -1153,6 +1153,10 @@ static void sched_show_numa(struct task_struct *p, struct seq_file *m)
+        if (p->mm)
+                P(mm->numa_scan_seq);
+
++       if (schedstat_enabled()) {
++               P_SCHEDSTAT(numa_task_migrated);
++               P_SCHEDSTAT(numa_task_swapped);
++       }
+        P(numa_pages_migrated);
+        P(numa_preferred_nid);
+        P(total_numa_faults);
+
+
+Thanks,
+Libo
+>  	u64				nr_wakeups;
+>  	u64				nr_wakeups_sync;
+> diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+> index 9e15a088ba38..91a3ce9a2687 100644
+> --- a/include/linux/vm_event_item.h
+> +++ b/include/linux/vm_event_item.h
+> @@ -66,6 +66,8 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+>  		NUMA_HINT_FAULTS,
+>  		NUMA_HINT_FAULTS_LOCAL,
+>  		NUMA_PAGE_MIGRATE,
+> +		NUMA_TASK_MIGRATE,
+> +		NUMA_TASK_SWAP,
+>  #endif
+>  #ifdef CONFIG_MIGRATION
+>  		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index c81cf642dba0..25a92f2abda4 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3352,6 +3352,9 @@ void set_task_cpu(struct task_struct *p, unsigned int new_cpu)
+>  #ifdef CONFIG_NUMA_BALANCING
+>  static void __migrate_swap_task(struct task_struct *p, int cpu)
+>  {
+> +	__schedstat_inc(p->stats.numa_task_swapped);
+> +	count_memcg_events_mm(p->mm, NUMA_TASK_SWAP, 1);
+> +
+>  	if (task_on_rq_queued(p)) {
+>  		struct rq *src_rq, *dst_rq;
+>  		struct rq_flags srf, drf;
+> @@ -7953,8 +7956,8 @@ int migrate_task_to(struct task_struct *p, int target_cpu)
+>  	if (!cpumask_test_cpu(target_cpu, p->cpus_ptr))
+>  		return -EINVAL;
+>  
+> -	/* TODO: This is not properly updating schedstats */
+> -
+> +	__schedstat_inc(p->stats.numa_task_migrated);
+> +	count_memcg_events_mm(p->mm, NUMA_TASK_MIGRATE, 1);
+>  	trace_sched_move_numa(p, curr_cpu, target_cpu);
+>  	return stop_one_cpu(curr_cpu, migration_cpu_stop, &arg);
+>  }
+> diff --git a/kernel/sched/debug.c b/kernel/sched/debug.c
+> index 56ae54e0ce6a..f971c2af7912 100644
+> --- a/kernel/sched/debug.c
+> +++ b/kernel/sched/debug.c
+> @@ -1206,6 +1206,10 @@ void proc_sched_show_task(struct task_struct *p, struct pid_namespace *ns,
+>  		P_SCHEDSTAT(nr_failed_migrations_running);
+>  		P_SCHEDSTAT(nr_failed_migrations_hot);
+>  		P_SCHEDSTAT(nr_forced_migrations);
+> +#ifdef CONFIG_NUMA_BALANCING
+> +		P_SCHEDSTAT(numa_task_migrated);
+> +		P_SCHEDSTAT(numa_task_swapped);
+> +#endif
+>  		P_SCHEDSTAT(nr_wakeups);
+>  		P_SCHEDSTAT(nr_wakeups_sync);
+>  		P_SCHEDSTAT(nr_wakeups_migrate);
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index c96c1f2b9cf5..cdaab8a957f3 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -463,6 +463,8 @@ static const unsigned int memcg_vm_event_stat[] = {
+>  	NUMA_PAGE_MIGRATE,
+>  	NUMA_PTE_UPDATES,
+>  	NUMA_HINT_FAULTS,
+> +	NUMA_TASK_MIGRATE,
+> +	NUMA_TASK_SWAP,
+>  #endif
+>  };
+>  
+> diff --git a/mm/vmstat.c b/mm/vmstat.c
+> index 4c268ce39ff2..ed08bb384ae4 100644
+> --- a/mm/vmstat.c
+> +++ b/mm/vmstat.c
+> @@ -1347,6 +1347,8 @@ const char * const vmstat_text[] = {
+>  	"numa_hint_faults",
+>  	"numa_hint_faults_local",
+>  	"numa_pages_migrated",
+> +	"numa_task_migrated",
+> +	"numa_task_swapped",
+>  #endif
+>  #ifdef CONFIG_MIGRATION
+>  	"pgmigrate_success",
+
