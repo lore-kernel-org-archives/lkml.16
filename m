@@ -1,115 +1,118 @@
-Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C2828382;
-	Thu,  1 May 2025 13:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32BCD13AD1C;
+	Thu,  1 May 2025 13:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746104670; cv=none; b=KAdehKBOWdXojxSkJtUzoTIVrhTUocL65ffxxhyFfwb8BbhRQpvd3XtHKmaGa+6bRxSpMYS6mGmn+y4qEkexKZH0+Vx4SvVk8ssp9h3C3HAmaR1sjsxMCoBGVgyVolaP0nKEcf9Y9kSEx8M+vIlC71jizxHHnN3HiYGCgkASul4=
+	t=1746104855; cv=none; b=aCSqFXLLtCsQsrRfPAq8b1/lg0isompfO+Lkw9TDOtbIhKVygCCUArRWFrNWGOTL9dvc03XMMU/4g3eIDxgfRkqg4+zPD7NTTl/uoidHD3hM0/3yp1dwA6/BRhCJzdhYbFyIb1sT8T3/xp4EIl9aNSq2/6UB5AyzECsoR/NMLzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746104670; c=relaxed/simple;
-	bh=MgJzVTP/cmGsc8FpUL9vgTr7SZhBLDFjvlBJd4Hi6Ok=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=axPgIggrPRznc/BjHhGdW19Ga8nClTTbsLviZcLm+bf4q5JHSw6DnGSjiniXYBhEyXyOXPSO+1a5ojJDEbEAtWnsWutFw6Cha1llNe53Q6dAbePtE+4pymTXEFwICvnBxifT2mE0GehUAmV7EaRR0zsI6nNBcEzqRi4HXFn6kqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=iWXRWv1e; arc=none smtp.client-ip=134.0.28.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
+	s=arc-20240116; t=1746104855; c=relaxed/simple;
+	bh=iciWH3TQMvTgRZbyKyAeQWMA85KUlGrMImI+Vn2Ayck=;
+	h=Date:Message-Id:To:Cc:Subject:From:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=agI/r2CuSkbPPAWTSC1/CqsMF6ft1KEOjqUOOkmwa9KiGwR5BLHp0swmS0EUVDMou8/tdXp7igBKvKTJToUo6MdQc5aHP5M/DTJMYzlzqWuevlS8MmY/GxiYW7oVjT6GMWc9Z2f4iWnQxQc/NAct0apbpEiNXjvPabfm4XiTBqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YY10mrd/; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="iWXRWv1e"
-Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
-	by mxout3.routing.net (Postfix) with ESMTP id DDC836047C;
-	Thu,  1 May 2025 12:57:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
-	s=20200217; t=1746104242;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=NnoUbMfttFzwRrbX8cLNmCp9Iqdu1NA79G+j70FEH9Y=;
-	b=iWXRWv1eeaVcFFtQWWjrMohgOyUY6glLempu1AWxYbDqZ0zfcmH6k+H/xjEsKgFBTTKU8I
-	guqoMJkRD5pV/BrwkReJMVWQZjXfX9601Ngplj8RKXIgC8+7UEB6WjmV3rcNd/qXfyaPCK
-	Bw6hf2KJsL6csJxH9y+3ZijsFzA5gHw=
-Received: from frank-u24.. (fttx-pool-157.180.225.138.bambit.de [157.180.225.138])
-	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id A245D10010F;
-	Thu,  1 May 2025 12:57:20 +0000 (UTC)
-From: Frank Wunderlich <linux@fw-web.de>
-To: Daniel Golle <daniel@makrotopia.org>,
-	Qingfang Deng <dqfext@gmail.com>,
-	SkyLake Huang <SkyLake.Huang@mediatek.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: Frank Wunderlich <frank-w@public-files.de>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [RFC,net-next v1] net: phy: mediatek: do not require syscon compatible for pio property
-Date: Thu,  1 May 2025 14:57:02 +0200
-Message-ID: <20250501125703.55224-1-linux@fw-web.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YY10mrd/"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-3031354f134so757243a91.3;
+        Thu, 01 May 2025 06:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746104853; x=1746709653; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ce1OY74HS/lf973Ll6R+BYLFB5N2IGJiNhqpPO8uVdg=;
+        b=YY10mrd/ggK201PZd2RfrbOmm3fd4Bkkag524h41Irq4Vat7OMp6t9Vrt5HD4iO60D
+         7BeBIGjyC+EPVvGskEntPs7u7Ih2aZdB+3v1ZDn6McX9epvGv8zJfLxyUzr2VwsqTb4X
+         WLfP+xuK7hjN8U4UCMq40fDvwfUVLmTJvGJlskQcA5hEdqAr5hgMloiIJLRKnfQHJEvK
+         uLEHSGaxxqFAELL6ZIcelKlKVUyBrBqSN8qAay3EN9YSocVOG3LxixuQKiBQjms0ePCk
+         HhUjSicxqlCDVqDiew9uM0DfjWr6/XTPVU53Zlx3awt0X61lKw92dhs7pKGyGC+9+EJ7
+         SfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746104853; x=1746709653;
+        h=content-transfer-encoding:mime-version:references:in-reply-to:from
+         :subject:cc:to:message-id:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ce1OY74HS/lf973Ll6R+BYLFB5N2IGJiNhqpPO8uVdg=;
+        b=lQLKvYOHj734+I8eELR2TOhoxug2psfu6cT3WGxtuBJEoz/vwzYDjP739SI1tYzBNN
+         rEbhW9PnwW2KePplUrmhpvwg6/CLYNJmkIwWoXy4Sgk4FYgh+okrzBY4am3PqTg1ptjG
+         DcX5myKA6KUUwcdXLZruUa/Sn4rcR5JktnI2tMjiFmgDohyZYrT8kfWl1Gbt1lGrKDi0
+         /zt7FNMHXNZ+FsS+jlqSOZUweIXRhkd3EwYSOv6MbbWbxPJeAZKSnm5ToveOIOByKF0s
+         eqafj573S8QhkvRcpHjm7DMKyH7MCqxrHfItvIy+r0bhzH4VFAhAG3ThwjgerYtHPtdl
+         x8gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVfa1o9S5LKRYCwjVu/9TTP/QPqUbpgvz+NJ56tu+1RQ483SflmKclGaCUzBKXLEpKvCA/QTNzv2dfR+Qk2DI0=@vger.kernel.org, AJvYcCX5lcZXYO0fbJDTIkXOzm0xSPhsoRFd42KNRUwGXn4lBzertr7DGdHaO6Og5Q76LL8Z4RxpolhFHBMdH50=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyC5F0BpsU4zkaReYUaEj2PXFQqX6l6WdpMv2PzZnWLMtSkaLoI
+	7ee4bSviY+o9BpQ4xFEsu/6J2DBgslQaw71ryrXPkzInJHfiqe48
+X-Gm-Gg: ASbGnctLpb9B6dhzS1CjDcXHWVJ7vmzwVNlj+uYywnWoRXEbinRryASqlTGCfen++ce
+	dRJut/bRDBYEX+6iTW8ifLUxlkmqQ/1LzFuXIQvY1O/1V0OnH8YRZXm+2kcEaDFb0/vR4h/vIdq
+	e3vuGm4Vuxx/ZSweRw+ZPTIp4Zol3p73IAx3ipxOjP5DJqDbl8SEPiN7+NSIfY4Qsb1WgfAOoiH
+	MdFTxdcLNezHguPuz/pv42SLafchqEIfWTfs74eEuYT87cQB3N4XE/3voGk2zYciGznuuMaBZ4Z
+	TMAmnedSVOglE8ePyDrSFiglYUprhXKKBn0R/jim6zfDyYIO30T6M81loWICT1pTy1fLFlS4fqo
+	a7KikY+nD3tmwv+uIjkX/vz4=
+X-Google-Smtp-Source: AGHT+IHN9rwQjjatNJ/9eX0PfCCsO11jAcWMSBH57N2WIfuTg7rKRcI9v1q84tM6ZUTT4C279BUN7A==
+X-Received: by 2002:a17:90a:e185:b0:301:1c29:a1d9 with SMTP id 98e67ed59e1d1-30a41d45eebmr3813199a91.21.1746104853330;
+        Thu, 01 May 2025 06:07:33 -0700 (PDT)
+Received: from localhost (p4138183-ipxg22701hodogaya.kanagawa.ocn.ne.jp. [153.129.206.183])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4745f945sm799307a91.4.2025.05.01.06.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 06:07:32 -0700 (PDT)
+Date: Thu, 01 May 2025 22:07:17 +0900 (JST)
+Message-Id: <20250501.220717.849589327730222635.fujita.tomonori@gmail.com>
+To: boqun.feng@gmail.com
+Cc: fujita.tomonori@gmail.com, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org, a.hindborg@samsung.com, frederic@kernel.org,
+ lyude@redhat.com, tglx@linutronix.de, anna-maria@linutronix.de,
+ jstultz@google.com, sboyd@kernel.org, ojeda@kernel.org,
+ alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ benno.lossin@proton.me, aliceryhl@google.com, tmgross@umich.edu,
+ chrisi.schrefl@gmail.com, arnd@arndb.de, linux@armlinux.org.uk
+Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
+From: FUJITA Tomonori <fujita.tomonori@gmail.com>
+In-Reply-To: <aBNojspyH5dHsuOm@Mac.home>
+References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+	<aBNojspyH5dHsuOm@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Mail-ID: 7d9196f7-2e8a-481a-ba32-0e3d88cab2b5
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 
-From: Frank Wunderlich <frank-w@public-files.de>
+On Thu, 1 May 2025 05:26:54 -0700
+Boqun Feng <boqun.feng@gmail.com> wrote:
 
-Current implementation requires syscon compatible for pio property
-which is used for driving the switch leds on mt7988.
+> On Thu, May 01, 2025 at 10:58:18AM +0900, FUJITA Tomonori wrote:
+>> Avoid 64-bit integer division that 32-bit architectures don't
+>> implement generally. This uses ktime_to_ms() and ktime_to_us()
+>> instead.
+>> 
+>> The timer abstraction needs i64 / u32 division so C's div_s64() can be
+>> used but ktime_to_ms() and ktime_to_us() provide a simpler solution
+>> for this timer abstraction problem. On some architectures, there is
+>> room to optimize the implementation of them, but such optimization can
+>> be done if and when it becomes necessary.
+>> 
+> 
+> Nacked-by: Boqun Feng <boqun.feng@gmail.com>
+> 
+> As I said a few times, we should rely on compiler's optimization when
+> available, i.e. it's a problem that ARM compiler doesn't have this
+> optimization, don't punish other architecture of no reason.
 
-Replace syscon_regmap_lookup_by_phandle with of_parse_phandle and
-device_node_to_regmap to get the regmap already assigned by pinctrl
-driver.
+Did you mean that we should do something like the following?
 
-Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
----
- drivers/net/phy/mediatek/mtk-ge-soc.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
-index 175cf5239bba..21975ef946d5 100644
---- a/drivers/net/phy/mediatek/mtk-ge-soc.c
-+++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
-@@ -7,6 +7,7 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/phy.h>
- #include <linux/regmap.h>
-+#include <linux/of.h>
- 
- #include "../phylib.h"
- #include "mtk.h"
-@@ -1319,6 +1320,7 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
- {
- 	struct device_node *np = dev_of_node(&phydev->mdio.bus->dev);
- 	struct mtk_socphy_shared *shared = phy_package_get_priv(phydev);
-+	struct device_node *pio_np;
- 	struct regmap *regmap;
- 	u32 reg;
- 	int ret;
-@@ -1336,7 +1338,13 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
- 	 * The 4 bits in TPBANK0 are kept as package shared data and are used to
- 	 * set LED polarity for each of the LED0.
- 	 */
--	regmap = syscon_regmap_lookup_by_phandle(np, "mediatek,pio");
-+	pio_np = of_parse_phandle(np, "mediatek,pio", 0);
-+	if (!pio_np)
-+		return -ENODEV;
-+
-+	regmap = device_node_to_regmap(pio_np);
-+	of_node_put(pio_np);
-+
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
--- 
-2.43.0
-
+pub fn as_millis(self) -> i64 {
+    #[cfg(CONFIG_ARM)]
+    {
+        // SAFETY: It is always safe to call `ktime_to_ms()` with any value.
+        unsafe { bindings::ktime_to_ms(self.nanos) }
+    }
+    #[cfg(not(CONFIG_ARM))]
+    {
+        self.as_nanos() / NSEC_PER_MSEC
+    }
+}
