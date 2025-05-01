@@ -1,205 +1,156 @@
-Received: from mailrelay3-3.pub.mailoutpod3-cph3.one.com (mailrelay3-3.pub.mailoutpod3-cph3.one.com [46.30.212.2])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544701EEE6
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 12:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1F41EEE6;
+	Thu,  1 May 2025 12:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746103366; cv=none; b=QP9PsNUQ7+8VecLQqIH5nrE8uBCHxdB57BghAuqemfTnmwJUGV9sr2R7u8qt+2sWpWGaSGubeVXRmhP22GclFwNkKhUgf3YhmNCZGEmgzcpvNJ3r3VWstoEMO3KM5BjbJtzG/ejAPi7MUsLus5kIOSzhT9lDLxSttziEU8u2etY=
+	t=1746103472; cv=none; b=TYB8Ab9/nImi3fNlgZJwT5oB9ezMX2TJko4+gypc5rGac0jsFtglwdvq+CsSCoJNg7Gzld2BhTzYx4/bWPCfu0xB3K1A2I31czdTyaI4v/NVIIL4540JlC2TbttfJg2sUyfCfOXYL5WqJ/7Tl+Mp2OMGbTo/d19M5v82cmyz+lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746103366; c=relaxed/simple;
-	bh=5BWScO4p1oGQf6FpMalCM1apggg7A8moneTgqodcGgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pyCQLWRUlYOO/mE5xRDu7Bw3Q9D2JWHQVEZraFEK3uGYrz1T5h7s/iuIW2dLoA5D/DegA0+oNbNWw7KW3ENi4Z26N6jAUJZbm90gqV8IUqVQNjdJRZ33K9SpPjLU+Mf+SysbL7DxckURoLeK5BAeNbKWYhX0jJyB44ZnIqgA0Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=eH4J0JfP; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=C9nw4wtQ; arc=none smtp.client-ip=46.30.212.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1746103472; c=relaxed/simple;
+	bh=WPG4ItA0UQzz9G5Wed/nsDRuYNB8SmpWf7d7wvrM4Ig=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=m4KkZO0oOO/Jti5Zem06Qr98h6IAgcCBcJHvhXe9mW5g4sMB3CJRxQkj5FcSKzgogT32VqyV7/7VXx4eRfVAz9RMJxy+i0ovQyKz+tx8wDci4i9wvfP0oTyGeyPYFs0wbtXFhJj+CtG7uszdg2+rbs4Sgo3RIdy3RbwzQ7ui2hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxDjMdGB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="eH4J0JfP";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="C9nw4wtQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1746103290; x=1746708090;
-	d=konsulko.se; s=rsa1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=dqMbI5G+JrmEvic3IALCS+ZlRXR5dmjmpFvqeROmpro=;
-	b=eH4J0JfP2d3wjgHQfWGln5JiptApWE0dkl/xpdgwvJ9tieEwZhUMHH1/TCg2JT5eSBRPe1fA+Z79v
-	 LqwOBiuMFDY2BQIKYBqLgAb7MCU3NDGrLiMBHQqxkFieUbPJgU3qewXCK3i7HiQanHACqoOww4yiom
-	 E+HsobVr4xAUAsIdBULWjXJIEniVcfuNj68oEUzxsJoVOKMcoa+59raaO4LHGrFPfXRIqjSwKtJXuc
-	 /7YwiMZRivhdkVv1AOlcDYFLDiQDMFJ+lcRLFTuraFFSHEI8V91b7mRQR+qyVTVtb9bkXQcEPuIFw8
-	 ISj5dLdl9//dhgAaTuRmETSLHuRH49g==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1746103290; x=1746708090;
-	d=konsulko.se; s=ed1;
-	h=content-transfer-encoding:content-type:in-reply-to:from:references:cc:to:
-	 subject:mime-version:date:message-id:from;
-	bh=dqMbI5G+JrmEvic3IALCS+ZlRXR5dmjmpFvqeROmpro=;
-	b=C9nw4wtQjyDjFHdVcjzQI5Lq3MSV3qmEfVXPbzHq/rNt7kgkTeGBU3LCgcjVDGnI1vchwaqqhKX//
-	 +0dvihnBA==
-X-HalOne-ID: 99c77899-2689-11f0-a3f1-2b8368a4d5c5
-Received: from [192.168.10.245] (host-90-233-217-8.mobileonline.telia.com [90.233.217.8])
-	by mailrelay3.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 99c77899-2689-11f0-a3f1-2b8368a4d5c5;
-	Thu, 01 May 2025 12:41:30 +0000 (UTC)
-Message-ID: <c612aff8-1b07-43aa-b909-f555da511da2@konsulko.se>
-Date: Thu, 1 May 2025 14:41:29 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxDjMdGB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D40FC4CEE3;
+	Thu,  1 May 2025 12:44:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746103472;
+	bh=WPG4ItA0UQzz9G5Wed/nsDRuYNB8SmpWf7d7wvrM4Ig=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=QxDjMdGBaO7OILE121xxXL/ZOnOaqCLtEBXhMWqkB+3PJ/81e/MmSvY1wUToCrhj4
+	 o09UND4kIgR1FXBbOv/55FCd/OzVBwRgoBGOKRqd4tO9c5cjsRV1GlGty2ybIey98M
+	 Lg+nMO5pZgEPqvPhdAFXoifIaxQoyNf5AIQ+1z0cDZWJ9kRunCBuAPEBO/FXXum7lW
+	 W1LmcTN82A52L8g5iIa5Ucd/iUs8WO+yyP/I650zIl0luAwZDGv+aVLdfXY2xUanJs
+	 d03TuxAlnXfTT8Rtp+TeEMdJfupvUktoh6E1sLRqamQNoOxsDebivNk/cK+bAp+RnI
+	 Bf6br0mFislfA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uATHB-00AZcw-3q;
+	Thu, 01 May 2025 13:44:29 +0100
+Date: Thu, 01 May 2025 13:44:28 +0100
+Message-ID: <861pt8ijpv.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Maxim Levitsky <mlevitsk@redhat.com>,
+	kvm@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Kunkun Jiang <jiangkunkun@huawei.com>,
+	Waiman Long <longman@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Alexander Potapenko <glider@google.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Andre Przywara <andre.przywara@arm.com>,
+	x86@kernel.org,
+	Joey Gouly <joey.gouly@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	kvm-riscv@lists.infradead.org,
+	Atish Patra <atishp@atishpatra.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jing Zhang <jingzhangos@google.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	kvmarm@lists.linux.dev,
+	Will Deacon <will@kernel.org>,
+	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
+	Sebastian Ott <sebott@redhat.com>,
+	Shusen Li <lishusen2@huawei.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Zenghui Yu <yuzenghui@huawei.com>
+Subject: Re: [PATCH v4 2/5] arm64: KVM: use mutex_trylock_nest_lock when locking all vCPUs
+In-Reply-To: <20250501111552.GO4198@noisy.programming.kicks-ass.net>
+References: <20250430203013.366479-1-mlevitsk@redhat.com>
+	<20250430203013.366479-3-mlevitsk@redhat.com>
+	<864iy4ivro.wl-maz@kernel.org>
+	<20250501111552.GO4198@noisy.programming.kicks-ass.net>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] mm: add zblock allocator
-To: Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>,
- Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>,
- Igor Belousov <igor.b@beldev.am>, Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>
-References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
- <aAdzjdv674Jn6G63@Asmaa.> <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
- <aBIXJrbxCmYSoCuz@Asmaa.>
-Content-Language: en-US
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aBIXJrbxCmYSoCuz@Asmaa.>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: peterz@infradead.org, mlevitsk@redhat.com, kvm@vger.kernel.org, linux-riscv@lists.infradead.org, jiangkunkun@huawei.com, longman@redhat.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, bhelgaas@google.com, boqun.feng@gmail.com, bp@alien8.de, aou@eecs.berkeley.edu, anup@brainfault.org, paul.walmsley@sifive.com, suzuki.poulose@arm.com, palmer@dabbelt.com, alex@ghiti.fr, glider@google.com, oliver.upton@linux.dev, andre.przywara@arm.com, x86@kernel.org, joey.gouly@arm.com, tglx@linutronix.de, kvm-riscv@lists.infradead.org, atishp@atishpatra.org, mingo@redhat.com, jingzhangos@google.com, hpa@zytor.com, dave.hansen@linux.intel.com, kvmarm@lists.linux.dev, will@kernel.org, keisuke.nishimura@inria.fr, sebott@redhat.com, lishusen2@huawei.com, pbonzini@redhat.com, rdunlap@infradead.org, seanjc@google.com, yuzenghui@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Yosry,
-
-On 4/30/25 14:27, Yosry Ahmed wrote:
-> On Wed, Apr 23, 2025 at 09:53:48PM +0200, Vitaly Wool wrote:
->> On 4/22/25 12:46, Yosry Ahmed wrote:
->>> I didn't look too closely but I generally agree that we should improve
->>> zsmalloc where possible rather than add a new allocator. We are trying
->>> not to repeat the zbud/z3fold or slub/slob stories here. Zsmalloc is
->>> getting a lot of mileage from both zswap and zram, and is more-or-less
->>> battle-tested. Let's work toward building upon that instead of starting
->>> over.
->>
->> The thing here is, zblock is using a very different approach to small object
->> allocation. The idea is: we have an array of descriptors which correspond to
->> multi-page blocks divided in chunks of equal size (block_size[i]). For each
->> object of size x we find the descriptor n such as:
->> 	block_size[n-1] < n < block_size[n]
->> and then we store that object in an empty slot in one of the blocks. Thus,
->> the density is high, the search is fast (rbtree based) and there are no
->> objects spanning over 2 pages, so no extra memcpy involved.
+On Thu, 01 May 2025 12:15:52 +0100,
+Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> The block sizes seem to be similar in principle to class sizes in
-> zsmalloc. It seems to me that there are two apparent differentiating
-> properties to zblock:
+> > > + */
+> > > +int kvm_trylock_all_vcpus(struct kvm *kvm)
+> > > +{
+> > > +	struct kvm_vcpu *vcpu;
+> > > +	unsigned long i, j;
+> > > +
+> > > +	kvm_for_each_vcpu(i, vcpu, kvm)
+> > > +		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
 > 
-> - Block lookup uses an rbtree, so it's faster than zsmalloc's list
->    iteration. On the other hand, zsmalloc divides each class into
->    fullness groups and tries to pack almost full groups first. Not sure
->    if zblock's approach is strictly better.
+> This one includes an assertion that kvm->lock is actually held.
 
-If we free a slot in a fully packed block we put it on top of the list. 
-zswap's normal operation pattern is that there will be more free slots 
-in that block so it's roughly the same.
+Ah, cunning. Thanks.
 
-> - Zblock uses higher order allocations vs. zsmalloc always using order-0
->    allocations. I think this may be the main advantage and I remember
->    asking if zsmalloc can support this. Always using order-0 pages is
->    more reliable but may not always be the best choice.
-
-There's a patch we'll be posting soon with "opportunistic" high order 
-allocations (i. e. if try_alloc_pages fails, allocate order-0 pages 
-instead). This will leverage the benefits of higher order allocations 
-without putting too much stress on the system.
-
-> On the other hand, zblock is lacking in other regards. For example:
-> - The lack of compaction means that certain workloads will see a lot of
->    fragmentation. It purely depends on the access patterns. We could end
->    up with a lot of blocks each containing a single object and there is
->    no way to recover AFAICT.
-
-We have been giving many variants of stress load on the memory subsystem 
-and the worst compression ratio *after* the stress load was 2.8x using 
-zstd as the compressor (and about 4x under load). With zsmalloc under 
-the same conditions the ratio was 3.6x after and 4x under load.
-
-With more normal (but still stressing) usage patterns the numbers 
-*after* the stress load were around 3.8x and 4.1x, respectively.
-
-Bottom line, ending up with a lot of blocks each containing a single 
-object is not a real life scenario. With that said, we have a quite 
-simple solution in the making that will get zblock on par with zsmalloc 
-even in the cases described above.
-
-> - Zblock will fail if a high order allocation cannot be satisfied, which
->    is more likely to happen under memory pressure, and it's usually when
->    zblock is needed in the first place.
-
-See above, this issue will be addressed in the patch coming in a really 
-short while.
-
-> - There's probably more, I didn't check too closely, and I am hoping
->    that Minchan and Sergey will chime in here.
+> That said, I'm not at all sure what the purpose of all this trylock
+> stuff is here.
 > 
->>
->> And with the latest zblock, we see that it has a clear advantage in
->> performance over zsmalloc, retaining roughly the same allocation density for
->> 4K pages and scoring better on 16K pages. E. g. on a kernel compilation:
->>
->> * zsmalloc/zstd/make -j32 bzImage
->> 	real	8m0.594s
->> 	user	39m37.783s
->> 	sys	8m24.262s
->> 	Zswap:            200600 kB <-- after build completion
->> 	Zswapped:         854072 kB <-- after build completion
->> 	zswpin 309774
->> 	zswpout 1538332
->>
->> * zblock/zstd/make -j32 bzImage
->> 	real	7m35.546s
->> 	user	38m03.475s
->> 	sys	7m47.407s
->> 	Zswap:            250940 kB <-- after build completion
->> 	Zswapped:         870660 kB <-- after build completion
->> 	zswpin 248606
->> 	zswpout 1277319
->>
->> So what we see here is that zblock is definitely faster and at least not
->> worse with regard to allocation density under heavy load. It has slightly
->> worse _idle_ allocation density but since it will quickly catch up under
->> load it is not really important. What is important is that its
->> characteristics don't deteriorate over time. Overall, zblock is simple and
->> efficient and there is /raison d'etre/ for it.
-> 
-> Zblock is performing better for this specific workload, but as I
-> mentioned earlier there are other aspects that zblock is missing.
-> Zsmalloc has seen a very large range of workloads of different types,
-> and we cannot just dismiss this.
+> Can someone explain? Last time I asked someone said something about
+> multiple VMs, but I don't know enough about kvm to know what that means.
 
-We've been running many different work loads with both allocators but 
-posting all the results in the patch description will go well beyond the 
-purpose of a patch submission. If there are some workloads you are 
-interested in in particular, please let me know, odds are high we have 
-some results for those too.
+Multiple VMs? That'd be real fun. Not.
 
->> Now, it is indeed possible to partially rework zsmalloc using zblock's
->> algorithm but this will be a rather substantial change, equal or bigger in
->> effort to implementing the approach described above from scratch (and this
->> is what we did), and with such drastic changes most of the testing that has
->> been done with zsmalloc would be invalidated, and we'll be out in the wild
->> anyway. So even though I see your point, I don't think it applies in this
->> particular case.
-> 
-> 
-> Well, we should start by breaking down the differences and finding out
-> why zblock is performing better, as I mentioned above. If it's the
-> faster lookups or higher order allocations, we can work to support that
-> in zsmalloc. Similarly, if zsmalloc has unnecessary complexity it'd be
-> great to get rid of it rather than starting over.
-> 
-> Also, we don't have to do it all at once and invalidate the testing that
-> zsmalloc has seen. These can be incremental changes that get spread over
-> multiple releases, getting incremental exposure in the process.
+> Are those vcpu->mutex another class for other VMs? Or what gives?
 
-I believe we are a lot closer now to having a zblock without the initial 
-drawbacks you have pointed out than a faster zsmalloc, retaining the 
-code simplicity of the former.
+Nah. This is firmly single VM.
 
-~Vitaly
+The purpose of this contraption is that there are some rare cases
+where we need to make sure that if we update some global state, all
+the vcpus of a VM need to see, or none of them.
 
+For these cases, the guarantee comes from luserspace, and it gives the
+pinky promise that none of the vcpus are running at that point. But
+being of a suspicious nature, we assert that this is true by trying to
+take all the vcpu mutexes in one go. This will fail if a vcpu is
+running, as KVM itself takes the vcpu mutex before doing anything.
+
+Similar requirement exists if we need to synthesise some state for
+userspace from all the individual vcpu states.
+
+If the global locking fails, we return to userspace with a middle
+finger indication, and all is well. Of course, this is pretty
+expensive, which is why it is only done in setup phases, when the VMM
+configures the guest.
+
+The splat this is trying to address is that when you have more than 48
+vcpus in a single VM, lockdep gets upset seeing up to 512 locks of a
+similar class being taken.
+
+Disclaimer: all the above is completely arm64-specific, and I didn't
+even try to understand what other architectures are doing.
+
+HTH,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
