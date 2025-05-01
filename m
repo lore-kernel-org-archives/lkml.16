@@ -1,108 +1,171 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE401D54C0;
-	Thu,  1 May 2025 17:59:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 824D72DC799
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:02:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746122394; cv=none; b=KRAhG+Y51EDWT2+2CyM2+1z38JBPWg0M8KS6FiSI/2bUg2ZjZ+bN3uHaGCBUWgUt70pqC/UnD5ruISjcqbIbh5Via4Vg8mZarJVAPOl6/rIUow7M9HT/Fd58Gs0wBACwst7MDVyuUVGGPN0P/aCJ0PSe8nrTQbi7SDgKD13IgkM=
+	t=1746122550; cv=none; b=sNxrXhCQ2E+2vw3a44PDy3ZcQl3tOpnVLJl9rPwmzfw9keBVUFv9E/XxbvfW8ap+gDDRBLz24mM5115XArjYQGv2uMF3frXvLNnrdVqsuozkwGogxAOb98TJYWKOgahLW7rkOsJX36QMuTW+ZaFl2bVFZdsyDDyfFVg281iWPJE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746122394; c=relaxed/simple;
-	bh=dIQUCShLwBXTXsE4l2kw65IKT1lNhQ1EI4HfKNwEE2w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ViuUMcLl55AEbQZDmBPmqxYpXe0Yn29pGlwGGZQZ+xxj0kithEsmnZRp83p7yP7YJIVNFmbieEWU4rhjkFQyXo7U5hKthGpJ9Yzdnmez2Js4us6an+DkqCxPbxvAi/DnWvx96BWqt7NUWESbbH5r6SGwCwoOGBXRhpe9zJnlNUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=bk6HoXDi; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="bk6HoXDi"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cf06eabdaso8930775e9.2;
-        Thu, 01 May 2025 10:59:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1746122391; x=1746727191; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=aHMG1aA2Sk1zdDZxkb/FxZQE43WXPupzxbeonOi1fI8=;
-        b=bk6HoXDi3zgnaBx37tbD34p1wNgtrvWhDbqh0C6yUb2mAXONWjmRE1SU2sOy6IV1ko
-         bImLQ6Ljr9OyDwwqKp8oiz6AcYJbaR3Kh+RrHcEh6683DlNMjchSKMQu29JYLaA2XuHT
-         zxFZh/fVLLm+D8Ouo0guiVuuj7LiV+rfZ2X34gCcfQJrFqz/Stb91hKBjBekfAR0fQo2
-         Omp8RsKLk5m9MsulTGP3eD0mJC0Kddj5vgDWB89sRwCU839EcDkhvRsUlt09bXsAdu9t
-         uff2epJluqlsnHRbFxRtebfiVOJTDeRvcluetk6VBsC+GSDUvYmIg968KtNcb4/kCpeL
-         Ow8A==
+	s=arc-20240116; t=1746122550; c=relaxed/simple;
+	bh=vO3ZY3zaojpbXyFFriv+iIx8/YlkFruAstxxUiukRis=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=uJJwJ0VrSKFdWHD+mG9YLSK+VyFgn+XsV50of1oEzT39Tg+UC7ByjeytLSTZDtYnHhiJByv/N7OauDbPkntMAY2xMzNH2Z4uz/yoqejGi0ZBkl1y0tImM9t1SZLvc/wnTMiUs/bYt98yBbwiEizgLzn2fRkofUuJopuPWiSIBRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3d8dd0c9143so19507195ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 11:02:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746122391; x=1746727191;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aHMG1aA2Sk1zdDZxkb/FxZQE43WXPupzxbeonOi1fI8=;
-        b=K5UnrUqI8vx0F2q2RFPgyejcrXyRwP3PkJUmB9APxkLcrv2zq3jgwlVyjV7M2eI/D3
-         2A4jv7sUfujnco9jRpqvLzkB2YYUyETPTFGepLm2gu7+sBXkmK7WBIPvKP/FHGSCPQFr
-         T0MTvvAOAv+x/XR1rHAtzKDs0M++kpfJZILMI7HojlYYOCCfkrP4NMMgTDlQFunATnP4
-         KG8mXtMQ+815m+U8G0Rshy54by/PMSc1NPLhRo6sEABk2Aga/DE4nYkUBdu2BozvzNWw
-         U+47Ho+tDNTTkGSJRTR+q++CQgaEtuHaQVVFB4O3WKp7KUBQ9Kvy9r04EjuM5kmIDrrR
-         50Dw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVser1uNPrWTDyFO7owzosmW/9jsfYj8lwI4NeLHIgRGsrhJOKSz0Iq+TauIlcF8xV552idQCg0LhznuM=@vger.kernel.org, AJvYcCXf0yUg5FO5bceLb82sjKEgqSBewE1vs5JJoOpeScYWyCn13uChRKELIpHAZS1X3g/6e25h4skg@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiS+iuQS68VOr3rnCzZU3N8FAcbWHi+XIr6bW9OMlbaoh9Xcoa
-	Gmk085/HzGkvaZJdpDI0ZNWJzYLT9TfF0aJGvTmurErDcrp0cHM=
-X-Gm-Gg: ASbGncukTzekn+X6/WACqTj7ZkVQ+E4GlQWag50zdpUHfKd67lQaQjnT8dr8FcN0L2c
-	e1Jsinxybxe4RVAn8K72UZp4u3zpn7TBddY/e0vVPrcz2F/HhVX99k+/Un8O/QQslSGKPbdaXGL
-	ps/R6yuc2vsbfeFsw3Xu71AUhWRErxStm9lDjwZydkuUh22ogG5TORGwp2PGHP59SuMBGT8qbil
-	gxNKHzWMm1vp81QeyLSLhvquxe3DFi79/gTeTYvyHbffJDLymxssyOH+LEtpYkawWfywfIReeCh
-	4gS7RbJ0wmylc4SYj2RLk+SUFnh3I2cweTlMv0EdTBPLgD5kDLddiid0KCVvm+11v83knlUaFy/
-	YxyGrfLP9p+0XdVjnxQ==
-X-Google-Smtp-Source: AGHT+IEQ7jXNXCkRAOOEYI68QrE+ebjWWr7a0UoGjImdQBADHX3NYO36ZjZwbQaapURvR9UApzsPJA==
-X-Received: by 2002:a05:600c:c3c8:b0:43d:fa59:be39 with SMTP id 5b1f17b1804b1-441b2b61eefmr41419385e9.33.1746122390366;
-        Thu, 01 May 2025 10:59:50 -0700 (PDT)
-Received: from [192.168.1.3] (p5b2b4589.dip0.t-ipconnect.de. [91.43.69.137])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441ae3f5949sm67754985e9.1.2025.05.01.10.59.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 10:59:49 -0700 (PDT)
-Message-ID: <a8cdbd62-c7bb-4f73-a411-fd3f05c9c569@googlemail.com>
-Date: Thu, 1 May 2025 19:59:48 +0200
+        d=1e100.net; s=20230601; t=1746122547; x=1746727347;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VgpqyE4FJN1BhirzIfJwvdlpr+35hhPYLMw/Cn5F5zs=;
+        b=Knr+rDVx33EK4M//LQq7ayRKI+Zdg5v/wJseARgD0IV4xrMZv8sq33+zajr55/faBt
+         JvRayaPCJAqi+4eTgIeoOUsksEwpCd6805/ZyH0Pk2hZlCORfOW5SG2wrHiiDFD0GR+L
+         Fru/V7aiJrAbVKh8Jcrj4EEqJICDq9mp5iSI9tkDEe8vI82LYxBe41KinAZOi7s4CMqD
+         Ha6GUngjEloCW0vjGtlSMcMzd0D+VyI4f5tktDnugSdBNLpFbdhw9rBB403rGAcVNkbG
+         A84oqFP60VK6c4JhEaW6geHFLbmmNLDOxIo4gIwbQ3NkSliyCg5YNEDGnPweYYa+S2E7
+         zA7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUDuFKKgr3ZTd75dAsch6JnmrxR15NK3Z6fpFlU7atCVLjVMNY5kUhlJXor7mxsycLHp/A2Rld5ZLpfRVU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxo+LZo7/UI0+sy/zbCxcLOuyDRybYm055V6jiLTuTcLX8IyNpn
+	zPLWRIxe8yYdW2H6erwjJJY/VX05RCLkgVPSDHAiwGMeTzfietL30FNVFt0YCA3287s2nsMZOrN
+	7nUJWpTAsQtblD9bBlGVEszlJuez5IdaVlgEzT+XRxUh3gLycVrkzPE4=
+X-Google-Smtp-Source: AGHT+IF8WztUPZpDgnBMpHkdA2a/MC7o3YN9yI2obZxt5nqxz/9Ps7fkjGTq1LJDjcgiB3kYfoZ+bTVu11B71jXtWGhzCdQmp2NX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH 6.1 000/157] 6.1.136-rc2 review
-Content-Language: de-DE
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250501080849.930068482@linuxfoundation.org>
-From: Peter Schneider <pschneider1968@googlemail.com>
-In-Reply-To: <20250501080849.930068482@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a05:6e02:16ca:b0:3d9:6cd9:5079 with SMTP id
+ e9e14a558f8ab-3d970266decmr41710745ab.14.1746122547632; Thu, 01 May 2025
+ 11:02:27 -0700 (PDT)
+Date: Thu, 01 May 2025 11:02:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6813b733.050a0220.53db9.0000.GAE@google.com>
+Subject: [syzbot] [mm?] INFO: rcu detected stall in nsim_fib_event_work
+From: syzbot <syzbot+5cf89626ecd9d0007691@syzkaller.appspotmail.com>
+To: akpm@linux-foundation.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, pasha.tatashin@soleen.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Am 01.05.2025 um 10:14 schrieb Greg Kroah-Hartman:
-> This is the start of the stable review cycle for the 6.1.136 release.
-> There are 157 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Hello,
 
-Just like rc1, rc2 builds, boots and works fine on my 2-socket Ivy Bridge Xeon E5-2697 v2 
-server. No dmesg oddities or regressions found.
+syzbot found the following issue on:
 
-Tested-by: Peter Schneider <pschneider1968@googlemail.com>
+HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15f130d4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9f5bd2a76d9d0b4e
+dashboard link: https://syzkaller.appspot.com/bug?extid=5cf89626ecd9d0007691
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=126c4374580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13f130d4580000
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/33f182866e0b/disk-5bc10186.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/103760a3e862/vmlinux-5bc10186.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/9954dc25ed1d/bzImage-5bc10186.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+5cf89626ecd9d0007691@syzkaller.appspotmail.com
+
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
+rcu: 	Tasks blocked on level-0 rcu_node (CPUs 0-1): P9/1:b..l
+rcu: 	(detected by 0, t=10503 jiffies, g=6869, q=616 ncpus=2)
+task:kworker/0:0     state:R  running task     stack:25496 pid:9     tgid:9     ppid:2      task_flags:0x4208060 flags:0x00004000
+Workqueue: events nsim_fib_event_work
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5382 [inline]
+ __schedule+0x116f/0x5de0 kernel/sched/core.c:6767
+ preempt_schedule_irq+0x51/0x90 kernel/sched/core.c:7090
+ irqentry_exit+0x36/0x90 kernel/entry/common.c:354
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0010:__kasan_check_read+0x0/0x20 mm/kasan/shadow.c:30
+Code: c3 cc cc cc cc 48 83 c4 60 48 c7 c7 90 22 a3 8d 5b 5d 41 5c e9 a1 c9 79 ff 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 <f3> 0f 1e fa 48 8b 0c 24 89 f6 31 d2 e9 7f f0 ff ff 66 66 2e 0f 1f
+RSP: 0018:ffffc900000e78c8 EFLAGS: 00000293
+RAX: 0000000000000000 RBX: ffff88801ed4d3d8 RCX: ffffffff822c44d1
+RDX: ffff88801c6f4880 RSI: 0000000000000004 RDI: ffff88801ed4d3dc
+RBP: 0000000000000000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: ffff88801ed4d390
+R13: ffff88801ed4d3dc R14: 0000000000000000 R15: dffffc0000000000
+ instrument_atomic_read include/linux/instrumented.h:68 [inline]
+ atomic_read include/linux/atomic/atomic-instrumented.h:32 [inline]
+ __page_table_check_zero+0x260/0x5b0 mm/page_table_check.c:143
+ page_table_check_free include/linux/page_table_check.h:41 [inline]
+ free_pages_prepare mm/page_alloc.c:1263 [inline]
+ __free_frozen_pages+0x704/0xff0 mm/page_alloc.c:2725
+ discard_slab mm/slub.c:2730 [inline]
+ __put_partials+0x16d/0x1c0 mm/slub.c:3199
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x4e/0x120 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x195/0x1e0 mm/kasan/quarantine.c:286
+ __kasan_kmalloc+0x8a/0xb0 mm/kasan/common.c:385
+ kmalloc_noprof include/linux/slab.h:905 [inline]
+ kzalloc_noprof include/linux/slab.h:1039 [inline]
+ nsim_fib6_rt_nh_add+0x4a/0x290 drivers/net/netdevsim/fib.c:500
+ nsim_fib6_rt_create drivers/net/netdevsim/fib.c:562 [inline]
+ nsim_fib6_rt_insert drivers/net/netdevsim/fib.c:752 [inline]
+ nsim_fib6_event drivers/net/netdevsim/fib.c:856 [inline]
+ nsim_fib_event drivers/net/netdevsim/fib.c:889 [inline]
+ nsim_fib_event_work+0x196a/0x2e80 drivers/net/netdevsim/fib.c:1493
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3319 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3400
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:153
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+net_ratelimit: 14203 callbacks suppressed
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+net_ratelimit: 16086 callbacks suppressed
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:12:9a:a3:e5:33:d9, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
+bridge0: received packet on bridge_slave_0 with own address as source address (addr:aa:aa:aa:aa:aa:1b, vlan:0)
+bridge0: received packet on veth0_to_bridge with own address as source address (addr:aa:aa:aa:aa:aa:0c, vlan:0)
 
 
-Beste Grüße,
-Peter Schneider
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
--- 
-Climb the mountain not to plant your flag, but to embrace the challenge,
-enjoy the air and behold the view. Climb it so you can see the world,
-not so the world can see you.                    -- David McCullough Jr.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-OpenPGP:  0xA3828BD796CCE11A8CADE8866E3A92C92C3FF244
-Download: https://www.peters-netzplatz.de/download/pschneider1968_pub.asc
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@googlemail.com
-https://keys.mailvelope.com/pks/lookup?op=get&search=pschneider1968@gmail.com
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
