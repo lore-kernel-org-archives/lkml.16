@@ -1,93 +1,124 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913F8288DA;
-	Thu,  1 May 2025 09:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1442D288DA;
+	Thu,  1 May 2025 09:02:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746090162; cv=none; b=ukugDtMKYmpz6zFpOF3Wj/WUnA2x4CkIK8vTMwT/jPGNYRgHsk4N7MKerIazVzNuubMdBgbJwwL6eGhHN/kU3QUAeT0wb4qZvKyfthnvf+tf2nuRgFF7jmrirZ4zS2+NFVw71j8P5IE5UXlY0zENjo2avVoOLF95UFgogAi437o=
+	t=1746090168; cv=none; b=hemAGjDWvXV+SRspAgcT7zfx2ZQgf7YASGK3xrV74KgYN8KJiqU5oZ1gLRSz+ZCmwPsluupyuZRvvnNTKP5n18XBrl5yuzwrK/HC3ackYLZI/MCGydDUO/kjf1FvOIvfL5B8Gilz2jPD1qe22/nPfSOktQSVoneFF0fAsCwgrSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746090162; c=relaxed/simple;
-	bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
+	s=arc-20240116; t=1746090168; c=relaxed/simple;
+	bh=Z0djQjxdkhG4vVVS1uhIzDAJWy/7M3SViprXNnH/Dtw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nSZ0mXzlSebT3ClZN/y89embbYU/5wrInqoCl7+GPcQycxz3XERkb+LCGu47/MZyb6DdGd6hVeKGn9P8YhhObdijfy+D0/LEuCprAZLyBwcJKXNIGzf9pGhzEeoLBosaWC2ke+Ocj02Whn7v5qi26qfkjvfE+3CmoMEiX3kSEzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nnbXBwOM; arc=none smtp.client-ip=209.85.216.43
+	 To:Content-Type; b=T8dL2WtdQuFXcgu0j+lxMPVS3vbb01V3G39rdmaWK0s+tOfhiVPblwTBrrmojJR3RqZ0zNx64nfRbOcY0X57W4PTgOwcxMM/t5eGvsU7WEcooazBH5bzTUdS93r+QezQ4l55w1Yb+OWFXqTQXQZTMFXW1N/nc71JqrKlXbj4I9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i3P/nP0f; arc=none smtp.client-ip=209.85.221.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnbXBwOM"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-3087a70557bso103655a91.2;
-        Thu, 01 May 2025 02:02:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i3P/nP0f"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c0dfad22aso420845f8f.2;
+        Thu, 01 May 2025 02:02:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746090161; x=1746694961; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=gmail.com; s=20230601; t=1746090164; x=1746694964; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
-        b=nnbXBwOMhXMrEXrBeNTISwAS6ST4BnjV2QAvaOVYCQq+f+4eJCi7H/binaLrD2/vgR
-         bXV6amjZP7Lv/T3JCNQ20y5zukDL+ea/awojUR/DmC1/83mEWTauXnUpKlfPdQwttt1m
-         mpRLTyF1odkmK1Um0/+BIwp+vQ8HiEshYhQN7P7v77AgfAvz67HQKONeUW1TpKPoYIK9
-         T9TSRlLdWTU05SaJyiikS+WSWB5eVfNrLxU5H5iO0ljCHES5B52XkSCxgb4p/+bhvPSm
-         gSDYXctIWCNr/iis8wnbqj5cH4gx5Tuk9fjipNs/mGCplBjA5DqAUQVsLmTizqeg+wnm
-         57dw==
+        bh=Z0djQjxdkhG4vVVS1uhIzDAJWy/7M3SViprXNnH/Dtw=;
+        b=i3P/nP0ffK0xEj8um2mqVWkM2fSw2OnjYzfxpu8+fn4Qus1tpYLlqMVntsk4GyDw7f
+         xy6oNEG2bCVWPx/de274vex7FzUaxm900jwlBPleOh8eHB00UBL80gA0RxR0rZhr/5xI
+         +Lqt9vqayQFk8EgAEBZ0FmMA3+OVscz3xqtd1Ex6Hwwo2ZWRBOvCTrvrPswaM5wrNz0M
+         o5RGZ0HAV3Hd7wk9WviB3u3gp14Jk2Q3/n0McPMLpkuHNooL4m8l4DGgnXTzpqQaJtXV
+         Gcg3n9sUhDpbX0os32fjq3ZJYzA2p4g/Vg87AcdpJVUQaL/vaBnjdevcXFlskfpnaBZ3
+         OgFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746090161; x=1746694961;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+        d=1e100.net; s=20230601; t=1746090164; x=1746694964;
+        h=content-transfer-encoding:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aikn57OcPfZo0b/VC1/rLCnMcVQbWV+5P1/sP6OfPMI=;
-        b=JsjAKR2Bf2Vg7E9AMytnkv0JcxFGxJeOn6QVieuwHvjHjYqUTKGZIpx8d/4cYnDtj/
-         sIyBOt7SobA3GsiqXL6ZEXNqDSeSmvzrpEaNkIsWmyHn7G/ndm96Vjg+lpRYoBv/Odse
-         0zNpTwjeZrdn9wnnx9/Y+QRRlsnZ1TzFB1TWRI9GvRpU6hHtFaU8WjfW0Vrty7t5xhBe
-         zQoZF9w1HqeKYVgjg+N4v94JKZaoUbUQSa2miyI5PVUZxnvHAYJddrW4HkrZLXQcyFUN
-         kxesY0CRuhgdw3CgUoXkscyg9BKyU5QVTOM04DI+azJ8DM5zPnsK0vxsDPDDgw1Oz3AT
-         8O4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWtccOdG2MHrp7S7hOn4jGk74NmzB6Vkj6RunaupGPB1oDj3THOLw01XZ/k+eI8zSenInOrGo+AIV+TiQ==@vger.kernel.org, AJvYcCWy5fDWOl/WH9hDvOrOjWUxoUiaFBZ4m2+3f/g+tpnZNtSqel+PJunZlo1qL3Q24PV/vetCJLqWF9jkN4Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaPBk+DFRErQVUh9rmklzPZy7qCz9m7xVu07o1HLUCNCrd0KsS
-	JdbZpqK+IRGpWU2ICkcGttRpdMB5LaOYrNxIbN/u38f/XxbNstSUIbrOKY2lfD6o5ChAbxOlXWj
-	+j24wNxyEE49Wqrs2VFtYmyalB69Ajl9L
-X-Gm-Gg: ASbGncsIQAnJy0HUK+fT5edl6T66itacfYEwbrdh/7Mxsn6fWc3oHYemXzl8LkqNR5L
-	RPfjlIPpw22F3qW6kbWTvOK05peQ5h2yZAAJP+av8jNqNc0uyp4hCI0PvbeyrmgQz0S1vRM2oDo
-	o32lKgtp5q/uKxW/yzZv4BLA==
-X-Google-Smtp-Source: AGHT+IEynVgXqKj5wZVHQcpTrOK/PaP7IjU+M8WWkEwyezewAJ/95tFY/SF3e+V0ZQ4tVFSzEQucR66JpGlNyr2Ib+U=
-X-Received: by 2002:a17:90b:3e8b:b0:2fe:7f51:d2ec with SMTP id
- 98e67ed59e1d1-30a348d7896mr3408670a91.0.1746090160627; Thu, 01 May 2025
- 02:02:40 -0700 (PDT)
+        bh=Z0djQjxdkhG4vVVS1uhIzDAJWy/7M3SViprXNnH/Dtw=;
+        b=GOh4Y9/4kFU07cMNrTe5/5W8/37wvO3t5UyXEMAk8P8sgmSSLUjA1yen/TBSz7Z2Z2
+         fAjZz+G4bv8rviJxZJ5sTH2GpmdlYl2nEeiU9klJRfaCNw/BA4nWTc4i4NNdF4UCG+VX
+         M8KJ1acTtSuLfGbN6XIW5d7LvcS919QJFIz9znX7ZL0OIwL4qENYRLshHRQZsq/wrgim
+         P30aibMFhCFpiA59maT+MnmzlxDM8qzkgKsIl0pgb3mvEZDfKxMQW1YkTppBgbENxbFv
+         SXw7cHcYvLTp3gH93D6CksKT55lGRqLwpKrXp+lJijC7EMnECOZvwjuPrHFLE7P+6FBZ
+         rEJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEtQPqU+bZvpi18w9iBouf6s/SBCfeAlnqAPNwn8NwZj7ykd7vrD1PTKs21PvwClZcZcCR2CkPTqC1gRpJ@vger.kernel.org, AJvYcCUlIy35e4G2YnIVvIwa06INgQSLqk75MKivfnwW1FmxpLjspuJKA7xYytoZC4Dq3EP54GNtvJwxmjmm7z/y5duHCaY=@vger.kernel.org, AJvYcCWaolWym1ygqOd3TEUYWpwLwkBMvgiJ3E3pZagy88b5UwTUWH2OTS0EcyZHAtZKrSEBgz5dJ6aaSUI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMWoTNo1hgUkg8BjD41XDVe/Rr4UuQFigCZyF3eZQHg2LB3vkr
+	9tREdO4XlqEvDsfeeOzcPtqbaUTMIzv62KYAjhZekmnYjFGclwZoJCwhDWVlTeKNkeNuU8UGaW8
+	4E/LXp0vK4M+LdhuvfImioWh+c1xsD031iSI=
+X-Gm-Gg: ASbGncuRBarN4kSn3zW0NI/DGU9qCpjKscr9k1g0CezOAK8maMw4/eeu7qv3MvMvcUM
+	i8FYeMIzTzUOImw/m1K/Zr5zJzK1mKbG/9CovHTRJSWJB+nhVUZhMO2JvAtuZNtMNda63mMLldD
+	3KNAeKx3k+jG7Bu2gwJP2oZg==
+X-Google-Smtp-Source: AGHT+IHGb1/CXknd/+CZ+q+Dk1/Rttb+ctd1LTyGXsEcnkmKUPDn89n4e7eUzxUtBlCjXD3Uo9haKpMTwGLTmsoY4Dc=
+X-Received: by 2002:a5d:64cd:0:b0:3a0:6ae3:a1a with SMTP id
+ ffacd0b85a97d-3a09404cae6mr1195041f8f.23.1746090164111; Thu, 01 May 2025
+ 02:02:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <tAJ0jyptJ0jLaRp9siDw8y2iw3S7GeuC05Uncum-qihlIKfCfEVhQbGNuTengQ0kWpnNp7OoTITxbEdf6nDTCw==@protonmail.internalid>
- <20250428203943.51dd39d5@canb.auug.org.au> <877c344gmp.fsf@kernel.org>
- <20250429174451.42a368af@canb.auug.org.au> <CANiq72kSReDcMU=eezmgsREL5+1FSnq9_VuEd-8AtU86W6UoNA@mail.gmail.com>
- <20250501183210.639f9abf@canb.auug.org.au>
-In-Reply-To: <20250501183210.639f9abf@canb.auug.org.au>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 1 May 2025 11:02:27 +0200
-X-Gm-Features: ATxdqUHvvEUmhRCQrVIDL7rvOu76D-SwIoD7BSOceuJajlu_iOzhimfMuCLMWks
-Message-ID: <CANiq72kgPJvGpgUuXE3owxMc5zFuK=wXgmSM5nyKZf8u8+jtEw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the rust-xarray tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Andreas Hindborg <a.hindborg@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
+References: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250430194647.332553-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <aBKFWxIRaa4W7TDf@shikoro> <CA+V-a8v5qFC+uxzC8Qw4F3M1XSFnVq90MWxbvmiRks=ZbkzZjw@mail.gmail.com>
+ <aBMpjKtQYYB-teNt@shikoro>
+In-Reply-To: <aBMpjKtQYYB-teNt@shikoro>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 1 May 2025 10:02:18 +0100
+X-Gm-Features: ATxdqUG9Jh624LeCKraAtGmTg0blNv-HVvQoE3BTxD_xFYY0aFCLpbyOU3qV9tQ
+Message-ID: <CA+V-a8t8AApJTgF8Zc3w+JjAu6yPvzUEgTo0g+1H+6GhvJUdbA@mail.gmail.com>
+Subject: Re: [PATCH v9 2/2] i2c: riic: Recover from arbitration loss
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Andy Shevchenko <andy@kernel.org>, linux-renesas-soc@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 1, 2025 at 10:32=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> I will try to remember to run 'make rustfmtcheck' whenever I do a merge
-> fix up on rust code.
->
-> (hmmm, no leading tab characters - who knew :-))
+Hi Wolfram,
 
-Thanks! :)
+On Thu, May 1, 2025 at 8:58=E2=80=AFAM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+>
+> > Do you mean that upon detecting an arbitration loss, we simply clear
+> > the arbitration bit and retry?
+>
+> Yes, after the bus is considered free again.
+>
+I'll give that a try but in my case the SDA line has gone low.
 
-(If you run `make rustfmt`, i.e. without the `check` at the end, it
-will apply the changes directly).
+> > However, when observing the SDA line after recovery, it goes LOW again
+> > during the transfer. I've attached a screenshot of this case: we
+> > recovered from a bus hang, the I2C recovery algorithm brought the bus
+> > to a STOP state, and then a START condition was issued. But after
+> > initiating the transfer, we can see the SDA line being held LOW again.
+>
+> That looks weird. Why are there two SDA transitions around 30us? Why is
+> SDA changed while SCL is high around 45us? Then, this small SCL spike
+> around 55us... What device is this?
+>
+From 10=C2=B5s to 50=C2=B5s, the clock pulses are part of the recovery sequ=
+ence.
+The SDA line is likely being toggled by the slave around 30=C2=B5s, after
+two clock pulses. At 45=C2=B5s, we are still within the recovery algorithm
+-- SCL is set to 1, followed by SDA. The recovery algorithm then
+checks if SCL is high and whether the bus is free (i.e., SDA is also
+high). At that point, i2c_generic_scl_recovery() returns, assuming the
+bus has been successfully recovered.
+Around 55=C2=B5s, the transfer function starts attempting to send data
+hence the clock pulse.
+
+The slave device is versa clock geberator 5P35023 (exact part number
+on SMARC RZ/G2L 5P35023B-629NLGI)
+https://www.renesas.com/en/products/clocks-timing/clock-generation/programm=
+able-clocks/5p35023-versaclock-3s-programmable-clock-generator?srsltid=3DAf=
+mBOoqlLSt_ul3hLh7NHYlCShXsnH-QZf90uSdoxZXI_Pre5Qg7soD6#overview
 
 Cheers,
-Miguel
+Prabhaka
