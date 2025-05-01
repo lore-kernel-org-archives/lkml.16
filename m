@@ -1,114 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25F7533F6;
-	Thu,  1 May 2025 16:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC86D1F1537
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746117327; cv=none; b=EhxuHnVvQu6UPEOFqPV7hSB9M0eYuhpAv1dQf33Rhrn0T18cItzLXmoFQGMXMJ8uMKnPSYFVZeRUup4JvztXF39wSlrw67WS2RcrFcrJaTQoNFmhtwQRT7fUTD/nW9sc0hV7ODlD7zs/6dUYNusl9sfFTVKHqFwRIA9wtIrfnRA=
+	t=1746117441; cv=none; b=OvlF99UUq8QhpJxgoZjDttDpSWPLo6hqghRbLVatzD2O8FpHNkD98B9++xIuLCeoy3RY4XkvIybhxfYKHMTFCnQ2/PMLliPfiNcoBKB/pormgWxTDCi2C8Qq4FpRQ8rzkbjiprYIUX0S8VJvwAF3Xj2VsGRp74Od4KuTjWyGcR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746117327; c=relaxed/simple;
-	bh=4Wfg99HhQU1fQHRwEG2NytbqKJWV1vNC8E9enELUdHE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g/KJE3LX7RnXFSGF+ai1c5MedW6+oIP3zww0jIAw1bqJk4PtaFdbwp/5BmHabXGhzDASCiuMU1T5PYyxzW3zAk4pBV2bypJMPvzd9PPea5Uv+ouqVeibNQatxCtfZdyHJH+ziU+n6Nnx89U+qdngtzQyOYE+wO++yIAQQIB/8iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AdauZo2f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746117441; c=relaxed/simple;
+	bh=5wab0/otZ82OVE/rJrbhgL2wR2IQtZ76AkM3zQixsM4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UTUYIIHCKO7Oj7qJhczKlMVNHbIprbofXMq2KBAADCpV1f+GVQsn3un5N+QwdzUz6J7RAkKxeZ+ThqugBFV3W/2+cC8buDWqrpbR0O1oM5yCsKf27Wn12gACh/Yfd2sqZe2ukIuaSNj5ltxa0vYzyuwWLtalWDHucgtB6kaxr8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LCvAWZf4; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AdauZo2f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B164C4CEE3;
-	Thu,  1 May 2025 16:35:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746117326;
-	bh=4Wfg99HhQU1fQHRwEG2NytbqKJWV1vNC8E9enELUdHE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AdauZo2flQbdA9UpmmQ8rjvFpiExQxGfnoxq+mEeN1cC0XQd9iLRql1Zb30gXTJTG
-	 utDRr0X2HGfrrVxyBOxzw+Z6rfA9RQqEmh9npp7bVZuTEkjhlB48DKbjhi3YGwI7iS
-	 hei2yeHPbg/1MYYFJVqKi6EgJjPkDsZhghtYd07SWXImweuGMIhmbitnvY8fq9+Ltp
-	 Ab+RmAp/xTeYT+dp9VQ+Hy0FAo7oBv3S81VOSidyAvXzpFwt30CnJaGkzKJ75Nwzfi
-	 yznRu00+hWHjLCoQ36wlwQo0j+6wngfnpWBOrfcor4QzCfk9xbGz57ZYN/hMtT2EK+
-	 z4N37cqseCiiA==
-Date: Thu, 1 May 2025 18:35:20 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] rust: debugfs: Bind DebugFS directory creation
-Message-ID: <aBOiyB5fG_F60BNv@pollux>
-References: <20250430-debugfs-rust-v2-0-2e8d3985812b@google.com>
- <20250430-debugfs-rust-v2-1-2e8d3985812b@google.com>
- <aBNKEewhCP8jRIZL@pollux>
- <CAGSQo01O8DFe1+APM2cYYFT_4ROKrbTQpNmozYk3NQwYc3Zv2Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LCvAWZf4"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-43cee550af2so1779355e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:37:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746117436; x=1746722236; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LzsO/skmVgtqLRk8Hn8ZI1p1OwGSLJGPUwYOe0XwdxY=;
+        b=LCvAWZf49H/1EZChlf2SFR75j5pYJqjRe6qJd6//QCF2QLJTcZeTavoD83Q2R6jlQ0
+         1/L4F59gEdoQjXDoN1S49KFDaj1fBCACGFI2HcY46YP3Vy9KRb5zWx+UiH5iZPqH7AHh
+         5EyWdt478eQwlQDYwh4PynKn/Zx1XVMjnDPBioa11svpDdNklT6Pmihaib3/AUtXFP3D
+         xlgqMYYioX31w27cQewoHowXDLn3JseKd2T2im72k/FUiAwrOvZU5Yj7MWd3JpncCWPM
+         VxDK0tgLlVyC9jent/EcFCZKZodVZ4yP/YVMjGdIvRks7JWUcIXOJ8m+YfEjv3s8iwS9
+         RY3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746117436; x=1746722236;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LzsO/skmVgtqLRk8Hn8ZI1p1OwGSLJGPUwYOe0XwdxY=;
+        b=fLr4MpwVN3OFpMpLEBXmuD3IkYYNdg+HpZw+mlQPNrW4JX6b4ke5vP2yF+DsSnazJ5
+         VZmXRTMDj9Bh7PvHQsjVqyBJdU4gs5XitzxmNsr7zZecW4bf/+vk0qhoW1rMTED9tbaJ
+         XHpLnJlkRQUZnAdDiCdQ6aKxt6NWO/+7b/V49UV1uJHUe/77mxuf+hAkdd25eht/SFZu
+         /zScswxLGinTu/VwRPc+fx0X1rsxUCqEOtedBAObZfsWxJkHCIIDl9nwOVqz0fnqQ22G
+         c2TeGeIdCS6t8W15+ciOCLrUrgw2g7I+ZqEdOVl5HwHu/t84J+fPQIc+uSDDoQB1b1y4
+         cYsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUREoP+BCJP3Q/k4KHTjSLmk2n6OzrPyGtrcNwplxlPwvj9cnKDOymhZLtPrNRAj8XKxTLkZ2dRFT27PLg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7Xfm/dVJgSagbFih9e8m31qooKn6/2t0byfsfqpFrzLR3QPSu
+	f9Yr467gcqoCE75fODRrzYx4YfDMb6PJxUkHfseGu46A+4J73/he9eNgpOgWlNg=
+X-Gm-Gg: ASbGncuRzJBbIflzKmBrFPjVc3DcXbeTWvhzaqSNc6rti/qnoaPnn+JQTXcUSYmIAMn
+	sGn+s8CKX5amUvip9P0W2YAogdf0Xd14ffYtXbtRwpXi0Zl8hhyEPOkQfTorf4yt3Kv4rpNNnlB
+	Ndeqqp4Wj++Dyc9ul3ih/g+76cm8fXoHSkTMxAIBg7SgzMq8+uCOjZIJ5tMjwvIG8pj/4H9tQlW
+	oFA2qObMZcxpX0Rn+81BABqUwB67qIhQ7hvssriEX4I67CDiRVz3A+EsCbCpssR17YUo9wfGt2G
+	upE7FB2/rbR/GcaKapEmWsVA+EBXz9U/LS+7r9aISJkkif/v+TEOAmci2F8=
+X-Google-Smtp-Source: AGHT+IFzBR3+bg1K+za0m3jmhBGaIEWJTaw2fxYEKMYSpYAY2Ghh2og1xXnvvNCVK4hKBJzyuscRFA==
+X-Received: by 2002:a05:600c:2d0b:b0:441:b397:e324 with SMTP id 5b1f17b1804b1-441b397e367mr14138705e9.9.1746117436018;
+        Thu, 01 May 2025 09:37:16 -0700 (PDT)
+Received: from [192.168.1.28] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a288f0sm17166175e9.27.2025.05.01.09.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 09:37:14 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH RESEND v2 0/3] iommu: omap: Simplify few things
+Date: Thu, 01 May 2025 18:36:54 +0200
+Message-Id: <20250501-syscon-phandle-args-iommu-v2-0-5a3cab296972@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAGSQo01O8DFe1+APM2cYYFT_4ROKrbTQpNmozYk3NQwYc3Zv2Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIACajE2gC/43NMQ+CMBAF4L9iOltDDyjEyUFWBx0NQ4EDLoGWt
+ EokhP9u7eak47uX+97KHFpCx467lVmcyZHRPsB+x+pe6Q45NT4ziCCNhBDcLa42mk++bAbkyna
+ OkxnHJwdUQkIFEKuE+f/JYkuvYN/ZtbgVlzMr/b0n9zB2CZOzCO0f+ix4xONMZg1imqdKngbSy
+ pqDsd1nLRAg4BdRx62qklxWCXwR5bZtb/RUOqoOAQAA
+X-Change-ID: 20250111-syscon-phandle-args-iommu-2ea162b223a4
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
+ Robin Murphy <robin.murphy@arm.com>, Yong Wu <yong.wu@mediatek.com>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1137;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=5wab0/otZ82OVE/rJrbhgL2wR2IQtZ76AkM3zQixsM4=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE6M1PHN0IE6o7mwFsELVIe5+r9pleayfwxEbo
+ f5oPBaEkyuJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBOjNQAKCRDBN2bmhouD
+ 1466D/0S9VB0/93O6znO1M37ZFRqm8qIG8w0AMML9qOAyuf6IzOdPuOkx7bkYPFE77CefdNI7lQ
+ x+YPqVrO25vpVv1VDZh6DJ0thxYl/9rosz64P7VA5qcvAyAoQ23h/szrrHCcnI5AO+cSUyGUYdf
+ lAQZjS1oLelqm/EqU1SX0mbmElBJh9lkWL51xc8IkR7TzG9Io4oRWK3ruCGto9uom2V9HLROx3k
+ oUVzzP7rCrRCEJtH4aU2h9p2MdaulNZIzlpYoHwIONVm6IV90H8QfPp6ZnqjftlbUUDUpGiZMRS
+ /TB+WOyd26I8CEJMlms/1irTj6R9Bxq2BIjlSyUM+ExuNjjGanakUy1jdgpyAPS1GMplNc9CWxx
+ j5mmy3HqNeTwKzwfHx5mVzDAACfbG/U4bN5LFzr4HRcb2wc3CFksZ+SnXBONFFXYf964R3jRTox
+ r5mQznXerKtYHGLnEN1HOjkZEynSzQ9QX8GWaOmnTP7uO01n/m1POcWglvL2v9p4Jj2LqqIHsud
+ De056uHkSOMdZQBQKQP5Tgs0ykchwjQu3szjmXySLVwfusGtK76V4vhJjJMVtfivckZ7gc7Ft1A
+ SFuLe8d+VVCLiraT1fYNoZHdZFV5Ymosp3TeQetnFf/heqHiD2HWqVzm7g6+vroQdvlOTtGjJSU
+ r+nGXyDYUCnukAA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Thu, May 01, 2025 at 09:02:58AM -0700, Matthew Maurer wrote:
-> On Thu, May 1, 2025 at 3:16 AM Danilo Krummrich <dakr@kernel.org> wrote:
-> >
-> > On Wed, Apr 30, 2025 at 11:31:56PM +0000, Matthew Maurer wrote:
-> > >
-> > > +    /// Create a DebugFS subdirectory.
-> > > +    ///
-> > > +    /// # Examples
-> > > +    ///
-> > > +    /// ```
-> > > +    /// # use kernel::c_str;
-> > > +    /// # use kernel::debugfs::Dir;
-> > > +    /// {
-> > > +    ///    let parent = Dir::new(c_str!("parent"));
-> > > +    ///    // parent exists in DebugFS here.
-> > > +    ///    let child = parent.subdir(c_str!("child"));
-> > > +    ///    // parent/child exists in DebugFS here.
-> > > +    /// }
-> > > +    /// // Neither exist here.
-> > > +    /// ```
-> > > +    pub fn subdir(&self, name: &CStr) -> Self {
-> > > +        Self::create(name, Some(self))
-> > > +    }
-> >
-> > I think this should return a new type (SubDir), which is a transparent wrapper
-> > of Dir and dereferences to Dir.
-> >
-> > Subsequently, we can remove Dir::keep() implement SubDir::keep() instead. This
-> > ensures that we can never call keep() on the root directory, which would always
-> > be a bug.
-> 1. If the code in question is builtin rather than a module, discarding
-> this without tearing it down may not be a bug.
+Changes in v2:
+- Combine patches #1 and #2, add dev_err_probe() and drop the comment
+  (resolving Robin's comment)
+- New patch: iommu: mtk_iommu_v1: Simplify by dropping local 'mtk_mapping' variable
+- Rb tag
+- Link to resend of v1: https://lore.kernel.org/r/20250212-syscon-phandle-args-iommu-v1-0-c3fab486b426@linaro.org
+- Link to v1: https://lore.kernel.org/r/20250111-syscon-phandle-args-iommu-v1-0-3767dee585a6@linaro.org
 
-True, if builtin *and* never intended to remove, it's indeed not a bug, but
-arguably not very useful either.
+Few code simplifications without functional impact.  Not tested on
+hardware.
 
-> 2. Users could always write `core::mem::forget()`, so this will always
-> be reachable (even if we decide to remove `::keep` to make it harder
-> to choose).
+Best regards,
+Krzysztof
 
-Yet I wouldn't encourage users to create bugs by offering them a convenient way
-to do so, without any benefit. :)
+---
+Krzysztof Kozlowski (3):
+      iommu: omap: Drop redundant check if ti,syscon-mmuconfig exists
+      iommu: omap: Use syscon_regmap_lookup_by_phandle_args
+      iommu: mtk_iommu_v1: Simplify by dropping local 'mtk_mapping' variable
 
-> > As an alternative to the Deref impl, you can also implement
-> > `From<SubDir> for Dir`, such that a SubDir can either be "kept" or converted to
-> > a Dir. Probably, that's even better.
-> 
-> Yes, this was the "extra type complexity" I referenced in the cover
-> letter that I was considering doing. I think that probably what I'll
-> do for v3 is to have both the `Deref` *and* `From` implementation, so
-> that `SubDir` still automatically gets all of `Dir`s stuff, since your
-> later `File` comment convinces me we can't just have everything be
-> `Dir`.
+ drivers/iommu/mtk_iommu_v1.c |  4 +---
+ drivers/iommu/omap-iommu.c   | 24 +++++-------------------
+ 2 files changed, 6 insertions(+), 22 deletions(-)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20250111-syscon-phandle-args-iommu-2ea162b223a4
 
-Sounds good to me, thanks!
+Best regards,
+-- 
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
