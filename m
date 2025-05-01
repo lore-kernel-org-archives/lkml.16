@@ -1,123 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00B7D2DC76A;
-	Thu,  1 May 2025 13:15:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE712DC76A;
+	Thu,  1 May 2025 13:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746105301; cv=none; b=txOLz9P6NnEq6SGwbQaFNqKNUXo0y03Nli2l4Vxna+s44KUI3HBaDRJ0/zt8cxtM/L3cBmnSGUoLGeaxWf0bDoTZvDjLBVxoMr9SOQXxZhcv6hO5+GfBUlzoKBt6B6LytC0K0Lernh6ytNNCfl++wwdI7NeOcuMFeF4g5q5+iZU=
+	t=1746105351; cv=none; b=X02J6GbdCvwHdB2Z6uHO7S7D6+96P1mx7/oqya1Il5jE3WQq0raP9v++fNZt+0ZVJP8zitokzngGYH0snGFsxQsltjoA9e4GLLe+k1wTtObp/JXuoUgo8engYYT6a68Y+fo4fyqnSJ/KARgw8tIIs9RduDpReIBMczpvA6SLiWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746105301; c=relaxed/simple;
-	bh=6ptm9e4+N5Xyo1RCMVV1pfCM3SsY2ZQgu3Uh/K4ek1U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nrOZDWWMHcpoz3rhi6Xs2p4y+jhwZ/1qRIjuu0e1Ggycwz2bCZB84MaNeUikfaKdeIV9HKY4c5dOzW0qnq9cn84nuf9vvflsQHdVfg0gATZu01FTIFsKT4OMfClt6n60LiOE9DieEBkpQDKUd6wPmaE2GTvWOsFwFSzugaXU498=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J58UFm9g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746105351; c=relaxed/simple;
+	bh=vG9RNDUsdMKUtcPNh3JTEqrqWWFL/iIruqjQNnXSe2Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HT9sQNf2pCmkEvdbtgsiu8n+E2W9zveLUYzPdYHRRa0kGsTqhVc4YXM7GpQwfFlok4DMxupXNh9xc4W3HRqXHU/JKYruRWuvPWsITpBt9MDE+hzBikxN44LcVoWx41AJgnEifdTkiWZ429a83o4V/8eFscGb1AW/bnec/XhImdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE8dhfOB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J58UFm9g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EA3CC4CEE4;
-	Thu,  1 May 2025 13:14:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE8dhfOB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E936C4CEE3;
+	Thu,  1 May 2025 13:15:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746105300;
-	bh=6ptm9e4+N5Xyo1RCMVV1pfCM3SsY2ZQgu3Uh/K4ek1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J58UFm9gNYOlLCrcSO6OxX6RPkPjwASSoVPejxOPQtMgK6DVbO37HkxQPsLZz+kRv
-	 PAinzrv821hFUBbMok1HnTGoVqSxpm069Q2Pi2ZzbL4rtMQedEhK25DslHGQZtgGin
-	 Y/mhgOiRlU82tjDVUpLtpGYrufX6e1BP+38x2QYbY8P8rolHG4wcoVaToZxhb8iLSN
-	 mTm1I0OLFr4lrPW3fIz/8zYoGlqO5vAnzcqWkzgM/jmRZKCSPzxYs3JpX0fa7mEsPI
-	 ztfSGRgj3gDV7zwepeaIbQh78A2YmIr+AAS65Xo4LQ/btBt5PkjYrhB5GQLLzAOifi
-	 XOJ+FUPGOvwmg==
-Date: Thu, 1 May 2025 14:14:54 +0100
-From: Lee Jones <lee@kernel.org>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>
-Cc: daniel.lezcano@linaro.org, alexandre.torgue@foss.st.com,
-	tglx@linutronix.de, ukleinek@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jic23@kernel.org, robh@kernel.org,
-	catalin.marinas@arm.com, will@kernel.org,
-	devicetree@vger.kernel.org, wbg@kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	olivier.moysan@foss.st.com
-Subject: Re: [PATCH v6 0/7] Add STM32MP25 LPTIM support: MFD, PWM, IIO,
- counter, clocksource
-Message-ID: <20250501131454.GO1567507@google.com>
-References: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+	s=k20201202; t=1746105350;
+	bh=vG9RNDUsdMKUtcPNh3JTEqrqWWFL/iIruqjQNnXSe2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZE8dhfOB0DRQqBSkFEh7Qhc0AbapWsMOLtOEowe066a90UYLToaMHAjsN9EBiGjQ2
+	 K+vcftRYrPjRsbUO11ldjBXnn5Vz9fL1XUX6dTANVJTxH/ykYg9IuOc/gqIFONvcqh
+	 rcT/HkYnOzyOKQCIBXx34Z8f0iZLXDpFYlrXIWX2WHaDJypw2wCcc0v0C2CMJd9t1N
+	 QbEjslSC2xs3IHPb+uRHRJWtP/47463ZTvcYoO77bZokGZNyn10q0dcIrsifSXlwOr
+	 0OALCVuwygFsNMnIB0BE6dKtS4EP6AgUQj/YCpB6Uv8YpR/ReiutWFhC6ctxSQeyOU
+	 wtD5/K+TKjWZg==
+Date: Thu, 1 May 2025 06:15:48 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Maxime Chevallier <maxime.chevallier@bootlin.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net-next v7 1/3] net: ethtool: Introduce per-PHY DUMP
+ operations
+Message-ID: <20250501061548.38f7479b@kernel.org>
+In-Reply-To: <20250430083220.5fba6c32@device-130.home>
+References: <20250422161717.164440-1-maxime.chevallier@bootlin.com>
+	<20250422161717.164440-2-maxime.chevallier@bootlin.com>
+	<20250424180333.035ff7d3@kernel.org>
+	<20250430083220.5fba6c32@device-130.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429125133.1574167-1-fabrice.gasnier@foss.st.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, 29 Apr 2025, Fabrice Gasnier wrote:
+On Wed, 30 Apr 2025 08:32:20 +0200 Maxime Chevallier wrote:
+> > > +/* perphy ->dumpit() handler for GET requests. */
+> > > +static int ethnl_perphy_dumpit(struct sk_buff *skb,
+> > > +			       struct netlink_callback *cb)
+> > > +{
+> > > +	struct ethnl_perphy_dump_ctx *ctx = ethnl_perphy_dump_context(cb);
+> > > +	struct ethnl_dump_ctx *ethnl_ctx = &ctx->ethnl_ctx;
+> > > +	int ret = 0;
+> > > +
+> > > +	if (ethnl_ctx->req_info->dev) {
+> > > +		ret = ethnl_perphy_dump_one_dev(skb, ethnl_ctx->req_info->dev,
+> > > +						ctx, genl_info_dump(cb));
+> > > +		if (ret < 0 && ret != -EOPNOTSUPP && likely(skb->len))
+> > > +			ret = skb->len;
+> > > +
+> > > +		netdev_put(ethnl_ctx->req_info->dev,
+> > > +			   &ethnl_ctx->req_info->dev_tracker);    
+> > 
+> > You have to release this in .done
+> > dumpit gets called multiple times until we run out of objects to dump.
+> > OTOH user may close the socket without finishing the dump operation.
+> > So all .dumpit implementations must be "balanced". The only state we
+> > should touch in them is the dump context to know where to pick up from
+> > next time.  
+> 
+> Sorry for the delayed answer, I'm still wrapping my head around all
+> this. calling netdev_put in dumpit() is not correct, but won't moving
+> this into .done() make us subject to the scenario you described to me
+> in another mail where userspace would stall the dump operation by not
+> calling recv() ?
 
-> This series adds support for STM32MP25 to MFD PWM, IIO, counter and
-> clocksource low-power timer (LPTIM) drivers.
-> This new variant is managed by using a new DT compatible string, hardware
-> configuration and version registers.
-> It comes with a slightly updated register set, some new features and new
-> interconnect signals inside the SoC.
-> Same feature list as on STM32MP1x is supported currently.
-> The device tree files add all instances in stm32mp251 dtsi file.
-> 
-> Changes in V6
-> ---
-> - Fixed kernel test robot warning
->   https://lore.kernel.org/oe-kbuild-all/202504261456.aCATBoYN-lkp@intel.com/
-> 
-> Changes in V5
-> ---
-> - Add a necessary delay in clocksource driver, when enabling the timer.
-> - Add collected Acks
-> - Dropped IIO trigger patch as applied by Jonathan [1] (no dependency)
->   [1] https://lore.kernel.org/all/20250331110435.26157ebe@jic23-huawei/
-> 
-> Changes in V4
-> ---
-> - Simplify IIO trigger driver as per Jonathan's comments.
-> - Rework clocksource driver: encapsulate mp25 changes in separate function
->   after Daniel's suggestion.
-> - Add some definitions to MFD header.
-> 
-> Changes in V3
-> ---
-> - Yaml indentation issue fixed, reported by Rob's bot
-> 
-> Changes in V2
-> ---
-> - Review comments from Krzysztof
->   - Adopt compatible fallback in dt-bindings and driver
->   - drivers: drop "st,stm32mp25-..." compatibles when unused (e.g. no .data)
->   - counter driver: no update (patch dropped)
->   - defconfig: only enable the necessary config for upstream board
->   - add lptimer DT node in stm32mp257f-ev1 board
-> - Add missing management of IER access for stm32mp25
-> 
-> Fabrice Gasnier (7):
->   dt-bindings: mfd: stm32-lptimer: add support for stm32mp25
->   mfd: stm32-lptimer: add support for stm32mp25
->   clocksource: stm32-lptimer: add support for stm32mp25
->   pwm: stm32-lp: add support for stm32mp25
->   arm64: defconfig: enable STM32 LP timer clockevent driver
->   arm64: dts: st: add low-power timer nodes on stm32mp251
->   arm64: dts: st: use lptimer3 as tick broadcast source on
->     stm32mp257f-ev1
-> 
->  .../bindings/mfd/st,stm32-lptimer.yaml        |  40 +++-
->  arch/arm64/boot/dts/st/stm32mp251.dtsi        | 177 ++++++++++++++
->  arch/arm64/boot/dts/st/stm32mp257f-ev1.dts    |   8 +
->  arch/arm64/configs/defconfig                  |   2 +
->  drivers/clocksource/timer-stm32-lp.c          |  61 ++++-
->  drivers/mfd/stm32-lptimer.c                   |  33 ++-
->  drivers/pwm/pwm-stm32-lp.c                    | 219 +++++++++++++++---
->  include/linux/mfd/stm32-lptimer.h             |  37 ++-
->  8 files changed, 537 insertions(+), 40 deletions(-)
-
-Is it just the Clocksource Ack that we're waiting on now?
-
--- 
-Lee Jones [李琼斯]
+Good catch, for the filtered dump you'll need to look up the netdev
+on every dumpit call.
