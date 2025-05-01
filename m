@@ -1,209 +1,279 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE1D256C6F;
-	Thu,  1 May 2025 20:59:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 210BA22156A;
+	Thu,  1 May 2025 21:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746133184; cv=pass; b=px+lYuGHH9WVdY9+l/gIp4DKCmRnhcwYH9A83qTHTFJy4byNlAJZGCcXquJeZO8UP+95BOsw6ajRKGUEe/NCT3eSLnV36VE6rxx+IgIteD3cR5qsEeOEEcoMn5rAgjVfG+nD7NWAi1ai1my1ej+H4p56xOnsCuwSGZDOr7H8reU=
+	t=1746133255; cv=fail; b=WQGA0PYmdspwObJ1cy5sPQoK+jqR9uPDLKPxNvKODLvLGjUMIr4af2v3OGEppQpW9/7qnmBaJ2npGUXkw77GGSmxSoxZRk1VLrItP/vFbJm7SYxbKj1Y1rbDM4kxYW+4LQqbKPoU+lfb8wgxKCGS7iIflhx7iOfFWqH5SXq0iKs=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746133184; c=relaxed/simple;
-	bh=Tj4FkkrZvsB2maiC806EUMjK7SnDEzY/91hRnDmXD/o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AVhYfpYTtxEkgdzuCVHCfAlXzDe26dyoqEuWkws4Jy638v8k7E24FexAx/ZQjOmeOOvs0+vjky8rAmYkWp6zRsTcqJ0EfLCVryIodXt1OzTo++vGmd8AVnbCwflS5fWeKvwHE/el8M38bAJBNq2XaFfjvVUN9MC0ZxsGitvmX0U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=a8jxLWq2; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746133255; c=relaxed/simple;
+	bh=WkcS294b/ii9ogtIIvfXG+zRm4VFxC57Bb2QYwS4VhA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=c/wsFNnb5ZSWQvZwwNS72OHg+hP9U5TdUgSo17CCsdeRY68G9Cku4BRJrnvVj4mOwJA6f+7JFhs+xQbwrwJjRppvlM//7LBgWQj3pGNUmvZmzEj0ek5gJZ/2tbjHRGNnAh19HN+W9Twp47mwaWnhATxA5Gjdgbzkdy9PCEDHj0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FFyuonpn; arc=fail smtp.client-ip=40.107.220.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="a8jxLWq2"
-ARC-Seal: i=1; a=rsa-sha256; t=1746133166; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=lCcbmb+W2Tie3QctiCvTewK6zzhTBwBr9d8rZdx56zXsV2wnaT3NL0ECFf2+v3BgdiUQmoBGHo2QOjpcFDRViVDKgjPA0ScklgQHfQFDDaZdP0Oy/saISqh3TgHjdJLq/hKprKrvg6IkTXYm1m68ELNuM6YZO8rHBeeCihiZZu4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746133166; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KBLoDZx40etsHxiD6+f4YnG0HqAxRojVOyVHXmA7Y1Q=; 
-	b=boDiSkMVwFhiVQEgZhWtflbfZIGdmPEdifwe5bZfHRVb/MdO/bNVQf6yuWFxDsRsBO4oqtRFCm8zN6g2HN8X3VIfNfIs67XPlhzBX/5j/QFF0m+YFrXDkY+WrJeeL5+zOzQDw0+BrO9NiH0ZU1ek2Exg7Zc8cuivpXRidoB8ykg=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746133166;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=KBLoDZx40etsHxiD6+f4YnG0HqAxRojVOyVHXmA7Y1Q=;
-	b=a8jxLWq24ACRpbiOiS/VirPsYzmXpIvodwiGGaY0rUUcW8NrKVyF0ONECrWWwmIf
-	Ub2hcuLeqxQwsegs6r6I23pFUaviup7gjad9joH28H00LoYhqJo4uuty7iEBFnSkIBn
-	RqoXlwa0N2h/TWvR7K1RTVgTFCWNFCaXdNqmjn5I=
-Received: by mx.zohomail.com with SMTPS id 1746133165242855.708041863016;
-	Thu, 1 May 2025 13:59:25 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id B3E63180F5C; Thu, 01 May 2025 22:59:19 +0200 (CEST)
-Date: Thu, 1 May 2025 22:59:19 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>, Guenter Roeck <groeck@chromium.org>, 
-	Matti Vaittinen <mazziesaccount@gmail.com>, Ahmad Fatoum <a.fatoum@pengutronix.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v9 4/7] nvmem: provide consumer access to cell size
- metrics
-Message-ID: <dixmyhyj6b66vyizfotpqw6yzaavi2o2mauloa5x6zn3qgk5ub@huoal5ucdd44>
-References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
- <20250422085717.2605520-5-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FFyuonpn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=BSVnlG2XLDb8ZKm8WLnoNeBiaSj0ybZvkJbEqN5Hcv+AiaWlaxQoeusUUmhh7qByXF/qRlvdjH1ql5UZTXJUlirYqLE6nXT/dhmYbnREQkJzu68wjzVXTeUTJbjmYW5ZwSiDXE5nYkjqcbghD6VU3kawozZnezycvpl6xBy5ynjz3W+4/1cKU/wFgx83QYAzmDJ1a6NUg6FlKKt8KtdL6VxQMRaVZl4Pue5czrP1lbrYooaF2KPdQe9r8ksJOOTbLuEQb364twCXodhZevFnctkiGDBj5bSDgzBUR/YCoe1B/hCzI982UI+NnUDdbPQ6lGzkm/ZfzNL9Z6ZfPZpwgg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mf1hc8ioBso5skW4fRWXvtd1yoWmPw6vdoxPFdArIDY=;
+ b=y4nezt1RiJhpMGtSBYi66cUCzwxn4dWzNfkz9pCId1UPz5rvCgADVwBWDnZJlHblH5tSLxQaADubWja7WoZXPXiFHoG6ttbUSk3sF6eWLkcLn2+PTw7ZLqI1Kto8Aan9AQUw7GuP+ABxurQLYLO7vpkR7vnSVciaRXUJhHMq5o0u3jmKpTIu8ADueiUF+PJTjt+Hv0JZCsjtqjwGjNNQEId2XKaN0nANTrrpx9eKmyXsrYldef7UH2T/fxWb20Gpryx/MD3PjGeTzDZhz9RuIzFHKZA0EKG5Gap+EbV2WvhxuvpGfh83s86K8dAssxJSaQGL+nPGue+yh1MUIy13Ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mf1hc8ioBso5skW4fRWXvtd1yoWmPw6vdoxPFdArIDY=;
+ b=FFyuonpnn9Dd4akRAYN+OoX+2hYUoufDaMh2PfRff0VuSYxz8mqqKrSHmPy++/W15Morn0oTObDAOtuB+ZOJ+OwxVoAJ08svJRRiFo0d7/mzq+M6jNiHXCf4ZPjQ+8A+3L4WUhIEgqPsucgLn3J9qpuWNtjbqolDGcD8PgyKYlog+QMIxgGLQ42oMFyI9BgG0MtFQSo57NmxpOtPceOdINlyMuYJ7ILg8Ai7hzY5floe+Q6V4HwDqlsObLJ5vueTvUoun26beaLiCwmyHiSiWCuaWuzB/C90GGJ+zMGUXIZpyuJrChC6oPRd+Ik5Sn2AUEOnhjVz1NZMvbqxZLGnAA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BL3PR12MB6643.namprd12.prod.outlook.com (2603:10b6:208:38f::17)
+ by IA0PR12MB7723.namprd12.prod.outlook.com (2603:10b6:208:431::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 1 May
+ 2025 21:00:49 +0000
+Received: from BL3PR12MB6643.namprd12.prod.outlook.com
+ ([fe80::4c5a:f9d8:3aa4:4d2f]) by BL3PR12MB6643.namprd12.prod.outlook.com
+ ([fe80::4c5a:f9d8:3aa4:4d2f%5]) with mapi id 15.20.8699.012; Thu, 1 May 2025
+ 21:00:48 +0000
+Message-ID: <5b74482c-38c3-4720-81b8-67c599184e39@nvidia.com>
+Date: Thu, 1 May 2025 14:00:45 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 rc] iommu: Skip PASID validation for devices without
+ PASID capability
+To: Vasant Hegde <vasant.hegde@amd.com>, joro@8bytes.org, will@kernel.org,
+ robin.murphy@arm.com, kevin.tian@intel.com, jgg@nvidia.com,
+ yi.l.liu@intel.com, iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org, stable@vger.kernel.org
+References: <20250430025426.976139-1-tdave@nvidia.com>
+ <85cab331-d19b-4cd7-83cb-02def31c71ac@amd.com>
+Content-Language: en-US
+From: Tushar Dave <tdave@nvidia.com>
+In-Reply-To: <85cab331-d19b-4cd7-83cb-02def31c71ac@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P221CA0020.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:303:8b::25) To BL3PR12MB6643.namprd12.prod.outlook.com
+ (2603:10b6:208:38f::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="txcrry3e57y7fctt"
-Content-Disposition: inline
-In-Reply-To: <20250422085717.2605520-5-o.rempel@pengutronix.de>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.2/246.120.57
-X-ZohoMailClient: External
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR12MB6643:EE_|IA0PR12MB7723:EE_
+X-MS-Office365-Filtering-Correlation-Id: 152f886d-912c-47bf-b63d-08dd88f33fdb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RnJac0pueElYcm96dmZKQXlCeCtUeXZTdXd2ZFVWLzl3WHdPUU13a0JpanUv?=
+ =?utf-8?B?L2RMV0RQSDRrdzRkakNNYmt2d1lhVUJwdEFnM01FWXJOZnZzUWhRS2lsZEZi?=
+ =?utf-8?B?WVUrWHJ3aHhxcWQ2Y3F1UkdISndzZys1Z1ZBMis4eHRUUWtMUEwweVRPMkxI?=
+ =?utf-8?B?UGIvZXFHZE9RVEZWMmFjSzBsTERqMWpHOVJ2TkZrRXNXUk13elhlQnJaVkk5?=
+ =?utf-8?B?Z3g1UmdKczB4Vk45YmhTM3FvT204dDh3cmdYRnA3QjFQTE96R21UVlR1YXFO?=
+ =?utf-8?B?ODBzQzY5ODIxWkI0Um8rcFNhVHBGdWgxZ0U4SytKbzhwMTNuTm9mUHNzVjZG?=
+ =?utf-8?B?N0lyS2hzbXdZNEZiYkMwcVRiQmhIc2grY21tSXM0c0lxMkZpMVdWeC81UXVS?=
+ =?utf-8?B?TFM5ZkdocGxRZjVMbVc4dFBiekM0a2padGh6Z2J6UEVzU3lWUlB6b3hldHdK?=
+ =?utf-8?B?MTNVSWtKU21naWUvNmw2RDJRTE15bTlVSzFFS09Md3dkVmxvV2trU01Qbzh3?=
+ =?utf-8?B?OElXUVI3NmNsUms3ZFQzaXVMRjBwZllMM0U0dFA3UVRoOVlSWHNydG1nSDQ1?=
+ =?utf-8?B?WnRrbGFZanQyYmdIRFZXSGViS1IxYUxTeERrUEVhOUJFVWxKbHgrOXFXWURi?=
+ =?utf-8?B?M3pNV3dEeEdZUldhNmNtRFJ6UThJenh5MlU1enB4V1htTjZPaEppdmtBaTVp?=
+ =?utf-8?B?MXBTdVlTekM0Rlg1WTViNWdybm5XS2pNWDNhWGdqU1VoNTlWNXprNzh5MXR6?=
+ =?utf-8?B?L09TL0xTSFVOd0wraFFENHFqLysvWW9wMHZjV09nbTlKZEh0a3djSzVJMjdT?=
+ =?utf-8?B?OGZHRjlQTEZaTkxucjR2NVFHSkQrclV1UVJmRWY3TW5uSHRiUHRWU0ttdU5m?=
+ =?utf-8?B?RGxOd3RZdXJhdUd1NWV1ZE91TEVtR1dCNWE5N3FCUWZ0NlRjVGlneGkrNUVt?=
+ =?utf-8?B?NmZLZmprbkxURGJhMStaWDIrMzk2TkFlNkVIS0k5eStWWVJOU3M2NVRONzdY?=
+ =?utf-8?B?TVM0ZU1VQ3pZUTJJSFFWMjNxR3B3akVIcVgwVFh5RmsvTnM2STQ5bFdmdSt2?=
+ =?utf-8?B?VmhRR1JsOHVaU2tROGNweXN3UUxDKzVFQ0M0L2dSL2U5RXRGa1hERVBVcjRR?=
+ =?utf-8?B?RnlMM2RDUUFON3VySTQyZ1UvMXdzQ3ZzcklmSXhhalM3SDZicW9kbnExcnhP?=
+ =?utf-8?B?QVFVQVlkbUpOL2ppRU5HM3lZOGIxL0ZYdGwyTGtGTFBxMjZzaWpQWE9WNWk3?=
+ =?utf-8?B?US95UndodXZ3eEN0MkZXM2h5N0puS3N0aDBxNEgwdGllZGxhNWs5M3ZTVVY2?=
+ =?utf-8?B?RStTRk1ua2FtMjNpemIyd1pManFNaERSNE9sem9GTjNsRGw1T0VzOEU4clhI?=
+ =?utf-8?B?T3hoOTBZRytZZzdyWUIrblVtY09sZ1R4STYyaE01ZnN2QWJ4aGRrd3p3OE95?=
+ =?utf-8?B?dWcxVGcvNTh4d1p3aU11bU1SWTRRNmRWMnk2UVZDekw4WG5hWnFrZWMwUTM1?=
+ =?utf-8?B?VWhKYTlxelZHZ3RKUEhNM1JGZCs0ZExIUTZVeCs0U0lrZGtKbFl5SExzU2tj?=
+ =?utf-8?B?UCtBaXM4ZnRyRGhOWmlzVmZQaDI5YXRxTWx4MW9pajZqRW8zRkdYcTI0M2xH?=
+ =?utf-8?B?bklWSnJTaWkrY1dyVXNvREE2Y0JiSnU3L250Q1RzcDdpOFJzQ2R1dG1welVk?=
+ =?utf-8?B?ZWxINzErRy9sUXh5TlRyVGlNWHY0Y0UvazFvZDZoWFI3NnYycGZCMmh4K3hp?=
+ =?utf-8?B?bkVnWEt2bjZvOFJFRzhYdTFzN2NjaEppNEc1R0V1Z1F2akd5WHg0KzIzeHEr?=
+ =?utf-8?B?QzY5Y0kzZCtjVWc1OVNmdEU1VEJSVUxyVVovMFV0Tzk5V1g2U2VZUmh3ald5?=
+ =?utf-8?B?RVhNZnNjMUNQL3puOE11dzJ5K0Z4QWxldFJENVVYTmd1R2EwVllVemNXcnVX?=
+ =?utf-8?Q?YtFhjK7Uvdw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR12MB6643.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SlNyNDdRVkZad3d0M21iSlZXY2Y2clBsN0RRalkraysyUWZGNFJCQ3dab2t3?=
+ =?utf-8?B?Y0l0eGVlL1ZEOVNZSjBjN3k0eHVvc2xDVkMvM1NLdUxYVDNOeS9jSHhyendI?=
+ =?utf-8?B?WmxoOFFZKzFWbEdWMFd3ZGRpeGhORzIzRmNmdzlUZ3FScUpMRjFyblovVDlN?=
+ =?utf-8?B?c2pZaVdLa0ZWcWl4NmVtLzJqOENVanpHNENVN0dQTHpOZDNIUTJVazUzYU5C?=
+ =?utf-8?B?ZVVlV1NFRHF5b0FhQ05KOGR3eGQycS90NlpPNTNMWStUQURKY25OZFhPTDAx?=
+ =?utf-8?B?MTcyaEhjajU5N0N2YXNLUWNTYkdMbERYV0Z2SXQxdHBzT2pYNFpBclBjRkdZ?=
+ =?utf-8?B?VnlFZU55OWdSMjVBTG9WaWlsWUp1cXkvYktLOU5YNnVqcW5HZEEwd1dWUE1H?=
+ =?utf-8?B?ZzR2LzF1TFU3RTRFclVCaXllRVZBTXdRaVZaQTFzdlE0clNEeENVWTNDMDQy?=
+ =?utf-8?B?UDc4Yklac3NULy81SEtMRXE1azJKTGc1UytwVjdja3NzdVRxTGtCYTZjNXds?=
+ =?utf-8?B?NmZQOVR1dWpBeitpWEpmZXlGMVpNZlpEQ2RLMVA0ZVkrZDZOUU4xOUg4M0tO?=
+ =?utf-8?B?UXlxTHA2cGFiMjhuUHZFeDNERC9oZ2FHUFhaUnZUTGZxY0JFWlFVNk1OS2M2?=
+ =?utf-8?B?Y1B6aXBoRnovQjgrdmJwdDZPRjdMSlJIemI0L0l0OG5HeGlyNFFMUkNwQ2Uz?=
+ =?utf-8?B?TlowZjJPNnJGVnVKZ016ZHA3b2p2ZUI5bTk5Ulk0UXVVNnI0Y1Y4TlpMejJ5?=
+ =?utf-8?B?bWN4eXlvaHhOS1JJTW1CaTFBQ0RZVG9GclFKWVlTMlEyRzh3Rm5qVFJpSE5Z?=
+ =?utf-8?B?QW00QzVYd3BJWlg5cm5ma2tsUEJ4U3IySThPcCtwcTJ2bnpLZXU4K0pmazdI?=
+ =?utf-8?B?UUZvK1JnRUd3SlRNd1U0ak5yeFR0Qno5bWFUb1dpMVJlYWd2WHFILzJSZXNn?=
+ =?utf-8?B?VFVEZ2k1MXZyUnNERTRXK2RONjh0eThEOG0wbW1VUW5MYkZmYTZFbE10b0Jl?=
+ =?utf-8?B?cys1UUtxMWtUOGluVXZETHNLTUQ1QnlFOFRqVm9QY1E1ME1Rb0FreTBoZW9r?=
+ =?utf-8?B?ZnAyVGhCTk1VWHArWjl0Rm9QWExKL1VqQytUaWJPYWJ3cW5LTW1Gb212a1Vw?=
+ =?utf-8?B?RFhqbCsrNk5yN2hHRlVIajIwcnBldFB1OFgvZ1FsUElyQTNMMG5aU3JmVlMx?=
+ =?utf-8?B?dUN0bThYRkptOU1Ga2ZZYXNTa0dWbXh2RmFEaE02WVNtTG9pUGNRc21heVhI?=
+ =?utf-8?B?SmFNQlFubGFJU25sVXMzSS95R2RNMnJBQW5aQ2FKcDBaZ3VHbTE3bzdmVm9Z?=
+ =?utf-8?B?QVN6RU9YdTd6RWlKY1hmSkx4UGlhWjdxVWhnRHFBa1d6Qjd4NXFuZ0VaRGZ5?=
+ =?utf-8?B?NnJ3WXR4aHFHNHFPaXE0K2FPTFhzbm9lWlQzbFNJK3R3OE1GamFobkJkSDBT?=
+ =?utf-8?B?UG5GaFJ3aFhOSUc1UGFadUpwcDI5T3djakkrUTNra1U3aEtrRkxNdkQzb1Jl?=
+ =?utf-8?B?T1NyKzlXSDllL0RkdFNWb2JnS2V5Z1NMUVRmT0NaM2FGYXpjeXBlMnRmclRH?=
+ =?utf-8?B?VHRmUFBLMUQwR0c1L2o5UUNRakVhMC9zeTR5K1YyTjdWdTEzTzZ3eUpCUFFL?=
+ =?utf-8?B?aFhkSWRZZUY3a0Izc1g5a3JWTkM5L2lKcXprVGI1cmhYcjZTNUlWZWdnY3R3?=
+ =?utf-8?B?cHNiVjRndEZjbjJhdGY2TGxzTklEVzhRR2hvamh2T2lRSmlrNHlVUG5HTWxF?=
+ =?utf-8?B?NXNSSDJ2SlBjeUhPbU15ZE5RQlNGOGVDMEIzT0J1cVU2SlRJRDVhSTMwWTRF?=
+ =?utf-8?B?cHo4cGVDcW9LMEhPSDNtWWVXVnFqUUtoa0pXelJDZTJIMmZlWEMzRUt1Z3dR?=
+ =?utf-8?B?aFhtVkpQS0YvZG5XNjFhYjF4MVNnQmlRWFI2UWN2b3ppemRsTndKTEpQakxj?=
+ =?utf-8?B?TzVVenhLdmhVOElFOWRxOUN5WlFkWlA0K05FcmtQSTkrSjg3Rlcwc1BuZFZl?=
+ =?utf-8?B?a2NYVHJPcUtWZHoyNU14V0JyTldiY0ZaRC9qR3NsWlIvVDlESmlKZlFHenNS?=
+ =?utf-8?B?ajNsTmJqcjlCc2xMNVZsbzlGUnNTRG44V2J1cE01cHN0UC9NRzNQT1BBSlNM?=
+ =?utf-8?Q?PrIchm6rMJNVw2qR+Ko1MLysS?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 152f886d-912c-47bf-b63d-08dd88f33fdb
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR12MB6643.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 21:00:48.8046
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Rp3yx4pkIt37gU9ex9aYm68UTkX1rN6UHZT/H+th1JkBvJ2wIVV26pVgaIYBOSmSXuij4eMFgMZH0Ulgw4PTOQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB7723
 
 
---txcrry3e57y7fctt
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 4/7] nvmem: provide consumer access to cell size
- metrics
-MIME-Version: 1.0
 
-Hi,
+On 5/1/25 03:58, Vasant Hegde wrote:
+> On 4/30/2025 8:24 AM, Tushar Dave wrote:
+>> Generally PASID support requires ACS settings that usually create
+>> single device groups, but there are some niche cases where we can get
+>> multi-device groups and still have working PASID support. The primary
+>> issue is that PCI switches are not required to treat PASID tagged TLPs
+>> specially so appropriate ACS settings are required to route all TLPs to
+>> the host bridge if PASID is going to work properly.
+>>
+>> pci_enable_pasid() does check that each device that will use PASID has
+>> the proper ACS settings to achieve this routing.
+>>
+>> However, no-PASID devices can be combined with PASID capable devices
+>> within the same topology using non-uniform ACS settings. In this case
+>> the no-PASID devices may not have strict route to host ACS flags and
+>> end up being grouped with the PASID devices.
+>>
+>> This configuration fails to allow use of the PASID within the iommu
+>> core code which wrongly checks if the no-PASID device supports PASID.
+>>
+>> Fix this by ignoring no-PASID devices during the PASID validation. They
+>> will never issue a PASID TLP anyhow so they can be ignored.
+>>
+>> Fixes: c404f55c26fc ("iommu: Validate the PASID in iommu_attach_device_pasid()")
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Tushar Dave <tdave@nvidia.com>
+>> ---
+>>
+>> changes in v2:
+>> - added no-pasid check in __iommu_set_group_pasid and __iommu_remove_group_pasid
+>>
+>>   drivers/iommu/iommu.c | 22 ++++++++++++++++------
+>>   1 file changed, 16 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+>> index 60aed01e54f2..8251b07f4022 100644
+>> --- a/drivers/iommu/iommu.c
+>> +++ b/drivers/iommu/iommu.c
+>> @@ -3329,8 +3329,9 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
+>>   	int ret;
+> 
+> initialize ret to zero?
 
-On Tue, Apr 22, 2025 at 10:57:14AM +0200, Oleksij Rempel wrote:
-> Add nvmem_cell_get_size() function to provide access to cell size
-> metrics. In some cases we may get cell size less as consumer would
-> expect it. So, nvmem_cell_write() would fail with incorrect buffer size.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v6:
-> - update function comment for nvmem_cell_get_size()
-> ---
+Thanks Vasant.
 
-This is also needed for the following patch:
+How about:
 
-https://lore.kernel.org/linux-pm/20250321161449.1175473-1-jberring@redhat.c=
-om/
+         for_each_group_device(group, device) {
+-               ret = domain->ops->set_dev_pasid(domain, device->dev,
+-                                                pasid, NULL);
+-               if (ret)
+-                       goto err_revert;
++               if (device->dev->iommu->max_pasids > 0) {
++                       ret = domain->ops->set_dev_pasid(domain, device->dev,
++                                                        pasid, NULL);
++                       if (ret)
++                               goto err_revert;
++               }
+         }
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Let me know.
 
--- Sebastian
+-Tushar
 
->  drivers/nvmem/core.c           | 29 +++++++++++++++++++++++++++++
->  include/linux/nvmem-consumer.h |  7 +++++++
->  2 files changed, 36 insertions(+)
->=20
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index fff85bbf0ecd..754a9448c39d 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -1828,6 +1828,35 @@ int nvmem_cell_write(struct nvmem_cell *cell, void=
- *buf, size_t len)
-> =20
->  EXPORT_SYMBOL_GPL(nvmem_cell_write);
-> =20
-> +/**
-> + * nvmem_cell_get_size() - Retrieve the storage size of an NVMEM cell.
-> + * @cell: Pointer to the NVMEM cell structure.
-> + * @bytes: Optional pointer to store the cell size in bytes (can be NULL=
-).
-> + * @bits: Optional pointer to store the cell size in bits (can be NULL).
-> + *
-> + * This function allows consumers to retrieve the size of a specific NVM=
-EM
-> + * cell before performing read/write operations. It is useful for valida=
-ting
-> + * buffer sizes to prevent mismatched writes.
-> + *
-> + * Return: 0 on success or negative on failure.
-> + */
-> +int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *=
-bits)
-> +{
-> +	struct nvmem_cell_entry *entry =3D cell->entry;
-> +
-> +	if (!entry->nvmem)
-> +		return -EINVAL;
-> +
-> +	if (bytes)
-> +		*bytes =3D entry->bytes;
-> +
-> +	if (bits)
-> +		*bits =3D entry->nbits;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(nvmem_cell_get_size);
-> +
->  static int nvmem_cell_read_common(struct device *dev, const char *cell_i=
-d,
->  				  void *val, size_t count)
->  {
-> diff --git a/include/linux/nvmem-consumer.h b/include/linux/nvmem-consume=
-r.h
-> index 34c0e58dfa26..bcb0e17e415d 100644
-> --- a/include/linux/nvmem-consumer.h
-> +++ b/include/linux/nvmem-consumer.h
-> @@ -56,6 +56,7 @@ void nvmem_cell_put(struct nvmem_cell *cell);
->  void devm_nvmem_cell_put(struct device *dev, struct nvmem_cell *cell);
->  void *nvmem_cell_read(struct nvmem_cell *cell, size_t *len);
->  int nvmem_cell_write(struct nvmem_cell *cell, void *buf, size_t len);
-> +int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *bytes, size_t *=
-bits);
->  int nvmem_cell_read_u8(struct device *dev, const char *cell_id, u8 *val);
->  int nvmem_cell_read_u16(struct device *dev, const char *cell_id, u16 *va=
-l);
->  int nvmem_cell_read_u32(struct device *dev, const char *cell_id, u32 *va=
-l);
-> @@ -128,6 +129,12 @@ static inline int nvmem_cell_write(struct nvmem_cell=
- *cell,
->  	return -EOPNOTSUPP;
->  }
-> =20
-> +static inline int nvmem_cell_get_size(struct nvmem_cell *cell, size_t *b=
-ytes,
-> +				      size_t *bits)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
->  static inline int nvmem_cell_read_u8(struct device *dev,
->  				     const char *cell_id, u8 *val)
->  {
-> --=20
-> 2.39.5
->=20
-
---txcrry3e57y7fctt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgT4KcACgkQ2O7X88g7
-+priChAAhBa2jS9PNKKJX4SU92UX/skvv6BYd12ckO6cGpe5H44x3q8fZq4S41Kn
-+IKmI0Lp5BM9IPMAuiC+p5GeeLhWlHbq5HPR/tlhj8IxGSIlTr7xgxEs4WsaGw20
-skKZIKS6d4UhEIxI5W1SvbvdbLe/VUgSLg/AHAr9MQt+hHjX2lnCjBqvX9IhMP8I
-CQouDIr/bYwIimnQICrHhlhgQAo7TiKxaw9rXDNui757iU7PrLPhilF9YvL8rJSP
-KBeSVpGoCmW0Wg9i+at+vDG0xpcugLm6UFt3cNP9eqrXa2pMO9kfjn7MUJ8AowKB
-BtKtK9Sw7/HvMadW6zWS0pd/5GvxVkPJIWYsnh16crnu9eX/v0uYnblZW6qyu7cO
-lIMBdLErio97FaaXGD9bloDj+brOwYw13ZJfQ7ZaJftlDWcV+ru0LgCrMbiIp05V
-S92NZUyEKLpIGXdiYHPz08pI+qMJjvb8FuCSlSUieW6Ea7zUKOOLIGb95i8Yg+wA
-EjnIbXB3UHxVQb+UGMQ1yjsTmE2LGQy3T/y3tqDXryHV8sVMeZRanM/OpnkVKMve
-mlHaGEa+zGXamMN6OT7jHVbfgNmMbZVFWQ+Il3UOkdcTufl6b0OOoDmIPu6v6EY8
-cSIltAGqZfUgmKtxDZbjBRkMjPNwGuLgz9MifrBKZL++OvDlvdE=
-=FfKc
------END PGP SIGNATURE-----
-
---txcrry3e57y7fctt--
+> 
+> -Vasant
+> 
+>>   
+>>   	for_each_group_device(group, device) {
+>> -		ret = domain->ops->set_dev_pasid(domain, device->dev,
+>> -						 pasid, NULL);
+>> +		if (device->dev->iommu->max_pasids > 0)
+>> +			ret = domain->ops->set_dev_pasid(domain, device->dev,
+>> +							 pasid, NULL);
+>>   		if (ret)
+>>   			goto err_revert;
+>>   	}
+>> @@ -3342,7 +3343,8 @@ static int __iommu_set_group_pasid(struct iommu_domain *domain,
+>>   	for_each_group_device(group, device) {
+>>   		if (device == last_gdev)
+>>   			break;
+>> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
+>> +		if (device->dev->iommu->max_pasids > 0)
+>> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
+>>   	}
+>>   	return ret;
+>>   }
+>> @@ -3353,8 +3355,10 @@ static void __iommu_remove_group_pasid(struct iommu_group *group,
+>>   {
+>>   	struct group_device *device;
+>>   
+>> -	for_each_group_device(group, device)
+>> -		iommu_remove_dev_pasid(device->dev, pasid, domain);
+>> +	for_each_group_device(group, device) {
+>> +		if (device->dev->iommu->max_pasids > 0)
+>> +			iommu_remove_dev_pasid(device->dev, pasid, domain);
+>> +	}
+>>   }
+>>   
+>>   /*
+>> @@ -3391,7 +3395,13 @@ int iommu_attach_device_pasid(struct iommu_domain *domain,
+>>   
+>>   	mutex_lock(&group->mutex);
+>>   	for_each_group_device(group, device) {
+>> -		if (pasid >= device->dev->iommu->max_pasids) {
+>> +		/*
+>> +		 * Skip PASID validation for devices without PASID support
+>> +		 * (max_pasids = 0). These devices cannot issue transactions
+>> +		 * with PASID, so they don't affect group's PASID usage.
+>> +		 */
+>> +		if ((device->dev->iommu->max_pasids > 0) &&
+>> +		    (pasid >= device->dev->iommu->max_pasids)) {
+>>   			ret = -EINVAL;
+>>   			goto out_unlock;
+>>   		}
+> 
