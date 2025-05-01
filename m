@@ -1,132 +1,90 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D951C253347
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 22:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65FF1D89E3;
+	Thu,  1 May 2025 23:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746140261; cv=none; b=SQF1269hhwKfGrQMyjpxS/qRDxg82ed2iNs6aY5SAdYek3MdpJTHlqwvRly86NyKJV+82jIOdcmFPso8ASYwW47tBBNawMiKVBCFW0WgJFmcT+FCPm2F8g0GXsAjTD+OwzHo7Ds4CrtyirsNsEYD0tgtZyj/4TAC6w6WKW8MQ8s=
+	t=1746140440; cv=none; b=SBDiPIdfuAb3tQ3D5PwlQKy/KJQJ7uX0HRwDWqhUrRkKkIlxpkxoutjUUjlY0TFxVGwXNjfOHsvs3yPEaGNrylWr/CwwKv+LEF+hgaQCISLj/Xr4kA+10V5wEa+advYw68/HoB0UjHpx7h/tH4EBaZhUcPJ7w+2emvnbMfEhuP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746140261; c=relaxed/simple;
-	bh=3zxHWlX0tDp2KZ/yT11dmKAtfvinwG+gf88s7SisIbw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mdvH33hhsL1VtFR7SzbzdJGvhUN165ei+x3xz1dJG+fJZHkDecM7dLjsdk4+Eg7KdE4awzqll1pZzSI2ivMiPZZklfIJdu56m8F9wJpcpxuxF4FB9SPtqyZH9Br26usS2hfxhX3P0oLwKBUeyeIDBZRPGbnafmRM2ciEh/aBcLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=XptMGTX6; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1746140440; c=relaxed/simple;
+	bh=1xRA18ItmOxRA1HPS4t1o2JORpDbr4fyL0IDsEt7UTw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DSUh8XoUueRhWMR7btWteK435RN0eK3cDufn7r8VhiI9/L0rxiVuP6ty5isisCflUjexYGL4IovUSMVmXgje30syKfOQntAhc6caHJMnp9Wgzjx2t3gJTkjVOdJCAfhRWIsJqCiBVXWKBFcSpHywyWg5BgB9poryjBuJPANCE60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5qbQUI2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="XptMGTX6"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id AYfjuMMENVkcRAcqRu5UeC; Thu, 01 May 2025 22:57:31 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id AcqQuSd1YRlrsAcqRuNCxS; Thu, 01 May 2025 22:57:31 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=6813fc5b
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=efVMuJ2jJG67FGuSm7J3ww==:17
- a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=C667ouF_f8g6uxj60aYA:9 a=QEXdDO2ut3YA:10 a=Xt_RvD8W3m28Mn_h3AK8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=W43Qa61YR17du0yXnoQXN2+FWM5SOwP9auDcLsuj2ck=; b=XptMGTX6C0VdVC6rtZreaDYrbn
-	LLUV4n+MSuODYrnrsaNDO3vhr2VMZUZhMKZ+KOl4Ld5Xi37iL26upGA2hPojK/jmlF0SG8XWwKIWF
-	bs611xEM/+Ql3w+SxU6/Oenn50KXqKSU6ip2ej0cGuFsEit+mZ+GYfvk2D1S7gc0Gr9eyzUIxezAy
-	yOSaCmwIbI7pGbz5QtKyyExiCL6MXz09zcNV0x6eNkpSzaxHligAP4N6ghKo5S+m7HjLa0RXpbHOS
-	t/TjXvzdG2C6hQ6S0oImOFCKCr6vspxnFvE0Djdun+wan2eiVbyCF3wXkQ4rakHAUmhhr0RXyoep8
-	Fnwqzj5w==;
-Received: from [177.238.17.151] (port=17926 helo=[192.168.0.101])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uAcqQ-00000003mgg-24Q5;
-	Thu, 01 May 2025 17:57:30 -0500
-Message-ID: <a9c0ab40-6907-46d8-9107-7afe2f1782ca@embeddedor.com>
-Date: Thu, 1 May 2025 16:57:24 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5qbQUI2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC882C4CEE3;
+	Thu,  1 May 2025 23:00:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746140439;
+	bh=1xRA18ItmOxRA1HPS4t1o2JORpDbr4fyL0IDsEt7UTw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=A5qbQUI2iHgOBYOzypoRJpf6LMW2l1GkDXG+/L+frUb6jNZYKW3P7rpAEiqNAqHXu
+	 F4xIP+SoOqhzi+sSEN7dTxSL3Jct6vC7TKLy+M5/k4qUu4go3NkCLyTuMwKvtLYT85
+	 zUMMttrlilXp/L3v0twxN1seQ3quZHlIpgqMG8BWPTnMNJFAylD87eNFjDU3u+HLt9
+	 71aUiKqFyKZ9Y0s4enxgsYF2xXztdwoNQ/nCW8LaoKDcnaBbP41yZFNPszCGPfJqRv
+	 3SOr8j8u/RYJVapQFg8hxdByIDVk5XoNd7mEAipEJD5vLg3pQBGTEfrbHKqCUtPeaM
+	 Mjiy/8aRJoQyQ==
+From: Nathan Chancellor <nathan@kernel.org>
+Subject: [PATCH 0/2] Deal with clang's -Wdefault-const-init-unsafe
+Date: Thu, 01 May 2025 16:00:20 -0700
+Message-Id: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH][next] overflow: Fix direct struct member initialization
- in _DEFINE_FLEX()
-To: Kees Cook <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <aBK2TUEeQfCFop9Y@kspp> <202505011315.AC9590F@keescook>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <202505011315.AC9590F@keescook>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.17.151
-X-Source-L: No
-X-Exim-ID: 1uAcqQ-00000003mgg-24Q5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.101]) [177.238.17.151]:17926
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 1
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfENhV3IjuhFWPIKYQjl6h3y1niZsXa1egALJ35DdcSL9wh85ADshOS1e1atdqeN/3+jQLRNZowobjkKyyTEd7/1AuMU+6wroVMAx7iQsCvbWvilA66uQ
- n734oMvRkug/FmmfNHdfYkf80N7ZB5e8yOZCChyiiuhp7B5gQmiiVV4Xyv/DpRk28xRGoXBJFucTXMjDS6nThLCsZvmrqkgBBGMEzNwm3vCXci/OXu+4Ihz1
+X-B4-Tracking: v=1; b=H4sIAAT9E2gC/x2MQQqAMAwEvyI5G6hVi/gV8dDaVANSpVURxL8bv
+ M3A7D6QKTFl6IsHEl2ceYsiVVnAtNg4E7IXB610q5paoadgz/XAaYv5QI4suEqIzpCuXOdV7Qz
+ IfE8U+P6vh/F9P9r9ROxqAAAA
+X-Change-ID: 20250430-default-const-init-clang-b6e21b8d03b6
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ Masahiro Yamada <masahiroy@kernel.org>
+Cc: Nicolas Schier <nicolas.schier@linux.dev>, 
+ Andrew Morton <akpm@linux-foundation.org>, 
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, 
+ Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+ Linus Torvalds <torvalds@linux-foundation.org>, 
+ linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ llvm@lists.linux.dev, patches@lists.linux.dev, stable@vger.kernel.org, 
+ Linux Kernel Functional Testing <lkft@linaro.org>, 
+ Marcus Seyfarth <m.seyfarth@gmail.com>, 
+ Nathan Chancellor <nathan@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=995; i=nathan@kernel.org;
+ h=from:subject:message-id; bh=1xRA18ItmOxRA1HPS4t1o2JORpDbr4fyL0IDsEt7UTw=;
+ b=owGbwMvMwCUmm602sfCA1DTG02pJDBnCf0XcLK3y+CxTGN68ulxwp2vSvrAHs1WPZt92LFJan
+ HPKd/6xjlIWBjEuBlkxRZbqx6rHDQ3nnGW8cWoSzBxWJpAhDFycAjARL2lGhuOKO5VTJ+1r/mef
+ bXXq4I7/0xo1th+5u0kn2u6+wZ3+RzGMDKstbpnmRU70K/+z2Gk+i+H7uyaP0j/MTXrZfeRtXOR
+ cDV4A
+X-Developer-Key: i=nathan@kernel.org; a=openpgp;
+ fpr=2437CB76E544CB6AB3D9DFD399739260CB6CB716
 
+A new on by default warning in clang aims to flag cases where a const
+variable or field is not initialized and has no default value (i.e., not
+static or thread local). The field version of the warning triggers in
+several places within the kernel that are not problematic so it is
+disabled in the first patch. The variable version of the warning only
+triggers in one place, the typecheck() macro, so I opted to silence it
+in that one place to keep it enabled until it can be proved to be
+problematic enough to disable it.
 
-> Earlier up in the file:
-> 
-> ...
->   * @initializer: initializer expression (could be empty for no init).
->     ^^^^^^^^^
->   */
-> #define _DEFINE_FLEX(type, name, member, count, initializer...)
-> 
-> This argument now becomes required, which is fine, but we should keep
+---
+Nathan Chancellor (2):
+      kbuild: Disable -Wdefault-const-init-field-unsafe
+      include/linux/typecheck.h: Zero initialize dummy variables
 
-Nice catch!
+ include/linux/typecheck.h  | 4 ++--
+ scripts/Makefile.extrawarn | 7 +++++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+---
+base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
+change-id: 20250430-default-const-init-clang-b6e21b8d03b6
 
-> the docs updated and double check any existing "_DEFINE_FLEX" users that
-> may have an empty final argument (I don't see any, so that's nice).
+Best regards,
+-- 
+Nathan Chancellor <nathan@kernel.org>
 
-Yep, I build-tested it and saw no errors.
-
-> 
->>   	union {									\
->>   		u8 bytes[struct_size_t(type, member, count)];			\
->>   		type obj;							\
->> -	} name##_u initializer;							\
->> +	} name##_u = { .obj initializer };					\
->>   	type *name = (type *)&name##_u
->>   
->>   /**
->> @@ -444,7 +444,7 @@ static inline size_t __must_check size_sub(size_t minuend, size_t subtrahend)
->>    * elements in array @member.
->>    */
->>   #define DEFINE_FLEX(TYPE, NAME, MEMBER, COUNTER, COUNT)	\
->> -	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .obj.COUNTER = COUNT, })
->> +	_DEFINE_FLEX(TYPE, NAME, MEMBER, COUNT, = { .COUNTER = COUNT, })
->>   
->>   /**
->>    * STACK_FLEX_ARRAY_SIZE() - helper macro for DEFINE_FLEX() family.
-> 
-> But otherwise, yes, let's do this!
-> 
-
-Here you go :)
-
-https://lore.kernel.org/linux-hardening/aBP0b3gfurLFDlwY@kspp/
-
-Thanks!
--Gustavo
