@@ -1,145 +1,415 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7397920DD51
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:37:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7310420D51A;
+	Thu,  1 May 2025 16:37:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746117443; cv=none; b=KEHCmk5PwU/z8mPeXprjiZ+93b3KhbM6kDkQRVTCDVPr9DL2u8rm6K3qYrXyttrqT4qB0UBxSYjJgupxjq3q/FVGnnQBzwPEs/INfiJ7ECqRktN8tk9ZQJXsyx50oPbx+0PY6JdHO62MUQIqonPS+KffAbV1gPZc7nUU57bsnxY=
+	t=1746117441; cv=none; b=I9yPlaq9mu9BLGFmXb6mfZhkTjYpVI4OBWgizVLgR8AN5u4bUtzADj7MLqRnzmaRpmk0+vssUbKZ8YBCU3pjF3WM4CJcgi8d0pUr1Ul218R4fQvhrz/cIjWzILRN/Fx/75i/olruMqmTvR6Mr3c0lO0GQ16Kc9+FPaN5d5+e1iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746117443; c=relaxed/simple;
-	bh=wSaZtA4bRYZs1G8waYvshbkAD9TzfZ9GbMZQt0pldJQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iKhDtG9tXqrNffD9xW3Z7WJIQRgEk8r24PM8T0deXLiMhOck4S/XCMd/mO4dEKwQ6LrMUqdAbXVZdadj3H/h+SoO2YJj5HdHmw/BGzuU3OiRMHQ9SRtpzHJTXCrTqlGHpeKEllN3hrpCmAKrLb2M6fPmRYq9mbPScDS0ziddXT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HR80fJPs; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746117441; c=relaxed/simple;
+	bh=UFKG35B9L3fXHrixK4gXQEx+P0NgCp9KHiKNXcvZ8Bc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=tORT5ZPrtZRdypu3wwNA+EHjYEgqelbe8bqm+TO+JkEZ+laklwASB+D5GGFQ8P4/JLjuh9LyDOPtTmkuwbdhgWbjgVac+AwoMPilqKos/uflfUwxPVpFRc71+RLeuEwsFlGGCbEfBjS4VLidjLRHhvaMaAzsLfRYkxDz/mqybSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQALpLZo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HR80fJPs"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf89f81c5so1443195e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:37:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746117440; x=1746722240; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9P1m7Y3z4d9rNoWAl6MknfdebV+lwfWdrXlwW8WNKhI=;
-        b=HR80fJPsyFPKEUQRwbA00bCr+qB95bBuFSLflfSJbO6paKVShE0VmL9AhgFRoQoCZ7
-         +u9+8MbyA6Pr5KiR7/cOkoz8v6VGurjKqCBmC8+twY5j9xlNoYsQqDApRaKKZcSGx5Ed
-         ceGnTaM3zsLtO0iZ0OF0iMMd1jjPj8MR/LWfHd6yfHtTNBzV6GbT72E0aqiV6T7T1clB
-         n6crbVUNb3NQxgRoqGBOFfxuj+FYYVO4e/Agk6aWLB9UMyUh4mofMxRrCpK9C6iKJfe7
-         Lgn8f0EW37YgFlVtM9QnDm1rRlmG4zmv3R+yLkxZqSZpuOMk0ccU2GkEchp0Q9SWi3yw
-         ZNSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746117440; x=1746722240;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9P1m7Y3z4d9rNoWAl6MknfdebV+lwfWdrXlwW8WNKhI=;
-        b=sDryqGG+GmKQtoahunP1C+IFoVtH5M4PJurt2/0DM/mOADCqq5gXAq6I/8yqwe4Ih4
-         NhxtEcxO5/JnJSZar6q8kf493X+shRAZhSwt2ucfg02xvg1iq6D4kep1aBLaLGgZ3qPh
-         Hh1hhW2NYKZuC7G47sAD0Utqp/Woiu7IDFh6+IJ/BsvMJ5drIP/FzbEBYlQOLr/94op0
-         ilx8iRILcKeE8ftJy7yGeQgVi3gVCFfcS1pEcN9PJznCfGnZiyV1qGQa52Tyg2byvjfF
-         g8CiB6wHgnht3DgfD0MLLjwReHwnIkQh/nQQrfDg4iP0UokEBRFcMn+MLOQFzqFeIxlg
-         F6aQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZX6nNDoLg4/n+Isx1lkDj3p9jsKt5WcTHOZUX/mY7HwslCh3SosMUicl26JPsBuB+sI42zlx5aK3dcw4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKFsXW6nmcNhPApLXx5UIOD5VOAERDu6rbIi3mhi//r7SCjouV
-	QMlsSYekr2UAIBAxpPcVHXMeJEvlmahtwmy+BaFefomqEPXB0+FeP1D5WT93hqM=
-X-Gm-Gg: ASbGnctBqY+IO+TXupp8jMHWBle2CDuHDDFbABOwMI1ahSxhqs+VfrEyVEAe1AVXkca
-	7qHRiu4n7UQBREHTFbR+jLjXBtTCtPUWii6OqCp3vZYags/7nmBxMhmjB9NlvhvayjR3JUtjdK2
-	f4oVgzhO+uP6XDCBn40e6OsN7nh8JpbG66GIGPNzokyhY76ADhvibZ70xGUIxe4/9Xtg+14WZ6B
-	7Fv8BsZ6a7aUUEgVUdx4dX8UnvK4Qbryuv8k/W8FcS8LNpU7EF4K1jNjPrTxJsxB++81HMUPFa5
-	APSl0oAczCyXHrEwy+GpU1jqjkg9tM7YoI02op/0MsZbsoRL4kVWvg8/HNc=
-X-Google-Smtp-Source: AGHT+IGPpDqg1uqE8LFEWwLX435f56VDxCANn/R7sh63I65f2yRV/LXQryCMvr0tRZXQRAMZb4Q3cA==
-X-Received: by 2002:a05:600c:1da0:b0:43d:fa5e:50e6 with SMTP id 5b1f17b1804b1-441b2dfce81mr23814815e9.9.1746117439733;
-        Thu, 01 May 2025 09:37:19 -0700 (PDT)
-Received: from [192.168.1.28] ([178.197.207.88])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a288f0sm17166175e9.27.2025.05.01.09.37.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 09:37:19 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Date: Thu, 01 May 2025 18:36:56 +0200
-Subject: [PATCH RESEND v2 2/3] iommu: omap: Use
- syscon_regmap_lookup_by_phandle_args
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQALpLZo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F2CC4CEE9;
+	Thu,  1 May 2025 16:37:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746117438;
+	bh=UFKG35B9L3fXHrixK4gXQEx+P0NgCp9KHiKNXcvZ8Bc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WQALpLZoTmWCxUOY5IfKEw6XqNNh3vJ3I+5aY7bjZozri9DDB5J5jteqqwmMKPQ7D
+	 wb554tYYi5XokuuqPWUV+SNdq0/206WpnGRZeKbCgZbP0NMSLQlqD4QB1sy5k4suaj
+	 2qz8M00W5ITrLsBIAk+HoZzN0JXwP4ctGvLb9bhhYCN+m9TawVaa5quEDR1MlKjbPH
+	 DGkMszy3NnogI+SHEfhvt5B9Ko1h/4zd5Ol2XNgHWS2KtRznHXJ6Ws9uq8nz5nJKcs
+	 etFTypIY3JBkIg3OEdO8coYyywISHzbXunLhdaIcMleLtGtB8TpldaG+12Cjp1B1sT
+	 XlG0f+w2K1Zfg==
+From: Jakub Kicinski <kuba@kernel.org>
+To: torvalds@linux-foundation.org
+Cc: kuba@kernel.org,
+	davem@davemloft.net,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	pabeni@redhat.com
+Subject: [GIT PULL] Networking for v6.15-rc5
+Date: Thu,  1 May 2025 09:37:17 -0700
+Message-ID: <20250501163717.3002314-1-kuba@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-syscon-phandle-args-iommu-v2-2-5a3cab296972@linaro.org>
-References: <20250501-syscon-phandle-args-iommu-v2-0-5a3cab296972@linaro.org>
-In-Reply-To: <20250501-syscon-phandle-args-iommu-v2-0-5a3cab296972@linaro.org>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>, 
- Robin Murphy <robin.murphy@arm.com>, Yong Wu <yong.wu@mediatek.com>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1817;
- i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
- bh=wSaZtA4bRYZs1G8waYvshbkAD9TzfZ9GbMZQt0pldJQ=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE6M3dTz73g1hTqWpvm/RlUFFBhL88fh777FAU
- nRWt/u50OyJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBOjNwAKCRDBN2bmhouD
- 14/1D/9qJJTAa6KNC4lnTB/UEBpK84vmumCpWTc11C3ByO2evXS29s7m1n4ZeLfrGzcrMmdIgev
- SlymAyZt1pL0HRWKb2lPzosqnhTpPMroFJltOQ9ZFiF89RGR+52847bWlrO2T3QhduCvBENWNcy
- gJucPsQ8IV8FsulSEYNSyk7wZwOD/zeCQrJg48ra6dJp5RBwKVfeVxMUKVb5BQ2U02MJZXCzvRO
- LJCgJhHs0cGBC8XRiTjCH0pc3PDZTlbUt7WyCDORjp1UzLrN7p3y2+rACVlW3Fr7gmGIDq/tRv7
- h6De2LgeQeZ/Jk4wRgQauPk+kOxC70aMXic7LzQ9zoe+FxBirV+x7veEsey+NsrDVCcUbNJQzlr
- w0FaKE6Tht0oesmD+iI4sETbNNt55JdQ8i0l3MkG0PAmKwSnFWT3sfCl7+ZBowY0j8b84fZQF/f
- P2fhWwsYBcxldooG/RmK9pSJYh0zCpTf7gRLFpoGELfB2PTRsXnjbqJFKDI2GfKxaRcNl4vPFcW
- 6T60C0sLDvFfESa810o+xYVTroMqojApfAcU661dCx5WcdE/EO2UtOnX1HVCENEXYpM6GxArbJS
- r1ta56HmrhLEoAqeIamYOzHSQIRL05dpIQPQJWm2Nlc3B4sySF5cuV6D30iUdELbH/fX2yQedfG
- 3ZTINBZ555xaPXw==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
- fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Use syscon_regmap_lookup_by_phandle_args() which is a wrapper over
-syscon_regmap_lookup_by_phandle() combined with getting the syscon
-argument.  Except simpler code this annotates within one line that given
-phandle has arguments, so grepping for code would be easier.
+Hi Linus!
 
-There is also no real benefit in printing errors on missing syscon
-argument, because this is done just too late: runtime check on
-static/build-time data.  Dtschema and Devicetree bindings offer the
-static/build-time check for this already.
+The following changes since commit e72e9e6933071fbbb3076811d3a0cc20e8720a5b:
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/iommu/omap-iommu.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+  Merge tag 'net-6.15-rc4' of git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net (2025-04-24 09:14:50 -0700)
 
-diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
-index 4448c0a512137c79195112eea25d762266c77bc3..30fdbabbc9c652990e6cd31d3c0a1a06633df9e6 100644
---- a/drivers/iommu/omap-iommu.c
-+++ b/drivers/iommu/omap-iommu.c
-@@ -1127,18 +1127,12 @@ static int omap_iommu_dra7_get_dsp_system_cfg(struct platform_device *pdev,
- 	if (!of_device_is_compatible(np, "ti,dra7-dsp-iommu"))
- 		return 0;
- 
--	obj->syscfg =
--		syscon_regmap_lookup_by_phandle(np, "ti,syscon-mmuconfig");
-+	obj->syscfg = syscon_regmap_lookup_by_phandle_args(np, "ti,syscon-mmuconfig",
-+							   1, &obj->id);
- 	if (IS_ERR(obj->syscfg))
- 		return dev_err_probe(&pdev->dev, PTR_ERR(obj->syscfg),
- 				     "ti,syscon-mmuconfig property is missing\n");
- 
--	if (of_property_read_u32_index(np, "ti,syscon-mmuconfig", 1,
--				       &obj->id)) {
--		dev_err(&pdev->dev, "couldn't get the IOMMU instance id within subsystem\n");
--		return -EINVAL;
--	}
--
- 	if (obj->id != 0 && obj->id != 1) {
- 		dev_err(&pdev->dev, "invalid IOMMU instance id\n");
- 		return -EINVAL;
+are available in the Git repository at:
 
--- 
-2.45.2
+  git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git tags/net-6.15-rc5
 
+for you to fetch changes up to 1daa05fdddebc8ea5f09d407a74ba88f6d0cfdbf:
+
+  Merge branch 'net-vertexcom-mse102x-fix-rx-handling' (2025-05-01 07:24:09 -0700)
+
+----------------------------------------------------------------
+Happy May Day.
+
+Things have calmed down on our end (knock on wood), no outstanding
+investigations. Including fixes from Bluetooth and WiFi.
+
+Current release - fix to a fix:
+
+ - igc: fix lock order in igc_ptp_reset
+
+Current release - new code bugs:
+
+ - Revert "wifi: iwlwifi: make no_160 more generic", fixes regression
+   to Killer line of devices reported by a number of people
+
+ - Revert "wifi: iwlwifi: add support for BE213", initial FW is too buggy
+
+ - number of fixes for mld, the new Intel WiFi subdriver
+
+Previous releases - regressions:
+
+ - wifi: mac80211: restore monitor for outgoing frames
+
+ - drv: vmxnet3: fix malformed packet sizing in vmxnet3_process_xdp
+
+ - eth: bnxt_en: fix timestamping FIFO getting out of sync on reset,
+   delivering stale timestamps
+
+ - use sock_gen_put() in the TCP fraglist GRO heuristic, don't assume
+   every socket is a full socket
+
+Previous releases - always broken:
+
+ - sched: adapt qdiscs for reentrant enqueue cases, fix list corruptions
+
+ - xsk: fix race condition in AF_XDP generic RX path, shared UMEM
+   can't be protected by a per-socket lock
+
+ - eth: mtk-star-emac: fix spinlock recursion issues on rx/tx poll
+
+ - btusb: avoid NULL pointer dereference in skb_dequeue()
+
+ - dsa: felix: fix broken taprio gate states after clock jump
+
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+
+----------------------------------------------------------------
+Benjamin Berg (1):
+      wifi: iwlwifi: mld: only create debugfs symlink if it does not exist
+
+Chad Monroe (1):
+      net: ethernet: mtk_eth_soc: fix SER panic with 4GB+ RAM
+
+Chris Lu (2):
+      Bluetooth: btmtksdio: Check function enabled before doing close
+      Bluetooth: btmtksdio: Do close if SDIO card removed without close
+
+Chris Mi (1):
+      net/mlx5: E-switch, Fix error handling for enabling roce
+
+Christian Heusel (1):
+      Revert "rndis_host: Flag RNDIS modems as WWAN devices"
+
+Cosmin Ratiu (1):
+      net/mlx5e: Fix lock order in mlx5e_tx_reporter_ptpsq_unhealthy_recover
+
+Da Xue (1):
+      net: mdio: mux-meson-gxl: set reversed bit when using internal phy
+
+Daniel Borkmann (1):
+      vmxnet3: Fix malformed packet sizing in vmxnet3_process_xdp
+
+Daniel Golle (1):
+      net: ethernet: mtk_eth_soc: sync mtk_clks_source_name array
+
+David S. Miller (1):
+      Merge branch 'bnxt_en-fixes'
+
+Emmanuel Grumbach (2):
+      wifi: iwlwifi: don't warn if the NIC is gone in resume
+      wifi: iwlwifi: fix the check for the SCRATCH register upon resume
+
+En-Wei Wu (1):
+      Bluetooth: btusb: avoid NULL pointer dereference in skb_dequeue()
+
+Felix Fietkau (1):
+      net: ipv6: fix UDPv6 GSO segmentation with NAT
+
+Hao Lan (1):
+      net: hns3: fixed debugfs tm_qset size
+
+Ido Schimmel (1):
+      vxlan: vnifilter: Fix unlocked deletion of default FDB entry
+
+Itamar Shalev (1):
+      wifi: iwlwifi: restore missing initialization of async_handlers_list
+
+Jacob Keller (1):
+      igc: fix lock order in igc_ptp_reset
+
+Jakub Kicinski (10):
+      Merge tag 'wireless-2025-04-24' of https://git.kernel.org/pub/scm/linux/kernel/git/wireless/wireless
+      Merge branch 'mlx5-misc-fixes-2025-04-23'
+      Merge branch 'net-ethernet-mtk-star-emac-fix-several-issues-on-rx-tx-poll'
+      Merge tag 'for-net-2025-04-25' of git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth
+      Merge branch 'net_sched-adapt-qdiscs-for-reentrant-enqueue-cases'
+      Merge branch 'intel-net-queue-100GbE'
+      Merge branch 'fix-felix-dsa-taprio-gates-after-clock-jump'
+      Merge branch '200GbE' of git://git.kernel.org/pub/scm/linux/kernel/git/tnguy/net-queue
+      Merge branch 'there-are-some-bugfix-for-the-hns3-ethernet-driver'
+      Merge branch 'net-vertexcom-mse102x-fix-rx-handling'
+
+Jian Shen (2):
+      net: hns3: store rx VLAN tag offload state for VF
+      net: hns3: defer calling ptp_clock_register()
+
+Jianbo Liu (1):
+      net/mlx5e: TC, Continue the attr process even if encap entry is invalid
+
+Jibin Zhang (1):
+      net: use sock_gen_put() when sk_state is TCP_TIME_WAIT
+
+Johannes Berg (3):
+      wifi: mac80211: restore monitor for outgoing frames
+      wifi: iwlwifi: back off on continuous errors
+      wifi: iwlwifi: mld: fix BAID validity check
+
+Justin Lai (1):
+      rtase: Modify the condition used to detect overflow in rtase_calc_time_mitigation
+
+Kalesh AP (1):
+      bnxt_en: Fix ethtool selftest output in one of the failure cases
+
+Kashyap Desai (2):
+      bnxt_en: call pci_alloc_irq_vectors() after bnxt_reserve_rings()
+      bnxt_en: delay pci_alloc_irq_vectors() in the AER path
+
+Kiran K (2):
+      Bluetooth: btintel_pcie: Avoid redundant buffer allocation
+      Bluetooth: btintel_pcie: Add additional to checks to clear TX/RX paths
+
+Kory Maincent (1):
+      netlink: specs: ethtool: Remove UAPI duplication of phy-upstream enum
+
+Larysa Zaremba (1):
+      idpf: protect shutdown from reset
+
+Louis-Alexis Eyraud (2):
+      net: ethernet: mtk-star-emac: fix spinlock recursion issues on rx/tx poll
+      net: ethernet: mtk-star-emac: rearm interrupts in rx_poll only when advised
+
+Luiz Augusto von Dentz (2):
+      Bluetooth: hci_conn: Fix not setting conn_timeout for Broadcast Receiver
+      Bluetooth: hci_conn: Fix not setting timeout for BIG Create Sync
+
+Madhu Chittim (1):
+      idpf: fix offloads support for encapsulated packets
+
+Maor Gottlieb (1):
+      net/mlx5: E-Switch, Initialize MAC Address for Default GID
+
+Mattias Barthel (1):
+      net: fec: ERR007885 Workaround for conventional TX
+
+Michael Chan (1):
+      bnxt_en: Fix ethtool -d byte order for 32-bit values
+
+Michal Swiatkowski (1):
+      idpf: fix potential memory leak on kcalloc() failure
+
+Miri Korenblit (4):
+      Revert "wifi: iwlwifi: add support for BE213"
+      Revert "wifi: iwlwifi: make no_160 more generic"
+      wifi: iwlwifi: mld: properly handle async notification in op mode start
+      wifi: iwlwifi: mld: inform trans on init failure
+
+Murad Masimov (1):
+      wifi: plfxlc: Remove erroneous assert in plfxlc_mac_release
+
+Paul Greenwalt (1):
+      ice: fix Get Tx Topology AQ command error on E830
+
+Pauli Virtanen (1):
+      Bluetooth: L2CAP: copy RX timestamp to new fragments
+
+Sagi Maimon (1):
+      ptp: ocp: Fix NULL dereference in Adva board SMA sysfs operations
+
+Sathesh B Edara (2):
+      octeon_ep_vf: Resolve netdevice usage count issue
+      octeon_ep: Fix host hang issue during device reboot
+
+Shannon Nelson (1):
+      pds_core: remove write-after-free of client_id
+
+Shravya KN (1):
+      bnxt_en: Fix error handling path in bnxt_init_chip()
+
+Shruti Parab (2):
+      bnxt_en: Fix coredump logic to free allocated buffer
+      bnxt_en: Fix out-of-bound memcpy() during ethtool -w
+
+Simon Horman (1):
+      net: dlink: Correct endianness handling of led_mode
+
+Somnath Kotur (1):
+      bnxt_en: Add missing skb_mark_for_recycle() in bnxt_rx_vlan()
+
+Stefan Wahren (4):
+      net: vertexcom: mse102x: Fix possible stuck of SPI interrupt
+      net: vertexcom: mse102x: Fix LEN_MASK
+      net: vertexcom: mse102x: Add range check for CMD_RTS
+      net: vertexcom: mse102x: Fix RX error handling
+
+Thangaraj Samynathan (1):
+      net: lan743x: Fix memleak issue when GSO enabled
+
+Vadim Fedorenko (2):
+      bnxt_en: improve TX timestamping FIFO configuration
+      bnxt_en: fix module unload sequence
+
+Victor Nogueira (5):
+      net_sched: drr: Fix double list add in class with netem as child qdisc
+      net_sched: hfsc: Fix a UAF vulnerability in class with netem as child qdisc
+      net_sched: ets: Fix double list add in class with netem as child qdisc
+      net_sched: qfq: Fix double list add in class with netem as child qdisc
+      selftests: tc-testing: Add TDC tests that exercise reentrant enqueue behaviour
+
+Vishal Badole (1):
+      amd-xgbe: Fix to ensure dependent features are toggled with RX checksum offload
+
+Vlad Dogaru (1):
+      net/mlx5e: Use custom tunnel header for vxlan gbp
+
+Vladimir Oltean (6):
+      net: mscc: ocelot: delete PVID VLAN when readding it as non-PVID
+      selftests: net: bridge_vlan_aware: test untagged/8021p-tagged with and without PVID
+      net: dsa: felix: fix broken taprio gate states after clock jump
+      selftests: net: tsn_lib: create common helper for counting received packets
+      selftests: net: tsn_lib: add window_size argument to isochron_do()
+      selftests: net: tc_taprio: new test
+
+Wentao Liang (1):
+      wifi: brcm80211: fmac: Add error handling for brcmf_usb_dl_writeimage()
+
+Xuanqiang Luo (1):
+      ice: Check VF VSI Pointer Value in ice_vc_add_fdir_fltr()
+
+Yonglong Liu (1):
+      net: hns3: fix an interrupt residual problem
+
+e.kubanski (2):
+      xsk: Fix race condition in AF_XDP generic RX path
+      xsk: Fix offset calculation in unaligned mode
+
+ Documentation/netlink/specs/ethtool.yaml           |   4 +-
+ drivers/bluetooth/btintel_pcie.c                   |  57 +--
+ drivers/bluetooth/btmtksdio.c                      |  12 +-
+ drivers/bluetooth/btusb.c                          | 101 +++--
+ drivers/net/dsa/ocelot/felix_vsc9959.c             |   5 +-
+ drivers/net/ethernet/amd/pds_core/auxbus.c         |   1 -
+ drivers/net/ethernet/amd/xgbe/xgbe-desc.c          |   9 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-dev.c           |  24 +-
+ drivers/net/ethernet/amd/xgbe/xgbe-drv.c           |  11 +-
+ drivers/net/ethernet/amd/xgbe/xgbe.h               |   4 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c          |  35 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.h          |   1 +
+ drivers/net/ethernet/broadcom/bnxt/bnxt_coredump.c |  30 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ethtool.c  |  38 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ptp.c      |  29 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt_ptp.h      |   1 +
+ drivers/net/ethernet/dlink/dl2k.c                  |   2 +-
+ drivers/net/ethernet/dlink/dl2k.h                  |   2 +-
+ drivers/net/ethernet/freescale/fec_main.c          |   7 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_debugfs.c |   2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |  82 ++--
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_ptp.c |  13 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  25 +-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   1 +
+ drivers/net/ethernet/intel/ice/ice_ddp.c           |  10 +-
+ drivers/net/ethernet/intel/ice/ice_virtchnl_fdir.c |   5 +
+ drivers/net/ethernet/intel/idpf/idpf.h             |  18 +-
+ drivers/net/ethernet/intel/idpf/idpf_lib.c         |  76 ++--
+ drivers/net/ethernet/intel/idpf/idpf_main.c        |   1 +
+ drivers/net/ethernet/intel/igc/igc_ptp.c           |   6 +-
+ .../net/ethernet/marvell/octeon_ep/octep_main.c    |   2 +-
+ .../ethernet/marvell/octeon_ep_vf/octep_vf_main.c  |   4 +-
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c        |  18 +-
+ drivers/net/ethernet/mediatek/mtk_star_emac.c      |  13 +-
+ .../ethernet/mellanox/mlx5/core/en/reporter_tx.c   |   6 +-
+ .../ethernet/mellanox/mlx5/core/en/tc_tun_vxlan.c  |  32 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c    |   5 +-
+ .../ethernet/mellanox/mlx5/core/eswitch_offloads.c |   5 +-
+ drivers/net/ethernet/mellanox/mlx5/core/rdma.c     |  11 +-
+ drivers/net/ethernet/mellanox/mlx5/core/rdma.h     |   4 +-
+ drivers/net/ethernet/microchip/lan743x_main.c      |   8 +-
+ drivers/net/ethernet/microchip/lan743x_main.h      |   1 +
+ drivers/net/ethernet/mscc/ocelot.c                 |   6 +
+ drivers/net/ethernet/realtek/rtase/rtase_main.c    |   4 +-
+ drivers/net/ethernet/vertexcom/mse102x.c           |  36 +-
+ drivers/net/mdio/mdio-mux-meson-gxl.c              |   3 +-
+ drivers/net/usb/rndis_host.c                       |  16 +-
+ drivers/net/vmxnet3/vmxnet3_xdp.c                  |   2 +-
+ drivers/net/vxlan/vxlan_vnifilter.c                |   8 +-
+ .../net/wireless/broadcom/brcm80211/brcmfmac/usb.c |   6 +-
+ drivers/net/wireless/intel/iwlwifi/cfg/sc.c        |   2 -
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h    |  16 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-csr.h       |   1 +
+ drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c |  16 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.c     |  28 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.h     |  14 +-
+ drivers/net/wireless/intel/iwlwifi/mld/agg.c       |   6 +-
+ drivers/net/wireless/intel/iwlwifi/mld/debugfs.c   |   5 +-
+ drivers/net/wireless/intel/iwlwifi/mld/fw.c        |  13 +-
+ drivers/net/wireless/intel/iwlwifi/mld/mac80211.c  |   1 +
+ drivers/net/wireless/intel/iwlwifi/mld/mld.c       |  11 +-
+ drivers/net/wireless/intel/iwlwifi/mld/mld.h       |   5 -
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c      | 245 ++++++------
+ drivers/net/wireless/intel/iwlwifi/pcie/internal.h |   9 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |  16 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c       |   2 +-
+ drivers/net/wireless/intel/iwlwifi/tests/devinfo.c |  15 +-
+ drivers/net/wireless/purelifi/plfxlc/mac.c         |   1 -
+ drivers/ptp/ptp_ocp.c                              |  52 ++-
+ include/net/bluetooth/hci.h                        |   4 +-
+ include/net/bluetooth/hci_core.h                   |  20 +-
+ include/net/bluetooth/hci_sync.h                   |   3 +
+ include/net/xdp_sock.h                             |   3 -
+ include/net/xsk_buff_pool.h                        |   4 +-
+ include/uapi/linux/ethtool_netlink_generated.h     |   5 -
+ net/bluetooth/hci_conn.c                           | 181 +--------
+ net/bluetooth/hci_event.c                          |  15 +-
+ net/bluetooth/hci_sync.c                           | 150 +++++++-
+ net/bluetooth/iso.c                                |  26 +-
+ net/bluetooth/l2cap_core.c                         |   3 +
+ net/ipv4/tcp_offload.c                             |   2 +-
+ net/ipv4/udp_offload.c                             |  61 ++-
+ net/ipv6/tcpv6_offload.c                           |   2 +-
+ net/mac80211/status.c                              |   8 +-
+ net/sched/sch_drr.c                                |   9 +-
+ net/sched/sch_ets.c                                |   9 +-
+ net/sched/sch_hfsc.c                               |   2 +-
+ net/sched/sch_qfq.c                                |  11 +-
+ net/xdp/xsk.c                                      |   6 +-
+ net/xdp/xsk_buff_pool.c                            |   1 +
+ .../testing/selftests/drivers/net/dsa/tc_taprio.sh |   1 +
+ tools/testing/selftests/drivers/net/ocelot/psfp.sh |   8 +-
+ .../selftests/net/forwarding/bridge_vlan_aware.sh  |  96 ++++-
+ .../testing/selftests/net/forwarding/tc_taprio.sh  | 421 +++++++++++++++++++++
+ tools/testing/selftests/net/forwarding/tsn_lib.sh  |  26 ++
+ .../tc-testing/tc-tests/infra/qdiscs.json          | 186 +++++++++
+ 96 files changed, 1786 insertions(+), 737 deletions(-)
+ create mode 120000 tools/testing/selftests/drivers/net/dsa/tc_taprio.sh
+ create mode 100755 tools/testing/selftests/net/forwarding/tc_taprio.sh
