@@ -1,118 +1,134 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D3123183C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 07:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C186C23183C;
+	Thu,  1 May 2025 07:18:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746083864; cv=none; b=G67eNEs+n172kE6YoJlEZ68VULRBABl8QaGcgKnMLpl7GW5qYnoLudaSfjfshYc9Dhl4mXhb5VqlD69DNq0HFxtlb3MU7bYmt7uoUbCs44m64tZFwP0DF5KPnFmcfl3GjH2EgvkhXDXFaZpwds4dO7qOaoAuqDQuG4DqwmTj24o=
+	t=1746083917; cv=none; b=N4dCyTAi7FzYFTknkpy0Au8XgR2hKBWFURpGKPRS/teVXzy6IL+S6Dww7iS3wZDEfrLHNN3sNGriYXOnmdWHVGhhiHRtFVm6zD9C1AHdAe8V0jf5Jlhz+NxneKZ7LNP4Ub2cPZqYALobVy5sdCzMh415noqp+jHpocQaKafkPDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746083864; c=relaxed/simple;
-	bh=IsEFuKr8MdJiyQYBneHaUVR7yEJMImUpl5m96czfCBI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JqG+yOY/QAEQkZrKBoXaA+Ow9qKF7ox6uq3T47vsNVwLD+Y3Lxp3lQAUEPV65xchuBH+DwbZ6b94qn5xcoAdlphaFAjgOmkzf1/DEjOqAuIAdVZldIE9z8dIzQ1Imgc/OOI2OgP4sHiy5BF8quGn51vTEsXjuPqT1VSVJrK7wFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Asn/uqIU; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746083917; c=relaxed/simple;
+	bh=su7Ol8QR1fuFy/VFNGr36BLKigm4/e1vZx94ZJZJg38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MZhuhOu117thaXJQZkTJ/e61FAj0NVkae/MZcg6O++mknv3TD2g+Rb4E2CUbsuqZQxCOQRTM/m4LA/Te33m7MoG0VRdxc9/HDftU6VuxsRrwfX4yH9LRLRiXIF0YeOfYpE/djRnr0gC9n+xLhBrAF92DY+fVn20WzetdWpfZMi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rPJcbEsX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Asn/uqIU"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d0618746bso3275995e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 00:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746083860; x=1746688660; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dfbpd6S+j/Op6XJKqOKEnKbRjtTW+fQ4p2/1pzW9EyY=;
-        b=Asn/uqIUxT7H2kQ/yyk5Cmwqr/XYQ1vR7NRDs85+JIjC94pJ0WiCH210kr6HMWehA+
-         RK+fWpOPh35jxVn0qsFnktC/b7eEX7oAr7fcRTLOYd0E5pH4zZU2s0EhMHmwTPPb+rzU
-         5tCUaHA2opkTFrNVx74YQ89+GjMVYSh5ggqiUsu1Nw95vCJBAAGEqtmPqZVJRt/pR0Rs
-         twAABu4IMFnunx4ZTEhbzPphrA+D+QV4SjplxxRIcApSLfZGhS7sgB2SnY1yaIdiEa/u
-         NfnY4EIli1TzDxuu+NTsEXp5fP89QxJe/y2YUapKrWwwvnroZrIE6mVm2WlrQeFe3XvN
-         vr8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746083860; x=1746688660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dfbpd6S+j/Op6XJKqOKEnKbRjtTW+fQ4p2/1pzW9EyY=;
-        b=ifJvOJfYfl4yWQPqy875oxMKNmtt8zIWsFyHxgv/mZ1f7xWR+pC5XwV7WRwaI7vDpv
-         Hu4nAZfTJmKRGSsrHGFJjskAcstEUBMJ6HjdTXgFsJ1ndcj1r7uhQPSLKxrNIVqat2cw
-         0f491slmRDU8iZnSRYXYXgFXJrcFFoLzWMppwSM4cjr3aCn04JCu+R5YDhhOZrJLx1j9
-         dir5MieTON1vGWeuag283VqOtDDAXJBsXeUI20OzRo0Yt4WjCS3QZV2PB/q3MFkksdxG
-         cQwkvzRozuMpQzWlD/r5zFzrBJiQWEaD9mwBernWt6DBPuqnuePqF0i9cg5f02liKEO2
-         NdkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUgIH/u5WiuxTZrEgpedg1SAskOQpnGQKUeQF0KhopubpPplhY25oQEVYJsV2gQFxGn0seZPiciT4XqJAg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz2JNSnKgbrBiIWuCTG5U0/uV8nhOheD5vstFIp76DEP7TL8ehW
-	bMXgZbfxHzEzt2qapbCGZUGTQ7QNBR+TJ+rGQEdjqpe7qaPvK4hjrjcGBST8V8Xli8bwZ4Flivk
-	P4TmgEbGoiWJ1sVMiPpnmLI1lbtS197TK/RIX
-X-Gm-Gg: ASbGncu2q1BsPol6M1unoo9TJugxmpujxrIlLp9A7rWdvE9AwkIK8ZU3khpn54mg3+M
-	UombMy4CI2zyYvcR0Bu6x5D1zo03lV0Jq83EieREnrfu/8R9uRT7UtqvbJFsGEG0nvAw/XdrTwj
-	mPI/3sHYBCzRVI8kylEE010BE=
-X-Google-Smtp-Source: AGHT+IFduWCt9dAJ2C1o84Xte2BlzpK0E9RUVCMttsag2Euox2KT9XXx00vsgL2LSClUGCr9nJXH2sWB2Mwl9YOh+0s=
-X-Received: by 2002:a05:600c:3493:b0:43d:fa5d:9314 with SMTP id
- 5b1f17b1804b1-441b653c894mr11786975e9.32.1746083860001; Thu, 01 May 2025
- 00:17:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rPJcbEsX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CF92C4CEE3;
+	Thu,  1 May 2025 07:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746083916;
+	bh=su7Ol8QR1fuFy/VFNGr36BLKigm4/e1vZx94ZJZJg38=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rPJcbEsXhGMC0dq469bmaLlkkVmpTUn3Tb0S6zGu3+bqDNRihHhQAt0pboiT/Bfnn
+	 oDLbw5I2ui5R8d5zxjLUmtpyyQ/Ql3Q2drqkJMJTROy9N0EmaHutplO2D6U4sEAGcu
+	 61EjbwYysFa7sycvpKmbswX/b8m0KRwA739rNN6k=
+Date: Thu, 1 May 2025 09:18:32 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Matthew Rosato <mjrosato@linux.ibm.com>
+Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	clang-built-linux <llvm@lists.linux.dev>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Anders Roxell <anders.roxell@linaro.org>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-s390@vger.kernel.org, linux-mips@vger.kernel.org,
+	io-uring@vger.kernel.org, virtualization@lists.linux.dev,
+	Halil Pasic <pasic@linux.ibm.com>,
+	Eric Farman <farman@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH 6.1 000/167] 6.1.136-rc1 review
+Message-ID: <2025050118-glade-lunchroom-927f@gregkh>
+References: <20250429161051.743239894@linuxfoundation.org>
+ <CA+G9fYuNjKcxFKS_MKPRuga32XbndkLGcY-PVuoSwzv6VWbY=w@mail.gmail.com>
+ <c8e88c29-e1bb-4845-a362-dc352d690508@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250423-rust-xarray-bindings-v19-0-83cdcf11c114@gmail.com>
- <20250423-rust-xarray-bindings-v19-1-83cdcf11c114@gmail.com>
- <20250430193112.4faaff3d.gary@garyguo.net> <CAJ-ks9nrrKvbfjt-6RPk0G-qENukWDvw=6ePPxyBS-me-joTcw@mail.gmail.com>
-In-Reply-To: <CAJ-ks9nrrKvbfjt-6RPk0G-qENukWDvw=6ePPxyBS-me-joTcw@mail.gmail.com>
-From: Alice Ryhl <aliceryhl@google.com>
-Date: Thu, 1 May 2025 09:17:27 +0200
-X-Gm-Features: ATxdqUFyUNh-QBM8NkJE1Rola7V4MLYJmp0oVbJRr7K1gApSfORdSuG0qeRLbzM
-Message-ID: <CAH5fLghKLZR7i6YQk8cQrvfOr11xEKia5LHtj1fn8dD3Stv0dQ@mail.gmail.com>
-Subject: Re: [PATCH v19 1/3] rust: types: add `ForeignOwnable::PointedTo`
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Gary Guo <gary@garyguo.net>, Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Matthew Wilcox <willy@infradead.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
-	"Rob Herring (Arm)" <robh@kernel.org>, =?UTF-8?B?TWHDrXJhIENhbmFs?= <mcanal@igalia.com>, 
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c8e88c29-e1bb-4845-a362-dc352d690508@linux.ibm.com>
 
-On Wed, Apr 30, 2025 at 8:57=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> On Wed, Apr 30, 2025 at 11:31=E2=80=AFAM Gary Guo <gary@garyguo.net> wrot=
-e:
-> >
-> > On Wed, 23 Apr 2025 09:54:37 -0400
-> > Tamir Duberstein <tamird@gmail.com> wrote:
-> > > -impl<T: 'static, A> ForeignOwnable for Box<T, A>
-> > > +// SAFETY: The `into_foreign` function returns a pointer that is wel=
-l-aligned.
-> > > +unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
-> > >  where
-> > >      A: Allocator,
-> > >  {
-> > > +    type PointedTo =3D T;
-> >
-> > I don't think this is the correct solution for this. The returned
-> > pointer is supposed to opaque, and exposing this type may encourage
-> > this is to be wrongly used.
->
-> Can you give an example?
+On Wed, Apr 30, 2025 at 11:54:49AM -0400, Matthew Rosato wrote:
+> 
+> > 2)
+> > Regressions on s390 with defconfig builds with gcc-13, gcc-8 and
+> > clang-20 and clang-nightly toolchains on the stable-rc 6.1.136-rc1.
+> > 
+> > * s390, build
+> >   - clang-20-defconfig
+> >   - clang-nightly-defconfig
+> >   - gcc-13-allmodconfig
+> >   - gcc-13-defconfig
+> >   - gcc-8-defconfig-fe40093d
+> > 
+> > Regression Analysis:
+> >  - New regression? Yes
+> >  - Reproducibility? Yes
+> > 
+> ...
+> > drivers/s390/virtio/virtio_ccw.c:88:9: error: unknown type name 'dma64_t'
+> >    88 |         dma64_t queue;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c:95:9: error: unknown type name 'dma64_t'
+> >    95 |         dma64_t desc;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c:99:9: error: unknown type name 'dma64_t'
+> >    99 |         dma64_t avail;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c:100:9: error: unknown type name 'dma64_t'
+> >   100 |         dma64_t used;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c:109:9: error: unknown type name 'dma64_t'
+> >   109 |         dma64_t summary_indicator;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c:110:9: error: unknown type name 'dma64_t'
+> >   110 |         dma64_t indicator;
+> >       |         ^~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_drop_indicator':
+> > drivers/s390/virtio/virtio_ccw.c:370:25: error: implicit declaration
+> > of function 'virt_to_dma64'; did you mean 'virt_to_page'?
+> > [-Werror=implicit-function-declaration]
+> >   370 |                         virt_to_dma64(get_summary_indicator(airq_info));
+> >       |                         ^~~~~~~~~~~~~
+> >       |                         virt_to_page
+> > drivers/s390/virtio/virtio_ccw.c:374:28: error: implicit declaration
+> > of function 'virt_to_dma32'; did you mean 'virt_to_page'?
+> > [-Werror=implicit-function-declaration]
+> >   374 |                 ccw->cda = virt_to_dma32(thinint_area);
+> >       |                            ^~~~~~~~~~~~~
+> >       |                            virt_to_page
+> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_setup_vq':
+> > drivers/s390/virtio/virtio_ccw.c:552:45: error: implicit declaration
+> > of function 'u64_to_dma64' [-Werror=implicit-function-declaration]
+> >   552 |                 info->info_block->l.queue = u64_to_dma64(queue);
+> >       |                                             ^~~~~~~~~~~~
+> > drivers/s390/virtio/virtio_ccw.c: In function 'virtio_ccw_find_vqs':
+> > drivers/s390/virtio/virtio_ccw.c:654:9: error: unknown type name 'dma64_t'
+> >   654 |         dma64_t *indicatorp = NULL;
+> >       |         ^~~~~~~
+> > cc1: some warnings being treated as errors
+> 
+> The virtio_ccw errors are caused by '[PATCH 6.1 033/167] s390/virtio_ccw: fix virtual vs physical address confusion'
+> 
+> Picking the following 2 dependencies would resolve the build error:
+> 
+> 1bcf7f48b7d4 s390/cio: use bitwise types to allow for type checking
+> 8b19e145e82f s390/cio: introduce bitwise dma types and helper functions
 
-This came up when we discussed this patch in the meeting yesterday:
-https://lore.kernel.org/all/20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org/
+I'm just going to drop all of these now and wait for a tested series to
+be sent.
 
-This is incorrect use of the trait. The pointer is supposed to be
-opaque, and you can't dereference it. See my reply to that patch as
-well:
-https://lore.kernel.org/all/CAH5fLggDwPBzMO2Z48oMjDm4qgoNM0NQs_63TxmVEGy+gt=
-MpOA@mail.gmail.com/
+thanks,
 
-Alice
+greg k-h
