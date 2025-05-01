@@ -1,120 +1,122 @@
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D3D1E9B03
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 03:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EDE0322A;
+	Thu,  1 May 2025 03:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746069163; cv=none; b=lBNj5UyrORrUYJiv9Q/2VahisYxOrZn7//+sHAG2KA4gC8DBpWGbac2bQjs8fpk074ysPNHu0T5mkqGcoJDAkBj456d1tM1WIUz0ttn/jXlI3YGfvtDKe2M/S92Ua/BRE+AFbJDEKdTld5xWKrKOl12rJaXJ3xmkgKSCqq+BdhU=
+	t=1746069561; cv=none; b=H7nh6yhqySeBrJc0OtrNbJTP2f6JP1pp/yO3zcCr5qaZFGSN8o0hatoxn0SqLI3ySoxUlqWm3ANwvJC9/LlNO/6lEWNbPQsPS/RC4WIOe2eyoN6/4LM4ucSmZ+C610ugKcI34FdTZ70zHcYe70SWD+PkGgm21bIoiQrQ/jSBsUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746069163; c=relaxed/simple;
-	bh=3Qs+LMUQu4ZZ9m3bGStlH/F2gPjLzRKPh3ITFdqZ4EU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aqftmgZjF/gLP+Mf0XmijRwWw9B1ij1sFnIgy8TiQri8qzJms9nmaHd/lpCXbYmVAHiIVGjrVERnLsIF6WkIM/2RIZm9UGIqb9cj7mWWFmX/qt093hLWidFGPT5+CsxJF3nuOSOUeRiggVjxV9FWotcoC8j3x49XIRp7PGIAvAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JB+kOAwP; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746069561; c=relaxed/simple;
+	bh=RnGo3eVZ8Wcd8RXMAWNDmmrSdcERCG1DiTmcD2L68Os=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D/gvgQXYbrLz5sJyHgUZ3YruwjrFbnpNhZxMd/Oe4fcADDYm5pzbK1LlgS4sBYbvUXAw18GUkf91BvcGNkrj4XVHe+DroGFq7caJgttFP1BCqryMOMb/M5py6u7jpmFTqrzqQ5xsUsOPR6d4jdD1+JgeCcYfhJgd6Zfw+wRP5rY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=Cqyp6Kiv; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JB+kOAwP"
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5f6c3f7b0b0so1167386a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:12:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Cqyp6Kiv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746069159; x=1746673959; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OC1oQVKn70KzlSasLkTsE0MQR+OTmhnwfBz3Xe1R3C4=;
-        b=JB+kOAwPDAKGzyPwVTQShbQfE8XqYM7PYy7O/m66J6KzjjK2/hXtupvmny5oyjqHHT
-         uxm3vhmVpfZXZduvvAhOLv0FXEiIxNetwvRikaxB+lCHUTg5qWnX2BF6KuULw77567dP
-         qGrlidxQRMo9PBy+fhljulSyqXlF1+2sdnKbQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746069159; x=1746673959;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OC1oQVKn70KzlSasLkTsE0MQR+OTmhnwfBz3Xe1R3C4=;
-        b=qiqbEAr6eMhPgZGRGc9lpB60qleCWhpIz+cErDH4+qC3Q3XhdCpswANvsijXw8IIPp
-         UTzeKRexh5zjJRc4eJrD+J3HByaCbrhgOXNhfhQnuY+OACnEu5kFltADOvjZJnZKwPM8
-         pVh21NxrOf8BjSOfpN0X0yCS/T4S2rEAqsgyEk8oFNNoR0Da291maxsfRi+CFp4rAZc5
-         PzdSd3rXjHaetwKDw3znj4/RiImUxn/fOIzs5aR4QCzCMD9x97KWISXJJztiXWXGuk10
-         wul7BGua9kDMy6PXiWHHDYn8Q2O3vrgL2X6FXjFeV4bsbbn3N93EdL+CubUsIBrWZMXq
-         BiKw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXJdevfIR5h4AwVQoJFSQEkeJ3jE+N9LZfIJzYEEiIZa7iaZ3vxHDJpnby2i3If8qzWIgKuwLe2PNWvvE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweKE5OEAsaR1xLFUZO23eVP6I965m1gx5625pn334VT0WAo6q+
-	EyFGS1Fb9R3731It6s2SCNgKiUIuIKoaxzfNmt9SmYgDe5tryb/iEZBXFkH0kf16PhBf4zyJRgc
-	YHDQ=
-X-Gm-Gg: ASbGnct7moeLk0+joYOZet3s9VJGI15SzmynL8UpcnoXTNzqqWv3T0nvHUUZkm9I7No
-	PQRmUNriuS8HlQxePV7EmQD7/HOxAFxw8duf0y0SQcenqSS/24PyDWVH0p5bh3B1BV5VvwOLdQ+
-	A0/5GalwqlWBNTMaAZjo1BOXzakLtNkmbk6bvZaGmCPdt0QMCuzGY2GT25pWiwPgD0tQMizZ/kM
-	nCoevNVU78bFLrmJ6JzbmJr/D0eYD8eJ73E4rfZuRW7TUihao9JOTGgpVF5NP3ST5/AhwO/8eWb
-	jvV7c+uAY+K1RrqMhmliezOdZunjRk0SN+5vxh/dAcjjQD5A639Qot9JiYK3BT+ctCJ4iSiqG0v
-	tXV8L9pSzrWX1nL8=
-X-Google-Smtp-Source: AGHT+IGv+08tPm0jVAj8Q0RS+TWOKdaNrBr5lmsrvQPzkV4e6u5gHVmFzk4hrPRxFYL0N0XIXziF5g==
-X-Received: by 2002:a17:907:948e:b0:ace:d166:8fbd with SMTP id a640c23a62f3a-aceff566a9cmr67135966b.59.1746069158903;
-        Wed, 30 Apr 2025 20:12:38 -0700 (PDT)
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ace6e59668fsm998881366b.83.2025.04.30.20.12.37
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 20:12:37 -0700 (PDT)
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ac2bb7ca40bso78179166b.3
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:12:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVbm8XMi4vohuVu/ybQmZQvDLgBzdfffxBDMj2GHH34dmS54mimAt+fEtrUuMRcG4WCjWJds9EBIGiZLmU=@vger.kernel.org
-X-Received: by 2002:a17:907:968a:b0:ace:d650:853e with SMTP id
- a640c23a62f3a-aceff41a4d7mr74472666b.15.1746069156852; Wed, 30 Apr 2025
- 20:12:36 -0700 (PDT)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746069560; x=1777605560;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=0jfy50eL43x6RabkD0VNeUvZqkKb2RUgwxKYds+fE2o=;
+  b=Cqyp6KivDJ+pmMUd2ft+oMZ52BdtZL0VEFvVah+gK0M1AWjL9MMIoUP8
+   EZkgqd1n7uJo8epW9ZmkYWlWgH0MX1FZLSAeNJ6gm4M/dRv+Eqp09+7ig
+   62jxYl9JcbvD/sqZpGopgUV5TLGSNLwe1Hf102l1xtbN1olgJ6M3vBr+M
+   4=;
+X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
+   d="scan'208";a="494284256"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 03:19:15 +0000
+Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:56266]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.38.92:2525] with esmtp (Farcaster)
+ id 6a9c4c01-a4bf-4386-a275-e61fc1e6a511; Thu, 1 May 2025 03:19:13 +0000 (UTC)
+X-Farcaster-Flow-ID: 6a9c4c01-a4bf-4386-a275-e61fc1e6a511
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 03:19:13 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 03:19:08 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <jlayton@kernel.org>
+CC: <airlied@gmail.com>, <akpm@linux-foundation.org>, <andrew@lunn.ch>,
+	<davem@davemloft.net>, <dri-devel@lists.freedesktop.org>,
+	<edumazet@google.com>, <horms@kernel.org>, <intel-gfx@lists.freedesktop.org>,
+	<jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<nathan@kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
+	<qasdev00@gmail.com>, <rodrigo.vivi@intel.com>, <simona@ffwll.ch>,
+	<tursulin@ursulin.net>, <tzimmermann@suse.de>
+Subject: Re: [PATCH v6 08/10] net: add symlinks to ref_tracker_dir for netns
+Date: Wed, 30 Apr 2025 20:07:56 -0700
+Message-ID: <20250501031900.71399-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <c0ccfad35ce8b990fc691814bb3d830b66845ded.camel@kernel.org>
+References: <c0ccfad35ce8b990fc691814bb3d830b66845ded.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
- <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
- <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
- <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
- <20250425195910.GA1018738@mit.edu> <d87f7b76-8a53-4023-81e2-5d257c90acc2@zytor.com>
-In-Reply-To: <d87f7b76-8a53-4023-81e2-5d257c90acc2@zytor.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Wed, 30 Apr 2025 20:12:20 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wgwuu5Yp0Y-t_U6MoeKmDbJ-Y+0e+MoQi7pkGw2Eu9BzQ@mail.gmail.com>
-X-Gm-Features: ATxdqUHanefpUI8GyxvaKB734S5zjy2OepCny55RpmWEo-qYF6q5WHIuuXBquxk
-Message-ID: <CAHk-=wgwuu5Yp0Y-t_U6MoeKmDbJ-Y+0e+MoQi7pkGw2Eu9BzQ@mail.gmail.com>
-Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: "Theodore Ts'o" <tytso@mit.edu>, Kent Overstreet <kent.overstreet@linux.dev>, 
-	linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D040UWB004.ant.amazon.com (10.13.138.91) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-On Wed, 30 Apr 2025 at 19:48, H. Peter Anvin <hpa@zytor.com> wrote:
->
-> It is worth noting that Microsoft has basically declared their
-> "recommended" case folding (upcase) table to be permanently frozen (for
-> new filesystem instances in the case where they use an on-disk
-> translation table created at format time.)  As far as I know they have
-> never supported anything other than 1:1 conversion of BMP code points,
-> nor normalization.
+From: Jeff Layton <jlayton@kernel.org>
+Date: Wed, 30 Apr 2025 19:59:23 -0700
+> On Wed, 2025-04-30 at 14:29 -0700, Kuniyuki Iwashima wrote:
+> > From: Jeff Layton <jlayton@kernel.org>
+> > Date: Wed, 30 Apr 2025 08:06:54 -0700
+> > > After assigning the inode number to the namespace, use it to create a
+> > > unique name for each netns refcount tracker with the ns.inum value in
+> > > it, and register a symlink to the debugfs file for it.
+> > > 
+> > > init_net is registered before the ref_tracker dir is created, so add a
+> > > late_initcall() to register its files and symlinks.
+> > > 
+> > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> > > ---
+> > >  net/core/net_namespace.c | 28 +++++++++++++++++++++++++++-
+> > >  1 file changed, 27 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+> > > index 008de9675ea98fa8c18628b2f1c3aee7f3ebc9c6..6cbc8eabb8e56c847fc34fa8ec9994e8b275b0af 100644
+> > > --- a/net/core/net_namespace.c
+> > > +++ b/net/core/net_namespace.c
+> > > @@ -763,12 +763,38 @@ struct net *get_net_ns_by_pid(pid_t pid)
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
+> > >  
+> > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
+> > > +static void net_ns_net_debugfs(struct net *net)
+> > > +{
+> > > +	ref_tracker_dir_symlink(&net->refcnt_tracker, "netns-%u-refcnt", net->ns.inum);
+> > > +	ref_tracker_dir_symlink(&net->notrefcnt_tracker, "netns-%u-notrefcnt", net->ns.inum);
+> > 
+> > Could you use net->net_cookie ?
+> > 
+> > net->ns.inum is always 1 when CONFIG_PROC_FS=n.
+> 
+> My main use-case for this is to be able to match the inode number in
+> the /proc/<pid>/ns/net symlink with the correct ref_tracker debugfs
+> file. Is there a way to use the net_cookie to make that association?
 
-So no crazy '=C3=9F' matches 'ss' kind of thing? (And yes, afaik that's
-technically wrong even in German, but afaik at least sorts the same in
-some locales).
+It's roundabout, but  net_cookie can be retrieved by creating a
+random socket in the netns and calling setsockopt(SO_NETNS_COOKIE).
 
-Because yes, if MS basically does a 1:1 unicode translation with a
-fixed table, that is not only "simpler", I think it's what we should
-strive for.
+Ido proposed a handy ip-netns subcommand here, and I guess it will
+be implemented soon(?)
+https://lore.kernel.org/netdev/1d99d7ccfc3a7a18840948ab6ba1c0b5fad90901.camel@fejes.dev/
 
-Because I think the *only* valid reason for case insensitive
-filesystems is "backwards compatibility", and given that, it's
-_particularly_ stupid to then do anything more complicated and broken
-than the thing you're trying to be compatible with.
 
-I hope to everything holy that nobody ever wants to be compatible with
-the absolute garbage that is the OSX HFS model.
-
-Because the whole "let's actively corrupt names into something that is
-almost, but not exactly, NFD" stuff is just some next-level evil
-stuff.
-
-            Linus
+> 
+> If there isn't, and ns.inum is always 1 with procfs is disabled, we
+> could just skip adding the symlink when CONFIG_PROC_FS=n.
