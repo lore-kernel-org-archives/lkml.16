@@ -1,169 +1,71 @@
-Received: from smtp-fw-9105.amazon.com (smtp-fw-9105.amazon.com [207.171.188.204])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29E7AD58;
-	Thu,  1 May 2025 04:27:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6512D4C85;
+	Thu,  1 May 2025 04:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746073661; cv=none; b=U4EGi8UYJ1Rx1m6/mQCcwpcObwLNFmQ+bcJAUkrSLt0I0bkyRxvA4t+f9J0lCD96wlGWCg6nY5zoFWaBT8sxusERIBSAyaZyZlhusPpQ5tQPTLxnYdEMhiv+SeKWsWzl09DpOmvTF4SViwMeLXzeuLxmAMfJiieBDWnSIAxiuSk=
+	t=1746073855; cv=none; b=Svwt27nnqWC1qMAXR09rppivrOJuUhgSMlE7M0xT3QrLAxYyOgFZ3ZlHnluQgyhaEkr50dhpmGWjO2tuqHHHOkfY87wDfR9rGWl/Q4n4havpxwqNQw0P8lBZTdlZgB/fJfbIapKbMMPmPTeg1kIclqEmTEwASd5luHLWow6j/ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746073661; c=relaxed/simple;
-	bh=wm2uoskBjcmJ5xq4YXyrUz3AWluHN+lK7mFqlsXzPSI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FLJD4yL2NX3a+ee/0l2T1xal3Mkv2l96Tu64cChhUhEhWmQ6KKNRpuUrPwDaQp1OTTbgQz9xQIiG4bBkjsB+LNQa1Ti8QNO0YHmTc/LabtbEu22BhafQd8oZs7ToN7tfqUY34wffUtzfVdylsuo6LYpiMBFxQFH8X2Q700HEXzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=aMP3Jy8a; arc=none smtp.client-ip=207.171.188.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746073855; c=relaxed/simple;
+	bh=lXs90SKBYnw4vhtrdlv7Pt+u57vH2VVBsnX6vGGu2bs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=awyMqot5JaiTvacsegZRXL7xIGEySrSalPgKE5mD1d6HsVJ4sLLnjArOI4CDcgrmg8IJ70CP6tGLjE3Fcvf/qHfncgdo8AD2LOOPf4OGFAuW2CpiN77D52H67Ci/r0S3vRAktJoKPbQ8WDE5Z8oxhGff/ieic82yyN8QJzqUfbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OEMM4ItZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="aMP3Jy8a"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746073660; x=1777609660;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dLcL67+O3gdWGHtlIunDL8NWJWKO9aINTCEgtB1sDsM=;
-  b=aMP3Jy8azOcNS1SjijmRlUtPsq9H2dhqyzrkbovF07M/SJARs1S5+Frt
-   GfYcXmJtD5/XoN5x5sk+4cudKNHsQbBb1dHVsCFcJyaM+nPqMO/H1Im6e
-   Xjl4IF3zU5HV4wLZHg93LTlNYUu+RLnmuM7HBABY2ql7OGhy6HkFUdgxF
-   w=;
-X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
-   d="scan'208";a="15368904"
-Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
-  by smtp-border-fw-9105.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 04:27:34 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.7.35:50737]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.21.68:2525] with esmtp (Farcaster)
- id f4ae1998-50aa-4fe2-9700-d7b1c72e7189; Thu, 1 May 2025 04:27:33 +0000 (UTC)
-X-Farcaster-Flow-ID: f4ae1998-50aa-4fe2-9700-d7b1c72e7189
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 04:27:33 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 04:27:27 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jlayton@kernel.org>
-CC: <airlied@gmail.com>, <akpm@linux-foundation.org>, <andrew@lunn.ch>,
-	<davem@davemloft.net>, <dri-devel@lists.freedesktop.org>,
-	<edumazet@google.com>, <horms@kernel.org>, <intel-gfx@lists.freedesktop.org>,
-	<jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-	<kuba@kernel.org>, <kuniyu@amazon.com>, <linux-kernel@vger.kernel.org>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<nathan@kernel.org>, <netdev@vger.kernel.org>, <pabeni@redhat.com>,
-	<qasdev00@gmail.com>, <rodrigo.vivi@intel.com>, <simona@ffwll.ch>,
-	<tursulin@ursulin.net>, <tzimmermann@suse.de>
-Subject: Re: [PATCH v6 08/10] net: add symlinks to ref_tracker_dir for netns
-Date: Wed, 30 Apr 2025 21:26:47 -0700
-Message-ID: <20250501042719.81002-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <0c4e532ed8b58f8253a14f8ed59d93523a096f16.camel@kernel.org>
-References: <0c4e532ed8b58f8253a14f8ed59d93523a096f16.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OEMM4ItZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7730C4CEE3;
+	Thu,  1 May 2025 04:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746073853;
+	bh=lXs90SKBYnw4vhtrdlv7Pt+u57vH2VVBsnX6vGGu2bs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=OEMM4ItZdopdosiaSYbCa9zn9FLKsXaYLkuZ9/1DDoB9pKGOzLyLblGmMTmoB2iON
+	 l4eLBewZ/2mJwB9jjIEc8N38zYGvkw6IVNUJYzg6mKOz5B+7qEs32Zcf76ab76k8le
+	 OrKNXfWO3i84eNC8c8JX+/6lNTdrhzag3dN3RI9bi7sB8CcP5ON2AVbOkt+kj9/V/W
+	 Ao8foGYGxmfpc5Ln3wthIk9oN5kltiV43vKPl+3dVmwe/y9Go/pZMf6obzC7YHi2df
+	 6vjz1SBE2N69O43eV8K3KdH/eq9+r/ZwcOt7x3GS7Z09wzh9XDSHCdfubdpI1s2WGc
+	 UdwFriTArIAlw==
+Date: Wed, 30 Apr 2025 21:30:53 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: Re: [PATCH v9 13/15] xfs: add xfs_compute_atomic_write_unit_max()
+Message-ID: <20250501043053.GD1035866@frogsfrogsfrogs>
+References: <20250425164504.3263637-1-john.g.garry@oracle.com>
+ <20250425164504.3263637-14-john.g.garry@oracle.com>
+ <a8ef548a-b83e-4910-9178-7b3fd35bca14@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D046UWB001.ant.amazon.com (10.13.139.187) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8ef548a-b83e-4910-9178-7b3fd35bca14@oracle.com>
 
-From: Jeff Layton <jlayton@kernel.org>
-Date: Wed, 30 Apr 2025 21:07:20 -0700
-> On Wed, 2025-04-30 at 20:50 -0700, Kuniyuki Iwashima wrote:
-> > From: Jeff Layton <jlayton@kernel.org>
-> > Date: Wed, 30 Apr 2025 20:42:40 -0700
-> > > On Wed, 2025-04-30 at 20:07 -0700, Kuniyuki Iwashima wrote:
-> > > > From: Jeff Layton <jlayton@kernel.org>
-> > > > Date: Wed, 30 Apr 2025 19:59:23 -0700
-> > > > > On Wed, 2025-04-30 at 14:29 -0700, Kuniyuki Iwashima wrote:
-> > > > > > From: Jeff Layton <jlayton@kernel.org>
-> > > > > > Date: Wed, 30 Apr 2025 08:06:54 -0700
-> > > > > > > After assigning the inode number to the namespace, use it to create a
-> > > > > > > unique name for each netns refcount tracker with the ns.inum value in
-> > > > > > > it, and register a symlink to the debugfs file for it.
-> > > > > > > 
-> > > > > > > init_net is registered before the ref_tracker dir is created, so add a
-> > > > > > > late_initcall() to register its files and symlinks.
-> > > > > > > 
-> > > > > > > Signed-off-by: Jeff Layton <jlayton@kernel.org>
-> > > > > > > ---
-> > > > > > >  net/core/net_namespace.c | 28 +++++++++++++++++++++++++++-
-> > > > > > >  1 file changed, 27 insertions(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
-> > > > > > > index 008de9675ea98fa8c18628b2f1c3aee7f3ebc9c6..6cbc8eabb8e56c847fc34fa8ec9994e8b275b0af 100644
-> > > > > > > --- a/net/core/net_namespace.c
-> > > > > > > +++ b/net/core/net_namespace.c
-> > > > > > > @@ -763,12 +763,38 @@ struct net *get_net_ns_by_pid(pid_t pid)
-> > > > > > >  }
-> > > > > > >  EXPORT_SYMBOL_GPL(get_net_ns_by_pid);
-> > > > > > >  
-> > > > > > > +#ifdef CONFIG_NET_NS_REFCNT_TRACKER
-> > > > > > > +static void net_ns_net_debugfs(struct net *net)
-> > > > > > > +{
-> > > > > > > +	ref_tracker_dir_symlink(&net->refcnt_tracker, "netns-%u-refcnt", net->ns.inum);
-> > > > > > > +	ref_tracker_dir_symlink(&net->notrefcnt_tracker, "netns-%u-notrefcnt", net->ns.inum);
-> > > > > > 
-> > > > > > Could you use net->net_cookie ?
-> > > > > > 
-> > > > > > net->ns.inum is always 1 when CONFIG_PROC_FS=n.
-> > > > > 
-> > > > > My main use-case for this is to be able to match the inode number in
-> > > > > the /proc/<pid>/ns/net symlink with the correct ref_tracker debugfs
-> > > > > file. Is there a way to use the net_cookie to make that association?
-> > > > 
-> > > > It's roundabout, but  net_cookie can be retrieved by creating a
-> > > > random socket in the netns and calling setsockopt(SO_NETNS_COOKIE).
-> > > > 
-> > > > Ido proposed a handy ip-netns subcommand here, and I guess it will
-> > > > be implemented soon(?)
-> > > > https://lore.kernel.org/netdev/1d99d7ccfc3a7a18840948ab6ba1c0b5fad90901.camel@fejes.dev/
-> > > 
-> > > For the cases where I was looking at netns leaks, there were no more
-> > > processes in the container, so there was no way to enter the container
-> > > and spawn a socket at that point.
-> > 
-> > Then how do you get net->ns.inum ?
-> > 
+On Wed, Apr 30, 2025 at 08:52:00AM +0100, John Garry wrote:
+> On 25/04/2025 17:45, John Garry wrote:
+> > +static inline xfs_extlen_t xfs_calc_perag_awu_max(struct xfs_mount *mp)
+> > +{
+> > +	if (mp->m_ddev_targp->bt_bdev_awu_min > 0)
+> > +		return max_pow_of_two_factor(mp->m_sb.sb_agblocks);
+> > +	return mp->m_ag_max_usable;
 > 
-> In my case, I was looking at /sys/kernel/debug/sunrpc/rpc_xprt/*/info.
-> That also displays net->ns.inum in the same format. When I was
-> originally working on this, the problem I was chasing was due to stuck
-> RPC transports (rpc_xprt).
-
-Thanks for the info.
-
-Prefarably the debugfs should also display netns_cookie instaed of inum,
-and the change is acceptable as the debugfs is not uAPI.
-
-Then we don't need to expose possibly non-unique value just for historical
-reason.
-
-
+> I think that this should be rounddown_pow_of_two(mp->m_ag_max_usable)
 > 
+> ditto for rt
 > 
-> > 
-> > > 
-> > > The point of the symlinks is to have a way to easily identify what
-> > > you're tracking. NAME_MAX is 255. We could do something like this
-> > > instead:
-> > > 
-> > >    snprintf(..., "netns-%u-%llx-refcnt", net->ns.inum, net->net_cookie);
-> > > 
-> > > Obviously the inums would all be 1 when PROC_FS=n, but the cookies
-> > > would be unique. Would that work?
-> > 
-> > This works, but depending on the question above, there's no point in
-> > using inum ?
-> 
-> Having the inum is definitely useful to me, particularly since the
-> net_cookie would be pretty useless for the problems I've been chasing.
->  
-> I'll plan to respin this to include the net_cookie though, since that
-> would disambiguate the names when PROC_FS=n. It might also turn out to
-> be useful for someone, once there is a way to fetch the net_cookie from
-> userland. 
-> -- 
+> I will fix (unless disagree).
+
+I don't think this needs fixing.  If there's no hardware support on the
+device, then we can do any size of atomic write that we want.
+
+--D
