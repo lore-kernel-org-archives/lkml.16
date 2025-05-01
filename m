@@ -1,200 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B0C198E6F;
-	Thu,  1 May 2025 14:51:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF041F76C2
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746111103; cv=none; b=sw/ngOY9SgRByRYsm+CZg8NdquXEx8HDykAF7Ix35Ojvom9sgBjm3euT9rV5CrteExXeR5O37jnmzA/7CZPHJLXtw2mFSc7VzuJYH/cNzIwxMYl57lM3MYwt1lr/7uZ3UeHDbNPyNpK8g4+t59uhi9KrOkFMw6KlawNVHx40TeQ=
+	t=1746111148; cv=none; b=Q5NETItS4RmWOPJC2NOwVZZj2JZ0sZKasxHge4doHqY9YrUQRkGCayXpY9cmLiVRyBsjM1DjRQkKyqs/k5xthaX+Bw3+SdeFdQGLWTmoJ1bTzkWFZV4HaNKM+WMc5hYLwzuxyC5xccZYU567BFyIkJO0+qf/wOpVuqssW6D3Ed4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746111103; c=relaxed/simple;
-	bh=wdjmd1246JboK3lbng6YEeoL6Zhji4MPN6fOxhiJpdw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZPjxoajVywGq2nZ+p/VdoSsYixa+HwVuEAptcBZ/jNtat7EI2OEMpsCG3G6brtiRtFZ8ZU2KDd6ZPq3qdxGuM9ao2ztMVAjPCdOQHHLWKdBLd08563WOyH3Xw+YrscwiS/kvrAYMy2kromhzQUPQo9zVyHZwSMr1cobV6GW9jG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bElToQK7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746111148; c=relaxed/simple;
+	bh=4vBN19AAg9T2It+spbWtSmKK8svHb3xb1Lx24a45eNI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HDTaX5GGCkfOLGqRrsamRmEHYnHVF7Lt5kDZVCW9/BtFnbZlQ6j+YEkpT/KXaF95/x87BUE/JG/oCSwIpykgwy9wB83dd97Fr7ZrdHuBgFmNzFqGwcab8dIhi1Yy0d8Y8pgj25ogas9zXL2/wAyDa/Dxo41NAlAJnnD0U7yYfms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ea9v+iHW; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bElToQK7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165E7C4CEED;
-	Thu,  1 May 2025 14:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746111103;
-	bh=wdjmd1246JboK3lbng6YEeoL6Zhji4MPN6fOxhiJpdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bElToQK7w+6nx2mjMzHZ1uPtFSEXuTctwMZpLLhMeeOV/VYTwgnbx9bHHJ4faKYGg
-	 AjKJpDYz71VP+m2LLTbUClNzwYzz1iUqD56BJiT9HPE+O5YENSfY2bhTT3VfbLuuHv
-	 ljDSf3MYYjO4RmomsHmcYreMwPD58KlX8R8SU+twUekKefPPM3PnbPwNb/5OyneW5X
-	 M12BOSI2xPPnteqTVBGhwGjaZOWMU1JqdhBzvAcAFUe/BQOqJwZEGuK8k87jc9cQJ2
-	 B3OvsOYi8pjxHNT9Gbp3jE3sEpBsW6muo/bBHZlSTWixxObZBDmw8GvmP66Ss+UKG2
-	 nbwUoN2n+CuUQ==
-Date: Thu, 1 May 2025 15:51:36 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Sayyad Abid <sayyad.abid16@gmail.com>
-Cc: linux-iio@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com,
-	javier.carrasco.cruz@gmail.com, olivier.moysan@foss.st.com,
-	gstols@baylibre.com, tgamblin@baylibre.com, alisadariana@gmail.com,
-	eblanc@baylibre.com, antoniu.miclaus@analog.com,
-	andriy.shevchenko@linux.intel.com, stefan.popa@analog.com,
-	ramona.gradinariu@analog.com, herve.codina@bootlin.com,
-	tobias.sperling@softing.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 5/5] dt-bindings: iio: adc: add bindings for TI
- ADS1262
-Message-ID: <20250501-nervous-agreed-73b4b63c82e0@spud>
-References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
- <20250501100043.325423-6-sayyad.abid16@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ea9v+iHW"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfe99f2a7so1716405e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:52:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746111145; x=1746715945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lJYIuRkvXgvyjv2IxF0maY1wel8nlqpI4PAniXDkr/Q=;
+        b=Ea9v+iHW6PbFFrFeC7r2je5IwDvTAzoUQVrWWiSNKFapGV2IDFvr5rLolc5VDezTiw
+         MZTkYiHYfusKl9F+1JmZ5gK/yh6DGFYtD6Vf3M7Ap9itQQiaTHVfHtpNzfo/qHxEBCW0
+         GuqOdoxGAYuIJSYXE11zCoOg7ayElwuiIJjqLInC3zyZbKlBEzA4VjUEzYvWDRMQ/DNN
+         bGWRIJExmz8XiCcbTsXgdm/117RL6vKit/sNXAih6ZFtdyeTaAep9zS6WZLx8fFJJ0Ty
+         EgPbB0PYBHzfXYMlczbJ3lG1l/3SzptGIm8A53c5rE9T6CAsZ1Fye2aZAVoFR4ryA+97
+         fvJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746111145; x=1746715945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lJYIuRkvXgvyjv2IxF0maY1wel8nlqpI4PAniXDkr/Q=;
+        b=LZU9gdmjTHHsZGxGwMjawHdx6gfewKzOhfVV4eiv97mhat7C9RyBYvFQqEWVoiSqs9
+         vcTB8GT9u996FZIQ8quK8I3KmWOGVsP5RNqhuQx0GSrVLq8e/nllS5htptKAP4Bo6JWM
+         R+6p+6XUQ9evIDe0HlUtVDkF/iY+3LdZleSC7ICnGLb7uFSBGJa+0dbkv7BkweQOwgZm
+         RKDzRI3INm5r0bUgHEU5HfsC3vfi4K8qBMMgEVLOGM4+1QxAj2xArs7ceJQkfp2sLT8P
+         SNlEuXNn1AtgAx8m+3fGX6ermCF4LoTgqHykmu3ukOIZtPIpMwKI1Rc4J3XMXpyhNXFV
+         wXxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX1Ii3HkjFSKmHCGsK4u9rSappfZw5UaJeqj42NlAHyyyLwnMTns35FoayYoYOq2scE1oZttyu4DT8Fz1M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR1kwxPY2Z1hUshIEQvcjHMsYh33thqr+lhECm7W2F3vUginfV
+	u0FelDW8S6LhJK65OhCgTOGXf13ElJiO11iODNCP3A8FBBO1ONTnXURZsnLuK38=
+X-Gm-Gg: ASbGncu2qwTMp2Cpx0YlQCKxfIyfcEqlvbKdeCnDsCj/8i+4+93EgRfPAQvc3B2nEcU
+	E2A75nEuqyAjMC5XNrNieVuPG0swV+IvXwZhfGcc2wDEYTjwvzFay/ccLzMig8YpOEjxCeZhDhG
+	+wIY0sgvnNsCfC3Cw1msNEm1lX9p15gV8u/5CZMqKzGO4Jq/XcU3QjlrE99J7099nKP7x3F+YMk
+	CXRcisI4sg/2HbU5S6SkUVSOTCARzjb+Lj06xX7ylmMdW3VelCBvrUucTkC5A4T+Sxtv7B4YDSy
+	4RIUY4NI7okxh6taBsyQPjfRi8o/IrU0Vj0hXQuqYiKMwBj3wQ==
+X-Google-Smtp-Source: AGHT+IEscX5IahyoV/eRtQh77jTXcANYfmic7ETf5PGiDochYM6dDXqHCgY2w9TfMWBhu1Fc9dpY5A==
+X-Received: by 2002:a05:600c:4f8e:b0:439:9fde:da76 with SMTP id 5b1f17b1804b1-441b740c97fmr6862565e9.0.1746111144682;
+        Thu, 01 May 2025 07:52:24 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89d15dasm14558175e9.16.2025.05.01.07.52.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 07:52:23 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Lee Jones <lee@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Colin Foster <colin.foster@in-advantage.com>,
+	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+	Marek Vasut <marek.vasut+renesas@gmail.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jeff LaBundy <jeff@labundy.com>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 1/2] dt-bindings: mfd: Drop unrelated nodes from DTS example
+Date: Thu,  1 May 2025 16:51:26 +0200
+Message-ID: <20250501145125.59952-3-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="62IET8pWxsXuL1RR"
-Content-Disposition: inline
-In-Reply-To: <20250501100043.325423-6-sayyad.abid16@gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2572; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=4vBN19AAg9T2It+spbWtSmKK8svHb3xb1Lx24a45eNI=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE4ptulClJmxd6R/zFbeEq5+2oIrFLOFC/OsgF
+ Eg7qxfabImJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBOKbQAKCRDBN2bmhouD
+ 13VyD/9mmygI3FArCUXOD4f6QaOXP7dD5Fsgyiy2iRtSSwwySLD3Eesa1LzWAQ/TGmj/aJyw9fG
+ DaYo9NoeywhAaeLW0WiLRFO2k1kjtddAc68IqPFohTHpgx4VcDi4fMcvvFyYbkpwit5SJp48sgi
+ +LCuw7oS9K5Ohmyqf1NAIan/guJfvKY21AgAD1nm0qU27Vdh/mHKeejNP/PXv3y2dInBCMAiUMw
+ yNewJrcoNeS0RRVFu35bjLUoo28vLof3ZrTBp/xZMXMFRNhVvpny7sIAdBRhQ6YiVP4fhOff9R0
+ mH8FUbY1NUr5d7vM3GoSyhSTbJkJoWzt8druiwrzJMrIueQdsb2PnTXnlygcXFfXuQHFtoGAnda
+ 9bSmOVsxc22KuzIl7SrhX4Q/ZpqlmKsyLEH47JLIwSW+jWYpEezBZToVUlG1e3Jz/NBZErXq55r
+ H8AclkEQLS2reCTfmSXi/ENGdXy9AVDxw5sN3JycBuqfADNGl52aYtT7oYMnt84aclDBLlHMcfd
+ quFI1oTHupbzyamJlnPwfAtMVnoPBB/haC3VR4w97JOsD85+eH4rj85Gm2zmhHol0aaXIiBy/Mf
+ lRAAMgvFGwwYovncTDj/UYqejjABZ1wt7jfh5x249XFIPS+7vDd1lBofEJzBCOI2TcEXJto2CO6 w18oNZQkiq7aUYQ==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Transfer-Encoding: 8bit
 
+Binding example should not contain other nodes, e.g. consumers of
+resource providers, because this is completely redundant and adds
+unnecessary bloat.
 
---62IET8pWxsXuL1RR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-On Thu, May 01, 2025 at 03:30:43PM +0530, Sayyad Abid wrote:
+---
 
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - ti,ads1262
+Changes in v2:
+1. Move pwm-leds removal hunk in iqs62x.yaml from next patch to here
+   (Geert)
+---
+ Documentation/devicetree/bindings/mfd/iqs62x.yaml     |  9 ---------
+ .../devicetree/bindings/mfd/mscc,ocelot.yaml          |  6 ------
+ .../devicetree/bindings/mfd/netronix,ntxec.yaml       | 11 -----------
+ 3 files changed, 26 deletions(-)
 
-How different is the ads1263? Do we get support for both "for free"?
+diff --git a/Documentation/devicetree/bindings/mfd/iqs62x.yaml b/Documentation/devicetree/bindings/mfd/iqs62x.yaml
+index e79ce447a800..3fc758664614 100644
+--- a/Documentation/devicetree/bindings/mfd/iqs62x.yaml
++++ b/Documentation/devicetree/bindings/mfd/iqs62x.yaml
+@@ -90,15 +90,6 @@ examples:
+             };
+     };
+ 
+-    pwmleds {
+-            compatible = "pwm-leds";
+-
+-            led-1 {
+-                    pwms = <&iqs620a_pwm 0 1000000>;
+-                    max-brightness = <255>;
+-            };
+-    };
+-
+   - |
+     /* Single inductive button with bipolar dock/tablet-mode switch. */
+     #include <dt-bindings/input/input.h>
+diff --git a/Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml b/Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
+index 8bd1abfc44d9..b613da83dca4 100644
+--- a/Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
++++ b/Documentation/devicetree/bindings/mfd/mscc,ocelot.yaml
+@@ -76,12 +76,6 @@ additionalProperties: false
+ 
+ examples:
+   - |
+-    ocelot_clock: ocelot-clock {
+-          compatible = "fixed-clock";
+-          #clock-cells = <0>;
+-          clock-frequency = <125000000>;
+-      };
+-
+     spi {
+         #address-cells = <1>;
+         #size-cells = <0>;
+diff --git a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+index 59a630025f52..06bada577acb 100644
+--- a/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
++++ b/Documentation/devicetree/bindings/mfd/netronix,ntxec.yaml
+@@ -63,14 +63,3 @@ examples:
+                     #pwm-cells = <2>;
+             };
+     };
+-
+-    backlight {
+-            compatible = "pwm-backlight";
+-            pwms = <&ec 0 50000>;
+-            power-supply = <&backlight_regulator>;
+-    };
+-
+-    backlight_regulator: regulator-dummy {
+-            compatible = "regulator-fixed";
+-            regulator-name = "backlight";
+-    };
+-- 
+2.45.2
 
-> +  spi-cpha:
-> +    type: boolean
-> +    description: Required for SPI mode 1 operation
-
-This should just collapse to "spi-cpha: true", cos the definition of it
-comes from spi-peripheral-props.yaml.
-
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: GPIO specifier for the reset pin (active low)
-> +
-> +  vref-supply:
-> +    description: |
-> +      The regulator supply for ADC reference voltage. If not specified,
-> +      the internal 2.5V reference will be used.
-
-I looked this device up, I don't see an input pin called "vref" and
-there appear to be multiple reference inputs. All supplies should be
-documented.
-
-> +      ti,gain:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        minimum: 0
-> +        maximum: 5
-> +        description: |
-> +          PGA gain setting. Not applicable for temperature sensor (chann=
-el 11).
-> +          0: 1 (default)
-> +          1: 2
-> +          2: 4
-> +          3: 8
-> +          4: 16
-> +          5: 32
-
-Why can't the gain be in it's actual unit, rather than what I am
-guessing is a register value?
-
-> +  ti,data-rate:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    minimum: 0
-> +    maximum: 15
-> +    description: |
-> +      Data acquisition rate in samples per second
-> +      0: 2.5
-> +      1: 5
-> +      2: 10
-> +      3: 16.6
-> +      4: 20
-> +      5: 50
-> +      6: 60
-> +      7: 100
-> +      8: 400
-> +      9: 1200
-> +      10: 2400
-> +      11: 4800
-> +      12: 7200
-> +      13: 14400
-> +      14: 19200
-> +      15: 38400
-
-Same applies here really, except that the fractional per second rate
-would only work if the base unit was samples-per-<something sub second>,
-which might or might not be worth it.
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      ads1262: adc@0 {
-
-The label here is unused AFAICT and should be dropped.
-
-Cheers,
-Conor.
-
-> +        compatible =3D "ti,ads1262";
-> +        reg =3D <0>;
-> +        spi-max-frequency =3D <7372800>;
-> +        vref-supply =3D <&adc_vref>;
-> +        spi-cpha;
-> +        reset-gpios =3D <&gpio1 16 GPIO_ACTIVE_LOW>;
-> +        ti,pga-bypass;
-> +        ti,data-rate =3D <15>; /* 38400 SPS */
-> +
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +        #io-channel-cells =3D <1>;
-> +
-> +        /* Single-ended channel */
-> +        channel@0 {
-> +          reg =3D <0>;
-> +        };
-> +
-> +        /* Differential channel */
-> +        channel@1 {
-> +          reg =3D <1>;
-> +          diff-channels =3D <1 2>;
-> +          ti,gain =3D <2>; /* Gain of 4 */
-> +        };
-> +
-> +        /* Temperature sensor */
-> +        channel@11 {
-> +          reg =3D <11>;
-> +        };
-> +      };
-> +    };
-> +...
-> --=20
-> 2.39.5
->=20
-
---62IET8pWxsXuL1RR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBOKeAAKCRB4tDGHoIJi
-0iDXAQDMeJzpK7bqks7PXJSILFx1HYJxR0frq2wqV/4eAZzXHwD8DYzj4Zw2QiD9
-uGzl1vxYuhW4ijM+iUCVHnGoSy9wkgg=
-=JpzC
------END PGP SIGNATURE-----
-
---62IET8pWxsXuL1RR--
