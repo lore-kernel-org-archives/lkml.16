@@ -1,188 +1,115 @@
-Received: from smtp-fw-80006.amazon.com (smtp-fw-80006.amazon.com [99.78.197.217])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 873CF213255;
-	Thu,  1 May 2025 07:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.217
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1ADA268FEC
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 07:13:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746083604; cv=none; b=A/lw/V+0ezLpUY8kwo82RoSdMBP1sZGBoOhwW7qhYBFgvbIXEpl0YrT3mGCuA3imSFW4Ov/5ivWtncIr4X1v1FmQSFWL6vcZK+N+PQ5MV92MD8iTw01YchYnPGcnxY33FKtFtN4O6qaN8mI5WhHSoQF9+dPudLdAxhiWl5u3mTI=
+	t=1746083622; cv=none; b=ExREC58z0hEoJ23g/qqMcw5RADd5fIFhkmc6rgUAsWSEB1wCDTAbgBnbn8K/N/bMFTlmb6O9dUkI1ZxF3c5z7qLKZyigrknBGM77KiMQ5M/TyV8Qrh7K4t7GjwhL74TJjzwRfmL1bKsXZZmcFw6rPfU1IEKyfxeB7GTxtaaK3xc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746083604; c=relaxed/simple;
-	bh=zPYU6GYNdy0mMALSF3glm6SldvCR75nV5Wr/ewBREMQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pdrA2KP4jVj42E+0wnZQtnDV2Izwpz7ilyJ1RKz8ZRazq1mOH/ZO6iNCpWtNjk1wDtRSntsmccvZ4sjHmjBD+ap26tgBHKsFy6N4/FULWvdp929bEyf4MZjHNpGtHzacDfXRjnrlRElCGff/4HTaQb19wR0oORPJP17tq4cYey0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=piT+hAhN; arc=none smtp.client-ip=99.78.197.217
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1746083622; c=relaxed/simple;
+	bh=QSceKILHuAqpArLvBrvn1WkL3zQ7RTNaWnjS/zM11MY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k1IgdeyKD4ux67gXISR+tGlIe3aTBW+8t1a/KhAvLe04h7dN2FQ5Ih9WkO4uL+JNxHllu+kVVWlgeh+BWxrtC9H9U1noJiq97oH9JxJp+ttTSkCrZWEncETMuesmMop8tORdjnkEqboHCle9lBuUNDM0wgDgLfH4R0Ljw60qYBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WJyCDxgI; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="piT+hAhN"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WJyCDxgI"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac9aea656so620360f8f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 00:13:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1746083602; x=1777619602;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vx0+NHqu1wQYPq/J+n4ZB7E7XDRzuoqX7tjLl8vX3Gc=;
-  b=piT+hAhN1GgAsvekVq13STCGXudkscunKP8ilmMCcn8ARjKXG4In+XuP
-   Q4OxKry8KbQuxu+HVbFKGxD/Az14HBdty0UpyDkJjYdC6I8R56YqXvf7u
-   sMYFG9W8v+FBg9zlw9mEoQwiPRppLqKL3OakOxSw5Uf+xejkbxJp7qn8E
-   E=;
-X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
-   d="scan'208";a="45627745"
-Received: from pdx4-co-svc-p1-lb2-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.214])
-  by smtp-border-fw-80006.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 07:13:21 +0000
-Received: from EX19MTAUWA002.ant.amazon.com [10.0.21.151:1121]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.49.105:2525] with esmtp (Farcaster)
- id cfb02766-30b7-414e-8a08-12f6538f65e7; Thu, 1 May 2025 07:13:20 +0000 (UTC)
-X-Farcaster-Flow-ID: cfb02766-30b7-414e-8a08-12f6538f65e7
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWA002.ant.amazon.com (10.250.64.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 07:13:20 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Thu, 1 May 2025 07:13:16 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <jiayuan.chen@linux.dev>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <pabeni@redhat.com>, <shuah@kernel.org>,
-	<willemdebruijn.kernel@gmail.com>
-Subject: Re: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
-Date: Thu, 1 May 2025 00:12:08 -0700
-Message-ID: <20250501071308.1931-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <1f4d3fb4eed397e346efb3ef597e29204e5a2f4b@linux.dev>
-References: <1f4d3fb4eed397e346efb3ef597e29204e5a2f4b@linux.dev>
+        d=google.com; s=20230601; t=1746083619; x=1746688419; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QSceKILHuAqpArLvBrvn1WkL3zQ7RTNaWnjS/zM11MY=;
+        b=WJyCDxgIVnVemuoy4+jDE9QanbmUs7X2yg/SEb0RfdES2Wojd9PTe3vJz0wJHTQ1T1
+         0YJAsfD5vs7lMu2X9J3sYq7QM1XMPeTemYlVgky+VZ5FzlIovHV4UKfJ0WuonMvOA4uP
+         NpZ+XsTo3qI5EqPSQXYl8MSyrgv18o/uQlPbn/adKoU7ZypqC+csJXZLshjad7Pv1ksR
+         2y/8GCgmbu9idQaFBLoD+erN9s9jDY/0K1MrJVUYxbKt7zVBNEYMjkMPO8pK9LDvZi72
+         8jDtS+hSo2F7VZbha8LS9yGJDiIEDcdkkNb73SOxA/Nd9NiTk02xRtUAqCt4SXR630zp
+         nLNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746083619; x=1746688419;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QSceKILHuAqpArLvBrvn1WkL3zQ7RTNaWnjS/zM11MY=;
+        b=aKDukkitdUmLQvtVrT73mtC6KLsjXfvHp/Of9wocRB+rHRNqJ2AF9NH5095lnnVA0o
+         yRjnm5pYDunUlsVNtf6HQW1YnlCks2h0Uc2LLB2GADYIRFuL+AWpWN0ygIY/iE6F4brM
+         kqHgNG2aPN/HSXa8XDOv0/A7ahrUiSAvhBOdong+tlBmzgDk4Dc2FmhoiIv5rPdANr/b
+         eH1e1d8UUP3fMm0J0MbU9Er1LvoYiphft6UoUQ2QHlVeRNwx5mK2v/TRfNl+k94LGjdg
+         lDvDUena/wxj1yuBfGq4UHzFZKwEcD/IeW2glVdInhmS1zpjv2qv5qmCitq4RrRCRgDI
+         DC7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDtnSGJKklUfSQ6iZQlXOCdZIWmKPHzWXWktVCrzj2QyXP9DoK+97Fg5LWATvP4Lo0lZ9HbxM9oSx5KNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzK/5sCl9AbiYA/SAltzpkkF51bDeT1Qui0QqVYH/+fge6QHtYN
+	CIVuaaMlsbw35Xn1DXtojRN4EQ2I0M0r95xOmlnM4RF+BNGyU2rOK6z/N3U/JN4X0I4tPL4UYWl
+	6r6nWh11iKbkvhk1CM01aTFp+cCP0xlz3lrvb
+X-Gm-Gg: ASbGnctx6A8G3jCrF2yZZuoGh4TKR+JG2hvcxfT8BKsaMalOHT5qELyPt4LCS+qmx+m
+	GpnhZilqh6PoyfeGCNsNw7sT89kRAmeS1K6nhZ1L6nTXNJDX27lUS/M9HIaZQIDhn+PM3UFYMLM
+	vsG2fMlFG8aTqX7Qg8OvgFFDs=
+X-Google-Smtp-Source: AGHT+IGN3TCVYF0QhPUHuMTXlmMoT5bvOUHFWUt0TCL/e5cKhJDlof9p+ZsQRcjZYfw9VK8lVZJZGWzzaKYax13SJKA=
+X-Received: by 2002:a05:6000:2403:b0:39c:2688:612b with SMTP id
+ ffacd0b85a97d-3a094044002mr875832f8f.7.1746083619006; Thu, 01 May 2025
+ 00:13:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D044UWA002.ant.amazon.com (10.13.139.11) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+References: <20250227-configfs-v5-0-c40e8dc3b9cd@kernel.org> <20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org>
+In-Reply-To: <20250227-configfs-v5-1-c40e8dc3b9cd@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Thu, 1 May 2025 09:13:25 +0200
+X-Gm-Features: ATxdqUGO2CyyZYzRoShGEfmJdbqkfUThUZw7qk03SErsEjIyLXmJS5-laQdv5uk
+Message-ID: <CAH5fLggDwPBzMO2Z48oMjDm4qgoNM0NQs_63TxmVEGy+gtMpOA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] rust: sync: change `<Arc<T> as ForeignOwnable>::PointedTo`
+ to `T`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
+	Joel Becker <jlbec@evilplan.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, 
+	Fiona Behrens <me@kloenk.dev>, Charalampos Mitrodimas <charmitro@posteo.net>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
-Date: Thu, 01 May 2025 06:22:17 +0000
-> 2025/5/1 12:42, "Kuniyuki Iwashima" <kuniyu@amazon.com> wrote:
-> 
-> > 
-> > From: Jiayuan Chen <jiayuan.chen@linux.dev>
-> > 
-> > Date: Thu, 1 May 2025 11:51:08 +0800
-> > 
-> > > 
-> > > For some services we are using "established-over-unconnected" model.
-> > > 
-> > >  
-> > > 
-> > >  '''
-> > > 
-> > >  // create unconnected socket and 'listen()'
-> > > 
-> > >  srv_fd = socket(AF_INET, SOCK_DGRAM)
-> > > 
-> > >  setsockopt(srv_fd, SO_REUSEPORT)
-> > > 
-> > >  bind(srv_fd, SERVER_ADDR, SERVER_PORT)
-> > > 
-> > >  
-> > > 
-> > >  // 'accept()'
-> > > 
-> > >  data, client_addr = recvmsg(srv_fd)
-> > > 
-> > >  
-> > > 
-> > >  // create a connected socket for this request
-> > > 
-> > >  cli_fd = socket(AF_INET, SOCK_DGRAM)
-> > > 
-> > >  setsockopt(cli_fd, SO_REUSEPORT)
-> > > 
-> > >  bind(cli_fd, SERVER_ADDR, SERVER_PORT)
-> > > 
-> > >  connect(cli, client_addr)
-> > > 
-> > >  ...
-> > > 
-> > >  // do handshake with cli_fd
-> > > 
-> > >  '''
-> > > 
-> > >  
-> > > 
-> > >  This programming pattern simulates accept() using UDP, creating a new
-> > > 
-> > >  socket for each client request. The server can then use separate sockets
-> > > 
-> > >  to handle client requests, avoiding the need to use a single UDP socket
-> > > 
-> > >  for I/O transmission.
-> > > 
-> > >  
-> > > 
-> > >  But there is a race condition between the bind() and connect() of the
-> > > 
-> > >  connected socket:
-> > > 
-> > >  We might receive unexpected packets belonging to the unconnected socket
-> > > 
-> > >  before connect() is executed, which is not what we need.
-> > > 
-> > >  (Of course, before connect(), the unconnected socket will also receive
-> > > 
-> > >  packets from the connected socket, which is easily resolved because
-> > > 
-> > >  upper-layer protocols typically require explicit boundaries, and we
-> > > 
-> > >  receive a complete packet before creating a connected socket.)
-> > > 
-> > >  
-> > > 
-> > >  Before this patch, the connected socket had to filter requests at recvmsg
-> > > 
-> > >  time, acting as a dispatcher to some extent. With this patch, we can
-> > > 
-> > >  consider the bind and connect operations to be atomic.
-> > > 
-> > 
-> > SO_ATTACH_REUSEPORT_EBPF is what you want.
-> > 
-> > The socket won't receive any packets until the socket is added to
-> > 
-> > the BPF map.
-> > 
-> > No need to reinvent a subset of BPF functionalities.
-> >
-> 
-> I think this feature is for selecting one socket, not filtering out certain
-> sockets.
-> 
-> Does this mean that I need to first capture all sockets bound to the same
-> port, and then if the kernel selects a socket that I don't want to receive
-> packets on, I'll need to implement an algorithm in the BPF program to
-> choose another socket from the ones I've captured, in order to avoid
-> returning that socket?
+On Thu, Feb 27, 2025 at 1:36=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel=
+.org> wrote:
+>
+> Using `ArcInner` as `PoinedTo` in the `ForeignOwnable` implementation for
+> `Arc` is a bit unfortunate. Using `T` as `PointedTo` does not remove any
+> functionality, but allows `ArcInner` to be private. Further, it allows
+> downstream users to write code that is generic over `Box` and `Arc`, when
+> downstream users need access to `T` after calling `into_foreign`.
+>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Right.
+We discussed this in the meeting yesterday, but just to summarize:
 
-If you want a set of sockets to listen on the port, you can implement
-as such with BPF; register the sockets to the BPF map, and if kernel pick
-up other sockets and triggers the BPF prog, just return one of the
-registerd sk.
+This isn't correct use of the trait. The trait is intended for cases
+where you pass a void pointer into C code, and the C code treats that
+void pointer entirely opaquely. That's why the docs for `into_foreign`
+say this:
 
-Even when you have connect()ed sockets on the same port, kernel will
-fall back to the normal scoring to find the best one, and it's not a
-problem as the last 'result' is one selected by BPF or a connected sk,
-and the packet won't be routed to not-yet-registered unconnected sk.
+The foreign representation is a pointer to void. There are no
+guarantees for this pointer. For example, it might be invalid,
+dangling or pointing to uninitialized memory. Using it in any way
+except for [`from_foreign`], [`try_from_foreign`], [`borrow`], or
+[`borrow_mut`] can result in undefined behavior.
 
+In this case, you want to make this change because the C code in
+configfs will dereference the void pointer and read from it. But
+that's not allowed with the ForeignOwnable trait. You need a new trait
+if you want pointers that are not opaque.
 
-> 
-> This looks like it completely bypasses the kernel's built-in scoring
-> logic. Or is expanding BPF_PROG_TYPE_SK_REUSEPORT to have filtering
-> capabilities also an acceptable solution?
+Alice
