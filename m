@@ -1,117 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411B22DC770;
-	Thu,  1 May 2025 08:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE2711E9B1F;
+	Thu,  1 May 2025 08:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746088076; cv=none; b=rowdQGgQ68g6N5i+K7QENLPKnjYWcupM8aPl8gNBxKrN3yH2UgLUEs4LwFxsQy+ecCCrJoSbB30wHg0AceSXgN6L5HpW8GiHZD1DMn1bqixP3YfoEbjyAERegofD7RhdIdtVypAkkVGRWHezs8XspwTVmbU67dS9QtbxQLCbiyg=
+	t=1746088207; cv=none; b=VW15QuxtptgkPNb9GDdCCqQ0Si9S4t/L9W9bjRwoqCVIHuIpYaS8uwSeNgc39RJJTmObFzOPNh3yXQWl6spYdwEElBzwbpM2foBaalFBNNMzT869YzOMwytbY/GP5Wv0t8IoxEX5HuhFi+XyY+xyEbZSP4BECgXPoF5BtaKACXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746088076; c=relaxed/simple;
-	bh=DIRp7PCO2q81pcfAhNFooEuVcja7gndPQjMS3ZpawtY=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=edkbCxZ2FaOptwXrBp2uYWuCuSQntrCGEtqKJg3GSDeZzeqk6/wikdIGzyvkhkVk9/3HJCtG10XFkfydYvpEGxCUO6SsBHamTi+lNwRinIjYJhixmmqj0BJD2kXPiL+cc7xHHtw8LYKof/VuUmCCfZdoPTmA1r9r0sbfif2Wktg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kdlRCrUM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746088207; c=relaxed/simple;
+	bh=R6eIpa2lZf15T2N49GWLTpKxSvaPSgfPxYQcLuZpIIE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tq3bI7nzMMPAXrUWn4pxuaK3BYwRKY9FsdHjeQ/MDgBYtFm5DlItmlEnZgrfYPe13G6FHFCM3y/N7Ku6rRHJM1dzJaklRYwlV92PQ1FlG9nkVD+IJ4SyOVC++Cx++HLiqaR65+kO6g5EC/wUloriwLJgED4q0GIiohAe9/Z6vFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=Kcf5ZiFJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kdlRCrUM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 800E4C4CEE3;
-	Thu,  1 May 2025 08:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746088075;
-	bh=DIRp7PCO2q81pcfAhNFooEuVcja7gndPQjMS3ZpawtY=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=kdlRCrUMmhE/tpd3yMnCUQ8nqFZey2KO2cjBF/eRRiX7S7tIBNUvPpONHiNjtp0Jw
-	 B3y0ddPIIL5h9wwXGQ9ORHG+J9rQeGilBbUOKKoX4iu/59rIZEAnup83l3Mdlrog0j
-	 haFWGO7+2NbfFDawZSIKTGd95wYawI4fdGk8jBEyL0uV4WZGwJ+AaI6gVLp51uq6Ce
-	 bswu/fX8jr/Uo+9LBf9DJs9mFhVah3+xuv5ho2wZzUDv9Ub1zudwGIgRfRV2p6sD3K
-	 IlzdE+73rrDDkwgXh3h0uxSA8vWF1/9iUXCzsxTfpmc+Rxhy7rUC2IHUKg0unU/7Gx
-	 KbLQJCgkOn/sg==
-Date: Thu, 01 May 2025 03:27:53 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Kcf5ZiFJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746088201;
+	bh=kvA22Nl85FWKJNReOuWUe6xaTzhaLKDDqM5V++hK/3c=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Kcf5ZiFJUcj5UqWKzpD2pmySYQ9Gvou0zqkQt2A4JXoimyoNYqKxB6ip6ZJXJJHDy
+	 CLmzdkIwxL91Sz9eY+yhAHckpB13k3Ag50jI+nMnt4k6UiE7DKwqQ3VoUNMz0woAe4
+	 HXpv6p2iKXlCmq3OpJhC9yAAiA1Imxk8WA3P3qs3MKPTWGnft1PH1CNshuHMWqUwWT
+	 EEnYrKXA8tZ6smYwO22HQS/ZmoZoMa0XQ9GqI+XBHiVowkEgoJRZlzumK+tk1AfpMq
+	 ZJRfsTY/aQrOyTHfichG27Mwe36ANYeAJbF1nl3w2VxT+wvrYCKij1mmN7OfatOc8g
+	 CsIWnY/wDB+UA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zp6gD6qdwz4wcj;
+	Thu,  1 May 2025 18:30:00 +1000 (AEST)
+Date: Thu, 1 May 2025 18:29:58 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Tamir Duberstein
+ <tamird@gmail.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the rust-xarray tree
+Message-ID: <20250501182958.110abc0b@canb.auug.org.au>
+In-Reply-To: <20250430104234.dmwnn5ih232kfk4z@vireshk-i7>
+References: <20250430202315.62bb1c1b@canb.auug.org.au>
+	<20250430104234.dmwnn5ih232kfk4z@vireshk-i7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: krzk+dt@kernel.org, linux-kernel@vger.kernel.org, v-singh1@ti.com, 
- vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, afd@ti.com, 
- conor+dt@kernel.org, nm@ti.com, praneeth@ti.com, devicetree@vger.kernel.org, 
- khasim@ti.com, kristo@kernel.org
-To: Paresh Bhagat <p-bhagat@ti.com>
-In-Reply-To: <20250501072923.1262414-2-p-bhagat@ti.com>
-References: <20250501072923.1262414-1-p-bhagat@ti.com>
- <20250501072923.1262414-2-p-bhagat@ti.com>
-Message-Id: <174608807383.1458182.1498162135150593654.robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
+Content-Type: multipart/signed; boundary="Sig_/vzDzLMEci=oePFLw=JnP7qC";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/vzDzLMEci=oePFLw=JnP7qC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 01 May 2025 12:59:21 +0530, Paresh Bhagat wrote:
-> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
-> targeted for applications needing high-performance Digital Signal
-> Processing. It is used in applications like automotive audio systems,
-> professional sound equipment, radar and radio for aerospace, sonar in
-> marine devices, and ultrasound in medical imaging. It also supports
-> precise signal analysis in test and measurement tools.
-> 
-> Some highlights of AM62D2 SoC are:
-> 
-> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster.
->   Dual/Single core variants are provided in the same package to allow
->   HW compatible designs.
-> * One Device manager Cortex-R5F for system power and resource management,
->   and one Cortex-R5F for Functional Safety or general-purpose usage.
-> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
->   single core C7x.
-> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
->   which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
->   and TDM Audio inputs and outputs.
-> * Integrated Giga-bit Ethernet switch supporting up to a total of two
->   external ports with TSN capable to enable audio networking features such
->   as, Ethernet Audio Video Bridging (eAVB) and Dante.
-> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
->   controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
->   peripherals.
-> * Dedicated Centralized Hardware Security Module with support for secure
->   boot, debug security and crypto acceleration and trusted execution
->   environment.
-> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
-> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
-> 
-> This adds dt bindings for TI's AM62D2 family of devices.
-> 
-> More details about the SoCs can be found in the Technical Reference Manual:
-> https://www.ti.com/lit/pdf/sprujd4
-> 
-> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
-> ---
->  Documentation/devicetree/bindings/arm/ti/k3.yaml | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
+Hi Viresh,
 
-My bot found errors running 'make dt_binding_check' on your patch:
+On Wed, 30 Apr 2025 16:12:34 +0530 Viresh Kumar <viresh.kumar@linaro.org> w=
+rote:
+>
+> On 30-04-25, 20:23, Stephen Rothwell wrote:
+> > Caused by commit
+> >=20
+> >   a68f46e83747 ("rust: types: add `ForeignOwnable::PointedTo`")
+> >=20
+> > interacting with commit
+> >=20
+> >   254df142ab42 ("rust: cpufreq: Add initial abstractions for cpufreq fr=
+amework")
+> >=20
+> > from the cpufreq-arm tree.
+> >=20
+> > I don't know how to fix this up, so I have dropped the rust-xarray tree
+> > for today. =20
+>=20
+> Probably this:
+>=20
+> diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+> index 49246e50f67e..82d20b999e6c 100644
+> --- a/rust/kernel/cpufreq.rs
+> +++ b/rust/kernel/cpufreq.rs
+> @@ -630,7 +630,7 @@ pub fn data<T: ForeignOwnable>(&mut self) -> Option<<=
+T>::Borrowed<'_>> {
+>              None
+>          } else {
+>              // SAFETY: The data is earlier set from [`set_data`].
+> -            Some(unsafe { T::borrow(self.as_ref().driver_data) })
+> +            Some(unsafe { T::borrow(self.as_ref().driver_data.cast()) })
+>          }
+>      }
+>=20
+> @@ -657,7 +657,7 @@ fn clear_data<T: ForeignOwnable>(&mut self) -> Option=
+<T> {
+>              let data =3D Some(
+>                  // SAFETY: The data is earlier set by us from [`set_data=
+`]. It is safe to take
+>                  // back the ownership of the data from the foreign inter=
+face.
+> -                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref=
+().driver_data) },
+> +                unsafe { <T as ForeignOwnable>::from_foreign(self.as_ref=
+().driver_data.cast()) },
+>              );
+>              self.as_mut_ref().driver_data =3D ptr::null_mut();
+>              data
+>=20
+>=20
+> Andreas, is your xarray-next branch immmutable ? I can rebase over the
+> change then.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/arm/ti/k3.yaml:37:13: [warning] wrong indentation: expected 14 but found 12 (indentation)
+I have applied that as a merge fix up for the rust-xarray tree merge
+from today.  (This time running "make rustftmcheck" :-))
+--=20
+Cheers,
+Stephen Rothwell
 
-dtschema/dtc warnings/errors:
+--Sig_/vzDzLMEci=oePFLw=JnP7qC
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-doc reference errors (make refcheckdocs):
+-----BEGIN PGP SIGNATURE-----
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250501072923.1262414-2-p-bhagat@ti.com
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgTMQcACgkQAVBC80lX
+0GzgxwgAkSp5GY7NLlWJrtiNANxA9ea0VEVBmRDu7OeBJ277gnOlathV299Z2Y0Z
+m2oIB74SgSxyS64zI8IbdKostQp5YTI2n5CG5VsmEonGZpRGUzO41pX8baLna/Rp
+Jo+cm5Sf7Z6V8ZZGdhPi8VhVZCCLlAOyXGObLKXWGfALuphiX60U7bvumG9rng8B
+Z2esIwKq91NjJi81qTIwMGGFbj260c3vpA8wcP50V92GJ7J8lKSfv5OZ1VzSKdaP
+Utws2OsFCvHlPX0e9N2WjFR4r/BSKEsZTotZIbfSPyGNrwF3wUn1w1hkEp/vNSyt
+9Eikspib4XQSO9qyZ3NCaXcC1s32iA==
+=Z4RL
+-----END PGP SIGNATURE-----
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--Sig_/vzDzLMEci=oePFLw=JnP7qC--
