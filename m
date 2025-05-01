@@ -1,446 +1,260 @@
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45337083A
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:19:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746134364; cv=none; b=pug9xC3E6IhtQ6Sy7UjHLsLFuQkbvg0YUKhJEXiTW0bFv7Kdjt7C9gG2gLYSf1u/JKWFdlbxoffemSt63rqXtIfZUPi0thC9AtWes1J3IbP9O2KaKpVwhVWRVAvUhZiGBxfK8CYJt587l/fazHbS1K5/0HC6iyeW7ZC2SfO1dbs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746134364; c=relaxed/simple;
-	bh=MpLWPuAzL+yJCf9Fm1hxqGtlv5BHdUFMuUbaod/UDP0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=duNtHc5qh/AneVsXLjubbi4We9B6T4ntehl7D/gaNgBB3YTZxh7L7shicQ+Dn90EKNyx+MJUZZVfN61HoXpF4kZmaCV5n5cRUEakgeBYQfF7/TfwIggeWB68bN8GFoa52TUqFMI8nuvtwpRBQ5p6p4XfL1meT7BIOSaAAkITxgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LzradtG3; arc=none smtp.client-ip=209.85.217.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B925A7083A
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746134626; cv=fail; b=oYiQOaxNg7gyqAh8PQ4uV8cBpFgn/949/bH9IiNZpEMJHC8L521hZzlPcgaA7lzZXqOw++B7XKvqND0WUo15GOMzA5B/XQroODh7cn9SwyS4HP53YrLRGj9Ynr1KPYwNz0+WJ09FQ6LZUcAaY66W6WRN5RcW4AuD6ecJ4w3YvS4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746134626; c=relaxed/simple;
+	bh=U0HM0obVqRPWfW8BucaYtW98B8slfTpAe8muOdoL0js=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=If2M9HbeiiwkCdLt35r/lkcGLaKfu/qv9KX1/JZ5AkISveu9aTx+BnkJjP4qPECnGz4M2dQBq44R4KpHl56+bYM4piB+rM+0w/4R157DaN0g8bAq6PLUQ1uk9XRc9oG9+yIsUke+plZxv1pnxqDPWJYOnNh3hcQUJ2CGQPNy2KU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JNtxZOZ4; arc=fail smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LzradtG3"
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-4c32d6ddd50so407914137.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746134361; x=1746739161; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sWSPVKoDF2DSjIr6FKMML4yzLY983kMFfeYVU0zakEQ=;
-        b=LzradtG3CaIKQKRXi8VJ1DWtq9iGz/2BHwwMa6zMUZZSMGZrAuT23FBqfrp402SWaI
-         dksRrcQMlnBzRmomJ+w38riP0MNbkEjiDeu5r1kCdtOPdfKKZNXte6EiRTD19TGhEjI4
-         b4NMnCuz+Z7pCY0OdKqs69kDSE8rpDx4MPvM4Ozf5ylz1PHl/5sht2dQNDW3pRk1DvN9
-         kCxVAE7AjqQSpliLv4x/SqdCvBvzKkPuYh+A6cXfrLLkZCkGV9u4XXMg6nAR+8sRw6A5
-         V8ql4QTXfDyIPHOTxQ9CjsFDer8af0TbhF41tnSrEmdNU9dBPsy/RaObmKAyXRC/T8DQ
-         oAhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746134361; x=1746739161;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sWSPVKoDF2DSjIr6FKMML4yzLY983kMFfeYVU0zakEQ=;
-        b=dz26Bu4qF8Gm4FWZQ2FcOrDjBWF8NZYq83R7vxeu/prOhkPVK/33kblxlJOoEmxcC/
-         OD8/RzlcbmmcgGUdmpoWZryt+h8Zfa1hjA6hPQQZLgYBk3TUeoAqbui1dR/ozvHhpRUD
-         bJe2Bcu/2wmja6VS2yLSWqJLFAq/i4CBrrYJVCMP6s7BRHNYq8FBhvvycZDEBLygas3e
-         rGSfOmpEGcOtQzS9IAGHpSY9P52jdIxU5/yRsfKW34PT4bfalNZDcGg7bJC7KM7Xg38z
-         C4uAog0PIzEWN+0mlicj66jMLaJDHZzG4My2Fevd9738bMKZsV4l7KlYB6wN5NjrKNGz
-         aakA==
-X-Forwarded-Encrypted: i=1; AJvYcCWxky47qJkY/383ox4Oh2ndKpSluoaiHl+PujV/sqR5z/4m0rYXZaFhTf+QpBhR9rbCWxKHU+ZSLcBhUC0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb1dz4L3tobS3ZdoYR93zh64MJBwNW2TT1KDbHLJ3iBlPyxCHn
-	/wyN8duBgBvKD26aAWdWyU9SlyR63Tm/eAk5IGsYXOtEx/lLZ8G4JTD9dcOTJ+o7nmnEIgsElQH
-	PjAkGfc9IXlc+mM+cpSjSsyahdDI=
-X-Gm-Gg: ASbGncu4YIk5HeMYXa/4CrMszDuzRNmaZHA+dz5k76uzcTMgvS6E8kgOIPm9XQ1Oeb1
-	IjOOg1xUXYpdohMIQpON6c9TKcfuqvzBqJ5w4Vfc3e+J/Vi9qPwr+ZW94gCgu6aO31Fi9kbatVA
-	6dPHiw1ZiADPslGhYu12x4YA==
-X-Google-Smtp-Source: AGHT+IG7gzh8xj+aQyo7V84PruhAGCrDVfDV5+MtNL2tephwGWisSfEc28tPVuI/W+ToXA0UoxjtbWjc9XpqVM6Nl6Y=
-X-Received: by 2002:a05:6102:9d7:b0:4da:e629:58c5 with SMTP id
- ada2fe7eead31-4dafb6d37c1mr527425137.23.1746134361200; Thu, 01 May 2025
- 14:19:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JNtxZOZ4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746134625; x=1777670625;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=U0HM0obVqRPWfW8BucaYtW98B8slfTpAe8muOdoL0js=;
+  b=JNtxZOZ4Qt2HhIPC2O5dbQksRZDV/rmkfmorAafvARkVnamLMYoO0Ecu
+   zNdihbiHO9Wx63O2FlBq+FcmfmLAA7vl6i5lWOCbIhiwacCVN5/f6fn9k
+   IglrG+niBH6q0lDHQiCoT2C852m/TqctufDrnrDRylC6qFtCEAYJ/TycI
+   g21aEFCKn0gk0mUYt2HzCW9RawzUhE6wpmIOqdbcyHPEsiFEXuk52AYJO
+   KpH5n7NWOfWmq5LZSv1hu9KpmOJv0DFalu21OSAWJp2Q2QKMmoYZrO5x7
+   e4vrF2iX1DgvNn9+Yhd5EwdL8SYRruPEi4+O5Bl6nQ39GDa8PGJpWvQ3o
+   A==;
+X-CSE-ConnectionGUID: NTDO9LaXTMKlgrv0qBgF7g==
+X-CSE-MsgGUID: lhN3e9UsR/KGoJ35/KGxsQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58026169"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="58026169"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 14:23:44 -0700
+X-CSE-ConnectionGUID: 7/fxC2FhT/eCcPnTEg4qZQ==
+X-CSE-MsgGUID: Wx3d+FkdRB+IwuCBIj9JTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="134379441"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 14:23:41 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 1 May 2025 14:23:38 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 1 May 2025 14:23:38 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 1 May 2025 14:23:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=hx0uc4hwC6AK0ZJgqYX7l8cVZpHlZQahKy8QGDG8fOWApcV6vhUFzjcw3SqCKQQRa5HielXWuBqOq3HSVTsupQ9iCErtsjD2d/qj3c6EZxl3REBE0UkFVQjQJeGOREngpPfMrsV+60X8hQkKLB8jEPAWJplrCq0tO2n8Yw0oy9jWve85DRJHZoz/7/XMsCHcvsVGPiWO/7vlETYGz352lWCcSnsgyKED6Re9uWscW6INB1QItMz7tOiJGl1DC2gqYYY7Rm6TUOCgGl1GXgmo4Tsx4NSd3YHBcv6GUbkK7Ss1BcZ0TOKi5685qMRLTYb1PlJSbRzjTkt1S+RrorrAkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eOzoVjStQkHtpF5LoFr+Q0ar+GkCuKZDPOwNlRTo5XQ=;
+ b=CCTUABk3UjvnR3EaZFXLTKJS7bGppvKiwDfR33C2u27lL7EdKuqU6UC7m1oH+OZUhGXlJRqbqF/lG3CEDBYffHzMa5G2O3JA8yJnYz94NQ/744XGr4dJCeFc7CeVq5E/QQhBlW+50hf27Rmgy5pmUpW4zKwXw16cbVB9tQ89crFGuslUaIOSXRdkuQudMH7NwnNdmSXDHmKEVUu+Jbb2Bu6XBw1F/ObXsDNGImIBKUoDANBIIQoC+IR7oQTtmsFJm68MiA/Msgmo42LltBQ0d6DX744DVmFhfxAHytQn5t8+kl+ZPEm1MaBWsqtY8Xcw2T53p+GM4XOH3C2cW7Q1BA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from IA0PR11MB7185.namprd11.prod.outlook.com (2603:10b6:208:432::20)
+ by PH3PPFA07D87DA6.namprd11.prod.outlook.com (2603:10b6:518:1::d3e) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Thu, 1 May
+ 2025 21:23:08 +0000
+Received: from IA0PR11MB7185.namprd11.prod.outlook.com
+ ([fe80::dd3b:ce77:841a:722b]) by IA0PR11MB7185.namprd11.prod.outlook.com
+ ([fe80::dd3b:ce77:841a:722b%4]) with mapi id 15.20.8699.019; Thu, 1 May 2025
+ 21:23:08 +0000
+From: "Kasireddy, Vivek" <vivek.kasireddy@intel.com>
+To: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>, "linux-mm@kvack.org"
+	<linux-mm@kvack.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Andrew
+ Morton" <akpm@linux-foundation.org>
+Subject: RE: [PATCH 1/2] mm/gup: Remove unnecessary check in
+ memfd_pin_folios()
+Thread-Topic: [PATCH 1/2] mm/gup: Remove unnecessary check in
+ memfd_pin_folios()
+Thread-Index: AQHbuWuU8AQjbhXPNUiEX1eD6eb+frO+SNGw
+Date: Thu, 1 May 2025 21:23:08 +0000
+Message-ID: <IA0PR11MB7185E3BD6CC4DB1CF7F49351F8822@IA0PR11MB7185.namprd11.prod.outlook.com>
+References: <20250430010059.892632-1-vishal.moola@gmail.com>
+ <20250430010059.892632-2-vishal.moola@gmail.com>
+In-Reply-To: <20250430010059.892632-2-vishal.moola@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: IA0PR11MB7185:EE_|PH3PPFA07D87DA6:EE_
+x-ms-office365-filtering-correlation-id: 35642aca-cae7-422b-ed31-08dd88f65e93
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?7q/16yRtHX8xmQoh3bKVGRN1PjdAgVF8S/ZfKM7r50bF/i2A9AN3husg1+c5?=
+ =?us-ascii?Q?yBbBda2hxlaWRNP0SXahe0du8mBfjVGvAqnhe3duAbAUmWCVlRlY/bUXS84P?=
+ =?us-ascii?Q?9KbwCphhJ1K5Hs7KuoZBoAwSkRz/OAEcBjsSjRqAc1gqdnC5IgVMjZbEko3R?=
+ =?us-ascii?Q?xXtLzm6sfrc1uKSZz+xY4+VF38wu+fUfunaI8oSU6iwUcd+fBEpK1ZlClWMm?=
+ =?us-ascii?Q?ORoFPYztxzkIWIYx7QPCS7mQX2rGVRrVS4c52NAbzRYT/2a/QhwexPnGnoZ3?=
+ =?us-ascii?Q?3sRqNdhkH2hEFhxG8NrWP+iENarvXi+y91ApqoAJ7IvEAmzmp6EJtEmdephZ?=
+ =?us-ascii?Q?9zzjGO4JHvfeP2S33SJvsVNQrheMeRtMC+fQdhZXZNLmYHSOG6mpqViE0tgh?=
+ =?us-ascii?Q?wfj/EDl1gBQyfwAdtYTw8HliVdEAzUgjmr3KfC5TJ9lAJbBC9yZwN46EiLo7?=
+ =?us-ascii?Q?QhhLS+DOiXhh68ZWVqMSkUkv4hIhy1WlDZ8xWQKotYHUQWfq546rA+xueBKH?=
+ =?us-ascii?Q?3X8urhb7GRAqCqUFU6JpHuuICsXfLk1XtA71BieAcakJIhHRrhz+jaHwoCh8?=
+ =?us-ascii?Q?HALwkGF8Dq74U6Kd4+HA1eLqth8ILfK5mznSzGH0NDXuqf9flJizkSMp65MC?=
+ =?us-ascii?Q?74FVOQ/3IF3K7UopUHNuN8baWjfuRVYLW9CnW6aydPFLK8DbdBTKQCnhm58d?=
+ =?us-ascii?Q?xzlHShV/cAIDY9JJXYAHlQApRgttwyheheTXgEdkF/OJNoMXJhmB6GxLncvd?=
+ =?us-ascii?Q?PKVGfFF0YcGkyj8ePqUmdNjBqJS2ux4fMo/fvDpnMKC3llmFfdQqEQqzHA99?=
+ =?us-ascii?Q?NIxGS1+Sn7iMHGrYpVRHWhQZHfTRqn09r4Z0KfAjoBcXWoDk3LKVayqgQCW9?=
+ =?us-ascii?Q?PAp8XqjKEOAZ0RGL5dZdigecqyaYrWOO1WTXOZc5aIpxeAjkUeFOce/EXXzO?=
+ =?us-ascii?Q?pmkPQfOQURKO1pTXaCVPw4lZ3Ojl6f2VOvpjhuOwng9UpYvFkalnZ6SjNuXF?=
+ =?us-ascii?Q?ZyypX4tGBkIPFdRK5wt7PXPn+2diksp0ljSPwJeZvKFWYcm6Yn6Jas3IrT8j?=
+ =?us-ascii?Q?R5L00Jg/cQB3BKfyKLGy2mUXK5vZfnhRd8kvaPjvVTcBQqN2PREiU0cR88Cg?=
+ =?us-ascii?Q?ufYTkykCW82tTJ2k6ic2mEdoMxUQFddxKZ2PVHFssWoxQwDmJDpkYhgAlRvR?=
+ =?us-ascii?Q?BpTgfZaVpQmJ39janqdF+pyhSPAH7mJWXZw8X8t9uFwiAKAfpPf32diOSUN7?=
+ =?us-ascii?Q?voEgeTBY3Xz/exOnM8kynID98rp5eq+dxyKdKR8pVz1tZL2IhzztTHD+AYn0?=
+ =?us-ascii?Q?O0D44TE1+5zpkdPZxtdwXN93ge2+aID+1eUjjpjQX7vtsuCrbMOIaydbn5mP?=
+ =?us-ascii?Q?XfYgs+DcHBt4+kMSSYerPQiu1Zp2ASYDwd9aPw18Hva7SsCzaBKtomp2B84F?=
+ =?us-ascii?Q?kFiCgPCMTJCAvr4+cfBNyCHgwoF7Od35DcrW8ZM/GwzRLiJ+pWMSSg=3D=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR11MB7185.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?b//1sfDBdHCs0wIYlFDpNR8OFwWf7+hHiXiIM4c7m9/6zPI3dTq90gUd3Dxd?=
+ =?us-ascii?Q?wY1U4LKmcy+4jl4vlDISmrvcC6mdUIrwkP3oXnDIvsvtF/kEH+oxDbf47qy/?=
+ =?us-ascii?Q?yKOfCn2bk/6yRCLf2aU1IHsmMEyG8cA6mbjRG8hJueZgpVKRLhTtkALZ72ps?=
+ =?us-ascii?Q?sX57NM6Oldxov1j5HOw4j58ooFyRmOmhXlW4yQipiwo048b/G9SbZ38S4x/C?=
+ =?us-ascii?Q?DzP3yHxCZnjl+WIWCVieacDZopFgfg8dpm5teMKqNxhTq2j2NXrcxntfz+qH?=
+ =?us-ascii?Q?vC3fnZ1gWyQIZtZdKN/Jjg5jXdYGTXkVtKej6uSftL6kDQsfqUluyvlg0ZfU?=
+ =?us-ascii?Q?g0rnNSDCDHatSuYffeD5kB8vuOcnBfVXMV8yE3tGptRXJjm+joMSFdpBFckV?=
+ =?us-ascii?Q?VB/YddndQvR6abNsdFT2dqfM6FUUpKsPLOHp6Z2Xki34JfVu5gXVWM2V6SmQ?=
+ =?us-ascii?Q?rf/HrIWLhecg5dhFG7iYBZvdRDNPCmDNGy2NtQT6s7isj87nQhwNHvdT7xi/?=
+ =?us-ascii?Q?/+c5EdQNbrKXHV0Y6bRAzbHtNKJkkn+87EzVW5+QczihHUgTHvBQSNzEmsbr?=
+ =?us-ascii?Q?8P6PuAu4z8UQFReWh0FlWO+MonXYpD4wz0yHWhVPmm+aKV66okNTZDzI+vsl?=
+ =?us-ascii?Q?XqwCQTRB6DpexSd25BlZbWQ+2vT4KZwepFIkpm7sIx6eB26Te8SpRK4xJedV?=
+ =?us-ascii?Q?gHxftZoRPr5jJKMtPokY7KgrodtmV5Ngdz2dwo+2DgOBa/P8k2lBzZj5xou5?=
+ =?us-ascii?Q?9U3lSFE+ecK00yjeY/LuBguWasUEsn6yK7jDmFAyMQ2drDfreDCjTPV5ZXxM?=
+ =?us-ascii?Q?hD6YOqoK5zya7RvG0Lh//Omc9q/rEC9z9lQa5oC7jeKN5iAxOPzUytw8qX/6?=
+ =?us-ascii?Q?RghCxceTFKzH/8PKzm+pEvw735OOOHeK4plskc6wBctv/itoencL7uhANIa9?=
+ =?us-ascii?Q?ONaIGaw8mSvOqxhpUWWQLssw5sZNPenhWAWcF4Ns8xtasF69bqtfFewMNq5G?=
+ =?us-ascii?Q?IgZC8ThW3dnbrin0sEN8lyXLVUFtYoGjN4D+QbzTBBn+6Oslj60u6oRhD8Ev?=
+ =?us-ascii?Q?Yvypc3kPgWzZPyy4PTVX7SkANftw9rZ2INJ0P0HUmJ1hgyJGAIBPusKprv3q?=
+ =?us-ascii?Q?UC8V25u9PJGWZAApwC5uao8/9rmm2SwnbZE7b8Pba4EghJNsdcp2oiERftLt?=
+ =?us-ascii?Q?zxB2cuulj6u37DUrP+taGye5f2CNIaDYW3W/zZbOdb6BMMKHacfdzEdcIrs/?=
+ =?us-ascii?Q?BXMhc0fyuTPcIvK+9Pb4Aiux1ZmxMd0+sjyCDfVW2P6E/P/A88asGvmaC3s8?=
+ =?us-ascii?Q?uxCduDBsWMXjqq+f4vsbKjPcdzhCqY6pV58crmnM5HdFR4AboyWAmzijNQlI?=
+ =?us-ascii?Q?IMh0pFvgJl1BpzMQTuKw6OSie1gBKw7Xs+Lf8rE9qm5PiGB/vJ/BRYudYIvb?=
+ =?us-ascii?Q?wwNoGqEDfwkormy5aQGTUvZQZjRsN2Bcf0n38MZgVCUWPMYmaBtkwLFKZRda?=
+ =?us-ascii?Q?Sdt3ytrE7KDvmjmerNXd2IKR8jCGCtnp0wZUqy5a8QFEOxYrLCz/bfBCI9PY?=
+ =?us-ascii?Q?trMPUYNU8jXLvSdZFtdYZk5NugCMre5tkSP+X1gU?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <f0e109c7-6bb2-4218-bc76-c5de39184064@arm.com> <20250415082205.2249918-1-xavier_qy@163.com>
- <20250415082205.2249918-2-xavier_qy@163.com> <eba7a8fa-0b85-4b30-ab3e-9c0a65b7dc80@arm.com>
- <3d338f91.8c71.1965cd8b1b8.Coremail.xavier_qy@163.com> <CAGsJ_4yGuH4vOFSZM2o3-Nev4DnZmzWKUh7CRXxA2U-FT2W0xA@mail.gmail.com>
- <1a8020d3.1f27.1968bdc27d8.Coremail.xavier_qy@163.com>
-In-Reply-To: <1a8020d3.1f27.1968bdc27d8.Coremail.xavier_qy@163.com>
-From: Barry Song <21cnbao@gmail.com>
-Date: Fri, 2 May 2025 09:19:09 +1200
-X-Gm-Features: ATxdqUHXxDXadmBhfaYD6vygAodsLavItWHiCyY3Xi77Nh4XMyHtuplB65naIH4
-Message-ID: <CAGsJ_4zKFiCEUnFjb3qThoM2FG4XCsmeU=JeTLDXjMU2KONu-Q@mail.gmail.com>
-Subject: Re: [mm/contpte v3 1/1] mm/contpte: Optimize loop to reduce redundant operations
-To: Xavier <xavier_qy@163.com>
-Cc: Ryan Roberts <ryan.roberts@arm.com>, dev.jain@arm.com, ioworker0@gmail.com, 
-	akpm@linux-foundation.org, catalin.marinas@arm.com, david@redhat.com, 
-	gshan@redhat.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, will@kernel.org, willy@infradead.org, 
-	ziy@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR11MB7185.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 35642aca-cae7-422b-ed31-08dd88f65e93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 21:23:08.5967
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: L5IxDUahmXCF7J77YzWuY9IHs/4PGqNSb3IBTQTpAkTCC83wNbbI8CQ9PvR5HT/BrjnN6K7wmX+T1rGSWJ0fKCLO+3POpN0yv9B9cMcJGxI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH3PPFA07D87DA6
+X-OriginatorOrg: intel.com
 
-On Fri, May 2, 2025 at 12:41=E2=80=AFAM Xavier <xavier_qy@163.com> wrote:
->
->
->
-> Hi Barry,
->
->
-> At 2025-05-01 07:17:36, "Barry Song" <21cnbao@gmail.com> wrote:
-> >On Tue, Apr 22, 2025 at 9:34=E2=80=AFPM Xavier <xavier_qy@163.com> wrote=
-:
-> >>
-> >>
-> >> Hi all,
-> >>
-> >>
-> >> At 2025-04-16 20:54:47, "Ryan Roberts" <ryan.roberts@arm.com> wrote:
-> >> >On 15/04/2025 09:22, Xavier wrote:
-> >> >> This commit optimizes the contpte_ptep_get function by adding early
-> >> >>  termination logic. It checks if the dirty and young bits of orig_p=
+Hi Vishal,
+
+> Subject: [PATCH 1/2] mm/gup: Remove unnecessary check in
+> memfd_pin_folios()
+>=20
+> Commit 89c1905d9c14 ("mm/gup: introduce memfd_pin_folios() for pinning
+> memfd folios")
+> checks if filemap_get_folios_contig() returned duplicate folios to
+> prevent multiple attempts at pinning the same folio.
+>=20
+> Commit 8ab1b1602396 ("mm: fix filemap_get_folios_contig returning batches
+> of identical folios")
+> ensures that filemap_get_folios_contig() returns a batch of distinct foli=
+os.
+>=20
+> We can remove the duplicate folio check to simplify the code and save
+> 58 bytes of text.
+>=20
+> Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+> ---
+>  mm/gup.c | 15 +--------------
+>  1 file changed, 1 insertion(+), 14 deletions(-)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f32168339390..1fb8f3b9a493 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -3589,7 +3589,7 @@ long memfd_pin_folios(struct file *memfd, loff_t
+> start, loff_t end,
+>  {
+>  	unsigned int flags, nr_folios, nr_found;
+>  	unsigned int i, pgshift =3D PAGE_SHIFT;
+> -	pgoff_t start_idx, end_idx, next_idx;
+> +	pgoff_t start_idx, end_idx;
+>  	struct folio *folio =3D NULL;
+>  	struct folio_batch fbatch;
+>  	struct hstate *h;
+> @@ -3639,19 +3639,7 @@ long memfd_pin_folios(struct file *memfd, loff_t
+> start, loff_t end,
+>  				folio =3D NULL;
+>  			}
+>=20
+> -			next_idx =3D 0;
+>  			for (i =3D 0; i < nr_found; i++) {
+> -				/*
+> -				 * As there can be multiple entries for a
+> -				 * given folio in the batch returned by
+> -				 * filemap_get_folios_contig(), the below
+> -				 * check is to ensure that we pin and return a
+> -				 * unique set of folios between start and end.
+> -				 */
+> -				if (next_idx &&
+> -				    next_idx !=3D folio_index(fbatch.folios[i]))
+> -					continue;
+At that time, I believed that filemap_get_folios_contig() returning duplica=
 te
-> >> >>  are already set and skips redundant bit-setting operations during
-> >> >>  the loop. This reduces unnecessary iterations and improves perform=
-ance.
-> >> >>
-> >> >> Signed-off-by: Xavier <xavier_qy@163.com>
-> >> >> ---
-> >> >>  arch/arm64/mm/contpte.c | 20 ++++++++++++++++++--
-> >> >>  1 file changed, 18 insertions(+), 2 deletions(-)
-> >> >>
-> >> >> diff --git a/arch/arm64/mm/contpte.c b/arch/arm64/mm/contpte.c
-> >> >> index bcac4f55f9c1..0acfee604947 100644
-> >> >> --- a/arch/arm64/mm/contpte.c
-> >> >> +++ b/arch/arm64/mm/contpte.c
-> >> >> @@ -152,6 +152,16 @@ void __contpte_try_unfold(struct mm_struct *mm=
-, unsigned long addr,
-> >> >>  }
-> >> >>  EXPORT_SYMBOL_GPL(__contpte_try_unfold);
-> >> >>
-> >> >> +/* Note: in order to improve efficiency, using this macro will mod=
-ify the
-> >> >> + * passed-in parameters.*/
-> >> >> +#define CHECK_CONTPTE_FLAG(start, ptep, orig_pte, flag) \
-> >> >> +    for (; (start) < CONT_PTES; (start)++, (ptep)++) { \
-> >> >> +            if (pte_##flag(__ptep_get(ptep))) { \
-> >> >> +                            orig_pte =3D pte_mk##flag(orig_pte); \
-> >> >> +                            break; \
-> >> >> +            } \
-> >> >> +    }
-> >> >
-> >> >I'm really not a fan of this macro, it just obfuscates what is going =
-on. I'd
-> >> >personally prefer to see the 2 extra loops open coded below.
-> >> >
-> >> >Or even better, could you provide results comparing this 3 loop versi=
-on to the
-> >> >simpler approach I suggested previously? If the performance is simila=
-r (which I
-> >> >expect it will be, especially given Barry's point that your test alwa=
-ys ensures
-> >> >the first PTE is both young and dirty) then I'd prefer to go with the=
- simpler code.
-> >> >
-> >>
-> >> Based on the discussions in the previous email, two modifications were=
- adopted
-> >> and tested, and the results are as follows:
-> >>
-> >> Modification 1
-> >>
-> >> pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
-> >> {
-> >>         pte_t pte;
-> >>         int i;
-> >>
-> >>         ptep =3D contpte_align_down(ptep);
-> >>
-> >>         for (i =3D 0; i < CONT_PTES; i++, ptep++) {
-> >>                 pte =3D __ptep_get(ptep);
-> >>
-> >>                 if (pte_dirty(pte)) {
-> >>                         orig_pte =3D pte_mkdirty(orig_pte);
-> >>                         if (pte_young(orig_pte))
-> >>                                 break;
-> >>                 }
-> >>
-> >>                 if (pte_young(pte)) {
-> >>                         orig_pte =3D pte_mkyoung(orig_pte);
-> >>                         if (pte_dirty(orig_pte))
-> >>                                 break;
-> >>                 }
-> >>         }
-> >>
-> >>         return orig_pte;
-> >> }
-> >>
-> >> Modification 2
-> >>
-> >> pte_t contpte_ptep_get(pte_t *ptep, pte_t orig_pte)
-> >> {
-> >>         pte_t pte;
-> >>         int i;
-> >>
-> >>         ptep =3D contpte_align_down(ptep);
-> >>
-> >>         for (i =3D 0; i < CONT_PTES; i++, ptep++) {
-> >>                 pte =3D __ptep_get(ptep);
-> >>
-> >>                 if (pte_dirty(pte)) {
-> >>                         orig_pte =3D pte_mkdirty(orig_pte);
-> >>                         for (; i < CONT_PTES; i++, ptep++) {
-> >>                                 pte =3D __ptep_get(ptep);
-> >>                                 if (pte_young(pte)) {
-> >>                                         orig_pte =3D pte_mkyoung(orig_=
-pte);
-> >>                                         break;
-> >>                                 }
-> >>                         }
-> >>                         break;
-> >>                 }
-> >>
-> >>                 if (pte_young(pte)) {
-> >>                         orig_pte =3D pte_mkyoung(orig_pte);
-> >>                         i++;
-> >>                         ptep++;
-> >>                         for (; i < CONT_PTES; i++, ptep++) {
-> >>                                 pte =3D __ptep_get(ptep);
-> >>                                 if (pte_dirty(pte)) {
-> >>                                         orig_pte =3D pte_mkdirty(orig_=
-pte);
-> >>                                         break;
-> >>                                 }
-> >>                         }
-> >>                         break;
-> >>                 }
-> >>         }
-> >>
-> >>         return orig_pte;
-> >> }
-> >>
-> >> Test Code:
-> >>
-> >> #define PAGE_SIZE 4096
-> >> #define CONT_PTES 16
-> >> #define TEST_SIZE (4096* CONT_PTES * PAGE_SIZE)
-> >> #define YOUNG_BIT 8
-> >> void rwdata(char *buf)
-> >> {
-> >>         for (size_t i =3D 0; i < TEST_SIZE; i +=3D PAGE_SIZE) {
-> >>                 buf[i] =3D 'a';
-> >>                 volatile char c =3D buf[i];
-> >>         }
-> >> }
-> >> void clear_young_dirty(char *buf)
-> >> {
-> >>         if (madvise(buf, TEST_SIZE, MADV_FREE) =3D=3D -1) {
-> >>                 perror("madvise free failed");
-> >>                 free(buf);
-> >>                 exit(EXIT_FAILURE);
-> >>         }
-> >>         if (madvise(buf, TEST_SIZE, MADV_COLD) =3D=3D -1) {
-> >>                 perror("madvise free failed");
-> >>                 free(buf);
-> >>                 exit(EXIT_FAILURE);
-> >>         }
-> >> }
-> >> void set_one_young(char *buf)
-> >> {
-> >>         for (size_t i =3D 0; i < TEST_SIZE; i +=3D CONT_PTES * PAGE_SI=
-ZE) {
-> >>                 volatile char c =3D buf[i + YOUNG_BIT * PAGE_SIZE];
-> >>         }
-> >> }
-> >>
-> >> void test_contpte_perf() {
-> >>         char *buf;
-> >>         int ret =3D posix_memalign((void **)&buf, CONT_PTES * PAGE_SIZ=
-E, TEST_SIZE);
-> >>         if ((ret !=3D 0) || ((unsigned long)buf % CONT_PTES * PAGE_SIZ=
-E)) {
-> >>                 perror("posix_memalign failed");
-> >>                 exit(EXIT_FAILURE);
-> >>         }
-> >>
-> >>         rwdata(buf);
-> >> #if TEST_CASE2 || TEST_CASE3
-> >>         clear_young_dirty(buf);
-> >> #endif
-> >> #if TEST_CASE2
-> >>         set_one_young(buf);
-> >> #endif
-> >>
-> >>         for (int j =3D 0; j < 500; j++) {
-> >>                 mlock(buf, TEST_SIZE);
-> >>
-> >>                 munlock(buf, TEST_SIZE);
-> >>         }
-> >>         free(buf);
-> >> }
-> >> ---
-> >>
-> >> Descriptions of three test scenarios
-> >>
-> >> Scenario 1
-> >> The data of all 16 PTEs are both dirty and young.
-> >> #define TEST_CASE2 0
-> >> #define TEST_CASE3 0
-> >>
-> >> Scenario 2
-> >> Among the 16 PTEs, only the 8th one is young, and there are no dirty o=
-nes.
-> >> #define TEST_CASE2 1
-> >> #define TEST_CASE3 0
-> >>
-> >> Scenario 3
-> >> Among the 16 PTEs, there are neither young nor dirty ones.
-> >> #define TEST_CASE2 0
-> >> #define TEST_CASE3 1
-> >>
-> >>
-> >> Test results
-> >>
-> >> |Scenario 1         |       Original|  Modification 1|  Modification 2=
-|
-> >> |-------------------|---------------|----------------|----------------=
-|
-> >> |instructions       |    37912436160|     18303833386|     18731580031=
-|
-> >> |test time          |         4.2797|          2.2687|          2.2949=
-|
-> >> |overhead of        |               |                |                =
-|
-> >> |contpte_ptep_get() |         21.31%|           4.72%|           4.80%=
-|
-> >>
-> >> |Scenario 2         |       Original|  Modification 1|  Modification 2=
-|
-> >> |-------------------|---------------|----------------|----------------=
-|
-> >> |instructions       |    36701270862|     38729716276|     36115790086=
-|
-> >> |test time          |         3.2335|          3.5732|          3.0874=
-|
-> >> |Overhead of        |               |                |                =
-|
-> >> |contpte_ptep_get() |         32.26%|          41.35%|          33.57%=
-|
-> >>
-> >> |Scenario 3         |       Original|  Modification 1|  Modification 2=
-|
-> >> |-------------------|---------------|----------------|----------------=
-|
-> >> |instructions       |    36706279735|     38305241759|     36750881878=
-|
-> >> |test time          |         3.2008|          3.5389|          3.1249=
-|
-> >> |Overhead of        |               |                |                =
-|
-> >> |contpte_ptep_get() |         31.94%|          41.30%|          34.59%=
-|
-> >>
-> >>
-> >> For Scenario 1, Modification 1 can achieve an instruction count benefi=
-t of
-> >> 51.72% and a time benefit of 46.99%. Modification 2 can achieve an ins=
-truction
-> >> benefit of 50.59% and a time benefit of 46.38%.
-> >>
-> >> For Scenarios 2, Modification 2 can achieve an instruction count benef=
-it of
-> >> 1.6% and a time benefit of 4.5%. while Modification 1 significantly in=
-creases
-> >> the instructions and time due to additional conditional checks.
-> >>
-> >> For Scenario 3, since all the PTEs have neither the young nor the dirt=
-y flag,
-> >> the branches taken by Modification 1 and Modification 2 should be the =
-same as
-> >> those of the original code. In fact, the test results of Modification =
-2 seem
-> >> to be closer to those of the original code. I don't know why there is =
-a
-> >> performance regression in Modification 1.
-> >>
-> >> Therefore, I believe modifying the code according to Modification 2 ca=
-n bring
-> >> maximum benefits. Everyone can discuss whether this approach is accept=
-able,
-> >> and if so, I will send Patch V4 to proceed with submitting this modifi=
-cation.
-> >>
-> >
-> >modification 2 is not correct. if pte0~pte14 are all young and no one
-> >is dirty, we are
-> >having lots of useless "for (; i < CONT_PTES; i++, ptep++)"
-> >
-> >                 if (pte_young(pte)) {
-> >                         orig_pte =3D pte_mkyoung(orig_pte);
-> >                         i++;
-> >                         ptep++;
-> >                         for (; i < CONT_PTES; i++, ptep++) {
-> >                                 pte =3D __ptep_get(ptep);
-> >                                 if (pte_dirty(pte)) {
-> >                                         orig_pte =3D pte_mkdirty(orig_p=
-te);
-> >                                         break;
-> >                                 }
-> >                         }
-> >                         break;
-> >                 }
-> >
->
-> I didn't understand which part you referred to when you said there were a=
- lot of
-> useless loops. According to the scenario you mentioned, "if pte0~pte14 ar=
-e all
-> young and no one is dirty", Modification 2 will enter the following branc=
-h when
-> judging pte0:
->
-> if (pte_young(pte)) {
->         orig_pte =3D pte_mkyoung(orig_pte);
->         // The dirty status of pte0 has already been checked, skip it.
->         i++;
->         ptep++;
->         // Then we only need to check whether pte1~pte15 are dirty.
->         for (; i < CONT_PTES; i++, ptep++) {
->                 pte =3D __ptep_get(ptep);
->                 if (pte_dirty(pte)) {
->                         // Exit as soon as a dirty entry is found.
->                         orig_pte =3D pte_mkdirty(orig_pte);
->                         break;
->                 }
->         }
->         // Exit directly here without going through the outer loop again.
->         break;
-> }
->
-> In this scenario, the total number of judgments in Modification 2 is near=
-ly half less
-> than that of the original code. I should have understood it correctly, ri=
-ght?
+folios was by design and not a result of a bug and hence added this workaro=
+und,
+which is no longer needed in light of your fix.
+Anyway, LGTM.
 
-You're right=E2=80=94I missed the part where you're also taking a break, ev=
-en though
-no one is dirty. Based on your data, modification 2 seems to be good.
+Acked-by: Vivek Kasireddy <vivek.kasireddy@intel.com>
 
-But I don't quite understand why you are doing
-         i++;
-         ptep++;
-before for (; i < CONT_PTES; i++, ptep++).
+Thanks,
+Vivek
 
-it seems to be wrong. if i=3D=3D15, you will get i=3D16. you are skipping
-the pte_dirty
-check for i=3D=3D15. it is also true for any value between 0 and 15. My
-point is that
-you should drop it and re-test.
-
->
->
+> -
+>  				folio =3D page_folio(&fbatch.folios[i]->page);
+>=20
+>  				if (try_grab_folio(folio, 1, FOLL_PIN)) {
+> @@ -3664,7 +3652,6 @@ long memfd_pin_folios(struct file *memfd, loff_t
+> start, loff_t end,
+>  					*offset =3D offset_in_folio(folio, start);
+>=20
+>  				folios[nr_folios] =3D folio;
+> -				next_idx =3D folio_next_index(folio);
+>  				if (++nr_folios =3D=3D max_folios)
+>  					break;
+>  			}
 > --
->
-> Thanks,
-> Xavier
+> 2.49.0
+>=20
 
-Thanks
-barry
