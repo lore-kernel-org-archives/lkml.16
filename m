@@ -1,137 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB13AD24;
-	Thu,  1 May 2025 14:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D744CAD24
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:33:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746109973; cv=none; b=IDeAECUeCkR2TsFcEYcWkfoZfx6uYihZj0o3JblaqQ+Y1+Lw07252SktoHmayEJy1Pt3T7ZLQNewfsUsKr4qAQ9pKuipZ8fpOSjP4/TEvnst6mUNye5DTUMwpfk4Qtf+V2gfKMX0B4Q61hSMzljE1CPA+mgqmWS8gHZKgajbg+k=
+	t=1746110016; cv=none; b=YV0WUKZIWdH/nQEHAeL3qPDNb7phN14nwaan420WGHtplqfwPCjEQauCvsKcwidyhzl5X79e/xoiMnJF+KKDAZkOS5YMm83XL4Bj0beYoEPT2pelQ8Oj8sRo8FMSorWM9l/CR4JMgaLPHDohV4XZ65mLPiqWnz3odKizhlLTZU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746109973; c=relaxed/simple;
-	bh=ChU0LnGye3/sKTfBYj0v3uZsJYxV4lwJzxdMPJHVNdw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ugq9vn3t4VuF6q1VOqL+IHJL0bKa/G1VtbFyNaWDhrKLk49TKiYeWZOz835Wve0MZOcIBs978tmZF2PaSaUNWJW1/kIcJOD1AlPjXnjaBtHZW6Ti78oseqLqOoBKMD2cbwNc+V1AtQ5/PcDk00jfUFZXPkyEX7skn4ylWYKq0Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzdD4tdW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746110016; c=relaxed/simple;
+	bh=bT3tXssg6ljHTYZOaPjPGNc1RzAsrRKhBsBNi8I09cM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=H3oUwH4WSRmc+iuLXrj/bIvlvF0H0ZMZvDwxHCocTzsLp7bjE81X3uIeuyB8tUErcGtFNdtkTzQFaaqTFQ+V0z+IRehT/2AUzNTsYn2D/ZMvEwLHDHTFpl1U4bNN2Z6kAIZSv4WuaMNvfZBesnsI9M08dE9+9AkXBah8RWXqzyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bUy7c6o1; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzdD4tdW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC572C4CEE3;
-	Thu,  1 May 2025 14:32:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746109973;
-	bh=ChU0LnGye3/sKTfBYj0v3uZsJYxV4lwJzxdMPJHVNdw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tzdD4tdWov6bTcHQjRH/3i/YplItQFfWojku1jIYAZEPAeyKWG/GlIwYUo0D3OmEn
-	 omyuAVWcjzTzM8/a3GEeToqhJkb2pUPjnOohvN5NHlrV+CWtW2EsfQzySMbqfH/E2M
-	 Ft0wYaR2a7NxL3Kw9kz6fYk8ArNGAuMMgEYJ6BKelaKjM8jGOYrqyoSH8EN+B/loLb
-	 vzLdYLMhlgPYuWkMAKbraZLtYbWhtiphlnphtBOCTdzas37rkhi2ZqB7/l1mfKh6sI
-	 qBS7FkmuwjN66QAbvL1s74uaz/tuOnKqbZ++h9f2klvBBncgNG7GrGWquGsGxfj5Vu
-	 q+0lsmAfC5/Qw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAUy3-00AbJY-00;
-	Thu, 01 May 2025 15:32:51 +0100
-Date: Thu, 01 May 2025 15:32:49 +0100
-Message-ID: <86seloh04u.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 15/22] arm64: Disable GICv5 read/write/instruction traps
-In-Reply-To: <20250424-gicv5-host-v2-15-545edcaf012b@kernel.org>
-References: <20250424-gicv5-host-v2-0-545edcaf012b@kernel.org>
-	<20250424-gicv5-host-v2-15-545edcaf012b@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUy7c6o1"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf825f46bso1328815e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:33:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746110013; x=1746714813; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g65zjmvJFausBkB6nJxIUNRj97LVqw2lVuraVtSlztM=;
+        b=bUy7c6o18T2Nv8DiCTEqMwrnwAne6+mwwRh+jq4jL1uLgIqzSOMFoh2PWQWNbDuivG
+         qnPcOEg+4jsQ3ayt2WexdnW5I7gMRzmkmT2KXTPtHrw++HaapchayObgwQDHf3uzzkcc
+         NS9LRZf4JlC9R/APCWbAQ6BLWwltsFA1lgqbSEKLfR3KPN1O8CjWtQfAt4S/6hnkLGcd
+         5Gpzltk4Ax3giaqfLGWprR6tK+sHr9C7BhcRlIEdSWEJBcyp7W0w7MiBxoB5td4NZ0Ws
+         ILvfnlyRG1eemZHSQofn/AwYAEY8z9rACfPpORLcioWrb8JqIOfP2G/KB7BcW5s4pRUc
+         ALMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746110013; x=1746714813;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g65zjmvJFausBkB6nJxIUNRj97LVqw2lVuraVtSlztM=;
+        b=apWNp2dsHateVmlLtUgaqtIOfEvgXAtuRgAWFAnCFY5v5lt7pNxk49AJMT8xU6idBw
+         lwDtCn1+BJmSV9zdik9fK7oqQmqV4rCe5vuHkihN9z9tH+GSd2hqXB9NlRvUUwXdijP1
+         8+1f1mCsb3DXxJRSkTiYIs+NPm0JN3Kj3O+EkuIEu9EnvGyjh0L9gcNwfpGWwKSgtK9t
+         inMcjMrFO8d17SxvEjF8iuS+bN9810NEbNdC1gdnydp5eq1RUsnYOjwFZksLRHN13pYn
+         eP/yEzFKYClNgwDwt79Lel3LAqYXi2R0QBNg8wtoPB3y1U01xEGocoaodM6Z5jKHAB8D
+         3zhw==
+X-Gm-Message-State: AOJu0YzrIZ9elAA5QO02TMwaVSe7Cogen6ZO3t2Dbd8IGA04g1HQTXeE
+	Tpq4kw8ybVHXGaFvf1RiZX0vawGbDpAeB7rY/HV4uiM0lMIG4Kx/34Q2dTFOP+I=
+X-Gm-Gg: ASbGncu4/oEOqWY1zF4pgybZwts+lYSrDbXvGTCK4hElbXRV7l84k50DGHPit5W2b0U
+	T7URLPvsAfQm0nIxLVmUeG0YtsqjZ/sKYIgxzTMp7iUwaGpjjse41048szjKV3Inv/fS3wQGetc
+	rHJV2hB/O67V6g2CR8gHhcnYZ7ZGyhOVvOvMPJNd4tpqIno013qTf4FJc2SU5dP6ARfxYqbM9ia
+	1b7h9CSbawMY74QqvA63vDImuN9Y2/KlZG8N5HkNeUNmzNsUkJoOxsDRtf73yZMFueN98r+CEsg
+	3QdYuMKfJ4cLe7TVrHpnwvDMNSlbGoF+ozDdxfhrbu/b3MqWh48dBgigkVI=
+X-Google-Smtp-Source: AGHT+IGiMwCsPJVRnPOnuT9nr3mjkXhzYlZtUEKo3aB0gvr9Pv4s+D2qCg2ZzwsgCWjqxYje4WJRQQ==
+X-Received: by 2002:a05:6000:1ac5:b0:39c:cc7:3d3b with SMTP id ffacd0b85a97d-3a08ff7ef08mr1745229f8f.8.1746110013205;
+        Thu, 01 May 2025 07:33:33 -0700 (PDT)
+Received: from [192.168.1.28] ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a8ef66sm957636f8f.88.2025.05.01.07.33.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 07:33:32 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v2 0/4] extcon: Fix wakeup source leaks on device unbind
+Date: Thu, 01 May 2025 16:33:20 +0200
+Message-Id: <20250501-device-wakeup-leak-extcon-v2-0-7af77802cbea@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, timothy.hayes@arm.com, Liam.Howlett@oracle.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADCGE2gC/42NTQ6CMBCFr0Jm7ZhSy4+svIdhUdsRJpCWtIgYw
+ t2tnMDl9/Le9zaIFJgiNNkGgRaO7F0CecrA9Np1hGwTgxSyEEqUaFPJEL71QK8JR9ID0job79C
+ a3Colr1o+FKT9FOjJ6+G+t4l7jrMPn+NqyX/pP9YlR4F1XV3I6KJSZXEb2engzz500O77/gVeQ
+ elZwwAAAA==
+X-Change-ID: 20250406-device-wakeup-leak-extcon-dc1d4429a2b4
+To: MyungJoo Ham <myungjoo.ham@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Hans de Goede <hdegoede@redhat.com>, 
+ Chen-Yu Tsai <wens@csie.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1195;
+ i=krzysztof.kozlowski@linaro.org; h=from:subject:message-id;
+ bh=bT3tXssg6ljHTYZOaPjPGNc1RzAsrRKhBsBNi8I09cM=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE4YzXLDQ806r8BrZZ6oTVp5DEGxyZxK94s8Or
+ fFSmvo31kCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBOGMwAKCRDBN2bmhouD
+ 14FzD/9jFWKh+0fxXBvM221H/9dCIn+AtI0nCMu/87ca1znxj/ccajg7bZbc5nJ6r4bFduhXPZh
+ EdfcxQg41owUOKuP9sShCy+KLpe4CqV/bPrTUUwc75rPW0otZKxmJHmV4RY+D1OzozQ1j8saBlQ
+ /Hgws/ExCRJycOyfPlYXKpcNMq5trAdUA9GiRExd0kcdVFTbEs835DttItiQwm9cwYfdlxeOd5V
+ rl3cvxAGaeG5wrhiKKTnDaeR40ULKRqRNiaweGZ5j4YlawMI8vr4mseO+Ap7E2kFNnVr7HtORBx
+ YFTuTrLo1HqF1HnVY8HP2TyMmbjZo0Ac+R2Tg3JTH3ld076ai0y2p0ga3nkZ8D0YbhrCzJpcQ/O
+ 8kyWbFbaXd2DnWO0+b5PUaQsLWILt1IZfFWvxeXmWbDTrKpEtnH6zAr1n7vwlt5x15y9V350rtA
+ zIHbpSdP9rL1XZJWTuHyspTZeABWhVzaxBPDJ1U4HkwhOd5guQshVq7zrK5ZVhnAUkuIRea/SyB
+ VxWZ+cKioRw37guNjXSrsOXC2f1i00FjEcO55a2Zn2Oz8+q2OwKwux8A2XvW2Xej1E+c8byT/tD
+ nvCjSdLkL0GtUXQO878Itdpmi57VCR4Yfcg8Bl0HO9hkrXL4hzT2Bo3CN+1AK5zfvr29gGbMBjC
+ NNljIatd1u0qliA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp;
+ fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 
-On Thu, 24 Apr 2025 11:25:26 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
-> 
-> GICv5 trap configuration registers value is UNKNOWN at reset.
-> 
-> Initialize GICv5 EL2 trap configuration registers to prevent
-> trapping GICv5 instruction/register access upon entering the
-> kernel.
-> 
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Marc Zyngier <maz@kernel.org>
-> ---
->  arch/arm64/include/asm/el2_setup.h | 45 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
-> index ebceaae3c749b84395c9c5eccf0caf874697ad11..1e362bb3b042d51fff15a7c2abc73842930b275a 100644
-> --- a/arch/arm64/include/asm/el2_setup.h
-> +++ b/arch/arm64/include/asm/el2_setup.h
-> @@ -165,6 +165,50 @@
->  .Lskip_gicv3_\@:
->  .endm
->  
-> +/* GICv5 system register access */
-> +.macro __init_el2_gicv5
-> +	mrs_s	x0, SYS_ID_AA64PFR2_EL1
-> +	ubfx	x0, x0, #ID_AA64PFR2_EL1_GCIE_SHIFT, #4
-> +	cbz	x0, .Lskip_gicv5_\@
-> +
-> +	mov	x0, #(1 << ICH_HFGITR_EL2_GICRCDNMIA_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICRCDIA_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDDI_SHIFT		| \
-> +		      1 << ICH_HFGITR_EL2_GICCDEOI_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDHM_SHIFT		| \
-> +		      1 << ICH_HFGITR_EL2_GICCRDRCFG_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDPEND_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDAFF_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDPRI_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDDIS_SHIFT	| \
-> +		      1 << ICH_HFGITR_EL2_GICCDEN_SHIFT)
+Changes in v2:
+- Patch #1: 0->false, extend commit msg
+- Add Rb/Acks
+- Link to v1: https://lore.kernel.org/r/20250406-device-wakeup-leak-extcon-v1-0-8873eca57465@linaro.org
 
-Please write this as:
+Device can be unbound, so driver must also release memory for the wakeup
+source.  Use devm for driver already having devm interface and manually
+disable wakeup for drivers still having remove() callback to keep
+consistent ordering of cleanups.
 
-	mov	x0, #(ICH_HFGITR_EL2_GICRCDNMIA	| \
-		      ICH_HFGITR_EL2_GICRCDIA	| \
-		      ICH_HFGITR_EL2_GICCDDI	| \
-		      ICH_HFGITR_EL2_GICCDEOI	| \
-		      ICH_HFGITR_EL2_GICCDHM	| \
-		      ICH_HFGITR_EL2_GICCRDRCFG	| \
-		      ICH_HFGITR_EL2_GICCDPEND	| \
-		      ICH_HFGITR_EL2_GICCDAFF	| \
-		      ICH_HFGITR_EL2_GICCDPRI	| \
-		      ICH_HFGITR_EL2_GICCDDIS	| \
-		      ICH_HFGITR_EL2_GICCDEN)
+Best regards,
+Krzysztof
 
-which has the exact same effect, and is consistent with other uses in
-this file.
+---
+Krzysztof Kozlowski (4):
+      extcon: adc-jack: Fix wakeup source leaks on device unbind
+      extcon: axp288: Fix wakeup source leaks on device unbind
+      extcon: fsa9480: Fix wakeup source leaks on device unbind
+      extcon: qcom-spmi-misc: Fix wakeup source leaks on device unbind
 
-Thanks,
+ drivers/extcon/extcon-adc-jack.c       | 1 +
+ drivers/extcon/extcon-axp288.c         | 2 +-
+ drivers/extcon/extcon-fsa9480.c        | 2 +-
+ drivers/extcon/extcon-qcom-spmi-misc.c | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+---
+base-commit: 393d0c54cae31317deaa9043320c5fd9454deabc
+change-id: 20250406-device-wakeup-leak-extcon-dc1d4429a2b4
 
-	M.
-
+Best regards,
 -- 
-Without deviation from the norm, progress is not possible.
+Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
