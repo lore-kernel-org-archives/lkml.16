@@ -1,81 +1,95 @@
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 637A8251782;
-	Thu,  1 May 2025 20:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.133.224.34
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96731E9B07;
+	Thu,  1 May 2025 20:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132102; cv=none; b=Q9Fo3wk6Yme36RlzGkaYHGDfj/6dnk01dtd0q2YM5qS/ACWw7KAmDl4Lx+xm6N/NV4JVfie4Xou3ip1g0CvSefWZT64rbTD3zb02V1i40mXDpmg8IRCG1yXvWH1WHZyTjIK0O+839VZvnh7GmZP12EpdXQGMwaxTvfNo1yRR2zw=
+	t=1746132246; cv=none; b=ej/Hh74azyKbU9hERbt1wUCgNqnraETAWSaHcXQkhmNXQTCJYTw0LGlC57OdYu7L3Xy3rHSVOWKVeRsTeFCzVx3RHttQcODcV5THeXCSLioINjdz9PtEAGxPNQGrzSUV0OHBVIRcdVq87GVcOk6YJBlDLOWtl4V9MzIC+txUB8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132102; c=relaxed/simple;
-	bh=BtPow0+KK2lHjTMqWNuY7h5XMiADCfLtIfFthHm7KUU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=KpYsuaSLHooEmb3QvMxZi2/Hd8vrQLYm0aoEHBkw8KFtEdC1StZdrw1cv4w6Av1hEqsd7u2M0e+uughzqvuMUG/1dofCwpiCKzW7AiLGM9t8QGr0inbQdKBAwpf1xTH21N2nXLirIKK4joPy8w3I22Xyzeb20FF1UNmNdb3CNtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk; spf=none smtp.mailfrom=orcam.me.uk; arc=none smtp.client-ip=78.133.224.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=orcam.me.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=orcam.me.uk
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-	id AA78F92009C; Thu,  1 May 2025 22:41:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by angie.orcam.me.uk (Postfix) with ESMTP id A33F492009B;
-	Thu,  1 May 2025 21:41:31 +0100 (BST)
-Date: Thu, 1 May 2025 21:41:31 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@orcam.me.uk>
-To: =?UTF-8?Q?Cl=C3=A9ment_L=C3=A9ger?= <cleger@rivosinc.com>
-cc: Peter Zijlstra <peterz@infradead.org>, Alexandre Ghiti <alex@ghiti.fr>, 
-    "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, 
-    open list <linux-kernel@vger.kernel.org>, 
-    "open list:RISC-V ARCHITECTURE" <linux-riscv@lists.infradead.org>, 
-    "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, 
-    Jonathan Corbet <corbet@lwn.net>, Paul Walmsley <paul.walmsley@sifive.com>, 
-    Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-    Shuah Khan <shuah@kernel.org>, Andrew Jones <ajones@ventanamicro.com>, 
-    Samuel Holland <samuel.holland@sifive.com>
-Subject: Re: [PATCH 1/5] riscv: misaligned: factorize trap handling
-In-Reply-To: <6e2ed6a9-aed0-4727-b1e3-903d3a7751b5@rivosinc.com>
-Message-ID: <alpine.DEB.2.21.2505012126250.31828@angie.orcam.me.uk>
-References: <20250414123543.1615478-1-cleger@rivosinc.com> <20250414123543.1615478-2-cleger@rivosinc.com> <ba11b910-9959-4845-b3a3-dd9a52466823@ghiti.fr> <2c4f4422-d9c9-4d36-b0ef-f68779b91ee9@rivosinc.com> <20250422094419.GC14170@noisy.programming.kicks-ass.net>
- <6e2ed6a9-aed0-4727-b1e3-903d3a7751b5@rivosinc.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+	s=arc-20240116; t=1746132246; c=relaxed/simple;
+	bh=+bcEEHO7cmBx0tkqXSmRjumWAGStNG0clgyqUo4+AVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QW8Y2I7WNlnkSTiIipek3EDjAOUgyRhhLRARRC8tj9O9GrwQCOUIInUGg1TCGHLHyHC4CuamADOk44fDKZNy65+xSvPe8jGjs/x+UWLKcDVntLMDz2VyBQS2ef2uMDyw6PuMVEPDeqUvF+irdguexrj2UGVpYK0+SNCcRe/94ZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BevXe5wb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BevXe5wb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4601C4CEE3;
+	Thu,  1 May 2025 20:44:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746132245;
+	bh=+bcEEHO7cmBx0tkqXSmRjumWAGStNG0clgyqUo4+AVg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=BevXe5wbVtTTTNyREagLUzH2GKbrqlBm8pbAjPxE1yiC8Tt1JS4YFubBjO9VtLuUT
+	 6s3Uw6DbbJlZ5ze0LWH9tFdeY0fiMkxIpAd5lKz9Jgl+tjZkboG2/tnDdNTjliMBq/
+	 0IyHfW8wIvpQoS/eGYH0fKuYpgV2DjAdzxctfERwkoKvp7Ys61sSASydtV2b1GOsI5
+	 xCEDH3IcODjqvVNBNnk9JLmG6oiIaMwFGLgMrrBv/enPSkHdr1tcMNIx7qIm6a7fYw
+	 p78lS/YFwgejBwCSpD/AseH1CwNXH99t9A441XMeEtlL5DfxnZURRptSQuksjAOX0C
+	 dJsDkUntDve7w==
+Message-ID: <e1e1fa75-e9c2-4ae7-befb-f3910a349a9f@kernel.org>
+Date: Thu, 1 May 2025 14:44:03 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [net?] UBSAN: array-index-out-of-bounds in
+ ip6_rt_copy_init
+Content-Language: en-US
+To: Kees Cook <kees@kernel.org>
+Cc: syzbot <syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com>,
+ davem@davemloft.net, edumazet@google.com, elver@google.com,
+ horms@kernel.org, justinstitt@google.com, kuba@kernel.org,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzkaller-bugs@googlegroups.com
+References: <68135796.050a0220.14dd7d.0008.GAE@google.com>
+ <202505011302.9C8E5E4@keescook>
+From: David Ahern <dsahern@kernel.org>
+In-Reply-To: <202505011302.9C8E5E4@keescook>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 
-On Tue, 22 Apr 2025, Clément Léger wrote:
-
-> > x86 mostly does the first, any trap that can happen with IRQs disabled
-> > is treated unconditionally as NMI like. The obvious exception is
-> > page-fault, but that already has a from-non-preemptible-context branch
-> > that is 'careful'.
-> > 
-> > As to unaligned traps from kernel space, I would imagine they mostly BUG
-> > the kernel, except when there's an exception entry for that location, in
-> > which case it might do a fixup?
+On 5/1/25 2:12 PM, Kees Cook wrote:
+> static int ip6_rt_type_to_error(u8 fib6_type)
+> {
+>         return fib6_prop[fib6_type];
+> }
 > 
-> The misaligned access exception handling currently handles misaligned
-> access for the kernel as well (except if explicitly disabled).
+> Perhaps some kind of type confusion, as this is being generated through
+> ip6_rt_init_dst_reject(). Is the fib6_type not "valid" on a reject?
 
- It's currently not clear that a kernel mode unaligned access is indeed a 
-bug, as some network protocol stacks may still rely on unaligned accesses 
-for performance reasons for the regular case where network headers do come 
-out aligned[1][2].
+fib6_result is initialized to 0 in ip6_pol_route and no setting of
+fib6_type should be > RTN_MAX.
 
- Hopefully not in the hardirq context though, and the usual approach is to 
-keep interrupts disabled in the emulation path if arriving from the kernel 
-mode as we don't expect kernel code to be ever paged out (the same applies 
-to all kinds of machine instruction emulation).
+> 
+> The reproducer appears to be just absolutely spamming netlink with
+> requests -- it's not at all obvious to me where the fib6_type is even
+> coming from. I think this is already only reachable on the error path
+> (i.e. it's during a "reject", it looks like), so the rt->dst.error is
+> just being set weird.
+> 
+> This feels like it's papering over the actual problem:
 
-References:
+yes, if fib6_type is > than RTN_MAX we need to understand where that is
+happening.
 
-[1] "TCP SYNs broken in 2.3.41", 
-    <https://marc.info/?l=linux-kernel&m=94927689929463>
+> 
+> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+> index 96f1621e2381..fba51a42e7ac 100644
+> --- a/net/ipv6/route.c
+> +++ b/net/ipv6/route.c
+> @@ -1092,6 +1092,8 @@ static const int fib6_prop[RTN_MAX + 1] = {
+>  
+>  static int ip6_rt_type_to_error(u8 fib6_type)
+>  {
+> +	if (fib6_type > RTN_MAX)
+> +		return -EINVAL;
+>  	return fib6_prop[fib6_type];
+>  }
+>  
+> 
+> -Kees
+> 
 
-[2] "Alpha: Emulate unaligned LDx_L/STx_C for data consistency", 
-    <https://lore.kernel.org/lkml/87v7rd8h99.fsf@email.froward.int.ebiederm.org/>
-
- HTH,
-
-  Maciej
