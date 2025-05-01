@@ -1,129 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49672253E4;
-	Thu,  1 May 2025 09:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2749C20F091;
+	Thu,  1 May 2025 09:22:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746091265; cv=none; b=nxNMxOjXpSixzO61Sdl7Y1p+vNmFIAOHLB3upWysu/FCeM1sUQnSRvZUIcxMqW9XMRK5NVv0zpByDANiZ9oI2p6P55JQ2OeF70J4BkmKIVfRfrttgZdESPYPI/FnL3or4OpmQX4qRsWKhEf9Mbd0BiHFv4B1LtInx7ZD38AW2ZM=
+	t=1746091362; cv=none; b=qyx1+oXYCJDlV7bQsDzg47qLrRjTnp1vvcQI+E4p4qfSopwW6KWwetZsF5J28GT4he2BD8FWQwCTwTZArdGzOS/kLQP+rUoEuVlXdkaupD561h/POffTLa7adMEdkiRYy1xvRaY40X0xSEC4HmnQoIdqSOThZs0GfT4/cmYdUfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746091265; c=relaxed/simple;
-	bh=bhaFvK3xEdQZODsOKhObltwsVATxMH+Qtg0rmi0q1eg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Qmtg2Ea89tjjvAm0YbfS11A75He5sYA78m55GBdLKV+xwK9jsB9ce5Mnah1MgHsbk/xVcGV3HzVADJXcxMhGbacot8/4H82IyX2b0888My7bDbr0g+yj7fZEqFlRTj9m8QylcuhyRwSjbQLnsK+22SGZ1nLqtc5i/75HgxTtDfI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsWECJFl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746091362; c=relaxed/simple;
+	bh=TPCz1U2y2kQUOod1TL37PUZG7miFnhkeZx9C+vxHSiU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LTQMg959qfuEBND9VOIyD64/1xfcb68fQPAh0oY+SmWynLw7BRTyg/Nc87Gq4A1k9zl+JLUS0fIIPENadMwhJc1p4geXXLAPSd4bT9AfdmTAQNpvd2tYPt3U9AFvxOLmES3yHvkss0zlFzR09wkeGH4KSJTVaNXFWju94qOUSUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aZFOVAcy; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsWECJFl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D3E1C4CEE9;
-	Thu,  1 May 2025 09:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746091265;
-	bh=bhaFvK3xEdQZODsOKhObltwsVATxMH+Qtg0rmi0q1eg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=YsWECJFloHM0Jgs5Nhz/h45t5fALZxzFJG5jEiI3+JHISAj5DIrIVpGV2CQyq1s6z
-	 VZC9BMc50ud3Kdsyk8xu2qc7UTUk2LQiw/cTz9qOWkI/ISeLXd8UtJl097uFLyiVQs
-	 RDrhp8HB0PzupfttBsDDk6CTZlM7Okeh5rRdEnl3RZuSNZw7paWMTFExhQ0Ofw6i9s
-	 c5KDGZPkl1YCPbxM28rToU+W5qkgJbtMSi2QB/66SocMznOTJr4u+LxqjozEENZ7Bw
-	 mNhfXVuPfRuu+qxQ7KDYrRBjgV2lIfW37xVj4OzQO/Ws/dd/8dvknTHYDwcHyuPlI3
-	 Ww9DO49XBRkKw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A49EC3ABAD;
-	Thu,  1 May 2025 09:21:05 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Thu, 01 May 2025 13:20:52 +0400
-Subject: [PATCH 2/2] arm64: dts: qcom: ipq5018: Add SPI nand support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZFOVAcy"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so108383a91.0;
+        Thu, 01 May 2025 02:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746091360; x=1746696160; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jBlkClAHFTnqI0HbjC5YVeOxMOu1AU47lWCaGBtkdKg=;
+        b=aZFOVAcysQzd95WPbLFDFunq9yMfHrA/DfqtZEvZhJlpO7kla/3+jS09W4c2DCpDfi
+         ntdLZ81hOqBpFr/T/g3RpTW6W9pq9lgj6ymGFlmPJylxPJieUyCcEyUFSCX4vBkCU8lY
+         Jql2GPxsGu7K+EyaR22X/Eu2xeD9Hnkp5UMJcYxPxbdXPwlOjtSFaZRrTGNXDup6HOaB
+         ivexsv6iMGRkcHsjvPiv7/flFNfROILkaGYzVB5AytcFZY616E6s795v8O5zkAEYxStU
+         apw33R9YhUyusqMckynWSYlhB1Cqgn/A4um8VqJRGG+d6zdG03KRJpuocrwnF4L1HZ+N
+         7UdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746091360; x=1746696160;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jBlkClAHFTnqI0HbjC5YVeOxMOu1AU47lWCaGBtkdKg=;
+        b=LtYcLqyCjzO+9f1FoFkYpDgx1Zg4Xcdz8zvbH3hou3Nx79uoPwAaiihdimYqWq1lto
+         AW/8pa53F3Z9nsmmKbKEfLFEMXVyflypT5IIwIJRcymrDmgOQXR0vr/FY3rVjA54tR5Y
+         IRKgEvo9L/nSCGc7ys+F1mszN3HfIhwoeZH9DX2ymYgaFCRPl+df4LgL/ESdivr8mIzw
+         ujr0Ower0vwJLq8QC5QiibAI/s2zTgELJEzd0DI8Ef+1tHB2uENvAQ2qaitnMt8V4jfs
+         hrSQmbOMTSvWxVMAzIBS7U+5fB1rbiXBlFQ+FACdEJgz2ycp1yJ5KImTzYkEIz6JgTn0
+         1A0w==
+X-Forwarded-Encrypted: i=1; AJvYcCXY++gwxJCHZLtMknlW/6C0q6j/qGFFPm+/vb7+F+CbLv0lYm/L4lHJvgLezxKQ0Imb8g/azwLJzGz8Fqs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YziN72u/6XmYL6DUi3a9oY5Q8GFdeTCaOTVmSBnrWbbUuIRDXT0
+	pZZfMRK44IO7uL5kyArVs/8DWBVnJ4fxwYCpOZySX7RZWCXSFfpAfRyKYP/LgmPDBgUsoQ0EPrG
+	LK3FSqfKu6cvOFZzPHpKZgGKrhAQ=
+X-Gm-Gg: ASbGncsteI3m3AvJNmVpuDyJ3QrTVUz88ewpBmYAfjzRDRjvdOtmu4skoqziUUZGCE0
+	2afI//HBcxPmJ5BCq0xEQpyT+Btr4u+4sXXTiGkHWP8YLt7FaOA5IG2BVJd1mn9hpNOZb5pn4bw
+	2jp2vic2hH2abnQrKM+I7u+OjuclkNS44Z
+X-Google-Smtp-Source: AGHT+IF6cCzK57m7UCpIms0aY70tBCwZLBdQLNtLMxH0LGssIuecBk5ZYr1Bt9QkGE8D5tRUgkpVByeYSL0KO/Bz6nc=
+X-Received: by 2002:a17:90b:1e0a:b0:2fe:b45b:e7ec with SMTP id
+ 98e67ed59e1d1-30a34ab4053mr3188948a91.8.1746091360257; Thu, 01 May 2025
+ 02:22:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-ipq5018-spi-qpic-snand-v1-2-31e01fbb606f@outlook.com>
-References: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
-In-Reply-To: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, sadre Alam <quic_mdalam@quicinc.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- George Moussalem <george.moussalem@outlook.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746091263; l=1584;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=SBXgAzr3U3+TwfIxnK19bwzVraHDh3dGsR1Xo4qgNv0=;
- b=mOvM1N4u8d1/IEZw8j0dzk/IDbEQ63omKyGqY3Qw62xStrm5RIXFeKb/XZ1Abm9r71DWrnzgd
- ilacLtBDzj+ArC+MzCc7OEDVFwAz8XvCKtbJdMoVFFFvdLPczjca1hB
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+References: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+In-Reply-To: <20250501015818.226376-1-fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Thu, 1 May 2025 11:22:27 +0200
+X-Gm-Features: ATxdqUHBI9dQkUswJF78TgUzK8Ok6dv_VNBa6u7LCuaEEvhjaBmLPPeDJJtOEjM
+Message-ID: <CANiq72=kHzATUO_H=cVsuak0dajPH05toyjW+TBMovKid57zCQ@mail.gmail.com>
+Subject: Re: [PATCH v1] rust: time: Avoid 64-bit integer division
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	a.hindborg@samsung.com, boqun.feng@gmail.com, frederic@kernel.org, 
+	lyude@redhat.com, tglx@linutronix.de, anna-maria@linutronix.de, 
+	jstultz@google.com, sboyd@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me, 
+	aliceryhl@google.com, tmgross@umich.edu, chrisi.schrefl@gmail.com, 
+	arnd@arndb.de, linux@armlinux.org.uk
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: George Moussalem <george.moussalem@outlook.com>
+On Thu, May 1, 2025 at 3:58=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> +s64 rust_helper_ktime_to_us(const ktime_t kt)
+> +{
+> +       return ktime_divns(kt, NSEC_PER_USEC);
+> +}
+> +
+> +s64 rust_helper_ktime_to_ms(const ktime_t kt)
+> +{
+> +       return ktime_divns(kt, NSEC_PER_MSEC);
+> +}
 
-Add QPIC SPI NAND support for IPQ5018 SoC.
+In general, we want to keep helpers mapping to the functions as close
+as possible to the C side (e.g. same arguments), unless there is a
+good reason not to -- but since you are changing it, let's review
+v2...
 
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
- arch/arm64/boot/dts/qcom/ipq5018.dtsi | 38 +++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-index 8914f2ef0bc47fda243b19174f77ce73fc10757d..b7454ed64474edb71c284bdb8e9f1e781b128437 100644
---- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
-@@ -238,6 +238,44 @@ blsp1_spi1: spi@78b5000 {
- 			status = "disabled";
- 		};
- 
-+		qpic_bam: dma-controller@7984000 {
-+			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-+			reg = <0x07984000 0x1c000>;
-+
-+			interrupts = <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			clocks = <&gcc GCC_QPIC_AHB_CLK>;
-+			clock-names = "bam_clk";
-+
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+
-+			status = "disabled";
-+		};
-+
-+		qpic_nand: spi@79b0000 {
-+			compatible = "qcom,ipq5018-snand", "qcom,ipq9574-snand";
-+			reg = <0x079b0000 0x10000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			clocks = <&gcc GCC_QPIC_CLK>,
-+				 <&gcc GCC_QPIC_AHB_CLK>,
-+				 <&gcc GCC_QPIC_IO_MACRO_CLK>;
-+			clock-names = "core",
-+				      "aon",
-+				      "iom";
-+
-+			dmas = <&qpic_bam 0>,
-+			       <&qpic_bam 1>,
-+			       <&qpic_bam 2>;
-+			dma-names = "tx",
-+				    "rx",
-+				    "cmd";
-+
-+			status = "disabled";
-+		};
-+
- 		usb: usb@8af8800 {
- 			compatible = "qcom,ipq5018-dwc3", "qcom,dwc3";
- 			reg = <0x08af8800 0x400>;
-
--- 
-2.49.0
-
-
+Cheers,
+Miguel
