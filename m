@@ -1,150 +1,112 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E230B2DC782;
-	Thu,  1 May 2025 07:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4D9275861
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 07:58:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746086261; cv=none; b=j3Y05CpWEhLFbvmpY0a+Mp9sYHyqSkmL8FZNniOgyVfK8oCFFmlsUzg+3jw4xHnf8/R0RNBgIQq00R7g0vEGmni4rV4OnPcX4s5jdh0cyYjaagtYce5TkyTE9lbBGZY70Hb4haQ1z29mx4F0qmzrHvQL3D9ggVdCJ730+Lsch80=
+	t=1746086289; cv=none; b=rCezM4ucLxSOOQR5T5UwfNCwHH6dHUjljXVdzUC2p4IEmLZiEYgmbbJVpY6i5UEintyr69QuROrpuQ9oTCAZ8sX8KV+E4IMYRV0ICDb9CQ38Zjy7HQghMPxzkYCqeMe1RXDbXPOX67t3yJg+cVDVjxWkc8XN8UD2Aw/bEPrGejY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746086261; c=relaxed/simple;
-	bh=e7E/j8WxzZn+JZOzyoOOcQbBdQtO6hyS1FFCCVgOb98=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bM7IDJvYhsGnanGWk1Sq7nNCFYr2v9N4DWI3MRgT+STN15uwTmWJzTtaBYjA2djlugtQ/jgTbXWfz0jUtiCDTjHAQN3ltBAgNNyDj3DfTF/JwY68ceCc3uOJof9uihNaL40wXQs1oKvujP/uT+aQSBuynoKpKKR0cUrjHnwrfD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=N5jRSGvf; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1746086289; c=relaxed/simple;
+	bh=AMet2O0U655+gsWsG5t7/qer8SmvqpDgG/WhSKtrgOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j89ACDcPRX1wEm9GZvNsblDrrc9tdormSd6KJTVH/1563+JfhLuVcVmMWZoRf6EDwwaeqviVl56tivmKPuKkBFm5wqDtqOoWxCGy6MIsiNIR3NhCAXu0yL7lMeQa1VURTGZZIk0Whm8e3UxDxQxaCQm68Mp4UFASscz6KpRF79Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Fsn+8PTh; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="N5jRSGvf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1746086257; bh=Mh/McMFl1sfMWaVxUouRcc2dZA/Y3EiLQKZKPq/VM5U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From:To:CC:
-	 Subject;
-	b=N5jRSGvfw9Z/z9en8secDIzqxvtMNQLDFt995FGcMf/oXOVpetXv2rWwMPQQc8vvn
-	 z52tVsmjqOyb991SJ7obA0ebs4OUvxEA+YeNq7qkPW2hBFEZZ5wFFZEGeprujsBNhp
-	 apocaBFFFBV9uRgchIYSFKpoOdvmG7g/OOFZWDKUv9qT5NfJRYqkvAJYWaX+gaFUWM
-	 1oadZxM0xNmVi9FdtcwtTp+1Kg4eWPC7kBeEHn/XmtxLUxmQjHxeBu8a01hhM9s6Vu
-	 As8FQ+g1HtdpBDfEAPuo+Roh/kw7BFaLmySUfOFZdXXjg25jyMvSw6jc1rd1Flbzte
-	 5Gp/3Q+MpraJA==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zp5xs2wm6z8srj;
-	Thu,  1 May 2025 09:57:37 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3636:a700:12b2:e53f:6cbc:f48c
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3636:a700:12b2:e53f:6cbc:f48c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX182BTKsmsUxPlxvR5qszKlQmxj0W+48n0g=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zp5xp0Y7jz8sv0;
-	Thu,  1 May 2025 09:57:34 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Cc: Maximilian Ott <ott@cs.fau.de>,
-	Milan Stephan <milan.stephan@fau.de>
-Subject: [PATCH bpf-next v3 07/11] bpf: Rename sanitize_stack_spill to nospec_result
-Date: Thu,  1 May 2025 09:35:58 +0200
-Message-ID: <20250501073603.1402960-8-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250501073603.1402960-1-luis.gerhorst@fau.de>
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Fsn+8PTh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=AMet
+	2O0U655+gsWsG5t7/qer8SmvqpDgG/WhSKtrgOE=; b=Fsn+8PThY/f44GssvN/h
+	HPEihDGbELHJVdk2DYOzo19/yCeN/9f7GAXiu4DzslQh/AryLc1tFsn3iG1+XtKS
+	i637GpBWs8/DieBSydpXYrJYzdhJ4elwjVlNEnR/Y6xJ4y8XTlN/+siGVbfktZ2K
+	6CpbgPYjoLMuXXGY9AZiUVrw8+In62mfUwy1VtnUD7fi9NIwXNXc/KktVJXThvqk
+	an6249XyZvqB7TgoxLsDfQhZFemeWMiaBlVKLQRSw346EYKps9AnRJt0hq5nTucJ
+	FVwkdYJevoO1OQ4BrtbGbPbNXLprEuE6R9vIWaVWOoF8z5gKr3goisFm0QVDdnmT
+	Ag==
+Received: (qmail 980056 invoked from network); 1 May 2025 09:58:04 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 1 May 2025 09:58:04 +0200
+X-UD-Smtp-Session: l3s3148p1@uRO6ZA40Do4gAwDPXxyAAIlRla1HkD11
+Date: Thu, 1 May 2025 09:58:04 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Cc: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v9 2/2] i2c: riic: Recover from arbitration loss
+Message-ID: <aBMpjKtQYYB-teNt@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>,
+	Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andy@kernel.org>,
+	linux-renesas-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20250430194647.332553-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250430194647.332553-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <aBKFWxIRaa4W7TDf@shikoro>
+ <CA+V-a8v5qFC+uxzC8Qw4F3M1XSFnVq90MWxbvmiRks=ZbkzZjw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ZZ0WXadQ9QuHKhxu"
+Content-Disposition: inline
+In-Reply-To: <CA+V-a8v5qFC+uxzC8Qw4F3M1XSFnVq90MWxbvmiRks=ZbkzZjw@mail.gmail.com>
 
-This is made to clarify that this flag will cause a nospec to be added
-after this insn and can therefore be relied upon to reduce speculative
-path analysis.
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
-Cc: Henriette Herzog <henriette.herzog@rub.de>
-Cc: Maximilian Ott <ott@cs.fau.de>
-Cc: Milan Stephan <milan.stephan@fau.de>
----
- include/linux/bpf_verifier.h | 2 +-
- kernel/bpf/verifier.c        | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+--ZZ0WXadQ9QuHKhxu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/include/linux/bpf_verifier.h b/include/linux/bpf_verifier.h
-index 9734544b6957..cebb67becdad 100644
---- a/include/linux/bpf_verifier.h
-+++ b/include/linux/bpf_verifier.h
-@@ -576,7 +576,7 @@ struct bpf_insn_aux_data {
- 	u64 map_key_state; /* constant (32 bit) key tracking for maps */
- 	int ctx_field_size; /* the ctx field size for load insn, maybe 0 */
- 	u32 seen; /* this insn was processed by the verifier at env->pass_cnt */
--	bool sanitize_stack_spill; /* subject to Spectre v4 sanitation */
-+	bool nospec_result; /* result is unsafe under speculation, nospec must follow */
- 	bool zext_dst; /* this insn zero extends dst reg */
- 	bool needs_zext; /* alu op needs to clear upper bits */
- 	bool storage_get_func_atomic; /* bpf_*_storage_get() with atomic memory alloc */
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 9c921867f77f..1e1eca85b7a6 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -5031,7 +5031,7 @@ static int check_stack_write_fixed_off(struct bpf_verifier_env *env,
- 		}
- 
- 		if (sanitize)
--			env->insn_aux_data[insn_idx].sanitize_stack_spill = true;
-+			env->insn_aux_data[insn_idx].nospec_result = true;
- 	}
- 
- 	err = destroy_if_dynptr_stack_slot(env, state, spi);
-@@ -20887,7 +20887,7 @@ static int convert_ctx_accesses(struct bpf_verifier_env *env)
- 		}
- 
- 		if (type == BPF_WRITE &&
--		    env->insn_aux_data[i + delta].sanitize_stack_spill) {
-+		    env->insn_aux_data[i + delta].nospec_result) {
- 			struct bpf_insn patch[] = {
- 				*insn,
- 				BPF_ST_NOSPEC(),
--- 
-2.49.0
 
+> Do you mean that upon detecting an arbitration loss, we simply clear
+> the arbitration bit and retry?
+
+Yes, after the bus is considered free again.
+
+> However, when observing the SDA line after recovery, it goes LOW again
+> during the transfer. I've attached a screenshot of this case: we
+> recovered from a bus hang, the I2C recovery algorithm brought the bus
+> to a STOP state, and then a START condition was issued. But after
+> initiating the transfer, we can see the SDA line being held LOW again.
+
+That looks weird. Why are there two SDA transitions around 30us? Why is
+SDA changed while SCL is high around 45us? Then, this small SCL spike
+around 55us... What device is this?
+
+
+--ZZ0WXadQ9QuHKhxu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmgTKYwACgkQFA3kzBSg
+KbbgGxAAsyDod1kFRTgEnVnVsgQDpUm2RCc5O2emluHW6Hctlims9JwkDkV0S5Da
+9Y2X8cXbMZzMdCGUNRBIJ/Mpz1FyOng34HqgKMjG7ZPY6gr69SnjJqjZodDyjoGt
+CJ0Ss1ST9vd/MmtUWoz/ha54+/v8M6J1poRRpcpgK/lORZBeYFZ38cb0Gco21tDj
+dMIDGGRBH228U2Dgds9KOB7uCnC1j0mdoDY4MRYrqQnCetfTuE7sieU5J1UB73Im
+MUAd7YBFvbCBX7J5ZrrNHYaBFQJLgyqJtSeuDdJ7RWgcyHZarQH8I8NwNe/aa/Y7
+7WZo/Hshl+cRQCmFhIdq5W0DLEFCtx/fgaQelKzYdWn0D4roibg3rAsj5PmFIfgp
+1DYKnLbigRA59vfSZfwO8N6Pgq8wLHH1HF6KZB0Ti8hVJkri/YH3RZ8QUTudLg7e
+ZncRQhf40MS/qa1qVkLtoPAoxOkamAiTF6sZwaLWFpzZQ3QjzZgOvUDQ4PlBS/yM
+nr3cK9dGGguDHAkmo6C3HhkiM75hI/8gIZ6EXFx80gQRpEhv7aihZ9CQR8jU11K1
+CZhbOhR9BU9Volk1QKH69fyxjgfMIlkr9IswTG6NxgOrA2orGnXfPSpiihvqoG/i
+m4x2kSUQ2wKFS47UYq5uilCLWZH/hPgSuYDbmAh/R27NJH7Ht4k=
+=Dq1O
+-----END PGP SIGNATURE-----
+
+--ZZ0WXadQ9QuHKhxu--
