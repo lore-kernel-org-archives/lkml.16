@@ -1,181 +1,227 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7708821B9F2;
-	Thu,  1 May 2025 18:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FBCF1C5F37
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746123533; cv=none; b=Ui8KFm9CxGLlMdMCe6LOi45TJ3NDUVy9dkN/hmZasunXrBVML96gbkIDgnA3OWzS7Er4aqZ1i0+Ucp+iAtyzEHIc1HH9F5whH6nd1BBUu4/90QGqYlMypSGaav7KqEEdU1sdysOodLLVuINDxI4yzgBlCUd/JAWmD3ncvY6HGgs=
+	t=1746123593; cv=none; b=oMGVevRoetaEyCeZHSV3zGxbLoR/gvRDK3nP084nS4F0yykQyWT/W32D+ihjnEpCqPdMkElvZKMhcFGOwnEMfpK2Xu87v0GJ1qN4b50odSGgWPzfzRhqc2XWhMEa8rKVEnf26A0JBUyPqsUavQYa27F98g2l00sOBVcw/LoJbRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746123533; c=relaxed/simple;
-	bh=8AJ5TYwtCJyFK7YoXPMcpOfVbXhPX9Uum8GFRy8zp9Q=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=PVNZSVXCb7HVxeHB+V94laqioAIvwri5Aa8DWIood0nTmJjynfquhuATpvAkc7x8+f+5J0AVrqfJHIfjiSreQtPV3pIujaKYa7i1SlyVJeMhlfDPu+rt5Orz5nd6mGNok64oGv0gKGPiAWxWVA/NWKBYawDKF4zk/SqUvOyw+xI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHiZnqQa; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746123593; c=relaxed/simple;
+	bh=hycH8nOjtWZTLvvT6FLkVd0wbItGhhzZCLbROgjVEtw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uqAz3upvmefFt8sdSxgFjIswn86S/l/4u89Fzjg7irsKtTFDCzcA4xZPDe0xMyVYPZLBT4YIM7Yl+sjezwjYZFgt2vviqtHt7+ea3+uUHNRiirmKKTCj+wULuGtD35bqslaTzEo+/qWSLpjRqhT7DgwBuN/+NF90TclVn+w1cnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=D6X4nH/N; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHiZnqQa"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-225477548e1so14711625ad.0;
-        Thu, 01 May 2025 11:18:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="D6X4nH/N"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac6e8cf9132so225214866b.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 11:19:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746123530; x=1746728330; darn=vger.kernel.org;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=suse.com; s=google; t=1746123589; x=1746728389; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:from:content-language:references:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=31M2a7MzQFnr+QMjJl1jAmf5oWz7cYiRof9uFBocW/c=;
-        b=bHiZnqQaMBIHcKek7LuB36Zyn3NeyyAkP8HdI1ox83zpTiQbtqlS0quQHGrwjOIbNk
-         3kCoWaHvSLmkoULw3EFMiNk1p4Wrr92qUQMlg0cjVyJcQLALjM0Q14emEaHXa4SgCHlW
-         CfHOpGX4qUYiHGdW6TSUaEsekAMMRBcNi4GCAiD+arWDcxrCKLtErY9ekH7x/nxXDe8s
-         zqNYMAzORzsuYzsXC3MGPnWrg+G+DKKSHNO/vdsMNfFQsedTg+9ITzony6sspYt6ZJXP
-         h9KiHTUI77HYvD/eo21opjvGWp1hP21vD60Sm603KYy+yZa/HFwpePS3OPVMc4DxHaRj
-         pImA==
+        bh=hycH8nOjtWZTLvvT6FLkVd0wbItGhhzZCLbROgjVEtw=;
+        b=D6X4nH/NoNrZwy3+nPIDoMEkuL0dVqM3Xh+pXOrQscbQL2R2kUETpYZth5iyervfsM
+         ZzZasVhCrU/k2zHP+F1y7HSYKu0nN4NSY4fUTAesCaDgCTqMKHt3cJKcZji9UX9Ry32A
+         iCju7ie2sYAyHnS9R//VGN8ex6WtDMpPMbdprpgwSTRYkAqrTejGGsIqRrc6o98jLOZj
+         BfhHFmjXoNnX90ePSaPGRf59vdFVMCG7ApQckk27q5LpyFVb4Us8zw4xh5wapvSbYYI7
+         jq+u/ds2VYlZYDH2iOmNNvoJ57pAopkeRPdjo68loLU5dgiEsXSu2TWc/KZ6DAk5l0aH
+         DLAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746123530; x=1746728330;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=31M2a7MzQFnr+QMjJl1jAmf5oWz7cYiRof9uFBocW/c=;
-        b=j16rXFKumE63QHNUx17KeTp6fG6iuERAzSP+Mls0rn5gLQRCWSrJ16vGdWrWH36VxW
-         pHrZIJSrwT3RQiVO+k0neF3OWVZiw1qz7lDQWuEh7xI+SWQuNAHIIj4STZa2mAfEgN4a
-         IaRyo9UhmhJfHuzgu9hb/PA0nQLng846cG93ILRM9w1PN43OPXSQnsdU58VGGdquYivH
-         JGXhIG/knjsgHiLLzQ+6+wjiYSlFOXWdm6hX4wZ2Ta+RMvN4hv/9O+FZ2dgQoDsmgRaE
-         t8EaT5caHJHzJK66zHTo2qOpuPxhw09/aD3wtuX4AykvMXZU3e44JV612We9Z0PKbd72
-         6p/g==
-X-Forwarded-Encrypted: i=1; AJvYcCUyAjPOk/jEP2VtIZgEY2pEeY9EaYMSz2kZJbuL2eU4u41KQcvTbUP1OQMW4yc6iN7C6EIO4V5fbCV4c3rlUA==@vger.kernel.org, AJvYcCXPhoXUu4cjteTrp7ltqmcfmCCB+QV4woDGrhlIp5j9d3uM0TNDumNk85x8tCgolFiVvpCFlDj0hpHhGV7v@vger.kernel.org, AJvYcCXtlK/6M/P+/FkPuCAFkBohh/SV+J9QDD2Gvyde8cxKSMoJpUgJqC3F6WbppQhx9OP9U7KLiraVThYdaypzpwVt@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIymXWuh9iGvosMd8UUrptJ15Xsmu4q+RkqZNmijx1gXTO76WF
-	ZFAjrVpa+YXOEhU2p3v6z23SYm+ZErVw6RLXj6iAAZn3zDN2YrVsbMVo8A==
-X-Gm-Gg: ASbGncuLzIAXdpuyK3xx0WDMYf1nG7Sz41qz0CkKio8uVE0Eu52Xt4DtqzBnSDcB4jP
-	WKaPE4dxxB9J/O4VAsz/a874wRexpxIxr4TeAcErzwwXnpVReY+kaWJIntnYQhCZzHI1esRjuQa
-	vPPsRvFkrx+D7Edt5pZAs+x4+BnCYMgnCgcon9hVG5opebL66OIbYGHvZtSoorJ53E2ovd0jYPI
-	8XIiHU9GJoPyWJGWQC6IuZK+2Z3MG4jimOE940deVazVZ0YynVbpmnmY2pmmAGENbmkE0Em9xLv
-	RxOrnPF/0GSOwjXhWpfTYKLt
-X-Google-Smtp-Source: AGHT+IHy6Ll3Z23nZVuIrTV6UN983Ah2h/ki0XZ6sOPNNuE027Lh/hRUnu81RjOmmeyjewU+wWuOdA==
-X-Received: by 2002:a17:902:d482:b0:224:1ec0:8a16 with SMTP id d9443c01a7336-22e1033c89cmr654615ad.21.1746123530559;
-        Thu, 01 May 2025 11:18:50 -0700 (PDT)
-Received: from smtpclient.apple ([2402:d0c0:11:86::1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e0bc7b0aasm9831765ad.169.2025.05.01.11.18.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 May 2025 11:18:49 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+        d=1e100.net; s=20230601; t=1746123589; x=1746728389;
+        h=in-reply-to:autocrypt:from:content-language:references:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hycH8nOjtWZTLvvT6FLkVd0wbItGhhzZCLbROgjVEtw=;
+        b=OwySEQVSK+NBYO81DXdA8rGC0WD/zFZLpggtuo9H7G1xpHSRQCCYCDC7XeCxVmxqQc
+         vN8st5ruCZ2N+VfuVMIbuOvLg7hHKbrtp7CsFicS/WBsifNADlt9ImeeHlNuH2CqzK/g
+         rF4+aIwqEZaLSCDzHMht3dz44o2lgkHM7ekFQTs+S+PmGaul9cF+nOHF/qLPfD+yv7Lb
+         WebG8HVdDE72kBE4mYlkXslOcMfKWu1DIBT2ctPtpnNHoNuny4lj0sroqrxzuLqVO+f4
+         XzL52aS0INFDkrl7VP2IBBnLO5c3yUs/i1UCmoqk1CJst3PnSWMYgUmMK36RlYpnIGXm
+         qB5g==
+X-Forwarded-Encrypted: i=1; AJvYcCVZLTv4LAL6Fbd9DTAK4wqKxV9TPbmQxG0zmxMhJQXPbwbjXygVX7+iC1Aq1E3ZWAfZPg8pndh5DRTnyuE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzHo1p4m/v/0aLfmU56rMo5WSXRKZLBb3zXb5S5uCAJAmu/gOFZ
+	sLjfAixCQIrX1kN7BnJCP8I79VkPErJqV/ilEs9b5UAV9jQv8FjkS/I4zYLkUjM=
+X-Gm-Gg: ASbGnctHOccBFVswyKAZ4kw7XiM6Et3aWweOyc8cJae42BYhfPd/54/EftTqprj2i4g
+	Zhd6ZouDZw66s6aQGC4pr+tnLOrL72BRbA45NgOaY9anbYTNwJ0daNXtAleT4oVSK3xNZYvNDjS
+	OEmDs3OlCoVpqfv3BQwqeqw3/1vPTNBN3LXzXAhLM9yFejcEgcqhvBaHpkOFWs6fNnoRwpvLsQb
+	xNsJTIxUsYWC72r00OCvc/Rg+ED0Ckdygkcpo+wv0ZisUQz5sF+E2ehOlmOMAz+JT/w4+0SGSq3
+	y0hbN5fQspuzKMd+I3JmlPjNnvv4RAy9/sE2xzc7wcZQngKmDFKQqH2jg5pcMYcDC2hDRYx4Ndg
+	rXCQsMurQqByHI9Gm0thM2+jH2lfCHldPHYUtIHwsfGvsfr3wqLztCz6+gqw88nP0kQ==
+X-Google-Smtp-Source: AGHT+IFT/GGxVj5LsyYhpFH/Jy9txkqGKBcfpkrOsbRqhzFHXZEFsF3GmQd3SL/kucSaPoQZqM2ToQ==
+X-Received: by 2002:a17:907:6e8a:b0:ac2:dc00:b34d with SMTP id a640c23a62f3a-ad17b865625mr10280166b.53.1746123588555;
+        Thu, 01 May 2025 11:19:48 -0700 (PDT)
+Received: from ?IPV6:2003:e5:870f:e000:6c64:75fd:2c51:3fef? (p200300e5870fe0006c6475fd2c513fef.dip0.t-ipconnect.de. [2003:e5:870f:e000:6c64:75fd:2c51:3fef])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da57c2d7sm74928566b.174.2025.05.01.11.19.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 11:19:48 -0700 (PDT)
+Message-ID: <917da057-adfd-4002-ad2b-f2a6ac3a00ee@suse.com>
+Date: Thu, 1 May 2025 20:19:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.500.181.1.5\))
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-From: Alan Huang <mmpgouride@gmail.com>
-In-Reply-To: <aBO2XVSisMXtU8nD@archlinux>
-Date: Fri, 2 May 2025 02:18:33 +0800
-Cc: kent.overstreet@linux.dev,
- Thorsten Blum <thorsten.blum@toblux.com>,
- Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Bill Wendling <morbo@google.com>,
- Kees Cook <kees@kernel.org>,
- regressions@lists.linux.dev,
- linux-bcachefs@vger.kernel.org,
- linux-hardening@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>,
- ardb@kernel.org,
- ojeda@kernel.org
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: CVE-2022-49816: xen/pcpu: fix possible memory leak in
+ register_pcpu()
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+References: <2025050131-CVE-2022-49816-0190@gregkh>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <2025050131-CVE-2022-49816-0190@gregkh>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------NZuB9CH4O2rWkH59FuiZojXF"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------NZuB9CH4O2rWkH59FuiZojXF
+Content-Type: multipart/mixed; boundary="------------1UjKpuYbZgY0QdwL89Gd7zc6";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: cve@kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <917da057-adfd-4002-ad2b-f2a6ac3a00ee@suse.com>
+Subject: Re: CVE-2022-49816: xen/pcpu: fix possible memory leak in
+ register_pcpu()
+References: <2025050131-CVE-2022-49816-0190@gregkh>
+In-Reply-To: <2025050131-CVE-2022-49816-0190@gregkh>
+
+--------------1UjKpuYbZgY0QdwL89Gd7zc6
+Content-Type: multipart/mixed; boundary="------------0FDn5BLm6pA9PWmFS8GstAl7"
+
+--------------0FDn5BLm6pA9PWmFS8GstAl7
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
+
+T24gMDEuMDUuMjUgMTY6MTAsIEdyZWcgS3JvYWgtSGFydG1hbiB3cm90ZToNCj4gRnJvbTog
+R3JlZyBLcm9haC1IYXJ0bWFuIDxncmVna2hAa2VybmVsLm9yZz4NCj4gDQo+IERlc2NyaXB0
+aW9uDQo+ID09PT09PT09PT09DQo+IA0KPiBJbiB0aGUgTGludXgga2VybmVsLCB0aGUgZm9s
+bG93aW5nIHZ1bG5lcmFiaWxpdHkgaGFzIGJlZW4gcmVzb2x2ZWQ6DQo+IA0KPiB4ZW4vcGNw
+dTogZml4IHBvc3NpYmxlIG1lbW9yeSBsZWFrIGluIHJlZ2lzdGVyX3BjcHUoKQ0KPiANCj4g
+SW4gZGV2aWNlX2FkZCgpLCBkZXZfc2V0X25hbWUoKSBpcyBjYWxsZWQgdG8gYWxsb2NhdGUg
+bmFtZSwgaWYgaXQgcmV0dXJucw0KPiBlcnJvciwgdGhlIG5hbWUgbmVlZCBiZSBmcmVlZC4g
+QXMgY29tbWVudCBvZiBkZXZpY2VfcmVnaXN0ZXIoKSBzYXlzLCBpdA0KPiBzaG91bGQgdXNl
+IHB1dF9kZXZpY2UoKSB0byBnaXZlIHVwIHRoZSByZWZlcmVuY2UgaW4gdGhlIGVycm9yIHBh
+dGguIFNvIGZpeA0KPiB0aGlzIGJ5IGNhbGxpbmcgcHV0X2RldmljZSgpLCB0aGVuIHRoZSBu
+YW1lIGNhbiBiZSBmcmVlZCBpbiBrb2JqZWN0X2NsZWFudXAoKS4NCj4gDQo+IFRoZSBMaW51
+eCBrZXJuZWwgQ1ZFIHRlYW0gaGFzIGFzc2lnbmVkIENWRS0yMDIyLTQ5ODE2IHRvIHRoaXMg
+aXNzdWUuDQoNClBsZWFzZSByZXZva2UgdGhpcyBDVkUuDQoNClRoZSBpc3N1ZSBjYW4gaW4g
+bm8gd2F5IGJlIHRyaWdnZXJlZCBieSBhbiB1bnByaXZpbGVnZWQgdXNlci4NCg0KVGhlIG1l
+bW9yeSBsZWFrIGNvdWxkIGhhcHBlbiBvbmx5IGVpdGhlciBkdXJpbmcgYm9vdCBvZiBkb20w
+LCBvciB3aGVuDQpob3RwbHVnZ2luZyBhIHBoeXNpY2FsIENQVSB0byBhIFhlbiBzZXJ2ZXIu
+DQoNCg0KSnVlcmdlbg0K
+--------------0FDn5BLm6pA9PWmFS8GstAl7
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <DD12E746-2B59-4AF5-B396-4700C6D099F9@gmail.com>
-References: <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux> <20241021192557.GA2041610@thelio-3990X>
- <ZxpIwkfg9_mHO3lq@archlinux> <20241025011527.GA740745@thelio-3990X>
- <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
- <Zxu4yhmxohKEJVSg@archlinux> <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
- <aBOtxplvvpgHed7o@archlinux> <D9967EB7-7F4D-4122-9470-DB14700FD906@gmail.com>
- <aBO2XVSisMXtU8nD@archlinux>
-To: Jan Hendrik Farr <kernel@jfarr.cc>
-X-Mailer: Apple Mail (2.3826.500.181.1.5)
 
-> On May 2, 2025, at 01:58, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
->=20
-> On 02 01:28:28, Alan Huang wrote:
->>=20
->> Thanks,
->> Alan
->>=20
->>=20
->>=20
->>> On May 2, 2025, at 01:22, Jan Hendrik Farr <kernel@jfarr.cc> wrote:
->>>=20
->>>>=20
->>>> I wonder if the __counted_by(x_name_len) in struct bch_xattr is =
-needed, since there is also a value after x_name.
->>>=20
->>> Wait a minute. Are you saying that the value with length x_val_len
->>> is behind the name (of length x_name_len) at the end of the struct.
->>> So essentially the flexible array member x_name has a length of
->>> x_name_len + x_val_len and contains both the name and value?
->>=20
->> Yes.
->=20
-> I assume you can't easily change the struct such that there exists a =
-member
-> that contains the result of x_val_len + x_name_len, correct?
->=20
-> In that case the only available course of action at this time is to
-> remove the __counted_by, because it is incorrect.
->=20
-> In addition I would recommend changing the name of x_name to something
-> like x_name_and_val or similar. It's very misleading to call it x_name
-> when it also contains the value.
->=20
->>=20
->>>=20
->>> If that's the case:
->>>=20
->>> 1. that's not at all clear from the struct definition
->>> 2. __counted_by(x_name_len) is not correct in that case
->>>=20
->>=20
->> Both clang and gcc say:
->>=20
->>    =E2=80=A2 p->array has at least p->count number of elements =
-available all the time.=20
->>=20
->> Note the at least here. Though I think the counted_by is misleading =
-here.
->>=20
->=20
-> Here's how clang defines __bdos language extension [1]. Also note the
-> attribute reference for __counted_by [2]. It assumes that the flexible =
-array
-> member contains exactly the amount of elements that are specified.
->=20
-> I guess your quote from the gcc docs is misleading, as gcc's behavior
-> is like clang's.
->=20
-> The kernel uses the type & 2 =3D=3D 0 case.
->=20
-> So let's say you have a simple struct like so:
->=20
-> struct foo{
-> int val_len;
-> char val[] __counted_by(val_len);
-> }
->=20
-> If val_len is 10 then foo->val[10] will be considered out of bounds.
-> Even if you did a malloc for enough space.
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-OK, thanks, I=E2=80=99ll revert that.
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
->=20
-> [1] =
-https://github.com/llvm/llvm-project/blob/3b88805ca20018ae202afd3aea39f4fa=
-856a8c64/clang/docs/LanguageExtensions.rst?plain=3D1#L5502-L5507
-> [2] =
-https://clang.llvm.org/docs/AttributeReference.html#counted-by-counted-by-=
-or-null-sized-by-sized-by-or-null
->=20
->=20
-> Best Regards
-> Jan
+--------------0FDn5BLm6pA9PWmFS8GstAl7--
 
+--------------1UjKpuYbZgY0QdwL89Gd7zc6--
 
+--------------NZuB9CH4O2rWkH59FuiZojXF
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmgTu0MFAwAAAAAACgkQsN6d1ii/Ey9W
+pQf/YlfUQQZnXmQo1vumeUoNdI8Yi74AoZ3X1fDTdmpYnnmOjk/zxyBoNPC1yH2KjvZbI/+yqC/U
+b7qXnKuby9mR5OXemiTFAwuemdBteyTFoGR9aGjPJ+00TUbL7nlTvHitNgviqUSxGulPmXqUoLnd
+FAlt107vW3DsAcdqJe+u6WAvr4MMSs3870r0oktpX9UOyAfhrWMLr0ORAW695uOdPTnQOgJWQGZr
+TzQFdK0rry1BYp1Rn4inka/i1KXoTVyppgLdzX1v72BXQRP7bHizxvZ+hxMzbjBvWyfzP7AEO1e4
+8kwTU4xXyEL/gp/b3Xc9f2zre9dtdv6V8Eru31lr6A==
+=L7a8
+-----END PGP SIGNATURE-----
+
+--------------NZuB9CH4O2rWkH59FuiZojXF--
