@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A571A1537C8;
-	Thu,  1 May 2025 05:43:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255D1267F66;
+	Thu,  1 May 2025 05:43:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746078201; cv=none; b=C5i8S7gntyZ70dYeoNJjk2avLdnpnI3SmW+Whs/Q5PIJoZq+OpMhw0me8U3d5lp/ALwInrL3oR0x2qB6GLeI0uetpwUIJZi1YB9oJIjDvuWoqA0wvWt2Y9eGEkMJcAH+WxYGcJ5BS7q7kwB44dqD+i/i3a6md5Qex++s7OsZMX0=
+	t=1746078204; cv=none; b=YSBkfeYA6MMcR38wzFyEOPukzjI90t9fplzvcNiNORj4gLJBriiXJaH1uN2bdFBXl3+q+jp1wAyQmnrw4puV60jjprs9KOlucpgZnFiCE4ySm67jyPhKP0J7/ulGgE3SfRqmriXrxeDgOKFhiOqqppOwiBEYpQ0zbeaR/7fLWe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746078201; c=relaxed/simple;
-	bh=qu0Xmfor536qqIpQMxGHEiDaMpRk2KVbHYC5st5MJBk=;
+	s=arc-20240116; t=1746078204; c=relaxed/simple;
+	bh=Nrgc0gY5E9nAftnrKuPVn5v0Qy3w1OKMTs5osTSQqzk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=R0XlyUaxlyNENH7zJXzz7xZp7B2BVSF1pzc4MHw/4qXfxTjbbbSxpwiUYkDOVv3LbnDZnosyjUx64EKu9oYDGYnIybWm3kZxzKf44MzI7pYNxKq049Mcj7TWfK+Chfz62Hh9F8avyZiB7IBxj/z7J/S/Sf/Bsx5VxV3lnMyHtLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CktucJZh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YIq1wCKotaxATUrQBXdQiGxdhVDfS4D/OczP0rWgB+DW+QKU3c49HKyBUIgGnWMKB+aDJpGUP+iWouJMhkMcd43NtW+CHxO4TyU+uPqMA+XgqVUg+yC73lBsrTMF12xCtcL8cxC2ECWCajrKQG7B9/Nh7r2M39qyFAm4gUoK+EA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bvOQZ1Ms; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CktucJZh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4773C4CEE3;
-	Thu,  1 May 2025 05:43:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bvOQZ1Ms"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA3DC4CEEE;
+	Thu,  1 May 2025 05:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746078201;
-	bh=qu0Xmfor536qqIpQMxGHEiDaMpRk2KVbHYC5st5MJBk=;
+	s=k20201202; t=1746078203;
+	bh=Nrgc0gY5E9nAftnrKuPVn5v0Qy3w1OKMTs5osTSQqzk=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=CktucJZhFAJzob9150t0M7StzV50ttYgLnwXLQcj5NKSY8RrpBCI10ba3Ri7/4L5r
-	 QVHJr4smW4qKdj3/3WrEaUDiWI5s0Oky4gJiagSvXKTCd13XecIGU3Fy0y+BPGawRZ
-	 8sg/OKW5keHCpWGUhscnfpv+wXRi2OQG0aysKu636Hsnhpg2Zcdy7KFoNIKMo9adLj
-	 3ZsGoJmapgbGnfTtN5FDX8iayQW6omZWDdl8F87B9jiodpJ1vF9rlszqR73xl02kbZ
-	 M7bzG7Y9wjIjr9o3tw78eG8w8lc7YbslNwKyDo1s35TX/YKYCWPXV9vh4dIPZ9R6IN
-	 bgjE7SMzfzbDA==
+	b=bvOQZ1Ms8N6sIVo5oU3uTeNI63Co2WEGyanUERSjjb3K/2qN7/jpZHb0C1V0X+e8w
+	 UE9THyk5gtPD9xnhqnTdt9CHmrSJ3bigKlEp/I4Ma7VDQ5uxaD2hp0yj2vVx6FgQoK
+	 TL5fUwc8s4kg1reDlGImWcKNL6uLp5zQjCdpPL6XP6Oh1/gLg84vEy/n7ccE3Svk02
+	 dXQ4cGn3mjTuIjT4m9XdqNIrbOqOy3crl2k09aClmXZM5obkiw59pJr9wOyxgQIRU3
+	 p6HOB8SpO+6PexbPV4PBREmhb1WycKH+yA4Gj5hSlmBP4xF7wQ+eY7fSSZRVMukgAL
+	 qeAIXbnu+l0VQ==
 From: Mark Brown <broonie@kernel.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Alexander Stein <alexander.stein@ew.tq-group.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250429094910.1150970-1-alexander.stein@ew.tq-group.com>
-References: <20250429094910.1150970-1-alexander.stein@ew.tq-group.com>
-Subject: Re: [PATCH 1/1] ASoC: simple-card-utils: Fix pointer check in
- graph_util_parse_link_direction
-Message-Id: <174607819946.4025361.17609297159298131450.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 14:43:19 +0900
+To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: alsa-devel@alsa-project.org, Sunil-kumar.Dommati@amd.com, 
+ Basavaraj.Hiregoudar@amd.com, venkataprasad.potturu@amd.com, 
+ Mario.Limonciello@amd.com, Liam Girdwood <lgirdwood@gmail.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ "open list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <linux-sound@vger.kernel.org>, 
+ open list <linux-kernel@vger.kernel.org>
+In-Reply-To: <20250430195517.3065308-1-Vijendar.Mukunda@amd.com>
+References: <20250430195517.3065308-1-Vijendar.Mukunda@amd.com>
+Subject: Re: [PATCH] ASoC: amd: ps: fix for irq handler return status
+Message-Id: <174607820124.4025361.17364354865281577854.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 14:43:21 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,14 +49,13 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c25d1
 
-On Tue, 29 Apr 2025 11:49:10 +0200, Alexander Stein wrote:
-> Actually check if the passed pointers are valid, before writing to them.
-> This also fixes a USBAN warning:
-> UBSAN: invalid-load in ../sound/soc/fsl/imx-card.c:687:25
-> load of value 255 is not a valid value for type '_Bool'
+On Thu, 01 May 2025 01:24:43 +0530, Vijendar Mukunda wrote:
+> If any Soundwire manager interrupt is reported, and wake interrupt
+> is not reported, in this scenario irq_flag will be set to zero,
+> which results in interrupt handler return status as IRQ_NONE.
 > 
-> This is because playback_only is uninitialized and is not written to, as
-> the playback-only property is absent.
+> Add new irq flag 'wake_irq_flag' check for SoundWire wake interrupt
+> handling to fix incorrect irq handling return status.
 > 
 > [...]
 
@@ -65,8 +65,8 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: simple-card-utils: Fix pointer check in graph_util_parse_link_direction
-      commit: 3cc393d2232ec770b5f79bf0673d67702a3536c3
+[1/1] ASoC: amd: ps: fix for irq handler return status
+      commit: 7f91f012c1df07af6b915d1f8cece202774bb50e
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
