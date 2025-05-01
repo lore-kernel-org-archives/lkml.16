@@ -1,110 +1,107 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBC570805
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 03:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7EBA79C0
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 03:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746068777; cv=none; b=mDqn5d3+/23MF5BWpfsF4jx0VaR2tYDlbNIrLwS3JQj4j/SZUZwUeH6tTEhN7+mAEwqNWj1j6BTXFkvNLZlcnrhTcOOy9Tacv+X4PSfSgxs0gaIZubmdH3UEYWYfNgfgr/nLpYkRJn9UFc8sfJGU9EnBb3swH2GJWvar9B/Tnxw=
+	t=1746069114; cv=none; b=ZjCkFl6f4P4+e0pJjkFmXF9Zss6y3WMdReImMrmJ5H1oeW9cgiJ7X8ivlz+PGfnwqiepSSGYd5BOplEUPdqEWxLO3YIovlNbi/bhXqKFYwTw1JGzV1Oqw6GQQEsA3OXtLeyeR3Xzja8wg/cfd/6rAMtf/pLoHH3GLfuqGSM28+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746068777; c=relaxed/simple;
-	bh=X/XhkrFmWidZvhk9MnMyADxxQYnJ6LlWfI1v/DRQrcw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jLcwrhL6aI7dqKsRUcPQYbBIsNS/RdInstn0IVNY/PQ1GYehec5uyfW8KUiGJ0O97FgNlJPYZ0dRiqoBCL0gdJmDboT9bgq/KM2NGmU0nVz7MidOAiFya0YwwbJ4SZDSkPw27U692zZqtNEjOiWB9V9EQBJdaKvdoR2plG3l3sQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h8qZTEyT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746069114; c=relaxed/simple;
+	bh=7khwD9zpUcBSuTbQLLJi+PXraV7hpZFehlDxNcwN32U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZC5zKB0pG6beoej2IJjjPMeImCscU2Vo4TN+WLSxwQRV1n0SFLnvjSnupEDIdVMTXL2jYT65VbHcVvEEaUkZ2QidhKWMTLr8pqZZNo5yIBNRCCWmGfxWYoQJqj8qn+PBK+sHfrkk77IhIB3R0y8J/IO7JhAairFcvNiyeEeIFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RilV/1Aa; arc=none smtp.client-ip=91.218.175.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h8qZTEyT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746068775;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RilV/1Aa"
+Date: Wed, 30 Apr 2025 23:11:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746069099;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=zBUyB0Q8zMsFcB5UcneuetEe4xDQ4aVw4JfTOnTTULU=;
-	b=h8qZTEyTzTw+YYY8eslPvuH5rrC4cuty3NrDHRkshHBZBJBjUG7jD3bCtB1m0Aliqn1rrf
-	5xyqgjAbf0ueyuOSAj4RHJr2rnI2Aiinv3Zq9aUs6IWGmMzvtfbE//qbyw1AhclVMw0Zid
-	ZLcvkCni2fczSvp2ee5tOjwBNGC4pOM=
-Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com
- [209.85.210.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-279-d8_LgUopMbKE3h7E-b2wKA-1; Wed, 30 Apr 2025 23:06:13 -0400
-X-MC-Unique: d8_LgUopMbKE3h7E-b2wKA-1
-X-Mimecast-MFC-AGG-ID: d8_LgUopMbKE3h7E-b2wKA_1746068772
-Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-7391d68617cso1609908b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 20:06:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746068772; x=1746673572;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zBUyB0Q8zMsFcB5UcneuetEe4xDQ4aVw4JfTOnTTULU=;
-        b=jxqEzOw+nJyxX+BcKDo0iZBEh9/e2qS+oHw/MTFV/F6xY6WNsR3o9iYiGtdz+hOXog
-         GiE/ABvf835pnm1o+0vo690OnxL3tYUKMExkn+piFP06+mc1rAcD9D64ffO+B1romXir
-         YCNE+kXIEHNQT1ITpNefmQUaVlydo5O3oYRQGA4SctgPNLziUbafFTvzaOB5lmV1aSGu
-         lNEAyS09OiaUQbxvg17PuU6Cotm7Iw1VrIgrqTMKWLxKfboUnaLjspJekLBv+au3dQtu
-         whpTxlHIbAKZ5tiFZQHEtDp2lAyiQJ/0IN2TQjqTTqsXXMJ2/oX7hUmgcR9sGNhEhNDe
-         GH9w==
-X-Forwarded-Encrypted: i=1; AJvYcCUkfglDVHMfEzQdCqeYKJF3qUZXhqA5qqNCTSUgycaszwKoTt2965VZMC/fdbmeG8yob3zw18aP3iUWqZM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2gC+xdN5M01gx8Qm5+zUWhNHCL3hDMSf9dQ+7CHIzptey1Xng
-	Znn/YFDyBIB1ZMpX+q3GHrmNhTXV4ZbRi+zZl0vMC1IrKHDFHtWovkQ+LIGpGFtmEE5oCiZZc4b
-	Z3nvl9s5dRnxAYSxH74R+RZzjr6t7QePQpXn4Kz+R8UfG5XQJbN+eTExeeHq2EA==
-X-Gm-Gg: ASbGncuaCGcYAdP3i4mtWQZ7a3zwYUwgT8kP9Z+TkjMe/c3fMOP5Z6JoFd2ltgiEmu9
-	TOtiazwn2IyaQJjNOV5wurhmFa2UC8xuin8+g1o6dEn26EKFJrV/hoFa9DgbpN57It9uEbuujzZ
-	iho9JOqChg0nkhJimVsSlbfsJ/tdpbydmZ6MrbloBLJCrJtY/zB2OfnhYX6A6NRyvMjNoN0pnlo
-	8mByXJYY6PK9d0PF2GM40WQLQXLBH86LBVK+dq7y6tJuUaM9ONwe2rUcanz0pwL1PGeUT1jKSlo
-	DjH72vLD6CBH
-X-Received: by 2002:a05:6a00:35c8:b0:736:bced:f4cf with SMTP id d2e1a72fcca58-7404927930fmr1444815b3a.0.1746068772426;
-        Wed, 30 Apr 2025 20:06:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEqFyaQqRxd5YG/d2aF2wgTwFAOyBR0cwvIicbDZqnls7TSQ0mJMT278uEe4KH0+EWzXzgDGQ==
-X-Received: by 2002:a05:6a00:35c8:b0:736:bced:f4cf with SMTP id d2e1a72fcca58-7404927930fmr1444772b3a.0.1746068772121;
-        Wed, 30 Apr 2025 20:06:12 -0700 (PDT)
-Received: from [192.168.68.51] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a600a7sm2560107b3a.130.2025.04.30.20.06.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 20:06:11 -0700 (PDT)
-Message-ID: <8a21a392-5ae6-4d55-905a-0956f48853ba@redhat.com>
-Date: Thu, 1 May 2025 13:06:02 +1000
+	bh=kOVXkRAnlkTfLIOI7aDoNf7o3WKrMGuwkdDG/cGMJ1w=;
+	b=RilV/1AayixcmLUL7C0y5gXXVMe9suPC8A8CZ+/RzYhaMvMm5mGElyvVL7W4rG+CSnTtMX
+	C/FQHK+fGF3jgS+oXZiLJIICDRFcRjzlN3jzlTHlDDTArSmzRTTTgwCsCsanH58l9w1Ofd
+	WEWcPQMYbeNvFAg6puKwPIJx4AvsOHo=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Theodore Ts'o <tytso@mit.edu>, 
+	Linus Torvalds <torvalds@linux-foundation.org>, linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] bcachefs fixes for 6.15-rc4
+Message-ID: <h3lt736royh562shwlau3kpjmydq5575oilp2sl23aash6gj3x@rw4gn4r2thcy>
+References: <l7pfaexlj6hs56znw754bwl2spconvhnmbnqxkju5vqxienp4w@h2eocgvgdlip>
+ <CAHk-=wjajMJyoTv2KZdpVRoPn0LFZ94Loci37WLVXmMxDbLOjg@mail.gmail.com>
+ <ivvkek4ykbdgktx5dimhfr5eniew4esmaz2wjowcggvc7ods4a@mlvoxz5bevqp>
+ <CAHk-=wg546GhBGFLWiuUCB7M1b3TuKqMEARCXhCkxXjZ56FMrg@mail.gmail.com>
+ <20250425195910.GA1018738@mit.edu>
+ <d87f7b76-8a53-4023-81e2-5d257c90acc2@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 43/43] KVM: arm64: Allow activating realms
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-44-steven.price@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250416134208.383984-44-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d87f7b76-8a53-4023-81e2-5d257c90acc2@zytor.com>
+X-Migadu-Flow: FLOW_OUT
 
-On 4/16/25 11:42 PM, Steven Price wrote:
-> Add the ioctl to activate a realm and set the static branch to enable
-> access to the realm functionality if the RMM is detected.
+On Wed, Apr 30, 2025 at 07:48:20PM -0700, H. Peter Anvin wrote:
+> On 4/25/25 12:59, Theodore Ts'o wrote:
+> > 
+> > Another use case was Valve who wanted to support Windows games that
+> > expcted case folding to work.  (Microsoft Windows; the gift that keeps
+> > on giving...)  In fact the engineer who worked on case folding was
+> > paid by Valve to do the work.
+> > 
+> > That being said, I completely agree with Linus that case insensitivity
+> > is a nightmare, and I don't really care about performance.  The use
+> > cases where people care about this don't have directories with a large
+> > number of entries, and we **really** don't want to encourage more use
+> > of case insensitive lookups.  There's a reason why spent much effort
+> > improving the CLI tools' support for case folding.  It's good enough
+> > that it works for Android and Valve, and that's fine.
+> > 
+> [...]
+> > 
+> > Perhaps if we were going to do it all over, we might have only
+> > supported ASCII, or ISO Latin-1, and not used Unicode at all.  But
+> > then I'm sure Valve or Android mobile handset manufacturers would be
+> > unhappy that this might not be good enough for some country that they
+> > want to sell into, like, say, Japan or more generally, any country
+> > beyond US and Europe.
+> > 
+> > What we probably could do is to create our own table that didn't
+> > support all Unicode scripts, but only the ones which are required by
+> > Valve and Android.  But that would require someone willing to do this
+> > work on a volunteer basis, or confinuce some company to pay to do this
+> > work.  We could probably reduce the kernel size by doing this, and it
+> > would probably make the code more maintainable.  I'm just not sure
+> > anyone thinks its worthwhile to invest more into it.  In fact, I'm a
+> > bit surprised Kent decided he wanted to add this feature into bcachefs.
+> > 
+> > Sometimes, partitioning a feature which is only needed for backwards
+> > compatibiltiy with is in fact the right approach.  And throwing good
+> > money after bad is rarely worth it.
+> > 
 > 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
->   arch/arm64/kvm/rme.c | 19 ++++++++++++++++++-
->   1 file changed, 18 insertions(+), 1 deletion(-)
+> [Yes, I realize I'm really late to weigh in on this discussion]
 > 
+> It is worth noting that Microsoft has basically declared their "recommended"
+> case folding (upcase) table to be permanently frozen (for new filesystem
+> instances in the case where they use an on-disk translation table created at
+> format time.)  As far as I know they have never supported anything other
+> than 1:1 conversion of BMP code points, nor normalization.
+> 
+> The exFAT specification enumerates the full recommended upcase table,
+> although in a somewhat annoying format (basically a hex dump of compressed
+> data):
+> 
+> https://learn.microsoft.com/en-us/windows/win32/fileio/exfat-specification
 
-Reviewed-by: Gavin Shan <gshan@redhat.com>
-
+Thanks, I'm adding this to Documentation/filesystems/bcachefs/casefolding.rst
