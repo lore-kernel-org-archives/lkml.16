@@ -1,80 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AA51EB9E8;
-	Thu,  1 May 2025 16:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877401EB9E8
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 16:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746118456; cv=none; b=g8KHyqmRMBZqnqPHT/SiGG3MIK2s/KC38Z3710wuuwmyZWaqZw41CK4VKDA2gSyQWWNEL04eIKKevgoV45v6UNUwwmHglXwXMo1/H2Vm2ErTNg6iipeDIsbiR7Qb2A49sU85Kvh3lmzPCEpk3PmOkA6xbTGl5FGT+Yn2xf9cbLI=
+	t=1746118608; cv=none; b=gcOf6uIbqZCy28W85bY/KWoHOKzxMIahB9esasa0nBNm+1yzeSyzc3M2rHqxHXNj3CCT1UGN6AmsbjfhxmS1KzvL6V+cLUGOgjr7OQcvceXNelDeDDpiQKtN6ZIIB9ryEpnG44t/p/TUqmawMD5DotztrtOEc+6RcD7YYU4LWv0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746118456; c=relaxed/simple;
-	bh=Po7MfUbHnxOioexoPPJU0FyruKTIR8Y+TUMMi5UN7kE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IWcDb9A3GG3sE8cSXoB+qXOc9gAdTbBgRv952/nK9kfQ6tmpD/1lcj+LvNrwn8hWmtOn7Nw4S5X7qH3YhQXwvO5Fgojv7Khw8FbsmsUK8tPYVsuEZJ2C5Gr7y0noWGwk1emtrBLbaS8I4iLUs7z0IphmIFPgjP31n636O69xH5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WxEfeMBp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746118608; c=relaxed/simple;
+	bh=RWONKRAMHQx/HHtWaaMS3+TSfg9I2vQ3LOiF7JfAbco=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qBnpYMUqzXB2BEyGXnulg9p6jB9vjiaqHSGb+W1V3rm4+JQoqgt4XlDx1SVUqUD9MNyBogj+hDEDlPDT5y/8v/KrG4uwpfPlU11QxehET6GetRkZOTPpSMHTH0XtDi+WpH9OPJMZp/tBtaGIrdSO+u/uT1KWWW9VYMXhJ+DybQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=db2/jfjW; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WxEfeMBp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2921EC4CEE3;
-	Thu,  1 May 2025 16:54:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746118455;
-	bh=Po7MfUbHnxOioexoPPJU0FyruKTIR8Y+TUMMi5UN7kE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WxEfeMBps3TDKi22pwZ24P+11ro+wChF7rraLYK6zgGE3MyDNOamjFere6h1wt9OK
-	 6MskWADUkZ4uaFm4ajeWVZimdyzpchtlOjlkFteLrXQ60kDtS4AifSns2rZjt310bb
-	 ie3/JdlvAF9NLM9vfgYMqCW5ToxUmUx849tloWdpUKL1vqcyqVc1Yv017OnophYY2G
-	 mkx6usm74mkghjJeQYkX8wCiL31R+GrrsS/2pxvocvpM4Jh5N3a21PUPPOwFFOMt0Z
-	 ytEcWrGOCmMUXhxYjxnh1jHgTxVnd3D0GEjhbObG0qKlJR3xxZhw/b5NtXYo150cPy
-	 y+ohNa2TU2veA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org,
-	broonie@kernel.org,
-	conor@kernel.org,
-	f.fainelli@gmail.com,
-	hargar@microsoft.com,
-	jonathanh@nvidia.com,
-	linux-kernel@vger.kernel.org,
-	linux@roeck-us.net,
-	lkft-triage@lists.linaro.org,
-	patches@kernelci.org,
-	patches@lists.linux.dev,
-	pavel@denx.de,
-	rwarsow@gmx.de,
-	shuah@kernel.org,
-	srw@sladewatkins.net,
-	stable@vger.kernel.org,
-	sudipm.mukherjee@gmail.com,
-	torvalds@linux-foundation.org,
-	Miguel Ojeda <ojeda@kernel.org>
-Subject: Re: [PATCH 6.6 000/196] 6.6.89-rc2 review
-Date: Thu,  1 May 2025 18:54:05 +0200
-Message-ID: <20250501165405.1125083-1-ojeda@kernel.org>
-In-Reply-To: <20250501081437.703410892@linuxfoundation.org>
-References: <20250501081437.703410892@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="db2/jfjW"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b00aa1f50d1so689018a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 09:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746118606; x=1746723406; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/GDZxMbT7to+hhJRhFiVGdhYtg0uYrOFj+zZ21/OJc=;
+        b=db2/jfjW9xOwXEpO0mDihbTmc+hKjhpvjUfbUWZBVqwQgwEqtRl/O6bvQdaisf/X6J
+         Wmd/RzyrMVQJARE8uVpP2ASdaA/w8uXlygSIS85XkJMufRR0HHcWNNlopnxINqdlmhgD
+         B60xaXTpqrNTufqc9v1rkrP5EhRQg7PROPeEdBnzRaK8pPRkmVrE+LDS+SOxOOqrglF8
+         kgOt36rLkWNhlqHcSJwAPcRguxQaauBL8X2UE6k6iw324fYCaBnx93SXnt4fBRvdPqbd
+         9gtPrSkucNTdCVJVILp4T44odfWhaAgn6xAxLUlo2VDo23nhHuN2yYGJ87xppAbEHBiO
+         6iTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746118606; x=1746723406;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5/GDZxMbT7to+hhJRhFiVGdhYtg0uYrOFj+zZ21/OJc=;
+        b=a/R2A2ardsCC+LmgDiLU2xR0JP+XEDoTtdaZR0eMcwlao7mzc9Hz1dCifJvWlAoaUW
+         SmO/TLJaYmj4o/eeS9LPNp9meMFYvB0jk9kanPXc84/B9Q/QBfiwasJ6x0Ji0X6Wf93N
+         AsTZjfyB6BqKIIQkOBw1lrpe969e97gWho+bCiNaXjgZWhqTPYgFiT8SAAq8lgMsEgVA
+         g9TzHgrOdMoVWQ5YCv3ZMsLZQNQXO8IFnWKZn+0o9HS0UWUpKJJYtYMXYBNG8KSXNev+
+         4QAOSqWhA8dKFnAOL1Z7QDFooCQbNRSKiSTk0gR+9/Np1X05JmP1TrkZmF89TXEy9YJu
+         W6cw==
+X-Forwarded-Encrypted: i=1; AJvYcCWAsUb+gk442ujWbGm1jpsfv7bYlMcZbYbq/VttgzaFMczoa+32J6wN+fdwextVhF0/nMc4Q3EcA804+xg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8qCD3A+e2mxtHLLBVCLaHaFnM/0l/XedbuQ2b7oS/lCeDb++0
+	w+EayRPlbKfYL7pvXUH8Ly61jpKtfcPWoSTSgXz7b0TihDcCFGkMeF8p8WKghbw+xWsiGMcm4Xw
+	wTw==
+X-Google-Smtp-Source: AGHT+IEtBgmWNLgCGNVs8Cyt3BKE0GnMHx+2E060vOGPHL+JaEOIee7LkbWlK0+C5WjFVOEc5Q+6CAAlAaA=
+X-Received: from pjbsw7.prod.google.com ([2002:a17:90b:2c87:b0:2fc:3022:36b8])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5290:b0:2ff:5e4e:861
+ with SMTP id 98e67ed59e1d1-30a4335de2fmr5395426a91.24.1746118605906; Thu, 01
+ May 2025 09:56:45 -0700 (PDT)
+Date: Thu, 1 May 2025 09:56:44 -0700
+In-Reply-To: <20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250215125307.GBZ7COM-AkyaF8bNiC@fat_crate.local>
+ <Z7LQX3j5Gfi8aps8@Asmaa.> <20250217160728.GFZ7NewJHpMaWdiX2M@fat_crate.local>
+ <Z7OUZhyPHNtZvwGJ@Asmaa.> <20250217202048.GIZ7OaIOWLH9Y05U-D@fat_crate.local>
+ <f16941c6a33969a373a0a92733631dc578585c93@linux.dev> <20250218111306.GFZ7RrQh3RD4JKj1lu@fat_crate.local>
+ <20250429132546.GAaBDTWqOsWX8alox2@fat_crate.local> <aBKzPyqNTwogNLln@google.com>
+ <20250501081918.GAaBMuhq6Qaa0C_xk_@fat_crate.local>
+Message-ID: <aBOnzNCngyS_pQIW@google.com>
+Subject: Re: x86/bugs: KVM: Add support for SRSO_MSR_FIX, back for moar
+From: Sean Christopherson <seanjc@google.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, Patrick Bellasi <derkling@google.com>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@redhat.com>, 
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, x86@kernel.org, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Patrick Bellasi <derkling@matbug.net>, 
+	Brendan Jackman <jackmanb@google.com>, David Kaplan <David.Kaplan@amd.com>, 
+	Michael Larabel <Michael@michaellarabel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-On Thu, 01 May 2025 10:18:13 +0200 Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.6.89 release.
-> There are 196 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 03 May 2025 08:13:56 +0000.
-> Anything received after that time might be too late.
+On Thu, May 01, 2025, Borislav Petkov wrote:
+> On Wed, Apr 30, 2025 at 04:33:19PM -0700, Sean Christopherson wrote:
+> > +static void svm_srso_add_remove_vm(int count)
+> > +{
+> > +	bool set;
+> > +
+> > +	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+> > +		return;
+> > +
+> > +	guard(mutex)(&srso_lock);
+> > +
+> > +	set = !srso_nr_vms;
+> > +	srso_nr_vms += count;
+> > +
+> > +	WARN_ON_ONCE(srso_nr_vms < 0);
+> > +	if (!set && srso_nr_vms)
+> > +		return;
+> 
+> So instead of doing this "by-foot", I would've used any of those
+> atomic_inc_return() and atomic_dec_and_test() and act upon the value when it
+> becomes 0 or !0 instead of passing 1 and -1. Because the count is kinda
+> implicit...
 
-Boot-tested under QEMU for Rust x86_64:
+Heh, I considered that, and even tried it this morning because I thought it wouldn't
+be as tricky as I first thought, but turns out, yeah, it's tricky.  The complication
+is that KVM needs to ensure BP_SPEC_REDUCE=1 on all CPUs before any VM is created.
 
-Tested-by: Miguel Ojeda <ojeda@kernel.org>
+I thought it wouldn't be _that_ tricky once I realized the 1=>0 case doesn't require
+ordering, e.g. running host code while other CPUs have BP_SPEC_REDUCE=1 is totally
+fine, KVM just needs to ensure no guest code is executed with BP_SPEC_REDUCE=0.
+But guarding against all the possible edge cases is comically difficult.
 
-Thanks!
+For giggles, I did get it working, but it's a rather absurd amount of complexity
+for very little gain.  In practice, when srso_nr_vms >= 1, CPUs will hold the lock
+for only a handful of cycles.  The latency of VM creation is somewhat important,
+but it's certainly not that latency sensitive, e.g. KVM already serializes VM
+creation on kvm_lock (which is a mutex) in order to add VMs to vm_list.
 
-Cheers,
-Miguel
+The only truly slow path is the 0<=>1 transitions, and those *must* be slow to
+get the ordering correct.
+
+One thing I can/will do is change the mutex into a spinlock, so that on non-RT
+systems there's zero chance of VM creation getting bogged down because a task
+happens to get preempted at just the wrong time.  I was thinking it's illegal to
+use on_each_cpu() in a spinlock, but that's fine; it's using it with IRQs disabled
+that's problematic.
+
+I'll post a proper patch with the spinlock and CONFIG_CPU_MITIGATIONS #ifdef,
+assuming testing comes back clean.
+
+As for all the problematic scenarios...  If KVM increments the counter before
+sending IPIs, then reacing VM creation can result in the second VM skipping the
+mutex and doing KVM_RUN with BP_SPEC_REDUCE=0.
+
+  VMs     MSR     CPU-0   CPU-1
+  -----------------------------
+  0       0       CREATE
+  0       0       lock()
+  1       0       inc()
+  1       0               CREATE
+  2       0               inc()
+  2       0               KVM_RUN :-(
+  2       0       IPI
+  2       1       WRMSR   WRMSR
+
+But simply incrementing the count after sending IPIs obviously doesn't work.
+
+  VMs     MSR     CPU-0   CPU-1
+  -----------------------------
+  0       0       CREATE
+  0       0       lock()
+  0       0       IPI
+  0       0       WRMSR   WRMSR
+  1       0       inc()
+  1       0       KVM_RUN :-(
+
+And passing in set/clear (or using separate IPI handlers) doesn't handle the case
+where the IPI from destroy arrives after the IPI from create.
+
+  VMs     MSR     CPU-0   CPU-1
+  -----------------------------
+  1       1               DESTROY
+  0       1       CREATE  dec()
+  0       1       lock()
+  0       1       IPI(1)
+  0       1       WRMSR   WRMSR
+  0       1               IPI(0)
+  0       0       WRMSR   WRMSR
+  1       0       inc()
+  1       0       KVM_RUN :-(
+
+Addressing that by adding a global flag to track that SRSO needs to be set
+almost works, but there's still a race with a destroy IPI if the callback only
+checks the "set" flag.
+
+  VMs     MSR     CPU-0   CPU-1
+  -----------------------------
+  1       1               DESTROY
+  0       1       CREATE  dec()
+  0       1       lock()
+  0       1       set=1
+  0       1       IPI
+  0       1       WRMSR   WRMSR
+  1       0       inc()
+  1       1       set=0
+  1       1               IPI
+  1       0       WRMSR   WRMSR
+  1       0       KVM_RUN :-(
+
+To address all of those, I ended up with the below.  It's not actually that much
+code, but amount of documentation needed to explain everything is ugly.
+
+#ifndef CONFIG_CPU_MITIGATIONS
+static DEFINE_MUTEX(srso_add_vm_lock);
+static atomic_t srso_nr_vms;
+static bool srso_set;
+
+static void svm_toggle_srso_spec_reduce(void *ign)
+{
+	/*
+	 * Read both srso_set and the count (and don't pass in set/clear!) so
+	 * that BP_SPEC_REDUCE isn't incorrectly cleared if IPIs from destroying
+	 * he last VM arrive after IPIs from creating the first VM (in the new
+	 * "generation").
+	 */
+	if (READ_ONCE(srso_set) || atomic_read(&srso_nr_vms))
+		msr_set_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+	else
+		msr_clear_bit(MSR_ZEN4_BP_CFG, MSR_ZEN4_BP_CFG_BP_SPEC_REDUCE_BIT);
+}
+
+static void svm_srso_vm_init(void)
+{
+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+		return;
+
+	/*
+	 * Acquire the mutex on a 0=>1 transition to ensure BP_SPEC_REDUCE is
+	 * set before any VM is fully created.
+	 */
+	if (atomic_inc_not_zero(&srso_nr_vms))
+		return;
+
+	guard(mutex)(&srso_add_vm_lock);
+
+	/*
+	 * Re-check the count before sending IPIs, only the first task needs to
+	 * toggle BP_SPEC_REDUCE, other tasks just need to wait.  For the 0=>1
+	 * case, update the count *after* BP_SPEC_REDUCE is set on all CPUs to
+	 * ensure creating multiple VMs concurrently doesn't result in a task
+	 * skipping the mutex before BP_SPEC_REDUCE is set.
+	 *
+	 * Atomically increment the count in all cases as the mutex only guards
+	 * 0=>1 transitions, e.g. another task can decrement the count if a VM
+	 * was created (0=>1) *and* destroyed (1=>0) between observing a count
+	 * of '0' and acquiring the mutex, and another task can increment the
+	 * count if the count is already >= 1.
+	 */
+	if (!atomic_inc_not_zero(&srso_nr_vms)) {
+		WRITE_ONCE(srso_set, true);
+		on_each_cpu(svm_toggle_srso_spec_reduce, NULL, 1);
+		atomic_inc(&srso_nr_vms);
+		smp_mb__after_atomic();
+		WRITE_ONCE(srso_set, false);
+	}
+}
+
+static void svm_srso_vm_destroy(void)
+{
+	if (!cpu_feature_enabled(X86_FEATURE_SRSO_BP_SPEC_REDUCE))
+		return;
+
+	/*
+	 * If the last VM is being destroyed, clear BP_SPEC_REDUCE on all CPUs.
+	 * Unlike the creation case, there is no need to wait on other CPUs as
+	 * running code with BP_SPEC_REDUCE=1 is always safe, KVM just needs to
+	 * ensure guest code never runs with BP_SPEC_REDUCE=0.
+	 */
+	 if (atomic_dec_and_test(&srso_nr_vms))
+		on_each_cpu(svm_toggle_srso_spec_reduce, NULL, 0);
+}
+#else
+static void svm_srso_vm_init(void) { }
+static void svm_srso_vm_destroy(void) { }
+#endif /* CONFIG_CPU_MITIGATIONS */
