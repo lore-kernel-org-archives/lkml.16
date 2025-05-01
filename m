@@ -1,137 +1,118 @@
-Received: from mail-43171.protonmail.ch (mail-43171.protonmail.ch [185.70.43.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEFD91362
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01591F426C
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:49:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746110932; cv=none; b=fzC9Jynnlyn+gWyMkp8XuWlqCiJ3Cyr4BF+E0D8JXUuWPaPGim3kwPXg9aqpvyTqCdAZp4QgDB5/czpnGzVS+zLkMiHPaFLW7ClOplT8tYvQfVMMUWSa4rq8fUI4Xh3DxJC3S9ofUnzZ3PyZDNp8y2lXaOD5dAoTMmGy9sicDpg=
+	t=1746110965; cv=none; b=cOhuElVwFFN0BeV6xLpIyfiH5BFoNVxubJVx9GLDUN7hZulanlHTNUsKsOnGEE2wGWneJWI+CkY0tZFDLQu2ARgmfx4WRTpLIcH4FL9HK4HmT3IQ4i5nXuqqagX3P+4NVUSyNP0vnkzJ4EgKJjL22WPxKFl2tE4nKIlZdBrCrJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746110932; c=relaxed/simple;
-	bh=5VDGG4Tt6ixGcUUnWvgYGQSqlfsjXSh3OAgUpU7Jd84=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qVdU1tlSKgeNeivJMCj8SLMQXiHTqd6k85CGOOpzK4TTiJFOlWFdPLDOMu8Jlm10lSVIaIDIRIIkpSGJ0J18IXrmJLvcrGQCDCHMjAfJvo4YRDjADTsSKQReKixsHfdCUosjjj68nS8JhF3Q50ihtcW/S5pnSTNE3w7xLSgZtVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=YTxro/Qd; arc=none smtp.client-ip=185.70.43.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+	s=arc-20240116; t=1746110965; c=relaxed/simple;
+	bh=Nj+Buzt0el1DKRoyQF913fIBNhoC13kudc2w1c3kB2I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=McoHn258IMkDkKzwcaoQmXjTtKBYcgt9DZlleaDqcDPG4ujBjRBL7HqQRhk0ndmhmGiHDUJCJ2wXJ94zC6/8Dk6euQs5z6TbdLuVY/ar/O1whTVGAxD4NM+tBXOu3RGgylSN7+dZwEIOX96QyrZ1J1DW+azZBLEhr9S5wnjyMLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=USFeTrTP; arc=none smtp.client-ip=209.85.160.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="YTxro/Qd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail; t=1746110920; x=1746370120;
-	bh=FaAaZncVGNvh1jWa2RrUNW5wqXclNgOASqEPn4kYyLk=;
-	h=From:Date:Subject:Message-Id:To:Cc:From:To:Cc:Date:Subject:
-	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector:List-Unsubscribe:
-	 List-Unsubscribe-Post;
-	b=YTxro/QdcNqmljA5zxs0WnrYclBi9WgX8/Uv3u1ylDjfVMuZ1/U6z7xJOeyEuEYfT
-	 kkb/BGQ7AB44F6Ix76YD8y+uR8bYJc2EM/liWnl/OtwDSTR9t2llAfoo7mNVe9btQ6
-	 fk9N1yrHEAe0tWFOa7XSB14TbalFY8RJzq6O5T9A03iMbhY9wPI0e3xpCzRiIVWTrS
-	 vTF2eM1gD2GZXqtZiX1uya6DtmcUx1MKvMmJFh1+ziAvICSekHOTh7o1UT+VLBmqG9
-	 kDb8iEFddYEb1RTeztUNyzMBuD4zNkQHKDMRUK/LQE9oI+vb0fnTkuY2FTV0oTlov5
-	 rZCRhWg4QcW0Q==
-X-Pm-Submission-Id: 4ZpH464345zLc
-From: Esben Haabendal <esben@geanix.com>
-Date: Thu, 01 May 2025 16:48:35 +0200
-Subject: [PATCH] regulator: bd718x7: Ensure SNVS power state is used as
- requested
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="USFeTrTP"
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2d060c62b61so971949fac.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:49:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746110962; x=1746715762; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fEs6umMySeLBJDEE1y2srlfEtA4e3pHxcXG4IeDmkZQ=;
+        b=USFeTrTPkhdXxAd7WkSfn4OAjwOwVD2HAJO4uaUBIfotv1a6ORmVRaLKq+mHTPpNjb
+         AEoz2Iy/2+FlFZXl8pYrchfyi8QWR7JjbZsWqApOcHQe/NXQP3UnvsC03s/DaLpMXTmz
+         Og1MbSNTocB0ycEPs7zsE3FESJ6nlhlener3/Wvm8aexLwJln7ZfF0lgRI1VWscoTb4Q
+         3VsKXbtDykX428vUQkQMViv0RSrRPQ5gCypp0qP7oNL/QXnwIuYtswelxcJ/BxXte+l9
+         txJ3ch8m57nUbeQZ58OpnNwWCxLfp54wILc0ros1izps2laTAgrkK4nFlKdvGbwcDn15
+         fr+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746110963; x=1746715763;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fEs6umMySeLBJDEE1y2srlfEtA4e3pHxcXG4IeDmkZQ=;
+        b=RGXYxnVPmN/8h3yleDdBsYmYAUoWpfNB3SQ6oglRuM3qdnHuF8ufNOXzB+BVPSgPqE
+         n8DvL5tvCx3EiZdUXdwoxZhpUjNz0E8tIaR4NewEgpg6gevRSW8AERcB2zQ31MK26kPx
+         3ZUwreYNtxNhH7ojWufYITLtGbSCyFcLqmyInVK58jDqs5fQ3epoMo6Qsx2F9zBsDAGK
+         sTkzt77KkK8lqmscKYR1IZmTpYBEgEUWkKAwYV7UVHdrEkGdVQAtJRyCJr+7iFhTjCwd
+         +T8GyY2Nd54WosBJww+i533BlQqzoAZY3WNiwEHMgLnyNQXLO+kV+ip7Cvdsl62TJFEa
+         wtbw==
+X-Forwarded-Encrypted: i=1; AJvYcCXFswFuAtj7LoHVJh3Ag+0YdL4+ziF78eqQzgTwNhSfDudLCh5goqs9/FZLrurpEGFCnsQBlDuMEPMRmp0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGzeRpl3WUD9wxx3T9DfeOqfnKDsK1z/vP31nBhFjkatwKHCPa
+	f2m87iP5WBLWzgWVT8jKuCR70B7bHgLcFetivtX9OZeMcrukuaUaW/yRlla1X/Y=
+X-Gm-Gg: ASbGncu63XF3ezNHvpguOV4QwewvO7ivHDGR4T3sb+anokuV+EB5+9wisCI/s1jV9+e
+	BnKjqieRo2nxdfZcwvtbI+AGdQ0JwOVu5JG6hZRCpKvz3w0SM6qkA1i3nXoY8/NOiqX7UiggMe5
+	rJ9DldXymMi0IMTfXTJeBI+1EgeyeFxvNO1fCJbhhRQPPajrEtkAXwAdQ04gHDhezYunScjeMEl
+	4gqvq54z9YNkMruelpn1hbEW9hXQ5jYakUWXYy3NrWVM7Y/zEqjYlVvEqFdlTHjzD2ZfScBBrxn
+	sgqwP/z40kJc8YPruu4rLMxAGkJlB6YOsVwDaKIBxYRCpuCewIZ0c+NWylL6VcUGp+xCWnwrViX
+	NTFXVTWz6UjwNeIS19rDKrAh5KRHO
+X-Google-Smtp-Source: AGHT+IG/sAO6ZHkviN2Ne0zUJ5m6cW80bEv+JtsGzgP47IWE2BU/C39yiIzIqJ5ZMSvTiqGOzJM5KQ==
+X-Received: by 2002:a05:6870:47a3:b0:29e:65ed:5c70 with SMTP id 586e51a60fabf-2da6d167ea9mr3635683fac.30.1746110962642;
+        Thu, 01 May 2025 07:49:22 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2daa126b723sm147495fac.49.2025.05.01.07.49.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 07:49:21 -0700 (PDT)
+Message-ID: <df11dff4-7641-46f8-a604-8727918629c3@baylibre.com>
+Date: Thu, 1 May 2025 09:49:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/1] iio: adc: ad7192: Refactor filter config
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Alisa-Dariana Roman <alisadariana@gmail.com>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+ Alisa-Dariana Roman <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>
+References: <20250425132051.6154-1-alisa.roman@analog.com>
+ <20250425132051.6154-2-alisa.roman@analog.com>
+ <6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
+ <20250426133241.7d14c776@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250426133241.7d14c776@jic23-huawei>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
-X-B4-Tracking: v=1; b=H4sIAMKJE2gC/x3MPQqAMAxA4atIZgONf1WvIg5qo2ap0kgRxLtbH
- L/hvQeUg7BCnz0QOIrK4RMoz2DZJ78xikuGwhS1qQ3h7Cy1t0X1UTGw8oXUNq4rq7m0C0EKz8C
- r3P90GN/3A1gXr8NkAAAA
-X-Change-ID: 20250501-bd718x7-snvs-reset-186d934b37c1
-To: Matti Vaittinen <mazziesaccount@gmail.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Esben Haabendal <esben@geanix.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746110918; l=3238;
- i=esben@geanix.com; s=20240523; h=from:subject:message-id;
- bh=5VDGG4Tt6ixGcUUnWvgYGQSqlfsjXSh3OAgUpU7Jd84=;
- b=SlKa5oEQLOEmdDUW5mygrV8YoSdFzZYP6gFouZY5qA6CzxKqM3hqvol387ghLr1LyAWPxzDq8
- 5BSgx+dMWA0CGBbUj9Onc7co+x90qI+LMJO5rLxpwOtqhjGaulsmV80
-X-Developer-Key: i=esben@geanix.com; a=ed25519;
- pk=PbXoezm+CERhtgVeF/QAgXtEzSkDIahcWfC7RIXNdEk=
 
-With the introduction of the rohm,reset-snvs-powered DT binding [2], the
-PMIC settings were only changed when the new property was not found.
+On 4/26/25 7:32 AM, Jonathan Cameron wrote:
+> On Fri, 25 Apr 2025 10:43:29 -0500
+> David Lechner <dlechner@baylibre.com> wrote:
+> 
+>> On 4/25/25 8:20 AM, Alisa-Dariana Roman wrote:
 
-As mentioned in [1] the default for BD71387 and BD71847 is to switch to
-SNVS power state on watchdog reset.
+...
 
-So even with rohm,reset-snvs-powered added to DT, a watchdog reset causes
-transitions through READY instead of SNVS. And with the default reboot
-method in mxc_restart() is to cause a watchdog reset, we ended up powering
-off the SNVS domains, and thus losing SNVS state such as SNVS RTC and
-LPGPR, on reboots.
+>>> +static const char *const ad7192_filter_modes_str[] = {
+>>> +	[AD7192_FILTER_SINC4] =			"sinc4",
+>>> +	[AD7192_FILTER_SINC3] =			"sinc3",
+>>> +	[AD7192_FILTER_SINC4_CHOP] =		"sinc4+chop",
+> 
+> Is chop really a filter? I had to look it up and to me at least it
+> seems like it isn't even though one thing it does is remove
+> some types of noise.  It also removes linear offsets (some types
+> of filter kind of do that, but the affect of chop smells more like
+> a calibration tweak than a filter)  
+> 
+> Maybe we need a separate control for chop, rather than trying to
+> force it through our already complex filter type attributes?
+> 
 
-With this change, the rohm,reset-snvs-powered property results in the PMIC
-configuration being modified so POWEROFF transitions to SNVS for all reset
-types, including watchdog reset.
 
-[1] commit e770b18bbbae ("regulator: bd718x7: Change next state after poweroff to ready")
-[2] commit 049369d46428 ("regulator: bd718x7: Support SNVS low power state")
+I was looking at the datasheet for another ADC that popped up on the mailing
+list today. https://www.ti.com/lit/ds/symlink/ads1262.pdf
 
-Signed-off-by: Esben Haabendal <esben@geanix.com>
----
- drivers/regulator/bd718x7-regulator.c | 33 +++++++++++++++++----------------
- 1 file changed, 17 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/regulator/bd718x7-regulator.c b/drivers/regulator/bd718x7-regulator.c
-index 1bb048de3ecd5a8df1087a48afc728a64623a024..d8c7fb2e73986a39066c9e8a114dd8d733bc8a33 100644
---- a/drivers/regulator/bd718x7-regulator.c
-+++ b/drivers/regulator/bd718x7-regulator.c
-@@ -1715,23 +1715,24 @@ static int bd718xx_probe(struct platform_device *pdev)
- 					 "rohm,reset-snvs-powered");
- 
- 	/*
--	 * Change the next stage from poweroff to be READY instead of SNVS
--	 * for all reset types because OTP loading at READY will clear SEL
--	 * bit allowing HW defaults for power rails to be used
-+	 * Set next power state from poweroff to be either READY or SNVS for all
-+	 * reset types. The default is READY state because OTP loading at READY
-+	 * will clear SEL bit allowing HW defaults for power rails to be used.
-+	 * Using SNVS power state instead allows SNVS state, such as RTC and
-+	 * LPGPR to be persisted over reboots.
- 	 */
--	if (!use_snvs) {
--		err = regmap_update_bits(regmap, BD718XX_REG_TRANS_COND1,
--					 BD718XX_ON_REQ_POWEROFF_MASK |
--					 BD718XX_SWRESET_POWEROFF_MASK |
--					 BD718XX_WDOG_POWEROFF_MASK |
--					 BD718XX_KEY_L_POWEROFF_MASK,
--					 BD718XX_POWOFF_TO_RDY);
--		if (err)
--			return dev_err_probe(&pdev->dev, err,
--					     "Failed to change reset target\n");
--
--		dev_dbg(&pdev->dev, "Changed all resets from SVNS to READY\n");
--	}
-+	err = regmap_update_bits(regmap, BD718XX_REG_TRANS_COND1,
-+				 BD718XX_ON_REQ_POWEROFF_MASK |
-+				 BD718XX_SWRESET_POWEROFF_MASK |
-+				 BD718XX_WDOG_POWEROFF_MASK |
-+				 BD718XX_KEY_L_POWEROFF_MASK,
-+				 use_snvs ? 0 : BD718XX_POWOFF_TO_RDY);
-+	if (err)
-+		return dev_err_probe(&pdev->dev, err,
-+				     "Failed to change reset target\n");
-+
-+	dev_dbg(&pdev->dev, "Changed all resets from %s to %s\n",
-+		use_snvs ? "READY" : "SNVS", use_snvs ? "SNVS" : "READY");
- 
- 	config.dev = pdev->dev.parent;
- 	config.regmap = regmap;
-
----
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-change-id: 20250501-bd718x7-snvs-reset-186d934b37c1
-
-Best regards,
--- 
-Esben Haabendal <esben@geanix.com>
-
+It also has a chop mode and filters very similar to this one. So perhaps another
+reason to make chop a separate bool attribute that could considered a "standard"
+attribute.
