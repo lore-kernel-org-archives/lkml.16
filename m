@@ -1,221 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88E21A314A;
-	Thu,  1 May 2025 16:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4875C1A314A;
+	Thu,  1 May 2025 17:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746118791; cv=none; b=ZHR66Aox86rQFrqvZGF7UpM1d70hHeCrHQk2KuPzYFpVJ6SDVaRQJorP1BAFUYVuZzyubggeumBVxCL7f9mzhBuywijv1QrSZCN8OvltgSe+I2UR5ZZc/X826sE0vkQrxY8jLaaGD//hrcBK9y/MwKbPagpD8uqYMCzbviKjn2s=
+	t=1746118836; cv=none; b=fxi0Gpp7pKuIajAFZulh4KPvNLPIeox6NPHtqTdTtYXyKXKvQixMKZ83vUa0Nun+aVgelquMMcyR8xJXjec2f4a1yHXfrwOD+reLheAkxLHAoie2z295AE404LiuPK5mQP/YJbUOhnobGNTigXhm+s0nXvdP1Lr6b/fdatCOxFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746118791; c=relaxed/simple;
-	bh=d2TQn+yS9tH5nsB7ZanQ2HrKzYsVJ1fORmCBlUOx2lk=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=TW1q7mNr/KtVeC3pauUfqy33NIk+htSe7KrFWoTShSYT5arb1vEwNyQ6PeDBelfPRp4+0MKGZ8IccvX4JoGaoTioYh8zJkBt87/JyGY1EM6glgh+CKWE6C8sygYzkc49Ih/Ig2sHAwf4BzYezhQL8FZyg8aPvlkT07+TtF2+++8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qmSEv0CO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=y+plwZkv; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746118836; c=relaxed/simple;
+	bh=OMA0eH9KcaDe8ZVYZIdJjVrB3QO1xkNDa2/W/DkYQIU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h7iBSNx+JeT10pA7QiSnCABNjnUUeVnb/sR8wfZJowIjx1wsWHYYE/DOXGb84fDPXqQBYn3xX6RpiulcRUoPmJ597YuH+1jOXV4KUXtG8Y7IVhDXkSUyV79otUNxSeIcPL1S4FzdMN5yT3nZdv/EOIXVfdFYWT5ir6KQY+G2qjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MXGls3im; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qmSEv0CO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y+plwZkv"
-Date: Thu, 01 May 2025 16:59:33 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746118781;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=LILwCHnsEdQJ4RiOkiicHNJJQQELBYZpwBHJyh5K/w4=;
-	b=qmSEv0COkNWT0aZ9ni8ACXqn1VckAYJ5300GtuDtuj5rAktSM01pilZBbNP1cTM5U0wzRm
-	QxRI7wa1ie6DjjesgtnWBIC11hyQ0oIrXXL9/Y0z03UmNGb2KfhLcYPQWeBOSMBS7RREaw
-	qM3OENLoWTR384bUiKFVaI0R3T9I1iojyQ/RQjLaxz97KKE2yXOF4q15dOuM9oIObJZVVE
-	69OSFsaXLkIDFxOBs3k/veEfW6DIEswcF7UhNkfsEkGsFxx3x1vaT3xTzyq3jm29lSIkIB
-	uviagJLzcgMem3NHL94jeAZH7ItCeBA1Z+uIb/a0kijG52vd9LvxeqzCm4H3Qg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746118781;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=LILwCHnsEdQJ4RiOkiicHNJJQQELBYZpwBHJyh5K/w4=;
-	b=y+plwZkvSibbDtV9lCaetKsGAgx/HktisAI4PslUCP6VwpcEU8wY9t0vkGI5dY+CLyLprI
-	d/jeEFNWbV6ve3CA==
-From: "tip-bot2 for Dan Williams" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/mm] x86/devmem: Remove duplicate range_is_allowed() definition
-Cc: Dan Williams <dan.j.williams@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Nikolay Borisov <nik.borisov@suse.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MXGls3im"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F2FDC4CEE3;
+	Thu,  1 May 2025 17:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746118835;
+	bh=OMA0eH9KcaDe8ZVYZIdJjVrB3QO1xkNDa2/W/DkYQIU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MXGls3imxlHtKUicGqPwKOtx3jWz3zlkNesvyfv182mdRSnPL/GPWqLV98OVLz+Z6
+	 E6jQ3Mkjed131tNt3+uFlw0YT3BAhw6e1jUmwKOOpI4UySFbBBY5RbYXFLv3Rzc17f
+	 zfIzAsvJiMp5nw/LzC1TnUZFGqO6iIZnYeOHsR7yQaNeu5He2C22G6V9eewzZlnaWr
+	 fgX9h1CR763aQqU0R1gTSGAotfnnwDvo7xi3CXBJi84wnAVAKrXXJt7GHO22rUSAEQ
+	 cvcNTxEZCaanvFI4Mb6gLWh1F7NrS4kGCzX/Te+j99e+SgMwrzZJ7E0h3fTF82E9PQ
+	 JoR6hyhzV2LiQ==
+Date: Thu, 1 May 2025 07:00:34 -1000
+From: Tejun Heo <tj@kernel.org>
+To: Nilay Shroff <nilay@linux.ibm.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	cgroups@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+	Ming Lei <ming.lei@redhat.com>
+Subject: Re: [RESEND] Circular locking dependency involving, elevator_lock,
+ rq_qos_mutex and pcpu_alloc_mutex
+Message-ID: <aBOosuedqt15xS1K@slm.duckdns.org>
+References: <Z_QjW7zJLsuO0xp6@slm.duckdns.org>
+ <Z_QjxCZW7dh_v22Z@slm.duckdns.org>
+ <16ed195d-7f26-41bb-86d6-ea961b3fa691@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174611877481.22196.10244252918339863915.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16ed195d-7f26-41bb-86d6-ea961b3fa691@linux.ibm.com>
 
-The following commit has been merged into the x86/mm branch of tip:
+Hello,
 
-Commit-ID:     1b3f2bd04d90f61e1f291b5e365b9bc4ce0ea7c7
-Gitweb:        https://git.kernel.org/tip/1b3f2bd04d90f61e1f291b5e365b9bc4ce0ea7c7
-Author:        Dan Williams <dan.j.williams@intel.com>
-AuthorDate:    Tue, 29 Apr 2025 19:46:21 -07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Thu, 01 May 2025 09:43:48 -07:00
+On Tue, Apr 08, 2025 at 12:32:50PM +0530, Nilay Shroff wrote:
+> Thanks for the report! This is now a known issue. And we're currently working on
+> it to cut dependency of q->io_lockdep_map (or queue freeze-lock) on q->elevator_lock. 
+> Please see below :https://lore.kernel.org/linux-block/67e6b425.050a0220.2f068f.007b.GAE@google.com/
+> https://lore.kernel.org/all/20250403105402.1334206-1-ming.lei@redhat.com/
 
-x86/devmem: Remove duplicate range_is_allowed() definition
+Any progress on this? The last activity on the threads seems to be back on
+Apr 10th and we're getting close to rc5. If we need to revert, I think it's
+about time to decide.
 
-17 years ago, Venki suggested [1] "A future improvement would be to
-avoid the range_is_allowed duplication".
+Thanks.
 
-The only thing preventing a common implementation is that
-phys_mem_access_prot_allowed() expects the range check to exit
-immediately when PAT is disabled [2]. I.e. there is no cache conflict to
-manage in that case. This cleanup was noticed on the path to
-considering changing range_is_allowed() policy to blanket deny /dev/mem
-for private (confidential computing) memory.
-
-Note, however that phys_mem_access_prot_allowed() has long since stopped
-being relevant for managing cache-type validation due to [3], and [4].
-
-Commit 0124cecfc85a ("x86, PAT: disable /dev/mem mmap RAM with PAT") [1]
-Commit 9e41bff2708e ("x86: fix /dev/mem mmap breakage when PAT is disabled") [2]
-Commit 1886297ce0c8 ("x86/mm/pat: Fix BUG_ON() in mmap_mem() on QEMU/i386") [3]
-Commit 0c3c8a18361a ("x86, PAT: Remove duplicate memtype reserve in devmem mmap") [4]
-
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/all/20250430024622.1134277-2-dan.j.williams%40intel.com
----
- arch/x86/mm/pat/memtype.c | 31 ++++---------------------------
- drivers/char/mem.c        | 18 ------------------
- include/linux/io.h        | 21 +++++++++++++++++++++
- 3 files changed, 25 insertions(+), 45 deletions(-)
-
-diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
-index 72d8cbc..c97b659 100644
---- a/arch/x86/mm/pat/memtype.c
-+++ b/arch/x86/mm/pat/memtype.c
-@@ -38,6 +38,7 @@
- #include <linux/kernel.h>
- #include <linux/pfn_t.h>
- #include <linux/slab.h>
-+#include <linux/io.h>
- #include <linux/mm.h>
- #include <linux/highmem.h>
- #include <linux/fs.h>
-@@ -773,38 +774,14 @@ pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 	return vma_prot;
- }
- 
--#ifdef CONFIG_STRICT_DEVMEM
--/* This check is done in drivers/char/mem.c in case of STRICT_DEVMEM */
--static inline int range_is_allowed(unsigned long pfn, unsigned long size)
--{
--	return 1;
--}
--#else
--/* This check is needed to avoid cache aliasing when PAT is enabled */
--static inline int range_is_allowed(unsigned long pfn, unsigned long size)
--{
--	u64 from = ((u64)pfn) << PAGE_SHIFT;
--	u64 to = from + size;
--	u64 cursor = from;
--
--	if (!pat_enabled())
--		return 1;
--
--	while (cursor < to) {
--		if (!devmem_is_allowed(pfn))
--			return 0;
--		cursor += PAGE_SIZE;
--		pfn++;
--	}
--	return 1;
--}
--#endif /* CONFIG_STRICT_DEVMEM */
--
- int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
- 				unsigned long size, pgprot_t *vma_prot)
- {
- 	enum page_cache_mode pcm = _PAGE_CACHE_MODE_WB;
- 
-+	if (!pat_enabled())
-+		return 1;
-+
- 	if (!range_is_allowed(pfn, size))
- 		return 0;
- 
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index 169eed1..4883995 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -61,29 +61,11 @@ static inline int page_is_allowed(unsigned long pfn)
- {
- 	return devmem_is_allowed(pfn);
- }
--static inline int range_is_allowed(unsigned long pfn, unsigned long size)
--{
--	u64 from = ((u64)pfn) << PAGE_SHIFT;
--	u64 to = from + size;
--	u64 cursor = from;
--
--	while (cursor < to) {
--		if (!devmem_is_allowed(pfn))
--			return 0;
--		cursor += PAGE_SIZE;
--		pfn++;
--	}
--	return 1;
--}
- #else
- static inline int page_is_allowed(unsigned long pfn)
- {
- 	return 1;
- }
--static inline int range_is_allowed(unsigned long pfn, unsigned long size)
--{
--	return 1;
--}
- #endif
- 
- static inline bool should_stop_iteration(void)
-diff --git a/include/linux/io.h b/include/linux/io.h
-index 6a6bc4d..0642c7e 100644
---- a/include/linux/io.h
-+++ b/include/linux/io.h
-@@ -183,4 +183,25 @@ static inline void arch_io_free_memtype_wc(resource_size_t base,
- int devm_arch_io_reserve_memtype_wc(struct device *dev, resource_size_t start,
- 				    resource_size_t size);
- 
-+#ifdef CONFIG_STRICT_DEVMEM
-+static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-+{
-+	u64 from = ((u64)pfn) << PAGE_SHIFT;
-+	u64 to = from + size;
-+	u64 cursor = from;
-+
-+	while (cursor < to) {
-+		if (!devmem_is_allowed(pfn))
-+			return 0;
-+		cursor += PAGE_SIZE;
-+		pfn++;
-+	}
-+	return 1;
-+}
-+#else
-+static inline int range_is_allowed(unsigned long pfn, unsigned long size)
-+{
-+	return 1;
-+}
-+#endif
- #endif /* _LINUX_IO_H */
+-- 
+tejun
