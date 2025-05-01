@@ -1,154 +1,100 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A12126ACD
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2788E2609D3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143353; cv=none; b=CKc2Sm8yceBF7y6X9WMh8XfJwB3L+9Z+0peGoUKSNiGlm2RWr0gf2H3ZSK6WRkEb6sg6n3ei0f0kcJ+qAP22VqpSidSA8baUtrEiks0n2mDK1Zy5zIW9Kks2qnV2R8ApHXAYj8fMktHzAFP42skCkq3mM7mMEbp+whTYIQ3MK6U=
+	t=1746143355; cv=none; b=iNcY7JAC6/shg1eSHkJ77Or8TQAksmPFsySMe+DqyT9/rc+fuW8K5qTszobgJAQ3SDk3W8byQzD6ShW/HBVfHhIHbc2wkZmauGJX+bgWfxvZG1cltsHYJQ53kwWD8RPoQVuAx8aIZKx4LlEuKSMaHFrd+ZVCu1aXzXGrvlZpPNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143353; c=relaxed/simple;
-	bh=jZU0SIz9MHtQqTLeIgHVwcXNw/09LKRPJ7/yrnh4F0c=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AN748uMfazxh3qea/Rp8SF4cumT1UZpyPqXYCdnmehfzLwz7K/Cm6KmpGuHdB0eYEOxMnxEaIF+dEjhB7ZxllaBy+4k5N2mwTV2/wEIoOV9PV2SX4+0HsJGA8eeUrRllvY79/R62MHNmD0VS2j+z7WLRFl1DYMByIqASsYKYoYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UVoIgBBl; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746143355; c=relaxed/simple;
+	bh=/1Fw8fdC6D275HXaKMAr3s4APSaQDNS5F3C9KwJey+k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WtgY+JGkLZuyydEwg0ATlyZ7eC3eQmYfkCVIKVqyeyFGPIq3gYCkZRSJ4MZXreypkDdz9hhuNKy4TzT38s7qcewPYBr3gLZkyGo0cJWjdxKZx6yrV7PJzoBOTywAQ70/4F+vsUFb+aJ+bnVLiIeUJlEsK59PQcqBaTYaK+IIlOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=d17q2GWg; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UVoIgBBl"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b115383fcecso902079a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:49:11 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d17q2GWg"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22401f4d35aso17847825ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746143351; x=1746748151; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YjaeVkecBE4pjAvNhqi1+CbQbpda08FZsnIbLNG4co=;
-        b=UVoIgBBlFX7Rx4e17DLrEqxpx4Yz9um0jPUCqPIw4rS6MnTGksEHmrMqG9SU7hQryV
-         VWDQYSTzNn7Y+PATA5f3tUh3U2R2d4MZ4Vhjt5kaNJXmfh8Zvnm4CGmDNuhSob9Bt9Dw
-         nDhWzabWaUFUjpu5Q8bU13gQxBsPOSZV5FPnr1TWf6GqRzxRqvQsASIfQfx8qf2qbGZD
-         vD7K3iSGTjoCZkUMUefNPHtCuNsHztw6RN/iFuoRv0FhvOv8XV17Y9fmv6vE4mkl6AlO
-         dPdUnaS/5dyktgriGxCMdimBPY1HfRSTIUbc8yeqOgOaSpxc+PG+uIdA1ATqGMA0ZXJg
-         ybQg==
+        d=chromium.org; s=google; t=1746143353; x=1746748153; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fpAIzRfEeZEVGfn6ebiTrTsfh9UyLOEfos/wb/ewUbs=;
+        b=d17q2GWgOu7PqOy7vpCs3QpgrY9TyO4mIeh6TY2KFUdzKHfiKaRIjrV5X5r/9w42LE
+         KAZfh+HjTBRsaIUUK6GkmMFUKvrR5MgZUhp1qwiWHyeFIXWRiRGF3+2IjCk+I2sFu4Cg
+         sMmym0k8RqPZ+71tcASWHyRvrFw8sq4qAeeiY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746143351; x=1746748151;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7YjaeVkecBE4pjAvNhqi1+CbQbpda08FZsnIbLNG4co=;
-        b=JoQkR9gwaR5Q2IR31fRYfYy1D89v6aCt/slPB8kZ3VJBfLjuBZz6nYPeODkpwrCEXN
-         MGD1Ad/oDG9V/kGSDMAjutDu47xYb7aWFlrCRnh6+sI/Y0aDP+yCaKcSbHSCnPD1KKzw
-         B3RaVHvGvYYsWkI+eY43x+kxwQb7nplphcjmcslWH92U2dO5tCvLhKGIxZakzA9vhUfx
-         qJbkuE5JK3J5Adxg8z4hT2NydatBT/cSKnUznsuo0DZzuV7A1/C/6UNs+R4p+0KIvvY7
-         4C7kJpoWc8oUfdEdJqOv/DWsUNxHsZm2PHDnx90vNB2JwG15QK3KGwFbXw8OcLG1ay+h
-         OYsg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvvc76v6IFSZr8PZ0Je0nyXm28NN4T/s1W3gqNfwOhUApeDZH8TEKeC5k2tUGKspNnU9i+OuFyCPf42zk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxxz1NwWetmwnamM512XiyK9oVyUdSDM6AOdcVWFcYr0ETim0jo
-	zx0Vh7X1H2Jl7a1LGr5laSXYCkCjIn0wXQbUYPRD16H4lIGsn3atfWRUlaFC+b7/aWbkLzzTzG3
-	7NQ==
-X-Google-Smtp-Source: AGHT+IFpk4LLtbCzk2o8pzjb4TQk7dvH4GDNA8trq7RtjjE6BSA0YG95We3X0NAUVh3kC6UoEPUU8DD0QKc=
-X-Received: from pjee15.prod.google.com ([2002:a17:90b:578f:b0:308:65f7:9f24])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2541:b0:305:5f55:899
- with SMTP id 98e67ed59e1d1-30a4e5a579cmr1510514a91.11.1746143350753; Thu, 01
- May 2025 16:49:10 -0700 (PDT)
-Date: Thu, 1 May 2025 16:49:09 -0700
-In-Reply-To: <aAcfcB8ZyBuz7t7J@google.com>
+        d=1e100.net; s=20230601; t=1746143353; x=1746748153;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fpAIzRfEeZEVGfn6ebiTrTsfh9UyLOEfos/wb/ewUbs=;
+        b=ENOpdP4iDcxjln3vQ7YnS4SUTly5+Uy9HbbmDGT4xvHI21wxvgOIZDmejTi518jTas
+         dOybcW8chIeq22dQiP/tBrU3kbDVu8mcudOhpwzNESxmcbqLycl7FMJv3wTJEDyXoT9+
+         BgEqyfUyKFD1JyPz5vCLMvFMC6qyBiESN+zBSxqhuNDmnB2qvWopnhqrD9FhapJrrdW0
+         eKqeEKvg3lKbkFdYM20oeNCFGJTcQ0McJO4Aljqszy4Yliq6MSZCBfbNAi8KwXsjLXpF
+         urgq3y81J7thmaSBxJLoOGpvRIsOj4W7gaXfZnqQIoI0Su+Ixz6Wbp7vJZpOOBBuNwYf
+         FPFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXtBdLFZl2YgwjRYmO2UsaLdGO0NYOnQ5wvAWIfJjTbefMjF+mXU5nWfPCSBmUESKJxMjmZnMiyOEFRJDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzh5EtotgeF4DOo3nolJ4hDJ9Ye2OXqmdBz4sU3g2eTgriSghaq
+	ogEdtJmQf24fLWoFlCmeOHABpKRQ1Q55nQN6Wl3n29yjchLgxeFlPu3XK1KJvg==
+X-Gm-Gg: ASbGncusNX9pqFscWdkGPtxzfJNC3dB/c8G3GVKrolYmajREwdWWcfYJAA+pF/tQoAc
+	RijfGCzGnmkN/yf7xmAIJL/ioJKIbrWlpSxZPq6cuwRt48ocg70IkIXZYOKDSMTJDRbcjmBSU0q
+	3BtNnWJd3XsRRnvZTVwEcMfNGfTdionL0YCmKOD2fY489Ycpn11xYkpEBj8f16N4FkRi9GtIcJT
+	DlLsNAHH7eOCjDTWimoShnHMZkzAE7B754PVpqKTgiwrpq7bfHp6mIWunMtc4AckQK60EiTQNtc
+	5URpEP6ZqE4SM1w91gngyioe1of3KlSfr6sb3RmdVoZA
+X-Google-Smtp-Source: AGHT+IHx5M56icWIbybEAyPSBfgLbmHwfrlIQNcxFmbiHbnKmmGAE/jGMqMcB7/2IW+lwBydqbftmQ==
+X-Received: by 2002:a17:903:22c2:b0:223:5e76:637a with SMTP id d9443c01a7336-22e102e4e6bmr14338205ad.23.1746143353411;
+        Thu, 01 May 2025 16:49:13 -0700 (PDT)
+Received: from google.com ([2401:fa00:8f:203:7255:67a0:34ee:5b40])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e108fb862sm2079025ad.134.2025.05.01.16.49.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 16:49:12 -0700 (PDT)
+Date: Fri, 2 May 2025 08:49:08 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: Yosry Ahmed <yosry.ahmed@linux.dev>, linux-mm@kvack.org, 
+	akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Nhat Pham <nphamcs@gmail.com>, 
+	Shakeel Butt <shakeel.butt@linux.dev>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Igor Belousov <igor.b@beldev.am>, Minchan Kim <minchan@kernel.org>, 
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH v4] mm: add zblock allocator
+Message-ID: <gullx3kk2dogzyxopmvtrhuv5ymfsjbn5mvtwskqkjjfjinqij@s6mmdq2mfwzs>
+References: <20250412154207.2152667-1-vitaly.wool@konsulko.se>
+ <aAdzjdv674Jn6G63@Asmaa.>
+ <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250325041350.1728373-1-suleiman@google.com> <20250325041350.1728373-2-suleiman@google.com>
- <aAcfcB8ZyBuz7t7J@google.com>
-Message-ID: <aBQIdcOB5ORNFzx2@google.com>
-Subject: Re: [PATCH v5 1/2] KVM: x86: Advance guest TSC after deep suspend.
-From: Sean Christopherson <seanjc@google.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Suleiman Souhlal <suleiman@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Chao Gao <chao.gao@intel.com>, 
-	David Woodhouse <dwmw2@infradead.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ssouhlal@freebsd.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e764d05a-6a83-4563-9f28-3f1a3e28727b@konsulko.se>
 
-On Tue, Apr 22, 2025, Tzung-Bi Shih wrote:
-> On Tue, Mar 25, 2025 at 01:13:49PM +0900, Suleiman Souhlal wrote:
-> > Advance guest TSC to current time after suspend when the host
-> > TSCs went backwards.
-> > 
-> > This makes the behavior consistent between suspends where host TSC
-> > resets and suspends where it doesn't, such as suspend-to-idle, where
-> > in the former case if the host TSC resets, the guests' would
-> > previously be "frozen" due to KVM's backwards TSC prevention, while
-> > in the latter case they would advance.
-> > 
-> > Suggested-by: Sean Christopherson <seanjc@google.com>
-> > Signed-off-by: Suleiman Souhlal <suleiman@google.com>
+On (25/04/23 21:53), Vitaly Wool wrote:
+[..]
+> * zsmalloc/zstd/make -j32 bzImage
+> 	real	8m0.594s
+> 	user	39m37.783s
+> 	sys	8m24.262s
+> 	Zswap:            200600 kB <-- after build completion
+> 	Zswapped:         854072 kB <-- after build completion
+> 	zswpin 309774
+> 	zswpout 1538332
 > 
-> Tested with comparing `date` before and after suspend-to-RAM[1]:
->   echo deep >/sys/power/mem_sleep
->   echo $(date '+%s' -d '+3 minutes') >/sys/class/rtc/rtc0/wakealarm
->   echo mem >/sys/power/state
-> 
-> Without the patch, the guest's `date` is slower (~3 mins) than the host's
-> after resuming.
-> 
-> Tested-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> 
-> [1]: https://www.kernel.org/doc/Documentation/power/states.txt
-> 
-> Some non-functional comments inline below.
-> 
-> > @@ -4971,7 +4971,37 @@ void kvm_arch_vcpu_load(struct kvm_vcpu *vcpu, int cpu)
-> >  
-> >  	/* Apply any externally detected TSC adjustments (due to suspend) */
-> >  	if (unlikely(vcpu->arch.tsc_offset_adjustment)) {
-> > -		adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
-> > +		unsigned long flags;
-> > +		struct kvm *kvm;
-> > +		bool advance;
-> > +		u64 kernel_ns, l1_tsc, offset, tsc_now;
-> > +
-> > +		kvm = vcpu->kvm;
-> 
-> It will be more clear (at least to me) if moving the statement to its declaration:
->   struct kvm *kvm = vcpu->kvm;
-> 
-> Other than that, the following code should better utilitize the local
-> variable, e.g. s/vcpu->kvm/kvm/g.
-> 
-> > +		advance = kvm_get_time_and_clockread(&kernel_ns,
-> > +		    &tsc_now);
+> * zblock/zstd/make -j32 bzImage
+> 	real	7m35.546s
+> 	user	38m03.475s
+> 	sys	7m47.407s
+> 	Zswap:            250940 kB <-- after build completion
+> 	Zswapped:         870660 kB <-- after build completion
+> 	zswpin 248606
+> 	zswpout 1277319
 
-In addition to Tzung-Bi's feedback...
-
-Please don't wrap at weird points, and align when you do wrap.  The 80 char limit
-isn't a super hard limit, and many of these wraps are well below that anyways.
-
-		advance = kvm_get_time_and_clockread(&kernel_ns, &tsc_now);
-		raw_spin_lock_irqsave(&kvm->arch.tsc_write_lock, flags);
-		/*
-		 * Advance the guest's TSC to current time instead of only
-		 * preventing it from going backwards, while making sure
-		 * all the vCPUs use the same offset.
-		 */
-		if (kvm->arch.host_was_suspended && advance) {
-			l1_tsc = nsec_to_cycles(vcpu,
-						vcpu->kvm->arch.kvmclock_offset + kernel_ns);
-			offset = kvm_compute_l1_tsc_offset(vcpu, l1_tsc);
-			kvm->arch.cur_tsc_offset = offset;
-			kvm_vcpu_write_tsc_offset(vcpu, offset);
-		} else if (advance) {
-			kvm_vcpu_write_tsc_offset(vcpu, vcpu->kvm->arch.cur_tsc_offset);
-		} else {
-			adjust_tsc_offset_host(vcpu, vcpu->arch.tsc_offset_adjustment);
-		}
-		kvm->arch.host_was_suspended = 0;
-		raw_spin_unlock_irqrestore(&kvm->arch.tsc_write_lock, flags);
-
-
-As for the correctness of this code with respect to masterclock and TSC
-synchronization, I'm definitely going to have to stare even more, and probably
-bring in at least Paolo for a consult, because KVM's TSC code is all kinds of
-brittle and complex.
+I'm sorry but what does this test test?  That under memory pressure the
+kernel swaps out different pages with different compression characteristics?
