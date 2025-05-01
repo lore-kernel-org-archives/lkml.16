@@ -1,74 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201CD19A297;
-	Thu,  1 May 2025 12:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0218155A4E;
+	Thu,  1 May 2025 12:29:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746102458; cv=none; b=TBwI8oul8q7OMM0YB9Vs1o04paa9xK2Vsxa4mkD68W0DVNroPNO3uZ0v4YWqp21hNGK2Jx+xMfluxoDtsgRR+UiS8BRHl80GQkvHVrzFQmE+RdNu0XSfdDcMf2uQ40l7tzVPotSnELVt99vkCUKIiYJQC/6AX2IHpTIuYGOq9FU=
+	t=1746102553; cv=none; b=KdRkm0I+AFaTGW6dafiJzAr0aeRx2FIEECby1SpD3C6vOgC3c27PmD+bx3h57pY0A+6SnilqRRdGCzLIpxBuFClaXKhT9cR4div0UPU0T+JSLTNStDQyspImjaMVQGkXjjPm0Hg9bGDhz3AeFSSVGXCsQk5hrUEsBkcX9q7YvhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746102458; c=relaxed/simple;
-	bh=HexxN5nBN6eJcubonn7zpFcCsGz6O39RwpRUeRqXaN4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JvQE0N9LnLRs/dUXDiesdhFl2aRXP/bT9N/wba46f2b6Co2OcV7VW7EBsSI6zCD14d6WNvfPay5xRuWtpud7FRk67Mmhfa0R84i/P80FLnEk5rjkQ59wNB6evRZ8PI1gDQd2GW9A0ybbUAX3+ISMfsTCLsz169LnvpBWSHej/d0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ceArrZif; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746102553; c=relaxed/simple;
+	bh=u5mpNsLNUVXpirS8AVUjZQUXt1KeHOFF2eiZr0XViho=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=hXg/ahFSzQgrz2NVxLanFhLbjzyG99xbliAGcATOHFIAqoXmtijTGFABwzyQXGVDFlI9r/KssW69GpENJc/Fr7yeTjaw3sahwlgvHFwHU8eG0thkTeV0wf7IukLVYA/5pVKajVrkg11iOb8W+c4StNmzfzXpvfVQGE1f+gxSxpY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=DP6jfear; arc=none smtp.client-ip=185.11.138.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ceArrZif"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D30C4CEE3;
-	Thu,  1 May 2025 12:27:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746102457;
-	bh=HexxN5nBN6eJcubonn7zpFcCsGz6O39RwpRUeRqXaN4=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ceArrZifcuDTLlxaQF68cB0zhaTwXEmSLucN+FavQ3D2uLaTllnzM+78CB4U2YP22
-	 fgicl9TAAwhrQ42sRIjTaA1Ki5IdC2YnNbzRLDVfnITOHEAOGTiG2UFkHHUKiyDSqv
-	 wpyt3cf2GCsrp3MUDb0n+JgvCbim4q60h0gSO274t2q2bvI5rTCIG7WprwQEnsp4Wr
-	 RyNsMxUcuvoRF9fy1x6qwYnSsIrObncwIPEIIBMrmHtrvUDZHDnXm9P/O48deajuJd
-	 L2y7sI9+Zs/xoVqyxWmGPj4IAEtYU93QXTosjK9Ge+F7/rtZI0LL+/u0S6RReV/0Mx
-	 2VGr5DanzpJYw==
-From: Lee Jones <lee@kernel.org>
-To: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
- Sami Tolvanen <samitolvanen@google.com>, 
- Daniel Gomez <da.gomez@samsung.com>, Masahiro Yamada <masahiroy@kernel.org>, 
- Nathan Chancellor <nathan@kernel.org>, 
- Nicolas Schier <nicolas.schier@linux.dev>, 
- Alexey Gladkov <legion@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org, 
- linux-kbuild@vger.kernel.org, Lee Jones <lee@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-In-Reply-To: <79d5a847303e45a46098f2d827d3d8a249a32be3.1745591072.git.legion@kernel.org>
-References: <cover.1745591072.git.legion@kernel.org>
- <79d5a847303e45a46098f2d827d3d8a249a32be3.1745591072.git.legion@kernel.org>
-Subject: Re: (subset) [PATCH v1 1/7] mfd: stmpe-spi: Correct the name used
- in MODULE_DEVICE_TABLE
-Message-Id: <174610245466.3816002.10815099602264061906.b4-ty@kernel.org>
-Date: Thu, 01 May 2025 13:27:34 +0100
+	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="DP6jfear"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
+	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=qY7jMh2s1Q1/dxv6yXIZWQpJJC7k3Ol85coLC/4oDNs=; b=DP6jfear58qpqLih8qEWeAKnQQ
+	Am4/8PcoygDS5o6wPyNNnUy0zvYj8bbVtlYNpg61LXGX1j5zZiBO6wRVUpDJo4xruDni7GlGyBNwh
+	LHIErPoNjgMhjuckkR12zUAxifgvdKGpG+iSS5oJ1V6jDs8j0BlWxt4a95QJESN7zVWCHoQXS4AH5
+	2FQ30Io/ZM48p3VvhJI13Y4JuD8QHc8/a6c/S82IuzkqnasGqhW6pJAcgCQSLPQIMNs1zsu7gzF+2
+	4vsbA3V8ZZUmEvUz6AKIjH/yiTq1mC0Vav2HgilyjKGiCzv2GUYC76ElZZOiR9XB89XTHXIdF4fRW
+	WuOP+l+g==;
+Received: from i53875bbc.versanet.de ([83.135.91.188] helo=diego.localnet)
+	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <heiko@sntech.de>)
+	id 1uAT2A-000129-Qn; Thu, 01 May 2025 14:28:58 +0200
+From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+To: Andy Yan <andyshrk@163.com>, Alex Bee <knaerzche@gmail.com>
+Cc: conor+dt@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+ hjc@rock-chips.com, mripard@kernel.org, neil.armstrong@linaro.org,
+ dmitry.baryshkov@oss.qualcomm.com, knaerzche@gmail.com,
+ devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-rockchip@lists.infradead.org, Andy Yan <andy.yan@rock-chips.com>
+Subject: Re: [PATCH v4 0/7] Convert inno hdmi to drm bridge
+Date: Thu, 01 May 2025 14:28:57 +0200
+Message-ID: <3554727.QJadu78ljV@diego>
+In-Reply-To: <20250422070455.432666-1-andyshrk@163.com>
+References: <20250422070455.432666-1-andyshrk@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-39345
 
-On Sat, 26 Apr 2025 18:16:32 +0200, Alexey Gladkov wrote:
-> The name used in the macro does not exist.
-> 
-> drivers/mfd/stmpe-spi.c:132:26: error: use of undeclared identifier 'stmpe_id'
->   132 | MODULE_DEVICE_TABLE(spi, stmpe_id);
->       |                          ^
-> 1 error generated.
-> 
-> [...]
+Hi Alex,
 
-Applied, thanks!
+Am Dienstag, 22. April 2025, 09:04:39 Mitteleurop=C3=A4ische Sommerzeit sch=
+rieb Andy Yan:
+> From: Andy Yan <andy.yan@rock-chips.com>
+>=20
+> When preparing to convert the current inno hdmi driver into a
+> bridge driver, I found that there are several issues currently
+> existing with it:
+>=20
+> 1. When the system starts up, the first time it reads the EDID, it
+>    will fail. This is because RK3036 HDMI DDC bus requires it's PHY's
+>    reference clock to be enabled first before normal DDC communication
+>    can be carried out.
+>=20
+> 2. The signal is unstable. When running the glmark2 test on the screen,
+>    there is a small probability of seeing some screen flickering.
+>    This is because The HSYNC/VSYNC polarity of rk3036 HDMI are controlled
+>    by GRF. This part is missing in the current driver.
+>=20
+> PATCH 1~6 are try to Fix Document in the dt-binding, then add the
+> missing part in driver and dts.
+> PATCH 7 converts the curren driver to drm bridge mode.
 
-[1/7] mfd: stmpe-spi: Correct the name used in MODULE_DEVICE_TABLE
-      commit: 7e5d7dcd96e29bb30fe7b105c53ae63a8edcd3e1
+this looks all pretty okay to me, but could you check that your rk3128
+keeps working and maybe provide a Tested-by?
 
---
-Lee Jones [李琼斯]
+Thanks a lot
+Heiko
+
 
