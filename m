@@ -1,158 +1,114 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AE61D90C8
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 08:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6CB11E5B6F;
+	Thu,  1 May 2025 08:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746089428; cv=none; b=XZ2++yEZy3P7+yiGmH0rgV7fQB5v2l/A5hJG2RkccXar0trUhYl+BK2pkNkd8LrNxYUUW56kebrqdpHVyq2ko6HK8/ex1VwaW6sNTTRBXM0JAV5maExpPA6+PMnqknE0QvNIK9CRpmYvE4tgHEBn+9PtyZtigZXcVxjERrZRlcw=
+	t=1746089455; cv=none; b=plYysp2ye5leb6/TRTF/iE8Fmdc26AFkSEdcwTUIsfO54c2RpmWVJwArGM0jYKhAMicxznpPO0OHwG5I7LQDGCK661Ja9rs8urFjerAf0XA0f5kpbp4fhG1YeDr858yl6Hu81yRk9CU4OrjZtyX0IJ33Fa0wX/pe70fNiuV/Z0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746089428; c=relaxed/simple;
-	bh=nxO2KECHyHyMFH/HMDoyJvxCzvgc1DV8+CQcb9wuWN8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmXnDtJL7ZdPMRVaWd1Z0wqeGEjwterAJPEdppvs3IcUZCQdWN6y0pRln+TaC3OFjZWpEhgJecZEHmairnO5VeF4wPaQIm/PhnOzUyToF1VVIwwQcRLsHpO1Ckz62efkeTp2GalU1DhPYnR9NMy0E8kQ/Jyo8UGsLbMpsNoMjbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p6orWX5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QntaoXpy; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=p6orWX5I; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=QntaoXpy; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p6orWX5I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QntaoXpy";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="p6orWX5I";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="QntaoXpy"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	s=arc-20240116; t=1746089455; c=relaxed/simple;
+	bh=7iG3g5Fpkpmnaw2P8DKAL0enzyTifLCknRgh9KOA600=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=j6qnzNC1gJPBplpHiggpZ8li0fFsF7XnnywdkOIpEZIPAxdJtVBuckyhgAlfAFs5yUZnWdz6gZBRD1GmSoqD1oz6qFGb0tL0KRBG/y+T65dynI+Y0CEHsuYuuonNfFuP23zS7AXK1S27aPup3ybCgT1qPArmTdIucV47ZuA4roo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Received: from [127.0.0.1] (unknown [116.232.147.253])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 5B8211F388;
-	Thu,  1 May 2025 08:50:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746089419;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
-	b=p6orWX5IrPomBFqQP3tyGwqXRDqAHdN89S6uPu8QinFYCTWfZ3k0WJ3hg2EWriU0LzHPDO
-	8KHynGzipMcBSDv6J85bnfUuw72WBWZTZcmZA8l6jMTj7N1gK04+iKXURnhZgIsmNZhsde
-	Ir80m3EhBSd+DzVbsYbn43oop7VBnHc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746089419;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
-	b=QntaoXpyGckBRK9h3U6A7HPb9az9ovf0QpcDepuVPTnft6nHBf2tYH06Bz4mYt/fVf+zBc
-	rnj8BaZ3oC4sWxAw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=p6orWX5I;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=QntaoXpy
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746089419;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
-	b=p6orWX5IrPomBFqQP3tyGwqXRDqAHdN89S6uPu8QinFYCTWfZ3k0WJ3hg2EWriU0LzHPDO
-	8KHynGzipMcBSDv6J85bnfUuw72WBWZTZcmZA8l6jMTj7N1gK04+iKXURnhZgIsmNZhsde
-	Ir80m3EhBSd+DzVbsYbn43oop7VBnHc=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746089419;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r5zIrmd5W9mcaRLQuezc6RZmJaUSbNbg4XZp0yaIFm4=;
-	b=QntaoXpyGckBRK9h3U6A7HPb9az9ovf0QpcDepuVPTnft6nHBf2tYH06Bz4mYt/fVf+zBc
-	rnj8BaZ3oC4sWxAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3403213931;
-	Thu,  1 May 2025 08:50:19 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id kWQwDMs1E2h8DwAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Thu, 01 May 2025 08:50:19 +0000
-Date: Thu, 1 May 2025 10:50:13 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-	Matthew Wilcox <willy@infradead.org>,
-	Hugh Dickins <hughd@google.com>, Chris Li <chrisl@kernel.org>,
-	David Hildenbrand <david@redhat.com>,
-	Yosry Ahmed <yosryahmed@google.com>,
-	"Huang, Ying" <ying.huang@linux.alibaba.com>,
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
-	linux-kernel@vger.kernel.org, Chris Mason <clm@fb.com>,
-	Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	linux-btrfs@vger.kernel.org, Qu Wenruo <wqu@suse.com>
-Subject: Re: [PATCH v3 2/6] btrfs: drop usage of folio_index
-Message-ID: <20250501085013.GL9140@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250430181052.55698-1-ryncsn@gmail.com>
- <20250430181052.55698-3-ryncsn@gmail.com>
+	(Authenticated sender: dlan)
+	by smtp.gentoo.org (Postfix) with ESMTPSA id BC823340C39;
+	Thu, 01 May 2025 08:50:49 +0000 (UTC)
+From: Yixun Lan <dlan@gentoo.org>
+Subject: [PATCH v2 0/2] soc: spacemit: add sdhci support to K1 SoC
+Date: Thu, 01 May 2025 16:50:20 +0800
+Message-Id: <20250501-20-k1-sdhci-v2-0-3e7005fae29b@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430181052.55698-3-ryncsn@gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: 5B8211F388
-X-Spam-Score: -4.21
-X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	ARC_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[kvack.org,linux-foundation.org,infradead.org,google.com,kernel.org,redhat.com,linux.alibaba.com,gmail.com,cmpxchg.org,vger.kernel.org,fb.com,toxicpanda.com,suse.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:replyto,suse.cz:mid,suse.cz:dkim,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,infradead.org:email,suse.com:email]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Flag: NO
-X-Spam-Level: 
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMw1E2gC/1XOTQrCMBCG4auUrI3MTGtMu/Ie4iI/0zaIjSa1K
+ OLdjYoLl+8H8zAPkTkFzqKrHiLxEnKIUwlaVcKNZhpYBl9aENAGCEkSyCPK7EcX5FaZpgWEGrw
+ V5eKcuA+3j7Y/lB5DnmO6f/AF3+vPqf+cBSVI7JtakWk1OL8beJpjXMc0iMPzKye+XMt785cX1
+ mSWLp5OYe4qMD31yjLahjTWemMVame1Mr5tFHv2oFvjdMGeL5sILsPzAAAA
+X-Change-ID: 20250212-20-k1-sdhci-76a4901030db
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alex Elder <elder@riscstar.com>, linux-mmc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ spacemit@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Yixun Lan <dlan@gentoo.org>
+X-Mailer: b4 0.15-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1960; i=dlan@gentoo.org;
+ h=from:subject:message-id; bh=7iG3g5Fpkpmnaw2P8DKAL0enzyTifLCknRgh9KOA600=;
+ b=owEBzQIy/ZANAwAKATGq6kdZTbvtAcsmYgBoEzXfTy59n2gtVx6jPw4KiofG2dRFcY72qANKR
+ 0UNuoigwqSJApMEAAEKAH0WIQS1urjJwxtxFWcCI9wxqupHWU277QUCaBM1318UgAAAAAAuAChp
+ c3N1ZXItZnByQG5vdGF0aW9ucy5vcGVucGdwLmZpZnRoaG9yc2VtYW4ubmV0QjVCQUI4QzlDMzF
+ CNzExNTY3MDIyM0RDMzFBQUVBNDc1OTREQkJFRAAKCRAxqupHWU277T4qD/9J9QVJfXVytcWb2J
+ DpCJg4p11unIBM6rffhwQjI2fJVI4bnrKBDphYWMw06VX3LVWKy6vPvwUaBcfGQ6x6wgSDCZyYi
+ ppdBww4//bTNtHc78DTZaYTxztm3oxNl9mI1XOO0NlsYRHvpobE1eTwjOpMR4Eay6FEQuoNTtB6
+ 2JxHw5vpEyZIWCt4aKbsJJ5hQZZXWFG4FXac9aTupmdJEiUSIYVSOPmQ3++YVmy+gIyEm4qPoha
+ 7xYJ+t6RYVzw91Bcl4GDcjYLZp1RtdebwXDm8Gvkw5zAvKtU+Yy4kyzbzARtqCKD/8yTabcwqMe
+ rHodvBTMMfFFHne8sVfSgvhlRP56q+VmUSWp3xJBo2wnUFewY2X09YsPzR8EcPMLqdRdyL+N44I
+ xae4jgBEUHFlueZbM8tqhh8INlhK3isYJYGsslc5uuGlwHGlK3WAInZJDUokink9yfCrTWcPvmD
+ njUClyQraISF4XG/iOna4+9FuCdLw07qCKq6gv3HOGE8X70EZHcPllfy8UcYlk1fjHnMdJw8w/t
+ 5icbJUWtW/4slKhlNNW4VB18tnsP9DS0hprNm6f53jbncyVxTSJ//t24WXacA6sbBR119f73QmX
+ pPX//ggMKyh/Q1/kV9ni/LW4GaTiyE2/R7fDVPezGveDIeXCQ/YK7ek8gpwyUn9KHM2g==
+X-Developer-Key: i=dlan@gentoo.org; a=openpgp;
+ fpr=50B03A1A5CBCD33576EF8CD7920C0DBCAABEFD55
 
-On Thu, May 01, 2025 at 02:10:48AM +0800, Kairui Song wrote:
-> From: Kairui Song <kasong@tencent.com>
-> 
-> folio_index is only needed for mixed usage of page cache and swap
-> cache, for pure page cache usage, the caller can just use
-> folio->index instead.
-> 
-> It can't be a swap cache folio here.  Swap mapping may only call into fs
-> through `swap_rw` but btrfs does not use that method for swap.
-> 
-> Signed-off-by: Kairui Song <kasong@tencent.com>
-> Cc: Chris Mason <clm@fb.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: Josef Bacik <josef@toxicpanda.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: David Sterba <dsterba@suse.com> (maintainer:BTRFS FILE SYSTEM)
-> Cc: linux-btrfs@vger.kernel.org (open list:BTRFS FILE SYSTEM)
-> Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-> Reviewed-by: Qu Wenruo <wqu@suse.com>
+Add support for the SD/eMMC Host Controller found in SpacemiT K1 SoC,
+The controller supports data transmission of MMC, SDIO, and SD protocol.
 
-The patch is from a series but seems to be independent. I'd like to take
-it through the btrfs tree unless you have other work that depends on it.
+The SD/eMMC Host Controller has the following features:
+- MMC/eMMC 5.1 specification compliant
+- Supports PIO mode and SDMA mode data transfer
+- Supports ADMA1 and ADMA 2 (64-bit addressing) data transfer
+- Supports 1-bit/4-bit SD memory and SDIO
+- Supports 1-bit/8-bit MMC and CE-ATA cards
+- SPI mode supported for eMMC card
+Full docs can be found at SpacemiT's developer web, chapter 10.4 SD/eMMC [1]
+
+In this patch series, only MMC part has been implemented and tested.
+This driver also requires clock support which now is ready for v6.16 [2].
+
+There is a WIP branch at SpacemiT's repo for people who interested [3].
+
+Link: https://developer.spacemit.com/documentation?token=WZNvwFDkYinYx0k9jzPcMK5WnIe [1]
+Link: https://lore.kernel.org/all/20250430012941-GYA288294@gentoo [2]
+Link: https://github.com/spacemit-com/linux/tree/k1/wip-sdhci [3]
+
+Signed-off-by: Yixun Lan <dlan@gentoo.org>
+---
+Changes in v2:
+- rebase to v6.15-rc1
+- collect review tags
+- drop RFC as clock driver is ready
+- drop spacemit_sdhci_remove(), favor sdhci_pltfm_remove()
+- update register definition using GENMASK(), FIELD_PREP()
+- Link to v1: https://lore.kernel.org/r/20250213-20-k1-sdhci-v1-0-1f4362a980cd@gentoo.org
+
+---
+Yixun Lan (2):
+      dt-bindings: mmc: spacemit,sdhci: add support for K1 SoC
+      mmc: sdhci-of-k1: add support for SpacemiT K1 SoC
+
+ .../devicetree/bindings/mmc/spacemit,sdhci.yaml    |  53 ++++
+ drivers/mmc/host/Kconfig                           |  14 +
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-of-k1.c                     | 306 +++++++++++++++++++++
+ 4 files changed, 374 insertions(+)
+---
+base-commit: 0af2f6be1b4281385b618cb86ad946eded089ac8
+change-id: 20250212-20-k1-sdhci-76a4901030db
+
+Best regards,
+-- 
+Yixun Lan
+
