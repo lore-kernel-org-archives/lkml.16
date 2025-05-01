@@ -1,143 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4D2114BFA2;
-	Thu,  1 May 2025 19:51:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD0514BFA2;
+	Thu,  1 May 2025 19:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746129107; cv=none; b=qlts5tjCeKICwNto+g3bi/Iohsy99Wn8E75n/nFUh3xQdHNKcrfRn39UQUQJoVX3PV42v5YYcJMM6/vtjIwa0M8yFV6p2ZVPDrgFoq/8Cn1aZr2mWBjRXWMsPEMGaavkjDmiJmZziDup6SwJXblnhFEf2j50Wo4wMImtzF94q9g=
+	t=1746129129; cv=none; b=P/1268AM25huWpVAl0DkRjqMxDDvquHPwSFMmelxftppVr9fkfJLYYqDKzVLn0w/o483GNzV3MBVxEXLZrSF2IROJuHGspQntgNnJKL0LuVn5b08ZxQVOMHTgZuU09e+7dZvahqzXhMapA5FXjAg/2rgBWAdhrE1pxps2ZgF8yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746129107; c=relaxed/simple;
-	bh=h5EaA3VYNdY85kolMxFMOR2dzJyUo6BJHKJnsp377hg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HO0SqbuL9V7fl8I5AxA0mNCzBwULU/I8ZlB89GHnAFwk6jrBtuCpqqRvcEkgRubPxY5puvbDPX932/UFPLSgPEyAQU9YY0J/QOWXrGUkVPBBfbsLrexDhhpP8vLcjGekxujq/r24QM555mjT3HPMv9VpZNe6ew25hPH/zzMuMf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9bPucCF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746129129; c=relaxed/simple;
+	bh=aH6SZdXyk5U3M7I6JGEIYeVkKFyJiBbPRkFQRB9H3CY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IbnvW3rcb6QH8ZRsyanOOr3MlcLn1qj2v6mD6DoqT1yzSZwjNy1Xsg7iBA6MYFcUJmjZVRDwz4B+ScJcaVsEpekbBTcmFz322tcINy2d5MRKqWXvT1PDubW1npGv3AWQwY6QWo+oCZqK/frEwAc/sKysZsRz6F93IGwsiKnubvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sp0ZpHah; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9bPucCF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55CAAC4CEE3;
-	Thu,  1 May 2025 19:51:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sp0ZpHah"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A57C9C4CEE4;
+	Thu,  1 May 2025 19:52:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746129107;
-	bh=h5EaA3VYNdY85kolMxFMOR2dzJyUo6BJHKJnsp377hg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=p9bPucCFym0ouSDo518c/ovDHLqJJstQ4vL0N+9izjgaTZdgxOiFf5RIKJugz9cck
-	 1CX28D/Yrjv0aulm5NuoROgX+dm6wPa1FLezst2Bo1KAdTJILhK62u3+QvQ65eSezj
-	 +ckctRUo3Ya7yu4JYFeWP1cOWsvL6HRarAsY/Q/6l6jjDmY16XLJunNjtLXH35XUGY
-	 hgOKLde84eJ2RvKlxPRSiUVIJkwTzGgtydZVWc0BtWUvAeKF73N7pPl9mLiYNxuA5q
-	 kSY/FHlvienFolCsZBBIX7I8hkKf1ldzdgOhdEB031ofvunb7FlF283HOsxlkUzxcd
-	 4YToc8umN/Hgw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
- <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
- <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
-  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
- <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
- <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
- <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
-  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
- <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
-In-Reply-To: <CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
- (Miguel
-	Ojeda's message of "Thu, 01 May 2025 21:26:24 +0200")
-References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
-	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
-	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
-	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
-	<87msbw1s9e.fsf@kernel.org>
-	<86-cT9dBPpEIyQXWVCeEmj3TRvBm6Ta0p1B20sSngRGOqOuC96i6hG3Q9Hg3bN8AQTCPXlsxg_C5Ok0G4JJzpQ==@protonmail.internalid>
-	<CANiq72nd0Pfv4TrpULGQ_fZkyBpHyVVZ1H45_RJBgBxkJuzCJQ@mail.gmail.com>
-	<87h62419r5.fsf@kernel.org>
-	<FLMJjrvUlrMEWy7KzihcYUt-V1IFyP8nt9KYysmVPsWdxUR9dRVXsRoSBw4Z0oFX8tzfWieBDkP7YPAHOXtFcg==@protonmail.internalid>
-	<CANiq72miL3eZ40ujmA-pXCqMS8y2AzJQ1UKpL1_hX03AJ0fteQ@mail.gmail.com>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Thu, 01 May 2025 21:51:29 +0200
-Message-ID: <87bjsc154u.fsf@kernel.org>
+	s=k20201202; t=1746129128;
+	bh=aH6SZdXyk5U3M7I6JGEIYeVkKFyJiBbPRkFQRB9H3CY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sp0ZpHahkGRWhi6np6c7D3WRQqjE0EDN1CPh6cn8Rmj1HRPmddqRdgx3q+TNWTMNE
+	 jNrl85vjuhj5zp/YVyKH+UadqP/UQTwxOv9AXkX173xDM2crMfY2em1bGPgKeQbmMI
+	 w5NqOJMx6mYTS6MxXCBYkqUS3uhlNEripHcKyZh5e6W3E09gF+M28O+FC4Y54+o3zH
+	 YUSjdrWeGYJ2ZFAEUfpZ1jIEL6DMScFOnUXNdCWTSnn5yL8f+yo3nrH2XWLz2WMlgZ
+	 r8wNyA72DejFPHLuzNiwOPIF5QUFfazJVbvQYeNbuKT3S9/qMhsBlcMijVU9WrdqNR
+	 k5s76+LE2285A==
+Date: Thu, 1 May 2025 12:52:08 -0700
+From: "Darrick J. Wong" <djwong@kernel.org>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
+	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
+	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
+	linux-api@vger.kernel.org
+Subject: [PATCH 16/15] xfs: only call xfs_setsize_buftarg once per buffer
+ target
+Message-ID: <20250501195208.GF25675@frogsfrogsfrogs>
+References: <20250501165733.1025207-1-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501165733.1025207-1-john.g.garry@oracle.com>
 
-"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
+From: Darrick J. Wong <djwong@kernel.org>
 
-> On Thu, May 1, 2025 at 8:11=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
-l.org> wrote:
->>
->> But why does that matter? Anything in the commit message after the cut
->> is dropped when applying the patch, right?
->
-> Yes, but it is not common to add a newline there. I mentioned it
-> because it looked odd, no worries.
->
->> I might not have the full picture, but it is my understanding that
->> while `const fn` are evaluated in const context when called from const
->> context, they _may_ be called from non-const context, and then they are
->> evaluated in non-const context if their arguments are not const [1].
->> They are not guaranteed to be evaluated in const context.
->>
->> So my thinking is that down the road, refactoring of this code may cause
->> the `AttributeList::add` to be called in a way so that it is not
->> evaluated in const context, and then the `assert` would be evaluated at
->> run time. With `build_error` we would get an error during build.
->
-> No, it will always be evaluated at compile-time (if it is evaluated at al=
-l).
->
-> Please see again the links I provided. There is no `const fn` in the
-> example I provided, and yet it is a build error.
->
-> From your link, it is clear `const` blocks are a const context, which
-> are always evaluated at compile time:
->
->     Certain forms of expressions, called constant expressions, can be
->     evaluated at compile time.
->
->     In const contexts, these are the only allowed expressions, and are
->     always evaluated at compile time.
->
->     A const context is one of the following: (...) A const block
->
-> And from mine, it mentions that it is guaranteed to be evaluated if
-> execution reaches that point and that such evaluation would happen at
-> compile time:
->
->     A const block is a variant of a block expression whose body
->     evaluates at compile-time instead of at runtime.
->
->     If the const block expression is executed at runtime, then the
->     constant is guaranteed to be evaluated, even if its return value is
->     ignored:
->
->         fn foo<T>() -> usize {
->             // If this code ever gets executed, then the assertion has
->             // definitely been evaluated at compile-time.
->             const { assert!(std::mem::size_of::<T>() > 0); }
->             // Here we can have unsafe code relying on the type being
->             // non-zero-sized.
->             /* ... */
->             42
->         }
->
-> That example they give is precisely about using a `const` block for
-> guaranteeing something that unsafe code relies on.
->
-> I hope that helps.
+It's silly to call xfs_setsize_buftarg from xfs_alloc_buftarg with the
+block device LBA size because we don't need to ask the block layer to
+validate a geometry number that it provided us.  Instead, set the
+preliminary bt_meta_sector* fields to the LBA size in preparation for
+reading the primary super.
 
-Ah - I understand. I missed that you wrapped the assert in a const
-block, a quite important bit =F0=9F=A4=A6 Thanks for explaining!
+It's ok to lose the sync_blockdev call at buftarg creation time for the
+external log and rt devices because we don't read from them until after
+calling xfs_setup_devices.  We do need an explicit sync for the data
+device because we read the primary super before calling
+xfs_setup_devices.
 
+This will enable the next patch to validate hw atomic write geometry
+against the filesystem geometry.
 
-Best regards,
-Andreas Hindborg
+Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
+---
+ fs/xfs/xfs_buf.h   |    5 +++++
+ fs/xfs/xfs_buf.c   |    8 ++++----
+ fs/xfs/xfs_super.c |    6 +++++-
+ 3 files changed, 14 insertions(+), 5 deletions(-)
 
-
-
+diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
+index 6f691779887f77..2f809e33ec66da 100644
+--- a/fs/xfs/xfs_buf.h
++++ b/fs/xfs/xfs_buf.h
+@@ -384,6 +384,11 @@ int xfs_buf_reverify(struct xfs_buf *bp, const struct xfs_buf_ops *ops);
+ bool xfs_verify_magic(struct xfs_buf *bp, __be32 dmagic);
+ bool xfs_verify_magic16(struct xfs_buf *bp, __be16 dmagic);
+ 
++static inline int xfs_buftarg_sync(struct xfs_buftarg *btp)
++{
++	return sync_blockdev(btp->bt_bdev);
++}
++
+ /* for xfs_buf_mem.c only: */
+ int xfs_init_buftarg(struct xfs_buftarg *btp, size_t logical_sectorsize,
+ 		const char *descr);
+diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
+index c1bd5654c3afa8..437fef08b7cf7b 100644
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1837,10 +1837,10 @@ xfs_alloc_buftarg(
+ 	 * When allocating the buftargs we have not yet read the super block and
+ 	 * thus don't know the file system sector size yet.
+ 	 */
+-	if (xfs_setsize_buftarg(btp, bdev_logical_block_size(btp->bt_bdev)))
+-		goto error_free;
+-	if (xfs_init_buftarg(btp, bdev_logical_block_size(btp->bt_bdev),
+-			mp->m_super->s_id))
++	btp->bt_meta_sectorsize = bdev_logical_block_size(btp->bt_bdev);
++	btp->bt_meta_sectormask = btp->bt_meta_sectorsize - 1;
++
++	if (xfs_init_buftarg(btp, btp->bt_meta_sectorsize, mp->m_super->s_id))
+ 		goto error_free;
+ 
+ 	return btp;
+diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
+index f021bdf8d0b592..b6b6fb4ce8ca65 100644
+--- a/fs/xfs/xfs_super.c
++++ b/fs/xfs/xfs_super.c
+@@ -507,7 +507,11 @@ xfs_open_devices(
+ 			bdev_fput(logdev_file);
+ 	}
+ 
+-	return 0;
++	/*
++	 * Flush and invalidate the data device pagecache before reading the
++	 * primary super because XFS doesn't use the bdev pagecache.
++	 */
++	return xfs_buftarg_sync(mp->m_ddev_targp);
+ 
+  out_free_rtdev_targ:
+ 	if (mp->m_rtdev_targp)
