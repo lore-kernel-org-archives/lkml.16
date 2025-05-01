@@ -1,49 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2992144C9;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B2F721C183;
 	Thu,  1 May 2025 19:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746128909; cv=none; b=gNDfAcV72mcenUc/Y6DWed1AUwkoCsxkqm4AL1Cx2xkaUvn+JFGuCE/d8tQcHbcWwnbAcZvRHmEzUY2fo0a+VZKMbATMzJJUcJqUx5Q8Qnc3t162AiD3J/cOqVkB3LJnKsq/cAITbLw8s9kk0HBgaQ31wpgLFxuUmGU2wRFzr60=
+	t=1746128909; cv=none; b=B0jb3JlBFPiOlM/VD+x72SzYbOjOaX07R5zuoi8gYCgjE+Tl5jmMJOr7zSCuD24BZhTIcRCmbhba4SQt46z8P4DxkGzynDQAW24IjYBOc9jXxSlC9FbvMTLo7QgIFUILmpqeSrTn1e+tC9KQfgcCoq1ONYqOKbhneNcC9+EDVD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746128909; c=relaxed/simple;
-	bh=nJ/O2qfc5y7+GRelzxRyWAg1TE/6pK01eAAImGz7s0o=;
+	bh=EquXf22t1MG3qlvTmHUyGycZGdk2twt1J14XgIQ4XgY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MPBMVH/D+qagrxrMK/q1zIp9DBL/CzGt3PaGsQ0mmcRrjmE7D/egoT6J64y/sx5iQ4Wvf2JuXh95S5dBG90EUtsNcAL5dK2tFNG/TMKBerOUSm+ZFgMAA6ZDFbLhgRMcdSw8e7MKcJErxWMw8dndeeW9tO8du4RKe6vaxKTJc8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k6XGbZ49; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IsCyeAZxymGbD3WvTdNXMZGR/UnuEkUxPJ/Ie/cO+iYjBzn+BEgdl2LVXwDtmKFAe9zE1kuJ71t/9rYnWVhDp79EctZexCjBRNowGn+NSEQ8AW95khxW6qCjnI+oYGddnAk2XST52mnNker8JeRT/ER50fS0FhWgSUurNxE2KME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iEZ0cBDP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k6XGbZ49"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AACFC4AF0B;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iEZ0cBDP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D297C4AF0C;
 	Thu,  1 May 2025 19:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1746128909;
-	bh=nJ/O2qfc5y7+GRelzxRyWAg1TE/6pK01eAAImGz7s0o=;
+	bh=EquXf22t1MG3qlvTmHUyGycZGdk2twt1J14XgIQ4XgY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=k6XGbZ49vl8PTh+LQjcJFY0SfyaNPpsIRb8XsMKZKxWg6Xeoin0vF22/pdsR/WOqY
-	 rtGYgoCR4cfYfGrDgrLlzcbZl6THWvE6FE/iuAgGwi/gMgysDcd/0wF8cGQ5/EB6D9
-	 3b8mHsDzhEs90sHxQ9wx2tNtFaxJ8j4sbYBIY/8j9mrhkHcXEuM/DdPxEiuu/HWtZ5
-	 QitPXN64n24J7PauE+1Oql2iTEZ9kcuZovpM5sX3CEQ1PcBm0GUSTe8DqTv/HlwEYu
-	 5rztIYEAL1cJ95qTMQ8uEEwb9iwFvGkThlFcYktOfXx0Fx5fHQvBD78u84n+0CoL6G
-	 bbqGjaaZkpa9A==
+	b=iEZ0cBDPV30yaUNfww7jGrgei/ijNalpIuUG+CJCcxbQuOoOGDcEQIc/oDWAT1Il5
+	 XJpo3iwq2Iq+CcCQZRQfVzWgwxb3lqDZJZi9tjwP1x3fF8sPpo/eAd6uFrtAIajMhS
+	 Akwn/sqpsq/foMuM5yfPfbhQMLwnfl7Yq4Z4OQofvnH1qkJYH32xUnn5QDyLNiUbaq
+	 EheXsWooLzvPhkm4BiYkw1QyMJsOqahVECr8aTA5h0sa+xWgSRnsJAWazs51mw+o2z
+	 41nbI8sONxQAMXBLCNyazNZVoYDpMj+OmNADQDaYshHu27WdMrCyd1GatDWbMs32Nl
+	 kn+MdUxVEFDTg==
 From: Kees Cook <kees@kernel.org>
 To: Masahiro Yamada <masahiroy@kernel.org>
 Cc: Kees Cook <kees@kernel.org>,
+	Justin Stitt <justinstitt@google.com>,
 	Nathan Chancellor <nathan@kernel.org>,
 	Nicolas Schier <nicolas.schier@linux.dev>,
-	linux-hardening@vger.kernel.org,
-	linux-kbuild@vger.kernel.org,
-	Petr Pavlu <petr.pavlu@suse.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Justin Stitt <justinstitt@google.com>,
 	Marco Elver <elver@google.com>,
 	Andrey Konovalov <andreyknvl@gmail.com>,
 	Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-	linux-kernel@vger.kernel.org,
-	kasan-dev@googlegroups.com
-Subject: [PATCH 1/3] gcc-plugins: Force full rebuild when plugins change
-Date: Thu,  1 May 2025 12:48:16 -0700
-Message-Id: <20250501194826.2947101-1-kees@kernel.org>
+	linux-kbuild@vger.kernel.org,
+	kasan-dev@googlegroups.com,
+	linux-hardening@vger.kernel.org,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] integer-wrap: Force full rebuild when .scl file changes
+Date: Thu,  1 May 2025 12:48:18 -0700
+Message-Id: <20250501194826.2947101-3-kees@kernel.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250501193839.work.525-kees@kernel.org>
 References: <20250501193839.work.525-kees@kernel.org>
@@ -53,55 +53,61 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1929; i=kees@kernel.org; h=from:subject; bh=nJ/O2qfc5y7+GRelzxRyWAg1TE/6pK01eAAImGz7s0o=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnCFxh7neu0XGZnlWzRUTPY0/hmqavW0X8s8ZvqWDaLM YtfZWDpKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmIixGsP/0Jsy0+XCkiRaDyZ8 a3qewybydodJZSCjU7gao1DsHN1sRobLb+7dut0Q9Cbs45z/D6p6V370npSh9UJGkSmOZXWL1E4 WAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2139; i=kees@kernel.org; h=from:subject; bh=EquXf22t1MG3qlvTmHUyGycZGdk2twt1J14XgIQ4XgY=; b=owGbwMvMwCVmps19z/KJym7G02pJDBnCFxhVw5LkMtT9F1052nPHuakx/wafkvXdLeWmT+V0x I5O0EvtKGVhEONikBVTZAmyc49z8XjbHu4+VxFmDisTyBAGLk4BmEiHOcP/+vxpzp/EF33dfr7I rHzutYapwnX5fJ9t70n23E33Oau8npHh19meOVfrLig1qc56t0x7ZcinFGPV3KJ/4i/eZy9VbJL hBgA=
 X-Developer-Key: i=kees@kernel.org; a=openpgp; fpr=A5C3F68F229DD60F723E6E138972F4DFDC6DC026
 Content-Transfer-Encoding: 8bit
 
-There was no dependency between the plugins changing and the rest of the
-kernel being built. Enforce this by including a synthetic header file
-when using plugins, that is regenerated any time the plugins are built.
+Since the integer wrapping sanitizer's behavior depends on its
+associated .scl file, we must force a full rebuild if the file changes.
+Universally include a synthetic header file that is rebuilt when the
+.scl file changes.
 
 Signed-off-by: Kees Cook <kees@kernel.org>
 ---
 Cc: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Justin Stitt <justinstitt@google.com>
 Cc: Nathan Chancellor <nathan@kernel.org>
 Cc: Nicolas Schier <nicolas.schier@linux.dev>
-Cc: <linux-hardening@vger.kernel.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Andrey Konovalov <andreyknvl@gmail.com>
+Cc: Andrey Ryabinin <ryabinin.a.a@gmail.com>
 Cc: <linux-kbuild@vger.kernel.org>
+Cc: <kasan-dev@googlegroups.com>
+Cc: <linux-hardening@vger.kernel.org>
 ---
- scripts/Makefile.gcc-plugins | 2 +-
- scripts/gcc-plugins/Makefile | 8 ++++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ scripts/Makefile.ubsan | 1 +
+ scripts/basic/Makefile | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/scripts/Makefile.gcc-plugins b/scripts/Makefile.gcc-plugins
-index 5b8a8378ca8a..b0d2b9ccf42c 100644
---- a/scripts/Makefile.gcc-plugins
-+++ b/scripts/Makefile.gcc-plugins
-@@ -38,7 +38,7 @@ export DISABLE_STACKLEAK_PLUGIN
+diff --git a/scripts/Makefile.ubsan b/scripts/Makefile.ubsan
+index 9e35198edbf0..254d5a7ec994 100644
+--- a/scripts/Makefile.ubsan
++++ b/scripts/Makefile.ubsan
+@@ -15,6 +15,7 @@ ubsan-cflags-$(CONFIG_UBSAN_TRAP)		+= $(call cc-option,-fsanitize-trap=undefined
+ export CFLAGS_UBSAN := $(ubsan-cflags-y)
  
- # All the plugin CFLAGS are collected here in case a build target needs to
- # filter them out of the KBUILD_CFLAGS.
--GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y))
-+GCC_PLUGINS_CFLAGS := $(strip $(addprefix -fplugin=$(objtree)/scripts/gcc-plugins/, $(gcc-plugin-y)) $(gcc-plugin-cflags-y)) -include $(objtree)/scripts/gcc-plugins/deps.h
- export GCC_PLUGINS_CFLAGS
+ ubsan-integer-wrap-cflags-$(CONFIG_UBSAN_INTEGER_WRAP)     +=	\
++	-include $(objtree)/scripts/basic/integer-wrap.h	\
+ 	-fsanitize-undefined-ignore-overflow-pattern=all	\
+ 	-fsanitize=signed-integer-overflow			\
+ 	-fsanitize=unsigned-integer-overflow			\
+diff --git a/scripts/basic/Makefile b/scripts/basic/Makefile
+index 31637ce4dc5c..04f5620a3f8b 100644
+--- a/scripts/basic/Makefile
++++ b/scripts/basic/Makefile
+@@ -15,3 +15,12 @@ $(obj)/randstruct_hash.h $(obj)/randstruct.seed: $(gen-randstruct-seed) FORCE
+ 	$(call if_changed,create_randstruct_seed)
  
- # Add the flags to the build!
-diff --git a/scripts/gcc-plugins/Makefile b/scripts/gcc-plugins/Makefile
-index 320afd3cf8e8..38fd4c9f9b98 100644
---- a/scripts/gcc-plugins/Makefile
-+++ b/scripts/gcc-plugins/Makefile
-@@ -66,3 +66,11 @@ quiet_cmd_plugin_cxx_o_c = HOSTCXX $@
- 
- $(plugin-objs): $(obj)/%.o: $(src)/%.c FORCE
- 	$(call if_changed_dep,plugin_cxx_o_c)
+ always-$(CONFIG_RANDSTRUCT) += randstruct.seed randstruct_hash.h
 +
-+quiet_cmd_gcc_plugins_updated = UPDATE  $@
-+      cmd_gcc_plugins_updated = echo '/* $^ */' > $(obj)/deps.h
++# integer-wrap: if the .scl file changes, we need to do a full rebuild.
++quiet_cmd_integer_wrap_updated = UPDATE  $@
++      cmd_integer_wrap_updated = echo '/* $^ */' > $(obj)/integer-wrap.h
 +
-+$(obj)/deps.h: $(plugin-single) $(plugin-multi) FORCE
-+	$(call if_changed,gcc_plugins_updated)
++$(obj)/integer-wrap.h: $(srctree)/scripts/integer-wrap-ignore.scl FORCE
++	$(call if_changed,integer_wrap_updated)
 +
-+always-y += deps.h
++always-$(CONFIG_UBSAN_INTEGER_WRAP) += integer-wrap.h
 -- 
 2.34.1
 
