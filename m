@@ -1,50 +1,49 @@
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF31B2288C0;
-	Thu,  1 May 2025 19:15:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8B722D4D6;
+	Thu,  1 May 2025 19:15:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746126946; cv=none; b=UOgjFAWx0LSX+zlDkpEHn/y16+j56C+s1UYbh7PBQi24EdgrNHE6NFLnZVJRjMjmTRAe9IV+QtbNJ3Fyb0TPDd99k5FI1FhmksRi19upH9w9JczG2vo29x+6Q44upHomrr/XHg/CAeTjlcgfbqaa+qbXKeTr54pkxWXIHdK9B84=
+	t=1746126947; cv=none; b=DlrzxX3LCF1Vw6SMzWATtGDLWfH0N90QTOyqLyCwCW20Ii+blk22Ce9qCXq0EAhiJqYTSITcJLxQCyhuaDl/e5aPQRIZmcNFTicZ0zya3sbbBb1n3dVlvD4z7391TrOQFIj/N5Wksromia5cwqAfUbdee3mxL87y0DaMJ5W6l8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746126946; c=relaxed/simple;
-	bh=cykMNW4gezG/3T5mqrPf5KzR1AlV5trTY8mLW2v8j90=;
+	s=arc-20240116; t=1746126947; c=relaxed/simple;
+	bh=oKHW1kFFzB+QLvTjYaMh9YdOhB8h+QQvnTP1gcp+0mY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=aNey2m0Bh1tv8AozGWZ3v8Agi+GAxxp+zjPfR919pQotlRUi0fk+IQXaINi8OQbgPZHa0y463ImcHEucJeH9znKM9+mew0Ubm/A8v1j6EM4RnFAROqrDRUhp0qasz5fnMQn9MBriLCoSsPiigbNYHmKZLzGPX8CpVYqF5ea+X5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=kKck+LSA; arc=none smtp.client-ip=205.220.168.131
+	 In-Reply-To:To:CC; b=cpFM4su9xc/fUW0zisTzHDrUN3tlaWH84H4VxcXJUxN/ItdW50i0L3YCAwnOAJ5LytUBJww1Wr1ppFvHB2Kyy544tiZHeKnSBP8k4Fbfdu26pj6XlGyXO8ua+C1vdQhJnXTRQN4GxLJSGRbWYR+x9ksyZChGIcXZGBVSURID9d0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MCc51aGo; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="kKck+LSA"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541D2Pm8010690;
-	Thu, 1 May 2025 19:15:40 GMT
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MCc51aGo"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541D26a1008651;
+	Thu, 1 May 2025 19:15:42 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	cc:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	LefXvc/xdC6em6kqSjTfUljXvfFUQmM4E/whmjrQoIk=; b=kKck+LSA3JOs+wFN
-	tbsf5I4pLPZiy2Iuq7McoiOxRS966qymgiTFHooLcdPDCGDbgBQw5+c/5jQ7oPcU
-	gYJTmOoWxvtJzgDHs114ypGqar7ppC5ZuXhkg4MQi6Af3UWqklfNCybAA1TVAhJm
-	94nyTy4QNGYg2dsGtTGwOKuI1JD3wrqniqhoIRaxBoe/huI2EPWgEKKbqLm9LRFE
-	Q4mMpR8ttb1O/wh7UFhQSzsfsRnLztzNu/0/ehFS+zfVW4gn2OfAjwDHrEVdl2az
-	ga9Jgr/i9rm4njLlz3D+vJJAJapbZOyWc4BXzNhT0dqFzfnlQtWMcvFL9hsYTtLA
-	39JsEQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u4e767-1
+	SwfP+ekK3ol8AG1qzTLn6MPPjRaHkVeQZcUzeXP9MSE=; b=MCc51aGobdrxC+3v
+	gSrwhk8MfUoYJPVyVwRVwGEqXIiKcoGPxYo1UaSNfbjHL8axg6X41hSho3RgEAcq
+	Jmtkkdx6BlApy7GeIJTD36Pr0N4WT3uALKs77sDk3Pt77nYpJtsbOOCKui1b4eFu
+	3nx/yW08jroTwahlOYjqyfGvSYYS6FSCNGkxkL6Nf372MCAN408+DWMbCtRty8Jp
+	ISxIhn49PZrXGU2/DdjhZNwwvl5lsK96KzNqtkCHwJ51BWAU9gcxCeGSxphE2PXD
+	q2/IEzgVsCudDd3+v/eGzHRHrwIn3dpnwz7i//ZGcVaknXnoY43bADqQG3rutEEl
+	AVIjKQ==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6uae3hj-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 19:15:39 +0000 (GMT)
+	Thu, 01 May 2025 19:15:42 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 541JFdrZ031507
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 541JFRJU012241
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 May 2025 19:15:39 GMT
+	Thu, 1 May 2025 19:15:27 GMT
 Received: from hu-dikshita-hyd.qualcomm.com (10.80.80.8) by
  nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Thu, 1 May 2025 12:15:33 -0700
+ 15.2.1544.9; Thu, 1 May 2025 12:15:21 -0700
 From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-Date: Fri, 2 May 2025 00:43:47 +0530
-Subject: [PATCH v3 17/23] media: iris: Remove redundant buffer count check
- in stream off
+Date: Fri, 2 May 2025 00:43:45 +0530
+Subject: [PATCH v3 15/23] media: iris: Improve last flag handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,7 +52,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250502-qcom-iris-hevc-vp9-v3-17-552158a10a7d@quicinc.com>
+Message-ID: <20250502-qcom-iris-hevc-vp9-v3-15-552158a10a7d@quicinc.com>
 References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
 In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
 To: Vikash Garodia <quic_vgarodia@quicinc.com>,
@@ -82,110 +81,134 @@ CC: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
         <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
         <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746126827; l=2500;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746126827; l=4175;
  i=quic_dikshita@quicinc.com; s=20240917; h=from:subject:message-id;
- bh=cykMNW4gezG/3T5mqrPf5KzR1AlV5trTY8mLW2v8j90=;
- b=V+jLzZ15LutihIeo3GgUZlrW/gnGI3YpbZCFdzugJEyXl6ZmSYsRRxGS3W0VZaFxx4iflvdPX
- bGi9NsnHrReC/9qpyB0GfXBELuD3lAFXXrF9+TT2WOAaZm+lwWEfgKM
+ bh=oKHW1kFFzB+QLvTjYaMh9YdOhB8h+QQvnTP1gcp+0mY=;
+ b=c99NOSXutiXR0WXpM8MHql7NDE+Nffjkk/+Q0auf+iCQaFSmntbzvthr/44E0LpOYej/eO6zj
+ VTA9k9BFRu4BAR1IMKe2icd5bHafxF0hLnynI0mvBfdG2JzRNb0PqHm
 X-Developer-Key: i=quic_dikshita@quicinc.com; a=ed25519;
  pk=EEvKY6Ar1OI5SWf44FJ1Ebo1KuQEVbbf5UNPO+UHVhM=
 X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4BpDNCWWz_Vm6iHJynzQxQkhxceZImYX
-X-Authority-Analysis: v=2.4 cv=Yaq95xRf c=1 sm=1 tr=0 ts=6813c85b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=-qshO7OKkG8J2I8e95wA:9 a=QEXdDO2ut3YA:10
+X-Authority-Analysis: v=2.4 cv=BNizrEQG c=1 sm=1 tr=0 ts=6813c85e cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=2cYQn0pMhZIMXRX04kcA:9 a=QEXdDO2ut3YA:10
  a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDE0NyBTYWx0ZWRfX9HV1RZ/+63Ol CyQ+qLuKaHXu/4vI1zqfg9j7C6p4nhkclk0u44RCLhLumT1WKHi5eLkIBYT3LasXHZfJLTT+wze jCNZPR2HiCp/USNqTKGxjh/1TQOCFBal798/1cQ8TrjVxjmlp0xEv9MCA0ucEuUzxLAyn4mYDfH
- iMSZbyuMXwiZBj0K8FEjZuD8ivWQzynzlLDQV4Mcv73iWaj4qpxVId7AXO8iQKVo44W7RjUcQDT LZudzVhgILcCPI7ybnZMYw0mTas2kC8I2bb5mRokgLKfxNeD8rrwq0ZoLw90BUS7ZIKS8aKs2yJ 76s4b8vXuIXWO0HfQqPSPa+5REKkVlrnUHiD5lv0KUMkfdMZVfNk3wM+1fRgpY8qTfQCIAYh0Ae
- dQBRTr1/4ngeSsxWeMdZlo2JrKWq2QeyV1R+mKQVXx7TtoHTNZ6Fh29uRpCb/5lETxLqj8rI
-X-Proofpoint-GUID: 4BpDNCWWz_Vm6iHJynzQxQkhxceZImYX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDE0NyBTYWx0ZWRfXw8Pa4SIElphC kz4HKvPRLw84eA504oWbVAbVKztH9UcDZ5LqHcj1J/fFw7m9KaOAPqJpH2x+GWOqMf03PVlDDGE Q/oddxLMO5T5IxfO2N8Hye0Pyspcdvrr30lz2tZQW+ivV71MKUyb9NJvTa+ZPH3LIBn2GbcxLUf
+ rNYzqqoR/egI8iJNpvO6RE89shg4cu0ehAFsbwhM1NQS/GzJLMNnOVfJBpfVgQ8+ok59HiMEXQE 8obWYSWhmzxnms9yagq76PNZl4tQW/3FVxbKyBWpLmSeZ40tAgnDYueS8/u8Hv1gIWOiYkczcyd 7VKDhTpRsiFzcQe1yONBlwQiGcdmBBJPF/ahIygk0HIm8+BjnUmD4s74PMStShXjSXjtkI+9X/v
+ 1tqzSE0Fppx8o6TJlHDttt/iGZ/yc2ldTvnL4MwESJ5I7Mg3GGyXQ3+ndgHQavwsGYaoxtpD
+X-Proofpoint-GUID: 7-wks_x8NUt21BzkcQ88bdghRJfQd6-D
+X-Proofpoint-ORIG-GUID: 7-wks_x8NUt21BzkcQ88bdghRJfQd6-D
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
  definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 suspectscore=0 bulkscore=0 mlxlogscore=999 malwarescore=0
- mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0 adultscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 clxscore=1015 spamscore=0 adultscore=0
+ phishscore=0 mlxscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
  definitions=main-2505010147
 
-Currently, the stream off process checks the count of buffers in
-v4l2_m2m_queues using v4l2_m2m_for_each_src_buf_safe and
-v4l2_m2m_for_each_dst_buf_safe APIs. If the count is non-zero, it
-returns an error. This check is redundant as the V4L2 framework already
-handles buffer management internally.
+Improve the handling of the V4L2_BUF_FLAG_LAST flag in the driver:
+- Ensure that the last flag is not sent multiple times.
+- Attach the last flag to the first capture buffer returned during
+  flush, triggered by a sequence change, addressing cases where the
+  firmware does not set the last flag.
 
-Remove the unnecessary buffer count check in stream off, simplifying the
-process and relying on V4L2's internal mechanisms for buffer management.
-
-Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
 Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
 ---
- drivers/media/platform/qcom/iris/iris_vdec.c | 36 ----------------------------
- 1 file changed, 36 deletions(-)
+ drivers/media/platform/qcom/iris/iris_buffer.c            | 1 +
+ drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c | 7 ++++++-
+ drivers/media/platform/qcom/iris/iris_instance.h          | 2 ++
+ drivers/media/platform/qcom/iris/iris_vb2.c               | 3 ++-
+ drivers/media/platform/qcom/iris/iris_vdec.c              | 2 ++
+ 5 files changed, 13 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/media/platform/qcom/iris/iris_buffer.c b/drivers/media/platform/qcom/iris/iris_buffer.c
+index 018334512bae..7dbac74b1a8d 100644
+--- a/drivers/media/platform/qcom/iris/iris_buffer.c
++++ b/drivers/media/platform/qcom/iris/iris_buffer.c
+@@ -636,6 +636,7 @@ int iris_vb2_buffer_done(struct iris_inst *inst, struct iris_buffer *buf)
+ 			v4l2_event_queue_fh(&inst->fh, &ev);
+ 			v4l2_m2m_mark_stopped(m2m_ctx);
+ 		}
++		inst->last_buffer_dequeued = true;
+ 	}
+ 
+ 	state = VB2_BUF_STATE_DONE;
+diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+index d36e29c779db..19ced1b3ee74 100644
+--- a/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
++++ b/drivers/media/platform/qcom/iris/iris_hfi_gen1_response.c
+@@ -458,7 +458,12 @@ static void iris_hfi_gen1_session_ftb_done(struct iris_inst *inst, void *packet)
+ 		timestamp_us = timestamp_hi;
+ 		timestamp_us = (timestamp_us << 32) | timestamp_lo;
+ 	} else {
+-		flags |= V4L2_BUF_FLAG_LAST;
++		if (pkt->stream_id == 1 && !inst->last_buffer_dequeued) {
++			if (iris_drc_pending(inst)) {
++				flags |= V4L2_BUF_FLAG_LAST;
++				inst->last_buffer_dequeued = true;
++			}
++		}
+ 	}
+ 	buf->timestamp = timestamp_us;
+ 
+diff --git a/drivers/media/platform/qcom/iris/iris_instance.h b/drivers/media/platform/qcom/iris/iris_instance.h
+index 06a7f1174ad5..5ec6368b2af7 100644
+--- a/drivers/media/platform/qcom/iris/iris_instance.h
++++ b/drivers/media/platform/qcom/iris/iris_instance.h
+@@ -43,6 +43,7 @@
+  * @sequence_out: a sequence counter for output queue
+  * @tss: timestamp metadata
+  * @metadata_idx: index for metadata buffer
++ * @last_buffer_dequeued: a flag to indicate that last buffer is sent by driver
+  */
+ 
+ struct iris_inst {
+@@ -74,6 +75,7 @@ struct iris_inst {
+ 	u32				sequence_out;
+ 	struct iris_ts_metadata		tss[VIDEO_MAX_FRAME];
+ 	u32				metadata_idx;
++	bool				last_buffer_dequeued;
+ };
+ 
+ #endif
+diff --git a/drivers/media/platform/qcom/iris/iris_vb2.c b/drivers/media/platform/qcom/iris/iris_vb2.c
+index b3bde10eb6d2..8b17c7c39487 100644
+--- a/drivers/media/platform/qcom/iris/iris_vb2.c
++++ b/drivers/media/platform/qcom/iris/iris_vb2.c
+@@ -305,7 +305,7 @@ void iris_vb2_buf_queue(struct vb2_buffer *vb2)
+ 		goto exit;
+ 	}
+ 
+-	if (V4L2_TYPE_IS_CAPTURE(vb2->vb2_queue->type)) {
++	if (!inst->last_buffer_dequeued && V4L2_TYPE_IS_CAPTURE(vb2->vb2_queue->type)) {
+ 		if ((inst->sub_state & IRIS_INST_SUB_DRC &&
+ 		     inst->sub_state & IRIS_INST_SUB_DRC_LAST) ||
+ 		    (inst->sub_state & IRIS_INST_SUB_DRAIN &&
+@@ -319,6 +319,7 @@ void iris_vb2_buf_queue(struct vb2_buffer *vb2)
+ 				v4l2_event_queue_fh(&inst->fh, &eos);
+ 				v4l2_m2m_mark_stopped(m2m_ctx);
+ 			}
++			inst->last_buffer_dequeued = true;
+ 			goto exit;
+ 		}
+ 	}
 diff --git a/drivers/media/platform/qcom/iris/iris_vdec.c b/drivers/media/platform/qcom/iris/iris_vdec.c
-index de4e3fe8ed5a..ce97c555192a 100644
+index d342f733feb9..de4e3fe8ed5a 100644
 --- a/drivers/media/platform/qcom/iris/iris_vdec.c
 +++ b/drivers/media/platform/qcom/iris/iris_vdec.c
-@@ -244,35 +244,6 @@ void iris_vdec_src_change(struct iris_inst *inst)
- 	v4l2_event_queue_fh(&inst->fh, &event);
+@@ -487,6 +487,8 @@ static int iris_vdec_process_streamon_output(struct iris_inst *inst)
+ 	if (ret)
+ 		return ret;
+ 
++	inst->last_buffer_dequeued = false;
++
+ 	return iris_inst_change_sub_state(inst, clear_sub_state, 0);
  }
  
--static int iris_vdec_get_num_queued_buffers(struct iris_inst *inst,
--					    enum iris_buffer_type type)
--{
--	struct v4l2_m2m_ctx *m2m_ctx = inst->m2m_ctx;
--	struct v4l2_m2m_buffer *buffer, *n;
--	struct iris_buffer *buf;
--	u32 count = 0;
--
--	switch (type) {
--	case BUF_INPUT:
--		v4l2_m2m_for_each_src_buf_safe(m2m_ctx, buffer, n) {
--			buf = to_iris_buffer(&buffer->vb);
--			if (!(buf->attr & BUF_ATTR_QUEUED))
--				continue;
--			count++;
--		}
--		return count;
--	case BUF_OUTPUT:
--		v4l2_m2m_for_each_dst_buf_safe(m2m_ctx, buffer, n) {
--			buf = to_iris_buffer(&buffer->vb);
--			if (!(buf->attr & BUF_ATTR_QUEUED))
--				continue;
--			count++;
--		}
--		return count;
--	default:
--		return count;
--	}
--}
- 
- static void iris_vdec_flush_deferred_buffers(struct iris_inst *inst,
- 					     enum iris_buffer_type type)
-@@ -321,7 +292,6 @@ int iris_vdec_session_streamoff(struct iris_inst *inst, u32 plane)
- {
- 	const struct iris_hfi_command_ops *hfi_ops = inst->core->hfi_ops;
- 	enum iris_buffer_type buffer_type;
--	u32 count;
- 	int ret;
- 
- 	switch (plane) {
-@@ -339,12 +309,6 @@ int iris_vdec_session_streamoff(struct iris_inst *inst, u32 plane)
- 	if (ret)
- 		goto error;
- 
--	count = iris_vdec_get_num_queued_buffers(inst, buffer_type);
--	if (count) {
--		ret = -EINVAL;
--		goto error;
--	}
--
- 	ret = iris_inst_state_change_streamoff(inst, plane);
- 	if (ret)
- 		goto error;
 
 -- 
 2.34.1
