@@ -1,103 +1,81 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401B6204098
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332EF1EFF81
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135931; cv=none; b=ttDNsztUqcm6gxyjlals5cenaDlKXpBzlDzs0NABosp5EI02NcCNzbGseBMmh1A3/X86LBsjhfLCEgYpbsqm9alqwGVTeZ9T5cGYGyjNwDxTuZ514nA0wUYbpRg1spsdMiOQGS0iv/T22MVkchNmkLaJGYp2qon4H38HPeYDoUI=
+	t=1746136006; cv=none; b=kWoYqLdvbrJ50+ielEIssm93PQTzUa0ppR8RFvRS6BUHBf34sW+al/99rQ8nHp510LUj1XV9zif7stlcsAHY9jGkCP0kbA2EtdlPdJTcyr0XepRQZHH0RALUUfGLjKsTTrPkxmvpvUWysSCBh+aGaDolppFKhJ8GZ0GdVX6nhMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135931; c=relaxed/simple;
-	bh=Vl91YjoG9bqUjwa4D3IQmMOeHqOlYv+Ub5TMWghr/ww=;
+	s=arc-20240116; t=1746136006; c=relaxed/simple;
+	bh=zREa4RUqnytl3tRJyZ1VEkek+EoTDe7j9JuQy8pDoNw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QCCNNb2pGBtOzANOo9Nxe9YCUoFHkW+8I79mzZWnAFTQb3Y7WWRx2XZpGNnftjLGjDILaix3ziSARXfe5lR4WixXpgObQnnMhOfGxAQST27spa8/AGjLx7fhdVx+BQPQIrSXmhdd2PACySN2PTG4UuS7XCH4t+KgRoYkciE8pl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=K6vyi+7m; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=EL6Y4ShZK1lxTdRNHeMV1RRT5YoP6dLQiWW2mriCeOGY83o2UQoLehJpUP2D/J7sevdwwhKeZEfFlOyqz1Z3XKT4ejYxQ+HifcVv9xFaM6RBP5nG1L7xmVTa5z9zAJYZpUZ1ZLyANWOjBqBxLkf/Uwnsq4LO9nio4f1fnhy5Uhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oTkceKgU; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="K6vyi+7m"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541D24wp006978
-	for <linux-kernel@vger.kernel.org>; Thu, 1 May 2025 21:45:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=ZWvEe+y9fZ95LVZsDUiRwMr7
-	gR6HVKRq8+OepTYfaZw=; b=K6vyi+7mToNIxjqq+Ofgd06E3o9S/X8ARJPRxMz6
-	Unhkwgq3QdDdgB7/LoNv13RljEQ2wjstmw4D4y3PKkA7L+u6j2+3OBdSH0eklOdb
-	trR54Z6tA+VB0OfEqSFs+thq2Yi/aStvjKUNbNSdbEJbaPV7bChyArEVh30sUFDx
-	vr5NUHdJoS+pOtJbUDH9x/GWeF3PzTsOrp6tjU/Yh1ZR2BugoAqMJLO4qzW8WNR/
-	spOs4ksP/c4jHEHpbSp+QCDAwjcKIS+x4n2rqgzYGJBU5vL6fM4nWtgbDF8cJUtk
-	41i2MzIdzp/q9BCiI+Fv+N7hsX7bay5REUyT6LwjaAr+vA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u9xeum-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 21:45:28 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5c82c6d72so230973385a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:45:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oTkceKgU"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240aad70f2so60725ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:46:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746136004; x=1746740804; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9r6A8pjeBdT9CIMooiOuLDzT6g9hy9vPLljDSfADzUo=;
+        b=oTkceKgU1fwRgCeiBHdOVVleK0UQDBd+qgip2AN1ETiW458Z9oPH/rWRCS5P6VDz8Y
+         hzqu+S9m/CAx6+VisWqhD216nV+O2FVPrbFB/KlO8gWXeDZqZxq+SGGzz90Vw+cMD4VS
+         iwQjU63Y5e1YPHMqm0H1UhxQGUbpf1Nahts4M3wp5r2CYj6b0r8UnM/ZtuqQ70D18qHK
+         N1NTIU++zFzlcF5s2ll+4A7ddH2Xd985B4eX63VWoO29ZqibvoZ+0hZX0AUHOXDRkUeb
+         s29B34ksf2fhViKkv5qeKgbB16+vOVf12knKFWz4cmb4GQWZPot6VQdmKBCNg/bcgX5c
+         kfBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746135927; x=1746740727;
+        d=1e100.net; s=20230601; t=1746136004; x=1746740804;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZWvEe+y9fZ95LVZsDUiRwMr7gR6HVKRq8+OepTYfaZw=;
-        b=V4cGRZv6j6wkJLHKHAkWEC/+Uw9sDI0JAinQ/NxeI6Ges7CoJWoEOzWE8pVsev9ZT9
-         aVleSAHpSWTNdbh9N2LYrGKGurH0DK3lxjcf1qVge2thCHig7Jfq5Lo80gX77YicHEGf
-         Y/1Y7c59n3+e/wB0ezGka+GmNoMEj/56iFCNdcoWVsS0e06ulxZUiDsiGkfzhNo0JsEy
-         F4qG+1m+fw0Cpt2c+oTwJR6YS5GH7/iwRP6q+wDQqNhuUTTtHo51h9dPeasCt8zozwfk
-         yVQhMXjqBfrZNFzaFxf/gK4/f8A9+qV7YlY25yQgS5HDasWFVeL/HzvfiNUVVHnufXeY
-         7rOQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWsFokekWP+7kVUyzOB7Zb1TcFvJPrnH1f94MrGj1ncFQGPL0ju8IurOWtW9/PbmR/AMUE4c75v4G60WWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwH3nyEtPcEnESQhkev0+YFMjr6tZTTeaQbg0yiUlKSJggkZ+qO
-	NSdhxwkWyJjGsmd7v635sczf7cOr6o3hAxGF7F10PAk4TrN/s182Gt2qb5KM2PltDGjxF/EG0tU
-	caW0FpHLylzCvDfRRP78R7Weyg9Qgn0d22wpD3aotXdz/yu/S3hhxS0/o3rNCww8=
-X-Gm-Gg: ASbGncsqSGE+BuZXVsN60stD++nD045+bLNtEts61nsE47Ag3dv3di4b10SUtxNXJzv
-	1dJQjDzvFuVZi010zkQR+7159O7gBsMlQj5oAA5gv6V8cGaSTNZad9YNNBVkQB5yKFcmBAfC9sw
-	EUvKF2Q+94cWXgp7Yf3+1wbR3O8m14YnfeWuoyMQ2IwcZM0M/PJAffcqzAl/QthbGCp3AMWFAWY
-	GOESLZxfR6NoApo7BOJ93HnXRge0Iov6AF0NE06xFe33xKciODgKKrq4LNf5wfmxMQvZAGMSVGp
-	aeAr3vYRztPjkuI9o89OftCbGsebzEFVp4zfrSFZq6B4EAPjk6c7nieGm0BwuXc988HLk/ntZ48
-	=
-X-Received: by 2002:a05:620a:4304:b0:7c5:9a6c:b7d3 with SMTP id af79cd13be357-7cad5b8e24dmr91836985a.37.1746135927305;
-        Thu, 01 May 2025 14:45:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH+2T3LiQpLagEU33hPpPGBOSneQuetQ2NiGG7X9LR4oyqvviiI/t4vmBzHx93FvWEjq2NtFA==
-X-Received: by 2002:a05:620a:4304:b0:7c5:9a6c:b7d3 with SMTP id af79cd13be357-7cad5b8e24dmr91832185a.37.1746135926940;
-        Thu, 01 May 2025 14:45:26 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-3202930c92esm1997371fa.54.2025.05.01.14.45.25
+        bh=9r6A8pjeBdT9CIMooiOuLDzT6g9hy9vPLljDSfADzUo=;
+        b=JnP+mk6FpwgrxBMHga2IDbFbp3CeCV+2P2lpXN7uCx0Co1aRMnXdaVI7QqQZVp0ULU
+         XjCyWxONWQmlNcT4VmnrJy8xO0EFiCz1dql5aQh7pxllHh/2MWJKft/gWmzh/8P3MFkM
+         hzB3bd/Z8SQcucLoS/t6LibfuzIppxmFcOXz7Q1EdxGCrVPLY1hUgxiZnqWitl4t6Meg
+         u0qTqVXt/1eeXUVr5ms4XX+rjdBEiPd1rWBpu+IkTbdZzQ9i1m2EH2M71/NM8Rg+N4O6
+         tt/K0M3/IqLpqOD8khCxm9vPMpfTA6wYueTJ3qRNjaEeP+9O5m261rCZaPpxdIg7kcNe
+         B07Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWAqymnu++NBDazFhfJHRPjPdAuddhQHbVwyUCWz75sfwn7z9h7YHthHLJHZ/b1eMyh06kZLQRgkOg6GaI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytBI/Dt8UFvfOS7Xt8T6mwiZWXk2DjJv+2IVowvOeNx2lbkSEy
+	jtwSqq96vAHSzg9XyffWzFqr5FfNz6ZcvvP1Nk+c8q4rbK2pECcvU/nqnDwJ5w==
+X-Gm-Gg: ASbGncuGYO5+j8Rtrrbp7zd3l0a06i1rZ9HufbxdoKNWWmh9aZ8ZYrOsnQa5uytrj4Z
+	NBFwkE72S6pM0HBUbsz8/KWE6LyYGyOHDhvIA/uJB+RsalhLH9hGg9J8+JbPu0GzbPar2NAymTw
+	vTRY+uMm3oKTdpcIA7mjrd2AiIMMvpvumEk0K5JZcbM9vwMDMh8hkBzo/tkheFezzVym2+06NBN
+	bYyklbXMPeybWCblzSMIG8I9AFXbaSg6460/a4XqHD12uUEYOosgZwMCFMtsmaSsfH6H1mbkaKn
+	HqTWMuvLwEWtrh6qCGgGwuGV5M3KqnXmcWHBd+N1VbJL3PBh6P96A6OYnufCcsKZvg5irZYH
+X-Google-Smtp-Source: AGHT+IFwvKnjZtLoQ4bY59+1gUvZDTEb4mowMJ0K70YKwsiOKp0lgYtmDTG0AdFCxAuctUKRuXVbug==
+X-Received: by 2002:a17:902:db02:b0:21f:631c:7fc9 with SMTP id d9443c01a7336-22e03c81070mr3938175ad.0.1746136004118;
+        Thu, 01 May 2025 14:46:44 -0700 (PDT)
+Received: from google.com (2.210.143.34.bc.googleusercontent.com. [34.143.210.2])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa8611424sm129648a12.73.2025.05.01.14.46.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 14:45:25 -0700 (PDT)
-Date: Fri, 2 May 2025 00:45:24 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Konrad Dybcio <konradybcio@kernel.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@gmail.com>,
-        Simona Vetter <simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Robert Foss <rfoss@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        Christian Marangi <ansuelsmth@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>,
-        Kyle Deng <quic_chunkaid@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        linux-arm-msm@vger.kernel.org, iommu@lists.linux.dev,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-usb@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: Re: [PATCH 02/11] dt-bindings: display: msm: sm8350-mdss: Describe
- the CPU-CFG icc path
-Message-ID: <spvg6kmgzkmkknttwrzjonn3pshj3vvoqn2ffv7euucnkysbtc@vmiqfocytvar>
-References: <20250306-topic-dt_bindings_fixups-v1-0-0c84aceb0ef9@oss.qualcomm.com>
- <20250306-topic-dt_bindings_fixups-v1-2-0c84aceb0ef9@oss.qualcomm.com>
+        Thu, 01 May 2025 14:46:43 -0700 (PDT)
+Date: Thu, 1 May 2025 21:46:32 +0000
+From: Pranjal Shrivastava <praan@google.com>
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	bagasdotme@gmail.com, robin.murphy@arm.com, joro@8bytes.org,
+	thierry.reding@gmail.com, vdumpa@nvidia.com, jonathanh@nvidia.com,
+	shuah@kernel.org, jsnitsel@redhat.com, nathan@kernel.org,
+	peterz@infradead.org, yi.l.liu@intel.com, mshavit@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v2 21/22] iommu/tegra241-cmdqv: Add user-space use support
+Message-ID: <aBPruHaehW4yU-ez@google.com>
+References: <cover.1745646960.git.nicolinc@nvidia.com>
+ <b81b2332f793a9ffccc528d821f2ed3ac051f9e0.1745646960.git.nicolinc@nvidia.com>
+ <aBKdMaFLPFJYegIS@google.com>
+ <aBKmk6PNFreeyfLh@Asurada-Nvidia>
+ <aBLGUby2dIiYCe7S@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -106,37 +84,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250306-topic-dt_bindings_fixups-v1-2-0c84aceb0ef9@oss.qualcomm.com>
-X-Proofpoint-GUID: yX1DJi-tyS7Y9BYaOykjj7Luy5AprarF
-X-Proofpoint-ORIG-GUID: yX1DJi-tyS7Y9BYaOykjj7Luy5AprarF
-X-Authority-Analysis: v=2.4 cv=UZZRSLSN c=1 sm=1 tr=0 ts=6813eb78 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=EuULMs42TwgxzVLzQZQA:9 a=CjuIK1q_8ugA:10 a=zZCYzV9kfG8A:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDE2NCBTYWx0ZWRfX6Wy01+NBhgsW vqgwpTieIPFLbigRtPq935LsEXZhu6rlRWC6Ien6FltEw+MdVELJGZdZJqdM4G9D+LR/8o/uS20 w7S0ShyblKI3aZ6DNXZI46kSrMgmdp1lEtMFRnVAkWkjUxtXa0XTWF2f8ES5Ong2w9CpR3v7B1s
- eMALBYdsTM+k+sblVIhOlEbhd8wO+x3/dq4LYifdIEjJOeRvvD4tSU+tQl6vUS3CrT5B7bCq/Y4 KueRAB3m7Ubng6YfGsnuh7V/m1avePKdQ1fe6nkZYPjis60/ZWBbTY8L69/ecNZVCs9GF3ASIV6 BdKkZx8IGZNQHoziFb072r+w7pOKO5tosnoZInHHcNoMZHy+X5XdxtqN9wvsGiTOglWi8vONNeu
- 1gAp1ATnNKIwgwEM0BHCnDTsOKP//QeCXR0/5GQw101UkPoaLpUZClH/yiEgvPnbWqtMcoqF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
- mlxlogscore=623 spamscore=0 priorityscore=1501 impostorscore=0 mlxscore=0
- malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010164
+In-Reply-To: <aBLGUby2dIiYCe7S@Asurada-Nvidia>
 
-On Thu, Mar 06, 2025 at 07:11:14PM +0100, Konrad Dybcio wrote:
-> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, Apr 30, 2025 at 05:54:41PM -0700, Nicolin Chen wrote:
+> On Wed, Apr 30, 2025 at 03:39:22PM -0700, Nicolin Chen wrote:
+> > On Wed, Apr 30, 2025 at 09:59:13PM +0000, Pranjal Shrivastava wrote:
+> > > >  enum iommu_viommu_type {
+> > > >  	IOMMU_VIOMMU_TYPE_DEFAULT = 0,
+> > > >  	IOMMU_VIOMMU_TYPE_ARM_SMMUV3 = 1,
+> > > > +	IOMMU_VIOMMU_TYPE_TEGRA241_CMDQV = 2,
+> > > > +};
+> > > 
+> > > This is a little confusing.. I understand that we need a new viommu type
+> > > to copy the new struct iommu_viommu_tegra241_cmdqv b/w the user & kernel
+> > > 
+> > > But, in a previous patch (Add vsmmu_alloc impl op), we add a check to
+> > > fallback to the standard type SMMUv3, if the impl_ops->vsmmu_alloc 
+> > > returns -EOPNOTSUPP:
+> > > 
+> > > 	if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
+> > > 		vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> > > 			master->smmu, s2_parent, ictx, viommu_type, user_data);
+> > > 	if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
+> > > 		if (viommu_type != IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
+> > > 			return ERR_PTR(-EOPNOTSUPP);
+> > > 		/* Fallback to standard SMMUv3 type if viommu_type matches */
+> > > 		vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu, core,
+> > > 					     &arm_vsmmu_ops);
+> > > 
+> > > Now, if we'll ALWAYS try to allocate an impl-specified vsmmu first, even
+> > > when the viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3, we are anyways
+> > > going to return back from the impl_ops->vsmmu_alloc with -EOPNOTSUPP.
+> > 
+> > That's not necessarily true. An impl_ops->vsmmu_alloc can support
+> > IOMMU_VIOMMU_TYPE_ARM_SMMUV3 potentially, e.g. an impl could just
+> > toggle a few special bits in a register and return a valid vsmmu
+> > pointer.
+> > 
+> > It doesn't work like this with VCMDQ as it supports its own type,
+> > but for the long run I think we should pass in the standard type
+> > to impl_ops->vsmmu_alloc too.
+> > 
+> > > Then we'll again check if the retval was -EOPNOTSUPP and re-check the
+> > > viommu_type requested.. which seems a little counter intuitive.
+> > 
+> > It's just prioritizing the impl_ops->vsmmu_alloc. Similar to the
+> > probe, if VCMDQ is missing or encountering some initialization
+> > problem, give it a chance to fallback to the standard SMMU.
 > 
-> There's a separate path that allows register access from CPUSS.
-> Describe it.
+> I changed to this and it should be clear now:
 > 
-> Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-> ---
->  Documentation/devicetree/bindings/display/msm/qcom,sm8350-mdss.yaml | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> +       /* Prioritize the impl that may support IOMMU_VIOMMU_TYPE_ARM_SMMUV3 */
+> +       if (master->smmu->impl_ops && master->smmu->impl_ops->vsmmu_alloc)
+> +               vsmmu = master->smmu->impl_ops->vsmmu_alloc(
+> +                       master->smmu, s2_parent, ictx, viommu_type, user_data);
+> +       if (PTR_ERR(vsmmu) == -EOPNOTSUPP) {
+> +               /* Otherwise, allocate an IOMMU_VIOMMU_TYPE_ARM_SMMUV3 here */
+> +               if (viommu_type == IOMMU_VIOMMU_TYPE_ARM_SMMUV3)
+> +                       vsmmu = iommufd_viommu_alloc(ictx, struct arm_vsmmu,
+> +                                                    core, &arm_vsmmu_ops);
 > 
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
--- 
-With best wishes
-Dmitry
+This looks good! Thanks!
+
+> Thanks
+> Nicolin
+
+Praan
