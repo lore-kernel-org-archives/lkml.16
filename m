@@ -1,113 +1,169 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E412DC774;
-	Thu,  1 May 2025 06:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A85259CAC
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 06:22:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746080125; cv=none; b=oet+v5+ff+I/d3iBxgNwc7JbhkvGmQP0R0yRjyeFPPaRkxIiyYa/Rq6fEvPqUcwz+S667ohev0FXfciBOwi+462MRZlKFPIgD6SttE/fWKDKXbIPiVVYZZlmvRKctOUCg+GYVzX4W4uiPW3GKXW635C5G+XTnzh46Bcm5rKSqGA=
+	t=1746080557; cv=none; b=ZNNGp5xtFRjwDzwQ7kgipHU3XmZMfXrwvtoWNlJsKT2svT7qY35mlSwfzTYJHz0aaVeoQupzaglZmBAdor/1boDdZDnoFtfITjqGz9E/+zOvIhQJ/7GytuIyuAFHtLC1xR1Xo5vV8w0sfDSMu+VZH5xaPRBB9dVjjquwJavb3f0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746080125; c=relaxed/simple;
-	bh=8q+DspcIiW+WxgXnXGTipxx+/T32UgJFM6wKHdw/wZc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=T7XeY3L2I2bOcTdM8pTKdXskiRkTVXeWpjrsv9Trl8798ZXaJtMrY68MN64YgUZn8WhQawGF4mxIcANvc4tTxfFUOjntthUOtWfkHGBX5grLI8lyELlY2bHzaoqA79SnmR92EkojSrpWYxhjB+z3+Pl2pXt09NQbbxkAXGdV+Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=e815NKQN; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1746080557; c=relaxed/simple;
+	bh=D4LMMZVUvWgTthgOdYiEWmA7Ak8ZBcN3AHcfBQngo3A=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=GLAjY/2i0uyl7mLCyZLDtOk3Sd0wlDwmACkJRPyQPRICJ/mjs6vOsr4IKGmMhGHL+6xpqSpcmpnjp15oM9B6HqbsLfqze/AU2FhPy3d1RReSBH1Rlmx6GRE84N3ItzRSZMZOhhuM2mVtZa6+Kay9VzrV64QJTI0trI+J5d9sEjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=F2enR2Ph; arc=none smtp.client-ip=95.215.58.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e815NKQN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1746080117;
-	bh=tQj/xSRoy2+0jwDjWjoHWqAxe6OY9vsWwEBAtcEdKQs=;
-	h=Date:From:To:Cc:Subject:From;
-	b=e815NKQN4VaNQBthWTumCDDlfBk74rABl2c8FUIeDuseN4Olg35KHviJ5x3Oek1B6
-	 OsSmpAzmwkEf8TRQKOSr7O0ckJCkSzKCs4OL9yE8H5C5qewT/nogns066TN8zhSOZA
-	 pq4A5CeVEoFqHI5CalPSTCfkbkFLiyENO2KnqpL0paEpZF9B8TSRsCLUhyaScpC6QA
-	 SK9X5fSAx066AVDfmNVoAhY1TIbaF9x3ebiBQYfk8cBkEUI8ojQW/1kYXVeawR37+W
-	 LY8V7us86RxTMmgyVvYDOFNV98wcDUymXcRMXsHzSHOsRAwv/NpbXCIoJxIV0ETupf
-	 orBio32ImhAsg==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zp3gm6yvWz4wcy;
-	Thu,  1 May 2025 16:15:16 +1000 (AEST)
-Date: Thu, 1 May 2025 16:15:15 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Greg KH <greg@kroah.com>, Sebastian Reichel <sre@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing
- List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>, Pengyu Luo <mitltlatltl@gmail.com>, Sebastian
- Reichel <sebastian.reichel@collabora.com>
-Subject: linux-next: manual merge of the usb tree with the battery tree
-Message-ID: <20250501161515.21916747@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="F2enR2Ph"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/lS9=zAqD=dnHicff9FwfA9G";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/lS9=zAqD=dnHicff9FwfA9G
-Content-Type: text/plain; charset=US-ASCII
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746080543;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yjChiQ9PgUc2a1/7cJEmrsrWFH7Apodvn16ltR0juPY=;
+	b=F2enR2Ph/xphEnIbT/WgtKidoT3a8MaDaJsGQGsuhwKH19ULsfSOZicpGsTIiN52Ton9O6
+	uTZyAs29HxDUmGNGeYAqDRGkJ/3bhkaoiYEbj7INOJmZGO/5Gyz2yZb8tnpLEhC7zy+PzD
+	T9TlFBYKT0i3u4tsSSVfyh5t1HcuoOw=
+Date: Thu, 01 May 2025 06:22:17 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <1f4d3fb4eed397e346efb3ef597e29204e5a2f4b@linux.dev>
+TLS-Required: No
+Subject: Re: [RFC net-next v1 1/2] udp: Introduce UDP_STOP_RCV option for UDP
+To: "Kuniyuki Iwashima" <kuniyu@amazon.com>
+Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com,
+ horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+ pabeni@redhat.com, shuah@kernel.org, willemdebruijn.kernel@gmail.com
+In-Reply-To: <20250501044321.83028-1-kuniyu@amazon.com>
+References: <20250501035116.69391-1-jiayuan.chen@linux.dev>
+ <20250501044321.83028-1-kuniyu@amazon.com>
+X-Migadu-Flow: FLOW_OUT
 
-Hi all,
+2025/5/1 12:42, "Kuniyuki Iwashima" <kuniyu@amazon.com> wrote:
 
-Today's linux-next merge of the usb tree got a conflict in:
+>=20
+>=20From: Jiayuan Chen <jiayuan.chen@linux.dev>
+>=20
+>=20Date: Thu, 1 May 2025 11:51:08 +0800
+>=20
+>=20>=20
+>=20> For some services we are using "established-over-unconnected" model=
+.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  '''
+> >=20
+>=20>  // create unconnected socket and 'listen()'
+> >=20
+>=20>  srv_fd =3D socket(AF_INET, SOCK_DGRAM)
+> >=20
+>=20>  setsockopt(srv_fd, SO_REUSEPORT)
+> >=20
+>=20>  bind(srv_fd, SERVER_ADDR, SERVER_PORT)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  // 'accept()'
+> >=20
+>=20>  data, client_addr =3D recvmsg(srv_fd)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  // create a connected socket for this request
+> >=20
+>=20>  cli_fd =3D socket(AF_INET, SOCK_DGRAM)
+> >=20
+>=20>  setsockopt(cli_fd, SO_REUSEPORT)
+> >=20
+>=20>  bind(cli_fd, SERVER_ADDR, SERVER_PORT)
+> >=20
+>=20>  connect(cli, client_addr)
+> >=20
+>=20>  ...
+> >=20
+>=20>  // do handshake with cli_fd
+> >=20
+>=20>  '''
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  This programming pattern simulates accept() using UDP, creating a =
+new
+> >=20
+>=20>  socket for each client request. The server can then use separate s=
+ockets
+> >=20
+>=20>  to handle client requests, avoiding the need to use a single UDP s=
+ocket
+> >=20
+>=20>  for I/O transmission.
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  But there is a race condition between the bind() and connect() of =
+the
+> >=20
+>=20>  connected socket:
+> >=20
+>=20>  We might receive unexpected packets belonging to the unconnected s=
+ocket
+> >=20
+>=20>  before connect() is executed, which is not what we need.
+> >=20
+>=20>  (Of course, before connect(), the unconnected socket will also rec=
+eive
+> >=20
+>=20>  packets from the connected socket, which is easily resolved becaus=
+e
+> >=20
+>=20>  upper-layer protocols typically require explicit boundaries, and w=
+e
+> >=20
+>=20>  receive a complete packet before creating a connected socket.)
+> >=20
+>=20>=20=20
+>=20>=20
+>=20>  Before this patch, the connected socket had to filter requests at =
+recvmsg
+> >=20
+>=20>  time, acting as a dispatcher to some extent. With this patch, we c=
+an
+> >=20
+>=20>  consider the bind and connect operations to be atomic.
+> >=20
+>=20
+> SO_ATTACH_REUSEPORT_EBPF is what you want.
+>=20
+>=20The socket won't receive any packets until the socket is added to
+>=20
+>=20the BPF map.
+>=20
+>=20No need to reinvent a subset of BPF functionalities.
+>
 
-  MAINTAINERS
+I think this feature is for selecting one socket, not filtering out certa=
+in
+sockets.
 
-between commit:
+Does this mean that I need to first capture all sockets bound to the same
+port, and then if the kernel selects a socket that I don't want to receiv=
+e
+packets on, I'll need to implement an algorithm in the BPF program to
+choose another socket from the ones I've captured, in order to avoid
+returning that socket?
 
-  cfe769670e82 ("power: supply: add Huawei Matebook E Go psy driver")
-
-from the battery tree and commit:
-
-  00327d7f2c8c ("usb: typec: ucsi: add Huawei Matebook E Go ucsi driver")
-
-from the usb tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc MAINTAINERS
-index f7a8c23d211c,91279eaec446..000000000000
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@@ -10998,7 -10967,7 +10998,8 @@@ M:	Pengyu Luo <mitltlatltl@gmail.com
-  S:	Maintained
-  F:	Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
-  F:	drivers/platform/arm64/huawei-gaokun-ec.c
- +F:	drivers/power/supply/huawei-gaokun-battery.c
-+ F:	drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
-  F:	include/linux/platform_data/huawei-gaokun-ec.h
- =20
-  HUGETLB SUBSYSTEM
-
---Sig_/lS9=zAqD=dnHicff9FwfA9G
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgTEXMACgkQAVBC80lX
-0GyZ0wgAhZKCyPK+X8WEKcJe65ngZGWP1OPTO3snZBkY0Ft2eMKumnfb667PM4sx
-3RbjelMKQzmpoUJe+C2gxY410yApuAtbZp7qN6psPxW/Ifa71uK8ie8VOtwbvSg6
-EfT6tnnCcmGC+UZDS9r4Vnd260Mh3l0+DVPge0qodxgjkD6M9NsjI7L+8M4UeC7v
-l32J8njbt05hQIvI5KmH2dBYuEDDA4iHsucfwk77olomZqR0BGebgm6Al+Gf6ko+
-ftNp5RFHDCn5VrrPKVMWBpENZVLxC+aV0q8tA6Lay33/5zVh1xVU7RVB8yWAgo+F
-epOiqp8oeFz1i+5mZXVG53oaWoLYSg==
-=fUYm
------END PGP SIGNATURE-----
-
---Sig_/lS9=zAqD=dnHicff9FwfA9G--
+This looks like it completely bypasses the kernel's built-in scoring
+logic. Or is expanding BPF_PROG_TYPE_SK_REUSEPORT to have filtering
+capabilities also an acceptable solution?
