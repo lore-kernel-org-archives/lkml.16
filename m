@@ -1,119 +1,146 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58182DC78E;
-	Thu,  1 May 2025 10:00:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCC22AEE1;
+	Thu,  1 May 2025 10:01:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746093651; cv=none; b=FVQlajqWmfVqTaoY98Je+8z430MO2ShopS43WmQoRlzVvEOFGx6dd2bbBSZkVbvvNLJ5ISVWFUnloA++IZYCZGhfQV6yLQLwIlH/UfiRo/fvWO7pbDnQ+QTMlfGiU2iAJbC4kxjTj9tJ0DGIlR3UPhx6sV/EKhIqg/Ja3Wn3VmI=
+	t=1746093691; cv=none; b=O+jp0v9z9PEPVwCHx2Tm8T8WPHgcuSA6aKZetUlw+oUvMQSdmskqDplxoXgMyaqA7mBIOyASKzJIJEtnKHvz3hXvGpJLajhhr3ShKJXzj01PoKiZwBOeznnre1UkWk5g/gjmNUiAb525/MimBjR8+SGXosyrqxUz4NkdU+0PMqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746093651; c=relaxed/simple;
-	bh=A2/tYQBZY1Z3uPg6ctYYIbPoFZIQJ6KqDCrjuG7/KAk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gVWoXCPu5h+g2dwFJgk5L5TqqxEmIm9nQwAOJrt3CRnp45x+39CG6QnImp3jVPqA4TJMqKkf1dh1IuEOlNHb5BnfcrtuUmEw+oJq7rtaODWFymNokeQVzXU6Sy9c16/908Ji8DGkS/U0ouCA/8DmDkmsQPNapv2ft98TBevEvBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NkI/nWXa; arc=none smtp.client-ip=209.85.214.180
+	s=arc-20240116; t=1746093691; c=relaxed/simple;
+	bh=AI/mHUl8LydWya19DshJH2A1tt9SvRunHOX7jCqrT4c=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rvwdEgbiSS8E4CdATXzaNy60d27aj6JkQGOtOCSVEfSwUDnFbtVK8Ay3oPW5rRa6g7AF3Q6Y+6Ar+nlq8t4Ee4biuN4NatOURPJqGW3NSmWd6jk4PV6EDcqYe0eE3Wxf5kN2YUFfP3LAsqNEBobyqZOr/4K6VHyZRviAZ17LopQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayRhWFtV; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NkI/nWXa"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227c7e4d5feso1579415ad.2;
-        Thu, 01 May 2025 03:00:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayRhWFtV"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-af91fc1fa90so710992a12.0;
+        Thu, 01 May 2025 03:01:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746093649; x=1746698449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WYd47t4gUtgZAEpPyFJEBYLZ3qfrinyM/AUCXFp30k8=;
-        b=NkI/nWXaTKCV/SeWbZk+Yk6rvX0ZKXpO+7cN4iVgmOcWCT9rgwz1U+bnECoSv7X9pf
-         J8deKP0TedO0FlfAxqlwOY7ZqCwDV6sytbNXV278vqpCSzR0/WRpcdBS70lt75ewtuln
-         7KAEUzWQAPw+1/ZMUuxe35m9bXuw2iyvspoiFxIx/M+HLo3eBv6cHiTxOVsT2wBdUi4K
-         fzjI0Oq4eDL0dxXBsShD2/EbLXSWpLlHcHdkhZ5wL5CAGV07P8ILadcYpGqAPDV4LbYI
-         PKfOFSDS5zJnnNgnXZrMknK57MPKU5ntN2BMJPcmAJ8P6afXpOnkpMVMjWxhSl4TKe3q
-         iO0w==
+        d=gmail.com; s=20230601; t=1746093689; x=1746698489; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YxebTC5y7OhLqj3HmllTjlggghkFcGo2pX2o0VLrcuc=;
+        b=ayRhWFtVVDcTjwv4xZxKeNjTHbP9mD84cKQlAm/hGcbdwH0XolcB3BBw/DhuLaYm5m
+         nJnm2CjRICx2yLHqp8Y0nnumAW6mvHwhYWHslJqd3miYtoindCVsN5bzDiqKmFucSMgO
+         pcxohEkYvf8aPMPbQY3L3+wSFq42yr53g0dB2ckLt5ndxzM3eZrt2EZrwPOyD+gec90l
+         TtxRtWkCWJks3FZAPDyuo6FdRosrproeOUeOlnaS4llfSeYp1Rg1Vbs7WP9xbPgtq1j4
+         7qeiB4YVcDl3D58nM6xMm6zU3jq4i9Xtja6vu6WCqk7v48KD8zQoNbLe1vviVvVmFO9q
+         zhHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746093649; x=1746698449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WYd47t4gUtgZAEpPyFJEBYLZ3qfrinyM/AUCXFp30k8=;
-        b=VgYm1A3N5Ig+nWlJA1JhY6k6l+x8jsNXDP1+UzusQ3OQcHC4xHBLN0aXACDn7XEL16
-         dVavlxpS2olKgpstEdr3dO5wEIpIAxI4tMiyn+PnCmzcFK3mjzhevLjs5Izbvo9/5vjR
-         lwRH0VkiqPZyafQXEEe67OclqnMJ8nNgRyEzCza1FaN4/uZbsO4tjqRaMDkIB/T0nAad
-         Tn45HzvbTG+dEyiqcI1tIFCGYl/5kjmCytciPWgmhY14j2p0nz88SHg2fIRaQA8krMZr
-         M5mfbB1pGQ8EkvkKuWTVo8H+zwYMrXnH6Mt2U/+FzgK9b/l84ZODy8oJP3j4pIi+rzwk
-         erzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUld98NsIzNZ8SdkdniFN0O5S9QYAvSRgogQgA1e0eJqPjJSXPyXeuLDywsegkfbOeW7/yUZ7JltV5nrVeeYPE=@vger.kernel.org, AJvYcCUmwbzX1sT3JlN4rJ0JbeP4uRisDPzef2OXvtemQKX9zzPeEKSjuazQqv8gAXjjFAY1gMmgMmcGsx7BJdg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbOsf0KpINvZgX8qB/GA6SYB2hh8vZlJpHRyCyRBNasEBmXPIC
-	5nEV3N1SjTQ90IVICD3uALksBGHig6jP0bXNyk/lP7yRVqPJh72K4jrOjuGtbb8JoMXIkFX+5S7
-	ucFLQKhOKI1pvN6iVYlNOBmWTjX0=
-X-Gm-Gg: ASbGncuO9Wbm7xbLP9mTgTZEivwNCSLcIf59Ez1t0ICHIwtZyEdu2fkxBmQ/hUJH16F
-	egWbk8LEByJI1H9UnzUkPlCf1TPZCg177tTVi2+B65zPglv6PwlTmSxnGRu6cT7tIb+2NndJmJ/
-	frCzfUiHyxz8WI5hUuUA1ucQ==
-X-Google-Smtp-Source: AGHT+IFwguHcR8tQBbYtnPIlB9QnWc+bW5pF8LXM/EEbWC88+f1AI898M/1iUA64HX15LkFSIwFHE1TMP0hP9pf9+4I=
-X-Received: by 2002:a17:902:c94e:b0:224:1936:698a with SMTP id
- d9443c01a7336-22e00cc026cmr20951245ad.5.1746093648821; Thu, 01 May 2025
- 03:00:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746093689; x=1746698489;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YxebTC5y7OhLqj3HmllTjlggghkFcGo2pX2o0VLrcuc=;
+        b=xAIpCGJveMOzLxIOgf0O2VADTWX/YfQxgVvcy1VdaenMq0cREJNEYD2UMeilcYTiYS
+         Hbxr8lxDHw+SWjtgLK5A5RwtAh39UbV2F8N8nnVSAj6x2LaMMHxb/AK3DV1mAkR+dL6K
+         ib0xvnkXOQKFB1qBg0twuWvh7FtDBtKuvQU8Iii9jgskuLHIPrJT6prwD2a3JiXOwDyd
+         8Hz0CimTEanxRRSv3pfLcph3OPTuonouuYT3PhInbmPRugbw7V/5XzllkqVJB4YSOqva
+         GMkmF+C0JLZ96h2b/FXmCFzlDtHdhiOKBTFaJSsDQzYJvF3WjSiIeR5MTXhhvEBLLshr
+         mKIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCbiy6ihmucIRZ0Jtovpm68p8hUWB5h9HpZcj0O4OSaenlylxSJys5wuG4hTMj/HLb1XLtV18HJJtBi0ax@vger.kernel.org, AJvYcCWTJfSJbCTAagxfk+X8ARbx7tJLlpQYJQQn+MrJ8aVAXDpTZ8SPhfn2O8ApGWEFQYwUdoHwVl+IAidJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhFSWWXmxskb5rcZU4vJN4aOwm8W739hP5nEcvKjd5WWSpp3ns
+	eIdKQg/h0tMBPnMM5XwR9lZsGWHn87AwnRT/ff0VmXr5lNaCpw1kvY5NoM6lQU8=
+X-Gm-Gg: ASbGnct+48Qtx5ScZJqwBEBRU1Z6RhZWjW0Skhhv+8DUg5TYkTdPGN/7PnxJfIH+Jiv
+	aGNoCDKEM+rcGSGPF/Bm/EHSpv4cXb89sYDwb/wgw0VJ7wAVQW3TMNuBVUOhTDFLlUBJeXjc4UA
+	ByjMnspbVgLojWwhtViFvheX1cds/udaIC3W75usICYa/zSgGKWV+gBT7jkjI77GJfgOiV1FR09
+	vBO+NKGQE5IwpxqyVpL82dq+pKwW5NJAwdrxy9gM8w6tKNJOXEN6Ier4PVaMwQ3ILb5zV+UrDvR
+	IF+02I+Fvm3Sh7cBQNVoF6JhYws/Gm2yqELLDIG/Tg7uF0pW9LKwdOH6kA==
+X-Google-Smtp-Source: AGHT+IGQWOmfENunZupgyaKhNy0TTGVADlNGGuyh/mvhxc8Rx0ELKrdePtlLozv9FQcnYc3pkVzkBQ==
+X-Received: by 2002:a17:90b:510c:b0:2fe:8c22:48b0 with SMTP id 98e67ed59e1d1-30a400d32dfmr3921191a91.15.1746093689180;
+        Thu, 01 May 2025 03:01:29 -0700 (PDT)
+Received: from debian.domain.name ([2401:4900:1c45:13dc:af05:2012:1f6c:ed34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a47476120sm472477a91.13.2025.05.01.03.01.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 03:01:28 -0700 (PDT)
+From: Sayyad Abid <sayyad.abid16@gmail.com>
+To: linux-iio@vger.kernel.org
+Cc: sayyad.abid16@gmail.com,
+	jic23@kernel.org,
+	lars@metafoo.de,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com,
+	olivier.moysan@foss.st.com,
+	gstols@baylibre.com,
+	tgamblin@baylibre.com,
+	alisadariana@gmail.com,
+	eblanc@baylibre.com,
+	antoniu.miclaus@analog.com,
+	andriy.shevchenko@linux.intel.com,
+	stefan.popa@analog.com,
+	ramona.gradinariu@analog.com,
+	herve.codina@bootlin.com,
+	tobias.sperling@softing.com,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/5] iio: adc: Add initial support for TI ADS1262
+Date: Thu,  1 May 2025 15:30:38 +0530
+Message-Id: <20250501100043.325423-1-sayyad.abid16@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430-debugfs-rust-v2-0-2e8d3985812b@google.com> <20250430-debugfs-rust-v2-1-2e8d3985812b@google.com>
-In-Reply-To: <20250430-debugfs-rust-v2-1-2e8d3985812b@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Thu, 1 May 2025 12:00:36 +0200
-X-Gm-Features: ATxdqUEXxhXQ6AFlFxbNBm4xvnMYu__JxbkT187AjW-JFOw0SWgwNEbPbSps1UQ
-Message-ID: <CANiq72mm5Anx+MPc15Qunq3ewdmQQjkzNTcV7rx78z9UniT9CQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] rust: debugfs: Bind DebugFS directory creation
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, 
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 1, 2025 at 1:32=E2=80=AFAM Matthew Maurer <mmaurer@google.com> =
-wrote:
->
-> +// INVARIANT: The wrapped pointer will always be NULL, an error, or an o=
-wned DebugFS `dentry`
+The ADS1262 is a 32-bit, high-resolution delta-sigma ADC communicating
+over SPI. It's designed for precision measurements.
 
-We do it the other way around, i.e. `# Invariants` section for the
-type, and `// INVARIANT: ...` comments for the places that ensure the
-type invariant.
+This initial driver provides the basic functionality needed to:
+ - Probe and register the device via SPI.
+ - Expose standard IIO channels for reading raw voltage samples.
 
-+    ///    // parent exists in DebugFS here.
+Basic testing was performed on a Raspberry Pi Zero 2W using the hardware
+SPI0 interface. The connections used were:
 
-Parent ...
++-----------------+            +-----------------+
+| RPi Zero 2W     |            | TI ADS1262      |
+| (SPI0 Pins)     |            |                 |
+|-----------------|            |-----------------|
+| MOSI            |----------->| DIN             |
+| MISO            |<-----------| DOUT/DRDY       |
+| SCLK            |----------->| SCLK            |
+| CE0             |----------->| /CS             |
+| 5V              |----------->| DVDD, AVDD      |
+| GND             |----------->| DGND, AGND      |
++-----------------+            +-----------------+
 
-> +        // * If parent is None, parent accepts null pointers to mean cre=
-ate at root
-> +        // * If parent is Some, parent accepts live dentry debugfs point=
-ers
+I would greatly appreciate any feedback on the driver structure,
+IIO integration, SPI communication handling, or any potential issues
+or areas for improvement you might spot.
 
-`None`, `Some` (also please end sentences with periods)
+This series is broken down as follows:
+ Patch 1: Adds the core driver code (ti-ads1262.c).
+ Patch 2: Adds the Kconfig option.
+ Patch 3: Adds the Makefile entry for compilation.
+ Patch 4: Adds the MAINTAINERS entry.
 
-> +    /// Returns the pointer representation of the DebugFS directory.
-> +    ///
-> +    /// # Invariant
-> +    ///
-> +    /// The value returned from this function will always be an error co=
-de, NUL, or a live DebugFS
+Thanks for your time and consideration.
 
-Hmm... so far we use `# Invariants` only for types. Perhaps you could
-say something like "Thanks to the type invariant, the return value
-will always be ..."
+Sayyad Abid (5):
+  iio: adc: ti-ads1262.c: add initial driver for TI ADS1262 ADC
+  iio: adc: Kconfig: add Kconfig entry for TI ADS1262 driver
+  iio: adc: Makefile: add compile support for TI ADS1262 driver
+  MAINTAINERS: add entry for TI ADS1262 ADC driver
+  dt-bindings: iio: adc: add bindings for TI ADS1262
 
-`NULL`?
+ .../bindings/iio/adc/ti,ads1262.yaml          | 189 ++++++++
+ MAINTAINERS                                   |   7 +
+ drivers/iio/adc/Kconfig                       |  12 +
+ drivers/iio/adc/Makefile                      |   1 +
+ drivers/iio/adc/ti-ads1262.c                  | 438 ++++++++++++++++++
+ 5 files changed, 647 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+ create mode 100644 drivers/iio/adc/ti-ads1262.c
 
-Thanks!
+--
+2.39.5
 
-Cheers,
-Miguel
