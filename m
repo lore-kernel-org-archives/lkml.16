@@ -1,142 +1,341 @@
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC8E82F3E;
-	Thu,  1 May 2025 01:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA42158A09;
+	Thu,  1 May 2025 01:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746062903; cv=none; b=BwMhjZDL9w3clTmHUZ4EtuozjbEXDqcY8uwtctXRzZcJY5aNghDMf5781fuWn5Bv7YnwsMzWffMclXpTQeV6FP7cqSjmcL7AbCwYyVzB8edRrV6tpO+t4A2HetHjJdTcqYiNdGQLzWq23KMNTAh55kydEaxBUlQv2Fbw91zyn6I=
+	t=1746063290; cv=none; b=HhkTOqUPCRtaNP7BnMSA3LzWfo4U6UaAUmz1gMCTtftEPHYNCaJ3Pmhm4aTY4X2Mm2J5ZiL5K3NPXnv1C+LWc5eCNpBibUfx8YbPEDDUJr5d4wwcCumw61Kki2xuvrARJgqWpICEU7fFy6NUq1QKlm3lp9AOHfhZR1ObUMcDHNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746062903; c=relaxed/simple;
-	bh=KM37b4s9Rfq9uTncM+K031EOHXQvnfMvyDPfM/D8BnI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bHhWGwbFsh6+q9JzH89W4HSp/768AAjKZR35pMnChSK0ihToztmcs7+GJZ+ncNZMVsVsHkspzWPm58f+26MOjgWVzr4WbfRZmM2rJfSbyMMJJQun2lHdZkAnDjnf7RZSPh5y3qXSxhq8k9AndbcfRr8a8nfsXBXTPoZiXuVncC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h2ljSetv; arc=none smtp.client-ip=209.85.210.52
+	s=arc-20240116; t=1746063290; c=relaxed/simple;
+	bh=K4FK1SksihiDRwHS9IOcnoEUnF35eZSZx4EEULu2AdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QATbmVEIHLf7y1gfMRg7DymvGa50zVD5+elhfWWNKPxcD4b+0/mPRpApOf8fwegS0Uan0B8MwH9DtIAf9CZufsEaJGkXtZkLRdnq81g89qKmVVclmm2Rmi1gKjtLYPqY/ebp2ijp6YwoRt9v7R8MkFce8R589IiTJghwFtkDOk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c292zasy; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h2ljSetv"
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-72b82c8230aso133071a34.2;
-        Wed, 30 Apr 2025 18:28:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c292zasy"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so487126b3a.1;
+        Wed, 30 Apr 2025 18:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746062900; x=1746667700; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BHAiAriL0a3M+j0yvGSbbT4kExDsM2lRnxLYoNjxlDc=;
-        b=h2ljSetvn2wc+AS28R401PPCTWGL+57rL5eDCMDtPsPlE5shmsnuyf9n/cuidIWF3d
-         tNXoCDRJvwAB6jyoN7p8Yk9zBq6roEBHfFZpUZJuWoMigY7ToR0PGrWlKo6uAVUI5LfI
-         1T8xZlewElXOEBDJe4+8lljXmch99ciHt8TBV2N0m9R3gWh+3+ALAqD7mW7crc5ryZCp
-         XdvWQjIJcDH9lpERt03UBcaAlYgXc2PlUjZTpOV2CWyQzFjBPJ8lNLB+Tz8dKcwe7mVe
-         zMEmte1ofCPsX3uNWHnd/uYdVOo7Er71IPBFv/EzbdzWk6lmf3cB5XiLOHE3TvOSh2qk
-         dtrw==
+        d=gmail.com; s=20230601; t=1746063288; x=1746668088; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1EJVZoGVPtB0ls/jqlR50tgBETOk68yBgDdBhLsXmyY=;
+        b=c292zasyoHycEyFE281T5gs3nCO9GDVejwhA0Ug1ctdbEbsJKAL4QbVdeGd+L0kIoo
+         qcPR5n7XKIstVPXpvcH8d+3WTQ5f5+AberzYrDSAIwbwr7tGeHPfzq1NtS1YpAIfyf6k
+         kBnfp0MF8v9n5XmISMKLaWRCR/M6lpRbnLXLBygmHf5sutl5909RzakbDcnNORnNweWB
+         Ae+5o34/6TootdTIBQRM5uzH/kVZcCXLe/GuDWYB2Di2Keep4S6OybSh2BrM3j8um3Kx
+         NjFoj07GSXmHfy3zbtxHOdSu9TzZYVFb6rUMG8+BmrWASzFQS1vcpt7G1nRz+czk+akl
+         yItg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746062900; x=1746667700;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1746063288; x=1746668088;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BHAiAriL0a3M+j0yvGSbbT4kExDsM2lRnxLYoNjxlDc=;
-        b=g9oeSZL8a4vCQWMdWSbdJYTm8EN6haCZ34YE/B00xgGJo21wAC1qVeqN2DzCTq0vaM
-         nJp9jzIrlcGl9BgsAuFOFDbrAr+m3Qv3eTTMtYGljdXeDcp4a1L8XgwBIhKuiTu5pDQl
-         EucFyt89tP5Q59iddKbNdfVgb1GNym1yu2wPxQShZnEejdc7T3fJDGWHtsqrmAgS3+8g
-         rjCED0FotByeovKhQ3Oxjue4wP0zkpZ8xl+sIsG8137pvL7TVeLk+8SPDzFer0lrwsRF
-         xiROr20Gmdjde98LZqwtauL3qhiolQD3w297a4km3mtIwCEpsApbLWhXSPa8UcTI1GzI
-         Gegg==
-X-Forwarded-Encrypted: i=1; AJvYcCXt+dKLt2bNQdz1Zj1OGMxxcFvWqMokVuaxFOHW0NrD+fSyLPjTcpJhqcXrPH8cgIYzrI1EFd40Xg==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0bO8Ogy8M10NU9YxIu3lCRzVWLUjJqC/Wh1FAC9NAbPjqU6+f
-	ZSivGeFur5GNT7RKvcDmKVUWRQOXC+myeTF8Q0+ugBZFmxpakFz8z/MSK0AE
-X-Gm-Gg: ASbGnctihJz48JURjhz4AfzOonJYIncHT8nWb8dgTPT4a4DITKECfK7w1zMIswblUXP
-	IjhH5ol0lMCB84IuRF72+yRhRVgrn/pdvCVedRr1InYxsu/kkpxH3uAFA87nXgLgATSdbt3+4fz
-	LeOJL9oJjWHXLRLtDNCruwPiiGoff16pgqJ1GxnBXZIT0V0a123dv/OPnpHc592RpOu1sLO+g+V
-	8/6gx6FMQ49lxuULgaqV2GqMiuNBNzE4DGssylX2yvhCyTdAimvn843a+EaBrXMIqEC6bOdDPFx
-	qdB0uLFLW10v+20SzQsdl2a3xHOF0bKTlbQm2kcwylnjeeK+7U4HXC+G
-X-Google-Smtp-Source: AGHT+IHxAh2FrqMqOg+Ig8XkRa1V1Q9oJXMfJkVlifPapgGOdJB/+slk7jZRlzWqP/CkL1v/dP9gbw==
-X-Received: by 2002:a05:6830:6f85:b0:72b:9a2e:7828 with SMTP id 46e09a7af769-731c0aab0eemr3791355a34.28.1746062900643;
-        Wed, 30 Apr 2025 18:28:20 -0700 (PDT)
-Received: from ?IPV6:2600:6c56:7d00:582f::64e? ([2600:6c56:7d00:582f::64e])
-        by smtp.googlemail.com with ESMTPSA id 46e09a7af769-7308b31214bsm1119027a34.57.2025.04.30.18.28.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 30 Apr 2025 18:28:20 -0700 (PDT)
-Message-ID: <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
-Date: Wed, 30 Apr 2025 20:28:19 -0500
+        bh=1EJVZoGVPtB0ls/jqlR50tgBETOk68yBgDdBhLsXmyY=;
+        b=M6JHLeR10ui1+WOACBYfgTjkJfdhzQMbzQ0k+K+L8+X31BSvyL+5FubcYsqzmXTd+j
+         4S/194hevBUaVeeJw4acbYPdCd3KVTTd4DzXHHy9mgphI65Qv4Q21oDH9I6hzQ7wu4MW
+         XD9HpQ1zUKw50IRlcwxPq+zJQJTaUvxKe6M61mrLxb0H9/tQDQmTBg7DoN95toEhKtw6
+         A+2F9RoRCIx/JNNvxytIx/BWsMUKJEmfqoAoH9V5Ywwy9Q/4X6Efk1Pv9TQ/YXbYMP4m
+         X2DXGto3Fb8WV3tHMp9LXQANtL30HIwMzq/SN4hSFyOEy3vJTtXSeMaCLy5k9TdW/for
+         J0hQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVh2DxNDeH+fE65uch4xdsK3MwdGdvi/gbIWKFH/w4nGD+gLulimeLtCcOvkucIyUtK4NPSy83k@vger.kernel.org, AJvYcCX07fMyPVpygUCexBbp6aVuVgu7q78sbgX1CEQHp7JQm67ObYT+s3lvFcR3eObhu2eT5UkYmewLeZ8qHm9C@vger.kernel.org, AJvYcCX4sZNT3O2eExFBX08irUWxQR5CrT1bJ8+bAsV5k9rlfkDkuZVi9G/Ks6G2EJYwfI9884k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA5jIP4rqPviOhqvW58uPPSBQD9BG4he4hkTwf6fgJBSsA5tLD
+	rE47pZBa10IoKJ76aDOiOWWqw4sG2nMDeDC7Eeas1KEp+B7k8jg=
+X-Gm-Gg: ASbGncveXfirXJsBjaibhwL0PM0sDmDLk3pnkmJpx3l0k0e5VW2Pb2QwPWDON+yCjNB
+	RxZ78GDM+vZz8lWiOVMNM4oIIEAkwC09tkKPb5C8OQTugfHdHYQckI+MG3E/ujgv3gJuefJfrlk
+	Abn99i8ZkUpeNHCDYC526j/4LIHTKhJaDiY5PtbmnordTtkhALRYElt2mqpoFGvX4HEC8bF26sv
+	zDdyCtP+8EMl8M9z84tY+20KtsDSsH7T/XecJpSL0y87QVotvER2mIVLy5vgQSDCmJPBJjQMK0v
+	dqQNihu9k4Y+IFkvXf5t4RWIGYIxkBns2Smti/v+xy3gND++tdbydH5NQmpnA4XkwfE3YFhtdAq
+	mK9+e36OpLw==
+X-Google-Smtp-Source: AGHT+IFNsKs/G+y5JObZ9injpFGWoGxzqspTFfuUyi/an9Y5CFE+Wct757N+xfdnPxt028yFjJSkPw==
+X-Received: by 2002:a05:6a20:3d8c:b0:204:2936:bce with SMTP id adf61e73a8af0-20bd804a2a9mr1094153637.31.1746063287773;
+        Wed, 30 Apr 2025 18:34:47 -0700 (PDT)
+Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b15f7ec0bb2sm11293329a12.18.2025.04.30.18.34.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 18:34:47 -0700 (PDT)
+Date: Wed, 30 Apr 2025 18:34:46 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Jon Kohler <jon@nutanix.com>
+Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Simon Horman <horms@kernel.org>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
+Subject: Re: [PATCH net-next v2] xdp: Add helpers for head length, headroom,
+ and metadata length
+Message-ID: <aBLPtszlDe74yTlk@mini-arch>
+References: <20250430201120.1794658-1-jon@nutanix.com>
+ <aBKReJUy2Z-JQwr4@mini-arch>
+ <32FB9CF5-E5BB-4912-B76D-53971C6B6F98@nutanix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] cpufreq: intel_pstate: Use CPPC to get scaling
- factors
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>,
- Linux PM <linux-pm@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-References: <1923452.tdWV9SEqCh@rjwysocki.net>
- <8476313.T7Z3S40VBb@rjwysocki.net>
-Content-Language: en-US
-From: Russell Haley <yumpusamongus@gmail.com>
-In-Reply-To: <8476313.T7Z3S40VBb@rjwysocki.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <32FB9CF5-E5BB-4912-B76D-53971C6B6F98@nutanix.com>
 
+On 05/01, Jon Kohler wrote:
+> 
+> 
+> > On Apr 30, 2025, at 5:09 PM, Stanislav Fomichev <stfomichev@gmail.com> wrote:
+> > 
+> > !-------------------------------------------------------------------|
+> >  CAUTION: External Email
+> > 
+> > |-------------------------------------------------------------------!
+> > 
+> > On 04/30, Jon Kohler wrote:
+> >> Introduce new XDP helpers:
+> >> - xdp_headlen: Similar to skb_headlen
+> >> - xdp_headroom: Similar to skb_headroom
+> >> - xdp_metadata_len: Similar to skb_metadata_len
+> >> 
+> >> Integrate these helpers into tap, tun, and XDP implementation to start.
+> >> 
+> >> No functional changes introduced.
+> >> 
+> >> Signed-off-by: Jon Kohler <jon@nutanix.com>
+> >> ---
+> >> v1->v2: Integrate feedback from Willem
+> >> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.kernel.org_project_netdevbpf_patch_20250430182921.1704021-2D1-2Djon-40nutanix.com_&d=DwIBaQ&c=s883GpUCOChKOHiocYtGcg&r=NGPRGGo37mQiSXgHKm5rCQ&m=9pdxzQszX_M0K3gEPeYOyMZZYSkRR8IMvxslS8320Eoctk58y-ELCdZ5iaryF2GH&s=J-ILB7E9VQ_plo0hyjEtzGzjy6G0_o4MMMmmE_z8vvc&e= 
+> >> 
+> >> drivers/net/tap.c |  6 +++---
+> >> drivers/net/tun.c | 12 +++++------
+> >> include/net/xdp.h | 54 +++++++++++++++++++++++++++++++++++++++++++----
+> >> net/core/xdp.c    | 12 +++++------
+> >> 4 files changed, 65 insertions(+), 19 deletions(-)
+> >> 
+> >> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
+> >> index d4ece538f1b2..a62fbca4b08f 100644
+> >> --- a/drivers/net/tap.c
+> >> +++ b/drivers/net/tap.c
+> >> @@ -1048,7 +1048,7 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
+> >> struct sk_buff *skb;
+> >> int err, depth;
+> >> 
+> >> - if (unlikely(xdp->data_end - xdp->data < ETH_HLEN)) {
+> >> + if (unlikely(xdp_headlen(xdp) < ETH_HLEN)) {
+> >> err = -EINVAL;
+> >> goto err;
+> >> }
+> >> @@ -1062,8 +1062,8 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
+> >> goto err;
+> >> }
+> >> 
+> >> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> >> - skb_put(skb, xdp->data_end - xdp->data);
+> >> + skb_reserve(skb, xdp_headroom(xdp));
+> >> + skb_put(skb, xdp_headlen(xdp));
+> >> 
+> >> skb_set_network_header(skb, ETH_HLEN);
+> >> skb_reset_mac_header(skb);
+> >> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> >> index 7babd1e9a378..4c47eed71986 100644
+> >> --- a/drivers/net/tun.c
+> >> +++ b/drivers/net/tun.c
+> >> @@ -1567,7 +1567,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
+> >> dev_core_stats_rx_dropped_inc(tun->dev);
+> >> return err;
+> >> }
+> >> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
+> >> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
+> >> break;
+> >> case XDP_TX:
+> >> err = tun_xdp_tx(tun->dev, xdp);
+> >> @@ -1575,7 +1575,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
+> >> dev_core_stats_rx_dropped_inc(tun->dev);
+> >> return err;
+> >> }
+> >> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
+> >> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
+> >> break;
+> >> case XDP_PASS:
+> >> break;
+> >> @@ -2355,7 +2355,7 @@ static int tun_xdp_one(struct tun_struct *tun,
+> >>       struct xdp_buff *xdp, int *flush,
+> >>       struct tun_page *tpage)
+> >> {
+> >> - unsigned int datasize = xdp->data_end - xdp->data;
+> >> + unsigned int datasize = xdp_headlen(xdp);
+> >> struct tun_xdp_hdr *hdr = xdp->data_hard_start;
+> >> struct virtio_net_hdr *gso = &hdr->gso;
+> >> struct bpf_prog *xdp_prog;
+> >> @@ -2415,14 +2415,14 @@ static int tun_xdp_one(struct tun_struct *tun,
+> >> goto out;
+> >> }
+> >> 
+> >> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
+> >> - skb_put(skb, xdp->data_end - xdp->data);
+> >> + skb_reserve(skb, xdp_headroom(xdp));
+> >> + skb_put(skb, xdp_headlen(xdp));
+> >> 
+> >> /* The externally provided xdp_buff may have no metadata support, which
+> >> * is marked by xdp->data_meta being xdp->data + 1. This will lead to a
+> >> * metasize of -1 and is the reason why the condition checks for > 0.
+> >> */
+> >> - metasize = xdp->data - xdp->data_meta;
+> >> + metasize = xdp_metadata_len(xdp);
+> >> if (metasize > 0)
+> >> skb_metadata_set(skb, metasize);
+> >> 
+> >> diff --git a/include/net/xdp.h b/include/net/xdp.h
+> >> index 48efacbaa35d..044345b18305 100644
+> >> --- a/include/net/xdp.h
+> >> +++ b/include/net/xdp.h
+> >> @@ -151,10 +151,56 @@ xdp_get_shared_info_from_buff(const struct xdp_buff *xdp)
+> >> return (struct skb_shared_info *)xdp_data_hard_end(xdp);
+> >> }
+> >> 
+> >> +/**
+> >> + * xdp_headlen - Calculate the length of the data in an XDP buffer
+> >> + * @xdp: Pointer to the XDP buffer structure
+> >> + *
+> >> + * Compute the length of the data contained in the XDP buffer. Does not
+> >> + * include frags, use xdp_get_buff_len() for that instead.
+> >> + *
+> >> + * Analogous to skb_headlen().
+> >> + *
+> >> + * Return: The length of the data in the XDP buffer in bytes.
+> >> + */
+> >> +static inline unsigned int xdp_headlen(const struct xdp_buff *xdp)
+> >> +{
+> >> + return xdp->data_end - xdp->data;
+> >> +}
+> >> +
+> >> +/**
+> >> + * xdp_headroom - Calculate the headroom available in an XDP buffer
+> >> + * @xdp: Pointer to the XDP buffer structure
+> >> + *
+> >> + * Compute the headroom in an XDP buffer.
+> >> + *
+> >> + * Analogous to the skb_headroom().
+> >> + *
+> >> + * Return: The size of the headroom in bytes.
+> >> + */
+> >> +static inline unsigned int xdp_headroom(const struct xdp_buff *xdp)
+> >> +{
+> >> + return xdp->data - xdp->data_hard_start;
+> >> +}
+> >> +
+> >> +/**
+> >> + * xdp_metadata_len - Calculate the length of metadata in an XDP buffer
+> >> + * @xdp: Pointer to the XDP buffer structure
+> >> + *
+> >> + * Compute the length of the metadata region in an XDP buffer.
+> >> + *
+> >> + * Analogous to skb_metadata_len().
+> >> + *
+> >> + * Return: The length of the metadata in bytes.
+> >> + */
+> >> +static inline unsigned int xdp_metadata_len(const struct xdp_buff *xdp)
+> > 
+> > I believe this has to return int, not unsigned int. There are places
+> > where we do data_meta = data + 1, and the callers check whether
+> > the result is signed or sunsigned.
+> 
+> The existing SKB APIs are the exact same return type (I copied them 1:1),
+> but I have a feeling that we’re never intending these values to either A) be
+> negative and/or B) wrap in strange ways?
+> 
+> > 
+> >> +{
+> >> + return xdp->data - xdp->data_meta;
+> >> +}
+> >> +
+> >> static __always_inline unsigned int
+> >> xdp_get_buff_len(const struct xdp_buff *xdp)
+> >> {
+> >> - unsigned int len = xdp->data_end - xdp->data;
+> >> + unsigned int len = xdp_headlen(xdp);
+> >> const struct skb_shared_info *sinfo;
+> >> 
+> >> if (likely(!xdp_buff_has_frags(xdp)))
+> >> @@ -364,8 +410,8 @@ int xdp_update_frame_from_buff(const struct xdp_buff *xdp,
+> >> int metasize, headroom;
+> 
+> Said another way, perhaps this should be unsigned?
+> 
+> >> 
+> >> /* Assure headroom is available for storing info */
+> >> - headroom = xdp->data - xdp->data_hard_start;
+> >> - metasize = xdp->data - xdp->data_meta;
+> >> + headroom = xdp_headroom(xdp);
+> >> + metasize = xdp_metadata_len(xdp);
+> >> metasize = metasize > 0 ? metasize : 0;
+> > 
+> > ^^ like here
+> 
+> Look across the tree, seems like more are unsigned than signed
 
-On 12/5/24 5:39 AM, Rafael J. Wysocki wrote:
+The ones that are unsigned are either calling xdp_data_meta_unsupported
+explicitly (and it does > to check for this condition, not signed math)
+or are running in the drivers that are guaranteed to have metadata
+support (and, hence, always have data_meta <= data).
 
-> +	 * Compute the perf-to-frequency scaling factor for the given CPU if
-> +	 * possible, unless it would be 0.
-> +	 */
-> +	if (!cppc_get_perf_caps(cpu, &cppc_perf) &&
-> +	    cppc_perf.nominal_perf && cppc_perf.nominal_freq)
-> +		return div_u64(cppc_perf.nominal_freq * KHZ_PER_MHZ,
-> +			       cppc_perf.nominal_perf);
+> These ones use unsigned:
+> xdp_convert_zc_to_xdp_frame
 
-I think this exposed a firmware bug on ARL. I have a Core Ultra 265K,
-and two of the E-cores report 33 for nominal_perf, while the others
-report 46. They all report 3300 for nominal_freq.
+This uses xdp_data_meta_unsupported
 
-The result is that the kernel thinks these two E-cores are capable of
-6.5 GHz.
+> veth_xdp_rcv_skb
+> xsk_construct_skb
+> bnxt_copy_xdp
+> i40e_build_skb
+> i40e_construct_skb_zc
+> ice_build_skb (this is u8)
+> ice_construct_skb_zc
+> igb_build_skb
+> igb_construct_skb_zc
+> igc_build_skb
+> igc_construct_skb
+> igc_construct_skb_zc
+> ixgbe_build_skb
+> ixgbe_construct_skb_zc
+> ixgbevf_build_skb
+> mvneta_swbm_build_skb
+> mlx5e_xsk_construct_skb
+> mana_build_skb
+> stmmac_construct_skb_zc
+> bpf_prog_run_generic_xdp
 
-> grep . /sys/devices/system/cpu/cpu*/cpufreq/cpuinfo_max_freq
-/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu1/cpufreq/cpuinfo_max_freq:5500000
-/sys/devices/system/cpu/cpu2/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu3/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu4/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu5/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu6/cpufreq/cpuinfo_max_freq:5400000
-/sys/devices/system/cpu/cpu7/cpufreq/cpuinfo_max_freq:5500000
-/sys/devices/system/cpu/cpu8/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu9/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu10/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu11/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu12/cpufreq/cpuinfo_max_freq:6500000 # wow
-/sys/devices/system/cpu/cpu13/cpufreq/cpuinfo_max_freq:6500000 # amazing
-/sys/devices/system/cpu/cpu14/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu15/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu16/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu17/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu18/cpufreq/cpuinfo_max_freq:4600000
-/sys/devices/system/cpu/cpu19/cpufreq/cpuinfo_max_freq:4600000
+These run in the drivers that support metadata (data_meta <= data)
 
-Hopefully you have the ear of someone on the firmware team so that a
-ticket can be created for this.
+> xdp_get_metalen
 
-In Phoronix discussion, users have reported seeing this on both ASRock
-and MSI motherboards:
+This uses xdp_data_meta_unsupported
 
-https://www.phoronix.com/forums/forum/hardware/processors-memory/1541981-intel-core-ultra-9-285k-arrow-lake-performance-on-linux-has-improved-a-lot-since-launch?p=1543676#post1543676
+> These ones are regular int:
+> xdp_build_skb_from_buff
+> xdp_build_skb_from_zc
+> xdp_update_frame_from_buff
+> tun_xdp_one
+> build_skb_from_xdp_buff
 
-----------
+These can be called from the drivers that support and don't support 
+the metadata, so have to (correctly) use int.
 
-Also, this may be related... I can't set scaling_max_freq to odd
-multiples of 100 MHz, only even. Checking with:
+> Perhaps a separate patch to convert the regulars to unsigned,
+> thoughts?
 
-    x86_energy_perf_policy &| grep -i req
-
-reveals that some values of max are being skipped. Setting manually with
-
-    x86_energy_perf_policy --cpu 0-7 --hwp-max 76
-
-allows the odd multiples to be accessed. Integer division issue somewhere?
+Take a look at xdp_set_data_meta_invalid and xdp_data_meta_unsupported.
+There are cases where xdp->data - xdp->data_meta is -1 (and the callers
+check for this condition), we can't use unsigned unconditionally
+(unless we use xdp_data_meta_unsupported).
