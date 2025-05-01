@@ -1,86 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4C72AD32;
-	Thu,  1 May 2025 10:58:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BDE817A2F5;
+	Thu,  1 May 2025 11:01:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746097131; cv=none; b=M/W+I9ABTc9zj4ma3dcYOySb6OF6TIb9vd/sR3BkKsNx2BJ8XSRbIqvo/WSTL5s2DsYWy4qm/gKA28vBjbsiPJEUq33zXP0i10mo1tjVd/MfWyM8/n1sojxdt+KuvC1t3aXrXTE6TWZnFrCyPN+JnhyYzWwON8bolUhgIg++inM=
+	t=1746097320; cv=none; b=qV639BS/6yAtlM+HnD0BT+Pq0jHfIo6zmNEkNhOFxS1rBd7X6a85FRZdFwuHk3oEQbLu0/+eP4gWhb1pkYvbCz2wGfq6eO5F3PBa4+jKh864gmus3nKnSrinyp3veUaaqIJkuGtdgv1qaWtrZYBwQES26gHQLSzTbeuYVfDVpEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746097131; c=relaxed/simple;
-	bh=fOPI1vRY7umuBn+S/P9hMul1fSPdaHJ81MJBCEDAOto=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qlb5vF5JoNEVWXTR43be7Am7UAT8lXUkid5hZN3/qbAqQFJHQ4PI2z53cNuXYKPd2eMdiiXMJ8/NH4hU1WckkJxU7nVTVg+BAiQDrH8rczWyZbxLiEhYf4KATgF1jYoUTdIA0D6v/b6Sbc/qpRzTYJGiD1nSJZEMeJ9y7/d2D3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G4kbdGbb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746097320; c=relaxed/simple;
+	bh=LWH9aQoEGKjvn+/B3c90aXr4V2lDUYHoaiBU/lVpSfQ=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=QxZ6ifbnJR1ykZPvaOtBF4Gca81uYSYPGGCF8AgqX7or5FPcPiKEiSSb0TjKXu/k8HAogfhDFgVk3/+GfQ0kYpUv3sGltUpkjy3qVvwRmO4nKcBThB3K3hEI+3bjUKADJiayl1Md88eAiXSngU39phplyyoKH6Ltwvc5dbMBZio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=DkHgLmPn; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G4kbdGbb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EC4C4CEE3;
-	Thu,  1 May 2025 10:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746097131;
-	bh=fOPI1vRY7umuBn+S/P9hMul1fSPdaHJ81MJBCEDAOto=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G4kbdGbb5Ttos7413Y9NRKDgW9LAD6g3OLKHMJHzdqOkufj89zfhI1K/vK872+YWD
-	 Ji3r3IcpHV1lO8l3J9Dc2Lf+aTaW2OFrSj1/KLtwkMY4LzriyrZpcF2k6aGfLgoeDo
-	 LVKR5uO8px3oWIpV9WZBwq+SaROVF7vvilxAXMDG7W2Gs+nDl0G1WbDfhqGA2tB2Uw
-	 dCJxhavYP92r0DTN9IAV3tAwyP9ii3arplTRgX02vriYnpVg5bSK2ABmigqie0RvVx
-	 Mzs3AmGVr/3Ko65RKjUtQgV/p/aplBuDvIz5dx2O6O/4dOGN+LwylQ+71GFQV7tWz5
-	 UKdNw5fBPxSNg==
-Date: Thu, 1 May 2025 12:58:48 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Caleb James DeLisle <cjd@cjdns.fr>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, tsbogend@alpha.franken.de, 
-	daniel.lezcano@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	benjamin.larsson@genexis.eu, linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH v4 1/7] dt-bindings: timer: Add EcoNet EN751221 "HPT" CPU
- Timer
-Message-ID: <20250501-ludicrous-idealistic-camel-7bf8aa@kuoka>
-References: <20250430133433.22222-1-cjd@cjdns.fr>
- <20250430133433.22222-2-cjd@cjdns.fr>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="DkHgLmPn"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id D0B07258E3;
+	Thu,  1 May 2025 13:01:54 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 5VqxOrDQx-27; Thu,  1 May 2025 13:01:54 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746097314; bh=LWH9aQoEGKjvn+/B3c90aXr4V2lDUYHoaiBU/lVpSfQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=DkHgLmPnYucvtXeETGabAofcZZEmBxKiTmR7RGcads/ZyhjGYsm5u0CWKnwLt0ivk
+	 5Nyl0+BokmdyNdfth1pPMwj6OBUNNqTjcmoJcfLJgOsShpHfiUvBRfFkFmpYGKjKGO
+	 BS5GPONOrnoYmg4VLfoUbNI+k0wJkY3ZqCrIWCoGZlBEojBXEpEWTFdh+fDe/RC7jz
+	 Iyta2WBQ9sQFaCmWm/lR35TX8eWd9j61oLaHDqN2kvAzeAGPoAhUlbna8L99xcZWNp
+	 9R29QJFgMl4bq3xUq3vuyp7GGGtEED3HsKEzOFUd4R5RVcD711JgWQxUUIfl2Mt39J
+	 qrh/Jo+Vj3bNA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250430133433.22222-2-cjd@cjdns.fr>
+Date: Thu, 01 May 2025 11:01:53 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, "Guilherme G.
+ Piccoli" <gpiccoli@igalia.com>, Ivaylo Ivanov
+ <ivo.ivanov.ivanov1@gmail.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v6 3/5] arm64: dts: exynos: add initial support for
+ Samsung Galaxy J7 Prime
+In-Reply-To: <298d8c1f-40ca-4377-a7a5-69f81989d7ea@kernel.org>
+References: <20250414-exynos7870-v6-0-039bd5385411@disroot.org>
+ <20250414-exynos7870-v6-3-039bd5385411@disroot.org>
+ <298d8c1f-40ca-4377-a7a5-69f81989d7ea@kernel.org>
+Message-ID: <4fe07fef083daed35898e8a1d11b6d2d@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 01:34:27PM GMT, Caleb James DeLisle wrote:
-> Add device tree bindings for the so-called high-precision timer (HPT)
-> in the EcoNet EN751221 SoC.
+On 2025-05-01 10:13, Krzysztof Kozlowski wrote:
+> On 13/04/2025 20:58, Kaustabh Chakraborty wrote:
+>> +		key-volup {
+>> +			label = "Volume Up Key";
+>> +			gpios = <&gpa2 0 GPIO_ACTIVE_LOW>;
+>> +			linux,code = <KEY_VOLUMEUP>;
+>> +		};
+>> +	};
+>> +
+>> +	memory@40000000 {
+>> +		device_type = "memory";
+>> +		reg = <0x0 0x40000000 0x3e400000>;
+>> +	};
+>> +
+>> +	memory@80000000 {
 > 
-> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
-> ---
->  .../bindings/timer/econet,en751221-timer.yaml | 80 +++++++++++++++++++
->  1 file changed, 80 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/econet,en751221-timer.yaml
+> Why are these two separate device nodes, instead of one for two ranges?
+> Does device has somehow two independent memory controllers?
+
+This is from Galaxy J6:
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0x3d800000>;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x40000000>;
+	};
+
+changes to
+
+	memory@40000000 {
+		device_type = "memory";
+		reg = <0x0 0x40000000 0x3d800000>,
+		      <0x0 0x80000000 0x7d800000>;
+	};
+
+I assume I have changed it correctly? `free -h` displays the full
+and correct memory capacity.
+
 > 
-
-What changed? Nothing explains dropping the tag.
-
-<form letter>
-This is a friendly reminder during the review process.
-
-It looks like you received a tag and forgot to add it.
-
-If you do not know the process, here is a short explanation:
-Please add Acked-by/Reviewed-by/Tested-by tags when posting new
-versions of patchset, under or above your Signed-off-by tag, unless
-patch changed significantly (e.g. new properties added to the DT
-bindings). Tag is "received", when provided in a message replied to you
-on the mailing list. Tools like b4 can help here. However, there's no
-need to repost patches *only* to add the tags. The upstream maintainer
-will do that for tags received on the version they apply.
-
-Please read:
-https://elixir.bootlin.com/linux/v6.12-rc3/source/Documentation/process/submitting-patches.rst#L577
-
-If a tag was not added on purpose, please state why and what changed.
-</form letter>
-
-Best regards,
-Krzysztof
-
+> 
+> Best regards,
+> Krzysztof
