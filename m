@@ -1,78 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F33220127F;
-	Thu,  1 May 2025 14:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929101F12FB;
+	Thu,  1 May 2025 14:20:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746109195; cv=none; b=pI4qoBhrEE63lTLhVhDhSGtLhw55IQHlKyIO4liNxgkRU6uz6tao7kt22sTGONWwlRhZi4oYFnrNRuaBEzdBhyTMUpzXSnqMulIiihLIxpssdjt1oFLfE1loy7jbI67+x3GJ1CX+vVzFWWc+4tO453JqdiBml/KCdzBYaaXraE4=
+	t=1746109201; cv=none; b=ZLmZEM0hiXDoxtjlytP9M+WCnpmISl/jqMAqZ/wkdu+ssuB6p7sE7bL+uylWisGaR+Rj/zTeOHsd+2/Gdb8aQQ115Nx8kR1BAWOFCgX+XBG+VS24YQJUt1dSPTlyavSDx2YXey+pxCYuUPb3CtKsUmZgwWv1UHQS/2H5vrSqjjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746109195; c=relaxed/simple;
-	bh=DZzv1vOq5mYAtL2pPeRgIa/stpLyReKbcRB0R8mKOh4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Mpva6Pyf1yzJSJRLDbyTt8ZPf1ov3G4flC2nTO4O+0sQ+WJfUJvbC9dA8Fm7l+HCzDPOzEFlZCafJOCxdAfRdw8gqjBpNiqhtF2i/VnYYCORm18sJfDyoQ3aWuTdw665yS4PQqIFpRtbZ2BqlxNgUu1O8wN+wMVw7lAWqIFMUOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbKDBFr8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746109201; c=relaxed/simple;
+	bh=yTGDsV/qkDX6/wJxY2XfQH1gt/Bhq2Z1tO1gg0yohu8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ab4GJMVM/bperV+QsQ9shIGzjyMy+GlQaMgaH/IMSsOCnCfFEeXlF0vAIr3gr6/tA9eMhKLfXs0HhtLbPuKeaq2tk8C/OF+0KxlaxTNx/PHO4wiMRBynbjnrqvKHNf9AAKimz139teGDHJwHNDCIbgkKqUxkGBt3sJiF/arfa2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n6BU+4l8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbKDBFr8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64903C4CEEE;
-	Thu,  1 May 2025 14:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746109195;
-	bh=DZzv1vOq5mYAtL2pPeRgIa/stpLyReKbcRB0R8mKOh4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=TbKDBFr8Mm3/s7P4VtfKBPOHUjSZZj0eCt7POq+4qZD8HRsX32pOM/i/9onrFn3Ho
-	 62aJVkUz6kwAR5Q2ddyZq/Vl7FIAmc3PmA+ssgGWsHdZ6Uwdr/3lUnh54jOJ/7vwwL
-	 qFvjjydbANLhBKcoR4Iv2gey/MXZdIhp1bgS95B5h5BuZOlwtF0JwwKzvNNP28mwed
-	 kS2ed8eIaN3CiME6g4mlsKKqtmLvoD+lVToNxRX+9046A42vJmzZ6SrrNKstNOpPkw
-	 07UOEqeUIwk5YcFBGA32tXdZyEpAA6rZeJRGJEynn9yPSz8plmluJexExylG69r38k
-	 XVauSKL951rCA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE40C3822D59;
-	Thu,  1 May 2025 14:20:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n6BU+4l8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB779C4CEE3;
+	Thu,  1 May 2025 14:20:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746109201;
+	bh=yTGDsV/qkDX6/wJxY2XfQH1gt/Bhq2Z1tO1gg0yohu8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n6BU+4l8c5gq/ZzPAFK9xFGa97oxCn6dQah+wqoItLFSJp008SxoaKOWO26yRdzNB
+	 xQT7RKvtO4ljIlwjF7UQInffIGB0vttyPhz5JZ6qlM+KDNDQA+XpSjVtT8XfyGgrpQ
+	 2jmuSSlB7sDWhamBaYp/EcgCRF/CUdKcs3RDgwH0=
+Date: Thu, 1 May 2025 16:17:00 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, cve@kernel.org,
+	linux-kernel@vger.kernel.org, linux-cve-announce@vger.kernel.org
+Subject: Re: CVE-2025-22029: exec: fix the racy usage of fs_struct->in_exec
+Message-ID: <2025050148-celtic-espresso-60d2@gregkh>
+References: <2025041655-CVE-2025-22029-349f@gregkh>
+ <aBH93qMAhgMEGDAY@tiehlicka>
+ <20250430112033.GA9277@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 net] net: lan743x: Fix memleak issue when GSO enabled
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174610923449.2992896.1884330785665850794.git-patchwork-notify@kernel.org>
-Date: Thu, 01 May 2025 14:20:34 +0000
-References: <20250429052527.10031-1-thangaraj.s@microchip.com>
-In-Reply-To: <20250429052527.10031-1-thangaraj.s@microchip.com>
-To: Thangaraj Samynathan <thangaraj.s@microchip.com>
-Cc: netdev@vger.kernel.org, bryan.whitehead@microchip.com,
- UNGLinuxDriver@microchip.com, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430112033.GA9277@redhat.com>
 
-Hello:
-
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Tue, 29 Apr 2025 10:55:27 +0530 you wrote:
-> Always map the `skb` to the LS descriptor. Previously skb was
-> mapped to EXT descriptor when the number of fragments is zero with
-> GSO enabled. Mapping the skb to EXT descriptor prevents it from
-> being freed, leading to a memory leak
+On Wed, Apr 30, 2025 at 01:20:33PM +0200, Oleg Nesterov wrote:
+> On 04/30, Michal Hocko wrote:
+> >
+> > Based on a follow up update from Oleg[1] I would like to dispute this
+> > CVE.
 > 
-> Fixes: 23f0703c125b ("lan743x: Add main source files for new lan743x driver")
-> Signed-off-by: Thangaraj Samynathan <thangaraj.s@microchip.com>
+> Agreed. Let me quote my reply to my "fix", see
+> https://lore.kernel.org/all/20250429154944.GA18907@redhat.com/
 > 
-> [...]
+> 	Damn, I am stupid.
+> 
+> 	On 03/24, Oleg Nesterov wrote:
+> 	>
+> 	> check_unsafe_exec() sets fs->in_exec under cred_guard_mutex, then execve()
+> 	> paths clear fs->in_exec lockless. This is fine if exec succeeds, but if it
+> 	> fails we have the following race:
+> 	>
+> 	> 	T1 sets fs->in_exec = 1, fails, drops cred_guard_mutex
+> 	>
+> 	> 	T2 sets fs->in_exec = 1
+> 	>
+> 	> 	T1 clears fs->in_exec
+> 
+> 	When I look at this code again, I think this race was not possible and thus
+> 	this patch (applied as af7bb0d2ca45) was not needed.
+> 
+> 	Yes, begin_new_exec() can drop cred_guard_mutex on failure, but only after
+> 	de_thread() succeeds, when we can't race with another sub-thread.
+> 
+> 	I hope this patch didn't make the things worse so we don't need to revert it.
+> 	Plus I think it makes this (confusing) logic a bit more clear. Just, unless
+> 	I am confused again, it wasn't really needed.
+> 
+> Sorry for the confusion caused by my patch :/
 
-Here is the summary with links:
-  - [v2,net] net: lan743x: Fix memleak issue when GSO enabled
-    https://git.kernel.org/netdev/net/c/2d52e2e38b85
+Sorry for the delay, the CVE is now rejected, thanks.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+greg k-h
