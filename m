@@ -1,177 +1,195 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE78A81ACA;
-	Thu,  1 May 2025 11:30:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF581EFF91;
+	Thu,  1 May 2025 11:32:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746099026; cv=none; b=q/phHaoLVi+ArPW73KBj2hlFHfkB8It3P+9+Y9q+UK3VaLZBdRlqu7ECrFEav6SeT5Y8guc6hrrwFb4k4yivjKqobBXzRiGUT+UXgfhOBa2F5Rh04bgxB7md+Df22Nprq50nEDiXzp90W0PxhkXz/yILhe3pJVnwzURXNYQ2uhs=
+	t=1746099132; cv=none; b=AbYYIkNN70EVMrvcaL/2WoiLYYWtlB6PIkB4lOWpVI8JBg7LOEQp/iR5XPQg+7VoLRFSWejN7bOCAquF4gteftpVcE/VN7fNDLfZxJtAceiliDOYsfO2zkhdHIJo1ARirExujwv7V8X19JyLrweiEspeSAuYJYp0+sTIx9PJMYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746099026; c=relaxed/simple;
-	bh=4Ds19eHlJOGqn/h+KCCqyUDgAqgoR57GRgX2HX9SGBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PA3mqfPUc7sDWo/QSyNzxsW91w17N8X4SGsdviosY+d4LRjpm0DMoIQiuadamuzX1H7cyxyzeCoEG9SLkpt48jaK6pZWRVQiemAQrgQ30YyDAsZywenLaNVqMIyDH88x5ULYwW5S0+28OfyzE5HxWzcIB6e2tPslSdkqCYAY1+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qCiLuN/X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746099132; c=relaxed/simple;
+	bh=i7brWx4GNLvRNgqrmbTOpqQaXLw7gytabLKOYnNELUM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fk7If02G1SispQ3RVbha8W0RV4wrqgpbA8PJIiZZ9L3Vn8iUzvDqsA8BiQou6yti6Azj0nvokm4sEKAIleK6DlU+5On6+DOPk+TVHWGXJQhzOsOEPzc8l2H0+CTPtO3IKRKcQniniNqyJr1d/7ksqDVZBDIqXeDhPgRmhoq9El8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Af0QUX9d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qCiLuN/X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57C89C4CEE3;
-	Thu,  1 May 2025 11:30:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Af0QUX9d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D616C4CEE3;
+	Thu,  1 May 2025 11:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746099024;
-	bh=4Ds19eHlJOGqn/h+KCCqyUDgAqgoR57GRgX2HX9SGBU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qCiLuN/X5b/t9vQjE+BPMTfWeVTVNWppPRGWMXGz1QYWfVei4ruxhBCKgxlkEsIXH
-	 WeuV0UIwCoYczwrt4ff3Ot2ahwCB+WNP4hqa8HKv1jJt/3SckhuXAaoCkOZA0zUdVO
-	 /JvHpUij4J8XG1bJOzMYQlKCdzk+ZRXD1ugP5SQSfyZ5zl5vL/MD3nCsTZeq8dIgp6
-	 EuReO/HKqSxD2WNjwrD3ycryCDXdPbBxJO0t95NJr/AFGC8d9ZN9wYTkTBCUwD1qOy
-	 Y56psZYV18q9z7h/X/f0EXgHZmM2f6rXfTblPz6mXFDNw2Pl549HbFTmQM6TkzJaM/
-	 seYzFMlq0dqOQ==
-Date: Thu, 1 May 2025 13:30:20 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 5/7] rust: alloc: add Vec::retain
-Message-ID: <aBNbTL2dIOFQq8yG@pollux>
-References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
- <20250429-vec-methods-v4-5-dad4436ff82d@google.com>
- <aBJPHUDYBGyAgUNf@pollux>
- <aBNWlC6uSOiFrQDL@google.com>
+	s=k20201202; t=1746099131;
+	bh=i7brWx4GNLvRNgqrmbTOpqQaXLw7gytabLKOYnNELUM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=Af0QUX9dq//ASAFd4J+n3SiOFYqwW/JJX+PJxm+afgZoKRu/Nex7bI/uJ4CQWFkJR
+	 7NS6mEIkMj/pU9OMkrwoqdAzs0OfpZ2n6lkky0oCFoXJ94ptbu8YKpQbqjNhdSVCCL
+	 s5aDV8cTOVk6MF3OxF3gYK/uDcgy7V+qdMXJVRhlZ0UN/UqqVlqpI9DD+WvCfR8Z9f
+	 H0hTA317/pi0QAk46vPS4V4nEgZLwXETQpAUw0UAgTEy9fv9wnObJN+gHyIlwJEemm
+	 1b8XRngJtIS1T/tlY/7IX9a4lM1FXPxQ/uB61lCCW3L+s+f67EkJCbowxrRa4BX7gG
+	 qJT07r0FrRqnQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>,  "Miguel Ojeda"
+ <ojeda@kernel.org>,  "Alex Gaynor" <alex.gaynor@gmail.com>,  "Boqun Feng"
+ <boqun.feng@gmail.com>,  "Gary Guo" <gary@garyguo.net>,  =?utf-8?Q?Bj?=
+ =?utf-8?Q?=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno Lossin" <benno.lossin@proton.me>,
+  "Alice Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Joel Becker" <jlbec@evilplan.org>,  "Peter Zijlstra"
+ <peterz@infradead.org>,  "Ingo Molnar" <mingo@redhat.com>,  "Will Deacon"
+ <will@kernel.org>,  "Waiman Long" <longman@redhat.com>,  "Fiona Behrens"
+ <me@kloenk.dev>,  "Charalampos Mitrodimas" <charmitro@posteo.net>,
+  "Daniel Almeida" <daniel.almeida@collabora.com>,  "Breno Leitao"
+ <leitao@debian.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 1/3] rust: configfs: introduce rust support for configfs
+In-Reply-To: <CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+ (Miguel
+	Ojeda's message of "Thu, 01 May 2025 12:52:10 +0200")
+References: <20250501-configfs-v6-0-66c61eb76368@kernel.org>
+	<20250501-configfs-v6-1-66c61eb76368@kernel.org>
+	<ELsEgktE6XbGxDyusumtuVzyX-eotyYuQdviHTZaIxN7KZaGFr0fNqrv5tac_gYWfbDZYNTC-wQyQuxnmufA2g==@protonmail.internalid>
+	<CANiq72mS_HV5rDjP+t+k0jX9QeAgF2SB9_xX54iEBTH-GoPuEg@mail.gmail.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Thu, 01 May 2025 13:31:57 +0200
+Message-ID: <87msbw1s9e.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBNWlC6uSOiFrQDL@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 01, 2025 at 11:10:12AM +0000, Alice Ryhl wrote:
-> On Wed, Apr 30, 2025 at 06:26:05PM +0200, Danilo Krummrich wrote:
-> > On Tue, Apr 29, 2025 at 02:44:25PM +0000, Alice Ryhl wrote:
-> > > This adds a common Vec method called `retain` that removes all elements
-> > > that don't match a certain condition. Rust Binder uses it to find all
-> > > processes that match a given pid.
-> > >
-> > > The stdlib retain method takes &T rather than &mut T and has a separate
-> > > retain_mut for the &mut T case. However, this is considered an API
-> > > mistake that can't be fixed now due to backwards compatibility. There's
-> > > no reason for us to repeat that mistake.
-> > >
-> > > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> > > ---
-> > >  rust/kernel/alloc/kvec.rs | 72 +++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 72 insertions(+)
-> > >
-> > > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > > index 72bc743ec88bf7b91a0a1ffd9f830cfe4f983ffd..357f5a37c7b1d15b709a10c162292841eed0e376 100644
-> > > --- a/rust/kernel/alloc/kvec.rs
-> > > +++ b/rust/kernel/alloc/kvec.rs
-> > > @@ -608,6 +608,29 @@ pub fn drain_all(&mut self) -> DrainAll<'_, T> {
-> > >              elements: elems.iter_mut(),
-> > >          }
-> > >      }
-> > > +
-> > > +    /// Removes all elements that don't match the provided closure.
-> > > +    ///
-> > > +    /// # Examples
-> > > +    ///
-> > > +    /// ```
-> > > +    /// let mut v = kernel::kvec![1, 2, 3, 4]?;
-> > > +    /// v.retain(|i| *i % 2 == 0);
-> >
-> > NIT: What about making this `v.retain(|&mut i| i % 2 == 0)`?
-> >
-> > > +    /// assert_eq!(v, [2, 4]);
-> > > +    /// # Ok::<(), Error>(())
-> > > +    /// ```
-> > > +    pub fn retain(&mut self, mut f: impl FnMut(&mut T) -> bool) {
-> > > +        let mut num_kept = 0;
-> > > +        let mut next_to_check = 0;
-> > > +        while let Some(to_check) = self.get_mut(next_to_check) {
-> > > +            if f(to_check) {
-> > > +                self.swap(num_kept, next_to_check);
-> > > +                num_kept += 1;
-> > > +            }
-> > > +            next_to_check += 1;
-> > > +        }
-> > > +        self.truncate(num_kept);
-> > > +    }
-> > >  }
-> > >
-> > >  impl<T: Clone, A: Allocator> Vec<T, A> {
-> > > @@ -1130,3 +1153,52 @@ fn drop(&mut self) {
-> > >          }
-> > >      }
-> > >  }
-> > > +
-> > > +#[macros::kunit_tests(rust_kvec_kunit)]
-> > > +mod tests {
-> > > +    use super::*;
-> > > +    use crate::prelude::*;
-> > > +
-> > > +    #[test]
-> > > +    fn test_kvec_retain() {
-> >
-> > Can we have this return a Result, like doctests can do?
-> 
-> I get warning when I try that:
-> 
-> warning: unused `core::result::Result` that must be used
->     --> rust/kernel/alloc/kvec.rs:1232:1
->      |
-> 1232 | #[macros::kunit_tests(rust_kvec_kunit)]
->      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->      |
->      = note: this `Result` may be an `Err` variant, which should be handled
->      = note: `#[warn(unused_must_use)]` on by default
->      = note: this warning originates in the attribute macro `macros::kunit_tests`
->              (in Nightly builds, run with -Z macro-backtrace for more info)
+"Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com> writes:
 
-Yes, I'm aware, I tried playing with that myself. I really meant the question as
-I wrote, not as "Can you please change that?". :-) Sorry for the confusion.
+> On Thu, May 1, 2025 at 12:15=E2=80=AFPM Andreas Hindborg <a.hindborg@kern=
+el.org> wrote:
+>>
+>> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+>>
+>> ---
+>>
+>
+> Spurious newlines.
 
-> > > +        /// Verify correctness for one specific function.
-> > > +        #[expect(clippy::needless_range_loop)]
-> > > +        fn verify(c: &[bool]) {
-> > > +            let mut vec1: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
-> > > +            let mut vec2: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
-> > > +
-> > > +            for i in 0..c.len() {
-> > > +                vec1.push_within_capacity(i).unwrap();
-> > > +                if c[i] {
-> > > +                    vec2.push_within_capacity(i).unwrap();
-> > > +                }
-> > > +            }
-> > > +
-> > > +            vec1.retain(|i| c[*i]);
-> > > +
-> > > +            assert_eq!(vec1, vec2);
-> >
-> > Don't we have macros around kunit_assert!() and kunit_assert_eq() outside of
-> > doctests (i.e. dedicated kunit tests)?
-> >
-> > I much prefer their output over the kernel panic we get with the "normal"
-> > asserts, unwraps, etc.
-> >
-> > Consistently sticking to the same output on failure makes it easier to catch and
-> > easier to setup CI environments.
-> 
-> The documentation for those macros says "Public but hidden since it
-> should only be used from generated tests." so I don't think I'm supposed
-> to use them.
+The one just before the cut?
 
-Same here, that's more a fundamental question, rather than something for you to
-change right away.
+>
+>> This patch is a direct dependency for `rnull`, the rust null block drive=
+r.
+>> ---
+>
+> By the way, you don't need this `---`.
 
-I really like the way doctests implement the assert macros and how they appear
-in the kernel log compared to panics through the "real" assert ones, unwraps,
-etc.
+b4 adds it =F0=9F=A4=B7
 
-I also think that avoiding things that directly panic in doctests (i.e. example
-code) is the correct thing to do. For KUnit tests it's probably less important,
-since they don't directly serve as sample code.
+>
+>> +//! `configfs` interface.
+>
+> I don't know if configfs is supposed to be written in code spans, but
+> I appreciate you are trying to be throughout in your Markdown use ;)
+> It may be easier to read to not have it in code spans, since we have
+> many already and it is not code anyway.
 
-So, I wonder what's our take on that. Do we want to have KUnit and doctests
-aligned? I think that'd be a good thing.
+OK
+
+>
+> By the way, you may want to mention somehow the title they use in
+> their docs: "Userspace-driven Kernel Object Configuration".
+
+Will do.
+
+>
+>> +//! See the [rust_configfs.rs] sample for a full example use of this mo=
+dule.
+>
+> Files are, though, like the C header below, so: [`rust_configfs.rs`]
+
+OK
+
+>
+>> +/// with configfs, embed a field of this type into your kernel module s=
+truct.
+>
+> Either with or without a code span, i.e. being consistent is best.
+
+I am! Consistently inconsistent. Very much so in this series. Will fix.
+
+>
+>> +    /// Return the address of the `bindings::config_group` embedded in =
+`Self`.
+>
+> I think you may be able to use intra-doc links for [`Self`].
+
+Thanks. Would be nice with a lint for missed intra-doc links.
+
+>
+>> +        let c_group: *mut bindings::config_group =3D
+>> +        // SAFETY: By function safety requirements, `item` is embedded =
+in a
+>> +        // `config_group`.
+>> +            unsafe { container_of!(item, bindings::config_group, cg_ite=
+m) }.cast_mut();
+>
+> It doesn't work to put the safety comment on top? (We had issues
+> similar to this in the past, so if it is intentional, that is fine).
+
+Clippy gets mad if we move it up. Because rustfmt wants the unsafe block
+to a new line:
+
+  warning: unsafe block missing a safety comment
+    --> rust/kernel/configfs.rs:557:13
+      |
+  557 |             unsafe { container_of!(item, bindings::config_group, cg=
+_item) }.cast_mut();
+      |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
+^^^^^^^^
+      |
+      =3D help: consider adding a safety comment on the preceding line
+      =3D help: for further information visit https://rust-lang.github.io/r=
+ust-clippy/master/index.html#undocumented_unsafe_blocks
+      =3D note: requested on the command line with `-W clippy::undocumented=
+-unsafe-blocks`
+
+>
+>> +/// This type is constructed statically at compile time and is by the
+>> +/// [`kernel::configfs_attrs`] macro.
+>
+> Sentence is missing something. Also, we never used `# Note` yet, but I
+> guess it is fine.
+
+Thanks, rephrased:
+
+  # Note
+=20=20
+  Instances of this type are constructed statically at compile by the
+  [`kernel::configfs_attrs`] macro.
+
+>
+>> +    /// Null terminated Array of pointers to `Attribute`. The type is `=
+c_void`
+>
+> Intar-doc link(s)?
+>
+>> +        // We need a space at the end of our list for a null terminator.
+>> +        if I >=3D N - 1 {
+>> +            kernel::build_error!("Invalid attribute index");
+>> +        }
+>
+> Would the following work instead?
+>
+>     const { assert!(I < N - 1, "Invalid attribute index") };
+>
+> (Please double-check it actually catches the cases you need)
+
+The reason I choose build_error is that if this should somehow end up
+being evaluated in non-const context at some point, I want the build to
+fail if the condition is not true. I don't think I get that with assert?
+
+
+Best regards,
+Andreas Hindborg
+
+
+
