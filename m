@@ -1,170 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E8C1DFDE;
-	Thu,  1 May 2025 13:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 519B71DFDE
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746107713; cv=none; b=iI65CjDNwi7h5xeoORzlCcj8RIhXOHqxgHTrR4U8dT3ZJQDG73RAvrKhMwWrXIbUj3qipjywDVzlN+aZZyOyH2QhzSQhIkp8+1EQePRFkpaVPylRwQYBjI0pfj67x0rrQrNH6RbHxZFG5mof8cuYcwCLXl49FTJPQcVZkNZFCOo=
+	t=1746107773; cv=none; b=ZeWpUpGUaELqIosoL1+RWfKCbcQ3VkUHH7Nq07a9/br+rZlo0tm1iwr/lDnbZiJp8vPuLVJI6NGNyEABy4vQRvXvbOSKANPTkL3tfqHE28Nbz1aw7M+695nh/RE+hGVmEFg446QaIe3ZHw85l5aEnDIDMBtA0B14H8zDkqd2Tk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746107713; c=relaxed/simple;
-	bh=HP9qPQcXPFBaNtd0LbBqA0JNCPyQw698ggOHjYeim0Y=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Moo6jmleYrGW09UTBIdWVNAmk98O6WxaHHPr0ceS2K2YjSP67WJAKkjg3tCGcHaQ4mKF2CADWQCAh12zvS/wCK5ZeIIh2sBBK3KNaJBOLopuWtJdKRzZTF/arxmw0+i7texqmnqJAximFv4V7Nm5qYUSzHMRQgfHHiRsAxl0AAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pfk1ZFoG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746107773; c=relaxed/simple;
+	bh=DhkoW9RkyZ+9a2ueSNfSUUN6wE8TS82ye9futa56RiY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J4Tkd6iPZCRnWcT3yKs2SsHr5cWNSvc26BRoXbzGKhjlTaVo7ykeOtsH6UCvW0qaWx02rGaOgSKqkNmOuvOuytoHRcHmXVDgAMBY/cQFb3l/TLLPUipKma1O/ODmKVOGWevOqJTaEHxCqJrTdP7Zu0u7xVFCQQGEV1to746Sk8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=isctNGub; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pfk1ZFoG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E48EC4CEE3;
-	Thu,  1 May 2025 13:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746107712;
-	bh=HP9qPQcXPFBaNtd0LbBqA0JNCPyQw698ggOHjYeim0Y=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Pfk1ZFoGFQBcJbn4eAazqmyuBJ6TkiGf2ekSQDgoa5Fjia9S2lMt5efsrXyzq1Vvm
-	 ULeuC83dmMDOduBWW3xv2ptavXQm1vdoGdMaOq6foW7rtSQf8ouqLVTIFegJWn1fzS
-	 EorN2jN0LePdF11Vpm6UW5UyEsjAfLLhsNMAJTWfxtw7S29pRommXhIjicwQXKd09K
-	 dja4faMd/aLvbeN4QKFNqUIDiiz0PK5zIlRXOlq9ONM7WY09BvtawseMmekfxpdUph
-	 231yeafldT6FquJnpqz72EltQ8Tb6TsqSFX9obyV9riRozvuNYg8YfhJH7B6vS3/oQ
-	 Lfve/zxbzhOzw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAUNa-00AakJ-3R;
-	Thu, 01 May 2025 14:55:10 +0100
-Date: Thu, 01 May 2025 14:55:08 +0100
-Message-ID: <86v7qkh1vn.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Maxim Levitsky <mlevitsk@redhat.com>,
-	kvm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Kunkun Jiang <jiangkunkun@huawei.com>,
-	Waiman Long <longman@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Anup Patel <anup@brainfault.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Alexander Potapenko <glider@google.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	Andre Przywara <andre.przywara@arm.com>,
-	x86@kernel.org,
-	Joey Gouly <joey.gouly@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	kvm-riscv@lists.infradead.org,
-	Atish Patra <atishp@atishpatra.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jing Zhang <jingzhangos@google.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	kvmarm@lists.linux.dev,
-	Will Deacon <will@kernel.org>,
-	Keisuke Nishimura <keisuke.nishimura@inria.fr>,
-	Sebastian Ott <sebott@redhat.com>,
-	Shusen Li <lishusen2@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Sean Christopherson <seanjc@google.com>,
-	Zenghui Yu <yuzenghui@huawei.com>
-Subject: Re: [PATCH v4 2/5] arm64: KVM: use mutex_trylock_nest_lock when locking all vCPUs
-In-Reply-To: <20250501134126.GT4439@noisy.programming.kicks-ass.net>
-References: <20250430203013.366479-1-mlevitsk@redhat.com>
-	<20250430203013.366479-3-mlevitsk@redhat.com>
-	<864iy4ivro.wl-maz@kernel.org>
-	<20250501111552.GO4198@noisy.programming.kicks-ass.net>
-	<861pt8ijpv.wl-maz@kernel.org>
-	<20250501134126.GT4439@noisy.programming.kicks-ass.net>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="isctNGub"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541Bp0Co011326;
+	Thu, 1 May 2025 13:55:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=FdABLb
+	GXU3xjbqcTCkxai/8AK3Ss9JYpvaFeHCIzyVM=; b=isctNGub2RIa4/fRulxz4X
+	ZUkoeQHvKXrP9zn7wvmIX8ZLlLGs8zIDxLx0pwG33WOLw5e6wduuhcceRG37zygj
+	2JszmqR5NGmsLoLLQ9g5jCfBC6KgRfEQm1qLF6jPw05mTB5GpQV9tKGubckdI9jN
+	xupc5naLgXRSupi4JF56rVZVBG8HL+GZbkls8FhGGwSRZ1qMbJj+moX74LXEOCgB
+	WK+YOCNCXeWJXj0Wm8ZjRlHuyGVyf8zTCg4+dAs6yMszXOrbRULtIjXLb0w0gmBD
+	DgWAI1ilR+vovEvVQulT3fwM0B4i9wXmpqpsBqIwEzLpDpHb9zCeQv1xF9RvdtAg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds90aw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:55:51 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 541Dnp4L023350;
+	Thu, 1 May 2025 13:55:50 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds90as-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:55:50 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 541DbFin031662;
+	Thu, 1 May 2025 13:55:49 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tudgkf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 13:55:49 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 541DtniD30278344
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 13:55:49 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6177058057;
+	Thu,  1 May 2025 13:55:49 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D9C5358059;
+	Thu,  1 May 2025 13:55:44 +0000 (GMT)
+Received: from [9.39.16.182] (unknown [9.39.16.182])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 May 2025 13:55:44 +0000 (GMT)
+Message-ID: <719c495f-d514-43f5-814d-e956e149f836@linux.ibm.com>
+Date: Thu, 1 May 2025 19:25:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: peterz@infradead.org, mlevitsk@redhat.com, kvm@vger.kernel.org, linux-riscv@lists.infradead.org, jiangkunkun@huawei.com, longman@redhat.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, catalin.marinas@arm.com, bhelgaas@google.com, boqun.feng@gmail.com, bp@alien8.de, aou@eecs.berkeley.edu, anup@brainfault.org, paul.walmsley@sifive.com, suzuki.poulose@arm.com, palmer@dabbelt.com, alex@ghiti.fr, glider@google.com, oliver.upton@linux.dev, andre.przywara@arm.com, x86@kernel.org, joey.gouly@arm.com, tglx@linutronix.de, kvm-riscv@lists.infradead.org, atishp@atishpatra.org, mingo@redhat.com, jingzhangos@google.com, hpa@zytor.com, dave.hansen@linux.intel.com, kvmarm@lists.linux.dev, will@kernel.org, keisuke.nishimura@inria.fr, sebott@redhat.com, lishusen2@huawei.com, pbonzini@redhat.com, rdunlap@infradead.org, seanjc@google.com, yuzenghui@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] driver/base: Optimize memory block registration to
+ reduce boot time
+To: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
+ <aBHTeeAWtlrt4gN8@localhost.localdomain>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <aBHTeeAWtlrt4gN8@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=afZhnQot c=1 sm=1 tr=0 ts=68137d67 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=w-oE209dy2xqcs4eIbgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: DEm5KhvvTcQ4t8u_nclR-1t6-z4GG_AB
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDEwMyBTYWx0ZWRfXzGNSYvEEJuHX RTsgRPQzK5bSc4xeV+2rl3JyqxqjMJlwPOWwS/C3FmLM4x1mupIAJ0h2jJn5x6Bv6b1jk1kSlbS aDMTgi96AhkKC663dyFRfO+yuwmhgS5ccagJ7ixin8drnDww5ZSqFBz0Dm1ebGDM+Ej3msIcXEK
+ q6jcNwQIsinUT4wHk7bDBT7AwYNPnEUR/zuFaQBT/4CtC+RqGn+wvVKgUZUTCJLqS5PAXeEYRFk tPn1ec8KyFz+lYLjnmUDjGXJfaBNh2gwrTy6cpcN4mJeslj3OTFMTUf6UYu/Cpjzgg3lJ9XPE1d csbtCDw/sXjoVFR0NP6Rxg4aY7tDk5MBSzNl95rKkd0Y6cWgcJPsXrwAfbmenNTtDTMIg5PPsN5
+ xN88ia+NQzF4fCiE/aCoX6NNsIv00wp3Ui1ffm7C4EY2B8g1K/NWh3m0W/7f+v7HQnFN4QAA
+X-Proofpoint-GUID: EjgKDxAJQet6KACIEkPTCDye5aidXw1R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
+ mlxlogscore=978 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505010103
 
-On Thu, 01 May 2025 14:41:26 +0100,
-Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> On Thu, May 01, 2025 at 01:44:28PM +0100, Marc Zyngier wrote:
-> > On Thu, 01 May 2025 12:15:52 +0100,
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > 
-> > > > > + */
-> > > > > +int kvm_trylock_all_vcpus(struct kvm *kvm)
-> > > > > +{
-> > > > > +	struct kvm_vcpu *vcpu;
-> > > > > +	unsigned long i, j;
-> > > > > +
-> > > > > +	kvm_for_each_vcpu(i, vcpu, kvm)
-> > > > > +		if (!mutex_trylock_nest_lock(&vcpu->mutex, &kvm->lock))
-> > > 
-> > > This one includes an assertion that kvm->lock is actually held.
-> > 
-> > Ah, cunning. Thanks.
-> > 
-> > > That said, I'm not at all sure what the purpose of all this trylock
-> > > stuff is here.
-> > > 
-> > > Can someone explain? Last time I asked someone said something about
-> > > multiple VMs, but I don't know enough about kvm to know what that means.
-> > 
-> > Multiple VMs? That'd be real fun. Not.
-> > 
-> > > Are those vcpu->mutex another class for other VMs? Or what gives?
-> > 
-> > Nah. This is firmly single VM.
-> > 
-> > The purpose of this contraption is that there are some rare cases
-> > where we need to make sure that if we update some global state, all
-> > the vcpus of a VM need to see, or none of them.
-> > 
-> > For these cases, the guarantee comes from luserspace, and it gives the
-> > pinky promise that none of the vcpus are running at that point. But
-> > being of a suspicious nature, we assert that this is true by trying to
-> > take all the vcpu mutexes in one go. This will fail if a vcpu is
-> > running, as KVM itself takes the vcpu mutex before doing anything.
-> > 
-> > Similar requirement exists if we need to synthesise some state for
-> > userspace from all the individual vcpu states.
-> 
-> Ah, okay. Because x86 is simply doing mutex_lock() instead of
-> mutex_trylock() -- which would end up waiting for this activity to
-> subside I suppose.
-> 
-> Hence the use of the killable variant I suppose, for when they get tired
-> of waiting.
 
-Yeah, I remember some debate around that when this refactoring was
-first posted. I quickly paged it out.
+On 4/30/25 1:08 PM, Oscar Salvador wrote:
+> On Mon, Apr 28, 2025 at 10:33:46PM +0530, Donet Tom wrote:
+>> During node device initialization, `memory blocks` are registered under
+>> each NUMA node. The `memory blocks` to be registered are identified using
+>> the node’s start and end PFNs, which are obtained from the node's pg_data
+>>
+> Hi Donet,
+>
+>> Test Results on My system with 32TB RAM
+>> =======================================
+>> 1. Boot time with CONFIG_DEFERRED_STRUCT_PAGE_INIT enabled.
+>>
+>> Without this patch
+>> ------------------
+>> Startup finished in 1min 16.528s (kernel)
+>>
+>> With this patch
+>> ---------------
+>> Startup finished in 17.236s (kernel) - 78% Improvement
+> That is pretty impressive.
+>
+>> +void register_memory_blocks_under_node_early(int nid)
+>> +{
+>> +	struct memblock_region *r;
+>> +	unsigned long start_block_id;
+>> +	unsigned long end_block_id;
+>> +	struct memory_block *mem;
+>> +	unsigned long block_id;
+>> +
+>> +	for_each_mem_region(r) {
+>> +		if (r->nid == nid) {
+>> +			start_block_id = phys_to_block_id(r->base);
+>> +			end_block_id = phys_to_block_id(r->base + r->size - 1);
+>> +
+>> +			for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+>> +				mem = find_memory_block_by_id(block_id);
+>> +				if (!mem)
+>> +					continue;
+> I would just mention what David already said here, reduce identation,
+> and maybe declare the variables where they are needed. It might be clearer.
 
-> If all the architectures are basically doing the same thing, it might
-> make sense to unify this particular behaviour. But what do I know.
 
-I don't know either. The trylock behaviour has been there since day-1
-on the arm side, and changing it would have userspace visible effects.
-So I'm pretty keen on preserving it, warts and all. The last thing I
-need is a VMM person hitting my inbox on the grounds that their toy is
-broken.
+Sure, I will change it.
 
-On the other hand, we're talking about virtualisation, so everything
-is more or less broken by design...
+>> +
+>> +				do_register_memory_block_under_node(nid, mem, MEMINIT_EARLY);
+>> +				put_device(&mem->dev);
+> I will comment on the "context" on patch#2.
+>
+>> +void register_memory_blocks_under_node_early(int nid);
+> static void ... ?
 
-	M.
+Yes, We can make it as static. I will add it in next version.
 
--- 
-Without deviation from the norm, progress is not possible.
+
+Thanks
+Donet
+
+
+>
+>
