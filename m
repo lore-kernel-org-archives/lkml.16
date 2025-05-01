@@ -1,166 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 058C46FB9;
-	Thu,  1 May 2025 20:25:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FEC6FB9;
+	Thu,  1 May 2025 20:26:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746131130; cv=none; b=TEOMWqpsjrMeZiowg5e2Y0ilbTX2cD7iSpiacRbaoLEwNrfiBu2R0Ng3OtgTaY9pTmXpkFXZuo5kO0HGQxMJsUA5oD/WOXHCWTWg3z4xD2YNf93Ygj2nSiwqEhALZcCIDauVHzDh1wOAltWOEJMoVavwaJUdUyi3qi8tXdRuGgg=
+	t=1746131192; cv=none; b=QabccFmBdj1rPirPuEOrRoM9Kwz5jsGoNhbDmJ9sXJorEKfqDGqETVeXyPcTD2B0zlmtPCbXyXIyCbowZuONXVUaIrEVkud2FAseH53MH3U/YDQt3BLI7W/QTCQvq2mlrhqisFJCezAQUxd2le4jo3L8f8emG8aeo3Zp7Tmxu9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746131130; c=relaxed/simple;
-	bh=zTV8Qd3ZZkNI2Id5bjuty6/SAjsFzxHH0uQilyi7Hjo=;
+	s=arc-20240116; t=1746131192; c=relaxed/simple;
+	bh=IxLWoBm+FK1NxQ4bJYIXoE8mUtPdRKTP/24EcnCLkss=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BG2plbjmMucHiGMrxYDSZpXWsSdCpQh6Q+c/YFhO9yj0Pot5NPgqY6UnQFfSPHFJY2EWTawCqPf21BjFk1TAQ2jfWdVxUICAH1v20TFgceYoDsSgGGbOgGaZb81O7fu8K1FYyZKJ/BnBORBd+v4U1j20xOheuEvW1v5MyFlTPTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L+JSyxNC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=UGWehX/J7KHRMtGaUTWR5cM5raxTpJMxTMewjgY0vDalCmeHK3Cl5pjEABnH//C7qGvrq6eflYWZo6OVdCqGqIiUy3YXhnT8OG5FxQUuSlbg8bx0b9V8GchlsPrHzO11XgzEvBW2jU1lW7LRPgghWJ/6C90oQzZw1f4jqRnAWyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pm23fLy2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L+JSyxNC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 094B7C4CEE3;
-	Thu,  1 May 2025 20:25:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pm23fLy2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1CFC4CEE3;
+	Thu,  1 May 2025 20:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746131129;
-	bh=zTV8Qd3ZZkNI2Id5bjuty6/SAjsFzxHH0uQilyi7Hjo=;
+	s=k20201202; t=1746131191;
+	bh=IxLWoBm+FK1NxQ4bJYIXoE8mUtPdRKTP/24EcnCLkss=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=L+JSyxNCDKDUrtg4O5ORnZVVqR8Y5xoLaZ0RZnk9C4RZrxxAbnQ1rQ5fHAPlzWKUs
-	 +EuCT2nELk7u0IIDOLAgMnLaYtDiw42Cqp+1GYVvEvS0d/aOg+m9CTp0OI8nP9t+bv
-	 0QVnGmLY56np8Hpz2HAYQDJGH7e21zZK3C+pIYT0EOq+G+mM0igUCHjesZ54p1+6mc
-	 CHKVwlsdlo8FyjOO/QW3MfvYybX+tJW0DOodAhQBhfvYfNZUdQqeljf9tdGBeF5Mbi
-	 ItDANSRjlMiRPsKHe/s3jnRE3d0YvPfzftDzQXVXfCRybR+6oKUhcWQBII+OHf9LTk
-	 IBgbDtc9MZbfw==
-Date: Thu, 1 May 2025 13:25:27 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf symbol-minimal: Fix double free in
- filename__read_build_id
-Message-ID: <aBPYt1G3VpLI5qBa@google.com>
-References: <20250501070003.22251-1-irogers@google.com>
+	b=pm23fLy25rAexTSPTHx3uZdDUHt8y1RsmPYsbzrOoQxLnS5/+AttFIIePlpwraE2L
+	 WjsP0oUEXfyFhqv2uzwOapdAIEafTa8zLLKiYc8spqnH61kZv4AWeKXSAUdX3srYgY
+	 YS9L22X1ILS+9FTPTEOfhsSGK/TRnsdVkrELHJAwsmab6kQSWsRgCxw0gUGKZtE5Lp
+	 zkjiqQt7cm1/7/EleCLQfBKR7QJsls7xJy4WebAZlxHlB9hKSIJRhv72dwCryC36e8
+	 tMXShYZ8eigpDJ//2+CuSr/xKFDwcDyUvlMva6u8/bVbrNansycL+IYokAsrEzHazN
+	 gBPy2PG2dJE1w==
+Date: Fri, 2 May 2025 05:26:28 +0900
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/196] 6.6.89-rc2 review
+Message-ID: <aBPY9H0BY4_Z16JP@finisterre.sirena.org.uk>
+References: <20250501081437.703410892@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r7ALQ56oqFOqDOuc"
 Content-Disposition: inline
-In-Reply-To: <20250501070003.22251-1-irogers@google.com>
+In-Reply-To: <20250501081437.703410892@linuxfoundation.org>
+X-Cookie: Well begun is half done.
 
-Hi Ian,
 
-On Thu, May 01, 2025 at 12:00:03AM -0700, Ian Rogers wrote:
-> Running the "perf script task-analyzer tests" with address sanitizer
-> showed a double free:
-> ```
-> FAIL: "test_csv_extended_times" Error message: "Failed to find required string:'Out-Out;'."
-> =================================================================
-> ==19190==ERROR: AddressSanitizer: attempting double-free on 0x50b000017b10 in thread T0:
->     #0 0x55da9601c78a in free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
->     #1 0x55da96640c63 in filename__read_build_id tools/perf/util/symbol-minimal.c:221:2
-> 
-> 0x50b000017b10 is located 0 bytes inside of 112-byte region [0x50b000017b10,0x50b000017b80)
-> freed by thread T0 here:
->     #0 0x55da9601ce40 in realloc (perf+0x260e40) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
->     #1 0x55da96640ad6 in filename__read_build_id tools/perf/util/symbol-minimal.c:204:10
-> 
-> previously allocated by thread T0 here:
->     #0 0x55da9601ca23 in malloc (perf+0x260a23) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a)
->     #1 0x55da966407e7 in filename__read_build_id tools/perf/util/symbol-minimal.c:181:9
-> 
-> SUMMARY: AddressSanitizer: double-free (perf+0x26078a) (BuildId: e7ef50e08970f017a96fde6101c5e2491acc674a) in free
-> ==19190==ABORTING
-> FAIL: "invocation of perf script report task-analyzer --csv-summary csvsummary --summary-extended command failed" Error message: ""
-> FAIL: "test_csvsummary_extended" Error message: "Failed to find required string:'Out-Out;'."
-> ---- end(-1) ----
-> 132: perf script task-analyzer tests                                 : FAILED!
-> ```
-> 
-> The buf_size if always set to phdr->p_filesz, but that may be 0
-> causing a free and realloc to return NULL. This is treated in
-> filename__read_build_id like a failure and the buffer is freed again.
-> 
-> To avoid this problem only grow buf, meaning the buf_size will never
-> be 0. This also reduces the number of memory (re)allocations.
+--r7ALQ56oqFOqDOuc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for fixing this!
+On Thu, May 01, 2025 at 10:18:13AM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.89 release.
+> There are 196 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Tested-by: Mark Brown <broonie@kernel.org>
 
-Thanks,
-Namhyung
+--r7ALQ56oqFOqDOuc
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> Fixes: b691f64360ec ("perf symbols: Implement poor man's ELF parser")
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/symbol-minimal.c | 34 +++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 16 deletions(-)
-> 
-> diff --git a/tools/perf/util/symbol-minimal.c b/tools/perf/util/symbol-minimal.c
-> index c6f369b5d893..d8da3da01fe6 100644
-> --- a/tools/perf/util/symbol-minimal.c
-> +++ b/tools/perf/util/symbol-minimal.c
-> @@ -147,18 +147,19 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
->  			if (phdr->p_type != PT_NOTE)
->  				continue;
->  
-> -			buf_size = phdr->p_filesz;
->  			offset = phdr->p_offset;
-> -			tmp = realloc(buf, buf_size);
-> -			if (tmp == NULL)
-> -				goto out_free;
-> -
-> -			buf = tmp;
-> +			if (phdr->p_filesz > buf_size) {
-> +				buf_size = phdr->p_filesz;
-> +				tmp = realloc(buf, buf_size);
-> +				if (tmp == NULL)
-> +					goto out_free;
-> +				buf = tmp;
-> +			}
->  			fseek(fp, offset, SEEK_SET);
-> -			if (fread(buf, buf_size, 1, fp) != 1)
-> +			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
->  				goto out_free;
->  
-> -			ret = read_build_id(buf, buf_size, bid, need_swap);
-> +			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
->  			if (ret == 0) {
->  				ret = bid->size;
->  				break;
-> @@ -199,18 +200,19 @@ int filename__read_build_id(const char *filename, struct build_id *bid)
->  			if (phdr->p_type != PT_NOTE)
->  				continue;
->  
-> -			buf_size = phdr->p_filesz;
->  			offset = phdr->p_offset;
-> -			tmp = realloc(buf, buf_size);
-> -			if (tmp == NULL)
-> -				goto out_free;
-> -
-> -			buf = tmp;
-> +			if (phdr->p_filesz > buf_size) {
-> +				buf_size = phdr->p_filesz;
-> +				tmp = realloc(buf, buf_size);
-> +				if (tmp == NULL)
-> +					goto out_free;
-> +				buf = tmp;
-> +			}
->  			fseek(fp, offset, SEEK_SET);
-> -			if (fread(buf, buf_size, 1, fp) != 1)
-> +			if (fread(buf, phdr->p_filesz, 1, fp) != 1)
->  				goto out_free;
->  
-> -			ret = read_build_id(buf, buf_size, bid, need_swap);
-> +			ret = read_build_id(buf, phdr->p_filesz, bid, need_swap);
->  			if (ret == 0) {
->  				ret = bid->size;
->  				break;
-> -- 
-> 2.49.0.967.g6a0df3ecc3-goog
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgT2PEACgkQJNaLcl1U
+h9AEDQf/b8J+ItIivN+uVJFvrJW9P0pQSwGXx2ykFx19oa5oVV7qtvXsQdEN1HMG
+dIUHMbQABD06GN4ugY8AOeomOByPANmqe3GtcLVO3s+K+md3tt0hdoni3d6dnhur
+O3j5+iBwv3j8y5RiONd97qcSigjWVydTzTbxlcS3etBVBfKkpO8dnujPdVlloglW
+9YhKu0mmz+qQwbENQzBMhH+uqbhDAJDYp7qyOzMVlK0XoW9QZvlq6MZ9B7j/CSRH
+G1Qfu4ZTqwwOTBm7D2YsYgBAnv8vBTmW3qTEN9Xb2bpz8uDUhfKsqQGdiaFUcxXF
+0TRMO8l0Gzfz9ZYSzIeHzDbEtzrwqA==
+=CoJt
+-----END PGP SIGNATURE-----
+
+--r7ALQ56oqFOqDOuc--
