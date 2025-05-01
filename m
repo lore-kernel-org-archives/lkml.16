@@ -1,44 +1,48 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B391804A;
-	Fri,  2 May 2025 00:16:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D7D2801;
+	Fri,  2 May 2025 00:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746144985; cv=none; b=fTZ/z1FB81Wu9u4hUaIxqH6nsT3WxvghWG4+kHeph2m6fHpkPojQIFtpjjwcvPROc8wTwCEXmFLv+Qhhw0K9nASL26K1SriJRLYObYeKQfcwnaiGkevKInS4bs+PHHuIzfcG+OefdDsnB2rbGklyhS/kq2S52njSumZuzmpc26o=
+	t=1746145058; cv=none; b=a5uvLcGzZidQsoZnVQiHInYGSNeaGpAfxU1kTLEU+JLPmR8k1tdkLYroU/Gq9rq5dCF/H+WzvXhuKPG/kl4j+/1EyIX2V6N7ajb2ltlfDt6ZNaVT+rIlQthV/8zacI9Nv8k551c/S5kOgDv0CAw2YUi9WuvEa/jTDvBoX0mOwdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746144985; c=relaxed/simple;
-	bh=1RGpA0j2oX5ye/l/RFU4b5p1FYXf54QBn5FZrRlSVgA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LW6VhnjAFNrdaE+t2FQGKQv6Vl+7wyp7CzEHjnjvdGxaRvDsleOZeRmxHyFwfylOMDqE8293p9j73hBgL8z4Kiu7fb4DiaKD0c3LGp0EoVc2doFZpVoGisWyoXRtNghkcVJ+OiAb//dCAYgto36d0z7DIo2BrRBCW6uprwUAGOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=0VgkBdpP; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746145058; c=relaxed/simple;
+	bh=5i8bFsSgpcufvSYsYIHQhogwNQunbUypD6CAxiA3sVw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ga2hYc7BbD2X3DtZuNwyfyPHUuhWuZzWW2rpxgPRLng5tQG1ag3YAP5YhXK2oaNYuaOOU1Bd5cup5xqkNMyeUv8Aq7mLmjf3+s9d987S8a99V01dqHgFQeeheSlM8ydeQ6KHjvMFjif9hHIHOIRI6iobD7OnmP4L9A2Gdb3IgWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=b/GkN4LF; arc=none smtp.client-ip=46.235.229.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="0VgkBdpP"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=JCvs5Qr4ScspEbBQWpbvqRy6Qod3tPj+N3ahGdJfo/k=; b=0VgkBdpPk9H3eyWhOd1UV9YQeS
-	cwJ/WJMV8zkpAdYf3RdGQnSGBsojlQuIydSzFpdGTpSlpalWALFLuuucD24Zaq5dAigv+qZOlYi/p
-	td4sGBhUT3r1SaFujpfBOl+TubNfAmcklAzzlZIwuSspEQ/fdZdBdbh2jVyjBbgsleHjmUDTARd9i
-	oEqplpFvWGcDYwI44qs0VsPRi8rLXu6Zzzmpx+PrfsFmS+9A/8wi0ggpJzvOmLTLX33Mfy1b5T8u/
-	un721sA7dO9df0ICxwiLTo8m3/drOjXjoNuLCpO3ZgnlifPm83K+h1ubu+jp8AgXlF+/MfFfDoeSO
-	P11MsJvg==;
-Received: from [50.39.124.201] (helo=bombadil.infradead.org)
-	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAe4l-00000000Moo-1IPM;
-	Fri, 02 May 2025 00:16:23 +0000
-From: Randy Dunlap <rdunlap@infradead.org>
-To: linux-kernel@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>,
-	Vadim Pasternak <vadimp@nvidia.com>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	platform-driver-x86@vger.kernel.org
-Subject: [PATCH] platform/mellanox: MLXREG_DPU depends on I2C
-Date: Thu,  1 May 2025 17:16:20 -0700
-Message-ID: <20250502001622.674263-1-rdunlap@infradead.org>
+	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="b/GkN4LF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
+	; s=bytemarkmx; h=MIME-Version:Message-ID:Date:Subject:From:Content-Type:From
+	:Subject; bh=95JfMuuwwwlYjV2zqmhexIQdacuaBYC+NdT7w2fT52Q=; b=b/GkN4LFfJPns1b8
+	gYuHMMcWTgo60iqVAS5m2gmE2RnqYwrpJBKjyScBAcECfIqtEfsme8QZ1xw1W6Xk3Xc1P6eqwkRUK
+	g/+5XUkFwjBpH2CWGNru7C3GC5BBzmmpR2Azw1xyMkL71qQWxxlYbXZr12qvqKKNC9QQZvOmxIBEE
+	p5ZcyIudvFvipfIi4w2FzoJihyW2OynGwKHlAEVs6vFvw7hI5X6Scii1UXjWtoZo4j6NNAnoBoJL+
+	sTh3NtGdt4jG/6s113Uq9kFaOP1xftnU2v/b5qkPb9kX7jxoYeFx3TdWVuiBEcwFyGwKMTUCVWlxb
+	M2modQL7Z8V5CG81ug==;
+Received: from localhost ([127.0.0.1] helo=dalek.home.treblig.org)
+	by mx.treblig.org with esmtp (Exim 4.96)
+	(envelope-from <linux@treblig.org>)
+	id 1uAdTs-000xxT-1s;
+	Thu, 01 May 2025 23:38:16 +0000
+From: linux@treblig.org
+To: marcelo.leitner@gmail.com,
+	lucien.xin@gmail.com
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	linux-sctp@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Dr. David Alan Gilbert" <linux@treblig.org>
+Subject: [PATCH net-next] sctp: Remove unused sctp_assoc_del_peer and sctp_chunk_iif
+Date: Fri,  2 May 2025 00:38:15 +0100
+Message-ID: <20250501233815.99832-1-linux@treblig.org>
 X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,46 +50,100 @@ List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-WARNING: unmet direct dependencies detected for REGMAP_I2C
-  Depends on [m]: I2C [=m]
-  Selected by [y]:
-  - MLXREG_DPU [=y] && MELLANOX_PLATFORM [=y]
+From: "Dr. David Alan Gilbert" <linux@treblig.org>
 
-Without the dependency, REGMAP_I2C=y since MLXREG_DPU=y.
-Since CONFIG_I2C=m, this causes many (> 230) unmet dependency warnings.
-E.g.:
-  Selected by [m]:
-  - EEPROM_AT24 [=m] && I2C [=m] && SYSFS [=y]
-  - SERIAL_MAX310X [=m] && TTY [=y] && HAS_IOMEM [=y] && SPI_MASTER [=y] && I2C [=m]
-  - PINCTRL_AW9523 [=m] && PINCTRL [=y] && OF [=y] && I2C [=m]
-  - PINCTRL_CY8C95X0 [=m] && PINCTRL [=y] && I2C [=m]
-  - GPIO_FXL6408 [=m] && GPIOLIB [=y] && I2C [=m]
-  - GPIO_DS4520 [=m] && GPIOLIB [=y] && I2C [=m]
-  - GPIO_PCA953X [=m] && GPIOLIB [=y] && I2C [=m]
-  - IP5XXX_POWER [=m] && POWER_SUPPLY [=y] && I2C [=m]
-  - BATTERY_CW2015 [=m] && POWER_SUPPLY [=y] && I2C [=m]
-  - CHARGER_SBS [=m] && POWER_SUPPLY [=y] && I2C [=m]
+sctp_assoc_del_peer() last use was removed in 2015 by
+commit 73e6742027f5 ("sctp: Do not try to search for the transport twice")
+which now uses rm_peer instead of del_peer.
 
-Fixes: 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Vadim Pasternak <vadimp@nvidia.com>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: platform-driver-x86@vger.kernel.org
+sctp_chunk_iif() last use was removed in 2016 by
+commit 1f45f78f8e51 ("sctp: allow GSO frags to access the chunk too")
+
+Remove them.
+
+Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 ---
- drivers/platform/mellanox/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ include/net/sctp/sm.h      |  1 -
+ include/net/sctp/structs.h |  2 --
+ net/sctp/associola.c       | 18 ------------------
+ net/sctp/sm_make_chunk.c   |  8 --------
+ 4 files changed, 29 deletions(-)
 
---- linux-next-20250501.orig/drivers/platform/mellanox/Kconfig
-+++ linux-next-20250501/drivers/platform/mellanox/Kconfig
-@@ -29,6 +29,7 @@ config MLX_PLATFORM
+diff --git a/include/net/sctp/sm.h b/include/net/sctp/sm.h
+index 64c42bd56bb2..3bfd261a53cc 100644
+--- a/include/net/sctp/sm.h
++++ b/include/net/sctp/sm.h
+@@ -161,7 +161,6 @@ const struct sctp_sm_table_entry *sctp_sm_lookup_event(
+ 					enum sctp_event_type event_type,
+ 					enum sctp_state state,
+ 					union sctp_subtype event_subtype);
+-int sctp_chunk_iif(const struct sctp_chunk *);
+ struct sctp_association *sctp_make_temp_asoc(const struct sctp_endpoint *,
+ 					     struct sctp_chunk *,
+ 					     gfp_t gfp);
+diff --git a/include/net/sctp/structs.h b/include/net/sctp/structs.h
+index dcd288fa1bb6..1ad7ce71d0a7 100644
+--- a/include/net/sctp/structs.h
++++ b/include/net/sctp/structs.h
+@@ -2152,8 +2152,6 @@ struct sctp_transport *sctp_assoc_add_peer(struct sctp_association *,
+ 				     const union sctp_addr *address,
+ 				     const gfp_t gfp,
+ 				     const int peer_state);
+-void sctp_assoc_del_peer(struct sctp_association *asoc,
+-			 const union sctp_addr *addr);
+ void sctp_assoc_rm_peer(struct sctp_association *asoc,
+ 			 struct sctp_transport *peer);
+ void sctp_assoc_control_transport(struct sctp_association *asoc,
+diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+index 760152e751c7..5793d71852b8 100644
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -736,24 +736,6 @@ struct sctp_transport *sctp_assoc_add_peer(struct sctp_association *asoc,
+ 	return peer;
+ }
  
- config MLXREG_DPU
- 	tristate "Nvidia Data Processor Unit platform driver support"
-+	depends on I2C
- 	select REGMAP_I2C
- 	help
- 	  This driver provides support for the Nvidia BF3 Data Processor Units,
+-/* Delete a transport address from an association.  */
+-void sctp_assoc_del_peer(struct sctp_association *asoc,
+-			 const union sctp_addr *addr)
+-{
+-	struct list_head	*pos;
+-	struct list_head	*temp;
+-	struct sctp_transport	*transport;
+-
+-	list_for_each_safe(pos, temp, &asoc->peer.transport_addr_list) {
+-		transport = list_entry(pos, struct sctp_transport, transports);
+-		if (sctp_cmp_addr_exact(addr, &transport->ipaddr)) {
+-			/* Do book keeping for removing the peer and free it. */
+-			sctp_assoc_rm_peer(asoc, transport);
+-			break;
+-		}
+-	}
+-}
+-
+ /* Lookup a transport by address. */
+ struct sctp_transport *sctp_assoc_lookup_paddr(
+ 					const struct sctp_association *asoc,
+diff --git a/net/sctp/sm_make_chunk.c b/net/sctp/sm_make_chunk.c
+index f80208edd6a5..3ead591c72fd 100644
+--- a/net/sctp/sm_make_chunk.c
++++ b/net/sctp/sm_make_chunk.c
+@@ -115,14 +115,6 @@ static void sctp_control_set_owner_w(struct sctp_chunk *chunk)
+ 	skb->destructor = sctp_control_release_owner;
+ }
+ 
+-/* What was the inbound interface for this chunk? */
+-int sctp_chunk_iif(const struct sctp_chunk *chunk)
+-{
+-	struct sk_buff *skb = chunk->skb;
+-
+-	return SCTP_INPUT_CB(skb)->af->skb_iif(skb);
+-}
+-
+ /* RFC 2960 3.3.2 Initiation (INIT) (1)
+  *
+  * Note 2: The ECN capable field is reserved for future use of
+-- 
+2.49.0
+
