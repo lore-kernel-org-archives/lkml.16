@@ -1,159 +1,392 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD33321CA0F
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1378E202C5D;
+	Thu,  1 May 2025 23:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746141025; cv=none; b=MUYI1CewAoOc1qo5bESerlayX2y6QTgdHyYRylQ+zyART6UUYsP35HKRLTG5a6BwpY6vQ+R5GBRHQucyiaJaZQYH6beeO94l/eLEjHOZH3bDUKuaHuBdwOpLHR2PvvHHW3fEB8pmit2qujvMc4ab13j/7IMjKmt4IeKVjMuUJvA=
+	t=1746141150; cv=none; b=lhtuUiF/Vh3MfK6oyCqdfARf+lowsvcUR7nzATkXI17eQ95DL+Kyv0nJB4JIHsty2/EeWB/GJmbrFe7+trnsEcR8O9AhONAHpqpu0lFOqDn4J6k0Ou5oCwf4A08/qAixo3cQjTGJpymx/pplc/43MgkKu3nhW31KS6JgqN3V7fM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746141025; c=relaxed/simple;
-	bh=rCiO67wSaKR/J66Y5RaJa3XiHHnRvsJAqdp3twkFRr0=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=L9WqZ66WWnsTwQ5pIm5zOBbnHJb7GcC6LasOe+ltdascSbfvvsnyz/Ne5mSsFZfBHB8+BYmWBomZjPlYrmhLJfw6n9bnTQbSybJIkqUlJ6ETcI0qLHIwGNz4S7QcaADDZ2Qo3qzhJSpe9mZYTVuhMI/Jy/VAiivnf0eQo4t95to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d6e10f8747so14580285ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:10:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746141023; x=1746745823;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CmMunFqJ0wsYItBEBVvHHIbIV4X1ZAlRO6ddSnExrAM=;
-        b=k0jL0XjL7bXR1rDobrXfr+cM+Wwv9nIO6ChqqrZLcyeUh8f3/8ltsRQWDAi0X5a5gO
-         C/O82ocjMu7Zd2t6QE6AxVQA4L/4eNwnIVkRbmtRe8sXjmSjcVt9Itr8lFupJtRpkVXA
-         4oVKjY2GfVUG2CD2C+Tl0kuw52rZ76u2GORqg4NpCePiquksbKwYr2sSouOQYFhgoaWy
-         PUf6Gft60A3a/iClRQ+7j+isz3xAtrBBKpzqm9TsAvzXQQ3c4SGQNXOR9XOlKtECcM3L
-         ttkIR7pc82DcaFTclN5BcJe6KiqENsuh373ukFMjlh+UKZS8x7gslq4geDaLMZMVpNmh
-         F/rQ==
-X-Gm-Message-State: AOJu0Yz2HajokjExxcSu777bTrsV+Fnp5dQXLwNSJoZq65IbD+awCuH/
-	iylo1/Bg9COYMH6dUbAHcZdmQx4wVhf8+ByXfWywc9CIjwisRsgQZ00KlXseMHpS7M++Bx0NASl
-	TH++VjUbjreggszpFWtOKTxE1LDAJK1zlcKq0c3DGkuZilEmvGHJ4TmlFfA==
-X-Google-Smtp-Source: AGHT+IHePGwor4oDjYFlZ6AgTMwp1kt5Ebu1QDtTzbj5/n5aPAKQAnbOGU5nfMeO/496/7sL6A6NdbF2PLqvXXmbxhyV7ATREENs
+	s=arc-20240116; t=1746141150; c=relaxed/simple;
+	bh=GPNb+1QVQD2lKbdBC337Ayi8643e3qblvHpAPhLgXOo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UqgNZrUpzWYEDCkjPz3oiKpRfwTtkim/xlRq1o8CaXSmIN/mKt4iw4RsVb1DwDzbmOJHbowymGSjeZetGkBYGqCV48ZOtLC27LEuomLyhqtFhtDbEyuYhsJpkK97LNZfLOukBOaRZTQJ9/iG5wdwZWatuFMTTr2Tx1AtMQ2ez6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l4YaK30v; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l4YaK30v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746141148; x=1777677148;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=GPNb+1QVQD2lKbdBC337Ayi8643e3qblvHpAPhLgXOo=;
+  b=l4YaK30v3djAKSN6l+kZun2sw7m0N7Lefp/U9J9RaVUbjmQi0Rquuqzu
+   Nyv2hYci19U3w9qguZooDUbe+Vz9secFYZ/N5jyFhcT6J/LUSAqjIlvyo
+   kCLPcFKmwGuYwXFj9aiur7DbP4Oh9MkNH6os8Vr3jQFniMEhiEK3Pq8HO
+   wlvnvSd1w8+MaBtRdZ9ArUGC9wgo7qBhUChAZGTvThbTPJRf1UHeVBRhy
+   jD8v3ORv39ix1bvXBZtjhCj+SjcRZCXE5gxi42ZZhb3h6Cu6dZIajxSkJ
+   RG+ObdpEDioN2N9KI8IsbVGTMHezSSnR8z2K3CALW0V9jaNUVjQPIToMN
+   g==;
+X-CSE-ConnectionGUID: VcOSmXKbSCWF/N5yiT/rjQ==
+X-CSE-MsgGUID: qhkoBYsKQ4aCR4XK2v0eYQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47078783"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="47078783"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:12:27 -0700
+X-CSE-ConnectionGUID: ZUhPpBwERHe6lq8cKt/Mgg==
+X-CSE-MsgGUID: FkagkSCvQQOJ5TasFDUFVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="134451497"
+Received: from spandruv-desk1.amr.corp.intel.com ([10.125.110.85])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 16:12:27 -0700
+Message-ID: <9a06fec4970bfbd294ad80dceaa7ec12f0869587.camel@linux.intel.com>
+Subject: Re: [PATCH v1 1/2] cpufreq: intel_pstate: Use CPPC to get scaling
+ factors
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Russell Haley <yumpusamongus@gmail.com>, "Rafael J. Wysocki"
+	 <rjw@rjwysocki.net>, Linux PM <linux-pm@vger.kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
+Date: Thu, 01 May 2025 16:12:26 -0700
+In-Reply-To: <ac0e5571-15b2-4b7a-adc9-84bbca96cbf3@gmail.com>
+References: <1923452.tdWV9SEqCh@rjwysocki.net>
+	 <8476313.T7Z3S40VBb@rjwysocki.net>
+	 <53027db5-f750-4b6f-8ac5-a849dff2524b@gmail.com>
+	 <b1bc2569b0da4c6749e896eee0fdf0af97c18fea.camel@linux.intel.com>
+	 <ac0e5571-15b2-4b7a-adc9-84bbca96cbf3@gmail.com>
+Autocrypt: addr=srinivas.pandruvada@linux.intel.com; prefer-encrypt=mutual;
+ keydata=mQGNBGYHNAsBDAC7tv5u9cIsSDvdgBBEDG0/a/nTaC1GXOx5MFNEDL0LWia2p8Asl7igx
+ YrB68fyfPNLSIgtCmps0EbRUkPtoN5/HTbAEZeJUTL8Xdoe6sTywf8/6/DMheEUzprE4Qyjt0HheW
+ y1JGvdOA0f1lkxCnPXeiiDY4FUqQHr3U6X4FPqfrfGlrMmGvntpKzOTutlQl8eSAprtgZ+zm0Jiwq
+ NSiSBOt2SlbkGu9bBYx7mTsrGv+x7x4Ca6/BO9o5dIvwJOcfK/cXC/yxEkr1ajbIUYZFEzQyZQXrT
+ GUGn8j3/cXQgVvMYxrh3pGCq9Q0Q6PAwQYhm97ipXa86GcTpP5B2ip9xclPtDW99sihiL8euTWRfS
+ TUsEI+1YzCyz5DU32w3WiXr3ITicaMV090tMg9phIZsjfFbnR8hY03n0kRNWWFXi/ch2MsZCCqXIB
+ oY/SruNH9Y6mnFKW8HSH762C7On8GXBYJzH6giLGeSsbvis2ZmV/r+LmswwZ6ACcOKLlvvIukAEQE
+ AAbQ5U3Jpbml2YXMgUGFuZHJ1dmFkYSA8c3Jpbml2YXMucGFuZHJ1dmFkYUBsaW51eC5pbnRlbC5j
+ b20+iQHRBBMBCAA7FiEEdki2SeUi0wlk2xcjOqtdDMJyisMFAmYHNAsCGwMFCwkIBwICIgIGFQoJC
+ AsCBBYCAwECHgcCF4AACgkQOqtdDMJyisMobAv+LLYUSKNuWhRN3wS7WocRPCi3tWeBml+qivCwyv
+ oZbmE2LcxYFnkcj6YNoS4N1CHJCr7vwefWTzoKTTDYqz3Ma0D0SbR1p/dH0nDgN34y41HpIHf0tx0
+ UxGMgOWJAInq3A7/mNkoLQQ3D5siG39X3bh9Ecg0LhMpYwP/AYsd8X1ypCWgo8SE0J/6XX/HXop2a
+ ivimve15VklMhyuu2dNWDIyF2cWz6urHV4jmxT/wUGBdq5j87vrJhLXeosueRjGJb8/xzl34iYv08
+ wOB0fP+Ox5m0t9N5yZCbcaQug3hSlgp9hittYRgIK4GwZtNO11bOzeCEMk+xFYUoa5V8JWK9/vxrx
+ NZEn58vMJ/nxoJzkb++iV7KBtsqErbs5iDwFln/TRJAQDYrtHJKLLFB9BGUDuaBOmFummR70Rbo55
+ J9fvUHc2O70qteKOt5A0zv7G8uUdIaaUHrT+VOS7o+MrbPQcSk+bl81L2R7TfWViCmKQ60sD3M90Y
+ oOfCQxricddC
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b46:b0:3d8:1d7c:e180 with SMTP id
- e9e14a558f8ab-3d97c186f80mr8708795ab.6.1746141022869; Thu, 01 May 2025
- 16:10:22 -0700 (PDT)
-Date: Thu, 01 May 2025 16:10:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <6813ff5e.050a0220.14dd7d.001b.GAE@google.com>
-Subject: [syzbot] [trace?] possible deadlock in print_event_fields
-From: syzbot <syzbot+441582c1592938fccf09@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mathieu.desnoyers@efficios.com, mhiramat@kernel.org, rostedt@goodmis.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+On Thu, 2025-05-01 at 16:33 -0500, Russell Haley wrote:
+>=20
+> On 5/1/25 12:13 PM, srinivas pandruvada wrote:
+> > Hi Russell,
+> >=20
+> >=20
+> > On Wed, 2025-04-30 at 20:28 -0500, Russell Haley wrote:
+> > >=20
+> > > On 12/5/24 5:39 AM, Rafael J. Wysocki wrote:
+> > >=20
+> > > > +	 * Compute the perf-to-frequency scaling factor for
+> > > > the
+> > > > given CPU if
+> > > > +	 * possible, unless it would be 0.
+> > > > +	 */
+> > > > +	if (!cppc_get_perf_caps(cpu, &cppc_perf) &&
+> > > > +	=C2=A0=C2=A0=C2=A0 cppc_perf.nominal_perf && cppc_perf.nominal_fr=
+eq)
+> > > > +		return div_u64(cppc_perf.nominal_freq *
+> > > > KHZ_PER_MHZ,
+> > > > +			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cppc_perf.nominal_perf);
+> > >=20
+> > Can you dump the output of
+> >=20
+> > =C2=A0grep -r . /sys/devices/system/cpu/cpu*/acpi_cppc/
+> >=20
 
-syzbot found the following issue on:
+For Intel=C2=AE Core=E2=84=A2 Ultra 7 Processor 265K as per spec:
 
-HEAD commit:    5bc1018675ec Merge tag 'pci-v6.15-fixes-3' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1246a374580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d61fd67fbda678a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=441582c1592938fccf09
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+Based on this CPU 0-7 are performance-cores. So there max frequency is
+correct.
+That can be 5.5 GHz or 5.4 GHz.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+CPU 8-19 are Efficient cores
+There max can be 4.6 GHz, except CPU 12, 13. 4.6 GHz also match the
+spec.
+The max perf raw value is 65. That is also correct.
+The nominal freq of all is 3300 MHz, that is also correct for all.
+Except for CPU 12 and 13 the nominal perf is 46.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/af5f43d5128c/disk-5bc10186.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/2a6f8aa6c1e6/vmlinux-5bc10186.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/423f4c1d2cde/bzImage-5bc10186.xz
+I expect that nominal perf value of 12, 13 should be same as other
+efficient cores. But here it is not same.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+441582c1592938fccf09@syzkaller.appspotmail.com
+Let me check if I can find some contact of Asrock to see why is this
+case.
 
-============================================
-WARNING: possible recursive locking detected
-6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 Tainted: G     U             
---------------------------------------------
-syz.3.3247/22963 is trying to acquire lock:
-ffffffff8e44b590 (trace_event_sem){++++}-{4:4}, at: print_event_fields+0x70e/0xc90 kernel/trace/trace_output.c:1049
-
-but task is already holding lock:
-ffffffff8e44b590 (trace_event_sem){++++}-{4:4}, at: tracing_read_pipe+0x3e0/0xc60 kernel/trace/trace.c:6658
-
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(trace_event_sem);
-  lock(trace_event_sem);
-
- *** DEADLOCK ***
-
- May be due to missing lock nesting notation
-
-4 locks held by syz.3.3247/22963:
- #0: ffff888027fc37b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x2a2/0x370 fs/file.c:1213
- #1: ffff8880785f8090 (&iter->mutex){+.+.}-{4:4}, at: class_mutex_constructor include/linux/mutex.h:201 [inline]
- #1: ffff8880785f8090 (&iter->mutex){+.+.}-{4:4}, at: tracing_read_pipe+0x65/0xc60 kernel/trace/trace.c:6626
- #2: ffffffff8e44b590 (trace_event_sem){++++}-{4:4}, at: tracing_read_pipe+0x3e0/0xc60 kernel/trace/trace.c:6658
- #3: ffffffff8e443170 (all_cpu_access_lock){++++}-{4:4}, at: trace_access_lock kernel/trace/trace.c:933 [inline]
- #3: ffffffff8e443170 (all_cpu_access_lock){++++}-{4:4}, at: trace_access_lock kernel/trace/trace.c:929 [inline]
- #3: ffffffff8e443170 (all_cpu_access_lock){++++}-{4:4}, at: tracing_read_pipe+0x8c7/0xc60 kernel/trace/trace.c:6659
-
-stack backtrace:
-CPU: 0 UID: 0 PID: 22963 Comm: syz.3.3247 Tainted: G     U              6.15.0-rc3-syzkaller-00342-g5bc1018675ec #0 PREEMPT(full) 
-Tainted: [U]=USER
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
- print_deadlock_bug+0x1e9/0x240 kernel/locking/lockdep.c:3042
- check_deadlock kernel/locking/lockdep.c:3094 [inline]
- validate_chain kernel/locking/lockdep.c:3896 [inline]
- __lock_acquire+0xff7/0x1ba0 kernel/locking/lockdep.c:5235
- lock_acquire kernel/locking/lockdep.c:5866 [inline]
- lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5823
- down_read+0x9b/0x480 kernel/locking/rwsem.c:1524
- print_event_fields+0x70e/0xc90 kernel/trace/trace_output.c:1049
- print_trace_fmt kernel/trace/trace.c:4208 [inline]
- print_trace_line+0x129a/0x17a0 kernel/trace/trace.c:4376
- tracing_read_pipe+0x4b9/0xc60 kernel/trace/trace.c:6664
- vfs_read+0x1de/0xc70 fs/read_write.c:568
- ksys_read+0x12a/0x240 fs/read_write.c:713
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x230 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f87f858e969
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f87f9439038 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-RAX: ffffffffffffffda RBX: 00007f87f87b5fa0 RCX: 00007f87f858e969
-RDX: 0000000000000067 RSI: 0000000000000000 RDI: 0000000000000007
-RBP: 00007f87f8610ab1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f87f87b5fa0 R15: 00007ffcda5a13e8
- </TASK>
+Thanks,
+Srinivas
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+> > Thanks,
+> > Srinivas
+>=20
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> Running microcode 0x117, CSME firmware 19.0.5.1948, shipped in BIOS
+> 3.04
+> on an ASRock Z890 Pro-A Wifi motherboard:
+>=20
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/feedback_ctrs:ref:1273162075
+> > 77 del:142876300546
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu0/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/feedback_ctrs:ref:3080604891
+> > 0 del:37298826546
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/highest_perf:88
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu1/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/feedback_ctrs:ref:3010485691
+> > 2 del:37149315858
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu2/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/feedback_ctrs:ref:2886479247
+> > 6 del:36395338959
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu3/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/feedback_ctrs:ref:2959129937
+> > 4 del:35708084379
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu4/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/feedback_ctrs:ref:2734735138
+> > 2 del:35000915045
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu5/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/feedback_ctrs:ref:2811773788
+> > 2 del:34854014824
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/highest_perf:87
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu6/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/feedback_ctrs:ref:2958635916
+> > 6 del:36871078184
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_nonlinear_perf:36
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/highest_perf:88
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/nominal_freq:3900
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/guaranteed_perf:63
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/nominal_perf:62
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/reference_perf:62
+> > /sys/devices/system/cpu/cpu7/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/feedback_ctrs:ref:2880811533
+> > 6 del:32798153181
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu8/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/feedback_ctrs:ref:2880844652
+> > 4 del:32557156736
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu9/acpi_cppc/wraparound_time:184467440737
+> > 09551615
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/feedback_ctrs:ref:284668584
+> > 72 del:32126528930
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu10/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/feedback_ctrs:ref:301586672
+> > 40 del:34095663687
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu11/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/feedback_ctrs:ref:290567520
+> > 36 del:33047611525
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/nominal_perf:33
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/reference_perf:39
+> > /sys/devices/system/cpu/cpu12/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/feedback_ctrs:ref:288689997
+> > 96 del:32974873909
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/nominal_perf:33
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/reference_perf:39
+> > /sys/devices/system/cpu/cpu13/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/feedback_ctrs:ref:327543421
+> > 92 del:33580705618
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu14/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/feedback_ctrs:ref:307564110
+> > 36 del:33232643243
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu15/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/feedback_ctrs:ref:294303303
+> > 84 del:32848376143
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu16/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/feedback_ctrs:ref:299978140
+> > 80 del:33374419073
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu17/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/feedback_ctrs:ref:283124003
+> > 76 del:32285787922
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu18/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/feedback_ctrs:ref:283166047
+> > 32 del:32229146887
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_nonlinear_perf:21
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/highest_perf:65
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/nominal_freq:3300
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_freq:0
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/guaranteed_perf:47
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/nominal_perf:46
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/lowest_perf:1
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/reference_perf:54
+> > /sys/devices/system/cpu/cpu19/acpi_cppc/wraparound_time:18446744073
+> > 709551615
+>=20
+> Thanks,
+>=20
+> Russell
+>=20
+>=20
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
