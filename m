@@ -1,58 +1,60 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F9FD20EB
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FB01E991D
 	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 21:30:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746135043; cv=none; b=tNL6oMvLP8lAzoS2stjyR/s5j8hypyoK/Aex15a5hPwOIkhzxUiUO6Q/T0LJbS4FmNryAhB/3hqbOETFTHt2h6CsG/uM3qpK53MKIBX+uxYMzhADkkbPW2bPnjow11tHNGMXLSm0uXzgkhqTcuvnQseEXacJIjEdcLFeQt324P0=
+	t=1746135044; cv=none; b=ZSqoUAwuAC7Zzp3AQgt5/EjRKAvBmW70u78MNfCToTDfzEmZDr7Bf6Xk/z5TCesQ9HEAsyKdrUKk87Ps0tNwozFH828xce0IpjR4zc/X4GjMHmFiZmJKr0h3wDcNd+esSQjXe5jt2uSHTeUpwF62xW/X1BePAFr7RaVM+mxlhD4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746135043; c=relaxed/simple;
-	bh=YyW/COy8u0xSHkNYfU0H94CrJ1LP/F4ydjWB0Z03IIw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GkQsNFGxBcAPOYRjejT0dPlO0jLjdWmc9may1z4okI55MLGmmhxx+E0QH2egKQgKcGV39PrW75zBSn/eNOJ77zwvgLXwDMUZ4BSzXTgE6TOGfqFEr/2X2d8siJ/BUjOrcmHayEuRByxdM9v2Wz8bvNJDjPwk6c28ztQoHVCAdzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DieGXnmo; arc=none smtp.client-ip=209.85.208.48
+	s=arc-20240116; t=1746135044; c=relaxed/simple;
+	bh=BvqQ+CBpYAAVznTR42OPdLQU4WD8pPMFPt45Xuh5A6Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=V0o8Kvm3UpQ0A39KrqCmJuC2e+WoLOJ/gvlE63Uqq7wJlrbBhcHmgGKCLt5dULn2AdpUpWY4dUCz+BIZBVRyUP+u3VRrYllFhx099DK03U+G564OktU2tc5iGy6ZGZcA7dvo5qshB46WHYslm9V4KxCtOCR91RS0+0YIzOUbPk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFrlyNFN; arc=none smtp.client-ip=209.85.218.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DieGXnmo"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5f62ef3c383so2441885a12.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFrlyNFN"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so147916866b.0
         for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 14:30:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20230601; t=1746135040; x=1746739840; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iU/SN4E12P0EznwvjosLSqRTc+oShnSCyWHNdSLiMcA=;
-        b=DieGXnmopl5rLvgz4YkvnvvmRT+QoHC6faRrEBHULKMlcx5z/fMX6FvqdpNvfUV50z
-         zQeDUFIMuZ9TVr/hKnFdMp8Dg+Tv4Kpcf/enaT9R7VI+/VDhzm13mpAz6lFMcPO4qciV
-         +XQd9Qa+6CwslFdQ3fRWJ77fbgGyV3UbIg3sgRPrXE5zuCk/OUq1wm4cW6coTLC0+bEE
-         IWDm4wF02vPj0ZhGusvUbI+dwwKN9gXATZfgs0FQfrM0gOBfuvcjfqMYR1Y4h/3qa8pc
-         I1UY7gTCR8IrGtf4RZOsv8O52+lOeOOJpQOwjf65wobcyaJJdbw0R7I1UuAmzOnmHrl5
-         vj1A==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iqUDyK3vGEqizw5TTGXv8tq5hFBthnGAWaurTJpA32Q=;
+        b=KFrlyNFNpr7bzq1CXiL78nNb/rL4kI2euu1cu2H6ZGsVdgxScUno1O/7feTlbj2zEr
+         27mf0M/YQGMw1DSM3zJOZdoaYcDETTjw0CYAAP5BtieBLw5viQviqWhyMscm9DU6OZyX
+         6EN0V3mY3E+CN6BOHy7EXnihHYw/fw5Ejz3KNmtwnA6XmDi39I0jUBORbd3ZkrCQ8qJa
+         wzaA1DQFaJSFzsIgVNZTEoKLWn/SVsPjEScAnv54F3+RegedVR75XYlGTsg99+vYxmmF
+         L4E2/3JoOYuH7nixEfFUxNIPcC23Wkk4sMFU3oIQ8TtYgWguh7Gq2kaNTgShwtYec3q9
+         lrqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1746135040; x=1746739840;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iU/SN4E12P0EznwvjosLSqRTc+oShnSCyWHNdSLiMcA=;
-        b=vnAGrqDy1ipX6dtx9eEi5Ffw87JBB0tiSw0tf02FWYYwe1DIniJusAjky47ESihaZl
-         fMiCMcWjHB1snUB8mPGl8bcbyXLqIYgOgzlweO+9pTD+ckNzwerfDz8czyTBtaNLiRS/
-         EQ925vN3BOOhnCs/eHxhE4FBLBt71y/LuzPAuK5Yl/YfJIK9h7wG1oawp1iWIMOH0HHO
-         GxJ+ledhyTlluffNdAMICZFAlEMd54hLrQwATQm8RwR6GGBzBKW93pGDaE1eZh0XBtMT
-         QViXuT09epenZappcKyM0gXgemqPd5UD8VdDEj0qMaLg7fx6CQnZ9xsDD7Hvjy06QYWh
-         ZOcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMqdSPneHukfBjTNBhJXDwZ1bP7MybS+6UKGvpzaBUVG82GJDTPMT7Lq9StWz2CHQJsL3mz7C4IKCgVZc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwjSe+9pS32QqC02PXyAnHjTgGbN8aiSujihq9I8LroKtRfrCYH
-	ZMFcetlfvG32SclXt3o3hdx08aozaDm1UzstxuM3ED3wjqr9KwSu
-X-Gm-Gg: ASbGncvv8DTEQg0oc89JtiGRQTM14GKkfeeBdCSnMeEMVryhIjmQ09XTf0gnvMX968I
-	Egj/DQ/V0vIWtl1xtjn33ssWLbsiOSq33lVHWQFSU7Zdcg3nljDEI2IraoLIJbsz40e2odb37mZ
-	KOqxZTX8/nUOjUS6lgNCoYGVD4Ahf/Owp6A+d6Xi9q5MzvI3c+3t0b+yEqN1MAu1XOy8EESiLhY
-	lGbu8GqLDMB5AeReOZTSYBGTj8cVuPk1D9PbHfrYV1zIcT3hiuS8Y2zTI03cQ7/vzzkrEqJLK2X
-	AcBv5ct53GxZeLjvVTD7aPSFPymhwAmNxl3AtoVk1Oq/qMjcToOtPHIDEFKEbM4UjC+nbnB9ZKY
-	9s82zCUIYINGp+kkCoiExWkZ3Xg0IYmKqFNy4xkEt4nUsZFMfRiV/7AKGKw45SR+uai7US6f4nJ
-	V1ng==
-X-Google-Smtp-Source: AGHT+IFBTxdVdQrLfnEhXg0W6c/Yj8/PyvkL5d89UZu3/fKawbDUQB7kLSAVoeyo37fJrpZwjPTuBw==
-X-Received: by 2002:a17:907:728a:b0:ace:5461:81dd with SMTP id a640c23a62f3a-ad17acfda03mr73271966b.3.1746135039633;
-        Thu, 01 May 2025 14:30:39 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iqUDyK3vGEqizw5TTGXv8tq5hFBthnGAWaurTJpA32Q=;
+        b=YprjVwP5iXirbwVBpP5CPxmtnDWNeNns1U4uBttTtGadRHfvC53UviMG4WLcw896jd
+         cNemr5ajHkk4XqcJ95pW3Dg7gwunI6EFPzKkhFE0PpUPEDjIz+G1NB76pDzsnIcTr964
+         4vY8mbG4S1Qy97s5MaTcSC8e84VUIdQ+HGzS7ByWv21QNnNFockwS3zoAs0Eq6VSGArZ
+         +WbxpGEzvp85MlXSM1dTQ47JxbM4dtuNvA5W7SMP81lRfiNJDdZmoXKSbLpZek9qD32Z
+         Fz2GR7jtu4jE1cmqaSGwG9ZGVi8Mb6gCCROPOwSLwyIk3OZdO0E+uVez/s5kJ8jZBdDm
+         G3Og==
+X-Forwarded-Encrypted: i=1; AJvYcCV2IEiRHjxf4RLc3KXLopJKPFK1Hg3/+fumJ/ht0AD0pj58fxJL2SGZZ7ZdUqCwzHatpHVj35baCJbrUkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+4LLubkxB11k/W1gXH4GMgyGXRICx5wlqLPMceWzGuRwiEJb2
+	1NL8ZwzWcFXgrTiG6909s1F4vz9M1CV/n8xc1K0sMrLXGTdEZ848BSdCblXLVJk4MJ8k
+X-Gm-Gg: ASbGncvs5CSM/ZEv24+m8Y4LPE7BfVoEn6Ag3+43fFxR1fNMEnZByMRGuiYM4CICiFr
+	A463h6GuhQZiohY+5CwVK4efM79+hNfnTOYIFQZVv76BaVz+7mFdw/UHFxPJOxgR8fEHShJDVbI
+	U+qnaYo+hh5CW1AMpeRuy7mzQH4byfTm4CGSKmUOiVW/X7REhVdj7B6+UivsObwZ7g29BSETNeH
+	AUWpHVu51N4lOvZEt3p3Lz9Q7H9bw5xb/eV5YUVdpIlsLZZg8Rh5j2FnNnR0tU3ERITQhDmcPX2
+	1iR319W3ujyl3Qk2D9vFSDezxEMRRdH3RwWaxVSSDfnCVnE7IMltBoAtmzS42fRjzSPyJsAxFXW
+	5g+8jAhf040H22eFChWFHd2q4yWZomrAfWVH6qBTpMEf2PKKvMIgtQq/Kc81xyqkvQkPa3kgbvT
+	+9lQ==
+X-Google-Smtp-Source: AGHT+IFen8NAa1gYV7IYZQFGgbEo+TNzKU6LwekucDQLxNs10VoAkrda6K2y1ptlUvY1rZ+ftPX/bQ==
+X-Received: by 2002:a17:907:728a:b0:ac7:d7f3:86c6 with SMTP id a640c23a62f3a-ad17ad3a86cmr59649366b.9.1746135040050;
+        Thu, 01 May 2025 14:30:40 -0700 (PDT)
 Received: from chimera.arnhem.chello.nl (2001-1c08-0706-8b00-41fd-2957-14cb-eff7.cable.dynamic.v6.ziggo.nl. [2001:1c08:706:8b00:41fd:2957:14cb:eff7])
         by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad0da560a63sm96466866b.139.2025.05.01.14.30.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
@@ -64,10 +66,12 @@ Cc: gregkh@linuxfoundation.org,
 	linux-kernel@vger.kernel.org,
 	linux-staging@lists.linux.dev,
 	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: [PATCH 0/8] Staging: gpib: Update return types and error handling for request_system_control
-Date: Thu,  1 May 2025 23:30:29 +0200
-Message-Id: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
+Subject: [PATCH 1/8] Staging: gpib: agilent_82357a: changing return type void in int
+Date: Thu,  1 May 2025 23:30:30 +0200
+Message-Id: <e902b9d53283d350e6f97399dd3fea646fdb5d88.1746133676.git.thomas.andreatta2000@gmail.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
+References: <cover.1746133676.git.thomas.andreatta2000@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,49 +80,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch series improves error propagation in the gpib driver by changing
-the return type of `request_system_control` and related functions from void to
-int, allowing proper error handling.
+Patched FIXME request moving the return type from a void to int.
 
-The changes follow these steps:
-* Fix the FIXME comment in agilent_82357a.c by changing the return type
-   from void to int
-* Update the function prototype in gpib_types.h
-* Update all implementations of the function across drivers to return int
-* Implement proper error checking for the new signatures in the resume function
-* Improves the mutex unlocking path process in the resume function
+Signed-off-by: Thomas Andreatta <thomas.andreatta2000@gmail.com>
+---
+ drivers/staging/gpib/agilent_82357a/agilent_82357a.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-All functions that used to be void and didn't had any intended return code are
-now returning success (0), and the resume code is refactored to ensure mutex
-unlocking in all execution paths.
-
-Thomas Andreatta (8):
-  Staging: gpib: agilent_82357a: changing return type void in int
-  Staging: gpib: Updated return type `request_system_control`
-  Staging: gpib: Updated return type for `request_system_control`
-  Staging: gpib: Updated return type `ines_request_system_control`
-  Staging: gpib: Updated return type for `ines_request_system_control`
-  Staging: gpib: Updated return type for `request_system_control`
-  Staging: gpib: `request_system_control` error handling in resume
-  Staging: gpib: Optimize error handling in agilent_82357a_driver_resume
-
- .../gpib/agilent_82350b/agilent_82350b.c      |  3 ++-
- .../gpib/agilent_82357a/agilent_82357a.c      | 27 ++++++++++---------
- drivers/staging/gpib/cb7210/cb7210.c          |  3 ++-
- drivers/staging/gpib/cec/cec_gpib.c           |  3 ++-
- drivers/staging/gpib/hp_82335/hp82335.c       |  3 ++-
- drivers/staging/gpib/hp_82341/hp_82341.c      |  3 ++-
- drivers/staging/gpib/include/gpib_types.h     |  2 +-
- drivers/staging/gpib/ines/ines.h              |  2 +-
- drivers/staging/gpib/ines/ines_gpib.c         |  3 ++-
- .../gpib/lpvo_usb_gpib/lpvo_usb_gpib.c        |  3 ++-
- drivers/staging/gpib/ni_usb/ni_usb_gpib.c     |  8 +++---
- drivers/staging/gpib/pc2/pc2_gpib.c           |  3 ++-
- drivers/staging/gpib/tnt4882/tnt4882_gpib.c   |  3 ++-
- 13 files changed, 38 insertions(+), 28 deletions(-)
-
+diff --git a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
+index da229965d98e..ce2d3850ba31 100644
+--- a/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
++++ b/drivers/staging/gpib/agilent_82357a/agilent_82357a.c
+@@ -754,8 +754,7 @@ static int agilent_82357a_go_to_standby(struct gpib_board *board)
+ 	return 0;
+ }
+ 
+-//FIXME should change prototype to return int
+-static void agilent_82357a_request_system_control(struct gpib_board *board,
++static int agilent_82357a_request_system_control(struct gpib_board *board,
+ 						  int request_control)
+ {
+ 	struct agilent_82357a_priv *a_priv = board->private_data;
+@@ -765,7 +764,7 @@ static void agilent_82357a_request_system_control(struct gpib_board *board,
+ 	int i = 0;
+ 
+ 	if (!a_priv->bus_interface)
+-		return; // -ENODEV;
++		return -ENODEV;
+ 
+ 	usb_dev = interface_to_usbdev(a_priv->bus_interface);
+ 	/* 82357B needs bit to be set in 9914 AUXCR register */
+@@ -785,7 +784,7 @@ static void agilent_82357a_request_system_control(struct gpib_board *board,
+ 	retval = agilent_82357a_write_registers(a_priv, writes, i);
+ 	if (retval)
+ 		dev_err(&usb_dev->dev, "write_registers() returned error\n");
+-	return;// retval;
++	return retval;
+ }
+ 
+ static void agilent_82357a_interface_clear(struct gpib_board *board, int assert)
 -- 
-
-Best regards,
-Thomas
+2.34.1
 
