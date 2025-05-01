@@ -1,135 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA717083A;
-	Thu,  1 May 2025 20:55:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BDB7083A;
+	Thu,  1 May 2025 20:55:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746132912; cv=none; b=JU1XKe+m0JFBGvT1ATcZ+v7rnrr9xvqrHW3BAP+xg9DdJ+kMXmbpc9gJhnH4U5M2g4kjImZkjy+NPHiH4ibaHWnA0G6LSPCDcarPZv1+0JqPi3skgH+dwwqCw4CgqWShrcNmj+m/hKQqpXvpBoXDOiRXrnyzdutTN1UYAAEdrl0=
+	t=1746132944; cv=none; b=SKNYjEG0A4TdBRRX1JAdt2V0O6TpTjdxjc3M2n+0JJJiBdQSLA8FQLmsmyJmpOqDDUqYhg9lN1sm10n75Ca2+lMbAuO1Ki4sbk+yVYoVJxwtiOEDzsK2vzppu04+npV6RyQmLAFvYubnKj3PVOxqdzeoyhFP1VsEZ/rroXO33eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746132912; c=relaxed/simple;
-	bh=FriBKFsOeEfghRvWGcXxtLwZP0e0ITdbyjcC+Dlh9FU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pevQuXzVQabQIlhsoYieP6e9eGDJMSWhYYz91RDPcQFhbM7KQ+CuFy466hqHXzqKPIerGFxKbPqnYwC7r/xI212AbPbEY6Ru1r5A57FbBaDHA6HkUeOQfN6gpHKB3bnrnRXKqGi+x4vSLX1xpuk9WVryuv33DheOxsW0y23dfPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S9vFCXZf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746132944; c=relaxed/simple;
+	bh=I+dEedf1pTJyAwoEmIwbwG0wBXM+8Q+YWSy8/oH3exQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PfH3juIrRI8H92q9286l3l4JMo1qqNEErlzivpbBxksGsRmrXssyHRE/m/TkCX41vlnWz6S5rOXrxdswM+bFBNBNqR9BHCkLGibImNdXmPuvoOaCqppsJ3fA8v90NS1GjYznDGsE1HfU0imCjhtzi8PJ7ItN/YDwWF0wsuSvhEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RKhXoJPk; arc=none smtp.client-ip=209.85.216.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S9vFCXZf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC1E5C4CEE3;
-	Thu,  1 May 2025 20:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746132912;
-	bh=FriBKFsOeEfghRvWGcXxtLwZP0e0ITdbyjcC+Dlh9FU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=S9vFCXZfdwKftvAhivyDTdP19qtVtg1WQPfi7Kcjn/9bxydDRSO+q01BwKgeS6d0M
-	 1xwEJIojwNwYqS0dTbCy9Za3oUXK943fFuLHQpONkzCz57KjCGovmfu6yw878upo1o
-	 Gae5kvk5fmq+SdaehMbJMXAlv3GXSNXFWjaArdvySwulREpWE4CSGzHSJG5D7tB+0u
-	 6nujjphusgmbPeEix5vXxJn3IVk0ju/7UO/4J4Iq2t4uCy6/ppk+3Mm+QwVB1bVAow
-	 M7Lwd5Y/6F4bupa6Sqb/DtTSsLCaD881oAlCkX3GXDM3SpCzu9GTgris6HQ2RKF5Ps
-	 2vq9LKAgSXM1w==
-Received: by venus (Postfix, from userid 1000)
-	id A871A180F5C; Thu, 01 May 2025 22:55:09 +0200 (CEST)
-Date: Thu, 1 May 2025 22:55:09 +0200
-From: Sebastian Reichel <sre@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
-	Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Matti Vaittinen <mazziesaccount@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org, 
-	Liam Girdwood <lgirdwood@gmail.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org, 
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>, Guenter Roeck <groeck@chromium.org>, 
-	Ahmad Fatoum <a.fatoum@pengutronix.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v9 2/7] reboot: hw_protection_trigger: use standardized
- numeric shutdown/reboot reasons instead of strings
-Message-ID: <pnvzk66ota2ebjnhjcfqhqsqepevl3f5khllqg7jd77zq562on@cm2rh72mvbzz>
-References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
- <20250422085717.2605520-3-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RKhXoJPk"
+Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso1599667a91.3;
+        Thu, 01 May 2025 13:55:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746132943; x=1746737743; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
+        b=RKhXoJPk2TMB4+b295fSUerabPW4ZT2nMP3GZcRRQfmlG3iiBX7jJjU0gA748y5PQz
+         EXhWq7SYGPvcv75HLE+sFMojxP5wPTihZQsF5YkOGKIssLnBtK+yproa63Am6ptrA4v2
+         2fx0XxKG3W2E9YVSWLfMwJW8/KL2NQFfLGca8AWVAeuWVPoZ1QCsoROq5uN5STXlkqZT
+         YwJvJSYp08dfKdShbI32u1DnNgwfhgqFYdhf++omusVGFAY5GPiGWWJiS2BJ6q48yrG+
+         8apvLXre8RnjTmu9JdFNoIZR8v73fz1/n4xeIZVVqzD+6lcH/aN1q0ImK/7Ema601EQi
+         ug7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746132943; x=1746737743;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DpiuHUeq5me2qFWhjdsz2hFxFCDha2ue8NZc3ijvfAY=;
+        b=CTjebm9+gUHAUbLHMYuTDuJpPKaSUf2JGG3YOq5F9E4I/b8WbrxAoEyeWiWHnMtI08
+         slcg5srcj4TTnvARZkLypZtbFmuzKUpWuAP1mzPP2WqzpV+tKx9prEdnqDjPos5Wm9e9
+         tR4BI4xzPmRKxNJS9q5oG7+L7lA+gWsA4J78plcaseGEr5M0l37hKLV065HiNnAPtwNg
+         8rExIBIDR4edy7mb913CkLuy6rePOqtvWdhK4jtSmpL6dsZQuHF9SwhBELG7zFWzo5BT
+         VBTMqJQ+DEZk7QVwNqkrFkd51AW/rka3tLWYxGS7fBgavolH+RgexCwAtZjf2g7WGP3c
+         Y4zA==
+X-Forwarded-Encrypted: i=1; AJvYcCUNQJQskmmjRLrxHfguRrWBPR9W6yeJovn/yyggEDylgVfKrEb+amF7lxOYlUDJiQLKeQEBGlbL8W8LREkAHFM/@vger.kernel.org, AJvYcCVL1J5tcx8ai2ly420lRXAoOpYnfUdQE5hH902jSz5qUr1iU4t5hzIgZ92K8J6nXESiIUSKzeacoNIfMGpPXCIqapsf@vger.kernel.org, AJvYcCVsjWQBzxSMID+rCBil9Xq6nPXfCtR2p4ZIHnSJ7/aDxlT9rFtzkYdu8FaMqzFTEcTg8sc=@vger.kernel.org, AJvYcCWfZc2vyd+HYAQ6HYfLmdQgCCmikLob54sWnQJi3b9JJW9Js+cS3liCAGg6h6R0JgsWBAOmRtu5iNdbjDPA@vger.kernel.org, AJvYcCWiWWEc4Ft2tLUI7ZgJi2/lTNCJt7ndkb7+nV8qw6ZNcKLROKKMuhUwa2xxdN9KeAz0Hyei9Mqj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnURbIPrW4rFByusZ5MwKKEt2js2ve8gZZPtpnMBvgv+Gx3PHx
+	PLwZ8IOqazXPl6YS2SD4TPglzKhcyZ129y5hmBj/o/7UlLcjSzr3A+Kj75FPoP4Zhrvpiwqj21S
+	HHVe5FeFtEZZxQKQv1HkkZB3X6dc=
+X-Gm-Gg: ASbGncsI6LUkHgmRAz7jW7KLYKRqZakgbLCCQaplwcCAQACy6ZNKF4yslwdOk7gbCnW
+	3r3DOXQINn41EdV8KcXR9n0aFuBYKcMFp/gHZAk+31jbAGK3YCe8orGwKHf0mCPSv090Aq3+LY1
+	YPv2jjCkQKG/l8y84/c6ZsiWx2N2JT/uPvZZJIKA==
+X-Google-Smtp-Source: AGHT+IGh50s+zJtysu2S6f9XjTktMRBtIt9lP5pMNu2Xa/D/taBoYtZM0t3nGA+Oq3ZGw2IWtnMnbRD+96VEn4T3D6k=
+X-Received: by 2002:a17:90b:5252:b0:309:f407:5ad1 with SMTP id
+ 98e67ed59e1d1-30a4e5aa540mr917882a91.14.1746132942788; Thu, 01 May 2025
+ 13:55:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="naw5frhrqjonpf3i"
-Content-Disposition: inline
-In-Reply-To: <20250422085717.2605520-3-o.rempel@pengutronix.de>
-
-
---naw5frhrqjonpf3i
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250426160027.177173-1-mannkafai@gmail.com> <20250426160027.177173-3-mannkafai@gmail.com>
+In-Reply-To: <20250426160027.177173-3-mannkafai@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 1 May 2025 13:55:30 -0700
+X-Gm-Features: ATxdqUG7m5lxLrm2WirOZ_o4hAMDhe7XKZ74AQNZzGPIJbnzyR-uo9LZrBb5eSk
+Message-ID: <CAEf4BzZM_SrdpjnVr9ytAm_hpAW-WEvZ2EptAqwut_1jeAmyzA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/4] bpf: Enable BPF_PROG_TEST_RUN for tp_btf
+To: KaFai Wan <mannkafai@gmail.com>
+Cc: song@kernel.org, jolsa@kernel.org, ast@kernel.org, daniel@iogearbox.net, 
+	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, 
+	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
+	sdf@fomichev.me, haoluo@google.com, mattbobrowski@google.com, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
+	horms@kernel.org, mykolal@fb.com, shuah@kernel.org, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, leon.hwang@linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v9 2/7] reboot: hw_protection_trigger: use standardized
- numeric shutdown/reboot reasons instead of strings
-MIME-Version: 1.0
 
-Hi,
+On Sat, Apr 26, 2025 at 9:01=E2=80=AFAM KaFai Wan <mannkafai@gmail.com> wro=
+te:
+>
+> Add .test_run for tp_btf. Use the .test_run for raw_tp.
 
-On Tue, Apr 22, 2025 at 10:57:12AM +0200, Oleksij Rempel wrote:
-> diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-> index 90629a756693..84448a4c7fd4 100644
-> --- a/drivers/regulator/core.c
-> +++ b/drivers/regulator/core.c
-> @@ -5263,26 +5263,23 @@ EXPORT_SYMBOL_GPL(regulator_bulk_free);
->  static void regulator_handle_critical(struct regulator_dev *rdev,
->  				      unsigned long event)
->  {
-> -	const char *reason =3D NULL;
-> +	enum psc_reason pscr;
+Hm... so now you'll be able to pass arbitrary values as pointers to
+kernel structs (e.g., arbitrary u64 as struct task_struct * pointer),
+not sure this is a good idea...
 
-enum psc_reason pscr =3D PSCR_UNKNOWN;
-
-(or add a default clause to the switch)
-
->  	if (!rdev->constraints->system_critical)
->  		return;
-> =20
->  	switch (event) {
->  	case REGULATOR_EVENT_UNDER_VOLTAGE:
-> -		reason =3D "System critical regulator: voltage drop detected";
-> +		pscr =3D PSCR_UNDER_VOLTAGE;
->  		break;
->  	case REGULATOR_EVENT_OVER_CURRENT:
-> -		reason =3D "System critical regulator: over-current detected";
-> +		pscr =3D PSCR_OVER_CURRENT;
->  		break;
->  	case REGULATOR_EVENT_FAIL:
-> -		reason =3D "System critical regulator: unknown error";
-> +		pscr =3D PSCR_REGULATOR_FAILURE;
->  	}
-> =20
-> -	if (!reason)
-> -		return;
-> -
-> -	hw_protection_trigger(reason,
-> +	hw_protection_trigger(pscr,
->  			      rdev->constraints->uv_less_critical_window_ms);
->  }
-
-Greetings,
-
--- Sebastian
-
---naw5frhrqjonpf3i
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmgT36kACgkQ2O7X88g7
-+prmIQ/+JKEXxXwdYHIW0jX1zJvf2PrCfXVs7awROca4BZAa0Xv/XWmtg7cV2yd9
-KdD39SMULbTuwj8F1I1+9xHMCLqsZApbAJQyfT1PzVaRDw6vl4Egxid0GJWUPngI
-TWCxUoAOfuOXXJGmgCM9Il4Xyd2DkSYeSh6EOcQ5PsyzEk+bJARJxVRkXXvgNH35
-2kIlspI8GhBAWVZrWCuPDBQTH7NL6l4T+39BClBSq/fS4JSQwtzznYKnriKCnbMP
-FkrkhcyqpyfZIpcbq/kL3eXecnXXwM+Dde+pvqmsRqD/2H8WVm99n0w27KnY+EJJ
-1svCP9evz2s/EPSnBAneg1/5V+0T3pRmh73aLLfa0NnWT6jPAMddJwjaZni06sB/
-4bdthL86t3sE5OOD1ZSOReafP7IT1JPC6RjduncF6p/Qx7bCXKeqPiGT/2roCx+1
-5zPvUNfRD7AKc7RYRrjMH4qqFcJe8b1KbdwhtXVxDC6DcTIQjTk8UannY+YARNS+
-0GOqgHgfUq8+oBMCDdhxzlXAyUlbqW8+lY1kY0TBWW/QhZlK1zpoMxq7Iw9ZP82w
-X5N+vwpU7OP6D5iMpPmRUnja6Xb9/F6Mx/VDZew+/NXsreGAo3zx+kUjKODppzXw
-W2J9MqnmiPu7jtxgOHNxkJXwtdj3N4idB9mcH8cResNlhoPY2Qs=
-=LA1C
------END PGP SIGNATURE-----
-
---naw5frhrqjonpf3i--
+>
+> Signed-off-by: KaFai Wan <mannkafai@gmail.com>
+> ---
+>  net/bpf/test_run.c | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
+> index 8cb285187270..8c901ec92341 100644
+> --- a/net/bpf/test_run.c
+> +++ b/net/bpf/test_run.c
+> @@ -690,6 +690,9 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
+>         int b =3D 2, err =3D -EFAULT;
+>         u32 retval =3D 0;
+>
+> +       if (prog->expected_attach_type =3D=3D BPF_TRACE_RAW_TP)
+> +               return bpf_prog_test_run_raw_tp(prog, kattr, uattr);
+> +
+>         if (kattr->test.flags || kattr->test.cpu || kattr->test.batch_siz=
+e)
+>                 return -EINVAL;
+>
+> --
+> 2.43.0
+>
