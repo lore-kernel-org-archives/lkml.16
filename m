@@ -1,285 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2AE22253FB
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9101F3FE2;
+	Thu,  1 May 2025 20:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746131713; cv=none; b=s0KRFKov6qmPDr6UHabU/5R3UTSe2NL1iWaEl0XAdGpL0V8D6yrCMtLdTHI/bznpqKUn6EqYTPfJM0u7azyyQuLQS685Kq7MYc8GMmh5VGZ7q9byYMqQ93EgDLptWdTsOlhPHOkZ2l8EBY595xVHMDA6w/zsVVG5J2SjMJoTX8g=
+	t=1746132015; cv=none; b=a5xJyhkeLHZcajtw6y/TC+wdlnMSCsUdUcOW8FobLa1lf+mflE72bzTiwoithi9a4WGOFtKTgXWyoa9R3htAlB9AfJkZ/IlTgpU422m6owAHmf75wawJIyRkl9SGRLyubUZ1B9OozAoBfgWhGlLJCub6I2XureU8mJo0Dp9/4IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746131713; c=relaxed/simple;
-	bh=744IgpeZI8AQ86NxfJtwPzupuE+/l+50aWVDFLPfm1s=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AjVAS7d03Ka3uphoIhH2lKuT/oNkeQL3BZTyouMaAalj/SB6xvXL4Ue8OBM7zqWh4hSr5jGbLMbry8AJYSPxuhDH7j1+ULoyRWulNChoFLJbCiiAoK3jZPURzRm/kYug9dnM4+IT8GtbmALyo+U6i4/OtblP78rjGTZncrrHY3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OZMWryCR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746132015; c=relaxed/simple;
+	bh=mpngZCwtqJFf9YonHiFbMeeI6hPHrVb3HHhdqWpxPxM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qlgk9lGAOqheafDKVHk9M/nbJxLIxQYYs5RPu1LLwqpCBReHZ3I8vjFJUZgj++QVX4ZtGklTZ+83Wm0V26lkJZu6YILY6wVMKe9f+SCPGYxpdmrnxs1iD1DikcpqtgXeFkYaD8NeNX8QKGCuGh7DXFtIMSJIOFllk6BwWU5e0IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=In+dGAYF; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OZMWryCR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746131710;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=hdVWSIZLz1k/wCeHJMz+JEKUkQKBnamYo2OoM4WNzZo=;
-	b=OZMWryCRuyQz1nw2G9ZDUvABjXBUMvlBDij1l93ODS2rxA0l+VsCKk4DQRfMgu3P3dCYvX
-	AbRTySdq7v9empn0Uu4iVpfLCh+caHnCwC+EDIzAOWk7gAMonLyEFSZNfBeco7ZfUAIb18
-	OlWg1r7wRgBUBF3ociNN4+xv9AvX6fE=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-475-4HzENHE1MWGalgcG8lwwCw-1; Thu, 01 May 2025 16:35:09 -0400
-X-MC-Unique: 4HzENHE1MWGalgcG8lwwCw-1
-X-Mimecast-MFC-AGG-ID: 4HzENHE1MWGalgcG8lwwCw_1746131709
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6f0e2d30ab4so28417586d6.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:35:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="In+dGAYF"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39efc1365e4so555185f8f.1;
+        Thu, 01 May 2025 13:40:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746132012; x=1746736812; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YROZyOkE+RaFyNeUnTjXvKAzg9wijNdW4xywU98p6mo=;
+        b=In+dGAYFSBMWGX+KdkntcaxFBPFLzdEFv9Vx7kvPC3Eozb6RYyAJrkkQNGZEwS+LYK
+         la/W5a8BeLY+eLqnkHVweqbrVu5KcCTbjvNE42Eke4TGsmxSjF3fZ+Tx9G9ZfycNIVsp
+         Nk7Pdbg51ujW/mTNs1nQKgB9OPDNs0JjbcXOxQEjgEaZhWyRgfytE9/Wfyh+0GHCgga1
+         sH+6t7yOe4vpMDbmQ4R3XUoSr5lUcuxdK1SgnP0to5Pa/w095vOd8pw9nJpW/SVxj3iQ
+         O9f0MTCDrXwYxGpJI0Tr1ygM/lrz+COElH5shEPErWbV2VgJ9kMx6I5LfiRBcNsvV7sm
+         y02A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746131709; x=1746736509;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hdVWSIZLz1k/wCeHJMz+JEKUkQKBnamYo2OoM4WNzZo=;
-        b=h3WALQ/c6mlYtPtoEkJZkRaHQ+GuDubJFgpCIh8Y5Zy1aWSDEij4sE5H3FmBYuxRRp
-         ycCsTPsGtn0vKXJOs0E9EJNlU5pflfqeEqXiIAvHQkygcR5ELLNt2FNZ1WeZJwgJgg6D
-         HrJvW6pXuz2QLxybrU159o1QCngFTrf5FwyQiA6LbJiTKE3mUVhukBAE6OfYLzkxF0JQ
-         ohoPoTNWRPQipwLYqj/EMxbq0d4ZDvGIWL0XmiCkLGANFQy+fUVkhdSR7hJ3FrdNL/2X
-         mtEotw7pEUY7OS24ekYfG+fS1A8rdgsb3bv81zKWz2iClrRdFO0Svign9ZRvlLE3K49K
-         J5zA==
-X-Forwarded-Encrypted: i=1; AJvYcCXf6YxrL5DVGkk7Dtacn7ZIKEF4XK6oViyNITJuJyLgaVX51qPzVEv0/AsiF2yw6fGXgtjpFUGEJuMHCoM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXu7OjIw9lmLD/g/rRkhOy9vDwp+fzqr0htxeYzhfh6uxVlrpE
-	AIpuQ5LwVU9wgNFG2OejzK+CzBghVltLh4oPfTg5T4NF2a3XyLXE5n4qA+86eqOwoFgJs7doFq8
-	JwdBzravB4Pj9DSeuGhkHQMLKOfOBmVamjT5UQcTDUzGg5ve/B48leQ0RzcjbHQ==
-X-Gm-Gg: ASbGnctzDwRGr3UAg8w9PUKOENjfTOU+CUQDfKFWNarbnR2UFb8Wjb0PEfXPaMNXMbn
-	NZdV7c2O3cNQ12rLwzt18VHUITzgWWNT1gePlwUusk7FzyRCTSzjBYj55QfPbKI8PejC3uxw3Fl
-	ZEYXbRehW8JC+qXa3LSaQIatOX/e5ooaVEybNQvVbFnESA8/OMn99PvvDkp1s6tzRdAxc/nalxc
-	Mc2MCsBFRqfnG/EbRjkyLUjC1ZsLswy0obsSeHa4s37eTopnv6be9ghd3GwOZ2Wq/Talfz2X3HU
-	w/xLeC5uzH3WE6dlhqzN7XxpxB3NBulN98Wfbj0XiQmb3THr+8FJp0sL9CA=
-X-Received: by 2002:a05:6214:124d:b0:6f2:b14e:46e6 with SMTP id 6a1803df08f44-6f51526d362mr11171326d6.17.1746131709090;
-        Thu, 01 May 2025 13:35:09 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGb8Nz4DcL3Cu1Ltf4oqxo2dugA5EurJTjUsbVrmXo5j90y4igGFrBf/DqJmp7vnSttsl2I0A==
-X-Received: by 2002:a05:6214:124d:b0:6f2:b14e:46e6 with SMTP id 6a1803df08f44-6f51526d362mr11170946d6.17.1746131708713;
-        Thu, 01 May 2025 13:35:08 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f50f3b05a3sm8993096d6.22.2025.05.01.13.35.07
+        d=1e100.net; s=20230601; t=1746132012; x=1746736812;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YROZyOkE+RaFyNeUnTjXvKAzg9wijNdW4xywU98p6mo=;
+        b=fZ500FsF6VW1naAfwG6tItssp64/Ne8H80ZqhKUBGTenpnoSYfW+xa2vzWDL1cbOTT
+         +pwuELhdpdHOlpclnDLbZoBNC/SL+9i+M+LObaHcMT1iWhb51SPEj9KDJWKWD23xvniG
+         aSvfcOs6DOyDLF8uciylzCyMpEI0XnlSpVCVGhw3srFmOzsxdRqIczpUqEfuWzGKOKxn
+         CugfpMdYwuEVkKvIo3A9CCVAjRRToUt1BF5nRiGkULTkxSSPupS6Z9f9wEQsGoQB/PZl
+         qcCuRZ5pWvI2nz91oc2mvd91Rx1MX8tO0L8wkBNjIV7u705Z+gswVssmYbC04r370lxS
+         nuLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBJEKdJyGGIPSuIugzddk3MDq6RKUL4VmLT8jZpfrZto2cJfMObuuleFgSfOQkBvKEwoLZtCadrO4iL7s1@vger.kernel.org, AJvYcCUNtsvUb6a7NKhz/ib+2goGlZ0lKv5SE70NIOc1PDgUwBJ629ab/4Tn07MUBpA98qhqJH8U76NuRKg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPst2xHNijvOiUztmO/MTTxAnILvmMFuiKfRMkRfS24MzItKXi
+	H+pk2+1T6/V8o6hTAEWCPivgPhFXpMaehGkoYIoVAWLHuexCGmAT
+X-Gm-Gg: ASbGnctxEmxz8nggftg6tQCv71oByqA0rFwQEAuwswnH9CPgpySGifoCC+Pe2Vvu543
+	3YQjhT1KH3htfU5Ek0uaozTv3GRamghbkVl+UmD/t0Snjhkz0ZEjRpLNQt8t+xDo1V9oOUwEkJA
+	rUV4yFBPWM544WRnWX6Gue31H2Cyr5imtTmwGbYJKPI9/GODNd+dlN4f/rdeqcEHoYEg5EjVdMp
+	Cba1XBmZ8OZGuKaKZbIxtlw0s9f421Cx/7pOf6VvUhsCRz8W9U7/5VNKUEHIqf+9oD6BS2P/O/o
+	/ICZ45Ejh30hboKeYCK2ccd4h1SBmExFJbr3jcyIvZ6aWZFkoJpVawheKhkAoOR/2gDiaLbPgeU
+	=
+X-Google-Smtp-Source: AGHT+IE1jA1xgxLG32fzSHaWs61R8osF+VteUCXk2DJOKdA15i6GvZN8NDX0nhqABiETFsYOK+eA7w==
+X-Received: by 2002:a05:6000:1acd:b0:3a0:880a:144f with SMTP id ffacd0b85a97d-3a099ad1bc7mr168792f8f.6.1746132011680;
+        Thu, 01 May 2025 13:40:11 -0700 (PDT)
+Received: from iku.Home ([2a06:5906:61b:2d00:f0e:4490:d947:2c92])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b10013sm164588f8f.65.2025.05.01.13.40.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 13:35:08 -0700 (PDT)
-Message-ID: <14eab14d368e68cb9c94c655349f94f44a9a15b4.camel@redhat.com>
-Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
- with access functions
-From: mlevitsk@redhat.com
-To: Sean Christopherson <seanjc@google.com>
-Cc: kvm@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Borislav
- Petkov <bp@alien8.de>, Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org,
- Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
- linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
-Date: Thu, 01 May 2025 16:35:07 -0400
-In-Reply-To: <aAgnRx2aMbNKOlXY@google.com>
-References: <20250416002546.3300893-1-mlevitsk@redhat.com>
-	 <20250416002546.3300893-2-mlevitsk@redhat.com>
-	 <aAgnRx2aMbNKOlXY@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
+        Thu, 01 May 2025 13:40:11 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v10] i2c: riic: Implement bus recovery
+Date: Thu,  1 May 2025 21:40:03 +0100
+Message-ID: <20250501204003.141134-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-04-22 at 16:33 -0700, Sean Christopherson wrote:
-> On Tue, Apr 15, 2025, Maxim Levitsky wrote:
-> > Instead of reading and writing GUEST_IA32_DEBUGCTL vmcs field directly,
-> > wrap the logic with get/set functions.
->=20
-> Why?  I know why the "set" helper is being added, but it needs to called =
-out.
->=20
-> Please omit the getter entirely, it does nothing more than obfuscate a ve=
-ry
-> simple line of code.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-In this patch yes. But in the next patch I switch to reading from 'vmx->msr=
-_ia32_debugctl'
-You want me to open code this access? I don't mind, if you insist.
+Implement I2C bus recovery support for the RIIC controller by making use
+of software-controlled SCL and SDA line manipulation. The controller allows
+forcing SCL and SDA levels through control bits, which enables generation
+of manual clock pulses and a stop condition to free a stuck bus.
 
->=20
-> > Also move the checks that the guest's supplied value is valid to the ne=
-w
-> > 'set' function.
->=20
-> Please do this in a separate patch.  There's no need to mix refactoring a=
-nd
-> functional changes.
+This implementation wires up the bus recovery mechanism using
+i2c_generic_scl_recovery and provides get/set operations for SCL and SDA.
 
-I thought that it was natural to do this in a the same patch. In this patch=
- I introduce
-a 'vmx_set_guest_debugctl' which should be used any time we set the msr giv=
-en
-the guest value, and VM entry is one of these cases.
+This allows the RIIC driver to recover from bus hang scenarios where SDA
+is held low by a slave.
 
-I can split this if you want.
+Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Tested-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Reviewed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+---
+v9->v10:
+- Fixed the order of defining ICCR1_SDAO and ICCR1_SCLO
+- Added Reviewed-by and Tested-by tags
 
->=20
-> > In particular, the above change fixes a minor security issue in which L=
-1
->=20
-> Bug, yes.  Not sure it constitutes a meaningful security issue though.
+v8>->v9:
+- Dropped Tested-by and Reviewed-by tags from patch 1/2
+- Updated commit message
 
-I also think so, but I wanted to mention this just in case.
+v7->v8:
+- Included Acks from Andy and Fabrizio.
 
->=20
-> > hypervisor could set the GUEST_IA32_DEBUGCTL, and eventually the host's
-> > MSR_IA32_DEBUGCTL
->=20
-> No, the lack of a consistency check allows the guest to set the MSR in ha=
-rdware,
-> but that is not the host's value.
+v6->v7:
+- https://lore.kernel.org/all/20250203143511.629140-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
-That's what I meant - the guest can set the real hardware MSR. Yes, after t=
-he
-guest exits, the OS value is restored. I'll rephrase this in v2.
+v2->v6:
+- Included RB and TB from Claudiu.
 
->=20
-> > to any value by performing a VM entry to L2 with VM_ENTRY_LOAD_DEBUG_CO=
-NTROLS
-> > set.
->=20
-> Any *legal* value.  Setting completely unsupported bits will result in VM=
--Enter
-> failing with a consistency check VM-Exit.
+v1->v2:
+- Used single register read to check SDA/SCL lines
+---
+ drivers/i2c/busses/i2c-riic.c | 53 +++++++++++++++++++++++++++++++++--
+ 1 file changed, 51 insertions(+), 2 deletions(-)
 
-True.
-
->=20
-> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
-> > ---
-> >  arch/x86/kvm/vmx/nested.c    | 15 +++++++---
-> >  arch/x86/kvm/vmx/pmu_intel.c |  9 +++---
-> >  arch/x86/kvm/vmx/vmx.c       | 58 +++++++++++++++++++++++-------------
-> >  arch/x86/kvm/vmx/vmx.h       |  3 ++
-> >  4 files changed, 57 insertions(+), 28 deletions(-)
-> >=20
-> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> > index e073e3008b16..b7686569ee09 100644
-> > --- a/arch/x86/kvm/vmx/nested.c
-> > +++ b/arch/x86/kvm/vmx/nested.c
-> > @@ -2641,6 +2641,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, =
-struct vmcs12 *vmcs12,
-> >  	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
-> >  	struct hv_enlightened_vmcs *evmcs =3D nested_vmx_evmcs(vmx);
-> >  	bool load_guest_pdptrs_vmcs12 =3D false;
-> > +	u64 new_debugctl;
-> > =20
-> >  	if (vmx->nested.dirty_vmcs12 || nested_vmx_is_evmptr12_valid(vmx)) {
-> >  		prepare_vmcs02_rare(vmx, vmcs12);
-> > @@ -2653,11 +2654,17 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu=
-, struct vmcs12 *vmcs12,
-> >  	if (vmx->nested.nested_run_pending &&
-> >  	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS)) {
-> >  		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
-> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
-> > +		new_debugctl =3D vmcs12->guest_ia32_debugctl;
-> >  	} else {
-> >  		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
-> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugctl);
-> > +		new_debugctl =3D vmx->nested.pre_vmenter_debugctl;
-> >  	}
-> > +
-> > +	if (CC(!vmx_set_guest_debugctl(vcpu, new_debugctl, false))) {
->=20
-> The consistency check belongs in nested_vmx_check_guest_state(), only nee=
-ds to
-> check the VM_ENTRY_LOAD_DEBUG_CONTROLS case, and should be posted as a se=
-parate
-> patch.
-
-I can move it there. Can you explain why though you want this? Is it becaus=
-e of the
-order of checks specified in the PRM?
-
-Currently GUEST_IA32_DEBUGCTL of the host is *written* in prepare_vmcs02.=
-=C2=A0
-Should I also move this write to nested_vmx_check_guest_state?
-
-Or should I write the value blindly in prepare_vmcs02 and then check the va=
-lue
-of 'vmx->msr_ia32_debugctl' in nested_vmx_check_guest_state and fail if the=
- value
-contains reserved bits?=C2=A0
-I don't like that idea that much IMHO.
-
-
->=20
-> > +		*entry_failure_code =3D ENTRY_FAIL_DEFAULT;
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +static void __vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data)
-> > +{
-> > +	vmcs_write64(GUEST_IA32_DEBUGCTL, data);
-> > +}
-> > +
-> > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host=
-_initiated)
-> > +{
-> > +	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiat=
-ed);
-> > +
-> > +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
-> > +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
-> > +		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-> > +		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
-> > +	}
-> > +
-> > +	if (invalid)
-> > +		return false;
-> > +
-> > +	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
-> > +					VM_EXIT_SAVE_DEBUG_CONTROLS))
-> > +		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
-> > +
-> > +	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &=
-&
-> > +	    (data & DEBUGCTLMSR_LBR))
-> > +		intel_pmu_create_guest_lbr_event(vcpu);
-> > +
-> > +	__vmx_set_guest_debugctl(vcpu, data);
-> > +	return true;
->=20
-> Return 0/-errno, not true/false.
-
-There are plenty of functions in this file and KVM that return boolean.
-
-e.g:=C2=A0
-
-static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
-static inline bool vmx_control_verify(u32 control, u32 low, u32 high)
-static bool nested_evmcs_handle_vmclear(struct kvm_vcpu *vcpu, gpa_t vmptr)
-
-static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
-						=C2=A0struct vmcs12 *vmcs12)
-
-
-static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
-static bool nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
-
-...
-
-
-I personally think that functions that emulate hardware should return boole=
-an values
-or some hardware specific status code (e.g VMX failure code) because the re=
-al hardware
-never returns -EINVAL and such.
-
-
-Best regards,
-	Maxim Levitsky
-
-
-
-
->=20
+diff --git a/drivers/i2c/busses/i2c-riic.c b/drivers/i2c/busses/i2c-riic.c
+index d7dddd6c296a..23375f7fe3ad 100644
+--- a/drivers/i2c/busses/i2c-riic.c
++++ b/drivers/i2c/busses/i2c-riic.c
+@@ -52,6 +52,8 @@
+ #define ICCR1_ICE	BIT(7)
+ #define ICCR1_IICRST	BIT(6)
+ #define ICCR1_SOWP	BIT(4)
++#define ICCR1_SCLO	BIT(3)
++#define ICCR1_SDAO	BIT(2)
+ #define ICCR1_SCLI	BIT(1)
+ #define ICCR1_SDAI	BIT(0)
+ 
+@@ -151,11 +153,11 @@ static int riic_bus_barrier(struct riic_dev *riic)
+ 	ret = readb_poll_timeout(riic->base + riic->info->regs[RIIC_ICCR2], val,
+ 				 !(val & ICCR2_BBSY), 10, riic->adapter.timeout);
+ 	if (ret)
+-		return ret;
++		return i2c_recover_bus(&riic->adapter);
+ 
+ 	if ((riic_readb(riic, RIIC_ICCR1) & (ICCR1_SDAI | ICCR1_SCLI)) !=
+ 	     (ICCR1_SDAI | ICCR1_SCLI))
+-		return -EBUSY;
++		return i2c_recover_bus(&riic->adapter);
+ 
+ 	return 0;
+ }
+@@ -439,6 +441,52 @@ static int riic_init_hw(struct riic_dev *riic)
+ 	return 0;
+ }
+ 
++static int riic_get_scl(struct i2c_adapter *adap)
++{
++	struct riic_dev *riic = i2c_get_adapdata(adap);
++
++	return !!(riic_readb(riic, RIIC_ICCR1) & ICCR1_SCLI);
++}
++
++static int riic_get_sda(struct i2c_adapter *adap)
++{
++	struct riic_dev *riic = i2c_get_adapdata(adap);
++
++	return !!(riic_readb(riic, RIIC_ICCR1) & ICCR1_SDAI);
++}
++
++static void riic_set_scl(struct i2c_adapter *adap, int val)
++{
++	struct riic_dev *riic = i2c_get_adapdata(adap);
++
++	if (val)
++		riic_clear_set_bit(riic, ICCR1_SOWP, ICCR1_SCLO, RIIC_ICCR1);
++	else
++		riic_clear_set_bit(riic, ICCR1_SOWP | ICCR1_SCLO, 0, RIIC_ICCR1);
++
++	riic_clear_set_bit(riic, 0, ICCR1_SOWP, RIIC_ICCR1);
++}
++
++static void riic_set_sda(struct i2c_adapter *adap, int val)
++{
++	struct riic_dev *riic = i2c_get_adapdata(adap);
++
++	if (val)
++		riic_clear_set_bit(riic, ICCR1_SOWP, ICCR1_SDAO, RIIC_ICCR1);
++	else
++		riic_clear_set_bit(riic, ICCR1_SOWP | ICCR1_SDAO, 0, RIIC_ICCR1);
++
++	riic_clear_set_bit(riic, 0, ICCR1_SOWP, RIIC_ICCR1);
++}
++
++static struct i2c_bus_recovery_info riic_bri = {
++	.recover_bus = i2c_generic_scl_recovery,
++	.get_scl = riic_get_scl,
++	.set_scl = riic_set_scl,
++	.get_sda = riic_get_sda,
++	.set_sda = riic_set_sda,
++};
++
+ static const struct riic_irq_desc riic_irqs[] = {
+ 	{ .res_num = 0, .isr = riic_tend_isr, .name = "riic-tend" },
+ 	{ .res_num = 1, .isr = riic_rdrf_isr, .name = "riic-rdrf" },
+@@ -495,6 +543,7 @@ static int riic_i2c_probe(struct platform_device *pdev)
+ 	adap->algo = &riic_algo;
+ 	adap->dev.parent = dev;
+ 	adap->dev.of_node = dev->of_node;
++	adap->bus_recovery_info = &riic_bri;
+ 
+ 	init_completion(&riic->msg_done);
+ 
+-- 
+2.49.0
 
