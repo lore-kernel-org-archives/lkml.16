@@ -1,341 +1,290 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-002c1b01.pphosted.com (mx0b-002c1b01.pphosted.com [148.163.155.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA42158A09;
-	Thu,  1 May 2025 01:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746063290; cv=none; b=HhkTOqUPCRtaNP7BnMSA3LzWfo4U6UaAUmz1gMCTtftEPHYNCaJ3Pmhm4aTY4X2Mm2J5ZiL5K3NPXnv1C+LWc5eCNpBibUfx8YbPEDDUJr5d4wwcCumw61Kki2xuvrARJgqWpICEU7fFy6NUq1QKlm3lp9AOHfhZR1ObUMcDHNE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746063290; c=relaxed/simple;
-	bh=K4FK1SksihiDRwHS9IOcnoEUnF35eZSZx4EEULu2AdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QATbmVEIHLf7y1gfMRg7DymvGa50zVD5+elhfWWNKPxcD4b+0/mPRpApOf8fwegS0Uan0B8MwH9DtIAf9CZufsEaJGkXtZkLRdnq81g89qKmVVclmm2Rmi1gKjtLYPqY/ebp2ijp6YwoRt9v7R8MkFce8R589IiTJghwFtkDOk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c292zasy; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D6E158A09;
+	Thu,  1 May 2025 01:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.155.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746063297; cv=fail; b=B297TL5lmS2g7fb516/X8rMTUFFqTsEK7BgunrqhE/zdUuvpRyGm3G5O3rP3kq8obaU/ggE2bUGQ5qYxxf0s3zPmWP+iVgz6JvNgXsIlrI8MoWuvte2Wk/jJeohmKkxvAQQf6rKft+r7KOV1ed8aU0qwvBomq0N3EVwPrvo1z9Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746063297; c=relaxed/simple;
+	bh=UGCRPEAT7BENgTGLULR0YmT6qhIfmzSA1CjU3rvj6Jk=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=ToFoXvqi3JdPBsJ+phqfS0aub8Z10Zu7Os6n94PNF9Zs/dsvCYNfHHuK6DZl71/Wstn7sr2O5Ho7vE/0e59/WBq1G7fMCrQrZtgDZbGnpJXxdPh6ZXgzsOspmFPECuhaXNJ6LbIwxqB0g+eZBcK6JH7vng0rcCs1/WwNP0LJXN4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com; spf=pass smtp.mailfrom=nutanix.com; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=dahn0+c+; dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b=tFkKJIbz; arc=fail smtp.client-ip=148.163.155.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nutanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nutanix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c292zasy"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so487126b3a.1;
-        Wed, 30 Apr 2025 18:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746063288; x=1746668088; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1EJVZoGVPtB0ls/jqlR50tgBETOk68yBgDdBhLsXmyY=;
-        b=c292zasyoHycEyFE281T5gs3nCO9GDVejwhA0Ug1ctdbEbsJKAL4QbVdeGd+L0kIoo
-         qcPR5n7XKIstVPXpvcH8d+3WTQ5f5+AberzYrDSAIwbwr7tGeHPfzq1NtS1YpAIfyf6k
-         kBnfp0MF8v9n5XmISMKLaWRCR/M6lpRbnLXLBygmHf5sutl5909RzakbDcnNORnNweWB
-         Ae+5o34/6TootdTIBQRM5uzH/kVZcCXLe/GuDWYB2Di2Keep4S6OybSh2BrM3j8um3Kx
-         NjFoj07GSXmHfy3zbtxHOdSu9TzZYVFb6rUMG8+BmrWASzFQS1vcpt7G1nRz+czk+akl
-         yItg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746063288; x=1746668088;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1EJVZoGVPtB0ls/jqlR50tgBETOk68yBgDdBhLsXmyY=;
-        b=M6JHLeR10ui1+WOACBYfgTjkJfdhzQMbzQ0k+K+L8+X31BSvyL+5FubcYsqzmXTd+j
-         4S/194hevBUaVeeJw4acbYPdCd3KVTTd4DzXHHy9mgphI65Qv4Q21oDH9I6hzQ7wu4MW
-         XD9HpQ1zUKw50IRlcwxPq+zJQJTaUvxKe6M61mrLxb0H9/tQDQmTBg7DoN95toEhKtw6
-         A+2F9RoRCIx/JNNvxytIx/BWsMUKJEmfqoAoH9V5Ywwy9Q/4X6Efk1Pv9TQ/YXbYMP4m
-         X2DXGto3Fb8WV3tHMp9LXQANtL30HIwMzq/SN4hSFyOEy3vJTtXSeMaCLy5k9TdW/for
-         J0hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVh2DxNDeH+fE65uch4xdsK3MwdGdvi/gbIWKFH/w4nGD+gLulimeLtCcOvkucIyUtK4NPSy83k@vger.kernel.org, AJvYcCX07fMyPVpygUCexBbp6aVuVgu7q78sbgX1CEQHp7JQm67ObYT+s3lvFcR3eObhu2eT5UkYmewLeZ8qHm9C@vger.kernel.org, AJvYcCX4sZNT3O2eExFBX08irUWxQR5CrT1bJ8+bAsV5k9rlfkDkuZVi9G/Ks6G2EJYwfI9884k=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzA5jIP4rqPviOhqvW58uPPSBQD9BG4he4hkTwf6fgJBSsA5tLD
-	rE47pZBa10IoKJ76aDOiOWWqw4sG2nMDeDC7Eeas1KEp+B7k8jg=
-X-Gm-Gg: ASbGncveXfirXJsBjaibhwL0PM0sDmDLk3pnkmJpx3l0k0e5VW2Pb2QwPWDON+yCjNB
-	RxZ78GDM+vZz8lWiOVMNM4oIIEAkwC09tkKPb5C8OQTugfHdHYQckI+MG3E/ujgv3gJuefJfrlk
-	Abn99i8ZkUpeNHCDYC526j/4LIHTKhJaDiY5PtbmnordTtkhALRYElt2mqpoFGvX4HEC8bF26sv
-	zDdyCtP+8EMl8M9z84tY+20KtsDSsH7T/XecJpSL0y87QVotvER2mIVLy5vgQSDCmJPBJjQMK0v
-	dqQNihu9k4Y+IFkvXf5t4RWIGYIxkBns2Smti/v+xy3gND++tdbydH5NQmpnA4XkwfE3YFhtdAq
-	mK9+e36OpLw==
-X-Google-Smtp-Source: AGHT+IFNsKs/G+y5JObZ9injpFGWoGxzqspTFfuUyi/an9Y5CFE+Wct757N+xfdnPxt028yFjJSkPw==
-X-Received: by 2002:a05:6a20:3d8c:b0:204:2936:bce with SMTP id adf61e73a8af0-20bd804a2a9mr1094153637.31.1746063287773;
-        Wed, 30 Apr 2025 18:34:47 -0700 (PDT)
-Received: from localhost (c-73-170-40-124.hsd1.ca.comcast.net. [73.170.40.124])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-b15f7ec0bb2sm11293329a12.18.2025.04.30.18.34.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 18:34:47 -0700 (PDT)
-Date: Wed, 30 Apr 2025 18:34:46 -0700
-From: Stanislav Fomichev <stfomichev@gmail.com>
-To: Jon Kohler <jon@nutanix.com>
-Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Jesper Dangaard Brouer <hawk@kernel.org>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH net-next v2] xdp: Add helpers for head length, headroom,
- and metadata length
-Message-ID: <aBLPtszlDe74yTlk@mini-arch>
-References: <20250430201120.1794658-1-jon@nutanix.com>
- <aBKReJUy2Z-JQwr4@mini-arch>
- <32FB9CF5-E5BB-4912-B76D-53971C6B6F98@nutanix.com>
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="dahn0+c+";
+	dkim=pass (2048-bit key) header.d=nutanix.com header.i=@nutanix.com header.b="tFkKJIbz"
+Received: from pps.filterd (m0127842.ppops.net [127.0.0.1])
+	by mx0b-002c1b01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5411CKg1002229;
+	Wed, 30 Apr 2025 18:34:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=proofpoint20171006; bh=t6lAQghpkT9Vf
+	c23SNqRafw+J+SrG87Kqs566IT2MOQ=; b=dahn0+c+oQMP7vjqa0s4waBt98yOg
+	90z54SlclS4pwxfPbjQh3DnYPJCyNIHM7F64V52POKXkBOFjRAjVYzc1uB8n5jzQ
+	f6lvv0IRJeAcNbZag8JrZXZSv+nFnsmGtKKwEZqtyLnGPq3CW/GTOAnqr0NYPF0q
+	vYxq0Gy504IhPef/fW0zaJBo3x1HLdym1HVsxdK0/R1nU8JU+grNLRTMYZyyqEDx
+	+K0VKgAhPARLAR8FLlmY6+6Ae6IkMqrpY1upmbsuIkfgA8ChFRakT+w0phC72wDp
+	6dro9dLl4fuC/E0k+Jp58Jfy2BA0kRRpyN2DAfvMF2UvUAfI9sBzAubsQ==
+Received: from cy4pr02cu008.outbound.protection.outlook.com (mail-westcentralusazlp17011031.outbound.protection.outlook.com [40.93.6.31])
+	by mx0b-002c1b01.pphosted.com (PPS) with ESMTPS id 468xtbjqar-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 30 Apr 2025 18:34:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TTM4GrT8jFTxic+iJgkOwz9c8ZMWPinh3Kob/A4h2O9NDQSw2D1bBVvuEXVUGxG8HdIMA2TXTlpu1VE+nYIImSqfwah1hgPgq9NKg4lTUxfaUbqDrkhJzlBmN9WFNbbNtzEwcXU3ORLw2C+mGOHTZUT3xIs09n+Z7bWDoKLXX7WPld5tmcWX3IMgZyCAKOf1ojiZDlDA+9LqRd3n+/BgCTbfCQs8gPAcp8+p4LFlqzuCpaYMPRUOxxpDEZcoZG3Bg2TMq6cYYFq/F7QOxhtvxZIXZ4cl0DQPB2RfVlDRtvXag43bOtTaaJ1zyX323Hkrnzp6lZ7T6/Z/CpJH+sxNVg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t6lAQghpkT9Vfc23SNqRafw+J+SrG87Kqs566IT2MOQ=;
+ b=xUAvNPsjxWYrPE6IlDLl2xvjeLAta4IJDVyJ7SXtaXP1vDg0FR1kaK+Mi0w6Fuu71+PDXZqfvajKHa9hyqo48XdRXY8nTOzK+gK9vKPxOiXkgwS2AtCJebe6cVeruiDs4vvg40hc0wES4gQxzTUa5vKBQC6huKv2s3/FZWGw5WxysgpPF6v+m8ulhnoTAi47bAawEqa2VfCPD/X6UMf8hPVnLech4s7/DQGxGHVUDZMrd0haap23MIJolA9J9G8+jQzR0Iw47X404EL1XtfhI94N2/7xU9/Ql/zkwXbkKlCmrtPi6k4aXqgAgqMeuJnWyAj7g5fU1v+p8elKC/EZsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nutanix.com; dmarc=pass action=none header.from=nutanix.com;
+ dkim=pass header.d=nutanix.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nutanix.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t6lAQghpkT9Vfc23SNqRafw+J+SrG87Kqs566IT2MOQ=;
+ b=tFkKJIbzZrNLF7E5ja1KtzOVWHG91z98H2rade6qXH38NxHxMEufSCuuPfv9nrSWzOQVrtq4pFJCfiHv3mAvyC6bKcwUKb7kpLvxcrnFFX/5+05qRG2e4KmNknYriWa75fd2NYmJvsMvQoYrzNdb7F8RJ4g28vGsuO42mbkq1echyBaPBF9jQQXjpjMdn9S0WOtRvw7jr2ohUHYg5cskgy88R6i7WHqt7740k+zTzHjwcoZ0uYvCl1ryM5VML9sE4hOFC0RfJgV96YdS7AzZyK/3dEMnS3YeQKuXs2xxcN5BCasvdWr/i8ayQvDiqKKzNZqJTRYTRQMxKMkWgjSXeQ==
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ (2603:10b6:408:1fa::10) by SN7PR02MB10177.namprd02.prod.outlook.com
+ (2603:10b6:806:2a5::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Thu, 1 May
+ 2025 01:34:46 +0000
+Received: from LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054]) by LV8PR02MB10287.namprd02.prod.outlook.com
+ ([fe80::b769:6234:fd94:5054%4]) with mapi id 15.20.8699.012; Thu, 1 May 2025
+ 01:34:46 +0000
+From: Jon Kohler <jon@nutanix.com>
+To: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        kvm@vger.kernel.org, virtualization@lists.linux.dev,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jon Kohler <jon@nutanix.com>
+Subject: [PATCH net-next v3] vhost/net: Defer TX queue re-enable until after sendmsg
+Date: Wed, 30 Apr 2025 19:04:28 -0700
+Message-ID: <20250501020428.1889162-1-jon@nutanix.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR07CA0099.namprd07.prod.outlook.com
+ (2603:10b6:a03:12b::40) To LV8PR02MB10287.namprd02.prod.outlook.com
+ (2603:10b6:408:1fa::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <32FB9CF5-E5BB-4912-B76D-53971C6B6F98@nutanix.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR02MB10287:EE_|SN7PR02MB10177:EE_
+X-MS-Office365-Filtering-Correlation-Id: ae36c420-59eb-44d2-cff0-08dd88505aea
+x-proofpoint-crosstenant: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?la3E7FLUtAgxtRAPh0s90iQcWOjCW0dawTpVnB3c036FUch3dqEp4psSAqOL?=
+ =?us-ascii?Q?SBKa6MekT8PexyJdt/NwT8g4B6EVndB0aE8HBU9wVCetkWDcH1uj+JCvdCEm?=
+ =?us-ascii?Q?3QpGVrHuTZRdIsNYLAH0vNs0SRnJ1Fn3Z19LkmB+XfkLlKDwHM49R+h5SVUk?=
+ =?us-ascii?Q?hshJfn3WjvpW1lEjLOV6LuCE3MxzVcOGExg+x8AOHu4XM1fmYN/j9XMoDGCt?=
+ =?us-ascii?Q?Kgj8uwjdI5GQyBCwVCcqIuj5XP5dH9UENS6HEAsUjzNTjZVtDP7s8MVVj+YU?=
+ =?us-ascii?Q?TyFxCZK1duBm5O+F5x1DqtUM1fLd32QLo68SnooCLke6yzBkykW3NsV2Y1EQ?=
+ =?us-ascii?Q?yVVzyhxNIc8XzHR8TCjWR6kqIOF8MGFlZszoINkmDYnybGRYboVd1hQXNhYC?=
+ =?us-ascii?Q?vAYU2T2E6MlT81UUoT7CphEGvB7SAgqz6Kk3UBwUXRaV/IJ741DZBW+gIpNM?=
+ =?us-ascii?Q?rNUCGWgHHGPqX8vrLjvadLCq4iODr2sUIbOf20jMDB8wLY9VEHNqtMh42+Z0?=
+ =?us-ascii?Q?lNrohDucwiUBIXEGS0+K0X5GtHAwjVaaN3BQFaWRrccontDCCkDloVrH0Oms?=
+ =?us-ascii?Q?iPo66HTnqRsgS0BWdsjJqIOfK3LaIpa75vSTGPcHfcUd1pIb6gC/XLstgrws?=
+ =?us-ascii?Q?K+yC8w+wnApFueI7v+zb8AqnXUuDYr6e3XQHnIp+IL+x80C9ApDgwpPWVgJ1?=
+ =?us-ascii?Q?CU9fqZ0K78zVo0QkyGRAqBDoUSjE2zwAgKoM37A8mrJGUuLMYJD4kf7fZLxE?=
+ =?us-ascii?Q?ChJ5MwdDEtbvi/w5AwH4aiwdI7QxhLFiIZe0QWZZ3X7rRvV8QRpskG5N5VwF?=
+ =?us-ascii?Q?zJBw3AUW9rBREwoE9+ppbKBLUD8R8d3/W05PFkHK9Wtqv/He8M7q1ujbaOw9?=
+ =?us-ascii?Q?+sCCYr1EqfdITg+8tlsrQSkFu0lYXM66xMpr6sxNfs6I19LyUK0+FIAT2LDf?=
+ =?us-ascii?Q?7uz0MQA2DWhfpVVu1y6DEo6EMedg7zmmfmgAb8pdACINqlPw3g0OMChXEd5V?=
+ =?us-ascii?Q?VkwkD0Paah65NGnUJQOVQpRb0L/3ztrlzHA2R5VBAWIdQ4vfP8BG5Lw1gFvN?=
+ =?us-ascii?Q?YE0vbgEJPuQTWgLZYGjoQmxsa0DaVPbrZ5v6WKTWs1d2lobFThvPFB1DONEo?=
+ =?us-ascii?Q?2MPpKcZe370J0EEV/wT+94iRaAUEZSWy1mUgzR17bL+2nZ92Tqqn8eBh5l+t?=
+ =?us-ascii?Q?HrUdYMpkXC6WthuUG0MWjxUzvxceVQGJl/dle0Ov+Kg886QZuVQ73AS5/T+F?=
+ =?us-ascii?Q?JuZt47FSFk/dL2gCizO8Lw89yYgek619YgANFbpCoPdM6Ib29w686fy1YnBp?=
+ =?us-ascii?Q?oRDHPOx3iXwZB+wI6pgJFiaWgfR6g1yUlt452Kg5bF358QZg8AAb1BASn/o/?=
+ =?us-ascii?Q?NmZ49I8CItiC6lYD4ikBaMEy5A/ZcoLOgXkq+syzHMXtsh57EZeasUD9f+XD?=
+ =?us-ascii?Q?pOBBsCZTi5CUP3SvIj/QPw79JNFz/8KZtzpG7AAg9JrJTDF86Hrxvf6pEk5l?=
+ =?us-ascii?Q?GsJN3hkokg6Tg0Y=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR02MB10287.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(52116014)(376014)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?UhY5vQzyBamc08s+TZxuR86LQNLoJdLLHo/hHa/SAJYX0WF0ml8VdpyZ/idu?=
+ =?us-ascii?Q?044ejNxN/MTaEi2ahQ6kM2s9MtNGclrLF+UKEBqfySJIrWcaHodnk4S8H1C3?=
+ =?us-ascii?Q?/uhsNc5xYQjA7BVsTKZmbsZP/Fx+irg9S6QspRnbmWcB0Uestdzdz7G1M5RT?=
+ =?us-ascii?Q?l6sbyB4cztJtd/xJC82eEQr1Hr9cMANnd0+YF79YGF+OqbvaAbGxBzXBgFb1?=
+ =?us-ascii?Q?k+kHa8iD+Q96jydW5oyGlnDHT2EJ7N0+nEd9EyoBybS7mf6bHUspvXUIDuI8?=
+ =?us-ascii?Q?25oNdk1XuEer5IPLoXtZhUDt7mD18KvJJJY3ZTeqH5HAQxMjXmJAYizo7R0p?=
+ =?us-ascii?Q?M0mvubWhG/bieTbVM/ABa2TPxW5YNtnnJNBGvMGYptBvO1EYKvpF2vDM5MG7?=
+ =?us-ascii?Q?H420EK/Y6RKB5lsqHRcxHhvcXrNnbUhUEMhWtKwIZEgUWjjukyw0y1FBo7m4?=
+ =?us-ascii?Q?6223uzhK52QTIVvqCOCe5NE4qkxufLe3RQMA+1fCQtM+zBL0UvumEv+5CI1M?=
+ =?us-ascii?Q?gt+w/1gt1Iy5tU/Zp71T+QoGHzQMZ6LlxxlBpYM3n8HBBfCEv5sGMIlK74Iz?=
+ =?us-ascii?Q?dsfvVFFNTdEMBHdsZIHDFJaWGyfAWhOgdbKBkLuhM7Z25FyDm6XvHFn1mnxg?=
+ =?us-ascii?Q?uvoBf1oQ857pTnUezdBK3ne288QB7D/TAlzLIDVXbnaFzM5AZJn3Vyr9FJ2/?=
+ =?us-ascii?Q?1Dre38Qr9DtDdr+vVTN2FT5C7KUmH8c1P8BpnpSmFFgIxLV7r+DzKAef68x8?=
+ =?us-ascii?Q?kxh5CbcA3qw00ppLn8Y8AN/AE103dcMZ/Py0dUmYpT+5FRYmTPibnNApKUi5?=
+ =?us-ascii?Q?xD8sLZCBbJs35tsIrWS6lnwJJXdDg3PpahbdKN1mu31CtXAR7ibwmllZB25S?=
+ =?us-ascii?Q?mcQUL57rdi6gAYGzLdoSMZZ7ukhmr1LqTO19/QkwZdhheo8sTTkx/W0NkXIu?=
+ =?us-ascii?Q?jYWuV1rGBpX1Zxm1gHzO8xp+HWxMsZ/xfC/iJKpSTCHL7zwC+vZoxzMSTfZn?=
+ =?us-ascii?Q?n7TGC7ZWQKrxwtx4jYsdh90XXy4bMXccw1zlk0XbygHP1MnlxqBSx52/+TRr?=
+ =?us-ascii?Q?vkvKOLZK/6iNlxKAOQoFkMvy1+nRejn2i+MUsZS9IhpYOc39N1uhiJFXJYqz?=
+ =?us-ascii?Q?TRE9FuWNny45X9M0OhITHjzYOpA0L8uyN32vNfJTEHV38U2UR26hKDp69eEl?=
+ =?us-ascii?Q?egM/NY3IAGiZqVpXpAUO8UggJZWK+aV5AvxFndGRxF2leqS4SFuBrHlhML64?=
+ =?us-ascii?Q?wGwvAJ+OYVsfjWQ0TW7a80nIpbJ37yS9FVboO++xgt4ADIeX08DqupcLb80b?=
+ =?us-ascii?Q?WIVvZyjrRKxwVkZ2TZ/KcyWsdoMvC6eTjOF6JSsPP4pCilK+3dXMk7UGdJny?=
+ =?us-ascii?Q?tNqYXYtfrQFCAqDfOGhrXBHauJ525JHRHOXy66AYXASvoYfNGkti3NsVH/FX?=
+ =?us-ascii?Q?lnElsaxxNcEvfBS3wbJkp+IP/yMTB10ZyTclwa9Hjt0z6z5wdGJPna4sOdXa?=
+ =?us-ascii?Q?DD9PLm/J6MeFiVofUMxUrSIT3E3mFAL1BPPgusHk+8UpWN90aA3iixeduIij?=
+ =?us-ascii?Q?vFtJSw53P/gmDs6ufnGk+mZmndSraDfBTytqq62EnsAotC+yLbyu1d7P91T/?=
+ =?us-ascii?Q?vg=3D=3D?=
+X-OriginatorOrg: nutanix.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ae36c420-59eb-44d2-cff0-08dd88505aea
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR02MB10287.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2025 01:34:46.3305
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bb047546-786f-4de1-bd75-24e5b6f79043
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Nh6hfIKDrDoVM8W7CCWRquX2THyGinn8wEghSEKdV0KPL1yhp5TmzBZXZnISkA5sMWQCaiAWN3lGVytjsC/1qanJejisRkzO3bOUPbq4WXc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR02MB10177
+X-Authority-Analysis: v=2.4 cv=QLBoRhLL c=1 sm=1 tr=0 ts=6812cfb9 cx=c_pps a=BzboTkwgGU/iU5aMRKiaVQ==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=XR8D0OoHHMoA:10
+ a=0kUYKlekyDsA:10 a=VwQbUJbxAAAA:8 a=64Cc0HZtAAAA:8 a=20KFwNOVAAAA:8 a=HhlKS6Ypksj65T2L5G8A:9
+X-Proofpoint-GUID: gXOPbPjJknFVpuqVEX2uDUUVUBHZ-N-j
+X-Proofpoint-ORIG-GUID: gXOPbPjJknFVpuqVEX2uDUUVUBHZ-N-j
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDAxMSBTYWx0ZWRfX/QwKjs/F8Ohk 68Yf62Jd0l7U7JibzQtM0vMWsLtfVBxrGfR5l4fT82KUn5osLezTwefv0mvkvT20dkf2xqM2bz8 Jlj/SNgzJ2KoEVy7I5uigxpy0IRfxwrC5bBj4Lg5lEMB1K1doCTQowqpLVrnNNEs4VJOsPq8HYk
+ mhsM/shTp86yoCJIpYPhPXqofkemdRkG+BrJhpiyBoWj5cJc6pDDd+tNeeVpOgt3FyWe+ju0gsl pGLUApZpHZJ6wIExdKpx9+PraFYuf9K/98h2HiH/aepdh2QJCOMUo+u4fNG5vY1UDvvkNMzyEFZ 06Vg/fPOgBsvAPE8A4cXkbVP/T5OdHFy01rga27wtijUHVSLgFhkia4habWfBS1wluyS77MJgId
+ MpaxLsdKBzdtEM0eY0U6vieh86YQ4I/WFMeTKMCaQ+yGfY4pI8bMEGX/62wvmymwCWiYEMlh
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_01,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Reason: safe
 
-On 05/01, Jon Kohler wrote:
-> 
-> 
-> > On Apr 30, 2025, at 5:09 PM, Stanislav Fomichev <stfomichev@gmail.com> wrote:
-> > 
-> > !-------------------------------------------------------------------|
-> >  CAUTION: External Email
-> > 
-> > |-------------------------------------------------------------------!
-> > 
-> > On 04/30, Jon Kohler wrote:
-> >> Introduce new XDP helpers:
-> >> - xdp_headlen: Similar to skb_headlen
-> >> - xdp_headroom: Similar to skb_headroom
-> >> - xdp_metadata_len: Similar to skb_metadata_len
-> >> 
-> >> Integrate these helpers into tap, tun, and XDP implementation to start.
-> >> 
-> >> No functional changes introduced.
-> >> 
-> >> Signed-off-by: Jon Kohler <jon@nutanix.com>
-> >> ---
-> >> v1->v2: Integrate feedback from Willem
-> >> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.kernel.org_project_netdevbpf_patch_20250430182921.1704021-2D1-2Djon-40nutanix.com_&d=DwIBaQ&c=s883GpUCOChKOHiocYtGcg&r=NGPRGGo37mQiSXgHKm5rCQ&m=9pdxzQszX_M0K3gEPeYOyMZZYSkRR8IMvxslS8320Eoctk58y-ELCdZ5iaryF2GH&s=J-ILB7E9VQ_plo0hyjEtzGzjy6G0_o4MMMmmE_z8vvc&e= 
-> >> 
-> >> drivers/net/tap.c |  6 +++---
-> >> drivers/net/tun.c | 12 +++++------
-> >> include/net/xdp.h | 54 +++++++++++++++++++++++++++++++++++++++++++----
-> >> net/core/xdp.c    | 12 +++++------
-> >> 4 files changed, 65 insertions(+), 19 deletions(-)
-> >> 
-> >> diff --git a/drivers/net/tap.c b/drivers/net/tap.c
-> >> index d4ece538f1b2..a62fbca4b08f 100644
-> >> --- a/drivers/net/tap.c
-> >> +++ b/drivers/net/tap.c
-> >> @@ -1048,7 +1048,7 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
-> >> struct sk_buff *skb;
-> >> int err, depth;
-> >> 
-> >> - if (unlikely(xdp->data_end - xdp->data < ETH_HLEN)) {
-> >> + if (unlikely(xdp_headlen(xdp) < ETH_HLEN)) {
-> >> err = -EINVAL;
-> >> goto err;
-> >> }
-> >> @@ -1062,8 +1062,8 @@ static int tap_get_user_xdp(struct tap_queue *q, struct xdp_buff *xdp)
-> >> goto err;
-> >> }
-> >> 
-> >> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
-> >> - skb_put(skb, xdp->data_end - xdp->data);
-> >> + skb_reserve(skb, xdp_headroom(xdp));
-> >> + skb_put(skb, xdp_headlen(xdp));
-> >> 
-> >> skb_set_network_header(skb, ETH_HLEN);
-> >> skb_reset_mac_header(skb);
-> >> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> >> index 7babd1e9a378..4c47eed71986 100644
-> >> --- a/drivers/net/tun.c
-> >> +++ b/drivers/net/tun.c
-> >> @@ -1567,7 +1567,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
-> >> dev_core_stats_rx_dropped_inc(tun->dev);
-> >> return err;
-> >> }
-> >> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
-> >> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
-> >> break;
-> >> case XDP_TX:
-> >> err = tun_xdp_tx(tun->dev, xdp);
-> >> @@ -1575,7 +1575,7 @@ static int tun_xdp_act(struct tun_struct *tun, struct bpf_prog *xdp_prog,
-> >> dev_core_stats_rx_dropped_inc(tun->dev);
-> >> return err;
-> >> }
-> >> - dev_sw_netstats_rx_add(tun->dev, xdp->data_end - xdp->data);
-> >> + dev_sw_netstats_rx_add(tun->dev, xdp_headlen(xdp));
-> >> break;
-> >> case XDP_PASS:
-> >> break;
-> >> @@ -2355,7 +2355,7 @@ static int tun_xdp_one(struct tun_struct *tun,
-> >>       struct xdp_buff *xdp, int *flush,
-> >>       struct tun_page *tpage)
-> >> {
-> >> - unsigned int datasize = xdp->data_end - xdp->data;
-> >> + unsigned int datasize = xdp_headlen(xdp);
-> >> struct tun_xdp_hdr *hdr = xdp->data_hard_start;
-> >> struct virtio_net_hdr *gso = &hdr->gso;
-> >> struct bpf_prog *xdp_prog;
-> >> @@ -2415,14 +2415,14 @@ static int tun_xdp_one(struct tun_struct *tun,
-> >> goto out;
-> >> }
-> >> 
-> >> - skb_reserve(skb, xdp->data - xdp->data_hard_start);
-> >> - skb_put(skb, xdp->data_end - xdp->data);
-> >> + skb_reserve(skb, xdp_headroom(xdp));
-> >> + skb_put(skb, xdp_headlen(xdp));
-> >> 
-> >> /* The externally provided xdp_buff may have no metadata support, which
-> >> * is marked by xdp->data_meta being xdp->data + 1. This will lead to a
-> >> * metasize of -1 and is the reason why the condition checks for > 0.
-> >> */
-> >> - metasize = xdp->data - xdp->data_meta;
-> >> + metasize = xdp_metadata_len(xdp);
-> >> if (metasize > 0)
-> >> skb_metadata_set(skb, metasize);
-> >> 
-> >> diff --git a/include/net/xdp.h b/include/net/xdp.h
-> >> index 48efacbaa35d..044345b18305 100644
-> >> --- a/include/net/xdp.h
-> >> +++ b/include/net/xdp.h
-> >> @@ -151,10 +151,56 @@ xdp_get_shared_info_from_buff(const struct xdp_buff *xdp)
-> >> return (struct skb_shared_info *)xdp_data_hard_end(xdp);
-> >> }
-> >> 
-> >> +/**
-> >> + * xdp_headlen - Calculate the length of the data in an XDP buffer
-> >> + * @xdp: Pointer to the XDP buffer structure
-> >> + *
-> >> + * Compute the length of the data contained in the XDP buffer. Does not
-> >> + * include frags, use xdp_get_buff_len() for that instead.
-> >> + *
-> >> + * Analogous to skb_headlen().
-> >> + *
-> >> + * Return: The length of the data in the XDP buffer in bytes.
-> >> + */
-> >> +static inline unsigned int xdp_headlen(const struct xdp_buff *xdp)
-> >> +{
-> >> + return xdp->data_end - xdp->data;
-> >> +}
-> >> +
-> >> +/**
-> >> + * xdp_headroom - Calculate the headroom available in an XDP buffer
-> >> + * @xdp: Pointer to the XDP buffer structure
-> >> + *
-> >> + * Compute the headroom in an XDP buffer.
-> >> + *
-> >> + * Analogous to the skb_headroom().
-> >> + *
-> >> + * Return: The size of the headroom in bytes.
-> >> + */
-> >> +static inline unsigned int xdp_headroom(const struct xdp_buff *xdp)
-> >> +{
-> >> + return xdp->data - xdp->data_hard_start;
-> >> +}
-> >> +
-> >> +/**
-> >> + * xdp_metadata_len - Calculate the length of metadata in an XDP buffer
-> >> + * @xdp: Pointer to the XDP buffer structure
-> >> + *
-> >> + * Compute the length of the metadata region in an XDP buffer.
-> >> + *
-> >> + * Analogous to skb_metadata_len().
-> >> + *
-> >> + * Return: The length of the metadata in bytes.
-> >> + */
-> >> +static inline unsigned int xdp_metadata_len(const struct xdp_buff *xdp)
-> > 
-> > I believe this has to return int, not unsigned int. There are places
-> > where we do data_meta = data + 1, and the callers check whether
-> > the result is signed or sunsigned.
-> 
-> The existing SKB APIs are the exact same return type (I copied them 1:1),
-> but I have a feeling that we’re never intending these values to either A) be
-> negative and/or B) wrap in strange ways?
-> 
-> > 
-> >> +{
-> >> + return xdp->data - xdp->data_meta;
-> >> +}
-> >> +
-> >> static __always_inline unsigned int
-> >> xdp_get_buff_len(const struct xdp_buff *xdp)
-> >> {
-> >> - unsigned int len = xdp->data_end - xdp->data;
-> >> + unsigned int len = xdp_headlen(xdp);
-> >> const struct skb_shared_info *sinfo;
-> >> 
-> >> if (likely(!xdp_buff_has_frags(xdp)))
-> >> @@ -364,8 +410,8 @@ int xdp_update_frame_from_buff(const struct xdp_buff *xdp,
-> >> int metasize, headroom;
-> 
-> Said another way, perhaps this should be unsigned?
-> 
-> >> 
-> >> /* Assure headroom is available for storing info */
-> >> - headroom = xdp->data - xdp->data_hard_start;
-> >> - metasize = xdp->data - xdp->data_meta;
-> >> + headroom = xdp_headroom(xdp);
-> >> + metasize = xdp_metadata_len(xdp);
-> >> metasize = metasize > 0 ? metasize : 0;
-> > 
-> > ^^ like here
-> 
-> Look across the tree, seems like more are unsigned than signed
+In handle_tx_copy, TX batching processes packets below ~PAGE_SIZE and
+batches up to 64 messages before calling sock->sendmsg.
 
-The ones that are unsigned are either calling xdp_data_meta_unsupported
-explicitly (and it does > to check for this condition, not signed math)
-or are running in the drivers that are guaranteed to have metadata
-support (and, hence, always have data_meta <= data).
+Currently, when there are no more messages on the ring to dequeue,
+handle_tx_copy re-enables kicks on the ring *before* firing off the
+batch sendmsg. However, sock->sendmsg incurs a non-zero delay,
+especially if it needs to wake up a thread (e.g., another vhost worker).
 
-> These ones use unsigned:
-> xdp_convert_zc_to_xdp_frame
+If the guest submits additional messages immediately after the last ring
+check and disablement, it triggers an EPT_MISCONFIG vmexit to attempt to
+kick the vhost worker. This may happen while the worker is still
+processing the sendmsg, leading to wasteful exit(s).
 
-This uses xdp_data_meta_unsupported
+This is particularly problematic for single-threaded guest submission
+threads, as they must exit, wait for the exit to be processed
+(potentially involving a TTWU), and then resume.
 
-> veth_xdp_rcv_skb
-> xsk_construct_skb
-> bnxt_copy_xdp
-> i40e_build_skb
-> i40e_construct_skb_zc
-> ice_build_skb (this is u8)
-> ice_construct_skb_zc
-> igb_build_skb
-> igb_construct_skb_zc
-> igc_build_skb
-> igc_construct_skb
-> igc_construct_skb_zc
-> ixgbe_build_skb
-> ixgbe_construct_skb_zc
-> ixgbevf_build_skb
-> mvneta_swbm_build_skb
-> mlx5e_xsk_construct_skb
-> mana_build_skb
-> stmmac_construct_skb_zc
-> bpf_prog_run_generic_xdp
+In scenarios like a constant stream of UDP messages, this results in a
+sawtooth pattern where the submitter frequently vmexits, and the
+vhost-net worker alternates between sleeping and waking.
 
-These run in the drivers that support metadata (data_meta <= data)
+A common solution is to configure vhost-net busy polling via userspace
+(e.g., qemu poll-us). However, treating the sendmsg as the "busy"
+period by keeping kicks disabled during the final sendmsg and
+performing one additional ring check afterward provides a significant
+performance improvement without any excess busy poll cycles.
 
-> xdp_get_metalen
+If messages are found in the ring after the final sendmsg, requeue the
+TX handler. This ensures fairness for the RX handler and allows
+vhost_run_work_list to cond_resched() as needed.
 
-This uses xdp_data_meta_unsupported
+Test Case
+    TX VM: taskset -c 2 iperf3  -c rx-ip-here -t 60 -p 5200 -b 0 -u -i 5
+    RX VM: taskset -c 2 iperf3 -s -p 5200 -D
+    6.12.0, each worker backed by tun interface with IFF_NAPI setup.
+    Note: TCP side is largely unchanged as that was copy bound
 
-> These ones are regular int:
-> xdp_build_skb_from_buff
-> xdp_build_skb_from_zc
-> xdp_update_frame_from_buff
-> tun_xdp_one
-> build_skb_from_xdp_buff
+6.12.0 unpatched
+    EPT_MISCONFIG/second: 5411
+    Datagrams/second: ~382k
+    Interval         Transfer     Bitrate         Lost/Total Datagrams
+    0.00-30.00  sec  15.5 GBytes  4.43 Gbits/sec  0/11481630 (0%)  sender
 
-These can be called from the drivers that support and don't support 
-the metadata, so have to (correctly) use int.
+6.12.0 patched
+    EPT_MISCONFIG/second: 58 (~93x reduction)
+    Datagrams/second: ~650k  (~1.7x increase)
+    Interval         Transfer     Bitrate         Lost/Total Datagrams
+    0.00-30.00  sec  26.4 GBytes  7.55 Gbits/sec  0/19554720 (0%)  sender
 
-> Perhaps a separate patch to convert the regulars to unsigned,
-> thoughts?
+Acked-by: Jason Wang <jasowang@redhat.com>
+Signed-off-by: Jon Kohler <jon@nutanix.com>
+---
+v2->v3: Address MST's comments regarding busyloop_intr
+	https://patchwork.kernel.org/project/netdevbpf/patch/20250420010518.2842335-1-jon@nutanix.com/
+v1->v2: Move from net to net-next (no changes)
+	https://patchwork.kernel.org/project/netdevbpf/patch/20250401043230.790419-1-jon@nutanix.com/
+---
+ drivers/vhost/net.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-Take a look at xdp_set_data_meta_invalid and xdp_data_meta_unsupported.
-There are cases where xdp->data - xdp->data_meta is -1 (and the callers
-check for this condition), we can't use unsigned unconditionally
-(unless we use xdp_data_meta_unsupported).
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index b9b9e9d40951..7cbfc7d718b3 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -755,10 +755,10 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 	int err;
+ 	int sent_pkts = 0;
+ 	bool sock_can_batch = (sock->sk->sk_sndbuf == INT_MAX);
++	bool busyloop_intr;
+ 
+ 	do {
+-		bool busyloop_intr = false;
+-
++		busyloop_intr = false;
+ 		if (nvq->done_idx == VHOST_NET_BATCH)
+ 			vhost_tx_batch(net, nvq, sock, &msg);
+ 
+@@ -769,13 +769,10 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 			break;
+ 		/* Nothing new?  Wait for eventfd to tell us they refilled. */
+ 		if (head == vq->num) {
+-			if (unlikely(busyloop_intr)) {
+-				vhost_poll_queue(&vq->poll);
+-			} else if (unlikely(vhost_enable_notify(&net->dev,
+-								vq))) {
+-				vhost_disable_notify(&net->dev, vq);
+-				continue;
+-			}
++			/* Kicks are disabled at this point, break loop and
++			 * process any remaining batched packets. Queue will
++			 * be re-enabled afterwards.
++			 */
+ 			break;
+ 		}
+ 
+@@ -825,7 +822,22 @@ static void handle_tx_copy(struct vhost_net *net, struct socket *sock)
+ 		++nvq->done_idx;
+ 	} while (likely(!vhost_exceeds_weight(vq, ++sent_pkts, total_len)));
+ 
++	/* Kicks are still disabled, dispatch any remaining batched msgs. */
+ 	vhost_tx_batch(net, nvq, sock, &msg);
++
++	if (unlikely(busyloop_intr))
++		/* If interrupted while doing busy polling, requeue the
++		 * handler to be fair handle_rx as well as other tasks
++		 * waiting on cpu.
++		 */
++		vhost_poll_queue(&vq->poll);
++	else
++		/* All of our work has been completed; however, before
++		 * leaving the TX handler, do one last check for work,
++		 * and requeue handler if necessary. If there is no work,
++		 * queue will be reenabled.
++		 */
++		vhost_net_busy_poll_try_queue(net, vq);
+ }
+ 
+ static void handle_tx_zerocopy(struct vhost_net *net, struct socket *sock)
+-- 
+2.43.0
+
