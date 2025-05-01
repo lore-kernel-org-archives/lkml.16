@@ -1,86 +1,47 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 945222DC782;
-	Thu,  1 May 2025 02:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D62AC2ED;
+	Thu,  1 May 2025 02:26:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746065631; cv=none; b=cK51N9/j4Yn3QaItucfvrAauHQz4GkN9xvM5BCmm0x3gj4XHBayYEYjdEsqVo21t1+TsRvOXV68oN0V8Vq0AW2xJewjTVj8niBiRLmbCyyg3Mlw43kXZK7H5ErLXQCRgfbDyFJ665rqNH/BQ5P6PrCdWYWjH0BaUKbYy8QRfDSY=
+	t=1746066382; cv=none; b=Ae1kOFRQdOgHeGIw8lFMsE2EEcZYKXGk0iEb9sHR+UYzpMIjWk3MFy3MtUqmbQfttPBPryZ6DXVnkBiWz79TSyoNaZdQYg4c/sbVmVjUUnIxPMrVJIXCaHkFwZ0ryxKGvK5WXmsSiPX7NZpkvKOuAWW/sp1kZWFOx1sFhz5NcZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746065631; c=relaxed/simple;
-	bh=IXL7L7GEzmRTgpRI7W6C+cM7nwoU1zodTrcRAWVG/RY=;
+	s=arc-20240116; t=1746066382; c=relaxed/simple;
+	bh=xDvmI+RzBrsAPUkmwQMATcemiN1t9n0AYagyAz0GKD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iFtNF2o+pZTPBXJqpZHlBCENkBl9WAwH1+61QtVVbMMN/L8CMghj4VMoMbQ1aFwMtHxCw5FungNtEEvnZ/uJrKZqLSteaXniDtbgFDL42glD1/oZ+2IdNDXQ3ZHFI97KfRlKQa9qHWmClNukn9+kbfN+VrAw/qY+/QWhxPODW5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XyIVoeUU; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=groves.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=LGn6IpZtL8wFeiPe8PRcTg69u49W041oO3AdbNrHPqvIYO6eAiPuPXN9OV8ex8DhOX9FL2hXfalY/6ELhFJeuUY6lPnQJ2kj53zC9DHlahqoeAdAXQDpKVKyR1lSXE2+MYzyHgLMa2U0amczmcVnHTxVPY8jZQa0MFZ3CdXN81s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aVIMS6EX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XyIVoeUU"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72ecc30903cso300997a34.0;
-        Wed, 30 Apr 2025 19:13:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746065628; x=1746670428; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IXdPE0dAK6WPnTA+7Y1kfcDmuDvdGOZCfAYjmJvCT6s=;
-        b=XyIVoeUUZCaRM8EhzzdIasPytauhPQEUby8+kPXUQaP6+7ikB7qohQoTiCYpFCZzz4
-         dsMpscwh6qrSAlzdKNLxhKyuq7THG8tTz41bXCw5JAgT1PJj7EpdeRiNRjTUTWvazKuc
-         h6t9FqjSo+Xtit5RBj9rPnf3rpkYn4OvMRtpmviod1E1UjJglPalNkWz5O1nt/ZAQEMr
-         6YFsid1fnYpXGH1uDXrUAEkTi77YYqCMyAqbnw+6m/JgOKA5b0I3VP2yj/IH3emQqw6s
-         ouZEcPJ0fJSCWTPgKXsF95X+RU3i5LzgbHuSw/0aI/y37CZSYxNsmAFmafq01Y7KUEYQ
-         +MSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746065628; x=1746670428;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IXdPE0dAK6WPnTA+7Y1kfcDmuDvdGOZCfAYjmJvCT6s=;
-        b=gAJI0/ynwecudn8s/osQNYjn3w2qsnSjrZ+U7nPTaFsvqt52Dma41MZwoNuG5A8OIx
-         xVZ3QXzo9GrmP73uXDXkH7qqGVIf1MCXQQb2+zrSA83zUdC1ODTY2dZ6+XhNpaOJpPJo
-         EZfVCridJRygyEO1+6upgFzwvxpxYGy7Ckk8Ua61PMw+9XjVeI2hy5J3s6Zq/HS/zQh4
-         M533hwSeFh0HL//4ZiL+b1FBhRZMJc4rJ31/SZ6R54ifpm+loODxrg7iWPiR40bpFSEv
-         0X5YL9FfHjYL/gfZ5v4hBAkTh3er2rt/mn5ZyEKevzAOZQvNskfSjhJbTCjQpjTHrLeF
-         pzoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUIOUaEsn8YrZLjCt2GF8lO5NOzdJT8pLgVt0Jz0TYIdQhdR6vrjfUdpuuQT0WnMG3xuuvTh30F2qgo@vger.kernel.org, AJvYcCUQbQvz7tnhtyA1YrEX8tcUV/pxn5AujwTR7VNo2A3dov8M0MXhj4erIrQIEuAi5J45Nsba6xyKCBA=@vger.kernel.org, AJvYcCUaxTFCPZFULmWDNC1Lzo3CrZuKIrB/6nxFnXkkbgslOnm7lqgnYKX9AUP7ckwH2vo5YSBBJK7DMA9thWeLng==@vger.kernel.org, AJvYcCWvi20q77XzS0ZI4GezQCTyRvUHCuXcjP4ciSOdoeX16PiBQH6XT3wpEMZa2SuHQeoIIALyTqFmT/Wep/Zi@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxof/Ph0MI5RBZzqaUWbpVRcO3PCHcfbT5MXBzbLT68/0fPkSn9
-	K/LFANn1Qk9J6SLgHSd5tDV3n7IQVRufQfLl7PnBHkkWaCElcIi+
-X-Gm-Gg: ASbGncvc0j45TxX+pbm/nOf9yAMYMRJFLRFgOBeGkhyTIZmG26BsJHS7jGZAAUTzILE
-	liVGkCXPhPj9Ak3fHwTjQk6kJODtR87cfL5t8kdoKqtp625lV5eriH839ZUuTjjGmQrN5Wg/Chy
-	9AluiqTsPaBj0YhqO4lALOZk0DwVJpuWMkCp6FblZf8YBXbIEtuY41x6UidInoif5/GxvnXGxaf
-	YS5qz6qJnOJC3xtKgCm+wG+7TXhpHZFfVvtmn5hHFGMKK3m5Fq+6+BXLuEg6rhlmXh2jII0+2Vx
-	hpPKVMgaQ8HK837CvSuviRPCxoGO987HJ/fKmoJXafG76f056Ga5y2+gIqfBDueifc0WMi5SwPJ
-	ggTsjUFFp
-X-Google-Smtp-Source: AGHT+IEmR48bt7XEiYsncU5O4Q5GIS0VjcmLqFK0GdoL7joQ9ta5UZGYwgpLnkZ5GqCYSdv4P6TBYA==
-X-Received: by 2002:a05:6830:3982:b0:72b:9cc7:25c4 with SMTP id 46e09a7af769-731ce3f9330mr690833a34.22.1746065628499;
-        Wed, 30 Apr 2025 19:13:48 -0700 (PDT)
-Received: from groves.net (syn-070-114-204-161.res.spectrum.com. [70.114.204.161])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7308b117371sm1140234a34.16.2025.04.30.19.13.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Apr 2025 19:13:47 -0700 (PDT)
-Sender: John Groves <grovesaustin@gmail.com>
-Date: Wed, 30 Apr 2025 19:13:37 -0700
-From: John Groves <John@groves.net>
-To: Alireza Sanaee <alireza.sanaee@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, 
-	Miklos Szeredi <miklos@szeredb.hu>, Bernd Schubert <bschubert@ddn.com>, 
-	John Groves <jgroves@micron.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, 
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, 
-	"Darrick J . Wong" <djwong@kernel.org>, Luis Henriques <luis@igalia.com>, 
-	Randy Dunlap <rdunlap@infradead.org>, Jeff Layton <jlayton@kernel.org>, 
-	Kent Overstreet <kent.overstreet@linux.dev>, Petr Vorel <pvorel@suse.cz>, Brian Foster <bfoster@redhat.com>, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-cxl@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	Amir Goldstein <amir73il@gmail.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Stefan Hajnoczi <shajnocz@redhat.com>, Joanne Koong <joannelkoong@gmail.com>, 
-	Josef Bacik <josef@toxicpanda.com>, Aravind Ramesh <arramesh@micron.com>, 
-	Ajay Joshi <ajayjoshi@micron.com>
-Subject: Re: [RFC PATCH 00/19] famfs: port into fuse
-Message-ID: <n4idslcksqlegd5e2nyggyzahwhgfh7qqsh3qni7fgpj342ohr@do2fu5pz7fsv>
-References: <20250421013346.32530-1-john@groves.net>
- <20250430154232.000045dd.alireza.sanaee@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aVIMS6EX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B4EBC4CEE7;
+	Thu,  1 May 2025 02:26:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746066381;
+	bh=xDvmI+RzBrsAPUkmwQMATcemiN1t9n0AYagyAz0GKD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aVIMS6EX1bmdbZlCT4Ph9BQSkBsKo1ZZ8cv5kzE4w46J3KEcLVv9IU8J0N+zyXVDh
+	 AQh5znq8L73Eebkqo9Roe6Tl62Ut7eDfj7S+TgnQVbe0LlkF9QvY+5jRgMO/I58+Hd
+	 DUtTGnQiUls4Cq2vq1gOBHdJSYQrXrUnhN1ltHksGAwh2qLYZDOhdMQfyTqAL8258e
+	 EYaDBvVua06TCgkHQsRTxv7B27A5j+kEQQOkOjqMum92sfyZPD0dgF2MTTnz9pQXtS
+	 TW38MM3FRjMU3ZHSvSgrLnKmeDJzpKfSfPN84pKFsYNlM2D3IIZyiP174i14GcTTpv
+	 XkpcgDRMXkRMw==
+Date: Wed, 30 Apr 2025 19:26:17 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+	sparclinux@vger.kernel.org, linux-s390@vger.kernel.org,
+	x86@kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld" <Jason@zx2c4.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 00/12] crypto: sha256 - Use partial block API
+Message-ID: <20250501022617.GA65059@sol.localdomain>
+References: <cover.1745992998.git.herbert@gondor.apana.org.au>
+ <20250430174543.GB1958@sol.localdomain>
+ <aBLMi5XOQKJyJGu-@gondor.apana.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -89,47 +50,170 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250430154232.000045dd.alireza.sanaee@huawei.com>
+In-Reply-To: <aBLMi5XOQKJyJGu-@gondor.apana.org.au>
 
-On 25/04/30 03:42PM, Alireza Sanaee wrote:
-> On Sun, 20 Apr 2025 20:33:27 -0500
-> John Groves <John@Groves.net> wrote:
+On Thu, May 01, 2025 at 09:21:15AM +0800, Herbert Xu wrote:
+> On Wed, Apr 30, 2025 at 10:45:43AM -0700, Eric Biggers wrote:
+> >
+> > As for your sha256_finup "optimization", it's an interesting idea, but
+> > unfortunately it slightly slows down the common case which is count % 64 < 56,
+> > due to the unnecessary copy to the stack and the following zeroization.  In the
+> > uncommon case where count % 64 >= 56 you do get to pass nblocks=2 to
+> > sha256_blocks_*(), but ultimately SHA-256 is serialized block-by-block anyway,
+> > so it ends up being only slightly faster in that case, which again is the
+> > uncommon case.  So while it's an interesting idea, it doesn't seem to actually
+> > be better.  And the fact that that patch is also being used to submit unrelated,
+> > more dubious changes isn't very helpful, of course.
 > 
->> <snip>
-> 
-> Hi John,
-> 
-> Apologies if the question is far off or irrelevant.
-> 
-> I am trying to understand FAMFS, and I am thinking where does FAMFS
-> stand when compared to OpenSHMEM PGAS. Can't we have a OpenSHMEM-based
-> shared memory implementation over CXL that serves as FAMFS?
-> 
-> Maybe FAMFS does more than that!?!
-> 
-> Thanks,
-> Alireza
->
+> I'm more than willing to change sha256_finup if you can prove it
+> with real numbers that it is worse than the single-block version.
 
-Continuation of this conversation likely belongs in the discusison section
-at [1], but a couple of thoughts.
+Interesting approach -- pushing out misguided optimizations without data, then
+demanding data for them to be reverted.  It's obviously worse for
+len % 64 < 56 for the reason I gave, so this is a waste of time IMO.  But since
+you're insisting on data anyway, here are some quick benchmarks on AMD Zen 5
+(not going to bother formatting into a table):
 
-Famfs provides a scale-out filesystem mounts where the files that map to the
-same disaggregated shared memory. If you mmap a famfs file, you are accessing
-the memory directly. Since shmem is file-backed (usually tmpfs or
-its ilk), shmem is a higher-level and more specialized abstraction, and
-OpenSHMEM may be able to run atop famfs. It looks like OpenSHMEM and PGAS
-cover the possibility that "shared memory" might require grabbing a copy via
-[r]dma - which famfs will probably never do. Famfs only handles cases where
-the memory is actually shared. (hey, I work for a memory company.)
+Before your finup "optimization":
 
-Since famfs provides memory-mappable files, almost all apps can access them
-(no requirement to write to the shmem, or other related but more estoteric
-interfaces). Apps are responsible for not doing "nonsense" access WRT cache
-coherency, but famfs manages cache coherency for its metadata.
+ sha256(len=0): 145 cycles
+ sha256(len=1): 146 cycles
+ sha256(len=2): 146 cycles
+ sha256(len=3): 146 cycles
+ sha256(len=4): 146 cycles
+ sha256(len=5): 146 cycles
+ sha256(len=6): 146 cycles
+ sha256(len=7): 146 cycles
+ sha256(len=8): 151 cycles
+ sha256(len=9): 148 cycles
+ sha256(len=10): 148 cycles
+ sha256(len=11): 148 cycles
+ sha256(len=12): 148 cycles
+ sha256(len=13): 148 cycles
+ sha256(len=14): 148 cycles
+ sha256(len=15): 149 cycles
+ sha256(len=16): 149 cycles
+ sha256(len=17): 148 cycles
+ sha256(len=18): 148 cycles
+ sha256(len=19): 148 cycles
+ sha256(len=20): 148 cycles
+ sha256(len=21): 148 cycles
+ sha256(len=22): 148 cycles
+ sha256(len=23): 148 cycles
+ sha256(len=24): 148 cycles
+ sha256(len=25): 148 cycles
+ sha256(len=26): 148 cycles
+ sha256(len=27): 148 cycles
+ sha256(len=28): 148 cycles
+ sha256(len=29): 148 cycles
+ sha256(len=30): 148 cycles
+ sha256(len=31): 148 cycles
+ sha256(len=32): 151 cycles
+ sha256(len=33): 148 cycles
+ sha256(len=34): 148 cycles
+ sha256(len=35): 148 cycles
+ sha256(len=36): 148 cycles
+ sha256(len=37): 148 cycles
+ sha256(len=38): 148 cycles
+ sha256(len=39): 148 cycles
+ sha256(len=40): 148 cycles
+ sha256(len=41): 148 cycles
+ sha256(len=42): 148 cycles
+ sha256(len=43): 148 cycles
+ sha256(len=44): 148 cycles
+ sha256(len=45): 148 cycles
+ sha256(len=46): 150 cycles
+ sha256(len=47): 149 cycles
+ sha256(len=48): 147 cycles
+ sha256(len=49): 147 cycles
+ sha256(len=50): 147 cycles
+ sha256(len=51): 147 cycles
+ sha256(len=52): 147 cycles
+ sha256(len=53): 147 cycles
+ sha256(len=54): 147 cycles
+ sha256(len=55): 148 cycles
+ sha256(len=56): 278 cycles
+ sha256(len=57): 278 cycles
+ sha256(len=58): 278 cycles
+ sha256(len=59): 278 cycles
+ sha256(len=60): 277 cycles
+ sha256(len=61): 277 cycles
+ sha256(len=62): 277 cycles
+ sha256(len=63): 276 cycles
+ sha256(len=64): 276 cycles
 
-The video at [2] may be useful to get up to speed.
+After your finup "optimization":
 
-[1] http://github.com/cxl-micron-reskit/famfs
-[2] https://www.youtube.com/watch?v=L1QNpb-8VgM&t=1680
+ sha256(len=0): 188 cycles
+ sha256(len=1): 190 cycles
+ sha256(len=2): 190 cycles
+ sha256(len=3): 190 cycles
+ sha256(len=4): 189 cycles
+ sha256(len=5): 189 cycles
+ sha256(len=6): 189 cycles
+ sha256(len=7): 190 cycles
+ sha256(len=8): 187 cycles
+ sha256(len=9): 188 cycles
+ sha256(len=10): 188 cycles
+ sha256(len=11): 188 cycles
+ sha256(len=12): 189 cycles
+ sha256(len=13): 189 cycles
+ sha256(len=14): 188 cycles
+ sha256(len=15): 189 cycles
+ sha256(len=16): 189 cycles
+ sha256(len=17): 190 cycles
+ sha256(len=18): 190 cycles
+ sha256(len=19): 190 cycles
+ sha256(len=20): 190 cycles
+ sha256(len=21): 190 cycles
+ sha256(len=22): 190 cycles
+ sha256(len=23): 190 cycles
+ sha256(len=24): 191 cycles
+ sha256(len=25): 191 cycles
+ sha256(len=26): 191 cycles
+ sha256(len=27): 191 cycles
+ sha256(len=28): 191 cycles
+ sha256(len=29): 192 cycles
+ sha256(len=30): 191 cycles
+ sha256(len=31): 191 cycles
+ sha256(len=32): 191 cycles
+ sha256(len=33): 191 cycles
+ sha256(len=34): 191 cycles
+ sha256(len=35): 191 cycles
+ sha256(len=36): 192 cycles
+ sha256(len=37): 192 cycles
+ sha256(len=38): 192 cycles
+ sha256(len=39): 191 cycles
+ sha256(len=40): 191 cycles
+ sha256(len=41): 194 cycles
+ sha256(len=42): 193 cycles
+ sha256(len=43): 193 cycles
+ sha256(len=44): 193 cycles
+ sha256(len=45): 193 cycles
+ sha256(len=46): 194 cycles
+ sha256(len=47): 194 cycles
+ sha256(len=48): 193 cycles
+ sha256(len=49): 195 cycles
+ sha256(len=50): 195 cycles
+ sha256(len=51): 196 cycles
+ sha256(len=52): 196 cycles
+ sha256(len=53): 195 cycles
+ sha256(len=54): 195 cycles
+ sha256(len=55): 195 cycles
+ sha256(len=56): 297 cycles
+ sha256(len=57): 297 cycles
+ sha256(len=58): 297 cycles
+ sha256(len=59): 297 cycles
+ sha256(len=60): 297 cycles
+ sha256(len=61): 297 cycles
+ sha256(len=62): 297 cycles
+ sha256(len=63): 297 cycles
+ sha256(len=64): 292 cycles
 
+So your "optimization" made it ~43 cycles slower for len % 64 < 56, or ~19
+cycles slower for len % 64 >= 56.
+
+As I said, it's from the overhead of unnecessarily copying the data onto the
+stack and then having to zeroize it at the end.
+
+- Eric
