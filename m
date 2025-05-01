@@ -1,118 +1,200 @@
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01591F426C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 14:49:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4B0C198E6F;
+	Thu,  1 May 2025 14:51:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746110965; cv=none; b=cOhuElVwFFN0BeV6xLpIyfiH5BFoNVxubJVx9GLDUN7hZulanlHTNUsKsOnGEE2wGWneJWI+CkY0tZFDLQu2ARgmfx4WRTpLIcH4FL9HK4HmT3IQ4i5nXuqqagX3P+4NVUSyNP0vnkzJ4EgKJjL22WPxKFl2tE4nKIlZdBrCrJ4=
+	t=1746111103; cv=none; b=sw/ngOY9SgRByRYsm+CZg8NdquXEx8HDykAF7Ix35Ojvom9sgBjm3euT9rV5CrteExXeR5O37jnmzA/7CZPHJLXtw2mFSc7VzuJYH/cNzIwxMYl57lM3MYwt1lr/7uZ3UeHDbNPyNpK8g4+t59uhi9KrOkFMw6KlawNVHx40TeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746110965; c=relaxed/simple;
-	bh=Nj+Buzt0el1DKRoyQF913fIBNhoC13kudc2w1c3kB2I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=McoHn258IMkDkKzwcaoQmXjTtKBYcgt9DZlleaDqcDPG4ujBjRBL7HqQRhk0ndmhmGiHDUJCJ2wXJ94zC6/8Dk6euQs5z6TbdLuVY/ar/O1whTVGAxD4NM+tBXOu3RGgylSN7+dZwEIOX96QyrZ1J1DW+azZBLEhr9S5wnjyMLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=USFeTrTP; arc=none smtp.client-ip=209.85.160.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746111103; c=relaxed/simple;
+	bh=wdjmd1246JboK3lbng6YEeoL6Zhji4MPN6fOxhiJpdw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZPjxoajVywGq2nZ+p/VdoSsYixa+HwVuEAptcBZ/jNtat7EI2OEMpsCG3G6brtiRtFZ8ZU2KDd6ZPq3qdxGuM9ao2ztMVAjPCdOQHHLWKdBLd08563WOyH3Xw+YrscwiS/kvrAYMy2kromhzQUPQo9zVyHZwSMr1cobV6GW9jG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bElToQK7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="USFeTrTP"
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-2d060c62b61so971949fac.0
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 07:49:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746110962; x=1746715762; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=fEs6umMySeLBJDEE1y2srlfEtA4e3pHxcXG4IeDmkZQ=;
-        b=USFeTrTPkhdXxAd7WkSfn4OAjwOwVD2HAJO4uaUBIfotv1a6ORmVRaLKq+mHTPpNjb
-         AEoz2Iy/2+FlFZXl8pYrchfyi8QWR7JjbZsWqApOcHQe/NXQP3UnvsC03s/DaLpMXTmz
-         Og1MbSNTocB0ycEPs7zsE3FESJ6nlhlener3/Wvm8aexLwJln7ZfF0lgRI1VWscoTb4Q
-         3VsKXbtDykX428vUQkQMViv0RSrRPQ5gCypp0qP7oNL/QXnwIuYtswelxcJ/BxXte+l9
-         txJ3ch8m57nUbeQZ58OpnNwWCxLfp54wILc0ros1izps2laTAgrkK4nFlKdvGbwcDn15
-         fr+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746110963; x=1746715763;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fEs6umMySeLBJDEE1y2srlfEtA4e3pHxcXG4IeDmkZQ=;
-        b=RGXYxnVPmN/8h3yleDdBsYmYAUoWpfNB3SQ6oglRuM3qdnHuF8ufNOXzB+BVPSgPqE
-         n8DvL5tvCx3EiZdUXdwoxZhpUjNz0E8tIaR4NewEgpg6gevRSW8AERcB2zQ31MK26kPx
-         3ZUwreYNtxNhH7ojWufYITLtGbSCyFcLqmyInVK58jDqs5fQ3epoMo6Qsx2F9zBsDAGK
-         sTkzt77KkK8lqmscKYR1IZmTpYBEgEUWkKAwYV7UVHdrEkGdVQAtJRyCJr+7iFhTjCwd
-         +T8GyY2Nd54WosBJww+i533BlQqzoAZY3WNiwEHMgLnyNQXLO+kV+ip7Cvdsl62TJFEa
-         wtbw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFswFuAtj7LoHVJh3Ag+0YdL4+ziF78eqQzgTwNhSfDudLCh5goqs9/FZLrurpEGFCnsQBlDuMEPMRmp0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGzeRpl3WUD9wxx3T9DfeOqfnKDsK1z/vP31nBhFjkatwKHCPa
-	f2m87iP5WBLWzgWVT8jKuCR70B7bHgLcFetivtX9OZeMcrukuaUaW/yRlla1X/Y=
-X-Gm-Gg: ASbGncu63XF3ezNHvpguOV4QwewvO7ivHDGR4T3sb+anokuV+EB5+9wisCI/s1jV9+e
-	BnKjqieRo2nxdfZcwvtbI+AGdQ0JwOVu5JG6hZRCpKvz3w0SM6qkA1i3nXoY8/NOiqX7UiggMe5
-	rJ9DldXymMi0IMTfXTJeBI+1EgeyeFxvNO1fCJbhhRQPPajrEtkAXwAdQ04gHDhezYunScjeMEl
-	4gqvq54z9YNkMruelpn1hbEW9hXQ5jYakUWXYy3NrWVM7Y/zEqjYlVvEqFdlTHjzD2ZfScBBrxn
-	sgqwP/z40kJc8YPruu4rLMxAGkJlB6YOsVwDaKIBxYRCpuCewIZ0c+NWylL6VcUGp+xCWnwrViX
-	NTFXVTWz6UjwNeIS19rDKrAh5KRHO
-X-Google-Smtp-Source: AGHT+IG/sAO6ZHkviN2Ne0zUJ5m6cW80bEv+JtsGzgP47IWE2BU/C39yiIzIqJ5ZMSvTiqGOzJM5KQ==
-X-Received: by 2002:a05:6870:47a3:b0:29e:65ed:5c70 with SMTP id 586e51a60fabf-2da6d167ea9mr3635683fac.30.1746110962642;
-        Thu, 01 May 2025 07:49:22 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2daa126b723sm147495fac.49.2025.05.01.07.49.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 07:49:21 -0700 (PDT)
-Message-ID: <df11dff4-7641-46f8-a604-8727918629c3@baylibre.com>
-Date: Thu, 1 May 2025 09:49:20 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bElToQK7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 165E7C4CEED;
+	Thu,  1 May 2025 14:51:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746111103;
+	bh=wdjmd1246JboK3lbng6YEeoL6Zhji4MPN6fOxhiJpdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bElToQK7w+6nx2mjMzHZ1uPtFSEXuTctwMZpLLhMeeOV/VYTwgnbx9bHHJ4faKYGg
+	 AjKJpDYz71VP+m2LLTbUClNzwYzz1iUqD56BJiT9HPE+O5YENSfY2bhTT3VfbLuuHv
+	 ljDSf3MYYjO4RmomsHmcYreMwPD58KlX8R8SU+twUekKefPPM3PnbPwNb/5OyneW5X
+	 M12BOSI2xPPnteqTVBGhwGjaZOWMU1JqdhBzvAcAFUe/BQOqJwZEGuK8k87jc9cQJ2
+	 B3OvsOYi8pjxHNT9Gbp3jE3sEpBsW6muo/bBHZlSTWixxObZBDmw8GvmP66Ss+UKG2
+	 nbwUoN2n+CuUQ==
+Date: Thu, 1 May 2025 15:51:36 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Sayyad Abid <sayyad.abid16@gmail.com>
+Cc: linux-iio@vger.kernel.org, jic23@kernel.org, lars@metafoo.de,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com, olivier.moysan@foss.st.com,
+	gstols@baylibre.com, tgamblin@baylibre.com, alisadariana@gmail.com,
+	eblanc@baylibre.com, antoniu.miclaus@analog.com,
+	andriy.shevchenko@linux.intel.com, stefan.popa@analog.com,
+	ramona.gradinariu@analog.com, herve.codina@bootlin.com,
+	tobias.sperling@softing.com, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 5/5] dt-bindings: iio: adc: add bindings for TI
+ ADS1262
+Message-ID: <20250501-nervous-agreed-73b4b63c82e0@spud>
+References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
+ <20250501100043.325423-6-sayyad.abid16@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] iio: adc: ad7192: Refactor filter config
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Alisa-Dariana Roman <alisadariana@gmail.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Alisa-Dariana Roman <alisa.roman@analog.com>, linux-iio@vger.kernel.org,
- linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>
-References: <20250425132051.6154-1-alisa.roman@analog.com>
- <20250425132051.6154-2-alisa.roman@analog.com>
- <6d0ff620-ec1a-4b17-9b5d-b9c48078271a@baylibre.com>
- <20250426133241.7d14c776@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <20250426133241.7d14c776@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-
-On 4/26/25 7:32 AM, Jonathan Cameron wrote:
-> On Fri, 25 Apr 2025 10:43:29 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> On 4/25/25 8:20 AM, Alisa-Dariana Roman wrote:
-
-...
-
->>> +static const char *const ad7192_filter_modes_str[] = {
->>> +	[AD7192_FILTER_SINC4] =			"sinc4",
->>> +	[AD7192_FILTER_SINC3] =			"sinc3",
->>> +	[AD7192_FILTER_SINC4_CHOP] =		"sinc4+chop",
-> 
-> Is chop really a filter? I had to look it up and to me at least it
-> seems like it isn't even though one thing it does is remove
-> some types of noise.  It also removes linear offsets (some types
-> of filter kind of do that, but the affect of chop smells more like
-> a calibration tweak than a filter)  
-> 
-> Maybe we need a separate control for chop, rather than trying to
-> force it through our already complex filter type attributes?
-> 
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="62IET8pWxsXuL1RR"
+Content-Disposition: inline
+In-Reply-To: <20250501100043.325423-6-sayyad.abid16@gmail.com>
 
 
-I was looking at the datasheet for another ADC that popped up on the mailing
-list today. https://www.ti.com/lit/ds/symlink/ads1262.pdf
+--62IET8pWxsXuL1RR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It also has a chop mode and filters very similar to this one. So perhaps another
-reason to make chop a separate bool attribute that could considered a "standard"
-attribute.
+On Thu, May 01, 2025 at 03:30:43PM +0530, Sayyad Abid wrote:
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,ads1262
+
+How different is the ads1263? Do we get support for both "for free"?
+
+> +  spi-cpha:
+> +    type: boolean
+> +    description: Required for SPI mode 1 operation
+
+This should just collapse to "spi-cpha: true", cos the definition of it
+comes from spi-peripheral-props.yaml.
+
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for the reset pin (active low)
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC reference voltage. If not specified,
+> +      the internal 2.5V reference will be used.
+
+I looked this device up, I don't see an input pin called "vref" and
+there appear to be multiple reference inputs. All supplies should be
+documented.
+
+> +      ti,gain:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 5
+> +        description: |
+> +          PGA gain setting. Not applicable for temperature sensor (chann=
+el 11).
+> +          0: 1 (default)
+> +          1: 2
+> +          2: 4
+> +          3: 8
+> +          4: 16
+> +          5: 32
+
+Why can't the gain be in it's actual unit, rather than what I am
+guessing is a register value?
+
+> +  ti,data-rate:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 15
+> +    description: |
+> +      Data acquisition rate in samples per second
+> +      0: 2.5
+> +      1: 5
+> +      2: 10
+> +      3: 16.6
+> +      4: 20
+> +      5: 50
+> +      6: 60
+> +      7: 100
+> +      8: 400
+> +      9: 1200
+> +      10: 2400
+> +      11: 4800
+> +      12: 7200
+> +      13: 14400
+> +      14: 19200
+> +      15: 38400
+
+Same applies here really, except that the fractional per second rate
+would only work if the base unit was samples-per-<something sub second>,
+which might or might not be worth it.
+
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    spi {
+> +      #address-cells =3D <1>;
+> +      #size-cells =3D <0>;
+> +
+> +      ads1262: adc@0 {
+
+The label here is unused AFAICT and should be dropped.
+
+Cheers,
+Conor.
+
+> +        compatible =3D "ti,ads1262";
+> +        reg =3D <0>;
+> +        spi-max-frequency =3D <7372800>;
+> +        vref-supply =3D <&adc_vref>;
+> +        spi-cpha;
+> +        reset-gpios =3D <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +        ti,pga-bypass;
+> +        ti,data-rate =3D <15>; /* 38400 SPS */
+> +
+> +        #address-cells =3D <1>;
+> +        #size-cells =3D <0>;
+> +        #io-channel-cells =3D <1>;
+> +
+> +        /* Single-ended channel */
+> +        channel@0 {
+> +          reg =3D <0>;
+> +        };
+> +
+> +        /* Differential channel */
+> +        channel@1 {
+> +          reg =3D <1>;
+> +          diff-channels =3D <1 2>;
+> +          ti,gain =3D <2>; /* Gain of 4 */
+> +        };
+> +
+> +        /* Temperature sensor */
+> +        channel@11 {
+> +          reg =3D <11>;
+> +        };
+> +      };
+> +    };
+> +...
+> --=20
+> 2.39.5
+>=20
+
+--62IET8pWxsXuL1RR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaBOKeAAKCRB4tDGHoIJi
+0iDXAQDMeJzpK7bqks7PXJSILFx1HYJxR0frq2wqV/4eAZzXHwD8DYzj4Zw2QiD9
+uGzl1vxYuhW4ijM+iUCVHnGoSy9wkgg=
+=JpzC
+-----END PGP SIGNATURE-----
+
+--62IET8pWxsXuL1RR--
