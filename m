@@ -1,174 +1,112 @@
-Received: from mx-rz-1.rrze.uni-erlangen.de (mx-rz-1.rrze.uni-erlangen.de [131.188.11.20])
+Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020282DC76D;
-	Thu,  1 May 2025 08:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=131.188.11.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706B352F99;
+	Thu,  1 May 2025 08:05:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746086631; cv=none; b=kLw9yH7fHyZGCLNXkzGX1hxDV5pe/kjXE1p5KFYJGiiF8i25ahoUKW/oSYNa6QWIXVnx1qnkn64RD87gjXDxT27MFsc1UnEmPAiTa9k+2hZ8HbY2IaK1ZA5wb/1xKkwGGTje2f28y4XWNSTaFuc3xeMRZ5gtqu73O3UFiBMqdy8=
+	t=1746086753; cv=none; b=tRQ7qb024DOVZ9S3qhlvR5wbTFm4quKIJ4cOZQaq+IAfRFBDsQOEPi7q9EGE2ZXTcsdI3kNx6EUAMDfhyfC75QIzJ+2cZ0oW8bUowiE5/RNnFKe0iFtw4lI4WcIBpdt7YcE4gwaf8F6sk5prCk1eI4/v9Tsx77+PxTtch5hvcug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746086631; c=relaxed/simple;
-	bh=GLEgbpMEfc6DvRYVqlJnbq8YGhcyB3jB8rNmeNWMpc0=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jGw3dIJy8U/TU1GeZHr03vHga6LSJaNW9vQEKpUVFnYzovLaAFln1JdmkWPWGaUNh789LoJ8HhbE+d88WMseSPmyr0nCX4aE47Bs7RXK2IbehgL7ymehCCm43PBTakZuz1H+S//ACzezfI/961TyCyOSSaIQYDkbPghlGreZ6U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de; spf=pass smtp.mailfrom=fau.de; dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b=gWbT9+wr; arc=none smtp.client-ip=131.188.11.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fau.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fau.de
+	s=arc-20240116; t=1746086753; c=relaxed/simple;
+	bh=ccMcuDXcJUUiFHGfdCsCuXcBJFwK42HgB+FyX3k8HAk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YLgVZGot43kE+/I+t0AspGj3LJkFmhVmzHlcBG1qnZU+ceBzXXmJsaS8r/idcRygYstB4SCA/KALJbwmT19TeMQxVmC+q8agObIoy1Zgp7wibzDVPe3CX6cnwJccTxXA0GYiPP/HOlvsL/3goHhTi/aj7hkGvUcMIfKRQoYRiZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=X11sVjtD; arc=none smtp.client-ip=185.226.149.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fau.de header.i=@fau.de header.b="gWbT9+wr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fau.de; s=fau-2021;
-	t=1746086626; bh=comqgaUQOxn93ZxQu1EvnNHU0RsO6P+D6nZ/mcIInMw=;
-	h=From:To:Subject:Date:In-Reply-To:References:From:To:CC:Subject;
-	b=gWbT9+wrMh+BUdg4ZnOZY0mSr2cUtj6Z8ZocBb7DWOxuwLwvdHihDnR2ttewnrGDh
-	 k8HHeOw0vbuhqHkTlENIEK82v36G7XJnwlPZXSw+1z5k5CeUaGbDk/0YznzhjNaqkQ
-	 dbI4UzG6r7BYCudym66d1pN34Nbed8F8Z8d/4MrDD9X0h0fAAjx31+dwj4DHFJ7lHd
-	 wUA5iYkbJ6MMTpRK+VQ5x5CmT4vMAsaws4e55mSinrT92WgGHEtebEthVgKgJql4lf
-	 aWdgGrLbuOVmKP3JDenaH5oJfNAQ/h3jmU2JmmBNgzP/5Kr6+cZFHk3D/CnMcNY8+T
-	 zxv6cmzBylVXw==
-Received: from mx-rz-smart.rrze.uni-erlangen.de (mx-rz-smart.rrze.uni-erlangen.de [IPv6:2001:638:a000:1025::1e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-rz-1.rrze.uni-erlangen.de (Postfix) with ESMTPS id 4Zp64y4Fw9z8sb2;
-	Thu,  1 May 2025 10:03:46 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at boeck4.rrze.uni-erlangen.de (RRZE)
-X-RRZE-Flag: Not-Spam
-X-RRZE-Submit-IP: 2001:9e8:3636:a700:12b2:e53f:6cbc:f48c
-Received: from luis-tp.fritz.box (unknown [IPv6:2001:9e8:3636:a700:12b2:e53f:6cbc:f48c])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: U2FsdGVkX1/VyCT2/hi5OQfWV2DB4gtoSsGC7vYH9bs=)
-	by smtp-auth.uni-erlangen.de (Postfix) with ESMTPSA id 4Zp64v0sdWz8srN;
-	Thu,  1 May 2025 10:03:43 +0200 (CEST)
-From: Luis Gerhorst <luis.gerhorst@fau.de>
-To: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Xu Kuohai <xukuohai@huaweicloud.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Hari Bathini <hbathini@linux.ibm.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Shuah Khan <shuah@kernel.org>,
-	Luis Gerhorst <luis.gerhorst@fau.de>,
-	Henriette Herzog <henriette.herzog@rub.de>,
-	Saket Kumar Bhaskar <skb99@linux.ibm.com>,
-	Cupertino Miranda <cupertino.miranda@oracle.com>,
-	Jiayuan Chen <mrpre@163.com>,
-	Matan Shachnai <m.shachnai@gmail.com>,
-	Dimitar Kanaliev <dimitar.kanaliev@siteground.com>,
-	Shung-Hsi Yu <shung-hsi.yu@suse.com>,
-	Daniel Xu <dxu@dxuuu.xyz>,
-	bpf@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v3 09/11] selftests/bpf: Add test for Spectre v1 mitigation
-Date: Thu,  1 May 2025 09:36:00 +0200
-Message-ID: <20250501073603.1402960-10-luis.gerhorst@fau.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250501073603.1402960-1-luis.gerhorst@fau.de>
-References: <20250501073603.1402960-1-luis.gerhorst@fau.de>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="X11sVjtD"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uAOvT-00BnGr-0j; Thu, 01 May 2025 10:05:47 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector1; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=sJUhKrCcta0cCKfNjfc+tCMkcd0YHLjBP3lnJByQx5E=
+	; b=X11sVjtDFm8yEoNaMhpaLlXQ5Gdp5LwHcvuzebpXnDjfB7AV4Efk7x1QxEy4RRol1i9j0WIT7
+	/VvEWY/SZm7IUGiF3ycw6qozv0morKNS//I6HBI/VdAMSoIAkv/CVkIUbvcOmsSxR/rb5ObZv4ks2
+	ufbvGcgMnYvYUfYO8Xusgh54BpFsSR+Cb89aJpjz6b1eIvuP3FTRuHepZI65bv2NAuPZNKxOVtCYZ
+	6kloxVzc0a9jNrHWX/xn40UIqD3MOAaTfbX6QWC5KI11FwkEsx1ferPNNHYKDQM1TyZJLlZFzEz16
+	M1ET2wVBpwgh4Qo/VPWXGgyEUj/7SyuP+Zm5pg==;
+Received: from [10.9.9.74] (helo=submission03.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uAOvS-0007wp-N3; Thu, 01 May 2025 10:05:46 +0200
+Received: by submission03.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uAOvH-005lsv-Rc; Thu, 01 May 2025 10:05:36 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Subject: [PATCH net-next v4 0/3] vsock: SOCK_LINGER rework
+Date: Thu, 01 May 2025 10:05:21 +0200
+Message-Id: <20250501-vsock-linger-v4-0-beabbd8a0847@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAEErE2gC/13NTQ6CMBCG4auQrq0Z+kfrynsYFwJTaTTUtKTBE
+ O5u043AcvLleWchEYPDSC7VQgImF50f8yFOFemGx/hE6vp8EwZMAgdBU/Tdi75dngI1wBRKa4x
+ WHcnkE9C6ueRuZMSJjjhP5J6XwcXJh2/5k+qyl6SAZp9MNQVaC6mBa+TCsGto/XzufMkktqGsP
+ lCWqUVjse2VUErvKd9QDgfKM+37FhveSi5k86fruv4AbNsNOyYBAAA=
+X-Change-ID: 20250304-vsock-linger-9026e5f9986c
+To: Stefano Garzarella <sgarzare@redhat.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, 
+ Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+ Stefan Hajnoczi <stefanha@redhat.com>
+Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
-This is based on the gadget from the description of commit 9183671af6db
-("bpf: Fix leakage under speculation on mispredicted branches").
+Change vsock's lingerning to wait on close() until all data is sent, i.e.
+until workers picked all the packets for processing.
 
-Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+Changes in v4:
+- While in virtio, stick to virtio_transport_unsent_bytes() [Stefano]
+- Squash the indentation reduction [Stefano]
+- Pull SOCK_LINGER check into vsock_linger() [Stefano]
+- Don't explicitly pass sk->sk_lingertime [Stefano]
+- Link to v3: https://lore.kernel.org/r/20250430-vsock-linger-v3-0-ddbe73b53457@rbox.co
+
+Changes in v3:
+- Set "vsock/virtio" topic where appropriate
+- Do not claim that Hyper-V and VMCI ever lingered [Stefano]
+- Move lingering to af_vsock core [Stefano] 
+- Link to v2: https://lore.kernel.org/r/20250421-vsock-linger-v2-0-fe9febd64668@rbox.co
+
+Changes in v2:
+- Comment that some transports do not implement unsent_bytes [Stefano]
+- Reduce the indentation of virtio_transport_wait_close() [Stefano] 
+- Do not linger on shutdown(), expand the commit messages [Paolo]
+- Link to v1: https://lore.kernel.org/r/20250407-vsock-linger-v1-0-1458038e3492@rbox.co
+
+Changes in v1:
+- Do not assume `unsent_bytes()` is implemented by all transports [Stefano]
+- Link to v0: https://lore.kernel.org/netdev/df2d51fd-03e7-477f-8aea-938446f47864@rbox.co/
+
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- .../selftests/bpf/progs/verifier_unpriv.c     | 57 +++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Michal Luczaj (3):
+      vsock/virtio: Linger on unsent data
+      vsock: Move lingering logic to af_vsock core
+      vsock/test: Expand linger test to ensure close() does not misbehave
 
-diff --git a/tools/testing/selftests/bpf/progs/verifier_unpriv.c b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-index c42c3839b30c..43236b93ebb5 100644
---- a/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-+++ b/tools/testing/selftests/bpf/progs/verifier_unpriv.c
-@@ -729,4 +729,61 @@ l0_%=:	r0 = 0;						\
- "	::: __clobber_all);
- }
- 
-+SEC("socket")
-+__description("unpriv: Spectre v1 path-based type confusion of scalar as stack-ptr")
-+__success __success_unpriv __retval(0)
-+#ifdef SPEC_V1
-+__xlated_unpriv("if r0 != 0x1 goto pc+2")
-+/* This nospec prevents the exploit because it forces the mispredicted (not
-+ * taken) `if r0 != 0x0 goto l0_%=` to resolve before using r6 as a pointer.
-+ * This causes the CPU to realize that `r6 = r9` should have never executed. It
-+ * ensures that r6 always contains a readable stack slot ptr when the insn after
-+ * the nospec executes.
-+ */
-+__xlated_unpriv("nospec")
-+__xlated_unpriv("r9 = *(u8 *)(r6 +0)")
-+#endif
-+__naked void unpriv_spec_v1_type_confusion(void)
-+{
-+	asm volatile ("					\
-+	r1 = 0;						\
-+	*(u64*)(r10 - 8) = r1;				\
-+	r2 = r10;					\
-+	r2 += -8;					\
-+	r1 = %[map_hash_8b] ll;				\
-+	call %[bpf_map_lookup_elem];			\
-+	if r0 == 0 goto l2_%=;				\
-+	/* r0: pointer to a map array entry */		\
-+	r2 = r10;					\
-+	r2 += -8;					\
-+	r1 = %[map_hash_8b] ll;				\
-+	/* r1, r2: prepared call args */		\
-+	r6 = r10;					\
-+	r6 += -8;					\
-+	/* r6: pointer to readable stack slot */	\
-+	r9 = 0xffffc900;				\
-+	r9 <<= 32;					\
-+	/* r9: scalar controlled by attacker */		\
-+	r0 = *(u64 *)(r0 + 0); /* cache miss */		\
-+	if r0 != 0x0 goto l0_%=;			\
-+	r6 = r9;					\
-+l0_%=:	if r0 != 0x1 goto l1_%=;			\
-+	r9 = *(u8 *)(r6 + 0);				\
-+l1_%=:  /* leak r9 */					\
-+	r9 &= 1;					\
-+	r9 <<= 9;					\
-+	*(u64*)(r10 - 8) = r9;				\
-+	call %[bpf_map_lookup_elem];			\
-+	if r0 == 0 goto l2_%=;				\
-+	/* leak secret into is_cached(map[0|512]): */	\
-+	r0 = *(u64 *)(r0 + 0);				\
-+l2_%=:							\
-+	r0 = 0;						\
-+	exit;						\
-+"	:
-+	: __imm(bpf_map_lookup_elem),
-+	  __imm_addr(map_hash_8b)
-+	: __clobber_all);
-+}
-+
- char _license[] SEC("license") = "GPL";
+ include/net/af_vsock.h                  |  1 +
+ net/vmw_vsock/af_vsock.c                | 30 ++++++++++++++++++++++++++++++
+ net/vmw_vsock/virtio_transport_common.c | 21 ++-------------------
+ tools/testing/vsock/vsock_test.c        | 30 +++++++++++++++++++++++++++---
+ 4 files changed, 60 insertions(+), 22 deletions(-)
+---
+base-commit: deeed351e982ac4d521598375b34b071304533b0
+change-id: 20250304-vsock-linger-9026e5f9986c
+
+Best regards,
 -- 
-2.49.0
+Michal Luczaj <mhal@rbox.co>
 
