@@ -1,348 +1,202 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 947EF1C861F;
-	Thu,  1 May 2025 13:31:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746106287; cv=none; b=YKNLHmARD1M4pZkr2knjhxe7m581ijWGqpKNnl1l1mtg+pueYGip2+pqXoS0TFy9h3DVejJL97BoC9wpO6ETrMNnb7y6a1BOvG2/NqOUVARFK1CkTWCD9ya7Rhx5TARpa8vCA8CpNWN2wuGE93PbTdH8ol40hn5/FUmFi1MjpW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746106287; c=relaxed/simple;
-	bh=501iMGdvWFMVbmnY1cQW5t1rzrn7kL8WrtB7rzKbW6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qUGLa1Ndi0GeZKzWrUitUvr3pXzkCVexjAO1GsNIgMPyNFyPL5x3EjU1hyV2i6aHSrJEWjcKlDt9Q3MmAkSCWMh4FIfkt05fvOhv/a+fCCaO95T+b2lZXbW7PCgWkbiIsqC5Vwu0QWIx71gpw81SUFli3LDs4P1/oPpetn5Acig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F5911CC4;
-	Thu,  1 May 2025 06:31:16 -0700 (PDT)
-Received: from [10.1.33.27] (e122027.cambridge.arm.com [10.1.33.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5A23F5A1;
-	Thu,  1 May 2025 06:31:19 -0700 (PDT)
-Message-ID: <961bd6f8-2c0c-47d7-991d-aab7d247ffa8@arm.com>
-Date: Thu, 1 May 2025 14:31:14 +0100
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D79F1A314A;
+	Thu,  1 May 2025 13:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746106534; cv=fail; b=uwMT5a7Gg9fdShW2B464Mv8N5Rw0cgvomjrBpLnQ5Dz/8bDgkVQ+pC7cPJxHXq6fEpeVmPM2353/J8Ls/BL6BBRAwNe+ixFqZA8ss0ZpgHvWSONPNs+oUxmhiDOoEpc9FKJ/MrZymgFDE6GZ8Ukchyi/JBGj2orMOJdocq6tcE8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746106534; c=relaxed/simple;
+	bh=IBpNFoTaLLvHUJ3PztuJAJnBhccmYeFtZGBXi3aApU8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=JMCqV8AohfUGQhbabNuyykyz61z+CAbjEq2kftqtwojHLM4cYlfZWC9cO+ouH51ImhE0IdpcGo8Q3JpgaFF4VYrV/Pv5ggD/eClJ8b3Xh2aZEvI8OlKlsKVGZckLoaRnDlMgRFsOSeXiiSE8HlnQIEzDW1rwSCZStynfvmLUEmU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=jh3PkeLf; arc=fail smtp.client-ip=40.107.92.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="jh3PkeLf"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=o2PuLlKk2ZIQmYWVdwTXVHqmav4y1uzeY4pQ1a+BLZMMxOXAQ3AefbzkSbAQEM2TjaWMLx9UJkUz1pLHcdVwuW3y/7F+iasZUoqsMwmfIlcPNZz1FRiLor+vdbMt+zaAIflb93ltxojKfsxhWgUOpKrYEzIfTZjsKKeIJciFY03H5DzYt1KpwLQkENq6Sf1wpksu6HCwPaOq+BwsChUupZikNDF/NF8fdUD+ChaSuQi04njdhZZmLAsUbm+YPeKv6t4cg6HFCJ30RoIjJYwc/ZHc0RWSlFRJSWQr6DDJNaGTX+KpDjTeIDV4tv7ulu9/CylMoch8n4jKzh4Xyu2URg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=IBpNFoTaLLvHUJ3PztuJAJnBhccmYeFtZGBXi3aApU8=;
+ b=atKyW7b/MNHrXDWKlwytfKnHHMvqvT6kOYAqPdi9auJ6ojAnmAZE/B2TFtkd70EjhLWET8WLYZi2brvutXpspYAb7n0UTnN3dWure0bRW4hW5DMMenJPXba4lHiNI4xJp8nShvjXgD/g8Cky1QE2jlG+mEcm0Wkhfxct0FbUcdX6RkJ9QQp288mYzk+LKXKzesLas09z5fra9anpyQZ4Mpjd/DiJY3XxtrJhlDAXbB2tEdA08HfsmyIhf/e8OC3RpWITiM0ZtVY8hIndG6FzPBIZK7+VC8LrdmuC47+anR5y3UiTwEscBFITTN5o2ZNUKGKDxXbX5gxsMX94vYPi1A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IBpNFoTaLLvHUJ3PztuJAJnBhccmYeFtZGBXi3aApU8=;
+ b=jh3PkeLfWjstXYQjQiI+M3hk4oiACM8maYUx94kBkjCEHBnodI9yX7qhLdijwy3Ebk87/G896cqn12kRcHY3h/D92YeVGIpDaSn9AXYKDJ2uyGR1+Ay/J6FJ3dN0mBgWzQIiUzgVztxAzXNfo5GeoNOcMwz70YnAlrIvPgTbPz7/HZQUvPcsYH7zaRkNzZmTzhK/JbG+y7jyrriV+q9eRKSgHFcXH6hVIqPa7zxu72/2RrAak7dbDn+LARk5dNa6tvkZWHLIS+AuXfsjDu3Ls430rkDbS/GXHv7KVvWLtYqmNHcC753mmkY+1Cr/w5qJokj3uTlpiFJje8XR43R4ow==
+Received: from SJ2PR11MB8369.namprd11.prod.outlook.com (2603:10b6:a03:53d::16)
+ by SA1PR11MB6992.namprd11.prod.outlook.com (2603:10b6:806:2b6::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 1 May
+ 2025 13:35:28 +0000
+Received: from SJ2PR11MB8369.namprd11.prod.outlook.com
+ ([fe80::4db1:768a:9a46:3628]) by SJ2PR11MB8369.namprd11.prod.outlook.com
+ ([fe80::4db1:768a:9a46:3628%7]) with mapi id 15.20.8699.012; Thu, 1 May 2025
+ 13:35:28 +0000
+From: <Don.Brace@microchip.com>
+To: <dan.carpenter@linaro.org>, <yi.zhang@redhat.com>
+CC: <James.Bottomley@hansenpartnership.com>, <martin.petersen@oracle.com>,
+	<storagedev@microchip.com>, <linux-scsi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] scsi: smartpqi: Delete a stray tab in
+ pqi_is_parity_write_stream()
+Thread-Topic: [PATCH] scsi: smartpqi: Delete a stray tab in
+ pqi_is_parity_write_stream()
+Thread-Index: AQHbuacxzx8dFyy6P0CS3+3iv209/7O9x+H4
+Date: Thu, 1 May 2025 13:35:28 +0000
+Message-ID:
+ <SJ2PR11MB8369F6648B1B4407735D64C4E1822@SJ2PR11MB8369.namprd11.prod.outlook.com>
+References: <aBHarJ601XTGsyOX@stanley.mountain>
+In-Reply-To: <aBHarJ601XTGsyOX@stanley.mountain>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SJ2PR11MB8369:EE_|SA1PR11MB6992:EE_
+x-ms-office365-filtering-correlation-id: d44cccf5-1cef-4c10-2486-08dd88b50949
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?YqEtgMIDi/8XO73lwz02GbIaKmZpcJTY8mNaYVujyxFuinTT+hIrsxjIhD?=
+ =?iso-8859-1?Q?ZnZN/GbGoUeqVjRp5b1JBxz0AGP1AFD254EFw1LWODZggX3GM0H9guufLU?=
+ =?iso-8859-1?Q?qa0mxHSikamTYPjVi/WWXLfo2Xra1odOHWAcPl6Z7bSFqSJ3iXeNLI3U8B?=
+ =?iso-8859-1?Q?n7mDL+JH7lXJBJF3GtRmjauuoYHtO5N6SRMn50YPYYtvn9kxCMgtUC8N+E?=
+ =?iso-8859-1?Q?z4WEI/3OI4gygzEywpWeSfSjg2C6PjJZ0ovhajWsQw8LyTbHJtLugNdkuM?=
+ =?iso-8859-1?Q?q9QgbCcmzxA8D2YHBXaLB7Ee3pyLa1lb8a1YziqvUje9qX8nsySTA+99M/?=
+ =?iso-8859-1?Q?Rl/kH2zjdomeNXWyd53L/2R/dWZSpN/mEv+96UcDhq0idIzHqsD2CNuBWp?=
+ =?iso-8859-1?Q?9xGIpaBGfwxCIBVmmH/UbLp0X1TTICmWGi4QUTMaURAlpdHOQJLVIV2+9/?=
+ =?iso-8859-1?Q?R7HIwpYh2EE7yyTpqyt4rWpqGRoqefaz2H8MoAwxvyZXGkw4B2c3E6vpi4?=
+ =?iso-8859-1?Q?7gdLT/807xb3eVZ/22QqRoObs8YIUOiLcZaxCiPjSUkrmAXLR8cW2crzpi?=
+ =?iso-8859-1?Q?zWKMdJ+PY8Uq/LqowRU04F3vEGYtL0GG4VmqbI0rJwW6SVopbXnZEKLSlq?=
+ =?iso-8859-1?Q?l6UnUgJFXvrcuJblCl6KT8KYElPw9qxmYxmKIMUF8sKuAiIM7AQNnw7VQG?=
+ =?iso-8859-1?Q?v0P66kad64GmRPEO2YNfsIOVVIYEH4bSBAYhaZlF0kmgPJXIqD3U0xi4Uu?=
+ =?iso-8859-1?Q?lHE1FHOZg5JUI6l7icqlQM7RgqJscSdTNBDtVy74uiyPJQP3bXOItMlKmw?=
+ =?iso-8859-1?Q?6H/isk+c8i81R1gtRgUpf38s/qvhwNCSzixnCbrgQ9VO8nTQQDgyGDu1sn?=
+ =?iso-8859-1?Q?Klji4xsY3GrAzRWwGp1zPnQnvVX7X2U3+yz1PMQ7Zmg5nQP5ZsjFZcCajq?=
+ =?iso-8859-1?Q?OYedWlTHIryMhVzZV86USp2H5hFoa2gLozrEdqtzPtWm2t2N2PSCqjw/kQ?=
+ =?iso-8859-1?Q?KzewHOs/5DJ8JOW/U4iA945aGOlAmyC6R05lGwXWlnO8DI4G7NKPnG7CYh?=
+ =?iso-8859-1?Q?BIvlvp8m+y9AdNQkEgx8HTDfb7m+inVixQsbrJkDwx3B4fNC7a5aKvwJ+S?=
+ =?iso-8859-1?Q?0uL1Hr7JgmDh3otbYWVXEcBA8kln6S1HnmblQQoh1qTqkb5JEVtMF8AJS0?=
+ =?iso-8859-1?Q?Tx4tM0EH4ZXgiBouZol01UmQuh6hGdOdtuCBV6WP6e/PksG5tsGhOrk5BR?=
+ =?iso-8859-1?Q?XyxXT9S9InWUaVj0E0QqDP0ORd+CVA72a5BMrcXsf1PXou0xTmQHW6mihT?=
+ =?iso-8859-1?Q?gHZivEViqBK9pArQ3tEVePWQFz2xwUYj2YPzfbzuv+s7Ua0CZMWgRtM5mg?=
+ =?iso-8859-1?Q?mtILL7hbRFzNMgoWFjDjKFeFGHYu7W/kA8xu6o07nXsyzC0FuS94MqpGXU?=
+ =?iso-8859-1?Q?ikTjvrSaT43lBSu6u5IoGLvkmWuTJ2pWdE/UWCp6ZUiLtzSqhRo/NPZU0f?=
+ =?iso-8859-1?Q?0orp9tfxs0oIcNpM4FQIddsyzqj/9yTavt1N6UdDU7gg=3D=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8369.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?MtobPTc5G58ivRwPcPdy6lMW8p//gUIViUOU/L3/kOP4hvwUy0FO7fezex?=
+ =?iso-8859-1?Q?TpFNyxKc+OfUlyuxCGe5CVw8IlEpgEnl0CoXB9c7Hi448qKX4PBomsK2tW?=
+ =?iso-8859-1?Q?TbSLoJ4Odn9/oHStx61nzV+l/2JlOtpo/HPTjHH2Jis3qgrRAQKtezEYI8?=
+ =?iso-8859-1?Q?pPPOyGhrGhsq5HC2d2K6Um4R2hkpJs66zaZEBeeMmtXzA+Ej78/mVuXq15?=
+ =?iso-8859-1?Q?09XVkWfapD58z4hL24F0acsbEHg5MnyNqQyfNT3bLCc6OR35ix/k8oTVzc?=
+ =?iso-8859-1?Q?nkz0lXTr5e1Euw21KiPztLSgZvBSUEth4J40YMIoXQ3vQzSDdJyEhSR+2n?=
+ =?iso-8859-1?Q?25K6NzfKkEvQJiFwR/h2X7EdHSoD6ZnFk3mx1jLosJ0xvwhFYLD7gh3sUg?=
+ =?iso-8859-1?Q?pSOJxFErfYZ89C0Ratref1zhwrBNX7CLnZiimeylDp1aZ6JkYGfePaGnUs?=
+ =?iso-8859-1?Q?6cWcFqQ32H2pbKVuZDNybOBx2UJlFpTcEBIEZ5n7cZfdzd77DdgV0cfLGg?=
+ =?iso-8859-1?Q?bii8LlVWJnx0agbJX3gdCOTPeAlVLj/D5KZFrODICg4pUmFkTSg0IaDucm?=
+ =?iso-8859-1?Q?pvsw2STWBYeUnqX8DvRg7K87DSPCKtxQrJ1rJzze5iVeHKU/ZxuyH4doL7?=
+ =?iso-8859-1?Q?hqnYGaTt0DeMq+Mpq7OMNNXL1HveOFWtnslIDq285aKLy2c2Sg/aYMvsH8?=
+ =?iso-8859-1?Q?j57nIpgBGtisPZq9Uhtg3iudUo8Do6PAuMsawSJ15xQMZioNYuVep/v0DV?=
+ =?iso-8859-1?Q?7vvnXaW7jzDo6GuNriuY/9+R8MT/a271pdHedJwOrzKcGUlTzTxtlnGflT?=
+ =?iso-8859-1?Q?G1oPTw288m+RA0uym/XLwfaviGekdhDsh9ZIdQawqsQ/eRSUNYbfpzWiy5?=
+ =?iso-8859-1?Q?VfLeLyvtlgDVF46OGujdiN22sHAPV6INw0902xBNIlA9eV3jZ+QW59W6C4?=
+ =?iso-8859-1?Q?lWW3i7PPP0orCRF7803a5W/8/uZ70lCcBdxUsuenDfUXPU6E0Y2e1MyTjQ?=
+ =?iso-8859-1?Q?xUC8JXN2U9Jq8jin4cwpTfLCs1ercifIm0y+Yie4W0QVZ4H7BBXMdbZvaR?=
+ =?iso-8859-1?Q?L88/osp6ynZHusONCPx3zn6+vtoMGOPqZcmAowZTqsbHsD90iaFvBdE26E?=
+ =?iso-8859-1?Q?iNBKAhPPCESU4KP0eCkR4Mdh/Uw3Q5bJWTqetAQFfy8w/gMCsJJwci37Ug?=
+ =?iso-8859-1?Q?N7umz/4XigQPJZArjkRSQp7XZZlmJFO26GN9LUTN0R9zy/jLyr8NbKCyVP?=
+ =?iso-8859-1?Q?OkkLTDlhL3kPyuI809IzyNe/n6Mci8ErD5Eh75QCQJtHu2l9m4NgzGSNNP?=
+ =?iso-8859-1?Q?JEhsVff6BoTN3tUtYtxXhrfCNafddexDsS7UkXZmDput+HdFuGhNr5ns5T?=
+ =?iso-8859-1?Q?ENB5RoyOeOceJxogaVK4jg+9ntSk4m/dqjJsP/WyAwSsD82mRoeGblkqLt?=
+ =?iso-8859-1?Q?6ikpFRhkSRpQvK0tkxLbWF1MKIbGWsip7h2QujkDfC//nRK2tRvUNi0fA0?=
+ =?iso-8859-1?Q?3arb8ICe5kukCXi6sYOpjg3Kpben+wP4vTl+ECLDdgMukDbEe3P9NyGKzr?=
+ =?iso-8859-1?Q?rjCJMFnNFCzwD020hqpcpidOwb3jFOwPD43hZufPtolTlmT3URjfokLDBG?=
+ =?iso-8859-1?Q?G++lcJmqMGoV3mAcycKkcs3OhEy2zcDRaP?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 06/43] arm64: RME: Define the user ABI
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-7-steven.price@arm.com>
- <35a91f8c-cdf6-4595-9ed2-c792a8e9d679@arm.com>
-From: Steven Price <steven.price@arm.com>
-Content-Language: en-GB
-In-Reply-To: <35a91f8c-cdf6-4595-9ed2-c792a8e9d679@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8369.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d44cccf5-1cef-4c10-2486-08dd88b50949
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 May 2025 13:35:28.2141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hAlT5zCoLGR7RktqzbR5CF8GpnhD0TIgTw888966q6xA4QUHYzN8sYyaBNt3FDNWLPoqB3YThKEjNsN7GLg8bA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB6992
 
-On 28/04/2025 09:58, Suzuki K Poulose wrote:
-> Hi Steven
-> 
-> On 16/04/2025 14:41, Steven Price wrote:
->> There is one (multiplexed) CAP which can be used to create, populate and
->> then activate the realm.
->>
->> Co-developed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Steven Price <steven.price@arm.com>
->> ---
->> Changes since v7:
->>   * Add documentation of new ioctls
->>   * Bump the magic numbers to avoid conflicts
->> Changes since v6:
->>   * Rename some of the symbols to make their usage clearer and avoid
->>     repetition.
->> Changes from v5:
->>   * Actually expose the new VCPU capability (KVM_ARM_VCPU_REC) by bumping
->>     KVM_VCPU_MAX_FEATURES - note this also exposes KVM_ARM_VCPU_HAS_EL2!
->> ---
->>   Documentation/virt/kvm/api.rst    | 70 +++++++++++++++++++++++++++++++
->>   arch/arm64/include/uapi/asm/kvm.h | 49 ++++++++++++++++++++++
->>   include/uapi/linux/kvm.h          | 10 +++++
->>   3 files changed, 129 insertions(+)
->>
->> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/
->> api.rst
->> index 1f8625b7646a..99ba6c82cf37 100644
->> --- a/Documentation/virt/kvm/api.rst
->> +++ b/Documentation/virt/kvm/api.rst
->> @@ -3527,6 +3527,11 @@ Possible features:
->>             - the KVM_REG_ARM64_SVE_VLS pseudo-register is immutable,
->> and can
->>               no longer be written using KVM_SET_ONE_REG.
->>   +    - KVM_ARM_VCPU_REC: Allocate a REC (Realm Execution Context)
->> for this
->> +      VCPU. This must be specified on all VCPUs created in a Realm VM.
->> +      Depends on KVM_CAP_ARM_RME.
->> +      Requires KVM_ARM_VCPU_FINALIZE(KVM_ARM_VCPU_REC).
->> +
->>   4.83 KVM_ARM_PREFERRED_TARGET
->>   -----------------------------
->>   @@ -5098,6 +5103,7 @@ Recognised values for feature:
->>       =====      ===========================================
->>     arm64      KVM_ARM_VCPU_SVE (requires KVM_CAP_ARM_SVE)
->> +  arm64      KVM_ARM_VCPU_REC (requires KVM_CAP_ARM_RME)
->>     =====      ===========================================
->>     Finalizes the configuration of the specified vcpu feature.
->> @@ -6452,6 +6458,30 @@ the capability to be present.
->>     `flags` must currently be zero.
->>   +4.144 KVM_ARM_VCPU_RMM_PSCI_COMPLETE
->> +------------------------------------
->> +
->> +:Capability: KVM_CAP_ARM_RME
->> +:Architectures: arm64
->> +:Type: vcpu ioctl
->> +:Parameters: struct kvm_arm_rmm_psci_complete (in)
->> +:Returns: 0 if successful, < 0 on error
->> +
->> +::
->> +
->> +  struct kvm_arm_rmm_psci_complete {
->> +    __u64 target_mpidr;
->> +    __u32 psci_status;
->> +    __u32 padding[3];
->> +  };
->> +
->> +Where PSCI functions are handled by user space, the RMM needs to be
->> informed of
->> +the target of the operation using `target_mpidr`, along with the status
->> +(`psci_status`). The RMM v1.0 specification defines two functions
->> that require
->> +this call: PSCI_CPU_ON and PSCI_AFFINITY_INFO.
->> +
->> +If the kernel is handling PSCI then this is done automatically and
->> the VMM
->> +doesn't need to call this ioctl.
->>     .. _kvm_run:
->>   @@ -8280,6 +8310,46 @@ aforementioned registers before the first
->> KVM_RUN. These registers are VM
->>   scoped, meaning that the same set of values are presented on all
->> vCPUs in a
->>   given VM.
->>   +7.38 KVM_CAP_ARM_RME
->> +--------------------
->> +
->> +:Architectures: arm64
->> +:Target: VM
->> +:Parameters: args[0] provides an action, args[1] points to a
->> structure in
->> +         memory for some actions.
->> +:Returns: 0 on success, negative value on error
->> +
->> +Used to configure and set up the memory for a Realm. The available
->> actions are:
->> +
->> +=================================
->> =============================================
->> + KVM_CAP_ARM_RME_CONFIG_REALM     Takes struct arm_rme_config as
->> args[1] and
->> +                                  configures realm parameters prior
->> to it being
->> +                                  created.
->> +
->> +                                  Options are ARM_RME_CONFIG_RPV to
->> set the
->> +                                  "Realm Personalization Value" and
->> +                                  ARM_RME_CONFIG_HASH_ALGO to set the
->> hash
->> +                                  algorithm.
->> +
->> + KVM_CAP_ARM_RME_CREATE_REALM     Request the RMM create the realm.
->> The realm's
-> 
-> minor nit: s/RMM create/RMM to create/
-
-Ack
-
-> Or may be rephrase it:
-> 
-> Request the RMM to create the Realm with the configured parameters.
-> 
-> 
->> +                                  configuration parameters must be
->> set first.
->> +
->> + KVM_CAP_ARM_RME_INIT_RIPAS_REALM Takes struct arm_rme_init_ripas as
->> args[1]
->> +                                  and sets the RIPAS (Realm IPA
->> State) to
->> +                                  RIPAS_RAM of a specified area of
->> the realm's
->> +                                  IPA.
->> +
->> + KVM_CAP_ARM_RME_POPULATE_REALM   Takes struct arm_rme_init_ripas as
->> args[1]
-> 
-> nit: struct arm_rme_populate_realm
-
-Copy/paste error - thanks for spotting.
-
->> +                                  and populates a region of protected
->> address
->> +                                  space by copying the data from the
->> shared
->> +                                  alias.
->> +
->> + KVM_CAP_ARM_RME_ACTIVATE_REALM   Request the RMM activate the realm. No
-> 
-> s/the RMM/the RMM to/
-
-Ack
-
->> +                                  further changes can be made to the
->> realm's
->> +                                  configuration, and VCPUs are not
->> permitted to
->> +                                  enter the realm until it has been
->> activated.
-> 
-> minor nit: this sounds as if "configurations" (of parameters)  are
-> possible after the CREATE_REALM and before ACTIVATE_REALM ? Could we
-> also make it clear that the VCPUs must have been created before ACTIVATE ?
-> 
-> 
-> May be rephrase it to:
-> 
-> No changes can be made to Realm's memory (including the IPA state). No
-> new VCPUs can be created after this step.
-
-I was attmepting to include that CONFIG_REALM cannot be called. How about:
-
-	Request the RMM to activate the realm. No
-	changes can be made to the Realm's memory,
-	IPA state or configuration parameters.  No
-	new VCPUs can be created after this step.
-
->> +=================================
->> =============================================
->> +
->>   8. Other capabilities.
->>   ======================
->>   diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/
->> uapi/asm/kvm.h
->> index af9d9acaf997..b57712880605 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -106,6 +106,7 @@ struct kvm_regs {
->>   #define KVM_ARM_VCPU_PTRAUTH_GENERIC    6 /* VCPU uses generic
->> authentication */
->>   #define KVM_ARM_VCPU_HAS_EL2        7 /* Support nested
->> virtualization */
->>   #define KVM_ARM_VCPU_HAS_EL2_E2H0    8 /* Limit NV support to E2H
->> RES0 */
->> +#define KVM_ARM_VCPU_REC        9 /* VCPU REC state as part of Realm */
->>     struct kvm_vcpu_init {
->>       __u32 target;
->> @@ -429,6 +430,54 @@ enum {
->>   #define   KVM_DEV_ARM_VGIC_SAVE_PENDING_TABLES    3
->>   #define   KVM_DEV_ARM_ITS_CTRL_RESET        4
->>   +/* KVM_CAP_ARM_RME on VM fd */
->> +#define KVM_CAP_ARM_RME_CONFIG_REALM        0
->> +#define KVM_CAP_ARM_RME_CREATE_REALM        1
->> +#define KVM_CAP_ARM_RME_INIT_RIPAS_REALM    2
->> +#define KVM_CAP_ARM_RME_POPULATE_REALM        3
->> +#define KVM_CAP_ARM_RME_ACTIVATE_REALM        4
->> +
->> +/* List of configuration items accepted for
->> KVM_CAP_ARM_RME_CONFIG_REALM */
->> +#define ARM_RME_CONFIG_RPV            0
->> +#define ARM_RME_CONFIG_HASH_ALGO        1
->> +
->> +#define ARM_RME_CONFIG_MEASUREMENT_ALGO_SHA256        0
->> +#define ARM_RME_CONFIG_MEASUREMENT_ALGO_SHA512        1
-> 
-> minor nit:
-> May be we could rename this to CONFIG_HASH_ALGO_* to align with the
-> RMM spec (btw which also moved from measurement to hash) and the
-> parameter.
-
-Ah, I must have missed that rename in the spec - yes that makes sense,
-I've generally tried to stick closely to the naming in the spec.
-
-Thanks,
-Steve
-
-> Suzuki
-> 
-> 
->> +
->> +#define ARM_RME_CONFIG_RPV_SIZE 64
->> +
->> +struct arm_rme_config {
->> +    __u32 cfg;
->> +    union {
->> +        /* cfg == ARM_RME_CONFIG_RPV */
->> +        struct {
->> +            __u8    rpv[ARM_RME_CONFIG_RPV_SIZE];
->> +        };
->> +
->> +        /* cfg == ARM_RME_CONFIG_HASH_ALGO */
->> +        struct {
->> +            __u32    hash_algo;
->> +        };
->> +
->> +        /* Fix the size of the union */
->> +        __u8    reserved[256];
->> +    };
->> +};
->> +
->> +#define KVM_ARM_RME_POPULATE_FLAGS_MEASURE    (1 << 0)
->> +struct arm_rme_populate_realm {
->> +    __u64 base;
->> +    __u64 size;
->> +    __u32 flags;
->> +    __u32 reserved[3];
->> +};
->> +
->> +struct arm_rme_init_ripas {
->> +    __u64 base;
->> +    __u64 size;
->> +    __u64 reserved[2];
->> +};
->> +
->>   /* Device Control API on vcpu fd */
->>   #define KVM_ARM_VCPU_PMU_V3_CTRL    0
->>   #define   KVM_ARM_VCPU_PMU_V3_IRQ    0
->> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->> index b6ae8ad8934b..0b8479985581 100644
->> --- a/include/uapi/linux/kvm.h
->> +++ b/include/uapi/linux/kvm.h
->> @@ -930,6 +930,7 @@ struct kvm_enable_cap {
->>   #define KVM_CAP_X86_APIC_BUS_CYCLES_NS 237
->>   #define KVM_CAP_X86_GUEST_MODE 238
->>   #define KVM_CAP_ARM_WRITABLE_IMP_ID_REGS 239
->> +#define KVM_CAP_ARM_RME 240
->>     struct kvm_irq_routing_irqchip {
->>       __u32 irqchip;
->> @@ -1582,4 +1583,13 @@ struct kvm_pre_fault_memory {
->>       __u64 padding[5];
->>   };
->>   +/* Available with KVM_CAP_ARM_RME, only for VMs with
->> KVM_VM_TYPE_ARM_REALM  */
->> +struct kvm_arm_rmm_psci_complete {
->> +    __u64 target_mpidr;
->> +    __u32 psci_status;
->> +    __u32 padding[3];
->> +};
->> +
->> +#define KVM_ARM_VCPU_RMM_PSCI_COMPLETE    _IOW(KVMIO, 0xd6, struct
->> kvm_arm_rmm_psci_complete)
->> +
->>   #endif /* __LINUX_KVM_H */
-> 
-
+=0A=
+________________________________________=0A=
+From:=A0Dan Carpenter <dan.carpenter@linaro.org>=0A=
+Sent:=A0Wednesday, April 30, 2025 3:09 AM=0A=
+To:=A0Yi Zhang <yi.zhang@redhat.com>=0A=
+Cc:=A0Don Brace - C33706 <Don.Brace@microchip.com>; James E.J. Bottomley <J=
+ames.Bottomley@hansenpartnership.com>; Martin K. Petersen <martin.petersen@=
+oracle.com>; storagedev <storagedev@microchip.com>; linux-scsi@vger.kernel.=
+org <linux-scsi@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kerne=
+l@vger.kernel.org>; kernel-janitors@vger.kernel.org <kernel-janitors@vger.k=
+ernel.org>=0A=
+Subject:=A0[PATCH] scsi: smartpqi: Delete a stray tab in pqi_is_parity_writ=
+e_stream()=0A=
+=A0=0A=
+EXTERNAL EMAIL: Do not click links or open attachments unless you know the =
+content is safe=0A=
+=0A=
+We accidentally intended this line an extra tab.=A0 Delete the tab.=0A=
+=0A=
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>=0A=
+=0A=
+Thank you for doing this Dan.=0A=
+Don=0A=
+=0A=
+=0A=
+---=0A=
+=A0drivers/scsi/smartpqi/smartpqi_init.c | 2 +-=0A=
+=A01 file changed, 1 insertion(+), 1 deletion(-)=0A=
+=0A=
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/=
+smartpqi_init.c=0A=
+index 93e6c777a01e..1d784ee7671c 100644=0A=
+--- a/drivers/scsi/smartpqi/smartpqi_init.c=0A=
++++ b/drivers/scsi/smartpqi/smartpqi_init.c=0A=
+@@ -6004,7 +6004,7 @@ static bool pqi_is_parity_write_stream(struct pqi_ctr=
+l_info *ctrl_info,=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pqi_s=
+tream_data->next_lba =3D rmd.first_block +=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 rmd.block_cnt;=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 pqi_s=
+tream_data->last_accessed =3D jiffies;=0A=
+-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
+=A0=A0=A0=A0=A0=A0 per_cpu_ptr(device->raid_io_stats, raw_smp_processor_id(=
+))->write_stream_cnt++;=0A=
++=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 per_cpu=
+_ptr(device->raid_io_stats, raw_smp_processor_id())->write_stream_cnt++;=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 retur=
+n true;=0A=
+=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 }=0A=
+=0A=
+--=0A=
+2.47.2=0A=
