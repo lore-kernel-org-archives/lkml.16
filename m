@@ -1,90 +1,414 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977C11F582F
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3FFB674
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 20:34:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746131681; cv=none; b=H2HAD1YWZ8ldy4dmyjqMDqBB/hL9e5I0FinnkJHu6LCLxeS8/l24RpTzIDFSGeZ0FZECLrQWWqAeFHcT/eTgp80B5pXXv3Nil/Jn5zY8YETOWU24u88mWY072o4MauNytNlB41qJFTBhsdNQRqAsfyE6UJp1kr5/oNI8FkPHzZ0=
+	t=1746131681; cv=none; b=W+NaY1ps2FiTAiUMwR4Ds6wP0/Sl6aQu2YbUJr15HXY4nIPQJq19bllsDa0SwDFBCdHyHMQ6IF+3LlVSkzZoOwQCpKOkKm6TFs9fjdtTfY+eOe8+EAHs3AJUkBa/sK6sGiOXnA4AHqPQYKFsrxvAH9frxbtRzdXA4EqNj7oVZ+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746131681; c=relaxed/simple;
-	bh=8pF1wWpVwTMd7z0FTKQe8nYgw+2TdAxHhQ+Tcw3TpA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PbHEkikwxMtjTuWPRg/etB91dRoYtfsMRKm7uMYFYJAWBR5+y4lxBWNH1LeyA34OvFjfEpyPeQ+MjI0pNliEqiCJ+pHUtXIR/EyTdVrFn/YzmcubEAUdHpgFao+s3vIKHNMNpVZxn0z/MuDiCIwGgryfcD1NRtQkm0wtdCzdcns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=suVW45fC; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=hU1GPYOS/p1CqrHi+G/ryco1Fmo8RhxEJs2RLJWMe64=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cG2VSMlvCzRBjJNPQyNyPEri7+bc6rdQP1K272gzVKimZiBrmgw8f7ZRlT1c6xfrtSBqSUC4VXaFEYTJaMuxZMG0UQEIJnXd30p/STmCcIxEozlDtSScnHRLWZi/TwmXPoQSV+1UoelL7vS07FFE7puZcXFuZr5kQVNHoFOx3EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JoO3i/OV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="suVW45fC"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-60402c94319so927486eaf.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:34:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746131678; x=1746736478; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=s2/TuQL3kQKm2Ps4XEUaXLRCzG1Av6dinL8AdUC/eeo=;
-        b=suVW45fC2QAOMX2j/ERCAKJ4AkCkIlmTD19KOe9xxQduwjhLEWOOrSmugompilQfyL
-         mYToKXYBINzSUwB7suMoA9wwgAzCTejNCKdtbnHdJ7kbOVCDmugy6FxMD2uQmhYpz+dI
-         yk6u+MUYxZ5WRc4svO+JX91J92X9c6NZw6bEpCNrfpgU6B6oi7mARNe83mbg1mehSiuz
-         ydoU9mzIV0JCRtUud89C51cN5zEajESLmRUi1ZDqwJJZxczWjvZ26h1kl9N5VRK25X4P
-         pWtSeIo8Wk+V+CT7q1acuD4fl/30T7Urtbq+qkMLcCkj4yNA/hgbrXUIqf873o26/puG
-         UGmg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JoO3i/OV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746131677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qylf8yURimfWi0owjqfP15rhCmH9Mk/8UKHeIezSz1M=;
+	b=JoO3i/OVIt13HFhUSR1H8OX4ljm53yO20sGkjta18r4zae6YWb2RGO62UWZUaOMtF/GTYT
+	BwyJH1okNfIhbvpbQ154FkiqPmP7DLmWlygnXSXHZfE/LeWMtqVL6gkKJtp1w0+MBZrqCE
+	OG/Zb7yCWv5kch4q/ujalQgnEE2/iqI=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-107-Z2-X99xlMx6wHJXEqznQAg-1; Thu, 01 May 2025 16:34:36 -0400
+X-MC-Unique: Z2-X99xlMx6wHJXEqznQAg-1
+X-Mimecast-MFC-AGG-ID: Z2-X99xlMx6wHJXEqznQAg_1746131676
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c7c30d8986so468039985a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 13:34:36 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746131678; x=1746736478;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=s2/TuQL3kQKm2Ps4XEUaXLRCzG1Av6dinL8AdUC/eeo=;
-        b=ZbxlW0PebnwDu+kxiVRwe8/fzBT8nuPJCoY1Wv9IPLtMsme7GHCgJGAALL1vFmULls
-         7wkRDM1O1jxHhAfsc/jjP5zML1qMtEhgeaJ0ilnnHTyKq7C9Yfsd2wCNG8L2bN9WaTl2
-         jl8BvoLYkRmVsrL608Ls4GUkZ45iiFdJpapJoH7bMWl1ktu2Kuf9C6BPUr2M0k0vBupO
-         itmkPoq6wn4kq0RgxCdw0qc29N0E5IGIaU0RO/FWGw6qn/wYUZuihjCmJjJrn3Cuaiig
-         ywriegxpBide8huFJzw1T6g0+UDteeVXmM3ofd2N9RS271uVLDKO/omqthiCwl8mGvUN
-         pI8g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8cuj1FSKRLh24zWX4vFFdDLbgZB+losqp2POsusIp1GtHXrixM9sGqSenSGkrfjuSDGWvRvn/iyIN9CA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1/EuQs0lWyuiLxlQRvt4M9wKRYZlYJNA2gJ9zVHCZA7GnfW9m
-	HuEO/7Y0C19updMPdr573nOoH9fnoLrxk51zO2jnqB7rphryLP+aP07izrvoDDRL5eWDJ1E/CP3
-	oe/IcfJRuZcMAhfUP7hvwV3QIM2SOqP5d1HMn0A==
-X-Gm-Gg: ASbGncuWukAg1aNlY8YVxCqbMZ+aw3ETufaE169e6nAq3bVwj46pasZVgG1MENQe7oC
-	fZ0yPk4Nrz4dC6H5x1vV/KeV0mcLTTI2q1eaBDrJqANw8UP7TYFZGtae9XAsR5Gr+QgSTGRtCeZ
-	jUCv6BTq/hhRENiR4AjbXprA==
-X-Google-Smtp-Source: AGHT+IF6bq7NXLJi5546fpk08Q9+VHouk/Ivf8VOZeleLm+nJv5PjsAxN/cnoxBRn6+mutu/ZCv+/Az9E+zhUFk9998=
-X-Received: by 2002:a05:6871:7419:b0:2d4:d820:6d82 with SMTP id
- 586e51a60fabf-2dab3313467mr143467fac.26.1746131678613; Thu, 01 May 2025
- 13:34:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746131676; x=1746736476;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qylf8yURimfWi0owjqfP15rhCmH9Mk/8UKHeIezSz1M=;
+        b=Yagizd4TNT/e6kUA2+HKph7zFRkff7p8caUlOSaQJ6IC0y7WTEQ+6hNS/H4krAIpRq
+         9uWXIiNoWqcEgunKXR9GMt/68N0Ja6/URmGbSYLsazdgk/TUNGIX3iY1p+n10/UvZ490
+         /KQvo4xgLPbq2IGrVw7iDUtSqnfsYSOqGhe/L0YbjnCsV0AHBAZmv2DTQusE+KVKPJpo
+         hf24H6RGPSyQSg5PyiKwaWhzVReJK/JQ6Z4f9bfRLz0ObTcJjo4u6f/xzZdjcAZp/tef
+         oe28vFBSkmzTOpyh6pgCc0iLVBYLILkdYtHuFtdffIa3o76ua3IE800rR+1gSLwxUzny
+         lpEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXobii3tqqkgnyJKLnZGjAcqIJQaBfCrsnaKdF783uug4BH0E2JEfbGqy5ekUjRPI83UroELnVzWektBX0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrJGVxd03ttySMSApRgVeT/TJnmXbFOG54l/4CAM56jDQr1572
+	HR+D6KGVC8q0nJ8An53uLg0qSnket1n9ygrTWDWyBxyBAQCkRcF461K/J2+yGHtrr1dnpL6y0KX
+	FBRiFZVjogRV1Oq426Nc2dT8w8Kcb0Nu8dLGSQBTyHpLedUj4Bb8ZvrfT3Li/2g==
+X-Gm-Gg: ASbGncvFAkDJ/1Nt1uLdQ0qMoK2DliZIkuHTGGqINscSmNZFELBOYcdUCqLGLaHcyfn
+	hwA8dSGaf0hte5bcBcz9x23mZwYLjC9H1ZD+sVpJ0Cc8dFktrCYW19zU4hul8M76x3zo5Sh1ed4
+	GaVpiU8/eqe9IuSYLlTKT1i/xTZUnyobVbJVVzhaFWOWLtVsuV5mGd8gpnLLrhi8Rqu+XEGelJl
+	Sf6SDvrx1sIRMCEtSSt8UC9P6wjX8BG+M1fKT8L+E9jS1d+iYXCpj39TTq/0+llRbjNtoQZwYg4
+	0opaIQ2XLZtpRGe6JYWSMg6MwMhOVi0G1/aaqXsRLl83CkSqVjQ/kJjB35g=
+X-Received: by 2002:a05:620a:2415:b0:7c5:9fd3:a90b with SMTP id af79cd13be357-7cad5bbaa29mr64560985a.47.1746131675901;
+        Thu, 01 May 2025 13:34:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHnJML61DpLHuJzY1vxpiK5BGDB0Ts3eXsJDqN3rpjbD2GVzXfb/Uqm5TI0zC7PQNvGmIk1Jw==
+X-Received: by 2002:a05:620a:2415:b0:7c5:9fd3:a90b with SMTP id af79cd13be357-7cad5bbaa29mr64557085a.47.1746131675449;
+        Thu, 01 May 2025 13:34:35 -0700 (PDT)
+Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7cad23b51f9sm88272585a.21.2025.05.01.13.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 13:34:35 -0700 (PDT)
+Message-ID: <517ee0b7ba1a68a63e9e1068ec2570c62471d695.camel@redhat.com>
+Subject: Re: [PATCH 1/3] x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write
+ with access functions
+From: mlevitsk@redhat.com
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, kvm@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+ Paolo Bonzini <pbonzini@redhat.com>, x86@kernel.org, Sean Christopherson
+ <seanjc@google.com>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar
+ <mingo@redhat.com>,  linux-kernel@vger.kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>
+Date: Thu, 01 May 2025 16:34:34 -0400
+In-Reply-To: <1a0325af-f264-47de-b9f7-da9721366c20@linux.intel.com>
+References: <20250416002546.3300893-1-mlevitsk@redhat.com>
+	 <20250416002546.3300893-2-mlevitsk@redhat.com>
+	 <1a0325af-f264-47de-b9f7-da9721366c20@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-1.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-0-1bcc44fb1d55@linaro.org>
- <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-5-1bcc44fb1d55@linaro.org>
-In-Reply-To: <20250429-contrib-pg-cpu-hotplug-suspend2ram-fixes-v1-v3-5-1bcc44fb1d55@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Thu, 1 May 2025 21:34:27 +0100
-X-Gm-Features: ATxdqUG_Q1uY69qq7IbymtjMCwucexqjDWrXAetFETrm0a0bcDxzCmS7-g07qNE
-Message-ID: <CADrjBPrRmQKvuTMZXAF+gVgMzkDs1=9LkwrW7CHGVEYG8c8bsg@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] soc: samsung: exynos-pmu: enable CPU hotplug
- support for gs101
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Alim Akhtar <alim.akhtar@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org, willmcvicker@google.com, 
-	kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hi folks,
+On Wed, 2025-04-23 at 17:51 +0800, Mi, Dapeng wrote:
+> The shortlog "x86: KVM: VMX: Wrap GUEST_IA32_DEBUGCTL read/write with
+> access functions" doesn't follow Sean's suggestion
+> (https://github.com/kvm-x86/linux/blob/next/Documentation/process/maintai=
+ner-kvm-x86.rst#shortlog).
+> Please modify. Thanks.
+>=20
+>=20
+> On 4/16/2025 8:25 AM, Maxim Levitsky wrote:
+> > Instead of reading and writing GUEST_IA32_DEBUGCTL vmcs field directly,
+> > wrap the logic with get/set functions.
+> >=20
+> > Also move the checks that the guest's supplied value is valid to the ne=
+w
+> > 'set' function.
+> >=20
+> > In particular, the above change fixes a minor security issue in which L=
+1
+> > hypervisor could set the GUEST_IA32_DEBUGCTL, and eventually the host's
+> > MSR_IA32_DEBUGCTL to any value by performing a VM entry to L2 with
+> > VM_ENTRY_LOAD_DEBUG_CONTROLS set.
+> >=20
+> > Signed-off-by: Maxim Levitsky <mlevitsk@redhat.com>
+> > ---
+> >  arch/x86/kvm/vmx/nested.c    | 15 +++++++---
+> >  arch/x86/kvm/vmx/pmu_intel.c |  9 +++---
+> >  arch/x86/kvm/vmx/vmx.c       | 58 +++++++++++++++++++++++-------------
+> >  arch/x86/kvm/vmx/vmx.h       |  3 ++
+> >  4 files changed, 57 insertions(+), 28 deletions(-)
+> >=20
+> > diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+> > index e073e3008b16..b7686569ee09 100644
+> > --- a/arch/x86/kvm/vmx/nested.c
+> > +++ b/arch/x86/kvm/vmx/nested.c
+> > @@ -2641,6 +2641,7 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu, =
+struct vmcs12 *vmcs12,
+> >  	struct vcpu_vmx *vmx =3D to_vmx(vcpu);
+> >  	struct hv_enlightened_vmcs *evmcs =3D nested_vmx_evmcs(vmx);
+> >  	bool load_guest_pdptrs_vmcs12 =3D false;
+> > +	u64 new_debugctl;
+> > =20
+> >  	if (vmx->nested.dirty_vmcs12 || nested_vmx_is_evmptr12_valid(vmx)) {
+> >  		prepare_vmcs02_rare(vmx, vmcs12);
+> > @@ -2653,11 +2654,17 @@ static int prepare_vmcs02(struct kvm_vcpu *vcpu=
+, struct vmcs12 *vmcs12,
+> >  	if (vmx->nested.nested_run_pending &&
+> >  	    (vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS)) {
+> >  		kvm_set_dr(vcpu, 7, vmcs12->guest_dr7);
+> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmcs12->guest_ia32_debugctl);
+> > +		new_debugctl =3D vmcs12->guest_ia32_debugctl;
+> >  	} else {
+> >  		kvm_set_dr(vcpu, 7, vcpu->arch.dr7);
+> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, vmx->nested.pre_vmenter_debugctl);
+> > +		new_debugctl =3D vmx->nested.pre_vmenter_debugctl;
+> >  	}
+> > +
+> > +	if (CC(!vmx_set_guest_debugctl(vcpu, new_debugctl, false))) {
+> > +		*entry_failure_code =3D ENTRY_FAIL_DEFAULT;
+> > +		return -EINVAL;
+> > +	}
+> > +
+> >  	if (kvm_mpx_supported() && (!vmx->nested.nested_run_pending ||
+> >  	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
+> >  		vmcs_write64(GUEST_BNDCFGS, vmx->nested.pre_vmenter_bndcfgs);
+> > @@ -3520,7 +3527,7 @@ enum nvmx_vmentry_status nested_vmx_enter_non_roo=
+t_mode(struct kvm_vcpu *vcpu,
+> > =20
+> >  	if (!vmx->nested.nested_run_pending ||
+> >  	    !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_DEBUG_CONTROLS))
+> > -		vmx->nested.pre_vmenter_debugctl =3D vmcs_read64(GUEST_IA32_DEBUGCTL=
+);
+> > +		vmx->nested.pre_vmenter_debugctl =3D vmx_get_guest_debugctl(vcpu);
+> >  	if (kvm_mpx_supported() &&
+> >  	    (!vmx->nested.nested_run_pending ||
+> >  	     !(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS)))
+> > @@ -4788,7 +4795,7 @@ static void load_vmcs12_host_state(struct kvm_vcp=
+u *vcpu,
+> >  	__vmx_set_segment(vcpu, &seg, VCPU_SREG_LDTR);
+> > =20
+> >  	kvm_set_dr(vcpu, 7, 0x400);
+> > -	vmcs_write64(GUEST_IA32_DEBUGCTL, 0);
+> > +	vmx_set_guest_debugctl(vcpu, 0, false);
+> > =20
+> >  	if (nested_vmx_load_msr(vcpu, vmcs12->vm_exit_msr_load_addr,
+> >  				vmcs12->vm_exit_msr_load_count))
+> > diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.=
+c
+> > index 8a94b52c5731..f6f448adfb80 100644
+> > --- a/arch/x86/kvm/vmx/pmu_intel.c
+> > +++ b/arch/x86/kvm/vmx/pmu_intel.c
+> > @@ -19,6 +19,7 @@
+> >  #include "lapic.h"
+> >  #include "nested.h"
+> >  #include "pmu.h"
+> > +#include "vmx.h"
+> >  #include "tdx.h"
+> > =20
+> >  /*
+> > @@ -652,11 +653,11 @@ static void intel_pmu_reset(struct kvm_vcpu *vcpu=
+)
+> >   */
+> >  static void intel_pmu_legacy_freezing_lbrs_on_pmi(struct kvm_vcpu *vcp=
+u)
+> >  {
+> > -	u64 data =3D vmcs_read64(GUEST_IA32_DEBUGCTL);
+> > +	u64 data =3D vmx_get_guest_debugctl(vcpu);
+> > =20
+> >  	if (data & DEBUGCTLMSR_FREEZE_LBRS_ON_PMI) {
+> >  		data &=3D ~DEBUGCTLMSR_LBR;
+> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
+> > +		vmx_set_guest_debugctl(vcpu, data, true);
+>=20
+> Two questions.=C2=A0
+>=20
+> 1. why to call vmx_set_guest_debugctl() to do the extra check? currently
+> IA32_DEBUGCTL MSR is always intercepted and it's already checked at
+> vmx_set_msr() and seems unnecessary to check here again.
 
-[..]
+Hi,
 
-> +
-> +       regmap_read(pmu_context->pmuintrgen, GS101_GRP1_INTR_BID_UPEND, &reg);
-> +       regmap_write(pmu_context->pmuintrgen, GS101_GRP2_INTR_BID_CLEAR,
-> +                    reg & mask);
 
-I just spotted a typo here in this patch, it should be
-GS101_GRP1_INTR_BID_CLEAR. I'll send an updated version.
+I wanted this to be consistent. KVM has plenty of functions that can be bot=
+h
+guest triggered and internally triggered. For example kvm_set_cr4()
 
-Peter.
+Besides the=C2=A0vmx_set_guest_debugctl also notes the value the guest wrot=
+e
+to be able to return it back to the guest if we choose to overide some
+bits of the MSR, so it made sense to have one common function to set the ms=
+r.
+
+Do you think that can affect performance?=C2=A0
+
+
+>=20
+> 2. why the argument "host_initiated" is true? It looks the data is not fr=
+om
+> host.
+
+This is my mistake.
+
+>=20
+>=20
+> >  	}
+> >  }
+> > =20
+> > @@ -729,7 +730,7 @@ void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu=
+)
+> > =20
+> >  	if (!lbr_desc->event) {
+> >  		vmx_disable_lbr_msrs_passthrough(vcpu);
+> > -		if (vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR)
+> > +		if (vmx_get_guest_debugctl(vcpu) & DEBUGCTLMSR_LBR)
+> >  			goto warn;
+> >  		if (test_bit(INTEL_PMC_IDX_FIXED_VLBR, pmu->pmc_in_use))
+> >  			goto warn;
+> > @@ -751,7 +752,7 @@ void vmx_passthrough_lbr_msrs(struct kvm_vcpu *vcpu=
+)
+> > =20
+> >  static void intel_pmu_cleanup(struct kvm_vcpu *vcpu)
+> >  {
+> > -	if (!(vmcs_read64(GUEST_IA32_DEBUGCTL) & DEBUGCTLMSR_LBR))
+> > +	if (!(vmx_get_guest_debugctl(vcpu) & DEBUGCTLMSR_LBR))
+> >  		intel_pmu_release_guest_lbr_event(vcpu);
+> >  }
+> > =20
+> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> > index ef2d7208dd20..4237422dc4ed 100644
+> > --- a/arch/x86/kvm/vmx/vmx.c
+> > +++ b/arch/x86/kvm/vmx/vmx.c
+> > @@ -2154,7 +2154,7 @@ int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr=
+_data *msr_info)
+> >  			msr_info->data =3D vmx->pt_desc.guest.addr_a[index / 2];
+> >  		break;
+> >  	case MSR_IA32_DEBUGCTLMSR:
+> > -		msr_info->data =3D vmcs_read64(GUEST_IA32_DEBUGCTL);
+> > +		msr_info->data =3D vmx_get_guest_debugctl(vcpu);
+> >  		break;
+> >  	default:
+> >  	find_uret_msr:
+> > @@ -2194,6 +2194,41 @@ static u64 vmx_get_supported_debugctl(struct kvm=
+_vcpu *vcpu, bool host_initiated
+> >  	return debugctl;
+> >  }
+> > =20
+> > +u64 vmx_get_guest_debugctl(struct kvm_vcpu *vcpu)
+> > +{
+> > +	return vmcs_read64(GUEST_IA32_DEBUGCTL);
+> > +}
+> > +
+> > +static void __vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data)
+> > +{
+> > +	vmcs_write64(GUEST_IA32_DEBUGCTL, data);
+> > +}
+>=20
+> IMO,=C2=A0 it seems unnecessary to add these 2=C2=A0 wrappers since the o=
+riginal code
+> is already intuitive enough and simple. But if you want, please add
+> "inline" before these 2 wrappers.
+
+The __vmx_set_guest_debugctl in the next patch will store the written value=
+ in
+a field, this is why I did it this way.
+
+The vmx_get_guest_debugctl will read this value instead, also in the next p=
+atch.
+
+I thought it would be cleaner to first introduce the trivial wrappers and t=
+hen
+extend them.
+
+>=20
+>=20
+> > +
+> > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 data, bool host=
+_initiated)
+>=20
+> Since most of code in this function checks guest debugctl, better to rena=
+me
+> it to "vmx_check_and_set_guest_debugctl".
+
+I don't mind doing so.
+
+>=20
+>=20
+> > +{
+> > +	u64 invalid =3D data & ~vmx_get_supported_debugctl(vcpu, host_initiat=
+ed);
+> > +
+> > +	if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> > +		kvm_pr_unimpl_wrmsr(vcpu, MSR_IA32_DEBUGCTLMSR, data);
+> > +		data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > +		invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+>=20
+> Add space around above 3 "|".
+
+I copied this code "as is" from the wrmsr code. I can add this though.
+
+Best regards,
+	Maxim Levitsky
+
+>=20
+>=20
+> > +	}
+> > +
+> > +	if (invalid)
+> > +		return false;
+> > +
+> > +	if (is_guest_mode(vcpu) && (get_vmcs12(vcpu)->vm_exit_controls &
+> > +					VM_EXIT_SAVE_DEBUG_CONTROLS))
+> > +		get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+> > +
+> > +	if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event &=
+&
+> > +	    (data & DEBUGCTLMSR_LBR))
+> > +		intel_pmu_create_guest_lbr_event(vcpu);
+> > +
+> > +	__vmx_set_guest_debugctl(vcpu, data);
+> > +	return true;
+> > +}
+> > +
+> >  /*
+> >   * Writes msr value into the appropriate "register".
+> >   * Returns 0 on success, non-0 otherwise.
+> > @@ -2263,26 +2298,9 @@ int vmx_set_msr(struct kvm_vcpu *vcpu, struct ms=
+r_data *msr_info)
+> >  		vmcs_writel(GUEST_SYSENTER_ESP, data);
+> >  		break;
+> >  	case MSR_IA32_DEBUGCTLMSR: {
+> > -		u64 invalid;
+> > -
+> > -		invalid =3D data & ~vmx_get_supported_debugctl(vcpu, msr_info->host_=
+initiated);
+> > -		if (invalid & (DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR)) {
+> > -			kvm_pr_unimpl_wrmsr(vcpu, msr_index, data);
+> > -			data &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > -			invalid &=3D ~(DEBUGCTLMSR_BTF|DEBUGCTLMSR_LBR);
+> > -		}
+> > -
+> > -		if (invalid)
+> > +		if (!vmx_set_guest_debugctl(vcpu, data, msr_info->host_initiated))
+> >  			return 1;
+> > =20
+> > -		if (is_guest_mode(vcpu) && get_vmcs12(vcpu)->vm_exit_controls &
+> > -						VM_EXIT_SAVE_DEBUG_CONTROLS)
+> > -			get_vmcs12(vcpu)->guest_ia32_debugctl =3D data;
+> > -
+> > -		vmcs_write64(GUEST_IA32_DEBUGCTL, data);
+> > -		if (intel_pmu_lbr_is_enabled(vcpu) && !to_vmx(vcpu)->lbr_desc.event =
+&&
+> > -		    (data & DEBUGCTLMSR_LBR))
+> > -			intel_pmu_create_guest_lbr_event(vcpu);
+> >  		return 0;
+> >  	}
+> >  	case MSR_IA32_BNDCFGS:
+> > @@ -4795,7 +4813,7 @@ static void init_vmcs(struct vcpu_vmx *vmx)
+> >  	vmcs_write32(GUEST_SYSENTER_CS, 0);
+> >  	vmcs_writel(GUEST_SYSENTER_ESP, 0);
+> >  	vmcs_writel(GUEST_SYSENTER_EIP, 0);
+> > -	vmcs_write64(GUEST_IA32_DEBUGCTL, 0);
+> > +	__vmx_set_guest_debugctl(&vmx->vcpu, 0);
+> > =20
+> >  	if (cpu_has_vmx_tpr_shadow()) {
+> >  		vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, 0);
+> > diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+> > index 6d1e40ecc024..8ac46fb47abd 100644
+> > --- a/arch/x86/kvm/vmx/vmx.h
+> > +++ b/arch/x86/kvm/vmx/vmx.h
+> > @@ -404,6 +404,9 @@ u64 vmx_get_l2_tsc_multiplier(struct kvm_vcpu *vcpu=
+);
+> > =20
+> >  gva_t vmx_get_untagged_addr(struct kvm_vcpu *vcpu, gva_t gva, unsigned=
+ int flags);
+> > =20
+> > +bool vmx_set_guest_debugctl(struct kvm_vcpu *vcpu, u64 value, bool hos=
+t_initiated);
+> > +u64 vmx_get_guest_debugctl(struct kvm_vcpu *vcpu);
+> > +
+> >  static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u3=
+2 msr,
+> >  					     int type, bool value)
+> >  {
+
