@@ -1,110 +1,115 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mxout3.routing.net (mxout3.routing.net [134.0.28.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4C913AD1C
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 13:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C2828382;
+	Thu,  1 May 2025 13:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.0.28.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746104641; cv=none; b=isXA2HgEztLexIE/uMvTiVfLOp8QqQzY5oKEjj4rj9B4xq/pzM/ZbmrZQIkbAYMFh9yoMVIqhw9WT+HzyW3GUOtcPSKgODJ0+gbknk4O13c2IP8g+ThNADHFiThVevZXAkd7a4CbZnlG7yqxObxp373gsJ+eafAtD1LcbKKURWs=
+	t=1746104670; cv=none; b=KAdehKBOWdXojxSkJtUzoTIVrhTUocL65ffxxhyFfwb8BbhRQpvd3XtHKmaGa+6bRxSpMYS6mGmn+y4qEkexKZH0+Vx4SvVk8ssp9h3C3HAmaR1sjsxMCoBGVgyVolaP0nKEcf9Y9kSEx8M+vIlC71jizxHHnN3HiYGCgkASul4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746104641; c=relaxed/simple;
-	bh=nKVLqKLmJJfRIGBCWAGgjHCyy4TQubGRwOKP7zHGUHc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sC6vqT4ZZquB9MB0viHBlDiCLBrGhBqjl325Mv+0PV9GHTwKHHq5GgNx+URVjzIcjXa/Vl0IIa6PojIq08PLdeUIocW/4g3cyIPTYSI9WwXgxDxtsQzMbn1Vcxzx30OFURUsQWBERW7qXfqex7vDLoclP3SbKobP1338+2zskU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R2V50OzX; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746104670; c=relaxed/simple;
+	bh=MgJzVTP/cmGsc8FpUL9vgTr7SZhBLDFjvlBJd4Hi6Ok=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=axPgIggrPRznc/BjHhGdW19Ga8nClTTbsLviZcLm+bf4q5JHSw6DnGSjiniXYBhEyXyOXPSO+1a5ojJDEbEAtWnsWutFw6Cha1llNe53Q6dAbePtE+4pymTXEFwICvnBxifT2mE0GehUAmV7EaRR0zsI6nNBcEzqRi4HXFn6kqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de; spf=pass smtp.mailfrom=fw-web.de; dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b=iWXRWv1e; arc=none smtp.client-ip=134.0.28.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=fw-web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fw-web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R2V50OzX"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-391342fc0b5so421253f8f.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 06:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746104638; x=1746709438; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tLp6G69AjGMZh/i0hYBrG+us2tPn51T4tZ/hDIBrtE4=;
-        b=R2V50OzX6qetgzRMcNePRoJUiTSj/GBKCHlscgzIL8M9Zzcmwe7tWYAqGUWtx7WOZW
-         XQuvAjRaxDCINvPUVUay9HdGr72j7rTDV81Blx5nRjxwhE97UC5XZVCzrLWl5MhKRQGI
-         sabrhc0MjFwNnmHWuX/aCaFLV6HzANPKZOYdX88BjF1Y6MRyZsG9XV8Tk1YPZC+CqQ+y
-         d156yw1Tt0+3DTnZdR19NxDnUOLln+2/a9LkfJp7qo9Nt1KfvQS5RhWybvEz2T6RgOdA
-         zfgusgej/MfOWfsTL2UqW6t4c+URbWr2RevCA0zhezV3fReT6VzlaabEvhVKlCqq3IEe
-         Dzzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746104638; x=1746709438;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tLp6G69AjGMZh/i0hYBrG+us2tPn51T4tZ/hDIBrtE4=;
-        b=X+c07A8lEK7M5fTzrpVcCRzr1RYOGiEyLnoqN+SORhcVPbov/p2+T37iOF+YO4jX7m
-         C/Slvwp6k3/4BBvYOSNQMH1PJZ9i+WoQH3MvHwIW9Wzj6/GwWxsrSskjCSISl3jGOPVo
-         Hw5jo1IfdkfIr8r0xXJGPXSjXU3t8+wLEahnRvHGAQ9FT8l1fXcNvyhhTOYF4L8eSLHm
-         fV+A7XpdjnB66XYspIjZXVmrHjOgCE2y4m24CDV8K5/x+iNJQmq+sFcsYZ7+dZGd0m2U
-         ShRgt2mO3aVQ1g/GfG8Aj1fPfLCc4UpHNpow493YTk7zqmrbdhpT6kRO+Zuy7LmkqFCf
-         5dQQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVyhklqK5HtCxxVpsoHI/OJFuDLlcwiBEEmwqOl88Vgbr/XR0lPuoKkytvSi3ueK+cnDacG5RlITxUMEOw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxhfjVBCLvN9DuVjIV6FEWIHUGL3L3Irs1pj4BaqcYowj00bhp
-	Y0F1xp+jX55yEgsqTC00yDwGKrToZg0jILqSrbiiaAFwMa34xLk+jVg6LGem
-X-Gm-Gg: ASbGncvtTOhZ6ao6ZBsq43vF2dNifQCWpmsIIo51dyA6+8a19qBvdPm/QmCR372eirw
-	V9e/M1rCDdqGrlK5z3MSyUX3pf4IacvOFH0ZTFe6rxZdsZbHmNOYuiDoxJ6QhRQ6GyvNUm8kUqV
-	ahLDD9YwIZHmxHk69aRb6LhfPTB4f51QYbbMSUgcQgdUsU7J9ah/670lfRQIcgEKZw3Ho93mWZH
-	ZR7DOE8+PbztztIcH+l4V5G7zzXDj9E1OJkzYVe76tV5kINkUXhbwWjBJKefRH1e/J/rA0+tyn/
-	pr7kVfwk8D4TW/EPhtsnjScujwS30Kn4SMF0NukIqpjGIKVWSuPPoCQzQ7bq
-X-Google-Smtp-Source: AGHT+IHN0m78X3MUvAMXKykuMAkM3TbruwNqjk1r7kAdw4UWFKm3it44VrZLXWxJYGsg9ZIawYZjxA==
-X-Received: by 2002:a05:6000:310f:b0:391:3f4f:a172 with SMTP id ffacd0b85a97d-3a08ff4fca9mr5109558f8f.49.1746104637846;
-        Thu, 01 May 2025 06:03:57 -0700 (PDT)
-Received: from localhost.localdomain ([37.72.3.43])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a3e04asm830880f8f.18.2025.05.01.06.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 06:03:57 -0700 (PDT)
-From: mikisabate@gmail.com
-To: paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	alex@ghiti.fr,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Miquel=20Sabat=C3=A9=20Sol=C3=A0?= <mikisabate@gmail.com>
-Subject: [PATCH] Improve Kconfig help for RISCV_ISA_V_PREEMPTIVE
-Date: Thu,  1 May 2025 15:03:09 +0200
-Message-ID: <20250501130309.14803-1-mikisabate@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=mailerdienst.de header.i=@mailerdienst.de header.b="iWXRWv1e"
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+	by mxout3.routing.net (Postfix) with ESMTP id DDC836047C;
+	Thu,  1 May 2025 12:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailerdienst.de;
+	s=20200217; t=1746104242;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=NnoUbMfttFzwRrbX8cLNmCp9Iqdu1NA79G+j70FEH9Y=;
+	b=iWXRWv1eeaVcFFtQWWjrMohgOyUY6glLempu1AWxYbDqZ0zfcmH6k+H/xjEsKgFBTTKU8I
+	guqoMJkRD5pV/BrwkReJMVWQZjXfX9601Ngplj8RKXIgC8+7UEB6WjmV3rcNd/qXfyaPCK
+	Bw6hf2KJsL6csJxH9y+3ZijsFzA5gHw=
+Received: from frank-u24.. (fttx-pool-157.180.225.138.bambit.de [157.180.225.138])
+	by mxbox2.masterlogin.de (Postfix) with ESMTPSA id A245D10010F;
+	Thu,  1 May 2025 12:57:20 +0000 (UTC)
+From: Frank Wunderlich <linux@fw-web.de>
+To: Daniel Golle <daniel@makrotopia.org>,
+	Qingfang Deng <dqfext@gmail.com>,
+	SkyLake Huang <SkyLake.Huang@mediatek.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Frank Wunderlich <frank-w@public-files.de>,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org
+Subject: [RFC,net-next v1] net: phy: mediatek: do not require syscon compatible for pio property
+Date: Thu,  1 May 2025 14:57:02 +0200
+Message-ID: <20250501125703.55224-1-linux@fw-web.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Mail-ID: 7d9196f7-2e8a-481a-ba32-0e3d88cab2b5
 
-From: Miquel Sabaté Solà <mikisabate@gmail.com>
+From: Frank Wunderlich <frank-w@public-files.de>
 
-Fix a couple of spelling issues plus some minor details on the grammar.
+Current implementation requires syscon compatible for pio property
+which is used for driving the switch leds on mt7988.
 
-Signed-off-by: Miquel Sabaté Solà <mikisabate@gmail.com>
+Replace syscon_regmap_lookup_by_phandle with of_parse_phandle and
+device_node_to_regmap to get the regmap already assigned by pinctrl
+driver.
+
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
 ---
- arch/riscv/Kconfig | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/net/phy/mediatek/mtk-ge-soc.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 1fd197afd2f7..3f40e33bc115 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -664,12 +664,12 @@ config RISCV_ISA_V_PREEMPTIVE
- 	default y
- 	help
- 	  Usually, in-kernel SIMD routines are run with preemption disabled.
--	  Functions which envoke long running SIMD thus must yield core's
-+	  Functions which invoke long running SIMD thus must yield the core's
- 	  vector unit to prevent blocking other tasks for too long.
+diff --git a/drivers/net/phy/mediatek/mtk-ge-soc.c b/drivers/net/phy/mediatek/mtk-ge-soc.c
+index 175cf5239bba..21975ef946d5 100644
+--- a/drivers/net/phy/mediatek/mtk-ge-soc.c
++++ b/drivers/net/phy/mediatek/mtk-ge-soc.c
+@@ -7,6 +7,7 @@
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/phy.h>
+ #include <linux/regmap.h>
++#include <linux/of.h>
  
--	  This config allows kernel to run SIMD without explicitly disable
--	  preemption. Enabling this config will result in higher memory
--	  consumption due to the allocation of per-task's kernel Vector context.
-+	  This config allows the kernel to run SIMD without explicitly disabling
-+	  preemption. Enabling this config will result in higher memory consumption
-+	  due to the allocation of per-task's kernel Vector context.
+ #include "../phylib.h"
+ #include "mtk.h"
+@@ -1319,6 +1320,7 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
+ {
+ 	struct device_node *np = dev_of_node(&phydev->mdio.bus->dev);
+ 	struct mtk_socphy_shared *shared = phy_package_get_priv(phydev);
++	struct device_node *pio_np;
+ 	struct regmap *regmap;
+ 	u32 reg;
+ 	int ret;
+@@ -1336,7 +1338,13 @@ static int mt7988_phy_probe_shared(struct phy_device *phydev)
+ 	 * The 4 bits in TPBANK0 are kept as package shared data and are used to
+ 	 * set LED polarity for each of the LED0.
+ 	 */
+-	regmap = syscon_regmap_lookup_by_phandle(np, "mediatek,pio");
++	pio_np = of_parse_phandle(np, "mediatek,pio", 0);
++	if (!pio_np)
++		return -ENODEV;
++
++	regmap = device_node_to_regmap(pio_np);
++	of_node_put(pio_np);
++
+ 	if (IS_ERR(regmap))
+ 		return PTR_ERR(regmap);
  
- config RISCV_ISA_ZAWRS
- 	bool "Zawrs extension support for more efficient busy waiting"
 -- 
-2.49.0
+2.43.0
 
