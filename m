@@ -1,69 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AE754C85;
-	Thu,  1 May 2025 04:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6998F4C79;
+	Thu,  1 May 2025 04:43:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746073912; cv=none; b=MuwVguqV/dRLRcSAmT2SfAZ6JuGjVdDiSKsqm3W8b4N8IWofVfY+kHYVExiFgcEvdjWsa9vG1NSf4wczdTpE95SEsCtlF4GPkqIpBVSMPnRtcVEzSrkdJtu7o2UOeP8m1mvxT/NY84j3LEfC95KYGHXcJ5OhjpYlVgLmMaT4qos=
+	t=1746074618; cv=none; b=KjMSBzPexghmd2DvaWlKk5rEnBXlB0bDoqUzmE74+mAAVyPwDeGV4uMy4pu9qlzPbPhkDkoM9XaDCXLCgg4bjrtF2gvhhP6/GWEIaCjoltsMpqK0l76Fgioj/x4X6mLphAdBB9vsm/4ncCMHaMxBY/ULCJkeCp3RZX+ygLE+d4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746073912; c=relaxed/simple;
-	bh=ZDNOHwwoAJLUr3IglTZ4hdSkQXIS1WA8o0QxHP5PN1M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SP9kn3wUQg5dQNCQSapHTGucBtXuDa2OXe0rQ/aXkPnpl97r9ETYsdgBXRPUcus4XBeVU/ZVY5J2ZUp3EfThZdHXCcgIs77kXuWDOedXC4gRCC97EZwRrGgRo5T3WJHe+CKY4DqMg286CrHyo/aDt09Hh77k68OZmftWhnaor8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tFJLQ49L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746074618; c=relaxed/simple;
+	bh=4JkwcjE5GPk9uPDAK84KvKHdAkJ6Hc+IvsTERslfTjY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=Yl/ODclr1i8+29i7DgNt97ZVr4/55VUbL4ub8gAe8wsJz1fq5Qh1iOq8rs3mPPhH0hyS8kwu3Dxu+kiBYz5b4ogaxzeYrjwVaGyVETRAaoi90TvsxKRn8jdke7w0b9GOVVIvnevyMb6ooHWFvv+aGv+dsx39G77sxVxP1wIbABQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=j09EE/4Z; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tFJLQ49L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9B8C4CEE3;
-	Thu,  1 May 2025 04:31:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746073911;
-	bh=ZDNOHwwoAJLUr3IglTZ4hdSkQXIS1WA8o0QxHP5PN1M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tFJLQ49LIWnXzJdisjZQ5wh1eua1xlS9w9mPEo4juI8L2W1kIDtBaFVQor53O6F9P
-	 fAn9oNYkspleX9oGaKCWAFq+84+RPDGncE3wlV+5UznkIu8LXDdPmJJ4QUHf0dVfiz
-	 uQmzmQg0wWIqRdajTJVEWubyzIk/Yu4BinByMGLgFqhM8nG9vpxasPXbSIU0lWbbGA
-	 65Q+yQGK6j1AFLixplo68CKnDP0qlpL7JT1xviSv68a6jUatDhenHtgp5+den8ILw6
-	 ce45e5tI3PNwTo0gHyWSQPCDTa9rS8iNvJTKaQ+2H7sdFjxZPABkyX4AhGdbGTMw2T
-	 IawbhBPm6CNIw==
-Date: Wed, 30 Apr 2025 21:31:51 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: hch@lst.de, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org, brauner@kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, cem@kernel.org
-Subject: Re: [PATCH v9 00/15] large atomic writes for xfs
-Message-ID: <20250501043151.GE1035866@frogsfrogsfrogs>
-References: <20250425164504.3263637-1-john.g.garry@oracle.com>
- <972bd2fc-4dc9-42d5-ab05-dab29fd0e444@oracle.com>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="j09EE/4Z"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 0D0C825DDC;
+	Thu,  1 May 2025 06:43:33 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 3ud8Ui2_EBSQ; Thu,  1 May 2025 06:43:32 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1746074612; bh=4JkwcjE5GPk9uPDAK84KvKHdAkJ6Hc+IvsTERslfTjY=;
+	h=From:To:Subject:Date;
+	b=j09EE/4ZxBp2Fl/fj12zjVXyBQ+uye8GyjmVdKfFJd4jKLZbAcpkb9wg/KGtTD2l2
+	 ora8UneQELBXkv69vXUTALhhEyL8ppSk97mxpVAl5mx7v/XA8PNkGX4f41SpvteWD1
+	 OCgWgOXtW0I4NbnvsmyQN6VbX4xRk8NdPfqL0ZmS7lWE4MpXlmHTKn6NiI2fS2DxXJ
+	 QjsJ/lMaSFydzWxlH0fSY449CAyrGWeohAfpjv73ptABMpdIyELadvGLL72sqJPX8j
+	 sEhNZnNEWZL70gdTLKwXME8s2jQqEg1d6TO62LxUB8xCrI9r+87h8DWm7DtxNiYQuk
+	 hRxZuLGKfXYcw==
+From: Yao Zi <ziyao@disroot.org>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Yao Zi <ziyao@disroot.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Junhao Xie <bigfoot@classfun.cn>,
+	=?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>,
+	Aradhya Bhatia <a-bhatia1@ti.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Binbin Zhou <zhoubinbin@loongson.cn>,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>
+Subject: [PATCH 0/4] Initial support for CTCISZ Ninenine Pi
+Date: Thu,  1 May 2025 04:42:36 +0000
+Message-ID: <20250501044239.9404-2-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <972bd2fc-4dc9-42d5-ab05-dab29fd0e444@oracle.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 30, 2025 at 03:14:04PM +0100, John Garry wrote:
-> Hi Christoph,
-> 
-> At this point, is your only issue now with
-> 05/15 xfs: ignore HW which cannot atomic write a single block
-> ?
-> 
-> I am not sure on 15/15...
+This series adds support for CTCISZ Ninenine Pi, which ships an Loongson
+2K0300 SoC and various peripherals. The vendor prefix and the board are
+documented and basic SoC/board devicetrees are added.
 
-This series still needs reviews of patches 2, 3, 5, and 15, if I'm not
-mistaken.
+I've successfully booted into console with vendor U-Boot, a bootlog
+could be obtained here[1]. DTB and initramfs must be built into the
+kernel as the vendor bootloader cannot pass them and upstream U-Boot
+support for LoongArch is still WIP.
 
---D
+Thanks for your time and review.
 
-> Thanks,
-> John
-> 
+[1]: https://gist.github.com/ziyao233/7fd2c8b3b51ef9b30fe5c17faae1bc4e
+
+Yao Zi (4):
+  dt-bindings: vendor-prefixes: Add CTCISZ Technology Co., LTD.
+  dt-bindings: LoongArch: Add CTCISZ Ninenine Pi
+  LoongArch: dts: Add initial SoC devicetree for Loongson 2K0300
+  LoongArch: dts: Add initial devicetree for CTCISZ Ninenine Pi
+
+ .../bindings/loongarch/loongson.yaml          |   5 +
+ .../devicetree/bindings/vendor-prefixes.yaml  |   2 +
+ arch/loongarch/boot/dts/Makefile              |   1 +
+ arch/loongarch/boot/dts/loongson-2k0300.dtsi  | 197 ++++++++++++++++++
+ .../boot/dts/ls2k0300-ctcisz-nineninepi.dts   |  41 ++++
+ 5 files changed, 246 insertions(+)
+ create mode 100644 arch/loongarch/boot/dts/loongson-2k0300.dtsi
+ create mode 100644 arch/loongarch/boot/dts/ls2k0300-ctcisz-nineninepi.dts
+
+-- 
+2.49.0
+
