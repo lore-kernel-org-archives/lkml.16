@@ -1,128 +1,135 @@
-Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0A1A3D561;
-	Thu,  1 May 2025 16:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337391C173F;
+	Thu,  1 May 2025 16:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746117965; cv=none; b=IZpgsKfK6zwEXNYqUXIfXhpn4l0gtiUwwRObwrwBp7g87+b1jYDyM+LeO4/EkVhsrJfi9uJ+QkwFOuXkGAoNutobxPzJF3Q8HoJ5e+orLF3erI5oCdJ8eBLha1+GJCsdS8BWbigTBW1yI1k3YRGjIGGnx4lPXtioMC9U4D99bCE=
+	t=1746118139; cv=none; b=ny/53gPZHmF1TFfQgMIG+RwUJlI6cgBKONqbnnaCbJkXHBXx2GwykFq63FHX1J/2gTgbmiq2pwwz+5Ooe0QNHL5YL1AwL04zJLE7YJVBWweE06x5p0xk7jszEeY/SPsbKEG735fljMd6C71kj8U5178T/ARIaVolk5y6MYxLutc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746117965; c=relaxed/simple;
-	bh=RkAW/Yjl6ixcVf6Xi5aYi2K1i1lxs3I9p2l1llyAREM=;
+	s=arc-20240116; t=1746118139; c=relaxed/simple;
+	bh=n+rp/1cfKWUVbAn2ayQIlXtUE0b/J4JdBnNRkRwb6x8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+PfdsRw+mKRthUIKdylcqoqM42/iUK7GOXP85bPIDZ38DN/0vK5QnHv2JzrHnkpkMkSGF2P2gz+4bS8Fu6osOB/gIRVYY6CA6ReGNJLHD0EpHsC2arj4YmiRg4nZyVvOdTvfTo5R0Wiwc1jmRq7ZHmRcLDjRlobh7kD5xmOH08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc; spf=pass smtp.mailfrom=jfarr.cc; dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b=E/g6boyc; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Wl9pEPfH; arc=none smtp.client-ip=202.12.124.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jfarr.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jfarr.cc
+	 Content-Type:Content-Disposition:In-Reply-To; b=LmZAr/Wtw052OELEaKT/8jRtgNHE5Va96xaUmwOklI4cjNL+omoBBPKSn/8EpG6rHXVoNaS5xZNBRpHTXUnzFM4/K2D0+a3UTKAdYGUKMQLyIgTAhJtk9JB5LKusv4rEGtghixM+agoz5+u/Rwrh3xeTFcN48I2EpoA9AShb0bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=GKucUTUN; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jfarr.cc header.i=@jfarr.cc header.b="E/g6boyc";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Wl9pEPfH"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id C90D2254020A;
-	Thu,  1 May 2025 12:46:00 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 01 May 2025 12:46:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jfarr.cc; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:subject
-	:subject:to:to; s=fm2; t=1746117960; x=1746204360; bh=JznQuwHGnJ
-	AzLSBoeScYjcnmlWNzVWZP+ZeXKHDaGGk=; b=E/g6boycmOwzzksE1Y1MVN9ZNS
-	CUy6Xado1PSJcG9epCz428dwR9j8hS+dOhoKc2HHG6ZIvpCYJfrGektWY9sVn5du
-	Aq4n6BDjyS3B41iUkZ/+ZX5flOljkgPANwQjLPLjyDoQssj+d+WcJb2Fipd6jaH1
-	i7bkTsSLC6GJIRnnBtkNM/6KiOoZncuFky5ywtU6qovRy7YNTt04rnljXNYxJ/91
-	bkA293N2UYndDJqirRc/cXf+VzltfcqF1eicNZtFBSz3j/IJJa+9tYMW6UENqdqF
-	cBbdd248ZqzxiSiRf+UnIQ/xsDy4HV3Jv7j5FJBia22Zl6JMhkTfGhzUBZFA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746117960; x=1746204360; bh=JznQuwHGnJAzLSBoeScYjcnmlWNzVWZP+Ze
-	XKHDaGGk=; b=Wl9pEPfHfhmJSHLMN+X86p6OKOii7czStitN4zG1M1e4fd2kbk3
-	D7GYD2E473KSXu8Xt925A6sgxRejeuBfCSjxYaNQsRoVYUQVgv0c72jR4rpkGhV9
-	gZZT0UJwtSwPTncmYrIdTE0VcTeMU6OS7Poqa5uwXb53wDlXpWoc9/WkPAIUartb
-	DbPadBqrKgoJOyhWgTUMx0u/PGZB7swFsfhWCc7UEE4J0HEIcXrTAQc/J5xjeQz8
-	MjDslDp89/ElBnfe+/wUD/tefjK1KLupyWcJowWk86fv4UsVs/Qf6konAnfEZLvO
-	GNFgyjMFO0Blm0QxELwX4xBRi8GaiqGd3hQ==
-X-ME-Sender: <xms:SKUTaPqFnT-tH_4GIiEUkKzKHnt_FRcqHORrE3lZJhovh4b3hvQzoA>
-    <xme:SKUTaJrD3jKgPXtRUyJtcGBOFCA0XJpPC9NyvDoHFrAVGzNXiPT9cBk1qyA48uma3
-    D0kCp2KN3k0v4tv9CM>
-X-ME-Received: <xmr:SKUTaMP87aEKLNb7cp6fkXPMhzTiFrQPlWcIaXWWu3iJC1_ZmXyZ7WGRavuabD8J_UT6kD6f-19FHJBIWHUYjMRKNBAF>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedttdelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnegfrhhlucfvnfffucdludehmdenucfjughrpeffhffvvefu
-    kfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeflrghnucfjvghnughrihhkucfhrg
-    hrrhcuoehkvghrnhgvlhesjhhfrghrrhdrtggtqeenucggtffrrghtthgvrhhnpeeutdet
-    uefhveekteekvedtiedtteefvdekleeifeekhfeiiedvleehjeefvdfgudenucffohhmrg
-    hinhepphhrihhvrghtvggsihhnrdhnvghtnecuvehluhhsthgvrhfuihiivgeptdenucfr
-    rghrrghmpehmrghilhhfrhhomhepkhgvrhhnvghlsehjfhgrrhhrrdgttgdpnhgspghrtg
-    hpthhtohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmmhhpghhouhhr
-    ihguvgesghhmrghilhdrtghomhdprhgtphhtthhopehkvghnthdrohhvvghrshhtrhgvvg
-    htsehlihhnuhigrdguvghvpdhrtghpthhtohepthhhohhrshhtvghnrdgslhhumhesthho
-    sghluhigrdgtohhmpdhrtghpthhtohepmhhighhuvghlrdhojhgvuggrrdhsrghnughonh
-    hishesghhmrghilhdrtghomhdprhgtphhtthhopehnrghthhgrnheskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepmhhorhgsohesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkh
-    gvvghssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrvghgrhgvshhsihhonhhssehl
-    ihhsthhsrdhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqsggtrggthhgvfh
-    hssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:SKUTaC49EybdrtfUQJagGdVQtIpK8UEhzLaPvB-pf1EimwiPaH3rFg>
-    <xmx:SKUTaO4k1AVuuWJ2d7V3a1Mm2G0mM-X0GK6aUpwOXyc4pXQpn1z_sQ>
-    <xmx:SKUTaKgp0AT-7hB8U3LPVcA5VmEQK8Lk8aDFjGOtQW-ZaDV0Zgvnhg>
-    <xmx:SKUTaA4-jJu3NqP3F4L98t7zwCHBp3NxH0Sxx-lnuKmC8z4iemJYmg>
-    <xmx:SKUTaNsWCtAW_z9Y6T5ciN_4zX5nUobImVU8hFZkJ2Hmob_-2eBy9YZ->
-Feedback-ID: i01d149f8:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 1 May 2025 12:45:58 -0400 (EDT)
-Date: Thu, 1 May 2025 18:45:56 +0200
-From: Jan Hendrik Farr <kernel@jfarr.cc>
-To: Alan Huang <mmpgouride@gmail.com>
-Cc: kent.overstreet@linux.dev, Thorsten Blum <thorsten.blum@toblux.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Bill Wendling <morbo@google.com>, Kees Cook <kees@kernel.org>,
-	regressions@lists.linux.dev, linux-bcachefs@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>, ardb@kernel.org,
-	ojeda@kernel.org
-Subject: Re: [REGRESSION][BISECTED] erroneous buffer overflow detected in
- bch2_xattr_validate
-Message-ID: <aBOlREPsG6LQqBVy@archlinux>
-References: <CAGG=3QVcsuN0Sk79oZWjY_nNTo_XfGYsDT3gc7vEmLyS8OK3rA@mail.gmail.com>
- <ZxB-uh1KzfD4ww2a@archlinux>
- <20241017165522.GA370674@thelio-3990X>
- <ZxWvcAPHPaRxp9UE@archlinux>
- <20241021192557.GA2041610@thelio-3990X>
- <ZxpIwkfg9_mHO3lq@archlinux>
- <20241025011527.GA740745@thelio-3990X>
- <CANiq72nbyqrzGr3Uw_vx-+8DLiv6KbeULrxpyK8Lh4ma15cq8g@mail.gmail.com>
- <Zxu4yhmxohKEJVSg@archlinux>
- <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="GKucUTUN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1746118134;
+	bh=n+rp/1cfKWUVbAn2ayQIlXtUE0b/J4JdBnNRkRwb6x8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GKucUTUNMeD2bPB11ZzjZiqIVgo4OjcUcIqicF632tFjAi8qs9kmxPN6wwBxRtzAj
+	 9naGTZeY9bn+2boxu52Z/zGFxoKe48WMyR92EdspNOUfVwzRToN5Y7VVNMewbE9XtJ
+	 4Zk7wE8EZshmiKS8cyGJLqMsaKSQnUggdfIQsg3g=
+Date: Thu, 1 May 2025 18:48:52 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Ben Hutchings <ben@decadent.org.uk>, Peter Oberparleiter <oberpar@linux.ibm.com>, 
+	MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
+Message-ID: <e3ccb1ef-1b7a-4069-960f-a6fc5353c1ce@t-8ch.de>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+ <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <775D7FF5-052B-42B9-A1B3-3E6C0C8296DA@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
 
+Hi Matthieu,
+
+On 2025-04-29 18:12:29+0200, Matthieu Baerts wrote:
+> Hi Thomas, Masahiro,
 > 
-> Hello, 
+> +Cc Peter Oberparleiter, MPTCP ML
 > 
-> Now there are users using gcc 15.1.1 came across the similar issue (they are fine with gcc 14.2.1 ):
+> On 15/03/2025 14:20, Thomas Weißschuh wrote:
+> > -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+> > Other references, for example in debug information, are not affected.
+> > This makes handling of file references in the compiler outputs harder to
+> > use and creates problems for reproducible builds.
+> > 
+> > Switch to -ffile-prefix map which affects all references.
+> > 
+> > Also drop the documentation section advising manual specification of
+> > -fdebug-prefix-map for reproducible builds, as it is not necessary
+> > anymore.
+> > 
+> > Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+> > Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
+> > Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
+> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > 
-> 	https://privatebin.net/?a0d4e97d590d71e1#9bLmp2Kb5NU6X6cZEucchDcu88HzUQwHUah8okKPReEt
+> Thank you for having worked on that!
+> 
+> (...)
+> 
+> > diff --git a/Makefile b/Makefile
+> > index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -1067,7 +1067,7 @@ endif
+> >  
+> >  # change __FILE__ to the relative path to the source directory
+> >  ifdef building_out_of_srctree
+> > -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+> > +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
+> >  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+> >  endif
+> 
+> Today, I noticed that my CI for the MPTCP subsystem couldn't produce
+> code coverage files like before: the source files are not found. A 'git
+> bisect' pointed me to this patch. Reverting it seems to fix the issue.
+> 
+> 
+> My CI is building the kernel out of the source tree, in ".virtme/build".
+> Before and after this patch, GCOV seems to do its job properly.
+> Capturing GCOV data with this lcov command seems OK too:
+> 
+>   lcov --capture --keep-going -j "${INPUT_CPUS}" \
+>      --rc geninfo_unexecuted_blocks=1 \
+>      --include '/net/mptcp/' \
+>      --function-coverage --branch-coverage \
+>      -b "${PWD}/.virtme/build" -o kernel.lcov
+> 
+> But after this patch, lcov complains some files are not found, e.g.
+> 
+>   ERROR: (source) unable to open
+> ${WORKDIR}/.virtme/build/net/mptcp/ctrl.c: No such file or directory
+> 
+> 
+> The output file is different: the path to the source file is wrong
+> because it points to the build dir. Instead of ...
+> 
+>   SF:${WORKDIR}/net/mptcp/ctrl.c
+> 
+> ... now I have ...
+> 
+>   SF:${WORKDIR}/.virtme/build/net/mptcp/ctrl.c
+> 
+> 
+> Are there modifications needed on GCOV side to adapt to the behaviour
+> change introduced by this patch? Or something else needed on the
+> userspace side?
 
-Just to confirm. Is this kernel built from the linux-mainline AUR
-package? 
+I'd like to focus on the report from Ville Syrjälä [0] first.
+While it is easier to reproduce and investigate, I suspect the solution
+found there will also work for your usecase.
 
-And gcc version 15.1.1+r7+gf36ec88aa85a-1 from the normal arch
-linux repo?
 
-Is bcachefs the rootfs and this happens during boot?
+Thomas
 
-Best Regards
-Jan
-
+[0] https://lore.kernel.org/lkml/aBEttQH4kimHFScx@intel.com/
