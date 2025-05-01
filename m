@@ -1,283 +1,218 @@
-Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0B033C9
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399E72F37
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 15:15:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746112419; cv=none; b=JkaaDiNyqSTiRMTmpUMemc1fQVz5NOvbFy6KkKURzg/FQzr1CsXJStBobtA0H5ZZRKxgoohss3p7HDZlHJUa+mjNotOgM5DbhE9hUgWoQK7lcJiwkvOtxoYn+vmUclCD37zoGY8116EjYev0Wh925lqmo49Ird7JxcTpIriWmr8=
+	t=1746112558; cv=none; b=nsJvunlHXgPzYAQJluzt/m2bNWPeKBnuiiWPT0B69lilnL1Jx6dX9mI902RyWYeCFQUnE1aL4UqrWh12O0exJY7U1AOs1H9jJ1itsGHj/cpHj3xkn5C+QYiU6WFxcgmdizn72rxlDmpZWrpkDAWOSZthOXZAK4WjVZb6rMn1S2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746112419; c=relaxed/simple;
-	bh=OzBrloBm/V4YW3Mg4aldVmjhnsv5beIgJRxQgna75gk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QxTNgBXHcs8m+6aHbmiKDMDBNMOlp8ZIpERDXD3uUemGdrSRtjqn9QiddEJrDL8OrBsYI0cDqoF1IQViYHodGMvycV7zXMuxqH/R9Tnh9/VvyRT2RIEKwOwRMBppnb2kbUQ9hgy6zINiaEr140mN5+PwXMgRLaQmqw2Y6l6Bnc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cutb4Rp1; arc=none smtp.client-ip=209.85.166.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746112558; c=relaxed/simple;
+	bh=4KBIm5nkYVus8R7BrxuZbayz+ft7a5XY9VfuSEmLdwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kjKfG6fecOrBqajviGQFBQAL9p9Yt4MUAcacexJCkXjaKJUB4vocLPt4PhKJXbAPl6n/AWx3SK4Jf0TU0w2l7hAQwFZGupezZmS45ZN0NtsfSVouSjsndNZyAGWfHd6t6RRXtWjgkJqtzQwmNaE8Ioo12EAm7Qu2qc1RVsEIAN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mC2Bjjsd; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cutb4Rp1"
-Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-3d91a45d148so172025ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 08:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746112417; x=1746717217; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=85n8jESwrmid0ZkoomIHFt8MZy/m9sXudOknYqK+2nQ=;
-        b=cutb4Rp1hOWIKsyuzdh8lkWLmPeXs7P1t3e6oj/kqOjq5thSkZ6Ua88RE+ijqlNw0q
-         C/tfYHu8r59YBMeg/Q+q8ca/whRxjKsdKqcFwS355vh9s/Vf17ivDVlup8FUTUJ/Sl6C
-         92ilnjmPCkwrk4XBvYlxAV/iDtvu/V3LLB7RNamgLqdmHma4HoWvlBuWPk3iONeljGZc
-         QZON39XlMBejmvjHe6TQmCQo9IakhYFWJ1sjmFKgXqpqfehtvnl0gcHLIxLxLpZl0xmc
-         3ZsWJ/w1C6GPfn0Ek3JW6plNWP0EA488BLQDnrN7ApF21DTebUciGrfnTnQO0DUE/CeP
-         jlPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746112417; x=1746717217;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=85n8jESwrmid0ZkoomIHFt8MZy/m9sXudOknYqK+2nQ=;
-        b=tt/9T+TRXqKc+TOkKv5xtEoVHuQaCzczhNQAwD1SwRUrE9S/E32TBYD7ihPrLFhYWK
-         CVVTdxfbbSR/iqmRnQDuRaPLetstMFDnAy/Lr0CZEsJPk4ShvNKhOtZY6H0r+TzEw4GH
-         vWqMBLmBDaO/Ls4/ykokkhxbenG1JbPCN6AJPsUA21ehtttIjHXLL3GFcQURfXiMYJCg
-         9icuYmuGQI7gpStNxVbddMaDgQ5kUmtIGqXHsrN+VI3c2Q7NhFEMhoTtEjEtmf9HwpHm
-         NO7bJTloOoxT4wct/3vEKer1yK/uII9My75Md5lxAGx5TNmGXzMrocx0F+9dqinkq22K
-         q7cg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJZBLHIzUJ/yWqYKEaIoIgCJctlvFDO56ojWEhl2Tzt0eQC0KmHPMP+8bLSjnaxU/DMAjDI6xXmJ9B/p8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRGNqMzgALIk2Y3Y7o/TLuonDMGCiXVGIuwi41f6gNryB8W41Q
-	jQYOm7EP2opW5XyzztBLH3+6hU9qg3mm0PBukKo6jO3NooQuh3oqO2AdkUMaWMaCY2bC9ZiSzhk
-	6T7fl9YV/mi0+4HSxaXa4Df2O9fuHAp7aV6Wv
-X-Gm-Gg: ASbGncsRyQf9rj29L25PyZNI3WYUl+I0QugxnV6SIbyeQQqVkEBBt+7mRM7v6SOu1La
-	EpMGjNbvA2DYi3qhDp/HBMjUdDeoLkbLmIVejQiylIuCvvId9Ho3JqiIqde7zHfFLcVFBtgUIiY
-	eSzW2x/mWfri+6rrxLDTT3xcfM4jhuBLR2Hfb+dMde1jfB3pGc6Q==
-X-Google-Smtp-Source: AGHT+IH/g13hY6mqTd3V9Dy+QXZ9IB5wT6d8KsQH0XFcUwB04paWY/i6fjQ4kjZss6cp+maGmlgLVAnvbwLlEzuqRaM=
-X-Received: by 2002:a05:6e02:2291:b0:3d3:d1f9:4ccd with SMTP id
- e9e14a558f8ab-3d970170975mr2263245ab.9.1746112416703; Thu, 01 May 2025
- 08:13:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mC2Bjjsd"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541BpWcU012535;
+	Thu, 1 May 2025 15:15:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=+iTVmW
+	agILWyumnwhCZ4bL1Yi+HwaNcsx/q07FdFKoE=; b=mC2Bjjsd3k4fBTzCdayb40
+	gKBsnmF5GMZK/U7QrHA5bdZD4PFbFph6WX4WXm/4GM14nCfxNUEvqB4koOmTTjBQ
+	sx440Os55sETekua6d2QxCbbVYzpx1vt5KIg7F8FLuUfaOSVlQuDBkyz956DpSYK
+	lSfguED1MS74pDZXTSSk15w/PNWrIcjAGdtxzcyTi4pOlipVsm2uXIJ5UdOFEoYK
+	t3eF6c4N/9CkJ8pPcd3IMamGeCJam0ggsIcbWcrOPgMD54jdcH78+M0d8JIyZjOb
+	fU9ns2LGJiEoro59U85K/cJhx4YnBx9eEJkVozDjjVGH9N2DLCitFGnQcbkDv/MQ
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds9c9c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 15:15:37 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 541FFbS6003669;
+	Thu, 1 May 2025 15:15:37 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46c7ds9c9a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 15:15:37 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 541DOBuB031617;
+	Thu, 1 May 2025 15:15:36 GMT
+Received: from smtprelay07.dal12v.mail.ibm.com ([172.16.1.9])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4699tudthp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 01 May 2025 15:15:36 +0000
+Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
+	by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 541FFZ4Q6750898
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 1 May 2025 15:15:35 GMT
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B16A358057;
+	Thu,  1 May 2025 15:15:35 +0000 (GMT)
+Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 94F5D58063;
+	Thu,  1 May 2025 15:15:30 +0000 (GMT)
+Received: from [9.39.16.182] (unknown [9.39.16.182])
+	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  1 May 2025 15:15:30 +0000 (GMT)
+Message-ID: <2534e3fe-cb4d-4753-a714-6d0bc8a51040@linux.ibm.com>
+Date: Thu, 1 May 2025 20:45:27 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501022809.449767-1-howardchu95@gmail.com>
-In-Reply-To: <20250501022809.449767-1-howardchu95@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 May 2025 08:13:25 -0700
-X-Gm-Features: ATxdqUE--wiAak5qnAOvXKfkOPQBHA5JKIS-hip6kd_XcccmZxR4MlNxNOM__EY
-Message-ID: <CAP-5=fVHo5sYSHoxzRgC7poszLS5x4H3Cy5NsUTB8tH+n3L6Ww@mail.gmail.com>
-Subject: Re: [PATCH v16 00/10] perf record --off-cpu: Dump off-cpu samples directly
-To: Howard Chu <howardchu95@gmail.com>
-Cc: acme@kernel.org, mingo@redhat.com, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, peterz@infradead.org, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	gautam@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] driver/base: Remove unused functions
+To: Zi Yan <ziy@nvidia.com>
+Cc: Mike Rapoport <rppt@kernel.org>, David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, rafael@kernel.org,
+        Danilo Krummrich <dakr@kernel.org>,
+        Ritesh Harjani <ritesh.list@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Yury Norov <yury.norov@gmail.com>, Dave Jiang <dave.jiang@intel.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <fbe1e0c7d91bf3fa9a64ff5d84b53ded1d0d5ac7.1745852397.git.donettom@linux.ibm.com>
+ <273649393600cb33ac3eec0e9a523c2d1853a47c.1745852397.git.donettom@linux.ibm.com>
+ <0EBDDF27-E05A-43D2-834D-987D6228A516@nvidia.com>
+Content-Language: en-US
+From: Donet Tom <donettom@linux.ibm.com>
+In-Reply-To: <0EBDDF27-E05A-43D2-834D-987D6228A516@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=afZhnQot c=1 sm=1 tr=0 ts=68139019 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VnNF1IyMAAAA:8 a=DEEYPtLpCerEZFQj_3sA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: kOzxZK8LJaDxNzy1KlKzBvNMAF7PiG2W
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDExNCBTYWx0ZWRfXxS2OkTofEvMv W00Ab7X+I+WFKriySoIXqmtB3JpfNkZodBC9TTiFphVl0AgP0ZNf1fM9EGqPMyBzrpa1k7DcQDF eCJvFESnJxENXoQpXWzexYX/sNv7a7ER26hUN+5ykI0BSfSxafkw4DO9LYpjE5fvQ6AuugHJDLm
+ ciLq93G5fXwqqqMJVz2dJwgWEi175945m1jx5VcXh6a3vSoDF+jjK7Lhg+K/QDn3vWvSQ9ApoHh 4WXxuWXFu6f460shIScRuV83wnSMAHqYN4U7Y6+gXnMoCLrQHP7ZeCnaCrQl5JE4GzJ0gzGDIJ4 d1J5zJdOZ3Vsoy0yVwrGbPQwpaSD/xuYG4QPIim2/RlLavTA2DvFJXmJLDe0jFNUqO9DnST+pfx
+ O8yRTLto5AaC0ZQiLZ3V/0mhkrrU5z7Sn2o0QKrUDl4+yZLVDQNvT+Eg8lYQTFIZVtRYHgit
+X-Proofpoint-GUID: yZtKorS_n4ezgUzMQYsy4Kz7-C6nxbvB
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_05,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 clxscore=1015 phishscore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2504070000 definitions=main-2505010114
 
-On Wed, Apr 30, 2025 at 7:28=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
->
-> Currently, off-cpu samples are dumped when perf record is exiting. This
-> results in off-cpu samples being after the regular samples. This patch
-> series makes possible dumping off-cpu samples on-the-fly, directly into
-> perf ring buffer. And it dispatches those samples to the correct format
-> for perf.data consumers.
->
-> Before:
-> ```
->      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  fff=
-fffff90d2e8aa record_times+0xa ([kernel.kallsyms])
->             perf  770116 [001] 27981.041375:          1    cycles:P:  fff=
-fffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041377:          1    cycles:P:  fff=
-fffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041379:      51611    cycles:P:  fff=
-fffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
->      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  fff=
-fffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
->      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  fff=
-fffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
->
-> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
->             79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
->             585690935cca [unknown] (/usr/bin/sshd)
-> ```
->
-> After:
-> ```
->             perf  774767 [003] 28178.033444:        497           cycles:=
-P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
->             perf  774767 [003] 28178.033445:     399440           cycles:=
-P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
->          swapper       0 [001] 28178.036639:  376650973           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->          swapper       0 [003] 28178.182921:  348779378           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->          swapper       0 [000] 28178.463253:  195945410           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->      dbus-broker     412 [002] 28178.464855:  376737008           cycles:=
-P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
-> ```
 
-Tested-by: Ian Rogers <irogers@google.com>
+On 5/1/25 8:38 PM, Zi Yan wrote:
+> On 28 Apr 2025, at 13:03, Donet Tom wrote:
+>
+>> The functions register_mem_block_under_node_early and get_nid_for_pfn
+>> are not used, as register_memory_blocks_under_node_early is now used
+>> to register memory blocks during early boot. Therefore, these unused
+>> functions have been removed.
+>>
+>> Signed-off-by: Donet Tom <donettom@linux.ibm.com>
+>> ---
+>>   drivers/base/node.c | 54 +--------------------------------------------
+>>   1 file changed, 1 insertion(+), 53 deletions(-)
+>>
+>> diff --git a/drivers/base/node.c b/drivers/base/node.c
+>> index 4869333d366d..59ec507fc97d 100644
+>> --- a/drivers/base/node.c
+>> +++ b/drivers/base/node.c
+>> @@ -748,15 +748,6 @@ int unregister_cpu_under_node(unsigned int cpu, unsigned int nid)
+>>   }
+>>
+>>   #ifdef CONFIG_MEMORY_HOTPLUG
+>> -static int __ref get_nid_for_pfn(unsigned long pfn)
+>> -{
+>> -#ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+>> -	if (system_state < SYSTEM_RUNNING)
+>> -		return early_pfn_to_nid(pfn);
+>> -#endif
+>> -	return pfn_to_nid(pfn);
+>> -}
+>> -
+>>   static void do_register_memory_block_under_node(int nid,
+>>   						struct memory_block *mem_blk,
+>>   						enum meminit_context context)
+>> @@ -783,46 +774,6 @@ static void do_register_memory_block_under_node(int nid,
+>>   				    ret);
+>>   }
+>>
+>> -/* register memory section under specified node if it spans that node */
+>> -static int register_mem_block_under_node_early(struct memory_block *mem_blk,
+>> -					       void *arg)
+>> -{
+>> -	unsigned long memory_block_pfns = memory_block_size_bytes() / PAGE_SIZE;
+>> -	unsigned long start_pfn = section_nr_to_pfn(mem_blk->start_section_nr);
+>> -	unsigned long end_pfn = start_pfn + memory_block_pfns - 1;
+>> -	int nid = *(int *)arg;
+>> -	unsigned long pfn;
+>> -
+>> -	for (pfn = start_pfn; pfn <= end_pfn; pfn++) {
+>> -		int page_nid;
+>> -
+>> -		/*
+>> -		 * memory block could have several absent sections from start.
+>> -		 * skip pfn range from absent section
+>> -		 */
+>> -		if (!pfn_in_present_section(pfn)) {
+>> -			pfn = round_down(pfn + PAGES_PER_SECTION,
+>> -					 PAGES_PER_SECTION) - 1;
+>> -			continue;
+>> -		}
+>> -
+>> -		/*
+>> -		 * We need to check if page belongs to nid only at the boot
+>> -		 * case because node's ranges can be interleaved.
+>> -		 */
+>> -		page_nid = get_nid_for_pfn(pfn);
+>> -		if (page_nid < 0)
+>> -			continue;
+>> -		if (page_nid != nid)
+>> -			continue;
+>> -
+>> -		do_register_memory_block_under_node(nid, mem_blk, MEMINIT_EARLY);
+>> -		return 0;
+>> -	}
+>> -	/* mem section does not span the specified node */
+>> -	return 0;
+>> -}
+>> -
+>>   /*
+>>    * During hotplug we know that all pages in the memory block belong to the same
+>>    * node.
+>> @@ -895,10 +846,7 @@ void register_memory_blocks_under_node(int nid, unsigned long start_pfn,
+>>   {
+> Should this function be renamed to register_memory_blocks_under_node_hotplug
+> to reflect its current implementation?
 
-and in the process coming across:
-https://lore.kernel.org/lkml/20250501070003.22251-1-irogers@google.com/
+Yes, we can rename it since it will only be called during hotplug. I will add it in next version.
 
-Thanks for persisting with this, we're past the 1 year milestone:
-https://lore.kernel.org/linux-perf-users/20240424024805.144759-1-howardchu9=
-5@gmail.com/
+Thanks
+Donet
 
-Thanks!
-Ian
 
-> Changes in v16:
->  - Add Tested-by from Gautam and Acked-by from Namhyung.
->  - Rebase on the perf-tools-next branch.
->  - Edit the commit message of patch 10.
->  - Fix a bug caused by the type change of struct perf_cpu.
->  - Rename test_offcpu_over_thresh() to test_offcpu_above_thresh().
 >
-> Changes in v15:
->  - Fix workload recording bug pointed out by Arnaldo.
->  - Rename struct stack to struct __stack as suggested by Arnaldo.
->  - Delete the extra offcpu workload now that recording workload is fixed,
->    use 'sleep 1' for testing instead.
->  - Add more tests for the off-cpu-thresh option.
->
-> Changes in v14:
->  - Change the internal off_cpu_thresh_us to off_cpu_thresh_ns, i.e. use
->    nsec instead of usec
->
-> Changes in v13:
->  - Move the definition of 'off_cpu_thresh_ns' to the same commit as
->    dumping off-cpu samples in BPF, and give off_cpu_thresh_ns a default
->    value before the --off-cpu-thresh option is parsed.
->
-> Changes in v12:
->  - Restore patches' bisectability, because the ordering of patches has
->    changed.
->  - Change 'us =3D ms * 1000' to 'us =3D ms * USEC_PER_MSEC'
->
-> Changes in v11:
->  - Modify the options used in the off-cpu tests, as I changed the unit
->    of the off-cpu threshold to milliseconds.
->
-> Changes in v10:
->  - Move the commit "perf record --off-cpu: Add --off-cpu-thresh option"
->    to where the direct sample feature is completed.
->  - Make --off-cpu-thresh use milliseconds as the unit.
->
-> Changes in v9:
->  - Add documentation for the new option '--off-cpu-thresh', and include
->    an example of its usage in the commit message
->  - Set inherit in evsel__config() to prevent future modifications
->  - Support off-cpu sample data collected by perf before this patch series
->
-> Changes in v8:
->  - Make this series bisectable
->  - Rename off_cpu_thresh to off_cpu_thresh_us and offcpu_thresh (in BPF)
->    to offcpu_thresh_ns for clarity
->  - Add commit messages to 'perf evsel: Expose evsel__is_offcpu_event()
->    for future use' commit
->  - Correct spelling mistakes in the commit message (s/is should be/should=
- be/)
->  - Add kernel-doc comments to off_cpu_dump(), and comments to the empty
->    if block
->  - Add some comments to off-cpu test
->  - Delete an unused variable 'timestamp' in off_cpu_dump()
->
-> Changes in v7:
->  - Make off-cpu event system-wide
->  - Use strtoull instead of strtoul
->  - Delete unused variable such as sample_id, and sample_type
->  - Use i as index to update BPF perf_event map
->  - MAX_OFFCPU_LEN 128 is too big, make it smaller.
->  - Delete some bound check as it's always guaranteed
->  - Do not set ip_pos in BPF
->  - Add a new field for storing stack traces in the tstamp map
->  - Dump the off-cpu sample directly or save it in the off_cpu map, not bo=
-th
->  - Delete the sample_type_off_cpu check
->  - Use __set_off_cpu_sample() to parse samples instead of a two-pass pars=
-ing
->
-> Changes in v6:
->  - Make patches bisectable
->
-> Changes in v5:
->  - Delete unnecessary copy in BPF program
->  - Remove sample_embed from perf header, hard code off-cpu stuff instead
->  - Move evsel__is_offcpu_event() to evsel.h
->  - Minor changes to the test
->  - Edit some comments
->
-> Changes in v4:
->  - Minimize the size of data output by perf_event_output()
->  - Keep only one off-cpu event
->  - Change off-cpu threshold's unit to microseconds
->  - Set a default off-cpu threshold
->  - Print the correct error message for the field 'embed' in perf data hea=
-der
->
-> Changes in v3:
->  - Add off-cpu-thresh argument
->  - Process direct off-cpu samples in post
->
-> Changes in v2:
->  - Remove unnecessary comments.
->  - Rename function off_cpu_change_type to off_cpu_prepare_parse
->
-> Howard Chu (10):
->   perf evsel: Expose evsel__is_offcpu_event() for future use
->   perf record --off-cpu: Parse off-cpu event
->   perf record --off-cpu: Preparation of off-cpu BPF program
->   perf record --off-cpu: Dump off-cpu samples in BPF
->   perf evsel: Assemble offcpu samples
->   perf record --off-cpu: Disable perf_event's callchain collection
->   perf script: Display off-cpu samples correctly
->   perf record --off-cpu: Dump the remaining samples in BPF's stack trace
->     map
->   perf record --off-cpu: Add --off-cpu-thresh option
->   perf test: Add direct off-cpu tests
->
->  tools/perf/Documentation/perf-record.txt |   9 ++
->  tools/perf/builtin-record.c              |  33 +++++++
->  tools/perf/builtin-script.c              |   4 +-
->  tools/perf/tests/shell/record_offcpu.sh  |  71 ++++++++++++++
->  tools/perf/util/bpf_off_cpu.c            | 119 ++++++++++++++---------
->  tools/perf/util/bpf_skel/off_cpu.bpf.c   |  98 ++++++++++++++++++-
->  tools/perf/util/evsel.c                  |  41 +++++++-
->  tools/perf/util/evsel.h                  |   2 +
->  tools/perf/util/off_cpu.h                |   3 +-
->  tools/perf/util/record.h                 |   1 +
->  10 files changed, 324 insertions(+), 57 deletions(-)
+>>   	walk_memory_blocks_func_t func;
+>>
+>> -	if (context == MEMINIT_HOTPLUG)
+>> -		func = register_mem_block_under_node_hotplug;
+>> -	else
+>> -		func = register_mem_block_under_node_early;
+>> +	func = register_mem_block_under_node_hotplug;
+>>
+>>   	walk_memory_blocks(PFN_PHYS(start_pfn), PFN_PHYS(end_pfn - start_pfn),
+>>   			   (void *)&nid, func);
+>> -- 
+>> 2.48.1
 >
 > --
-> 2.45.2
+> Best Regards,
+> Yan, Zi
 >
