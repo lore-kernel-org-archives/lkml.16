@@ -1,169 +1,102 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97516150997;
-	Thu,  1 May 2025 09:17:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C38B20F091;
+	Thu,  1 May 2025 09:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746091062; cv=none; b=GaDecvN18BkfPbQ2P6U8si+bFr2RgCp59HQH2jQIbeVR8Rjxp4E5xwrQE6FWKc6lelzVALvgNDmBCDSOLp+8xuDBM0+CMrUa8msB0FYA6nmxIyaaEu4HqdKKN73YEGApqssjw3KZX6fnKleHR1ZsZEYfuRLCxd+2Ybypl4v0I1M=
+	t=1746091265; cv=none; b=WckiApUDGz8kfBQtZZ/LgGKQ7G3EHinV8MKPFXZekoe+fOiwPOiOlvPJITO6mupCS4rqxB97TzEMC56aUQPfuODJJuC78/ideI9sgROntQUPzqKkMxXr+P48rQPcfDQAiwtSCb8SeKcNptCkbua9pgzXOKMgFX/CuMVWDs48cyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746091062; c=relaxed/simple;
-	bh=ccj29LzH5XvqYMAXSz5jWd+q3KcsdJgsxezJfR7HIXk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=eWTBZJ462HBXQ+xZ2+MwhypG1gJCBt5YWrKRekDnwrS+CrioMMiN2TGgWezmVnJ6XO/UB/yXHcQ+tu2DEqKjrLDzXeuY/XugcnJQph1uFNp+xOl+cQm1vKdyJHrNEKFMUCufm4kDaI9GOAYS9VhlyksB8NpZSSlj/YYIkpIxNLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HYVYiDSS; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746091265; c=relaxed/simple;
+	bh=VrVkL3ZKkmH7IRchxu6hs4KunGiXp7bNuu+DRsYoQLU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=VwyHNur9x7ko4Il5V6PozVqgO1rFYlm0sNJnNtk8bsGr0q9Tpt0tq0bPNUiMVSOO2GNhxqsp6zQmpowxWxqsix1Sfn4RAtoDWlLTLxwV/qFhgSO9+FrJIGSaQs9Wlm+0uszFOakpsgs4+7NfHFS1qFJuVBYWYzsy2mHviJGo8Fg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2X/WuIq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HYVYiDSS"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5413oFrh031394;
-	Thu, 1 May 2025 09:17:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	hNb1dl3k0K+rbG/BUE8UZ57J0ajZ81B0ROyGlfaeqBI=; b=HYVYiDSS9NHc2xot
-	8V1WxCFNYeJrhVrQ/xICepbLqOoqOVpcVRK8NZ7F1KU2tyYFe55+GnRSIlRB1HQm
-	mQzQ7rugMw4nS25nFMRWLitP2qk97pgMejEhxca6mbtbq50x59Y6FiyyklzTEvcW
-	rvvBGq0RA2KwJqub54fGqMfD+WWGw0XgfKnmo7RqWna6Gfmjmxaf94LhsP+mc6k1
-	hNrM7abUliFiaNlsklInhY/DTOYyQ9I3jvmjNOs1PcaH+SqCQcF+iXmYZXPvojfw
-	6ndhg96sRG/Eg8FvjFPV2l5grdGKNaNm7vgWedTcycf4gdcBIIwFqlWKRhLdK+d9
-	NZos0A==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u1vvue-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 01 May 2025 09:17:31 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5419HUc5015257
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 1 May 2025 09:17:30 GMT
-Received: from [10.216.32.231] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 1 May 2025
- 02:17:25 -0700
-Message-ID: <3de5d4f0-606e-48b5-b3f5-d7acf726d0ee@quicinc.com>
-Date: Thu, 1 May 2025 14:47:22 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2X/WuIq"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 32B5CC4CEED;
+	Thu,  1 May 2025 09:21:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746091265;
+	bh=VrVkL3ZKkmH7IRchxu6hs4KunGiXp7bNuu+DRsYoQLU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=R2X/WuIqE/ACfjAl+TA7NjEX1qW7cHsXZ6Pk4xJuPkUG0jJTleGgcGmddyOWfv+ZC
+	 QtSTOUPsOTr9rarM2hqTGJ6p6Eoe1CKfXFY6FHxq+pRdcU55EKiUfPI+ojZ8tVkrb0
+	 ad6bBiDFgrF2mwHxku1Vl/bkXRPlPthlBpI9qWQeVpHI8c2sUnjxOSleS+AimDo012
+	 icAazWrqqdWYoX5ZxZD/Up/Gu61f/KefTvc1kFSQtZA6sdtsc2r+20vZvniAJZ4sGe
+	 rxEm68V0LyjCs6Z9Nl+kzfXDkWMxSvE8y7/LeqTHMlJJJg4NjMxWlZC7lOw+oNFtMI
+	 GdEqLRZj7xk7g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D006C3ABA9;
+	Thu,  1 May 2025 09:21:05 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Date: Thu, 01 May 2025 13:20:51 +0400
+Subject: [PATCH 1/2] dt-bindings: spi: spi-qpic-snand: Add IPQ5018
+ compatible
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/5] drm/msm/adreno: Implement SMEM-based speed bin
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-CC: Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        "Abhinav
- Kumar" <quic_abhinavk@quicinc.com>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>,
-        David Airlie <airlied@gmail.com>, "Daniel
- Vetter" <daniel@ffwll.ch>,
-        Bjorn Andersson <andersson@kernel.org>, Rob
- Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor
- Dooley <conor+dt@kernel.org>,
-        Marijn Suijten <marijn.suijten@somainline.org>,
-        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <20240709-topic-smem_speedbin-v5-0-e2146be0c96f@linaro.org>
- <20240709-topic-smem_speedbin-v5-1-e2146be0c96f@linaro.org>
- <20240715200419.l47ng6efa25in6sg@hu-akhilpo-hyd.qualcomm.com>
- <c6cff2a7-4497-44b3-a019-60e3c6034d4f@oss.qualcomm.com>
-From: Akhil P Oommen <quic_akhilpo@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <c6cff2a7-4497-44b3-a019-60e3c6034d4f@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=G5AcE8k5 c=1 sm=1 tr=0 ts=68133c2b cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KKAkSRfTAAAA:8 a=egTsXL45pzzUbfgsQh0A:9 a=QEXdDO2ut3YA:10
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAxMDA3MCBTYWx0ZWRfX5jLRlGnSk/Mx M+VM9128DOCfSEWouU13szJGqFe9OLsvyu60hnds8BTruCnCdo8G9XugGnAbtVeLsHWblNBD+XU DWd2Alk2yZqEE3n8VH5Ll2swuHULak/jaHx+w8HnBBQUT3y4JBdTN6WH7apTwiCsKfs/VjGYkmi
- VNIiZmPeQ5qJ9cKcegTmxspQMk86SBFEo7YBQH1Jns9x+vJdJSoEzxtD9l5T6l5NI2oB1bpbDDn iLLioZZxLHsl6azkkDwQEoAgyp9f/PyBtohEtUE9Aq1a/BHOXQzLbzVynbtIcOsugxqK6Epu8o5 IsmojkuXV6d9Fap9tO0j/fXr96bATtaUmmdqFXVeeaM7nk8dvALarMwXWe/viQPvqPhCvBrZrLA
- s7vgohspwzOju+eZwVUiY+DbraudljuDZfz6mPSxPfr5z6fi1LopRsppQ0ritjb8Ff4k6+9l
-X-Proofpoint-GUID: hIRcUUZtDzD6m2PKlExzGT_a9w5TezNA
-X-Proofpoint-ORIG-GUID: hIRcUUZtDzD6m2PKlExzGT_a9w5TezNA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_03,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- clxscore=1011 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505010070
+Message-Id: <20250501-ipq5018-spi-qpic-snand-v1-1-31e01fbb606f@outlook.com>
+References: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
+In-Reply-To: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, sadre Alam <quic_mdalam@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746091263; l=1065;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=Vn57KyOsNu/ySFd+C3/QjJQvANGt6ZH80rH1wCZ1tT8=;
+ b=3RrQmearoVavPvbKtCI1KwwwSX1OTyhq6rOVklLPGZFGFKhyVqAfnJoUZCOids4dHNnILQ1AZ
+ 2W6MX43xx7PAi+38BpFmh99VvSWL/OLtdiAl9MDE8yRrH95LgCMBm/q
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-On 4/25/2025 2:35 PM, Konrad Dybcio wrote:
-> On 7/15/24 10:04 PM, Akhil P Oommen wrote:
->> On Tue, Jul 09, 2024 at 12:45:29PM +0200, Konrad Dybcio wrote:
->>> On recent (SM8550+) Snapdragon platforms, the GPU speed bin data is
->>> abstracted through SMEM, instead of being directly available in a fuse.
->>>
->>> Add support for SMEM-based speed binning, which includes getting
->>> "feature code" and "product code" from said source and parsing them
->>> to form something that lets us match OPPs against.
->>>
->>> Due to the product code being ignored in the context of Adreno on
->>> production parts (as of SM8650), hardcode it to SOCINFO_PC_UNKNOWN.
->>>
->>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>> ---
-> 
-> [...]
-> 
->>>  
->>>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->>> @@ -1102,9 +1136,9 @@ int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->>>  			devm_pm_opp_set_clkname(dev, "core");
->>>  	}
->>>  
->>> -	if (adreno_read_speedbin(dev, &speedbin) || !speedbin)
->>> +	if (adreno_read_speedbin(adreno_gpu, dev, &speedbin) || !speedbin)
->>>  		speedbin = 0xffff;
->>> -	adreno_gpu->speedbin = (uint16_t) (0xffff & speedbin);
->>> +	adreno_gpu->speedbin = speedbin;
->>
->> There are some chipsets which uses both Speedbin and Socinfo data for
->> SKU detection [1]. We don't need to worry about that logic for now. But
->> I am worried about mixing Speedbin and SKU_ID in the UABI with this patch.
->> It will be difficult when we have to expose both to userspace.
->>
->> I think we can use a separate bitfield to expose FCODE/PCODE. Currently,
->> the lower 32 bit is reserved for chipid and 33-48 is reserved for speedbin,
->> so I think we can use the rest of the 16 bits for SKU_ID. And within that
->> 16bits, 12 bits should be sufficient for FCODE and the rest 8 bits
->> reserved for future PCODE.
-> 
-> So I revisited this patchset and had another thought - maybe we could just
-> extend the speedbin bitfield to cover [63:32] and worry about filling these
-> higher bits in the future, when adding the platforms you mentioned?
+From: George Moussalem <george.moussalem@outlook.com>
 
-Sorry for the late response, I needed sometime to think this through.
+IPQ5018 contains the QPIC-SPI-NAND flash controller which is the same as
+the one found in IPQ9574. So let's document the IPQ5018 compatible and
+use IPQ9574 as the fallback.
 
-My concern is about mixing speedbin and socinfo in the same UABI. It
-will be complicated to handle this correctly later. We have to track the
-set of chipsets which exposes socinfo data via speedbin fields and those
-do not. I think it is be simpler to handle this correctly from the start.
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+ Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-If you are worried about breaking backward compatibility with Mesa, we
-can probably use a separate property for socinfo data which can be
-implemented later? Just don't expose socinfo via speedbin UABI.
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml b/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
+index aa3f933192034fe6d54d6149373d50c31ec4aa96..cb1f15224b45574a3c3d603566c859a9bec41937 100644
+--- a/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
++++ b/Documentation/devicetree/bindings/spi/qcom,spi-qpic-snand.yaml
+@@ -21,8 +21,12 @@ allOf:
+ 
+ properties:
+   compatible:
+-    enum:
+-      - qcom,ipq9574-snand
++    oneOf:
++      - items:
++          - enum:
++              - qcom,ipq5018-snand
++          - const: qcom,ipq9574-snand
++      - const: qcom,ipq9574-snand
+ 
+   reg:
+     maxItems: 1
 
-> 
-> Do we still have plans to use *both* SMEM and fuse encoding on them?
+-- 
+2.49.0
 
-It is better to keep that option open since there are chipsets using
-both production. And there will be for foreseeable future because
-automotive team stick with fuse register and mobile team stick with
-socinfo data.
-
--Akhil
-
-> 
-> Konrad
 
