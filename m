@@ -1,239 +1,152 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D01A1D89FD
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 10:34:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AA6218AC4
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 10:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746095687; cv=none; b=MQ9AZPG53OqChclHdCazi4lfneeEbNi0hEpYNIlfqIDaByEPyBm2G93ZhmG3NhhQFdeRepBC8QwBq9Y9IItTJRjcqWcVlAKHxe20bdhd67wgulsQTVxyXVRGDkUzDOOOGkcu+pfryhlvdKwk/Egj/DkUaKgtY9qrThsnOd0OMMg=
+	t=1746095752; cv=none; b=QD+Xj002FWWr7tZHs51+3dLfGjS7u/ugxK34FL4uwVpd4ZSivNljjgJ2ybkHVn+Jflqh7viuwThRSZI9gB6JXrvQzIvbCrMDPsq+AA0y/QjhsRJ0xtE3FNGqlDXoeP4FZzAQ5ARhv7CQQQyc2/YyYr3ocETgHkC1XYUayPA6Wtc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746095687; c=relaxed/simple;
-	bh=MUTaj/7IFe8Nqbi69i12FfDGJ44WM/LIkZkn7/gejDc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aR5IboB0UzY1Pjyya85qLh39CqL0oYhmgPNVmH8Zkp2TQWTShN/gczYV7ztL+FLSL16J2OnNBtz0rAgJbFqH6lQWfiLLs5vRBjyQWyRL8ivqHbZSuabbOOHCPUYQR0CwSUwpNJXSTVOqK8+1nlPXbnk/RGoa+Q4Jeir6r2CuMu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl; spf=pass smtp.mailfrom=conclusive.pl; dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b=FsaXCZ1b; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=conclusive.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=conclusive.pl
+	s=arc-20240116; t=1746095752; c=relaxed/simple;
+	bh=vNYmWvhVJQY/AqblF9NK9uhqlpRYbUIbtdpo5XR+1to=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=COsqiVh5HTlPWtLOKIMyJl/+dyTAhUvFFXBOo8E1YK1p6+0rkMjKj9YcBv1XJ2EPLJT8vDTDY/cN0qolusRjTWJ1k2GSY5nroLLU5mhwW5Z+bZpEzP4IMqXEwPVM6Gpq27sx0nQ5/jv4pDR00Y6D5yjFjJv2A2yK8tlR+Ow2Ul8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Iui+N/gd; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=conclusive.pl header.i=@conclusive.pl header.b="FsaXCZ1b"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5f861d16622so1336358a12.2
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 03:34:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Iui+N/gd"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43cf825f46bso1023945e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 03:35:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=conclusive.pl; s=google; t=1746095684; x=1746700484; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uQTqQXX6bF7BPtljE58vt7cyRRi/056r9gupueutWvo=;
-        b=FsaXCZ1b22VXn9gIQX8I1UWTUl4EK9hk+mxr5a//czMvGSAcVnWPZNrXv/pUIf4zI0
-         10ipcusWEQUcNZ7UwdTQL6t7gCbSpWK/hDexUndJYgpZdEqYGUj/7nXteWC/VDi3vi0M
-         sjw0zyiojyo+tLE2X/2tF6JqJwEyAcaxKux3oFshxSRQlR7QOvcnloWAlV+RI9OLlcrg
-         9L7fR7+Rkb1llVuWEAgfTJLWnP17TqvbRJA35jFKxsp+vlxQLnO4nDS4x8WcMXewyvx+
-         tgpeAL6pcFTRl9gNkxHPAP15ZXhrKDo+sOeRnX/RvRkm9b7bqWZADrHX6fUC4pAj82X3
-         h6Hg==
+        d=linaro.org; s=google; t=1746095748; x=1746700548; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0JnUeJrEz2QMwYoW3OD7Syx9Jdxy3i/s9a5E6cIdqNg=;
+        b=Iui+N/gd7U27Ge1BGBruaX96YwUsclq1Rt6A1fHQBf62la3S1tg9nek6Q6MI4XLlCs
+         Q/vxKx66riqPXerNZwVYxFAwodgLoN7rT7YP/0vUNv2yGKW3Xb3fE/FQdy7UbL9tLGcv
+         tWA8JWubZvUnuZY50w+frn9ckU/ZksN484YGJio2FxIpiYFe/djSrFDA8y2ayUB7DrmE
+         eAolAvo7kWfXWHSs9F3pPD4smaeGeCAkrOO1UHq3RGNGXpMpEVfcQ4Zi+eSVm1/501Rf
+         Riw9l5VpWQ7tcUyrqWMSXhwvmD9YxpW1DIgsCuYc7Kt+qDz/BinG4851nZbgEzxnyC3a
+         YW5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746095684; x=1746700484;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uQTqQXX6bF7BPtljE58vt7cyRRi/056r9gupueutWvo=;
-        b=iwAQYg5nvqdVGr4CbqnqjS4ekavy0Q5iZtLK8NTpDnWjNGJPFDJsVDAvYuN4LeGz6n
-         R+R4RD0DzFeRPwLcuPD2tLyH3okdTHPZCH334eBv6R3V6ii5Jm+LGrQr66iYMVCP8MzE
-         xRzKzvyIDbXAZBzGfqk6dvZ7hKySPPyKX83qHb+CZ9MbJv3puPTYseckcTzMtNY4gvCG
-         i/hJGiGaJwpZZW7Pc1xBXxHovRhPFPEmbttGpKMZxQkFH9VvN+3PwC0ca0ktTHw8Zs3N
-         4sHsMPwxW2t77TUvDPvgV6gUNgPIdieNh3XVE5Ny4+L5cpiCs8QLB8IdhwBbqYGL6o8F
-         JMyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVbeku1Zw7ud0afidHj9ZOOdpPdTuLw8LJz3V9F1iGwY40kyvzL00rcI8XNJaoSdlsZnacggNBxcW0rGww=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyIiXo4on0ongDmlR4KUkKvJRgeTAeX9xregR5ITigOKu7oMrw
-	IcxxP+pMsnHBsCV5ABvrQqV4Uwed9qB8KrlSL0ka3JKYkctkb2fMFuFK48GaXtbbMkeC/HRMLLu
-	bdRpqYdaNA3/tChlyU0CjjbV9DP4ps1Lf+uruwQ==
-X-Gm-Gg: ASbGncvdB1t5KvHfXmX2mybJ02UL6/L4WzRmy5dFUIIbfF39aJr1h9qOUftdUrM7ynu
-	VmK6AcBFL9OxEneT1untF7p/g/j4B65RAoY3dlWMCXTkR9B39GdG4ubWFejCfkfRsxEbA+KPNS3
-	hPJsJf2MmyU7JLoKWFxIuG1/Q=
-X-Google-Smtp-Source: AGHT+IHuZv2je4gGxhN7+ev1uXYmWjyBNOnwp20lzHsLJgfZTd7L6FICEpx+GOxp7dYxu+FNtnBrlAImRJQRK5hGbNU=
-X-Received: by 2002:a05:6402:2786:b0:5f5:6299:ad68 with SMTP id
- 4fb4d7f45d1cf-5f9124ec8dbmr2079272a12.11.1746095683491; Thu, 01 May 2025
- 03:34:43 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746095748; x=1746700548;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0JnUeJrEz2QMwYoW3OD7Syx9Jdxy3i/s9a5E6cIdqNg=;
+        b=g3KQU5WJP51G3/SPMW6koh6QG8EjejwlwBE/JYHANfmqU/Eoh0uXuHVXbNhoiuIEFl
+         +ZcOGzGqTGE6SURrSs+KKf8d0L/lkOXsO3C7XAcVx20/J21rnrRlGctYsX2GF2Y44osb
+         ef1to485o8wvjk1DLxFob+v44/yqFe9h2I7eKD5x4UB+9JZap54+CFRXiIt87VB9fb0A
+         Li7bFPRKTpmyLg93knvRmnIuZ993/gaOBm+5x54TCL4LDk0AUkZJwXkVeUqcokBCSUfr
+         KVXFpWVRPjsu2qZSPNVJixy7nTvVSbNNMhgPrQ+0/dFSn9mC2I5f28SbGPRheMx8HhgC
+         e2QA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGsgMu5qIHIEltUKvURNDSi5jtJrAm/kqFA3yLR205QuGuhJ0XW2MjEQWsfkVh61yZs8QDnkuP1prM51I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhsyFAQqqJXqwXHfqlaSTZ/ucUu9mk6jB6ypLZ7rdWLhqtPhPg
+	0UJl8UMVmeJVDMCsQYOn1pWDU0yrjiY3FoaOfaPYKJ4HSz1hdsmfPrIX9R8zvBY=
+X-Gm-Gg: ASbGncvbUAqPCxXPdjOyQq5JLgU+3Ff6vgcSF6jcdnTevwybIv6kuFEMPgXskuSrCsv
+	LY8J9WOKHu07FuxFiU6gpuwRxWVS+QAa8Fd1TiZNdI1hYh04nzHkjVRxf/HiW1SEeAu0JwmayWd
+	gcfk3zV1NDEEQ2vNH1AUGgDxtgAGMyJqXjYOmqoPo9OFLQ3tiwmBIrUL1I18pcnSk4gFRyusquj
+	dvu4qKS+n4+IoOJ3K5LcfbVJ9K24obycAR7uTwRDj7f2PzdRvhkeggvOH1U7U++oipH8xIDljlB
+	HXc+o+VRwK5xOxYnBt/1Q/f93EiMmYHKbh7nbdlofv39vs104A==
+X-Google-Smtp-Source: AGHT+IHpYbP0/kmTUa86knuxCp0uPFuqoZHphNnA+x+8xxOAP7htntUULz8OHSqI0KW/OuRv2E6e8g==
+X-Received: by 2002:a5d:59ab:0:b0:3a0:7119:cefa with SMTP id ffacd0b85a97d-3a0900a0a99mr1574177f8f.16.1746095748358;
+        Thu, 01 May 2025 03:35:48 -0700 (PDT)
+Received: from kuoka.. ([178.197.207.88])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a095a88218sm486646f8f.78.2025.05.01.03.35.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 03:35:47 -0700 (PDT)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	soc@lists.linux.dev,
+	Lee Jones <lee@kernel.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Peter Griffin <peter.griffin@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [GIT PULL] samsung: drivers for v6.16
+Date: Thu,  1 May 2025 12:35:41 +0200
+Message-ID: <20250501103541.13795-2-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250422175918.585022-1-artur@conclusive.pl> <20250422175918.585022-3-artur@conclusive.pl>
- <45b74f9f0831294e783a019cd6a1437fdad4eb6a.camel@sipsolutions.net>
- <CAGhaMFO_f_bvFB+39-z6xVF+y446ONwm1ROHQ=rXj=s4MnL54w@mail.gmail.com> <67cac31400c485ffee3bac24728fbfe128b73f6b.camel@sipsolutions.net>
-In-Reply-To: <67cac31400c485ffee3bac24728fbfe128b73f6b.camel@sipsolutions.net>
-From: Artur Rojek <artur@conclusive.pl>
-Date: Thu, 1 May 2025 12:34:32 +0200
-X-Gm-Features: ATxdqUF5U8dAltkMVsfQjIIWh1N9a22PvBa1CCHUXA5HYAtRc_3-gnwo5nUEqj4
-Message-ID: <CAGhaMFOt01SXNejP9a07cQ-0czFGGbm0S08EBevO=dno0UpQ=A@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Mark Brown <broonie@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	linux-wireless@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Jakub Klama <jakub@conclusive.pl>, 
-	Wojciech Kloska <wojciech@conclusive.pl>, Ulf Axelsson <ulf.axelsson@nordicsemi.no>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2160; i=krzysztof.kozlowski@linaro.org;
+ h=from:subject; bh=vNYmWvhVJQY/AqblF9NK9uhqlpRYbUIbtdpo5XR+1to=;
+ b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoE059ULjeHoIezM1OAEcRIkI9/eVyLkGHFQs+g
+ 7rpEZaMWx2JAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaBNOfQAKCRDBN2bmhouD
+ 12nUD/9GGensklaBc7M71nRyVAyLRtoLji6ft/Ict9H+mJZDnuu0b8HD7g+Bd8cQXxq/QEfpTpU
+ 3eZ2eHhGVRZjLwvIl29slEjPUmSCfJt0/FwGAvs4CS0S4J4Cz/NiemKpg/4e8Eew6EF40LceTHj
+ 4nZkclCbJ9W5znA6QdShYnsvijNEOLhZQsCNNSEQqIfXdzpnozs/QhftGoV9hT4tAqLSVU2f6Hn
+ jmsyfqT4JENOwsmtDN8j9YQYOrs3vGAKzcOcUDfiFbQ8DDWfVE7F1LRzzUR7XfQ/JoplAGqJv5w
+ 98STFW/3tbErQKmmTxGmJRd7k5b5s81O8DH2VR+kFZ41Iaz7bH5ui2cPJ3ollez7MA8bbP3yZT1
+ sZR7s6lOYvLV4sNQ/1v0+JoMkc9F4S2fl3NO3Bm65SW2K9Nu7QGVotAkKCYTLasz0ifE8Rady64
+ oPew0HeOVHkHLteSdmusZZmR/o+dlbVXsmqIFZ93b6xs/cb03KGr1uRj8YiVf4swVqTa4zpG/a8
+ oNbXpNyOht6RernZ4dKaL93ynESVArjwMoLvKetKMbM7DOXbqThhhUDSABqUfRc4LpEZzAk90FW
+ M9IRpcYQOZn2KX/e38M8x0F9wQBL0fY6A9Bk93WsBf7nV/8QLoAgsFBey9UQvZl6Kn7GIBFNNFh fsgUW3E/TP11+PA==
+X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 25, 2025 at 8:09=E2=80=AFPM Johannes Berg <johannes@sipsolution=
-s.net> wrote:
->
-> Hi,
->
-> > This is commercial work. I am employed by Conclusive Engineering, and
-> > was tasked with writing this driver. It was done for our internal needs
-> > (we sell hardware [1] with nRF70 on-board), however I was also asked to
-> > send the series upstream.
->
-> Makes sense.
->
-> > Nordic showed interest in this work, hence why their representative is
-> > CCd to this conversation. They agreed to use our hardware as a referenc=
-e
-> > board for nRF70 used in Linux context.
->
-> :)
->
-> > I fully understand your concerns with maintenance (I am privately
-> > a kernel contributor as well), and discussed this topic internally with
-> > appropriate decision making people. They understand the responsibilitie=
-s
-> > involved and agreed to allocate time for me to support this driver long
-> > term. As such, I will add myself to MAINTAINERS in v3.
->
-> Cool good to hear :)
->
-> > > https://lore.kernel.org/linux-wireless/21896d2788b8bc6c7fcb534cd43e75=
-671a57f494.camel@sipsolutions.net/
-> >
-> > Bearing in mind above time constraints, I have no objections to helping
-> > out. That said, this is my first Wi-Fi driver, and as such I am not tha=
-t
-> > familiar with the cfg80211 subsystem (hence why this series is RFC), so
-> > my expertise will be limited at best.
-> > What sort of help would you expect from me with the reviews?
->
-> I'm just handwaving I guess ;-) It'd just be good to see people a bit
-> involved in the community. Some apparently don't even have anyone who
-> follows the list and what happens in the community at all.
->
-> But it's a bit of a tit-for-tat thing - why would anyone review your
-> code? Why would you even expect anyone to? The already overloaded
-> maintainer? But on the other hand PHBs often think that sending their
-> code upstream magically makes it better. There's real effort involved in
-> keeping that true. :)
->
-> > > That CPU_LITTLE_ENDIAN seems like a cop-out. Do we really want that?
-> > > Asking not specifically you I guess...
-> >
-> > I addressed this in the cover letter (Patch 0/2), but nRF70 communicate=
-s
-> > using little-endian, byte packed messages, where each message type has
-> > a unique set of fields.
->
-> Sorry. Reading comprehension: 1, Johannes: 0. Guess I should look at
-> that and reply there too.
->
-> > This makes it a challenge to prepare said
-> > messages on a big-endian system. I am aware of the packing API [2],
->
-> I'm not familiar with it, tbh.
->
-> > however a cursory look at it indicates that I would need to provide
-> > custom code for each and every message (there's almost 150 of those in
-> > total, even if the driver doesn't support all of them at the moment -
-> > take a look at nrf70_cmds.h).
->
-> Looking at this, I don't see why? They're all just fixed structures? The
-> packing API appears (I never saw it before) to be for some form of bit-
-> packing, I'd think?
->
-> Looking at how you define the structures and how you use them, I'd say
-> all you need to do is replace u32/s32 by __le32, u16 by __le16, and then
-> fix the resulting sparse warnings by doing cpu_to_leXY()?
->
-> > Unless the __packed attribute is guaranteed to align the bytes the same
-> > way regardless of the endianness, and so calling cpu_to_le* for every
-> > field of a message is good enough (these messages are byte packed, not
-> > bit packed)?
->
-> Now I'm confused, what did you think would happen? If you have
->
-> struct foo {
->   u16 a;
->   u32 b;
-> } __packed;
->
-> you will get the 6 bytes, regardless of whether that's __le16/__le32 or
-> u16/u32. 'a' will be two bytes, and 'b' will be 4 bytes, and all you
-> need to do is convert the individual fields?
->
-> Maybe I don't understand the question.
+Hi Lee,
+That's the stable tag for you to base MFD patches on top.
 
-No, you're right. I somehow imagined that unaligned access will play
-a role, but access to packed members should be completely independent
-from byte swapping the lvalues.
 
-PS. I expected this to be more complicated, but it turns out aarch64
-can switch endianness at runtime, so I can continue testing on the same
-hardware as before. All I had to do is tick CONFIG_CPU_BIG_ENDIAN=3Dy,
-rebuild the rootfs for BE, and do minor hacks to the QSPI controller
-driver, and now nRF70 driver is beginning to work with BE. On a side
-note, I am taking a few days off, so v3 will come with a slight delay.
+Hi Arnd,
+Please pull it as regular drivers pull. Note this will be also shared with MFD
+tree.
 
-Cheers,
-Artur
+Best regards,
+Krzysztof
 
->
-> > > > +struct __packed nrf70_fw_img {
-> > > > +     u32 type;
-> > > > +     u32 length;
-> > > > +     u8 data[];
-> > > > +};
-> > >
-> > > making the u32's here __le32's (and fixing sparse) would probably go =
-a
-> > > long way of making it endian clean. The __packed is also placed oddly=
-.
-> >
-> > When declaring structure members for the messages (in nrf70_cmds.h),
-> > I noticed that this attribute has to go before the braces:
-> > > struct __packed { ... } name;
-> > rather than after braces:
-> > > struct { ... } __packed name;
->
-> Wait .. that syntax isn't right either way? But it can be
->
-> struct name { ... } __packed;
->
-> and that's what roughly everyone else does?
->
-> > > This sounds like you pretty much built the firmware for cfg80211 ;-)
-> >
-> > That's because the firmware *is* cfg80211.
->
-> Actually it appears to be also mac80211?
->
-> > Perhaps I am opening a can of worms here,
->
-> Heh, I guess.
->
-> >  but it has to be opened at some point during firmware
-> > upstream. From what I've seen, part of the nRF70 firmware (called UMAC)
-> > is derived from the cfg80211 project. Nordic makes the source code
-> > publicly available at this location [3]. I have also asked Nordic to
-> > provide a matching version of the source code for the fw blob they will
-> > be upstreaming to the linux-firmware project (I believe I will be
-> > assisting in that process as well). I hope everything there is dandy
-> > license-wise, as I am not a lawyer :)
->
-> Neither am I but the SFC says you have to have a way to build it. That
-> might be a real challenge since this integrates cfg80211/mac80211 (GPL)
-> and clearly unpublished proprietary code ("lmac").
->
-> Nordic folks might want to consult their lawyers on this.
->
-> johannes
+
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
+
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-6.16
+
+for you to fetch changes up to 2c2e5e908ea2b53aa0d21fbfe4d1dab527a7703e:
+
+  firmware: exynos-acpm: Correct kerneldoc and use typical np argument name (2025-04-25 11:41:03 +0200)
+
+----------------------------------------------------------------
+Samsung SoC drivers for v6.16
+
+Several improvements to Exynos ACPM (Alive Clock and Power Manager)
+driver:
+1. Handle communication timeous better.
+2. Avoid sleeping, so users (PMIC) can still transfer during system
+   shutdown.
+3. Fix reading longer messages from them firmware.
+4. Deferred probe improvements.
+5. Model the user of ACPM - PMIC - a as child device and export
+   devm_acpm_get_by_node() for such use case.
+
+----------------------------------------------------------------
+André Draszik (6):
+      firmware: exynos-acpm: use ktime APIs for timeout detection
+      firmware: exynos-acpm: allow use during system shutdown
+      dt-bindings: firmware: google,gs101-acpm-ipc: add PMIC child node
+      firmware: exynos-acpm: fix reading longer results
+      firmware: exynos-acpm: silence EPROBE_DEFER error on boot
+      firmware: exynos-acpm: introduce devm_acpm_get_by_node()
+
+Krzysztof Kozlowski (1):
+      firmware: exynos-acpm: Correct kerneldoc and use typical np argument name
+
+Tudor Ambarus (1):
+      firmware: exynos-acpm: populate devices from device tree data
+
+ .../bindings/firmware/google,gs101-acpm-ipc.yaml   | 35 +++++++++++++
+ drivers/firmware/samsung/exynos-acpm-pmic.c        | 16 +++---
+ drivers/firmware/samsung/exynos-acpm.c             | 58 +++++++++-------------
+ .../linux/firmware/samsung/exynos-acpm-protocol.h  |  6 ++-
+ 4 files changed, 70 insertions(+), 45 deletions(-)
