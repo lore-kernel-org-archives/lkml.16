@@ -1,50 +1,65 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001D21B5EB5
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:36:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65CE4132111
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746120985; cv=none; b=r1eHos1bpPJFtkn4QxZKQQytBd3xtrNawC1tuDrSIyyMa+DM3w4UTAR8h5jyO3n0+i5yJbumxKbQtP4mEtjdUSqlKrdrSBgPBggjyEeDnRuebqBgUEWbTB5zXjoRATF7LK7+VV4LzQIKpNXVQqHx+aL8q7kX/NqDTIbZogfNgZY=
+	t=1746121047; cv=none; b=gtS4IMKIPD1wbyQa1UCXqNLw3c8rx0ekNA2rpNuDxuXJKH5P20vRBVDWmHSJ+ZZ4OdcAoZcSLjlO1br/g4fUqhOgWX4Njhvv97ifjp8e/3SEVDONANfCxb1jNV8JxUT6yjOQfHvSRNEAYhIkZS9F72/K5XggCw+pX7xS6E31Sp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746120985; c=relaxed/simple;
-	bh=GVQZVmIPjFTL2nBzj0YFPfMMFlfwszWPp7tldmRsEGQ=;
+	s=arc-20240116; t=1746121047; c=relaxed/simple;
+	bh=1L3/NCL7TJkaCN+4lAJabZU6CsrzDXijUii+nvBNIKs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WmwchamcHpKIiroA9TzmY46/dBQGDzvCvxVopcgqiI48XSg/kbKyhOcrVhquCn3jKj4lFJlfzsUMYra/aMHUoVxdBIe7BHsO3nEXDs3YmpU59xUzKfN3npk96eAmXjnYBGNXEMK5RWdeRjdBnv72RZOy6WAu9DrTLqaoYVR0Qbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q3bd04eA; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=HPeSW0YJJhLYsYLUJB5teHXdK/ks4C0kiGuGD6JdrmMPW7L07OesL6VEbesHf6DqngnhzoQ43wX5ygWzaTkRLutl63vJ7LjtDdnViQddWwdqAjf844sKee/3X7SQWO/8PFqMuCJ9E7hbmhl00hN2XmQnyHGGL4YzNso7buQI6Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Pg4KBypU; arc=none smtp.client-ip=209.85.161.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3bd04eA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746120983; x=1777656983;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GVQZVmIPjFTL2nBzj0YFPfMMFlfwszWPp7tldmRsEGQ=;
-  b=Q3bd04eAmJ617zEPbyA3DouJLItIGMOd+t5Zkkt0KauyD+DknZE3J8z5
-   xfql0T0y+GckXRKQK/m9H5T2Dctd7PUTFxDMngeJVweyVOpWMz2/uVO5P
-   z0FZ0w+qlKUPoWF73Y4AJb/B8HASg++MNrisWXe1L2Xw2zRL9vO9lO9xB
-   RyGtf0V6qpxhZ8xIKAxMfVXf9AgzT+BhV25Q96DHD+P2L/8kRwTJv3t/+
-   g4ejv6FyFFuC37LSx+zZ9f2GNg+mXN+CbTy39zWJb0cxOysWR2NTHg9bN
-   XoJ+Vc7iDmYjpN3Fe3ZipJQ5Ne7iSSEnQ9gFSEwWMNO11wEaKkYJKCohf
-   g==;
-X-CSE-ConnectionGUID: ybX3wL+JQzitNBgZC1RCHw==
-X-CSE-MsgGUID: FHnigF04R3y4QsLgBZiRSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47941445"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47941445"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:36:22 -0700
-X-CSE-ConnectionGUID: VXKijSaBSH2ahV+mBkcspg==
-X-CSE-MsgGUID: Szj+zFtLQzGAyI3RuIx+9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="139251989"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.124.220.24]) ([10.124.220.24])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:36:21 -0700
-Message-ID: <13b76cda-4fa9-4a00-a923-6a842275e555@intel.com>
-Date: Thu, 1 May 2025 10:36:18 -0700
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Pg4KBypU"
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-605f7d3215cso614577eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 10:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746121043; x=1746725843; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5gCGeZx+LjxydnEdalUtnjSKhCJu8pLazJohhfHgkO0=;
+        b=Pg4KBypU5trILjnhGpXxlytaGToyqyRVguJk1iWRskYgGGZfVzIlU3HUvz2naFMuOp
+         85k8U3kaewtL63yo30DHWRt2jY3rrwj+MbtKzDY/wjqPAKWD90Rw41k3oLvaYYsxoLWH
+         Gl3TCHcgy4lMmhpVzzZguVYxC/zvs+By0Qlx6MB3wJL+s+uIjtb2qG+zPdv5fvio17cP
+         D/QQGkP/zbVDKVSg/Jw3uIVUwTZmmc5Hf4c7b0xkiCPGwuPQJrfBE+ISAfvtwKMrv0dh
+         a0E/NS03KfrI6Dd5zUekMTcxFl1FO/EI0v8O4KuCUve0XwDvFK8Jz52UUqwnsjL2pqP+
+         IlsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746121043; x=1746725843;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5gCGeZx+LjxydnEdalUtnjSKhCJu8pLazJohhfHgkO0=;
+        b=ArWjd+BwWwo2WFceHqonI5407VoFC/lX7vJl5fgMwGHV26wW5AbGIQur484GBsbyWD
+         ETZOq+DCg78KyRA1VSZDNoUQPT/vabSUqhwg0ApsubxalllBTPEhspfAWGdWGu29WRO5
+         LTjxgJwG6lPeqEbdk92qjfU9DP3fPa4sR6+JNHaHrQWWSsZcW8Z1PUYhTAWWrKraJwgp
+         duMHIo1F3Ke7US6N/bjn4XR1y83IZxq8XGEZJJRrfYxc02Kj4iGbg2BMIFGc/tJBFVra
+         bRKQa+XLve+8Zj7vV8+l8TzFJle8Gcrp0+NT/8GG/VOuRinf/Dk7NAH/0s9ewSJADAd8
+         OLtA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlNMv/WUBxKRRSV1ZXq4PjAa7l+2sGVVpJU54boZua4Jw7BVDE4jbuw45Dmmg6yYWL687dnqbSqsCTTqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwvJsPbzxO2iNVY7k4t9oxGkcSOccnARbkH1GxU/t+4s6gElAWS
+	+ufuRrGrnRtXa/zL9BUBEMXgqVdrPvKhCGVHDTgCaKrVWB0dC9+f5CrZCVrV+08=
+X-Gm-Gg: ASbGncu72YVoI2lJMSH7JbKBsu6R3ci0Oy8uyYOGq+BAhZnwhSb6hZ4HBif0h3PYWRL
+	hIO0HX6iV5CBY67n9IvkIQky3g+KepkoQWn+p5lXMrraI73XaYSKkfOc1CywF5RBBzbNTsDZmQ+
+	EbGSy0xdevhznpi9dFP3Gv8rb9oPiEsEAuEoj9+EPoeE+Eu9tZ5Bqad6z2PMxycML/T0ElBsb7v
+	zOW4Xec94Hs6fUbTAQSJ2TuqNhB/9D1TksNv4y2+BMhJ2CDodfQwoLbM1C9RhHcX7HQcsQge9OT
+	T1yu+oBd9JUi9RaF/s6Rp4kI7ALxLU4OCSI13Z+X7+5CDqHkaAEp7EK6ROb8JDBIPdGMCDr6/+C
+	7Dw3eKiin/bPGvO6nlcodQwYlRIHX
+X-Google-Smtp-Source: AGHT+IFFiJ5CMMoNBA8sEnTpfASSw3P278n1k6MkkRfBVIRwZUkXTSjxm+N/VMpA5ByWEyamwY3svA==
+X-Received: by 2002:a4a:ee06:0:b0:606:361b:52a6 with SMTP id 006d021491bc7-607e0d41e9amr2410872eaf.4.1746121043328;
+        Thu, 01 May 2025 10:37:23 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0? ([2600:8803:e7e4:1d00:b1ed:e5d7:8ea6:40e0])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-607e7d8b817sm196079eaf.13.2025.05.01.10.37.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 10:37:21 -0700 (PDT)
+Message-ID: <c262ecaf-598f-46a4-976d-bbc4ae0167b6@baylibre.com>
+Date: Thu, 1 May 2025 12:37:20 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,78 +67,276 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/5] x86/tdx: tdx_mcall_get_report0: Return -EBUSY on
- TDCALL_OPERAND_BUSY error
-To: Cedric Xing <cedric.xing@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
- Dionna Amalie Glaze <dionnaglaze@google.com>,
- Guorui Yu <guorui.yu@linux.alibaba.com>,
- James Bottomley <James.Bottomley@HansenPartnership.com>,
- Dan Middleton <dan.middleton@linux.intel.com>,
- Mikko Ylinen <mikko.ylinen@linux.intel.com>,
- Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
-References: <20250424-tdx-rtmr-v5-0-4fe28ddf85d4@intel.com>
- <20250424-tdx-rtmr-v5-4-4fe28ddf85d4@intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [RFC PATCH 5/5] dt-bindings: iio: adc: add bindings for TI
+ ADS1262
+To: Sayyad Abid <sayyad.abid16@gmail.com>, linux-iio@vger.kernel.org
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, nuno.sa@analog.com, javier.carrasco.cruz@gmail.com,
+ olivier.moysan@foss.st.com, gstols@baylibre.com, tgamblin@baylibre.com,
+ alisadariana@gmail.com, eblanc@baylibre.com, antoniu.miclaus@analog.com,
+ andriy.shevchenko@linux.intel.com, stefan.popa@analog.com,
+ ramona.gradinariu@analog.com, herve.codina@bootlin.com,
+ tobias.sperling@softing.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
+ <20250501100043.325423-6-sayyad.abid16@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250424-tdx-rtmr-v5-4-4fe28ddf85d4@intel.com>
+In-Reply-To: <20250501100043.325423-6-sayyad.abid16@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 4/24/25 13:12, Cedric Xing wrote:
-> Return `-EBUSY` from tdx_mcall_get_report0() when `TDG.MR.REPORT` returns
-> `TDCALL_OPERAND_BUSY`. This enables the caller to retry obtaining a
-> TDREPORT later if another VCPU is extending an RTMR concurrently.
-I would appreciate if someone can go back and look at centralizing the
-TDX error code => errno conversions. But that doesn't need to happen now.
+On 5/1/25 5:00 AM, Sayyad Abid wrote:
+> Add the Device Tree binding documentation for the Texas Instruments ADS1262 ADC.
+> 
+> Signed-off-by: Sayyad Abid <sayyad.abid16@gmail.com>
+> ---
 
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
+For readers, it logically makes more sense to have this be the first patch in
+the series.
+
+>  .../bindings/iio/adc/ti,ads1262.yaml          | 189 ++++++++++++++++++
+>  1 file changed, 189 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml b/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+> new file mode 100644
+> index 000000000000..8c4cc2cf6467
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ti,ads1262.yaml
+> @@ -0,0 +1,189 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/ti,ads1262.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments' ADS1262 32-Bit Analog to Digital Converter
+> +
+> +maintainers:
+> +  - Sayyad Abid <sayyad.abid16@gmail.com>
+> +
+> +description: |
+> +  Texas Instruments ADS1262 32-Bit Analog to Digital Converter with,
+> +  internal temperature sensor, GPIOs and PGAs
+> +
+> +  The ADS1262 is a 32-bit, 38-kSPS, precision ADC with a programmable gain
+> +  amplifier (PGA) and internal voltage reference. It features:
+> +  - 11 single-ended or 5 differential input channels
+> +  - Internal temperature sensor
+> +  - Programmable gain amplifier (PGA) with gains from 1 to 32
+> +  - Internal voltage reference
+> +  - GPIO pins for control and monitoring
+> +  - SPI interface
+
+Normally, I would say that we want to have the devicetree as complete as
+possible, but this chip has so many ways to wire it up, it would take days
+to do a through review, so not sure where to draw the line. But I think there
+are a few obvious ones we could still add, even if the driver doesn't use them
+yet.
+
+interrupts: for the /DRDY output
+
+clks: for the clock input (see adi,ad7173 and adi,ad7192 for inspiration)
+
+gpio-controller and #gpio-cells: for AIN pins used as GPIO
+
+And for later...
+* voltage supply outputs
+* DAC outputs
+* common mode voltage inputs
+* REF{P.N}{1,2,3} supplies
+* per-channel reference selection
+
+
+> +
+> +  Specifications about the part can be found at:
+> +  https://www.ti.com/product/ADS1262
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - ti,ads1262
+> +
+> +  reg:
+> +    maxItems: 1
+> +    description: SPI chip select number
+> +
+> +  spi-max-frequency:
+> +    maximum: 7372800
+> +    description: Maximum SPI clock frequency in Hz (7.3728 MHz)
+
+Datasheet says minimum period is 125 ns, so that would make the max 8 MHz.
+
+> +
+> +  spi-cpha:
+> +    type: boolean
+> +    description: Required for SPI mode 1 operation
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: GPIO specifier for the reset pin (active low)
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC reference voltage. If not specified,
+> +      the internal 2.5V reference will be used.
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  '#io-channel-cells':
+> +    const: 1
+> +
+> +  ti,pga-bypass:
+> +    type: boolean
+> +    description: |
+> +      If true, bypass the PGA. If false or not specified, PGA is enabled.
+
+Why is this one global but the actual gain per-channel?
+
+> +
+> +  ti,data-rate:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    minimum: 0
+> +    maximum: 15
+> +    description: |
+> +      Data acquisition rate in samples per second
+> +      0: 2.5
+> +      1: 5
+> +      2: 10
+> +      3: 16.6
+> +      4: 20
+> +      5: 50
+> +      6: 60
+> +      7: 100
+> +      8: 400
+> +      9: 1200
+> +      10: 2400
+> +      11: 4800
+> +      12: 7200
+> +      13: 14400
+> +      14: 19200
+> +      15: 38400
+
+This is something that should be implemented with a sampling_frequency attribute
+so that it can be changed at runtime rather than be hard-coded in the devicetree.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +  - '#address-cells'
+> +  - '#size-cells'
+> +  - '#io-channel-cells'
+> +
+> +additionalProperties: false
+> +
+> +patternProperties:
+> +  "^channel@([0-9]|1[0-1])$":
+> +    type: object
+> +    additionalProperties: false
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      Channels 0-9 are available for external signals, channel 10 is AINCOM,
+> +      and channel 11 is the internal temperature sensor.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          Channel number. It can have up to 10 channels numbered from 0 to 9,
+> +          channel 10 is AINCOM, and channel 11 is the internal temperature sensor.
+> +        items:
+> +          - minimum: 0
+> +            maximum: 11
+
+Why allow the temperature input here but not other diagnostic input? Would make
+more sense to me to omit temperature from the devicetree since it doesn't have
+different wiring possibilities like the AIN pins.
+
+> +
+> +      diff-channels:
+> +        description: |
+> +          List of two channel numbers for differential measurement.
+> +          First number is positive input, second is negative input.
+> +          Not applicable for temperature sensor (channel 11).
+> +        items:
+> +          - minimum: 0
+> +            maximum: 9
+> +          - minimum: 0
+> +            maximum: 9
+
+Shouldn't this have max of 10 to include AINCOM?
+
+> +
+> +      ti,gain:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 5
+> +        description: |
+> +          PGA gain setting. Not applicable for temperature sensor (channel 11).
+> +          0: 1 (default)
+> +          1: 2
+> +          2: 4
+> +          3: 8
+> +          4: 16
+> +          5: 32
+> +
+> +    required:
+> +      - reg
+> +
+> +allOf:
+> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ads1262: adc@0 {
+> +        compatible = "ti,ads1262";
+> +        reg = <0>;
+> +        spi-max-frequency = <7372800>;
+> +        vref-supply = <&adc_vref>;
+> +        spi-cpha;
+> +        reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+> +        ti,pga-bypass;
+
+If PGA is bypassed...
+
+> +        ti,data-rate = <15>; /* 38400 SPS */
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        #io-channel-cells = <1>;
+> +
+> +        /* Single-ended channel */
+> +        channel@0 {
+> +          reg = <0>;
+> +        };
+> +
+> +        /* Differential channel */
+> +        channel@1 {
+> +          reg = <1>;
+> +          diff-channels = <1 2>;
+> +          ti,gain = <2>; /* Gain of 4 */
+
+...then gain doesn't make sense here.
+
+> +        };
+> +
+> +        /* Temperature sensor */
+> +        channel@11 {
+> +          reg = <11>;
+> +        };
+> +      };
+> +    };
+> +...
+
