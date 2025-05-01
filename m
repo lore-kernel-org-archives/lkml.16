@@ -1,149 +1,181 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7EE21D3E4
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 18:59:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D3A4223DE3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 19:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746125964; cv=none; b=No8Va/22zKw2mLGRNzm9r7CpLEXKdAuPo/iEfg2+cenEi1nMUMX25ebYMGmb/abPp6MW7+NK/boNgxLBQCeKYCS088pb35FsA7HZoDMEqZC1/HuMkygMZaRvGViUQ4OZYgj2v2F0NJpG4y/oLBO1B0bF66RBNGShC5nr0y4K+Zw=
+	t=1746126004; cv=none; b=jZw3JK9n/c9+tvGyhnS5sW+Q4/ix52RmZRH5KRtOSZymhcNZb/r0x/NQ5P2RptspygyK11010nENDG9Kcp4WotGD8NVbpVz8UcneOi4TdEbLhk2pYI5CrSdC4nlliT8LeuViigbYSxxkSDOz7qGqajWMhHJDdWCC50WYAvjSeGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746125964; c=relaxed/simple;
-	bh=A03kUDEVQQnK4RyDZNecayUjK2SCxNK77jUM9829Xa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=e1Qrz8vSWeUx8756DjXBrojspfo0+X3CIDwXWKbmWvuc/THA++ROVFFCSl3h97uXka91DOmtpLFJEl+k43Kvf2Sbd5tT4PongbcGd64E+pdlVlnBeEUHM5+FvQFLL8cmKFmD57mJXfDZP61t2riOktQkunWYOFmk2k3Z/Wl4/xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a8rNCCpZ; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746126004; c=relaxed/simple;
+	bh=5MiUovNKUxYtrJS79oFnBsB9cOlpVIk+mk2oKba0ZTE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=eiZfYM6JH6XAz9rFA8QeteEMdPvUO6XIq45nS+SK9VT3KbCYlX1WHmytU/+G/DXBDDncf46vy/Fn+upZbopMLMiIwkV+M0l9Xy2Xvrjih/A+P1ejUvQT/VJIQModNpKBw1VOPCUzT3v/buU9Pel1dv4uqqFGAIG8zwqJPb8fiDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3mLrGCz9; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a8rNCCpZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746125962; x=1777661962;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=A03kUDEVQQnK4RyDZNecayUjK2SCxNK77jUM9829Xa8=;
-  b=a8rNCCpZXQvdfoenowBs7T5aXw+9CkhDXlNqZB9DYLC8bPRrEvVjXG4j
-   YT038um5FeazAWcPKDsHwDfmK6jgtFK5TtIJCKqU+11cNRaFgmekm6+Mn
-   ASrIejDPNr2+O2tf2vWrJWCqeGNzEl8WmnHNPhiCaF2Nrzjf5Xq1PMJ9Y
-   HhmtuzvG5fPWtbstQjcpJN6Fi1cTg9x1iUIbJaiaj30FfWfRgjhkKn7TA
-   NmEQ5mywZpQjF7be1WJ1iiupaWLrG2Trr5HRiDu6GiS+SyK8pt+++BIvB
-   aE3hpClqhP1QVheqRyJCaR6PyKjTD3yEfIO/EgW+ZDYLR9+FUjcK9ojP0
-   g==;
-X-CSE-ConnectionGUID: PkihQYmKT5yDitghYkFaFQ==
-X-CSE-MsgGUID: MCpZ7K5oTs2+5jNlkSoeFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47058665"
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="47058665"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 11:59:22 -0700
-X-CSE-ConnectionGUID: 7p3YdJRQQom/HzkgMI+l2A==
-X-CSE-MsgGUID: qJ4SRmEhROapBSqP/cLV9w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
-   d="scan'208";a="139590501"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 01 May 2025 11:59:20 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAZ7u-0004KT-0o;
-	Thu, 01 May 2025 18:59:18 +0000
-Date: Fri, 2 May 2025 02:58:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: include/linux/rcupdate.h:538:9: error: dereferencing pointer to
- incomplete type 'struct nfsd_file'
-Message-ID: <202505020234.i4y4JBan-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3mLrGCz9"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-30364fc706fso1248528a91.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 12:00:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746126001; x=1746730801; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AhI86EioQSEbgpJce+lctNIEqTzid9MIbsNPxLfGtK4=;
+        b=3mLrGCz9zpOW2GbN8KBaD8+DlchrL2GcyLOA2WQ0YAcLbmMxYU84eahEvCJ8HCV+u3
+         b51jwagZtHbE6n6QuWDuSxyPDz3RzwI7XMB7HZZhvwKqpQqdvw6M34I2mEjnsFRbhUIy
+         rkJZEBewqFwxxTvUoM5ucgzjRjmErKqU5bwAOM5pGvW+gZP+2fv/6xo5m3C1Ar269b1A
+         ykfuIFzt7SbMRjHE6p8nEyN4oNr+ruOr6C6genxAsE5Q8QA9DSy66/Qa02raV9enDANK
+         MR4XZU7m9CDquNow7HexmXZ2tEFLIL7rV8sNXKSJM33LIQwtNlL5Php7g/V9SQqOW23X
+         vd0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746126001; x=1746730801;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=AhI86EioQSEbgpJce+lctNIEqTzid9MIbsNPxLfGtK4=;
+        b=FQDFnViUU/CpVbD/z9Vc/EPzkdtkzCsXCfeTrFTvTDPdLuFaYd9G/mds1+iyG1e+Zl
+         hQ3jxvbg9y6DXhU6gR9pUTPiu4iXtyaKgtqQ59Y6V4Y0kx8dpw+ce3iZLOGw2IO0W+hz
+         URSfmKwmYlmflPAQhG3+7gC149QyqxKsUvUDhjJDyX9bZlWt8BzrZb8FElkPgdYll5VU
+         G6/sf6p6PpicJzd6EOf/FLM3E2gunKyLlZjqsULkj7KxIkKdojD/LISaxJXMCxW0ozFx
+         vq/1Z7x71hZwrYisI7tQuB92c4NYFIGJMhYkB0WXwyGtCZ9XZq7isKGhw7tZv5t6lZzs
+         pjow==
+X-Forwarded-Encrypted: i=1; AJvYcCWZVvKWoSmhIKNAG7NH0KPyiyBiV3R+F6/5VaepIlP3sgScaOJID3bBgSP2i+G2g+nWAf2OLOSBCg7D9GI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yywji4RIcYW7n4du9iRTfw7kzVC28HIWCcdR7SU4nogbxOGYZW7
+	uKLjrDXuzfsfNDR0z+O3KGik+COK4/YnZzqLfipD3x8hNEWsXHLePXfLZTvSty9KqJKkLT3vDU4
+	6qA==
+X-Google-Smtp-Source: AGHT+IGyvMaXwl8AWpHhKbhCNLsowpIBdryOMvwnzBzhTNzXBvilZ4B9xHoSwT7czOpr1qOamFGilGA9sm8=
+X-Received: from pjbtb7.prod.google.com ([2002:a17:90b:53c7:b0:301:2679:9d9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5785:b0:30a:3dde:6af4
+ with SMTP id 98e67ed59e1d1-30a4e6925dbmr311333a91.31.1746126000722; Thu, 01
+ May 2025 12:00:00 -0700 (PDT)
+Date: Thu, 1 May 2025 11:59:59 -0700
+In-Reply-To: <EB1786D7-C7FE-4517-A207-C5F63AC0F911@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Mime-Version: 1.0
+References: <20250430110734.392235199@infradead.org> <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
+ <20250430190600.GQ4439@noisy.programming.kicks-ass.net> <20250501103038.GB4356@noisy.programming.kicks-ass.net>
+ <20250501153844.GD4356@noisy.programming.kicks-ass.net> <aBO9uoLnxCSD0UwT@google.com>
+ <EB1786D7-C7FE-4517-A207-C5F63AC0F911@zytor.com>
+Message-ID: <aBPEr3DF4w9sbUdc@google.com>
+Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls in
+ __nocfi functions
+From: Sean Christopherson <seanjc@google.com>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, x86@kernel.org, kys@microsoft.com, 
+	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org, 
+	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org, 
+	jpoimboe@kernel.org, linux-hyperv@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, 
+	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi Mike,
+On Thu, May 01, 2025, H. Peter Anvin wrote:
+> On May 1, 2025 11:30:18 AM PDT, Sean Christopherson <seanjc@google.com> wrote:
+> >On Thu, May 01, 2025, Peter Zijlstra wrote:
+> >> On Thu, May 01, 2025 at 12:30:38PM +0200, Peter Zijlstra wrote:
+> >> > On Wed, Apr 30, 2025 at 09:06:00PM +0200, Peter Zijlstra wrote:
+> >> > > On Wed, Apr 30, 2025 at 07:24:15AM -0700, H. Peter Anvin wrote:
+> >> > > 
+> >> > > > >KVM has another; the VMX interrupt injection stuff calls the IDT handler
+> >> > > > >directly.  Is there an alternative? Can we keep a table of Linux functions
+> >> > > > >slighly higher up the call stack (asm_\cfunc ?) and add CFI to those?
+> >> > > 
+> >> > > > We do have a table of handlers higher up in the stack in the form of
+> >> > > > the dispatch tables for FRED. They don't in general even need the
+> >> > > > assembly entry stubs, either.
+> >> > > 
+> >> > > Oh, right. I'll go have a look at those.
+> >> > 
+> >> > Right, so perhaps the easiest way around this is to setup the FRED entry
+> >> > tables unconditionally, have VMX mandate CONFIG_FRED and then have it
+> >> > always use the FRED entry points.
+> >> > 
+> >> > Let me see how ugly that gets.
+> >> 
+> >> Something like so... except this is broken. Its reporting spurious
+> >> interrupts on vector 0x00, so something is buggered passing that vector
+> >> along.
+> >
+> >Uh, aren't you making this way more complex than it needs to be?  IIUC, KVM never
+> >uses the FRED hardware entry points, i.e. the FRED entry tables don't need to be
+> >in place because they'll never be used.  The only bits of code KVM needs is the
+> >__fred_entry_from_kvm() glue.
+> >
+> >Lightly tested, but this combo works for IRQs and NMIs on non-FRED hardware.
 
-FYI, the error/warning still remains.
+Hrm, and now I see that fred_extint() relies on fred_install_sysvec(), which makes
+me quite curious as to why IRQs didn't go sideways.  Oh, because sysvec_table[]
+is statically defined at compile time except for PV crud.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   4f79eaa2ceac86a0e0f304b0bab556cca5bf4f30
-commit: 86e00412254a717ffd5d38dc5ec0ee1cce6281b3 nfs: cache all open LOCALIO nfsd_file(s) in client
-date:   4 months ago
-config: arm64-randconfig-002-20250502 (https://download.01.org/0day-ci/archive/20250502/202505020234.i4y4JBan-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505020234.i4y4JBan-lkp@intel.com/reproduce)
+So yeah, I think my the patches are correct, they just the need a small bit of
+prep work to support dynamic setup of sysvec_table.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505020234.i4y4JBan-lkp@intel.com/
+> >--
+> >From 664468143109ab7c525c0babeba62195fa4c657e Mon Sep 17 00:00:00 2001
+> >From: Sean Christopherson <seanjc@google.com>
+> >Date: Thu, 1 May 2025 11:20:29 -0700
+> >Subject: [PATCH 1/2] x86/fred: Play nice with invoking
+> > asm_fred_entry_from_kvm() on non-FRED hardware
+> >
+> >Modify asm_fred_entry_from_kvm() to allow it to be invoked by KVM even
+> >when FRED isn't fully enabled, e.g. when running with CONFIG_X86_FRED=y
+> >on non-FRED hardware.  This will allow forcing KVM to always use the FRED
+> >entry points for 64-bit kernels, which in turn will eliminate a rather
+> >gross non-CFI indirect call that KVM uses to trampoline IRQs by doing IDT
+> >lookups.
+> >
+> >When FRED isn't enabled, simply skip ERETS and restore RBP and RSP from
+> >the stack frame prior to doing a "regular" RET back to KVM (in quotes
+> >because of all the RET mitigation horrors).
+> >
+> >Signed-off-by: Sean Christopherson <seanjc@google.com>
+> >---
+> > arch/x86/entry/entry_64_fred.S | 5 +++--
+> > 1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> >diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+> >index 29c5c32c16c3..7aff2f0a285f 100644
+> >--- a/arch/x86/entry/entry_64_fred.S
+> >+++ b/arch/x86/entry/entry_64_fred.S
+> >@@ -116,7 +116,8 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+> > 	movq %rsp, %rdi				/* %rdi -> pt_regs */
+> > 	call __fred_entry_from_kvm		/* Call the C entry point */
+> > 	POP_REGS
+> >-	ERETS
+> >+
+> >+	ALTERNATIVE "", __stringify(ERETS), X86_FEATURE_FRED
+> > 1:
+> > 	/*
+> > 	 * Objtool doesn't understand what ERETS does, this hint tells it that
+> >@@ -124,7 +125,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+> > 	 * isn't strictly needed, but it's the simplest form.
+> > 	 */
+> > 	UNWIND_HINT_RESTORE
+> >-	pop %rbp
+> >+	leave
+> > 	RET
+> > 
+> > SYM_FUNC_END(asm_fred_entry_from_kvm)
+> >
+> >base-commit: 45eb29140e68ffe8e93a5471006858a018480a45
+> 
+> Ok maybe I'm being dense, but what is left other than simply calling
+> __fred_entry_from_kvm() as a normal C function? 
+> 
+> I'm on the go so there might be something in the code I'm missing, but on the
+> surface...?
 
-All errors (new ones prefixed by >>):
+I'm sure it's doable, though I'd be more than a little nervous about diverging
+from what FRED=y does, e.g. in case code somewhere expects the stack to look
+exactly like a real FRED event.
 
-   In file included from include/linux/rbtree.h:24,
-                    from include/linux/mm_types.h:11,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:17,
-                    from fs/nfs/localio.c:11:
-   fs/nfs/localio.c: In function 'nfs_local_open_fh':
->> include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type 'struct nfsd_file'
-     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-            ^
-   include/linux/rcupdate.h:686:2: note: in expansion of macro '__rcu_dereference_check'
-     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-     ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/rcupdate.h:758:28: note: in expansion of macro 'rcu_dereference_check'
-    #define rcu_dereference(p) rcu_dereference_check(p, 0)
-                               ^~~~~~~~~~~~~~~~~~~~~
-   fs/nfs/localio.c:279:7: note: in expansion of macro 'rcu_dereference'
-     nf = rcu_dereference(*pnf);
-          ^~~~~~~~~~~~~~~
-
-
-vim +538 include/linux/rcupdate.h
-
-76c8eaafe4f061 Paul E. McKenney        2021-04-21  528  
-24ba53017e188e Chun-Hung Tseng         2021-09-15  529  #define __rcu_access_pointer(p, local, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  530  ({ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  531  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  532) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  533  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  534  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  535  #define __rcu_dereference_check(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  536  ({ \
-ac59853c06993a Pranith Kumar           2014-11-13  537  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15 @538  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  539  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  540) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  541  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  542  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  543  #define __rcu_dereference_protected(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  544  ({ \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  545  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  546) 	rcu_check_sparse(p, space); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  547  	((typeof(*p) __force __kernel *)(p)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  548  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  549  #define __rcu_dereference_raw(p, local) \
-995f1405610bd8 Paul E. McKenney        2016-07-01  550  ({ \
-995f1405610bd8 Paul E. McKenney        2016-07-01  551  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  552  	typeof(p) local = READ_ONCE(p); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  553  	((typeof(*p) __force __kernel *)(local)); \
-995f1405610bd8 Paul E. McKenney        2016-07-01  554  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  555  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  556  
-
-:::::: The code at line 538 was first introduced by commit
-:::::: 24ba53017e188e031f9cb8b290286fad52d2af00 rcu: Replace ________p1 and _________p1 with __UNIQUE_ID(rcu)
-
-:::::: TO: Chun-Hung Tseng <henrybear327@gmail.com>
-:::::: CC: Paul E. McKenney <paulmck@kernel.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+And since we'd still need the assembly to support FRED=y, I don't see any point
+in adding more code when it's trivially easy to have asm_fred_entry_from_kvm()
+skip ERETS.
