@@ -1,94 +1,70 @@
-Received: from fout-a4-smtp.messagingengine.com (fout-a4-smtp.messagingengine.com [103.168.172.147])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 341D41EEA27
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 05:58:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF9D32C85;
+	Thu,  1 May 2025 06:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746079088; cv=none; b=Gt8d1OuS/FbKYdD5TNVsmS8b5Z/LGO06GvUVYCy5INyu9HDhd3llkG7UYmeLxmbuI9CqjIJysKGB7tQ+luJex9LKmHVA7C2oCsh3eopDR1bjh2vBjFxYn5a8bVSKuhEM6nh4zi4aqFP1g7C2NGcOGHYfQV8epNtefp/J+RRSRKQ=
+	t=1746079422; cv=none; b=CqBUF4LBBJferKaLvFGL+2V5s19EQogXAz3cJzq7F2ujdGTrcgXW0yeTjn6E3cJXG7SdPL6c9OhYy2Qur42yNR2vfnMMcfpjVABhdhocm7x75q/MxeBIXVQjYcdRAw4BxQJARlyNfMVluHem2Xae5vCmKJjXEzy4IcU1ZRgm3BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746079088; c=relaxed/simple;
-	bh=xPLw1Eyccx30LPPm9w3J49Jr7VvuQSiA7RQxNbPiwC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bnW0wTPkI5e+l8DwjE6UPkiM7IXm5HpGQa/Hq0PhlCHuSrlVFxlxXM7IrNtuddXFfcsu2t2d+uMmjiZePWo4ZT5BUBP+BsV6bjyiGMVD56dVIGbW8DtiKyvrNbJMAaY6quLMCDN4gv41AqT7nmxmlbv0E9PhS+vDOBaDd6AEpFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com; spf=pass smtp.mailfrom=fastmail.com; dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b=O+4pzBF6; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=G7EhpQ0o; arc=none smtp.client-ip=103.168.172.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fastmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastmail.com
+	s=arc-20240116; t=1746079422; c=relaxed/simple;
+	bh=QdEOV5Pvru1jHHk6ci8tH+dTcY2lMatZVsfSaT2A64g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=thcXCMwxwXpAzSqOmoRrD8NCtbH6QIZM39U1iTOeZJLcs1Jiz3MqoR71/9MY/GQxxxSMgWMMaWzOPuMvhfW/Y2XUqSelRbZcIoeFJkad0b+xsmsi9mfC1dmtqZjQKm7BZkmYRafdrHgQEURHNY09QZS4PZKfXd7eC1dDshgb/F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GkL72EOG; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fastmail.com header.i=@fastmail.com header.b="O+4pzBF6";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="G7EhpQ0o"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.phl.internal (Postfix) with ESMTP id 3C59B138016C;
-	Thu,  1 May 2025 01:58:05 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-01.internal (MEProxy); Thu, 01 May 2025 01:58:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-	cc:cc:content-transfer-encoding:content-type:date:date:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=fm3; t=1746079085; x=1746165485; bh=wBa+/RP16JDDqe808w2hJ
-	uVvdiTrgtxeTmMlzvStV40=; b=O+4pzBF6r2WKZ6eDqs4LiUxjDiAFVOdEmok09
-	jA/7ww3vcBznOPaaPG29NjxpdgJeWOfpD+BLwhfKlKCrif/NnDeyr39/MZY2V3F9
-	Id+rA90HTNki3aW4NI2FdJA6V71kejBhHkkpzWRwfsrtfc2oWe2nfXUSX3Z9SNDB
-	BPSKFaEEFlJifczqymEKam4/6yaoJIB6ygKlBprcvZGj8rbi83ffjsdJabDl3SzI
-	psoAiJX1gM1gcno0hNyi5OpE1AFw48emJGfw2XZwLNSC78Th4TnSHSA2S1Xl3R66
-	7NinxDbdZJlX6Disz1xP3IMT2LGXliy7bs2EYiEoIkiqz2LAw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:date:date:feedback-id:feedback-id:from:from
-	:in-reply-to:message-id:mime-version:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-	1746079085; x=1746165485; bh=wBa+/RP16JDDqe808w2hJuVvdiTrgtxeTmM
-	lzvStV40=; b=G7EhpQ0oiQ1g3Euw64aaUrqs7YLmf4yu1Y10PaBGxdjonTZBCeB
-	jVCkjnXHhVWnMWr06RJAHjD6Q8tMZh5RnXvSY4hE3BNKyG7pk/ZpUNt5IelBbREk
-	LZuEtuZBFJERMyUCTZOgNng2SoM+Kp3Q8Lm+zo2vNeBvQ47Cm3BBHjhMeCQx1CO6
-	EoPbOR9bly2LVT+qXT3GbFeVKnach1pWDwLYyannk6MVTw6ABE/6gnZqPIByp1A8
-	7wjfNIcpXcjVflU6uxi+/ZsDAcqS7GK5FjuIyujAAoj45GpO/i2+d5t+cqiHw7KM
-	MnREZOXi55Sbq9WhAZYIU4MI9nncHAy3LnA==
-X-ME-Sender: <xms:bA0TaFzjQFUxAkSNbdVtIXXAURJuVg7S067NYNGLrqQ5uGpkWFslTA>
-    <xme:bA0TaFSSq0F6TlSfQ9_j50eUzpHgIJA6c0uWt3zmLoUmFujO-mHJcWWic8gUewqOa
-    uctuvJOiyOvvS1WtJo>
-X-ME-Received: <xmr:bA0TaPUdVdDaYFlwgIsj2372EtaI1wAxBqAeVpwmeYX8XZ2sLLmGXP2CVJTs1QvkF0mTmkTQaFXJEH7-C_gsyJ8vbw6ywQbPIh_876oWi3IIRYtE>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieekjeelucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucenucfjughrpefhvf
-    evufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeflrghmvghsucfhlhhofigvrhhs
-    uceosgholhgurdiiohhnvgdvfeejfeesfhgrshhtmhgrihhlrdgtohhmqeenucggtffrrg
-    htthgvrhhnpefhvefgkeeiuddtudfhgefgiedvuefhhedtffejtddtfeekieefieejveet
-    hfegheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    gsohhlugdriihonhgvvdefjeefsehfrghsthhmrghilhdrtghomhdpnhgspghrtghpthht
-    ohepudefpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehhrghrrhihrdifvghnth
-    hlrghnugesrghmugdrtghomhdprhgtphhtthhopehsuhhnphgvnhhgrdhlihesrghmugdr
-    tghomhdprhgtphhtthhopehsihhquhgvihhrrgesihhgrghlihgrrdgtohhmpdhrtghpth
-    htoheprghlvgigrghnuggvrhdruggvuhgthhgvrhesrghmugdrtghomhdprhgtphhtthho
-    pegthhhrihhsthhirghnrdhkohgvnhhighesrghmugdrtghomhdprhgtphhtthhopegrih
-    hrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhl
-    rdgthhdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorh
-    hgpdhrtghpthhtohepsgholhgurdiiohhnvgdvfeejfeesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:bA0TaHhL54XvezQvlBAWiJMLYQ4lLem4cvTj-Kqy8k02jJWwxr_gmQ>
-    <xmx:bA0TaHC2LLAW81q9rRvrJidjUSTsavhB4nxQI9BVFMTOeU60J1qvzg>
-    <xmx:bA0TaALqGP8q3C4Yq-Me_ZeYCIJ9Q5dqX6VtlhTSJnAbA8CarJsd6g>
-    <xmx:bA0TaGAAT-haECyx6lviJ9lgFvQ2sRihNoE9j0omVHuJX7_lElxLiQ>
-    <xmx:bQ0TaE3y3NlLynx7EDoKHNooBBNKkY5U1x5iIfJ0jXc7RA-bx9kKeyfg>
-Feedback-ID: ibd7e4881:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
- 1 May 2025 01:58:02 -0400 (EDT)
-From: James Flowers <bold.zone2373@fastmail.com>
-To: harry.wentland@amd.com,
-	sunpeng.li@amd.com,
-	siqueira@igalia.com,
-	alexander.deucher@amd.com,
-	christian.koenig@amd.com,
-	airlied@gmail.com,
-	simona@ffwll.ch,
-	skhan@linuxfoundation.org
-Cc: James Flowers <bold.zone2373@fastmail.com>,
-	amd-gfx@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	linux-kernel-mentees@lists.linux.dev
-Subject: [PATCH RESEND] drm/amd/display: adds kernel-doc comment for dc_stream_remove_writeback()
-Date: Wed, 30 Apr 2025 22:56:42 -0700
-Message-ID: <20250501055701.2667-1-bold.zone2373@fastmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GkL72EOG"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-739b3fe7ce8so667236b3a.0;
+        Wed, 30 Apr 2025 23:03:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746079420; x=1746684220; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cs9IXrE62ETOAPmRdDzYqt5zC7Fy7UCTTkkCjs/8jnY=;
+        b=GkL72EOGRPKuqKd9iHMwrHqe8fG317Fy16mS4CK1eyULQQH1vIF3B1tvAb/Js4spJJ
+         UsHeb5kp+RKPHQZ/WWJ/g+jeC1goZEcSXRx9ypAijM6Kqz/5EqdEwQ0S4IUhNNsZrqrT
+         4DcGkCbh4sgJgwDHAz1kdkrOHVzbxa6o3TzanDRxWh4/6BWEuurheg+gjtx72pHM/0oY
+         36tpi3WKKsINabJBnvruCmhgH2P8YDLu4emCfNZQM9HVsOc+kJu1Kbcr/aR+1uPzRD3C
+         eVJeO7VxkZwVNHA53fJLeuss/kml7YxUHXEyEFmce1H+biozdz/Jf2ymURYb0SN5UAjx
+         vvyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746079420; x=1746684220;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cs9IXrE62ETOAPmRdDzYqt5zC7Fy7UCTTkkCjs/8jnY=;
+        b=blOTfstJZ9qzvvUEnmYrt2tQRgQeIfccNBtGmR/MUXIIa0LzP18H6Cvk4USsrL8IMG
+         0sxibKXvWisyyuFlOG9VOgy7ANmjj85HoMoW7ngIATwDjjLwFGR1jsKwrMpCUqByOUSC
+         PmDfu57ULMYeCsPfHGemVe8ccxs2FHszLmJD59W1u8qEG4/9vEALxsVAJ/qgtrfWk8F6
+         2adrxMUhGJ0ivt1QfYMvs61GAHq3ttvRANSa4MoyIgK1NqEoyLSIjXnsgOnerkyPBlEp
+         DQueOSXApvcWJvEOrj49XpdJX3iw4426gVpezgIjQSisfAoEkUtsAB3YL0w49MoLdKMo
+         mKGw==
+X-Forwarded-Encrypted: i=1; AJvYcCVp+yT7btStOxTxPq2q2nm47sZNxrTmiNHQssZ+xA5gvt+ZfAjExDt/jfyx2CKso1Y9YubHsctDZ/edI1Yd4k0=@vger.kernel.org, AJvYcCWb/VTVUcEC31CshVAQnSts8eW2i58LAOKWRAJbpzNdmBtLBM4gsq5Hf4lc6gDXN/RmQEkCgeFp+i3HDGW9fho8@vger.kernel.org
+X-Gm-Message-State: AOJu0YyeVw2oL/un6Jd6CKqtU2/HbZEeb+EzXZFyxSN5sEVauPLQM+Up
+	Yq51mTqg4v4dJC56PiltPZJ01V+bdh9fJj385sfVd6b8X7IqsmpO
+X-Gm-Gg: ASbGncuT4YJQQ9QP3HVVyp89lrVJW4aXLIRhuhM05F4IGFIaI5T3Z2siIUSoIGfQTB1
+	b/2IERRH9yUFEx0a9UjyURdxiCQgFlQgNAPvERaA6N7r6g7IHbX3WYBXlJyuHYk2tTI8WoEgEF6
+	lSAitomy5Cta1iQY00C3eIp93VtIeFYCa/jAGx/Mu5RG8Ynt3+G7Hfak+uXaWrai9Wvl5v35EIz
+	5BGzl0NLXQYJlELKXc+qTgHtwvr3lIt1y6zhO0fVF58g6/4WNUcGd7PmsY2PslO9Fic7lPxcQpn
+	HbXLYbdFfbr5X0/8jMJ6jz8IZWX/s1XeZcth4lSfmOeiQwctQSfYrvwr6XQ=
+X-Google-Smtp-Source: AGHT+IF7I91yRefEnmOp0LueYRZIfStQCvLhkfwf08/5KNWA+VIgQkH5BIu/Y4c/cmm/+rrivYYIww==
+X-Received: by 2002:a05:6a21:8ccb:b0:1f5:591b:4f73 with SMTP id adf61e73a8af0-20a89325382mr9809228637.34.1746079419723;
+        Wed, 30 Apr 2025 23:03:39 -0700 (PDT)
+Received: from localhost.localdomain ([103.77.0.13])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-7404fa1f88bsm72337b3a.134.2025.04.30.23.03.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 23:03:39 -0700 (PDT)
+From: Ankit Chauhan <ankitchauhan2065@gmail.com>
+To: shuah@kernel.org,
+	linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Ankit Chauhan <ankitchauhan2065@gmail.com>
+Subject: [PATCH] [next] selftests/ptrace: Fix spelling mistake "multible" -> "multiple"
+Date: Thu,  1 May 2025 11:33:29 +0530
+Message-Id: <20250501060329.126117-1-ankitchauhan2065@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,32 +73,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Adds a kernel-doc for externally linked dc_stream_remove_writeback() function.
+Fix the spelling error from "multible" to "multiple".
 
-Signed-off-by: James Flowers <bold.zone2373@fastmail.com>
+Signed-off-by: Ankit Chauhan <ankitchauhan2065@gmail.com>
 ---
- drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/testing/selftests/ptrace/peeksiginfo.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-index 0478dd856d8c..060ee6c3fc2e 100644
---- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-+++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-@@ -552,6 +552,14 @@ bool dc_stream_fc_disable_writeback(struct dc *dc,
- 	return true;
- }
+diff --git a/tools/testing/selftests/ptrace/peeksiginfo.c b/tools/testing/selftests/ptrace/peeksiginfo.c
+index a6884f66dc01..2f345d11e4b8 100644
+--- a/tools/testing/selftests/ptrace/peeksiginfo.c
++++ b/tools/testing/selftests/ptrace/peeksiginfo.c
+@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
  
-+/**
-+ * dc_stream_remove_writeback() - Disables writeback and removes writeback info.
-+ * @dc: Display core control structure.
-+ * @stream: Display core stream state.
-+ * @dwb_pipe_inst: Display writeback pipe.
-+ *
-+ * Return: returns true on success, false otherwise. 
-+ */
- bool dc_stream_remove_writeback(struct dc *dc,
- 		struct dc_stream_state *stream,
- 		uint32_t dwb_pipe_inst)
+ 	/*
+ 	 * Dump signal from the process-wide queue.
+-	 * The number of signals is not multible to the buffer size
++	 * The number of signals is not multiple to the buffer size
+ 	 */
+ 	if (check_direct_path(child, 1, 3))
+ 		goto out;
 -- 
-2.49.0
+2.34.1
 
