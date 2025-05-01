@@ -1,40 +1,50 @@
-Received: from smtp.smtpout.orange.fr (smtp-27.smtpout.orange.fr [80.12.242.27])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA8731D6DBC;
-	Thu,  1 May 2025 17:46:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.27
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852D720CCE3
+	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 17:51:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746121568; cv=none; b=beKCcsa9qv/dOslwUp1H6F/w7tNbgHpkQVT3Ks87vauAYJ8dVEMtEKTPz/t1x24zSeldC6A+DXhnlxoTSLd12iTiJzP7d9fNosXejwRUa8j1hBlk+8ggfMcu/7HO9s5HwuVjQivMLX58r3P5VGH5e+Rtblhnyq86IGrAnYn8aG0=
+	t=1746121867; cv=none; b=shQUHzGnVeCLOV/i5V7Ho1HaeqtJk0IjwUH9zl1UFWU7jyfHjU6GLavgycefHNg5vWm3xnKZ7gL7AkUfhZnqMiaRMzurDgjpMUwoiurWhbMi4vgaJ332w4uvD/5rWhVyD6fdr8rqm+Ym/P4k1zZzFY/v8BoyvxLY+aS78CoGk6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746121568; c=relaxed/simple;
-	bh=idSL8FIZNtnlvPROVmiwxEiJwDqSNBxM751hv/Tx08g=;
-	h=Message-ID:Date:MIME-Version:Subject:References:From:Cc:To:
-	 In-Reply-To:Content-Type; b=VX+MRMDinBlPjGMFXRkJGoC75dGoiWrHDUtIihf9Oq3gIybb4Z0pGc75FER7GWNkCHDLysooHAYGp9c6RiaxIKwdUIuKrfNANEhxT9DYQ7C2HjuyR3oQsOuRhXV+Vqwdpe5mp4Ulnx+Qi79itsshEF+ZD0cUHSqB5aYjyRym4HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=e6hd/Ecs; arc=none smtp.client-ip=80.12.242.27
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1746121867; c=relaxed/simple;
+	bh=wyx9LuFLmRr/KpJH2cSuuH5H5luZ70m61Hsbna1NbVE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ifws8235r0rmLwaNGIN4fkeXu1vaoV0+8Cxw00tdTkICEtPNp/g+AGSJEchOtEW3msineYt78T9qz6P3obLshfptGPiA+wKSfdJiQbhqoOGJNYDVJZsy1/WS9+PEyF9ghRnG7IsiXupBGcIWmbFW0yqi3fC7SypyWTfMcLZrUSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kOagf3Kd; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="e6hd/Ecs"
-Received: from [192.168.1.37] ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id AXxpuAhzzGqxdAXxsugzS3; Thu, 01 May 2025 19:44:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1746121494;
-	bh=z7Nrw4AKQmy2euxdBhwFFiDxhQNLz4rSOScscuh0W0I=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To;
-	b=e6hd/EcsRx6taxaXTxk2taRj60hukc4HpaW8I/gT9gCIIY4QSz7wOdqu1UXQoYSPh
-	 GdHtdPl5nHlivewS3IHl6Ee/IJz6dDdd5yL+VkdRPVq73RZMAGt0vYMRbHrmzojZIy
-	 8p8m1Myau4F3hU6/17scjv8dF0IegiTmVtUgoinmrH30z9PS0/nm53hXTMfw+RkPOO
-	 NYFtDgeZINfF310bF/aJHQVCKV0WlzGPsdyfadWucJphCKEVAd0xdiYHogobPu46VR
-	 wfH1OOWDup6fveZMCvu+NcOjRN4xRfUK8AEDuqJTF9Se5HyGdYrMtqHxygTTwD50pw
-	 TsCw+ZUxZwxBg==
-X-ME-Helo: [192.168.1.37]
-X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
-X-ME-Date: Thu, 01 May 2025 19:44:54 +0200
-X-ME-IP: 90.11.132.44
-Message-ID: <a73dd097-cc0b-449c-b819-3450688e67ba@wanadoo.fr>
-Date: Thu, 1 May 2025 19:44:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kOagf3Kd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746121866; x=1777657866;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wyx9LuFLmRr/KpJH2cSuuH5H5luZ70m61Hsbna1NbVE=;
+  b=kOagf3KdMrrQgJiiqr2JRGyeJpgmJSgjBETeQGgsaibBwsWJ1FH3jaVT
+   91RdenFQr7w2kysWL+VDRUbCZG6pzcCUVSJl9dG3YjlYA2+tA7flsw+Qi
+   jZ9WhEIryTFhdGpJoUFF+E+q4c1z46JUe0ReixGK9eogJ0HIYPIb6Zwdp
+   NKyeh+0PZWuukHTOBO7YkuSyp29r/7P5puJo65LYGpYwk7lIZUAsVJVe/
+   JocVBb7Jsv3ftv16RmM3ydpEi1G6jKrkgzLAbEE0PXao57xdqbDl6kuka
+   33B7OlblAr5A4XUiDcCL02IqomGHPPU0AUuwbwWUJNyormq4Ut2En3Wbp
+   g==;
+X-CSE-ConnectionGUID: 58MNeXjTRae98S9D46KnyQ==
+X-CSE-MsgGUID: bi/AHWE+Q8KoKzJKRQPGPQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47813003"
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="47813003"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:51:02 -0700
+X-CSE-ConnectionGUID: wZ2WwlwVRXKpT5ZdiSfHRw==
+X-CSE-MsgGUID: 55UKEPIuRQKn4NsZeoK4bQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,254,1739865600"; 
+   d="scan'208";a="139577756"
+Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.124.220.24]) ([10.124.220.24])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 10:50:59 -0700
+Message-ID: <14b13fe4-7a0d-4ddb-92e9-bbe557b5bc15@intel.com>
+Date: Thu, 1 May 2025 10:50:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,88 +52,89 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 2/2] wifi: Add Nordic nRF70 series Wi-Fi driver
-References: <20250422175918.585022-1-artur@conclusive.pl>
- <20250422175918.585022-3-artur@conclusive.pl>
- <3cfd718f-e96a-44d0-b42f-d759ae698810@wanadoo.fr>
- <CAGhaMFNhq-O3O0TCj6cvzvTqzPQKE_id67U0hZjV0V2uKV91Tw@mail.gmail.com>
-Content-Language: en-US, fr-FR
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: broonie@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- jakub@conclusive.pl, johannes@sipsolutions.net, krzk+dt@kernel.org,
- lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, robh@kernel.org, s.hauer@pengutronix.de,
- ulf.axelsson@nordicsemi.no, wojciech@conclusive.pl
-To: artur@conclusive.pl
-In-Reply-To: <CAGhaMFNhq-O3O0TCj6cvzvTqzPQKE_id67U0hZjV0V2uKV91Tw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v5 3/5] x86/tdx: Add tdx_mcall_extend_rtmr() interface
+To: Cedric Xing <cedric.xing@intel.com>,
+ Dan Williams <dan.j.williams@intel.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+ "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev,
+ Dionna Amalie Glaze <dionnaglaze@google.com>,
+ Guorui Yu <guorui.yu@linux.alibaba.com>,
+ James Bottomley <James.Bottomley@HansenPartnership.com>,
+ Dan Middleton <dan.middleton@linux.intel.com>,
+ Mikko Ylinen <mikko.ylinen@linux.intel.com>,
+ Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <20250424-tdx-rtmr-v5-0-4fe28ddf85d4@intel.com>
+ <20250424-tdx-rtmr-v5-3-4fe28ddf85d4@intel.com>
+Content-Language: en-US
+From: Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250424-tdx-rtmr-v5-3-4fe28ddf85d4@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Le 01/05/2025 à 12:41, Artur Rojek a écrit :
-> Hi Christophe,
-> 
-> thanks for the review!
-> Reply inline.
-> 
-> On Fri, Apr 25, 2025 at 9:31 PM Christophe JAILLET
-> <christophe.jaillet-39ZsbGIQGT5GWvitb5QawA@public.gmane.org> wrote:
->>
->> Le 22/04/2025 à 19:59, Artur Rojek a écrit :
->>> Introduce support for Nordic Semiconductor nRF70 series wireless
->>> companion IC.
->>>
->>
->> Hi,
->> ...
->>
->>> +     /* vpwr is mandatory, but we want to catch the -ENODEV error. */
->>> +     priv->vpwr = devm_regulator_get_optional(dev, "vpwr");
->>> +     if (IS_ERR(priv->vpwr))
->>> +             return dev_err_probe(dev, PTR_ERR(priv->vpwr),
->>> +                                  "Unable to find vpwr-supply property");
->>> +
->>> +     priv->vio = devm_regulator_get_optional(dev, "vio");
->>> +     if (IS_ERR(priv->vio) && PTR_ERR(priv->vio) != -ENODEV) {
->>> +             return dev_err_probe(dev, PTR_ERR(priv->vio),
->>> +                                  "Invalid vio-supply property");
->>> +     }
->>
->> Unneeded extra { }
->>
->>> +
->>> +     irq = of_irq_get_byname(dev->of_node, "host-irq");
->>> +     if (irq <= 0)
->>> +             return dev_err_probe(dev, irq, "Unable to find host-irq\n");
->>
->> If irq is 0, is it expected to return sucess here?
-> 
-> No, return value of 0 is considered IRQ mapping failure, as per
-> of_irq_get_byname() documentation. Perhaps it warrants a different error
-> message, though.
+On 4/24/25 13:12, Cedric Xing wrote:
+> +	ret = __tdcall(TDG_MR_RTMR_EXTEND, &args);
+> +	if (ret) {
+> +		if (TDCALL_RETURN_CODE(ret) == TDCALL_INVALID_OPERAND)
+> +			return -ENXIO;
+> +		if (TDCALL_RETURN_CODE(ret) == TDCALL_OPERAND_BUSY)
+> +			return -EBUSY;
+> +		return -EIO;
+> +	}
+This a pretty ugly switch statement. ;)
 
-My point is nor related to the test itself, or the message.
+I assume there are more of these around, but it would be _nice_ if these
+could eventually look like:
 
-I mean, that, should irq = 0, then it ends to
-	return dev_err_probe(dev, 0, "Unable to find host-irq\n");
-and the probe returns success.
+	...
+	err = __tdcall(...);
 
-Maybe something like:
-	return dev_err_probe(dev, irq ? irq : -ESOMETHING, "Unable to find 
-host-irq\n");
+	return tdx_err_to_errno(err);
 
-CJ
-
-> 
-> Cheers,
-> Artur
-> 
->>
->>> +
->>> +     mutex_init(&priv->write_lock);
->>> +     mutex_init(&priv->read_lock);
->> ...
->>
->> CJ
-> 
-> 
 
