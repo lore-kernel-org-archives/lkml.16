@@ -1,46 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE07F21C183;
-	Thu,  1 May 2025 20:12:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC1121884B;
+	Thu,  1 May 2025 20:12:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746130333; cv=none; b=EIUct0tyfX6g6BVDivl9mgKsFeVVYl9CTDndoxUw3YrRN7c16aIcIqLLeHj5QW7o8ghuw2igoUj4elE+jyaPEdexmmwFmuHQrHdvmxhysB9cnrN4jt5IidJi5t7AcuQXsQim6OEMsRh4weC/ICYhAPu2fSrp4rU9PwSDvwPc94s=
+	t=1746130375; cv=none; b=bdPZexxE7CBN35r4MkyscrCeQ39d1eF6PoRggNYu+INqW/vhFsooe/4xBmBek+UyXd5jx7CR6rOgQuohf3vNsVTvzis7LyAFMmySDW3hF0g/FRyzjNTJmP8uDilI4GhFqTW3InUqmEMaS5CMn2nGa0+kfHgXuG4y6S4457d4RAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746130333; c=relaxed/simple;
-	bh=XrRb459uroJoO9qEw2VwUdS7OlcuUspffa1aqenJIr8=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=Uhq1zVGLR4KHcPiAkrOPiyAAdupUunLC5lYFWMe2XlzAg8cKJUiyVNiOASr97qq1TBcMfmhJn57u9OSWOBLNJT4HdnW6xeNxkAj5OBmWPHlUbsMst0t2HSng5LuEAV/xkYzbjf7k2JU7lueonIGKNsV+MMla24m5xAda0D1BH9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcOCIuvY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746130375; c=relaxed/simple;
+	bh=oi9lOW4HgqvO87HHAMfguJvLFFw/cNj3auUdf5ONCKc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fZy4aeCxPXEZ1tNuGSJ8MzkEfDFsNUV/xi4/85JOLdx0I8lPptk+B+ZqfHzSn3VY8c1oWJCXjzaQdoBvXyHYu9ndwSHqXNdfcJ2kcQOA/hd/9RxYWCQFoMCuV14zOTH5LUtQ4V8Cm8P2hjz5tszkgSVxDKUHBk4DyJo2fjUnN0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbb7GODa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcOCIuvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA570C4CEE3;
-	Thu,  1 May 2025 20:12:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbb7GODa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95797C4CEE3;
+	Thu,  1 May 2025 20:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746130333;
-	bh=XrRb459uroJoO9qEw2VwUdS7OlcuUspffa1aqenJIr8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=fcOCIuvYhbjkl/+lgLFp5OGgG0YvjQEfAtvUn915QhEXPUMBXB8aM++rwEKASptE5
-	 uGJIiQYjsqamlV8SLulKKtb78CF3px6090vR9sxIT0GbSeF5kWN8oGpUle7XtEnZGb
-	 AJe7aTnwZdqzi+V3399cZ0b8pM9pQxqrOkR/1FYbDCYtS5zIr33dTcosxvJu5CuZWt
-	 vuMbOhxm//sUvv5cHuWBD9qupNA5nIZfqelS6ole8CbwHWQgjBQ5hKIff+kTVIjjfU
-	 FZXo9yv3zl5rC7CNOhVHEgbPXrMkls2X3Kb05n7SSFD4PLrN+ZpeWj5rs4JC+bcI1Y
-	 8My5ij7AunGKw==
-Date: Thu, 1 May 2025 15:12:11 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
-	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
-	saravanak@google.com, p.zabel@pengutronix.de,
-	linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: Re: [PATCH 5/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
- Renesas RZ/G3S SoC
-Message-ID: <20250501201211.GA768334@bhelgaas>
+	s=k20201202; t=1746130374;
+	bh=oi9lOW4HgqvO87HHAMfguJvLFFw/cNj3auUdf5ONCKc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fbb7GODaWrlrrTJJilq3NdYjubR2kM5nCHxunKkrf6zW7i+P4knNTyj6vf2oaxqot
+	 XwXMiJRdk4OcUxO8GVHe6M8RFIFLF3tKUhBucjtPenHhLD4CJ/gTiQYNY66ebpE0Cc
+	 Pe5uUuC4Ff9J1Bmhl46frG8Ar6C1IngYf+n22RJWle1taaCw7TJkAC6KZpJ0osdwLC
+	 9vqlmmZxTrimhyHMBEc2MwpU1kzgmqTs7+02WAhx6OxcG48MDnmItOjds/krD2+/Ix
+	 KX/eCDhPrliH0oIDVeJqxOUqeX2TqwwrERNozAuYXRx/BDacmnRp80/to9BQhGozcp
+	 QDiPY837QPNpA==
+Date: Thu, 1 May 2025 13:12:51 -0700
+From: Kees Cook <kees@kernel.org>
+To: David Ahern <dsahern@kernel.org>
+Cc: syzbot <syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com>,
+	davem@davemloft.net, edumazet@google.com, elver@google.com,
+	horms@kernel.org, justinstitt@google.com, kuba@kernel.org,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] UBSAN: array-index-out-of-bounds in
+ ip6_rt_copy_init
+Message-ID: <202505011302.9C8E5E4@keescook>
+References: <68135796.050a0220.14dd7d.0008.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,352 +46,161 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250430103236.3511989-6-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <68135796.050a0220.14dd7d.0008.GAE@google.com>
 
-On Wed, Apr 30, 2025 at 01:32:33PM +0300, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Thu, May 01, 2025 at 04:14:30AM -0700, syzbot wrote:
+> Hello,
 > 
-> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
-> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
-> only as a root complex, with a single-lane (x1) configuration. The
-> controller includes Type 1 configuration registers, as well as IP
-> specific registers (called AXI registers) required for various adjustments.
+> syzbot found the following issue on:
 > 
-> Other Renesas RZ SoCs (e.g., RZ/G3E, RZ/V2H) share the same AXI registers
-> but have both Root Complex and Endpoint capabilities. As a result, the PCIe
-> host driver can be reused for these variants with minimal adjustments.
+> HEAD commit:    cc17b4b9c332 Merge branch 'io_uring-zcrx-fix-selftests-and..
+> git tree:       net-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=10ab50d4580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=7e367ce4a19f69ba
+> dashboard link: https://syzkaller.appspot.com/bug?extid=8f8024317adff163ec5a
+> compiler:       Debian clang version 20.1.2 (++20250402124445+58df0ef89dd6-1~exp1~20250402004600.97), Debian LLD 20.1.2
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17e2a270580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145a9d74580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0e09cf367bdd/disk-cc17b4b9.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/4ab63344d74c/vmlinux-cc17b4b9.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/14915e0e32b3/bzImage-cc17b4b9.xz
+> 
+> The issue was bisected to:
+> 
+> commit 557f8c582a9ba8abe6aa0fd734b6f342af106b26
+> Author: Kees Cook <keescook@chromium.org>
+> Date:   Thu Jan 18 23:06:05 2024 +0000
+> 
+>     ubsan: Reintroduce signed overflow sanitizer
 
-I guess this current driver only supports RZ/GS3 in Root Complex mode?
-If so, I don't think this paragraph is necessary or really relevant.
+Why _this_ patch exposes this, I'm not exactly sure, but ...
 
-> +++ b/drivers/pci/controller/pcie-rzg3s-host.c
-> @@ -0,0 +1,1561 @@
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1685d270580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=1585d270580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1185d270580000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com
+> Fixes: 557f8c582a9b ("ubsan: Reintroduce signed overflow sanitizer")
+> 
+> ------------[ cut here ]------------
+> UBSAN: array-index-out-of-bounds in net/ipv6/route.c:1095:9
+> index 255 is out of range for type 'const int[12]'
 
-I can't figure out the line width you're using.  Generally code in
-drivers/pci/ is formatted to fit in 80 columns.  Much of this file is
-formatted for that, but there are many cases that seem to use 90 or
-100 columns.
+... it looks like a real problem. fib6_type is 255, but the array is
+small, causing an out-of-bounds read past the end of the array further
+into .rodata:
 
-For single-line comments that are not a sentence or are a single
-sentence, it's typical to omit the period at end.
+static int ip6_rt_type_to_error(u8 fib6_type)
+{
+        return fib6_prop[fib6_type];
+}
 
-> +static void rzg3s_pcie_update_bits(void __iomem *base, u32 offset, u32 mask, u32 val)
-> +{
-> +	u32 tmp;
-> +
-> +	tmp = readl(base + offset);
-> +	tmp &= ~mask;
-> +	tmp |= val & mask;
-> +	writel(tmp, base + offset);
-> +}
+Perhaps some kind of type confusion, as this is being generated through
+ip6_rt_init_dst_reject(). Is the fib6_type not "valid" on a reject?
 
-Nothing rzg3s-specific here.
+The reproducer appears to be just absolutely spamming netlink with
+requests -- it's not at all obvious to me where the fib6_type is even
+coming from. I think this is already only reachable on the error path
+(i.e. it's during a "reject", it looks like), so the rt->dst.error is
+just being set weird.
 
-I think u32p_replace_bits() (include/linux/bitfield.h) is basically this.
+This feels like it's papering over the actual problem:
 
-> +static int rzg3s_pcie_config_access(struct rzg3s_pcie_host *host, struct pci_bus *bus,
-> +				    unsigned int devfn, int where, u32 *data,
-> +				    enum rzg3s_pcie_cfg_access_type access_type)
-> +{
-> +	bool type0 = pci_is_root_bus(bus->parent) ? true : false;
-> +	unsigned int dev, func, reg, tr_type;
-> +	int ret;
-> +
-> +	dev = PCI_SLOT(devfn);
-> +	func = PCI_FUNC(devfn);
-> +	reg = where & ~0x3;
+diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+index 96f1621e2381..fba51a42e7ac 100644
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -1092,6 +1092,8 @@ static const int fib6_prop[RTN_MAX + 1] = {
+ 
+ static int ip6_rt_type_to_error(u8 fib6_type)
+ {
++	if (fib6_type > RTN_MAX)
++		return -EINVAL;
+ 	return fib6_prop[fib6_type];
+ }
+ 
 
-This obviously has to be serialized with other config accesses.  Can
-you add a comment about what provides that serialization?  I assume
-it's probably pci_lock via pci_lock_config()?
+-Kees
 
-> +	/* Set the destination. */
-> +	writel(FIELD_PREP(RZG3S_PCI_REQADR1_BUS, bus->number) |
-> +	       FIELD_PREP(RZG3S_PCI_REQADR1_DEV, dev) |
-> +	       FIELD_PREP(RZG3S_PCI_REQADR1_FUNC, func) |
-> +	       FIELD_PREP(RZG3S_PCI_REQADR1_REG, reg),
-> +	       host->axi + RZG3S_PCI_REQADR1);
-> +
-> +	/* Set byte enable. */
-> +	writel(RZG3S_PCI_REQBE_BYTE_EN, host->axi + RZG3S_PCI_REQBE);
-> +
-> +	if (access_type == RZG3S_PCIE_CFG_ACCESS_RD) {
-> +		tr_type = type0 ? RZG3S_PCI_REQISS_TR_TP0_RD : RZG3S_PCI_REQISS_TR_TP1_RD;
-> +	} else {
-> +		tr_type = type0 ? RZG3S_PCI_REQISS_TR_TP0_WR : RZG3S_PCI_REQISS_TR_TP1_WR;
-> +
-> +		/* Set the write data.  */
-> +		writel(0, host->axi + RZG3S_PCI_REQDATA(0));
-> +		writel(0, host->axi + RZG3S_PCI_REQDATA(1));
-> +		writel(*data, host->axi + RZG3S_PCI_REQDATA(2));
-> +	}
-> +
-> +	/* Set the type of request. */
-> +	writel(tr_type, host->axi + RZG3S_PCI_REQISS);
-> +
-> +	/* Issue the request and wait to finish. */
-> +	ret = rzg3s_pcie_issue_request(host);
-> +	if (ret) {
-> +		if (access_type == RZG3S_PCIE_CFG_ACCESS_RD)
-> +			PCI_SET_ERROR_RESPONSE(data);
-> +
-> +		return PCIBIOS_SET_FAILED;
-> +	}
-> +
-> +	/* Read the data. */
-> +	if (access_type == RZG3S_PCIE_CFG_ACCESS_RD)
-> +		*data = readl(host->axi + RZG3S_PCI_REQRCVDAT);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
+> CPU: 1 UID: 0 PID: 5835 Comm: kworker/1:3 Not tainted 6.15.0-rc3-syzkaller-00584-gcc17b4b9c332 #0 PREEMPT(full) 
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 04/19/2025
+> Workqueue: mld mld_ifc_work
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
+>  ubsan_epilogue+0xa/0x40 lib/ubsan.c:231
+>  __ubsan_handle_out_of_bounds+0xe9/0xf0 lib/ubsan.c:453
+>  ip6_rt_type_to_error net/ipv6/route.c:1095 [inline]
+>  ip6_rt_init_dst_reject net/ipv6/route.c:1112 [inline]
+>  ip6_rt_init_dst net/ipv6/route.c:1137 [inline]
+>  ip6_rt_copy_init+0x8e7/0x970 net/ipv6/route.c:1175
+>  ip6_rt_pcpu_alloc net/ipv6/route.c:1424 [inline]
+>  rt6_make_pcpu_route net/ipv6/route.c:1467 [inline]
+>  ip6_pol_route+0xbac/0x1180 net/ipv6/route.c:2302
+>  pol_lookup_func include/net/ip6_fib.h:617 [inline]
+>  fib6_rule_lookup+0x348/0x6f0 net/ipv6/fib6_rules.c:125
+>  ip6_route_output_flags_noref net/ipv6/route.c:2674 [inline]
+>  ip6_route_output_flags+0x364/0x5d0 net/ipv6/route.c:2686
+>  ip6_route_output include/net/ip6_route.h:93 [inline]
+>  ip6_dst_lookup_tail+0x1ae/0x1510 net/ipv6/ip6_output.c:1128
+>  ip6_dst_lookup_flow+0x47/0xe0 net/ipv6/ip6_output.c:1259
+>  udp_tunnel6_dst_lookup+0x231/0x3c0 net/ipv6/ip6_udp_tunnel.c:165
+>  geneve6_xmit_skb drivers/net/geneve.c:957 [inline]
+>  geneve_xmit+0xd2e/0x2b70 drivers/net/geneve.c:1043
+>  __netdev_start_xmit include/linux/netdevice.h:5203 [inline]
+>  netdev_start_xmit include/linux/netdevice.h:5212 [inline]
+>  xmit_one net/core/dev.c:3828 [inline]
+>  dev_hard_start_xmit+0x2d4/0x830 net/core/dev.c:3844
+>  __dev_queue_xmit+0x1adf/0x3a70 net/core/dev.c:4681
+>  dev_queue_xmit include/linux/netdevice.h:3349 [inline]
+>  neigh_hh_output include/net/neighbour.h:523 [inline]
+>  neigh_output include/net/neighbour.h:537 [inline]
+>  ip6_finish_output2+0x11bc/0x16a0 net/ipv6/ip6_output.c:141
+>  __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
+>  ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
+>  NF_HOOK+0x9e/0x380 include/linux/netfilter.h:314
+>  mld_sendpack+0x800/0xd80 net/ipv6/mcast.c:1868
+>  mld_send_cr net/ipv6/mcast.c:2169 [inline]
+>  mld_ifc_work+0x835/0xde0 net/ipv6/mcast.c:2702
+>  process_one_work kernel/workqueue.c:3238 [inline]
+>  process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
+>  worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
+>  kthread+0x70e/0x8a0 kernel/kthread.c:464
+>  ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
+>  ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+>  </TASK>
+> ---[ end trace ]---
+> 
+> 
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> 
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+> 
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+> 
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+> 
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+> 
+> If you want to undo deduplication, reply with:
+> #syz undup
 
-> +static int rzg3s_pcie_read_conf(struct pci_bus *bus, unsigned int devfn, int where, int size,
-> +				u32 *val)
-> +{
-> +	struct rzg3s_pcie_host *host = bus->sysdata;
-> +	int ret;
-> +
-> +	/*
-> +	 * Bus number for root complex is set to zero. 
-
-A root bus is not always bus number zero.  It sounds like the bus
-number is configurable on this hardware?  I don't see a dependency on
-the bus number, so I'm wondering why this sentence is here.
-
-> +	   ... Skip other requests for
-> +	 * vendor and device ID (where = 0x00).
-
-Why do we need to avoid config reads for root bus devices other than
-00.0?  Does the hardware not fabricate ~0 read data when a PCI error
-occurs?
-
-It looks like you allow reads for other root bus devices at non-zero
-offsets?  E.g., we could read the Device ID at offset 0x02?
-
-> +	 */
-> +	if (pci_is_root_bus(bus) && PCI_SLOT(devfn) && !where)
-> +		return PCIBIOS_DEVICE_NOT_FOUND;
-> +
-> +	ret = rzg3s_pcie_read_config_access(host, bus, devfn, where, val);
-> +	if (ret != PCIBIOS_SUCCESSFUL)
-> +		return ret;
-> +
-> +	if (size == 1)
-> +		*val = (*val >> (BITS_PER_BYTE * (where & 3))) & 0xff;
-> +	else if (size == 2)
-> +		*val = (*val >> (BITS_PER_BYTE * (where & 2))) & 0xffff;
-> +
-> +	dev_dbg(&bus->dev, "%s(): bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> +		__func__, bus->number, devfn, where, size, *val);
-> +
-> +	return PCIBIOS_SUCCESSFUL;
-> +}
-
-> +static int rzg3s_pcie_write_conf(struct pci_bus *bus, unsigned int devfn, int where, int size,
-> +				 u32 val)
-> +{
-> +	struct rzg3s_pcie_host *host = bus->sysdata;
-> +	u32 shift, data;
-> +	int ret;
-> +
-> +	ret = rzg3s_pcie_read_config_access(host, bus, devfn, where, &data);
-> +	if (ret != PCIBIOS_SUCCESSFUL)
-> +		return ret;
-
-I guess this controller can't do an atomic config write, so you have
-to do a read/modify/write?  That's broken in some corner cases, e.g.,
-it can corrupt RW1C bits in adjacent registers.
-
-We emit a warning about this in pci_generic_config_write32().  I don't
-think we've been consistent about similar warnings in driver-specific
-code like this, but I would like to have a dmesg hint so that if we
-ever trip over this, it might be easier to debug.
-
-> +	dev_dbg(&bus->dev, "%s(): bus=%3d devfn=0x%04x where=0x%04x size=%d val=0x%08x\n",
-> +		__func__, bus->number, devfn, where, size, val);
-> +
-> +	if (size == 1) {
-> +		shift = BITS_PER_BYTE * (where & 3);
-> +		data &= ~(0xff << shift);
-> +		data |= ((val & 0xff) << shift);
-> +	} else if (size == 2) {
-> +		shift = BITS_PER_BYTE * (where & 2);
-> +		data &= ~(0xffff << shift);
-> +		data |= ((val & 0xffff) << shift);
-> +	} else {
-> +		data = val;
-> +	}
-> +
-> +	return rzg3s_pcie_write_config_access(host, bus, devfn, where, data);
-> +}
-
-> +static struct irq_chip rzg3s_pcie_msi_bottom_chip = {
-> +	.name			= "rz-pcie-msi",
-> +	.irq_ack		= rzg3s_pcie_msi_irq_ack,
-> +	.irq_mask		= rzg3s_pcie_msi_irq_mask,
-> +	.irq_unmask		= rzg3s_pcie_msi_irq_unmask,
-> +	.irq_compose_msi_msg	= rzg3s_pcie_msi_compose_msg,
-
-s/msi_compose_msg/compose_msi_msg/
-to match .irq_compose_msi_msg, which doesn't quite match the others
-but makes it easier to grep and compare .irq_compose_msi_msg
-implementations.
-
-> +	 * According to the RZ/G3S HW manual (section 34.4.5.2 Setting the MSI Window)
-> +	 * the MSI window need to be within any AXI window. Find an AXI window to setup
-> +	 * the MSI window.
-
-There may be several revisions of the RZ/G3S spec and they might not
-preserve section numbers, so it might be worth including "r1.0" or
-whatever to make the citation unambiguous.
-
-> +static struct irq_chip rzg3s_pcie_intx_irq_chip = {
-> +	.name = "PCIe INTx",
-> +	.irq_ack = rzg3s_pcie_intx_ack,
-> +	.irq_mask = rzg3s_pcie_intx_mask,
-> +	.irq_unmask = rzg3s_pcie_intx_unmask,
-
-Would prefer *_irq_ack, *_irq_mask, *_irq_unmask similar to MSI ops
-above.
-
-> +static int rzg3s_pcie_intx_setup(struct rzg3s_pcie_host *host)
-> +{
-> +	struct device *dev = host->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct device_node *intc_np __free(device_node) = of_get_child_by_name(np,
-> +								"legacy-interrupt-controller");
-> +	int irq_count;
-> +
-> +	if (!intc_np) {
-> +		dev_warn(dev, "legacy-interrupt-controller node is absent\n");
-> +		return 0;
-> +	}
-> +
-> +	irq_count = of_irq_count(intc_np);
-> +	if (irq_count != PCI_NUM_INTX)
-> +		return dev_err_probe(dev, -EINVAL,
-> +				     "Invalid IRQ entries in legacy-interrupt-controller\n");
-
-We now know the value of irq_count, so why not just use PCI_NUM_INTX
-below?
-
-> +	for (int i = 0; i < irq_count; i++) {
-> +		int irq = irq_of_parse_and_map(intc_np, i);
-> +
-> +		if (!irq)
-> +			return dev_err_probe(dev, -EINVAL, "Failed to parse and map INTx IRQ\n");
-
-Could say which one?
-
-> +
-> +		host->intx_irqs[i] = irq;
-> +		irq_set_chained_handler_and_data(irq, rzg3s_pcie_intx_irq_handler, host);
-> +	}
-> +
-> +	host->intx_domain = irq_domain_add_linear(intc_np, irq_count,
-> +						  &rzg3s_pcie_intx_domain_ops, host);
-> +	if (!host->intx_domain)
-> +		return dev_err_probe(dev, -EINVAL, "Failed to add irq domain for INTX irqs\n");
-
-s/INTX/INTx/ to match above.
-s/irqs/IRQs/ to match above.
-
-> +static int rzg3s_pcie_set_max_link_speed(struct rzg3s_pcie_host *host)
-> +{
-> +	u32 lcs, cs2, link_speed, remote_supported_link_speeds, tmp;
-> +	u8 ltssm_state_l0 = 0xc;
-> +	int ret;
-> +
-> +	/*
-> +	 * According to the RZ/G3S HW manual (section 34.6.3 Caution when Changing
-> +	 * the Speed Spontaneously) link speed change can be done only when the
-> +	 * link training and status state machine in the PCIe Core Link is L0.
-> +	 */
-> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, tmp,
-> +				 FIELD_GET(RZG3S_PCI_PCSTAT1_LTSSM_STATE, tmp) == ltssm_state_l0,
-> +				 100, 1000);
-
-Where do these timeout values come from?  Is there or should there be
-a #define for them?
-
-> +static void rzg3s_pcie_cfg_init(struct rzg3s_pcie_host *host)
-> +{
-> +	/* Enable access control to the CFGU. */
-> +	writel(RZG3S_PCI_PERM_CFG_HWINIT_EN, host->axi + RZG3S_PCI_PERM);
-> +
-> +	/* Update vendor ID and device ID. */
-> +	writel(FIELD_PREP(RZG3S_PCI_CFG_VID_VENDOR, host->vendor_id) |
-> +	       FIELD_PREP(RZG3S_PCI_CFG_VID_DEVICE, host->device_id),
-> +	       host->pcie + RZG3S_PCI_CFG_VID);
-> +
-> +	/* HW manual recommends to write 0xffffffff on initialization. */
-> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00L);
-> +	writel(0xffffffff, host->pcie + RZG3S_PCI_CFG_BARMSK00U);
-> +
-> +	/* Primary bus = 0, secondary bus = 1, subordinate bus = 1. */
-> +	writel(FIELD_PREP(RZG3S_PCI_CFG_BNR_SUBORDINATE_BUS, 1) |
-> +	       FIELD_PREP(RZG3S_PCI_CFG_BNR_SECONDARY_BUS, 1),
-> +	       host->pcie + RZG3S_PCI_CFG_BNR);
-
-I assume this configures a Root Port.  Is the primary bus hardwired to
-zero?  There's no PCIe requirement that a root bus be bus 0.  This
-looks like it limits the subordinate bus unnecessarily.  The PCI core
-can program the secondary and subordinate bus numbers to accommodate
-the attached hierarchy.
-
-> +static void rzg3s_pcie_irqs_init(struct rzg3s_pcie_host *host)
-
-This and many of the following functions have names that don't
-correspond to anything in other drivers, which makes it harder to
-transfer knowledge between the drivers.  If you can find a pattern
-somewhere to follow, it will make it easier for others to read the
-driver.
-
-> +static int rzg3s_pcie_hw_init(struct rzg3s_pcie_host *host, bool probe)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	/* Set the PCIe related registers. */
-> +	rzg3s_pcie_cfg_init(host);
-> +
-> +	/* Set the interrupts. */
-> +	rzg3s_pcie_irqs_init(host);
-> +
-> +	ret = rzg3s_pcie_resets_bulk_set(reset_control_bulk_deassert, host->cfg_resets,
-> +					 host->num_cfg_resets);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Wait for link up. */
-> +	ret = readl_poll_timeout(host->axi + RZG3S_PCI_PCSTAT1, val,
-> +				 !(val & RZG3S_PCI_PCSTAT1_DL_DOWN_STS), 5000, 500000);
-
-Ditto (source of timeout values).
-
-> +static int rzg3s_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	void *devres_group_id;
-> +	int ret;
-> +
-> +	devres_group_id = devres_open_group(dev, NULL, GFP_KERNEL);
-> +	if (!devres_group_id)
-> +		return -ENOMEM;
-
-What's the benefit of using devres_open_group()?  No other PCI
-controller drivers use it.
-
-> +	ret = rzg3s_pcie_probe_helper(pdev, devres_group_id);
-
-This is the only driver that uses a *_pcie_probe_helper() function.
-
-> +static DEFINE_NOIRQ_DEV_PM_OPS(rzg3s_pcie_pm_ops, rzg3s_pcie_suspend, rzg3s_pcie_resume);
-
-Adding "_noirq" to the function names would be a good hint.
-
-Only a dozen drivers in the whole tree use DEFINE_NOIRQ_DEV_PM_OPS(),
-which makes me wonder why this one is different.  There are a dozen or
-so PCI drivers that use NOIRQ_SYSTEM_SLEEP_PM_OPS().
-
-Bjorn
+-- 
+Kees Cook
