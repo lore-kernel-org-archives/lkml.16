@@ -1,128 +1,206 @@
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fout-a2-smtp.messagingengine.com (fout-a2-smtp.messagingengine.com [103.168.172.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DA3198E6F;
-	Thu,  1 May 2025 14:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE6B1BF37;
+	Thu,  1 May 2025 14:20:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.145
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746109248; cv=none; b=pBHHDBKHKgfDtZGjGC+UkVRRaD4h1Jm/EazXX+I1QMW5tzU+liPlGnWqxZVGoHDCdWJ6kBVKtgVXGkwqJEI4w4caxcFjGXpO+kmRdbASUl9gNRdcu93+gb4p2AUpL/vfc5cIgwHJedtkqnXiPIa2+rcjGletGOk31NSDDLl2Y/U=
+	t=1746109253; cv=none; b=NFXfa1t+9cY2SmRMug5TTx9cf+Q5viTe2zQZphOuItrP4bI121Lf6gP+xhIbr7X0pSikklEKIno72t/dH1tIxAwEK15YKefL6dbZLkWQ+crWzjcbv9HhLrcZDfhiqRjZrln0bPbMFxHHtbcwDzr+OZfFIj3rW/FF7btUl9zOK2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746109248; c=relaxed/simple;
-	bh=1UwSOIDlD3ic60nJ1mkNJNnPI8CaGS+D6mHUgFP9Qv8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=oB7tly0UcMqx06+JmA4KrZt2/j0l0UyVEUNur6BGdemLd4JuUumWlfnAmaUB+YzHXKa+EiC4xplf49TXiObtUvzOPfcmK/G5+ZWOcz89O6W0i8AsL+3AVU4A5WObRW+zRTNMRqfSSjrDTnUcpQuQZUrXuLzzglF4i0VuVn4zyHc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=qh/QxvR/; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
+	s=arc-20240116; t=1746109253; c=relaxed/simple;
+	bh=KvCQaG6SXcjN51v7sqzkLXuhokWPF1pgINLmHlDkT2E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ghVrwaqqKJVicgy0FR8eEnzZzazV7KK5vS7cKh4UUS6j1xohtKKHf0l56YsQITQjCUDI0X38nZSbD5F5owi/QE6muZ12Qc6MkcNK6HgxwBCHFUl0+RrdgJudoe4U7FSQmuuKdPpQa7YGCoNsHQRv86ZqBteniYe+o7NBzhUc5Z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=Ytmw572H; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=k5Ke2eFl; arc=none smtp.client-ip=103.168.172.145
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="qh/QxvR/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
-	t=1746108822; bh=1UwSOIDlD3ic60nJ1mkNJNnPI8CaGS+D6mHUgFP9Qv8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References;
-	b=qh/QxvR/kNaj8aKiL4KL/ex5wocOuIwxzTh6HinxhAs7xsP4QRghKdlxZ42jy/bwL
-	 CvbOpsuFKspfmy3D/UJFLo9wG867z8CoY2lL8RwkwZHnG8XeDEz7aB95BW0X6eHVvx
-	 F0bHsjE7uX4qKhU6hKcdXQ0upwKUE7ig5cUb2bhQ=
-Date: Thu, 01 May 2025 16:13:40 +0200
-From: Luca Weiss <luca@lucaweiss.eu>
-To: ~postmarketos/upstreaming@lists.sr.ht, Srinivas Kandagatla <srini@kernel.org>,
- Luca Weiss <luca.weiss@fairphone.com>
-CC: Banajit Goswami <bgoswami@quicinc.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, phone-devel@vger.kernel.org,
- alsa-devel@alsa-project.org, linux-arm-msm@vger.kernel.org,
- linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Neil Armstrong <neil.armstrong@linaro.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_2/5=5D_ASoC=3A_qcom=3A_sm8250?=
- =?US-ASCII?Q?=3A_set_card_driver_name_from_match_data?=
-In-Reply-To: <aBNdCRk_fP2q1vxQ@srini-hackbase>
-References: <20250425-fp5-dp-sound-v3-0-7cb45180091b@fairphone.com> <20250425-fp5-dp-sound-v3-2-7cb45180091b@fairphone.com> <aBNdCRk_fP2q1vxQ@srini-hackbase>
-Message-ID: <91110CA9-6E83-4811-AA04-C0312B99B95E@lucaweiss.eu>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="Ytmw572H";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="k5Ke2eFl"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id 9F0AE1380F0D;
+	Thu,  1 May 2025 10:20:48 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Thu, 01 May 2025 10:20:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1746109248; x=1746195648; bh=sWUpFpV0cU
+	jOY0J+pA8Gz2LLb6VfCRxxOB4lV+SwTGo=; b=Ytmw572HxSZeqwFN573xM+FQS0
+	xHJLZIUscRytb0/ENI8luv5DYr0x9fA77Zss080QY2iXML39SoBIn79nmGLOQwKR
+	YBooj5IAGhQhscdy6cU4nEfFr3DoXp70ArT5TaYrOB99R+upsNunIy5ChaC1x1mr
+	9CjiTzjFoD0vlP4qQHs6+3uXnMAPjWDhw1vgGz+6iulk1a8dEs+asioblyxx7U3a
+	XwTpjdopUckpIbmU4h3FrIxW93w3MjToa4i3CAirhqhJu9ip49eZ0RYxQw2Oa+6f
+	9+mJnZJprFcIi8aH/RTmmpXdztr4Q6KZrvFcWpihdnBv0BgkMrQ1lETDbQsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746109248; x=1746195648; bh=sWUpFpV0cUjOY0J+pA8Gz2LLb6VfCRxxOB4
+	lV+SwTGo=; b=k5Ke2eFlhYVcqvH0iCca0h/h6sT0W8OQ+eBYN1jyfJrf0EgM3Bk
+	mpOtmnJ8Uu8MVj/DkymJC567s0cKznkphLjUzRwP29Lw1xmT2XFave0BGYJ3RSpf
+	p8wqdeqUAgApKy5LRwP6iw+EozE4+xYH8ornCi6sCdfhQTzdZnq6edKn5WVSkJ+Z
+	YPtuPK8E/WX96+4RGWtZGlTJKAmTQOqOgLDmpCGdfTs6Tupj/ozdOH+XD1vAfc0e
+	nJNMpGaMRWLcETIkTNWkqe9XYDUj3QoXijpr5uAzjO0YRF3KeBTveSItb9cHmkDE
+	MM7zPRYLtM9Foom1QL4472nx9DqEfSrkzSA==
+X-ME-Sender: <xms:P4MTaEGQgL1REaEYHcjuUSCDkgI3T60xfq7SfjLJpBnUphp0E1gLnQ>
+    <xme:P4MTaNXtOdMGVmYMiS4-NFWmiZQyGfmtXqxqn7NRtldnefZrQXBEnBpcgD_KjQZ0r
+    UQY63UQKpbFEw>
+X-ME-Received: <xmr:P4MTaOL5E-nHpLjIfJIgZOY6v7ru5CDzxwIrIo4kRHhUq1c9wI2PicKcfqRSuVYqUjxbgHLCYzjeSAXZwoKNJy2OBodmsUA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvieelkedtucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopedutddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtoheptggrshgtrghrughosehighgrlhhirgdrtghomh
+    dprhgtphhtthhopehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthho
+    pegrrhhnugesrghrnhgusgdruggvpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqnhgvgihtsehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:P4MTaGHdPc1MlcoDGX2bwWHiJh0L91Cj4A9RELP6cTylDtNwvkRH9w>
+    <xmx:P4MTaKUs7GehgEvLpgykYm9TtfjB5fbx27LOkH3uTLcXsWH1n-skWA>
+    <xmx:P4MTaJPcrS7ALkUhjnRhyAodB-Z8TeoBKPRvUMmOXTQm_8WjIGuBRw>
+    <xmx:P4MTaB2OVFhB-XjNlDDDGqskrmspCnZzdelb1KEBnsMOSPmvO0C1YA>
+    <xmx:QIMTaB2PCzS0GiA1z1vjob1FttY9OnIBJW2doYSOvo29ZPdOjdOQzww0>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Thu,
+ 1 May 2025 10:20:47 -0400 (EDT)
+Date: Thu, 1 May 2025 16:20:45 +0200
+From: Greg KH <greg@kroah.com>
+To: Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Arnd Bergmann <arnd@arndb.de>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the char-misc tree
+Message-ID: <2025050120-shady-quote-c784@gregkh>
+References: <20250501164501.0fc0ab68@canb.auug.org.au>
+ <aBNJrYN1ThMwsLYT@quatroqueijos>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBNJrYN1ThMwsLYT@quatroqueijos>
 
-Hi Srini,
+On Thu, May 01, 2025 at 07:15:09AM -0300, Thadeu Lima de Souza Cascardo wrote:
+> On Thu, May 01, 2025 at 04:45:01PM +1000, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > After merging the char-misc tree, today's linux-next build (powerpc
+> > ppc64_defconfig) failed like this:
+> > 
+> > ld: warning: discarding dynamic section .glink
+> > ld: warning: discarding dynamic section .plt
+> > ld: linkage table error against `__kunit_do_failed_assertion'
+> > ld: stubs don't match calculated size
+> > ld: can not build stubs: bad value
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_minor':
+> > misc_minor_kunit.c:(.text+0x180): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0x1e4): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0x240): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_twice':
+> > misc_minor_kunit.c:(.text+0x3e8): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0x458): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x4c4): more undefined references to `__kunit_do_failed_assertion' follow
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_find_minors':
+> > misc_minor_kunit.c:(.text+0xb3c): undefined reference to `kunit_log_append'
+> > ld: misc_minor_kunit.c:(.text+0xbac): undefined reference to `kunit_log_append'
+> > ld: misc_minor_kunit.c:(.text+0xc1c): undefined reference to `kunit_log_append'
+> > ld: misc_minor_kunit.c:(.text+0xc88): undefined reference to `kunit_log_append'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_name':
+> > misc_minor_kunit.c:(.text+0xee4): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0xf40): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0xf90): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_duplicate_error':
+> > misc_minor_kunit.c:(.text+0x11b4): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.text+0x1210): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.text+0x1264): more undefined references to `__kunit_do_failed_assertion' follow
+> > ld: drivers/misc/misc_minor_kunit.o:(.toc+0x0): undefined reference to `kunit_binary_assert_format'
+> > ld: drivers/misc/misc_minor_kunit.o:(.toc+0x8): undefined reference to `kunit_fail_assert_format'
+> > ld: drivers/misc/misc_minor_kunit.o:(.toc+0x10): undefined reference to `kunit_unary_assert_format'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_can_open':
+> > misc_minor_kunit.c:(.init.text+0xc0): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x134): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_static_basic':
+> > misc_minor_kunit.c:(.init.text+0x25c): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x2b4): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict_reverse':
+> > misc_minor_kunit.c:(.init.text+0x408): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x414): undefined reference to `__kunit_abort'
+> > ld: misc_minor_kunit.c:(.init.text+0x46c): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x4d8): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x530): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x590): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x5e4): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o:misc_minor_kunit.c:(.init.text+0x63c): more undefined references to `__kunit_do_failed_assertion' follow
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_conflict':
+> > misc_minor_kunit.c:(.init.text+0x7a0): undefined reference to `__kunit_abort'
+> > ld: misc_minor_kunit.c:(.init.text+0x7f8): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x85c): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_basic':
+> > misc_minor_kunit.c:(.init.text+0x994): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x9ec): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision_reverse':
+> > misc_minor_kunit.c:(.init.text+0xb20): undefined reference to `kunit_kmalloc_array'
+> > ld: misc_minor_kunit.c:(.init.text+0xba8): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0xc00): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0xc64): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0xcc0): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_collision':
+> > misc_minor_kunit.c:(.init.text+0xe30): undefined reference to `kunit_kmalloc_array'
+> > ld: misc_minor_kunit.c:(.init.text+0xe98): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0xea4): undefined reference to `__kunit_abort'
+> > ld: misc_minor_kunit.c:(.init.text+0xf04): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0xfac): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x1058): undefined reference to `__kunit_do_failed_assertion'
+> > ld: drivers/misc/misc_minor_kunit.o: in function `miscdev_test_dynamic_only_range':
+> > misc_minor_kunit.c:(.init.text+0x1174): undefined reference to `kunit_kmalloc_array'
+> > ld: misc_minor_kunit.c:(.init.text+0x1200): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x1248): undefined reference to `__kunit_do_failed_assertion'
+> > ld: misc_minor_kunit.c:(.init.text+0x12ec): undefined reference to `__kunit_do_failed_assertion'
+> > 
+> > Caused by commit
+> > 
+> >   20acf4dd46e4 ("char: misc: make miscdevice unit test built-in only")
+> > 
+> > $ grep CONFIG_KUNIT .config
+> > CONFIG_KUNIT=m
+> > CONFIG_KUNIT_DEBUGFS=y
+> > CONFIG_KUNIT_FAULT_TEST=y
+> > CONFIG_KUNIT_TEST=m
+> > CONFIG_KUNIT_EXAMPLE_TEST=m
+> > CONFIG_KUNIT_ALL_TESTS=m
+> > CONFIG_KUNIT_DEFAULT_ENABLED=y
+> > CONFIG_KUNIT_AUTORUN_ENABLED=y
+> > $ grep CONFIG_TEST_MINOR .config
+> > $ 
+> > 
+> > I have used the char-misc tree from next-20250428 again.
+> > 
+> > -- 
+> > Cheers,
+> > Stephen Rothwell
+> 
+> This should fix it. I am sorry for still breaking all these builds. I have
+> tested this with the ppc64_defconfig (though that had required me to "fix" a
+> couple of warnings-turned-to-errors under arch/powerpc/). As I am trying to fix
+> this quickly, I haven't checked other configs. Again, I am sorry for the trouble.
+> 
+> Greg, I understand this may have caused you concern about merging this. Let
+> me know if you want to apply the fix below and have me submit it properly
+> or if we should wait for another cycle before applying a v5 after further
+> testing.
 
-Srinivas Kandagatla <srini@kernel=2Eorg> schreef op 1 mei 2025 13:37:45 CE=
-ST:
->On Fri, Apr 25, 2025 at 10:07:26AM +0200, Luca Weiss wrote:
->> Sound machine drivers for Qualcomm SoCs can be reused across multiple
->> SoCs=2E But user space ALSA UCM files depend on the card driver name wh=
-ich
->> should be set per board/SoC=2E
->>=20
->> Allow such customization by using driver match data as sound card drive=
-r
->> name=2E
->>=20
->> Also while we're already touching these lines, sort the compatibles
->> alphabetically=2E
->>=20
->> Reviewed-by: Dmitry Baryshkov <dmitry=2Ebaryshkov@oss=2Equalcomm=2Ecom>
->> Reviewed-by: Neil Armstrong <neil=2Earmstrong@linaro=2Eorg>
->> Signed-off-by: Luca Weiss <luca=2Eweiss@fairphone=2Ecom>
->> ---
->>  sound/soc/qcom/sm8250=2Ec | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
->>=20
->> diff --git a/sound/soc/qcom/sm8250=2Ec b/sound/soc/qcom/sm8250=2Ec
->> index b70b2a5031dfbf69024666f8a1049c263efcde0a=2E=2Ee920b413b762c803cfc=
-c4049f35deba828275478 100644
->> --- a/sound/soc/qcom/sm8250=2Ec
->> +++ b/sound/soc/qcom/sm8250=2Ec
->> @@ -16,7 +16,6 @@
->>  #include "usb_offload_utils=2Eh"
->>  #include "sdw=2Eh"
->> =20
->> -#define DRIVER_NAME		"sm8250"
->>  #define MI2S_BCLK_RATE		1536000
->> =20
->>  struct sm8250_snd_data {
->> @@ -200,15 +199,15 @@ static int sm8250_platform_probe(struct platform_=
-device *pdev)
->>  	if (ret)
->>  		return ret;
->> =20
->> -	card->driver_name =3D DRIVER_NAME;
->> +	card->driver_name =3D of_device_get_match_data(dev);
->>  	sm8250_add_be_ops(card);
->>  	return devm_snd_soc_register_card(dev, card);
->>  }
->> =20
->>  static const struct of_device_id snd_sm8250_dt_match[] =3D {
->> -	{=2Ecompatible =3D "qcom,sm8250-sndcard"},
->> -	{=2Ecompatible =3D "qcom,qrb4210-rb2-sndcard"},
->> -	{=2Ecompatible =3D "qcom,qrb5165-rb5-sndcard"},
->> +	{ =2Ecompatible =3D "qcom,qrb4210-rb2-sndcard", =2Edata =3D "sm8250" =
-},
->
->sm4250 for rb2?
+Let me revert for now and please submit after the next -rc1 is out and
+more testing can happen.
 
-Since this name is visible to user space and used for picking the UCM conf=
-ig, I don't think it's a good idea to change it=2E
+thanks,
 
-Regards
-Luca
-
->
->> +	{ =2Ecompatible =3D "qcom,qrb5165-rb5-sndcard", =2Edata =3D "sm8250" =
-},
->> +	{ =2Ecompatible =3D "qcom,sm8250-sndcard", =2Edata =3D "sm8250" },
->>  	{}
->>  };
->> =20
->>=20
->> --=20
->> 2=2E49=2E0
->>=20
+greg k-h
