@@ -1,93 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7EF259CAC;
-	Thu,  1 May 2025 06:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1B825F7B9;
+	Thu,  1 May 2025 06:38:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746081453; cv=none; b=OHBnSNKf8rccB14A+MARxhBmzNpsl/G9Q13JKRK8pfveDO0/X97XU37SojyhaZPysE3przC1KnqVKfR66pPkV729Iuo1cdj6/R3ccYIQlNe0MSu7WBch5Y4LHHjHLgCuH0udPfiIyXW/aYkXH4Za+MUTLzxocMYEDJN6NOZstgo=
+	t=1746081487; cv=none; b=A9Qsot4RCRsPS0SgQZGi68py1rK3Bk0n57VAKZ72UYseb+tBoiueTLn5k9ULTOZF1SswiRSQ+P152d3fN2zD8XawETDQmJ7SkVg42UsSYcwOq9MI37yW1GjBpEPcq0FOBrwlKcHyBpG/4/WI2X9EweY40lo2biLsuJQ0LSvhAYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746081453; c=relaxed/simple;
-	bh=XSs5FmnW0gR+lLgxJJLKw6c+ayB1H/kAPjj52SplI2g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sJPJY8KgJTDmxRC2l6lzH/7aiLHW6l0Q1GYj3bBgT3c+aoVO3KfrNGIJdoBHRX0s/PC1jYQBCYmnSrl5WTwRY1bA/buDNRT+91dTDeIASZcoJlFsyA732NTnwRhMGxYX1juiNePQ/mGygBDVru8Rk3BJGh27d2+X7YFJfTG49yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=oM9qzWz6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746081487; c=relaxed/simple;
+	bh=UAP2AV+qSbFSO/2/N++l3ypruXuDaFFIRSPyTIofkqg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=S3XoL6EVnfpz23WpLSkiDvFaSski64YUbPVlEuNSmW8L7BG0B8N63/NZZ2T+OIg3/inj2DWtGpzvEyB6W/TYDVSP/lAebMOlWLiq5NyqrsTM+E6hwSF7aPNVeq4fd762T7cYnxYPNiufPFNUN3+NjUvUy1rgZxLb9pHBQobumDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTK9N3wF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="oM9qzWz6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0610FC4CEED;
-	Thu,  1 May 2025 06:37:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746081452;
-	bh=XSs5FmnW0gR+lLgxJJLKw6c+ayB1H/kAPjj52SplI2g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oM9qzWz6qrdfn9mOrSZASQWYjpmBNeWSYnxl1PdbHyTMhNuGcxgG/VZTztO+MB//b
-	 IyUtOVRn7RkDlg4zof0+stby89IbOK0QY9rDcEq1faCdoPZbNLJt2O8BXc1SvB9+bx
-	 1e08HkfmbDnmf2GPllrCWarB+8GgdpSqhG/FZfpo=
-Date: Thu, 1 May 2025 08:37:29 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.12 000/280] 6.12.26-rc1 review
-Message-ID: <2025050121-reflected-scorer-cc29@gregkh>
-References: <20250429161115.008747050@linuxfoundation.org>
- <CA+G9fYvL0ZXnqujn9iNvy59R1gzX10Of_VLRmad5yg1aGxO_ZQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTK9N3wF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFE5AC4CEE3;
+	Thu,  1 May 2025 06:38:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746081486;
+	bh=UAP2AV+qSbFSO/2/N++l3ypruXuDaFFIRSPyTIofkqg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nTK9N3wFBMkhJe08xeOfs0C9EN4ztFCTh7V3x7cbBbR0jT5Wd68xB2EcCgKupe7vj
+	 DMnGWRYowzYv7KdRIGvxdPra3V571FpD5SgH8wudI2jmNigkHtleguUE+3hymi62DU
+	 ZcE9DY186mYo9CyQGHEOOzs3DiVTx/VTfjCiBQzDjJVPbqICnlWzA+J37d/A9NYhHT
+	 lkBQwunLyYBoI+uT+Ge9aPReAx+9quY0zhLB/ZaJCj9Vy1rvPPrsnLU6ZHGuAYNfq0
+	 KVL3zmVq2VcijwmMSIIYIOnxBMZOUydXa6wZbr/pHZi9T5mp0RB25OswPcvHuiLF9k
+	 I5+ojStYAwv+g==
+From: Mark Brown <broonie@kernel.org>
+To: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Olivier Moysan <olivier.moysan@foss.st.com>
+Cc: linux-sound@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250430165210.321273-1-olivier.moysan@foss.st.com>
+References: <20250430165210.321273-1-olivier.moysan@foss.st.com>
+Subject: Re: [PATCH 0/2] ASoC: stm32: sai: fix kernel rate configuration
+Message-Id: <174608148419.4032397.674149169345577452.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 15:38:04 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvL0ZXnqujn9iNvy59R1gzX10Of_VLRmad5yg1aGxO_ZQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Wed, Apr 30, 2025 at 10:28:57PM +0530, Naresh Kamboju wrote:
-> On Tue, 29 Apr 2025 at 22:55, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 6.12.26 release.
-> > There are 280 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 01 May 2025 16:10:15 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.26-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
+On Wed, 30 Apr 2025 18:52:07 +0200, Olivier Moysan wrote:
+> This patchset adds some checks on kernel minimum rate requirements.
+> This avoids potential clock rate misconfiguration, when setting the
+> kernel frequency on STM32MP2 SoCs.
 > 
+> Olivier Moysan (2):
+>   ASoC: stm32: sai: skip useless iterations on kernel rate loop
+>   ASoC: stm32: sai: add a check on minimal kernel frequency
 > 
-> Regressions on s390 build regressions with defconfig with gcc-13/8 and
-> clang-20/clang-nightly on the stable-rc 6.12.26-rc1.
-> 
-> * s390, build
->   - clang-20-defconfig
->   - clang-nightly-defconfig
->   - clang-nightly-lkftconfig-hardening
->   - clang-nightly-lkftconfig-lto-full
->   - clang-nightly-lkftconfig-lto-thing
->   - gcc-13-allmodconfig
->   - gcc-13-defconfig
->   - gcc-13-lkftconfig-hardening
->   - gcc-8-defconfig-fe40093d
->   - gcc-8-lkftconfig-hardening
->   - korg-clang-20-lkftconfig-hardening
->   - korg-clang-20-lkftconfig-lto-full
->   - korg-clang-20-lkftconfig-lto-thing
+> [...]
 
-Offending commit now dropped, thanks.
+Applied to
 
-greg k-h
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+
+Thanks!
+
+[1/2] ASoC: stm32: sai: skip useless iterations on kernel rate loop
+      commit: edea92770a3b6454dc796fc5436a3315bb402181
+[2/2] ASoC: stm32: sai: add a check on minimal kernel frequency
+      commit: cce34d113e2a592806abcdc02c7f8513775d8b20
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
