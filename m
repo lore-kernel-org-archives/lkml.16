@@ -1,26 +1,26 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECFD21EFF80;
-	Thu,  1 May 2025 01:35:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 805E91F758F;
+	Thu,  1 May 2025 01:35:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746063302; cv=none; b=tw+4a8KWyZG009MXlPdk2/Zu1bbATXZPr001CeuCZBPD6DKtfh1kGB1P2ABvVgZHYteJZFAPW2emjKrQ6dNkbQnbUJ2taHAnDrmF/G3RemHZNd5EhJVB1AwuOGiOFrVAZW8SBhFbGEIXeEF+O5cAjwcWaR0Gxc7viWOzEMZ7GO0=
+	t=1746063302; cv=none; b=sQHq60rVVi5X815cadhLJz8qYxUNiaDO5+ViWvsn99uW24YLPwJL2gc0IHVSD2WCHZINfx5tGbHSnU78X5WQMptXcUHfhCLu9Z/6p+Lw6XH0rrHrNtH2QGdjjrvJQ/jTFanOOeIAcaaJEmRh2rqBAB+P31UDKz3+/ibTsQFs4EA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746063302; c=relaxed/simple;
-	bh=SoMQdK/Ers1xN80tqiKf5AqaIQTnmCJ7Xm0J0w8Jy7k=;
+	bh=g593+XuzQEKQ7TP4igZ61P/wDrXKaJbg8PWTdIUm3W0=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=kAiP3PFPJnhDy1Oe5UloRnRSv1Tcd1SztgYoHSNcprwCpNXd7IYpxWobEwG7hsa0/4l5DElpmRTZbdbKMJozdn+2oSSstNB9mI+WL8kBFrB5ta5Ou/A51+PzzPfX5zFJzvBmWQPgfHaroNRg0jkaJGGQyoi8S35AxxDz/BD7lQw=
+	 Content-Type; b=fGSFlfLHEAVLg++9AllZ5to6DX9RD597uzXqA2tUPZ4TrfW+c/OsleqWrc21Bf8HXe7qOZIWJNF32Se1LnIJMtH1P1mr5+YjBplLCZbPu+i4OpTVXptkS94FP/KejeoaQhkz5uvRHOjVuDPlL71ykv265QinJBV46rCOEL/xAMo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BED9C4CEED;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9CBEC4CEF3;
 	Thu,  1 May 2025 01:35:01 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uAIpO-00000001olC-0wz9;
+	id 1uAIpO-00000001omg-33wN;
 	Wed, 30 Apr 2025 21:35:06 -0400
-Message-ID: <20250501013506.078795846@goodmis.org>
+Message-ID: <20250501013506.586292205@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 30 Apr 2025 21:32:03 -0400
+Date: Wed, 30 Apr 2025 21:32:06 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
@@ -53,7 +53,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Beau Belgrave <beaub@linux.microsoft.com>,
  "Jose E. Marchesi" <jemarch@gnu.org>,
  Alexander Aring <aahringo@redhat.com>
-Subject: [PATCH v6 1/5] unwind_user/deferred: Add deferred unwinding interface
+Subject: [PATCH v6 4/5] unwind deferred: Use SRCU unwind_deferred_task_work()
 References: <20250501013202.997535180@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -63,310 +63,137 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-Add an interface for scheduling task work to unwind the user space stack
-before returning to user space. This solves several problems for its
-callers:
+Instead of using the callback_mutex to protect the link list of callbacks
+in unwind_deferred_task_work(), use SRCU instead. This gets called every
+time a task exits that has to record a stack trace that was requested.
+This can happen for many tasks on several CPUs at the same time. A mutex
+is a bottleneck and can cause a bit of contention and slow down performance.
 
-  - Ensure the unwind happens in task context even if the caller may be
-    running in NMI or interrupt context.
+As the callbacks themselves are allowed to sleep, regular RCU can not be
+used to protect the list. Instead use SRCU, as that still allows the
+callbacks to sleep and the list can be read without needing to hold the
+callback_mutex.
 
-  - Avoid duplicate unwinds, whether called multiple times by the same
-    caller or by different callers.
+Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com/
 
-  - Create a "context cookie" which allows trace post-processing to
-    correlate kernel unwinds/traces with the user unwind.
-
-A concept of a "cookie" is created to detect when the stacktrace is the
-same. A cookie is generated the first time a user space stacktrace is
-requested after the task enters the kernel. As the stacktrace is saved on
-the task_struct while the task is in the kernel, if another request comes
-in, if the cookie is still the same, it will use the saved stacktrace,
-and not have to regenerate one.
-
-The cookie is passed to the caller on request, and when the stacktrace is
-generated upon returning to user space, it call the requester's callback
-with the cookie as well as the stacktrace.
-
-Co-developed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v5: https://lore.kernel.org/20250424192612.505622711@goodmis.org
+ kernel/unwind/deferred.c | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
-- Have unwind_deferred_request() return positive if already queued
-
-- Check (current->flags & PF_KTHREAD | PF_EXITING) in
-  unwind_deferred_request(), as the task_work will fail to be added in the
-  exit code.
-
- include/linux/unwind_deferred.h       |  18 +++
- include/linux/unwind_deferred_types.h |   3 +
- kernel/unwind/deferred.c              | 165 +++++++++++++++++++++++++-
- 3 files changed, 185 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/unwind_deferred.h b/include/linux/unwind_deferred.h
-index c2d760e5e257..d36784cae658 100644
---- a/include/linux/unwind_deferred.h
-+++ b/include/linux/unwind_deferred.h
-@@ -2,9 +2,19 @@
- #ifndef _LINUX_UNWIND_USER_DEFERRED_H
- #define _LINUX_UNWIND_USER_DEFERRED_H
- 
-+#include <linux/task_work.h>
- #include <linux/unwind_user.h>
- #include <linux/unwind_deferred_types.h>
- 
-+struct unwind_work;
-+
-+typedef void (*unwind_callback_t)(struct unwind_work *work, struct unwind_stacktrace *trace, u64 cookie);
-+
-+struct unwind_work {
-+	struct list_head		list;
-+	unwind_callback_t		func;
-+};
-+
- #ifdef CONFIG_UNWIND_USER
- 
- void unwind_task_init(struct task_struct *task);
-@@ -12,9 +22,14 @@ void unwind_task_free(struct task_struct *task);
- 
- int unwind_deferred_trace(struct unwind_stacktrace *trace);
- 
-+int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func);
-+int unwind_deferred_request(struct unwind_work *work, u64 *cookie);
-+void unwind_deferred_cancel(struct unwind_work *work);
-+
- static __always_inline void unwind_exit_to_user_mode(void)
- {
- 	current->unwind_info.cache.nr_entries = 0;
-+	current->unwind_info.cookie = 0;
- }
- 
- #else /* !CONFIG_UNWIND_USER */
-@@ -23,6 +38,9 @@ static inline void unwind_task_init(struct task_struct *task) {}
- static inline void unwind_task_free(struct task_struct *task) {}
- 
- static inline int unwind_deferred_trace(struct unwind_stacktrace *trace) { return -ENOSYS; }
-+static inline int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func) { return -ENOSYS; }
-+static inline int unwind_deferred_request(struct unwind_work *work, u64 *cookie) { return -ENOSYS; }
-+static inline void unwind_deferred_cancel(struct unwind_work *work) {}
- 
- static inline void unwind_exit_to_user_mode(void) {}
- 
-diff --git a/include/linux/unwind_deferred_types.h b/include/linux/unwind_deferred_types.h
-index b3b7389ee6eb..33373c32c221 100644
---- a/include/linux/unwind_deferred_types.h
-+++ b/include/linux/unwind_deferred_types.h
-@@ -9,6 +9,9 @@ struct unwind_cache {
- 
- struct unwind_task_info {
- 	struct unwind_cache	cache;
-+	u64			cookie;
-+	struct callback_head	work;
-+	int			pending;
- };
- 
- #endif /* _LINUX_UNWIND_USER_DEFERRED_TYPES_H */
 diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
-index 89ed04b1c527..b93ad97daf94 100644
+index 716393dff810..5f98ac5e3a1b 100644
 --- a/kernel/unwind/deferred.c
 +++ b/kernel/unwind/deferred.c
-@@ -2,13 +2,72 @@
- /*
-  * Deferred user space unwinding
+@@ -23,10 +23,11 @@
   */
-+#include <linux/sched/task_stack.h>
-+#include <linux/unwind_deferred.h>
-+#include <linux/task_work.h>
- #include <linux/kernel.h>
- #include <linux/sched.h>
- #include <linux/slab.h>
--#include <linux/unwind_deferred.h>
-+#include <linux/mm.h>
+ static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
  
- #define UNWIND_MAX_ENTRIES 512
+-/* Guards adding to and reading the list of callbacks */
++/* Guards adding to or removing from the list of callbacks */
+ static DEFINE_MUTEX(callback_mutex);
+ static LIST_HEAD(callbacks);
+ static unsigned long unwind_mask;
++DEFINE_STATIC_SRCU(unwind_srcu);
  
-+/*
-+ * This is a unique percpu identifier for a given task entry context.
-+ * Conceptually, it's incremented every time the CPU enters the kernel from
-+ * user space, so that each "entry context" on the CPU gets a unique ID.  In
-+ * reality, as an optimization, it's only incremented on demand for the first
-+ * deferred unwind request after a given entry-from-user.
-+ *
-+ * It's combined with the CPU id to make a systemwide-unique "context cookie".
-+ */
-+static DEFINE_PER_CPU(u64, unwind_ctx_ctr);
+ /*
+  * The context cookie is a unique identifier that is assigned to a user
+@@ -137,6 +138,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 	struct unwind_work *work;
+ 	struct task_struct *task = current;
+ 	u64 cookie;
++	int idx;
+ 
+ 	if (WARN_ON_ONCE(!info->pending))
+ 		return;
+@@ -155,14 +157,16 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 
+ 	cookie = get_cookie(info);
+ 
+-	guard(mutex)(&callback_mutex);
+-	list_for_each_entry(work, &callbacks, list) {
++	idx = srcu_read_lock(&unwind_srcu);
++	list_for_each_entry_srcu(work, &callbacks, list,
++				 srcu_read_lock_held(&unwind_srcu)) {
+ 		if (task->unwind_mask & (1UL << work->bit)) {
+ 			work->func(work, &trace, cookie);
+ 			clear_bit(work->bit, &current->unwind_mask);
+ 		}
+ 	}
+-	barrier();
++	srcu_read_unlock(&unwind_srcu, idx);
 +
-+/* Guards adding to and reading the list of callbacks */
-+static DEFINE_MUTEX(callback_mutex);
-+static LIST_HEAD(callbacks);
-+
-+/*
-+ * The context cookie is a unique identifier that is assigned to a user
-+ * space stacktrace. As the user space stacktrace remains the same while
-+ * the task is in the kernel, the cookie is an identifier for the stacktrace.
-+ * Although it is possible for the stacktrace to get another cookie if another
-+ * request is made after the cookie was cleared and before reentering user
-+ * space.
-+ *
-+ * The high 16 bits are the CPU id; the lower 48 bits are a per-CPU entry
-+ * counter shifted left by one and or'd with 1 (to prevent it from ever being
-+ * zero).
-+ */
-+static u64 ctx_to_cookie(u64 cpu, u64 ctx)
-+{
-+	BUILD_BUG_ON(NR_CPUS > 65535);
-+	return ((ctx << 1) & ((1UL << 48) - 1)) | (cpu << 48) | 1;
-+}
-+
-+/*
-+ * Read the task context cookie, first initializing it if this is the first
-+ * call to get_cookie() since the most recent entry from user.
-+ */
-+static u64 get_cookie(struct unwind_task_info *info)
-+{
-+	u64 ctx_ctr;
-+	u64 cookie;
-+	u64 cpu;
-+
-+	guard(irqsave)();
-+
-+	cookie = info->cookie;
-+	if (cookie)
-+		return cookie;
-+
-+	cpu = raw_smp_processor_id();
-+	ctx_ctr = __this_cpu_inc_return(unwind_ctx_ctr);
-+	info->cookie = ctx_to_cookie(cpu, ctx_ctr);
-+
-+	return info->cookie;
-+}
-+
- int unwind_deferred_trace(struct unwind_stacktrace *trace)
+ 	/* If another task work is pending, reuse the cookie and stack trace */
+ 	if (!READ_ONCE(info->pending))
+ 		WRITE_ONCE(info->cookie, 0);
+@@ -238,6 +242,7 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
  {
  	struct unwind_task_info *info = &current->unwind_info;
-@@ -46,11 +105,114 @@ int unwind_deferred_trace(struct unwind_stacktrace *trace)
- 	return 0;
- }
+ 	int pending;
++	int bit;
+ 	int ret;
  
-+static void unwind_deferred_task_work(struct callback_head *head)
-+{
-+	struct unwind_task_info *info = container_of(head, struct unwind_task_info, work);
-+	struct unwind_stacktrace trace;
-+	struct unwind_work *work;
-+	u64 cookie;
-+
-+	if (WARN_ON_ONCE(!info->pending))
-+		return;
-+
-+	/* Allow work to come in again */
-+	WRITE_ONCE(info->pending, 0);
-+
-+	/*
-+	 * From here on out, the callback must always be called, even if it's
-+	 * just an empty trace.
-+	 */
-+	trace.nr = 0;
-+	trace.entries = NULL;
-+
-+	unwind_deferred_trace(&trace);
-+
-+	cookie = get_cookie(info);
-+
-+	guard(mutex)(&callback_mutex);
-+	list_for_each_entry(work, &callbacks, list) {
-+		work->func(work, &trace, cookie);
-+	}
-+	barrier();
-+	/* If another task work is pending, reuse the cookie and stack trace */
-+	if (!READ_ONCE(info->pending))
-+		WRITE_ONCE(info->cookie, 0);
-+}
-+
-+/*
-+ * Schedule a user space unwind to be done in task work before exiting the
-+ * kernel.
-+ *
-+ * The returned cookie output is a unique identifer for the current task entry
-+ * context.  Its value will also be passed to the callback function.  It can be
-+ * used to stitch kernel and user stack traces together in post-processing.
-+ *
-+ * It's valid to call this function multiple times for the same @work within
-+ * the same task entry context.  Each call will return the same cookie.
-+ * If the callback is not pending because it has already been previously called
-+ * for the same entry context, it will be called again with the same stack trace
-+ * and cookie.
-+ *
-+ * Returns 1 if the the callback was already queued.
-+ *         0 if the callback will be called on task to user space
-+ *         Negative if there's an error.
-+ */
-+int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
-+{
-+	struct unwind_task_info *info = &current->unwind_info;
-+	int ret;
-+
-+	*cookie = 0;
-+
-+	if (WARN_ON_ONCE(in_nmi()))
+ 	*cookie = 0;
+@@ -249,12 +254,17 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+ 	if (in_nmi())
+ 		return unwind_deferred_request_nmi(work, cookie);
+ 
++	/* Do not allow cancelled works to request again */
++	bit = READ_ONCE(work->bit);
++	if (WARN_ON_ONCE(bit < 0))
 +		return -EINVAL;
 +
-+	if ((current->flags & (PF_KTHREAD | PF_EXITING)) ||
-+	    !user_mode(task_pt_regs(current)))
-+		return -EINVAL;
-+
-+	guard(irqsave)();
-+
-+	*cookie = get_cookie(info);
-+
-+	/* callback already pending? */
-+	if (info->pending)
-+		return 1;
-+
-+	/* The work has been claimed, now schedule it. */
-+	ret = task_work_add(current, &info->work, TWA_RESUME);
-+	if (WARN_ON_ONCE(ret))
-+		return ret;
-+
-+	info->pending = 1;
-+	return 0;
-+}
-+
-+void unwind_deferred_cancel(struct unwind_work *work)
-+{
-+	if (!work)
-+		return;
-+
-+	guard(mutex)(&callback_mutex);
-+	list_del(&work->list);
-+}
-+
-+int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
-+{
-+	memset(work, 0, sizeof(*work));
-+
-+	guard(mutex)(&callback_mutex);
-+	list_add(&work->list, &callbacks);
-+	work->func = func;
-+	return 0;
-+}
-+
- void unwind_task_init(struct task_struct *task)
+ 	guard(irqsave)();
+ 
+ 	*cookie = get_cookie(info);
+ 
+ 	/* This is already queued */
+-	if (current->unwind_mask & (1UL << work->bit))
++	if (current->unwind_mask & (1UL << bit))
+ 		return 1;
+ 
+ 	/* callback already pending? */
+@@ -280,19 +290,26 @@ int unwind_deferred_request(struct unwind_work *work, u64 *cookie)
+ void unwind_deferred_cancel(struct unwind_work *work)
  {
- 	struct unwind_task_info *info = &task->unwind_info;
+ 	struct task_struct *g, *t;
++	int bit;
  
- 	memset(info, 0, sizeof(*info));
-+	init_task_work(&info->work, unwind_deferred_task_work);
+ 	if (!work)
+ 		return;
+ 
+ 	guard(mutex)(&callback_mutex);
+-	list_del(&work->list);
++	list_del_rcu(&work->list);
++	bit = work->bit;
++
++	/* Do not allow any more requests and prevent callbacks */
++	work->bit = -1;
++
++	clear_bit(bit, &unwind_mask);
+ 
+-	clear_bit(work->bit, &unwind_mask);
++	synchronize_srcu(&unwind_srcu);
+ 
+ 	guard(rcu)();
+ 	/* Clear this bit from all threads */
+ 	for_each_process_thread(g, t) {
+-		clear_bit(work->bit, &t->unwind_mask);
++		clear_bit(bit, &t->unwind_mask);
+ 	}
  }
  
- void unwind_task_free(struct task_struct *task)
-@@ -58,4 +220,5 @@ void unwind_task_free(struct task_struct *task)
- 	struct unwind_task_info *info = &task->unwind_info;
+@@ -309,7 +326,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+ 	work->bit = ffz(unwind_mask);
+ 	unwind_mask |= 1UL << work->bit;
  
- 	kfree(info->cache.entries);
-+	task_work_cancel(task, &info->work);
+-	list_add(&work->list, &callbacks);
++	list_add_rcu(&work->list, &callbacks);
+ 	work->func = func;
+ 	return 0;
  }
 -- 
 2.47.2
