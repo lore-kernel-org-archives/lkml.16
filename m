@@ -1,198 +1,131 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4CF1F874F
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 01:38:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB28320DD7D;
+	Thu,  1 May 2025 01:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746063492; cv=none; b=mPZd/VkONjU6szU14w8PME5YRP2bM7CKXOkD+2LzUyahamAS2otCKN6DaR5dQm50LNXlsaReznkxtCw59tHzHjVLswtanglxDE2H3ZlI7QeHzMZ1D/qDuw+iuPXiwzwR6OcmcYM+o3bxdrc0LCHFcFpH33bFVIIHGnCvQVtkNEA=
+	t=1746063687; cv=none; b=WlmGp2m1xC32bvhIBIjB1TfyipKmrWaFn0HdsaCkadnll8yaBwInYsU46tGcDyiZJX8ILKCNtKPxEVCc5eLtPIkrGMk8HEiBvSVzd+3s99lOOI9sHX+xkav5kbVVr16zNnNzrSpbpbSEJhJRzuWUcTlNAiSsMWPsIR4vlzoBLqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746063492; c=relaxed/simple;
-	bh=qswmRgxBtKtJNAvLHM4hZPfSNBEZni24oTOcHXgl2v4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BET3LjXUjo+Cr/342QlOFrCf5UtOFPew0QF8XZB0Z0yajtyTutcF4ubNeXJPRd42aK6LNz172j54xyqSBq5sixt7WtSUzyQ+vj4iaqqXBpFRpw2dq6VFA1A+AzyHeaP4FVmpN62m6yHpIZ+Oxs3aniViHZnvfejZosSUHLnZ6K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DVMhv0ND; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746063687; c=relaxed/simple;
+	bh=JRo1hJI/8W+6ewuuE3wFT/YQUEgeNQ7z+KAfQSOOn3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j/Yf8PBADlZvl7GuNx//JMHMtsst5MHfJPMeoEQDRdiXxW8MnXm/DpjIOeck2bsaiFbsZdgBTObcWmCOuqsnK8GKWKQ8lmA8Onduq7ywr5nt5niC4rSKRfpa5ZiijYWbuYgwyioV0HBQHqBbQ/FwNAjWD4gp2ZysisFj7EOYDFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=Fmbgifoi; arc=none smtp.client-ip=144.6.53.87
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DVMhv0ND"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-476977848c4so7074741cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 30 Apr 2025 18:38:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746063489; x=1746668289; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nX4dVDllopq+tS8FzjHQ5g5N61k8rKm72Q1pN8FUsr0=;
-        b=DVMhv0NDKabUBPw1V5nqcdrlk+PHizZKx7Ddx/dvoJ/ptAnSKR4WquAqVoyj2EMoPc
-         nPantTXX2elepNvAHABkSxC/66RyL/o0gXR54sHkS9KCWxfHXhl3coXrpKMMqF7Fs2hA
-         m3OHxQlj6rXSIcC7JGSB9zQtOQFv09Frmgiso7/ms9USJZhk7hZTSeqHAaLH2NAyJJv7
-         IygLnxYAhpTxO67zP2Q1BJR7e4IhpPZd1LC3durhx1l8TLXGyEvDvwvuAYsFp5zrYnDk
-         7JNeWZZxZk63vx9FyDuG6rWK5QQbwXHLnWZdRnu0IID15uMi+kZs/X0otR4Isd7zlUWY
-         r8LQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746063489; x=1746668289;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nX4dVDllopq+tS8FzjHQ5g5N61k8rKm72Q1pN8FUsr0=;
-        b=KVb0eETUPHxYFulhdqCi42XFC0wtD0MYHyoMD9FKs4fUzdNVdIUAQui20UorcjMw1Q
-         X2Uh1hOLyJl2dI88RuDIyh9Yd0+aJHPeBw0roPX+ElSy7aId5CRDOp6cd+/hmDVu1eon
-         fK2yfmmxYMTBA6uDRclCIuvkpyNVMFP/D/XQkgI3H+e7MWq8LrOvAQ/l9xrDqqH+Ivkt
-         L3fkHVE4gTOP6RcLQeGqDWEX/TtKVY3TeNcE/UM0BxoqExb0zFHwDHcG/YQYCx7+cbRi
-         u/qo6wuLa8uA9utsvdwWFaz1xF5eFlnU5etJyU+wyERgFekRVf1cJLUPCYxIZVFSnKgM
-         T4JA==
-X-Forwarded-Encrypted: i=1; AJvYcCXHVQB4MbEd1v5ZO/iwaSlAqH1Dg3BptRSbj7q+txLxD7fDU+CuGZIaOrqNPklmMm9pQPkolyBkFUViYHM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL1ZqwDlfrP15dDPNvptCMajXGRfKduAlDoWWjqiLW7ty5fJJY
-	37v7g7c2/KWEu10vwAa8ZXIdA00ZwdVwBjGxiXlp+e2ly2Jqu9PUOesinGJPO1BBFYVbwoE1apR
-	ZVCSv40DUkeVnZRsxmuSfF3UUkTs=
-X-Gm-Gg: ASbGnct+4jZwlIRCzDJNNP5ooq+SuJonNLxCvuhyBcb4ToD3l/pMMfBlB21elm9o+tc
-	81rw835E0gwrGTfDIH0YCeuiRUNnnhD6JQmnsWz0ri2UiKn/BeFP432fFTiP1D52Be5p23sJeBi
-	BLZ5hT2cwrY1mdIurfp5NByL+/+LmZI2JRJm5MoME55GWATvz8zP1jlA==
-X-Google-Smtp-Source: AGHT+IHrCLTmNcY0FHD5WEC/WePPcdfn+RpbojiuUZCKwBlyUNvxT6k2qlNTuF2RqkP+4o2DKBbTidh6sUg7qZ3qWVQ=
-X-Received: by 2002:a05:622a:1148:b0:477:5d12:aac5 with SMTP id
- d75a77b69052e-48b21a60df3mr11470771cf.35.1746063489322; Wed, 30 Apr 2025
- 18:38:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="Fmbgifoi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
+	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=ed9go9csUlM1m+JZ6KkzZFk4Wl1ssOHqWmUSovrkrnA=; b=FmbgifoizgTBZWSlXn7C89RnMW
+	Zeusr5as1LP7nJR0o5GZj7fp0u9g1fyY5s5H6Nas9iR6MrpjSclcbLt/igrf4fCVd1Rhamb77nkI6
+	6d3Q0TiOceLLlSaOX/jGDb0j/NX60Fa3IhtQpTeCd0IVWPCJzWeZtvW4XfjiepoNBVLyh/chi3NKO
+	VfGrov68qtjFF57UhHPVgMLm0+FA3wLRkeNMIk9EFjW6F8BeWd70mJHpDeM2ksBKJqwOhGXS6/0Zm
+	KzH2pnMFWyi5qMDtvwyoV+o0cR8KTEcEBgp/QplHHDjHLl/vVNRp9psNJTBzmWRzST6b7e7Hycn7a
+	2wBTVbsw==;
+Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
+	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
+	id 1uAIv4-002R2Q-2g;
+	Thu, 01 May 2025 09:40:59 +0800
+Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Thu, 01 May 2025 09:40:58 +0800
+Date: Thu, 1 May 2025 09:40:58 +0800
+From: Herbert Xu <herbert@gondor.apana.org.au>
+To: Kanchana P Sridhar <kanchana.p.sridhar@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hannes@cmpxchg.org,
+	yosry.ahmed@linux.dev, nphamcs@gmail.com, chengming.zhou@linux.dev,
+	usamaarif642@gmail.com, ryan.roberts@arm.com, 21cnbao@gmail.com,
+	ying.huang@linux.alibaba.com, akpm@linux-foundation.org,
+	linux-crypto@vger.kernel.org, davem@davemloft.net,
+	clabbe@baylibre.com, ardb@kernel.org, ebiggers@google.com,
+	surenb@google.com, kristen.c.accardi@intel.com,
+	wajdi.k.feghali@intel.com, vinodh.gopal@intel.com
+Subject: Re: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
+ batching support in acomp & drivers.
+Message-ID: <aBLRKuhJOSF8kGZv@gondor.apana.org.au>
+References: <20250430205305.22844-1-kanchana.p.sridhar@intel.com>
+ <20250430205305.22844-11-kanchana.p.sridhar@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250430131516.24287-1-yangtiezhu@loongson.cn> <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-In-Reply-To: <CAAhV-H4VpYVEhwnhh4s083FuNsfEhGwrYxtceFDKD_imnBBrjw@mail.gmail.com>
-From: Vincent Li <vincent.mc.li@gmail.com>
-Date: Wed, 30 Apr 2025 18:37:57 -0700
-X-Gm-Features: ATxdqUFlmxlvNicj0lwYOXAq-vMhrWpp638DpK7NoOjFQFt_McQ3EnOPUchj68M
-Message-ID: <CAK3+h2xQbw=4s8qRK9WDGmzDhsWC2WhqkYWuwKUXdJFwLaL2Pg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Enable some configs in loongson3_defconfig
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, loongarch@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430205305.22844-11-kanchana.p.sridhar@intel.com>
 
-Hi Tiezhu,
+On Wed, Apr 30, 2025 at 01:52:56PM -0700, Kanchana P Sridhar wrote:
+>
+> @@ -127,6 +131,22 @@ struct acomp_req {
+>  struct crypto_acomp {
+>  	int (*compress)(struct acomp_req *req);
+>  	int (*decompress)(struct acomp_req *req);
+> +	unsigned int (*get_batch_size)(void);
+> +	bool (*batch_compress)(
+> +		struct acomp_req *reqs[],
+> +		struct page *pages[],
+> +		u8 *dsts[],
+> +		unsigned int dlens[],
+> +		int errors[],
+> +		int nr_reqs);
+> +	bool (*batch_decompress)(
+> +		struct acomp_req *reqs[],
+> +		u8 *srcs[],
+> +		struct page *pages[],
+> +		unsigned int slens[],
+> +		unsigned int dlens[],
+> +		int errors[],
+> +		int nr_reqs);
 
-On Wed, Apr 30, 2025 at 6:41=E2=80=AFAM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
->
-> Hi, Tiezhu,
->
-> When I enable these options:
-> CONFIG_FTRACE=3Dy
-> CONFIG_FUNCTION_TRACER=3Dy
-> CONFIG_FUNCTION_GRAPH_TRACER=3Dy
-> CONFIG_DYNAMIC_FTRACE=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_REGS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS=3Dy
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS=3Dy
-> CONFIG_KPROBES=3Dy
-> CONFIG_UPROBES=3Dy
-> CONFIG_KPROBE_EVENTS=3Dy
-> CONFIG_UPROBE_EVENTS=3Dy
->
-> Then your above commands will hang (or get a SIGTRAP), which options I
-> am missing?
->
-> I haven't tried your patches, maybe it works, but I want to know the
-> exactly needed options.
->
-> Huacai
->
->
-> On Wed, Apr 30, 2025 at 9:15=E2=80=AFPM Tiezhu Yang <yangtiezhu@loongson.=
-cn> wrote:
-> >
-> > This is a small patchset based on 6.15-rc4, each patch is a
-> > single logical change to better describe the problem and make
-> > it easier to review.
-> >
-> > If the changes make sense, all of them can be squashed into one
-> > single patch, I think that would be fine as well, let us see if
-> > other people have concern about it.
-> >
-> > By the way, I received many compile-time error reports about tools,
-> > most are related with configs, this is the motivation of this series.
-> >
-> > Additionally, I also received one run-time bug report about uprobe,
-> > but it works fine on my test environment. If somebody can reproduce
-> > it, please let me know, maybe I am missing something.
-> >
-> > 1. How to reproduce
-> >
-> > (1) Compile and install Tongsuo
-> >
-> > git clone https://github.com/Tongsuo-Project/Tongsuo.git
-> > cd Tongsuo && ./config --prefix=3D/opt/tongsuo -Wl,-rpath,/opt/tongsuo/=
-lib
-> > make && sudo make install
-> >
-> > https://www.tongsuo.net/docs/compilation/source-compilation
-> >
-> > (2) Compile and update kernel
-> >
-> > Apply this series based on 6.15-rc4, then use the loongson3_defconfig,
-> > CONFIG_UPROBE_EVENTS is already set.
-> >
-> > (3) Probe "openssl speed sm2"
-> >
-> > cd tools/perf && make
-> > sudo ./perf probe -x /usr/lib64/libcrypto.so BN_mod_mul_montgomery
-> > sudo ./perf stat -e probe_libcrypto:BN_mod_mul_montgomery /opt/tongsuo/=
-bin/openssl speed sm2
-> >
-> > 2. My test results
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf probe -x /usr/lib64/l=
-ibcrypto.so BN_mod_mul_montgomery
-> > Added new event:
-> >   probe_libcrypto:BN_mod_mul_montgomery (on BN_mod_mul_montgomery in /u=
-sr/lib64/libcrypto.so.3.2.2)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> >         perf record -e probe_libcrypto:BN_mod_mul_montgomery -aR sleep =
-1
-> >
-> > fedora@linux:~/uprobe.git/tools/perf$ sudo ./perf stat -e probe_libcryp=
-to:BN_mod_mul_montgomery /opt/tongsuo/bin/openssl speed sm2
-> > Doing 256 bits sign CurveSM2's for 10s: 7463 256 bits CurveSM2 signs in=
- 10.00s
-> > Doing 256 bits verify CurveSM2's for 10s: 9681 256 bits CurveSM2 verify=
- in 9.98s
-> > ...
-> >                               sign    verify    sign/s verify/s
-> >  256 bits SM2 (CurveSM2)   0.0013s   0.0010s    746.3    970.0
-> >
-> >  Performance counter stats for '/opt/tongsuo/bin/openssl speed sm2':
-> >
-> >                  0      probe_libcrypto:BN_mod_mul_montgomery
-> >
-> >       20.007539877 seconds time elapsed
-> >
-> >       19.990010000 seconds user
-> >        0.000000000 seconds sys
-> >
-> > Thanks,
-> > Tiezhu
-> >
-> > Tiezhu Yang (5):
-> >   LoongArch: Clean up loongson3_defconfig
-> >   LoongArch: Enable tracing infrastructure in defconfig
-> >   LoongArch: Enable tracing syscalls in defconfig
-> >   LoongArch: Enable debug information in defconfig
-> >   LoongArch: Enable kprobe and ftrace in defconfig
-> >
-> >  arch/loongarch/configs/loongson3_defconfig | 74 +++++-----------------
-> >  1 file changed, 16 insertions(+), 58 deletions(-)
+I shelved request chaining because allocating one request per page
+is actively harmful to performance.  So we should not add any
+interface that is based on one request per page.
 
-I recommend putting all the config changes in one patch so it is
-easier to review change and test, I have to look through each patch to
-see what config changed.
+My plan is to supply a whole folio through acomp_request_set_src_folio
+and mark it as a batch request with a data unit size of 4K, e.g.:
 
-> >
-> > --
-> > 2.42.0
-> >
->
+	acomp_request_set_src_folio(req, folio, 0, len);
+	acomp_request_set_data_unit(req, 4096);
+
+Then the algorithm can dice it up in whatever way it sees fit.  For
+algorithms that don't support batching, the acompress API should dice
+it up and feed it to the algorithm piece-meal.
+
+IOW the folio loop in zswap_store would be moved into the Crypto API.
+
+This is contingent on one API change, bringing back NULL dst support
+to acompress.  This way zswap does not need to worry about allocating
+memory that might not even be needed (when pages compress well).
+
+This won't look like the useless NULL dst we had before which simply
+pre-allocated memory rather than allocating them on demand.
+
+What acompress should do is allocate one dst page at a time, once that
+is filled up, then allocate one more.  They should be chained up in an
+SG list.  Pages that do not compress can be marked as a zero-length
+entry in the SG list.
+
+If the allocation fails at any point in time, simply stop the
+batching at that point and return the SG list of what has been
+compressed so far.  After processing the returned pages, zswap
+can then call acompress again with an offset into the folio to
+continue compression.
+
+To prevent pathological cases of zero progress, zswap can provide
+one pre-allocated page to seed the process.  For iaa, it should
+just allocate as many pages as it needs for batching, and if that
+fails, simply fall back to no batching and do things one page at
+a time (or however many pages you manage to allocate).
+
+I'll whip up a quick POC and we can work on top of it.
+
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
