@@ -1,126 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3E2422083;
-	Thu,  1 May 2025 00:31:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43CE19F421;
+	Thu,  1 May 2025 00:31:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746059461; cv=none; b=rOx++dlqhgWM3MpI3HzfiXDq+68a7aqsTybFAFi0sQ4jxAl+MNOMxCPTMi5UwBwpT5btA6spvKFnuq5QJLKz0/vlyLUZX0WskrFIxqy+qvnlCgRwu3GfJExibiLGPNpN733LFxF4jTV8bpS1PkWCJm8ZyTAFBKmvdoPhyQHHo9o=
+	t=1746059465; cv=none; b=qQMr2z4ww06CptxGAXDZxWQpH/g0uaJ11g5+mvVrNQoHhc9DzyWhOa5X8EC7JxA3AC30jhb8mV+R1T5DDtl598tnfglHcMiyFxX5yEVTYdYlaCqeNmjzzP1ryl+jfPfwb1hesQvVhPeqf3tnpDQiReB8EKFDgBABJRpcNx8dPxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746059461; c=relaxed/simple;
-	bh=WmWXQoaOvf8Ws0IsFcyWt/5E0xZpcoMExsvGw0lys/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iO2flb4KSkut8iGlymZGvy1po+13O+wh/8JwgNZ56JLq8lYNSMeIHlgX57ultkIfT0S9RDNWtVNo0ZFgtcmrl4eCH5XUcdHced2e8vB8lHI4aApFFa5s+3/t7mZaqD0Agw9pTCLVSgdkAG0WlJ4Bbq4oGKnml859tEd+8ulpIrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XMhzWRKY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746059465; c=relaxed/simple;
+	bh=Ci0DwSkdku8GewOdySf7cTEu3of/g50Vqk+aMKizZGk=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QE0NxB8BdtXS7WbJOwPwNvt8/H1hgRl5gN2h5ZIg38KAWvJ+bCASbJL9Y3Kh6TpHzuhxbYWE0rXR8pM4xDTXPAjZnyoFXyPYczDZLLzc/SVjQmpPEPzhqgHsK6DVxshHjmkKBA5EzZg64emitLfwbKpFUssYfoJrj7L/YpQ/fOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=o0aguuBk; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XMhzWRKY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB5F3C4CEE7;
-	Thu,  1 May 2025 00:31:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746059461;
-	bh=WmWXQoaOvf8Ws0IsFcyWt/5E0xZpcoMExsvGw0lys/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XMhzWRKYKWGBUvzM/2SYo8OHPm+CVtpcDQJLS4429RDDzB3pqDwXbSbNpe++Gp7eu
-	 27PT4SHwYIdBkl3SC7qXFiD7z974Q5gYoqtSfxgAfFh1JQ7AX7SrqgzO5Vqi2h50yH
-	 UouL9zazmLpkezf744qurt6k+X20sY13qVpAQcA2g/C/RuCv5mSuc4VjriZ2KwKne9
-	 BY6rPY9fjCR0+p15v+/+iXuC9aTG4n6KkB61h8WdCIR65WK2/j+6upDZdLT25zWK8+
-	 Nx4Smtaai1P1CeXyrJIfZ5qhyiS/nKOt++M7JjvuruFH1KYr9UUKYbOtDl6PfrQ59a
-	 /wwkALPj5N9NQ==
-Date: Thu, 1 May 2025 09:30:58 +0900
-From: Mark Brown <broonie@kernel.org>
-To: Jason Mo <NukaColaM@outlook.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>,
-	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: sound: soc: amd: rpl: No ALSA DMIC capture interface for ACP6x
- (PCIe rev 62)
-Message-ID: <aBLAwjELCoWNWDyH@finisterre.sirena.org.uk>
-References: <BY5PR07MB66126978095912E5D4A26E50A1802@BY5PR07MB6612.namprd07.prod.outlook.com>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="o0aguuBk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1746059463; x=1777595463;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=9S7Rq8JOZsTFJ9lLP4FliEFT/hASyEX4dw+STGpWrg4=;
+  b=o0aguuBkifPhu0e+YKdkVC23huP9c2CT+g5XqR2uW4azrUcP9cx58+W3
+   ng8gquh3tgJOac24dT/6j15pyrh2OqfEHz7Ei+myBvnVQQL9kHArQ2tc4
+   wfi3Zj7c3hHe0Dm75bFau/VxCW6vuKbkz1cqg9Cbuf4Cyeg4s9jfbK1rP
+   g=;
+X-IronPort-AV: E=Sophos;i="6.15,253,1739836800"; 
+   d="scan'208";a="196066862"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 00:31:01 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:64656]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.59.114:2525] with esmtp (Farcaster)
+ id 0c9374d3-d797-4853-a843-2daf2ecffefa; Thu, 1 May 2025 00:31:01 +0000 (UTC)
+X-Farcaster-Flow-ID: 0c9374d3-d797-4853-a843-2daf2ecffefa
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 00:31:01 +0000
+Received: from 6c7e67bfbae3.amazon.com (10.187.171.60) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Thu, 1 May 2025 00:30:56 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <brauner@kernel.org>
+CC: <bluca@debian.org>, <daan.j.demeyer@gmail.com>, <davem@davemloft.net>,
+	<david@readahead.eu>, <edumazet@google.com>, <horms@kernel.org>,
+	<jack@suse.cz>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<lennart@poettering.net>, <linux-fsdevel@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <me@yhndnzj.com>, <netdev@vger.kernel.org>,
+	<oleg@redhat.com>, <pabeni@redhat.com>, <viro@zeniv.linux.org.uk>,
+	<zbyszek@in.waw.pl>
+Subject: Re: [PATCH RFC 3/3] coredump: support AF_UNIX sockets
+Date: Wed, 30 Apr 2025 17:25:19 -0700
+Message-ID: <20250501003048.49502-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250430-work-coredump-socket-v1-3-2faf027dbb47@kernel.org>
+References: <20250430-work-coredump-socket-v1-3-2faf027dbb47@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="19cqhS9he+iGqxg+"
-Content-Disposition: inline
-In-Reply-To: <BY5PR07MB66126978095912E5D4A26E50A1802@BY5PR07MB6612.namprd07.prod.outlook.com>
-X-Cookie: Well begun is half done.
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWB003.ant.amazon.com (10.13.139.157) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
+From: Christian Brauner <brauner@kernel.org>
+Date: Wed, 30 Apr 2025 13:05:03 +0200
+> @@ -801,6 +837,49 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+>  		}
+>  		break;
+>  	}
+> +	case COREDUMP_SOCK: {
+> +		struct file *file __free(fput) = NULL;
+> +		struct sockaddr_un unix_addr = {
+> +			.sun_family = AF_UNIX,
+> +		};
+> +		struct sockaddr_storage *addr;
+> +
+> +		retval = strscpy(unix_addr.sun_path, cn.corename, sizeof(unix_addr.sun_path));
+> +		if (retval < 0)
+> +			goto close_fail;
+> +
+> +		file = __sys_socket_file(AF_UNIX, SOCK_STREAM, 0);
+> +		if (IS_ERR(file))
+> +			goto close_fail;
+> +
+> +		/*
+> +		 * It is possible that the userspace process which is
+> +		 * supposed to handle the coredump and is listening on
+> +		 * the AF_UNIX socket coredumps. This should be fine
+> +		 * though. If this was the only process which was
+> +		 * listen()ing on the AF_UNIX socket for coredumps it
+> +		 * obviously won't be listen()ing anymore by the time it
+> +		 * gets here. So the __sys_connect_file() call will
+> +		 * often fail with ECONNREFUSED and the coredump.
+> +		 *
+> +		 * In general though, userspace should just mark itself
+> +		 * non dumpable and not do any of this nonsense. We
+> +		 * shouldn't work around this.
+> +		 */
+> +		addr = (struct sockaddr_storage *)(&unix_addr);
+> +		retval = __sys_connect_file(file, addr, sizeof(unix_addr), O_CLOEXEC);
 
---19cqhS9he+iGqxg+
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The 3rd argument should be offsetof(struct sockaddr_un, sun_path)
++ retval of strscpy() above ?
 
-On Tue, Apr 29, 2025 at 01:14:07AM +0000, Jason Mo wrote:
-> Hi Liam, Mark,
->=20
-> The `sound/soc/amd/rpl/rpl-pci-acp6x.c` driver for AMD ACP6x (PCIe rev 62=
-) appears to lack ALSA DMIC capture support, making the digital microphone =
-unusable on affected hardware.
-
-Adding Mario.
-
->=20
-> Hardware Details:
-> 05:00.5 Multimedia controller: Advanced Micro Devices, Inc. [AMD] ACP/ACP=
-3X/ACP6x Audio Coprocessor (rev 62)
->  =A0 =A0 =A0 =A0Subsystem: AIstone Global Limited Device 1301
->  =A0 =A0 =A0 =A0Kernel driver in use: snd_rpl_pci_acp6x
->  =A0 =A0 =A0 =A0Kernel modules: snd_pci_acp3x, snd_rn_pci_acp3x, snd_pci_=
-acp5x, snd_pci_acp6x, snd_acp_pci, snd_rpl_pci_acp6x, ...
->=20
-> System Information:
-> Linux version 6.14.4-arch1-1 (linux@archlinux) (gcc (GCC) 14.2.1 20250207=
-, GNU ld (GNU Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Sat, 26 Apr 2025 00:06=
-:37 +0000
->=20
-> Symptoms:
-> * =A0 No corresponding sound card entry in `/proc/asound/cards`.
-> * =A0 `arecord -l` shows no relevant capture device.
-> * =A0 No related ALSA mixer controls are exposed.
->=20
-> Code Analysis:
-> The `rpl-pci-acp6x.c` driver handles basic PCIe initialization but seems =
-to be missing the necessary ALSA/ASoC integration for capture. This contras=
-ts with `sound/soc/amd/yc/pci-acp6x.c` (for rev 60/6f), which includes full=
- ALSA DMIC support.
->=20
-> Attached Logs:
-> * =A0 dmesg (full & filtered for audio)
-> * =A0 lspci -vvnn (for audio device)
-> * =A0 aplay -l / arecord -l
-> * =A0 /proc/asound/cards
-> * =A0 lsmod | grep snd
->=20
-> Question:
-> Is the missing DMIC support in the `rpl` driver for rev 62 intentional, o=
-r is this a bug/missing feature?
->=20
-> Happy to test patches or provide more info if DMIC support is planned or =
-contributions are welcome.
->=20
-> Thanks,
-> Jason Mo
-
-
-
---19cqhS9he+iGqxg+
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmgSwMEACgkQJNaLcl1U
-h9DMnQf/eIuE3EV5Ctm6pCDEf15KslG3utGUDMswR749ORTxM9xF+sCqhddB5tC4
-KN6DKk4Q4FtGEs0zPwtb9Zrmx4IclwniNcGSlrPehrbq+iTabyOWnzDagrD2MOs8
-WQjGVbKwplN4uT1jWUKoHp9CVKi15o+G0I4CjW2fYfhfkcxyonVsCiXfx6kfzuoV
-0peppBAoLTsRlijjjRtlnMpdP3fqDJQlRuBhzTP4/r/3I04B3A5DJT3r/inJLPfV
-kEmLVUc1Je4X3YSQmJV0eKc9wq48rgVqXiorjoyuyC7elBaNCllNa8iCAYoXHjJh
-oItuG24gBWANmVdTUVVGPGPzQiYMqQ==
-=3+cv
------END PGP SIGNATURE-----
-
---19cqhS9he+iGqxg+--
+I guess you could see an unexpected error when
+CONFIG_INIT_STACK_NONE=y and cn.corename has garbage at tail.
