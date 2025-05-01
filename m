@@ -1,93 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE712DC76A;
-	Thu,  1 May 2025 13:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94252DC76A;
+	Thu,  1 May 2025 13:17:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746105351; cv=none; b=X02J6GbdCvwHdB2Z6uHO7S7D6+96P1mx7/oqya1Il5jE3WQq0raP9v++fNZt+0ZVJP8zitokzngGYH0snGFsxQsltjoA9e4GLLe+k1wTtObp/JXuoUgo8engYYT6a68Y+fo4fyqnSJ/KARgw8tIIs9RduDpReIBMczpvA6SLiWs=
+	t=1746105463; cv=none; b=RablW0KMhjyM4RFXM37wCgPRdke1OLmwdRULCDvEt1mcfSYHVnl6L2tx/3OLDvL1I3+57RooqXnXoJRQMbPjLU9XU9tBhnWkta2v/ZNVjWN61TOAmv4prYTAKG6dV1K9au10tWSHj1fzGq+vdCeghDTU4dIAIIcaNQz+PjyL07c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746105351; c=relaxed/simple;
-	bh=vG9RNDUsdMKUtcPNh3JTEqrqWWFL/iIruqjQNnXSe2Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=HT9sQNf2pCmkEvdbtgsiu8n+E2W9zveLUYzPdYHRRa0kGsTqhVc4YXM7GpQwfFlok4DMxupXNh9xc4W3HRqXHU/JKYruRWuvPWsITpBt9MDE+hzBikxN44LcVoWx41AJgnEifdTkiWZ429a83o4V/8eFscGb1AW/bnec/XhImdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZE8dhfOB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746105463; c=relaxed/simple;
+	bh=QtW8V05Ll5TgPFoRHUE1CblqZBs5rBw/y7zDbeCz2Ew=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nenzTS3W1uIRkzf3GVlL8oKB44Dz5AacIgWP56Fl/ILJKPWuRlPlNAuIcmr7UuGLi2JUd20H4h2GOkD/ZMlOYh8UbIvTqAxVLaPEtGL/a3L1gEbhuRn/aEKP15xBsxzSg2LNvfhxBfWnIG5uoneCJ9mWi21ATFqt2lakO2DgFIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wl4GnDnw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZE8dhfOB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E936C4CEE3;
-	Thu,  1 May 2025 13:15:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wl4GnDnw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72118C4CEE3;
+	Thu,  1 May 2025 13:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746105350;
-	bh=vG9RNDUsdMKUtcPNh3JTEqrqWWFL/iIruqjQNnXSe2Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ZE8dhfOB0DRQqBSkFEh7Qhc0AbapWsMOLtOEowe066a90UYLToaMHAjsN9EBiGjQ2
-	 K+vcftRYrPjRsbUO11ldjBXnn5Vz9fL1XUX6dTANVJTxH/ykYg9IuOc/gqIFONvcqh
-	 rcT/HkYnOzyOKQCIBXx34Z8f0iZLXDpFYlrXIWX2WHaDJypw2wCcc0v0C2CMJd9t1N
-	 QbEjslSC2xs3IHPb+uRHRJWtP/47463ZTvcYoO77bZokGZNyn10q0dcIrsifSXlwOr
-	 0OALCVuwygFsNMnIB0BE6dKtS4EP6AgUQj/YCpB6Uv8YpR/ReiutWFhC6ctxSQeyOU
-	 wtD5/K+TKjWZg==
-Date: Thu, 1 May 2025 06:15:48 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Heiner Kallweit
- <hkallweit1@gmail.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
- linux-arm-kernel@lists.infradead.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
- Florian Fainelli <f.fainelli@gmail.com>, Russell King
- <linux@armlinux.org.uk>, Vladimir Oltean <vladimir.oltean@nxp.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
- <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
- <romain.gantois@bootlin.com>, Piergiorgio Beruto
- <piergiorgio.beruto@gmail.com>
-Subject: Re: [PATCH net-next v7 1/3] net: ethtool: Introduce per-PHY DUMP
- operations
-Message-ID: <20250501061548.38f7479b@kernel.org>
-In-Reply-To: <20250430083220.5fba6c32@device-130.home>
-References: <20250422161717.164440-1-maxime.chevallier@bootlin.com>
-	<20250422161717.164440-2-maxime.chevallier@bootlin.com>
-	<20250424180333.035ff7d3@kernel.org>
-	<20250430083220.5fba6c32@device-130.home>
+	s=k20201202; t=1746105463;
+	bh=QtW8V05Ll5TgPFoRHUE1CblqZBs5rBw/y7zDbeCz2Ew=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Wl4GnDnwJXGlIGZ8fC5LMt1nsQT92up9CfvAsDJqGX0AZ/pSez6UWnMczBPvGuoU+
+	 vJpRBXQawz0eZXmKgXOu2Tq/YZxgDuPeZmow79KAcR1JahN5qDmv/LuLKQbhMMfCS+
+	 LJTiuotSAnjKbzRYkrU25861E6pJu8d28cqTYFUlAC66b1uEeJYG/iN0+0Mq3kCgQZ
+	 2aapo/88irzFShq9xenYlP/GmqiMWYtnbkgsJb7ld6eWxYtIO694EfRe3zw2DtORNr
+	 XIpfeePuaPPGbdQwnrz+ALQLLNDqCaEQ0T3b3ko8/jMdCY1QV9ggBZ6xX1YEDlSQaA
+	 QBx3Syq6+lh4A==
+From: Lee Jones <lee@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Georgi Djakov <djakov@kernel.org>, 
+ Lee Jones <lee@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+ David Heidelberg <david@ixit.cz>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, coresight@lists.linaro.org, 
+ linux-arm-kernel@lists.infradead.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
+References: <20250425-fix-nexus-4-v3-0-da4e39e86d41@oss.qualcomm.com>
+Subject: Re: (subset) [PATCH v3 00/11] ARM: qcom: fix APQ8064 schema
+ warnings
+Message-Id: <174610545917.3855354.6995417813544260690.b4-ty@kernel.org>
+Date: Thu, 01 May 2025 14:17:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Mailer: b4 0.15-dev-39345
 
-On Wed, 30 Apr 2025 08:32:20 +0200 Maxime Chevallier wrote:
-> > > +/* perphy ->dumpit() handler for GET requests. */
-> > > +static int ethnl_perphy_dumpit(struct sk_buff *skb,
-> > > +			       struct netlink_callback *cb)
-> > > +{
-> > > +	struct ethnl_perphy_dump_ctx *ctx = ethnl_perphy_dump_context(cb);
-> > > +	struct ethnl_dump_ctx *ethnl_ctx = &ctx->ethnl_ctx;
-> > > +	int ret = 0;
-> > > +
-> > > +	if (ethnl_ctx->req_info->dev) {
-> > > +		ret = ethnl_perphy_dump_one_dev(skb, ethnl_ctx->req_info->dev,
-> > > +						ctx, genl_info_dump(cb));
-> > > +		if (ret < 0 && ret != -EOPNOTSUPP && likely(skb->len))
-> > > +			ret = skb->len;
-> > > +
-> > > +		netdev_put(ethnl_ctx->req_info->dev,
-> > > +			   &ethnl_ctx->req_info->dev_tracker);    
-> > 
-> > You have to release this in .done
-> > dumpit gets called multiple times until we run out of objects to dump.
-> > OTOH user may close the socket without finishing the dump operation.
-> > So all .dumpit implementations must be "balanced". The only state we
-> > should touch in them is the dump context to know where to pick up from
-> > next time.  
+On Fri, 25 Apr 2025 20:47:00 +0300, Dmitry Baryshkov wrote:
+> Rob's bot has reported [1] several warnings for Nexus 4 submisson,
+> however none of those warnings are specific to that device. Fix all
+> those warnings for all APQ8064 platforms by extending existing schemas,
+> adding missing schemas and making APQ8064 DT follow all the schema
+> files.
 > 
-> Sorry for the delayed answer, I'm still wrapping my head around all
-> this. calling netdev_put in dumpit() is not correct, but won't moving
-> this into .done() make us subject to the scenario you described to me
-> in another mail where userspace would stall the dump operation by not
-> calling recv() ?
+> [1]: https://lore.kernel.org/linux-arm-msm/174221818190.3957236.3364090534153729086.robh@kernel.org/
+> 
+> [...]
 
-Good catch, for the filtered dump you'll need to look up the netdev
-on every dumpit call.
+Applied, thanks!
+
+[02/11] dt-bindings: mfd: syscon: add qcom,apq8064-mmss-sfpb
+        commit: 137d4ebdf6bd86ca6aa26ec4f9a1c5b579905c6c
+[03/11] dt-bindings: mfd: syscon: add qcom,apq8064-sps-sic
+        commit: 9f8af721495e04b6c3a3a5293fd8afa7e38bee1f
+
+--
+Lee Jones [李琼斯]
+
