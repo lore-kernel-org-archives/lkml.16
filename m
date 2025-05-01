@@ -1,102 +1,109 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BCB221F21;
-	Thu,  1 May 2025 11:33:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE706223710;
+	Thu,  1 May 2025 11:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746099237; cv=none; b=YJoAoJGlCGq4fBrMmiwNMC+8hhWn5OMqU9/DhzBwNPlrs8ztZ3kCvAZ6aPbHfTz/hzeY6zuj+FLAfIkRWCsKlU66pEhoutNzEopq5smy++xKrE+IgvkmMmfYxlt0eJdUcKi3plyt1T7ttWBc9qf7V4WZI6qaWbClBChG7eT3a94=
+	t=1746099246; cv=none; b=F+BCq9MsE4lRgTuC0qFL2kGCgVTbUF6NoqJ/uP5aKS/38C4zO2nuw0nZ+RWgjBVM5Vrd+Gczi4eRU3sk9J+GNa0W5iuMIQd7gXDH8knRS4rbjQalf+XsOxlQKZBwRtd+UXLMr8C7zuOjkH1ac4LKbAvRK5MCOt/8b6u8KQpC6j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746099237; c=relaxed/simple;
-	bh=uzUwV7MCGPgFoaynlKP/SaT802tNGgqv6rxpk5HZMN0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=emCsH8iqdx9AOL5Xb1OaZcXyBEisk3kkY41Q/ZGtqYyS1lpbyg0SJXKIbAMt1sUR7FSwcr2qQZhrvaSlZQg7lPKObTaVcgbzsrCVVqjn6XH8ExrfAPAck/jfFi9TxnXwYzLqGNaSh/BkrEkFHFJtwqc2gPvcGD1HnGm9EoTUkxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=YFiv6lV8; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1746099246; c=relaxed/simple;
+	bh=MBSsfnpLazFvp18QOe8QQkxjGOkZ0vk0UOps61hYRlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QFZzn/Nz4nRuIKRjQJtF7WVHAZh9/rnv4cmRmtwJ/8H7+7EHWUAAbKaNFxUcax1CkVSRYhi+F98c5Zu6moRztBzEyDrXb/jhoJTj4+CE/ya4ifTXEdw4mSrKQgRTQhsOPUk7UVEoAEFLE/DZSST80gWtcxO1tE+lcaLZDRwu/jI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vs/C/zHh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="YFiv6lV8"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 5C71F25B9F;
-	Thu,  1 May 2025 13:33:52 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id Nc7fhaF9XpJn; Thu,  1 May 2025 13:33:51 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1746099231; bh=uzUwV7MCGPgFoaynlKP/SaT802tNGgqv6rxpk5HZMN0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=YFiv6lV8lu+8Sht1wrUjTbb4DyYavZRamoZSVkfmS3JQoMgj5V8CfLecLgn3LzBR8
-	 XjMYLrnAQIode/FyXcqZXzZzhqiecgM6GNl5aJC215Techl4ycEKsT+Sa+h9xxXQ4J
-	 Rb4YNJWEf2l8lkRIFn2TH4Al7IE/uQU/MuS3cNkh6EprUzSMTQJLof3IZthx2fuSXC
-	 cnXTD7ALJl9Pd5GrO7Bi/6jqg9qN68f5rBaa4+LtW49mAtf0zdEEJaQMOTqIPFuNLR
-	 hLXaKCTv7Ky/Fui4qWsGBGrlnd0ZHPIyYGq/JhD54PuF3J4qVS8wk75V/4ltwcZ7BK
-	 LMXOMLd08itGw==
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Date: Thu, 01 May 2025 17:02:57 +0530
-Subject: [PATCH v7 1/5] dt-bindings: arm: samsung: add compatibles for
- exynos7870 devices
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vs/C/zHh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23109C4CEE4;
+	Thu,  1 May 2025 11:34:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746099245;
+	bh=MBSsfnpLazFvp18QOe8QQkxjGOkZ0vk0UOps61hYRlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Vs/C/zHhez/7QBo2fGkFZ/1i8WlCGbG3I7xdHhU6QbI6NuqQLT3Y/mt/9ZqhOnoP2
+	 02Lt26IvbIRC6JwuhcwQQ+nSbGiW10tKZ3M7QUgZPh17onR3zB2ofmy+OL3zYx6uC+
+	 nbwcmyEtzSWzbXc6C6nF2qXBYW3TSt0I8dU4dj/8Jehnp+LnoagX3gv6s0SQPa9nFG
+	 2TKRT4NV5w7+aNsv98O4Gv7PNXw/9a8ovjphpAxgr+A05x81Et891L1gUFQoyFGbRm
+	 UI494g/qiHrY7M5es7jaODkt5whM7PPjn3Ko+qCDuB6WuDjTeDxRslO3pFbbIgduvW
+	 s0GfEGN/9RLwQ==
+Date: Thu, 1 May 2025 13:34:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [PATCH v4 3/7] rust: alloc: add Vec::push_within_capacity
+Message-ID: <aBNcKcS_U_kMOAxu@pollux>
+References: <20250429-vec-methods-v4-0-dad4436ff82d@google.com>
+ <20250429-vec-methods-v4-3-dad4436ff82d@google.com>
+ <aBJC_Ef1lKHNx4dv@pollux>
+ <aBNU-XsWZLZtlmOo@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250501-exynos7870-v7-1-bb579a27e5eb@disroot.org>
-References: <20250501-exynos7870-v7-0-bb579a27e5eb@disroot.org>
-In-Reply-To: <20250501-exynos7870-v7-0-bb579a27e5eb@disroot.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Kees Cook <kees@kernel.org>, Tony Luck <tony.luck@intel.com>, 
- "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>, 
- Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
- Kaustabh Chakraborty <kauschluss@disroot.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746099219; l=1470;
- i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=uzUwV7MCGPgFoaynlKP/SaT802tNGgqv6rxpk5HZMN0=;
- b=cClJaaD9AKPEJa8s4BKtIfkQf0ewkjgPgwoW1VDTDUy/30st1i7Goaqx2hOMMKVYmaOd+AENK
- y+7rH1tCi6mDWx9o2WOvIUWG1tejelepO6DtrpL7vUcPt9RHRiqXBBh
-X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
- pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBNU-XsWZLZtlmOo@google.com>
 
-Document the compatible string for Exynos7870 - "samsung,exynos7870".
+On Thu, May 01, 2025 at 11:03:21AM +0000, Alice Ryhl wrote:
+> On Wed, Apr 30, 2025 at 05:34:20PM +0200, Danilo Krummrich wrote:
+> > On Tue, Apr 29, 2025 at 02:44:23PM +0000, Alice Ryhl wrote:
+> > > 
+> > > +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> > > +    ///
+> > > +    /// Fails if the vector does not have capacity for the new element.
+> > > +    ///
+> > > +    /// # Examples
+> > > +    ///
+> > > +    /// ```
+> > > +    /// let mut v = KVec::with_capacity(10, GFP_KERNEL)?;
+> > > +    /// for i in 0..10 {
+> > > +    ///     v.push_within_capacity(i).unwrap();
+> > 
+> > I'd prefer to make this
+> > 
+> > 	v.push_within_capacity(i).map_err(|_| ENOMEM)?;
+> > 
+> > instead.
+> 
+> Perhaps we could make a new error type for `push_within_capacity`? That
+> way, you can use it with question mark directly, and you also get a
+> proper error message if you unwrap() it.
 
-The following devices are also added:
- - Galaxy A2 Core       ("samsung,a2corelte")
- - Galaxy J6            ("samsung,j6lte")
- - Galaxy J7 Prime      ("samsung,on7xelte")
+Generally, that sounds good to me. However, I'd like to avoid unwrap() or
+anything that panics from doctests, since they also serve as sample code. Hence,
+I think we should showcase how to do things the correct way (as much as
+possible).
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
-Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
----
- Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> > > +    /// }
+> > > +    ///
+> > > +    /// assert!(v.push_within_capacity(10).is_err());
+> > > +    /// # Ok::<(), Error>(())
+> > > +    /// ```
+> > > +    pub fn push_within_capacity(&mut self, v: T) -> Result<(), T> {
+> > > +        if self.len() < self.capacity() {
+> > > +            // SAFETY: The length is less than the capacity.
+> > > +            unsafe { self.push_within_capacity_unchecked(v) };
+> > > +            Ok(())
+> > > +        } else {
+> > > +            Err(v)
+> > > +        }
+> > > +    }
+> > >  
+> > > +    /// Appends an element to the back of the [`Vec`] instance without reallocating.
+> > > +    ///
+> > > +    /// # Safety
+> > > +    ///
+> > > +    /// The length must be less than the capacity.
+> > 
+> > NIT: Maybe be more specific and say:
+> > 
+> > "`self.len()` must be less than `self.capacity()`."
+> 
+> I try to avoid starting sentences with code, but I can do it if you
+> prefer that. But saying "the length" and "the capacity" does not seem
+> ambiguous to me.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-index fab29f95d8e62f5ea75bb0819a9d514e54f88d3c..b3be184c7e563478aa37eb16a69c08ff7f70af29 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -212,6 +212,14 @@ properties:
-               - samsung,exynos7-espresso        # Samsung Exynos7 Espresso
-           - const: samsung,exynos7
- 
-+      - description: Exynos7870 based boards
-+        items:
-+          - enum:
-+              - samsung,a2corelte               # Samsung Galaxy A2 Core
-+              - samsung,j6lte                   # Samsung Galaxy J6
-+              - samsung,on7xelte                # Samsung Galaxy J7 Prime
-+          - const: samsung,exynos7870
-+
-       - description: Exynos7885 based boards
-         items:
-           - enum:
-
--- 
-2.49.0
-
+I'll leave that up to you. :)
