@@ -1,88 +1,81 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9658D25D52B;
-	Fri,  2 May 2025 16:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4568525D549;
+	Fri,  2 May 2025 16:14:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202488; cv=none; b=EJx4QokUWG6gsvexbnUTCW7tCv9gCVA/Hw3HDzUYpJLZ7qRBDvBIQ01J0q8IOhBv/Gk0JSDvrOOJEmc7WeMWIR/XpCr1/g525w8HVlNlt+rbw2LlWNpQzzIDUeuQfinmxtjZWViblOjbYqyo0BB5Dta5F2wbPkEdpRThsD2tcU0=
+	t=1746202487; cv=none; b=hyXxDttV2NkTNn+Dqy9LPynW5S6g2VxV52/7wYKGxX23LYOQ3eRwEK5xQBHH0nwuTHTrMl3lZxJrZKZlBNOeiftkkRwWmRyfKSYYripbNmUUDpdz4SVJgL88xqVnsYa+xGmSyC7wNXoWvLvMWSOKKgUWSmMj6mZbrHB++TSneT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202488; c=relaxed/simple;
-	bh=qAc2Fmy45/uau6e8g/S0nTzfZPB9D3gGs7qdjxeIOWU=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EE49wvR2R1TYeTV30dUXehHpemfE4SDR/EpeDHvb/njFgcoHgamu46hb8Hp0wmLuDOEtUVlGYnNnYmXRLDQTdUgvERYcP/5rg165DU6pKeZHHGBnVerzhettv5LniPcxKcrMB+iZTIGoHnFciOry1ZLT0oW6g2i+BujbIIS0Ipg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZpwqD6pdcz6K9DM;
-	Sat,  3 May 2025 00:09:44 +0800 (CST)
-Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF8601402F7;
-	Sat,  3 May 2025 00:14:44 +0800 (CST)
-Received: from a2303103017.china.huawei.com (10.47.77.180) by
- frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 2 May 2025 18:14:43 +0200
-From: Alireza Sanaee <alireza.sanaee@huawei.com>
-To: <devicetree@vger.kernel.org>
-CC: <robh@kernel.org>, <jonathan.cameron@huawei.com>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linuxarm@huawei.com>, <mark.rutland@arm.com>,
-	<shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v2 3/6] coresight: cti: Use of_cpu_phandle_to_id for grabbing CPU id
-Date: Fri, 2 May 2025 17:12:57 +0100
-Message-ID: <20250502161300.1411-4-alireza.sanaee@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250502161300.1411-1-alireza.sanaee@huawei.com>
-References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+	s=arc-20240116; t=1746202487; c=relaxed/simple;
+	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=UTBl0jz5AZnBS1+4Li4MN6wQBAvylNRBEHHi/wROzLTA3ljpX8tCXy0Ge79Q1/uJxPYrQdgENmH8Gkg17/0LTt/hw9dfJFG7y1314QKkYxze6Bdi682+NCPTeIHkmigoEXZWK4y7f74QFN9ep6D597ujMxXcvNMIgzurv3tM9N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0u5/iY8j; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4CxBAFYk; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0u5/iY8j";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4CxBAFYk"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746202483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
+	b=0u5/iY8jokPrKCSd1P+rh1mE+RHmUHxEzPj6BI/YOl7JtCPBp7YdZnWTKIl//0mJoRLFmL
+	FynP036wpX/kl9lU2IIvTI0vJRC26d1px+JJzAu+Nx0fL7ieRH0Get2sm+cWimdPrDgCwL
+	xMmX6fGtvnVUjPRHYDyabzdeANa7RHY4Oevg9zfneCElJ6x/DNenl4RLTKFrcBchFX0Sx9
+	XHFdAjfDY/PfSKuckfF7t/gKeuNNOrEMTsRNQZ8z331X2YCytpbVgDns74xJ6k7VvjVROp
+	TB6cQyo3LlxPXM+PeN/dIe18jc6ZE7ZFfXnjg+dr/kzLuyhNiGGbzg5usWn7PQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746202483;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
+	b=4CxBAFYk/h2fFXjtogsyW/wcsOc0fsOtgy5FivVxbfrEElfMBODSXYfm2wSWo2gQREYuUh
+	nZ41Ewuz0+9HiWBg==
+To: Roman Kisel <romank@linux.microsoft.com>, ardb@kernel.org, bp@alien8.de,
+ dave.hansen@linux.intel.com, decui@microsoft.com,
+ dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
+ imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com, jgross@suse.com,
+ justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
+ kys@microsoft.com, lenb@kernel.org, mingo@redhat.com, nikunj@amd.com,
+ papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
+ rafael@kernel.org, romank@linux.microsoft.com, russ.anderson@hpe.com,
+ steve.wahl@hpe.com, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
+ tony.luck@intel.com, wei.liu@kernel.org, xin@zytor.com,
+ yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
+ sunilmut@microsoft.com
+Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
+ wakeup AP callback
+In-Reply-To: <20250430204720.108962-1-romank@linux.microsoft.com>
+References: <20250430204720.108962-1-romank@linux.microsoft.com>
+Date: Fri, 02 May 2025 18:14:41 +0200
+Message-ID: <8734dnouq6.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
- frapeml500003.china.huawei.com (7.182.85.28)
 
-Use the newly created API to grab CPU id.
+On Wed, Apr 30 2025 at 13:47, Roman Kisel wrote:
+> When starting APs, confidential guests and paravisor guests
+> need to know the CPU number, and the pattern of using the linear
+> search has emerged in several places. With N processors that leads
+> to the O(N^2) time complexity.
+>
+> Provide the CPU number in the AP wake up callback so that one can
+> get the CPU number in constant time.
+>
+> Suggested-by: Michael Kelley <mhklinux@outlook.com>
+> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
+> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
 
-Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
----
- .../hwtracing/coresight/coresight-cti-platform.c  | 15 +++------------
- 1 file changed, 3 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-cti-platform.c b/drivers/hwtracing/coresight/coresight-cti-platform.c
-index d0ae10bf6128..369a9b7170e8 100644
---- a/drivers/hwtracing/coresight/coresight-cti-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-cti-platform.c
-@@ -41,21 +41,12 @@
-  */
- static int of_cti_get_cpu_at_node(const struct device_node *node)
- {
-+	struct device_node *dn = NULL;
- 	int cpu;
--	struct device_node *dn;
- 
--	if (node == NULL)
--		return -1;
--
--	dn = of_parse_phandle(node, "cpu", 0);
--	/* CTI affinity defaults to no cpu */
--	if (!dn)
--		return -1;
--	cpu = of_cpu_node_to_id(dn);
-+	cpu = of_cpu_phandle_to_id(node, &dn);
- 	of_node_put(dn);
--
--	/* No Affinity  if no cpu nodes are found */
--	return (cpu < 0) ? -1 : cpu;
-+	return cpu;
- }
- 
- #else
--- 
-2.34.1
-
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
