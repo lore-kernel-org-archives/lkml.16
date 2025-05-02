@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB5A14BFA2;
-	Fri,  2 May 2025 20:37:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DFED1F1511;
+	Fri,  2 May 2025 20:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746218246; cv=none; b=nFznircMhmcBJNoLYmriuMWwnKdd5bnXlwqZmFWlmTVuJBcm8nRV/fakgEC17NCSnYYHDSGuCGiqGhXftLRUqklM5VAVVCkdc7RaQVnx+vqPMCzAJEN/ntlGkjNCK8xZeGHjO/TeEqXyPMQrnf+sU3GQ0cOK3NEylzqgdYE4Hg4=
+	t=1746218263; cv=none; b=D51GhnXA0An8W0ZOHWRuhYAD2AThEoVMmz6AJLQGG4N/jNIDbRi3DL7VajOu+Y7VU8zHAMPhHPkdA9F6+8QIibUCh26pwbDMeaEgyFVHHBfP8/spIzIt8VBr9tcV73WL1SLhdnuAWV556JLnF4sIpZkXg3hg883wy3/AvSjdvPY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746218246; c=relaxed/simple;
-	bh=stQodKNJPh75O/Bxldo7xJTk4UkT2CjGEElZCBFHLEk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sz7c3tkrqXMZZBb3IYPB6k5ZVcxPLMcxHJOP7Yx6Y0qT5q0xmMH3CPmxfx3pEDDXZeuOsVFba9FFDT7mVD0NwY4WodXUDtcelA1L1AhugcdVWidB/9KRgaqqpkeRs/VCakHLyAc5+v6+hfSQp9HXjeuIDUc+pPF8xNnEpa6ABac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHCQC3dy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746218263; c=relaxed/simple;
+	bh=oloKmQxAf54lQCGupu61nthqXQQLfUEn+3ZYUvSGYtA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jy/w1lwXoGf/Qxfghvg3NUdqYOos0XJ4eon2pA1f/iJ/WszMwgWrUYNzn9ojWCSeODahUlqV3uwQysndP/DwGLJLpV5rN4nAFG1pz4daucfjjfUzNeppCkKUqEnRbVhy+TZ2bx58IoZKHgMjV8LTFvqbhc8Jwx9ImiwxHMX4v4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JCIzU81z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHCQC3dy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 462E1C4CEE4;
-	Fri,  2 May 2025 20:37:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JCIzU81z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB18C4CEE4;
+	Fri,  2 May 2025 20:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746218246;
-	bh=stQodKNJPh75O/Bxldo7xJTk4UkT2CjGEElZCBFHLEk=;
+	s=k20201202; t=1746218263;
+	bh=oloKmQxAf54lQCGupu61nthqXQQLfUEn+3ZYUvSGYtA=;
 	h=From:To:Cc:Subject:Date:From;
-	b=JHCQC3dyZumSUfC3MvwLsnHI/yd5fF1vxl7qiUwd0VMZbULVax9fbNmY2fdFSSdwD
-	 IKpC9oZfwk0F1Y+EexsZfiHv0cztYYvCrdDPva5CVZ9XMJhQspjKORxfx84yGQzlfA
-	 24UmTS5plNpvl0NAu2KeJ6CFB8MLusJI5xPT5awJDl75wMlRRk6tkSy/rueNwxK0ph
-	 uTpCkHM82U5DQ/vEfVgKefDi7gwJoDGk/X9pceAuvYsWxY/TC7nZkhd6eqzo7h1/lo
-	 xInWuClz3NCuyslP7+EKIMXGbMfZ/ibioWZELacxmxK2FK/rjcDThe5gDuS7GsZtgH
-	 SDaGPsF8QXUJw==
+	b=JCIzU81z4JOJiko0V178+kfMW6k4Af7KGOWOSGWgGn4ciLIPVS3QF5JE5pG1L36zf
+	 EoiujVw9v/Glcn3qxOT/3k8Vo9qQ7nYju5BqdHwUslEll3Z4V5Vx+/vt26Y+tCGdDK
+	 P/ZiDMS9BTrrGK+qX24/sd2zSLnqenvR8M+dUGQmQ/lPENPxDeD+PLzwjvIBrAMiiO
+	 9x4PCOMNzhbwwO0ln/CHmqifDAa8+W1BevXvv6tmgewSWAq7KQnIaZuwC96zM/EcG9
+	 afps9Le26X2bJzN8neA80YceaOidwKRbQZsizZuP4qjg1YbQ5E5Kpc4Lgl+3rOl6Ar
+	 V2ECk0RKgak2Q==
 From: Arnd Bergmann <arnd@kernel.org>
-To: James Cowgill <james.cowgill@blaize.com>,
-	Matt Redfearn <matt.redfearn@blaize.com>,
-	Neil Jones <neil.jones@blaize.com>,
-	Nikolaos Pasaloukos <nikolaos.pasaloukos@blaize.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
+To: Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Vadim Pasternak <vadimp@nvidia.com>,
+	Ciju Rajan K <crajank@nvidia.com>
 Cc: Arnd Bergmann <arnd@arndb.de>,
-	linux-gpio@vger.kernel.org,
+	Michael Shych <michaelsh@nvidia.com>,
+	platform-driver-x86@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: blzp1600: remove incorrect pf_match_ptr()
-Date: Fri,  2 May 2025 22:37:07 +0200
-Message-Id: <20250502203721.2117186-1-arnd@kernel.org>
+Subject: [PATCH] platform/mellanox: mlxreg-dpu: add I2C dependency
+Date: Fri,  2 May 2025 22:37:35 +0200
+Message-Id: <20250502203739.2143173-1-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -49,30 +48,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The blzp1600_gpio_of_match is defined unconditionally and can always be referenced
-by the driver, so don't use of_match_ptr() and avoid this warning:
+REGMAP_I2C cannot be selected unless I2C is already enabled:
 
-drivers/gpio/gpio-blzp1600.c:263:34: error: 'blzp1600_gpio_of_match' defined but not used [-Werror=unused-const-variable=]
-  263 | static const struct of_device_id blzp1600_gpio_of_match[] = {
+WARNING: unmet direct dependencies detected for REGMAP_I2C
+  Depends on [n]: I2C [=n]
+  Selected by [y]:
+  - MLXREG_DPU [=y] && MELLANOX_PLATFORM [=y]
 
+Fixes: 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial support for Nvidia DPU")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpio/gpio-blzp1600.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/platform/mellanox/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/gpio-blzp1600.c b/drivers/gpio/gpio-blzp1600.c
-index 2760a13c0801..055cb296ae54 100644
---- a/drivers/gpio/gpio-blzp1600.c
-+++ b/drivers/gpio/gpio-blzp1600.c
-@@ -269,7 +269,7 @@ MODULE_DEVICE_TABLE(of, blzp1600_gpio_of_match);
- static struct platform_driver blzp1600_gpio_driver = {
- 	.driver		= {
- 		.name	= DRIVER_NAME,
--		.of_match_table = of_match_ptr(blzp1600_gpio_of_match),
-+		.of_match_table = blzp1600_gpio_of_match,
- 	},
- 	.probe		= blzp1600_gpio_probe,
- };
+diff --git a/drivers/platform/mellanox/Kconfig b/drivers/platform/mellanox/Kconfig
+index 7204b10388ca..e3afbe62c7f6 100644
+--- a/drivers/platform/mellanox/Kconfig
++++ b/drivers/platform/mellanox/Kconfig
+@@ -29,6 +29,7 @@ config MLX_PLATFORM
+ 
+ config MLXREG_DPU
+ 	tristate "Nvidia Data Processor Unit platform driver support"
++	depends on I2C
+ 	select REGMAP_I2C
+ 	help
+ 	  This driver provides support for the Nvidia BF3 Data Processor Units,
 -- 
 2.39.5
 
