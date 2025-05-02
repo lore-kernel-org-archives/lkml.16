@@ -1,81 +1,85 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4568525D549;
-	Fri,  2 May 2025 16:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 197E42571A9;
+	Fri,  2 May 2025 16:15:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202487; cv=none; b=hyXxDttV2NkTNn+Dqy9LPynW5S6g2VxV52/7wYKGxX23LYOQ3eRwEK5xQBHH0nwuTHTrMl3lZxJrZKZlBNOeiftkkRwWmRyfKSYYripbNmUUDpdz4SVJgL88xqVnsYa+xGmSyC7wNXoWvLvMWSOKKgUWSmMj6mZbrHB++TSneT0=
+	t=1746202521; cv=none; b=UwwLYjNerPrzEY5k2A/YTeFinkn7IPlQg0zhrJAgTVYkw1w6bL9M1yOD1OE+EPxANOP9TFkYTXV2oDr3TSllvqiv6v+JlGVuwo3152JZFqRSzI8dI5m25omoFn802qK9PharWk2EyLNZQN8bpTQT6UEMzhFuUfkp1nAMOSSOv/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202487; c=relaxed/simple;
-	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UTBl0jz5AZnBS1+4Li4MN6wQBAvylNRBEHHi/wROzLTA3ljpX8tCXy0Ge79Q1/uJxPYrQdgENmH8Gkg17/0LTt/hw9dfJFG7y1314QKkYxze6Bdi682+NCPTeIHkmigoEXZWK4y7f74QFN9ep6D597ujMxXcvNMIgzurv3tM9N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0u5/iY8j; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4CxBAFYk; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0u5/iY8j";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4CxBAFYk"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746202483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
-	b=0u5/iY8jokPrKCSd1P+rh1mE+RHmUHxEzPj6BI/YOl7JtCPBp7YdZnWTKIl//0mJoRLFmL
-	FynP036wpX/kl9lU2IIvTI0vJRC26d1px+JJzAu+Nx0fL7ieRH0Get2sm+cWimdPrDgCwL
-	xMmX6fGtvnVUjPRHYDyabzdeANa7RHY4Oevg9zfneCElJ6x/DNenl4RLTKFrcBchFX0Sx9
-	XHFdAjfDY/PfSKuckfF7t/gKeuNNOrEMTsRNQZ8z331X2YCytpbVgDns74xJ6k7VvjVROp
-	TB6cQyo3LlxPXM+PeN/dIe18jc6ZE7ZFfXnjg+dr/kzLuyhNiGGbzg5usWn7PQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746202483;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7azbC98NK7A58e8i7mCZ++5hDTdVnnNyy/56u/mTpQ4=;
-	b=4CxBAFYk/h2fFXjtogsyW/wcsOc0fsOtgy5FivVxbfrEElfMBODSXYfm2wSWo2gQREYuUh
-	nZ41Ewuz0+9HiWBg==
-To: Roman Kisel <romank@linux.microsoft.com>, ardb@kernel.org, bp@alien8.de,
- dave.hansen@linux.intel.com, decui@microsoft.com,
- dimitri.sivanich@hpe.com, haiyangz@microsoft.com, hpa@zytor.com,
- imran.f.khan@oracle.com, jacob.jun.pan@linux.intel.com, jgross@suse.com,
- justin.ernst@hpe.com, kprateek.nayak@amd.com, kyle.meyer@hpe.com,
- kys@microsoft.com, lenb@kernel.org, mingo@redhat.com, nikunj@amd.com,
- papaluri@amd.com, perry.yuan@amd.com, peterz@infradead.org,
- rafael@kernel.org, romank@linux.microsoft.com, russ.anderson@hpe.com,
- steve.wahl@hpe.com, thomas.lendacky@amd.com, tim.c.chen@linux.intel.com,
- tony.luck@intel.com, wei.liu@kernel.org, xin@zytor.com,
- yuehaibing@huawei.com, linux-acpi@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Cc: apais@microsoft.com, benhill@microsoft.com, bperkins@microsoft.com,
- sunilmut@microsoft.com
-Subject: Re: [PATCH hyperv-next v3] arch/x86: Provide the CPU number in the
- wakeup AP callback
-In-Reply-To: <20250430204720.108962-1-romank@linux.microsoft.com>
-References: <20250430204720.108962-1-romank@linux.microsoft.com>
-Date: Fri, 02 May 2025 18:14:41 +0200
-Message-ID: <8734dnouq6.ffs@tglx>
+	s=arc-20240116; t=1746202521; c=relaxed/simple;
+	bh=vsy3oN2Z7oNpTxQaL3FUY7WXhnGdXGwmIVjzlZnknNI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=eLpa43v0Xsheo9wl89awXA6nwUZRdRxbfXmjLB66GhWP4jYeEOJOztJgV60YCfQM4OGs/US6zeDVYXWbSDeGakAzzlXDUxhKPv7XimhsVUCXJJ5/QCS1k3W5QOtg5HR+3lPGsimI5weam63NtAxMWRNEM/Irrk+Swn/sfoLtOp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zpwrb00Wnz6M4fN;
+	Sat,  3 May 2025 00:10:54 +0800 (CST)
+Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3ADC11402F8;
+	Sat,  3 May 2025 00:15:18 +0800 (CST)
+Received: from a2303103017.china.huawei.com (10.47.77.180) by
+ frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 2 May 2025 18:15:17 +0200
+From: Alireza Sanaee <alireza.sanaee@huawei.com>
+To: <devicetree@vger.kernel.org>
+CC: <robh@kernel.org>, <jonathan.cameron@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linuxarm@huawei.com>, <mark.rutland@arm.com>,
+	<shameerali.kolothum.thodi@huawei.com>
+Subject: [PATCH v2 4/6] coresight: Use of_cpu_phandle_to_id for grabbing CPU id
+Date: Fri, 2 May 2025 17:12:58 +0100
+Message-ID: <20250502161300.1411-5-alireza.sanaee@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
+ frapeml500003.china.huawei.com (7.182.85.28)
 
-On Wed, Apr 30 2025 at 13:47, Roman Kisel wrote:
-> When starting APs, confidential guests and paravisor guests
-> need to know the CPU number, and the pattern of using the linear
-> search has emerged in several places. With N processors that leads
-> to the O(N^2) time complexity.
->
-> Provide the CPU number in the AP wake up callback so that one can
-> get the CPU number in constant time.
->
-> Suggested-by: Michael Kelley <mhklinux@outlook.com>
-> Signed-off-by: Roman Kisel <romank@linux.microsoft.com>
-> Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Use the newly created API to grab CPU id.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Alireza Sanaee <alireza.sanaee@huawei.com>
+---
+ drivers/hwtracing/coresight/coresight-platform.c | 14 ++------------
+ 1 file changed, 2 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+index 8192ba3279f0..be20caf965c9 100644
+--- a/drivers/hwtracing/coresight/coresight-platform.c
++++ b/drivers/hwtracing/coresight/coresight-platform.c
+@@ -167,19 +167,9 @@ of_coresight_get_output_ports_node(const struct device_node *node)
+ 
+ static int of_coresight_get_cpu(struct device *dev)
+ {
+-	int cpu;
+-	struct device_node *dn;
+-
+-	if (!dev->of_node)
+-		return -ENODEV;
+-
+-	dn = of_parse_phandle(dev->of_node, "cpu", 0);
+-	if (!dn)
+-		return -ENODEV;
+-
+-	cpu = of_cpu_node_to_id(dn);
++	struct device_node *dn = NULL;
++	int cpu = of_cpu_phandle_to_id(dev->of_node, &dn);
+ 	of_node_put(dn);
+-
+ 	return cpu;
+ }
+ 
+-- 
+2.34.1
+
