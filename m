@@ -1,121 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B13A25D203;
-	Fri,  2 May 2025 16:18:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7E25D20C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:20:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202692; cv=none; b=R8wq9mdfyrA7uYn2s2NlqK4zlak3/A2AjnCTjXCjH5mEt9qrV+6AruaFzZ4vO8Cwe0ymDsGTVCOIbTe4DDkuGzXj4rN0JM30nCcJFvsJCYGulih4/AWXpf3r/pdAYvfqtdKMqNAgeo5BIU+0QeduFDCxoTxgfhQD6tz73JXiag4=
+	t=1746202809; cv=none; b=cj1dDlpwwnz7fRkuZn1cxNfYEdM1VvSzE0qqbnWrd2a2LbD/IjIbGhV+eKu5LY3ZKMHdpYNnHFH27PpFbhPqTW/FsM63gHergs+rG2+6gU+qNLjL4vs3nzdkrNZAuiRUXnDaCwQNPt1n+NE1AsPCQm8ZARlMwKhbJRW5RimL5pM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202692; c=relaxed/simple;
-	bh=NUuvAkF9Yp4UdF79uBK6uSEGxsRQE3x35b21NmErHh8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZZwRNCK80mz/Dg2G6nsnIvPq7qUxKvMELBIwBIvrBHn3QX4GACKER+DkdDUzWJI3x028xfj9w3/HvjEZsnqZASIUJ1Yt4R1Z1v1IKRXEg/RZqD2KiT20Om1DkV9DE2hm05lTGk9J23B18cs/P/1LdvqHJO84SX4Xu0t5xKSZLrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2wwG93D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746202809; c=relaxed/simple;
+	bh=3EjapqU+jeTaOQ/Z8/xEhQVRbPLYwk7rw/gB+eafJ+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Z4EmRFJh7gHcvWYimLmSdw4oYODNfs8ShhRpvHrcAnuH2FJSxTP311dKeNdhYlPAWE2YAXw54fPVUrDKuAb0hWsuGOXIFvwOSRzNS+/3cKpN9QptiKdYD9AIsXbLLvTbWtXkCCL3WCdr0tDnPR8kisWLjaJSwxRa/ef+I2klpcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UOzNlvQK; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2wwG93D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB21FC4CEE4;
-	Fri,  2 May 2025 16:18:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746202692;
-	bh=NUuvAkF9Yp4UdF79uBK6uSEGxsRQE3x35b21NmErHh8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y2wwG93DNB5pyTNJMkIfTTGx+OwnKLxbz5opmCaM5I9NyPPh8mTzFWuStoALRPdM8
-	 fJeqsx4W+CckDRdOBm2+YKrEQVvjosN4mZBsPv+vPZ/gX5Y6TdTvziOA2RTDzgwQE1
-	 JGX0yAW9hjct4bYssQWr1L4499Fu382V4xm0XYlTcn9TZtUexIIuAhUvhCYvRJ92aL
-	 nYCY9MAf8PixMw/sEj6sRnfTQBydpGdXNwlO+teGkRKf6TuN498rSljcPWApEopoEs
-	 WHCZUBK+kIykvNnSeygjG5oYxvN8WRuD/QKgHf+QlqY+hAqtniEqa5l8a/i7jcoLgv
-	 XCgVEjb4uHpmw==
-Date: Fri, 2 May 2025 13:18:09 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH 08/11] perf hist: Hide unused mem stat columns
-Message-ID: <aBTwQeO1RwS7_jLk@x1>
-References: <20250430205548.789750-1-namhyung@kernel.org>
- <20250430205548.789750-9-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UOzNlvQK"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf680d351so17771195e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746202805; x=1746807605; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L/bz9fn1ApK8ehph3J3EWQJlOEkbeXH0IsSy7vj7uAo=;
+        b=UOzNlvQK6EQQdCcXpcWTbDPQQgfrI7dZfCSxX3OgKJJpmTEkcFnK4YPLVo+4H9gZfd
+         QsgrEx5ZwEUpo2OIC4J4htyyD/KSwamS0s1PorXa0ukd4K7tR3dv7ih+F+ZNATGyvGl4
+         2udlan8EWKJReejqKvmM+cG1eaGbCBEmnhATlDv92ApR543E0IBxcWcYLGqaNr+6h8am
+         YOY/kFcA8zV14H7pHcij/ypFeup7tGfWi5qgtf3QqKD7rWpximN8Ruw8j6VTYoC6cGrs
+         MUPj3GM02DCFDpTslLpZeSOGKY2IxGNPs1/BIT8IEMEXL+mEKPMuHT2s0/Kl+XW5baRP
+         zCXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746202805; x=1746807605;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L/bz9fn1ApK8ehph3J3EWQJlOEkbeXH0IsSy7vj7uAo=;
+        b=hoJ0Y1B4qL4HYja2XUhNi1CleDahgpVkPFTLXwTo459fw7AmTJnlZIlqWarpp61gg1
+         NCkKAmWVrFBJs5ff2FGKXAWtRd+mUzUDxoKe0DlWW8899qQa/1DbQP3/Jknfst4++edR
+         GT/kO/8jnWiDOh3FUmlLi1URAGSbpz8h4jv7bfiwLBSPv5WzwPcfcqlP7Khpw+rKUxCJ
+         NUMvX7elnbnLjLTakfyLrxwKf0GyO2tzyfms0W6fqwg3dNj42hc7KRInrSCEOmbj4fpf
+         Uq/p1vv132XYDgbrxFlFprtpPKerVIL1P+puuBZubj0yv+xyVDVze6M25xXxyhI4dINL
+         5V5w==
+X-Forwarded-Encrypted: i=1; AJvYcCXa2MUIBZ0FbAEyZwvzNz/tLsD/20XTCo8NgIMpO2dClGUPc/si0qB2QvOkM6odSfNF96F0t9FViQ+m+gk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWU/2IGTFXTRLhOSxPxnDQ3IAAJni4KvTb5iRpZIGMGNWqEUXo
+	Eia38ujRhp7ViOX3TcvVf64O4/q71Xo6aWpY5Y1FYe3f0oE4h6efufmBr1kWFEE=
+X-Gm-Gg: ASbGncs1MY+Lu+X8XYfeOkxix6Az7BrzH28ZhGN0/Hf4FsMNIUM+S9cXU5ei6sB8EWY
+	uV61tgl+Ob3uT71YWmYLlk+Bx4H2lvZqmZADg8FBKg3chBJvpYtJJI++6pZ82BS750gu7RH1E25
+	WlqmWUbd4oLhq1Do7eTaqclHqVpcK9b/s+qMPDhnyCeVMglYnfnUSjVD99V5V41L61Md7HBve5H
+	yqZtpvFszhe4i6RxdsREifRcaFEj717DbJ1Tn/MkxDsanBi4IR2weErMnf5HqB2YnQ6UyB5KvNi
+	D8ZWfEjT7jeD+D53KgfxQqwOXDKQ6dAb6auEDkG3QbrPe/BRmDN9OUf1DVX1q1bdQdcqbnRyibN
+	KCjZUDw==
+X-Google-Smtp-Source: AGHT+IHxteQF1bGkHCKmd6Y1/yMn23d0yEys+sIe42jqect0CeKlrVJkCO/XXn6oUIOdI381iLRBwg==
+X-Received: by 2002:a05:600c:8711:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-441bb88d42emr29490745e9.12.1746202805361;
+        Fri, 02 May 2025 09:20:05 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a31576sm48340455e9.37.2025.05.02.09.20.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 09:20:04 -0700 (PDT)
+Message-ID: <68aa8c09-233e-4997-b2f8-7db4cd411351@linaro.org>
+Date: Fri, 2 May 2025 17:20:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430205548.789750-9-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 18/23] media: iris: Add a comment to explain usage of
+ MBPS
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-18-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-18-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 30, 2025 at 01:55:45PM -0700, Namhyung Kim wrote:
-> Some mem_stat types don't use all 8 columns.  And there are cases only
-> samples in certain kinds of mem_stat types are available only.  For that
-> case hide columns which has no samples.
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Add a comment to explain usage of MBPS and define a macro for 8K
+> resolution for better readability
 > 
-> The new output for the previous data would be:
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_platform_common.h | 2 ++
+>   drivers/media/platform/qcom/iris/iris_platform_gen2.c   | 4 ++--
+>   drivers/media/platform/qcom/iris/iris_platform_sm8250.c | 2 +-
+>   3 files changed, 5 insertions(+), 3 deletions(-)
 > 
->   $ perf mem report -F overhead,op,comm --stdio
->   ...
->   #           ------ Mem Op -------
->   # Overhead     Load  Store  Other  Command
->   # ........  .....................  ...............
->   #
->       44.85%    21.1%  30.7%  48.3%  swapper
->       26.82%    98.8%   0.3%   0.9%  netsli-prober
->        7.19%    51.7%  13.7%  34.6%  perf
->        5.81%    89.7%   2.2%   8.1%  qemu-system-ppc
->        4.77%   100.0%   0.0%   0.0%  notifications_c
->        1.77%    95.9%   1.2%   3.0%  MemoryReleaser
->        0.77%    71.6%   4.1%  24.3%  DefaultEventMan
->        0.19%    66.7%  22.2%  11.1%  gnome-shell
->        ...
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> index 1dab276431c7..3e0ae87526a0 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
+> @@ -21,6 +21,7 @@ struct iris_inst;
+>   #define DEFAULT_MAX_HOST_BUF_COUNT		64
+>   #define DEFAULT_MAX_HOST_BURST_BUF_COUNT	256
+>   #define DEFAULT_FPS				30
+> +#define NUM_MBS_8K				((8192 * 4352) / 256)
+>   
+>   enum stage_type {
+>   	STAGE_1 = 1,
+> @@ -172,6 +173,7 @@ struct iris_platform_data {
+>   	struct ubwc_config_data *ubwc_config;
+>   	u32 num_vpp_pipe;
+>   	u32 max_session_count;
+> +	/* max number of macroblocks per frame supported */
+>   	u32 max_core_mbpf;
+>   	const u32 *input_config_params;
+>   	unsigned int input_config_params_size;
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> index 1e69ba15db0f..deb7037e8e86 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
+> @@ -248,7 +248,7 @@ struct iris_platform_data sm8550_data = {
+>   	.ubwc_config = &ubwc_config_sm8550,
+>   	.num_vpp_pipe = 4,
+>   	.max_session_count = 16,
+> -	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+> +	.max_core_mbpf = NUM_MBS_8K * 2,
+>   	.input_config_params =
+>   		sm8550_vdec_input_config_params,
+>   	.input_config_params_size =
+> @@ -308,7 +308,7 @@ struct iris_platform_data sm8650_data = {
+>   	.ubwc_config = &ubwc_config_sm8550,
+>   	.num_vpp_pipe = 4,
+>   	.max_session_count = 16,
+> -	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
+> +	.max_core_mbpf = NUM_MBS_8K * 2,
+>   	.input_config_params =
+>   		sm8550_vdec_input_config_params,
+>   	.input_config_params_size =
+> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c b/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
+> index 543fa2661539..8183e4e95fa4 100644
+> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
+> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
+> @@ -127,7 +127,7 @@ struct iris_platform_data sm8250_data = {
+>   	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
+>   	.num_vpp_pipe = 4,
+>   	.max_session_count = 16,
+> -	.max_core_mbpf = (8192 * 4352) / 256,
+> +	.max_core_mbpf = NUM_MBS_8K,
+>   	.input_config_params =
+>   		sm8250_vdec_input_config_param_default,
+>   	.input_config_params_size =
 > 
-> On Intel machines, the event is only for loads or stores so it'll have
-> only one columns like below:
-> 
->   #            Mem Op
->   # Overhead     Load  Command
->   # ........  .......  ...............
->   #
->       20.55%   100.0%  swapper
->       17.13%   100.0%  chrome
->        9.02%   100.0%  data-loop.0
->        6.26%   100.0%  pipewire-pulse
->        5.63%   100.0%  threaded-ml
->        5.47%   100.0%  GraphRunner
->        5.37%   100.0%  AudioIP~allback
->        5.30%   100.0%  Chrome_ChildIOT
->        3.17%   100.0%  Isolated Web Co
->        ...
 
-  # grep "model name" -m1 /proc/cpuinfo
-  model name    : AMD Ryzen 9 9950X3D 16-Core Processo
-  # perf mem report -F overhead,op,comm --stdio
-  # Total Lost Samples: 0
-  #
-  # Samples: 2K of event 'cycles:P'
-  # Total weight : 2637
-  # Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc
-  #
-  #           ------ Mem Op -------
-  # Overhead     Load  Store  Other  Command
-  # ........  .....................  ...............
-  #
-      61.02%    14.4%  25.5%  60.1%  swapper
-       5.61%    26.4%  13.5%  60.1%  Isolated Web Co
-       5.50%    21.4%  29.7%  49.0%  perf
-       4.74%    27.2%  15.2%  57.6%  gnome-shell
-       4.63%    33.6%  11.5%  54.9%  mdns_service
-       4.29%    28.3%  12.4%  59.3%  ptyxis
-       2.16%    24.6%  19.3%  56.1%  DOM Worker
-       0.99%    23.1%  34.6%  42.3%  firefox
-       0.72%    26.3%  15.8%  57.9%  IPC I/O Parent
-       0.61%    12.5%  12.5%  75.0%  kworker/u130:20
-       0.61%    37.5%  18.8%  43.8%  podman
-       0.57%    33.3%   6.7%  60.0%  Timer
-       0.53%    14.3%   7.1%  78.6%  KMS thread
-       0.49%    30.8%   7.7%  61.5%  kworker/u130:3-
-       0.46%    41.7%  33.3%  25.0%  IPDL Background
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
