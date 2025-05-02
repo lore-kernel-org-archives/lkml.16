@@ -1,274 +1,145 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2134.outbound.protection.outlook.com [40.107.22.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1772566D3;
-	Fri,  2 May 2025 14:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195996; cv=fail; b=NKDy7W+RyGZmVlDEDp8PYz7Xrj1fpyN8EpebQ+XbdWR+5Wtx5PwgTLKNRH/yGnrcQ/TBITcBRsh6jj8242rU0q9kSMYUisB+pEcgYhMTmkZ0P1ky313DceFl24vt1ZyKpu7RcPCXoSEjj/qeBNbrgItYQ1fzFda4hjbC7B5+XWA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195996; c=relaxed/simple;
-	bh=MO5lR6rRLk5CgQ5uqLmIXWYNsJsarivHN52Ro341JCU=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l6Dpgif4x1QdGx8AK7RevFXpBSF4hMkCHrQBKteSd64XEbJptaZWN/64acDQUdlNHW3CWJZEwjgASWOBGG2zb08hYWQXJGqo7jgSjbL3n40VmgwyQn9yKXC0qFvhydq/JLy2IeBQGZfhJTxq/LTfd90ProBaNozoTYaklIyuczk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de; spf=pass smtp.mailfrom=phytec.de; dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b=BzzYZmoF; arc=fail smtp.client-ip=40.107.22.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=phytec.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=phytec.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BED8254AFB;
+	Fri,  2 May 2025 14:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746196161; cv=none; b=eIbDg52+47qlPy7SYDSHGO07echS8CLBGnwfgxHfn/Htbfj2c9Kmgt4x7Am5jvz9AIET/49RgaTqhfBlr+7e2mJwzaIjv6T3+2qnttWqEual1EtTtknlZC8ChMlXQ7VhG6xXkdGogOvcTPkkwDt3c/WiRZ5hCLane3DsnbgZ2is=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746196161; c=relaxed/simple;
+	bh=glgP2H8iltkXz/0itYKcwN3X2MmC22mzZto+Unw1AGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ly9s3utAtXa8gd6A1UBxC2avSlhjXQMSTVHCmZ+u6ua62zLBgJCmUud77HbnlTsBnIkATo6PJFEuLPMWi8jg4a0Hh+wx4Z5mTzMF41XhSSmufUcsq8yizpoUmCiYL6AjTxX+vndWL76gXhrZTVWVECXjeG7H5KRMNBEdunlsXqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zk/y2DpQ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=phytec.de header.i=@phytec.de header.b="BzzYZmoF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wSLKlwuibLklBRghBKaKm3q4/1NJwppOoUt1oDe/MRo8G/Q3WAmEGmhemOVBHDOyap3+Nk80LYCLpMopvi8lMh7H4z/EySD9uVwA/3g4KlEJ0OkPncj7FeNfLI12ASWGShcW7ycqVcEuIFKk4yqgJIN2xk8ceAua0KBvIzn2CDwgxfGIQa/GQl6wMf0Md3YmBYfeKHlAJprXs2DUTZSpyZBzKyozV1fJkPOGWTVLWwT9suFYDMfPp08qt+jQSCZqyN/qjuNnjKcAK+WJoaQ3lCOnnoGJcWtV8ag9Ta5BS0xgF8cGgdBtdS2kEeOWp42EBAe/vMLN2n2lOPokzOtSow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AbH1Xx2Bspbo8b5a07oMy1KXVKdFJV2ljjkhKZ3iIXs=;
- b=I6o4f1SAeAs1CQKrIgtUmUATQBmA6LZiB7F8Uu82KxTHKBYZcSHPv32V2+Xk+/Tl1gSJdXE3MNyXyFiEBErZHOLgqH0rPnUci31/egJAUGmXp5qS2EarMbOvsWYuDX1R8Tw1WU9CfHLZLDDT6MrWegMAV7Q6SuHW/bcGuLSpZBkIf6qlWWG2lUk/RiytXOpbNJ3kGM5usV7ACUDpAcLcGNyVWdAb+DgX7QHalvDPCnvVprrXOFap77unQ3kp7Ql5eHv0wrpteuIpcMfStgvP2OgGXiRfQ5s1BH44B67qdPnVSCU7+SVbjJzdv36MqH6yxfW0ylK51auZjABKVHu3ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
- is 91.26.50.189) smtp.rcpttodomain=ti.com smtp.mailfrom=phytec.de; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine header.from=phytec.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=phytec.de;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbH1Xx2Bspbo8b5a07oMy1KXVKdFJV2ljjkhKZ3iIXs=;
- b=BzzYZmoFRNmuRT6d1WPjUnZNtfw8sQk/ToaVJVlnJO3wVQ+TSO0I/x4+/y8NALex4sMdVL4kP/YLrl69k9+l7GBZuS9jwroUjp6INiWTv/DNevSAF7GtB8nsAqFWqVkSZawyOofody4yR8bSP/RlUt+NF+zMPVDDwXsy4CDUOC9DCLJ5QdfmQ/ZeHjmucl8oHrY4BMiWuPfl1kz9I29UZCqUupupZLq/vjv9GRQEX4buQvNMNQTdIiS8WVbovzssqf3ZcaWFCcZtv8z2iAMOv8pbdZiugN1DDmtcnVAMzNXes+2usHnmFhNLHhNbvpaaujXE9C+j8tyf3UEU4iUfIQ==
-Received: from DU6P191CA0072.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:53e::25)
- by GV1P195MB2551.EURP195.PROD.OUTLOOK.COM (2603:10a6:150:1c5::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
- 2025 14:26:24 +0000
-Received: from DU6PEPF00009529.eurprd02.prod.outlook.com
- (2603:10a6:10:53e:cafe::c0) by DU6P191CA0072.outlook.office365.com
- (2603:10a6:10:53e::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
- 2 May 2025 14:26:24 +0000
-X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 91.26.50.189)
- smtp.mailfrom=phytec.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=phytec.de;
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- phytec.de discourages use of 91.26.50.189 as permitted sender)
-Received: from Diagnostix.phytec.de (91.26.50.189) by
- DU6PEPF00009529.mail.protection.outlook.com (10.167.8.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 14:26:23 +0000
-Received: from Florix.phytec.de (172.25.0.13) by Diagnostix.phytec.de
- (172.25.0.14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 2 May
- 2025 16:26:22 +0200
-Received: from ls-radium.phytec (172.25.39.17) by Florix.phytec.de
- (172.25.0.13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Fri, 2 May
- 2025 16:26:20 +0200
-From: Daniel Schultz <d.schultz@phytec.de>
-To: <nm@ti.com>, <vigneshr@ti.com>, <kristo@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <upstream@lists.phytec.de>, Daniel Schultz <d.schultz@phytec.de>
-Subject: [PATCH 1/3] arm64: dts: ti: k3-am62a: Enable CPU freq throttling on thermal alert
-Date: Fri, 2 May 2025 07:26:04 -0700
-Message-ID: <20250502142606.2840508-1-d.schultz@phytec.de>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zk/y2DpQ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-309d2e8c20cso2837113a91.0;
+        Fri, 02 May 2025 07:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746196157; x=1746800957; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=uv62vQqp6Wg2reIArK9ykz+gkyvcDoUeNoaYwXskcxk=;
+        b=Zk/y2DpQ3084WO1fnma3F35iHrHxRUA4l8H+6zd1SGzujCppfg4xAL7jOOx3GcCVLh
+         dfGfTbFi9KkM83m5+8YKG3tbBCb49ryfhlepuAvLnVfK0343cjPVek6VajLcb2VmSYi8
+         yvQa4b0YCst1mjFwzr5j+3Nd1nTfo14MFg2JlJ+lCkXJ6DrNP08LXzqhbNURTQ1QNsqr
+         qLtADPFlR2rJ6+NhFbTmbFVRJsw312oJeDr4r+X55C9Qdc8m+mQoDRKZUiPMHEGKm8Bv
+         MM9PaEb5YSza6UbLqoHT7Dvdwq8Y3nhId+KENFhz0ZNUAQhXVTw337vovrfJ9rN9aCDZ
+         eCbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746196157; x=1746800957;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uv62vQqp6Wg2reIArK9ykz+gkyvcDoUeNoaYwXskcxk=;
+        b=obkj4Ig7C8V1TMeVv2pUHeKK4RZqbDdQ6MdyhzvlgaHg6VuJhgrkhtbP6sd3YyFyGh
+         yJ3owsp4zL4emzqI2/5g3Fj5kS2oR3mZFCtm1fQv9/g2Om0bCKOijSzhkuDzq99+ZjGk
+         5NlpFiktl+3evY0IgMS3wj4z8dNgBDJzlG3LVAx0fFRXrzu6KEfGIPHNs4YYkC0NXgyw
+         xnlqtXyn7qMekCfWczuTpuJ4JkbE8O11ng3RRZ/x9f9raqzNZqw4IgQW9aMS76ljIoW7
+         eX6lYD+hlKB/150mlXLT9VZzjdFtfsCDp5A6u5WFYKtynqp58w70SUKNZTTve7yrO/Ff
+         PBKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUYnAKUODEfmAxPwyRs4KfErhebiky5dqPIxiGrUwnhT81vrTxd4DN5oSc/TodRx52bee3fDLhZV6vmXw==@vger.kernel.org, AJvYcCUut1lmQsUVK+fyiG7LNkl0E///WkEhvh9e5VsevGd/OyR09TY/xS1HVd3/dEc8vGUT50psIoaaqeYA@vger.kernel.org, AJvYcCX20ldXsh86z/Y58jTC+fXhYydEuqGhB80ACUxx21KI2tv2jqqGE5ykENgoHuCxecS57IZ/h7y4TxIbkz5j@vger.kernel.org
+X-Gm-Message-State: AOJu0YwrOG2tFPSnxKTioYLjABPqQFdwsCesGTMfrypoqt68xj9UPWYE
+	OqO4eCBMpbKgk24jBfZshy/mlnSl3bNoPXNWoS5jIjsDiprhgZ9R
+X-Gm-Gg: ASbGncsA/SrvWqIkjabaSS6pBEI2kOO3N/w092k6S8GmDd+cPy6tWUypRaYbnZgE3Aa
+	ysTewtmXS7M3T9csaXg5YWlt3VRu0ibQDJW59LMTsE3tXNPauqmkwCRvtWtcLusECrxAFmIldh8
+	/QCNtCzvQ1v0xmEKWBeXJSnGT7KrV90lIMhnKrmfeDFCyA1AErQzL3L6FMphEshjk2qBbkaOT2I
+	PlutP+brzPfo4UFthmMfKsBnN9089HnUftwAKofE/ddGzEWwcMGGi+bSlDZsOXTKNcvTRcRTqUn
+	jng3iq4/b4fCO12smArGpIvjat4dHSuAVTf3XHj5gdsF7queSxMSMD1gTHSF
+X-Google-Smtp-Source: AGHT+IGcxrpY5FwVcx8yrFraaIa7JOCgeuZA4gWlDNgGNkVeXC5Z1ByWUsBuDYSZ9H3EEoZMid1q1w==
+X-Received: by 2002:a17:90b:55d0:b0:2fe:b907:562f with SMTP id 98e67ed59e1d1-30a4e5ab679mr5576244a91.14.1746196157465;
+        Fri, 02 May 2025 07:29:17 -0700 (PDT)
+Received: from localhost ([2804:30c:4024:1700:8e03:72a4:b895:b221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22e1659f8b8sm4747735ad.14.2025.05.02.07.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 07:29:16 -0700 (PDT)
+Date: Fri, 2 May 2025 11:30:34 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Jonathan Santos <Jonathan.Santos@analog.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	andy@kernel.org, nuno.sa@analog.com, Michael.Hennerich@analog.com,
+	marcelo.schmitt@analog.com, jic23@kernel.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linus.walleij@linaro.org,
+	brgl@bgdev.pl, lgirdwood@gmail.com, broonie@kernel.org,
+	jonath4nns@gmail.com, dlechner@baylibre.com,
+	David Lechner <dlechner@baylire.com>
+Subject: Re: [PATCH v6 07/11] iio: adc: ad7768-1: add multiple scan types to
+ support 16-bits mode
+Message-ID: <aBTXCi0HINcrvXay@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1745605382.git.Jonathan.Santos@analog.com>
+ <0a214d5dfacc3976db71af8a80f9dcf2887fe6cc.1745605382.git.Jonathan.Santos@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: Diagnostix.phytec.de (172.25.0.14) To Florix.phytec.de
- (172.25.0.13)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU6PEPF00009529:EE_|GV1P195MB2551:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3a1fea80-b91d-43e1-16d5-08dd898550d8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?0yvAL3ep3pphtDGTtZJOc8T6PuQiQQgdo1SgXuHpUyLHSWqeJbTnGdQ9k0J6?=
- =?us-ascii?Q?yi1g7Q/v8dNWsfKk9dCdoB98jp44SPQI//7B+8erFvsVi8T/Kou1anQDPe/t?=
- =?us-ascii?Q?ckKFjzq8nUnX6z7F8qaSae/w4ol3r2UWTEtMbJKtQqKyJFDBpgKTTc2OtzIA?=
- =?us-ascii?Q?BZp6Fd/bA3FQYDSCOVZLr7cmlG9GB0w/FdS//MD42+eoCzm0PtcmvhRwu3ba?=
- =?us-ascii?Q?KOsPpMvzsTEbEJi1mIVSRFHXJ16L3abdbgFOSlP2gMX88ld0RbgAS1DHejTS?=
- =?us-ascii?Q?SrEp/MpTkmsKVClMAXGUliIltkj+eYb1VmItdjMoj2+eZhbCq6l8SP1oTayU?=
- =?us-ascii?Q?ALAiqPV8/bqN+l775rNjOcf+haLY2HR9CEkbgI7HqYF59gJbjbIQzo3avXOV?=
- =?us-ascii?Q?mV23z+lB7bjWMjbn2VEtMb42+mkqtjxue/P6rKocTQ81kItbtafPAJMTjF1z?=
- =?us-ascii?Q?Plowf8fIZ0qrH9XLjxpmHMD7dH3qCfx8uKKZ+WrhVAQeeEgu8Yy2lkwYDJUo?=
- =?us-ascii?Q?dWwuoDC7TfQUaicWL8QUF3kMSIHavyAS7y9t7lPt2KR0/bd4/HS09cNjuhE3?=
- =?us-ascii?Q?COceGbajnBSYYC4LFUa2k3XQoqPvxdJXMqraUvsAPDPl7PxVPiVot/EnJbZt?=
- =?us-ascii?Q?BOylpJFwNSd76MtGAGyn3j0VAtLljRaQjJHTX3aunm9Sr7kjHyRHTHFAEKWC?=
- =?us-ascii?Q?uwuj+RML1IByVWgpLz8YovJRiEJdCbsEL56+qJOXD9VFzG/jY47UwaR3QG7H?=
- =?us-ascii?Q?sGzwJZugSjnRnQ3dErmVlD0n9Ms1a9naFYzFdc11cLv8QyW5Y313gfbJcKTf?=
- =?us-ascii?Q?4EIYxRZxsAxXIUJv8OPGNHDsD1PnQzvfaUNd2w2fdBiKjJzf/KmxDuWIh0fo?=
- =?us-ascii?Q?y2y4L3g/wNxfkDDdnG78tmsSw0y7UqRWD22T80MWn1G2fOArKWmA575fYgY6?=
- =?us-ascii?Q?EZ5DkmI0XA2hZJBDH2U9Qafn7Yj8Xm6CjOGFJVUwybBL8wIbbgorYsohPZdc?=
- =?us-ascii?Q?EEA4o1Qg/AlJoh6Akm6RPrRXuo8FC6I3QOz8u/PP0CLB/Gpcojvj3v/XnXZN?=
- =?us-ascii?Q?2nJhfzm/BPcAvFxGk3AQpVrOY9nrmgZVmBmkcGjPSYICI5nURjrzyWk5vjos?=
- =?us-ascii?Q?9HJ/L6jrBFTLvhl0d27k+AgRmhWjesB+aCqjBG35e2ZwIThwMxaKtaYITnlm?=
- =?us-ascii?Q?Ql4N2hpdjR9J2FtDWwogYrnWLjAvVYSZXstxNrumIdPhQ+Pi6cohmikakhEp?=
- =?us-ascii?Q?C4Nv04AVJp+MJSVjC6nMiKrpUNzDqTWix4D1PjnyPzIJcHPnkHdkXx9rLegj?=
- =?us-ascii?Q?1T91R7iH/n1rSvc4ohJLJ6L8viYrF5zdeB1JEfH5PY5uBAE6Bk8r1/h1I/2X?=
- =?us-ascii?Q?iuCY2MLTGC3tZOjIJv2QDJqwH0foK7J9EffRdsJmIcL6Hfkp1W3rlmC0Yoof?=
- =?us-ascii?Q?Vt6t0ZNZzoIiBTwWIjEa6QA4LmhZs9+nI8dqxTifm9Gz3+JTPUkofFYHa2xT?=
- =?us-ascii?Q?KkWvx03Up0FCPlZodQC6V6uEugwcAFPln/QZ?=
-X-Forefront-Antispam-Report:
-	CIP:91.26.50.189;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:Diagnostix.phytec.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: phytec.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 14:26:23.5774
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3a1fea80-b91d-43e1-16d5-08dd898550d8
-X-MS-Exchange-CrossTenant-Id: e609157c-80e2-446d-9be3-9c99c2399d29
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e609157c-80e2-446d-9be3-9c99c2399d29;Ip=[91.26.50.189];Helo=[Diagnostix.phytec.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU6PEPF00009529.eurprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1P195MB2551
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0a214d5dfacc3976db71af8a80f9dcf2887fe6cc.1745605382.git.Jonathan.Santos@analog.com>
 
-Enable throttling down the CPU frequency when an alert temperature
-threshold (lower than the critical threshold) is reached.
+Hi Jonathan,
 
-Signed-off-by: Daniel Schultz <d.schultz@phytec.de>
----
- arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi | 57 ++++++++++++++++++--
- arch/arm64/boot/dts/ti/k3-am62a7.dtsi        |  4 ++
- 2 files changed, 58 insertions(+), 3 deletions(-)
+The new adjustable sample rate / precision patch looks good to me.
+My only concern is about one error handling path in the trigger handler function.
+With that sorted out
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-index c7486fb2a5b4..39ff9118b6c4 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a-thermal.dtsi
-@@ -12,12 +12,29 @@ main0_thermal: main0-thermal {
- 		thermal-sensors = <&wkup_vtm0 0>;
- 
- 		trips {
-+			main0_alert: main0-alert {
-+				temperature = <95000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
- 			main0_crit: main0-crit {
- 				temperature = <125000>;	/* milliCelsius */
- 				hysteresis = <2000>;	/* milliCelsius */
- 				type = "critical";
- 			};
- 		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&main0_alert>;
-+				cooling-device =
-+					<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
- 	};
- 
- 	main1_thermal: main1-thermal {
-@@ -26,25 +43,59 @@ main1_thermal: main1-thermal {
- 		thermal-sensors = <&wkup_vtm0 1>;
- 
- 		trips {
-+			main1_alert: main1-alert {
-+				temperature = <95000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
- 			main1_crit: main1-crit {
- 				temperature = <125000>;	/* milliCelsius */
- 				hysteresis = <2000>;	/* milliCelsius */
- 				type = "critical";
- 			};
- 		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&main1_alert>;
-+				cooling-device =
-+					<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
- 	};
- 
- 	main2_thermal: main2-thermal {
--	       polling-delay-passive = <250>;	/* milliSeconds */
--	       polling-delay = <500>;		/* milliSeconds */
--	       thermal-sensors = <&wkup_vtm0 2>;
-+		polling-delay-passive = <250>;	/* milliSeconds */
-+		polling-delay = <500>;		/* milliSeconds */
-+		thermal-sensors = <&wkup_vtm0 2>;
- 
- 		trips {
-+			main2_alert: main2-alert {
-+				temperature = <95000>;
-+				hysteresis = <2000>;
-+				type = "passive";
-+			};
-+
- 			main2_crit: main2-crit {
- 				temperature = <125000>;	/* milliCelsius */
- 				hysteresis = <2000>;	/* milliCelsius */
- 				type = "critical";
- 			};
- 		};
-+
-+		cooling-maps {
-+			map0 {
-+				trip = <&main2_alert>;
-+				cooling-device =
-+					<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+					<&cpu3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am62a7.dtsi b/arch/arm64/boot/dts/ti/k3-am62a7.dtsi
-index 6c99221beb6b..b6e5eee99370 100644
---- a/arch/arm64/boot/dts/ti/k3-am62a7.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am62a7.dtsi
-@@ -50,6 +50,7 @@ cpu0: cpu@0 {
- 			next-level-cache = <&L2_0>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 135 0>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -66,6 +67,7 @@ cpu1: cpu@1 {
- 			next-level-cache = <&L2_0>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 136 0>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -82,6 +84,7 @@ cpu2: cpu@2 {
- 			next-level-cache = <&L2_0>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 137 0>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -98,6 +101,7 @@ cpu3: cpu@3 {
- 			next-level-cache = <&L2_0>;
- 			operating-points-v2 = <&a53_opp_table>;
- 			clocks = <&k3_clks 138 0>;
-+			#cooling-cells = <2>;
- 		};
- 	};
- 
--- 
-2.25.1
+On 04/27, Jonathan Santos wrote:
+> When the device is configured to decimation x8, only possible in the
+> sinc5 filter, output data is reduced to 16-bits in order to support
+> 1 MHz of sampling frequency due to clock limitation.
+> 
+> Use multiple scan types feature to enable the driver to switch
+> scan type in runtime, making possible to support both 24-bit and
+> 16-bit resolution.
+> 
+> Reviewed-by: David Lechner <dlechner@baylire.com>
+> Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> ---
+...
+> +enum ad7768_scan_type {
+> +	AD7768_SCAN_TYPE_NORMAL,
+> +	AD7768_SCAN_TYPE_HIGH_SPEED,
+> +};
+> +
+> +static const int ad7768_mclk_div_rates[4] = {
+I think we can omit the 4 constant here
+static const int ad7768_mclk_div_rates[] = {
 
+Probably not a reason for a v7 if the other parts of the series are good.
+> +	16, 8, 4, 2,
+> +};
+> +
+...
+>  
+> @@ -674,9 +722,15 @@ static irqreturn_t ad7768_trigger_handler(int irq, void *p)
+>  	struct iio_poll_func *pf = p;
+>  	struct iio_dev *indio_dev = pf->indio_dev;
+>  	struct ad7768_state *st = iio_priv(indio_dev);
+> +	const struct iio_scan_type *scan_type;
+>  	int ret;
+>  
+> -	ret = spi_read(st->spi, &st->data.scan.chan, 3);
+> +	scan_type = iio_get_current_scan_type(indio_dev, &indio_dev->channels[0]);
+> +	if (IS_ERR(scan_type))
+> +		return PTR_ERR(scan_type);
+
+The IRQ never gets handled if we get an error from iio_get_current_scan_type()?
+Maybe make it jump to out?
+	if (IS_ERR(scan_type))
+		goto out;
+
+> +
+> +	ret = spi_read(st->spi, &st->data.scan.chan,
+> +		       BITS_TO_BYTES(scan_type->realbits));
+>  	if (ret < 0)
+>  		goto out;
+>  
+
+Best regards,
+Marcelo
