@@ -1,93 +1,99 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E426920FAB4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F57211276;
+	Fri,  2 May 2025 21:51:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222691; cv=none; b=bGBdhAVSTASpmJZCBgR6VaDFuokdCqwRH/G2wxNFvxjpxKhbc4E6w4PFOAN7d+Jf2nWcLSLqsI397PlYUzqbTmLWgTjK5hf2EyUnHm6Sz9CzqCn5qO0eai2QoWKJFkPfXjm7Qr4lTXPXsyzeFZtg9wecuXgWzdL5cLwM/W3HQoI=
+	t=1746222708; cv=none; b=nUUO8FxbBKNm57+n9ldo7ud1OEvoCNWDZUVpKqDlXT/efOZbvYua+1o+8eHBvThPyEZZmremZLPHjCSY94YxaBBj7EvQVGkZAjlLffiOXPdRMweJD3BjoqUZTT+eS0GF5ekvtaivnHxQnvR93ncboYijCo/0rw7IAJ1wbDzmrpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222691; c=relaxed/simple;
-	bh=2txtXmkPas782tuJZyId1VB56basPkhr7R2WNHcvWIg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=HLHIHxGjO1UIJQccNfr6/Dg44kyjIrC+s/G6gmUVbvv+4ymHFw8DntGL0gke/fVn/O+eqEwu5QDDy8ZCccOpN7tppRdBIOdY5A4EYUbJgPve3O4duG4jn3Jtv/dLFneJu7GncBc2+SUcyh+7dj1X4jjEXu+pGOR7iNbVqikLLzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wD//zs9O; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746222708; c=relaxed/simple;
+	bh=Fo/4cY/h3GvmA3zO6jclmLkwEdMV0ZBDksm5s1DKwPk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=btdYD9YUGYIT0udOvPNGDkAqe8qEKWn/eNxAegSdzLeCjvtvlB4pz8GNoysWtqUXpVlj4fCIyjybhSHwziEhrFEob8HXx4FWMI6HTO3VBPoKRe8ex5JnxjTkiYRb3DzLiENfH4j2mgp2lA4qrTXVwFiV37jTnqnuehAwUxNwrfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eb1JuoYW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wD//zs9O"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso3787471a91.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:51:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746222689; x=1746827489; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xuMrCSQLCVm3rK1Z/M2Y8ljgy1BUHkh9BuXdAIH55U0=;
-        b=wD//zs9Od0fk/M8vUPqNfa7tymOClDvngp9LxY8jqYE7BzG7xnIe6qssmh/PWcjbdx
-         TT4qT1c9bccHGUlZIQD7Djqc3TWLziYRy3CFHUPSa8dVhjjIS3+1gdqcZ3LGxNxQH/qq
-         su+0FJnYU8en3hp8K6APDx2mS35GVSVveYMHUDc6swtzpEVXJVGMEklggbxspvbE0/52
-         twi7MrxS06f6czu1uNQRmPFuCGygKAEOEu8lcoQ2mu03t40xnfiB0l77jCX5/hn37b5X
-         RsL3uJdxIZX/Nyo3/GdVepZADoYqji+nPnkmVQkH1j3FpnIGf/0K4P1GwCgKULwhYFO6
-         yGJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746222689; x=1746827489;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xuMrCSQLCVm3rK1Z/M2Y8ljgy1BUHkh9BuXdAIH55U0=;
-        b=ExIjHpdxQaU/BVAr/3WtAw+bB+r7lJfJ+H2r2B7eSBwfbvgOwNH2NMRmF3PME9QdfF
-         8hmZRqERX01YyG5SJAOENP4goI49BOwbVsVoG8D1ML1uRa47Xivwhqzv0woEXJyJPOSx
-         Lz6qBO69fcH8aP3xAF9ILHu69d9ev1swGw9/I+cC+9wR6UXjB4nIoOcYRfVgc1tJqhqp
-         +O97ZlyFSjQEYCj4zd6XJiAKFhwsjXSIQS3Ccwu/Fr6N/r1jtdJVyAkIZMWNb2zoJgvs
-         n/ZtDXXhKlgLYuhDCcq1EhV5LtKHy5ckIkIRnCXTFccQGdQjOp6Ilx7OOJ1MAoScTP6o
-         7yUQ==
-X-Gm-Message-State: AOJu0YwBqiAxG4gpgMQdOKHP84pn9VgOpeVmwnsepYZV+j8XvrgcTDmy
-	UId1e8G8UoZckJ/uFTxmuRN6iSbf7v+/E09B/nOVHyH3Fh6SVSvwssAVv8Kbjx0lt6lcUmsNWSt
-	nGA==
-X-Google-Smtp-Source: AGHT+IHot8nmmRowbrr226toKHfu1fQGbiC4az4KlzIrJYJnyZxG2Id1cugNtpGKpX82rmlgpPY7cq4QJok=
-X-Received: from pjzz16.prod.google.com ([2002:a17:90b:58f0:b0:2fc:13d6:b4cb])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5404:b0:30a:4c44:cc05
- with SMTP id 98e67ed59e1d1-30a4e5ab0acmr4754053a91.10.1746222689088; Fri, 02
- May 2025 14:51:29 -0700 (PDT)
-Date: Fri,  2 May 2025 14:50:55 -0700
-In-Reply-To: <20250318013038.5628-1-yan.y.zhao@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eb1JuoYW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06292C4CEED;
+	Fri,  2 May 2025 21:51:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746222708;
+	bh=Fo/4cY/h3GvmA3zO6jclmLkwEdMV0ZBDksm5s1DKwPk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Eb1JuoYWRHzLob+ECoIY41s36dHljuiKyKVggSYRWHwNJhW1hmaGU+0VLpRYZGlW1
+	 PeOEfovxIQMxPmnyux7TMHtGiKAd4yC78VM0PUdy7v9dhSlW6US44I0l+/Im/ev1Lq
+	 aeZ9B0aOExdK9OFUKwhm7wIKJa3khrYHXllXM8uVASkVHwW9zdDz4/5i5ToBPlYRYw
+	 1vhbls6ikTY5ALCoCbELh46oWdVKZ8ytKbFZ+StvKaff9OuMElLMtxsztNWSIcP8xs
+	 ljZQFpFCD5HuyQacGEI/gvG5D/QnxFjpAeLIvX7rEWLTmHSl7NisOOXSGgFJc251eC
+	 7pUEeYFiLL0Ew==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH 0/7] Rust KUnit `#[test]` support improvements
+Date: Fri,  2 May 2025 23:51:25 +0200
+Message-ID: <20250502215133.1923676-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250318013038.5628-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <174622239486.882502.1450694184969543673.b4-ty@google.com>
-Subject: Re: [PATCH v2 0/5] Small changes related to prefetch and spurious faults
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, Yan Zhao <yan.y.zhao@intel.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 18 Mar 2025 09:30:37 +0800, Yan Zhao wrote:
-> This is v2 of the series for some small changes related to
-> prefetch/prefault and spurious faults.
-> 
-> Patch 1: Checks if a shadow-present old SPTE is leaf to determine a
->          prefetch fault is spurious.
-> 
-> Patch 2: Merges the checks for prefetch and is_access_allowed() for
->          spurious faults into a common path.
-> 
-> [...]
+Improvements that build on top of the very basic `#[test]` support merged in
+v6.15.
 
-Applied 1-4 to kvm-x86 mmu, and patch 5 to fixes.  Thanks!
+They are fairly minimal changes, but they allow us to map `assert*!`s back to
+KUnit, plus to add support for test functions that return `Result`s.
 
-[1/5] KVM: x86/mmu: Further check old SPTE is leaf for spurious prefetch fault
-      https://github.com/kvm-x86/linux/commit/ea9fcdf76d3d
-[2/5] KVM: x86/tdp_mmu: Merge prefetch and access checks for spurious faults
-      https://github.com/kvm-x86/linux/commit/d17cc13cc484
-[3/5] KVM: x86/tdp_mmu: WARN if PFN changes for spurious faults
-      https://github.com/kvm-x86/linux/commit/988da7820206
-[4/5] KVM: x86/mmu: Warn if PFN changes on shadow-present SPTE in shadow MMU
-      https://github.com/kvm-x86/linux/commit/11d45175111d
-[5/5] KVM: x86/mmu: Check and free obsolete roots in kvm_mmu_reload()
-      https://github.com/kvm-x86/linux/commit/20a6cff3b283
+In essence, they get our `#[test]`s essentially on par with the documentation
+tests.
+
+I also took the chance to convert some host `#[test]`s we had to KUnit in order
+to showcase the feature.
+
+Finally, I added documentation that was lacking from the original submission.
+
+I hope this helps.
+
+Miguel Ojeda (7):
+  rust: kunit: support KUnit-mapped `assert!` macros in `#[test]`s
+  rust: kunit: support checked `-> Result`s in KUnit `#[test]`s
+  rust: add `kunit_tests` to the prelude
+  rust: str: convert `rusttest` tests into KUnit
+  rust: str: take advantage of the `-> Result` support in KUnit
+    `#[test]`'s
+  Documentation: rust: rename `#[test]`s to "`rusttest` host tests"
+  Documentation: rust: testing: add docs on the new KUnit `#[test]`
+    tests
+
+ Documentation/rust/testing.rst | 80 ++++++++++++++++++++++++++++++++--
+ init/Kconfig                   |  3 ++
+ rust/Makefile                  |  3 +-
+ rust/kernel/kunit.rs           | 29 ++++++++++--
+ rust/kernel/prelude.rs         |  2 +-
+ rust/kernel/str.rs             | 76 ++++++++++++++------------------
+ rust/macros/helpers.rs         | 16 +++++++
+ rust/macros/kunit.rs           | 31 ++++++++++++-
+ rust/macros/lib.rs             |  6 ++-
+ 9 files changed, 191 insertions(+), 55 deletions(-)
+
+
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
 --
-https://github.com/kvm-x86/linux/tree/next
+2.49.0
