@@ -1,21 +1,21 @@
 Received: from mail.actia.se (mail.actia.se [212.181.117.226])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA2B24676A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED1024C664
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186970; cv=none; b=b3p0oCm1c6GUt4ZKgSaCPJZHnTGNBICOWD5vd8lSMK7ty83qGMkHSrybmrWgQHK7kzWsCgyivFO91Je88YN6wPsXIk2pkuqeRgUjxu6yKlL6yreiuKzOrokwyWrLMWKmKCN0GeJ3ji/aCO8h/XNYYokImyWhH+jfwGTnMgJlA4U=
+	t=1746186972; cv=none; b=SPc28mr4DiqIYj7Yr4Q7EofF4F7LOp1dke3133ifvjl0t0pWj9YWS9JguolaiPiXOZopZ1/EvkJfHr90A5SC0CSrLGKfhikWMVvrPTrkaHdbRVy6JjPJEV6x4NaMKl0f4eQiuipL67inoWLTD6DMR3ZlAkfkmlqDWSRuLfq5AZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186970; c=relaxed/simple;
-	bh=letA9dsi2lcAXXHIjmfW26gJ0WuEb8Yj17N6ppRV9ig=;
+	s=arc-20240116; t=1746186972; c=relaxed/simple;
+	bh=4qEqoKqvg+Xasg8DNYrixWeFQHuSwAzHyApDRtQCJ+s=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RVT0eAgX2/zOMp9t04j9Tnv8d3iLSxuglXveEwI1t/2LWsQlMiG/pXvmkNtp1+jltnx08uPp9nwGdmsN3HPB1z48gOA5xF0RAV9KWOrVzOb40BZKeEag26XHszv08oz2yDsiK869OHlTLG5aBjuaaTpToskT3PKikZto+FAqtYI=
+	 Content-Type:MIME-Version; b=BefWA2ZMR/1/BSBrHNq85BQvOSXrOqmV2+ZNOHth7OJMmJKxUUwSwEQu6s5o/r4opMFSiiwePmHZgRyh2uQc2SoGWiXwydNSnpWEFCqpn7OMfFSWtVJCLhzjWPoEEbV4o/CdU9r+0QnFtfqBVUU+PQttQqM9oc/SDXOLQerHfO8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S036ANL.actianordic.se
- (10.12.31.117) with Microsoft SMTP Server (version=TLS1_2,
+Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
+ (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
  2025 13:40:56 +0200
 Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
@@ -30,12 +30,14 @@ CC: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Catalin Marinas
 	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"imx@lists.linux.dev" <imx@lists.linux.dev>, John Ernberg
-	<john.ernberg@actia.se>
-Subject: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-Thread-Topic: [PATCH 2/2] xen: swiotlb: Implement map_resource callback
-Thread-Index: AQHbu1cR+sKkXAZoXEOAUfrcrER15w==
-Date: Fri, 2 May 2025 11:40:56 +0000
-Message-ID: <20250502114043.1968976-3-john.ernberg@actia.se>
+	<john.ernberg@actia.se>, "stable@kernel.org" <stable@kernel.org>
+Subject: [PATCH 1/2] xen: swiotlb: Use swiotlb bouncing if kmalloc allocation
+ demands it
+Thread-Topic: [PATCH 1/2] xen: swiotlb: Use swiotlb bouncing if kmalloc
+ allocation demands it
+Thread-Index: AQHbu1cQNcuPrbmRHEK42QDjG7hf6w==
+Date: Fri, 2 May 2025 11:40:55 +0000
+Message-ID: <20250502114043.1968976-2-john.ernberg@actia.se>
 References: <20250502114043.1968976-1-john.ernberg@actia.se>
 In-Reply-To: <20250502114043.1968976-1-john.ernberg@actia.se>
 Accept-Language: en-US, sv-SE
@@ -44,7 +46,7 @@ X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-mailer: git-send-email 2.49.0
 x-esetresult: clean, is OK
-x-esetid: 37303A2955B14453667460
+x-esetid: 37303A2956B14453667460
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -54,61 +56,45 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-Needed by the eDMA v3 DMA engine found in iommu-less SoCs such as iMX8QXP
-to be able to perform DMA operations as a Xen Hardware Domain, which needs
-to be able to do DMA in MMIO space.
+Xen swiotlb support was missed when the patch set starting with
+4ab5f8ec7d71 ("mm/slab: decouple ARCH_KMALLOC_MINALIGN from
+ARCH_DMA_MINALIGN") was merged.
 
-The callback implementation is basically the same as the one for direct
-mapping of resources, except this also takes into account Xen page
-mappings.
+When running Xen on iMX8QXP, a SoC without IOMMU, the effect was that USB
+transfers ended up corrupted when there was more than one URB inflight at
+the same time.
 
-There is nothing to do for unmap, just like with direct, so the unmap
-callback is not needed.
+Add a call to dma_kmalloc_needs_bounce() to make sure that allocations too
+small for DMA get bounced via swiotlb.
 
+Closes: https://lore.kernel.org/linux-usb/ab2776f0-b838-4cf6-a12a-c208eb6aa=
+d59@actia.se/
+Fixes: 4ab5f8ec7d71 ("mm/slab: decouple ARCH_KMALLOC_MINALIGN from ARCH_DMA=
+_MINALIGN")
+Cc: stable@kernel.org # v6.5+
 Signed-off-by: John Ernberg <john.ernberg@actia.se>
 
 ---
 
-I originally exported dma_direct_map_resource() and used that which
-appeared to work, but it felt like not checking Xen page mappings wasn't
-fully correct and I went with this. But if dma_direct_map_resource() is
-the correct approach here then I can submit that isntead.
+It's impossible to pick an exact fixes tag since this driver was missed
+in the flagged patch set. I picked one I felt gave a decent enough picture
+for someone coming across this later.
 ---
- drivers/xen/swiotlb-xen.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ drivers/xen/swiotlb-xen.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index ef56a2500ed6..0f02fdd9128d 100644
+index 1f65795cf5d7..ef56a2500ed6 100644
 --- a/drivers/xen/swiotlb-xen.c
 +++ b/drivers/xen/swiotlb-xen.c
-@@ -285,6 +285,20 @@ static void xen_swiotlb_unmap_page(struct device *hwde=
-v, dma_addr_t dev_addr,
- 					   attrs, pool);
- }
-=20
-+static dma_addr_t xen_swiotlb_map_resource(struct device *dev, phys_addr_t=
- phys,
-+					   size_t size, enum dma_data_direction dir,
-+					   unsigned long attrs)
-+{
-+	dma_addr_t dev_addr =3D xen_phys_to_dma(dev, phys);
-+
-+	BUG_ON(dir =3D=3D DMA_NONE);
-+
-+	if (!dma_capable(dev, dev_addr, size, false))
-+		return DMA_MAPPING_ERROR;
-+
-+	return dev_addr;
-+}
-+
- static void
- xen_swiotlb_sync_single_for_cpu(struct device *dev, dma_addr_t dma_addr,
- 		size_t size, enum dma_data_direction dir)
-@@ -426,4 +440,5 @@ const struct dma_map_ops xen_swiotlb_dma_ops =3D {
- 	.alloc_pages_op =3D dma_common_alloc_pages,
- 	.free_pages =3D dma_common_free_pages,
- 	.max_mapping_size =3D swiotlb_max_mapping_size,
-+	.map_resource =3D xen_swiotlb_map_resource,
- };
+@@ -217,6 +217,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *d=
+ev, struct page *page,
+ 	 * buffering it.
+ 	 */
+ 	if (dma_capable(dev, dev_addr, size, true) &&
++	    !dma_kmalloc_needs_bounce(dev, size, dir) &&
+ 	    !range_straddles_page_boundary(phys, size) &&
+ 		!xen_arch_need_swiotlb(dev, phys, dev_addr) &&
+ 		!is_swiotlb_force_bounce(dev))
 --=20
 2.49.0
