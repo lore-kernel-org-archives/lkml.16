@@ -1,286 +1,146 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CED0BA50;
-	Fri,  2 May 2025 01:32:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C70D18E3F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746149572; cv=none; b=gTZp/0+Xk98cPFI34V/gLb+fwGsAMzfvAt1HwYmFeHpyriO0EfaMrPHw2aaarPoc4lkFaGPE8YZAUb2xSGyT2/FFYKqj7PUrzjjsjx+oq1+pajlmwoY+pSwQ+M1z+QyVocuIIwBh+YQwBrbLDh8vqMmLSM5rixHd3U9wqhkCRHw=
+	t=1746149647; cv=none; b=A4K7d2F3UgLe6Q98EOWDj+iEQaYy43sU9kDLPNpPgPVZAj5FEKeOa0PLYZR73clgrQHMmq22zfI06XEl/uyueIGooB1LTOWhLAZEPLGOl7a3KOIlwfd1dd9jlgiPihQGU3glpFWFi5pUijdnzW5I8H48LuONbi4WM6Zi5LcwcKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746149572; c=relaxed/simple;
-	bh=mc34lPAN3zUNn0Sak394IwbAJAZ57LWa4Yg5Ac4DzcQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i7jH3Yj9BIu+Bq/p5s9YbkNzRz0mkD/VSPVVRSStiJh6qt43JxEohu9/nXEdun0CUdYZhqYEtQfA68NI9y0zTsFmETc9ddL41k6Jjy1n1Ig2eWgmgWe9s3FUOEFdtixzxJhyMotjoLGa5dOqKrxWR/7Eeic7zWQ50V4BUA/uFPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=d3IwUnfc; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1746149647; c=relaxed/simple;
+	bh=VFjD3rX9Q7nIanEsWLWsYCBzpSANUb1jB6SFhJ8JD70=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=IMmDl43AxLTV60s2XB8SdIIyApau4zePa3t14PHynFE4juUEf1yHbzRTcix5DcZssL1H/IVDzEDZcrLAgj7texHapNU0hLTHiHJIrvuAi0H2lpyFyLQebrg5+p0vOljjGLPWKOE/HXfSUQpC1LUpjmxsEta3bXIFCWcHIdzMxwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PT1uvR4E; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="d3IwUnfc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1746149567; x=1746754367; i=w_armin@gmx.de;
-	bh=XkPgCkRr1484DbkQ7ByYdhmbf8+9nEO4Ey1DCW+uUwE=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=d3IwUnfcqrQWZiBZUFNW10zX1grtTYpF959X3g77gebyGEz0TVEyXbJyF3DsEzmN
-	 iV6p6PyzNrW+SGpGH+hkNTwoerUF3BrA4CoFIwUAiEn9aZ6LxGUWI9FIaFHE9dRKS
-	 39ppzsW0jwyEH/KWBuKQjV/4yPXSSEu4d8lzeUrTyiCa1GotQu/XYjzO3NWnZn0yX
-	 dRkq64S6x5UNi2ADFYahfLO2tOLXiqrsZe3e/YxXZAKtczg/qSBSfHAxj0LXlgCaT
-	 /viMD6RDpH2A5oHzAUNri67pQIh5xvPjARa30JrJUEzqeVXxNX+q4MHaTlmyWkSUP
-	 v/OWwJPzh+BEb6spfg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.0.69] ([87.177.78.219]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1MuUjC-1v2Dev0d0c-00zpLt; Fri, 02
- May 2025 03:32:47 +0200
-Message-ID: <dee4fd21-d9b4-450a-97ee-211559df516b@gmx.de>
-Date: Fri, 2 May 2025 03:32:44 +0200
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PT1uvR4E"
+Date: Thu, 1 May 2025 21:33:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1746149631;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
+	bh=KC+mXqTnHbJi8iH4wCBFRFB5qghJEho5DX6blQUzrxc=;
+	b=PT1uvR4EjRmouoTxItV+lh4PXW7hPBZjZcwBY/IkdPOJnyAeDnfTLi7PJZVvrjAs+8EORo
+	cvzdImNSjJM3BIWeiCauNanWtkElANOXjjG0rovOCZ2m0gUaqXCiePt7k+oGXizms+DYEb
+	v1w26vGW4EWIlsz2FrH9D/lVp/jbhhU=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Kent Overstreet <kent.overstreet@linux.dev>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] bcachefs fixes for rc5
+Message-ID: <avyfprbtjpphuhxjqekretgco6xs5r23efrlpkqx6uc5lhec7v@igrgjqacgb7i>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Documentation: wmi: alienware-wmi: Add GPIO
- control documentation
-To: kuurtb@gmail.com, Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: Gabriel Marcano <gabemarcano@yahoo.com>,
- platform-driver-x86@vger.kernel.org, Dell.Client.Kernel@dell.com,
- linux-kernel@vger.kernel.org
-References: <20250427-awcc-gpio-v2-0-c731373b5d02@gmail.com>
- <20250427-awcc-gpio-v2-2-c731373b5d02@gmail.com>
-Content-Language: en-US
-From: Armin Wolf <W_Armin@gmx.de>
-In-Reply-To: <20250427-awcc-gpio-v2-2-c731373b5d02@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:UqohOsoc/8RE/r1UEkRluoToR1cB6fMbZUlTAa5phAMDYkwySOm
- DVrN+VLQgA7+IdYpYlR1iWqOeLey2frGu4S5/NAeoieuKlMjEnDLZ69eeSwKXGySoRB5ayc
- PEj1Dun1p3e7IT1UOfmFHWRQWU1kqvF4PSoqWfXed78bA6ztiIsgPn/6J3c0aeRbGzyhnZ8
- gFbUPC/v5Bd2RbJvt6T+A==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:VBCIdcFDVFM=;WAILSXy36iznzawRsVEtzuzFyiL
- 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
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Migadu-Flow: FLOW_OUT
 
-Am 27.04.25 um 08:24 schrieb Kurt Borja via B4 Relay:
+Every week I keep telling myself "boy, that was a busy week of
+bugfixing, but next week is sure to finally slow down a bit".
 
-> From: Kurt Borja <kuurtb@gmail.com>
->
-> Add documentation for the GPIO control methods.
->
-> Signed-off-by: Kurt Borja <kuurtb@gmail.com>
-> ---
->   Documentation/wmi/devices/alienware-wmi.rst | 78 +++++++++++++++++++++=
-++++++--
->   1 file changed, 74 insertions(+), 4 deletions(-)
->
-> diff --git a/Documentation/wmi/devices/alienware-wmi.rst b/Documentation=
-/wmi/devices/alienware-wmi.rst
-> index 79238051b18bc5de9b502325017cd5c5fcf41748..2a6052efb9ae0e3fe0a5d9d5=
-775073234dfc96fb 100644
-> --- a/Documentation/wmi/devices/alienware-wmi.rst
-> +++ b/Documentation/wmi/devices/alienware-wmi.rst
-> @@ -231,6 +231,70 @@ WMI method MemoryOCControl([in] uint32 arg2, [out] =
-uint32 argr)
->   AWCC supports memory overclocking, but this method is very intricate a=
-nd has
->   not been deciphered yet.
->  =20
-> +GPIO control Methods
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Alienware and Dell G Series devices with the AWCC interface usually hav=
-e an
-> +embedded STM32 RGB lighting controller with USB/HID capabilities. It's =
-vendor ID
-> +is ``187c`` while it's product ID may vary from model to model.
-> +
-> +The control of two GPIO pins of this MCU is exposed as WMI methods for =
-debugging
-> +purposes.
-> +
-> ++--------------+-------------------------------------------------------=
-=2D------+
-> +| Pin          | Description                                           =
-       |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D+
-> +| 0            | Device Firmware Update (DFU)  | **HIGH**: Enables DFU =
-mode   |
-> +|              | mode pin.                     | on next MCU boot.     =
-       |
-> +|              |                               +-----------------------=
-=2D------+
-> +|              |                               | **LOW**: Disables DFU =
-mode   |
-> +|              |                               | on next MCU boot.     =
-       |
-> ++--------------+-------------------------------+-----------------------=
-=2D------+
-> +| 1            | Negative Reset (NRST) pin.    | **HIGH**: MCU is ON.  =
-       |
-> +|              |                               |                       =
-       |
-> +|              |                               +-----------------------=
-=2D------+
-> +|              |                               | **LOW**: MCU is OFF.  =
-       |
-> +|              |                               |                       =
-       |
-> ++--------------+-------------------------------+-----------------------=
-=2D------+
-> +
-> +See :ref:`acknowledgements` for more information on this MCU.
-> +
-> +.. note::
-> +   Some GPIO control methods break the usual argument structure and tak=
-e a
-> +   **Pin number** instead of an operation on the first byte.
-> +
-> +WMI method FWUpdateGPIOtoggle([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| Pin number         | Set the pin status                 | - Byte 1: P=
-in      |
-> +|                    |                                    |   status   =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +
-> +WMI method ReadTotalofGPIOs([out] uint32 argr)
-> +----------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| 0x00               | Get the total number of GPIOs      | - None     =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
+Hah.
 
-Maybe you should write that the "Operation" byte is theoretically not nece=
-ssary for this WMI method,
-but that we still have to provide a dummy value or else the firmware will =
-encounter an error.
+But it's all pretty small and boring.
 
-Take a look at the documentation for the msi-wmi-platform driver for detai=
-ls (grep for "CreateByteField()").
+A note on repair to users:
+--------------------------
 
-Other than that:
+We're continuing to steadily improve on self healing/automatic repair;
+we want to automatically repair and mount no matter what filesystem
+damage has occurred (and I've been seeing some fun ones, we had one this
+week that was from pcie power savings mode gone haywire).
 
-Reviewed-by: Armin Wolf <W_Armin@gmx.de>
+But we aren't doing this all at once, because repair code is among the
+most fiddly and least well tested: we're steadily adding error paths to
+the whitelist for automatic repair as they come up.
 
-> +
-> +WMI method ReadGPIOpPinStatus([in] uint32 arg2, [out] uint32 argr)
-> +------------------------------------------------------------------
-> +
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +| Operation (Byte 0) | Description                        | Arguments  =
-        |
-> ++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D+
-> +| Pin number         | Get the pin status                 | - None     =
-        |
-> ++--------------------+------------------------------------+------------=
-=2D-------+
-> +
-> +.. note::
-> +   There known firmware bug in some laptops where reading the status of=
- a pin
-> +   also flips it.
-> +
->   Other information Methods
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->  =20
-> @@ -239,10 +303,16 @@ WMI method ReadChassisColor([out] uint32 argr)
->  =20
->   Returns the chassis color internal ID.
->  =20
-> +.. _acknowledgements:
-> +
->   Acknowledgements
->   =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  =20
-> -Kudos to `AlexIII <https://github.com/AlexIII/tcc-g15>`_ and
-> -`T-Troll <https://github.com/T-Troll/alienfx-tools/>`_ for documenting =
-and
-> -testing some of this device's functionality, making it possible to gene=
-ralize
-> -this driver.
-> +Kudos to
-> +
-> +* `AlexIII <https://github.com/AlexIII/tcc-g15>`_
-> +* `T-Troll <https://github.com/T-Troll/alienfx-tools/>`_
-> +* `Gabriel Marcano <https://gabriel.marcanobrady.family/blog/2024/12/16=
-/dell-g5-5505-se-acpi-or-figuring-out-how-to-reset-the-rgb-controller/>`_
-> +
-> +for documenting and testing some of this device's functionality, making=
- it
-> +possible to generalize this driver.
->
+So if you ever run into something where a manual fsck is required, do
+drop me a note and include the output of 'bcachefs show-super -f errors'
+- that'll tell me what to add to the whitelist.
+
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-01
+
+for you to fetch changes up to 6846100b00d97d3d6f05766ae86a0d821d849e78:
+
+  bcachefs: Remove incorrect __counted_by annotation (2025-05-01 16:38:58 -0400)
+
+----------------------------------------------------------------
+bcachefs fixes for 6.15-rc5
+
+Lots of assorted small fixes...
+
+- Some repair path fixes, a fix for -ENOMEM when reconstructing lots of
+  alloc info on large filesystems, upgrade for ancient 0.14 filesystems,
+  etc.
+
+- Various assert tweaks; assert -> ERO, ERO -> log the error in the
+  superblock and continue
+
+- casefolding now uses d_ops like on other casefolding filesystems
+
+- fix device label create on device add, fix bucket array resize on
+  filesystem resize
+
+- fix xattrs with FORTIFY_SOURCE builds with gcc-15/clang
+
+----------------------------------------------------------------
+Alan Huang (1):
+      bcachefs: Remove incorrect __counted_by annotation
+
+Kent Overstreet (21):
+      bcachefs: Fix losing return code in next_fiemap_extent()
+      bcachefs: Use generic_set_sb_d_ops for standard casefolding d_ops
+      bcachefs: Emit unicode version message on startup
+      bcachefs: Add missing utf8_unload()
+      bcachefs: Run BCH_RECOVERY_PASS_reconstruct_snapshots on missing subvol -> snapshot
+      bcachefs: Add upgrade table entry from 0.14
+      bcachefs: fix bch2_dev_buckets_resize()
+      bcachefs: Improve bch2_dev_bucket_missing()
+      bcachefs: Don't generate alloc updates to invalid buckets
+      bcachefs: btree_node_data_missing is now autofix
+      bcachefs: btree_root_unreadable_and_scan_found_nothing autofix for non data btrees
+      bcachefs: More informative error message when shutting down due to error
+      bcachefs: Use bch2_kvmalloc() for journal keys array
+      bcachefs: Topology error after insert is now an ERO
+      bcachefs: improve missing journal write device error message
+      bcachefs: readdir fixes
+      bcachefs: Kill ERO in __bch2_i_sectors_acct()
+      bcachefs: check for inode.bi_sectors underflow
+      bcachefs: Kill ERO for i_blocks check in truncate
+      bcachefs: Fix __bch2_dev_group_set()
+      bcachefs: add missing sched_annotate_sleep()
+
+ fs/bcachefs/btree_gc.c              | 27 ++++++++++++++++++--
+ fs/bcachefs/btree_journal_iter.c    |  2 +-
+ fs/bcachefs/btree_update_interior.c | 49 ++++++++++++++++++++++++-------------
+ fs/bcachefs/buckets.c               | 15 ++++++++----
+ fs/bcachefs/dirent.c                |  4 +--
+ fs/bcachefs/disk_groups.c           | 25 +++++++++----------
+ fs/bcachefs/ec.c                    |  4 +--
+ fs/bcachefs/error.c                 |  4 ++-
+ fs/bcachefs/fs-io.c                 | 44 ++++++++++++++++++++++++++-------
+ fs/bcachefs/fs.c                    | 15 ++++++++----
+ fs/bcachefs/io_write.c              | 21 ++++++++++++++++
+ fs/bcachefs/journal_io.c            |  2 +-
+ fs/bcachefs/namei.c                 |  3 +++
+ fs/bcachefs/sb-downgrade.c          |  4 +++
+ fs/bcachefs/sb-errors_format.h      | 13 +++++++---
+ fs/bcachefs/sb-members.c            |  6 +++--
+ fs/bcachefs/sb-members.h            | 13 ++++++----
+ fs/bcachefs/subvolume.c             |  5 ++--
+ fs/bcachefs/super.c                 | 46 ++++++++++++++++++++--------------
+ fs/bcachefs/xattr_format.h          |  8 +++++-
+ 20 files changed, 219 insertions(+), 91 deletions(-)
