@@ -1,83 +1,149 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E9CA95E
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:34:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E46CA95E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:34:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189278; cv=none; b=h4z+E2b/29PGsQ71bneR/9ja2qVot1GzK9jWPY7YOdbomMgSdeXTJq4sP6n2a75Uu5yifig4YH2iq8gEdyLfQ7NiqnbDRVA/Q79AL8xY1eo6euyyGiYfE6ltBwyKUZQTyBDty87eItq9hlFoGXqwsgujLp7DAAkzR0awojeIm20=
+	t=1746189292; cv=none; b=KtJ+EiK+iypr2tcHMmrZK3VHeQGMWnH367FlIE/cCk/Dhemka8zDoryINSxqGQipyqh2EMnPRXmwrsiG6hiquXSb/edGCIO+wIZa3PAjqmngue12UZcgpjHKbWN5qNvXHeB4LdthGK0/zb1auEU3DzRC5NthYACSRqITh1wdbcg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189278; c=relaxed/simple;
-	bh=g7A0sbkQ4Aynm7fwdnm7WH5a5k+uVhYF0BxdHKNF7Yk=;
+	s=arc-20240116; t=1746189292; c=relaxed/simple;
+	bh=uuOu+aJmFh8t/CGTXqml2m2wi/LsBLGeddyeesWvub8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SRE00AUIdSSryeAf00rj9qU+lXdwMHLaqX/hnjOXxAGauqfh7KVY8xYBemOqXYQnban9YUb5OOvhSuFsQACcgZH9sZQ1gB9qbLf0f03EDpjdYUwy0jOQKTbXgsS0pseInnmoM8RcoiW7cd1Ji439KVhv0P/OnXzuYK/gxYPXD4k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELO2151L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aplA9bZ4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELO2151L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aplA9bZ4"
-Date: Fri, 2 May 2025 14:34:33 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746189275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9ELROxN1hM3HYk1nE1ZM0lckEfEoPs+ETna07i6Nbuo=;
-	b=ELO2151Ld++sm/3cMYKVH+Mg05H/0pumh7u1hRazIUV6n1m2wfFvJ/ooqwYpEnUtL6Q1IZ
-	qNi00hPcDCBl3y+UjOBaBnnUq1cxxeAtXWZzyEDrhkRKqlY9BjREjvI1g4ASKuofmMKXYn
-	AOium2JteJnL+AfggBWf/jpgxc31nIemKadWwdH8jTf7KUsXdxjKila7km6akmkM1+A99i
-	ut0yuE9LuWQRAV7cBrvuzKV8KQ7oI4rzNMEANQQ9UjbS0kSbccUNGZaG+1xp2uWd4vP3Ft
-	QwMAyhe0lutM1wqS3P8HYPDQPIiMfs3qP15aWAvglePZKI24TH4AiY+GVvnFkg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746189275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9ELROxN1hM3HYk1nE1ZM0lckEfEoPs+ETna07i6Nbuo=;
-	b=aplA9bZ4Yvgoslu5e4uU7ZLM/cHGCMQaRqonQ9f+eIaPogCuiBvIHwigNycpC6u6I6Iubb
-	5FfH4bIVAuY+VgDQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Prakash Sangappa <prakash.sangappa@oracle.com>
-Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
-	kprateek.nayak@amd.com
-Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
-Message-ID: <20250502123433.AHDVLZdY@linutronix.de>
-References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
- <20250502015955.3146733-2-prakash.sangappa@oracle.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=He/0atflQIUo/k/PYSCFUBQW+oun5YjqRQ75KRX5yWxDHLCv/NyniccZMubNY2QcPfXzxDq3+W69nwNVAB8RjT+k0jbl8VI4w0z5dd71LmjIX3MeqThPdQVqoAUTp17uq3sM9OOtvjvWOnefGOKKAIgovQ1uKW+c0FLxcr6PpDA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uApbM-0006E2-DO; Fri, 02 May 2025 14:34:48 +0200
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mkl@pengutronix.de>)
+	id 1uApbL-000khI-2k;
+	Fri, 02 May 2025 14:34:47 +0200
+Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	(Authenticated sender: mkl-all@blackshift.org)
+	by smtp.blackshift.org (Postfix) with ESMTPSA id 81CFB4064AB;
+	Fri, 02 May 2025 12:34:47 +0000 (UTC)
+Date: Fri, 2 May 2025 14:34:47 +0200
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Cc: Oliver Hartkopp <socketcan@hartkopp.net>, linux-can@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] can: dev: add struct data_bittiming_params to group
+ FD parameters
+Message-ID: <20250502-scrupulous-sunfish-of-attack-ca0160-mkl@pengutronix.de>
+References: <20250501171213.2161572-2-mailhol.vincent@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="p3azooixii3bxc6t"
 Content-Disposition: inline
-In-Reply-To: <20250502015955.3146733-2-prakash.sangappa@oracle.com>
+In-Reply-To: <20250501171213.2161572-2-mailhol.vincent@wanadoo.fr>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On 2025-05-02 01:59:52 [+0000], Prakash Sangappa wrote:
-> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> index 20154572ede9..b26adccb32df 100644
-> --- a/kernel/entry/common.c
-> +++ b/kernel/entry/common.c
-> @@ -98,8 +99,12 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
->  
->  		local_irq_enable_exit_to_user(ti_work);
->  
-> -		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
-> -			schedule();
-> +		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY)) {
 
-I asked to limit this to LAZY only.
+--p3azooixii3bxc6t
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] can: dev: add struct data_bittiming_params to group
+ FD parameters
+MIME-Version: 1.0
 
-> +		       if (irq && rseq_delay_resched())
-> +			       clear_tsk_need_resched(current);
-> +		       else
-> +			       schedule();
-> +		}
->  
->  		if (ti_work & _TIF_UPROBE)
->  			uprobe_notify_resume(regs);
+On 02.05.2025 02:12:10, Vincent Mailhol wrote:
+> This is a preparation patch for the introduction of CAN XL.
+>=20
+> CAN FD and CAN XL uses similar bittiming parameters. Add one level of
+> nesting for all the CAN FD parameters. Typically:
+>=20
+>   priv->can.data_bittiming;
+>=20
+> becomes:
+>=20
+>   priv->can.fd.data_bittiming;
+>=20
+> This way, the CAN XL equivalent (to be introduced later) would be:
+>=20
+>   priv->can.xl.data_bittiming;
+>=20
+> Add the new struct data_bittiming_params which contains all the data
+> bittiming parameters, including the TDC and the callback functions.
+>=20
+> This done, update all the CAN FD drivers to make use of the new
+> layout.
 
-Sebastian
+Thanks for the series!
+
+> Acked-by: Oliver Hartkopp <socketcan@hartkopp.net>
+> Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+> ---
+> The CAN XL series is still blocked because of lack of information on
+> the PWMS and PWML calculations, c.f.:
+>=20
+>   https://lore.kernel.org/linux-can/68e8c449-a6ab-4958-af3c-852ece2694c2@=
+wanadoo.fr/
+>=20
+> Regardless, the above patch will be needed at some time. And instead
+> of constantly rebasing it, I would rather have it merged early.
+>=20
+> The other CAN XL preparation patches target a smaller subset of the
+> tree and rebasing those is not an issue.
+>=20
+> ** Changelog **
+>=20
+> v1 -> v2:
+>=20
+>   - add Oliver's Acked-by tag
+>   - rebase on top of:
+>=20
+>       [PATCH v5] can: mcp251xfd: fix TDC setting for low data bit rates
+>       Link: https://lore.kernel.org/linux-can/20250430161501.79370-1-kels=
+ey@vpprocess.com/T/#u
+>=20
+>   Link: https://lore.kernel.org/linux-can/20250320144154.56611-2-mailhol.=
+vincent@wanadoo.fr/
+
+As "mcp251xfd: fix TDC setting for low data bit rates" will go through
+the "can" and "net" tree, we have to wait until "net" is merged back to
+"net-next".
+
+Regards,
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--p3azooixii3bxc6t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmgUu+MACgkQDHRl3/mQ
+kZw3DAf9EHh8b1+KqOwr/TBrHaQBO5esjx8fUF7D93qne7afbCiFKTM+570KKcFE
+vmOV4k1IvW54UkydnLTVulbgsKmprw+Lgd0hLPSupI8Sd+ow8LvBT9vo3nvOvVmP
+K8mb/x+LpqgGTBwyHb9ulvzGYAWsHfHRzWpmtXn+ezS8sXpNwKDKdUKh+b8Q57uO
+rNPcDKqt17l0FgL0S9ppQDaUW6gzKPiJ8RD/LrNjMssHHhlOAagaNC0zxs0XYCyb
+QrAlLhhMNoMBSYmn0Y5p9fHQlgTE81Ql+B0vXzsEn8GcEbihrgq/uxsVq917eR4S
+nFGju7HN+Umywc5kyrPzIL514BLIXA==
+=e+i5
+-----END PGP SIGNATURE-----
+
+--p3azooixii3bxc6t--
