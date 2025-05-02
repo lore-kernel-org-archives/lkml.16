@@ -1,39 +1,39 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-172.mta0.migadu.com (out-172.mta0.migadu.com [91.218.175.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21AF71F7569
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D174C1F8743
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216015; cv=none; b=kQ/JTpomTWAlxvIgXOWpT6DErr0F4vs0Ppmcz2e6ObL65yUbqQ4YVFqWzVDIF04ifkSHPSsU9gpZ0IKqyA61nBn5Lrk12MNQdcU3PnEJS3OvmTy20/w21SCUImoI7KKssIWKp2tz79XDCFaTUk4sNZJTploprbKzFTNsIwCY3KQ=
+	t=1746216016; cv=none; b=hwxUWMnFhBVbDGG3yVrUY3zwN5gdYkD62ddorWJOuRXIK+Bl0OsxM7mnPzJJEiLQ1Psth5FmiWsakPMxls5cpGONxkD4033o+Dvoy4Wrjk0V/f8gA9Wx7S4GUpK3K/XAuC8ZcrScc2sJEi9KFA30tgVe4LrEqLzgQXYTjPfNAMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216015; c=relaxed/simple;
-	bh=RcKkJtsoCg4JEJhBqrBT9I2/p66KBZXHKCNjzceiIgc=;
+	s=arc-20240116; t=1746216016; c=relaxed/simple;
+	bh=1S6uzaRBa0FtSxA9MxLj/7q3+opFssceFjQyClReKl8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=cPpKLpNke3LVilo8RsLeYx7NlCHTKbu4LySoKTOBCZp3u3a5FJE0798G6oDm5qjaxxRpRa9LLcX5dg0f2xtuxjIYl+9DfpuB3J41VHvQUgYvoMw6uH778ByfNg4SenChpMLDVexPooYXmuz2SckeyO4Kg48RLf3fdL6Oj8kRoag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=RwqluP+B; arc=none smtp.client-ip=91.218.175.170
+	 MIME-Version; b=tb0qYTkxCj7DbATQ+SWXJBU4n4OpqR8AEkJVe88zdhPoYpMfEMsr2axSbEqhihaVe+lGv0FTuaj8RRujdQWbKH/F19Jv6hKLxOx5B2FiYc5ttUaswrBSkaEt9YpBB7j/c3jJpdHhClrk3SC35PlJ0HVk7PS5jjg7nkRWss6tDSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=v/7x32wP; arc=none smtp.client-ip=91.218.175.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="RwqluP+B"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="v/7x32wP"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746216011;
+	t=1746216012;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ReUYFSWRiMLieiP4blFnICzA1f5cEZz7EuEF3waNFEM=;
-	b=RwqluP+BwPz7xncWNhvsjsnXmyLwSsGI7x0539bGRwn3aakoLktYiUgKr5RVUvO3nuGe0a
-	ILEjYgLn08Jci8WzMMuASOxnpgtvHA8ZMfpWgCLmimtYQLb/7kpoSMPHdAfVchx1EhshZt
-	4tE6se55T/y6xsYXb1QVeOBbFKicSYA=
+	bh=MZFpD/v/lwWIJu11j483vAie+phHYD55UN+mWXSFa1c=;
+	b=v/7x32wPaX2xCjkcuyxBeWCh+y6lrc8/7WRTWV+nNsLj9wf4KndpxMEAllTBUkRxTp19ok
+	WRn5NOx6oBWW5B26b8037BpV+O85+5fqkQ4DrI1W897wnwsReBvVlqW3bM50I9JmEOkkMG
+	5eMrxJJzEH2Ct7fpf4JP0wb7uBIAaf4=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 3/8] bcachefs: kill inode_walker_entry.snapshot
-Date: Fri,  2 May 2025 15:59:55 -0400
-Message-ID: <20250502200002.1309862-4-kent.overstreet@linux.dev>
+Subject: [PATCH 4/8] bcachefs: BCH_FSCK_ERR_snapshot_key_missing_inode_snapshot
+Date: Fri,  2 May 2025 15:59:56 -0400
+Message-ID: <20250502200002.1309862-5-kent.overstreet@linux.dev>
 In-Reply-To: <20250502200002.1309862-1-kent.overstreet@linux.dev>
 References: <20250502200002.1309862-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -45,165 +45,118 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-redundant
+We're going to be doing some snapshot deletion performance improvements,
+and those will strictly require that if an extent/dirent/xattr is
+present, an inode is present in that snapshot ID.
+
+We already check for this, but we don't repair it on disk: this patch
+adds that repair and turns it into a real fsck_err().
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/fsck.c | 46 ++++++++++++++++++++++------------------------
- 1 file changed, 22 insertions(+), 24 deletions(-)
+ fs/bcachefs/fsck.c             | 44 ++++++++++++++++------------------
+ fs/bcachefs/sb-errors_format.h |  3 ++-
+ 2 files changed, 23 insertions(+), 24 deletions(-)
 
 diff --git a/fs/bcachefs/fsck.c b/fs/bcachefs/fsck.c
-index 7d3dd1a0ae4f..f0aa3c7479e1 100644
+index f0aa3c7479e1..dd88113a7c70 100644
 --- a/fs/bcachefs/fsck.c
 +++ b/fs/bcachefs/fsck.c
-@@ -785,12 +785,11 @@ static int ref_visible2(struct bch_fs *c,
- 
- #define for_each_visible_inode(_c, _s, _w, _snapshot, _i)				\
- 	for (_i = (_w)->inodes.data; _i < (_w)->inodes.data + (_w)->inodes.nr &&	\
--	     (_i)->snapshot <= (_snapshot); _i++)					\
--		if (key_visible_in_snapshot(_c, _s, _i->snapshot, _snapshot))
-+	     (_i)->inode.bi_snapshot <= (_snapshot); _i++)				\
-+		if (key_visible_in_snapshot(_c, _s, _i->inode.bi_snapshot, _snapshot))
- 
- struct inode_walker_entry {
- 	struct bch_inode_unpacked inode;
--	u32			snapshot;
- 	u64			count;
- 	u64			i_size;
- };
-@@ -824,7 +823,6 @@ static int add_inode(struct bch_fs *c, struct inode_walker *w,
- 	return bch2_inode_unpack(inode, &u) ?:
- 		darray_push(&w->inodes, ((struct inode_walker_entry) {
- 		.inode		= u,
--		.snapshot	= inode.k->p.snapshot,
- 	}));
+@@ -862,9 +862,9 @@ static int get_inodes_all_snapshots(struct btree_trans *trans,
  }
  
-@@ -870,19 +868,19 @@ lookup_inode_for_snapshot(struct bch_fs *c, struct inode_walker *w, struct bkey_
+ static struct inode_walker_entry *
+-lookup_inode_for_snapshot(struct bch_fs *c, struct inode_walker *w, struct bkey_s_c k)
++lookup_inode_for_snapshot(struct btree_trans *trans, struct inode_walker *w, struct bkey_s_c k)
+ {
+-	bool is_whiteout = k.k->type == KEY_TYPE_whiteout;
++	struct bch_fs *c = trans->c;
  
  	struct inode_walker_entry *i;
  	__darray_for_each(w->inodes, i)
--		if (bch2_snapshot_is_ancestor(c, k.k->p.snapshot, i->snapshot))
-+		if (bch2_snapshot_is_ancestor(c, k.k->p.snapshot, i->inode.bi_snapshot))
- 			goto found;
- 
- 	return NULL;
+@@ -875,34 +875,32 @@ lookup_inode_for_snapshot(struct bch_fs *c, struct inode_walker *w, struct bkey_
  found:
--	BUG_ON(k.k->p.snapshot > i->snapshot);
-+	BUG_ON(k.k->p.snapshot > i->inode.bi_snapshot);
+ 	BUG_ON(k.k->p.snapshot > i->inode.bi_snapshot);
  
--	if (k.k->p.snapshot != i->snapshot && !is_whiteout) {
-+	if (k.k->p.snapshot != i->inode.bi_snapshot && !is_whiteout) {
- 		struct inode_walker_entry new = *i;
+-	if (k.k->p.snapshot != i->inode.bi_snapshot && !is_whiteout) {
+-		struct inode_walker_entry new = *i;
+-
+-		new.inode.bi_snapshot	= k.k->p.snapshot;
+-		new.count		= 0;
+-		new.i_size		= 0;
+-
+-		struct printbuf buf = PRINTBUF;
+-		bch2_bkey_val_to_text(&buf, c, k);
++	struct printbuf buf = PRINTBUF;
++	int ret = 0;
  
--		new.snapshot	= k.k->p.snapshot;
--		new.count	= 0;
--		new.i_size	= 0;
-+		new.inode.bi_snapshot	= k.k->p.snapshot;
-+		new.count		= 0;
-+		new.i_size		= 0;
- 
- 		struct printbuf buf = PRINTBUF;
- 		bch2_bkey_val_to_text(&buf, c, k);
-@@ -890,10 +888,10 @@ lookup_inode_for_snapshot(struct bch_fs *c, struct inode_walker *w, struct bkey_
- 		bch_info(c, "have key for inode %llu:%u but have inode in ancestor snapshot %u\n"
+-		bch_info(c, "have key for inode %llu:%u but have inode in ancestor snapshot %u\n"
++	if (fsck_err_on(k.k->p.snapshot != i->inode.bi_snapshot,
++			trans, snapshot_key_missing_inode_snapshot,
++			 "have key for inode %llu:%u but have inode in ancestor snapshot %u\n"
  			 "unexpected because we should always update the inode when we update a key in that inode\n"
  			 "%s",
--			 w->last_pos.inode, k.k->p.snapshot, i->snapshot, buf.buf);
-+			 w->last_pos.inode, k.k->p.snapshot, i->inode.bi_snapshot, buf.buf);
- 		printbuf_exit(&buf);
+-			 w->last_pos.inode, k.k->p.snapshot, i->inode.bi_snapshot, buf.buf);
+-		printbuf_exit(&buf);
++			 w->last_pos.inode, k.k->p.snapshot, i->inode.bi_snapshot,
++			 (bch2_bkey_val_to_text(&buf, c, k),
++			  buf.buf))) {
++		struct bch_inode_unpacked new = i->inode;
  
--		while (i > w->inodes.data && i[-1].snapshot > k.k->p.snapshot)
-+		while (i > w->inodes.data && i[-1].inode.bi_snapshot > k.k->p.snapshot)
- 			--i;
+-		while (i > w->inodes.data && i[-1].inode.bi_snapshot > k.k->p.snapshot)
+-			--i;
++		new.bi_snapshot = k.k->p.snapshot;
  
- 		size_t pos = i - w->inodes.data;
-@@ -1496,21 +1494,21 @@ static int check_i_sectors_notnested(struct btree_trans *trans, struct inode_wal
- 		if (i->inode.bi_sectors == i->count)
- 			continue;
+-		size_t pos = i - w->inodes.data;
+-		int ret = darray_insert_item(&w->inodes, pos, new);
+-		if (ret)
+-			return ERR_PTR(ret);
+-
+-		i = w->inodes.data + pos;
++		ret = __bch2_fsck_write_inode(trans, &new) ?:
++			bch2_trans_commit(trans, NULL, NULL, 0) ?:
++			-BCH_ERR_transaction_restart_nested;
++		goto fsck_err;
+ 	}
  
--		count2 = bch2_count_inode_sectors(trans, w->last_pos.inode, i->snapshot);
-+		count2 = bch2_count_inode_sectors(trans, w->last_pos.inode, i->inode.bi_snapshot);
++	printbuf_exit(&buf);
+ 	return i;
++fsck_err:
++	printbuf_exit(&buf);
++	return ERR_PTR(ret);
+ }
  
- 		if (w->recalculate_sums)
- 			i->count = count2;
+ static struct inode_walker_entry *walk_inode(struct btree_trans *trans,
+@@ -917,7 +915,7 @@ static struct inode_walker_entry *walk_inode(struct btree_trans *trans,
  
- 		if (i->count != count2) {
- 			bch_err_ratelimited(c, "fsck counted i_sectors wrong for inode %llu:%u: got %llu should be %llu",
--					    w->last_pos.inode, i->snapshot, i->count, count2);
-+					    w->last_pos.inode, i->inode.bi_snapshot, i->count, count2);
- 			i->count = count2;
- 		}
+ 	w->last_pos = k.k->p;
  
- 		if (fsck_err_on(!(i->inode.bi_flags & BCH_INODE_i_sectors_dirty),
- 				trans, inode_i_sectors_wrong,
- 				"inode %llu:%u has incorrect i_sectors: got %llu, should be %llu",
--				w->last_pos.inode, i->snapshot,
-+				w->last_pos.inode, i->inode.bi_snapshot,
- 				i->inode.bi_sectors, i->count)) {
- 			i->inode.bi_sectors = i->count;
- 			ret = bch2_fsck_write_inode(trans, &i->inode);
-@@ -1821,20 +1819,20 @@ static int check_extent(struct btree_trans *trans, struct btree_iter *iter,
- 		for (struct inode_walker_entry *i = extent_i ?: &darray_last(inode->inodes);
- 		     inode->inodes.data && i >= inode->inodes.data;
- 		     --i) {
--			if (i->snapshot > k.k->p.snapshot ||
--			    !key_visible_in_snapshot(c, s, i->snapshot, k.k->p.snapshot))
-+			if (i->inode.bi_snapshot > k.k->p.snapshot ||
-+			    !key_visible_in_snapshot(c, s, i->inode.bi_snapshot, k.k->p.snapshot))
- 				continue;
+-	return lookup_inode_for_snapshot(trans->c, w, k);
++	return lookup_inode_for_snapshot(trans, w, k);
+ }
  
- 			if (fsck_err_on(k.k->p.offset > round_up(i->inode.bi_size, block_bytes(c)) >> 9 &&
- 					!bkey_extent_is_reservation(k),
- 					trans, extent_past_end_of_inode,
- 					"extent type past end of inode %llu:%u, i_size %llu\n%s",
--					i->inode.bi_inum, i->snapshot, i->inode.bi_size,
-+					i->inode.bi_inum, i->inode.bi_snapshot, i->inode.bi_size,
- 					(bch2_bkey_val_to_text(&buf, c, k), buf.buf))) {
- 				struct btree_iter iter2;
+ static int get_visible_inodes(struct btree_trans *trans,
+diff --git a/fs/bcachefs/sb-errors_format.h b/fs/bcachefs/sb-errors_format.h
+index 6389f6e0f8dc..82bc1906aa00 100644
+--- a/fs/bcachefs/sb-errors_format.h
++++ b/fs/bcachefs/sb-errors_format.h
+@@ -216,6 +216,7 @@ enum bch_fsck_flags {
+ 	x(inode_str_hash_invalid,				194,	0)		\
+ 	x(inode_v3_fields_start_bad,				195,	0)		\
+ 	x(inode_snapshot_mismatch,				196,	0)		\
++	x(snapshot_key_missing_inode_snapshot,			314,	FSCK_AUTOFIX)	\
+ 	x(inode_unlinked_but_clean,				197,	0)		\
+ 	x(inode_unlinked_but_nlink_nonzero,			198,	0)		\
+ 	x(inode_unlinked_and_not_open,				281,	0)		\
+@@ -323,7 +324,7 @@ enum bch_fsck_flags {
+ 	x(dirent_stray_data_after_cf_name,			305,	0)		\
+ 	x(rebalance_work_incorrectly_set,			309,	FSCK_AUTOFIX)	\
+ 	x(rebalance_work_incorrectly_unset,			310,	FSCK_AUTOFIX)	\
+-	x(MAX,							314,	0)
++	x(MAX,							315,	0)
  
- 				bch2_trans_copy_iter(trans, &iter2, iter);
--				bch2_btree_iter_set_snapshot(trans, &iter2, i->snapshot);
-+				bch2_btree_iter_set_snapshot(trans, &iter2, i->inode.bi_snapshot);
- 				ret =   bch2_btree_iter_traverse(trans, &iter2) ?:
- 					bch2_btree_delete_at(trans, &iter2,
- 						BTREE_UPDATE_internal_snapshot_node);
-@@ -1856,8 +1854,8 @@ static int check_extent(struct btree_trans *trans, struct btree_iter *iter,
- 		for (struct inode_walker_entry *i = extent_i ?: &darray_last(inode->inodes);
- 		     inode->inodes.data && i >= inode->inodes.data;
- 		     --i) {
--			if (i->snapshot > k.k->p.snapshot ||
--			    !key_visible_in_snapshot(c, s, i->snapshot, k.k->p.snapshot))
-+			if (i->inode.bi_snapshot > k.k->p.snapshot ||
-+			    !key_visible_in_snapshot(c, s, i->inode.bi_snapshot, k.k->p.snapshot))
- 				continue;
- 
- 			i->count += k.k->size;
-@@ -1939,13 +1937,13 @@ static int check_subdir_count_notnested(struct btree_trans *trans, struct inode_
- 		if (i->inode.bi_nlink == i->count)
- 			continue;
- 
--		count2 = bch2_count_subdirs(trans, w->last_pos.inode, i->snapshot);
-+		count2 = bch2_count_subdirs(trans, w->last_pos.inode, i->inode.bi_snapshot);
- 		if (count2 < 0)
- 			return count2;
- 
- 		if (i->count != count2) {
- 			bch_err_ratelimited(c, "fsck counted subdirectories wrong for inum %llu:%u: got %llu should be %llu",
--					    w->last_pos.inode, i->snapshot, i->count, count2);
-+					    w->last_pos.inode, i->inode.bi_snapshot, i->count, count2);
- 			i->count = count2;
- 			if (i->inode.bi_nlink == i->count)
- 				continue;
-@@ -1954,7 +1952,7 @@ static int check_subdir_count_notnested(struct btree_trans *trans, struct inode_
- 		if (fsck_err_on(i->inode.bi_nlink != i->count,
- 				trans, inode_dir_wrong_nlink,
- 				"directory %llu:%u with wrong i_nlink: got %u, should be %llu",
--				w->last_pos.inode, i->snapshot, i->inode.bi_nlink, i->count)) {
-+				w->last_pos.inode, i->inode.bi_snapshot, i->inode.bi_nlink, i->count)) {
- 			i->inode.bi_nlink = i->count;
- 			ret = bch2_fsck_write_inode(trans, &i->inode);
- 			if (ret)
+ enum bch_sb_error_id {
+ #define x(t, n, ...) BCH_FSCK_ERR_##t = n,
 -- 
 2.49.0
 
