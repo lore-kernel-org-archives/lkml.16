@@ -1,66 +1,65 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58118211A05;
-	Fri,  2 May 2025 22:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218C921D3D0;
+	Fri,  2 May 2025 22:04:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746223491; cv=none; b=oty4XFpMQPHPDNOBKqbSeubUDn29Zy5005SL0xAjR09xPrhpb6GK3AtYfBz9bu5DKrV7II+I18ypkLOnZC6LpsHCycB80HotIZvgE+xsc8hV3C9yb3zfs9YINPwVk5HQ6b2rb5PkYFxfvjFijs1NXqXkBcZOoilyOyY4hit4bSU=
+	t=1746223498; cv=none; b=f1pcLbr3nGvs72xvFf7UByaoEXEYWhZ9jHdB8M0zqOzrSCZlmLVhcn2x4m8ZktOUJovrL6fDV06GhF/NaGgbzAr1MMk5V8ICGDrnAX062QgkCnhssZfvOcPn83YwmxCcsf0sdvtzKGg/doUF15of/I2nhIFb9o7JnOYayhd9deA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746223491; c=relaxed/simple;
-	bh=g8O89/tgxr9vz1Mo4beSgs2+D45p8f8lUVQIzp/SfqA=;
+	s=arc-20240116; t=1746223498; c=relaxed/simple;
+	bh=2eWns/mvd2DOjO4WQsDwacWvY07f8ZzkBblZGzu9jjc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nLs+cOIHVHsFkD0trD0g2Y1V7kJVXvjceAYkD6OaT3pDmQwEUMVEHl6yj27KZjI4LInmAEl/T5wPH7dokHiaQ8MDIueBijgKGgNEPVi7mqZSA8dRNPAm5RbTrhl4RalG75j8m9R8xyq9lXOEhwYa6pk3APXN54VGUxQQUkZ8qzw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X/lofpdD; arc=none smtp.client-ip=209.85.215.179
+	 In-Reply-To:To:Cc; b=i7sYETv9KCtVIJJGzZxeYuyNIXwoX6jXZfOp86fW6Ch03v5G/XNaeR3oU3+YCm6O3sLM0xioHM3DBm3IkNgGqOfn2ulb7mhL+iuFlGRO5fNuq3SNJzKnYG250OD8vrkh8Ylg+xdT7W+iHob9dMz5qEbNwygJ0hlHyTCKZt66ZcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O6abRlPm; arc=none smtp.client-ip=209.85.210.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/lofpdD"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af59c920d32so1768090a12.0;
-        Fri, 02 May 2025 15:04:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O6abRlPm"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-73712952e1cso2769780b3a.1;
+        Fri, 02 May 2025 15:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746223489; x=1746828289; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746223496; x=1746828296; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Uq+OXw6OLnK7x004RVfSVNUbbrimNuG8oSdUlWB6tLA=;
-        b=X/lofpdDMt6b0j6m3FQ5/itcdXzmnIEc2w5Jt7ueeWmqGArNx9xsYfale2hjBQ9hhU
-         V/epCA7nNNlXHujnop/8bAJJpIIMAqIFXT3OfYDaylT8SN/gWHCDLQopPuKk4qAg8k8h
-         4lYxOC/EEf8CwG5epo10UNxmunl5leyPPmC9ukxV63pkmyjxgjgKNeGtYp/AHoJkePxc
-         Qn9Uv13Bt6TyGgKN4GdBFVVNNfj9Eatw0clc5/R4UhIlEDNRtttOn7foxFb8N2QaIfe3
-         BQqRrK9zAo7iuuPRWGf48qx4qkcNvTwlojVywvF6Y69lzYn3omE1OfKlY77hj3M1qzrl
-         /9kA==
+        bh=LqT9icyH5L3HVEZ++wzzfeTDQafQM9FU6JdKrhZWgZg=;
+        b=O6abRlPmkwyQTMcPxDdIx2gt3NuIw+ws/gF5B86DGOfQj8W6ul3VMCQCLUA2vN+VQj
+         RLBARQCq4K75MwsZ3/N/NvySaSe0sb51j/EbkkjCXLXhwqfUqjymPYpMsqHLJP69viwe
+         ThlMk2NTKZLorUBP/iwpBrJQ27ePhD8hNhgvbGVsu+jdiI3IYy8GooYtB2kNMXTO4mh8
+         njC+Q+tBBDoYP+F/sNtMdEqdIq32h8eCOMYUqLLVrLIeO796GICB1RPjCjphdRjUK+ld
+         rwTZzboB7HOXUzcB9mLSahi3OhW306lOuVdtWmzY9GfpPHPa5fABIO28skYjclcyUHDB
+         zd6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746223489; x=1746828289;
+        d=1e100.net; s=20230601; t=1746223496; x=1746828296;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Uq+OXw6OLnK7x004RVfSVNUbbrimNuG8oSdUlWB6tLA=;
-        b=FA4elIs0g+/vISzkqt6XTB9xGkUimXsH2ATzxpSSD1ZYuJaN0IrXxbMn50T0l6P6rX
-         E3zr8PR8kIHmAgmnw+VhlSjMZ3upBZ20PgU9i3/ZJJgcgH4Fo4S5mOnOXbzE5HRw5xMz
-         Ej+RCTJ34165sYBuZSri93Np9YSyG2I8UOPCIE6HFqPhq0bOpC9F3ohzG5s1I7PpT3pr
-         TGJgovbxf17ggszbURvwdYPO96m1B0NQR0au5Mp/HGYIA8EgFMOdkeKfdGUx/Zf4jgH4
-         eRtMW5Rsp1G6OWN3dUpRJGrWgVYadtDO8prIeeXMmtVQFR/17bMn6iDw4FnD869SoO57
-         VzPg==
-X-Forwarded-Encrypted: i=1; AJvYcCUz6CupWJyhJzlOubv1YPmi6AtJ31wJrxYFrMtICfZPTFl+ZKLbEs6qf+0E17Dko+hDzyEj0aQqBzRoqpE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPo113b9wenuJW3vx2xUGGL/0AxrAbiJZcWrSClMmc50Eb0KW8
-	CiMqMDNa5QH6EdaN0MO6LZoLCgbLIgHr++uzkel2tKjN1MtFC3bZ
-X-Gm-Gg: ASbGncsxWRoXbPyXsPJD2z6+VRQG0SByLr7tREwjHXLTGyyN9/zAQ99APca9fHj1z4r
-	tfB0zfQwrQ42p5PWi9o2+eSRicaae1NKR6f1V4EI47wIXhquoCA+pkSKCl+KIq1SqPzjluJL1SI
-	+nJnUpT2Mnmdg4D+Etgp7aQ8xWvMDfqmOOKjRhiQNkILmDw7n5qqi+vbrXxRg6o4tYjbZKtjU/7
-	Oo0zRxgH1q47oDgz6sW4CUjPy4lV+Cj/tpY3NhH0sWD+m1zz3mCNY04dSFjoxoJCr6wuFfMg82z
-	SnM++I36N7XVsT8KbCEH3Eyy8e+CG6A8PorUakfoDT4rWjmw8TZNAB7HYsWKZ+s=
-X-Google-Smtp-Source: AGHT+IGIUqAabkLqubDX4Jwh5s3qIBaj31PlOqtXecuhGusREvC+uNRvRC9U1mpHrmUFZCkKtK1DPg==
-X-Received: by 2002:a17:90b:5707:b0:2ee:f550:3848 with SMTP id 98e67ed59e1d1-30a4e55b5a2mr6295145a91.5.1746223489449;
-        Fri, 02 May 2025 15:04:49 -0700 (PDT)
+        bh=LqT9icyH5L3HVEZ++wzzfeTDQafQM9FU6JdKrhZWgZg=;
+        b=U4q7MwSVOwqlo6Cc/xTl/pcFynyWEh79nHfAK26hiH+Fh2weqSrRxfTBf7nwXLq8Ir
+         q9ZC/G/eofPDTJYrKUdKdwJk1q8AlMS+rUhRGaLa76LHvd73ucA4mxc2QAb39V/3Krcw
+         zYCFf4+Y5TxfdS8X21Mhx6353Z/N1PGwPMc29+NCQ9Od1xgBOJ23hR7lDEzQYCInHlQl
+         PlBtMLBjtTKXX386551320wIysJdhfhWoLaZIep9SVNUhZMbh56c5yhmDs8IikozuwS7
+         ylj+LuXhqPewujx4tgIGGzMx1eFJNka58gfXZB2coFN9ACdlD9WukRxA0/xRVJ+abR5D
+         1qeg==
+X-Forwarded-Encrypted: i=1; AJvYcCX89u9WmgGVweZgLdme+DpZLusuiOpdggnD5PF87cTcXRyew6Enx8+hrfszUCVcoPkY524D+zozK+4Fo1w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywqotm5zWo+iuD211nDgtZsPI2G07qu8+Q/SHYwoOITEDRqno2y
+	61QmUnbvroJ9l97t23Tjfwu7jvPZXgKV9fz9SuVkxafGcx/IPkeX
+X-Gm-Gg: ASbGnctA2kE9rboSfx0WZrR+svXIHHw0f1izp9051Iok4zv/mlk7BO6KOg3htRo+3lb
+	uQ5fRu6UY0mGHacL3GD7QFbZQpHplt60m/a7dpN0iIcL0s1fXoiePWb9sEf2TM66lxCpG7k8i8Y
+	gw0zsdOXl6V4tbHwR8F3lAdnEFu0cEALTG/xmtXYO+hWbKMjklw8y0YRu8ztoGEZeXkRcHTYPu5
+	LogL3NssT9bzt4zJd4+SHd6y7Sngi7iUV33EV3My5ZADN9/mfoIV5KawPaWL5v7k72jdujPyE5c
+	VQSrN8vbjBRMQGbcslzVYsTDj+/tep8nZhhxot0d3zr0stYCwJUW
+X-Google-Smtp-Source: AGHT+IFrsZgXwTb+o3P5NX+EcspzU3ZXTnhUP6GZ8J8b0ioO7HZutoa08ad7NnCqnvC4OrqAm97JVw==
+X-Received: by 2002:a05:6a20:ce44:b0:1f5:8179:4f47 with SMTP id adf61e73a8af0-20cdef3aa2cmr6376196637.20.1746223496252;
+        Fri, 02 May 2025 15:04:56 -0700 (PDT)
 Received: from NB-GIGA003.letovo.school ([5.194.95.139])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c48ac4sm1301153a12.55.2025.05.02.15.04.43
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3c48ac4sm1301153a12.55.2025.05.02.15.04.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 15:04:49 -0700 (PDT)
+        Fri, 02 May 2025 15:04:55 -0700 (PDT)
 From: Alexey Charkov <alchark@gmail.com>
-Date: Sat, 03 May 2025 02:04:23 +0400
-Subject: [PATCH v2 1/3] dt-bindings: soc: Add VIA/WonderMedia SoC
- identification
+Date: Sat, 03 May 2025 02:04:24 +0400
+Subject: [PATCH v2 2/3] soc: Add VIA/WonderMedia SoC identification driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +68,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-wmt-soc-driver-v2-1-8c774ad84d47@gmail.com>
+Message-Id: <20250503-wmt-soc-driver-v2-2-8c774ad84d47@gmail.com>
 References: <20250503-wmt-soc-driver-v2-0-8c774ad84d47@gmail.com>
 In-Reply-To: <20250503-wmt-soc-driver-v2-0-8c774ad84d47@gmail.com>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -77,66 +76,230 @@ To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-arm-kernel@lists.infradead.org, Alexey Charkov <alchark@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746223484; l=1713;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746223484; l=6618;
  i=alchark@gmail.com; s=20250416; h=from:subject:message-id;
- bh=g8O89/tgxr9vz1Mo4beSgs2+D45p8f8lUVQIzp/SfqA=;
- b=EAIdOSwrW7w3KBGa/ocx/LaApsk6+8FLtGjQCektH9Dvh4aT21hW/4ADeFZoclicEljnO5tE9
- RUQ+2rIXptGDYQhtoNVw16zgJfo+5uSYHW+gvrBdUcTFbmKLw3NYP5Q
+ bh=2eWns/mvd2DOjO4WQsDwacWvY07f8ZzkBblZGzu9jjc=;
+ b=Bnp6OOMBfrpLigSGh22fhgwfwPkaSR7MmvfXDPmHB6JuD+mXwQurmZO4vWH3p0k1JpTRP5FEf
+ NjSqzmg4TSHD6W/oXQjy49ZTh5uz6uHwtHRPNtDuUdGkTEVVG/Ay4RT
 X-Developer-Key: i=alchark@gmail.com; a=ed25519;
  pk=ltKbQzKLTJPiDgPtcHxdo+dzFthCCMtC3V9qf7+0rkc=
 
-VIA/WonderMedia SoC's have a chip ID register inside their system
-configuration controller space, which can be used to identify
-appropriate hardware quirks at runtime. Add binding for it.
+Add a small SOC bus driver to parse the chip ID and revision made
+available on VIA/WonderMedia SoCs via their system configuration
+controller's SCC_ID register.
+
+This is intended to select appropriate sets of on-chip device quirks
+at runtime, as it has been found that even within the same SoC
+version there can be register-incompatible differences, such as
+with the SDMMC controller on WM8505 rev. A0-A1 vs. rev. A2.
+
+The list of SoC versions is compiled from various vendor source dumps
+and not all of them have corresponding mainline driver support.
+Some of them also have been seen with varying on-chip markings while
+sharing the same hardware chip ID's (as is the case with e.g. WM8850
+vs. WM8950). In such cases the selection of names to use here among
+those seen in various source dumps and chip markings was arbitrary.
+
+Suggested by Krzysztof at [1] - thanks a lot!
+
+[1] https://lore.kernel.org/all/14de236b-e2a7-4bde-986d-1e5ffddd01b4@kernel.org/
 
 Signed-off-by: Alexey Charkov <alchark@gmail.com>
 ---
- .../bindings/hwinfo/via,vt8500-scc-id.yaml         | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+ drivers/soc/Kconfig              |   1 +
+ drivers/soc/Makefile             |   1 +
+ drivers/soc/vt8500/Kconfig       |  20 +++++++
+ drivers/soc/vt8500/Makefile      |   2 +
+ drivers/soc/vt8500/wmt-socinfo.c | 125 +++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 149 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml b/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
+index 6a8daeb8c4b96cd29d56343b338a423140b89896..37ca3f094f8994c7e9c7c99c3ba47d168d41ce30 100644
+--- a/drivers/soc/Kconfig
++++ b/drivers/soc/Kconfig
+@@ -28,6 +28,7 @@ source "drivers/soc/tegra/Kconfig"
+ source "drivers/soc/ti/Kconfig"
+ source "drivers/soc/ux500/Kconfig"
+ source "drivers/soc/versatile/Kconfig"
++source "drivers/soc/vt8500/Kconfig"
+ source "drivers/soc/xilinx/Kconfig"
+ 
+ endmenu
+diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
+index 2037a8695cb2898659a434803dcdfa2d95b1dbd6..777255401252eab554f56bded7ff8ea5611704bf 100644
+--- a/drivers/soc/Makefile
++++ b/drivers/soc/Makefile
+@@ -34,4 +34,5 @@ obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
+ obj-y				+= ti/
+ obj-$(CONFIG_ARCH_U8500)	+= ux500/
+ obj-y				+= versatile/
++obj-y				+= vt8500/
+ obj-y				+= xilinx/
+diff --git a/drivers/soc/vt8500/Kconfig b/drivers/soc/vt8500/Kconfig
 new file mode 100644
-index 0000000000000000000000000000000000000000..87bdb947dedb47b508528d70543aba067aa03e95
+index 0000000000000000000000000000000000000000..2b2350678c3f70297c51f94eb77674c01be773d8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwinfo/via,vt8500-scc-id.yaml
-@@ -0,0 +1,37 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/vt8500/via,vt8500-scc-id.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/soc/vt8500/Kconfig
+@@ -0,0 +1,20 @@
++# SPDX-License-Identifier: GPL-2.0-only
 +
-+title: VIA/WonderMedia SoC system configuration information
++if ARCH_VT8500 || COMPILE_TEST
 +
-+maintainers:
-+  - Alexey Charkov <alchark@gmail.com>
++menu "VIA/WonderMedia SoC drivers"
 +
-+description:
-+  The system configuration controller on VIA/WonderMedia SoC's contains a chip
-+  identifier and revision used to differentiate between different hardware
-+  versions of on-chip IP blocks having their own peculiarities which may or
-+  may not be captured by their respective DT compatible strings
++config WMT_SOCINFO
++	bool "VIA/WonderMedia SoC Information driver"
++	default ARCH_VT8500
++	select SOC_BUS
++	default ARCH_VT8500
++	help
++	  Say yes to support decoding of VIA/WonderMedia system configuration
++	  register information. This currently includes just the chip ID register
++	  which helps identify the exact hardware revision of the SoC the kernel
++	  is running on (to know if any revision-specific quirks are required)
 +
-+properties:
-+  compatible:
-+    items:
-+      - const: via,vt8500-scc-id
++endmenu
 +
-+  reg:
-+    maxItems: 1
++endif
+diff --git a/drivers/soc/vt8500/Makefile b/drivers/soc/vt8500/Makefile
+new file mode 100644
+index 0000000000000000000000000000000000000000..05964c5f2890989c1d794af4f5af10f849a497bc
+--- /dev/null
++++ b/drivers/soc/vt8500/Makefile
+@@ -0,0 +1,2 @@
++# SPDX-License-Identifier: GPL-2.0-only
++obj-$(CONFIG_WMT_SOCINFO)	+= wmt-socinfo.o
+diff --git a/drivers/soc/vt8500/wmt-socinfo.c b/drivers/soc/vt8500/wmt-socinfo.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..461f8c1ae56ee367dc2c84a58ff8fada0dfdaed0
+--- /dev/null
++++ b/drivers/soc/vt8500/wmt-socinfo.c
+@@ -0,0 +1,125 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright 2025 Alexey Charkov <alchark@gmail.com>
++ * Based on aspeed-socinfo.c
++ */
 +
-+required:
-+  - compatible
-+  - reg
++#include <linux/dev_printk.h>
++#include <linux/device.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/sys_soc.h>
 +
-+additionalProperties: false
++static const struct {
++	const char *name;
++	const u32 id;
++} chip_id_table[] = {
++	/* VIA */
++	{ "VT8420", 0x3300 },
++	{ "VT8430", 0x3357 },
++	{ "VT8500", 0x3400 },
 +
-+examples:
-+  - |
-+    chipid@d8120000 {
-+        compatible = "via,vt8500-scc-id";
-+        reg = <0xd8120000 0x4>;
-+    };
++	/* WonderMedia */
++	{ "WM8425", 0x3429 },
++	{ "WM8435", 0x3437 },
++	{ "WM8440", 0x3451 },
++	{ "WM8505", 0x3426 },
++	{ "WM8650", 0x3465 },
++	{ "WM8750", 0x3445 },
++	{ "WM8850", 0x3481 },
++	{ "WM8880", 0x3498 },
++};
++
++static const char *sccid_to_name(u32 sccid)
++{
++	u32 id = sccid >> 16;
++	unsigned int i;
++
++	for (i = 0 ; i < ARRAY_SIZE(chip_id_table) ; ++i) {
++		if (chip_id_table[i].id == id)
++			return chip_id_table[i].name;
++	}
++
++	return "Unknown";
++}
++
++static int wmt_socinfo_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct soc_device_attribute *attrs;
++	struct soc_device *soc_dev;
++	char letter, digit;
++	void __iomem *reg;
++	u32 sccid;
++
++	reg = devm_of_iomap(&pdev->dev, np, 0, NULL);
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	sccid = readl(reg);
++
++	attrs = devm_kzalloc(&pdev->dev, sizeof(*attrs), GFP_KERNEL);
++	if (!attrs)
++		return -ENOMEM;
++
++	/*
++	 * Machine: VIA APC Rock
++	 * Family: WM8850
++	 * Revision: A2
++	 * SoC ID: raw silicon revision id (34810103 in hexadecimal)
++	 */
++
++	attrs->family = sccid_to_name(sccid);
++
++	letter = (sccid >> 8) & 0xf;
++	letter = (letter - 1) + 'A';
++	digit = sccid & 0xff;
++	digit = (digit - 1) + '0';
++	attrs->revision = devm_kasprintf(&pdev->dev, GFP_KERNEL,
++					 "%c%c", letter, digit);
++
++	attrs->soc_id = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%08x", sccid);
++
++	if (!attrs->revision || !attrs->soc_id)
++		return -ENOMEM;
++
++	soc_dev = soc_device_register(attrs);
++	if (IS_ERR(soc_dev))
++		return PTR_ERR(soc_dev);
++
++	dev_info(&pdev->dev,
++		 "VIA/WonderMedia %s rev %s (%s)\n",
++		 attrs->family,
++		 attrs->revision,
++		 attrs->soc_id);
++
++	platform_set_drvdata(pdev, soc_dev);
++	return 0;
++}
++
++static void wmt_socinfo_remove(struct platform_device *pdev)
++{
++	struct soc_device *soc_dev = platform_get_drvdata(pdev);
++
++	soc_device_unregister(soc_dev);
++}
++
++static const struct of_device_id wmt_socinfo_ids[] = {
++	{ .compatible = "via,vt8500-scc-id" },
++	{ /* Sentinel */ },
++};
++
++static struct platform_driver wmt_socinfo = {
++	.probe = wmt_socinfo_probe,
++	.remove = wmt_socinfo_remove,
++	.driver = {
++		.name = "wmt-socinfo",
++		.of_match_table = wmt_socinfo_ids,
++	},
++};
++module_platform_driver(wmt_socinfo);
++
++MODULE_AUTHOR("Alexey Charkov <alchark@gmail.com>");
++MODULE_DESCRIPTION("VIA/WonderMedia socinfo driver");
++MODULE_LICENSE("GPL");
 
 -- 
 2.49.0
