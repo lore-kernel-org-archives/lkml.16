@@ -1,152 +1,118 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19CF22576D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0C322576D;
+	Fri,  2 May 2025 09:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176778; cv=none; b=NUrN3VDZM0wzpLBPa6Gn1mo+0rWX+1/crR6AnXFz7JhiDV/a4kAhXizzOJyh2vHs4mRRwHnNBGVk3jAga8Y+BXSxPbxwfdM2R2DCKHXIzopT7ornNUc9ynrseqJBlfKkgq2QLkyL9z6e1nh44w0/PEL2ck6x++++14T5neJtfJw=
+	t=1746176849; cv=none; b=c+mnVvv+PTB65w9kwmNayHLoBVAf70GuaR3tMaiws0twLV15NhuxWcC6FxEE/WizAwUXqXkRDJDIcJtFN18cyXJi0fEaKK7H7AJ/ZmIlEmk2Yu7FjEUnhnAvjMcJiKW0n33Mm2IgnFAUEpkX8hSN0HAna3f6y87ArU9Fv7ynA+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176778; c=relaxed/simple;
-	bh=M2oj46kMzUMSEbGNCUOFuda0AGjerO2qSWTOnylr0tY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g+A/sGWgryS+zqjCgKBsGgqSAfLhLFPwFHxkGFdkgycXOfJzP339GVbZ2ECKXLxmxRcMr/mNKb3xed3jYZvjuxp7AZvuRYCwX5yy8xfASeptxN0XpPCYzfNgXxjusxo32gwfzjNnMvVSlRAUbq1ef0mIPB+W5HO20tuf9Hu2I84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VxJqz33K; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746176849; c=relaxed/simple;
+	bh=8V2LMlhIR6jtrHPIFw3siQfwtc50CNo0M2ewnkYj3uo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=i1LD/OrQb0AP39H9xI++C9yAxmFOUBw2H22to7qQvA1A/YhldoiOMrlnGfmLWIYnX/ncAvEqMjgxB/2TWH4/J4Kozi9OWOwVNBgrgyqRJZ+pptwPFvZouK/Uui7uTinYr/cuhQdbu9gBKP1KXnTKehlWS5h/mbc6QrATiPiUZx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=3KxdsgQi; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VxJqz33K"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=R6qvRY5edeMxG0ix5dbjscdMhwf5+XMxecbE1wVwGGY=; b=VxJqz33KsJo1jRDyslIgs3neOa
-	/uIO/luCEUExbFGqwAqnnHsRcpbOXv5z82Agkv9GwrxhHHix+8A2HLOOZ86InzH40Lfy5pWc/OIyO
-	Wtt1EG/dPUrIQujK+0/tumKxgNEmPSzfkg4nTd0dvAo8M30qNpqb7pQWdAvrlUYQM/upYRtskNN2H
-	iPKkzymoguAo09u7mHZJc0x7H0Ogg9LdNeuORo6Pbd7d6+preVPEVpvN3J9tl82vPHOOComdBVUVp
-	7khuzejBvvKevUnIdAe3lCyO3Z/aK7/C6iX1jAlotcW8TJ3P+lsX7l4J6WlQ2bs094YfHawlz5LyP
-	o2xXWf0A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAmKs-0000000BaKr-3z1b;
-	Fri, 02 May 2025 09:05:36 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 316373001D4; Fri,  2 May 2025 11:05:29 +0200 (CEST)
-Date: Fri, 2 May 2025 11:05:29 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Prakash Sangappa <prakash.sangappa@oracle.com>
-Cc: linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
-	bigeasy@linutronix.de, kprateek.nayak@amd.com
-Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
-Message-ID: <20250502090529.GU4198@noisy.programming.kicks-ass.net>
-References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
- <20250502015955.3146733-2-prakash.sangappa@oracle.com>
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="3KxdsgQi"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1746176277; bh=8V2LMlhIR6jtrHPIFw3siQfwtc50CNo0M2ewnkYj3uo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=3KxdsgQiEFZ9GDjPKSO03SGwMWvYiGtZ8i09NutZ3PZMILTSWgOlw7Xash8zMKxJx
+	 7vQ5WX9wlG1vCdpC90ds0ZIgfSxuXx1pqjRPBA3cosbEAyyOEYHzacALn5GmPbk6El
+	 fmtVz3B3duse6GoCdNEq9vw6UbKX2+Vp9mWBarCQ=
+Received: from [IPV6:2001:67c:10ec:5784:8000::87] (2001-67c-10ec-5784-8000--87.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::87])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id A8B872052D0F;
+	Fri,  2 May 2025 10:57:57 +0200 (CEST)
+Message-ID: <761a05ce-b711-439c-bbb5-44c570867a50@ralfj.de>
+Date: Fri, 2 May 2025 10:57:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502015955.3146733-2-prakash.sangappa@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
+To: Benno Lossin <lossin@kernel.org>,
+ Christian Schrefl <chrisi.schrefl@gmail.com>, Sky <sky@sky9.dev>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
+ <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
+ <22f6f12b-d002-4ada-834e-00ef0073bd9e@gmail.com>
+ <D9L1WOB7LYI2.1JNEDXOGQ4F9U@kernel.org>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <D9L1WOB7LYI2.1JNEDXOGQ4F9U@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 01:59:52AM +0000, Prakash Sangappa wrote:
-> Add support for a thread to request extending its execution time slice on
-> the cpu. The extra cpu time granted would help in allowing the thread to
-> complete executing the critical section and drop any locks without getting
-> preempted. The thread would request this cpu time extension, by setting a
-> bit in the restartable sequences(rseq) structure registered with the kernel.
+Hi all,
+
+On 01.05.25 20:55, Benno Lossin wrote:
+> On Thu May 1, 2025 at 7:12 PM CEST, Christian Schrefl wrote:
+>> On 30.04.25 10:36 AM, Christian Schrefl wrote:
+>>> +/// This type provides a way to opt-out of typical aliasing rules;
+>>> +/// specifically, `&mut UnsafePinned<T>` is not guaranteed to be a unique pointer.
+>>> +///
+>>> +/// However, even if you define your type like `pub struct Wrapper(UnsafePinned<...>)`, it is still
+>>> +/// very risky to have an `&mut Wrapper` that aliases anything else. Many functions that work
+>>> +/// generically on `&mut T` assume that the memory that stores `T` is uniquely owned (such as
+>>> +/// `mem::swap`). In other words, while having aliasing with `&mut Wrapper` is not immediate
+>>> +/// Undefined Behavior, it is still unsound to expose such a mutable reference to code you do not
+>>> +/// control! Techniques such as pinning via [`Pin`](core::pin::Pin) are needed to ensure soundness.
+>>> +///
+>>> +/// Similar to [`UnsafeCell`], [`UnsafePinned`] will not usually show up in
+>>> +/// the public API of a library. It is an internal implementation detail of libraries that need to
+>>> +/// support aliasing mutable references.
+>>> +///
+>>> +/// Further note that this does *not* lift the requirement that shared references must be read-only!
+>>> +/// Use [`UnsafeCell`] for that.
+>>
+>> [CC Ralf]
+>>
+>> Ralf has replied to me on Github that this will most likely change [0]. How should this be handled?
+>>
+>> I would fine with submitting a patch once it changes on the rust side (possibly waiting until the
+>> feature is close to stabilization). I think it is better to only add this guarantee later as it
+>> will be easier to remove unnecessary `UnsafeCell`s than it would be to later add them back in ever
+>> case where they would be needed (in case rust doesn't change `UnsafePinned` to act like `UnsafeCell`).
 > 
-> Kernel will grant a 50us extension on the cpu, when it sees the bit set.
-> With the help of a timer, kernel force preempts the thread if it is still
-> running on the cpu when the 50us timer expires. The thread should yield
-> the cpu by making a system call after completing the critical section.
+> Agreed, unless Ralf suggests a different way, we should do it like this.
+
+Sorry, I replied only on github since that was easier to do more quickly. ;)
+
+Yes I would recommend for now to keep the `UnsafeCell` in the kernel sources, 
+until the compiler actually implements the change that removes `noalias` from 
+`&UnsafePinned`. And even then you should probably keep the `UnsafeCell` when 
+building for older compiler versions from before that patch (or keep it until 
+you drop support for those older compiler versions).
+
+This is not a spec-only change, codegen really has to be adjusted to make 
+`&UnsafePinned` properly compatible with mutable aliasing, and I see no reason 
+to risk potential problems here by prematurely removing that `UnsafeCell`.
+
+Kind regards,
+Ralf
+
 > 
-> Suggested-by: Peter Ziljstra <peterz@infradead.org>
-> Signed-off-by: Prakash Sangappa <prakash.sangappa@oracle.com>
 > ---
+> Cheers,
+> Benno
+> 
+>> Also see to the tracking issue [1] for the reason why `UnsafeCell` behavior is most likely required.
+>>
+>> [0]: https://github.com/rust-lang/rust/issues/125735#issuecomment-2842926832
+>> [1]: https://github.com/rust-lang/rust/issues/137750
+>>
+>> Cheers
+>> Christian
 
-> diff --git a/include/uapi/linux/rseq.h b/include/uapi/linux/rseq.h
-> index c233aae5eac9..900cb75f6a88 100644
-> --- a/include/uapi/linux/rseq.h
-> +++ b/include/uapi/linux/rseq.h
-> @@ -26,6 +26,7 @@ enum rseq_cs_flags_bit {
->  	RSEQ_CS_FLAG_NO_RESTART_ON_PREEMPT_BIT	= 0,
->  	RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT	= 1,
->  	RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT	= 2,
-> +	RSEQ_CS_FLAG_DELAY_RESCHED_BIT		= 3,
->  };
->  
->  enum rseq_cs_flags {
-> @@ -35,6 +36,8 @@ enum rseq_cs_flags {
->  		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_SIGNAL_BIT),
->  	RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE	=
->  		(1U << RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE_BIT),
-> +	RSEQ_CS_FLAG_DELAY_RESCHED		=
-> +		(1U << RSEQ_CS_FLAG_DELAY_RESCHED_BIT),
->  };
->  
->  /*
-> @@ -128,6 +131,10 @@ struct rseq {
->  	 * - RSEQ_CS_FLAG_NO_RESTART_ON_MIGRATE
->  	 *     Inhibit instruction sequence block restart on migration for
->  	 *     this thread.
-> +	 * - RSEQ_CS_DELAY_RESCHED
-> +	 *     Request by user task to try delaying preemption. With
-> +	 *     use of a timer, extra cpu time upto 50us is granted for this
-> +	 *     thread before being rescheduled.
->  	 */
->  	__u32 flags;
-
-So while it works for testing, this really is a rather crap interface
-for real because userspace cannot up front tell if its going to work or
-not.
-
-> +void rseq_delay_resched_fini(void)
-> +{
-> +#ifdef CONFIG_SCHED_HRTICK
-> +	extern void hrtick_local_start(u64 delay);
-> +	struct task_struct *t = current;
-> +	/*
-> +	 * IRQs off, guaranteed to return to userspace, start timer on this CPU
-> +	 * to limit the resched-overdraft.
-> +	 *
-> +	 * If your critical section is longer than 50 us you get to keep the
-> +	 * pieces.
-> +	 */
-> +	if (t->sched_time_delay)
-> +		hrtick_local_start(50 * NSEC_PER_USEC);
-> +#endif
-> +}
-
-Should not the interface at least reflect this SCHED_HRTICK status? One,
-slightly hacky way of doing this might to be invert the bit. Have the
-system write a 1 when the feature is present, and have userspace flip it
-to 0 to activate.
-
-A better way might be to add a second bit.
-
-Also, didn't we all agree 50us was overly optimistic and this number
-should be lower?
-
-> diff --git a/kernel/sched/syscalls.c b/kernel/sched/syscalls.c
-> index cd38f4e9899d..1b2b64fe0fb1 100644
-> --- a/kernel/sched/syscalls.c
-> +++ b/kernel/sched/syscalls.c
-> @@ -1378,6 +1378,11 @@ static void do_sched_yield(void)
->   */
->  SYSCALL_DEFINE0(sched_yield)
->  {
-> +	if (IS_ENABLED(CONFIG_RSEQ) && current->sched_time_delay) {
-> +		schedule();
-> +		return 0;
-> +	}
-> +
->  	do_sched_yield();
->  	return 0;
->  }
-
-Multiple people, very much including Linus, have already said this
-'cute' hack isn't going to fly. Why is it still here?
