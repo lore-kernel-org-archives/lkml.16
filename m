@@ -1,112 +1,130 @@
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3B8822F152;
-	Fri,  2 May 2025 11:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18A8244686;
+	Fri,  2 May 2025 11:43:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186183; cv=none; b=pwVEmNHOvOhFMvqXSjJmNqasS27wTqY5/PwnHUKckTv/BiiIELF/mYjyx7bEklcgS8CU7VZd66Hp7qDY6s/S74I1ioOwCQeLSXBZKAbQmnucB16/RjE51pPHPAoWO29dZQiR1DkMGFy25/bMWCofsLArSBHOG/wU03oquR6TjMI=
+	t=1746186202; cv=none; b=lxxeMhkweegTG857KZ2qomPdYbQAIU80Lb2LCeuWbqdEnRZ0KzEJqSjOO7SfpT7kIIJVCWHOXt7zV0OYddaeaPB2yF5F/eSUF0AG526pJ1R/WbEI1D5/esN7p0GOh4CMHR2qsT6zXJa6pUb72DYF4PHdtZPaPC+K7a3jtbELggc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186183; c=relaxed/simple;
-	bh=+bKH78JkWpMbuLiMH2klT+W2jWWSwU2GBJo+cDrKX5Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ra+b+wI8aVSQoMimKddbjCl2k0KA3JNfZV/rg7cJTM3so1zCt68bWoXOxWtp3Asa86tKrO6N/49v5ioUwH07M/7FVlnwuM/iX7DtkNVjKJtGGfW7nlJyBIbdXLioio+bSzUmWwrGnDtwR4twJgJloAjZkUA09YlS7Fp5C0+0kbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-5241abb9761so575887e0c.1;
-        Fri, 02 May 2025 04:43:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746186179; x=1746790979;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Xx93yRVM4w/R+TEdbPsidsu/QFUjb5pgYuRlHQSKOPE=;
-        b=fYWUdTUF4wyJxQjlMlGrf+dOJ5Ck7ms+5nbYnnWo1o1sGdb51heePfGr0Ugaebdn2n
-         /zVJl1kY5yPviwuxsuY6kEWS7GHW8Hmq9tCA0uGLeWtoucFe1xLy9OU21VThgcXlgljm
-         Wn6QIlXye2f4nFv1v6TQ9wRYWa/8NeSj3pEU/9uc5VsE0mq75nNVtvdm7kx7UrRwNCYR
-         vjpn74VXBGPkwSNEeGARmiWivDhTOvbIS3GYbSD2STZCew3njn4ZTJUv66a2gXWNh74+
-         j6np5EIFHuspGnZXcSazqq5DvYHBmktbvkF39wSp1ugWNRa+q5N4iyfPHaScKsoMupXk
-         y3xA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFF5H+X+XYBWi4GCekztdYqiu+SKNV3RVcZko5QbFMh97Bywgkh3kktqySlEcXGliQeuHhvVQJUe8L@vger.kernel.org, AJvYcCWHwx0jijpUJ02x2Q6w22UkX8Pno/S4kCvc5ZU7pBKUSNPNVD1SmHgWnySrK+Zq+re4/h2pDVQSG8DTBYmo@vger.kernel.org, AJvYcCX59PVpjaLwu9JmaqIRgCkFtNPosV3w0UPo4W02B8WMztPZ4GbYdvUAca3YVffjrhyInIXAKSWEKN6aIhWbXtzVwyc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrQuCvEuhFo05iFLPAlPwaFoP0r5pNeSaDTNg0ZvMeU/dIuZ4o
-	s5X2wJml+IdXsp8btYeUKmfbxQyhtaZSUvZwRfrWtTV0oG25NQh5t7k9kXXw
-X-Gm-Gg: ASbGncvAbS8QxwhkbhBYNttLc2u54V/pMaarM2FGqzdlHs6Aw20wnmvterpsY+IIHLX
-	y9Ip/3IuAco/xO4/pIE94WJyzu4ddvojVpxhIx0MIEd9cbPPxISxBor+5hIr5C5tXdZRuI4DgJV
-	IOj1f/VRu8kq+h1tMFXgKeSWVUizavhtt8ZnQrRMd9WNNXyIjRxEXUxGqdPCBI2S4eTtJBlb/p7
-	i1kFYzJXKo8r32BksZRrPkFkTxsvAZ9AQS1MsdIy+YeKjjcXOALJwF47GewgMt3Sk6OSGoiDThZ
-	PEsnGrzYYJy5aq9h9WAA+FipglzEJgGXJbNZgElYdkf9vMMTU3JkXsaq0UaY0V8u56cE1Sd/QDs
-	AE4U=
-X-Google-Smtp-Source: AGHT+IEO1w1g1QUECyrQMLxwQQdjFP6jVO0zHzv4tVTRXMkP5O6ihqRIOgGnCmbEeGUAKaUNGLgafg==
-X-Received: by 2002:a05:6102:3c86:b0:4bb:cdc0:5dd7 with SMTP id ada2fe7eead31-4dafb68b6damr1234793137.16.1746186179513;
-        Fri, 02 May 2025 04:42:59 -0700 (PDT)
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780afe9cdesm255690241.5.2025.05.02.04.42.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 04:42:58 -0700 (PDT)
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-873a2ba6f7cso508139241.3;
-        Fri, 02 May 2025 04:42:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUVoVaDlLmzw/1JSYfjyQNoisshX3AGZuEEtLI3vs8Nj1ueqzKCL32bSqo2QH3V53qFo5i1mnufWXK9QifS@vger.kernel.org, AJvYcCW04m3c4gkD08BwItAhZhklwY7H9MWNQPnQJ1m3Vbmg0QWp4C1n52xbWrkLYojYFnaqNls87AcPBa9G8q5jtP/1B8o=@vger.kernel.org, AJvYcCXrXfc2eafx3e7PrH2UOm3dsPplk+cDkFBxQ/d9XiSqVtlb56FPnK1Gx/KJVacxmvnGDdQ5Y5V0fx0q@vger.kernel.org
-X-Received: by 2002:a05:6102:4b1b:b0:4c1:9738:820d with SMTP id
- ada2fe7eead31-4dafb4f7276mr1451231137.6.1746186178555; Fri, 02 May 2025
- 04:42:58 -0700 (PDT)
+	s=arc-20240116; t=1746186202; c=relaxed/simple;
+	bh=aWaWeIVruQo2QDXJvl6mXOqBikKY5OkUj65q+GvireU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u3m+PLf6i1rgFtJLluvYJydq8/2YFcxEfIsPwDSko3mSHQUh+izPbG6ly2fCAzuLt+nR03m7GubqY9uQucLf3cyx5cD4tF6AEdXn3Tg1o3Rfx/jCQZOidD9U1P20bJWGcE5DRk0g/kUWL0VrTFEZVwpYtf0zggrUm5LSPhhzD5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T05m8mJ4; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T05m8mJ4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83F49C4CEEE;
+	Fri,  2 May 2025 11:43:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746186201;
+	bh=aWaWeIVruQo2QDXJvl6mXOqBikKY5OkUj65q+GvireU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=T05m8mJ4SJEtv3oMaPq8TV3fqx5eklcsotN1dJdEJfIWLL/CQ8x6Q67y5NFRVx/B5
+	 R8Oz5Na85YPlNlOViisqv0URkNEbJTFwxLVozQrlFbG7bv1GQbTmb+U1HZBaNRI6ok
+	 zKynbiaYDI6FjLAh1P1MaKqqR597LDl9LMyUB+mIRNiCJLaZ7I2c/1QCiehuhbwcQi
+	 imLnEXIzzGTKhBXcfYe3McKZmWJevKLE4bwU1MYr7dmBwoSmwRziHK+cCVRVlV4d81
+	 FbASYJOIQMla5BBh17ZWI/+Eo31xBdcf5qeirIT1kb2Cz+/iVC/0v8Vz1zbGeNS1jU
+	 gsQITn8aI4JNg==
+Date: Fri, 2 May 2025 20:43:18 +0900
+From: William Breathitt Gray <wbg@kernel.org>
+To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
+Cc: "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"o.rempel@pengutronix.de" <o.rempel@pengutronix.de>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] counter: interrupt-cnt: Protect enable/disable OPs with
+ mutex
+Message-ID: <aBSv1pJ1mulT78gn@ishi>
+References: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
+ <jir0aD7w3brmbPDdhC4xAhaEKCp-g08TBmtdn785u_Z5M77ZHMhsK7UoamaROSznl2WmcUmPSnocgVnCSYmUYg==@protonmail.internalid>
+ <8394ef31a75fdf9122331ecb97dd6f986d5026f1.camel@siemens.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250415130854.242227-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20250415130854.242227-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 2 May 2025 13:42:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVh+Xr2o7YMPpk3gwYDAD8z-W0OOWO=2Gq0VunyaoH-tA@mail.gmail.com>
-X-Gm-Features: ATxdqUHz4lf0vegjX0kY0z5gx-e18rdT0Qc71om7yw5cMjLBX0VHQIlaIHl9fxc
-Message-ID: <CAMuHMdVh+Xr2o7YMPpk3gwYDAD8z-W0OOWO=2Gq0VunyaoH-tA@mail.gmail.com>
-Subject: Re: [PATCH v3] pinctrl: renesas: rzg2l: Add support for RZ/V2N SoC
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2FnaEQLJIxit3zw2"
+Content-Disposition: inline
+In-Reply-To: <8394ef31a75fdf9122331ecb97dd6f986d5026f1.camel@siemens.com>
 
-On Tue, 15 Apr 2025 at 15:09, Prabhakar <prabhakar.csengg@gmail.com> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Add pinctrl support for the Renesas RZ/V2N SoC by reusing the existing
-> RZ/V2H(P) pin configuration data. The PFC block is nearly identical, with
-> the only difference being the absence of `PCIE1_RSTOUTB` on RZ/V2N.
->
-> To handle this, the rzv2h_dedicated_pins array is refactored into a common
-> and pcie1 subset. This enables reuse of the common portion across both
-> SoCs, while excluding PCIE1_RSTOUTB for RZ/V2N.
->
-> This change allows the pinctrl-rzg2l driver to support RZ/V2N without
-> duplicating large parts of the RZ/V2H configuration.
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> ---
-> Hi All,
-> This patch is from series [0]. Since most of the patches have already
-> been queued, I'm sending this one separately.
-> [0] https://lore.kernel.org/all/20250407191628.323613-11-prabhakar.mahadev-lad.rj@bp.renesas.com/
-> Cheers, Prabhakar
-> v2->v3:
-> - Split up rzv2h_dedicated_pins into common and pcie1 subsets to
->   facilitate reuse for RZ/V2N.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.16.
+--2FnaEQLJIxit3zw2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Gr{oetje,eeting}s,
+On Fri, May 02, 2025 at 09:24:20AM +0000, Sverdlin, Alexander wrote:
+> Dear maintainers,
+>=20
+> On Mon, 2025-03-31 at 18:36 +0200, A. Sverdlin wrote:
+> > From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> >
+> > Enable/disable seems to be racy on SMP, consider the following scenario:
+> >
+> > CPU0					CPU1
+> >
+> > interrupt_cnt_enable_write(true)
+> > {
+> > 	if (priv->enabled =3D=3D enable)
+> > 		return 0;
+> >
+> > 	if (enable) {
+> > 		priv->enabled =3D true;
+> > 					interrupt_cnt_enable_write(false)
+> > 					{
+> > 						if (priv->enabled =3D=3D enable)
+> > 							return 0;
+> >
+> > 						if (enable) {
+> > 							priv->enabled =3D true;
+> > 							enable_irq(priv->irq);
+> > 						} else {
+> > 							disable_irq(priv->irq)
+> > 							priv->enabled =3D false;
+> > 						}
+> > 		enable_irq(priv->irq);
+> > 	} else {
+> > 		disable_irq(priv->irq);
+> > 		priv->enabled =3D false;
+> > 	}
+> >
+> > The above would result in priv->enabled =3D=3D false, but IRQ left enab=
+led.
+> > Protect both write (above race) and read (to propagate the value on SMP)
+> > callbacks with a mutex.
+> >
+> > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+>=20
+> I've noticed that the patch has been marked as "Changes Requested" in
+> the patchwork, could it be a mistake? Because I never received any
+> change request.
 
-                        Geert
+Hi Alexander,
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+I can't comment on the patchwork status because I don't use that
+service, but I apologize nonetheless for the delay in responding to your
+patch submission. I'm hoping for an Ack from Oleksij, but this is a
+pretty straight-forward fix that I'll be happy to pick it up regardless.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Would you provide a Fixes line so the stable trees can pick this up for
+the necessary kernel versions?
+
+Thanks,
+
+William Breathitt Gray
+
+--2FnaEQLJIxit3zw2
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCaBSv1QAKCRC1SFbKvhIj
+K5AXAQCUKyd24kH3cw/KsWiKcBDbzgF5wILTzRCXBD22B/UhVwD+J7m3fdEqH3uo
+oViPsGv5sUsmxgjpIZkyJ+emaNI0DAU=
+=oIr1
+-----END PGP SIGNATURE-----
+
+--2FnaEQLJIxit3zw2--
