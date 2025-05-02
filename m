@@ -1,344 +1,127 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 659AD2116F6
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6142820E718;
+	Fri,  2 May 2025 11:53:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186721; cv=none; b=YI/HT/yVTaV5oXYfMKmfANAjLcqFG4ZeqOtdv2FI+bA0aoWsQ5vgVWX5TUYcT+8aMFE/cpPczyWB4jB6Poh3Iz/rbdRp6mK4gc9SVlTvKfuoVqk2Wozi5M9fYYjo0gEj9tlb4fzU4Eqzy5bqwGLBbM6G1qhutBiMTMdhYKefdxA=
+	t=1746186788; cv=none; b=g059wtvosoptpKz2ocZIz/3YqDtyypuxzQuN0U6zA573ccfG5vfk8IYeeTdTmgFKwcZct36wQiQPmQdFsaziDf4vc/b7R5sD5MYgveBgSUODWtv570Dmb6MbPAwCjFk5Fah8j9fztk1lh6jmOsXdpFvxayZmI0vjEgkN+SSefVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186721; c=relaxed/simple;
-	bh=hVNqzctfPfpGZwGZ7YOr1XZ/YVIyy4tCqdQcpZn4LJk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nidYSHH5I+2EwBlttDFp4GafIHVH+qphDP+ITa1/u3O7AME3ooSKq1O+8sXXHQff3BwW9oI/aJtFm04xEimVA8/wkNrvA5uqUnGX71gUs+cCZeJweIy8NFZild3QzshV0d3CaiOp1rMct2DYhnEA7jRajL+ERjpVCEbsZRifBck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCE7A1688;
-	Fri,  2 May 2025 04:51:48 -0700 (PDT)
-Received: from [10.57.93.118] (unknown [10.57.93.118])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 055023F673;
-	Fri,  2 May 2025 04:51:53 -0700 (PDT)
-Message-ID: <912c3126-8ba7-4c3a-b168-438f92e89217@arm.com>
-Date: Fri, 2 May 2025 12:51:50 +0100
+	s=arc-20240116; t=1746186788; c=relaxed/simple;
+	bh=Q4jOg98k+QNmKecUp0Ldv7WZt4SAs8j6y1rKcruNP9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OZfeMyR5Q/nx/3/hbeYN0VFzdQbRHXw4XOkLKHE6Ts22Hfu/ULZzGX5AK6hN1qupbjYG4/sHG1g66t8ch6CIN42Sp378aNd0A7zhyMBPeQjplZAHSV/sG0m2ZyBrl5FiFIfXCvUcFBBBvg2geB6gu0N9q2LsLcx8IteSC/pujVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vb5sMp6t; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vb5sMp6t"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542BqUe03852546
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 06:52:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746186750;
+	bh=ylg5pHJj6soRgfq6YOqDlWI4JdGvCXUzDJpfJJFlwoQ=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=vb5sMp6t7wlt8I3haJ/yR/M68BhrswtvCDpm8GkEqAit5aG6Tx+9tjBEZLB1hS2Vl
+	 thI4PGAsqZIyYzxp8C762fSj4RF+iavs+05lrq8m0Bli0cPMPgZFWvOmcDMMgJnfFh
+	 P/IK9hUIFGYn82xPG54r4CNqYEmcmxTYnjCo4FZQ=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542BqTAC064408
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 06:52:29 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 06:52:29 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 06:52:29 -0500
+Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542BqNfA101955;
+	Fri, 2 May 2025 06:52:24 -0500
+Message-ID: <ead31912-d1e5-4813-99a7-5cd2754672ef@ti.com>
+Date: Fri, 2 May 2025 17:22:23 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v3 PATCH 0/6] arm64: support FEAT_BBM level 2 and large block
- mapping when rodata=full
-Content-Language: en-GB
-To: Yang Shi <yang@os.amperecomputing.com>, will@kernel.org,
- catalin.marinas@arm.com, Miko.Lenczewski@arm.com,
- scott@os.amperecomputing.com, cl@gentwo.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Dev Jain <dev.jain@arm.com>
-References: <20250304222018.615808-1-yang@os.amperecomputing.com>
- <3750d3f8-17c6-4bb8-8107-215d442e4ec3@os.amperecomputing.com>
- <2fb974bb-1470-4a5f-90d5-97456140c98f@arm.com>
- <22b53cff-00db-48f1-b1e8-b11a54ebb147@os.amperecomputing.com>
- <4794885d-2e17-4bd8-bdf3-8ac37047e8ee@os.amperecomputing.com>
- <5c6d9706-7684-4288-b630-c60b3766b13f@arm.com>
- <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <4d02978c-03c0-48fe-84eb-0f3fa0c54fea@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Betterbird (Linux)
+Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
+ cut-down versions
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
+        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
+        <h-shenoy@ti.com>, <jyri.sarha@iki.fi>, <airlied@gmail.com>,
+        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
+        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>
+References: <20250429143656.3252877-1-devarsht@ti.com>
+ <20250429143656.3252877-3-devarsht@ti.com>
+ <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
+ <1f8c43cd-8c26-4e42-b144-b91f5ffc2e2e@ti.com>
+ <88993439-bfdc-418c-95c6-d6d8bdb5b87f@ideasonboard.com>
+ <466254e9-145f-4839-9451-a5f282ff02e9@ti.com>
+ <ce831f65-67d0-4f4c-9f08-3014b1d00dc0@ideasonboard.com>
+ <ca008cb0-bec6-4b10-b6b5-0f29648f76c0@ti.com>
+ <ed82e498-b3af-46f6-97ce-3a2f47872935@ideasonboard.com>
+Content-Language: en-US
+From: Devarsh Thakkar <devarsht@ti.com>
+In-Reply-To: <ed82e498-b3af-46f6-97ce-3a2f47872935@ideasonboard.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 14/04/2025 22:24, Yang Shi wrote:
-> 
-> 
-> On 4/14/25 6:03 AM, Ryan Roberts wrote:
->> On 10/04/2025 23:00, Yang Shi wrote:
->>> Hi Ryan,
->>>
->>> I know you may have a lot of things to follow up after LSF/MM. Just gently ping,
->>> hopefully we can resume the review soon.
->> Hi, I'm out on holiday at the moment, returning on the 22nd April. But I'm very
->> keen to move this series forward so will come back to you next week. (although
->> TBH, I thought I was waiting for you to respond to me... :-| )
+Hi,
+
+<snip>
+>> It uses hw_id i.e. 1 for all vid irqstatus related registers since it is
+>> accessing am65x common region register space which has vid on idx0 which
+>> we want to skip for am62l.
 >>
->> FWIW, having thought about it a bit more, I think some of the suggestions I
->> previously made may not have been quite right, but I'll elaborate next week. I'm
->> keen to build a pgtable splitting primitive here that we can reuse with vmalloc
->> as well to enable huge mappings by default with vmalloc too.
-> 
-> Sounds good. I think the patches can support splitting vmalloc page table too.
-> Anyway we can discuss more after you are back. Enjoy your holiday.
-
-Hi Yang,
-
-Sorry I've taken so long to get back to you. Here's what I'm currently thinking:
-I'd eventually like to get to the point where the linear map and most vmalloc
-memory is mapped using the largest possible mapping granularity (i.e. block
-mappings at PUD/PMD, and contiguous mappings at PMD/PTE level).
-
-vmalloc has history with trying to do huge mappings by default; it ended up
-having to be turned into an opt-in feature (instead of the original opt-out
-approach) because there were problems with some parts of the kernel expecting
-page mappings. I think we might be able to overcome those issues on arm64 with
-BBML2.
-
-arm64 can already support vmalloc PUD and PMD block mappings, and I have a
-series (that should make v6.16) that enables contiguous PTE mappings in vmalloc
-too. But these are currently limited to when VM_ALLOW_HUGE is specified. To be
-able to use that by default, we need to be able to change permissions on
-sub-regions of an allocation, which is where BBML2 and your series come in.
-(there may be other things we need to solve as well; TBD).
-
-I think the key thing we need is a function that can take a page-aligned kernel
-VA, will walk to the leaf entry for that VA and if the VA is in the middle of
-the leaf entry, it will split it so that the VA is now on a boundary. This will
-work for PUD/PMD block entries and contiguous-PMD/contiguous-PTE entries. The
-function can assume BBML2 is present. And it will return 0 on success, -EINVAL
-if the VA is not mapped or -ENOMEM if it couldn't allocate a pgtable to perform
-the split.
-
-Then we can use that primitive on the start and end address of any range for
-which we need exact mapping boundaries (e.g. when changing permissions on part
-of linear map or vmalloc allocation, when freeing part of a vmalloc allocation,
-etc). This way we only split enough to ensure the boundaries are precise, and
-keep larger mappings inside the range.
-
-Next we need to reimplement __change_memory_common() to not use
-apply_to_page_range(), because that assumes page mappings only. Dev Jain has
-been working on a series that converts this to use walk_page_range_novma() so
-that we can change permissions on the block/contig entries too. That's not
-posted publicly yet, but it's not huge so I'll ask if he is comfortable with
-posting an RFC early next week.
-
-You'll still need to repaint the whole linear map with page mappings for the
-case !BBML2 case, but I'm hoping __create_pgd_mapping_locked() (potentially with
-minor modifications?) can do that repainting on the live mappings; similar to
-how you are doing it in v3.
-
-Miko's BBML2 series should hopefully get imminently queued for v6.16.
-
-So in summary, what I'm asking for your large block mapping the linear map
-series is:
-  - Paint linear map using blocks/contig if boot CPU supports BBML2
-  - Repaint linear map using page mappings if secondary CPUs don't support BBML2
-  - Integrate Dev's __change_memory_common() series
-  - Create primitive to ensure mapping entry boundary at a given page-aligned VA
-  - Use primitive when changing permissions on linear map region
-
-This will be mergable on its own, but will also provide a great starting base
-for adding huge-vmalloc-by-default.
-
-What do you think?
-
-Thanks,
-Ryan
-
-
-> 
-> Thanks,
-> Yang
-> 
+>> For dispc_plane_enable(), the caller uses
+>>> 0, for dispc_k3_vid_write_irqstatus(), the caller uses 1...
 >>
->> Thanks,
->> Ryan
+>> Yes above is correct, and I think that's how it is supposed to be.
+> 
+> No it's not. Both functions have "hw_plane" parameter, yet they require
+> a different value to be used even when referring to the same plane.
+>
+>>> With a quick look at the code, changing the callers to pass the "old
+>>> style" hw_plane as the parameter to those irq functions, and the
+>>> functions internally get the hw_id, would solve most of the problems.
 >>
->>> Thanks,
->>> Yang
+>> I don't follow above, hw_plane has 0 so it should not be used for
+>> programming irq related functions which expect idx 1 as explained above.
+> 
+> We have various functions in tidss_dispc.c that have hw_plane as a
+> parameter. But the caller is supposed to know that for some functions
+> hw_plane is a plane index from 0, and for some it's the hw_id from
+> vid_info[].
+> 
+>> There's still dispc_k3_set_irqenable() which manages 'main_disable' and
+>>> needs the hw_id, but maybe that's fine, even if a bit confusing.
 >>>
->>>
->>> On 3/13/25 10:40 AM, Yang Shi wrote:
->>>>
->>>> On 3/13/25 10:36 AM, Ryan Roberts wrote:
->>>>> On 13/03/2025 17:28, Yang Shi wrote:
->>>>>> Hi Ryan,
->>>>>>
->>>>>> I saw Miko posted a new spin of his patches. There are some slight changes
->>>>>> that
->>>>>> have impact to my patches (basically check the new boot parameter). Do you
->>>>>> prefer I rebase my patches on top of his new spin right now then restart
->>>>>> review
->>>>>> from the new spin or review the current patches then solve the new review
->>>>>> comments and rebase to Miko's new spin together?
->>>>> Hi Yang,
->>>>>
->>>>> Sorry I haven't got to reviewing this version yet, it's in my queue!
->>>>>
->>>>> I'm happy to review against v3 as it is. I'm familiar with Miko's series
->>>>> and am
->>>>> not too bothered about the integration with that; I think it's pretty straight
->>>>> forward. I'm more interested in how you are handling the splitting, which I
->>>>> think is the bulk of the effort.
->>>> Yeah, sure, thank you.
->>>>
->>>>> I'm hoping to get to this next week before heading out to LSF/MM the following
->>>>> week (might I see you there?)
->>>> Unfortunately I can't make it this year. Have a fun!
->>>>
->>>> Thanks,
->>>> Yang
->>>>
->>>>> Thanks,
->>>>> Ryan
->>>>>
->>>>>
->>>>>> Thanks,
->>>>>> Yang
->>>>>>
->>>>>>
->>>>>> On 3/4/25 2:19 PM, Yang Shi wrote:
->>>>>>> Changelog
->>>>>>> =========
->>>>>>> v3:
->>>>>>>      * Rebased to v6.14-rc4.
->>>>>>>      * Based on Miko's BBML2 cpufeature patch (https://lore.kernel.org/
->>>>>>> linux-
->>>>>>> arm-kernel/20250228182403.6269-3-miko.lenczewski@arm.com/).
->>>>>>>        Also included in this series in order to have the complete patchset.
->>>>>>>      * Enhanced __create_pgd_mapping() to handle split as well per Ryan.
->>>>>>>      * Supported CONT mappings per Ryan.
->>>>>>>      * Supported asymmetric system by splitting kernel linear mapping if
->>>>>>> such
->>>>>>>        system is detected per Ryan. I don't have such system to test, so the
->>>>>>>        testing is done by hacking kernel to call linear mapping repainting
->>>>>>>        unconditionally. The linear mapping doesn't have any block and cont
->>>>>>>        mappings after booting.
->>>>>>>
->>>>>>> RFC v2:
->>>>>>>      * Used allowlist to advertise BBM lv2 on the CPUs which can handle TLB
->>>>>>>        conflict gracefully per Will Deacon
->>>>>>>      * Rebased onto v6.13-rc5
->>>>>>>      * https://lore.kernel.org/linux-arm-kernel/20250103011822.1257189-1-
->>>>>>> yang@os.amperecomputing.com/
->>>>>>>
->>>>>>> RFC v1: https://lore.kernel.org/lkml/20241118181711.962576-1-
->>>>>>> yang@os.amperecomputing.com/
->>>>>>>
->>>>>>> Description
->>>>>>> ===========
->>>>>>> When rodata=full kernel linear mapping is mapped by PTE due to arm's
->>>>>>> break-before-make rule.
->>>>>>>
->>>>>>> A number of performance issues arise when the kernel linear map is using
->>>>>>> PTE entries due to arm's break-before-make rule:
->>>>>>>      - performance degradation
->>>>>>>      - more TLB pressure
->>>>>>>      - memory waste for kernel page table
->>>>>>>
->>>>>>> These issues can be avoided by specifying rodata=on the kernel command
->>>>>>> line but this disables the alias checks on page table permissions and
->>>>>>> therefore compromises security somewhat.
->>>>>>>
->>>>>>> With FEAT_BBM level 2 support it is no longer necessary to invalidate the
->>>>>>> page table entry when changing page sizes.  This allows the kernel to
->>>>>>> split large mappings after boot is complete.
->>>>>>>
->>>>>>> This patch adds support for splitting large mappings when FEAT_BBM level 2
->>>>>>> is available and rodata=full is used. This functionality will be used
->>>>>>> when modifying page permissions for individual page frames.
->>>>>>>
->>>>>>> Without FEAT_BBM level 2 we will keep the kernel linear map using PTEs
->>>>>>> only.
->>>>>>>
->>>>>>> If the system is asymmetric, the kernel linear mapping may be repainted once
->>>>>>> the BBML2 capability is finalized on all CPUs.  See patch #6 for more
->>>>>>> details.
->>>>>>>
->>>>>>> We saw significant performance increases in some benchmarks with
->>>>>>> rodata=full without compromising the security features of the kernel.
->>>>>>>
->>>>>>> Testing
->>>>>>> =======
->>>>>>> The test was done on AmpereOne machine (192 cores, 1P) with 256GB memory and
->>>>>>> 4K page size + 48 bit VA.
->>>>>>>
->>>>>>> Function test (4K/16K/64K page size)
->>>>>>>      - Kernel boot.  Kernel needs change kernel linear mapping permission at
->>>>>>>        boot stage, if the patch didn't work, kernel typically didn't boot.
->>>>>>>      - Module stress from stress-ng. Kernel module load change permission
->>>>>>> for
->>>>>>>        linear mapping.
->>>>>>>      - A test kernel module which allocates 80% of total memory via
->>>>>>> vmalloc(),
->>>>>>>        then change the vmalloc area permission to RO, this also change
->>>>>>> linear
->>>>>>>        mapping permission to RO, then change it back before vfree(). Then
->>>>>>> launch
->>>>>>>        a VM which consumes almost all physical memory.
->>>>>>>      - VM with the patchset applied in guest kernel too.
->>>>>>>      - Kernel build in VM with guest kernel which has this series applied.
->>>>>>>      - rodata=on. Make sure other rodata mode is not broken.
->>>>>>>      - Boot on the machine which doesn't support BBML2.
->>>>>>>
->>>>>>> Performance
->>>>>>> ===========
->>>>>>> Memory consumption
->>>>>>> Before:
->>>>>>> MemTotal:       258988984 kB
->>>>>>> MemFree:        254821700 kB
->>>>>>>
->>>>>>> After:
->>>>>>> MemTotal:       259505132 kB
->>>>>>> MemFree:        255410264 kB
->>>>>>>
->>>>>>> Around 500MB more memory are free to use.  The larger the machine, the
->>>>>>> more memory saved.
->>>>>>>
->>>>>>> Performance benchmarking
->>>>>>> * Memcached
->>>>>>> We saw performance degradation when running Memcached benchmark with
->>>>>>> rodata=full vs rodata=on.  Our profiling pointed to kernel TLB pressure.
->>>>>>> With this patchset we saw ops/sec is increased by around 3.5%, P99
->>>>>>> latency is reduced by around 9.6%.
->>>>>>> The gain mainly came from reduced kernel TLB misses.  The kernel TLB
->>>>>>> MPKI is reduced by 28.5%.
->>>>>>>
->>>>>>> The benchmark data is now on par with rodata=on too.
->>>>>>>
->>>>>>> * Disk encryption (dm-crypt) benchmark
->>>>>>> Ran fio benchmark with the below command on a 128G ramdisk (ext4) with disk
->>>>>>> encryption (by dm-crypt).
->>>>>>> fio --directory=/data --random_generator=lfsr --norandommap --randrepeat 1 \
->>>>>>>        --status-interval=999 --rw=write --bs=4k --loops=1 --ioengine=sync \
->>>>>>>        --iodepth=1 --numjobs=1 --fsync_on_close=1 --group_reporting --
->>>>>>> thread \
->>>>>>>        --name=iops-test-job --eta-newline=1 --size 100G
->>>>>>>
->>>>>>> The IOPS is increased by 90% - 150% (the variance is high, but the worst
->>>>>>> number of good case is around 90% more than the best number of bad case).
->>>>>>> The bandwidth is increased and the avg clat is reduced proportionally.
->>>>>>>
->>>>>>> * Sequential file read
->>>>>>> Read 100G file sequentially on XFS (xfs_io read with page cache populated).
->>>>>>> The bandwidth is increased by 150%.
->>>>>>>
->>>>>>>
->>>>>>> Mikołaj Lenczewski (1):
->>>>>>>          arm64: Add BBM Level 2 cpu feature
->>>>>>>
->>>>>>> Yang Shi (5):
->>>>>>>          arm64: cpufeature: add AmpereOne to BBML2 allow list
->>>>>>>          arm64: mm: make __create_pgd_mapping() and helpers non-void
->>>>>>>          arm64: mm: support large block mapping when rodata=full
->>>>>>>          arm64: mm: support split CONT mappings
->>>>>>>          arm64: mm: split linear mapping if BBML2 is not supported on
->>>>>>> secondary
->>>>>>> CPUs
->>>>>>>
->>>>>>>     arch/arm64/Kconfig                  |  11 +++++
->>>>>>>     arch/arm64/include/asm/cpucaps.h    |   2 +
->>>>>>>     arch/arm64/include/asm/cpufeature.h |  15 ++++++
->>>>>>>     arch/arm64/include/asm/mmu.h        |   4 ++
->>>>>>>     arch/arm64/include/asm/pgtable.h    |  12 ++++-
->>>>>>>     arch/arm64/kernel/cpufeature.c      |  95 ++++++++++++++++++++++++++++++
->>>>>>> +++++++
->>>>>>>     arch/arm64/mm/mmu.c                 | 397 ++++++++++++++++++++++++++++++
->>>>>>> ++++
->>>>>>> +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->>>>>>> +++++
->>>>>>> ++++++++++++++++++++++-------------------
->>>>>>>     arch/arm64/mm/pageattr.c            |  37 ++++++++++++---
->>>>>>>     arch/arm64/tools/cpucaps            |   1 +
->>>>>>>     9 files changed, 518 insertions(+), 56 deletions(-)
->>>>>>>
->>>>>>>
+>>
+>> I still feel there is no inherent bug here, but let me know if you want
+>> me to put some debug prints or get register dump so that we can double
+>> confirm.
+> 
+> I'm not saying there's a bug. I'm saying it's bad code and will cause
+> confusion and bugs in the future.
 > 
 
+Ok I see what you mean to say.....although functionally it is working
+fine but from readability point of view it is confusing since both
+functions use same argument name i.e hw_plane in two different contexts.
+In that case, I would propose to use hw_id as arg name for all
+dispc_k3_vid* functions, will that be okay ?
+
+Regards
+Devarsh
