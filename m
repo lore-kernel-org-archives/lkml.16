@@ -1,125 +1,90 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F6F2571CF
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E24F4255F5E;
+	Fri,  2 May 2025 14:14:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195247; cv=none; b=aOzvU4HtVpuL1BDXP7WxKlOK+lEF7mwrq8lbUAFLLNqMpqJJ33Pmhcu/FWZbaASGZJh5UtVl8BrmC9gGKygr9jL2ARUOCQbvBIqVuUt8crEG3iI1enRJOH/J+XBnj56eUFqlexuKOE2WL4+HCw1518F1r3t4OytTCh5NNyWOH60=
+	t=1746195262; cv=none; b=Lym4MZe8afKW4IEw0g8IC5vHvaLomUSlFGUv65EMSG7yQfhOPkadI0MGFgPEOqaDOPxurS8BZNaB9yj83eywaMoOMP0NULR0Olm3XUOeLpyyeK3xc+0ZYpmR4q68zUq7twLHogWzBo4w8KLKhXUYlu5h5U19w9tzaWcKfbYMNAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195247; c=relaxed/simple;
-	bh=Ti5fQqNL3/P0T43KCHmLdTJn2MrwLdnaKDWpyP6L+Yc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=j9DwPpUpI0hCUSYhkNo6PJwvjIknLcrErFYTwqws9lG+GYXGYxmJKcv5MESwApAyaY9wBl2o8wzYiSCvWnM2VYnhoUFYHmvCMAEhMjBWOWQSo+vVH99ey692hEODZgA6x7fiTIlYu9muT6xcJL+QVsXidxdbQzV6+4fNGzXLoy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uAr9M-0000vV-Hd
-	for linux-kernel@vger.kernel.org; Fri, 02 May 2025 16:14:00 +0200
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1uAr9L-000lQp-2u
-	for linux-kernel@vger.kernel.org;
-	Fri, 02 May 2025 16:13:59 +0200
-Received: from dspam.blackshift.org (localhost [127.0.0.1])
-	by bjornoya.blackshift.org (Postfix) with SMTP id 91C374065CB
-	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:13:59 +0000 (UTC)
-Received: from hardanger.blackshift.org (unknown [172.20.34.65])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by bjornoya.blackshift.org (Postfix) with ESMTPS id ABE3140659D;
-	Fri, 02 May 2025 14:13:56 +0000 (UTC)
-Received: from hardanger.blackshift.org (localhost [::1])
-	by hardanger.blackshift.org (OpenSMTPD) with ESMTP id 39826ef2;
-	Fri, 2 May 2025 14:13:56 +0000 (UTC)
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Date: Fri, 02 May 2025 16:13:44 +0200
-Subject: [PATCH 1/3] can: mcp251xfd: mcp251xfd_remove(): fix order of
- unregistration calls
+	s=arc-20240116; t=1746195262; c=relaxed/simple;
+	bh=m6QjeTDmjEFVIOLoBxnDhIcTIAn+T1Yym8af0FkdhUk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ogKmMv5bYy32vrmko6cvAViqBoLd3DFuHFe8AN0fF5bz3mR8VJIvY/sRZ4oLE6y/MZSDd2e1eViQPdzoYplT6JpFTZmiANbXK3mUy9V8Yr9WODLgdCiz02HNn1vXVpZB7nTIbQk3Q9Eh+Y45iWz/mzSu9a7y/O5Cx5fgdhKeXRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N1B2bHmd; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N1B2bHmd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746195261; x=1777731261;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=m6QjeTDmjEFVIOLoBxnDhIcTIAn+T1Yym8af0FkdhUk=;
+  b=N1B2bHmdRHYVJxjuLspl4lHNbTlTL0HmVbALhrUTJz6AXEAV1sACu5K3
+   1mSDa0McEc2uqsw0X584Ipka4pwdYQ5sH7RPf4Uo/nr69l4l/nrbtx1FR
+   IUurbqnPhlfHQAAe1PZrAKg+s3JfriPfzGQ9E4EU9HXDh/VYJEkys+Po+
+   ydQLa6Nr6LgcLJjiXhgrsiPU24qhI8Eem7AhtSy8w3o/y2nFQMlUjUvd2
+   ftilepix1tHIe4lrAEkOytUE0JWmkstN3/Gt3GB0pt/Gvg9kLCvKelhO+
+   7XwxXnvJu0j5dOis414pAlRw8/NZwn/YqUYsNjXHRqJFa0rl+vASi/shf
+   Q==;
+X-CSE-ConnectionGUID: biGiGNgYQb+6u1fPyrD96w==
+X-CSE-MsgGUID: 8QhSk6daSyCL3CJF7pMOLA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47135939"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47135939"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:14:20 -0700
+X-CSE-ConnectionGUID: U6cdrD1BQjy+FzNHh436kw==
+X-CSE-MsgGUID: 6hLzPHLnTRqVpm7t8tnImQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134611673"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:14:19 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAr9d-00000002Dla-0SwG;
+	Fri, 02 May 2025 17:14:17 +0300
+Date: Fri, 2 May 2025 17:14:16 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v3 1/1] media: v4l2-core: Replace the check for firmware
+ registered I2C devices
+Message-ID: <aBTTOLmILq7D-AZy@smile.fi.intel.com>
+References: <20250313113115.359942-1-andriy.shevchenko@linux.intel.com>
+ <Z9RkYCJ-ggJl2kn0@smile.fi.intel.com>
+ <Z_UT8qKhF6R5VTan@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-can-rx-offload-del-v1-1-59a9b131589d@pengutronix.de>
-References: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
-In-Reply-To: <20250502-can-rx-offload-del-v1-0-59a9b131589d@pengutronix.de>
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Thomas Kopp <thomas.kopp@microchip.com>, 
- Vincent Mailhol <mailhol.vincent@wanadoo.fr>, kernel@pengutronix.de, 
- Heiko Stuebner <heiko@sntech.de>, 
- Chandrasekar Ramakrishnan <rcsekar@samsung.com>, 
- Markus Schneider-Pargmann <msp@baylibre.com>
-Cc: linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- Marc Kleine-Budde <mkl@pengutronix.de>, stable@vger.kernel.org
-X-Mailer: b4 0.15-dev-048ad
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1617; i=mkl@pengutronix.de;
- h=from:subject:message-id; bh=Ti5fQqNL3/P0T43KCHmLdTJn2MrwLdnaKDWpyP6L+Yc=;
- b=owEBbQGS/pANAwAKAQx0Zd/5kJGcAcsmYgBoFNMbpz87OapaXKbWzF12J12gplVe/ENOKMJGg
- nwet94JJKqJATMEAAEKAB0WIQSf+wzYr2eoX/wVbPMMdGXf+ZCRnAUCaBTTGwAKCRAMdGXf+ZCR
- nBROB/0Ze9IdyFTWggQdVTIu7SikDc1++C+nVmbgh321px4R70xNq4/ln8+Rw4sla7liUoPagWP
- 3FJEAS1wj/DM70+eZB7scbK3ySgrZ0kAtGAi4Cp1oy/YW+alOVrPU2kNOZiYD1D71/9cBE1Cg59
- tbXpe4vM3sP5fqCdXwV2cbSP/v5pe4x/bselx2ooObNKZCHhWm++PFf6kBRghaTQ2CH+XHkI7ro
- aRaAC85CqcLwvt3sZ0R1cyuT3VYPUc8IjJdIFoLvGRizHX1wzxMAtYEv2QxS0tBDVQup/BCKqNn
- fkIQXk/hmhYmATC8GIzHfJmHn7bTGvWSdJSTyDNn+do/gu73
-X-Developer-Key: i=mkl@pengutronix.de; a=openpgp;
- fpr=C1400BA0B3989E6FBC7D5B5C2B5EE211C58AEA54
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z_UT8qKhF6R5VTan@smile.fi.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-If a driver is removed, the driver framework invokes the driver's
-remove callback. A CAN driver's remove function calls
-unregister_candev(), which calls net_device_ops::ndo_stop further down
-in the call stack for interfaces which are in the "up" state.
+On Tue, Apr 08, 2025 at 03:17:54PM +0300, Andy Shevchenko wrote:
+> On Fri, Mar 14, 2025 at 07:16:17PM +0200, Andy Shevchenko wrote:
+> > On Thu, Mar 13, 2025 at 01:30:34PM +0200, Andy Shevchenko wrote:
+> > > Replace the check for firmware registered I²C devices as the firmware node
+> > > independently on type should be retrieved via dev_fwnode().
+> > 
+> > Hans, are you okay with this now? Can it be applied?
+> 
+> Is this fell into cracks? Also, can somebody harvest those pretty much simple
+> one- or so liners that I have sent last week(s)? They all basically in a way
+> about fwnode.
 
-With the mcp251xfd driver the removal of the module causes the
-following warning:
-
-| WARNING: CPU: 0 PID: 352 at net/core/dev.c:7342 __netif_napi_del_locked+0xc8/0xd8
-
-as can_rx_offload_del() deletes the NAPI, while it is still active,
-because the interface is still up.
-
-To fix the warning, first unregister the network interface, which
-calls net_device_ops::ndo_stop, which disables the NAPI, and then call
-can_rx_offload_del().
-
-Fixes: 55e5b97f003e ("can: mcp25xxfd: add driver for Microchip MCP25xxFD SPI CAN")
-Cc: stable@vger.kernel.org
-Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
----
- drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-index 3bc56517fe7a..dd0b3fb42f1b 100644
---- a/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-+++ b/drivers/net/can/spi/mcp251xfd/mcp251xfd-core.c
-@@ -2174,8 +2174,8 @@ static void mcp251xfd_remove(struct spi_device *spi)
- 	struct mcp251xfd_priv *priv = spi_get_drvdata(spi);
- 	struct net_device *ndev = priv->ndev;
- 
--	can_rx_offload_del(&priv->offload);
- 	mcp251xfd_unregister(priv);
-+	can_rx_offload_del(&priv->offload);
- 	spi->max_speed_hz = priv->spi_max_speed_hz_orig;
- 	free_candev(ndev);
- }
+Any comments? Can it be applied?
 
 -- 
-2.47.2
+With Best Regards,
+Andy Shevchenko
 
 
