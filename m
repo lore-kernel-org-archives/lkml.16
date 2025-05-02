@@ -1,127 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 188182F2E;
-	Fri,  2 May 2025 19:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F2D51AA1DB
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:01:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746212445; cv=none; b=fgxG3H3ktHYjAd0FkPuzlxEJOJZLwNrNpx/lwXSbWZw+Cgs/uO0VqGGlQXGgns6zLocC5KP5FPaVKQwi0Tk1P74PLzDY5itTtUarg33k9XRwv1VBf0GuACf0D0kdDB0aCFSUkBfrRQ8kJfA/x94yrRbPtbpThN8hdxLn8isb0pQ=
+	t=1746212481; cv=none; b=Q8BzH4QC37XMqM54Vi9HncsqJQnSP0JsM3DVVk3BMjG2l9/VPp/wFoymWU4qgfZeQGzAhQKdBF1lDfCz6er/WO7eS9QQxMqj2sBcA/4XwA0OvU7WAnx496iP430sKaOUxPBNEVa880uSCgyiw1NYJ/ctsXXIDqT2jo/cnKzwY6Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746212445; c=relaxed/simple;
-	bh=LRTzkroHpUqBBS66F+/5iJ/bP7dLfCm5QyQ+g9hrpLk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jYP+IdN6Q26kLppO/T7rNO3fOTLbw7jqXpSXFG0SpGCqI3pWyIGR2+F5xW1q1GXrJAH6lCoMmcfmbHPJ7+3ePZyfgg+BGlhfx+RT49+W+OIdIfi5wA7GbCcwlWARbBnIKTy4SDVVypqaS+ssHgbzXD6lhhL1dXgABO678qWUR/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RVCxA7Fi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746212481; c=relaxed/simple;
+	bh=0DJRj/roTx2TlUPmbcSX3CMHGsoBIXB/OFsCbOGjL7s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=fXgKM1HcPVlmkgstgkIxCb/uWiWSnnt0jg8l93yzI9NvukM3992h6g/LcqFp0aLCYaPVzURAp72b7e90XNnuzQWU0GWzoEi1035Czi/N087fZu6seyVx7o2Mh3P830fCivLwqLR05nSlb0U+H0SztoPhVrIbLzon4uRijTbfUEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=eyDPLfTN; arc=none smtp.client-ip=205.220.165.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RVCxA7Fi"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BE755C4AF0D;
-	Fri,  2 May 2025 19:00:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746212444;
-	bh=LRTzkroHpUqBBS66F+/5iJ/bP7dLfCm5QyQ+g9hrpLk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=RVCxA7Fi2kC70zTldFhPrK12iBLCevvXON41AsQDhiT1fNWYAKJzGGtG2vHmHgeQz
-	 kjELgmD5yS/RwhIz6ZsP4qOmmrnBCBAI42KTEdcI36beuHzh6rrohOww0jH7VCepXq
-	 niPchHhpAF6xaYAvHHj71qbjmogoNEPbk5PS/ZTMFIQPFLJc1/b/7cjvbZq5TS1z3B
-	 raweVQ0sMEm2uUVth8Puo6kpl5vNGooYCbCs5hfBrUX4Am9pMc3eK51s2xuQPhU2Df
-	 W7P1tgBzpvX8TxFZ3rsLRfHw6ga1iEdjKpHK53zdXnOwsfm3v+nNaelfk5T9Es7/1Z
-	 iyvrzzxvfnmKA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B00CDC3ABAC;
-	Fri,  2 May 2025 19:00:44 +0000 (UTC)
-From: Aaron Kling via B4 Relay <devnull+webgeek1234.gmail.com@kernel.org>
-Date: Fri, 02 May 2025 14:00:32 -0500
-Subject: [PATCH v3 4/4] PCI: tegra: Drop unused remove callback
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eyDPLfTN"
+Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542IttTN008675;
+	Fri, 2 May 2025 19:01:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=
+	content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=corp-2025-04-25; bh=jxcag99Lf5vM47fPYCnfh7DS4x/qq
+	Pn4W6mmCiyQxxc=; b=eyDPLfTNIg/lGMSU8Ehg9wn6GcdCmuIj338tcdrkafRSP
+	WKxGQHVnHEtyQchpZd1iJGpsmUDQUm1kX/dTrqFRt+Qj/TnjMuiLEGpoKESOkd7f
+	Bbho+T8GA3B0bb0coYgzmYN04ksVyD34o458Q6y+M/DwyIwHRNL9fDq62dM/g+El
+	sLqe0rFxCLmfMn8ChDc3yEpyudM3s3VbtcDcMolqGA/hWkprWN1MogANaMQrj6ne
+	GX0ELfp/M2VwnyxAi7MHGU1+IpKdyXj7EST4fdLj3y2QM57zR2Gq3dxffLH+eIVg
+	5bTEVW2snIGVwHcAQ3hpKDDyy1bfc2NAyGHC5JWLw==
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6uqnw80-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 May 2025 19:01:04 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 542IFENI023804;
+	Fri, 2 May 2025 19:01:03 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxmc18f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 May 2025 19:01:03 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 542J12rF022528;
+	Fri, 2 May 2025 19:01:02 GMT
+Received: from chyser-vm6.osdevelopmeniad.oraclevcn.com (chyser-vm6.appad3iad.osdevelopmeniad.oraclevcn.com [100.100.242.35])
+	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 468nxmc184-1;
+	Fri, 02 May 2025 19:01:02 +0000
+From: chris hyser <chris.hyser@oracle.com>
+To: "Chris Hyser" <chris.hyser@oracle.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Mel Gorman" <mgorman@suse.de>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        "Jonathan Corbet" <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: [Patch v2 0/2] sched/numa, mm/numa: Soft Affinity via numa_preferred_nid.
+Date: Fri,  2 May 2025 14:59:40 -0400
+Message-ID: <20250502190059.4121320-1-chris.hyser@oracle.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-pci-tegra-module-v3-4-556a49732d70@gmail.com>
-References: <20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com>
-In-Reply-To: <20250502-pci-tegra-module-v3-0-556a49732d70@gmail.com>
-To: Thomas Gleixner <tglx@linutronix.de>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org, 
- Aaron Kling <webgeek1234@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746212443; l=1781;
- i=webgeek1234@gmail.com; s=20250217; h=from:subject:message-id;
- bh=miAFNHWEF9RJxGC8gWXehC/2+WRlc/Ou80W+mmEfiFc=;
- b=Waqua4Tb7qWUjc1jh0Wel81cwJ28ZdHn3RtzwEJsCdSru2Wde97OIA4t1VBCcM2Gt/PaW64r4
- m3PfBEnaE9fCLOlIe+Ks563X1TV6HHbYThvPTaXeCeMIL7ObcY64WHr
-X-Developer-Key: i=webgeek1234@gmail.com; a=ed25519;
- pk=TQwd6q26txw7bkK7B8qtI/kcAohZc7bHHGSD7domdrU=
-X-Endpoint-Received: by B4 Relay for webgeek1234@gmail.com/20250217 with
- auth_id=342
-X-Original-From: Aaron Kling <webgeek1234@gmail.com>
-Reply-To: webgeek1234@gmail.com
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_04,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=955 phishscore=0
+ suspectscore=0 spamscore=0 adultscore=0 mlxscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505020153
+X-Proofpoint-ORIG-GUID: 0GzJGuw9mQ521sNWC0uU3TYK8B001jDO
+X-Authority-Analysis: v=2.4 cv=Vq8jA/2n c=1 sm=1 tr=0 ts=68151670 b=1 cx=c_pps a=qoll8+KPOyaMroiJ2sR5sw==:117 a=qoll8+KPOyaMroiJ2sR5sw==:17 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=WsHKUha7AAAA:8 a=glSDMOvTweIbZLxOEDYA:9 a=H4LAKuo8djmI0KOkngUh:22 cc=ntf
+ awl=host:13130
+X-Proofpoint-GUID: 0GzJGuw9mQ521sNWC0uU3TYK8B001jDO
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDE1MiBTYWx0ZWRfX3O7D82ma882B YnNjwCc/FExxz+YSUq0Kfid0Oj+NrU4whetDv1sGfLVwGapkRzfBek5k54rPNyUARU4H2PBFwvN nh/8ltZgo/Qyo0IRWXLlu5P3778Ia8BVyHdi/D5Z2uViPDHk6DvR3IyPAXN11ctgQHQ1EOfvaLR
+ 09gYi/B8GVlmMUI33OMCm/2qKU03UpOKzkiV3HkKRBkbNnMjduzKl07WFnCsZrmrmChRzxCM+EO /Jxm8U2OWgDz5Vx410sozW8JMBIunezPY4iXlkzgNrJMCSwYAYT0HJPBkE//gDlZv4Bsvyqt/dR xH7ICnWAaT44BS7SHaqmro2aztMQvZYb7lRpmoGEZQaSIpmJGAcUoIgm55qcG2X00II0XZK+74x
+ 0xOZjBmrIY4+SpGBY7sXAQUI2Rz3zxxl7NAFk/cNzX6FfQsW1GFTg9mF9O/JkrgekLN17LYF
 
-From: Aaron Kling <webgeek1234@gmail.com>
+Soft Affinity (value of hard affinity with graceful handling of overload) as a
+concept has been around for years. The original implementation was rejected
 
-Debugfs cleanup is moved to a new shutdown callback to ensure the
-debugfs nodes are properly cleaned up on shutdown and reboot.
+https://lore.kernel.org/lkml/20190702172851.GA3436@hirez.programming.kicks-ass.net/
 
-Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
----
- drivers/pci/controller/pci-tegra.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+with an alternative, using numa_preferred_nid, suggested by Peter Zijlstra.
 
-diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
-index 1539d172d708c11c3d085721ab9416be3dea6b12..cc9ca4305ea2072b7395ee1f1e979c24fdea3433 100644
---- a/drivers/pci/controller/pci-tegra.c
-+++ b/drivers/pci/controller/pci-tegra.c
-@@ -2674,27 +2674,12 @@ static int tegra_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
--static void tegra_pcie_remove(struct platform_device *pdev)
-+static void tegra_pcie_shutdown(struct platform_device *pdev)
- {
- 	struct tegra_pcie *pcie = platform_get_drvdata(pdev);
--	struct pci_host_bridge *host = pci_host_bridge_from_priv(pcie);
--	struct tegra_pcie_port *port, *tmp;
- 
- 	if (IS_ENABLED(CONFIG_DEBUG_FS))
- 		tegra_pcie_debugfs_exit(pcie);
--
--	pci_stop_root_bus(host->bus);
--	pci_remove_root_bus(host->bus);
--	pm_runtime_put_sync(pcie->dev);
--	pm_runtime_disable(pcie->dev);
--
--	if (IS_ENABLED(CONFIG_PCI_MSI))
--		tegra_pcie_msi_teardown(pcie);
--
--	tegra_pcie_put_resources(pcie);
--
--	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
--		tegra_pcie_port_free(port);
- }
- 
- static int tegra_pcie_pm_suspend(struct device *dev)
-@@ -2800,7 +2785,7 @@ static struct platform_driver tegra_pcie_driver = {
- 		.pm = &tegra_pcie_pm_ops,
- 	},
- 	.probe = tegra_pcie_probe,
--	.remove = tegra_pcie_remove,
-+	.shutdown = tegra_pcie_shutdown,
- };
- builtin_platform_driver(tegra_pcie_driver);
- MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+This is a simple implementation with most of the changes associated with a
+prctl() to set/get the value. It does not modify the scheduler's behavior but
+simply exploits the current NUMA balancing behavior.
 
--- 
-2.48.1
+The intent is to provide a mechanism whereby a knowledgble user, system admin,
+or importantly, a NUMA aware application can force Auto NUMA Balancing to prefer
+the "correct" node, for example pinned memory like RDMA buffers or other
+scenarios where heavily accessed memory ranges are pinned and not subject to
+NUMA hint faults.
 
+[PATCH v2 1/2] sched/numa: Add ability to override task's numa_preferred_nid.
+ include/linux/sched.h |  1 +
+ init/init_task.c      |  1 +
+ kernel/sched/core.c   |  5 ++++-
+ kernel/sched/debug.c  |  1 +
+ kernel/sched/fair.c   | 15 +++++++++++++--
+ 5 files changed, 20 insertions(+), 3 deletions(-)
 
+[PATCH v2 2/2] sched/numa: prctl to set/override task's numa_preferred_nid
+ Documentation/scheduler/sched-preferred-node.rst | 67 ++++++++++++++++++++++++++++++++
+ include/linux/sched.h                            |  9 +++++
+ include/uapi/linux/prctl.h                       |  8 ++++
+ kernel/sched/fair.c                              | 64 ++++++++++++++++++++++++++++++
+ kernel/sys.c                                     |  5 +++
+ tools/include/uapi/linux/prctl.h                 |  6 +++
+ 6 files changed, 159 insertions(+)
