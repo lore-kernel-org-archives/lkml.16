@@ -1,115 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C7419E83E;
-	Fri,  2 May 2025 07:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7ADE266B5E;
+	Fri,  2 May 2025 07:14:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746170012; cv=none; b=BqWdNKGFnrd5b5yFp6yAMzbPywagRmnQOsJ8CIslnO3ne8rif1syRtD5Bpt1XV0/YSWe1rNFTwBB/hh9Sq5dwbWaqGdHOXNG1zhoLFy1iIYbgtnJ2Zmx0yn656p4obZM+g/U8E/70NQJQRXopg727Kan24Pc1Mj+T4PzJTvnJ4Q=
+	t=1746170091; cv=none; b=HVU2pvlH/8GuJJ+4skdmjQYJzmrgDAJnqT4E9KsTcGaQqRx4jE7vKcGT8v9XxBaFaIr5lQv2Z0AJ6+83dGNWR+tlvKrfaMuD6eE4qp4XMFgIYugh1CtiTbyLtlcPYlBoax7l8ni3+2ibBz8VdkDCXrsqA4pLFidDqtg+0NCogyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746170012; c=relaxed/simple;
-	bh=L66J/eQYes/GoM+dSimhqwXOafQgvfhtmOkECvbQyYk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JUl7oBY9M6wXpIxJOjegA9IMpVPRbYDh/myGT/VnrZLISbNRNDfYUXIXVeW7XMNSOIFGNO6/DZyS9b9irrGnmE70J7b/189Fy39XUnXOpzr1kj2XxUS+H/SZ6+ne6Gz7E/qhbSTEQvBRQiNrBKzc+igdUg6utps4dBotsYIjb+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=olWs2xSb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746170091; c=relaxed/simple;
+	bh=WZMcB7IZq0pU+GD0KzLwmI2O89KEodLSHYG0SH/X1LM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j8Pvsibq7iwjUxcT2wThWUoWbSl2aKoAUz55i7Jodo2ICQ51MaYtbNRd3d/TfOEdRsHOAEiTlM2mTdsPBWpYyW0KinhiCX1Dpaii4ULNhh0PZV/jvUE63MRm5CoANdSnNelkF6ezObyOUj2Jdz/hFeVbUKAWn8Lop3OWm21JH0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/semb5n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="olWs2xSb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 358F9C4CEE4;
-	Fri,  2 May 2025 07:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746170010;
-	bh=L66J/eQYes/GoM+dSimhqwXOafQgvfhtmOkECvbQyYk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=olWs2xSb9VKrNz3V3Tz8OaqO0bZEmj/zi6rjuraKEBP+kHtGZIoAbqY8QwnJOyEe6
-	 c3ynuHQGlwxyAPsd5NcEz9Z/b+HQxyC/hqsdll3Tp5FbRE5P/Vh3Z7D//xjDghcp4S
-	 LZBoHFVmI+iMk+q1cyGqyyxZAq/WE5Viy0fkJpGk=
-Date: Fri, 2 May 2025 09:13:28 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sami Tolvanen <samitolvanen@google.com>,
-	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] rust: samples: Add debugfs sample
-Message-ID: <2025050253-wriggly-pod-e420@gregkh>
-References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
- <20250501-debugfs-rust-v3-4-850869fab672@google.com>
- <aBRtrfTaaC3Vk9fL@pollux>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/semb5n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FBAEC4CEE4;
+	Fri,  2 May 2025 07:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746170091;
+	bh=WZMcB7IZq0pU+GD0KzLwmI2O89KEodLSHYG0SH/X1LM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=j/semb5nvJ6TikEwk5ZY1owF/dZjIMrvygoezgB9u7bzZXekMwUoqoggKKOQgI/bu
+	 DUVl5qePcZlEicoD9cB/dvNIjdCqyLVRemKoT1aBQcJNnUa4LoiQ2PXvJdkWWJU2zm
+	 Pg5oL1EcR3IxkOBLXYcKNwA5kWjRByIrtZvc2R9XQBHHm5B+YO/IGncBcHQpGH0Mta
+	 Ezz05Us9N3jjNpxOOS+WnNh/Xsd1K6Fft+DCCZpMQ5WZcfu053MYlSV0hUjjtL3ZMw
+	 ZoAgIduZ/aHhadHxsl20vpetMgE9EpymkQBLwHBQEyj3lw35ZN4jfNdAxNU84E0z1T
+	 92/L2POJBmvgg==
+Message-ID: <074a9a19-9050-44dd-a0bf-536ae8318da2@kernel.org>
+Date: Fri, 2 May 2025 09:14:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBRtrfTaaC3Vk9fL@pollux>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 4/4] net: ti: icssg-prueth: Fix kernel panic during
+ concurrent Tx queue access
+To: Meghana Malladi <m-malladi@ti.com>, dan.carpenter@linaro.org,
+ john.fastabend@gmail.com, daniel@iogearbox.net, ast@kernel.org,
+ pabeni@redhat.com, kuba@kernel.org, edumazet@google.com,
+ davem@davemloft.net, andrew+netdev@lunn.ch
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, srk@ti.com,
+ Vignesh Raghavendra <vigneshr@ti.com>, Roger Quadros <rogerq@kernel.org>,
+ danishanwar@ti.com
+References: <20250428120459.244525-1-m-malladi@ti.com>
+ <20250428120459.244525-5-m-malladi@ti.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250428120459.244525-5-m-malladi@ti.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 09:01:01AM +0200, Danilo Krummrich wrote:
-> On Thu, May 01, 2025 at 10:47:44PM +0000, Matthew Maurer wrote:
-> > +struct RustDebugFs {
-> > +    // As we only hold this for drop effect (to remove the directory) we have a leading underscore
-> > +    // to indicate to the compiler that we don't expect to use this field directly.
+
+
+On 28/04/2025 14.04, Meghana Malladi wrote:
+> Add __netif_tx_lock() to ensure that only one packet is being
+> transmitted at a time to avoid race conditions in the netif_txq
+> struct and prevent packet data corruption. Failing to do so causes
+> kernel panic with the following error:
 > 
-> This feels like an introduction to Rust in the kernel for Rust beginners, which
-> is a great thing!
+> [ 2184.746764] ------------[ cut here ]------------
+> [ 2184.751412] kernel BUG at lib/dynamic_queue_limits.c:99!
+> [ 2184.756728] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
 > 
-> However, I wonder if, instead, we may want a dedicated (or even multiple) sample
-> modules or sample drivers, where we go into such detail and leave those samples
-> to focus only on the corresponding API?
-
-People search for the specific example of what they want to do, so I
-recommend just leaving all of these comments in for now as knowing to
-search for a different example is usually not going to happen :)
-
-
+> logs: https://gist.github.com/MeghanaMalladiTI/9c7aa5fc3b7fb03f87c74aad487956e9
 > 
-> > +    _debugfs: Dir,
-> > +}
-> > +
-> > +static EXAMPLE: AtomicU32 = AtomicU32::new(8);
-> > +
-> > +impl kernel::Module for RustDebugFs {
-> > +    fn init(_this: &'static ThisModule) -> Result<Self> {
-> > +        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
-> > +        let debugfs = Dir::new(c_str!("sample_debugfs"));
-> > +
-> > +        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
-> > +        let sub = debugfs.subdir(c_str!("subdir"));
-> > +
-> > +        // Create a single file in the subdirectory called "example" that will read from the
-> > +        // `EXAMPLE` atomic variable.
-> > +        sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
-> > +            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
-> > +        });
-> > +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
-> > +
-> > +        // Change the value in the variable displayed by the file. This is intended to demonstrate
-> > +        // that the module can continue to change the value used by the file.
-> > +        EXAMPLE.store(10, Ordering::Relaxed);
-> > +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
-> > +
-> > +        // Save the root debugfs directory we created to our module object. It will be
-> > +        // automatically cleaned up when our module is unloaded because dropping the module object
-> > +        // will drop the `Dir` handle. The base directory, the subdirectory, and the file will all
-> > +        // continue to exist until the module is unloaded.
+> The lock is acquired before calling emac_xmit_xdp_frame() and released after the
+> call returns. This ensures that the TX queue is protected from concurrent access
+> during the transmission of XDP frames.
 > 
-> Same with this comment.
+> Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
+> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+> ---
+>   drivers/net/ethernet/ti/icssg/icssg_common.c | 7 ++++++-
+>   drivers/net/ethernet/ti/icssg/icssg_prueth.c | 7 ++++++-
+>   2 files changed, 12 insertions(+), 2 deletions(-)
 > 
-> @Greg: I know you proposed this one; for educational purposes I suppose. What's
-> your take on the above?
+> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
+> index a120ff6fec8f..e509b6ff81e7 100644
+> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
+> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+> @@ -660,6 +660,8 @@ static u32 emac_run_xdp(struct prueth_emac *emac, struct xdp_buff *xdp,
+>   			struct page *page, u32 *len)
+>   {
+>   	struct net_device *ndev = emac->ndev;
+> +	struct netdev_queue *netif_txq;
+> +	int cpu = smp_processor_id();
+>   	struct bpf_prog *xdp_prog;
+>   	struct xdp_frame *xdpf;
+>   	u32 pkt_len = *len;
+> @@ -679,8 +681,11 @@ static u32 emac_run_xdp(struct prueth_emac *emac, struct xdp_buff *xdp,
+>   			goto drop;
+>   		}
+>   
+> -		q_idx = smp_processor_id() % emac->tx_ch_num;
+> +		q_idx = cpu % emac->tx_ch_num;
+> +		netif_txq = netdev_get_tx_queue(ndev, q_idx);
+> +		__netif_tx_lock(netif_txq, cpu);
+>   		result = emac_xmit_xdp_frame(emac, xdpf, page, q_idx);
+> +		__netif_tx_unlock(netif_txq);
+>   		if (result == ICSSG_XDP_CONSUMED) {
+>   			ndev->stats.tx_dropped++;
+>   			goto drop;
+> diff --git a/drivers/net/ethernet/ti/icssg/icssg_prueth.c b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> index ee35fecf61e7..b31060e7f698 100644
+> --- a/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> +++ b/drivers/net/ethernet/ti/icssg/icssg_prueth.c
+> @@ -1075,20 +1075,25 @@ static int emac_xdp_xmit(struct net_device *dev, int n, struct xdp_frame **frame
+>   {
+>   	struct prueth_emac *emac = netdev_priv(dev);
+>   	struct net_device *ndev = emac->ndev;
+> +	struct netdev_queue *netif_txq;
+> +	int cpu = smp_processor_id();
+>   	struct xdp_frame *xdpf;
+>   	unsigned int q_idx;
+>   	int nxmit = 0;
+>   	u32 err;
+>   	int i;
+>   
+> -	q_idx = smp_processor_id() % emac->tx_ch_num;
+> +	q_idx = cpu % emac->tx_ch_num;
+> +	netif_txq = netdev_get_tx_queue(ndev, q_idx);
+>   
+>   	if (unlikely(flags & ~XDP_XMIT_FLAGS_MASK))
+>   		return -EINVAL;
+>   
+>   	for (i = 0; i < n; i++) {
+>   		xdpf = frames[i];
+> +		__netif_tx_lock(netif_txq, cpu);
+>   		err = emac_xmit_xdp_frame(emac, xdpf, NULL, q_idx);
+> +		__netif_tx_unlock(netif_txq);
 
-I like it and want to see this here as it helps explain both how to use
-this, AND how to have maintainers review code that uses the api that are
-not that familiar with how Rust does things.
+Why are you taking and releasing this lock in a loop?
 
-thanks,
+XDP gain performance by sending a batch of 'n' packets.
+This approach looks like a performance killer.
 
-greg k-h
+
+>   		if (err != ICSSG_XDP_TX) {
+>   			ndev->stats.tx_dropped++;
+>   			break;
+
+
