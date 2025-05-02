@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58AD5255F5D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:19:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F26B255F4E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191993; cv=none; b=PuCGIJa8PA6AZT7GnM34B+As7kL8k1loH81kKYhaW7ycNka8bfJddhDcJWt+mfIfFMBKWNBMUCU/eLRoMhWoKvG80emhqTiiouPg0PJLZHg8FRJF50OobXKbXvNhW6VLPji/vJwDpQF6nP/FJh8RFM78dp0XHSrsStH5mc/R6lw=
+	t=1746191995; cv=none; b=OmZT6Q++9zILC5LiWvv1ypndbw7PjqwCHctN39DozkNClxUUKGMTrPbgzX1tsC6TxV1Fquysaj5YT8bWQr3q0vuLx484FRV3piZib1V95aaVVoBH1ZrJvqQR5edA2Ja8SXbi114tfQLGmrguzP8E2Va+MwpoeXmXiqrrLV6BmZU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191993; c=relaxed/simple;
-	bh=ntNHKD1aAus/XVUDLI6auIHzcPaub0zhy99OX5NhOao=;
+	s=arc-20240116; t=1746191995; c=relaxed/simple;
+	bh=NPI8Q0CzeDhYCgGRlOT+/ncU0nCVd9zf3HV87DMudMQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OanCRFeUQ6Ot/qk5T/Y+w/c5tFD1/f42Wf1BvOW1M/eQY6tHlZeTNrB1EVr4q1FX+sVP36JtkFCPI613qUdXUBnqKd/voqlDsNrNoIevKiSnLSmmCh4O34Ykf46/ecbyerDC2jXQVV5bGpcQQb7m38nYf7tG++qF7KvIjfv/A4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=39gPze4X; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=G5/IeTxPBku7teWI/4ab8w3nCRFskET6qsJsLgYr01HR3dOHZb24T0CYH3APWXLUnZ9s8lyLoed/wNMqq0WLRQWpoJeHNIghNjqb/FSh/wPE0AFm7HU9nBe5m0MmT+CaxcYe8uEpivA/wtDcIY9qsJd4oN17ZGYCCSfm9dcTjww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ly42+29Y; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="39gPze4X"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43ea256f039so14592885e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:19:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ly42+29Y"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a07a867a4dso1015546f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746191990; x=1746796790; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746191992; x=1746796792; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1tpEf3+bu3lxuNrb8CKVDwlrCGOTDoKQVcY7PTqeRY=;
-        b=39gPze4XylEbh5onl8W3gfJG1fMF3535/nrT6p+JQ+TiJLrD5kWBvqjV81q24bOT2c
-         QNl4/DieKlirJIcuSAtLjf2sC8n9ndPpJrVHlhytBTd35m3tpjKz7NGqqEBn18U7VCbk
-         lykzVbIYiVCgfXluuz32yk5J7ra1N+5t8YEUyZUfp7CioBWVrvG9c2y9mvVhrSrlfr2A
-         J+ZxJX4gdq8xZDINXt/Vu3iQlU8C3EujyvXy1Bs0F1t0efsY4Qw84PBz/zY70Fg/3PR3
-         z3smGPZstgAboOOqGjk3NCsLbl4f0OSF2MyATGydz8IlBt+pd3fYmPcJFJuDePAONEuB
-         IUeg==
+        bh=xzccJFQgm3Btdw/UpST5BSIO17Up7GalLaw9yByRn6A=;
+        b=ly42+29YxXpVExFhm8YGYF3wR9/NK8l9/xOp/SzJAK88h60ycU3XNSWWwEUsKrXgbT
+         qclKUnjzLqcs8Ztu0U8tvxN1YSzDAlUBVrs6OnqYO6ZQGpEFJIAEw7m2vzE5syunX/69
+         1CBJ3R1haE97W1KPL+ltUhvgVCmSgH7djFYQSjY64GpfWfmXfxXD5ViuBN3V6qXDcfOr
+         hON1DMk1Ki/n50UB4eCwEXKv6j73GiKLt+PlhVwFAfQ6uoXoEFOzaRMh8wOJcu1AzSOy
+         ne0W1vN9mheo3xkfi9HaMhCtewXQ7+VLKl8ZKAU7OKYIlBTkoRFvuZKHoPc5YFh7Pw4P
+         2vng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746191990; x=1746796790;
+        d=1e100.net; s=20230601; t=1746191992; x=1746796792;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s1tpEf3+bu3lxuNrb8CKVDwlrCGOTDoKQVcY7PTqeRY=;
-        b=IA/A3LLcm/2/DrJObFFTT+7EfCAaOPmI8g29E3MW8OAYlHudrKsJVDcylq5mUC3x8e
-         YWRU8N2RgHyoNu16U/T6aPKKgMoMQPlcFKYAlZ2JFgDZ5enLRupcDkTbwdKvkfF5snRI
-         6q9nULWkcsLqhdSM+gpMw/fqivujn3/qUwFHciOEIF0gE4/MBwQAw0D6csGlQEH+32+y
-         lhVXRmHZ7sVUGc7gQPK/XI2TB/HLrOolMZ4vXpW2R4xIE7eIW0mVAWdWCdnsI7FvI+Ge
-         yaECnFVANx2ixcZS3fKC2M+48Bv0LKMjuQm7M+87dNYplmDMsV1SiB+CEojGBIpAUYXD
-         z0tA==
-X-Forwarded-Encrypted: i=1; AJvYcCULv5yGCIg/XOD9Q4YWKGxjBVw+lAPNTjwQ8qsx5YXao/EmIiRxHqzNM3D4RiZuD2kNoyNfAt3fd51eL7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzJha3vcyFBTh3IiuV+JdlGhHnwghcsBtNqR9tECoDYpsHByAWg
-	MLGwTBZATROAGm8G3gG3LB0vKgKqn1WU7x9iLsexc7wt8KBjXPebQoOVrmd6on2LWBQileWsQ7b
-	vX5Xfx/ECoyMAWA==
-X-Google-Smtp-Source: AGHT+IHAFqMJkAtqC2SWZxLVqIggAEd9I23F+Rr4fh+PToGXouWQ4XCpFH5Wsw5/aFzuNZFmLh2jeM6OTeI2tjY=
-X-Received: from wmbfp20.prod.google.com ([2002:a05:600c:6994:b0:43c:f5b8:aad0])
+        bh=xzccJFQgm3Btdw/UpST5BSIO17Up7GalLaw9yByRn6A=;
+        b=GSVDnWr7GHDWH7gj5H537ioDcA50MEIMuMMawvbEH74q5xZv9xlVIAKVpGxZgofmPA
+         HrdCh4AmlSwaai/2Uha/wL6q2O6AQD6n39zuQ9cgD1vxgzXvowtZsOsFxpzUoD3LhMBC
+         T03Ydg1CxnKO2bHBTR7sB33tMhhRDKXq3qZhhlMVYO+4ZCxAGEGjsVrU5XwmAsHVAwhg
+         meT/DHr74MHQnRs9qrsHm/Xr6wF6Y9sUu311cpOBJoHI3lg78poyapKs1+DnM7RkadHK
+         WB3YLsD8mC7z9JKAurJn12CqgbnaSUj6ShH62KxrMXDwKk0Wgbj/aw4GfiBire+gFLam
+         Llxg==
+X-Forwarded-Encrypted: i=1; AJvYcCXecnQOeT7IGB72hRJh4lfWgL8PRnRJJaK6VWuIsTwpGurwXtsdHnqHFMTXnSQwoqqNHNXqF3+Yrb5AJMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9aAuXYnEWakwhj4MFmS0/NYbdN9KRRPC0foQD28QnQRTVlZrJ
+	iF9wmkrhAqfn+hfyQG/SnHPdUUb+BObyKQ6Lw2KA8GDKnvyqvvBSag3UjCeF+UKg6u1p8ogdHby
+	cHGOTIhcZAHlSPA==
+X-Google-Smtp-Source: AGHT+IERAEp6Y3HGppF1/OOjzNHvj6vYq+bUMzpiTu5TzcOhpBKMX4Gv/giZgYisNuR6fADi18ZYP+Bp7+ayHh4=
+X-Received: from wmbji5.prod.google.com ([2002:a05:600c:a345:b0:440:595d:fba9])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3155:b0:440:6a1a:d89f with SMTP id 5b1f17b1804b1-441bbea0e1dmr24794695e9.4.1746191989989;
- Fri, 02 May 2025 06:19:49 -0700 (PDT)
-Date: Fri, 02 May 2025 13:19:33 +0000
+ 2002:a05:6000:1446:b0:391:3406:b4e2 with SMTP id ffacd0b85a97d-3a099af1304mr2118599f8f.49.1746191992447;
+ Fri, 02 May 2025 06:19:52 -0700 (PDT)
+Date: Fri, 02 May 2025 13:19:34 +0000
 In-Reply-To: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,127 +59,122 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250502-vec-methods-v5-0-06d20ad9366f@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3500; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=ntNHKD1aAus/XVUDLI6auIHzcPaub0zhy99OX5NhOao=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoFMZpNca3fQ1kydJbsV7WpBUsdAazh+kXuZlEZ
- v14TxsM44WJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBTGaQAKCRAEWL7uWMY5
- RrIDEACIdhbzpcsrR3j0V7JeiyO3csHGQGJy5MMPwxn71owlEsaD+YPjE+unTZ5jKnkyBFiNtdc
- PmE1KoUHPxRhOa9WAYXQ+LN8hCCPUrmvySQbZY9BPwz3N56zxqtWCbaUldBy4qf0QuhOAQTz7wu
- cyRrC6JmMZ9zwdAgoBzV8BmKkls3MKCKyAnJebkCgCydQFms7W0tltvzv7vdxLBWzBDCYGHWeQO
- WPxJo9T8YEydA4armdMctooU9c5KCwZbpEtbrsOgqsBK5FXVjWddpNpQ2wyBz3vtXdynIZL5Bhq
- beSTEjH18j/gUxarR72KGLqXVH5NhczOXLLUDyXV9VN9OJixt+QHCFyALlUPGMx71TrnfI4/vSA
- TwPuxqk0q1KFXuwVUPrcWg5599tKgJFLSlXv/pjeunTCrUqGJI8eRm0Q1tjY9TR7qa/HEWNOX6M
- oCav5In6udDYm9p+KxnUtwy/5KOrjL1IY2R+Yqqt1viEI+zzLzS6beSqmgAyRBkBDuSsekfWDNO
- Ozw8PF1+hzv1yqqiM1O/HjNWBuHUY4tlnLre7YIkPnhuliQyHLaW+013cr3qRMPdEZEphxxUjJm
- OMV2G9XTQip7yx1fU453j5BUesKmMH3HG7dFtlt/hnG3A2COKu2NBWFS+wK2K1NcD78mVPBw4KN YTmcFlWd/JBl3tA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3519; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=NPI8Q0CzeDhYCgGRlOT+/ncU0nCVd9zf3HV87DMudMQ=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoFMZpQGtBpyeKhsH9KTgDwX8YIWvfvp819rVCW
+ YiaMq2+1gKJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaBTGaQAKCRAEWL7uWMY5
+ RohPD/9xqXoqE6eao1bCOeaVAHUgZfFMO25NzqOL07q7JHy8Fg11q2TXwxY6bX/++nRczCVbjnP
+ hrk+OsTrwAYjZYZDUXUtq8OMKBCwS/XBOltyx2PRUAo6QAqUcVtb6LA0PHoCoK1CO+L3p4u0lei
+ IkaHFhImdw30BiXxJkSE9K4rF4BeaaQOzI/6IE2JqVWvOHCtX3yopWudEKOuZ8/ME+vxs5A3e7Y
+ nz8uI9FNmFUAkslZWD0tXKltpZYG6XmskbiIvRvBVeXg0aQW0ysnhYyLJXKQP2LbkkZhKgsquQE
+ t0gGlnuRu6NdtPO6KmoulGayRe6e3jE2GXx78uqMxSpDLvMftvo52G9EF0uylg5bn1ZijWnlAlg
+ pOUTJX2QiqALXYRtGvTccFBLFxZl+PgpgOtV3vwIvL8B4or2tpM8V0bLwsCC+Iteim0ck/Zwp9r
+ k0Ub7L5COkfII3YdNitpM0TRSSUoBT9KlBIfDsSryL1bNHkJUyiXzjjmcgNJr9V04LnRbPSmURK
+ tnPHWwhbCfs9G/HxjkScyTOEQ3hNMYkj5tnGHwjz3XZFg+UH+dUWx3g8l1RlL9CWHXQU/ZZ+Jwo
+ Tvpg4BRPLEHVEN+nEfnf8RDBYB9vm8n/MWuYxNguZZzyYTbmfnEBE01Sc8vhrVuKQweB9MCmH9c 51Yf9X9Jtlw7N/Q==
 X-Mailer: b4 0.14.2
-Message-ID: <20250502-vec-methods-v5-5-06d20ad9366f@google.com>
-Subject: [PATCH v5 5/7] rust: alloc: add Vec::retain
+Message-ID: <20250502-vec-methods-v5-6-06d20ad9366f@google.com>
+Subject: [PATCH v5 6/7] rust: alloc: add Vec::remove
 From: Alice Ryhl <aliceryhl@google.com>
 To: Danilo Krummrich <dakr@kernel.org>
 Cc: Matthew Maurer <mmaurer@google.com>, rust-for-linux@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-This adds a common Vec method called `retain` that removes all elements
-that don't match a certain condition. Rust Binder uses it to find all
-processes that match a given pid.
+This is needed by Rust Binder in the range allocator, and by upcoming
+GPU drivers during firmware initialization.
 
-The stdlib retain method takes &T rather than &mut T and has a separate
-retain_mut for the &mut T case. However, this is considered an API
-mistake that can't be fixed now due to backwards compatibility. There's
-no reason for us to repeat that mistake.
+Panics in the kernel are best avoided when possible, so an error is
+returned if the index is out of bounds. An error type is used rather
+than just returning Option<T> to let callers handle errors with ?.
 
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/alloc/kvec.rs | 72 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ rust/kernel/alloc/kvec.rs        | 42 +++++++++++++++++++++++++++++++++++++++-
+ rust/kernel/alloc/kvec/errors.rs | 15 ++++++++++++++
+ 2 files changed, 56 insertions(+), 1 deletion(-)
 
 diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-index 7f75f3174ccb85daa3a9546d7b110da97f46063f..3298b3b0f32c70f3fe517fcb7af6b9922fea926b 100644
+index 3298b3b0f32c70f3fe517fcb7af6b9922fea926b..8845e7694334b672476ff935580f3a9eb94d23fe 100644
 --- a/rust/kernel/alloc/kvec.rs
 +++ b/rust/kernel/alloc/kvec.rs
-@@ -610,6 +610,29 @@ pub fn drain_all(&mut self) -> DrainAll<'_, T> {
-             elements: elems.iter_mut(),
-         }
+@@ -22,7 +22,7 @@
+ };
+ 
+ mod errors;
+-pub use self::errors::PushError;
++pub use self::errors::{PushError, RemoveError};
+ 
+ /// Create a [`KVec`] containing the arguments.
+ ///
+@@ -389,6 +389,46 @@ pub fn pop(&mut self) -> Option<T> {
+         Some(unsafe { removed.read() })
      }
-+
-+    /// Removes all elements that don't match the provided closure.
+ 
++    /// Removes the element at the given index.
++    ///
++    /// # Panics
++    ///
++    /// Panics if the index is out of bounds.
 +    ///
 +    /// # Examples
 +    ///
 +    /// ```
-+    /// let mut v = kernel::kvec![1, 2, 3, 4]?;
-+    /// v.retain(|i| *i % 2 == 0);
-+    /// assert_eq!(v, [2, 4]);
++    /// let mut v = kernel::kvec![1, 2, 3]?;
++    /// assert_eq!(v.remove(1)?, 2);
++    /// assert_eq!(v, [1, 3]);
 +    /// # Ok::<(), Error>(())
 +    /// ```
-+    pub fn retain(&mut self, mut f: impl FnMut(&mut T) -> bool) {
-+        let mut num_kept = 0;
-+        let mut next_to_check = 0;
-+        while let Some(to_check) = self.get_mut(next_to_check) {
-+            if f(to_check) {
-+                self.swap(num_kept, next_to_check);
-+                num_kept += 1;
-+            }
-+            next_to_check += 1;
-+        }
-+        self.truncate(num_kept);
++    pub fn remove(&mut self, i: usize) -> Result<T, RemoveError> {
++        let value = {
++            let value_ref = self.get(i).ok_or(RemoveError)?;
++            // INVARIANT: This breaks the invariants by invalidating the value at index `i`, but we
++            // restore the invariants below.
++            // SAFETY: The value at index `i` is valid, because otherwise we would have already
++            // failed with `RemoveError`.
++            unsafe { ptr::read(value_ref) }
++        };
++
++        // SAFETY: We checked that `i` is in-bounds.
++        let p = unsafe { self.as_mut_ptr().add(i) };
++
++        // INVARIANT: After this call, the invalid value is at the last slot, so the Vec invariants
++        // are restored after the below call to `dec_len(1)`.
++        // SAFETY: `p.add(1).add(self.len - i - 1)` is `i+1+len-i-1 == len` elements after the
++        // beginning of the vector, so this is in-bounds of the vector's allocation.
++        unsafe { ptr::copy(p.add(1), p, self.len - i - 1) };
++
++        // SAFETY: Since the check at the beginning of this call did not fail with `RemoveError`,
++        // the length is at least one.
++        unsafe { self.dec_len(1) };
++
++        Ok(value)
 +    }
- }
- 
- impl<T: Clone, A: Allocator> Vec<T, A> {
-@@ -1132,3 +1155,52 @@ fn drop(&mut self) {
-         }
++
+     /// Creates a new [`Vec`] instance with at least the given capacity.
+     ///
+     /// # Examples
+diff --git a/rust/kernel/alloc/kvec/errors.rs b/rust/kernel/alloc/kvec/errors.rs
+index 84c96ec5007ddc676283cbce07f4d670c3873c1e..06fe696e8bc6612a5e6aa2f6c28b685033acfa2f 100644
+--- a/rust/kernel/alloc/kvec/errors.rs
++++ b/rust/kernel/alloc/kvec/errors.rs
+@@ -21,3 +21,18 @@ fn from(_: PushError<T>) -> Error {
+         EINVAL
      }
  }
 +
-+#[macros::kunit_tests(rust_kvec_kunit)]
-+mod tests {
-+    use super::*;
-+    use crate::prelude::*;
++/// Error type for [`Vec::remove`].
++pub struct RemoveError;
 +
-+    #[test]
-+    fn test_kvec_retain() {
-+        /// Verify correctness for one specific function.
-+        #[expect(clippy::needless_range_loop)]
-+        fn verify(c: &[bool]) {
-+            let mut vec1: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
-+            let mut vec2: KVec<usize> = KVec::with_capacity(c.len(), GFP_KERNEL).unwrap();
++impl Debug for RemoveError {
++    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
++        write!(f, "Index out of bounds")
++    }
++}
 +
-+            for i in 0..c.len() {
-+                vec1.push_within_capacity(i).unwrap();
-+                if c[i] {
-+                    vec2.push_within_capacity(i).unwrap();
-+                }
-+            }
-+
-+            vec1.retain(|i| c[*i]);
-+
-+            assert_eq!(vec1, vec2);
-+        }
-+
-+        /// Add one to a binary integer represented as a boolean array.
-+        fn add(value: &mut [bool]) {
-+            let mut carry = true;
-+            for v in value {
-+                let new_v = carry != *v;
-+                carry = carry && *v;
-+                *v = new_v;
-+            }
-+        }
-+
-+        // This boolean array represents a function from index to boolean. We check that `retain`
-+        // behaves correctly for all possible boolean arrays of every possible length less than
-+        // ten.
-+        let mut func = KVec::with_capacity(10, GFP_KERNEL).unwrap();
-+        for len in 0..10 {
-+            for _ in 0u32..1u32 << len {
-+                verify(&func);
-+                add(&mut func);
-+            }
-+            func.push_within_capacity(false).unwrap();
-+        }
++impl From<RemoveError> for Error {
++    fn from(_: RemoveError) -> Error {
++        EINVAL
 +    }
 +}
 
