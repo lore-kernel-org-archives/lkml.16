@@ -1,234 +1,109 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7533822AE7B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:37:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EDDB8828
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:39:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175022; cv=none; b=hvDprIm85mH+3+YznI9VltYF8Hip4ZbW1O3ANkbXLt2oyREi3IJ+RllwqnPRZd1Q8qZ9KiGiZ1EA7VowFTkf+6mtAmX1YAzOqD9NLrV9b3k0yfyQ7E5kac526BV3dXMhf4+DdiG6d9ExsyGTtQAJMlfa70gIOh7+NqqL7xaa4oc=
+	t=1746175176; cv=none; b=kp4C705VoflZ3GzcNfK14euGL2m2N9ZiVC3QCYYWua9hXPqNR2F9uxTQYEQJwLU4ZFUJK5CiFbAt879WJb8sEqEzAf/5D2Zs/8TWdM9hFdBkCPKyWtzlND09twudUBYeLstRnrds2FU/yC5jgYDOSRemktcQ6EEX1pz0HJqGrK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175022; c=relaxed/simple;
-	bh=zNUe0Pj5dkyMuxu1Q6WqSp1fT4n1YqCD8YdUazcTFgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=B3nHFgL+pBD9rECDANbdGA/jCBFK/j5Euu7KqeHXlPslKI7pNPVGnmfxZwBgeA6s7jvypMkWEIhh0gmk4flU/74le9mlBBjBybO0MAIOExpPBB0Der0GaziXt0bJTX3zcjmqxra1+TTgkVjmqSwX+iO2KoLEPshnmK7CGTSME2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E407EIsB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dhTksgVL; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E407EIsB; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=dhTksgVL; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746175176; c=relaxed/simple;
+	bh=Fc6VGyglFbCU4Zg5Mw2hQNZJJof9kthAbyW2Wut9M2I=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=WW0heIobT85dg+lihmjxaamj4PYiWebAvvNkbLH1Pl+seTc0MWEOPXNzMTJUDkFGNIcwZBTSpwahMV7Bzkx7QOHib0OTRpHOVlj+oernY6ju3TsDM7vfjdcEAvojh+a2m7pgyXT3OlwA7LZ63nanr5OOpRsNKWbj2M1ThE/12JI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pgkeSmGo; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E407EIsB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dhTksgVL";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E407EIsB";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="dhTksgVL"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 569E01F385;
-	Fri,  2 May 2025 08:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746175007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UDf9u3uKTejLxqlFBo+30RhKdS2KOtzyesZwbietrzs=;
-	b=E407EIsBUWip8Z6Cwmgh3Wl2kaa0j7sxZ1hltythl7SUS6D2WT96YDDh9+c9fr40WfOVyo
-	3IGv7Q+d7ayql4Zq5GYndUiti11mNpddW0MPMCBf3lMF6orjC2otMELnZ7Msq+IKyMa5SU
-	6F5Hhwp0/n40OrGI/Es6L7RP18hYzCM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746175007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UDf9u3uKTejLxqlFBo+30RhKdS2KOtzyesZwbietrzs=;
-	b=dhTksgVL5QO8F9XwJ2/P1tItL1hidLjb2ESMRXIkrtbHg+lsCLhNb5i9aiWrFbrUI2Hj1/
-	5BRmW3lq2kX19PCQ==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E407EIsB;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=dhTksgVL
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746175007; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UDf9u3uKTejLxqlFBo+30RhKdS2KOtzyesZwbietrzs=;
-	b=E407EIsBUWip8Z6Cwmgh3Wl2kaa0j7sxZ1hltythl7SUS6D2WT96YDDh9+c9fr40WfOVyo
-	3IGv7Q+d7ayql4Zq5GYndUiti11mNpddW0MPMCBf3lMF6orjC2otMELnZ7Msq+IKyMa5SU
-	6F5Hhwp0/n40OrGI/Es6L7RP18hYzCM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746175007;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UDf9u3uKTejLxqlFBo+30RhKdS2KOtzyesZwbietrzs=;
-	b=dhTksgVL5QO8F9XwJ2/P1tItL1hidLjb2ESMRXIkrtbHg+lsCLhNb5i9aiWrFbrUI2Hj1/
-	5BRmW3lq2kX19PCQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id BF50F1399F;
-	Fri,  2 May 2025 08:36:46 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id cJTyKx6EFGhVSwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Fri, 02 May 2025 08:36:46 +0000
-From: Oscar Salvador <osalvador@suse.de>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: David Hildenbrand <david@redhat.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Vlastimil Babka <vbabka@suse.cz>,
-	Hyeonggon Yoo <42.hyeyoo@gmail.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Rakie Kim <rakie.kim@sk.com>,
-	Oscar Salvador <osalvador@suse.de>,
-	Harry Yoo <harry.yoo@oracle.com>
-Subject: [PATCH v3 3/3] mm,memory_hotplug: Rename status_change_nid parameter in memory_notify
-Date: Fri,  2 May 2025 10:36:24 +0200
-Message-ID: <20250502083624.49849-4-osalvador@suse.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502083624.49849-1-osalvador@suse.de>
-References: <20250502083624.49849-1-osalvador@suse.de>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pgkeSmGo"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1182959f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:39:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746175173; x=1746779973; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=YTp1n3CXi4d/IkYoP7iNGIaUGP0jg9QVzJw7i5UhA5Y=;
+        b=pgkeSmGoxGb3NfuIJob4Qla0scUPSMXoTsndHmbdmjevpXYIfbDx4MAZn4oT6YbLOm
+         xw0IrMORmI9j9tflWnq3tb+KApmrfvvNjN5AQhARq+w+0R5nmLM9mnMKFqCS5XJPyHxo
+         ZGy4DKfP0RBUJXBZsDPWD3ETQHuMl8oOD/lLf24/i+dn38TW/79l2ayYffez7wkm2LB6
+         E0vFUMDR1QP3WqhZwGzws5jaC+Bu7ylByJz58gdyGInOUsMUythMtSzs2KESFQncXLsF
+         nIyZ795yXc42yqI0ohwTiiqGI0EFaOaE6ACA90QLsHmK26oLqIN//JN+vcHHfpJhFdED
+         g1UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746175173; x=1746779973;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YTp1n3CXi4d/IkYoP7iNGIaUGP0jg9QVzJw7i5UhA5Y=;
+        b=udq4ywGP8IJYbIxcqzF7JDuOL5F8lhTAOKRKD+YAXpaWfn10kginMHg5I0JxdLlvxF
+         bGAxU4FKAVFilPcFL5k3oFQ2lPkmHqqfKCmzRMVqjYrY1mHe565jan/fwnwdoCfzm4Nf
+         PgYZJyeoph7IZKejf73Gn5jya17zRTIZXQHHepVqhkZzGVgiWzC3k5oXjV+yW5fC8wW5
+         XvM/WtF4hc8RZ7QKDQKdr5NtaIuMKFANOVCUVih9J4hl2OBLnhPZaX67QJkuyS2Xgps3
+         3deXbEDpijXoBsUVrioD+FxrjjKxRva3s6+aKaKlkPkk7oph7SL1KX1nliiBqCy7zdEo
+         3eXw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4vZliHcZy0b3OBdGteVoKW6sF06XD7Sw3T76VHn3XnuytMpLX3VyPKcb9fFbVsCj5AIvmHKWkkiIMLAo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyV8VlIOP5eVCltzfMAABxY2fqpE1Bk6fhipxx/6dKCJb5f8q8N
+	5nTY/Gts/nROYWAMy1RMCksodCPWJpOYSs8pAagiJSqulcTDc0PnDDP60ayBTqI=
+X-Gm-Gg: ASbGnctgocIiN4hETSrVmEf0OYN3LSWI1RVj+0HxKQ5pOttDdcwEGkWJFYbtMmayVqH
+	Z7H6rcfbNuxjh4oTxCA9ABkpgrR95enPJm7wqaToIkweMIagCDn9GhZ+cIytmsiUqthc1FdFt4B
+	++s6eTZjm8IvKOwlx7BUs3pssrxWCqYpLoV9GOhRAZmQ1f6MPmkQgpZUIh65OUTHR8YZ3UHT9di
+	TdO9eOpgZRyLjcArWZoTab6F8UuA/f7A40JActOBpnoRuUvf6msyQ/bzuxBoVToCPePg3WHYaiT
+	C5ysvaxgrLnu4LeStyS0+qW4MoEsR53VN4D8qRTdmWm6lg==
+X-Google-Smtp-Source: AGHT+IGb74sv8hsGiSyin0BDmnbpMA2IZnPZBnAg8xwnjuUfYCPDX9NlYI/bGPAEUyHsmHQ+F3zSMg==
+X-Received: by 2002:a5d:588b:0:b0:39c:1f10:ba54 with SMTP id ffacd0b85a97d-3a099adeae2mr1444276f8f.35.1746175173327;
+        Fri, 02 May 2025 01:39:33 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099ae0d2csm1473852f8f.2.2025.05.02.01.39.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:39:32 -0700 (PDT)
+Date: Fri, 2 May 2025 11:39:29 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Keguang Zhang <keguang.zhang@gmail.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>, linux-mips@vger.kernel.org,
+	linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH next] mtd: rawnand: loongson1: Fix error code in
+ ls1x_nand_dma_transfer()
+Message-ID: <aBSEwag_ducqOwy7@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 569E01F385
-X-Spam-Level: 
-X-Spamd-Result: default: False [-1.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	ARC_NA(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[redhat.com,kvack.org,vger.kernel.org,suse.cz,gmail.com,huawei.com,sk.com,suse.de,oracle.com];
-	DKIM_TRACE(0.00)[suse.de:+];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,suse.de:email,suse.de:dkim,suse.de:mid,suse.cz:email];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	TAGGED_RCPT(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	ASN(0.00)[asn:25478, ipnet:::/0, country:RU];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -1.51
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-The 'status_change_nid' field was used to track changes in the memory
-state of a numa node, but that funcionality has been decoupled from
-memory_notify and moved to node_notify.
-Current consumers of memory_notify are only interested in which node the
-memory we are adding belongs to, so rename current 'status_change_nid'
-to 'nid'.
+The "desc" variable is NULL and PTR_ERR(NULL) is zero/success.  Return
+a negative error code instead.
 
-Signed-off-by: Oscar Salvador <osalvador@suse.de>
-Reviewed-by: Harry Yoo <harry.yoo@oracle.com>
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Fixes: d2d10ede04b1 ("mtd: rawnand: Add Loongson-1 NAND Controller Driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- include/linux/memory.h |  2 +-
- mm/memory_hotplug.c    |  4 ++--
- mm/page_ext.c          | 12 +-----------
- 3 files changed, 4 insertions(+), 14 deletions(-)
+It's hard to know what the patch prefix should be here.  Ideally when we
+add a new driver we would use the patch prefix for the driver.
 
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index 8c5c88eaffb3..3c482f189d14 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -117,7 +117,7 @@ struct memory_notify {
- 	unsigned long altmap_nr_pages;
- 	unsigned long start_pfn;
- 	unsigned long nr_pages;
--	int status_change_nid;
-+	int nid;
- };
- 
- struct node_notify {
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 777f98326908..9b57b58e88bc 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1192,6 +1192,7 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
- 
- 	mem_arg.start_pfn = pfn;
- 	mem_arg.nr_pages = nr_pages;
-+	mem_arg.nid = nid;
- 	node_states_check_changes_online(nr_pages, zone, &node_arg);
- 
- 	if (node_arg.status_change_nid >= 0) {
-@@ -1204,7 +1205,6 @@ int online_pages(unsigned long pfn, unsigned long nr_pages,
+Tired: subsystem: Add driver XXX
+Wired: subsystem: XXX: Add driver for XXX
+
+ drivers/mtd/nand/raw/loongson1-nand-controller.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/nand/raw/loongson1-nand-controller.c b/drivers/mtd/nand/raw/loongson1-nand-controller.c
+index 6a369b1c7d86..8754bb4f8b56 100644
+--- a/drivers/mtd/nand/raw/loongson1-nand-controller.c
++++ b/drivers/mtd/nand/raw/loongson1-nand-controller.c
+@@ -371,7 +371,7 @@ static int ls1x_nand_dma_transfer(struct ls1x_nand_host *host, struct ls1x_nand_
+ 	desc = dmaengine_prep_slave_single(chan, dma_addr, op->len, xfer_dir, DMA_PREP_INTERRUPT);
+ 	if (!desc) {
+ 		dev_err(dev, "failed to prepare DMA descriptor\n");
+-		ret = PTR_ERR(desc);
++		ret = -ENOMEM;
+ 		goto err;
  	}
- 
- 	cancel_mem_notifier_on_err = true;
--	mem_arg.status_change_nid = node_arg.status_change_nid;
- 	ret = memory_notify(MEM_GOING_ONLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
- 	if (ret)
-@@ -2014,6 +2014,7 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 
- 	mem_arg.start_pfn = start_pfn;
- 	mem_arg.nr_pages = nr_pages;
-+	mem_arg.nid = node;
- 	node_states_check_changes_offline(nr_pages, zone, &node_arg);
- 
- 	if (node_arg.status_change_nid >= 0) {
-@@ -2025,7 +2026,6 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 	}
- 
- 	cancel_mem_notifier_on_err = true;
--	mem_arg.status_change_nid = node_arg.status_change_nid;
- 	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
- 	ret = notifier_to_errno(ret);
- 	if (ret) {
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index c351fdfe9e9a..477e6f24b7ab 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -378,16 +378,6 @@ static int __meminit online_page_ext(unsigned long start_pfn,
- 	start = SECTION_ALIGN_DOWN(start_pfn);
- 	end = SECTION_ALIGN_UP(start_pfn + nr_pages);
- 
--	if (nid == NUMA_NO_NODE) {
--		/*
--		 * In this case, "nid" already exists and contains valid memory.
--		 * "start_pfn" passed to us is a pfn which is an arg for
--		 * online__pages(), and start_pfn should exist.
--		 */
--		nid = pfn_to_nid(start_pfn);
--		VM_BUG_ON(!node_online(nid));
--	}
--
- 	for (pfn = start; !fail && pfn < end; pfn += PAGES_PER_SECTION)
- 		fail = init_section_page_ext(pfn, nid);
- 	if (!fail)
-@@ -436,7 +426,7 @@ static int __meminit page_ext_callback(struct notifier_block *self,
- 	switch (action) {
- 	case MEM_GOING_ONLINE:
- 		ret = online_page_ext(mn->start_pfn,
--				   mn->nr_pages, mn->status_change_nid);
-+				   mn->nr_pages, mn->nid);
- 		break;
- 	case MEM_OFFLINE:
- 		offline_page_ext(mn->start_pfn,
+ 	desc->callback = ls1x_nand_dma_callback;
 -- 
-2.49.0
+2.47.2
 
