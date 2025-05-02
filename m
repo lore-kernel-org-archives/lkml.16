@@ -1,166 +1,263 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E694725A353;
-	Fri,  2 May 2025 13:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284B425A64E;
+	Fri,  2 May 2025 13:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191335; cv=none; b=aAHo0Ih9tfIfPsq89WCswEPEwkNAg1vmy+lrBUVIq2BrW4+Gx1NWvw5jmZX0tbKLmK20ytLSI2LXFL+KPCHYIw9Pz0Gpk0SIQmtU76SiHa8wUJbNg5z9xeQvwtBhRi6FZthAszktrX4XcdD0wvuAPqG/q9qM6bbH8W6xPnghQnw=
+	t=1746191336; cv=none; b=ABph4fKH+HNF05e8s+9SphhMgn4HzhsFUhfmoGJWrbgB2LfF9y1f5CQPl6U/2oMbIMw5HMZHtJr4U4QvOGjNj9yKH5p3ds3W93n4z6joe5K14lrLv7SikWLs/KPRKCx0HJZsxujyNLGaCmt9Jq1o6yXFSrkPL0s9QNB+GWbEpeA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191335; c=relaxed/simple;
-	bh=K45+jnAwgqGxsKwa0YV5hIGJFdEwtfa90HqU8GLRK5w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jkb4mc/ppB4Z+PGgexgYedFJGy4LwCFPQsmfn7XX0TJnQBRl3p0OIOp9seogn6KevsnalTFy+Yr+iIKrCVicus3FM9UJCWVtFvJgd+CDV9IG0N6B0TWrT4WICyFvK5vatYkM7oZMN/HqlfHEg6V6e+Pck3a3gcj4wlCnbMNgNWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GzOQvT+6; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746191336; c=relaxed/simple;
+	bh=6KdVYsEBJ/j6nE8ePLlnDGqB/MG4p1xHnjjBkVTUNtA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sJDu0CSKhkkaIIcRBpScm76RpwiAM6WgdBYY4NcIOOwnv/YQmj/N0eJL15zdE1TcLiPide/mqEttVdWC5LFjMjcPhTCuGnQPn6chJz+eBZ5PNQ444Zkwfma6kN7GNkElX1GfHYdn9m+TAfzLcj7PwZlVYHnzKo6px8znNK2mMwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jm5XCcJt; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzOQvT+6"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7369ce5d323so1865732b3a.1;
-        Fri, 02 May 2025 06:08:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746191332; x=1746796132; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=5zFPSvTZV6xwJ05g1Uom0S9ocPnq40i5wq9xeFgZldA=;
-        b=GzOQvT+6ZmrfCmNh78faxbv+oZNQg69PCR+OKBgCZJYIpGrSmOyjsnSKBXDhGMRn4S
-         vZh1aRR72f8U1Bcnpv0MwJ1zR1qPrwMnZGj//S8nX2zSsauKvWvM0od8k5ppb5CUfjLY
-         gSlqIf6NsPqYvvcL4Uhyqb5nAuS6n52P/P2zfGu14mZHtp5ZV3HyWeln8fPoiF4qEv06
-         w+ExMSGyDKkDgztnM1dbby8UAygPcIreVk1wTmi3xSXN22EkBxAiozQr0U1AKoRT474u
-         qiqEQ/rdQJpRYrUfOBaJ58hvcSc/TtkDMIhhLYG6hTLkFaOFb/BDT7P2Eocyel95brrb
-         vNiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746191332; x=1746796132;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5zFPSvTZV6xwJ05g1Uom0S9ocPnq40i5wq9xeFgZldA=;
-        b=G8YNL/FguX35ajqBl8rx4EjomL0w/JRc4CZtuiAZa9dxOSUBdWqqpMuW9GWde8crs9
-         o+TvIPBym1FKHowMeLrbJw4xKElb0bDASNpw2fR9/KFw1Z7WShW2XQp4hd9kww0GzhDx
-         cJCuzWUcBapAaDvNzNiLCC/9zUQ4yh5ZtYmZxyJhgSijb/RjptlAkEEceQi+JCgcVIcC
-         I1W9+4Euw2HLdUUVknlRxCD8/bygsPLNXNBHNvBPowPdIq3rJCAdT1B7z+/9dayXdSKo
-         /lD6fooqnLAQ0bUrRL+jW6hxwxPNGIuNf8ioMwvaVMwbXauIjC4E78WQZtlRAIP4zBtO
-         GedA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDiRZlQAmqFFod8E91B1MtsV8vC1el6yJNrGCFQ9Fyap1L9vV5XnOYDJVRPj/7OzBEkZ86kp0bqsNMtlT7l2M=@vger.kernel.org, AJvYcCUazMQYFO0hRLf5cbqwojyuzH9xzQEiur2qahMAO0oWoxVXRnBVcFjIf0WVzDDY5HIp68wqaOUhYuLNIjk=@vger.kernel.org, AJvYcCWuJAD8hMziWsPVOoWy5UcpFHmiGkiJ+d4B+A/weQxxCOgMEfN3E2MPVIZZ/4cRfpgYxBLeyJ1wiuFhwYRAk7tG4JA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxh4uIAWqyArD534es8n+246rOXisDMp41ymuls/v7su1HoJg5T
-	h06LT+6D4mxC6oUh4LDf5oMYPO9XBTczkPpNn5uD+m6SUydUs+yH
-X-Gm-Gg: ASbGncvPc2FAPkYqIIOe1laFxadbpuhLggbsjAQeOBKsHOqZqxOJdv7nSmid9YSD/f0
-	D1iaermhdSb2LFmd6Gnmur7bKAE/7rCIL3IWrrlaEG1BSvuqPiMJ/QB4dOpeozDxmFE/1JlEBak
-	wxqIMPw6fbNNI63ZpP5n+LHs3moYLD5Ro4tzMxhb4S5batWVVyY8iUdYGkq+8dEmKMd7I794Auy
-	SZWARJFEL4dqztUwxhI6gjVZvu7kAv8/owSuBjEC7mAmgvzBax9DYBCqJrUySIrc9EwcBVCrNc1
-	MS8n8yhAoorqGWT8SKs5Rnu2qS2YyUwZpHNlkrL3TUdrilGkGwXTw/DxilUVq7L82AVV9L5OArh
-	0jhiKIluoefJ2GQ==
-X-Google-Smtp-Source: AGHT+IGaAsfQdzwAlNP1PWKcKnbMPs3aaElsvCy60p34IvS3SmdMFcdU1VzYoNo0kWRiWg1plLRKnA==
-X-Received: by 2002:a05:6a21:8cc6:b0:1fd:f48b:f397 with SMTP id adf61e73a8af0-20cdee3ade5mr4187467637.23.1746191331633;
-        Fri, 02 May 2025 06:08:51 -0700 (PDT)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058df43c8sm1460915b3a.84.2025.05.02.06.08.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 06:08:50 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <be0a5d8f-2b51-4cf7-be74-8aaef6ff848d@roeck-us.net>
-Date: Fri, 2 May 2025 06:08:48 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jm5XCcJt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746191333; x=1777727333;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=6KdVYsEBJ/j6nE8ePLlnDGqB/MG4p1xHnjjBkVTUNtA=;
+  b=jm5XCcJtpLljNy9hcSTBtrgLDvRHB9fXBIXmLeVw7WOYn0Vx9KhGR16H
+   dPMvT1mPHQCWusmkg7d04lq7WVO+CUGuF3aYaGBkTwAWUgdgdZHgmUcWh
+   fQiE4bBTlvb3RyLNGvd8HCak7SZF0IiHrX1hjnQfFWUrPr1FFnco2SjND
+   IQqt9uq9znnPja3wYbCYcQVcELQZQTSzJEZNb8bkvqit1QuHiF5VS38ZW
+   tFmtGUn4UwOS1Pau7lcKL5eDrVlmhouCV2GwUOu2qJhxeCBE15TXGIVd+
+   AOPXi4yPHJPGoykHgDzJ00+fs+h0azksCPw+TGXhVtGtf2NllYXvd0hmz
+   A==;
+X-CSE-ConnectionGUID: y5nuyg0BQtyYxs/imU/SRA==
+X-CSE-MsgGUID: jEc0ryaXTCeElw3fXTlOkw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58495280"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58495280"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:08:51 -0700
+X-CSE-ConnectionGUID: 8tZWGe7yT5a8MWhcxhzp+w==
+X-CSE-MsgGUID: lJjrM7SrRlu9dwzC/wPHZQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="138657786"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa003.fm.intel.com with ESMTP; 02 May 2025 06:08:41 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 40BB51A1; Fri, 02 May 2025 16:08:36 +0300 (EEST)
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: rick.p.edgecombe@intel.com,
+	isaku.yamahata@intel.com,
+	kai.huang@intel.com,
+	yan.y.zhao@intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	kvm@vger.kernel.org,
+	x86@kernel.org,
+	linux-coco@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [RFC, PATCH 05/12] KVM: TDX: Add tdx_pamt_get()/put() helpers
+Date: Fri,  2 May 2025 16:08:21 +0300
+Message-ID: <20250502130828.4071412-6-kirill.shutemov@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
+References: <20250502130828.4071412-1-kirill.shutemov@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: watchdog: renesas,wdt: Document RZ/V2N
- (R9A09G056) support
-To: Prabhakar <prabhakar.csengg@gmail.com>,
- Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
- Magnus Damm <magnus.damm@gmail.com>,
- Wolfram Sang <wsa+renesas@sang-engineering.com>,
- linux-watchdog@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>,
- Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
- Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250502120054.47323-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20250502120054.47323-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 5/2/25 05:00, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Document support for the watchdog IP found on the Renesas RZ/V2N
-> (R9A09G056) SoC. The watchdog IP is identical to that on RZ/V2H(P),
-> so `renesas,r9a09g057-wdt` will be used as a fallback compatible,
-> enabling reuse of the existing driver without changes.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Introduce a pair of helpers to allocate and free memory for a given 2M
+range. The range is represented by struct page for any memory in the
+range and the PAMT memory by a list of pages.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Use per-2M refcounts to detect when PAMT memory has to be allocated and
+when it can be freed.
 
-> ---
->   Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> index 3e0a8747a357..78874b90c88c 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas,wdt.yaml
-> @@ -76,7 +76,9 @@ properties:
->             - const: renesas,rcar-gen4-wdt # R-Car Gen4
->   
->         - items:
-> -          - const: renesas,r9a09g047-wdt # RZ/G3E
-> +          - enum:
-> +              - renesas,r9a09g047-wdt # RZ/G3E
-> +              - renesas,r9a09g056-wdt # RZ/V2N
->             - const: renesas,r9a09g057-wdt # RZ/V2H(P)
->   
->         - const: renesas,r9a09g057-wdt       # RZ/V2H(P)
+pamt_lock spinlock serializes against races between multiple
+tdx_pamt_add() as well as tdx_pamt_add() vs tdx_pamt_put().
+
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/include/asm/tdx.h   |   2 +
+ arch/x86/kvm/vmx/tdx.c       | 123 +++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/tdx_errno.h |   1 +
+ 3 files changed, 126 insertions(+)
+
+diff --git a/arch/x86/include/asm/tdx.h b/arch/x86/include/asm/tdx.h
+index 8091bf5b43cc..42449c054938 100644
+--- a/arch/x86/include/asm/tdx.h
++++ b/arch/x86/include/asm/tdx.h
+@@ -135,6 +135,8 @@ static inline int tdx_nr_pamt_pages(const struct tdx_sys_info *sysinfo)
+ 	return sysinfo->tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
+ }
+ 
++atomic_t *tdx_get_pamt_refcount(unsigned long hpa);
++
+ int tdx_guest_keyid_alloc(void);
+ u32 tdx_get_nr_guest_keyids(void);
+ void tdx_guest_keyid_free(unsigned int keyid);
+diff --git a/arch/x86/kvm/vmx/tdx.c b/arch/x86/kvm/vmx/tdx.c
+index b952bc673271..ea7e2d93fb44 100644
+--- a/arch/x86/kvm/vmx/tdx.c
++++ b/arch/x86/kvm/vmx/tdx.c
+@@ -207,6 +207,10 @@ static bool tdx_operand_busy(u64 err)
+ 	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY;
+ }
+ 
++static bool tdx_hpa_range_not_free(u64 err)
++{
++	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_HPA_RANGE_NOT_FREE;
++}
+ 
+ /*
+  * A per-CPU list of TD vCPUs associated with a given CPU.
+@@ -276,6 +280,125 @@ static inline void tdx_disassociate_vp(struct kvm_vcpu *vcpu)
+ 	vcpu->cpu = -1;
+ }
+ 
++static DEFINE_SPINLOCK(pamt_lock);
++
++static void tdx_free_pamt_pages(struct list_head *pamt_pages)
++{
++	struct page *page;
++
++	while ((page = list_first_entry_or_null(pamt_pages, struct page, lru))) {
++		list_del(&page->lru);
++		__free_page(page);
++	}
++}
++
++static int tdx_alloc_pamt_pages(struct list_head *pamt_pages)
++{
++	for (int i = 0; i < tdx_nr_pamt_pages(tdx_sysinfo); i++) {
++		struct page *page = alloc_page(GFP_KERNEL);
++		if (!page)
++			goto fail;
++		list_add(&page->lru, pamt_pages);
++	}
++	return 0;
++fail:
++	tdx_free_pamt_pages(pamt_pages);
++	return -ENOMEM;
++}
++
++static int tdx_pamt_add(atomic_t *pamt_refcount, unsigned long hpa,
++			struct list_head *pamt_pages)
++{
++	u64 err;
++
++	hpa = ALIGN_DOWN(hpa, SZ_2M);
++
++	spin_lock(&pamt_lock);
++
++	/* Lost race to other tdx_pamt_add() */
++	if (atomic_read(pamt_refcount) != 0) {
++		atomic_inc(pamt_refcount);
++		spin_unlock(&pamt_lock);
++		tdx_free_pamt_pages(pamt_pages);
++		return 0;
++	}
++
++	err = tdh_phymem_pamt_add(hpa | TDX_PS_2M, pamt_pages);
++
++	if (err)
++		tdx_free_pamt_pages(pamt_pages);
++
++	/*
++	 * tdx_hpa_range_not_free() is true if current task won race
++	 * against tdx_pamt_put().
++	 */
++	if (err && !tdx_hpa_range_not_free(err)) {
++		spin_unlock(&pamt_lock);
++		pr_tdx_error(TDH_PHYMEM_PAMT_ADD, err);
++		return -EIO;
++	}
++
++	atomic_set(pamt_refcount, 1);
++	spin_unlock(&pamt_lock);
++	return 0;
++}
++
++static int tdx_pamt_get(struct page *page)
++{
++	unsigned long hpa = page_to_phys(page);
++	atomic_t *pamt_refcount;
++	LIST_HEAD(pamt_pages);
++
++	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
++		return 0;
++
++	pamt_refcount = tdx_get_pamt_refcount(hpa);
++	WARN_ON_ONCE(atomic_read(pamt_refcount) < 0);
++
++	if (atomic_inc_not_zero(pamt_refcount))
++		return 0;
++
++	if (tdx_alloc_pamt_pages(&pamt_pages))
++		return -ENOMEM;
++
++	return tdx_pamt_add(pamt_refcount, hpa, &pamt_pages);
++}
++
++static void tdx_pamt_put(struct page *page)
++{
++	unsigned long hpa = page_to_phys(page);
++	atomic_t *pamt_refcount;
++	LIST_HEAD(pamt_pages);
++	u64 err;
++
++	if (!tdx_supports_dynamic_pamt(tdx_sysinfo))
++		return;
++
++	hpa = ALIGN_DOWN(hpa, SZ_2M);
++
++	pamt_refcount = tdx_get_pamt_refcount(hpa);
++	if (!atomic_dec_and_test(pamt_refcount))
++		return;
++
++	spin_lock(&pamt_lock);
++
++	/* Lost race against tdx_pamt_add()? */
++	if (atomic_read(pamt_refcount) != 0) {
++		spin_unlock(&pamt_lock);
++		return;
++	}
++
++	err = tdh_phymem_pamt_remove(hpa | TDX_PS_2M, &pamt_pages);
++	spin_unlock(&pamt_lock);
++
++	if (err) {
++		pr_tdx_error(TDH_PHYMEM_PAMT_REMOVE, err);
++		return;
++	}
++
++	tdx_free_pamt_pages(&pamt_pages);
++}
++
+ static void tdx_clear_page(struct page *page)
+ {
+ 	const void *zero_page = (const void *) page_to_virt(ZERO_PAGE(0));
+diff --git a/arch/x86/kvm/vmx/tdx_errno.h b/arch/x86/kvm/vmx/tdx_errno.h
+index 6ff4672c4181..c8a471d6b991 100644
+--- a/arch/x86/kvm/vmx/tdx_errno.h
++++ b/arch/x86/kvm/vmx/tdx_errno.h
+@@ -18,6 +18,7 @@
+ #define TDX_OPERAND_BUSY			0x8000020000000000ULL
+ #define TDX_PREVIOUS_TLB_EPOCH_BUSY		0x8000020100000000ULL
+ #define TDX_PAGE_METADATA_INCORRECT		0xC000030000000000ULL
++#define TDX_HPA_RANGE_NOT_FREE			0xC000030400000000ULL
+ #define TDX_VCPU_NOT_ASSOCIATED			0x8000070200000000ULL
+ #define TDX_KEY_GENERATION_FAILED		0x8000080000000000ULL
+ #define TDX_KEY_STATE_INCORRECT			0xC000081100000000ULL
+-- 
+2.47.2
 
