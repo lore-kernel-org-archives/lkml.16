@@ -1,169 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE26D23B0;
-	Fri,  2 May 2025 15:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0AF23B0
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:36:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200190; cv=none; b=OKrgATmpoASVt6cXBD73KRMMFE+HswvClsgGIy9rqL1zzcl8dkcJIUfkrOj7os4vcWifjDKb+VzfvAPDUxlJE0/LAjucakUzJEPKYmPrZqNP0RhQ8pMQQ0r1/C5vze4DlqvSX8FTnc8az9oixwDxwLzXGpgq1ITw/Gj4zW3FPjo=
+	t=1746200198; cv=none; b=js0oX525RvsON8sl0MhWqcNylNCWCUHv5ZAPINHMnNp1R5m8/ZYHSVlBX3ksoO5yVoRQ2etw2NgVeY8siUdkFRjT1FS+yW7Y7XFAawqGjOliYf4fexgk1qVuJ1xxS2DNFBPlp9LLplERgcuuJ+L6GzMN+5lzCVD1Dl1gijNxASo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200190; c=relaxed/simple;
-	bh=OpAQrB/oue+iEzkT/7L711k9l4b8H/6bGWPqCs/H+ts=;
+	s=arc-20240116; t=1746200198; c=relaxed/simple;
+	bh=3BAV8Vn4xGGDhP96Ad7to89CEGi5VAjBKGPATV/9yrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CFkZ/Of/rd7Mz8F0HI6LlMHP2P3BIhjKJ4ZrzhJZmOFwcca9bI35CEsBQymXpxjU706HFSunDvbbWi86kePRfdIdMYQI5gRED7L+t8Vwa6KLF7f8uyQRQejJ76niL2yFWUpOY/1LUwl+t4ZmC+pjV/TvdybA3cpPHlSyjHq6xHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ThOk+f3A; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=X+lANlLOC4Hp2bDUFp2b7qENm0XnvxGk2rbohH77d39xlANbZ6mdRS07qSzkiCZ3qUZZIHRiAgBvw+ZX0/Ha59/6+8A7OmfFUAIYS0BAoIA9FbtCSd8kSmW0OhNH3GHtWHq5jK40mFnLVuayJwP2ut2yse9iDVn5QZskUQJAF3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xsf9AdLd; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ThOk+f3A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746200188; x=1777736188;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OpAQrB/oue+iEzkT/7L711k9l4b8H/6bGWPqCs/H+ts=;
-  b=ThOk+f3ApKHqPudWHa3pgadePwYzu4meKTcLmnDrdt55lXbGzXoM2QeQ
-   RF/Sgc1IvP8a9dOJFY++QOinzervDdNezUUIeuBHDZKot+TE8ih8Q0HGZ
-   XnrzOH1LWSLdpPOJIR9ogTEX59Go3LrmIHCZ7bzt9/64U79ZKlhv85YvP
-   TcrSvwhnhIxYit2b4+Ahkx4NY2eN4v1HkDUEb4GA+3l5mYxeF1sGasIdY
-   8Z3XW+n7NTkpQ6hAnEfhWVDdrH8dMTOgXpVNFqth33EsnXLiRchJ4fvW5
-   n3QuOKAZh8VXOAPb+8Jr1mfuCx/d0GkEAw9AGlxalUDmIkAGQ5Fi/XREs
-   Q==;
-X-CSE-ConnectionGUID: RwDFfA9jS6CFXu69Ka7uzA==
-X-CSE-MsgGUID: XNQ2+q+fSW2nP2N1KxQc6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58508461"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58508461"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 08:36:27 -0700
-X-CSE-ConnectionGUID: 1Tr+RxKCS8W7df/mIMbyXw==
-X-CSE-MsgGUID: O0M4VKRTRTSDLUzRmY6urA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139843076"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 02 May 2025 08:36:23 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAsR1-0004px-30;
-	Fri, 02 May 2025 15:36:19 +0000
-Date: Fri, 2 May 2025 23:36:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: oushixiong1025@163.com, Sumit Semwal <sumit.semwal@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Dave Airlie <airlied@redhat.com>, Sean Paul <sean@poorly.run>,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: Re: [PATCH 2/3] drm/prime: Support importing DMA-BUF without sg_table
-Message-ID: <202505022224.FCDQ8TCB-lkp@intel.com>
-References: <20250430085658.540746-2-oushixiong1025@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xsf9AdLd"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-736b350a22cso1955384b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:36:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746200196; x=1746804996; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ID/3gEVRaELChbZF1u1wTlxxoC3hlcOuUi/IoEPjJzQ=;
+        b=Xsf9AdLd1uXRrktRw3bXyCetKFazuNAiY6MmKMhw7Huoxf0UKsVfY99NtNrhyzvifo
+         5HS7lXf3kumJPcB/qgOMCs3FFBQ88AWfmR5ivPRWWCWzTRbqRfGp4WnCBGi/6o6pox5R
+         60L6MlKFew+SE3DkrLzb7FdoangsNxGKLiazJugK8ukzfFyzSuK17DALS3aa7P2P+cTs
+         I/zLDFCUHB+G0zZZpJw6Fku+hueyrOb/vc5hHOphWgg1RTXJ2ZgVT9hGLpxOzPqc90tn
+         xFmCiebpWfwB1jEnK4xpLECVnMo8xSzKH8+SvMZKl5Q/ZxqM/jPgS/hmlotpLbuJt4Mq
+         +Mdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746200196; x=1746804996;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ID/3gEVRaELChbZF1u1wTlxxoC3hlcOuUi/IoEPjJzQ=;
+        b=MOh52stna9Z6FZ21eO+CVAje9+UUwkdrBQ3aunVgVHYuuFqwW2ueDOZdNRBo+k7TcR
+         VMlB3wbFIaR0CWVRaEMUgeoiZ2ZI7jOyirnCLI7E2ILH8VMaQ40KWUeHIUbMMbDGVJGB
+         dg8FtCBfdr9U2ys73e2oU6ZhfOSDqojxF0MeX3KWjjnWNlrQZ8QHBG5W8OVq+UBbKW1O
+         0fbGQTjm0Ul9urgvIwebYafQ36QFvnNtrc2BW4AiuoFqHV/GWV0vfCssf3VH1JNO5gDe
+         w3YJA8CTBEecHx9eajzNO8eZqjMgszeW6p1Hedii46sh3DBx/xWHxyEHe/pCIlNd/cTX
+         nIAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWq/aLc+BDK7sZc2ws009lpFpjY2WQm8ZUbCWi9jevQ8ZnK5keuk9cBf8XZd/K6lXrGliRSdEcAlOU8f/o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+8XG0Q9+50sXXY9u87byyULpPc0aPwX88PbF3mR0z/InFh5mH
+	O1eoHMoXDgn7CppU1xne/Zu02DhhIWg9Ipf2PMGoo0uxR8tpUvoe5c/OeDD90Q==
+X-Gm-Gg: ASbGnctA4K4bmYjMuGldRYSyMK1rH7eomcyolDDDsA/N26YR0oX1JaCN0AnptDTpcf4
+	2DEIFSRBcaUkEX4JzDROlCu6uCQOGCX4F1/b8xHXsG+uCXgb+DSGErPyjPn/geDm3lmQLthc256
+	39nnlGkUkN87D0ewPp7VkYYQY2097CFTZSQlBEsrZrzJufnV0f6PT150wlzoPZsqlhjl2exVGTQ
+	7E0eQ1QZeieFMv9V4+zls8jyNnZN6nmX7zdraBKF8VAmgdSQHVZ/7mY7pJYmoR1hFGuSAoDor4H
+	C3iB6PhY6SWFLVZOtjMv+lWy9mVSLyXPoWga7VFtJGthSNy+eqzTcw==
+X-Google-Smtp-Source: AGHT+IFb0CRE5XpBeKP67vibx/Q9XRU6cVwp3u+88sAT+xVnNz7vp/obg79d1d6ykFtM6a7ldH9EkA==
+X-Received: by 2002:a05:6a21:3943:b0:1ee:dcd3:80d7 with SMTP id adf61e73a8af0-20cdc0f55fdmr5042626637.0.1746200195776;
+        Fri, 02 May 2025 08:36:35 -0700 (PDT)
+Received: from thinkpad ([220.158.156.122])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3b7cb28sm913569a12.42.2025.05.02.08.36.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 08:36:35 -0700 (PDT)
+Date: Fri, 2 May 2025 21:06:31 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, 
+	jingoohan1@gmail.com, cassel@kernel.org, robh@kernel.org, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Standardize link status check to return bool
+Message-ID: <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
+References: <20250428171027.13237-1-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250430085658.540746-2-oushixiong1025@163.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250428171027.13237-1-18255117159@163.com>
 
-Hi,
+On Tue, Apr 29, 2025 at 01:10:24AM +0800, Hans Zhang wrote:
+> 1. PCI: dwc: Standardize link status check to return bool.
+> 2. PCI: mobiveil: Refactor link status check.
+> 3. PCI: cadence: Simplify j721e link status check.
+> 
 
-kernel test robot noticed the following build warnings:
+Thanks for the cleanup. Looks good to me except the redundancy conversion that
+Niklas noted. So with that change,
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on char-misc/char-misc-testing char-misc/char-misc-next char-misc/char-misc-linus usb/usb-testing usb/usb-next usb/usb-linus xen-tip/linux-next linus/master v6.15-rc4]
-[cannot apply to tegra/for-next drm-xe/drm-xe-next rmk-arm/drm-armada-devel rmk-arm/drm-armada-fixes next-20250501]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-url:    https://github.com/intel-lab-lkp/linux/commits/oushixiong1025-163-com/drm-prime-Support-importing-DMA-BUF-without-sg_table/20250430-170136
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20250430085658.540746-2-oushixiong1025%40163.com
-patch subject: [PATCH 2/3] drm/prime: Support importing DMA-BUF without sg_table
-config: arc-randconfig-002-20250501 (https://download.01.org/0day-ci/archive/20250502/202505022224.FCDQ8TCB-lkp@intel.com/config)
-compiler: arc-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505022224.FCDQ8TCB-lkp@intel.com/reproduce)
+- Mani
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505022224.FCDQ8TCB-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/gpu/drm/drm_prime.c:925:24: warning: no previous prototype for 'drm_gem_prime_import_dev_skip_map' [-Wmissing-prototypes]
-     925 | struct drm_gem_object *drm_gem_prime_import_dev_skip_map(struct drm_device *dev,
-         |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/drm_gem_prime_import_dev_skip_map +925 drivers/gpu/drm/drm_prime.c
-
-   913	
-   914	/**
-   915	 * drm_gem_prime_import_dev_skip_map - core implementation of the import callback
-   916	 * @dev: drm_device to import into
-   917	 * @dma_buf: dma-buf object to import
-   918	 * @attach_dev: struct device to dma_buf attach
-   919	 *
-   920	 * This function exports a dma-buf without get it's scatter/gather table.
-   921	 *
-   922	 * Drivers who need to get an scatter/gather table for objects need to call
-   923	 * drm_gem_prime_import_dev() instead.
-   924	 */
- > 925	struct drm_gem_object *drm_gem_prime_import_dev_skip_map(struct drm_device *dev,
-   926								 struct dma_buf *dma_buf,
-   927								 struct device *attach_dev)
-   928	{
-   929		struct dma_buf_attachment *attach;
-   930		struct drm_gem_object *obj;
-   931		int ret;
-   932	
-   933		if (dma_buf->ops == &drm_gem_prime_dmabuf_ops) {
-   934			obj = dma_buf->priv;
-   935			if (obj->dev == dev) {
-   936				/*
-   937				 * Importing dmabuf exported from our own gem increases
-   938				 * refcount on gem itself instead of f_count of dmabuf.
-   939				 */
-   940				drm_gem_object_get(obj);
-   941				return obj;
-   942			}
-   943		}
-   944	
-   945		attach = dma_buf_attach(dma_buf, attach_dev, true);
-   946		if (IS_ERR(attach))
-   947			return ERR_CAST(attach);
-   948	
-   949		get_dma_buf(dma_buf);
-   950	
-   951		obj = dev->driver->gem_prime_import_attachment(dev, attach);
-   952		if (IS_ERR(obj)) {
-   953			ret = PTR_ERR(obj);
-   954			goto fail_detach;
-   955		}
-   956	
-   957		obj->import_attach = attach;
-   958		obj->resv = dma_buf->resv;
-   959	
-   960		return obj;
-   961	
-   962	fail_detach:
-   963		dma_buf_detach(dma_buf, attach);
-   964		dma_buf_put(dma_buf);
-   965	
-   966		return ERR_PTR(ret);
-   967	}
-   968	EXPORT_SYMBOL(drm_gem_prime_import_dev_skip_map);
-   969	
+> Hans Zhang (3):
+>   PCI: dwc: Standardize link status check to return bool.
+>   PCI: mobiveil: Refactor link status check.
+>   PCI: cadence: Simplify j721e link status check.
+> 
+>  drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
+>  drivers/pci/controller/dwc/pci-dra7xx.c                | 2 +-
+>  drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
+>  drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
+>  drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
+>  drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
+>  drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
+>  drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
+>  drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
+>  drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
+>  drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
+>  drivers/pci/controller/dwc/pcie-qcom-ep.c              | 4 ++--
+>  drivers/pci/controller/dwc/pcie-qcom.c                 | 2 +-
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
+>  drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
+>  drivers/pci/controller/dwc/pcie-tegra194.c             | 2 +-
+>  drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
+>  drivers/pci/controller/dwc/pcie-visconti.c             | 2 +-
+>  drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
+>  drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
+>  21 files changed, 34 insertions(+), 53 deletions(-)
+> 
+> 
+> base-commit: 286ed198b899739862456f451eda884558526a9d
+> -- 
+> 2.25.1
+> 
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+மணிவண்ணன் சதாசிவம்
