@@ -1,132 +1,166 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE792561AA;
-	Fri,  2 May 2025 14:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD012566E1
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:40:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196802; cv=none; b=kf2z8QYJ7wX948OgUP+ytMAYUq0viqnqSl4P25CLi5eagwKOCrTUEgS9ViP6yOkVTut0du28rRhIHXYTh4zYCeKW84lkOBswldWtXqGFZzhhogjpNKnRbV+NNtuFWz+AU7MMkhMkj80TyEUSHgUIIB5lA0t4PzBpsTPe3MmzS5o=
+	t=1746196802; cv=none; b=k0jgom9Vz5EJkgJigU8DdzFBxqHHsBBdjCRQbvfv5eQOpunNNVyvL/CJHmvaKKfNbhSm5ASTLP7l2Fj9at44vV1ipGOCAy/I6VoAfR9EzUzZDqVfho1WfWC/ht9YJdSSegopLorjcIlASJKxhnnZvkZB48g+GTtN9QSrRz9ca8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746196802; c=relaxed/simple;
-	bh=QsPpiaBLB1aFFmt/jJN2Nv++3refqGj4VMkze5Zx/mY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=GOJveoTDEF088SbeBLyGKl1RSLJbAT1WW1UehinijofxFzIgGEnsgAyYTmdJHR1A2WmlnOJKZSr8KB1/l+9GLb5qz3C0KjIzb/WqcGH8ChqAtO287WwYc4FMi294mYBv1FHiJ4pz75QCtBJ4agFxyHamFCC1Ueo/q4BkNyL0YBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UW+T+1O7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	bh=kYqKcRH6fB4ETHEgD1rPpMflF3bCZXf/I4lKuOxxHWo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Gla7u5vMCWOMS22DoQX3kN1TRq/rnuEY9ylvPq6Dm4LezmKS3Q0qvHeoaJ/rjaYzPYFCW1zogCxMTWewZIFoCPxD+w2GFQRTOfMgwwMnO0qOIT6CIP4/vQGnByrBQIlwsWUyCxPvyLyw8hM+zP22BNeDFS+XZBOxu6iG4BRZR0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=KKmWpXcS; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UW+T+1O7"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542DXQl8023283;
-	Fri, 2 May 2025 14:39:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	ihUAnzGKyPDiDhSe0ZCJJ88GnAc85VGkvMyX1QaWv7o=; b=UW+T+1O78hQ2Z0Wz
-	tRR1GvCiB/ZVLs/WH2YCC5R9VhRpLVC00wZfKxjp73xIsHaV/HRW+podzmY/Kw8G
-	3ZMJ87riRJIwomHf/EhXaazuOVqDd0dlbRsWYM2EXdJfeDArJvgiyaYHzzxAwTnh
-	Nd8SHnD5SZBNpYCTh+gaWY4I3EDCb2sFI9kZVfca91yO1/OwqNglfzR23PBuU92D
-	fEwM5a3iVx6tud93/Z/Ok4V7x/FxO2S7kFyAd2LAKpmdB29PlYLXks5xq51zV86j
-	3r46hx+jHZaz1mwk42ivn4fxDqwVmO27J/648V8fwf66GrhsNCAHpg63PM7Fg6NY
-	9KM5Eg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u80kyw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 14:39:55 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 542Eds6V020371
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 14:39:54 GMT
-Received: from [10.216.18.87] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
- 07:39:47 -0700
-Message-ID: <cc17c3d2-f882-4729-a676-476705a203bc@quicinc.com>
-Date: Fri, 2 May 2025 20:09:44 +0530
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KKmWpXcS"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-af908bb32fdso1960052a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:40:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1746196799; x=1746801599; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1vZF3B9IYrXQbmQQ8MxFmSjJPr92HC1Q2NCx1VrCKwk=;
+        b=KKmWpXcSyG7hXCKTTBSWYK6euQO2Ehjze8IoyKnV8ulD6GcJxVzHypOHjx4ZmbSkgg
+         CgJUpDIEX8QGA9IdyusmFI8tOOKZykU0WAFJR9n5DtzrXMh475JtLmANnhmZZtcuYHhJ
+         4AgcZW81HDDv2+h+aP2T/adenCoRSFy0dV5dE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746196799; x=1746801599;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1vZF3B9IYrXQbmQQ8MxFmSjJPr92HC1Q2NCx1VrCKwk=;
+        b=WRhYsxrkzEQ0OJ52qZjiTklfj7/jC3GSFOGlw7nJwZC3zbtzsKjhYLEAjkWWTJPeN7
+         SpzSizb5oIPDbsxPsC+7yzKQcraUnQV49GEFWsCTcw/58knstkhzkvzdWyx2iNjut3CS
+         x+YkTjlOR6/MZ+z1Ymuedek1IpVF1XIGmdgEvVR9huDFWOjfSr7/93ENboZxYbADmNqI
+         rpKgQ1fU2chsb4p4CuSS3W2Gup6c+5s80qr+qZ7e29QnT51lG7XMrND4FUcFZHCTqok4
+         pMOdNGvTuQ+L6M2GLYxPong3ZQMwyhFSwXJroX5UnAvQo/BoSo5pr/VlAqVhYjnAom1q
+         Edsg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjFiZd4pH2fkwvoubZn8BfeKnlWrqWTruL1oY0VZPl9qDSAH417U4PplkKH4HmwS/QhKFN+kMYD/OLGC0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZ/xgx4JZ7S05P3w2QUqyzpqd3rlCQZdB4riOHlCi6E7NsoNjw
+	Stkzz1PzdfX+XKwcXO4hqihoXH8oFs3CUehTCtFC6Z/LZTFHM4z2VY382J/YzJO8b5i2+fIYUv8
+	=
+X-Gm-Gg: ASbGncvvZaDHd2wlp/b3k1MjDa+emr9ayIFNokJIXdoVCV7KlDAw1vTQy/fDOc79odg
+	VrSSKNlQYB0gp086iDNBAfe+2x79B+n8hNNdZLieVsYvLuTnGxioJFABQeGWufBqwXlf3OvQ8pr
+	1Mp0KQsf81d8WCDoBbbaf0Sp0j74ibNutwmC/zUx1jdgtgpRoVdH1lXLbsf+DmuIA4ycI1IqnFU
+	GLNdRr+49sF9af6AQY+TStYbX0m2aelNi2ff8B8URGF9QMH9Mj2DXqAcdhdE9Du6C0owKxNYF9h
+	80xDI5C3szzt35QZBptiS5+FsYrVTKkjwc5gCoOCIy01JP+m2VqjokP3A9cjJFeCzfR0QLf7/Jm
+	a3YvlRLi/ftJNkrKFxRM=
+X-Google-Smtp-Source: AGHT+IGJTmQhk+zWcGPglNU0vmLIctrcrJhT8c2JCbLa1PT8qxuZ1YI6kXBnX2joxoz1IENkJAQwWg==
+X-Received: by 2002:a05:6a20:c91b:b0:1ee:5f21:6720 with SMTP id adf61e73a8af0-20bd86450e0mr9776096637.16.1746196799384;
+        Fri, 02 May 2025 07:39:59 -0700 (PDT)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com. [209.85.215.179])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3924df3sm722148a12.3.2025.05.02.07.39.58
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 07:39:58 -0700 (PDT)
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-af908bb32fdso1959974a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:39:58 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXtBicZWgnb2e5RrwJx2p7XcgKjwgDFIJgtlAVNuo7zM2Lfezv0RoMPzrWDRvCdMU3RpeBR2yFYxT+Yi6Q=@vger.kernel.org
+X-Received: by 2002:a17:90b:5247:b0:30a:204e:fe47 with SMTP id
+ 98e67ed59e1d1-30a4e238283mr5274952a91.16.1746196797472; Fri, 02 May 2025
+ 07:39:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
-To: Viresh Kumar <viresh.kumar@linaro.org>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby
-	<jirislaby@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Viresh Kumar
-	<vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd
-	<sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <psodagud@quicinc.com>,
-        <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-2-quic_ptalari@quicinc.com>
- <20250502053758.utawzhq6famwenc2@vireshk-i7>
- <8ba02745-378b-4264-883a-b99764701d0b@quicinc.com>
- <20250502081402.yjagnnjrfva7u4cb@vireshk-i7>
- <e1b2029b-2461-4cfc-a6b3-acdf5e01c289@quicinc.com>
- <CAKohpondRqdfqC3CFSJibL2om8_Bbds8k5Dfu8fcZDksNxQUwg@mail.gmail.com>
-Content-Language: en-US
-From: Praveen Talari <quic_ptalari@quicinc.com>
-In-Reply-To: <CAKohpondRqdfqC3CFSJibL2om8_Bbds8k5Dfu8fcZDksNxQUwg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=Ldc86ifi c=1 sm=1 tr=0 ts=6814d93b cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=B5uisSGkWXMBVcHgxMUA:9 a=QEXdDO2ut3YA:10
- a=zZCYzV9kfG8A:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: BLC-XjugQWvpu8IIlQHOHrm1McJkrgrl
-X-Proofpoint-ORIG-GUID: BLC-XjugQWvpu8IIlQHOHrm1McJkrgrl
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDExNiBTYWx0ZWRfX7+mQQSkd3Vij kNKshKwPex+efq4MBATgc6zx5ntseOs3rwNAFlnqJSRR3N8wLqihBeNFZa6YP7BwnwP1kyDq+5f oh12CHUkexUllb6CAKrOsXfMp3uW3PQHqyX1ErEiO3IfoyQrPV+zdP6P1GpPuH6bJoH/bnAS2Yi
- 1UzUhsGPIbBXN+crOaPFtBvTlIFLKPAQ4weTST0s7q3ZId42J9Tk03tlT4lzF0AIjRhu8dhMbeu QXDgVt/VEQd+F7rMcMf5nokFnr59T9teFCB3UilfCDyfOZxBblp8XhvUfK66oic6b8Lvpw/u23F oXCXgv37OVKa82BsSFY0+H+9CzMfcLEMA0Pasw4kGyL+OoqTUGcIG5ggCzq5YX4WvRqJDLHXtcX
- 00iUnMJ7kX980Xe6KrgsiX3jSsnlqqZBhnXbu/wLFW4QAAGIsSNWgvBnwj4oEFfJ8MhUlW/l
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_02,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 phishscore=0 impostorscore=0 clxscore=1015 spamscore=0
- bulkscore=0 mlxlogscore=950 malwarescore=0 mlxscore=0 suspectscore=0
- adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020116
+References: <20250502103905.3995477-1-max.kellermann@ionos.com>
+In-Reply-To: <20250502103905.3995477-1-max.kellermann@ionos.com>
+From: Doug Anderson <dianders@chromium.org>
+Date: Fri, 2 May 2025 07:39:44 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=Udm8M2HnMWzzY-cyr7UCVf-0O8uSe-yOAfJ+27YBOTdQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH3pEZ-iVBIoKyH9R01WQyAmPtK0ORDT1kr3BWCBtOxmXaa6s2ZMKtwLNg
+Message-ID: <CAD=FV=Udm8M2HnMWzzY-cyr7UCVf-0O8uSe-yOAfJ+27YBOTdQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] kernel/watchdog: add /sys/kernel/{hard,soft}lockup_count
+To: Max Kellermann <max.kellermann@ionos.com>
+Cc: akpm@linux-foundation.org, song@kernel.org, joel.granados@kernel.org, 
+	cminyard@mvista.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi
+Hi,
 
-On 5/2/2025 7:41 PM, Viresh Kumar wrote:
-> On Fri, 2 May 2025 at 19:32, Praveen Talari <quic_ptalari@quicinc.com> wrote:
->> now i can push V4 right and will not face errors on my series w.r.t this
->> API.
-> Not fully sure what you meant, but you can send a V4 of the series,
-
-i mean one of the patch from series is depended on patch-1, that i have 
-removed from series now
-
-so will i face any issue like kernel bot
-
-Thanks,
-
-Praveen Talari
-
-> without the first patch. Please mention it as an dependency in the
-> cover letter and that it is applied in the OPP tree's linux-next branch.
+On Fri, May 2, 2025 at 3:39=E2=80=AFAM Max Kellermann <max.kellermann@ionos=
+.com> wrote:
 >
-> The one who applies your series needs to apply the series over the commit
-> in my branch to avoid breakage (if your series is going in 6.16-rc1).
+> There is /proc/sys/kernel/hung_task_detect_count,
+> /sys/kernel/warn_count and /sys/kernel/oops_count but there is no
+> userspace-accessible counter for hard/soft lockups.  Having this is
+> useful for monitoring tools.
+
+Hmmm. I suspect this has more to do with the fact that both hard and
+soft lockups nearly always end up being fatal. ...but I guess
+technically they could be recovered from and the kernel can be
+configured not to panic, so I guess it would be OK to add something
+like this.
+
+It feels like there would be a better place for these to go than
+straight in `/sys/kernel`, though I don't really know it. Maybe
+someone else on this thread has opinions? Any chance they could go in
+"debugfs"?
+
+
+> Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
+> ---
+>  kernel/watchdog.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 53 insertions(+)
 >
-> --
-> Viresh
+> diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+> index 9fa2af9dbf2c..09994bfb47af 100644
+> --- a/kernel/watchdog.c
+> +++ b/kernel/watchdog.c
+> @@ -63,6 +63,29 @@ int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
+>   */
+>  unsigned int __read_mostly hardlockup_panic =3D
+>                         IS_ENABLED(CONFIG_BOOTPARAM_HARDLOCKUP_PANIC);
+> +
+> +#ifdef CONFIG_SYSFS
+> +
+> +static unsigned int hardlockup_count;
+> +
+> +static ssize_t hardlockup_count_show(struct kobject *kobj, struct kobj_a=
+ttribute *attr,
+> +                                    char *page)
+> +{
+> +       return sysfs_emit(page, "%u\n", hardlockup_count);
+> +}
+> +
+> +static struct kobj_attribute hardlockup_count_attr =3D __ATTR_RO(hardloc=
+kup_count);
+> +
+> +static __init int kernel_hardlockup_sysfs_init(void)
+> +{
+> +       sysfs_add_file_to_group(kernel_kobj, &hardlockup_count_attr.attr,=
+ NULL);
+> +       return 0;
+> +}
+> +
+> +late_initcall(kernel_hardlockup_sysfs_init);
+> +
+> +#endif // CONFIG_SYSFS
+> +
+>  /*
+>   * We may not want to enable hard lockup detection by default in all cas=
+es,
+>   * for example when running the kernel as a guest on a hypervisor. In th=
+ese
+> @@ -169,6 +192,10 @@ void watchdog_hardlockup_check(unsigned int cpu, str=
+uct pt_regs *regs)
+>                 unsigned int this_cpu =3D smp_processor_id();
+>                 unsigned long flags;
+>
+> +#ifdef CONFIG_SYSFS
+> +               ++hardlockup_count;
+> +#endif
+
+Please no embedded ifdefs like this. I personally wouldn't hate it if
+the "unsigned int" was simply always defined, but if we want to keep
+it only defined for sysfs then please use a function to increment this
+that's declared as a static inline noop in the case that sysfs is off.
+
+-Doug
