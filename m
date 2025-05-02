@@ -1,127 +1,134 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6142820E718;
-	Fri,  2 May 2025 11:53:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5057023C4F4;
+	Fri,  2 May 2025 11:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186788; cv=none; b=g059wtvosoptpKz2ocZIz/3YqDtyypuxzQuN0U6zA573ccfG5vfk8IYeeTdTmgFKwcZct36wQiQPmQdFsaziDf4vc/b7R5sD5MYgveBgSUODWtv570Dmb6MbPAwCjFk5Fah8j9fztk1lh6jmOsXdpFvxayZmI0vjEgkN+SSefVI=
+	t=1746186801; cv=none; b=MC//HfaMK3SPX0qk2hin1kRK0dwag9u15gBJ2Dz5FX4EmlLXsVD9qT7EjFGrZzKVjIU4hFYJNzc7xNI2Tg1flLZLAICl9i9nLk20vMYd5voHs1eVM/CH4RBYOdLtHzl7ei5IT/V9eDdXfrVEsfG4miJ1jWHuRJ9Ploqn6HFRy68=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186788; c=relaxed/simple;
-	bh=Q4jOg98k+QNmKecUp0Ldv7WZt4SAs8j6y1rKcruNP9w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OZfeMyR5Q/nx/3/hbeYN0VFzdQbRHXw4XOkLKHE6Ts22Hfu/ULZzGX5AK6hN1qupbjYG4/sHG1g66t8ch6CIN42Sp378aNd0A7zhyMBPeQjplZAHSV/sG0m2ZyBrl5FiFIfXCvUcFBBBvg2geB6gu0N9q2LsLcx8IteSC/pujVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=vb5sMp6t; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vb5sMp6t"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542BqUe03852546
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 06:52:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746186750;
-	bh=ylg5pHJj6soRgfq6YOqDlWI4JdGvCXUzDJpfJJFlwoQ=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=vb5sMp6t7wlt8I3haJ/yR/M68BhrswtvCDpm8GkEqAit5aG6Tx+9tjBEZLB1hS2Vl
-	 thI4PGAsqZIyYzxp8C762fSj4RF+iavs+05lrq8m0Bli0cPMPgZFWvOmcDMMgJnfFh
-	 P/IK9hUIFGYn82xPG54r4CNqYEmcmxTYnjCo4FZQ=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542BqTAC064408
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 06:52:29 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 06:52:29 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 06:52:29 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542BqNfA101955;
-	Fri, 2 May 2025 06:52:24 -0500
-Message-ID: <ead31912-d1e5-4813-99a7-5cd2754672ef@ti.com>
-Date: Fri, 2 May 2025 17:22:23 +0530
+	s=arc-20240116; t=1746186801; c=relaxed/simple;
+	bh=2ZV+8Wt9GqansuqT8TLijEvg5bx7UD6FB0qJem+6Qnk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I8iG8y+1iCLb2WUWSAnmL+f3vHvC4JgWmJYar8TxkkpM+u3CIUCK9c5EOpBZLIKDEyFbCZiUT8UnfVayVML9QcU1xf9o8BplwkUvLyb3NZaleG/hsvWD57vkEB5GfwMkjGxOI2Jtf1VsLUa3cFl0n8m57eBYsPc+Hj9nEId31U4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-4c4e1f16833so544322137.0;
+        Fri, 02 May 2025 04:53:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746186798; x=1746791598;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dvv3aZc6ysvtM6PaScZm0AZ9BZs2r0w8R3h6Sq84JNU=;
+        b=Oi5ynCkdM6ofwFNEEaO803KYp1hVlqyTgLhp6aKJjOFASgHndte5GnZaB3X+S6hepn
+         PhmET095VrkWTUfjvQnNVIXe3G+O4P/BG7ZblIAtGG8ZCxmYIgvg1w5FoGPipO4F/f1Y
+         GTwsZyyVgydq3YlENgrVhsQYCOcZ1WX3C7WfuLVTln69z/8UyUP22jn3FiCamhuJ41Rc
+         +561FHMnyHw01gTB5dwKCekXQz85n9E0TpxmHTNUUVq6nDsaqyiIVpnYsOVtjQhFMiTR
+         4BY7OLyBJji1bTiON7r1QfMAscmNNGoXA/EuDy6ZE0RAwsXOph8ZEwNJNpaqAQadIhD9
+         KZrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVfSQCHR2BOCrt8KcuZCpKGbyW9JlOc6CVwARAQrI6Ceaov55yZzjtqvoM85xwNnmztE+jxLTw20miG@vger.kernel.org, AJvYcCWTUsMcLapkMZIELHhxGNdQLwUTh+ON/aGvN3EtMSCzMreg7Zn1TTZkMbSMRHEa5rk7E82oDljotx6IJJmqbQeYClg=@vger.kernel.org, AJvYcCWeVdLNHC+mNXB2o8iNWkW9amhqdBkC9AQzEbvKb8/pWkNTBV6oothY4qnlxIstXEXc8iniHlEa/Ru+LYDl@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiymZrsF/WErYd6ojDEnGgKiolNbdGDGDUl76lixSLpIAwXTOv
+	/8YKr3yEk1IsgyFzxvL7gS6nmbQab2i7Q+GnWCdxqAJEnkgB4yUs5q2mf8D+
+X-Gm-Gg: ASbGncspAeAm/SszVROklab0YbctDekQuD9rmGAMfFM98yU0E824xKAQjlwz5z9LQee
+	16oGhjPOHkgMh37H3/TSNbkuWGLxdkO60fEZMZyEkLYUEbm0tCWYFkW4FCBIbVBImT7C0uKeW+4
+	0l74lM0rB2pSskx2YzwkA6JhTD2seaDXsGt2EPiY2rfuCoubXBt6FaJnYVIiuYhgKX+b9rzOJOJ
+	rz4Dap4YpbRRbN1+wDCfrEnsfYB08tvZX78oq/q/1W4jeiF4/xgVW0P9iX2Q45DqV0qMGNi19+x
+	8yZc5eDuZtQblzikA/9uCQYwnHkSj9s4tja8Az9PjYHYDUxAvBIrh67lH7ofQROwBWhloApv1Pi
+	sYFA=
+X-Google-Smtp-Source: AGHT+IFJ8Jo8FKmiSjciLmlOJhQacHz/H658B3pTVMevrmzztj6Ljp8E5nbeV0AF7PKh3Wao0zdnhw==
+X-Received: by 2002:a05:6102:330a:b0:4ba:974c:891e with SMTP id ada2fe7eead31-4dafb68b67emr1520153137.17.1746186797770;
+        Fri, 02 May 2025 04:53:17 -0700 (PDT)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8780b293e9csm251507241.31.2025.05.02.04.53.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 04:53:17 -0700 (PDT)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-86fbb48fc7fso450257241.2;
+        Fri, 02 May 2025 04:53:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUuFVZTf/UUOU40s/prBghrrUw+T0F5gPAkek7uB2E0PnZXOckQCH+Tt2uhtkA01IwC8yC5Jyzfb0YY93oLGI1KDsM=@vger.kernel.org, AJvYcCUwXSN1bekKAGE6g7PKT5I37dNk+kfx8fjzxrU55KiDFe9J3cYAAGHGRZo+tdNEEtCtgC0GUM9NS/gu@vger.kernel.org, AJvYcCVIE9J3XlrU0YyUDe2uwSu45CBmL2qQnB8qGI+6ZPoQRltcoGQ5BjzhYnkftFIqOlX4HoGxc0579rLkScb/@vger.kernel.org
+X-Received: by 2002:a05:6102:5045:b0:4c2:ffc8:93d9 with SMTP id
+ ada2fe7eead31-4dafb50dd11mr1438920137.9.1746186797387; Fri, 02 May 2025
+ 04:53:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
- cut-down versions
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
-        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
-        <h-shenoy@ti.com>, <jyri.sarha@iki.fi>, <airlied@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-References: <20250429143656.3252877-1-devarsht@ti.com>
- <20250429143656.3252877-3-devarsht@ti.com>
- <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
- <1f8c43cd-8c26-4e42-b144-b91f5ffc2e2e@ti.com>
- <88993439-bfdc-418c-95c6-d6d8bdb5b87f@ideasonboard.com>
- <466254e9-145f-4839-9451-a5f282ff02e9@ti.com>
- <ce831f65-67d0-4f4c-9f08-3014b1d00dc0@ideasonboard.com>
- <ca008cb0-bec6-4b10-b6b5-0f29648f76c0@ti.com>
- <ed82e498-b3af-46f6-97ce-3a2f47872935@ideasonboard.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <ed82e498-b3af-46f6-97ce-3a2f47872935@ideasonboard.com>
+References: <20250501123709.56513-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20250501123709.56513-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20250501123709.56513-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 13:53:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVjCE5-X3AmDy1=UHGPb7kmi_kpBX79s1t0g76-__sc6Q@mail.gmail.com>
+X-Gm-Features: ATxdqUHd8V0pQvGYSlvvIMPnGrAT00VG3I_OsFOHO0G8lVIaFANIhY-BWLZCXg0
+Message-ID: <CAMuHMdVjCE5-X3AmDy1=UHGPb7kmi_kpBX79s1t0g76-__sc6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: timer: renesas,ostm: Document RZ/V2N
+ (R9A09G056) support
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	Magnus Damm <magnus.damm@gmail.com>, Chris Brandt <chris.brandt@renesas.com>, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Hi,
-
-<snip>
->> It uses hw_id i.e. 1 for all vid irqstatus related registers since it is
->> accessing am65x common region register space which has vid on idx0 which
->> we want to skip for am62l.
->>
->> For dispc_plane_enable(), the caller uses
->>> 0, for dispc_k3_vid_write_irqstatus(), the caller uses 1...
->>
->> Yes above is correct, and I think that's how it is supposed to be.
-> 
-> No it's not. Both functions have "hw_plane" parameter, yet they require
-> a different value to be used even when referring to the same plane.
+On Thu, 1 May 2025 at 14:37, Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
->>> With a quick look at the code, changing the callers to pass the "old
->>> style" hw_plane as the parameter to those irq functions, and the
->>> functions internally get the hw_id, would solve most of the problems.
->>
->> I don't follow above, hw_plane has 0 so it should not be used for
->> programming irq related functions which expect idx 1 as explained above.
-> 
-> We have various functions in tidss_dispc.c that have hw_plane as a
-> parameter. But the caller is supposed to know that for some functions
-> hw_plane is a plane index from 0, and for some it's the hw_id from
-> vid_info[].
-> 
->> There's still dispc_k3_set_irqenable() which manages 'main_disable' and
->>> needs the hw_id, but maybe that's fine, even if a bit confusing.
->>>
->>
->> I still feel there is no inherent bug here, but let me know if you want
->> me to put some debug prints or get register dump so that we can double
->> confirm.
-> 
-> I'm not saying there's a bug. I'm saying it's bad code and will cause
-> confusion and bugs in the future.
-> 
+> Document support for the Renesas OS Timer (OSTM) found on the Renesas
+> RZ/V2N (R9A09G056) SoC. The OSTM IP on RZ/V2N is identical to that on
+> other RZ families, so no driver changes are required as `renesas,ostm`
+> will be used as fallback compatible.
+>
+> Also include RZ/V2N in the list of compatibles for which the `resets`
+> property is required.
+>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Ok I see what you mean to say.....although functionally it is working
-fine but from readability point of view it is confusing since both
-functions use same argument name i.e hw_plane in two different contexts.
-In that case, I would propose to use hw_id as arg name for all
-dispc_k3_vid* functions, will that be okay ?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Regards
-Devarsh
+> --- a/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+> +++ b/Documentation/devicetree/bindings/timer/renesas,ostm.yaml
+> @@ -26,6 +26,7 @@ properties:
+>            - renesas,r9a07g043-ostm # RZ/G2UL and RZ/Five
+>            - renesas,r9a07g044-ostm # RZ/G2{L,LC}
+>            - renesas,r9a07g054-ostm # RZ/V2L
+> +          - renesas,r9a09g056-ostm # RZ/V2N
+>            - renesas,r9a09g057-ostm # RZ/V2H(P)
+>        - const: renesas,ostm        # Generic
+>
+> @@ -59,6 +60,7 @@ if:
+>            - renesas,r9a07g043-ostm
+>            - renesas,r9a07g044-ostm
+>            - renesas,r9a07g054-ostm
+> +          - renesas,r9a09g056-ostm
+>            - renesas,r9a09g057-ostm
+
+Looks like we have reached critical mass to invert the logic?
+
+    not:
+      contains:
+        - renesas,r7s72100-ostm
+        - renesas,r7s9210-ostm
+
+?
+
+>  then:
+>    required:
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
