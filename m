@@ -1,184 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3241BEF77;
-	Fri,  2 May 2025 11:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D59221721;
+	Fri,  2 May 2025 11:34:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185655; cv=none; b=DmqAxK22dUgwfi4JPJ0M3C7t2piFq6Oqu5wX/JahXf+2bIQ2NfRGdXVEB/matE8f8PMMnpC9rXuAHt2RObF33qFeFXQbctVqUeNMxBpokkA53YT5df/csPEKqKhp+8qbCLgiflfvXqLqaNfC+Y/zd+pi8k9vonHqSXrUC2YI49g=
+	t=1746185667; cv=none; b=AgVE5Rrmsq/ERefuugvx+ve8pXYxPpvKmguqSLg2AIzZTzLKHQqb5TpHd3E6wjHOimT9sXQFshXnKmqyRU1yZEA4g0SuOPm9V4FSwFxiD9iNdcIn7orUSsWPCrhlKLkouNN1SoxMnHKJ8eprpekRYBqx6GELHmCxfgrziIYmrtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185655; c=relaxed/simple;
-	bh=ezYwlB9fBt/xFiYifIO5qVSNZM/FZ69JnrSopMVLz8k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=X8aavRI0Kt3Iv4jaW/ByLY3autMaMokRcDjXyQiWJK+Y4IH/vVo/aMqmRkT4PCv7ExxeX85vmD1VcjF8jKxK1qE0vbERSOxphK0M+VRxkgj2MtkPbo4GxC251UeT0P6oqbplGjeTNk0YrLUXygxyqFwmRY/AZqoJia/2sOKYjMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q02eNc8n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746185667; c=relaxed/simple;
+	bh=7w60J+FKjVS3g5Z95mqPgSc2nzysE8E6h9d60GXPWus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kQqklomM5Ul+OK0P3z9vJwsiBEpJWGTnR0Y4YxNhRVTjU5ToLdjqFSolBLa/JIhX6hHuypHqc0ZTfbXa6srljSz3hFiOTD69uym5eNdMFufbcuv+mNSyTO+DJndNZ7/8meH9teWv26AXsbpBxusYz9vHgwaBgjghw1LRM6sZJ1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n4dykVL0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q02eNc8n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90300C4CEE4;
-	Fri,  2 May 2025 11:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746185654;
-	bh=ezYwlB9fBt/xFiYifIO5qVSNZM/FZ69JnrSopMVLz8k=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=q02eNc8ng9FxM05iwbatgdBbkj0XjGhf65VsdygWKlREwiqdiso2H7/bLenF6NnWD
-	 UDoX6osJQJtvqMqxNmgx2CF8Ko7/Tj1D0ae3JHlhaR4a6wDOljf53NXNiwxVqgsYvf
-	 wvt5CmA4iC653a4aG8RI+oDdwPBHju6Q2HMfNYiwy5ab73Bdl6Hi98ur5hZ/Bl8Yo/
-	 6aOMQ9fZ0sSy0q8MEetrMwDQQgJ7yv4uMKd1k9c9Qkn3irxa2I93EmThVk/cDdr816
-	 tPVU5PprEZZi0MK0rwwWTvUExatj++cpOymV55xK2JeKKf3KNWeLYhddM+3bMDDoqN
-	 hriStzu43b+dA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,
-  Boqun Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,
-  =?utf-8?Q?Bj=C3=B6rn?=
- Roy Baron <bjorn3_gh@protonmail.com>,  Benno Lossin
- <benno.lossin@proton.me>,  Alice Ryhl <aliceryhl@google.com>,  Trevor
- Gross <tmgross@umich.edu>,  Asahi Lina <lina@asahilina.net>,
-  rust-for-linux@vger.kernel.org,  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 3/5] rust: Add missing SAFETY documentation for ARef
- example
-In-Reply-To: <87o6wbz46a.fsf@kernel.org> (Andreas Hindborg's message of "Fri,
-	02 May 2025 12:40:29 +0200")
-References: <20250325-unique-ref-v9-0-e91618c1de26@pm.me>
-	<BilXj9TIYuQxgQ8GYVKxO0m88NUME1b-jtwrV9ZX3W9GXO-QJGFpb9rChJZarPa4e2AAvgJTm_DINEIW1JINlA==@protonmail.internalid>
-	<20250325-unique-ref-v9-3-e91618c1de26@pm.me> <87a58pd6t4.fsf@kernel.org>
-	<Z_33ntAgpRU_541N@mango> <87o6wbz46a.fsf@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 30.1
-Date: Fri, 02 May 2025 13:33:53 +0200
-Message-ID: <87cycrz1pa.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n4dykVL0"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541LgHKV005395;
+	Fri, 2 May 2025 11:33:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=U/RCjn
+	+HqnJhle1+I403uhVDGs5SD7lY0aQbaeLHTRw=; b=n4dykVL0IQcNXPaKnLq7cG
+	3gtrD5EZzBrZum0CwK3YW1Qvr14ruooORvgAA/9uATxdkeGGekpcKHn2n8cnBGzy
+	0YbG/PLkTKal/1VA7bwz0jmIU03yPeP/XrYjESIfaNwPlrigeiErhbYf00BE5vib
+	y8Zq1X3hN7/mF+bmtfHY70IgjOenuGLDL/xG5gyMDjG0YR9Vmf9TFhe4AfvD7/6S
+	vEup76zsqUCmiz0UcaSATsg1LfT8gpRik/3W1VC1mqiOdSDZTW0bn2Py5/tScBty
+	VL56+v9D0XQ59K+k+I7AkaWpQioIA+Fe4W9diIdsCr7Wt24fS3ogA3kIlHOFZJNg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ch3vtntx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:33:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 542BG6hF001791;
+	Fri, 2 May 2025 11:33:55 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469ban1hac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:33:55 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 542BXsxm25690550
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 11:33:54 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5ED9E5805E;
+	Fri,  2 May 2025 11:33:54 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DED9958052;
+	Fri,  2 May 2025 11:33:51 +0000 (GMT)
+Received: from [9.61.121.210] (unknown [9.61.121.210])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  2 May 2025 11:33:51 +0000 (GMT)
+Message-ID: <70e065c7-8129-4c78-a7a8-72718ceea334@linux.ibm.com>
+Date: Fri, 2 May 2025 13:33:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
+To: Matthieu Baerts <matttbe@kernel.org>,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ben Hutchings <ben@decadent.org.uk>,
+        MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+ <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+Content-Language: en-US
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
+In-Reply-To: <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Z+XsHGRA c=1 sm=1 tr=0 ts=6814ada3 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=8T59DR07AAAA:8 a=VTue-mJiAAAA:8 a=hfMpdXb5uliVZ7BdCgcA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=nH4QB3FtVBqZfhiODIJV:22 a=S9YjYK_EKPFYWS37g-LV:22
+X-Proofpoint-ORIG-GUID: VvdH58BCApXO3aiQkWqM4QgzlyDnRmvp
+X-Proofpoint-GUID: VvdH58BCApXO3aiQkWqM4QgzlyDnRmvp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4NyBTYWx0ZWRfX1f1a7KAI0ak7 na6p83njbnyNC+VVxVng+drrrGEzhU5EMR1YixM06UFLGYdQhKF7UKeqD3co0hkUUbMigxkDdVB AhYRz8LCPI5dAsW7NDQ3TPicAkSmvejTnkhh8BJivZRMFVGiMjL7r/9run5wTAZqw9vF8TeYvd2
+ e6cy6qrS70N3sw9aUq5I2HnHtNPutfmZt8XLSPUeohvixNlgyZU+Lt8KnwpagFVB1emdAAAiFCM mwojYIEDizFOKDi8P8h0DSCVru9bficPcX9h3j03FDYQKqFwABBGZSW94EWZlWjP2dopXYUltoR BtXiSrEGzaxjNO2uZ72ObBQiziKMdBWKcJGoqFvPAaD4tk4k9QNKRUVqc0C88Ny0Nrjlxy2fAg5
+ DNPsGQjAK23Q8/z4/keto4Q3lVgbAZ42xQrkh7na7vz8p/mJYkXAgjLwwn0APIDhOf7Gis3h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020087
 
-Andreas Hindborg <a.hindborg@kernel.org> writes:
-
-> Oliver Mangold <oliver.mangold@pm.me> writes:
->
->> On 250409 1126, Andreas Hindborg wrote:
->>> "Oliver Mangold" <oliver.mangold@pm.me> writes:
->>> 
->>> > SAFETY comment in rustdoc example was just 'TODO'. Fixed.
->>> >
->>> > Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
->>> > ---
->>> >  rust/kernel/types.rs | 4 ++--
->>> >  1 file changed, 2 insertions(+), 2 deletions(-)
->>> >
->>> > diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
->>> > index c8b78bcad259132808cc38c56b9f2bd525a0b755..db29f7c725e631c11099fa9122901ec2b3f4a039 100644
->>> > --- a/rust/kernel/types.rs
->>> > +++ b/rust/kernel/types.rs
->>> > @@ -492,7 +492,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->>> >      ///
->>> >      /// struct Empty {}
->>> >      ///
->>> > -    /// # // SAFETY: TODO.
->>> > +    /// // SAFETY: We do not free anything.
->>> 
->>> How about:
->>> 
->>>   This implementation will never free the underlying object, so the
->>>   object is kept alive longer than the safety requirement specifies.
+On 29.04.2025 18:12, Matthieu Baerts wrote:
+> On 15/03/2025 14:20, Thomas Weißschuh wrote:
+>> -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+>> Other references, for example in debug information, are not affected.
+>> This makes handling of file references in the compiler outputs harder to
+>> use and creates problems for reproducible builds.
 >>
->> Yes, was rather sloppy wording. Thanks, I will use your version.
+>> Switch to -ffile-prefix map which affects all references.
 >>
->>> >      /// unsafe impl RefCounted for Empty {
->>> >      ///     fn inc_ref(&self) {}
->>> >      ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
->>> > @@ -500,7 +500,7 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
->>> >      ///
->>> >      /// let mut data = Empty {};
->>> >      /// let ptr = NonNull::<Empty>::new(&mut data).unwrap();
->>> > -    /// # // SAFETY: TODO.
->>> > +    /// // SAFETY: We keep `data` around longer than the `ARef`.
->>> 
->>> This is not sufficient. The safety requirement is:
->>> 
->>>   Callers must ensure that the reference count was incremented at least once, and that they
->>>   are properly relinquishing one increment. That is, if there is only one increment, callers
->>>   must not use the underlying object anymore -- it is only safe to do so via the newly
->>>   created [`ARef`].
->>> 
->>> How about:
->>> 
->>>   The `RefCounted` implementation for `Empty` does not count references
->>>   and never frees the underlying object. Thus we can act as having a
->>>   refcount on the object that we pass to the newly created `ARef`.
->>> 
->>> I think this example actually exposes a soundness hole. When the
->>> underlying object is allocated on the stack, the safety requirements are
->>> not sufficient to ensure the lifetime of the object. We could safely
->>> return `data_ref` and have the underlying object go away. We should add
->>> to the safety requirement of `ARef::from_raw`:
->>> 
->>>   `ptr` must be valid while the refcount is positive.
+>> Also drop the documentation section advising manual specification of
+>> -fdebug-prefix-map for reproducible builds, as it is not necessary
+>> anymore.
 >>
->> Wouldn't this already be covered by the below in the doc for
->> AlwaysRefCounted?
->>
->>     Implementers must ensure that increments to the reference count keep
->>     the object alive in memory at least until matching decrements are
->>     performed."
->
-> No, I don't think that is enough. We can implement the trait properly
-> with refcounts and still we can allocate an object on the stack and then
-> do a `from_raw` on that object without violating any safety
-> requirements. I think the `ARef::from_raw` should have the safety
-> requirement above. But we can do that as a separate patch.
+>> Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+>> Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
+>> Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
+>> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+> 
+> Thank you for having worked on that!
+> 
+> (...)
+> 
+>> diff --git a/Makefile b/Makefile
+>> index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -1067,7 +1067,7 @@ endif
+>>  
+>>  # change __FILE__ to the relative path to the source directory
+>>  ifdef building_out_of_srctree
+>> -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+>> +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
+>>  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+>>  endif
+> 
+> Today, I noticed that my CI for the MPTCP subsystem couldn't produce
+> code coverage files like before: the source files are not found. A 'git
+> bisect' pointed me to this patch. Reverting it seems to fix the issue.
+> 
+> 
+> My CI is building the kernel out of the source tree, in ".virtme/build".
+> Before and after this patch, GCOV seems to do its job properly.
+> Capturing GCOV data with this lcov command seems OK too:
+> 
+>   lcov --capture --keep-going -j "${INPUT_CPUS}" \
+>      --rc geninfo_unexecuted_blocks=1 \
+>      --include '/net/mptcp/' \
+>      --function-coverage --branch-coverage \
+>      -b "${PWD}/.virtme/build" -o kernel.lcov
+> 
+> But after this patch, lcov complains some files are not found, e.g.
+> 
+>   ERROR: (source) unable to open
+> ${WORKDIR}/.virtme/build/net/mptcp/ctrl.c: No such file or directory
 
-On second thought, I think you are right. I was trying to implement a
-counter example, and I think it is not possible to implement
-`RefCounted` while following the safety requirements in a way that would
-trigger this issue. Implementers will have to make sure that the the
-type that implement `RefCounted` cannot be directly constructed. In
-other words the implementation for `Empty` is illegal in this regard.
+I can confirm that the subject kernel commit breaks gcov-kernel for
+out-of-srctree builds by making it impossible for a consumer of GCOV
+data to determine the actual location of a source file without manually
+specifying it.
 
-We can do this instead for the example
+Sample .gcno file content changes as seen with gcov-dump:
 
+- cwd: /home/.../build
+- /home/.../linux/kernel/workqueue.c:8049:19-8057:1
++ cwd: /home/.../build
++ kernel/workqueue.c:8049:19-8057:1
 
-    mod empty {
-        use crate::alloc::KBox;
-        use core::ptr::NonNull;
+> The output file is different: the path to the source file is wrong
+> because it points to the build dir. Instead of ...
+> 
+>   SF:${WORKDIR}/net/mptcp/ctrl.c
+> 
+> ... now I have ...
+> 
+>   SF:${WORKDIR}/.virtme/build/net/mptcp/ctrl.c
+> 
+> 
+> Are there modifications needed on GCOV side to adapt to the behaviour
+> change introduced by this patch? Or something else needed on the
+> userspace side?
 
-        pub struct Empty {
-            // Prevent direct construction
-            _p: (),
-        }
+I don't see how this could be fixed by changes in userspace nor
+gcov-kernel - the source tree directory information is missing from the
+relevant data files.
 
-        // SAFETY: The `RefCounted` implementation for `Empty` does not count references
-        // and never frees the underlying object. Thus we can act as having a
-        // refcount on the object that we pass to the newly created `ARef`.
-        unsafe impl super::RefCounted for Empty {
-            fn inc_ref(&self) {}
-
-            unsafe fn dec_ref(_obj: NonNull<Self>) {}
-        }
-
-        impl Empty {
-            pub fn new() -> NonNull<Self> {
-                NonNull::new(KBox::into_raw(
-                    KBox::new(Self { _p: () }, kernel::alloc::flags::GFP_KERNEL).unwrap(),
-                ))
-                .unwrap()
-            }
-        }
-    }
-
-    let ptr = empty::Empty::new();
-
-    // SAFETY: The `RefCounted` implementation for `Empty` does not count
-    // references and never frees the underlying object. Thus we can act as
-    // having a refcount on the object that we pass to the newly created `ARef`.
-    let data_ref: ARef<empty::Empty> = unsafe { ARef::from_raw(ptr) };
-    let _raw_ptr: NonNull<empty::Empty> = ARef::into_raw(data_ref);
-
-
-
-Best regards,
-Andreas Hindborg
-
-
+-- 
+Peter Oberparleiter
+Linux on IBM Z Development - IBM Germany R&D
