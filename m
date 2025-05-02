@@ -1,110 +1,103 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0968D1EA90;
-	Fri,  2 May 2025 01:28:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD5DBA50;
+	Fri,  2 May 2025 01:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746149342; cv=none; b=WY+QYqDu8gylSgrlSLKgv4eoLRpC1nyWP+AnZiDMCZQRcHcbLep+KEpVMJt99Pv1gAOV6ya+Vs9L+2EpMOSr5MBxGRFk0nFe6LO8v6/QvTcUuzoEWk3zVDKGft+1Hi6EYKSVscVFhRim7qMUNM2Su4paVu6pE6ozL+N4mHQqNSI=
+	t=1746149412; cv=none; b=PiIOIw5n+VhEz677NL1SoIi9BpyI40iJJgPezHe3bVu1fOomk0Dg2h6dDDjRMapRkHSAsspi6T0nuGTLfcxXFozQv4hNOwdvQ+IJx7lJZ+hZ7jzSNTn+/F3t8OOcy89UFSTQ9G9mN0c3vvbiKMge6Sk9BXYmmaMfZcwHpI8cD+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746149342; c=relaxed/simple;
-	bh=fJWJT35IUWPGEYm2Dlk1TyNhqD36PQtGiuKeHvfRaOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oOIVIIwe9mfXcUEs5bB7TwVK3kpWKCXVrkWJpKAAsjLaIBXNYKZIrAwIaSIWJ9f67xnevzvXsd0S7C6tSyQgsZrfJflHqFbnlNB3EKVMb2fmZOSJunNpnHg0xote33Pu8+PcBIvsngvzllX+Mw6qjYp2rn9j0KzFuYWZtmPQ4so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=EvZmyMp+; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746149412; c=relaxed/simple;
+	bh=7yPiM/BTKprD4dt1k+8OG/eUHYXJCorznVvQ6X6X/Ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SDHCCVKvnNuNl6RceTEP/HK4sHFt4fhYgkTA9Xx4Ievi2NjYCn31ksTdRLC9pTZSk8ecktBr5OLrt4q2vZ83l4ARvtBIqc0RJEdmDaw98sTfbRlzmvEGItta97Nd2TOEZtFsEbynoFBT8najOM2swVw6lPwqD/Gag8W51/lN+Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYjHviPr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EvZmyMp+"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=tUavYtvPrR+gGbX3pyNVUrqdQnleNkRAQhp8GoXCfO8=; b=EvZmyMp+Jl+5exMXUwDkmx9wSc
-	UUJbyF4hnk9i/8PkzoaNkvpLbx4EKKrmDeup+SQV8+FZUbSLKV1nNq05+lNh4qZac148O4ZXwSlXA
-	cxvOQB2SlosTJSuohzuINJ4/W+kuOlchCEYRy45BjILhBa0wZqyXziCryPgEsd01dJYHHi9rOkZ/w
-	dyzOkffINlo80in+ft5jmNlEpU15L8VFagTi1aSEISc66i36R76J7/ngBoe44VJ9ME0Hys6D0zO/Q
-	XYYhoW4WqTQWg9ktYa6xa6qEboiLIDVFMkkRFUF/qFJxEIt3HaG8sXv56E71Qa5cymNmaGOC5y4OB
-	cKMY2now==;
-Received: from [50.39.124.201] (helo=[192.168.254.17])
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAfCe-0000000GgWT-1u0u;
-	Fri, 02 May 2025 01:28:38 +0000
-Message-ID: <f5402d7e-78d0-4efe-bc35-c30dcdf9f98a@infradead.org>
-Date: Thu, 1 May 2025 18:28:15 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYjHviPr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12CF4C4CEE3;
+	Fri,  2 May 2025 01:30:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746149412;
+	bh=7yPiM/BTKprD4dt1k+8OG/eUHYXJCorznVvQ6X6X/Ns=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YYjHviPrXUxcfLLV6rgJajN7utTKn9Gt6bKvVT4rPDHzEFeRV4Zabxll1z5MPMmNq
+	 wFfAcZt4grrvoqSvzcHZGU4rPJGY8e5QA1awo/Fzopelk9bvu4/rUwKaA1ptjQrKqH
+	 mkM8d+aldzRzIhac950E6ITQG0OXA2Z8rsNH6AZlnO5LxvtXV4oy8lDwJVd5poQlgw
+	 USpMSEBhvs1f7zAU/YBQo2pZ8+MlKJUiEIYmXhc5Exd+ujSYSQcpH1jpTq6V+kHb29
+	 iySZwI6udC+ygJ4CFxig9QneVM7rE1/bSXJsAcrh9EnX/B8QdSChNW9i5BWYis6j9M
+	 5lIHItPsE7smA==
+Date: Thu, 1 May 2025 20:30:10 -0500
+From: Rob Herring <robh@kernel.org>
+To: Quentin Schulz <quentin.schulz@cherry.de>
+Cc: Chaoyi Chen <kernel@airkyi.com>, FUKAUMI Naoki <naoki@radxa.com>,
+	linux-rockchip@lists.infradead.org,
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
+	Heiko Stuebner <heiko@sntech.de>, Dragan Simic <dsimic@manjaro.org>,
+	Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+	devicetree@vger.kernel.org, Kever Yang <kever.yang@rock-chips.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	Jonas Karlman <jonas@kwiboo.se>, Andrew Lunn <andrew@lunn.ch>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Jianfeng Liu <liujianfeng1994@gmail.com>,
+	Alexey Charkov <alchark@gmail.com>,
+	Chaoyi Chen <chaoyi.chen@rock-chips.com>,
+	Jimmy Hon <honyuenkwun@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: rockchip: Add rk3399 industry
+ evaluation board
+Message-ID: <20250502013010.GA3405545-robh@kernel.org>
+References: <20250430074848.539-1-kernel@airkyi.com>
+ <20250430074848.539-2-kernel@airkyi.com>
+ <174602375195.3396795.11425847299435773154.robh@kernel.org>
+ <9c51863c-95a6-4c40-9268-0b2be9b8835b@cherry.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kernel.h: add comments for system_states
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
- Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>
-References: <20241129045750.456251-1-rdunlap@infradead.org>
- <CAJZ5v0gnsFM7YcBqO8Mbkr72ipQxT8nJ=i94z74Q0XM1csnTYw@mail.gmail.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <CAJZ5v0gnsFM7YcBqO8Mbkr72ipQxT8nJ=i94z74Q0XM1csnTYw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c51863c-95a6-4c40-9268-0b2be9b8835b@cherry.de>
 
-
-
-On 12/10/24 10:55 AM, Rafael J. Wysocki wrote:
-> On Fri, Nov 29, 2024 at 5:57 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>
->> Provide some basic comments about the system_states and what they imply.
->> Also convert the comments to kernel-doc format.
->>
->> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Pavel Machek <pavel@ucw.cz>
->> Cc: Len Brown <len.brown@intel.com>
->> Cc: linux-pm@vger.kernel.org
->> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+On Wed, Apr 30, 2025 at 04:48:35PM +0200, Quentin Schulz wrote:
+> Hi Rob,
 > 
-> Fine by me.
+> On 4/30/25 4:36 PM, Rob Herring (Arm) wrote:
+> > 
+> > On Wed, 30 Apr 2025 15:48:47 +0800, Chaoyi Chen wrote:
+> > > From: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> > > 
+> > > Add devicetree binding for the rk3399 industry evaluation board.
+> > > 
+> > > Signed-off-by: Chaoyi Chen <chaoyi.chen@rock-chips.com>
+> > > ---
+> > > 
+> > > (no changes since v1)
+> > > 
+> > >   Documentation/devicetree/bindings/arm/rockchip.yaml | 5 +++++
+> > >   1 file changed, 5 insertions(+)
+> > > 
+> > 
+> > 
+> > Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> > there's no need to repost patches *only* to add the tags. The upstream
+> > maintainer will do that for acks received on the version they apply.
+> > 
+> > If a tag was not added on purpose, please state why and what changed.
+> > 
+> > Missing tags:
+> > 
+> > Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > 
 > 
-> Acked-by: Rafael J. Wysocki <rafael@kernel.org>
-> 
+> To be fair, the Acked-by was given on the v1[1] after the v2[2] was sent, we
+> cannot expect Chaoyi Chen to travel back in time :)
 
-Please merge...
-Thanks.
+Usually a sign of sending new versions too quickly...
 
->> ---
->>  include/linux/kernel.h |   14 ++++++++++++--
->>  1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> --- linux-next-20241125.orig/include/linux/kernel.h
->> +++ linux-next-20241125/include/linux/kernel.h
->> @@ -176,9 +176,19 @@ extern int root_mountflags;
->>
->>  extern bool early_boot_irqs_disabled;
->>
->> -/*
->> - * Values used for system_state. Ordering of the states must not be changed
->> +/**
->> + * enum system_states - Values used for system_state.
->> + * Ordering of the states must not be changed
->>   * as code checks for <, <=, >, >= STATE.
->> + *
->> + * @SYSTEM_BOOTING:    %0, no init needed
->> + * @SYSTEM_SCHEDULING: system is ready for scheduling; OK to use RCU
->> + * @SYSTEM_FREEING_INITMEM: system is freeing all of initmem; almost running
->> + * @SYSTEM_RUNNING:    system is up and running
->> + * @SYSTEM_HALT:       system entered clean system halt state
->> + * @SYSTEM_POWER_OFF:  system entered shutdown/clean power off state
->> + * @SYSTEM_RESTART:    system entered emergency power off or normal restart
->> + * @SYSTEM_SUSPEND:    system entered suspend or hibernate state
->>   */
->>  extern enum system_states {
->>         SYSTEM_BOOTING,
->>
+But I just send this semi-automated email so we capture the ack and I 
+can clear it out of my inbox.
 
--- 
-~Randy
-
+Rob
