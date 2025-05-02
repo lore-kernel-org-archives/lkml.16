@@ -1,33 +1,50 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D20D151991;
-	Fri,  2 May 2025 14:33:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49789253B71;
+	Fri,  2 May 2025 14:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196439; cv=none; b=dLuSFqz+nrrqRmUG8fYc8VTovaVGgUfFG7iAp5D4UXbRD+D7QOta4/ledEaqtVtAnPrb/V/nnunUNdTrV/rjPqrPKhdmsrBoxXGNkJd6vqx/4x7htfyxxwheWP0Qr7qc6ov4i9wBeUMS04DTjth9IiaUzefckPzkqUhmgUOxQxo=
+	t=1746196447; cv=none; b=SWIYQp+L0q9OlplVbYArRL88502sLud8PoMRhfJyUL4lozrsUnoGOw5JU6PvkcMyy+wF2gH38TH0jQTprStbIvpRqIcegXu51kG8qbmGQuxxXlWIlex75cICXTr0PO9Fdm09KiR9cSMGn2w7F20Efz79epud0c73+sXKUAOQZSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196439; c=relaxed/simple;
-	bh=3OB+vCsY1Nf1uqDEFMD9tdzEcnzhPdE9qneBGjxivtM=;
+	s=arc-20240116; t=1746196447; c=relaxed/simple;
+	bh=6xpTcm5i9h8w6CwoFRxZPxtoKJJ3BBCKGnmNa7Z2kh4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mfUnwutZhlWGQVCtk1rao8GK2cm3jeHUfS2RqulSxmHjFThs13iWOvEvyoBLKfxr3wfGS3Pibl7QyljVUXNcHd9Vo+/fmp26N0y48Zl4SxztUP3Gq7yc6eJpkEtZUlVaXvA2fmQZjPN6szYlNqYrEfWuUBnj0IsYCYIwAch3OTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ulU8ezpv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h68RrAsZVc8fLKevKfnBDOkr/YP3vX3lI7TxqFD9EP+aZgdiYSaoE+EYW+V/isuR6+rjba2XKefMmnD1nGi1HGvlwY8EUrF5HG9MHMmzKAPhqKm9HgeS8qzhhxV51Ox+1vOABvANRYYdTKkldFBZlaou2LI5c0030CbWRbHbT5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Npe5tFXN; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ulU8ezpv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1E36C4CEE4;
-	Fri,  2 May 2025 14:33:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746196437;
-	bh=3OB+vCsY1Nf1uqDEFMD9tdzEcnzhPdE9qneBGjxivtM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ulU8ezpvMpMndR+a4tvGp+KoP+p+oCpffievS/+dJkj6xqVkxn0sCRAu2U8JnB4VV
-	 +zwWoXgxuLrV9cv0EDt0xNHIkG+KXRHMR5WAZ/4dBJnhIoDM85xoV8iBgO8DJ7uxCj
-	 2oC7Z/IcA1u7OWaKJfgCChQ3P/LDZOvQcJZy5qwVPnNmwxp7zJSgJljjqM0dmjw1lp
-	 k2acbxAw9vFUGDiW6zdz5DXGWudMhbnIQgIT9tPUPY6JmoM1KdQ+Vl3BQvZpSE1mYk
-	 HC6sYnOwpgT3nrsL/Kwv6o3Zgod6nYd0E/lL0GQ4fnV55cNu2aRjYZhIskcLbVV0Qp
-	 TvhLflrSQkDbA==
-Message-ID: <a01df80b-c1ee-4c36-b400-e3044a0156e2@kernel.org>
-Date: Fri, 2 May 2025 16:33:50 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Npe5tFXN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746196446; x=1777732446;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=6xpTcm5i9h8w6CwoFRxZPxtoKJJ3BBCKGnmNa7Z2kh4=;
+  b=Npe5tFXNWCE2ydv1+lpRhtikkivi/XAwMXnMIKPnPQ5wuM+WFF8b4lqU
+   PXfISgifALZahW+OrIsEOUfaVmUCVxLtVp0+KxI1O3P2oiQSw6k882tyq
+   g4PfyRHulvqm9LF0l+I1uKpfeRX2D0+kjDDyy1u6m+7LK7zR/gU3/f7zA
+   2q9aWVRUMxxxu2OtWQR4o+uXLuGHP1nICenJJW7H+ZtArzbjGcUjsq4Cg
+   VyaT5fn+pxkTqrGHSggUb08MdL8nwgkjgS8dZ9HZsFKNkxz4mYpoKoLFf
+   b3KuGJ/wZkkcKVuXroOyTpLCDFoqcjecZjcKJotUuF848QheFn2yFf9le
+   Q==;
+X-CSE-ConnectionGUID: 1OP9sx5mQ2yjeVnYUhmvqA==
+X-CSE-MsgGUID: 2/LkVHk+TRWMuHCel1Lcig==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47762474"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47762474"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:34:04 -0700
+X-CSE-ConnectionGUID: VxHvVA4GR1yhOEAvPb47UQ==
+X-CSE-MsgGUID: rx5pPAMZTRORyTUWVz/hDw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="135634956"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:33:59 -0700
+Message-ID: <6c44fa0e-28ed-400e-aaf2-e0e0720d3811@intel.com>
+Date: Fri, 2 May 2025 07:33:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,338 +52,174 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v10 4/7] net: mtip: The L2 switch driver for imx287
-To: Lukasz Majewski <lukma@denx.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
- davem@davemloft.net, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20250502074447.2153837-1-lukma@denx.de>
- <20250502074447.2153837-5-lukma@denx.de>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+ Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, kvm@vger.kernel.org,
+ linux-arch@vger.kernel.org, linux-modules@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, rcu@vger.kernel.org,
+ linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ bpf@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+ Marcelo Tosatti <mtosatti@redhat.com>, Yair Podemsky <ypodemsk@redhat.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>,
+ Petr Tesarik <ptesarik@suse.com>, Nicolas Saenz Julienne
+ <nsaenz@amazon.com>, Frederic Weisbecker <frederic@kernel.org>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
+ Ajay Kaher <ajay.kaher@broadcom.com>,
+ Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+ Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+ Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>,
+ Sami Tolvanen <samitolvanen@google.com>, Daniel Gomez
+ <da.gomez@samsung.com>, Naveen N Rao <naveen@kernel.org>,
+ Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+ "David S. Miller" <davem@davemloft.net>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joel@joelfernandes.org>,
+ Josh Triplett <josh@joshtriplett.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Uladzislau Rezki <urezki@gmail.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang1211@gmail.com>,
+ Vincent Guittot <vincent.guittot@linaro.org>,
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, Ben Segall
+ <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+ Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Masahiro Yamada <masahiroy@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Miguel Ojeda <ojeda@kernel.org>, "Mike Rapoport (Microsoft)"
+ <rppt@kernel.org>, Rong Xu <xur@google.com>,
+ Rafael Aquini <aquini@redhat.com>, Song Liu <song@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Dan Carpenter
+ <dan.carpenter@linaro.org>, Brian Gerst <brgerst@gmail.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ Benjamin Berg <benjamin.berg@intel.com>,
+ Vishal Annapurve <vannapurve@google.com>,
+ Randy Dunlap <rdunlap@infradead.org>, John Stultz <jstultz@google.com>,
+ Tiezhu Yang <yangtiezhu@loongson.cn>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
+From: Dave Hansen <dave.hansen@intel.com>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250502074447.2153837-5-lukma@denx.de>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 02/05/2025 09:44, Lukasz Majewski wrote:
-> +
-> +static int mtip_parse_of(struct switch_enet_private *fep,
-> +			 struct device_node *np)
-> +{
-> +	struct device_node *p;
-> +	unsigned int port_num;
-> +	int ret = 0;
-> +
-> +	p = of_find_node_by_name(np, "ethernet-ports");
+On 5/2/25 04:22, Peter Zijlstra wrote:
+> On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
+> 
+>> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+>> You can go buy the Intel hardware off the shelf today.
+> To be fair, the Intel RAR thing is pretty horrific 🙁 Definitely
+> sub-par compared to the AMD and ARM things.
+> 
+> Furthermore, the paper states it is a uarch feature for SPR with no
+> guarantee future uarchs will get it (and to be fair, I'd prefer it if
+> they didn't).
 
-This should be looking for children, not any nodes. Otherwise you will
-take the ethernet ports from a next device as well.
+I don't think any of that is set in stone, fwiw. It should be entirely
+possible to obtain a longer promise about its availability.
 
-> +
-> +	for_each_available_child_of_node_scoped(p, port) {
-> +		if (of_property_read_u32(port, "reg", &port_num))
-> +			continue;
-> +
-> +		if (port_num > SWITCH_EPORT_NUMBER) {
-> +			dev_err(&fep->pdev->dev,
-> +				"%s: The switch supports up to %d ports!\n",
-> +				__func__, SWITCH_EPORT_NUMBER);
-> +			goto of_get_err;
-> +		}
-> +
-> +		fep->n_ports = port_num;
-> +		ret = of_get_mac_address(port, &fep->mac[port_num - 1][0]);
-> +		if (ret)
-> +			dev_dbg(&fep->pdev->dev,
-> +				"of_get_mac_address(%pOF) failed (%d)!\n",
-> +				port, ret);
-> +
-> +		ret = of_property_read_string(port, "label",
-> +					      &fep->ndev_name[port_num - 1]);
-> +		if (ret < 0) {
-> +			dev_err(&fep->pdev->dev,
-> +				"%s: Cannot get ethernet port name (%d)!\n",
-> +				__func__, ret);
-> +			goto of_get_err;
-> +		}
-> +
-> +		ret = of_get_phy_mode(port, &fep->phy_interface[port_num - 1]);
-> +		if (ret < 0) {
-> +			dev_err(&fep->pdev->dev,
-> +				"%s: Cannot get PHY mode (%d)!\n", __func__,
-> +				ret);
-> +			goto of_get_err;
-> +		}
-> +
-> +		fep->phy_np[port_num - 1] = of_parse_phandle(port,
-> +							     "phy-handle", 0);
-> +	}
-> +
-> + of_get_err:
-> +	of_node_put(p);
-> +
-> +	return ret;
-> +}
-> +
-> +static int mtip_sw_learning(void *arg)
-> +{
-> +	struct switch_enet_private *fep = arg;
-> +
-> +	while (!kthread_should_stop()) {
-> +		set_current_state(TASK_INTERRUPTIBLE);
-> +		/* check learning record valid */
-> +		mtip_atable_dynamicms_learn_migration(fep, fep->curr_time,
-> +						      NULL, NULL);
-> +		schedule_timeout(HZ / 100);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void mtip_mii_unregister(struct switch_enet_private *fep)
-> +{
-> +	mdiobus_unregister(fep->mii_bus);
-> +	mdiobus_free(fep->mii_bus);
-> +}
-> +
-> +static const struct mtip_devinfo mtip_imx28_l2switch_info = {
-> +	.quirks = FEC_QUIRK_BUG_CAPTURE | FEC_QUIRK_SINGLE_MDIO |
-> +		  FEC_QUIRK_SWAP_FRAME,
-> +};
-> +
-> +static const struct of_device_id mtipl2_of_match[] = {
-> +	{ .compatible = "nxp,imx28-mtip-switch",
-> +	  .data = &mtip_imx28_l2switch_info},
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, mtipl2_of_match);
-> +
-> +static int mtip_sw_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	const struct of_device_id *of_id;
-> +	struct switch_enet_private *fep;
-> +	struct mtip_devinfo *dev_info;
-> +	int ret;
-> +
-> +	fep = devm_kzalloc(&pdev->dev, sizeof(*fep), GFP_KERNEL);
-> +	if (!fep)
-> +		return -ENOMEM;
-> +
-> +	of_id = of_match_node(mtipl2_of_match, pdev->dev.of_node);
-> +	if (of_id) {
-> +		dev_info = (struct mtip_devinfo *)of_id->data;
+Or ask that AMD and Intel put their heads together in their fancy new
+x86 advisory group and figure out a single way forward. If you're right
+that RAR stinks and INVLPGB rocks, then it'll be an easy thing to advise.
 
-Do not open-code of_device_get_match_data().
+> Furthermore, I suspect it will actually be slower than IPIs for anything
+> with more than 64 logical CPUs due to reduced parallelism.
 
-> +		if (dev_info)
-> +			fep->quirks = dev_info->quirks;
-> +	}
-> +
-> +	fep->pdev = pdev;
-> +	platform_set_drvdata(pdev, fep);
-> +
-> +	fep->enet_addr = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(fep->enet_addr))
-> +		return PTR_ERR(fep->enet_addr);
-> +
-> +	fep->irq = platform_get_irq_byname(pdev, "enet_switch");
-> +	if (fep->irq < 0)
-> +		return fep->irq;
-> +
-> +	ret = mtip_parse_of(fep, np);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "%s: OF parse error (%d)!\n", __func__,
-> +			ret);
+Maybe my brain is crusty and I need to go back and read the spec, but I
+remember RAR using the normal old APIC programming that normal old TLB
+flush IPIs use. So they have similar restrictions. If it's inefficient
+to program a wide IPI, it's also inefficient to program a RAR operation.
+So the (theoretical) pro is that you program it like an IPI and it slots
+into the IPI code fairly easily. But the con is that it has the same
+limitations as IPIs.
 
-Syntax is:
-return dev_err_probe
-just like you have in other places
+I was actually concerned that INVLPGB won't be scalable. Since it
+doesn't have the ability to target specific CPUs in the ISA, it
+fundamentally need to either have a mechanism to reach all CPUs, or some
+way to know which TLB entries each CPU might have.
 
-> +		return ret;
-> +	}
-> +
-> +	/* Create an Ethernet device instance.
-> +	 * The switch lookup address memory starts at 0x800FC000
-> +	 */
-> +	fep->hwp_enet = fep->enet_addr;
-> +	fep->hwp = fep->enet_addr + ENET_SWI_PHYS_ADDR_OFFSET;
-> +	fep->hwentry = (struct mtip_addr_table __iomem *)
-> +		(fep->hwp + MCF_ESW_LOOKUP_MEM_OFFSET);
-> +
-> +	ret = devm_regulator_get_enable_optional(&pdev->dev, "phy");
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, ret,
-> +				     "Unable to get and enable 'phy'\n");
-> +
-> +	fep->clk_ipg = devm_clk_get_enabled(&pdev->dev, "ipg");
-> +	if (IS_ERR(fep->clk_ipg))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(fep->clk_ipg),
-> +				     "Unable to acquire 'ipg' clock\n");
-> +
-> +	fep->clk_ahb = devm_clk_get_enabled(&pdev->dev, "ahb");
-> +	if (IS_ERR(fep->clk_ahb))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(fep->clk_ahb),
-> +				     "Unable to acquire 'ahb' clock\n");
-> +
-> +	fep->clk_enet_out = devm_clk_get_optional_enabled(&pdev->dev,
-> +							  "enet_out");
-> +	if (IS_ERR(fep->clk_enet_out))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(fep->clk_enet_out),
-> +				     "Unable to acquire 'enet_out' clock\n");
-> +
-> +	/* setup MII interface for external switch ports */
-> +	mtip_enet_init(fep, 1);
-> +	mtip_enet_init(fep, 2);
-> +
-> +	spin_lock_init(&fep->learn_lock);
-> +	spin_lock_init(&fep->hw_lock);
-> +	spin_lock_init(&fep->mii_lock);
-> +
-> +	ret = devm_request_irq(&pdev->dev, fep->irq, mtip_interrupt, 0,
-> +			       dev_name(&pdev->dev), fep);
-> +	if (ret)
-> +		return dev_err_probe(&pdev->dev, fep->irq,
-> +				     "Could not alloc IRQ\n");
-> +
-> +	ret = mtip_register_notifiers(fep);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = mtip_ndev_init(fep, pdev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: Failed to create virtual ndev (%d)\n",
-> +			__func__, ret);
-> +		goto ndev_init_err;
-> +	}
-> +
-> +	ret = mtip_switch_dma_init(fep);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: ethernet switch init fail (%d)!\n",
-> +			__func__, ret);
-> +		goto dma_init_err;
-> +	}
-> +
-> +	ret = mtip_mii_init(fep, pdev);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "%s: Cannot init phy bus (%d)!\n", __func__,
-> +			ret);
-> +		goto mii_init_err;
-> +	}
-> +	/* setup timer for learning aging function */
-> +	timer_setup(&fep->timer_aging, mtip_aging_timer, 0);
-> +	mod_timer(&fep->timer_aging,
-> +		  jiffies + msecs_to_jiffies(LEARNING_AGING_INTERVAL));
-> +
-> +	fep->task = kthread_run(mtip_sw_learning, fep, "mtip_l2sw_learning");
-> +	if (IS_ERR(fep->task)) {
-> +		ret = PTR_ERR(fep->task);
-> +		dev_err(&pdev->dev, "%s: learning kthread_run error (%d)!\n",
-> +			__func__, ret);
+Maybe AMD has something super duper clever to limit the broadcast scope.
+But if they don't, then a small range flush on a small number of CPUs
+might end up being pretty expensive, relatively.
 
-ret = dev_err_probe
+I don't think this is a big problem in Rik's series because he had a
+floor on the size of processes that get INVLPGB applied. Also, if it
+turns out to be a problem, it's dirt simple to revert back to IPIs for
+problematic TLB flushes.
 
-> +		goto task_learning_err;
-> +	}
-> +
-> +	return 0;
-> +
-> + task_learning_err:
-> +	timer_delete_sync(&fep->timer_aging);
-> +	mtip_mii_unregister(fep);
-> + mii_init_err:
-> + dma_init_err:
-> +	mtip_ndev_cleanup(fep);
-> + ndev_init_err:
-> +	mtip_unregister_notifiers(fep);
-> +
-> +	return ret;
-> +}
-> +
-> +static void mtip_sw_remove(struct platform_device *pdev)
-> +{
-> +	struct switch_enet_private *fep = platform_get_drvdata(pdev);
-> +
-> +	mtip_unregister_notifiers(fep);
-> +	mtip_ndev_cleanup(fep);
-> +
-> +	mtip_mii_remove(fep);
-> +
-> +	kthread_stop(fep->task);
-> +	timer_delete_sync(&fep->timer_aging);
-> +	platform_set_drvdata(pdev, NULL);
-> +
-> +	kfree(fep);
+But I am deeply curious how the system will behave if there are a
+boatload of processes doing modestly-sized INVLPGBs that only apply to a
+handful of CPUs on a very large system.
 
-Jakub already pointed out that tools would find this bug but also
-testing. This was not ever tested. If it was, you would see nice clear
-double free.
-
-All last three versions had trivial issues which are pointed out by
-tooling, compilers, static analyzers. Before you post next version.
-please run standard kernel tools for static analysis, like coccinelle,
-smatch and sparse, and fix reported warnings. Also please check for
-warnings when building with W=1 with clang. Most of these commands
-(checks or W=1 build) can build specific targets, like some directory,
-to narrow the scope to only your code. The code here looks like it needs
-a fix. Feel free to get in touch if the warning is not clear.
-
-You do not nede the the top-level, one of the most busy maintainers to
-point out the issues which compilers find as well. Using reviewers
-instead of automated tools is the easiest way to get grumpy responses.
-
-
-Best regards,
-Krzysztof
+AMD and Intel came at this from very different angles (go figure). The
+designs are prioritizing different things for sure. I can't wait to see
+both of them fighting it out under real workloads.
