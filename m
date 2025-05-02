@@ -1,63 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D52819D07B;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF39D23E25A;
 	Fri,  2 May 2025 10:33:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182011; cv=none; b=UP3pPEYkFPDIPqP4Fs4yUjm20hh1iBA2iPqKkcJV+bPU6qcpiDUHNtDNxF+04Meg5kIfjEIiertrp3ctvCt4ikEiJ6GxdBImjZRZZJBB2JCnKBPRRHXzWtQdsLBgctnP2eMJIRDccdr/VApA/BSfVAtskFcmUPoAiIGwUypufm0=
+	t=1746182011; cv=none; b=OttZOoqbqM7dZWuQB/8oSeHq71JXSxcPsdkqDDWGRQfzbY0fMJybZDgZ+byaDr0oQQ5RjPMsU0y0sepkdadPu6tF+YfWay2pf3TbZZ61aYMPRt0lsYmQ3J3genVRvnkw67PfKmm0nzsUtWQnIiqpG1UOgDcbeBKIQUVs2+t6fkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746182011; c=relaxed/simple;
-	bh=wv/m5XFngLvg5HqCuNwcLS5i2RaGH88tm9vNtPiIMIo=;
+	bh=NVcf5ekFlTExlawjl9eiqCYgk6OCpjocGIJAkR89sv8=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=mYlxjnv/eGU4p7EUZUutiswFe+VZoTBBdX67tCy7foCkuFfMlMyBnzv8xw+e9sUbAnG4eO16oYnfmEpZvR4cEcxovET1BupHlSrlNNT80GPBLhOONUjBufmqofa5x4vsDT23W5cqNZZLN+4hcbxH+MGdOhdBMSXPbBtM+sxt8ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cp1/+YFp; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ad/iEdUz; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=YHnTczObka9W+3lwHawBuYPh0HMhCycOspxVB/fi7zaXxH+vZOakaRgQ4SbaMjN4PNqdFXGpu5c5KyGqTucZCQ7NKXam8qvafWfDzH2bMWoEawMHXS18oTknqN+ZXT/ySaqOVCM2Me9T3rdn8G8L1KRuK5K84MM29fdj0sH5gr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y2OURHLQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Zt9tMqgO; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cp1/+YFp";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ad/iEdUz"
-Date: Fri, 02 May 2025 10:33:26 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y2OURHLQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Zt9tMqgO"
+Date: Fri, 02 May 2025 10:33:27 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746182007;
+	s=2020; t=1746182008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yrD0LDWBY7hXJ7TpipTnyw2+BtM90UenpiWZI6ebr6o=;
-	b=cp1/+YFpH9XFpOuRkwcQJT34CABSouta5dV8bVNKN4TfuA+4Gr3ixIFy8qDU7eWj+mPGH+
-	XaAfvCXBPuSNJZoFLN4QIJLUKBpMuJLrGGQChsEDf6T4gVoukPaCuUhmtugHQ2eaDILQsB
-	M9HaL4OllM+E1t4Ad6P6BPnUD4rnQDFFz2ahf4b4II2IQXPOc0X4Qh14BW3hR92g27lICx
-	8elqnrrXaHSbPSyOZ8p3r44jJ8XZ7m97FAR5llfQcn7NcWXIm5vGpgnrVNIsRaZuCpbzZ7
-	Ox7R1ffIzk25G1lH7ffPq6izAG89prhZ6RlDw1Haex267LKN3F6PNbUnES7CEw==
+	bh=ixE3SxPYP+L949DCopHPJqzgbBUQzIpL+pxdNZpZRs0=;
+	b=Y2OURHLQ8s+uwrgzvo/RuXchRgxk/xDYMCIM52wAUiDP327tFSWhWnQNhTodLSWgm6dGbr
+	47SmcBh8gggo83JPwbjiMRLwzT+jF9eUj74yKf6yNLFwnCHyg1z6X62PkiKEwjNzpLnwoH
+	DE3es/echhIX9F8c5AeeNfu4V9NtqkM7sMe65Qx8pgP2F+lTj2YjA5m/vUGgV05TwQD1QV
+	4Tmv6FhnuhG8z3doKMIPfU22m6BX7jAf7RU15JIT5uTFneg8+LKAmvC0u2p2mJxZTbaKfj
+	HlJjGqaz1nNbtzqBZivvtFwnZufcwVvY5kKBgTwIezTkBrn/ZGpPpEYpd/r4xA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746182007;
+	s=2020e; t=1746182008;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yrD0LDWBY7hXJ7TpipTnyw2+BtM90UenpiWZI6ebr6o=;
-	b=Ad/iEdUzdbvzdtKYzeC3IscCE7CqqunxZgeq8D1ijheOgiXr5vHO9/bew13B4Zl1aRrivb
-	T4OftI8L+HBRd4Cg==
+	bh=ixE3SxPYP+L949DCopHPJqzgbBUQzIpL+pxdNZpZRs0=;
+	b=Zt9tMqgOFfFHsJHZHyeVa2b3IwAuf+mYGB0NFTk/JQu95VJgjOXdB/zzWu1wFrms037WtL
+	lI8jdSj4KsmJ//CA==
 From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Restructure spectre_v2_user mitigation
+Subject: [tip: x86/bugs] x86/bugs: Restructure retbleed mitigation
 Cc: David Kaplan <david.kaplan@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250418161721.1855190-12-david.kaplan@amd.com>
-References: <20250418161721.1855190-12-david.kaplan@amd.com>
+In-Reply-To: <20250418161721.1855190-11-david.kaplan@amd.com>
+References: <20250418161721.1855190-11-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174618200650.22196.1931491127552746457.tip-bot2@tip-bot2>
+Message-ID: <174618200717.22196.8651223091467963937.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,297 +67,332 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/bugs branch of tip:
 
-Commit-ID:     ddfca9430a617780c8ad9691bf44660ae49e2a35
-Gitweb:        https://git.kernel.org/tip/ddfca9430a617780c8ad9691bf44660ae49e2a35
+Commit-ID:     e3b78a7ad5ea718ea1dbaeb02ba9a6aa2aee9324
+Gitweb:        https://git.kernel.org/tip/e3b78a7ad5ea718ea1dbaeb02ba9a6aa2aee9324
 Author:        David Kaplan <david.kaplan@amd.com>
-AuthorDate:    Fri, 18 Apr 2025 11:17:16 -05:00
+AuthorDate:    Fri, 18 Apr 2025 11:17:15 -05:00
 Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 29 Apr 2025 18:51:21 +02:00
+CommitterDate: Tue, 29 Apr 2025 10:22:08 +02:00
 
-x86/bugs: Restructure spectre_v2_user mitigation
+x86/bugs: Restructure retbleed mitigation
 
-Restructure spectre_v2_user to use select/update/apply functions to
-create consistent vulnerability handling.
+Restructure retbleed mitigation to use select/update/apply functions to create
+consistent vulnerability handling.  The retbleed_update_mitigation()
+simplifies the dependency between spectre_v2 and retbleed.
 
-The IBPB/STIBP choices are first decided based on the spectre_v2_user
-command line but can be modified by the spectre_v2 command line option
-as well.
+The command line options now directly select a preferred mitigation
+which simplifies the logic.
 
 Signed-off-by: David Kaplan <david.kaplan@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
-Link: https://lore.kernel.org/20250418161721.1855190-12-david.kaplan@amd.com
+Link: https://lore.kernel.org/20250418161721.1855190-11-david.kaplan@amd.com
 ---
- arch/x86/kernel/cpu/bugs.c | 168 ++++++++++++++++++++----------------
- 1 file changed, 94 insertions(+), 74 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 195 ++++++++++++++++++------------------
+ 1 file changed, 98 insertions(+), 97 deletions(-)
 
 diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 207a472..dc75195 100644
+index 7edf429..207a472 100644
 --- a/arch/x86/kernel/cpu/bugs.c
 +++ b/arch/x86/kernel/cpu/bugs.c
-@@ -60,6 +60,8 @@ static void __init retbleed_select_mitigation(void);
- static void __init retbleed_update_mitigation(void);
- static void __init retbleed_apply_mitigation(void);
+@@ -57,6 +57,8 @@ static void __init spectre_v1_select_mitigation(void);
+ static void __init spectre_v1_apply_mitigation(void);
+ static void __init spectre_v2_select_mitigation(void);
+ static void __init retbleed_select_mitigation(void);
++static void __init retbleed_update_mitigation(void);
++static void __init retbleed_apply_mitigation(void);
  static void __init spectre_v2_user_select_mitigation(void);
-+static void __init spectre_v2_user_update_mitigation(void);
-+static void __init spectre_v2_user_apply_mitigation(void);
  static void __init ssb_select_mitigation(void);
  static void __init l1tf_select_mitigation(void);
- static void __init mds_select_mitigation(void);
-@@ -190,11 +192,6 @@ void __init cpu_select_mitigations(void)
+@@ -187,11 +189,6 @@ void __init cpu_select_mitigations(void)
+ 	/* Select the proper CPU mitigations before patching alternatives: */
  	spectre_v1_select_mitigation();
  	spectre_v2_select_mitigation();
- 	retbleed_select_mitigation();
 -	/*
--	 * spectre_v2_user_select_mitigation() relies on the state set by
--	 * retbleed_select_mitigation(); specifically the STIBP selection is
--	 * forced for UNRET or IBPB.
+-	 * retbleed_select_mitigation() relies on the state set by
+-	 * spectre_v2_select_mitigation(); specifically it wants to know about
+-	 * spectre_v2=ibrs.
 -	 */
- 	spectre_v2_user_select_mitigation();
- 	ssb_select_mitigation();
- 	l1tf_select_mitigation();
-@@ -217,6 +214,13 @@ void __init cpu_select_mitigations(void)
+ 	retbleed_select_mitigation();
+ 	/*
+ 	 * spectre_v2_user_select_mitigation() relies on the state set by
+@@ -219,12 +216,14 @@ void __init cpu_select_mitigations(void)
+ 	 * After mitigations are selected, some may need to update their
  	 * choices.
  	 */
- 	retbleed_update_mitigation();
-+
-+	/*
-+	 * spectre_v2_user_update_mitigation() depends on
-+	 * retbleed_update_mitigation(), specifically the STIBP
-+	 * selection is forced for UNRET or IBPB.
-+	 */
-+	spectre_v2_user_update_mitigation();
++	retbleed_update_mitigation();
  	mds_update_mitigation();
  	taa_update_mitigation();
  	mmio_update_mitigation();
-@@ -224,6 +228,7 @@ void __init cpu_select_mitigations(void)
+ 	rfds_update_mitigation();
  
  	spectre_v1_apply_mitigation();
- 	retbleed_apply_mitigation();
-+	spectre_v2_user_apply_mitigation();
++	retbleed_apply_mitigation();
  	mds_apply_mitigation();
  	taa_apply_mitigation();
  	mmio_apply_mitigation();
-@@ -1379,6 +1384,8 @@ enum spectre_v2_mitigation_cmd {
- 	SPECTRE_V2_CMD_IBRS,
+@@ -1085,6 +1084,7 @@ enum spectre_v2_mitigation spectre_v2_enabled __ro_after_init = SPECTRE_V2_NONE;
+ 
+ enum retbleed_mitigation {
+ 	RETBLEED_MITIGATION_NONE,
++	RETBLEED_MITIGATION_AUTO,
+ 	RETBLEED_MITIGATION_UNRET,
+ 	RETBLEED_MITIGATION_IBPB,
+ 	RETBLEED_MITIGATION_IBRS,
+@@ -1092,14 +1092,6 @@ enum retbleed_mitigation {
+ 	RETBLEED_MITIGATION_STUFF,
  };
  
-+static enum spectre_v2_mitigation_cmd spectre_v2_cmd __ro_after_init = SPECTRE_V2_CMD_AUTO;
-+
- enum spectre_v2_user_cmd {
- 	SPECTRE_V2_USER_CMD_NONE,
- 	SPECTRE_V2_USER_CMD_AUTO,
-@@ -1417,31 +1424,18 @@ static void __init spec_v2_user_print_cond(const char *reason, bool secure)
- 		pr_info("spectre_v2_user=%s forced on command line.\n", reason);
- }
- 
--static __ro_after_init enum spectre_v2_mitigation_cmd spectre_v2_cmd;
+-enum retbleed_mitigation_cmd {
+-	RETBLEED_CMD_OFF,
+-	RETBLEED_CMD_AUTO,
+-	RETBLEED_CMD_UNRET,
+-	RETBLEED_CMD_IBPB,
+-	RETBLEED_CMD_STUFF,
+-};
 -
--static enum spectre_v2_user_cmd __init
--spectre_v2_parse_user_cmdline(void)
-+static enum spectre_v2_user_cmd __init spectre_v2_parse_user_cmdline(void)
+ static const char * const retbleed_strings[] = {
+ 	[RETBLEED_MITIGATION_NONE]	= "Vulnerable",
+ 	[RETBLEED_MITIGATION_UNRET]	= "Mitigation: untrained return thunk",
+@@ -1110,9 +1102,7 @@ static const char * const retbleed_strings[] = {
+ };
+ 
+ static enum retbleed_mitigation retbleed_mitigation __ro_after_init =
+-	RETBLEED_MITIGATION_NONE;
+-static enum retbleed_mitigation_cmd retbleed_cmd __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_RETBLEED) ? RETBLEED_CMD_AUTO : RETBLEED_CMD_OFF;
++	IS_ENABLED(CONFIG_MITIGATION_RETBLEED) ? RETBLEED_MITIGATION_AUTO : RETBLEED_MITIGATION_NONE;
+ 
+ static int __ro_after_init retbleed_nosmt = false;
+ 
+@@ -1129,15 +1119,15 @@ static int __init retbleed_parse_cmdline(char *str)
+ 		}
+ 
+ 		if (!strcmp(str, "off")) {
+-			retbleed_cmd = RETBLEED_CMD_OFF;
++			retbleed_mitigation = RETBLEED_MITIGATION_NONE;
+ 		} else if (!strcmp(str, "auto")) {
+-			retbleed_cmd = RETBLEED_CMD_AUTO;
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+ 		} else if (!strcmp(str, "unret")) {
+-			retbleed_cmd = RETBLEED_CMD_UNRET;
++			retbleed_mitigation = RETBLEED_MITIGATION_UNRET;
+ 		} else if (!strcmp(str, "ibpb")) {
+-			retbleed_cmd = RETBLEED_CMD_IBPB;
++			retbleed_mitigation = RETBLEED_MITIGATION_IBPB;
+ 		} else if (!strcmp(str, "stuff")) {
+-			retbleed_cmd = RETBLEED_CMD_STUFF;
++			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
+ 		} else if (!strcmp(str, "nosmt")) {
+ 			retbleed_nosmt = true;
+ 		} else if (!strcmp(str, "force")) {
+@@ -1158,76 +1148,109 @@ early_param("retbleed", retbleed_parse_cmdline);
+ 
+ static void __init retbleed_select_mitigation(void)
  {
--	enum spectre_v2_user_cmd mode;
- 	char arg[20];
- 	int ret, i;
- 
--	mode = IS_ENABLED(CONFIG_MITIGATION_SPECTRE_V2) ?
--		SPECTRE_V2_USER_CMD_AUTO : SPECTRE_V2_USER_CMD_NONE;
+-	bool mitigate_smt = false;
 -
--	switch (spectre_v2_cmd) {
--	case SPECTRE_V2_CMD_NONE:
-+	if (cpu_mitigations_off() || !IS_ENABLED(CONFIG_MITIGATION_SPECTRE_V2))
- 		return SPECTRE_V2_USER_CMD_NONE;
--	case SPECTRE_V2_CMD_FORCE:
--		return SPECTRE_V2_USER_CMD_FORCE;
--	default:
--		break;
--	}
- 
- 	ret = cmdline_find_option(boot_command_line, "spectre_v2_user",
- 				  arg, sizeof(arg));
- 	if (ret < 0)
--		return mode;
-+		return SPECTRE_V2_USER_CMD_AUTO;
- 
- 	for (i = 0; i < ARRAY_SIZE(v2_user_options); i++) {
- 		if (match_option(arg, ret, v2_user_options[i].option)) {
-@@ -1452,7 +1446,7 @@ spectre_v2_parse_user_cmdline(void)
- 	}
- 
- 	pr_err("Unknown user space protection option (%s). Switching to default\n", arg);
--	return mode;
-+	return SPECTRE_V2_USER_CMD_AUTO;
- }
- 
- static inline bool spectre_v2_in_ibrs_mode(enum spectre_v2_mitigation mode)
-@@ -1460,60 +1454,72 @@ static inline bool spectre_v2_in_ibrs_mode(enum spectre_v2_mitigation mode)
- 	return spectre_v2_in_eibrs_mode(mode) || mode == SPECTRE_V2_IBRS;
- }
- 
--static void __init
--spectre_v2_user_select_mitigation(void)
-+static void __init spectre_v2_user_select_mitigation(void)
- {
--	enum spectre_v2_user_mitigation mode = SPECTRE_V2_USER_NONE;
--	enum spectre_v2_user_cmd cmd;
+-	if (!boot_cpu_has_bug(X86_BUG_RETBLEED) || cpu_mitigations_off())
+-		return;
 -
- 	if (!boot_cpu_has(X86_FEATURE_IBPB) && !boot_cpu_has(X86_FEATURE_STIBP))
- 		return;
- 
--	cmd = spectre_v2_parse_user_cmdline();
--	switch (cmd) {
-+	switch (spectre_v2_parse_user_cmdline()) {
- 	case SPECTRE_V2_USER_CMD_NONE:
--		goto set_mode;
-+		return;
- 	case SPECTRE_V2_USER_CMD_FORCE:
--		mode = SPECTRE_V2_USER_STRICT;
-+		spectre_v2_user_ibpb  = SPECTRE_V2_USER_STRICT;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT;
- 		break;
- 	case SPECTRE_V2_USER_CMD_AUTO:
- 	case SPECTRE_V2_USER_CMD_PRCTL:
-+		spectre_v2_user_ibpb  = SPECTRE_V2_USER_PRCTL;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_PRCTL;
-+		break;
- 	case SPECTRE_V2_USER_CMD_PRCTL_IBPB:
--		mode = SPECTRE_V2_USER_PRCTL;
-+		spectre_v2_user_ibpb  = SPECTRE_V2_USER_STRICT;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_PRCTL;
- 		break;
- 	case SPECTRE_V2_USER_CMD_SECCOMP:
-+		if (IS_ENABLED(CONFIG_SECCOMP))
-+			spectre_v2_user_ibpb = SPECTRE_V2_USER_SECCOMP;
-+		else
-+			spectre_v2_user_ibpb = SPECTRE_V2_USER_PRCTL;
-+		spectre_v2_user_stibp = spectre_v2_user_ibpb;
-+		break;
- 	case SPECTRE_V2_USER_CMD_SECCOMP_IBPB:
-+		spectre_v2_user_ibpb = SPECTRE_V2_USER_STRICT;
- 		if (IS_ENABLED(CONFIG_SECCOMP))
--			mode = SPECTRE_V2_USER_SECCOMP;
-+			spectre_v2_user_stibp = SPECTRE_V2_USER_SECCOMP;
- 		else
--			mode = SPECTRE_V2_USER_PRCTL;
-+			spectre_v2_user_stibp = SPECTRE_V2_USER_PRCTL;
- 		break;
- 	}
- 
--	/* Initialize Indirect Branch Prediction Barrier */
--	if (boot_cpu_has(X86_FEATURE_IBPB)) {
--		static_branch_enable(&switch_vcpu_ibpb);
-+	/*
-+	 * At this point, an STIBP mode other than "off" has been set.
-+	 * If STIBP support is not being forced, check if STIBP always-on
-+	 * is preferred.
-+	 */
-+	if ((spectre_v2_user_stibp == SPECTRE_V2_USER_PRCTL ||
-+	     spectre_v2_user_stibp == SPECTRE_V2_USER_SECCOMP) &&
-+	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT_PREFERRED;
- 
--		spectre_v2_user_ibpb = mode;
--		switch (cmd) {
--		case SPECTRE_V2_USER_CMD_NONE:
--			break;
--		case SPECTRE_V2_USER_CMD_FORCE:
--		case SPECTRE_V2_USER_CMD_PRCTL_IBPB:
--		case SPECTRE_V2_USER_CMD_SECCOMP_IBPB:
--			static_branch_enable(&switch_mm_always_ibpb);
--			spectre_v2_user_ibpb = SPECTRE_V2_USER_STRICT;
--			break;
--		case SPECTRE_V2_USER_CMD_PRCTL:
--		case SPECTRE_V2_USER_CMD_AUTO:
--		case SPECTRE_V2_USER_CMD_SECCOMP:
--			static_branch_enable(&switch_mm_cond_ibpb);
--			break;
--		}
-+	if (!boot_cpu_has(X86_FEATURE_IBPB))
-+		spectre_v2_user_ibpb = SPECTRE_V2_USER_NONE;
- 
--		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
--			static_key_enabled(&switch_mm_always_ibpb) ?
--			"always-on" : "conditional");
-+	if (!boot_cpu_has(X86_FEATURE_STIBP))
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_NONE;
-+}
-+
-+static void __init spectre_v2_user_update_mitigation(void)
-+{
-+	if (!boot_cpu_has(X86_FEATURE_IBPB) && !boot_cpu_has(X86_FEATURE_STIBP))
-+		return;
-+
-+	/* The spectre_v2 cmd line can override spectre_v2_user options */
-+	if (spectre_v2_cmd == SPECTRE_V2_CMD_NONE) {
-+		spectre_v2_user_ibpb = SPECTRE_V2_USER_NONE;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_NONE;
-+	} else if (spectre_v2_cmd == SPECTRE_V2_CMD_FORCE) {
-+		spectre_v2_user_ibpb = SPECTRE_V2_USER_STRICT;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT;
- 	}
- 
- 	/*
-@@ -1531,30 +1537,44 @@ spectre_v2_user_select_mitigation(void)
- 	if (!boot_cpu_has(X86_FEATURE_STIBP) ||
- 	    !cpu_smt_possible() ||
- 	    (spectre_v2_in_eibrs_mode(spectre_v2_enabled) &&
--	     !boot_cpu_has(X86_FEATURE_AUTOIBRS)))
-+	     !boot_cpu_has(X86_FEATURE_AUTOIBRS))) {
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_NONE;
+-	switch (retbleed_cmd) {
+-	case RETBLEED_CMD_OFF:
++	if (!boot_cpu_has_bug(X86_BUG_RETBLEED) || cpu_mitigations_off()) {
++		retbleed_mitigation = RETBLEED_MITIGATION_NONE;
  		return;
 +	}
  
--	/*
--	 * At this point, an STIBP mode other than "off" has been set.
--	 * If STIBP support is not being forced, check if STIBP always-on
--	 * is preferred.
--	 */
--	if (mode != SPECTRE_V2_USER_STRICT &&
--	    boot_cpu_has(X86_FEATURE_AMD_STIBP_ALWAYS_ON))
--		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
+-	case RETBLEED_CMD_UNRET:
+-		if (IS_ENABLED(CONFIG_MITIGATION_UNRET_ENTRY)) {
+-			retbleed_mitigation = RETBLEED_MITIGATION_UNRET;
+-		} else {
++	switch (retbleed_mitigation) {
++	case RETBLEED_MITIGATION_UNRET:
++		if (!IS_ENABLED(CONFIG_MITIGATION_UNRET_ENTRY)) {
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+ 			pr_err("WARNING: kernel not compiled with MITIGATION_UNRET_ENTRY.\n");
+-			goto do_cmd_auto;
+ 		}
+ 		break;
 -
--	if (retbleed_mitigation == RETBLEED_MITIGATION_UNRET ||
--	    retbleed_mitigation == RETBLEED_MITIGATION_IBPB) {
--		if (mode != SPECTRE_V2_USER_STRICT &&
--		    mode != SPECTRE_V2_USER_STRICT_PREFERRED)
-+	if (spectre_v2_user_stibp != SPECTRE_V2_USER_NONE &&
-+	    (retbleed_mitigation == RETBLEED_MITIGATION_UNRET ||
-+	     retbleed_mitigation == RETBLEED_MITIGATION_IBPB)) {
-+		if (spectre_v2_user_stibp != SPECTRE_V2_USER_STRICT &&
-+		    spectre_v2_user_stibp != SPECTRE_V2_USER_STRICT_PREFERRED)
- 			pr_info("Selecting STIBP always-on mode to complement retbleed mitigation\n");
--		mode = SPECTRE_V2_USER_STRICT_PREFERRED;
-+		spectre_v2_user_stibp = SPECTRE_V2_USER_STRICT_PREFERRED;
- 	}
-+	pr_info("%s\n", spectre_v2_user_strings[spectre_v2_user_stibp]);
+-	case RETBLEED_CMD_IBPB:
++	case RETBLEED_MITIGATION_IBPB:
+ 		if (!boot_cpu_has(X86_FEATURE_IBPB)) {
+ 			pr_err("WARNING: CPU does not support IBPB.\n");
+-			goto do_cmd_auto;
+-		} else if (IS_ENABLED(CONFIG_MITIGATION_IBPB_ENTRY)) {
+-			retbleed_mitigation = RETBLEED_MITIGATION_IBPB;
+-		} else {
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
++		} else if (!IS_ENABLED(CONFIG_MITIGATION_IBPB_ENTRY)) {
+ 			pr_err("WARNING: kernel not compiled with MITIGATION_IBPB_ENTRY.\n");
+-			goto do_cmd_auto;
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
++		}
++		break;
++	case RETBLEED_MITIGATION_STUFF:
++		if (!IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING)) {
++			pr_err("WARNING: kernel not compiled with MITIGATION_CALL_DEPTH_TRACKING.\n");
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
++		} else if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL) {
++			pr_err("WARNING: retbleed=stuff only supported for Intel CPUs.\n");
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+ 		}
+ 		break;
++	default:
++		break;
++	}
+ 
+-	case RETBLEED_CMD_STUFF:
+-		if (IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING) &&
+-		    spectre_v2_enabled == SPECTRE_V2_RETPOLINE) {
+-			if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL) {
+-				pr_err("WARNING: retbleed=stuff only supported for Intel CPUs.\n");
+-				goto do_cmd_auto;
+-			}
+-			retbleed_mitigation = RETBLEED_MITIGATION_STUFF;
++	if (retbleed_mitigation != RETBLEED_MITIGATION_AUTO)
++		return;
+ 
+-		} else {
+-			if (IS_ENABLED(CONFIG_MITIGATION_CALL_DEPTH_TRACKING))
+-				pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
+-			else
+-				pr_err("WARNING: kernel not compiled with MITIGATION_CALL_DEPTH_TRACKING.\n");
++	/* Intel mitigation selected in retbleed_update_mitigation() */
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
++	    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
++		if (IS_ENABLED(CONFIG_MITIGATION_UNRET_ENTRY))
++			retbleed_mitigation = RETBLEED_MITIGATION_UNRET;
++		else if (IS_ENABLED(CONFIG_MITIGATION_IBPB_ENTRY) &&
++			 boot_cpu_has(X86_FEATURE_IBPB))
++			retbleed_mitigation = RETBLEED_MITIGATION_IBPB;
++		else
++			retbleed_mitigation = RETBLEED_MITIGATION_NONE;
++	}
 +}
  
--	spectre_v2_user_stibp = mode;
-+static void __init spectre_v2_user_apply_mitigation(void)
+-			goto do_cmd_auto;
+-		}
+-		break;
++static void __init retbleed_update_mitigation(void)
 +{
-+	/* Initialize Indirect Branch Prediction Barrier */
-+	if (spectre_v2_user_ibpb != SPECTRE_V2_USER_NONE) {
-+		static_branch_enable(&switch_vcpu_ibpb);
++	if (!boot_cpu_has_bug(X86_BUG_RETBLEED) || cpu_mitigations_off())
++		return;
 +
-+		switch (spectre_v2_user_ibpb) {
-+		case SPECTRE_V2_USER_STRICT:
-+			static_branch_enable(&switch_mm_always_ibpb);
++	if (retbleed_mitigation == RETBLEED_MITIGATION_NONE)
++		goto out;
+ 
+-do_cmd_auto:
+-	case RETBLEED_CMD_AUTO:
+-		if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+-		    boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
+-			if (IS_ENABLED(CONFIG_MITIGATION_UNRET_ENTRY))
+-				retbleed_mitigation = RETBLEED_MITIGATION_UNRET;
+-			else if (IS_ENABLED(CONFIG_MITIGATION_IBPB_ENTRY) &&
+-				 boot_cpu_has(X86_FEATURE_IBPB))
+-				retbleed_mitigation = RETBLEED_MITIGATION_IBPB;
++	/*
++	 * retbleed=stuff is only allowed on Intel.  If stuffing can't be used
++	 * then a different mitigation will be selected below.
++	 */
++	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF) {
++		if (spectre_v2_enabled != SPECTRE_V2_RETPOLINE) {
++			pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
++			retbleed_mitigation = RETBLEED_MITIGATION_AUTO;
+ 		}
++	}
++	/*
++	 * Let IBRS trump all on Intel without affecting the effects of the
++	 * retbleed= cmdline option except for call depth based stuffing
++	 */
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
++		switch (spectre_v2_enabled) {
++		case SPECTRE_V2_IBRS:
++			retbleed_mitigation = RETBLEED_MITIGATION_IBRS;
 +			break;
-+		case SPECTRE_V2_USER_PRCTL:
-+		case SPECTRE_V2_USER_SECCOMP:
-+			static_branch_enable(&switch_mm_cond_ibpb);
++		case SPECTRE_V2_EIBRS:
++		case SPECTRE_V2_EIBRS_RETPOLINE:
++		case SPECTRE_V2_EIBRS_LFENCE:
++			retbleed_mitigation = RETBLEED_MITIGATION_EIBRS;
 +			break;
 +		default:
-+			break;
++			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
++				pr_err(RETBLEED_INTEL_MSG);
 +		}
- 
--set_mode:
--	pr_info("%s\n", spectre_v2_user_strings[mode]);
-+		pr_info("mitigation: Enabling %s Indirect Branch Prediction Barrier\n",
-+			static_key_enabled(&switch_mm_always_ibpb) ?
-+			"always-on" : "conditional");
++		/* If nothing has set the mitigation yet, default to NONE. */
++		if (retbleed_mitigation == RETBLEED_MITIGATION_AUTO)
++			retbleed_mitigation = RETBLEED_MITIGATION_NONE;
 +	}
++out:
++	pr_info("%s\n", retbleed_strings[retbleed_mitigation]);
++}
+ 
+-		/*
+-		 * The Intel mitigation (IBRS or eIBRS) was already selected in
+-		 * spectre_v2_select_mitigation().  'retbleed_mitigation' will
+-		 * be set accordingly below.
+-		 */
+ 
+-		break;
+-	}
++static void __init retbleed_apply_mitigation(void)
++{
++	bool mitigate_smt = false;
+ 
+ 	switch (retbleed_mitigation) {
++	case RETBLEED_MITIGATION_NONE:
++		return;
++
+ 	case RETBLEED_MITIGATION_UNRET:
+ 		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+ 		setup_force_cpu_cap(X86_FEATURE_UNRET);
+@@ -1277,28 +1300,6 @@ do_cmd_auto:
+ 	if (mitigate_smt && !boot_cpu_has(X86_FEATURE_STIBP) &&
+ 	    (retbleed_nosmt || cpu_mitigations_auto_nosmt()))
+ 		cpu_smt_disable(false);
+-
+-	/*
+-	 * Let IBRS trump all on Intel without affecting the effects of the
+-	 * retbleed= cmdline option except for call depth based stuffing
+-	 */
+-	if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
+-		switch (spectre_v2_enabled) {
+-		case SPECTRE_V2_IBRS:
+-			retbleed_mitigation = RETBLEED_MITIGATION_IBRS;
+-			break;
+-		case SPECTRE_V2_EIBRS:
+-		case SPECTRE_V2_EIBRS_RETPOLINE:
+-		case SPECTRE_V2_EIBRS_LFENCE:
+-			retbleed_mitigation = RETBLEED_MITIGATION_EIBRS;
+-			break;
+-		default:
+-			if (retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
+-				pr_err(RETBLEED_INTEL_MSG);
+-		}
+-	}
+-
+-	pr_info("%s\n", retbleed_strings[retbleed_mitigation]);
  }
  
- static const char * const spectre_v2_strings[] = {
+ #undef pr_fmt
+@@ -1855,8 +1856,8 @@ static void __init spectre_v2_select_mitigation(void)
+ 
+ 		if (IS_ENABLED(CONFIG_MITIGATION_IBRS_ENTRY) &&
+ 		    boot_cpu_has_bug(X86_BUG_RETBLEED) &&
+-		    retbleed_cmd != RETBLEED_CMD_OFF &&
+-		    retbleed_cmd != RETBLEED_CMD_STUFF &&
++		    retbleed_mitigation != RETBLEED_MITIGATION_NONE &&
++		    retbleed_mitigation != RETBLEED_MITIGATION_STUFF &&
+ 		    boot_cpu_has(X86_FEATURE_IBRS) &&
+ 		    boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) {
+ 			mode = SPECTRE_V2_IBRS;
+@@ -1964,7 +1965,7 @@ static void __init spectre_v2_select_mitigation(void)
+ 	    (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||
+ 	     boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)) {
+ 
+-		if (retbleed_cmd != RETBLEED_CMD_IBPB) {
++		if (retbleed_mitigation != RETBLEED_MITIGATION_IBPB) {
+ 			setup_force_cpu_cap(X86_FEATURE_USE_IBPB_FW);
+ 			pr_info("Enabling Speculation Barrier for firmware calls\n");
+ 		}
