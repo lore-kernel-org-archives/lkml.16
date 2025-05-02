@@ -1,134 +1,242 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7DB1474DA;
-	Fri,  2 May 2025 13:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92DC53D76
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193534; cv=none; b=Xs5GcBlNN2a+S8sV5ijMOFM22uFnp75XChry4t6lf9sOmGs0wwaTjg/ABhhdJT1YQRo5pXV6q2rkrIZmZgm9mcRPddB60qzSX2laPZ8b9CIVXwb4bXhyZ4WogaUz0NcEqLv6zFUKQiCuvgn6ugid02dozD5+lkFHfW+EkINNxXU=
+	t=1746193610; cv=none; b=jGr7jZSQaDsZxN+dawcukqwwSwdn4wzeUh/W3UyOMWueVJopQ3KT2Hj+kYsd3hB7y+gmXHUJwQy02IT6vxm7wHngSutNhfcvfjKsXS1ccfbnUcd8m0p9MMePIDjjCQ9yBBpwSzFqz/wujGS/xBgFLlYGbfn/sdLVYBCfLpJnEYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193534; c=relaxed/simple;
-	bh=odBsd8OOefsLhvmtI/QyybmT0n5dZ2Nsnaqdl13KW7I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=h9HsF4uWYRJXwFbbYVPCKOzTjgZN6BIRK3F3VnVwD/6KTy2OHu5hILtS1SdfvNbYSi+7MuLWqawNlon/r7JIIpBoavFi2zRyAiFAsYsXwcU+maYLFTO5NvsXoQs5AAlASj8q1yCl1rlEGjUqBftKraSxGkGzbajkhIxPqlI0CJM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=NUFALEr8; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746193610; c=relaxed/simple;
+	bh=bLnKoNftABG2OB4Q01vU3eb9fNvmmUVBrHvWNLMKcXc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=dhIrrilCxS0CeexFE1I6NIIwBgS54s6gznsFEWOf8hSVMs6zC37IIpPvmnbiACOgrjVK+UOuOfzQ6gI5ENH8QkOs0HAtpyCnJfg3KS4Np/k0HU+blIndALU+PgM8FhrMsExgM8Yz/kLMCPi32ZNrOwt7zaucC8XetnBp9G30v7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PvKoG7zH; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="NUFALEr8"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NR81010420;
-	Fri, 2 May 2025 13:45:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Vjlv5XaJd+MrBgWuCB32swhUU5yAHYALuWdbB8bcKzE=; b=NUFALEr8HIiYMiPi
-	LzhpRbo6Xb8/Ascq/0NnSIR8jf7Rp82rIk7PGghlEkkBfvOp3ooXZNkbuWAOBVUJ
-	9vMHh6jTAy6DtEAgvXVv4VZKG8AwRv3cpXh5tZK72pyCeVu77bbHaKN0oK2LyBW0
-	cbVJNEptgVw+YZNnsg5dbYbp9hLftrNtDTA1We3PjajnuqTn295JWeEjZlWSGyxx
-	us4kVdpAuzhJ5+w5jcGr3pZyX6U1niE6wKgxdsmUKotAOLqnT8qGAAYcbccHpjxr
-	nkSIynla0TcaB3xWc4f7wnDBEJq0B/98Y8APusS5W6TcaO66IweOUPcC2pGknh8f
-	zFFZMg==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubrgxc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 13:45:28 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 542DjRaJ029255
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 13:45:27 GMT
-Received: from [10.50.25.148] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 2 May 2025
- 06:45:21 -0700
-Message-ID: <35b1a256-f3fd-9ada-3385-e1ac4dc4a68f@quicinc.com>
-Date: Fri, 2 May 2025 19:15:17 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PvKoG7zH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746193607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t26WFBHi08pW7euHNG026rO+y6++jNdV0Wnu59PtcDI=;
+	b=PvKoG7zH5mWdvt1kglKm0mzgIA4E/kLKRr72PZlbMjDRJGRKUloqlp8He9Jm6dDzK5vtED
+	4ohZU4taPtYpFqsqR/xSAh9hPHKdrpvU1SHOzNy3xXEGlPpJHhSZ6IqXIJPQVyG3vzi/kk
+	X9rZ3Q6EPJ6TTbCsiaG49zsD16McBJU=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-595-euVTC-fAPum53FFtH4NVXQ-1; Fri, 02 May 2025 09:46:46 -0400
+X-MC-Unique: euVTC-fAPum53FFtH4NVXQ-1
+X-Mimecast-MFC-AGG-ID: euVTC-fAPum53FFtH4NVXQ_1746193605
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3912fe32a30so650229f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:46:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746193605; x=1746798405;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=t26WFBHi08pW7euHNG026rO+y6++jNdV0Wnu59PtcDI=;
+        b=Z4GVSYC7uCpg+AcFiU34ujH9MCZqVPG/JWyJyNgUIg3xn1VFl2RF8xWnQcK5Y9xADW
+         UFgUF4oZU6zVrk+euyGORCFu/GmJRBM2gnQR1XMhaE0caeNfXy3mEw+IvtjTh08YI+2a
+         ngyha+/wokRM9Mth5X3l6A/rPZsA6CtEjJwYPbs1Juv3NdEFp7dwQ5dDwAJhn405g8Io
+         tNXX4X8cU0sH1Sa689dxr5JzX+VC+N2Ku9R5u6Hi4tb/B92VhruFqMh/ZIngL2wyYcy1
+         z/ql8dstBl0bNqRbh3nFrm//9vDAlAqetF0yylUo7vkHjqkqQr20o2F6WJDy9scuYPfN
+         obXA==
+X-Forwarded-Encrypted: i=1; AJvYcCX6SU3AgzH2qnKWNLsBtg4sNjtOKE6MXvO0LO6SlfDnY5QH8v2kN/VIlpB1sZdhq7+zbAOlNx0TWmxhOeQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx1smPjj92OJnXB3n6yql5D4MdQlOwuzGqsUqAbkkLFFH/nL2jp
+	1ahXDrseSoe+GU34bsogb7sLLRauCcwJKceeNXNRUPeVjgyQleE8uytvEaVZud6xMoa5PUSpdxe
+	Mv1paRAAQ0nsxOiy+8tR0XBqUTbdl5qbr/DPb6dzJI9Ltqf2hsSeCgNBdd6TAS2g39DN0x9J7ny
+	dbqmUFNSWy73/baQeJuM2WvAN8tFnqb+TdZO4TvTf27VQNYA==
+X-Gm-Gg: ASbGncunSvWFB8mzcvOz2gFkT8wp0W4lQunTXTRMV8BPK62Nb0/B3KD0SR35HPH2BXi
+	XqC9GiyBFtzXyxUk0fnCDIIR5xEuiEA+VGmMCvkJ3vBVYo2BilFfvCK2fG7xox6/Siv+xy/7LDI
+	IVJA9n/0tXAYZSHuEjtZhIwzCFhxMptKWZcLkidsFABOMCVhW6XlwvF00FMB9JyxckKDtLQqfIo
+	rJyhofJa/berlMn9+tm9W1jADGc9BRtDR0lagW/R9S3DsUI7lNymyMZVebQqj3HYBP+hS//YH5D
+	NbGhBP8=
+X-Received: by 2002:a5d:588b:0:b0:3a0:8442:2c48 with SMTP id ffacd0b85a97d-3a099ae9222mr2602366f8f.44.1746193605223;
+        Fri, 02 May 2025 06:46:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFGs1GZuij98mNUcVZcrNsFGm1V35jGUDgdtybLeV9BC/KcmWiOtMwk4H8uBWA4raSVAiEO2w==
+X-Received: by 2002:a5d:588b:0:b0:3a0:8442:2c48 with SMTP id ffacd0b85a97d-3a099ae9222mr2602322f8f.44.1746193604732;
+        Fri, 02 May 2025 06:46:44 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2b20c3fsm91680295e9.28.2025.05.02.06.46.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 06:46:44 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: x86@kernel.org, linux-efi@vger.kernel.org, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Peter
+ Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, Emanuele
+ Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann
+ <kraxel@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi
+ <bluca@debian.org>, Peter Zijlstra <peterz@infradead.org>, Matthew Garrett
+ <mjg59@srcf.ucam.org>, James Bottomley
+ <James.Bottomley@hansenpartnership.com>, Eric Snowberg
+ <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, Paul
+ Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/efi: Implement support for embedding SBAT data
+ for x86
+In-Reply-To: <CAMj1kXFkFCOqU2jvG_o97DzrhpXKyUd=WxPhHFA-_0ddPSvs0g@mail.gmail.com>
+References: <20250424080950.289864-1-vkuznets@redhat.com>
+ <20250424080950.289864-3-vkuznets@redhat.com>
+ <CAMj1kXFMmhROmaDZ0gsw+ozG5iSkMvSXb15qexToUSAFyBn5hQ@mail.gmail.com>
+ <87ldrka6w6.fsf@redhat.com>
+ <CAMj1kXE0WcenLEB+60=+oc+aKfbqZkwYZf-TrOyDY=ShXQ2pYw@mail.gmail.com>
+ <87a57v9pt4.fsf@redhat.com>
+ <CAMj1kXFkFCOqU2jvG_o97DzrhpXKyUd=WxPhHFA-_0ddPSvs0g@mail.gmail.com>
+Date: Fri, 02 May 2025 15:46:43 +0200
+Message-ID: <877c2z9lbw.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v3 06/23] media: iris: Remove deprecated property setting
- to firmware
-Content-Language: en-US
-To: Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Vikash Garodia
-	<quic_vgarodia@quicinc.com>,
-        Abhinav Kumar <quic_abhinavk@quicinc.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Stefan Schmidt
-	<stefan.schmidt@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        "Rob Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor Dooley" <conor+dt@kernel.org>
-CC: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        Neil Armstrong
-	<neil.armstrong@linaro.org>,
-        Nicolas Dufresne
-	<nicolas.dufresne@collabora.com>,
-        <linux-media@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org>,
-        <20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com>,
-        <stable@vger.kernel.org>
-References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
- <20250502-qcom-iris-hevc-vp9-v3-6-552158a10a7d@quicinc.com>
- <f9aacef3-eed2-4a0b-a543-b26342c4d3f1@linaro.org>
-From: Dikshita Agarwal <quic_dikshita@quicinc.com>
-In-Reply-To: <f9aacef3-eed2-4a0b-a543-b26342c4d3f1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: seodNYEnccKd1jvAiQ1VGPlyOTz7kZl8
-X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=6814cc78 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=tShw72k2IWi_z6KUo_8A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwOSBTYWx0ZWRfXy+QSEl+YQ+Xi R/8X8g8zOdmYmOHF6DcB2JZh8sovLJsQT85V6OpzvBD8zHMwIFz7mE/SfLiiaDgsfYCMGydROD3 /pGXQ/PQluS40vhw9533KRT1Uvftc74PoAtLrXtpKnFBb+bdToTU1e3PC1JXE/Y97PGjiMRhSkV
- Ua9m+H5JZ9m/KbyyRAtCJ1FZ9kwCqAR1iI4vP0QqB+XjUi1QilD4UhnwkD1eo3xnDeXsRy1m5sU VAn2neaSiIbCqzjkONHPu0F52totjCahb9X54UbzJnFZAT89D7CRP5mckYTGZNB1Ma+FKEpaD+o 0+YNigyN+Hf9NStGRWXsvj7Y/2iV4TQ1y1TsyPSAvB7DEx9s6NFLmRdv0rjmXPvEPLABcstKx3Z
- vD4cUTig6c2iKxbSgcxIqZOSKBxLRAdJAEJRhJMY4fxU71TaT7RfJ+QTmjZLks1ciTutGuuN
-X-Proofpoint-ORIG-GUID: seodNYEnccKd1jvAiQ1VGPlyOTz7kZl8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020109
+Content-Type: text/plain
 
+Ard Biesheuvel <ardb@kernel.org> writes:
 
+> On Fri, 2 May 2025 at 14:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> Ard Biesheuvel <ardb@kernel.org> writes:
+>>
+>> > On Mon, 28 Apr 2025 at 12:59, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>> >>
+>> >> Ard Biesheuvel <ardb@kernel.org> writes:
+>> >>
+>> >> > On Thu, 24 Apr 2025 at 10:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> ...
+>>
+>> >> >>  $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
+>> >> >>         $(call if_changed,ld)
+>> >> >>
+>> >> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> >> index 3b2bc61c9408..d0a27905de90 100644
+>> >> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+>> >> >> @@ -49,9 +49,22 @@ SECTIONS
+>> >> >>                 *(.data.*)
+>> >> >>
+>> >> >>                 /* Add 4 bytes of extra space for the obsolete CRC-32 checksum */
+>> >> >> +#ifndef CONFIG_EFI_SBAT
+>> >> >>                 . = ALIGN(. + 4, 0x200);
+>> >> >> +#else
+>> >> >> +               /* Avoid gap between '.data' and '.sbat' */
+>> >> >> +               . = ALIGN(. + 4, 0x1000);
+>> >> >> +#endif
+>> >> >>                 _edata = . ;
+>> >> >>         }
+>> >> >> +#ifdef CONFIG_EFI_SBAT
+>> >> >> +       .sbat : ALIGN(0x1000) {
+>> >> >> +               _sbat = . ;
+>> >> >> +               *(.sbat)
+>> >> >> +               _esbat = ALIGN(0x200);
+>> >> >> +               . = _esbat;
+>> >> >> +       }
+>> >> >> +#endif
+>> >> >>         . = ALIGN(L1_CACHE_BYTES);
+>> >> >>         .bss : {
+>> >> >>                 _bss = . ;
+>> >> >
+>> >> > This looks a bit odd - see below
+>> >> >
+>> >> >> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
+>> >> >> index b5c79f43359b..ab851490ef74 100644
+>> >> >> --- a/arch/x86/boot/header.S
+>> >> >> +++ b/arch/x86/boot/header.S
+>> >> >> @@ -207,6 +207,19 @@ pecompat_fstart:
+>> >> >>                 IMAGE_SCN_MEM_READ              | \
+>> >> >>                 IMAGE_SCN_MEM_WRITE             # Characteristics
+>> >> >>
+>> >> >> +#ifdef CONFIG_EFI_SBAT
+>> >> >> +       .ascii ".sbat\0\0\0"
+>> >> >> +       .long   ZO__esbat - ZO__sbat            # VirtualSize
+>> >> >> +       .long   setup_size + ZO__sbat           # VirtualAddress
+>> >> >> +       .long   ZO__esbat - ZO__sbat            # SizeOfRawData
+>> >> >> +       .long   setup_size + ZO__sbat           # PointerToRawData
+>> >> >> +
+>> >> >> +       .long   0, 0, 0
+>> >> >> +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA  | \
+>> >> >> +               IMAGE_SCN_MEM_READ              | \
+>> >> >> +               IMAGE_SCN_MEM_DISCARDABLE       # Characteristics
+>> >> >> +#endif
+>> >> >> +
+>> >> >
+>> >> > This puts the .sbat section at the very end of the file. However, the
+>> >> > virtual size of .data is 'ZO__end - ZO__data' not 'ZO__edata -
+>> >> > ZO__data', and so the .sbat section will overlap with .bss in the
+>> >> > memory view of the image.
+>> >>
+>> >> Missed that, will fix, thanks! A stupid question though: does this
+>> >> matter in practice for SBAT? I don't think anyone needs SBAT data after
+>> >> kernel starts booting so we can consider it 'discarded'. BSS data can
+>> >> then do whatever it wants.
+>> >>
+>> >
+>> > It violates the PE/COFF spec, and some PE loaders and signing tools
+>> > are very pedantic about the layout.
+>>
+>> Turns out it the problem is slightly harder to address then I initially
+>> thought.
+>
+> Yeah I was afraid this was going to be tricky.
+>
+> ...
+>
+>> The problem is similar for zboot.
+>
+> How so?
+>
 
-On 5/2/2025 5:57 PM, Bryan O'Donoghue wrote:
-> On 01/05/2025 20:13, Dikshita Agarwal wrote:
->> HFI_PROPERTY_CONFIG_VDEC_POST_LOOP_DEBLOCKER is deprecated and no longer
->> supported on current firmware, remove setting the same to firmware.
-> 
-> What about older firmware - what's the effect there ?
-if you are referring to firmware being used in venus, its the same.
-This property was never supported on SM8250 firmware.
-> 
->> At the same time, remove the check for non-zero number of v4l2 controls
->> as some SOC might not expose any capability which requires v4l2 control.
-> 
-> Please break up patches like this one patch removing your legacy
-> functionality - assuming that makes sense another patch amending your
-> non-zero number of v4l2 controls.
-> 
-Ok, will split.
+zboot-header.S has:
 
-Thanks,
-Dikshita
-> Generally any commit log or patch title that requires "do this and do that"
-> should be broken up @ the and.
-> 
-> ---
-> bod
+    .ascii          ".data\0\0\0"
+    .long           __data_size
+    .long           _etext - .Ldoshdr
+    .long           __data_rawsize
+    .long           _etext - .Ldoshdr
+
+where the difference between '__data_rawsize' and '__data_size' is:
+
+ PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
+ PROVIDE(__data_size = ABSOLUTE(_end - _etext));
+
+and "_end" is the end of BSS. So if we put '.sbat' right after '.data'
+then '.data' will cover it too (so we will get an overlap). If we put
+if after '.bss' then we're going to get a hole (size of '.bss') upon
+(aarch64 example):
+
+ objcopy  -O binary arch/arm64/boot/vmlinuz.efi.elf arch/arm64/boot/vmlinuz.efi
+
+as AFAIU it won't be able to squeeze the binary, it only truncates the
+tail throwing away secions without content (in particular, '.sbat').
+
+>> I have two ideas:
+>> 1) Get back to the idea of putting '.sbat' between '.text' and '.data'
+>> (was in my RFC).
+>>
+>
+> This is what zboot does, no?
+>
+
+In v1 I put '.sbat' right after '.data' and before '.bss' but I didn't
+think about the memory overlap problem.
+
+>> 2) Introduce a separate '.bss' section to the PE binary, basically:
+>>
+>
+> I'd like .sbat to be as unintrusive as we can make it, so this is my
+> least preferred option.
+>
+
+This is very reasonable -- unless for some reason we belive that
+separating '.bss' into its own PE section is a good idea on its own.
+
+-- 
+Vitaly
+
