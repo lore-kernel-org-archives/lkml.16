@@ -1,260 +1,306 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B44376
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE3F71E7C1C;
+	Fri,  2 May 2025 20:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216845; cv=none; b=ZxsDPTxY+US0wEGsiV47TG26u/Kgr8WZ2/ZNdKkbgKsnQ7LQXI0GkhjFM/2Op2mNVK1AEQcuNG54TcrGVJSwLbfQNILKuXNptfmTTYazV1Z+i2aqFhhUI5R3G4BRyUE5UbYi93GuX9aLoNfSu91O5x4CbvB0v5J3Jk0Rx5ivylI=
+	t=1746216987; cv=none; b=nyhA6WWwM6X0wzy8kKC167l1lQT9I2fuHbOtvcy06m26VQKpVcQK0qmhZaoMlO1ugVVd6qfq8OTM+jB/YOL1qSi5FbzMRp2Xza+8JzP8fhZYeAlhRQ4HfzvL0wND0A2IUwUbzpgqvdA4+4cezRv0iCMH2feQ1jbd+9jN/fMdvkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216845; c=relaxed/simple;
-	bh=TtJqAB1fKu0acUdQl4SimWlO80c+kj4wqBMlGQjqF5U=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Dr/cz9WhL6I7UJaSfPgyRetv8/+o5s8DU3mcDKgImVRAl1bcpuZZPwOqLrtHVDdgL3uv+da7ZN9NOV6iu7JJdcGOPBuT58h1t9pKIj6yGIVTKWMBqU/NMOUS5dLoAw+Vtu/fPE1MFxpGmh0eh6Iq2TIW/VlTqcQxcMubhP/G8DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UihQEv3A; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746216987; c=relaxed/simple;
+	bh=RW5K/w2L0V2EaZgbi8rSHarTcf/k6d7xE2jTTR7hZBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f5SEtrwnswIeHTNu+Kg9S1Sv0C+LSla2Jcwsx0xLBfhbooumlK5uIvIBfBLjiAKih1Pt3clLMV9kuKThHrtpwSPHgYZ91Aai50GFl8xGqUV+OFHSlF2p3rFd3gVip0DIo/iw230MzUrZY9kHMnBnMHgEXaIqrUPtLDz14VnEOAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGS/1WN+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UihQEv3A"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso385166066b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 13:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746216841; x=1746821641; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=IWH1cHDu5KH0pRViPEWRqXxu0kS8sZnFv4Swd/5VeOQ=;
-        b=UihQEv3AuwxHGh6229tycL01NSPeGMbzVtk69SLMh5OJ6UxGXwSTXMpR5iudgzYCzG
-         U8CVjdBj1DazC/FuQV7aLn579VGSHCojBw6zYTgKPQlL1vDQRginm00g+QCfbvIXspgH
-         dXZOIkh/YJEzpHW0C+iJyqbOLQ2hoPzXqFwriUst2gLOGrDb2kWpA+rRbAmLDqyUbBWI
-         NdOoZSKp+W+7CQ8aJVS7CBMgrCKE3c0VlxbJ9hDw0VpSJNnh6Pza8Yv7oWuHz6XXT2L+
-         nuAB1szEZMmS4WGWBy0ndlHOZpQKt9pXtcKAjZuWyC9xury5dMGOSXNIzYJ0sa9ceeSS
-         ETQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746216841; x=1746821641;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IWH1cHDu5KH0pRViPEWRqXxu0kS8sZnFv4Swd/5VeOQ=;
-        b=iHNxQRrgaupDv92rarlkYWV6O9bpHvuvnRIMnUrrp3yxpD64MsmQqeVxeDv0vtAWQe
-         sDGVOUlMz+CNopqBMWJQ+ltSXIGCoF8jpBv+Qpsoa+bqQBGZYgqKDoM7A5REw+3V2Lnf
-         vBbz3G9xNhIcmLssUNwBV56UXYOKF94ZfIRCEqDah7BV/NvSjcsPXsyflBvg7BDNsPgK
-         0nfTpgo7Akqqj9aDmniQ1hQ2sDKuq0oIg1eh9ehvso5ZjFMYE1C1pH30rr1Bb0bYtIXa
-         o/O8gfiM1dJCcrekt3FpmbebM7ZXajhKTK1aOtGzacndDIWupE+VmbNAqc+BejsbkDFv
-         JJEA==
-X-Forwarded-Encrypted: i=1; AJvYcCVftkqgsBxvoReoizIptrcGl1svCSbv9jTRoK+mD4OHiLhHqEjqScNln1KN10RjxmbEO0UEveh43jDBG9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKtsh4+RjX2XWou5ZmsTzJp8RfQjCehu21pn9fm/rL68IT2Clx
-	doiMHc0SKQlQhI0bu9MOybVhlfv3o0+0k7QwQHQVFACUbhDU8At2p2nXFHCi6HZuoUyxe33zPSs
-	UjBk/yqD2V8L44sY0Noq4R5oyIjA=
-X-Gm-Gg: ASbGnctQ8Wn/7bRcMZWBfeUr/py+dcLem7xQvVpkdUoS08vDiZSH9YIYkMidiB47nsZ
-	qoCI2l83PMhLPqDiOxD2YBKafrjq2HkHOO7o1DO3QN/m7sMvnf/C5rtgv8eRXo0xKEUS8a43qV3
-	n8is/dD8FQKzPoU61etuzr
-X-Google-Smtp-Source: AGHT+IH5+b2nYFhvbaa9fGevqTPKYSSF08veZF2/Iy6/VoQIjhbmSs2E8Po24EQl6RMyd/DIQ/jaWoBNICOwyu9amY0=
-X-Received: by 2002:a17:907:1c1f:b0:ad1:8e6e:bea8 with SMTP id
- a640c23a62f3a-ad1908373a3mr50877666b.37.1746216841199; Fri, 02 May 2025
- 13:14:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGS/1WN+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53F06C4CEE4;
+	Fri,  2 May 2025 20:16:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746216986;
+	bh=RW5K/w2L0V2EaZgbi8rSHarTcf/k6d7xE2jTTR7hZBk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GGS/1WN+Y2oxasCC82z4yBpD57IEkkWcmdWTG6xgowI9D7yx1B8Keav7AskKucNd4
+	 XjZQEgFZt0x/Iwx3WoyTZNVZnACfhxrpND7zEbes+G1lVnHZaIy/4aQXLN6bVVF8nG
+	 ZZ0z+qlAF7uWDE/BCHWgEzKjrzjxlJS+jVJWpho1r++0rlj2eOLsgdq8BHW78CzaRF
+	 DTy6xJILGgxm9B8Y+UJ4R9quAonsF+CublmBtZdXH5hVUO050qpHuxvBcY/ivR61sv
+	 Bs2Ohc9jxSTWRjXy7B+6FkMBkXDoxH6ytW6kR75S3mfXWXR8r3ifJgKHeWTG5V8am9
+	 2BUCoqH3flUeQ==
+Date: Fri, 2 May 2025 13:16:23 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>, x86@kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Indu Bhagat <indu.bhagat@oracle.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+	linux-toolchains@vger.kernel.org, Jordan Rome <jordalgo@meta.com>,
+	Sam James <sam@gentoo.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jens Remus <jremus@linux.ibm.com>,
+	Florian Weimer <fweimer@redhat.com>,
+	Andy Lutomirski <luto@kernel.org>, Weinan Liu <wnliu@google.com>,
+	Blake Jones <blakejones@google.com>,
+	Beau Belgrave <beaub@linux.microsoft.com>,
+	"Jose E. Marchesi" <jemarch@gnu.org>,
+	Alexander Aring <aahringo@redhat.com>
+Subject: Re: [PATCH v6 5/5] perf: Support deferred user callchains for per
+ CPU events
+Message-ID: <aBUoF8DyzqmiW5vk@google.com>
+References: <20250501013202.997535180@goodmis.org>
+ <20250501013506.751321323@goodmis.org>
+ <aBPWE7ItDhEnSpav@google.com>
+ <20250501165730.69642099@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Dave Airlie <airlied@gmail.com>
-Date: Sat, 3 May 2025 06:13:49 +1000
-X-Gm-Features: ATxdqUGs0PnOxmt2B41wQhgJOvIJZ_8jVR5PAqirocl5W192K0P8o4yakp6yjoQ
-Message-ID: <CAPM=9txGv4UObO6mWDtU+RLCaswfHPovigKQwuD3XK3BtqF07A@mail.gmail.com>
-Subject: [git pull] drm fixes for 6.15-rc5
-To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250501165730.69642099@gandalf.local.home>
 
-Hi Linus,
+On Thu, May 01, 2025 at 04:57:30PM -0400, Steven Rostedt wrote:
+> On Thu, 1 May 2025 13:14:11 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
+> 
+> > Hi Steve,
+> > 
+> > On Wed, Apr 30, 2025 at 09:32:07PM -0400, Steven Rostedt wrote:
+> 
+> > > To solve this, when a per CPU event is created that has defer_callchain
+> > > attribute set, it will do a lookup from a global list
+> > > (unwind_deferred_list), for a perf_unwind_deferred descriptor that has the
+> > > id that matches the PID of the current task's group_leader.  
+> > 
+> > Nice, it'd work well with the perf tools at least.
+> 
+> Cool!
+> 
+> 
+> 
+> > > +static void perf_event_deferred_cpu(struct unwind_work *work,
+> > > +				    struct unwind_stacktrace *trace, u64 cookie)
+> > > +{
+> > > +	struct perf_unwind_deferred *defer =
+> > > +		container_of(work, struct perf_unwind_deferred, unwind_work);
+> > > +	struct perf_unwind_cpu *cpu_unwind;
+> > > +	struct perf_event *event;
+> > > +	int cpu;
+> > > +
+> > > +	guard(rcu)();
+> > > +	guard(preempt)();
+> > > +
+> > > +	cpu = smp_processor_id();
+> > > +	cpu_unwind = &defer->cpu_events[cpu];
+> > > +
+> > > +	WRITE_ONCE(cpu_unwind->processing, 1);
+> > > +	/*
+> > > +	 * Make sure the above is seen for the rcuwait in
+> > > +	 * perf_remove_unwind_deferred() before iterating the loop.
+> > > +	 */
+> > > +	smp_mb();
+> > > +
+> > > +	list_for_each_entry_rcu(event, &cpu_unwind->list, unwind_list) {
+> > > +		perf_event_callchain_deferred(event, trace);
+> > > +		/* Only the first CPU event gets the trace */
+> > > +		break;  
+> > 
+> > I guess this is to emit a callchain record when more than one events
+> > requested the deferred callchains for the same task like:
+> > 
+> >   $ perf record -a -e cycles,instructions
+> > 
+> > right?
+> 
+> Yeah. If perf assigns more than one per CPU event, we only need one of
+> those events to record the deferred trace, not both of them.
+> 
+> But I keep a link list so that if the program closes the first one and
+> keeps the second active, this will still work, as the first one would be
+> removed from the list, and the second one would pick up the tracing after
+> that.
 
-Weekly drm fixes, amdgpu and xe as usual, the new adp driver has a
-bunch of vblank fixes, then a bunch of small fixes across the board.
-Seems about the right level for this time in the release cycle.
+Makes sense.
 
-Regards,
-Dave.
+> 
+> > 
+> > 
+> > > +	}
+> > > +
+> > > +	WRITE_ONCE(cpu_unwind->processing, 0);
+> > > +	rcuwait_wake_up(&cpu_unwind->pending_unwind_wait);
+> > > +}
+> > > +
+> > >  static void perf_free_addr_filters(struct perf_event *event);
+> > >  
+> > >  /* vs perf_event_alloc() error */
+> > > @@ -8198,6 +8355,15 @@ static int deferred_request_nmi(struct perf_event *event)
+> > >  	return 0;
+> > >  }
+> > >  
+> > > +static int deferred_unwind_request(struct perf_unwind_deferred *defer)
+> > > +{
+> > > +	u64 cookie;
+> > > +	int ret;
+> > > +
+> > > +	ret = unwind_deferred_request(&defer->unwind_work, &cookie);
+> > > +	return ret < 0 ? ret : 0;
+> > > +}
+> > > +
+> > >  /*
+> > >   * Returns:
+> > >  *     > 0 : if already queued.
+> > > @@ -8210,11 +8376,14 @@ static int deferred_request(struct perf_event *event)
+> > >  	int pending;
+> > >  	int ret;
+> > >  
+> > > -	/* Only defer for task events */
+> > > -	if (!event->ctx->task)
+> > > +	if ((current->flags & PF_KTHREAD) || !user_mode(task_pt_regs(current)))
+> > >  		return -EINVAL;
+> > >  
+> > > -	if ((current->flags & PF_KTHREAD) || !user_mode(task_pt_regs(current)))
+> > > +	if (event->unwind_deferred)
+> > > +		return deferred_unwind_request(event->unwind_deferred);
+> > > +
+> > > +	/* Per CPU events should have had unwind_deferred set! */
+> > > +	if (WARN_ON_ONCE(!event->ctx->task))
+> > >  		return -EINVAL;
+> > >  
+> > >  	if (in_nmi())
+> > > @@ -13100,13 +13269,20 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+> > >  		}
+> > >  	}
+> > >  
+> > > +	/* Setup unwind deferring for per CPU events */
+> > > +	if (event->attr.defer_callchain && !task) {  
+> > 
+> > As I said it should handle per-task and per-CPU events.  How about this?
+> 
+> Hmm, I just added some printk()s in this code, and it seems that perf
+> record always did per CPU.
 
-drm-fixes-2025-05-03:
-drm fixes for 6.15-rc5
+Right, that's the default behavior.
 
-ttm:
-- docs warning fix
+> 
+> But if an event is per CPU and per task, will it still only trace that
+> task? It will never trace another task right?
 
-kunit
-- fix leak in shmem tests
+Yes, the event can be inherited to a child but then child will create a
+new event so each task will have its own events.
 
-fdinfo:
-- driver unbind race fix
+> 
+> Because the way this is currently implemented is that the event that
+> requested the callback is the one that records it, even if it runs on
+> another CPU:
+> 
+> In defer_request_nmi():
+> 
+> 	struct callback_head *work = &event->pending_unwind_work;
+> 	int ret;
+> 
+> 	if (event->pending_unwind_callback)
+> 		return 1;
+> 
+> 	ret = task_work_add(current, work, TWA_NMI_CURRENT);
+> 	if (ret)
+> 		return ret;
+> 
+> 	event->pending_unwind_callback = 1;
+> 
+> The task_work_add() adds the work from the event's pending_unwind_work.
+> 
+> Now the callback will be:
+> 
+> static void perf_event_deferred_task(struct callback_head *work)
+> {
+> 	struct perf_event *event = container_of(work, struct perf_event, pending_unwind_work);
+> 
+> // the above is the event that requested this. This may run on another CPU.
+> 
+> 	struct unwind_stacktrace trace;
+> 
+> 	if (!event->pending_unwind_callback)
+> 		return;
+> 
+> 	if (unwind_deferred_trace(&trace) >= 0) {
+> 
+> 		/*
+> 		 * All accesses to the event must belong to the same implicit RCU
+> 		 * read-side critical section as the ->pending_unwind_callback reset.
+> 		 * See comment in perf_pending_unwind_sync().
+> 		 */
+> 		guard(rcu)();
+> 		perf_event_callchain_deferred(event, &trace);
+> 
+> // The above records the stack trace to that event.
+> // Again, this may happen on another CPU.
+> 
+> 	}
+> 
+> 	event->pending_unwind_callback = 0;
+> 	local_dec(&event->ctx->nr_no_switch_fast);
+> 	rcuwait_wake_up(&event->pending_unwind_wait);
+> }
+> 
+> Is the recording to an event from one CPU to another CPU an issue, if that
+> event also is only tracing a task?
 
-amdgpu:
-- Fix possible UAF in HDCP
-- XGMI dma-buf fix
-- NBIO 7.11 fix
-- VCN 5.0.1 fix
+IIUC it should be fine as long as you use the unwind descriptor logic
+like in the per-CPU case.  The data should be written to the current
+CPU's ring buffer for per-task and per-CPU events.
 
-xe:
-- Eustall locking fix and disabling on VF
-- Documentation fix kernel version supporting hwmon entries
-- SVM fixes on error handling
+> 
+> > 
+> > 	if (event->attr.defer_callchain) {
+> > 		if (event->cpu >= 0) {
+> > 			err = perf_add_unwind_deferred(event);
+> > 			if (err)
+> > 				return ERR_PTR(err);
+> > 		} else {
+> > 			init_task_work(&event->pending_unwind_work,
+> > 					perf_event_callchain_deferred,
+> > 					perf_event_deferred_task);
+> > 		}
+> > 	}
+> > 
+> > > +		err = perf_add_unwind_deferred(event);
+> > > +		if (err)
+> > > +			return ERR_PTR(err);
+> > > +	}
+> > > +
+> > >  	err = security_perf_event_alloc(event);
+> > >  	if (err)
+> > >  		return ERR_PTR(err);
+> > >  
+> > >  	if (event->attr.defer_callchain)
+> > >  		init_task_work(&event->pending_unwind_work,
+> > > -			       perf_event_callchain_deferred);
+> > > +			       perf_event_deferred_task);  
+> > 
+> > And you can remove here.
+> 
+> There's nothing wrong with always initializing it. It will just never be
+> called.
 
-i915:
-- Fix build for CONFIG_DRM_I915_PXP=n
+Ok.
 
-nouveau:
-- fix race condition in fence handling
+> 
+> What situation do we have where cpu is negative? What's the perf command?
+> Is there one?
 
-ivpu:
-- interrupt handling fix
-- D0i2 test mode fix
+Yep, there's --per-thread option for just per-task events.
 
-adp:
-- vblank fixes
-
-mipi-dbi:
-- timing fix
-The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
-
-  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
-
-are available in the Git repository at:
-
-  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-03
-
-for you to fetch changes up to 4e6de6b8f0d5181fcf546ee98b908372fa3cfc0d:
-
-  Merge tag 'drm-xe-fixes-2025-05-01' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-(2025-05-02 14:12:52 +1000)
-
-----------------------------------------------------------------
-drm fixes for 6.15-rc5
-
-ttm:
-- docs warning fix
-
-kunit
-- fix leak in shmem tests
-
-fdinfo:
-- driver unbind race fix
-
-amdgpu:
-- Fix possible UAF in HDCP
-- XGMI dma-buf fix
-- NBIO 7.11 fix
-- VCN 5.0.1 fix
-
-xe:
-- Eustall locking fix and disabling on VF
-- Documentation fix kernel version supporting hwmon entries
-- SVM fixes on error handling
-
-i915:
-- Fix build for CONFIG_DRM_I915_PXP=n
-
-nouveau:
-- fix race condition in fence handling
-
-ivpu:
-- interrupt handling fix
-- D0i2 test mode fix
-
-adp:
-- vblank fixes
-
-mipi-dbi:
-- timing fix
-
-----------------------------------------------------------------
-Andrzej Kacprowski (1):
-      accel/ivpu: Fix the D0i2 disable test mode
-
-Chen Linxuan (1):
-      drm/i915/pxp: fix undefined reference to
-`intel_pxp_gsccs_is_ready_for_sessions'
-
-Chris Bainbridge (1):
-      drm/amd/display: Fix slab-use-after-free in hdcp
-
-Dafna Hirschfeld (1):
-      drm/gpusvm: set has_dma_mapping inside mapping loop
-
-Dave Airlie (4):
-      Merge tag 'drm-misc-fixes-2025-04-30' of
-https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
-      Merge tag 'drm-intel-fixes-2025-04-30' of
-https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
-      Merge tag 'amd-drm-fixes-6.15-2025-05-01' of
-https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
-      Merge tag 'drm-xe-fixes-2025-05-01' of
-https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
-
-Felix Kuehling (1):
-      drm/amdgpu: Fail DMABUF map of XGMI-accessible memory
-
-Harish Chegondi (2):
-      drm/xe/eustall: Resolve a possible circular locking dependency
-      drm/xe/eustall: Do not support EU stall on SRIOV VF
-
-Harshit Mogalapalli (1):
-      drm/xe/svm: fix dereferencing error pointer in drm_gpusvm_range_alloc()
-
-Janne Grunau (5):
-      drm: adp: Use spin_lock_irqsave for drm device event_lock
-      drm: adp: Handle drm_crtc_vblank_get() errors
-      drm: adp: Enable vblank interrupts in crtc's .atomic_enable
-      drm: adp: Remove pointless irq_lock spin lock
-      drm: Select DRM_KMS_HELPER from DRM_DEBUG_DP_MST_TOPOLOGY_REFS
-
-John Harrison (1):
-      drm/xe/guc: Fix capture of steering registers
-
-Karol Wachowski (1):
-      accel/ivpu: Correct DCT interrupt handling
-
-Lijo Lazar (1):
-      drm/amdgpu: Fix offset for HDP remap in nbio v7.11
-
-Lucas De Marchi (1):
-      drm/xe/hwmon: Fix kernel version documentation for temperature
-
-Maxime Ripard (1):
-      drm/tests: shmem: Fix memleak
-
-Philipp Stanner (1):
-      drm/nouveau: Fix WARN_ON in nouveau_fence_context_kill()
-
-Russell Cloran (1):
-      drm/mipi-dbi: Fix blanking for non-16 bit formats
-
-Sonny Jiang (1):
-      drm/amdgpu: Add DPG pause for VCN v5.0.1
-
-Sunil Khatri (1):
-      drm/ttm: fix the warning for hit_low and evict_low
-
-Tvrtko Ursulin (1):
-      drm/fdinfo: Protect against driver unbind
-
- .../ABI/testing/sysfs-driver-intel-xe-hwmon        |  4 +-
- drivers/accel/ivpu/ivpu_fw.c                       |  4 +-
- drivers/accel/ivpu/ivpu_hw_btrs.h                  |  2 +-
- drivers/accel/ivpu/ivpu_pm.c                       | 18 ++++----
- drivers/gpu/drm/Kconfig                            |  2 +-
- drivers/gpu/drm/adp/adp_drv.c                      | 27 +++++------
- drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c        |  5 ++
- drivers/gpu/drm/amd/amdgpu/nbio_v7_11.c            |  2 +-
- drivers/gpu/drm/amd/amdgpu/vcn_v5_0_1.c            | 54 ++++++++++++++++++++++
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 19 ++++++--
- drivers/gpu/drm/drm_file.c                         |  6 +++
- drivers/gpu/drm/drm_gpusvm.c                       |  2 +-
- drivers/gpu/drm/drm_mipi_dbi.c                     |  6 ++-
- drivers/gpu/drm/i915/pxp/intel_pxp_gsccs.h         |  8 +++-
- drivers/gpu/drm/nouveau/nouveau_fence.c            |  2 +-
- drivers/gpu/drm/tests/drm_gem_shmem_test.c         |  3 ++
- drivers/gpu/drm/ttm/ttm_bo.c                       |  3 +-
- drivers/gpu/drm/xe/xe_eu_stall.c                   | 14 +++++-
- drivers/gpu/drm/xe/xe_eu_stall.h                   |  3 +-
- drivers/gpu/drm/xe/xe_guc_capture.c                |  2 +-
- drivers/gpu/drm/xe/xe_svm.c                        |  2 +-
- 21 files changed, 146 insertions(+), 42 deletions(-)
+Thanks,
+Namhyung
