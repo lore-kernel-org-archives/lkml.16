@@ -1,75 +1,83 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9A661AE877;
-	Fri,  2 May 2025 07:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7FE1A5B88;
+	Fri,  2 May 2025 07:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171015; cv=none; b=KkirW9PULt/Ix/TOUyK550FmvIURQKOOMbOSmdmDN3Po0rDDD88ts4ShJ9DNqLyZO9HoJdKHXRdEebNx0vhD/8ajpA2AQYv3z4qMXyzRbcNN5J6O/X4A5AB2lcLjhL8dJ3l9SaU0vFJMYtahxWri3dB1FL6z3zTgMGcEtoE5zbM=
+	t=1746171079; cv=none; b=Bht+KkFO05sJsNlXffbFKEF3AJl1lrqFuhiPCOGZ+IkRtBcnHq14ZBCDS4F7W4Qx9IyGz1gxpOHfJG7MuecP0pZfeAOw6vZCFaGNNfCYdkkLVb6zPvq/Il3Qfe0R1MOk1aKCBCCPuJc3EgXZJMKKYcVP6QpTAlC9zXAjWRkIJJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171015; c=relaxed/simple;
-	bh=/F4YIEMqZA+aTAeaYWQzXH78v5/HOeUmmLzyOtPA7mo=;
+	s=arc-20240116; t=1746171079; c=relaxed/simple;
+	bh=wtoQr0xWC7SiqYlR1iiTaHqZi3kSYO3Wq5NsfIXggRU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nJS+5uRPMYg2BMBUl9ASK7wl4RknpqFIdJeP45Rcu6xHgKVItULMcMiK/+b+nVa/qlx2UT1Lmj+oin9oEnApvQSTsa33PZGvvgkLCgY7bR8Lds0MTm/LU1QNgrr1eFuqHfZuLcOinPUhmEQ6hWiTcTX+0WVLKwEsiViTviVAIWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZNOjQ2Op; arc=none smtp.client-ip=209.85.214.180
+	 Content-Type:Content-Disposition:In-Reply-To; b=NvmMyxEZ6I8jf1i09nkkDZBHazgZEK2GFDUo9cm6+kWymEougB+r2MBa2MOUXjTXHHu/N1ra2p9+slHQErc7/ig6z6ZTmh/1JquT0vijub3ISFcZdzbeN+dGilIUoZ9RD8PVkofdJ6VjmSuQXKIRkome+xhRCj+/8r97xq9tfok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KdqG+Fwy; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZNOjQ2Op"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-223f4c06e9fso16449235ad.1;
-        Fri, 02 May 2025 00:30:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdqG+Fwy"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22435603572so20241505ad.1;
+        Fri, 02 May 2025 00:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746171013; x=1746775813; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746171077; x=1746775877; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H73Vab/GWNXbFGiWUUMX37ZLjVojiTMLjvN4/NhO0uU=;
-        b=ZNOjQ2OpAwhZzP1vTskbq+pWZWQY9jlrdOyuKYEXJ+b9xYElQ//PStYAO73RtkjwRW
-         eYAitywAHrDmS1kJbLKPvxku188/qZ2ZBZRhYNE4ASCxnG6jMikY0srSBuczOhPxga3Q
-         T4dOS7FHDtOm+/IXEOp1RKM8GApbCrbipBgVqskqrVVHEeYByRdOa74VLnK6005m2L+M
-         rddj2nscKHwWVwEIlTfIddSYEEbtdHooTZuWYu9GW9yMqA+Mgcxo5/lMLKkHEH2qoO2b
-         mWIXzlGn5dzVw2jiEDsIxmnq467sh3DcR3AutHkxv4ct+SHFq4IkBbv+1pTrK/o66vSC
-         +Yjg==
+        bh=WhyG+qPql1C6VOEStks/G335oAHhX6Klfc0SAJXR260=;
+        b=KdqG+FwyuPZx7cr9Qv2cDQSRFJ7Ghy/9mz0uQq40At0o8lY7LzQ3NuDDlc5edKE0Tj
+         JkQ/Tvi+N/5aj1EKnd5xKpvZg/jK999Fc1mgqIds4z1z4WISOrCNBWwv/XxphBAPgCcE
+         qYaYoZu9ZdhAb3kkFVTn563I6caJmK65CvDDJBA1XqWt3lMGkfAgg5PttS4ScZj8Dgtu
+         0cQ6+/tl3cw5yIM1QclAIJIDq/xiLcqFxRyONolF2oSv/8d+Kq5eE7YpRofuZQLKMtH0
+         29Z+C1/78MMAiSISScy3XXu7IA+XFRRmeN8Pa5r2cDqS2ZijTh55gYPf9RSzM3D0Xv0v
+         t+5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171013; x=1746775813;
+        d=1e100.net; s=20230601; t=1746171077; x=1746775877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H73Vab/GWNXbFGiWUUMX37ZLjVojiTMLjvN4/NhO0uU=;
-        b=Plno3bWoIZqy5ev6hSmc0eTPBcMV8fQXByitxYGfmjAUyzUCerV0dhfIe717kMh4O2
-         0rKP2OgBOK7WukCis2G1Ko7DbDIs8j7uJs3DmRcTEz5wTJX/p6wphpu+YLVpXVKjUIi4
-         qkbCBrY1sRU+VIoN7hZY3Hs/kbRw1VdVetzYU2vst/xbnu9Fr9KIxmxu+w4EicMpUimY
-         iZHctFOS0xXt0djdjbttFEC53orjnu9+7t8QWB5DiEM3yEBH8qKR3WRKYdeiMFdbC1wx
-         54xZrHkAy7v+G0wVSFN7laiN7C1CB4h3OLBFV40fvm7e/nRG9XW2EffQxDeKOA9KPLVD
-         gu/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVtY7PyWJozJhB/nca6R13C/+3j5UcNbY/hLJwjWOi6EtxyvJ4OZgigKAhiArm8FmSRk/cMxWeNY1E=@vger.kernel.org, AJvYcCXC6Bkcg/gC19v+FiiAkSKOI76TNkYVhivgsh0cE+0BcsQQqN65SJXOM9imt81t/K/j4HGnWwzrFBxYt6XS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD3aXAuGKzZnEHEcTqSutFgdqfRQMMVrdBGqQTre5YF7HDviGO
-	EbeGVLwVSj3P6o7onVqBuoHoXn9E1qQewgTXwag3cDdO5eyrX4Jo
-X-Gm-Gg: ASbGnctdnJFY/9wePHjM7XF+ewhhZWNKSLcVTFrvD0csMlj813ULARQImCGjgGe/rPu
-	besap2q78xSFAa1zFn/oean4iBsYLEnA8E8yfibBUbh74MBnomHaYpcyRWeLWFBSF4XjwoJgXVV
-	XGfx8R/HarOMu61eIYPviQS09tney2n0mmX6Zi30ucMgBdv9z8pZhdYN+kZlK00l/6yYw2agrN/
-	krgeqbfUX0CYkdjf7miDjJ9Kkz90dPh3Q+z8puFLBy+rAXbkwFmT1wBReNB5kS6L7ExDQaxwmJD
-	ZgxfGfpPS0j8AvOYhKuzt4Rljg8LoyVzl+lyrhZo
-X-Google-Smtp-Source: AGHT+IGuSrcwQ0ohbtCnf4UdVyUYXhpw38Ls4x/HnE/rV/mhHe/iYqVjWnA7Bzqc6Z5emjylgBkrMA==
-X-Received: by 2002:a17:902:db12:b0:224:3d:2ffd with SMTP id d9443c01a7336-22e0863a1f7mr82307685ad.17.1746171012754;
-        Fri, 02 May 2025 00:30:12 -0700 (PDT)
+        bh=WhyG+qPql1C6VOEStks/G335oAHhX6Klfc0SAJXR260=;
+        b=ZjAuazlb4qNvgp1wj1KQhzGO0Z5YVjYa6IxnKqTlfyTFlmLRVrv5ZJ/fh4zXFmk4Jc
+         ig2el3yLoYdHukROUiwU66IyNQbSA6p0fxIxBDrbS0j/+vA/Hj/izdzbsBQ4Z4joSyQc
+         D450GdUA7xkxwfFp6WPhBvvs6jdQPcL/zyTlaKOPDAvXiWHpVkgTRu8i0MCc62uYt2r9
+         cf+zReKEDYc0R3HXADvXiNkDkLeczntFQtwXSMgFpKiGPBmztIOU2gvsuQjl5HnYOgJe
+         uDQTnBb1F28xZB/eFEzeTOjFfN2oZLJFqHNqgu9eHOHa/OIQrJQ02JaA75WfVNaGNxhN
+         Y3Dw==
+X-Forwarded-Encrypted: i=1; AJvYcCVVR30b/sHtpVdCNqUlIbchncu7XuvdOEwhlc3G3He6w7qv7DxVbx91oiEoqaBdSVpRSf3r2zy6Zzc=@vger.kernel.org, AJvYcCW1FCaK5S4AZslQmImhkquByBiQlERYmq4MgVxKKcNjAa/JVbcjepWGW2aC8fLpjt1n+/xLEOPAB9Bptp/u@vger.kernel.org, AJvYcCW72uvveCSxlRYCC6NH0+PHIhlYzw6mo9+8UtRBw1BXTGan03kzaHr6KzObY1j5MpUJeSJnd8OBHLc8TSI=@vger.kernel.org, AJvYcCXwuc/7e3mjYhvIGiCyfL4B4A2354O6BbknvxuDzOno3g0uFdCGdWwLcX8C/3TtiodTndtMKDIn810NoILlYOhX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR7Oijcb2IPNQoRM/xxe+FoNrQ6kVbE7D54h1fGICpHd4iUP3y
+	vfj0A97XP1u6PC8FN385iTp36jUkL9A34HaSvfrb+pcKBMHQHGOp
+X-Gm-Gg: ASbGncu25O3ALcydYRuE+WXqdiW4n62WZCN9g5jVUDLGG9igbNaDb2huHbg3fH0l4bT
+	/aQ9+a2e1b83EPXTOlOkomsqZ9NShRBppy78/qRR/V/KRpvWkYkah0dnm+DtQxhVYO6RTYYkQSe
+	WVoYy/Hlduxa2TeeOZWeYlvLOyM8mhDQ0IvY3LQhOsjjVvHySwZyZ3cFdt3gmUtFO6w7VmmUOdu
+	uhCRCjzpGbBcLtciBQ31DygA355hKKQdSkBp56hSGHjSUU5t3fs6tONFo3JIvVcPv/ZLInNcB50
+	Mb4uq/w1AoPO7YHrdOoocjkmdUewZ6AKlKuJw+S1
+X-Google-Smtp-Source: AGHT+IH52a6BgPoPUu5N1D3Rb40EG6pjnTkV9nhRgxYGSZyv07U3fjSm8A6SXkBygATuXX2l4VA+sQ==
+X-Received: by 2002:a17:903:2f91:b0:224:191d:8a87 with SMTP id d9443c01a7336-22e1034418bmr27532815ad.26.1746171077036;
+        Fri, 02 May 2025 00:31:17 -0700 (PDT)
 Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1521fa1csm982475ad.133.2025.05.02.00.30.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1522f7c8sm937775ad.228.2025.05.02.00.31.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:30:11 -0700 (PDT)
+        Fri, 02 May 2025 00:31:15 -0700 (PDT)
 Received: by archie.me (Postfix, from userid 1000)
-	id 3468A420A6AB; Fri, 02 May 2025 14:30:09 +0700 (WIB)
-Date: Fri, 2 May 2025 14:30:08 +0700
+	id B8C52420A6AB; Fri, 02 May 2025 14:31:13 +0700 (WIB)
+Date: Fri, 2 May 2025 14:31:13 +0700
 From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>, peterz@infradead.org
-Cc: kprateek.nayak@amd.com, gautham.shenoy@amd.com,
+To: Nicolin Chen <nicolinc@nvidia.com>
+Cc: jgg@nvidia.com, kevin.tian@intel.com, corbet@lwn.net, will@kernel.org,
+	robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
+	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
+	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
+	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
+	zhangzekun11@huawei.com, iommu@lists.linux.dev,
 	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH] docs/sched: Make the sched-stats documentation consistent
-Message-ID: <aBR0gBIxZFGhJixx@archie.me>
-References: <20250430062559.1188661-1-swapnil.sapkal@amd.com>
- <aBQnuv9JLOHYayiu@archie.me>
- <87ikmj1qok.fsf@trenco.lwn.net>
+	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
+	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
+Subject: Re: [PATCH v3 16/23] Documentation: userspace-api: iommufd: Update
+ vQUEUE
+Message-ID: <aBR0wWzQablOklyW@archie.me>
+References: <cover.1746139811.git.nicolinc@nvidia.com>
+ <0beddeaaa4a8a7a45ce93ff21c543ae58be64908.1746139811.git.nicolinc@nvidia.com>
+ <aBRA75V9l9WlI2Q3@archie.me>
+ <aBRYVkOKfFGMb5Y+@Asurada-Nvidia>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,41 +85,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nRa2lLqxAcQAUP5G"
+	protocol="application/pgp-signature"; boundary="vde97DQHR/3Yogi4"
 Content-Disposition: inline
-In-Reply-To: <87ikmj1qok.fsf@trenco.lwn.net>
+In-Reply-To: <aBRYVkOKfFGMb5Y+@Asurada-Nvidia>
 
 
---nRa2lLqxAcQAUP5G
+--vde97DQHR/3Yogi4
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 02, 2025 at 12:18:19AM -0600, Jonathan Corbet wrote:
-> Bagas Sanjaya <bagasdotme@gmail.com> writes:
+On Thu, May 01, 2025 at 10:29:58PM -0700, Nicolin Chen wrote:
+> On Fri, May 02, 2025 at 10:50:07AM +0700, Bagas Sanjaya wrote:
+> > On Thu, May 01, 2025 at 04:01:22PM -0700, Nicolin Chen wrote:
+> > > +- IOMMUFD_OBJ_VQUEUE, representing a hardware accelerated virtual qu=
+eue, as a
+> > > +  subset of IOMMU's virtualization features, for the IOMMU HW to dir=
+ectly read
+> > > +  or write the virtual queue memory owned by a guest OS. This HW-acc=
+eleration
+> > > +  allows VM to work with the IOMMU HW directly without a VM Exit, i.=
+e. reducing
+> > > +  overhead from the hypercalls. Along with this vQUEUE object, iommu=
+fd provides
+> > > +  user space an mmap interface for VMM to mmap a physical MMIO regio=
+n from the
+> > > +  host physical address space to the guest physical address space, a=
+llowing the
+> > > +  guest OS to control the allocated vQUEUE HW. Thus, when allocating=
+ a vQUEUE,
+> > > +  the VMM must request a pair of VMA info (vm_pgoff/size) for an mma=
+p syscall.
+> > > +  The length argument of an mmap syscall can be smaller than the giv=
+en size for
+> > > +  a partial mmap, but the addr argument of the mmap syscall should n=
+ever offset
+> > > +  from the returned vm_pgoff, which implies that an mmap will always=
+ start from
+> >=20
+> > Did you mean never be offset from returned vm_pgoff?
 >=20
-> >> +    9)  # of times in this domain detach_task() was called even thoug=
-h the
-> >>          target task was cache-hot when busy
-> >                            s/cache-hot/hot-cached/ maybe?
+> Yes. Will fix this.
 >=20
-> That strikes me as anything but an improvement; the existing phrasing is
-> fine.
+> > > +  the beginning of the physical MMIO region.
+> > > +
+> >=20
+> > Confused...
+>=20
+> Meaning that VMM should just use the given vm_pgoff as is, without
+> adding any offset to the vm_pgoff.
 
-OK, thanks!
-
+Understood, thanks!
+=20
 --=20
 An old man doll... just what I always wanted! - Clara
 
---nRa2lLqxAcQAUP5G
+--vde97DQHR/3Yogi4
 Content-Type: application/pgp-signature; name=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBR0fAAKCRD2uYlJVVFO
-o1LwAQDW3606wSJOv9d8j8m4txj7yRoZXe3QgHKO3ey60i9DdgEA8TWv1NqT6LZi
-vCaDZ1KkqWOsNfXLfERTlKc1F63jdgE=
-=xKId
+iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBR0wQAKCRD2uYlJVVFO
+o2GmAQD6yTz+9Kdn/nHALYBCiSbtX+ewWJjZ0spXlFlQyWBmSgEA9HdlnssGmaCv
+oibhf/yiDjC4MkNfQVDV7Jw5qTjhagQ=
+=zmrU
 -----END PGP SIGNATURE-----
 
---nRa2lLqxAcQAUP5G--
+--vde97DQHR/3Yogi4--
