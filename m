@@ -1,143 +1,105 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50E22A819;
-	Fri,  2 May 2025 08:47:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66A31FCFE2;
+	Fri,  2 May 2025 08:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175680; cv=none; b=uB9y/7d47/SF/o3MNEoErOWe/qjnpAdQnFKtuL9cL2sa4pfQlaygkkR7k0yf+PKLdMIFDAIDvp721WPiUEG5PsNfjMjTAgzCLzRVnq9wnSgQSFojRx+Am03/QZ2LP0Sdgt9lCLix0vU8yCb2i0shux16lc9h+NHE42N+rdFTCTU=
+	t=1746175755; cv=none; b=sPbKfgc0/RtzbSAJKWy4X95QCDKu1U9ABsI/JBIouS/u9uhwocJB+q3eNbXPXEuSy0gEoZGeBI5ZF5WNWdPYPFRwkl5GSieYbZvg/q/ByzEaVBE1MseDyhNnEPRhoGzTJ8AvClQl3QnTsfxMH81YRJOm9GUreGG2aqQm5k95GPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175680; c=relaxed/simple;
-	bh=fpk/kMJFJOYpZ6RZKJXvQwwCwcQhzbrqgWEEwEcexaE=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PPEURs7XGuDwx87Kx8j53zTt+LhvWFlxnQH+zW1yHedSMbYXdciXmM51VGgT0DV1kjOuTB1d1mICY+KZsOn0poOgHFNCyD58bbyCSdsku68qWJG9NX9N57tliqNSFBYbCbTzZTmQco/41vpGUvqQgPq3B0ORAQU2aCFZpTy3FDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSF7K3Gf; arc=none smtp.client-ip=209.85.208.41
+	s=arc-20240116; t=1746175755; c=relaxed/simple;
+	bh=Sc0kKtLVhzxsFBLnXRrtQDKelHx1RU6Bl7SXit2X3Rs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uQ9tE8e1JVP2yF7eW8/+rvcDQl13oU+u219jmqumdPqP+YLbZtvTmqtCDY/tWaESnipTzZywmivopfmzkezDVAZW8grOEN7b5r5YgDhoHeTSQQrXAkQQT0UAVCjwifMjvNi7xrPyGY20ZKRBk/jSs6nN6QdNUHkGQWA1yyh9R/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A98IylqC; arc=none smtp.client-ip=209.85.218.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSF7K3Gf"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso2659361a12.2;
-        Fri, 02 May 2025 01:47:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A98IylqC"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acb615228a4so536378966b.0;
+        Fri, 02 May 2025 01:49:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746175677; x=1746780477; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
-        b=OSF7K3Gfqc/YTeKBtrGVHpngZd23AosjYjNA2WLDk4MZ9ia4ho8f+ASfbVwHWaN1YB
-         gEcOwLZ+USo6YWuKuB9xq7CRQZQzySl9ViMfTMpsWDYMYIM70jwmSJOSFj+Puc7GzTnx
-         dYKYk14j9L0rfkPGq99aOssVUHz67X2UFHQsmOkvOdtSDUKyZvJ+me8ijkglH4C0ItuP
-         GFfAVS6Lp5xwZdjLxj6PsZC2CC+MBppjxGbAVAICx70sFW51pEs7yG4O/MiAAudhrjQV
-         TIc778xpaYSSSkJ2mtujks1LV3HAJSOk1AqnSzHmLL3MVzwjEfNmw3d1kuRbDMO2zu48
-         zN2Q==
+        d=gmail.com; s=20230601; t=1746175752; x=1746780552; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uB7k2sMKFXWKwkMljfzsMqgRuKAdD5+ATWJpVBXl8Qs=;
+        b=A98IylqCV/IP4dZrk7zJLRdZKMfq71dz5ODFCa/Z2W1KTY0KrSq3brl4eynU2jlJzg
+         oN7aA5mAyK/GiZChOHaR9Ot9osfsfCpNAtLKjCY2V7onO4gyRy5ydr7qRftNyIkqAEyt
+         Wzn3pobJplWK5t7TN1lLBN/+tqreS6Ca5gECLdu2+AVA8Nr42a4TiVx2Uo2GiMx/IfAx
+         LvDJcKSXoYriadix1iTewgiJqimVzfc3KZmH7nGaKchF5LalxUGDJ428hN2S9h2ob4f4
+         TYM/mY9TNCyz6dfSusGqyxpH/HUxs4Edh+HqbnTCe8snOWvg3Lq1Jvz7T7q0uXTr81C5
+         dE3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746175677; x=1746780477;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
-        b=mNOvWV5TNoe7Z/J4XnzbJgMKidRG1tQdPfNMrcc9aICFpNLxiKHAPp8n5v78E8dnci
-         slhoibEKv2Bx3vFin2UHHs3nRQpnD8EvqSZyW6T4JjucmqSunD3I4B+Hb98+HPDDGsN2
-         tmab869ojwEmNZoSr3gdDXY7oIxlbgyxRUQsPFB7PyQkIUaRjj4F8DMbCO+NNvLb8vBr
-         2rIP9J2kpRsdOMxpxPuY0EQ4aA1+rXrNSWMtrrb6FgM2WtCIIunIfmHYNDYT6MiQPShc
-         zfpBQhJ2NbLbhnrB+IXqO4731F3uF93PpPVJb6OXvp1N/S7h+Sru0/FB7hh0/951izMC
-         TgdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUn6Kn1sWK2I/5kMsewAD7YaXi08F/kDxmZfG7IFHA8DGvWmWgtq4l8bmmhcCbl9yKFWIo=@vger.kernel.org, AJvYcCW7MNO9CRRiEqKBD63hJYHSoeThl5TYW1X02tTnDBJpS3A911uQiBNlok4bPaRVptT8sqQblwlmJizTEj14@vger.kernel.org, AJvYcCWqUJyh27FN/Cyi5lOuhAPNnbsocbWfEiKojqwwYhCCG2KIsTm1JRCarupwh1m8MHivwhPxN4Oyahk/2UK21zW2/wB9@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWJbUOHW6PYtcHV+c8sFtrVeG6IjPHeZftecAU5M6B3SPWA6y9
-	dtDiwWh5WODsmJjPME8wEy6bMmKSxhMm6IlLPmua0vxejS9ebSFW
-X-Gm-Gg: ASbGnctt/dliQwLvG+I+av1QnH0MWLNuhvcqVM7dhpLlxI07rB5+tjse/oVCpw57GbS
-	eLl69UYqh10WO4Gaq+K8YIj9IwWAFZjLDy7P7PGh81pnmX8pQCQsbdwJFbtLA3/HdeSWv80sren
-	cl8Tm0jOsB3kbqroMkbTnCp5buDdQTC72C2OJDeXxRlCSgQMoJpEFk5m7gxvuZDqUHshygIiyaw
-	xCtncn6iGH2xjOrC3Hd0vlB5Er7OARXrYU0oETI1fGxspHCMVe7IJUX8eUqqCgwryqXzkLyTTUE
-	y5ZVkZmxs5ZKa70CJRlzt+4P6s0=
-X-Google-Smtp-Source: AGHT+IGLo5LwCnRs/f36Ec6GHgEp3262fW7h0ITzF1LNYmVO5/4odC3rPODA7HJ2f7d15r/5GhhTrQ==
-X-Received: by 2002:a05:6402:1e89:b0:5f4:d5d2:dd47 with SMTP id 4fb4d7f45d1cf-5fa789182c1mr1445887a12.25.1746175676569;
-        Fri, 02 May 2025 01:47:56 -0700 (PDT)
-Received: from krava ([173.38.220.54])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b8ffcfsm894913a12.64.2025.05.02.01.47.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 01:47:56 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Fri, 2 May 2025 10:47:53 +0200
-To: Alejandro Colomar <alx@kernel.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
-Message-ID: <aBSGuZUzSZAzG8O-@krava>
-References: <20250421214423.393661-1-jolsa@kernel.org>
- <20250421214423.393661-23-jolsa@kernel.org>
- <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
- <aAehVOlj-W5kVyW3@krava>
- <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
- <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
+        d=1e100.net; s=20230601; t=1746175752; x=1746780552;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uB7k2sMKFXWKwkMljfzsMqgRuKAdD5+ATWJpVBXl8Qs=;
+        b=SLC6lf4eL0bdhObXiZyvRjoW//hMhQKmfLQ0fmSCwH2lQjrdJJdCG2IwigYr9wETgt
+         b01nk0obX+WShUKYRAsKQKSw64DiEC3ZxxNUpshwOvD+sgXYSUi2wF9p/NgwQ7vf4rXL
+         bQP1ABci2wsSAUx9IMJj8wRHOrwqPOf2J8BBBfIp5zFgOm7t4KyL9twyuvEOgJ2pTgeI
+         ZSdxf7YEJcs8Fzn00Lx40bsd4u5n9pxY67AFfaIWlNIUyaljZy5j/B84lzzoQuQDOfSW
+         gqX15O5IbK9MYJpsLDyNViGMUNAnJ0M61b20B6FcGvNAelmZUt7eHt2v+apeoNwGjJKf
+         a6Tg==
+X-Forwarded-Encrypted: i=1; AJvYcCW2Lvh3RQjTk8WPuyM4/R2pf9XULlRMuZ8eEYIoO1J2yXmsMF/HOZ+7iWqCE+YhCowqbQZ1CYt2cg==@vger.kernel.org, AJvYcCWXdK2ZwUdgWjCko1g56rcFSaSRc7Ja2h0mKXNzqzjTKLQQxc4eVPf8w363pSZMiH358dc9cHdA2W+7m9vU@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz/iJDumaHOKLAodcrpWZqhzI8Hc5gPzSbzBeko9JBkOOhS2B6U
+	ADTUl6E5afkAtDE2/M0kOe9fcSlpLr6QRAMyr8fSRDo1V3b3MOCQ
+X-Gm-Gg: ASbGncvQ/xYaN0Pz2V1gYn3q7q0/e7X+z593lep2i3lHTiLkJlJGzAMF3076EMaPGDy
+	iX11uRhcbF2B8jzm1a+zLDo2E3gmzd6K1q/zcKIhx1JePwz0KeLpsqi/x2zC3DbeQjKd+GtFH1r
+	MYWn8KTnRxMqoSNz5b8AWXddD4XsiRStyOawdnA79hx3HYvLnyRZ+yFLCw3EQO9P9vXfJ4HJSHt
+	B/bUSpbkl/PUz3Iy47/LaTD+419uCXzOJDms0jvnNFXu45vpTCoTN8xblMTdUxkMROcPtA6ZFuY
+	7pHV66ZudGENSrd6beXvEtr8Gy5DhNnFGPd1gM4MrRPZzNdEMVxPCQ==
+X-Google-Smtp-Source: AGHT+IEFeB52irtgk+4uPAFrjyWyOmGPusvb+AQOm3hwAQ3CgBJ+5rseSOcIlViJkbRqxH/lPpmJ+g==
+X-Received: by 2002:a17:907:6e87:b0:ace:4ed9:a8c3 with SMTP id a640c23a62f3a-ad17ad876e4mr192517266b.7.1746175751592;
+        Fri, 02 May 2025 01:49:11 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325::1fc? ([2620:10d:c092:600::1:80f0])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891478fasm17169966b.26.2025.05.02.01.49.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 01:49:10 -0700 (PDT)
+Message-ID: <23dbf9ff-8542-43d0-8bc1-2584e5f88808@gmail.com>
+Date: Fri, 2 May 2025 09:50:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 16/31] io_uring/timeout: Switch to use hrtimer_setup()
+To: Nam Cao <namcao@linutronix.de>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-kernel@vger.kernel.org, io-uring <io-uring@vger.kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+References: <cover.1729864823.git.namcao@linutronix.de>
+ <8bc0762e419b6fd1d0a0da31a187d19826d71187.1729864823.git.namcao@linutronix.de>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <8bc0762e419b6fd1d0a0da31a187d19826d71187.1729864823.git.namcao@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 01, 2025 at 11:26:46PM +0200, Alejandro Colomar wrote:
-> Hi Jiri,
+On 10/28/24 07:31, Nam Cao wrote:
+> There is a newly introduced hrtimer_setup() which will replace
+> hrtimer_init(). This new function is similar to the old one, except that it
+> also sanity-checks and initializes the timer's callback function.
 > 
-> On Tue, Apr 22, 2025 at 10:45:41PM +0200, Alejandro Colomar wrote:
-> > On Tue, Apr 22, 2025 at 04:01:56PM +0200, Jiri Olsa wrote:
-> > > > > +is an alternative to breakpoint instructions
-> > > > > +for triggering entry uprobe consumers.
-> > > > 
-> > > > What are breakpoint instructions?
-> > > 
-> > > it's int3 instruction to trigger breakpoint (on x86_64)
-> > 
-> > I guess it's something that people who do that stuff understand.
-> > I don't, but I guess your intended audience will be okay with it.  :)
-> > 
-> > > > The pages are almost identical.  Should we document both pages in the
-> > > > same page?
-> > > 
-> > > great, I was wondering this was an option, looks much better
-> > > should we also add uprobe link, like below?
-> > 
-> > Yep, sure.  Thanks for the reminder!
+> Switch to use the new function.
 > 
-> From what I see, I should not yet merge the patch, right?  The kernel
-> code is under review, right?
+> This new function is also used to initialize the callback function in
+> .prep() (the callback function depends on whether it is IORING_OP_TIMEOUT
+> or IORING_OP_LINK_TIMEOUT). Thus, callback function setup in io_timeout()
+> and io_queue_linked_timeout() are now redundant, therefore remove them.
 
-right, we need to figure out other stuff first
+Next time do the basic courtesy of CC'ing io_uring mailing list if
+you're sending io_uring patches, so that people don't have to guess
+months later why there is an unknown patch in the tree and where the
+hell did it came from.
 
-thanks,
-jirka
-
-> 
-> 
-> Have a lovely night!
-> Alex
-> 
-> > 
-> > 
-> > Have a lovely night!
-> > Alex
-> > 
-> > -- 
-> > <https://www.alejandro-colomar.es/>
-> 
-> 
-> 
-> -- 
-> <https://www.alejandro-colomar.es/>
-
+-- 
+Pavel Begunkov
 
