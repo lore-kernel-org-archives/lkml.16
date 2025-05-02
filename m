@@ -1,252 +1,231 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CBB9255F5D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746192506; cv=none; b=QZ9d8D21wL1CPpNp5xHz2u/sZJxIqQnIXkuZT8wW2n/365LkjW/tQMMVj0kD6qdH4WJ8HCq6VGGu7lTXf+ZIwSn+zF2voPt0nAC2/zcpM/PvM179GZRPFu6QMQQa/TZ/yVJ40VYNdq9hk33LaQ1nq/d+LRSXCGHADa58yHSwsW8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746192506; c=relaxed/simple;
-	bh=/r8suY1Up2Qw3JiT04uRdtjQsRncn+ol5tkKKKi4YvE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TJnGwacp894nfoqSkAc2lqSDazSEbj+yXO8e5WcDrw7GG8VdeYU2MrAoQQKnqpXkp0wOWyvW0+uLeIiDwbzqZiTwUInuM2j9OTRRZcdyM5B/OCC9Hwsyqrl3pLHJiZeCl3A/M0dBEERAVri365fy0yLa9EWPk+lih4P8EtIBzYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hxIacMxR; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2024C2566E8;
+	Fri,  2 May 2025 13:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746192507; cv=fail; b=b/L31vQ9UGaU8nxvzb8sHeXZj2D0I0LNIJjqGKcvYH5nUnLgk41KwicJGidipyMIzFWAn82EzR/9VQaZwXIDFnyoqU7A5if5hAL5QfGIBAlGHab/atcy0+dD0YbNdlxMm6smAbhE0vEoQzG0TySlL8qwyqqz4uuJmA+56ywvU2Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746192507; c=relaxed/simple;
+	bh=GEiJEinZLkIOvayYW+IdE72TF866YHHogCsz8MEGVKI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NkLZIy4nTthC2dr8IvbNecB87Wb6aiX1aEY6XSrrTqvzBX/viiDq/2HHlGN6uzrrx4Tf6/yFJpJ3+100JmTBIfACym5O7IRlkxLjl7oO8M4vACMAm54Ezyz6mN1mEaXuncnDZTnA5thTEgyRRMcIzVp1541XS9QbK09hvSys3os=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=AaO8LJ5b; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=ZItIMoGS; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hxIacMxR"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43cf05f0c3eso11339135e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:28:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AaO8LJ5b";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="ZItIMoGS"
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5425WeXF023779;
+	Fri, 2 May 2025 13:27:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	corp-2025-04-25; bh=p5+S3jcjLXeZ7ADIa58vA71r0pv2dzVjr2qcCqefZbk=; b=
+	AaO8LJ5bq0k98sQ02ahYxthrRj9J9QAIulFX+uPyLMh8klNoWY7j5hllFDv2ZT1R
+	5Q9BPKF7APaMnPOQLgAJWntgdigiG0cMzIS1sBiM0TFhaZIravBEFIl/vgF85O3j
+	RFVXr4UrSB/VmNggK5JJ/xe48M83aLuyydgSuiP/xWuR4fOt3rTKV+d9sMXT/CF8
+	U+FI3IZzcCQvBcCJT5EugHlE0fPouRPrTQTMalp/vEwQPjF2JEDUwx39aJ+dKBe+
+	d0IrGUce0cm/FR+zyCQKAnM6QjscEcURGUYCtDBEvNjcqZHHMzQbA8cocklbrmfY
+	lRnEQf/af6Cb5VCcTfN1pA==
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 46b6umd9sv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 May 2025 13:27:47 +0000 (GMT)
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 542BKVwF035252;
+	Fri, 2 May 2025 13:27:46 GMT
+Received: from nam02-bn1-obe.outbound.protection.outlook.com (mail-bn1nam02lp2048.outbound.protection.outlook.com [104.47.51.48])
+	by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 468nxdj4a0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 02 May 2025 13:27:45 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dOxoJmZJ25vY4li1xq4D9EE8aGmqfTcRzKSaMGASDZ1XwqDftJUru75FKGU8qCoNC7f5T5L/TYj6CE5QCt9DILajMSz6iPMSM60RZRhtm4KU4bRelsI5UcKN3iItWAjpB58rFvMoQ7iWtutBVYuMLK1M+n20x6+JYvboafEEclG/eXFjNg9i1ElTvObuSTmmZFYjKPbsMm2WoFZ0zX9/F/xXh1SxRQ1QH7THnMYJkBwmdEzGKQkbzen7W6GzeWO7XmLqo0Av7kef3NOt3PtLVd+l7kX8i7z0RucQNS+TuxRECI04XG2yM2Q+X3+X5VkmAUX8sZjhGEVqN9YmoDpvgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=p5+S3jcjLXeZ7ADIa58vA71r0pv2dzVjr2qcCqefZbk=;
+ b=tHqEO2Wk0A8Xi78bLWl2eiIXmjiidPBBgkvn+pHBO4wXY1P7YwRRUOYsyaubvOrZCJGYFigK7bYhFhlor6u6w4I3x94wvFRFKzi0nphTgJGv1DX8B6wCon2LNc7yOtisX83302uglUTtAc/+U/zzlE/aFDATTySp5HuiM8mXyKxeelmSrkdgbIfeWtvkZVEUZwKQX9u+yAiipsapExa5AtpMAy2MV3lMX0mCByNe3pXfAi9CXG+FlmE7PBJWCS4eYOPLs1etc8dT1xBDXS8QuOVk2Y1sR9O+Ab1cBKa7E9pgfcYGhP0S+e6o6EkYeix2YNrG5NsWO3qKN31MQfBF/w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746192502; x=1746797302; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1RB+4ADJTBxuxoLrq2q5axLDiDnl84yPV2iN1+Z+zwY=;
-        b=hxIacMxRcQs3BG72JPMQqyii5EI/e6GYhTDv1A2ma+k8Uec6HiAp9E+/1Pa/qaCFcl
-         bvEHDhTMYUcoo8jhtn6RsUP70iL0kPdTMFKGTc67m/9lR95nW03w2vPQQyl06V8VRAVD
-         kVWXcA31sMt2vPc/1fUSXfjXhxw4J1pcnB1OLzSdFnPRsLVrTc7sFzFRrQ6q3+8A/OXP
-         l+gbuPwznwVNbYjM222L/HFm+vkj9+bcg7ghhZDc42IB1Pbg3SUc9MXG0AD2VtM9Yddv
-         zA71J5J5OzApLBa/hzRmEiAWs9FMGkDeaX6OZumTnnRgwPnS/VX6vkbcodVPuG6ZeIZO
-         hdgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746192502; x=1746797302;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1RB+4ADJTBxuxoLrq2q5axLDiDnl84yPV2iN1+Z+zwY=;
-        b=ru7JZsk5DKd6cplLFAhPvHMhigK6Rn5wok52X+AKw3OXsp9zGjpV+lwPmUmTrIuN15
-         YJjTkop9A6Mc9cxubkFN+FpmhoPCAvMi6l72qqbjie/YXVcAFnaKzru8NGEmyUpE3+Zl
-         Qt/fZFBP/qHHtW4+ELD6K3I8v+uGy0NWa0ir9wbHuAdMRdBjt3qZ5nSeU+1dJdZEoMsV
-         D7Jz/jjJ8WfN2QqG1TujXfhvye3Qai9ryBzUKHYTC39w3fQyBtFuJefWeDNKt8RFfT6R
-         infgIBHst8oQntIWz2pzhrSCu8Ci8KWH+FVtFcl9k08yDqI+lgyGiIgyGTMakYWuE3d2
-         PLtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfDeW+NKTIuipqshe+NHNyCZfTIzbwhmpo+3q7qZ/z69HDgX7PeslFfosRCIuCGe5Gib77Q0hoa4SbZ2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCS54cL9Xh7PzIUJGw/NLr8pLLGNwQewP81dcVt6VzWd0Ba4gy
-	unDMsrtnBUwmMu1X7rcpVp2vgI4aZu0UZLXFEhZtJ6ZUmpFQUzcwDLzKUZN1biA=
-X-Gm-Gg: ASbGncuiL1kpPHVX657okuHXSY2uRdOMNerRNEZGsWuBeL+X0zRdHmZFN3dLm3qx7Ik
-	L5KcdZZonILX8rHTINI9YePROQ+ATRwURhCFFfJ6H4aSAt5G2dJkRxFAvS01hl8D9iwEdpNF4F2
-	7tZTnQQQl2b8OPkUnj1u1jHKM5v9aItiHqxikk5L9pe001lGQ9tju59voE/dtGpe7mPde5gokNm
-	yge4nWatxGPtqilFgB+fLkwglYsfSyh1Z+N5/Ksfsgz2eKFqcfKLxeWrTxvkx17IR6Sb2ODu+4N
-	hX3OkysoulCqXvw9uu4Emk+Wx3Z/eHt1V3gUW6S7fDqt
-X-Google-Smtp-Source: AGHT+IEgIlcfMb/XuKwOYfgMGDYSXZQ5POyf/PBHKjynVwRRRgEBI6ighVhqJv33JiCr+mBDdnCeZw==
-X-Received: by 2002:a05:600c:4fc9:b0:43c:f70a:2af0 with SMTP id 5b1f17b1804b1-441bbedb54emr29454945e9.16.1746192502497;
-        Fri, 02 May 2025 06:28:22 -0700 (PDT)
-Received: from [192.168.0.2] ([87.8.31.78])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b89cc50esm45761065e9.8.2025.05.02.06.28.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 06:28:22 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Fri, 02 May 2025 15:27:02 +0200
-Subject: [PATCH v2 5/5] iio: adc: ad7606: add gain calibration support
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p5+S3jcjLXeZ7ADIa58vA71r0pv2dzVjr2qcCqefZbk=;
+ b=ZItIMoGSYRBMb3bpP3J6NpF+zemDt5/UeAsvr38tREccr8q6xHZdmcBW/bFDJOXoL5AR7sa8PC2SElygABFrQRcU+21L3g32K5Qbv/ovPOqt44epMserg5c787k7da41q9JSVekS/olX9x7Q4jInMoS7nqd9JIpQ0agVDrGK4XY=
+Received: from SJ0PR10MB5437.namprd10.prod.outlook.com (2603:10b6:a03:3aa::8)
+ by MW5PR10MB5762.namprd10.prod.outlook.com (2603:10b6:303:19b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
+ 2025 13:27:42 +0000
+Received: from SJ0PR10MB5437.namprd10.prod.outlook.com
+ ([fe80::e4e9:670b:5d8f:f2af]) by SJ0PR10MB5437.namprd10.prod.outlook.com
+ ([fe80::e4e9:670b:5d8f:f2af%4]) with mapi id 15.20.8699.019; Fri, 2 May 2025
+ 13:27:41 +0000
+Message-ID: <aa73d045-c803-49f8-aefc-53b74543185a@oracle.com>
+Date: Fri, 2 May 2025 18:57:30 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5.15 000/368] 5.15.181-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+        f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+        rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com,
+        broonie@kernel.org
+References: <20250501081459.064070563@linuxfoundation.org>
+Content-Language: en-US
+From: Vijayendra Suman <vijayendra.suman@oracle.com>
+In-Reply-To: <20250501081459.064070563@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0014.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:25::19) To SJ0PR10MB5437.namprd10.prod.outlook.com
+ (2603:10b6:a03:3aa::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-wip-bl-ad7606-calibration-v2-5-174bd0af081b@baylibre.com>
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
-In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
-To: Jonathan Cameron <jic23@kernel.org>, 
- David Lechner <dlechner@baylibre.com>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michael Hennerich <michael.hennerich@analog.com>, 
- devicetree@vger.kernel.org, Angelo Dureghello <adureghello@baylibre.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5681;
- i=adureghello@baylibre.com; h=from:subject:message-id;
- bh=vqrUpAxX+9UwYDkass8KUvKkJQRsyw1vKSCquKwrjPg=;
- b=owGbwMvMwCXGf3bn1e/btlsznlZLYsgQOaGeIrHou0jJxfBkGdabri3MKdcclXfeFsx7wWp3d
- uu2up2MHaUsDGJcDLJiiix1iREmobdDpZQXMM6GmcPKBDKEgYtTACaSXMjwh+OlyhGPE+olVkpZ
- S7KbnumenOwyz4WH2WPej406Bxzj3zH84XHz4J63t0kiUYhj5bH5Bzh5N7RyTIwyOLM14kNUndF
- 7dgA=
-X-Developer-Key: i=adureghello@baylibre.com; a=openpgp;
- fpr=703CDFAD8B573EB00850E38366D1CB9419AF3953
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ0PR10MB5437:EE_|MW5PR10MB5762:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5b208b94-2b2d-4fc6-dd6f-08dd897d1d49
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ekJwbUdXdk1VSWM0U0t5aStoV3htTFdQeUgxcHNKUGtEUmFtVG5STFE2eDBB?=
+ =?utf-8?B?MitXKzZvRFMyUE0ra3FMNE1PUC9JL3NiSkxtWWdKNzZGODBjS3RjNjdBeS9R?=
+ =?utf-8?B?VGJhazl6MHcwYng3SEJESzVpZ0E4bnpDNFB4aG9YZStqR3Jxa2VCd3NPV3Jr?=
+ =?utf-8?B?cnZvZXZZdEMvay9UMEFzVHIya3RNT0ZTdGk1bHByZFBoQnlKTSt2U2FxQm02?=
+ =?utf-8?B?MVR3UUpIZU1WQXpRSEdWSUFmSmQxejIyenhocHVOeldpbldUV0xuWUcrbFBN?=
+ =?utf-8?B?eER4S29Za3UwcmZEbUc4NDNBSzdObEI0RDRocjVzbTBQTnBETFRueDJwS1ZU?=
+ =?utf-8?B?VmoveUNjNzZrRVBDRFZ1MEpKV2Zua3laUk00cVR6ZTByNGQvcFpkZDdGSHpQ?=
+ =?utf-8?B?ZnJWc1ZQUGJvNDkreE84VGRqRWs0UGt3cGtJK1NydkJLOWhRSk5HM0t1NDly?=
+ =?utf-8?B?ZEErRTlxbFA3L20wQURUMHEvWW5mblNUZ2xZTzNNajdLeGgvU0YrOVkweG16?=
+ =?utf-8?B?dFNxazk3MjcyQkY4QUtmWEhzMHl3K2hXMG8yeXMvSXU0UGhOaTlVUFNSOXhU?=
+ =?utf-8?B?LzdrSmQrUzRIWTRHbE1wSUhkWlFoUFpWNCtwSHdVSGFlNXVyNjRpZnFHYmwx?=
+ =?utf-8?B?M3Q3T3dKL3RnaFg2aTE0SGFrQWVsS0U1SnVwU0M5Y3dUOHdsdllWZmJaMVpT?=
+ =?utf-8?B?Z0l0MzhwZW5XZUVhR2pMT1pOZGQyelROVzFyQkxLcE5Rc1J1UVRkaGNlLzFJ?=
+ =?utf-8?B?WUtXQnFlUXk2bDdjNFk4MHNsUUNTeDZuTzAzMCs0V29Cam91STJrTjJ2OUl4?=
+ =?utf-8?B?TUlOTzcreE1VS1pmUFZRbStHYVV5SFg4L0s0Z1orYzBSZHNKemk3VTRtbWFv?=
+ =?utf-8?B?SFBUTXpPTVJsM24zd0Y3MHBPeUViR3pyZ3c1YnZjb3BrQk1QMjEySlNITnd0?=
+ =?utf-8?B?eW5MYnZDYnV0ODhNTThaRTVUMEYzU2tDYXVaTnB0MHBxNkZVRjJuRFplQ3hj?=
+ =?utf-8?B?SS9TcWNlSGZUZ2JpdzRFTllEa3F5NmdTZ3JtUHF2V3FsTGJDV0xQUHJkZkgy?=
+ =?utf-8?B?VVJRdzBMVklsUHd0aTN5NlQwNXN6bHRTa1dWMy9QWU9qQWpzTVV4emxNY2Ni?=
+ =?utf-8?B?QnFMQ2MzalA4MnJjK2tpQ1lSNVU4SjFjUFpORDI5Z3ZQN2loUU1QSlNLOWZl?=
+ =?utf-8?B?S2h0L1BZdllidDRESk93c1p1UUhpM0pQcUdXUHNvbWJWV1J5d3YzbXBuTjdL?=
+ =?utf-8?B?VkxtR2JOczRWVkNtaTI3T2hHTzAwTWc5QnBVZGdhM3ltRkZQVFYxYnpRZTRp?=
+ =?utf-8?B?ODFqYVNqRlplVEV0YXFPZ3A2bXRPL2RoZDJzdGU5YmVXem5tQ3d6RWdVM3NG?=
+ =?utf-8?B?WmIyNDU3V2FiOUdYLzE4WWpYRCtJUTI3TGVmZW5YK1Q4YXZqVVNwRVp6SFRk?=
+ =?utf-8?B?Q1pDelZIalg3Rk0rVFJZbzgzU3lPWkEyT0FLbUYzWG1HZFEwM3hESUhVamFq?=
+ =?utf-8?B?TmlMMVJFWWtVVXBnREVrRUpjUDRVL2JmSU1ydU9rZVhGZXVXUU13OFZrRkpn?=
+ =?utf-8?B?MzJXUFJRaUVEKzE2R2hEYjVBS3N2Q2VXZGR5U3pFV0JnbVFEZkoyUHB2RHFa?=
+ =?utf-8?B?K01XaTVSMHZLQmlQZ25UQWMrY0ZOVXp2emcwNHRCNnRaK0Q4aGlUbjJqc0Y3?=
+ =?utf-8?B?OEx4WmY5dHhrakRPL1FyM3pobXBpWUxqbWZtbUtjMmdaYmV6dExDcXpjUUpn?=
+ =?utf-8?B?d1FraCtTb3lydmZCbFBYZHBRaHpMeUR6Z3NwVmtUaDZzNEFTeXNQdk1CQ2NO?=
+ =?utf-8?B?QkFrZXNDYU00RFZOUWhIN3Z0VXlJQVdBQU1YL2RUellUS2dIbzRCdC8vZE1l?=
+ =?utf-8?B?SWxMdGQxcHpvVjQ5T0pJZngzY2grUkxMenJrN0FkYkgzdUwrbUlRUUU2VXRE?=
+ =?utf-8?Q?bsCj7G98yW8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR10MB5437.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WDQzYmZvdUppSzFLcUMrTm95c0tIbVZJODN2ODFIRldoVFk5a1BVNkdFMUtS?=
+ =?utf-8?B?ck1sNTVlZzJmbWd1b016dHFKcTVjL0JlNnZFckEycTd1bVhQdnVPQUlkL2t1?=
+ =?utf-8?B?MldRVlhIQ3R3bjhMRmM5Q05BUTZlTlR2cGRhMFlnb3FwQUplS0RXNm9jNUJ0?=
+ =?utf-8?B?YlVKVzRkRUZVV1ZLMnB4bGUzVEthMTEwS0FNRHZWTXBRWFJKUEN2T3FyTVBG?=
+ =?utf-8?B?clloMTgvQml0UVJFZnpJSk5sNVBTNEhNc05WYTk3MVpkd2ZKZUN0SWUraWVQ?=
+ =?utf-8?B?TkcvMWgxZHRTU0ZrcUloTlgrVE94UkxwWTlweTk3R0cvYng1R2ltODk0YkVB?=
+ =?utf-8?B?Vll3NXJwR0FnZDVPeW1VQ2drUXV4b2crcFpvemFsN3B2ZjlpWUhtL0R4UjNk?=
+ =?utf-8?B?SW1JM3VMVExMTjJkczBaNHdZMDF5cXo0MXBJdWROSm0rdTI0bEhPbWlkYTN5?=
+ =?utf-8?B?VDZWbGdiUzU5eVFDR0ErTFNGYTYzNkJZMnZLTWhvbEFpdHplalhjdytUZ3lr?=
+ =?utf-8?B?WlFXTWdXYm9YdUxFOG1lYzN1QXMweWRGbUhGT0FOOEYwMzFZTnEzNWRqTWFB?=
+ =?utf-8?B?SThLMzc4aEhYRlJHcmZBMUFxK2hJZlkvYWpSbUpTWUh1eUNrbnZNRUV4YVYx?=
+ =?utf-8?B?cXN5dlpSb0p1OWpYNFFTckg2OTl3UkdIWHQvelloWjhxTDhGckkvMFIybmtH?=
+ =?utf-8?B?SUlheXlZWEI3bjJya1hWUStjQU8zbW1iNE5EWDJyaDRnL2t1Z0NCQjE4eDg5?=
+ =?utf-8?B?ODlJNkJsZGNaWEZ1cVFGV3FxQWk4a2VKYk9zY2pYcTBhOG5nMWFZUnlOLzRv?=
+ =?utf-8?B?UFRnRVR5VHZrazNWTWVhWlkvdGpyaDdDbERIbUU2S1BwbFRidDVkS1dZWjBj?=
+ =?utf-8?B?alBVQkd6YjdwRFpGRUtMVWZzYUloOVhpTkE5S0Q5eXZXUElxTVp2L2lsdXBS?=
+ =?utf-8?B?blJsaHFvUVNFeVNwOVEvYnFxMU1vVjlYeDVlaFBXeVRwMXZnVGdZMFk2ako5?=
+ =?utf-8?B?MnF5MVQ3dnNDSk56OXZNSlUxTVcrNFdOV1dyblNzYm5kL1BkcFlLMmhOakJH?=
+ =?utf-8?B?eDZIQnQwcGl1RHk1TDRpbTZ2OTRhR0JLWS9FdXpXUDdXQXJvemxwcVN6dHl5?=
+ =?utf-8?B?VUMzWGltTGg4YzJTTENwdW1Cc3N1SXlhUHBFUUJFTEVRaUpYQStNMjk0L3l4?=
+ =?utf-8?B?WVozWjFLQmFxMnAwRE9MRmRNenhoWEM1cWM3ZlF4QnlpWHRWaUhLZHR5SVJR?=
+ =?utf-8?B?QW1QbjMxL1ZScGxUQURIYzFkZnlEOFptM2YwUENFYTJVRWl1dVdnSXNFWlhH?=
+ =?utf-8?B?SWZaN1VXWmJ1c1dsSHRkQTZoZEVPaC9zaVZTMWs5MlhHdWZLVmFBcDlnMVdC?=
+ =?utf-8?B?L2NWWmFkWWFVWXlwV3Rjc3hZdDlGT005UHk2SFJaTlhkcGhKTXRKUjVFak5K?=
+ =?utf-8?B?ME9qa3lxaW1QVDQ1bnZNcW5lZzI4RTBhL2g3QVhwOURoaUxaNDh5OXg4SGVw?=
+ =?utf-8?B?eThDM1Vna1ViSXZpVGtSUHM0SEd1WUhoZ0M0YXFPVmI5c2xqTzluODVtbUxZ?=
+ =?utf-8?B?M3JzN2RRcFFvQXBtWUdZQzhrSlNCN24zR0E2bFhoc0xMY3RxeEhyQkV4QXRM?=
+ =?utf-8?B?a1ExclhVTVNiR1JsMmJvMFZqZm9uL0o3eDZiRG9aUUtRdXY4Y0Rtd2Y0eDlv?=
+ =?utf-8?B?RjExaCt1Yit4bTlMYVlYTlNES0tHYS9WTldYZ0RpbEFlRFpsb2RJRXdncTBZ?=
+ =?utf-8?B?aTEvWmNsTlVBS3NHTEZXN0ZHTDN6OW54bHpPN0kweXh3eWh5MVRpdUZhRFJN?=
+ =?utf-8?B?dzZRLzZxQTFDd1hCTmNDWXBQcCt2a2JNMkEvOERsanpIcTBIQ1V0dE5GMSti?=
+ =?utf-8?B?NUJMVjdPQmd4OEFYN0t3aWVDK0xhYkp3MWVVeURFNW1vTlY1SjFIUVprcGxY?=
+ =?utf-8?B?YlRsOE1FOHRHZW9IZ0U3cWlTNEJYMm5ZNGtINGs5S054YmRTamJURmxQZ3M2?=
+ =?utf-8?B?dWVWRzhEZTlqU1pGR0hyOWhKblJyWCtZM2p1eEp6RWFIUXZ3QkszRVU2UWJK?=
+ =?utf-8?B?bGEyRnpzY2NBMmlONExFMjFObWVyVDNvVllaSm5WWWh6b0hqM0xsa0wrNzRB?=
+ =?utf-8?B?U21GNm5Xamc0TUxFT3cxZzRXYTUwYVhmbUtZUTdxc2I0Y29rS2krMVNyTHRP?=
+ =?utf-8?B?cHc9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	vHzLBdl6IAgoPfWpHsBpA8leqwVrfpu//dBJYtnR896mLgzJdMHHRmOUc+mCQx8nJVMoJ09hi96RVR0aFCXGEFqt+rm5uwMRJpS/Ue5FEyd/S6kBqt31BAlhQA/oTcD5cI6Tv9bWMTGbI7o5yPZv3maq++Nfi0BnTkIKHObl3esE21adukfhvxio5X14jhY8dIMKT7baby/+ytWpfq4sHzUTvlCJsBwapIIh7kw+5Tvgj66MBzg8ab+GUKm6DNl8WOHtvdZGjy0YQZd5AIduxRAR5RBuS2TnXVl9H5r6JRFXD6XFZ+OUdxKjX7ncTYVcCrUGP6Mzr3ZVWL0G0COY9aY1xuq8uz+cO3eii4Ilr3N2gs09cyrHnvvkgfnnOnETuepaFXHnJAugN7fkNWTeCsZqqiOhDYuAfaMCR3b72ImXtilpY44V+SKsM4X+ZWYkXHGNx61cg/S9MP/nYYedS/QBeaGJHeLIf4HtE0jf5/rGKQhMGCfYXlXnTzE5fhIheQbly+4vwZz4wyIqudNz9vJE8S8tZQwZvbhmdsQAC8bjDTs14ggD3dVZBSNXN3PtqV3oMVit/zKg426gBvM7NQkuMKkL9xhoAq5j3cjMnSA=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b208b94-2b2d-4fc6-dd6f-08dd897d1d49
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR10MB5437.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 13:27:41.8252
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2s+7Ryhr1Hbcq0H5wAso/LwwC1rze0zJauuyC8z2YejdBVyOoiw473ikJGzL5X1PeCHRdRQAZlW/4X/oucy1/75a5Hnu0xvyRbiIrLRP/mM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR10MB5762
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 phishscore=0
+ suspectscore=0 mlxscore=0 malwarescore=0 adultscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2504070000 definitions=main-2505020106
+X-Authority-Analysis: v=2.4 cv=dfSA3WXe c=1 sm=1 tr=0 ts=6814c853 b=1 cx=c_pps a=e1sVV491RgrpLwSTMOnk8w==:117 a=e1sVV491RgrpLwSTMOnk8w==:17 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19
+ a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=GoEa3M9JfhUA:10 a=VwQbUJbxAAAA:8 a=yPCof4ZbAAAA:8 a=l5Z3sCsuGtR49M5VgQgA:9 a=QEXdDO2ut3YA:10 cc=ntf awl=host:14638
+X-Proofpoint-GUID: 2Lliz20tzxG87LBXEMdzQTK4DOlO3u8z
+X-Proofpoint-ORIG-GUID: 2Lliz20tzxG87LBXEMdzQTK4DOlO3u8z
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwNyBTYWx0ZWRfX6AcVA/74lutU jVvACmtX4YKoUUFJXSjva7ZSHJ03eOeps3NuenuDDDdx+VxgR5+EDmkugfCvO1fBZmnTIDZADlI LKh7x2tlB3t/546BGO+73ND0qhaXw5/gMxMrvLhLge8YJ72zjJbUdTxoF9Vit7fnzJ8/j9bAqrg
+ uyzCjVtA0joXCB7iJ1AE84P737tcxx9IBJch/gZM6T27ctEsCP/H/rXe2Cb1BOjt40JHRaeC5/r r8T0o2+jcADGHYhTgCZOX7qU8bGuw3uOBGbG1LirrCBzlgtNRErN03alSuMeb9FnLATMDVciKp5 DNnFJBke5us7jMzWtk3ItI1OopR3IXyK4QJh7r7eR1UPPpkKNG4FZPUGyl+MbqxbLF5J+a/wnxV
+ oB8LsNW+6cRVhDBWim4gyRploIhhs7gCs2Vlo8hDjjaOA2i7cEMSuWQrIDOsQu18Cnwx3Hu6
 
-From: Angelo Dureghello <adureghello@baylibre.com>
 
-Add gain calibration support, using resistor values set on devicetree,
-values to be set accordingly with ADC external RFilter, as explained in
-the ad7606c-16 datasheet, rev0, page 37.
 
-Usage example in the fdt yaml documentation.
+On 01/05/25 1:48 pm, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.15.181 release.
+> There are 368 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 03 May 2025 08:13:53 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/ 
+> patch-5.15.181-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
+> and the diffstat can be found below.
 
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
- drivers/iio/adc/ad7606.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
- drivers/iio/adc/ad7606.h |  4 ++++
- 2 files changed, 61 insertions(+)
+No issues were seen on x86_64 and aarch64 platforms with our testing.
 
-diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-index 139d8b3f9bb39dd631a71c70539005d719fb5b7b..a167f080e89c8a8d8accaff5904cce31d860edf9 100644
---- a/drivers/iio/adc/ad7606.c
-+++ b/drivers/iio/adc/ad7606.c
-@@ -33,6 +33,10 @@
- 
- #include "ad7606.h"
- 
-+#define AD7606_CALIB_GAIN_MIN	0
-+#define AD7606_CALIB_GAIN_STEP	1024
-+#define AD7606_CALIB_GAIN_MAX	(63 * AD7606_CALIB_GAIN_STEP)
-+
- /*
-  * Scales are computed as 5000/32768 and 10000/32768 respectively,
-  * so that when applied to the raw values they provide mV values.
-@@ -125,6 +129,8 @@ static int ad7609_chan_scale_setup(struct iio_dev *indio_dev,
- 				   struct iio_chan_spec *chan);
- static int ad7616_sw_mode_setup(struct iio_dev *indio_dev);
- static int ad7606b_sw_mode_setup(struct iio_dev *indio_dev);
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
-+					struct iio_chan_spec *chan);
- 
- const struct ad7606_chip_info ad7605_4_info = {
- 	.max_samplerate = 300 * KILO,
-@@ -180,6 +186,7 @@ const struct ad7606_chip_info ad7606b_info = {
- 	.scale_setup_cb = ad7606_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606b_calib_phase_avail,
- };
-@@ -195,6 +202,7 @@ const struct ad7606_chip_info ad7606c_16_info = {
- 	.scale_setup_cb = ad7606c_16bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -246,6 +254,7 @@ const struct ad7606_chip_info ad7606c_18_info = {
- 	.scale_setup_cb = ad7606c_18bit_chan_scale_setup,
- 	.sw_setup_cb = ad7606b_sw_mode_setup,
- 	.offload_storagebits = 32,
-+	.calib_gain_setup_cb = ad7606_chan_calib_gain_setup,
- 	.calib_offset_avail = ad7606c_18bit_calib_offset_avail,
- 	.calib_phase_avail = ad7606c_calib_phase_avail,
- };
-@@ -357,6 +366,50 @@ static int ad7606_get_chan_config(struct iio_dev *indio_dev, int ch,
- 	return 0;
- }
- 
-+static int ad7606_chan_calib_gain_setup(struct iio_dev *indio_dev,
-+					struct iio_chan_spec *chan)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+	unsigned int num_channels = st->chip_info->num_adc_channels;
-+	struct device *dev = st->dev;
-+	int ret;
-+
-+	device_for_each_child_node_scoped(dev, child) {
-+		int reg, r_gain;
-+
-+		ret = fwnode_property_read_u32(child, "reg", &reg);
-+		if (ret)
-+			return ret;
-+
-+		/* channel number (here) is from 1 to num_channels */
-+		if (reg < 1 || reg > num_channels) {
-+			dev_warn(dev, "invalid ch number (ignoring): %d\n", reg);
-+			continue;
-+		}
-+
-+		ret = fwnode_property_read_u32(child, "adi,rfilter-ohms",
-+					       &r_gain);
-+		if (ret == -EINVAL)
-+			/* Keep the default register value. */
-+			continue;
-+		if (ret)
-+			return ret;
-+
-+		if (r_gain < AD7606_CALIB_GAIN_MIN ||
-+		    r_gain > AD7606_CALIB_GAIN_MAX)
-+			return dev_err_probe(st->dev, -EINVAL,
-+					     "wrong gain calibration value.");
-+
-+		/* Chan reg is 1-based index. */
-+		ret = st->bops->reg_write(st, AD7606_CALIB_GAIN(reg - 1),
-+					  r_gain / AD7606_CALIB_GAIN_STEP);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ad7606c_18bit_chan_scale_setup(struct iio_dev *indio_dev,
- 					  struct iio_chan_spec *chan)
- {
-@@ -1410,6 +1463,10 @@ static int ad7606_probe_channels(struct iio_dev *indio_dev)
- 				chan->info_mask_separate_available |=
- 					BIT(IIO_CHAN_INFO_CALIBBIAS) |
- 					BIT(IIO_CHAN_INFO_CALIBCONV_DELAY);
-+				ret = st->chip_info->calib_gain_setup_cb(
-+					indio_dev, chan);
-+				if (ret)
-+					return ret;
- 			}
- 
- 			/*
-diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-index 4c39de36154ffb80dfbb01bb4f812826bdc55967..e9a59d2afafd43e66137599dbd8220cd6b641e61 100644
---- a/drivers/iio/adc/ad7606.h
-+++ b/drivers/iio/adc/ad7606.h
-@@ -50,6 +50,8 @@ struct ad7606_state;
- typedef int (*ad7606_scale_setup_cb_t)(struct iio_dev *indio_dev,
- 				       struct iio_chan_spec *chan);
- typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-+typedef int (*ad7606_calib_gain_setup_cb_t)(struct iio_dev *indio_dev,
-+					    struct iio_chan_spec *chan);
- 
- /**
-  * struct ad7606_chip_info - chip specific information
-@@ -66,6 +68,7 @@ typedef int (*ad7606_sw_setup_cb_t)(struct iio_dev *indio_dev);
-  * @init_delay_ms:	required delay in milliseconds for initialization
-  *			after a restart
-  * @offload_storagebits: storage bits used by the offload hw implementation
-+ * @calib_gain_setup_cb: callback to setup of gain calibration for each channel
-  * @calib_offset_avail: pointer to offset calibration range/limits array
-  * @calib_phase_avail:  pointer to phase calibration range/limits array
-  */
-@@ -81,6 +84,7 @@ struct ad7606_chip_info {
- 	bool				os_req_reset;
- 	unsigned long			init_delay_ms;
- 	u8				offload_storagebits;
-+	ad7606_calib_gain_setup_cb_t	calib_gain_setup_cb;
- 	const int			*calib_offset_avail;
- 	const int			(*calib_phase_avail)[2];
- };
+Tested-by: Vijayendra Suman <vijayendra.suman@oracle.com>
 
--- 
-2.49.0
+> 
+> thanks,
+> 
+> greg k-h
 
