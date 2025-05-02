@@ -1,96 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB5BD1BEF77;
-	Fri,  2 May 2025 11:36:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A45A1BEF77;
+	Fri,  2 May 2025 11:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185762; cv=none; b=IHjqMqB+Q40FtFNIjnnSnzFanS4A24FG+NrwCHv/rz0GDJa7NeJg2zjHhC/tsMdzI5YvwGTRya81yNdeRhyAlsF0TDYxqbP9//m/CSDA4v7kRRHL+DJ4AI+llMzeMACdeC6lYrV9yB7CnBNJxPC8TT4i7M/lXBYVpOa3NJugUTA=
+	t=1746185779; cv=none; b=Gmy6/0Bzk+Sf9WYMyuNmZ5S3ssCu/F51YCGjoKw5wHvzJx2rBRSAzHRjj5mMYccSwS+P9S0R3oxm0xvDW8WHKYYFCFYW41pOT6viUhjHJcvBMi0HvBfqCkHELyidWtMjtfNYaiBDNIasfDdi2xMec5hXYLzxmZHTw9ne99nmZ5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185762; c=relaxed/simple;
-	bh=IC+tFmMgGc8gy+XWT7MuumYI16SywRq+USGzBe2YkhM=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=UjgXgAPI47W8SBALaZlqZmsMoJHMJpK4uWMPPm+GbjIpts6tZTtbgsRw7B48JZTdCGi8jwAMLSDK8jBxImIvVqd8GXcNmRN1HL0RYKd6EzU5I4ykGql3AYhzKGnUj+A/UKP0L+S5PzAz0OODtvkPbV5QAOkptvxqqgZBwU318FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puzm0WPU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746185779; c=relaxed/simple;
+	bh=4jQbUxmd9/xbIND4Q1vwwag8dJIJvv8UtuwlSFMxTk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0GEnrBkwjzVxMZx32bkLe+TSWeympOfc7b89e/K4oMjmZIahFaqutdvETR61BYJECnXQEBVbDlBXUp3VRpkwskxwOOSKDug2SRiNoSzeteD9c0K4IEsr4GAD3C0izWAnagTVmHyGmBgQhSZ5BdKqowWQJge6oSX2jXp7QthHsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=mVTQDdPD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puzm0WPU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0716EC4CEEB;
-	Fri,  2 May 2025 11:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746185761;
-	bh=IC+tFmMgGc8gy+XWT7MuumYI16SywRq+USGzBe2YkhM=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=puzm0WPUFl9KxGEZ1hy/8EHzZGrBQnl7zP3MluGp7vWlEzgGjHjRRCji2j1GWnfkh
-	 R549rpDu2xN/MlxXHxKTemfaBYIKQi9IeEpRfwq8B9kXEG1L7l5eHMiK5CLF0q9WcO
-	 v9+usY+wk8Fo7Mz6JRzsnSUZfoiwiPTXKFOsuFQSeHpCZ5tfExInO+ABBc064vgA7L
-	 9+ZvnLJ8SOcjOijeqTDD0lbzy5vyYThlnA6ktDzc8tWovDVkWf0F4xTxZANnLF7/CB
-	 P1G8at6YADbYBZxPrlYBaPgJ4ia44RGMEMmzQ62lUL0MaEk7kmL9938qph/IKfZDWV
-	 xgnBrTlXCQJsQ==
-Date: Fri, 02 May 2025 06:35:59 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="mVTQDdPD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4991CC4CEE4;
+	Fri,  2 May 2025 11:36:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746185778;
+	bh=4jQbUxmd9/xbIND4Q1vwwag8dJIJvv8UtuwlSFMxTk8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mVTQDdPDN3ufg4fKdS9Li8yRSj5OlRJO6J8VFUD22mzhqQvt2or90tOZ7JSCXBSyX
+	 PzO4cn2jh5ffmhqDamj+h9U5/m0oVMQGwtS2mocllDYGVCSMKmTplwD9uh9Arcss/8
+	 knDyIxG2oY2CDk3HZkIEOKbqd6uenaxMQkiT0UB8=
+Date: Fri, 2 May 2025 13:36:16 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <2025050240-sublet-snarl-f7f4@gregkh>
+References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
+ <20250501-debugfs-rust-v3-1-850869fab672@google.com>
+ <D9LIUW74XIRW.2DUQCSLYX1JP4@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, linux-clk@vger.kernel.org, 
- Konrad Dybcio <konradybcio@kernel.org>, Luo Jie <quic_luoj@quicinc.com>, 
- devicetree@vger.kernel.org, Lee Jones <lee@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
-References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
- <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
-Message-Id: <174618575948.666955.12764440519077221270.robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: clock: qcom: Add CMN PLL support for
- IPQ5018 SoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9LIUW74XIRW.2DUQCSLYX1JP4@kernel.org>
 
-
-On Fri, 02 May 2025 14:15:43 +0400, George Moussalem wrote:
-> The CMN PLL block in the IPQ5018 SoC takes 96 MHZ as the reference
-> input clock. Its output clocks are the XO (24Mhz), sleep (32Khz), and
-> ethernet (50Mhz) clocks.
+On Fri, May 02, 2025 at 10:12:15AM +0200, Benno Lossin wrote:
+> > +    /// Create a new directory in DebugFS. If `parent` is [`None`], it will be created at the root.
+> > +    #[cfg(CONFIG_DEBUG_FS)]
+> > +    fn create(name: &CStr, parent: Option<&Self>) -> Self {
+> > +        let parent_ptr = match parent {
+> > +            Some(parent) => parent.as_ptr(),
+> > +            None => core::ptr::null_mut(),
+> > +        };
+> > +        // SAFETY:
+> > +        // * `name` argument points to a NUL-terminated string that lives across the call, by
+> > +        //   invariants of `&CStr`.
+> > +        // * If `parent` is `None`, `parent` accepts null pointers to mean create at root.
+> > +        // * If `parent` is `Some`, `parent` accepts live dentry debugfs pointers.
+> > +        // * `debugfs_create_dir` either returns an error code or a legal `dentry` pointer,
+> > +        //   so we can call `Self::from_ptr`.
+> > +        unsafe { Self::from_ptr(bindings::debugfs_create_dir(name.as_char_ptr(), parent_ptr)) }
 > 
-> Unlike IPQ9574, the CMN PLL to the ethernet block needs to be enabled
-> first in IPQ5018. Hence, add optional phandle to TCSR register space
-> and offset to do so.
+> What about when an error got returned? Should that be exposed to the
+> user?
+
+No, not at all.  See my comments on version 1 of this patchset.  No
+error should ever go back to the caller, it should never know if a
+debugfs call succeeded or not so that it can just keep moving forward
+and not act any differently.
+
+Many of the C debugfs apis are already changed to be this way, let's not
+go backwards and add this logic to the rust code only to rip it out in
+the future.
+
+> > +    }
+> > +
+> > +    #[cfg(not(CONFIG_DEBUG_FS))]
+> > +    fn create(_name: &CStr, _parent: Option<&Self>) -> Self {
+> > +        Self()
+> > +    }
+> > +
 > 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  .../devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml  | 11 ++++++++---
->  include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h         | 16 ++++++++++++++++
->  2 files changed, 24 insertions(+), 3 deletions(-)
+> > +impl Drop for Dir {
+> > +    fn drop(&mut self) {
+> > +        // SAFETY: `debugfs_remove` can take `NULL`, error values, and legal DebugFS dentries.
+> > +        // `as_ptr` guarantees that the pointer is of this form.
+> > +        #[cfg(CONFIG_DEBUG_FS)]
+> > +        unsafe {
 > 
+> I feel a bit uneasy with seeing `cfg` on `unsafe` code, since now the
+> correctness also depends on the configuration. Someone might add/modify
+> it making it incorrect under certain configurations.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The option is either enabled or not, this should be fine.
 
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml:55:9: [warning] wrong indentation: expected 6 but found 8 (indentation)
+> This case is pretty straight forward, but I'm not so sure if we already
+> have such a case.
+> 
+> How about having two modules providing the two implementations and then
+> just conditionally import one or the other?
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.example.dtb: clock-controller@9b000 (qcom,ipq9574-cmn-pll): 'reg' does not match any of the regexes: 'pinctrl-[0-9]+'
-	from schema $id: http://devicetree.org/schemas/clock/qcom,ipq9574-cmn-pll.yaml#
+That would require a lot more duplicated code that you then have to
+always keep in sync.  And from past experience, that's hard to do over
+time.  So let's do it this way if at all possible.
 
-doc reference errors (make refcheckdocs):
+thanks,
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+greg k-h
