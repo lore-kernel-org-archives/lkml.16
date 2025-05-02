@@ -1,128 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427AE224B04;
-	Fri,  2 May 2025 11:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033FF224B04;
+	Fri,  2 May 2025 11:55:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186863; cv=none; b=FKWDjhk+Eg+IBCL26fuYYCTlqxKt6rXCNzLzLUdUY3ZZgH/9VDxKz7hPDxcVVlWr6NylCXHFzPU6uJwGeaWSULmCsd4Hgi0MWGg8dX3JiQUP/IjhrXUSG4AuXvcjrC37iMJKMb3adhAxz/khYS6F1vqgzMxGZOboW+W5dCsXRDk=
+	t=1746186912; cv=none; b=S84hHp8WHDfWncRaJsEm612kQFvvW9hcCuaeubaKS4qGO/M44v9rS4gGZ68VvmXH7OprcXQRFRB7kRf40fdkt716XPhTqHDL64JF5qaXwuhzLgSXKGWROhM/FxmLPJ+EAGsE69aHxP3Rcni9ejgJ6xspL5uthcGrZN7ebwR+4T8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186863; c=relaxed/simple;
-	bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MNUjnO1qNyf50eBk7ev2QE33+00zWd75ZTcPzfJoKWJmRtvVVxEn1Ykxv70BPfFJzTFGfvLG7gbJRUP6id62z1kPSPZKLejF5PBGdxxKUVzEfuqCb1xBKFDruspJbRFA6nSzsqBVYS2ER434rADKSGlxBKNXOBeHqRhGPkvzyxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8P57N0d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746186912; c=relaxed/simple;
+	bh=YL4wDpIvjBpWbiMu6F1en9Cgfe7Ezj9YrWIGpA4T7i0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=noU7BgMe01c+pv+eXpHk1QMVS+nZRzMXpWRZDQFD6qgCufT0CYQIrdu2KNQU68JpX6nqp1ezmYAGaUx8SYCTiXaJz/EZ6BErRmASrF5KS2HqpU2kC/K8vZx8NHmv6cU1ZFFX8s52UtCceGCFmjYFxeMrEFtbC5SQixA+Nwnb/AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=x/Ebb8If; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8P57N0d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C54C4CEE4;
-	Fri,  2 May 2025 11:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746186862;
-	bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
-	h=From:Date:Subject:To:Cc:From;
-	b=u8P57N0dYjZpwTQdC+xwzLLCR+Ki9PAQNaMLOL41u/wUZPzyiLI//QOGa7RhBkxOk
-	 xUXF9dwMYy5viMaHfG3yiyrG/e1XRvatgGYGk/fSBXW6PbTNNof/zGqn0or1sNpQAG
-	 +mt4wkTf3n8ZDKTSrtotPL0N6G9qqVy+tnokCy176/2fFJDhSKfiYIPKzs8hN+r8uh
-	 T1B7BsiyK7JI6jc/FbUzSL94XXUTghSbYhTYuNerSKzFbTpGQGgnjZyCZsZgfpho0C
-	 FO/fVClfuip2Fcs5ONT3XJ4o16Ut3ycQd9qqJAdrLEZ7tJk9JmHSgrVpEi5Bg0I51D
-	 cx8W5S0rEyhWA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Fri, 02 May 2025 13:53:57 +0200
-Subject: [PATCH] rust: elaborate safety requirements for
- `AlwaysReferenceCounted`
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="x/Ebb8If"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC212C4CEE4;
+	Fri,  2 May 2025 11:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1746186911;
+	bh=YL4wDpIvjBpWbiMu6F1en9Cgfe7Ezj9YrWIGpA4T7i0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=x/Ebb8Ifjse7GYC1Zov0pxqTauxSQXI5LPFqz0jjXXgL0TwFwfKiNLb7LZ2wxsf9c
+	 vLyKO0WF+MKP1QSd3S89fyNppFNRmTkQXZ9/h3mIgYIuMBoP78MW8nWHV6+pAlVrAL
+	 HQuZSozPOF7V/6jBX1gYfwlVjwC36uQN2nzwyofc=
+Date: Fri, 2 May 2025 13:55:08 +0200
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
+Message-ID: <2025050208-jot-evolve-89b6@gregkh>
+References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
+ <20250501-debugfs-rust-v3-1-850869fab672@google.com>
+ <aBRoNKjB063QhGZo@pollux>
+ <2025050230-browsing-backstab-8de9@gregkh>
+ <aBRutTMBtq-uCnii@pollux>
+ <2025050205-reassign-entire-4078@gregkh>
+ <aBR1O6d6YBszgVlU@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFSyFGgC/x2MMQqAMAwAvyKZDbSVOvgVcaiaagarpKBC6d8Nj
- sdxVyCTMGUYmgJCN2c+k4JtG1j2kDZCXpXBGeeNNw6DUMQo54ESHiRrzdxRv87RgzaXWn7/3zj
- V+gFXG9WhXwAAAA==
-X-Change-ID: 20250502-aref-from-raw-e110b3e6dbf5
-To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
-Cc: Oliver Mangold <oliver.mangold@pm.me>, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; i=a.hindborg@kernel.org;
- h=from:subject:message-id; bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
- b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoFLJhwDA4cSoj8/KWclBEo55Y0qMuTSEhDKUhd
- NkIkIfO1TOJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaBSyYQAKCRDhuBo+eShj
- dyOGD/9Rn71Ptf+mGiZ/TPi7BWgcJ7eg66sdRHDTLwo4eLB6g/33W0pAQi/kDEk71O2jfJuF0za
- XQGcSrrARxyiuWM4PgNO++ZGfPXHaYiQbjFlfCuJ0PVAzy2s+Vq8o/+6OHeZ8O12lwC/IMyiL1Z
- a47o937r4OF7j/ZDmixTfaiVEjgWMCsRJHXSTPtqrHXN47yL+52Aj+sw5+AD/8BEd3jGUAEdOFC
- gMieNPF0a37XK93v1E41/eifVMX5yVL7kF033zfWVdiICCktrv9aq4H78089wKJw/eBF2oxKuMA
- 9aeWLpis/VY8fA85FNJAOOyZ+Kx18AR9CjucQlpnXLvT/T81eXkdLHXhsCacJLQsODI7REVkerx
- CazNw2IQqW14xQpNtwFG+rl0+zISTgaABclaKLiWkwGvJjbWKOdCEoDxblVCwSy6Ooscp1nwMKM
- a56kwocIg/NfqhtRCWfEYQpt4iYyQa3RzjtDggEFt+HztaEeK9Zfj0E9+SivOqBWWRAbdg4JyW9
- VW362i/m3a3vH37CXNu3Rp7Dr9keDpV3d/B7uW5+SHkQQE3ZRJ/pOOKRFU5xyUqZsRketf0pGla
- fMRTw2Nmebo6NHoJIBnAWbJf+67thwrn97dYHvoUriRsHonpSxS3uqfBEmbRkJ6iPIX1Ccaz3Hm
- emaHNhxIV8f6XzQ==
-X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
- fpr=3108C10F46872E248D1FB221376EB100563EF7A7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBR1O6d6YBszgVlU@pollux>
 
-Clarify that implementers of `AlwaysReferenceCounted` must prevent the
-implementer from being directly initialized by users.
+On Fri, May 02, 2025 at 09:33:15AM +0200, Danilo Krummrich wrote:
+> On Fri, May 02, 2025 at 09:11:37AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, May 02, 2025 at 09:05:25AM +0200, Danilo Krummrich wrote:
+> > > On Fri, May 02, 2025 at 09:00:07AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Fri, May 02, 2025 at 08:37:40AM +0200, Danilo Krummrich wrote:
+> > > > > On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
+> > > > > > +/// Handle to a DebugFS directory that will stay alive after leaving scope.
+> > > > > > +#[repr(transparent)]
+> > > > > > +pub struct SubDir(ManuallyDrop<Dir>);
+> > > > > 
+> > > > > I think it's not very intuitive if the default is that a SubDir still exists
+> > > > > after it has been dropped. I think your first approach being explicit about this
+> > > > > with keep() consuming the SubDir was much better; please keep this approach.
+> > > > 
+> > > > Wait, let's step back.  Why do we care about the difference between a
+> > > > "subdir" and a "dir"?  They both are the same thing, and how do you
+> > > > describe a subdir of a subdir?  :)
+> > > 
+> > > We care about the difference, because Dir originally had keep() which drops the
+> > > Dir instance without actually removing it. For subdirs this is fine, since
+> > > they'll be cleaned up when the parent is removed.
+> > 
+> > But does that mean a subdir can not be cleaned up without dropping the
+> > parent first?  For many subsystems, they make a "root" debugfs
+> > directory, and then add/remove subdirs all the time within that.
+> 
+> In the following I will call the first top level directory created by a module /
+> driver "root".
+> 
+> The logic I propose is that "root" is of type Dir, which means there is no
+> keep() and if dropped the whole tree under root is removed.
+> 
+> A subdir created under a Dir is of type SubDir and has the keep() method and if
+> called consumes the type instance and subsequently can only ever be removed by
+> dropping root.
+> 
+> Alternatively a SubDir can be converted into a Dir, and hence don't has keep()
+> anymore and if dropped will be removed.
+> 
+> So, the result is that we still can add / remove subdirs as we want.
+> 
+> The advantage is that we don't have keep() for root, which would be a dedicated
+> API for driver / modules to create bugs. If a driver / module would call keep()
+> on the root, it would not only mean that we leak the root directory, but also
+> all subdirs and files that we called keep() on.
+> 
+> This becomes even more problematic if we start attaching data to files. Think of
+> an Arc that is attached to a file, which keeps driver data alive just because we
+> leaked the root.
 
-It is a violation of the safety requirements of `AlwaysReferenceCounted` if
-its implementers can be initialized on the stack by users. Although this
-follows from the safety requirements, it is not immediately obvious.
+Ok, fair enough, let's try it this way, without keep()
 
-The following example demonstrates the issue. Note that the safety
-requirements for implementing `AlwaysRefCounted` and for calling
-`ARef::from_raw` are satisfied.
+> > > However, we don't want users to be able to call keep() on the directory that has
+> > > been created first, since if that's done we loose our root anchor to ever free
+> > > the tree, which almost always would be a bug.
+> > 
+> > Then do a call to debugfs_lookup_and_remove() which is what I really
+> > recommend doing for any C user anyway.  That way no dentry is ever
+> > "stored" anywhere.
+> > 
+> > Anyway, if Dir always has an implicit keep() call in it, then I guess
+> > this is ok.  Let's see how this shakes out with some real-world users.
+> > We can always change it over time if it gets unwieldy.
+> 
+> I really advise against it, Rust allows us to model such subtile differences
+> properly (and easily) with the type system to avoid bugs. Let's take advantage
+> of that.
+> 
+> Using debugfs_lookup_and_remove() wouldn't change anything, since we want to
+> attach the lifetime of a directory to a corresponding object.
+> 
+> (Otherwise we're back to where we are with C, i.e. the user has to remember to
+> call the correct thing at the correct time, rather than letting the type system
+> take care instead.)
+> 
+> So, instead of debugfs_remove() we'd call debugfs_lookup_and_remove() from
+> Dir::drop(), which only changes what we store in Dir, i.e. struct dentry pointer
+> vs. CString.
 
-  struct Empty {}
+Ok, that's fine, and it gives me an idea of how I can fix up the C api
+over time to get rid of exporting the dentry entirely :)
 
-  unsafe impl AlwaysRefCounted for Empty {
-      fn inc_ref(&self) {}
-      unsafe fn dec_ref(_obj: NonNull<Self>) {}
-  }
+thanks,
 
-  fn unsound() -> ARef<Empty> {
-      use core::ptr::NonNull;
-      use kernel::types::{ARef, RefCounted};
-
-      let mut data = Empty {};
-      let ptr = NonNull::<Empty>::new(&mut data).unwrap();
-      let aref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
-
-      aref
-  }
-
-Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
----
- rust/kernel/types.rs | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 9d0471afc9648f2973235488b441eb109069adb1..193a1356f0df6fede428498485aaef19b4c845c6 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -409,6 +409,10 @@ pub const fn raw_get(this: *const Self) -> *mut T {
- /// Implementers must also ensure that all instances are reference-counted. (Otherwise they
- /// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
- /// alive.)
-+///
-+/// Note: This means that implementers must prevent users from directly
-+/// initializing the implementer. Otherwise users could initialize the
-+/// implementer on the stack, which would violate the safety requirements.
- pub unsafe trait AlwaysRefCounted {
-     /// Increments the reference count on the object.
-     fn inc_ref(&self);
-
----
-base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
-change-id: 20250502-aref-from-raw-e110b3e6dbf5
-
-Best regards,
--- 
-Andreas Hindborg <a.hindborg@kernel.org>
-
-
+greg k-h
