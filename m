@@ -1,71 +1,72 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC9205AB9
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:28:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48A123C4F1
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181704; cv=none; b=EKVulkc72xsVkVGaktx7TAkaVsMcgmvg9x5/cvIN1noyKZBb//8Ly1yESIhK2S/Ev3wUM1MyvN40gfgEyU66qzr0thFoWARFNHsLx7NKRFlLewm7cXY3D8gWhpM8TNevI6r/1kvBapTt4qYh99tJ7GmeZ8+BYwbOW3RBBRkwaEA=
+	t=1746181801; cv=none; b=fy3dG1tL32C77QHlyInOx+d1cAOGQ9qhsNfYCQs3dPTNTbRMjKQJRlhFXEVkSPkFAR8V3bNaXt6lpsGrFfYRqbFl6U+4t/adl4ZnaSiESt0yZ5GzX57dxUvYwz/F7LfOYhM7A8supblNEpaxyRv40/PpuvBcnzIovpwLyUTtwFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181704; c=relaxed/simple;
-	bh=SEU8CqxPdXWm5kBs+itfyCdnnlLFQ0gV+s9EvH0h3a4=;
+	s=arc-20240116; t=1746181801; c=relaxed/simple;
+	bh=i7lDDRucUlwhNKwX/fbh3u9h2y2t42fMvoTgrZxh8fY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cca699BrTE+1x2Jw1FEDiWFNFNg8azaI5irhJAm1SIlTJYMIqYUoPXrnwX5NiicYF8jFMmL0/PnifzWludqWjD4XuE/wkocDYzg6x88xDTiHaHPOOc1Arb7XnM77KPQkPwV8PuxU7u0z1D9F09ICnsaXzYcu+C/uJthu5Wd/jWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H64ScWfx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=EifgVQg7gYXQKKBDF7CZULJFGTo/ki000jK4N71dA5V05kRT5Cki/5FzEguuyITCvlCJXfXEbIsJjF0HI+JgF8CIbwJsUW7/jcCQFiHuQ2jazq7vTymKSI6V4CIdrM3fhmaHIwUWPF7Vp9x86m/rOfmGuT5hXOFVB8TeZP26GKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=l1Gai6KP; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H64ScWfx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746181702;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QSbhw2lx3uIU9bt71Ke9bjoVhiyqLGEvU1SMMBHqrLU=;
-	b=H64ScWfxSM7cF+QCqeuldvCfQnV5iv/rxuLuU2M06TyvrdBDVdfvLjxJbiE9I6wZAdZ3Gm
-	mNU2SEC7sst43cb1pSzqdwLWtk5rsocUrVnFYUu6K3GEF6vxlKE76/QLbP29u+y/1+MLZy
-	tlolETy7gRGUeShMloRFcNgvZtlGDko=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-232-JutgP70VMkSzllabD_Zd5A-1; Fri, 02 May 2025 06:28:21 -0400
-X-MC-Unique: JutgP70VMkSzllabD_Zd5A-1
-X-Mimecast-MFC-AGG-ID: JutgP70VMkSzllabD_Zd5A_1746181700
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso1160194f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:28:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="l1Gai6KP"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NLrd010409
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:29:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4Dn7fvn/GQzMSROH7cCLUoBJLbxJJYWAddOeCioJDak=; b=l1Gai6KPbjpr7o5J
+	Hr3ZMqRKavmSUhCNa2QUgclx25l+PA+ZDkUUwmSv/bpX6CkpPUdOCmNuFbM3jLYC
+	nqpoJL86ruqNcxZs3JGPm9deAxexS9Xuy/SV9HuXQWQiG5uKQyWKapWrxJ9QFpPy
+	ZDY+c8jG6YBlQf0eAiKPYzR1BuKr+MIF3yr+uJWajlMla4WlMMXx5H8FrpB60d/o
+	DMn/q2rqb0V274gBVqH+aO3DM+MeXx7sxSUBkBlErL/wDKT3NrcPbwxWaMJZ3IsL
+	UpbjTuMX519ima7NKU+H61fuSuCDhSqyCV4AWspkRQWHx0ClM5WPYbBCYscuTzKO
+	4DtUhQ==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6ubr1bq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:29:58 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5466ca3e9so45569985a.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:29:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746181700; x=1746786500;
+        d=1e100.net; s=20230601; t=1746181798; x=1746786598;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QSbhw2lx3uIU9bt71Ke9bjoVhiyqLGEvU1SMMBHqrLU=;
-        b=dcvsk+WvwBTFCWXijq8O5WUKqdBW9KH+Jyvf7PK02i+dW81ubtBHtPOU608DCTXYG3
-         rRRlNgdWvw6sCcBk3LjJrsDVWglkyxzztuzJrh8uAJ2eEI57sFN9vqw8mW/VqWUvCZmT
-         HM2IGRx2LhRSiN2DMpG3zELRmzhKPp4Hwe7veobYIhWsULXY9pl9Lc4zxHJMY9+mSYPW
-         OW5tzAve7SssZLwxAJKMyCqEXjvRHoM2XGPEbuWc4rYeGJ5OIef4Fe9cNQv9AYKBbJH+
-         +9F8RB15e3NHWXbT35WYqvoykH8vDrpfus5ybsznwycVrtOxZAxXag8hpQfpKiVU/MBg
-         GyOw==
-X-Forwarded-Encrypted: i=1; AJvYcCX0VyQWCo8M1ZzYWde0/3VCUlhSwUjXTD6XoATFLJ1aLHD69bLx7eSKkT/AlcyahrnmTOiHK7eA/uUhFzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzoyyLDEQvP9h4Py6XAWllFjkla+baNt85dl3PbUBhEebRyEwhE
-	e3Lp9tTPkWdupUXq7XWZgEko4PkFi4TGnTuO2F49esznCyvAsKwBRRh8lTQ/7EaVlzvXvhRyVt6
-	dkfR/7L/Ge9mYz0O/c7kKywUxzqKxCcCNOtD3PeNjLvLo2Sz9IbYbVlN8w3RK8A==
-X-Gm-Gg: ASbGncu8RBl+diFN2N+CKXdx8tykiGoOaCLAKN/7OM3ztWUGUhxk6tnBZF7FE/jHOf+
-	+8ntnG5oCp6S4MP2nf6h2yyZQ9Rd8atjhE1niZqo6LJj8oYk+nAyEfQhaWDTvrBmZCh1fQQb9X7
-	nWJswFX/QCce7gWfYA/wNCa1b4OepWGaVBzkB02YN2wH6pdRJDvyaOBmHdcUGaSe8h9hNLT8inx
-	sAat1M0RlGBhhjeB6j+x6rO/TBoqNG9avfq/Hmkwcy7TDteAIKOoLvmuwA/lMQYTkVSpwOsNY70
-	Qmm4uNMpA8ATkGPX6SM=
-X-Received: by 2002:a05:6000:1a85:b0:3a0:8524:b480 with SMTP id ffacd0b85a97d-3a09402cacbmr5066376f8f.2.1746181699723;
-        Fri, 02 May 2025 03:28:19 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGWyOVTRRGEVNWXO/iDfooNor6IST3SO4x3a3xxs7csOvOKwxwfMPv7xS3Tnv2MrR9Li9kpkg==
-X-Received: by 2002:a05:6000:1a85:b0:3a0:8524:b480 with SMTP id ffacd0b85a97d-3a09402cacbmr5066344f8f.2.1746181699348;
-        Fri, 02 May 2025 03:28:19 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:246d:aa10::f39? ([2a0d:3344:246d:aa10::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad784asm85337125e9.7.2025.05.02.03.28.18
+        bh=4Dn7fvn/GQzMSROH7cCLUoBJLbxJJYWAddOeCioJDak=;
+        b=fJDfjzOFzeZw01GyX1fUo1gZ4jll9iyZ2H5RUfad0pBpMN7ZG6WgLvV/M3L2bLUK+R
+         hGufKoDcXIn/hPTHeWJzwm1CY4K6RuPb2cgZXvBlQxsh6xYo0HBi4DwH0uxVr60NeQLh
+         sG0Q/IMWDkRcMtBTV6cYBXNX2tRm+tvJ0VCrkBa/xN8KiVs2T2nlSJpcCZQG/j4cwWvw
+         /bNuMyopAEHMzNDfJ5tfy//w/x+Ocn9osLiyTxCXzpVFMeN8q1HkpmEu/5QYV3ZeZ9oW
+         JnLPPjwxBBL0E06/KvRVhnf/+YK9Im/xLy458/R9xv04DqQGuOxiFCqbDi9tDGG9A7bX
+         Tecw==
+X-Forwarded-Encrypted: i=1; AJvYcCUbdJp972Uvuphewb50pYIxtD+SsC6h8etpYEHBV3fatVrGLH013WRr1r7QzgEvtBl3YyIDW/uZgXAmXsw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytoqyHAguAER9LuHuwav9Ip4WKYIPxckGJXWlur4etjjMXC0GT
+	2y0lUGVzoOyLQ9TvHjiiOnbYx2M6ZCgRcGzJ+9joZNyKPg1U1azqE/GYvYbWn6/AnhLuB8OWrT1
+	Bymx6jHOyF70wVw8NQtggmOZSdXytZszzkXlQQUpl1KoZwQOCxVP/INybyBrAbjI=
+X-Gm-Gg: ASbGncuNRcRSfBifXVmRhfVpF184RO0uMP69F3n334sEp+77cwOerdweinke4vndODI
+	305bjvIs8zMIAH27ksGZaih8FVt7YoNovhWTFn8yRJhau5t2KXHEloHRVkz2sbBKqUgzvA2Nu49
+	mySyn3P50j0jScGcAZ+BI+sMK6cD3W3vtM2KranmUFs7zkPGQVUlH3LLbneCiU35wbJyk81ppUD
+	QPwSXlz2SACxxMrhb4eoymy6QUGMDLhfLqoQjbFO627vSa8umdOUjyz82MfaJdGX4lwY+GGbAsS
+	t3rUdzA3jwZ6jqipx+UHezAA07DvTVZxOEYy8xPDR/2emlMw3qE+sP1uiBmvAMp8D/A=
+X-Received: by 2002:ac8:7f8f:0:b0:472:15be:54ad with SMTP id d75a77b69052e-48c32ebec71mr11930251cf.14.1746181797955;
+        Fri, 02 May 2025 03:29:57 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExpZCizKsiNGnAZGjO17fHH8yFM+oPe1mErUD+l8Dx92sb7vZcW1igq+h+lNhd+1RWdEMubQ==
+X-Received: by 2002:ac8:7f8f:0:b0:472:15be:54ad with SMTP id d75a77b69052e-48c32ebec71mr11930041cf.14.1746181797657;
+        Fri, 02 May 2025 03:29:57 -0700 (PDT)
+Received: from [192.168.65.113] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18914731dsm29461266b.28.2025.05.02.03.29.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 03:28:18 -0700 (PDT)
-Message-ID: <74e11512-934b-446c-94cf-93bf97eff9fb@redhat.com>
-Date: Fri, 2 May 2025 12:28:17 +0200
+        Fri, 02 May 2025 03:29:57 -0700 (PDT)
+Message-ID: <1435b068-3bb9-4285-8399-81fc278152c4@oss.qualcomm.com>
+Date: Fri, 2 May 2025 12:29:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,83 +74,52 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v3] selftests/vsock: add initial vmtest.sh for
- vsock
-To: Stefano Garzarella <sgarzare@redhat.com>,
- Bobby Eshleman <bobbyeshleman@gmail.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>, Shuah Khan <shuah@kernel.org>,
- kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
- virtualization@lists.linux.dev, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250428-vsock-vmtest-v3-1-181af6163f3e@gmail.com>
- <a57wg5kmprrpk2dm3zlzvegb3gzj73ubs5lxeukyinc4edlcsw@itkgfcm44qu2>
+Subject: Re: [PATCH 2/6] clk: qcom: ipq5018: mark XO clock as critical
+To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
+        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
+ <20250502-ipq5018-cmn-pll-v1-2-27902c1c4071@outlook.com>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <a57wg5kmprrpk2dm3zlzvegb3gzj73ubs5lxeukyinc4edlcsw@itkgfcm44qu2>
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250502-ipq5018-cmn-pll-v1-2-27902c1c4071@outlook.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: 8jOayan9Vp8NsMIJpICi76G0gcXUhDk1
+X-Authority-Analysis: v=2.4 cv=bsxMBFai c=1 sm=1 tr=0 ts=68149ea6 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=N5ds6sLAiLYF8mbRe1EA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4MiBTYWx0ZWRfX+2ZC2cC3Qlkr NlrfY+iR7GGcvRC3DMZUFSJxSh0IPbuHxRL8G79CJpQLMppF8XksO8pChJOLawHV1ED5BKkNppl L1oez/7abmox2lOkDol3TXbL+b/SEtQluHwcvaezd1ev7gM81Ipjpi7LzBnNznIg8R4Up34sV/T
+ zbgD/bz62olbdoRhfNqwY7gOlbX7eyQ1isrUgiVIb75lUmPA+nfNXl3nxV/Q5f1o9X1CT+61eNk Qb2kiGxa+YwUF1WU7iRQp+4Zv1GN+my6A4bfRILkgvzNOJLvgLzOwjNWR6+7e1yHDNhVOp1G+mU 4xHuC4gtUyz8XxY5MrqV6Z29PmkAQrLS0HzgKAF0W2OIRFObfX4Fbfl+vy3ZPP5KrQKmzJCTKN+
+ e3alYzSVUlY8KhKEyKsYg93Lgn+a5qNcPHOI2W4XcXdqrPLXui6GonfkAeJBBBNs7fj64ozG
+X-Proofpoint-ORIG-GUID: 8jOayan9Vp8NsMIJpICi76G0gcXUhDk1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ clxscore=1015 mlxscore=0 priorityscore=1501 spamscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 bulkscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020082
 
-On 4/30/25 3:06 PM, Stefano Garzarella wrote:
-> On Mon, Apr 28, 2025 at 04:48:11PM -0700, Bobby Eshleman wrote:
->> This commit introduces a new vmtest.sh runner for vsock.
->>
->> It uses virtme-ng/qemu to run tests in a VM. The tests validate G2H,
->> H2G, and loopback. The testing tools from tools/testing/vsock/ are
->> reused. Currently, only vsock_test is used.
->>
->> VMCI and hyperv support is automatically built, though not used.
->>
->> Only tested on x86.
->>
->> To run:
->>
->>  $ tools/testing/selftests/vsock/vmtest.sh
+On 5/2/25 12:15 PM, George Moussalem via B4 Relay wrote:
+> From: George Moussalem <george.moussalem@outlook.com>
 > 
-> I tried and it's working, but I have a lot of these messages in the
-> output:
->      dmesg: read kernel buffer failed: Operation not permitted
-> 
-> I'm on Fedora 41:
-> 
-> $ uname -r
-> 6.14.4-200.fc41.x86_64
+> The XO clock must not be disabled, so let's add the CLK_IS_CRITICAL
+> flag to avoid the kernel trying to disable the XO clock (when parenting
+> it under the CMN PLL reference clock), else the kernel will panic and
+> the following message will appear in the kernel logs:
 
-This sounds like the test tripping on selinux. I think this problem
-should not be handled by the script itself.
+Remove the struct definition for this clock (and the assignment in
+blah_blah_clks[]) and replace it with:
 
-[...]
-> ERROR: trailing whitespace
-> #174: FILE: tools/testing/selftests/vsock/vmtest.sh:47:
-> +^Ivm_server_host_client^IRun vsock_test in server mode on the VM and in client mode on the host.^I$
-> 
-> WARNING: line length of 104 exceeds 100 columns
-> #174: FILE: tools/testing/selftests/vsock/vmtest.sh:47:
-> +	vm_server_host_client	Run vsock_test in server mode on the VM and in client mode on the host.	
-> 
-> ERROR: trailing whitespace
-> #175: FILE: tools/testing/selftests/vsock/vmtest.sh:48:
-> +^Ivm_client_host_server^IRun vsock_test in client mode on the VM and in server mode on the host.^I$
-> 
-> WARNING: line length of 104 exceeds 100 columns
-> #175: FILE: tools/testing/selftests/vsock/vmtest.sh:48:
-> +	vm_client_host_server	Run vsock_test in client mode on the VM and in server mode on the host.	
-> 
-> ERROR: trailing whitespace
-> #176: FILE: tools/testing/selftests/vsock/vmtest.sh:49:
-> +^Ivm_loopback^I^IRun vsock_test using the loopback transport in the VM.^I$
-> 
-> ERROR: trailing whitespace
-> #443: FILE: tools/testing/selftests/vsock/vmtest.sh:316:
-> +IFS="^I$
-> 
-> total: 4 errors, 4 warnings, 0 checks, 382 lines checked
-> 
-I almost forgot: I think it's better to avoid the special formatting and
-replies on review for proper updating of the script's help.
+qcom_branch_set_clk_en(regmap, 0x30030); /* GCC_XO_CLK */
 
-Thanks,
-
-Paolo
-
+Konrad
