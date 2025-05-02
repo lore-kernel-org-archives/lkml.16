@@ -1,110 +1,162 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E30622A7F8
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:40:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 888CB21D3DD
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:41:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175223; cv=none; b=dFsWDjZmlJxRKf0WYjoeClq7wo0BgdDHC75wqMXRBfqNmvgJWGlfOZ85vi+W5Ouzddf1QkYjNYNXEK27m9MCTGjl+57ODZjtk8J3scoWVpPsFPJaaw6KdCXUHV7f8HPGZkf151CIi0bTn/JX7uTxmEr34JjBcHHBPJIcdlOH2u8=
+	t=1746175285; cv=none; b=hMOaNMknJ4N7dlCjk4YRYnC8nx/UrwbIiKlRSljagCoMtjc/ekQoHHXcgHW4xKKdpvat6HvMwlbI5Qyni7bA+JYBEweG9s943UPKZndCgNsQqH9R32eiiAVowyyLyYTqSMY2522IhtaN5DTogsufY5BGjwkTlGmP38XG39px8Zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175223; c=relaxed/simple;
-	bh=4GwIMV2g6kYQJfYrG026JnY99HzIdumMHujNiN5PFkQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=SyeZLDmuw14f244jW1JbD3hwrrBPSqN8fYPyj97h+6yJE+GN1xrPEfbfpM4xBVt3iNyV0gq5FPFRvr2UX/MdGiYehBMxIsZDSWUmVCCy5d3hj25V/g0YXcVbUOHV48D+ov+xxqTQfBvjoSnQRjq1E3TPccaro+5ko1+y9vpBjAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e59c++Xo; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746175285; c=relaxed/simple;
+	bh=npABTeUFUCu6LQpOWIpBYOYHmW80tuI5wNyqHdFBqYY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=njQHyGB/KXomKY7uHJ2bD8Zaa666OC6SLbtsUEKE0DSdow6QiOZuekqn8L+sPyOTFGhEPVKEkGAAK8XIifjiKAlBgGGtwetp/JPB7xmBLqhNrtFMYLVT74zcs+6xX65SvREUsIGtjomrRe+OwIoKE7boMKtECjYvujsQQ3z1lZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=itGXcyXA; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e59c++Xo"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39c1efbefc6so1200394f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:40:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746175219; x=1746780019; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dfPxHK34iqz0YjaqRlpXE1B0HpLY07y212OEUguH+Us=;
-        b=e59c++Xolau9uKv5LXFDx7H/lPOQPzpuTp6hpnqxJpjBP3r/6dkH7pML7nyqFlfn7l
-         Jk9/LaWBFyRpGjwX+0y252PGjgU0fHW9O+EAnDdsKcS+/ptq/AcWcAXVvAtbdsIJDb7Y
-         vVomeIxKb7xYf/rNXMt1cj7WsGh8vVB7QzHDCZ+ab6x10LRy3eE4MyAFi+5k84PIfmI0
-         ONasA/QKpHbEb98VZfvj2oGw0VVNU00wT6jhsF0ZuXm2QBT1NFCNA52O0JedBVmOzIjz
-         K0U9JrMW1BJxHD3SeCos7d84A6Rb2oW0ayxKd0j7Y5nZSDVcmFYB0qTbolcKsLYoFZvC
-         7sfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746175219; x=1746780019;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dfPxHK34iqz0YjaqRlpXE1B0HpLY07y212OEUguH+Us=;
-        b=jYZjMMwlfXPqSGq/VxIsLy21FX/An061RzliweCbzGv81UD9x/2ROezSXJRXwYJBe2
-         qXieeD8FRFoDr0ksgObtJGUjMgoxHIi2mSFdu3MCXsBFa2bFHnj5ILs1FUZusEqPVRvC
-         jrOog7mR/846wwRUKV0jRH4cynYy3CehOag0fsPgB5GhZlBqrw4mEL5s2TD6iPBf4OPs
-         gCo+FwyW9sBAHPsx3yaPFmcHYJleT0XE8eTDmnasVG18v4Guv5a3ftPwaVA0jlIx1hvN
-         68c4I0Z/gmeGmIV8EoViLnzTCv/2eVAi2ZiDJXq8LV6jlvluk1TF4bTbllmQL+vqfWte
-         P7nw==
-X-Forwarded-Encrypted: i=1; AJvYcCWJfTTFZH8W8k2K3R4wTIzNh7CiiHwJkjZieOUMfdRLXElyH249CzH+t3Oes8+pf0oyI7quRMOSJfAbq+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDIzzgccA6SEflbHyD0DzWugOYXpfCt7zB+yUB+w7espr8uhb4
-	aPBnmS8VkHs507aQVCyQ8AJiguzLGraty4wjyU5yWHX9h+SNzQ8F0u7/dCP1Gbo=
-X-Gm-Gg: ASbGnctKC30LyFjkJCWFkqF5OaYKjIDoHlCFEPvdxGuXQpWHp6legwarbpzu7FE9SzK
-	rKFF28liYG+Ld4WszGWBt36o7z7IK46u2Zxe3mXsN0p21/tOt/k9snNKwfYbfI1VgXEWqyiicsl
-	kMWp22KDbnCDun/gFtuRT3QChlsqtKIKWMzRkoRfjmROLFboaNYFok15uIVA0jW4kktKiVlDDKk
-	6zWXL22Jp7qOpEx0SaD5G3RZO8HgYIt0EDvpZNollza+8sUJfSpublj9L34SVpMXNDbaHIJqp6A
-	Gp80C8ltEMne6I/tSudhT3G/zJI2SHmdeCHH0WcCzBFt2g==
-X-Google-Smtp-Source: AGHT+IHreIZwzg9TVSTEmBpk2mrA1QNuEKFUEw+ZtdCxQ4dopKGMwZ9mLqKa2D9lb6EAzaR8gqchzg==
-X-Received: by 2002:a05:6000:1446:b0:391:2f2f:818 with SMTP id ffacd0b85a97d-3a099ad46a2mr1385443f8f.9.1746175219587;
-        Fri, 02 May 2025 01:40:19 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a099b0f118sm1482225f8f.78.2025.05.02.01.40.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 01:40:18 -0700 (PDT)
-Date: Fri, 2 May 2025 11:40:15 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Antheas Kapenekakis <lkml@antheas.dev>
-Cc: Derek John Clark <derekjohn.clark@gmail.com>,
-	=?iso-8859-1?Q?Joaqu=EDn_Ignacio_Aramend=EDa?= <samsagax@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-	platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] platform/x86: oxpec: Add a lower bounds check in
- oxp_psy_ext_set_prop()
-Message-ID: <aBSE71VKfBlQg_fZ@stanley.mountain>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="itGXcyXA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=3z7pnP5a9433Xs9kCWo2kjpx1MkwlxyUKoKm47boGUo=;
+	b=itGXcyXAYcQ3CClaj9PZUTkMaImSdVHKR2a1uLDihBVXJu3Uwa+wTHYkhrvI8A
+	fgEe8vdTz8BBrCLsxOCLnGWu7e4j0n44nCTLliQlAYMX4EFZKwEUCs3gV4n9Tx51
+	S2MNH7IjaRqyDotndsNuVJhUT5Jz9RmlViYGG0fN9MrAo=
+Received: from [192.168.142.52] (unknown [])
+	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wDndAIWhRRonRbODw--.57534S2;
+	Fri, 02 May 2025 16:40:55 +0800 (CST)
+Message-ID: <398dd7f9-7651-4b36-a543-093a219c0077@163.com>
+Date: Fri, 2 May 2025 16:40:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] genirq/msi: Fix MSI domain debugfs show
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de
+References: <20250430124836.49964-2-ajones@ventanamicro.com>
+ <96a6e4a3-c89c-4446-8c3f-a0f173aed26a@163.com>
+ <20250502-10084e4c093eceb9a3d276e2@orel>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250502-10084e4c093eceb9a3d276e2@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wDndAIWhRRonRbODw--.57534S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZrWUXr1UtF4DAF4UGFyDWrg_yoW7JFykpF
+	y5tF1UCr48Jr13Xr4jkr45Z34UtFyaya47JryUWF13AF1DWw1DtF10qFZrCrn0yr1UJr12
+	yr4qq3y0vr98G3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRniSLUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiOhRBo2gUbY-O1wABsK
 
-The "val->intval" variable is an integer which comes from the user.  This
-code has an upper bounds check but the lower bounds check was
-accidentally omitted.  The write_to_ec() take a u8 value as a parameter
-so negative values would be truncated to positive values in the 0-255
-range.
 
-Return -EINVAL if the user passes a negative value.
 
-Fixes: 202593d1e86b ("platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
- drivers/platform/x86/oxpec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 2025/5/2 15:33, Andrew Jones wrote:
+> On Thu, May 01, 2025 at 09:51:07AM +0800, Hans Zhang wrote:
+>>
+>>
+>> On 2025/4/30 20:48, Andrew Jones wrote:
+>>> irq_domain_debug_show_one() calls the irqdomain's debug_show() with
+>>> a non-null domain pointer and a null irqdata pointer
+>>> (irq_debug_show_data() calls debug_show() with those the other way
+>>> around). Ensure we have a non-null irqdata pointer in
+>>> msi_domain_debug_show() before dereferencing it.
+>>>
+>>> Fixes: 01499ae673dc ("genirq/msi: Expose MSI message data in debugfs")
+>>> Signed-off-by: Andrew Jones <ajones@ventanamicro.com>
+>>> ---
+>>>    kernel/irq/msi.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+>>> index 5c8d43cdb0a3..c05ba7ca00fa 100644
+>>> --- a/kernel/irq/msi.c
+>>> +++ b/kernel/irq/msi.c
+>>> @@ -761,7 +761,7 @@ static int msi_domain_translate(struct irq_domain *domain, struct irq_fwspec *fw
+>>>    static void msi_domain_debug_show(struct seq_file *m, struct irq_domain *d,
+>>>    				  struct irq_data *irqd, int ind)
+>>>    {
+>>> -	struct msi_desc *desc = irq_data_get_msi_desc(irqd);
+>>> +	struct msi_desc *desc = irqd ? irq_data_get_msi_desc(irqd) : NULL;
+>>
+>> Hi Andrew,
+>>
+>> I think irqd will never be NULL.
+>>
+>>
+>> static int irq_debug_show(struct seq_file *m, void *p)
+>>    irq_debug_show_data(m, data, 0);
+>>      if (data->domain && data->domain->ops && data->domain->ops->debug_show)
+>>        data->domain->ops->debug_show(m, NULL, data, ind + 1);
+>>          msi_domain_debug_show
+>>
+>>
+>>
+>> static int irq_debug_show(struct seq_file *m, void *p)
+>> {
+>> 	struct irq_desc *desc = m->private;
+>> 	struct irq_data *data;
+>>
+>> 	raw_spin_lock_irq(&desc->lock);
+>> 	data = irq_desc_get_irq_data(desc);
+>>
+>> 	If it needs to be judged as NULL, should it also be here?
+>>
+>>
+>>
+>> static void irq_domain_debug_show_one(struct seq_file *m, struct irq_domain
+>> *d, int ind)
+>>    if (d->ops && d->ops->debug_show)	// d->ops->debug_show is NULL, not
+>> irq_debug_show.
+>>
+>>
+>> If I'm wrong, please correct me.
+>>
+> 
+> # cat /sys/kernel/debug/irq/domains/PCI-MSIX-0000:00:01.0-12
+> [   51.954695] Unable to handle kernel access to user memory without uaccess routines at virtual address 0000000000000010
+> [   51.956868] Current cat pgtable: 4K pagesize, 57-bit VAs, pgdp=0x0000000101a9a000
+> [   51.957207] [0000000000000010] pgd=00000000407e8801, p4d=00000000406a9001, pud=00000000407ac001, pmd=00000000407ad001, pte=0000000000000000
+> [   51.958324] Oops [#1]
+> [   51.958417] Modules linked in:
+> [   51.958721] CPU: 1 UID: 0 PID: 83 Comm: cat Not tainted 6.15.0-rc4-00147-gebd297a2affa #1 NONE
+> [   51.958993] Hardware name: riscv-virtio,qemu (DT)
+> [   51.959196] epc : msi_domain_debug_show+0xa/0x8a
+> [   51.959736]  ra : irq_domain_debug_show_one+0xb6/0xf4
+> [   51.959871] epc : ffffffff800a26a4 ra : ffffffff8009f064 sp : ff2000000035bc10
+> [   51.960035]  gp : ffffffff81516710 tp : ff600000802d7080 t0 : ff600000809f20c3
+> [   51.960204]  t1 : 00000000000000de t2 : ffffffff80e01470 s0 : ff2000000035bc40
+> [   51.960373]  s1 : ff60000080285f00 a0 : ff60000081eb5000 a1 : ff60000080285f00
+> [   51.960533]  a2 : 0000000000000000 a3 : 0000000000000001 a4 : 0000000000000000
+> [   51.960697]  a5 : ffffffff800a269a a6 : 0000000000000000 a7 : 0000000000000010
+> [   51.960854]  s2 : ff60000081eb5000 s3 : 0000000000000000 s4 : 0000000000000001
+> [   51.961017]  s5 : ff2000000035bd00 s6 : 0000000000000000 s7 : ff60000081eb5028
+> [   51.961188]  s8 : fffffffffffff000 s9 : ff60000081eb5038 s10: 000000007ffff000
+> [   51.961349]  s11: 0000000000000000 t3 : ffffffff80e5d850 t4 : 0000000000174000
+> [   51.961509]  t5 : 0000000000000002 t6 : ff600000809f20de
+> [   51.961635] status: 0000000200000120 badaddr: 0000000000000010 cause: 000000000000000d
+> [   51.961886] [<ffffffff800a26a4>] msi_domain_debug_show+0xa/0x8a
+> [   51.962098] [<ffffffff8009f064>] irq_domain_debug_show_one+0xb6/0xf4
+> [   51.962250] [<ffffffff8009f0b4>] irq_domain_debug_show+0x12/0x2a
+> [   51.962389] [<ffffffff80246bd6>] seq_read_iter+0xc6/0x316
+> [   51.962516] [<ffffffff80246f12>] seq_read+0xec/0x11e
+> [   51.962634] [<ffffffff80381d20>] full_proxy_read+0x48/0x88
+> [   51.962771] [<ffffffff802184de>] vfs_read+0xb2/0x288
+> [   51.962897] [<ffffffff80218ecc>] ksys_read+0x56/0xc0
+> [   51.963012] [<ffffffff80218f4a>] __riscv_sys_read+0x14/0x1c
+> [   51.963147] [<ffffffff809f3566>] do_trap_ecall_u+0x186/0x206
+> [   51.963290] [<ffffffff809fdf42>] handle_exception+0x146/0x152
+> [   51.963588] Code: 0209 9181 b7a5 4981 b759 7179 f022 f406 e44e 1800 (6a1c) b983
+> [   51.963910] ---[ end trace 0000000000000000 ]---
+> Segmentation fault
 
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 4b48f4571b09..de70ca7e8493 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -582,7 +582,7 @@ static int oxp_psy_ext_set_prop(struct power_supply *psy,
- 
- 	switch (psp) {
- 	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
--		if (val->intval > 100)
-+		if (val->intval < 0 || val->intval > 100)
- 			return -EINVAL;
- 		return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
- 	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
--- 
-2.47.2
+
+Ok, I see. Thank you for fixing this problem.
+
+Reviewed-by: Hans Zhang <18255117159@163.com>
+
+Best regards,
+Hans
+
 
