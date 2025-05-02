@@ -1,146 +1,124 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C70D18E3F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4AF26AD9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:35:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746149647; cv=none; b=A4K7d2F3UgLe6Q98EOWDj+iEQaYy43sU9kDLPNpPgPVZAj5FEKeOa0PLYZR73clgrQHMmq22zfI06XEl/uyueIGooB1LTOWhLAZEPLGOl7a3KOIlwfd1dd9jlgiPihQGU3glpFWFi5pUijdnzW5I8H48LuONbi4WM6Zi5LcwcKI=
+	t=1746149720; cv=none; b=hvIZE21UE4dfi2U97T4NpNAEEbGP5TklNYJIdcHoKnxIfYaZdqE85M9zu0S6RwSG3nobACWvsYg71bTpxnFXucKVmkItTX26CxUwPerI3IDLVY2kfYWns2YWmHPjB9ZyQF3WJ8fxRZbZy547pA2emcW93CyjXzFoyPJGt8cYECg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746149647; c=relaxed/simple;
-	bh=VFjD3rX9Q7nIanEsWLWsYCBzpSANUb1jB6SFhJ8JD70=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=IMmDl43AxLTV60s2XB8SdIIyApau4zePa3t14PHynFE4juUEf1yHbzRTcix5DcZssL1H/IVDzEDZcrLAgj7texHapNU0hLTHiHJIrvuAi0H2lpyFyLQebrg5+p0vOljjGLPWKOE/HXfSUQpC1LUpjmxsEta3bXIFCWcHIdzMxwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PT1uvR4E; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1746149720; c=relaxed/simple;
+	bh=0As8xmw9EhCI8l9UThvyG5mZVKiCmUiyNh+yysJrxBs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eHQ7v1okrE+V9CnDU7yqRbgfOoiCMCuAuNcUzWZxN33kTbPXZ0kReQ90GOaSeXKXJXvSheuBvEwmVy/VpMz9w0YKAtQ0nccg8pTQL8X4RfF/ugU6F9mgk0fnxHhZf3GXi2aLhWXNucZ5mtsIgN3e90cnWBh+2U44MiKCI0Sm0GQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SPprT+1n; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PT1uvR4E"
-Date: Thu, 1 May 2025 21:33:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746149631;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-	bh=KC+mXqTnHbJi8iH4wCBFRFB5qghJEho5DX6blQUzrxc=;
-	b=PT1uvR4EjRmouoTxItV+lh4PXW7hPBZjZcwBY/IkdPOJnyAeDnfTLi7PJZVvrjAs+8EORo
-	cvzdImNSjJM3BIWeiCauNanWtkElANOXjjG0rovOCZ2m0gUaqXCiePt7k+oGXizms+DYEb
-	v1w26vGW4EWIlsz2FrH9D/lVp/jbhhU=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Kent Overstreet <kent.overstreet@linux.dev>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-bcachefs@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] bcachefs fixes for rc5
-Message-ID: <avyfprbtjpphuhxjqekretgco6xs5r23efrlpkqx6uc5lhec7v@igrgjqacgb7i>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SPprT+1n"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso2187156a12.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 18:35:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1746149716; x=1746754516; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=97MRcwlNgiaSiCPIOhEJ8niynAiuZuA+VUyMszsZ0b0=;
+        b=SPprT+1nFQ67fCpBtccCG0ezIC35XPVenOv47cyWL9UlhZCiEimwZxGyirEa1bosTv
+         HopzMfWDPB6cRJF4iA0xDZmbTQJxBVwhDCR2i4KNNGmC2ubug6/2gzVBy6hosWrFnSTz
+         Cp0Ieax/SA3Uzs648PAVJeVcM2HB2B5TGAXhg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746149716; x=1746754516;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=97MRcwlNgiaSiCPIOhEJ8niynAiuZuA+VUyMszsZ0b0=;
+        b=CSpOQhOQ8EDcbmb5sL0tzLS8gun0Xehm6IsQJoQyuWcs4cFyK/8gICt3iUIGHDK+Cr
+         N19e0tlbeDfZpmNAPKbprYr5d0MoFM1wjoCaez1Ii7yAugwWGO9r8ALH8KY0pc7VzI4z
+         W9RAfI+EVZ7inZL1nhwspNzFWuP95uzZuJVn0Gj0cYpB68lGbluBzjgdB+qVHHxYiqYW
+         qFCYItnCZXe9F5jE0BKJLWEBudlzEidVZ+p7YO8rOd1FoDIGWDZ8wKOb9hwnVvko9vQm
+         iQwAmd5fnjY7bTldnKUpHpvvymKqR3bsRG8bFqNsJB4DtaVIrGVjsRyClfAGsyI54yHq
+         qrXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU7xcmbyNast48D2WIFoxJP7G2paGam4Cp6vJouIFmaEyr3EfvkJDEKIlUf9uKdJ8jRaSKxY84wJX4YE2I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD1092HipCab6H10KghpLSOuH5dn4jxQKe+5mvdkLvd8WlSy6f
+	1dq8UazQv6soQbqEzRQVEdLgvWF+lP3ueRKQ4SAEdTujqaLbHOCZeK5FP8w6CyjNdnclodo3UTS
+	zFUo=
+X-Gm-Gg: ASbGncuRHW8MSRHiBxQSnjA9T8Y1y44laFTrkGp9oCUZ0XNRiuGkVCr5NCLznAZq5qx
+	CxS99Gebhfg785MN6Fd9tSrZ46aQxLzrKEHaKCiJ3VXFfkjv/e6pppYT03ga31xWg19GLvZxcnn
+	5ZEUg2YtQY9f7FSVa85B1zTuDl4gwmVfPsqnyTQP35EpeCcIQPBJ0gO2Jx+csnRwlSsNNDhqaE4
+	IqafSRgOmQpvG8NS9CFxhyPJ76U3OWKYwFStm5Txn04IMuXcyvxYiAwCZF+ehYS1kYvppe/zGpk
+	uLyUZDN5M8K9UCLftUJMsJqmVXlfx3JyQED8KJpFX+ixky/svx8OS1hiqhJtr0sAtBOF9DNTcHP
+	Pvry1GW8kPhZ65Iw=
+X-Google-Smtp-Source: AGHT+IELPXnB9lKlBasOGUFYnlU512vWCF7LFI9g4JPofD0di8E6S9eBu2VHK600elfod/82/D0xkw==
+X-Received: by 2002:a05:6402:1e89:b0:5de:c9d0:6742 with SMTP id 4fb4d7f45d1cf-5fa78017633mr534470a12.9.1746149716572;
+        Thu, 01 May 2025 18:35:16 -0700 (PDT)
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777561d3sm423826a12.16.2025.05.01.18.35.14
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 18:35:15 -0700 (PDT)
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso2236604a12.1
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 18:35:14 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXllsnaztabxFEeUjw2Y65iurgMHA9aybWDm7/xUfL6GqawEnAe4ZX13N/9fPGTrRjqaUj/Eus9a3/UfYo=@vger.kernel.org
+X-Received: by 2002:a05:6402:3806:b0:5f4:35c4:a935 with SMTP id
+ 4fb4d7f45d1cf-5fa788ade3emr571279a12.21.1746149713941; Thu, 01 May 2025
+ 18:35:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Migadu-Flow: FLOW_OUT
+References: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org>
+ <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
+ <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com> <20250502012449.GA1744689@ax162>
+In-Reply-To: <20250502012449.GA1744689@ax162>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 1 May 2025 18:34:57 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wif4eOpn3YaUXMKUhSrF1t-2ABasBiBRXR2Mxm059yXqQ@mail.gmail.com>
+X-Gm-Features: ATxdqUH6AO9B4IM6TzOpfLne5kIG1EGNzVEfwRIWeNnmYRyNorzVe6ZE38sDwtI
+Message-ID: <CAHk-=wif4eOpn3YaUXMKUhSrF1t-2ABasBiBRXR2Mxm059yXqQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] include/linux/typecheck.h: Zero initialize dummy variables
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
+	stable@vger.kernel.org, Linux Kernel Functional Testing <lkft@linaro.org>, 
+	Marcus Seyfarth <m.seyfarth@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
 
-Every week I keep telling myself "boy, that was a busy week of
-bugfixing, but next week is sure to finally slow down a bit".
+On Thu, 1 May 2025 at 18:24, Nathan Chancellor <nathan@kernel.org> wrote:
+>
+> but '= {0}' appears to work: https://godbolt.org/z/x7eae5vex
+>
+> If using that instead upsets sparse still, then I can just abandon this
+> change and update the other patch to disable -Wdefault-const-init-unsafe
+> altogether (
 
-Hah.
+The "= { 0 }" form makes sparse unhappy for a different reason:
 
-But it's all pretty small and boring.
+       void *a = { 0 };
 
-A note on repair to users:
---------------------------
+makes sparse (correctly) complain about the use of '0' for 'NULL'.
 
-We're continuing to steadily improve on self healing/automatic repair;
-we want to automatically repair and mount no matter what filesystem
-damage has occurred (and I've been seeing some fun ones, we had one this
-week that was from pcie power savings mode gone haywire).
+    warning: Using plain integer as NULL pointer
 
-But we aren't doing this all at once, because repair code is among the
-most fiddly and least well tested: we're steadily adding error paths to
-the whitelist for automatic repair as they come up.
+and gcc has also finally adopted that warning for braindamage:
 
-So if you ever run into something where a manual fsck is required, do
-drop me a note and include the output of 'bcachefs show-super -f errors'
-- that'll tell me what to add to the whitelist.
+    warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
 
-The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+although it's not on by default (and apparently we've never enabled it
+for the kernel - although we really should).
 
-  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+sparse has complained about this since day one, because I personally
+find the "plain 0 as NULL" to be a complete BS mistake in the language
+(that came from avoiding a keyword, not from some "design" reason),
+and while it took C++ people three decades to figure that out, in the
+end they did indeed figure it out.
 
-are available in the Git repository at:
+In case anybody wonders why '0' is so broken for NULL, think stdarg.
 
-  git://evilpiepirate.org/bcachefs.git tags/bcachefs-2025-05-01
+But also think "Christ people, it's fundamental type safety!!%^%!!"
 
-for you to fetch changes up to 6846100b00d97d3d6f05766ae86a0d821d849e78:
-
-  bcachefs: Remove incorrect __counted_by annotation (2025-05-01 16:38:58 -0400)
-
-----------------------------------------------------------------
-bcachefs fixes for 6.15-rc5
-
-Lots of assorted small fixes...
-
-- Some repair path fixes, a fix for -ENOMEM when reconstructing lots of
-  alloc info on large filesystems, upgrade for ancient 0.14 filesystems,
-  etc.
-
-- Various assert tweaks; assert -> ERO, ERO -> log the error in the
-  superblock and continue
-
-- casefolding now uses d_ops like on other casefolding filesystems
-
-- fix device label create on device add, fix bucket array resize on
-  filesystem resize
-
-- fix xattrs with FORTIFY_SOURCE builds with gcc-15/clang
-
-----------------------------------------------------------------
-Alan Huang (1):
-      bcachefs: Remove incorrect __counted_by annotation
-
-Kent Overstreet (21):
-      bcachefs: Fix losing return code in next_fiemap_extent()
-      bcachefs: Use generic_set_sb_d_ops for standard casefolding d_ops
-      bcachefs: Emit unicode version message on startup
-      bcachefs: Add missing utf8_unload()
-      bcachefs: Run BCH_RECOVERY_PASS_reconstruct_snapshots on missing subvol -> snapshot
-      bcachefs: Add upgrade table entry from 0.14
-      bcachefs: fix bch2_dev_buckets_resize()
-      bcachefs: Improve bch2_dev_bucket_missing()
-      bcachefs: Don't generate alloc updates to invalid buckets
-      bcachefs: btree_node_data_missing is now autofix
-      bcachefs: btree_root_unreadable_and_scan_found_nothing autofix for non data btrees
-      bcachefs: More informative error message when shutting down due to error
-      bcachefs: Use bch2_kvmalloc() for journal keys array
-      bcachefs: Topology error after insert is now an ERO
-      bcachefs: improve missing journal write device error message
-      bcachefs: readdir fixes
-      bcachefs: Kill ERO in __bch2_i_sectors_acct()
-      bcachefs: check for inode.bi_sectors underflow
-      bcachefs: Kill ERO for i_blocks check in truncate
-      bcachefs: Fix __bch2_dev_group_set()
-      bcachefs: add missing sched_annotate_sleep()
-
- fs/bcachefs/btree_gc.c              | 27 ++++++++++++++++++--
- fs/bcachefs/btree_journal_iter.c    |  2 +-
- fs/bcachefs/btree_update_interior.c | 49 ++++++++++++++++++++++++-------------
- fs/bcachefs/buckets.c               | 15 ++++++++----
- fs/bcachefs/dirent.c                |  4 +--
- fs/bcachefs/disk_groups.c           | 25 +++++++++----------
- fs/bcachefs/ec.c                    |  4 +--
- fs/bcachefs/error.c                 |  4 ++-
- fs/bcachefs/fs-io.c                 | 44 ++++++++++++++++++++++++++-------
- fs/bcachefs/fs.c                    | 15 ++++++++----
- fs/bcachefs/io_write.c              | 21 ++++++++++++++++
- fs/bcachefs/journal_io.c            |  2 +-
- fs/bcachefs/namei.c                 |  3 +++
- fs/bcachefs/sb-downgrade.c          |  4 +++
- fs/bcachefs/sb-errors_format.h      | 13 +++++++---
- fs/bcachefs/sb-members.c            |  6 +++--
- fs/bcachefs/sb-members.h            | 13 ++++++----
- fs/bcachefs/subvolume.c             |  5 ++--
- fs/bcachefs/super.c                 | 46 ++++++++++++++++++++--------------
- fs/bcachefs/xattr_format.h          |  8 +++++-
- 20 files changed, 219 insertions(+), 91 deletions(-)
+           Linus
