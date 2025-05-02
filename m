@@ -1,96 +1,89 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9877A255F58
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CBB2566D4;
+	Fri,  2 May 2025 14:11:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195099; cv=none; b=sUKc9XL4tKnnGJkhXAA5YhuAPwN74zCGiM6gtLLCgcsfCDcOg1OVp0k8mXwFofGdlZcKLp7oIy8GZPiWY/zoSkm/QvF0TFBcCZngIKDPzMFxsX/yg37Vwxcgj74c6xIXODVr0JXCWpdxs72U3wyGuRCMiRCmddCFOR+VgNaJ+0M=
+	t=1746195110; cv=none; b=ujz8NX7CpjHrzUNUb348P0zHaD1BoVnpcn/6Ak5bEHf8pg0ygZs3MGe9XgmvGRrhEIheYVMPu0GM2sGiDTcCxtcayehC+VgD1ufN8qz5nBdj1zSJLGdlIQeHbNbNcRHLKT/sRZEgaTQ55m4mTXOa07sZiDGUw8crCS0vnnlLLp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195099; c=relaxed/simple;
-	bh=yIxrVkU4SFQ66DwToqGuNlKqd5dY6/8jM/wyRARXfyA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l2RgJ7BxAh0zbA8rV5U7+L4IeqmRlz+eUU3D2lCbradnCKsV0f7VP0MPp7hyzInU2U1c7r1X624ROon7h1ESheuJfhHMZZRNck2WIk6MIbhECIDAqV52nBlGwL8tDGgbEqBQK1V4HA6pWk7kvIc5qp6prqJ/7g8CexziOZrlTSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YD0FCrbz; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746195110; c=relaxed/simple;
+	bh=YX5K9W8SlvAErcT4KDiQHr82LNYtHxZsOutAoTNilCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hCM3HNJ1cQFdh/8OOHue3s6opImpW4xkxTnBgfas2l2Ym2a/StZNDMfS3wUloFRLykTOneurf2guU+RzpXTtTf53Ite4/GkPtPIfGqqcUYH/OPp6YAFrIKsJRxqQf+Mitl9XwCdgDRyYXXZ6PyDip9bpHks+6r9bAOPiYekEKlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZBVRzCkz; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YD0FCrbz"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ace333d5f7bso369587366b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746195096; x=1746799896; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=yIxrVkU4SFQ66DwToqGuNlKqd5dY6/8jM/wyRARXfyA=;
-        b=YD0FCrbzKXq2+J2x4Rcme2ozK3eFo4u0VIcHUYKLCvz4iNR79O8ClYduTKwRNcyqaw
-         bXfiWU/HISaRQTGl3+5YiTH8Bn+C/UA3AfmXKSAZhQGqC3w2yI7tWHr8Erm2y68sfehE
-         spUNbVK2CCXox3mX3/cjje+6fCpKZ+OFr57nh02U9astSB86upmsB9tQ6Ah7WVJ0gnuB
-         Zk+UoNj2VfPGePA18Gq9mklX40U3NKRmbWrYI93hWENAlxFN1uFh89syUJA295cyrN36
-         Gi7qUZfun+1RCkxTjX0potqKDlk1mwNhLmrdS5btewlFex6spsP2zqpBafPZ2RIKURBm
-         HmGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746195096; x=1746799896;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yIxrVkU4SFQ66DwToqGuNlKqd5dY6/8jM/wyRARXfyA=;
-        b=ElvBnSVAcCDeM1ct5buv73adKXBP5TTaAapwRJ4UXWQ4gUCFmLpNRrX29JNCs7TmGS
-         7HjKTbHH6cg3+88UplV7hFkr3cN20LkjxiyZGujlghU87N+2y4Zk6z3pyaxSRCEryV0k
-         beVoXz5fErPaHfkNia8j0+RkpU7NpKjFapWOovIBQpH4tOYQY8lNNHAPJmxC3ZIW6hAR
-         spCHRLy0o6CXcUZM2/raQ83WXopS6tzne1w3IeuU3+0sUKJcBWF+jKsbQWxSqmkmfM2G
-         0USBzjWKl+krFB0RbS5OTLzi4jringAijXgnzHxdyThgAq0HlvVK5nBUDm+E+zDJofwh
-         JB+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVgi2n1cXk7i6TZSfAzC1yAus1ZLRrBYSv+atpKTJi64GnfTYvvqt9PLx+7kmJiQbyxLHyglTHbFa/rSsA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytKRiwzfu2/8nZehTiBQXhORtSgtxZnfpoCBxKgJwyQrKL8rMV
-	gBzDGSR8s9pOl2Lo7IF8MmObWQvRyAAucHh07D2NXz/s6y8Dom7gq8D1TquAeSdP59esujj17hr
-	v91XOzMtEb//+zprs3P6PJG2Gq10+SDPdY4cvVA==
-X-Gm-Gg: ASbGncsO135MkvpRMMkHomPcrSfwlXKu5MToC3MFcLQas/jj58kul6oIyzt+zp1+mlo
-	l4TZk1uzEzw8sNAImJSIpFqLFGgvIigb3CYvdORDWsaPyvjuacu+CdVu44r5OQPeMzOfcIT6EyY
-	qRmMF+N3Uvu2o3ahkuVEq5H+091jEU4cUl
-X-Google-Smtp-Source: AGHT+IEs1bTD91IQNhCNs2cmGXwwVdvucdgeJR3evc2FFZN3RtZBiPjhHMCBSyUR5aj84pE2Qt2l2g6KYv7IB3kEAbQ=
-X-Received: by 2002:a17:907:74a:b0:acf:15d:2387 with SMTP id
- a640c23a62f3a-ad17ada7132mr329262566b.19.1746195095856; Fri, 02 May 2025
- 07:11:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZBVRzCkz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746195109; x=1777731109;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=YX5K9W8SlvAErcT4KDiQHr82LNYtHxZsOutAoTNilCI=;
+  b=ZBVRzCkzXlDK/XxjSxBtpC2Sq9ganRW5vVhiCMva1b2JE2tDUiu3bD+A
+   Tr7gqkLsONFvJJbzxM5EWrtJEWLN3ZDrcD7HhjAonrXrFXleRxCvrTjeH
+   j/Q5S5IvDX0LTiT+kNv0zHFHcoLjs9T4jKBexwGO7llwI0mVJtmyIeaeV
+   bmZbrFARFOQsQ7IF7pWhaYcIryVEtYIJmCqFcl49bAUy+oJKpP0k//beL
+   Gah2Q/wyVHPA+JXDMh0kTBTnznTxRgM6GymKUC4LcbbYGVKyEM+v+dIZg
+   e+qZudpNmjKPyk2XMyNl41IRVI4ZGYnfxmvIxQlKOVzAc7ol30YbUGIVe
+   g==;
+X-CSE-ConnectionGUID: U1OJjRSNTcSN5mMlzNDSxQ==
+X-CSE-MsgGUID: DfFvpW4kSYyN+QiZfznVLQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="48019979"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="48019979"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:11:48 -0700
+X-CSE-ConnectionGUID: O2cAMrm+RmStsBngfky0Cg==
+X-CSE-MsgGUID: S5bc+TXhSame8+YbhwCHSg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="135608569"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:11:46 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAr79-00000002Did-0njo;
+	Fri, 02 May 2025 17:11:43 +0300
+Date: Fri, 2 May 2025 17:11:42 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	linux-media@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Subject: Re: [PATCH v1 1/1] media: raspberrypi: rp1-cfe: Remove (explicitly)
+ unused header
+Message-ID: <aBTSnv5buH7AZp1X@smile.fi.intel.com>
+References: <20250331072136.3987653-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-2-quic_ptalari@quicinc.com> <20250502053758.utawzhq6famwenc2@vireshk-i7>
- <8ba02745-378b-4264-883a-b99764701d0b@quicinc.com> <20250502081402.yjagnnjrfva7u4cb@vireshk-i7>
- <e1b2029b-2461-4cfc-a6b3-acdf5e01c289@quicinc.com>
-In-Reply-To: <e1b2029b-2461-4cfc-a6b3-acdf5e01c289@quicinc.com>
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Date: Fri, 2 May 2025 19:41:24 +0530
-X-Gm-Features: ATxdqUFgSe5sdPhV4tcbtGto6wWWIR8JrD77D7tcOXpnzioIpQJVJvx6MOBRrS4
-Message-ID: <CAKohpondRqdfqC3CFSJibL2om8_Bbds8k5Dfu8fcZDksNxQUwg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/9] opp: add new helper API dev_pm_opp_set_level()
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pm@vger.kernel.org, psodagud@quicinc.com, 
-	djaggi@quicinc.com, quic_msavaliy@quicinc.com, quic_vtanuku@quicinc.com, 
-	quic_arandive@quicinc.com, quic_mnaresh@quicinc.com, 
-	quic_shazhuss@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250331072136.3987653-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 2 May 2025 at 19:32, Praveen Talari <quic_ptalari@quicinc.com> wrote:
-> now i can push V4 right and will not face errors on my series w.r.t this
-> API.
+On Mon, Mar 31, 2025 at 10:21:36AM +0300, Andy Shevchenko wrote:
+> The fwnode.h is not supposed to be used by the drivers as it
+> has the definitions for the core parts for different device
+> property provider implementations. Drop it.
+> 
+> Note, that fwnode API for drivers is provided in property.h
+> which is included here.
 
-Not fully sure what you meant, but you can send a V4 of the series,
-without the first patch. Please mention it as an dependency in the
-cover letter and that it is applied in the OPP tree's linux-next branch.
+Any comments? Can it be applied?
 
-The one who applies your series needs to apply the series over the commit
-in my branch to avoid breakage (if your series is going in 6.16-rc1).
+-- 
+With Best Regards,
+Andy Shevchenko
 
---
-Viresh
+
