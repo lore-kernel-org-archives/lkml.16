@@ -1,73 +1,71 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BBACAD24;
-	Fri,  2 May 2025 03:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4889AD24;
+	Fri,  2 May 2025 03:10:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746155281; cv=none; b=V5QQ4j5G+UOMdFUsBZll/UPEU3f8JsV7WehRuNLcKRKgmPeBw+wsVUCWNYIjhqnKXlgBhc0KUp5+ITCaJRWFfsNYzCMQZqlWJ1+XnpCvSJd6sPJHKnuwa+Ys3vQfLUZQU1obrD7Pf64Fm080L2y7tetwZpXCxLER93JuvPfuaK0=
+	t=1746155430; cv=none; b=XDCKx7EY8Fevzs2mLmOLXSthKTcQbo8Mpm1NmzL/8RB3XphHC8xNo+2xGRhOe9mFCfAR67SVnjHGSPJopoDIzMqd9PUQmEjP97yeMXMYD+9ZQ4NcqgSaGL2TyraGFSSG1sFSvEbVFaVqWyWH5Sx9s2U7pXoa6z2sDFh4SQjDokg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746155281; c=relaxed/simple;
-	bh=MJyl2k5yqd44Kvel7sxoCFX11yZKu/q5XrHYAApYtis=;
+	s=arc-20240116; t=1746155430; c=relaxed/simple;
+	bh=4+/rI1wiUBYGNxJna4MkbschuPz2AG/VFmnrbRg2ES0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QLzKo/MBNaK1kA1/4WkF7GoWYGnj1l4iz9aiXl7ckPP8RYktYujJFTnFMmv6liQSum3nx+OOEwnGKEMx+k5i2XKLYuqVGzA29h92U8SmDwjQcFbUCu2wB9+WZMP8tCLaH2oToV7PZojotXB9Fy3eECdYw6u/VVbAcLQXlzLwjy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zts0Jjvx; arc=none smtp.client-ip=209.85.210.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=WrFGrXyt52yzC+DAGNJBSz3v79/+rD+1WiOFVKxvWE3jJeeYfKFZbL/ommVI3M83hL0PIjRf2+W8WPJb8kDQMN4BOPjdm/g0c3oPFDtp7gM3VvcHgeB6bEZhFgh70Hbz7VqOoLd3BvUAVdXP3eARZyrW7mtWitCABtYrJLZKQDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aP3lqXu1; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zts0Jjvx"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-73bf5aa95e7so1550735b3a.1;
-        Thu, 01 May 2025 20:07:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aP3lqXu1"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2295d78b433so16033305ad.2;
+        Thu, 01 May 2025 20:10:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746155279; x=1746760079; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1746155428; x=1746760228; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kVtvDV0C/eHfIXjQ6YUfb3F1rCb5PxuZuk0fhziZi+g=;
-        b=Zts0JjvxYq9CUQjaG8LpYa2O3rqxK76Vp10OfOIZkF7LQs04At/5qHC8UoUZtMvmlq
-         JVsVwGkTl2bR5zWC+2wSjX0oq7GTIoepqe/Oqx5WK/ca959ORDlvLSrBWaaqNemcPjy8
-         RIz2aVCtoE27zA7of8mnUIVE+2FIiBTFmacktfs82uDq2z/sGonI11JRf2kgN3rwD+SJ
-         8WmBSPUhffkF008YMAPlDM/jiyUwGrtBh+yPA4Aw71YcF10cm9scoQvpe0SIApskTWuS
-         4G2sZDKyFt1BwjdATaVXnCkMWDldbI3PoTi/9zF+8zl0I9HDg7RcrG854iWgevV6Vd8/
-         c91w==
+        bh=4Tz8QpW2yRSPnyN9+E+xuVvdU1GlFxrBV2mFXNUnh1I=;
+        b=aP3lqXu1cVdbSkVOekLJUtYQsKFdw6cLD5GQH3gALKiMwEp+qgKOlr1wLEtCr2uQBi
+         HILqVW1D8w0jE6u/lmL0rqL38RHt7+5qynwMEoF5RIHru2keS1Busatyx6mtkhEO98ZF
+         9Jd4G3fztaVKe16Ke6aVuh60wnhqpzUS7B2E+CCKXu2kfRwJpycqAi6FIHKYDKejVK/Z
+         sGq4o86bQx9jFToLu6G9xqVlTv/H1fLtECpImB3SHEC+u0Ru5vOjqaTbvyl4Ij+yqLZU
+         4W+/tV48pnooPUAsqmZzR0h9Rp9/v5p8um6v2LtoPCl0dyPDDCe8ujra9nkNp93GWqN+
+         1DYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746155279; x=1746760079;
+        d=1e100.net; s=20230601; t=1746155428; x=1746760228;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kVtvDV0C/eHfIXjQ6YUfb3F1rCb5PxuZuk0fhziZi+g=;
-        b=BgF7R2Qy8s1sCYb+/vJj/nytHuMD18RA013A1BvFfwmPfInctXgrCci5ziZMjcz9PG
-         7Nj1yWZ6lKA+V9z/m6h8wRzdDI/SYc66WWUCONS+JnYqQ/pduKHEhCf4IGZqFxJNRHX9
-         WLdhQHKlggsIz9XhP+cQguDYylefDLV293Yf0VTav60yXIMmSvFEhIFCTp32ap/pNeQc
-         qD4za3RKDZr+5StVSy/e5pTCg9pAClEuQQrhdt08DMVF46+F5HZxrblZ9egN64Z9PNiw
-         yx0XSXVyBYY4cm+0yKdYOlCvc69c01YzEfMzH+Hkw4SQAfhi6Gw2hFND/i3+vAHXG3wo
-         5w5A==
-X-Forwarded-Encrypted: i=1; AJvYcCVdR2zaFmTWK8iA7DPHdxYJ3zoHGwuqAfjqFm0Y0NeKXql8bQjnVHv2wiaFQfzIoWFAVCXWdWHxRNTuC7Ep@vger.kernel.org, AJvYcCWpJmkhmSLYJ7CeBuf24C7yIJhGhhOPdd7WH+SEM+SDFd6Q0z2bTn//2wGbfonAQMb+3+dWvFSaqaX+aw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrCJgLS9XrXjrk8Gk9jihjUJPi30YRmY0/S/aHFZqJiS0bX3eB
-	x3AErZx5qNsGcAHs78hFfiUwNyuuCdxyudnN82Jrp2HUtGDc9PDS
-X-Gm-Gg: ASbGncvgKYDQS1Wlb20KCbSwYro27+z/Xyb1kdxqi/1wByRimQZ4iTyVuOMCP4AUGzd
-	oS7qCNDD8rwxEMilXXG6yOrfHrYoz4v+UwVn4ShDXnRHEwxxPLt8x88tSlmnfm9QiUqBz3Ha6dC
-	HBuxeJAgofEabUl3AhRmN8C7pYHTCLU9vmoXbqarVlmTX7L0bq1x0SHtFOBJDnfXWxM61xiNmlt
-	x3UDwIm0bZ9SVnXvNMpXiPVXYGLqTDzK5CSSJzEtglLIexV0DOqGqDuT+jghzvhGA0rsuZpmIG4
-	QjAn/vyMYEmtIZ/s6ZB4pWaZRWhNpXxGhRFHZvtvAjSqMsx5SfJzPg==
-X-Google-Smtp-Source: AGHT+IHM7iT0kaDRezlM4eZHATSGJlglo1w9pqSNSyXL7KG+pXFpYOMcv4R71hZO1pglEoxpc823FA==
-X-Received: by 2002:a05:6a20:d494:b0:204:432e:5fa4 with SMTP id adf61e73a8af0-20cdee3ad97mr1865553637.23.1746155278726;
-        Thu, 01 May 2025 20:07:58 -0700 (PDT)
+        bh=4Tz8QpW2yRSPnyN9+E+xuVvdU1GlFxrBV2mFXNUnh1I=;
+        b=c4pAT2BWCs4ks/cBhtRdsHqVCa7IizxnSGqlR+ik62NePauzEfLHfc1jUfFD+h2Jyt
+         90UilxrbOzpN21JblFh3fhwo4v8EV69tGdx/xXlnoagtRbt97B0IDi3Fro8PTYE32Ioy
+         9deuJZkbjEUzh6dZXiGlLozQJ5rkMXfH2+x4VNcVU8VIFPjl4Bb10TGJK+eY26OnsDrP
+         T6eqPrZn7870n79eLsz4pT5mlcaF9BRYLxCuLVULLbwwbLWkXepQvF+QOWrWu2K/I0Aa
+         nfHzFzPV8fcAEL/gIbLWqDhEUy6ZqHf3ND8XkcYk5pzGMTjiPfEi12c9n6NBe4ComF7y
+         qF6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUbg2LRxZD9bHFPbaw7eSkTqKypHdmPVJNU5R2hImlPML6Zm+RufVA/JMGpod0cbxgcLislhGLyWB1KQw==@vger.kernel.org, AJvYcCVZ1pJD04chc7lSfk9yWh5vlP4d8vs6zXrYaCytMKMdSAHSuMm+NVwXftMZvrWU46lyC4DUOMOQi3oV/1Rg@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXjjx6rVDkpucU6d7eYfDBM2v/VAfNty87Y2zvOexE17qXvxCB
+	KKf4Xv83d5/MzPqE1FNYnua0JBqg3QGvc02XZ11DVtvbs4f6aXCm
+X-Gm-Gg: ASbGncv1NJMyN/GyP/Urubg66cU3MrkFZKtz3lgim9gBern0USOy4ipVqU9wYXUDkGb
+	LNYoAAgW3yumcS5tB/Ms1L9PDtagIdmSqykQxmD6pemvNnN58Qh3Qfp3+DGgY/GXWSXYdGOn6EA
+	q46DpNNynLwHHzIXkDlMpT75MXUeosyukzl4TRPMIUCaXARE0WrXpMGtOwOl0Q6Xqv37daXOkyW
+	jFSc4dNA1eRfV0F50+ga9GQ5Epm1NLZypn2NHIPvhLVOol9C1k1Pn/UTYvMBWsH3GC8ZiDCG+kh
+	ms7AIvucsw72RpvGGaK7XN+x3gJRn2jnrQqRJBSrdhFwzVoZZvdrEg==
+X-Google-Smtp-Source: AGHT+IG3jYUTv9hFdKl1ALM6mgxnYYenOg9a4tAX8hp2gdvql7zMP7rnzxg9C62Y/ZjNFsF2/NsVcA==
+X-Received: by 2002:a17:903:18a:b0:224:93e:b5d7 with SMTP id d9443c01a7336-22e10382c26mr21597655ad.34.1746155427823;
+        Thu, 01 May 2025 20:10:27 -0700 (PDT)
 Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a225sm458715b3a.23.2025.05.01.20.07.57
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e10941869sm3847135ad.258.2025.05.01.20.10.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 20:07:58 -0700 (PDT)
+        Thu, 01 May 2025 20:10:27 -0700 (PDT)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Thu, 1 May 2025 20:07:57 -0700
+Date: Thu, 1 May 2025 20:10:26 -0700
 From: Guenter Roeck <linux@roeck-us.net>
-To: Alexei Safin <a.safin@rosa.ru>
-Cc: Eugene Shalygin <eugene.shalygin@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-Subject: Re: [PATCH] hwmon: (asus-ec-sensors) check sensor index in
- read_string()
-Message-ID: <745427d1-3c2d-4ad4-90b5-773466aa269e@roeck-us.net>
-References: <20250424202654.5902-1-a.safin@rosa.ru>
+To: Bo Liu <liubo03@inspur.com>
+Cc: mail@carsten-spiess.de, jdelvare@suse.com, kcfeng0@nuvoton.com,
+	linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] hwmon: convert to use maple tree register cache
+Message-ID: <26cb8da6-58cf-4c54-89ee-3313b15b3437@roeck-us.net>
+References: <20250424010829.2610-1-liubo03@inspur.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,24 +74,15 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250424202654.5902-1-a.safin@rosa.ru>
+In-Reply-To: <20250424010829.2610-1-liubo03@inspur.com>
 
-On Thu, Apr 24, 2025 at 11:26:54PM +0300, Alexei Safin wrote:
-> Prevent a potential invalid memory access when the requested sensor
-> is not found.
+On Wed, Apr 23, 2025 at 09:08:29PM -0400, Bo Liu wrote:
+> The maple tree register cache is based on a much more modern data structure
+> than the rbtree cache and makes optimisation choices which are probably
+> more appropriate for modern systems than those made by the rbtree cache.
 > 
-> find_ec_sensor_index() may return a negative value (e.g. -ENOENT),
-> but its result was used without checking, which could lead to
-> undefined behavior when passed to get_sensor_info().
-> 
-> Add a proper check to return -EINVAL if sensor_index is negative.
-> 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
-> 
-> Fixes: d0ddfd241e57 ("hwmon: (asus-ec-sensors) add driver for ASUS EC")
-> Signed-off-by: Alexei Safin <a.safin@rosa.ru>
+> Signed-off-by: Bo Liu <liubo03@inspur.com>
 
-Since we can't agree on warn or not or how, I decided to apply this
-version after changing the error return value as suggested.
+Applied.
 
 Guenter
