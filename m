@@ -1,81 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 974D04503B;
-	Fri,  2 May 2025 02:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665A94503B;
+	Fri,  2 May 2025 02:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746153690; cv=none; b=LHbpaiP/u17g+jPPyPie0V9NA7mp7ex12LywL9M51oRFyII6FlPJXUf/CrgNe2bs5TKkFVMbM5knqn6wm9AP9eyj99iBb8QUT5G7yoDhoo4LFjPPq6HG5TlByVdHVlsKQuunsgDC+JJPaGq0PX2VcsLPd8Onon5IIT3KJfGzYGg=
+	t=1746153832; cv=none; b=a4yorQfRwrHDdCpIf7qjKwFgTd2XQdjc/f+EacfTO6OKoRaMZQmFQ1VW95gd/ptQRj+cZr3dVe63ULG/P1Eb2HS4kt3Zrtw+w1P3ch1t29/Ysex3bIfrV9QKqG7T5ahiIkJtCXQMI6mV4DJdFOkRAz7FEPnaKkHYIy6KP8gavS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746153690; c=relaxed/simple;
-	bh=R6N13CcjaQ5R6swn2YwkSJbx4AQnYnjKfIOWz1tRGvE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=WFgM81Ts1819Klnrq5HPF0cKWZGZ/MeI3HfM+LsGzNDAO2AVdGx/jHwKtgLMQI540Nc2b7MV1IiFlFbsDxLLIiyzDV5VLi5vOWt6EujanQD2SKWYxMePkzrk3y9BSTJ1wqM11i5ZC2i1fkUqakHL2Vfemr13dZEoKaRfX8uxQOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B1DC4CEE3;
-	Fri,  2 May 2025 02:41:29 +0000 (UTC)
-Date: Thu, 1 May 2025 22:41:28 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: LKML <linux-kernel@vger.kernel.org>, Linux trace kernel
- <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>,
- syzbot+441582c1592938fccf09@syzkaller.appspotmail.com
-Subject: [PATCH] tracing: Do not take trace_event_sem in
- print_event_fields()
-Message-ID: <20250501224128.0b1f0571@batman.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746153832; c=relaxed/simple;
+	bh=JP7W2bdy/YHTp8gYecnAY096WEgnonzXy1JmRUqJM3U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JLpZ+vGD6pGc70dmXtPXByI2sMQZZIKWw9rdpOFSQCl09b7jJj5k1PeMlFgYzf6dGNkZaZ0XSOmBYW5YQF5YpqczZJ29Y7rPpKJVIruUJpfkwS6CjP8SccpA4jDXV7YgEDLS99082acKnM/veNH0qaxxmCbJ3iu+QEr50maZ0LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHT29Aa9; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHT29Aa9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE304C4CEE3;
+	Fri,  2 May 2025 02:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746153831;
+	bh=JP7W2bdy/YHTp8gYecnAY096WEgnonzXy1JmRUqJM3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gHT29Aa9C5gquUBYj0DPA0x4qpqpjEuA/W7il23tX7wdwFJUILK5Rv/PO8sWvuG8g
+	 +1acVKUt9SzbtQaxqQTxxF4WOcIKKnLkaENPXomcCE2lQZo4NbIQi6UUuYEq059rJf
+	 t+dlTxVviwZFtKwJIwYxpfzI+u1oI5BNgLsnxJ+A0iQX6EEAB8TgM/Pu6SgQ4cPJGp
+	 TevT03Gy7sSwQb9HqkSJqJQFczYx4+GmImPXsDUbg1VqmJNYmdiGTDsc7LQ+xS+oPK
+	 Gh8U3qRCj6uT9yvLsUDqaIhsgyLpBPkgAAdLdJB5iViTkhfnnPUK9/VtOL43YwRr9c
+	 Q3IyCzvswi+jw==
+Date: Thu, 1 May 2025 19:43:48 -0700
+From: Kees Cook <kees@kernel.org>
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: dsahern@kernel.org, davem@davemloft.net, edumazet@google.com,
+	elver@google.com, horms@kernel.org, justinstitt@google.com,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, pabeni@redhat.com,
+	syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [net?] UBSAN: array-index-out-of-bounds in
+ ip6_rt_copy_init
+Message-ID: <202505011943.B3A6D3DAF@keescook>
+References: <e1e1fa75-e9c2-4ae7-befb-f3910a349a9f@kernel.org>
+ <20250502011550.66510-1-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502011550.66510-1-kuniyu@amazon.com>
 
-From: Steven Rostedt <rostedt@goodmis.org>
+On Thu, May 01, 2025 at 06:15:28PM -0700, Kuniyuki Iwashima wrote:
+> From: David Ahern <dsahern@kernel.org>
+> Date: Thu, 1 May 2025 14:44:03 -0600
+> > On 5/1/25 2:12 PM, Kees Cook wrote:
+> > > static int ip6_rt_type_to_error(u8 fib6_type)
+> > > {
+> > >         return fib6_prop[fib6_type];
+> > > }
+> > > 
+> > > Perhaps some kind of type confusion, as this is being generated through
+> > > ip6_rt_init_dst_reject(). Is the fib6_type not "valid" on a reject?
+> > 
+> > fib6_result is initialized to 0 in ip6_pol_route and no setting of
+> > fib6_type should be > RTN_MAX.
+> > 
+> > > 
+> > > The reproducer appears to be just absolutely spamming netlink with
+> > > requests -- it's not at all obvious to me where the fib6_type is even
+> > > coming from. I think this is already only reachable on the error path
+> > > (i.e. it's during a "reject", it looks like), so the rt->dst.error is
+> > > just being set weird.
+> > > 
+> > > This feels like it's papering over the actual problem:
+> > 
+> > yes, if fib6_type is > than RTN_MAX we need to understand where that is
+> > happening.
+> 
+> Sorry, I think this was my mistake,
+> https://lore.kernel.org/netdev/20250502002616.60759-1-kuniyu@amazon.com/T/#t
+> 
+> and this will fix it.
+> https://lore.kernel.org/netdev/20250501005335.53683-1-kuniyu@amazon.com/
+> 
+> Thanks!
+> 
+> 
+> #syz dup: [syzbot] [net?] WARNING in ipv6_addr_prefix
 
-On some paths in print_event_fields() it takes the trace_event_sem for
-read, even though it should always be held when the function is called.
+Ah-ha! Thanks for getting it fixed! :)
 
-Remove the taking of that mutex and add a lockdep_assert_held_read() to
-make sure the trace_event_sem is held when print_event_fields() is called.
-
-Cc: stable@vger.kernel.org
-Fixes: 80a76994b2d88 ("tracing: Add "fields" option to show raw trace event fields")
-Reported-by: syzbot+441582c1592938fccf09@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/all/6813ff5e.050a0220.14dd7d.001b.GAE@google.com/
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_output.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index c5e8299d1842..aa0d3663f754 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1056,11 +1056,12 @@ enum print_line_t print_event_fields(struct trace_iterator *iter,
- 	struct trace_event_call *call;
- 	struct list_head *head;
- 
-+	lockdep_assert_held_read(&trace_event_sem);
-+
- 	/* ftrace defined events have separate call structures */
- 	if (event->type <= __TRACE_LAST_TYPE) {
- 		bool found = false;
- 
--		down_read(&trace_event_sem);
- 		list_for_each_entry(call, &ftrace_events, list) {
- 			if (call->event.type == event->type) {
- 				found = true;
-@@ -1070,7 +1071,6 @@ enum print_line_t print_event_fields(struct trace_iterator *iter,
- 			if (call->event.type > __TRACE_LAST_TYPE)
- 				break;
- 		}
--		up_read(&trace_event_sem);
- 		if (!found) {
- 			trace_seq_printf(&iter->seq, "UNKNOWN TYPE %d\n", event->type);
- 			goto out;
 -- 
-2.47.2
-
+Kees Cook
