@@ -1,447 +1,279 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C79E21EB5C2
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 06:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166244; cv=none; b=oG/23xufkn7Pc5BlAtXuTU7oV4NNcKveiZvAAikgYslOUuHMxLlFkelsRdRxcmNuWM5cl5SWq0EO5LZBK8qiQ26a9BwSCjC5DJx9qGX0Q1K4vMJaKWkMff5Oos5hnWFZA4m+xhkJz/kxhnWluYMJ/Q60v6RoxaBGVEaASdvYslQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166244; c=relaxed/simple;
-	bh=zn52pCbrQViBUBJs2UGRGkFO+xTr8W4XeCripHZwxEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=cvf2QEosugKyx+wgQWgu7DAzk5ueo7c2Bc2rcONEbLbRDlDlUMira4HmzF2vAlWd7sv+4pF/Ius0rsy3sC0mLNcOslz9sXLdFccno/SNmy/6Z+3rnYLdQ/06JrE+7L6HKejVwaxoMKKlnfw6cxOKD6jxxbX3TR1n5vIpSILckhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DCDB51063;
-	Thu,  1 May 2025 23:10:31 -0700 (PDT)
-Received: from [10.163.80.122] (unknown [10.163.80.122])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F7D83F66E;
-	Thu,  1 May 2025 23:10:35 -0700 (PDT)
-Message-ID: <f56a73a4-ae63-4a46-a493-322c4806b3a2@arm.com>
-Date: Fri, 2 May 2025 11:40:31 +0530
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781F418E050
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 06:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=60.244.123.138
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746166335; cv=fail; b=iUgO0H2a4KR+fc3HgeiU5D9KsDFn3R1XfVV7+hiR0BhoR+cbvBHQfWBKZbVucQmbePYD0U05Hfqj5UciOGoEyDOEPsvAL6lxRYTJEU5bFfnkGgqjsS2jetIx13a2tyB3QGjA3gKbJ9AzHSDShOTu9ButLvyT+ZZ/LZuKW755oic=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746166335; c=relaxed/simple;
+	bh=Pzp7uRYq5Tq19HLv9gub3Q3ZUo+rN7PNISDYLS2ffVI=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=P559Ycj96zWvr7BmWCxFx47I10BTPmj3Pp6HiHomfxzWAPLUQiGb+j0JTsvuI0P0uqr+hOhfJJygLNqbIcwtXOc8RhfP2eEF8cgHNtd3FD0eX2o132z46yDZ8BA6FrgXB6w4l8u5/Q09/tNsRycw734nEpxc97OBVa+fRPfFhNA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=Jv10Z/HG; dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b=Tc6hPgCN; arc=fail smtp.client-ip=60.244.123.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Jv10Z/HG";
+	dkim=pass (1024-bit key) header.d=mediateko365.onmicrosoft.com header.i=@mediateko365.onmicrosoft.com header.b="Tc6hPgCN"
+X-UUID: 5b8370bc271c11f0813e4fe1310efc19-20250502
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=Pzp7uRYq5Tq19HLv9gub3Q3ZUo+rN7PNISDYLS2ffVI=;
+	b=Jv10Z/HGnS/lrAl5XyzQzQIxeNnyP3Se/dZH1IoTkchz43bFl6y+gDiTnxoxqP0omeJJv2CNBGmWSXOK0Vp2d93qHvi3olsW5AphvDxYUkcZk1m2xMtHbIVCrPrIxRDH+YwSnYjDLiUnAkrkLQ6QFKua5FWOowjPSDevKwCbd3U=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.2.1,REQID:ee4a86c7-c32f-4e92-96f8-abc12886bebe,IP:0,UR
+	L:0,TC:0,Content:9,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:9
+X-CID-META: VersionHash:0ef645f,CLOUDID:4a761970-e08c-41ab-89e8-3ba0a33da853,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102|110|111,TC:nil,Conte
+	nt:4|50,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,
+	OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: 5b8370bc271c11f0813e4fe1310efc19-20250502
+Received: from mtkmbs13n2.mediatek.inc [(172.21.101.108)] by mailgw01.mediatek.com
+	(envelope-from <ck.hu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 800885778; Fri, 02 May 2025 14:11:59 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ MTKMBS14N1.mediatek.inc (172.21.101.75) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.39; Fri, 2 May 2025 14:11:58 +0800
+Received: from SEYPR02CU001.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
+ 15.2.1258.39 via Frontend Transport; Fri, 2 May 2025 14:11:58 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VNir5AjT07U/M96RXg1YK2UdYlJZTR39akTj/Unigs67UniK2yQ+MRe+DUHzxsEA/upgUvZmmVavh7HR3t84jeC7hN+IUS5S09cHYcbTBrtd4Wph73C8NkrkGr1LqbDyRZGWjnLkm5ZGpGX+hwhurA8ozzRLcEcGH2IRFyy9ckd19SC7FbR2UMt5sfa+ezipBIFRsW2km4D39+VCXAmGRB0XG49yeZ6gk6+yBDZA+OsDCpe6wgZOk6uoCMaD5yB5EuMCrA7NoUdvNLaNIvSSAOp3dMhcJX1jDV5SvzUlY/pekQIlBgc8X6UVQmUj+gjWmhl1TNiaqaEA9eD8fH/v1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Pzp7uRYq5Tq19HLv9gub3Q3ZUo+rN7PNISDYLS2ffVI=;
+ b=ROBJ2x7WUrJPHC9h0zsSENxQQRsMERb6VBJlixQ+znsG1ZIPAD6I8SEgnFpSYUhi9Oy3/m6j8VNtPoW9cmAS9S9boOYiHvIi0aQ8IZD7UnDS40vgzMz6rxhSB9vNW4r1K3g0tqsoGhT4hQWZWBF0uECYPnU3NfujpkIeneLbaU/e3/jzljpzpfwZ+lHCrCcwvKii37rrOyHowBxittSS56qe87bVaCN4GTJyUTr7VrQ/UZgNaOUQE5Depm+a84Xq99fx5XKa0qtFrfV4aw5vQVY7v3lRoLZZZZ3x+mMkzKozT8jSv2u0EWBbriKP1KgK3WwCFjDeodKhePRzBhPWlA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Pzp7uRYq5Tq19HLv9gub3Q3ZUo+rN7PNISDYLS2ffVI=;
+ b=Tc6hPgCNLumPLu4M5te2uv/+2d43F1d/mg9hkIIiNkmDz0RhWQdnOKtTb6UbVrwbmQBmunxLIcKiFy+0R8VSuOI1Q81jUqiYVfHONXoBF3v0EKkmg9samYMEV0kXKD8Zj7ARA+li4+lnqAjfe0/WXouTE4lBRI15u5Pu/7IfqGU=
+Received: from TYZPR03MB6624.apcprd03.prod.outlook.com (2603:1096:400:1f4::13)
+ by JH0PR03MB8188.apcprd03.prod.outlook.com (2603:1096:990:4f::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8678.34; Fri, 2 May
+ 2025 06:11:55 +0000
+Received: from TYZPR03MB6624.apcprd03.prod.outlook.com
+ ([fe80::9ce6:1e85:c4a7:2a54]) by TYZPR03MB6624.apcprd03.prod.outlook.com
+ ([fe80::9ce6:1e85:c4a7:2a54%5]) with mapi id 15.20.8699.021; Fri, 2 May 2025
+ 06:11:55 +0000
+From: =?utf-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>
+To: "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"chunkuang.hu@kernel.org" <chunkuang.hu@kernel.org>, "AngeloGioacchino Del
+ Regno" <angelogioacchino.delregno@collabora.com>,
+	=?utf-8?B?U3VubnkgU2hlbiAo5rKI5aeN5aeNKQ==?= <Sunny.Shen@mediatek.com>
+CC: =?utf-8?B?U2luZ28gQ2hhbmcgKOW8teiIiOWciyk=?= <Singo.Chang@mediatek.com>,
+	"treapking@chromium.org" <treapking@chromium.org>,
+	Project_Global_Chrome_Upstream_Group
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	=?utf-8?B?TmFuY3kgTGluICjmnpfmrKPonqIp?= <Nancy.Lin@mediatek.com>,
+	=?utf-8?B?SmFzb24tSkggTGluICjmnpfnnb/npaUp?= <Jason-JH.Lin@mediatek.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>,
+	=?utf-8?B?UGF1bC1wbCBDaGVuICjpmbPmn4/pnJYp?= <Paul-pl.Chen@mediatek.com>,
+	"linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>,
+	"matthias.bgg@gmail.com" <matthias.bgg@gmail.com>, "p.zabel@pengutronix.de"
+	<p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 4/5] drm/mediatek: Add MDP-RSZ component support for
+ MT8196
+Thread-Topic: [PATCH v2 4/5] drm/mediatek: Add MDP-RSZ component support for
+ MT8196
+Thread-Index: AQHbssLtPg/1S1D38k6dxjTmo68f9LO+7K0A
+Date: Fri, 2 May 2025 06:11:54 +0000
+Message-ID: <d5ba3c060744ab6ad188399550598718d036abfc.camel@mediatek.com>
+References: <20250421133835.508863-1-sunny.shen@mediatek.com>
+	 <20250421133835.508863-5-sunny.shen@mediatek.com>
+In-Reply-To: <20250421133835.508863-5-sunny.shen@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Evolution 3.52.3-0ubuntu1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR03MB6624:EE_|JH0PR03MB8188:EE_
+x-ms-office365-filtering-correlation-id: 419643cb-5566-4e22-8f76-08dd89403cf3
+x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?K3dnZStHUmcxZENWN1dEWFNCZTErL0ZBTkFHZnY2dG9MNENjUUZYVFlKUUkz?=
+ =?utf-8?B?bDlvUDdSbU9tUXZBa05Nb2EzNVkwanorQUFWTVRvNmhEeEp6MHpDQ3hNT2RN?=
+ =?utf-8?B?Q1hTV3VUWG5TYnQ1UmQ5SytUSkxtZzhJWEl2czR2L214S1E5QW0xQTd4WGsx?=
+ =?utf-8?B?SUx0MERXWWozN1BIbzUycWZXcjJvNjhPY3p1aUU1M2tVNTdmUHBPOFhEMjJz?=
+ =?utf-8?B?MVIvdVFydll1emhHZlQrZTN6bStvNlQ2Q0duVWY3N2p5bFJlSzVmWGRKQys3?=
+ =?utf-8?B?Y3AzRWtDZmlZYkIyNW5yZWtIOHZNRzc2NmdJcFZOU2FOc09PWGNlc21LcHhK?=
+ =?utf-8?B?TlZTNkhYYW5xaVBtakZiZVZPSFZFNE9OZFRJRkJoNzJXMEVxK3hOTGgrdDJq?=
+ =?utf-8?B?cEdQek9ZaFBJTHBBc0kvNURob2FMTGNTeGVkalhnVVl3UGhsN3Z0QTBIejk0?=
+ =?utf-8?B?ZU42dWM1S0k2ZjBIenlLOTR3bEltVk1KTGk1SHVHc1RvSzZSczlrcDNLWUcw?=
+ =?utf-8?B?d2tYZVdtZndnL3dvQjc5WG9uQ25tS0IvYTA4Tyt4cnRZVkFYd3EwTXJCQ0RF?=
+ =?utf-8?B?Z0RrRUU0d21yNGJXbXJObEhBbkJtdUk2V1BkazFWRjB1TVc1NFJJeCtwZDV4?=
+ =?utf-8?B?Z2xjWEEyV2ZLeDAvcWNlcVR6RDVHN0FOYUw4dmRQZnlza3hMTG9RazFBd1R3?=
+ =?utf-8?B?SU5lV0s0RGxPVERnUktyeEp3WTN0bTljSWw3NmZ4KzFzS2w3RGpTSFk0OWlW?=
+ =?utf-8?B?eUd1ci9OQjlic2VvVHFtSzYvemtrSU1xRkdqalRVRUhjNzJ1RWppSGg1UGtJ?=
+ =?utf-8?B?S0ZqUDFFRktKL3o5RklKSjRKNHZ4bVg3Y3JIbGVvKzYzTjBrQWk1aTMxQ3Ba?=
+ =?utf-8?B?cFBianJHN2xLcytaOWdLdm53RmVnSG1OZVNTcXQ1VkJZV200dWUyV0tGRlJt?=
+ =?utf-8?B?b2hMczZVVWk0WXZZcUlNS0IrVVMybkIvenQxMWF5VG9mb3cyUUF2OWRyQ0k5?=
+ =?utf-8?B?U1RLUXJ5bStYY0VWZTJlbTdocFVNL2Y4ZG9uNXFxQWxEbm84Z3ZnV2MxTDlE?=
+ =?utf-8?B?YWpYVGtQTWFBL3ZxNEtYWlVEU3Z1emU2QkswSllQU2xibDZPdmVjY3hGalNi?=
+ =?utf-8?B?emRybWJvUnE5WmtBbU9tN3BleGViMlpzcCtPTGh5a01sUWhuSHVGbU14cElo?=
+ =?utf-8?B?cmlIdU1kZlVNTlR0aHY2ZUxjNXFiUmlQTHc4Zjd4ZGFSTjNaeUk4U0VOcVZ2?=
+ =?utf-8?B?amxPOEExWGV0Y3ZNY0NzeVhzOXdXbnovN2N0Qm4xT0dRYkFPY2R0SkxMcllO?=
+ =?utf-8?B?RFA4cXVnUFNjVmhicGpRS1I2d2NucUxvUDBkYTl4aHNiZ2NkdWoxeWJ0TTV3?=
+ =?utf-8?B?Y0R6M0ZFS3ZnbnhxWTBqN1lMbmhiZ0cyR1p5em5sRGVDbTIrc0lUZzRvei9Q?=
+ =?utf-8?B?M1lPUmR2WVN2SHF4ZzVua2k2OVo2OUZuR2FmdVNWV25oYXR1M2VjOEVsOU1o?=
+ =?utf-8?B?U2p4RkhTRTJFbXAxTEdPdkswU2dIOUtYODVDV2hTTWtkNVZza0FNZ092bVhL?=
+ =?utf-8?B?cXJiOWo5ck5mRkY5WTRvSlNJN3UzZ2ZPMzQrNXA0YUFaRmE2cWQ4QTVkTjhp?=
+ =?utf-8?B?N2I4QjBrdUYxTmVFRi8xVVhPNitYeWZTN3hKdHJmRGRqZXZyRlpRVTVMd2hs?=
+ =?utf-8?B?dHRjVHNwTUNYNHNwSlhxZ0tkb1ErR1BiV3YxSTlrWUJWS2pkREZFS2Y5a1NM?=
+ =?utf-8?B?Tm1jM1JtNHpvcUdsZHdFTTZPejVRRTVYN3hEU2VhQmkyS1JxUVVmeHNuZGJ6?=
+ =?utf-8?B?c3ZVYWZ3YWprNm5zOHArRGJuOVhTMjFLd1dmeXJpeGZ3c1dCWDBnbTNJQ0Vh?=
+ =?utf-8?B?RXNoMmJqVVhlS2hWK1ZxcXprNWlUVW53TVEvb1kvSmJmNEFTYkVoN3d2cDJj?=
+ =?utf-8?B?VjFvVEpIU2Z4M1dEU3pTY0pJbnlYYURxTENOcVNnRWRQTURzKzdQQ2VvaVBq?=
+ =?utf-8?Q?Dvl1KxkdOhdsCqwWjpHCZO4sOqpdTw=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6624.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?KzNUaVBvd25jb09nZEdnMDVjOVNFZi9xQTgydzRDbDB1QmZ4amhiWTMrS0N5?=
+ =?utf-8?B?UGozeEx1QXduL2NUaytvV3UvYXlSTE5WRTNVYllUV3FRU3QxWVkySHhPYWhk?=
+ =?utf-8?B?QnBxZkd5dVlXamhUMUpXM3BtcnA0OHA4KzJqNG0vU09KZWtjRGpGekVlenkw?=
+ =?utf-8?B?eUNiQlZlWXZ0REx5VENSWG9HSkcrZ0lNSHFaM1M1cmQ1NzhOd1NsL0E5RVdC?=
+ =?utf-8?B?bTZPZEFIZ0NmSVBPbnN5bS9yWG9nRFgxU1lVcndNRWJTdys0dEljVnFMQ2NS?=
+ =?utf-8?B?SXE5c2tzV291a3YzV3pTZmVZN0tsQ3RBckhOeTBpTU9HSEpJQTlPZFFLTXlN?=
+ =?utf-8?B?NzhZUGpycVM2djRUSEdhSEx1dEM3ZmlwR1pHSXZEaXhVdWNodzBIWHAvcEhm?=
+ =?utf-8?B?V0t0UUdmVHVHa2JRdXJzekt6dVp2a01IMHR2bG9vWlBTNW91WU8zQ1B4ajRx?=
+ =?utf-8?B?bHJydWNtSlVoTll1VGpQRlA1ZC9QSFczVVR4YXI3dndCdnRsWlNVcEhnOFNX?=
+ =?utf-8?B?SkkvaTJKSlpZVEJaUy93UTBhU2FHN0VTamZ1bVVBd2hZVTRmYU1nZDFtZTN4?=
+ =?utf-8?B?OW85SFNhK2cySFU0cUpkT2FZdUFaNlNJcjdxalRCcTdEZEJrcWRtRFJQRkE4?=
+ =?utf-8?B?YzZ6aHEvbDFvL296SmEzNFkzSm9ORWVpTXJTTnk3UkhNc3ZSQjkyYlh3VXMz?=
+ =?utf-8?B?emtNVjNYbU8vRHhJSU4xcjBGeXpyUjdKNnhzVEh3MXgwNWd3SlM3bWpWaHJl?=
+ =?utf-8?B?MDdRUXpQai85VnNHVTFNYjFWRmJXa1dqd1BhaVMrR0JHRVREb0hqaCs1NURF?=
+ =?utf-8?B?TnhGSlNlYjF4MEtna3E5eldpd0k3bHNFdnUwNmgyV0FTZm5QK2ljT0VTVjcx?=
+ =?utf-8?B?NW4wU01CM3dJY3pLTWtCNm8xOUpPR3hCanRkd0ViNTZqRjZNeFEzREI5b0lS?=
+ =?utf-8?B?MmJUOUlib1ZXS25Gd0tZSWNlMFBhUmNLTVRGN1F6WUE0VWZ5MHBIYUQxSjFR?=
+ =?utf-8?B?QVhpQnorKytEcWVUajBrbkZiNFpoMkd2SXNuMzN3Mm1raGpuRmQ1elFlcXJD?=
+ =?utf-8?B?RVBwUHUrNkZQMDBPSVlFWjNMdzkwOVlWMWxmd0Iwb0RRRTROSjBIUm44ZVJ6?=
+ =?utf-8?B?QXRnTkdnSGFzcy9BYjZtdHgxTTV4bVVORFRuL3JxaXVWbU0zZXdQZEMvQ2xQ?=
+ =?utf-8?B?T2hyWFUxenRlMElwZ1QzS0VIeVlocTdUVm8vNkZGVmg3S25oRnJ3bXR1dEVn?=
+ =?utf-8?B?eCt4ajY1Vi9MalRsL095dUxtblE3S083RVAwcFBWaUp4RUljVHAvQ2lDRWZD?=
+ =?utf-8?B?ZnVFSTFsQ2dTbGk0RjRXODBqM0ZmV2JmM2ZmN2p5TEYvczUwdTVCR3hEWGlh?=
+ =?utf-8?B?bmNubm9xYUl4TE1ESWQ2WUo1dElBZVJQWTBmWWlHcVJnblZEUXg2cUFuMVkr?=
+ =?utf-8?B?Vys3M3VlM2tReDlVL1EvOWdpZWQ3NlB0elRtUzlENnFFZDQ1MUt4R2czMGg4?=
+ =?utf-8?B?TmkvWXFsMEEweFc4cG1oeUdqdEh5elBETFE5cXpVeXdkZnVGS0xhTU5pVk5C?=
+ =?utf-8?B?bmJ0akMvWDB3KzladW5XNFpYNDZSU0xaYUtqY2Z0eTNsVWpGMUtaOTlkUEZu?=
+ =?utf-8?B?NHR6OTFYTTdKR1IraHJ6QXJYaDZJbmJTSlFUOFN0TEZ3U0c1MkN2OFRtKzc4?=
+ =?utf-8?B?bmY5VHBmQWY2SWlIQzBLNFl1TmpPazZiaExZVzFWREl5L1JWZmRxVk5DcGtC?=
+ =?utf-8?B?UENmQW4rc2t1YmIxdklKVktiWE9IaTRVMGNBWVNTK1E4Y1JxYWpoV0JjMGRu?=
+ =?utf-8?B?R2JRNERYNmN6emptOUlUVklJM1JJMm90SGtickl4T3JOUHh2aWF1TnU0dFd0?=
+ =?utf-8?B?UkkxOWRLbTZmcTlXSnJKbkhwS29sZ1ExYm5ZSFRIaDVzcXE0NmM3QWdqWE5I?=
+ =?utf-8?B?YkhFSi94VzdUYW1HcjhoRTVKUFlDQXBOeHoySmVpRlhrTTZzUjVwTnUvMXhr?=
+ =?utf-8?B?RU11ZHZETVVwS2VoL01yNndWMWNyeFR4UjIzU0liYmdpaGRZVFU5aVM5Vytk?=
+ =?utf-8?B?aWwwS2ZBREwzMmFpWCsyZ3MwK25vL0NmL0RjMUhaMVMzbWdTNEs1S2xtWDgy?=
+ =?utf-8?Q?xeUopusbZLM7pWXqC/dEY8gPA?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <55DA925D9A5EA2468A4186E56F9045F4@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/9] coresight: Disable programming clock properly
-To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com
-References: <20250423151726.372561-1-leo.yan@arm.com>
- <20250423151726.372561-5-leo.yan@arm.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250423151726.372561-5-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6624.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 419643cb-5566-4e22-8f76-08dd89403cf3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2025 06:11:54.9894
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: fTd9DUhPRF9iNeObrrSqIMieryOpzOvsrJcQ5UkcJRRxdc6TbLcZMK2y18sAvWYT3CX4BfpdwjdSX0muVXLt3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB8188
 
-Even though this might seem to be being bike shedding, the subject
-line above could be re-organized something like the following for
-better clarity.
-
- coresight: Properly/Appropriately disable programming clocks
-
-On 4/23/25 20:47, Leo Yan wrote:
-> Some CoreSight components have programming clocks (pclk) and are enabled
-> using clk_get() and clk_prepare_enable().  However, in many cases, these
-> clocks are not disabled when modules exit and only released by clk_put().
-
-That is correct, it would be definitely better to disable these clocks
-rather than doing a clk_put() that is prevalent for the pclk clocks in
-context.
-
-> 
-> To fix the issue, this commit refactors coresight_get_enable_apb_pclk()
-> by replacing clk_get() and clk_prepare_enable() with
-> devm_clk_get_enabled() for enabling APB clock.  Callers are updated
-> to reuse the returned error value.
-> 
-> With the change, programming clocks are managed as resources in driver
-> model layer, allowing clock cleanup to be handled automatically.  As a
-> result, manual cleanup operations are no longer needed and are removed
-> from the Coresight drivers.
-
-Looks correct. Although emphasizing the fact that devm_clk_get_enabled()
-is the function which gets apb and apb_pclk clocks managed in the driver
-model layer there after, might be better.
-
-> 
-> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
-
-Seems right to classify this patch as a "Fixes: " as the clocks were not
-handled properly earlier. The commit ID is also correct as it introduced
-coresight_get_enable_apb_pclk() function.
-
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  drivers/hwtracing/coresight/coresight-catu.c       |  9 ++-------
->  drivers/hwtracing/coresight/coresight-cpu-debug.c  |  6 +-----
->  drivers/hwtracing/coresight/coresight-ctcu-core.c  | 10 ++--------
->  drivers/hwtracing/coresight/coresight-etm4x-core.c |  9 ++-------
->  drivers/hwtracing/coresight/coresight-funnel.c     |  6 +-----
->  drivers/hwtracing/coresight/coresight-replicator.c |  6 +-----
->  drivers/hwtracing/coresight/coresight-stm.c        |  4 +---
->  drivers/hwtracing/coresight/coresight-tmc-core.c   |  4 +---
->  drivers/hwtracing/coresight/coresight-tpiu.c       |  4 +---
-
-All call sites have been changed.
-
->  include/linux/coresight.h                          | 16 +++-------------
->  10 files changed, 15 insertions(+), 59 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-> index 9fcda5e49253..c0a51ab0312c 100644
-> --- a/drivers/hwtracing/coresight/coresight-catu.c
-> +++ b/drivers/hwtracing/coresight/coresight-catu.c
-> @@ -627,7 +627,7 @@ static int catu_platform_probe(struct platform_device *pdev)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
-
-Returning PTR_ERR() on the clock after detecting a problem via IS_ERR() is correct.
-
->  
->  	pm_runtime_get_noresume(&pdev->dev);
->  	pm_runtime_set_active(&pdev->dev);
-> @@ -636,11 +636,8 @@ static int catu_platform_probe(struct platform_device *pdev)
->  	dev_set_drvdata(&pdev->dev, drvdata);
->  	ret = __catu_probe(&pdev->dev, res);
->  	pm_runtime_put(&pdev->dev);
-> -	if (ret) {
-> +	if (ret)
->  		pm_runtime_disable(&pdev->dev);
-> -		if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -			clk_put(drvdata->pclk);
-> -	}
->  
->  	return ret;
->  }
-> @@ -654,8 +651,6 @@ static void catu_platform_remove(struct platform_device *pdev)
->  
->  	__catu_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
-
-This kind of error handling is not required any more as it would be
-handled in the driver model layer here after.
-
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> index 342c3aaf414d..744b6f9b065e 100644
-> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-> @@ -699,7 +699,7 @@ static int debug_platform_probe(struct platform_device *pdev)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  
->  	dev_set_drvdata(&pdev->dev, drvdata);
->  	pm_runtime_get_noresume(&pdev->dev);
-> @@ -710,8 +710,6 @@ static int debug_platform_probe(struct platform_device *pdev)
->  	if (ret) {
->  		pm_runtime_put_noidle(&pdev->dev);
->  		pm_runtime_disable(&pdev->dev);
-> -		if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -			clk_put(drvdata->pclk);
->  	}
->  	return ret;
->  }
-> @@ -725,8 +723,6 @@ static void debug_platform_remove(struct platform_device *pdev)
->  
->  	__debug_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
-Should not these IS_ERR_OR_NULL() here be changed to IS_ERR() ?
-Because now there could not be a NULL return value.
-
-drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev)
-
-#ifdef CONFIG_PM
-static int debug_runtime_suspend(struct device *dev)
-{
-        struct debug_drvdata *drvdata = dev_get_drvdata(dev);
-
-        if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-                clk_disable_unprepare(drvdata->pclk);
-        return 0;
-}
-
-static int debug_runtime_resume(struct device *dev)
-{
-        struct debug_drvdata *drvdata = dev_get_drvdata(dev);
-
-        if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-                clk_prepare_enable(drvdata->pclk);
-        return 0;
-}
-#endif
-
-There might more instances like these as well.
-	
-git grep IS_ERR_OR_NULL drivers/hwtracing/coresight/ | grep "drvdata->pclk"
-drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-cpu-debug.c:      if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-funnel.c: if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-replicator.c:     if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-stm.c:    if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-drivers/hwtracing/coresight/coresight-tpiu.c:   if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-
->  
->  #ifdef CONFIG_ACPI
-> diff --git a/drivers/hwtracing/coresight/coresight-ctcu-core.c b/drivers/hwtracing/coresight/coresight-ctcu-core.c
-> index c6bafc96db96..de279efe3405 100644
-> --- a/drivers/hwtracing/coresight/coresight-ctcu-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-ctcu-core.c
-> @@ -209,7 +209,7 @@ static int ctcu_probe(struct platform_device *pdev)
->  
->  	drvdata->apb_clk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->apb_clk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->apb_clk);
->  
->  	cfgs = of_device_get_match_data(dev);
->  	if (cfgs) {
-> @@ -233,12 +233,8 @@ static int ctcu_probe(struct platform_device *pdev)
->  	desc.access = CSDEV_ACCESS_IOMEM(base);
->  
->  	drvdata->csdev = coresight_register(&desc);
-> -	if (IS_ERR(drvdata->csdev)) {
-> -		if (!IS_ERR_OR_NULL(drvdata->apb_clk))
-> -			clk_put(drvdata->apb_clk);
-> -
-> +	if (IS_ERR(drvdata->csdev))
->  		return PTR_ERR(drvdata->csdev);
-> -	}
->  
->  	return 0;
->  }
-> @@ -275,8 +271,6 @@ static void ctcu_platform_remove(struct platform_device *pdev)
->  
->  	ctcu_remove(pdev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->apb_clk))
-> -		clk_put(drvdata->apb_clk);
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x-core.c b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> index 537d57006a25..ff4ac4b686c4 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x-core.c
-> @@ -2237,14 +2237,12 @@ static int etm4_probe_platform_dev(struct platform_device *pdev)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  
->  	if (res) {
->  		drvdata->base = devm_ioremap_resource(&pdev->dev, res);
-> -		if (IS_ERR(drvdata->base)) {
-> -			clk_put(drvdata->pclk);
-> +		if (IS_ERR(drvdata->base))
->  			return PTR_ERR(drvdata->base);
-> -		}
->  	}
->  
->  	dev_set_drvdata(&pdev->dev, drvdata);
-> @@ -2351,9 +2349,6 @@ static void etm4_remove_platform_dev(struct platform_device *pdev)
->  	if (drvdata)
->  		etm4_remove_dev(drvdata);
->  	pm_runtime_disable(&pdev->dev);
-> -
-> -	if (drvdata && !IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  static const struct amba_id etm4_ids[] = {
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index 0541712b2bcb..3fb9d0a37d55 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -240,7 +240,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  
->  	/*
->  	 * Map the device base for dynamic-funnel, which has been
-> @@ -283,8 +283,6 @@ static int funnel_probe(struct device *dev, struct resource *res)
->  out_disable_clk:
->  	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
->  		clk_disable_unprepare(drvdata->atclk);
-> -	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_disable_unprepare(drvdata->pclk);
->  	return ret;
->  }
->  
-> @@ -354,8 +352,6 @@ static void funnel_platform_remove(struct platform_device *pdev)
->  
->  	funnel_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  static const struct of_device_id funnel_match[] = {
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index ee7ee79f6cf7..87346617b852 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -247,7 +247,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  
->  	/*
->  	 * Map the device base for dynamic-replicator, which has been
-> @@ -295,8 +295,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  out_disable_clk:
->  	if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
->  		clk_disable_unprepare(drvdata->atclk);
-> -	if (ret && !IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_disable_unprepare(drvdata->pclk);
->  	return ret;
->  }
->  
-> @@ -334,8 +332,6 @@ static void replicator_platform_remove(struct platform_device *pdev)
->  
->  	replicator_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/hwtracing/coresight/coresight-stm.c b/drivers/hwtracing/coresight/coresight-stm.c
-> index 26f9339f38b9..c32d0bd92f30 100644
-> --- a/drivers/hwtracing/coresight/coresight-stm.c
-> +++ b/drivers/hwtracing/coresight/coresight-stm.c
-> @@ -851,7 +851,7 @@ static int __stm_probe(struct device *dev, struct resource *res)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  	dev_set_drvdata(dev, drvdata);
->  
->  	base = devm_ioremap_resource(dev, res);
-> @@ -1033,8 +1033,6 @@ static void stm_platform_remove(struct platform_device *pdev)
->  
->  	__stm_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  #ifdef CONFIG_ACPI
-> diff --git a/drivers/hwtracing/coresight/coresight-tmc-core.c b/drivers/hwtracing/coresight/coresight-tmc-core.c
-> index ddca5ddf4ed2..517850d39a0e 100644
-> --- a/drivers/hwtracing/coresight/coresight-tmc-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-tmc-core.c
-> @@ -990,7 +990,7 @@ static int tmc_platform_probe(struct platform_device *pdev)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(&pdev->dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  
->  	dev_set_drvdata(&pdev->dev, drvdata);
->  	pm_runtime_get_noresume(&pdev->dev);
-> @@ -1014,8 +1014,6 @@ static void tmc_platform_remove(struct platform_device *pdev)
->  
->  	__tmc_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  #ifdef CONFIG_PM
-> diff --git a/drivers/hwtracing/coresight/coresight-tpiu.c b/drivers/hwtracing/coresight/coresight-tpiu.c
-> index 97ef36f03ec2..4b9634941752 100644
-> --- a/drivers/hwtracing/coresight/coresight-tpiu.c
-> +++ b/drivers/hwtracing/coresight/coresight-tpiu.c
-> @@ -153,7 +153,7 @@ static int __tpiu_probe(struct device *dev, struct resource *res)
->  
->  	drvdata->pclk = coresight_get_enable_apb_pclk(dev);
->  	if (IS_ERR(drvdata->pclk))
-> -		return -ENODEV;
-> +		return PTR_ERR(drvdata->pclk);
->  	dev_set_drvdata(dev, drvdata);
->  
->  	/* Validity for the resource is already checked by the AMBA core */
-> @@ -293,8 +293,6 @@ static void tpiu_platform_remove(struct platform_device *pdev)
->  
->  	__tpiu_remove(&pdev->dev);
->  	pm_runtime_disable(&pdev->dev);
-> -	if (!IS_ERR_OR_NULL(drvdata->pclk))
-> -		clk_put(drvdata->pclk);
->  }
->  
->  #ifdef CONFIG_ACPI
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index d79a242b271d..b888f6ed59b2 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -476,26 +476,16 @@ static inline bool is_coresight_device(void __iomem *base)
->   * Returns:
->   *
->   * clk   - Clock is found and enabled
-> - * NULL  - clock is not found
-
-NULL is not a return value any more.
-
->   * ERROR - Clock is found but failed to enable
->   */
->  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
->  {
->  	struct clk *pclk;
-> -	int ret;
->  
-> -	pclk = clk_get(dev, "apb_pclk");
-> -	if (IS_ERR(pclk)) {
-> -		pclk = clk_get(dev, "apb");
-> -		if (IS_ERR(pclk))
-> -			return NULL;
-> -	}
-> +	pclk = devm_clk_get_enabled(dev, "apb_pclk");
-> +	if (IS_ERR(pclk))
-> +		pclk = devm_clk_get_enabled(dev, "apb");
->  
-> -	ret = clk_prepare_enable(pclk);
-> -	if (ret) {
-> -		clk_put(pclk);
-> -		return ERR_PTR(ret);
-> -	}
->  	return pclk;
->  }
->  
-Updated coresight_get_enable_apb_pclk() LGTM. IS_ERR() on the returned
-pclk value can indicate, if there was a problem in finding or enabling
-apb/apb_pclk clock.
+T24gTW9uLCAyMDI1LTA0LTIxIGF0IDIxOjM4ICswODAwLCBTdW5ueSBTaGVuIHdyb3RlOg0KPiBB
+ZGQgTURQLVJTWiBjb21wb25lbnQgc3VwcG9ydCBmb3IgTVQ4MTk2Lg0KDQpSZXZpZXdlZC1ieTog
+Q0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4NCg0KPiANCj4gU2lnbmVkLW9mZi1ieTogU3Vubnkg
+U2hlbiA8c3Vubnkuc2hlbkBtZWRpYXRlay5jb20+DQo+IC0tLQ0KPiAgZHJpdmVycy9ncHUvZHJt
+L21lZGlhdGVrL210a19kZHBfY29tcC5jIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysrDQo+
+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RkcF9jb21wLmggfCAgMSArDQo+ICBkcml2
+ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYyAgfCAgMiArKw0KPiAgMyBmaWxlcyBj
+aGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210
+a19kZHBfY29tcC5jDQo+IGluZGV4IDY2MjhmNWNkNzMyYS4uMDRmMTNjYTM2MDFiIDEwMDY0NA0K
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RkcF9jb21wLmMNCj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kZHBfY29tcC5jDQo+IEBAIC00Niw2ICs0Niw5
+IEBADQo+ICAjZGVmaW5lIERTQ19CWVBBU1MJCQkJQklUKDQpDQo+ICAjZGVmaW5lIERTQ19VRk9F
+X1NFTAkJCQlCSVQoMTYpDQo+ICANCj4gKyNkZWZpbmUgRElTUF9SRUdfTURQX1JTWl9JTlBVVF9T
+SVpFCQkweDAwMTANCj4gKyNkZWZpbmUgRElTUF9SRUdfTURQX1JTWl9PVVRQVVRfU0laRQkJMHgw
+MDE0DQo+ICsNCj4gICNkZWZpbmUgRElTUF9SRUdfT0RfRU4JCQkJMHgwMDAwDQo+ICAjZGVmaW5l
+IERJU1BfUkVHX09EX0NGRwkJCQkweDAwMjANCj4gICNkZWZpbmUgT0RfUkVMQVlNT0RFCQkJCUJJ
+VCgwKQ0KPiBAQCAtMjM1LDYgKzIzOCwxOSBAQCBzdGF0aWMgdm9pZCBtdGtfb2Rfc3RhcnQoc3Ry
+dWN0IGRldmljZSAqZGV2KQ0KPiAgCXdyaXRlbCgxLCBwcml2LT5yZWdzICsgRElTUF9SRUdfT0Rf
+RU4pOw0KPiAgfQ0KPiAgDQo+ICtzdGF0aWMgdm9pZCBtdGtfbWRwX3Jzel9jb25maWcoc3RydWN0
+IGRldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgdywNCj4gKwkJCSAgICAgICB1bnNpZ25lZCBpbnQg
+aCwgdW5zaWduZWQgaW50IHZyZWZyZXNoLA0KPiArCQkJICAgICAgIHVuc2lnbmVkIGludCBicGMs
+IHN0cnVjdCBjbWRxX3BrdCAqY21kcV9wa3QpDQo+ICt7DQo+ICsJc3RydWN0IG10a19kZHBfY29t
+cF9kZXYgKnByaXYgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsNCj4gKw0KPiArCS8qIFNldCBzaXpl
+ID0gMCBmb3IgYnlwYXNzIG1vZGUgKi8NCj4gKwltdGtfZGRwX3dyaXRlKGNtZHFfcGt0LCAwLCAm
+cHJpdi0+Y21kcV9yZWcsIHByaXYtPnJlZ3MsDQo+ICsJCSAgICAgIERJU1BfUkVHX01EUF9SU1pf
+SU5QVVRfU0laRSk7DQo+ICsJbXRrX2RkcF93cml0ZShjbWRxX3BrdCwgMCwgJnByaXYtPmNtZHFf
+cmVnLCBwcml2LT5yZWdzLA0KPiArCQkgICAgICBESVNQX1JFR19NRFBfUlNaX09VVFBVVF9TSVpF
+KTsNCj4gK30NCj4gKw0KPiAgc3RhdGljIHZvaWQgbXRrX3Bvc3RtYXNrX2NvbmZpZyhzdHJ1Y3Qg
+ZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCB3LA0KPiAgCQkJCXVuc2lnbmVkIGludCBoLCB1bnNp
+Z25lZCBpbnQgdnJlZnJlc2gsDQo+ICAJCQkJdW5zaWduZWQgaW50IGJwYywgc3RydWN0IGNtZHFf
+cGt0ICpjbWRxX3BrdCkNCj4gQEAgLTM5Myw2ICs0MDksMTIgQEAgc3RhdGljIGNvbnN0IHN0cnVj
+dCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX292bHN5c19hZGFwdG9yID0gew0KPiAgCS5nZXRfbnVt
+X2Zvcm1hdHMgPSBtdGtfb3Zsc3lzX2FkYXB0b3JfZ2V0X251bV9mb3JtYXRzLA0KPiAgfTsNCj4g
+IA0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX21kcF9yc3og
+PSB7DQo+ICsJLmNsa19lbmFibGUgPSBtdGtfZGRwX2Nsa19lbmFibGUsDQo+ICsJLmNsa19kaXNh
+YmxlID0gbXRrX2RkcF9jbGtfZGlzYWJsZSwNCj4gKwkuY29uZmlnID0gbXRrX21kcF9yc3pfY29u
+ZmlnLA0KPiArfTsNCj4gKw0KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVu
+Y3MgZGRwX3Bvc3RtYXNrID0gew0KPiAgCS5jbGtfZW5hYmxlID0gbXRrX2RkcF9jbGtfZW5hYmxl
+LA0KPiAgCS5jbGtfZGlzYWJsZSA9IG10a19kZHBfY2xrX2Rpc2FibGUsDQo+IEBAIC00NTYsNiAr
+NDc4LDcgQEAgc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBtdGtfZGRwX2NvbXBfc3RlbVtNVEtf
+RERQX0NPTVBfVFlQRV9NQVhdID0gew0KPiAgCVtNVEtfRElTUF9ESVRIRVJdID0gImRpdGhlciIs
+DQo+ICAJW01US19ESVNQX0RTQ10gPSAiZHNjIiwNCj4gIAlbTVRLX0RJU1BfR0FNTUFdID0gImdh
+bW1hIiwNCj4gKwlbTVRLX0RJU1BfTURQX1JTWl0gPSAibWRwLXJzeiIsDQo+ICAJW01US19ESVNQ
+X01FUkdFXSA9ICJtZXJnZSIsDQo+ICAJW01US19ESVNQX01VVEVYXSA9ICJtdXRleCIsDQo+ICAJ
+W01US19ESVNQX09EXSA9ICJvZCIsDQo+IEBAIC01MTUsNiArNTM4LDcgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggbXRrX2RkcF9tYXRjaGVzW0REUF9DT01QT05FTlRf
+RFJNX0lEX01BWF0NCj4gIAlbRERQX0NPTVBPTkVOVF9EU0kyXQkJPSB7IE1US19EU0ksCQkJMiwg
+JmRkcF9kc2kgfSwNCj4gIAlbRERQX0NPTVBPTkVOVF9EU0kzXQkJPSB7IE1US19EU0ksCQkJMywg
+JmRkcF9kc2kgfSwNCj4gIAlbRERQX0NPTVBPTkVOVF9HQU1NQV0JCT0geyBNVEtfRElTUF9HQU1N
+QSwJCTAsICZkZHBfZ2FtbWEgfSwNCj4gKwlbRERQX0NPTVBPTkVOVF9NRFBfUlNaMF0JPSB7IE1U
+S19ESVNQX01EUF9SU1osCQkwLCAmZGRwX21kcF9yc3p9LA0KPiAgCVtERFBfQ09NUE9ORU5UX01F
+UkdFMF0JCT0geyBNVEtfRElTUF9NRVJHRSwJCTAsICZkZHBfbWVyZ2UgfSwNCj4gIAlbRERQX0NP
+TVBPTkVOVF9NRVJHRTFdCQk9IHsgTVRLX0RJU1BfTUVSR0UsCQkxLCAmZGRwX21lcmdlIH0sDQo+
+ICAJW0REUF9DT01QT05FTlRfTUVSR0UyXQkJPSB7IE1US19ESVNQX01FUkdFLAkJMiwgJmRkcF9t
+ZXJnZSB9LA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kZHBf
+Y29tcC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kZHBfY29tcC5oDQo+IGluZGV4
+IGJhZGI0MmJkNGY3Yy4uODdmNTczZmNjOTAzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvbXRrX2RkcF9jb21wLmgNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kZHBfY29tcC5oDQo+IEBAIC0zNiw2ICszNiw3IEBAIGVudW0gbXRrX2RkcF9jb21w
+X3R5cGUgew0KPiAgCU1US19ESVNQX09WTFNZU19BREFQVE9SLA0KPiAgCU1US19ESVNQX09WTF8y
+TCwNCj4gIAlNVEtfRElTUF9PVkxfQURBUFRPUiwNCj4gKwlNVEtfRElTUF9NRFBfUlNaLA0KPiAg
+CU1US19ESVNQX1BPU1RNQVNLLA0KPiAgCU1US19ESVNQX1BXTSwNCj4gIAlNVEtfRElTUF9SRE1B
+LA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZHJ2LmMg
+Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuYw0KPiBpbmRleCA3MGE3ZTZk
+MDZkNGYuLmFhN2VlYzFmYzdlNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
+dGVrL210a19kcm1fZHJ2LmMNCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZHJ2LmMNCj4gQEAgLTk3NSw2ICs5NzUsOCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2Rl
+dmljZV9pZCBtdGtfZGRwX2NvbXBfZHRfaWRzW10gPSB7DQo+ICAJICAuZGF0YSA9ICh2b2lkICop
+TVRLX0RTSSB9LA0KPiAgCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTg4LWRzaSIsDQo+
+ICAJICAuZGF0YSA9ICh2b2lkICopTVRLX0RTSSB9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAibWVk
+aWF0ZWssbXQ4MTk2LW1kcC1yc3oiLA0KPiArCSAgLmRhdGEgPSAodm9pZCAqKU1US19ESVNQX01E
+UF9SU1ogfSwNCj4gIAl7IH0NCj4gIH07DQo+ICANCg0K
