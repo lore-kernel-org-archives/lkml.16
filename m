@@ -1,62 +1,64 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66ED223C4E4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E660239082
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182351; cv=none; b=eTzoWTVuuUeArCOe/qRmCJlqzUUYt2hqjtiS4Uut7ER6LvJqP8WphCZl44kRmeHRfurGj+BMMw/3l1U+2SL5di3JCzbLntsBjahPk6kPSjGqI/CQaLnEecIX7LMZZA11Ay5FRQAuUVFAUdnIFb7BWkll02De/bL193uKW7pNg2I=
+	t=1746182352; cv=none; b=WUOxBid9OOCQDl1VgugPUQ98ocQBxMXbTz4AnE09ZIVRHPxyPlPyU9hYDYGBwdk0SaYlYn0CQ/3GUSTG7VrXpO7We5rvoYG81re96kVtwaOQtywi+FYsT+yQLkDiiO4uLk9J8B8ypuhW0Z0hazGceUjUtMUC2efoWh9wXLVbdpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182351; c=relaxed/simple;
-	bh=C9bqEmm3kramZyyM1PP0llBLUiugdMK+MXIMYOhipxQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lR6OM+b+5C9uviHUWoJmu5c3i6I38gLtRKxTOBEP3c5DmsBlnF5wukno/WoL2nVGmvpQLV7oAqGc/4iQCxeciz7Ods9OREiEEJC3lWRyFXzZ9sSKuysTBDzxVZeBBfKvZEUID2LosD57AImketipuyXc7H9Im4k9zPLSXm76sLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=SkshiVWn; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1746182352; c=relaxed/simple;
+	bh=1xtJj5TgcV9ysrlW4hz+0ouhr9pvlBf5bSy7WTmom/A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FB6IqRoxifXs6DiPmLtso0mVLTovfcfsi0CSDQ/pL/xMMgseyURGQwcBhYWSByX6NvMxDTvpT5sv2Ta9OdI1Qi5t/0lst1eUMuOCkRUWabzTLTVDudXlt3tmJ0aBsRxCzgvJg6KHK87gGrUROuim0ESCSsrsoGN9j3zrqG/4vQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=Wn0EUT4m; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="SkshiVWn"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso2879303a12.2
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="Wn0EUT4m"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5e5e0caa151so3204086a12.0
         for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:39:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ionos.com; s=google; t=1746182347; x=1746787147; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=nh6OyTEaRIP4JEj3g79TeNhKXaJQFCWid10EPU50POc=;
-        b=SkshiVWnbrv4XuY1Sylvo3VQCTn2aDHkOVD63yetww8disM9gdFzdMFstlp+zmOA7v
-         2lJodCVsXHW1JicVbAPsjraLB9ng6AiFFUKWX02BiQkxH01rH0RDKQPpBxmZIYOxgCA1
-         ZGLh0rPHH0z3d1xk40TdkrZJ/PqkhIqnw7c2njxa5vwgUPl5FZXQzzkMsmUEuoj+4aKx
-         eAyK3r2fgtt3x/bG2Px0wcmMPzMaCSW9hGf2T44ELzpQxaOVHX/oSlvuccfjaWCQVNiU
-         /yAxnV+AiNPi1UKpVjIbjqg1P+NTX6YQbsZ9PVOoug+0X/uvdsCCfi5038oqGUnU4F4y
-         osdA==
+        d=ionos.com; s=google; t=1746182348; x=1746787148; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V2fs1eaETknFKoQfoweIhivzDo8grL/ET92EHCDB4eg=;
+        b=Wn0EUT4mV0ruogqn/ja7YP74VcyKC4twGOnlVhOJvGSHoD50SP1ER/0JZMQ1acqLiu
+         egKJKd+7Uf+yCfJBKvkPZpBUvdrKipuL7jeH7WTB7UYLL7OxyjZ+KxIjFERnheeLBMDD
+         vbheppr/+x9w09v8jbL6XSTTNadssw6DRbU1NFlkMBjJgBeb9s0NWjuLQqsjyMqAAE4a
+         YApso9x0OB+RUOdyqDjVkPqOqsUb/foX3mJ87HQSiFJ7uBrWW9LIaHEraCEcjjza79Ub
+         HX5VrBsy0o4xccDgC14wn6mvlo/tV59j7xcvwhqSQE25tkkabr0ogkGrxu0XTa+8iMoW
+         sYWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746182347; x=1746787147;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nh6OyTEaRIP4JEj3g79TeNhKXaJQFCWid10EPU50POc=;
-        b=no9bVsLaVTFtOOeNvfcEYu3EYeM54W1/8m0Yx1ssdHH6XFeXS8z8IhLaSKlrNqCOp0
-         BnOSR8sJ6tpPrHtcYKdpsOnhWfJevFTxE5M4XsNQPPjZbcHDu6YZKQ/HKJa3E0lt1fNq
-         bFkg5OKAn3+g+bKeVxzedwaFGXj6bPO9Tyup8tf48g1QIoNFl4WpkoXUdFmWinuzxp8f
-         wmAsTx57wnh8VDQBPKdSkimxoFSk3FxJHA3qfpiBjr8l2o2UnDZTfbq23BXCUzJmRqk6
-         AUbG+4cj/RidP9UmEYP6K26E4E/lDT+uovbXjdeP1ZJ8+bAHPi2Cj7YSASzzaxqrDdYu
-         dlpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUhXeL5wFVHtqelYq3MzEkz5DhjvefQrvstct11sepagr2evgXtHhSneWBrVJiyJOQ3L+MwoqVBufRz6uk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxoMT5yCAge2BimzB1CTDQj8uRX5JKLLKwASOW2RVjW52GIA+yH
-	AuDYlHvrCpjJ4YKXnDh1OcUA0/3cYX3svzpIUB8x8UBOLc8cGAgZtIZQOVR/etCv5D10MDwgTnJ
-	v
-X-Gm-Gg: ASbGnctsA4k1HYFk3qmYsrJOB/vkmOLLbfLAZZAQx2NQT1KnJrBcnEavQRdpoLSs9jJ
-	lwtyYQzN8ok05bzHLI9pthSBbpDn7cJF5l+aB1dc6EUDvc7mKcdaDGggEuWHl5SsivHmEmbJV10
-	EQw0AA4oXLX3g+tumtgplIwuRHoOp7bEQLAeeg4skJVz+nZK5BOB53aLmpCUUA/01/UtAepWqGX
-	13+351uRXemHJt3daq4vuj3HFD2xh23ks5c8n/SfTR5SEsEWWW/5UOjly6h+w1q+0hlW+3G9/IU
-	ArAI7B313xm73C7RU3yzFJcLgDgpqRkMPj1d/zRpGrGP+QIkeXvPBOs4ClvC4SYcC6vqkmUZiaU
-	NPqZZP3wavmLdvO6IidTkkCijgaaWzbOvuirGFrxA
-X-Google-Smtp-Source: AGHT+IGklk1vAFvyeWl3LzPI+8ph34p43t2JasY3HHBdDDlmVqcAUrvQ9NmvZqjD3Vf0x1DuCYwlCQ==
-X-Received: by 2002:a17:906:730f:b0:ad0:c6ae:c0c9 with SMTP id a640c23a62f3a-ad17af4cb91mr259745966b.40.1746182347526;
-        Fri, 02 May 2025 03:39:07 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746182348; x=1746787148;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V2fs1eaETknFKoQfoweIhivzDo8grL/ET92EHCDB4eg=;
+        b=CkWBO2l50w0M2UU1ktLF49VV1VIsj3ZTU/Yg8wHN5zyCbbqTp7lnW8D8jDYixTzvVS
+         Ub62xq7v+D2dm+YP6xxszQrsqtkto4/3LF654XJzZ4PEX9Q6wrKPgHdgQ+4xOyOoqjA7
+         TnmjrZYmiqFlsPT0j6VsuLztkduizd3srvpMaFCyX2UYX3+zO3LpG2wVw+8dAOHJaCHP
+         8a7zO4WTvmLnTA19asZCKtY6/vFQuJkx0jK5Vj6YmNu3tfST1yNqPnaj/pkP9ZZNRBcg
+         nGencQF2mamoDdNLeQu6mEJsTJzHDSf4DVFGetkZDXggY87ql2JMKawNbN6GjfK2WIoD
+         f08w==
+X-Forwarded-Encrypted: i=1; AJvYcCUTJwpEExBsav5+FtUoh0gvV1oFIIThmEsX3vfDAEoaAGoIbYIGj43qmiPk0aPnidtlhlU5cNKc3MvDtY0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp82VPXeP6uDj9uErcU6MmiXixZfhsq6So5mHchrFq1ZHf4p01
+	E658MwvXJdFZCCg4ypBvEIip4UIekQd7PBG/JHPxjw7lwjt1A9PLiHT6bn6YE0grqd/lsyicW+o
+	H
+X-Gm-Gg: ASbGncvbYOCAD6sJ8731PQLJFoq9wwQs6EU/SNU0KohtG52vxvP7ZPXC7bLFapVlugE
+	fTTFnMI+rycTGqshsFPxJRORFbLkd9omCBXuRorDrAmXetc+BZu/2XhzAIW63ZNBFc156jRtznr
+	FPWBj70dHtCWMAhRVH9soNHNvKr1YP21Igcaa+QdF73a1yCiT1UCXFgAnsKDrX4mxE30TrAJCFw
+	Tv4vgiLgQjDJqTYtX1MNG/Kc1i7Ujru96c5vhTrut6BImSEPhg48U46UojZpI8xp+mxwGHueb94
+	DSUc/lMlcFmGRbEuc2tJ17AvQViIHxej3osKhdLfoDpud3dGW+EjbuLynGt1+YJpTA7UBvaYwsn
+	ZrQ86n7B+6Xug4knaGC0V0Zw5VOEtgHDKoCbasqpH
+X-Google-Smtp-Source: AGHT+IHTyszrg1a3LkcAucghWKm+QsiMTHKbOEsw5NVvCGYXTNi62ZGwmLRT6Xudd37zE4DwCIobew==
+X-Received: by 2002:a17:906:c14e:b0:acb:5f17:623d with SMTP id a640c23a62f3a-ad17ada647emr225716366b.24.1746182348499;
+        Fri, 02 May 2025 03:39:08 -0700 (PDT)
 Received: from raven.intern.cm-ag (p200300dc6f46c100023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f46:c100:230:64ff:fe74:809])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c025esm28889966b.114.2025.05.02.03.39.06
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1894c025esm28889966b.114.2025.05.02.03.39.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 03:39:07 -0700 (PDT)
+        Fri, 02 May 2025 03:39:08 -0700 (PDT)
 From: Max Kellermann <max.kellermann@ionos.com>
 To: akpm@linux-foundation.org,
 	song@kernel.org,
@@ -65,10 +67,12 @@ To: akpm@linux-foundation.org,
 	cminyard@mvista.com,
 	linux-kernel@vger.kernel.org
 Cc: Max Kellermann <max.kellermann@ionos.com>
-Subject: [PATCH 1/2] kernel/watchdog: add /sys/kernel/{hard,soft}lockup_count
-Date: Fri,  2 May 2025 12:39:04 +0200
-Message-ID: <20250502103905.3995477-1-max.kellermann@ionos.com>
+Subject: [PATCH 2/2] kernel/rcu/tree_stall: add /sys/kernel/rcu_stall_count
+Date: Fri,  2 May 2025 12:39:05 +0200
+Message-ID: <20250502103905.3995477-2-max.kellermann@ionos.com>
 X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250502103905.3995477-1-max.kellermann@ionos.com>
+References: <20250502103905.3995477-1-max.kellermann@ionos.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,101 +81,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-There is /proc/sys/kernel/hung_task_detect_count,
-/sys/kernel/warn_count and /sys/kernel/oops_count but there is no
-userspace-accessible counter for hard/soft lockups.  Having this is
-useful for monitoring tools.
+Exposing a simple counter to userspace for monitoring tools.
 
 Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- kernel/watchdog.c | 53 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ kernel/rcu/tree_stall.h | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/kernel/watchdog.c b/kernel/watchdog.c
-index 9fa2af9dbf2c..09994bfb47af 100644
---- a/kernel/watchdog.c
-+++ b/kernel/watchdog.c
-@@ -63,6 +63,29 @@ int __read_mostly sysctl_hardlockup_all_cpu_backtrace;
-  */
- unsigned int __read_mostly hardlockup_panic =
- 			IS_ENABLED(CONFIG_BOOTPARAM_HARDLOCKUP_PANIC);
-+
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index 925fcdad5dea..158330524795 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -20,6 +20,28 @@
+ int sysctl_panic_on_rcu_stall __read_mostly;
+ int sysctl_max_rcu_stall_to_panic __read_mostly;
+ 
 +#ifdef CONFIG_SYSFS
 +
-+static unsigned int hardlockup_count;
++static unsigned int rcu_stall_count;
 +
-+static ssize_t hardlockup_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				     char *page)
++static ssize_t rcu_stall_count_show(struct kobject *kobj, struct kobj_attribute *attr,
++				    char *page)
 +{
-+	return sysfs_emit(page, "%u\n", hardlockup_count);
++	return sysfs_emit(page, "%u\n", rcu_stall_count);
 +}
 +
-+static struct kobj_attribute hardlockup_count_attr = __ATTR_RO(hardlockup_count);
++static struct kobj_attribute rcu_stall_count_attr = __ATTR_RO(rcu_stall_count);
 +
-+static __init int kernel_hardlockup_sysfs_init(void)
++static __init int kernel_rcu_stall_sysfs_init(void)
 +{
-+	sysfs_add_file_to_group(kernel_kobj, &hardlockup_count_attr.attr, NULL);
++	sysfs_add_file_to_group(kernel_kobj, &rcu_stall_count_attr.attr, NULL);
 +	return 0;
 +}
 +
-+late_initcall(kernel_hardlockup_sysfs_init);
++late_initcall(kernel_rcu_stall_sysfs_init);
 +
 +#endif // CONFIG_SYSFS
 +
- /*
-  * We may not want to enable hard lockup detection by default in all cases,
-  * for example when running the kernel as a guest on a hypervisor. In these
-@@ -169,6 +192,10 @@ void watchdog_hardlockup_check(unsigned int cpu, struct pt_regs *regs)
- 		unsigned int this_cpu = smp_processor_id();
- 		unsigned long flags;
- 
-+#ifdef CONFIG_SYSFS
-+		++hardlockup_count;
-+#endif
-+
- 		/* Only print hardlockups once. */
- 		if (per_cpu(watchdog_hardlockup_warned, cpu))
+ #ifdef CONFIG_PROVE_RCU
+ #define RCU_STALL_DELAY_DELTA		(5 * HZ)
+ #else
+@@ -784,6 +806,10 @@ static void check_cpu_stall(struct rcu_data *rdp)
+ 		if (kvm_check_and_clear_guest_paused())
  			return;
-@@ -311,6 +338,28 @@ unsigned int __read_mostly softlockup_panic =
- static bool softlockup_initialized __read_mostly;
- static u64 __read_mostly sample_period;
  
 +#ifdef CONFIG_SYSFS
-+
-+static unsigned int softlockup_count;
-+
-+static ssize_t softlockup_count_show(struct kobject *kobj, struct kobj_attribute *attr,
-+				     char *page)
-+{
-+	return sysfs_emit(page, "%u\n", softlockup_count);
-+}
-+
-+static struct kobj_attribute softlockup_count_attr = __ATTR_RO(softlockup_count);
-+
-+static __init int kernel_softlockup_sysfs_init(void)
-+{
-+	sysfs_add_file_to_group(kernel_kobj, &softlockup_count_attr.attr, NULL);
-+	return 0;
-+}
-+
-+late_initcall(kernel_softlockup_sysfs_init);
-+
-+#endif // CONFIG_SYSFS
-+
- /* Timestamp taken after the last successful reschedule. */
- static DEFINE_PER_CPU(unsigned long, watchdog_touch_ts);
- /* Timestamp of the last softlockup report. */
-@@ -742,6 +791,10 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
- 	touch_ts = __this_cpu_read(watchdog_touch_ts);
- 	duration = is_softlockup(touch_ts, period_ts, now);
- 	if (unlikely(duration)) {
-+#ifdef CONFIG_SYSFS
-+		++softlockup_count;
++		++rcu_stall_count;
 +#endif
 +
- 		/*
- 		 * Prevent multiple soft-lockup reports if one cpu is already
- 		 * engaged in dumping all cpu back traces.
+ 		rcu_stall_notifier_call_chain(RCU_STALL_NOTIFY_NORM, (void *)j - gps);
+ 		if (READ_ONCE(csd_lock_suppress_rcu_stall) && csd_lock_is_stuck()) {
+ 			pr_err("INFO: %s detected stall, but suppressed full report due to a stuck CSD-lock.\n", rcu_state.name);
 -- 
 2.47.2
 
