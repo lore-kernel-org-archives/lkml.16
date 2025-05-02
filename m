@@ -1,108 +1,117 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8648267716;
-	Fri,  2 May 2025 16:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6989926138F;
+	Fri,  2 May 2025 16:43:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204213; cv=none; b=TTzvgpYCcNHnchGVWJK9Gb66I/ZpNLnE7RqwteHBPmUBi3srXOWFuMS16aXA/x3DpjUQN0sHySKF5IqF9/ZPd0UznClemRMngLZjeCbMV6Q//ycRvyrJNpgqbhW7Hlf1XiIgegmEx1KrrCggk8S3CFqnk39EsO9dXcwu9/J802g=
+	t=1746204230; cv=none; b=Dbo7RIoRK/WcqQA0GbhwoQfHADblMOPjKa58hSROLEsAwwYle/R/sU8CJ6AW0Nu9KcTm1wU60X7ThEk+Vmx+/kfzWb2YmVqyMa6pgez+PSQRCtsexM/YDRV4g8ZN6EK1TPXVlN8exkeGHohzyEhBYGW7Ii/yCm+jZWyRXfH0RUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204213; c=relaxed/simple;
-	bh=ygx2bzlBgpHjz1t7Ya2NDxpOQ/Eveinyd42eds817pg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fjY6/3wqTUWkILLOwSGeAWnKtoDrSNbEjo4BvCWbQwwRSB4+dmmAOIQffXAY95m8odgra+u89XsR8ZeFu9mjHzR3oEMg+4vcLkkngqDe3frRzzYUaGmuNJ/SHTpIhY+6A9UMQQntZ20/76C+qidyenr8iSNoHDvNKR5qiZyVggE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=q1B+zzkp; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746204230; c=relaxed/simple;
+	bh=amLX7FDEwYM1CydOTz1TzXbPOF2Acs7PuTpiYKs/K6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rG58S0MYrY+bkoT7cyf+0XDg1rOiPzQJSak6Z3QMcrJ802ogkD/cu9v3zpdJ0bwfIdtG8m7/Uiz6VjTKo2tIXaZy4ZrdTk3qxV2gMwksG7cXYXyF93jSyudWQLglTtDeLhv4Oy1HqaRG7ckwJUY9vnkSDOYf/OMNrp1y2C8Q1HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NcPcSVxu; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="q1B+zzkp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746204210;
-	bh=ygx2bzlBgpHjz1t7Ya2NDxpOQ/Eveinyd42eds817pg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=q1B+zzkpLiAT/IBpIvW7htAZx20VHLTySJOBTzYHqwk+TH6dQ0Pe6AiPO20GtF+FO
-	 sgvYCFkgNFm1sCbT/KBekn5a2/oxtB6g/LDSOhGlFQ+fsG5IskGTEAs7MTE8hGDySt
-	 uCakBdm8dsU0mOu5xjcN16OIPtgGEMtpn5kP9S6WrlGhe34bzrLPXuNk3TKbfGFxR6
-	 yWcF+Q5HkbEVQ9c3doQW6RR62S2INKAa/O0SXSU3zD0JYST73UJf615bBRCR0XVbue
-	 ph8cvwttJlHntLirMQ9iEyNBO2eIj2vk7U2eifOxk+lFWDOdRGKAgTs5vWjJkitR7D
-	 EWqy+WTxvnQ5g==
-Received: from [192.168.1.63] (unknown [70.107.117.78])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nfraprado)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EDDB817E125D;
-	Fri,  2 May 2025 18:43:27 +0200 (CEST)
-From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-Date: Fri, 02 May 2025 12:43:22 -0400
-Subject: [PATCH 2/2] arm64: dts: mediatek: mt8365: Describe infracfg-nao as
- a pure syscon
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NcPcSVxu"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549963b5551so2576675e87.2;
+        Fri, 02 May 2025 09:43:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746204226; x=1746809026; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=rhPxxO8YPt82z7DOp+d+tt8ExEv/tDtudEGn21E0idc=;
+        b=NcPcSVxuYJGB4Qck4tEkFuUcsPIkV2JNIAlrYdADYYdDNgxfCnrJt+YUce48LxuZpC
+         2DChB7WGy0UVwLfo6jA/mXALlQgp2eRvzbYCcQP8/9UsqAu3DXiiBZisZGfosl246ZkN
+         EjcZKldemrJu9MJphdM20WOBL3M87tlLFNAfwzoNWLLnjKzGu5ZaIg2xn006ch9fbFrL
+         KaoSBO6frPZ3jNodR5EslUcPC6Ix6yXX9W2WLV+7LlcSJXpePNrJ0GAoRwYfi8W+d+6w
+         EHlapf/3qHosjfBKGoTbyL8+35immpRCHfXP0vj2ELNBEdehckqbsr78+4p6RoXOT/qU
+         C4LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746204226; x=1746809026;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rhPxxO8YPt82z7DOp+d+tt8ExEv/tDtudEGn21E0idc=;
+        b=p0EZGGYzEfin/E7cvqtw6P9Qp3CaIe8woisQebAxJxmR+g34a4DetedFrO7N/2bTcL
+         KJUdvh+/TbQlc9zPqfvzVpLu+r+shjIT9/9UeAHBe1ZZfZ8KaEnyEFrOTTMlH4jOpZ2G
+         9t8woXbgbrEws3G2NGq1MXef7lSLh04704OZpeIspHX6fhACrqnLUbTr/e3NLVju3xED
+         bXZTw+DMeGAO04t6Z+O8aNdke8xN43VGDVIDnktYp8x1L0ERzRxAHhO0ZssbHa4MTaml
+         iwdjx7gjq1pPQ2e3byQmkwIpPDW9pj9/C7XMEIqQxcLa/filfi/t+5dWCEP1P0qOOGOU
+         954w==
+X-Forwarded-Encrypted: i=1; AJvYcCUM3fvpQMdIpTrBmjegffpnNT1SsIXNc999CzXmUs+mgIEez+wX14rWvUcILmdeHGd+JaFM4yhZkk1V+s4=@vger.kernel.org, AJvYcCWLrDi0/dMSEuxQCutXvn1oPed45I33e0p7LFMDDMVIDtAlvs+G2/uhWZgn0q4qaAH6VsUnvIze@vger.kernel.org
+X-Gm-Message-State: AOJu0YyHS6RFh76d5BwOjBLJ3k1nPn+eLyIzY3KaxRpsRoNapSOiD2lS
+	+2udwpQ/dAqOkrB239HPuhuGeyNGRP4WAVJXrOxJgIjgQsVKuOIt
+X-Gm-Gg: ASbGncutpGcP0ipeK6MedJC9MxATUlm3b04blxwuldgP66U8CX+39a/3T/wMOMBeULu
+	hnkwcI23n4GolsyVzM1eMW4rw62wun8gdcQlmqrw2HPBrvS2nbugERKMaY86/N74u7WJXsqEwYB
+	eDKm2juaVx0WTQobv6opIbLAf4NOyYl6oMfgXI4MD8hZiII2IMGP/D/RCkVzPk2aziarqc+SM+U
+	ueH6EvM3VQToYi8iB/1x1Aux5iyca8F0+HphkuD9iUKTJUF4y1HH7K9bhHRxy3jrzu2x55XWuZD
+	Gh90x2CKrGDZHHQ+YR4SlXXvvgOhlkgQZmbJEZUc16TuzN3QO+MQdOyzJhGfgOU=
+X-Google-Smtp-Source: AGHT+IFIMmhFt0XsxkysWhs6WHqtlWSo1GlKtlOWd9aa9MnWOS2gRs6dDUZjRsWMHLBCVgIpsmC86Q==
+X-Received: by 2002:a05:6512:3d27:b0:549:5822:c334 with SMTP id 2adb3069b0e04-54eac24c748mr1051225e87.52.1746204226227;
+        Fri, 02 May 2025 09:43:46 -0700 (PDT)
+Received: from localhost.localdomain ([91.193.179.235])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c08c3sm398459e87.81.2025.05.02.09.43.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 09:43:45 -0700 (PDT)
+From: Andrey Kriulin <kitotavrik.s@gmail.com>
+X-Google-Original-From: Andrey Kriulin <kitotavrik.media@gmail.com>
+To: Christian Brauner <brauner@kernel.org>
+Cc: Andrey Kriulin <kitotavrik.media@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>,
+	NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: [PATCH] fs: minix: Fix handling of corrupted directories
+Date: Fri,  2 May 2025 19:43:36 +0300
+Message-ID: <20250502164337.62895-1-kitotavrik.media@gmail.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250502-mt8365-infracfg-nao-compatible-v1-2-e40394573f98@collabora.com>
-References: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
-In-Reply-To: <20250502-mt8365-infracfg-nao-compatible-v1-0-e40394573f98@collabora.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Amjad Ouled-Ameur <aouledameur@baylibre.com>, 
- =?utf-8?q?Bernhard_Rosenkr=C3=A4nzer?= <bero@baylibre.com>, 
- Fabien Parent <fparent@baylibre.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
-X-Mailer: b4 0.14.2
 
-The infracfg-nao register space at 0x1020e000 has different registers
-than the infracfg space at 0x10001000, and most importantly, doesn't
-contain any clock controls. Therefore it shouldn't use the same
-compatible used for the mt8365 infracfg clocks driver:
-mediatek,mt8365-infracfg. Since it currently does, probe errors are
-reported in the kernel logs:
+If the directory is corrupted and the number of nlinks is less than 2 
+(valid nlinks have at least 2), then when the directory is deleted, the
+minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+value.
 
-  [    0.245959] Failed to register clk ifr_pmic_tmr: -EEXIST
-  [    0.245998] clk-mt8365 1020e000.infracfg: probe with driver clk-mt8365 failed with error -17
+Make nlinks validity check for directory in minix_lookup.
 
-This register space is used only as a syscon for bus control by the
-power domain controller, so in order to properly describe it and fix the
-errors, set its compatible to a distinct compatible used exclusively as
-a syscon, drop the clock-cells, and while at it rename the node to
-'syscon' following the naming convention.
+Found by Linux Verification Center (linuxtesting.org) with Syzkaller.
 
-Fixes: 6ff945376556 ("arm64: dts: mediatek: Initial mt8365-evk support")
-Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable@vger.kernel.org
+Signed-off-by: Andrey Kriulin <kitotavrik.media@gmail.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8365.dtsi | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ fs/minix/namei.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8365.dtsi b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-index e6d2b3221a3b7a855129258b379ae4bc2fd05449..49ad4dee9c4cf563743dc55d5e0b055cfb69986a 100644
---- a/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8365.dtsi
-@@ -495,10 +495,9 @@ iommu: iommu@10205000 {
- 			#iommu-cells = <1>;
- 		};
+diff --git a/fs/minix/namei.c b/fs/minix/namei.c
+index 8938536d8..5717a56fa 100644
+--- a/fs/minix/namei.c
++++ b/fs/minix/namei.c
+@@ -28,8 +28,13 @@ static struct dentry *minix_lookup(struct inode * dir, struct dentry *dentry, un
+ 		return ERR_PTR(-ENAMETOOLONG);
  
--		infracfg_nao: infracfg@1020e000 {
--			compatible = "mediatek,mt8365-infracfg", "syscon";
-+		infracfg_nao: syscon@1020e000 {
-+			compatible = "mediatek,mt8365-infracfg-nao", "syscon";
- 			reg = <0 0x1020e000 0 0x1000>;
--			#clock-cells = <1>;
- 		};
+ 	ino = minix_inode_by_name(dentry);
+-	if (ino)
++	if (ino) {
+ 		inode = minix_iget(dir->i_sb, ino);
++		if (S_ISDIR(inode->i_mode) && inode->i_nlink < 2) {
++			iput(inode);
++			return ERR_PTR(-EIO);
++		}
++	}
+ 	return d_splice_alias(inode, dentry);
+ }
  
- 		rng: rng@1020f000 {
-
 -- 
-2.49.0
+2.47.2
 
