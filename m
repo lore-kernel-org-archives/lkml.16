@@ -1,137 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5642D19D891;
-	Fri,  2 May 2025 08:47:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD50E22A819;
+	Fri,  2 May 2025 08:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175669; cv=none; b=PpJhUHGson0FFSfk4O5tdET7UypnvZmiKvGY5OzheN5WYUq6tXU0mpcOS9FKwVwf6Ih5BwJsSHmvQAPFFAiRhMSL7tHkCzSzj6u4J/FNhW6QB6qosrSy7dBOZgoZ4H4CDNG9CF8eEj13YLagZ6tTaT0pdd0YLLcLgup1u491GMQ=
+	t=1746175680; cv=none; b=uB9y/7d47/SF/o3MNEoErOWe/qjnpAdQnFKtuL9cL2sa4pfQlaygkkR7k0yf+PKLdMIFDAIDvp721WPiUEG5PsNfjMjTAgzCLzRVnq9wnSgQSFojRx+Am03/QZ2LP0Sdgt9lCLix0vU8yCb2i0shux16lc9h+NHE42N+rdFTCTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175669; c=relaxed/simple;
-	bh=NCirDjbr0P+QIBLiB7dQOcgcs9vpxXzMLjZHxOXUKuc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mz64U8qm0AFfbqviw2rRXafEtg5v65w4j/UCCCmAGWjLJ7DfOz9+OLUOEBvYwZdPClos3H330mdgP3M/LGKrWaBrL8X3LsMGegjjfE0qpe24JRbU5D7Kg0hhcyECeTl7GbIt2qlsDICxOR6FzQZY3C901Aw3MEDy4QHRXMnIIHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDTH9KZO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746175680; c=relaxed/simple;
+	bh=fpk/kMJFJOYpZ6RZKJXvQwwCwcQhzbrqgWEEwEcexaE=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PPEURs7XGuDwx87Kx8j53zTt+LhvWFlxnQH+zW1yHedSMbYXdciXmM51VGgT0DV1kjOuTB1d1mICY+KZsOn0poOgHFNCyD58bbyCSdsku68qWJG9NX9N57tliqNSFBYbCbTzZTmQco/41vpGUvqQgPq3B0ORAQU2aCFZpTy3FDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSF7K3Gf; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDTH9KZO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CADC4CEE4;
-	Fri,  2 May 2025 08:47:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746175668;
-	bh=NCirDjbr0P+QIBLiB7dQOcgcs9vpxXzMLjZHxOXUKuc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=dDTH9KZOh1hEj5xVKE8c4rjCXx6+gYnRq4nmbWqx+h06O4kbsj8rs3Cjor4bsvuxy
-	 IGVhsrPI+9HG3K1KPCVrJLkQ3Kyirq8fgViGp0hv3zYpPjFmdxqCXAP69SStXn19Yc
-	 xZWCq1QmxZ0v7nWggAMIJEEYmbb3XqEW2L93TLA/wto4PyFRIW34manFUmZq4gqR1+
-	 vbspoZbhRI9zQSxguE6Omoh41tLkqsiCmh4u0le1Z66WjXGuVl8Is5qO1QBDnoWcYK
-	 EutwhLC4Zr2qRZPlZdambTEO6RkFZPV6w2KfF5SvNs1BJmunFL4TSduEEXhshF1N66
-	 qkplJtD0MN8lA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uAm3e-00Apre-AY;
-	Fri, 02 May 2025 09:47:46 +0100
-Date: Fri, 02 May 2025 09:47:45 +0100
-Message-ID: <86r017h00e.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Per Larsen <perl@immunant.com>
-Cc: linux-kernel@vger.kernel.org,
-	"qperret@google.com" <qperret@google.com>,
-	"sebastianene@google.com" <sebastianene@google.com>,
-	kernel-team@android.com,
-	"will@kernel.org" <will@kernel.org>,
-	"sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	"catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-	yuzenghui@huawei.com,
-	Armelle Laine <armellel@google.com>,
-	arve@android.org
-Subject: Re: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
-In-Reply-To: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
-References: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSF7K3Gf"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f728aeedacso2659361a12.2;
+        Fri, 02 May 2025 01:47:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746175677; x=1746780477; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
+        b=OSF7K3Gfqc/YTeKBtrGVHpngZd23AosjYjNA2WLDk4MZ9ia4ho8f+ASfbVwHWaN1YB
+         gEcOwLZ+USo6YWuKuB9xq7CRQZQzySl9ViMfTMpsWDYMYIM70jwmSJOSFj+Puc7GzTnx
+         dYKYk14j9L0rfkPGq99aOssVUHz67X2UFHQsmOkvOdtSDUKyZvJ+me8ijkglH4C0ItuP
+         GFfAVS6Lp5xwZdjLxj6PsZC2CC+MBppjxGbAVAICx70sFW51pEs7yG4O/MiAAudhrjQV
+         TIc778xpaYSSSkJ2mtujks1LV3HAJSOk1AqnSzHmLL3MVzwjEfNmw3d1kuRbDMO2zu48
+         zN2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746175677; x=1746780477;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bh0Rl1k2uOksfrDAOIuz8rd+aIGZh9M8Pf/lIkHtO8I=;
+        b=mNOvWV5TNoe7Z/J4XnzbJgMKidRG1tQdPfNMrcc9aICFpNLxiKHAPp8n5v78E8dnci
+         slhoibEKv2Bx3vFin2UHHs3nRQpnD8EvqSZyW6T4JjucmqSunD3I4B+Hb98+HPDDGsN2
+         tmab869ojwEmNZoSr3gdDXY7oIxlbgyxRUQsPFB7PyQkIUaRjj4F8DMbCO+NNvLb8vBr
+         2rIP9J2kpRsdOMxpxPuY0EQ4aA1+rXrNSWMtrrb6FgM2WtCIIunIfmHYNDYT6MiQPShc
+         zfpBQhJ2NbLbhnrB+IXqO4731F3uF93PpPVJb6OXvp1N/S7h+Sru0/FB7hh0/951izMC
+         TgdA==
+X-Forwarded-Encrypted: i=1; AJvYcCUn6Kn1sWK2I/5kMsewAD7YaXi08F/kDxmZfG7IFHA8DGvWmWgtq4l8bmmhcCbl9yKFWIo=@vger.kernel.org, AJvYcCW7MNO9CRRiEqKBD63hJYHSoeThl5TYW1X02tTnDBJpS3A911uQiBNlok4bPaRVptT8sqQblwlmJizTEj14@vger.kernel.org, AJvYcCWqUJyh27FN/Cyi5lOuhAPNnbsocbWfEiKojqwwYhCCG2KIsTm1JRCarupwh1m8MHivwhPxN4Oyahk/2UK21zW2/wB9@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWJbUOHW6PYtcHV+c8sFtrVeG6IjPHeZftecAU5M6B3SPWA6y9
+	dtDiwWh5WODsmJjPME8wEy6bMmKSxhMm6IlLPmua0vxejS9ebSFW
+X-Gm-Gg: ASbGnctt/dliQwLvG+I+av1QnH0MWLNuhvcqVM7dhpLlxI07rB5+tjse/oVCpw57GbS
+	eLl69UYqh10WO4Gaq+K8YIj9IwWAFZjLDy7P7PGh81pnmX8pQCQsbdwJFbtLA3/HdeSWv80sren
+	cl8Tm0jOsB3kbqroMkbTnCp5buDdQTC72C2OJDeXxRlCSgQMoJpEFk5m7gxvuZDqUHshygIiyaw
+	xCtncn6iGH2xjOrC3Hd0vlB5Er7OARXrYU0oETI1fGxspHCMVe7IJUX8eUqqCgwryqXzkLyTTUE
+	y5ZVkZmxs5ZKa70CJRlzt+4P6s0=
+X-Google-Smtp-Source: AGHT+IGLo5LwCnRs/f36Ec6GHgEp3262fW7h0ITzF1LNYmVO5/4odC3rPODA7HJ2f7d15r/5GhhTrQ==
+X-Received: by 2002:a05:6402:1e89:b0:5f4:d5d2:dd47 with SMTP id 4fb4d7f45d1cf-5fa789182c1mr1445887a12.25.1746175676569;
+        Fri, 02 May 2025 01:47:56 -0700 (PDT)
+Received: from krava ([173.38.220.54])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa77b8ffcfsm894913a12.64.2025.05.02.01.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 01:47:56 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Fri, 2 May 2025 10:47:53 +0200
+To: Alejandro Colomar <alx@kernel.org>
+Cc: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 22/22] man2: Add uprobe syscall page
+Message-ID: <aBSGuZUzSZAzG8O-@krava>
+References: <20250421214423.393661-1-jolsa@kernel.org>
+ <20250421214423.393661-23-jolsa@kernel.org>
+ <42yzod7olktnj4meijj57j5peiojywo2d47d5gefnbmbwxfz4b@5ek6puondmck>
+ <aAehVOlj-W5kVyW3@krava>
+ <6rauz4mwgjpcmdbpny3pnh632t3wbequxni2iqdvs3bmjbzqzt@7cykilsvoggn>
+ <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: perl@immunant.com, linux-kernel@vger.kernel.org, qperret@google.com, sebastianene@google.com, kernel-team@android.com, will@kernel.org, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, catalin.marinas@arm.com, yuzenghui@huawei.com, armellel@google.com, arve@android.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cqih4qscx5jslfaq46bjcldt3dqoiyqg2dgbnif5eqa7ioygem@lorictjx3jrb>
 
-On Fri, 02 May 2025 04:52:39 +0100,
-Per Larsen <perl@immunant.com> wrote:
+On Thu, May 01, 2025 at 11:26:46PM +0200, Alejandro Colomar wrote:
+> Hi Jiri,
 > 
-> FF-A implementations with the same major version must interoperate with
-> earlier minor versions per DEN0077A 1.2 REL0 13.2.1 but FF-A version 1.1
-> broke the ABI on several structures and 1.2 relies on SMCCC 1.2 is not
-> backwards compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
+> On Tue, Apr 22, 2025 at 10:45:41PM +0200, Alejandro Colomar wrote:
+> > On Tue, Apr 22, 2025 at 04:01:56PM +0200, Jiri Olsa wrote:
+> > > > > +is an alternative to breakpoint instructions
+> > > > > +for triggering entry uprobe consumers.
+> > > > 
+> > > > What are breakpoint instructions?
+> > > 
+> > > it's int3 instruction to trigger breakpoint (on x86_64)
+> > 
+> > I guess it's something that people who do that stuff understand.
+> > I don't, but I guess your intended audience will be okay with it.  :)
+> > 
+> > > > The pages are almost identical.  Should we document both pages in the
+> > > > same page?
+> > > 
+> > > great, I was wondering this was an option, looks much better
+> > > should we also add uprobe link, like below?
+> > 
+> > Yep, sure.  Thanks for the reminder!
 > 
-> If we return the negotiated hypervisor version when the host requests a
-> lesser minor version, the host will rely on the FF-A interoperability
-> rules. Since the hypervisor does not currently have the necessary
-> compatibility paths (e.g. to handle breaking changes to the SMC calling
-> convention), return NOT_SUPPORTED.
+> From what I see, I should not yet merge the patch, right?  The kernel
+> code is under review, right?
+
+right, we need to figure out other stuff first
+
+thanks,
+jirka
+
 > 
-> Signed-off-by: Per Larsen <perlarsen@google.com>
-> Signed-off-by: Per Larsen <perl@immunant.com>
-> ---
->  arch/arm64/kvm/hyp/nvhe/ffa.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> index 3369dd0c4009..10e88207b78e 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/ffa.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
-> @@ -712,7 +712,24 @@ static void do_ffa_version(struct arm_smccc_res *res,
+> Have a lovely night!
+> Alex
 > 
->   hyp_spin_lock(&version_lock);
->   if (has_version_negotiated) {
-> - res->a0 = hyp_ffa_version;
-> + /*
-> + * FF-A implementations with the same major version must
-> + * interoperate with earlier minor versions per DEN0077A 1.2
-> + * REL0 13.2.1 but FF-A version 1.1 broke the ABI on several
-> + * structures and 1.2 relies on SMCCC 1.2 is not backwards
-> + * compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
-
-I can't parse this sentence. Missing words?
-
-> + *
-> + * If we return the negotiated hypervisor version when the host
-> + * requests a lesser minor version, the host will rely on the
-> + * aforementioned FF-A interoperability rules. Since the
-> + * hypervisor does not currently have the necessary compatibility
-> + * paths (e.g. to paper over the above-mentioned calling
-> + * convention changes), return NOT_SUPPORTED.
-> + */
-> + if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(hyp_ffa_version))
-> + res->a0 = FFA_RET_NOT_SUPPORTED;
-> + else
-> + res->a0 = hyp_ffa_version;
->   goto unlock;
->   }
+> > 
+> > 
+> > Have a lovely night!
+> > Alex
+> > 
+> > -- 
+> > <https://www.alejandro-colomar.es/>
 > 
+> 
+> 
+> -- 
+> <https://www.alejandro-colomar.es/>
 
-Something has gone seriously wrong with your email, and the patches
-are badly mangled and unusable. They are also sent as individual
-patches and not as a thread, which is a sign that you didn't send them
-using git. Please fix this for your next posting.
 
-More to the meat of the patches: why should the hypervisor paper over
-anything if the spec is broken? Why can't the host just as well decide
-for itself what to do?
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
