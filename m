@@ -1,49 +1,49 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F97267713
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDE82571D5;
+	Fri,  2 May 2025 16:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204872; cv=none; b=SC+SYt01iFZsKBtnkH+LOxvUHQOzOUtYV4QXLcR1iwXTk0a0Ca3Zv8npyKza22yUt2S+BUas3DY7sdMRObuxekOjPRx6LOVuph3qxJkr8EnK+flqKTvlb17RHzzvLVd9lGkEiJe2X0UyXO3YSBcXOiOpEyxYbNqMEYeGVKJfGak=
+	t=1746204922; cv=none; b=O8oLiXbIxiqfZL+7eScS1XkDW7LRwi2aNBIENZd29+Quf0JUfyMeg63T8Z4/4tl9L6oFw1UWvjxJrhG7iOMnSZMTWl7TSaaLyUoFDVwfzu3kKLws0wFc7h/WIwMfQ4tIZKCujzOaE+HD05+2b69CCsexGKQwdHdwdR75Iiz8ZiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204872; c=relaxed/simple;
-	bh=IBdEo4TKzpkkWBzpsOe+Lont38DEq8RTG02a5nilIj0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EdI8HN+37ObegbUygmvsCSZj8CTGMn4xv7orbmADJVMsegGqNFR4zKwrnH+GsD8MKs0jV1dkk1NIX3PGMH+Ax1ZkjtAZYvJvh8yvhZyd8a7QLOrR3tIhByFMuk0Zyij+Z7Z1mFc+3pa8wLL0/CPOlwWbrthDF+/RCUQiARr7OJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XyMD5uVH; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746204922; c=relaxed/simple;
+	bh=CP3jeZBrPH5Y+i58jheG3yHFPs48exV22tFrSpFI7OY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SOXpj2ZJL9FF0jZKCZS3KauyETX0HIhOm6d5VbH0iJSbuqM4Nuxgj6Rk54b62lnqWNfGmuCQoC1wadtuy2KNi3MD1ZO+lcYlsmm/nUEAyt6ETQmAoPpqiUTFwQCG9OFtdlnhkzo4u6JoobBpW1rlxUWbhwvhkrCQSVzWyrrhJv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=iKKYORQj; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XyMD5uVH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746204869;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bu9UhU+O+lj6htW8SouO0+6n/1iffy38JAAPOH/btzA=;
-	b=XyMD5uVHw4cVHDq2ECGGXJG+UXhPPZjBNZBZI6wUY+HSSAWmuGsVMJCsYqt9J75FtPDmkV
-	bvFDNFwNgYCJ7H51bKlToi9n0jfGekOpDxvLlIInm4WBrGTHQ14foDjTNO45QmRVOhxhy6
-	fgaYrbi+uUSUL+d0MSjW01njrd7yLEw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-529-DpK6vXU3NyqxzdYB4IHgDA-1; Fri,
- 02 May 2025 12:54:24 -0400
-X-MC-Unique: DpK6vXU3NyqxzdYB4IHgDA-1
-X-Mimecast-MFC-AGG-ID: DpK6vXU3NyqxzdYB4IHgDA_1746204862
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B19C919560AD;
-	Fri,  2 May 2025 16:54:21 +0000 (UTC)
-Received: from [10.44.32.102] (unknown [10.44.32.102])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A46F019560A3;
-	Fri,  2 May 2025 16:54:16 +0000 (UTC)
-Message-ID: <a699035f-3e8d-44d7-917d-13c693feaf2e@redhat.com>
-Date: Fri, 2 May 2025 18:54:15 +0200
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iKKYORQj"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542GtCsn271542
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 11:55:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746204912;
+	bh=k6EziXFSk8NbTx/1V+mCgjnx9+FiwrLm4eimV4AStAs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=iKKYORQjlCx7jiQqyBxRbkSiU80TGKBlXfqTcdVoGJo5z2VMRvsTXstGgLm8b5PqH
+	 /DhhIutb0xc+SUQOloMg8ZvR2oj6OJR258KabN6pP3Ibfc1phfkKMXCDKY6kkwPjwW
+	 dPxwDkGCnS2mBJOxSQwKsZpQhiDHnzK5LOi+jgQI=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542GtCqs109949
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 11:55:12 -0500
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 11:55:12 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 11:55:12 -0500
+Received: from [10.250.35.60] ([10.250.35.60])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542GtBu7060727;
+	Fri, 2 May 2025 11:55:11 -0500
+Message-ID: <b7fdd7bf-dad9-4b54-9091-f11c89e39c0e@ti.com>
+Date: Fri, 2 May 2025 11:55:11 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,95 +51,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v6 8/8] mfd: zl3073x: Register DPLL sub-device
- during init
-To: Lee Jones <lee@kernel.org>
-Cc: netdev@vger.kernel.org, Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Arkadiusz Kubalewski <arkadiusz.kubalewski@intel.com>,
- Jiri Pirko <jiri@resnulli.us>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Prathosh Satish <Prathosh.Satish@microchip.com>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Andy Shevchenko <andy@kernel.org>, Michal Schmidt <mschmidt@redhat.com>,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250430101126.83708-1-ivecera@redhat.com>
- <20250430101126.83708-9-ivecera@redhat.com>
- <20250501132201.GP1567507@google.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: ti: Add pinctrl entries for AM62D2
+ family of SoCs
+To: Paresh Bhagat <p-bhagat@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
+        <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>
+References: <20250502153915.734932-1-p-bhagat@ti.com>
+ <20250502153915.734932-3-p-bhagat@ti.com>
 Content-Language: en-US
-From: Ivan Vecera <ivecera@redhat.com>
-In-Reply-To: <20250501132201.GP1567507@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Andrew Davis <afd@ti.com>
+In-Reply-To: <20250502153915.734932-3-p-bhagat@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 01. 05. 25 3:22 odp., Lee Jones wrote:
-> On Wed, 30 Apr 2025, Ivan Vecera wrote:
+On 5/2/25 10:39 AM, Paresh Bhagat wrote:
+> Update k3-pinctrl file to include pin definitions for AM62D2 family of
+> SoCs.
 > 
->> Register DPLL sub-devices to expose the functionality provided
->> by ZL3073x chip family. Each sub-device represents one of
->> the available DPLL channels.
->>
->> Signed-off-by: Ivan Vecera <ivecera@redhat.com>
->> ---
->> v4->v6:
->> * no change
->> v3->v4:
->> * use static mfd cells
->> ---
->>   drivers/mfd/zl3073x-core.c | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/drivers/mfd/zl3073x-core.c b/drivers/mfd/zl3073x-core.c
->> index 050dc57c90c3..3e665cdf228f 100644
->> --- a/drivers/mfd/zl3073x-core.c
->> +++ b/drivers/mfd/zl3073x-core.c
->> @@ -7,6 +7,7 @@
->>   #include <linux/device.h>
->>   #include <linux/export.h>
->>   #include <linux/math64.h>
->> +#include <linux/mfd/core.h>
->>   #include <linux/mfd/zl3073x.h>
->>   #include <linux/module.h>
->>   #include <linux/netlink.h>
->> @@ -755,6 +756,14 @@ static void zl3073x_devlink_unregister(void *ptr)
->>   	devlink_unregister(ptr);
->>   }
->>   
->> +static const struct mfd_cell zl3073x_dpll_cells[] = {
->> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 0),
->> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 1),
->> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2),
->> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 3),
->> +	MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 4),
->> +};
+> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+> ---
+>   arch/arm64/boot/dts/ti/k3-pinctrl.h | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> What other devices / subsystems will be involved when this is finished?
+> diff --git a/arch/arm64/boot/dts/ti/k3-pinctrl.h b/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> index cac7cccc1112..0cf57179c974 100644
+> --- a/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> +++ b/arch/arm64/boot/dts/ti/k3-pinctrl.h
+> @@ -63,6 +63,9 @@
+>   #define AM62AX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+>   #define AM62AX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
+>   
+> +#define AM62DX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+> +#define AM62DX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
+> +
 
-Lee, btw. I noticed from another discussion that you mentioned that
-mfd_cell->id should not be used outside MFD.
+Your board DTS file is including k3-am62a.dtsi, so you are using the AM62A pinmux
+controller and should use its macros (AM62AX_*).
 
-My sub-drivers uses this to get DPLL channel number that should be used
-for the particular sub-device.
+Andrew
 
-E.g.
-1) MFD_CELL_BASIC("zl3073x-dpll", NULL, NULL, 0, 2);
-2) MFD_CELL_BASIC("zl3073x-phc", NULL, NULL, 0, 3);
-
-In these cases dpll_zl3073x sub-driver will use DPLL channel 2 for this
-DPLL sub-device and ptp_zl3073x sub-driver will use DPLL channel 3 for
-this PHC sub-device.
-
-platform_device->id cannot be used for this purpose in conjunction with
-PLATFORM_DEVID_AUTO as that ->id can be arbitrary.
-
-So if I cannot use mfd_cell->id what should I use for that case?
-Platform data per cell with e.g. the DPLL channel number?
-
-Thanks for advices...
-
-Ivan
-
+>   #define AM62PX_IOPAD(pa, val, muxmode)		(((pa) & 0x1fff)) ((val) | (muxmode))
+>   #define AM62PX_MCU_IOPAD(pa, val, muxmode)	(((pa) & 0x1fff)) ((val) | (muxmode))
+>   
