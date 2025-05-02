@@ -1,210 +1,190 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBB8224AEB
-	for <linux-kernel@vger.kernel.org>; Thu,  1 May 2025 23:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EFF0182;
+	Fri,  2 May 2025 00:03:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746143979; cv=none; b=p5FGpV+avGMahjXkonrQinpnPHGC7tp2PS2nEyJMon2JgtVZGpEPj6j5lq2QPQfJWrNZEb7iqUOuxjdd1883h+eBMc2JGfWb0MsKQuN2Rnf+Ck9/f9MVE5He6XfmSjacU5Bl+1yNaWmfOj1E02vmfxVmAj11P8SiecU8ukjbQeM=
+	t=1746144232; cv=none; b=fUt3HoVvcep0pPPlWi7IF4GACv9zQ+PqEtaSiwoP4UZunk11FMc2RTeHU/+joBbU1Rrkg4DoZp5Ggi4RlxhpdBRgq9xxMTngKwsf/cme76lZ2W0OKwEdpUcarTFeVhfKzI00sg9JmNvT/u7NCxgozqwGDZ+b7rmJmj5CMxm4teo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746143979; c=relaxed/simple;
-	bh=0dKoIngO2U3OwRkNoIpYh9lZw9hPMv1MG1wI2ft80KA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=edAkrhsMwMHJHvMAFYC1iGOUYNTnwX5sq2OKUTp100MdC6A+pLsnmH7H1CXBIrZBa1i2AUCMJD5Z/3168UCaEx6s0x/9t3Boje0hrZnCLohWynM1hM/zi1kXyou4ynTdE3A0fq9cDh8qhv36NqflJisE742pq/zVqcvGTuYQzek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Jgw66BxQ; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1746144232; c=relaxed/simple;
+	bh=/t8j0f0BABthS00kehdFg8AaafAN7EcCIlYHLPI/pSk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r8QkpH7QhHz35LmoduBdrVzC9ZZBt3y5bsv6c1FyDTY5Uc1D80EMNfkgdFnYGVdqbUxgcskD+RAn+++3Z/jpnZLC4fXfBIJR8pHLqRvommKx76peSGOstQP5jQsD0W4nfDXrwcZRZsyIgb58WQC1Tlw3YHUE/hLRSJkkTQW7yZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UMkuBXSt; arc=none smtp.client-ip=209.85.208.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jgw66BxQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746143976;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cBANZxuf9Ewcq9UHI1RdTA5tF6P0Odc/vpt5hBmkkMY=;
-	b=Jgw66BxQO/FGWTLR5ausNpI4SOr085EvZnh+qkDq0cg/rggXnl0q+tVeN4LOGj/pgFpuwQ
-	xGQ+pN3zSyx48IAcJ1jbldz8TMgb0J1VbwKf3L1KRPjJX7CkfYODhUqrlGbiVNJSMq28ug
-	xzDTHMSZgppOS82X/GCriioAFBPFzHc=
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
- [209.85.210.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-486-HCmUN8z5NIy8HtiUU8lkPQ-1; Thu, 01 May 2025 19:59:35 -0400
-X-MC-Unique: HCmUN8z5NIy8HtiUU8lkPQ-1
-X-Mimecast-MFC-AGG-ID: HCmUN8z5NIy8HtiUU8lkPQ_1746143974
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-736b22717f1so1411390b3a.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 16:59:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMkuBXSt"
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5f4d6d6aaabso2248782a12.2;
+        Thu, 01 May 2025 17:03:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746144229; x=1746749029; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BAdrSpHVasOUL/GpRMRQtUO4sMi+w7FhQalzllF+FBE=;
+        b=UMkuBXStFgEbcig2oayvAKznnU5Au5NZ6mfhVOFMp3ddhndRH1XcEocQ2TExiO2uQA
+         v5LVRzqI7PuzJ3G0/oHlYH8XjKhzbLZdrP+Rwfh0AnvSJbyTou4U3M6G/7V1BBeIty8m
+         Eek3OFxkIhS8WfFvv95lAnhv5BLzjO88EJupZOMSDatu5VSDpDOWSZDJPksMYpUppk00
+         MxwTxwe64+nlwq2pCroAPctvFGFmwOA1kj1sDqyJLAj01e5H8cEFMHjcGzyfXHlxFHl/
+         lLMtT241dfftWlnfiIzWdwflfs/VghGYfGtasQAjpbCY7GslO4X/h5EiHbxZEZCMb8gG
+         tH5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746143974; x=1746748774;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cBANZxuf9Ewcq9UHI1RdTA5tF6P0Odc/vpt5hBmkkMY=;
-        b=iKGYXBYR4oDdta0aVApk4/wIIZoqkfH7jFBvZL73Rk7y1VSFwvk2Zx5XDE48s9Tvas
-         7WqrT2lFrGlgIrcqiBm7gQRBiNe++ek3dWufdfVSg1mywx6wgC9BqZHzj/yiQp9N2yZt
-         gZFljx/5fLNCPsQLaUj0DSMW4T9CdFnTUgxFWlAByPHh4TxzdjbdyH38Mq8rgdOuG2OA
-         mvSihA1BmQM/DnlMf20PJn3gMrzz8Hsmy+mfTeXfMppEFPmiTRwr4XVQVOPqNWeJHkn9
-         C//DpZyQyhoZl4G3C7pbV19gRbdIfq9KKtBAMw3XQeDWX83bDquT67Aj7tQBVdST/CC2
-         tgDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVNXo5Q7SDAevdYfxDyQ7XELLXNdQb4iTjx8jpMCYWGJYJ3cXe6xTdskrxSuGT3rm1j9Hh+4b74Tq/lIRg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7DZ4TL63tgYeaT63OaL+Ybk0XpShkau2jef9GPiPtVFsXWRDf
-	e7HEbBxoeeVG9j8lNleXhuK9dq4WGVhpaC31nGsx6PGUxnoglJw3zIA81cWrjsFe//C9eK6z0tR
-	7WpiCMR28YGQ/hbd/0gVl9V5YlMQJ+FszbnJQNr18mCNwPc68oO/OVShixEdm/w==
-X-Gm-Gg: ASbGncvZyrVKZIM4HLqv5s+fa5ROuiVAxWiofRach8fMwuiSXSqermnwii59ZXvLOVk
-	FnSJlQrod7dW1ykSDpyLEiadF6WjF61L6MMEb1rWemoVTmoqEUjPF19a4Ji9JKAeyf3PxAjWF0T
-	XvfeyPnQJhnxoUBbrn8NA2WwocAGv6/VEh03TVV2nxqxwNdK6MBPwgLax1cLQXCTF+sR+uy0/OB
-	CT4EaqIX2D1MAincUfMH42DDqrMNdU+AOqZl9jagzHGUtFwzQSmFuCgTOFAlCl8zm8L/3J8Ym3G
-	L/E8BVTfFjNk
-X-Received: by 2002:a05:6a21:3a95:b0:1ee:a410:4aa5 with SMTP id adf61e73a8af0-20ccd77ed42mr1244504637.17.1746143973966;
-        Thu, 01 May 2025 16:59:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEMpgyoNeMNenmpM+HSomoVyyuNDLKcDkubN3MpNbx1DHID/acstvVT2f8CfagoMMSqLqN1+A==
-X-Received: by 2002:a05:6a21:3a95:b0:1ee:a410:4aa5 with SMTP id adf61e73a8af0-20ccd77ed42mr1244475637.17.1746143973557;
-        Thu, 01 May 2025 16:59:33 -0700 (PDT)
-Received: from [192.168.68.51] ([180.233.125.65])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a497sm279346b3a.33.2025.05.01.16.59.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 16:59:32 -0700 (PDT)
-Message-ID: <15b37ee8-2aeb-442e-b683-705e30f3b0ca@redhat.com>
-Date: Fri, 2 May 2025 09:59:24 +1000
+        d=1e100.net; s=20230601; t=1746144229; x=1746749029;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BAdrSpHVasOUL/GpRMRQtUO4sMi+w7FhQalzllF+FBE=;
+        b=Iwar4+sdwfToK877dVkmEH5lLd5BL6aPlDVyKLhZhJ6QE+9hdstgcXfvnhmHX9M3Db
+         g8CXPJEAN1f+fkTl9vC72Stjj/ppSh2zO8TGe8C2FcAv4dkR3dY+xAYD4nWv2tqbGxI4
+         02BGlzidS2QFvz0AprLLUPZKTCjGSi59X+bygtq7eFvFvx5a2xgkTFdOO2bc9uU+fxut
+         AulLDYLqoRxdzAIzhSEPPWUrMoivwLhHHQcVX55tScDOZL/jClOBxIG+RgPsMVtbCYmZ
+         AC0SD88Hq3FJ8/KAVC8yVsMjuDBn9Sa1S9z4xrv3t1NIafyYBnQABcozBNYpr9gNqkw/
+         71hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUEJvKnmyuIgBRzYwabkQQqNj2dtwKKVrOdNS1Z3dOdyIZpA0/fd03QGoA0B+0MYXFm2zBGrowbZrXkWlJEmgPU@vger.kernel.org, AJvYcCVOe4FpqCsW6xH67FmycxoloT5yFjqXPEwfsEHezrTaZR2sUX5kOEaV6RAjXYGD4ERuMyOiuugOP+iWgC5V@vger.kernel.org, AJvYcCWDUYUzdUUDxtJyOhg1EVUAzgQZ1FNlRkwSWPbgPfnAjYxqeAE79KFKmS8biDN9N/QA++w=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6y6TqhEOHbjbkpDwutAuwjKn06UTn6RKMfK8TLuxg9YFsCTEz
+	wM+d8W6jt90+ujVhrTcFaJuAmeCKq5hE5cpoY5n0iIJiizru1o2EdKIhleI9iWoUAxpHHhZjWHr
+	mi2MgZMj94/uESUd7NcyYaGtX6NU=
+X-Gm-Gg: ASbGnctJuhXrr6HEJyKhEsRd7guYd5ujZ6qL3FASn3nlZlgJPKOI+2gFC+zh+mww92p
+	JFxvwGdABz2w2wQ0UFoQHypk6EQjL7N9Nh222NNxa3Hc3moEaSWwyvkLdEdaLlcdYD8g/EIhgHw
+	uPYZtDky+lrGLEYKYfseRvxQhA9rmC5MXczcApYniO8dE=
+X-Google-Smtp-Source: AGHT+IEZmaXKlPg2SX6D1Gg4Ct+dglKTu1NfoiUsMrHJ97ikPtGkPZ2woUqGvcz2mbdKYLABZveqW+MvsUkMW/lyo9o=
+X-Received: by 2002:a05:6402:51d3:b0:5ec:fb3d:f51f with SMTP id
+ 4fb4d7f45d1cf-5fa78006329mr578324a12.10.1746144228590; Thu, 01 May 2025
+ 17:03:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 15/43] arm64: RME: Allow VMM to set RIPAS
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, Joey Gouly <joey.gouly@arm.com>,
- Alexandru Elisei <alexandru.elisei@arm.com>,
- Christoffer Dall <christoffer.dall@arm.com>, Fuad Tabba <tabba@google.com>,
- linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Shanker Donthineni <sdonthineni@nvidia.com>, Alper Gun
- <alpergun@google.com>, "Aneesh Kumar K . V" <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-16-steven.price@arm.com>
- <cc2c5834-c942-4454-903d-11b53f8f5451@redhat.com>
- <d2caa472-01da-4dc2-8c38-bf0cd4524bcd@arm.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <d2caa472-01da-4dc2-8c38-bf0cd4524bcd@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250501073603.1402960-1-luis.gerhorst@fau.de> <20250501073603.1402960-11-luis.gerhorst@fau.de>
+In-Reply-To: <20250501073603.1402960-11-luis.gerhorst@fau.de>
+From: Kumar Kartikeya Dwivedi <memxor@gmail.com>
+Date: Fri, 2 May 2025 02:03:12 +0200
+X-Gm-Features: ATxdqUHVm1hIS_v_8Z_z0qlxAyMnE3MrBINfcmLce0vU9ymsmOtLw6c47Fn4EGE
+Message-ID: <CAP01T76HZ+s5h+_REqRFkRjjoKwnZZn9YswpSVinGicah1pGJw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 10/11] bpf: Allow nospec-protected var-offset
+ stack access
+To: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Henriette Herzog <henriette.herzog@rub.de>, Saket Kumar Bhaskar <skb99@linux.ibm.com>, 
+	Cupertino Miranda <cupertino.miranda@oracle.com>, Jiayuan Chen <mrpre@163.com>, 
+	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org, 
+	Maximilian Ott <ott@cs.fau.de>, Milan Stephan <milan.stephan@fau.de>
+Content-Type: text/plain; charset="UTF-8"
 
-On 5/2/25 2:00 AM, Steven Price wrote:
-> On 30/04/2025 12:38, Gavin Shan wrote:
->> On 4/16/25 11:41 PM, Steven Price wrote:
->>> Each page within the protected region of the realm guest can be marked
->>> as either RAM or EMPTY. Allow the VMM to control this before the guest
->>> has started and provide the equivalent functions to change this (with
->>> the guest's approval) at runtime.
->>>
->>> When transitioning from RIPAS RAM (1) to RIPAS EMPTY (0) the memory is
->>> unmapped from the guest and undelegated allowing the memory to be reused
->>> by the host. When transitioning to RIPAS RAM the actual population of
->>> the leaf RTTs is done later on stage 2 fault, however it may be
->>> necessary to allocate additional RTTs to allow the RMM track the RIPAS
->>> for the requested range.
->>>
->>> When freeing a block mapping it is necessary to temporarily unfold the
->>> RTT which requires delegating an extra page to the RMM, this page can
->>> then be recovered once the contents of the block mapping have been
->>> freed.
->>>
->>> Signed-off-by: Steven Price <steven.price@arm.com>
->>> ---
->>> Changes from v7:
->>>    * Replace use of "only_shared" with the upstream "attr_filter" field
->>>      of struct kvm_gfn_range.
->>>    * Clean up the logic in alloc_delegated_granule() for when to call
->>>      kvm_account_pgtable_pages().
->>>    * Rename realm_destroy_protected_granule() to
->>>      realm_destroy_private_granule() to match the naming elsewhere. Also
->>>      fix the return codes in the function to be descriptive.
->>>    * Several other minor changes to names/return codes.
->>> Changes from v6:
->>>    * Split the code dealing with the guest triggering a RIPAS change into
->>>      a separate patch, so this patch is purely for the VMM setting up the
->>>      RIPAS before the guest first runs.
->>>    * Drop the useless flags argument from alloc_delegated_granule().
->>>    * Account RTTs allocated for a guest using kvm_account_pgtable_pages().
->>>    * Deal with the RMM granule size potentially being smaller than the
->>>      host's PAGE_SIZE. Although note alloc_delegated_granule() currently
->>>      still allocates an entire host page for every RMM granule (so wasting
->>>      memory when PAGE_SIZE>4k).
->>> Changes from v5:
->>>    * Adapt to rebasing.
->>>    * Introduce find_map_level()
->>>    * Rename some functions to be clearer.
->>>    * Drop the "spare page" functionality.
->>> Changes from v2:
->>>    * {alloc,free}_delegated_page() moved from previous patch to this one.
->>>    * alloc_delegated_page() now takes a gfp_t flags parameter.
->>>    * Fix the reference counting of guestmem pages to avoid leaking memory.
->>>    * Several misc code improvements and extra comments.
->>> ---
->>>    arch/arm64/include/asm/kvm_rme.h |   5 +
->>>    arch/arm64/kvm/mmu.c             |   8 +-
->>>    arch/arm64/kvm/rme.c             | 384 +++++++++++++++++++++++++++++++
->>>    3 files changed, 394 insertions(+), 3 deletions(-)
->>>
+On Thu, 1 May 2025 at 10:17, Luis Gerhorst <luis.gerhorst@fau.de> wrote:
+>
+> Insert a nospec before the access to prevent it from ever using an index
+> that is subject to speculative scalar-confusion.
+>
+> The access itself can either happen directly in the BPF program (reads
+> only, check_stack_read_var_off()) or in a helper (read/write,
+> check_helper_mem_access()).
+>
+> This relies on the fact that the speculative scalar confusion that leads
+> to the variable-stack access going OOBs must stem from a prior
+> speculative store or branch bypass. Adding a nospec before the
+> variable-stack access will force all previously bypassed stores/branches
+> to complete and cause the stack access to only ever go to the stack slot
+> that is accessed architecturally.
+>
+> Alternatively, the variable-offset stack access might be a write that
+> can itself be subject to speculative store bypass (this can happen in
+> theory even if this code adds a nospec /before/ the variable-offset
+> write). Only indirect writes by helpers might be affected here (e.g.,
+> those taking ARG_PTR_TO_MAP_VALUE). (Because check_stack_write_var_off()
+> does not use check_stack_range_initialized(), in-program variable-offset
+> writes are not affected.) If the in-helper write can be subject to
+> Spectre v4 and the helper writes/overwrites pointers on the BPF stack,
+> they are already a problem for fixed-offset stack accesses and should be
+> subject to Spectre v4 sanitization.
+>
+> Signed-off-by: Luis Gerhorst <luis.gerhorst@fau.de>
+> Acked-by: Henriette Herzog <henriette.herzog@rub.de>
+> Cc: Maximilian Ott <ott@cs.fau.de>
+> Cc: Milan Stephan <milan.stephan@fau.de>
+> ---
+>  kernel/bpf/verifier.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+>
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index db26b477dd45..1fbafea3ed69 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -7894,6 +7894,11 @@ static int check_atomic(struct bpf_verifier_env *env, struct bpf_insn *insn)
+>         }
+>  }
+>
+> +static struct bpf_insn_aux_data *cur_aux(const struct bpf_verifier_env *env)
+> +{
+> +       return &env->insn_aux_data[env->insn_idx];
+> +}
+> +
+>  /* When register 'regno' is used to read the stack (either directly or through
+>   * a helper function) make sure that it's within stack boundary and, depending
+>   * on the access type and privileges, that all elements of the stack are
+> @@ -7933,18 +7938,18 @@ static int check_stack_range_initialized(
+>         if (tnum_is_const(reg->var_off)) {
+>                 min_off = max_off = reg->var_off.value + off;
+>         } else {
+> -               /* Variable offset is prohibited for unprivileged mode for
+> +               /* Variable offset requires a nospec for unprivileged mode for
+>                  * simplicity since it requires corresponding support in
+>                  * Spectre masking for stack ALU.
+>                  * See also retrieve_ptr_limit().
+>                  */
+>                 if (!env->bypass_spec_v1) {
+> -                       char tn_buf[48];
+> -
+> -                       tnum_strn(tn_buf, sizeof(tn_buf), reg->var_off);
+> -                       verbose(env, "R%d variable offset stack access prohibited for !root, var_off=%s\n",
+> -                               regno, tn_buf);
+> -                       return -EACCES;
+> +                       /* Allow the access, but prevent it from using a
+> +                        * speculative offset using a nospec before the
+> +                        * dereference op.
+> +                        */
+> +                       cur_aux(env)->nospec = true;
+> +                       WARN_ON_ONCE(cur_aux(env)->alu_state);
+>                 }
+>                 /* Only initialized buffer on stack is allowed to be accessed
+>                  * with variable offset. With uninitialized buffer it's hard to
+> @@ -11172,11 +11177,6 @@ static int check_get_func_ip(struct bpf_verifier_env *env)
+>         return -ENOTSUPP;
+>  }
 
-.../...
+Hmm, while reading related code, I noticed that sanitize_check_bounds
+returns 0 in case the type is not map_value or stack.
+It seems like it should be returning an error, cannot check right now
+but I'm pretty sure these are not the two pointer types unprivileged
+programs can access?
+So smells like a bug?
 
->>> +static int kvm_init_ipa_range_realm(struct kvm *kvm,
->>> +                    struct arm_rme_init_ripas *args)
->>> +{
->>> +    gpa_t addr, end;
->>> +    struct realm *realm = &kvm->arch.realm;
->>> +
->>> +    addr = args->base;
->>> +    end = addr + args->size;
->>> +
->>> +    if (end < addr)
->>> +        return -EINVAL;
->>
->> The check needs to cover 'end <= addr'. RMI_ERROR_INPUT is returned from
->> RMM::smc_rtt_init_ripas()
->> if 'end' is equal to 'addr', but we're returning 0, inconsistent to that.
-> 
-> I agree we're different to smc_rtt_init_ripas(), but I don't really see
-> why we should prevent args->size==0. Calling the low level SMC in that
-> case would clearly be wrong (the kernel should be validating and that
-> would show a lack of validation), but we handle that with the while loop
-> in realm_init_ipa_state().
-> 
-> Do you think it's important to define this uAPI to disallow size==0?
-> 
-
-No, it's not a big deal since it's just a nitpick. The current implementation
-isn't wrong because 0 will be returned when size is 0, meaning it succeeds
-but no work to do there. Please leave the code as of being :)
-
->>      if (end <= addr)
->>          return -EINVAL;
->>
->>> +
->>> +    if (kvm_realm_state(kvm) != REALM_STATE_NEW)
->>> +        return -EPERM;
->>
->> To keep the consistency, kvm_realm_is_created() can be used here.
->>
->>      if (kvm_realm_is_created(kvm))
->>          return -EPERM;
-> 
-> This isn't the same - kvm_realm_is_create() is checking for
-> REALM_STATE_NONE, but we want to check for REALM_STATE_NEW.
-> 
-
-Hmm, sorry for the noise. The current code is good enough then :)
-
-Thanks,
-Gavin
-
+>
+> -static struct bpf_insn_aux_data *cur_aux(const struct bpf_verifier_env *env)
+> -{
+> -       return &env->insn_aux_data[env->insn_idx];
+> -}
+> -
+>  static bool loop_flag_is_zero(struct bpf_verifier_env *env)
+>  {
+>         struct bpf_reg_state *regs = cur_regs(env);
+> --
+> 2.49.0
+>
+>
