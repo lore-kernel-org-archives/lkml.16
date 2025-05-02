@@ -1,163 +1,269 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6DBBE4A;
-	Fri,  2 May 2025 00:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9034F2DC782
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 00:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746144499; cv=none; b=fIeZIsIaVEkdjcdFXT4HDOfFlm3FVCyQoF0So16rcaVFrPHND1dh2dqp2yFWok7RONWoO4qzVTi5EyK4Rr10z6/4ovEHUTRqabGbB0KJprBArLu1539M5U0hVN+CKQbpnLbX1i3JwPwoOXKm0Y5dryXV9g4jB1pvlnnZstLN/y8=
+	t=1746144935; cv=none; b=AergNPGv7FCCaC6S2KTqlpzmLBFvGsgr3OkVrLFapZZ2KKOBfu7oDZpa/2ziDjUrSD4T01oxlZAcG6Omy2K2ubCKoktET9Z3sjcxjPPhIcDDAklvZzowQgskel51O3u7rk4a6loitc+DOx3IW2OIdkpBiAGboQu9yazEdZlLaok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746144499; c=relaxed/simple;
-	bh=G4Yelyaq4K575lkOWnn+J/9krWtW+nzfnMldXMOHTYY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+6p5fudzKcTFBcsMre2Ef+IsngkcqTpodHm/18iZ8NkZBf2CpNxFo/H/7PE+/3XZlneiXl+tZvwy+SEG/uSAHZL7dN5UKYOfv4gHKjNKGvThWlTyGARurGjY//cCkuaJHdULybbQqOOPT2uB//fTyeoToIHYwVXACRJIl9aezc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T7NesTyq; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746144935; c=relaxed/simple;
+	bh=Hu9uey6Pa0D+z+erSEtVapskvsnht62al90pnI1d3to=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SDMrbct6jOH81KmrJymSC9c5KMHxfSwQWdFTxJYiOpB23yJvrLRhyh8/NWyomS0sdOuXhXZ1tJH3H+FQJglabclHWpqdpXpDtjII0mLl0tg/pFihOK0n6dAh5h+LPqtcQk60TemyUZQojPc//DGiN+iw7Q2IWZr/kuvPmMLDE+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KQu2pz2i; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7NesTyq"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-39bf44be22fso1052777f8f.0;
-        Thu, 01 May 2025 17:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746144495; x=1746749295; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Qmmz7QPWO9AKqsoz/lze3ltHGKhYQq6ZhSbT7GiQVWw=;
-        b=T7NesTyqlbMR3SKGU21UmmmjBsU794Hz5iyC1VcZtsegKszLmIlqn+wBJbd6COyDza
-         XTY7T1n9SWUtTQ1+R6gkOHlnIjK7SxAoQg7r0HQLIHUH8jxxlzzhvGkWk5SWQ04MubdR
-         Id+3PgypT3Fg7er+P01mRe+zGBjJgduaQKgk1UzeHzmL1TYuODxoGNNdgdBwTNFt6iGj
-         u9b086qu4iri10ElI0lXw43YDNuUE+KxLlmAeiXCI+aneZ+Y3EeYETGazBiRhr7obWqe
-         T0UvidLn4hV4E/PEpNX/vsm6QqnxmuZIpTHUQJb4/tvJlyJtTn4x/lj98AUXmQxsjvrs
-         mjQA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KQu2pz2i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746144932;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nbSujQdzOlpgDul9aKhNv07DzuPDK3kC7rOVdyX4Q9k=;
+	b=KQu2pz2inDUpDlE71OJMy5HhNQMF+HukeJ1uTEHHeHk3S3AmuAdSePiSmgS6aibUo3ldPz
+	e0Mhfp2gqtShdUzhhcPeVcjI0TjP4/5geqVxpFTxqB5ZlCAcX/5lGoJdUvY/5MvPo84r+/
+	ErNrocpxvMO0tFDpEyoa+ZQb6X9SaOA=
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com
+ [209.85.210.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-689-PfpIzpHeMt298UyOZM_ytQ-1; Thu, 01 May 2025 20:15:31 -0400
+X-MC-Unique: PfpIzpHeMt298UyOZM_ytQ-1
+X-Mimecast-MFC-AGG-ID: PfpIzpHeMt298UyOZM_ytQ_1746144930
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736cd27d51fso1163699b3a.2
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 17:15:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746144495; x=1746749295;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qmmz7QPWO9AKqsoz/lze3ltHGKhYQq6ZhSbT7GiQVWw=;
-        b=t2yGZw4Qr4PM7Kv2hcuzaV9Cd9Ji/nDVgT2nUjCrgiuveEA2xM3eGP1Lok5UZpNMRm
-         vEg6wfi2tbr5Hqvowt7/6WhJo5pdhtmqW2dfgFC3p/Q/KqgXcXJTMbzoT7fEav3Y904x
-         5l9ZIYERKufQ9PA9xATE8fnjWFq4DSpFj8Vo4uSpTL/o6zeUwRDjMW3m/pQPofR1xnE/
-         3vMH1g2OO1uYkNNgozNsg32kv85efnrdhG0da5+nc71ZFQoPJlSh+jIrrxodynrO2ZvT
-         q8RlpD44w8pgl1xMVAb/PcWhNCdZT58a35PdiYfx9s1+/lS0oPRRpABJMEJmUSWBQExY
-         sNpw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrah/NYOiQEC2cKF1m0iqYmBMeEy1edJlB8o/4gHJ53LloOH2ywLYWw8PSOuYPoPDP+1KRmdiQiENVCo2RDQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQuyS/R9Rop9i4rXToCZdmvoNPhY+DHv41o09GPpKjAPnriBE1
-	YR/ry9wE1qQDoO0ov89+sboJvJpEnD++y/JmSVPzrhIh7t41FlF8
-X-Gm-Gg: ASbGnctCHNb6Bt5GJUn8x2xKTcWjL6UcreLc3YCjoifi5OluiNJBfT3T2hDE/rPBDlH
-	w9d87Z28xus9CxsuJLskdaBXNx67N15U23/d18flG9r93Quqt0o0Kw/jm3WGRvVnmooFBmFpGQz
-	hC5Z2d6XOqytmNqwxP713hIF9Loc89LYsj+EuYgVJvd/RGExmF1y0QGT7lLa6aHIwUPjAe6dAHO
-	oCUuyNqYphmjnZQrHDtUAmTPex/IcfO6jEthedwVWFuO4rLDejEzuooL0xLYUCpzTwMPFi7M0Xp
-	qS8QC3nOWO4MhlSOFkK3ECaKvVvUMq/eG9oyHeOEHQdD87822HFcww==
-X-Google-Smtp-Source: AGHT+IEkItABsVh/c7tEgCdZWiLWMAao79UBNmfnMlL6qp3POnO3tE6eggDEvNwtopzWCoRYIMDV2g==
-X-Received: by 2002:a05:6000:18ac:b0:391:3f64:ed00 with SMTP id ffacd0b85a97d-3a099ade0e2mr341854f8f.26.1746144495239;
-        Thu, 01 May 2025 17:08:15 -0700 (PDT)
-Received: from ?IPV6:2001:871:22a:99c5::1ad1? ([2001:871:22a:99c5::1ad1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b1702dsm536931f8f.88.2025.05.01.17.08.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 17:08:14 -0700 (PDT)
-Message-ID: <d5e8e635-08c4-4d3d-99a8-27f3b3a2153b@gmail.com>
-Date: Fri, 2 May 2025 02:08:13 +0200
+        d=1e100.net; s=20230601; t=1746144929; x=1746749729;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nbSujQdzOlpgDul9aKhNv07DzuPDK3kC7rOVdyX4Q9k=;
+        b=JXoHfwNoJ/MiitROkHwih/7YXE1Vxgd6bfPpFYGpSKHlzmPvsVegbvGqKY7abxpZt/
+         /AjSNYBNFeT6YYybEX+SsF8wG5GZdiBgzmGvFg9KjJyF7eefPDpqD1warlZGT9ukVzkR
+         5h9UzIxrSnlH5/YyR4Mnzik5QMOz6bpFhYZ0FoocpJgMc7qRiixnJeZk9LbUAE1Pp2PI
+         eC9atS2pv1jnO1gPaoHbooFIxIIKzpsw8rLITb83DgZ3Sj+pdhSKH43nfSePj/gU9zMD
+         4yA3iaTJ8ugjnhyIjUikSjumgTuGuEF8NXWN1nSkcwTlxLAgFK7f91MCx4zm/9C+DUP7
+         Fpfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVmDILNxOAm4hgVdDTLdDgJ77Wde/PsB508Ic874Gpr9K3Q+UMMcqzKb0mPKco1ZbTFNG//kp/c/6Wa4NQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7wUlFErBweN1a0qmwGc9iQl9fuIU2Yt3BWVsd/IQG3CUJEiMM
+	w1khGR6avw+XitOItS6cWUPVp+ObWyB8VQidi6TfYbpn1vfpwzWbapy3EwHN7egcJDL9PuuR+v8
+	tUqj1GyuAn3hTvvYMVZQqMWTFSsTQFNgYpT7l9FZJLc45i/LlvzQszCe48dMovg==
+X-Gm-Gg: ASbGnct/iZIxqEWGXaS5eSlcPbNUDhtyyNRrHD+AQyrZPOQsdrIwSGCF6Wu7cGkCnUG
+	Zjn6GXIgK9Z2dnaWbudR4j5PlpErlj4+4qpn3dUTGyF3tG/BwZCDA7XPR33SnlcwwIRwwQWDxvb
+	5oE9To1Dpqw7iNFbiBk/l3EJQpmiSnpJw0K/RtqGZtqHiXV8DX/hvf/kqqOtkXpcQ1VQO9J+44P
+	upadKhr7FikBf+IjGZRs1WvAstlYOo9cy6CcblR9vXWMjbCitmuBmCG5MiKjBsOrT8eEQPif4MU
+	1NY=
+X-Received: by 2002:a05:6a00:4482:b0:736:32d2:aa82 with SMTP id d2e1a72fcca58-74058b5afa8mr1174956b3a.23.1746144928241;
+        Thu, 01 May 2025 17:15:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGy4Y5HHdUqHKiUz0kaMhKXY0SFHVwDyaNMwEA6Af6JnFYU50R/5oUIym3PoOTyiAHn9eWf0g==
+X-Received: by 2002:a05:6a00:4482:b0:736:32d2:aa82 with SMTP id d2e1a72fcca58-74058b5afa8mr1174908b3a.23.1746144927790;
+        Thu, 01 May 2025 17:15:27 -0700 (PDT)
+Received: from localhost ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7405902154dsm294793b3a.90.2025.05.01.17.15.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 May 2025 17:15:27 -0700 (PDT)
+Date: Fri, 2 May 2025 08:13:03 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Arnaud Lefebvre <arnaud.lefebvre@clever-cloud.com>
+Cc: kexec@lists.infradead.org, Ondrej Kozina <okozina@redhat.com>, 
+	Milan Broz <gmazyland@gmail.com>, Thomas Staudt <tstaudt@de.ibm.com>, 
+	Daniel P =?utf-8?B?LiBCZXJyYW5nw6k=?= <berrange@redhat.com>, Kairui Song <ryncsn@gmail.com>, 
+	Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, 
+	linux-kernel@vger.kernel.org, x86@kernel.org, Dave Hansen <dave.hansen@intel.com>, 
+	Vitaly Kuznetsov <vkuznets@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, 
+	Jonathan Corbet <corbet@lwn.net>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v8 6/7] x86/crash: pass dm crypt keys to kdump kernel
+Message-ID: <q3673nazd6gsblq7ifcdwr2qcn7d6khxfk4cxpznmbhdnyyqum@o6i7udo5e7uu>
+References: <20250207080818.129165-1-coxu@redhat.com>
+ <20250207080818.129165-7-coxu@redhat.com>
+ <fa6uyhukjfjgteptdpud6wd6w7yin466p3tp6rdxwbsuqgkfdc@jwgf5ztb2ni7>
+ <rwetpbjimryr7g7xmdmaeuwkdasyqdpejsy4sdee3kzlssm32s@5xnznwqa3ivm>
+ <c2mqpzhtyrd5qzove5pa44ob2iiwdcrtnj655sozy2a4pprln7@mql5bjuwjbxs>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
-To: Benno Lossin <lossin@kernel.org>, Sky <sky@sky9.dev>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
- =?UTF-8?Q?Gerald_Wisb=C3=B6ck?= <gerald.wisboeck@feather.ink>,
- Ralf Jung <post@ralfj.de>
-Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
- <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com>
- <D9JVKYI3LL5L.2SFOJMSK91HLA@kernel.org>
- <d433986a-fdad-4859-b8bf-080a18158189@gmail.com>
- <D9L1TI5NVKJU.361JFPWMLDWN4@kernel.org>
- <7bc9f839-a69a-4819-ba6d-36eadd8776b3@gmail.com>
- <D9L6XO6T7JEU.CK47C5BOQ0NG@kernel.org>
-Content-Language: en-US, de-DE
-From: Christian Schrefl <chrisi.schrefl@gmail.com>
-In-Reply-To: <D9L6XO6T7JEU.CK47C5BOQ0NG@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <c2mqpzhtyrd5qzove5pa44ob2iiwdcrtnj655sozy2a4pprln7@mql5bjuwjbxs>
 
-[cc Ralf]
+On Wed, Apr 30, 2025 at 04:48:25PM +0200, Arnaud Lefebvre wrote:
+>On Tue, Apr 29, 2025 at 05:40:21PM +0800, Coiby Xu wrote:
+>>On Wed, Apr 23, 2025 at 10:59:06PM +0200, Arnaud Lefebvre wrote:
+>>>>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+>>>>index 68530fad05f7..5604a5109858 100644
+>>>>--- a/arch/x86/kernel/kexec-bzimage64.c
+>>>>+++ b/arch/x86/kernel/kexec-bzimage64.c
+>>>>@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
+>>>>	if (image->type == KEXEC_TYPE_CRASH) {
+>>>>		len = sprintf(cmdline_ptr,
+>>>>			"elfcorehdr=0x%lx ", image->elf_load_addr);
+>>>>+
+>>>>+		if (image->dm_crypt_keys_addr != 0)
+>>>>+			len += sprintf(cmdline_ptr + len,
+>>>>+					"dmcryptkeys=0x%lx ", image->dm_crypt_keys_addr);
+>>
+>>sprintf will return the length of dmcryptkey=xxx which will be added to
+>>len.
+>>
+>>>>	}
+>>>>	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
+>>>>	cmdline_len += len;
+>>
+>>Then cmdline_len will included the new len.
+>
+>Yes, the cmdline_len is correct. No issue there.
 
-On 02.05.25 12:51 AM, Benno Lossin wrote:
-> On Thu May 1, 2025 at 9:11 PM CEST, Christian Schrefl wrote:
->> On 01.05.25 8:51 PM, Benno Lossin wrote:
->>> On Wed Apr 30, 2025 at 7:30 PM CEST, Christian Schrefl wrote:
->>>> On 30.04.25 11:45 AM, Benno Lossin wrote:
->>>>> On Wed Apr 30, 2025 at 10:36 AM CEST, Christian Schrefl wrote:
->>>>>> +/// This implementation works because of the "`!Unpin` hack" in rustc, which allows (some kinds of)
->>>>>> +/// mutual aliasing of `!Unpin` types. This hack might be removed at some point, after which only
->>>>>> +/// the `core::pin::UnsafePinned` type will allow this behavior. In order to simplify the migration
->>>>>> +/// to future rust versions only this polyfill of this type should be used when this behavior is
->>>>>> +/// required.
->>>>>> +///
->>>>>> +/// In order to disable niche optimizations this implementation uses [`UnsafeCell`] internally,
->>>>>> +/// the upstream version however will not. So the fact that [`UnsafePinned`] contains an
->>>>>> +/// [`UnsafeCell`] must not be relied on (Other than the niche blocking).
->>>>>
->>>>> I would make this last paragraph a normal comment, I don't think we
->>>>> should expose it in the docs.
->>>>
->>>> I added this as docs since I wanted it to be a bit more visible,
->>>> but I can replace the comment text (about `UnsafeCell`) with this paragraph
->>>> and drop it from the docs if you want.
+Thanks for confirming it!
+
+>
+>>
 >>>
->>> I think we shouldn't talk about these implementation details in the
->>> docs.
+>>>You are adding another kernel parameter but I believe without taking its
+>>>length into account. See the MAX_ELFCOREHDR_STR_LEN constant which is added to the
+>>>params_cmdline_sz variable for the elfcorehdr= parameter.
 >>
->> Alright, what do you think of:
+>>Thanks for raising the concern! I believe this issue has already been
+>>took care of. Please check the above two inline comments:)
 >>
->> // As opposed to the upstream Rust type this contains a `PhantomPinned`` and `UnsafeCell<T>`
-> 
-> There are two '`' after PhantomPinned.
-> 
->> // - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<T>`
-> 
-> s/ a / an /
-> 
-> I find the phrasing 'avoid needing <negative impl>' a bit weird, I'd
-> just say "`PhantomPinned` to ensure the struct always is `!Unpin` and
-> thus enables the `!Unpin` hack".
+>
+>I'm sorry but I don't think it is. If you look at my comments below:
+>
+>>
+>>>
+>>>This will (at least during my tests) truncate the cmdline given to the crash kernel because
+>>>the next section (efi_map_offset) will have an offset starting inside the cmdline section
+>>>and it might overwrite the end of it:
+>>>
+>>>kexec-bzimage64.c:480:
+>>>params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>>>			MAX_ELFCOREHDR_STR_LEN; <<< Should have + 31 here for "dmcryptkeys=0x<ptr> "
+>>>params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+>>>kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+>>>			sizeof(struct setup_data) +
+>>>			sizeof(struct efi_setup_data) +
+>>>			sizeof(struct setup_data) +
+>>>			RNG_SEED_LENGTH;
+>>>
+>>>And I believe the buffer might be too small.
+>>>
+>>>Also, there is another check a few lines above that needs to take the size into account:
+>>>
+>>>/*
+>>>* In case of crash dump, we will append elfcorehdr=<addr> to
+>>>* command line. Make sure it does not overflow
+>>>*/
+>>>if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+>>>	pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+>>>	return ERR_PTR(-EINVAL);
+>>>}
+>>>
+>>
+>
+>To try to explain a bit more, we pass a lot of arguments to the crash kernel so
+>the initrd (dracut) can mount the encrypted disk. When I run kexec using
+>the following:
+>
+>/usr/host/bin/kexec --debug --load-panic /linux-hv '--append=maxcpus=1
+>reset_devices rd.info rd.cc.kdump root=UUID=d039277c-2ee
+>3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10 rd.shell=1
+>rd.cc.kdump.encrypted
+>rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+>rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447' --initrd
+>/crash-initrd
+>
+>kexec debug print those logs:
+>
+><snip>
+>[   53.642483] kexec-bzImage64: Loaded purgatory at 0xb6ffb000
+>[   53.642828] kexec-bzImage64: Loaded boot_param, command line and misc at
+>0xb6ff9000 bufsz=0x12f0 memsz=0x2000
+>[   53.643366] kexec-bzImage64: Loaded 64bit kernel at 0xb1000000
+>bufsz=0x16a5000 memsz=0x550d000
+>[   53.643918] kexec-bzImage64: Loaded initrd at 0xaeb90000 bufsz=0x246f2a1
+>memsz=0x246f2a1
+>[   53.644363] kexec-bzImage64: Final command line is: elfcorehdr=0x77000000
+>dmcryptkeys=0xa81fc000 maxcpus=1 reset_devices rd.info rd.cc.kdump
+>root=UUID=d039277c-2ee3-466a-85eb-db9524398135  console=ttyS0 rd.timeout=10
+>rd.shell=1 rd.cc.kdump.encrypted
+>rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+>rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
+><snip>
+>
+>Here, we see the full command line, as expected. But when I trigger a panic
+>using `echo c > /proc/sysrq-trigger`, the first two lines of the crash kernel
+>loading are:
+>
+>[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
+>(GNU Binutils) 2.44) #4 SMP Wed Apr 30 16:11:39 CEST 2025
+>[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0x9ec14000
+>maxcpus=1 reset_devices rd.info rd.cc.kdump
+>root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
+>rd.shell=1 rd.cc.kdump.encrypted
+>rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+>rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c26090
+>
+>You can see some of it is truncated at the end. It's missing `7a2447`. This is
+>because I guess it gets overridden.
+>
+>My comment above explains where and why it might happen. If I add the size of
+>the dmcryptkeys string length to the params_cmdline_sz variable, we should
+>allocate enough space to have it all. With the patch below, it works fine and I
+>get the full cmdline when my crash kernel boots:
+>
+>[    0.000000] Linux version 6.12.23+ (arnaud@exherbo) (gcc (GCC) 12.3.0, GNU ld
+>(GNU Binutils) 2.44) #3 SMP Thu Apr 24 16:42:18 CEST 2025
+>[    0.000000] Command line: elfcorehdr=0x77000000 dmcryptkeys=0xa81fc000
+>maxcpus=1 reset_devices rd.info rd.cc.kdump
+>root=UUID=d039277c-2ee3-466a-85eb-db9524398135 console=ttyS0 rd.timeout=10
+>rd.shell=1 rd.cc.kdump.encrypted
+>rd.cc.kdump.device=UUID=908234b1-c1f3-4150-bfdf-c260907a2447
+>rd.cc.kdump.keyring=cryptsetup:908234b1-c1f3-4150-bfdf-c260907a2447
+>
+>
+>diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+>index 5604a5109858..06fc1f412af4 100644
+>--- a/arch/x86/kernel/kexec-bzimage64.c
+>+++ b/arch/x86/kernel/kexec-bzimage64.c
+>@@ -27,6 +27,7 @@
+> #include <asm/kexec-bzimage64.h>
+> #define MAX_ELFCOREHDR_STR_LEN	30	/* elfcorehdr=0x<64bit-value> */
+>+#define MAX_DMCRYPTKEYS_STR_LEN 31
+> /*
+>  * Defines lowest physical address for various segments. Not sure where
+>@@ -434,7 +435,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+> 	 * In case of crash dump, we will append elfcorehdr=<addr> to
+> 	 * command line. Make sure it does not overflow
+> 	 */
+>-	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN > header->cmdline_size) {
+>+	if (cmdline_len + MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN > header->cmdline_size) {
+> 		pr_err("Appending elfcorehdr=<addr> to command line exceeds maximum allowed length\n");
+> 		return ERR_PTR(-EINVAL);
+> 	}
+>@@ -478,7 +479,7 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+> 	 */
+> 	efi_map_sz = efi_get_runtime_map_size();
+> 	params_cmdline_sz = sizeof(struct boot_params) + cmdline_len +
+>-				MAX_ELFCOREHDR_STR_LEN;
+>+				MAX_ELFCOREHDR_STR_LEN + MAX_DMCRYPTKEYS_STR_LEN;
+> 	params_cmdline_sz = ALIGN(params_cmdline_sz, 16);
+> 	kbuf.bufsz = params_cmdline_sz + ALIGN(efi_map_sz, 16) +
+> 				sizeof(struct setup_data) +
+>
+>
+>Let me know if it makes more sense!
 
-Thanks I'll use that.
+Yes, thanks for providing a crystal clear explanation and also a fix! I
+appreciate your elaboration to show me what the problem is! I'll fix it
+in v9.
 
-> 
-> If you have a link to somewhere that explains that hack, then I'd also
-> put it there. I forgot if it's written down somewhere.
-
-I haven't found anything that describes the hack in detail.
-From what I understand its a combination of disabling `noalias`
-[0] (this PR enables it for `Unpin` types) and disabling 
-`dereferencable` [1] on `&mut !Unpin` types.
-Related rust issue about this [2].
-
-Maybe Alice, Ralf or someone else form the rust side can provide
-a better reference?
-
-[0]: https://github.com/rust-lang/rust/pull/82834
-[1]: https://github.com/rust-lang/rust/pull/106180
-[2]: https://github.com/rust-lang/rust/issues/63818
-
-Cheers
-Christian
-
->> //   Required to use the `!Unpin hack`.
->> // - In order to disable niche optimizations this implementation uses `UnsafeCell` internally,
->> //   the upstream version however currently does not. This will most likely change in the future
->> //   but for now we don't expose this in the documentation, since adding the guarantee is simpler
->> //   than removing it. Meaning that for now the fact that `UnsafePinned` contains an `UnsafeCell`
->> //   must not be relied on (Other than the niche blocking).
+-- 
+Best regards,
+Coiby
 
