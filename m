@@ -1,93 +1,93 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12493211A05
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E426920FAB4
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222682; cv=none; b=kZATh/SG7SZI2/SJOKJA+0MK1AFdzv4Jlqq0ZzecdUGjbQsndT1I3L3mSHDKrzJrNElUU+uBJcSsT7QnGHYt4N6HtJMb2EHF5LDERm7tvnZVB6QmikWNIA496e+AwNgzEwtSR0g19pfUpIrbgRezAweuYPVzmAu9VcfE5hd09zY=
+	t=1746222691; cv=none; b=bGBdhAVSTASpmJZCBgR6VaDFuokdCqwRH/G2wxNFvxjpxKhbc4E6w4PFOAN7d+Jf2nWcLSLqsI397PlYUzqbTmLWgTjK5hf2EyUnHm6Sz9CzqCn5qO0eai2QoWKJFkPfXjm7Qr4lTXPXsyzeFZtg9wecuXgWzdL5cLwM/W3HQoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222682; c=relaxed/simple;
-	bh=JXSPMNU2F6PIX0FUsPuhRSrAfg0l7mo2VPCcc/ccc6g=;
+	s=arc-20240116; t=1746222691; c=relaxed/simple;
+	bh=2txtXmkPas782tuJZyId1VB56basPkhr7R2WNHcvWIg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=uDSow7+xW+lfFFMlrrkNkZprUjdAiywpaS4sxMlnE3E0WoSojnj8zvcQaMUpJKorp59Bq3J8yp2zvU2sEhNQyxBJo1kEII4iVLiAjQjHukrWcMA0LtrRIxTzSdt0zI5q9OlxGisCcm/mdRVT5AStt9DHItCJmlI6U91r7LcPY0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bsh0rRN2; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=HLHIHxGjO1UIJQccNfr6/Dg44kyjIrC+s/G6gmUVbvv+4ymHFw8DntGL0gke/fVn/O+eqEwu5QDDy8ZCccOpN7tppRdBIOdY5A4EYUbJgPve3O4duG4jn3Jtv/dLFneJu7GncBc2+SUcyh+7dj1X4jjEXu+pGOR7iNbVqikLLzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wD//zs9O; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bsh0rRN2"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-af534e796baso1304157a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:51:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wD//zs9O"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff58318acaso3787471a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746222680; x=1746827480; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746222689; x=1746827489; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NJvfYawPyN0V8zmHL1OuCkkneTy6JZ4iVJIh4vfswsI=;
-        b=bsh0rRN2G6PgXZhWV+cbjlm7RduYRGD/JOG0+hFzP9z1oGcIWAjwVImttSYFNJohtj
-         rhIw1HzHZWkZt3mzttKwzFUc3VLYUpiH6Zee2G5cbA7C+jzDe4UcjZSgdiN0uQJnJJij
-         kixvLUq4IJvD0EVhPl6KcluFeHj9ncaE1vpQcExnu6J/0glYVrl45bzJCGJPq+RjYhLR
-         7ufwd8fLTRcB3SuJQEnwmgqcey1grFZ/Ub2cRXr/C/ZlbkM1QUpncEUWb+A2XDMIMmy/
-         pNcdetmYZNxmePVqeL2TwCxXCiwE9uWL/bL+ynTANQziSw5452QXJX2JB96r2+N7A0L1
-         +eIA==
+        bh=xuMrCSQLCVm3rK1Z/M2Y8ljgy1BUHkh9BuXdAIH55U0=;
+        b=wD//zs9Od0fk/M8vUPqNfa7tymOClDvngp9LxY8jqYE7BzG7xnIe6qssmh/PWcjbdx
+         TT4qT1c9bccHGUlZIQD7Djqc3TWLziYRy3CFHUPSa8dVhjjIS3+1gdqcZ3LGxNxQH/qq
+         su+0FJnYU8en3hp8K6APDx2mS35GVSVveYMHUDc6swtzpEVXJVGMEklggbxspvbE0/52
+         twi7MrxS06f6czu1uNQRmPFuCGygKAEOEu8lcoQ2mu03t40xnfiB0l77jCX5/hn37b5X
+         RsL3uJdxIZX/Nyo3/GdVepZADoYqji+nPnkmVQkH1j3FpnIGf/0K4P1GwCgKULwhYFO6
+         yGJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746222680; x=1746827480;
+        d=1e100.net; s=20230601; t=1746222689; x=1746827489;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NJvfYawPyN0V8zmHL1OuCkkneTy6JZ4iVJIh4vfswsI=;
-        b=XFRcHy2HrS0JamUDFnRO4QJ0e3EpYPNAeT8jdBB59QwYM/NIxFRT1dqF8nc3t8m5Ck
-         E8cc0nv2qt3mlxxktr1xCbHI4NZglXh5gtviCidDzH9wI1LRar5blbq5eDUvo5kCD7qs
-         V4CWyHXL9EXj2BFIDxoFeWs7yD60nzyZIME69Y80ecJRbgE28G5iRpFBtrH0HbZ7M2WB
-         1pj0lRIhITroXlU9X5ReZAJ6kMwqL50mH7c32tTfPlEz5AaYv+PSxnXCJOZwiY6mXUJc
-         23LC3v1anFbZesoKyp1UIRpTjOhLCvhVywBiUh7P0lJieRiVaNpr/64RV+mJgedrnh/Z
-         m3rQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSfTEiscWMkB6H3F2Sq0wtsfHMyYCQPgP1BmoYiRRrTkJv75ZLgeAgkP6rhA+tKPVDu33uCskh4acbmYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+A9up/lPWt95p5SrWtFPxABrSK4ECIDF47FRCazL5kTbh2IK9
-	A48OPPqoVsAyh3Mm1u6vtv7T31OOZ6eogJZZ0Twc78g999o/O5zHp3q4dl/k46ATZHoc6Tf5AW2
-	dCA==
-X-Google-Smtp-Source: AGHT+IFfvB5BYcCkUy0HSKU1ftZqpv237388LVDliX9NyOGYbIIAII1ebAC4Dj75mncu2D7rWaPQcZunEDw=
-X-Received: from pjbpd12.prod.google.com ([2002:a17:90b:1dcc:b0:308:87dc:aa52])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:57e5:b0:2ee:f076:20f1
- with SMTP id 98e67ed59e1d1-30a4e395cf1mr8976249a91.0.1746222680316; Fri, 02
- May 2025 14:51:20 -0700 (PDT)
-Date: Fri,  2 May 2025 14:50:53 -0700
-In-Reply-To: <20250320013759.3965869-1-yosry.ahmed@linux.dev>
+        bh=xuMrCSQLCVm3rK1Z/M2Y8ljgy1BUHkh9BuXdAIH55U0=;
+        b=ExIjHpdxQaU/BVAr/3WtAw+bB+r7lJfJ+H2r2B7eSBwfbvgOwNH2NMRmF3PME9QdfF
+         8hmZRqERX01YyG5SJAOENP4goI49BOwbVsVoG8D1ML1uRa47Xivwhqzv0woEXJyJPOSx
+         Lz6qBO69fcH8aP3xAF9ILHu69d9ev1swGw9/I+cC+9wR6UXjB4nIoOcYRfVgc1tJqhqp
+         +O97ZlyFSjQEYCj4zd6XJiAKFhwsjXSIQS3Ccwu/Fr6N/r1jtdJVyAkIZMWNb2zoJgvs
+         n/ZtDXXhKlgLYuhDCcq1EhV5LtKHy5ckIkIRnCXTFccQGdQjOp6Ilx7OOJ1MAoScTP6o
+         7yUQ==
+X-Gm-Message-State: AOJu0YwBqiAxG4gpgMQdOKHP84pn9VgOpeVmwnsepYZV+j8XvrgcTDmy
+	UId1e8G8UoZckJ/uFTxmuRN6iSbf7v+/E09B/nOVHyH3Fh6SVSvwssAVv8Kbjx0lt6lcUmsNWSt
+	nGA==
+X-Google-Smtp-Source: AGHT+IHot8nmmRowbrr226toKHfu1fQGbiC4az4KlzIrJYJnyZxG2Id1cugNtpGKpX82rmlgpPY7cq4QJok=
+X-Received: from pjzz16.prod.google.com ([2002:a17:90b:58f0:b0:2fc:13d6:b4cb])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5404:b0:30a:4c44:cc05
+ with SMTP id 98e67ed59e1d1-30a4e5ab0acmr4754053a91.10.1746222689088; Fri, 02
+ May 2025 14:51:29 -0700 (PDT)
+Date: Fri,  2 May 2025 14:50:55 -0700
+In-Reply-To: <20250318013038.5628-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250320013759.3965869-1-yosry.ahmed@linux.dev>
+References: <20250318013038.5628-1-yan.y.zhao@intel.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <174622231823.882065.2543559051221676218.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86: Unify cross-vCPU IBPB
+Message-ID: <174622239486.882502.1450694184969543673.b4-ty@google.com>
+Subject: Re: [PATCH v2 0/5] Small changes related to prefetch and spurious faults
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Yosry Ahmed <yosry.ahmed@linux.dev>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Jim Mattson <jmattson@google.com>, x86@kernel.org, 
-	kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, Yan Zhao <yan.y.zhao@intel.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Content-Type: text/plain; charset="utf-8"
 
-On Thu, 20 Mar 2025 01:37:59 +0000, Yosry Ahmed wrote:
-> Both SVM and VMX have similar implementation for executing an IBPB
-> between running different vCPUs on the same CPU to create separate
-> prediction domains for different vCPUs.
+On Tue, 18 Mar 2025 09:30:37 +0800, Yan Zhao wrote:
+> This is v2 of the series for some small changes related to
+> prefetch/prefault and spurious faults.
 > 
-> For VMX, when the currently loaded VMCS is changed in
-> vmx_vcpu_load_vmcs(), an IBPB is executed if there is no 'buddy', which
-> is the case on vCPU load. The intention is to execute an IBPB when
-> switching vCPUs, but not when switching the VMCS within the same vCPU.
-> Executing an IBPB on nested transitions within the same vCPU is handled
-> separately and conditionally in nested_vmx_vmexit().
+> Patch 1: Checks if a shadow-present old SPTE is leaf to determine a
+>          prefetch fault is spurious.
+> 
+> Patch 2: Merges the checks for prefetch and is_access_allowed() for
+>          spurious faults into a common path.
 > 
 > [...]
 
-Applied to kvm-x86 misc, with the online=>possible change split out to its own
-patch.  Thanks!
+Applied 1-4 to kvm-x86 mmu, and patch 5 to fixes.  Thanks!
 
-[1/2] KVM: SVM: Clear current_vmcb during vCPU free for all *possible* CPUs
-      https://github.com/kvm-x86/linux/commit/1bee4838eb3a
-[2/2] KVM: x86: Unify cross-vCPU IBPB
-      https://github.com/kvm-x86/linux/commit/54a1a24fea19
-
+[1/5] KVM: x86/mmu: Further check old SPTE is leaf for spurious prefetch fault
+      https://github.com/kvm-x86/linux/commit/ea9fcdf76d3d
+[2/5] KVM: x86/tdp_mmu: Merge prefetch and access checks for spurious faults
+      https://github.com/kvm-x86/linux/commit/d17cc13cc484
+[3/5] KVM: x86/tdp_mmu: WARN if PFN changes for spurious faults
+      https://github.com/kvm-x86/linux/commit/988da7820206
+[4/5] KVM: x86/mmu: Warn if PFN changes on shadow-present SPTE in shadow MMU
+      https://github.com/kvm-x86/linux/commit/11d45175111d
+[5/5] KVM: x86/mmu: Check and free obsolete roots in kvm_mmu_reload()
+      https://github.com/kvm-x86/linux/commit/20a6cff3b283
 --
 https://github.com/kvm-x86/linux/tree/next
