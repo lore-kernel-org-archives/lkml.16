@@ -1,86 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04A7D264FB4;
-	Fri,  2 May 2025 06:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46DC92AD32
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 06:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746167882; cv=none; b=tuxr57MQiQL8w5qY/N6zfwJMhjB/jYbTjzNRuWjeGbbpeBNG8B3aOX+IB9mqr4GKGm1ztwmbFXakrGHeKvJV9Q3OGIG+Ae4vCSD9SCP8IZjkaHxSsgeEfHKswFq7t6OJGjsgy6r3a3w+5XRjktg3gns6U5RslO/n2+fUzVU/Mmg=
+	t=1746167946; cv=none; b=M0Uzvv8mbmeIE8yIf56AbPTV8iYofNBV8FLRChF3O4ce6DPowZbCU1JAcq//wjxn8gCR/UzOTE6BXJm1SAs5Sa/2mdvosyvQTGB/4/cv0h0kXcPvtvlfi7Xhngq/bCfKS6c0KPzR006dk17yiyat6F7BTr7O5D/bMRO3jfjfrqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746167882; c=relaxed/simple;
-	bh=IMqFIlZ6SAyyAE5sTtWzqeu643LBdgSXKpb5tiqgPak=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JZOaMk+RIO48cKXHb2yqKffpWPMgxFDyzOlPYhxUWGpjgqwT19Lj5S2+3PhgEKO+ErOTC6pLKKCTPOzcVMKoXNqBFXcTHzv3Jk9IQ3B6agHGd6DEfGqfmubf4/WuWUyPTFsTEAwDcZQSTGdAyc4dylCnemUvBk/Sn3FMV9pXGvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwKFv1TH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwKFv1TH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D9EC4CEE4;
-	Fri,  2 May 2025 06:38:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746167881;
-	bh=IMqFIlZ6SAyyAE5sTtWzqeu643LBdgSXKpb5tiqgPak=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lwKFv1THI/nBuyaWPwpPU4y6LJq+343nZrfIc1kJhnn6QLZvxPp0p6uxXkRYcwjG8
-	 xPYb8Cbz+nfBKIHzwFnwxHDisW/+xlps540FPV7ioTx+L8CY/Jbgrv4ChR2dx3WNzj
-	 KX8+iw1BLHuxyJ26Ul/rXrRdSlMWvF4Zh1w6gWaKJfGNIELUa9FQPhQ7bLhyE/M9S9
-	 b8BfVikBG4MwiPImuQQLt8y8uoboygT1tJWsMOGsYQYSGy3/70G0okeDYkbde/Oavk
-	 yEHO/Iuf+Fv2S2bwNY1R8GYwi/BTwyDMnw22WsXY1cO9GqcpOrsCz4T7dzumXgyuy3
-	 rX3u13yg6U4RA==
-Date: Fri, 2 May 2025 08:37:58 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Praveen Talari <quic_ptalari@quicinc.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Jiri Slaby <jirislaby@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, 
-	psodagud@quicinc.com, djaggi@quicinc.com, quic_msavaliy@quicinc.com, 
-	quic_vtanuku@quicinc.com, quic_arandive@quicinc.com, quic_mnaresh@quicinc.com, 
-	quic_shazhuss@quicinc.com, Nikunj Kela <quic_nkela@quicinc.com>
-Subject: Re: [PATCH v3 3/9] dt-bindings: qcom: geni-se: describe SA8255p
-Message-ID: <20250502-quirky-prudent-beaver-dcebd0@kuoka>
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-4-quic_ptalari@quicinc.com>
+	s=arc-20240116; t=1746167946; c=relaxed/simple;
+	bh=O6nmuomLYTknJOUevxoWSl+W7UzIdX0FAfhKsSaQYOc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=P0gd2xw5Ao5vnJJHS3gwc0WdYTAOJrR38FF6uZ+EGNhYDS8dxx5OBP4hAR46RhHkIP8YUCM4Yx6HPywMZftI6ET8wSPT/Lx8/DvHGwTviGGu8I9uLWCZPR3SDp7W2cOR//Rn4aQX5IZzOxxRThwuExUzDh+RYhfccqz8r7DyZug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8CD9C106F;
+	Thu,  1 May 2025 23:38:55 -0700 (PDT)
+Received: from [10.163.80.122] (unknown [10.163.80.122])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20E023F66E;
+	Thu,  1 May 2025 23:38:58 -0700 (PDT)
+Message-ID: <063577a4-1530-4658-9838-934b0606e8e0@arm.com>
+Date: Fri, 2 May 2025 12:08:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250502031018.1292-4-quic_ptalari@quicinc.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/9] coresight: Avoid enable programming clock
+ duplicately
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250423151726.372561-1-leo.yan@arm.com>
+ <20250423151726.372561-7-leo.yan@arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250423151726.372561-7-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 08:40:12AM GMT, Praveen Talari wrote:
-> From: Nikunj Kela <quic_nkela@quicinc.com>
+On 4/23/25 20:47, Leo Yan wrote:
+> The programming clock is enabled by AMBA bus driver before a dynamic
+> probe.  As a result, a CoreSight driver may redundantly enable the same
+> clock.
+
+Are you sure AMBA bus driver always enables such clocks in all scenarios ?
+Even if that is true - why cannot coresight_get_enable_apb_pclk() ensured
+to be called only for the platform drivers cases via code re-organization,
+rather than changing the coresight_get_enable_apb_pclk() helper itself.
+
 > 
-> SA8255p platform abstracts resources such as clocks, interconnect
-> configuration in Firmware.
+> To avoid this, add a check for device type and skip enabling the
+> programming clock for AMBA devices.  The returned NULL pointer will be
+> tolerated by the drivers.
 > 
-> Add DT bindings for the QUP Wrapper on sa8255p platform.
+> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  include/linux/coresight.h | 11 +++++++----
+>  1 file changed, 7 insertions(+), 4 deletions(-)
 > 
-> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
-> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> 
-> v2 -> v3
-> - reordered required option
-
-
-...
-
-
-> +additionalProperties: false
-> +
-> +required:
-
-Which part of "required: block goes after properties and
-patternproperties." is unclear?
-
-Look at example schema.
-
-Best regards,
-Krzysztof
-
+> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+> index b888f6ed59b2..26eb4a61b992 100644
+> --- a/include/linux/coresight.h
+> +++ b/include/linux/coresight.h
+> @@ -476,15 +476,18 @@ static inline bool is_coresight_device(void __iomem *base)
+>   * Returns:
+>   *
+>   * clk   - Clock is found and enabled
+> + * NULL  - Clock is not needed as it is managed by the AMBA bus driver
+>   * ERROR - Clock is found but failed to enable
+>   */
+>  static inline struct clk *coresight_get_enable_apb_pclk(struct device *dev)
+>  {
+> -	struct clk *pclk;
+> +	struct clk *pclk = NULL;
+>  
+> -	pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> -	if (IS_ERR(pclk))
+> -		pclk = devm_clk_get_enabled(dev, "apb");
+> +	if (!dev_is_amba(dev)) {
+> +		pclk = devm_clk_get_enabled(dev, "apb_pclk");
+> +		if (IS_ERR(pclk))
+> +			pclk = devm_clk_get_enabled(dev, "apb");
+> +	}
+>  
+>  	return pclk;
+>  }
