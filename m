@@ -1,228 +1,208 @@
-Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazon11023079.outbound.protection.outlook.com [52.101.127.79])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56604146A68;
-	Fri,  2 May 2025 16:08:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.127.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202089; cv=fail; b=Q++lqHqFwcdWadVS7FTRCzGQpAH9XG896SYz3VyaQ/F/USO3YiU/79cmkfQekYgMqlLB8LsVjYWqawzPccGSEiSoyqTkPNxfb2bVY7YBQPHhS83LspwfzSYNJcieZnYwHsM0XHdVfEj7HIXwsYSvXhOAtP1qu4EcOKtqy2364Jk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202089; c=relaxed/simple;
-	bh=AUWhvCBdr+7F/YZAjylLidkP4sR9HY/QzyrOXnOCk78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MneRVQw6j0ZJoN2sUSyZQeSkwTFVfQs1dO7XpB4+Qgf5eIT0aNaWAZuLqpJE8PBmT4ATOXRnrtgEVY5dXX3Bzb6nbUqPjHY9Y9/nFKITjAgklALOjuGVw25ABNBERdsp4qMIcO4+6HGUzcUiSGr+tg/gwAd7G/MRmq/TwkzMbKI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.127.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=q04zkAMYFWI87JAeib5wqhrJS83MyCaxMlUFlYXFQ46tN14Ih6dWBSGaf7Ix7lK5XOu5xDfxNEsevfjBCYH7gl1lQqjv6e3uU0n4tHg+xWDIY4h57/pIWkUVlSc5/g1aIH6A+75jmwAPiAqStuuTkQRIaGbm4nNN2t5jsxTNTjXOT6dU5ShUBen5PjcTgkotQk/KmUbV2z5oqzyN0prkB5fp3yaELBPkt2q7a0ZcYR4oDJ34whogFxTaq/7t84oAjOc4w/oIJP8YPLad0wcZBWxz8uagi0ndI+KSEEgtgvpYff6SqEIvOwitDec8ArRmpkO1G8DXhX78CpxwgIAiXA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NU0qRaH89ItNGSqhBnkOyoQmmH18HgCEXlxos+cBjQk=;
- b=B5szNeJtaBQ2o6WOgNfeqYvGcwpN3Orx1Od7NrLHo/uxXNveoc3DETMHXoZvlIrtkahg8Zbc3A5xyALJZI5DdNbEoDhVfJISkz9MgAntSik9S5v9RJV7DJ2R0g3W73y42bqLC5M484pcYTDplydhLFPt+jOkKkXWluHcN0GprjrjTBhcFXQHME/2XMd62TBGN0Tn9R9GgZEOLpkQko+o8BGJ3FLwIlWW4WFEi3lmInd0am4Cnqxt73XibNnyRYWTjOl9wjRDhqhyYCJSgVASuZ60PQsvYt3xkz/hKU4EBffEMHL5Zm5QqPDWMlQfEFHbRrMBuyhZiYXcUs2U4gsbZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 222.71.101.198) smtp.rcpttodomain=grimberg.me smtp.mailfrom=cixtech.com;
- dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
- not signed); arc=none (0)
-Received: from TYAPR01CA0048.jpnprd01.prod.outlook.com (2603:1096:404:28::36)
- by TYSPR06MB6795.apcprd06.prod.outlook.com (2603:1096:400:475::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.22; Fri, 2 May
- 2025 16:08:02 +0000
-Received: from OSA0EPF000000CA.apcprd02.prod.outlook.com
- (2603:1096:404:28:cafe::52) by TYAPR01CA0048.outlook.office365.com
- (2603:1096:404:28::36) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
- 2 May 2025 16:08:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
- smtp.mailfrom=cixtech.com; dkim=none (message not signed)
- header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
-Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
- 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
- client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
-Received: from smtprelay.cixcomputing.com (222.71.101.198) by
- OSA0EPF000000CA.mail.protection.outlook.com (10.167.240.56) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 16:08:01 +0000
-Received: from [172.16.64.208] (unknown [172.16.64.208])
-	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 2175C40A5A01;
-	Sat,  3 May 2025 00:07:59 +0800 (CST)
-Message-ID: <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
-Date: Sat, 3 May 2025 00:07:55 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA054146A68
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:08:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746202101; cv=none; b=ow/xU75q4/TXqJAF7lSQKoGxqkfESK4ZKpTfmnXfmW0y5rc98dS7OMj0fUsQw9jfjeIN+34jQM9ToiSrhiKC1SKuaLWFqS3jCmj14MZp5fUtxMmq/5vDX85r0w27xg0LyqKB/1vCaoTmh4XgZNwNYOjJ5d37hlLGxyPQXCAs3eM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746202101; c=relaxed/simple;
+	bh=EWGiktsus5+/o19nyZqxpCKSl+7liaK/rjrKxK1GacA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=R9rmsSmj1yGbENv7O4g31aEaAuOPWpHDbNOQmh/01e9X9HfUgegAQXE0qnD/a5zq00zlTzkpIhaB0GEfzaPEtdr3uF8g5t52vMzJo2Tj3xJwWW1ULmORpV3au8JBtkyfNG6jlkFryC755EIrQXcjXaNp1md2bNPNkv8PDxFUjAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Htfg8dlY; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Htfg8dlY"
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 72BC23F7DF
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:08:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1746202089;
+	bh=3CisZnV7pjBTrd6barH3Ffmi1vw4zOqiBAICZChs/hU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=Htfg8dlYfXjHLF5GwOlrzQbw21B0YWI9TUM02aNcd55ReS9L8Wqz2AoqELEf5XlrM
+	 cWg31GeWU8hrVjGblnoTnXIygsMDi4+4dMa96qC8OKFQ2ReM8WlMA1toIt8tkvd9z1
+	 458tm7IKbx7SFu5VMaDUZTSrzeO49xX5/KnkkR4CAuv0on3uEvLaGJ5JrhtYu8GPG2
+	 MhJDEgXc9hqHa9V/PvTMVmsC3Gg0yZQ7S81TVXYv0LvoOlvlDgdV6n774XpkwQ/8sF
+	 IBbSHOwn6nvg+zd9BSFUy7QNFl+8OChCPDeeUdu501hXTtnA0H9sy4B5ZX7/9Iv6CB
+	 8F2o/aNVFVhuA==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-acf0113e311so200085366b.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:08:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746202089; x=1746806889;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3CisZnV7pjBTrd6barH3Ffmi1vw4zOqiBAICZChs/hU=;
+        b=oUQX7I8y514kg2M+6GSidoiDRBn8/Ja2+GM01yebJGAL7nUxlvNMPfvHM1m000r12l
+         tbwpxyeFsRsnbzIxzHdrpOY9AezbpRft/pbzgdJJWqa/4shthSqP7GSVX4KX3UHxb4ui
+         10hnVUYt95XYeqHAZYxhCDsipS0GVjH/6ncIotkqY7la6smJY+B6feSOcRX5dxzO9smE
+         1hkSnYL7flCuhnKrrMKJFcB/6aHjbSXROBNIBZX6Nzlr4s0SU9dfNuGARTtZwl0HRfUL
+         dfFHIxkoJCBikz6oh65zTO/O9WfVEUhbcJFQRBCQf0JaoPH9KmAiK0XbDffzyQsHKXL+
+         gFGg==
+X-Gm-Message-State: AOJu0YyJFB3nyaCspKPebCo2KWOu8aLWFlxjV7vs56iSFFrcIZ9U615q
+	6U0YHfsQpC0ZQ3TEwGZg3kV6st9zCz3h9OllQCb1Ge3SHaU7NgQ/B+BQg1GbAFl/jy4+2Int5gy
+	Vr0V4uMEq1rtPb8Ywlb7fSGupUYvc4UWZIRxFjQhRRBhoDFeFdyNUn6jGSofmy6+l0OiamdjDJ7
+	N5ZnH3BG2Q6pW9vzuGqCjWWJql9lYzCVmtnBPtEmcEHbz1dTwAjTJl
+X-Gm-Gg: ASbGnctHlaKybmjUdAVKmcXCSrz+wH/WDmghjESWLEgdXtNXV3BnbIO4ITLAJK6rIqe
+	lua7qcNgz1ErFrvspvu1O7ML8NXkG/yaDT7G2h9M6XLbEL4BKnVk9JAf2WVDoMxQgjtZd
+X-Received: by 2002:a17:907:6e93:b0:ab7:cfe7:116f with SMTP id a640c23a62f3a-ad17af50ba6mr318240766b.46.1746202088754;
+        Fri, 02 May 2025 09:08:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEr9plp3S4dQ544LaoyFbcAWDmz+kpgB70DWFpnKwx/6/nfuEShDUm7vfsqSJ3aI2C6UpRBZ8JzEemIwm+iSxA=
+X-Received: by 2002:a17:907:6e93:b0:ab7:cfe7:116f with SMTP id
+ a640c23a62f3a-ad17af50ba6mr318236366b.46.1746202088361; Fri, 02 May 2025
+ 09:08:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
- suspend
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
- hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20250502150027.GA818097@bhelgaas>
- <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
- <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
-Content-Language: en-US
-From: Hans Zhang <hans.zhang@cixtech.com>
-In-Reply-To: <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: OSA0EPF000000CA:EE_|TYSPR06MB6795:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbd6e553-131c-4f28-db1f-08dd899383d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?c2pFWHBsS2FVQmhYNFVBWlNvbS91cnVXcCtqOGRJT2U1RVRYd3FBVGZkczNr?=
- =?utf-8?B?cXpjdnV1bnpKZjZXTmdFZnNzNk53eGZwOWlqck1aeG1JOHhmSGxERjlNV3M4?=
- =?utf-8?B?eGlCUVRBZlJDb1M5WVpJbXZ1N0s4MmZ5VHZxYkkyWU5JbWozYXQrQnlyQ2Iv?=
- =?utf-8?B?VzVLUVNwR1d4ZjZCZHZGMUo3cUFlcmp5M2cwV3ltS0hRR0dGRjN1QURlT2xq?=
- =?utf-8?B?d3lqWXVXSTRxcEhORGtxeWFvV0pQOWFGL21aSHRmei9BNzFNVVJlY3ZmU2V0?=
- =?utf-8?B?TXZGNkU1WDFGTWxTWkovQ0hOWERwRkpvV1YralhXMmNlQzczNFJBbDB5L0Vj?=
- =?utf-8?B?Z3dtcm90ZkpnenJGbzJ5Ni9YZmgzOHFCYVROU2k5UVF0YU1GNWdieTV5WmVY?=
- =?utf-8?B?cXVlWDRFak1uUlRuK3h3VGV2UzVvTkovUWpScXZNQk5nWGt1ZDFuWE5BVy9D?=
- =?utf-8?B?ZGJXdzIvdzl1cWJpQmRzMDFOY0hUbGtqTEl0Mk1QVU85Qlk3U0hBdWR2aUh2?=
- =?utf-8?B?MmE3cFF4Rkx1RjdvRjlMYzloYXJLWlJ3NDBwZUFuTUFCZ3FGMFFRdlJKUWNW?=
- =?utf-8?B?QXJmYkhSUFNNNEJDT0lRV21uaDhrTnFIMkg2T1E4VElEQjVjZE92YmppZEYz?=
- =?utf-8?B?a25WYlM3d09WSmE5TnorUU9PZHRLMklIek9PRi9vakhsRjJmcUViNTRFVlNQ?=
- =?utf-8?B?VnRKcXJxalFyTVJIQ2JFelozMmhwME1MZWtScWc2MkJEczhVYUNkZkpva1pv?=
- =?utf-8?B?b25SSit0bThUejVoNXFIL3h4Qlk4SVA1b0p4dU9LT1F3NzB2MEsvVWxkRjI1?=
- =?utf-8?B?TEJuZVpnVU1ibkFua3F4YlAzbVRBTmlLdHN3K21zUnZkOHJqV0NiaVVHVVVJ?=
- =?utf-8?B?SEQwbjRGNHN0UjhYUi9tTG9TcDE3VURLQnhVS1M5N1ZPTWprUHphSVpFM3Ur?=
- =?utf-8?B?NERuYUE3V0I0QmE4MkhscUFVNWFPejBVRWpXaGc4Ym4wcGFQbWhNM1VqUVp0?=
- =?utf-8?B?NDdMempmdlRRYjNJeDhBVzBLdVk5ZnlZcmxJd05YSkpQRDdTZW95Vk92NEM2?=
- =?utf-8?B?dE1CRFdOQmVGc25DamtYc3JtdHV4VElOdTRmVmQ5T3NoVGRMeWhRNzI1aVlJ?=
- =?utf-8?B?TExkZ0RlVDVlc0N5QTgyV2ZGa2cyM3YzeEhsbWxVajhNQXB0SWJaejhZUFhE?=
- =?utf-8?B?dWtZRm12NS9FZForVjN2dXdWY0hBUlFZZm5KTjYraUM5bFpaRmZwck1aMURO?=
- =?utf-8?B?K1o2eDNrdVd4cUYwWFhoNm1wVkVsYkYyaGlocXdhdkR3d3VvTmV3czM1QVZk?=
- =?utf-8?B?WEhFOUkycjV5M3EyVHVTOVdXbHE4cDBiWU56UCs5TmUweXYzUmpwMGNlSXFW?=
- =?utf-8?B?OWVoVjFqcDVXWGZkWXIvVnd5RlFTZGhoYXg5bDh2aDBncXI2b29DWk5odVlN?=
- =?utf-8?B?S1pycWYxL1pkc3dMNEFwSGJCMDNwNytPSjUwd1hsd3NTTkxBUmdBOXp6TUtM?=
- =?utf-8?B?U2JsVUpLdUlJQkhDeVd0S2Y5UzlzN1dUZkpTdnZtNWZnL2pjWGdGdDJKa0tQ?=
- =?utf-8?B?ckZKQ1RsTHJicFNaYlREb2JmTHlSODU5R2ZiRURmbmxKTWJwaVBSY0FTS3Zs?=
- =?utf-8?B?K3J3a1h1R1JzM0tNaU41c0lhd2hKYXp6VjhUaFc4ckVpTjFyWlVJMG9KeEV1?=
- =?utf-8?B?SkZzUDh0RGFZY2lRL2gwLzQ5QldsME9yem5kY0xsbTEzbzRTby93TXpJMVNK?=
- =?utf-8?B?MGJrV2IzNlVEU2VUSzBZS1VPaWpjTEtpQ1BUY1BsQ1R4WUY1QXlITlFucWw3?=
- =?utf-8?B?Y21PQjlNZGlIR0laY1NadS85QUN1c01WU082Mk5adWJ0R3pUVnpYdkVmdkxp?=
- =?utf-8?B?QjRGV1NBZjc3azRhaGd3eUR2dXVuYWxnUDNEeC84bDV2eWlrTTQ1Mkh3ZDJs?=
- =?utf-8?B?MkZEeXVlalVMaVU2dm9KRlNHcVk0R001NTBiK0VYM0NGQmNjbjF5QnQxbjRM?=
- =?utf-8?B?RzlvOVk5TUFoMWlRRTdWZFArbWpEMEJub0FlMjBqT0EwZ3JvdFZYZjluS0xS?=
- =?utf-8?Q?/Y+S5i?=
-X-Forefront-Antispam-Report:
-	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024);DIR:OUT;SFP:1102;
-X-OriginatorOrg: cixtech.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 16:08:01.9178
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbd6e553-131c-4f28-db1f-08dd899383d7
-X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
-X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000CA.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR06MB6795
+References: <20250502014412.682674-1-rdunlap@infradead.org>
+In-Reply-To: <20250502014412.682674-1-rdunlap@infradead.org>
+From: Ryan Lee <ryan.lee@canonical.com>
+Date: Fri, 2 May 2025 09:07:56 -0700
+X-Gm-Features: ATxdqUH1VSosWBuE6vF-uqoJMXP5CM2bLoq1d2PsBwhsXzhf70B3sJUNYIK_FnA
+Message-ID: <CAKCV-6vV1o6KmPjD3k-LWo-VYEEaZ8QS_tdM=GezT9XH2M=Hng@mail.gmail.com>
+Subject: Re: [PATCH] apparmor: fix some kernel-doc issues in header files
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: linux-kernel@vger.kernel.org, John Johansen <john.johansen@canonical.com>, 
+	John Johansen <john@apparmor.net>, apparmor@lists.ubuntu.com, 
+	linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, 
+	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, May 1, 2025 at 6:44=E2=80=AFPM Randy Dunlap <rdunlap@infradead.org>=
+ wrote:
+>
+>
 
+The commit message should also have an introduction like that says
+something like "This commit fixes apparmor documentation comment
+issues found by [name of the tool you used]:"
 
-On 2025/5/2 23:58, Manivannan Sadhasivam wrote:
-> EXTERNAL EMAIL
-> 
-> On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
->>
->>
->> On 2025/5/2 23:00, Bjorn Helgaas wrote:
->>> EXTERNAL EMAIL
->>>
->>> On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
->>>> From: Hans Zhang <hans.zhang@cixtech.com>
->>>>
->>>> When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
->>>
->>> CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
->>> dynamically regardless of the config.
->>>
->>
->> Dear Bjorn,
->>
->> Thank you very much for your reply.
->>
->> Yes. To reduce the power consumption of the SOC system, we have enabled ASPM
->> L1 by default.
->>
->>>> NVMe controllers fail to release LPI MSI-X interrupts during system
->>>> suspend, leading to a system hang. This occurs because the driver's
->>>> existing power management path does not fully disable the device
->>>> when ASPM is active.
->>>
->>> I have no idea what this has to do with ASPM L1.  I do see that
->>> nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
->>> janky and racy).  But this doesn't explain anything about what would
->>> cause a system hang.
->>
->> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM: calling
->> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
->> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
->> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
->> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
->> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
->> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
->> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
->> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
->> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
->> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
->> pcie_phy_common_exit end
->> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
->> sky1_pcie_suspend_noirq
->> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
->> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
->> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
->> 7110000.system-controller:clock-controller: PM: calling
->> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
->> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
->> 7110000.system-controller:clock-controller: PM: genpd_suspend_noirq+0x0/0x80
->> returned 0 after 1 usecs
->> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
->>
->>
->> Hans: Before I added the printk for debugging, it hung here.
->>
->>
->> I added the log output after debugging printk.
->>
->> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
->> Our hardware is in STR(suspend to ram), and the controller and PHY will lose
->> power.
->>
->> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
->> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
->> controller and PHY will be reinitialized. If suspend does not close the AXI
->> and APB clock, and the AXI is reopened during the resume process, the APB
->> clock will cause the reference count of the kernel API to accumulate
->> continuously.
->>
-> 
-> So this is the actual issue (controller loosing power during system suspend) and
-> everything else (ASPM, MSIX write) are all side effects of it.
-> 
-> Yes, this issue is more common with several vendors and we need to come up with
-> a generic solution instead of hacking up the client drivers. I'm planning to
-> work on it in the coming days. Will keep you in the loop.
-> 
+> cred.h:128: warning: expecting prototype for end_label_crit_section(). Pr=
+ototype was for end_current_label_crit_section() instead
+> file.h:108: warning: expecting prototype for aa_map_file_perms(). Prototy=
+pe was for aa_map_file_to_perms() instead
+>
+> lib.h:159: warning: Function parameter or struct member 'hname' not descr=
+ibed in 'basename'
+> lib.h:159: warning: Excess function parameter 'name' description in 'base=
+name'
+>
+> match.h:21: warning: This comment starts with '/**', but isn't a kernel-d=
+oc comment. Refer Documentation/doc-guide/kernel-doc.rst
+>  * The format used for transition tables is based on the GNU flex table
+>  * The format used for transition tables is based on the GNU flex table
+>
+> perms.h:109: warning: Function parameter or struct member 'accum' not des=
+cribed in 'aa_perms_accum_raw'
+> perms.h:109: warning: Function parameter or struct member 'addend' not de=
+scribed in 'aa_perms_accum_raw'
+> perms.h:136: warning: Function parameter or struct member 'accum' not des=
+cribed in 'aa_perms_accum'
+> perms.h:136: warning: Function parameter or struct member 'addend' not de=
+scribed in 'aa_perms_accum'
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: John Johansen <john.johansen@canonical.com>
+> Cc: John Johansen <john@apparmor.net>
+> Cc: apparmor@lists.ubuntu.com
+> Cc: linux-security-module@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> ---
+>  security/apparmor/include/cred.h  |    2 +-
+>  security/apparmor/include/file.h  |    2 +-
+>  security/apparmor/include/lib.h   |    2 +-
+>  security/apparmor/include/match.h |    2 +-
+>  security/apparmor/include/perms.h |    8 ++++----
+>  5 files changed, 8 insertions(+), 8 deletions(-)
+>
+> --- linux-next-20250501.orig/security/apparmor/include/cred.h
+> +++ linux-next-20250501/security/apparmor/include/cred.h
+> @@ -117,7 +117,7 @@ static inline struct aa_label *aa_get_cu
+>  #define __end_current_label_crit_section(X) end_current_label_crit_secti=
+on(X)
+>
+>  /**
+> - * end_label_crit_section - put a reference found with begin_current_lab=
+el..
+> + * end_current_label_crit_section - put a reference found with begin_cur=
+rent_label..
+>   * @label: label reference to put
+>   *
+>   * Should only be used with a reference obtained with
+> --- linux-next-20250501.orig/security/apparmor/include/file.h
+> +++ linux-next-20250501/security/apparmor/include/file.h
+> @@ -104,7 +104,7 @@ void aa_inherit_files(const struct cred
+>
+>
+>  /**
+> - * aa_map_file_perms - map file flags to AppArmor permissions
+> + * aa_map_file_to_perms - map file flags to AppArmor permissions
+>   * @file: open file to map flags to AppArmor permissions
+>   *
+>   * Returns: apparmor permission set for the file
+> --- linux-next-20250501.orig/security/apparmor/include/lib.h
+> +++ linux-next-20250501/security/apparmor/include/lib.h
+> @@ -170,7 +170,7 @@ struct aa_policy {
+>
+>  /**
+>   * basename - find the last component of an hname
+> - * @name: hname to find the base profile name component of  (NOT NULL)
+> + * @hname: hname to find the base profile name component of  (NOT NULL)
+>   *
+>   * Returns: the tail (base profile name) name component of an hname
+>   */
+> --- linux-next-20250501.orig/security/apparmor/include/match.h
+> +++ linux-next-20250501/security/apparmor/include/match.h
+> @@ -17,7 +17,7 @@
+>  #define DFA_START                      1
+>
+>
+> -/**
+> +/*
+>   * The format used for transition tables is based on the GNU flex table
+>   * file format (--tables-file option; see Table File Format in the flex
+>   * info pages and the flex sources for documentation). The magic number
+> --- linux-next-20250501.orig/security/apparmor/include/perms.h
+> +++ linux-next-20250501/security/apparmor/include/perms.h
+> @@ -101,8 +101,8 @@ extern struct aa_perms allperms;
+>
+>  /**
+>   * aa_perms_accum_raw - accumulate perms with out masking off overlappin=
+g perms
+> - * @accum - perms struct to accumulate into
+> - * @addend - perms struct to add to @accum
+> + * @accum: perms struct to accumulate into
+> + * @addend: perms struct to add to @accum
+>   */
+>  static inline void aa_perms_accum_raw(struct aa_perms *accum,
+>                                       struct aa_perms *addend)
+> @@ -128,8 +128,8 @@ static inline void aa_perms_accum_raw(st
+>
+>  /**
+>   * aa_perms_accum - accumulate perms, masking off overlapping perms
+> - * @accum - perms struct to accumulate into
+> - * @addend - perms struct to add to @accum
+> + * @accum: perms struct to accumulate into
+> + * @addend: perms struct to add to @accum
+>   */
+>  static inline void aa_perms_accum(struct aa_perms *accum,
+>                                   struct aa_perms *addend)
+>
 
-Dear Mani,
+With the commit message addition that I mentioned above:
 
-Thank you very much for your reply. Thank you very much for helping to 
-solve this problem together. If possible, I'd be very glad to help with 
-the test together.
-
-Best regards,
-Hans
-
-
-
+Reviewed-by: Ryan Lee <ryan.lee@canonical.com>
