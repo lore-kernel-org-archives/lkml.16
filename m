@@ -1,171 +1,222 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F45517A2E1
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:31:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9621991B8
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199897; cv=none; b=m2cSRqxSH3rQAHJu0XWhdgrEhEKT1X7bXzvTKovrrmccLoVuegZQHs7JTPTvJQ2vh3bNTClA3b4kOjWc1YFBK9dpNCHCXVYOt+Oo9pVn1kOXmmt1C4LduPfBHrX2rQLzLRvE0g5v1OJ2tDTOxJO9qNF2lmbtr934Ahvir40gLyA=
+	t=1746199914; cv=none; b=Woa8mAGb1X9Nh5Y354+A6KP0CEUI9stGdGKgEghOwyhDNG7W9TtGASzACL5DbXng4Id+sqvoIPa29QfgXnVOwgbp25JziTKbU92tF0vsVkzKT4qJQimCwQfbrjDQ2aL2L+fZPZicpIyM8y31UFgEt6ctYm3a7SawSzpJmynxg9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199897; c=relaxed/simple;
-	bh=RgsUVPW9FmjBBY4GM2k1ebX3w5AMTDdulNA13o2n7dE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=knymFPftcdOilWHXa4lQUF74w7tFZ/LfeJvwxyazBqNKduw7BQdG3Aju0fV9LIc0jSfPxH2IyTo4nm5mw8lwV8O1gAx9A3QMx0B48q2f33S1b/9yLfPa/Usr33g+AhxoRrs3oiiHcaps+w3VX9QLh+/eAugvdlg7xiRCg7HRin4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KXuLcfX3; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746199914; c=relaxed/simple;
+	bh=JpxLmURCuj3alrBPtN3GglsjWmWJzl73/AdPQR+bWLc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjSDu6WGx0g15f0AMMTep4tpZLjZuRSn9ch1iEqZIdHsOp4TmXDuEKjtnrjKpqbvmwz6qzT5fJPRQSK0mstCdC18KrSFTMtzYOV/2oRXOBTOiLbnrbW0DVlI46bDV8xRR5CfCE9IDnRUHLF3YpveioOHKDeL5S89Ucz3LQ1O5cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gyKSWKOq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KXuLcfX3"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1477421a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:31:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746199895; x=1746804695; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uQe+MROJ/ag6KDFyVS/w9IQL57geisNKdBHBf0gkBb4=;
-        b=KXuLcfX38uY+Pvxv4kIoYPGRlHxegAnL83ODbJcghGU2zZ+4BdpH5ptoY5St8DcQzT
-         Q6cG+IaAmB0wbaICxOYafQ0h2DmqysBU+Opf7Mw58wAaHWgNBSyVXu667w0snuRwHWgR
-         jeLgfTGhtts6JTyGeMTjhKc31hibPo7QcsG9BjC8myt+6flnOk1VxAQzw7cSJD4XqX+d
-         9DcT85kKvQBv3Ge9XLqyLLrGxJOfKXYja4g9E/S9sHmIlzAosY7zI7S5MQbi2bBLAQoj
-         kVB+ts10xJNC0I5lnpIkZ7AGHHtBMTIVHa5XqkkjGg82Z0MbP3zurzCso8yAR/L/vJIH
-         7eHg==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gyKSWKOq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746199911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jM8M6akj52fCQHHjXX1/nsZvwbcymr7x1EGpLLdZdRo=;
+	b=gyKSWKOqP4uLnebtLqw1aFbxEhh1XEYr5QoKpoPiCkik3lZgmbS6cyJw5Bf7WyDVDDHC3v
+	o6bML0BgKm8KLksdkehSZI3UGOYlLkS+T/m3FhBsPK9AHOJh+A7c9c+RFyAk12EdyC8QJS
+	k03MfQcVl5C9NmlPkAJUN/TBygPFIvw=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-341-nmuh_mXIM7uOveivIeGNIQ-1; Fri, 02 May 2025 11:31:50 -0400
+X-MC-Unique: nmuh_mXIM7uOveivIeGNIQ-1
+X-Mimecast-MFC-AGG-ID: nmuh_mXIM7uOveivIeGNIQ_1746199909
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43cf172ffe1so13251525e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:31:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746199895; x=1746804695;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uQe+MROJ/ag6KDFyVS/w9IQL57geisNKdBHBf0gkBb4=;
-        b=pZMvh55szgRithG6On1yK0QHs/LWBzhZTx8I+H0Socd8tMm6DtOFXk0l7wy60Gfcb4
-         xcUHlXykugUff9+rmBfLfhHuVpayuBD58njKAUAgmLfp+vBCq5jAY19fLzXenmSiruhO
-         1YrTjV2U5slid+G/xXIzyV+/GJVSWMqvR5tYaJzus/yTmTuhfXqKeoUf+wDWcb2fCAAl
-         kkBqESs//1GllTqg/KJjLo7wu/LzPlTXSNUgIRLmrP2H6vcW7rOiQPJk03Pc5okN8ova
-         2bU2LLRf6HDCoHmQimm7ha5/oQo1HEF4sxk6maFX+ndkkz9Jlkh/3QgqCFXnYzqlBHlr
-         oVbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUElu3kntIRv2TaB80Kf2Wr6kSwsVwM4mEH6AeuB8RwPBI4BcRtokFwvnJ4PWhm/G0mpFhQI/iabZJeaaY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJdbkPMSXTKiG/5+wgbHJBmKxRTX7FvcKlx8Y0rOFnUrWDWNYP
-	EeQTBd1dR6rsNaS6yVSAKEOlDUxabjbH2U1uj7GM8xdX9VsUmg8bnp/FMpAnzA==
-X-Gm-Gg: ASbGnctXZuzNHIVBmcybNajf/6XZMZRALUlq9IX+Tb/ujk/6nhRmAEIBLmDf1kavA5V
-	QWjs7UfGq+g5lZ6FfHEEjQfwNXTvqLpLcibbRbNE8E3pkQwGMVicGOKIOHwNx6WXWb0HSVX/Zjf
-	5eIcSV9ET+uF+PCjAAtN3dPQ82cGEt34dudgNvyzxrNLIAbaHX8ZMFuPGcm++SI201q1c9HbhuG
-	iBuiBDJWJikJfSqHcYicDweR8f+00JuSA/EiyO/KMG2yymf4C8GxMcMrQ1CukNuUEG+kwBBL+rr
-	WOWp0756MDTn47qK+XePn+vbyfS/04ZuLDcOYoTlZuhoappWlJUn42EWQDRastc8
-X-Google-Smtp-Source: AGHT+IFdGWX9Sw1XBBVo+bVrO9YSbA26fhevpmOJ0/HG3/Dt/hywD45Ieea7g6tn4SCocxQu/IFEJw==
-X-Received: by 2002:a05:6a21:9103:b0:1f5:64a4:aeac with SMTP id adf61e73a8af0-20cdfcfc84cmr4720910637.33.1746199895470;
-        Fri, 02 May 2025 08:31:35 -0700 (PDT)
-Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbbb15sm1767568b3a.58.2025.05.02.08.31.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:31:34 -0700 (PDT)
-Date: Fri, 2 May 2025 21:01:29 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Aaron Kling <webgeek1234@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, 
-	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH 2/2] PCI: tegra: Allow building as a module
-Message-ID: <4u4h27w77sdjvy43b3yonidhfjuvljylms3qxqfaqwyw3v32qo@kzgrrenxr6yz>
-References: <20250420-pci-tegra-module-v1-0-c0a1f831354a@gmail.com>
- <20250420-pci-tegra-module-v1-2-c0a1f831354a@gmail.com>
- <pgp3cdksefn2z4n2hlyhftbdlfwyx7gbol7q6wdj5j4brux3cw@thts2qcahdw3>
- <CALHNRZ9R4SWtzAYocY9X7D9hm4mXeWKhdo_rk5UmRPVGD-vbBQ@mail.gmail.com>
- <lk37wtb25pr2rj3zhct5udaykr7joqw2mpgtupjq33of2xhesi@rmdgucbzxmgz>
- <CALHNRZ8gSzOVpN_au_ntSan7or=uRBrPSRFdbDqAHxitcEfs7g@mail.gmail.com>
- <ym5fy2svuukmoy7uvg4i4amsosjdzygxauytxoctjbjzxwqdng@o5tsy5irkgfl>
- <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1746199909; x=1746804709;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jM8M6akj52fCQHHjXX1/nsZvwbcymr7x1EGpLLdZdRo=;
+        b=P9IYjsHWl2fJ+ASDIeW7cENH+3lDRk3mksCFMIpD8G54OlJXPe2iBim2gdyH6rWNGd
+         lTUxICXLmMyiiJ1cARWGvlnOCVDCLsd2siH7OHNG14gZIKaIhti9kcsB9g0CRm5ezpTF
+         3mMVZlSi+ekFcffm/PWZwGBmT/Ad/h1vkOl4qawP+aROZjwLqhfUOD8vlqLp/U9PYIAt
+         wmob23+X3PH8gUlYTCvTC18IYIHzmUCHshWAwur+qbpgAB1DBt55Fppu1fcywiXpE775
+         F1tWkl7F3T192DL9uLO1m/8bhrbAoO/auqPMqZTQoBFrDJeRNy7F5E+aglQP7RIeUXTl
+         3Wfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWDU8XCvdEako9uo24gdJHEm4Lf0jjCMsGe0WMQ0kykvnivHIo4yhPnDqiN1DeUj7OsL8DjoeMVR2Hkac8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnI89RGmLiB4G5v2JKyX/DkDHVd6h/0U/JnCHuxXuYgEQCuCnY
+	o0BDYuhthgWANaIcMXofrnQ2DnBR/N/xaTtpUUqOI33oIhXOeBpshBE5/Sk7qfyWN4w9U0HRg1J
+	uHTjEjoFh9EIGoZW7vpkySLJc+H233Q8DqROKh0wUEMpV4PE11lxDaaBsKnexOw==
+X-Gm-Gg: ASbGnctqGxEhKB9hY77Gc4BAcVRuUi4W8p2aW2qHxJqwvJmJNDjyYrbKFuDooOs76p9
+	8p5OK8IBkQNDvE1a48DicM8Vk8b4XoL2CXX4pgfT1GtW4NDwfxE6B7wr1gT7GZwGOjlPGQMRuyi
+	tsGV9vQo2f+C2x7TF3Euw+fVNzpzEuwKQXMcKYXey4Y6THR4j87gxTou9ya9Fwm89T3paIN9S/c
+	cqiBTrvtw9sTO0i7jUvOYYU6+FGCUwyRtwqouePEYEx2fgoSdqxgfKbqa7eeXIju8xfTO16ll7J
+	2hBnYALa+TBprFmgdTV0bXdCf5pDTVFIJ4ESUOfGznG3yoc5CdLRzyWWhyoMG3pglqrIdKuRZ8j
+	fheOzDee4Tphm1ucGh+6L7Ykcfd0ZG+xiPzWbbfY=
+X-Received: by 2002:a05:600c:a368:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-441bbf37f2bmr27033295e9.29.1746199909397;
+        Fri, 02 May 2025 08:31:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEvYzEZlLwr2sfu3x5hwxFQiu1NtDm78iDWETxYBo0k9U7Y9unR1MHkU940jUVDxeM2iTskQ==
+X-Received: by 2002:a05:600c:a368:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-441bbf37f2bmr27032725e9.29.1746199908975;
+        Fri, 02 May 2025 08:31:48 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c713:d600:afc5:4312:176f:3fb0? (p200300cbc713d600afc54312176f3fb0.dip0.t-ipconnect.de. [2003:cb:c713:d600:afc5:4312:176f:3fb0])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecc20sm93468795e9.13.2025.05.02.08.31.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 08:31:47 -0700 (PDT)
+Message-ID: <a34c844d-b44f-411c-b5d7-8e38a50b0b05@redhat.com>
+Date: Fri, 2 May 2025 17:31:46 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [REGRESSION] Re: [PATCH v3 3/6] mm: shmem: add large folio
+ support for tmpfs
+To: Daniel Gomez <da.gomez@kernel.org>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+ akpm@linux-foundation.org, hughd@google.com, willy@infradead.org,
+ wangkefeng.wang@huawei.com, 21cnbao@gmail.com, ryan.roberts@arm.com,
+ ioworker0@gmail.com, da.gomez@samsung.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, regressions@lists.linux.dev,
+ intel-gfx@lists.freedesktop.org, Eero Tamminen <eero.t.tamminen@intel.com>
+References: <cover.1732779148.git.baolin.wang@linux.alibaba.com>
+ <035bf55fbdebeff65f5cb2cdb9907b7d632c3228.1732779148.git.baolin.wang@linux.alibaba.com>
+ <aBEP-6iFhIC87zmb@intel.com>
+ <ac8cbd8d-44e9-4a88-b88b-e29e9f30a2fd@linux.alibaba.com>
+ <aBIHYqzar5J8uxGO@intel.com>
+ <cxwpgygobg6wleoeezbowjhmid4mdhptzheqask44ew37h2q24@kryzkecuobbp>
+ <57dc4929-268b-4f3f-a0f8-43d6ec85974f@linux.alibaba.com>
+ <72978e3a-ee67-47d4-b06d-e911bc5d57ff@redhat.com>
+ <exl3dpqh7oqhdd3afo3gvainumqw6j4ebfifkyeqkqvf36yxlh@pcuhdqanuy32>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <exl3dpqh7oqhdd3afo3gvainumqw6j4ebfifkyeqkqvf36yxlh@pcuhdqanuy32>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALHNRZ-vVzNzfJRMM+i044qwvuv-bm0hB8fTZu0XQJA_qT9Mow@mail.gmail.com>
 
-On Mon, Apr 28, 2025 at 05:39:23PM -0500, Aaron Kling wrote:
-> On Sun, Apr 27, 2025 at 10:57 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > On Mon, Apr 21, 2025 at 11:33:01AM -0500, Aaron Kling wrote:
-> > > On Mon, Apr 21, 2025 at 3:54 AM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > On Mon, Apr 21, 2025 at 03:09:42AM -0500, Aaron Kling wrote:
-> > > > > On Mon, Apr 21, 2025 at 2:52 AM Manivannan Sadhasivam
-> > > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > > >
-> > > > > > On Sun, Apr 20, 2025 at 09:59:06PM -0500, Aaron Kling via B4 Relay wrote:
-> > > > > > > From: Aaron Kling <webgeek1234@gmail.com>
-> > > > > > >
-> > > > > > > The driver works fine as a module, so allow building as such.
-> > > > > > >
-> > > > > >
-> > > > > > In the past, the former irqchip maintainer raised concerns for allowing the
-> > > > > > irqchip drivers to be removed from the kernel. The concern was mostly (afaik)
-> > > > > > due to not disposing all IRQs before removing the irq_domain.
-> > > > > >
-> > > > > > So Marek submitted a series [1] that added a new API for that. But that series
-> > > > > > didn't progress further. So if you want to make this driver a module, you need
-> > > > > > to do 2 things:
-> > > > > >
-> > > > > > 1. Make sure the cited series gets merged and this driver uses the new API.
-> > > > > > 2. Get an Ack from Thomas (who is the only irqchip maintainer now).
-> > > > >
-> > > > > Should this be a hard blocker for building this one driver as a
-> > > > > module? I did a quick grep of drivers/pci/controller for irq_domain,
-> > > > > then compared several of the hits to the Kconfig. And every single one
-> > > > > is tristate. Tegra is by far not a unique offender here.
-> > > > >
-> > > >
-> > > > Not 'unique', yes. But the situation is a bit worse atm. Some of the patches
-> > > > (making the driver as a module) were merged in the past without addressing the
-> > > > mapping issue.
-> > > >
-> > > > Please take a look at the reply from Marc:
-> > > > https://lkml.iu.edu/hypermail/linux/kernel/2207.2/08367.html
-> > > >
-> > > > Even though Marc said that disposing IRQs is not enough to make sure there are
-> > > > no dangling pointers of the IRQs in the client drivers, I'm inclined to atleast
-> > > > allow modular drivers if they could dispose all the mappings with the new API.
-> > > > This doesn't mean that I'm not cared about the potential issue, but the removing
-> > > > of modules is always an 'experimental' feature in the kernel. So users should be
-> > > > aware of what they are doing. Also, we have not seen any reported issues after
-> > > > disposing the IRQs from the controller drivers. That also adds to my view on
-> > > > this issue.
-> > > >
-> > > > That being said, the safest option would be to get rid of the remove callback
-> > > > and make the module modular. This will allow the driver to be built as a module
-> > > > but never getting removed (make sure .suppress_bind_attrs is also set).
-> > > .suppress_bind_attrs is already set in this driver. But what happens
-> > > cleanup on shutdown if the remove is dropped? Would it be better to
-> > > move remove to shutdown for this case?
-> > >
-> >
-> > remove() won't be called on shutdown path, you need to populate the shutdown()
-> > callback for that. But do note that both remove() and shutdown() serves
-> > different purpose, so do not just rename the function.
+On 02.05.25 15:10, Daniel Gomez wrote:
+> On Fri, May 02, 2025 at 09:18:41AM +0100, David Hildenbrand wrote:
+>> On 02.05.25 03:02, Baolin Wang wrote:
+>>>
+>>>
+>>> On 2025/4/30 21:24, Daniel Gomez wrote:
+>>>> On Wed, Apr 30, 2025 at 02:20:02PM +0100, Ville Syrjälä wrote:
+>>>>> On Wed, Apr 30, 2025 at 02:32:39PM +0800, Baolin Wang wrote:
+>>>>>> On 2025/4/30 01:44, Ville Syrjälä wrote:
+>>>>>>> On Thu, Nov 28, 2024 at 03:40:41PM +0800, Baolin Wang wrote:
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> This causes a huge regression in Intel iGPU texturing performance.
+>>>>>>
+>>>>>> Unfortunately, I don't have such platform to test it.
+>>>>>>
+>>>>>>>
+>>>>>>> I haven't had time to look at this in detail, but presumably the
+>>>>>>> problem is that we're no longer getting huge pages from our
+>>>>>>> private tmpfs mount (done in i915_gemfs_init()).
+>>>>>>
+>>>>>> IIUC, the i915 driver still limits the maximum write size to PAGE_SIZE
+>>>>>> in the shmem_pwrite(),
+>>>>>
+>>>>> pwrite is just one random way to write to objects, and probably
+>>>>> not something that's even used by current Mesa.
+>>>>>
+>>>>>> which prevents tmpfs from allocating large
+>>>>>> folios. As mentioned in the comments below, tmpfs like other file
+>>>>>> systems that support large folios, will allow getting a highest order
+>>>>>> hint based on the size of the write and fallocate paths, and then will
+>>>>>> attempt each allowable huge order.
+>>>>>>
+>>>>>> Therefore, I think the shmem_pwrite() function should be changed to
+>>>>>> remove the limitation that the write size cannot exceed PAGE_SIZE.
+>>>>
+>>>> To enable mTHP on tmpfs, the necessary knobs must first be enabled in sysfs
+>>>> as they are not enabled by default IIRC (only THP, PMD level). Ville, I
+>>>> see i915_gemfs the huge=within_size mount option is passed. Can you confirm
+>>>> if /sys/kernel/mm/transparent_hugepage/hugepages-*/enabled are also marked as
+>>>> 'always' when the regression is found?
+>>>
+>>> The tmpfs mount will not be controlled by
+>>> '/sys/kernel/mm/transparent_hugepage/hugepages-*Kb/enabled' (except for
+>>> the debugging options 'deny' and 'force').
+>>
+>> Right, IIRC as requested by Willy, it should behave like other FSes where
+>> there is no control over the folio size to be used.
 > 
-> I did some more looking into this today and came across 662b94c3195654
-> [0]. That commit stated to add support to the driver to be built as a
-> module, but didn't touch the Kconfig, so I'm unsure how that ever
-> worked. But Manivannan, can you please take a look at that commit and
-> its message? I'm not familiar with pcie and what is required for
-> proper de-initialization. That commit added the remove method for the
-> stated purpose of making the driver a module. Implying that none of
-> that was needed on shutdown when built-in. So if the intent is to make
-> a permanent module which cannot be unloaded, as you're asking for,
-> does that mean it's safe to just fully revert that commit?
+> Thanks for reminding me. I forgot we finally changed it.
 > 
+> Could the performance drop be due to the driver no longer using PMD-level pages?
 
-Yeah, that commit was simply wrong and pointless. But the revert won't be
-straightforward. So I'd recommend to simply drop the .remove() callback and the
-associated code and finally make the driver tristate.
+I suspect that the faulting logic will now go to a smaller order first, 
+indeed.
 
-- Mani
+... trying to digest shmem_allowable_huge_orders() and 
+shmem_huge_global_enabled(), having a hard time trying to isolate the 
+tmpfs case: especially, if we run here into the vma vs. !vma case.
+
+Without a VMA, I think we should have "mpfs will allow getting a highest 
+order hint based on and fallocate paths, then will try each allowable 
+order".
+
+With a VMA (no access hint), "we still use PMD-sized order to locate 
+huge pages due to lack of a write size hint."
+
+So if we get a fallocate()/write() that is, say, 1 MiB, we'd now 
+allocate an 1 MiB folio instead of a 2 MiB one.
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Cheers,
+
+David / dhildenb
+
