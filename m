@@ -1,235 +1,260 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58B81EBFFF;
-	Fri,  2 May 2025 20:13:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B44376
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216802; cv=none; b=A3LNT2VER0yxE6v9y9MPAqoZKlj9K2hDPKB5HYj5pycyZEli2Yq9QhcBpQqBVyYLVTZTwtEZdD/7hcYjpW4nVh+e7K9yIVq15+wVVwthU7IQb9f8WqqyhSIL6f+YcKffXgtKJnqrZKWEHB/LVbHKUAHZkZveZ+8hW0ZDX4ps3Qs=
+	t=1746216845; cv=none; b=ZxsDPTxY+US0wEGsiV47TG26u/Kgr8WZ2/ZNdKkbgKsnQ7LQXI0GkhjFM/2Op2mNVK1AEQcuNG54TcrGVJSwLbfQNILKuXNptfmTTYazV1Z+i2aqFhhUI5R3G4BRyUE5UbYi93GuX9aLoNfSu91O5x4CbvB0v5J3Jk0Rx5ivylI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216802; c=relaxed/simple;
-	bh=ud5kPFd0X0qVPSg4fD5da0mFAuqP+3DF97NZsjzX95U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EiZO8+Nk5CVgNOT7cDxNw92XZiQDQ7Cr0ljxXRmGzQ+41BcvQXA5E26eMPxL4//FdHtWlpGeYJiEeBhl/XhV0tKesdk946lDJWf0m8HwPOyW4GrKhY1NgmGOs52Mb5UsqomFfjIm5nEKpmocEbaCa2ec73ufa1uGBTs2PcoysuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NAEcku5N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746216845; c=relaxed/simple;
+	bh=TtJqAB1fKu0acUdQl4SimWlO80c+kj4wqBMlGQjqF5U=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Dr/cz9WhL6I7UJaSfPgyRetv8/+o5s8DU3mcDKgImVRAl1bcpuZZPwOqLrtHVDdgL3uv+da7ZN9NOV6iu7JJdcGOPBuT58h1t9pKIj6yGIVTKWMBqU/NMOUS5dLoAw+Vtu/fPE1MFxpGmh0eh6Iq2TIW/VlTqcQxcMubhP/G8DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UihQEv3A; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NAEcku5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5360BC4CEE4;
-	Fri,  2 May 2025 20:13:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746216801;
-	bh=ud5kPFd0X0qVPSg4fD5da0mFAuqP+3DF97NZsjzX95U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NAEcku5Nxv9GRrH+L3Iv16BNKPw2uuy+IMAMt90iPCt+ePynUTiSzPsznqzxwQD/9
-	 C17Lj0STrmFVoPn7ELJh55vaiGisuowphWqqPYV4yq7kmQIy/pkL/yvdYvTMAi/hV0
-	 dgD/jTpX77cq13Br+NwbHwqvWk3/4S5SzA+28kp0zHzmcp5yUC19esm7Ym07ZOgBHS
-	 xk/fufQrNpRoG3j5hH4MuoVrzW8GaHK2yMUTKCcV8kBk0VTpm7Cs+yb7EwXWSWRgv7
-	 kR8TacvlojjWGanqW01wpH6leNdoQsaImm1eJlQetuMQqjq8hDVLhZ9AJjdcr5BS3n
-	 +N3I3zez2Wg6Q==
-Date: Fri, 2 May 2025 13:13:20 -0700
-From: "Darrick J. Wong" <djwong@kernel.org>
-To: John Garry <john.g.garry@oracle.com>
-Cc: brauner@kernel.org, hch@lst.de, viro@zeniv.linux.org.uk, jack@suse.cz,
-	cem@kernel.org, linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
-	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org, catherine.hoang@oracle.com,
-	linux-api@vger.kernel.org
-Subject: [PATCH v10.1 05/15] xfs: ignore HW which cannot atomic write a
- single block
-Message-ID: <20250502201320.GV25675@frogsfrogsfrogs>
-References: <20250501165733.1025207-1-john.g.garry@oracle.com>
- <20250501165733.1025207-6-john.g.garry@oracle.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UihQEv3A"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso385166066b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 13:14:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746216841; x=1746821641; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=IWH1cHDu5KH0pRViPEWRqXxu0kS8sZnFv4Swd/5VeOQ=;
+        b=UihQEv3AuwxHGh6229tycL01NSPeGMbzVtk69SLMh5OJ6UxGXwSTXMpR5iudgzYCzG
+         U8CVjdBj1DazC/FuQV7aLn579VGSHCojBw6zYTgKPQlL1vDQRginm00g+QCfbvIXspgH
+         dXZOIkh/YJEzpHW0C+iJyqbOLQ2hoPzXqFwriUst2gLOGrDb2kWpA+rRbAmLDqyUbBWI
+         NdOoZSKp+W+7CQ8aJVS7CBMgrCKE3c0VlxbJ9hDw0VpSJNnh6Pza8Yv7oWuHz6XXT2L+
+         nuAB1szEZMmS4WGWBy0ndlHOZpQKt9pXtcKAjZuWyC9xury5dMGOSXNIzYJ0sa9ceeSS
+         ETQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746216841; x=1746821641;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=IWH1cHDu5KH0pRViPEWRqXxu0kS8sZnFv4Swd/5VeOQ=;
+        b=iHNxQRrgaupDv92rarlkYWV6O9bpHvuvnRIMnUrrp3yxpD64MsmQqeVxeDv0vtAWQe
+         sDGVOUlMz+CNopqBMWJQ+ltSXIGCoF8jpBv+Qpsoa+bqQBGZYgqKDoM7A5REw+3V2Lnf
+         vBbz3G9xNhIcmLssUNwBV56UXYOKF94ZfIRCEqDah7BV/NvSjcsPXsyflBvg7BDNsPgK
+         0nfTpgo7Akqqj9aDmniQ1hQ2sDKuq0oIg1eh9ehvso5ZjFMYE1C1pH30rr1Bb0bYtIXa
+         o/O8gfiM1dJCcrekt3FpmbebM7ZXajhKTK1aOtGzacndDIWupE+VmbNAqc+BejsbkDFv
+         JJEA==
+X-Forwarded-Encrypted: i=1; AJvYcCVftkqgsBxvoReoizIptrcGl1svCSbv9jTRoK+mD4OHiLhHqEjqScNln1KN10RjxmbEO0UEveh43jDBG9U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKtsh4+RjX2XWou5ZmsTzJp8RfQjCehu21pn9fm/rL68IT2Clx
+	doiMHc0SKQlQhI0bu9MOybVhlfv3o0+0k7QwQHQVFACUbhDU8At2p2nXFHCi6HZuoUyxe33zPSs
+	UjBk/yqD2V8L44sY0Noq4R5oyIjA=
+X-Gm-Gg: ASbGnctQ8Wn/7bRcMZWBfeUr/py+dcLem7xQvVpkdUoS08vDiZSH9YIYkMidiB47nsZ
+	qoCI2l83PMhLPqDiOxD2YBKafrjq2HkHOO7o1DO3QN/m7sMvnf/C5rtgv8eRXo0xKEUS8a43qV3
+	n8is/dD8FQKzPoU61etuzr
+X-Google-Smtp-Source: AGHT+IH5+b2nYFhvbaa9fGevqTPKYSSF08veZF2/Iy6/VoQIjhbmSs2E8Po24EQl6RMyd/DIQ/jaWoBNICOwyu9amY0=
+X-Received: by 2002:a17:907:1c1f:b0:ad1:8e6e:bea8 with SMTP id
+ a640c23a62f3a-ad1908373a3mr50877666b.37.1746216841199; Fri, 02 May 2025
+ 13:14:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501165733.1025207-6-john.g.garry@oracle.com>
+From: Dave Airlie <airlied@gmail.com>
+Date: Sat, 3 May 2025 06:13:49 +1000
+X-Gm-Features: ATxdqUGs0PnOxmt2B41wQhgJOvIJZ_8jVR5PAqirocl5W192K0P8o4yakp6yjoQ
+Message-ID: <CAPM=9txGv4UObO6mWDtU+RLCaswfHPovigKQwuD3XK3BtqF07A@mail.gmail.com>
+Subject: [git pull] drm fixes for 6.15-rc5
+To: Linus Torvalds <torvalds@linux-foundation.org>, Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel <dri-devel@lists.freedesktop.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Darrick J. Wong <djwong@kernel.org>
+Hi Linus,
 
-Currently only HW which can write at least 1x block is supported.
+Weekly drm fixes, amdgpu and xe as usual, the new adp driver has a
+bunch of vblank fixes, then a bunch of small fixes across the board.
+Seems about the right level for this time in the release cycle.
 
-For supporting atomic writes > 1x block, a CoW-based method will also be
-used and this will not be resticted to using HW which can write >= 1x
-block.
+Regards,
+Dave.
 
-However for deciding if HW-based atomic writes can be used, we need to
-start adding checks for write length < HW min, which complicates the
-code.  Indeed, a statx field similar to unit_max_opt should also be
-added for this minimum, which is undesirable.
+drm-fixes-2025-05-03:
+drm fixes for 6.15-rc5
 
-HW which can only write > 1x blocks would be uncommon and quite weird,
-so let's just not support it.
+ttm:
+- docs warning fix
 
-Signed-off-by: "Darrick J. Wong" <djwong@kernel.org>
-Signed-off-by: John Garry <john.g.garry@oracle.com>
----
-v10.1: rename xfs_getsize_buftarg and rebase on previous changes to
-xfs_getsize_buftarg
----
- fs/xfs/xfs_buf.h   |    4 ++--
- fs/xfs/xfs_inode.h |   14 ++------------
- fs/xfs/xfs_buf.c   |   44 ++++++++++++++++++++++++++++++++++++--------
- fs/xfs/xfs_super.c |    6 +++---
- 4 files changed, 43 insertions(+), 25 deletions(-)
+kunit
+- fix leak in shmem tests
 
-diff --git a/fs/xfs/xfs_buf.h b/fs/xfs/xfs_buf.h
-index 132210705602b4..7759fe35d93ea7 100644
---- a/fs/xfs/xfs_buf.h
-+++ b/fs/xfs/xfs_buf.h
-@@ -112,7 +112,7 @@ struct xfs_buftarg {
- 	struct percpu_counter	bt_readahead_count;
- 	struct ratelimit_state	bt_ioerror_rl;
- 
--	/* Atomic write unit values */
-+	/* Atomic write unit values, bytes */
- 	unsigned int		bt_bdev_awu_min;
- 	unsigned int		bt_bdev_awu_max;
- 
-@@ -374,7 +374,7 @@ struct xfs_buftarg *xfs_alloc_buftarg(struct xfs_mount *mp,
- extern void xfs_free_buftarg(struct xfs_buftarg *);
- extern void xfs_buftarg_wait(struct xfs_buftarg *);
- extern void xfs_buftarg_drain(struct xfs_buftarg *);
--extern int xfs_setsize_buftarg(struct xfs_buftarg *, unsigned int);
-+extern int xfs_configure_buftarg(struct xfs_buftarg *, unsigned int);
- 
- #define xfs_getsize_buftarg(buftarg)	block_size((buftarg)->bt_bdev)
- #define xfs_readonly_buftarg(buftarg)	bdev_read_only((buftarg)->bt_bdev)
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index bdbbff0d8d9920..d7e2b902ef5c97 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -356,19 +356,9 @@ static inline bool xfs_inode_has_bigrtalloc(const struct xfs_inode *ip)
- 	(XFS_IS_REALTIME_INODE(ip) ? \
- 		(ip)->i_mount->m_rtdev_targp : (ip)->i_mount->m_ddev_targp)
- 
--static inline bool
--xfs_inode_can_hw_atomic_write(
--	struct xfs_inode	*ip)
-+static inline bool xfs_inode_can_hw_atomic_write(const struct xfs_inode *ip)
- {
--	struct xfs_mount	*mp = ip->i_mount;
--	struct xfs_buftarg	*target = xfs_inode_buftarg(ip);
--
--	if (mp->m_sb.sb_blocksize < target->bt_bdev_awu_min)
--		return false;
--	if (mp->m_sb.sb_blocksize > target->bt_bdev_awu_max)
--		return false;
--
--	return true;
-+	return xfs_inode_buftarg(ip)->bt_bdev_awu_max > 0;
- }
- 
- /*
-diff --git a/fs/xfs/xfs_buf.c b/fs/xfs/xfs_buf.c
-index 292891d6ff69ac..770dc4ca79e4c4 100644
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1714,13 +1714,45 @@ xfs_free_buftarg(
- 	kfree(btp);
- }
- 
-+/*
-+ * Configure this buffer target for hardware-assisted atomic writes if the
-+ * underlying block device supports is congruent with the filesystem geometry.
-+ */
-+static inline void
-+xfs_configure_buftarg_atomic_writes(
-+	struct xfs_buftarg	*btp)
-+{
-+	struct xfs_mount	*mp = btp->bt_mount;
-+	unsigned int		min_bytes, max_bytes;
-+
-+	min_bytes = bdev_atomic_write_unit_min_bytes(btp->bt_bdev);
-+	max_bytes = bdev_atomic_write_unit_max_bytes(btp->bt_bdev);
-+
-+	/*
-+	 * Ignore atomic write geometry that is nonsense or doesn't even cover
-+	 * a single fsblock.
-+	 */
-+	if (min_bytes > max_bytes ||
-+	    min_bytes > mp->m_sb.sb_blocksize ||
-+	    max_bytes < mp->m_sb.sb_blocksize) {
-+		min_bytes = 0;
-+		max_bytes = 0;
-+	}
-+
-+	btp->bt_bdev_awu_min = min_bytes;
-+	btp->bt_bdev_awu_max = max_bytes;
-+}
-+
-+/* Configure a buffer target that abstracts a block device. */
- int
--xfs_setsize_buftarg(
-+xfs_configure_buftarg(
- 	struct xfs_buftarg	*btp,
- 	unsigned int		sectorsize)
- {
- 	int			error;
- 
-+	ASSERT(btp->bt_bdev != NULL);
-+
- 	/* Set up metadata sector size info */
- 	btp->bt_meta_sectorsize = sectorsize;
- 	btp->bt_meta_sectormask = sectorsize - 1;
-@@ -1733,6 +1765,9 @@ xfs_setsize_buftarg(
- 		return -EINVAL;
- 	}
- 
-+	if (bdev_can_atomic_write(btp->bt_bdev))
-+		xfs_configure_buftarg_atomic_writes(btp);
-+
- 	return 0;
- }
- 
-@@ -1795,13 +1830,6 @@ xfs_alloc_buftarg(
- 	btp->bt_daxdev = fs_dax_get_by_bdev(btp->bt_bdev, &btp->bt_dax_part_off,
- 					    mp, ops);
- 
--	if (bdev_can_atomic_write(btp->bt_bdev)) {
--		btp->bt_bdev_awu_min = bdev_atomic_write_unit_min_bytes(
--						btp->bt_bdev);
--		btp->bt_bdev_awu_max = bdev_atomic_write_unit_max_bytes(
--						btp->bt_bdev);
--	}
--
- 	/*
- 	 * When allocating the buftargs we have not yet read the super block and
- 	 * thus don't know the file system sector size yet.
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 83de3ac39ae53b..ed23e6ffe644b6 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -557,7 +557,7 @@ xfs_setup_devices(
- {
- 	int			error;
- 
--	error = xfs_setsize_buftarg(mp->m_ddev_targp, mp->m_sb.sb_sectsize);
-+	error = xfs_configure_buftarg(mp->m_ddev_targp, mp->m_sb.sb_sectsize);
- 	if (error)
- 		return error;
- 
-@@ -566,7 +566,7 @@ xfs_setup_devices(
- 
- 		if (xfs_has_sector(mp))
- 			log_sector_size = mp->m_sb.sb_logsectsize;
--		error = xfs_setsize_buftarg(mp->m_logdev_targp,
-+		error = xfs_configure_buftarg(mp->m_logdev_targp,
- 					    log_sector_size);
- 		if (error)
- 			return error;
-@@ -580,7 +580,7 @@ xfs_setup_devices(
- 		}
- 		mp->m_rtdev_targp = mp->m_ddev_targp;
- 	} else if (mp->m_rtname) {
--		error = xfs_setsize_buftarg(mp->m_rtdev_targp,
-+		error = xfs_configure_buftarg(mp->m_rtdev_targp,
- 					    mp->m_sb.sb_sectsize);
- 		if (error)
- 			return error;
+fdinfo:
+- driver unbind race fix
+
+amdgpu:
+- Fix possible UAF in HDCP
+- XGMI dma-buf fix
+- NBIO 7.11 fix
+- VCN 5.0.1 fix
+
+xe:
+- Eustall locking fix and disabling on VF
+- Documentation fix kernel version supporting hwmon entries
+- SVM fixes on error handling
+
+i915:
+- Fix build for CONFIG_DRM_I915_PXP=n
+
+nouveau:
+- fix race condition in fence handling
+
+ivpu:
+- interrupt handling fix
+- D0i2 test mode fix
+
+adp:
+- vblank fixes
+
+mipi-dbi:
+- timing fix
+The following changes since commit b4432656b36e5cc1d50a1f2dc15357543add530e:
+
+  Linux 6.15-rc4 (2025-04-27 15:19:23 -0700)
+
+are available in the Git repository at:
+
+  https://gitlab.freedesktop.org/drm/kernel.git tags/drm-fixes-2025-05-03
+
+for you to fetch changes up to 4e6de6b8f0d5181fcf546ee98b908372fa3cfc0d:
+
+  Merge tag 'drm-xe-fixes-2025-05-01' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+(2025-05-02 14:12:52 +1000)
+
+----------------------------------------------------------------
+drm fixes for 6.15-rc5
+
+ttm:
+- docs warning fix
+
+kunit
+- fix leak in shmem tests
+
+fdinfo:
+- driver unbind race fix
+
+amdgpu:
+- Fix possible UAF in HDCP
+- XGMI dma-buf fix
+- NBIO 7.11 fix
+- VCN 5.0.1 fix
+
+xe:
+- Eustall locking fix and disabling on VF
+- Documentation fix kernel version supporting hwmon entries
+- SVM fixes on error handling
+
+i915:
+- Fix build for CONFIG_DRM_I915_PXP=n
+
+nouveau:
+- fix race condition in fence handling
+
+ivpu:
+- interrupt handling fix
+- D0i2 test mode fix
+
+adp:
+- vblank fixes
+
+mipi-dbi:
+- timing fix
+
+----------------------------------------------------------------
+Andrzej Kacprowski (1):
+      accel/ivpu: Fix the D0i2 disable test mode
+
+Chen Linxuan (1):
+      drm/i915/pxp: fix undefined reference to
+`intel_pxp_gsccs_is_ready_for_sessions'
+
+Chris Bainbridge (1):
+      drm/amd/display: Fix slab-use-after-free in hdcp
+
+Dafna Hirschfeld (1):
+      drm/gpusvm: set has_dma_mapping inside mapping loop
+
+Dave Airlie (4):
+      Merge tag 'drm-misc-fixes-2025-04-30' of
+https://gitlab.freedesktop.org/drm/misc/kernel into drm-fixes
+      Merge tag 'drm-intel-fixes-2025-04-30' of
+https://gitlab.freedesktop.org/drm/i915/kernel into drm-fixes
+      Merge tag 'amd-drm-fixes-6.15-2025-05-01' of
+https://gitlab.freedesktop.org/agd5f/linux into drm-fixes
+      Merge tag 'drm-xe-fixes-2025-05-01' of
+https://gitlab.freedesktop.org/drm/xe/kernel into drm-fixes
+
+Felix Kuehling (1):
+      drm/amdgpu: Fail DMABUF map of XGMI-accessible memory
+
+Harish Chegondi (2):
+      drm/xe/eustall: Resolve a possible circular locking dependency
+      drm/xe/eustall: Do not support EU stall on SRIOV VF
+
+Harshit Mogalapalli (1):
+      drm/xe/svm: fix dereferencing error pointer in drm_gpusvm_range_alloc()
+
+Janne Grunau (5):
+      drm: adp: Use spin_lock_irqsave for drm device event_lock
+      drm: adp: Handle drm_crtc_vblank_get() errors
+      drm: adp: Enable vblank interrupts in crtc's .atomic_enable
+      drm: adp: Remove pointless irq_lock spin lock
+      drm: Select DRM_KMS_HELPER from DRM_DEBUG_DP_MST_TOPOLOGY_REFS
+
+John Harrison (1):
+      drm/xe/guc: Fix capture of steering registers
+
+Karol Wachowski (1):
+      accel/ivpu: Correct DCT interrupt handling
+
+Lijo Lazar (1):
+      drm/amdgpu: Fix offset for HDP remap in nbio v7.11
+
+Lucas De Marchi (1):
+      drm/xe/hwmon: Fix kernel version documentation for temperature
+
+Maxime Ripard (1):
+      drm/tests: shmem: Fix memleak
+
+Philipp Stanner (1):
+      drm/nouveau: Fix WARN_ON in nouveau_fence_context_kill()
+
+Russell Cloran (1):
+      drm/mipi-dbi: Fix blanking for non-16 bit formats
+
+Sonny Jiang (1):
+      drm/amdgpu: Add DPG pause for VCN v5.0.1
+
+Sunil Khatri (1):
+      drm/ttm: fix the warning for hit_low and evict_low
+
+Tvrtko Ursulin (1):
+      drm/fdinfo: Protect against driver unbind
+
+ .../ABI/testing/sysfs-driver-intel-xe-hwmon        |  4 +-
+ drivers/accel/ivpu/ivpu_fw.c                       |  4 +-
+ drivers/accel/ivpu/ivpu_hw_btrs.h                  |  2 +-
+ drivers/accel/ivpu/ivpu_pm.c                       | 18 ++++----
+ drivers/gpu/drm/Kconfig                            |  2 +-
+ drivers/gpu/drm/adp/adp_drv.c                      | 27 +++++------
+ drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c        |  5 ++
+ drivers/gpu/drm/amd/amdgpu/nbio_v7_11.c            |  2 +-
+ drivers/gpu/drm/amd/amdgpu/vcn_v5_0_1.c            | 54 ++++++++++++++++++++++
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_hdcp.c | 19 ++++++--
+ drivers/gpu/drm/drm_file.c                         |  6 +++
+ drivers/gpu/drm/drm_gpusvm.c                       |  2 +-
+ drivers/gpu/drm/drm_mipi_dbi.c                     |  6 ++-
+ drivers/gpu/drm/i915/pxp/intel_pxp_gsccs.h         |  8 +++-
+ drivers/gpu/drm/nouveau/nouveau_fence.c            |  2 +-
+ drivers/gpu/drm/tests/drm_gem_shmem_test.c         |  3 ++
+ drivers/gpu/drm/ttm/ttm_bo.c                       |  3 +-
+ drivers/gpu/drm/xe/xe_eu_stall.c                   | 14 +++++-
+ drivers/gpu/drm/xe/xe_eu_stall.h                   |  3 +-
+ drivers/gpu/drm/xe/xe_guc_capture.c                |  2 +-
+ drivers/gpu/drm/xe/xe_svm.c                        |  2 +-
+ 21 files changed, 146 insertions(+), 42 deletions(-)
