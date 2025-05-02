@@ -1,45 +1,53 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 665A94503B;
-	Fri,  2 May 2025 02:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB74A17BB6;
+	Fri,  2 May 2025 02:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746153832; cv=none; b=a4yorQfRwrHDdCpIf7qjKwFgTd2XQdjc/f+EacfTO6OKoRaMZQmFQ1VW95gd/ptQRj+cZr3dVe63ULG/P1Eb2HS4kt3Zrtw+w1P3ch1t29/Ysex3bIfrV9QKqG7T5ahiIkJtCXQMI6mV4DJdFOkRAz7FEPnaKkHYIy6KP8gavS0=
+	t=1746154022; cv=none; b=iCrkbVXAziWqXos/SYvvf1kfl0fobe3yR0m28/gpR5M+O1EOjLbjNB04z0FB989+o+4mDiI+qt2dYJURFYvTvbA1TLm36UGWnOhpNcMKe4S6lzs0uAMVUd1thM2jVHtK0EJRXmCfWHhBDDDtc0vUlC1xU12WAMq94yXjosypZKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746153832; c=relaxed/simple;
-	bh=JP7W2bdy/YHTp8gYecnAY096WEgnonzXy1JmRUqJM3U=;
+	s=arc-20240116; t=1746154022; c=relaxed/simple;
+	bh=kCsuUYT/SjUQVrPNwt+MDCVPrSpdg5Uljxu8zKa+2bg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JLpZ+vGD6pGc70dmXtPXByI2sMQZZIKWw9rdpOFSQCl09b7jJj5k1PeMlFgYzf6dGNkZaZ0XSOmBYW5YQF5YpqczZJ29Y7rPpKJVIruUJpfkwS6CjP8SccpA4jDXV7YgEDLS99082acKnM/veNH0qaxxmCbJ3iu+QEr50maZ0LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHT29Aa9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=e5lkxymeUaZO+CJ9uERzDsMTkxTorTyvdmnZXfxGaXQdpKwkIugTrsO3+7i7z7MhiZBZhUDp4QXbUnBjnHxf2F9fb/lyzpJNfmF3/kZiym3dbBiB8lzGk18V25uhuoGoBcpaQQDAbzX9Ye2vhDAz2StJfsrhEnkJI/pIaVaaL6o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uA2+3X0Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHT29Aa9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE304C4CEE3;
-	Fri,  2 May 2025 02:43:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uA2+3X0Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 270FCC4CEE3;
+	Fri,  2 May 2025 02:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746153831;
-	bh=JP7W2bdy/YHTp8gYecnAY096WEgnonzXy1JmRUqJM3U=;
+	s=k20201202; t=1746154022;
+	bh=kCsuUYT/SjUQVrPNwt+MDCVPrSpdg5Uljxu8zKa+2bg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gHT29Aa9C5gquUBYj0DPA0x4qpqpjEuA/W7il23tX7wdwFJUILK5Rv/PO8sWvuG8g
-	 +1acVKUt9SzbtQaxqQTxxF4WOcIKKnLkaENPXomcCE2lQZo4NbIQi6UUuYEq059rJf
-	 t+dlTxVviwZFtKwJIwYxpfzI+u1oI5BNgLsnxJ+A0iQX6EEAB8TgM/Pu6SgQ4cPJGp
-	 TevT03Gy7sSwQb9HqkSJqJQFczYx4+GmImPXsDUbg1VqmJNYmdiGTDsc7LQ+xS+oPK
-	 Gh8U3qRCj6uT9yvLsUDqaIhsgyLpBPkgAAdLdJB5iViTkhfnnPUK9/VtOL43YwRr9c
-	 Q3IyCzvswi+jw==
-Date: Thu, 1 May 2025 19:43:48 -0700
+	b=uA2+3X0YwVrQUFVA9HsqyCw5af9OMSANt0To2/hJS+SeOWEthCCcE5nlBXU8PPQQw
+	 2G9h7L18fn1sGbCjOfnE86TLGT2X/AACZaIThdUgIPdnL85HHiLf1eQIkloGdR5Q5C
+	 V5cKY+g/KJ7yKlGJKd9+nsWawOer6r/ApOZJthha6P1IToRMij8G+oTrZ1taauF2DG
+	 QSSXC1uJZM0rSE4hb5oKG+9VUensoClaZkRBbzWYu2P2SiMk0orkiRFX5YAnbgWaBM
+	 hKobl+lHiuMGVdDxmoNzzDD5Pl/lI9z1PPKDI1UsyGfSlsJcNSKp9nxCKrD+91KPZ6
+	 pFuHK50PMq6fg==
+Date: Thu, 1 May 2025 19:46:59 -0700
 From: Kees Cook <kees@kernel.org>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: dsahern@kernel.org, davem@davemloft.net, edumazet@google.com,
-	elver@google.com, horms@kernel.org, justinstitt@google.com,
-	kuba@kernel.org, linux-kernel@vger.kernel.org,
-	netdev@vger.kernel.org, pabeni@redhat.com,
-	syzbot+8f8024317adff163ec5a@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [net?] UBSAN: array-index-out-of-bounds in
- ip6_rt_copy_init
-Message-ID: <202505011943.B3A6D3DAF@keescook>
-References: <e1e1fa75-e9c2-4ae7-befb-f3910a349a9f@kernel.org>
- <20250502011550.66510-1-kuniyu@amazon.com>
+To: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Brost <matthew.brost@intel.com>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
+ struct file
+Message-ID: <202505011944.E35A427@keescook>
+References: <20250502002437.it.851-kees@kernel.org>
+ <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
+ <20250502023447.GV2023217@ZenIV>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,47 +56,46 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250502011550.66510-1-kuniyu@amazon.com>
+In-Reply-To: <20250502023447.GV2023217@ZenIV>
 
-On Thu, May 01, 2025 at 06:15:28PM -0700, Kuniyuki Iwashima wrote:
-> From: David Ahern <dsahern@kernel.org>
-> Date: Thu, 1 May 2025 14:44:03 -0600
-> > On 5/1/25 2:12 PM, Kees Cook wrote:
-> > > static int ip6_rt_type_to_error(u8 fib6_type)
-> > > {
-> > >         return fib6_prop[fib6_type];
-> > > }
+On Fri, May 02, 2025 at 03:34:47AM +0100, Al Viro wrote:
+> On Thu, May 01, 2025 at 07:13:12PM -0700, Matthew Brost wrote:
+> > On Thu, May 01, 2025 at 05:24:38PM -0700, Kees Cook wrote:
+> > > Casting through a "void *" isn't sufficient to convince the randstruct
+> > > GCC plugin that the result is intentional. Instead operate through an
+> > > explicit union to silence the warning:
 > > > 
-> > > Perhaps some kind of type confusion, as this is being generated through
-> > > ip6_rt_init_dst_reject(). Is the fib6_type not "valid" on a reject?
-> > 
-> > fib6_result is initialized to 0 in ip6_pol_route and no setting of
-> > fib6_type should be > RTN_MAX.
-> > 
+> > > drivers/gpu/drm/ttm/ttm_backup.c: In function 'ttm_file_to_backup':
+> > > drivers/gpu/drm/ttm/ttm_backup.c:21:16: note: randstruct: casting between randomized structure pointer types (ssa): 'struct ttm_backup' and 'struct file'
+> > >    21 |         return (void *)file;
+> > >       |                ^~~~~~~~~~~~
 > > > 
-> > > The reproducer appears to be just absolutely spamming netlink with
-> > > requests -- it's not at all obvious to me where the fib6_type is even
-> > > coming from. I think this is already only reachable on the error path
-> > > (i.e. it's during a "reject", it looks like), so the rt->dst.error is
-> > > just being set weird.
-> > > 
-> > > This feels like it's papering over the actual problem:
+> > > Suggested-by: Matthew Brost <matthew.brost@intel.com>
 > > 
-> > yes, if fib6_type is > than RTN_MAX we need to understand where that is
-> > happening.
+> > I forgot the policy if suggest-by but will add:
+> > Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+> > 
+> > Thomas was out today I suspect he will look at this tomorrow when he is
+> > back too.
 > 
-> Sorry, I think this was my mistake,
-> https://lore.kernel.org/netdev/20250502002616.60759-1-kuniyu@amazon.com/T/#t
+> [fsdevel and the rest of VFS maintainers Cc'd]
 > 
-> and this will fix it.
-> https://lore.kernel.org/netdev/20250501005335.53683-1-kuniyu@amazon.com/
+> NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
 > 
-> Thanks!
+> Reason: struct file should *NOT* be embedded into other objects without
+> the core VFS being very explicitly aware of those.  The only such case
+> is outright local to fs/file_table.c, and breeding more of those is
+> a really bad idea.
 > 
-> 
-> #syz dup: [syzbot] [net?] WARNING in ipv6_addr_prefix
+> Don't do that.  Same goes for struct {dentry, super_block, mount}
+> in case anyone gets similar ideas.
 
-Ah-ha! Thanks for getting it fixed! :)
+Well, in that case, the NAK should be against commit e7b5d23e5d47
+("drm/ttm: Provide a shmem backup implementation"), but that looks to
+have had 15 revisions already...
+
+But I will just back away slowly now. I was just fixing a warning
+introduced by it. :)
 
 -- 
 Kees Cook
