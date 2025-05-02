@@ -1,159 +1,144 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A5B3224B03
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:23:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C881E5B62;
+	Fri,  2 May 2025 11:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185011; cv=none; b=hdXixWJt8YiHcHpfD9uGxpgVuQnxWVBwQCS8X3sP0fwvrWkrnyFWGyelFA2oyQUD7/hjXVh74HLodc48uxzmRTShDK1jbQ2u2+0ES8i/GHpr/Fj5EUSNteRnG0/w+Xdxe4xO39VdxqeWL6UU+bvZ+FLlmyGsloFBZYcB5nmSXjE=
+	t=1746185014; cv=none; b=osDXjMz7z3TvR5RrTV/Pr9VN+i+4UsqNkekmmHrcX8UD7kONHuXPO59sxibhAp05FwEE9AkRCpGa3Oz1MqB7oMnm9SIYUUKehsyyOi6aFqsZLNuzxKIfnatunEPPGzT8pxsbi4w9Opvd/JQGZEPx0lIN3hmjD7f9NK9FWnFEKno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185011; c=relaxed/simple;
-	bh=/8HjksHxnR/LYWVqNif9GxKSelg3nmmTb3Hq2VrAvkc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JPSIdZ2ZQdlWQSlDthVSoqCEgoXMC83gZGHF9n0pRL7Ywh8qzEpYNaIbdQhSrh2rGpTUs+hLaqgdBvxjNguPg2qoKXE0T/fcXpL4g4Cj5S3FSXbdrMrstvU2X4QXfTTjL+itWRWTdkIFWZYR/t7EwZvuBDk6s8H8MpRVAPEfHy4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=UIq+AH4A; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1746185014; c=relaxed/simple;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aUCWQpoSrcP0KEtS9ljATKEOt7WiXA5RQ2z+e0iHBPRJeKQCPi3tt0EeYalYNgp2ATSgIPh+L2QvHQlqOv9R+GpI/hsa+uZofrQvEZLA+bgRvMLfVVWYFA+fIWQ5+1a1mWqy87yKc5dwVNsHTfdkX6Kp7houkXPsPp4kxzVElJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lmV94JNE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="UIq+AH4A"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ac3fcf5ab0dso301927166b.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:23:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1746185007; x=1746789807; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kbObYtDFx1qro1bvSu2kf9oWhwh2pZ6u6GB8eCByqt4=;
-        b=UIq+AH4A3aBH1zasRm1+GKpkM+tUMuTsSCFDdCOQc7PNZmonNYmH4TX6eaH/00ziVj
-         vpQtOzeJvOn9gmkn0Gz9hbrnb0Wto5rPthd1/44Q8ivtvx2HxkMkB3cGyCaVUJq+4GuZ
-         6plsTMM85VoyI8413nii/ieaXuZ87GHGHPJCGPPK+IvjxOUBSEDd9eYLgC6FtEdVqGKU
-         adONr+vW2o+c5H1CE/aGSnnWu5oVjqcBMp7bYwD2VdZsEmmPi2zD6q0Ej8mT5/3zvb/U
-         FOh71OXDkNOA3GNP+TVG6ZBDwg/3mnF8xCVfVql5sVT7y4W7jQBox/I1lDornUvwLe8Y
-         TaKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746185007; x=1746789807;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kbObYtDFx1qro1bvSu2kf9oWhwh2pZ6u6GB8eCByqt4=;
-        b=KcgoWTBEzR83t5UXpew4g+5Y2Na+Ic+WCoFG+vNAm+VT0Q03NdzxUSxIA5z9UHXtTl
-         9GXp+Yb2YTzwL/BmI7GRxG5YDaP8KGYOnW69TTss3jZmcggA28WiFvQ7cWw7YXMbBGaX
-         iQ4NjajqlCo0BMd6xW9rX9hd2Y1DPRypnDle5pSVUEkLXOh+BEqIdAM87vc++g/0nxlX
-         GqChnRCooO1IXNnf9tRlYuv45dl0lu5KGzRnGNY3xZ9zQjVXfxtS1hc3OjqinQbXuH2N
-         0GnMUTIOAQR3IaEGVFH428y6JSDwQvZyNir+w3qCxAI5eA8D1WV4BwxVOdeDUoFpN60E
-         beLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXpzWKSNv2Ry/qoUos6ULQ5IH+fwyvBn81y4P39vgBldNkHKgqFu2Hpa7NtA09Ai41C2gPGEWyPT+j/BIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNONY0cNjh7Ux58uzddbHM3V/JZTCuEIZIqt1CdlzkfVean7hB
-	m3BHDnNWzT+8Vwy4uZVA7UufNlyGsI7JJqJdrDDv3SauzDrAl0ZGnYPv/LeERxvZj7ng7dh9ix0
-	b86IICSCU4yAbolMHD60BzahtF138aDrnX7apyw==
-X-Gm-Gg: ASbGncuj61RkLq0jZFcRR34sW0Y95tASTIYmMWEWIHR2hRu2biaRxpQYOoucSCukhZg
-	ekOj+cdLeojbU0bUcHLbhi6NvyukB462Z+/UGkiRJf0WiW9AC9uza1Chj2mVvEhHa0AOjHoaJHx
-	QLPb0jUjCg4AwmkqCalL/9
-X-Google-Smtp-Source: AGHT+IGcHZhjWLByBsMxPMPruZs0xWBL5PKE+RQGiE6tacXkOtMX3cecKZVa20XY0Ly27mWWYpAz6Vbn3JDoG9Qnmag=
-X-Received: by 2002:a17:906:ba83:b0:ac7:95b5:f5d1 with SMTP id
- a640c23a62f3a-ad17af4f980mr196136366b.42.1746185006625; Fri, 02 May 2025
- 04:23:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lmV94JNE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=PRPW/uDt3qcKT5KOPbhmERJnNbucXaeqN2L1IjyyPX4=; b=lmV94JNEzV4MsUJuxpPUrg3Bax
+	VPmVO1/zySgMAd5F2IJnFvPiwZNPECAQ1noECVKMioFjFmA+n5SOAzV+kGbk/f9S1iWtVP9rLg6cZ
+	hHF7SAR0m7IaJh5tCHy2qA/R/vkevPz7ZR3+xa+Zh5GSLdg0ezbI6iHsuifF9HE00+OjyODMdnQyb
+	JkPl44vhH6EmamOKaWacZeeUgT5U6RxA5F79Ex/83F13pJOquOWPbK7ely8gHy1uVeRQNWbA0aBQP
+	f+nYHty39Jk6K+NlHv/lPYoCn7B5BgUPqoEMb82IHPQShd8FJim54uJ17ucrfOJGKm432KMXzRw1R
+	RwhYSB9w==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAoTJ-0000000FKnO-0XWf;
+	Fri, 02 May 2025 11:22:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6C1A530057C; Fri,  2 May 2025 13:22:16 +0200 (CEST)
+Date: Fri, 2 May 2025 13:22:16 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250429151800.649010-1-neelx@suse.com> <20250430080317.GF9140@twin.jikos.cz>
- <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
- <CAPjX3FdpjOfu61KTnQFKdGgh4u5eVz_AwenoPVNgP_eiuka3hw@mail.gmail.com> <20250502103014.GN9140@suse.cz>
-In-Reply-To: <20250502103014.GN9140@suse.cz>
-From: Daniel Vacek <neelx@suse.com>
-Date: Fri, 2 May 2025 13:23:15 +0200
-X-Gm-Features: ATxdqUFsCAE23vInO_k8SiCRrPA6hEZ9aX390SzLq56qcaA2sgLYgWUY9M-tHYY
-Message-ID: <CAPjX3FeNcwQrBofsHppQpua7e7UwbwRAKKaz0KHS9ypEfntTDA@mail.gmail.com>
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
-To: dsterba@suse.cz
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
 
-On Fri, 2 May 2025 at 12:30, David Sterba <dsterba@suse.cz> wrote:
->
-> On Wed, Apr 30, 2025 at 02:31:33PM +0200, Daniel Vacek wrote:
-> > On Wed, 30 Apr 2025 at 10:21, Daniel Vacek <neelx@suse.com> wrote:
-> > >
-> > > On Wed, 30 Apr 2025 at 10:03, David Sterba <dsterba@suse.cz> wrote:
-> > > >
-> > > > On Tue, Apr 29, 2025 at 05:17:57PM +0200, Daniel Vacek wrote:
-> > > > > Even super block nowadays uses nodesize for eb->len. This is since commits
-> > > > >
-> > > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
-> > > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
-> > > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
-> > > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
-> > > > >
-> > > > > With these the eb->len is not really useful anymore. Let's use the nodesize
-> > > > > directly where applicable.
-> > > >
-> > > > I've had this patch in my local branch for some years from the times we
-> > > > were optimizing extent buffer size. The size on release config is 240
-> > > > bytes. The goal was to get it under 256 and keep it aligned.
-> > > >
-> > > > Removing eb->len does not change the structure size and leaves a hole
-> > > >
-> > > >  struct extent_buffer {
-> > > >         u64                        start;                /*     0     8 */
-> > > > -       u32                        len;                  /*     8     4 */
-> > > > -       u32                        folio_size;           /*    12     4 */
-> > > > +       u32                        folio_size;           /*     8     4 */
-> > > > +
-> > > > +       /* XXX 4 bytes hole, try to pack */
-> > > > +
-> > > >         long unsigned int          bflags;               /*    16     8 */
-> > > >         struct btrfs_fs_info *     fs_info;              /*    24     8 */
-> > > >         void *                     addr;                 /*    32     8 */
-> > > > @@ -5554,8 +5556,8 @@ struct extent_buffer {
-> > > >         struct rw_semaphore        lock;                 /*    72    40 */
-> > > >         struct folio *             folios[16];           /*   112   128 */
-> > > >
-> > > > -       /* size: 240, cachelines: 4, members: 14 */
-> > > > -       /* sum members: 238, holes: 1, sum holes: 2 */
-> > > > +       /* size: 240, cachelines: 4, members: 13 */
-> > > > +       /* sum members: 234, holes: 2, sum holes: 6 */
-> > > >         /* forced alignments: 1, forced holes: 1, sum forced holes: 2 */
-> > > >         /* last cacheline: 48 bytes */
-> > > >  } __attribute__((__aligned__(8)));
-> > > >
-> > > > The benefit of duplicating the length in each eb is that it's in the
-> > > > same cacheline as the other members that are used for offset
-> > > > calculations or bit manipulations.
-> > > >
-> > > > Going to the fs_info->nodesize may or may not hit a cache, also because
-> > > > it needs to do 2 pointer dereferences, so from that perspective I think
-> > > > it's making it worse.
-> > >
-> > > I was considering that. Since fs_info is shared for all ebs and other
-> > > stuff like transactions, etc. I think the cache is hot most of the
-> > > time and there will be hardly any performance difference observable.
-> > > Though without benchmarks this is just a speculation (on both sides).
-> > >
-> > > > I don't think we need to do the optimization right now, but maybe in the
-> > > > future if there's a need to add something to eb. Still we can use the
-> > > > remaining 16 bytes up to 256 without making things worse.
-> > >
-> > > This really depends on configuration. On my laptop (Debian -rt kernel)
-> > > the eb struct is actually 272 bytes as the rt_mutex is significantly
-> > > heavier than raw spin lock. And -rt is a first class citizen nowadays,
-> > > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
-> > > I think it would be nice to slim the struct below 256 bytes even there
-> > > if that's your aim.
-> >
-> > Eventually we can get there by using ushort for bflags and moving
-> > log_index and folio_shift to fill the hole.
-> > Let me know what you think.
->
-> The bflags are atomic bits and this requires unsigned long. Also the
+On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
 
-I realized and dropped that idea. Which means we can save just 8 bytes
-on -rt and nothing on default config. Still a good win for free. I
-mean in case we end up removing the `len` field.
+> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+> You can go buy the Intel hardware off the shelf today.
 
-> short int type is something we want to avoid because it's not a natural
-> type on many architectures and generates worse code. I don't think we
-> need to optimize for RT kernels, it's now part of mainline kernel but by
-> far not a common configuration.
+To be fair, the Intel RAR thing is pretty horrific :-( Definitely
+sub-par compared to the AMD and ARM things.
+
+Furthermore, the paper states it is a uarch feature for SPR with no
+guarantee future uarchs will get it (and to be fair, I'd prefer it if
+they didn't).
+
+Furthermore, I suspect it will actually be slower than IPIs for anything
+with more than 64 logical CPUs due to reduced parallelism.
