@@ -1,125 +1,212 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A2A241CA4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:39:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FC519D07B;
+	Fri,  2 May 2025 10:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182356; cv=none; b=lU/wrM1s4QUCPNZZob2q9T/DTz6PKH57QLISh2Y6kFwrU7/rBLhpjPE5LhO4zrAFZ+uByEleeUNBZ6BqvN1d5RYHF434EWYEn702GamEU+UeUbnXZ2itOCbogNQ27KM/+2gv+0Occxf0kHgf5DfOH/LPFF4DJcPf+X2Mas/0ZQc=
+	t=1746182374; cv=none; b=HEJgUw5Qy0n1kLX8g2FY5ZSlkcg3Szo3KbYF4xK+msy0irjalfgT0w1bFplUkyK17Y54Ltx46cbkg6wvfFTS9Ztc5n2yyHX7KWE2S9WdiiOv1h5BLPK9WgcJzY5qf6IOi/ARvKXcsrglanIZRBtSRGdMj0KuDvWx5wWuLNSRqTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182356; c=relaxed/simple;
-	bh=91+VzaeK9dxPZVYsr+MR5CZNL9ROHE0XLh3Z2QKhg4c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TW0zsrVqgjtLtteweVGKngctpeMZ5wFJVSyatjbayBuVSAMcX8sJ3dBvfR0tpFb1+eMQyT0NcJ4VGWAtMBRYHJxyXEP4XT2sgGKXUUUApjxiBYsOVVVzU8kHNDBp+oNey7WUiBy++0mSECCa8gO6ODyKb58OKdSm1P8FyzzMmvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=YBsJewTE; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746182374; c=relaxed/simple;
+	bh=k2HSV8/6jmFeiVY3Fl/ESqkYIy6+9gkufQuyLH4M/AY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oauvX0QA7bHe9/k8A7DKt01xoA+CSyI+hwP1/OsaVkou8OoO4I6k+tuyaLN6NRnkr7Vl82A9khCsTDiXCwTNCW14OfHsiLgXK1bZxNu5mEzZotv1CZX/wj+l2Pim4p40ZGYWiGvyEIevZ/C8O/RpA07iLAiH2R4u/k5mXT6A1sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EnU6Muju; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="YBsJewTE"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421OwUG020208
-	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:39:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	OIr1D/lYOg7T3JU7Mk1AnGQHoq2cb/y6xIambWrp6gA=; b=YBsJewTEPjg4WfS+
-	3U5HYHgksaOKrpOSHbLtewheei/G4B2gW5AiwIllxixn/Ycg5sD8lIeJz/rOKF/o
-	rIf6tkcj60OEinE+30bpU1Xunb0mHXi72ALkg33U3EYgo6xfn/2c5xKBoL/RzJnG
-	lSQMdVqb8CbK6enmOSw8GDcgei4mxhSl8EhqdPQfE/AJvW5PH66fw7GU+ada2JNc
-	nGugszQ6IofBjmTYL79g4dbvJfb1uZZt/swTj4HYJme0OIHQu9iTQVyil4Y2rYEj
-	LbgIt8c9Z7I1ZwoFsmJs6TDMTYkJ22UVfArCQNJnX8tBMUvBdP+ZpM8LceX0IINV
-	V+8gaw==
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u780br-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:39:13 +0000 (GMT)
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e8fb83e15fso5306286d6.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:39:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746182352; x=1746787152;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OIr1D/lYOg7T3JU7Mk1AnGQHoq2cb/y6xIambWrp6gA=;
-        b=ZQB0auQs/PsCP7o1p6ZLwClr0JR19OFyQS8lKHFx2UgKvtEOK/Gmlt8Fa/5+wrEIAx
-         RKt4E7jDLgCTUDFr1JRyEAdWfNnKIhU4ykrzjYqsqTJXsIvD2p4WuQrVpoVHFbu3Gxib
-         asViCPSS3dMounswSC6r70QxcFfSY+OUisxrXX6/M9vWB9W1FV4cxeG++qKM9yoqg1nc
-         Zq4lG5Newbb9ieVfRQHczXuZrVgXParPVLUzE91dfCiIqVcGq6s2CTF4mX7bxUxhZ0l7
-         3PKxQkoQHky3AGhGKa9EWTRb2RGXbrKK8oDpqm97HtscgcnAJ/dpauNLujz56I2MiS3Z
-         Ud8A==
-X-Forwarded-Encrypted: i=1; AJvYcCU7XqHyNxtuoLxc3n8YCQdD22ttWgYyD7+4JITYLOo192ogV3sl5HdQkDbdA3gCT9eJdE+13zjZbe4ZNOo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEOSaCrDXzE5k5UU0BnGJl7b9h8hVB/ajubQsvF/NiOlkHM45z
-	oVwjT0HEeDbis7r4SYOuEvk4w2+guga8TAoZQTAs4yzm8OQabnMcAy3JueHBexfj2sSG+8ZopQJ
-	2ayqW2hkO5ifgxNdBgZ1CpNZIqJsUiKNN+rHFtUxEekUwduy4O2x2An19bo2KOY4=
-X-Gm-Gg: ASbGncuEd5zHWczV/CGGBoSNs5fTjV3y0BV+ilNnH4Dohdlhg8B4R7diPBTUK9PUFNp
-	yGDRASMg4YzkK6CrgTr9D33vBsomqsRfFXMSy9Evec74wkaykT4QiqcbajVZ1ayAdARBYBdmgs3
-	wKKLTBc+Lhur6dZaDWZAFP2+W6opfE9oCdi1LqvC8e2HmOg0XACNdEcxG5BQV5BCf0BbOtbJ/+H
-	UORbMx6tNXoQKf6xweSzEPmsxBxq3NWijrqDXiTvk1/vVtYfR2PV3D19gqnF49IGEQYr4urIGW1
-	yM7pBObpgdBtEV436aEfgSQ/+2XvQSi5FVYhWDUPOeggh3hUIv3mHzMWrNJNscLDdo8=
-X-Received: by 2002:a05:6214:250d:b0:6f4:c603:588c with SMTP id 6a1803df08f44-6f5155ebaeamr14766966d6.7.1746182352125;
-        Fri, 02 May 2025 03:39:12 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE5ESrkRVw2+mxu0PO1FXdnLDMWH1my1jiV6PycYxBVLygwmc0LUraGDQp7Jf3L/XIsvmlHMA==
-X-Received: by 2002:a05:6214:250d:b0:6f4:c603:588c with SMTP id 6a1803df08f44-6f5155ebaeamr14766836d6.7.1746182351808;
-        Fri, 02 May 2025 03:39:11 -0700 (PDT)
-Received: from [192.168.65.113] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad18950907bsm28979166b.126.2025.05.02.03.39.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 03:39:11 -0700 (PDT)
-Message-ID: <2f5d9be9-8eff-46c9-9316-be2c539303ac@oss.qualcomm.com>
-Date: Fri, 2 May 2025 12:39:09 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EnU6Muju"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746182372; x=1777718372;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=k2HSV8/6jmFeiVY3Fl/ESqkYIy6+9gkufQuyLH4M/AY=;
+  b=EnU6MujuJ5qHoFxjj4DjHzH4aztd9UfKmyKSVbvPFB1MhnODr+CiPNyq
+   D7zwbTJCPmMfqB4VYmXtC6dUj6vP2DKPZNf05fTXxecSKNvAMMH4yNT3Q
+   5VGplZ7h1NbDdOHeXU99M1iwkogxiai1eK1+S4xxwYnj3UIDQ9ZBvFvHf
+   adgn25tn1TKr/F4Zl0y9+LIegSGduJTtuh6LU8sIJtwjxj0NLycWmIgGK
+   oCNKFrpy930XAj4rP01OL0aFsrtu/dD+/tAlMFTd66QCkQUolUvDqcdmc
+   +e+iTNglbRNtevqNTzWxk2V1+7HlCpidIjsjrtEcwrFSi0G2VFIfu7b9+
+   Q==;
+X-CSE-ConnectionGUID: bTVzWRRjSrixP97S5o+9kA==
+X-CSE-MsgGUID: osjM7BzhThKuVWwL4lV/Nw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="46972823"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="46972823"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:39:31 -0700
+X-CSE-ConnectionGUID: RKK5Nb7GQdmA/sCFwHCfQQ==
+X-CSE-MsgGUID: zbkvS9inQSmWpv7X68kAWA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134362449"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:39:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAnnf-00000002AKs-0IXp;
+	Fri, 02 May 2025 13:39:23 +0300
+Date: Fri, 2 May 2025 13:39:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+Message-ID: <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] arm64: dts: qcom: Update IPQ5018 xo_board_clk to use
- fixed factor clock
-To: george.moussalem@outlook.com, Bjorn Andersson <andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-        Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
- <20250502-ipq5018-cmn-pll-v1-6-27902c1c4071@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250502-ipq5018-cmn-pll-v1-6-27902c1c4071@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4MyBTYWx0ZWRfX6fu/1Qe+Pgoz C5iILI29Ot/yGiS/aN06Q+mBeXv2SjUzeZ0cUdocv6/PUfGU/osSUpCdmKRkTDHi6Zqo6uBDGVt LyIBhyJMZHzSl3zP3A9iniM4oVTM5csJsVwQvzINR500W+2S1Uikzzq9L63K6HQfzRIo/NBDEl8
- AFfTLzMtF5l9qiDEalrpsZlkD+CnetW5BbXg+epQENwju/29u/qc/Asb4aAkCC8i/xaZQVZEkgF 4nNjghI9tvdfjnyfcGw1UvmowpMueQ+n4a3cnLy2bC9XROY8U5wdpXGwGdJbgrwkUrXt3cWNXMD gwGeOdThbC762C0syAjzAgEhg2/T6WAeOlVyaA8n9CtbGd75y2pELW+cIalPm2s7hcF8h/vJkPC
- fOYr9c6JhMuF9/gfPQO2vyXP2rU/i9yyfQs52EfHs7rg3BK3TymyMQssUGXKNmP7IkSac2Yl
-X-Proofpoint-GUID: z8BDKO4S2XpKsB1dyXjA5JjtfLoKUkds
-X-Proofpoint-ORIG-GUID: z8BDKO4S2XpKsB1dyXjA5JjtfLoKUkds
-X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=6814a0d1 cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=UqCG9HQmAAAA:8 a=EUspDBNiAAAA:8 a=RdtYeOucVzowFPH3w8gA:9 a=QEXdDO2ut3YA:10
- a=pJ04lnu7RYOZP9TFuWaZ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=905 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020083
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 5/2/25 12:15 PM, George Moussalem via B4 Relay wrote:
-> From: George Moussalem <george.moussalem@outlook.com>
+On Mon, Apr 28, 2025 at 01:57:26PM +0200, Mathieu Dubois-Briand wrote:
+> Add driver for Maxim Integrated MAX7360 GPIO/GPO controller.
 > 
-> The xo_board_clk is fixed to 24 MHZ, which is routed from WiFi output
-> clock 96 MHZ (also being the reference clock of CMN PLL) divided by 4
-> to the analog block routing channel.
-> 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
+> Two sets of GPIOs are provided by the device:
+> - Up to 8 GPIOs, shared with the PWM and rotary encoder functionalities.
+>   These GPIOs also provide interrupts on input changes.
+> - Up to 6 GPOs, on unused keypad columns pins.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+...
 
-Konrad
+> +#include <linux/bitmap.h>
+> +#include <linux/err.h>
+
+> +#include <linux/gpio/driver.h>
+
+Is this still needed?
+
+> +#include <linux/gpio/regmap.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/max7360.h>
+
++ minmax.h
+
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/regmap.h>
+
+...
+
+> +static int max7360_gpio_probe(struct platform_device *pdev)
+> +{
+> +	const struct max7360_gpio_plat_data *plat_data;
+> +	struct gpio_regmap_config gpio_config = { };
+> +	struct regmap_irq_chip *irq_chip;
+> +	struct device *dev = &pdev->dev;
+> +	struct regmap *regmap;
+> +	unsigned int outconf;
+> +	int ret;
+> +
+> +	regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+> +
+> +	plat_data = device_get_match_data(dev);
+> +	if (plat_data->function == MAX7360_GPIO_PORT) {
+> +		if (device_property_read_bool(dev, "interrupt-controller")) {
+> +			/*
+> +			 * Port GPIOs with interrupt-controller property: add IRQ
+> +			 * controller.
+> +			 */
+> +			gpio_config.regmap_irq_flags = IRQF_ONESHOT | IRQF_SHARED;
+> +			gpio_config.regmap_irq_line =
+> +				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
+> +			if (gpio_config.regmap_irq_line < 0)
+> +				return dev_err_probe(dev, gpio_config.regmap_irq_line,
+> +						     "Failed to get IRQ\n");
+
+> +			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+
+Can this be made static const instead?
+
+> +			gpio_config.regmap_irq_chip = irq_chip;
+> +			if (!irq_chip)
+> +				return -ENOMEM;
+> +
+> +			irq_chip->name = dev_name(dev);
+> +			irq_chip->status_base = MAX7360_REG_GPIOIN;
+> +			irq_chip->status_is_level = true;
+> +			irq_chip->num_regs = 1;
+> +			irq_chip->num_irqs = MAX7360_MAX_GPIO;
+> +			irq_chip->irqs = max7360_regmap_irqs;
+> +			irq_chip->handle_mask_sync = max7360_handle_mask_sync;
+> +			irq_chip->irq_drv_data = regmap;
+
+> +			for (unsigned int i = 0; i < MAX7360_MAX_GPIO; i++) {
+> +				ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
+> +							MAX7360_PORT_CFG_INTERRUPT_EDGES,
+> +							MAX7360_PORT_CFG_INTERRUPT_EDGES);
+> +				if (ret)
+> +					return dev_err_probe(dev, ret,
+> +							     "Failed to enable interrupts\n");
+> +			}
+> +		}
+> +
+> +		/*
+> +		 * Port GPIOs: set output mode configuration (constant-current or not).
+> +		 * This property is optional.
+> +		 */
+> +		ret = device_property_read_u32(dev, "maxim,constant-current-disable", &outconf);
+> +		if (!ret) {
+> +			ret = regmap_write(regmap, MAX7360_REG_GPIOOUTM, outconf);
+> +			if (ret)
+> +				return dev_err_probe(dev, ret,
+> +						     "Failed to set constant-current configuration\n");
+> +		}
+> +	}
+> +
+> +	/* Add gpio device. */
+> +	gpio_config.parent = dev;
+> +	gpio_config.regmap = regmap;
+> +	if (plat_data->function == MAX7360_GPIO_PORT) {
+> +		gpio_config.ngpio = MAX7360_MAX_GPIO;
+> +		gpio_config.reg_dat_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOIN);
+> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PWMBASE);
+> +		gpio_config.reg_dir_out_base = GPIO_REGMAP_ADDR(MAX7360_REG_GPIOCTRL);
+> +		gpio_config.ngpio_per_reg = MAX7360_MAX_GPIO;
+> +		gpio_config.reg_mask_xlate = max7360_gpio_reg_mask_xlate;
+> +	} else {
+> +		ret = max7360_set_gpos_count(dev, regmap);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret, "Failed to set GPOS pin count\n");
+> +
+> +		gpio_config.reg_set_base = GPIO_REGMAP_ADDR(MAX7360_REG_PORTS);
+> +		gpio_config.ngpio = MAX7360_MAX_KEY_COLS;
+> +		gpio_config.init_valid_mask = max7360_gpo_init_valid_mask;
+> +	}
+> +
+> +	return PTR_ERR_OR_ZERO(devm_gpio_regmap_register(dev, &gpio_config));
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
