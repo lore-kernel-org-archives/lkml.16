@@ -1,171 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA3F2236FC;
-	Fri,  2 May 2025 22:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8DD215162
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 22:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746225510; cv=none; b=XR00BBI38IbHp2l/0lGc3o/dNcOM2YSNJynXtrs6zJb2rJEAhYzcltx+2QOqijAzDn3x45ESSqwAamQe5h0KPNLhwckEvKVwobpNNFDS1aj1/se2rxkXj9rWxSAZFbneO3505zJCTNwiShA5an2T0MwHCgsLWRRxrh/HzfgRVwE=
+	t=1746225659; cv=none; b=f2240IhvmEhhRUadOFqemaUc1dgyF1+LUj6n63mmQuhKipiLjj8G0GZ6Sl7va0mwiP8XqgG5wReYt5Zh4Qmbvqxk2dLDshN031qAa3s0aJOypHkq3PlIsN3eB/QeMQePqAXxKDxIjj6VT0CHC0jpCg/TQGrSjc5m9sdgs85DFJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746225510; c=relaxed/simple;
-	bh=46Iz1SAIFT0JpyGlK8VgIBKquW7d8t2mwHaZU9vek3M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZqqI4epFpEE2E7EQ+FtPEmZEfWr8k4u5QLNaeByNnE/RZbf0H4IhHWBZ0yvdDgqLhNNUiQxsu7KoyjcSOoGnRtmFpXPebvRdceFml6Ng1X/LK9+Wa5rbjrkRIXLxHnoD8tOE4zkrbG6JqpSxRf2SNyCR6Bjjz+VcB82PPozp6Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s+SbYuIg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746225659; c=relaxed/simple;
+	bh=zlnZNHvDSKtj61yBY6pXk50K8Zec3Hak0oiG+jfquAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sGyaFFe8dyviUgTP/O5Zb6BOg5FFT2HBbAdMFzTsZkU0wpAQG0mT6MgpXIMXdLkqG+doYAB0ZD6eMcfOb9s6+shLjRuI3N2zAyhlwobh/PzuMN7u9ZUKih8VAZIDDuU45/WGY+HA7M23bX9WokEt69/dN7c+be5lrvxZtQ7sLCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N7zSodoE; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s+SbYuIg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68DE1C4CEED;
-	Fri,  2 May 2025 22:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746225510;
-	bh=46Iz1SAIFT0JpyGlK8VgIBKquW7d8t2mwHaZU9vek3M=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=s+SbYuIg86j8WxZx9B8uZWiv1ovYu/ZUo++UARWAWGcGiZe5k6dESAyrpEh6T7yl5
-	 nrXkcT7DMvXvjgbuV5z2+crryZ2Ndd4NiSzc+qAeh1cbGbOFXbFCVOWRVBFHTsu5ht
-	 A6NUIhg+aKv33mprT3WIA68lyS/jLikbe9LRatk4oNxjQPBrcN/eieoEORww+wHR8x
-	 i5W0oWp/Fdy25hCjOaRRUCFeOUKl5JpgzXLUFYND9G1EUy7u+J5TnjZ7Sgh5A1aFbG
-	 /xas+1v6pHTDCYmsbh9/UN/FwnWnCozCET9GsbrqP2oZtR7ZY/G+2tI1JkBwDuz9Ki
-	 mpEEs3mxMo4KQ==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Sat, 03 May 2025 00:38:01 +0200
-Subject: [PATCH 3/3] arm64: dts: qcom: sc8280xp: Add SLPI
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N7zSodoE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746225656;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=AfTpVow31STgGjbJWRiqCTj7zeM2wTu0PCwlKxMuS7o=;
+	b=N7zSodoEX0JRT8uaFy51Q+ko6LUpUkYtp1QT/MqA57GT8q5fjrPzBR1ROJxryEc6OvCxwU
+	7oOWcaiLpGbQewTu8/IC/5lVl7kKN5zzp+/SopKEN9jxSwfpMfEyJWN4eI+4Uuw7yrLcIu
+	VLIg2ayeONte2TfH6zRvCRDZRUadlww=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-Fbrm0R5iMFedRAm1qMh1tg-1; Fri,
+ 02 May 2025 18:40:53 -0400
+X-MC-Unique: Fbrm0R5iMFedRAm1qMh1tg-1
+X-Mimecast-MFC-AGG-ID: Fbrm0R5iMFedRAm1qMh1tg_1746225653
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D6C09180034A;
+	Fri,  2 May 2025 22:40:52 +0000 (UTC)
+Received: from omen.home.shazbot.org (unknown [10.22.80.42])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2E10130001A2;
+	Fri,  2 May 2025 22:40:50 +0000 (UTC)
+From: Alex Williamson <alex.williamson@redhat.com>
+To: alex.williamson@redhat.com,
+	peterx@redhat.com
+Cc: kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Adolfo <adolfotregosa@gmail.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] vfio/pci: Align huge faults to order
+Date: Fri,  2 May 2025 16:40:31 -0600
+Message-ID: <20250502224035.3183451-1-alex.williamson@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250503-topic-8280_slpi-v1-3-9400a35574f7@oss.qualcomm.com>
-References: <20250503-topic-8280_slpi-v1-0-9400a35574f7@oss.qualcomm.com>
-In-Reply-To: <20250503-topic-8280_slpi-v1-0-9400a35574f7@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746225495; l=2986;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=510uETyHRVIvkSyJRnlRP+3kTmwGHCpIWWOr8PY43F0=;
- b=3V6VspehR9/5TiD9I7Z7WCRKgu5LCl3dCVvAgn4+YZxcLwB1CksAYxPzDxdSTdw12ksg7JL3g
- gmXcYGtLWdsC7+2qprGjh1lKjuVef0RHMIfabHNYgDxsAX9n2o2D5W0
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The vfio-pci huge_fault handler doesn't make any attempt to insert a
+mapping containing the faulting address, it only inserts mappings if the
+faulting address and resulting pfn are aligned.  This works in a lot of
+cases, particularly in conjunction with QEMU where DMA mappings linearly
+fault the mmap.  However, there are configurations where we don't get
+that linear faulting and pages are faulted on-demand.
 
-SC8280XP features a SLPI (Sensor Low Power Island) core. Describe it.
+The scenario reported in the bug below is such a case, where the physical
+address width of the CPU is greater than that of the IOMMU, resulting in a
+VM where guest firmware has mapped device MMIO beyond the address width of
+the IOMMU.  In this configuration, the MMIO is faulted on demand and
+tracing indicates that occasionally the faults generate a VM_FAULT_OOM.
+Given the use case, this results in a "error: kvm run failed Bad address",
+killing the VM.
 
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+The host is not under memory pressure in this test, therefore it's
+suspected that VM_FAULT_OOM is actually the result of a NULL return from
+__pte_offset_map_lock() in the get_locked_pte() path from insert_pfn().
+This suggests a potential race inserting a pte concurrent to a pmd, and
+maybe indicates some deficiency in the mm layer properly handling such a
+case.
+
+Nevertheless, Peter noted the inconsistency of vfio-pci's huge_fault
+handler where our mapping granularity depends on the alignment of the
+faulting address relative to the order rather than aligning the faulting
+address to the order to more consistently insert huge mappings.  This
+change not only uses the page tables more consistently and efficiently, but
+as any fault to an aligned page results in the same mapping, the race
+condition suspected in the VM_FAULT_OOM is avoided.
+
+Reported-by: Adolfo <adolfotregosa@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=220057
+Fixes: 09dfc8a5f2ce ("vfio/pci: Fallback huge faults for unaligned pfn")
+Cc: stable@vger.kernel.org
+Tested-by: Adolfo <adolfotregosa@gmail.com>
+Co-developed-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 ---
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi | 72 ++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/vfio/pci/vfio_pci_core.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-index 3f9195da90ee898c68296f19dc55bcb3ac73fe29..75ec34bfa729946687c4c35aa9550685cac95a10 100644
---- a/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc8280xp.dtsi
-@@ -695,6 +695,11 @@ pil_adsp_mem: adsp-region@86c00000 {
- 			no-map;
- 		};
+diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+index 35f9046af315..6328c3a05bcd 100644
+--- a/drivers/vfio/pci/vfio_pci_core.c
++++ b/drivers/vfio/pci/vfio_pci_core.c
+@@ -1646,14 +1646,14 @@ static vm_fault_t vfio_pci_mmap_huge_fault(struct vm_fault *vmf,
+ {
+ 	struct vm_area_struct *vma = vmf->vma;
+ 	struct vfio_pci_core_device *vdev = vma->vm_private_data;
+-	unsigned long pfn, pgoff = vmf->pgoff - vma->vm_pgoff;
++	unsigned long addr = vmf->address & ~((PAGE_SIZE << order) - 1);
++	unsigned long pgoff = (addr - vma->vm_start) >> PAGE_SHIFT;
++	unsigned long pfn = vma_to_pfn(vma) + pgoff;
+ 	vm_fault_t ret = VM_FAULT_SIGBUS;
  
-+		pil_slpi_mem: slpi-region@88c00000 {
-+			reg = <0 0x88c00000 0 0x1500000>;
-+			no-map;
-+		};
-+
- 		pil_nsp0_mem: cdsp0-region@8a100000 {
- 			reg = <0 0x8a100000 0 0x1e00000>;
- 			no-map;
-@@ -783,6 +788,30 @@ smp2p_nsp1_in: slave-kernel {
- 		};
- 	};
- 
-+	smp2p-slpi {
-+		compatible = "qcom,smp2p";
-+		qcom,smem = <481>, <430>;
-+		interrupts-extended = <&ipcc IPCC_CLIENT_SLPI
-+					     IPCC_MPROC_SIGNAL_SMP2P
-+					     IRQ_TYPE_EDGE_RISING>;
-+		mboxes = <&ipcc IPCC_CLIENT_SLPI
-+				IPCC_MPROC_SIGNAL_SMP2P>;
-+
-+		qcom,local-pid = <0>;
-+		qcom,remote-pid = <3>;
-+
-+		smp2p_slpi_out: master-kernel {
-+			qcom,entry-name = "master-kernel";
-+			#qcom,smem-state-cells = <1>;
-+		};
-+
-+		smp2p_slpi_in: slave-kernel {
-+			qcom,entry-name = "slave-kernel";
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+
- 	soc: soc@0 {
- 		compatible = "simple-bus";
- 		#address-cells = <2>;
-@@ -2454,6 +2483,49 @@ tcsr: syscon@1fc0000 {
- 			reg = <0x0 0x01fc0000 0x0 0x30000>;
- 		};
- 
-+		remoteproc_slpi: remoteproc@2400000 {
-+			compatible = "qcom,sc8280xp-slpi-pas", "qcom,sm8350-slpi-pas";
-+			reg = <0 0x02400000 0 0x10000>;
-+
-+			interrupts-extended = <&pdc 9 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_slpi_in 0 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_slpi_in 1 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_slpi_in 2 IRQ_TYPE_EDGE_RISING>,
-+					      <&smp2p_slpi_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog",
-+					  "fatal",
-+					  "ready",
-+					  "handover",
-+					  "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "xo";
-+
-+			power-domains = <&rpmhpd SC8280XP_LCX>,
-+					<&rpmhpd SC8280XP_LMX>;
-+			power-domain-names = "lcx", "lmx";
-+
-+			memory-region = <&pil_slpi_mem>;
-+
-+			qcom,qmp = <&aoss_qmp>;
-+
-+			qcom,smem-states = <&smp2p_slpi_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			status = "disabled";
-+
-+			glink-edge {
-+				interrupts-extended = <&ipcc IPCC_CLIENT_SLPI
-+							IPCC_MPROC_SIGNAL_GLINK_QMP
-+							IRQ_TYPE_EDGE_RISING>;
-+				mboxes = <&ipcc IPCC_CLIENT_SLPI
-+						IPCC_MPROC_SIGNAL_GLINK_QMP>;
-+
-+				label = "slpi";
-+				qcom,remote-pid = <3>;
-+			};
-+		};
-+
- 		remoteproc_adsp: remoteproc@3000000 {
- 			compatible = "qcom,sc8280xp-adsp-pas";
- 			reg = <0 0x03000000 0 0x10000>;
-
+-	pfn = vma_to_pfn(vma) + pgoff;
+-
+-	if (order && (pfn & ((1 << order) - 1) ||
+-		      vmf->address & ((PAGE_SIZE << order) - 1) ||
+-		      vmf->address + (PAGE_SIZE << order) > vma->vm_end)) {
++	if (order && (addr < vma->vm_start ||
++		      addr + (PAGE_SIZE << order) > vma->vm_end ||
++		      pfn & ((1 << order) - 1))) {
+ 		ret = VM_FAULT_FALLBACK;
+ 		goto out;
+ 	}
 -- 
-2.49.0
+2.48.1
 
