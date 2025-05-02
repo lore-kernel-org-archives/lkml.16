@@ -1,96 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA2223FC5A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA25E23FC5A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:11:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746184279; cv=none; b=lvmxVIThi4GpAf2uxLeok3/FLV7jfct120gW2Tfw2y/fIvj32Xa6EhD6z44UADjsWid3lXrYtaoEoM6jaQwjunu5nBAs5R6RNnssCLPvBQiGNxVvqqFdFpEw5U6vPM1aRr0hGXe5SRbNJT1VSIxdSxPcoHaF0jkZHNM1PDVVR0o=
+	t=1746184295; cv=none; b=DMBcuhrIu6EKummQi/ClI+OvBjaQFwGbV1mV5aGw5FlTDY3um93v/1f3/WCtNSKQfmg2jumf+EK3kDXllCTIEne8NL8vKr9dkWJ7BtNNw+k9M4Abnn3Q0ZwLPy1ktzqkRn3Xx8U/tP8gYnAUxrjux8aGXGoutDdqDJop9qee4OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746184279; c=relaxed/simple;
-	bh=5x2cPJ9xDp00yJ7ZoWTufzMw/GRYyxNXmL3uAafLwq4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k6yZvGHBMhv7+WszTB3bG584S1Zbi9RnXc5D23gQUKraWvhXc8QC6+S6JLeyLPTjYCMWJuDFOD2wc0hkdu5D0MaRH+wO/tjv3Y6rm0kNFWe+XRFjgBtmwDXJEDBfmRlKKECoC0bC3GnBR/DALCcBZQNF6nXuVYgoMgJvHpAchzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4E65E1688;
-	Fri,  2 May 2025 04:11:07 -0700 (PDT)
-Received: from e132581.cambridge.arm.com (e132581.arm.com [10.1.196.87])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA2913F66E;
-	Fri,  2 May 2025 04:11:13 -0700 (PDT)
-From: Leo Yan <leo.yan@arm.com>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH] coresight: replicator: Fix panic for clearing claim tag
-Date: Fri,  2 May 2025 12:11:08 +0100
-Message-Id: <20250502111108.2726217-1-leo.yan@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746184295; c=relaxed/simple;
+	bh=lxjGHS3cfRSQaQe4SoSD/hzcMZPlcMfBcwBXxPqcwQ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uN212A/jIFzcUUQMC3Fg9al/LO/oLLhiTJfp42kOscLlgszzR0zv0AWPfPuQ6Vz3y424evhuhw2eVzeaSCu8Fuu8vFZIRNP4ln7/zaq1O0nNFxnblPiT0q5FH1i4e5rYLlMYSZmdl5ec9PSeJmhRo6/LuVkDB0g4sMkHHEK1VLY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UaWPp5Fu; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UaWPp5Fu"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=rOcmUHivWm2VyijzsBx2fgbFNnH4PTajNysnSptcXWo=; b=UaWPp5FubR6G8XSifKUH5oHEqv
+	5FWN3MCNRlpz4lbl9v7mMT73rlWRj/zO98rUPFdgD6OiHRLwTJ/hwHqU9M6Zan7Ib1r3QT0UnsvKV
+	aYIK+v8giP1CTbM6AIFa66XQVpmY4PecIoapK50uDsN8ZBKlVy4QyRvR21ei25DAcJx7f38NX9LRy
+	GuCcJbEx+48GPuKUqxzhAtBWiGBbZkqv4Edb4lCiqpahu54sCVjbyk3uZ0kWwUwACengc0v1KC6BD
+	T9Ugjf170jcrK/26huMOjF7lZvJdBXVoA8tMUd9byVJFAo6kEjicaJh77gY+ptGQuKdTF3gWkcr7d
+	f2ni50fw==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAoIE-0000000F0w4-1kBh;
+	Fri, 02 May 2025 11:10:59 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 602C030057C; Fri,  2 May 2025 13:10:44 +0200 (CEST)
+Date: Fri, 2 May 2025 13:10:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Prakash Sangappa <prakash.sangappa@oracle.com>,
+	linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
+	kprateek.nayak@amd.com
+Subject: Re: [PATCH V3 4/4] Sched: Add tracepoint for sched time slice
+ extension
+Message-ID: <20250502111044.GY4198@noisy.programming.kicks-ass.net>
+References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
+ <20250502015955.3146733-5-prakash.sangappa@oracle.com>
+ <20250502091434.GV4198@noisy.programming.kicks-ass.net>
+ <20250502110210.rZX1iHcg@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250502110210.rZX1iHcg@linutronix.de>
 
-On platforms with a static replicator, a kernel panic occurs during boot:
+On Fri, May 02, 2025 at 01:02:10PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-05-02 11:14:34 [+0200], Peter Zijlstra wrote:
+> > This is horrific coding style. But really why do we need this? I'm not,
+> > in general, a fan of tracepoints.
+> 
+> I suggested a tracepoint so that we see why the NEED_RESCHED flag
+> disappeared. The trace would show a wakeup, the need_resched flag would
+> be set and the flag would disappear without an explanation.
 
-  [    4.999406]  replicator_probe+0x1f8/0x360
-  [    5.003455]  replicator_platform_probe+0x64/0xd8
-  [    5.008115]  platform_probe+0x70/0xf0
-  [    5.011812]  really_probe+0xc4/0x2a8
-  [    5.015417]  __driver_probe_device+0x80/0x140
-  [    5.019813]  driver_probe_device+0xe4/0x170
-  [    5.024032]  __driver_attach+0x9c/0x1b0
-  [    5.027900]  bus_for_each_dev+0x7c/0xe8
-  [    5.031769]  driver_attach+0x2c/0x40
-  [    5.035373]  bus_add_driver+0xec/0x218
-  [    5.039154]  driver_register+0x68/0x138
-  [    5.043023]  __platform_driver_register+0x2c/0x40
-  [    5.047771]  coresight_init_driver+0x4c/0xe0
-  [    5.052079]  replicator_init+0x30/0x48
-  [    5.055865]  do_one_initcall+0x4c/0x280
-  [    5.059736]  kernel_init_freeable+0x1ec/0x3c8
-  [    5.064134]  kernel_init+0x28/0x1f0
-  [    5.067655]  ret_from_fork+0x10/0x20
-
-A static replicator doesn't have registers, so accessing the claim
-register results in a NULL pointer deference.  Fixes the issue by
-accessing the claim registers only after the I/O resource has been
-successfully mapped.
-
-Fixes: 6f4c6f70575f ("coresight: Clear self hosted claim tag on probe")
-Signed-off-by: Leo Yan <leo.yan@arm.com>
----
- drivers/hwtracing/coresight/coresight-replicator.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index f1d2f764e898..06efd2b01a0f 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -262,6 +262,7 @@ static int replicator_probe(struct device *dev, struct resource *res)
- 		drvdata->base = base;
- 		desc.groups = replicator_groups;
- 		desc.access = CSDEV_ACCESS_IOMEM(base);
-+		coresight_clear_self_claim_tag(&desc.access);
- 	}
- 
- 	if (fwnode_property_present(dev_fwnode(dev),
-@@ -284,7 +285,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
- 	desc.pdata = dev->platform_data;
- 	desc.dev = dev;
- 
--	coresight_clear_self_claim_tag(&desc.access);
- 	drvdata->csdev = coresight_register(&desc);
- 	if (IS_ERR(drvdata->csdev)) {
- 		ret = PTR_ERR(drvdata->csdev);
--- 
-2.34.1
-
+Would we not see a timer_start event for the hrtick or somesuch?
