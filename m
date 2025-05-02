@@ -1,162 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1376D22A7ED
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBAB222A7E5
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 08:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174911; cv=none; b=LMSyOyA8izncjbTbLe7BTnSsawu1XGDrgoiqIfNou/rScqQnw95PDvS8mDMpI3DI4jitqBXO2C5zAADGVRocyLQn71Pi3ep2UWZD9IMwPvnws66XDd4WfpgWLeBLNdBEr3fTwIjViHoAuANaavaIS98wmzPXMHD0WBbmdGZICGY=
+	t=1746174940; cv=none; b=hfO4T5xf0FpAU5NdLJP1vTmvjDtO0ZNHTS9aaIyFpDXH2w40Ss6x5Wpcf4GkyX2GWmguVRRN0cyW3e/O6JmxaalL0PLrL+4RkZuhsL4fKSyKSWMd2qqg0M9xjKvTOe0wFslTzvSjTv8HW290tsATpvULF8DTyjy8ka4rm+3UwvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174911; c=relaxed/simple;
-	bh=WgaG5HEwDg1hR1FxgLdW1ysgzjnL/9WPjU9+4FX24jU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=frTdmAryKS0CaaQ419DjzyGI+P1WryQtDT1of8AVtf2LBnaFSo8c3xCB+Chkq89t9mbl052uvehKIb2M06ruiZck8HZqmFHDDvCrI32uXGSKJN4GqGzdu7ciWMMbk28EOxfBMa2OHDy9dK/hd9Ruig6f/CEvSYEsxFDSoewcMEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gaLd6RGh; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746174940; c=relaxed/simple;
+	bh=LUBY75erqJBugAhNu+5GPQ9ZxN0mQ9SsLVRTeLJn3zs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qIl7h0NBCDEme+CeGH+NDaLdzLWpTPbGe0he2G6gP8Vds7hjBEdxtbHxzYjLaoR5IRBdlWnG+h7FXjfE62VqQtBGMYK5bsW/RqBOJUtBFxEWOrnlRQz02+EZ8y/oVWkMu10dC7j1mzWV+lRLQMIycMeFMBLofkDA1t8OonT61cU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lHBPwyTa; arc=none smtp.client-ip=209.85.128.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gaLd6RGh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746174909; x=1777710909;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WgaG5HEwDg1hR1FxgLdW1ysgzjnL/9WPjU9+4FX24jU=;
-  b=gaLd6RGhRrRwu9D4gg1aqcJc7AhBtDDbALvHIUzACrfvUezVhhLl5Gvr
-   s60fVjBO8W6KqBWG6wWfLIlMElMEseoqjWnKU0i/GIcyd2elK3xr9QhUy
-   kW68YmXQ8cS20i1o+1CxFOjzuP4qQyNWGDmXq5AAvGzb6xPcTCNJf4XjT
-   oew5y6iml+T/RxZRs5GwfNblihrQdRFXTAsfnN380PVzAPVWXGlBo97ia
-   anNq4NKy/KDo8yeTBdSWvhqbV4Rw/8/Rau0bh9naCOveSkZ+7I9T3CBfS
-   0xIwGCQJ+JABIiE3yDE/Iq4cwbr+zwU8ayUNV4t+SfK+JsJw6AAFqwCpl
-   g==;
-X-CSE-ConnectionGUID: tDgXGzVVTeyPUzHaRFPNtQ==
-X-CSE-MsgGUID: gqa8IawbSMaTefI2RM0H6w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58480220"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58480220"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 01:35:08 -0700
-X-CSE-ConnectionGUID: 4WcVytTxSVKEgFb+l1ugkw==
-X-CSE-MsgGUID: uCwUYYhITauOkBxWL2hN1Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="165511540"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 02 May 2025 01:34:51 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAlr7-0004cj-0U;
-	Fri, 02 May 2025 08:34:49 +0000
-Date: Fri, 2 May 2025 16:33:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Thomas Andreatta <thomasandreatta2000@gmail.com>, dpenkler@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-staging@lists.linux.dev,
-	Thomas Andreatta <thomas.andreatta2000@gmail.com>
-Subject: Re: [PATCH 2/8] Staging: gpib: Updated return type
- `request_system_control`
-Message-ID: <202505021518.8HGGOavD-lkp@intel.com>
-References: <28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lHBPwyTa"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d734da1a3so6914595e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 01:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746174937; x=1746779737; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7r6WR049enygy037lONQ9m9pD13OBTo4e15DUJyoKE=;
+        b=lHBPwyTa1A7MHnIeD2Ba9CUh5JzMIrcQ/qkuTgNmt7BO3hWaSSqfq72FH/WugH21or
+         6pPy6tPulSkQnkogT9oUOKGR5HTQQzyz2bAVrLb/he0sN25DbJK7CNW0ez4bnrvPVAHu
+         tA67e72bjpqltxxwKjuK8yoLR+fIPcGAIge+V7V4Bo8IDEv8R+BlY92KZzMqFDr6vaDL
+         MqCBwbiHrToi202x/zP/2PGogcREm6BsPI+9eYFcPVB7pxe51j0u/mM8GD9uevcHMofq
+         2ELgc0Qv1lm+TPsBsK4r9sY7gEy59pnL80/0Zpcc3Fp0c5Ct8FjlQ+dJnMJupLcVOTLD
+         V82A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746174937; x=1746779737;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=f7r6WR049enygy037lONQ9m9pD13OBTo4e15DUJyoKE=;
+        b=ZvxF7CxiwOnIdbIjFuIfyehoPQgjghHLjSIYZYUVIrJS/0045c2/H3XJkOtSJuDVTy
+         eftbw2eRfNWs6YpdwGsRX09JmQYLr2hbejs9JImDVHzkyISw6t7nSj62Evh2vQ7QqF6I
+         2ugD5y1nIVKouadDHUUMKM03EWmxjTZqcARQkIzzDS24w7EZWzFrLezukTzJFHBMJ7Kw
+         D/isOz3a97/m/EGdF2btXgEZ4jB+Af15le0FwTQW/lJ1t0q8Nx02FeDK/qpNVsWtVq3T
+         DkjzIJQgwKCh7c69U6xPPDOOvIJcrxXsgPDnih1NPnCVbMmB0jXV1IgZC2ydqwwogGf1
+         MGPA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOCEA77orb7IkyRmO1BAhQCWnb7gRi9R4XhrRHmBdbswZRZg8xc4EaV5NXrKAHBQigtmcZrS24Pwc2ODA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9y8PsRANRx03jHSqUFYTc7dSA63IUpkYd+ZhLfsTzaDvhonty
+	tpwEtaYeGVHKGZ7wns3xCZeu76gSVI1UxJ+2xTaSBT2tYQSPnlHDciilM80ixH5H4Zl98tV26Gp
+	UooDSx3OE1P0AQQ==
+X-Google-Smtp-Source: AGHT+IGJkCdyZwfRFOBv6xVkehjXZ02i6s82Mg6JkS5KgBztkzCNpCn2kt3Ktou857DyL5RBsEPF7VOnppmsNZo=
+X-Received: from wmbjg12.prod.google.com ([2002:a05:600c:a00c:b0:43c:eaf6:525e])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:820d:b0:43c:f8fc:f69a with SMTP id 5b1f17b1804b1-441bbe98fbbmr16071135e9.4.1746174937358;
+ Fri, 02 May 2025 01:35:37 -0700 (PDT)
+Date: Fri, 2 May 2025 08:35:35 +0000
+In-Reply-To: <d5e8e635-08c4-4d3d-99a8-27f3b3a2153b@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000@gmail.com>
+Mime-Version: 1.0
+References: <20250430-rust_unsafe_pinned-v2-0-fc8617a74024@gmail.com>
+ <20250430-rust_unsafe_pinned-v2-1-fc8617a74024@gmail.com> <D9JVKYI3LL5L.2SFOJMSK91HLA@kernel.org>
+ <d433986a-fdad-4859-b8bf-080a18158189@gmail.com> <D9L1TI5NVKJU.361JFPWMLDWN4@kernel.org>
+ <7bc9f839-a69a-4819-ba6d-36eadd8776b3@gmail.com> <D9L6XO6T7JEU.CK47C5BOQ0NG@kernel.org>
+ <d5e8e635-08c4-4d3d-99a8-27f3b3a2153b@gmail.com>
+Message-ID: <aBSD108aP1pATvrn@google.com>
+Subject: Re: [PATCH v2 1/3] rust: add UnsafePinned type
+From: Alice Ryhl <aliceryhl@google.com>
+To: Christian Schrefl <chrisi.schrefl@gmail.com>
+Cc: Benno Lossin <lossin@kernel.org>, Sky <sky@sky9.dev>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, 
+	"Gerald =?utf-8?Q?Wisb=C3=B6ck?=" <gerald.wisboeck@feather.ink>, Ralf Jung <post@ralfj.de>, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-Hi Thomas,
+On Fri, May 02, 2025 at 02:08:13AM +0200, Christian Schrefl wrote:
+> [cc Ralf]
+> 
+> On 02.05.25 12:51 AM, Benno Lossin wrote:
+> > On Thu May 1, 2025 at 9:11 PM CEST, Christian Schrefl wrote:
+> >> On 01.05.25 8:51 PM, Benno Lossin wrote:
+> >>> On Wed Apr 30, 2025 at 7:30 PM CEST, Christian Schrefl wrote:
+> >>>> On 30.04.25 11:45 AM, Benno Lossin wrote:
+> >>>>> On Wed Apr 30, 2025 at 10:36 AM CEST, Christian Schrefl wrote:
+> >>>>>> +/// This implementation works because of the "`!Unpin` hack" in rustc, which allows (some kinds of)
+> >>>>>> +/// mutual aliasing of `!Unpin` types. This hack might be removed at some point, after which only
+> >>>>>> +/// the `core::pin::UnsafePinned` type will allow this behavior. In order to simplify the migration
+> >>>>>> +/// to future rust versions only this polyfill of this type should be used when this behavior is
+> >>>>>> +/// required.
+> >>>>>> +///
+> >>>>>> +/// In order to disable niche optimizations this implementation uses [`UnsafeCell`] internally,
+> >>>>>> +/// the upstream version however will not. So the fact that [`UnsafePinned`] contains an
+> >>>>>> +/// [`UnsafeCell`] must not be relied on (Other than the niche blocking).
+> >>>>>
+> >>>>> I would make this last paragraph a normal comment, I don't think we
+> >>>>> should expose it in the docs.
+> >>>>
+> >>>> I added this as docs since I wanted it to be a bit more visible,
+> >>>> but I can replace the comment text (about `UnsafeCell`) with this paragraph
+> >>>> and drop it from the docs if you want.
+> >>>
+> >>> I think we shouldn't talk about these implementation details in the
+> >>> docs.
+> >>
+> >> Alright, what do you think of:
+> >>
+> >> // As opposed to the upstream Rust type this contains a `PhantomPinned`` and `UnsafeCell<T>`
+> > 
+> > There are two '`' after PhantomPinned.
+> > 
+> >> // - `PhantomPinned` to avoid needing a `impl<T> !Unpin for UnsafePinned<T>`
+> > 
+> > s/ a / an /
+> > 
+> > I find the phrasing 'avoid needing <negative impl>' a bit weird, I'd
+> > just say "`PhantomPinned` to ensure the struct always is `!Unpin` and
+> > thus enables the `!Unpin` hack".
+> 
+> Thanks I'll use that.
+> 
+> > 
+> > If you have a link to somewhere that explains that hack, then I'd also
+> > put it there. I forgot if it's written down somewhere.
+> 
+> I haven't found anything that describes the hack in detail.
+> From what I understand its a combination of disabling `noalias`
+> [0] (this PR enables it for `Unpin` types) and disabling 
+> `dereferencable` [1] on `&mut !Unpin` types.
+> Related rust issue about this [2].
+> 
+> Maybe Alice, Ralf or someone else form the rust side can provide
+> a better reference?
+> 
+> [0]: https://github.com/rust-lang/rust/pull/82834
+> [1]: https://github.com/rust-lang/rust/pull/106180
+> [2]: https://github.com/rust-lang/rust/issues/63818
 
-kernel test robot noticed the following build errors:
+I wrote this a long time ago:
+https://gist.github.com/Darksonn/1567538f56af1a8038ecc3c664a42462
 
-[auto build test ERROR on staging/staging-linus]
-[also build test ERROR on linus/master v6.15-rc4]
-[cannot apply to staging/staging-testing staging/staging-next next-20250501]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+But it doesn't really take the angle of explaining the !Unpin hack. It's
+more of an early doc arguing for having an UnsafePinned type.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Thomas-Andreatta/Staging-gpib-agilent_82357a-changing-return-type-void-in-int/20250502-053306
-base:   staging/staging-linus
-patch link:    https://lore.kernel.org/r/28632a0bf5275553e929e8699830377069e921fa.1746133676.git.thomas.andreatta2000%40gmail.com
-patch subject: [PATCH 2/8] Staging: gpib: Updated return type `request_system_control`
-config: arm64-randconfig-003-20250502 (https://download.01.org/0day-ci/archive/20250502/202505021518.8HGGOavD-lkp@intel.com/config)
-compiler: aarch64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250502/202505021518.8HGGOavD-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505021518.8HGGOavD-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/staging/gpib/eastwood/fluke_gpib.c:710:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fluke_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/eastwood/fluke_gpib.c:710:28: note: (near initialization for 'fluke_unaccel_interface.request_system_control')
-   drivers/staging/gpib/eastwood/fluke_gpib.c:745:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fluke_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/eastwood/fluke_gpib.c:745:28: note: (near initialization for 'fluke_hybrid_interface.request_system_control')
-   drivers/staging/gpib/eastwood/fluke_gpib.c:772:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fluke_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/eastwood/fluke_gpib.c:772:28: note: (near initialization for 'fluke_interface.request_system_control')
-   cc1: some warnings being treated as errors
---
->> drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1023:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fmh_gpib_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1023:28: note: (near initialization for 'fmh_gpib_unaccel_interface.request_system_control')
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1051:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fmh_gpib_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1051:28: note: (near initialization for 'fmh_gpib_interface.request_system_control')
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1079:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fmh_gpib_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1079:28: note: (near initialization for 'fmh_gpib_pci_interface.request_system_control')
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1107:28: error: initialization of 'int (*)(struct gpib_board *, int)' from incompatible pointer type 'void (*)(struct gpib_board *, int)' [-Werror=incompatible-pointer-types]
-     .request_system_control = fmh_gpib_request_system_control,
-                               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/staging/gpib/fmh_gpib/fmh_gpib.c:1107:28: note: (near initialization for 'fmh_gpib_pci_unaccel_interface.request_system_control')
-   cc1: some warnings being treated as errors
-
-
-vim +710 drivers/staging/gpib/eastwood/fluke_gpib.c
-
-55936779f49612 Dave Penkler 2024-09-18  700  
-95cfc75234534b Dave Penkler 2025-01-11  701  static gpib_interface_t fluke_unaccel_interface = {
-95cfc75234534b Dave Penkler 2025-01-11  702  	.name = "fluke_unaccel",
-95cfc75234534b Dave Penkler 2025-01-11  703  	.attach = fluke_attach_holdoff_all,
-95cfc75234534b Dave Penkler 2025-01-11  704  	.detach = fluke_detach,
-95cfc75234534b Dave Penkler 2025-01-11  705  	.read = fluke_read,
-95cfc75234534b Dave Penkler 2025-01-11  706  	.write = fluke_write,
-95cfc75234534b Dave Penkler 2025-01-11  707  	.command = fluke_command,
-95cfc75234534b Dave Penkler 2025-01-11  708  	.take_control = fluke_take_control,
-95cfc75234534b Dave Penkler 2025-01-11  709  	.go_to_standby = fluke_go_to_standby,
-95cfc75234534b Dave Penkler 2025-01-11 @710  	.request_system_control = fluke_request_system_control,
-95cfc75234534b Dave Penkler 2025-01-11  711  	.interface_clear = fluke_interface_clear,
-95cfc75234534b Dave Penkler 2025-01-11  712  	.remote_enable = fluke_remote_enable,
-95cfc75234534b Dave Penkler 2025-01-11  713  	.enable_eos = fluke_enable_eos,
-95cfc75234534b Dave Penkler 2025-01-11  714  	.disable_eos = fluke_disable_eos,
-95cfc75234534b Dave Penkler 2025-01-11  715  	.parallel_poll = fluke_parallel_poll,
-95cfc75234534b Dave Penkler 2025-01-11  716  	.parallel_poll_configure = fluke_parallel_poll_configure,
-95cfc75234534b Dave Penkler 2025-01-11  717  	.parallel_poll_response = fluke_parallel_poll_response,
-95cfc75234534b Dave Penkler 2025-01-11  718  	.line_status = fluke_line_status,
-95cfc75234534b Dave Penkler 2025-01-11  719  	.update_status = fluke_update_status,
-95cfc75234534b Dave Penkler 2025-01-11  720  	.primary_address = fluke_primary_address,
-95cfc75234534b Dave Penkler 2025-01-11  721  	.secondary_address = fluke_secondary_address,
-95cfc75234534b Dave Penkler 2025-01-11  722  	.serial_poll_response = fluke_serial_poll_response,
-95cfc75234534b Dave Penkler 2025-01-11  723  	.serial_poll_status = fluke_serial_poll_status,
-95cfc75234534b Dave Penkler 2025-01-11  724  	.t1_delay = fluke_t1_delay,
-95cfc75234534b Dave Penkler 2025-01-11  725  	.return_to_local = fluke_return_to_local,
-55936779f49612 Dave Penkler 2024-09-18  726  };
-55936779f49612 Dave Penkler 2024-09-18  727  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Alice
