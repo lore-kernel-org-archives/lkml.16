@@ -1,137 +1,125 @@
-Received: from mslow3.mail.gandi.net (mslow3.mail.gandi.net [217.70.178.249])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EF6182;
-	Fri,  2 May 2025 12:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.178.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA382343AF;
+	Fri,  2 May 2025 12:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189408; cv=none; b=ffl2XC2+8Mg8FZxLJEMKuKwnJ72eeOXerOX072htrxvSBPO2DuNuKh1GAADb7B//Jp6ajnLGPEFjVEvCqiKE5ScOXgUDqKQg0ClZJalx0MJHPcjg6QQLabDVYjmtvNp6pzrd4na989Q4Q0GCDi7TAm3pT5GfJ+Fgqsi5kBKpi48=
+	t=1746189428; cv=none; b=FbBNadpOz1WUZg7rzlFocrp4Rwu/5itXJ5Pp5eGXE7ofNV9t41qJR7Vy2KVwOG/RjgY93mUlWl0baNs4B8sgTjyjnbln6CuqT2ZBOE8TUYSpkpovP+bjeGiH8OdusHQ6Eo+Gd9ZzzOWJ330ehoCldRUbm4Xj2nGBlqCJmrFLuF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189408; c=relaxed/simple;
-	bh=jt4cu7JoAcja/i7vDiI5Eo9ijTBc3g0OQvyp48ZU9nA=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=AAvfddAGWsMir+uNYhnS2NGIucvT1+hG9AO2V2+vi2gQtk7FlF3FFeO2M0I4cysVPunvD+pHnWTfw+BFL73za5CvQ2baPrGo5TWIQBnoCpIxcSC0DRhu+IZ/5yXWkXkBckyUKm1bTpPkNWK63tWB2dz9G+MPZZncYkcdvPjYgnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Woz6aWmH; arc=none smtp.client-ip=217.70.178.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746189428; c=relaxed/simple;
+	bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Bu9uZ1cl9kQvFmQQM7MrwpQ8bXnSysqDP1awFBSq2ZFS+krc9lP8emH2ZUtt6EeJzlUmoNBAKDmcIWiHy4/+gbU+GRPDfF+itLCoXuIPgb10kRGavBWF6tqM2aokna7ge4KiC9KB5Ilz2l5CUiqcY99ETVqpepj+8JVd6q0xKes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6jeTHPK; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Woz6aWmH"
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	by mslow3.mail.gandi.net (Postfix) with ESMTP id A9458580015;
-	Fri,  2 May 2025 12:08:09 +0000 (UTC)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6597343978;
-	Fri,  2 May 2025 12:08:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746187681;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6J//V8N/2FPUCK55/Rt0fc9X9pPfCrpuRCbgqXf8ghE=;
-	b=Woz6aWmHiSZ+6qQs+TFI8SsnPc7vh+aL//JQCRYBsQv9PNjJm1tuEBka1eaDwc+XaORNvC
-	V8xicpuheO41nEXYkMBVvLHPv5BE6kj81YuBfeC1LUbu4IMy5SPOEFLtv0H3vhA2478BFv
-	Ey9dHSyzrozhk9A9EJrtoW8bJ0QraiHWL0M1R5L2hXmra7k99iD83BHmjyDPVUpPhrse3Z
-	PKxXddTxsr8Y4eIKvjxyNHkqTAk+kDlTS5vh/lHkdf1mbQ0WYdfcUylhyTmWcov136Rekp
-	MiulJXV0CVcuTQmv5Mz7NDAc+hwHMMiQ64Xx6mEBkA9mbdoxwxjwvxHNIHNfbQ==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6jeTHPK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746189427; x=1777725427;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
+  b=f6jeTHPK0LWnujIO9ISmaL7LGXOaICj0G5wObnI2+9ZOJhPZ/50X4F3A
+   xC+10j5SpBJgl2kE1lSejg2rDvNQjkFHbrIQl++NlSqLb3thgyNqMNlWI
+   /W13ydP5tfkaUAtHuyPucz7nSiGxvtx+Mjz3qYicod5bkEwrfr4SkfbaD
+   4FgJVQ4lsjRWS7jxj+0MhsutneO3tUFqGMuL9fyZKXxT2EPZG6DTn+RcA
+   wZMO9BmDGbdteykhJx8/25wbbdLl2MLFXjWxIQWKd/trTN/rLn6z4qWF3
+   STJaozE8tI9Z3FdUVFfJpj/yzo4tN53aAsgk6LTXKefAswWTtgsnwWX3x
+   Q==;
+X-CSE-ConnectionGUID: znjMJG8PSuSw+13tgxOC/g==
+X-CSE-MsgGUID: tIZh7qIQQ0apiqJPZk5CmA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58078335"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="58078335"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:05 -0700
+X-CSE-ConnectionGUID: vGEnkxCiQ76ZBLd4Ck/A8Q==
+X-CSE-MsgGUID: GWlg6MNVT0etXQpnNGIIDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134528571"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.135])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:02 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 2 May 2025 15:36:58 +0300 (EEST)
+To: Randy Dunlap <rdunlap@infradead.org>
+cc: LKML <linux-kernel@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH] platform/mellanox: MLXREG_DPU depends on I2C
+In-Reply-To: <20250502001622.674263-1-rdunlap@infradead.org>
+Message-ID: <150c0b1b-8845-db78-39d3-388d3ca79613@linux.intel.com>
+References: <20250502001622.674263-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 14:07:59 +0200
-Message-Id: <D9LNVDTBPE6Q.3KOYKLIH8PPZ7@bootlin.com>
-Subject: Re: [PATCH v7 03/11] pinctrl: Add MAX7360 pinctrl driver
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-3-4e0608d0a7ff@bootlin.com>
- <aBSbKwmao-K-e1k8@smile.fi.intel.com>
-In-Reply-To: <aBSbKwmao-K-e1k8@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvgeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: multipart/mixed; BOUNDARY="8323328-1411073070-1746189394=:958"
+Content-ID: <20731f71-4262-d7d5-77e4-e0926c256de4@linux.intel.com>
 
-On Fri May 2, 2025 at 12:15 PM CEST, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:21PM +0200, Mathieu Dubois-Briand wrote:
->> Add driver for Maxim Integrated MAX7360 pinctrl on the PORT pins. Pins
->> can be used either for GPIO, PWM or rotary encoder functionalities.
->
->> +struct max7360_pinctrl {
->> +	struct pinctrl_dev *pctldev;
->> +	struct pinctrl_desc pinctrl_desc;
->
-> Does`pahole` agree with your choice of layout?
->
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-I believe so. `pahole drivers/pinctrl/pinctrl-max7360.ko` says:
-struct max7360_pinctrl {
-        struct pinctrl_dev *       pctldev;              /*     0     4 */
-        struct pinctrl_desc        pinctrl_desc;         /*     4    44 */
+--8323328-1411073070-1746189394=:958
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-ID: <5e401ceb-7dc3-8190-71ca-be626e46298f@linux.intel.com>
 
-        /* XXX last struct has 3 bytes of padding */
+On Thu, 1 May 2025, Randy Dunlap wrote:
 
-        /* size: 48, cachelines: 1, members: 2 */
-        /* paddings: 1, sum paddings: 3 */
-        /* last cacheline: 48 bytes */
-};
+> WARNING: unmet direct dependencies detected for REGMAP_I2C
+>   Depends on [m]: I2C [=3Dm]
+>   Selected by [y]:
+>   - MLXREG_DPU [=3Dy] && MELLANOX_PLATFORM [=3Dy]
+>=20
+> Without the dependency, REGMAP_I2C=3Dy since MLXREG_DPU=3Dy.
+> Since CONFIG_I2C=3Dm, this causes many (> 230) unmet dependency warnings.
+> E.g.:
+>   Selected by [m]:
+>   - EEPROM_AT24 [=3Dm] && I2C [=3Dm] && SYSFS [=3Dy]
+>   - SERIAL_MAX310X [=3Dm] && TTY [=3Dy] && HAS_IOMEM [=3Dy] && SPI_MASTER=
+ [=3Dy] && I2C [=3Dm]
+>   - PINCTRL_AW9523 [=3Dm] && PINCTRL [=3Dy] && OF [=3Dy] && I2C [=3Dm]
+>   - PINCTRL_CY8C95X0 [=3Dm] && PINCTRL [=3Dy] && I2C [=3Dm]
+>   - GPIO_FXL6408 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - GPIO_DS4520 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - GPIO_PCA953X [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
+>   - IP5XXX_POWER [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>   - BATTERY_CW2015 [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>   - CHARGER_SBS [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
+>=20
+> Fixes: 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial support =
+for Nvidia DPU")
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Vadim Pasternak <vadimp@nvidia.com>
+> Cc: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: platform-driver-x86@vger.kernel.org
+> ---
+>  drivers/platform/mellanox/Kconfig |    1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> --- linux-next-20250501.orig/drivers/platform/mellanox/Kconfig
+> +++ linux-next-20250501/drivers/platform/mellanox/Kconfig
+> @@ -29,6 +29,7 @@ config MLX_PLATFORM
+> =20
+>  config MLXREG_DPU
+>  =09tristate "Nvidia Data Processor Unit platform driver support"
+> +=09depends on I2C
+>  =09select REGMAP_I2C
+>  =09help
+>  =09  This driver provides support for the Nvidia BF3 Data Processor Unit=
+s,
+>=20
 
->> +	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
->> +	if (!chip)
->> +		return -ENOMEM;
->> +
->> +	pd =3D &chip->pinctrl_desc;
->> +
->> +	pd->pctlops =3D &max7360_pinctrl_ops;
->> +	pd->pmxops =3D &max7360_pmxops;
->> +	pd->name =3D dev_name(dev);
->> +	pd->pins =3D max7360_pins;
->> +	pd->npins =3D MAX7360_MAX_GPIO;
->> +	pd->owner =3D THIS_MODULE;
->> +
->> +	device_set_of_node_from_dev(dev, dev->parent);
->
-> I don't like this, but I have no better idea right now. Perhaps add a com=
-ment
-> on top to explain this call?
->
-
-I'm adding this comment here, and a similar one in the PWM driver.
-
-/*
- * This MFD sub-device does not have any associated device tree node:
- * properties are stored in the device node of the parent (MFD) device
- * and this same node is used in phandles of client devices.
- * Reuse this device tree node here, as otherwise the pinctrl subsystem
- * would be confused by this topology.
- */
-
-OK for all other comments.
-
-Thanks for your review.
-Mathieu
+Thanks for the patch but the review-ilpo-next branch already has this=20
+fixed, just waiting for lkp to build test it until it propagates into=20
+for-next.
 
 --=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+ i.
+--8323328-1411073070-1746189394=:958--
