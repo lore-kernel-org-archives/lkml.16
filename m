@@ -1,86 +1,143 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F1C22ACD1;
-	Fri,  2 May 2025 08:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BBBF8828;
+	Fri,  2 May 2025 08:43:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746175326; cv=none; b=HL0VEFYErLGLknlwmMRlZwm0xUAUFzijwrDsJ3F9/knT8zCrA7GOdPiQDbIGpGe7Jj+QSQy+cR8Cbi30mzwZHlXyOYEDu+3oKNMLRtPevSGkVX+vNHQl6ibInadvEdbSe3hRarrnvVLPXleada3vommvdgDz8MoeaE7dF/+rZ40=
+	t=1746175400; cv=none; b=EZJZI9s8KS+27SaBZDyzJvnRb5f50uOf5gS5zt+YEkJxYPrLoIq1nUzZhgyPaPP9yqwHDs7YuKleI1F1tWlt/bMWk4VXWKUFK8bvVd/qqVRRZpSdaOgnxu2bwYUwttx16wsls3F1mRKXeC1frddeTaBosPFyV9oGcp8xUBUmC4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746175326; c=relaxed/simple;
-	bh=JAkxRcMnCLTEaaF2Sx3Fm9Sem8/O4saWART4WZ6A1pU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqzjmhb+CWUQxbLnzdWie/Lgk2+bEiJmi6tV94ye3Q2SPSuVknh3LThz4uKCKqaOrS8TFbY0SwXcFgUhm3W3EeMzkBZ3jIvaNYCeShXzRzkUlw7mFkFQvLUyhDVFZaB+vZi9GpYuIG44GgdbddW9NoyGEAUj3eBEhOvdHqYGbr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=DIzoxIz0; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIzoxIz0"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=j6cbPjR+T0yzG1mLDzVIumfGnchJ8jrJp8SEOFZnJ0c=; b=DIzoxIz0Ehp+HLggJApwwus3VG
-	7rYxbEyl0G5WKBNyh2ko6DrCZQ4m22+3PRjS5LpsFKXwZDC93qkLiI5/pSl9Vwju11TlWH28Wji0O
-	3xCqPFuF+TFs4nOK3tU9tnjCQx/575+qsVxK2leGPxXJnNDK+3KuUcuZZQPq6oT9u2sCGOBRdPbY7
-	lgl87qfSpNsoydPh2dRBaLEXE9dxXJT7yg0k+6KT9OiUJh3mj4O9SGoAW4StpZ0fDtNqZZiWi7J3Y
-	4HFfdhDqgekQjYw9G7bjWSo5vt8rruRV3y3h/A1/v1SRKMYxHXrUxd0gu5dsATZQcjts0dGwLI/yl
-	ZoIv90BA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAlwb-0000000At0F-2Hrl;
-	Fri, 02 May 2025 08:40:35 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id BF3193001D4; Fri,  2 May 2025 10:40:07 +0200 (CEST)
-Date: Fri, 2 May 2025 10:40:07 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sean Christopherson <seanjc@google.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, kys@microsoft.com,
-	haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-	dave.hansen@linux.intel.com, pbonzini@redhat.com, ardb@kernel.org,
-	kees@kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	gregkh@linuxfoundation.org, jpoimboe@kernel.org,
-	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org, linux-efi@vger.kernel.org,
-	samitolvanen@google.com, ojeda@kernel.org, xin@zytor.com
-Subject: Re: [PATCH v2 00/13] objtool: Detect and warn about indirect calls
- in __nocfi functions
-Message-ID: <20250502084007.GS4198@noisy.programming.kicks-ass.net>
-References: <20250430110734.392235199@infradead.org>
- <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com>
- <20250430190600.GQ4439@noisy.programming.kicks-ass.net>
- <20250501103038.GB4356@noisy.programming.kicks-ass.net>
- <20250501153844.GD4356@noisy.programming.kicks-ass.net>
- <aBO9uoLnxCSD0UwT@google.com>
+	s=arc-20240116; t=1746175400; c=relaxed/simple;
+	bh=x2aq1XKqHbH6eCxQRGcIKB3OrIuNOfWz2k3HWH6042s=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LWUJDpIJyBZeYDKm8iLpY8nHDql6wFFHmfone03xyNFZVU/19dACXZoEee9ye1teORRQYGQFHHklY7jSMfKhKd43QwKzpji9eXHNjOCdEzbFgpdPeUXtU1TwmCpI1Qs7Nuw9GmkrJYiF9JN2t2Dc/M6Zct+IqaPQXSkoOofkRtE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZpkpJ5b0Nz6K5rg;
+	Fri,  2 May 2025 16:38:16 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id A06D41402FE;
+	Fri,  2 May 2025 16:43:15 +0800 (CST)
+Received: from localhost (10.48.156.249) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 2 May
+ 2025 10:43:14 +0200
+Date: Fri, 2 May 2025 09:43:13 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Erick Karanja <karanja99erick@gmail.com>
+CC: <manivannan.sadhasivam@linaro.org>, <kw@linux.com>, <kishon@kernel.org>,
+	<bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <julia.lawall@inria.fr>
+Subject: Re: [PATCH 2/2] PCI: endpoint: Use scoped_guard for manual mutex
+ lock/unlock
+Message-ID: <20250502094313.000055d1@huawei.com>
+In-Reply-To: <88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
+References: <cover.1746114596.git.karanja99erick@gmail.com>
+	<88bf352aab2b3ba68b2381b23706513e4cdea155.1746114596.git.karanja99erick@gmail.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBO9uoLnxCSD0UwT@google.com>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, May 01, 2025 at 11:30:18AM -0700, Sean Christopherson wrote:
+On Thu,  1 May 2025 18:56:12 +0300
+Erick Karanja <karanja99erick@gmail.com> wrote:
 
-> Uh, aren't you making this way more complex than it needs to be? 
+> This refactor replaces manual mutex lock/unlock with scoped_guard()
+> in places where early exits use goto. Using scoped_guard()
+> avoids error-prone unlock paths and simplifies control flow.
+> 
+> Signed-off-by: Erick Karanja <karanja99erick@gmail.com>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 53 +++++++++++++----------------
+>  1 file changed, 24 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index beabea00af91..3f3ff36fa8ab 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -709,7 +709,6 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+>  {
+>  	struct list_head *list;
+>  	u32 func_no;
+> -	int ret = 0;
+>  
+>  	if (IS_ERR_OR_NULL(epc) || epf->is_vf)
+>  		return -EINVAL;
+> @@ -720,36 +719,32 @@ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+>  	if (type == SECONDARY_INTERFACE && epf->sec_epc)
+>  		return -EBUSY;
+>  
+> -	mutex_lock(&epc->list_lock);
+> -	func_no = find_first_zero_bit(&epc->function_num_map,
+> -				      BITS_PER_LONG);
+> -	if (func_no >= BITS_PER_LONG) {
+> -		ret = -EINVAL;
+> -		goto ret;
+> -	}
+> -
+> -	if (func_no > epc->max_functions - 1) {
+> -		dev_err(&epc->dev, "Exceeding max supported Function Number\n");
+> -		ret = -EINVAL;
+> -		goto ret;
+> +	scoped_guard(mutex, &epc->list_lock) {
+This one is better, but using
+	guard(mutex)(&epc->list_lock);
+Is going to make for an easier to read patch and lower indent etc.
 
-Possibly :-)
+Unless there is some subsystem related reason that scoped_guard() is
+preferred then I'd go that way.
 
-> IIUC, KVM never
-> uses the FRED hardware entry points, i.e. the FRED entry tables don't need to be
-> in place because they'll never be used.  The only bits of code KVM needs is the
-> __fred_entry_from_kvm() glue.
+> +		func_no = find_first_zero_bit(&epc->function_num_map,
+> +					      BITS_PER_LONG);
+> +		if (func_no >= BITS_PER_LONG)
+> +			return -EINVAL;
+> +
+> +		if (func_no > epc->max_functions - 1) {
+> +			dev_err(&epc->dev, "Exceeding max supported Function Number\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		set_bit(func_no, &epc->function_num_map);
+> +		if (type == PRIMARY_INTERFACE) {
+> +			epf->func_no = func_no;
+> +			epf->epc = epc;
+> +			list = &epf->list;
+> +		} else {
+> +			epf->sec_epc_func_no = func_no;
+> +			epf->sec_epc = epc;
+> +			list = &epf->sec_epc_list;
+> +		}
+> +
+> +		list_add_tail(list, &epc->pci_epf);
+>  	}
+>  
+> -	set_bit(func_no, &epc->function_num_map);
+> -	if (type == PRIMARY_INTERFACE) {
+> -		epf->func_no = func_no;
+> -		epf->epc = epc;
+> -		list = &epf->list;
+> -	} else {
+> -		epf->sec_epc_func_no = func_no;
+> -		epf->sec_epc = epc;
+> -		list = &epf->sec_epc_list;
+> -	}
+> -
+> -	list_add_tail(list, &epc->pci_epf);
+> -ret:
+> -	mutex_unlock(&epc->list_lock);
+> -
+> -	return ret;
+> +	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_add_epf);
+>  
 
-But __fred_entry_from_kvm() calls into fred_extint(), which then
-directly uses the fred sysvec_table[] for dispatch. How would we not
-have to set up that table?
-
-> Lightly tested, but this combo works for IRQs and NMIs on non-FRED hardware.
-
-So the FRED NMI code is significantly different from the IDT NMI code
-and I really didn't want to go mixing those.
-
-If we get a nested NMI I don't think it'll behave well.
