@@ -1,165 +1,173 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AA63D6F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EE5C3D6F;
+	Fri,  2 May 2025 18:04:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746209017; cv=none; b=LiJ3YCRo9mlzt3znI/S6XqUriaQpFQLcBWrXEjjYne7Wz+pdO2CC/jFAJWpsF6cezm2eYhsXXYOc0oti/Sm4nzdBbXHj+pBrGJxKv/hInseHqrFqTGI/AKvdnoCknJMoj5q99/rRyAbI+leM5LtGqPDK5mkGtXQAG6eIWaTTOs4=
+	t=1746209062; cv=none; b=uPoHGJtFGXcxENKsOTo+Uhto6fm+pcdaAys9nXG297V6o8L+jBdjbwiGlpKWH99JtIyzyErAwwZbUFFYrQif6Ao/Mvr1D1a+T2PUsM09biH7bCqRKJXIqNikhEk5CR8kaHxYlsCsCbulhsvIi1yG2apewpdiViO5OIXRzgtZ4mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746209017; c=relaxed/simple;
-	bh=AJDNpzw3NdJGP69xXtuBevmL3yyHJPVj2D5j+/V5UUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M2IaBMm3VdlpnL/wIufhRZtMWWIAU0J1JbB/HKsf0FlIaXjYav1SkLke6uxRUKH/8wzJgGOXCmgrj03SuGYsk5+f3zegaCiDaCUrY9h0tVI/tvhQXZkgNmQu4NXE9OdPvUKTiD5jJMM+oifkPegdzy55rby/5mWj8REFj4G1TNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=j586PUgR; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="j586PUgR"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=dZGoOCcIvLVxbGi5BQAlsaUxjo3U40CWkuJXwGWx0IY=; b=j586PUgRgF57d/bi0wYp+B1+Ai
-	r11ReXh+AK2wBZRmui6MBGitwBzrR3b2KcOL2S1EGabC2LIzKp91vIFhCalNW8aB/RIUuXkvG6RM+
-	IhQX5kuqIwLJZj3fNINGNTLShTGekMLkUzQfIJVuaFl26CU1MOBV2DhxTREeZOTQL3BoE0HaxlVfa
-	l59/tca7BaqJ2IVnbSMV6F3zoVF1j3ouughJFWwPJtAEwVwxQTrXmf+urOKUASA2Fv9QevgxNkdtC
-	pMzozXTc5A8jRrF3hgxVTZQ2/QlXBSPQeIirYgTW+30PVlZLoDBSleHSw+RDC7tM/I7uiPopX6luI
-	WsliKOZQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAui7-00000008thY-1fB9;
-	Fri, 02 May 2025 18:02:11 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 8FE1F30057C; Fri,  2 May 2025 20:01:54 +0200 (CEST)
-Date: Fri, 2 May 2025 20:01:54 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>, Ingo Molnar <mingo@redhat.com>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Valentin Schneider <vschneid@redhat.com>,
-	Waiman Long <longman@redhat.com>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>
-Subject: Re: [PATCH v12 15/21] futex: Allow to make the private hash immutable
-Message-ID: <20250502180154.GY4439@noisy.programming.kicks-ass.net>
-References: <20250416162921.513656-1-bigeasy@linutronix.de>
- <20250416162921.513656-16-bigeasy@linutronix.de>
+	s=arc-20240116; t=1746209062; c=relaxed/simple;
+	bh=kf1CLPC3uiAsS6Ay/HaQPi+qXMWQGBPiUt9q6FFJD1g=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=W7E2Prv9A8/Xu365dgeZseMOPzdZW2xqiPHH9KJqAfMGbN+IBuYggQpT5yGy83gKLjVodxUVWIH44JZ3eabR7a48GHcrAHdH1KH+i+GauzM9J+aYP3fbAXYGGrVg1KuBE/trl/kv1zghQHN6uP9mQfYr0l6AsaqlKFug6ELyWpc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 923322F;
+	Fri,  2 May 2025 11:04:09 -0700 (PDT)
+Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2BC163F673;
+	Fri,  2 May 2025 11:04:15 -0700 (PDT)
+From: Yeoreum Yun <yeoreum.yun@arm.com>
+To: catalin.marinas@arm.com,
+	will@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com,
+	broonie@kernel.org,
+	maz@kernel.org,
+	oliver.upton@linux.dev,
+	joey.gouly@arm.com,
+	shameerali.kolothum.thodi@huawei.com,
+	james.morse@arm.com,
+	hardevsinh.palaniya@siliconsignals.io,
+	ardb@kernel.org,
+	ryan.roberts@arm.com
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Yeoreum Yun <yeoreum.yun@arm.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
+Date: Fri,  2 May 2025 19:04:12 +0100
+Message-Id: <20250502180412.3774883-1-yeoreum.yun@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250416162921.513656-16-bigeasy@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Apr 16, 2025 at 06:29:15PM +0200, Sebastian Andrzej Siewior wrote:
-> My initial testing showed that
-> 	perf bench futex hash
-> 
-> reported less operations/sec with private hash. After using the same
-> amount of buckets in the private hash as used by the global hash then
-> the operations/sec were about the same.
-> 
-> This changed once the private hash became resizable. This feature added
-> a RCU section and reference counting via atomic inc+dec operation into
-> the hot path.
-> The reference counting can be avoided if the private hash is made
-> immutable.
-> Extend PR_FUTEX_HASH_SET_SLOTS by a fourth argument which denotes if the
-> private should be made immutable. Once set (to true) the a further
-> resize is not allowed (same if set to global hash).
-> Add PR_FUTEX_HASH_GET_IMMUTABLE which returns true if the hash can not
-> be changed.
-> Update "perf bench" suite.
+create_init_idmap() could be called before .bss section initialization
+which is done in early_map_kernel().
+Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
 
-Does the below make sense? This changes arg4 into a flags field and uses
-bit0 for immutable.
+PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
+and this variable places in .bss section.
 
-(the point where I got upset is where arg4==2 was accepted :-)
+   # llvm-objdump-21 --syms vmlinux-gcc | grep arm64_use_ng_mappings
+     ffff800082f242a8 g     O .bss    0000000000000001 arm64_use_ng_mappings
 
---- a/include/uapi/linux/prctl.h
-+++ b/include/uapi/linux/prctl.h
-@@ -367,6 +367,7 @@ struct prctl_mm_map {
- /* FUTEX hash management */
- #define PR_FUTEX_HASH			78
- # define PR_FUTEX_HASH_SET_SLOTS	1
-+# define FH_FLAG_IMMUTABLE		(1ULL << 0)
- # define PR_FUTEX_HASH_GET_SLOTS	2
- # define PR_FUTEX_HASH_GET_IMMUTABLE	3
- 
---- a/kernel/futex/core.c
-+++ b/kernel/futex/core.c
-@@ -1440,7 +1440,10 @@ static bool futex_hash_less(struct futex
- 	return false; /* equal */
- }
- 
--static int futex_hash_allocate(unsigned int hash_slots, unsigned int immutable, bool custom)
-+#define FH_CUSTOM	0x01
-+#define FH_IMMUTABLE	0x02
-+
-+static int futex_hash_allocate(unsigned int hash_slots, unsigned int flags)
- {
- 	struct mm_struct *mm = current->mm;
- 	struct futex_private_hash *fph;
-@@ -1448,8 +1451,6 @@ static int futex_hash_allocate(unsigned
- 
- 	if (hash_slots && (hash_slots == 1 || !is_power_of_2(hash_slots)))
- 		return -EINVAL;
--	if (immutable > 2)
--		return -EINVAL;
- 
- 	/*
- 	 * Once we've disabled the global hash there is no way back.
-@@ -1469,8 +1470,8 @@ static int futex_hash_allocate(unsigned
- 
- 	rcuref_init(&fph->users, 1);
- 	fph->hash_mask = hash_slots ? hash_slots - 1 : 0;
--	fph->custom = custom;
--	fph->immutable = !!immutable;
-+	fph->custom = !!(flags & FH_CUSTOM);
-+	fph->immutable = !!(flags & FH_IMMUTABLE);
- 	fph->mm = mm;
- 
- 	for (i = 0; i < hash_slots; i++)
-@@ -1563,7 +1564,7 @@ int futex_hash_allocate_default(void)
- 	if (current_buckets >= buckets)
- 		return 0;
- 
--	return futex_hash_allocate(buckets, 0, false);
-+	return futex_hash_allocate(buckets, 0);
- }
- 
- static int futex_hash_get_slots(void)
-@@ -1592,7 +1593,7 @@ static int futex_hash_get_immutable(void
- 
- #else
- 
--static int futex_hash_allocate(unsigned int hash_slots, unsigned int immutable, bool custom)
-+static int futex_hash_allocate(unsigned int hash_slots, unsigned int flags)
- {
- 	return -EINVAL;
- }
-@@ -1610,11 +1611,16 @@ static int futex_hash_get_immutable(void
- 
- int futex_hash_prctl(unsigned long arg2, unsigned long arg3, unsigned long arg4)
- {
-+	unsigned int flags = FH_CUSTOM;
- 	int ret;
- 
- 	switch (arg2) {
- 	case PR_FUTEX_HASH_SET_SLOTS:
--		ret = futex_hash_allocate(arg3, arg4, true);
-+		if (arg4 & ~FH_FLAG_IMMUTABLE)
-+			return -EINVAL;
-+		if (arg4 & FH_FLAG_IMMUTABLE)
-+			flags |= FH_IMMUTABLE;
-+		ret = futex_hash_allocate(arg3, flags);
- 		break;
- 
- 	case PR_FUTEX_HASH_GET_SLOTS:
+If .bss section doesn't initialized, "arm64_use_ng_mappings" would be set
+with garbage value and then the text_prot or data_prot could be set incorrectly.
+
+Here is what i saw with kernel compiled via llvm-21
+
+  // create_init_idmap()
+  ffff80008255c058: d10103ff     	sub	sp, sp, #0x40
+  ffff80008255c05c: a9017bfd     	stp	x29, x30, [sp, #0x10]
+  ffff80008255c060: a90257f6     	stp	x22, x21, [sp, #0x20]
+  ffff80008255c064: a9034ff4     	stp	x20, x19, [sp, #0x30]
+  ffff80008255c068: 910043fd     	add	x29, sp, #0x10
+  ffff80008255c06c: 90003fc8     	adrp	x8, 0xffff800082d54000
+  ffff80008255c070: d280e06a     	mov	x10, #0x703     // =1795
+  ffff80008255c074: 91400409     	add	x9, x0, #0x1, lsl #12 // =0x1000
+  ffff80008255c078: 394a4108     	ldrb	w8, [x8, #0x290] ------------- (1)
+  ffff80008255c07c: f2e00d0a     	movk	x10, #0x68, lsl #48
+  ffff80008255c080: f90007e9     	str	x9, [sp, #0x8]
+  ffff80008255c084: aa0103f3     	mov	x19, x1
+  ffff80008255c088: aa0003f4     	mov	x20, x0
+  ffff80008255c08c: 14000000     	b	0xffff80008255c08c <__pi_create_init_idmap+0x34>
+  ffff80008255c090: aa082d56     	orr	x22, x10, x8, lsl #11 -------- (2)
+
+Note, (1) is load the arm64_use_ng_mappings value in w8 and
+(2) is set the text or data prot with the w8 value to set PTE_NG bit.
+If .bss section doesn't initialized, x8 can include garbage value
+-- In case of some platform, x8 loaded with 0xcf -- it could generate
+wrong mapping. (i.e) text_prot is expected with
+PAGE_KERNEL_ROX(0x0040000000000F83) but
+with garbage x8 -- 0xcf, it sets with (0x0040000000067F83)
+and This makes boot failure with translation fault.
+
+This error cannot happen according to code generated by compiler.
+
+here is the case of gcc:
+   ffff80008260a940 <__pi_create_init_idmap>:
+   ffff80008260a940: d100c3ff      sub     sp, sp, #0x30
+   ffff80008260a944: aa0003ed      mov     x13, x0
+   ffff80008260a948: 91400400      add     x0, x0, #0x1, lsl #12 // =0x1000
+   ffff80008260a94c: a9017bfd      stp     x29, x30, [sp, #0x10]
+   ffff80008260a950: 910043fd      add     x29, sp, #0x10
+   ffff80008260a954: f90017e0      str     x0, [sp, #0x28]
+   ffff80008260a958: d00048c0      adrp    x0, 0xffff800082f24000 <reset_devices>
+   ffff80008260a95c: 394aa000      ldrb    w0, [x0, #0x2a8]
+   ffff80008260a960: 37000640      tbnz    w0, #0x0, 0xffff80008260aa28 <__pi_create_init_idmap+0xe8> ---(3)
+   ffff80008260a964: d280f060      mov     x0, #0x783      // =1923
+   ffff80008260a968: d280e062      mov     x2, #0x703      // =1795
+   ffff80008260a96c: f2e00800      movk    x0, #0x40, lsl #48
+   ffff80008260a970: f2e00d02      movk    x2, #0x68, lsl #48
+   ffff80008260a974: aa2103e4      mvn     x4, x1
+   ffff80008260a978: 8a210049      bic     x9, x2, x1
+   ...
+   ffff80008260aa28: d281f060      mov     x0, #0xf83      // =3971
+   ffff80008260aa2c: d281e062      mov     x2, #0xf03      // =3843
+   ffff80008260aa30: f2e00800      movk    x0, #0x40, lsl #48
+
+In case of gcc, according to value of arm64_use_ng_mappings (annoated as(3)),
+it branches to each prot settup code.
+However this is also problem since it branches according to garbage
+value too -- idmapping with incorrect pgprot.
+
+To resolve this, annotate arm64_use_ng_mappings as ro_after_init.
+
+Fixes: 84b04d3e6bdb ("arm64: kernel: Create initial ID map from C code")
+Cc: <stable@vger.kernel.org> # 6.9.x
+Tested-by: Nathan Chancellor <nathan@kernel.org>
+Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+---
+Since v1:
+  - add comments explaining arm64_use_ng_mappings shouldn't place .bss
+    section
+  - fix type on commit message
+  - https://lore.kernel.org/all/20250502145755.3751405-1-yeoreum.yun@arm.com/
+
+There is another way to solve this problem by setting
+test/data_prot with _PAGE_DEFAULT which doesn't include PTE_MAYBE_NG
+with constanst check in create_init_idmap() to be free from
+arm64_use_ng_mappings. but i think it would be better to change
+arm64_use_ng_mappings as ro_after_init because it doesn't change after
+init phase and solve this problem too.
+---
+ arch/arm64/kernel/cpufeature.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index d2104a1e7843..913ae2cead98 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -114,7 +114,18 @@ static struct arm64_cpu_capabilities const __ro_after_init *cpucap_ptrs[ARM64_NC
+
+ DECLARE_BITMAP(boot_cpucaps, ARM64_NCAPS);
+
+-bool arm64_use_ng_mappings = false;
++/*
++ * The variable arm64_use_ng_mappings should be placed in the .rodata section.
++ * Otherwise, it would end up in the .bss section, where it is initialized in
++ * early_map_kernel(). This can cause problems because the PTE_MAYBE_NG macro
++ * uses this variable, and create_init_idmap() — which might run before
++ * early_map_kernel() — could end up generating an incorrect idmap table.
++ *
++ * In other words, accessing variable placed in .bss section before
++ * early_map_kernel() will return garbage,
++ * potentially resulting in a wrong pgprot value.
++ */
++bool arm64_use_ng_mappings __ro_after_init = false;
+ EXPORT_SYMBOL(arm64_use_ng_mappings);
+
+ DEFINE_PER_CPU_READ_MOSTLY(const char *, this_cpu_vector) = vectors;
+--
+LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
+
