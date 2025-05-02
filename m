@@ -1,100 +1,95 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48E821ABDA
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:53:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC5D217F30
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222798; cv=none; b=eIqup0NgXCWs1WlN2gjXetVUuA/k8+G5nGe1JJFsWUS0Y9uRHrkjkwKC3cJUYvtPRVS75bPLuK6ncCr86NvZ23pvdFbiTlQeJ1XLMXsEePAb2+cXsDOsE4Ru6RQOjlT4+PGP8YML6gYF8LYp7Dhx7VashdGEUial7cwY3yteFLU=
+	t=1746222808; cv=none; b=pMiRgCEb/jLqrjYfJf+tD4Yghv/OAyhM0dTs59vonJJHLQeeyBJDAy3B8rIC3x/FmUG58gtbVu9wi9i0Wytny0OkqmztpTkO/7UMc2QWactQy5kvQkFOkvbCYe7e338BMaECQpMq7Rvvxyu/P1+CJEzrrtM4tPL1X6oRCc57dUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222798; c=relaxed/simple;
-	bh=nCQfZRGnU7XdEzRqGD04fz4uMnP/E5gcgt1TqjuuJmE=;
+	s=arc-20240116; t=1746222808; c=relaxed/simple;
+	bh=FQr+BHlQxSxBR2zipuncYisr6Ec0sQ1MPg6ilSJIAVY=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=coJiEH2qCAbrw0TlCuhzB1k6GdBF/9JfRAFE2foTubDWRQ44w5z6moV+aqo8NRA7cKtHo3tcolIE/miEe4jjTYRCggdECRKv1WcvoNkEIJ6Pgk9hC3FOYXqvD29U4lBkfX2cjZhKoVElnOdy2Xyqm5noJIXN1dFiueeXx/1xkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rmHpAdGp; arc=none smtp.client-ip=209.85.214.201
+	 To:Cc:Content-Type; b=gudBn1l3CZXovhoi04F3t+Iz4FaZiMMc5FsyQH7zSHfE4y1EgU912VHds8r3DObek2+WvHh9uhzVK96ov5GP/xkDIsKNs2Dlgs+peksuOCEbLiNvLGb3vqJ5po1Vy+Sl6It7v7lOZVaDCV/RftmOrBd4iLxVdTKoRf2hW/fg304=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NCKogl3F; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmHpAdGp"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-227ed471999so22151465ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:53:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NCKogl3F"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-225429696a9so36491945ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:53:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746222796; x=1746827596; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1746222806; x=1746827606; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOOJN/3iLkJuzLWQ6HzhE0I5jjTP+F/Ic+GWLQnPrgs=;
-        b=rmHpAdGpnl/AlAugtxLoRZytQrXzWjTZmljfrI24S3E061cfnjkFhRUo+uGWD73lmp
-         6pL+2E03gn9Yr6hRJ2iZ3JdRlJYyqBBw5ur9/mTahYwd0OrGLP/4xoqK2kDWl6NxzuMV
-         xpTUFqWMo1bHvgExx/TQpzhf1G23llH2t5iDN/h4wRxDqfY0YjFJtmwgFxVNy0BFWYQY
-         Aw0EB3RXumzLMeoM/3RS4sHfEnnnxUMWGIq5m8ZxbWz21StY/aN53VBUtEqhIp+wchSc
-         Tym3GMTHPI56jVGmaL7dDgDTNhmICsVf7LURnD+jQnttyY90C9kgNG/dHVxWJ5r9DnMT
-         MdQA==
+        bh=2N9ldHU5FxazqlSntDy1e6IIyYJu+r433Gbvk8Qp75Q=;
+        b=NCKogl3FkwnJXkxZZrO/32yQYXgdwUTQQKwsLaT6VZTOtkxCit5ROp0h+jgG9bhJTY
+         Eq9oc6UU6E2neQpbFO20vogkaOBboXq+mQh9X5jQq/Qt2hOcU158ALRLf58ul1nqdOea
+         tw6m2PbZR5gWdrBZkGLRtuAoS5w9r38gOtK2zsrE5wDmuobiF07nJAlB8k0dboHigoWs
+         i8SZEDBCVI2PauA3GasQfZq/r8J/b/ywPd/Ya7OpR1Eg67lYHdf4urt9A2qaAX9Mh5W2
+         Q5g3qk1iSMPxseNQVw2pl4xQTK8MKX6JjbszC/Wd719VKXGPxLPMX27Sh5DQ08M1M2sK
+         df/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746222796; x=1746827596;
+        d=1e100.net; s=20230601; t=1746222806; x=1746827606;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TOOJN/3iLkJuzLWQ6HzhE0I5jjTP+F/Ic+GWLQnPrgs=;
-        b=cwjt41dfS02b0qRBN7iVKnzpO+cswz7UEDyw5B6t/O5r1kVcaJskyMe8FiDoI+PMXD
-         N6/Wh2LckVba5hnpBPe8KIfnOwsLh8+PsegMoPRZ7Dpe8ufRrjhs3MxohmoJ+O4f6Tas
-         ykGtQCDSdkCawWFNC+6JeJkb5t++b4zOE39NzXCAzs7wSXhtwod2Gz1riP346iee5LXr
-         V6gc9UkjWai09BmXyNyZXusH6JpLtSu8rSY5ns2ztRF4nGXMs7xBcWx0xQEmfrallbs9
-         JKp7UHevrFh4yMBko9qCL+oev6XIHxWyAU7ihCFOfXtivQcxdCp48IJvE6bIlhismJQ7
-         FLRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXlEuXFR5tdRdSFVTdmnKkexCYfDYBY1Sv6gNBzKhFZBbANTJsxubnbu0E0TmLd60UdoQGWp0pkvZsaWCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKH3EkNs+wfuXetOTwW2M5uEmyRCgJymXVxPJRND753gvC+o61
-	BJ1j2ime9xG2YEp47nXd39wgNBbd7b9wOh2tUn/8i1NxKHX8chxJMX4IGHQPjpIaBggS9hGDTL2
-	nNA==
-X-Google-Smtp-Source: AGHT+IHYs1MEn10lvN07xty29oFw5oiyxFAmn6SFBXdP9nD8jAOeMnNJQ3el6hmUPc7oHdKrGD6YxS6KF80=
-X-Received: from plbml6.prod.google.com ([2002:a17:903:34c6:b0:223:432c:56d4])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:3c25:b0:22c:3609:97ed
- with SMTP id d9443c01a7336-22e1031f6femr66397945ad.30.1746222796181; Fri, 02
- May 2025 14:53:16 -0700 (PDT)
-Date: Fri,  2 May 2025 14:51:05 -0700
-In-Reply-To: <20250502203421.865686-1-seanjc@google.com>
+        bh=2N9ldHU5FxazqlSntDy1e6IIyYJu+r433Gbvk8Qp75Q=;
+        b=He3egi/0Zeo73ms36TxuWEZr8kPW0dajpv39LvjBL9fBh25DmZiI2vCdjvBwuGRx7n
+         fsuH9piJne2edJkU21mWQ+susyukFHGBwDD6/q0mzuXnis83+em4IxoDhkobmOPCE4d1
+         V9oMDKr0Ynza1e47v55SBie8PGuEZWBO2rG5tnOLoxToZdE8Hj/49siEwNExdasRCv84
+         X5iawnTrIq9IutBCfw9ptr+R15djwDyqE5Ls7NoQTb03eqJeKdMXHiq6cHveJstW/TgJ
+         Bj73diuJgW0YbDpKBIH5vo+Su8q1adUW50jW+lGINfAQPdsvHBNawCd+YUJQJaUSirDd
+         vUvA==
+X-Forwarded-Encrypted: i=1; AJvYcCWfDVTu74SKpL3lZHhx9a6HGhm6sZoFVgqqvoGIav3xVWJUInWLHAgXrpPgshUpLZ8KabyxEcjQCzeZMAc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSkvnSPqPojNzuwxNVknqNxFpXOuv4Hq13HMVcAZsCrra4W+kO
+	5Z1fdpP6SttDl6erfY5K7GBV9PQiE4icqCVYOkRtiK3k1cXhGwgry1VaQZOUjOf9LfFQEM0b2q9
+	7aA==
+X-Google-Smtp-Source: AGHT+IFybCoH+yRZqSEW5GjgjMi2HGp4+sGXvvJ0+WGZDozCL6CsKNaI6/NE1ygpGpjeY4FePZ40NmVB49E=
+X-Received: from pgla5.prod.google.com ([2002:a63:b45:0:b0:af3:30b9:99a4])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1c7:b0:220:e023:8fa6
+ with SMTP id d9443c01a7336-22e1035c5a9mr71760665ad.50.1746222806577; Fri, 02
+ May 2025 14:53:26 -0700 (PDT)
+Date: Fri,  2 May 2025 14:51:07 -0700
+In-Reply-To: <20250318-vverma7-cleanup_x86_ops-v2-0-701e82d6b779@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250502203421.865686-1-seanjc@google.com>
+References: <20250318-vverma7-cleanup_x86_ops-v2-0-701e82d6b779@intel.com>
 X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <174622200919.880464.5585413953831680839.b4-ty@google.com>
-Subject: Re: [PATCH] KVM: x86: Revert kvm_x86_ops.mem_enc_ioctl() back to an
- OPTIONAL hook
+Message-ID: <174622213091.880948.13355437272012240115.b4-ty@google.com>
+Subject: Re: [PATCH v2 0/4] KVM: TDX: Cleanup the kvm_x86_ops structure for vmx/tdx
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Vishal Verma <vishal.l.verma@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Binbin Wu <binbin.wu@linxu.intel.com>, Rick Edgecombe <rick.p.edgecombe@intel.com>
 Content-Type: text/plain; charset="utf-8"
 
-On Fri, 02 May 2025 13:34:21 -0700, Sean Christopherson wrote:
-> Restore KVM's handling of a NULL kvm_x86_ops.mem_enc_ioctl, as the hook is
-> NULL on SVM when CONFIG_KVM_AMD_SEV=n, and TDX will soon follow suit.
+On Tue, 18 Mar 2025 00:35:05 -0600, Vishal Verma wrote:
+> This is a cleanup that should follow the initial TDX base support (i.e.
+> not an immediate fix needed for kvm-coco-queue).
 > 
->   ------------[ cut here ]------------
->   WARNING: CPU: 0 PID: 1 at arch/x86/include/asm/kvm-x86-ops.h:130 kvm_x86_vendor_init+0x178b/0x18e0
->   Modules linked in:
->   CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.15.0-rc2-dc1aead1a985-sink-vm #2 NONE
->   Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
->   RIP: 0010:kvm_x86_vendor_init+0x178b/0x18e0
->   Call Trace:
->    <TASK>
->    svm_init+0x2e/0x60
->    do_one_initcall+0x56/0x290
->    kernel_init_freeable+0x192/0x1e0
->    kernel_init+0x16/0x130
->    ret_from_fork+0x30/0x50
->    ret_from_fork_asm+0x1a/0x30
->    </TASK>
->   ---[ end trace 0000000000000000 ]---
+> Patch 1 is a precursory fix for a build warning/error found when
+> manually testing the CONFIG_INTEL_TDX_HOST=n case.
+> 
+> For Patches 2-4:
 > 
 > [...]
 
-Applied very quickly to kvm-x86 vmx, as I want to get the TDX macro cleanups
-applied.  I'll force push if someone finds an issue.
+Applied 2-4 to kvm-x86 vmx, with Chao's feedback incorporated, along with a few
+other minor cleanups.
 
-[1/1] KVM: x86: Revert kvm_x86_ops.mem_enc_ioctl() back to an OPTIONAL hook
-      https://github.com/kvm-x86/linux/commit/f2d7993314a3
+[1/4] KVM: TDX: Fix definition of tdx_guest_nr_guest_keyids()
+      (no commit info)
+[2/4] KVM: VMX: Move apicv_pre_state_restore to posted_intr.c
+      https://github.com/kvm-x86/linux/commit/84ad4d834ce9
+[3/4] KVM: VMX: Make naming consistent for kvm_complete_insn_gp via define
+      https://github.com/kvm-x86/linux/commit/1a81d9d5a1da
+[4/4] KVM: VMX: Clean up and macrofy x86_ops
+      https://github.com/kvm-x86/linux/commit/907092bf7cbd
 
 --
 https://github.com/kvm-x86/linux/tree/next
