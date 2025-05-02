@@ -1,189 +1,184 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B0B1EFFBB;
-	Fri,  2 May 2025 19:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2569211C
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746213119; cv=none; b=ht3ZK3qEGXSaEtgbr+ZPgKp0fvTLJ8jxcyxYudAhWgy4enEt+B0X3VhJmuyjuhQXdRLDVcsOdhgRMdia6HOvy0q9nafmrlzWIYNlb46dlzj7RUlneixqwQCaGU30z/o1vdNUq1EZ9INuTxbn1Y9yXK14yNZGFbccR+UF1i5Fa8g=
+	t=1746213324; cv=none; b=MifYsv+/StQnVtqssQqqlK8bt8Vvz+6mfxDH7Z8XsIlW8rfOERy9fWGi50uDsBwRahrv0PMhIlPcC7G9Gwn89BKReqfGa/NIBkC9Kbx7zHiqo1HorQvONtpnVQr9kuG2E+kkV+eaxxo+egJUMycvjJiBLYTYhotdh8dJfCd2PXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746213119; c=relaxed/simple;
-	bh=8SeIdJB60MOAqSI90MujJ4ezCLgLTfpKSnF/Q+0MsZI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pJ899CkmSM5/r/fzk12XKrpTG2VduXPuVY+PesXOM3WXYxSprySuJJrJ+Z0qsJPVkiRpzFrWceeMEXuYZMOT4vwQ3l+yNsPMmCyF022USS4besojgFVhbR/hvSTghtcOoj8BKCXWOqEI7gs9J7TQ9vqeTLIevB5wy7OULphW9OE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dutoPjKF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746213324; c=relaxed/simple;
+	bh=YuQ6sYeZWDqXQlWKOJ9AMWO1R7mDoJTLawFYLpQ9rzY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EaDoB4j67wlzgyWaXrWMLiSIS+EqedFXGMsNmNsxkk0yBTpjmdPyWj0fA9Z3xDXL9pKFmo+r7KPvd1KwvpuGLuyt9EX1cVYoIq1EF65ipR74Uj92x54+T1ZJBI7bcEHIZBYqh+PiDN/Tbk/gCWDLvFlsB+8htJK5SO3rFyCjMKM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=M1Lxt7lE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yyLQAK5e; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dutoPjKF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B6F6C4CEE4;
-	Fri,  2 May 2025 19:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746213118;
-	bh=8SeIdJB60MOAqSI90MujJ4ezCLgLTfpKSnF/Q+0MsZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dutoPjKFZIdmb/r4zhhKTTOhrU+RgPNZhP54f/Sfyyoezjk6OQbw3Qz/NDygG7k8b
-	 TeV39MEn7C1JVoPUnT+pR0pOyE1z3AkKm3J87Hk7HRDNmROdfQrHeqelp0PZm8e1VW
-	 kXw4Bhsl2ogVlzQHHBvgZhqmfjkQtPmgKRju2sp2wAqE3Gsv0xKR/eJDRRaZkaPjJ9
-	 ObwLZsUlRvHxyEDnzmzBSyHZA8kLd0joK0vmOAClgxn9HyZAXyCj8pudwc3VXeqwqI
-	 nDzB2VyPpRQ7BtO3xabN/UTrOg3PV2ECMel0eCSdkp5EgkCQEThpa7zoeCjZm+fud6
-	 YW0ndsl1aRb7w==
-Date: Fri, 2 May 2025 16:11:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
-	linux-s390@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	namhyung@kernel.org, agordeev@linux.ibm.com, gor@linux.ibm.com,
-	sumanthk@linux.ibm.com, hca@linux.ibm.com, irogers@google.com
-Subject: Re: [PATCH V4] perf test: Allow tolerance for leader sampling test
-Message-ID: <aBUY-zaI6BxRvWWS@x1>
-References: <20250430140611.599078-1-tmricht@linux.ibm.com>
- <aBT0a5lGzUSLpWpX@x1>
- <CAJpZYjWW07J8J40ygx6-5q_rfKEoz2g0VYCC=Go3PM2pBKvDRw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="M1Lxt7lE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yyLQAK5e"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746213320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmuBtyMRS3IDSg/UvXGWAy8MjsYUeJZg794cqy74t1I=;
+	b=M1Lxt7lEJqnyYIRFcSqbZinxO7uD/hmbLPg2sZDIIpSNMCshYVX0//9rJE51sPZg93sgh7
+	gLYzP8Zs82ynz4lDnQ5lfchYBsVOD6naRvgYSX1g8nJoWT89Gw2yCvJui6phgXWT7R7pOz
+	FaVg/x5wn0GkwSpFDu6LnxfURsW62fTWgOwqJcb3RJB6nspi0cefMsXIs69impuAfsplIr
+	CAGAmSBsq9S6OqNiVTWkAeSJVRYOZR7yvjg5Z0zD5elQ9ty0ZAQOBZrt5uG2hbqRfn7EFf
+	sDKKvfbUeWOnEZ0ora0vfRjs3LQkR5oskt11rRsrdPEgD1y5Wa4cewtlfdiUDw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746213320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qmuBtyMRS3IDSg/UvXGWAy8MjsYUeJZg794cqy74t1I=;
+	b=yyLQAK5eWmGz8firrZ3hb9sJHduLxHn6Rt11gcO36PQ9uoH2qwEkHidkTRY51IeM+qrJr2
+	bXiTpx09bHwXDrCg==
+To: Borislav Petkov <bp@alien8.de>
+Cc: Kevin Koster <lkml@ombertech.com>, Oerg866 <oerg866@googlemail.com>,
+ linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>
+Subject: Re: [PATCH -v2] x86/microcode: Consolidate the loader enablement
+ checking
+In-Reply-To: <20250502162210.GCaBTxMhdUT_Iw3_bj@fat_crate.local>
+References: <20250406190253.GAZ_LP3RPZInWKcHN7@fat_crate.local>
+ <20250407095848.7933a358c9f450fe03fb8234@ombertech.com>
+ <20250407102927.GAZ_OpBw5hJ2QTFsKz@fat_crate.local>
+ <20250408002150.8955343f4e2f2ac31b4663e8@ombertech.com>
+ <20250407135533.GDZ_PZVZ-2CKmhbt7d@fat_crate.local>
+ <20250408172250.GCZ_VbaqKsshMYTdaE@fat_crate.local> <875xjcteq2.ffs@tglx>
+ <20250411110741.GCZ_j3_dLFQ5fGhHqw@fat_crate.local>
+ <20250414095933.GAZ_zchcLNPpUHF9IN@fat_crate.local> <87frhppihj.ffs@tglx>
+ <20250502162210.GCaBTxMhdUT_Iw3_bj@fat_crate.local>
+Date: Fri, 02 May 2025 21:15:19 +0200
+Message-ID: <87zffuomd4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJpZYjWW07J8J40ygx6-5q_rfKEoz2g0VYCC=Go3PM2pBKvDRw@mail.gmail.com>
+Content-Type: text/plain
 
-On Fri, May 02, 2025 at 11:21:07AM -0700, Chun-Tse Shao wrote:
-> Hi Arnaldo,
-> 
-> I submitted the patch v1 and Thomas helped me to modify and submit v2
-> and v3 while I was OOO. In this case I am not sure which one should be
-> the author, maybe just keep it as Thomas.
+On Fri, May 02 2025 at 18:22, Borislav Petkov wrote:
+> On Wed, Apr 30, 2025 at 09:16:56PM +0200, Thomas Gleixner wrote:
+>> This return here is confusing at best. The only valid return value is
+>> 'false' according to the above logic, because nothing modifies
+>> dis_ucode_ldr and that must be false according to the top-most check,
+>> no?
+>
+> You mean the return value is the build-time dis_ucode_ldr value which is true.
+> Well, *was* true, keep on reading.
+>
+> I.e., the loader was default-disabled unless we decide it is ok to turn it on.
+>
+> Now that I look at it, this double-negation looks gross:
+>
+> disable:
+>         dis_ucode_ldr = true;
+>
+> "disable the disable loader". Pfff.
 
-From the tags provided, I think it would be best to list you as the
-author and Thomas a a Co-developer, like mentioned in:
+Indeed and it's all confusing because at the top of the function you
+have:
 
-Documentation/process/submitting-patches.rst
+	if (dis_ucode_ldr)                                                                                                                                                                                                                                                                                            
+		return true;                                                                                                                                                                                                                                                                                          
 
-Co-developed-by: states that the patch was co-created by multiple developers;
-it is used to give attribution to co-authors (in addition to the author
-attributed by the From: tag) when several people work on a single patch.  Since
-Co-developed-by: denotes authorship, every Co-developed-by: must be immediately
-followed by a Signed-off-by: of the associated co-author.  Standard sign-off
-procedure applies, i.e. the ordering of Signed-off-by: tags should reflect the
-chronological history of the patch insofar as possible, regardless of whether
-the author is attributed via From: or Co-developed-by:.  Notably, the last
-Signed-off-by: must always be that of the developer submitting the patch.
+That means, that dis_ucode_ldr must be false when it reaches
 
-Note, the From: tag is optional when the From: author is also the person (and
-email) listed in the From: line of the email header.
+     	return dis_ucode_ldr;
 
-Example of a patch submitted by the From: author::
+in your original patch, no?
 
-        <changelog>
+>> Something like the delta patch below makes it way more obvious and gets
+>> rid of the ugly gotos as well.
+>
+> Almost. When we *enable* the loader, we must set dis_ucode_ldr to false. IOW,
+> we must write dis_ucode_ldr to the newly detected value because
+> load_ucode_ap() checks it because it can't call microcode_loader_disabled()
+> because of this:
+>
+>         /*
+>          * Can't use microcode_loader_disabled() here - .init section
+>          * hell. It doesn't have to either - the BSP variant must've
+>          * parsed cmdline already anyway.
+>          */
+>
+>
+> IOW, yours a bit modified. Still untested ofc.
+>
+> ---
+> diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
+> index 7771755481ed..652198805ee3 100644
+> --- a/arch/x86/kernel/cpu/microcode/core.c
+> +++ b/arch/x86/kernel/cpu/microcode/core.c
+> @@ -42,7 +42,7 @@
+>  #include "internal.h"
+>  
+>  static struct microcode_ops *microcode_ops;
+> -static bool dis_ucode_ldr = true;
+> +static bool dis_ucode_ldr = false;
+>  
+>  bool force_minrev = IS_ENABLED(CONFIG_MICROCODE_LATE_FORCE_MINREV);
+>  module_param(force_minrev, bool, S_IRUSR | S_IWUSR);
+> @@ -84,6 +84,9 @@ static bool amd_check_current_patch_level(void)
+>  	u32 lvl, dummy, i;
+>  	u32 *levels;
+>  
+> +	if (x86_cpuid_vendor() != X86_VENDOR_AMD)
+> +		return false;
+> +
+>  	native_rdmsr(MSR_AMD64_PATCH_LEVEL, lvl, dummy);
+>  
+>  	levels = final_levels;
+> @@ -100,27 +103,28 @@ bool __init microcode_loader_disabled(void)
+>  	if (dis_ucode_ldr)
+>  		return true;
+>  
+> -	if (!have_cpuid_p())
+> -		goto disable;
+> -
+>  	/*
+> -	 * CPUID(1).ECX[31]: reserved for hypervisor use. This is still not
+> -	 * completely accurate as xen pv guests don't see that CPUID bit set but
+> -	 * that's good enough as they don't land on the BSP path anyway.
+> +	 * Disable when:
+> +	 *
+> +	 * 1) The CPU does not support CPUID
+> +	 *
+> +	 * 2) Bit 31 in CPUID[1]:ECX is clear
+> +	 *    The bit is reserved for hypervisor use. This is still not
+> +	 *    completely accurate as XEN PV guests don't see that CPUID bit
+> +	 *    set, but that's good enough as they don't land on the BSP
+> +	 *    path anyway.
+> +	 *
+> +	 * 3) Certain AMD patch levels are not allowed to be
+> +	 *    overwritten.
+>  	 */
+> -	if (native_cpuid_ecx(1) & BIT(31))
+> -		goto disable;
+> -
+> -	if (x86_cpuid_vendor() == X86_VENDOR_AMD) {
+> -		if (amd_check_current_patch_level())
+> -			goto disable;
+> -	}
+> +	if (!have_cpuid_p() ||
+> +	    native_cpuid_ecx(1) & BIT(31) ||
+> +	    amd_check_current_patch_level())
+> +		dis_ucode_ldr = true;
+> +	else
+> +		dis_ucode_ldr = false;
 
-        Co-developed-by: First Co-Author <first@coauthor.example.org>
-        Signed-off-by: First Co-Author <first@coauthor.example.org>
-        Co-developed-by: Second Co-Author <second@coauthor.example.org>
-        Signed-off-by: Second Co-Author <second@coauthor.example.org>
-        Signed-off-by: From Author <from@author.example.org>
+This still does not make any sense, because if dis_ucode_ldr == true
+when this function is called then the first check immediately returns.
 
-Example of a patch submitted by a Co-developed-by: author::
+So dis_ucode_ldr _IS_ false when this code is reached, no?
+  
+Thanks,
 
-        From: From Author <from@author.example.org>
-
-        <changelog>
-
-        Co-developed-by: Random Co-Author <random@coauthor.example.org>
-        Signed-off-by: Random Co-Author <random@coauthor.example.org>
-        Signed-off-by: From Author <from@author.example.org>
-        Co-developed-by: Submitting Co-Author <sub@coauthor.example.org>
-        Signed-off-by: Submitting Co-Author <sub@coauthor.example.org>
- 
-> Thanks,
-> CT
-> 
-> On Fri, May 2, 2025 at 9:35 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> >
-> > On Wed, Apr 30, 2025 at 04:06:11PM +0200, Thomas Richter wrote:
-> > > V4: Update to be applied onto linux-next
-> > > V3: Added check for missing samples as suggested by Chun-Tse.
-> > > V2: Changed bc invocation to return 0 on success and 1 on error.
-> > >
-> > > There is a known issue that the leader sampling is inconsistent, since
-> > > throttle only affect leader, not the slave. The detail is in [1]. To
-> > > maintain test coverage, this patch sets a tolerance rate of 80% to
-> > > accommodate the throttled samples and prevent test failures due to
-> > > throttling.
-> > >
-> > > [1] lore.kernel.org/20250328182752.769662-1-ctshao@google.com
-> > >
-> > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > Suggested-by: Ian Rogers <irogers@google.com>
-> > > Suggested-by: Thomas Richter <tmricht@linux.ibm.com>
-> >
-> > But who is the author? As-is this patch states Thomas Richter as the
-> > author, but since there is also a Suggested-by and Tested-by Thomas
-> > Richter, it makes me believe the author is Chun-Tse Shao, is that the
-> > case?
-> >
-> > - Arnaldo
-> >
-> > > Tested-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-> > > ---
-> > >  tools/perf/tests/shell/record.sh | 33 ++++++++++++++++++++++++++------
-> > >  1 file changed, 27 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> > > index 05d91a663fda..587f62e34414 100755
-> > > --- a/tools/perf/tests/shell/record.sh
-> > > +++ b/tools/perf/tests/shell/record.sh
-> > > @@ -240,22 +240,43 @@ test_leader_sampling() {
-> > >      err=1
-> > >      return
-> > >    fi
-> > > +  perf script -i "${perfdata}" | grep brstack > $script_output
-> > > +  # Check if the two instruction counts are equal in each record.
-> > > +  # However, the throttling code doesn't consider event grouping. During throttling, only the
-> > > +  # leader is stopped, causing the slave's counts significantly higher. To temporarily solve this,
-> > > +  # let's set the tolerance rate to 80%.
-> > > +  # TODO: Revert the code for tolerance once the throttling mechanism is fixed.
-> > >    index=0
-> > > -  perf script -i "${perfdata}" > "${script_output}"
-> > > +  valid_counts=0
-> > > +  invalid_counts=0
-> > > +  tolerance_rate=0.8
-> > >    while IFS= read -r line
-> > >    do
-> > > -    # Check if the two instruction counts are equal in each record
-> > >      cycles=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="cycles:") print $(i-1)}')
-> > >      if [ $(($index%2)) -ne 0 ] && [ ${cycles}x != ${prev_cycles}x ]
-> > >      then
-> > > -      echo "Leader sampling [Failed inconsistent cycles count]"
-> > > -      err=1
-> > > -      return
-> > > +      invalid_counts=$(($invalid_counts+1))
-> > > +    else
-> > > +      valid_counts=$(($valid_counts+1))
-> > >      fi
-> > >      index=$(($index+1))
-> > >      prev_cycles=$cycles
-> > >    done < "${script_output}"
-> > > -  echo "Basic leader sampling test [Success]"
-> > > +  total_counts=$(bc <<< "$invalid_counts+$valid_counts")
-> > > +  if (( $(bc <<< "$total_counts <= 0") ))
-> > > +  then
-> > > +    echo "Leader sampling [No sample generated]"
-> > > +    err=1
-> > > +    return
-> > > +  fi
-> > > +  isok=$(bc <<< "scale=2; if (($invalid_counts/$total_counts) < (1-$tolerance_rate)) { 0 } else { 1 };")
-> > > +  if [ $isok -eq 1 ]
-> > > +  then
-> > > +     echo "Leader sampling [Failed inconsistent cycles count]"
-> > > +     err=1
-> > > +  else
-> > > +    echo "Basic leader sampling test [Success]"
-> > > +  fi
-> > >  }
-> > >
-> > >  test_topdown_leader_sampling() {
-> > > --
-> > > 2.45.2
+        tglx
