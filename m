@@ -1,90 +1,110 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2411321770B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:52:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21B70219E93;
+	Fri,  2 May 2025 21:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222723; cv=none; b=NwE/WYBzVsWfEwI61IhZibWuAGPiF1ctPiMfwwRtxTkxBZWoaYDyHbq+F4zfwc+xMOuv4giand7tQyr5M527Jd2vR0VyWcFux//SWTJl7Y/9SXpfFXx1xJXnpTuJFtmk6OVQrljiInU4yPaMq8BcKF3Hp44Z8P2cRpfzgg5FmT0=
+	t=1746222727; cv=none; b=HYHiD2ETPiTQTmPreIf2HyhmPWya/h213/8L7HXHbYRpQNfOyI44E6mt05/HRT++gv/dzJS3oF5lPLsdNSkTwsGJ6crr98kGcKQPXdDBxO2VHwe0JV4pjxOy3ZxOHu9h2BwZtJTxGThlNp2CTt78+VEHS4FjAvmiAkIyWuYiT9E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222723; c=relaxed/simple;
-	bh=mTw9meZwxQX27VgMX/IkJeu9X1ncOgS+hPnL6MC6iI4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=e6Ng96iv8H3yY7LflrNZYYHopSSNcKqj/uM6RW4SuMCgnpHYgwhXMoX7EjTezbSu+AYGKSLPcg/1EccAWd68hoyOKCpP8sxpiEe2GM8ECeRdPrbu3SUq2CB5LW0aM7GceI5pcYv4deww9vRBN6GVF066NlKj8x/4yTdO2E9HBYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=en7quOWS; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1746222727; c=relaxed/simple;
+	bh=YG1y6vcd/mwrVWGLSsGMxcKcSqp12PyuG/HK1WrSQL4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BiuN2Gi53y1DW/LlMScHGUfs8QWzK1uHTdF6jj7A/mzknji8Ioau8sT6LThSOkCiNLiaStwYONCMFL5uU9v2YAP0142YAjGGDbP5/nc99UC3ugDKbi0h22TY3A1k5wYxbM/2/Gqf6z5b8f/wwk3Q8CEoSCseuoYAQySfXTVaUc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSw+oRn5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="en7quOWS"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff78dd28ecso2714502a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:52:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746222721; x=1746827521; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUERDQgic6jYhSnng0bbK0BO6GHErZXOAhSsWHpvBSw=;
-        b=en7quOWSoB6f9z+BacOtdUOzedlOHnpSL5UMr/oFWktSdme9OutoypOoEyHn4bTH/x
-         3uXqS2kuCOnkr9zI0StLAJJ/uN35ljWwZKUWh54wCPKAuvl8ch/5PP6ZdmynzP6fHced
-         zOBDsN7CWJxLLHKCWVvCsL2DA7PbwKIRgizLfnvgrYaqJY5UI5G3lN6g43QYL2S/d7dP
-         FbCXif0634xYKdGSp5at092xKiGxrOFO3inKoMmOeK9WCTSQc0EjPhqN3+QAkSJseSYV
-         Lj4RDV2+R7SxUe0YHVbxsgGYumt4NJwQP9DdZfjnDnjkcPYAtL1NCFfrx31Ma+IdKc4y
-         cdeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746222721; x=1746827521;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUERDQgic6jYhSnng0bbK0BO6GHErZXOAhSsWHpvBSw=;
-        b=DeKPudiu8v2cGekRkrKV/OvlQVvKvMGLjwMVSMNr/tzk+oGzH/an9DK2X6qoKEesC6
-         7ELHABERQGnMnXoQFME5EMbeiVlwghPAN+E1/b+/CvTy5+rV1st0mRMf83KnlRyj/jlh
-         YcBMwsmVvhd2ugkrpaZ00CB6r+94/y1Ru37R4fobk1k9toG6hFEZpUQ1SUFx+oWopC3b
-         IhVT2Fy5EB9aVIlm2LH4uB6rwlJFDQC3d3OYmhrTDDFV5MIg4b1HkyMgJrixy2SbvSSm
-         65BEFWDRTxcfnKGME8ViasqmrrXTiqkf2UcPRa/LKzA+vDf3memXcO7inVbfBwWzZvF8
-         hBdA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0m5aFCMqmEUOq/V65QpKbQP6mI/rVy/E84F3nGDwd62YWcgGE1Ev2jToG5ZHC1093JfS1ZYH61tQCGAI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcIVW5DMKGOM6qfYhXFIukh7+73JJWIEYH5lwNAgkSlmaKJldb
-	0I8hCyX6sn05xZx4noLL0VzfSKlUb5irbG9cM8C2f6PRG69i4h3Tz06V8RR9qJsU3r1QWUiKIFI
-	jYg==
-X-Google-Smtp-Source: AGHT+IEwgH5mk6MVRWNhPp+TSJ2BuOkDoyHYKUScxrQW1rPrL85Vc8OC6M7uCh2JJCo7Vxa6BdY8Sj9gbmA=
-X-Received: from pjbpt18.prod.google.com ([2002:a17:90b:3d12:b0:2fc:11a0:c549])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2747:b0:2f2:a664:df20
- with SMTP id 98e67ed59e1d1-30a4e579ef4mr7443371a91.7.1746222721474; Fri, 02
- May 2025 14:52:01 -0700 (PDT)
-Date: Fri,  2 May 2025 14:51:01 -0700
-In-Reply-To: <20250227222411.3490595-1-seanjc@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSw+oRn5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 798E6C4CEE4;
+	Fri,  2 May 2025 21:52:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746222726;
+	bh=YG1y6vcd/mwrVWGLSsGMxcKcSqp12PyuG/HK1WrSQL4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=cSw+oRn5Ywhz2iT8S9ASiK4VzgoAVpw+bnbGyLDaR7N2jRdI8iuMxfaQqOx3P1zj+
+	 YCEiRO5LUv90Ccd4VyPknQEW8YC897iSA35Amv0Xgv2bqDzKx7rjg5u1GuBPXo2tW8
+	 7GXRpncRHRme7HGbSGhw8aMQMwAn6j35FBqSuXdLLNo2xhrPdkr/Uv0SKHjNCeleU/
+	 nN98wg6/+3PZuZ0UBAeBZfAhhzWurcfiGH24kuDMXFwjac2cBssVa+V+cthr4UHWeG
+	 3fpxKm+RuQkhG4KbH8za53psCxPgK73vHqyxS3Urx6Uj8JNkvKMg5Is+iDB8pbwNeH
+	 M5HeJXaHgPNTQ==
+From: Miguel Ojeda <ojeda@kernel.org>
+To: Brendan Higgins <brendan.higgins@linux.dev>,
+	David Gow <davidgow@google.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Rae Moar <rmoar@google.com>,
+	linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	patches@lists.linux.dev
+Subject: [PATCH 4/7] rust: str: convert `rusttest` tests into KUnit
+Date: Fri,  2 May 2025 23:51:29 +0200
+Message-ID: <20250502215133.1923676-5-ojeda@kernel.org>
+In-Reply-To: <20250502215133.1923676-1-ojeda@kernel.org>
+References: <20250502215133.1923676-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250227222411.3490595-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
-Message-ID: <174622246244.883023.7921101160630129073.b4-ty@google.com>
-Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com, 
-	whanos@sergal.fun
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Thu, 27 Feb 2025 14:24:05 -0800, Sean Christopherson wrote:
-> Fix a long-lurking bug in SVM where KVM runs the guest with the host's
-> DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
-> context switch DEBUGCTL if and only if LBR virtualization is enabled (not
-> just supported, but fully enabled).
-> 
-> The bug has gone unnoticed because until recently, the only bits that
-> KVM would leave set were things like BTF, which are guest visible but
-> won't cause functional problems unless guest software is being especially
-> particular about #DBs.
-> 
-> [...]
+In general, we should aim to test as much as possible within the actual
+kernel, and not in the build host.
 
-Applied patch 6 to kvm-x86 svm (1-5 already went into 6.15).
+Thus convert these `rusttest` tests into KUnit tests.
 
-[6/6] KVM: SVM: Treat DEBUGCTL[5:2] as reserved
-      https://github.com/kvm-x86/linux/commit/5ecdb48dd918
+Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+---
+ rust/kernel/str.rs | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---
-https://github.com/kvm-x86/linux/tree/next
+diff --git a/rust/kernel/str.rs b/rust/kernel/str.rs
+index 878111cb77bc..cf2caa2db168 100644
+--- a/rust/kernel/str.rs
++++ b/rust/kernel/str.rs
+@@ -6,7 +6,7 @@
+ use core::fmt::{self, Write};
+ use core::ops::{self, Deref, DerefMut, Index};
+ 
+-use crate::error::{code::*, Error};
++use crate::prelude::*;
+ 
+ /// Byte string without UTF-8 validity guarantee.
+ #[repr(transparent)]
+@@ -572,8 +572,7 @@ macro_rules! c_str {
+     }};
+ }
+ 
+-#[cfg(test)]
+-#[expect(clippy::items_after_test_module)]
++#[kunit_tests(rust_kernel_str)]
+ mod tests {
+     use super::*;
+ 
+@@ -622,11 +621,10 @@ fn test_cstr_to_str() {
+     }
+ 
+     #[test]
+-    #[should_panic]
+-    fn test_cstr_to_str_panic() {
++    fn test_cstr_to_str_invalid_utf8() {
+         let bad_bytes = b"\xc3\x28\0";
+         let checked_cstr = CStr::from_bytes_with_nul(bad_bytes).unwrap();
+-        checked_cstr.to_str().unwrap();
++        assert!(checked_cstr.to_str().is_err());
+     }
+ 
+     #[test]
+-- 
+2.49.0
+
