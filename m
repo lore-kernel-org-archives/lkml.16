@@ -1,206 +1,233 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2075.outbound.protection.outlook.com [40.107.244.75])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C951E32D5
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 22:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746224736; cv=fail; b=jKLhyvxkd/94JXrljOt2AIZtJ/3v49R05vAjD60uuCkkuJ0JzNdwb10qvzqcRMjQsFI2facf3EsD/wXH3Ur/kLnq1+9ehm6Z5PDqiD50THfVL2uIFFhXPrhfvYtOyw4el37hnYculgLW1Ow297VJHZ7wAmvLgOwhzHSorIVcnQY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746224736; c=relaxed/simple;
-	bh=7EEuQ05eKICFmIOBRrXfqQDGgOfyQ+SnrooobShv0BE=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IKa+yINBylG7fiXMNdJnoxKS8gYKhswWcLGCNWcO46uGk8l/ylnhfk8CxSjDRCCEyvY/8iUPb7jTIG/VGQLLRl57FO91RXwHwHiH1QnJ/+kLp8MO4AzEVVDE9SPRoqsTcpkD2WtihsZvRIQDmM2z2uHyNJ7s9lSPT1KFh+p42RY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VkMCw2mn; arc=fail smtp.client-ip=40.107.244.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A69CD1E32D5;
+	Fri,  2 May 2025 22:29:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746224997; cv=none; b=pXRE4cO6hQ4mWIlwbdgaJnhZv3vjL2GbqeBkzzDnSocklJpHSi3Nvvgtfy+zt/H520sKhgpKiuVdtktWm8U34HjbQTaIz8c8K8lgIhvyh+SMoSn4pMFvb26iZuzDMitQ5ZY/ZSwpGWwg+BYrKb6cw+zZLzY6918lozjStZwVFtE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746224997; c=relaxed/simple;
+	bh=12slEHSSydirYvv1zO5VNqnzmBNqIh+tj6oaFB5Imfs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ap7DOYC2hciTacqywOcUD/kCkV2f6owUOGqua1mY8PlQnmXYadVWqbXmS9zzZz6ADUCPjUuP05egKBxmydr4tS5jXQ230tPi6RwU7HrlzUE5nm6VZcxyW9L+SAonotcE8rnoBIOlwUWVqtaFjbuIvqLejULQFQPUVceSuOs7LeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b=cjD5Za7V; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VkMCw2mn"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cUJk0V1ggN+yFFkHmMZ/RLq2uXv62fAxMIm0MZEU1KfhX7RpZpHqAiRQN9yKffYfORPGmhZlt5FEBE6tIxJsTFSZs1KXbOOen/+Q+s8Wnwb0VuI5dGXSNkjYCeLyjpqRxE9erLwdY2di9sY9BDmC+ikkXK6b6SwmaZlVC8y/I4/5Xk/W6ZRbeEW43KJVcuedLN2Qj/mGDQmLfwxCAxHe2if7zjvdDpwFhYdR//zB4RGA+QDaEU78TdFsOjGT1FYN4HDBWaDSU7yF6+YEgYreRF+QXd2AYudZWEg0/pRCUQCRNsSpHok9H8RVmEZAQPxtUelcu/sn99BvpUVDPecIBA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zXNvFg2f7kpyvT2KF7WtLPwLxDah19gd6VnZVglMEA0=;
- b=G6rz+Hk94ZLa5jhIQMUHlLjcAUdzD45mIBC41LKrTymRU1PScKbYmU7HJzdtDZsBAA+iwLWz8dsk8fGgnV48v5q9uzLKRjX6i8zrNRMQ/KxmDIgckevq4waADnAUHeB8kXDPcFPBRVcfeZ7ErTeZpbYRtBhtzUI+JFF0ofZRKBvJ0viWuIxrJTOOwIMwLOKADUEkT17gGZtf/CuCAS/GQyLPrra/u70ghJ8i4YSPR6iqxKC2szIBYaCAlT+k9Mcsu+EdnICuJf9VBXkxyI3bX3QYEE+4oucouoBSzzv2vfnKhWv2dqwrRHwXmoYIdA92Ff7PnPEA2aKqegC0x6+OFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zXNvFg2f7kpyvT2KF7WtLPwLxDah19gd6VnZVglMEA0=;
- b=VkMCw2mnlEBOYrXfWl9AnusvsVuDX1AhlhDRwZMl25SPXuVgIXKHl8fS+mI707mFXmYagAfM8eirZC+cmbb503HGSto9RBmvvn3treWMvSsWd24ee5HS1/yupPHYBduGTXkxRxCYB48AWTbGBQTASxgNMLhwCwIcdSTYEPfrLps=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com (2603:10b6:8:17e::15)
- by BL4PR12MB9481.namprd12.prod.outlook.com (2603:10b6:208:591::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.24; Fri, 2 May
- 2025 22:25:31 +0000
-Received: from DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1]) by DM4PR12MB8476.namprd12.prod.outlook.com
- ([fe80::2ed6:28e6:241e:7fc1%5]) with mapi id 15.20.8699.019; Fri, 2 May 2025
- 22:25:31 +0000
-Message-ID: <83eae1ce-ead2-47c9-a636-755a5207a6be@amd.com>
-Date: Fri, 2 May 2025 16:25:27 -0600
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND] drm/amd/display: adds kernel-doc comment for
- dc_stream_remove_writeback()
-To: James Flowers <bold.zone2373@fastmail.com>, harry.wentland@amd.com,
- sunpeng.li@amd.com, siqueira@igalia.com, alexander.deucher@amd.com,
- christian.koenig@amd.com, airlied@gmail.com, simona@ffwll.ch,
- skhan@linuxfoundation.org
-Cc: amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-References: <20250501055701.2667-1-bold.zone2373@fastmail.com>
-Content-Language: en-US
-From: Alex Hung <alex.hung@amd.com>
-In-Reply-To: <20250501055701.2667-1-bold.zone2373@fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0028.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:86::14) To DM4PR12MB8476.namprd12.prod.outlook.com
- (2603:10b6:8:17e::15)
+	dkim=pass (2048-bit key) header.d=gmx.de header.i=w_armin@gmx.de header.b="cjD5Za7V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
+	s=s31663417; t=1746224984; x=1746829784; i=w_armin@gmx.de;
+	bh=XOY5mknf5eww30NwncIbeluV8XJxpGodV7W3OS8gW6o=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
+	 References:From:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding:cc:content-transfer-encoding:
+	 content-type:date:from:message-id:mime-version:reply-to:subject:
+	 to;
+	b=cjD5Za7V8M+lejD0s3VxYEQhHItuFx1snseRX4JLJoxRwOV4XUtQ8qBYVuvIx0PP
+	 bOsO+dSkPbn2qTcxQh384NkKUMT1of1MljUr5W02LIqZPbUNGH2rE28yjKI5QMDn9
+	 9PpXFR5x9xu7d3QWUCDD4a3TDJBOQyw7Fti9vPkmIGJEcSbjAz05W4Ugzvz5PiE8F
+	 2NDB0Qiy3Lfb/25Vqp86pexBKgFu3WbeApPN+KJgIzCm6e6e5NjSf/VZi67nznt3f
+	 lvLqphBJXL2ESYY2ra5k2wGTmhRrhdkp+wPbAEkedsglQWZGkBj/v+85exoN/j+F+
+	 3pEAwOU/glrhN6z5zQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.0.24] ([87.177.78.219]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Md6Mj-1ukaYV0qqR-00bfTI; Sat, 03
+ May 2025 00:29:44 +0200
+Message-ID: <5cec046e-c495-4517-82c8-83ae3cdb63a1@gmx.de>
+Date: Sat, 3 May 2025 00:29:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR12MB8476:EE_|BL4PR12MB9481:EE_
-X-MS-Office365-Filtering-Correlation-Id: 40660d7f-6069-442a-7393-08dd89c83fb8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014|7053199007;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?cEFObDhXNzZEYUF4WkkyWmdNSVlRMDhHUHAxNHIyQStQckZ2YVlxNGZHSzRU?=
- =?utf-8?B?VkhjcXlXejdUK05nbnE1RU01YjEwb0R3RTEyQzJIeEJsdXIrYWVWRnI5Nmt4?=
- =?utf-8?B?VGVYeloxZUl4K09DUXRrTWF0bW02OWN6bjRlL2MveUZqWFdyWkpoaDFXS0dU?=
- =?utf-8?B?TlV3aDFHek80RWhHakhERkFvZ2MwZ1RyNW5uNzIzUnozUldZTzJOZ3dnbVd2?=
- =?utf-8?B?aHlta1RXdWVkNS9jNW1aYkU5UWxpS1ZpQlAxR1FPN0xSNUVNVXBVWG54S2J5?=
- =?utf-8?B?YStVbS8ycVVpT3FIem8wUkNzRGxVYzh1Q0wwaFlza2MwYlJmZGVrbjdaQmh3?=
- =?utf-8?B?RSt1SU1OWFFySmRKMVVidUY1eXFpMmg5d1pROW9ETS8wdExQVmVsYUlHNVRF?=
- =?utf-8?B?RzIzclU0SjR6d2VUTlZXbWZ0RG8vWERwdkI5YlltOUp4QW9EUWo0ZDFvcDBD?=
- =?utf-8?B?UjBSZjh5Zld2anhjak5Ga0YxdjJVdDVRaUxHVG9SQ2ViN3BCQThJdTUwa3Bq?=
- =?utf-8?B?d01mK3hWOXd0N1V1TkJ1WlBYaHczUk1NanlIejY5WDkzRWJjc01kaWUwbW55?=
- =?utf-8?B?NE9nWVhOQUxBd3hvV0VDRjZCQ0ZrS0dwYlE5dDQvSFNyaFFBZ3JxaG5yU2FE?=
- =?utf-8?B?blVNZ0xncnRoa2Q0RE52Vk9KaUZERjFrSEdBR3pKMWZXN1gxNW50Mk5COER6?=
- =?utf-8?B?YS9OYlZnWEdueEZnK3htc3hUZjZrOFAwcElhME9BVUc1RFZJWUUxakpCSWtI?=
- =?utf-8?B?K2xDaDhwMjliSUpCZ3Yybll2SXJ4dTVjYjhBaG16RnUrejhvM3ZKWVFjQmpN?=
- =?utf-8?B?L1VxN2loMDFVNE4yWHorTWVNeHNMa05iRmZtby9scEE2N3drV0RYNFo4bkIr?=
- =?utf-8?B?MmxjSTdoUDczVllkcGlzY2xneUNiWCtlMkdnRHlmcHkxTUVMS0FRUFJtY2RP?=
- =?utf-8?B?MEZDaVViczV3Qlg0aVVhTnF6R0NxMFFDMkdXM2lpYXgrUkRwRjhBb3RCenAz?=
- =?utf-8?B?amdIZUkwS3lIVGZiN0pSOElDQ09lVWVGY2FXTUxmY3MxanVzRG1rVUt3OW5M?=
- =?utf-8?B?V0FTQ1lZaXh6eitTdWJaTnNpMDErS1R2ME4xVGRWeU0ybjdyQXB5TjU5YjBw?=
- =?utf-8?B?aDlyb3VSblhKa0Q2OHBiR0Jhb2dnUXB6TlN5NjlnSlVBY2hNa3EyNkw2WmYy?=
- =?utf-8?B?bmJKUGNKQVR2Y0pkdHJHeDlNWkFHNm9wcXl3MnBTSkRIYWllNHNBVFVJWlZ1?=
- =?utf-8?B?S2ZITGlrM1UyMGpoSjhDbkViaHpkUi9yRUxIcnNySldaWlo2Tm04bWJ1Mm5l?=
- =?utf-8?B?M1NEeTJtUjBHOUZwZkdtZnV1MVVjR2VvZy91bkcvQmdQajlMUG1XR29qczNO?=
- =?utf-8?B?ZHpJeHhycGJrSmR1aDBqdWt6dFdLRXk4Z0xpMFVlTjFEODVlRDdialE0dFhW?=
- =?utf-8?B?b1VDWHpBYWY0dU9rUk44K1hieVJJUmtidkNwSkkyaWVpUDV3dmw5NzJSSmZr?=
- =?utf-8?B?Q0RuZmJMUmNOUWRPcnJSaUdRaVdIV3lJOTQ1ZjBxVlV0Qk5BdlMrMXhad3pj?=
- =?utf-8?B?cW5tM2RUd1hYMjlpaHA3NTNzNDlndlgzRjdIdjNHaTdxU2RpMlN2R2lhdWtZ?=
- =?utf-8?B?R05NeDl3MGo5dVlwcjlnRjlsTzZMWWx6VzRMMCtkNWNTM2JRWXlIT2xJTHJo?=
- =?utf-8?B?VHBSRnBpTTR3MnNONlF5bnJFclEwMmJmbUVpRmpuNmlQL0hNQTh2cTl6Qmxv?=
- =?utf-8?B?NnFrcFc3UHU5bENiWTdIMkc1YzVhNUNFMGtKZVBhcVdrRkl1aFZtOG5TeFBM?=
- =?utf-8?B?Q1dxN1d2SU9jWFkvdmUzZE1BMGVZQldoNDNCYldGZC93a2VIL0RoUEpaN1Ux?=
- =?utf-8?B?bitiOUtMTE56cnUwSFd0WFJVajRXQ1ZseU5XazIzRWtqSDUyUG56MlJock93?=
- =?utf-8?Q?F9/Ij1TO7NY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB8476.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?b0EvOU4wMm4vRnpDRjhvQ05oZktURVJydUdkMVFqQ3N6Um5rZFR5cGRZWStU?=
- =?utf-8?B?Wk40dmQ5K1VXbWNJWDArOC9SNkRiamUzUlV3NHpoaForVis4UE1majRtWnFF?=
- =?utf-8?B?TGF3QTNwUXlvQmp1UENuRnJRSWZoNW5ZcjBTd242aVdZT3VNUlJralByUHJo?=
- =?utf-8?B?OVI3VUtORHpuRHJqdENCTmFPT1pzcVF4UHdjWHZybTRBb1RseldjSVU0SFZ5?=
- =?utf-8?B?cGNzdDN6dFVFUUNZOEZDN2w1cEdJbmNKQld5U2dFdTVQcTdDZE8ySmZxYTR3?=
- =?utf-8?B?SXR1c2xDNFFacUpLM2RkcDdSdzZFcnhTb0hZL3hsdklybTVmUUlBVFZpVnQv?=
- =?utf-8?B?YnhrTnpSblhORXFkeE5FdkovaWc2UFg1SHVXb01sQmlpYWVUMlAzUFJ0QytQ?=
- =?utf-8?B?ejh0ZVRid0hxb1hDVjR6R2hQOGRmemU5SkFIRzFBeHVEM1ora2hpVklvaDhY?=
- =?utf-8?B?U0w2RmhBVDhnU2wvTzRzVnI5Zy81Y25QMC9ldlBkcUh1eE9jTWUrZ3hCbmN5?=
- =?utf-8?B?Zzk5bk56QUFHT2FDT1lBRllTM3F2MVgyd1V1Z0xkUW9Ud20rd2gvbWMwWTZs?=
- =?utf-8?B?TWRvbWRsQnVVaXhKV1grdEtzTjlLd1BZZ2YrYkNHVkJZWHFqTFdvNk44ZWk0?=
- =?utf-8?B?MmFqOEplblNaY3VLOXhaVTZCcHIvOURTUjBLVjJ3STdaMFRLS0ZycU1LTVpI?=
- =?utf-8?B?TW96SDB5aFNXc0RRT2FhL1lJVUhiUlBIaWxLQzFLbmoydXdnUk5ZRlU4L2Ew?=
- =?utf-8?B?SFBrbHZaSGZpS2pRQXluOTI4c29jcy9aVWpQeHpDUVJiTkxJUG1xZUZNWjM4?=
- =?utf-8?B?MXdZS1JJSHVYOThIQzF5cUpZWXRvV3lkSUVkZmxVS0E4cmdXY2h2NVFBdU90?=
- =?utf-8?B?eUpNeFVFN3FYNVRWT1FCaHhibkE1WWZNMFpvRFA4VGMrSm5WNHhnY3pzMmlY?=
- =?utf-8?B?dmlWaUlBb2d1Smx2MnF1SzhzZkRld25IWnFMb1FsZVp4ZXM3NVY3RXNNMGts?=
- =?utf-8?B?dmE5d3QxRG14WTlmSXhPRkduUDlBZVRDZXhiclgyMEk0RzdpQ2c3YU1VRENT?=
- =?utf-8?B?eGJnekVRSkVZcFJCSUhzblBTRDJSZTlSYzNUNExhUTUxYmY0eHBBZnpNUFE1?=
- =?utf-8?B?MjV1TU9wWVlHOUc2emh2WFdTS0JZZGJrQkE1UlovQmNWT0kyenhZa3FnbTEx?=
- =?utf-8?B?ZkRZTkZqS3oxRDdGdHdzZWtDdmdFOTQwNmFzMUxyaWJOMS9nTnVLNWtTbnZk?=
- =?utf-8?B?Tk1uL2xEY0JPNm1MS25aeHlXcnFsdTBIaW1ZY2J6SS9Hc2J2b0tjNTA3c2w0?=
- =?utf-8?B?c2NYSy9vbGxhTUlYdXNQMTFuN2gwZkZrLzFvKzFRbXJUNjdPT004ZVdmSVBu?=
- =?utf-8?B?KzF3TWRWaCtRL1lhemluckhLeTh5YlIxcjI2ODYrV25NVm43Y1cwanlxUVl5?=
- =?utf-8?B?U2ViZlJLRFZYdjNuTTJJYjROMmdqbzYwT29NL2tmL2NmWWNMWVhMbm5iSFB6?=
- =?utf-8?B?bTBldjNTeTE4bVdVWkpzSmpjRk9kdG5SZHUzRzhGTWhES1BXeXNreFlmRFdB?=
- =?utf-8?B?dGJCRE8yU1Z0TUVieWplZStSZElydVhhK0xuY21tUUhRTHRDSUdCVTNmNUJ0?=
- =?utf-8?B?NDJQUS91RnR0OFA5a2hNOXVkMHlmMkY2ZHpBdXp6SHFTOUhvSjJKK1lSVVZ6?=
- =?utf-8?B?N1RtR1VQdEw0Z3FiWldXNzVuU1VDZ2ZTRWdSZmRmQU1yVDVVNVlYSzZrSDha?=
- =?utf-8?B?MC9ZbmlrNWxhdlgwYy9waU9UMEZOYWc2bFR6UThneTJ2bjdUcFpwUEx3Z2Uz?=
- =?utf-8?B?VjJRSmNMZ2w5WEh6Zk9XK1Q4L1h0RVJhOVMzbS9DdnFDeHVhd0xTNVpSTkJP?=
- =?utf-8?B?STlHR1ZZdUpOdnNDcm05Y0o5WjBhUEJjN1FqbkJTMlZRb0NMYmZ5WUViaTlW?=
- =?utf-8?B?bEQ0OGwzRHlrSjRYOTVGTDZDakxqV1Y3ckxXUHhNTUtaUVFDaE55N2Y1Zkl1?=
- =?utf-8?B?dGNodC9RZ1p5aENmbXp1MU0vQ1Jac2JrYjNjdE1kS2VXZFl4MWJ0UDZmV1FJ?=
- =?utf-8?B?RmxOTUFWa0ZnWkIwdkNZa2lVZnM0TThMN3Q3dGtWeUFWeUEybjRTUTdHWEhX?=
- =?utf-8?Q?o+W5fUZKML3B8vqGWpCMsFi2e?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 40660d7f-6069-442a-7393-08dd89c83fb8
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB8476.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 22:25:31.4508
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6tUoaZfHOI1GEPqur8gqT7aztvrd7GsEeuviI6xg+VA0Fmxruhh+a+zow+j/yYN7NT57eb1Z3FYW3ZGnaDMrrA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9481
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] ACPI: thermal: Properly support the _SCP control
+ method
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: rui.zhang@intel.com, lenb@kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250410165456.4173-1-W_Armin@gmx.de>
+ <91ea8aed-5f98-4e4e-b3ee-fdc86d54f787@gmx.de>
+ <CAJZ5v0jOR9=jA=8XASBpxJyXaB4TvXmxcZQWq1qUgq1J4h_tEg@mail.gmail.com>
+ <90cba8fa-e6a9-4dab-a4ea-fa96d570a870@gmx.de>
+ <c8127d88-194a-4a23-b22e-040e2c6b3e9b@gmx.de>
+ <CAJZ5v0icUnepOwb87k44nAt1ZwfHp_BqSBzS-TrQWJ_4E3Ls=g@mail.gmail.com>
+Content-Language: en-US
+From: Armin Wolf <W_Armin@gmx.de>
+In-Reply-To: <CAJZ5v0icUnepOwb87k44nAt1ZwfHp_BqSBzS-TrQWJ_4E3Ls=g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:S0g7n5IwUOhVBiDy+0LwI6pj2YBzt7DthiJi91tpzvSwhAzyRlG
+ Qz+jHjyTWythb57tH2PqCVwToFGsMLDmRdBFs5z9qbVLFbSjtSMPwFiaOXjfr1xRAkR2VZj
+ ZV3GkSvhAcvp/UjqN/4svAq9QB2Aiu3+Y8SfNO/AcsrOZ/Xh9P9yLEH8QAvmHXY7hiu+Ef6
+ 07fxnOkQk4c6YiJeGwUiQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:NP8dYZINHec=;UQEVBJICDfb59P6qPzwxSFDOPtf
+ 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
 
-Hi James,
+Am 28.04.25 um 14:34 schrieb Rafael J. Wysocki:
 
-checkpatch reports the following warning and error
+> On Mon, Apr 28, 2025 at 2:31=E2=80=AFPM Armin Wolf <W_Armin@gmx.de> wrot=
+e:
+>> Am 27.04.25 um 00:52 schrieb Armin Wolf:
+>>
+>>> Am 26.04.25 um 15:12 schrieb Rafael J. Wysocki:
+>>>
+>>>> On Sat, Apr 26, 2025 at 1:20=E2=80=AFAM Armin Wolf <W_Armin@gmx.de> w=
+rote:
+>>>>> Am 10.04.25 um 18:54 schrieb Armin Wolf:
+>>>>>
+>>>>>> The ACPI specification defines an interface for the operating syste=
+m
+>>>>>> to change the preferred cooling mode of a given ACPI thermal zone.
+>>>>>> This interface takes the form of a special ACPI control method call=
+ed
+>>>>>> _SCP (see section 11.4.13 for details) and is already supported by =
+the
+>>>>>> ACPI thermal driver.
+>>>>>>
+>>>>>> However this support as many issues:
+>>>>>>
+>>>>>>     - the kernel advertises support for the "3.0 _SCP Extensions"
+>>>>>> yet the
+>>>>>>       ACPI thermal driver does not support those extensions. This m=
+ay
+>>>>>>       confuse the ACPI firmware.
+>>>>>>
+>>>>>>     - the execution of the _SCP control method happens after the dr=
+iver
+>>>>>>       retrieved the trip point values. This conflicts with the ACPI
+>>>>>>       specification:
+>>>>>>
+>>>>>>         "OSPM will automatically evaluate _ACx and _PSV objects aft=
+er
+>>>>>>          executing _SCP."
+>>>>>>
+>>>>>>     - the cooling mode is hardcoded to active cooling and cannot be
+>>>>>>       changed by the user.
+>>>>>>
+>>>>>> Those issues are fixed in this patch series. In the end the user
+>>>>>> will be able to tell the ACPI firmware wether he prefers active or
+>>>>>> passive cooling. This setting will also be interesting for
+>>>>>> applications like TLP (https://linrunner.de/tlp/index.html).
+>>>>>>
+>>>>>> The whole series was tested on various devices supporting the _SCP
+>>>>>> control method and on a device without the _SCP control method and
+>>>>>> appears to work flawlessly.
+>>>>> Any updates on this? I can proof that the new interface for setting
+>>>>> the cooling mode
+>>>>> works. Additionally the first two patches fix two issues inside the
+>>>>> underlying code
+>>>>> itself, so having them inside the mainline tree would be beneficial
+>>>>> to users.
+>>>> Sure.
+>>>>
+>>>> I'm going to get to them next week, probably on Monday.
+>>> Ok, thanks.
+>>>
+>>> Armin Wolf
+>>>
+>> I am a bit ashamed of myself but i think we need to put this patch seri=
+es on hold after all :(.
+>>
+>> The reason of this is that i am confused by the ACPI specification rega=
+rding _SCP:
+>>
+>>          11.1.2.1. OSPM Change of Cooling Policy
+>>
+>>          When OSPM changes the platform=E2=80=99s cooling policy from o=
+ne cooling mode to the other, the following occurs:
+>>
+>>          1. OSPM notifies the platform of the new cooling mode by runni=
+ng the Set Cooling Policy (_SCP) control method in all thermal zones and i=
+nvoking the OS-specific Set Cooling Policy interface to all participating =
+devices in each thermal zone.
+>>
+>>          2. Thresholds are updated in the hardware and OSPM is notified=
+ of the change.
+>>
+>>          3. OSPM re-evaluates the active and passive cooling temperatur=
+e trip points for the zone and all devices in the zone to obtain the new t=
+emperature thresholds.
+>>
+>> This section of the ACPI specification tells me that we need to evaluat=
+e the _SCP control method of all ACPI thermal zones
+>> at the same time, yet section 11.4.13. tells me that each _SCP control =
+methods belongs to the individual thermal zone.
+>>
+>> The reason why i am concerned by this is because Windows adheres to sec=
+tion 11.1.2.1. and only exposes this setting
+>> as a global tunable. This might cause device manufacturers to depend on=
+ this behavior and lead to strange things
+>> should two thermal zones have different _SCP settings.
+>>
+>> I will ask the UEFI mailing list which behavior is expected by the ACPI=
+ specification. Until then i suggest that
+>> we put this patch series on hold.
+> Sure, no problem.
+>
+> Please resend it when you think it is good to go.
+>
+> Thanks!
 
-WARNING: Prefer a maximum 75 chars per line (possible unwrapped commit 
-description?)
-#18:
-Adds a kernel-doc for externally linked dc_stream_remove_writeback() 
-function.
+Alright, the UEFI mailing list gave no response, so i am kind of stuck.
 
-ERROR: trailing whitespace
-#39: FILE: drivers/gpu/drm/amd/display/dc/core/dc_stream.c:561:
-+ * Return: returns true on success, false otherwise. $
+It seems that many firmware implementation only have a single cooling poli=
+cy register which is set by all _SCP control methods inside the whole syst=
+em.
+The reason for this seems to be that Windows threats this setting as globa=
+l, but the ACPI specification seemingly does not directly mandate this.
 
-total: 1 errors, 1 warnings, 14 lines checked
+Do you thing we should take the risk and allow users to control each _SCP =
+instance manually?
 
+Apart from that the first two patches should be safe, so you can still pic=
+k them. Only the last patch needs some more work.
 
-On 4/30/25 23:56, James Flowers wrote:
-> Adds a kernel-doc for externally linked dc_stream_remove_writeback() function.
-> 
-> Signed-off-by: James Flowers <bold.zone2373@fastmail.com>
-> ---
->   drivers/gpu/drm/amd/display/dc/core/dc_stream.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-> index 0478dd856d8c..060ee6c3fc2e 100644
-> --- a/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-> +++ b/drivers/gpu/drm/amd/display/dc/core/dc_stream.c
-> @@ -552,6 +552,14 @@ bool dc_stream_fc_disable_writeback(struct dc *dc,
->   	return true;
->   }
->   
-> +/**
-> + * dc_stream_remove_writeback() - Disables writeback and removes writeback info.
-> + * @dc: Display core control structure.
-> + * @stream: Display core stream state.
-> + * @dwb_pipe_inst: Display writeback pipe.
-> + *
-> + * Return: returns true on success, false otherwise.
-> + */
->   bool dc_stream_remove_writeback(struct dc *dc,
->   		struct dc_stream_state *stream,
->   		uint32_t dwb_pipe_inst)
+Thanks,
+Armin Wolf
 
