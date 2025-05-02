@@ -1,111 +1,93 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC9A2907;
-	Fri,  2 May 2025 02:34:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1913B4689;
+	Fri,  2 May 2025 02:34:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746153252; cv=none; b=OjKRmV0pvTrw5jNnjGzVeeniqFv43hgY6O2ZJ0DM2snr5iuy4IvVGbBpGHJUyTFFHC+9zTuiZ9pKkw1FzlS7Sg3glR3b3asfxXLeYQ6xroZ5ToAK1VTq54O0gm/39F+6IBX73AUNk824kKirmq8E3O3z4+Cdwm2NmM3UDCqwLbk=
+	t=1746153300; cv=none; b=rRQnhAEA9bouCbfFiwEjafEAvn4eMegBslu2nZ+GHuI4ZRjt55mBGEFd3SzNs/+nanPpYUIYCf8RoBYJcDbzt0/Vi3Y3w+vj6XMV0Kvi1dRunI+2rVI7mD2Uc14WeDyUWUslXUuhqUnrv/CI6vWhbzbXJoIxV1CJTwZIv5qIk5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746153252; c=relaxed/simple;
-	bh=jxQ4AtCytiBcKJEdLSTc1Y4Vmzs0RBigJwvcoI4eal4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gccj2rYBlh6CWSrzbUmij9lX8k7FPV2S5xBFZoOZ7nEMMJD5wYAY4VjpADRFGMhLxBJ3mwWWPTO7e96aQa7IEYZ7tr/I7XejGEHzNQWnbWptmUB+p0Id3iRCCW3UIy2TYbuhX+Pi8XLl64xsfLFm/4HwR7yXhDakD493/NNvafM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XTvaXISk; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746153300; c=relaxed/simple;
+	bh=f5h1Ie7dXSDU8i0YNIdrMw8K7HFjGkJ4NCJCiwAwALs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2C5J6D9rCYOLZBt5AtfhTtL6FU+jvhn9aAvdd4plSATn2ipkeQEf1DxuxisuKO+x1W9V01WAW+9b0Q6owFxtGdCY/PhflvdUJh2fWFl9ducBipUrGL8ISrpRDUuYkL3dI9F/IjNWVVhSwR9B54Aa+xuKj5+Slw7G6u1Yj8zIsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=wWJocYSy; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XTvaXISk"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-739be717eddso1356986b3a.2;
-        Thu, 01 May 2025 19:34:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746153249; x=1746758049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=+0VmhuGhanKnbTzQbxudXoHQeY9FKUjFsARdJaOVXWg=;
-        b=XTvaXISk7EIyai3eGAFLiLXvitY042nuBcI0yx5dYAH4aHr2a1XCCM1Hl1NHPBWfJ/
-         abUf3ra3h1zxXD8bEVd5PFPUZkGjO+Uqwy1UFEyFgvQvZFdPTmlUlgRIvm3KwzE9VC+u
-         h2qGg7L2r76jiGOlvUdjmvB2Jt8NpHL/jCoDd2ctrGjpqjfJNuIMzDCHanbxAjHCaV1t
-         PpzPPC0MGduRybOUA8e3xY0OO651XyLVshFyP21zRKqjUyEvaVQwE713wY9rv3aoJqe8
-         i2HkgpwlxmLhty/meVk0lS9dj6FxJt5PeGi3BhQHm7NkRbTdSfi41TElGsg7g7SCJS1p
-         fnyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746153249; x=1746758049;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+0VmhuGhanKnbTzQbxudXoHQeY9FKUjFsARdJaOVXWg=;
-        b=a/BCz5vq7o23pbHqTvyZHrXt+QzhUNJvXoBftcmb7KaK0fckkR0WVuFxXUjGmi37Z0
-         arNNTF/ajcgWqB0tcBOxgxa3siBhee1I2bjcixAR8MlqFBluVt1o9vREgsajYKIxy8SE
-         e0A2gkNJTRCncQkWvYkMy2FW1ta0JHHoj/d/qFtDn8THGmUyd7DKwb17I6cj+kpTfeEk
-         VUq4NrHaeXxpEnfoqAZahTw9twpQuIhasdEIn29u36aZHcx+1Z2Rq5pgzZw+peeJtHji
-         4QpKiWn8a+y4bEsidUQm9xe/s8JTqtc+lNkfI1Ye1bd+YPowVyR1m2EGLYFUvRnJ8KFA
-         GAMQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxMA5YHXzP26I0E3WKrtNR3yemLvZww7gWvxTXWnf/yASU4TKjVVNAXWcoBpRNrd7xZ6S6IToBvIc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcffbdOfREsufYNXlPnfScFwH/f+unohhZfRwAu7rvsnsGXY3D
-	D8YP/BnFoI9jh6+AJtEvzKGvZF4U8hmDr1Gc6ePaWJx/v5NeIhQc
-X-Gm-Gg: ASbGncv+lstGx4+R/po8ZqVHQprllIFecEFcekgQ48Nt1i/x6s2Bduos54aIqYmF4Nb
-	WxGuAC/yheirPFzLuWE/zU9ChzcjMCFxVNgi9QFKd14mh7kDNwnEVO99cA02FYBDBcudCTLdj9L
-	RjDf9ojfX3wISnutNmQsq5vn1D0xV4mTey108RI9en2oJXEmtrCTs7cZJFQDTk85xXy6eq3fMlb
-	iQmu5KPSMmX8ZrUn+k9PD3xU6uuqf08t5m+oOL2QZAVVd1v8Z53A+VuqBQ4ZkpRURUeYiM/AJrO
-	hie+4B/UsSSf9TJ9gXfqyxXrwszE2jkC+Kd23N7G
-X-Google-Smtp-Source: AGHT+IGWyOPQA3ltZClbKdEnGZQUk+rwwl9wjJznk+gRmENzIz4qHWYWSdAezQJiAuao5NK9GJX6pA==
-X-Received: by 2002:a05:6a21:3a88:b0:1ee:d8c8:4b82 with SMTP id adf61e73a8af0-20cdfcfc9a3mr1931565637.31.1746153248829;
-        Thu, 01 May 2025 19:34:08 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fa82b66e5sm362030a12.39.2025.05.01.19.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 19:34:08 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 6A47E420A6AB; Fri, 02 May 2025 09:34:06 +0700 (WIB)
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Documentation <linux-doc@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Ingo Molnar <mingo@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH] x86/cpu: Add "Old Microcode" docs to hw-vuln toctree
-Date: Fri,  2 May 2025 09:33:57 +0700
-Message-ID: <20250502023358.14846-1-bagasdotme@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="wWJocYSy"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=P8bGVFcQNC8bUMcQFTsN63CjDxjXndvf41sHelhW6H0=; b=wWJocYSy4eEtn2ABOR4emJvlY/
+	6Tnj9e1xzI+e33h7hXaotSUYbz4BhuLe5sco8BPyM2GklEjHS5hFpp3X8VFJpeN8zY854LaEaZzCE
+	boOkWSUpK/cHocbZVJMuT+BPEcDeLOVFRajKMBmAvKWA5st1J60p0MTJnqaj7061jJqXaa27fP0RB
+	DGHpsPoz6ZHW0aNdmaL0VLocXD8wngmT+TSv/c+IlsST2UPiZqavOodfz1zE6v/QPuo94hz66VDPz
+	RHLZQOpmf7CPd2ztkj0h6V74x6S5r6LvzDUHcIDkvWwhcs4QN5vaY3hO979aB4Q5pvXp1Z+lJArx+
+	1imCFZ0Q==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAgEh-0000000FDhl-3Vaf;
+	Fri, 02 May 2025 02:34:47 +0000
+Date: Fri, 2 May 2025 03:34:47 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Matthew Brost <matthew.brost@intel.com>
+Cc: Kees Cook <kees@kernel.org>,
+	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
+	Christian Koenig <christian.koenig@amd.com>,
+	Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+	Huang Rui <ray.huang@amd.com>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
+ struct file
+Message-ID: <20250502023447.GV2023217@ZenIV>
+References: <20250502002437.it.851-kees@kernel.org>
+ <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=959; i=bagasdotme@gmail.com; h=from:subject; bh=jxQ4AtCytiBcKJEdLSTc1Y4Vmzs0RBigJwvcoI4eal4=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDBkietG8RRdzEliO5vrKP9m9+KCyDW+H95ImxX0rQ1Krb vu7/bzcUcrCIMbFICumyDIpka/p9C4jkQvtax1h5rAygQxh4OIUgIkwzWL4H8Ty1Nv5e2Lnti3X DCUe3+h4WRAe9l++TFhWcVpwbeKhmYwMJz/tiVz/Iry87mvWm3X90pOWvXwaUX6tbo7Hc+Gkl1n fuQE=
-X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-Sphinx reports missing toctree entry warning:
+On Thu, May 01, 2025 at 07:13:12PM -0700, Matthew Brost wrote:
+> On Thu, May 01, 2025 at 05:24:38PM -0700, Kees Cook wrote:
+> > Casting through a "void *" isn't sufficient to convince the randstruct
+> > GCC plugin that the result is intentional. Instead operate through an
+> > explicit union to silence the warning:
+> > 
+> > drivers/gpu/drm/ttm/ttm_backup.c: In function 'ttm_file_to_backup':
+> > drivers/gpu/drm/ttm/ttm_backup.c:21:16: note: randstruct: casting between randomized structure pointer types (ssa): 'struct ttm_backup' and 'struct file'
+> >    21 |         return (void *)file;
+> >       |                ^~~~~~~~~~~~
+> > 
+> > Suggested-by: Matthew Brost <matthew.brost@intel.com>
+> 
+> I forgot the policy if suggest-by but will add:
+> Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+> 
+> Thomas was out today I suspect he will look at this tomorrow when he is
+> back too.
 
-Documentation/admin-guide/hw-vuln/old_microcode.rst: WARNING: document isn't included in any toctree
+[fsdevel and the rest of VFS maintainers Cc'd]
 
-Add entry for "Old Microcode" docs to fix the warning.
+NAKed-by: Al Viro <viro@zeniv.linux.org.uk>
 
-Fixes: 4e2c719782a847 ("x86/cpu: Help users notice when running old Intel microcode")
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
----
- Documentation/admin-guide/hw-vuln/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+Reason: struct file should *NOT* be embedded into other objects without
+the core VFS being very explicitly aware of those.  The only such case
+is outright local to fs/file_table.c, and breeding more of those is
+a really bad idea.
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index 451874b8135d8e..cf151114592790 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -23,3 +23,4 @@ are configurable at compile, boot or run time.
-    gather_data_sampling
-    reg-file-data-sampling
-    rsb
-+   old_microcode
-
-base-commit: b43dc4ab097859c24e2a6993119c927cffc856aa
--- 
-An old man doll... just what I always wanted! - Clara
-
+Don't do that.  Same goes for struct {dentry, super_block, mount}
+in case anyone gets similar ideas.
