@@ -1,57 +1,36 @@
-Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EFCB14883F;
-	Fri,  2 May 2025 04:31:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F4A14883F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746160320; cv=none; b=rnQgWC8X7KaRV++nWT7e92ROLbRB1Ai4y1pstpySk5P1NmebzsRsSV8P/SU6hNQUXplvaMTwP7dG24IR9w/EURq2m8WG4mhWerPoycC3qb2yjqb/e0DGZmiZSAqg5BEJu/O9Q6/rVpIRo8lM5Nt5/ug8t27WoAv+B0gal45ie1Q=
+	t=1746160629; cv=none; b=iezeKI2oVyAuDaxzYatSG01UirAFg1FBU6Kf8cdReckfvRuA1GUOoy3CgAqLoxDwCIEms6JGn5avyw/pzgtAnwgY6USCQDcUtfDwfcf2PP+maijNXEXp3YBpkRNQPGxZaqd6liCH5Zym3tYytFI4C0URMUR6JdO0q1D4z/h+fhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746160320; c=relaxed/simple;
-	bh=sJQdtme048fLLoeEILMSI+01YtYV965QaIGB8McWDpg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAPQFj4kOGLW0Bg/KjRj4FPj8XuntlyWNX+8dEwKq5peCtIjUFaxBBoZ+jskqhQzZUoQug2UdH7zPJRUUPBruHxqVXJdC6kZDKTC8Ao9IkofpLNdPkBD4CwFLB68JaBUn8tRU5ta8BFq2f5MRZB/FWCjeOGYgg8t1uEonnwxjlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=OEyEgfhc; arc=none smtp.client-ip=62.89.141.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="OEyEgfhc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=W75ohiwgzQ2b4Y0vvPNQDeN3F8noVVK8UMQcA0s5vW0=; b=OEyEgfhcNYmmukh/cCmF4Bur9J
-	5TTFFRKRoVZ1LiLz7O7//pNumoM24E8Wx8vZhRuvwWy43xbSQ1eS6SC9bBM2caxDUEYVSFjT1w47X
-	mfbtBNqT90EZBKa2Tyac93FtVBihVucsJvBfOxhUWHPXnBY6Nvwoyk+UvL56AafW1RcdBzneytf66
-	DRycb8i1SmCr4CqHlBHS3uZrSpwmGdsCgf1L7xrgmOF2Dkc459bOOnSyKrTMS0coNy/1xpNjfRiP0
-	EQr6KhDUW8txsF5hMzriQ+EklzGxzfLDABykVEeQQPWHcjB3f/0AYPCtViTNQcdxWWjyeTrlsh8iO
-	AgVJ5zGA==;
-Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uAi3x-0000000FpJU-2zcC;
-	Fri, 02 May 2025 04:31:49 +0000
-Date: Fri, 2 May 2025 05:31:49 +0100
-From: Al Viro <viro@zeniv.linux.org.uk>
-To: Matthew Brost <matthew.brost@intel.com>
-Cc: Kees Cook <kees@kernel.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-Message-ID: <20250502043149.GW2023217@ZenIV>
-References: <20250502002437.it.851-kees@kernel.org>
- <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
- <20250502023447.GV2023217@ZenIV>
- <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
+	s=arc-20240116; t=1746160629; c=relaxed/simple;
+	bh=LLY8xpyYLsXiObaIvpoWXNKHRJPV8o6/VdS8c+GqqEM=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hSF6heSATKxXUKCjw1jkuEaTRsO3uXp3FpKIIG+0VGVJGF0d6n9aTnhaNEtL9AcIZAdpTdtF25fBg5P/Y0kVRRNHdZ7utawBNF23DSKihKmgSxfwq1PkoWtTx3PRBdON+dp3XASJFu5J8e/ziUMrG03BQEKLpCXSHPF9gk7X1wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
+	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
+	id ee27fbcb-270e-11f0-9bc3-005056bdf889;
+	Fri, 02 May 2025 07:35:53 +0300 (EEST)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 2 May 2025 07:35:52 +0300
+To: Lee Jones <lee@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Peter Tyser <ptyser@xes-inc.com>,
+	Purva Yeshi <purvayeshi550@gmail.com>, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH] mfd: lpc_ich: Fix ARRAY_SIZE usage for
+ apl_gpio_resources
+Message-ID: <aBRLqGDpV8Y63JaJ@surfacebook.localdomain>
+References: <20250322131841.31711-1-purvayeshi550@gmail.com>
+ <174377238828.330559.7652024137546009839.b4-ty@kernel.org>
+ <aAqKcn25bkrjIiLF@black.fi.intel.com>
+ <20250501120725.GJ1567507@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,20 +39,56 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
-Sender: Al Viro <viro@ftp.linux.org.uk>
+In-Reply-To: <20250501120725.GJ1567507@google.com>
 
-On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
+Thu, May 01, 2025 at 01:07:25PM +0100, Lee Jones kirjoitti:
+> On Thu, 24 Apr 2025, Andy Shevchenko wrote:
+> > On Fri, Apr 04, 2025 at 02:13:08PM +0100, Lee Jones wrote:
+> > > On Sat, 22 Mar 2025 18:48:41 +0530, Purva Yeshi wrote:
+> > > > Fix warning detected by smatch tool:
+> > > > drivers/mfd/lpc_ich.c:194:34: error: strange non-value function or array
+> > > > drivers/mfd/lpc_ich.c:194:34: error: missing type information
+> > > > drivers/mfd/lpc_ich.c:201:34: error: strange non-value function or array
+> > > > drivers/mfd/lpc_ich.c:201:34: error: missing type information
+> > > > drivers/mfd/lpc_ich.c:208:34: error: strange non-value function or array
+> > > > drivers/mfd/lpc_ich.c:208:34: error: missing type information
+> > > > drivers/mfd/lpc_ich.c:215:34: error: strange non-value function or array
+> > > > drivers/mfd/lpc_ich.c:215:34: error: missing type information
 
-> I;m fairly certain is just aliasing... but I do understand a file cannot
-> be embedded. Would comment help here indicating no other fields should
-> be added to ttm_backup without struct file be converted to pointer or
-> that just to risky?
+[...]
 
-What exactly are you trying to do there?  IOW, is that always supposed to
-be a struct file, or something dependent upon something in struct ttm_tt
-instance, or...?
+> > > Applied, thanks!
+> > > 
+> > > [1/1] mfd: lpc_ich: Fix ARRAY_SIZE usage for apl_gpio_resources
+> > >       commit: 87e172b0fdd3aa4e3d099884e608dbc70ee3e663
+> > 
+> > Can this be reverted ASAP, please? See below why.
+> > 
+> > There is no problem with the code. The original author of the change
+> > haven't proved otherwise.
+> > 
+> > The change made it much worse to read and maintain. By the way, it actually
+> > _added_ the problem as far as I can see with my small test program.
+> > 
+> > Let's just calculate based on the sizeof(struct foo) taken as 10 for
+> > simplicity and array size as 4x2. The full size of the array is
+> > 4 * 2 * 10 bytes. The size of the entry in outer array will be 2 * 10 bytes.
+> > Now, what ARRAY2D_SIZE do is (4 * 2 * 10 / 10 / (2 * 10 / 10) == 4, and
+> > that's WRONG! This will make a out-of-boundary accesses possible.
+> > 
+> > If smatch can't parse something, it's problem of smatch. No need to "fix"
+> > the working and robust code. The original code even allows (in theory) to have
+> > different amount of resources per entry, however it's quite unlikely to happen.
+> > But at bare minimum it shows the entry taken along with _its_ ARRAY_SIZE()
+> > and not something common over the outer array.
+> 
+> Done.
 
-And what is the lifecycle of that thing?  E.g. what is guaranteed about
-ttm_backup_fini() vs. functions accessing the damn thing?  Are they
-serialized on something/tied to lifecycle stages of struct ttm_tt?
+I still see it as commit
+https://web.git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=for-mfd-next&id=c6c07f8ea2cbb0dca0e529f9ed16df71276515a4
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
