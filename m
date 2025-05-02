@@ -1,113 +1,117 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A145F22F155
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95518255F5A
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746198117; cv=none; b=GDpXXI8aPYWsU7SXia4jf8rhgO1UxtUJyWl0CjFzB9NELWXTxz2F0MmC89ol+6KyVsWpo8t/RcY1og9JfYWXslKG/CuvU4hTjf9sQEWSJ4Dao1J+mtCv6VXLQiniQTliYM+8QVQro1MU59kVFTsDxJ0C+1wu1ky5IbmcW5IMZH4=
+	t=1746198253; cv=none; b=ALeng1SrzSmqpt47c7dFPHjUlZGrn7Ks9zDMjOH6U35hwFEOnR3Zt4Fra5TVDa8ULhH8LeVm9SXd7iqPqh089K0ihdxNAa9WoxKGWuVGpzrxpf7YMMBaA4tqnJ6DdpzQXd1VYjhUOVME6cP3xXplnw7fmo1A0kABMuWc86I3VPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746198117; c=relaxed/simple;
-	bh=B1p0307AbGuUVy0xQNjE2egVjJKppcbO+fozf3RhI5E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Zd4lKwU3p7Ta+O7cVHvItoPODjiBYQGQaf+oabiHfyEegQVyFmLJBxobb0SGZ8OSbJ5AVJRB/Us8r/WRzKZoYi9wSgyUw+gz7kNvHdTEE2YASz1ngBcTiqhLKOCFxkJDCqnx15nzc1tVsp7uVe3vup2ei8//PpRiLoDdP4s9QIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by metis.whiteo.stw.pengutronix.de with esmtp (Exim 4.92)
-	(envelope-from <m.felsch@pengutronix.de>)
-	id 1uArtR-0002iK-Ov; Fri, 02 May 2025 17:01:37 +0200
-From: Marco Felsch <m.felsch@pengutronix.de>
-To: nicolas.dufresne@collabora.com,
-	benjamin.gaignard@collabora.com,
-	p.zabel@pengutronix.de,
-	mchehab@kernel.org,
-	shawnguo@kernel.org,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	paul.kocialkowski@bootlin.com,
-	hverkuil@xs4all.nl,
-	laurent.pinchart@ideasonboard.com,
-	sebastian.fricke@collabora.com,
-	ming.qian@nxp.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [RFC PATCH 00/11] VC8000E H.264 V4L2 Stateless Encoder
-Date: Fri,  2 May 2025 17:00:53 +0200
-Message-Id: <20250502150105.4167289-1-m.felsch@pengutronix.de>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1746198253; c=relaxed/simple;
+	bh=ZfdAuZ4luE7ecRrrKYgU2xqiiinSC6V246gx5SGCqOU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=q8fkdWC9Y9O14n0j+Hfo5KIKvaM9W+z8HvKkrVpweS5YlSTdlVbIkJKG5SvWg4IQ0UgrSVscIl7r/D99hO8pZXCIvdYIN7MKtjR8/RQ2X23l7CkaG+8aofg8fqJyVZTJKz9xMGXEm41wsyUYcHvikQ+nb2AtDnmHV2L1YxsuE/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dv9A1z3j; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dv9A1z3j"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b16f5365310so1421014a12.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746198251; x=1746803051; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FvHi4YFKCbuqsMQKI+TX+enTdCmUmo+3VNuon3agJYk=;
+        b=dv9A1z3jizHik41nuxffAzkDLEA/b64VBy1nyJHEQFPWZd1BZRwAMvaPDIG+UiKeCK
+         HksGDYnD8e0fkV3K3mqfa46ijcFQg5JgxlgiEM7vc5uxL4i9Rv2wAcUs3wS5QivNdBoT
+         +mAufLAiHS+HTbvODNl72H/5BZM3hHF/6PeYKKcHdZGtv1mR13dAl4hMS9wlcV0pL07k
+         ocMwfYc3BWRxC51L8ozdvkztMsojw14ZI28HCjSAD9zT1CJ6uYNLGeg9fDRPitmKdcxY
+         ptC1cLyYvHZmJPwqwYrsho7YkX0ikU1BDSef9pSZKhWpcWBA20MmS2jQAAo872PiM+Q5
+         UZBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746198251; x=1746803051;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FvHi4YFKCbuqsMQKI+TX+enTdCmUmo+3VNuon3agJYk=;
+        b=fXhhXDydOHBn3S05SN42V+/pL0JE8QjdQ4RvcztHkWjL0ne7bsadiDZI3oyLVuDOOr
+         S9ZGWU5+gUNnhcM0+6AytvkOQr5/Zfv6vhKgCwStqjH/sQggbQ41CLCfqzywQ01E1k3n
+         PD2735AyrMa3i0Yf+KsaI4HEDwYIwBU5ycDYaY7hWCxF42Bet8pkw/sETOdpRtoTMdee
+         sesNABoS7ndYWcxfvQx8P571oyzcLrZUxHZet0pn9t7GO+bXJzastaTxGcGum3apfzDt
+         8xsKpeTh8tuJV5z4pW8we1edtUsMQHM6p3rXaPJb1P5A8/2GkMX3ge8BFrVsDCg1pa9k
+         9sFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwXu5JcrjsbVAu4XkuiVTdG3eJ72SByvFYNfQStOzTjjzvnbvBMTLtcxNUs1yz4Je+tCZ248dSCptL024=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxuk+gTaXIXmHrmJVLu7v8/6aAB3FTPr+49EB82v6Wh+Dk2DoQU
+	r5Mrs4vrjYNGRt7DxwzDW+2Aqc1rvcX5F5PcJUgdELjNo2h47SMZHAQ2J+PrXi3pfD4ynCjIQ8C
+	BRg==
+X-Google-Smtp-Source: AGHT+IEq9Ml4E8TtIdCStMt4qKKAbF1zNt+6heIhpZJLGDBHf9KVgBdqXSANU9yLOCS831wxgusg2lp6zCk=
+X-Received: from pjbpt18.prod.google.com ([2002:a17:90b:3d12:b0:2fc:11a0:c549])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:56c8:b0:308:1ee5:4247
+ with SMTP id 98e67ed59e1d1-30a4e6b457dmr4586669a91.32.1746198250755; Fri, 02
+ May 2025 08:04:10 -0700 (PDT)
+Date: Fri, 2 May 2025 08:04:09 -0700
+In-Reply-To: <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::28
-X-SA-Exim-Mail-From: m.felsch@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+References: <20250426001355.1026530-1-seanjc@google.com> <701a94eb-feac-4578-850c-5b1f015877af@linux.intel.com>
+Message-ID: <aBTe6dpaQs6bmFwh@google.com>
+Subject: Re: [PATCH] perf/x86/intel: KVM: Mask PEBS_ENABLE loaded for guest
+ with vCPU's value.
+From: Sean Christopherson <seanjc@google.com>
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Seth Forshee <sforshee@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Sun, Apr 27, 2025, Dapeng Mi wrote:
+> On 4/26/2025 8:13 AM, Sean Christopherson wrote:
+> Currently we have this Sean's fix, only the guest PEBS event bits of
+> IA32_PEBS_ENABLE MSR are enabled in non-root mode, suppose we can simply
+> change global_ctrl guest value calculation to this.
+>=20
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 09d2d66c9f21..5bc56bb616ec 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4342,9 +4342,12 @@ static struct perf_guest_switch_msr
+> *intel_guest_get_msrs(int *nr, void *data)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 arr[global_ctrl] =3D (struct p=
+erf_guest_switch_msr){
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 .msr =3D MSR_CORE_PERF_GLOBAL_CTRL,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 .host =3D intel_ctrl & ~cpuc->intel_ctrl_guest_mask,
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask & ~pebs_ma=
+sk,
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 .guest =3D intel_ctrl & ~cpuc->intel_ctrl_host_mask,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 };
 
-this RFC implements the kernel V4L2 stateless encoding counter part for
-the Verisilicon VC8000E encoder. The encoder is capable of H.264 and
-H.265 encoding and can be found on several SoCs e.g. NXP i.MX8MP.
+Hmm, that's not as clear cut.  PEBS needs to be disabled because leaving it=
+ enabled
+will crash the guest.  For the counter itself, unless leaving it enabled br=
+eaks
+perf and/or degrades the sampling, I don't think there's an obvious right/w=
+rong
+approach.
 
-The RFC is based on Pauls initial attempts [1].
-
-This patchset is still in a *very very* early state since the uAPI handling
-still needs to be figured out. It's clearly not for productive use yet!
-The only reason of publishing the driver in this early state is to align
-with other developers also working on V4L2 stateless H.264 encoding.
-
-That said, paired with the GStreamer userspace [2] the driver is capable
-of:
- * H.264 encoding
- * I/P frame handling
- * Arbitrary frame sizes
- * YUV420M input
-
-Note: Be aware that the GStreamer element [2] is in a *very* early state
-too, so don't expect to much. There are limitations like: the element
-requires to work on its own buffers, so there is no fast-path and
-always a copy involved.
-
-@DT folks
-The dt-bindings are missing yet.
-
-[1] https://github.com/bootlin/linux/tree/hantro/h264-encoding-v5.11
-[2] https://gitlab.freedesktop.org/dude/gstreamer/-/tree/h264-stateless-encoder
-
-Regards,
-  Marco
-
-Marco Felsch (7):
-  arm64: dts: imx8mp: drop gpcv2 vpu power-domains and clocks
-  arm64: dts: imx8mp: add VC8000E encoder node
-  arm64: dts: imx8mp: fix VPU_BUS clock setting
-  media: hantro: use hantro_decoded_buffer only for dst_vq
-  media: verisilicon: add H264 encoder support
-  media: verisilicon: split read/write debug
-  media: hantro: add support for i.MX8MP VC8000E
-
-Michael Tretter (3):
-  media: uapi: add documentation for the V4L2 H.264 stateless encoding
-    API
-  media: uapi: add nal unit header fields to encode_params
-  media: uapi: add more V4L2_H264_ENCODE_FLAGs
-
-Paul Kocialkowski (1):
-  media: Introduce Hantro V4L2 H.264 stateless encoding API
-
--- 
-2.39.5
-
+E.g. if the host wants to profile host and guest, then keeping the count ru=
+nning
+while the guest is active might be a good thing.  It's still far, far from
+perfect, as a counter that overflows when the guest is active won't generat=
+e a
+PEBS record, but without digging further, it's not obvious that even that f=
+law
+is overall worse than always disabling the counter.
