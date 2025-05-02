@@ -1,35 +1,46 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DA02441A7;
-	Fri,  2 May 2025 17:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3CD21A0BFA;
+	Fri,  2 May 2025 17:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746205966; cv=none; b=EM+HSoNXW9qGZ/HlifBmUblubV/ZCvzm8KItL0J8yOV0qsRzczD1oGdPDwo6EarCOS5+IKpbORo8l3IXAydliLkqAjuecLbaOPQIHDtMDqs3Rpcg8bcMvjj3kDx5dqlBsrgBaL1sJeNHGcnTFoVUExRKbClg35TrMOzbAWhL3ak=
+	t=1746206003; cv=none; b=CLEgwknmEeeBW9ZFz2EToODKUCvKfkAI5bie92sghiOFaoylEC6EHf1M5XLitNnseUWmjwakFGndm6enNF0eLR6isvyCwwpCXlyY3G04Ubna83nzvNSxCcj8a4N4Qqs6A6zF+kVzU+xjA6tkSiL3gfDNYaV3eHLp4OvhdmdqvwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746205966; c=relaxed/simple;
-	bh=fqXQ9jgI/VklvA+2TRXRDHIqkX08QUCBhCzCjmghMVo=;
+	s=arc-20240116; t=1746206003; c=relaxed/simple;
+	bh=44Qu48lHB4fRdAZURnFn9uTMB6PP2r+CsQti1RkiD2E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p5Sj1s4kHyiOtxacJbeLGxtKuIaDDghcvY2EKKrwsnqLLmU/ucKCpeWrext/RCUbnq99279TmYJrCwYYz1YEHD3ZHP8fWT7qv028p4vZwC7BHIJb0cbUjwyyrG6N/RU6qChVODJKyRqoSk6u+WM0ziLKH7imcDxtNqWtYrx7xgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75993C4CEE4;
-	Fri,  2 May 2025 17:12:42 +0000 (UTC)
-Date: Fri, 2 May 2025 18:12:40 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com,
-	joey.gouly@arm.com, yury.khrustalev@arm.com, maz@kernel.org,
-	oliver.upton@linux.dev, frederic@kernel.org,
-	shmeerali.kolothum.thodi@huawei.com, james.morse@arm.com,
-	mark.rutland@arm.com, huangxiaojia2@huawei.com,
-	akpm@linux-foundation.org, surenb@google.com, robin.murphy@arm.com,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org, nd@arm.com,
-	Peter Collingbourne <pcc@google.com>
-Subject: Re: [PATCH v3 1/3] arm64: add FEAT_MTE_TAGGED_FAR feature
-Message-ID: <aBT9CA7vnlfszTDw@arm.com>
-References: <20250410074721.947380-1-yeoreum.yun@arm.com>
- <20250410074721.947380-2-yeoreum.yun@arm.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=uk5GBU2LBQOE7liA6sPquKY1KsugDe/8LY/kFhSxhGZaQbI43Uo5axCP97DY27izSX0hV79OrcL8DYOfjYpcZlP3szQ5MnC7lBeUnb5OK+RVhsF7Wd3mdG7zdeDu2WETzBEQVcWdjcKwfXEzIk0UzdkvfBu5E4vfP2Cw0hIiV4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=t4AanCGv; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="t4AanCGv"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=p8tAjozIfQA0TAt69y3uSYXciDCOXKGSdjD6jRMBMNo=; b=t4AanCGvkpTyGHwgipJn+LIBZh
+	vEDagLp+q7pwzbScLKVONe8MUxFk9DO0E7/WsqcDaZEDDIzxfFhnsxdPH7QCO1BrLoUqlqtQ003rb
+	QXvLUCGK4FQ0nd/4CEhxDp14X3M1v9rYmfWqdQbgzfUGXd/SJliE+XAWZ2w6SQ1HdL6pmavPwLj3e
+	yO+3H4QnVt5fkLD3INNXOBnKQGZxZYAlfqxgpYLrIgdASgPP1RSbL4wJ/e0gL75LeuVsyGdsu9od7
+	YgjITrCt9RzhhxBIXaZDoeKFMLbg4KdmMeaTjE92OcDutPFDCrihDXBrmyV66FrRfvWi+VzlkaYo3
+	2ej+Qz2g==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAtwq-00000001tPf-0AJt;
+	Fri, 02 May 2025 17:13:16 +0000
+Date: Fri, 2 May 2025 18:13:16 +0100
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: Andrey Kriulin <kitotavrik.s@gmail.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Andrey Kriulin <kitotavrik.media@gmail.com>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Josef Bacik <josef@toxicpanda.com>, NeilBrown <neilb@suse.de>,
+	Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+	lvc-project@linuxtesting.org, stable@vger.kernel.org
+Subject: Re: [PATCH] fs: minix: Fix handling of corrupted directories
+Message-ID: <20250502171316.GY2023217@ZenIV>
+References: <20250502165059.63012-1-kitotavrik.media@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,41 +49,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250410074721.947380-2-yeoreum.yun@arm.com>
+In-Reply-To: <20250502165059.63012-1-kitotavrik.media@gmail.com>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Thu, Apr 10, 2025 at 08:47:19AM +0100, Yeoreum Yun wrote:
-> Add FEAT_MTE_TAGGED_FAR cpucap which makes FAR_ELx report
-> all non-address bits on a synchronous MTE tag check fault since Armv8.9
+On Fri, May 02, 2025 at 07:50:57PM +0300, Andrey Kriulin wrote:
+> If the directory is corrupted and the number of nlinks is less than 2 
+> (valid nlinks have at least 2), then when the directory is deleted, the
+> minix_rmdir will try to reduce the nlinks(unsigned int) to a negative
+> value.
 > 
-> Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
-> Acked-by: Yury Khrustalev <yury.khrustalev@arm.com>
-[...]
-> @@ -3191,6 +3199,7 @@ static const struct arm64_cpu_capabilities arm64_elf_hwcaps[] = {
->  #ifdef CONFIG_ARM64_MTE
->  	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE2, CAP_HWCAP, KERNEL_HWCAP_MTE),
->  	HWCAP_CAP(ID_AA64PFR1_EL1, MTE, MTE3, CAP_HWCAP, KERNEL_HWCAP_MTE3),
-> +	HWCAP_CAP(ID_AA64PFR2_EL1, MTEFAR, IMP, CAP_HWCAP, KERNEL_HWCAP_MTE_FAR),
-
-Nitpick: from a theoretical bisectability perspective, I'd move the
-hwcap exposing to the following patch. The rest, feature detection etc
-can stay in this file. Otherwise, one can apply this patch, see the
-hwcap but not get the actual behaviour.
-
->  #endif /* CONFIG_ARM64_MTE */
->  	HWCAP_CAP(ID_AA64MMFR0_EL1, ECV, IMP, CAP_HWCAP, KERNEL_HWCAP_ECV),
->  	HWCAP_CAP(ID_AA64MMFR1_EL1, AFP, IMP, CAP_HWCAP, KERNEL_HWCAP_AFP),
-> diff --git a/arch/arm64/kernel/cpuinfo.c b/arch/arm64/kernel/cpuinfo.c
-> index 285d7d538342..e2b13454e38a 100644
-> --- a/arch/arm64/kernel/cpuinfo.c
-> +++ b/arch/arm64/kernel/cpuinfo.c
-> @@ -160,6 +160,7 @@ static const char *const hwcap_str[] = {
->  	[KERNEL_HWCAP_SME_SFEXPA]	= "smesfexpa",
->  	[KERNEL_HWCAP_SME_STMOP]	= "smestmop",
->  	[KERNEL_HWCAP_SME_SMOP4]	= "smesmop4",
-> +	[KERNEL_HWCAP_MTE_FAR]		= "mte_far",
-
-Personal preference: "mtefar" (no underscore), mostly because there's no
-other underscore in the hwcap strings yet ;).
-
--- 
-Catalin
+> Make nlinks validity check for directory in minix_lookup.
+ 
+Not sure it's a good mitigation strategy - if nothing else, doing that
+on r/o filesystem is clear loss...
