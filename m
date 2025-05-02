@@ -1,113 +1,186 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862C51EBFFF;
-	Fri,  2 May 2025 09:55:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61A56238C15;
+	Fri,  2 May 2025 09:57:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179745; cv=none; b=X9+BKZ3nDZhdiNo6u6I3NQxG7pU/Wi5xCl9RVrXnQq6EnbsIY6/DITFw8wTIBKivX7P9cDXasezCXrVL8C+KepP1i+RH07DUr7vracz+c49DfA4AQgq4P1nis/Jx0ATWM3U8eLAxXeFAZUPH6ORwF33p+b0B1wYQRpSY1AQbisQ=
+	t=1746179870; cv=none; b=HDXUO6ISFSGutqgpxrKnke66KOL+735mycbMicVwXADve8gklBIKwbxMtlIpaTYYCYiRi1/E2fh+TAAt0VRISHAS6k3WRQq4N9TPfL9FXhgsBm5HAP2jECB2JgAX0H+WijzM0KnFpk1ITr8iaklyApZtPUOuPY8DaPxlkB9NUFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179745; c=relaxed/simple;
-	bh=18nnLX0/C8KF+jNYA79xjt+DAQ8iglHtX24j5mr2qNM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ksuxz243CvdviguNcvVY/GwcEXI2upbFYlVUFZK1uAdyibbaCaKsFhPTR5gP3exlnMK+p9jI2Cy9w+JrleZYsC/4mtA4OnzUSPgjMxjYd3kLXkl5aYQG+dlB4oN6kXUafHC0vNGI8Kgxc/3ElziUwNiob22J1aUtHW59W4M6H7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: +jaR3ltJT4i6A1rtbSelxw==
-X-CSE-MsgGUID: kWItGplbSlGnoSRqchiYmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58527996"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58527996"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:55:43 -0700
-X-CSE-ConnectionGUID: lHVdCa2QQsaYrCwCaMQDnQ==
-X-CSE-MsgGUID: rLft6Zf9RrO9hCzZprvvIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134519616"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:55:40 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uAn7J-000000029Vd-1HiT;
-	Fri, 02 May 2025 12:55:37 +0300
-Date: Fri, 2 May 2025 12:55:37 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Angelo Dureghello <adureghello@baylibre.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7606_spi: add offload scan mask check
-Message-ID: <aBSWmeRaPg5U8f7v@smile.fi.intel.com>
-References: <20250430-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v1-1-8b165d9d6c0e@baylibre.com>
+	s=arc-20240116; t=1746179870; c=relaxed/simple;
+	bh=pW1H8xXE21A+n17a+0P5k7+tQf/Aa0cTWaK+S948R4s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=sjeLUENcct5CbUwBA73LMw9fbtCx0ZLEhJM5TOR1VM2R9BkE67X8FtXcEvYEVoz1k9R5FZht7aT6KacEl1w2MPxsHlWAMmqrd5epmCFQuN2cqXwo481iod0S+Zm6pbCbfl6jHdtVp9KED6ku2qTo0L26cdP5G+oIuN7iwR3oPo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDPm6fIN; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDPm6fIN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBF68C4CEED;
+	Fri,  2 May 2025 09:57:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746179869;
+	bh=pW1H8xXE21A+n17a+0P5k7+tQf/Aa0cTWaK+S948R4s=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=NDPm6fINYnhGBeSfvFNgqO/AnV4iA4AnGFqqrk5aE+5rqVTjGTwRhpP7iMrILQr/P
+	 DdILNeLXVmqJltLISpeZ6yEwnzgiG1b69h3l9aJG9+XRZ+wqowTXiKPFdXy9YpG/iy
+	 3QBrNBcC9MorTP4JZH3m+MkQrafRgEAUd9PAhYNgrQEwnuFPFum42zYaOB0z+RoN7S
+	 di/ilaVBvsXnEM886gxQapzZz00wFLowQRp0bv1P5Fz2+gkK6b23JaJ2hNifMb4oLy
+	 FlcTh5Gqs+KULhcCTop+tz/xHkd6urhWFmGdzyc8sKVryJMbA4kEF8D1Umwv07/OAi
+	 b6B9CJ6avteJA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Oliver Mangold" <oliver.mangold@pm.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Alice Ryhl" <aliceryhl@google.com>,
+  "Trevor Gross" <tmgross@umich.edu>,  "Asahi Lina" <lina@asahilina.net>,
+  <rust-for-linux@vger.kernel.org>,  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v10 1/5] rust: types: Add Ownable/Owned types
+In-Reply-To: <20250502-unique-ref-v10-1-25de64c0307f@pm.me> (Oliver Mangold's
+	message of "Fri, 02 May 2025 09:02:29 +0000")
+References: <20250502-unique-ref-v10-0-25de64c0307f@pm.me>
+	<d6hUddIgwZqRCgQQQV7L2VG4idnic0hOdWqt67Itt_xixs1RI25dMrPZRMyoIe2W_FS4eL6X66J_iclD2aUA0Q==@protonmail.internalid>
+	<20250502-unique-ref-v10-1-25de64c0307f@pm.me>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Fri, 02 May 2025 11:57:30 +0200
+Message-ID: <87zffvz65x.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v1-1-8b165d9d6c0e@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 
-On Wed, Apr 30, 2025 at 04:41:58PM -0500, David Lechner wrote:
-> Validate the scan mask when SPI offloading is being used.
-> 
-> Since this family of ADCs is simultaneous sampling, there isn't a way
-> to selectively disable channels when reading sample data. (Technically,
-> AD7616 has a sequencer so could have some control, but that is for
-> another day).
-> 
-> For "regular" IIO triggered buffer reads, this isn't a problem and the
-> IIO core will demux the data and ignore data from disabled channels.
-> However, since SPI offloading is done completely in hardware, we don't
-> have a way to do the same. So before this patch, if less than all
-> channels were enabled, the data would be misplaced in the buffer.
-> 
-> By adding a check in update_scan_mode, we can fail to enable the buffer
-> instead of having bad data returned to userspace.
+"Oliver Mangold" <oliver.mangold@pm.me> writes:
 
-...
-
-> +static int ad7606_spi_update_scan_mode(struct iio_dev *indio_dev,
-> +				       const unsigned long *scan_mask)
-> +{
-> +	struct ad7606_state *st = iio_priv(indio_dev);
+> From: Asahi Lina <lina@asahilina.net>
+>
+> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
+> C FFI) type that *may* be owned by Rust, but need not be. Unlike
+> AlwaysRefCounted, this mechanism expects the reference to be unique
+> within Rust, and does not allow cloning.
+>
+> Conceptually, this is similar to a KBox<T>, except that it delegates
+> resource management to the T instead of using a generic allocator.
+>
+> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
+> [ om:
+>   - split code into separate file and `pub use` it from types.rs
+>   - make from_raw() and into_raw() public
+>   - fixes to documentation
+> ]
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>  rust/kernel/types.rs         |   3 ++
+>  rust/kernel/types/ownable.rs | 117 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 120 insertions(+)
+>
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 9d0471afc9648f2973235488b441eb109069adb1..5d8a99dcba4bf733107635bf3f0c15840ec33e4c 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -11,6 +11,9 @@
+>  };
+>  use pin_init::{PinInit, Zeroable};
+>
+> +pub mod ownable;
+> +pub use ownable::{Ownable, OwnableMut, Owned};
 > +
-> +	if (st->offload_en) {
-> +		DECLARE_BITMAP(bitmap, AD760X_MAX_CHANNELS);
+>  /// Used to transfer ownership to and from foreign (non-Rust) languages.
+>  ///
+>  /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
+> diff --git a/rust/kernel/types/ownable.rs b/rust/kernel/types/ownable.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..52e7a69019f1e2bbbe3cf715651b67a5a5c7c13d
+> --- /dev/null
+> +++ b/rust/kernel/types/ownable.rs
+> @@ -0,0 +1,117 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +
-> +		bitmap_fill(bitmap, AD760X_MAX_CHANNELS);
+> +//! Owned reference types.
 > +
-> +		/*
-> +		 * SPI offload requires that all channels are enabled since
-> +		 * there isn't a way to selectively disable channels that get
-> +		 * read (this is simultaneous sampling ADC) and the DMA buffer
-> +		 * has no way of demuxing the data to filter out unwanted
-> +		 * channels.
-> +		 */
-> +		if (!bitmap_equal(bitmap, scan_mask,
-> +				  st->chip_info->num_adc_channels))
-> +			return -EINVAL;
-
-
-No need to have the local variable, just make sure that bitmap_weigth(FOO) == FOO.
-
-	if (... && bitmap_weight(FOO) != FOO)
-		return -EINVAL;
-
-> +	}
+> +use core::{
+> +    marker::PhantomData,
+> +    mem::ManuallyDrop,
+> +    ops::{Deref, DerefMut},
+> +    ptr::NonNull,
+> +};
 > +
-> +	return 0;
+> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
+> +///
+> +/// It allows such types to define their own custom destructor function to be called when
+> +/// a Rust-owned reference is dropped.
+> +///
+> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that:
+> +/// - Any objects owned by Rust as [`Owned<T>`] stay alive while that owned reference exists (i.e.
+> +///   until the [`release()`](Ownable::release) trait method is called).
+> +/// - That the C code follows the usual mutable reference requirements. That is, the kernel will
+> +///   never mutate the [`Ownable`] (excluding internal mutability that follows the usual rules)
+> +///   while Rust owns it.
+> +pub unsafe trait Ownable {
+> +    /// Releases the object (frees it or returns it to foreign ownership).
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the object is no longer referenced after this call.
+> +    unsafe fn release(this: NonNull<Self>);
 > +}
+> +
+> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] or `&mut Owned<T>` Rust reference
+> +/// may be dereferenced into a `&mut T`.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that access to a `&mut T` is safe, implying that it is okay to call
+> +/// [`core::mem::swap`] on the `Ownable`. This excludes pinned types (meaning: most kernel types).
+> +pub unsafe trait OwnableMut: Ownable {}
+> +
+> +/// An owned reference to an ownable kernel object.
+> +///
+> +/// The object is automatically freed or released when an instance of [`Owned`] is
+> +/// dropped.
+> +///
+> +/// # Invariants
+> +///
+> +/// The pointer stored in `ptr` is valid for the lifetime of the [`Owned`] instance.
+> +pub struct Owned<T: Ownable> {
+> +    ptr: NonNull<T>,
+> +    _p: PhantomData<T>,
+> +}
+> +
+> +// SAFETY: It is safe to send `Owned<T>` to another thread when the underlying `T` is `Send` because
+> +// it effectively means sending a `&mut T` (which is safe because `T` is `Send`).
+> +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
+> +
+> +// SAFETY: It is safe to send `&Owned<T>` to another thread when the underlying `T` is `Sync`
+> +// because it effectively means sharing `&T` (which is safe because `T` is `Sync`).
+> +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
+> +
+> +impl<T: Ownable> Owned<T> {
+> +    /// Creates a new instance of [`Owned`].
+> +    ///
+> +    /// It takes over ownership of the underlying object.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that the underlying object is acquired and can be considered owned by
+> +    /// Rust.
 
--- 
-With Best Regards,
-Andy Shevchenko
+
+This part "the underlying object is acquired" is unclear to me. How about:
+
+  Callers must ensure that *ownership of* the underlying object has been
+  acquired. That is, the object can be considered owned by the caller.
+
+
+Best regards,
+Andreas Hindborg
 
 
