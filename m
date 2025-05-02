@@ -1,80 +1,135 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 965C418E3F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:35:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E342550B2;
+	Fri,  2 May 2025 14:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196554; cv=none; b=V6+l0SnXNiexqPbAfgnVlN36C2Sj9nsTXKSWCX+Gt6lNufNC3LpuiL01/6BvDbvRU23/mLBDqTNXrPvCRqMEdK2SG6VGgSD+uSDXLFBukFCPmuRiBX5sPSl8BZjDW70G83eigx0P1nWckKlQ8CgWvp0AQ5jljheRIG3b4DGbUiA=
+	t=1746196575; cv=none; b=dWOVPS1jZ8XWiLmeLc29VZ4gUXRnGs3ulUGGs+8ivd/WFJID8IlQR/C+Y9zrf+DjyZDaBKlaKLKhOFOA8tcr9KfTFNHIwfYRmKizCFLm2Slox0x3FJn1xHbx+kZroILMCS6UzBQDW8XW+2zBr9L3bxZb63I7hhhTHBpNMoUj/FQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196554; c=relaxed/simple;
-	bh=ARWyjDur8yjCBSeTQOV6z1pA+12Zrb+wPZ5kWTaPM7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I553hM6R6i28E9lOZra7KvhV+rEUzChAU7TU/6r1y9IL/xRUuTCjTVN5tnbRGPiXHFC7fyZUVZLiQ5+pDz+ob/7dVEhkOP5xeNvad1N+8jFN1yVr+Golbb5TaIV3XECJli7C3eoKEPyDX7JxV3TXRecUvyYUkY+qK9dUYVi3MMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=C6JciLWf; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1746196575; c=relaxed/simple;
+	bh=gwcMJUkApPGDXrq/QKFxu6Y9J25Arvpy6IBH9dF4V88=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vD6Pvl8Ms47DPFkJ3kwlzrZuC6QtSZ10SJgwrrusCWQ/E8s8VYxSm6I6ufS8SL5MvxuL2sVBqzWXxL3pmOpIFSe+8pt+B+PM+iOtRjiDj0y5x+yI5N/cZFHbeNMhfSFC+hCvMLzvoRtTdwTted3qrxuZUxqMC6xu8tgRVAaEUfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=H8efNMOx; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C6JciLWf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=UbAG8iInp9ePuVcNeFLqHQPxcdJSZ1IQ2sJpc0Vp0h0=; b=C6JciLWf3x/ELUskxzsb2MTsmL
-	Ksb2suhhaF2ZSeKe+l8q6pBYe0Yc9gMqqIOMZ/WasmfviyzTvwAxW+xIrL0HtLkKQUmcrEBYgfnEb
-	V7WNHjiA1IumPvvE9RWjSqQ2Vl81aj99VmEGUGPAPhr88ZUrvs3/ve2ADuFV9eonLTcnGVC3qCsrq
-	yms1Bm/y1+Wm1N/zpXGOzbM2Mi6f52+ahnkdqKzwjtH/TjuRNBOff/GC/oSkeiY2ojtjEDy5sf5rY
-	5ONAZ7nuWryi5BA5BZLB6hhMBP+B1OuLaR2NCOGrM1BtBeuA0zXshlwHg2UQHV0pYXpkO8kVaUfzo
-	xROEjAEQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.1 #2 (Red Hat Linux))
-	id 1uArUP-0000000Ezmp-09yi;
-	Fri, 02 May 2025 14:35:45 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 97AE230057C; Fri,  2 May 2025 16:35:44 +0200 (CEST)
-Date: Fri, 2 May 2025 16:35:44 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: Prakash Sangappa <prakash.sangappa@oracle.com>,
-	linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
-	kprateek.nayak@amd.com
-Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
-Message-ID: <20250502143544.GW4439@noisy.programming.kicks-ass.net>
-References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
- <20250502015955.3146733-2-prakash.sangappa@oracle.com>
- <20250502123433.AHDVLZdY@linutronix.de>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="H8efNMOx"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 0970243848;
+	Fri,  2 May 2025 14:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746196565;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MwfsXK8KzjO5gVC7RgW4J9kTDD0YO2FDIqbR/Q+ykHg=;
+	b=H8efNMOxrLub86MsEYSPjQeUg0+vPoKT0CJxjBmYsJwRb3Z22b28+NHblwjT7d+xI1bENI
+	6EBh+0+QJh6R0vrzaaV9w+X+l/ar8ZUb/2G0AyKQeRvqVllVVFfd79iD28Fp2DFPhrCEU0
+	CPc9tD6McUIERiVmiekkvjHAEinUi3sOSUye5aT8QOkvyov+BqPQx4uD8EpydrC+p/sW9K
+	7PBRn7yH15V6/MoDZjODU3mw2HKnO62nZwBR4YAVKlqmcyLZnRmODZp2X9hoaBPmwXdHm2
+	kLxNb3ueBwpZgK/A6cSMt9k/1qMrM2BFkhR/VpWsUaFf2I/IzOrRMrD96AnGtg==
+Date: Fri, 2 May 2025 16:35:59 +0200
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Andrew Davis <afd@ti.com>,
+ Ayush Singh <ayush@beagleboard.org>, Geert Uytterhoeven
+ <geert@linux-m68k.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+ <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Arnd Bergmann
+ <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana
+ Kannan <saravanak@google.com>, devicetree@vger.kernel.org,
+ devicetree-compiler@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas
+ Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v2 3/7] of: resolver: Add export_symbols in
+ of_resolve_phandles() parameters
+Message-ID: <20250502163559.0a5643e5@booty>
+In-Reply-To: <20250430125154.195498-4-herve.codina@bootlin.com>
+References: <20250430125154.195498-1-herve.codina@bootlin.com>
+	<20250430125154.195498-4-herve.codina@bootlin.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502123433.AHDVLZdY@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvjeduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfetudeugfehheeliefhjeejuddvledtuddttdevledthfehgeeugfetheekgfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudehpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggrvhhiugesghhisghsohhnrdgurhhophgsvggrrhdrihgurdgruhdprhgtphhtthhopegrfhgusehtihdrtghom
+ hdprhgtphhtthhopegrhihushhhsegsvggrghhlvggsohgrrhgurdhorhhgpdhrtghpthhtohepghgvvghrtheslhhinhhugidqmheikehkrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On Fri, May 02, 2025 at 02:34:33PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-05-02 01:59:52 [+0000], Prakash Sangappa wrote:
-> > diff --git a/kernel/entry/common.c b/kernel/entry/common.c
-> > index 20154572ede9..b26adccb32df 100644
-> > --- a/kernel/entry/common.c
-> > +++ b/kernel/entry/common.c
-> > @@ -98,8 +99,12 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
-> >  
-> >  		local_irq_enable_exit_to_user(ti_work);
-> >  
-> > -		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
-> > -			schedule();
-> > +		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY)) {
-> 
-> I asked to limit this to LAZY only.
+Hello Herv=C3=A9,
 
-No -- this should work irrespective of the preemption model chosen.
+On Wed, 30 Apr 2025 14:51:47 +0200
+Herve Codina <herve.codina@bootlin.com> wrote:
 
-It should also have a default time that is shorter than the scheduling
-delay normally observed.
+> In order to prepare the introduction of the export symbols node
+> handling, add a export_symbols parameter in of_resolve_phandles().
+>=20
+> The export_symbols is the export symbols device tree node the resolver
+> will use for the overlay symbols resolution.
+>=20
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Tested-by: Ayush Singh <ayush@beagleboard.org>
 
-It should probably also have a PR_WARN on raising the sysctl value.
+[...]
 
-I know you worry about RT, but show me a trace where it is a problem.
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -237,7 +237,8 @@ static int get_phandle_from_symbols_node(const struct=
+ device_node *tree_symbols,
+>  /**
+>   * of_resolve_phandles - Relocate and resolve overlay against live tree
+>   *
+> - * @overlay:	Pointer to devicetree overlay to relocate and resolve
+> + * @overlay:		Pointer to devicetree overlay to relocate and resolve
+> + * @export_symbols:	Pointer to devicetree export symbols node.
+>   *
+>   * Modify (relocate) values of local phandles in @overlay to a range that
+>   * does not conflict with the live expanded devicetree.  Update referenc=
+es
+> @@ -257,6 +258,10 @@ static int get_phandle_from_symbols_node(const struc=
+t device_node *tree_symbols,
+>   * corresponding to that symbol in the live tree.  Update the references=
+ in
+>   * the overlay with the phandle values in the live tree.
+>   *
+> + * @export_symbols can be use in this references update. The resolver tr=
+ies
+> + * first to find a match in the @export_symbols. If not found, it uses t=
+he
+> + * "__symbol__" node in the live tree.
+
+The rationale behind this logic is not clear to me. I'd have expected
+instead this logic:
+
+  if (export-symbols !=3D NULL):
+      match only in export-symbols
+  else
+      match only in __symbols__
+
+following the idea that it's better to be strict when introducing
+something, and possibly relax it later on.
+
+As I see it, with the current logic if you use export-symbols but you
+build dtbs with -@, you can still match a global label. export-symbols
+should avoid that instead.
+
+Let me know whether I'm missing something here (which is surely
+possible).
+
+Other than this, the series looks good to me. I'm not adding my R-by on
+the implementation patches though, waiting for the above question to be
+clarified.
+
+Luca
+
+--=20
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
