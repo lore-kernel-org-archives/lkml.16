@@ -1,135 +1,193 @@
-Received: from freeshell.de (freeshell.de [116.202.128.144])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D3822D4C8;
-	Fri,  2 May 2025 10:31:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.202.128.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5C0E79D2;
+	Fri,  2 May 2025 10:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181909; cv=none; b=Ji6s+Eews+X+DZ/QR/ikT2qfIn7qTt8dF/vBsTYLzg8S/yX1iDiv5kJqbl5E8vmXIY7YRJfKF/uT/4geOSEApwKZLSNlj5ZGwokC3EwMaZm2CtbUhHu6BNA+GQUJm2TzmBTOLb+kJM7M55eWuYP1ovO+VrLqdFp7EWuD9/qcZiI=
+	t=1746182004; cv=none; b=iyApB61+dnjmQYe8jSYuaQUjoXFgB9pJtgT3L7uiWQLiaarjOaXU7evQV19yUfnqEq7LJyjtG4tvih/6OK4LTggkCGxbrBVii4gEtH2y43+apyw80Fk0+lDmuA0hwT2vgqfp9u+G4bH1/J03vRoE4OpfyiRQgx9Kr9k2zeSzklo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181909; c=relaxed/simple;
-	bh=ude+34SekGs1D0woRTY6kRCOUKBE+OC2Cp4Bvkd6jyM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZaPS3VClh94fhbxzVWIOjQr5dRyQQG+v+8XCHglQ/hQXFor4nn16VjX7XyJS6ds/0Jg1+iUAHYwzaFO1lRXZo6oHMli+hrHhKThYwG5GNL1mFnHRd+NoCkBbgKed6Q9bR8Y08VEaztUSYBsweE5FrVEChjOwpOXz2d+NtwZYyQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de; spf=pass smtp.mailfrom=freeshell.de; arc=none smtp.client-ip=116.202.128.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=freeshell.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=freeshell.de
-Received: from hay.lan. (unknown [IPv6:2605:59c0:20f3:a400:6ecf:39ff:fe00:8375])
-	(Authenticated sender: e)
-	by freeshell.de (Postfix) with ESMTPSA id 69C78B4C2409;
-	Fri,  2 May 2025 12:31:43 +0200 (CEST)
-From: E Shattow <e@freeshell.de>
-To: Emil Renner Berthing <kernel@esmil.dk>,
-	Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	E Shattow <e@freeshell.de>
-Subject: [PATCH v3 4/4] riscv: dts: starfive: jh7110-common: bootph-pre-ram hinting needed by boot loader
-Date: Fri,  2 May 2025 03:30:44 -0700
-Message-ID: <20250502103101.957016-5-e@freeshell.de>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502103101.957016-1-e@freeshell.de>
-References: <20250502103101.957016-1-e@freeshell.de>
+	s=arc-20240116; t=1746182004; c=relaxed/simple;
+	bh=kWVYp1X9EMVkhHKe2qMihc1zNSk46s7GyfQUw0nJkjc=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=sQPYkt/zjWWM3VSDTr55AgbjFIzXCKruZk2y2g4hluU7yTCU+HjrZCve4Kpc4/5GeKmJQiv2jmoWSfK2gGhLJr9hPltN31YTSPVGXyr7l9EuC4+uiMCqRqzL3mShLDvIcCLbG9jjMi/un8QEl2q5EF4gYMPuLC+q+IkVFAtYpyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Vs3+W5ZS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I9PlMOPf; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Vs3+W5ZS";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I9PlMOPf"
+Date: Fri, 02 May 2025 10:33:19 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746182000;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiH/hk0vZo1sihawLn/P10wG4NsxuCpp+GocUDhesl4=;
+	b=Vs3+W5ZS3JSKsovNWvBfGhDM8Rx6gD3qMv1KJqEVHhW1NJVfcb+fxhFE08asdheoJURil0
+	CBjH2Ny/4RDPlNHMpVOLKEr4VQI4Mi9QD7ZdOo9nSFvu+gki4icqfRJfSg4X1/O8mpi9s2
+	VA6cUOb1/xN98ubxYpevOixhTYf/AH3GECYcRepHBISnYQ5qsLvp9HBecFbFPJ3OAV9KpL
+	0pORIkoS0gaOmQuIpitg7Rg39g2piiod77bKmFmNRyQnjxjW18+stymZBUUQ0kID6qbUnk
+	vMVcmSmyIkKSbozbHRfITKha6as+deZcsKg5rZZRpfbL1yOIofN1nTvsLzTEAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746182000;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FiH/hk0vZo1sihawLn/P10wG4NsxuCpp+GocUDhesl4=;
+	b=I9PlMOPf5EcKybqgFszhEjJzzpRqHFpN3t5fZPInCaKaA+aKxKZN57MtbMEv7A02M5PNsV
+	gIVDnKMieSkzvbCA==
+From: "tip-bot2 for David Kaplan" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/bugs] x86/bugs: Restructure L1TF mitigation
+Cc: David Kaplan <david.kaplan@amd.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Josh Poimboeuf <jpoimboe@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250418161721.1855190-16-david.kaplan@amd.com>
+References: <20250418161721.1855190-16-david.kaplan@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <174618199974.22196.12832189173399649709.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Add bootph-pre-ram hinting to jh7110-common.dtsi:
-  - i2c5_pins and i2c-pins subnode for connection to eeprom
-  - eeprom node
-  - qspi flash configuration subnode
-  - memory node
-  - mmc0 for eMMC
-  - mmc1 for SD Card
-  - uart0 for serial console
+The following commit has been merged into the x86/bugs branch of tip:
 
-  With this the U-Boot SPL secondary program loader may drop such overrides.
+Commit-ID:     d43ba2dc8eeeca21811fd9b30e3bd15bb35caaec
+Gitweb:        https://git.kernel.org/tip/d43ba2dc8eeeca21811fd9b30e3bd15bb35caaec
+Author:        David Kaplan <david.kaplan@amd.com>
+AuthorDate:    Fri, 18 Apr 2025 11:17:20 -05:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Tue, 29 Apr 2025 18:57:30 +02:00
 
-Signed-off-by: E Shattow <e@freeshell.de>
+x86/bugs: Restructure L1TF mitigation
+
+Restructure L1TF to use select/apply functions to create consistent
+vulnerability handling.
+
+Define new AUTO mitigation for L1TF.
+
+Signed-off-by: David Kaplan <david.kaplan@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Link: https://lore.kernel.org/20250418161721.1855190-16-david.kaplan@amd.com
 ---
- arch/riscv/boot/dts/starfive/jh7110-common.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/include/asm/processor.h |  1 +
+ arch/x86/kernel/cpu/bugs.c       | 25 +++++++++++++++++++------
+ arch/x86/kvm/vmx/vmx.c           |  2 ++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-index f1dc45b98e1d..d2cdb2f276c3 100644
---- a/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-+++ b/arch/riscv/boot/dts/starfive/jh7110-common.dtsi
-@@ -28,6 +28,7 @@ chosen {
- 	memory@40000000 {
- 		device_type = "memory";
- 		reg = <0x0 0x40000000 0x1 0x0>;
-+		bootph-pre-ram;
- 	};
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 5d2f7e5..0973bed 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -734,6 +734,7 @@ void store_cpu_caps(struct cpuinfo_x86 *info);
  
- 	gpio-restart {
-@@ -249,6 +250,7 @@ emmc_vdd: aldo4 {
- 	eeprom@50 {
- 		compatible = "atmel,24c04";
- 		reg = <0x50>;
-+		bootph-pre-ram;
- 		pagesize = <16>;
- 	};
- };
-@@ -268,6 +270,7 @@ &mmc0 {
- 	assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO0_SDCARD>;
- 	assigned-clock-rates = <50000000>;
- 	bus-width = <8>;
-+	bootph-pre-ram;
- 	cap-mmc-highspeed;
- 	mmc-ddr-1_8v;
- 	mmc-hs200-1_8v;
-@@ -285,6 +288,7 @@ &mmc1 {
- 	assigned-clocks = <&syscrg JH7110_SYSCLK_SDIO1_SDCARD>;
- 	assigned-clock-rates = <50000000>;
- 	bus-width = <4>;
-+	bootph-pre-ram;
- 	no-sdio;
- 	no-mmc;
- 	cd-gpios = <&sysgpio 41 GPIO_ACTIVE_LOW>;
-@@ -323,6 +327,7 @@ &qspi {
- 	nor_flash: flash@0 {
- 		compatible = "jedec,spi-nor";
- 		reg = <0>;
-+		bootph-pre-ram;
- 		cdns,read-delay = <2>;
- 		spi-max-frequency = <100000000>;
- 		cdns,tshsl-ns = <1>;
-@@ -402,6 +407,8 @@ GPOEN_SYS_I2C2_DATA,
- 	};
+ enum l1tf_mitigations {
+ 	L1TF_MITIGATION_OFF,
++	L1TF_MITIGATION_AUTO,
+ 	L1TF_MITIGATION_FLUSH_NOWARN,
+ 	L1TF_MITIGATION_FLUSH,
+ 	L1TF_MITIGATION_FLUSH_NOSMT,
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index fbb4f13..25d84e2 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -67,6 +67,7 @@ static void __init spectre_v2_user_apply_mitigation(void);
+ static void __init ssb_select_mitigation(void);
+ static void __init ssb_apply_mitigation(void);
+ static void __init l1tf_select_mitigation(void);
++static void __init l1tf_apply_mitigation(void);
+ static void __init mds_select_mitigation(void);
+ static void __init mds_update_mitigation(void);
+ static void __init mds_apply_mitigation(void);
+@@ -245,6 +246,7 @@ void __init cpu_select_mitigations(void)
+ 	retbleed_apply_mitigation();
+ 	spectre_v2_user_apply_mitigation();
+ 	ssb_apply_mitigation();
++	l1tf_apply_mitigation();
+ 	mds_apply_mitigation();
+ 	taa_apply_mitigation();
+ 	mmio_apply_mitigation();
+@@ -2538,7 +2540,7 @@ EXPORT_SYMBOL_GPL(itlb_multihit_kvm_mitigation);
  
- 	i2c5_pins: i2c5-0 {
-+		bootph-pre-ram;
+ /* Default mitigation for L1TF-affected CPUs */
+ enum l1tf_mitigations l1tf_mitigation __ro_after_init =
+-	IS_ENABLED(CONFIG_MITIGATION_L1TF) ? L1TF_MITIGATION_FLUSH : L1TF_MITIGATION_OFF;
++	IS_ENABLED(CONFIG_MITIGATION_L1TF) ? L1TF_MITIGATION_AUTO : L1TF_MITIGATION_OFF;
+ #if IS_ENABLED(CONFIG_KVM_INTEL)
+ EXPORT_SYMBOL_GPL(l1tf_mitigation);
+ #endif
+@@ -2586,22 +2588,33 @@ static void override_cache_bits(struct cpuinfo_x86 *c)
+ 
+ static void __init l1tf_select_mitigation(void)
+ {
++	if (!boot_cpu_has_bug(X86_BUG_L1TF) || cpu_mitigations_off()) {
++		l1tf_mitigation = L1TF_MITIGATION_OFF;
++		return;
++	}
 +
- 		i2c-pins {
- 			pinmux = <GPIOMUX(19, GPOUT_LOW,
- 					      GPOEN_SYS_I2C5_CLK,
-@@ -410,6 +417,7 @@ GPI_SYS_I2C5_CLK)>,
- 					      GPOEN_SYS_I2C5_DATA,
- 					      GPI_SYS_I2C5_DATA)>;
- 			bias-disable; /* external pull-up */
-+			bootph-pre-ram;
- 			input-enable;
- 			input-schmitt-enable;
- 		};
-@@ -638,6 +646,7 @@ GPOEN_DISABLE,
- };
++	if (l1tf_mitigation == L1TF_MITIGATION_AUTO) {
++		if (cpu_mitigations_auto_nosmt())
++			l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
++		else
++			l1tf_mitigation = L1TF_MITIGATION_FLUSH;
++	}
++}
++
++static void __init l1tf_apply_mitigation(void)
++{
+ 	u64 half_pa;
  
- &uart0 {
-+	bootph-pre-ram;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins>;
- 	status = "okay";
--- 
-2.49.0
-
+ 	if (!boot_cpu_has_bug(X86_BUG_L1TF))
+ 		return;
+ 
+-	if (cpu_mitigations_off())
+-		l1tf_mitigation = L1TF_MITIGATION_OFF;
+-	else if (cpu_mitigations_auto_nosmt())
+-		l1tf_mitigation = L1TF_MITIGATION_FLUSH_NOSMT;
+-
+ 	override_cache_bits(&boot_cpu_data);
+ 
+ 	switch (l1tf_mitigation) {
+ 	case L1TF_MITIGATION_OFF:
+ 	case L1TF_MITIGATION_FLUSH_NOWARN:
+ 	case L1TF_MITIGATION_FLUSH:
++	case L1TF_MITIGATION_AUTO:
+ 		break;
+ 	case L1TF_MITIGATION_FLUSH_NOSMT:
+ 	case L1TF_MITIGATION_FULL:
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index a1754f7..0aba471 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -273,6 +273,7 @@ static int vmx_setup_l1d_flush(enum vmx_l1d_flush_state l1tf)
+ 		case L1TF_MITIGATION_OFF:
+ 			l1tf = VMENTER_L1D_FLUSH_NEVER;
+ 			break;
++		case L1TF_MITIGATION_AUTO:
+ 		case L1TF_MITIGATION_FLUSH_NOWARN:
+ 		case L1TF_MITIGATION_FLUSH:
+ 		case L1TF_MITIGATION_FLUSH_NOSMT:
+@@ -7704,6 +7705,7 @@ int vmx_vm_init(struct kvm *kvm)
+ 		case L1TF_MITIGATION_FLUSH_NOWARN:
+ 			/* 'I explicitly don't care' is set */
+ 			break;
++		case L1TF_MITIGATION_AUTO:
+ 		case L1TF_MITIGATION_FLUSH:
+ 		case L1TF_MITIGATION_FLUSH_NOSMT:
+ 		case L1TF_MITIGATION_FULL:
