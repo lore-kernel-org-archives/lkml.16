@@ -1,195 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8C7255F25;
-	Fri,  2 May 2025 13:59:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA762253B7B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194394; cv=none; b=DloQe+kDThNjVnnhY/CC39RbT7Brnebd86LdmytddXfooqnT+FHlq38ajyoWLpE2nBTJYL1ZoHWNaCn+QHuhbtTMj/tl1yqsa0gYJux1SVQ8XAInLf76RETDU+60aEaYkQ+8lf04R/Op3oJA55V4FF8d4gYWc3Ob1fu1xLx437s=
+	t=1746194428; cv=none; b=c9pfzq9NrlE+fMIjnZEUZP1zWCCbKogPY9nO44wPpxr6iD8hbjGjweSABB9T/7lKs6UTx3Y/1Ees1kOnC8YSkSaR8awAs0kxEZIaAouEqGSakB4LjH89PHntdPQze2qVT8Yxa6wILKcO+8AD2Be3NJXK4TxNzdIPbBAvjlDbeKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194394; c=relaxed/simple;
-	bh=88NFVXZUaDaRJYWPhXI1WcMj18KEdbphqFNzYdApJss=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DoXP6Hy9J30ntua0dL2iNNjdZLrfr3PXepVyCFk1SHjq99OMRYh/fek9rp0XTqil6FqrnAeOa2BAmqltMuBz6VROLRDD12ElshU9NL9jYG9hWJ26bI1BT+3lyyRxAgy1BZqnTgI25+31zNCrf9uwM+2C/23kq+lYGQfhbh9HTfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q+G+d2AF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746194428; c=relaxed/simple;
+	bh=lnnL8JGgyWBzzwSxMhHtcvMzZM5o+MSNEYGAJee0dU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lqfjSu0Ys1XHRjIxTtLchicH7l5ANlVQ20mNqZS5YQ9UrBqhvFtzSlNwJY69IZRpTpEjDmWKO70k4hRJU46fuyD9fQ1zb5ids3Z6bPGf4PnrzxbjsgziIw3VNIpRiCZBc0+ynzOM4DUFzaoPQuP6uCJDUVcju4xT9gndOpu1aP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LG04ZD4W; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q+G+d2AF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01393C4CEF7;
-	Fri,  2 May 2025 13:59:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746194394;
-	bh=88NFVXZUaDaRJYWPhXI1WcMj18KEdbphqFNzYdApJss=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=q+G+d2AFwxPqZ1IbpSQtcKHBOzh4UNnex+XQiq6pey/o04QI/GbkT8coaMy7npKwh
-	 4WNzhwxDUp/NwasAuvuJv4qgyiqrvOHRvrdz88cfY3YLRELKQgHwOzWPMeof7K8xX5
-	 TgjiLeAsrtFaOvsPUzOZapPRuJKhw2kmGwguLtTkXIG/rs/oyw3Dj/MU/RvHFPwIpc
-	 SniKzQoGE956mklUPyZFfLBYr5MkNpYE/Jt9ryjYAQHBm1c/rjSu56XtrjnUeMKD6M
-	 san9fjYMy7gYRW5Z5EHoNCL4NGdvQFB4XsGXPyAmZhIU/as8R6LDdWXxw+Q/sv8Uea
-	 GqmFQuJ/LNEhw==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54e8e5d2cf0so2404420e87.2;
-        Fri, 02 May 2025 06:59:53 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVBM1aPMbyljPXMdX3nI6Q+D5d35wUbvWL5OjkpiuU3bB217Wxw6OsgGSsD5prpPh3y457ZrGV1+NwVn/Yy@vger.kernel.org, AJvYcCVsgVHfiXa9dEgijEAntrHIAxW3Y5S51P9uIhSPLpDTyWuZizg25iSxQ9ObfggLy0y8l2jWqBctH7g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaducT3UFmyhaP4yHphr/EuCRbLw/wO8S8tySeffQwed9hYLtq
-	8iWplPEjS7rgM8jaI0r4fWBT4FPlIyXHlB2ySTOktIp6JcAVOHzr48VGX/c9ML6fBXz5kZtC8fw
-	GlCrymEaXZO7EGo1LpF4aZJQb7Kk=
-X-Google-Smtp-Source: AGHT+IGr5b1a1gQxlQm0D4LZ5TZhA73SmaQyU2KyUmenM1TrcRCJnJx7hdIKg/Xc3Nyl46yYwNTsjCSg6z9AKg81Lv0=
-X-Received: by 2002:a05:6512:3d94:b0:545:6fa:bf60 with SMTP id
- 2adb3069b0e04-54eac20b3cbmr882115e87.19.1746194392276; Fri, 02 May 2025
- 06:59:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LG04ZD4W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746194427; x=1777730427;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lnnL8JGgyWBzzwSxMhHtcvMzZM5o+MSNEYGAJee0dU8=;
+  b=LG04ZD4WdQdv7GRWezXat3q/EChGWnHSj6zRpx2gAt9+8aRqY6MU6S0c
+   yPRWajQVIW3tcJwchhodC1TeVbovwBMOhjWCFlXYwuVSVD57fRWG8R8BR
+   QH5nmXNLbT4hHBFDlDLEv5HrQ7UT9A3sQ3DmQJ0QcByL8uYpFEuyvSM8X
+   G0DcBAxPt4mIyiD59S2NSY2s60+HKNKH+yecC0DslD7p4j+5FHJgPYYyv
+   YIJkd4dVSsjMnPvlCLltXnOD3nnH9cZcZLumP6T512/2HDrXYqnswjoY/
+   uhRGs8w0XfxWL7P6hpg3UiLeqLYdCuhPPZGSBXz1wjmzaYLhbHtmWgTwP
+   g==;
+X-CSE-ConnectionGUID: 94z4QcDeRHKiuqKc8Y2xSg==
+X-CSE-MsgGUID: d6gqm8QuTMy5qsiE0g1QBw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="50531574"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="50531574"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:00:26 -0700
+X-CSE-ConnectionGUID: aVgIMMrKTDmEQq/CHUT3ag==
+X-CSE-MsgGUID: wjgDXYmLS52peqiLrVerEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="139453040"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:00:23 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAqw8-00000002DUl-2OrD;
+	Fri, 02 May 2025 17:00:20 +0300
+Date: Fri, 2 May 2025 17:00:20 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>
+Subject: Re: [PATCH v1 1/1] lockdep: Move hlock_equal() to the respective
+ ifdeffery
+Message-ID: <aBTP9AaJ0uyzAjxG@smile.fi.intel.com>
+References: <20250415085857.495543-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250424080950.289864-1-vkuznets@redhat.com> <20250424080950.289864-3-vkuznets@redhat.com>
- <CAMj1kXFMmhROmaDZ0gsw+ozG5iSkMvSXb15qexToUSAFyBn5hQ@mail.gmail.com>
- <87ldrka6w6.fsf@redhat.com> <CAMj1kXE0WcenLEB+60=+oc+aKfbqZkwYZf-TrOyDY=ShXQ2pYw@mail.gmail.com>
- <87a57v9pt4.fsf@redhat.com> <CAMj1kXFkFCOqU2jvG_o97DzrhpXKyUd=WxPhHFA-_0ddPSvs0g@mail.gmail.com>
- <877c2z9lbw.fsf@redhat.com>
-In-Reply-To: <877c2z9lbw.fsf@redhat.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 2 May 2025 15:59:41 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXH00miQoZcPygSz+C5dWN0U2AhjTn+HfRki2smfMwjWEQ@mail.gmail.com>
-X-Gm-Features: ATxdqUGExM_e4qzwbqX3tr9hmm5GsxfyeFI24AH5nF7tC6nIL9PhK0VQ65QSApg
-Message-ID: <CAMj1kXH00miQoZcPygSz+C5dWN0U2AhjTn+HfRki2smfMwjWEQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] x86/efi: Implement support for embedding SBAT data
- for x86
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: x86@kernel.org, linux-efi@vger.kernel.org, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Jones <pjones@redhat.com>, Daniel Berrange <berrange@redhat.com>, 
-	Emanuele Giuseppe Esposito <eesposit@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
-	Greg KH <gregkh@linuxfoundation.org>, Luca Boccassi <bluca@debian.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Matthew Garrett <mjg59@srcf.ucam.org>, 
-	James Bottomley <James.Bottomley@hansenpartnership.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250415085857.495543-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 2 May 2025 at 15:46, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Ard Biesheuvel <ardb@kernel.org> writes:
->
-> > On Fri, 2 May 2025 at 14:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> Ard Biesheuvel <ardb@kernel.org> writes:
-> >>
-> >> > On Mon, 28 Apr 2025 at 12:59, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >> >>
-> >> >> Ard Biesheuvel <ardb@kernel.org> writes:
-> >> >>
-> >> >> > On Thu, 24 Apr 2025 at 10:10, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> ...
-> >>
-> >> >> >>  $(obj)/vmlinux: $(vmlinux-objs-y) $(vmlinux-libs-y) FORCE
-> >> >> >>         $(call if_changed,ld)
-> >> >> >>
-> >> >> >> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> >> >> >> index 3b2bc61c9408..d0a27905de90 100644
-> >> >> >> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> >> >> >> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> >> >> >> @@ -49,9 +49,22 @@ SECTIONS
-> >> >> >>                 *(.data.*)
-> >> >> >>
-> >> >> >>                 /* Add 4 bytes of extra space for the obsolete CRC-32 checksum */
-> >> >> >> +#ifndef CONFIG_EFI_SBAT
-> >> >> >>                 . = ALIGN(. + 4, 0x200);
-> >> >> >> +#else
-> >> >> >> +               /* Avoid gap between '.data' and '.sbat' */
-> >> >> >> +               . = ALIGN(. + 4, 0x1000);
-> >> >> >> +#endif
-> >> >> >>                 _edata = . ;
-> >> >> >>         }
-> >> >> >> +#ifdef CONFIG_EFI_SBAT
-> >> >> >> +       .sbat : ALIGN(0x1000) {
-> >> >> >> +               _sbat = . ;
-> >> >> >> +               *(.sbat)
-> >> >> >> +               _esbat = ALIGN(0x200);
-> >> >> >> +               . = _esbat;
-> >> >> >> +       }
-> >> >> >> +#endif
-> >> >> >>         . = ALIGN(L1_CACHE_BYTES);
-> >> >> >>         .bss : {
-> >> >> >>                 _bss = . ;
-> >> >> >
-> >> >> > This looks a bit odd - see below
-> >> >> >
-> >> >> >> diff --git a/arch/x86/boot/header.S b/arch/x86/boot/header.S
-> >> >> >> index b5c79f43359b..ab851490ef74 100644
-> >> >> >> --- a/arch/x86/boot/header.S
-> >> >> >> +++ b/arch/x86/boot/header.S
-> >> >> >> @@ -207,6 +207,19 @@ pecompat_fstart:
-> >> >> >>                 IMAGE_SCN_MEM_READ              | \
-> >> >> >>                 IMAGE_SCN_MEM_WRITE             # Characteristics
-> >> >> >>
-> >> >> >> +#ifdef CONFIG_EFI_SBAT
-> >> >> >> +       .ascii ".sbat\0\0\0"
-> >> >> >> +       .long   ZO__esbat - ZO__sbat            # VirtualSize
-> >> >> >> +       .long   setup_size + ZO__sbat           # VirtualAddress
-> >> >> >> +       .long   ZO__esbat - ZO__sbat            # SizeOfRawData
-> >> >> >> +       .long   setup_size + ZO__sbat           # PointerToRawData
-> >> >> >> +
-> >> >> >> +       .long   0, 0, 0
-> >> >> >> +       .long   IMAGE_SCN_CNT_INITIALIZED_DATA  | \
-> >> >> >> +               IMAGE_SCN_MEM_READ              | \
-> >> >> >> +               IMAGE_SCN_MEM_DISCARDABLE       # Characteristics
-> >> >> >> +#endif
-> >> >> >> +
-> >> >> >
-> >> >> > This puts the .sbat section at the very end of the file. However, the
-> >> >> > virtual size of .data is 'ZO__end - ZO__data' not 'ZO__edata -
-> >> >> > ZO__data', and so the .sbat section will overlap with .bss in the
-> >> >> > memory view of the image.
-> >> >>
-> >> >> Missed that, will fix, thanks! A stupid question though: does this
-> >> >> matter in practice for SBAT? I don't think anyone needs SBAT data after
-> >> >> kernel starts booting so we can consider it 'discarded'. BSS data can
-> >> >> then do whatever it wants.
-> >> >>
-> >> >
-> >> > It violates the PE/COFF spec, and some PE loaders and signing tools
-> >> > are very pedantic about the layout.
-> >>
-> >> Turns out it the problem is slightly harder to address then I initially
-> >> thought.
-> >
-> > Yeah I was afraid this was going to be tricky.
-> >
-> > ...
-> >
-> >> The problem is similar for zboot.
-> >
-> > How so?
-> >
->
-> zboot-header.S has:
->
->     .ascii          ".data\0\0\0"
->     .long           __data_size
->     .long           _etext - .Ldoshdr
->     .long           __data_rawsize
->     .long           _etext - .Ldoshdr
->
-> where the difference between '__data_rawsize' and '__data_size' is:
->
->  PROVIDE(__data_rawsize = ABSOLUTE(_edata - _etext));
->  PROVIDE(__data_size = ABSOLUTE(_end - _etext));
->
-> and "_end" is the end of BSS. So if we put '.sbat' right after '.data'
-> then '.data' will cover it too (so we will get an overlap). If we put
-> if after '.bss' then we're going to get a hole (size of '.bss') upon
-> (aarch64 example):
->
->  objcopy  -O binary arch/arm64/boot/vmlinuz.efi.elf arch/arm64/boot/vmlinuz.efi
->
-> as AFAIU it won't be able to squeeze the binary, it only truncates the
-> tail throwing away secions without content (in particular, '.sbat').
->
+On Tue, Apr 15, 2025 at 11:58:56AM +0300, Andy Shevchenko wrote:
+> When hlock_equal() is unused, it prevents kernel builds with clang,
+> `make W=1` and CONFIG_WERROR=y, CONFIG_LOCKDEP=y and
+> CONFIG_LOCKDEP_SMALL=n:
+> 
+>   lockdep.c:2005:20: error: unused function 'hlock_equal' [-Werror,-Wunused-function]
+> 
+> Fix this by moving the function to the respective existing ifdeffery
+> for its the only user.
+> 
+> See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
+> inline functions for W=1 build").
 
-Ah I misread your patch - I thought .sbat was between .text and .data,
-which arguably makes more sense.
+Any news here, please? The problem still exists in v6.15-rc4.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
