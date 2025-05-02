@@ -1,168 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C87A82586C3;
-	Fri,  2 May 2025 15:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6DD259CA7;
+	Fri,  2 May 2025 15:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201262; cv=none; b=oxTJXN9WHXKiwPZEyasbncU0GmC5831OXD+ENvFGsD28mx/c/yat3fXXhV5rv3KCyndw954M+Ejj55JmDbAt/gmXEX4AtzlRT8nKc+gp6JEeU92kFHp7BV1dCqe6ssspeHRg6CrrZzN2cCy3eQopIq4XMHG3xmIept6PNDrd+nc=
+	t=1746201480; cv=none; b=m870OkvHvZg77kDRK2E+BgRseUW+wOX66iyeHsnGyzs8vyiCf8b3rG3cYVy622sLIf+LgbphxIMKYzsuyhUh5VJMAwjO3x8p5mB47DKDgxbVEGntiNTv2cgnZeYAWDIATJKKGkBcU8LbO3lt0ZWUcY5lpiiRemKp8vnEhtG6lis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201262; c=relaxed/simple;
-	bh=bJ6OEuI6BGJBeFQpBoup7efpiK67woSSTXfIen8SRj0=;
+	s=arc-20240116; t=1746201480; c=relaxed/simple;
+	bh=8QYuu7fU5WUIXfLa2awfgrXyGtQ8swMWYYVzxECzPEw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ik4J/MrFwo7KPQ5q5ip26GdjE0yQzIq+watsY3zgAS69EVqSmDtsoPtrqLeir8vXi4WvKsmIqtp1yQ/aEZ1HLEueETOUxPcmi/Dlg32lyP+pBTprKcdUFLoFXB1s+W9qyQYtURy1j2Xy6NLiPAqkfHLUGTVRuQw/ksV4qZKevQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDML70SB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=D03PFSh4B34DGsaXDTREOMxKAB3DDE9Jz1gxSR1FruBLcjZ9OVlBD2AE8IfL/zZNc6zvt5kotvQiWV2t93BkRogPXH6Sip+G/BkwVSvlVZgYbcHdx1q8k47dXrfV4AW5q8WTokyXjVbWOfgtXw4Zjt8zbQKOrzYPsTdV73zuvmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=s2GAqAeM; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDML70SB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7B3C4CEE4;
-	Fri,  2 May 2025 15:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746201262;
-	bh=bJ6OEuI6BGJBeFQpBoup7efpiK67woSSTXfIen8SRj0=;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="s2GAqAeM"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id AFE20353;
+	Fri,  2 May 2025 17:57:48 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746201468;
+	bh=8QYuu7fU5WUIXfLa2awfgrXyGtQ8swMWYYVzxECzPEw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZDML70SBWZOKq97eezlv4Rw5t7EsdMoRg7meViLluK4bi7/nTcd8Fk5MczdpZO9xr
-	 sX3jGTe69E5fF3A+RNwuLdrUkJDayOguPxfW/3pMOxeXSd3yV2FWeqUJF/3Xo4p6BT
-	 HplObp8ewhghc+9qF6zuYHIxkrCP0rzVxDymPprEkriVVuVkfXS0v4ubWggOWwTXYx
-	 ES8IJVCElRq6IkHYKhyJo7I//U8h2d3j8T5zURtVG6URbHM0k5FRjHYZPKVLacZkm7
-	 llNCpTpD+QZYiJRYtdPJBQtxLKbzw4aewPDRL5AiFrIM0XxSQrgzt6nANwIHsgkVEX
-	 hDQ33F7ZX2c6w==
-Date: Fri, 2 May 2025 12:54:19 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf hist: Remove output field from sort-list properly
-Message-ID: <aBTqq3-splDRYxO5@x1>
-References: <20250430180321.736939-1-namhyung@kernel.org>
+	b=s2GAqAeMwGyk87qn58OiHrgsgvDI9wlMCxw6tM5KORPioPIiY1cmhZ4Y0rEEV43Rk
+	 ZHjsi56wlLzk/opQb+UNzFOMac7F4k2CqiXSQp2+Qt3+cGTHMzV5Jn+a0EtAh9nzzb
+	 R52QvJGHsjKV22hApy2kl1o8bPbbX+ATTa2Iy05k=
+Date: Fri, 2 May 2025 18:57:47 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Rui Miguel Silva <rmfrfs@gmail.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Robert Chiras <robert.chiras@nxp.com>,
+	"Guoniu.zhou" <guoniu.zhou@nxp.com>
+Subject: Re: [PATCH v4 04/13] media: nxp: imx8-isi: Use
+ devm_clk_bulk_get_all() to fetch clocks
+Message-ID: <20250502155747.GB20093@pendragon.ideasonboard.com>
+References: <20250408-8qxp_camera-v4-0-ef695f1b47c4@nxp.com>
+ <20250408-8qxp_camera-v4-4-ef695f1b47c4@nxp.com>
+ <20250421211438.GN17813@pendragon.ideasonboard.com>
+ <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250430180321.736939-1-namhyung@kernel.org>
+In-Reply-To: <aBQZjFsExJh2uRfK@lizhi-Precision-Tower-5810>
 
-On Wed, Apr 30, 2025 at 11:03:21AM -0700, Namhyung Kim wrote:
-> When it removes an output format for cancelled children or latency, it
-> should delete itself from the sort list as well.  Otherwise assertion
-> in fmt_free() will fire.
+Hi Frank,
+
+On Thu, May 01, 2025 at 09:02:04PM -0400, Frank Li wrote:
+> On Tue, Apr 22, 2025 at 12:14:38AM +0300, Laurent Pinchart wrote:
+> > On Tue, Apr 08, 2025 at 05:53:02PM -0400, Frank Li wrote:
+> > > Use devm_clk_bulk_get_all() helper to simplify clock handle code.
+> > >
+> > > No functional changes intended.
+> > >
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.c    | 46 +++-------------------
+> > >  .../media/platform/nxp/imx8-isi/imx8-isi-core.h    |  3 +-
+> > >  2 files changed, 6 insertions(+), 43 deletions(-)
+> > >
+> > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > index ecfc95882f903..015350c6f2784 100644
+> > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.c
+> > > @@ -275,11 +275,6 @@ static const struct mxc_isi_set_thd mxc_imx8_isi_thd_v1 = {
+> > >  	.panic_set_thd_v = { .mask = 0xf0000, .offset = 16, .threshold = 0x7 },
+> > >  };
+> > >
+> > > -static const struct clk_bulk_data mxc_imx8mn_clks[] = {
+> > > -	{ .id = "axi" },
+> > > -	{ .id = "apb" },
+> > > -};
+> > > -
+> > >  static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+> > >  	.model			= MXC_ISI_IMX8MN,
+> > >  	.num_ports		= 1,
+> > > @@ -287,8 +282,6 @@ static const struct mxc_isi_plat_data mxc_imx8mn_data = {
+> > >  	.reg_offset		= 0,
+> > >  	.ier_reg		= &mxc_imx8_isi_ier_v1,
+> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > -	.clks			= mxc_imx8mn_clks,
+> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > >  	.buf_active_reverse	= false,
+> > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
+> > >  	.has_36bit_dma		= false,
+> > > @@ -301,8 +294,6 @@ static const struct mxc_isi_plat_data mxc_imx8mp_data = {
+> > >  	.reg_offset		= 0x2000,
+> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > -	.clks			= mxc_imx8mn_clks,
+> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > >  	.buf_active_reverse	= true,
+> > >  	.gasket_ops		= &mxc_imx8_gasket_ops,
+> > >  	.has_36bit_dma		= true,
+> > > @@ -315,8 +306,6 @@ static const struct mxc_isi_plat_data mxc_imx8ulp_data = {
+> > >  	.reg_offset		= 0x0,
+> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > -	.clks			= mxc_imx8mn_clks,
+> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > >  	.buf_active_reverse	= true,
+> > >  	.has_36bit_dma		= false,
+> > >  };
+> > > @@ -328,8 +317,6 @@ static const struct mxc_isi_plat_data mxc_imx93_data = {
+> > >  	.reg_offset		= 0,
+> > >  	.ier_reg		= &mxc_imx8_isi_ier_v2,
+> > >  	.set_thd		= &mxc_imx8_isi_thd_v1,
+> > > -	.clks			= mxc_imx8mn_clks,
+> > > -	.num_clks		= ARRAY_SIZE(mxc_imx8mn_clks),
+> > >  	.buf_active_reverse	= true,
+> > >  	.gasket_ops		= &mxc_imx93_gasket_ops,
+> > >  	.has_36bit_dma		= false,
+> > > @@ -386,7 +373,7 @@ static int mxc_isi_runtime_suspend(struct device *dev)
+> > >  {
+> > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+> > >
+> > > -	clk_bulk_disable_unprepare(isi->pdata->num_clks, isi->clks);
+> > > +	clk_bulk_disable_unprepare(isi->num_clks, isi->clks);
+> > >
+> > >  	return 0;
+> > >  }
+> > > @@ -396,7 +383,7 @@ static int mxc_isi_runtime_resume(struct device *dev)
+> > >  	struct mxc_isi_dev *isi = dev_get_drvdata(dev);
+> > >  	int ret;
+> > >
+> > > -	ret = clk_bulk_prepare_enable(isi->pdata->num_clks, isi->clks);
+> > > +	ret = clk_bulk_prepare_enable(isi->num_clks, isi->clks);
+> > >  	if (ret) {
+> > >  		dev_err(dev, "Failed to enable clocks (%d)\n", ret);
+> > >  		return ret;
+> > > @@ -414,27 +401,6 @@ static const struct dev_pm_ops mxc_isi_pm_ops = {
+> > >   * Probe, remove & driver
+> > >   */
+> > >
+> > > -static int mxc_isi_clk_get(struct mxc_isi_dev *isi)
+> > > -{
+> > > -	unsigned int size = isi->pdata->num_clks
+> > > -			  * sizeof(*isi->clks);
+> > > -	int ret;
+> > > -
+> > > -	isi->clks = devm_kmemdup(isi->dev, isi->pdata->clks, size, GFP_KERNEL);
+> > > -	if (!isi->clks)
+> > > -		return -ENOMEM;
+> > > -
+> > > -	ret = devm_clk_bulk_get(isi->dev, isi->pdata->num_clks,
+> > > -				isi->clks);
+> > > -	if (ret < 0) {
+> > > -		dev_err(isi->dev, "Failed to acquire clocks: %d\n",
+> > > -			ret);
+> > > -		return ret;
+> > > -	}
+> > > -
+> > > -	return 0;
+> > > -}
+> > > -
+> > >  static int mxc_isi_probe(struct platform_device *pdev)
+> > >  {
+> > >  	struct device *dev = &pdev->dev;
+> > > @@ -457,11 +423,9 @@ static int mxc_isi_probe(struct platform_device *pdev)
+> > >  	if (!isi->pipes)
+> > >  		return -ENOMEM;
+> > >
+> > > -	ret = mxc_isi_clk_get(isi);
+> > > -	if (ret < 0) {
+> > > -		dev_err(dev, "Failed to get clocks\n");
+> > > -		return ret;
+> > > -	}
+> > > +	isi->num_clks = devm_clk_bulk_get_all(dev, &isi->clks);
+> >
+> > This prevents validating that the DT contains the expected clocks, which
+> > could cause hard to debug issues. Isn't it a problem ?
 > 
->   $ perf report -H --stdio
->   perf: ui/hist.c:603: fmt_free: Assertion `!(!list_empty(&fmt->sort_list))' failed.
->   Aborted (core dumped)
-> 
-> Also convert to perf_hpp__column_unregister() for the same open codes.
-> 
-> Fixes: dbd11b6bdab12f60 ("perf hist: Remove formats in hierarchy when cancel children")
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> It is checked by dt-binding. Now no warning by DTB_CHECK under arm64 freecale.
+> CHECK_DTB should be enough to find expected clocks.
 
-Tested and added the following patch just before this one.
+Yes, the DTB check will catch issues at build time, but the driver will
+not enforce that. I'm not sure if there's a clear policy here, and if
+ensuring at runtime in drivers that the expected clocks are present is
+considered as a good practice by the DT maintainers. Rob, Krzysztof,
+Conor, do you have an opinion ?
 
-Please check.
+> > > +	if (isi->num_clks < 0)
+> > > +		return dev_err_probe(dev, isi->num_clks, "Failed to get clocks\n");
+> > >
+> > >  	isi->regs = devm_platform_ioremap_resource(pdev, 0);
+> > >  	if (IS_ERR(isi->regs)) {
+> > > diff --git a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > index e7534a80af7b4..bd3cfe5fbe063 100644
+> > > --- a/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > +++ b/drivers/media/platform/nxp/imx8-isi/imx8-isi-core.h
+> > > @@ -169,8 +169,6 @@ struct mxc_isi_plat_data {
+> > >  	const struct mxc_isi_ier_reg  *ier_reg;
+> > >  	const struct mxc_isi_set_thd *set_thd;
+> > >  	const struct mxc_gasket_ops *gasket_ops;
+> > > -	const struct clk_bulk_data *clks;
+> > > -	unsigned int num_clks;
+> > >  	bool buf_active_reverse;
+> > >  	bool has_36bit_dma;
+> > >  };
+> > > @@ -282,6 +280,7 @@ struct mxc_isi_dev {
+> > >
+> > >  	void __iomem			*regs;
+> > >  	struct clk_bulk_data		*clks;
+> > > +	int				num_clks;
+> > >  	struct regmap			*gasket;
+> > >
+> > >  	struct mxc_isi_crossbar		crossbar;
 
-Thanks, applied to perf-tools-next.
-
-- Arnaldo
-
-From 0184752e038f00ea2ccdc4ef4fdb6713ef2a328e Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Fri, 2 May 2025 12:48:28 -0300
-Subject: [PATCH 1/2] perf test perf-report-hierarchy: Add new test
-
-Super simple test to check that at least we're not segfaulting when
-trying to use 'perf report --hierarchy', more subtests should be added
-to make sure the output is the expected one.
-
-This is being merged right before a fix for that that this test detects:
-
-  # perf test hierarchy
-   83: perf report --hierarchy                                         : FAILED!
-  # perf test -v hierarchy
-  --- start ---
-  test child forked, pid 102242
-  perf report --hierarchy
-  Linux
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.025 MB /tmp/perf-test-report.HX0N85TlPq/perf-report-hierarchy-perf.data (6 samples) ]
-  perf: ui/hist.c:603: fmt_free: Assertion `!(!list_empty(&fmt->sort_list))' failed.
-  /home/acme/libexec/perf-core/tests/shell/perf-report-hierarchy.sh: line 34: 102250 Aborted                 (core dumped) perf report --hierarchy > /dev/null
-  --- Cleaning up ---
-  ---- end(-1) ----
-   83: perf report --hierarchy                                         : FAILED!
-  #
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/20250430180321.736939-1-namhyung@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- .../perf/tests/shell/perf-report-hierarchy.sh | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100755 tools/perf/tests/shell/perf-report-hierarchy.sh
-
-diff --git a/tools/perf/tests/shell/perf-report-hierarchy.sh b/tools/perf/tests/shell/perf-report-hierarchy.sh
-new file mode 100755
-index 0000000000000000..a9cc1edae36ba003
---- /dev/null
-+++ b/tools/perf/tests/shell/perf-report-hierarchy.sh
-@@ -0,0 +1,47 @@
-+#!/bin/sh
-+# perf report --hierarchy
-+# SPDX-License-Identifier: GPL-2.0
-+# Arnaldo Carvalho de Melo <acme@redhat.com> 
-+
-+set -e
-+
-+temp_dir=$(mktemp -d /tmp/perf-test-report.XXXXXXXXXX)
-+
-+perfdatafile="${temp_dir}/perf.data"
-+
-+err=0
-+
-+cleanup()
-+{
-+	trap - EXIT TERM INT
-+	sane=$(echo "${temp_dir}" | cut -b 1-21)
-+	if [ "${sane}" = "/tmp/perf-test-report" ] ; then
-+		echo "--- Cleaning up ---"
-+		rm -rf "${temp_dir:?}/"*
-+		rmdir "${temp_dir}"
-+	fi
-+}
-+
-+trap_cleanup()
-+{
-+	cleanup
-+	exit 1
-+}
-+
-+trap trap_cleanup EXIT TERM INT
-+
-+test_report_hierarchy()
-+{
-+	echo "perf report --hierarchy"
-+
-+	perf_data="${temp_dir}/perf-report-hierarchy-perf.data"
-+	perf record -o "${perf_data}" uname
-+	perf report --hierarchy > /dev/null
-+	echo "perf report --hierarchy test [Success]"
-+}
-+
-+test_report_hierarchy
-+
-+cleanup
-+
-+exit $err
 -- 
-2.49.0
+Regards,
 
+Laurent Pinchart
