@@ -1,121 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91D4194080;
-	Fri,  2 May 2025 18:49:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C6C1E1E1B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211797; cv=none; b=doa2YIt5mWFHEV5mrPYn3kAzT4+3kvM9aYFKmIJcq9/UX/6UK1/btPQVsWD0fSKY2NQAVk0VoBIrcolo8cP8no2ANxisX79X+7YBOTUBVcogDoWamsIvp8ETZwNkjX2HAH+KzoEM7QcACiKuuFr0UA4oAPSSPJG3qPVilnFvVrc=
+	t=1746212083; cv=none; b=NELz/bXUuCshI7SX/CBTVLVJC/ONzWvh2+8rgcHRDfy/qbNMixxXuuxGcmplFfVikjr46tvZ2Os3oBWH1ZLTKLGyG5QYhndac1zKDVck8BykH+6DWwBbdZx7kcP4RX0m8UoBkeExf8VPT6rf/vyCo4K7AoYCBoBXFMrEX82RjGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211797; c=relaxed/simple;
-	bh=TAqoh8rRxLj1ScyAlxJ/V1DlCFqEWCFSMj5NSeuxrKk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=fV4nNllynTABtIMOuGigh6jP9js58rDD3XOYgzlXHkriuCy2/kWkvizoxKStY51MssHOD0SyMU8jYoYuA4ftjPRCJJhN9qikLwIaBIAuRgdHfSLO09HJ8qBxwwXALWFa05fB8PQn/ub9GE+kzPmEvgx1qWajRLzzGsVT9e7RgNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQDO0H3+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746212083; c=relaxed/simple;
+	bh=etET4InrPZFfLVNbBfsGBvrQq/2AsRr7XUB0q5olziI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jlihz+p26BAxyNIrkxCNXgGq7JwKLFGESwlm+O473UBuQav/BhbBETesiPj0r+tR2EiAwzMAmPGs/MWy5JhKmQYbKbZf9yMvkBoj7zn4DVzm2Uv3VEtetTvb70OOYrrPyxX+nUi6wvnIp7ipqiCBrsFQO93eTTepzHHy00zJdAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=YzMBEKTq; arc=none smtp.client-ip=209.85.167.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQDO0H3+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 773E1C4CEE4;
-	Fri,  2 May 2025 18:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746211797;
-	bh=TAqoh8rRxLj1ScyAlxJ/V1DlCFqEWCFSMj5NSeuxrKk=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=VQDO0H3+ygnna3GK2jKuIiJK7tP6zKZGtmUBmwWZjUPSj1qcTq1V4IoDNH6d+VxyR
-	 AxRiDAQilneMMHT8pggLVAjYrnMYSuwcaf6XUw5Cxu+tGFSuye+tFbEWcV44p75g86
-	 xGFFUx9g81V6mzZQkB5lxuT0LF35PtgrsWbLEK2m51MwdN/IiRVNbPnhXBuBBs0EjN
-	 /afOfa9zMYpbqUl9NrpsOS7glmeg484GbYL97GLO867izV4/m2TTrhHqx/+wj17/xJ
-	 bo6zd/MprOvhB7tdA+kG+vuhupxhSDnkAFCdWRZ8q75vsLRaMTc6h348T1F52WqnHE
-	 kYsumTDiRqp4g==
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="YzMBEKTq"
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3fefbbc7dd4so1629730b6e.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:54:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746212080; x=1746816880; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=o0v5QJaDLKj7eiDa88mbshkSyU/5sC59jCX11a9PYWo=;
+        b=YzMBEKTqsD+BZdkWxkpGJMWWMKyilOR4Zmp3PXghZcy3XnI1GKivB83PUGRJ7JJfcP
+         WBizkXiGkNBXB7WekDSMLfDGYiIqramxd+gveNRfYU8lIt+9wfqHtri86ltsaH3h2bRt
+         32xNhvkfGaGekAGuvbxA6mQFwa95xYDKoUv6FxiwcLRMmqlLq4crT3diNsOQ8gfZ2NEa
+         Ha2y12XNj1bnuinvNCLjEIvR/CEpA1GVlLjXPvk4qFzk1ugTo6Z23C3eaEfsMXxFig7u
+         Sv7ADOTvUbSSOiMMIwQpRGRuCBVOX55zVE0RFuZLwVaZ6BbvU0sgECkOMYkcjGMlHt2z
+         ZyNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746212080; x=1746816880;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=o0v5QJaDLKj7eiDa88mbshkSyU/5sC59jCX11a9PYWo=;
+        b=dTMjealJBdT2K8j29AVlBx4gRRbMMWPlffdy7kXv1CYIDdhZq07OtBRXUMuSN6mitE
+         /BhYNu9nGr1Z/ZwFMxsuDBxm9fYgm5NoewpZOs6givDG2FodzMKxIbMplfPqWXwATEH9
+         em+u3gIFe9b78zlxsIDdksUiBbMmrk2rnNhfBor85BH6w5j4ce+RG/aqPSd6Dddz61DN
+         t/K3P2M3D+RiIamMTfguRNVh+IS6/aI/1ermAX7XwQPlzwPLNSPvF5iwi8jWnbHC3Xfn
+         5ccm8HmlQZWIY3i9ahOZ2MVqKPPjtkvr2sVEh2oTvhZ2Ndm+DV+LyGJlRbTbQ71i/tRh
+         uVRg==
+X-Forwarded-Encrypted: i=1; AJvYcCXkjh/3ApetDog4K/vPsb1+1CF0MQuJQK1bBwf5JD3BtEpWukgYpY65A/uRvOn6sJGVKbBVDFn5DTBrLic=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8PI79xcUwYNarAExIaYH05gNaQBasLZCUJJStxtVhVrVFxt3i
+	8n2gDhyOKjMuV08iFJrhl6zkPoWZc9XSrbG1xoCTvY8bTuTTRPZj8cf332MNoLI=
+X-Gm-Gg: ASbGnctrEoJfSKHnR1DHMeaLVZrABxe9KixRhSZbrRIjhdjdguWSXM+Ni1H5ekkZEy2
+	HXNzlmAOmqKdU7PPwZ1vOynr/kVUREGgGPY1j0lAk0Umqfq5AlnUJ9V4/k8pQJdHrcFl/9ThJFm
+	kVkyZqha85eMVOHZL03i5b4FZqsekHrVlexwgoWDhOU2L6aaq15q9aQ2HT+bronk/zZmHbwZ5O3
+	M6ZMa7hwr47+LmLQwS36GNhmE2qqkgz+6rOI4PQtovESMpMuP6Cc8tkXIvr5SAEO1WUOFLHK0BA
+	P93EP1TehRLIy5fXqhMu42Xj5JIQnbtOJ+c/sBY70oniImd5yj/0FgAXrgApb3hduaCiLmbgVBk
+	ZUDB9FPvN/Yc7X1gAzm3q4PQ093Ke
+X-Google-Smtp-Source: AGHT+IGg3NfrHCT9rWDG9WuCsQU3jADp64M+/PiypBGRCbX4Dd8LSeFbkh4aztyl1pAXJ+UtiOQbLg==
+X-Received: by 2002:a05:6808:2e4c:b0:3fc:1f7b:c3b3 with SMTP id 5614622812f47-4034148814dmr2250631b6e.33.1746212079887;
+        Fri, 02 May 2025 11:54:39 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:1d00:4489:d382:ca90:f531? ([2600:8803:e7e4:1d00:4489:d382:ca90:f531])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-4033dae382fsm685964b6e.21.2025.05.02.11.54.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 11:54:38 -0700 (PDT)
+Message-ID: <8ff3f1da-f868-4c7e-9123-00a3c54904d5@baylibre.com>
+Date: Fri, 2 May 2025 13:54:37 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] dt-bindings: iio: adc: adi,ad7606: add gain
+ calibration support
+To: Angelo Dureghello <adureghello@baylibre.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org
+References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
+ <20250502-wip-bl-ad7606-calibration-v2-4-174bd0af081b@baylibre.com>
+From: David Lechner <dlechner@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-4-174bd0af081b@baylibre.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 20:49:52 +0200
-Message-Id: <D9LWF31GZM92.JYBJGA8BHRZQ@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
- "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
- "Danilo Krummrich" <dakr@kernel.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
- <stable@vger.kernel.org>
-Subject: Re: [PATCH 5/5] rust: clean Rust 1.88.0's
- `clippy::uninlined_format_args` lint
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>
-X-Mailer: aerc 0.20.1
-References: <20250502140237.1659624-1-ojeda@kernel.org>
- <20250502140237.1659624-6-ojeda@kernel.org>
-In-Reply-To: <20250502140237.1659624-6-ojeda@kernel.org>
+Content-Transfer-Encoding: 7bit
 
-On Fri May 2, 2025 at 4:02 PM CEST, Miguel Ojeda wrote:
-> Starting with Rust 1.88.0 (expected 2025-06-26) [1], `rustc` may move
-> back the `uninlined_format_args` to `style` from `pedantic` (it was
-> there waiting for rust-analyzer suppotr), and thus we will start to see
-> lints like:
->
->     warning: variables can be used directly in the `format!` string
->        --> rust/macros/kunit.rs:105:37
->         |
->     105 |         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{}", test);
->         |                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^
->         |
->         =3D help: for further information visit https://rust-lang.github.=
-io/rust-clippy/master/index.html#uninlined_format_args
->     help: change this to
->         |
->     105 -         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{}", test);
->     105 +         let kunit_wrapper_fn_name =3D format!("kunit_rust_wrapp=
-er_{test}");
->
-> There is even a case that is a pure removal:
->
->     warning: variables can be used directly in the `format!` string
->       --> rust/macros/module.rs:51:13
->        |
->     51 |             format!("{field}=3D{content}\0", field =3D field, co=
-ntent =3D content)
->        |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^^^^^^^
->        |
->        =3D help: for further information visit https://rust-lang.github.i=
-o/rust-clippy/master/index.html#uninlined_format_args
->     help: change this to
->        |
->     51 -             format!("{field}=3D{content}\0", field =3D field, co=
-ntent =3D content)
->     51 +             format!("{field}=3D{content}\0")
->
-> The lints all seem like nice cleanups, thus just apply them.
->
-> We may want to disable `allow-mixed-uninlined-format-args` in the future.
->
-> Cc: stable@vger.kernel.org # Needed in 6.12.y and later (Rust is pinned i=
-n older LTSs).
-> Cc: Benno Lossin <benno.lossin@proton.me>
-> Link: https://github.com/rust-lang/rust-clippy/pull/14160 [1]
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-
-For the pin-init modification:=20
-
-Acked-by: Benno Lossin <lossin@kernel.org>
-
----
-Cheers,
-Benno
-
+On 5/2/25 8:27 AM, Angelo Dureghello wrote:
+> From: Angelo Dureghello <adureghello@baylibre.com>
+> 
+> Add gain calibration support by a per-channel resistor value.
+> 
+> Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 > ---
->  drivers/gpu/nova-core/gpu.rs              |  2 +-
->  rust/kernel/str.rs                        | 46 +++++++++++------------
->  rust/macros/kunit.rs                      | 13 ++-----
->  rust/macros/module.rs                     | 19 +++-------
->  rust/macros/paste.rs                      |  2 +-
->  rust/pin-init/internal/src/pinned_drop.rs |  3 +-
->  6 files changed, 35 insertions(+), 50 deletions(-)
+>  .../devicetree/bindings/iio/adc/adi,ad7606.yaml    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> index 29f12d650442b8ff2eb455306ce59a0e87867ddd..d4b8ea51f60be367e79a4db18d932cbca9c7dc91 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7606.yaml
+> @@ -204,6 +204,15 @@ patternProperties:
+>            considered a bipolar differential channel. Otherwise it is bipolar
+>            single-ended.
+>  
+> +      adi,rfilter-ohms:
+> +        description:
+> +          For ADCs that supports gain calibration, this property must be set to
+> +          the value of the external RFilter resistor. Proper gain error
+> +          correction is applied based on this value.
+> +        default: 0
+> +        minimum: 0
+> +        maximum: 65536
+> +
+Max should be 64512.
