@@ -1,201 +1,238 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F460225413
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A7E205AB9;
+	Fri,  2 May 2025 10:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181823; cv=none; b=bOUjStY6dvozzoPhlHZCaCtzHD0Qbqb4Yoi/EdixIix3VbmV/Qouab+GmTFvO6cp4AUxnRmFGuV6EKtwpex0cduntkvTPAwgdnpNDWPKSbskAdEJsRxqfIEMAb5b6B6jR5sL0SlMKw58g4gsEmU2ExuDSfetLeghy5W/3oMn53Q=
+	t=1746181825; cv=none; b=MnnfxOBdN+UNldrwyssrAw5tvEevjmf+VY5F+y1nKX0oLEF1CCIb73T8DBQdTbOPnoPZ/GQv/JmyaPC9bHnlmJprSyiCxMsIcjVNRnAdHbER+GCKuBHWwT2KNkiFT2UaI0WlElYDKnRI+WYR8q+5FckZooP+qAuxn5jhcjPtc5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181823; c=relaxed/simple;
-	bh=3kNMqTh9H9ygp+57pUlvRr1l2ON0YKc8lAqIAihPrxI=;
+	s=arc-20240116; t=1746181825; c=relaxed/simple;
+	bh=bKgIZqE60Yc5Ng7cINg5bqiXiAx88WDNx0NxbbmuxJo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ipbVm6OiVd1uenYZKkH87wxQbnZZqfur5mCMySbTsg2uNYeSRF3w5GUkqqA4IcPk8CEpEcNhaSc2jdJz6ifajsTlq0OYlH1ngfWYa73/9R58HAKl0dzI49AySzqlz6RXBPfTE+t5QZkS/2sT1bCNYwfVN98etSQBsM3lyvNtZR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYrg1DN7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rZNfHJ6/; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=MYrg1DN7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rZNfHJ6/; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=sPhB8C01LH/w3bXAIOKwNo3RvD7rNVa6LtnujXWvzAVeQd773srtWQUhCm6oK5PVaG3GSo/LroT3ExIbbRztn6VwUPsA3icByuuYXc0kKiP3AXsPFRh7gV7FjOr6gm4ElBpVqgCKpqgle0VoSDLxm2is6EPihsaJOdKJed+as58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=TaBqGMnl; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYrg1DN7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rZNfHJ6/";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="MYrg1DN7";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rZNfHJ6/"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 2AC8721171;
-	Fri,  2 May 2025 10:30:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746181820;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
-	b=MYrg1DN7xQ336giz5Istmut0rhBXoQd4Z1n26ZqffhPJTipcxlYr2F5UJf2TVEL1BaV62+
-	Vd8kLw1tuVoUtY4aqZQEx4h8g0QYCnVxp/hQ5Ug8g3Wn/w7ZYuLowkcD5ScOcReVrlndB9
-	GhDz2x9fnUBu6uYSEzGhBm88Gw5qzig=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746181820;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
-	b=rZNfHJ6/FkYNSR3auvJuX6eLWW31hJONLMPz3XKx9pK1YsGnaNkjSiD96NCQSQN3RMMEyy
-	7oy9AKqca5wvofBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1746181820;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
-	b=MYrg1DN7xQ336giz5Istmut0rhBXoQd4Z1n26ZqffhPJTipcxlYr2F5UJf2TVEL1BaV62+
-	Vd8kLw1tuVoUtY4aqZQEx4h8g0QYCnVxp/hQ5Ug8g3Wn/w7ZYuLowkcD5ScOcReVrlndB9
-	GhDz2x9fnUBu6uYSEzGhBm88Gw5qzig=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1746181820;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=B3Dg8FFm07x6o2vkfqnLLpP2hhONvlOQZM/jwx/yDq4=;
-	b=rZNfHJ6/FkYNSR3auvJuX6eLWW31hJONLMPz3XKx9pK1YsGnaNkjSiD96NCQSQN3RMMEyy
-	7oy9AKqca5wvofBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 02A6F13687;
-	Fri,  2 May 2025 10:30:20 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id QtBrALyeFGgIagAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Fri, 02 May 2025 10:30:20 +0000
-Date: Fri, 2 May 2025 12:30:14 +0200
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member
- field
-Message-ID: <20250502103014.GN9140@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250429151800.649010-1-neelx@suse.com>
- <20250430080317.GF9140@twin.jikos.cz>
- <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
- <CAPjX3FdpjOfu61KTnQFKdGgh4u5eVz_AwenoPVNgP_eiuka3hw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TaBqGMnl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=SN1hpXTp8D/aFRS6lABiopQRF6lYY9KR9gHRTnY5UwY=; b=TaBqGMnlMHaMberg1eWR0Bpk7C
+	cAqtlSQ8oAF/kfWClzM5St1RGCJTeFCogu2EdzZBXPdPKuku9XC4V5dJoCRbUiqVVNoCfJfxP3xK7
+	Q/ORspdHtNoj5CBDjizcPpsKAB+zkicOzPonG1E3x7H8xjsjcjAtWKRlzCyiNaRAhmTjPJtQvXGsi
+	E6uaTPtuk7qIFEM4AJPYocuhkmHWa4+YFdUeXAnyQ6vrhpNqGoDtt2z3bJLrTi2LYdCO2ASsUySeg
+	4qbnDUi63PA1Toi2nqOK5QTKhBxtcA0xwJfEr9u2Upd4mw6MOyd7V0964mK0WV1yJ9z0jzyI/l5pe
+	L/oKUGgA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAne6-0000000Ds04-2eqf;
+	Fri, 02 May 2025 10:29:33 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id A5DC73001D4; Fri,  2 May 2025 12:29:18 +0200 (CEST)
+Date: Fri, 2 May 2025 12:29:18 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/4] perf: Fix irq work dereferencing garbage
+Message-ID: <20250502102918.GW4198@noisy.programming.kicks-ass.net>
+References: <20250424161128.29176-1-frederic@kernel.org>
+ <20250424161128.29176-3-frederic@kernel.org>
+ <20250424163024.GC18306@noisy.programming.kicks-ass.net>
+ <aA9ic6m6WAcmVBAw@pavilion.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAPjX3FdpjOfu61KTnQFKdGgh4u5eVz_AwenoPVNgP_eiuka3hw@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.00 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	ARC_NA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.com:email];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Spam-Score: -4.00
-X-Spam-Flag: NO
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aA9ic6m6WAcmVBAw@pavilion.home>
 
-On Wed, Apr 30, 2025 at 02:31:33PM +0200, Daniel Vacek wrote:
-> On Wed, 30 Apr 2025 at 10:21, Daniel Vacek <neelx@suse.com> wrote:
-> >
-> > On Wed, 30 Apr 2025 at 10:03, David Sterba <dsterba@suse.cz> wrote:
-> > >
-> > > On Tue, Apr 29, 2025 at 05:17:57PM +0200, Daniel Vacek wrote:
-> > > > Even super block nowadays uses nodesize for eb->len. This is since commits
-> > > >
-> > > > 551561c34663 ("btrfs: don't pass nodesize to __alloc_extent_buffer()")
-> > > > da17066c4047 ("btrfs: pull node/sector/stripe sizes out of root and into fs_info")
-> > > > ce3e69847e3e ("btrfs: sink parameter len to alloc_extent_buffer")
-> > > > a83fffb75d09 ("btrfs: sink blocksize parameter to btrfs_find_create_tree_block")
-> > > >
-> > > > With these the eb->len is not really useful anymore. Let's use the nodesize
-> > > > directly where applicable.
-> > >
-> > > I've had this patch in my local branch for some years from the times we
-> > > were optimizing extent buffer size. The size on release config is 240
-> > > bytes. The goal was to get it under 256 and keep it aligned.
-> > >
-> > > Removing eb->len does not change the structure size and leaves a hole
-> > >
-> > >  struct extent_buffer {
-> > >         u64                        start;                /*     0     8 */
-> > > -       u32                        len;                  /*     8     4 */
-> > > -       u32                        folio_size;           /*    12     4 */
-> > > +       u32                        folio_size;           /*     8     4 */
-> > > +
-> > > +       /* XXX 4 bytes hole, try to pack */
-> > > +
-> > >         long unsigned int          bflags;               /*    16     8 */
-> > >         struct btrfs_fs_info *     fs_info;              /*    24     8 */
-> > >         void *                     addr;                 /*    32     8 */
-> > > @@ -5554,8 +5556,8 @@ struct extent_buffer {
-> > >         struct rw_semaphore        lock;                 /*    72    40 */
-> > >         struct folio *             folios[16];           /*   112   128 */
-> > >
-> > > -       /* size: 240, cachelines: 4, members: 14 */
-> > > -       /* sum members: 238, holes: 1, sum holes: 2 */
-> > > +       /* size: 240, cachelines: 4, members: 13 */
-> > > +       /* sum members: 234, holes: 2, sum holes: 6 */
-> > >         /* forced alignments: 1, forced holes: 1, sum forced holes: 2 */
-> > >         /* last cacheline: 48 bytes */
-> > >  } __attribute__((__aligned__(8)));
-> > >
-> > > The benefit of duplicating the length in each eb is that it's in the
-> > > same cacheline as the other members that are used for offset
-> > > calculations or bit manipulations.
-> > >
-> > > Going to the fs_info->nodesize may or may not hit a cache, also because
-> > > it needs to do 2 pointer dereferences, so from that perspective I think
-> > > it's making it worse.
-> >
-> > I was considering that. Since fs_info is shared for all ebs and other
-> > stuff like transactions, etc. I think the cache is hot most of the
-> > time and there will be hardly any performance difference observable.
-> > Though without benchmarks this is just a speculation (on both sides).
-> >
-> > > I don't think we need to do the optimization right now, but maybe in the
-> > > future if there's a need to add something to eb. Still we can use the
-> > > remaining 16 bytes up to 256 without making things worse.
-> >
-> > This really depends on configuration. On my laptop (Debian -rt kernel)
-> > the eb struct is actually 272 bytes as the rt_mutex is significantly
-> > heavier than raw spin lock. And -rt is a first class citizen nowadays,
-> > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
-> > I think it would be nice to slim the struct below 256 bytes even there
-> > if that's your aim.
+On Mon, Apr 28, 2025 at 01:11:47PM +0200, Frederic Weisbecker wrote:
+> Le Thu, Apr 24, 2025 at 06:30:24PM +0200, Peter Zijlstra a écrit :
+> > On Thu, Apr 24, 2025 at 06:11:26PM +0200, Frederic Weisbecker wrote:
+> > > @@ -13940,29 +13941,36 @@ perf_event_exit_event(struct perf_event *event,
+> > >  		 * Do destroy all inherited groups, we don't care about those
+> > >  		 * and being thorough is better.
+> > >  		 */
+> > > -		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_CHILD;
+> > >  		mutex_lock(&parent_event->child_mutex);
+> > >  	}
+> > >  
+> > >  	if (revoke)
+> > > -		detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> > > +		prd.detach_flags |= DETACH_GROUP | DETACH_REVOKE;
+> > >  
+> > > -	perf_remove_from_context(event, detach_flags);
+> > > +	perf_remove_from_context(event, &prd);
+> > 
+> > Isn't all this waay to complicated?
+> > 
+> > That is, to modify state we need both ctx->mutex and ctx->lock, and this
+> > is what __perf_remove_from_context() has, but because of this, holding
+> > either one of those locks is sufficient to read the state -- it cannot
+> > change.
+> > 
+> > And here we already hold ctx->mutex.
+> > 
+> > So can't we simply do:
+> > 
+> > 	old_state = event->attach_state;
+> > 	perf_remove_from_context(event, detach_flags);
+> > 
+> > 	// do whatever with old_state
 > 
-> Eventually we can get there by using ushort for bflags and moving
-> log_index and folio_shift to fill the hole.
-> Let me know what you think.
+> Right, the locking scenario is just a bit more complicated.
+> Most flags are set on init or with both ctx mutex and lock.
+> But:
+> 
+> _ PERF_ATTACH_CHILD is set instead with parent child_mutex and ctx lock.
 
-The bflags are atomic bits and this requires unsigned long. Also the
-short int type is something we want to avoid because it's not a natural
-type on many architectures and generates worse code. I don't think we
-need to optimize for RT kernels, it's now part of mainline kernel but by
-far not a common configuration.
+Looks trivial to add ctx->mutex to the mix here. Its not like that's a
+fast path. But let me go read your patch before deciding if that's
+actually needed :-)
+
+> _ PERF_ATTACH_ITRACE is set from pmu::start(). Thus from the event context
+>   with just interrupt disabled. It's probably enough to synchronize against
+>   initialization and remove_from_context IPIs but perf_event_exit_event() needs
+>   some care.
+
+Right, that's a little tricky indeed. As stated, we don't care about the
+bit, but the write shouldn't mess things up.
+
+> So we must hold both ctx mutex and child_mutex (although the pmus_srcu thing
+> should make that PERF_ATTACH_CHILD thing visible but let's keep things obvious).
+> And also have WRITE_ONCE() / READ_ONCE() to take care about PERF_ATTACH_ITRACE,
+> which we don't care about anyway.
+> 
+> Now this looks like this:
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 7bcb02ffb93a..7278ca731a55 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -208,7 +208,6 @@ static void perf_ctx_unlock(struct perf_cpu_context *cpuctx,
+>  }
+>  
+>  #define TASK_TOMBSTONE ((void *)-1L)
+> -#define EVENT_TOMBSTONE ((void *)-1L)
+>  
+>  static bool is_kernel_event(struct perf_event *event)
+>  {
+> @@ -2338,12 +2337,6 @@ static void perf_child_detach(struct perf_event *event)
+>  
+>  	sync_child_event(event);
+>  	list_del_init(&event->child_list);
+> -	/*
+> -	 * Cannot set to NULL, as that would confuse the situation vs
+> -	 * not being a child event. See for example unaccount_event().
+> -	 */
+> -	event->parent = EVENT_TOMBSTONE;
+> -	put_event(parent_event);
+>  }
+>  
+>  static bool is_orphaned_event(struct perf_event *event)
+> @@ -5705,7 +5698,7 @@ static void put_event(struct perf_event *event)
+>  	_free_event(event);
+>  
+>  	/* Matches the refcount bump in inherit_event() */
+> -	if (parent && parent != EVENT_TOMBSTONE)
+> +	if (parent)
+>  		put_event(parent);
+>  }
+>  
+> @@ -9998,7 +9991,7 @@ void perf_event_text_poke(const void *addr, const void *old_bytes,
+>  
+>  void perf_event_itrace_started(struct perf_event *event)
+>  {
+> -	event->attach_state |= PERF_ATTACH_ITRACE;
+> +	WRITE_ONCE(event->attach_state, event->attach_state | PERF_ATTACH_ITRACE);
+>  }
+>  
+>  static void perf_log_itrace_start(struct perf_event *event)
+> @@ -13922,10 +13915,7 @@ perf_event_exit_event(struct perf_event *event,
+>  {
+>  	struct perf_event *parent_event = event->parent;
+>  	unsigned long detach_flags = DETACH_EXIT;
+> -	bool is_child = !!parent_event;
+> -
+> -	if (parent_event == EVENT_TOMBSTONE)
+> -		parent_event = NULL;
+> +	unsigned int attach_state;
+>  
+>  	if (parent_event) {
+>  		/*
+> @@ -13942,6 +13932,8 @@ perf_event_exit_event(struct perf_event *event,
+>  		 */
+>  		detach_flags |= DETACH_GROUP | DETACH_CHILD;
+>  		mutex_lock(&parent_event->child_mutex);
+> +		/* PERF_ATTACH_ITRACE might be set concurrently */
+> +		attach_state = READ_ONCE(event->attach_state);
+>  	}
+>  
+>  	if (revoke)
+> @@ -13951,18 +13943,25 @@ perf_event_exit_event(struct perf_event *event,
+>  	/*
+>  	 * Child events can be freed.
+>  	 */
+> -	if (is_child) {
+> -		if (parent_event) {
+> -			mutex_unlock(&parent_event->child_mutex);
+> -			/*
+> -			 * Kick perf_poll() for is_event_hup();
+> -			 */
+> -			perf_event_wakeup(parent_event);
+> +	if (parent_event) {
+> +		mutex_unlock(&parent_event->child_mutex);
+> +		/*
+> +		 * Kick perf_poll() for is_event_hup();
+> +		 */
+> +		perf_event_wakeup(parent_event);
+
+Should not this perf_event_wakeup() be inside the next if() as well?
+doing anything on parent_event when !ATTACH_CHILD seems dodgy.
+
+> +
+> +		/*
+> +		 * Match the refcount initialization. Make sure it doesn't happen
+> +		 * twice if pmu_detach_event() calls it on an already exited task.
+> +		 */
+> +		if (attach_state & PERF_ATTACH_CHILD) {
+>  			/*
+>  			 * pmu_detach_event() will have an extra refcount.
+> +			 * perf_pending_task() might have one too.
+>  			 */
+>  			put_event(event);
+>  		}
+> +
+>  		return;
+>  	}
+
+This is a *much* saner patch, thank you!
+
+So the thing I worried about... which is why I chose for the TOMBSTONE
+thing, is that this second invocation will now dereference parent_event,
+even though we've already released our reference count on it. 
+
+This is essentially a use-after-free.
+
+The thing that makes it work is RCU. And I think we're good, since the
+fail case is two perf_event_exit_event() invocations on the same event,
+separated by an RCU grace period, and I don't think this can happen.
+
+But its a shame we can't reliably detect that.. Oh well.
