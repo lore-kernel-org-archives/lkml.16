@@ -1,172 +1,125 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D0B254AEE;
-	Fri,  2 May 2025 13:15:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4891D254AF6;
+	Fri,  2 May 2025 13:16:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191740; cv=none; b=gCDNwDSMQFDRnoBsSWuK2Eev1yR7WA+1njYAV3OzoDT1MxAGLlzkFTuxac0TolHfGgXxmu3/PagZv/D1t4XnI5wLSPq560UUCbL0LvpDbnxkaaksERpQ2aEedhtS91Z5KCeIJP0f2vcv/J1y+Daq9CEqD1YRz+gh7eGmYzIxZ08=
+	t=1746191769; cv=none; b=JYR2UugXTAqUtsMPOsoM6uujPqshoycnH+lWEX5gnc9wLNALYHxTANcxiLpMbgJ/vEIHNtXe/NBo3IXm52HjQcYwJEFfENgfus2fbpntEJk7flrBwfYgKJmjgfR6+TgwEE133tJ2VeDmbyHCKbrUlQ+SKTqtq2W0Qk5Sb5TIUmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191740; c=relaxed/simple;
-	bh=l6dshRg5SKm0QLRKQuxCti2pObhOW2+5/X5aezlQtn4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=YbNhF34w1KvmCM6Y8Sj9bljKpwGVCB3+0y7U+rjXrsHnGFfWgD/NzRmbTbEPCDE4vjIwhvI6iUR71yWae9jitGkGSE6khgFDpWkzzktWQyJoknrwTngoIyJIdf7/QRsbRD2e7Wx6nCDuxC/EEeTNeSSXO0R99TDuAxGcmdcjOjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=O5G5HHbz; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746191769; c=relaxed/simple;
+	bh=TNGKJsHFD9W/hweRfsyrGNZ62fbkiaEiQ9aAoscBr08=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=b8oDh74LFFeeGa6RXO7UW6ZS6/BaqsTdw6ZHXdZ9gTVJ9dRltZNqInXbmu/nRX2+9SFZ79baxCTX1/hbaNJ8iMHyx/b/d35hGGpl7Kya5Sgs5y55fuIcxyiKFF9Vq5Qz/PcV93U8lq6g6/E9VPyWQerpIzPRxuQBwqSz+vjUu5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUb1uSA4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="O5G5HHbz"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A42D342D83;
-	Fri,  2 May 2025 13:15:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746191735;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=/cWrrSzsINQ9rqSRtPa0XHYsGuJCfe/yw3Uo+Rflj8o=;
-	b=O5G5HHbzdiyCDRrMoU+aw7ZBqMRBKXzSsfUjAAfQPQ1+teUClCIlU0hM7XiPYgSMuWtcSv
-	ZAtvBsdD9LbydbSkhzcjJ7POGOkT3tF6E9Is3cIOoZtWfNoG0uLRVZovjqgRWuLkeFNPn5
-	RI00CWNdB6j9h/5KDkmIMsDtPcrv0UdzzyhIEuwRbTAS3yhdoboxlLDs/MN7zi6jI+xXtU
-	ws0UEFArTni5kS28UBGVenAuWEcKdevmY0+fnmozxZW8nAt677Z+n0Is3LDhj/t+aEwHkK
-	KIHtTF30vz9WSM9lS3LlqshenE4d6av3tHgEiFU8S6zSHnLb1JSe9Xa39cfHoA==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUb1uSA4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D2021C4CEEB;
+	Fri,  2 May 2025 13:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746191768;
+	bh=TNGKJsHFD9W/hweRfsyrGNZ62fbkiaEiQ9aAoscBr08=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=JUb1uSA4Xftxk0q+8kdYpdMf/nINyybwvVRTvy8qexEEgDRpTi1S3Gw2tgLhzQbeL
+	 GztTkyacQn7AdQHYfSjMr2GKqWv3IO7N+mT+kE3RLfmbnM9tjv0BnuZEbKrPveugy5
+	 kVdpnOhYN+ExEOwdrM1cYbelTmBguSzkijEEwNvEdxXdfu+vHuDtoRLMXF/GNdKnme
+	 7v4W3KuLbmGx1Knz1HFE7pfdKx4J7aNjCfHBmg9JPVh5K6CoPWtIZ2GKtsboLrhA6t
+	 CuJpJoayuAbqT5ryB3tTASG+UZB5UP3cs8bJPFv6l6C9NyYEMcPzSPlnS+r9M6u5TN
+	 ut8Ez0zE0YIzg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C621BC3ABAA;
+	Fri,  2 May 2025 13:16:08 +0000 (UTC)
+From: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
+Date: Fri, 02 May 2025 15:15:53 +0200
+Subject: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 02 May 2025 15:15:34 +0200
-Message-Id: <D9LPB49CQJDW.3VMFI0TFGV7K2@bootlin.com>
-Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360
- keypad
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
- <gregory.clement@bootlin.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
- <aBSii0rHox72GM5Y@smile.fi.intel.com>
-In-Reply-To: <aBSii0rHox72GM5Y@smile.fi.intel.com>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvheehucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
- dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
+References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+In-Reply-To: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, 
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ Paul Cacheux <paulcacheux@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191767; l=1822;
+ i=paulcacheux@gmail.com; s=20250422; h=from:subject:message-id;
+ bh=JoafqU4uAGl3ydwos4FNrWPAGaAC2MqNPKDgQHWMZCs=;
+ b=KcHSfL163DKlJ1NliuUUMQWzwqr+MsVP+H2ve6fE7oWXWJIIhlwtWCk5QHPT/9rTaAJKOXtz9
+ bdzZoYkn6hnDJpyf2/hgWq0lNlOdrSgxB9BIXHG4TaBqtYSIu27wspw
+X-Developer-Key: i=paulcacheux@gmail.com; a=ed25519;
+ pk=8UguSecyECHKHp0YLS7hTEDob0ctFMr3ygBTeAmrFHs=
+X-Endpoint-Received: by B4 Relay for paulcacheux@gmail.com/20250422 with
+ auth_id=386
+X-Original-From: Paul Cacheux <paulcacheux@gmail.com>
+Reply-To: paulcacheux@gmail.com
 
-On Fri May 2, 2025 at 12:46 PM CEST, Andy Shevchenko wrote:
-> On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
->> Add driver for Maxim Integrated MAX7360 keypad controller, providing
->> support for up to 64 keys, with a matrix of 8 columns and 8 rows.
->
-> ...
->
->> +static irqreturn_t max7360_keypad_irq(int irq, void *data)
->> +{
->> +	struct max7360_keypad *max7360_keypad =3D data;
->> +	struct device *dev =3D max7360_keypad->input->dev.parent;
->> +	unsigned int val;
->> +	unsigned int row, col;
->> +	unsigned int release;
->> +	unsigned int code;
->> +	int error;
->> +
->> +	do {
->> +		error =3D regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &v=
-al);
->> +		if (error) {
->> +			dev_err(dev, "Failed to read max7360 FIFO");
->> +			return IRQ_NONE;
->> +		}
->> +
->> +		/* FIFO overflow: ignore it and get next event. */
->> +		if (val =3D=3D MAX7360_FIFO_OVERFLOW)
->> +			dev_warn(dev, "max7360 FIFO overflow");
->
-> If many events are missing this will flood the logs, perhaps _ratelimited=
-() ?
->
->> +	} while (val =3D=3D MAX7360_FIFO_OVERFLOW);
->
-> regmap_read_poll_timeout() ?
->
+From: Paul Cacheux <paulcacheux@gmail.com>
 
-OK, I can try something like:
+The shared trace_probe_log variable can be accessed and modified
+by multiple processes using tracefs at the same time, this new
+mutex will guarantee it's always in a coherent state.
 
-+       error =3D regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, =
-&val);
+There is no guarantee that multiple errors happening at the same
+time will each have the correct error message, but at least this
+won't crash.
+
+Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
+
+Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
+---
+ kernel/trace/trace_probe.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
+ }
+ 
+ static struct trace_probe_log trace_probe_log;
++static DEFINE_MUTEX(trace_probe_log_lock);
+ 
+ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+ {
++	guard(mutex)(&trace_probe_log_lock);
+ 	trace_probe_log.subsystem = subsystem;
+ 	trace_probe_log.argc = argc;
+ 	trace_probe_log.argv = argv;
+@@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+ 
+ void trace_probe_log_clear(void)
+ {
++	guard(mutex)(&trace_probe_log_lock);
+ 	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+ }
+ 
+ void trace_probe_log_set_index(int index)
+ {
++	guard(mutex)(&trace_probe_log_lock);
+ 	trace_probe_log.index = index;
+ }
+ 
+@@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
+ 	char *command, *p;
+ 	int i, len = 0, pos = 0;
+ 
++	guard(mutex)(&trace_probe_log_lock);
 +
-+       /* FIFO overflow: ignore it and get next event. */
-+       if (!error && (val =3D=3D MAX7360_FIFO_OVERFLOW)) {
-+               dev_warn(dev, "max7360 FIFO overflow");
-+               error =3D regmap_read_poll_timeout(max7360_keypad->regmap, =
-MAX7360_REG_KEYFIFO,
-+                                                val, val !=3D MAX7360_FIFO=
-_OVERFLOW, 0, 0);
-+       }
-+
-+       if (error) {
-+               dev_err(dev, "Failed to read max7360 FIFO");
-+               return IRQ_NONE;
-+       }
-+
+ 	if (!trace_probe_log.argv)
+ 		return;
+ 
 
-Sleep_us is 0 as we are in the IRQ handler, but I'm not sure about
-timeout_us. We could set one to make sure we are not stuck in the IRQ
-handler, but the IRQ would fire again right after we return. I will stay
-with 0 for now.
+-- 
+2.49.0
 
-Also, the "max7360 FIFO overflow" message would be shown at most once
-per IRQ, so probably no need for dev_warn_ratelimited().
-
->> +	if (val =3D=3D MAX7360_FIFO_EMPTY) {
->> +		dev_dbg(dev, "Got a spurious interrupt");
->> +
->> +		return IRQ_NONE;
->> +	}
->> +
->> +	row =3D FIELD_GET(MAX7360_FIFO_ROW, val);
->> +	col =3D FIELD_GET(MAX7360_FIFO_COL, val);
->> +	release =3D val & MAX7360_FIFO_RELEASE;
->> +
->> +	code =3D MATRIX_SCAN_CODE(row, col, MAX7360_ROW_SHIFT);
->> +
->> +	dev_dbg(dev, "key[%d:%d] %s\n", row, col, release ? "release" : "press=
-");
->> +
->> +	input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
->> +	input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code]=
-, !release);
->> +	input_sync(max7360_keypad->input);
->> +
->> +	return IRQ_HANDLED;
->> +}
->
-> ...
->
-
-OK with other comments.
-
-Thanks for your review.
-Mathieu
-
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
