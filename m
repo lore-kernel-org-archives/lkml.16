@@ -1,98 +1,128 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C3E923E34D;
-	Fri,  2 May 2025 11:53:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 427AE224B04;
+	Fri,  2 May 2025 11:54:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186819; cv=none; b=SSijzUNuLqyLK84BsUg8PMJwydh3QMNNKX+H2lAS+WTpeJ4atPDG88rxUY/+39+jcvzgiTp8MW8GPybqrFDcDKGHUB6/W/cDEnLKcViutyKbKKkR41XA29beRSa7VV3a+ZYvc8bysdoxQtGi4j0Wu8PtU3U01sScvI5ka5dPL6o=
+	t=1746186863; cv=none; b=FKWDjhk+Eg+IBCL26fuYYCTlqxKt6rXCNzLzLUdUY3ZZgH/9VDxKz7hPDxcVVlWr6NylCXHFzPU6uJwGeaWSULmCsd4Hgi0MWGg8dX3JiQUP/IjhrXUSG4AuXvcjrC37iMJKMb3adhAxz/khYS6F1vqgzMxGZOboW+W5dCsXRDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186819; c=relaxed/simple;
-	bh=nvkCXbOOlwO5COYI6VWPwJZYbS28JXrJMxy5A7wSPPM=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j0TSgLb5u0TzrptI/GprikGcdHhQRLBTcqq99Uaii6GCcZXFHDsk4PNTrXBgJMnHvfEUPTDxinp8tgFMogZGc3mrUNmZwEH/jLkDUwsvbLMWq2RBvCL3dec8HOOtg7+AF+LZkm7lTDRDQ/TixSUt0+R/JsMuto5oPcI2Cv5tuk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SEykF8Rh; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746186863; c=relaxed/simple;
+	bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=MNUjnO1qNyf50eBk7ev2QE33+00zWd75ZTcPzfJoKWJmRtvVVxEn1Ykxv70BPfFJzTFGfvLG7gbJRUP6id62z1kPSPZKLejF5PBGdxxKUVzEfuqCb1xBKFDruspJbRFA6nSzsqBVYS2ER434rADKSGlxBKNXOBeHqRhGPkvzyxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8P57N0d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SEykF8Rh"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542BrTEw3853483
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 06:53:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746186809;
-	bh=GjYueOMHsV5EFTUGnHK3sbKEUs/cnXj4pgk/cBeCBSI=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=SEykF8RhBoiPBAodpbh4wInNdxr2kUMKWW3KkbpeF0VCJ0xQ+iwvsE5mV76x7epqo
-	 gTgneiZyznh4H49DNvtGAjTKOI/F6/8YPsde6mRyIeLpzQJ46aRB3ziyrYJMdUDvIJ
-	 irY2Z4TeABmFCG8ArPMyqdFjokRzUGtJLolM8tPQ=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542BrT3x089683
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 06:53:29 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 06:53:28 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 06:53:28 -0500
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542BrSxp060046;
-	Fri, 2 May 2025 06:53:28 -0500
-Date: Fri, 2 May 2025 06:53:28 -0500
-From: Nishanth Menon <nm@ti.com>
-To: Judith Mendez <jm@ti.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Hari Nagalla
-	<hnagalla@ti.com>,
-        Beleswar Prasad <b-padhi@ti.com>, Andrew Davis
-	<afd@ti.com>,
-        Markus Schneider-Pargmann <msp@baylibre.com>,
-        Devarsh Thakkar
-	<devarsht@lewv0571a.ent.ti.com>
-Subject: Re: [PATCH v7 06/11] arm64: dts: ti: k3-am62a7-sk: Enable IPC with
- remote processors
-Message-ID: <20250502115328.mcwtslklr7m4sih7@demotion>
-References: <20250415153147.1844076-1-jm@ti.com>
- <20250415153147.1844076-7-jm@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8P57N0d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3C54C4CEE4;
+	Fri,  2 May 2025 11:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746186862;
+	bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
+	h=From:Date:Subject:To:Cc:From;
+	b=u8P57N0dYjZpwTQdC+xwzLLCR+Ki9PAQNaMLOL41u/wUZPzyiLI//QOGa7RhBkxOk
+	 xUXF9dwMYy5viMaHfG3yiyrG/e1XRvatgGYGk/fSBXW6PbTNNof/zGqn0or1sNpQAG
+	 +mt4wkTf3n8ZDKTSrtotPL0N6G9qqVy+tnokCy176/2fFJDhSKfiYIPKzs8hN+r8uh
+	 T1B7BsiyK7JI6jc/FbUzSL94XXUTghSbYhTYuNerSKzFbTpGQGgnjZyCZsZgfpho0C
+	 FO/fVClfuip2Fcs5ONT3XJ4o16Ut3ycQd9qqJAdrLEZ7tJk9JmHSgrVpEi5Bg0I51D
+	 cx8W5S0rEyhWA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+Date: Fri, 02 May 2025 13:53:57 +0200
+Subject: [PATCH] rust: elaborate safety requirements for
+ `AlwaysReferenceCounted`
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250415153147.1844076-7-jm@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFSyFGgC/x2MMQqAMAwAvyKZDbSVOvgVcaiaagarpKBC6d8Nj
+ sdxVyCTMGUYmgJCN2c+k4JtG1j2kDZCXpXBGeeNNw6DUMQo54ESHiRrzdxRv87RgzaXWn7/3zj
+ V+gFXG9WhXwAAAA==
+X-Change-ID: 20250502-aref-from-raw-e110b3e6dbf5
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+Cc: Oliver Mangold <oliver.mangold@pm.me>, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Andreas Hindborg <a.hindborg@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2101; i=a.hindborg@kernel.org;
+ h=from:subject:message-id; bh=KqCHWYDAwRHrAXjGqjKGYmxy69emOTeIfd0UFqib5ig=;
+ b=owEBbQKS/ZANAwAIAeG4Gj55KGN3AcsmYgBoFLJhwDA4cSoj8/KWclBEo55Y0qMuTSEhDKUhd
+ NkIkIfO1TOJAjMEAAEIAB0WIQQSwflHVr98KhXWwBLhuBo+eShjdwUCaBSyYQAKCRDhuBo+eShj
+ dyOGD/9Rn71Ptf+mGiZ/TPi7BWgcJ7eg66sdRHDTLwo4eLB6g/33W0pAQi/kDEk71O2jfJuF0za
+ XQGcSrrARxyiuWM4PgNO++ZGfPXHaYiQbjFlfCuJ0PVAzy2s+Vq8o/+6OHeZ8O12lwC/IMyiL1Z
+ a47o937r4OF7j/ZDmixTfaiVEjgWMCsRJHXSTPtqrHXN47yL+52Aj+sw5+AD/8BEd3jGUAEdOFC
+ gMieNPF0a37XK93v1E41/eifVMX5yVL7kF033zfWVdiICCktrv9aq4H78089wKJw/eBF2oxKuMA
+ 9aeWLpis/VY8fA85FNJAOOyZ+Kx18AR9CjucQlpnXLvT/T81eXkdLHXhsCacJLQsODI7REVkerx
+ CazNw2IQqW14xQpNtwFG+rl0+zISTgaABclaKLiWkwGvJjbWKOdCEoDxblVCwSy6Ooscp1nwMKM
+ a56kwocIg/NfqhtRCWfEYQpt4iYyQa3RzjtDggEFt+HztaEeK9Zfj0E9+SivOqBWWRAbdg4JyW9
+ VW362i/m3a3vH37CXNu3Rp7Dr9keDpV3d/B7uW5+SHkQQE3ZRJ/pOOKRFU5xyUqZsRketf0pGla
+ fMRTw2Nmebo6NHoJIBnAWbJf+67thwrn97dYHvoUriRsHonpSxS3uqfBEmbRkJ6iPIX1Ccaz3Hm
+ emaHNhxIV8f6XzQ==
+X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
+ fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 
-On 10:31-20250415, Judith Mendez wrote:
-> From: Devarsh Thakkar <devarsht@ti.com>
-> 
-> For each remote proc, reserve memory for IPC and bind the mailbox
-> assignments. Two memory regions are reserved for each remote processor.
-> The first region of 1MB of memory is used for Vring shared buffers
-> and the second region is used as external memory to the remote processor
-> for the resource table and for tracebuffer allocations.
-> 
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-> Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> Acked-by: Andrew Davis <afd@ti.com>
-> Reviewed-by: Beleswar Padhi <b-padhi@ti.com>
-> Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
+Clarify that implementers of `AlwaysReferenceCounted` must prevent the
+implementer from being directly initialized by users.
 
-Could you rebase the series on latest linux-next? it looks like we
-picked up a conflict with this series.
+It is a violation of the safety requirements of `AlwaysReferenceCounted` if
+its implementers can be initialized on the stack by users. Although this
+follows from the safety requirements, it is not immediately obvious.
+
+The following example demonstrates the issue. Note that the safety
+requirements for implementing `AlwaysRefCounted` and for calling
+`ARef::from_raw` are satisfied.
+
+  struct Empty {}
+
+  unsafe impl AlwaysRefCounted for Empty {
+      fn inc_ref(&self) {}
+      unsafe fn dec_ref(_obj: NonNull<Self>) {}
+  }
+
+  fn unsound() -> ARef<Empty> {
+      use core::ptr::NonNull;
+      use kernel::types::{ARef, RefCounted};
+
+      let mut data = Empty {};
+      let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+      let aref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
+
+      aref
+  }
+
+Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+---
+ rust/kernel/types.rs | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 9d0471afc9648f2973235488b441eb109069adb1..193a1356f0df6fede428498485aaef19b4c845c6 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -409,6 +409,10 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+ /// Implementers must also ensure that all instances are reference-counted. (Otherwise they
+ /// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
+ /// alive.)
++///
++/// Note: This means that implementers must prevent users from directly
++/// initializing the implementer. Otherwise users could initialize the
++/// implementer on the stack, which would violate the safety requirements.
+ pub unsafe trait AlwaysRefCounted {
+     /// Increments the reference count on the object.
+     fn inc_ref(&self);
 
 ---
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+base-commit: b4432656b36e5cc1d50a1f2dc15357543add530e
+change-id: 20250502-aref-from-raw-e110b3e6dbf5
+
+Best regards,
+-- 
+Andreas Hindborg <a.hindborg@kernel.org>
+
+
