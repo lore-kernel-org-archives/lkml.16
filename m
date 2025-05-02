@@ -1,208 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A013527718;
-	Fri,  2 May 2025 03:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4487F18BC2F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 03:50:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746157798; cv=none; b=nhWljYYbSFxsk1kAUXRUxAfmWOpjfefNcZPlv/0/hDHlHnMV0epR3JSXE/wlFmfXXqkh/5fco3GzJBwUBWiZgycQpfK5WFyH8t9YK89N0mb3TDkEQekCtNgMMuFFM4IkodY0ehiIeju3rvUXp17OGDRVOdOO9KQym2COZT+0GLQ=
+	t=1746157812; cv=none; b=fNjnJYbkFdArqT429XMEMAi9UpcKPFvt9c8M0lpbRpHNZPDY6MTCYkIWPPun3UNTd3vpP5PSREKWjqxhMziuL/jT6UaTDGpZa6dFE++UNdQeBt8kjyHKFx+UPcmfYXjAQ+PYB+8bokzFguHbcJL5SbL+EyisKEeoXqeq/oQohRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746157798; c=relaxed/simple;
-	bh=U5mdhGYsJQIu31ah8zFEE1prb3PTq8AzmT9FnTheryc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WnnER7C5wKiIHGZXmq5DqDa+nLiiQFZK6JP9+KMV5ZClqUtYBXrqNaec0x6EdGhDGxgX0/+u9r50Jo5kV8W2DrzthQlQGKg4uXWacF6TfEKDjqKMkyR/daj26yei13FIf8vdABoOUigltWCnm44IMWviPar4hcIYvHDkoSS+rBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=J2+h4eJp; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1746157812; c=relaxed/simple;
+	bh=yqu8sxN8vXWGWRHsJGlCQvKRYulQkFz+N2frigbjAhs=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=qIY0f4JtkeHxEff+CG/Gl1HonElPh40zbPqrwRtVJ6MACd6Jl9nypOMiXmzFdESyvCs89lQjlnHS+Hb1Te0z67YE7mmQmWYF2k2g5fWMv69kGiyU2MS7dtfCB7mZtjWBrI/pumLwtw9Sv3h/6GfUzrDdi3pUYBP9OxKPFGxSBz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=immunant.com; spf=none smtp.mailfrom=immunant.com; dkim=pass (2048-bit key) header.d=immunant-com.20230601.gappssmtp.com header.i=@immunant-com.20230601.gappssmtp.com header.b=0KdbKUCH; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=immunant.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=immunant.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J2+h4eJp"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421MvsN001947;
-	Fri, 2 May 2025 03:49:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	8aIn+HhV0I+UOqU2s77LSnK4rEAaF/YhK6sj5oV1cl4=; b=J2+h4eJpvRYGzO7e
-	iERM1hAZT85zLkLdfJQODWCDkBf63UG1AUC8HG7RK+O5UhqUK/fCjSmCOzufUpea
-	LlwFQHFcRllvbq3vfbPlDCDi2FdBIfkoIjnh11HrMVl+/Y9QOm+tqtECEnmnSwuQ
-	oPT02WvE18jDW3aqRYphSM5EeTUaR50f196izV/hAeWY/1vGRJoLq6UhhkZcchL8
-	8mL6qHddxJpOqW9no7Ja7okt7XELeTbEyvHw6t5OE3o4W4kqOE34JurpgetgkNc5
-	5iMPIgcL/ux1Qfaaoo3q6EJchtmSehbIOdMKD9GBqViqMdOUXi052Mm+NqXwqIMP
-	Y1MdUA==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u7771a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 May 2025 03:49:51 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 5423npWo026585
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 03:49:51 GMT
-Received: from [10.110.24.115] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 1 May 2025
- 20:49:50 -0700
-Message-ID: <d7c53dac-790a-490f-b757-fa2bc86b5276@quicinc.com>
-Date: Thu, 1 May 2025 20:49:49 -0700
+	dkim=pass (2048-bit key) header.d=immunant-com.20230601.gappssmtp.com header.i=@immunant-com.20230601.gappssmtp.com header.b="0KdbKUCH"
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3feaedb4085so971918b6e.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 20:50:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=immunant-com.20230601.gappssmtp.com; s=20230601; t=1746157810; x=1746762610; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=200bRbkNG4RFm4RNlBvwI80KWoLNHSBTitlUXIIUifY=;
+        b=0KdbKUCHPzRWb4K0vvb0ijdytoxH8wN8hV9l8uR/Br1KkSfSCtc6YeIJa9EPbBP5AL
+         dtpW5rVAW0pLUzj/ifqzKuPOMeKHn5IOZJM03WjOBQn1lsf1wVCzFMpd73OxL99aSbaE
+         jXTN2jSpolmMTXylUnyANQo7ZowMXpZgBuSmWzgu2MnswHauXyVZvW4JwQo1Eo/sQvPn
+         4RtNFnTv7jDsBzaf7kCPWMYSzZbiRYbKgZSgTU3FNYusZD163RmzIkJOLWfX/X2yNLNK
+         RGODV667YKTRZMCcepNle/O7TD41WWKxjUMswyBk22Bthlkv6Jg6QQuSf6ArTBpAcqEf
+         Ny4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746157810; x=1746762610;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=200bRbkNG4RFm4RNlBvwI80KWoLNHSBTitlUXIIUifY=;
+        b=iCkZXq0SG55fFfU7vQdWBo3KdRj9NezzK3/pLgrS63ELH09I744Que//v9zB6Te8l9
+         yRCtobE3f3B03z3nD+Tc/AHWsbwL96pOZ3Jw1V9ZaUbs7sJPQqlYgc2xKWExHQCQoSdS
+         R2weR3Jz/wEDQRHAaTdAD1JOgq3Z3v0L9/7mTvjR/9q5hXxUw+qBm77Bqk8PCLlHDwJq
+         vv8EUXjTtpiSbtsDRzc/xclG5aIzDYfbqmD8WLQm4AoHOvbdPkb4MT+3XFjoRrjOpfcv
+         kIgls7SRXGRAZBTzFSBsvvbxG8F0nrmOZA1yGHgZZgPM+87hA8PNQkEA763ezH/txcpH
+         9LMw==
+X-Gm-Message-State: AOJu0YxBGaVkpaecu8rs0BLuzd6tAKIZTK06TviijTS8vD35pLHYbCBK
+	l2wqO/49wvqkHnHB/UfrDsPAwKd8X+6UV1L2W8ybiuhUFLNjvSibOBv/Cz+qbEqKruyfXEu04tX
+	TC7eLFrkGjpP4RqnY8sNRO6viWb3gmANJxqC+iCCQe1OAoPBERFA=
+X-Gm-Gg: ASbGncupu0qJlCsZL1B/45WuSM0XWCwr4NGsTyuZMGbg+bOzrf7f9jJ0tezOw61Ac+5
+	T1NhNYUVngvPx3jyw7FJOiqScvEQPwQrXtMvF23JWVorXK2keGEtfKwwJ7WsJtCvaWHEncQ3xyp
+	fZ9wFIS0ZAWQRubs0l+Q==
+X-Google-Smtp-Source: AGHT+IFWDH1QH7ebTs8UuQsCRHiO0kkjYVbdpD1lI2qZLhDSsrRH3ei2huvBBDrcoqitjfmO+306hZ3bUjGoQYSjf1c=
+X-Received: by 2002:a05:6808:4e11:b0:3fb:a7d0:3b1f with SMTP id
+ 5614622812f47-403414c0ac9mr902368b6e.39.1746157810107; Thu, 01 May 2025
+ 20:50:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/9] dt-bindings: serial: describe SA8255p
-To: Praveen Talari <quic_ptalari@quicinc.com>,
-        Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon
-	<nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki"
-	<rafael@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>
-CC: <psodagud@quicinc.com>, <djaggi@quicinc.com>, <quic_msavaliy@quicinc.com>,
-        <quic_vtanuku@quicinc.com>, <quic_arandive@quicinc.com>,
-        <quic_mnaresh@quicinc.com>, <quic_shazhuss@quicinc.com>,
-        Nikunj Kela
-	<quic_nkela@quicinc.com>
-References: <20250502031018.1292-1-quic_ptalari@quicinc.com>
- <20250502031018.1292-3-quic_ptalari@quicinc.com>
-Content-Language: en-US
-From: Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20250502031018.1292-3-quic_ptalari@quicinc.com>
+From: Per Larsen <perl@immunant.com>
+Date: Thu, 1 May 2025 20:49:33 -0700
+X-Gm-Features: ATxdqUH6DSpDNWj9GH7IVvgNReOtTawW4yUp6qlFfnIUyWLaN_WIyzpu7vU_EyE
+Message-ID: <CA+AY4Xc7SEhSd-zQzhDnuewEOksxEqDHarcHzDwp-_SibDu2pg@mail.gmail.com>
+Subject: [PATCH 0/3] KVM: arm64: Support FF-A 1.2 and SEND_DIRECT2 ABI
+To: linux-kernel@vger.kernel.org
+Cc: "qperret@google.com" <qperret@google.com>, "sebastianene@google.com" <sebastianene@google.com>, kernel-team@android.com, 
+	"will@kernel.org" <will@kernel.org>, maz@kernel.org, 
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, yuzenghui@huawei.com, 
+	Armelle Laine <armellel@google.com>, arve@android.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAyNiBTYWx0ZWRfXxQtudpHRtV6Z NMesxL05INmoHCNBtBocmmmOi/PvKeRLaEUr/FGPHJSx+8ty7qdmBpCWkP09klyS9A4UtstyLSN HZiefs1H8B/0MtGmZ/zypGJo8myeg0jcmE7pcpiLPa6if4A4eFj1zmxKhZefHspw/r1P9idi4I8
- B5GpgauU78RfOyejBUMtVHptoiufkX0pWdxngR6Ay8gpFPnfpwGEbev4La4lNOyafK5v08ZUD9+ G30oK/2b438q+2f+z11Q4kYAqsEjuoWPr7k2OkeHgWswxgTBKNwNKD2v+wiGJq3/Nsg/K00gMCa 7tRKwZ7N2vjnaQD7cq5kUYa0wCkx/7Ivi+AL4wLx3dPglclMJoaIaJ2pRD+B1BGUm4N7QA8rV9k
- Wck+k5vMG81hgTv7t9vsTmr0UzKRk/FwVWXO3DEaXuYhSQmSN2gDxCoXhOhLv2lONl2bAQyw
-X-Proofpoint-GUID: z9yNTtQf08yRmmdQ-iyaXiJIvG2XhYYt
-X-Authority-Analysis: v=2.4 cv=W404VQWk c=1 sm=1 tr=0 ts=681440df cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=gEfo2CItAAAA:8 a=COk6AnOGAAAA:8 a=i1IpkjnnKvMeRn0L5gEA:9
- a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: z9yNTtQf08yRmmdQ-iyaXiJIvG2XhYYt
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 spamscore=0
- clxscore=1015 phishscore=0 impostorscore=0 mlxlogscore=999 malwarescore=0
- suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020026
 
-On 5/1/2025 8:10 PM, Praveen Talari wrote:
-> From: Nikunj Kela <quic_nkela@quicinc.com>
-> 
-> SA8255p platform abstracts resources such as clocks, interconnect and
-> GPIO pins configuration in Firmware. SCMI power and perf protocols are
-> used to send request for resource configurations.
-> 
-> Add DT bindings for the QUP GENI UART controller on sa8255p platform.
-> 
-> Signed-off-by: Nikunj Kela <quic_nkela@quicinc.com>
-> Co-developed-by: Praveen Talari <quic_ptalari@quicinc.com>
-> Signed-off-by: Praveen Talari <quic_ptalari@quicinc.com>
-> 
-> v2 -> v3
-> - dropped description for interrupt-names
-> - rebased reg property order in required option
-> 
-> v1 -> v2
-> - reorder sequence of tags in commit text
-> - moved reg property after compatible field
-> - added interrupt-names property
+Hi,
 
-Please fix all the patches. 
+The FF-A 1.2 specification introduces a new SEND_DIRECT2 ABI which
+allows registers x4-x17 to be used for the message payload. This patch
+set prevents the host from using a lower FF-A version than what has
+already been negotiated with the hypervisor. This is necessary because
+the hypervisor does not have the necessary compatibility paths to
+translate from the hypervisor FF-A version to a previous version.
 
-> ---
->  .../serial/qcom,sa8255p-geni-uart.yaml        | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> new file mode 100644
-> index 000000000000..85b1d7c05079
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/qcom,sa8255p-geni-uart.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/qcom,sa8255p-geni-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Geni based QUP UART interface
-> +
-> +maintainers:
-> +  - Praveen Talari <quic_ptalari@quicinc.com>
-> +
-> +allOf:
-> +  - $ref: /schemas/serial/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sa8255p-geni-uart
-> +      - qcom,sa8255p-geni-debug-uart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    items:
-> +      - description: UART core irq
-> +      - description: Wakeup irq (RX GPIO)
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: uart
-> +      - const: wakeup
-> +
-> +  power-domains:
-> +    minItems: 2
-> +    maxItems: 2
-> +
-> +  power-domain-names:
-> +    items:
-> +      - const: power
-> +      - const: perf
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - power-domains
-> +  - power-domain-names
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    serial@990000 {
-> +        compatible = "qcom,sa8255p-geni-uart";
-> +        reg = <0x990000 0x4000>;
-> +        interrupts = <GIC_SPI 531 IRQ_TYPE_LEVEL_HIGH>;
-> +        power-domains = <&scmi0_pd 0>, <&scmi0_dvfs 0>;
-> +        power-domain-names = "power", "perf";
-> +    };
-> +...
+Support for FF-A 1.2 in the hypervisor is added as a precursor to the
+addition of the FFA_MSG_SEND_DIRECT_REQ2 messaging interface. The bulk
+of this change has to do with the upgrade to SMCCC 1.2 required by
+FF-A 1.2. Additionally, unimplemented FF-A 1.2 interfaces are added to
+the list of unsupported functions.
 
+Tested by booting Android under QEMU and loading Trusty as the guest
+VM and observing the SEND_DIRECT2 ABI being used successfully during
+guest boot.
+
+Thanks,
+Per Larsen
+
+Per Larsen (3):
+  KVM: arm64: Restrict FF-A host version renegotiation
+  KVM: arm64: Bump the supported version of FF-A to 1.2
+  KVM: arm64: Support FFA_MSG_SEND_DIRECT_REQ2 in host handler
+
+ arch/arm64/kvm/hyp/nvhe/Makefile |   1 +
+ arch/arm64/kvm/hyp/nvhe/ffa.c    | 235 ++++++++++++++++++++++++++++---
+ include/linux/arm_ffa.h          |   2 +
+ 3 files changed, 221 insertions(+), 17 deletions(-)
 
 -- 
----Trilok Soni
+2.49.0.906.g1f30a19c02-goog
