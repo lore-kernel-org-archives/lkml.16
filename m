@@ -1,135 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D21BEF77;
-	Fri,  2 May 2025 11:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF2E23A99F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185832; cv=none; b=u/4KZ0sXcPZst9QKvT2+Mm4I7524fwmARlTzAkPSltoWcsV54dc2wmo8kiiyzHxIU9iGys4OdFjvKpwlJ4MZqAMhKPZp6MVTFjsPW9XydNUnD7KnxNtmy4AjK3rPaGBEYD6qjoWi2Wpme/IyOR43hCYRjlb4nnUEUu1avOtDZbc=
+	t=1746185861; cv=none; b=L+fBYabKGy+1P4eNP2jztXIkFBCA5EmH8cCBc9fdir5iSIU/veADWPowE49GZ+dV/sGqaJsj5wg0n3de/dKIKauhGcSfqvoYKv8v6GWYisQc4yZhAN6Xz6S3ra3rBBe3hCPcagVrOWoAU1pGdZJl/672dzXCbZr7WfaDUoC0abk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185832; c=relaxed/simple;
-	bh=zDHyIMpBkliiANGkCUwk/FgZr9BdMK5VPVDur9GvegY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zhmkz6Z+s7EV9Vt3AF9pQnMsEtftBqON1SCABTWEyuhyNlKYrWBoffwXzfIdS3GP5Vibol/bzjMzeB/HADYFw8X/nvkHfcsussV3ZNWfvvpxozJZ16HfzpBqB5HrLz85c8zlwEX0zDQ7JPCeYLii816S2t6Jk3LEOsmGlxiUIxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9LNTIy8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746185861; c=relaxed/simple;
+	bh=R20iTsL1Y4YvlVm8x3qRJWYAMGHK+p/fYIgio9JtTZQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pmigS6ee26PYttPNE0XgytkeWXgZm15vTssops9OAUvU3I4IWoQ1B7fCsbUDGmAEWup1PCgXVS+/jiZrCay64YcFp3K6QcCaPtsyWpxZT2G3obe1k260f5+jegvSw/6DTtkURJKhuUPRGXZhPadnSdkqX3o7CHRikLd6Xc1ZuII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pahvfXyj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9LNTIy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11F8EC4CEE4;
-	Fri,  2 May 2025 11:37:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pahvfXyj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B483FC4CEE4;
+	Fri,  2 May 2025 11:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746185831;
-	bh=zDHyIMpBkliiANGkCUwk/FgZr9BdMK5VPVDur9GvegY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=c9LNTIy8WsnWrwq4CV1KEuI+FQH/CfVm6OxRlRFyKzpfTIb19kZhCx2ePlIWy5y4V
-	 7f8yuzeE9qRtghbhKALSFgD9FjSCo7qpQMnR0ptx1I+ahC4Gl5DHJYWwiiM3ETBIa7
-	 fm962uXizMcDqsypE9zmUm7YokNZNf24R3auusmlQGGhxg5cEL/7bD0Q1zwbVCKgJM
-	 TuuPUnWYsWt7X5ao9wiTYzSAJXezUurt33ErJUpvAWrEaffxMjDxmtFp1PVyAwBLCQ
-	 NoCkvsQnw6pwmhnCiQUSuu4AhAlv6phOOhwf9JtCp5K1bjyaRyGNc7dqown+zZ+PgW
-	 9+UV7tDWnYjDg==
-Message-ID: <d4d91f3c-731f-44a8-8f08-1979f335b074@kernel.org>
-Date: Fri, 2 May 2025 13:37:06 +0200
+	s=k20201202; t=1746185860;
+	bh=R20iTsL1Y4YvlVm8x3qRJWYAMGHK+p/fYIgio9JtTZQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pahvfXyjZ5Dvyicm+QYm1c4GBlnYwFUo37WyNHQYg4rZ4tXSLnW6MWu1dQPlqZuh3
+	 Arb4MPurEbwWh3sqjgD+XcEbbz65PYsq9QDyAZJZHZ7zU5gA60nId8r+/JC2XdP83/
+	 uhjA3vHt1FmyP1oYjidjDE2IZQyOu7AWVW8vQa15ML8P50MSFbcwOW9M3DArL5Lyc6
+	 D3uNniMczKv1nS0UMdb1xBui+IOuEmKiicXyMC5FSMR2vAbMsdCDyKeJNbUWb7rMQS
+	 o9tpv2WMFJDlw9P4tHoMK0zRX+OK0jWzMb4YDiPxh0PemAoxClRecvz4n0PUBq/xmJ
+	 O4J+naEHpBQWQ==
+Date: Fri, 2 May 2025 12:37:34 +0100
+From: Will Deacon <will@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Juan Yescas <jyescas@google.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, tjmercier@google.com, isaacmanjarres@google.com,
+	surenb@google.com, kaleshsingh@google.com,
+	Vlastimil Babka <vbabka@suse.cz>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	David Hildenbrand <david@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Minchan Kim <minchan@kernel.org>
+Subject: Re: [PATCH] mm: Add ARCH_FORCE_PAGE_BLOCK_ORDER to select page block
+ order
+Message-ID: <20250502113733.GA29622@willie-the-truck>
+References: <20250501052532.1903125-1-jyescas@google.com>
+ <aBO_laRsZDYgjEfL@casper.infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: dma: convert text based binding to json
- schema
-To: Charan Pedumuru <charan.pedumuru@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250501-nvidea-dma-v1-1-a29187f574ba@gmail.com>
- <20250502-lush-resolute-cheetah-a8ceee@kuoka>
- <a701201e-c888-40e5-a57b-45ea0416af31@gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <a701201e-c888-40e5-a57b-45ea0416af31@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBO_laRsZDYgjEfL@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On 02/05/2025 12:27, Charan Pedumuru wrote:
->>> +    maxItems: 1
->>> +
->>> +  reset-names:
->>> +    const: dma
->>> +
->>> +required:
->>> +  - compatible
->>> +  - reg
->> And here the order is correct...
->>
-
-Fix your email program, because it re-wraps or removes line breaks in
-each quote. It is making conversation unnecessarily less readable.
-
->>> +  - interrupts
->>> +  - clocks
->> But here different. Keep the same order as in properties.
->>
->>> +  - resets
->>> +  - reset-names
->>> +  - "#dma-cells"
->>> +
->> missing allOf: to dma-controller
+On Thu, May 01, 2025 at 07:38:13PM +0100, Matthew Wilcox wrote:
+> On Wed, Apr 30, 2025 at 10:25:11PM -0700, Juan Yescas wrote:
+> > Problem: On large page size configurations (16KiB, 64KiB), the CMA
+> > alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
+> > and this causes the CMA reservations to be larger than necessary.
+> > This means that system will have less available MIGRATE_UNMOVABLE and
+> > MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
+> > 
+> > The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
+> > MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
+> > ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
 > 
-> 
-> The reason, I didn't include dma-controller is the pattern under 
-> $nodename in dma-controller is not matching with the pattern present in 
-> dts files.
-> 
-> So, I excluded it.
+> Sure, but why would any architecture *NOT* want to set this?
+> This seems like you're making each architecture bump into the problem
+> by itself, when the real problem is that the CMA people never thought
+> about this and should have come up with better defaults.
 
-Then the DTS has to be changed.
+Yes, I agree. It would be nice if arm64 wasn't the odd duck here. You'd
+think Power and Risc-V would benefit from similar treatement, if nothing
+else.
 
-
-Best regards,
-Krzysztof
+Will
