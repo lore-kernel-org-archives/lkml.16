@@ -1,162 +1,97 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52C6255E2B
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98881255231
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193461; cv=none; b=Q4wqO2qclhCovCiwnKTDcnbQ20tuo6zVrjwaikoCCVeE8q9Qoa/HJ08yqMgCyrV/rntYgKD5Ly1cBAb/nNWAd8XWNzQpAYc85DOTTDar4vNELa0VUz4/1ddn+J8kV1cWGKXtBobUlnOWwRhZ/LecM9YtZ7ko5SluCyGJ34y0WqI=
+	t=1746193483; cv=none; b=SPyWzCxajaWE0NIlpEnzhdlQvathS7aWVMW8TVrlpI6NSH8PV2ccUbmwyCrQr6jy7R+5X9rp4w4vRBKAsjxEiRffFRNQ2YdesQoYd30RSJRvNZjtrMOcQx2M0k8SfjtB/W/ZS4cGJcRAqioZZM+DP5bw93N+3d4gipafNquZNGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193461; c=relaxed/simple;
-	bh=g1ZgZils+uIGmjH+sJCijkWj58eoAO+5+vhmz54zqng=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UckLT6Wpo9I46/8ko604lsjO01lMxFWSk6DDAbIUPbGo1+E19nXUi+t/ZuMX5VGbRydnslYn7S+q7xj13a6yHsUCiSuap+32eymws6rHGurm3a81ktCkx6GD1riMQjf/RFNzW8WZ5hOFWGxqtuZPsBnu9XDRPM+siycbWVEd7O8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AtW3CDbY; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1746193483; c=relaxed/simple;
+	bh=ILN2iET/9uCytdvIyIEDl0TgrwE0lpNVHjhf6eXZDH8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iPdRNieYrqT4q3kibtBuo3kYDaYAQFJeRF/RIPW2jaf1aIq60s90NOT9JL9ooeB6zB8OnhX/OP3uIMT3bXJOwyaTb56uk9neV0tHpBcWxISnTi3d3LUhAn0cwZObPkyHcWUpxlLRmuV6sGNCZ4NpkjrJny3b6J6HWjpoQ9vXeG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GqL08wN6; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtW3CDbY"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43947a0919aso13141055e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:44:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746193458; x=1746798258; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vTlnazaQVMThLmfIbwpqp3Xc7k0uu2U7TuS5r4iVAU=;
-        b=AtW3CDbYrEwsiz3JvGie3okg4UA6QXDOP91W3KSPhN/+ENd1ZwHeCwXfn+3euhw896
-         ICxtn1CH5uPrOTgmKuit2mEWQF027yMJEUxI6Gz8t4fGdWsOTv16vQ9jDvdSMBiP6DXP
-         EqTVzk1tnboNkuWF6xbBpzS6sXaC2FbYN4mzHvk55g47GooFHP+ejFvs8RijH6vEfUUn
-         yvKSZuSoVVBnUJEPQTv17FcO6SAsceXRPAbTjXkcPTU8U2xn7YMruRTilKxe59itUY8b
-         iWgE/MiK4BRpWFQ/xofKUHWWBWmp6gmkwSYoD267WMgnF5LyMdq2oaZoBDSQkPPAMlfW
-         QrZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746193458; x=1746798258;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8vTlnazaQVMThLmfIbwpqp3Xc7k0uu2U7TuS5r4iVAU=;
-        b=JEw5KmUAYEFVWFz1rzfx02oRCb+7mVQ1VC9b/KY/obMyltguf0f1mzXeF5UCzJPik+
-         ZyXAcLkJkuKj6FHejQTceBnFQdU8SKlPGZsnUrFERPwUCkTTIMBMGRFgzOB3DgsYBti4
-         VyNgkE3OakqnP4Ycfp8xwUGQ77gXSSEbDOs3rtFR2BZC8g/3vsjK3yOUe6OIh0uFBbap
-         3r4c472hJWGzAk8MWQWQ9IBUFz7vd5SBfsx7XcXX6eAp4HtBpKsmyWngujXRbeYMgGmY
-         I5nerEJ+8jKrD5JX0Hcyb+Sg37DARQ0daJ8Fuk4Qos13e6do+TRhOOMcGQoO0reUSurJ
-         VxKg==
-X-Forwarded-Encrypted: i=1; AJvYcCXosgejEkkSDuIOTNuOV7KnenPGTxYY6tJ5YHCFIKnCD7nbG03acNVPTbgcP3AF1mMpQxmrjpxd5Wr2DXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFjzKNdpf1BTW+BH/SMYERNg/wap5jahZ0v47by2Xt8m9sQXb8
-	rcqDNaSTvIKefvxJL3Fo5YvAHvhIJQCCN1qDfcHvO4sJwk4vD4XQHuDWKLSg8vyeTf8rKonqVjg
-	7Ngu2hLoUUq6LSQ==
-X-Google-Smtp-Source: AGHT+IEEgU9nO8+UD2Pb7fL6yoFx+ADY8fhoKwXwvYxRbDyw/NOtlc4poFHnBmyLm0nVuIh4YARc+RWwPkJd+/E=
-X-Received: from wmbbe6.prod.google.com ([2002:a05:600c:1e86:b0:440:5d4e:87])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:1da6:b0:43d:fa59:be39 with SMTP id 5b1f17b1804b1-441bbf38afemr24834895e9.33.1746193458263;
- Fri, 02 May 2025 06:44:18 -0700 (PDT)
-Date: Fri, 2 May 2025 13:44:16 +0000
-In-Reply-To: <20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GqL08wN6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746193481; x=1777729481;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ILN2iET/9uCytdvIyIEDl0TgrwE0lpNVHjhf6eXZDH8=;
+  b=GqL08wN6duv1gyCl14S25jNjbIjngd4ERU9TcbEpm/vGQxSYJXFmV32e
+   t0LL66iyrjO3pM/Hqc47bOYt/13DGkBnPLnV+wijyOfQaO1UqkO75dp1v
+   ysk+YmdfihlCgFzqM0MaTDZUVtW87jRVOXN3phNTkY070ZcjfW8qVeMhh
+   j1IRd/cukabVo1tbytwGjOLaZNZGqfDqioV1tjqsiJdreno7CGQSW5J2r
+   e0g9qDanMxsoVcYdkqKzYWXs82tMEZ4tE3oaEG7mS48pw276rmu2QeNF4
+   JasRZ0NCKIxLUlwj11MflS7/QduCHzt9IJYCJXp9AYio6HA1ERWUuLGlH
+   Q==;
+X-CSE-ConnectionGUID: Sj0yC/6aTiC0yDzFAcv6fg==
+X-CSE-MsgGUID: 8LrMkTKeSfeYE5HxOz+ckg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47595179"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47595179"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:44:40 -0700
+X-CSE-ConnectionGUID: LK3VOkSJSy+1kiVJLpgmKA==
+X-CSE-MsgGUID: MCZWEtLTQ9Wt0yZFrcqSSQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="135603804"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa009.fm.intel.com with ESMTP; 02 May 2025 06:44:39 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 0462C1A1; Fri, 02 May 2025 16:44:37 +0300 (EEST)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] iopoll: Use fsleep() instead of usleep_range()
+Date: Fri,  2 May 2025 16:43:45 +0300
+Message-ID: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250502-module-params-v3-v11-0-6096875a2b78@kernel.org> <20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
-Message-ID: <aBTMMHWNXS7wK7zS@google.com>
-Subject: Re: [PATCH v11 2/3] rust: add parameter support to the `module!` macro
-From: Alice Ryhl <aliceryhl@google.com>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
-	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
-	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
-	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
-	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 02, 2025 at 02:16:35PM +0200, Andreas Hindborg wrote:
-> Add support for module parameters to the `module!` macro. Implement read
-> only support for integer types without `sysfs` support.
-> 
-> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
-> Tested-by: Daniel Gomez <da.gomez@samsung.com>
-> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
+Use fsleep() instead of usleep_range() to improve small time delays
+by avoiding the timer use. With this, use slightly bigger initial
+delays then was passed to usleep_range().
 
-> +unsafe extern "C" fn set_param<T>(
-> +    val: *const kernel::ffi::c_char,
-> +    param: *const crate::bindings::kernel_param,
-> +) -> core::ffi::c_int
-> +where
-> +    T: ModuleParam,
-> +{
-> +    // NOTE: If we start supporting arguments without values, val _is_ allowed
-> +    // to be null here.
-> +    if val.is_null() {
-> +        // TODO: Use pr_warn_once available.
-> +        crate::pr_warn!("Null pointer passed to `module_param::set_param`");
-> +        return EINVAL.to_errno();
-> +    }
-> +
-> +    // SAFETY: By function safety requirement, val is non-null and
-> +    // null-terminated. By C API contract, `val` is live and valid for reads
-> +    // for the duration of this function.
-> +    let arg = unsafe { CStr::from_char_ptr(val) };
-> +
-> +    crate::error::from_result(|| {
-> +        let new_value = T::try_from_param_arg(arg)?;
-> +
-> +        // SAFETY: `param` is guaranteed to be valid by C API contract
-> +        // and `arg` is guaranteed to point to an instance of `T`.
-> +        let old_value = unsafe { (*param).__bindgen_anon_1.arg as *mut T };
-> +
-> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
-> +        // access. `old_value` is pointing to an initialized static, and
-> +        // so it is properly initialized.
-> +        unsafe { core::ptr::replace(old_value, new_value) };
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/iopoll.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-You don't use the return value of this, so this is equivalent to
-unsafe { *old_value = new_value };
+diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
+index 91324c331a4b..fca50f117fae 100644
+--- a/include/linux/iopoll.h
++++ b/include/linux/iopoll.h
+@@ -41,7 +41,7 @@
+ 	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
+ 	might_sleep_if((__sleep_us) != 0); \
+ 	if (sleep_before_read && __sleep_us) \
+-		usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
++		fsleep((__sleep_us >> 1) + 1); \
+ 	for (;;) { \
+ 		(val) = op(args); \
+ 		if (cond) \
+@@ -52,7 +52,7 @@
+ 			break; \
+ 		} \
+ 		if (__sleep_us) \
+-			usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
++			fsleep((__sleep_us >> 1) + 1); \
+ 		cpu_relax(); \
+ 	} \
+ 	(cond) ? 0 : -ETIMEDOUT; \
+-- 
+2.47.2
 
-> +macro_rules! make_param_ops {
-> +    ($ops:ident, $ty:ty) => {
-> +        ///
-> +        /// Static [`kernel_param_ops`](srctree/include/linux/moduleparam.h)
-> +        /// struct generated by `make_param_ops`
-> +        #[doc = concat!("for [`", stringify!($ty), "`].")]
-> +        pub static $ops: $crate::bindings::kernel_param_ops = $crate::bindings::kernel_param_ops {
-> +            flags: 0,
-> +            set: Some(set_param::<$ty>),
-> +            get: None,
-> +            free: Some(free::<$ty>),
-
-You could potentially only include `free` if
-`core::mem::needs_drop::<T>()` as an optimization.
-
-> +    fn emit_params(&mut self, info: &ModuleInfo) {
-> +        let Some(params) = &info.params else {
-> +            return;
-> +        };
-> +
-> +        for param in params {
-> +            let ops = param_ops_path(&param.ptype);
-> +
-> +            // Note: The spelling of these fields is dictated by the user space
-> +            // tool `modinfo`.
-> +            self.emit_param("parmtype", &param.name, &param.ptype);
-> +            self.emit_param("parm", &param.name, &param.description);
-> +
-> +            write!(
-> +                self.param_buffer,
-> +                "
-> +                    pub(crate) static {param_name}:
-> +                        ::kernel::module_param::ModuleParamAccess<{param_type}> =
-> +                            ::kernel::module_param::ModuleParamAccess::new({param_default});
-
-Is this global accessible to the user? It would be a use-after-free to
-access it during module teardown. For example, what if I access this
-static during its own destructor? Or during the destructor of another
-module parameter?
-
-Alice
