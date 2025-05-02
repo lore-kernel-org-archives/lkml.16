@@ -1,47 +1,47 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A48825C811;
-	Fri,  2 May 2025 16:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A1F025C6F8;
+	Fri,  2 May 2025 16:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201715; cv=none; b=XihkV8VPU/TuPPk2sWG90FLP9c2vpnENefVpsi9VQ1eurFVHA+XQC/Oyl/vY0kq8ho4W8gcF4XWYe4Mr+7hw12Qgg6SUoaHXJSEX7lY+mAqQiHIseYxzz/UMBwiWxRBhCCTVdZbP2UTNbWYdrJ5X84nQs7TT9G1J6UIAgLAiG2c=
+	t=1746201731; cv=none; b=HnRhCBrEtQx+JStO54bwHMe5rmRs3r1w+O/FWcPNv5+be2o1WyzaIhBN7p4CL/gC+mm6Rq5rcMeSTCFfnNt/v9PpBtxAI7bXnmp1iXso+/blFJo5Ty0vz1sBbIxRMXfm/dEHP6QnQEBRQksutrQpUWerdMrzMpMpdupUAhWzyrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201715; c=relaxed/simple;
-	bh=BLLDcntWlfKFCB539QrhIX1zn2SPnmC0v59nvwOTu/c=;
+	s=arc-20240116; t=1746201731; c=relaxed/simple;
+	bh=v9KxtRTJu9kJpRHk6H1ZCOWDUTXu4rkJkGVRDnIH5vk=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NIXMmuQ8/WyAWWYiKQNM6IJGIydKs0alt/F050/EiJH8qGI9F2V6wti8YHLgdIYPbRblGPqCrZsytS1NhmV6eRBaz8lG6pBMi3DTuRZplSS9XYnBXPeYXSD5gRh5MApX/LN25RWJCqGTyZtHrmfT5rx3XmEIt6MM8tgRJOQ4Ghc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=N2xCKHNO; arc=none smtp.client-ip=198.47.23.234
+	 MIME-Version:Content-Type; b=OP1ng3ol+tzcUVLsN2ESZJoB4xoIAxuxFZaktJLksGfh2PWb32rHB3IeQl4mrgG+9SAls1ynjlzSRxSgl1m0tAv+BxKNq/EbIJwUOud8s+7ITRRNF0Bk1iQInQzQIUVNcOksvGVU1Ll7oioOWwPPpkRGpySgTYImVwEkFAMnhoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=g+HW2vH9; arc=none smtp.client-ip=198.47.23.235
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="N2xCKHNO"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="g+HW2vH9"
 Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542G1ilP3899617
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542G24M2444126
 	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 11:01:44 -0500
+	Fri, 2 May 2025 11:02:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746201704;
-	bh=SM/2nkvFBsdAVdTDZP4AfmeiPEIN/8uymH+sgluv2DA=;
+	s=ti-com-17Q1; t=1746201724;
+	bh=Y1sFmVEx4gXcykMRmXYn9FRQlYWf21/wBfA1y8v8IXM=;
 	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=N2xCKHNO95Y00XdTjBME+cxRUZ5NETxV+97ukXPf9w7MOYWOqeBeWy6c1Hekpvz5A
-	 GhBXvu5jZv6r/Cx9NpW/j64gafqp2iVDTGQPv4etQ9eEvXSPhnMVcxl99nqk+GjbwC
-	 Fp8i73APkOSpzBc8c3iMwjlnDRsYNti9LAAv59NE=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542G1iSw105937
+	b=g+HW2vH9aGKBxccZII6OOARqXktgjlKPRZtbVsUNXlb6Xb/HfIi126G0I3bwF/tB/
+	 Ksqmwbt4we8Iz53RgR6PtfFPKM0zq4a96211W+4g6qjvNPDq6W/K8MtIIFD1l29+TI
+	 lXovZpbQNHODSyb5vuu2WWTqACPptE0DJ3UCwJ2A=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542G23Oc106153
 	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 11:01:44 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+	Fri, 2 May 2025 11:02:03 -0500
+Received: from DLEE103.ent.ti.com (157.170.170.33) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 11:01:43 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ May 2025 11:02:03 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 11:01:43 -0500
+ Frontend Transport; Fri, 2 May 2025 11:02:03 -0500
 Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542G1hA7084565;
-	Fri, 2 May 2025 11:01:43 -0500
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542G236V085051;
+	Fri, 2 May 2025 11:02:03 -0500
 From: Nishanth Menon <nm@ti.com>
 To: Vignesh Raghavendra <vigneshr@ti.com>, Judith Mendez <jm@ti.com>
 CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
@@ -52,14 +52,13 @@ CC: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
 	<conor+dt@kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, Moteen Shah
-	<m-shah@ti.com>,
-        Udit Kumar <u-kumar1@ti.com>, Bryan Brattlof <bb@ti.com>
-Subject: Re: [PATCH v2 0/3] Set eMMC clock parent to default
-Date: Fri, 2 May 2025 11:01:42 -0500
-Message-ID: <174620168930.3146730.1790558612742355964.b4-ty@ti.com>
+	<m-shah@ti.com>
+Subject: Re: [PATCH v2] arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+Date: Fri, 2 May 2025 11:02:02 -0500
+Message-ID: <174620171156.3146851.4963787197478116210.b4-ty@ti.com>
 X-Mailer: git-send-email 2.47.0
-In-Reply-To: <20250429163337.15634-1-jm@ti.com>
-References: <20250429163337.15634-1-jm@ti.com>
+In-Reply-To: <20250429173009.33994-1-jm@ti.com>
+References: <20250429173009.33994-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -72,29 +71,19 @@ X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
 Hi Judith Mendez,
 
-On Tue, 29 Apr 2025 11:33:34 -0500, Judith Mendez wrote:
-> This series was split-off from "Misc MMC updates" patch series [0] and the
-> original patch further divided into three to help with backporting as per
-> review comments [1].
+On Tue, 29 Apr 2025 12:30:08 -0500, Judith Mendez wrote:
+> For am65x, add missing ITAPDLYSEL values for Default Speed and High
+> Speed SDR modes to sdhci0 node according to the device datasheet [0].
 > 
-> This series sets clock parent for eMMC to the default clock parent
-> MAIN_PLL0_HSDIV5_CLKOUT for am62, am62a, & am62p/j722s SoCs. Software (DM)
-> does not switch MMC clock parent correctly as per the Arasan IP requirement
-> to hold the IP in reset while clock source is switched. Since muxes to
-> switch clock parent are not glitch-free and the default parent is tested
-> and working fine, switch to the default as a preventative action.
+> [0] https://www.ti.com/lit/gpn/am6548
 > 
-> [...]
+> 
 
 I have applied the following to branch ti-k3-dts-next on [1].
 Thank you!
 
-[1/3] arm64: dts: ti: k3-am62-main: Set eMMC clock parent to default
-      commit: 3a71cdfec94436079513d9adf4b1d4f7a7edd917
-[2/3] arm64: dts: ti: k3-am62a-main: Set eMMC clock parent to default
-      commit: 6af731c5de59cc4e7cce193d446f1fe872ac711b
-[3/3] arm64: dts: ti: k3-am62p-j722s-common-main: Set eMMC clock parent to default
-      commit: 9c6b73fc72e19c449147233587833ce20f84b660
+[1/1] arm64: dts: ti: k3-am65-main: Add missing taps to sdhci0
+      commit: f55c9f087cc2e2252d44ffd9d58def2066fc176e
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent up the chain during
