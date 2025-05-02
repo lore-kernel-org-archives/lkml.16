@@ -1,68 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4171222A7E1;
-	Fri,  2 May 2025 08:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 084BF22B8A6;
+	Fri,  2 May 2025 08:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746176218; cv=none; b=QNIQJxTlMSI7yu6ns7ABa24i7bten7a/Ys34KQo6lJQ+UCXEh2UeWvRlDOKVWeyzlZNBxW5MT7uZUMJV3I1PTFyrRCBRg5LVWhN9djNGtf6mo14/oCLMoX+Vn0c71KmgIZLo3+RunIN/caU9e/M/76SYVKzVrP7B0D49yoVJ8+Y=
+	t=1746176255; cv=none; b=EZmWd1RP3NiHRQjI2mbbT+khV3ImZdrUQATHGagy/bwGFl3AAOG+WyncR++IZurnt/siW3Cd9iJWdNww0UVRfi3W1GEIIRmxax0A1enu3EnTrTi0NhH6Vv/WvqVygsUi7T0+b5hPQr8Src3CWSyn+3UKAn1SRC55JXvK4rIWcyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746176218; c=relaxed/simple;
-	bh=B2S7t4hxs70eyK+EQYt9MPrDHRd6O/BscLmI9x3WT+4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rKykmRSv1bGynN2FWGK/PvMgM9jn3BlznJorWcU6KA1t8tFxy9lKRNtkEzeY3OGMPoqJpP7exqDLlHfjXmPWgV1khbWP5KdkF/kQTeEOUrn3BLtumt4pqiYy0/IKMLEjbyMqlb4hjID75mNPOTCSE4sxbUIVRDA0dYI+7EXMl4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTuYBJWg; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTuYBJWg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C966C4CEE4;
-	Fri,  2 May 2025 08:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746176217;
-	bh=B2S7t4hxs70eyK+EQYt9MPrDHRd6O/BscLmI9x3WT+4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uTuYBJWg3ZllVDS6TqDA2/08BRO8eMvMWSJDjVQUYMYMF/gDtP4zorMllb9Hr6OxC
-	 Gb2ApUDw+/SRT/mUanbqi2ScpvoPh3eGt1AKONCl2Trul8z8IkKyDZGjI/EKoT7Hb6
-	 WJuUXuSy9Nh9gbERJBVyn7KsNKQCMjWTKFPQrjHe9crztqPxvxqVlQiRJvkTVdRjwF
-	 khp/fjWKVhJSnTN80enTaqZDFWtq/QaFEgxTvZrVhbY5nsGnqNqjWiu3D8QI+Fa3z6
-	 qxw7NJx6MG8xXPtf4hoRX4/0BktSJz7UYj3gpF0se4EtrBeFNjIWT5y53tXcYJCwnX
-	 mLfjtyYlyZ6dw==
-Date: Fri, 2 May 2025 10:56:52 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Magnus Damm <magnus.damm@gmail.com>, Andy Shevchenko <andy@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH] dt-bindings: i2c: renesas,riic: Document RZ/V2N
- (R9A09G056) support
-Message-ID: <2msodreg2o4vpcqbnorgxbqnbw5gytxmpguroox2lvtfvtm24t@iq3zb3xe5whe>
-References: <20250501203310.140137-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1746176255; c=relaxed/simple;
+	bh=qFHFB+DwmqM2jMBUN6w9mF5dQfpASkF5/ZedKcfaUMM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sNruosvvE3rR092/E4nYHFyZgLQ2s1RjUrCGPZoQMSr01V/Wl72l/ffRubtuz9wi+bGTmwZSRtP7rShAl/EeqBYX2hY4L51BEk5k/KNb3UNHQGTW8TFHZn6V2PbjFvvwtK9gWyQQl2bEg2IeBxwa84sQERsiQh0WsJs+y5/Oz4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
+	by mail.itouring.de (Postfix) with UTF8SMTPSA id AB149103765;
+	Fri, 02 May 2025 10:57:22 +0200 (CEST)
+Received: from localhost (hho.applied-asynchrony.com [192.168.100.221])
+	by tux.applied-asynchrony.com (Postfix) with UTF8SMTP id 1DAB8601893B6;
+	Fri, 02 May 2025 10:57:22 +0200 (CEST)
+From: =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+To: Quentin Monnet <qmo@kernel.org>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
+Subject: [PATCH] bpftool: build bpf bits with -std=gnu11
+Date: Fri,  2 May 2025 10:57:10 +0200
+Message-ID: <20250502085710.3980-1-holger@applied-asynchrony.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501203310.140137-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Lad,
+A gcc-15-based bpf toolchain defaults to C23 and fails to compile various
+kernel headers due to their use of a custom 'bool' type.
+Explicitly using -std=gnu11 works with both clang and bpf-toolchain.
 
-On Thu, May 01, 2025 at 09:33:10PM +0100, Prabhakar wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> 
-> Document support for the I2C Bus Interface (RIIC) found on the Renesas
-> RZ/V2N (R9A09G056) SoC. The RIIC IP is identical to that on RZ/V2H(P),
-> so `renesas,riic-r9a09g057` will be used as a fallback compatible,
-> enabling reuse of the existing driver without changes.
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+---
+ tools/bpf/bpftool/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-merged to i2c/i2c-host.
+diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+index 9e9a5f006..ca6c1e04b 100644
+--- a/tools/bpf/bpftool/Makefile
++++ b/tools/bpf/bpftool/Makefile
+@@ -227,7 +227,7 @@ $(OUTPUT)%.bpf.o: skeleton/%.bpf.c $(OUTPUT)vmlinux.h $(LIBBPF_BOOTSTRAP)
+ 		-I$(or $(OUTPUT),.) \
+ 		-I$(srctree)/tools/include/uapi/ \
+ 		-I$(LIBBPF_BOOTSTRAP_INCLUDE) \
+-		-g -O2 -Wall -fno-stack-protector \
++		-g -O2 -Wall -fno-stack-protector -std=gnu11 \
+ 		--target=bpf -c $< -o $@
+ 	$(Q)$(LLVM_STRIP) -g $@
+ 
+-- 
+2.49.0
 
-Thanks,
-Andi
