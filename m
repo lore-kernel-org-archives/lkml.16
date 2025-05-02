@@ -1,81 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF2E23A99F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D251BEF77;
+	Fri,  2 May 2025 11:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746185861; cv=none; b=L+fBYabKGy+1P4eNP2jztXIkFBCA5EmH8cCBc9fdir5iSIU/veADWPowE49GZ+dV/sGqaJsj5wg0n3de/dKIKauhGcSfqvoYKv8v6GWYisQc4yZhAN6Xz6S3ra3rBBe3hCPcagVrOWoAU1pGdZJl/672dzXCbZr7WfaDUoC0abk=
+	t=1746185997; cv=none; b=AMWm2QiyVHA4TrtycLx2orIOhxb+S9rug/0c/ovf28Jxf8aBNEJFQifxtMo0Xhjs5k/70kLIJUD3TUfRDIyn20yP9YZekF2JoLbWQdP+i9HBYyKhxwGQ0YV0gALHWkTTGS8zkZan/3yUz0VB3qFoOJ4uvaD6qgAzRDco0pO4oag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746185861; c=relaxed/simple;
-	bh=R20iTsL1Y4YvlVm8x3qRJWYAMGHK+p/fYIgio9JtTZQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pmigS6ee26PYttPNE0XgytkeWXgZm15vTssops9OAUvU3I4IWoQ1B7fCsbUDGmAEWup1PCgXVS+/jiZrCay64YcFp3K6QcCaPtsyWpxZT2G3obe1k260f5+jegvSw/6DTtkURJKhuUPRGXZhPadnSdkqX3o7CHRikLd6Xc1ZuII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pahvfXyj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746185997; c=relaxed/simple;
+	bh=gkrh52IbmYbFCbQFLYixSyK3E2Vd7dNScAr7oJkTbvM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=SkDsYOImkKJcPFi0aisrpU49I3p0Rug0Y0ROVvoXNU6XNDKQtmLklRaRJ/0R4VUEUfSRrLB27HWtAv7jnkkif+Hav5vPWw7lkABanmDCKE0MdohqbyZEeHjeOu0GE60Q7YHzXtIAEAg2WRBq9TNapGbuIRbopIjbJP6XPZhIt4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mScyZaNQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pahvfXyj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B483FC4CEE4;
-	Fri,  2 May 2025 11:37:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mScyZaNQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8400C4CEE4;
+	Fri,  2 May 2025 11:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746185860;
-	bh=R20iTsL1Y4YvlVm8x3qRJWYAMGHK+p/fYIgio9JtTZQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pahvfXyjZ5Dvyicm+QYm1c4GBlnYwFUo37WyNHQYg4rZ4tXSLnW6MWu1dQPlqZuh3
-	 Arb4MPurEbwWh3sqjgD+XcEbbz65PYsq9QDyAZJZHZ7zU5gA60nId8r+/JC2XdP83/
-	 uhjA3vHt1FmyP1oYjidjDE2IZQyOu7AWVW8vQa15ML8P50MSFbcwOW9M3DArL5Lyc6
-	 D3uNniMczKv1nS0UMdb1xBui+IOuEmKiicXyMC5FSMR2vAbMsdCDyKeJNbUWb7rMQS
-	 o9tpv2WMFJDlw9P4tHoMK0zRX+OK0jWzMb4YDiPxh0PemAoxClRecvz4n0PUBq/xmJ
-	 O4J+naEHpBQWQ==
-Date: Fri, 2 May 2025 12:37:34 +0100
-From: Will Deacon <will@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: Juan Yescas <jyescas@google.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, tjmercier@google.com, isaacmanjarres@google.com,
-	surenb@google.com, kaleshsingh@google.com,
-	Vlastimil Babka <vbabka@suse.cz>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	David Hildenbrand <david@redhat.com>,
-	Mike Rapoport <rppt@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	Minchan Kim <minchan@kernel.org>
-Subject: Re: [PATCH] mm: Add ARCH_FORCE_PAGE_BLOCK_ORDER to select page block
- order
-Message-ID: <20250502113733.GA29622@willie-the-truck>
-References: <20250501052532.1903125-1-jyescas@google.com>
- <aBO_laRsZDYgjEfL@casper.infradead.org>
+	s=k20201202; t=1746185997;
+	bh=gkrh52IbmYbFCbQFLYixSyK3E2Vd7dNScAr7oJkTbvM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=mScyZaNQwEWk+HGA5dYW32BLpcQKuHBAHw8BQW22FUzez9Hj/PUcGPagsj6VtSyNB
+	 S0zv0hujMfmnsTVpJq4y/NePfbFWZgnn7qylc9Aghp18g4yQTXuzlOB/iJBa8hQ1IO
+	 BVPpF9as/7+CdHekai++oxkWmN7sZnmE0OiNl8LJGM3KxRxYnJ+6XlYKOvHw+zd42v
+	 mXxFrRDcWwPc6PBs+nggmG8hUNc2celrESSyKClo8hq2fuw1VaAebG7DGMuy+sA/Bk
+	 keT4EPAIgES5bOoMYjn4GeymhTfW9JYzhwI2xu2m66dyrBI3NkrludB7+kylCTgH91
+	 pzCdryIyxVAlA==
+From: Mark Brown <broonie@kernel.org>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, sadre Alam <quic_mdalam@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ George Moussalem <george.moussalem@outlook.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-spi@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
+References: <20250501-ipq5018-spi-qpic-snand-v1-0-31e01fbb606f@outlook.com>
+Subject: Re: (subset) [PATCH 0/2] Add QPIC SPI NAND support for IPQ5018
+Message-Id: <174618599396.4075974.7322251763578575960.b4-ty@kernel.org>
+Date: Fri, 02 May 2025 20:39:53 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aBO_laRsZDYgjEfL@casper.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c25d1
 
-On Thu, May 01, 2025 at 07:38:13PM +0100, Matthew Wilcox wrote:
-> On Wed, Apr 30, 2025 at 10:25:11PM -0700, Juan Yescas wrote:
-> > Problem: On large page size configurations (16KiB, 64KiB), the CMA
-> > alignment requirement (CMA_MIN_ALIGNMENT_BYTES) increases considerably,
-> > and this causes the CMA reservations to be larger than necessary.
-> > This means that system will have less available MIGRATE_UNMOVABLE and
-> > MIGRATE_RECLAIMABLE page blocks since MIGRATE_CMA can't fallback to them.
-> > 
-> > The CMA_MIN_ALIGNMENT_BYTES increases because it depends on
-> > MAX_PAGE_ORDER which depends on ARCH_FORCE_MAX_ORDER. The value of
-> > ARCH_FORCE_MAX_ORDER increases on 16k and 64k kernels.
+On Thu, 01 May 2025 13:20:50 +0400, George Moussalem wrote:
+> Add support for the QPIC SPI NAND controller found in IPQ5018 which is
+> the same as the one found in IPQ5018.
 > 
-> Sure, but why would any architecture *NOT* want to set this?
-> This seems like you're making each architecture bump into the problem
-> by itself, when the real problem is that the CMA people never thought
-> about this and should have come up with better defaults.
+> 
 
-Yes, I agree. It would be nice if arm64 wasn't the odd duck here. You'd
-think Power and Risc-V would benefit from similar treatement, if nothing
-else.
+Applied to
 
-Will
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
+
+Thanks!
+
+[1/2] dt-bindings: spi: spi-qpic-snand: Add IPQ5018 compatible
+      commit: 2dbe74c63cb73829be0aab0d0e7e68b87071b5fa
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
