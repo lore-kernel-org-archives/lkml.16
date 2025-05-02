@@ -1,124 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C7A8221F21;
-	Fri,  2 May 2025 21:52:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2411321770B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 21:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746222722; cv=none; b=ZurvBqxx+aBVP6qVKS9Xfe4d8zRz2o1jGqWavULApm32g9CmhlIlXn0+FKu9As5RZ8swTnW7dk9YcSBl85DnCtx9/ZeC4MPrCoiP8DNXXQVhXbDjaKAgzQhzid9P0Gv0fhjTmLSrzjSt/woIo5nlalYS359GoraDogYncvQA508=
+	t=1746222723; cv=none; b=NwE/WYBzVsWfEwI61IhZibWuAGPiF1ctPiMfwwRtxTkxBZWoaYDyHbq+F4zfwc+xMOuv4giand7tQyr5M527Jd2vR0VyWcFux//SWTJl7Y/9SXpfFXx1xJXnpTuJFtmk6OVQrljiInU4yPaMq8BcKF3Hp44Z8P2cRpfzgg5FmT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746222722; c=relaxed/simple;
-	bh=Ywzns9kdzvgchDQq8gUskAhoVH1XxfCbNL7gC5kzNDM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T4g6JTjkca8dcivixdrb6yJzPfUGRSfTV7Eebvjn7ocvBKOuxo4hvQzFcQt5F12QA5eFIlZNuUYjLL87115tcrcdAManoe3hbcHGJJ/Q/tBc2ewvzua7LOy/grWX1UP6F1EDESskVUCsi8SymungQhAQTvWVSAusXPjdRPk6J38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cYJxa0fO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746222723; c=relaxed/simple;
+	bh=mTw9meZwxQX27VgMX/IkJeu9X1ncOgS+hPnL6MC6iI4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=e6Ng96iv8H3yY7LflrNZYYHopSSNcKqj/uM6RW4SuMCgnpHYgwhXMoX7EjTezbSu+AYGKSLPcg/1EccAWd68hoyOKCpP8sxpiEe2GM8ECeRdPrbu3SUq2CB5LW0aM7GceI5pcYv4deww9vRBN6GVF066NlKj8x/4yTdO2E9HBYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=en7quOWS; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cYJxa0fO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19A2C4CEEB;
-	Fri,  2 May 2025 21:51:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746222722;
-	bh=Ywzns9kdzvgchDQq8gUskAhoVH1XxfCbNL7gC5kzNDM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cYJxa0fOKQNQqSN0tZ1fD5HfOhHC4111Fosluxj856LqCVvm1i0bw/BiMz2LGr1Cq
-	 dtCFMp+b+4N272rKP6CvTAWLgArXYlUCpxw74GwvqQMyAvh2ofbie1Dn2Bp1Zdd28c
-	 Lqzt0u3WyEPFJmv3Wig1dGARB0gwhirUFUimzNMcx3P9ugogPciIevNdC4WYrfA9fc
-	 EaVwygKjs3rpK1s4gvezw8Z9qic4K307JQTj2C2V2EBgGYx0odRCeFvOcWklajdt61
-	 OUQfDlAj2OIjTrqRCHYKb/NJOOvtYc+DTFZA3LTDWdnOymVpcpZi9B+0/NJL6ME++R
-	 WnFvWCd66PhXA==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Brendan Higgins <brendan.higgins@linux.dev>,
-	David Gow <davidgow@google.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Rae Moar <rmoar@google.com>,
-	linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev
-Subject: [PATCH 3/7] rust: add `kunit_tests` to the prelude
-Date: Fri,  2 May 2025 23:51:28 +0200
-Message-ID: <20250502215133.1923676-4-ojeda@kernel.org>
-In-Reply-To: <20250502215133.1923676-1-ojeda@kernel.org>
-References: <20250502215133.1923676-1-ojeda@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="en7quOWS"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff78dd28ecso2714502a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 14:52:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746222721; x=1746827521; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SUERDQgic6jYhSnng0bbK0BO6GHErZXOAhSsWHpvBSw=;
+        b=en7quOWSoB6f9z+BacOtdUOzedlOHnpSL5UMr/oFWktSdme9OutoypOoEyHn4bTH/x
+         3uXqS2kuCOnkr9zI0StLAJJ/uN35ljWwZKUWh54wCPKAuvl8ch/5PP6ZdmynzP6fHced
+         zOBDsN7CWJxLLHKCWVvCsL2DA7PbwKIRgizLfnvgrYaqJY5UI5G3lN6g43QYL2S/d7dP
+         FbCXif0634xYKdGSp5at092xKiGxrOFO3inKoMmOeK9WCTSQc0EjPhqN3+QAkSJseSYV
+         Lj4RDV2+R7SxUe0YHVbxsgGYumt4NJwQP9DdZfjnDnjkcPYAtL1NCFfrx31Ma+IdKc4y
+         cdeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746222721; x=1746827521;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SUERDQgic6jYhSnng0bbK0BO6GHErZXOAhSsWHpvBSw=;
+        b=DeKPudiu8v2cGekRkrKV/OvlQVvKvMGLjwMVSMNr/tzk+oGzH/an9DK2X6qoKEesC6
+         7ELHABERQGnMnXoQFME5EMbeiVlwghPAN+E1/b+/CvTy5+rV1st0mRMf83KnlRyj/jlh
+         YcBMwsmVvhd2ugkrpaZ00CB6r+94/y1Ru37R4fobk1k9toG6hFEZpUQ1SUFx+oWopC3b
+         IhVT2Fy5EB9aVIlm2LH4uB6rwlJFDQC3d3OYmhrTDDFV5MIg4b1HkyMgJrixy2SbvSSm
+         65BEFWDRTxcfnKGME8ViasqmrrXTiqkf2UcPRa/LKzA+vDf3memXcO7inVbfBwWzZvF8
+         hBdA==
+X-Forwarded-Encrypted: i=1; AJvYcCU0m5aFCMqmEUOq/V65QpKbQP6mI/rVy/E84F3nGDwd62YWcgGE1Ev2jToG5ZHC1093JfS1ZYH61tQCGAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcIVW5DMKGOM6qfYhXFIukh7+73JJWIEYH5lwNAgkSlmaKJldb
+	0I8hCyX6sn05xZx4noLL0VzfSKlUb5irbG9cM8C2f6PRG69i4h3Tz06V8RR9qJsU3r1QWUiKIFI
+	jYg==
+X-Google-Smtp-Source: AGHT+IEwgH5mk6MVRWNhPp+TSJ2BuOkDoyHYKUScxrQW1rPrL85Vc8OC6M7uCh2JJCo7Vxa6BdY8Sj9gbmA=
+X-Received: from pjbpt18.prod.google.com ([2002:a17:90b:3d12:b0:2fc:11a0:c549])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2747:b0:2f2:a664:df20
+ with SMTP id 98e67ed59e1d1-30a4e579ef4mr7443371a91.7.1746222721474; Fri, 02
+ May 2025 14:52:01 -0700 (PDT)
+Date: Fri,  2 May 2025 14:51:01 -0700
+In-Reply-To: <20250227222411.3490595-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250227222411.3490595-1-seanjc@google.com>
+X-Mailer: git-send-email 2.49.0.906.g1f30a19c02-goog
+Message-ID: <174622246244.883023.7921101160630129073.b4-ty@google.com>
+Subject: Re: [PATCH v3 0/6] KVM: SVM: Fix DEBUGCTL bugs
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Xiaoyao Li <xiaoyao.li@intel.com>, rangemachine@gmail.com, 
+	whanos@sergal.fun
+Content-Type: text/plain; charset="utf-8"
 
-It is convenient to have certain things in the `kernel` prelude, and
-means kernel developers will find it even easier to start writing tests.
+On Thu, 27 Feb 2025 14:24:05 -0800, Sean Christopherson wrote:
+> Fix a long-lurking bug in SVM where KVM runs the guest with the host's
+> DEBUGCTL if LBR virtualization is disabled.  AMD CPUs rather stupidly
+> context switch DEBUGCTL if and only if LBR virtualization is enabled (not
+> just supported, but fully enabled).
+> 
+> The bug has gone unnoticed because until recently, the only bits that
+> KVM would leave set were things like BTF, which are guest visible but
+> won't cause functional problems unless guest software is being especially
+> particular about #DBs.
+> 
+> [...]
 
-And, anyway, nobody should need to use this identifier for anything else.
+Applied patch 6 to kvm-x86 svm (1-5 already went into 6.15).
 
-Thus add it to the prelude.
+[6/6] KVM: SVM: Treat DEBUGCTL[5:2] as reserved
+      https://github.com/kvm-x86/linux/commit/5ecdb48dd918
 
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
----
- rust/kernel/kunit.rs   | 3 +--
- rust/kernel/prelude.rs | 2 +-
- rust/macros/lib.rs     | 2 +-
- 3 files changed, 3 insertions(+), 4 deletions(-)
-
-diff --git a/rust/kernel/kunit.rs b/rust/kernel/kunit.rs
-index f43e3ed460c2..053a7da147d5 100644
---- a/rust/kernel/kunit.rs
-+++ b/rust/kernel/kunit.rs
-@@ -6,6 +6,7 @@
- //!
- //! Reference: <https://docs.kernel.org/dev-tools/kunit/index.html>
- 
-+use crate::prelude::*;
- use core::{ffi::c_void, fmt};
- 
- /// Prints a KUnit error-level message.
-@@ -40,8 +41,6 @@ pub fn info(args: fmt::Arguments<'_>) {
-     }
- }
- 
--use macros::kunit_tests;
--
- /// Asserts that a boolean expression is `true` at runtime.
- ///
- /// Public but hidden since it should only be used from generated tests.
-diff --git a/rust/kernel/prelude.rs b/rust/kernel/prelude.rs
-index baa774a351ce..e5d61a83952f 100644
---- a/rust/kernel/prelude.rs
-+++ b/rust/kernel/prelude.rs
-@@ -17,7 +17,7 @@
- pub use crate::alloc::{flags::*, Box, KBox, KVBox, KVVec, KVec, VBox, VVec, Vec};
- 
- #[doc(no_inline)]
--pub use macros::{export, module, vtable};
-+pub use macros::{export, kunit_tests, module, vtable};
- 
- pub use pin_init::{init, pin_data, pin_init, pinned_drop, InPlaceWrite, Init, PinInit, Zeroable};
- 
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 8bd7906276be..8b8d46e759d4 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -406,7 +406,7 @@ pub fn paste(input: TokenStream) -> TokenStream {
- /// # Examples
- ///
- /// ```ignore
--/// # use macros::kunit_tests;
-+/// # use kernel::prelude::*;
- /// #[kunit_tests(kunit_test_suit_name)]
- /// mod tests {
- ///     #[test]
--- 
-2.49.0
-
+--
+https://github.com/kvm-x86/linux/tree/next
