@@ -1,185 +1,276 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A35C22688C
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:04:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFFE915350B;
+	Fri,  2 May 2025 10:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746180248; cv=none; b=JwdzPELnu1QxNycY3xntMMNYqzwFc2eDI/AcrFhFbJtiWTjLGnzO/vI4VO+lWcg6ib7xE4t81JhGs3xmM5yjsrXt35oIvWpK7V9DwhYFQ5McqtRiumPg44+XF9fW6l6oTfGqI8Jw2mR4kzSfypEAkSPmxcDzONy0Sl/MGrToibU=
+	t=1746180454; cv=none; b=rUXyAH2IWhUaeTn1k6CU5dvDA7KdRPB1KDGUBUoOkm7djNHrX0UzlAMYHb5hSR5YcUk90R22VvnfdLCDE7lPw/W6BTDFjLmkV9yEOnbOve+u7SOpsth3/hMkkpPczGd+LU+2nH27FGi1EjU6aFrsS+4fs6YxlsVauilOCUS2MNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746180248; c=relaxed/simple;
-	bh=a+4NTP7GAXZxu26Q7gR9o+DTZj2sBGxCE8Et4DTkVLQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qqCDBV72bb/f+2jD+FoOm/s/Ku4LqxxzyuFO3U84AB/EWHQtN/mj/QFBQ7eObT84piHsWcyVnUweY5syKC64CmdO86uGSJU3y8ax+zOPhyZ1zubAH3LBi0G9/MpPANbszC/l96UAZ6l7HEqx/7vmA7BcBmBYHrNLL/EslD41ySA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=RvVqmUAp; arc=none smtp.client-ip=212.77.101.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1746180454; c=relaxed/simple;
+	bh=ABTJzmirhXJNfdMrrzRqDK9d4R4fuVLD8Yt2bg5MhM8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lxl3MRzV5capB97EOgL3APQxsLQnjR5lCe0nobJUIJ/Onb6KoI+3OabquY5k8zqLK+EpIovBwh0ChTdM/1vwBKxNVFSEy+JwfaAJxCTNWH00i/gTw67UwPJVGAPy+LVS0eLi/YTYhUkMkhiNRT85cAWsrA6/p+4r895yvXnJcKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S3nHkOqO; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="RvVqmUAp"
-Received: (wp-smtpd smtp.wp.pl 24179 invoked from network); 2 May 2025 12:03:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1746180234; bh=JxgIDUsaIMgLK10xPZb5AYDJC+rfdHR+oalBdnFri1g=;
-          h=From:To:Cc:Subject;
-          b=RvVqmUAp6CEBPtUFED5hYrTeu3I5G82Vg3yfqgG5xYD4C06+YWv4JEZ4t2ORlTzsi
-           abcepRhyyFjJ2Yy+QOOljw3/PdK0/lMaHnoZL0XYD7ONDbSzDJTwavsu7MY4wy1eti
-           /XD7OFUQnQjJgRTzifZ0ctzCVa/QpB168biXAJrvyyO/rsqSMY4F8nHhA9/cTOl9Dt
-           G2IYTt1hiJeSJt8WvOLApEiTgdp1HJ0TXQAiVwVE+WHocBO1BNLMFrC1HFJVRJKHo9
-           QcHUubUqFoMujfDsEx5Y0HWQ6UgqvUOU5SBgOryUuWpzy6mUsMhbU5MSijzl7XMJxb
-           kI0JNKuLLgAkg==
-Received: from 83.5.150.21.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.150.21])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <johannes.berg@intel.com>; 2 May 2025 12:03:54 +0200
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: johannes.berg@intel.com,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH iw] iw: scan: Add printing of EHT Operation Element
-Date: Fri,  2 May 2025 12:03:53 +0200
-Message-Id: <20250502100353.3149470-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S3nHkOqO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746180453; x=1777716453;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ABTJzmirhXJNfdMrrzRqDK9d4R4fuVLD8Yt2bg5MhM8=;
+  b=S3nHkOqO43g+p9Q+4v2E0GbZA69j2bSYtKVErU8Yzq0YtHN7BFDh2IxQ
+   3w70tT5EkP1s5OhZl+94naZY+1EmVUxD8brB5AV13yGRuoS40nXxe11uI
+   DAIRIFwhDXo1ZrxOde6zFRbb4wxgQFZ/N4QcHTfryEDfY4WBJCBHTFjGo
+   iQLU89J/UGHm3HMRYAT6ZsBD4T0flt4rkbp0HWtq2uGiugAyD5a0rJmML
+   3X1j70pv59fja7Vb9hilUJ0wHHRmEgF6m2gFxGuDMj310aJx4rKbUnvX+
+   nF8fGVYhFNagU1bBMHfN5qfK4TRbEC1f8nm4CSX19K9emVbuSNTbCvIxe
+   w==;
+X-CSE-ConnectionGUID: Jd9v1WTFSlmRkWGxGqzPgQ==
+X-CSE-MsgGUID: 4ZpMxNjPSxKPwfD/B//YTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="65270948"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="65270948"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:07:32 -0700
+X-CSE-ConnectionGUID: LYFtxGDlRIu6hCEzWP6bfg==
+X-CSE-MsgGUID: tilehn2yQyu1xZRohk+8Pg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="139785170"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:07:26 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAnIh-000000029ep-0tO8;
+	Fri, 02 May 2025 13:07:23 +0300
+Date: Fri, 2 May 2025 13:07:22 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Sayyad Abid <sayyad.abid16@gmail.com>, linux-iio@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com, olivier.moysan@foss.st.com,
+	gstols@baylibre.com, tgamblin@baylibre.com, alisadariana@gmail.com,
+	eblanc@baylibre.com, antoniu.miclaus@analog.com,
+	stefan.popa@analog.com, ramona.gradinariu@analog.com,
+	herve.codina@bootlin.com, tobias.sperling@softing.com,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 1/5] iio: adc: ti-ads1262.c: add initial driver for
+ TI ADS1262 ADC
+Message-ID: <aBSZWs_rWNHZbU7V@smile.fi.intel.com>
+References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
+ <20250501100043.325423-2-sayyad.abid16@gmail.com>
+ <01cb0333-1ca7-46b3-9f32-5e81b8a53537@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                                      
-X-WP-MailID: 728dea30b0664b2579c9c2915b3f293e
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [YYN0]                               
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01cb0333-1ca7-46b3-9f32-5e81b8a53537@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Add ability to print out EHT capabilities from AP beacons.
+On Thu, May 01, 2025 at 12:37:30PM -0500, David Lechner wrote:
+> On 5/1/25 5:00 AM, Sayyad Abid wrote:
+> > Add the core driver file `ti-ads1262.c` for the TI ADS1262 ADC.
+> > This initial version implements basic IIO functionality for device
+> > probe via SPI and reading raw voltage samples from input channels.
 
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
- ieee80211.h |  1 +
- iw.h        |  1 +
- scan.c      |  8 +++++++
- util.c      | 62 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 72 insertions(+)
+...
 
-diff --git a/ieee80211.h b/ieee80211.h
-index 1e29371..c31041e 100644
---- a/ieee80211.h
-+++ b/ieee80211.h
-@@ -99,6 +99,7 @@ enum elem_id {
- enum elem_id_ext {
- 	EID_EXT_HE_CAPABILITY		= 35,
- 	EID_EXT_HE_OPERATION		= 36,
-+	EID_EXT_EHT_OPERATION		= 106,
- 	EID_EXT_EHT_CAPABILITY		= 108,
- };
- 
-diff --git a/iw.h b/iw.h
-index b8caccd..a423431 100644
---- a/iw.h
-+++ b/iw.h
-@@ -247,6 +247,7 @@ void print_he_operation(const uint8_t *ie, int len);
- void print_he_info(struct nlattr *nl_iftype);
- void print_eht_capability(const uint8_t *ie, int len, const uint8_t *he_cap,
- 			  bool from_ap);
-+void print_eht_operation(const uint8_t *ie, int len);
- void print_eht_info(struct nlattr *nl_iftype, int band);
- void print_s1g_capability(const uint8_t *caps);
- 
-diff --git a/scan.c b/scan.c
-index 748ead1..263d2e3 100644
---- a/scan.c
-+++ b/scan.c
-@@ -2426,10 +2426,18 @@ static void print_eht_capa(const uint8_t type, uint8_t len,
- 	print_eht_capability(data, len, ctx->he_cap, ctx->from_ap);
- }
- 
-+static void print_eht_oper(const uint8_t type, uint8_t len, const uint8_t *data,
-+			   const struct ie_context *ctx)
-+{
-+	printf("\n");
-+	print_eht_operation(data, len);
-+}
-+
- static const struct ie_print ext_printers[] = {
- 	[EID_EXT_HE_CAPABILITY] = { "HE capabilities", print_he_capa, 21, 54, BIT(PRINT_SCAN), },
- 	[EID_EXT_HE_OPERATION] = { "HE Operation", print_he_oper, 6, 15, BIT(PRINT_SCAN), },
- 	[EID_EXT_EHT_CAPABILITY] = { "EHT capabilities", print_eht_capa, 13, 30, BIT(PRINT_SCAN), },
-+	[EID_EXT_EHT_OPERATION] = { "EHT Operation", print_eht_oper, 5, 10, BIT(PRINT_SCAN), },
- };
- 
- static void print_extension(unsigned char len, unsigned char *ie,
-diff --git a/util.c b/util.c
-index c6d5974..e285e20 100644
---- a/util.c
-+++ b/util.c
-@@ -1924,6 +1924,68 @@ void print_he_operation(const uint8_t *ie, int len)
- 	}
- }
- 
-+void print_eht_operation(const uint8_t *ie, int len)
-+{
-+	uint8_t oper_parameters = ie[0];
-+	uint8_t disabled_subchannel_info_present = oper_parameters & 0x02;
-+	uint8_t eht_operation_info_present = oper_parameters & 0x01;
-+
-+	printf("\t\tEHT Operation Parameters: (0x%02x)\n",
-+	       oper_parameters);
-+
-+	if (oper_parameters & 0x04)
-+		printf("\t\t\tEHT Default PE Duration\n");
-+
-+	if (oper_parameters & 0x08)
-+		printf("\t\t\tGroup Addressed BU Indication Limit\n");
-+
-+	printf("\t\t\tGroup Addressed BU Indication Exponent: 0x%01x\n",
-+	       (oper_parameters >> 4 & 3));
-+
-+	printf("\t\tBasic EHT-MCS And Nss Set: 0x");
-+	for (uint8_t i = 0; i < 4; i++)
-+		printf("%02x", ie[1 + i]);
-+
-+	printf("\n");
-+
-+	if (eht_operation_info_present) {
-+		uint8_t offset = 5;
-+		const uint8_t control = ie[offset];
-+		uint8_t eht_operation_info_len = 3;
-+
-+		if (disabled_subchannel_info_present)
-+			eht_operation_info_len += 2;
-+
-+		if (len - offset < eht_operation_info_len) {
-+			printf("\t\tEHT Operation Info: Invalid\n");
-+			return;
-+		}
-+
-+		printf("\t\tEHT Operation Info: 0x");
-+		for (uint8_t i = 0; i < eht_operation_info_len; i++)
-+			printf("%02x", ie[offset + i]);
-+
-+		printf("\n");
-+		printf("\t\t\tChannel Width: ");
-+		switch (control & 0x7) {
-+		case 0: printf("20 MHz\n"); break;
-+		case 1: printf("40 MHz\n"); break;
-+		case 2: printf("80 MHz\n"); break;
-+		case 3: printf("160 MHz\n"); break;
-+		case 4: printf("320 MHz\n"); break;
-+		}
-+
-+		printf("\t\t\tCenter Frequency Segment 0: %hhu\n",
-+		       ie[offset + 1]);
-+		printf("\t\t\tCenter Frequency Segment 1: %hhu\n",
-+		       ie[offset + 2]);
-+
-+		if (disabled_subchannel_info_present)
-+			printf("\t\t\tDisabled Subchannel Bitmap: 0x%02x%02x\n",
-+			       ie[offset + 3], ie[offset + 4]);
-+	}
-+}
-+
- void iw_hexdump(const char *prefix, const __u8 *buf, size_t size)
- {
- 	size_t i;
+> > +#include <linux/kernel.h>
+> 
+> This header includes too much, please use more specific headers.
+> 
+> > +#include <linux/device.h>
+
+Ditto for this one. Include it only if really required, otherwise we have often
+used dev_printk.h, device/devres.h.
+
+> > +#include <linux/module.h>
+> > +#include <linux/mod_devicetable.h>
+> > +#include <linux/delay.h>
+> 
+> Alphabetical order is preferred.
+
+> > +#include <linux/spi/spi.h>
+> > +#include <linux/unaligned.h>
+
+Also many headers are missing (probably due to inclusion of kernel.h).
+
+...
+
+> > +#define ADS1262_SETTLE_TIME_USECS	10000
+
+_US is fine (no need to have longer _USECS, which is not so standard).
+
+Also
+(10 * USEC_PER_MSEC)
+
+...
+
+> > +/* The Read/Write commands require 4 tCLK to encode and decode, for speeds
+> > + * 2x the clock rate, these commands would require extra time between the
+> > + * command byte and the data. A simple way to tacke this issue is by
+> > + * limiting the SPI bus transfer speed while accessing registers.
+> > + */
+
+/*
+ * Wrong style for multi-line comments, please use
+ * this as an example. Fix all comments in the file
+ * accordingly.
+ */
+
+...
+
+> > +/* For reading and writing we need a buffer of size 3bytes*/
+
+Missing space.
+
+...
+
+> > +/**
+> > + * struct ads1262_private - ADS1262 ADC private data structure
+> > + * @spi: SPI device structure
+> > + * @reset_gpio: GPIO descriptor for reset pin
+> > + * @prev_channel: Previously selected channel for MUX configuration
+> > + * @cmd_buffer: Buffer for SPI command transfers
+> > + * @rx_buffer: Buffer for SPI data reception
+> > + */
+> > +struct ads1262_private {
+> > +	struct spi_device *spi;
+
+Is it really used? Or is struct device *dev just enough?
+
+> > +	struct gpio_desc *reset_gpio;
+> > +	u8 prev_channel;
+> > +	u8 cmd_buffer[ADS1262_SPI_CMD_BUFFER_SIZE];
+> > +	u8 rx_buffer[ADS1262_SPI_RDATA_BUFFER_SIZE] __aligned(IIO_DMA_MINALIGN);
+> 
+> cmd_buffer is also used with SPI, so __aligned(IIO_DMA_MINALIGN); needs to go
+> there instead.
+> 
+> > +};
+
+...
+
+> > +#define ADS1262_CHAN(index)						\
+> > +{									\
+> > +	.type = IIO_VOLTAGE,						\
+> > +	.indexed = 1,							\
+> > +	.channel = index,						\
+> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),			\
+> > +	.scan_index = index,						\
+> > +	.scan_type = {							\
+> > +		.sign = 's',						\
+> > +		.realbits = ADS1262_BITS_PER_SAMPLE,			\
+> > +		.storagebits = 32,					\
+> > +		.endianness = IIO_CPU					\
+
+Leave trailing comma here and in the similar cases (when it's not a clear
+terminator entry).
+
+> > +	},								\
+> > +}
+
+...
+
+> > +static int ads1262_write_cmd(struct ads1262_private *priv, u8 command)
+> > +{
+> > +	struct spi_transfer xfer = {
+> > +		.tx_buf = priv->cmd_buffer,
+> > +		.rx_buf = priv->rx_buffer,
+> > +		.len = ADS1262_SPI_RDATA_BUFFER_SIZE,
+> > +		.speed_hz = ADS1262_CLK_RATE_HZ,
+> > +	};
+> > +
+> > +	priv->cmd_buffer[0] = command;
+> > +
+> > +	return spi_sync_transfer(priv->spi, &xfer, 1);
+> > +}
+> > +
+> > +static int ads1262_reg_write(void *context, unsigned int reg, unsigned int val)
+> > +{
+> > +	struct ads1262_private *priv = context;
+> > +
+> > +	priv->cmd_buffer[0] = ADS1262_CMD_WREG | reg;
+> > +	priv->cmd_buffer[1] = 0;
+> > +	priv->cmd_buffer[2] = val;
+> > +
+> > +	return spi_write(priv->spi, &priv->cmd_buffer[0], 3);
+> > +}
+
+Can't you use regmap SPI instead?
+
+...
+
+> > +static int ads1262_reg_read(void *context, unsigned int reg)
+> > +{
+> > +	struct ads1262_private *priv = context;
+> > +	struct spi_transfer reg_read_xfer = {
+> > +		.tx_buf = priv->cmd_buffer,
+> > +		.rx_buf = priv->cmd_buffer,
+> > +		.len = 3,
+> > +		.speed_hz = ADS1262_CLK_RATE_HZ,
+> > +	};
+> > +	int ret;
+> > +
+> > +	priv->cmd_buffer[0] = ADS1262_CMD_RREG | reg;
+> > +	priv->cmd_buffer[1] = 0;
+> > +	priv->cmd_buffer[2] = 0;
+> > +
+> > +	ret = spi_sync_transfer(priv->spi, &reg_read_xfer, 1);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> 
+> Why not use regmap? You will still custom read/write functions similar to these
+> because of needing the lower SCLK rate, but it will give you a bunch of other
+> nice features for free.
+
+Ah, same comment above :-)
+
+...
+
+> > +static int ads1262_reset(struct iio_dev *indio_dev)
+> > +{
+> > +	struct ads1262_private *priv = iio_priv(indio_dev);
+> > +
+> > +	if (priv->reset_gpio) {
+> > +		gpiod_set_value(priv->reset_gpio, 0);
+> > +		usleep_range(200, 300);
+> 
+> Use fsleep(). Also, could make this clear that it is 4 tCLK cycles (the hard-
+> coded value would have to be changed if external clock support was added).
+> 
+> > +		gpiod_set_value(priv->reset_gpio, 1);
+> 
+> The DT bindings will take care of active low, so this looks backwards. Also
+> st->reset_gpio is never assigned, so this is dead code.
+> 
+> > +	} else {
+
+Redundant else. Just return from the conditional and have the below outside of
+it.
+
+> > +		return ads1262_write_cmd(priv, ADS1262_CMD_RESET);
+> > +	}
+
+Missing blank line, but see above.
+
+> > +	return 0;
+> > +}
+
 -- 
-2.39.5
+With Best Regards,
+Andy Shevchenko
+
 
