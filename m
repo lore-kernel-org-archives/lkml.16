@@ -1,145 +1,83 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88AA7246794;
-	Fri,  2 May 2025 12:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07E9CA95E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189210; cv=none; b=ZysRObp5f0s1FNmVhpFpVIsCHVfixcjFMKa2NaOfCwsuAiIgg6loZ5jgmNsQKGTm6YVJEXKKJ1OcWcIy8ZWqETXoMyE11Xar8UVh4Tx0bvB5UUaiIQT3JuomPZRm5+PKS06ApGBfCoLdwTms7Yko2+/X3+7GkV0bCuOf1taPerg=
+	t=1746189278; cv=none; b=h4z+E2b/29PGsQ71bneR/9ja2qVot1GzK9jWPY7YOdbomMgSdeXTJq4sP6n2a75Uu5yifig4YH2iq8gEdyLfQ7NiqnbDRVA/Q79AL8xY1eo6euyyGiYfE6ltBwyKUZQTyBDty87eItq9hlFoGXqwsgujLp7DAAkzR0awojeIm20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189210; c=relaxed/simple;
-	bh=z6z8DOFK9JCqv0xb1jgf68DObLMsaturhjSGbJ1U/rk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kpA/nkLwkPtcxSoNIL2w7IcMVxB/BTfDTIoazdH3BS3qHqzs06IRmv2E3m7C7tLi9yOn/8iu7W62WgHRvNvD/IXSq4RDOIy1qAlGUOrHSIq+ISdjL/FfwVq37LARmH1uCQ9KWtTfyPYMa++LHQ13YRKKhiTYw3suliVXEwbEH0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Eey53Ler; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746189278; c=relaxed/simple;
+	bh=g7A0sbkQ4Aynm7fwdnm7WH5a5k+uVhYF0BxdHKNF7Yk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SRE00AUIdSSryeAf00rj9qU+lXdwMHLaqX/hnjOXxAGauqfh7KVY8xYBemOqXYQnban9YUb5OOvhSuFsQACcgZH9sZQ1gB9qbLf0f03EDpjdYUwy0jOQKTbXgsS0pseInnmoM8RcoiW7cd1Ji439KVhv0P/OnXzuYK/gxYPXD4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ELO2151L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=aplA9bZ4; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eey53Ler"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-30332dfc820so2403483a91.2;
-        Fri, 02 May 2025 05:33:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746189208; x=1746794008; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=8LFbdO81pjLbU3iMuNN+ugtfZ7paGqSVKOTIGx3Lamw=;
-        b=Eey53LerByZlVWMrZqdf7cDNnOnaNxUXWyS1npovmo6K5d5hwrszCeD5k6uOIGbt4N
-         p3yfQUu96sPZ88SpI7mRRVppGe84elX75Ujnt3v+shJ5KDyLdCECfRYLE+y+aru4P75q
-         NsX1q639oNF5pouayzj4ejaGsRw16WD1fDgHGKppJxEG667hKWZWFr3QlVv2CYqgEyvG
-         l1c6b31ujG2A3Lr6d0J8T+fHJZ6izhMhHivtTBfDx9I8Z9sTJAO5KB53NMs6FtTruICA
-         zLXPs1dJsEMoexNJJSxBRM6WjEplpQ3UD4BEPdxYSZM6yA8VM2fzYVLiXbh47WM0HpzG
-         WyQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746189208; x=1746794008;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8LFbdO81pjLbU3iMuNN+ugtfZ7paGqSVKOTIGx3Lamw=;
-        b=C8P1FuFTvwQXjGpdW/qsftv2ca19c+ehOFtgj7y2JlefQ4GmZFWLW9WN+Jro1zkTjp
-         jGW6hAaXtENLP8VFucNngbgbbr9OH+Mu2F1W3PwqEHFLT1CT2ehqo78LDg79x2z0C/rd
-         Kb8/e1kSmztERYjjIrw39AsIxSdJGrR1rsrp74Mxf/jnHzDql1lZb0LSUwZBLm1D53T5
-         5CszWYjviG/BmtxwyAeMZso3XHuDeLQYjkLmH2NyuqbzH5NF7u3PC4tpWs2E8mUILLN3
-         6w+tWji/Ij6tNFOBYsGLMvoxyEVUOosYnyQl9Jr5ozv4jqt7dm6CP9fkYSUK6+oHs4KB
-         h3HQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVRmNX/4yd7aCk/BpkaOBbkRbSTynoxe61fNT6fJXKKL/jktSjXxhMNJYITNWkYtqrhObrxKlfUnI8YNN4=@vger.kernel.org, AJvYcCXsfaYMfP0kcvhXZrKrqs0Gtd7hLgyxXWAw753XO4JXmKW5TUcqjQunLNclLZ5H7TYEKgzStkE4@vger.kernel.org
-X-Gm-Message-State: AOJu0YxR+RVVtxyf8XXiOSyXfLz5x/BMwQ28j4iybupIUBuoG81yzAJg
-	LgS2SdNa9DrzFE10KU5klzuJFzWA6pXpZY74TmzA70TZ8FO0tcKW
-X-Gm-Gg: ASbGnctsGmUHFMV8kMGCzXEO4onFOeLzrZ8hPsRsnQKLC5Z4u+/ARajsADZNdlwKwic
-	F/XBhSuAOehnd1vTFqdGeNWrU0txJAdaIGy13S9010wVeWbPEL2XITd/ikkwayVsdN5mRGchjag
-	1fBn0AFUTQtt3ScfXc0UzTG59gciy2kDH+VAVidz/vh4oGR0tS1vuT1CmioljNTu4gSKJkrrMAk
-	J5s0+VcRfgCVpbvHpH5LR0Ydi/M6nMB71WGciZU0G5zG8urCeJBVxYGIxFCGPiUsOCtIV9YUCLb
-	/doEdh3Q8JyBzJPb2KmHvsJUFIIdiMqa36+rYfHm5R2R+YNYAOgir+MnBETJvGEhA/Q=
-X-Google-Smtp-Source: AGHT+IES1oMpEpa2nbuC/A86IqMpoOcTS4u6tbnudaz9Gj5lBssrqoVHSSuYEIPZqrNZJrdwxL2KZg==
-X-Received: by 2002:a17:90b:37c8:b0:309:be48:a77c with SMTP id 98e67ed59e1d1-30a4e5c6388mr5128351a91.18.1746189207654;
-        Fri, 02 May 2025 05:33:27 -0700 (PDT)
-Received: from [192.168.0.24] (home.mimichou.net. [82.67.5.108])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151ea71csm5934345ad.101.2025.05.02.05.33.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 05:33:27 -0700 (PDT)
-Message-ID: <8b15a1ca-fbda-4bc0-b6af-e543ee03f7f9@gmail.com>
-Date: Fri, 2 May 2025 14:33:17 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ELO2151L";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="aplA9bZ4"
+Date: Fri, 2 May 2025 14:34:33 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746189275;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9ELROxN1hM3HYk1nE1ZM0lckEfEoPs+ETna07i6Nbuo=;
+	b=ELO2151Ld++sm/3cMYKVH+Mg05H/0pumh7u1hRazIUV6n1m2wfFvJ/ooqwYpEnUtL6Q1IZ
+	qNi00hPcDCBl3y+UjOBaBnnUq1cxxeAtXWZzyEDrhkRKqlY9BjREjvI1g4ASKuofmMKXYn
+	AOium2JteJnL+AfggBWf/jpgxc31nIemKadWwdH8jTf7KUsXdxjKila7km6akmkM1+A99i
+	ut0yuE9LuWQRAV7cBrvuzKV8KQ7oI4rzNMEANQQ9UjbS0kSbccUNGZaG+1xp2uWd4vP3Ft
+	QwMAyhe0lutM1wqS3P8HYPDQPIiMfs3qP15aWAvglePZKI24TH4AiY+GVvnFkg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746189275;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9ELROxN1hM3HYk1nE1ZM0lckEfEoPs+ETna07i6Nbuo=;
+	b=aplA9bZ4Yvgoslu5e4uU7ZLM/cHGCMQaRqonQ9f+eIaPogCuiBvIHwigNycpC6u6I6Iubb
+	5FfH4bIVAuY+VgDQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Prakash Sangappa <prakash.sangappa@oracle.com>
+Cc: linux-kernel@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, tglx@linutronix.de,
+	kprateek.nayak@amd.com
+Subject: Re: [PATCH V3 1/4] Sched: Scheduler time slice extension
+Message-ID: <20250502123433.AHDVLZdY@linutronix.de>
+References: <20250502015955.3146733-1-prakash.sangappa@oracle.com>
+ <20250502015955.3146733-2-prakash.sangappa@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.15 000/368] 5.15.181-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250501081459.064070563@linuxfoundation.org>
-Content-Language: en-US
-From: Florian Fainelli <f.fainelli@gmail.com>
-Autocrypt: addr=f.fainelli@gmail.com; keydata=
- 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
- WlfRzlpjIPmdjgoicA==
-In-Reply-To: <20250501081459.064070563@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250502015955.3146733-2-prakash.sangappa@oracle.com>
 
+On 2025-05-02 01:59:52 [+0000], Prakash Sangappa wrote:
+> diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+> index 20154572ede9..b26adccb32df 100644
+> --- a/kernel/entry/common.c
+> +++ b/kernel/entry/common.c
+> @@ -98,8 +99,12 @@ __always_inline unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+>  
+>  		local_irq_enable_exit_to_user(ti_work);
+>  
+> -		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY))
+> -			schedule();
+> +		if (ti_work & (_TIF_NEED_RESCHED | _TIF_NEED_RESCHED_LAZY)) {
 
+I asked to limit this to LAZY only.
 
-On 5/1/2025 10:18 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.15.181 release.
-> There are 368 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Sat, 03 May 2025 08:13:53 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.15.181-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.15.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
+> +		       if (irq && rseq_delay_resched())
+> +			       clear_tsk_need_resched(current);
+> +		       else
+> +			       schedule();
+> +		}
+>  
+>  		if (ti_work & _TIF_UPROBE)
+>  			uprobe_notify_resume(regs);
 
-On ARCH_BRCMSTB using 32-bit and 64-bit ARM kernels, build tested on 
-BMIPS_GENERIC:
-
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
-
+Sebastian
