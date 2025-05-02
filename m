@@ -1,205 +1,157 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3870142A87
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:07:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A04342A87;
+	Fri,  2 May 2025 18:10:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746209282; cv=none; b=RPc8PKjIUylVeSlIPoO16DAk2PRFLnJu8SF006KYfT8T3DPA6I4je0kFv4QnOtYpPlJsS1bVOoU8tZbssPNL6YDya43sdcB+uyYniQfmXMu/r+LZ2fGL0RiryRzmpsBKk15RJMBGWJ8jIF10nHFoXKnihiP52UtV54L/MG0ISpc=
+	t=1746209422; cv=none; b=dZVLpDk76MBLh0Y9538xO/s7EchN8drZWbme7de1lrtIOwoFostyl5TNUAU5HB9r72hGQs8CYT/LgkXxHlgcMGBlo+Q6b0CWY/3I6hEmwhOsCYNAENukaYkkMTOql43BCAOWEKzYZAV10BK1+mdwY2n6NjJuFN/9+zJEW2ZwJ7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746209282; c=relaxed/simple;
-	bh=rwg4gawI96y1Cnef5dyxfcZ6XeGlVWYyHuhSqsnh9Xw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MlMSM8/hSqgjUImlVQh/Es9lz3Vyc5sOtJK9fuNktp1zRpZlypW+mQXKUkYHSbo9wsSYwNSCt1uaA6ZwGtf/TIbdhMcO2Lw8WO2LMp5w0KBCS4qxE4eN+iYusMoCqoU1HwyMdddQtCS6Ge6L12BFHMIGQ1PJV8mKaSNIokEydFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8eurDPu; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746209422; c=relaxed/simple;
+	bh=1wXTTHb5bXBrdK2EgccYQYFHa4IE2A2pICCNASrvymc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=euZt8aldPEb5N55H7c294NmxxViMoxWJ6UOWTkaftKyTYLaHxL31j7yWohnBw8U9U4ZvtZuoDwY+aOsxa9uSLCRgqaIuJZr2RF/DcwSsWTsnmx5NjXR5+si++hnEEsgxm7Af6169i78ef80yDXFiNG6IGa80VgeW3TGbouIfNKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Ik1PM2pU; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8eurDPu"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5f88f236167so954a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:07:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746209278; x=1746814078; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6LQbC+nJszXeBREigfR47+CLzCElXLbpUOZ74/4Z7og=;
-        b=r8eurDPun8xgR/Cy53pxm5RlLO7tpb+bXx4qlkMx3iovhWBdoF28Ok3B8H7kkup1wH
-         ujctdsrmmjRqE83net+ATn0jJ/8/07V2Q2/KCFScFrTeH7lonCm45KZTd8I23G1LzP/1
-         HhpmcCrhE6dUTP7coidLxv1p1FWt4o9TvlTdOj9eS2G2zKv/U0oYbSAAZKz3yMcG1mot
-         MYsxWeRA365JP+DDAUKkNrwQHuidQ0LaaDBYwPQIleFvo1s8NbzvUPJV7/bxiXvW/5VI
-         9yEBiQOv5w/Q+Z66+KQhr1CCds/TqLBYKjinnAgpqIemmbDPoxu4y26W8NC8gRHF6dWe
-         sXXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746209278; x=1746814078;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6LQbC+nJszXeBREigfR47+CLzCElXLbpUOZ74/4Z7og=;
-        b=ndZneVMudU58THX+Km0uKm5UhoU6ocob3xOl9F4mGeUcic8QvoUEznvYuIDIXV7GNX
-         HEq4SIQofAbBOyhwM/lQIvLEmWFhkRKG/4lYA3v5p8RNiDucERH5/TN+M61petg81IGl
-         opu1hFVTlXCGltwpiCdsopvtRQH74t6RkgSjENuzlpjOSNr8zez3nd56DQNdG1dSg30/
-         fv6Dhr9xcMQkB87GRZAHgpo0QbKbzFocKBC3xaUabkC3mNlCafkvQLH6JSd5YTVZi7hP
-         qsTGJe5f/Fwwh0DNok3AwNBUwF5gQ75MKibeYmNWBIfUORnEtmvTyMBFYDzPoi2wMOCF
-         e7/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVtLpy2LUon4pHtm1QDYNBd7eCRNEaZdoHzQ3u3yJ9d9mx5KljqNhJBHoogRFdwZ9SpX6DfS8t9cwlPP4E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5bMvqZdy6GzOKIDXrfjSRM2XZFLCsNZ8mKz1Yzf9+Ofm3rWrZ
-	KnOcH+fxIQeS4P/0yU1SllYgBGnybfGw4low6NU0Pbi4Ae+iawhKq+/aFfENuudzBvdR0AEepZn
-	PLjZ9QyizNWQ1F1c5kpjBrzqDE41I1I4bYBLz
-X-Gm-Gg: ASbGncv30nZc6kNFkZnXwWbvgoNrcBvkvNJK/PT/qDI8YQ+kfZUU45KtbhgDnOJ70Kg
-	drG9yr8tJNb6dCI7fP3mFp8O/2Fodt1/f7Sl7PG0+ZpBYinVCBkfpJQcTmlD3dH5HR2I/4TYEqP
-	PgcT/dPZHiC1scD2X38fjFa3Yvniya97dwf722Xc7bSXJsMFNVXDF1
-X-Google-Smtp-Source: AGHT+IHXyGsWkjb/CVg4mHXhQIW8JT6cKEM7tCeu1T+lD4b6/5HaRqRhHLciPrNsxgfv94oycGry6l/tyQ+gE9t0aSo=
-X-Received: by 2002:a05:6402:3199:b0:5fa:82a1:b99c with SMTP id
- 4fb4d7f45d1cf-5faa69618bamr10645a12.0.1746209278292; Fri, 02 May 2025
- 11:07:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ik1PM2pU"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542I9URm2109765
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 2 May 2025 11:09:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542I9URm2109765
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746209374;
+	bh=vq/A29GwC24q+yBRNQofOThRodhc2pHOhalxWP8yF44=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ik1PM2pUOLDwsjM0pqh49zNwLFsJWsVvCOj193iIxEYzWbmWmPkLOpNjbPdzrjX3v
+	 011IuXpNubhbptoPBokYY/dElyxPQHBCRBjU3Lulkb2yxO4epZ6XSk5+/VuLkmyTKm
+	 0Ud2Zan/4XorBw9nLxr1az3pZ8UdL1JipoDA4C6q89BQQ1lor7RIvGuJ3g6OnfiFiz
+	 CnEXvlTclGzLsYNkl8D2WwBsbJipZUTOsHbneDfOJuaejckEKDSBWeybOIBPjijOO0
+	 KGDNLUtdX+eqbIB7ygYhUbhkhUiAb06+5ytRj+5jyUF4CBn/8fUyg6Mi66qsYtwZ4H
+	 VoszEMjA20uGw==
+Message-ID: <2cbb468c-188e-4e6b-9b17-b60a66208c7a@zytor.com>
+Date: Fri, 2 May 2025 11:09:29 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
- <20250501-debugfs-rust-v3-2-850869fab672@google.com> <aBRrniLfCzWX7nbR@pollux>
-In-Reply-To: <aBRrniLfCzWX7nbR@pollux>
-From: Matthew Maurer <mmaurer@google.com>
-Date: Fri, 2 May 2025 11:07:47 -0700
-X-Gm-Features: ATxdqUFFztN991yYQoIh5MKauNa5jMjEKkNxwstl3fgfZHk3lc9srhF4_BVJl20
-Message-ID: <CAGSQo02bU9HLG=KoYAukUWDX=Ky+kx_wCJszpS-x4gjWXWrYjQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] rust: debugfs: Bind file creation for long-lived Display
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Sami Tolvanen <samitolvanen@google.com>, Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        wei.liu@kernel.org, ajay.kaher@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
+        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
+        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
+        haiyangz@microsoft.com, decui@microsoft.com,
+        dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-3-xin@zytor.com> <aBR8EoYkxaFHwZN2@gmail.com>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aBR8EoYkxaFHwZN2@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 1, 2025 at 11:52=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Thu, May 01, 2025 at 10:47:42PM +0000, Matthew Maurer wrote:
-> > +/// Handle to a DebugFS file.
-> > +#[repr(transparent)]
-> > +pub struct File(ManuallyDrop<Dir>);
->
-> Same as with SubDir, please keep your original approach with keep().
->
-> Exposing this as a separate type is much better, but I still find it a bi=
-t weird
-> that it uses Dir internally, which still provides methods that are not
-> applicable.
->
-> I think it would be good to have the following types instead:
->
->         // Generic wrapper around the dentry pointer.
->         struct Entry;
->
->         // Based on Entry; provides Dir specific methods.
->         struct Dir;
->
->         // Based on Dir; implements Keep.
->         struct SubDir;
->
->         // Based on Entry; implements Keep.
->         struct File;
->
->         // Common trait that implements keep().
->         trait Keep;
->
-> > +impl File {
-> > +    /// Remove the file from DebugFS.
-> > +    ///
-> > +    /// # Examples
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// let dir =3D Dir::new(c_str!("foo"));
-> > +    /// {
-> > +    ///     let file =3D dir.display_file(c_str!("bar"), &0);
-> > +    ///     // "foo/bar" is created.
-> > +    /// }
-> > +    /// // "foo/bar" still exists.
-> > +    /// {
-> > +    ///     let file =3D dir.display_file(c_str!("baz"), &0);
-> > +    ///     // "foo/baz" is created.
-> > +    ///     file.remove();
-> > +    ///     // "foo/baz" is gone.
-> > +    /// }
-> > +    pub fn remove(self) {
-> > +        drop(ManuallyDrop::into_inner(self.0))
-> > +    }
-> > +}
->
-> Same as with my comment on Dir::subdir(), it really gets confusing if we =
-invert
-> the normal drop() logic. Removing the file when it is dropped and keeping=
- it
-> when calling keep() is much more intuitive..
->
-> > +
-> > +#[cfg(CONFIG_DEBUG_FS)]
-> > +mod helpers {
-> > +    use crate::seq_file::SeqFile;
-> > +    use crate::seq_print;
-> > +    use core::fmt::Display;
-> > +
-> > +    /// Implements `open` for `file_operations` via `single_open` to f=
-ill out a `seq_file`.
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// * `inode`'s private pointer must point to a value of type `T` =
-which will outlive the `inode`
-> > +    ///   and will not be mutated during this call.
-> > +    /// * `file` must point to a live, not-yet-initialized file object=
-.
-> > +    pub(crate) unsafe extern "C" fn display_open<T: Display>(
-> > +        inode: *mut bindings::inode,
-> > +        file: *mut bindings::file,
-> > +    ) -> i32 {
-> > +        // SAFETY:
-> > +        // * `file` is acceptable by caller precondition.
-> > +        // * `print_act` will be called on a `seq_file` with private d=
-ata set to the third argument,
-> > +        //   so we meet its safety requirements.
-> > +        // * The `data` pointer passed in the third argument is a vali=
-d `T` pointer that outlives
-> > +        //   this call by caller preconditions.
-> > +        unsafe { bindings::single_open(file, Some(display_act::<T>), (=
-*inode).i_private) }
->
-> Please split up unsafe operations.
->
-> > +    }
-> > +
-> > +    /// Prints private data stashed in a seq_file to that seq file.
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// `seq` must point to a live `seq_file` whose private data is a =
-live pointer to a `T` which is
-> > +    /// not being mutated.
-> > +    pub(crate) unsafe extern "C" fn display_act<T: Display>(
-> > +        seq: *mut bindings::seq_file,
-> > +        _: *mut core::ffi::c_void,
-> > +    ) -> i32 {
-> > +        // SAFETY: By caller precondition, this pointer is live, point=
-s to a value of type `T`, and
-> > +        // is not being mutated.
-> > +        let data =3D unsafe { &*((*seq).private as *mut T) };
->
-> This creates an intermediate reference to private, which is UB. Please us=
-e
-> addr_of! instead.
+On 5/2/2025 1:02 AM, Ingo Molnar wrote:
+> 
+> * Xin Li (Intel) <xin@zytor.com> wrote:
+> 
+>> index 94408a784c8e..13335a130edf 100644
+>> --- a/arch/x86/include/asm/tsc.h
+>> +++ b/arch/x86/include/asm/tsc.h
+>> @@ -7,7 +7,81 @@
+>>   
+>>   #include <asm/cpufeature.h>
+>>   #include <asm/processor.h>
+>> -#include <asm/msr.h>
+>> +
+>> +/*
+>> + * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+>> + * constraint has different meanings. For i386, "A" means exactly
+>> + * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+>> + * it means rax *or* rdx.
+>> + */
+>> +#ifdef CONFIG_X86_64
+>> +/* Using 64-bit values saves one instruction clearing the high half of low */
+>> +#define DECLARE_ARGS(val, low, high)	unsigned long low, high
+>> +#define EAX_EDX_VAL(val, low, high)	((low) | (high) << 32)
+>> +#define EAX_EDX_RET(val, low, high)	"=a" (low), "=d" (high)
+>> +#else
+>> +#define DECLARE_ARGS(val, low, high)	u64 val
+>> +#define EAX_EDX_VAL(val, low, high)	(val)
+>> +#define EAX_EDX_RET(val, low, high)	"=A" (val)
+>> +#endif
+> 
+> Meh, this patch creates a duplicate copy of DECLARE_ARGS() et al in
+> <asm/tsc.h> now:
+> 
+>   arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+>   arch/x86/include/asm/msr.h:#define DECLARE_ARGS(val, low, high) u64 val
+>   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+>   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+>   arch/x86/include/asm/msr.h:     DECLARE_ARGS(val, low, high);
+>   arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) unsigned long low, high
+>   arch/x86/include/asm/tsc.h:#define DECLARE_ARGS(val, low, high) u64 val
+>   arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+>   arch/x86/include/asm/tsc.h:     DECLARE_ARGS(val, low, high);
+>   arch/x86/include/asm/tsc.h:#undef DECLARE_ARGS
+> 
+> Which was both an undeclared change, bloats the code, causes various
+> problems, and is totally unnecessary to boot.
+> 
+> Please don't do that ...
 
-I'm making this change, but so that I can be correct in the future,
-can you explain why taking an intermediate reference to private is UB?
-My understanding is that my provided vtable are supposed to be the
-only methods looking at this field, and they don't mutate it.
-Additionally, the `private_data` field on file is accessed this way in
-`miscdevice` at the moment - what makes it safe there, and UB here?
+Learned!
+
+Especially that every change needs to explicitly called out.
