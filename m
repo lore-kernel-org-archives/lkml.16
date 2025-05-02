@@ -1,41 +1,73 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5391632F2;
-	Fri,  2 May 2025 13:17:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5110254AEE
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:18:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191859; cv=none; b=UqrwedvJcd2pgTt71JQ0600CcPjU36KCFrW6wtAi4f0UOsJqWP0E8ZbFQ2dOR7hPhKy0yQP4GVSD8cUiNWN0s8W81/OTkGB0bjanICqiLoevZ0UmdHpFsrz390P4qSHRaAfl+V7v0oI2Q/oqheyPBe89sv3kzN9aGgoQO1lO/VA=
+	t=1746191892; cv=none; b=MaRNwcEjlcGVHhwuysUENhbmRT25d93GkSK7tvzxAxVzNBv3nE/iEv3XK8TI0Zb7G4g0fgmlr4gfy7vxgltufHk/0mphDME2WwqnclADbiI3oE8eD6pTl2JWucTz/R/4GwI6SskQNFrOTZUHOxCWw+rHFY8QdJoisv8uhTOJL7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191859; c=relaxed/simple;
-	bh=Zz5tEQSp2nyOEYwbhv7kdI9iSPvJ55sNnhWZna4qC2w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P8MkEBaLgMLr+vEjtIArxBfijir4UNR0idK8EA/Ehk1+UXWYVb9wyA061AP5vQqk3CU8vaOMQyI+rrB1vWkvMXlLLY1X6zx6yc9hvmdtJYILXP+AlVENXRaqo55ctC+nOP39TuYqi2q5yONxhuU+9anq8PLTS5MBAKeDpUXh8lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hCDXlrcm; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1746191892; c=relaxed/simple;
+	bh=C2CySGd6ZHVIgvcnuI0Gzs0w0QJK0EJWr2JrYPf1iPM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W58x3box7ejRu/USlVmboNzzE2CYkh9FKT4YKnK9GHYXAiAAhWEnrplwoLIN6amJGWBUw1oyGycvI96NBvS9IBn04pz86U/gF/rLzCca4E/4cqO1Ylcdb/teadjQvPm5iUjINC0xEN1BWKzzq1+x3u8kGmInykB/BG0PMwoW42Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KPI99qm9; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hCDXlrcm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1746191854;
-	bh=Zz5tEQSp2nyOEYwbhv7kdI9iSPvJ55sNnhWZna4qC2w=;
-	h=From:Date:Subject:To:Cc:From;
-	b=hCDXlrcmQCqkshuy5FbnW+qRrOFZcVDu6heaJSZluW0SfEA6nVRnwRupgEfTwLdvR
-	 RiEMt3lZ6jBB2kN4j2PEuWn+FRBPmf7r/iGqbGWVn6/paZ2GGQDUo9jhzG/n4L9SCp
-	 CsVXjrI5qNc4EOWAAZoI1mRA1PXLD9r0TCiI2abgvunQte40Wr7+bYB5sco/REv2gR
-	 RkI3RGB0syVPa3SvjGVHiCZ3Oh50yjscHWJAoUDTnVFOtSw6Yj1YoCniYHeAFrj/zS
-	 CR19i3tuKEJragLwX3lH/eBEE4NNqSO4Of1J7PVIKJ+A0uKopB6ki28Lxx1YOc/dtI
-	 bOmSmt/IrjbMA==
-Received: from yukiji.home (amontpellier-657-1-116-247.w83-113.abo.wanadoo.fr [83.113.51.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: laeyraud)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4D16117E05D9;
-	Fri,  2 May 2025 15:17:33 +0200 (CEST)
-From: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
-Date: Fri, 02 May 2025 15:17:19 +0200
-Subject: [PATCH v2] arm64: dts: mediatek: mt8390-genio-common: Set ssusb2
- default dual role mode to host
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KPI99qm9"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421NkOd024128
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 13:18:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=E8sL/zuc6D/PHkqkSglj+e
+	mYjJifggg81Nq8wDBMLOE=; b=KPI99qm9ExPxlHVF6V5AebqLA7bcpEELoypiUP
+	zEQka647HWR0dt/xoGLYcAx7hPXd1o2bAZJkvcrXiXV7xvBEwjIKYAiIpGHjGZfu
+	BshfXi+vyvkgP/jVfOlPtFtSjG/Ezuf2Gh8h/MUNmF0HFwWVL7t4tOCoM1ufJBbK
+	RDReHGzdNYtR6f+WTHMmc68kYsE1jnl62rNgSlkVKMEn0ox+2Q8C61zTbXGSFyb/
+	yiaYRHz/y6QVAYmsTF5bsiP54nclO9fUmoKOuYIY/69jepq+FAVp+T5zn3as4LLz
+	HCwz7mD3SQxoh62Ci2fTVcXtzRzXfI9PU+YzdFWpsv9PXUzA==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u80dgu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 13:18:09 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-7401179b06fso1911745b3a.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:18:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746191889; x=1746796689;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=E8sL/zuc6D/PHkqkSglj+emYjJifggg81Nq8wDBMLOE=;
+        b=sQv9IP0KLZ0BrRQJc6oRVEb4NeM2bVEAYVxq8HVDReEL2yPL+d0xH0yE+WAgOfh7qv
+         fazmt0O38O+yGI6fdu5ADU2SfI6m0Ma1aU1Cx5am3kEyCHvQQzL1EC8+enu7ohRuOacz
+         dJjR8dWZfbrDSN7K/4PJPm4pfdHTSh1qLLdxtFbwj1kMyYMmHiaXfkB5XQELuh+nFVrZ
+         5SvsjH9hruRDhUP5Z51+bR3OFtFh3bi0MRBdotClyflLp2BSpvxRNdob7nE0/0+Hv8+y
+         aYBcvfNRfSwY4puEPlQqS2cbdLAvdDylyNXBZpyLLFTewE/m4nZuRht8Rhe+/Ir0CO2L
+         yiSA==
+X-Forwarded-Encrypted: i=1; AJvYcCV142xd9iQI4zzw7umzPw4KQYEX98PpNqynoMWEwl+EUwDb/gJn6vBsMS+dd1Z98dRh41aQPvcD+y6q/Zo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3MtyU6u/+UoSc0zloMONtygVUAjUe5m2v45yne6MNcIza7U97
+	o4RZ0aU0ZTErrpHcqdrf4YjWhurhITgOk8/9hK06NXS4Yet8iuFM+8BgVIZhUhf7mi01MwYjXLF
+	IAo51Re5p+hHHSvtddtGncBvXpXofaFDis9xlYx62ChYbNnomdVZdP7n68k/EB0Q=
+X-Gm-Gg: ASbGncsYE01hF+xeDy1OnF1lu/E+qvqbWQnsqh6CPSg2l+sqTN4x9CeNQjKSEm8kboI
+	QuMK+tz5r0HtVk/16HyaQTupj4BxTe4IEjTjYEPtZe9N0JNHJzXfx1Ud8hbkH+UYjlnRzB/Jvma
+	oqCZWjHJZKWqdwf/u0ErebptBW0Z4bB9z0Uf2BnOkq8Fc6aft72rKtCEwJfk2XJN2WAQeEuqkaD
+	kuFq5PLgv1SRfIWk9MReWIZzrLktoDhDCcVIgQmx1cM1Blq77VroXzpJGdvHMebLR3/5Qcfx3fV
+	o4C9RucGyimcL9bnS9lmOB6wS1baVN1tLNhPqy81/paCVclF+y4535mOYkJPo/nLWsOxGN2zM6A
+	TRJ0DEpIPhq+rFbKBtnxU/PdT9tnhm5WcJw8wz/et9KnMlXM=
+X-Received: by 2002:a05:6a00:2884:b0:730:927c:d451 with SMTP id d2e1a72fcca58-74058b21917mr3667060b3a.20.1746191888807;
+        Fri, 02 May 2025 06:18:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGGnJlGhBXgkli0DVnltPlz+Rz3Rlz0Tns84nb67FojZk7pFA9oqlxADSBZO8yIBi2J9haR+g==
+X-Received: by 2002:a05:6a00:2884:b0:730:927c:d451 with SMTP id d2e1a72fcca58-74058b21917mr3667021b3a.20.1746191888400;
+        Fri, 02 May 2025 06:18:08 -0700 (PDT)
+Received: from hu-kathirav-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058dbb939sm1525886b3a.61.2025.05.02.06.18.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 06:18:07 -0700 (PDT)
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+Subject: [PATCH v3 0/4] Add support to read the restart reason from IMEM
+Date: Fri, 02 May 2025 18:47:48 +0530
+Message-Id: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,99 +76,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-mtk-genio-510-700-fix-bt-detection-v2-1-870aa2145480@collabora.com>
-X-B4-Tracking: v=1; b=H4sIAN7FFGgC/42OTQ6CMBCFr0Jm7Zj+QDCuvIdh0ZYBGoFqWwmGc
- HdruYDLN5nvfW+DQN5SgGuxgafFBuvmFMSpADOouSe0bcogmKiYFBec4gN7mq3DijOsGcPOrqg
- jthTJxISjqDk32mgtqIRU9PSUfrLk3hzZ0+udXPE4glaB0LhpsvFazLRGzL6KCfgBgw3R+U8eu
- fBMHHsk/2fPwpGjLEkJ03FZd/Jm3Dgq7bw6Jyk0+75/AbbVXZsJAQAA
-X-Change-ID: 20250328-mtk-genio-510-700-fix-bt-detection-2711cbcbb2e4
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mediatek@lists.infradead.org, 
- Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAPzFFGgC/x2MQQqAIBAAvxJ7TjCtyL4SEVJb7UXDjQrEv2ddB
+ uYwE4ExEDL0RYSAFzF5l0WXBcy7dRsKWrKDkqqRtezEvZxTQMaPlr0TWCmjKtPq1baQsyPgSs+
+ /HMaUXgjRewpiAAAA
+X-Change-ID: 20250408-wdt_reset_reason-e12921963fa6
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, bod.linux@nxsw.ie
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191853; l=3055;
- i=louisalexis.eyraud@collabora.com; s=20250113; h=from:subject:message-id;
- bh=Zz5tEQSp2nyOEYwbhv7kdI9iSPvJ55sNnhWZna4qC2w=;
- b=qvb9qzrAn2vsXJAvQj69b8+UXVaTVio8Hm708kWHhI+mQMfO873wEv5CANPz4boCtv+vMqzJe
- NQj6VshybcQBcF7urOCeUk+8teXSTkam9xVVHVUA68fS/MkMnCa3y7e
-X-Developer-Key: i=louisalexis.eyraud@collabora.com; a=ed25519;
- pk=CHFBDB2Kqh4EHc6JIqFn69GhxJJAzc0Zr4e8QxtumuM=
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191883; l=2135;
+ i=kathiravan.thirumoorthy@oss.qualcomm.com; s=20230906;
+ h=from:subject:message-id; bh=C2CySGd6ZHVIgvcnuI0Gzs0w0QJK0EJWr2JrYPf1iPM=;
+ b=soBqD2Is5FZGH42QT7as39Hdc/zedRJbshj+tTlvhcydtgj44+D/FlIhZbi5N9U5HF50hLaCN
+ rDeReQoGfG6CApzwzr/oOsq20DaT01Eu9cY/slG2Zw9i2yu8n42ABBl
+X-Developer-Key: i=kathiravan.thirumoorthy@oss.qualcomm.com; a=ed25519;
+ pk=xWsR7pL6ch+vdZ9MoFGEaP61JUaRf0XaZYWztbQsIiM=
+X-Authority-Analysis: v=2.4 cv=Ldc86ifi c=1 sm=1 tr=0 ts=6814c611 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=-Vf3EJXieAsgESLsksMA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-GUID: 3SAo45Z_jhcxyuBZHuDUySfyLnv_HKAF
+X-Proofpoint-ORIG-GUID: 3SAo45Z_jhcxyuBZHuDUySfyLnv_HKAF
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwNSBTYWx0ZWRfX0lo92OJwD1dP 90JsAD4zf6MCajdCKZgsz2nwJVkxAwsHMCf9o/F7yY5ID1SFp7vRhlDqJ0K7vN1PJoNOmopG1ux BrQLmuiVxQjgjHJlwnt8/VE7ADkuQmHy8XwRvQYely7OzlNHa4TZ2Gb0/YvFjqRQpOesnnbHeuS
+ wS5ii2E9Om5ZCtsGz1m3cxX+Glggjhw6gZdImRytuRbMITNtsaWwESTCSPeJPtcM2cT9mXwyOJE v9ZKGTcRXspRvFIcn64OLOoukt1pWNI9cDEZtU/QBlARXXUMdbH9k+ZlDLcure49QL2Qq6lgy93 QXeGNAQNnCknvZ/nTl8Z170DNLHkR7VjXU2BuYRbBW+Dsk8dnvodpp5yEJgIRFU5DbjUNfjmqh9
+ 1atQDS6phhq+L27v7MMrgXNSkDUjjefmizh15PJputchnmtTpOuA4cVesPyRnUZktSvFb87j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 phishscore=0 impostorscore=0 clxscore=1015 spamscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 mlxscore=0 suspectscore=0
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020105
 
-On the Mediatek Genio 510-EVK and 700-EVK boards, ssusb2 controller is
-one but has two ports: one is routed to the M.2 slot, the other is on
-the RPi header who does support full OTG.
-Since Mediatek Genio 700-EVK USB support was added, dual role mode
-property is set to otg for ssusb2. This config prevents the M.2
-Wifi/Bluetooth module, present on those boards and exposing Bluetooth
-as an USB device to be properly detected at startup as the default role
-is device.
-To keep the OTG functionality and make the M.2 module be detected at
-the same time, add role-switch-default-mode property set to host and
-also fix the polarity of GPIO associated to the USB connector, so the
-ssusb2 controller role is properly set to host when the other port is
-unused.
+In Qualcomm IPQ SoC, if the system is rebooted due to the watchdog
+timeout, there is no way to identify it. Current approach of checking
+the EXPIRED_STATUS in WDT_STS is not working.
 
-Fixes: 1afaeca17238 ("arm64: dts: mediatek: mt8390-genio-700: Add USB, TypeC Controller, MUX")
-Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+To achieve this, if the system is rebooted due to watchdog timeout, the
+information is captured in the IMEM by the bootloader (along with other
+reason codes as well).
+
+This series attempts to address this by adding the support to read the
+IMEM and populate the information via bootstatus sysfs file. As of now,
+we are handling only the non secure watchdog timeout reason.
+
+With the CONFIG_WATCHDOG_SYSFS enabled, user can extract the information
+as below:
+
+cat /sys/devices/platform/soc@0/f410000.watchdog/watchdog/watchdog0/bootstatus
+32
+
+Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 ---
-I've tested this patch on Mediatek Genio 510-EVK board with a kernel
-based on linux-next (tag: next-20250502).
----
+Changes in v3:
+- Picked up the relevant tags
+- Dropped the fallback compatible handling
+- Split the driver changes into 2. Introduce the device data in one and
+  extend the same in another for the use case
+- Linke to v2:
+  https://lore.kernel.org/linux-arm-msm/20250416-wdt_reset_reason-v2-0-c65bba312914@oss.qualcomm.com/
+
 Changes in v2:
-- Remove dr_mode property change and add role-switch-default-mode one
-  instead, as suggested by AngeloGioacchino Del Regno
-- Fix USB connector GPIO polarity
-- Reword comment in ssusb2 node to match v2 fix
-- Reword commit message and title
-- Rebase on linux-next (tag: next-20250502)
-- Link to v1: https://lore.kernel.org/r/20250331-mtk-genio-510-700-fix-bt-detection-v1-1-34ea2cf137f3@collabora.com
----
- arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-index 127764c4d6be81767ef534a7cb228989f471b3bd..aa8dd12a84ea9d8e0e879067c45f59563455b077 100644
---- a/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8390-genio-common.dtsi
-@@ -1333,8 +1333,18 @@ xhci_ss_ep: endpoint {
- };
- 
- &ssusb2 {
-+	/*
-+	 * the ssusb2 controller is one but we got two ports : one is routed
-+	 * to the M.2 slot, the other is on the RPi header who does support
-+	 * full OTG.
-+	 * As the controller is shared between them, the role switch default
-+	 * mode is set to host to make any peripheral inserted in the M.2
-+	 * slot (i.e BT/WIFI module) be detected when the other port is
-+	 * unused.
-+	 */
- 	dr_mode = "otg";
- 	maximum-speed = "high-speed";
-+	role-switch-default-mode = "host";
- 	usb-role-switch;
- 	vusb33-supply = <&mt6359_vusb_ldo_reg>;
- 	wakeup-source;
-@@ -1345,7 +1355,7 @@ &ssusb2 {
- 	connector {
- 		compatible = "gpio-usb-b-connector", "usb-b-connector";
- 		type = "micro";
--		id-gpios = <&pio 89 GPIO_ACTIVE_HIGH>;
-+		id-gpios = <&pio 89 GPIO_ACTIVE_LOW>;
- 		vbus-supply = <&usb_p2_vbus>;
- 	};
- };
+- Dropped the RFC tag
+- Reworked the driver changes to use the syscon API
+- Link to v1:
+  https://lore.kernel.org/linux-arm-msm/20250408-wdt_reset_reason-v1-0-e6ec30c2c926@oss.qualcomm.com/
 
 ---
-base-commit: 1c51b1ba38c07e4f999802eb708bf798dd5f5d1b
-change-id: 20250328-mtk-genio-510-700-fix-bt-detection-2711cbcbb2e4
+Kathiravan Thirumoorthy (4):
+      dt-bindings: sram: qcom,imem: Document IPQ5424 compatible
+      arm64: dts: qcom: ipq5424: Add the IMEM node
+      watchdog: qcom: introduce the device data for IPQ5424 watchdog device
+      watchdog: qcom: add support to read the restart reason from IMEM
+
+ .../devicetree/bindings/sram/qcom,imem.yaml        |  1 +
+ arch/arm64/boot/dts/qcom/ipq5424.dtsi              |  9 +++++
+ drivers/watchdog/qcom-wdt.c                        | 47 +++++++++++++++++++++-
+ 3 files changed, 55 insertions(+), 2 deletions(-)
+---
+base-commit: 3e039dcc9c1320c0d33ddd51c372dcc91d3ea3c7
+change-id: 20250408-wdt_reset_reason-e12921963fa6
 
 Best regards,
 -- 
-Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
 
