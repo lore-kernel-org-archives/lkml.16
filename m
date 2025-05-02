@@ -1,95 +1,184 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720D5376;
-	Fri,  2 May 2025 18:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C69E376;
+	Fri,  2 May 2025 18:44:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211221; cv=none; b=KbEEgShzfaUPLwX8NRzC1aW7oelfwkH6Zp6QRMiZ1oE7m3PYM62eVR4YGGLVwEnell/wFvyXrRY+cCH+OUy/4SRnJcKTw6J7ZwKnB1AIuFR4CeGbgUKn+gULzGNFXS8H/jdcqdfIEqKQnKcdtdIe7yJsPWcTFxwtbgzoazx5qEM=
+	t=1746211474; cv=none; b=u3u86x7ofDZziWrhPLKlRKmdrOIvhnb0uuBisTSLE/svA9b3FRf1zDGl0A5QIWLVyLWTc5fCzaD4i/tQCcXJ2sGQcG+ULxy1PO06t5gAhapkS8mDZyMxV/JY+4rz9KDxGkhwtxWKyz+kiy/abzJHXuR1xWVl32EAwtobsLjou0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211221; c=relaxed/simple;
-	bh=WWlvYWvX5sQaxtSf9NvaWtWy2I/qNM9Vtev3NIybXbA=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=m6OQ50RLpvaeRtGvomK9tJoVH3mqeU3oXFrR20mL8lCq7UHWzR/z8CyNeJlPvfeUwqz+e4wri7N2v2Qxt4H0KQFQdsZLpFotHiPHNE4fgfzYFbMtFBgj9yGe2JtXtz8av7KMuBqZwPzSsMd5isvWHYBXK1iyjnaqb2i26biFc0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yVuP1VVo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjCaq9RB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746211474; c=relaxed/simple;
+	bh=LWm2Mewi0nFsm/A6RwwDy26RvhP0+n0VoXoQ4yv8rig=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=e/pjH2iw6VUElVu2h28WRYK2lx/dKLYyAsPLal7eToKdsE4kRSRc6a3VyX0s9T2rKKC74oREr6QCihxXu0Fpka3EDuwoyfbnfmrsewVa5dCg0bJRTFM5vwDM9Dt+QFKKv6UFybuH/tF4fye8jcEukcQsWgoO/Zo4K6RAVVFMZyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ZebQyXQN; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yVuP1VVo";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjCaq9RB"
-Date: Fri, 02 May 2025 18:39:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746211210;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=j7SU9mYn5lZkGovlo7OmGthVh7uDHm0Iv4HEWIY1lb4=;
-	b=yVuP1VVo5ZX0KUuBXKbQO0wJqVJTna67H+uh5FGXfEgSSHn0Fp5VeVyJmmu9Q9lg+Epqq2
-	8IN2WGrtHYGwXeuDa6VFzaLHgdLWct39ZfCkXGPFdZZsduyvfc2FOtjA8ncIpnOIi5xKCp
-	sXR7bQ6TXJBShuzLCfU8MfRINg8CpWZD9gMVKzc5I/IymKOHD7iIgJIpqFgWTulCDsw6IM
-	1vE0+VXpJIKzfRkFm5eUmd4LZo+amdCPAhcEn7hynlC9FraPB12/7tJfoeV/7uj2zGgGMm
-	T67diNlIWoP1zPyNC/W0R9XLV5kUEhs4/Fybm3htR1HKFoYggSrQrsR5/wDFKA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746211210;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=j7SU9mYn5lZkGovlo7OmGthVh7uDHm0Iv4HEWIY1lb4=;
-	b=VjCaq9RB7eRuX9vL2uxoFskg7an1mdY2qS5g2NLUSNt+XDVo9/WwE0c7w1zXV4UnylPBwV
-	KLLVtW9989EcCaAQ==
-From: "tip-bot2 for Bagas Sanjaya" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/microcode] x86/cpu: Add "Old Microcode" docs to hw-vuln toctree
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZebQyXQN"
+Received: from narnia.corp.microsoft.com (unknown [40.78.12.133])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C2C212111574;
+	Fri,  2 May 2025 11:44:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2C212111574
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1746211472;
+	bh=aEe0PfwCQ3p3kPpyx+RuNZSjsrvOc2pL1wXnh7jwV18=;
+	h=From:To:Subject:Date:From;
+	b=ZebQyXQNFVO/se60BdDeY4wGv06VFo7Ggfizpn795gClnXruqrZ2LZWKTCxrAvIx7
+	 EsftJAIyCwyPDU/Fxjd5QombyTS2FTw3NBrVGIVAtxI3Rqv+JPjlvgEMDKg4I/Jj4Y
+	 o3mmqY9LLD8zmV/n5/QyvRTHOGmkyZAf/fZMO5+4=
+From: Blaise Boscaccy <bboscaccy@linux.microsoft.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	David Howells <dhowells@redhat.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	"David S. Miller" <davem@davemloft.net>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas@fjasle.eu>,
+	Shuah Khan <shuah@kernel.org>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Blaise Boscaccy <bboscaccy@linux.microsoft.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	Neal Gompa <neal@gompa.dev>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	keyrings@vger.kernel.org,
+	linux-crypto@vger.kernel.org,
+	linux-security-module@vger.kernel.org,
+	linux-kbuild@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	bpf@vger.kernel.org,
+	llvm@lists.linux.dev,
+	nkapron@google.com,
+	teknoraver@meta.com,
+	roberto.sassu@huawei.com,
+	xiyou.wangcong@gmail.com,
+	Tyler Hicks <code@tyhicks.com>,
+	James Bottomley <James.Bottomley@hansenpartnership.com>
+Subject: [PATCH v3 0/4] Introducing Hornet LSM
+Date: Fri,  2 May 2025 11:44:06 -0700
+Message-ID: <20250502184421.1424368-1-bboscaccy@linux.microsoft.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174621120116.22196.10353372719782138280.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the x86/microcode branch of tip:
+This patch series introduces the Hornet LSM. The goal of Hornet is to
+provide a signature verification mechanism for eBPF programs.
 
-Commit-ID:     4804f5ad5d63cf7ddad148132a3ecea11410dfa9
-Gitweb:        https://git.kernel.org/tip/4804f5ad5d63cf7ddad148132a3ecea11410dfa9
-Author:        Bagas Sanjaya <bagasdotme@gmail.com>
-AuthorDate:    Fri, 02 May 2025 09:33:57 +07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Fri, 02 May 2025 11:33:35 -07:00
+eBPF has similar requirements to that of modules when it comes to
+loading: find symbol addresses, fix up ELF relocations, some struct
+field offset handling stuff called CO-RE (compile-once run-anywhere),
+and some other miscellaneous bookkeeping. During eBPF program
+compilation, pseudo-values get written to the immediate operands of
+instructions. During loading, those pseudo-values get rewritten with
+concrete addresses or data applicable to the currently running system,
+e.g., a kallsyms address or an fd for a map. This needs to happen
+before the instructions for a bpf program are loaded into the kernel
+via the bpf() syscall. Unlike modules, an in-kernel loader
+unfortunately doesn't exist. Typically, the instruction rewriting is
+done dynamically in userspace via libbpf. Since the relocations and
+instruction modifications are happening in userspace, and their values
+may change depending upon the running system, this breaks known
+signature verification mechanisms.
 
-x86/cpu: Add "Old Microcode" docs to hw-vuln toctree
+Light skeleton programs were introduced in order to support early
+loading of eBPF programs along with user-mode drivers. They utilize a
+separate eBPF program that can load a target eBPF program and perform
+all necessary relocations in-kernel without needing a working
+userspace. Light skeletons were mentioned as a possible path forward
+for signature verification.
 
-Sphinx reports missing toctree entry warning:
+Hornet takes a simple approach to light-skeleton-based eBPF signature
+verification. A PKCS#7 signature of a data buffer containing the raw
+instructions of an eBPF program, followed by the initial values of any
+maps used by the program is used. A utility script is provided to
+parse and extract the contents of autogenerated header files created
+via bpftool. That payload can then be signed and appended to the light
+skeleton executable.
 
-Documentation/admin-guide/hw-vuln/old_microcode.rst: WARNING: document isn't included in any toctree
+Maps are checked that they are frozen to prevent TOCTOU bugs where a
+sufficiently privileged user could rewrite map data between the calls
+to BPF_PROG_LOAD and BPF_PROG_RUN. Additionally, both
+sparse-array-based and fd_array_cnt-based map fd arrays are supported
+for signature verification.
 
-Add entry for "Old Microcode" docs to fix the warning.
+References:
+  [1] https://lore.kernel.org/bpf/20220209054315.73833-1-alexei.starovoitov@gmail.com/
+  [2] https://lore.kernel.org/bpf/CAADnVQ+wPK1KKZhCgb-Nnf0Xfjk8M1UpX5fnXC=cBzdEYbv_kg@mail.gmail.com/
 
-Fixes: 4e2c719782a847 ("x86/cpu: Help users notice when running old Intel microcode")
-Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/all/20250502023358.14846-1-bagasdotme%40gmail.com
----
- Documentation/admin-guide/hw-vuln/index.rst | 1 +
- 1 file changed, 1 insertion(+)
+Change list:
+- v2 -> v3
+  - Remove any and all usage of proprietary bpf APIs
+  - Add optional systemd/pid1 whitelisting
+  - Minor Makefile cleanup
+  - Fixed buffer leak
+  - Handled null current task
+  - Made magic number required
+  - Defensive checks against invalid buffer signature reads
 
-diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
-index 451874b..cf15111 100644
---- a/Documentation/admin-guide/hw-vuln/index.rst
-+++ b/Documentation/admin-guide/hw-vuln/index.rst
-@@ -23,3 +23,4 @@ are configurable at compile, boot or run time.
-    gather_data_sampling
-    reg-file-data-sampling
-    rsb
-+   old_microcode
+- v1 -> v2
+  - Jargon clarification, maintainer entry and a few cosmetic fixes
+
+Revisions:
+- v1
+  https://lore.kernel.org/bpf/20250321164537.16719-1-bboscaccy@linux.microsoft.com
+- v2
+  https://lore.kernel.org/linux-security-module/20250404215527.1563146-1-bboscaccy@linux.microsoft.com
+
+Blaise Boscaccy (4):
+  security: Hornet LSM
+  hornet: Introduce sign-ebpf
+  hornet: Add a light skeleton data extractor script
+  selftests/hornet: Add a selftest for the Hornet LSM
+
+ Documentation/admin-guide/LSM/Hornet.rst      |  65 +++
+ Documentation/admin-guide/LSM/index.rst       |   1 +
+ MAINTAINERS                                   |   9 +
+ crypto/asymmetric_keys/pkcs7_verify.c         |  10 +
+ include/linux/kernel_read_file.h              |   1 +
+ include/linux/verification.h                  |   1 +
+ include/uapi/linux/lsm.h                      |   1 +
+ scripts/Makefile                              |   1 +
+ scripts/hornet/Makefile                       |   5 +
+ scripts/hornet/extract-skel.sh                |  29 ++
+ scripts/hornet/sign-ebpf.c                    | 411 ++++++++++++++++++
+ security/Kconfig                              |   3 +-
+ security/Makefile                             |   1 +
+ security/hornet/Kconfig                       |  24 +
+ security/hornet/Makefile                      |   4 +
+ security/hornet/hornet_lsm.c                  | 250 +++++++++++
+ security/selinux/hooks.c                      |  12 +-
+ security/selinux/include/classmap.h           |   2 +-
+ tools/testing/selftests/Makefile              |   1 +
+ tools/testing/selftests/hornet/Makefile       |  58 +++
+ tools/testing/selftests/hornet/fail_loader.sh |   3 +
+ tools/testing/selftests/hornet/frozen_skel.h  | 393 +++++++++++++++++
+ tools/testing/selftests/hornet/loader.c       |  22 +
+ tools/testing/selftests/hornet/trivial.bpf.c  |  33 ++
+ 24 files changed, 1336 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/admin-guide/LSM/Hornet.rst
+ create mode 100644 scripts/hornet/Makefile
+ create mode 100755 scripts/hornet/extract-skel.sh
+ create mode 100644 scripts/hornet/sign-ebpf.c
+ create mode 100644 security/hornet/Kconfig
+ create mode 100644 security/hornet/Makefile
+ create mode 100644 security/hornet/hornet_lsm.c
+ create mode 100644 tools/testing/selftests/hornet/Makefile
+ create mode 100755 tools/testing/selftests/hornet/fail_loader.sh
+ create mode 100644 tools/testing/selftests/hornet/frozen_skel.h
+ create mode 100644 tools/testing/selftests/hornet/loader.c
+ create mode 100644 tools/testing/selftests/hornet/trivial.bpf.c
+
+-- 
+2.48.1
+
