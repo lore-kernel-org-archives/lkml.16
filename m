@@ -1,315 +1,118 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE46221FB8;
-	Fri,  2 May 2025 07:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+Received: from mail.8bytes.org (mail.8bytes.org [85.214.250.239])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6777B221FB8
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:08:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.214.250.239
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746169674; cv=none; b=f+nyhtYrEm6TNBeGltAoGmc03szfpHXRM8STS/ztCF71GgNsd0keGZVokJdw5230rrZH9FB2E659gSgoCIAdrDDCXTcEg0Zm8FYnD/ZaVXoURJO2kHjM3ctNeSIkRRjO1Z3/2o16GNVZ3cY48y7vQEa6Pqu3glrCbqOMmI6U+dw=
+	t=1746169693; cv=none; b=bHPyFaWWru2yuYJYKK98yvCbMPMgXo7Uh5D1zhF0cFGib6+LhmaRtCydFh1XQJeJzFbAoToRed4nJ4Ezrc43FuN5oQefI0ij/jo8ggm1wblOfspMyYLFW6vMVQtmMc3a9qa3Ed/r4nEzgq+JMm3NKDeeJlOhgbrlk4QHKG6IdEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746169674; c=relaxed/simple;
-	bh=T45VgyJu63LXKQRA+MzOiWeBQEa8W6iXyJy6kk9TZlY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CDRIbLJX1w31Sr1BV5qwl7sOER8xKc4rWpz1inkDWpnnbk+Pm+G7SVx3Y5SJ/6EpDOkqWj3wyOX4HJD4+VPVccHot8thGzAqBA9uR/3xYBikF9ujfJOa1Qh3v2kkNrGPFplhJ2Z2PhugqDQ2UrCRBcezrjr24L9XVqD0wdNBofA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=C5Rth0gY; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746169693; c=relaxed/simple;
+	bh=dVPtd0HJC42Ctt+/s1RrBttzRbeTmnHlGTKCx1r7qaQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=hKGjWDtarOjkNbgUoRXZcxCLoCFlV9dvP5+fZ/+XZ25K/MdWl3S6Aj7LfcS70HxfMav8oYA3wh0zcsx2Uj8bmUQLqToefzupoHuGZcwh4vaMAcnhtrdIHMN/NhBtvTwpYe5Xy/YpBQrDRQD5l7Lkdiz1f79BH4kXI0LHjAdxNxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org; spf=pass smtp.mailfrom=8bytes.org; dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b=N2VnUMaa; arc=none smtp.client-ip=85.214.250.239
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=8bytes.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=8bytes.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="C5Rth0gY"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5427719p3808923
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 02:07:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746169621;
-	bh=5lPdpWg8+WzMVw9zUJXF6y/4UeJT5ewBY7WGRIOZsbI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=C5Rth0gY4R6uMVj5PKW0G/IlRjfly+q4I+p1NZYj2sYGRAqUhNr2KNl1+HDmTDUjk
-	 EJXYzmbX2ntSleW8F5oGzS5p9ZfDEWq5Ph6vU5I26w0I9i1BCFXWnRZvTzniiwezG6
-	 9mVTiMf/slEpE2UPvoYHw5Sy5yLq98M3rLXyKHEM=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542771We047774
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 02:07:01 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 02:07:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 02:07:01 -0500
-Received: from [172.24.227.193] (devarsh-precision-tower-3620.dhcp.ti.com [172.24.227.193])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 54276tvr034332;
-	Fri, 2 May 2025 02:06:55 -0500
-Message-ID: <466254e9-145f-4839-9451-a5f282ff02e9@ti.com>
-Date: Fri, 2 May 2025 12:36:54 +0530
+	dkim=pass (2048-bit key) header.d=8bytes.org header.i=@8bytes.org header.b="N2VnUMaa"
+Received: from 8bytes.org (p4ffe03ae.dip0.t-ipconnect.de [79.254.3.174])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.8bytes.org (Postfix) with ESMTPSA id 214A447B79;
+	Fri,  2 May 2025 09:08:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=8bytes.org;
+	s=default; t=1746169690;
+	bh=dVPtd0HJC42Ctt+/s1RrBttzRbeTmnHlGTKCx1r7qaQ=;
+	h=Date:From:To:Cc:Subject:From;
+	b=N2VnUMaaGLqNorC9HtA4E23zhSl8BcuavR4zYOkrtQm4LD6cRQ4R01ttltqwDAud/
+	 IVbSp8Yo20uc0673yFNPMUJIlAgVoeP6Czl5MODboGUb1wdpQMuWkjfJcyhAeH4EnH
+	 42WhJjFLh3tgwRpQCUNFJvBsVG5xLBoiqbkWutiZgspSydqFAV4x7ruXoPXJfMaWxc
+	 aUtkfGnfUNfJLwr45+lXqEivYgn+BLGyFJErIdSZuV7VBPMtANxYRrMOZVWzpHKLoC
+	 /F7pRPvtt6jHNCPp9HApzFLDe0smyLgl3bag8zlKcXpYuOxiFS6qCxf6iSyKfukTIR
+	 k3NDA4bgaCgCw==
+Date: Fri, 2 May 2025 09:08:08 +0200
+From: Joerg Roedel <joro@8bytes.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Will Deacon <will@kernel.org>, linux-kernel@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: [git pull] IOMMU Fixes for Linux v6.15-rc2
+Message-ID: <aBRvWCTS7c_j6CCa@8bytes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH v5 2/3] drm/tidss: Update infrastructure to support K3 DSS
- cut-down versions
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-CC: <praneeth@ti.com>, <vigneshr@ti.com>, <aradhya.bhatia@linux.dev>,
-        <s-jain1@ti.com>, <r-donadkar@ti.com>, <j-choudhary@ti.com>,
-        <h-shenoy@ti.com>, <jyri.sarha@iki.fi>, <airlied@gmail.com>,
-        <maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-        <tzimmermann@suse.de>, <dri-devel@lists.freedesktop.org>,
-        <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>
-References: <20250429143656.3252877-1-devarsht@ti.com>
- <20250429143656.3252877-3-devarsht@ti.com>
- <f729c0d6-45a0-4610-b22b-92c03f534bf7@ideasonboard.com>
- <1f8c43cd-8c26-4e42-b144-b91f5ffc2e2e@ti.com>
- <88993439-bfdc-418c-95c6-d6d8bdb5b87f@ideasonboard.com>
-Content-Language: en-US
-From: Devarsh Thakkar <devarsht@ti.com>
-In-Reply-To: <88993439-bfdc-418c-95c6-d6d8bdb5b87f@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Tomi
+Hi Linus,
 
-Thanks for quick comments.
+The following changes since commit 8ffd015db85fea3e15a77027fda6c02ced4d2444:
 
-On 30/04/25 23:12, Tomi Valkeinen wrote:
-> On 30/04/2025 19:37, Devarsh Thakkar wrote:
->> Hi Tomi
->>
->> Thanks for the review.
->>
->> <snip>
->>>>    @@ -2025,7 +2101,7 @@ int dispc_plane_check(struct dispc_device
->>>> *dispc, u32 hw_plane,
->>>>                  const struct drm_plane_state *state,
->>>>                  u32 hw_videoport)
->>>>    {
->>>> -    bool lite = dispc->feat->vid_lite[hw_plane];
->>>> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
->>>
->>> I don't think this is correct. You can't access the vid_info[] with the
->>> hw-id.
->>
->> I don't think hw_id is getting passed to hw_plane here. The
->> dispc_plane_check is called from tidss_plane_atomic_check which passes
->> hw_plane as tplane->hw_plane_id and this index starts from actually
->> instantiated planes i.e. from 0 and are contiguous as these are
-> 
-> Well, if tplane->hw_plane_id is not the HW plane id (i.e. it's misnamed
-> now), and tidss_plane.c calls dispc_plane_enable() with tplane-
->>hw_plane_id as the hw_plane parameter, which is used as a HW plane
-> ID... Then... One of these is wrong, no?
-> 
+  Linux 6.15-rc2 (2025-04-13 11:54:49 -0700)
 
-As mentioned here [1], dispc_plane_enable acts on VID_* registers which
-are only mapped per the instantiated/actual pipes present in the SoC, so
-the indexing always starts from 0 and we need not worry about skipping
-un-instantiated planes.
+are available in the Git repository at:
 
-So hw_plane_id -> Index of only instantiated planes starting from 0
-hw_id -> Hardware Index taking into account instantiated +
-un-instantiated/skipped planes main used for common0/1 region registers
-dealing with VID planes.
+  git://git.kernel.org/pub/scm/linux/kernel/git/iommu/linux.git tags/iommu-fixes-v6.15-rc4
 
+for you to fetch changes up to 2c8a7c66c90832432496616a9a3c07293f1364f3:
 
-For e.g. for AM62L which includes VIDL pipe
-hw_plane_id -> 0
-hw_id -> 1
+  iommu/vt-d: Apply quirk_iommu_igfx for 8086:0044 (QM57/QS57) (2025-04-28 13:00:58 +0200)
 
+----------------------------------------------------------------
+IOMMU Fixes for Linux v6.15-rc4:
 
->> populated from vid_order array (hw_plane_id =
->> feat->vid_order[tidss->num_planes];) and not the hw_id index.
->>
->> So for e.g. for AM62L even though hw_id is 1 for VIDL hw_plane is
->> getting passed as 0 and that's how it is able to access the first and
->> only member of vid_info struct and read the properties correctly and
->> function properly as seen in test logs [1].
-> 
-> If for AM62L the tplane->hw_plane_id is 0, the the dispc_plane_enable()
-> call would enable the wrong plane, wouldn't it?
-> 
-> But even if it all works, I think this highlights how confusing it is...
-> 
->>
->>>
->>>>        u32 fourcc = state->fb->format->format;
->>>>        bool need_scaling = state->src_w >> 16 != state->crtc_w ||
->>>>            state->src_h >> 16 != state->crtc_h;
->>>> @@ -2096,7 +2172,7 @@ void dispc_plane_setup(struct dispc_device
->>>> *dispc, u32 hw_plane,
->>>>                   const struct drm_plane_state *state,
->>>>                   u32 hw_videoport)
->>>>    {
->>>> -    bool lite = dispc->feat->vid_lite[hw_plane];
->>>> +    bool lite = dispc->feat->vid_info[hw_plane].is_lite;
->>>
->>> Here too.
->>
->> Here also hw_plane is getting passed as 0 and not the hw_id which is 1
->> for AM62L.
->>
->>>
->>>>        u32 fourcc = state->fb->format->format;
->>>>        u16 cpp = state->fb->format->cpp[0];
->>>>        u32 fb_width = state->fb->pitches[0] / cpp;
->>>> @@ -2210,7 +2286,7 @@ static void dispc_k2g_plane_init(struct
->>>> dispc_device *dispc)
->>>>        /* MFLAG_START = MFLAGNORMALSTARTMODE */
->>>>        REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
->>>>    -    for (hw_plane = 0; hw_plane < dispc->feat->num_planes;
->>>> hw_plane++) {
->>>> +    for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
->>>>            u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
->>>>            u32 thr_low, thr_high;
->>>>            u32 mflag_low, mflag_high;
->>>> @@ -2226,7 +2302,7 @@ static void dispc_k2g_plane_init(struct
->>>> dispc_device *dispc)
->>>>              dev_dbg(dispc->dev,
->>>>                "%s: bufsize %u, buf_threshold %u/%u, mflag threshold
->>>> %u/%u preload %u\n",
->>>> -            dispc->feat->vid_name[hw_plane],
->>>> +            dispc->feat->vid_info[hw_plane].name,
->>>
->>> Here hw_plane is not actually the hw-id (anymore), but elsewhere in this
->>> function it is used as a hw-id, which is no longer correct.
->>
->> For accessing vid_info hw_plane needs to be used which is the index of
->> actually instantiated planes and I see it as correctly being passed for
->> AM62L too. hw_id is only for dispc_k3_vid* functions where we need to
->> skip the not-instantiated vid regions by adding the offset per the hw_id
->> index.
-> 
-> Hmm, sorry, I don't follow. If we use the same variable, hw_plane, to
-> access the vid_info[], and as a parameter to functions that take
-> hw_plane, e.g., dispc_vid_set_buf_threshold(), isn't one of those uses
-> wrong?
-> 
-> Oh, wait... I think I see it now. For some functions using the hw_id as
-> the hw_plane parameter is fine, as they access the VID's registers by
-> just using, e.g. dispc_vid_write(), which gets the address correctly
-> from dispc->base_vid[hw_plane], as that one is indexed from 0 to num_vids.
-> 
+Including:
 
-Yes exactly.
+	* ARM-SMMU fixes:
+	  - Fix broken detection of the S2FWB feature
+	  - Ensure page-size bitmap is initialised for SVA domains
+	  - Fix handling of SMMU client devices with duplicate Stream IDs
+	  - Don't fail SMMU probe if Stream IDs are aliased across clients
 
-> But some functions use registers that have bits based on the hw_id (like
-> dispc_k3_vid_write_irqstatus), and then we use the hw_id for the
-> hw_plane parameter. If that function were to also write a vid register,
-> using the passed hw_plane, it wouldn't work, but I guess we don't do that.
-> 
+	* Intel VT-d fixes:
+	  - Add quirk for IGFX device
+	  - Revert an ATS change to fix a boot failure
 
-Yes, hw_id is only for dispc_k3_vid* functions dealing with common
-region registers that play with VID pipes.
+	* AMD IOMMU:
+          - Fix potential buffer overflow
 
-> It feels broken... We can't have 'hw_plane' that's sometimes the HW id
-> (i.e. 1 for AM62L), and sometimes the driver's index (i.e. 0 for AM62L).
-> 
+	* Core:
+	  - Fix for iommu_copy_struct_from_user()
 
-Sorry I don't follow, what exactly is broken here. hw_plane is for
-instantiated planes present in SoC used in context of VID* register
-space while doing reg writess and hw_id is the plane hardware index
-w.r.t larger K3 family i.e used in context for common register space.
+----------------------------------------------------------------
+Aneesh Kumar K.V (Arm) (1):
+      iommu/arm-smmu-v3: Add missing S2FWB feature detection
 
->>>
->>>>                size,
->>>>                thr_high, thr_low,
->>>>                mflag_high, mflag_low,
->>>> @@ -2265,7 +2341,7 @@ static void dispc_k3_plane_init(struct
->>>> dispc_device *dispc)
->>>>        /* MFLAG_START = MFLAGNORMALSTARTMODE */
->>>>        REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
->>>>    -    for (hw_plane = 0; hw_plane < dispc->feat->num_planes;
->>>> hw_plane++) {
->>>> +    for (hw_plane = 0; hw_plane < dispc->feat->num_vids; hw_plane++) {
->>>>            u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
->>>>            u32 thr_low, thr_high;
->>>>            u32 mflag_low, mflag_high;
->>>> @@ -2281,7 +2357,7 @@ static void dispc_k3_plane_init(struct
->>>> dispc_device *dispc)
->>>>              dev_dbg(dispc->dev,
->>>>                "%s: bufsize %u, buf_threshold %u/%u, mflag threshold
->>>> %u/%u preload %u\n",
->>>> -            dispc->feat->vid_name[hw_plane],
->>>> +            dispc->feat->vid_info[hw_plane].name,
->>>
->>> And here.
->>>
->>> All these issues make me wonder whether we have the right model. It's
->>> just too easy to get the usage wrong.
->>>
->>> I'm not sure which way to go here.
->>>
->>> Fix the current issues? It's a bit cumbersome to go from hw-id to the
->>> index (needs a search), just to get some hw properties.
->>>
->>> Or go back to the earlier one, with a vid array containing unused slots?
->>> That makes the for loops a bit harder.
->>>
->>> I need to think about it...
->>>
->>
->> Hmm, I don't think so, it seems to look fine to me and work fine too. I
->> have tested thoroughly for AM62L (which has uninstantiated vid region)
->> along with AM62x and AM62A with all planes displayed simultaneously. If
->> you want I can put on some test logs, create some dummy holes for VID
->> regions in AM62 and AM62A to put this on to some further negative tests.
->>
->> Also if naming convention is confusing (hw_id vs hw_plane) then maybe we
->> can use something else like vid_idx ??
-> 
-> It is confusing. But I think it's also broken, in the sense that e.g.
-> dispc_k3_vid_write_irqstatus() has hw_plane parameter. But it's actually
-> hw_id.
-> 
-> I'm not sure if naming them differently helps here. It's super
-> confusing. What indices do we have?
-> 
-> - The lowest level HW IDs, e.g. for DISPC_VID_IRQSTATUS()
-> - The index for the dispc->vid_info[]
-> - The index to tidss->planes[]
-> - drm_plane->index
-> 
+Balbir Singh (1):
+      iommu/arm-smmu-v3: Fix pgsize_bit for sva domains
 
-All above are for the instantiated ones so they start from 0.
-Since we decide to use "common region" of AM65x family as you suggested
-in V1 review comments [2] we need to handle the caveats associated with
-VID and VIDL register bits for this common region only w.r.t SoCs which
-don't include both of them.
+Lu Baolu (1):
+      iommu/vt-d: Revert ATS timing change to fix boot failure
 
-So for e.g. am65x common region include both VID (idx0) and VIDL (idx1)
-but am62L does not have VID, but the offset and bit indexing for VIDL in
-both  AM65X and AM62L is still the same i.e. idx VIDL.
+Mingcong Bai (1):
+      iommu/vt-d: Apply quirk_iommu_igfx for 8086:0044 (QM57/QS57)
 
+Nicolin Chen (2):
+      iommu/arm-smmu-v3: Fix iommu_device_probe bug due to duplicated stream ids
+      iommu: Fix two issues in iommu_copy_struct_from_user()
 
-> Originally I kept the drm_plane and the HW index separate, so that the
-> dispc.c doesn't really deal with the drm_plane at all. But I wonder if
-> we need to change that, as drm_plane pointer can't really be
-> "understood" wrong, whereas an two indices are easy to mix.
-> 
+Pavel Paklov (1):
+      iommu/amd: Fix potential buffer overflow in parse_ivrs_acpihid
 
-Sorry I don't follow exactly on concern above and I am not able to catch
-any bugs either in the testing done so far in multiple SoCs. If you see
-any potential issue or a negative scenario I can help put debug logs or
-provide a register dump.
+Robin Murphy (1):
+      iommu/arm-smmu-v3: Fail aliasing StreamIDs more gracefully
 
+ drivers/iommu/amd/init.c                        |  8 ++++++
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-sva.c |  6 +++++
+ drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c     | 23 ++++++++++++----
+ drivers/iommu/intel/iommu.c                     | 35 ++++++++++++++++---------
+ include/linux/iommu.h                           |  8 +++---
+ 5 files changed, 58 insertions(+), 22 deletions(-)
 
-For the naming if this is confusing, is cmn_vid_idx a better name to
-highlight that it only deals with vid/vidl specific indexing and
-register/bit writes for common region ?
+Please pull.
 
-[1] https://lore.kernel.org/all/096ff788-7a25-47a3-ad13-caff971cf0bc@ti.com/
-[2]
-https://lore.kernel.org/all/f6b20a29-1205-4f5e-87b6-fec58bd43545@ideasonboard.com/
+Thanks,
 
-Regards
-Devarsh
-
->  Tomi
-> 
-
+	Joerg
