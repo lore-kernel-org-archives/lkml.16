@@ -1,130 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC37D2566D4;
-	Fri,  2 May 2025 12:29:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E48D722D4C5;
+	Fri,  2 May 2025 12:31:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188996; cv=none; b=l/HY/LNeAVoNnYuUdXD3tio0+7m3fO9rA1qPrgMcrymPJfRsFslm1oKqfMp/R3btnE+2MGTGpPgbin5dErECcK5IILhXJBiFtiRYq9MqQI7GbJrZfa3lp7TmwjvC0UnqIce3icpX1Bf5Vs3CcIqBfHFN7ORO1J5RxFwV9tlkZwE=
+	t=1746189080; cv=none; b=oXnzORw4kvLnxIqx1VBm12fb0P0Wc1DhH1TJ6Myu2TIGZqUav7W6HXYqENlOF1jck1ulNuh4DA/SO/tezIFrroreMXOZTqwqwV0kPssVpP4JnFYnE9Nz9WZ1mAaufCL52fOXGYcYnCa9bVii0B3cEwzmTWAyApJlFYWva1CxMyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188996; c=relaxed/simple;
-	bh=DGcYu+3DqZNwUOU60M33ZGmzLjkivOhGbY2ClBN8f/4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=jphPvsfU8ZX9qR/bvHcCwtb4BLo+AsAyh4nUyaetN2AMuOOOGNManzlQ6KU54SDOXAWnlcahHrKNiTHLq+CIoqTHmsnxJlnI31yuZfZ3Zoz/+3uFxToOa9hVcA8BhArzubnYzTiUFuEDsGVJpXUguHYkaTyIDmXbs4SgtTImgjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A5Aq20Um; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746189080; c=relaxed/simple;
+	bh=3G3CkBJ5xwmbD1aL2pXi9Vq8HxzS0MbLhvQFlo4eHDE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=Rc1HVAL6IroCGRLJ9ahgrVnecv2mYBvaTNAdYIA7qlNnN4IIZjfeWDwk69bMBPrqDfnKr3HR8zJKn9UwpnQ23Tan8l20OaR1ftPKBOzZHRTpSxXQiFiwC782jlsFKgIYc0TzGsszlS7PMVm1lvZVpJqyNmDa/XBl49kNzH+QdAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TlzZp1/0; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A5Aq20Um"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5614C4CEEF;
-	Fri,  2 May 2025 12:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746188996;
-	bh=DGcYu+3DqZNwUOU60M33ZGmzLjkivOhGbY2ClBN8f/4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=A5Aq20UmZw/n8JuSJthdNPcL2VufHRnX86P9N5/lDJDQ1Nl3rYcA59uYY/tHf7Eqy
-	 20yeBrxIabqqt93vElvDVvAyQqY2N8wWbX79hyCq3b9e4N4zjzMy3/byNpHlAL5yAh
-	 DQpMs3dacjTe84NqvpFxzc8NxHhycI5HaqJVDtMWKS1N/sy1JScmUWxCCZuxrBRpps
-	 DlT2947AWIfX/T6O1edUogJ4erzQ2TyPagA/1ITxwpg/XR/CsmxdK26jGoi/IozjK0
-	 1CpV15GX7WDp3Yu8vk9AHPsAH7cRgry4JOTIw+o07lj+rQeZY4PE+9Dyh9jSJuMae0
-	 3mYLlaeqq09VA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 02 May 2025 14:29:27 +0200
-Subject: [PATCH net-next 7/7] selftests: mptcp: add chk_sublfow in diag.sh
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TlzZp1/0"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id CF4C843B02;
+	Fri,  2 May 2025 12:31:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1746189075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IVc5PbC2k1qdzHpLeknU2G3KgAO+5ptclccnAPwMI+M=;
+	b=TlzZp1/0oKau46rbcImJXUoZfqTMdboxJb9zF5I+oT4MBM3UKybI43+7j3nTPbAC5Yp1mY
+	29LSG9vQ9szDDM4I0Z6OnEc8/UVUIZu8q7weO0ntfpvOXV9V8+t1W+fI/CvinnTDMPoy5D
+	L9LrATS0cs67BQ8+ByFdZD92EyDAX9WHhOr/s4ZPoMqan5z5GSQa/J4aBf3FCwmEKcrxBr
+	p8QzSm1wQtK9kbA3OTc7Vk0px3qUla+7M5oZ9RcvWVpvfdnOxZ528ejZjI4wvN2AspDwFq
+	fgCnH60HzO9LiKxoVy45e0ihTN6UwwnBzCP01UQGx1biZO9nAXGpdE/UDexZ+w==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-net-next-mptcp-sft-inc-cover-v1-7-68eec95898fb@kernel.org>
-References: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
-In-Reply-To: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Gang Yan <yangang@kylinos.cn>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1984; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JQOWlruNPp9QEkq2WeaRRQQFmYLUfEbcF8gyDviCmTk=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJEdq2Naprr8HbH2oIpBw1DDmc9O66+ZMbL2eW/Sxarx
- gi4XdFO7ChlYRDjYpAVU2SRbovMn/m8irfEy88CZg4rE8gQBi5OAZjIknqGv2KBIuqsYbM0713X
- SJbXXm3n7VzL17fv+tTJn/mv3Yk9fYSR4X4Qg6TNhiwRyXtMXcYbb8xYXnR256/ZaZP4e3mEjWZ
- t4wEA
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 02 May 2025 14:31:13 +0200
+Message-Id: <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
+Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@linaro.org>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
+ <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
+In-Reply-To: <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvgeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlr
+ dhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-From: Gang Yan <yangang@kylinos.cn>
+On Fri May 2, 2025 at 12:39 PM CEST, Andy Shevchenko wrote:
+> On Mon, Apr 28, 2025 at 01:57:26PM +0200, Mathieu Dubois-Briand wrote:
+>> +static int max7360_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct max7360_gpio_plat_data *plat_data;
+>> +	struct gpio_regmap_config gpio_config =3D { };
+>> +	struct regmap_irq_chip *irq_chip;
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct regmap *regmap;
+>> +	unsigned int outconf;
+>> +	int ret;
+>> +
+>> +	regmap =3D dev_get_regmap(dev->parent, NULL);
+>> +	if (!regmap)
+>> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+>> +
+>> +	plat_data =3D device_get_match_data(dev);
+>> +	if (plat_data->function =3D=3D MAX7360_GPIO_PORT) {
+>> +		if (device_property_read_bool(dev, "interrupt-controller")) {
+>> +			/*
+>> +			 * Port GPIOs with interrupt-controller property: add IRQ
+>> +			 * controller.
+>> +			 */
+>> +			gpio_config.regmap_irq_flags =3D IRQF_ONESHOT | IRQF_SHARED;
+>> +			gpio_config.regmap_irq_line =3D
+>> +				fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
+>> +			if (gpio_config.regmap_irq_line < 0)
+>> +				return dev_err_probe(dev, gpio_config.regmap_irq_line,
+>> +						     "Failed to get IRQ\n");
+>
+>> +			irq_chip =3D devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
+>
+> Can this be made static const instead?
+>
 
-This patch aims to add chk_dump_subflow in diag.sh. The subflow's
-info can be obtained through "ss -tin", then use the 'mptcp_diag'
-to verify the token in subflow_info.
+Sorry, I don't think we can. We do have a few data that will vary:
+->name, but above all ->irq_drv_data, as it will point on the regmap of
+the specific device.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
-Co-developed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/diag.sh | 32 +++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+> ...
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index e7a75341f0f32304ff4e58c9b2500d405124dc74..7a3cb4c09e450f0ae570015c4724ec268c6dc19f 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -225,6 +225,37 @@ chk_dump_one()
- 	fi
- }
- 
-+chk_dump_subflow()
-+{
-+	local inet_diag_token
-+	local subflow_line
-+	local ss_output
-+	local ss_token
-+	local msg
-+
-+	ss_output=$(ss -tniN $ns)
-+
-+	subflow_line=$(echo "$ss_output" | \
-+		       grep -m1 -Eo '[0-9.]+:[0-9].+ +[0-9.]+:[0-9.]+')
-+
-+	ss_token=$(echo "$ss_output" | grep -m1 -Eo 'token:[^ ]+')
-+
-+	inet_diag_token=$(ip netns exec $ns ./mptcp_diag -s "$subflow_line" | \
-+			  grep -Eo 'token:[^ ]+')
-+
-+	msg="....chk dump_subflow"
-+
-+	mptcp_lib_print_title "$msg"
-+	if [ -n "$ss_token" ] && [ "$ss_token" = "$inet_diag_token" ]; then
-+		mptcp_lib_pr_ok
-+		mptcp_lib_result_pass "${msg}"
-+	else
-+		mptcp_lib_pr_fail "expected $ss_token found $inet_diag_token"
-+		mptcp_lib_result_fail "${msg}"
-+		ret=${KSFT_FAIL}
-+	fi
-+}
-+
- msk_info_get_value()
- {
- 	local port="${1}"
-@@ -316,6 +347,7 @@ chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2
- chk_msk_cestab 2
- chk_dump_one
-+chk_dump_subflow
- flush_pids
- 
- chk_msk_inuse 0 "2->0"
+OK with all other comments.
 
--- 
-2.48.1
+Thanks for your review.
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
