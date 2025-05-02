@@ -1,180 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D3C254AF8
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:31:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE6E254AF3;
+	Fri,  2 May 2025 12:32:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189119; cv=none; b=I/SUZc64bNrrxxTQ5n2mrDkXGCP2DbLgSYszeDhf085ryAxAjmVN4kKlPyHDBqQlymaCq7gqREka+y2HJL0O/J3yKd1VuYLrUPIaGoucIFgYsd+BvGCreC6rEKlaqJaHyeho3P81eF9ATDinyl6XVfm8rWk219KsOwqyLBoXtes=
+	t=1746189124; cv=none; b=Ag76oNl6/yL+XwIr2TV1t3EWodOhfNxWHK6KsdrpcRhKFSnmBsy9l6ajxRyan2ZOF9fsxz4PDoGkGNdo59NIiWQjUk0F+PGcCu31nLjhnqxQ+YodbclA4mekW1msiesENAuAffCYMAGMoX/XsdF0SkOP55TxZue7GtKeu50B6rM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189119; c=relaxed/simple;
-	bh=4nbbHAkkGAtKI9mh8scHvE2TT8W67/3O7vP/JzptVKQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kxkmYwm2guNsKiN1sxSAj3Ez4JRfvA19fNtO76rNN16MZdom9Ix4tAnfDLlBEFAIVBYhfJGnE3m/hg1kq9K5WPaUDL4UFLBaGqeDn1rxphlvRG4zRa4+XTn8ak6Rnp2V7FvMgLHJrIBDR19knYKfdIzy+OLxhEFcJkrQW+25woU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MBEotoHW; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746189124; c=relaxed/simple;
+	bh=IGdaO2A/M4SfrvXrLhWuIG91zV2VLydm1UtEi2pY81o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=MVsYpkDJvwmbzmzjRvGiaTILzuxdnMQK6N+lvuaI5+G/1QpE0GaLaCwkZ5zuxRjjlptcLEj+prN/G6Wtla2TxzRQs/Uftxj+XoNGhmeertfamtmudsr20phodvqNotKmKHS25CZkI+fLMzyZrBcrB7lK05ZTkgh2qOxEsjpFp1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJR0yLzQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MBEotoHW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746189117; x=1777725117;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=4nbbHAkkGAtKI9mh8scHvE2TT8W67/3O7vP/JzptVKQ=;
-  b=MBEotoHWpBWEq2PBIQ5dyN3FljMXHEUPNunrIS2XsPdUYPfw1cHwLDRb
-   al+QoeaLAv9EoorpD5QcM65IYBmX+P6QK1XRywjVAhdcvP7IYFKj3+Hgx
-   355S2splpxBPu85c3s/r2vbR7wCGE97hi6nfdj/xhpH1ldSFEzbdyzAFU
-   BVdUaEEkqvNSoo1lxbvWnyl4iTmghusOCfB9pJTE7W3GuDnW91GdnKcsT
-   8DxwD4Z/tVRE2ebiO03Y5nvd75xkJe8Dn6PHHvlFtCKSmLlcxiqwEzJxJ
-   vjldQnDjCuhOLUCr/LmvVokNfT9SakkzxEak8VMhMekC+8WiUN18J6epP
-   Q==;
-X-CSE-ConnectionGUID: AlN9ERehTCm872kzHmEiTw==
-X-CSE-MsgGUID: VMVEBqKlRmi2dqJKgQ6/mA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47955302"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47955302"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:31:52 -0700
-X-CSE-ConnectionGUID: O2/EIfQ4SHijfel5IupSXQ==
-X-CSE-MsgGUID: EG+iCQXwT0KdGMpLk0HSkQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="135592036"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 02 May 2025 05:31:50 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id ED9A811C; Fri, 02 May 2025 15:31:47 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Ashish Kalra <ashish.kalra@amd.com>,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	David Woodhouse <dwmw@amazon.co.uk>,
-	Denis Mukhin <dmukhin@ford.com>
-Subject: [PATCH v1 1/6] x86/boot: Convert early_serial_base to unsigned long
-Date: Fri,  2 May 2025 15:29:37 +0300
-Message-ID: <20250502123145.4066635-2-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
-References: <20250502123145.4066635-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJR0yLzQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52DF4C4CEEF;
+	Fri,  2 May 2025 12:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746189124;
+	bh=IGdaO2A/M4SfrvXrLhWuIG91zV2VLydm1UtEi2pY81o=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=DJR0yLzQ8IZehPtDOH74CDb6XFTRXszbIOCH0+twTczQ8qMPDoIRYadse3B8QaR5g
+	 TAlnYn3lyRxanBVRHsXw5MqXxiVYXWK9T2s1MV0fQpDVOv8NqQ10Cgq4im3dab6YVW
+	 PXTMFLlGZPmK5YTyEAPiAYROgwK96LnXsc/9VP1e9eSrOc4lmSfbHFEl3jFYMC+6V3
+	 mayg+XKI/+17dwdaOf+q10oZNa0wV1TKHo9iilZ5Q+fxHLrEypKwPlfc7yMmvmYyN6
+	 Ns6vNm21S9axvS/tdH0+hXgW9pUHaRJSYmiLjq6AgCeyK+STpVSOD99hq+kc8BME8e
+	 0CyM/3fImhRaA==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Alice Ryhl" <aliceryhl@google.com>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Oliver Mangold"
+ <oliver.mangold@pm.me>,  <rust-for-linux@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] rust: elaborate safety requirements for
+ `AlwaysReferenceCounted`
+In-Reply-To: <aBS0ZP9tFnujvodq@google.com> (Alice Ryhl's message of "Fri, 02
+	May 2025 12:02:44 +0000")
+References: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
+	<y-zNJ4bc_qB45bZdnhojbouRbKGZCnzfvM4um6WShQHCTrvN6WikMId_DeZsZz2iSiSQwfNZ13cabCinPpDDlA==@protonmail.internalid>
+	<aBS0ZP9tFnujvodq@google.com>
+User-Agent: mu4e 1.12.7; emacs 30.1
+Date: Fri, 02 May 2025 14:31:55 +0200
+Message-ID: <87plgrxkg4.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-As a preparatory of adding flexible serial I/O accessors, convert
-early_serial_base to unsigned long to cover all possible bus addresses
-on the system.
+"Alice Ryhl" <aliceryhl@google.com> writes:
 
-No functional change intended.
+> On Fri, May 02, 2025 at 01:53:57PM +0200, Andreas Hindborg wrote:
+>> Clarify that implementers of `AlwaysReferenceCounted` must prevent the
+>> implementer from being directly initialized by users.
+>>
+>> It is a violation of the safety requirements of `AlwaysReferenceCounted` if
+>> its implementers can be initialized on the stack by users. Although this
+>> follows from the safety requirements, it is not immediately obvious.
+>>
+>> The following example demonstrates the issue. Note that the safety
+>> requirements for implementing `AlwaysRefCounted` and for calling
+>> `ARef::from_raw` are satisfied.
+>>
+>>   struct Empty {}
+>>
+>>   unsafe impl AlwaysRefCounted for Empty {
+>>       fn inc_ref(&self) {}
+>>       unsafe fn dec_ref(_obj: NonNull<Self>) {}
+>>   }
+>>
+>>   fn unsound() -> ARef<Empty> {
+>>       use core::ptr::NonNull;
+>>       use kernel::types::{ARef, RefCounted};
+>>
+>>       let mut data = Empty {};
+>>       let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+>>       let aref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
+>>
+>>       aref
+>>   }
+>
+> I don't think it's entirely impossible to write an AlwaysRefCounted
+> value that can be on the stack. The type just needs a lifetime
+> parameter. For example, this API is not unsound:
+>
+> struct MyDataStorage {
+>     // ...
+> }
+>
+> impl MyDataStorage {
+>     fn as_aref(&self) -> ARef<MyData<'_>> {
+>         unsafe { ARef::from_raw(ptr::from_ref(self).cast()) }
+>     }
+> }
+>
+> #[repr(transparent)]
+> struct MyData<'s> {
+>     storage: MyDataStorage,
+>     _lifetime: PhantomData<&'s MyDataStorage>,
+> }
+>
+> unsafe impl AlwaysRefCounted for MyData<'_> {
+>     fn inc_ref(&self) {}
+>     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+> }
+>
+> impl Deref for MyData<'_> {
+>     type Target = MyDataStorage;
+>     fn deref(&self) -> &MyDataStorage {
+>         &self.storage
+>     }
+> }
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- arch/x86/boot/boot.h                            | 2 +-
- arch/x86/boot/compressed/early_serial_console.c | 2 +-
- arch/x86/boot/compressed/misc.h                 | 4 ++--
- arch/x86/boot/early_serial_console.c            | 6 +++---
- arch/x86/boot/tty.c                             | 2 +-
- 5 files changed, 8 insertions(+), 8 deletions(-)
+Right. I would rephrase then:
 
-diff --git a/arch/x86/boot/boot.h b/arch/x86/boot/boot.h
-index 38f17a1e1e36..753f429b28cb 100644
---- a/arch/x86/boot/boot.h
-+++ b/arch/x86/boot/boot.h
-@@ -274,7 +274,7 @@ int check_knl_erratum(void);
- int validate_cpu(void);
- 
- /* early_serial_console.c */
--extern int early_serial_base;
-+extern unsigned long early_serial_base;
- void console_init(void);
- 
- /* edd.c */
-diff --git a/arch/x86/boot/compressed/early_serial_console.c b/arch/x86/boot/compressed/early_serial_console.c
-index 70a8d1706d0f..5b8db03f40ad 100644
---- a/arch/x86/boot/compressed/early_serial_console.c
-+++ b/arch/x86/boot/compressed/early_serial_console.c
-@@ -1,6 +1,6 @@
- #include "misc.h"
- 
- /* This might be accessed before .bss is cleared, so use .data instead. */
--int early_serial_base __section(".data");
-+unsigned long early_serial_base __section(".data");
- 
- #include "../early_serial_console.c"
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index dd8d1a85f671..f083360c84c1 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -127,10 +127,10 @@ extern unsigned char _pgtable[];
- 
- #ifdef CONFIG_EARLY_PRINTK
- /* early_serial_console.c */
--extern int early_serial_base;
-+extern unsigned long early_serial_base;
- void console_init(void);
- #else
--static const int early_serial_base;
-+static const unsigned long early_serial_base;
- static inline void console_init(void)
- { }
- #endif
-diff --git a/arch/x86/boot/early_serial_console.c b/arch/x86/boot/early_serial_console.c
-index 023bf1c3de8b..7a7766fa16e5 100644
---- a/arch/x86/boot/early_serial_console.c
-+++ b/arch/x86/boot/early_serial_console.c
-@@ -23,7 +23,7 @@
- 
- #define DEFAULT_BAUD 9600
- 
--static void early_serial_init(int port, int baud)
-+static void early_serial_init(unsigned long port, int baud)
- {
- 	unsigned char c;
- 	unsigned divisor;
-@@ -46,9 +46,9 @@ static void early_serial_init(int port, int baud)
- static void parse_earlyprintk(void)
- {
- 	int baud = DEFAULT_BAUD;
-+	unsigned long port = 0;
- 	char arg[32];
- 	int pos = 0;
--	int port = 0;
- 
- 	if (cmdline_find_option("earlyprintk", arg, sizeof(arg)) > 0) {
- 		char *e;
-@@ -118,7 +118,7 @@ static void parse_console_uart8250(void)
- {
- 	char optstr[64], *options;
- 	int baud = DEFAULT_BAUD;
--	int port = 0;
-+	unsigned long port = 0;
- 
- 	/*
- 	 * console=uart8250,io,0x3f8,115200n8
-diff --git a/arch/x86/boot/tty.c b/arch/x86/boot/tty.c
-index f7eb976b0a4b..e2ab8b8076ef 100644
---- a/arch/x86/boot/tty.c
-+++ b/arch/x86/boot/tty.c
-@@ -13,7 +13,7 @@
- 
- #include "boot.h"
- 
--int early_serial_base;
-+unsigned long early_serial_base;
- 
- #define XMTRDY          0x20
- 
--- 
-2.47.2
+It is a violation of the safety requirements of `AlwaysReferenceCounted`
+if its implementers can be initialized on the stack by users and an
+`ARef` referencing the object can outlive the object. Although this follows from
+the safety requirements, it is not immediately obvious.
+
+and
+
++/// Note: This means that implementers must prevent users from directly
++/// initializing the implementer when the implementer is `'static`. Otherwise users could
++/// initialize the implementer on
++/// the stack, which would violate the safety requirements.
+
+What do you think?
+
+
+Best regards,
+Andreas Hindborg
+
 
