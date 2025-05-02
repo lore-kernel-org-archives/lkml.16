@@ -1,173 +1,196 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EE5C3D6F;
-	Fri,  2 May 2025 18:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0BF13D6F
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746209062; cv=none; b=uPoHGJtFGXcxENKsOTo+Uhto6fm+pcdaAys9nXG297V6o8L+jBdjbwiGlpKWH99JtIyzyErAwwZbUFFYrQif6Ao/Mvr1D1a+T2PUsM09biH7bCqRKJXIqNikhEk5CR8kaHxYlsCsCbulhsvIi1yG2apewpdiViO5OIXRzgtZ4mE=
+	t=1746209139; cv=none; b=t2yWtOTHn7iOhlI6s8gecQ1uwmOyLEi22bxZf4iZ857Spg7AST2rKYry6eoEPYRf94CXAxc9/x5d5QiDMHkuloLO5qceDcEpoCq8MhDFGZ0P8NuKBsp5wS7CIa498UkNYHT71Zg6y4WP79DgR+h9qpUEQeY85CakeTUTmVbr04o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746209062; c=relaxed/simple;
-	bh=kf1CLPC3uiAsS6Ay/HaQPi+qXMWQGBPiUt9q6FFJD1g=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=W7E2Prv9A8/Xu365dgeZseMOPzdZW2xqiPHH9KJqAfMGbN+IBuYggQpT5yGy83gKLjVodxUVWIH44JZ3eabR7a48GHcrAHdH1KH+i+GauzM9J+aYP3fbAXYGGrVg1KuBE/trl/kv1zghQHN6uP9mQfYr0l6AsaqlKFug6ELyWpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 923322F;
-	Fri,  2 May 2025 11:04:09 -0700 (PDT)
-Received: from e129823.cambridge.arm.com (e129823.arm.com [10.1.197.6])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2BC163F673;
-	Fri,  2 May 2025 11:04:15 -0700 (PDT)
-From: Yeoreum Yun <yeoreum.yun@arm.com>
-To: catalin.marinas@arm.com,
-	will@kernel.org,
-	nathan@kernel.org,
-	nick.desaulniers+lkml@gmail.com,
-	morbo@google.com,
-	justinstitt@google.com,
-	broonie@kernel.org,
-	maz@kernel.org,
-	oliver.upton@linux.dev,
-	joey.gouly@arm.com,
-	shameerali.kolothum.thodi@huawei.com,
-	james.morse@arm.com,
-	hardevsinh.palaniya@siliconsignals.io,
-	ardb@kernel.org,
-	ryan.roberts@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev,
-	Yeoreum Yun <yeoreum.yun@arm.com>,
-	stable@vger.kernel.org
-Subject: [PATCH v2] arm64/cpufeature: annotate arm64_use_ng_mappings with ro_after_init to prevent wrong idmap generation
-Date: Fri,  2 May 2025 19:04:12 +0100
-Message-Id: <20250502180412.3774883-1-yeoreum.yun@arm.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1746209139; c=relaxed/simple;
+	bh=Pvjqugsj9+0gGq21AJX0rzcX8GqamVjbuB2k+vTiFrs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CVCbgbevq+/mqgiLd10hsSIX+7lQyhiSMat5ojeutwk3/lXolKWw+tTBkQfyi3YDJu5WqzzE1BksrJOxZIXO9JITtEAEDCmG1kyptMnvzwGzF+g89bHt5mgbt/1y67pWqqc/2ZcXp8/72Uy3xmVptrE+rKdBy8LCjbz+l9Nit5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hDjRvKpH; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hDjRvKpH"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2240b4de12bso39714025ad.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746209134; x=1746813934; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=zcSLiUz4ebnW8auKGRYJu0KQ8ZdZMC2lQaQD2lbQrvw=;
+        b=hDjRvKpHWQjxoVbYiuTGZxde1P+F4PGXIfJ1N2dnsgVh6870+RmsfrNfqfFObNp2v6
+         rKdPZE+WNzEobzYxQBseBl7J3ck9uFS5+U59VH06ueYwUyvGPyWqDJliNhcKh7TL1/pV
+         bk1zkW3tNv68G43Ceiw3BV5xgwoEcKgDe5rOtDEtu0Owey2DTo+1JwLuoLJsvs7KV0KM
+         pf7KTizdYQY3cLXi/UbjfVQ0gvCce091J4xFmWUYzU7qiiylNL30cpEciD7MWcSljbJk
+         m1R/3JsfpNfU5Q4ZyIFBQfaE4DG+iRKHxARTrfxgOtuVul0hyo3aBDssOn27Rno6Q428
+         Rpqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746209134; x=1746813934;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zcSLiUz4ebnW8auKGRYJu0KQ8ZdZMC2lQaQD2lbQrvw=;
+        b=armMwAjtbo/cp1pqTaIOQQ4cTU5KmGwpLZat/3gD/LE4jbdxHwlYTqpIbqUTkxc+MP
+         wqUOQg3qZ65/P0DavKWCMh0qUPG0hkgpHSsNEe5F+duodwYQGXlVHKVFY1d6C1dExvj0
+         LW705mKZylCKlAD/Hm5wsHBC1dreqI6jpSym25/paFePPNmRICH84HREY/gI08Y9Ku3N
+         8vBhuUondIz0J1M8npM7LeEg3OWAvXX7Sc39Oavxa8bdEpSW83xz8so2BQzZ0K4pRYGP
+         JJGw9laZsTLG4H5JCFnqXr5tU2/1aHdxzhKyXBeL6cTFNF5ClMxf1mHwIwecfkp7qVdx
+         SpLA==
+X-Forwarded-Encrypted: i=1; AJvYcCXQVV+sWX8xrYOy6U6ZX4/rBE6Y4G+ydJ6vWpGuyIFcGJq45l+rhjlIU8eg18yQUz0/EO8Aw8GyazHzdUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzL+SascmuW/mXfU6bBy/UsOnQMYLdvnZNaOLdSSQaI28IT1Fpb
+	04kguoW9jztiC88ZDpaW6tsm7L2zz6qhhoZh98VYCSvpzdf3YOZZfJteCFGzXg==
+X-Gm-Gg: ASbGncu8Bw/rHIAMqKOcqH0h3r93wYHh2k6kge5lyhfHG9EMUHceZlgyl+mv1MasUM7
+	5zxXo7xRYMcx67C1vHkRr84w2ffEhO96nf31nupS1AyDP6FEDPLj9iirUdNSx68c+D2K+as1I4w
+	XKFjoj2pGYbuPe+8GMq4pEIr0vxfIl4IGzSzM3qg4WT3SztXPGJ0Dgt1iyUukEg9ULYaJhCmMst
+	WJqR9dAMggluaxKyQPo4dj/1SCLqniIs4MzudzB/zIQsAlWqp9eOPCVhveBh/vYHu9AYCVA32R9
+	5ZAYvBDAIbxsySik2LdKirIrx9oSJhX9TYvl+ehDHEhAD2Eorh/DtA==
+X-Google-Smtp-Source: AGHT+IEYeLUys5tfLkjUspsmDDI1Cb1YA+edBh30Ni418v1MT8XNeWwFc7kK/LBz4rDgcz2jBf4ikw==
+X-Received: by 2002:a17:903:2c9:b0:21f:7e12:5642 with SMTP id d9443c01a7336-22e102c79d0mr54635905ad.18.1746209133893;
+        Fri, 02 May 2025 11:05:33 -0700 (PDT)
+Received: from thinkpad ([220.158.156.122])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e150eae63sm10793605ad.18.2025.05.02.11.05.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 11:05:33 -0700 (PDT)
+Date: Fri, 2 May 2025 23:35:29 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Hans Zhang <hans.zhang@cixtech.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk, 
+	hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
+ suspend
+Message-ID: <onw47gzc6mda2unsew36b2cmp2et3ijrjqlmgpueeko5vucgph@wrkaiqlbo2fp>
+References: <20250502150027.GA818097@bhelgaas>
+ <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
+ <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
+ <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
+ <58e343d9-adf3-4853-9dec-df7c1892d6b2@cixtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <58e343d9-adf3-4853-9dec-df7c1892d6b2@cixtech.com>
 
-create_init_idmap() could be called before .bss section initialization
-which is done in early_map_kernel().
-Therefore, data/test_prot could be set incorrectly by PTE_MAYBE_NG macro.
+On Sat, May 03, 2025 at 12:20:52AM +0800, Hans Zhang wrote:
+> 
+> 
+> On 2025/5/3 00:07, Hans Zhang wrote:
+> > 
+> > 
+> > On 2025/5/2 23:58, Manivannan Sadhasivam wrote:
+> > > EXTERNAL EMAIL
+> > > 
+> > > On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
+> > > > 
+> > > > 
+> > > > On 2025/5/2 23:00, Bjorn Helgaas wrote:
+> > > > > EXTERNAL EMAIL
+> > > > > 
+> > > > > On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
+> > > > > > From: Hans Zhang <hans.zhang@cixtech.com>
+> > > > > > 
+> > > > > > When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
+> > > > > 
+> > > > > CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
+> > > > > dynamically regardless of the config.
+> > > > > 
+> > > > 
+> > > > Dear Bjorn,
+> > > > 
+> > > > Thank you very much for your reply.
+> > > > 
+> > > > Yes. To reduce the power consumption of the SOC system, we have
+> > > > enabled ASPM
+> > > > L1 by default.
+> > > > 
+> > > > > > NVMe controllers fail to release LPI MSI-X interrupts during system
+> > > > > > suspend, leading to a system hang. This occurs because the driver's
+> > > > > > existing power management path does not fully disable the device
+> > > > > > when ASPM is active.
+> > > > > 
+> > > > > I have no idea what this has to do with ASPM L1.  I do see that
+> > > > > nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
+> > > > > janky and racy).  But this doesn't explain anything about what would
+> > > > > cause a system hang.
+> > > > 
+> > > > [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0:
+> > > > PM: calling
+> > > > pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
+> > > > [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
+> > > > pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
+> > > > [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+> > > > calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
+> > > > [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+> > > > pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
+> > > > [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
+> > > > sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
+> > > > [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
+> > > > pcie_phy_common_exit end
+> > > > [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
+> > > > sky1_pcie_suspend_noirq
+> > > > [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
+> > > > sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
+> > > > [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
+> > > > 7110000.system-controller:clock-controller: PM: calling
+> > > > genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
+> > > > [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
+> > > > 7110000.system-controller:clock-controller: PM:
+> > > > genpd_suspend_noirq+0x0/0x80
+> > > > returned 0 after 1 usecs
+> > > > [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
+> > > > 
+> > > > 
+> > > > Hans: Before I added the printk for debugging, it hung here.
+> > > > 
+> > > > 
+> > > > I added the log output after debugging printk.
+> > > > 
+> > > > Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
+> > > > Our hardware is in STR(suspend to ram), and the controller and
+> > > > PHY will lose
+> > > > power.
+> > > > 
+> > > > So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
+> > > > controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
+> > > > controller and PHY will be reinitialized. If suspend does not
+> > > > close the AXI
+> > > > and APB clock, and the AXI is reopened during the resume
+> > > > process, the APB
+> > > > clock will cause the reference count of the kernel API to accumulate
+> > > > continuously.
+> > > > 
+> > > 
+> > > So this is the actual issue (controller loosing power during system
+> > > suspend) and
+> > > everything else (ASPM, MSIX write) are all side effects of it.
+> > > 
+> 
+> Dear Mani,
+> 
+> There are some things I don't understand here. Why doesn't the NVMe SSD
+> driver release the MSI/MSIx interrupt when ASPM is enabled? However, if ASPM
+> is not enabled, the MSI/MSIx interrupt will be released instead.
+> 
 
-PTE_MAYBE_NG macro set NG bit according to value of "arm64_use_ng_mappings".
-and this variable places in .bss section.
+You mean by calling pci_free_irq_vectors()? If so, the reason is that if ASPM is
+unavailable, then the NVMe cannot be put into low power APST state during
+suspend. So shutting down it is the only sane option to save power, with the
+cost of increased resume latency. But if ASPM is available, then the driver
+doesn't shut the NVMe as it relies on APST to keep the NVMe controller/memory in
+low power mode.
 
-   # llvm-objdump-21 --syms vmlinux-gcc | grep arm64_use_ng_mappings
-     ffff800082f242a8 g     O .bss    0000000000000001 arm64_use_ng_mappings
+- Mani
 
-If .bss section doesn't initialized, "arm64_use_ng_mappings" would be set
-with garbage value and then the text_prot or data_prot could be set incorrectly.
-
-Here is what i saw with kernel compiled via llvm-21
-
-  // create_init_idmap()
-  ffff80008255c058: d10103ff     	sub	sp, sp, #0x40
-  ffff80008255c05c: a9017bfd     	stp	x29, x30, [sp, #0x10]
-  ffff80008255c060: a90257f6     	stp	x22, x21, [sp, #0x20]
-  ffff80008255c064: a9034ff4     	stp	x20, x19, [sp, #0x30]
-  ffff80008255c068: 910043fd     	add	x29, sp, #0x10
-  ffff80008255c06c: 90003fc8     	adrp	x8, 0xffff800082d54000
-  ffff80008255c070: d280e06a     	mov	x10, #0x703     // =1795
-  ffff80008255c074: 91400409     	add	x9, x0, #0x1, lsl #12 // =0x1000
-  ffff80008255c078: 394a4108     	ldrb	w8, [x8, #0x290] ------------- (1)
-  ffff80008255c07c: f2e00d0a     	movk	x10, #0x68, lsl #48
-  ffff80008255c080: f90007e9     	str	x9, [sp, #0x8]
-  ffff80008255c084: aa0103f3     	mov	x19, x1
-  ffff80008255c088: aa0003f4     	mov	x20, x0
-  ffff80008255c08c: 14000000     	b	0xffff80008255c08c <__pi_create_init_idmap+0x34>
-  ffff80008255c090: aa082d56     	orr	x22, x10, x8, lsl #11 -------- (2)
-
-Note, (1) is load the arm64_use_ng_mappings value in w8 and
-(2) is set the text or data prot with the w8 value to set PTE_NG bit.
-If .bss section doesn't initialized, x8 can include garbage value
--- In case of some platform, x8 loaded with 0xcf -- it could generate
-wrong mapping. (i.e) text_prot is expected with
-PAGE_KERNEL_ROX(0x0040000000000F83) but
-with garbage x8 -- 0xcf, it sets with (0x0040000000067F83)
-and This makes boot failure with translation fault.
-
-This error cannot happen according to code generated by compiler.
-
-here is the case of gcc:
-   ffff80008260a940 <__pi_create_init_idmap>:
-   ffff80008260a940: d100c3ff      sub     sp, sp, #0x30
-   ffff80008260a944: aa0003ed      mov     x13, x0
-   ffff80008260a948: 91400400      add     x0, x0, #0x1, lsl #12 // =0x1000
-   ffff80008260a94c: a9017bfd      stp     x29, x30, [sp, #0x10]
-   ffff80008260a950: 910043fd      add     x29, sp, #0x10
-   ffff80008260a954: f90017e0      str     x0, [sp, #0x28]
-   ffff80008260a958: d00048c0      adrp    x0, 0xffff800082f24000 <reset_devices>
-   ffff80008260a95c: 394aa000      ldrb    w0, [x0, #0x2a8]
-   ffff80008260a960: 37000640      tbnz    w0, #0x0, 0xffff80008260aa28 <__pi_create_init_idmap+0xe8> ---(3)
-   ffff80008260a964: d280f060      mov     x0, #0x783      // =1923
-   ffff80008260a968: d280e062      mov     x2, #0x703      // =1795
-   ffff80008260a96c: f2e00800      movk    x0, #0x40, lsl #48
-   ffff80008260a970: f2e00d02      movk    x2, #0x68, lsl #48
-   ffff80008260a974: aa2103e4      mvn     x4, x1
-   ffff80008260a978: 8a210049      bic     x9, x2, x1
-   ...
-   ffff80008260aa28: d281f060      mov     x0, #0xf83      // =3971
-   ffff80008260aa2c: d281e062      mov     x2, #0xf03      // =3843
-   ffff80008260aa30: f2e00800      movk    x0, #0x40, lsl #48
-
-In case of gcc, according to value of arm64_use_ng_mappings (annoated as(3)),
-it branches to each prot settup code.
-However this is also problem since it branches according to garbage
-value too -- idmapping with incorrect pgprot.
-
-To resolve this, annotate arm64_use_ng_mappings as ro_after_init.
-
-Fixes: 84b04d3e6bdb ("arm64: kernel: Create initial ID map from C code")
-Cc: <stable@vger.kernel.org> # 6.9.x
-Tested-by: Nathan Chancellor <nathan@kernel.org>
-Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
----
-Since v1:
-  - add comments explaining arm64_use_ng_mappings shouldn't place .bss
-    section
-  - fix type on commit message
-  - https://lore.kernel.org/all/20250502145755.3751405-1-yeoreum.yun@arm.com/
-
-There is another way to solve this problem by setting
-test/data_prot with _PAGE_DEFAULT which doesn't include PTE_MAYBE_NG
-with constanst check in create_init_idmap() to be free from
-arm64_use_ng_mappings. but i think it would be better to change
-arm64_use_ng_mappings as ro_after_init because it doesn't change after
-init phase and solve this problem too.
----
- arch/arm64/kernel/cpufeature.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index d2104a1e7843..913ae2cead98 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -114,7 +114,18 @@ static struct arm64_cpu_capabilities const __ro_after_init *cpucap_ptrs[ARM64_NC
-
- DECLARE_BITMAP(boot_cpucaps, ARM64_NCAPS);
-
--bool arm64_use_ng_mappings = false;
-+/*
-+ * The variable arm64_use_ng_mappings should be placed in the .rodata section.
-+ * Otherwise, it would end up in the .bss section, where it is initialized in
-+ * early_map_kernel(). This can cause problems because the PTE_MAYBE_NG macro
-+ * uses this variable, and create_init_idmap() — which might run before
-+ * early_map_kernel() — could end up generating an incorrect idmap table.
-+ *
-+ * In other words, accessing variable placed in .bss section before
-+ * early_map_kernel() will return garbage,
-+ * potentially resulting in a wrong pgprot value.
-+ */
-+bool arm64_use_ng_mappings __ro_after_init = false;
- EXPORT_SYMBOL(arm64_use_ng_mappings);
-
- DEFINE_PER_CPU_READ_MOSTLY(const char *, this_cpu_vector) = vectors;
---
-LEVI:{C3F47F37-75D8-414A-A8BA-3980EC8A46D7}
-
+-- 
+மணிவண்ணன் சதாசிவம்
