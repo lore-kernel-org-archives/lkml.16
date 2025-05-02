@@ -1,47 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F175221DA1;
-	Fri,  2 May 2025 07:00:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F036EC4;
+	Fri,  2 May 2025 07:01:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746169211; cv=none; b=NL2SVZkC5DGvQ68pKzk79pKteL3FcI/IPs8KBUeNRIU7d21EZSNw4CyITyyObSURKpDzyXTBi+7+4gYzn+Xcdwc7ac5zqDT5CAAXiheZfh4xgchUK3wDCGdr1RwqTmYRupdmymqfInDJ78IjRXquPHOK5mvwhea1r+IDKk90eA8=
+	t=1746169268; cv=none; b=Sx5XLYEXom7SGf39m/rOVoOqugc1MRR5i1qlBwjkADMOl9P1OknGa3s2vwp6UhIGsgK3vOydcvMh+EZRBRUAZmIUZcWt77SP3i4Ob/8KTuV7sN1zIqyRh35ANy/O3jvm19fco3XVbFHkXQNooXWPZkH0Y/W6xtgs12vuOnBi1p4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746169211; c=relaxed/simple;
-	bh=P+YhjYIHYKpbJSu8CioVTFw9tPUKW2eluanOspryhR4=;
+	s=arc-20240116; t=1746169268; c=relaxed/simple;
+	bh=IcRiTAcRFn4Z4s8s5pcO3DJLGHeQZh3uWEsA71CyQoo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jkRYpvbjTeUja5rvZ/fmOTw/Csaf/zWzw19wl4P42fdP4UtTodLcqP8ULQwMuWW/tUkT08eERJCTEGm4ubHXyfZbxK8aWEs5IUELpL2vxZvJEdu1JemkgYyBZsncOQA7Qhxga7W9EtsL4rhL521LKepf87s1Z63lYD2NIp3JiAo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=n5I82/LQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=kL6GtDGTDk6/RrUWDQXB55o8V/+elZm5/FtazIpXlMLp7SF+GDCC/xlDM7AIxtYz0i4bEMMWjgDtYzX8wczFDp8qSMamVyW6/ar3d+2MTQ28tVCxM2B+TdPgywwInrEOZ/0ucURY4Aq6uyyKHcEO2BxeBp5kYkz+xWs4104sPXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHqlP51y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="n5I82/LQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F1EC4CEE4;
-	Fri,  2 May 2025 07:00:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1746169210;
-	bh=P+YhjYIHYKpbJSu8CioVTFw9tPUKW2eluanOspryhR4=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHqlP51y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E54C4CEEE;
+	Fri,  2 May 2025 07:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746169267;
+	bh=IcRiTAcRFn4Z4s8s5pcO3DJLGHeQZh3uWEsA71CyQoo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n5I82/LQpEvDfHt5WBbG2KCHqBLOBw9pmW/dgxbo7Hs6BF3MQFPNqZ6NgWyIUS3eB
-	 LCowVVvgxc5/AYvWoRGidQWoDSFk7Geq2l15hLYNMjfQ6VUj2TE0Q5FsdYBIC3I/sb
-	 9NL0musHKUp2LHvD0K+BfqaxrFMJnY+114fLSM90=
-Date: Fri, 2 May 2025 09:00:07 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Matthew Maurer <mmaurer@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
+	b=JHqlP51yoEph8k9zujm2yT/YRtDspS9K5r9jvfpH/XeaLad3/yhgrOp0AhqtfkoPA
+	 9fYOLMB2RpMf9k41kH2kSmcBhFRM5DTAVotGJGtJ1qVhbhzMhV+NUWPxpMRCvPd1+y
+	 7mAYLDXzxzV6FNWF1rrC5m9bofkn8L2WqeXTe5pZEhaFOTgrIYd+XRNVelnustSNHa
+	 Dvnvxl5RJaDu4fwdc2hlTcORafFc8bvINHUFVJrZF0T9b606gTzxoe/MxRd3QNviEF
+	 p6qdXHntaRdxZxGrWKTW4Cd6IFkYRD/YgGYW2lwC3Al1I+0KBoTmLXw5RpnNs3h/Iw
+	 82n32m+btGWoA==
+Date: Fri, 2 May 2025 09:01:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
 	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
 	Benno Lossin <benno.lossin@proton.me>,
 	Andreas Hindborg <a.hindborg@kernel.org>,
 	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	"Rafael J. Wysocki" <rafael@kernel.org>,
 	Sami Tolvanen <samitolvanen@google.com>,
 	Timur Tabi <ttabi@nvidia.com>, linux-kernel@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] rust: debugfs: Bind DebugFS directory creation
-Message-ID: <2025050230-browsing-backstab-8de9@gregkh>
+Subject: Re: [PATCH v3 4/4] rust: samples: Add debugfs sample
+Message-ID: <aBRtrfTaaC3Vk9fL@pollux>
 References: <20250501-debugfs-rust-v3-0-850869fab672@google.com>
- <20250501-debugfs-rust-v3-1-850869fab672@google.com>
- <aBRoNKjB063QhGZo@pollux>
+ <20250501-debugfs-rust-v3-4-850869fab672@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,171 +52,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aBRoNKjB063QhGZo@pollux>
+In-Reply-To: <20250501-debugfs-rust-v3-4-850869fab672@google.com>
 
-On Fri, May 02, 2025 at 08:37:40AM +0200, Danilo Krummrich wrote:
-> On Thu, May 01, 2025 at 10:47:41PM +0000, Matthew Maurer wrote:
-> > +/// Owning handle to a DebugFS directory.
-> > +///
-> > +/// This directory will be cleaned up when it goes out of scope.
-> > +///
-> > +/// # Invariants
-> > +///
-> > +/// The wrapped pointer will always be `NULL`, an error, or an owned DebugFS `dentry`.
-> > +#[repr(transparent)]
-> > +pub struct Dir(#[cfg(CONFIG_DEBUG_FS)] *mut bindings::dentry);
-> 
-> Should probably use Opaque instead of a raw pointer.
-> 
-> > +// SAFETY: Dir is just a `dentry` under the hood, which the API promises can be transferred
-> 
-> [`Dir`]
-> 
-> > +// between threads.
-> > +unsafe impl Send for Dir {}
-> > +
-> > +// SAFETY: All the native functions we re-export use interior locking, and the contents of the
-> > +// struct are opaque to Rust.
-> > +unsafe impl Sync for Dir {}
-> > +
-> > +impl Dir {
-> > +    /// Create a new directory in DebugFS at the root.
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// {
-> > +    ///    let parent = Dir::new(c_str!("parent"));
-> > +    ///    // The path "parent" exists in DebugFS here.
-> > +    /// }
-> > +    /// // It does not exist here.
-> 
-> This ready like an explanation for scopes; I think we should drop those comments
-> and the scope.
-> 
-> > +    /// ```
-> > +    pub fn new(name: &CStr) -> Self {
-> > +        Self::create(name, None)
-> > +    }
-> > +
-> > +    /// Create a DebugFS subdirectory.
-> > +    ///
-> > +    /// This returns a [`SubDir`], which will not be automatically cleaned up when it leaves scope.
-> > +    /// To convert this to a handle governing the lifetime of the directory, use [`Dir::from`].
-> > +    ///
-> > +    /// # Examples
-> > +    ///
-> > +    /// ```
-> > +    /// # use kernel::c_str;
-> > +    /// # use kernel::debugfs::Dir;
-> > +    /// {
-> > +    ///    let parent = Dir::new(c_str!("parent"));
-> > +    ///    // The path "parent" exists in DebugFS here.
-> > +    ///    {
-> > +    ///        let child = parent.subdir(c_str!("child"));
-> > +    ///        // The path "parent/child" exists in DebugFS here.
-> > +    ///    }
-> > +    ///    // The path "parent/child" still exists.
-> > +    ///    {
-> > +    ///        let child2 = Dir::from(parent.subdir(c_str!("child2")));
-> > +    ///        // The path "parent/child2" exists in DebugFS here.
-> > +    ///    }
-> > +    ///    // The path "parent/child2" is gone.
-> > +    /// }
-> > +    /// // None of the paths exist here.
-> 
-> I think the fact that you need all those comments here proves that it's not
-> really intuitive. Please see me comment on SubDir below.
-> 
-> > +    /// ```
-> > +    pub fn subdir(&self, name: &CStr) -> SubDir {
-> > +        SubDir::new(Self::create(name, Some(self)))
-> > +    }
-> > +
-> > +    /// Create a new directory in DebugFS. If `parent` is [`None`], it will be created at the root.
-> > +    #[cfg(CONFIG_DEBUG_FS)]
-> > +    fn create(name: &CStr, parent: Option<&Self>) -> Self {
-> > +        let parent_ptr = match parent {
-> > +            Some(parent) => parent.as_ptr(),
-> > +            None => core::ptr::null_mut(),
-> > +        };
-> > +        // SAFETY:
-> > +        // * `name` argument points to a NUL-terminated string that lives across the call, by
-> > +        //   invariants of `&CStr`.
-> > +        // * If `parent` is `None`, `parent` accepts null pointers to mean create at root.
-> > +        // * If `parent` is `Some`, `parent` accepts live dentry debugfs pointers.
-> > +        // * `debugfs_create_dir` either returns an error code or a legal `dentry` pointer,
-> > +        //   so we can call `Self::from_ptr`.
-> > +        unsafe { Self::from_ptr(bindings::debugfs_create_dir(name.as_char_ptr(), parent_ptr)) }
-> 
-> Please split up in two calls, such that we don't have two unsafe function calls
-> in a single unsafe block.
-> 
-> > +    }
-> > +
-> > +    #[cfg(not(CONFIG_DEBUG_FS))]
-> > +    fn create(_name: &CStr, _parent: Option<&Self>) -> Self {
-> > +        Self()
-> > +    }
-> > +
-> > +    /// Constructs a new DebugFS [`Dir`] from the underlying pointer.
-> > +    ///
-> > +    /// # Safety
-> > +    ///
-> > +    /// The pointer must either be an error code, `NULL`, or represent a transfer of ownership of a
-> > +    /// live DebugFS directory.
-> > +    #[cfg(CONFIG_DEBUG_FS)]
-> > +    unsafe fn from_ptr(ptr: *mut bindings::dentry) -> Self {
-> > +        Self(ptr)
-> > +    }
-> > +
-> > +    /// Returns the pointer representation of the DebugFS directory.
-> > +    ///
-> > +    /// Due to the type invariant, the value returned from this function will always be an error
-> > +    /// code, NUL, or a live DebugFS directory.
-> 
-> Maybe put this in a '# Guarantees' section.
-> 
-> > +    // If this function is ever needed with `not(CONFIG_DEBUG_FS)`, hardcode it to return `ENODEV`.
-> 
-> I think you mean ERR_PTR(ENODEV).
-> 
-> > +    #[cfg(CONFIG_DEBUG_FS)]
-> > +    fn as_ptr(&self) -> *mut bindings::dentry {
-> > +        self.0
-> > +    }
-> > +}
-> > +
-> > +impl Drop for Dir {
-> > +    fn drop(&mut self) {
-> > +        // SAFETY: `debugfs_remove` can take `NULL`, error values, and legal DebugFS dentries.
-> > +        // `as_ptr` guarantees that the pointer is of this form.
-> > +        #[cfg(CONFIG_DEBUG_FS)]
-> > +        unsafe {
-> > +            bindings::debugfs_remove(self.as_ptr())
-> > +        }
-> > +    }
-> > +}
-> > +
-> > +/// Handle to a DebugFS directory that will stay alive after leaving scope.
-> > +#[repr(transparent)]
-> > +pub struct SubDir(ManuallyDrop<Dir>);
-> 
-> I think it's not very intuitive if the default is that a SubDir still exists
-> after it has been dropped. I think your first approach being explicit about this
-> with keep() consuming the SubDir was much better; please keep this approach.
+On Thu, May 01, 2025 at 10:47:44PM +0000, Matthew Maurer wrote:
+> +struct RustDebugFs {
+> +    // As we only hold this for drop effect (to remove the directory) we have a leading underscore
+> +    // to indicate to the compiler that we don't expect to use this field directly.
 
-Wait, let's step back.  Why do we care about the difference between a
-"subdir" and a "dir"?  They both are the same thing, and how do you
-describe a subdir of a subdir?  :)
+This feels like an introduction to Rust in the kernel for Rust beginners, which
+is a great thing!
 
-Why the "split" here, that just adds additional mental energy to both
-someone using the api, as well as someone having to review someone using
-it.  A directory is a directory, no matter where in debugfs it lives, so
-let's just keep it as simple as possible please.
+However, I wonder if, instead, we may want a dedicated (or even multiple) sample
+modules or sample drivers, where we go into such detail and leave those samples
+to focus only on the corresponding API?
 
-thanks,
+> +    _debugfs: Dir,
+> +}
+> +
+> +static EXAMPLE: AtomicU32 = AtomicU32::new(8);
+> +
+> +impl kernel::Module for RustDebugFs {
+> +    fn init(_this: &'static ThisModule) -> Result<Self> {
+> +        // Create a debugfs directory in the root of the filesystem called "sample_debugfs".
+> +        let debugfs = Dir::new(c_str!("sample_debugfs"));
+> +
+> +        // Create a subdirectory, so "sample_debugfs/subdir" now exists.
+> +        let sub = debugfs.subdir(c_str!("subdir"));
+> +
+> +        // Create a single file in the subdirectory called "example" that will read from the
+> +        // `EXAMPLE` atomic variable.
+> +        sub.fmt_file(c_str!("example"), &EXAMPLE, &|example, f| {
+> +            writeln!(f, "Reading atomic: {}", example.load(Ordering::Relaxed))
+> +        });
+> +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 8\n" when read.
+> +
+> +        // Change the value in the variable displayed by the file. This is intended to demonstrate
+> +        // that the module can continue to change the value used by the file.
+> +        EXAMPLE.store(10, Ordering::Relaxed);
+> +        // Now, "sample_debugfs/subdir/example" will print "Reading atomic: 10\n" when read.
+> +
+> +        // Save the root debugfs directory we created to our module object. It will be
+> +        // automatically cleaned up when our module is unloaded because dropping the module object
+> +        // will drop the `Dir` handle. The base directory, the subdirectory, and the file will all
+> +        // continue to exist until the module is unloaded.
 
-greg k-h
+Same with this comment.
+
+@Greg: I know you proposed this one; for educational purposes I suppose. What's
+your take on the above?
