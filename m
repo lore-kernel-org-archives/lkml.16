@@ -1,116 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FF5F15A848;
-	Fri,  2 May 2025 13:50:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64E914286;
+	Fri,  2 May 2025 13:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193819; cv=none; b=lbE4+EkOdXbq7zjMxJo32OJIGWjatKVLlIYuXHjgP7guswtpvhm+N8V+sSLon595Wxwb9oXhfE9i199Mq6+dnqgvkmzhdW6mp0sMTomkTPEu6LkrFY1qX2UruIJJjSQd3OHUubYYrgSUqBo9TsSrMfw9v8Vo4aLlsHdfEQ2qImk=
+	t=1746193981; cv=none; b=EUnVvws3ENPiyrCTYE7n17ydNG/22sw0QOZA7m9Iulo6QqYX4ESGsxtlwZdC0qGSS8X1ESjszYXmQXF1BZIa66KO/6sJMr+OVulrMJdziUy5WiHxKJxMevU4DpluIcpXvMOI+uzWxr3DKGJ8oZWBTEwE+V6xiaC1NeqNutpCHmQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193819; c=relaxed/simple;
-	bh=Nb/eXk2fbpiaVSkfDB5EFnBMcgoaMSvuaoHQKAMHA9Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=enWGe5afjDCiN6BZsBf1sxZHv2jNH0fEolJaJlDMZ+yEqdhYxZ30iMWr8UBAUJGgAGAdTRRMcmv4+jI2Sc0wf/mZaOZTkuvZNb23xDja+y/eh9WPiOwo5etP7jXXNVwHctLgbrwMoE53BED/1+WdPkipQBHnFWqzWjrH0i6Lux8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E2AAC4CEE4;
-	Fri,  2 May 2025 13:50:18 +0000 (UTC)
-Date: Fri, 2 May 2025 09:50:25 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
-Cc: paulcacheux@gmail.com, Masami Hiramatsu <mhiramat@kernel.org>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, Namhyung Kim
- <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] tracing: protect trace_probe_log with mutex
-Message-ID: <20250502095025.1bc0426e@gandalf.local.home>
-In-Reply-To: <20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
-References: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
-	<20250502-fix-trace-probe-log-race-v2-2-511ecc1521ec@gmail.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1746193981; c=relaxed/simple;
+	bh=4tsrVryRz+16AB+WbysY5iqYJ9Qd0CMgQaHodtvzzM4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kWHBtUCSFXL5WmdcArvLVADMLz7PbX8uGxdzBrKus7du2FCELEKRT0tb88IO8VUUyd4Js2T+Zy3nKeJY4oXPHxRZGyC6DoTiXf5q52DbaXwGabvHOISdi9H9rh+dkuIOfr1K1bfRbNrhWWy9kGsCmc1TH0+cmvRKDdTWXnSv+bo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Xg25t1Qh; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Xg25t1Qh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746193979; x=1777729979;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4tsrVryRz+16AB+WbysY5iqYJ9Qd0CMgQaHodtvzzM4=;
+  b=Xg25t1Qh2MlcXb7EZ9O+l/cm2fNe78zGHNGG9K01drWmEwd5xz/IpFGw
+   KDTiJjkvSA+8TN9ix8YXR2n99TGAc/ccXRjcCKp2gOnVo6+VOQ98IJ+2V
+   q9+CGmRbwTQRtf16OBrKQi3ULIifT2i84ZHZQi8FTimcSz9P/MCF2mMZF
+   inFbackAvbylCzGovwJFQQyGqPwZkCEqtb0cG9TNiWzuwO9FZ8gXRjs36
+   mOhQaEBaxc/UvLrWUZtTdX7GvWvmpdR9eAFGnrP71YnI26Pxw1qX1w+el
+   mldLbk5uMxHjelfFYhD7Zm7vltyDIS5EGcrokxD+u134Uc3imNCFA8XNy
+   Q==;
+X-CSE-ConnectionGUID: AlzFob8MTVqqIBXExB7QZw==
+X-CSE-MsgGUID: krjR7kybRz+vVjesJV8hLw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47762120"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47762120"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:52:55 -0700
+X-CSE-ConnectionGUID: 4/Leqc5tTw2MRUfkuf73AA==
+X-CSE-MsgGUID: BOYIiIh2TCqshhSJTy2ItA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134599322"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:52:54 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAqot-00000002DOg-1lcN;
+	Fri, 02 May 2025 16:52:51 +0300
+Date: Fri, 2 May 2025 16:52:51 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
+Subject: Re: [PATCH v1 1/1] Input: ALPS - bail out when device path can't fit
+ buffer
+Message-ID: <aBTOMzlitljoDAob@smile.fi.intel.com>
+References: <20250422185645.1949391-1-andriy.shevchenko@linux.intel.com>
+ <ybenmz2fmjxjpo3zhnrh2ptquikxrtb63664qbhhfv5d4ezx5n@c3p2tbosx2tz>
+ <aBBdFoBbdl8GI6da@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aBBdFoBbdl8GI6da@surfacebook.localdomain>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 02 May 2025 15:15:53 +0200
-Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org> wrote:
+On Tue, Apr 29, 2025 at 08:01:10AM +0300, Andy Shevchenko wrote:
+> Mon, Apr 28, 2025 at 04:30:13PM -0700, Dmitry Torokhov kirjoitti:
+> > On Tue, Apr 22, 2025 at 09:56:45PM +0300, Andy Shevchenko wrote:
 
-> From: Paul Cacheux <paulcacheux@gmail.com>
+...
+
+> > > +		n = snprintf(priv->phys2, sizeof(priv->phys2), "%s/input1",
+> > > +			     psmouse->ps2dev.serio->phys);
+> > > +		if (n >= sizeof(priv->phys2)) {
+> > > +			psmouse_err(psmouse,
+> > > +				    "failed to prepare path to the trackstick device\n");
+> > > +			error = -E2BIG;
+> > > +			goto init_fail;
+> > 
+> > So you just broke touchpad of some poor guy who had it working just fine 
+> > for many years. For maximum impact you should add BUG() or panic()
+> > here.
 > 
-> The shared trace_probe_log variable can be accessed and modified
-> by multiple processes using tracefs at the same time, this new
-> mutex will guarantee it's always in a coherent state.
+> Ha-ha. You know that your speculation most likely so far from the truth.
+
+And actually what you are telling about is not true at all. If the device was
+working it means that the file node name is not cut, and hence this patch won't
+anyhow change this behaviour. Otherwise, provide an example which can fail this
+and still be working in the user space.
+
+> > In all seriousness, it is OK to have truncated phys, rarely anyone looks
+> > at it and if we get a report of it being truncated then we can consider
+> > addressing the size (or we can decide to live with it truncated).
 > 
-> There is no guarantee that multiple errors happening at the same
-> time will each have the correct error message, but at least this
-> won't crash.
-> 
-> Fixes: ab105a4fb894 ("tracing: Use tracing error_log with probe events")
-> 
+> In all seriousness, while I agree on the statement, the 4 drivers in Input
+> subsystem break the build. It's the biggest obstacle now to enable WERROR=y,
+> which is default, builds on `make W=1`. So, I already gave you chance to fix,
+> instead I hear nothing back for a months (to be precise 2 months and a day
+> passed from my first attempt that you didn't like), the problem still exists.
+> Please, address this the way you like.
 
-No space needed between Fixes and SOB.
+For the reference, the first approach:
+https://lore.kernel.org/r/20250228121147.242115-1-andriy.shevchenko@linux.intel.com
+where I also asked about this one, ano got no answer.
 
-> Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
-> ---
->  kernel/trace/trace_probe.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 2eeecb6c95eea55502b83af6775b7b6f0cc5ab94..14a7a0b59cd20a8bc43e3e7c653e986081f924c8 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -154,9 +154,11 @@ static const struct fetch_type *find_fetch_type(const char *type, unsigned long
->  }
->  
->  static struct trace_probe_log trace_probe_log;
-> +static DEFINE_MUTEX(trace_probe_log_lock);
+I really don't want to try anything new as it seems a big pushback to whatever
+I propose. So, please consider fixing the issues rather sooner. I will be more
+than happy to test.
 
-Probably should add a comment here saying something like:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-/*
- * The trace_probe_log_lock only protects against the individual
- * modification of the trace_probe_log. It does not protect against
- * the log from producing garbage if two probes use it at the same
- * time. That would only happen if two admins were trying to add
- * probes simultaneously which they shouldn't be doing.
- */
-
--- Steve
-
-
->  
->  void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
->  {
-> +	guard(mutex)(&trace_probe_log_lock);
->  	trace_probe_log.subsystem = subsystem;
->  	trace_probe_log.argc = argc;
->  	trace_probe_log.argv = argv;
-> @@ -165,11 +167,13 @@ void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
->  
->  void trace_probe_log_clear(void)
->  {
-> +	guard(mutex)(&trace_probe_log_lock);
->  	memset(&trace_probe_log, 0, sizeof(trace_probe_log));
->  }
->  
->  void trace_probe_log_set_index(int index)
->  {
-> +	guard(mutex)(&trace_probe_log_lock);
->  	trace_probe_log.index = index;
->  }
->  
-> @@ -178,6 +182,8 @@ void __trace_probe_log_err(int offset, int err_type)
->  	char *command, *p;
->  	int i, len = 0, pos = 0;
->  
-> +	guard(mutex)(&trace_probe_log_lock);
-> +
->  	if (!trace_probe_log.argv)
->  		return;
->  
-> 
 
