@@ -1,159 +1,137 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A28137C37
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:23:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E15419FA92
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 05:24:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746163408; cv=none; b=lDIn5XxLv5TAHKOVKk5EKoYXVn7Pc2pMrE3LdveqbMzbMDXWKZBlChhg5/jOED7QE0LdDInaEGv+TnbnEccw+/iLVzLhMR835ZcJhtgN4VnevRCX4MpU7tejRhJWkEpr09DwmXdBqpO0LgYmoenDmp1GwQGmjAZFP+gHgdzeKxw=
+	t=1746163497; cv=none; b=Ow085jHY7K8D+T4aCuW3pyZVqR7Hkd1IrfhVa33+Rp7F4iwxarIDrs/RhpjBzeobsnCM/Ub1RxHZUCUVTsLfXy9VrpVCHc5DsJ3yZnipvKXkrURvVsVC1F3cyHQhvgrplofCLnrJ3LCsbvRgV0u16TmSw41FQ8/x+POipqQjyLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746163408; c=relaxed/simple;
-	bh=D99X97H0h0egYlqmZ2qyx2bGB/WuCPs4SWCP3Auk0hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RtCXg82YfmOum2lyK0ssJcQVUEe59byvE5PKNOiI9no7v/oVkRuMd7xqgnEkQhjVGZHQS1ryREdJPRNAgeuhW4X6yxMK2nIq7LSODdqY70W+UlM0wTorVOD/h7/x8w1QE6ZI1N2gt8kCgyxwhXuvaMcXoTTAgSda3y/cIWI1Cmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uAirS-0004Qb-Gu; Fri, 02 May 2025 07:22:58 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uAirP-000he0-35;
-	Fri, 02 May 2025 07:22:55 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uAirP-00GTlC-2X;
-	Fri, 02 May 2025 07:22:55 +0200
-Date: Fri, 2 May 2025 07:22:55 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-	Benson Leung <bleung@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	=?utf-8?B?U8O4cmVu?= Andersen <san@skov.dk>,
-	Guenter Roeck <groeck@chromium.org>,
-	Ahmad Fatoum <a.fatoum@pengutronix.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	chrome-platform@lists.linux.dev
-Subject: Re: [PATCH v9 3/7] power: reset: Introduce PSCR Recording Framework
- for Non-Volatile Storage
-Message-ID: <aBRWrwY6YN0526SN@pengutronix.de>
-References: <20250422085717.2605520-1-o.rempel@pengutronix.de>
- <20250422085717.2605520-4-o.rempel@pengutronix.de>
- <bumx6ma3kjanapwaf3oc3mdjnekatvc2cmavt6secfkaapgjpz@kouqjidbl47k>
+	s=arc-20240116; t=1746163497; c=relaxed/simple;
+	bh=JWEPL1EE/CpYX9MgOwqslYQfNEn0bilVYHt55+rnc/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VLE+YaZk/3iSUXnttkVS97Cozx5qaVwvylN3B2sBBqQ84sfBIQZdiqgXUmsqfjBeNmtBHkcjr4UGEAcoSlOjuG2d4OETelKISQo4ozGdwcF/yzmcdzxU044pFwyUU+9XBnQEYmDKK9Fr6XpcLXib43gUUnPmAl5u7fjZPqr/3H0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kv7oMd5a; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kv7oMd5a"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-549b116321aso1968820e87.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 22:24:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746163494; x=1746768294; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q3ZrzTbZzGv85Pi6dndpBJYvMy8n/ymcE4coQYSTCA4=;
+        b=Kv7oMd5akTo2/7W/adXrhD49L9Arzef4A3RJ4XG2ssF9gYwZo3ymlMI6MIMMNecvet
+         vn4RkBcC4x7cS8pGw8LFPVhK1xENzYNeob1oRICUMo4/tP4cwkwvfSwozLx2N9i25QaL
+         FqW4GhytP9pQs61APWFkLWsv8udriBt61M1PeHSiQB1SgKM6BsFv9UtBG3L2B9Z9wIOA
+         LgwhaBqkI1aPeCIYeKobn+zZjX6ieZU+tOurcnPSS9mxAaz1aMJ7o8jkK/3BSNfT547u
+         SZ9ipkmObZthbAshliXlo5wy+5dEN+7ZSomm38swhoJnQGCyJ20PXy4xo2JLZN9IoXAS
+         P+2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746163494; x=1746768294;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q3ZrzTbZzGv85Pi6dndpBJYvMy8n/ymcE4coQYSTCA4=;
+        b=EYzjjtzByXOqLAK3Agm8GrsCT8Yvm7VuZ7WeXKVu0Vap58QTevtzIwG3hgyiAcyhlq
+         NPRf9sYRvS9ebMG7w70v3coX76Jikhy0joZP0Qg3I/FjEMSqiDJbRnjOS2BX9SiiQHz1
+         fSK+36dPVqx9e50zpJPFuRaYWsmxmxI1JkAw5eSthB4JW1MBt4MFs5xfYYJiWICCdoJz
+         zd4VUwLbVNF/nSK81mzkGnJCKwcOlp/p6qveMFoK5b3QEkEUhPcbquS98DosedNW9WeV
+         iCw+Xhu+ntG16q6Aeb9C3IWSZ47X5w4ESjBi75VQnPM/zk6VpCjZ7/JAziAEbZDo3quj
+         zViw==
+X-Gm-Message-State: AOJu0Yy2Z/88ibCFEr3fb9mtko9oJAUi+0pd70G7tpp5lO3uoUL5wgju
+	LupSF00dgXfW3Xdnf/4c3Ku/RMnOoPF9866Pf8M1IvmlhkbvCcIh
+X-Gm-Gg: ASbGncthXl0CCsPLk9FngQZgeS/yMeWZ4938cFks41KbufHxXAvwx4nLTcwdHxajO+u
+	9TmEDnaO6SGFN/Czs5WqEdI5ByRFpsdjAYuhEC2LhelLUm2YMf2a8du5emHZGLT3jXznr2Mtymf
+	RLBPLtkaOyekKWOHXmxgfAOWc0fAQP0NGZ1XdCufKiQ7HueoNilKoGDrllOA2eCDembNTvmY+J0
+	reNH4ntcQlbgD4eh+xNHdcYui+NDmJhNasmdISKtZDmprR8ZeaaFLt4lB+3wWjd4zdAnGyOs/Hy
+	lc8o0I7w17Sve39TKPhMIBI9ULVOWWj6+yW6hSudcdP8vJK5Fge9CoJ4G3QXfrzH/T/hxfEvRk3
+	rNcdCC2U0m2jd+kmOi1e/7g==
+X-Google-Smtp-Source: AGHT+IF08T8aFBQR7GQCDh1JQ8RzCZpGXa5rbE8n0mVFXadUPyx2dCjPHtoc/wTXKoS1kie91osF3w==
+X-Received: by 2002:a05:6512:e98:b0:549:8f15:db36 with SMTP id 2adb3069b0e04-54eac244ef1mr342702e87.51.1746163493930;
+        Thu, 01 May 2025 22:24:53 -0700 (PDT)
+Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ea94c55a0sm265917e87.86.2025.05.01.22.24.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 22:24:53 -0700 (PDT)
+Message-ID: <52221c62-689c-44d2-b65d-07a5301090b3@gmail.com>
+Date: Fri, 2 May 2025 08:24:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bumx6ma3kjanapwaf3oc3mdjnekatvc2cmavt6secfkaapgjpz@kouqjidbl47k>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] regulator: bd718x7: Ensure SNVS power state is used as
+ requested
+To: Esben Haabendal <esben@geanix.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+References: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
+Content-Language: en-US, en-AU, en-GB, en-BW
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+In-Reply-To: <20250501-bd718x7-snvs-reset-v1-1-1fcc7088200e@geanix.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Sebastian,
+Hi Esben,
 
-Thanks for the feedback.
+Oh, it has been a while since I've heard anything from these PMICs :)
 
-On Fri, May 02, 2025 at 01:20:50AM +0200, Sebastian Reichel wrote:
-> Hi,
+On 01/05/2025 17:48, Esben Haabendal wrote:
+> With the introduction of the rohm,reset-snvs-powered DT binding [2], the
+> PMIC settings were only changed when the new property was not found.
 > 
-> On Tue, Apr 22, 2025 at 10:57:13AM +0200, Oleksij Rempel wrote:
-> > This commit introduces the Power State Change Reasons Recording (PSCRR)
-> > framework. It provides a generic mechanism to store shutdown or reboot
-> > reasons, such as under-voltage, thermal events, or software-triggered
-> > actions, into non-volatile storage.
-> > 
-> > PSCRR is primarily intended for systems where software is able to detect
-> > a power event in time and store the reason—typically when backup power
-> > (e.g., capacitors) allows a short window before shutdown. This enables
-> > reliable postmortem diagnostics, even on devices where traditional storage
-> > like eMMC or NAND may not survive abrupt power loss.
-> > 
-> > In its current form, PSCRR focuses on software-reported reasons. However,
-> > the framework is also designed with future extensibility in mind and could
-> > serve as a central frontend for exposing hardware-reported reset reasons
-> > from sources such as PMICs, watchdogs, or SoC-specific registers.
-> > 
-> > This version does not yet integrate such hardware-based reporting.
+> As mentioned in [1] the default for BD71387 and BD71847 is to switch to
+> SNVS power state on watchdog reset.
+
+I suppose you mean READY, not SNVS? Commit seems to state:
+"By default only wathcdog reset changes state from poweroff to ready."
+
+> So even with rohm,reset-snvs-powered added to DT, a watchdog reset causes
+> transitions through READY instead of SNVS.
+
+The original idea of the rohm,reset-snvs-powered was not to configure 
+the SNVS to be the target. The driver was mostly built to assume that 
+the PMIC has been configured by earlier stages like uboot, and configs 
+in the driver were mostly introduced to make power rail enable states 
+controllable by the software - without risking the rails to be left off. 
+Thus, AFAIR, the values set by boot (or other power manager MCUs) 
+haven't been overwritten is the "rohm,reset-snvs-powered" has been found.
+
+Configuring for example the hardware watchdog related stuff at Linux 
+driver boot is somewhat late, since watchdog should probably be running 
+already - and hangs might happen prior the driver probe.
+
+> And with the default reboot
+> method in mxc_restart() is to cause a watchdog reset, we ended up powering
+> off the SNVS domains, and thus losing SNVS state such as SNVS RTC and
+> LPGPR, on reboots.
 > 
-> This adds quite some complex code for a very specific problem while
-> mostly ignoring the common case of hardware reported reasons. I think
-> having at least one hardware-reported reasons (e.g. WDOG) is mandatory
-> to make sure the framework can really handle it.
+> With this change, the rohm,reset-snvs-powered property results in the PMIC
+> configuration being modified so POWEROFF transitions to SNVS for all reset
+> types, including watchdog reset.
 
-The initial purpose of the PSCRR framework is to record power state
-change reasons such as *undervoltage* or *regulator failures*, which can
-be detected and stored by software just before shutdown. Supporting
-hardware-reported reset reasons (like watchdog, PMIC, or SoC registers)
-is possible by design — the interface allows it — but it’s not something
-I consider mandatory for the initial version.
+As far as I can say, this change is, in principle, fine. The 
+"rohm,reset-snvs-powered" shouldn't be populated in the device-tree, if 
+SNVS is not meant to be used. My only worry is that the BD71837, 47 and 
+50 have been on the field since 2018 - and I am not at all sure all the 
+device-trees are sane... And if we configure the reset to use SNVS 
+state, then the software controlled regulators will not turn ON after 
+the reset. Fail to mark them in the device-tree and the device will be 
+dead until battery is drained or removed.
 
-I’d prefer to focus on solving one concrete problem at a time, and the
-current use case is already well-supported with software-side logic.
+Is there a way for you to set the "target state" at boot SW? I think 
+that should work as the Linux driver won't touch the target state if 
+rohm,reset-snvs-powered is set(?)
 
-> I also see you extended power_on_reason.h and included it here
+This is not NACK to the change, this is asking if we had a safer way, 
+both for other users and also for you (since I still think these configs 
+should be done prior Linux driver probe)...
 
-You're right — the `#include <linux/power/power_on_reason.h>` is no
-longer used directly in `pscrr.c` and will be removed in the next
-revision.
-
-> but
-> don't actually use the defined strings at all. Also you create the
-> new enum, but don't handle the existing reasons and just add the new
-> codes you need instead of making sure things are properly in-sync :(
-
-Could you please clarify what exactly you mean here? The strings defined
-in `power_on_reason.h` are still used indirectly via
-`psc_reason_to_str()`, which is called in the reboot core and used by
-PSCRR for logging (e.g., in `pscrr_reboot_notifier()` and
-`pscrr_core_init()`). If your concern is about the enum values
-themselves or something else, I'd appreciate a bit more detail.
-
-> > [...]
-> 
-> > +struct pscrr_core {
-> > +	struct mutex lock;
-> > +	struct pscrr_backend *backend;
-> > +	/* Kobject for sysfs */
-> > +	struct kobject *kobj;
-> > +	struct notifier_block reboot_nb;
-> > +} g_pscrr = {
-> > +	.lock = __MUTEX_INITIALIZER(g_pscrr.lock),
-> > +};
-> 
-> Apart from the highlevel problems I have with this:
-> 
-> g_pscrr can be static
-> 
-> -- Sebastian
-
-Best regards,  
-Oleksij
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Yours,
+	-- Matti
