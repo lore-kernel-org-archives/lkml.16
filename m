@@ -1,416 +1,115 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83F3625522D;
-	Fri,  2 May 2025 13:42:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193368; cv=none; b=LrTBS1C1RZD6BomRhOBGINUryJsSXyC5JcXAlyoL7eHedPpLjkWf1C9nUEWM2fSuYHpI+YTOgtGD2Vtg58e8XeAutG5jT9Yq2B+wEgavms5GiMp9Js+AgJ590ONrHdfDIidclmFHE2NuBYmIgnFyDa1SYq535dtQnDRSGd0S6Ew=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193368; c=relaxed/simple;
-	bh=IY0rlxjmEHi/ciqk8neIWDYUSW1yDZpT8KyLguF3h5g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hkE+V5tijBWyUURlvjD3QpyK66xBavu8sAKV8SQvxme+/kfVAxaLMgakCLA43mUPLJJShwwLp5Ssx06dgjOM9QvO/Jo+AxSJ12GE9rBWmtl6r3jcHXvgykLV3KAUKTXzk1GRC3UzB6eugwyk63TbotSOnZrKMUblxaWo2Vh+q/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EDZFm9cR; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10EF725522D;
+	Fri,  2 May 2025 13:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193397; cv=pass; b=KygzZwa01i0uX1ot4Av/H3tYgbu7WBvoSFqHoEL4diJAqR94UBA8pNz1LVKRqXFs+jPLGGatanjIc5zzv6iXOZfXWOFfd+W0V5J/CHAdV9tKGmzsRzBD7eSUlnjTsrdBubLhTpmhJAHrvK/tCSMtIlQYux20/PmPtuwqY33iwM0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193397; c=relaxed/simple;
+	bh=fu+TW10DD8fGAjrtNifUxuSSmnNqdY8dpSFjihb3fDk=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dC4GWHt7gOF19gjXrF+mGGmEfuTosA2OqbqSVioh0OS8h04LxF9GQEsY9yQDdm/BoAxw20vC2AcOxQmIB82yCk+OXC5iH+Fql8XEMZthJ3PZVtYh/uRBb1r2mEbBlL4s/P0QjT1m8/WAYTIBbkWPR7EoUjuTApOxE6cUk1xf2RQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=JUJcRSbI; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EDZFm9cR"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 0527640E0206;
-	Fri,  2 May 2025 13:42:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WzojnnI9NbdX; Fri,  2 May 2025 13:42:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1746193358; bh=3QSMU3KlWQVbxBP3Lk2kvk2uhPllvL0/5lmXwW4VnTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EDZFm9cR668TeU9Ptf2SNcTAWEp3rtT1cZmI77WC6jtdgj9i2zmL42LIfAdwKiFgZ
-	 8iy8ppWvEewbVyOAs1Y21gT8oPuK0UzIL+pX4ZTrubob05nuLvdfCUV90pZBd9Oh9S
-	 hF+tsSYrqHmd9vPwd4WjWBxGrXQP1iKQodFUXJQv04CMzr6Dxylk9UbLbaZs7+1pAO
-	 Omn9+OyWFpLvR9Ud7nh3uOtdCmUgkY+xUyEtjegC0EhBtkT0O5XJTf9H8xxft7wl0l
-	 se9L//9FP2LBW3vsA2L38o0xYfDq1W1e19CC6yYTc9Wo9oHSQ+k+/c/U8/rw7o7Zyf
-	 r2vTCzoEaI5RsyxB1f7Neq7EoqfOzWOB/HKNvw9DC+hvaRfkg8tdT6tSoTARB7OLQ7
-	 WeiGZ6mIXgWDZUoPhdHRehzERbaXLjMvTxLEVi8YqMqo9Tr6Z2HmQ+po/6GQODspSw
-	 yOSuUs6OlE10TJsA1CjBVGCX4FL9mflf6AY7aeHAYPTaCZl2K+ksTcf2+Yi8nwQq4v
-	 I6ya5FMePn2hloqSX5P9tmLWbAV4ZCbsVQ+3YVhz5LfywB9ULcLODa0G8F6XtxE5Si
-	 nXQKFQY0wa8R3Jn1Jcm3ZxR2YKDj6Unve51j46SyGBUNKLWGVTuHz4Ve+teTkky0fa
-	 iHntu04tdlxmv+xDHqjxlfAU=
-Received: from zn.tnic (p579690ee.dip0.t-ipconnect.de [87.150.144.238])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3943A40E01CF;
-	Fri,  2 May 2025 13:42:19 +0000 (UTC)
-Date: Fri, 2 May 2025 15:42:12 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Ashish Kalra <Ashish.Kalra@amd.com>, tglx@linutronix.de,
-	mingo@redhat.com, dave.hansen@linux.intel.com, x86@kernel.org,
-	hpa@zytor.com, kees@kernel.org, michael.roth@amd.com,
-	nikunj@amd.com, seanjc@google.com, ardb@kernel.org,
-	gustavoars@kernel.org, sgarzare@redhat.com, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
-	kexec@lists.infradead.org, linux-coco@lists.linux.dev
-Subject: Re: [PATCH v4] x86/sev: Don't touch VMSA pages during kdump of SNP
- guest memory
-Message-ID: <20250502134212.GBaBTLtDu8D5Xl6Jqy@fat_crate.local>
-References: <20250430215730.369777-1-Ashish.Kalra@amd.com>
- <e7a0cc72-388a-7fa4-601f-371aea369204@amd.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="JUJcRSbI"
+ARC-Seal: i=1; a=rsa-sha256; t=1746193384; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=W9JzYJTnQXG1d6Zt3zRv8WjbHCGls4hTVI8DA+Wo14oT790LvUe9V75A8+8ilRBle9Joy7xLNkUWGNfKOauXgzxKkfudD4CL3o8yvphcPSpotOpyiup+rLAit0mK2LIf3WQB7DeFk03gsoMO2V/+td1XkrdBhd3p5jzqVuMBFkU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746193384; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=6Zmuc615J6mbppoDVFz1aqh4r+4ECOigtCQVSe13+SM=; 
+	b=CIr5pLuzky+1lm3ck+5mDDyUtYWZL9l5SkXYo+gn8CzaK2PtfhmZ8WU0uSFG5/7eDI2pNT3uDd3jMPBh1m212xFkyxodHdPK1ux5RxNXH1VGEiyLIWiVUZYcxdgtLO/AWjEGn7TCwDVMcWTOsneK9wOQyEyKFkYhYEy420z7M8U=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193384;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=6Zmuc615J6mbppoDVFz1aqh4r+4ECOigtCQVSe13+SM=;
+	b=JUJcRSbIDw/IgZM69BKzw5EecEmEtvqxdXuvvcrvrzrNFaooN5xkwCHv1V5eDspw
+	cxAE424q/v927dIRxh73QhBKjlJEgI3fJBkzTE2Bmmm8drEbyjdvYP7v4sH3M20JT4x
+	1rukZlhvB0cOC7eVpo4fcPAQXXsNvZ2JJsVofmjY=
+Received: by mx.zohomail.com with SMTPS id 174619338158373.28545445771317;
+	Fri, 2 May 2025 06:43:01 -0700 (PDT)
+Message-ID: <c01d8c7e-bac7-4d4d-872d-14f0ac0c6ec2@collabora.com>
+Date: Fri, 2 May 2025 18:42:55 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e7a0cc72-388a-7fa4-601f-371aea369204@amd.com>
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/7] selftests: vDSO: chacha: Correctly skip test if
+ necessary
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
+ <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
+ <20250502-selftests-vdso-fixes-v1-1-fb5d640a4f78@linutronix.de>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250502-selftests-vdso-fixes-v1-1-fb5d640a4f78@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Thu, May 01, 2025 at 08:29:59AM -0500, Tom Lendacky wrote:
-> Just occurred to me that, while we don't use it, there is another create
-> event, SVM_VMGEXIT_AP_CREATE_ON_INIT. So maybe change this to
+On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
+> According to kselftest.h ksft_exit_skip() is not meant to be called when
+> a plan has already been printed.
+Agreed
+
 > 
->   bool create = event != SVM_VMGEXIT_AP_DESTROY;
+> Use the recommended function ksft_test_result_skip().
+> 
+> This fixes a bug, where the TAP output would be invalid when skipping:
+> 
+> 	TAP version 13
+> 	1..1
+> 	ok 2 # SKIP Not implemented on architecture
+> 
+> The SKIP line should start with "ok 1" as the plan only contains one test.
+> 
+> Fixes: 3b5992eaf730 ("selftests: vDSO: unconditionally build chacha test")
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Thx, I have this applied now:
-
----
-From: Ashish Kalra <ashish.kalra@amd.com>
-Date: Mon, 28 Apr 2025 21:41:51 +0000
-Subject: [PATCH] x86/sev: Do not touch VMSA pages during SNP guest memory kdump
-
-When kdump is running makedumpfile to generate vmcore and dump SNP guest
-memory it touches the VMSA page of the vCPU executing kdump.
-
-It then results in unrecoverable #NPF/RMP faults as the VMSA page is
-marked busy/in-use when the vCPU is running and subsequently a causes
-guest softlockup/hang.
-
-Additionally, other APs may be halted in guest mode and their VMSA pages
-are marked busy and touching these VMSA pages during guest memory dump
-will also cause #NPF.
-
-Issue AP_DESTROY GHCB calls on other APs to ensure they are kicked out
-of guest mode and then clear the VMSA bit on their VMSA pages.
-
-If the vCPU running kdump is an AP, mark it's VMSA page as offline to
-ensure that makedumpfile excludes that page while dumping guest memory.
-
-Fixes: 3074152e56c9 ("x86/sev: Convert shared memory back to private on kexec")
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
-Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/20250428214151.155464-1-Ashish.Kalra@amd.com
----
- arch/x86/coco/sev/core.c | 244 +++++++++++++++++++++++++--------------
- 1 file changed, 158 insertions(+), 86 deletions(-)
-
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 2c19396f8186..144e0f8ac042 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -959,6 +959,102 @@ void snp_accept_memory(phys_addr_t start, phys_addr_t end)
- 	set_pages_state(vaddr, npages, SNP_PAGE_STATE_PRIVATE);
- }
- 
-+static int vmgexit_ap_control(u64 event, struct sev_es_save_area *vmsa, u32 apic_id)
-+{
-+	bool create = event != SVM_VMGEXIT_AP_DESTROY;
-+	struct ghcb_state state;
-+	unsigned long flags;
-+	struct ghcb *ghcb;
-+	int ret = 0;
-+
-+	local_irq_save(flags);
-+
-+	ghcb = __sev_get_ghcb(&state);
-+
-+	vc_ghcb_invalidate(ghcb);
-+
-+	if (create)
-+		ghcb_set_rax(ghcb, vmsa->sev_features);
-+
-+	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
-+	ghcb_set_sw_exit_info_1(ghcb,
-+				((u64)apic_id << 32)	|
-+				((u64)snp_vmpl << 16)	|
-+				event);
-+	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
-+
-+	sev_es_wr_ghcb_msr(__pa(ghcb));
-+	VMGEXIT();
-+
-+	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
-+	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
-+		pr_err("SNP AP %s error\n", (create ? "CREATE" : "DESTROY"));
-+		ret = -EINVAL;
-+	}
-+
-+	__sev_put_ghcb(&state);
-+
-+	local_irq_restore(flags);
-+
-+	return ret;
-+}
-+
-+static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
-+{
-+	int ret;
-+
-+	if (snp_vmpl) {
-+		struct svsm_call call = {};
-+		unsigned long flags;
-+
-+		local_irq_save(flags);
-+
-+		call.caa = this_cpu_read(svsm_caa);
-+		call.rcx = __pa(va);
-+
-+		if (make_vmsa) {
-+			/* Protocol 0, Call ID 2 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
-+			call.rdx = __pa(caa);
-+			call.r8  = apic_id;
-+		} else {
-+			/* Protocol 0, Call ID 3 */
-+			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
-+		}
-+
-+		ret = svsm_perform_call_protocol(&call);
-+
-+		local_irq_restore(flags);
-+	} else {
-+		/*
-+		 * If the kernel runs at VMPL0, it can change the VMSA
-+		 * bit for a page using the RMPADJUST instruction.
-+		 * However, for the instruction to succeed it must
-+		 * target the permissions of a lesser privileged (higher
-+		 * numbered) VMPL level, so use VMPL1.
-+		 */
-+		u64 attrs = 1;
-+
-+		if (make_vmsa)
-+			attrs |= RMPADJUST_VMSA_PAGE_BIT;
-+
-+		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
-+	}
-+
-+	return ret;
-+}
-+
-+static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
-+{
-+	int err;
-+
-+	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
-+	if (err)
-+		pr_err("clear VMSA page failed (%u), leaking page\n", err);
-+	else
-+		free_page((unsigned long)vmsa);
-+}
-+
- static void set_pte_enc(pte_t *kpte, int level, void *va)
- {
- 	struct pte_enc_desc d = {
-@@ -1061,6 +1157,65 @@ void snp_kexec_begin(void)
- 		pr_warn("Failed to stop shared<->private conversions\n");
- }
- 
-+/*
-+ * Shutdown all APs except the one handling kexec/kdump and clearing
-+ * the VMSA tag on AP's VMSA pages as they are not being used as
-+ * VMSA page anymore.
-+ */
-+static void shutdown_all_aps(void)
-+{
-+	struct sev_es_save_area *vmsa;
-+	int apic_id, this_cpu, cpu;
-+
-+	this_cpu = get_cpu();
-+
-+	/*
-+	 * APs are already in HLT loop when enc_kexec_finish() callback
-+	 * is invoked.
-+	 */
-+	for_each_present_cpu(cpu) {
-+		vmsa = per_cpu(sev_vmsa, cpu);
-+
-+		/*
-+		 * The BSP or offlined APs do not have guest allocated VMSA
-+		 * and there is no need  to clear the VMSA tag for this page.
-+		 */
-+		if (!vmsa)
-+			continue;
-+
-+		/*
-+		 * Cannot clear the VMSA tag for the currently running vCPU.
-+		 */
-+		if (this_cpu == cpu) {
-+			unsigned long pa;
-+			struct page *p;
-+
-+			pa = __pa(vmsa);
-+			/*
-+			 * Mark the VMSA page of the running vCPU as offline
-+			 * so that is excluded and not touched by makedumpfile
-+			 * while generating vmcore during kdump.
-+			 */
-+			p = pfn_to_online_page(pa >> PAGE_SHIFT);
-+			if (p)
-+				__SetPageOffline(p);
-+			continue;
-+		}
-+
-+		apic_id = cpuid_to_apicid[cpu];
-+
-+		/*
-+		 * Issue AP destroy to ensure AP gets kicked out of guest mode
-+		 * to allow using RMPADJUST to remove the VMSA tag on it's
-+		 * VMSA page.
-+		 */
-+		vmgexit_ap_control(SVM_VMGEXIT_AP_DESTROY, vmsa, apic_id);
-+		snp_cleanup_vmsa(vmsa, apic_id);
-+	}
-+
-+	put_cpu();
-+}
-+
- void snp_kexec_finish(void)
- {
- 	struct sev_es_runtime_data *data;
-@@ -1075,6 +1230,8 @@ void snp_kexec_finish(void)
- 	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
- 		return;
- 
-+	shutdown_all_aps();
-+
- 	unshare_all_memory();
- 
- 	/*
-@@ -1100,51 +1257,6 @@ void snp_kexec_finish(void)
- 	}
- }
- 
--static int snp_set_vmsa(void *va, void *caa, int apic_id, bool make_vmsa)
--{
--	int ret;
--
--	if (snp_vmpl) {
--		struct svsm_call call = {};
--		unsigned long flags;
--
--		local_irq_save(flags);
--
--		call.caa = this_cpu_read(svsm_caa);
--		call.rcx = __pa(va);
--
--		if (make_vmsa) {
--			/* Protocol 0, Call ID 2 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_CREATE_VCPU);
--			call.rdx = __pa(caa);
--			call.r8  = apic_id;
--		} else {
--			/* Protocol 0, Call ID 3 */
--			call.rax = SVSM_CORE_CALL(SVSM_CORE_DELETE_VCPU);
--		}
--
--		ret = svsm_perform_call_protocol(&call);
--
--		local_irq_restore(flags);
--	} else {
--		/*
--		 * If the kernel runs at VMPL0, it can change the VMSA
--		 * bit for a page using the RMPADJUST instruction.
--		 * However, for the instruction to succeed it must
--		 * target the permissions of a lesser privileged (higher
--		 * numbered) VMPL level, so use VMPL1.
--		 */
--		u64 attrs = 1;
--
--		if (make_vmsa)
--			attrs |= RMPADJUST_VMSA_PAGE_BIT;
--
--		ret = rmpadjust((unsigned long)va, RMP_PG_SIZE_4K, attrs);
--	}
--
--	return ret;
--}
--
- #define __ATTR_BASE		(SVM_SELECTOR_P_MASK | SVM_SELECTOR_S_MASK)
- #define INIT_CS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_READ_MASK | SVM_SELECTOR_CODE_MASK)
- #define INIT_DS_ATTRIBS		(__ATTR_BASE | SVM_SELECTOR_WRITE_MASK)
-@@ -1176,24 +1288,10 @@ static void *snp_alloc_vmsa_page(int cpu)
- 	return page_address(p + 1);
- }
- 
--static void snp_cleanup_vmsa(struct sev_es_save_area *vmsa, int apic_id)
--{
--	int err;
--
--	err = snp_set_vmsa(vmsa, NULL, apic_id, false);
--	if (err)
--		pr_err("clear VMSA page failed (%u), leaking page\n", err);
--	else
--		free_page((unsigned long)vmsa);
--}
--
- static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- {
- 	struct sev_es_save_area *cur_vmsa, *vmsa;
--	struct ghcb_state state;
- 	struct svsm_ca *caa;
--	unsigned long flags;
--	struct ghcb *ghcb;
- 	u8 sipi_vector;
- 	int cpu, ret;
- 	u64 cr4;
-@@ -1307,33 +1405,7 @@ static int wakeup_cpu_via_vmgexit(u32 apic_id, unsigned long start_ip)
- 	}
- 
- 	/* Issue VMGEXIT AP Creation NAE event */
--	local_irq_save(flags);
--
--	ghcb = __sev_get_ghcb(&state);
--
--	vc_ghcb_invalidate(ghcb);
--	ghcb_set_rax(ghcb, vmsa->sev_features);
--	ghcb_set_sw_exit_code(ghcb, SVM_VMGEXIT_AP_CREATION);
--	ghcb_set_sw_exit_info_1(ghcb,
--				((u64)apic_id << 32)	|
--				((u64)snp_vmpl << 16)	|
--				SVM_VMGEXIT_AP_CREATE);
--	ghcb_set_sw_exit_info_2(ghcb, __pa(vmsa));
--
--	sev_es_wr_ghcb_msr(__pa(ghcb));
--	VMGEXIT();
--
--	if (!ghcb_sw_exit_info_1_is_valid(ghcb) ||
--	    lower_32_bits(ghcb->save.sw_exit_info_1)) {
--		pr_err("SNP AP Creation error\n");
--		ret = -EINVAL;
--	}
--
--	__sev_put_ghcb(&state);
--
--	local_irq_restore(flags);
--
--	/* Perform cleanup if there was an error */
-+	ret = vmgexit_ap_control(SVM_VMGEXIT_AP_CREATE, vmsa, apic_id);
- 	if (ret) {
- 		snp_cleanup_vmsa(vmsa, apic_id);
- 		vmsa = NULL;
--- 
-2.43.0
+> 
+> ---
+> I'm not sure if this is not a general bug in ksft_exit_skip().
+> First ksft_xskip is incremented then read back through ksft_test_num() and
+> then that result is incremented again.
+> 
+> In any case, using the correct function is better.
+> ---
+>  tools/testing/selftests/vDSO/vdso_test_chacha.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/vDSO/vdso_test_chacha.c b/tools/testing/selftests/vDSO/vdso_test_chacha.c
+> index 8757f738b0b1a76a48c83c5e5df79925a30c1bc7..0aad682b12c8836efabb49a65a47cf87466891a3 100644
+> --- a/tools/testing/selftests/vDSO/vdso_test_chacha.c
+> +++ b/tools/testing/selftests/vDSO/vdso_test_chacha.c
+> @@ -76,7 +76,8 @@ static void reference_chacha20_blocks(uint8_t *dst_bytes, const uint32_t *key, u
+>  
+>  void __weak __arch_chacha20_blocks_nostack(uint8_t *dst_bytes, const uint32_t *key, uint32_t *counter, size_t nblocks)
+>  {
+> -	ksft_exit_skip("Not implemented on architecture\n");
+> +	ksft_test_result_skip("Not implemented on architecture\n");
+> +	ksft_finished();
+>  }
+>  
+>  int main(int argc, char *argv[])
+> 
 
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Regards,
+Usama
