@@ -1,108 +1,162 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D9F1A83FB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B775213248;
+	Fri,  2 May 2025 09:32:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746178309; cv=none; b=peCHf2iDWOCHFTyhfMDma8llXg4cI+YSB8SrEJKwmllbpW/08l2AKyqkWLBM2mHgf8776TE/vNA+Cjj2GcxSXAujVXDzTPEgHy7Iw0Xk5geKOxYIPIsnx4q84FDO4yAZiudFO1klERCfioYjiepNyTQlCNZ68c4Ka4LadRrVeEk=
+	t=1746178350; cv=none; b=MdEGQOhgr1HrXIMTPOuiDq1mv5yXdBso9A1at3AC/nP2EcpzBjyQvavAhygT1AsXiPkQ0QFjpLRA48BYtzkxA8jtHqpqeBO1SSIy7IRkyRGEUVme/MAB1MP62vfkXHXL/nLVqko+ysypL0ozpkS77ijCjU2DCWm9frgsko7tULo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746178309; c=relaxed/simple;
-	bh=8O4zIZ9Qzp6mbnHE5QCiNJEo51Ocv0R4T+lUPDYjNlk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=twBUVDEhXh9PH/njAVv7E3Zd7WNKuEinCafmWEut3FclWd+LdVSMZhwCZI16aGdKUSvEWXWOGqOefqjhinhv3H1HkSVPcTfhjdY1g4P9LM/nYo1nnW9c1JnLovyZT4hrALqch+KFRTTtonj8kQXAn95E1psaAaKtZNBzBzIzbDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sOOyUR9q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746178350; c=relaxed/simple;
+	bh=Wp41p70BSqgZEyuE3IVb+/E/nl+P9ml2u0e92dLqWrE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=FsgMqbDC2T3UsD+c+8lMMwx5SRRFnY30H6VsJAa2AWlYKDN7ucBbduxUmyOLo5e8DCoAAkl/ybQRtWU0x7PPsgOyH3kYwuHdpWzdJjCY0lBhzWJ/mf/MYyaYin+HOW4eZGRcsY5sxx2MFkIIcgH6cCZokuTYEbJy7NG34nrXVDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=u1V8An0E; arc=none smtp.client-ip=198.47.19.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sOOyUR9q"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D633C4CEE4;
-	Fri,  2 May 2025 09:31:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746178309;
-	bh=8O4zIZ9Qzp6mbnHE5QCiNJEo51Ocv0R4T+lUPDYjNlk=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=sOOyUR9qy9yXnUUrUaJet7pvQ0Ydqwe/srOrURjzBfnMVBo9fjn7bi39tuI7sWNbs
-	 0ePzM/UEm1Fc4xsSEp7RbJQfx5Z7FCDIlodvYEXgXpHoWo3ZT73TEvd1Efki36wzaG
-	 5XNP/uKHhK3peXA5N7NN5TkyGwR5EPoJxrVCGkNwOI5vC1E6MOyhcLu/hpog64yV7A
-	 fwRCt8YP6S1YrD/c00JorF/P8PLNzjd1eCb2BNmnqwt7pTNJ5/mrM6Ac+TCDUW/F3e
-	 zcftQWJyOxTpDsxR8mEdmqfOhgdNviIJS0PX0+yPfb7ZW0N2x7+qKX+RlEQAmvBkRq
-	 9YIAfSQC/aVIA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3526EC3ABA3;
-	Fri,  2 May 2025 09:31:49 +0000 (UTC)
-From: Ignacio Moreno Gonzalez via B4 Relay <devnull+Ignacio.MorenoGonzalez.kuka.com@kernel.org>
-Date: Fri, 02 May 2025 11:31:41 +0200
-Subject: [PATCH] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
- enabled
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="u1V8An0E"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5429W0Sr3831866
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 04:32:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1746178320;
+	bh=PkqMSSAZ2mWgrwjBraBF0CvV/vcdXHZByR+N3CA5B7U=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=u1V8An0Eca85G1KbNdjiH+NJt7Acs5JHIvVkI1gWjzkKeg8SixvJFs/y8/1bgwUsF
+	 RIzz6Nwif+Ev2S72UjJn9g2moNYfSqAG5n4nyirydyjHo7Wv1zE+4xRWmDzILJS146
+	 GeTJPsn5gXUX+EznEjjSy+30ULGC4pY5XWlYu8kA=
+Received: from DLEE110.ent.ti.com (dlee110.ent.ti.com [157.170.170.21])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5429W05f003807
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 2 May 2025 04:32:00 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
+ May 2025 04:32:00 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 2 May 2025 04:32:00 -0500
+Received: from [172.24.30.16] (lt9560gk3.dhcp.ti.com [172.24.30.16])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5429VssE080397;
+	Fri, 2 May 2025 04:31:55 -0500
+Message-ID: <7e91a1c1-237d-463d-8045-eb7ca9e8c8df@ti.com>
+Date: Fri, 2 May 2025 15:01:53 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net 3/4] net: ti: icssg-prueth: Fix race condition for
+ traffic from different network sockets
+To: Jakub Kicinski <kuba@kernel.org>
+CC: <dan.carpenter@linaro.org>, <john.fastabend@gmail.com>, <hawk@kernel.org>,
+        <daniel@iogearbox.net>, <ast@kernel.org>, <pabeni@redhat.com>,
+        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>,
+        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Roger Quadros
+	<rogerq@kernel.org>, <danishanwar@ti.com>
+References: <20250428120459.244525-1-m-malladi@ti.com>
+ <20250428120459.244525-4-m-malladi@ti.com>
+ <20250501075615.34573158@kernel.org>
+Content-Language: en-US
+From: "Malladi, Meghana" <m-malladi@ti.com>
+In-Reply-To: <20250501075615.34573158@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com>
-X-B4-Tracking: v=1; b=H4sIAPyQFGgC/x2NQQqDMBBFryKz7kAMCm2vUopMk9EM1SQkqSji3
- Zt28RYPHv8fkDkJZ7g3ByReJUvwVdpLA8aRnxjFVgetdK86fcWF4o8hFzJvLAHXZfDBfSaOVOv
- g5x1lxOIiSkb29JrZouFOUWtZ3XoLdTsmHmX7/z6e5/kF78HTM4cAAAA=
-X-Change-ID: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
-To: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
- Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746178308; l=1800;
- i=Ignacio.MorenoGonzalez@kuka.com; s=20220915; h=from:subject:message-id;
- bh=fqHEYzRVTDCWtppau7rpnlBqweJIa/e1V5D0pJG1Pm8=;
- b=sORPxW2hJtjJRkgQLgAA4J9V8d632Q5Nhca5+LarntPGbh2i3oJLgDVba4c3Dnq3bRs7F2MT6
- n8GBzNgtAK9Dz0klHvfVo09O3Pi8Ku2/OtzI2vIl3lJerwPHelJQUJg
-X-Developer-Key: i=Ignacio.MorenoGonzalez@kuka.com; a=ed25519;
- pk=j7nClQnc5Q1IDuT4eS/rYkcLHXzxszu2jziMcJaFdBQ=
-X-Endpoint-Received: by B4 Relay for
- Ignacio.MorenoGonzalez@kuka.com/20220915 with auth_id=391
-X-Original-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-Reply-To: Ignacio.MorenoGonzalez@kuka.com
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
+Hi Jakub,
 
-commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
-the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
-CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
-VM_NOHUGEPAGE does not make sense. For instance, when calling madvise()
-with MADV_NOHUGEPAGE, an error is always returned.
+On 5/1/2025 8:26 PM, Jakub Kicinski wrote:
+> On Mon, 28 Apr 2025 17:34:58 +0530 Meghana Malladi wrote:
+>> When dealing with transmitting traffic from different network
+>> sockets to a single Tx channel, freeing the DMA descriptors can lead
+>> to kernel panic with the following error:
+>>
+>> [  394.602494] ------------[ cut here ]------------
+>> [  394.607134] kernel BUG at lib/genalloc.c:508!
+>> [  394.611485] Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
+>>
+>> logs: https://gist.github.com/MeghanaMalladiTI/ad1d1da3b6e966bc6962c105c0b1d0b6
+>>
+>> The above error was reproduced when sending XDP traffic from XSK
+>> socket along with network traffic from BSD socket. This causes
+>> a race condition leading to corrupted DMA descriptors. Fix this
+>> by adding spinlock protection while accessing the DMA descriptors
+>> of a Tx ring.
+> 
+> IDK how XSK vs normal sockets matters after what is now patch 4.
+> The only possible race you may be protecting against is pushing
+> work vs completion. Please double check this is even needed,
+> and if so fix the commit msg.
 
-Signed-off-by: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
----
-I discovered this issue when trying to use the tool CRIU to checkpoint
-and restore a container. Our running kernel is compiled without
-CONFIG_TRANSPARENT_HUGETABLES. CRIU parses the output of
-/proc/<pid>/smaps and saves the "nh" flag. When trying to restore the
-container, CRIU fails to restore the "nh" mappings, since madvise()
-MADV_NOHUGEPAGE always returns an error because
-CONFIG_TRANSPARENT_HUGETABLES is not defined.
----
- include/linux/mman.h | 2 ++
- 1 file changed, 2 insertions(+)
+I can think of race conditions happening in the following cases:
+1. Multiport use cases where traffic is being handled on more than one 
+interface to a single Tx channel.
+2. Having emac_xmit_xdp_frame() and icssg_ndo_start_xmit(), two 
+different traffics being transmitted over a single interface to a single 
+tx channel.
 
-diff --git a/include/linux/mman.h b/include/linux/mman.h
-index bce214fece16b9af3791a2baaecd6063d0481938..1e83bc0e3db670b04743f5208826e87455a05325 100644
---- a/include/linux/mman.h
-+++ b/include/linux/mman.h
-@@ -155,7 +155,9 @@ calc_vm_flag_bits(struct file *file, unsigned long flags)
- 	return _calc_vm_trans(flags, MAP_GROWSDOWN,  VM_GROWSDOWN ) |
- 	       _calc_vm_trans(flags, MAP_LOCKED,     VM_LOCKED    ) |
- 	       _calc_vm_trans(flags, MAP_SYNC,	     VM_SYNC      ) |
-+#if defined(CONFIG_TRANSPARENT_HUGEPAGE)
- 	       _calc_vm_trans(flags, MAP_STACK,	     VM_NOHUGEPAGE) |
-+#endif
- 	       arch_calc_vm_flag_bits(file, flags);
- }
- 
+In both of the above scenarios Tx channel is a common resource which 
+needs to be protected from any race conditions, which might happen 
+during Tx descriptor push/pop. As suggested by you, I am currently 
+excluding this patch and doing some stress testing. Regardless 
+conceptually I still think spinlock is needed, please do correct me if I 
+am wrong.
 
----
-base-commit: fc96b232f8e7c0a6c282f47726b2ff6a5fb341d2
-change-id: 20250428-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-ce40a1de095d
+> 
+>> Fixes: 62aa3246f462 ("net: ti: icssg-prueth: Add XDP support")
+>> Signed-off-by: Meghana Malladi <m-malladi@ti.com>
+>> ---
+>>   drivers/net/ethernet/ti/icssg/icssg_common.c | 7 +++++++
+>>   drivers/net/ethernet/ti/icssg/icssg_prueth.h | 1 +
+>>   2 files changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/ti/icssg/icssg_common.c b/drivers/net/ethernet/ti/icssg/icssg_common.c
+>> index 4f45f2b6b67f..a120ff6fec8f 100644
+>> --- a/drivers/net/ethernet/ti/icssg/icssg_common.c
+>> +++ b/drivers/net/ethernet/ti/icssg/icssg_common.c
+>> @@ -157,7 +157,9 @@ int emac_tx_complete_packets(struct prueth_emac *emac, int chn,
+>>   	tx_chn = &emac->tx_chns[chn];
+>>   
+>>   	while (true) {
+>> +		spin_lock(&tx_chn->lock);
+>>   		res = k3_udma_glue_pop_tx_chn(tx_chn->tx_chn, &desc_dma);
+>> +		spin_unlock(&tx_chn->lock);
+>>   		if (res == -ENODATA)
+>>   			break;
+>>   
+>> @@ -325,6 +327,7 @@ int prueth_init_tx_chns(struct prueth_emac *emac)
+>>   		snprintf(tx_chn->name, sizeof(tx_chn->name),
+>>   			 "tx%d-%d", slice, i);
+>>   
+>> +		spin_lock_init(&tx_chn->lock);
+>>   		tx_chn->emac = emac;
+>>   		tx_chn->id = i;
+>>   		tx_chn->descs_num = PRUETH_MAX_TX_DESC;
+>> @@ -627,7 +630,9 @@ u32 emac_xmit_xdp_frame(struct prueth_emac *emac,
+>>   	cppi5_hdesc_set_pktlen(first_desc, xdpf->len);
+>>   	desc_dma = k3_cppi_desc_pool_virt2dma(tx_chn->desc_pool, first_desc);
+>>   
+>> +	spin_lock_bh(&tx_chn->lock);
+>>   	ret = k3_udma_glue_push_tx_chn(tx_chn->tx_chn, first_desc, desc_dma);
+>> +	spin_unlock_bh(&tx_chn->lock);
+> 
+> I'm afraid this needs to be some form of spin_lock_irq
+> The completions may run from hard irq context when netpoll/netconsole
+> is used.
 
-Best regards,
+Didn't know system can handle network interrupts in a hard IRQ context. 
+Ok I will update to spin_lock_irq() if this patch is necessary.
+
 -- 
-Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
-
+Thanks,
+Meghana Malladi
 
