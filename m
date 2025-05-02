@@ -1,119 +1,108 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E295D70830;
-	Fri,  2 May 2025 14:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 594B370830;
+	Fri,  2 May 2025 14:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746194957; cv=none; b=SK8QUkYQgBgyB5ZlOAZe80ONbtHR4GZ/EyO7bxd/qpmF1nRuD6tM8ZF3Xdhpv1bfjmwZHxYT9zskOptmqQDk7atqC3apJ7qd1Hzsn2OCq6KAZ8dE5CJ46rp8+NFjJjN4167ENO5BwkgIi9LGlWJjiHiqDAeH80BF8X00QXVysq4=
+	t=1746195009; cv=none; b=GDGx2lGt/gJ699sFNaY+MthEsPCMciLfdv1L4r236WZTx86+LS/153l0KwJsogocHB7PQkePUYHyuzrIb04IIO5f6SwoHSTwpkYXiLwco+Rgu+YgLy8NT5bcpKJ+c/ZebBrNrsZaytkq0JLZcU3lutb4wk3nGFkjXRswr9Xh+/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746194957; c=relaxed/simple;
-	bh=x10rJVRO+bobuZENwdtQ9uPUVVMm4D4dXAPYpSKSIiY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L0RpHhwN6YJV7eCE2lG/atuRVzcPoP2vpwn7ma5McGKloUAdKAX0PkJ+6rwEKuwsZjJ5QSx1nQX03kP7mEWoY+PFDRdiy/lDRD9dC3FZXDSdbmhihnTWPHE8ElfBrRBFck7/1KVPFd44G54Tcby1YxsQG8yVo475xhFSs7Igl9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p7ILztUJ; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1746195009; c=relaxed/simple;
+	bh=UE+HTAX8L03rDUiOBDCz+RRsBQJY1YMYvIyhl6gQwdo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g+U3Y+zVzXkcTWbLPTnsdJ0+m7sS6JfKlJoBsW4FEM4QUTBQxVSXEP0/7AASVWMpYST/zMtbxM2QXcnDTobHM4+VPuYbzMfGfzaLC2XyML3fhosYTCwswE52aLkjXMk4ON6BCt5yTpuqkcqsiMugU4qUecXtKSSHml+ObkYwtss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DMPXCZKV; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p7ILztUJ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2353A43930;
-	Fri,  2 May 2025 14:09:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1746194953;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=KFncIClPHZHqPRHwYeVO7dn4vVHyo3SFbQeh1DTCLyA=;
-	b=p7ILztUJkSqkTIf9Ci0t06hKjp+n8QXM9kCo6TrS6OTCPxYmC6iIf3D7y4H5H1RmYO3M9E
-	9VdcVG7O3VmCeaxm1+v//m13J9WSsxZnPNdAiQBUKwsCSj1yAf3Gh8NixBdYJ1tU+qReBW
-	A6cGn2FVE/cA2PKDAilyL+GqsTVmJ5fcTlBQdAMIE2bzIgziUgu/36VVOVG2QGGjECh/LS
-	ABodCoR5ZKUzIYeQcPvpfZZOwbR9GFf5fLSDxP1M2HavJmKDHWObRcnVm4D62+NyG7OWXS
-	/yYlxAPQ6cEwuGsYGUuegenNepzPVKMU+CTr8eDZ+7YyQDD8fE53txxCxs4+2A==
-Date: Fri, 2 May 2025 16:09:10 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Ayush Singh <ayush@beagleboard.org>, Wolfram Sang
- <wsa+renesas@sang-engineering.com>, Andi Shyti <andi.shyti@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor
- Dooley <conor+dt@kernel.org>, linux-i2c@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree-spec@vger.kernel.org, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v2 1/1] schemas: i2c: Introduce I2C bus extensions
-Message-ID: <20250502160910.448f63dd@booty>
-In-Reply-To: <20250430152201.209797-2-herve.codina@bootlin.com>
-References: <20250430152201.209797-1-herve.codina@bootlin.com>
-	<20250430152201.209797-2-herve.codina@bootlin.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DMPXCZKV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746195007; x=1777731007;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=UE+HTAX8L03rDUiOBDCz+RRsBQJY1YMYvIyhl6gQwdo=;
+  b=DMPXCZKVeviF2TeBpBd+ymtNSWBWjyZmsiLA17hQ1YRolwTSCM42v7t1
+   cZQ0zTBz70u+gIgyJdu/F9RrDtjaUKGsy8j4hBaHtft3CtIiFLlJe2yrp
+   BAiSBu4uK5VBJJ9HxLXF1flLFtP3SnQUqIenrgFX41EFyub97I3qR35Yi
+   IMU7DC5zJC+ZAz7UHVmYtPXIhXjI+pnfdZyVbVsyEbtl3Sy3jneWKa4/B
+   8wIcS2e2v1wTejSQYb1I8T+/WVmEByEo0kdxEORhB33iNnplxmlIBxzOp
+   +Sc8z4m9kjTtwuZLhLAkIUpO8Sz/WfsXC25gKMZfGZVChNv/o64jvb2B2
+   w==;
+X-CSE-ConnectionGUID: +k7bcu7mR2KwE9WEbvTW2A==
+X-CSE-MsgGUID: eX9HYA7YQFGfrv/TrEOnrg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="48015749"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="48015749"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:10:06 -0700
+X-CSE-ConnectionGUID: nfmX4pclRTa5g4djy3denA==
+X-CSE-MsgGUID: dUCN4HZxQXOLbMFp1P4M1g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134396166"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:10:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAr5S-00000002Dgq-2DDQ;
+	Fri, 02 May 2025 17:09:58 +0300
+Date: Fri, 2 May 2025 17:09:58 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 10/11] input: misc: Add support for MAX7360 rotary
+Message-ID: <aBTSNsCupbpAscwA@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-10-4e0608d0a7ff@bootlin.com>
+ <aBSkCsw3GJ6RHeJV@smile.fi.intel.com>
+ <D9LQ7NV1LJM9.F2GF0YEEDFEY@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedvieeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfetudeugfehheeliefhjeejuddvledtuddttdevledthfehgeeugfetheekgfffnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtohephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheprgihuhhshhessggvrghglhgvsghorghrugdrohhrghdprhgtphhtthhopeifshgrodhrvghnvghsrghssehsrghng
- hdqvghnghhinhgvvghrihhnghdrtghomhdprhgtphhtthhopegrnhguihdrshhhhihtiheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqihdvtgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D9LQ7NV1LJM9.F2GF0YEEDFEY@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello Herv=C3=A9,
+On Fri, May 02, 2025 at 03:58:04PM +0200, Mathieu Dubois-Briand wrote:
+> On Fri May 2, 2025 at 12:52 PM CEST, Andy Shevchenko wrote:
+> > On Mon, Apr 28, 2025 at 01:57:28PM +0200, Mathieu Dubois-Briand wrote:
 
-On Wed, 30 Apr 2025 17:22:00 +0200
-Herve Codina <herve.codina@bootlin.com> wrote:
+...
 
-> An I2C bus can be wired to the connector and allows an add-on board to
-> connect additional I2C devices to this bus.
->=20
-> Those additional I2C devices could be described as sub-nodes of the I2C
-> bus controller node however for hotplug connectors described via device
-> tree overlays there is additional level of indirection, which is needed
-> to decouple the overlay and the base tree:
->=20
->   --- base device tree ---
->=20
->   i2c1: i2c@abcd0000 {
->       compatible =3D "xyz,i2c-ctrl";
->       i2c-bus-extension@0 {
->           i2c-bus =3D <&i2c_ctrl>;
->       };
->       ...
->   };
->=20
->   i2c5: i2c@cafe0000 {
->       compatible =3D "xyz,i2c-ctrl";
->       i2c-bus-extension@0 {
->           i2c-bus =3D <&i2c-sensors>;
-                        ^^^^^^^^^^^
+> >> +				pos = max(0, (int)pos + steps);
+> >
+> > Please, no castings for min()/max()/clamp(). It diminishes the use of those
+> > macros.
+> 
+> Sorry, I'm not sure to get the point. Should I use MIN_T() instead?
 
-This should be i2c_sensors (with an underscore)...
+Are the second argument is compile-time constant? I don't think so. Hence no
+use for MIN*()/MAX*(). First of all, try to answer to the Q: Why is the explicit
+casting being used? The second Q: How can it be easily fixed without using _t()
+variants of the macros?
 
->       };
->       ...
->   };
->=20
->   connector {
->       i2c_ctrl: i2c-ctrl {
->           i2c-parent =3D <&i2c1>;
->           #address-cells =3D <1>;
->           #size-cells =3D <0>;
->       };
->=20
->       i2c-sensors {
+-- 
+With Best Regards,
+Andy Shevchenko
 
-...and this should have a label:
 
-        i2c-sensors: i2c-sensors {
-
-With those fixed you can add my:
-
-+Reviewed-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-
---=20
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
