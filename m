@@ -1,91 +1,128 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E480B25484E
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:28:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE3324BBFD
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:29:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746188941; cv=none; b=T0W0CESl1FYnLtmxz0W9JoOZYlQzM8Ts4Vf0alOtYvEdIlZzp1dsIMbcagGgxpudWXnK7R/ZEpwwJn4ma1bP2JujcKAe2cEm4hqVpC6xyE1qn4HodL1aNZMB3ktvFp2JAtO9t5JxYz5Xm9fk8jkVql9wbJaAghIVX8M5TJ/bHyM=
+	t=1746188960; cv=none; b=aGm/JTHbxLuNPCLPz6n1XaSrXS4Mm4fLtiS8PAmto7+sy70YaD1GHK+FMpOjIEsfNxCNO96yqrOsXG2k6LBIqQOZZF76GoDeSuBBNMYsKidrO0wxiPMMrKUun3ggXZfNt7rfRGf/CMDwsFnhM6iMq7StpEezYgVprTuAI9lltMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746188941; c=relaxed/simple;
-	bh=LZ5FaQiluJjVti4wLSM0wjS0i57hJKuyzn8GkILRL/k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DEwNkhOEi+db6eHooDkixGz2flwNQkz6KGsy6NmBQwEmkGWWPraCPaMdJz7NRTqDO4jr1nayDVua7ALGuCkTwKqubTM/cEQzY5ukBWwD/74DBjqO+CVSlwt5fbep2dlJG/34llZXY/i18OkteID5TQI303Vm7QEb/tI9WrVoo9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FYL+obIt; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746188960; c=relaxed/simple;
+	bh=zvHa4X0rrQTDwYzkbYkZYw+dLVBDwFqqMgeUnHdOFUs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lTkb7JgJcqmauWdAfIkbj5KuA1XtTcvz/wNov9dehpZ2FeH0YL+vxXjzwlmYDDnMhcRX/BVG0Ri8VmchGBxHmlLiSZNAecNpO2TvPU8ElYIlZexjwI2x/U8byIIBmKvxa29jUJ6FH/X616e/1qSBV+n5rlubw/pJw+FeiBGDcjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dm6V/Oiv; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FYL+obIt"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f632bada3bso6946a12.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:28:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dm6V/Oiv"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso12030385e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:29:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746188938; x=1746793738; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LZ5FaQiluJjVti4wLSM0wjS0i57hJKuyzn8GkILRL/k=;
-        b=FYL+obItbfMfYPmMc/gZS6rn9M807hsIZHlWZEwRhYqVnxAN/1ITaJj/D89A9nAaWw
-         80ELlkq42fUyM8UvPxtbfSFQ6IpCIE8EXHXDMjCnAiWOixQCWOD/QwnmF446DAHCr6+D
-         ltGdSHru6y2I4AE4WLTixKWmd1gT0+wzcCRpcA1owxh2Rf+P0rnPUJKH4JNWJTdNaa36
-         rIYbx3mxZtKXuqI2OtYfDmJxmZUcmu7Ooqnns9uqRZ+qY0TjrObRCpamVYwvleAeDyyp
-         oXCTWMlLeIUsKjtMKP0Y51S15EhiECctZK+tFtNSf/f/yCrBCIEpTBwlI/V3VkquWI2x
-         8FAA==
+        d=linaro.org; s=google; t=1746188956; x=1746793756; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=fPXhl5ABY9Cpe5wfSbh97dWtdpEKAOmViXZEiA/5wSY=;
+        b=dm6V/OivuHe2fp0JRkEb9KUx8oEhQSYiDYQvawtgWI7c8JaKpi2eq82uR6SRS6Hdhe
+         yJMhyNogRRIAMKo+w3cC1XC33lJjYE8c5FA7ntLQ4OWGfvBWfyDm/ZaWePl2oE5uDtbC
+         rO78zoGActrCZqWhCAUxxH7DXxDeQY7y2+L/s+9KqXdsR6o5BXWGAuojQFvRC1GABtGn
+         mECO5WqMsgvIqbTS7IGQsu8ayY3k1hHS98KRUkW0VigALT4sd/CpRUHjbQBL08oBOiA3
+         BKglN8afU86p0DHG4Ex4VIpTOn07i0tSzxySynjyGcrzdWL/v93nVujGoKs7zC24ACri
+         K0ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746188938; x=1746793738;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LZ5FaQiluJjVti4wLSM0wjS0i57hJKuyzn8GkILRL/k=;
-        b=Ru8u/50P196posj58Xnm9hla2EcjpvWf0LfsjPBLaloXJW+zBtSgGqFtc5U8YEiaD4
-         5weJ6yuQRUwZ8H/4O6uObvLfB5stCZ7QthMARqPUjBEcA1/vq+YN0ismFD031xtFvAJM
-         Wycwv6EEOu6Xa08RybsA+HV99sblQGEkVMx2iFnI3C8/sam2Vi9G5ulD+CqIyRQSk1MR
-         Wb7u8leXZoaosH75rDWvxYJxAeQQjR4yVL0gw7Jc1Hfu3dL6tfErx5itGciIslAe1bew
-         cOLCbXLq/5m90E25zCLHFtI9vbtsAPdbA0OCiYEMpf1BrkW8joGV7YX7bQHzlcxwFbqL
-         S8jg==
-X-Forwarded-Encrypted: i=1; AJvYcCXA5jHxUIIB5iA/YVjso7F6SHkKsyEcNFTXmSLxHqx0iKzRxo26+dvFjhPR0uuutrgA553ngKInUTQqRfc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEoXMsSTZGlvsdKSvXhsJI3xHuyaxIfQWgyHtqc+u+JRn/VmTF
-	nBYTSFK2GDa3DOTmZP+9iUj+XQCdeWZmhyZTKLNuLX3V3t4ekfZlevw+Rp1zrCxJXKkq3d2Dtbv
-	DMK6WMS/FSB2NWNlbJJMBdurKlohDRrc4kf/0
-X-Gm-Gg: ASbGncuiAGa1VxIKtLALjD+SCUaxUMWSloBUpNFK2t2wU0+P8ed6NYBe2q0LFTxpySK
-	NOL/DRfO3A8NPf1vtlhaZTd6vSlo8EgK6v9eU9FLi58uM4HdnhQb1rP2q23UayT/+7kxkdFFo3W
-	UJBujTxA47ffSuAojyrG0zuHaFqmrQP+sjFIREqT5d6nJ/iC6JYA==
-X-Google-Smtp-Source: AGHT+IGNygGO9znp1dKmEYz6swuBx/QLlclRDdgG8tFuaCByAEaPQ6EozLi+aH6xuzZRKvwAbTyrzrlgJgAQz50dGjs=
-X-Received: by 2002:aa7:cc12:0:b0:5e4:9ee2:afe1 with SMTP id
- 4fb4d7f45d1cf-5f9132eb267mr189885a12.2.1746188937859; Fri, 02 May 2025
- 05:28:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746188956; x=1746793756;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fPXhl5ABY9Cpe5wfSbh97dWtdpEKAOmViXZEiA/5wSY=;
+        b=UzrFxZrxunpnabT1KSEaqy2z3eppqq7y/T5DaMKiEfjKHOayklBXTf+RJVonkxBxCY
+         J1PTxFqbQ4lFKeX4biD0vVX1FfJ8Bsy82U7v+0zMY+jsYLJXvWpoWqEkNX7vR+W6khJT
+         J56mtGFrK9ZNhOOYCbnbUh33tDNj+TqjLs0shZH80xtSWA5llGbUuU6UHLFFeoaqtrko
+         ymjvmFBRtMvPfEOz/csTnm3vLc5Dl9J0WG7p7Wf1OQg6xVClTNNduSxrbjc+vZrOutnC
+         WtOSgqRg4y0N9aiBW3qsdz1md5rv2PyRFajTUC0kxTVMb8R8L/1t6pBrrh/AigIhx/IZ
+         Ckfg==
+X-Forwarded-Encrypted: i=1; AJvYcCXuvRoPTNaNH1OtDSzdAom2rO9G1q7RukOKqIbV6uaJEk+eqHiwk38kG6L3islH5wlOAJ+l4sm8brBKSRM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHn9/vaYZHuoO2OIRHKSV9B8Ayny8h99RvvxDNaC9vbiAXq50A
+	oMTuARAR+rekK1EL+lvnHcu7I3g8dqGV5295GjK7xl3RHZnQaDNk84ydu9CEcf4=
+X-Gm-Gg: ASbGnctPv4RHk1cOW9czJYD52ocN4HU2a5v67D10SRwV4/Qhc32Q6NxEbngYEy2/z1o
+	C0nx56RUdNSdWXXzHDF4gGWzlyfSBvcDD4rn35lAPQrHNhFhR5u0ZydxKZAyRnt6Vpkll62kf21
+	f7X8Nl9XPqAf89u44Z7FgLp4Mcg3oXZmgSKrmwJXUmSIn4DuzPAStk7GvPJgG6XYq4RfzD5DjeF
+	cmCMQIDF5N2Iiqc0nLYpTJ8gPh0nvdZDoW2ZqIMoPXCTgQYsR7GRA0/9shm3V7lb5nEYNsoiIPB
+	74+4wzN0wnDVlFVS3bisw9Y3tW3ArHUL266CkeNXxd6DQRg/zOD6UR/mDshpEDolfD14cyLODad
+	HgkdnUg==
+X-Google-Smtp-Source: AGHT+IEJQc8ArVKhReP08d9VcgU4GcvNbex+0BCVyeNSxBvarnE07Zhzs5sQR2N9SWFhkCNJNsJqEg==
+X-Received: by 2002:a05:600c:5022:b0:43c:e6d1:efe7 with SMTP id 5b1f17b1804b1-441bbf34052mr18854655e9.26.1746188956401;
+        Fri, 02 May 2025 05:29:16 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0ffcasm2030879f8f.74.2025.05.02.05.29.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:29:15 -0700 (PDT)
+Message-ID: <b255fec0-216d-42c8-b7ba-cb0cde51e73c@linaro.org>
+Date: Fri, 2 May 2025 13:29:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428-tee-sizecheck-v1-1-5c3c25a2fa79@google.com> <20250501210158.5b2c86a7@pumpkin>
-In-Reply-To: <20250501210158.5b2c86a7@pumpkin>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 2 May 2025 14:28:21 +0200
-X-Gm-Features: ATxdqUGwos--eWIWeWH3S7H7Il3ChdLC4SH-nUgaQGqhNN79bE9tpFWmae02MWQ
-Message-ID: <CAG48ez1DPWhT2dhd1iptFawWjteh_=pZ4M6Yq5KKCq2DTArnqw@mail.gmail.com>
-Subject: Re: [PATCH] tee: Prevent size calculation wraparound on 32-bit kernels
-To: David Laight <david.laight.linux@gmail.com>
-Cc: Jens Wiklander <jens.wiklander@linaro.org>, Sumit Garg <sumit.garg@kernel.org>, 
-	op-tee@lists.trustedfirmware.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 09/23] media: iris: Fix typo in depth variable
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com, stable@vger.kernel.org
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-9-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-9-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 1, 2025 at 10:02=E2=80=AFPM David Laight
-<david.laight.linux@gmail.com> wrote:
->
-> On Mon, 28 Apr 2025 15:06:43 +0200
-> Jann Horn <jannh@google.com> wrote:
->
-> > The current code around TEE_IOCTL_PARAM_SIZE() is a bit wrong on
-> > 32-bit kernels: Multiplying a user-provided 32-bit value with the
-> > size of a structure can wrap around on such platforms.
-> >
-> > Fix it by using saturating arithmetic for the size calculation.
->
-> Why not just add a sanity check on 'num_params' after it is read.
-> Max is 31 (1024-32)/32), but any sane limit will do because of
-> the buf.buf_len test.
-
-That would work, too. I don't know which way looks nicer.
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Correct a typo from "dpeth" to "depth".
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 3a19d7b9e08b ("media: iris: implement set properties to firmware during streamon")
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> index a908b41e2868..802fa62c26eb 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_command.c
+> @@ -178,7 +178,7 @@ static int iris_hfi_gen2_set_crop_offsets(struct iris_inst *inst)
+>   						  sizeof(u64));
+>   }
+>   
+> -static int iris_hfi_gen2_set_bit_dpeth(struct iris_inst *inst)
+> +static int iris_hfi_gen2_set_bit_depth(struct iris_inst *inst)
+>   {
+>   	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
+>   	u32 port = iris_hfi_gen2_get_port(V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE);
+> @@ -378,7 +378,7 @@ static int iris_hfi_gen2_session_set_config_params(struct iris_inst *inst, u32 p
+>   		{HFI_PROP_BITSTREAM_RESOLUTION,       iris_hfi_gen2_set_bitstream_resolution   },
+>   		{HFI_PROP_CROP_OFFSETS,               iris_hfi_gen2_set_crop_offsets           },
+>   		{HFI_PROP_CODED_FRAMES,               iris_hfi_gen2_set_coded_frames           },
+> -		{HFI_PROP_LUMA_CHROMA_BIT_DEPTH,      iris_hfi_gen2_set_bit_dpeth              },
+> +		{HFI_PROP_LUMA_CHROMA_BIT_DEPTH,      iris_hfi_gen2_set_bit_depth              },
+>   		{HFI_PROP_BUFFER_FW_MIN_OUTPUT_COUNT, iris_hfi_gen2_set_min_output_count       },
+>   		{HFI_PROP_PIC_ORDER_CNT_TYPE,         iris_hfi_gen2_set_picture_order_count    },
+>   		{HFI_PROP_SIGNAL_COLOR_INFO,          iris_hfi_gen2_set_colorspace             },
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
