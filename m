@@ -1,95 +1,113 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0CE25DCE6;
-	Fri,  2 May 2025 16:10:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BCCF25D1F8;
+	Fri,  2 May 2025 16:11:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202227; cv=none; b=c5hU2VObf4Nz/WziIGar5yD2+/69CUwmwoBtcBsHLGisk9L5iyzgFXbDBXVKn1IlTnbJ8SqdIhfA2an19pBUV9xH9QL+cwc3rzWtCSbyJBoZaZSFLLN/7JBBGOkc9+xHRb56uUE7ZJjoOuoHUEkqgibhE5tE+CerlxYUKNlpPic=
+	t=1746202275; cv=none; b=hTFl65rHX1wNh3lZ6KAAxUx0xLjuwWVXBEqDDXqPrFRLlIgiRXByfxwP2+C275U1fNJZBL4tEfE8+k2cEaIKjYd23famRh4wk3WP/axqLBXpaPWY1VbFSsaPAPR+zaPowZNdQ/HzuBWNmuavXCc9kpUNktnWcdcs34nuBLvl0PY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202227; c=relaxed/simple;
-	bh=T+l6OVVT45tzMYV8TY6DeZg93MwIQ0gaakx3sxA0rT0=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JDlFknauf9MszawiQYMXIX9aF4V85N5oDvpzmV9mu6m+UY1iNmyDXAEU/Kf6uS/tVKJE77m7tHCC++eJY1L9RH3j8oPwUK+zRFYdqN8NqhueqrOLlCJYwtC8dYG1mxvl/zgzTVz99RPGajRE2PlUgGAPUxtaadlFr0sRRK2pK+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=trImmTPt; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1746202275; c=relaxed/simple;
+	bh=DPug44X9dHryGwrzjaKdUAfjFQzgEW4o8Y6DNXDGvWA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TEzaw2dfVE1l/rtfx5yn3nXteFy5BTcx4rcjQZNddLZdTKE6fMQRQORffaE+M6JrtY2R5FWkG8M73P+Ux/ZNlba8eWh8hh7BzAS7shDnSKqfTka6hDNmY7/cFtU53eqrBJq2+MAWMEsB4qLabi6xuiiQc2jCNMg4XOxSVqCILk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=GOfa8Qgn; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="trImmTPt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1746202226; x=1777738226;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T+l6OVVT45tzMYV8TY6DeZg93MwIQ0gaakx3sxA0rT0=;
-  b=trImmTPt7bgIQUB/3DbtdppW+BJ/MVMhb8leQBbwl+/Ia2eFM00Q0wag
-   VZTskIhexeY0PmGdUVW9k48t5irlV1IADg0XK0Ia8ZaCxiw+D/wqXCGOD
-   FpxVcztv2XouAXug//MRF83GiogGEPbdNXaJovX5LV/oKUJlKuNia+N2+
-   ZKYTSBTf4dZnpO4o1JGStuoz15vp67syiMpfWgDcc4GhN1maNyCuX55UJ
-   mUsm2sbxOgRzeNrCnKlgts4VXRxATT8QchuowgG9MXD0Mmk1auWqN5/6g
-   JtsNNJpc3stvoiOS2Jkz9vHWY5HY9QA/2J+jyOemi1QXsvf+j5qw1b4r9
-   g==;
-X-CSE-ConnectionGUID: JuVaQLK6ReSI1JeiqIMSGg==
-X-CSE-MsgGUID: 6LSpReV7RC+S7xg2a8j0Gw==
-X-IronPort-AV: E=Sophos;i="6.15,256,1739862000"; 
-   d="scan'208";a="272519113"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 02 May 2025 09:10:03 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Fri, 2 May 2025 09:09:33 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Fri, 2 May 2025 09:09:33 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <radu_nicolae.pirea@upb.ro>, <richard.genoud@bootlin.com>,
-	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>, <robh@kernel.org>,
-	<krzk+dt@kernel.org>, <conor+dt@kernel.org>, <nicolas.ferre@microchip.com>,
-	<alexandre.belloni@bootlin.com>, <claudiu.beznea@tuxon.dev>
-CC: <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-serial@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<inux-arm-kernel@lists.infradead.org>, Dharma Balasubiramani
-	<dharma.b@microchip.com>
-Subject: [RESEND PATCH v6 1/1] dt-bindings: serial: atmel,at91-usart: add microchip,sama7d65-usart
-Date: Fri, 2 May 2025 09:10:00 -0700
-Message-ID: <ba19dff5c20bd022cf5391ac909a85ab5e1797b4.1746201835.git.Ryan.Wanner@microchip.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1746201835.git.Ryan.Wanner@microchip.com>
-References: <cover.1746201835.git.Ryan.Wanner@microchip.com>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="GOfa8Qgn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
+	Content-Type; bh=8E3jSyTAqXG9hYae4q67c9mUvB58U8oFjHxwj1NgMfE=;
+	b=GOfa8QgnA6p/P2afJUuIdU0JcM5ELU4Ulabyv5hhh2ET00b//T59Jxtbf/cjHg
+	Lk2gtzk5vYkYn1voRfa+Wo5mS/bL84w9N3vvSqiZySFJnl/caqBJVwETjgQPvb37
+	CjosNkveiIe7NBbwvjL7Z3PlEwklmvsSjQ2zQWqUfsUGs=
+Received: from [192.168.71.93] (unknown [])
+	by gzga-smtp-mtada-g1-1 (Coremail) with SMTP id _____wAHZCl57hRox3kxEA--.23916S2;
+	Sat, 03 May 2025 00:10:34 +0800 (CST)
+Message-ID: <d4adb108-5762-41d3-897f-217b8e7666e5@163.com>
+Date: Sat, 3 May 2025 00:10:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] Standardize link status check to return bool
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+ jingoohan1@gmail.com, cassel@kernel.org, robh@kernel.org,
+ linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250428171027.13237-1-18255117159@163.com>
+ <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <7oxb4uviwnpnkdjacihwjrzqhxpd7nk244ivpwml5372jsiimm@5hgnnfjlfkr3>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:_____wAHZCl57hRox3kxEA--.23916S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Cry8Jw4rCFy5ZF47KFWrAFb_yoW8trW5pa
+	45tayIyF18tF4Y9a1Yq3WDCw15tFn7Aa4DJ395u3W7XFy29FW7Xry3GFyftasxJFW5Xr13
+	KF15t3W7JFsxJFDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U3rchUUUUU=
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWxZBo2gUgt812AACsh
 
-From: Dharma Balasubiramani <dharma.b@microchip.com>
 
-Add SAMA7D65 USART compatible to DT bindings documentation.
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
----
- Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml | 1 +
- 1 file changed, 1 insertion(+)
+On 2025/5/2 23:36, Manivannan Sadhasivam wrote:
+> On Tue, Apr 29, 2025 at 01:10:24AM +0800, Hans Zhang wrote:
+>> 1. PCI: dwc: Standardize link status check to return bool.
+>> 2. PCI: mobiveil: Refactor link status check.
+>> 3. PCI: cadence: Simplify j721e link status check.
+>>
+> 
+> Thanks for the cleanup. Looks good to me except the redundancy conversion that
+> Niklas noted. So with that change,
+> 
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
 
-diff --git a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-index f466c38518c4..087a8926f8b4 100644
---- a/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-+++ b/Documentation/devicetree/bindings/serial/atmel,at91-usart.yaml
-@@ -26,6 +26,7 @@ properties:
-           - enum:
-               - microchip,sam9x60-usart
-               - microchip,sam9x7-usart
-+              - microchip,sama7d65-usart
-           - const: atmel,at91sam9260-usart
-       - items:
-           - const: microchip,sam9x60-dbgu
--- 
-2.43.0
+Dear Mani,
+
+Thank you very much for your reply. I have sent version v2 to resolve 
+Niklas' review opinions.
+
+Best regards,
+Hans
+
+> - Mani
+> 
+>> Hans Zhang (3):
+>>    PCI: dwc: Standardize link status check to return bool.
+>>    PCI: mobiveil: Refactor link status check.
+>>    PCI: cadence: Simplify j721e link status check.
+>>
+>>   drivers/pci/controller/cadence/pci-j721e.c             | 6 +-----
+>>   drivers/pci/controller/dwc/pci-dra7xx.c                | 2 +-
+>>   drivers/pci/controller/dwc/pci-exynos.c                | 4 ++--
+>>   drivers/pci/controller/dwc/pci-keystone.c              | 5 ++---
+>>   drivers/pci/controller/dwc/pci-meson.c                 | 6 +++---
+>>   drivers/pci/controller/dwc/pcie-armada8k.c             | 6 +++---
+>>   drivers/pci/controller/dwc/pcie-designware.c           | 2 +-
+>>   drivers/pci/controller/dwc/pcie-designware.h           | 4 ++--
+>>   drivers/pci/controller/dwc/pcie-dw-rockchip.c          | 2 +-
+>>   drivers/pci/controller/dwc/pcie-histb.c                | 9 +++------
+>>   drivers/pci/controller/dwc/pcie-keembay.c              | 2 +-
+>>   drivers/pci/controller/dwc/pcie-kirin.c                | 7 ++-----
+>>   drivers/pci/controller/dwc/pcie-qcom-ep.c              | 4 ++--
+>>   drivers/pci/controller/dwc/pcie-qcom.c                 | 2 +-
+>>   drivers/pci/controller/dwc/pcie-rcar-gen4.c            | 2 +-
+>>   drivers/pci/controller/dwc/pcie-spear13xx.c            | 7 ++-----
+>>   drivers/pci/controller/dwc/pcie-tegra194.c             | 2 +-
+>>   drivers/pci/controller/dwc/pcie-uniphier.c             | 2 +-
+>>   drivers/pci/controller/dwc/pcie-visconti.c             | 2 +-
+>>   drivers/pci/controller/mobiveil/pcie-layerscape-gen4.c | 9 ++-------
+>>   drivers/pci/controller/mobiveil/pcie-mobiveil.h        | 2 +-
+>>   21 files changed, 34 insertions(+), 53 deletions(-)
+>>
+>>
+>> base-commit: 286ed198b899739862456f451eda884558526a9d
+>> -- 
+>> 2.25.1
+>>
+> 
 
