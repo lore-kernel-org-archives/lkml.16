@@ -1,116 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4897B2550B6;
-	Fri,  2 May 2025 13:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C447D27E;
+	Fri,  2 May 2025 13:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191769; cv=none; b=gfYeK4EIsO2gIC9IyXiRqZzSXdPg61lIJ1ris7LmqCRgjDK2cbM01B0vO7DTEwB5QOdD33JM5QPUFmxGD9lwgVfO0O4fBgccC83cQKsh4akZmEtZQgwc3UBDv9YwUp6czb0c/FPApIixDRXMglT3TOv6UcDbAnU1rJ+oJbOBvoM=
+	t=1746191810; cv=none; b=pvZg0bANWayRN3M2eD6ptagH/fV9qarCSGfDDerOfgtPxM7/hhSY7iqMTAtqAti4eKTkRp7jVu7RwQ8pMdkXigP2yO35JNOgWqd7SawQKni9UYeNXYLsaVGHKy15wD+01wCrnqAwwdIgBLMsUsOz6YWCJEUN/kqbDD+ZOFWCC8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191769; c=relaxed/simple;
-	bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p4WYT/EMt2AOX1Q4oVodgW5x8YlFtCz69Vc29S4PYEbL2E5HXVPNkHelv3JKfhLxCWLvAFvUM63Zc4lTx7d+fy2GPoyA0XWbqGlMgFAntJB1lGI7+M7pgFJzONlz5VAT3/q7ow4LR7/L7hncKBq0XPMZTccQYADdtvpm3tMa4y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGfut9Fv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746191810; c=relaxed/simple;
+	bh=KnLK/lMmScw2OCDX7p+prVDCmF5kI2Jwf/GCh5wxjbo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rZG8G8GmpqPnRzvBsSaCJMbIT+m+Td0Fndk6wuMu4XCzkSVUDYbmsgUIEJiHJL4EACTsqp/E2eZKjoO6LfdMFdFFtjLaePZGp2LQlKxwVcBfHclJDHXkXwrFUtOlSKxLT3tO0rk4nc5m9dZykIW6c5Gng/1BohKhSB5iuX/nrno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=UzHqZm1K; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGfut9Fv"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id BFB8EC4CEE4;
-	Fri,  2 May 2025 13:16:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746191768;
-	bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=VGfut9FvN7+HSTUfoq3xexsLavO1mYBGgb8LMl8//dVIbErdfxtSs9hEQetQaBie3
-	 Uo0LL83IagFEDpJMPh0b+vnaGFdqUPNKCuQ6/TMT3I5g9FRzZlwKINxzj5HnvqglPn
-	 4VxzKi82eth7HqQLfZVGFF3Cp3phKjx6Xw4UP8XTbrY+BLvW0PP3sshRYBL71J/4yU
-	 1QgCumaEwbo0uzCXoJEjF6g47N7DzrTRmSaZ54AxjFw9ajL/Po0dwjUtUHeflv1ije
-	 y4tKmLP1i9sDgBhtoAh1GN1eKuq/53ciQUCZaxz3uHyseIB+ioIkFgJgFRfKUqZECw
-	 62mftS9hCrDUg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED8CC3ABAC;
-	Fri,  2 May 2025 13:16:08 +0000 (UTC)
-From: Paul Cacheux via B4 Relay <devnull+paulcacheux.gmail.com@kernel.org>
-Subject: [PATCH v2 0/2] tracing: fix race when creating trace probe log
- error message
-Date: Fri, 02 May 2025 15:15:51 +0200
-Message-Id: <20250502-fix-trace-probe-log-race-v2-0-511ecc1521ec@gmail.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UzHqZm1K"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=s23vB0WKs877pOYJca3/jvhe1JspKWX0ewDkhN8AS9s=; b=UzHqZm1KfMYIi3/JO+wkCKKWio
+	ypUiQHpdvNcmcpJvtNdirFFXN4me6TvDAaPlVtFCWyMbIMAMTVJ8a4oTLAA8rZYxdtx4fVy3FRiRG
+	Y/VcI6Tj/Y65omKLw0HScbrgN6JbXG8TIPl+NEIPOtKjwwVdzyBzy0naLDhJ0k7QGyHmi9/AwiKa5
+	1GTPgNhexGuP1XrAUa6xJhAv61uuV4g0Dbw0mRAaRmtsT3A95v/Xtr3p7je4GjQoqLwnR1Itkzhqp
+	Z4XP9/8oaCzeDgHIGOCHxuCRKg2sinyBPXTB2OS4Zzbv29VBM6lA0m+7NSrAoMQpuPUbvwSAHPZpA
+	92zB2oFg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAqF9-00000000oTy-04CY;
+	Fri, 02 May 2025 13:15:57 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4FFD430057C; Fri,  2 May 2025 15:15:47 +0200 (CEST)
+Date: Fri, 2 May 2025 15:15:47 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mcgrof@kernel.org
+Cc: x86@kernel.org, hpa@zytor.com, petr.pavlu@suse.com,
+	samitolvanen@google.com, da.gomez@samsung.com, masahiroy@kernel.org,
+	nathan@kernel.org, nicolas@fjasle.eu, linux-kernel@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-kbuild@vger.kernel.org,
+	hch@infradead.org, gregkh@linuxfoundation.org,
+	Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCH -v2 6/7] module: Account for the build time module name
+ mangling
+Message-ID: <20250502131547.GD4198@noisy.programming.kicks-ass.net>
+References: <20241202145946.108093528@infradead.org>
+ <20241202150810.606849101@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIfFFGgC/3WNwQqDMBBEf0X23C1mUWp76n+Ih7hZdUGNJCIt4
- r83FXrs8Q0zb3aIElQiPLIdgmwa1c8J6JIBD3buBdUlBsqpzAvKsdMXrsGy4BJ8Kzj6Hk9kru6
- ukrJrTQlpvgRJ3VNdN4kHjasP7/NpM9/0J6X/0s2gQUc3qlxBbLl99pPV8cp+guY4jg+FG8taw
- AAAAA==
-X-Change-ID: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
-To: Steven Rostedt <rostedt@goodmis.org>, 
- Masami Hiramatsu <mhiramat@kernel.org>, 
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- Paul Cacheux <paulcacheux@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191767; l=1762;
- i=paulcacheux@gmail.com; s=20250422; h=from:subject:message-id;
- bh=KpVvY39bTMtM8+XE+uRP1OauAipaWPrZAaSpJuBqdO0=;
- b=s8QdfrlRuuLv1kCYAOYbz7sqfW+OGlxZHlYqubZkhTMzCambp3fmi+4UXmyPonECg6Tmq5sz6
- uBRkEVWeSKwAS9oLzA5Dy20Rx4Dh6VcEST8GzIp3WzBUADunE+GSC3D
-X-Developer-Key: i=paulcacheux@gmail.com; a=ed25519;
- pk=8UguSecyECHKHp0YLS7hTEDob0ctFMr3ygBTeAmrFHs=
-X-Endpoint-Received: by B4 Relay for paulcacheux@gmail.com/20250422 with
- auth_id=386
-X-Original-From: Paul Cacheux <paulcacheux@gmail.com>
-Reply-To: paulcacheux@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241202150810.606849101@infradead.org>
 
-Hello,
+On Mon, Dec 02, 2024 at 03:59:52PM +0100, Peter Zijlstra wrote:
+> Sean noted that scripts/Makefile.lib:name-fix-token rule will mangle
+> the module name with s/-/_/g.
+> 
+> Since this happens late in the build, only the kernel needs to bother
+> with this, the modpost tool still sees the original name.
+> 
+> Reported-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  kernel/module/main.c |   26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
+> 
+> --- a/kernel/module/main.c
+> +++ b/kernel/module/main.c
+> @@ -1062,6 +1062,30 @@ static char *get_modinfo(const struct lo
+>  }
+>  
+>  /*
+> + * Like strncmp(), except s/-/_/g as per scripts/Makefile.lib:name-fix-token rule.
+> + */
+> +static int mod_strncmp(const char *str_a, const char *str_b, size_t n)
+> +{
+> +	for (int i = 0; i < n; i++) {
+> +		char a = str_a[i];
+> +		char b = str_b[i];
+> +		int d;
+> +
+> +		if (a == '-') a = '_';
+> +		if (b == '-') b = '_';
+> +
+> +		d = a - b;
+> +		if (d)
+> +			return d;
+> +
+> +		if (!a)
+> +			break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+>   * @namespace ~= "MODULE_foo-*,bar", match @modname to 'foo-*' or 'bar'
+>   */
+>  static bool verify_module_namespace(const char *namespace, const char *modname)
+> @@ -1086,7 +1110,7 @@ static bool verify_module_namespace(cons
+>  		if (*sep)
+>  			sep++;
+>  
+> -		if (strncmp(namespace, modname, len) == 0 && (glob || len == modlen))
+> +		if (mod_strncmp(namespace, modname, len) == 0 && (glob || len == modlen))
+>  			return true;
 
-As reported in [1] a race exists in the shared trace probe log
-used to build error messages. This can cause kernel crashes
-when building the actual error message, but the race happens
-even for non-error tracefs uses, it's just not visible.
+Note that this is going to be a pain if we use glob_match(), because
+then either all the patterns must already use '[-_]', or we need to
+dynamically rewrite the glob.
 
-Reproducer first reported that is still crashing:
+Neither really appeals to me much.
 
-  # 'p4' is invalid command which make kernel run into trace_probe_log_err()
-  cd /sys/kernel/debug/tracing
-  while true; do
-    echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
-    echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
-    echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
-  done;
-
-The original email suggested to use a mutex or to allocate the
-trace_probe_log on the stack. This patch implements a simpler
-solution suggest during the review of the v1 where we only protect
-access to the shared trace_probe_log with a mutex. This will prevent
-any crash from happening.
-
-[1] https://lore.kernel.org/all/20221121081103.3070449-1-zhengyejian1@huawei.com/T/
-
-Signed-off-by: Paul Cacheux <paulcacheux@gmail.com>
----
-Changes in v2:
-- change approach, and use the mutex based solution suggested during
-  review
-- Link to v1: https://lore.kernel.org/r/20250422-fix-trace-probe-log-race-v1-1-d2728d42cacb@gmail.com
-
----
-Paul Cacheux (2):
-      tracing: add missing trace_probe_log_clear for eprobes
-      tracing: protect trace_probe_log with mutex
-
- kernel/trace/trace_eprobe.c | 3 +++
- kernel/trace/trace_probe.c  | 6 ++++++
- 2 files changed, 9 insertions(+)
----
-base-commit: ebd297a2affadb6f6f4d2e5d975c1eda18ac762d
-change-id: 20250420-fix-trace-probe-log-race-cc89d8e5fb15
-
-Best regards,
--- 
-Paul Cacheux <paulcacheux@gmail.com>
-
-
+Best to keep it simple.
