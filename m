@@ -1,112 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 401EA22E00E;
-	Fri,  2 May 2025 09:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F96CAD24;
+	Fri,  2 May 2025 09:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746178610; cv=none; b=ds1MHTETB566+/MNrPnVXgTd37VTQvcct6F3XI8n8QSkuC1pT6S4Zvmku3tzhqYvy3aI2V+VFbiHIUCPs6wtdxRESyRDlfsiChmUGmQY/FlBIwLrbs1p/Ikph759AjWehIl5cGiHUnFFuhRoABoPbrKGqmEp20ckJXk4wV2bYrc=
+	t=1746178635; cv=none; b=ndauSUtYuqfzYv7rDpacsTwhmQAfWuKGOPHx4wiQk5S2frmvrePElzYt7Drc4c+e/F3RnpIMQr4YwIU+tza8yDdKPd3I0HUkgzoawNhebMxqQBG/ixSrthraafblxD+P/xeWJhd6/D+bh6e+mnKrmTBrBeU6weJ67XO01GM/NF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746178610; c=relaxed/simple;
-	bh=qO5Uzrf4EcWUBp68VsfzP2cwci35gHFejxNmBHPXlpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RhPzZ+pDY2mnHLmtLdfbbxqiQLfurH62oa6EZ+uME2/JElx5PMQoYmTOVFlz6e88cH9aB7DpJwUQASd2rMkGt+D1aArps0/d/fG9LQoucWpyB0D/hdPhkBxxiSy7AYfzgoLWXpEWL2U0rmGINo4rLsla7Y3rQpVzlv8Aq0tOVWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AaddnoRa; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746178635; c=relaxed/simple;
+	bh=jovtptrEGeHU8Uh+ORr8rtGF8VlX1JF4VpT6y77Xhd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=sLkADyd6Wh1S8/bHNdjTMxXb1zOzm3hACNEKTjl0I7pSR47iBFqX6QvP2Tj/G7CEyL/Siz3fi0ppfV+RwI6xKgGyIhHC577Rvy94fTl1RDtdl2G8YfLXN07hLWOAi2vhygFDMtnqaQu3Ie89+GFwYKjbGUzVdO1fWQ/AuGMNmk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=d7GiNJH+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AaddnoRa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746178608; x=1777714608;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qO5Uzrf4EcWUBp68VsfzP2cwci35gHFejxNmBHPXlpw=;
-  b=AaddnoRaxpGiRV3SnV6P/9BHBcp+3iwmUMKSdJ7kyVeb/VMqQTHLaApG
-   6/8IxZP0hXD759UndlvqHRMe4qLEtQQYAvrzyLW8F73Eu+FBN7WJAXO1D
-   o+XZ1aOMNcvyrs2+kOTIfUbgENwNE/howmQYKbJOQSWkV2uH8PJcf6OXC
-   8JHmZOD8Mhwpzw/GMTYC1JVVLtMZLmKEJsxWYTf+ZsyYhBNvXg5/0fwkh
-   H+mUFVAiPWpQrQMM7sXUpMeD3PGFML1HDULlEEyh60miYrrII6oAfeUOz
-   AuX2XAOKHmDJGvmqagTQ4nPQdBZXaU8uEySyd/mWjUzkeVwspu/dgUUSc
-   g==;
-X-CSE-ConnectionGUID: StbgYm2aSLGzB8pb4FfnSA==
-X-CSE-MsgGUID: +f1/i89MQryICylVpJeQoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="59221032"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="59221032"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:36:47 -0700
-X-CSE-ConnectionGUID: GyzI4gIgSUmLH4cFY4xw0w==
-X-CSE-MsgGUID: 1BkqQ91nTsK5J39c28Uq0w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134497643"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 02 May 2025 02:36:44 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uAmp0-0004ev-1J;
-	Fri, 02 May 2025 09:36:42 +0000
-Date: Fri, 2 May 2025 17:36:36 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
-Message-ID: <202505021641.QEim367T-lkp@intel.com>
-References: <20250502013447.3416581-1-robh@kernel.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="d7GiNJH+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746178629;
+	bh=0jThxcg43rzZCPnIqcWLWu5e6kqgevnJSlPyibcdspo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=d7GiNJH+0ltD52uDGt8zuL0l92v+8U1R0gujWuyeeXtuSAe/3gLMWheTAohfneLTy
+	 frJbReQG782DvVACw2ogrDhra6BdF4BoAy2AqwTOPurXBcCOy62ShXBK4IhDRk539D
+	 ywZwbt0S6Sw9aiM5tf2moEyuNbkYvE6gFYn70QwJRj8DdTJsmfgx5KTYTHKOVHIBYd
+	 ufAhhJht5zhs7Ch5i0ndfWhEy1Xqat/5zNPnxqSeOBmXIYuMHnyD6b6W8mKUliWGFV
+	 XZsp4akpYqF5ZP3JOr+0zc1JuyDg5hieiSY0ZTIU2H412IKlwnlxzdgV/LPxbAStkk
+	 CDi8DYkGU+NCA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4Zpm6F2Dhkz4x3S;
+	Fri,  2 May 2025 19:37:08 +1000 (AEST)
+Date: Fri, 2 May 2025 19:37:08 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the scmi tree
+Message-ID: <20250502193708.62e01d11@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502013447.3416581-1-robh@kernel.org>
+Content-Type: multipart/signed; boundary="Sig_/mO5vVHKwjvBk+/rtpbIR+0Z";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi Rob,
+--Sig_/mO5vVHKwjvBk+/rtpbIR+0Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build warnings:
+Hi all,
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus linus/master v6.15-rc4 next-20250501]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+After merging the scmi tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rob-Herring-Arm/dt-bindings-PCI-Convert-v3-v360epc-pci-to-DT-schema/20250502-093635
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20250502013447.3416581-1-robh%40kernel.org
-patch subject: [PATCH] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
-reproduce: (https://download.01.org/0day-ci/archive/20250502/202505021641.QEim367T-lkp@intel.com/reproduce)
+drivers/firmware/arm_scmi/quirks.c: In function 'scmi_quirk_signature':
+drivers/firmware/arm_scmi/quirks.c:208:24: error: implicit declaration of f=
+unction 'partial_name_hash' [-Wimplicit-function-declaration]
+  208 |                 hash =3D partial_name_hash(tolower(*p++), hash);
+      |                        ^~~~~~~~~~~~~~~~~
+drivers/firmware/arm_scmi/quirks.c:209:18: error: implicit declaration of f=
+unction 'end_name_hash' [-Wimplicit-function-declaration]
+  209 |         hash32 =3D end_name_hash(hash);
+      |                  ^~~~~~~~~~~~~
+drivers/firmware/arm_scmi/quirks.c:211:9: error: implicit declaration of fu=
+nction 'kfree' [-Wimplicit-function-declaration]
+  211 |         kfree(signature);
+      |         ^~~~~
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505021641.QEim367T-lkp@intel.com/
+Caused by commit
 
-All warnings (new ones prefixed by >>):
+  81ce8d705821 ("firmware: arm_scmi: Add common framework to handle firmwar=
+e quirks")
 
-   Warning: Documentation/translations/zh_CN/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/translations/zh_TW/admin-guide/README.rst references a file that doesn't exist: Documentation/dev-tools/kgdb.rst
-   Warning: Documentation/translations/zh_TW/dev-tools/gdb-kernel-debugging.rst references a file that doesn't exist: Documentation/dev-tools/gdb-kernel-debugging.rst
-   Warning: Documentation/userspace-api/netlink/index.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
-   Warning: Documentation/userspace-api/netlink/specs.rst references a file that doesn't exist: Documentation/networking/netlink_spec/index.rst
->> Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
-   Warning: MAINTAINERS references a file that doesn't exist: Documentation/devicetree/bindings/leds/backlight/ti,lp8864.yaml
-   Can't build as 1 mandatory dependency is missing at ./scripts/sphinx-pre-install line 984.
-   make[2]: *** [Documentation/Makefile:121: htmldocs] Error 255
-   make[1]: *** [Makefile:1801: htmldocs] Error 2
-   make: *** [Makefile:248: __sub-make] Error 2
+I have disabled CONFIG_ARM_SCMI_QUIRKS for today.
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--Sig_/mO5vVHKwjvBk+/rtpbIR+0Z
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgUkkQACgkQAVBC80lX
+0Gy+BAgAhTaaSwWaWi82VD3pc+h9qgBRr2dlqAtkR2ZvflkvS4guTVyGd+WWsqSs
+H5QwgJ8EKaw6lWO2dcJVImaEwpGEiaxEwTY/ciRYe3hsemWdxHEbpfxPM+e+et92
+XFYDxTAZ/ALnEL93rXsHpcmoxpfrTMkIFYxUNwDsheg28Z8lkPqiKhlrfsxQitQW
+nnnB2/tSGw419WRuEy5GFTk2nqc63GsybkPJQxTqprcT878wXSsIns5SRg9QbtuQ
+3WfqMYsbISR8PYa40hcSjcBQUIFboFpj6JHD2mfDl8FfB00vg5DUIee9j80Jvwoj
+EuJgG7Uwidebm5P8MmNIlaIpwSEwbA==
+=MXvZ
+-----END PGP SIGNATURE-----
+
+--Sig_/mO5vVHKwjvBk+/rtpbIR+0Z--
