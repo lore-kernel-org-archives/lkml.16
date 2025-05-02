@@ -1,229 +1,277 @@
-Received: from invmail3.skhynix.com (exvmail3.hynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACB341A3166
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:57:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746161848; cv=none; b=de/KB4CbqoG46xP0/N/+Z7WW5uFXKTEImrhBFSlgdCp/8XWmgNADPvnDHXnwdg5tzFkfherp8sumXtUyYqQuKhiQ8/m1blGWWzse+UPOZVQWDfkljiI9Xsqvn2wGnC/LhUpZkk9H6cHcjRu8QHFQntCij20OpQg0xW+lLdKYGB8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746161848; c=relaxed/simple;
-	bh=t2mPsg3cNM5tOVeHDbDyZCHdhU9Z6i7g6+yIeQsHgHY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=udVpO4KbtxSWi//uk64Lsqdd3elXbgu2+CrmjztzzBI4U92v6Bz/PkkxN7dweLaWlXcCzgYvG5dO+/pOgj0CMi3eHVZhjYlzJWVNCOYF57o7qggKk8kyjry1ndDh5dfVNwkR8nJos9sqz1//WWBb6gQPqfQn85GEuECQavlfM+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-057ff7000000aab6-48-68144d21cb0b
-From: "yohan.joung" <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org,
-	daehojeong@google.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	pilhyun.kim@sk.com,
-	"yohan.joung" <yohan.joung@sk.com>
-Subject: [PATCH v2 2/2] f2fs: add ckpt_valid_blocks to the section entry
-Date: Fri,  2 May 2025 13:41:45 +0900
-Message-ID: <20250502044146.552-2-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
-In-Reply-To: <20250502044146.552-1-yohan.joung@sk.com>
-References: <20250502044146.552-1-yohan.joung@sk.com>
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F14D1A4F3C;
+	Fri,  2 May 2025 04:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746161879; cv=fail; b=LN8lfVHnxEN8rrJFGW41wmvakRCEwsnGXUedfpdf9hTSRqgrt/3gb/1yulBc5ZSg6fMyQ/zvnH68caTaj4a0DSDCEA7ROGXu3SzCKvqJe8jEkjZU+UoFraFms0Gvih/GEZ7xsAQEbMUmJDZyMUjPSKVJx4OMcD0vKhaaIDq648k=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746161879; c=relaxed/simple;
+	bh=5MHU6DY3V9Xp5fPGddlwfwbwCQf7E2oPXn9bR74hvVA=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=Sziik5zpvMWL8d69KBVZ+1cAx+ivIPg9uL8YZRpgtOuIhRj0LJpwATOIk50/HqryD/fvQRTux3JhnDtqf8acV+7/jMsKc76mFKiqTYuu8b5xlfb8N2/Pk7jp90NK9pbpkLaThtcaBTF1c6OQWVMfqZrbarmzLGb1f8A3igSiSJs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=cSxgYKEn; arc=fail smtp.client-ip=40.107.93.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="cSxgYKEn"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=llSQb72crNMIXw0Fzqxy8UF1AyP5QXIGKCmPcu2AJQAc+vm+TpbaVKoiJKX9EYcEtT2UcMY8NOmGFPx8Dtpnt+mENGLUWtOyPfaBEeCpdNnxK1Q3S+EFcpOYW6PMDr8DN5kZHOtxefQMvLAulGBibMbcQHPs8krc9Zdk9/vo4MBxQaCW5ktM7jZDLDzOgwQKuFtrAq3RDOViTTaxS3Mjfv25NQ54EDR2QRjb0X0WRuhBv3J+b1Ll00l4UEDcKjtmWCDg4DsJMYPICI4u9foHGmh5TGep7yi6EOP8SM32iP9gSFVcSNCZfzlVSU61yvftURWV8/QjHcgbgXr6YSvC1A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=T5bQfOH29AKQnQUu5TN+6QKVOOkwBXbrziqIwOn6Tro=;
+ b=wpirll8JNCksC8Zk0rfOI8Si6bCRGpcpxD3kfehNyUiYgsccCAyfu51stD3VSJGo0SaWqRQSVZh+jw/hcrI4zRk+DxOjr0VT3OOoFWwW8WLzRY16VuXVxLIlZaAZ02M7zX9MAWxcMJNIT1J5bFUfgC2O4LItK13i1KXPSq2Ho/7vu2Ye1/kcacgREbu76ZcpQ0fC//2PRyAbKfCVULpXhEP+xH84y3DPdzlyEpO8YOJueJdtt0zOJoOJEEdhJtFV4KY6ftXK3OOox7ntJaKt6riFqOdqfvGHAbIEipqdQEnXGSqw5WkPoIb7S2+msCDOLxgjsDi8kFVunQrDidw4Qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=T5bQfOH29AKQnQUu5TN+6QKVOOkwBXbrziqIwOn6Tro=;
+ b=cSxgYKEnOW5V8lDjZpQFlND6qoIimsYthw6bbG2+kIXpKy5CpaYLZ8jvgF+GT5wNjXS+rkHtwicQH2POy5ghBPrMowYCYiK7s1cpzU04D4kSCvT54LHiwBkSZ0gXF6U92moBEu0VV5+XuftUkpV+RFygh9nqy0DZtcYwSLIVMseDVoaxUmFHIJ1OhmVK7YymDWLGrsjMithNPjNDqGPR9EtubGdpx2nUyJ+RVS608xY6Eg9mrDBvy+5bSS1MT5GTVTHzNecPYNUhy3Z65Nht4Nb6EQJyL2oC00XEamKcoROpYTE9KD5SO0HoLipGa9IoXwkJU7wsZtAkGaWig8monQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by CH3PR12MB8936.namprd12.prod.outlook.com (2603:10b6:610:179::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.21; Fri, 2 May
+ 2025 04:57:55 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8699.012; Fri, 2 May 2025
+ 04:57:55 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 02 May 2025 13:57:52 +0900
+Message-Id: <D9LEQ1U1PLO8.3N22GRY380ZM3@nvidia.com>
+Subject: Re: [PATCH v2 17/21] rust: num: Add an upward alignment helper for
+ usize
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>, "Jonathan Corbet"
+ <corbet@lwn.net>
+Cc: "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs" <bskeggs@nvidia.com>,
+ "Joel Fernandes" <joelagnelf@nvidia.com>, "Timur Tabi" <ttabi@nvidia.com>,
+ "Alistair Popple" <apopple@nvidia.com>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250501-nova-frts-v2-0-b4a137175337@nvidia.com>
+ <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
+In-Reply-To: <20250501-nova-frts-v2-17-b4a137175337@nvidia.com>
+X-ClientProxiedBy: TYCPR01CA0210.jpnprd01.prod.outlook.com
+ (2603:1096:405:7a::9) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrALMWRmVeSWpSXmKPExsXC9ZZnoa6Sr0iGQbe/xempZ5ksprbvZbR4
-	sn4Ws8WlRe4Wl3fNYXNg9ViwqdRj06pONo/dCz4zeXzeJBfAEsVlk5Kak1mWWqRvl8CVceLF
-	dNaC/zoVn/7cYG9gnKLaxcjJISFgIvHq5z9GGPv/wl8sIDabgIbEn95eZhBbRMBJ4v+NdvYu
-	Ri4OZoE2Ron2o02sIAlhAQ+JQw9/gNksAqoSvz79YgOxeQVMJV5cPcIEMVRTYseX80A2Bwen
-	gJlEzws7kLAQUMmfPy/ZIcoFJU7OfAK2l1lAXqJ562xmkF0SAh1sEvs372OBmCMpcXDFDZYJ
-	jPyzkPTMQtKzgJFpFaNIZl5ZbmJmjrFecXZGZV5mhV5yfu4mRmA4Lqv9E7mD8duF4EOMAhyM
-	Sjy8AQXCGUKsiWXFlbmHGCU4mJVEeGMMgEK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJ
-	pCeWpGanphakFsFkmTg4pRoYTWx9dy6xepx7e0VsqIp32pvsNfuLjs5K2jV3720xhj0sd9MO
-	G5SXzjI557Kl//G1f2bGH1IbL/C+auA9sapxv7J5oaFC8cmDf48YPuL1fST3ekKM+Nw37Q7c
-	3T9/5AVKLP//x2LCHX813+UpE6WdHTYsiz+4/3adjurl+EbvtuWzf99WbZ94UImlOCPRUIu5
-	qDgRAGjytjdDAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFLMWRmVeSWpSXmKPExsXCNUNljq6ir0iGwd1Hhhanp55lspjavpfR
-	4sn6WcwWlxa5W1zeNYfNYsLcq0wW77feY3Rg91iwqdRj06pONo/dCz4zeXy77eHxeZNcAGsU
-	l01Kak5mWWqRvl0CV8aJF9NZC/7rVHz6c4O9gXGKahcjJ4eEgInE/4W/WEBsNgENiT+9vcwg
-	toiAk8T/G+3sXYxcHMwCbYwS7UebWEESwgIeEoce/gCzWQRUJX59+sUGYvMKmEq8uHqECWKo
-	psSOL+eBbA4OTgEziZ4XdiBhIaCSP39eskOUC0qcnPkEbC+zgLxE89bZzBMYeWYhSc1CklrA
-	yLSKUSQzryw3MTPHTK84O6MyL7NCLzk/dxMjMMSW1f6ZtIPx22X3Q4wCHIxKPLwBBcIZQqyJ
-	ZcWVuYcYJTiYlUR4YwyAQrwpiZVVqUX58UWlOanFhxilOViUxHm9wlMThATSE0tSs1NTC1KL
-	YLJMHJxSDYyyOZ+/LayT2fOoL/e0je1ylbtlFaW2uZeumnz6x7jS5cK/UxqbV8pKsRbs2dSz
-	XO6dib/pVA/ddK4e37l6v9tuOp6eyygz88O+wKwvSTc1We6bFW7bdJhFb3Hs7Gv3t7gUL9q8
-	fhGHTNKDiuR9Ky8l/RHc49jlx2E7N/CT0+GowD2NyjYKUQFKLMUZiYZazEXFiQAFdf92LQIA
-	AA==
-X-CFilter-Loop: Reflected
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CH3PR12MB8936:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1788cc18-ed18-42a6-c913-08dd8935e67f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|10070799003|7416014|376014|366016|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WXNubHpGSlJpS0RJZE1wSFlJcXRnbG1SaVU2bkMxclFraC9BRENyNHJtY3hZ?=
+ =?utf-8?B?MVFKUXAwN3J6RUI4N21tbjRnYk5uMkVVZm9SZ0NGcHFBUENXdk90T1luZDc1?=
+ =?utf-8?B?dXN1MWM2aG4xdStqMkNkbWx4czBPVHVKNm5RQ1YrWHFZQ0xaVWFZeEhQUnA3?=
+ =?utf-8?B?aHdRMmdRbFN1VFN2dmJ6R3RMWEJNaHQrK1h0cWJLcm5iRkpqK3AwcytnQzBB?=
+ =?utf-8?B?UjlJbG4xamM3VUtFWlh3cU03ZVhwS25rSklWRHhRRFdCU2J6LzV0a3BNVng4?=
+ =?utf-8?B?Mkh5S2ZlWERhQ1NMSjZRdTQ1cGRIcWtkRnd3Ym80cnA4QVlOUVR6em90aW5s?=
+ =?utf-8?B?OGhBRStpUnBUYjk5T2RqcDhLdk5BbEVWUnllWmt3b0M2bWFUbU5iZkxjVGVR?=
+ =?utf-8?B?dExGVmxQcVYwRGxBczNvOHVZbzJOWGpHMWJZUkpEQnBqV29PM29ld0FMbEpX?=
+ =?utf-8?B?VWNvRXJac3djdG1hdUE5bUJERjdwVXNJL2ZOT3JMdG9obEN4OGFBUzh2c2h5?=
+ =?utf-8?B?UTVmbzFiV2U0dVV1YWZoRktSMzh5ZFRsODBmTlc5SHJWc1UxMFRHanAwbHJ2?=
+ =?utf-8?B?dlNJNmE3ZEZmcUVnTHFJNktobnNSK09Fd3l0WGFMWm9hQ2hneVBjMjhCM3B2?=
+ =?utf-8?B?U1lURXJFazVldDM1eTFBNW14WGwvdlhxYmo3cTMrclpUdXM1S0hYYld3aGRU?=
+ =?utf-8?B?UnVqdktwNWpwajlSMytPUHlXUzZKR0FTcDk0Z3M4NXZycDhsaEZGTERaMGp2?=
+ =?utf-8?B?Y2JMSmNxYXpPeVczb3AwT0ZPcGhyNGlCd3F5RGVyR053WkpCZHc0UExZaTFy?=
+ =?utf-8?B?bXFDTEhoT2dPWGZoT29zRnllMzhvZmp6SnVUek9aUUJXaGFVUXlnRWN2aWpT?=
+ =?utf-8?B?b1owRjZ5WXBwcUpITjY4aUppZUVCMUk1L0R6bm50dUsrOWIvRjBmZWpXUVgy?=
+ =?utf-8?B?czZxVWs2LzRQN1ZmeGtRdC85d0FERzFUVXprSEltdDFOcFFOeWtXeUJjaWpB?=
+ =?utf-8?B?b2d0c2NjeXBEdWYwMEpadDVua2dzUXlXekRnZzRtM1ZSalhkWklYaGljUVNW?=
+ =?utf-8?B?VVpjd09LYmVlTWRiKzlyU1FjRGp3Nld3TTJBZG1jTlVuZEppamJFYWwvaWJU?=
+ =?utf-8?B?SkpzU1BPbGVZVWhHQUlYN2dhNmJ0WjBLa2VSZTl0YWRwTElaSExuY2V2RHR2?=
+ =?utf-8?B?VGJUTmgwU2IwbThoZWtNZEJaVXZHNGtCTWI3WWJuMEt0c1pTNEZ3UDRZL1ZR?=
+ =?utf-8?B?aEZPYzQrV1FjdytlbnR2cGxYcEw2NHYxemJPc1RxUHVqbzZ0WE5GdTFoUDZk?=
+ =?utf-8?B?UGwwU0ZodzZBRHkzQUFueW5HZ3lFZklKQWVJZUdHU3dra29DcVpYdGVURFps?=
+ =?utf-8?B?WTU0Tnd5aWNMTEhzMGgyWGF1YnZqVU9wMEljRVJNRWcyenYydCt4YVJJM1V5?=
+ =?utf-8?B?YXRyR0RpMkJVb3I5RjN4b0EzT1BvSjBQZG5aTzNRcHN3eFc3WXFzZU1lK00w?=
+ =?utf-8?B?a09TZnJrdFJnUEVNUmVrYUdmYkI5N09zMno4dFNtVjl0azFFMmdaSXF5NXhG?=
+ =?utf-8?B?S1ZPeEdvOWlON2RBZUwwODZaa241c0QrVXR3Ly9ROFVEOURKODYxRVpRVDN3?=
+ =?utf-8?B?WWxJRExDbDkvVGdaYXcwMUZtZFF2MVJmZ1RrTGVaL2ljK3dQWVkzQVdpT29Y?=
+ =?utf-8?B?bHhQL3E1bC9oSE9mbGJmNlIybHdlNE5ocGxCZ1F0Z2F2ZkJUc05lYW0zVnFt?=
+ =?utf-8?B?QkNCalVWQ2FmRHBxRFFnVEdqUE5ac2krZTZ3M0JNZmpyUkRUNEE4dm9sR3pX?=
+ =?utf-8?B?ZDMwVXZhYlUzNXFEajRLM0lNbzkwaFNmWFpvRWVsQmlqMmZhWEVPdnVHbEs0?=
+ =?utf-8?B?eDVLUVNhQVVMS01LSGdZMVkyMHhyTm1IOEgzZTBzelhWNUtzTWZiZFVpU29u?=
+ =?utf-8?B?eThaY3ArdnNScHhIOXZOaFUvazM4T082Y0UyOFBvelJ4bUk3VGlzV2hwWHZX?=
+ =?utf-8?B?UWNiYWJ5L1dnPT0=?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(7416014)(376014)(366016)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZU9LRkhGMkxQdWNQcDFhMmxwaWJyRVpML0pWTkRHeXlTWUlaMmluRWxaT290?=
+ =?utf-8?B?dUxHRHgxY3NTdWY0NnJ1dVVISnZCWDRjN04zM0RjR0ZFc2VlWWtyemt4VG1Z?=
+ =?utf-8?B?NDV2UUNSK3pXcFRUSjJqYXcxSDBIaTh5a3ZsQ1FQNXZIT3pES1VMUXcvUkI5?=
+ =?utf-8?B?OW5LTy8veVRBMlQ3ek9McEFSaDJQT2FyOW1BSmtDcno5RDVjS0RSWlhIMG1S?=
+ =?utf-8?B?bVQwWVVMS01oamdwUGNPNVZHY2lvdTh1QzB6TTF0VUxzMUN3TXRCY2RQdng1?=
+ =?utf-8?B?cTFIby84ZW8yc2lONnJuWjc2STAwMEEvWUx2YnliYjZFMDFZbzNFOVNBYnNN?=
+ =?utf-8?B?NG90YWRkT3JyWWIzcDRZWmtxTytUa2FmenFlK2o5ZjdyQ0dhaHlQTVZ5czVJ?=
+ =?utf-8?B?dFBLYi9UUEpXZWpvVWpYWjMwK3g4cldseFN0SnM2dDhXVlpBdU9EdmlMRnpL?=
+ =?utf-8?B?dEY4Y28zWU9IK0YxYVE1SkNtdkQzUEtyNU1pOWE3YnBCRzNwNyt4WEFreWF6?=
+ =?utf-8?B?MHRRSHIzWnRsSEtYbGdYU1NWWTZHN1M5cmlaUGJpVXpvTXhBWno2UUxmMENF?=
+ =?utf-8?B?NkxYYkRMQmZBT3JKK2dkUXIwelFxM3RQVEZuQVdqMUJEdHlweW9JRkdSNmpu?=
+ =?utf-8?B?Qys1N2dWYko2ZVYrUmdVdmdUSVZEU1pUUHRZRG00NjBZUmFCbllpcDEyYkJN?=
+ =?utf-8?B?YzhpQ05wa2llVXBqSC9lTkdDYXBoNVNaTGd6U1lQTzlqSFVRT2NieHlYTjRZ?=
+ =?utf-8?B?SWhGVnNJQzh3OWNjZU5YK2RxTVlDYUwwVFFwSUM3ODQwZ0Q3em9ZYjl3Sk5p?=
+ =?utf-8?B?d0lqcEdRQms5Q1FKK0NMMXhPaFIxdHJWVTZuaVhEUXhyWWwyamlIWEp1bWdT?=
+ =?utf-8?B?UzRkNGt3VDBWbE5JWVhaWSs2bXBWejJBNE1KRW5va2cxeDFYRTl4MmlocDJ1?=
+ =?utf-8?B?UXg5cU5odHlaaVVCUHg2OVNOS0Irajd2ZmVENnhOVU1laldJdUt2MzA0SC9a?=
+ =?utf-8?B?SEFBL0dxeGxKczc3UEVoeW5vZGRjNHlTeGYvay9Xam52Si9RaVhDbjk3c2hl?=
+ =?utf-8?B?cHhGaW5NQjI1Y0hlMUY3SUlkN1J0N2NIaElYRW1Iakordklwd00va0h0MkMv?=
+ =?utf-8?B?Zm1pcVA5TmgvM1JqVityUGRUYVRjM25rWE9yUGlsZ1lSd0l6SmhTUzlzY0lW?=
+ =?utf-8?B?dGtzQW5YblZ3MGpORkx1dmVZVEdXRVd2ZEFPbng1cktIcm52Tlg0MklMeWcx?=
+ =?utf-8?B?ZXBJYmREQ3laSTBOVGFXT1BBaGxja2I2OVdHWFNBdHZITTVXMUlnNHkrdlBo?=
+ =?utf-8?B?aFB5UmxuOVMxWTFjWDlrUzhmTERDaytWWXBBQng0OTBZWktpV0c5SlFEMUJa?=
+ =?utf-8?B?eFFlWkNHaFhPR1plRE00MWpadVhJRUFaYUVHZDVTVXhOalFLQ0EyVDQ3VFY1?=
+ =?utf-8?B?aEFickVMUXNQNTZITFErc1dKNUNZZ3hCRWlYbkVmUGZ3bFowR2lDT0lUOWhF?=
+ =?utf-8?B?MjRsWDdnU0owM0srdlFQdmNJT2VrL3FzMjBIRTg4aDhrc29RU3hwcFVrOFdm?=
+ =?utf-8?B?blF1U2JQYkIvcFZwVUg0dk5ZT29GSkszL0N5Ky95Z1h6ZGFUemNWR0sxZkt2?=
+ =?utf-8?B?MlVrSnFyOW1weTVBRlNmRWpkMVR5V1Z4STlad0g3K251MVNzTHRvSDRGeW9j?=
+ =?utf-8?B?VUsyTERsbXpBRGRPYlFpcHBLR2w3bUpsYUg0eWROWDl4R3grN0xuaHgyYndl?=
+ =?utf-8?B?OFlmVWlSVzMwUWNERERVcFQ1NnZKQXJqc21rT0pTdCtYQVAydktkZmRwT0Vw?=
+ =?utf-8?B?anVXd3BVbmtyUEh0ZG8yWHBpNEV1RllHRzlDNFhtNnppWnYvVGxBd3JqL0Yz?=
+ =?utf-8?B?YTNKSkJiZGJIVENRMVlXUHk4bWlqTDF3Q01saGZrZEx2N0JoVWU3Y1AvNElJ?=
+ =?utf-8?B?azZxdlVSdjBWeW9teHowNXdXa1p2eEFYOGNCN09qS3c4RFVRMTNJaW5VMVZO?=
+ =?utf-8?B?UWhIcVR6cmYvL3UvWGJMc2Y1b2VQWXluZ3FWVDlGODlUQWZMRUg3MkdyZDZF?=
+ =?utf-8?B?aHJLOGRPS21UZzNWdG9XaTJQL1hVbzY3eVZhWW9pdWx0ZGRKK2dmM2dHcExO?=
+ =?utf-8?B?S3VuUFFrQmltQ2hEczZKd2NrSlk2bUpqVjRyN3J1b1FlNmxENTZKb29rV2Uy?=
+ =?utf-8?Q?6fWTTs5RqoH6KX045XoUQRkQAGgiAcOXRYeV/NIzy1ci?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1788cc18-ed18-42a6-c913-08dd8935e67f
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 04:57:55.2875
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 32LrNneBVkkZ3Iw/VX0Mx8103RhzrmLxtOo4tqteDjpGLfFyM5GnHTkkfyYyqO2zTe1t+hMrX/+YcU8Z5g6JrA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8936
 
-when performing buffered writes in a large section,
-overhead is incurred due to the iteration through
-ckpt_valid_blocks within the section.
-when SEGS_PER_SEC is 128, this overhead accounts for 20% within
-the f2fs_write_single_data_page routine.
-as the size of the section increases, the overhead also grows.
-to handle this problem ckpt_valid_blocks is
-added within the section entries.
+On Thu May 1, 2025 at 9:58 PM JST, Alexandre Courbot wrote:
+> From: Joel Fernandes <joelagnelf@nvidia.com>
+>
+> This will be used in the nova-core driver where we need to upward-align
+> the image size to get to the next image in the VBIOS ROM.
+>
+> [acourbot@nvidia.com: handled conflicts due to removal of patch creating
+> num.rs]
+>
+> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
+> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> ---
+>  rust/kernel/lib.rs |  1 +
+>  rust/kernel/num.rs | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+>
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index ab0286857061d2de1be0279cbd2cd3490e5a48c3..be75b196aa7a29cf3eed7c902=
+ed8fb98689bbb50 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -67,6 +67,7 @@
+>  pub mod miscdevice;
+>  #[cfg(CONFIG_NET)]
+>  pub mod net;
+> +pub mod num;
+>  pub mod of;
+>  pub mod page;
+>  #[cfg(CONFIG_PCI)]
+> diff --git a/rust/kernel/num.rs b/rust/kernel/num.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..953c6ab012601efb3c9387b4b=
+299e22233670c4b
+> --- /dev/null
+> +++ b/rust/kernel/num.rs
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Numerical and binary utilities for primitive types.
+> +
+> +/// A trait providing alignment operations for `usize`.
+> +pub trait UsizeAlign {
+> +    /// Aligns `self` upwards to the nearest multiple of `align`.
+> +    fn align_up(self, align: usize) -> usize;
+> +}
 
-Test
-insmod null_blk.ko nr_devices=1 completion_nsec=1  submit_queues=8
-hw_queue_depth=64 max_sectors=512 bs=4096 memory_backed=1
-make_f2fs /dev/block/nullb0
-make_f2fs -s 128 /dev/block/nullb0
-fio --bs=512k --size=1536M --rw=write --name=1
---filename=/mnt/test_dir/seq_write
---ioengine=io_uring --iodepth=64 --end_fsync=1
+As it turns out I will also need the same functionality for u64 in a
+future patch. :) Could we turn this into a more generic trait? E.g:
 
-before
-SEGS_PER_SEC 1
-2556MiB/s
-SEGS_PER_SEC 128
-2145MiB/s
+    /// A trait providing alignment operations for `usize`.
+    pub trait Align {
+        /// Aligns `self` upwards to the nearest multiple of `align`.
+        fn align_up(self, align: Self) -> Self;
+    }
 
-after
-SEGS_PER_SEC 1
-2556MiB/s
-SEGS_PER_SEC 128
-2556MiB/s
+That way it can be implemented for all basic types. I'd suggest having a lo=
+cal
+macro that takes an arbitrary number of arguments and generates the impl bl=
+ocks
+for each of them, which would be invoked as:
 
-Signed-off-by: yohan.joung <yohan.joung@sk.com>
----
- fs/f2fs/segment.c | 29 ++++++++++++++++++++++-------
- fs/f2fs/segment.h | 29 ++++++++++++++++++-----------
- 2 files changed, 40 insertions(+), 18 deletions(-)
+    impl_align!(i8, u8, i16, u16, ...);
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 671bc5a8fd4a..09b66a755559 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2447,7 +2447,7 @@ static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr,
-  * that the consecutive input blocks belong to the same segment.
-  */
- static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_entry *se,
--				block_t blkaddr, unsigned int offset, int del)
-+				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
- {
- 	bool exist;
- #ifdef CONFIG_F2FS_CHECK_FS
-@@ -2492,15 +2492,18 @@ static int update_sit_entry_for_release(struct f2fs_sb_info *sbi, struct seg_ent
- 				f2fs_test_and_clear_bit(offset + i, se->discard_map))
- 			sbi->discard_blks++;
- 
--		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map))
-+		if (!f2fs_test_bit(offset + i, se->ckpt_valid_map)) {
- 			se->ckpt_valid_blocks -= 1;
-+			if (__is_large_section(sbi))
-+				get_sec_entry(sbi, segno)->ckpt_valid_blocks -= 1;
-+		}
- 	}
- 
- 	return del;
- }
- 
- static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry *se,
--				block_t blkaddr, unsigned int offset, int del)
-+				unsigned int segno, block_t blkaddr, unsigned int offset, int del)
- {
- 	bool exist;
- #ifdef CONFIG_F2FS_CHECK_FS
-@@ -2533,12 +2536,18 @@ static int update_sit_entry_for_alloc(struct f2fs_sb_info *sbi, struct seg_entry
- 	 * or newly invalidated.
- 	 */
- 	if (!is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
--		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map))
-+		if (!f2fs_test_and_set_bit(offset, se->ckpt_valid_map)) {
- 			se->ckpt_valid_blocks++;
-+			if (__is_large_section(sbi))
-+				get_sec_entry(sbi, segno)->ckpt_valid_blocks++;
-+		}
- 	}
- 
--	if (!f2fs_test_bit(offset, se->ckpt_valid_map))
-+	if (!f2fs_test_bit(offset, se->ckpt_valid_map)) {
- 		se->ckpt_valid_blocks += del;
-+		if (__is_large_section(sbi))
-+			get_sec_entry(sbi, segno)->ckpt_valid_blocks += del;
-+	}
- 
- 	return del;
- }
-@@ -2569,9 +2578,9 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 
- 	/* Update valid block bitmap */
- 	if (del > 0) {
--		del = update_sit_entry_for_alloc(sbi, se, blkaddr, offset, del);
-+		del = update_sit_entry_for_alloc(sbi, se, segno, blkaddr, offset, del);
- 	} else {
--		del = update_sit_entry_for_release(sbi, se, blkaddr, offset, del);
-+		del = update_sit_entry_for_release(sbi, se, segno, blkaddr, offset, del);
- 	}
- 
- 	__mark_sit_entry_dirty(sbi, segno);
-@@ -5029,6 +5038,12 @@ static int build_sit_entries(struct f2fs_sb_info *sbi)
- 	}
- 	up_read(&curseg->journal_rwsem);
- 
-+	/* update ckpt_ckpt_valid_block */
-+	if (__is_large_section(sbi)) {
-+		for (unsigned int segno = 0; segno < MAIN_SEGS(sbi); segno += SEGS_PER_SEC(sbi))
-+			set_ckpt_valid_blocks(sbi, segno);
-+	}
-+
- 	if (err)
- 		return err;
- 
-diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
-index 345da052f0e1..cabcec5af1ae 100644
---- a/fs/f2fs/segment.h
-+++ b/fs/f2fs/segment.h
-@@ -209,6 +209,7 @@ struct seg_entry {
- 
- struct sec_entry {
- 	unsigned int valid_blocks;	/* # of valid blocks in a section */
-+	unsigned int ckpt_valid_blocks; /* # of valid blocks last cp in a section */
- };
- 
- #define MAX_SKIP_GC_COUNT			16
-@@ -345,20 +346,26 @@ static inline unsigned int get_valid_blocks(struct f2fs_sb_info *sbi,
- static inline unsigned int get_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
- 				unsigned int segno, bool use_section)
- {
--	if (use_section && __is_large_section(sbi)) {
--		unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
--		unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
--		unsigned int blocks = 0;
--		int i;
-+	if (use_section && __is_large_section(sbi))
-+		return get_sec_entry(sbi, segno)->ckpt_valid_blocks;
-+	else
-+		return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-+}
-+
-+static inline void set_ckpt_valid_blocks(struct f2fs_sb_info *sbi,
-+		unsigned int segno)
-+{
-+	unsigned int secno = GET_SEC_FROM_SEG(sbi, segno);
-+	unsigned int start_segno = GET_SEG_FROM_SEC(sbi, secno);
-+	unsigned int blocks = 0;
-+	int i;
- 
--		for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
--			struct seg_entry *se = get_seg_entry(sbi, start_segno);
-+	for (i = 0; i < SEGS_PER_SEC(sbi); i++, start_segno++) {
-+		struct seg_entry *se = get_seg_entry(sbi, start_segno);
- 
--			blocks += se->ckpt_valid_blocks;
--		}
--		return blocks;
-+		blocks += se->ckpt_valid_blocks;
- 	}
--	return get_seg_entry(sbi, segno)->ckpt_valid_blocks;
-+	get_sec_entry(sbi, segno)->ckpt_valid_blocks = blocks;
- }
- 
- static inline void seg_info_from_raw_sit(struct seg_entry *se,
--- 
-2.33.0
+> +impl UsizeAlign for usize {
+> +    fn align_up(mut self, align: usize) -> usize {
+> +        self =3D (self + align - 1) & !(align - 1);
+> +        self
+> +    }
+> +}
+
+Note that there is no need to mutate `self`, the body can just be:
+
+    (self + align - 1) & !(align - 1)
+
+This operation can trigger overflows/underflows, so I guess for safety it
+should return a `Result` and use `checked_add` and `checked_sub`, after mov=
+ing
+`align - 1` into a local variable to avoid checking it twice.
+
+There is also the interesting question of, what if `align` is not a power o=
+f 2.
+We should probably document the fact that it is expected to be.
+
+> +/// Aligns `val` upwards to the nearest multiple of `align`.
+> +pub const fn usize_align_up(val: usize, align: usize) -> usize {
+> +    (val + align - 1) & !(align - 1)
+> +}
+
+Let's add a statement in the documentation saying that this exists for use =
+in
+`const` contexts. The `impl` version can maybe call this one directly to av=
+oid
+repeating the same operation twice.
+
+Actually I'm not sure whether we want the `impl` block at all since this
+provides the same functionality, albeit in a slightly less cosmetic way. Ca=
+n
+core R4L folks provide guidance about that?
+
+Cheers,
+Alex.
 
