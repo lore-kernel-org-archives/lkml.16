@@ -1,159 +1,136 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74E237083A;
-	Fri,  2 May 2025 06:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C28D61C6FE1;
+	Fri,  2 May 2025 06:06:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746165671; cv=none; b=UNg6y0jsJxoFaqLkfm9wjdatzASlYUi23IDNr4BH/x8xma7vFEBaiCChUkXxS3J8fL11qdCrApQdOJqT0icuiQkfkMsmXzrU1PUz3cyn9pq4BV2zXFpTyB+lRFY38q1QFh2cdRulGTl/W2o8DIqOC7TNFqCn5euYCq1tW6uatcs=
+	t=1746166004; cv=none; b=HBR4J8QXOv//w39itTzadN48uusrEuAxnTCqsPJOeXXJMyG6aUOV1MoHC3vfwet4QAbCfz3ZSAtb6t0X/+IQ9Xlm9/dFZA4/XjiYGjKvDAJzcFuZpejVTzFvuX/gA4FS4Q7Q8bRkMCBPaoguwG9wGBKuNLpt9JfrRRujVCn0EG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746165671; c=relaxed/simple;
-	bh=AVxBl5tihGLUMFHt3lxk0q44vNka5p+fcSzp6TxyzLk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qFYbaw5eYTsfDa8VfXmGLFTkEVx4S3vxKeeNeqnMj2eqG4hbbCSjj8N9Isyd2h614zhx2GR033Mc9HzKjhdxxKYO5EfZSJR/0MFD+Sz+SVJZLfLeZJ8JfLGHA4nWQT3L1a9W04Ty8A16/ga25pX96+e2SHCH/Gji822iDNPgcNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=ESYZ4B3F; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1746166004; c=relaxed/simple;
+	bh=Ko9F8N+zSPoEZwy8bx/ngZm72qTMS1KTcz8AUXdK5wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=RoEtA75u03Sf0hO2cz+6a/iQ1mMMZ2aWgH2vcflEKMdALeobT/ESeNPfsAYhClUH4tPcDelo3dBvlvgTaf9viyNJV7FUOk1qpIOWchV3fs95yYg3pZXRFt8Ye6Xu7S3FHTM3kyBpSeMlhtQ0LUtTcJsGi3Zzo4U7w1D5zGKP0T8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=U4st9TyL; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ESYZ4B3F"
-Received: from [100.79.193.170] (unknown [4.194.122.170])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 42434211159B;
-	Thu,  1 May 2025 23:01:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42434211159B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1746165668;
-	bh=n6KFWWoXYHxscjPof2OutrHwg+xGPVvT7uzE7cJP4LU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ESYZ4B3Fcg3Ko2lR5YdEo+mqD7tWwDu0FDc4cb8270QuBWO7kKB5QfUmcdX2YPrKb
-	 ufdjCvBIHn+keFgdpmDDKJMvDVYMD6rjCCkiargQqN/+r2pfG6LfA1IHnzZtXp2809
-	 a7gX0PvtbE2Z7BjkSYkzePiQSW2uiwTrAFZGz3Jg=
-Message-ID: <2173d71c-301d-4b6c-b839-0e747d0d0a4b@linux.microsoft.com>
-Date: Fri, 2 May 2025 11:31:03 +0530
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="U4st9TyL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=202503; t=1746165991;
+	bh=7KDiv+Y4VlK9mNT9noGQ2GwQatfVZudbbTQhZiRAUUw=;
+	h=Date:From:To:Cc:Subject:From;
+	b=U4st9TyLXcW/yg/5Y0tQupnYUkvteyGo0AgYVZc7UiORdP2pLwAlX2g3FzZNCcThC
+	 Bcj3ZqTQvX1y4sDFaBBQ9j4i9+baYgv68/0GkUbEdSPil9+uBH9nmsIvhhgOzvVXmo
+	 JDk117OAFedfHnrSsV41NZ49ffxJ/I/rXVZUBgs7XeLVaVZH7jqYO+F0EB1WxDhh+X
+	 cEYXlkER5SsOBBKjo9sjZQSx06xkuVZt+K8ZcZzT4cBP5/UBDuYbfTcvkLxxEZgQb7
+	 4upQMIrXanY/uKMtG518cGnnpYXd1+3EkJJFzC5hLNVCkUR0Fwcrq9ZJQIBaSI7aqf
+	 J1AHBJAx3dz3Q==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZpgRB2Ywkz4x21;
+	Fri,  2 May 2025 16:06:30 +1000 (AEST)
+Date: Fri, 2 May 2025 16:06:12 +1000
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Corey Minyard <corey@minyard.net>
+Cc: Corey Minyard <cminyard@mvista.com>, Ingo Molnar <mingo@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>, Thomas Gleixner
+ <tglx@linutronix.de>
+Subject: linux-next: manual merge of the ipmi tree with Linus' tree
+Message-ID: <20250502160521.202cdc0e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/2] uio_hv_generic: Fix ring buffer sysfs creation
- path
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250424053524.1631-1-namjain@linux.microsoft.com>
- <2025042501-accuracy-uncombed-cb99@gregkh>
- <752c5b1c-ef67-4644-95d4-712cdba6ad2b@linux.microsoft.com>
- <2025050154-skyward-snagged-973d@gregkh>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <2025050154-skyward-snagged-973d@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/WHfAzOgnRTWsbPSKsM0AKP+";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/WHfAzOgnRTWsbPSKsM0AKP+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 5/1/2025 9:35 PM, Greg Kroah-Hartman wrote:
-> On Mon, Apr 28, 2025 at 02:37:22PM +0530, Naman Jain wrote:
->>
->>
->> On 4/25/2025 7:30 PM, Greg Kroah-Hartman wrote:
->>> On Thu, Apr 24, 2025 at 11:05:22AM +0530, Naman Jain wrote:
->>>> Hi,
->>>> This patch series aims to address the sysfs creation issue for the ring
->>>> buffer by reorganizing the code. Additionally, it updates the ring sysfs
->>>> size to accurately reflect the actual ring buffer size, rather than a
->>>> fixed static value.
->>>>
->>>> PFB change logs:
->>>>
->>>> Changes since v5:
->>>> https://lore.kernel.org/all/20250415164452.170239-1-namjain@linux.microsoft.com/
->>>> * Added Reviewed-By tags from Dexuan. Also, addressed minor comments in
->>>>     commit msg of both patches.
->>>> * Missed to remove check for "primary_channel->device_obj->channels_kset" in
->>>>     hv_create_ring_sysfs in earlier patch, as suggested by Michael. Did it
->>>>     now.
->>>> * Changed type for declaring bin_attrs due to changes introduced by
->>>>     commit 9bec944506fa ("sysfs: constify attribute_group::bin_attrs") which
->>>>     merged recently. Did not use bin_attrs_new since another change is in
->>>>     the queue to change usage of bin_attrs_new to bin_attrs
->>>>     (sysfs: finalize the constification of 'struct bin_attribute').
->>>
->>> Please fix up to apply cleanly without build warnings:
->>>
->>> drivers/hv/vmbus_drv.c:1893:15: error: initializing 'struct bin_attribute **' with an expression of type 'const struct bin_attribute *const[2]' discards qualifiers in nested pointer types [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
->>>    1893 |         .bin_attrs = vmbus_chan_bin_attrs,
->>>         |                      ^~~~~~~~~~~~~~~~~~~~
->>> 1 error generated.
->>
->> Hi Greg,
->> I tried reproducing this error but could not see it. Should I rebase the
->> change to some other tree or use some specific config option, gcc version,
->> compilation flag etc.?
->>
->> I tried the following:
->> * Rebased to latest linux-next tip with below base commit:
->> 393d0c54cae31317deaa9043320c5fd9454deabc
->> * Regular compilation with gcc: make -j8
->> * extra flags:
->>    make -j8  EXTRA_CFLAGS="-Wall -O2"
->>    make -j8 EXTRA_CFLAGS="-Wincompatible-pointer-types-discards-qualifiers
->> -Werror"
->> * Tried gcc 11.4, 13.3
->> * Tried clang/LLVM with version 18.1.3 : make LLVM=1
-> 
-> I tried this against my char-misc-linus branch (which is pretty much
-> just 6.15.0-rc4 plus some iio patches), and it fails with that error
-> above.
-> 
->> BTW I had to edit the type for bin_attrs as this change got merged recently:
->> 9bec944506fa ("sysfs: constify attribute_group::bin_attrs")
->>
->> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
->> index 576b8b3c60af..f418aae4f113 100644
->> --- a/include/linux/sysfs.h
->> +++ b/include/linux/sysfs.h
->> @@ -107,7 +107,7 @@ struct attribute_group {
->>                                              int);
->>          struct attribute        **attrs;
->>          union {
->> -               struct bin_attribute            **bin_attrs;
->> +               const struct bin_attribute      *const *bin_attrs;
->>                  const struct bin_attribute      *const *bin_attrs_new;
->>          };
->>   };
-> 
-> That commit is not in my char-misc branches, that's coming from
-> somewhere else.
-> 
-> thanks,
-> 
-> greg k-h
+Today's linux-next merge of the ipmi tree got conflicts in:
 
-Hi Greg,
+  drivers/char/ipmi/ipmi_msghandler.c
+  drivers/char/ipmi/ipmi_ssif.c
 
-I can send a patch based on char-misc/6.15.0-rc4 which does not have 
-this patch, but I am worried that it will cause compilation issues when 
-your branch is merged with linux-next since this change is already there 
-in linux-next. Do you want me to proceed with sending a patch on 6.15.0-rc4?
+between commit:
 
-Here are more details of that patch:
+  8fa7292fee5c ("treewide: Switch/rename to timer_delete[_sync]()")
 
-"""
-sysfs: constify attribute_group::bin_attrs
-All users of this field have been migrated to bin_attrs_new.
-It can now be constified.
+from Linus' tree and commits:
 
-Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
-Link: 
-https://lore.kernel.org/r/20250313-sysfs-const-bin_attr-final-v2-2-96284e1e88ce@weissschuh.net
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  7b1ee7900db5 ("ipmi:msghandler: Move timer handling into a work queue")
+  55c5befa949a ("ipmi:ssif: Fix a shutdown race")
 
-"""
+from the ipmi tree.
 
-Regards,
-Naman
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/char/ipmi/ipmi_msghandler.c
+index 3ba9d7e9a6c7,ece6aa95fbb5..000000000000
+--- a/drivers/char/ipmi/ipmi_msghandler.c
++++ b/drivers/char/ipmi/ipmi_msghandler.c
+@@@ -5538,7 -5577,8 +5577,8 @@@ static void __exit cleanup_ipmi(void
+  		 * here.
+  		 */
+  		atomic_set(&stop_operation, 1);
+ -		del_timer_sync(&ipmi_timer);
+ +		timer_delete_sync(&ipmi_timer);
++ 		cancel_work_sync(&ipmi_timer_work);
+ =20
+  		initialized =3D false;
+ =20
+diff --cc drivers/char/ipmi/ipmi_ssif.c
+index 0b45b07dec22,b016fabaac68..000000000000
+--- a/drivers/char/ipmi/ipmi_ssif.c
++++ b/drivers/char/ipmi/ipmi_ssif.c
+@@@ -1268,12 -1266,10 +1266,10 @@@ static void shutdown_ssif(void *send_in
+  		schedule_timeout(1);
+ =20
+  	ssif_info->stopping =3D true;
+ -	del_timer_sync(&ssif_info->watch_timer);
+ -	del_timer_sync(&ssif_info->retry_timer);
+ +	timer_delete_sync(&ssif_info->watch_timer);
+ +	timer_delete_sync(&ssif_info->retry_timer);
+- 	if (ssif_info->thread) {
+- 		complete(&ssif_info->wake_thread);
++ 	if (ssif_info->thread)
+  		kthread_stop(ssif_info->thread);
+- 	}
+  }
+ =20
+  static void ssif_remove(struct i2c_client *client)
+
+--Sig_/WHfAzOgnRTWsbPSKsM0AKP+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmgUYNQACgkQAVBC80lX
+0Gz89Qf+JYwPbGgX9g4ASo9NgnVs9jnKl0lknyUf1WBps8PAVFkiVDyi6lrOZt8b
+B8D8XTq4CZyiiWoxPC6g77Ay3dQ5TfKtX7S9U+WxGUSdVo0QVYsATbN177Ir/0y6
+YXcYCwZ8DxDalyob0l0YZhFG9nLWUZj6C7YCuvF5ABMUCxBS+HWv8sHzHCkhD7BI
+Eb14WlHU3pf8j1hbErWgvPPrX8pKSEOKETzyUv5cEk6dXBARsppAmGa784ZYmC7C
+xSleUMEr0tBSzdcyhN0qAdJUNYdVdtV17IoXH23t3uNaWJkYHvpAhyV9yCF5xSda
+W+vFlWwGkHrFX50KFKptHzOwpQq0rQ==
+=Fxdt
+-----END PGP SIGNATURE-----
+
+--Sig_/WHfAzOgnRTWsbPSKsM0AKP+--
