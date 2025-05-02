@@ -1,93 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA1D61F426C;
-	Fri,  2 May 2025 08:27:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDEB19D891;
+	Fri,  2 May 2025 08:30:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746174423; cv=none; b=pvIlqlgWcweASvicizV2Mpof9vyOuG9DPb+1xyt2a8DiZNyaVy4Rd8xzb4cvg49RB0uazCjbHSknT5bT7xlQiauDr44EtOUVxIZYV3X/dpaMsonhqSUV1pFa3UmWIe7GVZGUlUMarThOQvGpvbfbO+0uTUQvlL10Ex5M28UwIzo=
+	t=1746174623; cv=none; b=KZBlj1XRBYAKyhRy/UsblUD+hbUp/l27NPZEvgK8I0in3verkqk9BRxL0PsNtWGMx+P7R7gAUSvMwSzL9qvxH/NE3zyKGe136hlgeTE0MbRK5o1yz0AU62eAdPiHF+if8qjxsJXyDJifkuZqc2EJy/qgy79c+rPfAzIbUD7R9jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746174423; c=relaxed/simple;
-	bh=F83/aGQLPpi9JYaClKC8Nzfz8FWScdHIxxTOqvFD3Lc=;
+	s=arc-20240116; t=1746174623; c=relaxed/simple;
+	bh=XJ/fOLSZPcDhzbn7SBomjY3ra1ercNwGTwdTApCpr4M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NR583Y+CGA9pBRUV9p/Lz14vG0ExnyOkrc+5sVXCm1TGhZ0IWWqBjmFw8CnxT4HOnMleWrXMvbO9MSIlFgx8zYmc8j8GiHQStkTsCfRfwTvUGKkOa1+wp842ps8y1ytu0fHqqiCdz1ulMKiwrLsjoPWHs4oZes8mczUG+r/5nhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0k8s4JZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=brY3400eAxSuk/zowbNfnpHI3c9CVRv2qjSxRPEMq4fTPbLU6RsYvl+a5++wwLNj+WdQvAl4VxiKFs1pF8meCC1zsjD49yNmZdXtCjaNlxyiLCDmajVAE4wk35YjzCpRIZ9qNlzUCO9AOw1ziIDqX7aEfzUjlp6h7kmETpo2UJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsCcumy8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0k8s4JZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2293AC4CEE4;
-	Fri,  2 May 2025 08:26:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsCcumy8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88BD6C4CEEE;
+	Fri,  2 May 2025 08:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746174423;
-	bh=F83/aGQLPpi9JYaClKC8Nzfz8FWScdHIxxTOqvFD3Lc=;
+	s=k20201202; t=1746174621;
+	bh=XJ/fOLSZPcDhzbn7SBomjY3ra1ercNwGTwdTApCpr4M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R0k8s4JZFLJc79spjk3tbFhlExbLH/Pqqni3nBLdEJ5QEDhPKGMcBTogfFpvL223a
-	 KNsUpr4VI1iYpnUZo+9XaNBjs5uaIPxMaEbPfXdpD20odD1UbpQQoBgLWTnjJTskOH
-	 PV5QhtwXDlzyCrn4lCY6XTOjUctfJrnuDsj2fp9v7SUkO6a5Dk9Mr5k+YwF8kxNUg+
-	 32Xy+rtLknUND/cuBzcwgSHzxCoTypsotVgRr7kaFpaSKMi+kuop5rxEyowhtcr+p+
-	 evHrNWFNIQSLR5rW6Z65UrAx5PA2pNHCckEM63xHRqUHpp5obYbTbvxxLkYoCUeXYF
-	 zmqiS1u2S1zVA==
-Date: Fri, 2 May 2025 09:26:56 +0100
-From: Lee Jones <lee@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	andriy.shevchenko@intel.com,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v7 02/11] mfd: Add max7360 support
-Message-ID: <20250502082656.GF3865826@google.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-2-4e0608d0a7ff@bootlin.com>
- <20250501125943.GN1567507@google.com>
- <D9LI2Y0J2KZY.15PIU2T55GIH0@bootlin.com>
+	b=CsCcumy8yvL+I8c/Q+4FCgid3SiZumzGsXHXwXMdYu5Pb//5a+dPYvjCYyRD0S7xR
+	 8OsobySDrVsqsSztegV67tmw+EzZy4UOm+uiwwLSOqz/aq7BngmEF9jCSpd5akyoGf
+	 jMaLyfr2RqTyi2jyDa2H7KelSZY5d/1QPDkg1pXrmQa9gQSSLPwb/gIIrSfO435Of0
+	 0gqTeWxKfMi1jh6+Z8xUkVFzHKvRcUa/gyVx5VK12AAAxHeKAUA7qDytqmewnPFkw4
+	 90zUASti8CLXJfv7JW3XsRHfW5jf8FmECPis1Q3MnBN6EE6TFStJAALK1mkZJmFN08
+	 ftBTm+oNzkoJA==
+Date: Fri, 2 May 2025 10:30:11 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
+	linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
+	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+	acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
+	peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, wei.liu@kernel.org,
+	ajay.kaher@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
+	tony.luck@intel.com, pbonzini@redhat.com, vkuznets@redhat.com,
+	seanjc@google.com, luto@kernel.org, boris.ostrovsky@oracle.com,
+	kys@microsoft.com, haiyangz@microsoft.com, decui@microsoft.com,
+	dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
+Subject: Re: [PATCH v4 10/15] x86/xen/msr: Remove calling
+ native_{read,write}_msr{,_safe}() in pmu_msr_{read,write}()
+Message-ID: <aBSCk5phiMYO_B6T@gmail.com>
+References: <20250427092027.1598740-1-xin@zytor.com>
+ <20250427092027.1598740-11-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <D9LI2Y0J2KZY.15PIU2T55GIH0@bootlin.com>
+In-Reply-To: <20250427092027.1598740-11-xin@zytor.com>
 
-On Fri, 02 May 2025, Mathieu Dubois-Briand wrote:
 
-> On Thu May 1, 2025 at 2:59 PM CEST, Lee Jones wrote:
-> > On Mon, 28 Apr 2025, mathieu.dubois-briand@bootlin.com wrote:
-> >
-> >> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
-> >> +static int max7360_probe(struct i2c_client *client)
-> >> +{
-> >> +	struct device *dev = &client->dev;
-> >> +	struct regmap *regmap;
-> >> +	int ret;
-> >> +
-> >> +	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
-> >> +	if (IS_ERR(regmap))
-> >> +		return dev_err_probe(dev, PTR_ERR(regmap), "Failed to initialise regmap\n");
-> >
-> > dev_err_ptr_probe()
-> >
+* Xin Li (Intel) <xin@zytor.com> wrote:
+
+> hpa found that pmu_msr_write() is actually a completely pointless
+> function [1]: all it does is shuffle some arguments, then calls
+> pmu_msr_chk_emulated() and if it returns true AND the emulated flag
+> is clear then does *exactly the same thing* that the calling code
+> would have done if pmu_msr_write() itself had returned true.  And
+> pmu_msr_read() does the equivalent stupidity.
 > 
-> I believe dev_err_ptr_probe() is meant to be used for the opposite case,
-> where the variable holding the error is an int but the function has to
-> return a pointer. Here regmap is a pointer but we have to return an int,
-> so I believe neither dev_err_ptr_probe() or any similar macro can really
-> help us.
+> Remove the calls to native_{read,write}_msr{,_safe}() within
+> pmu_msr_{read,write}().  Instead reuse the existing calling code
+> that decides whether to call native_{read,write}_msr{,_safe}() based
+> on the return value from pmu_msr_{read,write}().  Consequently,
+> eliminate the need to pass an error pointer to pmu_msr_{read,write}().
+> 
+> While at it, refactor pmu_msr_write() to take the MSR value as a u64
+> argument, replacing the current dual u32 arguments, because the dual
+> u32 arguments were only used to call native_write_msr{,_safe}(), which
+> has now been removed.
+> 
+> [1]: https://lore.kernel.org/lkml/0ec48b84-d158-47c6-b14c-3563fd14bcc4@zytor.com/
+> 
+> Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Sign-off-by: Xin Li (Intel) <xin@zytor.com>
 
-Ah yes, you're right.  Disregard.
+'Sign-off-by' is not a proper SOB tag, I've changed it to Signed-off-by.
 
--- 
-Lee Jones [李琼斯]
+Thanks,
+
+	Ingo
