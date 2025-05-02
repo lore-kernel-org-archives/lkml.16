@@ -1,157 +1,137 @@
-Received: from mx4.wp.pl (mx4.wp.pl [212.77.101.12])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3421B1F2BAD
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 19:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.77.101.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A251F2BAD;
+	Fri,  2 May 2025 19:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746215052; cv=none; b=h9UdwS3sKzHVIH2oAj/KnZyYOGcQjiBMJ/3bNC/dcBuJozXPFYOMYhNPLcrnRwmYvSz4aoZjG0QSHLvz9VQLSkDp7d667dDV6V+sP3NmxdLKMr//B4JF/adqYX7gdnWJq3HKeJMoFqDL2x1IdAgJmJeY8V/4GeRBovky/F7PWW8=
+	t=1746215070; cv=none; b=rEVsmKRRRCQBQHU8Z9j2my0/cSZfcdfmxXDEvIxso0ujbzaMW8iRD6tKWCkcw+2sv1jYswVEqcru8lDYpbBmTatboVnQTrwvGT5hAOen0KvsjTMXR/f/MDa/Lho1qA8PrGlLF+POh7P5kxe5wDXqKzOnspfK3wrQKXVKdU1qzWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746215052; c=relaxed/simple;
-	bh=u7M8GWj4IaX6mHqj2i5wR0WVsdjlkUXEkduLTA39lkM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=srGMgqALQoT3qNaOCho5C78VbFb8fageoTzDSz9IKjs1yTzGrRkfV0WAtEf2TYtowo+lG+n3KCT4SVSPG7y48eOipGBTzpn8NBDBH/KSN6Uh8b7jRBgVmh/I+Ah/Ba5A4d1W9SUejjsj3w4+HF2wrgQmuk/XFo+H36euyvJSFXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl; spf=pass smtp.mailfrom=wp.pl; dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b=N/8AKUe6; arc=none smtp.client-ip=212.77.101.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=wp.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wp.pl
+	s=arc-20240116; t=1746215070; c=relaxed/simple;
+	bh=n+L5wdWKfMSnWgjpxdKD9mYdVp2ikqZ5Yl7stiWg6xg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=B+HZFWySXfWWe/SNufWuTFI4yGlbqcP0Ej7eN53shWf6ArYMKybUAO540HZsk+rNtYAKcG23TYhp/QbM0LwcTO60KRT3VAW+0kAs2H/KbaRtdt3fyD2BU+7jjVbsd9ArwNQxoJuSNUPGr/QwPhr48Pyd8cTG6O1sTrZNOS1OxA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=hXlnQTzu; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wp.pl header.i=@wp.pl header.b="N/8AKUe6"
-Received: (wp-smtpd smtp.wp.pl 515 invoked from network); 2 May 2025 21:44:07 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=20241105;
-          t=1746215047; bh=M8iujvxQGOpd8snMonMxwTWSoEQvZ8kYbB55eRI/Mo0=;
-          h=From:To:Cc:Subject;
-          b=N/8AKUe6Injy9Ohy5Wkyyu/L+NPlcfznrBAkLB8+T9oV+0O+5Vn9y6Nap6W+piWxk
-           fXoabanY3CIrc+3IHpmAQUNZOMnT1mjFqdR+rorFGs9zaJ8skIsKPs3RS73sFr/vZq
-           /Gys/YVPdza1NRBe/68jItaqRypxg6Gc3Nm2iThM9aRpxGLmdQ42yNioZbgRgLKXbF
-           Cbh8Hu9ta/9V8GXXir2lUYnzM6Q/S0czV3LOJ35dDLqXMwAw110wugXnjCImLOtmZo
-           hUu3+jys4dwBeyevSYmq0Ov9j2WxWSLjrZR937ijgSFSNjGfJz/6/ri8Q1K6VSZSWp
-           XZT93LH+6cXyQ==
-Received: from 83.5.150.21.ipv4.supernova.orange.pl (HELO laptop-olek.home) (olek2@wp.pl@[83.5.150.21])
-          (envelope-sender <olek2@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <johannes.berg@intel.com>; 2 May 2025 21:44:07 +0200
-From: Aleksander Jan Bajkowski <olek2@wp.pl>
-To: johannes.berg@intel.com,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Aleksander Jan Bajkowski <olek2@wp.pl>
-Subject: [PATCH iw,v2] iw: fix EHT capabilities on Big Endian platforms
-Date: Fri,  2 May 2025 21:44:05 +0200
-Message-Id: <20250502194405.3489240-1-olek2@wp.pl>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hXlnQTzu"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542JhQjh2150495
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 2 May 2025 12:43:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542JhQjh2150495
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025042001; t=1746215008;
+	bh=ZqLXxzNJv0IHqSG9SsLfGERgXXTrSiEhUW5FOYYelTg=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=hXlnQTzulXtKiJv1Lq04GAWzGF/0q4TfVKQJTch09TMCik6jf/8YdVqA77Ps8sd25
+	 QX5VLVzqgNsl8Q7tJ/7P4VMTaU4KPlYk/zktKDIoM1I9Fyau9p1HZQZcY2pbEW/q+I
+	 Hrxb+YOhhwHl49hLEBYFb9Y+caY17+IRSFyp2ZARE6p8jGafT8Gm2CCQb367j+1uaK
+	 o2hyqIBGWTUzPdeWKhV0Hy8YOmYk5Zqio4UbkvzM/zuTwf7JNTt3fwtQcqarSo1jrX
+	 +pBune/c9bJzdacTU00rRG5QZkwPze2HEkF2Vy037KbBFp54+9MCfbfhNp6N9c87Qu
+	 Qq3ksCCBwRmaA==
+Date: Fri, 02 May 2025 12:43:23 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Xin Li <xin@zytor.com>, Sean Christopherson <seanjc@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+CC: x86@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        pbonzini@redhat.com, ardb@kernel.org, kees@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, gregkh@linuxfoundation.org,
+        jpoimboe@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        linux-efi@vger.kernel.org, samitolvanen@google.com, ojeda@kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_00/13=5D_objtool=3A_Detect_and_wa?=
+ =?US-ASCII?Q?rn_about_indirect_calls_in_=5F=5Fnocfi_functions?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <9b112e40-d281-422c-b862-3c073b3c7239@zytor.com>
+References: <20250430110734.392235199@infradead.org> <8B86A3AE-A296-438C-A7A7-F844C66D0198@zytor.com> <20250430190600.GQ4439@noisy.programming.kicks-ass.net> <20250501103038.GB4356@noisy.programming.kicks-ass.net> <20250501153844.GD4356@noisy.programming.kicks-ass.net> <aBO9uoLnxCSD0UwT@google.com> <9b112e40-d281-422c-b862-3c073b3c7239@zytor.com>
+Message-ID: <80783990-FEF8-4F40-810E-5B89D9801E84@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                                      
-X-WP-MailID: 2b1ff6474733ec445ba36c34ed366773
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 000000A [EcME]                               
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-IE fields are encoded in Little Endian and are not correctly
-printed on Big Endian platforms.
+On May 1, 2025 10:48:42 PM PDT, Xin Li <xin@zytor=2Ecom> wrote:
+>On 5/1/2025 11:30 AM, Sean Christopherson wrote:
+>>  From c50fb5a8a46058bbcfdcac0a100c2aa0f7f68f1c Mon Sep 17 00:00:00 2001
+>> From: Sean Christopherson<seanjc@google=2Ecom>
+>> Date: Thu, 1 May 2025 11:10:39 -0700
+>> Subject: [PATCH 2/2] x86/fred: KVM: VMX: Always use FRED for IRQ+NMI wh=
+en
+>>   CONFIG_X86_FRED=3Dy
+>>=20
+>> Now that FRED provides C-code entry points for handling IRQ and NMI exi=
+ts,
+>> use the FRED infrastructure for forwarding all such events even if FRED
+>> isn't supported in hardware=2E  Avoiding the non-FRED assembly trampoli=
+nes
+>> into the IDT handlers for IRQs eliminates the associated non-CFI indire=
+ct
+>> call (KVM performs a CALL by doing a lookup on the IDT using the IRQ
+>> vector)=2E
+>>=20
+>> Force FRED for 64-bit kernels if KVM_INTEL is enabled, as the benefits =
+of
+>> eliminating the IRQ trampoline usage far outwieghts the code overhead f=
+or
+>> FRED=2E
+>>=20
+>> Suggested-by: Peter Zijlstra<peterz@infradead=2Eorg>
+>> Signed-off-by: Sean Christopherson<seanjc@google=2Ecom>
+>> ---
+>>   arch/x86/kvm/Kconfig   | 1 +
+>>   arch/x86/kvm/vmx/vmx=2Ec | 4 ++--
+>>   2 files changed, 3 insertions(+), 2 deletions(-)
+>>=20
+>> diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
+>> index 2eeffcec5382=2E=2E712a2ff28ce4 100644
+>> --- a/arch/x86/kvm/Kconfig
+>> +++ b/arch/x86/kvm/Kconfig
+>> @@ -95,6 +95,7 @@ config KVM_SW_PROTECTED_VM
+>>   config KVM_INTEL
+>>   	tristate "KVM for Intel (and compatible) processors support"
+>>   	depends on KVM && IA32_FEAT_CTL
+>> +	select X86_FRED if X86_64
+>
+>I LOVE this change, but not sure if everyone is happy with it=2E
+>
+>>   	select KVM_GENERIC_PRIVATE_MEM if INTEL_TDX_HOST
+>>   	select KVM_GENERIC_MEMORY_ATTRIBUTES if INTEL_TDX_HOST
+>>   	help
+>> diff --git a/arch/x86/kvm/vmx/vmx=2Ec b/arch/x86/kvm/vmx/vmx=2Ec
+>> index ef2d7208dd20=2E=2E2ea89985107d 100644
+>> --- a/arch/x86/kvm/vmx/vmx=2Ec
+>> +++ b/arch/x86/kvm/vmx/vmx=2Ec
+>> @@ -6995,7 +6995,7 @@ static void handle_external_interrupt_irqoff(stru=
+ct kvm_vcpu *vcpu,
+>>   		return;
+>>     	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+>> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
+>> +	if (IS_ENABLED(CONFIG_X86_FRED))
+>
+>"if (IS_ENABLED(CONFIG_X86_64))"?
+>
+>>   		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
+>>   	else
+>>   		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + ve=
+ctor));
+>> @@ -7268,7 +7268,7 @@ noinstr void vmx_handle_nmi(struct kvm_vcpu *vcpu=
+)
+>>   		return;
+>>     	kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+>> -	if (cpu_feature_enabled(X86_FEATURE_FRED))
+>> +	if (IS_ENABLED(CONFIG_X86_FRED))
+>
+>Ditto=2E
 
-Fixes: 5a71b722270c ("iw: Print local EHT capabilities")
-Signed-off-by: Aleksander Jan Bajkowski <olek2@wp.pl>
----
- util.c | 40 +++++++++++++++++++++++++---------------
- 1 file changed, 25 insertions(+), 15 deletions(-)
-
-diff --git a/util.c b/util.c
-index c6d5974..9403528 100644
---- a/util.c
-+++ b/util.c
-@@ -1538,22 +1538,31 @@ static void __print_eht_capa(int band,
- 	unsigned int i;
- 	const char *pre = indent ? "\t" : "";
- 
--	#define PRINT_EHT_CAP(_var, _idx, _bit, _str) \
-+	#define PRINT_EHT_MAC_CAP(_idx, _bit, _str) \
- 	do { \
--		if (_var[_idx] & BIT(_bit)) \
-+		if (mac_cap[_idx] & BIT(_bit)) \
- 			printf("%s\t\t\t" _str "\n", pre); \
- 	} while (0)
- 
--	#define PRINT_EHT_CAP_MASK(_var, _idx, _shift, _mask, _str) \
-+	#define PRINT_EHT_MAC_CAP_MASK(_idx, _shift, _mask, _str) \
- 	do { \
--		if ((_var[_idx] >> _shift) & _mask) \
--			printf("%s\t\t\t" _str ": %d\n", pre, (_var[_idx] >> _shift) & _mask); \
-+		if ((mac_cap[_idx] >> _shift) & _mask) \
-+			printf("%s\t\t\t" _str ": %d\n", pre, \
-+			       (mac_cap[_idx] >> _shift) & _mask); \
-+	} while (0)
-+
-+	#define PRINT_EHT_PHY_CAP(_idx, _bit, _str) \
-+	do { \
-+		if (le32toh(phy_cap[_idx]) & BIT(_bit)) \
-+			printf("%s\t\t\t" _str "\n", pre); \
- 	} while (0)
- 
--	#define PRINT_EHT_MAC_CAP(...) PRINT_EHT_CAP(mac_cap, __VA_ARGS__)
--	#define PRINT_EHT_MAC_CAP_MASK(...) PRINT_EHT_CAP_MASK(mac_cap, __VA_ARGS__)
--	#define PRINT_EHT_PHY_CAP(...) PRINT_EHT_CAP(phy_cap, __VA_ARGS__)
--	#define PRINT_EHT_PHY_CAP_MASK(...) PRINT_EHT_CAP_MASK(phy_cap, __VA_ARGS__)
-+	#define PRINT_EHT_PHY_CAP_MASK(_idx, _shift, _mask, _str) \
-+	do { \
-+		if ((le32toh(phy_cap[_idx]) >> _shift) & _mask) \
-+			printf("%s\t\t\t" _str ": %d\n", pre, \
-+			       (le32toh(phy_cap[_idx]) >> _shift) & _mask); \
-+	} while (0)
- 
- 	printf("%s\t\tEHT MAC Capabilities (0x", pre);
- 	for (i = 0; i < 2; i++)
-@@ -1627,7 +1636,7 @@ static void __print_eht_capa(int band,
- 	PRINT_EHT_PHY_CAP(2, 1, "Rx 4096-QAM In Wider Bandwidth DL OFDMA Supported");
- 
- 	if (!from_ap &&
--	    !(he_phy_cap[0] & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8))) {
-+	    !(le16toh(he_phy_cap[0]) & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8))) {
- 		static const char * const mcs[] = { "0-7", "8-9", "10-11", "12-13" };
- 
- 		printf("%s\t\tEHT-MCS Map (20 Mhz Non-AP STA) (0x", pre);
-@@ -1649,8 +1658,9 @@ static void __print_eht_capa(int band,
- 		 * If no Channel Width bits are set, but we are an AP, we use
- 		 * this MCS logic also.
- 		 */
--		if (he_phy_cap[0] & ((BIT(1) | BIT(2)) << 8) ||
--		    (from_ap && !(he_phy_cap[0] & ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8)))) {
-+		if (le16toh(he_phy_cap[0]) & ((BIT(1) | BIT(2)) << 8) ||
-+		    (from_ap && !(le16toh(he_phy_cap[0]) &
-+		    ((BIT(1) | BIT(2) | BIT(3) | BIT(4)) << 8)))) {
- 			printf("%s\t\tEHT-MCS Map (BW <= 80) (0x", pre);
- 			for (i = 0; i < 3; i++)
- 				printf("%02x", ((__u8 *)mcs_set)[i]);
-@@ -1665,7 +1675,7 @@ static void __print_eht_capa(int band,
- 		}
- 		mcs_set += 3;
- 
--		if (he_phy_cap[0] & (BIT(3) << 8)) {
-+		if (le16toh(he_phy_cap[0]) & (BIT(3) << 8)) {
- 			printf("%s\t\tEHT-MCS Map (BW = 160) (0x", pre);
- 			for (i = 0; i < 3; i++)
- 				printf("%02x", ((__u8 *)mcs_set)[i]);
-@@ -1680,7 +1690,7 @@ static void __print_eht_capa(int band,
- 		}
- 
- 		mcs_set += 3;
--		if (band == NL80211_BAND_6GHZ && (phy_cap[0] & BIT(1))) {
-+		if (band == NL80211_BAND_6GHZ && (le32toh(phy_cap[0]) & BIT(1))) {
- 			printf("%s\t\tEHT-MCS Map (BW = 320) (0x", pre);
- 			for (i = 0; i < 3; i++)
- 				printf("%02x", ((__u8 *)mcs_set)[i]);
-@@ -1695,7 +1705,7 @@ static void __print_eht_capa(int band,
- 		}
- 	}
- 
--	if (ppet && ppet_len && (phy_cap[1] & BIT(11))) {
-+	if (ppet && ppet_len && (le32toh(phy_cap[1]) & BIT(11))) {
- 		printf("%s\t\tEHT PPE Thresholds ", pre);
- 		for (i = 0; i < ppet_len; i++)
- 			if (ppet[i])
--- 
-2.39.5
-
+I don't think anyone will have a problem with compiling it in=2E=2E=2E it =
+is such a small amount of code=2E
