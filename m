@@ -1,94 +1,173 @@
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0F4A14883F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746160629; cv=none; b=iezeKI2oVyAuDaxzYatSG01UirAFg1FBU6Kf8cdReckfvRuA1GUOoy3CgAqLoxDwCIEms6JGn5avyw/pzgtAnwgY6USCQDcUtfDwfcf2PP+maijNXEXp3YBpkRNQPGxZaqd6liCH5Zym3tYytFI4C0URMUR6JdO0q1D4z/h+fhE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746160629; c=relaxed/simple;
-	bh=LLY8xpyYLsXiObaIvpoWXNKHRJPV8o6/VdS8c+GqqEM=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hSF6heSATKxXUKCjw1jkuEaTRsO3uXp3FpKIIG+0VGVJGF0d6n9aTnhaNEtL9AcIZAdpTdtF25fBg5P/Y0kVRRNHdZ7utawBNF23DSKihKmgSxfwq1PkoWtTx3PRBdON+dp3XASJFu5J8e/ziUMrG03BQEKLpCXSHPF9gk7X1wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-232.elisa-laajakaista.fi [88.113.26.232])
-	by fgw22.mail.saunalahti.fi (Halon) with ESMTP
-	id ee27fbcb-270e-11f0-9bc3-005056bdf889;
-	Fri, 02 May 2025 07:35:53 +0300 (EEST)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 2 May 2025 07:35:52 +0300
-To: Lee Jones <lee@kernel.org>
-Cc: Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Peter Tyser <ptyser@xes-inc.com>,
-	Purva Yeshi <purvayeshi550@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH] mfd: lpc_ich: Fix ARRAY_SIZE usage for
- apl_gpio_resources
-Message-ID: <aBRLqGDpV8Y63JaJ@surfacebook.localdomain>
-References: <20250322131841.31711-1-purvayeshi550@gmail.com>
- <174377238828.330559.7652024137546009839.b4-ty@kernel.org>
- <aAqKcn25bkrjIiLF@black.fi.intel.com>
- <20250501120725.GJ1567507@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F1DD18A92D;
+	Fri,  2 May 2025 04:37:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746160678; cv=fail; b=LMyBLE6iPFLDnB0FESC+o/+8GMhMzQaZ4L4/ebPnmejMtsJINh9fsbYhhldyEWtvczEtOxRqy8Fkttm9yAHlevOM36ecw5QUKlB7Ws3GJceXaLty8YTIVm4o4bwYs4zUWh0m5UiXzvNAmajW3u1NFaflQF8KbBucs8a8ecE+Zgw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746160678; c=relaxed/simple;
+	bh=2S/JnY0zdFaqgRQeOpX2iMZA6XU8Vas+H/gtyMMNnM8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=krHUESpLARHjlO25TAJUJLF1pUpOkYp0qTjTBkRpGuVzjrnB+gR/wDsnJDwf0GXMDiGx/whJAvQ6ygPj8HMeNTsLrYY30B+jYCzMCiokPz0ROd9b7R333A1kAsJ0ge4zUj4kszjYYcW7Z+l1siM2+grOn41+szxEfXF57hOfc0k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=i8z8HMVZ; arc=fail smtp.client-ip=40.107.244.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="i8z8HMVZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=VGHEfMJdBv1bjuSqDzA0JwXSfqVWrmCy8CsXOw1It78cpiIgY9QGlK00xzO3z3/puaOcmBkV950y9vTiVFYAyKv/VvxLijBjyCfpJfAEwdm60XA9T7aY4/wOvI5bXLFeEj4nIQALs3xbzrSmzC+DS/wYIkbji++xcuqWuwCPg5n5ZMlfD5hMVmZwuM0/3nz+QdJBakNf/Whx/mcgc72MuOA2SUCOfe5tFoePx1dxm14pxXKSOK9UW3XcxZVZ5wv+qDsPXvImq6EdGYpZu7tKn2ywsuXYK3xUOJ6k6aVbHpFCcBldWUEpM9gGXjN05ZZA9rDVeAYNXsV/p055obvbUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/Zbxlmj5IL0OzsHqf3icJRMzDsH6f12TkTWuQmX00wc=;
+ b=b3lpsG+luKy3ZDeMVYjcZVH0wYIdOUKvXNqL0ZVbN5qEindMeCm2DfkwAsnhMl2H1syuri1sgmV6QQLDY7klzkaCESW3qEPcTwCRUFEccpTqmvYCMzIqt7g72452TeU3dpanSNKN5GBWVhXkBrrRn6eCtm4nWeHuoZWM+GQRLvRqPkQGqFf/H/9ASGqMwxMki1o73TLXbMaUXThsNiLi6+Sa1ftNW2ic5lLgLC4hwg8M/peM0n03iC1GAyZjqeRM4Qsp3gPYft0ave7UZZBQH+kl9IJ3G3Lo1Z0nWCZW989h1gwHaxZjoL1GMX1I4qefQLqWfxyiyEgTbEjCePz4IQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/Zbxlmj5IL0OzsHqf3icJRMzDsH6f12TkTWuQmX00wc=;
+ b=i8z8HMVZPq2UMVdzXNtWkDHnBELYzq35fFflmkcz2U6CV+G6lrCZmZfCfoK/NzL0cWhw/5UyqrXceiGUR+Q+EwZAFnMG9ARNzJXnZ6qw8LUGo4hdE+LKSPrw0nm14IiK5UFG6CDuSu8N7Iq4vhvNxinKBNRMnTjhk/rcAUMa7lwJbUGPvdfIaSo090ctNe//xSKqRSJyzfpeFvUR65IyCxjV2sJX8unamkltC9vJXhS0IBnPH/6gbNobx8e4o3p/u49p9cyK9w7BpO1w6L54TeRblKTUxvUcKYdCCRWvWZJWggSsWZCr5xON86UhvLUQZ0zzcvpFe2dGy7ZTN+exLw==
+Received: from CH3P220CA0021.NAMP220.PROD.OUTLOOK.COM (2603:10b6:610:1e8::31)
+ by MW6PR12MB7069.namprd12.prod.outlook.com (2603:10b6:303:238::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Fri, 2 May
+ 2025 04:37:52 +0000
+Received: from CH1PEPF0000A345.namprd04.prod.outlook.com
+ (2603:10b6:610:1e8:cafe::33) by CH3P220CA0021.outlook.office365.com
+ (2603:10b6:610:1e8::31) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
+ 2 May 2025 04:37:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ CH1PEPF0000A345.mail.protection.outlook.com (10.167.244.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 04:37:51 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 1 May 2025
+ 21:37:43 -0700
+Received: from robelin-Precision-3660.nvidia.com (10.126.231.35) by
+ rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 1 May 2025 21:37:41 -0700
+From: Robert Lin <robelin@nvidia.com>
+To: <thierry.reding@gmail.com>, <daniel.lezcano@linaro.org>,
+	<jonathanh@nvidia.com>, <tglx@linutronix.de>, <pohsuns@nvidia.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+	<sumitg@nvidia.com>, robelin <robelin@nvidia.com>
+Subject: [PATCH v7 0/3] clocksource: fix Tegra234 SoC Watchdog Timer.
+Date: Fri, 2 May 2025 12:37:24 +0800
+Message-ID: <20250502043727.396896-1-robelin@nvidia.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250501120725.GJ1567507@google.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A345:EE_|MW6PR12MB7069:EE_
+X-MS-Office365-Filtering-Correlation-Id: a54f7ac3-7254-4394-091d-08dd89331986
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|36860700013|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pf613+nigHZBvHpRGBWlKQ7I8g/zUM9nz1Z0JqtMN8Y6O/lZ/HVSfL3iWLC6?=
+ =?us-ascii?Q?hZOddcKj8PbwPbba6Slu3gKs38R2SjdAa14g9oqHFJMIo+R5gP/0Hcf1Oy8j?=
+ =?us-ascii?Q?vWWFInAd0z7ptqlZqtHb8YPCKzYyjXprFO2gab0krOaIAU6cfveczDcJhJ9R?=
+ =?us-ascii?Q?MIJ7ELIvJlXSuHeZnCGxd5vuHDbDfWtQy3G/lzw65USJhyLnYpHM/oVkbLRp?=
+ =?us-ascii?Q?zlJM2szQJct6Oow69uKzYrg/CjFEXVbXbV+JpX1r44LmtHd6bMWa6j4ZQLbK?=
+ =?us-ascii?Q?YW17PUY/b2DnemMcxy1MaBGzYT4KS6wADmOeylYfE2tJ4uV9pLlBNBVpHkpp?=
+ =?us-ascii?Q?VraBe3R/NFRfedCle6+i1Lr2S/SgPJDkjkpLGJiDNuONswKrTvMNrkDO3i39?=
+ =?us-ascii?Q?0FIY6G8M+PFpD4PTKjjh+fky3Xz8SZ8EM5W0G2wGDl8Y/rQBC2OCZfuwA3Lb?=
+ =?us-ascii?Q?oHBuPjQjO5Xe/+HdYkVgYlPsG6TYfZ2a6R6ezKfquALkeuGVIw5rg7+DFGeU?=
+ =?us-ascii?Q?KW4AOo8N/a0x4Z9ij9uWMNT6L5Pgk8Q0t8JYaOVHP+cwZOONleWJpOUt7QVF?=
+ =?us-ascii?Q?Cdbs4sEueQkDyeT+DbhqzOSw/m4mnE8wyWvYZbIdjCAu1uEhaPUW7V1WhtxJ?=
+ =?us-ascii?Q?UnPxWz3CmhHmnl7z+dTqqQjUoZIPH+nGZQ3VLnkuR4JdhX10GlznuYfZAUZU?=
+ =?us-ascii?Q?3L4gHThArBzqEMAhEz00XFhwVL6Av7kG00f/aaWzF3X3EXSgVBWCc8fCjxqP?=
+ =?us-ascii?Q?0gTzynud6o8ieY+B0oXc8g5L7eV1pFZWuzME/OqFcasz2kcpvD3Mrukdh4Yj?=
+ =?us-ascii?Q?9rN+yOYn9ydW5sjRjZcOhlD2UbkmwfrtzRKJkmsYshfcmSiws5BkzaqGQhfO?=
+ =?us-ascii?Q?/5YOj+1JStwNahqTMzq1XEh1STk2WhCcJwa/wE2VdarTVh071eHDORwvZ5Z8?=
+ =?us-ascii?Q?tAgjLfc23+Zt9wKFr8F/rUQyqoBZowqCHHTpTSP0QzpCz4sSM0Pgk7HuoiiR?=
+ =?us-ascii?Q?xWYBwBuA7N9FdFOVV9ExYYFyzhWVTCBjo+B4yKSXtOGDTFMZz4lFxkbFLW1K?=
+ =?us-ascii?Q?LL07ckIsLVz9rokLVgkYmdex5J+aXNvuiWuawF/x8B/bYaxoGJIRpajjqd/Q?=
+ =?us-ascii?Q?k8jy0D98aHIght7GjFL0sHugnHR101Xx8lmitdHL6FKFx2dGiUVbVpqsRpW7?=
+ =?us-ascii?Q?ypJpcPZzl3JHdOSvKN0uG8wL4vTIJ0HOZUqORPnGXgEyH42IdQ2pYM+8SsiK?=
+ =?us-ascii?Q?XKxGyceJ9eSv4LKa7r4AI1YDnkXtBf+XHAspplespwn/kFtpStzh/YPuoqU7?=
+ =?us-ascii?Q?ufO3X5Adt3TyFjDXxOrRn4PNBCuYTvid86ilQHXXsq8eyi3MIfXUCCx1DlSD?=
+ =?us-ascii?Q?0cDSDiXfPKXgoF22YuJNPxSaB1GU4j1R33vhFiqTDKPg98F/JO4dvzDTJkrP?=
+ =?us-ascii?Q?9R8WinB52UIHtagk2c3uSsfDUNPCeiQ6nBgXCNzaztDDsndSTOHOWybKFCt7?=
+ =?us-ascii?Q?rzBxNzJsrpJ4wTvg0vWszgGwS5eH5q0KS9lT?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 04:37:51.9454
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a54f7ac3-7254-4394-091d-08dd89331986
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH1PEPF0000A345.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB7069
 
-Thu, May 01, 2025 at 01:07:25PM +0100, Lee Jones kirjoitti:
-> On Thu, 24 Apr 2025, Andy Shevchenko wrote:
-> > On Fri, Apr 04, 2025 at 02:13:08PM +0100, Lee Jones wrote:
-> > > On Sat, 22 Mar 2025 18:48:41 +0530, Purva Yeshi wrote:
-> > > > Fix warning detected by smatch tool:
-> > > > drivers/mfd/lpc_ich.c:194:34: error: strange non-value function or array
-> > > > drivers/mfd/lpc_ich.c:194:34: error: missing type information
-> > > > drivers/mfd/lpc_ich.c:201:34: error: strange non-value function or array
-> > > > drivers/mfd/lpc_ich.c:201:34: error: missing type information
-> > > > drivers/mfd/lpc_ich.c:208:34: error: strange non-value function or array
-> > > > drivers/mfd/lpc_ich.c:208:34: error: missing type information
-> > > > drivers/mfd/lpc_ich.c:215:34: error: strange non-value function or array
-> > > > drivers/mfd/lpc_ich.c:215:34: error: missing type information
+From: robelin <robelin@nvidia.com>
 
-[...]
+This set of patches includes a fix for watchdog for it may not bark
+due to self-pinging and adds WDIOC_GETTIMELEFT support.
 
-> > > Applied, thanks!
-> > > 
-> > > [1/1] mfd: lpc_ich: Fix ARRAY_SIZE usage for apl_gpio_resources
-> > >       commit: 87e172b0fdd3aa4e3d099884e608dbc70ee3e663
-> > 
-> > Can this be reverted ASAP, please? See below why.
-> > 
-> > There is no problem with the code. The original author of the change
-> > haven't proved otherwise.
-> > 
-> > The change made it much worse to read and maintain. By the way, it actually
-> > _added_ the problem as far as I can see with my small test program.
-> > 
-> > Let's just calculate based on the sizeof(struct foo) taken as 10 for
-> > simplicity and array size as 4x2. The full size of the array is
-> > 4 * 2 * 10 bytes. The size of the entry in outer array will be 2 * 10 bytes.
-> > Now, what ARRAY2D_SIZE do is (4 * 2 * 10 / 10 / (2 * 10 / 10) == 4, and
-> > that's WRONG! This will make a out-of-boundary accesses possible.
-> > 
-> > If smatch can't parse something, it's problem of smatch. No need to "fix"
-> > the working and robust code. The original code even allows (in theory) to have
-> > different amount of resources per entry, however it's quite unlikely to happen.
-> > But at bare minimum it shows the entry taken along with _its_ ARRAY_SIZE()
-> > and not something common over the outer array.
-> 
-> Done.
+--
+V7:
+- Fix formatting
+- Consider overflow and warn if happens
 
-I still see it as commit
-https://web.git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/commit/?h=for-mfd-next&id=c6c07f8ea2cbb0dca0e529f9ed16df71276515a4
+V6:
+- Fix timeleft value addition using unmatched time unit
+- Use u64 type to maintain the microseconds value in case of overflow
+
+V5:
+- Print warning message if get unexpected value from the register
+
+V4:
+- Improve the precision of timeleft value
+- Fix the unused variable warning
+
+V3:
+- Improve comment description
+- Refactor to fit codeline within 80 columns
+- Remove unused if(0) blocks
+
+
+V2:
+- Fix a compilation error, a warning and updates copyright
+--
+
+Pohsun Su (2):
+  clocksource/drivers/timer-tegra186: add WDIOC_GETTIMELEFT support
+  clocksource/drivers/timer-tegra186: fix watchdog self-pinging
+
+robelin (1):
+  clocksource/drivers/timer-tegra186: Remove unused bits
+
+ drivers/clocksource/timer-tegra186.c | 100 +++++++++++++++++----------
+ 1 file changed, 63 insertions(+), 37 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
