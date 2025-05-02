@@ -1,105 +1,136 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08244220696
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:37:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDBE8266B55;
+	Fri,  2 May 2025 07:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746171425; cv=none; b=B8ATKs0R2x+NqRw3IddCNlSi6rVKyWikYFYnKGa3SvCeQMcz6EW2ecGKmmFpx3kxKmlOYihp/9W0jAmEDQyJIUEkUZfmZXQSlxcYpQf3j0hnV0AiROOWwDeRkAQJiUAHKdM0VFajLv3xDMPjLp3aBmXLXnY1rovBesDGSNGr3yk=
+	t=1746171436; cv=none; b=RsX1l9GexHtuvAa/qcyz2s+Hu8YlNITDu9yt+BJa2fjluaPAC8UcPrl38uIWbMvWAXCfUKztL4UJD1NwOzih+VrHlol73jQo82jjYbGwN0Bzxd0Iqp2r4sm9suAF8EjV7AI7Tk8ziwSGlPmxezbQX6cmkMXA7k/Uwn03+gY9xLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746171425; c=relaxed/simple;
-	bh=vBXYpiuevWTMi/1nNtUJbKESjuRs2n43jiMJE1nOqL0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R9PbXwckEICjIGDxdHl3ojgawc3HlbZALkZZGxQ6uWWdB7bR7Vb4dTXXAcwDMtPqnMO2/P6/flD36qdLPYXH+9aVyVvalmdm98V2c+y/X/jE53LSpfa46GVP89YrYkpYI0WTzh8tjjzcyQHJLp2XLcAFB6FXozEsz3fB6gbpUn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PEHEeXp7; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1746171436; c=relaxed/simple;
+	bh=v201QsXuMk2tktiCCnexqwrucy1bAT1qtrUCkc84WXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IpjZ40kTY5LeyPoLZwTICr898yG+gF+h2km6aDQH0bcbwgzGf5k6S6sgrram2LTO3vl5N/BNAflDNEFNevWapmz0U+XpKPr3i+4Z7D5lXhEzirjJ9MozxONnXflBIJOAPX96QOwiIPZd3irWWk764A6lWA3rH0LMaYYMqEQDE20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PEHEeXp7"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39bf44be22fso1204542f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:37:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746171422; x=1746776222; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vBXYpiuevWTMi/1nNtUJbKESjuRs2n43jiMJE1nOqL0=;
-        b=PEHEeXp7TnNvn3g6im4JaliTX75Rnv38YLu5KmZlNGjk4iYP4DbS4doLU3bvcOy2Iq
-         ZwfEKEtABNlt9dxTxIy8F02GMA2f/OuHluqbeMH1wJnB0XR4ukfL9aP8+L2YpYNCoaZf
-         zXJgQlPJrThVJ8HOFyF60RIH3kmnM+Caa17ecgXEVuZb4dvikUtOxedR4E/pk9Th3gVr
-         BRloG4LyjjQRCRDh6I4rY79dHZYAMN8nxurXn+uoNC1lwZlEnTy2HR0NXKc9lAZs7qjA
-         DQwqbekG+JpiqWUH3KP8Wuj4tlhXcRt+thQRARLJPfbcc3rq4B3nkTfhCDL/Uk9pLQW0
-         ulJQ==
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-524038ba657so1323785e0c.0;
+        Fri, 02 May 2025 00:37:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746171422; x=1746776222;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vBXYpiuevWTMi/1nNtUJbKESjuRs2n43jiMJE1nOqL0=;
-        b=VHFxPiWfKo8pUjytmDXCqQDyf5v5wWEE4AA1cX20TifGK5kkOR0gAlAoRd0PpQAdDi
-         5ULwTXQBpHYjG1Vuyo989Byn4IkeqhF3WGLiUKeqttlSGOjN4IOC6kxLsn8y/wNVwzbL
-         owiQWTGFwKUUC3bauNPv0SAVB4Oz+N/LS9L8I93+KBII36oeOuvmtAZButajmjE1gcka
-         +MD45Yzh0fdoQOruRPiQtA28RtfZ9+hDIDRHtjtMS8NVriheWUeawb0BYPjXHV9leLUG
-         dwBZCscv2+MN4cUpAtY3BRey+IYv16D1YMgoFXKBmpcwyxlW9wAuG03+C1P4/jUZhGGj
-         FhqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVcii9GFj9dwt8oU+17mBaMnXeqhcD6A0j2/+l1PelNzJb31FPQezfioNd+112JcX4yji+dN4nFhL5OdnE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyunrV5zrd4RrLsmVR9sJz/mtaHEwdfw47xhhj2vAoMUbLFpuZz
-	+2M3ETB1QOwUC5EBO9IZZpgyllGPJnsxHmt+IQyknqR2xzZUE393
-X-Gm-Gg: ASbGncuUbvCFcs4wHIXGrTYZVZFkxRXi7UllFuQnznM/n5/IzrK1iLEQAkcEi0JuojF
-	yWXNhDHOb0Uc8+MSyaL2pO2lg9CTKAHvqxWY4iy38qBS8zHmnMbZg6z/TJQw/+LZjwHyiYjDLzr
-	Ml+P9dK5MjHoie7m6F7nTCPTg3RVi1TlAAioC/K5oirW/05X5M6nE2Ecez1OfzKBGZ0lavWlgeX
-	Bw3V82w9viA4AhB+QWLSQG6JpptXcAfiar8q236A6gcN8fzsicXtGXS4OPwneKYhjZWfETfemHH
-	MK/JGFjvJEHu0RZiPqGDEo87O8QaaJFhfsfVr+HmKzJSuBeITFbXlFt/+XO2sDIXKPmPEsIOEtz
-	BPoYyCV74lKCi
-X-Google-Smtp-Source: AGHT+IFxtcs4l9HcRDaxZDAQOP5k4BaScOa+b6sTV3maiE6nVQ/jGLYkJqXMC5+XPAcsJNmNNaX7MQ==
-X-Received: by 2002:a05:6000:4312:b0:3a0:8c46:1763 with SMTP id ffacd0b85a97d-3a099a87bc3mr1107790f8f.0.1746171422361;
-        Fri, 02 May 2025 00:37:02 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a286b9sm35133395e9.28.2025.05.02.00.37.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:37:01 -0700 (PDT)
-Message-ID: <6e7927176c29366643a13e69d0f66da74ed1a31d.camel@gmail.com>
-Subject: Re: mfd: adp5585: add support for key events
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: "Colin King (gmail)" <colin.i.king@gmail.com>, Nuno
- =?ISO-8859-1?Q?S=E1?=	 <nuno.sa@analog.com>
-Cc: Lee Jones <lee@kernel.org>, "linux-kernel@vger.kernel.org"
-	 <linux-kernel@vger.kernel.org>
-Date: Fri, 02 May 2025 08:37:08 +0100
-In-Reply-To: <7a6d0a8a-aa14-488e-9072-0bbafaa84e5e@gmail.com>
-References: <7a6d0a8a-aa14-488e-9072-0bbafaa84e5e@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+        d=1e100.net; s=20230601; t=1746171432; x=1746776232;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8llC9jHROc+tcTrdFCCLdaEjIsrrc+65EGVehejnUu0=;
+        b=IsDj9/6rkDxIrFtPJJ6oOaj6isa0vPuxx1RUZ5j/NPQM6B3Nb90yC/KzZsLP+Zmvq3
+         dZ2WCxWeenzvEJFV+7Tn4TQoPC/x+RRyfLWU9sAyVL2UojkJ4EAwbM7GLEcEH8lJNeY8
+         2CpTkjBGhxVoKQzlvbcL4UzXCxCMGqAo84hFVvEougVTJdm4SCx+e2D+2Euq4HlbCIrg
+         WruJDN5Z+aKgzC5SCgsDlcsPZBdbKi/AE2WfHqvWafYsnPurQh9RgofFoqRU792umJvc
+         NmnKLBcmTrfvryfaoBN4x92GRmsVGUzR2gc4HbNcR4XftKcqFcQt9Gy4n0oRED0wTXi5
+         ajeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+bgUAOsNEqUWNMxEYwygAT6Wr2Y9wgVWTSk4LjYzKw4C5yzMYZZIuD/sma1atu0GW742oGPNo9rPl2C1h@vger.kernel.org, AJvYcCWvEyz7SO/B39JMZOJb/kTnoe0bpLJ0F+wa/C98OWGNi49vaMsLcVC7wjJ+2w64/3KR2saxz8n8jAzBHQ==@vger.kernel.org, AJvYcCWwJVMOCmyb60+aPhfijDck4EKW5qcRNm0wTJvUBgRE7NAm5qG0U26+NVLIw8DxaOf0mKjua4Y5fS3X4TdwiKLu@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPdNRqOk1eu6y0f3zBA9JDzWgDoRbMmmOVtbgjJtSE7CU8/NXw
+	Z+ugpprBTM8l+4F5qhuDoyafnbDre0uvsVvpSooK6TXHON98l8QFvBIWRD0f
+X-Gm-Gg: ASbGnct8tkwzSQRRLcVTgh1U57qGln966++rStdbIJP0hY29DB7/fX6KN5KFSW8JpeW
+	Fa8TUasa/U8D7v14LVYpnopufhaiEmn5BuKtim7H8AnKiYD0i0GYYGHbG87w4qnG5sJbF0XytV6
+	Ki+KtIGO7KHQq0P94r8dIkd4NxsG7zi+FmbMl+ZAoKS/IgF8zhRa/90DUP58St5NrgFF/wbmpFH
+	YuILTfXZs8bL/WHQy1vU2OlANojwtOBjGXr9CWc1//YaGlE1GA2z+vVQYQImylwAlnoNKoCaOsx
+	IcRjWy/kJgxyylThxCvT04sPKAYBOuERK75+KEjuaoMtmCxHeUgRMPer0lJOUKtt+wqEzDjhbDM
+	zV28=
+X-Google-Smtp-Source: AGHT+IEoE+W16s0SJ2xbxlja3yhtvcX8FAOTA8FL5KkN1dZTpqZBS4bWzy4M4XbQOAKwlm5GGNwBqw==
+X-Received: by 2002:a05:6122:1ac9:b0:527:b7a3:dda8 with SMTP id 71dfb90a1353d-52aecb0c9c2mr1211049e0c.7.1746171431702;
+        Fri, 02 May 2025 00:37:11 -0700 (PDT)
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com. [209.85.217.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-52ae419c84fsm437257e0c.36.2025.05.02.00.37.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 00:37:10 -0700 (PDT)
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4c32190386eso2016838137.1;
+        Fri, 02 May 2025 00:37:10 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU342xxQt3FrQXXy+seiNh5I/OQbEGT+aJ8R5HNHyfBd6qr7KgY+FWZo/tGqrhXwtQC4W8VnvcxovTJqgsT@vger.kernel.org, AJvYcCXNNVXkZGb6GuoOIzLGZcEWIyOMcu0Y0S8A+2qu+5d6vOruS9G/0KsP28xVhS+mvsLYFE7ixcobzdU5/w==@vger.kernel.org, AJvYcCXwkZk3SjWyi/1xHaUjPuiN3Td1PEApCFxVoMVsXLEcw12MoTBgmGXHLHVQIOP2OTWYlStrsOL1TV44Is2Vib/F@vger.kernel.org
+X-Received: by 2002:a05:6102:5123:b0:4c1:8ded:2d66 with SMTP id
+ ada2fe7eead31-4dae8bbcf5fmr3872454137.12.1746171430220; Fri, 02 May 2025
+ 00:37:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250426062305.work.819-kees@kernel.org> <b982d4f1-6ed8-490b-8d47-6dc5231913e7@gmx.de>
+ <CAMuHMdVY1_gEqULGD0BzdTd05OAkodhk+RXKRAy-T-0+RJt7yQ@mail.gmail.com> <e68c6218-6055-45a6-b96e-9c8381a4b409@gmx.de>
+In-Reply-To: <e68c6218-6055-45a6-b96e-9c8381a4b409@gmx.de>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 2 May 2025 09:36:58 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXWCPcjqqxJ2JxQBeTSnQaAUFL0DqnJ7X8kEYko2L935A@mail.gmail.com>
+X-Gm-Features: ATxdqUGW6RuInIXJPMsgitscW_CZTwRS749shCj0tpcRFKiOrjcAgwc2y1eUuZY
+Message-ID: <CAMuHMdXWCPcjqqxJ2JxQBeTSnQaAUFL0DqnJ7X8kEYko2L935A@mail.gmail.com>
+Subject: Re: [PATCH] video: fbdev: arkfb: Cast ics5342_init() allocation type
+To: Helge Deller <deller@gmx.de>
+Cc: Kees Cook <kees@kernel.org>, Javier Martinez Canillas <javierm@redhat.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Zheyu Ma <zheyuma97@gmail.com>, 
+	Samuel Thibault <samuel.thibault@ens-lyon.org>, 
+	Jiapeng Chong <jiapeng.chong@linux.alibaba.com>, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-hardening@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 2025-05-01 at 12:09 +0100, Colin King (gmail) wrote:
-> Hi,
->=20
-> I noticed that there is an issue with the naming of device tree property=
-=20
-> in the commit:
->=20
-> commit f674cea99d03199a4fc9a96c68149b8804053f80
-> Author: Nuno S=C3=A1 <nuno.sa@analog.com>
-> Date:=C2=A0=C2=A0 Tue Apr 15 15:49:26 2025 +0100
->=20
-> =C2=A0=C2=A0=C2=A0=C2=A0 mfd: adp5585: add support for key events
->=20
->=20
-> There is a property named "rst-passtrough-enable", should that be in=20
-> fact "rst-passthrough-enable"? (an h is missing)
->=20
->=20
+Hi Helge,
 
-I'll need to re-spin ate least one more version of the series. I'll fix the
-spelling issue.
+On Tue, 29 Apr 2025 at 22:17, Helge Deller <deller@gmx.de> wrote:
+> On 4/28/25 08:36, Geert Uytterhoeven wrote:
+> > On Sat, 26 Apr 2025 at 13:33, Helge Deller <deller@gmx.de> wrote:
+> >> On 4/26/25 08:23, Kees Cook wrote:
+> >>> In preparation for making the kmalloc family of allocators type aware,
+> >>> we need to make sure that the returned type from the allocation matches
+> >>> the type of the variable being assigned. (Before, the allocator would
+> >>> always return "void *", which can be implicitly cast to any pointer type.)
+> >>>
+> >>> The assigned type is "struct dac_info *" but the returned type will be
+> >>> "struct ics5342_info *", which has a larger allocation size. This is
+> >>> by design, as struct ics5342_info contains struct dac_info as its first
+> >>> member. Cast the allocation type to match the assignment.
+> >>>
+> >>> Signed-off-by: Kees Cook <kees@kernel.org>
+> >
+> > Thanks for your patch, which is now commit 8d2f0f5bbac87b9d ("fbdev:
+> > arkfb: Cast ics5342_init() allocation type") in fbdev/for-next.
+> >
+> >> I applied your patch, but wouldn't this untested patch be cleaner and fulfill the
+> >> same purpose to match a kzalloc return type?
+> >>
+> >> diff --git a/drivers/video/fbdev/arkfb.c b/drivers/video/fbdev/arkfb.c
+> >> index 7d131e3d159a..a57c8a992e11 100644
+> >> --- a/drivers/video/fbdev/arkfb.c
+> >> +++ b/drivers/video/fbdev/arkfb.c
+> >> @@ -431,7 +431,8 @@ static struct dac_ops ics5342_ops = {
+> >>
+> >>    static struct dac_info * ics5342_init(dac_read_regs_t drr, dac_write_regs_t dwr, void *data)
+> >>    {
+> >> -       struct dac_info *info = (struct dac_info *)kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+> >> +       struct ics5342_info *ics_info = kzalloc(sizeof(struct ics5342_info), GFP_KERNEL);
+> >
+> > sizeof(*ics_info)?
+> >
+> >> +       struct dac_info *info = &ics_info->dac;
+> >
+> > Exactly my thought when I noticed this commit.  Adding casts makes
+> > it harder to notice any future discrepancies.
+>
+> I've changed it accordingly.
 
-Thx!
-- Nuno S=C3=A1
+Thanks, but the one-line summary no longer matches what the commit
+is doing...
 
+Commit f1a78a7d7827357c ("fbdev: arkfb: Cast ics5342_init() allocation
+type") in fbdev/for-next.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
