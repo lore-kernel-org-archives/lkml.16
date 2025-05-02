@@ -1,222 +1,220 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACBE2417D4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA6D241667
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746183119; cv=none; b=eoAXdPCNLr0eNR440jz3ZTvsrHcCLMQSXpkw+aw/CeX/cLEZV/pwZVBoxH2NRegdD92E7fPRHRA0rJmJGv9CnK7PV8PkvXb4JKlm4j15dA5hIbSoIq1iUG5VmWF/aRj6WFmr4OMy2EC9eGcZlX3vJdAwzG2RAJ7s27jMu8phw9U=
+	t=1746183122; cv=none; b=N/iWmZlcebQE6U/sLu8lJ38c0xsAPD5RIwIm3p1RXkxUZCEP5RMlCTW5P4E9ybx651bGQQDZvp3IcrLOpEWs5qWZdQEyGHf5yr3hG4WFTRKNGXXHWC4EtbeAyFfd5g8c5tNOB9hIE+uYkjrYSoKcRTNhO/kjWGVuZtZK7ZC42o0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746183119; c=relaxed/simple;
-	bh=0uPHl+JKsAOJ9sDRh8lKshqI4ciquTUm5Xwj42FnyZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Emuuae/RLP4JqxNwSBLFP0N/AL1SLDDm0SIbIv4+GP/NpMJqYI4D5aWM47vPQ5Eyxhbf0Vu3s9QMpbVu7KCrlYTj6XNZHHbyCaSqjbdmZnxust71bR1m4kT2krNX+CIqGWYzmCfDqHKf7pZ4FpoUKy65uJxwmEBr/6v/huW1o5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIoKqBSK; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746183122; c=relaxed/simple;
+	bh=LAAsQFiTjrism+q2nG20wPccf5TbyKe889K4SJxTo20=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MNodbrKzceIpvv3FXg/5RVzfn+kZ2DeCPDHLq+TlfJ/UYNdzDJsiU808FMJqJjR8VmhV9HGCBIoFR11daMwET0Sx7NSlBmSAD4Ywqq30Gc3Ah/k/P8LSbfX75ismo0AYl8hEYYG6gNhgJhsHl2dUhMdo4I68pSBPtSrTVpY5VbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hkQIcRrX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIoKqBSK"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso11387035e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:51:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746183116; x=1746787916; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=aRdXs5rbhlDN2keohW+Yxv/pOyDwK0v6kHn5yhxOBCQ=;
-        b=LIoKqBSKLVHEr2RA4zwNREMNg80Id2AI8IyX5vjoGk3TeOPLT3eqUqcGKJTEM8StgS
-         D4TNGAvhLDPS+5aEprtXIQvAr1Y6MwzgCLLV1PAFEv1NnMmIBSGWu5MENq1CaBGMFbZa
-         DY+zujf+6HXIO3v1wy0lkSgDyDBZ/bqMqFejpXGvoyTOEtR8S6eNCfmGA6XRoWmvfQKB
-         jdKlHF1x3C6O4L1elYsgtYF50MCntuoruwBD6074uOpNb+qyUEMzPwwexrJ5Ir5Vgonb
-         xP4GCtMp0mnBYJVJ3KlJ0g2LsM9l91lzZB3OCov7XRDfJfgw2reonEocyF6PUlu9Wa5l
-         blaA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hkQIcRrX"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421N1Zd001408
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 10:51:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	I88an99AIAvSoT+DIkAkztlH4kdpnjQu8t+ZJSXD3iQ=; b=hkQIcRrX2giDwKH+
+	kQ/b4xipP7cIz2jrTvMVDal1Gjp7Y3P1C7nfJoH3YY22cwXEdKEPa/QR40wJ1tr9
+	yeuhuTHkzJgg5vXAT5UNJrxLBbPDBpXAmHEOOvvZidVkFctRtpKVpfPYMc4KtyOk
+	lljFrPEr14bEgVHufMt7yV1Wt83r380txK37csHDZ8CCmJp6Ce3helWkbmv86zAN
+	CQIOrHgbxrYI5/WgUEspiGEAwuEA1gPqGRZJkzO3/qFCjERAAUmEl81Al4oQUbCc
+	SsVpb8kImU+QxWdWviC31RyTEfSKzTP6diMWdwLQovTTQ69EvPfXHfDRuUV3PV/c
+	A7Hh4Q==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u2g2ew-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 10:51:55 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5d608e6f5so481353185a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:51:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746183116; x=1746787916;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1746183114; x=1746787914;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=aRdXs5rbhlDN2keohW+Yxv/pOyDwK0v6kHn5yhxOBCQ=;
-        b=JXzatfMQfwANQ7F05crLbgtXYs3QrQ55TN6bizsqXxeVHFbWGsuNyYqI1slOsJ+Y7i
-         f60Fp39GMHUFcDFncEFjYWlY4dFaDWY6kab8o2nhnegY64DPels9nFIACGmwn9j4TTzQ
-         U5FKVqN6drf4AXvDqU0WaEEd+x9rcYUrxCriOQqJvoQ5BdsPvps1Q6QNmR/sPKsRgMHI
-         MopNOosbpgtoY9V6KBhqrzamM3TtSEhAAz9v7JQZHtOUecSdWjNyRPHUvf4dgpQ4u/P+
-         0w5AouJt52/Acuy9f7ZoY7WJmYeR12VSW2myDiFKmzBjjqN3oY3ZmrGQfKr5StQoivbJ
-         O37w==
-X-Forwarded-Encrypted: i=1; AJvYcCXe68hTztXUWLtX7LJqyt9oVIoy951GMun3Dg+E+rWtE64/cT+jMDs1bSh3GSuFKfF8fqmvOmCeuEbKM8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIZAVbKL3MXmuC7Cc0cZyTdEaCYvCUlIHbs0mcKQPIPO39iNF8
-	wkW8iAQqKOhupXjwxgYNsuDDsL9oyX1VQwcGm2OkbLz2sxTdCZJewM4lp8hwnmk=
-X-Gm-Gg: ASbGncufmGlB7BICPFHyTlx2gWT77E2Lcx5+6COJHoPjC2jvprcITyugq4irvvozKSr
-	yGQMfDMV6z0n07SQbg2Mqf1fG372OfTklu8N/SXJB3Z6h8OjEuFWKzGYouUaNgOwICe/j45DHeE
-	rBik+q+ZfFCz54Z4Zrb9WQiiOxhSB+63jiDfELY8hqDnFfGBxIMJZzmPNM4qqNY8+2l66owtOJX
-	tY53HN4RahOna/aDy+Jmw5VKeqYBIETzmNiA66UQJgukOcTOa7KmMDNwFyzwLVCHep3OHoxBzLX
-	zUXoS4CS5MAoQXxKDxAcEcPUrxF7wPcUXXB1ooxL+trUolGCpyEGs56p28yZKbirT6gE/VYIyvy
-	T1Lg=
-X-Google-Smtp-Source: AGHT+IFRnGNbLPkos0AOjKBTxhwusA6Jdyu+EXTCwoVRh0zl7lML0HixTtNT14lxd6CpT8T/JzkcOA==
-X-Received: by 2002:a05:600c:8218:b0:43c:f616:f08 with SMTP id 5b1f17b1804b1-441bbec1835mr18848105e9.8.1746183115889;
-        Fri, 02 May 2025 03:51:55 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad76a2sm87172035e9.6.2025.05.02.03.51.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 03:51:55 -0700 (PDT)
-Date: Fri, 2 May 2025 12:51:53 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Robert Lin <robelin@nvidia.com>, thierry.reding@gmail.com,
-	tglx@linutronix.de, pohsuns@nvidia.com,
-	linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-	sumitg@nvidia.com
-Subject: Re: [PATCH v7 1/3] clocksource/drivers/timer-tegra186: add
- WDIOC_GETTIMELEFT support
-Message-ID: <aBSjyZJ0__ctBa-4@mai.linaro.org>
-References: <20250502043727.396896-1-robelin@nvidia.com>
- <20250502043727.396896-2-robelin@nvidia.com>
- <aBSOJTlQUUnFIEVr@mai.linaro.org>
- <af0e0ab4-89d5-4f77-86c7-90d2bc3e13dd@nvidia.com>
+        bh=I88an99AIAvSoT+DIkAkztlH4kdpnjQu8t+ZJSXD3iQ=;
+        b=Km+a7qJt1XB18EQnryOAnA/842qpeJpdJEYktqHtxrDdhaxcvTZb0ckXPq5+VH+q5H
+         8F/cc9KR1f6GuLYoZzpz3JwKvSByfbEXLcEdLAGAWIrxxyvC+8VDa4bNjKoM8JMruQiA
+         3RJOENhGwKCBAF7R7zCZAwxdV8BFRTnNiIb/kNibc0EqkSI4f/gZwDH7eoW4bUeHc5eZ
+         S17w/FyKsE+q6fSg8ROgW8Oe+PFVUta6ETmkNECkZcPjDnTdynwVblk4zpux63m/tvru
+         5jLJWaCXUklwDCZ/QrDniSBxdD3XJ0vSaMIfsFRn5xAdQtxrMn3Uf8/idhPOkJA49wV4
+         pIMA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDeLnDXnaGHHGU+g88QtPekc8hhIOmikyHqvtaJH2Kp6Lw0AgwJLEzWSxjEyiWiNTPq/OSHia5Kpn9vtY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4lfQMW8bwFkfTMugAMo1riir8pb3pceYk7CLSi9kP8KLq4qoP
+	6RTthIhzxf76ELhXVG1XShcj9MJnBni2ReWAQzxijh1qmg3BQh3cs/Iyy1Jai4msVcY/j1M8p/x
+	vR+VodmBUDO8OoIEUokZVWl6gbxEeCYHp8VPpHXC/fXT9GLPRdhPOBUfuWfy/aw0=
+X-Gm-Gg: ASbGncsnQ0tK0e8mWe3J3IZPgAViRl15CR1tsLRJOn/8BuMouh54rk2aPbp4klaPxLS
+	OIHMG800EpJtx7w5BMu+Sh5ZXrdzH2+1DUPfqpdyiRbOcPNPYF8Ou4hAGvikzdffiAEZ+KZf91b
+	+/D3onEdnZETEP/UYyDBguBabwoKt6TCOnvKydUjqmXH0jOg06MC/hB5n1iW/GGer8HU006P7JR
+	gEERKm9TldlJ6UI+oVqymi2szE1cb0snE+fqmFEP+xK8x0BCcPEtQagy+4FlUOoPqWEyx29IDwa
+	v4Nazd9vXnGncwT/rVCLgQrqs8IqCeHgRMU0yg==
+X-Received: by 2002:a05:620a:460a:b0:7c9:4bba:1ac0 with SMTP id af79cd13be357-7cad5b22d62mr380124185a.9.1746183114611;
+        Fri, 02 May 2025 03:51:54 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFEq4m+dIgBbhLDT8yukudxbcJZtNknJH8dMUbDaanD4ZfImkcyIadgYrN9lw4vhw0dSwsyjA==
+X-Received: by 2002:a05:620a:460a:b0:7c9:4bba:1ac0 with SMTP id af79cd13be357-7cad5b22d62mr380121885a.9.1746183114314;
+        Fri, 02 May 2025 03:51:54 -0700 (PDT)
+Received: from [192.168.68.119] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-441b8a286cfsm40063885e9.29.2025.05.02.03.51.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 03:51:53 -0700 (PDT)
+Message-ID: <bf9291e1-bdad-4b4d-b527-b21963970902@oss.qualcomm.com>
+Date: Fri, 2 May 2025 11:51:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <af0e0ab4-89d5-4f77-86c7-90d2bc3e13dd@nvidia.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: dts: qcom: sm8750: Add adsp fastrpc support
+To: Alexey Klimov <alexey.klimov@linaro.org>, andersson@kernel.org,
+        konradybcio@kernel.org, linux-arm-msm@vger.kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        srini@kernel.org, quic_ekangupt@quicinc.com,
+        krzysztof.kozlowski@linaro.org
+References: <20250502011539.739937-1-alexey.klimov@linaro.org>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+In-Reply-To: <20250502011539.739937-1-alexey.klimov@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: nUYW0IHelal-4gep4uD7CYJvoxfjgAoQ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4NSBTYWx0ZWRfXxFEk3g1znB9q qDerA/I9kt9eFa1UaE997DVQvvo+V5LuaZA58o6pHJbhPL23eFpbXY3Iv7bMAUljLmmctOxFRWL 3oWdCdCr1MsRbqXtXdx69Zxxt1BYs4p7pNsHNiy1otMZ84OY7QoXxxQIB6nAbTIZc5f4tl9ujHY
+ 13FYwNHkDEKuSYM9eDY36wygwFU2OkV0ThMZwClImlEGaRxy898XDeKSh7JpjncecQ5sgmzGmsm p9BXKyyp71ZWXv5WbrfHq/VoxNu2+duzNxpEBqMExZk8mHDj1FopAFFatu1kXbH+/OgQ69qN9jK uveShqdY/x4fLiIRijE7b1Oc14cJlzEazILILkNIvHLi6OM88cO5BQGd1WgabPCrRGQUBF9z/Jg
+ MjOeVAzUln2CgFOe/+v8egLh+S7C1tdLdTpJSNv2lmkO3ELoGTgdnbM79ihP+T2ZAlMb8+iI
+X-Authority-Analysis: v=2.4 cv=b5qy4sGx c=1 sm=1 tr=0 ts=6814a3cb cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=ZsC4DHZuhs/kKio7QBcDoQ==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=COk6AnOGAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=gH14mSXmLtDuaprCSZYA:9
+ a=QEXdDO2ut3YA:10 a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-ORIG-GUID: nUYW0IHelal-4gep4uD7CYJvoxfjgAoQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=809 phishscore=0
+ mlxscore=0 impostorscore=0 malwarescore=0 spamscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020085
 
-On Fri, May 02, 2025 at 11:16:17AM +0100, Jon Hunter wrote:
+On 5/2/25 02:15, Alexey Klimov wrote:
+> While at this, also add required memory region for fastrpc.
 > 
+> Tested on sm8750-mtp device with adsprpdcd.
 > 
-> On 02/05/2025 10:19, Daniel Lezcano wrote:
-> > On Fri, May 02, 2025 at 12:37:25PM +0800, Robert Lin wrote:
-> > > From: Pohsun Su <pohsuns@nvidia.com>
-> > > 
-> > > This change adds support for WDIOC_GETTIMELEFT so userspace
-> > > programs can get the number of seconds before system reset by
-> > > the watchdog timer via ioctl.
-> > > 
-> > > Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
-> > > Signed-off-by: Robert Lin <robelin@nvidia.com>
-> > > ---
-> > >   drivers/clocksource/timer-tegra186.c | 64 +++++++++++++++++++++++++++-
-> > >   1 file changed, 63 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-> > > index ea742889ee06..8d5698770cbd 100644
-> > > --- a/drivers/clocksource/timer-tegra186.c
-> > > +++ b/drivers/clocksource/timer-tegra186.c
-> > > @@ -1,8 +1,9 @@
-> > >   // SPDX-License-Identifier: GPL-2.0-only
-> > >   /*
-> > > - * Copyright (c) 2019-2020 NVIDIA Corporation. All rights reserved.
-> > > + * Copyright (c) 2019-2025 NVIDIA Corporation. All rights reserved.
-> > >    */
-> > > +#include <linux/bitfield.h>
-> > >   #include <linux/clocksource.h>
-> > >   #include <linux/module.h>
-> > >   #include <linux/interrupt.h>
-> > > @@ -30,6 +31,7 @@
-> > >   #define TMRSR 0x004
-> > >   #define  TMRSR_INTR_CLR BIT(30)
-> > > +#define  TMRSR_PCV GENMASK(28, 0)
-> > >   #define TMRCSSR 0x008
-> > >   #define  TMRCSSR_SRC_USEC (0 << 0)
-> > > @@ -46,6 +48,9 @@
-> > >   #define  WDTCR_TIMER_SOURCE_MASK 0xf
-> > >   #define  WDTCR_TIMER_SOURCE(x) ((x) & 0xf)
-> > > +#define WDTSR 0x004
-> > > +#define  WDTSR_CURRENT_EXPIRATION_COUNT GENMASK(14, 12)
-> > > +
-> > >   #define WDTCMDR 0x008
-> > >   #define  WDTCMDR_DISABLE_COUNTER BIT(1)
-> > >   #define  WDTCMDR_START_COUNTER BIT(0)
-> > > @@ -235,12 +240,69 @@ static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
-> > >   	return 0;
-> > >   }
-> > > +static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
-> > > +{
-> > > +	struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
-> > > +	u32 expiration, val;
-> > > +	u64 timeleft;
-> > > +
-> > > +	if (!watchdog_active(&wdt->base)) {
-> > > +		/* return zero if the watchdog timer is not activated. */
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	/*
-> > > +	 * Reset occurs on the fifth expiration of the
-> > > +	 * watchdog timer and so when the watchdog timer is configured,
-> > > +	 * the actual value programmed into the counter is 1/5 of the
-> > > +	 * timeout value. Once the counter reaches 0, expiration count
-> > > +	 * will be increased by 1 and the down counter restarts.
-> > > +	 * Hence to get the time left before system reset we must
-> > > +	 * combine 2 parts:
-> > > +	 * 1. value of the current down counter
-> > > +	 * 2. (number of counter expirations remaining) * (timeout/5)
-> > > +	 */
-> > > +
-> > > +	/* Get the current number of counter expirations. Should be a
-> > > +	 * value between 0 and 4
-> > > +	 */
-> > > +	val = readl_relaxed(wdt->regs + WDTSR);
-> > > +	expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
-> > > +	if (WARN_ON(expiration > 4))
-> > > +		return 0;
-> > 
-> > Each call will generate a big warning in the message. May be simpler
-> > to add a pr_err() with an explicit message.
+> Cc: Ekansh Gupta <quic_ekangupt@quicinc.com>
+> Cc: Srinivas Kandagatla <srini@kernel.org>
+> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sm8750.dtsi | 70 ++++++++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
 > 
-> I prefer the WARN. This should never happen. If we do change this, then
-> dev_WARN() might be more appropriate, but I think that this is fine too.
+> diff --git a/arch/arm64/boot/dts/qcom/sm8750.dtsi b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> index 149d2ed17641..48ee66125a89 100644
+> --- a/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sm8750.dtsi
+> @@ -7,6 +7,7 @@
+>  #include <dt-bindings/clock/qcom,sm8750-gcc.h>
+>  #include <dt-bindings/clock/qcom,sm8750-tcsr.h>
+>  #include <dt-bindings/dma/qcom-gpi.h>
+> +#include <dt-bindings/firmware/qcom,scm.h>
+>  #include <dt-bindings/interconnect/qcom,icc.h>
+>  #include <dt-bindings/interconnect/qcom,sm8750-rpmh.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+> @@ -523,6 +524,14 @@ llcc_lpi_mem: llcc-lpi@ff800000 {
+>  			reg = <0x0 0xff800000 0x0 0x800000>;
+>  			no-map;
+>  		};
+> +
+> +		adsp_rpc_remote_heap_mem: adsp-rpc-remote-heap {
+> +			compatible = "shared-dma-pool";
+> +			alloc-ranges = <0x0 0x00000000 0x0 0xffffffff>;
+> +			alignment = <0x0 0x400000>;
+> +			size = <0x0 0xc00000>;
+> +			reusable;
+> +		};
+>  	};
+>  
+>  	smp2p-adsp {
+> @@ -2237,6 +2246,67 @@ q6prmcc: clock-controller {
+>  						};
+>  					};
+>  				};
+> +
+> +				fastrpc {
+> +					compatible = "qcom,fastrpc";
+> +					qcom,glink-channels = "fastrpcglink-apps-dsp";
+> +					label = "adsp";
+> +					memory-region = <&adsp_rpc_remote_heap_mem>;
+> +					qcom,vmids = <QCOM_SCM_VMID_LPASS
+> +						      QCOM_SCM_VMID_ADSP_HEAP>;
+> +					qcom,non-secure-domain;
 
-The function tegra186_wdt_get_timeleft() is triggered from userspace
-via an ioctl or sysfs. The documentation process/coding-style.rst says:
+Any reason why we what to mark adsp as non-secure domain by default?
 
-"""
-Do not WARN lightly
-*******************
+--srini
 
-WARN*() is intended for unexpected, this-should-never-happen situations.
-WARN*() macros are not to be used for anything that is expected to happen
-during normal operation. These are not pre- or post-condition asserts, for
-example. Again: WARN*() must not be used for a condition that is expected
-to trigger easily, for example, by user space actions. pr_warn_once() is a
-possible alternative, if you need to notify the user of a problem.
-"""
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +
+> +					compute-cb@3 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <3>;
+> +						iommus = <&apps_smmu 0x1003 0x80>,
+> +							 <&apps_smmu 0x1043 0x20>;
+> +						dma-coherent;
+> +					};
+> +
+> +					compute-cb@4 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <4>;
+> +						iommus = <&apps_smmu 0x1004 0x80>,
+> +							 <&apps_smmu 0x1044 0x20>;
+> +						dma-coherent;
+> +					};
+> +
+> +					compute-cb@5 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <5>;
+> +						iommus = <&apps_smmu 0x1005 0x80>,
+> +							 <&apps_smmu 0x1045 0x20>;
+> +						dma-coherent;
+> +					};
+> +
+> +					compute-cb@6 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <6>;
+> +						iommus = <&apps_smmu 0x1006 0x80>,
+> +							 <&apps_smmu 0x1046 0x20>;
+> +						dma-coherent;
+> +					};
+> +
+> +					compute-cb@7 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <7>;
+> +						iommus = <&apps_smmu 0x1007 0x40>,
+> +							 <&apps_smmu 0x1067 0x0>,
+> +							 <&apps_smmu 0x1087 0x0>;
+> +						dma-coherent;
+> +					};
+> +
+> +					compute-cb@8 {
+> +						compatible = "qcom,fastrpc-compute-cb";
+> +						reg = <8>;
+> +						iommus = <&apps_smmu 0x1008 0x80>,
+> +							 <&apps_smmu 0x1048 0x20>;
+> +						dma-coherent;
+> +					};
+> +				};
+>  			};
+>  		};
+>  
 
-I understand it is important to check the return value in order to
-have a consistent result when computing the remaining time but that
-should not trigger a warning each time.
-
-[ ... ]
-
-> > > +	/*
-> > > +	 * Convert the current counter value to seconds,
-> > > +	 * rounding up to the nearest second. Cast u64 to
-> > > +	 * u32 under the assumption that no overflow happens
-> > > +	 * when coverting to seconds.
-> > > +	 */
-> > > +	timeleft = (timeleft + USEC_PER_SEC / 2) / USEC_PER_SEC;
-> > 
-> > Did you check there is a macro fitting the need in math.h ?
-> 
-> I had a quick look, but looking again, I see we can use
-> DIV_ROUND_CLOSEST_ULL() here.
-
-What about 'roundup()' ?
-
-> > > +	if (WARN_ON(timeleft > U32_MAX))
-> > 
-> > s/WARN_ON/pr_err/
-> 
-> Why? Again this is not expected. I think that this is fine.
-
-[ ... ]
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
