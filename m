@@ -1,110 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0932254861
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C3F256C81
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197677; cv=none; b=mL2AwnMq3seWq/pNAOH6631jalxXg+VxQ95Usq2FaJ6K4fOrGebKtg24pTKQvHaHmsn0cPN9aqFNUdDCOgp00h7K5RFkXp4+zx9kJ0hL7Fi+sGSMzNhgXQJQyb56Pt4fgOQDR5nD5nlmzCY2HbFPm8TvLF9YxTnwiGfYtNiVzhg=
+	t=1746197687; cv=none; b=ILSDIW2MflkKaIBT5JB7Q1lpan22bt4fbFFwgtHR4pfroNsQT/Q0OHYGBQsCZDhaKT1Ef7SoVd4iNpGWv02EHf8r2p/vah+y0Tq5nyzju1ULeR3NEQw86uNaa8tqbbp8LUItmp3rOzmwDY9xabJ/IiL0mPWtUMjnVfxBYwBFxFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746197677; c=relaxed/simple;
-	bh=0y73RY0urN80J1Jj8SHrAVqHgvajjs8QowqUXePpx7g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dNm9lJ7sKnLUXJK9/UvPZk3N8SEYrg9MuR+whX8SSaLPRjD7tWvgh8gq2Cru3dpfwHqQzbotdvRhyysH1UDAjov1enGBoiyDFa9t2UTPHJQPdp10Hq8rNCcX2Z7AXVldAp8VQUsaACepuQhsU4I9RsnXBBapHHpdT2lG8o1jTHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DlauYN08; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746197687; c=relaxed/simple;
+	bh=RpJVwCDKSnByw8jtUR+cMwoe+OU/wu1hEclu+sJDocE=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=ezkUC/J2wntSguoAj+FVQ7lxrHw/9x8OVNs3rQzG6xsb0JCm4XBPFfccojpFlRMPBG1ANDet7LADNZ6ldsrC1Zo62WUvfNc2ZDNwcHp7yg36QHMzkwaGzZOGbuSdYWqLOgCmZNzc7FMwc7L6eavTRTjcBReuI/9BN1lWv+o9ZAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yzhds76e; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DlauYN08"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746197676; x=1777733676;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0y73RY0urN80J1Jj8SHrAVqHgvajjs8QowqUXePpx7g=;
-  b=DlauYN08jVWk5kGnTW51SKf/NMS06KV+fxq6KaOX/Tqqas5TuW40A5vg
-   Xovuxc9CxUfEaKSt+gb679FJN+2d5LoaqfvI0e9tH+NLe888ZRBdrc8Ge
-   NnmssH3jDT1KyB3tk4yr57ZARJZoKm7kjhl9+oqoXkB1i5E+9xWbOy7oN
-   rU+tjUXhTsybNoV8UlY24izk/G6NukxXqucPLpVo9pLlhy6uzDEGW0iSl
-   CvbA99BZsnttGaKAlYZxJyNLtgZo0D1z/SPjUi/PO7lIFWYiFo5qyQRdA
-   yCnlJqDoIafaVzbp/dF+QSODWzygj6VF+H3J5x+E5qJCcLyzECWEbdWIi
-   A==;
-X-CSE-ConnectionGUID: zBzSumiqTQSmO30y4xaB9g==
-X-CSE-MsgGUID: iG2iJuZVQaeR99sekc27yg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="51543581"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="51543581"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:54:36 -0700
-X-CSE-ConnectionGUID: u9eiiQJYRs2znahj783Xzw==
-X-CSE-MsgGUID: A9IHD9AEQDWvs2uMEOsASw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134575523"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 07:54:33 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uArmX-00000002ENu-0kYL;
-	Fri, 02 May 2025 17:54:29 +0300
-Date: Fri, 2 May 2025 17:54:28 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>
-Subject: Re: [PATCH v1 1/1] lockdep: Move hlock_equal() to the respective
- ifdeffery
-Message-ID: <aBTcpCYHOVtQX1lF@smile.fi.intel.com>
-References: <20250415085857.495543-1-andriy.shevchenko@linux.intel.com>
- <aBTP9AaJ0uyzAjxG@smile.fi.intel.com>
- <6814da67.050a0220.2f3283.cdc1@mx.google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yzhds76e"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-30572effb26so2118809a91.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 07:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746197685; x=1746802485; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:to:from
+         :reply-to:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=APu7gvDG+GWIH3CqaZfGtDjeCKACn6athf5zXmMCeek=;
+        b=Yzhds76eaOQr2njwQU5f9nPC1YVy34MCcet94KqjdhZYmtlqsngK+2siuJzjLpu7eU
+         Zqv9z5ImAl5iYPsDkyVPWxgh/jRQM2Z5BKBJf/keBHdKZu+943f2/7thr9dGsHlFDeTu
+         hFusV2bSuqNohCi6U8aJ28tNWx5DRfP24GQokGIQTMqTlM4UIS+ibpnpTkwJAYcXSUUS
+         YW+Ozu+HV0iH4auF+Tsp/FsegDnP9S2atEXidnJI+2xhcwShx2RWsuC8bag1V1ToVT93
+         X5euz488YP+ehb9hRGS+SASl/kUCJvu5MlNJ0twFfDwD3hLyG/14Sc+g3xo7U9uAoRol
+         1+SQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746197685; x=1746802485;
+        h=content-transfer-encoding:mime-version:message-id:subject:to:from
+         :reply-to:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=APu7gvDG+GWIH3CqaZfGtDjeCKACn6athf5zXmMCeek=;
+        b=dOLkTWRp6qnQjbHZePE9lmd9qajTkBJu3v6THxscEAsNPEyR2a2XVpOYw//Ujylhg5
+         xDxxwA7kgaQk66aJI/c1RlPhLkXlDMxsCor6ZVi1zAYBbqHbu+LyYwjE0g7wQRJq10QA
+         jep/2EI7W8j+bdW4rOFTrNHZJjmWiF3Yg44DBl1c9zSkI+zOMPi/IIF0gHzWooDS78Vz
+         xpJTGZRVRHNZj6zGJJsQw0bblN6X0XIIC/9ZSpUC0lscPsmHm/ZbeZ/v32d86kx2WGIP
+         fVGVA26r7fCkIo/bj/Rm+4hpcWE5JjfDL6Yg5/rLhzrDped9n/nR9sQTYkS/NjaJeWOt
+         KWyw==
+X-Gm-Message-State: AOJu0YzEpYqmBnnIF7D1czwLopxFmpRcp9GP2s7FtU3rXZnHHgEoEUdi
+	ztl2M5Tlb9Iu4WoTO3SB2Bhdi8R+JsJVb1XhzHpR/XywtgnalMR6C8zB0B/oOcw=
+X-Gm-Gg: ASbGncu65u+FozB8AO1CpK9n7QEFFDRjJRwNhmECv802QAWh77zqVlGIjn8jdp3xSCP
+	3u3Xa4hQD4/piTjMawUaxEknJX1hBmwllRt12wQtl9xnb2ARLO2DXfWIMb0qlb2DLIeen2VK4gi
+	FeiZQT4s5Hvl7McccQzdphcUpG5mbjVZppEQijciI8eAV/dI9bQVxbdqPXWG+3BwJh90KSCaD0o
+	nDJQLKn29s/TdMo0JzOKWJ59R1GsDqNT/GjSqRjp470uOzfRjQrGHpkpCal4/a06cMFFHMvZe1i
+	4vCQaPH9ViQUWba2cC1UGB60AfqUl6ufgsRuLcPzpIbKUqtk49jathRyDxE3IYAa94cmUh0ATO2
+	NsiaUNKbI/jKuwqJ0
+X-Google-Smtp-Source: AGHT+IHn7Y8AVYxoDs0398AiB0UwBhBWtyMBWcsUNuI/tSXRCHjv9HaSrzogEksiiNkjADgvql5Ezw==
+X-Received: by 2002:a17:90b:57cc:b0:2ff:58c7:a71f with SMTP id 98e67ed59e1d1-30a4e692471mr4374925a91.32.1746197685063;
+        Fri, 02 May 2025 07:54:45 -0700 (PDT)
+Received: from 179-190-173-23.cable.cabotelecom.com.br ([179.190.173.23])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3480f0aasm6423373a91.35.2025.05.02.07.54.42
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 07:54:43 -0700 (PDT)
+Date: Fri, 02 May 2025 07:54:43 -0700 (PDT)
+X-Google-Original-Date: 2 May 2025 09:54:41 -0500
+Reply-To: sales1@theleadingone.net
+From: Winston Taylor <sglvlinks@gmail.com>
+To: linux-kernel@vger.kernel.org
+Subject: wts
+Message-ID: <20250502095441.4F3E93927FC16CE9@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6814da67.050a0220.2f3283.cdc1@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 02, 2025 at 07:44:53AM -0700, Boqun Feng wrote:
-> On Fri, May 02, 2025 at 05:00:20PM +0300, Andy Shevchenko wrote:
-> > On Tue, Apr 15, 2025 at 11:58:56AM +0300, Andy Shevchenko wrote:
-> > > When hlock_equal() is unused, it prevents kernel builds with clang,
-> > > `make W=1` and CONFIG_WERROR=y, CONFIG_LOCKDEP=y and
-> > > CONFIG_LOCKDEP_SMALL=n:
-> > > 
-> > >   lockdep.c:2005:20: error: unused function 'hlock_equal' [-Werror,-Wunused-function]
-> > > 
-> > > Fix this by moving the function to the respective existing ifdeffery
-> > > for its the only user.
-> > > 
-> > > See also commit 6863f5643dd7 ("kbuild: allow Clang to find unused static
-> > > inline functions for W=1 build").
-> > 
-> > Any news here, please? The problem still exists in v6.15-rc4.
-> 
-> This is in my radar, so it will be in a PR to tip soon. I didn't reply
-> earlier because I meant to find a whole cleanup for ifdefferies in
-> lockdep:
-> 
-> 	https://lore.kernel.org/lkml/Z46BJ8FhWCIXbM7p@boqun-archlinux/
+Hello ,
 
-This is good news! Nobody likes ifdeffery, it makes code harder to read.
+ These are available for sale. If you=E2=80=99re interested in purchasing=
+=20
+these, please email me
 
-> to avoid whack-a-mole fixes. I never found time so I have to postpone
-> that. Thanks!
+ 960GB SSD SATA 600 pcs/18 USD
 
--- 
-With Best Regards,
-Andy Shevchenko
+S/N MTFDDAK960TDS-1AW1ZABDB
 
+Brand New C9200L-48T-4X-E  $1,200 EAC
+Brand New ST8000NM017B  $70 EA
+
+Brand New ST20000NM007D
+QTY 86  $100 EACH
+Brand New ST4000NM000A   $30 EA
+Brand New WD80EFPX   $60 EA
+ Brand New WD101PURZ    $70 EA
+
+Intel Xeon Gold 5418Y Processors
+
+QTY $70 each
+
+
+
+CPU  4416+   200pcs/$500
+
+CPU  5418Y    222pcs/$700
+
+ 
+
+8TB 7.2K RPM SATA
+6Gbps 512   2500pcs/$70
+
+
+960GB SSD SATA   600pcs/$30
+serial number MTFDDAK960TDS-1AW1ZABDB
+
+
+SK Hynix 48GB 2RX8 PC5 56008 REO_1010-XT
+PH HMCGY8MG8RB227N AA
+QTY 239 $50 EACH
+
+
+SAMSUNG 64GB 4DRX4 PC4-2666V-LD2-12-MAO
+M386A8K40BM2-CTD60 S
+QTY 320 $42 each
+
+
+Ipad pro 129 2021 MI 5th Gen 256 WiFi + Cellular
+quantity 24 $200 EACH
+
+=20
+Ipad pro 12.9 2022 m2 6th Gen 128 WiFi + Cellular
+quantity - 44 $250 EAC
+
+Brand New NVIDIA GeForce RTX 4090 Founders
+Edition 24GB - QTY: 56 - $700 each
+
+ Brand New ASUS TUF Gaming GeForce RTX 4090 OC
+ 24GB GDDR6X Graphics Card
+ QTY87 $1000 each
+=20
+Refurbished MacBook Pro with Touch Bar 13 inches
+MacBook Pro 2018 i5 8GB 256gb quantity $ 200 EACH
+MacBook Pro 2019 i5 8GB 256gb Quantity $ 200
+MacBook Pro 2020 i5 8gb 256gb Quantity $200
+MacBook Pro 2022 i5 m2 8gb 256gb quantity $250 EACH
+
+ 
+
+Refurbished Apple iPhone 14 Pro Max - 256 GB
+quantity-10 $35O EACH
+
+Refurbished Apple iPhone 13 Pro Max has
+quantity-22 $300 EACH
+
+
+Apple MacBook Pro 14-inch with M3 Pro chip, 512GB SSD (Space=20
+Black)[2023
+QTY50
+USD 280
+
+
+Apple MacBook Air 15" (2023) MQKR3LL/A M2 8GB 256GB
+QTY25
+USD 300 EACH
+
+
+HP EliteBook 840 G7 i7-10610U 16GB RAM 512GB
+SSD Windows 11 Pro TOUCH Screen
+QTY 237 USD 100 each
+
+
+ Best Regards,
+
+300 Laird St, Wilkes-Barre, PA 18702, USA
+Mobile: +1 570-890-5512
+Email: sales1@theleadingone.net
+www.theleadingone.net
 
