@@ -1,116 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23437376;
-	Fri,  2 May 2025 18:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20D1D376;
+	Fri,  2 May 2025 18:39:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211118; cv=none; b=fw4Rya7MOlAgjyzV9QoryAs5Zs94sVeMfK7yh6d/V4b4T4CHT7P6iF+R97u56JjdHsfxm2YtFEw6CUHdcg5uQI20OvGOcz7WigJXmzJzh4xsNAgYsZmJidZr1XPt41cHu8P2HfQTf005tQFhqP4EyNOXkca6EACjrojKJCwz/oA=
+	t=1746211149; cv=none; b=NCtp5/6TXXZnH3Td629lqOd1iadvF7yh7jXTQ0VIclSMWFBAWF0CTvyhNpkinU9ciAQ7wlUMCrQX7UvJu45ui7MPNzaYSfVL2LO55nnAG9oogef5GStIZXx/tylx1SO8cEgV4P52nOGUEgr7Y1R2CrHce0zwY+QiuMvGIVwmAf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211118; c=relaxed/simple;
-	bh=mxt/A8uSc/V7U/TI22nd6Tm/RVYbg+4ChVanawz9r48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FzjV0vOtOAbn/I8q1ttPhKHrPAjD4iRe5XFcz89KgmDzJb39PcBIWy34kVTEeOG8a0erB13vSPaoVkKnVNxVqPfoG+vXcJj771wWi4x0MfUaKDXJ8ePN3pZ9niX4uyS3fDavveUkYapR0zzoLFEVe7agTWZk4W5JSUySgnHBwgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oXYiuFGB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746211149; c=relaxed/simple;
+	bh=k4bpnd3rel4lDav3D9jMnc5FYe9j0M+IePk2yRuFE1w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IjcGHVkpGEH/ZWrE9Q7MKOB+bBHdAkEVTPdxw20tQ7P2Jn1M1eYBn6aIdtar6SBB0ZqIr2ho15Za2R7qYPLmtJPKMHdCyZDsVxcpPCGwFPtMMHZ1+f5iB4Igt+rRw6xsjJrt52/GArihI5B1s8/1bj6JJ1iQ41Nb4KzL/UivJV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOzadMwX; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oXYiuFGB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D21C4CEE4;
-	Fri,  2 May 2025 18:38:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746211117;
-	bh=mxt/A8uSc/V7U/TI22nd6Tm/RVYbg+4ChVanawz9r48=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oXYiuFGBNcb/jYIKb1wr2jq5n3BQ8PVcsJg+q6OVnkW3B+1EQQX+YZkOgY2SUE+Qe
-	 5FDaeGQpD59ySTzdsXVWFab7BasoTthAx16qVMLTU4vOOTYLp9z/Y+7DDIjFGdNXl0
-	 Jvlvr6W9hSZitCX8DCGooC4G67dfOACrCnGWfKATSYwXT967Gvq0OIHteuJ3Xsukyy
-	 cPatRt4+sFbcDLn4KLfh5GhmIwyhhYBFQO7lgGYZAz5OvqpQ2k3RYF1mQHWk7klHJG
-	 qjwQSux+5ERrHjwcJ5PR0OicdVzh/pwUPs2fLgja9ZzEy6hlnh+NdH7F8Cz/Mdg9GG
-	 WN5c34H8Sjj5A==
-Date: Fri, 2 May 2025 11:38:35 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH 11/11] perf mem: Add 'dtlb' output field
-Message-ID: <aBURK58syHRV9Eqx@google.com>
-References: <20250430205548.789750-1-namhyung@kernel.org>
- <20250430205548.789750-12-namhyung@kernel.org>
- <aBTzK_vZ0kBh9CLV@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOzadMwX"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746211147; x=1777747147;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=k4bpnd3rel4lDav3D9jMnc5FYe9j0M+IePk2yRuFE1w=;
+  b=BOzadMwXEuVvzwvoBXPG5MF6D+hpefwgnr20D1OcnRL7vaP9ChdzfC1F
+   t/0qXBlysGHBKmFNm6/TJn2yP19iBfgpb3FluXD+HtsWfwAj3cGzLQ/wi
+   mYCMDQ4MrurSGVWXXoJ/ibww7jxAR3yJ7H+JdVeNx9DmfTW5xQCp5v5U8
+   91/A4zH/OlaFjPWVwtuW0xwvZCbLriaQXzBQHCqp9Wnavy3uTwJsVG1jt
+   mt2s9+TTUkjuhlQTIkCE/TKdAla6MH5iU/CpEhs7ranQCpqs7sJT/9S1i
+   5D8DbV/noPMJ+Wf1naPEsUcBEVK3T2V/CCK+c7nbnrhWIqRcwg+QrQ7Mx
+   Q==;
+X-CSE-ConnectionGUID: TWXq+50sQ9OvVX7sLHORiQ==
+X-CSE-MsgGUID: 7KqujmUZQImA/N0emTYZ2w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="35518220"
+X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
+   d="scan'208";a="35518220"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:06 -0700
+X-CSE-ConnectionGUID: /0mAd8ECTXqelpKpeQuAfA==
+X-CSE-MsgGUID: 6eMiZhjuRfSko/i4n3d/bA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,257,1739865600"; 
+   d="scan'208";a="134663527"
+Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 11:39:04 -0700
+Message-ID: <9dcf8bd9-f4c3-4c7d-a717-ff3eb95f12b9@intel.com>
+Date: Fri, 2 May 2025 11:39:02 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aBTzK_vZ0kBh9CLV@x1>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 12/18] x86/kexec: add support for passing kexec
+ handover (KHO) data
+To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de,
+ ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de,
+ catalin.marinas@arm.com, corbet@lwn.net, dave.hansen@linux.intel.com,
+ devicetree@vger.kernel.org, dwmw2@infradead.org, ebiederm@xmission.com,
+ graf@amazon.com, hpa@zytor.com, jgowans@amazon.com,
+ kexec@lists.infradead.org, krzk@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+ pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org,
+ ptyadav@amazon.de, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org,
+ saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de,
+ thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+References: <20250501225425.635167-1-changyuanl@google.com>
+ <20250501225425.635167-13-changyuanl@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250501225425.635167-13-changyuanl@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 02, 2025 at 01:30:35PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Apr 30, 2025 at 01:55:48PM -0700, Namhyung Kim wrote:
-> > This is a breakdown of perf_mem_data_src.mem_dtlb values.  It assumes
-> > PMU drivers would set PERF_MEM_TLB_HIT bit with an appropriate level.
-> > And having PERF_MEM_TLB_MISS means that it failed to find one in any
-> > levels of TLB.  For now, it doesn't use PERF_MEM_TLB_{WK,OS} bits.
-> > 
-> > Also it seems Intel machines don't distinguish L1 or L2 precisely.  So I
-> > added ANY_HIT (printed as "L?-Hit") to handle the case.
-> > 
-> >   $ perf mem report -F overhead,dtlb,dso --stdio
-> >   ...
-> >   #           --- D-TLB ----
-> >   # Overhead   L?-Hit   Miss  Shared Object
-> >   # ........  ..............  .................
-> >   #
-> >       67.03%    99.5%   0.5%  [unknown]
-> >       31.23%    99.2%   0.8%  [kernel.kallsyms]
-> >        1.08%    97.8%   2.2%  [i915]
-> >        0.36%   100.0%   0.0%  [JIT] tid 6853
-> >        0.12%   100.0%   0.0%  [drm]
-> >        0.05%   100.0%   0.0%  [drm_kms_helper]
-> >        0.05%   100.0%   0.0%  [ext4]
-> >        0.02%   100.0%   0.0%  [aesni_intel]
-> >        0.02%   100.0%   0.0%  [crc32c_intel]
-> >        0.02%   100.0%   0.0%  [dm_crypt]
-> >        ...
+On 5/1/25 15:54, Changyuan Lyu wrote:
+> From: Alexander Graf <graf@amazon.com>
 > 
-> root@number:~# perf report --header | grep cpudesc
-> # cpudesc : AMD Ryzen 9 9950X3D 16-Core Processor
-> root@number:~# perf mem report -F overhead,dtlb,dso --stdio | head -20
-> # To display the perf.data header info, please use --header/--header-only options.
-> #
-> #
-> # Total Lost Samples: 0
-> #
-> # Samples: 2K of event 'cycles:P'
-> # Total weight : 2637
-> # Sort order   : local_weight,mem,sym,dso,symbol_daddr,dso_daddr,snoop,tlb,locked,blocked,local_ins_lat,local_p_stage_cyc
-> #
-> #           ---------- D-TLB -----------                                   
-> # Overhead   L1-Hit L2-Hit   Miss  Other  Shared Object                    
-> # ........  ............................  .................................
-> #
->     77.47%    18.4%   0.1%   0.6%  80.9%  [kernel.kallsyms]                
->      5.61%    36.5%   0.7%   1.4%  61.5%  libxul.so                        
->      2.77%    39.7%   0.0%  12.3%  47.9%  libc.so.6                        
->      2.01%    34.0%   1.9%   1.9%  62.3%  libglib-2.0.so.0.8400.1          
->      1.93%    31.4%   2.0%   2.0%  64.7%  [amdgpu]                         
->      1.63%    48.8%   0.0%   0.0%  51.2%  [JIT] tid 60168                  
->      1.14%     3.3%   0.0%   0.0%  96.7%  [vdso]                           
-> root@number:~#
+> kexec handover (KHO) creates a metadata that the kernels pass between each
+> other during kexec. This metadata is stored in memory and kexec image
+> contains a (physical) pointer to that memory.
+> 
+> In addition, KHO keeps "scratch regions" available for kexec: physically
+> contiguous memory regions that are guaranteed to not have any memory that
+> KHO would preserve. The new kernel bootstraps itself using the scratch
+> regions and sets all handed over memory as in use. When subsystems that
+> support KHO initialize, they introspect the KHO metadata, restore preserved
+> memory regions, and retrieve their state stored in the preserved memory.
+> 
+> Enlighten x86 kexec-file and boot path about the KHO metadata and make sure
+> it gets passed along to the next kernel.
 
-I guess it's because those samples don't have mem_info as they are not
-memory instructions.
-
-Can you please re-run the perf record with filters like below?
-
-  $ perf record -aW --sample-mem-info -e cycles:P --filter 'mem_op == load || mem_op == store' sleep 1
-
-Thanks,
-Namhyung
-
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
