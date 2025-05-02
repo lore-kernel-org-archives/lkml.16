@@ -1,89 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58C7E376;
-	Fri,  2 May 2025 18:39:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720D5376;
+	Fri,  2 May 2025 18:40:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746211182; cv=none; b=Fqk4aogoKNcfIlZfNC3WcoaWe7eTdDF9pgcw4tMt5aSiGDZhqAJ2LS8gw/Q20ZyRGhMlUdqfhDvHKhIKN1abvAUDaFmRkauOa5ciSgvo6ULDXFSzZvKnS1NoxnejMyfDDPdcG6HdkhlUE/gtGgfbdVE0nCxV/CN9bLzhkfXakqs=
+	t=1746211221; cv=none; b=KbEEgShzfaUPLwX8NRzC1aW7oelfwkH6Zp6QRMiZ1oE7m3PYM62eVR4YGGLVwEnell/wFvyXrRY+cCH+OUy/4SRnJcKTw6J7ZwKnB1AIuFR4CeGbgUKn+gULzGNFXS8H/jdcqdfIEqKQnKcdtdIe7yJsPWcTFxwtbgzoazx5qEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746211182; c=relaxed/simple;
-	bh=eWeXFUsFqqWiEPqkBtlgn2arWqgAePgxBwoLc+q61HE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YO1bn0EMe1fMF1cm7+axVilgrVyB2yPkRUiXkcvXWentfnBBgi6sYcVqN7ktL0F2yVNdYaGiXw8C9HglwlRr2sMF5VLO0VuSERQb9PiOUQoqoromdmjIXliJXLcLaPLPSayGSm64KaA/7fND/NKtCgFtOfqcOOFdCLJsKpIaMfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3Zty5YU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746211221; c=relaxed/simple;
+	bh=WWlvYWvX5sQaxtSf9NvaWtWy2I/qNM9Vtev3NIybXbA=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=m6OQ50RLpvaeRtGvomK9tJoVH3mqeU3oXFrR20mL8lCq7UHWzR/z8CyNeJlPvfeUwqz+e4wri7N2v2Qxt4H0KQFQdsZLpFotHiPHNE4fgfzYFbMtFBgj9yGe2JtXtz8av7KMuBqZwPzSsMd5isvWHYBXK1iyjnaqb2i26biFc0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yVuP1VVo; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=VjCaq9RB; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3Zty5YU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F421C4CEE4;
-	Fri,  2 May 2025 18:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746211182;
-	bh=eWeXFUsFqqWiEPqkBtlgn2arWqgAePgxBwoLc+q61HE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E3Zty5YU1xMsuwMJiRCigUgxNI39PvZ1N4jx+iMe0TG98rOw+D10SZ/8qCZA1nGFb
-	 GxikXPlZKLL/qyg8Q5YRuluzxVKFthm+DnWOHyrIk92LuGQ90gjET/Exledj66MVWL
-	 9iXWT5uvP4sV/0u6IpZQ1SeudVmOG5Olti8MfMO7Bj9iV3CLd61yXArnXv8Mc9maaQ
-	 3qo1CiRcgz+ztVAOsa/C12epXmtZTiv2w3DLbBZSaPsAYKF146gCJR/ZLV24ahDjAn
-	 1kjPpgssr4zA7X5otC3WDK+r6xIcjC95bXdU6x9nB/8lpZR3Lrb12WgjNq6joi2iiA
-	 j6BwLYBXmCO1w==
-Date: Fri, 2 May 2025 08:39:41 -1000
-From: Tejun Heo <tj@kernel.org>
-To: Waiman Long <longman@redhat.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>,
-	Roman Gushchin <roman.gushchin@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Muchun Song <muchun.song@linux.dev>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	cgroups@vger.kernel.org, linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v8 0/2] memcg: Fix test_memcg_min/low test failures
-Message-ID: <aBURbZD1ZpIUPt64@slm.duckdns.org>
-References: <20250502010443.106022-1-longman@redhat.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yVuP1VVo";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VjCaq9RB"
+Date: Fri, 02 May 2025 18:39:58 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1746211210;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=j7SU9mYn5lZkGovlo7OmGthVh7uDHm0Iv4HEWIY1lb4=;
+	b=yVuP1VVo5ZX0KUuBXKbQO0wJqVJTna67H+uh5FGXfEgSSHn0Fp5VeVyJmmu9Q9lg+Epqq2
+	8IN2WGrtHYGwXeuDa6VFzaLHgdLWct39ZfCkXGPFdZZsduyvfc2FOtjA8ncIpnOIi5xKCp
+	sXR7bQ6TXJBShuzLCfU8MfRINg8CpWZD9gMVKzc5I/IymKOHD7iIgJIpqFgWTulCDsw6IM
+	1vE0+VXpJIKzfRkFm5eUmd4LZo+amdCPAhcEn7hynlC9FraPB12/7tJfoeV/7uj2zGgGMm
+	T67diNlIWoP1zPyNC/W0R9XLV5kUEhs4/Fybm3htR1HKFoYggSrQrsR5/wDFKA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1746211210;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=j7SU9mYn5lZkGovlo7OmGthVh7uDHm0Iv4HEWIY1lb4=;
+	b=VjCaq9RB7eRuX9vL2uxoFskg7an1mdY2qS5g2NLUSNt+XDVo9/WwE0c7w1zXV4UnylPBwV
+	KLLVtW9989EcCaAQ==
+From: "tip-bot2 for Bagas Sanjaya" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/microcode] x86/cpu: Add "Old Microcode" docs to hw-vuln toctree
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250502010443.106022-1-longman@redhat.com>
+Message-ID: <174621120116.22196.10353372719782138280.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 01, 2025 at 09:04:41PM -0400, Waiman Long wrote:
-> v8:
->  - Ignore the low event count of child 2 with memory_recursiveprot on
->    in patch 1 as originally suggested by Michal.
-> 
-> v7:
->  - Skip the vmscan change as the mem_cgroup_usage() check for now as
->    it is currently redundant.
-> 
-> v6:
->  - The memcg_test_low failure is indeed due to the memory_recursiveprot
->    mount option which is enabled by default in systemd cgroup v2 setting.
->    So adopt Michal's suggestion to adjust the low event checking
->    according to whether memory_recursiveprot is enabled or not.
-> 
-> The test_memcontrol selftest consistently fails its test_memcg_low
-> sub-test (with memory_recursiveprot enabled) and sporadically fails
-> its test_memcg_min sub-test. This patchset fixes the test_memcg_min
-> and test_memcg_low failures by adjusting the test_memcontrol selftest
-> to fix these test failures.
-> 
-> Waiman Long (2):
->   selftests: memcg: Allow low event with no memory.low and
->     memory_recursiveprot on
->   selftests: memcg: Increase error tolerance of child memory.current
->     check in test_memcg_protection()
+The following commit has been merged into the x86/microcode branch of tip:
 
-Acked-by: Tejun Heo <tj@kernel.org>
+Commit-ID:     4804f5ad5d63cf7ddad148132a3ecea11410dfa9
+Gitweb:        https://git.kernel.org/tip/4804f5ad5d63cf7ddad148132a3ecea11410dfa9
+Author:        Bagas Sanjaya <bagasdotme@gmail.com>
+AuthorDate:    Fri, 02 May 2025 09:33:57 +07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Fri, 02 May 2025 11:33:35 -07:00
 
-Probably best to go through -mm? If cgroup would be better, please let me
-know.
+x86/cpu: Add "Old Microcode" docs to hw-vuln toctree
 
-Thanks.
+Sphinx reports missing toctree entry warning:
 
--- 
-tejun
+Documentation/admin-guide/hw-vuln/old_microcode.rst: WARNING: document isn't included in any toctree
+
+Add entry for "Old Microcode" docs to fix the warning.
+
+Fixes: 4e2c719782a847 ("x86/cpu: Help users notice when running old Intel microcode")
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Link: https://lore.kernel.org/all/20250502023358.14846-1-bagasdotme%40gmail.com
+---
+ Documentation/admin-guide/hw-vuln/index.rst | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
+index 451874b..cf15111 100644
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@ -23,3 +23,4 @@ are configurable at compile, boot or run time.
+    gather_data_sampling
+    reg-file-data-sampling
+    rsb
++   old_microcode
