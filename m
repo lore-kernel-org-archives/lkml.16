@@ -1,125 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA382343AF;
-	Fri,  2 May 2025 12:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CDD12343AF
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:37:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189428; cv=none; b=FbBNadpOz1WUZg7rzlFocrp4Rwu/5itXJ5Pp5eGXE7ofNV9t41qJR7Vy2KVwOG/RjgY93mUlWl0baNs4B8sgTjyjnbln6CuqT2ZBOE8TUYSpkpovP+bjeGiH8OdusHQ6Eo+Gd9ZzzOWJ330ehoCldRUbm4Xj2nGBlqCJmrFLuF0=
+	t=1746189455; cv=none; b=be1d3+Q3sO9JoXhmOipxlFOuKwbcDDTezWdiWc4qAzCpprIqUK+PH/k+IK8RhnBXLfuOtJAF2Y3ILt+8X3EGZdqkFF2+9cL5f4JR3QNpRzrKUl42+dJkpiXx++MtoUFjLwcAADcFbfgs8zB4v9mL/+T1e6Z76/LbKLfnhmVoyUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189428; c=relaxed/simple;
-	bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Bu9uZ1cl9kQvFmQQM7MrwpQ8bXnSysqDP1awFBSq2ZFS+krc9lP8emH2ZUtt6EeJzlUmoNBAKDmcIWiHy4/+gbU+GRPDfF+itLCoXuIPgb10kRGavBWF6tqM2aokna7ge4KiC9KB5Ilz2l5CUiqcY99ETVqpepj+8JVd6q0xKes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f6jeTHPK; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746189455; c=relaxed/simple;
+	bh=i9qafAyvt4Sqrxt9qfuo2++lLzaRzoiUtvRXlje/Nyo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I6PDovBzyluxyW+lbr6Ee7/oV/03fF6od/TFocO+qqmC1NmE/Dc3toIZHv1xt1ozoYtAM/ReabdMSoCz1gXsgXexualv7spjvbi8DwytKuI4m/PX4fEw4r/JENEM00Nl/XcwADU5xDJ/EH+eldf18YM7cxT+/M7Od4Cklk4L27Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JcCTrYCJ; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f6jeTHPK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746189427; x=1777725427;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=3RrRQioMmY9W3U549so7dN6E6HO0z0x4sBheM1e4sgs=;
-  b=f6jeTHPK0LWnujIO9ISmaL7LGXOaICj0G5wObnI2+9ZOJhPZ/50X4F3A
-   xC+10j5SpBJgl2kE1lSejg2rDvNQjkFHbrIQl++NlSqLb3thgyNqMNlWI
-   /W13ydP5tfkaUAtHuyPucz7nSiGxvtx+Mjz3qYicod5bkEwrfr4SkfbaD
-   4FgJVQ4lsjRWS7jxj+0MhsutneO3tUFqGMuL9fyZKXxT2EPZG6DTn+RcA
-   wZMO9BmDGbdteykhJx8/25wbbdLl2MLFXjWxIQWKd/trTN/rLn6z4qWF3
-   STJaozE8tI9Z3FdUVFfJpj/yzo4tN53aAsgk6LTXKefAswWTtgsnwWX3x
-   Q==;
-X-CSE-ConnectionGUID: znjMJG8PSuSw+13tgxOC/g==
-X-CSE-MsgGUID: tIZh7qIQQ0apiqJPZk5CmA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58078335"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58078335"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:05 -0700
-X-CSE-ConnectionGUID: vGEnkxCiQ76ZBLd4Ck/A8Q==
-X-CSE-MsgGUID: GWlg6MNVT0etXQpnNGIIDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134528571"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.135])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 05:37:02 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 2 May 2025 15:36:58 +0300 (EEST)
-To: Randy Dunlap <rdunlap@infradead.org>
-cc: LKML <linux-kernel@vger.kernel.org>, Vadim Pasternak <vadimp@nvidia.com>, 
-    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] platform/mellanox: MLXREG_DPU depends on I2C
-In-Reply-To: <20250502001622.674263-1-rdunlap@infradead.org>
-Message-ID: <150c0b1b-8845-db78-39d3-388d3ca79613@linux.intel.com>
-References: <20250502001622.674263-1-rdunlap@infradead.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JcCTrYCJ"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39ac8e7688aso1367643f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:37:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746189451; x=1746794251; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E+LD7uFVP1leLiXU44C+zD7gJP6t/daHyVJD0W+bQs4=;
+        b=JcCTrYCJRcUTLKDTZM2kyE6yrqNX666v/kKkrOWmeLuTHTMovJkpx1WSUfFcKOMMVA
+         12hhXXcbTxKIZa2w/37x7uXPHj+PCxhq2WXjnVTL7bMACPvE4O9G7BSgm2ubMGWU3zPG
+         VaSssGG6qdXpAyGROzA6Op0GpQV8B6QgWxunlueke35YUEO10+RqrE+khx2aQAnFsfmX
+         7JVgR2im9yYXtiWEvrYiYhwz4HTcDumgvzyTZRrU1JFRQKDZUIlL6CJupFgx9lg4/jcL
+         aGraqdMByjbSiLdjTJnDaxSE6Hx1f7LLf1Nz6kYCbZ6WZu1tHEHfm49B9E0aVjc+qu8y
+         LyvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746189451; x=1746794251;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E+LD7uFVP1leLiXU44C+zD7gJP6t/daHyVJD0W+bQs4=;
+        b=vWatH9+qnwudaxdFdblyL/onyBbBkXmQ3KnYaDJ5MY8OWT5+1A5d8LUOEb46O7Nxts
+         10+y4npz28U6RBdHYs+F815b3FnoVRXoFx+VKNqLYM24VH1Nqu+vam7Am8BvKmTc8GjY
+         CbtUftIdJyjAT8ynmFdyLNg6jFSktJacGfJzpiyWvZIOSMvo2tW4cPoAE4BWGz7sYKrb
+         3ymDUhRXewO53+pH92uDNEWbUeaMUexN+BCBAKvFmmg8V9docl83rILd2fuRvzDa81AX
+         smxczoHFwp2Cw+opscHCTZvaWAtFUMDVcYLHVphAeMoOjUgqTZvKrTl/QviGocfePfvb
+         rv0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUR/86TVhc0pKpqM0AOSBqv0HFOUSeCBXHX05jSJarWWWeNVQCD/ul6T0Dt9w+1WbIKJIWwKqcw6+ryRgQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzuFOHHRHpsb7buqgJDTkM3e64lyixny/A7bpx9XJkDXvcFAtp4
+	+zIjM9FX/Dju8DQebBycGtd/JlICZO6FsGGBF4/2hvk5AYVoZFhyo1jwwedreoK+3eMy3STIhWo
+	KASlAznOICVtZ9nTiBLE6CUKxuqet8b3VH7pE
+X-Gm-Gg: ASbGncsluz0kc+JWug5HXBWQe/KzEBgM2TrPrd9uwsdvTdMW1gtvOrtCE183wEwbBLJ
+	xgHRmcp2Q9T0algLCXVh7t/bJI4XG0iZhKVDc5VCNEkW1iVxPR1bMeE5zayN1SlO7gU6fcMvTup
+	Qb2mU7XKX4BToz6KIpJjEA2fv6MgZiHZ8wz6vIoUZD8G//dN5GRSAM
+X-Google-Smtp-Source: AGHT+IGPyMbs/4uv+xTOcLOHcJXPcSy0mP9URN/0D+0p2zNyPN27jpO0nnO9tXJRxDAaEoX12v69dBZuX5X5K2lpJgI=
+X-Received: by 2002:a05:6000:186b:b0:3a0:90bf:b9b with SMTP id
+ ffacd0b85a97d-3a099ad40dcmr1830545f8f.8.1746189451420; Fri, 02 May 2025
+ 05:37:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-1411073070-1746189394=:958"
-Content-ID: <20731f71-4262-d7d5-77e4-e0926c256de4@linux.intel.com>
+References: <20250502-aref-from-raw-v1-1-eb0630626bba@kernel.org>
+ <y-zNJ4bc_qB45bZdnhojbouRbKGZCnzfvM4um6WShQHCTrvN6WikMId_DeZsZz2iSiSQwfNZ13cabCinPpDDlA==@protonmail.internalid>
+ <aBS0ZP9tFnujvodq@google.com> <87plgrxkg4.fsf@kernel.org>
+In-Reply-To: <87plgrxkg4.fsf@kernel.org>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Fri, 2 May 2025 14:37:19 +0200
+X-Gm-Features: ATxdqUHyw9AleEOVnpS-XOSafxmeCRy9bKz9vYtTiEE1KChzGVzZPTpoAk5KAK4
+Message-ID: <CAH5fLgj3j2BEyOmVw+T_988e_h1TYRmYVuEDYaL-baRu_mQq4g@mail.gmail.com>
+Subject: Re: [PATCH] rust: elaborate safety requirements for `AlwaysReferenceCounted`
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Oliver Mangold <oliver.mangold@pm.me>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Fri, May 2, 2025 at 2:32=E2=80=AFPM Andreas Hindborg <a.hindborg@kernel.=
+org> wrote:
+>
+> "Alice Ryhl" <aliceryhl@google.com> writes:
+>
+> > On Fri, May 02, 2025 at 01:53:57PM +0200, Andreas Hindborg wrote:
+> >> Clarify that implementers of `AlwaysReferenceCounted` must prevent the
+> >> implementer from being directly initialized by users.
+> >>
+> >> It is a violation of the safety requirements of `AlwaysReferenceCounte=
+d` if
+> >> its implementers can be initialized on the stack by users. Although th=
+is
+> >> follows from the safety requirements, it is not immediately obvious.
+> >>
+> >> The following example demonstrates the issue. Note that the safety
+> >> requirements for implementing `AlwaysRefCounted` and for calling
+> >> `ARef::from_raw` are satisfied.
+> >>
+> >>   struct Empty {}
+> >>
+> >>   unsafe impl AlwaysRefCounted for Empty {
+> >>       fn inc_ref(&self) {}
+> >>       unsafe fn dec_ref(_obj: NonNull<Self>) {}
+> >>   }
+> >>
+> >>   fn unsound() -> ARef<Empty> {
+> >>       use core::ptr::NonNull;
+> >>       use kernel::types::{ARef, RefCounted};
+> >>
+> >>       let mut data =3D Empty {};
+> >>       let ptr =3D NonNull::<Empty>::new(&mut data).unwrap();
+> >>       let aref: ARef<Empty> =3D unsafe { ARef::from_raw(ptr) };
+> >>
+> >>       aref
+> >>   }
+> >
+> > I don't think it's entirely impossible to write an AlwaysRefCounted
+> > value that can be on the stack. The type just needs a lifetime
+> > parameter. For example, this API is not unsound:
+> >
+> > struct MyDataStorage {
+> >     // ...
+> > }
+> >
+> > impl MyDataStorage {
+> >     fn as_aref(&self) -> ARef<MyData<'_>> {
+> >         unsafe { ARef::from_raw(ptr::from_ref(self).cast()) }
+> >     }
+> > }
+> >
+> > #[repr(transparent)]
+> > struct MyData<'s> {
+> >     storage: MyDataStorage,
+> >     _lifetime: PhantomData<&'s MyDataStorage>,
+> > }
+> >
+> > unsafe impl AlwaysRefCounted for MyData<'_> {
+> >     fn inc_ref(&self) {}
+> >     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+> > }
+> >
+> > impl Deref for MyData<'_> {
+> >     type Target =3D MyDataStorage;
+> >     fn deref(&self) -> &MyDataStorage {
+> >         &self.storage
+> >     }
+> > }
+>
+> Right. I would rephrase then:
+>
+> It is a violation of the safety requirements of `AlwaysReferenceCounted`
+> if its implementers can be initialized on the stack by users and an
+> `ARef` referencing the object can outlive the object. Although this follo=
+ws from
+> the safety requirements, it is not immediately obvious.
+>
+> and
+>
+> +/// Note: This means that implementers must prevent users from directly
+> +/// initializing the implementer when the implementer is `'static`. Othe=
+rwise users could
+> +/// initialize the implementer on
+> +/// the stack, which would violate the safety requirements.
+>
+> What do you think?
 
---8323328-1411073070-1746189394=:958
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <5e401ceb-7dc3-8190-71ca-be626e46298f@linux.intel.com>
+Hmm. Perhaps we should say that you can never own it "by value". There
+must always be pointer indirection.
 
-On Thu, 1 May 2025, Randy Dunlap wrote:
-
-> WARNING: unmet direct dependencies detected for REGMAP_I2C
->   Depends on [m]: I2C [=3Dm]
->   Selected by [y]:
->   - MLXREG_DPU [=3Dy] && MELLANOX_PLATFORM [=3Dy]
->=20
-> Without the dependency, REGMAP_I2C=3Dy since MLXREG_DPU=3Dy.
-> Since CONFIG_I2C=3Dm, this causes many (> 230) unmet dependency warnings.
-> E.g.:
->   Selected by [m]:
->   - EEPROM_AT24 [=3Dm] && I2C [=3Dm] && SYSFS [=3Dy]
->   - SERIAL_MAX310X [=3Dm] && TTY [=3Dy] && HAS_IOMEM [=3Dy] && SPI_MASTER=
- [=3Dy] && I2C [=3Dm]
->   - PINCTRL_AW9523 [=3Dm] && PINCTRL [=3Dy] && OF [=3Dy] && I2C [=3Dm]
->   - PINCTRL_CY8C95X0 [=3Dm] && PINCTRL [=3Dy] && I2C [=3Dm]
->   - GPIO_FXL6408 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
->   - GPIO_DS4520 [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
->   - GPIO_PCA953X [=3Dm] && GPIOLIB [=3Dy] && I2C [=3Dm]
->   - IP5XXX_POWER [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
->   - BATTERY_CW2015 [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
->   - CHARGER_SBS [=3Dm] && POWER_SUPPLY [=3Dy] && I2C [=3Dm]
->=20
-> Fixes: 3e75f2954116 ("platform/mellanox: mlxreg-dpu: Add initial support =
-for Nvidia DPU")
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Vadim Pasternak <vadimp@nvidia.com>
-> Cc: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> Cc: platform-driver-x86@vger.kernel.org
-> ---
->  drivers/platform/mellanox/Kconfig |    1 +
->  1 file changed, 1 insertion(+)
->=20
-> --- linux-next-20250501.orig/drivers/platform/mellanox/Kconfig
-> +++ linux-next-20250501/drivers/platform/mellanox/Kconfig
-> @@ -29,6 +29,7 @@ config MLX_PLATFORM
-> =20
->  config MLXREG_DPU
->  =09tristate "Nvidia Data Processor Unit platform driver support"
-> +=09depends on I2C
->  =09select REGMAP_I2C
->  =09help
->  =09  This driver provides support for the Nvidia BF3 Data Processor Unit=
-s,
->=20
-
-Thanks for the patch but the review-ilpo-next branch already has this=20
-fixed, just waiting for lkp to build test it until it propagates into=20
-for-next.
-
---=20
- i.
---8323328-1411073070-1746189394=:958--
+Alice
