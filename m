@@ -1,128 +1,127 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C0A3215789;
-	Fri,  2 May 2025 18:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDED21D6187
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 18:03:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746208956; cv=none; b=rIs0uSs3FACSGiNimeDJfYkJ93SdkEQeuXsHUAC/AekYtg1XXshdsgTbDfN0u1NJKAVmDbDNFoPiohlI0kEE+wcooIW9WSakjirgMQQeZCtxSiSDMnhWk4JaibgFjDj9aGzBhMvZCAjSnvod0KtW86vbDZQsujuWh8e5z1Dv3p8=
+	t=1746208998; cv=none; b=BuVQerJE32cXhE/9/GoijCtXHKjwnxbIx9T/4p8rzoLYCxEETNGcV7+mQyPUbGSPLkDArcXxO6ywb9a8mha1pxhi+dE1C8c4hhHlZ6E+D365UxZnrCmqIxPXzDbCz6AD2Q68zKJsE9dYpAgzPkwoqCxrT5UDsnthPjk4sLl0rPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746208956; c=relaxed/simple;
-	bh=P09igpDPPUN4W2AMrznc4R4gg1j+zk9bYVIjtPmI5Qo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cQ76FQJCFM9LckDwwL1T58tTrgCg3yHLSmlnscJU1toMfC4Dn0slv0cVxGPrgpK8PjkHKvUfbX2RaQSR3nlGWE7nOxeuQLQDZwqUCtYExdXrH4jr4HvnqPch52warVOWwNh6G4Gp+NVb+vMvm1yKcsMHDl8IZo1PbuGL0GtePro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=VOCJ0eCC; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1746208998; c=relaxed/simple;
+	bh=izXoVRU+7OViSqYvW7E6kyGuXfCC5s4BnUS6j3QPDTE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a22E6iAogseLjUHH6YgzT9BVosGtYj2jYOwh/051asT8VwLDJysSasIDFiLKlzd2kX3pxNMn5j+/4f9C5OEp6kle1P1BF4e+rSj/5r4rAuBnVbeXN3uS45M9OSTO+4HWMNUJoMqLc4dxXzYOSc+oBahXu/OxgvySVbFp6GLGYFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hW321zuB; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="VOCJ0eCC"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 542I1mpa2105495
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 2 May 2025 11:01:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 542I1mpa2105495
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025042001; t=1746208911;
-	bh=YB94RPwo0LiI+lMqmkXijW8cqAbUGVDkYACiu4rhJOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VOCJ0eCCKEI1R2ioFr5ehcvkLYBzIHaFZ7pM8wyOLShTf+o7l9PFmGhWDbsdpLxQW
-	 rcoCbdc89fjuUFgfp7bB1gHXoCLu9YHYUOC9OAcpCU56iXWZ2OKCrPGpjrEMLxkE2d
-	 n/S+MTkFrGLR3Rf9GG0B/ASRUKucjVEKTIdvAyOPgijN7QnsACq5Y2axwtq96cdTCl
-	 5+6d46fXskfc2RwEpwu2heXdygLklUe6dzhmSFhZ15wH2HmKiCsM+42OPweeJlvkgL
-	 waa4XMFGYhcr5mQd3ciW2VlgRbYtUdo8/6h8/XYwibFp0MRNe2QxHohkamu9kpC1+h
-	 ynCS6u6OzyyAw==
-Message-ID: <3a88480e-c705-4914-ac18-9764b799a36c@zytor.com>
-Date: Fri, 2 May 2025 11:01:47 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hW321zuB"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2240aad70f2so16555ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 11:03:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746208996; x=1746813796; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+kbJ8+C/uu2ODDuwjMpH5SsAXpV8tPujfUT5kEiVUq8=;
+        b=hW321zuBqBAcHC9D/AUZYPLj+J0/ZAiTp4m9GZTcQuhynezRSH2QaNuOoQK0+oYCSy
+         FTQ+7FSMLVGN/sFkQ/sQWUSUqLYrKue2wkdzWX7uUsNA+36RH5/m1ZpZoKJWv67Aagnh
+         yuZGRJYnIarlJg4LCkrpt66ugQ+s7sGELFa/MQAfBarqw/y6PpZsxglExPXXgSUV7SdV
+         UV13Emun3tGQcfPpe+8p3h12U7yHNQxWeLaksWnL0DTSWj22L32zZP8l68YA0PikJKMs
+         pfLKsn+rQf6UIjG37SrQW+x43ozF+UmhMSj2v582Kt+lkC8RHQWUe3NAGE4eRsb8RPq6
+         LuHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746208996; x=1746813796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+kbJ8+C/uu2ODDuwjMpH5SsAXpV8tPujfUT5kEiVUq8=;
+        b=tt3jCez1vJHdEVqyiswcRC39FFrDBwpMEZBzFcXd1DRUrvbv8N2qSYjO+zNFy35Pzj
+         5KdYsKfXNMaDN/1/A7Tc10DEXMgGvUEjFFa+K9MVkFvLdh4jPZNCnbhvJKdd+nQHRdms
+         nv8FNssQDpfBsqj9SHxDZ/EJUn2qynGsK6XXJQWW8QHMRDJ0L8gefyACoH0N9b0vJXt8
+         +4rJfFcTPSWboBNZ4lEzEEd+hCrJfmgw65SL4Jm1JuGGQZ8k6BjQKQKghgkL0jZcQPoo
+         cHUYgH9l2mXR7Ifw82Tn6jskn0saMIz1+V488ovtgOSnRhsxSxH0BGyk+tWYEiZ21aHC
+         8l0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVJW4beulv1E2eSaQAuOZy8EfGCDQ2dT47d6+tbEJQIVpO52edASqQxRDhb/qSn4wDrTj5dKR2JhpRI9e8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFG6Cle7S1p5TqjvJUdHOjW2gvrq5hBNZOAiCZaQKh+ZmVmTGv
+	0JaTp/HuuT469WZqTxcwrpu7eDzk/PipcXqyvHu6zt0kgNsKaUu2d2GpauU1RSxUGdR5PE2Mxyq
+	J6GQbN08xvUrbsDQF81hYT3004GasR1nN4v/a
+X-Gm-Gg: ASbGnctyW6c8SzxWB5Gl6sLMEy8JUKfiR9Nff0fouawqX+T3gTv/LkYi6qgf0MUYheV
+	/NPrcQESdgtVgSoyQlzsQ9ZI+zxqbKjKgldHM3M3K3pigdxRPhzYNeVpHYYweEkPf31xOd9nXSL
+	s4nIAsU5psr2yM+3pMwaiargZvDWuTgtor91Bm94W3qV42GMkrH1E+
+X-Google-Smtp-Source: AGHT+IGif0Eh2+5YkpX39b2tNiXHYnZt3gkMnS36U3DbQWNXHb+22416g9jDeQvpOmxKSTiTERO1uErucZK65/w9jk4=
+X-Received: by 2002:a17:902:db0b:b0:21f:631c:7fc9 with SMTP id
+ d9443c01a7336-22e189c0121mr194485ad.0.1746208995602; Fri, 02 May 2025
+ 11:03:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/15] x86/msr: Move rdtsc{,_ordered}() to <asm/tsc.h>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        virtualization@lists.linux.dev, linux-pm@vger.kernel.org,
-        linux-edac@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        netdev@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        acme@kernel.org, jgross@suse.com, andrew.cooper3@citrix.com,
-        peterz@infradead.org, namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
-        wei.liu@kernel.org, ajay.kaher@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, tony.luck@intel.com,
-        pbonzini@redhat.com, vkuznets@redhat.com, seanjc@google.com,
-        luto@kernel.org, boris.ostrovsky@oracle.com, kys@microsoft.com,
-        haiyangz@microsoft.com, decui@microsoft.com,
-        dapeng1.mi@linux.intel.com, ilpo.jarvinen@linux.intel.com
-References: <20250427092027.1598740-1-xin@zytor.com>
- <20250427092027.1598740-3-xin@zytor.com> <aBR_1oQN-gKCREBD@gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <aBR_1oQN-gKCREBD@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20250410080723.953525-1-yeoreum.yun@arm.com> <20250410080723.953525-3-yeoreum.yun@arm.com>
+ <390f3d5e-8da6-4286-b8a9-72eabcc3abd5@redhat.com> <aBUC5fsSVzGkQtUV@arm.com>
+In-Reply-To: <aBUC5fsSVzGkQtUV@arm.com>
+From: Peter Collingbourne <pcc@google.com>
+Date: Fri, 2 May 2025 11:03:02 -0700
+X-Gm-Features: ATxdqUGj_ouubcbGaHwTQTp7_F0tDIVnLUEUzyS1JU_L9W_1IMMJiAzk-HvEemk
+Message-ID: <CAMn1gO7ai3EvHhepJJQXOvjc8_Mp6DEAZg0J1gMKSJTECnU0VA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] prtcl: introduce PR_MTE_STORE_ONLY
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: David Hildenbrand <david@redhat.com>, Yeoreum Yun <yeoreum.yun@arm.com>, will@kernel.org, 
+	broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, 
+	maz@kernel.org, oliver.upton@linux.dev, frederic@kernel.org, 
+	james.morse@arm.com, hardevsinh.palaniya@siliconsignals.io, 
+	shameerali.kolothum.thodi@huawei.com, huangxiaojia2@huawei.com, 
+	mark.rutland@arm.com, samuel.holland@sifive.com, palmer@rivosinc.com, 
+	charlie@rivosinc.com, thiago.bauermann@linaro.org, bgray@linux.ibm.com, 
+	tglx@linutronix.de, puranjay@kernel.org, yang@os.amperecomputing.com, 
+	mbenes@suse.cz, joel.granados@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	nd@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 5/2/2025 1:18 AM, Ingo Molnar wrote:
-> 
-> * Xin Li (Intel) <xin@zytor.com> wrote:
-> 
->> For some reason, there are some TSC-related functions in the MSR
->    ^^^^^^^^^^^^^^^
->> header even though there is a tsc.h header.
-> 
-> The real reason is that the rdtsc{,_ordered}() methods use the
-> EAX_EDX_*() macros to optimize their EDX/EAX assembly accessors, which
-> is why these methods were in <asm/msr.h>.
-> 
-> Your followup patch tacitly acknowledges this by silently creating
-> duplicate copies of these facilities in both headers ...
-> 
-> I've cleaned it all up in tip:x86/msr via these preparatory patches:
-> 
->    x86/msr: Improve the comments of the DECLARE_ARGS()/EAX_EDX_VAL()/EAX_EDX_RET() facility
->    x86/msr: Rename DECLARE_ARGS() to EAX_EDX_DECLARE_ARGS
->    x86/msr: Move the EAX_EDX_*() methods from <asm/msr.h> to <asm/asm.h>
-> 
+On Fri, May 2, 2025 at 10:37=E2=80=AFAM Catalin Marinas <catalin.marinas@ar=
+m.com> wrote:
+>
+> On Thu, Apr 24, 2025 at 10:34:57PM +0200, David Hildenbrand wrote:
+> > On 10.04.25 10:07, Yeoreum Yun wrote:
+> > > PR_MTE_STORE_ONLY is used to restrict the MTE tag check for store
+> > > opeartion only.
+> > >
+> > > Signed-off-by: Yeoreum Yun <yeoreum.yun@arm.com>
+> > > ---
+> > >   include/uapi/linux/prctl.h | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/include/uapi/linux/prctl.h b/include/uapi/linux/prctl.h
+> > > index 15c18ef4eb11..83ac566251d8 100644
+> > > --- a/include/uapi/linux/prctl.h
+> > > +++ b/include/uapi/linux/prctl.h
+> > > @@ -244,6 +244,8 @@ struct prctl_mm_map {
+> > >   # define PR_MTE_TAG_MASK          (0xffffUL << PR_MTE_TAG_SHIFT)
+> > >   /* Unused; kept only for source compatibility */
+> > >   # define PR_MTE_TCF_SHIFT         1
+> > > +/* MTE tag check store only */
+> > > +# define PR_MTE_STORE_ONLY         (1UL << 19)
+> >
+> > That is the next available bit after PR_MTE_TAG_MASK, correct?
+> >
+> > Would we want to leave some space to grow PR_MTE_TAG_MASK in the future
+> > (could that happen?)?
+>
+> The current mask covers 16 tags (bits 59:56 of a pointer) and given the
+> reluctance to have a tag storage of 4 bits per 16 bytes (3% of RAM), I
+> doubt we'd ever grow this.
+>
+> However, you have a good point, we could indeed leave 32 bits for the
+> tag mask, just in case MTE gets so much traction that someone wants 8
+> bits per tag (and likely a bigger granule than 16 bytes). It doesn't
+> cost us anything to add additional bits from (PR_MTE_TAG_SHIFT + 32).
 
-Brilliant!
+If it's 8 bits per tag wouldn't the exclusion mask need to be 256
+bits? I probably wouldn't try to anticipate this case since it would
+likely require a different API anyway.
+
+Peter
