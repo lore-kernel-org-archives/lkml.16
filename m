@@ -1,179 +1,236 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AFF2DC77E;
-	Fri,  2 May 2025 15:20:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396762566;
+	Fri,  2 May 2025 15:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199251; cv=none; b=M7Udiy3xDSuvHnOyd9ZZM/ddcqgHcSPaVB+CQrZ1hk1M5JoxcE92N8CEWNap80g9ugvCh9qwVrvKJB8x21t5dpf1Y6kfhxbgfmsYaSEcvCpCITvo6rjdgY6yPy/XVy1JxPSHeDgcponVN11BOdhOt9q2EBTK5PwrlG/fKCzbD3M=
+	t=1746199322; cv=none; b=X9xZpeusoa0aCSiLPhurPgppFxsx1mdX9zuYSXtC7eV/dyYYq2AVqjqt+h4Pkg15umM1HkM38soImhaKJxYU7C0BtES/VTGtlxli7bSC+7w/O4BEvm9i3F8PrW8/XgzVbDvFyCtrxK7pNP2qgJUPiCvygMJbI6uGoyjRZNA2HZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199251; c=relaxed/simple;
-	bh=gWTxBs0F9UqXJIG0qtujTiPxAtr3572MEERKWgr50PA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e1ZIL2ZjNx2SdwokJ2eve5M2GM2kuq7PmALEv/8y8yihOHH7ZCpJJYXs4OxOCtzfYZooIwSN0Ix7d7PZNMfs0RTkjBE0gRS/f83U9fXA5OyQrKHRLzUHsvq6iT1SrikAFUrYWLBWWo6iAPy8m5K3wjGtIC7xECSOmHneI5DVmY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NBiPbK5e; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746199322; c=relaxed/simple;
+	bh=lOTz4fM30AMVEWlFBUzcvFWNPVkGYLhLbFmCBFLUSGQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RSLFbDUsm6Aoee+RBbbCjs6j5/lSoHQ3/xWCh9YXBofe5En5yNDHepoqo43iHNkPWc5NC0EWQBPItyuTM/ep/g7skykxox6ubqN92XcXHDaInfK8KPHVp+6WFQOm7k9z3q0re9SoS9b4CV5trTlavzlzZTALo4WChjS4+Hm6NPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VLicN+pt; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NBiPbK5e"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso19808995e9.1;
-        Fri, 02 May 2025 08:20:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746199248; x=1746804048; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MkApf9OF2vt2m7wQ3AVnCZaRmP1pVhUuWGCy8xr055s=;
-        b=NBiPbK5eDnA54YGCh/PXmvdfpZGjAforM0JqGe2MFBIKq3FZmuEAXw3H6Y9i/x5y0S
-         qYyO+XlNzDZDiK7WZtIzVEUgyEpm2e31Ib8rF4sFDcyZ15r1QoZLjunHEc1aJ+77Ihiz
-         R0JcE0zkuWElxrPe48Qq7y7iapT/1ofhPWW9N4j4NNSdkVmCvPKVKjls+s0Of6AYuvtQ
-         w3iD1GKefp3p21h0xjyfrXFNn8NwLwICTyhy9yqAmZKlY6vxJwGMKeNYStjVhtMSVc0D
-         Ph3RC/TEyhkzg4OCfvhsauE5oddi+ngRGGd3BcBolgf25Ta0LlsoylB4iel5JzjPBQXG
-         +dtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746199248; x=1746804048;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MkApf9OF2vt2m7wQ3AVnCZaRmP1pVhUuWGCy8xr055s=;
-        b=DTzO84PQrsvSMDddxlKyjWijcTfnxo167p5m7/z85XW+tPdUuAOl1To8QMSXqF5ccW
-         +WZ9wGyR4LeuqU98LdvKgMQe+XG+X0BoYfRgb5pMMYFoM+hOuBUHTSi79gtjfSyOD1Lq
-         kcWBIIsQqTue+0XZAp3tFId2T/uzMb5dMmE97sy8lcglC0QC9ll9DoEx8iyiUcTjfwyl
-         LuqD9zIaSF4+YcR2G99VFcbT4K0U7Yyr9AS7+DfRLvcmPRNqhsK8Uyw0qG8SVwc324YE
-         5SPBO9xz0ZOPNNBfp6QXkOb+1FoSaZ2oM0wi0B3I9Y2OMNDf6tgcAlZ4dhoMVY6bQvhP
-         w7pw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvxs+ykt1ywnCEo2cABWJ5MXI5FG0XpRHj1Y6GwccMemPysUG7YdQOS+C+Vct8iWKnCReMODX4H0QR@vger.kernel.org, AJvYcCWyszZs7tDS5N9tLf/eyMdgAkOfebb/t2gsf/ERxkLkCUQ9eJzYgZZYcYZfq2QbEPYQk9I7D/4Eufbaf5cy@vger.kernel.org, AJvYcCXnU0Ti9nqtGmB/cz7D6GXl0QF+Zay3z7Swbl0E61dvoVFT94uKS5jyrfkx70u0OJ3V9WJpv3PMPve7@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRF8yzimcewUAIdK1U9mrXCP1ROiuRaPqdCrWkLvWIlcU1WIKG
-	QOBiRoU91ygHkNpj9HbZ75Icc+Hks+4s73AbacqVwmEYGJb494gC07A1gcXt
-X-Gm-Gg: ASbGnctFPtGQxUOI7pLk6lkmqAMnFyfwE7MveBGU5pSqsjs3SDZZY8rfye7UcpmAyI5
-	qhrGPMLIFwa6u9KV1AnIEdfzBnVqUwPrY2dLdHbmHIcYXreJQkWy4k1pBJ4lXTc4dnqg9dHIRbR
-	A8xWaN5zEPd7jO/KZCQGJRnz8lfcxNuBLtQt5gO/72PC4wwCLxrRPwJLGHkJJR4x7ZUhkU/kPBw
-	pPAwrNe0LvUTkYOnT511jLKxVfhpZTT8IDUQowWhTmpX+SkSFn/v6OYYKWyDDpRapnMmQWa1607
-	LR9hQ8CqBp4CyPHbbKn95A45tWaoZBMGmEfQVs/i2hl37DUDxxtMAB2gJHdpE9k+QlAX6Q3mLlw
-	S6eE9j8L7sScD
-X-Google-Smtp-Source: AGHT+IFeQ5IkqLdaj8y0dWe3uTpBDyz2jlnuUZvXie29cskA3rNqzqhUsNwvdZ63M7av01RuCLAebg==
-X-Received: by 2002:a05:600c:a08d:b0:43c:fc00:f94f with SMTP id 5b1f17b1804b1-441bbf2d127mr26405915e9.23.1746199247685;
-        Fri, 02 May 2025 08:20:47 -0700 (PDT)
-Received: from ?IPv6:2001:818:ea8e:7f00:2575:914:eedd:620e? ([2001:818:ea8e:7f00:2575:914:eedd:620e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441ae3ee26fsm100635405e9.1.2025.05.02.08.20.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:20:46 -0700 (PDT)
-Message-ID: <44a14b310695b725cdda35226c2e9bf6525b777e.camel@gmail.com>
-Subject: Re: [PATCH v4 05/10] iio: adc: adi-axi-adc: add filter type config
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Antoniu Miclaus <antoniu.miclaus@analog.com>, jic23@kernel.org, 
-	robh@kernel.org, conor+dt@kernel.org, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date: Fri, 02 May 2025 16:20:50 +0100
-In-Reply-To: <20250502085905.24926-6-antoniu.miclaus@analog.com>
-References: <20250502085905.24926-1-antoniu.miclaus@analog.com>
-	 <20250502085905.24926-6-antoniu.miclaus@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VLicN+pt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=el7AZkw1ZRKHIxRciQGDkRJRuJhHBYcxb7Lx2vUA2VY=; b=VLicN+ptqmmrlGpkHyenbaJkO3
+	UKl1u4ZcqZ7oWPbRw6dMMUxn72FaEy0WJ3uleLDo46IZAmhsK1s6PzstYFLXVCoeTFAELrE5DCXZV
+	2a3xjeJXk3jd+MNSv440/ctFcN/2lRBE7zBjIvFKJhZ8qlHasISVIsAF7PhbVmOI9sTPnfKtBF/j0
+	T5ii54POjzNHVsJRtQ6Eurq9+2ni0YwiVd6GYbIqODtfs42ci2vCC2IhgLIcfyKRhIXKA+++xBeTX
+	7vzCcTdWbJuGqjLYTRZaDRmsGTt0uypAIK5VRc3biSMOf5Mo2j4U1WGyzwr0huO9Ilv8zAyVG14w8
+	3oLsV5eQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAsBP-00000004E1V-1rsm;
+	Fri, 02 May 2025 15:20:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id D6C5B30057C; Fri,  2 May 2025 17:20:02 +0200 (CEST)
+Date: Fri, 2 May 2025 17:20:02 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	Valentin Schneider <vschneid@redhat.com>,
+	linux-kernel@vger.kernel.org, virtualization@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, loongarch@lists.linux.dev,
+	linux-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org,
+	kvm@vger.kernel.org, linux-arch@vger.kernel.org,
+	linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	rcu@vger.kernel.org, linux-hardening@vger.kernel.org,
+	linux-kselftest@vger.kernel.org, bpf@vger.kernel.org,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Marcelo Tosatti <mtosatti@redhat.com>,
+	Yair Podemsky <ypodemsk@redhat.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Daniel Wagner <dwagner@suse.de>, Petr Tesarik <ptesarik@suse.com>,
+	Nicolas Saenz Julienne <nsaenz@amazon.com>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Juergen Gross <jgross@suse.com>,
+	Ajay Kaher <ajay.kaher@broadcom.com>,
+	Alexey Makhalov <alexey.amakhalov@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Huacai Chen <chenhuacai@kernel.org>,
+	WANG Xuerui <kernel@xen0n.name>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Paolo Bonzini <pbonzini@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+	Jason Baron <jbaron@akamai.com>, Ard Biesheuvel <ardb@kernel.org>,
+	Luis Chamberlain <mcgrof@kernel.org>,
+	Petr Pavlu <petr.pavlu@suse.com>,
+	Sami Tolvanen <samitolvanen@google.com>,
+	Daniel Gomez <da.gomez@samsung.com>,
+	Naveen N Rao <naveen@kernel.org>,
+	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Kees Cook <kees@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
+	"Mike Rapoport (Microsoft)" <rppt@kernel.org>,
+	Rong Xu <xur@google.com>, Rafael Aquini <aquini@redhat.com>,
+	Song Liu <song@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Brian Gerst <brgerst@gmail.com>,
+	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+	Benjamin Berg <benjamin.berg@intel.com>,
+	Vishal Annapurve <vannapurve@google.com>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	John Stultz <jstultz@google.com>,
+	Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: Re: [PATCH v5 00/25] context_tracking,x86: Defer some IPIs until a
+ user->kernel transition
+Message-ID: <20250502152002.GX4439@noisy.programming.kicks-ass.net>
+References: <20250429113242.998312-1-vschneid@redhat.com>
+ <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
+ <20250430132047.01d48647@gandalf.local.home>
+ <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
+ <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
+ <6c44fa0e-28ed-400e-aaf2-e0e0720d3811@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c44fa0e-28ed-400e-aaf2-e0e0720d3811@intel.com>
 
-On Fri, 2025-05-02 at 11:59 +0300, Antoniu Miclaus wrote:
-> Add support for enabling/disabling filter based on the filter type
-> provided.
->=20
-> This feature is specific to the axi ad408x IP core, therefore add new
-> compatible string and corresponding iio_backend_ops.
->=20
-> Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
-> ---
+On Fri, May 02, 2025 at 07:33:55AM -0700, Dave Hansen wrote:
+> On 5/2/25 04:22, Peter Zijlstra wrote:
+> > On Wed, Apr 30, 2025 at 11:07:35AM -0700, Dave Hansen wrote:
+> > 
+> >> Both AMD and Intel have hardware to do it. ARM CPUs do it too, I think.
+> >> You can go buy the Intel hardware off the shelf today.
+> > To be fair, the Intel RAR thing is pretty horrific 🙁 Definitely
+> > sub-par compared to the AMD and ARM things.
+> > 
+> > Furthermore, the paper states it is a uarch feature for SPR with no
+> > guarantee future uarchs will get it (and to be fair, I'd prefer it if
+> > they didn't).
+> 
+> I don't think any of that is set in stone, fwiw. It should be entirely
+> possible to obtain a longer promise about its availability.
+> 
+> Or ask that AMD and Intel put their heads together in their fancy new
+> x86 advisory group and figure out a single way forward. 
 
-Reviewed-by: Nuno S=C3=A1 <nuno.sa@analog.com>
+This might be a good thing regardless.
 
-> changes in v4:
-> =C2=A0- update commit message to state that the new compatible is added.
-> =C2=A0- checking for max value is done in the iio_backend function.
-> =C2=A0drivers/iio/adc/adi-axi-adc.c | 38 ++++++++++++++++++++++++++++++++=
-+++
-> =C2=A01 file changed, 38 insertions(+)
->=20
-> diff --git a/drivers/iio/adc/adi-axi-adc.c b/drivers/iio/adc/adi-axi-adc.=
-c
-> index 61ab7dce43be..2a3a6c3f5e59 100644
-> --- a/drivers/iio/adc/adi-axi-adc.c
-> +++ b/drivers/iio/adc/adi-axi-adc.c
-> @@ -52,6 +52,7 @@
-> =C2=A0#define=C2=A0=C2=A0 AXI_AD485X_PACKET_FORMAT_20BIT	0x0
-> =C2=A0#define=C2=A0=C2=A0 AXI_AD485X_PACKET_FORMAT_24BIT	0x1
-> =C2=A0#define=C2=A0=C2=A0 AXI_AD485X_PACKET_FORMAT_32BIT	0x2
-> +#define=C2=A0=C2=A0 AXI_AD408X_CNTRL_3_FILTER_EN_MSK	BIT(0)
-> =C2=A0
-> =C2=A0#define ADI_AXI_ADC_REG_DRP_STATUS		0x0074
-> =C2=A0#define=C2=A0=C2=A0 ADI_AXI_ADC_DRP_LOCKED		BIT(17)
-> @@ -402,6 +403,19 @@ static int axi_adc_ad485x_oversampling_ratio_set(str=
-uct
-> iio_backend *back,
-> =C2=A0	}
-> =C2=A0}
-> =C2=A0
-> +static int axi_adc_ad408x_filter_type_set(struct iio_backend *back,
-> +					=C2=A0 enum iio_backend_filter_type type)
-> +{
-> +	struct adi_axi_adc_state *st =3D iio_backend_get_priv(back);
-> +
-> +	if (type)
-> +		return regmap_set_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +				=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 AXI_AD408X_CNTRL_3_FILTER_EN_MS=
-K);
-> +
-> +	return regmap_clear_bits(st->regmap, ADI_AXI_ADC_REG_CNTRL_3,
-> +				 AXI_AD408X_CNTRL_3_FILTER_EN_MSK);
-> +}
-> +
-> =C2=A0static struct iio_buffer *axi_adc_request_buffer(struct iio_backend=
- *back,
-> =C2=A0						 struct iio_dev *indio_dev)
-> =C2=A0{
-> @@ -582,6 +596,24 @@ static const struct iio_backend_info axi_ad485x =3D =
-{
-> =C2=A0	.ops =3D &adi_ad485x_ops,
-> =C2=A0};
-> =C2=A0
-> +static const struct iio_backend_ops adi_ad408x_ops =3D {
-> +	.enable =3D axi_adc_enable,
-> +	.disable =3D axi_adc_disable,
-> +	.chan_enable =3D axi_adc_chan_enable,
-> +	.chan_disable =3D axi_adc_chan_disable,
-> +	.request_buffer =3D axi_adc_request_buffer,
-> +	.free_buffer =3D axi_adc_free_buffer,
-> +	.data_sample_trigger =3D axi_adc_data_sample_trigger,
-> +	.filter_type_set =3D axi_adc_ad408x_filter_type_set,
-> +	.debugfs_reg_access =3D iio_backend_debugfs_ptr(axi_adc_reg_access),
-> +	.debugfs_print_chan_status =3D
-> iio_backend_debugfs_ptr(axi_adc_debugfs_print_chan_status),
-> +};
-> +
-> +static const struct iio_backend_info axi_ad408x =3D {
-> +	.name =3D "axi-ad408x",
-> +	.ops =3D &adi_ad408x_ops,
-> +};
-> +
-> =C2=A0static int adi_axi_adc_probe(struct platform_device *pdev)
-> =C2=A0{
-> =C2=A0	struct adi_axi_adc_state *st;
-> @@ -697,9 +729,15 @@ static const struct axi_adc_info adc_ad7606 =3D {
-> =C2=A0	.has_child_nodes =3D true,
-> =C2=A0};
-> =C2=A0
-> +static const struct axi_adc_info adi_axi_ad408x =3D {
-> +	.version =3D ADI_AXI_PCORE_VER(10, 0, 'a'),
-> +	.backend_info =3D &axi_ad408x,
-> +};
-> +
-> =C2=A0/* Match table for of_platform binding */
-> =C2=A0static const struct of_device_id adi_axi_adc_of_match[] =3D {
-> =C2=A0	{ .compatible =3D "adi,axi-adc-10.0.a", .data =3D &adc_generic },
-> +	{ .compatible =3D "adi,axi-ad408x", .data =3D &adi_axi_ad408x },
-> =C2=A0	{ .compatible =3D "adi,axi-ad485x", .data =3D &adi_axi_ad485x },
-> =C2=A0	{ .compatible =3D "adi,axi-ad7606x", .data =3D &adc_ad7606 },
-> =C2=A0	{ /* end of list */ }
+> > Furthermore, I suspect it will actually be slower than IPIs for anything
+> > with more than 64 logical CPUs due to reduced parallelism.
+> 
+> Maybe my brain is crusty and I need to go back and read the spec, but I
+> remember RAR using the normal old APIC programming that normal old TLB
+> flush IPIs use. So they have similar restrictions. If it's inefficient
+> to program a wide IPI, it's also inefficient to program a RAR operation.
+> So the (theoretical) pro is that you program it like an IPI and it slots
+> into the IPI code fairly easily. But the con is that it has the same
+> limitations as IPIs.
+
+The problem is in the request structure. Sending an IPI is an async
+action. You do, done.
+
+OTOH RAR has a request buffer where pending requests are put and 'polled'
+for completion. This buffer does not have room for more than 64 CPUs.
+
+This means that if you want to invalidate across more, you need to do it
+in multiple batches.
+
+So where IPI is:
+
+ - IPI all CPUs
+ - local invalidate
+ - wait for completion
+
+This then becomes:
+
+ for ()
+   - RAR some CPUs
+   - wait for completion
+
+Or so I thought to have understood, the paper isn't the easiest to read.
+
+> I was actually concerned that INVLPGB won't be scalable. Since it
+> doesn't have the ability to target specific CPUs in the ISA, it
+> fundamentally need to either have a mechanism to reach all CPUs, or some
+> way to know which TLB entries each CPU might have.
+> 
+> Maybe AMD has something super duper clever to limit the broadcast scope.
+> But if they don't, then a small range flush on a small number of CPUs
+> might end up being pretty expensive, relatively.
+
+So the way I understand things:
+
+Sending IPIs is sending a message on the interconnect. Mostly this is a
+cacheline in size (because MESI). Sparc (v9?) has a fun feature where
+you can actually put data payload in an IPI.
+
+Now, we can target an IPI to a single CPU or to a (limited) set of CPU
+or broadcast to all CPUs. In fact, targeted IPIs might still be
+broadcast IPIs, except most CPUs will ignore it because it doesn't match
+them.
+
+TLBI broadcast is like sending IPIs to all CPUs, the message goes out,
+everybody sees it.
+
+Much like how snoop filters and the like function, a CPU can process
+these messages async -- your CPU doesn't stall for a cacheline
+invalidate message either (except ofcourse if it is actively using that
+line). Same for TLBI, if the local TLB does not have anything that
+matches, its done. Even if it does match, as long as nothing makes
+active use of it, it can just drop the TLB entry without disturbing the
+actual core.
+
+Only if the CPU has a matching TLB entry *and* it is active, then we
+have options. One option is to interrupt the core, another option is to
+wait for it to stop using it.
+
+IIUC the current AMD implementation does the 'interrupt' thing.
+
+One thing to consider in all this is that if we TLBI for an executable
+page, we should very much also wipe the u-ops cache and all such related
+structures -- ARM might have an 'issue' here.
+
+That is, I think the TLBI problem is very similar to the I in MESI --
+except possibly simpler, because E must not happen until all CPUs
+acknowledge I etc. TLBI does not have this, it has until the next
+TLBSYNC.
+
+Anyway, I'm not a hardware person, but this is how I understand these
+things to work.
