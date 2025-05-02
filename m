@@ -1,64 +1,71 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240C9205AB9;
-	Fri,  2 May 2025 10:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CC9205AB9
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 10:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746181654; cv=none; b=bDu8GucgP2xTiJlJHnfCHQgNOu/zNJM5ThcxQLP62aigz4ATaWESImUjuGW435PPL2hUy4ukrehY6p92oFNN5I6FvLFHi4UGm1ChyH612ZwSgm5F/GvT81QmDJZP99HJwIehV4QXTWUIlfMYdSzgL0MmlzsAxmepAl8zNTHwzaI=
+	t=1746181704; cv=none; b=EKVulkc72xsVkVGaktx7TAkaVsMcgmvg9x5/cvIN1noyKZBb//8Ly1yESIhK2S/Ev3wUM1MyvN40gfgEyU66qzr0thFoWARFNHsLx7NKRFlLewm7cXY3D8gWhpM8TNevI6r/1kvBapTt4qYh99tJ7GmeZ8+BYwbOW3RBBRkwaEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746181654; c=relaxed/simple;
-	bh=xuh/WQteY3swVTua4deDZ/uDNCLp8v2XD3HQD6/BtE0=;
+	s=arc-20240116; t=1746181704; c=relaxed/simple;
+	bh=SEU8CqxPdXWm5kBs+itfyCdnnlLFQ0gV+s9EvH0h3a4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=THW+2BP8fd76jipsx+N78r8sSSBeUF6uo4yCbGXLG2m6oJA+zm8kerBMgRUQ/MXYz0bsR4A6AZeTdY75Gd8CjIvOzswFf2scteA7lCQT5F825ZnV6GtV2fzpCemOOafNQa4m3rxlP9QeR6TQ9mMOLz+A1lOQOdZmbM2YCJYI+90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d4pfQHOf; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 In-Reply-To:Content-Type; b=cca699BrTE+1x2Jw1FEDiWFNFNg8azaI5irhJAm1SIlTJYMIqYUoPXrnwX5NiicYF8jFMmL0/PnifzWludqWjD4XuE/wkocDYzg6x88xDTiHaHPOOc1Arb7XnM77KPQkPwV8PuxU7u0z1D9F09ICnsaXzYcu+C/uJthu5Wd/jWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=H64ScWfx; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d4pfQHOf"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736bfa487c3so1772039b3a.1;
-        Fri, 02 May 2025 03:27:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746181652; x=1746786452; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=CNSvtlzeetqRmQ7Ywh5GEVTUEx1QnVbPGZ+bGVXhHy8=;
-        b=d4pfQHOfzek0y1P46WXU0CTtHx3Xsga3aK4eeVn9vtsOqXgWzjeF/miY3nvpT5ungq
-         ObpdgaGXJvGTHG92rUQfBijhI1V//PAEA8ydxk6Mg0n1ZxqIchy3U9VDnNy8SZW21Reg
-         rI1QdXYQLtPaIltJiEcjCd1mgJ2yieUV1ucq1qO9sNdFoBDAKkQoGru22rW3n66iqiMC
-         8KBnkPlF2z79y9E9oB+BxAT9Fu95XFWO0uFXdgU0OxC6qrZ+yDP25Z+NVT2xe4w29UlX
-         a0/7arP1GYsqwsGkq24YIUFGcrN6lIXSByTDKYXuuD97Il1TvxNUkl7CRrDGNXyonzt2
-         EpXQ==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H64ScWfx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746181702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=QSbhw2lx3uIU9bt71Ke9bjoVhiyqLGEvU1SMMBHqrLU=;
+	b=H64ScWfxSM7cF+QCqeuldvCfQnV5iv/rxuLuU2M06TyvrdBDVdfvLjxJbiE9I6wZAdZ3Gm
+	mNU2SEC7sst43cb1pSzqdwLWtk5rsocUrVnFYUu6K3GEF6vxlKE76/QLbP29u+y/1+MLZy
+	tlolETy7gRGUeShMloRFcNgvZtlGDko=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-232-JutgP70VMkSzllabD_Zd5A-1; Fri, 02 May 2025 06:28:21 -0400
+X-MC-Unique: JutgP70VMkSzllabD_Zd5A-1
+X-Mimecast-MFC-AGG-ID: JutgP70VMkSzllabD_Zd5A_1746181700
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39ee4b91d1cso1160194f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 03:28:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746181652; x=1746786452;
+        d=1e100.net; s=20230601; t=1746181700; x=1746786500;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CNSvtlzeetqRmQ7Ywh5GEVTUEx1QnVbPGZ+bGVXhHy8=;
-        b=kOFMBRut5wJR/7tb7v0x6rgyei6SyWqJrsCFpTxLSQfjQTldssJHCBSmYQYAvs06PS
-         amZgZrxP+WetfD8+5Lnc+hkJ4ihC30xFViPdQP3ReqVTuJsJeoZ7sDR/yKxdrJVfphjD
-         pMhwxrjCRdmUhUi+gR+AB/TdsWO2maEdq4VdlCHPGDeZCRQZwT+jJI6Qc00p0Ly+kgTy
-         Cs0K7NuYupyweYTrY86y5lxooRFHXTTpbFhhsQ8lWVu14TE0qox2gzv8YzmGugQN4Upq
-         njUW1xvBjrF8Kf5qw5j44RuZZgmGQavBDtEzOXy3Fl8TLY+FLnxtAxFNjyenu8Axsuyi
-         NZWQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCvNzWNaKcU5v7+WoTvPMk8U3Q4s2HUIbY3+Z5vwNrRhXIbhJ3vI0VF5y8I333y1mCJPkiLz6apEpK@vger.kernel.org, AJvYcCVP2nxUsl+ZuQ9E818Zs9kOL6gw3EFLRZd5QkipPDfcbTSUuosEe1oF7sVoQ9BEXUABzlOe/qvWsrBYQtKv@vger.kernel.org, AJvYcCWXHiocfWFzHd18ElXH9Z1hfTSBvA9qTKE1zbQnSyqi0QRiqDau+8kKdhI6EFx9soTqRvTENFmLPVNwY5w=@vger.kernel.org, AJvYcCWbuna1HGBbZyh1s0fqYOSZtiwx9iV0CI7VK1emZz0KYIiHmu522Z4JUBRzMXTmCsUB5g8xmSRvo0S3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6FHhMdMmum64d2QwwM8KOQagR0Oudd2F8nuKxoIMLAMScZ4+2
-	awA6QGgsCcLZeo3W8DLmIu4tBT1llVHQKK/ud4/aYcUBcFFhq2d4
-X-Gm-Gg: ASbGncuOOoQ3BTOGCkPs2RtcoU3/R+7qaqo5mku1ewG288OpByiHp5EIrYvCNV0iaU4
-	CF9wA1IFtdk8lt1yFuU5hBTATWOru7gWa5Nthqt3JZU3w85NLFtJdL4zDoNlQ0djaD3Vq6PdTBd
-	DqqQRaYTU34OcJIF2mxgXq9BTbfC0OUZGF03VGIjYKGY8aCkcXUiz0vDmzMEyVb1CK//iEqt5Qx
-	jFcpp/0IzqjzPTLNRWFwrKJ7uzi5EDPY1kgdJUV6j9idCduaJN5NnhqPU1OYKxZkdjtUS8OtjSS
-	lK9soMMo/fzQ7Dt8PARtVVbIFW19drRtkbn0UcMeevmTZJo0aK5DbILfEtH+gOJ5
-X-Google-Smtp-Source: AGHT+IH5mCb+cEBdztEih9506vzOUTqRr88cZ2G3trTZ0ka/+m7/OCK70IqiZJqOrbDvGQvjY/2Wqg==
-X-Received: by 2002:a17:90b:2dd2:b0:301:c5cb:7b13 with SMTP id 98e67ed59e1d1-30a4e55f5c3mr3438353a91.3.1746181652132;
-        Fri, 02 May 2025 03:27:32 -0700 (PDT)
-Received: from [192.168.1.5] ([182.69.11.114])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a347723basm5283950a91.24.2025.05.02.03.27.28
+        bh=QSbhw2lx3uIU9bt71Ke9bjoVhiyqLGEvU1SMMBHqrLU=;
+        b=dcvsk+WvwBTFCWXijq8O5WUKqdBW9KH+Jyvf7PK02i+dW81ubtBHtPOU608DCTXYG3
+         rRRlNgdWvw6sCcBk3LjJrsDVWglkyxzztuzJrh8uAJ2eEI57sFN9vqw8mW/VqWUvCZmT
+         HM2IGRx2LhRSiN2DMpG3zELRmzhKPp4Hwe7veobYIhWsULXY9pl9Lc4zxHJMY9+mSYPW
+         OW5tzAve7SssZLwxAJKMyCqEXjvRHoM2XGPEbuWc4rYeGJ5OIef4Fe9cNQv9AYKBbJH+
+         +9F8RB15e3NHWXbT35WYqvoykH8vDrpfus5ybsznwycVrtOxZAxXag8hpQfpKiVU/MBg
+         GyOw==
+X-Forwarded-Encrypted: i=1; AJvYcCX0VyQWCo8M1ZzYWde0/3VCUlhSwUjXTD6XoATFLJ1aLHD69bLx7eSKkT/AlcyahrnmTOiHK7eA/uUhFzI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoyyLDEQvP9h4Py6XAWllFjkla+baNt85dl3PbUBhEebRyEwhE
+	e3Lp9tTPkWdupUXq7XWZgEko4PkFi4TGnTuO2F49esznCyvAsKwBRRh8lTQ/7EaVlzvXvhRyVt6
+	dkfR/7L/Ge9mYz0O/c7kKywUxzqKxCcCNOtD3PeNjLvLo2Sz9IbYbVlN8w3RK8A==
+X-Gm-Gg: ASbGncu8RBl+diFN2N+CKXdx8tykiGoOaCLAKN/7OM3ztWUGUhxk6tnBZF7FE/jHOf+
+	+8ntnG5oCp6S4MP2nf6h2yyZQ9Rd8atjhE1niZqo6LJj8oYk+nAyEfQhaWDTvrBmZCh1fQQb9X7
+	nWJswFX/QCce7gWfYA/wNCa1b4OepWGaVBzkB02YN2wH6pdRJDvyaOBmHdcUGaSe8h9hNLT8inx
+	sAat1M0RlGBhhjeB6j+x6rO/TBoqNG9avfq/Hmkwcy7TDteAIKOoLvmuwA/lMQYTkVSpwOsNY70
+	Qmm4uNMpA8ATkGPX6SM=
+X-Received: by 2002:a05:6000:1a85:b0:3a0:8524:b480 with SMTP id ffacd0b85a97d-3a09402cacbmr5066376f8f.2.1746181699723;
+        Fri, 02 May 2025 03:28:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGWyOVTRRGEVNWXO/iDfooNor6IST3SO4x3a3xxs7csOvOKwxwfMPv7xS3Tnv2MrR9Li9kpkg==
+X-Received: by 2002:a05:6000:1a85:b0:3a0:8524:b480 with SMTP id ffacd0b85a97d-3a09402cacbmr5066344f8f.2.1746181699348;
+        Fri, 02 May 2025 03:28:19 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:246d:aa10::f39? ([2a0d:3344:246d:aa10::f39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2ad784asm85337125e9.7.2025.05.02.03.28.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 03:27:31 -0700 (PDT)
-Message-ID: <a701201e-c888-40e5-a57b-45ea0416af31@gmail.com>
-Date: Fri, 2 May 2025 15:57:24 +0530
+        Fri, 02 May 2025 03:28:18 -0700 (PDT)
+Message-ID: <74e11512-934b-446c-94cf-93bf97eff9fb@redhat.com>
+Date: Fri, 2 May 2025 12:28:17 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,176 +73,83 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: dma: convert text based binding to json
- schema
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, dmaengine@vger.kernel.org,
- devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250501-nvidea-dma-v1-1-a29187f574ba@gmail.com>
- <20250502-lush-resolute-cheetah-a8ceee@kuoka>
+Subject: Re: [PATCH net-next v3] selftests/vsock: add initial vmtest.sh for
+ vsock
+To: Stefano Garzarella <sgarzare@redhat.com>,
+ Bobby Eshleman <bobbyeshleman@gmail.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>, Shuah Khan <shuah@kernel.org>,
+ kvm@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ virtualization@lists.linux.dev, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20250428-vsock-vmtest-v3-1-181af6163f3e@gmail.com>
+ <a57wg5kmprrpk2dm3zlzvegb3gzj73ubs5lxeukyinc4edlcsw@itkgfcm44qu2>
 Content-Language: en-US
-From: Charan Pedumuru <charan.pedumuru@gmail.com>
-In-Reply-To: <20250502-lush-resolute-cheetah-a8ceee@kuoka>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <a57wg5kmprrpk2dm3zlzvegb3gzj73ubs5lxeukyinc4edlcsw@itkgfcm44qu2>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-On 02-05-2025 13:28, Krzysztof Kozlowski wrote:
-> On Thu, May 01, 2025 at 01:12:36PM GMT, Charan Pedumuru wrote:
->> Update text binding to YAML.
->> Changes during conversion:
->> - Add a fallback for "nvidia,tegra30-apbdma" as it is
->>    compatible with the IP core on "nvidia,tegra20-apbdma".
->> - Update examples and include appropriate file directives to resolve
->>    errors identified by `dt_binding_check` and `dtbs_check`.
+On 4/30/25 3:06 PM, Stefano Garzarella wrote:
+> On Mon, Apr 28, 2025 at 04:48:11PM -0700, Bobby Eshleman wrote:
+>> This commit introduces a new vmtest.sh runner for vsock.
 >>
-> Please use subject prefixes matching the subsystem. You can get them for
-> example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
-> your patch is touching. For bindings, the preferred subjects are
-> explained here:
-> https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
->
-> Missing final nvidia,tegra20-apbdma prefix.
-
-
-Sure, will update that accordingly.
-
-
->
->
->> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
->> ---
->>   .../bindings/dma/nvidia,tegra20-apbdma.txt         | 44 -----------
->>   .../bindings/dma/nvidia,tegra20-apbdma.yaml        | 90 ++++++++++++++++++++++
->>   2 files changed, 90 insertions(+), 44 deletions(-)
+>> It uses virtme-ng/qemu to run tests in a VM. The tests validate G2H,
+>> H2G, and loopback. The testing tools from tools/testing/vsock/ are
+>> reused. Currently, only vsock_test is used.
 >>
-> ...
->
->> +$id: http://devicetree.org/schemas/dma/nvidia,tegra20-apbdma.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: NVIDIA Tegra APB DMA Controller
->> +
->> +description: |
-> Do not need '|' unless you need to preserve formatting.
->
->> +  The NVIDIA Tegra APB DMA controller is a hardware component that
->> +  enables direct memory access (DMA) on Tegra systems. It facilitates
->> +  data transfer between I/O devices and main memory without constant
->> +  CPU intervention.
->> +
->> +maintainers:
->> +  - Jonathan Hunter <jonathanh@nvidia.com>
->> +
->> +properties:
->> +  compatible:
->> +    oneOf:
->> +      - const: nvidia,tegra20-apbdma
->> +      - items:
->> +          - const: nvidia,tegra30-apbdma
->> +          - const: nvidia,tegra20-apbdma
->> +
->> +  "#dma-cells":
->> +    description:
->> +      Must be <1>. This dictates the length of DMA specifiers
->> +      in client node's dmas properties.
-> Drop description, you are not telling here anything new except
-> explaining basically DT syntax.
->
->> +    const: 1
->> +
->> +  clocks:
->> +    maxItems: 1
->> +
->> +  reg:
->> +    maxItems: 1
-> reg is the second property. Old binding even had it correct.
->
->> +
->> +  interrupts:
->> +    description:
->> +      Should contain all of the per-channel DMA interrupts in
->> +      ascending order with respect to the DMA channel index.
->> +    minItems: 1
->> +    maxItems: 32
->> +
->> +  resets:
->> +    maxItems: 1
->> +
->> +  reset-names:
->> +    const: dma
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> And here the order is correct...
->
->> +  - interrupts
->> +  - clocks
-> But here different. Keep the same order as in properties.
->
->> +  - resets
->> +  - reset-names
->> +  - "#dma-cells"
->> +
-> missing allOf: to dma-controller
+>> VMCI and hyperv support is automatically built, though not used.
+>>
+>> Only tested on x86.
+>>
+>> To run:
+>>
+>>  $ tools/testing/selftests/vsock/vmtest.sh
+> 
+> I tried and it's working, but I have a lot of these messages in the
+> output:
+>      dmesg: read kernel buffer failed: Operation not permitted
+> 
+> I'm on Fedora 41:
+> 
+> $ uname -r
+> 6.14.4-200.fc41.x86_64
 
+This sounds like the test tripping on selinux. I think this problem
+should not be handled by the script itself.
 
-The reason, I didn't include dma-controller is the pattern under 
-$nodename in dma-controller is not matching with the pattern present in 
-dts files.
+[...]
+> ERROR: trailing whitespace
+> #174: FILE: tools/testing/selftests/vsock/vmtest.sh:47:
+> +^Ivm_server_host_client^IRun vsock_test in server mode on the VM and in client mode on the host.^I$
+> 
+> WARNING: line length of 104 exceeds 100 columns
+> #174: FILE: tools/testing/selftests/vsock/vmtest.sh:47:
+> +	vm_server_host_client	Run vsock_test in server mode on the VM and in client mode on the host.	
+> 
+> ERROR: trailing whitespace
+> #175: FILE: tools/testing/selftests/vsock/vmtest.sh:48:
+> +^Ivm_client_host_server^IRun vsock_test in client mode on the VM and in server mode on the host.^I$
+> 
+> WARNING: line length of 104 exceeds 100 columns
+> #175: FILE: tools/testing/selftests/vsock/vmtest.sh:48:
+> +	vm_client_host_server	Run vsock_test in client mode on the VM and in server mode on the host.	
+> 
+> ERROR: trailing whitespace
+> #176: FILE: tools/testing/selftests/vsock/vmtest.sh:49:
+> +^Ivm_loopback^I^IRun vsock_test using the loopback transport in the VM.^I$
+> 
+> ERROR: trailing whitespace
+> #443: FILE: tools/testing/selftests/vsock/vmtest.sh:316:
+> +IFS="^I$
+> 
+> total: 4 errors, 4 warnings, 0 checks, 382 lines checked
+> 
+I almost forgot: I think it's better to avoid the special formatting and
+replies on review for proper updating of the script's help.
 
-So, I excluded it.
+Thanks,
 
-
->
->> +additionalProperties: false
-> unevaluatedProperties instead. Just open any other DMA binding.
-
-
-sure.
-
-
->
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> You included this...
-
-
-I checked the other DMA binding from nvidia, they included the same 
-header file. I can change it to irq.h, if required
-
-
->
->> +    #include <dt-bindings/reset/tegra186-reset.h>
->> +    dma@6000a000 {
-> Doesn't look like correct name. Schema requires specific name.
-
-
-The dt_binding_check is successful when I included allOf to 
-dma-controller and used dma-controller@600 as node name, but when I was 
-checking for dtb, the pattern is not matching with the one
-
-inside dma-controller, so I removed allOf and changed the node name in 
-examples according to the node present inside the dts file.
-
-
->
->> +        compatible = "nvidia,tegra30-apbdma", "nvidia,tegra20-apbdma";
->> +        reg = <0x6000a000 0x1200>;
->> +        interrupts = <0 136 0x04>,
-> ... so use it.
->
-> Best regards,
-> Krzysztof
->
--- 
-Best Regards,
-Charan.
+Paolo
 
