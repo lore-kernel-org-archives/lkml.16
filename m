@@ -1,294 +1,192 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95229243951;
-	Fri,  2 May 2025 11:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746183875; cv=none; b=rmD4tHFTdjjeIWOo06IMK5ii0ne6tldPrmoeLAZZHTba5qyW0whn9tutd+8nK1vBWIFU3CK+vaLjERnqY2omJIcfzWuQZz741nK/o27C8xe5kvi0iMn/O9Wb6f+T/P+wlYuoLGD2wfZ64iqxyfZm8jBab4faIyNTCv8aXQtHe8Y=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746183875; c=relaxed/simple;
-	bh=3OTFRZBkrjijZtuyP1PjuHQyBy+WZ2Tuv4lnEulpl30=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QeUtDEbjwufkSG5XuB+RN5+0dVBsup6Yr6HW9EESolWKuiOOxdOP5JZgsV7XO4c+R45PXJ/HuzN2AbImXG0zCRTNmHMTlotp1qXFAf/6rT6pClwIM0//03Jt0/kPFpGmKJTvJTdGUtPSldWDf6xAE7c1Nlvu/IqE0DG4Sb6XjvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 414501688;
-	Fri,  2 May 2025 04:04:22 -0700 (PDT)
-Received: from [10.57.43.85] (unknown [10.57.43.85])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 645533F66E;
-	Fri,  2 May 2025 04:04:25 -0700 (PDT)
-Message-ID: <bf0b9232-36b0-41c5-89a5-6639719cd09e@arm.com>
-Date: Fri, 2 May 2025 12:04:23 +0100
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECD7F254876;
+	Fri,  2 May 2025 11:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746183874; cv=pass; b=s+Ub3IfSeDuFPMzwQ+hP4YtTVOr+lnrrRdzHVRcoDczlfQb/XljtzsZVx50D3Tu1ycsE05GY1FhJTksNiU3mjNuPo4SyngwfRMFB0420E1k4jfc3SXra0Y9OrMVyK+sF/r0BWsYMFFkPqAwRZ6MDoFUa96PmtLUFu4UmBxiQ9XY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746183874; c=relaxed/simple;
+	bh=gjFsYyl3zi4PwMmGnKtfu9pJqLMqRxhwSZu8oUau0W0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iycjR6kLYZ5Ak7n0ligyfmsEfrTQOfnyn+TrnvPWG4y+ttVp0477OfkfpEJ+gC0rxO/uVxU8NP7juO7MSdjAITSjmzBj3oUK/SKOwc4bK9evSIxM3WRd9u3jtK9fvm5KmGSoJo2xjWPyYgNEE6oZ7M12Dz0BgWc0TrM3eRBtgx0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=DBuM/yse; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="DBuM/yse"
+ARC-Seal: i=1; a=rsa-sha256; t=1746183845; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=QfpYX8qPcxPJnFdXGXN9lwMGLMe6n5Hx+gkOUFh9AQzq+GQ8H7O+MPuhlI6R+DA+lhL/qivgn9ZBdrSiBHggfshcvxP5AKe6REIi5WCtlhQGMHdZALCdP/7+2ZUCA/+7oitS/xykXur3uMAlUv0TerEy6z4L9yxd8hheadcoKjw=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746183845; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kaCYyrbqrYjh5lrSJFFiV+CYsBoA1EBJh7E+FO7i5KI=; 
+	b=eo/i8CrCCNtctZoed5totthRKI5QL2iXYeYtpIvdswFCCgg0NEqLbYhwMV7tjkJP7lyVzeHL6h7ha2CoOIAdW4g3fjxy+wkqT9yeJKu8IFR2V3t4GGejnLn2v3W7w6SGBdSBBJ0Y3wkMniEXNhDRoPnxZ2+EXpASPYxGisPherM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746183845;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=kaCYyrbqrYjh5lrSJFFiV+CYsBoA1EBJh7E+FO7i5KI=;
+	b=DBuM/yseXSvpDadrKZTAE010XkDTy00zELvkOSBV6i2rYr1VEpK8c8yMdFvL4ZDa
+	7mCBqxOYuIrXSic7CaCCfllfz2T7aEAMh5+x0P2kHiuKeZw4XZaJoFjpDOe7ZKbmZgp
+	XtHPvxq7JhN8cMlapZu7Ta9hcn5CKCquYzIH+9Ho=
+Received: by mx.zohomail.com with SMTPS id 1746183842869999.0527254330781;
+	Fri, 2 May 2025 04:04:02 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Date: Fri, 02 May 2025 13:03:13 +0200
+Subject: [PATCH v3 07/10] arm64: dts: rockchip: Add analog audio on RK3576
+ Sige5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 13/43] arm64: RME: Support for the VGIC in realms
-Content-Language: en-GB
-To: Steven Price <steven.price@arm.com>, kvm@vger.kernel.org,
- kvmarm@lists.linux.dev
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Marc Zyngier <maz@kernel.org>,
- Will Deacon <will@kernel.org>, James Morse <james.morse@arm.com>,
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- Joey Gouly <joey.gouly@arm.com>, Alexandru Elisei
- <alexandru.elisei@arm.com>, Christoffer Dall <christoffer.dall@arm.com>,
- Fuad Tabba <tabba@google.com>, linux-coco@lists.linux.dev,
- Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
- Gavin Shan <gshan@redhat.com>, Shanker Donthineni <sdonthineni@nvidia.com>,
- Alper Gun <alpergun@google.com>, "Aneesh Kumar K . V"
- <aneesh.kumar@kernel.org>
-References: <20250416134208.383984-1-steven.price@arm.com>
- <20250416134208.383984-14-steven.price@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250416134208.383984-14-steven.price@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250502-rk3576-sai-v3-7-376cef19dd7c@collabora.com>
+References: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
+In-Reply-To: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
+To: Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Sebastian Reichel <sebastian.reichel@collabora.com>, kernel@collabora.com, 
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org, 
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+X-Mailer: b4 0.14.2
 
-On 16/04/2025 14:41, Steven Price wrote:
-> The RMM provides emulation of a VGIC to the realm guest but delegates
-> much of the handling to the host. Implement support in KVM for
-> saving/restoring state to/from the REC structure.
-> 
-> Signed-off-by: Steven Price <steven.price@arm.com>
-> ---
-> Changes from v5:
->   * Handle RMM providing fewer GIC LRs than the hardware supports.
-> ---
->   arch/arm64/include/asm/kvm_rme.h |  1 +
->   arch/arm64/kvm/arm.c             | 16 +++++++++---
->   arch/arm64/kvm/rme.c             |  5 ++++
->   arch/arm64/kvm/vgic/vgic-init.c  |  2 +-
->   arch/arm64/kvm/vgic/vgic-v3.c    |  6 ++++-
->   arch/arm64/kvm/vgic/vgic.c       | 43 ++++++++++++++++++++++++++++++--
->   6 files changed, 66 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_rme.h b/arch/arm64/include/asm/kvm_rme.h
-> index f716b890e484..9bcad6ec5dbb 100644
-> --- a/arch/arm64/include/asm/kvm_rme.h
-> +++ b/arch/arm64/include/asm/kvm_rme.h
-> @@ -92,6 +92,7 @@ struct realm_rec {
->   
->   void kvm_init_rme(void);
->   u32 kvm_realm_ipa_limit(void);
-> +u32 kvm_realm_vgic_nr_lr(void);
->   
->   int kvm_realm_enable_cap(struct kvm *kvm, struct kvm_enable_cap *cap);
->   int kvm_init_realm_vm(struct kvm *kvm);
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index fd83efb667cc..808d7e479571 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -683,19 +683,24 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
->   		kvm_call_hyp_nvhe(__pkvm_vcpu_put);
->   	}
->   
-> +	kvm_timer_vcpu_put(vcpu);
-> +	kvm_vgic_put(vcpu);
-> +
-> +	vcpu->cpu = -1;
-> +
-> +	if (vcpu_is_rec(vcpu))
-> +		return;
-> +
->   	kvm_vcpu_put_debug(vcpu);
->   	kvm_arch_vcpu_put_fp(vcpu);
->   	if (has_vhe())
->   		kvm_vcpu_put_vhe(vcpu);
-> -	kvm_timer_vcpu_put(vcpu);
-> -	kvm_vgic_put(vcpu);
->   	kvm_vcpu_pmu_restore_host(vcpu);
->   	if (vcpu_has_nv(vcpu))
->   		kvm_vcpu_put_hw_mmu(vcpu);
->   	kvm_arm_vmid_clear_active();
->   
->   	vcpu_clear_on_unsupported_cpu(vcpu);
-> -	vcpu->cpu = -1;
->   }
->   
->   static void __kvm_arm_vcpu_power_off(struct kvm_vcpu *vcpu)
-> @@ -912,6 +917,11 @@ int kvm_arch_vcpu_run_pid_change(struct kvm_vcpu *vcpu)
->   			return ret;
->   	}
->   
-> +	if (!irqchip_in_kernel(kvm) && kvm_is_realm(vcpu->kvm)) {
-> +		/* Userspace irqchip not yet supported with Realms */
-> +		return -EOPNOTSUPP;
-> +	}
-> +
->   	mutex_lock(&kvm->arch.config_lock);
->   	set_bit(KVM_ARCH_FLAG_HAS_RAN_ONCE, &kvm->arch.flags);
->   	mutex_unlock(&kvm->arch.config_lock);
-> diff --git a/arch/arm64/kvm/rme.c b/arch/arm64/kvm/rme.c
-> index f4923fc3b34e..1239eb07aca6 100644
-> --- a/arch/arm64/kvm/rme.c
-> +++ b/arch/arm64/kvm/rme.c
-> @@ -77,6 +77,11 @@ u32 kvm_realm_ipa_limit(void)
->   	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_S2SZ);
->   }
->   
-> +u32 kvm_realm_vgic_nr_lr(void)
-> +{
-> +	return u64_get_bits(rmm_feat_reg0, RMI_FEATURE_REGISTER_0_GICV3_NUM_LRS);
-> +}
-> +
->   static int get_start_level(struct realm *realm)
->   {
->   	return 4 - ((realm->ia_bits - 8) / (RMM_PAGE_SHIFT - 3));
-> diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-> index 1f33e71c2a73..a81c7f3d1d42 100644
-> --- a/arch/arm64/kvm/vgic/vgic-init.c
-> +++ b/arch/arm64/kvm/vgic/vgic-init.c
-> @@ -81,7 +81,7 @@ int kvm_vgic_create(struct kvm *kvm, u32 type)
->   	 * the proper checks already.
->   	 */
->   	if (type == KVM_DEV_TYPE_ARM_VGIC_V2 &&
-> -		!kvm_vgic_global_state.can_emulate_gicv2)
-> +	    (!kvm_vgic_global_state.can_emulate_gicv2 || kvm_is_realm(kvm)))
->   		return -ENODEV;
->   
->   	/* Must be held to avoid race with vCPU creation */
-> diff --git a/arch/arm64/kvm/vgic/vgic-v3.c b/arch/arm64/kvm/vgic/vgic-v3.c
-> index b9ad7c42c5b0..c10ad817030d 100644
-> --- a/arch/arm64/kvm/vgic/vgic-v3.c
-> +++ b/arch/arm64/kvm/vgic/vgic-v3.c
-> @@ -8,9 +8,11 @@
->   #include <linux/kvm_host.h>
->   #include <linux/string_choices.h>
->   #include <kvm/arm_vgic.h>
-> +#include <asm/kvm_emulate.h>
->   #include <asm/kvm_hyp.h>
->   #include <asm/kvm_mmu.h>
->   #include <asm/kvm_asm.h>
-> +#include <asm/rmi_smc.h>
->   
->   #include "vgic.h"
->   
-> @@ -758,7 +760,9 @@ void vgic_v3_put(struct kvm_vcpu *vcpu)
->   		return;
->   	}
->   
-> -	if (likely(!is_protected_kvm_enabled()))
-> +	if (vcpu_is_rec(vcpu))
-> +		cpu_if->vgic_vmcr = vcpu->arch.rec.run->exit.gicv3_vmcr;
-> +	else if (likely(!is_protected_kvm_enabled()))
->   		kvm_call_hyp(__vgic_v3_save_vmcr_aprs, cpu_if);
->   	WARN_ON(vgic_v4_put(vcpu));
->   
-> diff --git a/arch/arm64/kvm/vgic/vgic.c b/arch/arm64/kvm/vgic/vgic.c
-> index 8d189ce18ea0..c68a41a29917 100644
-> --- a/arch/arm64/kvm/vgic/vgic.c
-> +++ b/arch/arm64/kvm/vgic/vgic.c
-> @@ -10,7 +10,9 @@
->   #include <linux/list_sort.h>
->   #include <linux/nospec.h>
->   
-> +#include <asm/kvm_emulate.h>
->   #include <asm/kvm_hyp.h>
-> +#include <asm/kvm_rme.h>
->   
->   #include "vgic.h"
->   
-> @@ -23,6 +25,8 @@ struct vgic_global kvm_vgic_global_state __ro_after_init = {
->   
->   static inline int kvm_vcpu_vgic_nr_lr(struct kvm_vcpu *vcpu)
->   {
-> +	if (unlikely(vcpu_is_rec(vcpu)))
-> +		return kvm_realm_vgic_nr_lr();
->   	return kvm_vgic_global_state.nr_lr;
->   }
->   
-> @@ -864,10 +868,23 @@ static inline bool can_access_vgic_from_kernel(void)
->   	return !static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif) || has_vhe();
->   }
->   
-> +static inline void vgic_rmm_save_state(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
-> +	int i;
-> +
-> +	for (i = 0; i < kvm_vcpu_vgic_nr_lr(vcpu); i++) {
-> +		cpu_if->vgic_lr[i] = vcpu->arch.rec.run->exit.gicv3_lrs[i];
-> +		vcpu->arch.rec.run->enter.gicv3_lrs[i] = 0;
-> +	}
-> +}
+The ArmSoM Sige5 board features an Everest ES8388 codec to provide
+analog stereo audio output, as well as analog audio input. The codec
+hangs off the i2c2 bus and responds to address 0x10. It is connected to
+the SAI1 audio controller of the RK3576, with one SDO (output) lane and
+one SDI (input) lane.
 
-We also need to save/restore gicv3_hcr/cpuif->vgic_hcr.
+The codec has two sets of outputs. One set, LOUT1/ROUT1, is connected
+through a set of 22uF non-polarised coupling capacitors to a 3-position
+connector that appears to be a clone of the JST BM03B-SURS-TF header,
+and is capable of mating with a JST 03SUR-32S (or JST 03SUR-36L if you
+prefer lemon-lime) or compatible clone connector. The right headphone
+output is the one closest to the Type-C DC input connector, the left
+headphone output is the one in the middle, and the third position, the
+one closest to the USB3 Type-A host connector, is puzzingly labelled as
+"HP_GND" in the schematic but is in fact connected to the codecs RIN1
+input through a 1uF non-plarised coupling capacitor.
 
-> +
->   static inline void vgic_save_state(struct kvm_vcpu *vcpu)
->   {
->   	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
->   		vgic_v2_save_state(vcpu);
-> +	else if (vcpu_is_rec(vcpu))
-> +		vgic_rmm_save_state(vcpu);
->   	else
->   		__vgic_v3_save_state(&vcpu->arch.vgic_cpu.vgic_v3);
->   }
-> @@ -903,10 +920,28 @@ void kvm_vgic_sync_hwstate(struct kvm_vcpu *vcpu)
->   	vgic_prune_ap_list(vcpu);
->   }
->   
-> +static inline void vgic_rmm_restore_state(struct kvm_vcpu *vcpu)
-> +{
-> +	struct vgic_v3_cpu_if *cpu_if = &vcpu->arch.vgic_cpu.vgic_v3;
-> +	int i;
-> +
-> +	for (i = 0; i < kvm_vcpu_vgic_nr_lr(vcpu); i++) {
-> +		vcpu->arch.rec.run->enter.gicv3_lrs[i] = cpu_if->vgic_lr[i];
-> +		/*
-> +		 * Also populate the rec.run->exit copies so that a late
-> +		 * decision to back out from entering the realm doesn't cause
-> +		 * the state to be lost
-> +		 */
-> +		vcpu->arch.rec.run->exit.gicv3_lrs[i] = cpu_if->vgic_lr[i];
-> +	}
-> +}
-> +
->   static inline void vgic_restore_state(struct kvm_vcpu *vcpu)
->   {
->   	if (!static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
->   		vgic_v2_restore_state(vcpu);
-> +	else if (vcpu_is_rec(vcpu))
-> +		vgic_rmm_restore_state(vcpu);
->   	else
->   		__vgic_v3_restore_state(&vcpu->arch.vgic_cpu.vgic_v3);
->   }
-> @@ -976,7 +1011,9 @@ void kvm_vgic_flush_hwstate(struct kvm_vcpu *vcpu)
->   
->   void kvm_vgic_load(struct kvm_vcpu *vcpu)
->   {
-> -	if (unlikely(!irqchip_in_kernel(vcpu->kvm) || !vgic_initialized(vcpu->kvm))) {
-> +	if (unlikely(!irqchip_in_kernel(vcpu->kvm) ||
-> +		     !vgic_initialized(vcpu->kvm) ||
-> +		     vcpu_is_rec(vcpu))) {
+LOUT2 and ROUT2 are routed to 1mm test pads T36 and T37 respectively.
+These are located on the bottom of the board, and do not go through any
+coupling capacitor. For use as line out, the ES8388 datasheet recommends
+adding 1uF coupling capacitor if one wishes to use it as a line-level
+output.
 
+There is also a pair of inputs for a stereo microphone, going from two
+1mm testpads T34 and T35, which are decoupled with a 100pF capacitor and
+pulled to 3.3v and ground respectively. These inputs then go through 1uF
+capacitors each and end up in the LINPUT2 and RINPUT2 pins of the
+ES8388 codec.
 
->   		if (has_vhe() && static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
->   			__vgic_v3_activate_traps(&vcpu->arch.vgic_cpu.vgic_v3);
->   		return;
-> @@ -990,7 +1027,9 @@ void kvm_vgic_load(struct kvm_vcpu *vcpu)
->   
->   void kvm_vgic_put(struct kvm_vcpu *vcpu)
->   {
-> -	if (unlikely(!irqchip_in_kernel(vcpu->kvm) || !vgic_initialized(vcpu->kvm))) {
-> +	if (unlikely(!irqchip_in_kernel(vcpu->kvm) ||
-> +		     !vgic_initialized(vcpu->kvm) ||
-> +		     vcpu_is_rec(vcpu))) {
->   		if (has_vhe() && static_branch_unlikely(&kvm_vgic_global_state.gicv3_cpuif))
->   			__vgic_v3_deactivate_traps(&vcpu->arch.vgic_cpu.vgic_v3);
+The codec's power inputs are routed to receive 3.3V for both its analog
+and digital inputs, though from different supplies.
 
-We could return early here for rec, and skip the unnecessary trap steps. 
-Similar for the vgic_load case.
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+ .../boot/dts/rockchip/rk3576-armsom-sige5.dts      | 56 ++++++++++++++++++++++
+ 1 file changed, 56 insertions(+)
 
-Rest looks good to me.
+diff --git a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+index 570252c4c0bfe56a3c269e47d81fca7676e61787..2c991ad974a95fe1995a8d15eaba3e7b07d4dfb6 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3576-armsom-sige5.dts
+@@ -56,6 +56,34 @@ red_led: red-led {
+ 		};
+ 	};
+ 
++	es8388_sound: es8388-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,mclk-fs = <256>;
++		simple-audio-card,name = "On-board Analog ES8388";
++		simple-audio-card,widgets = "Microphone", "Headphone Mic",
++					    "Microphone", "Mic Pads",
++					    "Headphone", "Headphone",
++					    "Line Out", "Line Out";
++		simple-audio-card,routing = "Headphone", "LOUT1",
++					    "Headphone", "ROUT1",
++					    "Line Out", "LOUT2",
++					    "Line Out", "ROUT2",
++					    "RINPUT1", "Headphone Mic",
++					    "LINPUT2", "Mic Pads",
++					    "RINPUT2", "Mic Pads";
++		simple-audio-card,pin-switches = "Headphone", "Line Out";
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai1>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&es8388>;
++			system-clock-frequency = <12288000>;
++		};
++	};
++
+ 	vcc_12v0_dcin: regulator-vcc-12v0-dcin {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "vcc_12v0_dcin";
+@@ -624,6 +652,25 @@ hym8563: rtc@51 {
+ 	};
+ };
+ 
++&i2c3 {
++	status = "okay";
++
++	es8388: audio-codec@10 {
++		compatible = "everest,es8388", "everest,es8328";
++		reg = <0x10>;
++		clocks = <&cru CLK_SAI1_MCLKOUT_TO_IO>;
++		AVDD-supply = <&vcca_3v3_s0>;
++		DVDD-supply = <&vcc_3v3_s0>;
++		HPVDD-supply = <&vcca_3v3_s0>;
++		PVDD-supply = <&vcc_3v3_s0>;
++		assigned-clocks = <&cru CLK_SAI1_MCLKOUT_TO_IO>;
++		assigned-clock-rates = <12288000>;
++		#sound-dai-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&sai1m0_mclk>;
++	};
++};
++
+ &mdio0 {
+ 	rgmii_phy0: phy@1 {
+ 		compatible = "ethernet-phy-ieee802.3-c22";
+@@ -680,6 +727,15 @@ pcie_reset: pcie-reset {
+ 	};
+ };
+ 
++&sai1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sai1m0_lrck
++		     &sai1m0_sclk
++		     &sai1m0_sdi0
++		     &sai1m0_sdo0>;
++	status = "okay";
++};
++
+ &sdhci {
+ 	bus-width = <8>;
+ 	full-pwr-cycle-in-suspend;
 
-Suzuki
-
-
->   		return;
+-- 
+2.49.0
 
