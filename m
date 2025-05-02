@@ -1,127 +1,141 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 100141E883A
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:23:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E7822E3F0;
+	Fri,  2 May 2025 09:23:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746177792; cv=none; b=C+lVbwvvGXxXwJitRIoIsdpZ/+DM9E6NWOKRfhB4e0WVc+ejEitnfWkkTsMlXZxfdbMd9r7x9OP9iS4dSYh5gnjT1GuPvt7rjLJtk3U2v9MhjqXzAkJPIU8xKCVmqltMs2UzJ4OuztjjE5byreqgVmruPZLg2nLsyTnIfA5SkMY=
+	t=1746177796; cv=none; b=oaka13bPlpaWFXY9Jn44oShprG+N8tQrDDOGQFToFc8oGa4AKA9TGORuXZzMWqcQ/O0W/TkWs09VPxZPbMUrh89BkL+BkaZD77fg8Jx8DBsFIdE3o8DiaTRpFolneEiv7IrMBRsncCVenJr/LgnP5MJNEfQQ9yueFM1AzxZ0M30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746177792; c=relaxed/simple;
-	bh=ekJa/d94ESjfMuIQNVaqRWOsDNgRaf36C6VoqCPZFV8=;
+	s=arc-20240116; t=1746177796; c=relaxed/simple;
+	bh=U++3sNlCPeeANu+nz6fN0S33H3Je9z9LoqgHkKhQ0fo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Kj64vJFD1a3VG32d8zytDdvUvyPG9t0iF8pPqFzw1SbubJ4vfT1hWzPpEs0Wv3wLE4QaxP7b4OsebUf00wEqJHYAIEt/a4libECAePOotqqv5E+wiFii2MlwBYjp3PVtj4RJOJkQpA2SuJXYUtwkHVZuYz0WrJIWepRKaCZA6Hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sNYaepKS; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZmZe5PPYBFACz9dpZ2v2Day/o+XHBb0Pd3r8hqe0fNuJUOu9i5ybYyiBhKahN1xvCH3BD5Z9/WimYNItdT6YlADdZtS8708nKSMcdWmgYZjQ78JwagPkq4zmqVlcasf7A2OzVkj33SqS6GZnhLvkJwIvQwcfAXp9tjDszzsXsk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a5QT+9Jy; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sNYaepKS"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so1828824f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 02:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746177789; x=1746782589; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=CaOQHqMDa8OZ46blFqHo7Rw/aRIi/u9Q9Wy1w1jQELI=;
-        b=sNYaepKSdKb83a8yXkERuKY/EQ1QRoA15T8YMXgcfz+biHzAxFFRQ+ZTad52Nk7mEX
-         wKfsBfkIDRFjiet42P4D/8h5WnWIafypeTCuHXW9RZBppR2n0Lw20I2pWEw5o1wjTuUq
-         79VUgNdB/DHkeBDX2cjp94XrjqdOdGM/OC9sPlf+XaEzBFqtnJ1GA5H/8WWyDD/pFLxa
-         zgFVMM8hwTqjwrYD1g8kfDde1OSIzzWZmKGVHGaQs196pPJg/EDzg860HrDR1dLr2Psz
-         577/OjMCQ3micw+sLeXw+Qdthlxy/VgPOfp9K7ci/PQqhL0CcvccJxw1rO+cHQctICQX
-         V9WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746177789; x=1746782589;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CaOQHqMDa8OZ46blFqHo7Rw/aRIi/u9Q9Wy1w1jQELI=;
-        b=sJJwzyCZDdTUrptvxOzW3kqQ/kFtuVrZWKPosxDOyAY94qhJt0kbd3HVA4f8aidXV3
-         4wgfo6CqYc/BkIgq1yK8dAXIY9IaTtUVeMf3gGbT4g32I0etd8cV5up2n4B75ZtzVdiQ
-         4TbFXHEqz2ri3m8eXNs6+BKW76THEZpeHqqE76w6izWnTP0XW1lUuRLcARNP+CjIBu2H
-         Ac/EqnBbqhr0iqjjfl7B8kAlPn5KxdMw/IB+jztLsdjDw1j7KX5HSSNsBPCCHFdeQ+bD
-         OQ5cqIPsayb8wjpJhrcEYCW0GmW8xEa41YT4UUPO7QzL9hBtGl6eTQY1q7jQ96H23sLa
-         DvQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmwodnh/NgCIhJvp53OTxpAypfB+DdrBqCjKiXniL8YZo5Mf1BMGP/L/Nk1pd2/QEG+DB6XdNZT/286YY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKyA9P+eRoRlNq4+zSMBkxW1XeTILiW7g9ReHVad5uzQLhYaih
-	JSfoYceVLbeFPLUlAZgNmD/6IQOV02NuAd+eajMa2QWZLGCJ/SaJQD6DSjoawck=
-X-Gm-Gg: ASbGncsuURzKHkS80v5D/AfdVZLwX2aJWvYxrQygy36ZOt0n08cSx3+UWnkQcPpD7uT
-	lvA82k9cihUhdD6PXLhC4MhWRMTT7pzXlOBvOrGHZM3BwpC7BiDvg7PdtpkAYwKbfD8brpu8o/q
-	20dfBth3i3JjmCUo34jsY8kKLspxWhlfbSuaccBbfNY1tieNg7mDfSct/6k0OfJmVU/0NveVJvI
-	eHvSsGCPkq9dJV9TKC+JRYUKH53TIy4q7Ae2k9eCwdEs0o016PXBaaFhLPQbPMhew4S5gxav4or
-	6R8r7cENpeIM2ra/MMxOXbR1j6XRics7dReCeuoJfGee2tHs3AkKn6FihJaUZcN4khV0yMB2+cO
-	s74E=
-X-Google-Smtp-Source: AGHT+IHZIZQKxokVXfqMkIHYqovCFqCOMp1S59YaL8IoOtnobquxt5VlkTlRg2xMgElyl2ygcoOp2A==
-X-Received: by 2002:a5d:64c4:0:b0:39e:e438:8e4b with SMTP id ffacd0b85a97d-3a099af1fbamr1268637f8f.50.1746177789352;
-        Fri, 02 May 2025 02:23:09 -0700 (PDT)
-Received: from mai.linaro.org (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b172b3sm1609188f8f.90.2025.05.02.02.23.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 02:23:08 -0700 (PDT)
-Date: Fri, 2 May 2025 11:23:07 +0200
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: Robert Lin <robelin@nvidia.com>
-Cc: thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-	pohsuns@nvidia.com, linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org, sumitg@nvidia.com
-Subject: Re: [PATCH v7 0/3] clocksource: fix Tegra234 SoC Watchdog Timer.
-Message-ID: <aBSO-wk5WPsWYs-V@mai.linaro.org>
-References: <20250502043727.396896-1-robelin@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a5QT+9Jy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746177795; x=1777713795;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=U++3sNlCPeeANu+nz6fN0S33H3Je9z9LoqgHkKhQ0fo=;
+  b=a5QT+9JyayPJIWIyZ4QHQOG3Oq4QqpMSNncnaPKExBFP3q3+9oPyNwd9
+   p8WBSX9ZaXfrhJRIEqSQOaDW9V2Tfb2hPs4o106dUY4iO0sBIALSI2n6I
+   ndBwrzrZ8toNXCeUb2G01IQrkoobv3a899gwa6auZcKTvT0I4d77wXNbj
+   DJI9cQtxp041Wyv6N1Dc+ytSSb2YHYz+1b8ShgzxKMkyBDAVcSQol0MVO
+   CL4QGURQtzPamlVB69cREzrM+oN5me9cRIuGFS20FffGeo7YOL95ymASH
+   hG2t9dMm34m9ZJNpGyAOAJN0CYY2Gx6lrxMDXtUPS84gZPsf5Xrap+pmm
+   w==;
+X-CSE-ConnectionGUID: bjQcJeg0TyOOGe+RE1dNjw==
+X-CSE-MsgGUID: xRMmoHR8TDSUtOktgOgVDA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47945288"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="47945288"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:23:14 -0700
+X-CSE-ConnectionGUID: iiQ1d/qGSoeCjpfWWLMd/Q==
+X-CSE-MsgGUID: vFfdScTFQX6wwFxCDBTG2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="165662214"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:23:09 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uAmbq-00000002958-17hD;
+	Fri, 02 May 2025 12:23:06 +0300
+Date: Fri, 2 May 2025 12:23:06 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Eason Yang <j2anfernee@gmail.com>
+Cc: jic23@kernel.org, lars@metafoo.de, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+	javier.carrasco.cruz@gmail.com, tgamblin@baylibre.com,
+	olivier.moysan@foss.st.com, alisadariana@gmail.com,
+	gstols@baylibre.com, antoniu.miclaus@analog.com,
+	eblanc@baylibre.com, matteomartelli3@gmail.com,
+	marcelo.schmitt@analog.com, chanh@os.amperecomputing.com,
+	KWLIU@nuvoton.com, yhyang2@nuvoton.com, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/2] iio: adc: add support for Nuvoton NCT7201
+Message-ID: <aBSO-o4OFrXKJ82C@smile.fi.intel.com>
+References: <20250429025505.3278016-1-j2anfernee@gmail.com>
+ <20250429025505.3278016-3-j2anfernee@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250502043727.396896-1-robelin@nvidia.com>
+In-Reply-To: <20250429025505.3278016-3-j2anfernee@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, May 02, 2025 at 12:37:24PM +0800, Robert Lin wrote:
-> From: robelin <robelin@nvidia.com>
+On Tue, Apr 29, 2025 at 10:55:05AM +0800, Eason Yang wrote:
+> Add Nuvoton NCT7201/NCT7202 system voltage monitor 12-bit ADC driver
 > 
-> This set of patches includes a fix for watchdog for it may not bark
-> due to self-pinging and adds WDIOC_GETTIMELEFT support.
+> NCT7201/NCT7202 supports up to 12 analog voltage monitor inputs and up
+> to 4 SMBus addresses by ADDR pin. Meanwhile, ALERT# hardware event pins
+> for independent alarm signals, and all the threshold values could be set
+> for system protection without any timing delay. It also supports reset
+> input RSTIN# to recover system from a fault condition.
 > 
-> --
+> Currently, only single-edge mode conversion and threshold events are
+> supported.
 
-When sending a new version, could you please Cc: the watchdog maintainers ?
+...
 
-Thanks
-  -- Daniel
+> +static int nct7201_write_event_value(struct iio_dev *indio_dev,
+> +				     const struct iio_chan_spec *chan,
+> +				     enum iio_event_type type,
+> +				     enum iio_event_direction dir,
+> +				     enum iio_event_info info,
+> +				     int val, int val2)
+> +{
+> +	struct nct7201_chip_info *chip = iio_priv(indio_dev);
+> +	int  err;
 
-> V7:
-> - Fix formatting
-> - Consider overflow and warn if happens
-> 
-> V6:
-> - Fix timeleft value addition using unmatched time unit
-> - Use u64 type to maintain the microseconds value in case of overflow
-> 
-> V5:
-> - Print warning message if get unexpected value from the register
-> 
-> V4:
-> - Improve the precision of timeleft value
-> - Fix the unused variable warning
-> 
-> V3:
-> - Improve comment description
-> - Refactor to fit codeline within 80 columns
-> - Remove unused if(0) blocks
-> 
-> 
-> V2:
-> - Fix a compilation error, a warning and updates copyright
-> --
+One space too many.
 
-[ ... ]
+> +	if (chan->type != IIO_VOLTAGE)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (info != IIO_EV_INFO_VALUE)
+> +		return -EOPNOTSUPP;
+> +
+> +	if (dir == IIO_EV_DIR_FALLING)
+> +		err = regmap_write(chip->regmap16, NCT7201_REG_VIN_LOW_LIMIT(chan->address),
+> +				   FIELD_PREP(NCT7201_REG_VIN_MASK, val));
+> +	else
+> +		err = regmap_write(chip->regmap16, NCT7201_REG_VIN_HIGH_LIMIT(chan->address),
+> +				   FIELD_PREP(NCT7201_REG_VIN_MASK, val));
+> +
+> +	return err;
+> +}
+
+...
+
+> +	/* Enable Channel */
+
+Channels
+
+> +	if (chip->num_vin_channels <= 8)
+> +		err = regmap_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
+> +				   GENMASK(chip->num_vin_channels - 1, 0));
+
+Why can't you use the value kept in data variable?
+
+> +	else
+> +		err = regmap_bulk_write(chip->regmap, NCT7201_REG_CHANNEL_ENABLE,
+> +					&data, sizeof(data));
+> +	if (err)
+> +		return dev_err_probe(dev, err, "Failed to enable channel\n");
 
 -- 
+With Best Regards,
+Andy Shevchenko
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
