@@ -1,94 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315D823182E;
-	Fri,  2 May 2025 09:52:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F31225A5B;
+	Fri,  2 May 2025 09:53:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746179570; cv=none; b=gXL5gnd19AypM6YGmLdlgNQtBIei1hIjaOEX7jKK41Qq6Ujp58NzeXevDYFsj4RVxjF9/vzeF2bZix78L/92cTntbQ/LY7dHjYRb6aAMtRzXbP4ugFvueg+xsT/a9s7mZO7BMJaKyiGrGfPLIhgmvPm7GTaPerC4MomdU1muiug=
+	t=1746179620; cv=none; b=JJ8odLwWneQWDQydK6zsvDCEdXX013lKDe+WITFwMFfcsWvf4j/lHb/IoobRHz97gKJf8GEQVtQuVJ/520ZLEN4C6BQJHAvNnMYVlzbdzPUsJl9+Q4ScQ++HQ4nplgzCi5VR4amp2R4GH3upZW29Dyo+vn3pFSyRnBEy7aXHnfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746179570; c=relaxed/simple;
-	bh=QHN2zaWuAM7RHV7iyUCY1FWmMmQkekv0CaUHa28bOnA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S7DrYEi/gJ5YfBWTakcCKJdH5M4KaF+JxuaYUT9PG95xzUcW6DspujvJdAB8rXcwZJRMt0Fkq9lUYw4xn24+Q1Fyz+Lhbv2nd7jE5zwBVXnOCvXnvdBYkpP1SVB0c4yzRCsYRihsL4UKPABupMPsCmPu0ZjURj7s3aTRS86DO38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XV/vFuwm; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XV/vFuwm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746179569; x=1777715569;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QHN2zaWuAM7RHV7iyUCY1FWmMmQkekv0CaUHa28bOnA=;
-  b=XV/vFuwmA+3Oyep0fPXK5tZfnJw8oQESV8qV5vCijiCkedAN88YcqBab
-   eUcDUQtOOd3WN1JY1TELkZXF2n0rU1zAsGjMzMJy56aqPh4psxeYv5I96
-   z22Otqe97M4kZAeL9w5ipGq57ZUyFecPLUDDBXjrzER9Uoe8xO3IaOUCe
-   kxF5jA6BqrAqmvP2ZpZsU6Z0iLWjwKkCNk6bXjKuWAcD1Re0CSbIkyKPt
-   C3tLwBynUoMlBFOHwkmYf1+4j851dVYZzSTdzJDfLcoV5CekFhbdNRz5D
-   bMQo+yNK7beUnRM+LKzr1RtVgzaHRyXJxp29TkgZjfpCOso0POUP1KZtQ
-   g==;
-X-CSE-ConnectionGUID: aaYaRlGwTiK+/NZ/yCUCyw==
-X-CSE-MsgGUID: Sb5RMzdcSVqhOBZ0cXmNtQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="58527793"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58527793"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:52:48 -0700
-X-CSE-ConnectionGUID: UFMmxyHVTPiblVRZZnPABQ==
-X-CSE-MsgGUID: ma2+lM9ZSnicgX88wMt2ng==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="171851347"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 02:52:43 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uAn4R-000000029T6-2oV8;
-	Fri, 02 May 2025 12:52:39 +0300
-Date: Fri, 2 May 2025 12:52:39 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Sayyad Abid <sayyad.abid16@gmail.com>, linux-iio@vger.kernel.org,
-	jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, nuno.sa@analog.com,
-	javier.carrasco.cruz@gmail.com, olivier.moysan@foss.st.com,
-	gstols@baylibre.com, tgamblin@baylibre.com, alisadariana@gmail.com,
-	eblanc@baylibre.com, antoniu.miclaus@analog.com,
-	stefan.popa@analog.com, ramona.gradinariu@analog.com,
-	herve.codina@bootlin.com, tobias.sperling@softing.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/5] iio: adc: Add initial support for TI ADS1262
-Message-ID: <aBSV56I5pYg5kgTd@smile.fi.intel.com>
-References: <20250501100043.325423-1-sayyad.abid16@gmail.com>
- <46659705-0384-4497-9f5d-cae4a8290093@baylibre.com>
+	s=arc-20240116; t=1746179620; c=relaxed/simple;
+	bh=JHMMMU1bX3h8bu/hi6tQeKJ8hxcjwpsysQUN8R7ylWc=;
+	h=Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ZVn13RYlizyRVtaq+dBCOgJ2xud4/173Gp3ppwPd4BVeCb90JrzxRHij8m5V0OMRhDuxtNkLhc5uIKirWFaOnFHJimd7K2FiWHzKPYPQPej3iW1gaJEwX0ufapzWdGafhtOiOY0hLV71rM9/DrpHs3yK7EOlrlJjRwhzWT+kiKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
+	by mail.itouring.de (Postfix) with ESMTPSA id 909E8103765;
+	Fri, 02 May 2025 11:53:35 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 61134601893B6;
+	Fri, 02 May 2025 11:53:35 +0200 (CEST)
+Subject: Re: [PATCH] bpftool: build bpf bits with -std=gnu11
+To: Quentin Monnet <qmo@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Eduard Zingerman
+ <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250502085710.3980-1-holger@applied-asynchrony.com>
+ <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <913f66a8-6745-0e30-b5b8-96d23bf05b90@applied-asynchrony.com>
+Date: Fri, 2 May 2025 11:53:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46659705-0384-4497-9f5d-cae4a8290093@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <7326223e-0cb9-4d22-872f-cbf1ff42227d@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-On Thu, May 01, 2025 at 01:20:51PM -0500, David Lechner wrote:
-> On 5/1/25 5:00 AM, Sayyad Abid wrote:
+On 2025-05-02 11:26, Quentin Monnet wrote:
+> On 02/05/2025 09:57, Holger Hoffstätte wrote:
+>> A gcc-15-based bpf toolchain defaults to C23 and fails to compile various
+>> kernel headers due to their use of a custom 'bool' type.
+>> Explicitly using -std=gnu11 works with both clang and bpf-toolchain.
+>>
+>> Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+> 
+> Thanks! I tested that it still works with clang.
+> 
+> Acked-by: Quentin Monnet <qmo@kernel.org>
 
-> It looks like you managed to CC everyone who ever touched the IIO ADC makefile.
-> On v2, you don't need to include quite so many. :-) Just the people listed in
-> MAINTAINERS.
+Thanks!
 
-FWIW, one may use my "smart" script [1] that has some heuristics which appears to
-be quite robust (rarely gives false positives).
+> I didn't manage to compile with gcc, though. I tried with gcc 15.1.1 but
+> option '--target=bpf' is apparently unrecognised by the gcc version on
+> my setup.
+> 
+> Out of curiosity, how did you build using gcc for the skeleton? Was it
+> enough to run "CLANG=gcc make"? Does it pass the clang-bpf-co-re build
+> probe successfully?
 
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.sh
+I'm on Gentoo where we have a gcc-14/15 based "bpf-toolchain" package,
+which is just gcc configured & packaged for the bpf target.
+Our bpftool package can be built with clang (default) or without, in
+which case it depend on the bpf-toolchain. The idea is to gradually
+allow bpf/xdp tooling to build/run without requiring clang.
 
+The --target definition is conditional and removed when not using clang:
+https://gitweb.gentoo.org/repo/gentoo.git/tree/dev-util/bpftool/bpftool-7.5.0.ebuild?id=bf70fbf7b0dc97fbc97af579954ea81a8df36113#n94
 
--- 
-With Best Regards,
-Andy Shevchenko
+The bug for building with the new gcc-15 based toolchain where this
+patch originated is here: https://bugs.gentoo.org/955156
 
+Hope this helps!
 
+cheers
+Holger
