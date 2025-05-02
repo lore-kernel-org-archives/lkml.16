@@ -1,97 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98881255231
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:44:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193483; cv=none; b=SPyWzCxajaWE0NIlpEnzhdlQvathS7aWVMW8TVrlpI6NSH8PV2ccUbmwyCrQr6jy7R+5X9rp4w4vRBKAsjxEiRffFRNQ2YdesQoYd30RSJRvNZjtrMOcQx2M0k8SfjtB/W/ZS4cGJcRAqioZZM+DP5bw93N+3d4gipafNquZNGM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193483; c=relaxed/simple;
-	bh=ILN2iET/9uCytdvIyIEDl0TgrwE0lpNVHjhf6eXZDH8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iPdRNieYrqT4q3kibtBuo3kYDaYAQFJeRF/RIPW2jaf1aIq60s90NOT9JL9ooeB6zB8OnhX/OP3uIMT3bXJOwyaTb56uk9neV0tHpBcWxISnTi3d3LUhAn0cwZObPkyHcWUpxlLRmuV6sGNCZ4NpkjrJny3b6J6HWjpoQ9vXeG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GqL08wN6; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A709255E2B;
+	Fri,  2 May 2025 13:44:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193500; cv=pass; b=VJbwLfsAzGNtYc8CH8MlmkDhKf+6GGFvMp1HDh2WbNbAalgnUkZ7Zd7OyzC7nq2CyHgV20a0is0GA7zK91n+t/DFnW1vDdDo4IKkSNrUuiVRMRZJVoC2tck4AwG3LqyGhumxb0GXnYcPKAEQJiMAK0r9u4z1RKAB+mlMdFQouAE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193500; c=relaxed/simple;
+	bh=hlMTXh8Sb5JBp2Hi28m9ieB78infImEPVVJT8s+zO/Y=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Bk+kglwGF3fgRIJbtpXBVMY+d9clWg/1Cy9JOGzGmHNX/rrNhfGkn3hxFeabWsJo1XQARzdMYtnEgw1D2naYbkvAOq0JNbeTz8qsR7liYb9VQyTuuYbpc1LkhCdMMAMQzNTxMfPdNYcszRFaxmTlmBEXrBvmALrcyDIzTDVnbZg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=BdCZommH; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GqL08wN6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746193481; x=1777729481;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ILN2iET/9uCytdvIyIEDl0TgrwE0lpNVHjhf6eXZDH8=;
-  b=GqL08wN6duv1gyCl14S25jNjbIjngd4ERU9TcbEpm/vGQxSYJXFmV32e
-   t0LL66iyrjO3pM/Hqc47bOYt/13DGkBnPLnV+wijyOfQaO1UqkO75dp1v
-   ysk+YmdfihlCgFzqM0MaTDZUVtW87jRVOXN3phNTkY070ZcjfW8qVeMhh
-   j1IRd/cukabVo1tbytwGjOLaZNZGqfDqioV1tjqsiJdreno7CGQSW5J2r
-   e0g9qDanMxsoVcYdkqKzYWXs82tMEZ4tE3oaEG7mS48pw276rmu2QeNF4
-   JasRZ0NCKIxLUlwj11MflS7/QduCHzt9IJYCJXp9AYio6HA1ERWUuLGlH
-   Q==;
-X-CSE-ConnectionGUID: Sj0yC/6aTiC0yDzFAcv6fg==
-X-CSE-MsgGUID: 8LrMkTKeSfeYE5HxOz+ckg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47595179"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47595179"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:44:40 -0700
-X-CSE-ConnectionGUID: LK3VOkSJSy+1kiVJLpgmKA==
-X-CSE-MsgGUID: MCZWEtLTQ9Wt0yZFrcqSSQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="135603804"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa009.fm.intel.com with ESMTP; 02 May 2025 06:44:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 0462C1A1; Fri, 02 May 2025 16:44:37 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] iopoll: Use fsleep() instead of usleep_range()
-Date: Fri,  2 May 2025 16:43:45 +0300
-Message-ID: <20250502134346.4146857-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="BdCZommH"
+ARC-Seal: i=1; a=rsa-sha256; t=1746193489; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=aFTs1LYlszuwZSqjPlyTpl+G/oiov+KLlpSv33V1bejHw+1G+hajCDOdfZ4aBnYqAGNUOcb96fTCH4PiESlVl4MtjsUuACjjjtmpsEFCTvxvhGEheKqhttLOt0n0SFZJ3RiCi6UiLbdgzdSvr+nS61PjEq8OP6Q15Ydvm2lPTmM=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746193489; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=tcIrRIN3loF/w+Qza67n1XAiigXUU/UsKhmU0+IWq9w=; 
+	b=SYNrg8wgIlCKtmutSwhQOCrsfwziiMbg0N+b9SI+8IjsRshYqHuqCM8QkmXjMIp4WLLb/KzrBeEBcpA4lJ0pk6Y7u7Puv9SuqmvRhYJWQKk8wK6vk3m7RRhAZ4iPrXXUA9NlYqASmf/X6PJCKdHUb1hVuUr9STexqoqm3l382cQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193489;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=tcIrRIN3loF/w+Qza67n1XAiigXUU/UsKhmU0+IWq9w=;
+	b=BdCZommHKFniJ3BbYD3YDaLVazKRfyHeMVN0l0r7uYv6mLVvaGoz7pcCjWgI6N5Q
+	9Ahbd8ubYJGUasJ6AYc5oLC6IWUG+S6pyrYF5Dny/HoGQr23pT5acI2EZZDJF5GKJjS
+	CwLc/1SINEDOxwv8AusT6jXXqQeUwtX8HFSgfDSs=
+Received: by mx.zohomail.com with SMTPS id 1746193487126290.6967342499622;
+	Fri, 2 May 2025 06:44:47 -0700 (PDT)
+Message-ID: <1f2288d9-6829-4af2-9b58-4c68eecbb777@collabora.com>
+Date: Fri, 2 May 2025 18:44:41 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 3/7] selftests: vDSO: vdso_test_correctness: Fix
+ -Wold-style-definitions
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
+ <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
+ <20250502-selftests-vdso-fixes-v1-3-fb5d640a4f78@linutronix.de>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250502-selftests-vdso-fixes-v1-3-fb5d640a4f78@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Use fsleep() instead of usleep_range() to improve small time delays
-by avoiding the timer use. With this, use slightly bigger initial
-delays then was passed to usleep_range().
+On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
+> Functions definitions without any argument list produce a warning with
+> -Wold-style-definition:
+> 
+> vdso_test_correctness.c:111:13: warning: old-style function definition [-Wold-style-definition]
+>   111 | static void fill_function_pointers()
+>       |             ^~~~~~~~~~~~~~~~~~~~~~
+This warning doesn't appear on my side. Are you using extra compiler
+flags? If yes, please add them to the Makefile.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/iopoll.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> Explicitly use an empty argument list.
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+> ---
+>  tools/testing/selftests/vDSO/vdso_test_correctness.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/vDSO/vdso_test_correctness.c b/tools/testing/selftests/vDSO/vdso_test_correctness.c
+> index 5fb97ad67eeaf17b6cfa4f82783c57894f03e5c5..da651cf53c6ca4242085de109c7fc57bd807297c 100644
+> --- a/tools/testing/selftests/vDSO/vdso_test_correctness.c
+> +++ b/tools/testing/selftests/vDSO/vdso_test_correctness.c
+> @@ -108,7 +108,7 @@ static void *vsyscall_getcpu(void)
+>  }
+>  
+>  
+> -static void fill_function_pointers()
+> +static void fill_function_pointers(void)
+>  {
+>  	void *vdso = dlopen("linux-vdso.so.1",
+>  			    RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
+> 
 
-diff --git a/include/linux/iopoll.h b/include/linux/iopoll.h
-index 91324c331a4b..fca50f117fae 100644
---- a/include/linux/iopoll.h
-+++ b/include/linux/iopoll.h
-@@ -41,7 +41,7 @@
- 	ktime_t __timeout = ktime_add_us(ktime_get(), __timeout_us); \
- 	might_sleep_if((__sleep_us) != 0); \
- 	if (sleep_before_read && __sleep_us) \
--		usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
-+		fsleep((__sleep_us >> 1) + 1); \
- 	for (;;) { \
- 		(val) = op(args); \
- 		if (cond) \
-@@ -52,7 +52,7 @@
- 			break; \
- 		} \
- 		if (__sleep_us) \
--			usleep_range((__sleep_us >> 2) + 1, __sleep_us); \
-+			fsleep((__sleep_us >> 1) + 1); \
- 		cpu_relax(); \
- 	} \
- 	(cond) ? 0 : -ETIMEDOUT; \
+
 -- 
-2.47.2
-
+Regards,
+Usama
