@@ -1,140 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1369B1EA7F1;
-	Fri,  2 May 2025 10:45:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E5E222B5B5;
+	Fri,  2 May 2025 10:46:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746182723; cv=none; b=Ye7q207cj0y07UVaL5RfqvwMZty1IZMWGj31VnXVEtPo2Sy7fCkKLHyy93sx0aQzQ/RKvdSbJsxHSXzse5yVo4IYJKEouDuoEQ7T0oM64ji/7Nr0s/c7T4MZwUNAZXuBmN0jC5ufvR5HGxr8kjWcDlhZpt9YFa9h5bMXm7tOQUU=
+	t=1746182805; cv=none; b=oJf9lHO+omRJl4ta+A+W1jCMstR9ZVPmrKurmP2IDj5aWoX2+O1QnUraj983PXyUMTFgyRr80ZyWjTLB8e0cuBLdGq/It5ftj+OSYN/vs4O1utEcoF0mT6V0pCjgJrgSaLXHfAuhAPASMNylBvwyNMzKB7PTPumBpnyxLsH7Oj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746182723; c=relaxed/simple;
-	bh=kabmlv0KkQDAyrTzn6zjy1nl1svXPwvfHYYf/932dMc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=YVHZWcnkOUWYwM3jPLdWVUuivz5NulA8S1gDMdJLafpyzvqe5fUBw2q71HlUmC7VUrQQggY2cDcA+YUt79jhEa55sELJU74z31ADlN03sKxjKIFApOk3J2edoNnVgiZeBiMKua9nShWll2z/vHyRK9+xMcGPt3ZePEhfMcpGdsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SQnSjer3; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1746182805; c=relaxed/simple;
+	bh=+uWLx+L+tZ7/VsicxvUcq5ge94vHmBIsuYivGRIzZEg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ox2tI7MDdBxX5lYY3SFgVnyo+K+ZarUf5mbqfqhDt4ISvb1gHbSsliqK6zpiiPcE640WXUPKGh5y59BnFK+JZ62c99ASQEjvRO6/YG+N4TTPqaH8mu9VuaFtY0j8kerZiLeyEj25fR71KzxQCC+I8MkkSHr1JRqxkWItdGxd888=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MF3u5I+b; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SQnSjer3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MF3u5I+b"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746182723; x=1777718723;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=kabmlv0KkQDAyrTzn6zjy1nl1svXPwvfHYYf/932dMc=;
-  b=SQnSjer3b2rqwHtCYrKVHoRNTidB87lFiYNv3v2HN2q5AxL0BtQKelSW
-   bpl1SBy0Fml08FfYopmhytfxGXLH3UmZ4qdzdup8oQV1S8QdzZihbbtLc
-   VekMclL26bUwS59Vtp8DZutndCBTpxz+muC1M6DtXWzu55XZHHFiqe6jJ
-   UX5QGj1nNms22OVZp6/BTx+yz+2zyNDfh0DqtOhu4AKukJzQKtFN0HWzA
-   fDUXFoMQSpLi5d3RWNUMi6ZH9SXa+JxuEX/dCN0NZSinERNWDBSCa3drD
-   JcNK/eEbiNA3j1hs62JfOQQfHJi8dQdETDcJOTb445abet1zV39Qy4yrT
+  t=1746182804; x=1777718804;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+uWLx+L+tZ7/VsicxvUcq5ge94vHmBIsuYivGRIzZEg=;
+  b=MF3u5I+bW86jYt7Nh8ZKj/OMAiNXZigccnGMYKOiskEzxAdH/2XkkvGR
+   tUEu33Mjj6l6U1922VWRMNX+bBeODWfVjI0bJjyGQ1ZCUAp1boM4vicv/
+   rmOlBRVfZwsRy3XLILYL/s6b8IOEnEwVChi83J+6cF2uKjAyPrdJntkea
+   H0PeIg9gxmA3lPlWLepzrbKTq3oKTtgGM0kbzQh9QZ9rPINtJ2xJYVwLf
+   eZaSWKLvsiD8c9rsG3vn1EwZbEZKCRYFzBCxGKOZzu2SRlYV30dx5foQ6
+   p/XGgv1Gp7JAHiqR/TKQ9D6PvCRtjOQRfoZu6vjwfI4HOkyEfw6hd5IZp
    g==;
-X-CSE-ConnectionGUID: Srfaajz8ScC1ik+6FKrqGA==
-X-CSE-MsgGUID: siakygFkSFqdOaQXCePIvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47874582"
+X-CSE-ConnectionGUID: UQueTEEJSv24T9dSpAc7lA==
+X-CSE-MsgGUID: 7QOYQPMbSgiUXCxDoVKsUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="70365611"
 X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47874582"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:45:22 -0700
-X-CSE-ConnectionGUID: xCwqsuJUQiCqtrX/wmzsYw==
-X-CSE-MsgGUID: Dr+n9SJTRY+OMs3pDcKF5A==
+   d="scan'208";a="70365611"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:46:43 -0700
+X-CSE-ConnectionGUID: cEGxtrhmTRe0iAKHb4/5aQ==
+X-CSE-MsgGUID: 5C6HuZYeS4WDy06Q9OKjxA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139612566"
-Received: from sschumil-mobl2.ger.corp.intel.com (HELO [10.245.246.151]) ([10.245.246.151])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:45:17 -0700
-Message-ID: <9c8dbbafdaf9f3f089da2cde5a772d69579b3795.camel@linux.intel.com>
-Subject: Re: [PATCH v2] drm/ttm: Silence randstruct warning about casting
- struct file
-From: Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>
-To: Christian =?ISO-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>, Al Viro
-	 <viro@zeniv.linux.org.uk>, Matthew Brost <matthew.brost@intel.com>
-Cc: Kees Cook <kees@kernel.org>, Somalapuram Amaranath	
- <Amaranath.Somalapuram@amd.com>, Huang Rui <ray.huang@amd.com>, Matthew
- Auld	 <matthew.auld@intel.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,  Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, 	linux-hardening@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, Christian Brauner <brauner@kernel.org>, Jan
- Kara <jack@suse.cz>
-Date: Fri, 02 May 2025 12:44:26 +0200
-In-Reply-To: <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
-References: <20250502002437.it.851-kees@kernel.org>
-	 <aBQqOCQZrHBBbPbL@lstrano-desk.jf.intel.com>
-	 <20250502023447.GV2023217@ZenIV>
-	 <aBRJcXfBuK29mVP+@lstrano-desk.jf.intel.com>
-	 <20250502043149.GW2023217@ZenIV>
-	 <aBRPeLVgG5J5P8SL@lstrano-desk.jf.intel.com>
-	 <20250502053303.GX2023217@ZenIV>
-	 <da694af6-1a9a-4cee-86b7-1da97e1e91de@amd.com>
-Organization: Intel Sweden AB, Registration Number: 556189-6027
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+   d="scan'208";a="135140047"
+Received: from smile.fi.intel.com ([10.237.72.55])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 03:46:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uAnud-00000002ASM-1J0X;
+	Fri, 02 May 2025 13:46:35 +0300
+Date: Fri, 2 May 2025 13:46:35 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v7 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <aBSii0rHox72GM5Y@smile.fi.intel.com>
+References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
+ <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250428-mdb-max7360-support-v7-9-4e0608d0a7ff@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 2025-05-02 at 09:49 +0200, Christian K=C3=B6nig wrote:
-> On 5/2/25 07:33, Al Viro wrote:
-> > On Thu, May 01, 2025 at 09:52:08PM -0700, Matthew Brost wrote:
-> > > On Fri, May 02, 2025 at 05:31:49AM +0100, Al Viro wrote:
-> > > > On Thu, May 01, 2025 at 09:26:25PM -0700, Matthew Brost wrote:
-> >=20
-> > > > And what is the lifecycle of that thing?=C2=A0 E.g. what is
-> > > > guaranteed about
-> > > > ttm_backup_fini() vs. functions accessing the damn thing?=C2=A0 Are
-> > > > they
-> > > > serialized on something/tied to lifecycle stages of struct
-> > > > ttm_tt?
-> > >=20
-> > > I believe the life cycle is when ttm_tt is destroyed or api
-> > > allows
-> > > overriding the old backup with a new one (currently unused).
-> >=20
-> > Umm...=C2=A0 So can ttm_tt_setup_backup() be called in the middle of
-> > e.g. ttm_backup_drop() or ttm_backup_{copy,backup}_page(), etc.?
-> >=20
-> > I mean, if they had been called by ttm_backup.c internals, it would
-> > be an internal business of specific implementation, with all
-> > serialization, etc. warranties being its responsibility;
-> > but if it's called by other code that is supposed to be isolated
-> > from details of what ->backup is pointing to...
-> >=20
-> > Sorry for asking dumb questions, but I hadn't seen the original
-> > threads.=C2=A0 Basically, what prevents the underlying shmem file
-> > getting
-> > torn apart while another operation is using it?=C2=A0 It might very wel=
-l
-> > be simple, but I had enough "it's because of... oh, bugger" moments
-> > on the receiving end of such questions...
->=20
-> It's the outside logic which makes sure that the backup structure
-> stays around as long as the BO or the device which needs it is
-> around.
->=20
-> But putting that aside I was not very keen about the whole idea of
-> never defining the ttm_backup structure and just casting it to a file
-> in the backend either.
->=20
-> So I would just completely nuke that unnecessary abstraction and just
-> use a pointer to a file all around.
+On Mon, Apr 28, 2025 at 01:57:27PM +0200, Mathieu Dubois-Briand wrote:
+> Add driver for Maxim Integrated MAX7360 keypad controller, providing
+> support for up to 64 keys, with a matrix of 8 columns and 8 rows.
 
-Hmm, yes there were early the series a number of different
-implementations of the struct ttm_backup. Initially because previous
-attempts of using a shmem object failed but now that we've landed on a
-shmem object, We should be able to replace it with a struct file
-pointer.
+...
 
-Let me take a look at this.=20
+> +static irqreturn_t max7360_keypad_irq(int irq, void *data)
+> +{
+> +	struct max7360_keypad *max7360_keypad = data;
+> +	struct device *dev = max7360_keypad->input->dev.parent;
+> +	unsigned int val;
+> +	unsigned int row, col;
+> +	unsigned int release;
+> +	unsigned int code;
+> +	int error;
+> +
+> +	do {
+> +		error = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
+> +		if (error) {
+> +			dev_err(dev, "Failed to read max7360 FIFO");
+> +			return IRQ_NONE;
+> +		}
+> +
+> +		/* FIFO overflow: ignore it and get next event. */
+> +		if (val == MAX7360_FIFO_OVERFLOW)
+> +			dev_warn(dev, "max7360 FIFO overflow");
 
-/Thomas
+If many events are missing this will flood the logs, perhaps _ratelimited() ?
 
->=20
-> Regards,
-> Christian.
+> +	} while (val == MAX7360_FIFO_OVERFLOW);
+
+regmap_read_poll_timeout() ?
+
+> +	if (val == MAX7360_FIFO_EMPTY) {
+> +		dev_dbg(dev, "Got a spurious interrupt");
+> +
+> +		return IRQ_NONE;
+> +	}
+> +
+> +	row = FIELD_GET(MAX7360_FIFO_ROW, val);
+> +	col = FIELD_GET(MAX7360_FIFO_COL, val);
+> +	release = val & MAX7360_FIFO_RELEASE;
+> +
+> +	code = MATRIX_SCAN_CODE(row, col, MAX7360_ROW_SHIFT);
+> +
+> +	dev_dbg(dev, "key[%d:%d] %s\n", row, col, release ? "release" : "press");
+> +
+> +	input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
+> +	input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code], !release);
+> +	input_sync(max7360_keypad->input);
+> +
+> +	return IRQ_HANDLED;
+> +}
+
+...
+
+> +static int max7360_keypad_open(struct input_dev *pdev)
+> +{
+> +	struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
+> +	struct device *dev = max7360_keypad->input->dev.parent;
+> +	int error;
+> +
+> +	/* Somebody is using the device: get out of sleep. */
+> +	error = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
+> +				  MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
+> +	if (error) {
+> +		dev_err(dev, "Failed to write max7360 configuration: %d\n", error);
+
+> +		return error;
+> +	}
+> +
+> +	return 0;
+
+Just
+
+	return error;
+
+should work instead of those 4 lines.
+
+> +}
+
+...
+
+> +	size = device_property_count_u32(dev, propname);
+> +	if (size <= 0) {
+> +		dev_err(dev, "missing or malformed property %s: %d\n", propname, size);
+> +		return size < 0 ? size : -EINVAL;
+> +	}
+
+Wouldn't be better to split these two?
+
+...
+
+> +	error = matrix_keypad_build_keymap(&keymap_data, NULL,
+> +					   max7360_keypad->rows, max7360_keypad->cols,
+> +					   max7360_keypad->keycodes, max7360_keypad->input);
+> +
+> +	return error;
+
+	return matrix_...(...);
+
+...
+
+> +	device_init_wakeup(dev, true);
+> +	error = dev_pm_set_wake_irq(dev, irq);
+> +	if (error)
+> +		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
+
+...
+
+> +static void max7360_keypad_remove(struct platform_device *pdev)
+> +{
+> +	dev_pm_clear_wake_irq(&pdev->dev);
+
+Shouldn't
+
+	device_init_wakeup(false);
+
+be called here?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
