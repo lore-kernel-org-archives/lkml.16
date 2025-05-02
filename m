@@ -1,39 +1,39 @@
-Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC661F8BC7
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16B91FCFE2
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 20:00:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216016; cv=none; b=XA9KmmtFULb+x8CRMzO9GIrz6hCiNcIsXT70tEb3LttHqzeLhQJFE6ytoMH70dy7RYjUjIwzchSEPXTikIM+//opwkNf7LvzJmVqkWNdwK2ofmdrL1LUbIMlzRfUjjd3Z01Aw6QnNq6XtfA9wjBGVSOTHvpKYlszzyCmkZ1H0Zg=
+	t=1746216018; cv=none; b=RriVqiB//nbYI3J/Rq9cqhs8uSU16Moy58Gczl+Lh1t0uyoxCL4oz8mig+uPz/DA8EQTu1UJ7MbaG+C/95t+dIomb4XpoGObCrjlhO15EIMI2hDh8f9vN5vd0bteC3T7V9CrBJ9jcwl3Ciw6xwgVF3xoEPRI/PN6M/myymeLyK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216016; c=relaxed/simple;
-	bh=1k/qLvfk5Gpy98xthVQ1JPV5K5pWtiv6CS8I/dN1uKs=;
+	s=arc-20240116; t=1746216018; c=relaxed/simple;
+	bh=qrcHTKc3T2CBYpInX5zoEg0eS8fpTDC/0Cr1IpF3WzE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=du840YrCrtK/eDhNOkBtkuFnfCU/fUKZ5QLYGh3J/WTkJm41T4DtmnqyugY3mAPIlpdl/BSss8zu4XX+xG+T97NkqydwFfg7jWxMe5qxjqEk45fzx7iMf6A5XTFJjXahD7roJwBJWEGalCdFATeQWqM25lq02sxs9V16kcMZpYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HtEJJu5m; arc=none smtp.client-ip=91.218.175.174
+	 MIME-Version; b=V9yHo8ARW+IVwbdgZB4+ctH7b2JxSqJ6dTj+fL1S24PT9WA4sktf5Dwf7pE5AFVJHQKjiqgKoYUgO1ndSSQKWQixR5wHxzWLNw8UpeoFsII69mSDMxKWC/WHPd6HKkffLQ5whralo6ZzRtR8Cc3ie8SAzwZjGpz8/JUERGw5/R4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HzFdNXNz; arc=none smtp.client-ip=91.218.175.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HtEJJu5m"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HzFdNXNz"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1746216012;
+	t=1746216014;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UReUCsLGNEVLao4OCJWiFeZpqM6wWN3x9UsUAyCZv4U=;
-	b=HtEJJu5mjs5w3XtaV3C/aYZYgZmTXLepn67CcXJSx4mNelhkM9umx8DSM47LexRCewWwxm
-	GDBb5u8o9/jSoj922iW1qhK7SwB5H193EFKjmxZmnTm0JLN2b8uTMPUfy9Pit52iKFgrx1
-	3XApM+3fD3G7nREK0VyAgMhtuDFVdes=
+	bh=qIsio+xzgKh9uKa+u77mHFbVQuuvfgvskJa7iDsD9C4=;
+	b=HzFdNXNzQWMDIpNvh7RLmhMhb0HQx4oyNbR017/a4XvFPtD3GNHfM5Ls9YeXJqww25ig9v
+	ZjT7UDUmrqBmRAb+36Eryuo4NUD5VJEHSWrrs7zCZSGQmfj8yDSTE4Uy0V/lU6ZRz68nkh
+	aWdCxkJbzhwgUA2ynCNEsHVEqyqy3mY=
 From: Kent Overstreet <kent.overstreet@linux.dev>
 To: linux-bcachefs@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Kent Overstreet <kent.overstreet@linux.dev>
-Subject: [PATCH 5/8] bcachefs: Skip unrelated snapshot trees in snapshot deletion
-Date: Fri,  2 May 2025 15:59:57 -0400
-Message-ID: <20250502200002.1309862-6-kent.overstreet@linux.dev>
+Subject: [PATCH 6/8] bcachefs: BCH_SNAPSHOT_DELETED -> BCH_SNAPSHOT_WILL_DELETE
+Date: Fri,  2 May 2025 15:59:58 -0400
+Message-ID: <20250502200002.1309862-7-kent.overstreet@linux.dev>
 In-Reply-To: <20250502200002.1309862-1-kent.overstreet@linux.dev>
 References: <20250502200002.1309862-1-kent.overstreet@linux.dev>
 Precedence: bulk
@@ -45,109 +45,93 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-Don't scan keys in inodes for which the snapshot tree doesn't match any
-we're deleting from.
+We're going to be speeding up snapshot deletion, by only having it
+process the extents/dirents/xattrs btrees if an inode of a given
+snapshot ID was present.
+
+This raises the possibility of 'bkey_in_missing_snapshot' errors popping
+up, if we ever accidentally don't do the corresponding inode update, or
+if the new algorithm has bugs.
+
+So we'll want to be able to differentiate more definitively between
+'snapshot went missing' (and perhaps needs to be reconstructed), and
+'key in snapshot that was deleted'.
+
+So instead of deleting snapshot IDs, we'll be adding a new deleted flag
+and leaving them permanently.
 
 Signed-off-by: Kent Overstreet <kent.overstreet@linux.dev>
 ---
- fs/bcachefs/snapshot.c       | 35 +++++++++++++++++++++++++++++++++--
- fs/bcachefs/snapshot_types.h |  1 +
- 2 files changed, 34 insertions(+), 2 deletions(-)
+ fs/bcachefs/snapshot.c        | 12 ++++++------
+ fs/bcachefs/snapshot_format.h |  2 +-
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/fs/bcachefs/snapshot.c b/fs/bcachefs/snapshot.c
-index 2f2f129ce482..219cba038778 100644
+index 219cba038778..7349f7f33a4f 100644
 --- a/fs/bcachefs/snapshot.c
 +++ b/fs/bcachefs/snapshot.c
-@@ -1432,6 +1432,24 @@ static int delete_dead_snapshots_process_key(struct btree_trans *trans,
- 	return 0;
- }
+@@ -213,7 +213,7 @@ void bch2_snapshot_to_text(struct printbuf *out, struct bch_fs *c,
  
-+static bool skip_unrelated_snapshot_tree(struct btree_trans *trans, struct btree_iter *iter)
-+{
-+	struct bch_fs *c = trans->c;
-+	struct snapshot_delete *d = &c->snapshot_delete;
-+
-+	bool ret = !snapshot_list_has_id(&d->deleting_from_trees,
-+					 bch2_snapshot_tree(c, iter->pos.snapshot));
-+	if (unlikely(ret)) {
-+		struct bpos pos = iter->pos;
-+		pos.snapshot = 0;
-+		if (iter->btree_id != BTREE_ID_inodes)
-+			pos.offset = U64_MAX;
-+		bch2_btree_iter_set_pos(trans, iter, bpos_nosnap_successor(pos));
-+	}
-+
-+	return ret;
-+}
-+
- /*
-  * For a given snapshot, if it doesn't have a subvolume that points to it, and
-  * it doesn't have child snapshot nodes - it's now redundant and we can mark it
-@@ -1457,8 +1475,11 @@ static int check_should_delete_snapshot(struct btree_trans *trans, struct bkey_s
- 			!snapshot_list_has_id(&d->delete_leaves, child);
+ 	prt_printf(out, "is_subvol %llu deleted %llu parent %10u children %10u %10u subvol %u tree %u",
+ 	       BCH_SNAPSHOT_SUBVOL(s.v),
+-	       BCH_SNAPSHOT_DELETED(s.v),
++	       BCH_SNAPSHOT_WILL_DELETE(s.v),
+ 	       le32_to_cpu(s.v->parent),
+ 	       le32_to_cpu(s.v->children[0]),
+ 	       le32_to_cpu(s.v->children[1]),
+@@ -339,7 +339,7 @@ static int __bch2_mark_snapshot(struct btree_trans *trans,
+ 		       parent - id - 1 < IS_ANCESTOR_BITMAP)
+ 			__set_bit(parent - id - 1, t->is_ancestor);
+ 
+-		if (BCH_SNAPSHOT_DELETED(s.v)) {
++		if (BCH_SNAPSHOT_WILL_DELETE(s.v)) {
+ 			set_bit(BCH_FS_need_delete_dead_snapshots, &c->flags);
+ 			if (c->curr_recovery_pass > BCH_RECOVERY_PASS_delete_dead_snapshots)
+ 				bch2_delete_dead_snapshots_async(c);
+@@ -748,7 +748,7 @@ static int check_snapshot(struct btree_trans *trans,
  	}
  
-+	u32 tree = bch2_snapshot_tree(c, s.k->p.offset);
-+
- 	if (live_children == 0) {
--		return snapshot_list_add(c, &d->delete_leaves, s.k->p.offset);
-+		return  snapshot_list_add_nodup(c, &d->deleting_from_trees, tree) ?:
-+			snapshot_list_add(c, &d->delete_leaves, s.k->p.offset);
- 	} else if (live_children == 1) {
- 		struct snapshot_interior_delete n = {
- 			.id		= s.k->p.offset,
-@@ -1470,7 +1491,8 @@ static int check_should_delete_snapshot(struct btree_trans *trans, struct bkey_s
- 			return -EINVAL;
- 		}
+ 	bool should_have_subvol = BCH_SNAPSHOT_SUBVOL(&s) &&
+-		!BCH_SNAPSHOT_DELETED(&s);
++		!BCH_SNAPSHOT_WILL_DELETE(&s);
  
--		return darray_push(&d->delete_interior, n);
-+		return  snapshot_list_add_nodup(c, &d->deleting_from_trees, tree) ?:
-+			darray_push(&d->delete_interior, n);
- 	} else {
- 		return 0;
+ 	if (should_have_subvol) {
+ 		id = le32_to_cpu(s.subvol);
+@@ -1062,10 +1062,10 @@ int bch2_snapshot_node_set_deleted(struct btree_trans *trans, u32 id)
  	}
-@@ -1551,6 +1573,10 @@ static int bch2_fix_child_of_deleted_snapshot(struct btree_trans *trans,
  
- static void bch2_snapshot_delete_nodes_to_text(struct printbuf *out, struct snapshot_delete *d)
- {
-+	prt_printf(out, "deleting from trees");
-+	darray_for_each(d->deleting_from_trees, i)
-+		prt_printf(out, " %u", *i);
-+
- 	prt_printf(out, "deleting leaves");
- 	darray_for_each(d->delete_leaves, i)
- 		prt_printf(out, " %u", *i);
-@@ -1611,6 +1637,10 @@ int bch2_delete_dead_snapshots(struct bch_fs *c)
- 				BTREE_ITER_prefetch|BTREE_ITER_all_snapshots, k,
- 				&res, NULL, BCH_TRANS_COMMIT_no_enospc, ({
- 			d->pos.pos = iter.pos;
-+
-+			if (skip_unrelated_snapshot_tree(trans, &iter))
-+				continue;
-+
- 			delete_dead_snapshots_process_key(trans, &iter, k);
- 		}));
+ 	/* already deleted? */
+-	if (BCH_SNAPSHOT_DELETED(&s->v))
++	if (BCH_SNAPSHOT_WILL_DELETE(&s->v))
+ 		goto err;
  
-@@ -1653,6 +1683,7 @@ int bch2_delete_dead_snapshots(struct bch_fs *c)
- 	}
+-	SET_BCH_SNAPSHOT_DELETED(&s->v, true);
++	SET_BCH_SNAPSHOT_WILL_DELETE(&s->v, true);
+ 	SET_BCH_SNAPSHOT_SUBVOL(&s->v, false);
+ 	s->v.subvol = 0;
  err:
- 	mutex_lock(&d->lock);
-+	darray_exit(&d->deleting_from_trees);
- 	darray_exit(&d->delete_interior);
- 	darray_exit(&d->delete_leaves);
- 	d->running = false;
-diff --git a/fs/bcachefs/snapshot_types.h b/fs/bcachefs/snapshot_types.h
-index bb67a6beb6e3..39fb47f43183 100644
---- a/fs/bcachefs/snapshot_types.h
-+++ b/fs/bcachefs/snapshot_types.h
-@@ -15,6 +15,7 @@ struct snapshot_delete {
- 	struct work_struct	work;
+@@ -1770,7 +1770,7 @@ static int bch2_check_snapshot_needs_deletion(struct btree_trans *trans, struct
+ 		return 0;
  
- 	struct mutex		lock;
-+	snapshot_id_list	deleting_from_trees;
- 	snapshot_id_list	delete_leaves;
- 	interior_delete_list	delete_interior;
+ 	struct bkey_s_c_snapshot snap = bkey_s_c_to_snapshot(k);
+-	if (BCH_SNAPSHOT_DELETED(snap.v) ||
++	if (BCH_SNAPSHOT_WILL_DELETE(snap.v) ||
+ 	    interior_snapshot_needs_delete(snap))
+ 		set_bit(BCH_FS_need_delete_dead_snapshots, &trans->c->flags);
  
+diff --git a/fs/bcachefs/snapshot_format.h b/fs/bcachefs/snapshot_format.h
+index aabcd3a74cd9..685a9fe209ab 100644
+--- a/fs/bcachefs/snapshot_format.h
++++ b/fs/bcachefs/snapshot_format.h
+@@ -15,7 +15,7 @@ struct bch_snapshot {
+ 	bch_le128		btime;
+ };
+ 
+-LE32_BITMASK(BCH_SNAPSHOT_DELETED,	struct bch_snapshot, flags,  0,  1)
++LE32_BITMASK(BCH_SNAPSHOT_WILL_DELETE,	struct bch_snapshot, flags,  0,  1)
+ 
+ /* True if a subvolume points to this snapshot node: */
+ LE32_BITMASK(BCH_SNAPSHOT_SUBVOL,	struct bch_snapshot, flags,  1,  2)
 -- 
 2.49.0
 
