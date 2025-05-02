@@ -1,118 +1,1142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4481F4C89;
-	Fri,  2 May 2025 20:24:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7051DB125;
+	Fri,  2 May 2025 20:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746217479; cv=none; b=ochwn6ZcSwE+6x/6kcfO7yOa3I8CB5SuXJG6GvrQhB5/scqabFhUxJPh2G+Dl4i6fOFyKRehcoSrBSny+Q6CvSECCh50ih8H1Hm4Zj8IDyoXn1lln3EW+XHog4xyYGqyV61FsQ3Y2CODHLPerIfxKm+JtMi4Df6VtpwFihgEPqc=
+	t=1746217619; cv=none; b=PXT29EroICPE+4EtRhYFGabpDza/KLNjRXgHz6KLu9rZtXJ6UvXWbi1i8BIQXKpWPwjYKBoF/KpFfpIVfWR2+JKvb08LFqpBnRp1VeD+H85LRQSBAwI67+m70PQ/DUYg6Yooc7XD2+ctPbPkC0oyvt+ncGDtmLK59lE96QKocJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746217479; c=relaxed/simple;
-	bh=CKdQwCNtbgJmOIJdgIkwnIPv7ivHg8H3tUDDNRilhu4=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=BXbpaPsOjpBM9gfCGX5QLAcpc65SVBvkeNlz3rC/g5qdYqr+SAGA9ProcAQfrL8lVQfdO+lcpi4ahKC+T6BYxYnld/bzk45zAVdTqFHGNyZpUtqN/fpi/XwoX4Kqme+BawVLO4s/v80zgV7wliKisGxK/gf8Dle4DW6FbTM+aa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a1wNx7XB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746217619; c=relaxed/simple;
+	bh=Hn5I8ECAHmnNYIPBNwwVI+Folf3aItawHfxfnzgkgtY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oUqcokObM62B+q/OYs3cv8Zp5u2QtkfGjd3s/T7LuA/GjQqFvI+G4dfh4tXfiwi93e3lu11rvHDKgCgeyCmS8cJw+RdbLigFytpe/7oWy1HZ6Fb/x826sT7bdoUkwEkLeyCpxQs6EZ5eFT1CPwcFsJY0YavrJrO9sAZXk/J0rb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=hnTc84Nl; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a1wNx7XB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C05CC4CEE4;
-	Fri,  2 May 2025 20:24:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746217479;
-	bh=CKdQwCNtbgJmOIJdgIkwnIPv7ivHg8H3tUDDNRilhu4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=a1wNx7XBYkalEtykc+Z3OIRyoeklvF1OsUyMWqQ7tLoDzpUJEJkJrDjxn2n4UBwcR
-	 IG2hJ6SNfpxB+1J+/kxzx1XkKfWv5wagnDAgnfM2+5YCevhPAyqzXm2lUnOkLf2XrB
-	 jnzX/G1JYVoX/2mz/6TzvwLH2gCwLitzohNAyXIwPWtz3+dIt/XGSn9PbZGgj0pdjU
-	 SMIc8N5C++K/PaJkb5HhNJmJjbSovRsZERJh/EurZz0g+lL/JOSPavJD7DO6cfzbb1
-	 7Hwil1UKnztT6xv2xrQMJRtne5jsMtG9cDEWgTKhE+S9lPzYz4vASddzAgF1DOeK9c
-	 Y8CuYmFaELy4g==
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2cc82edcf49so695215fac.1;
-        Fri, 02 May 2025 13:24:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVign9eNtLrLzktYhgWzVQS2aFx8YKIP902pWBvsWYF4DWtOzkUm2NVL8Qv5TfEoBaKcTf137ERBQlQJRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiBZiUWJyMDM+BvPi+yj5I7tSkpOHuDY/3Xm+ZHRFo3hZJ5UOJ
-	5QJlYzEdjux+f/WSCpPdJVgZa+u8DnN9mRmgwiD7n1u+DjiJcFbQHZ/UQ0x98i6FRCcE+kkop0L
-	poZUIBXnT1fONILabp/06AMeTWII=
-X-Google-Smtp-Source: AGHT+IG5MVEHG99bUGtq3hQ19odxMAg5CRQLYjohAVivNoibLMq0qjwzbzNNUYD6uB86bNDQBOlkQi+1l88Rpk6G25k=
-X-Received: by 2002:a05:6870:b004:b0:29f:97af:a1a0 with SMTP id
- 586e51a60fabf-2dab3301a9cmr2305480fac.24.1746217478465; Fri, 02 May 2025
- 13:24:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="hnTc84Nl"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 897DCAF;
+	Fri,  2 May 2025 22:26:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746217605;
+	bh=Hn5I8ECAHmnNYIPBNwwVI+Folf3aItawHfxfnzgkgtY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hnTc84NlQFKf+/Plk6Tp2qCYcUU2K6ieP+yRyHVrN93UTNihvIq3bbkXqIyZtkAGR
+	 kjbIqkGexaQN/CO8NmP4K07WiDB7NC49C3H3B5QNFGI4azR2ZnWNQy+A0l8EayCjQW
+	 0YywLvTvt95AfjwXPMbaMgGlrDfhgqBwdBi7g5CM=
+Date: Fri, 2 May 2025 23:26:44 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v8] media: vsp1: Add VSPX support
+Message-ID: <20250502202644.GF20093@pendragon.ideasonboard.com>
+References: <20250502-b4-vspx-v8-1-b2a7592668dd@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 2 May 2025 22:24:27 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hWHUokQz-cU=W7+wY4-ZRWKnz4PvUSk17vsDoPb9oqXQ@mail.gmail.com>
-X-Gm-Features: ATxdqUFktImLQLMCCikDmTaLIzO0CrxcayCGg_H2QrHFELmRJvkGgat7NTIo1G8
-Message-ID: <CAJZ5v0hWHUokQz-cU=W7+wY4-ZRWKnz4PvUSk17vsDoPb9oqXQ@mail.gmail.com>
-Subject: [GIT PULL] Power management fixes for v6.15-rc5
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linux PM <linux-pm@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Bard Liao <yung-chuan.liao@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250502-b4-vspx-v8-1-b2a7592668dd@ideasonboard.com>
 
-Hi Linus,
+Hi Jacopo,
 
-Please pull from the tag
+Thank you for the patch.
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- pm-6.15-rc5
+On Fri, May 02, 2025 at 03:23:10PM +0200, Jacopo Mondi wrote:
+> Add support for VSPX, a specialized version of the VSP2 that
+> transfers data to the ISP. The VSPX is composed of two RPF units
+> to read data from external memory and an IIF instance that performs
+> transfer towards the ISP.
+> 
+> The VSPX is supported through a newly introduced vsp1_vspx.c file that
+> exposes two interfaces: vsp1_vspx interface, declared in vsp1_vspx.h
+> for the vsp1 core to initialize and cleanup the VSPX, and a vsp1_isp
+> interface, declared in include/media/vsp1.h for the ISP driver to
+> control the VSPX operations.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+> ---
+> The VSPX is a VSP2 function that reads data from external memory using
+> two RPF instances and feed it to the ISP.
+> 
+> The VSPX includes an IIF unit (ISP InterFace) modeled in the vsp1 driver
+> as a new, simple, entity type.
+> 
+> IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
+> interfacing. To prepare to support VSPX, support IIF first by
+> introducing a new entity and by adjusting the RPF/WPF drivers to
+> operate correctly when an IIF is present.
+> 
+> Changes in v8:
+> - Remove patches already collected by Laurent in
+>   [GIT PULL FOR v6.16] Renesas media drivers changes
+> 
+> - Rebased on
+>   https://gitlab.freedesktop.org/linux-media/users/pinchartl.git #renesas-next
+> 
+> - Changes to the VSPX interface towards the ISP
+>   - Split start/stop_streaming
+>   - Add vsp1_isp_jobs_release() to release pending jobs
+>   - Add vsp1_isp_free_buffer()
+>   - Remove vsp1_isp_configure() and compute partitions on job creation
+> 
+> - Driver changes
+>   - Drop irq-driver flow
+>     The VSPX used to schedule new jobs as soon as processing the last
+>     one is done. This doesn't work well with the R-Car ISP design
+>     for two reasons:
+>     - The ISP needs per-job registers programming
+>     - The ISP and VSPX job queues have to stay in sync
+> 
+> - Minors
+>   - Remove the jobs_lock as a single lock is fine
+>   - Protect against VSPX/ISP irq races in job_run() by checking the
+>     VSPX 'busy' register and remove the 'processing' flag
+>   - Manually set the pipeline state to STOPPED before scheduling a new
+>     job without waiting for frame_end
+> 
+> Changes in v7:
+> - Include VSPX driver in the series
+> - Use existing VSP1 formats and remove patches extending formats on RPF
+> - Rework VSPX driver to split jobs creation and scheduling in two
+>   different API entry points
+> - Fix VSPX stride using the user provided bytesperline and using the
+>   buffer size for ConfigDMA buffers
+> - Link to v6: https://lore.kernel.org/r/20250321-v4h-iif-v6-0-361e9043026a@ideasonboard.com
+> 
+> Changes in v6:
+> - Little cosmetic change as suggested by Laurent
+> - Collect tags
+> - Link to v5: https://lore.kernel.org/r/20250319-v4h-iif-v5-0-0a10456d792c@ideasonboard.com
+> 
+> Changes in v5:
+> - Drop additional empty line 5/6
+> - Link to v4: https://lore.kernel.org/r/20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com
+> 
+> Changes in v4:
+> - Fix SWAP bits for RAW10, RAW12 and RAW16
+> - Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
+> 
+> Changes in v3:
+> - Drop 2/6 from v2
+> - Add 5/7 to prepare for a new implementation of 6/7
+> - Individual changelog per patch
+> - Add 7/7
+> - Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
+> 
+> Changes in v2:
+> - Collect tags
+> - Address review comments from Laurent, a lot of tiny changes here and
+>   there but no major redesign worth an entry in the patchset changelog
 
-with top-most commit 23203ed263f0701368468952d5004e320e5af6db
+You've come a long way since v1, I think we're getting close to a good
+implementation.
 
- Merge branch 'pm-cpufreq'
+> ---
+>  drivers/media/platform/renesas/vsp1/Makefile    |   1 +
+>  drivers/media/platform/renesas/vsp1/vsp1.h      |   1 +
+>  drivers/media/platform/renesas/vsp1/vsp1_drv.c  |  13 +-
+>  drivers/media/platform/renesas/vsp1/vsp1_regs.h |   1 +
+>  drivers/media/platform/renesas/vsp1/vsp1_vspx.c | 664 ++++++++++++++++++++++++
+>  drivers/media/platform/renesas/vsp1/vsp1_vspx.h |  16 +
+>  include/media/vsp1.h                            |  75 +++
+>  7 files changed, 770 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/renesas/vsp1/Makefile b/drivers/media/platform/renesas/vsp1/Makefile
+> index de8c802e1d1a..2057c8f7be47 100644
+> --- a/drivers/media/platform/renesas/vsp1/Makefile
+> +++ b/drivers/media/platform/renesas/vsp1/Makefile
+> @@ -6,5 +6,6 @@ vsp1-y					+= vsp1_clu.o vsp1_hsit.o vsp1_lut.o
+>  vsp1-y					+= vsp1_brx.o vsp1_sru.o vsp1_uds.o
+>  vsp1-y					+= vsp1_hgo.o vsp1_hgt.o vsp1_histo.o
+>  vsp1-y					+= vsp1_iif.o vsp1_lif.o vsp1_uif.o
+> +vsp1-y					+= vsp1_vspx.o
+>  
+>  obj-$(CONFIG_VIDEO_RENESAS_VSP1)	+= vsp1.o
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1.h b/drivers/media/platform/renesas/vsp1/vsp1.h
+> index 263024639dd2..1872e403f26b 100644
+> --- a/drivers/media/platform/renesas/vsp1/vsp1.h
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1.h
+> @@ -110,6 +110,7 @@ struct vsp1_device {
+>  	struct media_entity_operations media_ops;
+>  
+>  	struct vsp1_drm *drm;
+> +	struct vsp1_vspx *vspx;
+>  };
+>  
+>  int vsp1_device_get(struct vsp1_device *vsp1);
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_drv.c b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
+> index d13e9b31aa7c..e338ab8af292 100644
+> --- a/drivers/media/platform/renesas/vsp1/vsp1_drv.c
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1_drv.c
+> @@ -38,6 +38,7 @@
+>  #include "vsp1_uds.h"
+>  #include "vsp1_uif.h"
+>  #include "vsp1_video.h"
+> +#include "vsp1_vspx.h"
+>  
+>  /* -----------------------------------------------------------------------------
+>   * Interrupt Handling
+> @@ -488,7 +489,10 @@ static int vsp1_create_entities(struct vsp1_device *vsp1)
+>  
+>  		ret = media_device_register(mdev);
+>  	} else {
+> -		ret = vsp1_drm_init(vsp1);
+> +		if (vsp1->info->version == VI6_IP_VERSION_MODEL_VSPX_GEN4)
+> +			ret = vsp1_vspx_init(vsp1);
+> +		else
+> +			ret = vsp1_drm_init(vsp1);
+>  	}
+>  
+>  done:
+> @@ -846,6 +850,13 @@ static const struct vsp1_device_info vsp1_device_infos[] = {
+>  		.uif_count = 2,
+>  		.wpf_count = 1,
+>  		.num_bru_inputs = 5,
+> +	}, {
+> +		.version = VI6_IP_VERSION_MODEL_VSPX_GEN4,
+> +		.model = "VSP2-X",
+> +		.gen = 4,
+> +		.features = VSP1_HAS_IIF,
+> +		.rpf_count = 2,
+> +		.wpf_count = 1,
+>  	},
+>  };
+>  
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_regs.h b/drivers/media/platform/renesas/vsp1/vsp1_regs.h
+> index 86e47c2d991f..10cfbcd1b6e0 100644
+> --- a/drivers/media/platform/renesas/vsp1/vsp1_regs.h
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1_regs.h
+> @@ -799,6 +799,7 @@
+>  #define VI6_IP_VERSION_MODEL_VSPDL_GEN3	(0x19 << 8)
+>  #define VI6_IP_VERSION_MODEL_VSPBS_GEN3	(0x1a << 8)
+>  #define VI6_IP_VERSION_MODEL_VSPD_GEN4	(0x1c << 8)
+> +#define VI6_IP_VERSION_MODEL_VSPX_GEN4	(0x1d << 8)
+>  /* RZ/G2L SoCs have no version register, So use 0x80 as the model version */
+>  #define VI6_IP_VERSION_MODEL_VSPD_RZG2L	(0x80 << 8)
+>  
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.c b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
+> new file mode 100644
+> index 000000000000..6edb5e4929d9
+> --- /dev/null
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.c
+> @@ -0,0 +1,664 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * vsp1_vspx.c  --  R-Car Gen 4 VSPX
+> + *
+> + * Copyright (C) 2025 Ideas On Board Oy
+> + * Copyright (C) 2025 Renesas Electronics Corporation
+> + */
+> +
+> +#include "vsp1_vspx.h"
+> +
+> +#include <linux/cleanup.h>
+> +#include <linux/container_of.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include <media/media-entity.h>
+> +#include <media/v4l2-subdev.h>
+> +#include <media/vsp1.h>
+> +
+> +#include "vsp1_dl.h"
+> +#include "vsp1_iif.h"
+> +#include "vsp1_pipe.h"
+> +#include "vsp1_rwpf.h"
+> +
+> +/*
+> + * struct vsp1_vspx_pipeline - VSPX pipeline
+> + * @pipe: the VSP1 pipeline
+> + * @partition: the pre-calculated partition used by the pipeline
+> + * @vspx_lock: protect access to the VSPX configuration and the jobs queue
 
-on top of commit b4432656b36e5cc1d50a1f2dc15357543add530e
+As there's a single lock, you could name it just "lock".
 
- Linux 6.15-rc4
+> + * @enabled: the enable flag
+> + * @jobs: jobs queue
+> + * @vspx_frame_end: frame end callback
+> + * @frame_end_data: data for the frame end callback
+> + */
+> +struct vsp1_vspx_pipeline {
+> +	struct vsp1_pipeline pipe;
+> +	struct vsp1_partition partition;
+> +
+> +	/* Protects the pipeline configuration */
+> +	spinlock_t vspx_lock;
+> +	bool enabled;
+> +
+> +	struct list_head jobs;
+> +
+> +	void (*vspx_frame_end)(void *frame_end_data);
+> +	void *frame_end_data;
+> +};
+> +
+> +static inline struct vsp1_vspx_pipeline *
+> +to_vsp1_vspx_pipeline(struct vsp1_pipeline *pipe)
+> +{
+> +	return container_of(pipe, struct vsp1_vspx_pipeline, pipe);
+> +}
+> +
+> +/*
+> + * struct vsp1_vspx_job - VSPX transfer job
+> + * @dl: display list populated by vsp1_isp_job_prepare()
+> + * @job_queue: list handle
+> + */
+> +struct vsp1_vspx_job {
+> +	struct vsp1_dl_list *dl;
+> +	struct list_head job_queue;
+> +};
+> +
+> +/*
+> + * struct vsp1_vspx - VSPX device
+> + * @vsp1: the VSP1 device
+> + * @pipe: the VSPX pipeline
+> + */
+> +struct vsp1_vspx {
+> +	struct vsp1_device *vsp1;
+> +	struct vsp1_vspx_pipeline pipe;
+> +};
+> +
+> +static const struct v4l2_pix_format_mplane vspx_default_fmt = {
+> +	.width = 1920,
+> +	.height = 1080,
+> +	.pixelformat = V4L2_PIX_FMT_SRGGB8,
+> +	.field = V4L2_FIELD_NONE,
+> +	.num_planes = 1,
+> +	.plane_fmt = {
+> +		[0] = {
+> +			.sizeimage = 1920 * 1080,
+> +			.bytesperline = 1920,
+> +		},
+> +	},
+> +};
+> +
+> +/*
+> + * Apply the given width, height and fourcc to the subdevice inside the
+> + * VSP1 entity.
 
-to receive power management fixes for 6.15-rc5.
+s/entity/RWPF/ as you only deal with RPFs and WPFs here. Or
 
-These fix three recent regressions, two in cpufreq and one in the Intel
-Soundwire driver, and an unchecked MSR access in the intel_pstate
-driver:
+/* Apply the given width, height and fourcc to the RWPF's subdevice */
 
- - Fix a recent regression causing systems where frequency tables are
-   used by cpufreq to have issues with setting frequency limits (Rafael
-   Wysocki).
+> + */
+> +static int vsp1_vspx_rwpf_set_subdev_fmt(struct vsp1_device *vsp1,
+> +					 struct vsp1_rwpf *rwpf,
+> +					 u32 isp_fourcc,
+> +					 unsigned int width,
+> +					 unsigned int height)
+> +{
+> +	struct vsp1_entity *ent = &rwpf->entity;
+> +	const struct vsp1_format_info *fmtinfo;
+> +	struct v4l2_subdev_format format = {};
+> +	u32 vspx_fourcc;
+> +
+> +	switch (isp_fourcc) {
+> +	case V4L2_PIX_FMT_GREY:
+> +		/* 8 bit RAW Bayer image. */
+> +		vspx_fourcc = V4L2_PIX_FMT_RGB332;
+> +		break;
+> +	case V4L2_PIX_FMT_Y10:
+> +	case V4L2_PIX_FMT_Y12:
+> +	case V4L2_PIX_FMT_Y16:
+> +		/* 10, 12 and 16 bit RAW Bayer image. */
+> +		vspx_fourcc = V4L2_PIX_FMT_RGB565;
+> +		break;
+> +	case V4L2_META_FMT_GENERIC_8:
+> +		/* ConfigDMA parameters buffer. */
+> +		vspx_fourcc = V4L2_PIX_FMT_XBGR32;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	fmtinfo = vsp1_get_format_info(vsp1, vspx_fourcc);
+> +	rwpf->fmtinfo = fmtinfo;
 
- - Fix a recent regression causing frequency boost settings to become
-   out-of-sync if platform firmware updates the registers associated
-   with frequency boost during system resume (Viresh Kumar).
+	rwpf->fmtinfo = vsp1_get_format_info(vsp1, vspx_fourcc);
 
- - Fix a recent regression causing resume failures to occur in the
-   Intel Soundwire driver if the device handled by it is in runtime
-   suspend before a system-wide suspend (Rafael Wysocki).
+and drop the local variable.
 
- - Fix an unchecked MSR access in the intel_pstate driver occurring when
-   CPUID indicates no turbo, but the driver attempts to enable turbo
-   frequencies due to a misleading value read from an MSR (Srinivas
-   Pandruvada).
+> +
+> +	format.which = V4L2_SUBDEV_FORMAT_ACTIVE;
+> +	format.pad = RWPF_PAD_SINK;
+> +	format.format.width = width;
+> +	format.format.height = height;
+> +	format.format.field = V4L2_FIELD_NONE;
+> +	format.format.code = fmtinfo->mbus;
+> +
+> +	return v4l2_subdev_call(&ent->subdev, pad, set_fmt, NULL, &format);
+> +}
+> +
+> +/* Configure RPF0 for ConfigDMA and RAW image transfer. */
 
-Thanks!
+s/and/or/
 
+But you also configure the WPF, so I'd write
 
----------------
+/* Configure the RPF -> IIF -> WPF pipeline for ConfigDMA or RAW image transfer. */
 
-Rafael J. Wysocki (2):
-      cpufreq: Fix setting policy limits when frequency tables are used
-      soundwire: intel_auxdevice: Fix system suspend/resume handling
+and rename the function to vsp1_vspx_pipeline_configure().
 
-Srinivas Pandruvada (1):
-      cpufreq: intel_pstate: Unchecked MSR access in legacy mode
+> +static int vsp1_vspx_rpf0_configure(struct vsp1_device *vsp1,
+> +				    dma_addr_t addr, u32 isp_fourcc,
+> +				    unsigned int width, unsigned int height,
+> +				    unsigned int stride,
+> +				    unsigned int iif_sink_pad,
+> +				    struct vsp1_dl_list *dl,
+> +				    struct vsp1_dl_body *dlb)
+> +{
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
+> +	struct vsp1_rwpf *rpf0 = pipe->inputs[0];
+> +	int ret;
+> +
+> +	ret = vsp1_vspx_rwpf_set_subdev_fmt(vsp1, rpf0, isp_fourcc, width,
+> +					    height);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = vsp1_vspx_rwpf_set_subdev_fmt(vsp1, pipe->output, isp_fourcc,
+> +					    width, height);
+> +	if (ret)
+> +		return ret;
+> +
+> +	vsp1_pipeline_calculate_partition(pipe, &pipe->part_table[0],
+> +					  width, 0);
+> +
 
-Viresh Kumar (1):
-      cpufreq: ACPI: Re-sync CPU boost state on system resume
+You should also set rwpf->format.num_planes to 1 here.
 
----------------
+> +	rpf0->format.plane_fmt[0].bytesperline = stride;
+> +
+> +	/*
+> +	 * Connect RPF0 to the IIF sink pad corresponding to the config or image
+> +	 * path.
+> +	 */
+> +	rpf0->entity.sink_pad = iif_sink_pad;
+> +
+> +	pipe->part_table[0].rpf[0].width = width;
+> +	pipe->part_table[0].rpf[0].height = height;
 
- drivers/cpufreq/acpi-cpufreq.c      | 15 ++++++-
- drivers/cpufreq/cpufreq.c           | 22 ++++++----
- drivers/cpufreq/cpufreq_ondemand.c  |  3 +-
- drivers/cpufreq/freq_table.c        |  6 +--
- drivers/cpufreq/intel_pstate.c      |  3 ++
- drivers/soundwire/intel_auxdevice.c | 36 ++++++----------
- include/linux/cpufreq.h             | 83 ++++++++++++++++++++++++-------------
- 7 files changed, 102 insertions(+), 66 deletions(-)
+Isn't this handled by vsp1_pipeline_calculate_partition() ?
+
+> +
+> +	rpf0->mem.addr[0] = addr;
+> +	rpf0->mem.addr[1] = 0;
+> +	rpf0->mem.addr[2] = 0;
+> +
+> +	vsp1_entity_route_setup(&rpf0->entity, pipe, dlb);
+> +	vsp1_entity_configure_stream(&rpf0->entity, rpf0->entity.state, pipe,
+> +				     dl, dlb);
+> +	vsp1_entity_configure_partition(&rpf0->entity, pipe,
+> +					&pipe->part_table[0], dl, dlb);
+> +
+> +	return 0;
+> +}
+> +
+> +/* -----------------------------------------------------------------------------
+> + * Interrupt handling
+> + */
+> +
+> +static void vsp1_vspx_pipeline_frame_end(struct vsp1_pipeline *pipe,
+> +					 unsigned int completion)
+> +{
+> +	struct vsp1_vspx_pipeline *vspx_pipe = to_vsp1_vspx_pipeline(pipe);
+> +
+> +	if (vspx_pipe->vspx_frame_end)
+> +		vspx_pipe->vspx_frame_end(vspx_pipe->frame_end_data);
+> +}
+> +
+> +/* -----------------------------------------------------------------------------
+> + * ISP Driver API (include/media/vsp1.h)
+> + */
+> +
+> +/**
+> + * vsp1_isp_init() - Initialize the VSPX
+> + *
+> + * @dev: The VSP1 struct device
+> + *
+> + * Return: %0 on success or a negative error code on failure
+> + */
+> +int vsp1_isp_init(struct device *dev)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +
+> +	if (!vsp1)
+> +		return -EPROBE_DEFER;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_init);
+> +
+> +/**
+> + * vsp1_isp_get_bus_master - Get VSPX bus master
+> + *
+> + * The VSPX accesses memory through an FCPX instance. When allocating memory
+> + * buffers that will have to be accessed by the VSPX the 'struct device' of
+> + * the FCPX should be used. Use this function to get a reference to it.
+
+The function description should go after parameters. Same elsewhere
+where applicable.
+
+> + *
+> + * @dev: The VSP1 struct device
+> + *
+> + * Return: a pointer to the bus master's device
+> + */
+> +struct device *vsp1_isp_get_bus_master(struct device *dev)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +
+> +	if (!vsp1)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return vsp1->bus_master;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_get_bus_master);
+> +
+> +/**
+> + * vsp1_isp_alloc_buffer - Allocate a buffer in the VSPX address space
+> + *
+> + * Allocate a buffer that will be later accessed by the VSPX. Buffers allocated
+> + * using vsp1_isp_alloc_buffer() shall be released with a call to
+> + * vsp1_isp_free_buffer().
+
+I would explain somewhere that this is meant for ISP configuration
+parameters.
+
+> + *
+> + * @dev: The VSP1 struct device
+> + * @size: The size of the buffer to be allocated by the VSPX
+> + * @buffer_desc: The allocated buffer descriptor, will be filled with the
+> + *		 buffer CPU-mapped address, the bus address and the allocated
+> + *		 buffer size
+> + *
+> + * Return: %0 on success or a negative error code on failure
+> + */
+> +int vsp1_isp_alloc_buffer(struct device *dev, size_t size,
+> +			  struct vsp1_isp_buffer_desc *buffer_desc)
+> +{
+> +	struct device *bus_master = vsp1_isp_get_bus_master(dev);
+> +
+> +	if (IS_ERR_OR_NULL(bus_master))
+> +		return -ENODEV;
+> +
+> +	buffer_desc->cpu_addr = dma_alloc_coherent(bus_master, size,
+> +						   &buffer_desc->dma_addr,
+> +						   GFP_KERNEL);
+> +	if (!buffer_desc->cpu_addr)
+> +		return -ENOMEM;
+> +
+> +	buffer_desc->size = size;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_alloc_buffer);
+> +
+> +/**
+> + * vsp1_isp_free_buffer - Release a buffer allocated by vsp1_isp_alloc_buffer()
+> + *
+> + * Release memory in the VSPX address space allocated by
+> + * vsp1_isp_alloc_buffer().
+> + *
+> + * @dev: The VSP1 struct device
+> + * @buffer_desc: The descriptor of the buffer to release as returned by
+> + *		 vsp1_isp_alloc_buffer()
+> + */
+> +void vsp1_isp_free_buffer(struct device *dev,
+> +			  struct vsp1_isp_buffer_desc *buffer_desc)
+> +{
+> +	struct device *bus_master = vsp1_isp_get_bus_master(dev);
+> +
+> +	if (IS_ERR_OR_NULL(bus_master))
+> +		return;
+> +
+> +	dma_free_coherent(bus_master, buffer_desc->size, buffer_desc->cpu_addr,
+> +			  buffer_desc->dma_addr);
+> +}
+> +
+> +/**
+> + * vsp1_isp_start_streaming - Start processing VSPX jobs
+> + *
+> + * Start the VSPX and prepare for accepting buffer transfer job requests.
+> + *
+> + * @dev: The VSP1 struct device
+> + * @frame_end: The frame end callback description
+> + *
+> + * Return: %0 on success or a negative error code on failure
+> + */
+> +int vsp1_isp_start_streaming(struct device *dev,
+> +			     struct vsp1_vspx_frame_end *frame_end)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
+> +	unsigned long flags;
+> +	u32 value;
+> +	int ret;
+> +
+> +	spin_lock_irqsave(&vspx_pipe->vspx_lock, flags);
+
+Can this function ever be called with interrupts disabled ? If no, you
+can use spin_lock_irq().
+
+> +
+> +	if (vspx_pipe->enabled) {
+> +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+> +		return 0;
+
+Shouldn't this be an error ?
+
+> +	}
+> +
+> +	if (!frame_end) {
+
+You can move this check before taking the lock.
+
+> +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+> +		return -EINVAL;
+> +	}
+> +
+> +	vspx_pipe->vspx_frame_end = frame_end->vspx_frame_end;
+> +	vspx_pipe->frame_end_data = frame_end->frame_end_data;
+
+Move this just before setting ->enabled to true, so you won't override
+the values if the function returns an error in the checks below.
+
+> +
+> +	/* Make sure VSPX is not active. */
+
+This should never happen unless there's a serious bug in the driver,
+right ? I would make that explicit in the comment:
+
+	/*
+	 * Make sure VSPX is not active. This should never happen in normal
+	 * usage.
+	 */
+
+> +	value = vsp1_read(vsp1, VI6_CMD(0));
+> +	if (value & VI6_CMD_STRCMD) {
+> +		dev_err(vsp1->dev,
+> +			"%s: Starting of WPF0 already reserved\n", __func__);
+> +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+> +		return -EBUSY;
+> +	}
+> +
+> +	value = vsp1_read(vsp1, VI6_STATUS);
+> +	if (value & VI6_STATUS_SYS_ACT(0)) {
+> +		dev_err(vsp1->dev,
+> +			"%s: WPF0 has not entered idle state\n", __func__);
+> +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+> +		return -EBUSY;
+> +	}
+> +
+> +	vspx_pipe->enabled = true;
+> +
+> +	spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+
+and close the guarded scope here
+
+	}
+
+> +
+> +	/* Enable the VSP1 and prepare for streaming. */
+> +	vsp1_pipeline_dump(pipe, "VSPX job");
+> +
+> +	ret = vsp1_device_get(vsp1);
+
+This should be done before you read the registers.
+
+> +	if (ret < 0) {
+> +		guard(spinlock_irqsave)(&vspx_pipe->vspx_lock);
+> +		vspx_pipe->enabled = false;
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_start_streaming);
+> +
+> +/**
+> + * vsp1_isp_stop_streaming - Stop the VSPX
+> + *
+> + * @dev: The VSP1 struct device
+> + */
+> +void vsp1_isp_stop_streaming(struct device *dev)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&vspx_pipe->vspx_lock, flags);
+> +
+> +	if (!vspx_pipe->enabled) {
+> +		spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+> +		return;
+> +	}
+
+	scoped_guard(spinlock_irqsave)(&vspx_pipe->vspx_lock, flags) {
+		if (!vspx_pipe->enabled)
+			return;
+
+		...
+
+(or spinlock_irq, see comment in vsp1_isp_start_streaming()).
+
+> +
+> +	vspx_pipe->enabled = false;
+> +
+> +	pipe->state = VSP1_PIPELINE_STOPPED;
+> +	vsp1_pipeline_stop(pipe);
+
+You can't call this with a spin lock held. We can look together at how
+to handle locking in this driver, and use a mutex instead of a spinlock
+(I know you went the other way around).
+
+> +	vspx_pipe->vspx_frame_end = NULL;
+> +	vsp1_dlm_reset(pipe->output->dlm);
+> +
+> +	spin_unlock_irqrestore(&vspx_pipe->vspx_lock, flags);
+
+	}
+
+> +
+> +	vsp1_device_put(vsp1);
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_stop_streaming);
+> +
+> +/**
+> + * vsp1_vspx_job_prepare - Prepare a new buffer transfer job
+> + *
+> + * Prepare a new buffer transfer job by populating a display list that will be
+> + * later executed by a call to vsp1_isp_job_run().
+> + *
+> + * The newly created job is appended to the queue of pending jobs. All pending
+> + * jobs must be released after stopping the streaming operations with a call
+> + * to vsp1_isp_jobs_release().
+> + *
+> + * @dev: The VSP1 struct device
+> + * @job: The job description
+> + *
+> + * Return: %0 on success or a negative error code on failure
+> + */
+> +int vsp1_isp_job_prepare(struct device *dev,
+> +			 const struct vsp1_isp_job_desc *desc)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
+> +	const struct v4l2_pix_format_mplane *pix_mp;
+> +	struct vsp1_dl_list *second_dl = NULL;
+> +	struct vsp1_vspx_job *job;
+> +	struct vsp1_dl_body *dlb;
+> +	struct vsp1_dl_list *dl;
+> +	int ret;
+> +
+> +	/* Memory will be released when the job is consumed. */
+> +	job = kmalloc(sizeof(*job), GFP_KERNEL);
+> +	if (!job)
+> +		return -ENOMEM;
+
+Hmmm... I think this can be improved. I would need to see how the ISP
+driver uses this API, but I'm thinking the job data could be stored in
+vsp1_isp_job_desc, without adding the job to a queue in this function.
+The job would then be passed to the run function, which would queue it.
+I think the resulting API would be cleaner. You will need an extra
+function to delete/destroy/cleanup a job that hasn't been queued (the
+counterpart of this function, essentially).
+
+> +
+> +	/*
+> +	 * Transfer the buffers described in the job: an optional ConfigDMA
+> +	 * parameters buffer and a RAW image.
+> +	 */
+> +
+> +	job->dl = vsp1_dl_list_get(pipe->output->dlm);
+> +	if (!job->dl) {
+> +		ret = -ENOMEM;
+> +		goto error_free_job;
+> +	}
+> +
+> +	dl = job->dl;
+> +	dlb = vsp1_dl_list_get_body0(dl);
+> +
+> +	/* Disable RPF1. */
+> +	vsp1_dl_body_write(dlb, vsp1->rpf[1]->entity.route->reg,
+> +			   VI6_DPR_NODE_UNUSED);
+
+The route is disabled in vsp1_device_init(), and we never use RPF1. I
+think this can be dropped.
+
+> +
+> +	/* Configure IIF routing and enable IIF function */
+
+s/function/function./
+
+> +	vsp1_entity_route_setup(pipe->iif, pipe, dlb);
+> +	vsp1_entity_configure_stream(pipe->iif, pipe->iif->state, pipe,
+> +				     dl, dlb);
+> +
+> +	/* Configure WPF0 to enable RPF0 as source*/
+
+s/source/source. /
+
+> +	vsp1_entity_route_setup(&pipe->output->entity, pipe, dlb);
+> +	vsp1_entity_configure_stream(&pipe->output->entity,
+> +				     pipe->output->entity.state, pipe,
+> +				     dl, dlb);
+
+I'm kind of tempting to call route_setup, configure_stream,
+configure_frame and configure_partition by iterating over the entities
+in the pipe, as done by vsp1_du_pipeline_configure(). The code would be
+more generic, at the cost of a few calls being duplicated between the
+config DMA and image configurations. What do you think ?
+
+> +
+> +	if (desc->config.pairs) {
+> +		/*
+> +		 * Configure RPF0 for config data. Transfer the number of
+> +		 * configuration pairs plus 2 words for the header.
+> +		 */
+> +		ret = vsp1_vspx_rpf0_configure(vsp1, desc->config.mem,
+> +					       V4L2_META_FMT_GENERIC_8,
+> +					       desc->config.pairs * 2 + 2, 1,
+> +					       desc->config.pairs * 2 + 2,
+> +					       VSPX_IIF_SINK_PAD_CONFIG,
+> +					       dl, dlb);
+> +		if (ret)
+> +			goto error_put_dl;
+> +
+> +		second_dl = vsp1_dl_list_get(pipe->output->dlm);
+> +		if (!second_dl) {
+> +			ret = -ENOMEM;
+> +			goto error_put_dl;
+> +		}
+> +
+> +		dl = second_dl;
+> +		dlb = vsp1_dl_list_get_body0(dl);
+> +	}
+> +
+> +	/* Configure RPF0 for RAW image transfer. */
+> +	pix_mp = &desc->img.fmt.fmt.pix_mp;
+> +	ret = vsp1_vspx_rpf0_configure(vsp1, desc->img.mem,
+> +				       pix_mp->pixelformat,
+> +				       pix_mp->width, pix_mp->height,
+> +				       pix_mp->plane_fmt[0].bytesperline,
+> +				       VSPX_IIF_SINK_PAD_IMG, dl, dlb);
+> +	if (ret)
+> +		goto error_put_dl;
+> +
+> +	if (second_dl)
+> +		vsp1_dl_list_add_chain(job->dl, second_dl);
+> +
+> +	scoped_guard(spinlock_irqsave, &vspx_pipe->vspx_lock) {
+> +		list_add_tail(&job->job_queue, &vspx_pipe->jobs);
+> +	}
+> +
+> +	return 0;
+> +
+> +error_put_dl:
+> +	if (second_dl)
+> +		vsp1_dl_list_put(second_dl);
+> +	vsp1_dl_list_put(job->dl);
+> +error_free_job:
+> +	kfree(job);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_job_prepare);
+> +
+> +/**
+> + * vsp1_isp_job_run - Run the first pending transfer job
+> + *
+> + * Extract the first available job from the pending job queue and execute the
+> + * display list there contained. The ISP driver shall call this function when a
+> + * new transfer of a ConfigDMA parameters buffer and RAW image is required.
+> + *
+> + * @dev: The VSP1 struct device
+> + *
+> + * Return: %0 on success or a negative error code on failure
+> + */
+> +int vsp1_isp_job_run(struct device *dev)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_pipeline *pipe = &vspx_pipe->pipe;
+> +	struct vsp1_vspx_job *job;
+> +	u32 value;
+> +
+> +	/* Make sure VSPX is not busy processing a frame. */
+> +	value = vsp1_read(vsp1, VI6_CMD(0));
+> +	if (value) {
+> +		dev_err(vsp1->dev,
+> +			"%s: Starting of WPF0 already reserved\n", __func__);
+> +		return -EBUSY;
+> +	}
+> +
+> +	scoped_guard(spinlock_irqsave, &vspx_pipe->vspx_lock) {
+> +
+> +		job = list_first_entry_or_null(&vspx_pipe->jobs,
+> +					       struct vsp1_vspx_job,
+> +					       job_queue);
+> +		if (!job)
+> +			return -ENODEV;
+> +
+> +		list_del(&job->job_queue);
+> +
+> +		/* Apply the display list. */
+> +		vsp1_dl_list_commit(job->dl, 0);
+> +		kfree(job);
+> +	}
+> +
+> +	scoped_guard(spinlock_irqsave, &pipe->irqlock) {
+> +		/*
+> +		 * Operating the vsp1_pipe in singleshot mode requires to
+> +		 * manually set the pipeline state to stopped.
+> +		 */
+> +		pipe->state = VSP1_PIPELINE_STOPPED;
+> +		vsp1_pipeline_run(pipe);
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_job_run);
+> +
+> +/**
+> + * vsp1_isp_jobs_release - Release all pending VSPX jobs
+> + *
+> + * Release jobs prepared by a call to vsp1_vspx_job_prepare() and not yet
+> + * processed. Pending jobs shall be released after streaming has been stopped.
+> + *
+> + * @dev: The VSP1 struct device
+> + */
+> +void vsp1_isp_jobs_release(struct device *dev)
+> +{
+> +	struct vsp1_device *vsp1 = dev_get_drvdata(dev);
+> +	struct vsp1_vspx_pipeline *vspx_pipe = &vsp1->vspx->pipe;
+> +	struct vsp1_vspx_job *job, *tmp;
+> +
+> +	guard(spinlock_irqsave)(&vspx_pipe->vspx_lock);
+> +
+> +	list_for_each_entry_safe(job, tmp, &vspx_pipe->jobs, job_queue) {
+> +		list_del(&job->job_queue);
+> +		vsp1_dl_list_put(job->dl);
+> +		kfree(job);
+> +	}
+> +}
+> +EXPORT_SYMBOL_GPL(vsp1_isp_jobs_release);
+> +
+> +/* -----------------------------------------------------------------------------
+> + * Initialization and cleanup
+> + */
+> +
+> +int vsp1_vspx_init(struct vsp1_device *vsp1)
+> +{
+> +	struct vsp1_vspx_pipeline *vspx_pipe;
+> +	struct vsp1_pipeline *pipe;
+> +
+> +	vsp1->vspx = devm_kzalloc(vsp1->dev, sizeof(*vsp1->vspx), GFP_KERNEL);
+> +	if (!vsp1->vspx)
+> +		return -ENOMEM;
+> +
+> +	vsp1->vspx->vsp1 = vsp1;
+> +
+> +	vspx_pipe = &vsp1->vspx->pipe;
+> +	vspx_pipe->enabled = false;
+> +
+> +	pipe = &vspx_pipe->pipe;
+> +
+> +	vsp1_pipeline_init(pipe);
+> +
+> +	pipe->partitions = 1;
+> +	pipe->part_table = &vspx_pipe->partition;
+> +	pipe->interlaced = false;
+> +	pipe->frame_end = vsp1_vspx_pipeline_frame_end;
+> +
+> +	INIT_LIST_HEAD(&vspx_pipe->jobs);
+> +	spin_lock_init(&vspx_pipe->vspx_lock);
+> +
+> +	/*
+> +	 * Initialize RPF0 as input for VSPX and use it unconditionally for
+> +	 * now.
+> +	 */
+> +	pipe->inputs[0] = vsp1->rpf[0];
+> +	pipe->inputs[0]->entity.pipe = pipe;
+> +	pipe->inputs[0]->entity.sink = &vsp1->iif->entity;
+> +	vsp1_vspx_rwpf_set_subdev_fmt(vsp1, pipe->inputs[0],
+> +				      vspx_default_fmt.pixelformat,
+> +				      vspx_default_fmt.width,
+> +				      vspx_default_fmt.height);
+
+Is there an actual need for this default configuration, given that you
+always reprogram the RPF and WPF when preparing a job ? I think you
+could just drop the call, and the vspx_default_fmt structure.
+
+> +	list_add(&pipe->inputs[0]->entity.list_pipe, &pipe->entities);
+
+s/list_add/list_add_tail/
+
+It won't make any functional difference, but will align the code with
+the calls below.
+
+> +
+> +	pipe->iif = &vsp1->iif->entity;
+> +	pipe->iif->pipe = pipe;
+> +	pipe->iif->sink = &vsp1->wpf[0]->entity;
+> +	pipe->iif->sink_pad = RWPF_PAD_SINK;
+> +	list_add_tail(&pipe->iif->list_pipe, &pipe->entities);
+> +
+> +	pipe->output = vsp1->wpf[0];
+> +	pipe->output->entity.pipe = pipe;
+> +	vsp1_vspx_rwpf_set_subdev_fmt(vsp1, pipe->output,
+> +				      vspx_default_fmt.pixelformat,
+> +				      vspx_default_fmt.width,
+> +				      vspx_default_fmt.height);
+
+Same here.
+
+> +	list_add_tail(&pipe->output->entity.list_pipe, &pipe->entities);
+> +
+> +	return 0;
+> +}
+> +
+> +void vsp1_vspx_cleanup(struct vsp1_device *vsp1)
+> +{
+> +	vsp1_isp_jobs_release(vsp1->dev);
+> +}
+> diff --git a/drivers/media/platform/renesas/vsp1/vsp1_vspx.h b/drivers/media/platform/renesas/vsp1/vsp1_vspx.h
+> new file mode 100644
+> index 000000000000..f871bf9e7dec
+> --- /dev/null
+> +++ b/drivers/media/platform/renesas/vsp1/vsp1_vspx.h
+> @@ -0,0 +1,16 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +/*
+> + * vsp1_vspx.h  --  R-Car Gen 4 VSPX
+> + *
+> + * Copyright (C) 2025 Ideas On Board Oy
+> + * Copyright (C) 2025 Renesas Electronics Corporation
+> + */
+> +#ifndef __VSP1_VSPX_H__
+> +#define __VSP1_VSPX_H__
+> +
+> +#include "vsp1.h"
+> +
+> +int vsp1_vspx_init(struct vsp1_device *vsp1);
+> +void vsp1_vspx_cleanup(struct vsp1_device *vsp1);
+> +
+> +#endif /* __VSP1_VSPX_H__ */
+> diff --git a/include/media/vsp1.h b/include/media/vsp1.h
+> index 48f4a5023d81..6843e8e85520 100644
+> --- a/include/media/vsp1.h
+> +++ b/include/media/vsp1.h
+> @@ -15,6 +15,10 @@
+>  
+>  struct device;
+>  
+> +/* -----------------------------------------------------------------------------
+> + * VSP1 DU interface
+> + */
+> +
+>  int vsp1_du_init(struct device *dev);
+>  
+>  #define VSP1_DU_STATUS_COMPLETE		BIT(0)
+> @@ -117,4 +121,75 @@ void vsp1_du_atomic_flush(struct device *dev, unsigned int pipe_index,
+>  int vsp1_du_map_sg(struct device *dev, struct sg_table *sgt);
+>  void vsp1_du_unmap_sg(struct device *dev, struct sg_table *sgt);
+>  
+> +/* -----------------------------------------------------------------------------
+> + * VSP1 ISP interface
+> + */
+> +
+> +/**
+> + * struct vsp1_isp_buffer_desc - Describe a buffer allocated by VSPX
+> + *
+> + * @size: Byte size of the buffer allocated by VSPX
+> + * @cpu_addr: CPU-mapped address of a buffer allocated by VSPX
+> + * @dma_addr: bus address of a buffer allocated by VSPX
+> + */
+> +struct vsp1_isp_buffer_desc {
+> +	size_t size;
+> +	void *cpu_addr;
+> +	dma_addr_t dma_addr;
+> +};
+> +
+> +/**
+> + * struct vsp1_isp_job_desc - Describe a VSPX buffer transfer request
+> + *
+> + * Describe a transfer request for the VSPX to perform on behalf of the ISP.
+> + * The transfer job descriptor contains an optional ConfigDMA buffer and
+> + * one RAW image buffer. Set config.pairs to 0 if no ConfigDMA buffer should
+> + * be transferred.
+> + *
+> + * @config: ConfigDMA buffer
+> + * @config.pairs: number of reg-value pairs in the ConfigDMA buffer
+> + * @config.mem: bus address of the ConfigDMA buffer
+> + * @img: RAW image buffer
+> + * @img.fmt: RAW image format
+> + * @img.mem: bus address of the RAW image buffer
+> + */
+> +struct vsp1_isp_job_desc {
+> +	struct {
+> +		unsigned int pairs;
+> +		dma_addr_t mem;
+> +	} config;
+> +	struct {
+> +		struct v4l2_format fmt;
+> +		dma_addr_t mem;
+> +	} img;
+> +};
+> +
+> +/**
+> + * struct vsp1_vspx_frame_end - VSPX frame end callback data
+> + *
+> + * @vspx_frame_end: Frame end callback. Called after a transfer job has been
+> + *		    completed. If the job includes both a ConfigDMA and a
+> + *		    RAW image, the callback is called after both have been
+> + *		    transferred
+> + * @frame_end_data: Frame end callback data, passed to vspx_frame_end
+> + */
+> +struct vsp1_vspx_frame_end {
+> +	void (*vspx_frame_end)(void *data);
+> +	void *frame_end_data;
+> +};
+> +
+> +int vsp1_isp_init(struct device *dev);
+> +struct device *vsp1_isp_get_bus_master(struct device *dev);
+> +int vsp1_isp_alloc_buffer(struct device *dev, size_t size,
+> +			  struct vsp1_isp_buffer_desc *buffer_desc);
+> +void vsp1_isp_free_buffer(struct device *dev,
+> +			  struct vsp1_isp_buffer_desc *buffer_desc);
+> +int vsp1_isp_start_streaming(struct device *dev,
+> +			     struct vsp1_vspx_frame_end *frame_end);
+> +void vsp1_isp_stop_streaming(struct device *dev);
+> +int vsp1_isp_job_prepare(struct device *dev,
+> +			 const struct vsp1_isp_job_desc *desc);
+> +int vsp1_isp_job_run(struct device *dev);
+> +void vsp1_isp_jobs_release(struct device *dev);
+> +
+>  #endif /* __MEDIA_VSP1_H__ */
+> 
+> ---
+> base-commit: 1d41f477d6ff5f5eb0b78b37644ffac0785602c9
+> change-id: 20250502-b4-vspx-90c815bff6dd
+
+-- 
+Regards,
+
+Laurent Pinchart
