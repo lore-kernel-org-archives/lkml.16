@@ -1,170 +1,175 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE6BD214A7B;
-	Fri,  2 May 2025 22:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+Received: from elvis.franken.de (elvis.franken.de [193.175.24.41])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53E6321579C;
+	Fri,  2 May 2025 22:03:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.175.24.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746223428; cv=none; b=Io9rROqfM5GBhVx3gQ9dmIhP0zoas4PzucgtqMZxdcSfSuC1ZqAP14bQLMT6BqKNrcdvgbo66n+/nMS4lsh/SG0aETJnqB4Hes63sbIy9TJisqEZ03TkWgU9UIvGkyDYgi3MPsZAg6bOLfQf+OkxQhHffoNzwhGWvOSKFykDzQA=
+	t=1746223434; cv=none; b=jzhlxKfwGMhSEGqWWEfBmPYOGVCDCboPqv2956PIeI+qJPHuh34nR+fgzBOIIpsjzNbRQDUB97i0Wc7hMp1X8OQn94syJs/iLBwfVngzOeBCtYgesCueXGGeMXap9iWFBYIuc/B6fBRqqT7uujFtE1kzdFL8MWmkoquHqsA0EtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746223428; c=relaxed/simple;
-	bh=YIM9Cy2fK1VR81k7zj5aqhU4o8NBU9GIku6QI47dl0E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gg+ISCcDwPlPTBXTAybcKgrqN3dyEbR0u56qagKVGwPcaxrJh9Lkfe79CDciVOAzKNn6DDYymzxI6cB6P3mxOHj7PG7mPzpxktwg7SucbQ1nemnla3hmzLS4urn8mOx+PA5L4j+6kveXAB4F1aIN3TetW66P8X+ZkwwBPFRdl2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=Cjq5Vd5u; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Cjq5Vd5u"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3QJb499995
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 17:03:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746223406;
-	bh=HYwCu/rJ2m8WppnUG1eag8yAoXVOTvEvOBk/GugkqN0=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=Cjq5Vd5uOJ2YFEZONeXQQox2akngT1E+ueORiiU9lLBGC9NIDskPQ74U5Dti1Ttx3
-	 2WVh+71v798Cyrpm6sztfz1dAf5zyWQRc4XiMkJRKHKrQC2u8m264WgTrNIcC/WdI4
-	 pk6ZIVBDJCaMnLm7lCjCJr3zgpdiHErw6K7/0yfI=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542M3QDI054536
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 17:03:26 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 17:03:26 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 17:03:26 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542M3PC1006849;
-	Fri, 2 May 2025 17:03:26 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Nishanth Menon <nm@ti.com>,
-        Vignesh Raghavendra
-	<vigneshr@ti.com>
-CC: Tero Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Hari
- Nagalla <hnagalla@ti.com>,
-        Beleswar Padhi <b-padhi@ti.com>,
-        Markus
- Schneider-Pargmann <msp@baylibre.com>,
-        Andrew Davis <afd@ti.com>, Devarsh
- Thakkar <devarsht@ti.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 07/11] arm64: dts: ti: k3-am62p5-sk: Enable IPC with remote processors
-Date: Fri, 2 May 2025 17:03:21 -0500
-Message-ID: <20250502220325.3230653-8-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502220325.3230653-1-jm@ti.com>
-References: <20250502220325.3230653-1-jm@ti.com>
+	s=arc-20240116; t=1746223434; c=relaxed/simple;
+	bh=DpP+88hJLy7CP597o93+6YUD+p4vmlKs4pFy5wAegVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eHeICr53qlBROZGNs7nZsNh+h+aSb/2NdAILW/5fEaKYhF4+jf0RciBEtOQkI2YSLexnBJzeDq56MEbrnY1k5GrA8xE/eGIbX3SVM9ppJ+syp2Aw9vsGUmxSToET706BPMVaVSmEcQOOMzSVpQbd0WnhO1fMT6f4hmS0CRGXMWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de; spf=pass smtp.mailfrom=alpha.franken.de; arc=none smtp.client-ip=193.175.24.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=alpha.franken.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alpha.franken.de
+Received: from uucp by elvis.franken.de with local-rmail (Exim 3.36 #1)
+	id 1uAyTu-0001Wu-00; Sat, 03 May 2025 00:03:42 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+	id 00C67C01A2; Sat,  3 May 2025 00:03:08 +0200 (CEST)
+Date: Sat, 3 May 2025 00:03:08 +0200
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Huacai Chen <chenhuacai@kernel.org>,
+	Jiaxun Yang <jiaxun.yang@flygoat.com>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	=?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MIPS: SMP: Implement parallel CPU bring up for EyeQ
+Message-ID: <aBVBHFGH2kICjnT3@alpha.franken.de>
+References: <20250413-parallel-cpu-bringup-v1-1-a19d36ec229b@bootlin.com>
+ <CAAhV-H6JSKwWvLwPSK7Bu6jZixRn4U+xtpxGL4KBtsmjhc3PVA@mail.gmail.com>
+ <CAAhV-H6iOwoYCCob6TmFf1boKQHb0=Mim2bWFvZCMfi9Rw5FPQ@mail.gmail.com>
+ <87wmb2ceh7.fsf@BLaptop.bootlin.com>
+ <CAAhV-H65b5Ae-cCYYHTx0QBhYJ_fzSVLFGY0RH1PCq0XbvNPQA@mail.gmail.com>
+ <87o6wecdg0.fsf@BLaptop.bootlin.com>
+ <87cycrc9jt.fsf@BLaptop.bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <87cycrc9jt.fsf@BLaptop.bootlin.com>
 
-From: Devarsh Thakkar <devarsht@ti.com>
+On Fri, May 02, 2025 at 05:32:54PM +0200, Gregory CLEMENT wrote:
+> Hello, 
+> 
+> > Huacai Chen <chenhuacai@kernel.org> writes:
+> >
+> >> On Wed, Apr 30, 2025 at 3:09 PM Gregory CLEMENT
+> >> <gregory.clement@bootlin.com> wrote:
+> >>>
+> >>> Hello Huacai,
+> >>>
+> >>> > Hi, Gregory,
+> >>> >
+> >>> > On Sun, Apr 27, 2025 at 6:13 PM Huacai Chen <chenhuacai@kernel.org> wrote:
+> >>> >>
+> >>> >> Hi, Gregory and Thomas,
+> >>> >>
+> >>> >> I'm sorry I'm late, but I have some questions about this patch.
+> >>> >>
+> >>> >> On Mon, Apr 14, 2025 at 3:12 AM Gregory CLEMENT
+> >>> >> <gregory.clement@bootlin.com> wrote:
+> >>> >> >
+> >>> >> > Added support for starting CPUs in parallel on EyeQ to speed up boot time.
+> >>> >> >
+> >>> >> > On EyeQ5, booting 8 CPUs is now ~90ms faster.
+> >>> >> > On EyeQ6, booting 32 CPUs is now ~650ms faster.
+> >>> >> >
+> >>> >> > Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+> >>> >> > ---
+> >>> >> > Hello,
+> >>> >> >
+> >>> >> > This patch allows CPUs to start in parallel. It has been tested on
+> >>> >> > EyeQ5 and EyeQ6, which are both MIPS64 and use the I6500 design. These
+> >>> >> > systems use CPS to support SMP.
+> >>> >> >
+> >>> >> > As noted in the commit log, on EyeQ6, booting 32 CPUs is now ~650ms
+> >>> >> > faster.
+> >>> >> >
+> >>> >> > Currently, this support is only for EyeQ SoC. However, it should also
+> >>> >> > work for other CPUs using CPS. I am less sure about MT ASE support,
+> >>> >> > but this patch can be a good starting point. If anyone wants to add
+> >>> >> > support for other systems, I can share some ideas, especially for the
+> >>> >> > MIPS_GENERIC setup that needs to handle both types of SMP setups.
+> >>> >> >
+> >>> [...]
+> >>> >> >   * A logical cpu mask containing only one VPE per core to
+> >>> >> > @@ -74,6 +76,8 @@ static cpumask_t cpu_core_setup_map;
+> >>> >> >
+> >>> >> >  cpumask_t cpu_coherent_mask;
+> >>> >> >
+> >>> >> > +struct cpumask __cpu_primary_thread_mask __read_mostly;
+> >>> >> > +
+> >>> >> >  unsigned int smp_max_threads __initdata = UINT_MAX;
+> >>> >> >
+> >>> >> >  static int __init early_nosmt(char *s)
+> >>> >> > @@ -374,10 +378,15 @@ asmlinkage void start_secondary(void)
+> >>> >> >         set_cpu_core_map(cpu);
+> >>> >> >
+> >>> >> >         cpumask_set_cpu(cpu, &cpu_coherent_mask);
+> >>> >> > +#ifdef CONFIG_HOTPLUG_PARALLEL
+> >>> >> > +       cpuhp_ap_sync_alive();
+> >>> >> This is a "synchronization point" due to the description from commit
+> >>> >> 9244724fbf8ab394a7210e8e93bf037abc, which means things are parallel
+> >>> >> before this point and serialized after this point.
+> >>> >>
+> >>> >> But unfortunately, set_cpu_sibling_map() and set_cpu_core_map() cannot
+> >>> >> be executed in parallel. Maybe you haven't observed problems, but in
+> >>> >> theory it's not correct.
+> >>>
+> >>> I am working on it. To address your remark, I have a few options that I
+> >>> evaluate.
+> >> I suggest to revert this patch temporary in mips-next.
+> >
+> >
+> > As I previously mentioned, I haven't observed any issues until now. What
+> > I'm evaluating is whether there is a real problem with this
+> > implementation. Let's examine whether we need a new patch or if this one
+> > is sufficient.
+> >
+> > I will have the resutls at the end of the week.
+> 
+> After hundreds of reboots on the EyeQ5, I did not encounter any failures
+> during boot. However, while executing the set_cpu_core_map() and
+> set_cpu_sibling_map() functions in parallel, modifications to shared
+> resources could result in issues. To address this, I proposed the
+> following fix:
+> 
+> diff --git a/arch/mips/kernel/smp.c b/arch/mips/kernel/smp.c
+> index 1726744f2b2ec..5f30611f45a1c 100644
+> --- a/arch/mips/kernel/smp.c
+> +++ b/arch/mips/kernel/smp.c
+> @@ -374,13 +377,13 @@ asmlinkage void start_secondary(void)
+>         calibrate_delay();
+>         cpu_data[cpu].udelay_val = loops_per_jiffy;
+>  
+> +#ifdef CONFIG_HOTPLUG_PARALLEL
+> +       cpuhp_ap_sync_alive();
+> +#endif
+>         set_cpu_sibling_map(cpu);
+>         set_cpu_core_map(cpu);
+>  
+>         cpumask_set_cpu(cpu, &cpu_coherent_mask);
+> -#ifdef CONFIG_HOTPLUG_PARALLEL
+> -       cpuhp_ap_sync_alive();
+> -#endif
+>         notify_cpu_starting(cpu);
+>  
+>  #ifndef CONFIG_HOTPLUG_PARALLEL
+> 
+> It moved these two functions back in the serialized part of the boot. I
+> was concerned about potential slowdowns during the boot process, but I
+> didn't notice any issues during my test on EyeQ5. Therefore, we can make
+> this change.
+> 
+> 
+> Thomas,
+> 
+> how would you like to proceed? Do you want to squash this patch
+> into the current commit, or do you prefere I create a separate patch for
+> it, or a new version of the patch including this change?
 
-For each remote proc, reserve memory for IPC and bind the mailbox
-assignments. Two memory regions are reserved for each remote processor.
-The first region of 1MB of memory is used for Vring shared buffers
-and the second region is used as external memory to the remote processor
-for the resource table and for tracebuffer allocations.
+please send a seperate patch with just the fix
 
-Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
-Signed-off-by: Hari Nagalla <hnagalla@ti.com>
-Signed-off-by: Judith Mendez <jm@ti.com>
-Reviewed-by: Andrew Davis <afd@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 50 ++++++++++++++++++++++---
- 1 file changed, 44 insertions(+), 6 deletions(-)
+Thomas.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index c2f55cc5a8eb..df73b5a398a6 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -49,6 +49,30 @@ reserved-memory {
- 		#size-cells = <2>;
- 		ranges;
- 
-+		mcu_r5fss0_core0_dma_memory_region: mcu-r5fss-dma-memory-region@9b800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9b800000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		mcu_r5fss0_core0_memory_region: mcu-r5fss-memory-region@9b900000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9b900000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9c800000 0x00 0x100000>;
-+			no-map;
-+		};
-+
-+		wkup_r5fss0_core0_memory_region: r5f-memory@9c900000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00 0x9c900000 0x00 0xf00000>;
-+			no-map;
-+		};
-+
- 		secure_tfa_ddr: tfa@9e780000 {
- 			reg = <0x00 0x9e780000 0x00 0x80000>;
- 			no-map;
-@@ -58,12 +82,6 @@ secure_ddr: optee@9e800000 {
- 			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
- 			no-map;
- 		};
--
--		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
--			compatible = "shared-dma-pool";
--			reg = <0x00 0x9c900000 0x00 0x01e00000>;
--			no-map;
--		};
- 	};
- 
- 	vmain_pd: regulator-0 {
-@@ -666,6 +684,26 @@ mbox_mcu_r5_0: mbox-mcu-r5-0 {
- 	};
- };
- 
-+&wkup_r5fss0 {
-+	status = "okay";
-+};
-+
-+&wkup_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster0 &mbox_r5_0>;
-+	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-+			<&wkup_r5fss0_core0_memory_region>;
-+};
-+
-+&mcu_r5fss0 {
-+	status = "okay";
-+};
-+
-+&mcu_r5fss0_core0 {
-+	mboxes = <&mailbox0_cluster1 &mbox_mcu_r5_0>;
-+	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-+			<&mcu_r5fss0_core0_memory_region>;
-+};
-+
- &main_uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&main_uart0_pins_default>;
 -- 
-2.49.0
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
