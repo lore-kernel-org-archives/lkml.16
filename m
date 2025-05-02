@@ -1,65 +1,55 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022140.outbound.protection.outlook.com [52.101.126.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B7E25D20C
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:20:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202809; cv=none; b=cj1dDlpwwnz7fRkuZn1cxNfYEdM1VvSzE0qqbnWrd2a2LbD/IjIbGhV+eKu5LY3ZKMHdpYNnHFH27PpFbhPqTW/FsM63gHergs+rG2+6gU+qNLjL4vs3nzdkrNZAuiRUXnDaCwQNPt1n+NE1AsPCQm8ZARlMwKhbJRW5RimL5pM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202809; c=relaxed/simple;
-	bh=3EjapqU+jeTaOQ/Z8/xEhQVRbPLYwk7rw/gB+eafJ+I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z4EmRFJh7gHcvWYimLmSdw4oYODNfs8ShhRpvHrcAnuH2FJSxTP311dKeNdhYlPAWE2YAXw54fPVUrDKuAb0hWsuGOXIFvwOSRzNS+/3cKpN9QptiKdYD9AIsXbLLvTbWtXkCCL3WCdr0tDnPR8kisWLjaJSwxRa/ef+I2klpcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UOzNlvQK; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UOzNlvQK"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cf680d351so17771195e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746202805; x=1746807605; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L/bz9fn1ApK8ehph3J3EWQJlOEkbeXH0IsSy7vj7uAo=;
-        b=UOzNlvQK6EQQdCcXpcWTbDPQQgfrI7dZfCSxX3OgKJJpmTEkcFnK4YPLVo+4H9gZfd
-         QsgrEx5ZwEUpo2OIC4J4htyyD/KSwamS0s1PorXa0ukd4K7tR3dv7ih+F+ZNATGyvGl4
-         2udlan8EWKJReejqKvmM+cG1eaGbCBEmnhATlDv92ApR543E0IBxcWcYLGqaNr+6h8am
-         YOY/kFcA8zV14H7pHcij/ypFeup7tGfWi5qgtf3QqKD7rWpximN8Ruw8j6VTYoC6cGrs
-         MUPj3GM02DCFDpTslLpZeSOGKY2IxGNPs1/BIT8IEMEXL+mEKPMuHT2s0/Kl+XW5baRP
-         zCXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746202805; x=1746807605;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/bz9fn1ApK8ehph3J3EWQJlOEkbeXH0IsSy7vj7uAo=;
-        b=hoJ0Y1B4qL4HYja2XUhNi1CleDahgpVkPFTLXwTo459fw7AmTJnlZIlqWarpp61gg1
-         NCkKAmWVrFBJs5ff2FGKXAWtRd+mUzUDxoKe0DlWW8899qQa/1DbQP3/Jknfst4++edR
-         GT/kO/8jnWiDOh3FUmlLi1URAGSbpz8h4jv7bfiwLBSPv5WzwPcfcqlP7Khpw+rKUxCJ
-         NUMvX7elnbnLjLTakfyLrxwKf0GyO2tzyfms0W6fqwg3dNj42hc7KRInrSCEOmbj4fpf
-         Uq/p1vv132XYDgbrxFlFprtpPKerVIL1P+puuBZubj0yv+xyVDVze6M25xXxyhI4dINL
-         5V5w==
-X-Forwarded-Encrypted: i=1; AJvYcCXa2MUIBZ0FbAEyZwvzNz/tLsD/20XTCo8NgIMpO2dClGUPc/si0qB2QvOkM6odSfNF96F0t9FViQ+m+gk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWU/2IGTFXTRLhOSxPxnDQ3IAAJni4KvTb5iRpZIGMGNWqEUXo
-	Eia38ujRhp7ViOX3TcvVf64O4/q71Xo6aWpY5Y1FYe3f0oE4h6efufmBr1kWFEE=
-X-Gm-Gg: ASbGncs1MY+Lu+X8XYfeOkxix6Az7BrzH28ZhGN0/Hf4FsMNIUM+S9cXU5ei6sB8EWY
-	uV61tgl+Ob3uT71YWmYLlk+Bx4H2lvZqmZADg8FBKg3chBJvpYtJJI++6pZ82BS750gu7RH1E25
-	WlqmWUbd4oLhq1Do7eTaqclHqVpcK9b/s+qMPDhnyCeVMglYnfnUSjVD99V5V41L61Md7HBve5H
-	yqZtpvFszhe4i6RxdsREifRcaFEj717DbJ1Tn/MkxDsanBi4IR2weErMnf5HqB2YnQ6UyB5KvNi
-	D8ZWfEjT7jeD+D53KgfxQqwOXDKQ6dAb6auEDkG3QbrPe/BRmDN9OUf1DVX1q1bdQdcqbnRyibN
-	KCjZUDw==
-X-Google-Smtp-Source: AGHT+IHxteQF1bGkHCKmd6Y1/yMn23d0yEys+sIe42jqect0CeKlrVJkCO/XXn6oUIOdI381iLRBwg==
-X-Received: by 2002:a05:600c:8711:b0:439:5f04:4f8d with SMTP id 5b1f17b1804b1-441bb88d42emr29490745e9.12.1746202805361;
-        Fri, 02 May 2025 09:20:05 -0700 (PDT)
-Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a31576sm48340455e9.37.2025.05.02.09.20.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 09:20:04 -0700 (PDT)
-Message-ID: <68aa8c09-233e-4997-b2f8-7db4cd411351@linaro.org>
-Date: Fri, 2 May 2025 17:20:02 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11303C465;
+	Fri,  2 May 2025 16:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.140
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746202874; cv=fail; b=LYFDG3k1oFdqVHv8tWxlln4RHHtjdZAyUUg9F5+yQywp0F0itpV1QD0LzyI5sdQ89TbfIRDcP3c+tT5p8rRfn0YZtfpFaPEGWv3bo57eDCD40DvZkUYpXxztdJPzFmqaUKnUZG36+gO4o7LQT9BvoHCnR2KbGtNsJWpr1J/0Scw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746202874; c=relaxed/simple;
+	bh=ozOYn5MQIQ5x6+8zHOXmdg5Wt//VBFbEFpTU8X7Lg6k=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gMpPjb2C2Jq5q7pA8qqlYxs7T3dviPfgC2mTBKq0VpfkMoTueiSGdqINcj2z66KJG/KNfeV261jToAKd8mWhHKNpn9J6zeC1b8XtDogjnmaNypF8nE+5UXwyLotwl9BXRCbdt4o2ZLMBDccVRE9K5yjPlYWAJbutFHKH4TftMtE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com; spf=pass smtp.mailfrom=cixtech.com; arc=fail smtp.client-ip=52.101.126.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cixtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cixtech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=cL6hSMRx7RhUme9Q/3Ga685DgPfqm6/uycM3sN8qg7aTkOMkeE10TXZAMgv5/Q4w8QKf4tTPJkv4ipcTJOjV28GWgogiN2A7rhmafmOxdQpbykVQvpw4ncURSr7LXYTKwn7yIH9epbYC6ezSoz0xWyj7gL1kUPuNfoSPpFYlK6s5w7/HpYs5dr3vc/qRMm+rPJmVxRcmHrD8qOxWPtA5QzdqxOWOF8IvA1OprkSWnrDK89cZbxdLRnSp1ZE2ZpFtcIXQNaaNkvGtoAwP+Wd3OA9hHjNSBRgRobH6+E6HaFppSsZgSSmLoQNkayDsQWWJo9fJDr7oFrsmNbO2gj0ocQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=D4scuSyYAAyaEnnMzORyO07XR2GSyh3j5iCUK7j3lmU=;
+ b=r2j5yjSEcYDfkduK9c707/LBEgLLPc+jnsiwjEc5Di6vb3ykwSJX603TMVm8rKjfmCpkJDQmAswaf9mNLeDUNJPPLPCunyaL1W50IHt18EhrigLCOvE4G+ARbFAK/P86oswEKxeraCYUhtmehpi0NLX/pZjO57DTgfqvxV4BE6skfqrReVWzRt7A6f5ic0m9EbU5U4aeqARj2D98EcPic/CcntVMtX1h+MPZXEHp53iB4fdootBU+KEEcQRTEp0/QKhKjxtLfBNsLtXtNfFHPt8AFq0MsD/oYTvuD9It2T/XvUMH9ycA1E6f37NI2MBPbOuI5WJNlP+uv9tYht/uNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 222.71.101.198) smtp.rcpttodomain=grimberg.me smtp.mailfrom=cixtech.com;
+ dmarc=bestguesspass action=none header.from=cixtech.com; dkim=none (message
+ not signed); arc=none (0)
+Received: from PS2PR01CA0058.apcprd01.prod.exchangelabs.com
+ (2603:1096:300:57::22) by SEYPR06MB5254.apcprd06.prod.outlook.com
+ (2603:1096:101:86::7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.20; Fri, 2 May
+ 2025 16:21:05 +0000
+Received: from OSA0EPF000000C9.apcprd02.prod.outlook.com
+ (2603:1096:300:57:cafe::73) by PS2PR01CA0058.outlook.office365.com
+ (2603:1096:300:57::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.42 via Frontend Transport; Fri,
+ 2 May 2025 16:21:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 222.71.101.198)
+ smtp.mailfrom=cixtech.com; dkim=none (message not signed)
+ header.d=none;dmarc=bestguesspass action=none header.from=cixtech.com;
+Received-SPF: Pass (protection.outlook.com: domain of cixtech.com designates
+ 222.71.101.198 as permitted sender) receiver=protection.outlook.com;
+ client-ip=222.71.101.198; helo=smtprelay.cixcomputing.com; pr=C
+Received: from smtprelay.cixcomputing.com (222.71.101.198) by
+ OSA0EPF000000C9.mail.protection.outlook.com (10.167.240.55) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 16:21:04 +0000
+Received: from [172.16.64.208] (unknown [172.16.64.208])
+	by smtprelay.cixcomputing.com (Postfix) with ESMTPSA id 8743F40A5A01;
+	Sat,  3 May 2025 00:21:03 +0800 (CST)
+Message-ID: <58e343d9-adf3-4853-9dec-df7c1892d6b2@cixtech.com>
+Date: Sat, 3 May 2025 00:20:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,98 +57,195 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 18/23] media: iris: Add a comment to explain usage of
- MBPS
-To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Vikash Garodia <quic_vgarodia@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>,
- Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
- <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
- Neil Armstrong <neil.armstrong@linaro.org>,
- Nicolas Dufresne <nicolas.dufresne@collabora.com>,
- linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
- 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
-References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
- <20250502-qcom-iris-hevc-vp9-v3-18-552158a10a7d@quicinc.com>
+Subject: Re: [PATCH] nvme-pci: Fix system hang when ASPM L1 is enabled during
+ suspend
+From: Hans Zhang <hans.zhang@cixtech.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org, axboe@kernel.dk,
+ hch@lst.de, sagi@grimberg.me, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20250502150027.GA818097@bhelgaas>
+ <be8321e5-d048-4434-9b2a-8159e9bdba43@cixtech.com>
+ <z4bq25pr35cklwoodz34pnfaopfrtbjwhc6gvbhbsvnwblhxia@frmtb3t3m4nk>
+ <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
 Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-18-552158a10a7d@quicinc.com>
+In-Reply-To: <433f2678-86c1-4ff6-88d1-7ed485cf44b7@cixtech.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: OSA0EPF000000C9:EE_|SEYPR06MB5254:EE_
+X-MS-Office365-Filtering-Correlation-Id: ede5cc35-0625-4bcd-6329-08dd89955670
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|36860700013|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?enphbEhzY3ZrczdHdFNvNUhkZ1ozcHlhcXMzWkNzYlh5cEl4U3ZsM3VodkxZ?=
+ =?utf-8?B?OUp6cVZ3b2FzL1ZLSmh6eG9ZcDNSYTRVcElSRFBMUHFIL1JZWTZ5ZmZ2ZERx?=
+ =?utf-8?B?aDJuUU5YL3dhMWlLSDNVTlpzU2VvWEJncEFWY040N1I4V0c4aU15NjVyMlVi?=
+ =?utf-8?B?eVFxMmFMNGxVdFhpOVhLQWFEbTRWQW5uM1JPRFpMdUtOUEZWWnpWMTU2QTJS?=
+ =?utf-8?B?d1UrVFhlWTRWazVOM051alFFTlptZ09JSmVMdDNzcC9sOXUyOVhTalBLdHRm?=
+ =?utf-8?B?cmJaKy9UUitTVUZXbldxWEhKTDB4dnVVVCs1L2ZISEtlVklLY28ra201TjdS?=
+ =?utf-8?B?c0pNRTdUTGUxalJ0NmdXeWh2eUFyOUt5MTBjUEhoclZMMTY4UXRvcW04V3ZM?=
+ =?utf-8?B?eW03TmUvM1JRK2xhTlMzTGVvNndIZE1yMUFISjRrK24vY01FNmo4THQ3azdm?=
+ =?utf-8?B?WDN5Y2hTd21NL0thOStjOE1jaytOeHo2Z2Jzd0FIckQydE96WW1SVnFzWm0z?=
+ =?utf-8?B?YzhZL0ZXQ00xNkJxUVNiZ200SDR6NmtHUmpJVFRYTWM3QkNDVG43WmtUWmpm?=
+ =?utf-8?B?c21tTURCZmgxb21CT3c0bGlHOWpvQy8xSlozeVBiZWJlTE9wdThsZlJXcEo4?=
+ =?utf-8?B?YmRRV1B1ZDZDMmlHTm9WZmFDK2tVRjJPNENnWE9rbVdxQVFFcENVWkxGcnZT?=
+ =?utf-8?B?d3Fpa1ZxZW53NkJoL1NhMDhNajFPRGU3Wi9Rd2M3dWJtOHp4M3JNR0RtL1c0?=
+ =?utf-8?B?TmxISjBKVlNqTXl4R3FNeU9xRllYTmE1V213MDZScTNJdW5uUW9QK2VNWFNq?=
+ =?utf-8?B?cGR4QS9xSXYvSkp3bmNFNG90NVU5YU85b2J6WWJtTWhiZjJ2UGlTMFVNd3Bu?=
+ =?utf-8?B?UVkxVlViUUpZWmpVM0lUZW9wMVlXMzNTL3ViRUNZcVAvQWx3c0tkOVpWYmhD?=
+ =?utf-8?B?Tzd5eWdXNXk5WnNidWJJeUF4dEtUM1JrTFFxYmtVTkJqK3Jsdzk2OTFmNEtP?=
+ =?utf-8?B?V3JPSTBhc2xOdVl6MG5STUNIT1FoYUJxMHlzL3NNYWdPMFNGbndkcHRNLzNs?=
+ =?utf-8?B?R1NJWmM1c3ZPTVBWcXV5UFFScDRnTDVzZW1LWjlLUnlpZnhlbWpINXJlYTAz?=
+ =?utf-8?B?NFVpdENHaHM3T1pXVWRQM2lLM0lZRU9KaERXdTNzUTR5UG4yaDFGRnQ3OUov?=
+ =?utf-8?B?bE5LY1MwSTdRa2dzbDZMcTAvVzdDN3dCRmhTWWtZazczWk14ZjRnMk9QUWt2?=
+ =?utf-8?B?dC9NanVVanNMbUlmakg4VTJRSnVJbzF3UUZHYi9mWjRuYno0K3dIZUoybDNu?=
+ =?utf-8?B?bUVmd3BzakltYlR1dXoxeEtwa0plK1N3bDQ4VGxmbDR1SXBtRFRuNmp6UC9V?=
+ =?utf-8?B?aGxmakpGdkRFNVNodktYWmZ5aFpNQ2VOcnBZdHFmQURpWnN4K1g1WUMrc0Rw?=
+ =?utf-8?B?dzI3bWJxZ1ZqK3RORCsrSUYzMGVvQmlNWkdiQXdtL2daSGVBZkRMR3RHbEZj?=
+ =?utf-8?B?SGk5cTNYQ0dSUnplZDRSem9oV2hhWC9PdXRqdFRNbE16NXlDekdmODcwWkU2?=
+ =?utf-8?B?UUFNeTBJRkp2cW5MVXBuRTNnTWQ3b2E0d09LQTZhUTZiZVJReFJ5TWx5c29z?=
+ =?utf-8?B?UjFBK0Z4dU41TGJjS2xodHhObEkxOXJJS1RXZG5FT1c3eko3eFhnaUJXUk44?=
+ =?utf-8?B?cmE4VnBWNlRGSmhKT3RCcVAvdEJheGhUbWhHTE1sVXI3d25FcGJjSGJndFpw?=
+ =?utf-8?B?Z0pNMm54WFhhTG9DVHRIck0vT0dZQ1NqNFJWZmRVRmlBNEFwcHVKck03ZVV5?=
+ =?utf-8?B?eHY2aU9wRk41Z0lIdjRIOXVmVGxIam03U0k0N2ZKYTV5aEw3LzRGNzBzUzZN?=
+ =?utf-8?B?OGRaMkpZbnVjWVducWIvb2FzUXQyMWhoNU5nclVMWWFzR0MxRkkrWnNad0k2?=
+ =?utf-8?B?ZUU2eHhqK1IwMVhPTlZXOWpLNVFxdTBOQU1HSU5UTk00QmkzUG8xZG4vd2Zh?=
+ =?utf-8?B?dXNramJLcEg1eWhTUzRyOWhYZ2h2ZXQ5ZFVUcVZma1R6U1lzNDg3ZXUyVFVu?=
+ =?utf-8?Q?cMH4WN?=
+X-Forefront-Antispam-Report:
+	CIP:222.71.101.198;CTRY:CN;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:smtprelay.cixcomputing.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(36860700013)(1800799024);DIR:OUT;SFP:1102;
+X-OriginatorOrg: cixtech.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 16:21:04.4308
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: ede5cc35-0625-4bcd-6329-08dd89955670
+X-MS-Exchange-CrossTenant-Id: 0409f77a-e53d-4d23-943e-ccade7cb4811
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0409f77a-e53d-4d23-943e-ccade7cb4811;Ip=[222.71.101.198];Helo=[smtprelay.cixcomputing.com]
+X-MS-Exchange-CrossTenant-AuthSource: OSA0EPF000000C9.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5254
 
-On 01/05/2025 20:13, Dikshita Agarwal wrote:
-> Add a comment to explain usage of MBPS and define a macro for 8K
-> resolution for better readability
-> 
-> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
-> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
-> ---
->   drivers/media/platform/qcom/iris/iris_platform_common.h | 2 ++
->   drivers/media/platform/qcom/iris/iris_platform_gen2.c   | 4 ++--
->   drivers/media/platform/qcom/iris/iris_platform_sm8250.c | 2 +-
->   3 files changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_common.h b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> index 1dab276431c7..3e0ae87526a0 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_common.h
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_common.h
-> @@ -21,6 +21,7 @@ struct iris_inst;
->   #define DEFAULT_MAX_HOST_BUF_COUNT		64
->   #define DEFAULT_MAX_HOST_BURST_BUF_COUNT	256
->   #define DEFAULT_FPS				30
-> +#define NUM_MBS_8K				((8192 * 4352) / 256)
->   
->   enum stage_type {
->   	STAGE_1 = 1,
-> @@ -172,6 +173,7 @@ struct iris_platform_data {
->   	struct ubwc_config_data *ubwc_config;
->   	u32 num_vpp_pipe;
->   	u32 max_session_count;
-> +	/* max number of macroblocks per frame supported */
->   	u32 max_core_mbpf;
->   	const u32 *input_config_params;
->   	unsigned int input_config_params_size;
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_gen2.c b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-> index 1e69ba15db0f..deb7037e8e86 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_gen2.c
-> @@ -248,7 +248,7 @@ struct iris_platform_data sm8550_data = {
->   	.ubwc_config = &ubwc_config_sm8550,
->   	.num_vpp_pipe = 4,
->   	.max_session_count = 16,
-> -	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
-> +	.max_core_mbpf = NUM_MBS_8K * 2,
->   	.input_config_params =
->   		sm8550_vdec_input_config_params,
->   	.input_config_params_size =
-> @@ -308,7 +308,7 @@ struct iris_platform_data sm8650_data = {
->   	.ubwc_config = &ubwc_config_sm8550,
->   	.num_vpp_pipe = 4,
->   	.max_session_count = 16,
-> -	.max_core_mbpf = ((8192 * 4352) / 256) * 2,
-> +	.max_core_mbpf = NUM_MBS_8K * 2,
->   	.input_config_params =
->   		sm8550_vdec_input_config_params,
->   	.input_config_params_size =
-> diff --git a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c b/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
-> index 543fa2661539..8183e4e95fa4 100644
-> --- a/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
-> +++ b/drivers/media/platform/qcom/iris/iris_platform_sm8250.c
-> @@ -127,7 +127,7 @@ struct iris_platform_data sm8250_data = {
->   	.hw_response_timeout = HW_RESPONSE_TIMEOUT_VALUE,
->   	.num_vpp_pipe = 4,
->   	.max_session_count = 16,
-> -	.max_core_mbpf = (8192 * 4352) / 256,
-> +	.max_core_mbpf = NUM_MBS_8K,
->   	.input_config_params =
->   		sm8250_vdec_input_config_param_default,
->   	.input_config_params_size =
-> 
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+
+On 2025/5/3 00:07, Hans Zhang wrote:
+> 
+> 
+> On 2025/5/2 23:58, Manivannan Sadhasivam wrote:
+>> EXTERNAL EMAIL
+>>
+>> On Fri, May 02, 2025 at 11:49:07PM +0800, Hans Zhang wrote:
+>>>
+>>>
+>>> On 2025/5/2 23:00, Bjorn Helgaas wrote:
+>>>> EXTERNAL EMAIL
+>>>>
+>>>> On Fri, May 02, 2025 at 11:20:51AM +0800, hans.zhang@cixtech.com wrote:
+>>>>> From: Hans Zhang <hans.zhang@cixtech.com>
+>>>>>
+>>>>> When PCIe ASPM L1 is enabled (CONFIG_PCIEASPM_POWERSAVE=y), certain
+>>>>
+>>>> CONFIG_PCIEASPM_POWERSAVE=y only sets the default.  L1 can be enabled
+>>>> dynamically regardless of the config.
+>>>>
+>>>
+>>> Dear Bjorn,
+>>>
+>>> Thank you very much for your reply.
+>>>
+>>> Yes. To reduce the power consumption of the SOC system, we have 
+>>> enabled ASPM
+>>> L1 by default.
+>>>
+>>>>> NVMe controllers fail to release LPI MSI-X interrupts during system
+>>>>> suspend, leading to a system hang. This occurs because the driver's
+>>>>> existing power management path does not fully disable the device
+>>>>> when ASPM is active.
+>>>>
+>>>> I have no idea what this has to do with ASPM L1.  I do see that
+>>>> nvme_suspend() tests pcie_aspm_enabled(pdev) (which seems kind of
+>>>> janky and racy).  But this doesn't explain anything about what would
+>>>> cause a system hang.
+>>>
+>>> [   92.411265] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM: 
+>>> calling
+>>> pci_pm_suspend_noirq+0x0/0x2c0 @ 322, parent: 0000:90:00.0
+>>> [   92.423028] [pid:322,cpu11,kworker/u24:6]nvme 0000:91:00.0: PM:
+>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 1 usecs
+>>> [   92.433894] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+>>> calling pci_pm_suspend_noirq+0x0/0x2c0 @ 324, parent: pci0000:90
+>>> [   92.445880] [pid:324,cpu10,kworker/u24:7]pcieport 0000:90:00.0: PM:
+>>> pci_pm_suspend_noirq+0x0/0x2c0 returned 0 after 39 usecs
+>>> [   92.457227] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM: calling
+>>> sky1_pcie_suspend_noirq+0x0/0x174 @ 916, parent: soc@0
+>>> [   92.479315] [pid:916,cpu7,bash]cix-pcie-phy a080000.pcie_phy:
+>>> pcie_phy_common_exit end
+>>> [   92.487389] [pid:916,cpu7,bash]sky1-pcie a070000.pcie:
+>>> sky1_pcie_suspend_noirq
+>>> [   92.494604] [pid:916,cpu7,bash]sky1-pcie a070000.pcie: PM:
+>>> sky1_pcie_suspend_noirq+0x0/0x174 returned 0 after 26379 usecs
+>>> [   92.505619] [pid:916,cpu7,bash]sky1-audss-clk
+>>> 7110000.system-controller:clock-controller: PM: calling
+>>> genpd_suspend_noirq+0x0/0x80 @ 916, parent: 7110000.system-controller
+>>> [   92.520919] [pid:916,cpu7,bash]sky1-audss-clk
+>>> 7110000.system-controller:clock-controller: PM: 
+>>> genpd_suspend_noirq+0x0/0x80
+>>> returned 0 after 1 usecs
+>>> [   92.534214] [pid:916,cpu7,bash]Disabling non-boot CPUs ...
+>>>
+>>>
+>>> Hans: Before I added the printk for debugging, it hung here.
+>>>
+>>>
+>>> I added the log output after debugging printk.
+>>>
+>>> Sky1 SOC Root Port driver's suspend function: sky1_pcie_suspend_noirq
+>>> Our hardware is in STR(suspend to ram), and the controller and PHY 
+>>> will lose
+>>> power.
+>>>
+>>> So in sky1_pcie_suspend_noirq, the AXI,APB clock, etc. of the PCIe
+>>> controller will be turned off. In sky1_pcie_resume_noirq, the PCIe
+>>> controller and PHY will be reinitialized. If suspend does not close 
+>>> the AXI
+>>> and APB clock, and the AXI is reopened during the resume process, the 
+>>> APB
+>>> clock will cause the reference count of the kernel API to accumulate
+>>> continuously.
+>>>
+>>
+>> So this is the actual issue (controller loosing power during system 
+>> suspend) and
+>> everything else (ASPM, MSIX write) are all side effects of it.
+>>
+
+Dear Mani,
+
+There are some things I don't understand here. Why doesn't the NVMe SSD 
+driver release the MSI/MSIx interrupt when ASPM is enabled? However, if 
+ASPM is not enabled, the MSI/MSIx interrupt will be released instead.
+
+Best regards,
+Hans
+
+>> Yes, this issue is more common with several vendors and we need to 
+>> come up with
+>> a generic solution instead of hacking up the client drivers. I'm 
+>> planning to
+>> work on it in the coming days. Will keep you in the loop.
+>>
+> 
+> Dear Mani,
+> 
+> Thank you very much for your reply. Thank you very much for helping to 
+> solve this problem together. If possible, I'd be very glad to help with 
+> the test together.
+> 
+> Best regards,
+> Hans
+> 
+> 
+> 
