@@ -1,35 +1,41 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1872F254AF8;
-	Fri,  2 May 2025 12:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00DE7248F72;
+	Fri,  2 May 2025 12:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746189792; cv=none; b=Tw34LRd0T4GB16gQo1tZmsNOvgN838u3pnDS1FwietdQ+e/CxDMA5eDQ/etmu9Z2/jimlB1LaSpN1uAndPebYgdK9Bi9wwjYLsZl3M+hfupTlugCx08nlQ7RlFLvurrBg+b2qeNmrv+C6GsPjCLtLRT8cxKN9MZYnqKq4X7eI9A=
+	t=1746189807; cv=none; b=Up0D92swr0ZA6tqMPsK3HK029SUHvjcfk102avLqOpMrxx5hX75nWPreUXYTF5EDzNFs1e+K6nskDeEV9FYllbxwrABLEgd66ZEa4hx+FiDgPqD+aUQ6uiqL3XFIjFjg1gS4MkINzj8UkHNH0NLgNUtU2qVmqj2cq2V9cF3VoIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746189792; c=relaxed/simple;
-	bh=vWvdauE0P4tZXK3aJ6k30xFFFQGEsyt1LCtOQc4zs2U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WIXIxBGXs4P9KGTFwBeRGck07qJCSfOZwxJ10hNut0Z+fm75q8RzgrtGSWzRXgMmv5OMOCoNKOAFl3z3jYLCtIc9SNpYglW2ZTfvvSs6T2bKxtfK9EO33GEdoAFPSfdmdPdUrK5r9lUT5OJDLURQ+A16CslnKtZBPFj7QHY+WbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XYqTei7I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746189807; c=relaxed/simple;
+	bh=miKYsAgcz+q2XvZ4Cs30fspOBVQgxjgsR9aXuexv4qs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=RoZssINvg5avtI/sLJAcdY2o4LAIHRIt8EnBqmid4SqWQaFXVRihl7iy+Rz0sUIyXN2KysIKszzqvtpaAy+0DsZ5bIhskYUdpz9IUkRDakp63iGDdyxFlWdAzErpSBvvpz3grEiv1rejX7/YmJG+k+LWCR5w/R9SxRgsxZa/XJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kiwMpLqN; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XYqTei7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88201C4CEE4;
-	Fri,  2 May 2025 12:43:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746189791;
-	bh=vWvdauE0P4tZXK3aJ6k30xFFFQGEsyt1LCtOQc4zs2U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=XYqTei7Iu717MS6b7ipZKgw+7d6TYnrO/ZshwmXBbtxlMtnnKr4OPPLjqd0vPkAgT
-	 n6YHXGQLnlEcyvPAZ0Dwe5y9QCGcHYp/kyb5Kdj1i2iU/sMZIY6rrR5Yr0RlElFezm
-	 8OAQ2ZoMohXDDtwTtfPBLehkR4OV8jMs9Nfm7Ve5kFFWIs2Bvh9xY4EWqecGiUbPkx
-	 09i1q73tAANoD9XJeieDt+YFOEme7kJwGAdD9C/hNbMb/NrN8Y1BJNDwJUOoNWX4Aq
-	 b6CEGrdd7oJk8uAoge6agezK+xLh20eYi8QifSVinXAOyyZo9KjIUHoJ5lHFuSo6d8
-	 0TpZCwYd5xADw==
-From: Christian Brauner <brauner@kernel.org>
-Date: Fri, 02 May 2025 14:42:37 +0200
-Subject: [PATCH RFC v2 6/6] selftests/coredump: add tests for AF_UNIX
- coredumps
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kiwMpLqN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746189804;
+	bh=miKYsAgcz+q2XvZ4Cs30fspOBVQgxjgsR9aXuexv4qs=;
+	h=From:Date:Subject:To:Cc:From;
+	b=kiwMpLqNuk97bJJM3h4OAExIQos7f7C/MfrlltGlrWZgXq4KxwP/9OayX3xzTGSYA
+	 p3FCIG9n+CCE4LYnV2rJnU3sFuDD43RNyJ9mQL3qtJ9+AdL94KgdXJbi1JFWiOIPLZ
+	 pGWl7V6+T5+sC6CJ6vltJXy1yIAs/WzmC6gjEynYUHFxh/5sdgyM8T0mbPTlEVcxnv
+	 ePbls8y6vG7h7v4AYTNtLKbc9XihGNVCQfcT1GvUyHl9JJLpR7HG/7osrDKBcwZ/Us
+	 mnn6NDC5uJe3c3s05+6XFmQ4hnQpeMxIA7jnOKHuDA6BRiXZZm4D5h80oUkkA5iFfD
+	 0nbAUak3+JrGg==
+Received: from [192.168.1.63] (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 5531F17E0649;
+	Fri,  2 May 2025 14:43:22 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Fri, 02 May 2025 08:42:56 -0400
+Subject: [PATCH] arm64: dts: mediatek: mt8395-genio-1200-evk: Disable
+ unused backlight
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,108 +43,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-work-coredump-socket-v2-6-43259042ffc7@kernel.org>
-References: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org>
-In-Reply-To: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org>
-To: Eric Dumazet <edumazet@google.com>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, 
- linux-fsdevel@vger.kernel.org, Jann Horn <jannh@google.com>
-Cc: "David S. Miller" <davem@davemloft.net>, 
- Alexander Viro <viro@zeniv.linux.org.uk>, 
- Daan De Meyer <daan.j.demeyer@gmail.com>, 
- David Rheinsberg <david@readahead.eu>, Jakub Kicinski <kuba@kernel.org>, 
- Jan Kara <jack@suse.cz>, Lennart Poettering <lennart@poettering.net>, 
- Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- =?utf-8?q?Zbigniew_J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, 
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- Christian Brauner <brauner@kernel.org>
-X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2158; i=brauner@kernel.org;
- h=from:subject:message-id; bh=vWvdauE0P4tZXK3aJ6k30xFFFQGEsyt1LCtOQc4zs2U=;
- b=owGbwMvMwCU28Zj0gdSKO4sYT6slMWSI7D1w0ctzz1Ephx8XKvuajIUbKwye+8azC7CvF/5iU
- aVY9lq7o5SFQYyLQVZMkcWh3SRcbjlPxWajTA2YOaxMIEMYuDgFYCLvDRn+pznNU5+QMM/DJ32b
- 6xf3vdLLTzE63PG2mmLgHinpyV7szsgw+3XpQ6e0RX/q+DPsL+jJp20/8G3VBNvMKWxsGl/sHd6
- wAQA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp;
- fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250502-genio-1200-disable-backlight-lcd1-v1-1-c021d2c9e48e@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAM+9FGgC/x3NPQrDMAxA4asEzRVIIl56ldDBP4ojYpxil1IIu
+ XtMx29574SuzbTDczqh6de6HXWAHxPEzdesaGkYhMSRI8Gs1Q5kIcJk3YeiGHzci+XtgyUmxsC
+ kK80ye8cwOu+mq/3+j+V1XTfUTrmfcwAAAA==
+X-Change-ID: 20250502-genio-1200-disable-backlight-lcd1-b10ef0424a51
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+X-Mailer: b4 0.14.2
 
-Add a simple test for generating coredumps via AF_UNIX sockets.
+The builtin panel on the Genio 1200 EVK board uses the backlight_lcm0
+node for its backlight. Though the backlight_lcd1 is currently left
+enabled, it is unused, and its pwm input, disp_pwm1, is disabled, so it
+fails probe. Disable this unused node.
 
-Signed-off-by: Christian Brauner <brauner@kernel.org>
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
- tools/testing/selftests/coredump/stackdump_test.c | 50 +++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/coredump/stackdump_test.c b/tools/testing/selftests/coredump/stackdump_test.c
-index fe3c728cd6be..ccaee98dbee3 100644
---- a/tools/testing/selftests/coredump/stackdump_test.c
-+++ b/tools/testing/selftests/coredump/stackdump_test.c
-@@ -5,7 +5,9 @@
- #include <linux/limits.h>
- #include <pthread.h>
- #include <string.h>
-+#include <sys/mount.h>
- #include <sys/resource.h>
-+#include <sys/stat.h>
- #include <unistd.h>
+diff --git a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+index dc884e2e95c70309407798e6a51b595e441e6369..be5e5f339e811728e91b1ffec45ada25f9b0208b 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8395-genio-1200-evk.dts
+@@ -106,6 +106,7 @@ backlight_lcd1: backlight-lcd1 {
+ 		brightness-levels = <0 1023>;
+ 		num-interpolated-steps = <1023>;
+ 		default-brightness-level = <576>;
++		status = "disabled";
+ 	};
  
- #include "../kselftest_harness.h"
-@@ -154,4 +156,52 @@ TEST_F_TIMEOUT(coredump, stackdump, 120)
- 	fclose(file);
- }
- 
-+TEST_F(coredump, socket)
-+{
-+	int fd, ret, status;
-+	FILE *file;
-+	pid_t pid, pid_socat;
-+	struct stat st;
-+	char core_file[PATH_MAX];
-+
-+	ASSERT_EQ(unshare(CLONE_NEWNS), 0);
-+	ASSERT_EQ(mount(NULL, "/", NULL, MS_PRIVATE | MS_REC, NULL), 0);
-+	ASSERT_EQ(mount(NULL, "/tmp", "tmpfs", 0, NULL), 0);
-+
-+	pid_socat = fork();
-+	ASSERT_GE(pid_socat, 0);
-+	if (pid_socat == 0) {
-+		execlp("socat", "socat",
-+		       "unix-listen:/tmp/coredump.socket,fork",
-+		       "FILE:/tmp/coredump_file,create,append,trunc",
-+		       (char *)NULL);
-+		_exit(EXIT_FAILURE);
-+	}
-+
-+	file = fopen("/proc/sys/kernel/core_pattern", "w");
-+	ASSERT_NE(NULL, file);
-+
-+	ret = fprintf(file, ":/tmp/coredump.socket");
-+	ASSERT_EQ(ret, strlen(":/tmp/coredump.socket"));
-+	ASSERT_EQ(fclose(file), 0);
-+
-+	pid = fork();
-+	ASSERT_GE(pid, 0);
-+	if (pid == 0)
-+		crashing_child();
-+
-+	waitpid(pid, &status, 0);
-+	ASSERT_TRUE(WIFSIGNALED(status));
-+	ASSERT_TRUE(WCOREDUMP(status));
-+
-+	ASSERT_EQ(kill(pid_socat, SIGTERM), 0);
-+	waitpid(pid_socat, &status, 0);
-+	ASSERT_TRUE(WIFEXITED(status));
-+	ASSERT_EQ(WEXITSTATUS(status), 143);
-+
-+	/* We should somehow validate the produced core file. */
-+	ASSERT_EQ(stat("/tmp/coredump_file", &st), 0);
-+	ASSERT_GT(st.st_size, 0);
-+}
-+
- TEST_HARNESS_MAIN
+ 	can_clk: can-clk {
 
+---
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250502-genio-1200-disable-backlight-lcd1-b10ef0424a51
+
+Best regards,
 -- 
-2.47.2
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
