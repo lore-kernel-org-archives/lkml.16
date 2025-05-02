@@ -1,78 +1,43 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8F542049;
-	Fri,  2 May 2025 13:04:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 834F2254AFB
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:04:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746191042; cv=none; b=PtHDIpVagF0Bw/ctV1yyW9HsD7bI9xxD88iruJ0W3BbnkuZF/iCo8Cz1CuhMwqHtpXiPd64dkDlAQe0j9HLMlORbmuyawmcqoTvGmorMdgeHwGkuG0AdUNdeZBpwlcRlz2bcyjd1bBT8af90uYVyBtgX8+HMwxcAuI04IpCZD94=
+	t=1746191046; cv=none; b=D8KVhkztmh0tUhQ3g8pCslYd1VqBOoPazrhicfXxexbBYaIrq4I3q6rUzXFcWrPQhP+2fFBMb4orj1KJkgR9z45ak6objf+AE2t38j3qVasWUJKgqyQARWM+qugUwdrQlOtEPG0NzVllzo7dPhMq5hh5UHw5zVhYnnEWAhJ8hjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746191042; c=relaxed/simple;
-	bh=QatY+WDFSaAt6uRhjr00UcB5/OkX54c4KsiiSBMzf0A=;
+	s=arc-20240116; t=1746191046; c=relaxed/simple;
+	bh=Z5M0foWNFn5Pxj93pxmwvm4RAl1oCD3uWimtnUIRWa0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VFC7nhc02EfqvL7bw4X4T5So9yCqRh/4ZYNfK7wQpFqM6v5VFMonsJC1ASXiHY2wkvzEB/uIbl5kgesfR8blDh2MsZ9wsdWiwD5lhHSYYZiiFHsZIhwaZHKyAzVSTXmpH9WsWUm5LH3qji9PvbV78Pdccxh8Fla2OG5jLsvQzEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bCofNX/M; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHAaX3CJZ2UfQ/KUUBSf4Ggrx01qtIGuanR0uTLZuGHCYjCK7lJ9ZoBp76nHtnQnzu/0uowOHgwodLzzhgoifNA6utB4qxmHALitx2GpizkeSDGtaqj2Sc1SQhgBY4DonpL3VTgW9xgCWtE18pFjM6MB0q7a++kWL2y3AHNeF+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CfBcORtE; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bCofNX/M"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746191041; x=1777727041;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QatY+WDFSaAt6uRhjr00UcB5/OkX54c4KsiiSBMzf0A=;
-  b=bCofNX/M9Rdt6E4Y2wPl2LIqwwZlzFHgWtOWuUQ2b8JH9T/MiQmrk83x
-   4kcCkDc/PVqbFzdzZumQ33mUdFDzb+9YOn9/zfRatUuGez3DKrraTFtE5
-   pTwrdOC6WwqiS2QpQyB1wOGkWk1KxzLhEg9znUkJxf+D5g2PLAFo/VONP
-   3D66m4W4Dd820CAA27XDMQ6SwcbdykCt7II/NTBvxRaNirzrY+HtLaTE7
-   MlQXQfwm297q99XC+Pq/XUP7dsmenV//iLd5mMfwJ29LSdUI0d5Yb8EB8
-   p5hYL73VnrZS5ZQ6olQtpvL1ZGluwQ8zlIPuc7LmLJENt1bMrv3j6EOFS
-   A==;
-X-CSE-ConnectionGUID: QN8nh0/vRZmYXvgfdIcEHQ==
-X-CSE-MsgGUID: 5R+2udtSSd+Yv+t9Y8TtPQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58861565"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58861565"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:04:00 -0700
-X-CSE-ConnectionGUID: d31mDcEsT8GAa+ZYKQFeew==
-X-CSE-MsgGUID: aPtqETHXT6288IEgLhtryA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139776859"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:03:55 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uAq3U-00000002Cgi-28Xc;
-	Fri, 02 May 2025 16:03:52 +0300
-Date: Fri, 2 May 2025 16:03:52 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v7 08/11] gpio: max7360: Add MAX7360 gpio support
-Message-ID: <aBTCuIBxGI3M_pSE@smile.fi.intel.com>
-References: <20250428-mdb-max7360-support-v7-0-4e0608d0a7ff@bootlin.com>
- <20250428-mdb-max7360-support-v7-8-4e0608d0a7ff@bootlin.com>
- <aBSg2qwNhPqJJRxK@smile.fi.intel.com>
- <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CfBcORtE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=EXHTi0wkEODS8HPIZd3aLUlx7XjPC9CvhHuCiNFzwS4=; b=CfBcORtERcHUouS6CToeHdF1/a
+	GOA1ObdAVZEzq6oGrTEsDk0LP1OjLdSTCY4vGkxFOiAOaeM6k3quLoTGPRBIMsZPDsiYadP3wFZEF
+	gidawGZbWMUQFU3hv+byav1KqRZ7a4gWkE+7V8aBDlEsjwVUj0DT1zRB6BergjwKIgMT6LlGybBD8
+	Axnlnkzv1BOsuqJgNwQWcFgsRN1lOW4ZMWvT7CIOhRFHxhLhb0iItHk8ILRmfR4X4+Lysrf5acdVI
+	9ys996M9hElPMkczlzvhNQndcZW+1PPciCqwzZ3e70KvHivZ/QHDJc06Nw6pxBe+PlcSHLj60eLSs
+	Ah2WYhHw==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAq3Q-00000000Tvj-0u6P;
+	Fri, 02 May 2025 13:03:48 +0000
+Date: Fri, 2 May 2025 14:03:48 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Ignacio.MorenoGonzalez@kuka.com
+Cc: Liam.Howlett@oracle.com, lorenzo.stoakes@oracle.com, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mm: mmap: map MAP_STACK to VM_NOHUGEPAGE only if THP is
+ enabled
+Message-ID: <aBTCtOXBhUK_FLU6@casper.infradead.org>
+References: <20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -81,27 +46,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <D9LOD5X8NXF2.2GWBU2IAZESH7@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250502-map-map_stack-to-vm_nohugepage-only-if-thp-is-enabled-v1-1-113cc634cd51@kuka.com>
 
-On Fri, May 02, 2025 at 02:31:13PM +0200, Mathieu Dubois-Briand wrote:
-> On Fri May 2, 2025 at 12:39 PM CEST, Andy Shevchenko wrote:
-> > On Mon, Apr 28, 2025 at 01:57:26PM +0200, Mathieu Dubois-Briand wrote:
-
-...
-
-> >> +			irq_chip = devm_kzalloc(dev, sizeof(*irq_chip), GFP_KERNEL);
-> >
-> > Can this be made static const instead?
+On Fri, May 02, 2025 at 11:31:41AM +0200, Ignacio Moreno Gonzalez via B4 Relay wrote:
+> From: Ignacio Moreno Gonzalez <Ignacio.MorenoGonzalez@kuka.com>
 > 
-> Sorry, I don't think we can. We do have a few data that will vary:
-> ->name, but above all ->irq_drv_data, as it will point on the regmap of
-> the specific device.
+> commit c4608d1bf7c6 ("mm: mmap: map MAP_STACK to VM_NOHUGEPAGE") maps
+> the mmap option MAP_STACK to VM_NOHUGEPAGE. This is also done if
+> CONFIG_TRANSPARENT_HUGETABLES is not defined. But in that case, the
+> VM_NOHUGEPAGE does not make sense. For instance, when calling madvise()
+> with MADV_NOHUGEPAGE, an error is always returned.
 
-I see, perhaps a (oneline) comment?
+Isn't that the real problem though?
 
--- 
-With Best Regards,
-Andy Shevchenko
++++ b/include/linux/huge_mm.h
+@@ -596,6 +596,8 @@ static inline bool unmap_huge_pmd_locked(struct vm_area_struct *vma,
+ static inline int hugepage_madvise(struct vm_area_struct *vma,
+                                   unsigned long *vm_flags, int advice)
+ {
++       if (advice == MADV_NOHUGEPAGE)
++               return 0;
+        return -EINVAL;
+ }
 
 
