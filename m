@@ -1,139 +1,146 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4125253B7B;
-	Fri,  2 May 2025 12:47:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D7C211A1E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:50:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746190033; cv=none; b=s2B46ewqucrrlD+NpmTCgfZ5JLTYYBmPIX359i2TLNQfZtBrcnm9gpk5e/c+2Dbau1S+q4gKFaJ9CxvGU8CRU8WnEhNCjOvSBds+VjiNoXQSHi+CdMW04d1i4Mbs4LI9InBULRyfSHJlPAvLck6k6W5u0HYDuRzW5BixTSPuBEI=
+	t=1746190203; cv=none; b=Y2KZZT8pkIP+vFZb/t32iOZhGmypsQkGvq2Aj048RmEP92XXPeHgKZ2EGa9xaDryeCxR6QWdvswFeY11f1LBlw/WBcT8z2m+7iH1BmQGFfmM7BFC8JZj3h8sAy8sgK5HpWgBT3jwnBKQVFhlhjFeBDXiNmcIZaWz7i7pqgghPEU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746190033; c=relaxed/simple;
-	bh=IbvGkt4GXc09hbWiIUTvQsh0pXs2j1L0CBHEqmVOi+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a76j79+8aJa0BAMg+MnDlJo+bAsZAq6CeXhoGxt7gEAEsw5JQC7waHYVATKhJc2180TfK5PWOttSYoOhQs8GxO+ahTMRsLgrKAKERii6t54ejjgVbcFiz8UroppODGDYxgTgoNRHwj0eRy3EyYtaKghwOoMpsbet0tCdlqXnIv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=noluADna; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746190203; c=relaxed/simple;
+	bh=JrOubkwGe9p+sK08ebhN+YAgR5LXsT2jghNi9jx0xWM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iRzeAwQKctnmsx6Y1c6XGAbhBCyW3Uo//nCV4BEnr3WNotmbXdr0ElHRMoCwl1/4PtH7ALan7Pqy6epsCfoDx3Srycj90UPzUi6c6ytdNpGR0FEl5MjQrjDiPdR/FrWLfuFV/cHU0ZmS46xI3YCfF/Z2cIqeoHaiw9wPCVhsQJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wnHTSFzx; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="noluADna"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso2068500f8f.0;
-        Fri, 02 May 2025 05:47:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wnHTSFzx"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39ee5ac4321so2060990f8f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:50:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746190028; x=1746794828; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VyZ+eLudmHh2VnqIodF574m3pdc+SuHZ5uWsOFJLCKI=;
-        b=noluADnaC3ay6Td8pDssGW0xDZhwj+UVoklRB0H3Mtli+T9Y2oiyalmvVt06pjYlXq
-         1qmCYgmFmpg8NG6ocSp595JWV35alqLJL+WgaZevAK2HbEsvulx3IgWYFlGAnxD+aGoy
-         qxOTsDHTzR1IWMBsCmzNHlng27c5NJVIL1/mZg8h4uqOxpiLdDnUdUso1iip15Yf/xG7
-         1Bv0WC+bN2ByjP2YeAvBF/YbCTQopNFqIbSKoLBA8EfiuEb7NK1Z1ACquwtj2xaiN6I7
-         7O2nr7oliQfE1PNf7RJWiZg6afDrkzCp9FRdZiovfBvm9YP1iBH+lm0IJas2alVHscLw
-         ajHA==
+        d=linaro.org; s=google; t=1746190199; x=1746794999; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NhKThSlafFeqp4Hvo+pSEwoDYjQos7s5HRDgvc3EtFA=;
+        b=wnHTSFzx3/6pSWrGx8P7N77VGRiwT9Vq1nbzjX1f1Dj72T9VhFmJf3+4+bSp9zSyQo
+         5hvTg8gz7fJNUt+T1yFdzeofPFaZyZQ7PeCm2QFnuzpB+Fqq7j2uXfMejsfoNsYyBzU5
+         +aBaHC7oCyR/h9nziGbEmTABIRdSrzDAvBRd6pKjQOLpj6kdP32aevnlLXkJO5qaDjfM
+         ax+nFDlwWMdRYu4LczEZz/5AdukH32mZKk/NfpDRbixV6wG3jg3XlAIXrloJvwaLNtmx
+         N7DuQjIk64FvUOQzZ0uZ534+Qz0fR26M+8mfBQ4NEZq8LlH34MtEeMS6DbqayUzvdHPt
+         dUkA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746190028; x=1746794828;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VyZ+eLudmHh2VnqIodF574m3pdc+SuHZ5uWsOFJLCKI=;
-        b=gA0pfzHTAiUw+0dZbl0Byo2oh0UIvECjyeg6LgKniZ/vKuJ7CoNe0UOZmFD4IGCNG9
-         jJXAq7qUx+bJFPyCGq59ziLMtW83B0XS2ifg7SBpzvMiIHM1MKBzdf8qbVJZhyrqpNZH
-         Bu62SUYp7UksNGqNcKx7gW4YUGuPA7MDDfbgYcyts4xb9pkr261ktizX3VBIjbXMuLBH
-         Kz3Oc1q9qy15ByeU3IRV8wW/6duIOQAXND4uRpBxTiHepKJOM4Qhg2BGttDbf7xNw2Vv
-         5xjnIdiuFol4GhhNoKVYZmjE2xFw6vp5IVByxETKjEi0KSk2d20mkNzElKHCTTAGp5nF
-         If4A==
-X-Forwarded-Encrypted: i=1; AJvYcCU8Nxq7dNwaAutegurSCLKlhxNgUyKNmTPQxS/YnzTt43bDwZCNvZ6JYQWBRMBqU8zB+6oApw2ZKzNlIprpt33zR+E=@vger.kernel.org, AJvYcCXHYVi/DKuKMs26DEtptz/Ik8zZdyGw3VWcFMHX3h2y+ijeMnEY8rBegcgQNfpAybsjvvFfeFoPUb1f@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpSV2fJtPw2iN4zRoRm/AC0Z6J9RgjTIxlnlPs34/IOa33bboQ
-	zz20F9dkhgyaHfMrUC+zCGWwfMBppXEkhypGW+7bbx+ZFyZ9/53y
-X-Gm-Gg: ASbGncun911DjHhzFD7LdKzwvmkWRaCG8Yr2BSlK79o0GblC3t+UwZAQs/bPJLn7U93
-	Z1cvL3BLVLND7wKmXllHt78O1+pR0QcYsVTWwAuvpeDN1yuPyEuQSPGwR7TcsHFVqvv/DESPZ3i
-	o53gyFmT5qqFjjHjPUDTOLR/x29YO/Rbv9EieRPqwIuFJy7PT/NWiv3UzKl9SLIOP6JQbaaFh1N
-	z3GXRQQYP38ljTgy4QvefFFXD0DbEOnDRhUvQJBXU/BRJDCYeSaR0jliLQOv1Unv1+pOFaFiZzu
-	aX1e3DkqMNpLKCQJrcXosyUiqtIsD1il3lIczHMb4PKbN3WDwniISPAHbqJbY+i8
-X-Google-Smtp-Source: AGHT+IF6Cpj3okvDc4iC/5uUndp+JjODJdaRzI6e7QeAzCIjmBfAW7UuXi1BOJlw8WNGiV0/o+enjQ==
-X-Received: by 2002:a5d:64e6:0:b0:390:e62e:f31f with SMTP id ffacd0b85a97d-3a099ad2f9cmr2204754f8f.3.1746190027748;
-        Fri, 02 May 2025 05:47:07 -0700 (PDT)
-Received: from iku.Home ([2a06:5906:61b:2d00:10cf:e432:b2b:bf99])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0f16fsm2059134f8f.77.2025.05.02.05.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 05:47:06 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Chris Brandt <chris.brandt@renesas.com>
-Cc: linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v2 2/2] clocksource/drivers/renesas-ostm: Enable reprobe for all ARM64 SoCs
-Date: Fri,  2 May 2025 13:46:27 +0100
-Message-ID: <20250502124627.69644-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502124627.69644-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250502124627.69644-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        d=1e100.net; s=20230601; t=1746190199; x=1746794999;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NhKThSlafFeqp4Hvo+pSEwoDYjQos7s5HRDgvc3EtFA=;
+        b=b0R/9yYXRuwL30PKMJ5vKV3N0t+ffIXANi1fqOIlKqQO6uR3Eb7YWpfXIyMn5jBbHy
+         9XGhlLQKHi3g2qL94IogpUIKLax6dLgT/or+Sfl4d5wfo1n84Ih7Up+fABe0+40xj8IY
+         uSC62YwzqgoAaq4Y8w8tz8r7lVm0TiU/H92Y5WLIsTD4qVg/qFxoAJsqYrL5s8tB9Vqw
+         dlS1gLJqOSyDc2ckqSjndN+PhZ4m/UKRNBbTwJ8sCE6+KZd+SQqqUVx06c3NPGaAZk+4
+         ajPS1yrb3UP4fEcDZSIpSmly/pibu+Ly8qGHupiMUBMdBgZYWLhbjKm82ePVgbhmvC+t
+         cBUg==
+X-Forwarded-Encrypted: i=1; AJvYcCXUD5Q5JgTD13e1BwK+F82VJ5dvO/Ky/RvneVKbvpK9nv9fyvaJ07Kl1MIzPblZnrz/MB7lHHJHjII/UKM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzfuAXA+kW3s9dm7JvMz4yvYnP8zJSsbaI7AsTdeaAA3Y0OY4yq
+	KXDUN6DAJu7Raj7q7L3irKKPWawRkwaSxGsvXLhiyQksghloH7qQcliTsZzBu4M=
+X-Gm-Gg: ASbGncvry4z2NpXlDVipRBofXltvvtOYOOn1ptEZ5cB35+ENn28qPRd/JqieoE2R5Xl
+	XsnbzuFe8xQHAIhKn8Y4imIckVD7IoCgCdHpOs4e1cF42LmmcbcXWEMI1oclPG/3jFWMRh1XCLc
+	i7h1si38/ksEKiHUj7750dIoF4xgRVL7NvD2NUzzZQ4+3RGikSgkIZzwJeFMSbG0gisBHbHA9sW
+	55t/LL5pTHLzEVi1Rf/uYizR0GiVB6wEMYZDMY4I6FEY/qqymbnweKk7wqofbF/0627jrCGl/ur
+	hbU4U4V2TK3jGkumD8/Xjez3nq/LLw5VU+RoLM7sjE1WQDLC0XxV3l00Yg7l4IJag3rWV2R6MOW
+	r4Rmsig==
+X-Google-Smtp-Source: AGHT+IGSngeiJzMwrYS7IpeghcL1Q/aGw28NETws0AJluPOXa5GCJRNjj7kYUwaCWH2uCBerdODN+g==
+X-Received: by 2002:adf:e38e:0:b0:3a0:99b1:bab7 with SMTP id ffacd0b85a97d-3a099b1bb0fmr1867838f8f.55.1746190198863;
+        Fri, 02 May 2025 05:49:58 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a099b0fe9dsm2072190f8f.71.2025.05.02.05.49.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:49:58 -0700 (PDT)
+Message-ID: <f9767d12-a9b4-41f3-bd96-f2b13cea5b86@linaro.org>
+Date: Fri, 2 May 2025 13:49:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 13/23] media: iris: Send V4L2_BUF_FLAG_ERROR for
+ buffers with 0 filled length
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-13-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-13-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Firmware sends buffers with 0 filled length which needs to be dropped,
+> to achieve the same, add V4L2_BUF_FLAG_ERROR to such buffers.
+> Also make sure:
+> - These 0 length buffers are not returned as result of flush.
+> - Its not a buffer with LAST flag enabled which will also have 0 filled
+>    length.
+> 
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 6 ++++++
+>   1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> index 4488540d1d41..3bb326843a7b 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> @@ -378,6 +378,12 @@ static int iris_hfi_gen2_handle_output_buffer(struct iris_inst *inst,
+>   
+>   	buf->flags = iris_hfi_gen2_get_driver_buffer_flags(inst, hfi_buffer->flags);
+>   
+> +	if (!buf->data_size && inst->state == IRIS_INST_STREAMING &&
+> +	    !(hfi_buffer->flags & HFI_BUF_FW_FLAG_LAST) &&
+> +	    !(inst->sub_state & IRIS_INST_SUB_DRC)) {
+> +		buf->flags |= V4L2_BUF_FLAG_ERROR;
+> +	}
+> +
+>   	return 0;
+>   }
+>   
+> 
 
-Change the OSTM driver's probe condition to `CONFIG_ARM64` so that the
-platform driver will defer and reprobe on any ARM64 Renesas SoC once its
-reset controller is available. Previously, only RZ/G2L and RZ/V2H(P)
-were covered.
+This is a pretty complex conjunctive clause.
 
-By matching on `CONFIG_ARM64`, this avoids adding a new config entry
-for each future ARM64 Renesas SoC with OSTM IP. RZ/A1 and RZ/A2 (ARM32)
-are unaffected-they still use OSTM but do not define a resets property,
-so the deferred reprobe mechanism is unnecessary.
+Is it possible for say 1/3 of these logical criteria to be false ?
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. if you get to:
+
+1. buf->data_size && inst->state == IRIS_INST_STREAMING
+2. !(hfi_buffer->flags & HFI_BUF_FW_FLAG_LAST)
+
+is it possible to get to
+
+3. !(inst->sub_state & IRIS_INST_SUB_DRC)
+
+?
+
+This also feels like a bugfix ?
+
 ---
-Hi Geert,
-I've restored the Reviewed-by tag from v1 with your suggestions applied.
-I hope you're okay with this.
-Cheers, Prabhakar
- 
-v1->v2:
-- Instead of adding config for new SoC, changed the probe condition to
-  `CONFIG_ARM64`.
-- Updated commit message
-- Added a Reviewed-by tag from Geert.
----
- drivers/clocksource/renesas-ostm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
-index 3fcbd02b2483..6a5785f9c9c1 100644
---- a/drivers/clocksource/renesas-ostm.c
-+++ b/drivers/clocksource/renesas-ostm.c
-@@ -225,7 +225,7 @@ static int __init ostm_init(struct device_node *np)
- 
- TIMER_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
- 
--#if defined(CONFIG_ARCH_RZG2L) || defined(CONFIG_ARCH_R9A09G057)
-+#if defined(CONFIG_ARM64)
- static int __init ostm_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--- 
-2.49.0
-
+bod
