@@ -1,103 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2A3F9E6;
-	Fri,  2 May 2025 14:17:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDB719E97B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746195453; cv=none; b=cavCfAJT0Zr3GmG+nJmGLsxW49dKmSA/O48/RxVLl0RwYhpFiYjyzTLP7+gudFhX435cY0Nv1rGhD/tfpPyjqSxWhgjpdP+C1ABK5u6rAgf7eHpaMNbhNaQY7xjWnDxZ5sbuprTXezqxKVUcjcMdG4KraYAXrnMJ6pK5Fcwu1Ys=
+	t=1746195596; cv=none; b=luGvQagNPHZ2hhfkoW4Y0luBY39kpzkuoL9fztTCEhYbVsbBSBhu9Cdc1AqYVJE3aQdAAW4Buf7CycdAXTr69PZDOno98jsdC9iQK9V9CXo8VUnXyV+w9Xulb9yDZckBBODJowHjX1DTTnR//jgaZjuxOJX8R9NMALACI+h+gXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746195453; c=relaxed/simple;
-	bh=2N8TEGsiMLtjUetJc49vJ9WjD1CCLSGeFZZkcJ6kGII=;
+	s=arc-20240116; t=1746195596; c=relaxed/simple;
+	bh=9NCnJEvTNi5RFQa82/PB0GyDEkBbpIKdoJQumbgTQ0w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e8nA0oq4F4Ee269Wp9wlTKiP+SpiXxN3wp2X1mS57Ppfv0CFF04Ix4jqzoHqZo7ZUNhvb6bQd1p/e0ZixYgwrIv6WllHgQratAukTrxWbXjNZmiHdOeneEx5JG4BiHfqx5QHc7WSjhnD4cTFRVOav88Dwt/jnuLzMuK9hiVq7lY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t6k+0ekJ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t6k+0ekJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F615C4CEE4;
-	Fri,  2 May 2025 14:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746195452;
-	bh=2N8TEGsiMLtjUetJc49vJ9WjD1CCLSGeFZZkcJ6kGII=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t6k+0ekJL9QRE4ELBOS5da/qeX6ubfL2owHdpi9KkWe5nAPf3l8ztARELEwyIG9+Z
-	 uUypwPuSYv2sYRqdH7b/AWiAwI+L17wsCYCuv6IVsZCD8h4+4HtntekG2yuhVXwn6E
-	 DP8/Dk4ko3neerJHTyWrHeMbV1SMirN2CEHPmUYpb4EVwAMsWlzPOPE2eSZRB+6tAR
-	 kumPNt8fyFuuCPQUpf0bW/Ah0YzoKgSRwPp3KzwarBYvUdrmZ8TdR2mVasHUkLoH4s
-	 RsBKIIxOV6nJUdfZf3KLKTPopo/Qa4rD+f3HDiUh6NWR0D2FmhtB9cq9PQ5yohxmTA
-	 +tfnjOeaUZtvQ==
-Date: Fri, 2 May 2025 09:17:30 -0500
-From: Rob Herring <robh@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Luo Jie <quic_luoj@quicinc.com>,
-	Lee Jones <lee@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>,
-	linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: clock: qcom: Add CMN PLL support for
- IPQ5018 SoC
-Message-ID: <20250502141730.GA1259057-robh@kernel.org>
-References: <20250502-ipq5018-cmn-pll-v1-0-27902c1c4071@outlook.com>
- <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=R7n3828LkVOB+xhSwROehEKbcdh0YDxnPQ11T3FXM/Prc77NR1Mzfy+2oU2CDiACH+zKGtPtfFAL41n5OHousMColE3weWGzmDLGLXgXfPerwnllNXkCxmTfJgaM/l0hiSzbRFc2TByOQuLRwrm1MouCJwqvYPHheGnEJdiZywk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 496BFC4CEE4;
+	Fri,  2 May 2025 14:19:54 +0000 (UTC)
+Date: Fri, 2 May 2025 15:19:51 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Will Deacon <will@kernel.org>, Nam Cao <namcao@linutronix.de>,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andy Lutomirski <luto@kernel.org>,
+	Vincenzo Frascino <vincenzo.frascino@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Jan Stancek <jstancek@redhat.com>
+Subject: Re: [PATCH v2 1/2] arm64: vdso: Work around invalid absolute
+ relocations from GCC
+Message-ID: <aBTUh6WwC0_jl5_e@arm.com>
+References: <20250430-vdso-absolute-reloc-v2-0-5efcc3bc4b26@linutronix.de>
+ <20250430-vdso-absolute-reloc-v2-1-5efcc3bc4b26@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250502-ipq5018-cmn-pll-v1-1-27902c1c4071@outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250430-vdso-absolute-reloc-v2-1-5efcc3bc4b26@linutronix.de>
 
-On Fri, May 02, 2025 at 02:15:43PM +0400, George Moussalem wrote:
-> The CMN PLL block in the IPQ5018 SoC takes 96 MHZ as the reference
-> input clock. Its output clocks are the XO (24Mhz), sleep (32Khz), and
-> ethernet (50Mhz) clocks.
+Hi Thomas,
+
+On Wed, Apr 30, 2025 at 11:20:13AM +0200, Thomas Weiﬂschuh wrote:
+> All vDSO code needs to be completely position independent.
+> Symbol references are marked as hidden so the compiler emits
+> PC-relative relocations.
+> However GCC emits absolute relocations for symbol-relative references with
+> an offset >= 64KiB. After recent refactorings in the vDSO code this is the
+> case in __arch_get_vdso_u_timens_data() with a page size of 64KiB.
 > 
-> Unlike IPQ9574, the CMN PLL to the ethernet block needs to be enabled
-> first in IPQ5018. Hence, add optional phandle to TCSR register space
-> and offset to do so.
+> Work around the issue by preventing the optimizer from seeing the offsets.
 > 
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> Reported-by: Jan Stancek <jstancek@redhat.com>
+> Closes: https://lore.kernel.org/lkml/aApGPAoctq_eoE2g@t14ultra/
+> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=120002
+> Fixes: 83a2a6b8cfc5 ("vdso/gettimeofday: Prepare do_hres_timens() for introduction of struct vdso_clock")
+> Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
 > ---
->  .../devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml  | 11 ++++++++---
->  include/dt-bindings/clock/qcom,ipq5018-cmn-pll.h         | 16 ++++++++++++++++
->  2 files changed, 24 insertions(+), 3 deletions(-)
+>  arch/arm64/include/asm/vdso/gettimeofday.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-> index cb6e09f4247f4b25105b25f4ae746c0b3ef47616..25006d65d30e20ef8e1f43537bcf3dca65bae73d 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,ipq9574-cmn-pll.yaml
-> @@ -24,12 +24,10 @@ description:
->  properties:
->    compatible:
->      enum:
-> +      - qcom,ipq5018-cmn-pll
->        - qcom,ipq5424-cmn-pll
->        - qcom,ipq9574-cmn-pll
+> diff --git a/arch/arm64/include/asm/vdso/gettimeofday.h b/arch/arm64/include/asm/vdso/gettimeofday.h
+> index 92a2b59a9f3df4d20feb483e6d8ebd1d813b7932..3322c7047d84fecae316a2904f1adec0cb458f6f 100644
+> --- a/arch/arm64/include/asm/vdso/gettimeofday.h
+> +++ b/arch/arm64/include/asm/vdso/gettimeofday.h
+> @@ -99,6 +99,19 @@ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode,
+>  	return res;
+>  }
 >  
-> -  reg:
-> -    maxItems: 1
-> -
->    clocks:
->      items:
->        - description: The reference clock. The supported clock rates include
-> @@ -50,6 +48,13 @@ properties:
->    "#clock-cells":
->      const: 1
->  
-> +  qcom,cmn-pll-eth-enable:
-> +    description: Register in TCSR to enable CMN PLL to ethernet
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    items:
-> +        - description: phandle of TCSR syscon
-> +        - description: offset of TCSR register to enable CMN PLL to ethernet
+> +#if IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB)
+> +static __always_inline const struct vdso_time_data *__arch_get_vdso_u_time_data(void)
+> +{
+> +	const struct vdso_time_data *ret = &vdso_u_time_data;
+> +
+> +	/* Work around invalid absolute relocations */
+> +	OPTIMIZER_HIDE_VAR(ret);
+> +
+> +	return ret;
+> +}
+> +#define __arch_get_vdso_u_time_data __arch_get_vdso_u_time_data
+> +#endif /* IS_ENABLED(CONFIG_CC_IS_GCC) && IS_ENABLED(CONFIG_PAGE_SIZE_64KB) */
 
-items:
-  - items:
-      - description: phandle of TCSR syscon
-      - description: offset of TCSR register to enable CMN PLL to ethernet
+Thanks for the fix. We may have to chase other such cases in the future
+but I don't have any better suggestion.
 
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+
+Question for the other Thomas (tglx): what's your preference, do you
+plan to take these through tip or shall I queue them via the arm64 tree?
+
+Thanks.
+
+-- 
+Catalin
