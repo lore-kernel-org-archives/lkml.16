@@ -1,134 +1,127 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6589A25D1E2
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:02:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F03C25CC4E;
+	Fri,  2 May 2025 16:03:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201773; cv=none; b=JEg59Qi/eAwhPpaYPhSMIErMvrGkBT/Cr+uVwVezgPAil8BKBvadMF+w11ugKnhixDtpfGYTMzx+rg2U6VBnpaFnF/ahAcj8L1osJvbogiS8tNcHb2+raXbveH2eu/bxdVeaNImn2zO6xp8ScyTKsRcLzM80eNb2D/ylbBKQjxo=
+	t=1746201840; cv=none; b=PKReUZ9/JtJwgmFW2g6c+wmPAl53QeTiCm11lyhdrYqQimAjOuLohXHust137/Urj3LLnRKDpd3lxmm5NZOY9pOkfHpgKuU8TumVbhhLUEFwP8MBO8jLHguN6qIpkcwtx069EHrStfbhcufKVMZ3UQNAYmUZu8liD3c2bl1J1VA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201773; c=relaxed/simple;
-	bh=nt7pCl0xKFuZMbcsKuarhpz0f9X8gk1jA/yLJS6JUcc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KmxwGdQBBSoaEg9k5hXheG/TdsAGDY2TPbFcP3FEMHkuX/Stzvf5sI/c46kvifbjISbOyUdrm1I7kPT562JE0FsuM1w2dig6fa3iQjjxtGiNNoMOvNReGPcX6ewKyNVRsEI+eV7wpbFzqbaU6dxhlgrtOzPpRtJV5BbLRh9Yb90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=B5azY2Vr; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1746201840; c=relaxed/simple;
+	bh=/Ir9RUZPJNowHtDjB8+O6p57Zsy6wW7vA4h0CW+yCQs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbthRLVGZ6NT7xBlGSMDSLAd9QU8VbSuCDV8PA+oEz1M2S5nRx90ll/QWf+AvDfwZBgoJ1rQsn3Rp0T54phLmvVw7ORnuk7kewDHZzZDFY1tRUEbATbzf/ERrccj051MlaSh7zeAo0J0h4mQfvCnnZXDb8MRdr8NUQQM4389Iuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qqvspjkj; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="B5azY2Vr"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 542DQgbE016121
-	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 16:02:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	1frcGzb8hC2GYxGmVc0gjbhl3/lGMlADlvPYUqYXl2s=; b=B5azY2VrKcqp2fDH
-	NNgpg0OO9B5W60hqqzqsEwm63kQBYjYPSdS+o7RSFap1rpNms/7emM4fRpIuqACG
-	K1vA/G/mavbFcnsWm+vPe2fW387ntQCIKnwZ1yRkXphMgqInW3t0O0eLC+7Z9cy7
-	uKzxSMRF1ZAkMvuN1mL4C35QTScS20khcdabXIHw0UvUduo3FvG21uk3ax2earkR
-	kx+QaMoSQFt9hgrdSBCCit3G7kahqOKWSzW0Jyp4OIcvi68ssphPqPq5Rl5GHjyW
-	UnZ5b/hW9YvmYn8I+NROs9bxTZZT7P1vYjsW8nEasQ2oFfCjC/SJxEy9V81CpAoc
-	TGERRQ==
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u78tub-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 16:02:51 +0000 (GMT)
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b1442e039eeso1407363a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 09:02:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qqvspjkj"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b1fb650bdf7so343703a12.1;
+        Fri, 02 May 2025 09:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746201838; x=1746806638; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gDaKrXtDcJswvbEwS8wGTnCooDFXgZ8JEIYZCAsVSDU=;
+        b=QqvspjkjRyYHX2YqBuxryHcDEDm3dL3foUPyF5iuuzrISkgrqeGxnMUglBDbZVIrQY
+         rh0v1PfjcVYIr3ngW+defvj8nKdDnHFiT08sPC48It0b/wdwLbnLHKpBqANwDzdnI2qy
+         7E5ZJda+h6kg2LJgLcF3u4JL5OOBqRtv3TiTkl4tRRITYECMANFhLXCV7dOudsOE+H93
+         VktwmPKvvgY6yYoapCVxTbT3pl9jLpZjAytqyj6M4G0m+lLtIBVFwNIm+wUoLHpodU3Z
+         ygD/0E/qfwkL26UbFii7fbMY+YdFcYDFEg84MNpH2jeL/PE4GXgc+Jk5XW66H14yEVIh
+         kmyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746201770; x=1746806570;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1frcGzb8hC2GYxGmVc0gjbhl3/lGMlADlvPYUqYXl2s=;
-        b=FldTCw6bjFUAlNIIAWxm9cArIWCTHOoBNPCCPVaQcgqM5TSwDm4nRkifDI6LbMfLSC
-         cjwk/juFJWFE/KgNycuwQ771bXSyG0rsr2hbGoConqGEG7MtjcFnLrNBEWfxwidWUli1
-         5wDxeZaIsDZZRhf34XpAbdehlsMMmowYQ26keMLNXT4bjjpVp5Nam6zLY50DsM2C06VC
-         XuEvJk4jaOFXSEo2LJTGMWQT9R588ApiN/RViSnfDtuhSjOMrqep30EMiYoiu7G8o1tJ
-         rY6M8jeUDS3wwbtjuxoFfICGL4gyjfH09YJA8uKpqHDrvcMNHtnERJX00RlKOcpWICsI
-         CQ0w==
-X-Forwarded-Encrypted: i=1; AJvYcCXpqzKctijGx84YvkZ2Fg8bok8lXS8SHy7ByfDdW4+jSEVcAhumJSpExlNsib6VAEW1jAPf8dWq0EPYF4Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLGs34W9GNQvgVtidVQlbLvpiw+iQthWJSA0CBg4hGuFOblnG1
-	QNFeVai34KkyVXLw8p9YVW8mlC9sco1N+ZbA4zRArqPdQlXaZXJInqmbHg0YA636HyQNY/0fOcb
-	vOh4fxkyca4amRZBilLR34IxomX3GVzJ+GY9wYTL/5Zd/IcBMoGGDQA5x1+CTTeQ=
-X-Gm-Gg: ASbGncvEIEC/A/lDzK4q0B+YPcIb9VlmC/apLZs3eG4HCTHRDADZ2YQN45hYr0CNoDf
-	MnyarbSoHohIl6y2f8J0/X942FiCAKEDbCngkV1+zz1Zc8MBnQzhmtujydnnYC4cIqcYMeQAcP1
-	lC7f9i67OQphswWEE3cZoRH74yMB9F9fhyhghQMkHTyEGyb1AzsStWc0D7I14xTRiBpGysp1lpF
-	/9gIi/F3doOi4/jGF8kn3ip3KCBu6StXVdblaFLTR2PF2/q9b50O9jtX7Hy/wSvqjJhmkJjfuFb
-	phbE4F4BXs5jJBakKQK3tdelOIRJSIp+JTAfxCoSOeqkO7wbTJNf
-X-Received: by 2002:a05:6a20:6f90:b0:1f5:95a7:8159 with SMTP id adf61e73a8af0-20cde952d6cmr4451423637.10.1746201770543;
-        Fri, 02 May 2025 09:02:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+5DGedS7lQxaiS0zztOhBE3vSAm0Y8qu2C3qMH794u9G4iH73tZO1pQYXwyOinkWDLCtVwQ==
-X-Received: by 2002:a05:6a20:6f90:b0:1f5:95a7:8159 with SMTP id adf61e73a8af0-20cde952d6cmr4451382637.10.1746201770057;
-        Fri, 02 May 2025 09:02:50 -0700 (PDT)
-Received: from [192.168.1.4] ([122.164.87.156])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b1fb3920e67sm952740a12.7.2025.05.02.09.02.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 09:02:49 -0700 (PDT)
-Message-ID: <41f0eb29-931d-4aad-ab8a-1cc725e9d30a@oss.qualcomm.com>
-Date: Fri, 2 May 2025 21:32:46 +0530
+        d=1e100.net; s=20230601; t=1746201838; x=1746806638;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gDaKrXtDcJswvbEwS8wGTnCooDFXgZ8JEIYZCAsVSDU=;
+        b=lhCy25+ULzYs+4XzisMl6Hr66Jd6XBYb/M6UOT3jeNnwaxNM7XomU4Lnj+QXAICT0K
+         FawMy2ejusCmAxLeC75vFVdC2wvkpEC4x6NT8M8hnUgHxjyR5JxxgeP4yIq1wYoEhF+M
+         QuUgRl7zcNgOhr8O5a2c+4z/MOywC3DPdf2/LNPHLGpVXZULqaAr4WL0qEsZ2FSj15Rx
+         oIJ2wRMjTUVTLkKPdPQXMYhfWcp8237RHqvXHfgePMA0Ub3WOVD4G61zcUitEVR1+Fu5
+         +b39ivIbXsivbTS0BPZd04MtwHoARdPdeKfI7xcX8Ue61bPMZLadOqxnN2oRwklkxL/S
+         z2xg==
+X-Forwarded-Encrypted: i=1; AJvYcCUgLx+dlSMqpMG70qIidKHYxx/qeZbWUkamE5kmhWzkysd63Mx+pscV2mGRL4p3dQuv1oVana3AiCKg@vger.kernel.org, AJvYcCVv7gAOjY1qGu78v/1WnOcPFeLF/fk5VWxrWGjdGgZJ1vjgq3fqG5VIUOwfl8Pw+iyG7SoKhjWX2ZaOc7+f@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx0f3AeBCtE0x2/fWnLwiNUFUhQynWhFJDUMktVGgYKAJuwcyz4
+	uMQCVZDSU2Zr31O5fMGyW2Qx/JfM0rFUG9J4UvbZz8NxjcL1KM3+
+X-Gm-Gg: ASbGncuwsFc8eGHRLOnnReBaRrzNDxwazx37IeRknILDPzwdd98NzC4/e2erRfIvQD1
+	A8nTo+6gD2YZI/LjUWv09zjthhbk9m+8mAIGLU6AGMEv2KsK1yqzDXI7/PClIx3kAxzS0mbSdxp
+	88mveY674qYbLSOf2FWCA5rSxEIj/FlJS21ELqc9RFfK09/ZHdXrZ+UCcsQmqPCgb9eCewDPWM0
+	EpAIubLcUxg4gpAOrmO6tt6+fAOXC6WvdmrUtWJrpMXBTAegK7f9pL36bHncpUCK3NiAtTt4qr1
+	JvKdgdCdUuq7OvM/3sL0+BYQTq9XGFDhjKHz/TT9
+X-Google-Smtp-Source: AGHT+IHjbc82WPFLFYJqUcclQhm+5J20tGWB4R4jo77r5H5Zl7NTJpo1SEIdn4FVH/XUTu4IGCJZHw==
+X-Received: by 2002:a17:90b:3c4e:b0:2ff:796b:4d05 with SMTP id 98e67ed59e1d1-30a4e5ae12amr5825968a91.11.1746201838224;
+        Fri, 02 May 2025 09:03:58 -0700 (PDT)
+Received: from localhost ([216.228.127.130])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a3471ef7asm5916080a91.9.2025.05.02.09.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 09:03:57 -0700 (PDT)
+Date: Fri, 2 May 2025 12:03:55 -0400
+From: Yury Norov <yury.norov@gmail.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Jacob Keller <jacob.e.keller@intel.com>, linux-arch@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+	Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH v2 2/5] bitmap: Silence a clang -Wshorten-64-to-32 warning
+Message-ID: <aBTs6yvKlCYYgU2O@yury>
+References: <20250430171534.132774-1-irogers@google.com>
+ <20250430171534.132774-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] watchdog: qcom: add support to read the restart
- reason from IMEM
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck
- <linux@roeck-us.net>, bod.linux@nxsw.ie
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20250502-wdt_reset_reason-v3-0-b2dc7ace38ca@oss.qualcomm.com>
- <20250502-wdt_reset_reason-v3-4-b2dc7ace38ca@oss.qualcomm.com>
- <ac8837b8-3964-40ec-84a6-e25aa06dda39@kernel.org>
-From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
-In-Reply-To: <ac8837b8-3964-40ec-84a6-e25aa06dda39@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEyOCBTYWx0ZWRfX0OUH7ObKOeuh WEaR/CT44fFxmnvzQ4+sJdZUaAXynqyKvCsbQ1q4XwFglaS40vcFXjkClrjCq7/cxDm75nq74pJ C0XnMPIR5wiuYheS0AmuK0vRma/LMWPYz+/DW3PBHxSbBBtAh9uXSq44EUnNCEYEG30LQ4WIEyW
- RR+62DfkLLKR8Chs/Ojf/xp5KBOSTk1ER3qliiJGOkvW8ciYQZFX9/rT5ypfKbuuu7RPnQCfDcu eTKtnA2q+lohvBtfUhaUJsCi7HcytY1MMOFP+UN6rsMKI6K27zpwvmW/Ci7sM7D6SaTf/zeMWcV G2CheW2bKKsIFJKDP7WgYBZIIjDKKpF6TRBXRvZ0sPBO+Yf4Fhyh56jcFxsGXCvz5W9EqURxk7Q
- G+jjMbBVOJLfL5f4M39jbaWjbZ/7CeGNdQQDjigMRhPqBPLtkm+q04mKokTxYCWuxt7ooDTS
-X-Proofpoint-GUID: lqoLGLy_j6PufSaG3EZxsEVr6Hn_YQRY
-X-Proofpoint-ORIG-GUID: lqoLGLy_j6PufSaG3EZxsEVr6Hn_YQRY
-X-Authority-Analysis: v=2.4 cv=b6Wy4sGx c=1 sm=1 tr=0 ts=6814ecab cx=c_pps a=rz3CxIlbcmazkYymdCej/Q==:117 a=wj/iefQKNY9P1RSDfSoyGA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=KK8y6wEurEKhoEb90x8A:9 a=QEXdDO2ut3YA:10 a=bFCP_H2QrGi7Okbo017w:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
- definitions=2025-05-02_02,2025-04-30_01,2025-02-21_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=930 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
- priorityscore=1501 clxscore=1015 adultscore=0 suspectscore=0 mlxscore=0
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
- definitions=main-2505020128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250430171534.132774-3-irogers@google.com>
 
+Hi Ian,
 
-On 5/2/2025 7:03 PM, Krzysztof Kozlowski wrote:
-> On 02/05/2025 15:17, Kathiravan Thirumoorthy wrote:
->>   
->> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
->> +					const struct qcom_wdt_match_data *data)
->> +{
->> +	struct regmap *imem;
->> +	unsigned int val;
->> +	int ret;
->> +
->> +	imem = syscon_regmap_lookup_by_compatible(data->imem_compatible);
-> And how are you handling proper probe ordering? Use phandles and define
-> this as an ABI.
+On Wed, Apr 30, 2025 at 10:15:31AM -0700, Ian Rogers wrote:
+> The clang warning -Wshorten-64-to-32 can be useful to catch
+> inadvertent truncation. In some instances this truncation can lead to
+> changing the sign of a result, for example, truncation to return an
+> int to fit a sort routine. Silence the warning by making the implicit
+> truncation explicit. This isn't to say the code is currently incorrect
+> but without silencing the warning it is hard to spot the erroneous
+> cases.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  include/linux/bitmap.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+> index 595217b7a6e7..4395e0a618f4 100644
+> --- a/include/linux/bitmap.h
+> +++ b/include/linux/bitmap.h
+> @@ -442,7 +442,7 @@ static __always_inline
+>  unsigned int bitmap_weight(const unsigned long *src, unsigned int nbits)
+>  {
+>  	if (small_const_nbits(nbits))
+> -		return hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
+> +		return (int)hweight_long(*src & BITMAP_LAST_WORD_MASK(nbits));
 
+This should return unsigned int, I guess?
 
-Sure, I will follow the Konrad's suggestion.
+Also, most of the functions you touch here have their copies in tools.
+Can you please keep them synchronized?
 
+Thanks,
+Yury
 
-> Best regards,
-> Krzysztof
+>  	return __bitmap_weight(src, nbits);
+>  }
+>  
+> -- 
+> 2.49.0.906.g1f30a19c02-goog
