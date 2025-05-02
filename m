@@ -1,101 +1,114 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87A51474DA;
-	Fri,  2 May 2025 13:47:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193659; cv=none; b=oVbuHeTXRv7AajG93WexDCTsYAru59ygR8DpW+M1wwNGLijv14C7DSisuInlG5D2kIMAg+BW69LjWHS6cnZ5YAEShqpVBmYpTsiomfm4Ed6N0wTQSTQ6yv3oM+q1t4poEHgsv0e7JUod6dKaG9flC+g51phorws+q70TZ2X0QpE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193659; c=relaxed/simple;
-	bh=YO7DeRcZqOkyyJp/N9tF4f54dRAU+mGMvwJb68kNOUs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=foN2BiBH01lImjVtlJLzDdfpWp+nhGa4r0V7/aryAjYMyF/OBBGZRCoty9+VKdqSXPJ0DK37UgZ5O+LCi9SYSb9JdaHBYghJeXe4hy5elqvbEkXLwZcsw6ny5WAgbFH/wQraIrVT5DE8thxNaiqr/la5pEJu8yNJXHJ9m0M7bgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RLckHg55; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 956D01474DA;
+	Fri,  2 May 2025 13:48:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193704; cv=pass; b=DfoEJxX9+1mre5YSTJtaNEzmfgEc8GXh4z/AYJD+C/bUaVOjq7tJo8xlQJ2k+a4nwbzLqxRwnbHyXd569GNSjihY/A4UAsYC7giL7LnXe1W1diTdquiQ4Jw3B6YIIXEf7anLHFYDr4GZRbhMQHsvPBDKBAMmhxh+ttdAehPLkTU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193704; c=relaxed/simple;
+	bh=9Ov9bFT8WBiC1HOucRoC3NGXXZYwaxxlf4b0Le+wBtM=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=jqtO9yLf6AqkjHTLXgTILbX/EsdYaPnUc9fJl8g8nHZad1yB46f4iNwk4l8x3wNhPkCeQNoK79rwpzB3y3kRzxNGKIC/Q63fKJvhGcpMlOzd8dDYFH2Z7aQ6cB2yxQ9FuBWozTxFFrL34RksRGuNrD1u3y3iRvk7p7RX23tvvFY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=fKKwh67T; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RLckHg55"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-227c7e4d5feso3809165ad.2;
-        Fri, 02 May 2025 06:47:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746193657; x=1746798457; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YO7DeRcZqOkyyJp/N9tF4f54dRAU+mGMvwJb68kNOUs=;
-        b=RLckHg55rgdES5VRUp0FSLpuP/AecSQWFUXxtjBvJDVmx6kfylcLhsAZb0zxhhMp9H
-         UvYnSnQPvrV4h2htjyAt6Mumy101ST5mLg9kbwndPbBUZCAutw1l7HX4ukYIUU1kTfCa
-         lQAVC43e40WIGwyuj7/1AgNTkhuZO5Tn2kT/jXpL/qPEitwnSsbkuhaImO9JYzfPdjEX
-         EHMwoWUvuqs+LKdP7aOOhw4ictNpQ0SPOUc+43jeiinMLyaN9TsgPbBBrnqc2grI3lbD
-         dsvjz7NanzjXy+EvfgH0zOfjeCZ4sCbdkaLi953aoGws26mfqt9UyY5iJAlrsDJfBSHm
-         tuMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746193657; x=1746798457;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YO7DeRcZqOkyyJp/N9tF4f54dRAU+mGMvwJb68kNOUs=;
-        b=PKLCWfKlLvYlmc+Xjpwy67fBEVtbupRdruLL1lHQIZWsIFVay0x33LAMBK07lS91sS
-         kjxjcA/1/TishlU9GT7dpspFfuJDwAvUwB9SouiNi4R7gNTKSUoY08Xuo2WHEQ0cmKxT
-         jKhRzaBykchfB+Qx2VLHo4nCs4R/g7FUeK1QMGdbH0QCZ0eVm2eDDGIRFci0iFLhRLMV
-         TS1ltLBI95DlGfjq42NZrbgHDkTRjhLx/slmesR8vXpaAy41bKdKvOVx6f0rV3Odo7o7
-         goCNHzvzn8gDA0XSVYh87JC5Fj8BK0f4446O3Rp7wPB5Rs5Q2ZemOxFnK9XreHgfE/Y0
-         NrjA==
-X-Forwarded-Encrypted: i=1; AJvYcCU+8KwHAH4tvpwyXP+6fMpxKFEulUmHsgWBro0fqaktXgNjit758UpRoAxE0bH9T37/kLI9YHKMBd5JJEGzRws=@vger.kernel.org, AJvYcCWEByFZcunIhSSFEMsgex2G/TZ5WCAALIUXvaV5Ebt1nYcAqoX9wc5tPaSsoVllp84M8eWgT2HSKzOSA0xf@vger.kernel.org, AJvYcCWMVzvS4I8c8rv1BHC6RBWxBwXxkM8RwflxzwEabgssfrPJbYzn5AkonKh/iBHSQVpyGW+qVvmsyPDadrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwalXbz7V5vVzYRDf0UzUXoNNOT0r2Vfj3OqjewlT82N0JcBWbE
-	F2Qt0UExwjKNL4ncUQQW2/WpkUIAqs8cT/r+Kh0EApl4s2t34ZaV1loRWLhyVY3hmP0uMD4rBon
-	55VxztM2pacQJNS2U/ChqgyFB3M8=
-X-Gm-Gg: ASbGncvwqRaVvo0PzTBDttUwHJklhc/LjFV6cOIoleetFq+zJBXKwVSFiO5vwzs+H4V
-	gLmi4jkVgORT5uSYz2Ctfl7UkeltEUDZ5une8AA3J0VDBV8Jxyq5xevbfDPvbp2umDeMbtdZfFr
-	JBtn1iCvv//ieL5jK80k9UnA==
-X-Google-Smtp-Source: AGHT+IGvS8ysehRTmkpn/MLH73wWVl8uhQ2dVyiEZQB9+BX+Cc/I214Nibn1sSJ0p2PSB3EHImIX9TR/DCb1IZQeD1I=
-X-Received: by 2002:a17:903:2f45:b0:22c:336f:cb5c with SMTP id
- d9443c01a7336-22e1031f5a7mr16755265ad.6.1746193657040; Fri, 02 May 2025
- 06:47:37 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="fKKwh67T"
+ARC-Seal: i=1; a=rsa-sha256; t=1746193691; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=WXFtziDNmYzvKr1OOO2vdXXJeXhOvQTjDETkGcnHp+isiV++suUDKXqBRfnzLzaN5uOUdDXv6f6LU4fsf5EejBCX9JDHhWewIMZ8cxuvLtsN7yJ3vydeMw1sfi8dVBGxH/F3R7R0Xty1yM3wEfGJF9LMTT+PU+SXeSgu1VO78t4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1746193691; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+ghhvBMBj35cdnVypJnvXisCWHPKfiKGsf04CiNP4U0=; 
+	b=NX51ttl8wb3ZNmvE/sjtyL7dAhN4uB8gce+sXQE2WfOXKr83weBjCzpb0QUNPMMbbK+IweFYy6XTs+zq/EFC5v4an/QL4QyDqdnPniOkWOmQJVaVgqm/2NIAL4mDTe5pN9a4x6nJwvC8tWpbSCCLfcGe52A3cn5L7b6mdIEfE+M=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193691;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=+ghhvBMBj35cdnVypJnvXisCWHPKfiKGsf04CiNP4U0=;
+	b=fKKwh67THd3qza/5qKFOqJobAMb8SDOyT2H4CR3ZvrxS340uA/ZFo6RL/EEs48Cq
+	6a9/QFu5ZiMASOcQpGWWJFxxjPTW6jyFl0MrAHJebZaC+M2d+wspCJISk4qQMVX/smk
+	BlKyMiKWoNE3sWZ+bqJZQvF3lj+6GP1Y7XrSNfOE=
+Received: by mx.zohomail.com with SMTPS id 1746193689115908.4390295289863;
+	Fri, 2 May 2025 06:48:09 -0700 (PDT)
+Message-ID: <36bb6e78-1db9-4dad-a2ef-7e860ead30e4@collabora.com>
+Date: Fri, 2 May 2025 18:48:03 +0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-rust-kcov-v2-1-b71e83e9779f@google.com> <CANp29Y41LKZg-kSP+j5hjUKMNeWnPsVd8VvDnOpN8+4WHHjEgQ@mail.gmail.com>
-In-Reply-To: <CANp29Y41LKZg-kSP+j5hjUKMNeWnPsVd8VvDnOpN8+4WHHjEgQ@mail.gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Fri, 2 May 2025 15:47:24 +0200
-X-Gm-Features: ATxdqUHPzjJxM4ztTNooAwhiGBxmesfG9DnCr-xy_d1ASwZ94NEytM0G2eVkbK0
-Message-ID: <CANiq72m7GAZ4gfgiU5bXSb86R3-UMG2vsvi5J1Ua1EpVV5EdAQ@mail.gmail.com>
-Subject: Re: [PATCH v2] kcov: rust: add flags for KCOV with Rust
-To: Aleksandr Nogikh <nogikh@google.com>
-Cc: Alice Ryhl <aliceryhl@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nathan Chancellor <nathan@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, kasan-dev@googlegroups.com, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, llvm@lists.linux.dev, 
-	Matthew Maurer <mmaurer@google.com>, Alexander Potapenko <glider@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 6/7] selftests: vDSO: vdso_test_getrandom: Always print
+ TAP header
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
+ <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
+References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
+ <20250502-selftests-vdso-fixes-v1-6-fb5d640a4f78@linutronix.de>
+Content-Language: en-US
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+In-Reply-To: <20250502-selftests-vdso-fixes-v1-6-fb5d640a4f78@linutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-On Fri, May 2, 2025 at 2:36=E2=80=AFPM Aleksandr Nogikh <nogikh@google.com>=
- wrote:
->
-> Thanks for incorporating the core.o change!
-> I've tested the v2 patch on my local setup and it works well.
->
-> Tested-by: Aleksandr Nogikh <nogikh@google.com>
+On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
+> The TAP specification requires that the output begins with a header line.
+> If vgetrandom_init() fails and skips the test, that header line is missing.
+> 
+> Call vgetrandom_init() after ksft_print_header().
+> 
+> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
 
-Thanks for testing, very much appreciated.
+> ---
+>  tools/testing/selftests/vDSO/vdso_test_getrandom.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/vDSO/vdso_test_getrandom.c b/tools/testing/selftests/vDSO/vdso_test_getrandom.c
+> index b0e0d664508a38d6dde9df0a61ec8198ee928a17..01892d8e65d754d0353f7df2b63910d5be8cd1bc 100644
+> --- a/tools/testing/selftests/vDSO/vdso_test_getrandom.c
+> +++ b/tools/testing/selftests/vDSO/vdso_test_getrandom.c
+> @@ -232,6 +232,7 @@ static void kselftest(void)
+>  	pid_t child;
+>  
+>  	ksft_print_header();
+> +	vgetrandom_init();
+>  	ksft_set_plan(2);
+>  
+>  	for (size_t i = 0; i < 1000; ++i) {
+> @@ -285,8 +286,6 @@ static void usage(const char *argv0)
+>  
+>  int main(int argc, char *argv[])
+>  {
+> -	vgetrandom_init();
+> -
+>  	if (argc == 1) {
+>  		kselftest();
+>  		return 0;
+> @@ -296,6 +295,9 @@ int main(int argc, char *argv[])
+>  		usage(argv[0]);
+>  		return 1;
+>  	}
+> +
+> +	vgetrandom_init();
+> +
+>  	if (!strcmp(argv[1], "bench-single"))
+>  		bench_single();
+>  	else if (!strcmp(argv[1], "bench-multi"))
+> 
 
-Dmitry/Andrey: I guess you may want this to go through your tree
-(although I don't see a `M:` there), but if not, please let me know:
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
-
-Cheers,
-Miguel
+-- 
+Regards,
+Usama
