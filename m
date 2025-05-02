@@ -1,584 +1,360 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD61822A4F8;
-	Fri,  2 May 2025 15:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201122; cv=none; b=Zn4LxPLViS/8ihUncD0A8FTCEMqhbGzMa+UjSdLN0L2egAZ6i/aikjOg+rBWN+2LOMiJnXMla8VixraJ4MhwKaIqQ9y7G5gv23TCjjuMZqhNivnYGyPA1oyftduL5VYkUJ8N3uAr2WUhJ/32UIV1qmZYMYL5ZpRLmvZmjTyINwc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201122; c=relaxed/simple;
-	bh=pJggKYMcXKVM8/K7YfPQN6f8hWqTSwe9ExOItLif1bw=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=IktahVVxfhlE48KBpQmd/xvaWeWlYkoaYLSfQUy+Ysh6tDcUMp/S2aItu1yNdMr2VadauGGc/IFuqs7sOAVsjv7y5Wh9gUD8Wp5GzwKp1iW3ZfIwb3alLREZr4h7ranc4H5F3aK2ziSOle8Ucw6bplKvpmOHKwDFZcItJW7aSYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EkcqRnn8; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86622A4F8;
+	Fri,  2 May 2025 15:53:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746201202; cv=fail; b=IVhCftd8gOp9tVpoehweA0u60X1ktnk6os6lFfADKvHGX7XMnOyay728OqlY4phpHBxBI4NP97x7O9B6A+nTK4Lj+5edjXoX1nfmNOEGNh8gE6MZMLXKsJuXT2oiLHjvkdTBPVzOoGMqMKykzgujX5PbbmNWXEKnbe1ccMr8+3s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746201202; c=relaxed/simple;
+	bh=fnJI4WSxssDUEaz0rVHqLxkzWm3FOlqpW7DJ86Rov+M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=fTa/bgcjyTNb5DOLYeDK1cvfTAOGOn2XrsN8vqzVOLTLIKwJsn2rGYT1OAtxX59zgcKzEZVqdQSPH2TDHWLCN5flnEi7dmkffqXuk6kF75NJ7z09xSAyZQxXPlY23AoB2Bh867SoNmNY8ZTpAFfGXnxAjoZDlKRenU9C2z8Cwzg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K2CeqyYp; arc=fail smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkcqRnn8"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1496098a12.1;
-        Fri, 02 May 2025 08:52:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746201120; x=1746805920; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=K/M5vDk+UKb6rsRBh/L+Hf81YD4rGeGAYZff+Q+1MrE=;
-        b=EkcqRnn8hIOPWrCAi7zMF3eN2R9bYk3ltynIVmhANIYYq1rypj+EO3lyeKcNoyGCip
-         zhpfmaRmeRwyTyCsmhhsas0PZHFow+X1vawX/EhGKC6B+l5geiuLTTeGmKYS9HyC+0SV
-         f/Y30gylNs4z9nLHQKvzxX3N8rvBtPdAUk11xZAwxHWJaCoV9CI48dibKTmBmKeoUVc8
-         QVqX3a2hCQUDKvDwyOMLXnX0ZHgjwiNSjBx5OURka0qrN1YzRHlkaHb8pYaukm371jhx
-         b7TOTC+35oUP07CEwWmssBdGZFyIrUCqB2IC8QH9iGIjBCytnF1K7crx1cLrQvu45Bjn
-         7XDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746201120; x=1746805920;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K/M5vDk+UKb6rsRBh/L+Hf81YD4rGeGAYZff+Q+1MrE=;
-        b=p7qJzFeb9hsf+AATxZHlBGuTFIO7st8mef5m5EI23OD6xHnFJeNbhiws04Y1lkVxwi
-         BPCCAbbguehQ/iWpI3EaJAPgOqGoawiKXStE0MCTFS4S2Lsf0mS0mTn7DcimoH3TkDxc
-         HUPB33zm49TY0IsY/Qw3xDWRc4KmxlKnuGbXFtX2dInBBzXzN6QN0sxc1NKpdr19olHu
-         LGaS382YyQ/cwcCxFljY5HGesDbnYnPRvPHBVO4Ee1jJze4uTKX72cP+wFXF0Jh2VmK+
-         QY0BCOASjfQU9/U8BvA6Q2c6hQn2D8b7LxQRvZY2kx3nqLwCvPiy6W5Zq1cwxrI5OGOy
-         NsYg==
-X-Forwarded-Encrypted: i=1; AJvYcCVIVSG7RTl0lnmHEpxtNGolMfszFP+NpEjv0iSKjXM8OVrrjQuxEEFfyWKnTl8kfZmmQOFURjyD0gXagbAIHieTDAxkfw==@vger.kernel.org, AJvYcCW0VK0h3Hx5ephQZ9Ez3l5YvUUUo0bLMipjFjAswQF9yPM0vF8Xoo+Uvw9mjjInTYShrh09FhF0KC7ZVB+F@vger.kernel.org, AJvYcCWzsPLXw7UDZ/d3JJZY64dCBrNFdT0goS6qQSErjNV7P/CT4ilGZlCJon2u3fFVKv9TXymyY1I+rCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz3phvkKpcwtBmpsnnkuh11p+Z2gZRDY/Tv/yBcZ1HyD3TMa3dp
-	0VYjFbjn6C8OoQ9mzSJhzuG6c8NWSmsyCrzMgjblIrCI5raYnYuw
-X-Gm-Gg: ASbGnctvEqrCs/Lb+YklEZZFFJPHi13TzLKYPGfY8oKSygBYRKtx8ERIber0WplJqaK
-	R/J0RJD18cIgdlsQalXCM8cmiFOIeme2hcw2/B5OnRp5WJLHu3v7WkIYKg7L6KiWV7xi49tEwBL
-	qoDnPA/7HTRDlDFh+2BXfacpWO53tG12Sjey3G66gzxHtimg3tn4x2CjTdfZOXtweC9s3guRPwp
-	rRV+Z0qZ6ogBrB2Ba8taSX8fJURopIyx9KRu26GxSz0vkTAN95mZ41Q/czD+yarrROhn1HA50Qu
-	oz5G1Af8yFjPRNDP+AZYyLtNGzPyVR3maxmHjHviMrL+Va0=
-X-Google-Smtp-Source: AGHT+IF6RQ4Q+o1kYE7jobyJH7wD/JO0AoDQKbSaNv7gINDhEyMucnZxjqCZUb0VUzLrEG8eEb2cTg==
-X-Received: by 2002:a17:90b:4fc2:b0:2ee:8430:b831 with SMTP id 98e67ed59e1d1-30a4e558b91mr5590741a91.2.1746201119847;
-        Fri, 02 May 2025 08:51:59 -0700 (PDT)
-Received: from ?IPv6:::1? ([2607:fb91:1e3:45a4:ad2:fe58:51fc:b286])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e151e97eesm9219635ad.71.2025.05.02.08.51.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 08:51:59 -0700 (PDT)
-Date: Fri, 02 May 2025 08:51:57 -0700
-From: "Derek J. Clark" <derekjohn.clark@gmail.com>
-To: Armin Wolf <W_Armin@gmx.de>, Hans de Goede <hdegoede@redhat.com>,
- =?ISO-8859-1?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-CC: Jonathan Corbet <corbet@lwn.net>, Mario Limonciello <superm1@kernel.org>,
- Luke Jones <luke@ljones.dev>, Xino Ni <nijs1@lenovo.com>,
- Zhixin Zhang <zhangzx36@lenovo.com>, Mia Shao <shaohz1@lenovo.com>,
- Mark Pearson <mpearson-lenovo@squebb.ca>,
- "Pierre-Loup A . Griffais" <pgriffais@valvesoftware.com>,
- "Cody T . -H . Chiu" <codyit@gmail.com>, John Martens <johnfanv2@gmail.com>,
- platform-driver-x86@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v6_4/6=5D_platform/x86=3A_Add?=
- =?US-ASCII?Q?_Lenovo_WMI_Capability_Data_01_Driver?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <a339b4b5-c7ca-4875-adb8-183539be563f@gmx.de>
-References: <20250428012029.970017-1-derekjohn.clark@gmail.com> <20250428012029.970017-5-derekjohn.clark@gmail.com> <a339b4b5-c7ca-4875-adb8-183539be563f@gmx.de>
-Message-ID: <20FEC2FF-775F-49F5-9DAA-4641C73B0367@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K2CeqyYp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746201199; x=1777737199;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fnJI4WSxssDUEaz0rVHqLxkzWm3FOlqpW7DJ86Rov+M=;
+  b=K2CeqyYphg6q+XzMCPAMABndYHDI1nXeJDy0Fl8GKU9GpSZI1HFchc98
+   mXb4RU0mHJ2HX9Wkl71F6NAT/oD3/G7dLYgual4uw0P5yD4+tJBnK+gYB
+   JGKrnHXu3f2x9l9sH8qd3sZiiXchr6mqEResOrsrDkAAI8uoLDPfI9o4y
+   pSa08FTwaKcvLTnBI+PnfbOhXd+9FNRo3lg5vtMlr8oBFN4xWKYaOIsOf
+   bLZAqyWGRAzZLiI54bJmhFeFOe06Zdx8EQgnSB4jDLpmbQXv4Qw9ICmCx
+   vUwOgFuvqlGkPC0bC2c7aN3KlJXLC4OQmMSioo0G4YsBIRBJtBCcLmQjb
+   A==;
+X-CSE-ConnectionGUID: /B7+RKSUR0q/LiUrLDZ1Hw==
+X-CSE-MsgGUID: bxZmYdBpQy2lf9DfPW4pGg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="50541345"
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="50541345"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 08:53:12 -0700
+X-CSE-ConnectionGUID: Sr/j/jbFShW1DZH+GsQUEw==
+X-CSE-MsgGUID: Di0TaOQ5T2SZdUckDHgt3g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
+   d="scan'208";a="134419273"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 08:53:11 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 2 May 2025 08:53:10 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 2 May 2025 08:53:10 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.175)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 2 May 2025 08:53:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=dO2HSgNlXa+LZJJU8nKB7crHfGGAU63zgmqnIkXkJ6wqdQQhAllu51eO87qZAuGSI6imxcGwuWqGlCV4VSev9b+Pgbex+dQPzFb/aTTm5vhL7PymDm93qLHGz8r85UkAkpaR2dXp2I+WHJa7hsL3Jb3etsis8ZWTrz1yzYMTc2t/W8yMI/SdIMkdvEMyirshsuUMclXakmAfi7c+QRyL8qAxZ8WBXv7hjH4+fPdVNtjNEXSVyT54MSIYR/R3DZ5PTRj1mXOnuW5F7Zs1v+UWR1gnobxYtXnJj8AtISa51MAqk25Mp+D3QZ/V8pBkZypijg8djKUXDXq8oPZ+55V56g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cJM9dFi6U4K0IIRA8+wZh266skZPKVEwqE6XiAk/6lk=;
+ b=kgv05o17VQBNJwj+jjaYVEIgXTYhgT5LdXddYQvhnuvIq2Dyn7ztCliaj/Dz/jRqziLv0dnlDJa/xhqQv2kYDVDbIlZ7pxcbSYpblwwWXIUToV5r/Ro7qY5g/OHhRvO+FW8+Gc2DRabSlhXno7nsr0LmmLIyg6cy7a56n0q6X7Yr3c8c7xiiBnXfVn1xTuBc6g1jFxakLA5DAY597w+KbxjcZ6LpzszwY3mnzR3ViaO4QJyFOE1qUd+pf/AukN71TRp0WF4OKVsh5MMIRAxRiF8EgymnAcrJfdKXBOpP+6ZGMJAaSJ+EEE0DSqB7OKjLmMe7F/6497oXlq00nTEdzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from PH7PR11MB8121.namprd11.prod.outlook.com (2603:10b6:510:234::14)
+ by PH0PR11MB4999.namprd11.prod.outlook.com (2603:10b6:510:37::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Fri, 2 May
+ 2025 15:53:07 +0000
+Received: from PH7PR11MB8121.namprd11.prod.outlook.com
+ ([fe80::ec4e:64cf:cf1f:daab]) by PH7PR11MB8121.namprd11.prod.outlook.com
+ ([fe80::ec4e:64cf:cf1f:daab%6]) with mapi id 15.20.8699.022; Fri, 2 May 2025
+ 15:53:07 +0000
+From: "Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>
+To: Herbert Xu <herbert@gondor.apana.org.au>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "hannes@cmpxchg.org"
+	<hannes@cmpxchg.org>, "yosry.ahmed@linux.dev" <yosry.ahmed@linux.dev>,
+	"nphamcs@gmail.com" <nphamcs@gmail.com>, "chengming.zhou@linux.dev"
+	<chengming.zhou@linux.dev>, "usamaarif642@gmail.com"
+	<usamaarif642@gmail.com>, "ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"21cnbao@gmail.com" <21cnbao@gmail.com>, "ying.huang@linux.alibaba.com"
+	<ying.huang@linux.alibaba.com>, "akpm@linux-foundation.org"
+	<akpm@linux-foundation.org>, "linux-crypto@vger.kernel.org"
+	<linux-crypto@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>,
+	"clabbe@baylibre.com" <clabbe@baylibre.com>, "ardb@kernel.org"
+	<ardb@kernel.org>, "ebiggers@google.com" <ebiggers@google.com>,
+	"surenb@google.com" <surenb@google.com>, "Accardi, Kristen C"
+	<kristen.c.accardi@intel.com>, "Feghali, Wajdi K"
+	<wajdi.k.feghali@intel.com>, "Gopal, Vinodh" <vinodh.gopal@intel.com>,
+	"Sridhar, Kanchana P" <kanchana.p.sridhar@intel.com>
+Subject: RE: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
+ batching support in acomp & drivers.
+Thread-Topic: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitate
+ batching support in acomp & drivers.
+Thread-Index: AQHbuhHqqvvzDgyN0kmGLETwq+HXa7O9AAgAgAJ9QoA=
+Date: Fri, 2 May 2025 15:53:07 +0000
+Message-ID: <PH7PR11MB8121D578B8BAA95B07D6EF8CC98D2@PH7PR11MB8121.namprd11.prod.outlook.com>
+References: <20250430205305.22844-1-kanchana.p.sridhar@intel.com>
+ <20250430205305.22844-11-kanchana.p.sridhar@intel.com>
+ <aBLRKuhJOSF8kGZv@gondor.apana.org.au>
+In-Reply-To: <aBLRKuhJOSF8kGZv@gondor.apana.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB8121:EE_|PH0PR11MB4999:EE_
+x-ms-office365-filtering-correlation-id: 0ef15368-6624-4f88-4dc6-08dd89916e93
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info: =?us-ascii?Q?ho3ydbnl59hcTCCuVss2reRQysxnjcQsyFPWraIJ74Ol73mCsPRdKorcjDm9?=
+ =?us-ascii?Q?LKKPqiUFZiomXOjePAsP44TFElVBJJSEQd0ZDvdnT4NecY599At3GqMr+WRi?=
+ =?us-ascii?Q?4g0OBwv5Xr60dLQ3UP9p+64Q5N6bk26Ua/LpqT0+usXggG9gRrngriJE4IE1?=
+ =?us-ascii?Q?YOP1jbbip9LksfT2CW/9GRJ+a8EWbCsqL2L7t/1zNItU6Ed2pawkpJfxq4no?=
+ =?us-ascii?Q?wwn12NcLtiRX86o1Bpz+Q0G0CDiF6P9pyKS1FCQUALkkYIDcE8YV7M54Qe7O?=
+ =?us-ascii?Q?XSi03sr7HC+S5FQwnIZNEb4gdGx5T8lDc54JYBGjPBnZZPB7isvPVJ50xY+D?=
+ =?us-ascii?Q?DRvYnHon22CAfJE9LKsYPW1zPoQBI/qTlXq2cIDTxIlC8mFzbmLSZvtvYe3h?=
+ =?us-ascii?Q?B+WXoBo0zQtyWEkJaG67M8o/Uek95WlQ+/AQC9o01EPvpnbLK4Cquc4Ta0dh?=
+ =?us-ascii?Q?lV6NqWEjwyjTXzHvCVI+IDrD9eOgVrPyUioYPT381JvFBkaSPCMwtGuh5NEs?=
+ =?us-ascii?Q?hK3/sre8xSjn7gP9zFTnDHJ7754WAAORmMpRS0N7Ks2ecuIP9qQzckejBcwl?=
+ =?us-ascii?Q?hivcfGRIyWvWXSuKGqw1I72jucC2epoy12wFWta6+jkJCPiUK+ekLTPH2OcH?=
+ =?us-ascii?Q?LD2yqz/OtO0+qP3XxbXeU7rieLw39R9B4k3XG7e+5p5xVjd9pwsyDcImb/ZE?=
+ =?us-ascii?Q?2EXFuqNKFCQPKnAW0uk283oifWbfoU++T49UWdWpCiUCuIe89tE0DLWhl7Ro?=
+ =?us-ascii?Q?OruUaqeLdvGFmHtQFhyOPEXWQlZk2X3bJ/EDEr1oNgBR5DHth1vAy9NdOGoI?=
+ =?us-ascii?Q?aO/OyNEdun1q9hN3KFew8PR3fImvUybHDz32CSUQq9AZqjJsm7ov9yEy0f06?=
+ =?us-ascii?Q?AUzbLp/DfQdlP3rtBXNzo+JD3Ei8uRflheYvauCgoSPe3LZYHQBkgjH8adRA?=
+ =?us-ascii?Q?8sEBIRQb2IgHjrzScgWXLelK8ZA8ABJGvej9gG8qQb729k3MXGTZcF1rLbeI?=
+ =?us-ascii?Q?GN76qY6qIVGBl8w/yaol4C0f7YGz96PotwxwaTKzmLLsTCLjPj9XH6lDy/mJ?=
+ =?us-ascii?Q?3PkdHZfs2+jwaKw+b6tcGB8szzd+MjZUr+2d8b/IfqjW/nxax3DysdMCiXhK?=
+ =?us-ascii?Q?7y5BzMMv7BVpibA67RFSRTF8w7uOL7nwaDLw9A5zB18dMStx/1O7AD+GTzZ2?=
+ =?us-ascii?Q?nDlRZHptFcJzqmelfPUnJskK3itkfN/1qHNA+VrlhAHaDSaw3nToOn5Ac9Fl?=
+ =?us-ascii?Q?xy7VS75Eg+yOun76p50hwtlT8WW3BSHJIwCTgKc7alpBW+/0anqz2BkmnbUz?=
+ =?us-ascii?Q?C93/jVvRKgv6P5pO2v5+GAXttL5AbnqDkduY2+qvqEXwaxPkY7NZO9pkBT9x?=
+ =?us-ascii?Q?YTqLhPmZ5mCI0l+iE6qiU/5k5pOtUSRrkEYM3fLHnkMNTMzbuKtlfyWsjANN?=
+ =?us-ascii?Q?ctxPL8LKO5c=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB8121.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?m55nTYk+E5nvxY3jLrpY9jvjXsfrWPvpKrSZSZI0+xYidmzVeJXvRmBBktp6?=
+ =?us-ascii?Q?ZTmuqv8ukC/Qerv+/QpSIMp5/sr81JHILSgOJ/ytmZDtI6y+S9bJvf1WqAix?=
+ =?us-ascii?Q?WsC3PK1smzKrW4jvCXXZubDCyT+jUUfPZ0MVsQriL+woDrC5n9Y6E0SHn8F6?=
+ =?us-ascii?Q?GxmuqRWM+p/numkbux5vxL6PfU6QsxbV9MZRiDnz4zStDdvFFmpr77kIUrfo?=
+ =?us-ascii?Q?QRjyfthPH0QqjIcV8JimWEYnTPfVNhIYW6VVELAhbhgTtNMI5U1YohiVk5FV?=
+ =?us-ascii?Q?7nX+pfgDXkLDCQMvv5gGqoTiPMANfqOf+PtzgAvPxgiTY20y4AiN4zsSD+mC?=
+ =?us-ascii?Q?uQlgceB96f/cD8qcz/S6lzWXaJghuxAJg8n5bE9rSeZLT7DlLDbUNrcB16TX?=
+ =?us-ascii?Q?+68rpC0dYFFTYavMbdN04hBr1/0TosJfVEz1WfLuYw7Q/7Ujzm6Yz3nxf6C5?=
+ =?us-ascii?Q?IJ9W/4QWWtLyEm3wn5Q4xcPSUG5LFWCBKFb00Q/PTb0M0wMFXdB+ita9tZyU?=
+ =?us-ascii?Q?6uUAn0x6Xusw6M3R5CJZfzDdXy1b+IqgIQU2XRZBOZLvv4icRkXO0XfgiX2l?=
+ =?us-ascii?Q?TwKVRLFkMisR5Dua3OGJvObdXn2RPBl+dKNTWW9atc8HvavkIzxJrh9G7w55?=
+ =?us-ascii?Q?NG1JxXGHfrx1zfvvcpqHZwwGBZEF8Uq4EUmypdnKvEMPQLxnSCqkHyJInzUU?=
+ =?us-ascii?Q?WmDBH8hccOJ15hYb36mYK7zCKCFPlWzlUTkMzzRr8ItOWKIx0hLR/I1UZ0pz?=
+ =?us-ascii?Q?J1OFg5AeZ2kOS1UdjRjZaf29eBhKRG6qi1IuijyUwYSB11IF1dRbaDe7AwWy?=
+ =?us-ascii?Q?pyHCnVouy8Pu/mt3cmeQUn/qYy/lK8qqXILfqCG6BgYHgRFOt+JZR5MUaSYx?=
+ =?us-ascii?Q?MIT7wSQokg70XzhaLyetWuSHNWj0at7BXrHE4RyX0oKCmyQATgXmROennEQy?=
+ =?us-ascii?Q?aiswx/Y4DQrx674BJYjC9FVe78K/FqvU+34IN6AavsdH6DoXARLy5lb7634g?=
+ =?us-ascii?Q?afjG6JSzlLNz6IGt8yaP1y6UHj2B6oLMw2bHMzOWww8nDKYeET9Rb8/mc20u?=
+ =?us-ascii?Q?7hc/2ydPkZtqONs/aMZLlbCmTwQbcUr68Aw8zqGS+JQ2Qj13dsJSrR4s/pAt?=
+ =?us-ascii?Q?m8zOOzTR4uiR3yFCOfQ2e98blC+de9ZLGMAUJZWishZ9Gz76XF63OsSNZK38?=
+ =?us-ascii?Q?Iy9SXQqDApbauzEhqnRLE7VezNfbUCU6i5BdN2YxxKXhEQ+XK5xz+utjSZ64?=
+ =?us-ascii?Q?w8SdQIX05PG7Y79MlxjrEWHzDDcKVWPsNtsNEb4kEQC43bkb6T+KRd7A20wh?=
+ =?us-ascii?Q?Qxdscvtk2y3tNzG1Cav14Ps5urRzMV2SKnZ3aRMKPhZTP62aH3tsr2CLnWHt?=
+ =?us-ascii?Q?9yqC5cN8f4J2pNoeVrk6vVvmo8WwgWq3hb7u6j1zBrOU47dFYjdTbuDNSqdn?=
+ =?us-ascii?Q?Cd7bASEeI+9yiw+hhjq1L9P8BbTaS79nXENUMSGcOSOYMf/+oWJx2VFWYzdA?=
+ =?us-ascii?Q?TwkeoecPfyIq/862vOe0dAaV/vg2OR1nAaC0v5DSLJBWFREpzMFPrRqpGQvN?=
+ =?us-ascii?Q?q0TDW+MBYnLAq/aHZUYFUd6mXQEmhmQjs6ClbX7FILGPVDLGd8PJ9jNEMyq3?=
+ =?us-ascii?Q?ZQ=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB8121.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0ef15368-6624-4f88-4dc6-08dd89916e93
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2025 15:53:07.4670
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: YOS8kfe41YG5zDeRrzqOcRtkj7fSBxkaBmtsb6IV/cDlDe43hHhrKfB702wQVtDzjQQEa9OXlpslWYPwqegYTvNJhpxQGRttAAHzAh3ID9k=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4999
+X-OriginatorOrg: intel.com
 
 
-
-On May 1, 2025 7:18:40 PM PDT, Armin Wolf <W_Armin@gmx=2Ede> wrote:
->Am 28=2E04=2E25 um 03:18 schrieb Derek J=2E Clark:
->
->> Adds lenovo-wmi-capdata01 driver which provides the
->> LENOVO_CAPABILITY_DATA_01 WMI data block that comes on "Other Mode"
->> enabled hardware=2E Provides an interface for querying if a given
->> attribute is supported by the hardware, as well as its default_value,
->> max_value, min_value, and step increment=2E
->>=20
->> Reviewed-by: Armin Wolf <W_Armin@gmx=2Ede>
->> Signed-off-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> ---
->> v6:
->>   - Recache capabiltiy data on ACPI AC events to ensure accutare
->>     max_value=2E
->>   - Fix typos and rewordings from v5 review=2E
->> v5:
->>   - Return to cache at device initialization=2E On component bind, pass=
- a
->>     pointer to lenovo-wmi-other=2E
->>   - Fixes from v4 review=2E
->> v4:
->>   - Make driver data a private struct, remove references from Other Mod=
+> -----Original Message-----
+> From: Herbert Xu <herbert@gondor.apana.org.au>
+> Sent: Wednesday, April 30, 2025 6:41 PM
+> To: Sridhar, Kanchana P <kanchana.p.sridhar@intel.com>
+> Cc: linux-kernel@vger.kernel.org; linux-mm@kvack.org;
+> hannes@cmpxchg.org; yosry.ahmed@linux.dev; nphamcs@gmail.com;
+> chengming.zhou@linux.dev; usamaarif642@gmail.com;
+> ryan.roberts@arm.com; 21cnbao@gmail.com;
+> ying.huang@linux.alibaba.com; akpm@linux-foundation.org; linux-
+> crypto@vger.kernel.org; davem@davemloft.net; clabbe@baylibre.com;
+> ardb@kernel.org; ebiggers@google.com; surenb@google.com; Accardi,
+> Kristen C <kristen.c.accardi@intel.com>; Feghali, Wajdi K
+> <wajdi.k.feghali@intel.com>; Gopal, Vinodh <vinodh.gopal@intel.com>
+> Subject: Re: [PATCH v9 10/19] crypto: acomp - New interfaces to facilitat=
 e
->>     driver=2E
->>   - Don't cache data at device initialization=2E Instead, on component =
-bind,
->>     cache the data on a member variable of the Other Mode driver data
->>     passed as a void pointer=2E
->>   - Add header file for capdata01 structs=2E
->>   - Add new struct to pass capdata01 array data and array length to Oth=
-er
->>     Mode=2E
->> v3:
->> - Add as component to lenovo-wmi-other driver=2E
->> v2:
->> - Use devm_kmalloc to ensure driver can be instanced, remove global
->>    reference=2E
->> - Ensure reverse Christmas tree for all variable declarations=2E
->> - Remove extra whitespace=2E
->> - Use guard(mutex) in all mutex instances, global mutex=2E
->> - Use pr_fmt instead of adding the driver name to each pr_err=2E
->> - Remove noisy pr_info usage=2E
->> - Rename capdata_wmi to lenovo_wmi_cd01_priv and cd01_wmi to priv=2E
->> - Use list to get the lenovo_wmi_cd01_priv instance in
->>    lenovo_wmi_capdata01_get as none of the data provided by the macros
->>    that will use it can pass a member of the struct for use in
->>    container_of=2E
->>   MAINTAINERS                                 |   1 +
->>   drivers/platform/x86/Kconfig                |   4 +
->>   drivers/platform/x86/Makefile               |   1 +
->>   drivers/platform/x86/lenovo-wmi-capdata01=2Ec | 272 +++++++++++++++++=
-+++
->>   drivers/platform/x86/lenovo-wmi-capdata01=2Eh |  29 +++
->>   5 files changed, 307 insertions(+)
->>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Ec
->>   create mode 100644 drivers/platform/x86/lenovo-wmi-capdata01=2Eh
->>=20
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 2b4b06e81192=2E=2E1b22e41cc730 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -13164,6 +13164,7 @@ L:	platform-driver-x86@vger=2Ekernel=2Eorg
->>   S:	Maintained
->>   F:	Documentation/wmi/devices/lenovo-wmi-gamezone=2Erst
->>   F:	Documentation/wmi/devices/lenovo-wmi-other=2Erst
->> +F:	drivers/platform/x86/lenovo-wmi-capdata01=2E*
->>   F:	drivers/platform/x86/lenovo-wmi-events=2E*
->>   F:	drivers/platform/x86/lenovo-wmi-helpers=2E*
->>   diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kcon=
-fig
->> index 13b8f4ac5dc5=2E=2E64663667f0cb 100644
->> --- a/drivers/platform/x86/Kconfig
->> +++ b/drivers/platform/x86/Kconfig
->> @@ -467,6 +467,10 @@ config LENOVO_WMI_HELPERS
->>   	tristate
->>   	depends on ACPI_WMI
->>   +config LENOVO_WMI_DATA01
->> +	tristate
->> +	depends on ACPI_WMI
->> +
->>   config IDEAPAD_LAPTOP
->>   	tristate "Lenovo IdeaPad Laptop Extras"
->>   	depends on ACPI
->> diff --git a/drivers/platform/x86/Makefile b/drivers/platform/x86/Makef=
-ile
->> index fc039839286a=2E=2E7a35c77221b7 100644
->> --- a/drivers/platform/x86/Makefile
->> +++ b/drivers/platform/x86/Makefile
->> @@ -69,6 +69,7 @@ obj-$(CONFIG_THINKPAD_LMI)	+=3D think-lmi=2Eo
->>   obj-$(CONFIG_YOGABOOK)		+=3D lenovo-yogabook=2Eo
->>   obj-$(CONFIG_YT2_1380)		+=3D lenovo-yoga-tab2-pro-1380-fastcharger=2E=
-o
->>   obj-$(CONFIG_LENOVO_WMI_CAMERA)	+=3D lenovo-wmi-camera=2Eo
->> +obj-$(CONFIG_LENOVO_WMI_DATA01)	+=3D lenovo-wmi-capdata01=2Eo
->>   obj-$(CONFIG_LENOVO_WMI_EVENTS)	+=3D lenovo-wmi-events=2Eo
->>   obj-$(CONFIG_LENOVO_WMI_HELPERS)	+=3D lenovo-wmi-helpers=2Eo
->>   diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Ec b/drivers/=
-platform/x86/lenovo-wmi-capdata01=2Ec
->> new file mode 100644
->> index 000000000000=2E=2E841d4a37249b
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Ec
->> @@ -0,0 +1,272 @@
->> +// SPDX-License-Identifier: GPL-2=2E0-or-later
->> +/*
->> + * Lenovo Capability Data 01 WMI Data Block driver=2E
->> + *
->> + * Lenovo Capability Data 01 provides information on tunable attribute=
-s used by
->> + * the "Other Mode" WMI interface=2E The data includes if the attribut=
-e is
->> + * supported by the hardware, the default_value, max_value, min_value,=
- and step
->> + * increment=2E Each attibute has multiple pages, one for each of the =
-thermal
->> + * modes managed by the Gamezone interface=2E
->> + *
->> + * Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
->> + */
->> +
->> +#include <linux/acpi=2Eh>
->> +#include <linux/cleanup=2Eh>
->> +#include <linux/component=2Eh>
->> +#include <linux/container_of=2Eh>
->> +#include <linux/device=2Eh>
->> +#include <linux/export=2Eh>
->> +#include <linux/gfp_types=2Eh>
->> +#include <linux/module=2Eh>
->> +#include <linux/notifier=2Eh>
->> +#include <linux/overflow=2Eh>
->> +#include <linux/types=2Eh>
->> +#include <linux/wmi=2Eh>
->> +
->> +#include "lenovo-wmi-capdata01=2Eh"
->> +
->> +#define LENOVO_CAPABILITY_DATA_01_GUID "7A8F5407-CB67-4D6E-B547-39B3BE=
-018154"
->> +
->> +#define ACPI_AC_NOTIFY_STATUS 0x80
->> +
->> +static DEFINE_MUTEX(list_mutex);
->
->Hi,
->
->why not moving this mutex inside struct cd01_list?
->
+> batching support in acomp & drivers.
+>=20
+> On Wed, Apr 30, 2025 at 01:52:56PM -0700, Kanchana P Sridhar wrote:
+> >
+> > @@ -127,6 +131,22 @@ struct acomp_req {
+> >  struct crypto_acomp {
+> >  	int (*compress)(struct acomp_req *req);
+> >  	int (*decompress)(struct acomp_req *req);
+> > +	unsigned int (*get_batch_size)(void);
+> > +	bool (*batch_compress)(
+> > +		struct acomp_req *reqs[],
+> > +		struct page *pages[],
+> > +		u8 *dsts[],
+> > +		unsigned int dlens[],
+> > +		int errors[],
+> > +		int nr_reqs);
+> > +	bool (*batch_decompress)(
+> > +		struct acomp_req *reqs[],
+> > +		u8 *srcs[],
+> > +		struct page *pages[],
+> > +		unsigned int slens[],
+> > +		unsigned int dlens[],
+> > +		int errors[],
+> > +		int nr_reqs);
+>=20
+> I shelved request chaining because allocating one request per page
+> is actively harmful to performance.  So we should not add any
+> interface that is based on one request per page.
 
-I can do that=2E Is that preferable over adding it to priv?
+Hi Herbert,
 
->> +
->> +struct lwmi_cd01_priv {
->> +	struct notifier_block acpi_nb; /* ACPI events */
->> +	struct wmi_device *wdev;
->> +	struct cd01_list *list;
->> +};
->> +
->> +/**
->> + * lwmi_cd01_component_bind() - Bind component to master device=2E
->> + * @cd01_dev: Pointer to the lenovo-wmi-capdata01 driver parent device=
-=2E
->> + * @om_dev: Pointer to the lenovo-wmi-other driver parent device=2E
->> + * @data: capdata01_list object pointer used to return the capability =
-data=2E
->> + *
->> + * On lenovo-wmi-other's master bind, provide a pointer to the local c=
-apdata01
->> + * list=2E This is used to call lwmi_cd01_get_data to look up attribut=
-e data
->> + * from the lenovo-wmi-other driver=2E
->> + *
->> +:* Return: 0 on success, or an error code=2E
->> + */
->> +static int lwmi_cd01_component_bind(struct device *cd01_dev,
->> +				    struct device *om_dev, void *data)
->> +{
->> +	struct lwmi_cd01_priv *priv =3D dev_get_drvdata(cd01_dev);
->> +	struct cd01_list **cd01_list =3D data;
->> +
->> +	if (!priv->list)
->> +		return -ENODEV;
->> +
->> +	*cd01_list =3D priv->list;
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct component_ops lwmi_cd01_component_ops =3D {
->> +	=2Ebind =3D lwmi_cd01_component_bind,
->> +};
->> +
->> +/**
->> + * lwmi_cd01_get_data - Get the data of the specified attribute
->> + * @dev: The lenovo-wmi-capdata01 parent device=2E
->> + * @tunable_attr: The attribute to be populated=2E
->> + *
->> + * Retrieves the capability data 01 struct pointer for the given
->> + * attribute for its specified thermal mode=2E
->> + *
->> + * Return: Either a pointer to capability data, or NULL=2E
->> + */
->> +struct capdata01 *lwmi_cd01_get_data(struct cd01_list *list, u32 attri=
-bute_id)
->> +{
->> +	u8 idx;
->> +
->> +	guard(mutex)(&list_mutex);
->> +	for (idx =3D 0; idx < list->count; idx++) {
->> +		if (list->data[idx]=2Eid !=3D attribute_id)
->> +			continue;
->> +		return &list->data[idx];
->
->This might cause issues should lwmi_cd01_cache() be called when the calle=
-r of this function
->currently accesses the returned data=2E
->
->Maybe it would make sense to simply copy the struct capdata01? It is rath=
-er small, so the overhead
->would be negligible=2E
->
->I envision something like this:
->
->int lwmi_cd01_get_data(struct cd01_list *list, u32 attribute_id, struct c=
-apdata01 *output);
->
->In this case the resulting capdata is copied into "output"=2E
->
+My cover letter presents data that I've gathered that indicates significant
+performance improvements with the crypto_acomp_batch_compress()
+interface that allocates one request per page.
 
-I can make this work=2E I assume memcpy is preferred=2E Should I make the =
-source pointer a devm kmalloc before it's sent or use the stack?
+In addition, I would also like to share the p50/p99 latency of just the cal=
+ls
+to crypto_acomp_compress() and crypto_acomp_batch_compress() that
+I gathered using the silesia.tar dataset (http://wanos.co/assets/silesia.ta=
+r)
+and a simple madvise test that reads the dataset into memory, then
+swaps out all pages and swaps them back in.
 
->> +	}
->> +	return NULL;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_get_data, "LENOVO_WMI_CD01");
->> +
->> +/**
->> + * lwmi_cd01_setup() - Cache all WMI data block information
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Loop through each WMI data block and cache the data=2E
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_cd01_cache(struct lwmi_cd01_priv *priv)
->> +{
->> +	int idx;
->> +
->> +	guard(mutex)(&list_mutex);
->> +	for (idx =3D 0; idx < priv->list->count; idx++) {
->> +		union acpi_object *ret_obj __free(kfree) =3D NULL;
->> +
->> +		ret_obj =3D wmidev_block_query(priv->wdev, idx);
->> +		if (!ret_obj)
->> +			return -ENODEV;
->> +
->> +		if (ret_obj->type !=3D ACPI_TYPE_BUFFER ||
->> +		    ret_obj->buffer=2Elength < sizeof(priv->list->data[idx]))
->> +			continue;
->> +
->> +		memcpy(&priv->list->data[idx], ret_obj->buffer=2Epointer,
->> +		       ret_obj->buffer=2Elength);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_cd01_alloc() - Allocate a cd01_list struct in drvdata
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Allocate a cd01_list struct large enough to contain data from all W=
-MI data
->> + * blocks provided by the interface=2E
->> + *
->> + * Return: 0 on success, or an error=2E
->> + */
->> +static int lwmi_cd01_alloc(struct lwmi_cd01_priv *priv)
->> +{
->> +	struct cd01_list *list;
->> +	size_t list_size;
->> +	int count;
->> +
->> +	count =3D wmidev_instance_count(priv->wdev);
->> +	list_size =3D struct_size(list, data, count);
->> +
->> +	guard(mutex)(&list_mutex);
->> +	list =3D devm_kzalloc(&priv->wdev->dev, list_size, GFP_KERNEL);
->> +	if (!list)
->> +		return -ENOMEM;
->> +
->> +	list->count =3D count;
->> +	priv->list =3D list;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * lwmi_cd01_setup() - Cache all WMI data block information
->> + * @priv: lenovo-wmi-capdata01 driver data=2E
->> + *
->> + * Allocate a cd01_list struct large enough to contain data from all W=
-MI data
->> + * blocks provided by the interface=2E Then loop through each data blo=
-ck and
->> + * cache the data=2E
->> + *
->> + * Return: 0 on success, or an error code=2E
->> + */
->> +static int lwmi_cd01_setup(struct lwmi_cd01_priv *priv)
->> +{
->> +	int ret;
->> +
->> +	ret =3D lwmi_cd01_alloc(priv);
->> +	if (ret)
->> +		return ret;
->> +
->> +	return lwmi_cd01_cache(priv);
->> +}
->> +
->> +/**
->> + * lwmi_cd01_notifier_call() - Call method for lenovo-wmi-capdata01 dr=
-iver notifier=2E
->> + * block call chain=2E
->> + * @nb: The notifier_block registered to lenovo-wmi-events driver=2E
->> + * @action: Unused=2E
->> + * @data: The ACPI event=2E
->> + *
->> + * For LWMI_EVENT_THERMAL_MODE, set current_mode and notify platform_p=
-rofile
->> + * of a change=2E
->> + *
->> + * Return: notifier_block status=2E
->> + */
->> +static int lwmi_cd01_notifier_call(struct notifier_block *nb, unsigned=
- long action,
->> +				   void *data)
->> +{
->> +	struct acpi_bus_event *event =3D (struct acpi_bus_event *)data;
->
->Unnecessary cast, please drop=2E
->
->> +	struct lwmi_cd01_priv *priv;
->> +	int ret;
->> +
->> +
->> +	priv =3D container_of(nb, struct lwmi_cd01_priv, acpi_nb);
->> +
->> +	switch (event->type) {
->> +	case ACPI_AC_NOTIFY_STATUS:
->
->You should also check the the "device_class" of the ACPI event (search fo=
-r ACPI_AC_CLASS)
->because "type" is not guaranteed to be unique between different events=2E
->
+This data is on Sapphire Rapids, core frequency fixed at 2500 MHz.
+I have enabled 64K folios.
+The "count" refers to the number of calls to the crypto_acomp API.
+As expected, the deflate-iaa "count" values in v9 are much lower
+because zswap_compress() in v9 uses compression batching, i.e.,
+invokes crypto_acomp_batch_compress() with batches of 8 pages,
+while storing the 64K folios.
 
-Good to know, thanks=2E
+     ----------------------------------------------------------------------=
+---
+     64K folios:    Normalized Per-Page Latency of crypto_acomp
+                           calls in zswap_compress() (ns)
+     ------------+------------------------------+--------------------------=
+--
+                 |     mm-unstable-4-21-2025    |              v9
+     ------------+------------------------------+--------------------------=
+--
+                 |   count       p50       p99  |   count      p50       p9=
+9
+     ------------+------------------------------+--------------------------=
+--
+     deflate-iaa |  50,459     3,396     3,663  |   6,379      717       77=
+4
+                 |                              |
+     zstd        |  50,631    27,610    33,006  |  50,631   27,253    32,51=
+6
+     ------------+------------------------------+--------------------------=
+--
 
+There is no indication of sending one acomp request per page
+harming performance, with either deflate-iaa or zstd. We see a
+4.7X speedup with IAA that uses the crypto_acomp_batch_compress()
+interface in question.
 
-Ack all below=2E
-=20
+>=20
+> My plan is to supply a whole folio through acomp_request_set_src_folio
+> and mark it as a batch request with a data unit size of 4K, e.g.:
+>=20
+> 	acomp_request_set_src_folio(req, folio, 0, len);
+> 	acomp_request_set_data_unit(req, 4096);
+>=20
+> Then the algorithm can dice it up in whatever way it sees fit.  For
+> algorithms that don't support batching, the acompress API should dice
+> it up and feed it to the algorithm piece-meal.
+>=20
+> IOW the folio loop in zswap_store would be moved into the Crypto API.
+>=20
+> This is contingent on one API change, bringing back NULL dst support
+> to acompress.  This way zswap does not need to worry about allocating
+> memory that might not even be needed (when pages compress well).
+>=20
+> This won't look like the useless NULL dst we had before which simply
+> pre-allocated memory rather than allocating them on demand.
+>=20
+> What acompress should do is allocate one dst page at a time, once that
+> is filled up, then allocate one more.  They should be chained up in an
+> SG list.  Pages that do not compress can be marked as a zero-length
+> entry in the SG list.
+>=20
+> If the allocation fails at any point in time, simply stop the
+> batching at that point and return the SG list of what has been
+> compressed so far.  After processing the returned pages, zswap
+> can then call acompress again with an offset into the folio to
+> continue compression.
+
+I am not sure if this would be feasible, because zswap_store()
+incrementally does other book-keeping necessary for mm/swap
+consistency as pages get compressed, such as allocating entries,
+storing compressed buffers in zpool, updating the xarray of swap
+offsets stored in zswap, adding the entry to the zswap memcg LRU
+list, etc.
+
+As soon as an error is encountered in zswap_compress(),
+zswap_store() has to cleanup any prior zpool stores for the batch,
+and delete any swap offsets for the folio from xarray.
+
+Imo, handing over the folio store loop to crypto might make this
+"maintaining consistency of mm/swap incrementally with each
+page compressed/stored" somewhat messy. However, I would like
+to request the zswap maintainers to weigh in with their insights
+on pros/cons of what you are proposing.
+
+>=20
+> To prevent pathological cases of zero progress, zswap can provide
+> one pre-allocated page to seed the process.  For iaa, it should
+> just allocate as many pages as it needs for batching, and if that
+> fails, simply fall back to no batching and do things one page at
+> a time (or however many pages you manage to allocate).
+
+I'm somewhat concerned about a) allocating memory and b) adding
+computes in the zswap_store() path. It is not clear what is the
+motivating factor for doing so, especially because the solution and
+data presented in v9 have indicated only performance upside with
+the crypto_acomp_batch_compress() API and its implementation
+in iaa_crypto, and modest performance gains with zstd using the
+existing crypto_acomp_compress() API to compress one page at a
+time in a large folio. Please let me know if I am missing something.
+
 Thanks,
-Derek
+Kanchana
 
->> +		ret =3D lwmi_cd01_cache(priv);
->> +		if (ret)
->> +			return NOTIFY_BAD;
->> +
->> +		return NOTIFY_OK;
->> +	default:
->> +		return NOTIFY_DONE;
->> +	}
->> +}
->> +
->> +static int lwmi_cd01_probe(struct wmi_device *wdev, const void *contex=
-t)
->> +
->> +{
->> +	struct lwmi_cd01_priv *priv;
->> +	int ret;
->> +
->> +	priv =3D devm_kzalloc(&wdev->dev, sizeof(*priv), GFP_KERNEL);
->> +	if (!priv)
->> +		return -ENOMEM;
->> +
->> +	priv->wdev =3D wdev;
->> +	dev_set_drvdata(&wdev->dev, priv);
->> +
->> +	ret =3D lwmi_cd01_setup(priv);
->> +	if (ret)
->> +		return ret;
->> +
->> +	priv->acpi_nb=2Enotifier_call =3D lwmi_cd01_notifier_call;
->> +	register_acpi_notifier(&priv->acpi_nb);
->> +
->> +	return component_add(&wdev->dev, &lwmi_cd01_component_ops);
->
->You need to unregister the ACPI notifier when component_add() fails=2E
->
->> +}
->> +
->> +static void lwmi_cd01_remove(struct wmi_device *wdev)
->> +{
->> +	component_del(&wdev->dev, &lwmi_cd01_component_ops);
->
->Same as above=2E You could use devm_add_action_or_reset() to fix both cas=
-es=2E
->
->> +}
->> +
->> +static const struct wmi_device_id lwmi_cd01_id_table[] =3D {
->> +	{ LENOVO_CAPABILITY_DATA_01_GUID, NULL },
->> +	{}
->> +};
->> +
->> +static struct wmi_driver lwmi_cd01_driver =3D {
->> +	=2Edriver =3D {
->> +		=2Ename =3D "lenovo_wmi_cd01",
->> +		=2Eprobe_type =3D PROBE_PREFER_ASYNCHRONOUS,
->> +	},
->> +	=2Eid_table =3D lwmi_cd01_id_table,
->> +	=2Eprobe =3D lwmi_cd01_probe,
->> +	=2Eremove =3D lwmi_cd01_remove,
->> +	=2Eno_singleton =3D true,
->> +};
->> +
->> +/**
->> + * lwmi_cd01_match() - Match rule for the master driver=2E
->> + * @dev: Pointer to the capability data 01 parent device=2E
->> + * @data: Unused void pointer for passing match criteria=2E
->> + *
->> + * Return: int=2E
->> + */
->> +int lwmi_cd01_match(struct device *dev, void *data)
->> +{
->> +	return dev->driver =3D=3D &lwmi_cd01_driver=2Edriver;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(lwmi_cd01_match, "LENOVO_WMI_CD01");
->> +
->> +module_wmi_driver(lwmi_cd01_driver);
->> +
->> +MODULE_DEVICE_TABLE(wmi, lwmi_cd01_id_table);
->> +MODULE_AUTHOR("Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>");
->> +MODULE_DESCRIPTION("Lenovo Capability Data 01 WMI Driver");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/platform/x86/lenovo-wmi-capdata01=2Eh b/drivers/pl=
-atform/x86/lenovo-wmi-capdata01=2Eh
->> new file mode 100644
->> index 000000000000=2E=2Eed4f3d86464d
->> --- /dev/null
->> +++ b/drivers/platform/x86/lenovo-wmi-capdata01=2Eh
->> @@ -0,0 +1,29 @@
->> +/* SPDX-License-Identifier: GPL-2=2E0-or-later */
->> +
->> +/* Copyright(C) 2025 Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom> =
-*/
->> +
->> +#ifndef _LENOVO_WMI_CAPDATA01_H_
->> +#define _LENOVO_WMI_CAPDATA01_H_
->> +
->> +#include <linux/types=2Eh>
->> +
->> +struct device;
->> +
->> +struct capdata01 {
->> +	u32 id;
->> +	u32 supported;
->> +	u32 default_value;
->> +	u32 step;
->> +	u32 min_value;
->> +	u32 max_value;
->> +};
->> +
->> +struct cd01_list {
->> +	u8 count;
->> +	struct capdata01 data[];
->> +};
->
->Since client driver are not directly accessing this struct anyway please =
-keep its definition private
->and only provide an incomplete definition in this header:
->
->	struct cd01_list *;
->
->Thanks,
->Armin Wolf
->
->> +
->> +struct capdata01 *lwmi_cd01_get_data(struct cd01_list *list, u32 attri=
-bute_id);
->> +int lwmi_cd01_match(struct device *dev, void *data);
->> +
->> +#endif /* !_LENOVO_WMI_CAPDATA01_H_ */
-
-- Derek
+>=20
+> I'll whip up a quick POC and we can work on top of it.
+>=20
+> Cheers,
+> --
+> Email: Herbert Xu <herbert@gondor.apana.org.au>
+> Home Page: http://gondor.apana.org.au/~herbert/
+> PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
