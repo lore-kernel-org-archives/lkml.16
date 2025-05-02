@@ -1,221 +1,134 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41DCF23C516
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:50:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCD9211A1E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746190245; cv=none; b=TekCRUwEpkVq5nRCbF3X+XVYf7gxsM0KGTIHaSkQy014NlB9FZaYZeCTNXaylYtgfqQ1GqRUvQwVigGOIF9ro/bFxZVgSkuLzZrF/wGWEo6EgQIrV37EDwSGWsxdts6K6kvyRA48iHMkQ5QNqfHDGyS5/0PWMqQObCnjK+3+DkA=
+	t=1746190255; cv=none; b=fSEuA3HNUgq352f5d8SGni5FRtKll2qw/NvmSEgTVKDDDxLf2BtDsOPmgxmk4Zn5SoZFQ1xZyRaYLdbN9wF+RIon4eOZCtNnqnVUtHWukrfXtn1oJZSTsgt7XtHEJq3tYUeLEOul1RAESv3DnNhznPLuukJTy7mz9sYIR8MgBnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746190245; c=relaxed/simple;
-	bh=yJ2br5vO6A0anKaplCB0lpB6gJg7j9WiiLocIpMSJFE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9n0BDbRnSrqcvzjv9kEopODUsQ1ykeBU4BOjvWBq/LxibGeQLi/pn/Tx6jyWlAWqQZuXIY2mdXm8v/l7ES0M+oWcUGVtX7L15iN3fS9nqSwF1wcsBD1nLJpqIauM3tEojMWzDmnICPPlE73sPbw5SI6nb5xSabTTmsGo5r5a8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J0DPn0sc; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1746190255; c=relaxed/simple;
+	bh=I6QAVRToiFrvXi4WBLFZ0QTX2zbLl6IKDM8t8exjEX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uFOlk4kDWkeRnHmlKcY3ReUhoxx+M/SEBMOqZfVGJxUYFH5Au9WacLUWZoufXYfkLcaVIar8/GVLPN7tmFx9mhwm2dKWfEhVNn2Cm5CIJKo72q7KBD4ul6akkyaZ30QSIu1cA58daWth/wv1S/MzvuXFkKJGNyh7A+veimTol+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cHKi5deO; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J0DPn0sc"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5dbfc122b82so9958a12.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:50:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cHKi5deO"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-39ee5a5bb66so1127414f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1746190241; x=1746795041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ld8hRinh9GbkBEMDrzL6i5e2SIxAQjM/p85QdAMHIYE=;
-        b=J0DPn0scdHyczIHPToxyODRtPobzWzxlQgBSb8nfrxPmCWXoXaKrOUm/U3yjHc2xIb
-         KUTVH+o/Lc6STJRJlEOixQuOkgVxBE/irVpnnNgzoZv2VjmXp1xK64OHHRzu8i+QIEsY
-         b23rKINdQJ+d2tUqYPDfn00dQ9mqRjWKsEfSo3+eAq1GY2sON9vpa5Axlx5Zy6/j+mE8
-         KDoB/fP+or8fh1ZrpC8VackeN5EuusR9FAcxGoUqMY5CwhySxzq98Znc57qhArPfrtCb
-         EnN4isZO7Oy0OqhkIttGTAj0xmI2vIR3w2dlQX+TL15al6Y7eNO3GBxr2OtITguetm5/
-         2tmQ==
+        d=linaro.org; s=google; t=1746190252; x=1746795052; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OVMDO5iVYdVsAgbbPuYJnfbdpZGyS2sQg1xq2ZTg1LA=;
+        b=cHKi5deOJ293bf3CRIphFNNfccXuVpGeTQkweNbYsuGDGPRmyAAqXcSf5TKyhYbBxM
+         B6uqGFVseCZrUIpOcXA6AV5eqC/TPGFipFGqvTsnIhQLbiOdj7CBFbETeiQQ2mSLXotS
+         M+46dYNWyhaOiiV9Htsi/iJNJWUVK4XLrHuEr9mUrslroilTvHcIe5Rmd/SARHlCKZQg
+         T7AvoB5qPsb3scm1XUwFntqLFeBFknb2WhhfhT9liYd9nrknsSIPF6NcxWgOOFwrrifk
+         eI2M5D4cP40H9elbFCMdMXJ3J1cp3WMdeEljoW5SX20hKkz6EOafP8sbBiDw8m/04POJ
+         Ukxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746190241; x=1746795041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ld8hRinh9GbkBEMDrzL6i5e2SIxAQjM/p85QdAMHIYE=;
-        b=Vb+WOUc3JJfGFEDLuhtphZN03yAq9bSYvGTorA9qsi3PDVq/eBqP4ZgLuelUCrmQnp
-         CF7AhD5biqmR35d/fhYiYu4s2lRnDUuQ/aGSw4B2MjRklrtVkUOLCEwOOfYZArpR/WO+
-         j++bcmH9sbJGgpM7xIxFIE4FGrFxHTyey36JYGKHtR19hWJ37pJoyH+o+SiiOflBM09J
-         yWmnEa8qbmSuEHOvTRKt5CM8MspTBmX/PwA128MXEOFg/xxvQkC8N0eFTkqKifIEzSNc
-         MrrpCub96+yTQ0WBesW7Z8iB1kiUpCVXNh8w3WvjxDw81YjoyqB3AaFG0UHuhT/boWa/
-         39Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXXbeGvNrgRp+kW++mFxJk8q/IZ343XRmf7P8HDvsbP0deSWSLX7Otl1oZ76tlx18HL/9NRkCszFvmG7go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRXkOG7aJm6FcIMpMz/piL6YSy/xeeK83hc6vHohfBruTakDYe
-	Z3IAoXwSFhrQ56C0AuWgraecvkr/30UQbXX1vkfdQjy8b7BD/VHqnPqYArSE7qeSopVYnbeeLao
-	IMJin+md5Cw7gQmlbhQR3w8f2usqH0tX/vTvsLTTCr7CGy71NccSqcpI=
-X-Gm-Gg: ASbGncuFjtnoN34K5BFbl51K7BroqcCzsqDim7c605+kv+MfCDLZcUQlbyxqx6kAuJh
-	AQS60RyMcAh52w7MQXMZOnxnc18gmXx07LsKo3smIm0bIAVqJcfYgGJB2YUH1hyMNtSt79Hg5Ez
-	WosYWV1YtSc25sf5XOA6WmV9Pgy/xtVZVjpunpwFIMv9rAwDLs6Q==
-X-Google-Smtp-Source: AGHT+IG3MxGSNZIU/DLDRhXYOvvIy6yvhn86oGlso7zA/bv5//6dzg5601r9+ubOpvul9MK0F9INy9LM5qMNZeJUT5g=
-X-Received: by 2002:aa7:c599:0:b0:5de:bcd9:4aa with SMTP id
- 4fb4d7f45d1cf-5f918c09629mr179021a12.3.1746190241144; Fri, 02 May 2025
- 05:50:41 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1746190252; x=1746795052;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OVMDO5iVYdVsAgbbPuYJnfbdpZGyS2sQg1xq2ZTg1LA=;
+        b=L7vFC0iHY84WU8tnWOrlubBxB6Z7qZ0YE8iRD5UUYV05kWR73AvLUY5XYDQmFaU4YD
+         CG0hYi+9LGO/ke27MxNzxwUAHa9InSR+Pnczg9CIVY/gAyXLHedtbxZ/3AGB25HpiGqs
+         hbpVs8zOzD/sjNT2U/nOovNUUpD6BwOE1NL0BFOxo9cY/kVEhjzyR9EKLjvDRdRDYZ7w
+         nSaLbDEBg0fO5/I1s4mKiUq17FHIZAyOGVyNCPEWTHJ4q5ZbeKJGizQ8Quhbbk8pJ7ZZ
+         se9Rp0axl6E6OxJih7Ho0WkuKmu0mWj7GVoTsEyBz1SxPiru8Gq1wZ2MV5MnDO6UWN8s
+         G3hg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTgFtph92kZpic3EPQjPx8zyd4X82fHlMneQTfgDEATiX1fG7KrP1upVwBRD3RZiRnGxiN5vgHEGv/7cI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwI4gr1+kH6aDeG5JCBSWQ25sKarbGkEQY2Tk44m1CtloNMEX7X
+	IA40sEfQHsYoVEW2Z817ZPMh0zgypCrlb00ELXUSbWHLUyiN75IMVZhYQuKA3gE=
+X-Gm-Gg: ASbGncupZD1mojQi8ukOPAyPSA4XaWWk2Qefb8t+DtGp3CnTrMqE+Bp9IQjyy9NGWPI
+	oE3o2nJvXOXn84mK4jgLNu0NH/fW4mIJ9j3Tsr9tViytv+TjrtauiwEK+GqZh/ymVV8hkBXT0IK
+	CvM45iegx4zmI2tBvXC1dy3DVsZ3B+ba3vtHSdtSFTZEh0yEskeBsBLpLhjWj+fGX6qlXCxoHaC
+	CkThHUPCNYe0L/BE0Am+HWhzh2P/J1con4aptl/E9ncqu9xd2Cq5L8AyeTy5kYX0KN5Y795kfm4
+	O8dYuHcFL0HfL2+Eba1ZOHXRyXKWT+sKirISaGNAF/gwynMKnZ6l73d37B50kmE/KrbmRVs3TLI
+	HNlN0H+SurImd8hOJ
+X-Google-Smtp-Source: AGHT+IEpWxj8o8pcRmbEsdS/lBTeH4fuOpeC4FeLOdr9sgL5/27OXW/XpA743y7zHGnyxTK8bCoWtA==
+X-Received: by 2002:a05:6000:186b:b0:3a0:90bf:b9b with SMTP id ffacd0b85a97d-3a099ad40dcmr1861666f8f.8.1746190252191;
+        Fri, 02 May 2025 05:50:52 -0700 (PDT)
+Received: from [192.168.0.35] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecb54sm88637035e9.10.2025.05.02.05.50.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 02 May 2025 05:50:51 -0700 (PDT)
+Message-ID: <6bd73ae8-28eb-42da-b916-fadc114e2fd4@linaro.org>
+Date: Fri, 2 May 2025 13:50:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250428181218.85925-1-npache@redhat.com> <20250428181218.85925-8-npache@redhat.com>
- <CAG48ez2oge4xs1pSz_T9L46g=wQnFyC63kQKsXwbHGRWAxQ+aw@mail.gmail.com>
- <CAA1CXcBHJbs7_DGVR929NOD5G4nkJ3LguDrL9itV8-QS+BNUpg@mail.gmail.com> <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com>
-In-Reply-To: <b6093db0-9b18-4b70-81bd-6c02e80ac9fa@redhat.com>
-From: Jann Horn <jannh@google.com>
-Date: Fri, 2 May 2025 14:50:05 +0200
-X-Gm-Features: ATxdqUHoBHrob4F884q8RfFXZYe_rdAyjR_yWnJbdQTKUjzn_Qy_PjvRzckdGXk
-Message-ID: <CAG48ez0oe6oZ0QTDWr1rtUJFFTLO69sVpdoCmo+CxZUb6L1seg@mail.gmail.com>
-Subject: Re: [PATCH v5 07/12] khugepaged: add mTHP support
-To: David Hildenbrand <david@redhat.com>, Nico Pache <npache@redhat.com>
-Cc: linux-mm@kvack.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	akpm@linux-foundation.org, corbet@lwn.net, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, baohua@kernel.org, 
-	baolin.wang@linux.alibaba.com, ryan.roberts@arm.com, willy@infradead.org, 
-	peterx@redhat.com, ziy@nvidia.com, wangkefeng.wang@huawei.com, 
-	usamaarif642@gmail.com, sunnanyong@huawei.com, vishal.moola@gmail.com, 
-	thomas.hellstrom@linux.intel.com, yang@os.amperecomputing.com, 
-	kirill.shutemov@linux.intel.com, aarcange@redhat.com, raquini@redhat.com, 
-	dev.jain@arm.com, anshuman.khandual@arm.com, catalin.marinas@arm.com, 
-	tiwai@suse.de, will@kernel.org, dave.hansen@linux.intel.com, jack@suse.cz, 
-	cl@gentwo.org, jglisse@google.com, surenb@google.com, zokeefe@google.com, 
-	hannes@cmpxchg.org, rientjes@google.com, mhocko@suse.com, 
-	rdunlap@infradead.org, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 14/23] media: iris: Add handling for no show frames
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>,
+ Stefan Schmidt <stefan.schmidt@linaro.org>, Hans Verkuil
+ <hverkuil@xs4all.nl>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+ linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ 20250417-topic-sm8x50-iris-v10-v7-0-f020cb1d0e98@linaro.org,
+ 20250424-qcs8300_iris-v5-0-f118f505c300@quicinc.com
+References: <20250502-qcom-iris-hevc-vp9-v3-0-552158a10a7d@quicinc.com>
+ <20250502-qcom-iris-hevc-vp9-v3-14-552158a10a7d@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250502-qcom-iris-hevc-vp9-v3-14-552158a10a7d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 2, 2025 at 8:29=E2=80=AFAM David Hildenbrand <david@redhat.com>=
- wrote:
-> On 02.05.25 00:29, Nico Pache wrote:
-> > On Wed, Apr 30, 2025 at 2:53=E2=80=AFPM Jann Horn <jannh@google.com> wr=
-ote:
-> >>
-> >> On Mon, Apr 28, 2025 at 8:12=E2=80=AFPM Nico Pache <npache@redhat.com>=
- wrote:
-> >>> Introduce the ability for khugepaged to collapse to different mTHP si=
-zes.
-> >>> While scanning PMD ranges for potential collapse candidates, keep tra=
-ck
-> >>> of pages in KHUGEPAGED_MIN_MTHP_ORDER chunks via a bitmap. Each bit
-> >>> represents a utilized region of order KHUGEPAGED_MIN_MTHP_ORDER ptes.=
- If
-> >>> mTHPs are enabled we remove the restriction of max_ptes_none during t=
-he
-> >>> scan phase so we dont bailout early and miss potential mTHP candidate=
-s.
-> >>>
-> >>> After the scan is complete we will perform binary recursion on the
-> >>> bitmap to determine which mTHP size would be most efficient to collap=
-se
-> >>> to. max_ptes_none will be scaled by the attempted collapse order to
-> >>> determine how full a THP must be to be eligible.
-> >>>
-> >>> If a mTHP collapse is attempted, but contains swapped out, or shared
-> >>> pages, we dont perform the collapse.
-> >> [...]
-> >>> @@ -1208,11 +1211,12 @@ static int collapse_huge_page(struct mm_struc=
-t *mm, unsigned long address,
-> >>>          vma_start_write(vma);
-> >>>          anon_vma_lock_write(vma->anon_vma);
-> >>>
-> >>> -       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, addr=
-ess,
-> >>> -                               address + HPAGE_PMD_SIZE);
-> >>> +       mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm, _add=
-ress,
-> >>> +                               _address + (PAGE_SIZE << order));
-> >>>          mmu_notifier_invalidate_range_start(&range);
-> >>>
-> >>>          pmd_ptl =3D pmd_lock(mm, pmd); /* probably unnecessary */
-> >>> +
-> >>>          /*
-> >>>           * This removes any huge TLB entry from the CPU so we won't =
-allow
-> >>>           * huge and small TLB entries for the same virtual address t=
-o
-> >>
-> >> It's not visible in this diff, but we're about to do a
-> >> pmdp_collapse_flush() here. pmdp_collapse_flush() tears down the
-> >> entire page table, meaning it tears down 2MiB of address space; and it
-> >> assumes that the entire page table exclusively corresponds to the
-> >> current VMA.
-> >>
-> >> I think you'll need to ensure that the pmdp_collapse_flush() only
-> >> happens for full-size THP, and that mTHP only tears down individual
-> >> PTEs in the relevant range. (That code might get a bit messy, since
-> >> the existing THP code tears down PTEs in a detached page table, while
-> >> mTHP would have to do it in a still-attached page table.)
-> > Hi Jann!
-> >
-> > I was under the impression that this is needed to prevent GUP-fast
-> > races (and potentially others).
-
-Why would you need to touch the PMD entry to prevent GUP-fast races for mTH=
-P?
-
-> > As you state here, conceptually the PMD case is, detach the PMD, do
-> > the collapse, then reinstall the PMD (similarly to how the system
-> > recovers from a failed PMD collapse). I tried to keep the current
-> > locking behavior as it seemed the easiest way to get it right (and not
-> > break anything). So I keep the PMD detaching and reinstalling for the
-> > mTHP case too. As Hugh points out I am releasing the anon lock too
-> > early. I will comment further on his response.
-
-As I see it, you're not "keeping" the current locking behavior; you're
-making a big implicit locking change by reusing a codepath designed
-for PMD THP for mTHP, where the page table may not be exclusively
-owned by one VMA.
-
-> > As I familiarize myself with the code more, I do see potential code
-> > improvements/cleanups and locking improvements, but I was going to
-> > leave those to a later series.
->
-> Right, the simplest approach on top of the current PMD collapse is to do
-> exactly what we do in the PMD case, including the locking: which
-> apparently is no completely the same yet :).
->
-> Instead of installing a PMD THP, we modify the page table and remap that.
->
-> Moving from the PMD lock to the PTE lock will not make a big change in
-> practice for most cases: we already must disable essentially all page
-> table walkers (vma lock, mmap lock in write, rmap lock in write).
->
-> The PMDP clear+flush is primarily to disable the last possible set of
-> page table walkers: (1) HW modifications and (2) GUP-fast.
->
-> So after the PMDP clear+flush we know that (A) HW can not modify the
-> pages concurrently and (B) GUP-fast cannot succeed anymore.
->
-> The issue with PTEP clear+flush is that we will have to remember all PTE
-> values, to reset them if anything goes wrong. Using a single PMD value
-> is arguably simpler. And then, the benefit vs. complexity is unclear.
->
-> Certainly something to look into later, but not a requirement for the
-> first support,
-
-As I understand, one rule we currently have in MM is that an operation
-that logically operates on one VMA (VMA 1) does not touch the page
-tables of other VMAs (VMA 2) in any way, except that it may walk page
-tables that cover address space that intersects with both VMA 1 and
-VMA 2, and create such page tables if they are missing.
-
-This proposed patch changes that, without explicitly discussing this
-locking change.
-
-Just as one example: I think this patch retracts a page table without
-VMA-locking the relevant address space (we hold a VMA lock on VMA 1,
-but not on VMA 2), and we then drop the PMD lock after (temporarily)
-retracting the page table. At that point, I think a racing fault that
-uses the VMA-locked fastpath can observe the empty PMD, and can
-install a new page table? Then when collapse_huge_page() tries to
-re-add the retracted page table, I think we'll get a BUG_ON(). Similar
-thing with concurrent ftruncate() or such trying to zap PTEs, we can
-probably end up not zapping PTEs that should have been zapped?
-
-> The real challenge/benefit will be looking into avoiding taking all the
-> heavy weight locks. Dev has already been thinking about that. For mTHP
-> it might be easier than for THPs. Probably it will involve setting PTE
-> migration entries whenever we drop the PTL, and dealing with the
-> possibility of concurrent zapping of these migration entries.
+On 01/05/2025 20:13, Dikshita Agarwal wrote:
+> Firmware sends the picture type as NO_SHOW for frames which are not
+> supposed to be displayed, add handling for the same in driver to drop
+> them.
+> 
+> Acked-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+> Signed-off-by: Dikshita Agarwal <quic_dikshita@quicinc.com>
+> ---
+>   drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h  | 1 +
+>   drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c | 4 +++-
+>   2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
+> index 806f8bb7f505..666061a612c3 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_defines.h
+> @@ -113,6 +113,7 @@ enum hfi_picture_type {
+>   	HFI_PICTURE_I				= 0x00000008,
+>   	HFI_PICTURE_CRA				= 0x00000010,
+>   	HFI_PICTURE_BLA				= 0x00000020,
+> +	HFI_PICTURE_NOSHOW			= 0x00000040,
+>   };
+>   
+>   enum hfi_buffer_type {
+> diff --git a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> index 3bb326843a7b..2267e220c9ea 100644
+> --- a/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> +++ b/drivers/media/platform/qcom/iris/iris_hfi_gen2_response.c
+> @@ -91,7 +91,9 @@ static int iris_hfi_gen2_get_driver_buffer_flags(struct iris_inst *inst, u32 hfi
+>   	struct iris_inst_hfi_gen2 *inst_hfi_gen2 = to_iris_inst_hfi_gen2(inst);
+>   	u32 driver_flags = 0;
+>   
+> -	if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
+> +	if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_NOSHOW)
+> +		driver_flags |= V4L2_BUF_FLAG_ERROR;
+> +	else if (inst_hfi_gen2->hfi_frame_info.picture_type & keyframe)
+>   		driver_flags |= V4L2_BUF_FLAG_KEYFRAME;
+>   	else if (inst_hfi_gen2->hfi_frame_info.picture_type & HFI_PICTURE_P)
+>   		driver_flags |= V4L2_BUF_FLAG_PFRAME;
+> 
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
