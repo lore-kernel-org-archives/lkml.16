@@ -1,250 +1,277 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2080.outbound.protection.outlook.com [40.107.223.80])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 958D01A2C06;
-	Fri,  2 May 2025 04:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.80
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746160688; cv=fail; b=GzM8A8qEtDT02O0QkfGox+FMnP6RFclKqFqs216mOja9hclTkG6yo2PDe4iFtUM579xVFpnF6L1J4BA+1TEaovzJa0IW3mOMC3j4CwSgP9Iqe1s0IfdcRbxzzis62HeLkqOxPSUTkTpfUusnVDIU9yu96SBZGZOtzHxfr7c3KPY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746160688; c=relaxed/simple;
-	bh=icVHXhZyBN07VZDr1FU5xzA8tBrR69P+8CIX1UjE40w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oRugHEL8shBx6s89O6ch1kjfV/a+iUY0GD7LdemiMF0OetMmeALOea4Eg+TGu0DoRmpguF50uwaL1emn03GCN47Gyikbm0T83ie01v5rUGEiVDNyURe1jWn3mY7vx1P6ZJNqy6kaa/luHoKCC5tXELEuWxBxFNHEgP/d6fXWLLs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=FutVeuit; arc=fail smtp.client-ip=40.107.223.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F091A3156
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 04:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746160933; cv=none; b=hU8xNmG4RCQ9qtaj7Ff2qqnqxF8HEyye5G++8sOAGUksDBw76TOfM4qK7Zkb1iBw79fu4X5bN69aNe/i3LwQCKccP2FGKf8kRuFGxwjrH219En/kb5QIdLO2PkBQeQJBxoTyTbF8GnDuFlkoMzz1ZmiCC6/iAgRbbNR3mXeDkQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746160933; c=relaxed/simple;
+	bh=AS5GCwcO4Mg8AL75Z9J2FHBKkN5+JSl/LX+VBO7oJqQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Krb6jFlUmBlMGdijcO9rCSjYTjp5levExNvqvgv9aVApKVhjwr8ejFponGIo/CMSV3jG0SRXGUin4K1qrbkKjPjx4/sWM4ZimwXY4oIzjpyf12PeiOE0RJUKs+I6W4laccyWiBxtCGEYa2nw3SLHC0r4UW4rBr88vlAJVtIXeU4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lD93qQm0; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="FutVeuit"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M2fgf05tQ+UMTsAboyM5ufLjQluzoZIjkM0/Hmzynny2tDGeo+AqsR7ce2DtEtdsxNcYsbbFFXh2Jk+m2QLFkAMybCbd6LELqtWxNtrCz7zD67HChphcWXfwDG5hvcQ80yeww/FI/gbRy4zoTdswguB9YNz36XXX9kMSw0WZAR/j0cl72k3BCoavbrke79kBlQ/qQO6kmyehljVpVHCFpvJC5euEBNVRvYzkCqzCVl2VwvwQXnApZ15yllEb/yCf/aPTNJjy1BC5P5FlVgPnktwpHNT3M4wWqPsVbaGkmuCpk2qiExiFsyNtD7w4BvV/c/u7/VM1CE7dQgDp/w47jA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NE26+DDznd9PiWs39GUsBJH58++ZiDTkExkLwoP6CAo=;
- b=K4lbCYSpjhGMPlJsbpkN3JNO58o991SZoIcEa5RCjr0Gk3UazrNrmv9VMj74vGLQrIzqD/MGrUgmKp4Mywky8ZNC7qewqaI/zVwd9VxeEmalZPuSCbyExUVOC8Ti0DnJwrHZkqM/oNas06/0qaKzUR8WvYTe++iNImrRX0dlwb9yntAqLyDvXxZ1aYlfErQMVajla329eO0kyRpJnaxneqPOAzBbcHg3c5ik2yBatpC15PvvsakoHEL+SwA5Z95Xr8CQnWsfgo5KKgRy1FjhysDzB4UX18Pv0bOSNB4U4YUExXDEwbc97O5pG2Ac4Cj2od6Rcz6XSPzy8PNx4fmYiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NE26+DDznd9PiWs39GUsBJH58++ZiDTkExkLwoP6CAo=;
- b=FutVeuitb8gjVz05y6m8/CWlgiVgYBCyla+9CpYAFz9olc7t0PJV9ew4JmF+2F1GmXx18woks75GDdWKgUVEy5++OLT68Ar6KZFcNVU6I3F785GuYY/MhhvUnI8cI+d+O7PC6yhUiQG92crtxSu3G5rmHxyhIXekfw5TUW59ASbVjDu5Jhbz9P/NEX1/HZ+NhVdSRCHAGxx9nBdgsDX1KMSrfoAnS/MR7U5nRgMa7CFGxHh79nEk3yqiZpNvk/2MjKabx4wqfvpkmw0jtBb5sOPqwQLpEiB9XKMWKfv6GBE5RFZ1dhErJpiocIDmR8OFowFXM3uGEdGZWHvgf9gpBg==
-Received: from BN9PR03CA0926.namprd03.prod.outlook.com (2603:10b6:408:107::31)
- by BY5PR12MB4324.namprd12.prod.outlook.com (2603:10b6:a03:209::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.23; Fri, 2 May
- 2025 04:38:00 +0000
-Received: from BN2PEPF000044AA.namprd04.prod.outlook.com
- (2603:10b6:408:107:cafe::ef) by BN9PR03CA0926.outlook.office365.com
- (2603:10b6:408:107::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8655.41 via Frontend Transport; Fri,
- 2 May 2025 04:38:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN2PEPF000044AA.mail.protection.outlook.com (10.167.243.105) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8699.20 via Frontend Transport; Fri, 2 May 2025 04:37:59 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 1 May 2025
- 21:37:48 -0700
-Received: from robelin-Precision-3660.nvidia.com (10.126.231.35) by
- rnnvmail201.nvidia.com (10.129.68.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Thu, 1 May 2025 21:37:46 -0700
-From: Robert Lin <robelin@nvidia.com>
-To: <thierry.reding@gmail.com>, <daniel.lezcano@linaro.org>,
-	<jonathanh@nvidia.com>, <tglx@linutronix.de>, <pohsuns@nvidia.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-	<sumitg@nvidia.com>, Robert Lin <robelin@nvidia.com>
-Subject: [PATCH v7 1/3] clocksource/drivers/timer-tegra186: add WDIOC_GETTIMELEFT support
-Date: Fri, 2 May 2025 12:37:25 +0800
-Message-ID: <20250502043727.396896-2-robelin@nvidia.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250502043727.396896-1-robelin@nvidia.com>
-References: <20250502043727.396896-1-robelin@nvidia.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lD93qQm0"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5421OAjj018172
+	for <linux-kernel@vger.kernel.org>; Fri, 2 May 2025 04:42:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7j5UxYN6C9Dd6qHXGE97a7YLEYkg4By51iUOqA+ylAQ=; b=lD93qQm0lfGtQu2b
+	Qol+d3LR4qo4+nRMOn5UzV0/SgDWNud83Pb+Tb1RKqYAJjqowwungs3q4s2MUfb6
+	7PXzNa05DwwAk2Rj1KaQsViGT+LbFMTslw56wXt5S4ADZssd0iVNijqc72MCH2l6
+	30Ndlv6aAvcHhBga9oSw6ybxw3mAwHQpEIpS1CiwVdJO29HkpbWoihIBbqjIwyKC
+	UBZ30zVcfnRHVBUtSNVVIBEI6fDQvOe3F6REV3Q6NwDIuRC03LCduxDPZfxwG8Cu
+	n1Int1HTfaIThrO4uv7x/l7f9t2By+WhIdTJpAy3ufJ9pyI+4lyiGiJNNFzybgLG
+	wm+Kow==
+Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 46b6u3y5xs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:42:10 +0000 (GMT)
+Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-736c1ea954fso979618b3a.3
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 21:42:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746160929; x=1746765729;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7j5UxYN6C9Dd6qHXGE97a7YLEYkg4By51iUOqA+ylAQ=;
+        b=sfvywepJmRwDqyiipmtEtApC7Rps1JWFrSwHlG1N41BTU+i/XfP+LZbTHAjvo/91IZ
+         jKRcpkqRE6HyBN5YqaKC+PdfMXNIku3rfqBKADKz5E2BTzHmYv0NaM65eHypsxzBp3PI
+         GgwgjBNvrsrgMtVaQ6WjHNATgy0iTXWg2h9T87sILDbzFukV6AuojG9oROg0kHe1jhdf
+         tfgLbsQSS+EKeznWmM8nqP7IxOqWYSss8ANHf74Ssy/8y8gDKiAG4MtkaN+WJJ6zJOof
+         r7YIxTKAvAM2BpP7oP2P9BEQN5M+MhpXHgCO8jH0dS8FIWnz9cNAlcW7IUYrjrXtpDhH
+         i5rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUnEkZvZMyC633shLGwU4qaTo5VhEjKmVMPFIROLqUcVvlNV7vHFik6WOyzBr6Kaor+3f6/jdxsEdfBe98=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy3s+54QT/BSD3TRDuq/isEmmQteR1FPx+NOh95ratlkMjc++9f
+	zKkoRObXCB4l07rSdpdNR+HHszsNX8Las7aKWGoDEeYNOrQjyUV3LTpPjIT+YBqJ9y3CFswnbwY
+	7gpxhAGk6fcfpOhDnIDWyjPVM5r6dHEe0/gt08q/UqFD+8Q4t/ReFrdxulHD5K/8=
+X-Gm-Gg: ASbGncubOUlud7E81XDT+cxaulm+1GFq01NTqpatfkcS1hY9EzKu/aiHNN8UVG+OwMQ
+	c+HaSdrcFemMP0ofHrZRgcQOqTRgPXdBGdjPyG42FO5CLq0fVKYz82owlJjAlm3lg1ywHnu6WwM
+	xOCKnsMjGXKYWpgIlgFfEGecccYOZYWjDoVkghJUXApw9CNk224VqIUqcTirtbqTGNGFjEJLmbq
+	C+nl9lwaU1KD98EtlrtemE35X4Ow/q4wN5/FbXNeBb8/0AJd7vpJARpNDHCEbZ7+sS4cryQsKhR
+	SQIxaTLk5lcZBN4W6YetDF4beSQiM4E3jq50dCO9OoLdzA50A/21
+X-Received: by 2002:a05:6a00:4294:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-74058b23ef3mr1866200b3a.21.1746160928682;
+        Thu, 01 May 2025 21:42:08 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGBQrj67WLhBG3Hq96DBg+5Opa1dABnH/Q1s+TspcF/KflEqOJ5Mrv0bnI/pESCH+hoqmXB/g==
+X-Received: by 2002:a05:6a00:4294:b0:736:6ecd:8e32 with SMTP id d2e1a72fcca58-74058b23ef3mr1866183b3a.21.1746160928305;
+        Thu, 01 May 2025 21:42:08 -0700 (PDT)
+Received: from [10.151.37.217] ([202.46.23.19])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74059021483sm590790b3a.93.2025.05.01.21.42.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 01 May 2025 21:42:07 -0700 (PDT)
+Message-ID: <09579b2c-f312-4c8a-b57a-b240204cd733@oss.qualcomm.com>
+Date: Fri, 2 May 2025 10:12:02 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000044AA:EE_|BY5PR12MB4324:EE_
-X-MS-Office365-Filtering-Correlation-Id: ace08967-4c28-400d-86f8-08dd89331e52
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|36860700013|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ul7iRBnuZgs2/pyQ718fDFaXFqaBd0ZUOFjN2V6IiuC4HZto2fOx/Qr0By4j?=
- =?us-ascii?Q?ytkR4jKBYlTK5pZj4SuADOgLakJaCkY7GH6lJ3oVzTSpCcezEDkjxANfGmXP?=
- =?us-ascii?Q?pBY48nOxywbvrUyNZoBx8U2MFA4BDaWvdbblDcDJxjLXpVI7yJ+CxJatdOZC?=
- =?us-ascii?Q?HuAL37DWvmlk8HIMlh/uCAOLwmShgfhSvqARw/BcYF5PTzBfNXEYZiR4RkzZ?=
- =?us-ascii?Q?RxX2cEULPRqbTqcuP2RdwxWgLa660tvP41MPLD4kkkKLRo2RSrzO/71CHboj?=
- =?us-ascii?Q?hzLjOuK1EKDWY6MNFWQGpr3wc55lnClJUA4sLcJ+nMge6juRqph56m+IhZI1?=
- =?us-ascii?Q?44FsFMS5shynN+7mt7Tg/hqgqDbKP4++pxyUcFDfLUUvz/W9NmNpJlPXFG/m?=
- =?us-ascii?Q?NXYQrbPTFy9uBiTkJzFd9JBYoKEDA8S8xRnZjVnCE/2zGsiwlTS8MpQmKcBY?=
- =?us-ascii?Q?Z57kAdsApaaTC+pCAzcJ5oq8o32xPZgZMAG3HvJXhGz0WKQ1g8V7AZUMyTIh?=
- =?us-ascii?Q?KGjFKRFZtqYKeVY5P2BX4iPT9YVOMMWWEpXEX3FpDhh1oStjN3De0cpXzY+m?=
- =?us-ascii?Q?EGE4+XrUeSjvXlKSqMRjWWta7FKWbFI1W0oxB80WL9TQ7ACRfMn/hNm0z6mH?=
- =?us-ascii?Q?q1L0YFJz+obFuP97zgm22QciXuCKfIxJsMcA22fohIEh7fJHUHFlXJfdGPo5?=
- =?us-ascii?Q?cW8F+oxskXgpluc7Tt36K7j+/yh4ugR0iTXQPbQAS8JZS45cJsQh0gDbJlZt?=
- =?us-ascii?Q?CG1DxfC2hdqgv9f+vioccPsIvJUjE9K4+Ni48Hp/0ZHkJjT+MMJB8SUWifjT?=
- =?us-ascii?Q?XYSVlDJxE18nETU+i8UWlekD51PZjNKIBpWRmCZn/NiG+cTlBI/QJuBbqYW4?=
- =?us-ascii?Q?96ZP94TDj7zP8lEHe7En1657jBlzFnhYoq199/G2i5xIaDMD1R55w+SgWOzX?=
- =?us-ascii?Q?Je2/D+fthscle2La2+NCfhGi8W0l08eY2ZIO1lPxE2jz7sO6qF9u/jH4+nUb?=
- =?us-ascii?Q?AZT3ssiYtqKxO0rv6lfOLHAZVTx10LfXtwiWg4tEGqDRVOIT+Y/bN/HXx6pq?=
- =?us-ascii?Q?xrtqir3P8eo3OMFcUpQ0Y60n1VmCuv+oexJm9A6KBgNi0prGyPXp/kw58lA8?=
- =?us-ascii?Q?8BMdZsRifl4R81m4KgTqq9gAekQ1UmUrHkAEMOZGGEB4waTBiM9bindEI+1F?=
- =?us-ascii?Q?IOzR/64HFKlVg8Sk1rm7Z+vOmOXuuXeLpV+v3bb2zJ9mllQMPzyW54JQGNa9?=
- =?us-ascii?Q?t8zoT3kTdS5Xw+g7jnzCbXzYkgmomLBiuvFsSlXodsFraKz5ut+0PGlQZ/LP?=
- =?us-ascii?Q?fbd+DKMMrMBZBm4SO5oqW/LIB3A+3XSabIBAMtAJThQ70OhioVsXkaImlmo8?=
- =?us-ascii?Q?WF4B6QlWVpBFFH7CU0FVqpy/x78iq5wgFFJdk98xcpKJVQX/99XaH8sTLaA0?=
- =?us-ascii?Q?7oA/Y4cWky3hYeAP4Ojpw40gq0sCtFBzi1WlNaPp8bh3Smy4FHo1Cq7deNrt?=
- =?us-ascii?Q?FXOeaTXn8tssemBal0ZXQqOukbnwGBom1kol?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(36860700013)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2025 04:37:59.9546
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ace08967-4c28-400d-86f8-08dd89331e52
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000044AA.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4324
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/5] watchdog: qcom: add support to read the restart
+ reason from IMEM
+Content-Language: en-US
+To: Bryan O'Donoghue <bod.linux@nxsw.ie>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+ <linux@roeck-us.net>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+References: <20250416-wdt_reset_reason-v2-0-c65bba312914@oss.qualcomm.com>
+ <20250416-wdt_reset_reason-v2-5-c65bba312914@oss.qualcomm.com>
+ <ebd4790b-e7aa-45b1-b7d7-9d1b331ee842@nxsw.ie>
+From: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+In-Reply-To: <ebd4790b-e7aa-45b1-b7d7-9d1b331ee842@nxsw.ie>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=Bv6dwZX5 c=1 sm=1 tr=0 ts=68144d22 cx=c_pps a=mDZGXZTwRPZaeRUbqKGCBw==:117 a=j4ogTh8yFefVWWEFDRgCtg==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=EUspDBNiAAAA:8 a=Amq28VNnWxlBxfWyqssA:9 a=QEXdDO2ut3YA:10
+ a=zc0IvFSfCIW2DFIPzwfm:22
+X-Proofpoint-GUID: sYPSWLeLJuc5Fi0Isa39HAFqQGEKPcVl
+X-Proofpoint-ORIG-GUID: sYPSWLeLJuc5Fi0Isa39HAFqQGEKPcVl
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDAzNCBTYWx0ZWRfX6J4hxEwf2BnW MDkW6wBmxyOY8uTqy/gioCQZJLgA7BAdHKKnxQ6ulgAS62Vf2JlT2s5RuRFoTZz8ywVEPIn7Jwf JGz0NxLBsHrma7ls1ydmCo4r6KePLnyI6bN38FpnB3u4dT/RpicreV3NKXgQwVtzPQj7SMIwd1l
+ u3Rexxgi449whI3UrBssTw7pAVyNCP0rqdEzFot0PUcKfdv43rb+wnV0f7MQrgH7q5rlojK+FFl 1mU95RXeV7nKiad9lStGbwxwvWQN4ipf4aqAJNIBm7cxOYT6kBKFXB2UMGV58ZpqGbymjDRu04F oWE05klJdcZYSU43b/0LDd2D0wY3o6aO+0SehmJf3lkKQKvnK9KVYb6dUABPfjrQRBq2i6+R8cB
+ +MOgeNZ0bf6SJTvZiaiJ7xzJRf0bRMAVe6h8KvD9QWyYwLTNNW1/kVsOlsQM7wrOv2CDemuU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-01_06,2025-04-24_02,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0 lowpriorityscore=0
+ impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020034
 
-From: Pohsun Su <pohsuns@nvidia.com>
 
-This change adds support for WDIOC_GETTIMELEFT so userspace
-programs can get the number of seconds before system reset by
-the watchdog timer via ioctl.
+On 5/1/2025 5:31 AM, Bryan O'Donoghue wrote:
+> On 16/04/2025 09:29, Kathiravan Thirumoorthy wrote:
+>> When the system boots up after a watchdog reset, the EXPIRED_STATUS bit
+>> in the WDT_STS register is cleared. To identify if the system was restarted
+>> due to WDT expiry, bootloaders update the information in the IMEM region.
+>> Update the driver to read the restart reason from IMEM and populate the
+>> bootstatus accordingly.
+> Which bootloaders ?
+>
+> Do you mean bootrom or one of the subsequent phase bootloaders ?
 
-Signed-off-by: Pohsun Su <pohsuns@nvidia.com>
-Signed-off-by: Robert Lin <robelin@nvidia.com>
----
- drivers/clocksource/timer-tegra186.c | 64 +++++++++++++++++++++++++++-
- 1 file changed, 63 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-tegra186.c b/drivers/clocksource/timer-tegra186.c
-index ea742889ee06..8d5698770cbd 100644
---- a/drivers/clocksource/timer-tegra186.c
-+++ b/drivers/clocksource/timer-tegra186.c
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0-only
- /*
-- * Copyright (c) 2019-2020 NVIDIA Corporation. All rights reserved.
-+ * Copyright (c) 2019-2025 NVIDIA Corporation. All rights reserved.
-  */
- 
-+#include <linux/bitfield.h>
- #include <linux/clocksource.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
-@@ -30,6 +31,7 @@
- 
- #define TMRSR 0x004
- #define  TMRSR_INTR_CLR BIT(30)
-+#define  TMRSR_PCV GENMASK(28, 0)
- 
- #define TMRCSSR 0x008
- #define  TMRCSSR_SRC_USEC (0 << 0)
-@@ -46,6 +48,9 @@
- #define  WDTCR_TIMER_SOURCE_MASK 0xf
- #define  WDTCR_TIMER_SOURCE(x) ((x) & 0xf)
- 
-+#define WDTSR 0x004
-+#define  WDTSR_CURRENT_EXPIRATION_COUNT GENMASK(14, 12)
-+
- #define WDTCMDR 0x008
- #define  WDTCMDR_DISABLE_COUNTER BIT(1)
- #define  WDTCMDR_START_COUNTER BIT(0)
-@@ -235,12 +240,69 @@ static int tegra186_wdt_set_timeout(struct watchdog_device *wdd,
- 	return 0;
- }
- 
-+static unsigned int tegra186_wdt_get_timeleft(struct watchdog_device *wdd)
-+{
-+	struct tegra186_wdt *wdt = to_tegra186_wdt(wdd);
-+	u32 expiration, val;
-+	u64 timeleft;
-+
-+	if (!watchdog_active(&wdt->base)) {
-+		/* return zero if the watchdog timer is not activated. */
-+		return 0;
-+	}
-+
-+	/*
-+	 * Reset occurs on the fifth expiration of the
-+	 * watchdog timer and so when the watchdog timer is configured,
-+	 * the actual value programmed into the counter is 1/5 of the
-+	 * timeout value. Once the counter reaches 0, expiration count
-+	 * will be increased by 1 and the down counter restarts.
-+	 * Hence to get the time left before system reset we must
-+	 * combine 2 parts:
-+	 * 1. value of the current down counter
-+	 * 2. (number of counter expirations remaining) * (timeout/5)
-+	 */
-+
-+	/* Get the current number of counter expirations. Should be a
-+	 * value between 0 and 4
-+	 */
-+	val = readl_relaxed(wdt->regs + WDTSR);
-+	expiration = FIELD_GET(WDTSR_CURRENT_EXPIRATION_COUNT, val);
-+	if (WARN_ON(expiration > 4))
-+		return 0;
-+
-+	/* Get the current counter value in microsecond. */
-+	val = readl_relaxed(wdt->tmr->regs + TMRSR);
-+	timeleft = FIELD_GET(TMRSR_PCV, val);
-+
-+	/*
-+	 * Calculate the time remaining by adding the time for the
-+	 * counter value to the time of the counter expirations that
-+	 * remain.
-+	 */
-+	timeleft += (((u64)wdt->base.timeout * USEC_PER_SEC) / 5) * (4 - expiration);
-+
-+	/*
-+	 * Convert the current counter value to seconds,
-+	 * rounding up to the nearest second. Cast u64 to
-+	 * u32 under the assumption that no overflow happens
-+	 * when coverting to seconds.
-+	 */
-+	timeleft = (timeleft + USEC_PER_SEC / 2) / USEC_PER_SEC;
-+
-+	if (WARN_ON(timeleft > U32_MAX))
-+		return U32_MAX;
-+
-+	return lower_32_bits(timeleft);
-+}
-+
- static const struct watchdog_ops tegra186_wdt_ops = {
- 	.owner = THIS_MODULE,
- 	.start = tegra186_wdt_start,
- 	.stop = tegra186_wdt_stop,
- 	.ping = tegra186_wdt_ping,
- 	.set_timeout = tegra186_wdt_set_timeout,
-+	.get_timeleft = tegra186_wdt_get_timeleft,
- };
- 
- static struct tegra186_wdt *tegra186_wdt_create(struct tegra186_timer *tegra,
--- 
-2.34.1
+It is updated by the XBL. I shall mention it explicitly.
 
+
+>
+> Please be specific about which bootloader populates this data i.e. if I
+> switch my bootloader to u-boot do I loose the added flag ?
+>
+>> For backward compatibility, keep the EXPIRED_STATUS bit check. Add a new
+>> function qcom_wdt_get_restart_reason() to read the restart reason from
+>> IMEM.
+>>
+>> Signed-off-by: Kathiravan Thirumoorthy <kathiravan.thirumoorthy@oss.qualcomm.com>
+> What I'd really love to see here is an example of reading out the data
+> from sysfs.
+>
+> How do I as a user/consumer of this new functionality parse the new data
+> it provides ?
+>
+> Ideally do this in the commit log and recommend doing it in the cover
+> letter to, as people don't always read both when commenting on patches.
+
+
+Sure, will mention the sysfs path and its output in the commit log and 
+cover letter.
+
+
+>
+>> ---
+>> Changes in v2:
+>> 	- Use the syscon API to access the IMEM region
+>> 	- Handle the error cases returned by qcom_wdt_get_restart_reason
+>> 	- Define device specific data to retrieve the IMEM compatible,
+>> 	  offset and the value for non secure WDT, which allows to
+>> 	  extend the support for other SoCs
+>> ---
+>>    drivers/watchdog/qcom-wdt.c | 47 +++++++++++++++++++++++++++++++++++++++++++--
+>>    1 file changed, 45 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/watchdog/qcom-wdt.c b/drivers/watchdog/qcom-wdt.c
+>> index 006f9c61aa64fd2b4ee9db493aeb54c8fafac818..94ba9ec9907a19854cd45a94f8da17d6e6eb33bc 100644
+>> --- a/drivers/watchdog/qcom-wdt.c
+>> +++ b/drivers/watchdog/qcom-wdt.c
+>> @@ -7,9 +7,11 @@
+>>    #include <linux/interrupt.h>
+>>    #include <linux/io.h>
+>>    #include <linux/kernel.h>
+>> +#include <linux/mfd/syscon.h>
+>>    #include <linux/module.h>
+>>    #include <linux/of.h>
+>>    #include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>>    #include <linux/watchdog.h>
+>>
+>>    enum wdt_reg {
+>> @@ -39,6 +41,9 @@ static const u32 reg_offset_data_kpss[] = {
+>>    };
+>>
+>>    struct qcom_wdt_match_data {
+>> +	const char *compatible;
+>> +	unsigned int restart_reason_offset;
+>> +	unsigned int non_secure_wdt_val;
+>>    	const u32 *offset;
+>>    	bool pretimeout;
+>>    	u32 max_tick_count;
+>> @@ -175,6 +180,15 @@ static const struct watchdog_info qcom_wdt_pt_info = {
+>>    	.identity	= KBUILD_MODNAME,
+>>    };
+>>
+>> +static const struct qcom_wdt_match_data match_data_ipq5424 = {
+>> +	.compatible = "qcom,ipq5424-imem",
+>> +	.restart_reason_offset = 0x7b0,
+>> +	.non_secure_wdt_val = 0x5,
+>> +	.offset = reg_offset_data_kpss,
+>> +	.pretimeout = true,
+>> +	.max_tick_count = 0xFFFFFU,
+>> +};
+>> +
+> You should separate the addition of your compatibles and their
+> descriptor tables from generic functional extensions.
+>
+> i.e. add the compat string and the above table in a subsequent patch.
+
+
+Got it. Will split the patch into 2.
+
+
+>
+>>    static const struct qcom_wdt_match_data match_data_apcs_tmr = {
+>>    	.offset = reg_offset_data_apcs_tmr,
+>>    	.pretimeout = false,
+>> @@ -187,6 +201,29 @@ static const struct qcom_wdt_match_data match_data_kpss = {
+>>    	.max_tick_count = 0xFFFFFU,
+>>    };
+>>
+>> +static int  qcom_wdt_get_restart_reason(struct qcom_wdt *wdt,
+>> +					const struct qcom_wdt_match_data *data)
+>> +{
+>> +	struct regmap *imem;
+>> +	unsigned int val;
+>> +	int ret;
+>> +
+>> +	imem = syscon_regmap_lookup_by_compatible(data->compatible);
+>> +	if (IS_ERR(imem))
+>> +		return PTR_ERR(imem);
+>> +
+>> +	ret = regmap_read(imem, data->restart_reason_offset, &val);
+>> +	if (ret) {
+>> +		dev_err(wdt->wdd.parent, "failed to read the restart reason info\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	if (val == data->non_secure_wdt_val)
+>> +		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>    static int qcom_wdt_probe(struct platform_device *pdev)
+>>    {
+>>    	struct device *dev = &pdev->dev;
+>> @@ -267,8 +304,13 @@ static int qcom_wdt_probe(struct platform_device *pdev)
+>>    	wdt->wdd.parent = dev;
+>>    	wdt->layout = data->offset;
+>>
+>> -	if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>> -		wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>> +	ret = qcom_wdt_get_restart_reason(wdt, data);
+>> +	if (ret == -ENODEV) {
+>> +		if (readl(wdt_addr(wdt, WDT_STS)) & 1)
+>> +			wdt->wdd.bootstatus = WDIOF_CARDRESET;
+>> +	} else if (ret) {
+>> +		return ret;
+>> +	}
+>>
+>>    	/*
+>>    	 * If 'timeout-sec' unspecified in devicetree, assume a 30 second
+>> @@ -322,6 +364,7 @@ static const struct dev_pm_ops qcom_wdt_pm_ops = {
+>>    };
+>>
+>>    static const struct of_device_id qcom_wdt_of_table[] = {
+>> +	{ .compatible = "qcom,apss-wdt-ipq5424", .data = &match_data_ipq5424 },
+>>    	{ .compatible = "qcom,kpss-timer", .data = &match_data_apcs_tmr },
+>>    	{ .compatible = "qcom,scss-timer", .data = &match_data_apcs_tmr },
+>>    	{ .compatible = "qcom,kpss-wdt", .data = &match_data_kpss },
+>>
+>> --
+>> 2.34.1
+>>
+>>
