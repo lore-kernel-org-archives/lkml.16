@@ -1,143 +1,119 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717D01917CD;
-	Fri,  2 May 2025 03:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F4327718
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 03:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746157813; cv=none; b=PH2lkXl0rAwK9I0Kj0Nyn9AyoBHX9ZCvOGeJOr0z3M4rcVk2p/zaVW7mfDqhFusX+rDwCUBY49R2Y75BD3iksyuVxVOFFliRxZFYdEfv5aYppKF26F5v5RfIXSmpQywz1uUWc84HYNqBW+uLpCYHv14zdZeKL+4uKlYW51Cv8YQ=
+	t=1746157997; cv=none; b=LHgE2CgysIq+Fud7IbCFBC1T09EYhMdQIli69CabiF/xo0UqhSYR32p3BbRSx258JWKlVoX8r0K62sH3FPprP/aCAy5qBepfd/+Mz0IlFZOCjrcLDxah36py4ICb097StCbAXYLMssz+7Kdm/HEsuqcoCmgMuOXuPoerIn8cObc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746157813; c=relaxed/simple;
-	bh=3c1nlzF8RZhIa2IfkWpFCztfXW4famdPY+LgthBQ6Fo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DQuSEJApiJyDvE4Iirt+8ZRCUBDsgP9XbmFY8f9jt733IzVhtUVxctsOnYbQTUfYBpQcbUDmhw6hMm5YtKXDuDMdF8qErbMA0bkKwV7pXP83XavnqPIZKF+YYBer5nZgPCTfWeG27ZM3Hc3zE3700V+GfkYhms5dzEhPgx4BshE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fBR6tDKb; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746157997; c=relaxed/simple;
+	bh=3guqmtCUgZU4RrlWuBDVyZE/GiHf7japNUzdE+nkYF0=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=k9cIRptU4cE1GiifOtL58jH6oziFETRo/5upRMrXPCDGPNlnxVQ/wu6PMoHtTQhnIUEl+mcWhe2JPUuS9btzp/o4pqofajNfGN4wRaKeFpgD4ZtHYmAnLStV9vDBQGk4GXxmVRYDXqI0NQ/5L8WHmGZD+K9be8ibSNCh1GGS46I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=immunant.com; spf=none smtp.mailfrom=immunant.com; dkim=pass (2048-bit key) header.d=immunant-com.20230601.gappssmtp.com header.i=@immunant-com.20230601.gappssmtp.com header.b=UKPCcbQ8; arc=none smtp.client-ip=209.85.161.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=immunant.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=immunant.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fBR6tDKb"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3031354f134so1371591a91.3;
-        Thu, 01 May 2025 20:50:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=immunant-com.20230601.gappssmtp.com header.i=@immunant-com.20230601.gappssmtp.com header.b="UKPCcbQ8"
+Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-605f7d3215cso820374eaf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 20:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746157812; x=1746762612; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q9Fmb2BpvFenPgSBSx7aFW99AUa48pruOHMxG4AYI/0=;
-        b=fBR6tDKb6ZhxKjwnaP1yus7+YeGppo85BGRAywrM//dJEphUR7dqhycbtHdDOrnPrr
-         QgIX283qkX8l+GX5/U9oHjYWGLQAjc9EPV1z+h0wfkqVXbt+mlPFOM62arZ3MQ1Hfnwy
-         8+R7Nvv61/SMDPoi6AE/ixykfpc28uBLcjrhooOU6CRtcKI57HYCYYBjgzBI6DxABQ4T
-         YcYdPPwqMvg1MPF9wxDyssHl9eaeaM9PqjfmNQDRSgBBuTV8uupcXMPF4UbkIg+75+5m
-         9SZx2a6hPBLLXKnaQ8K0EhhyLIkyF86xYdDS0/oyg47ra+mThGCPx+0FASCFkhFlGccM
-         Frbg==
+        d=immunant-com.20230601.gappssmtp.com; s=20230601; t=1746157995; x=1746762795; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ojFTK86BOKHs5Sffk/1VcJDUeg7+bF9Sd/43yKdhw7c=;
+        b=UKPCcbQ8wN9Db1R8g3fkykokiLykFb+LBYw0WeP7hxmAFjD9I/uPHo5gSVNNzTCk75
+         EgwJxB0Xcj/mE3onGcMVEzBmA3+1muEZh+/8nsO0TsbjOaCXGVdtN4RBVvJwPqLhFZKY
+         xzykgSpVwpFVhRWm7/dJZDHRHWuKYBaAgnnvaI90AJjmUUiZolx096Dww6Wxr/lPJyPS
+         4G7TP70OkxFZNKuhHlxtbovlAo4tRL2O1iI4U4gJtovXFhhCyri2T+w5wmvibrcsM2Rg
+         +etj/Ts9Mo2lYMaCMsMitJYhR7afuF+Sge37sxM3MkBKcVNMlvfJIKzEe5Rx3v3lylGh
+         EaUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746157812; x=1746762612;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q9Fmb2BpvFenPgSBSx7aFW99AUa48pruOHMxG4AYI/0=;
-        b=jl4LzkE88j/9fZdfnhHNvguadqwAVAHH1e+pHKrD531mdE/EdToaHFXvu0wKsrNIvS
-         jovoUAKoO19n83jSB2OIApyIHXjb1Cd4dgByNkqMwvhUlIwdAB+7y50YB5pGb0MtZBTp
-         eVwGkGOz4tlCqVKfcSiHtwpfLbFxUMvzcG5VDMjvV7l0ZXB1tpuTAy0NKhLj1WiAFFQn
-         L1Zq8Lax3g4qr8n9Veg01DPQ6lK+7bfz16EVhob1SMzeDN0DUhkM3WFGr1D2kMi+qHCa
-         Me00j3SWTLogEY01KVFgquO+7dKmgtRft+hTlacSI0WTVci/yD0ClBw5nVUyLB+8uF4x
-         efdA==
-X-Forwarded-Encrypted: i=1; AJvYcCV8qNlUdxjJ90eCIcra4zIf5ikoTDLY+gLtdOfQ2v/fywtNeWT+lKGYhb6vod/h6vrE80Wa5D03G+vMMbhxrx7j@vger.kernel.org, AJvYcCXCpsdqx3chPR15DeDoXt7hEIDkLyqfzu/xA+TTUPAJHF6sHyEwWsvg5iLbj+IT0+HMmXkeDziCEz6AmG+c@vger.kernel.org, AJvYcCXkDnU/3pPn5UDEkYQxRXwZVkJevBvejt+Z9pPzSDblnHa7WxZsngmQM0NQYa1DPOykI9tEfDElfOo=@vger.kernel.org, AJvYcCXzz/U5Qiy0uf840uY/zKj9V3qPKaxGNgamRXPSpFRwQcKQEmrASKxLrtG2Zcrbo0iC+zFE7sYiEvMLo20=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK703ZBqSu7KvQsTiaTZj5r+jEpS/doyPRQiX+w56B+4ls17eO
-	IEHZMr4ECjec2Szx1jc4e8ZEPSeTXf3owT0Uk/tvTRJZmbQSDddL
-X-Gm-Gg: ASbGncvAhYCH3LD9GbxjSVDFDbuQBaXSfRAexUuLvkB46qI5+BZIjDh7d1Tn23Letc9
-	e9Tgf3/e4z7oWL1ywuUbldEbM7c0kLrp+KjTAi3yC0atwpOzVCK+rUtBtq7GijagqqJRhiYaYt9
-	okvEWWSgZGjN+eQNo88/bNtvxNNHNq5xFmn/iu3pDjunHn7GLNh7WRoM2xw0u3QO670Um7Qpym4
-	7RumEnT2aRqiuIhqy6BJ3joOGsZJsW0ZnKpRDT89TGuGDLUR0q7ZxOB8WgC5zdJSNx7GliBvST7
-	SZ9+gGXpIj4YGcka692mGaxuJE0UMauvQ2P1gXND
-X-Google-Smtp-Source: AGHT+IFusSWo1BAwwXVBEu66ZFOQHwzVAGyr3p079qazgApC+Wzq8zZL3bsDTFLCQouzn2+zKuFDTg==
-X-Received: by 2002:a17:90b:586c:b0:2f8:b2c:5ef3 with SMTP id 98e67ed59e1d1-30a4e59f952mr2796823a91.14.1746157811349;
-        Thu, 01 May 2025 20:50:11 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30a4748e852sm1776417a91.23.2025.05.01.20.50.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 May 2025 20:50:10 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id CE99B420A6AB; Fri, 02 May 2025 10:50:07 +0700 (WIB)
-Date: Fri, 2 May 2025 10:50:07 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Nicolin Chen <nicolinc@nvidia.com>, jgg@nvidia.com,
-	kevin.tian@intel.com, corbet@lwn.net, will@kernel.org
-Cc: robin.murphy@arm.com, joro@8bytes.org, thierry.reding@gmail.com,
-	vdumpa@nvidia.com, jonathanh@nvidia.com, shuah@kernel.org,
-	jsnitsel@redhat.com, nathan@kernel.org, peterz@infradead.org,
-	yi.l.liu@intel.com, mshavit@google.com, praan@google.com,
-	zhangzekun11@huawei.com, iommu@lists.linux.dev,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
-	linux-kselftest@vger.kernel.org, patches@lists.linux.dev,
-	mochs@nvidia.com, alok.a.tiwari@oracle.com, vasant.hegde@amd.com
-Subject: Re: [PATCH v3 16/23] Documentation: userspace-api: iommufd: Update
- vQUEUE
-Message-ID: <aBRA75V9l9WlI2Q3@archie.me>
-References: <cover.1746139811.git.nicolinc@nvidia.com>
- <0beddeaaa4a8a7a45ce93ff21c543ae58be64908.1746139811.git.nicolinc@nvidia.com>
+        d=1e100.net; s=20230601; t=1746157995; x=1746762795;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ojFTK86BOKHs5Sffk/1VcJDUeg7+bF9Sd/43yKdhw7c=;
+        b=Cqa5P767adl1ISwwstXfNqmcdhx+ojn/SpwBErzBvDj+jsfRxg+L6rlJzJKWhxWhwZ
+         25aRgHeR+tytF3xssn67NfmQ6yYdD8XvLSwwtM6NkRvwn55Wd6GTN7YbRbtTgVS9oUu5
+         6eXy6aMT7s9wVI2ehuk31wgJ1mTs/SgQkEB5seZCGONanFlMgw44UIGuiIWsbI+fGTWH
+         /N3kFO5mtNH8vwQued4YmZ4bqC26RGR1C8R5/ss/Uhrrdj5hmVS/YMBUaiMuHumR+n97
+         d/giBpVc771nbYsnNHLylOwhcXAAtsMvpi8YoxwR8/IWMX3bYuLzzIpIDh+fyHNvhctm
+         Xevg==
+X-Gm-Message-State: AOJu0YwtC9yKQTvGZV5HJy4pcamPgMtbSwrFJvQ35sUpHlfd5uQF8C+B
+	3WswW61s+x2/iWOAG79eGncFFvYP2/j1L77ipUmX8dybS7ixsvLnqNlJ/4G8gMjQE8VFgKIXdmo
+	jgP2+zCxZMQqhyyqYbWJVRE/ZG+/KLns2aYlL6JXT2AKJQvxbzq2NKA==
+X-Gm-Gg: ASbGncuOsFhcnO3LEtfjYdOVAxeJcAIoDiyE87CbfZaBh1PiwUl1g0Fyetmpj45XA+y
+	PRdR6KvTf/0nkK9HfKXoec6GQ/XkcOvdr92T7gXfXXU0P+0HGan1CZaXuBJjTuAahO38Yf3AIzt
+	iljJ58fFwn2DW9IeigLQ==
+X-Google-Smtp-Source: AGHT+IFCtscwV8O7+W4yBswaX+xL5CU0m6pTn37NOQZAybr47eZb3GirbpP/+XKz7nDZsXAaZlthUftbLpDAo4xDjtQ=
+X-Received: by 2002:a05:6820:3104:b0:606:5531:d903 with SMTP id
+ 006d021491bc7-607ee6d2206mr788932eaf.2.1746157995308; Thu, 01 May 2025
+ 20:53:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="VfsLxvgoTsplys2W"
-Content-Disposition: inline
-In-Reply-To: <0beddeaaa4a8a7a45ce93ff21c543ae58be64908.1746139811.git.nicolinc@nvidia.com>
+From: Per Larsen <perl@immunant.com>
+Date: Thu, 1 May 2025 20:52:39 -0700
+X-Gm-Features: ATxdqUH0icFH_SkqozKpifraM3UBR6tR1qCNPkxonjxJAJvE10BR_u9dZ27wUdQ
+Message-ID: <CA+AY4XcaJa1_U3qXQUBj4wZJYc9hKmRX8FTNeDvV2auEnC_WrA@mail.gmail.com>
+Subject: [PATCH 1/3] KVM: arm64: Restrict FF-A host version renegotiation
+To: linux-kernel@vger.kernel.org
+Cc: "qperret@google.com" <qperret@google.com>, "sebastianene@google.com" <sebastianene@google.com>, kernel-team@android.com, 
+	"will@kernel.org" <will@kernel.org>, maz@kernel.org, 
+	"sudeep.holla@arm.com" <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, yuzenghui@huawei.com, 
+	Armelle Laine <armellel@google.com>, arve@android.org
+Content-Type: text/plain; charset="UTF-8"
 
+FF-A implementations with the same major version must interoperate with
+earlier minor versions per DEN0077A 1.2 REL0 13.2.1 but FF-A version 1.1
+broke the ABI on several structures and 1.2 relies on SMCCC 1.2 is not
+backwards compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
 
---VfsLxvgoTsplys2W
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If we return the negotiated hypervisor version when the host requests a
+lesser minor version, the host will rely on the FF-A interoperability
+rules. Since the hypervisor does not currently have the necessary
+compatibility paths (e.g. to handle breaking changes to the SMC calling
+convention), return NOT_SUPPORTED.
 
-On Thu, May 01, 2025 at 04:01:22PM -0700, Nicolin Chen wrote:
-> +- IOMMUFD_OBJ_VQUEUE, representing a hardware accelerated virtual queue,=
- as a
-> +  subset of IOMMU's virtualization features, for the IOMMU HW to directl=
-y read
-> +  or write the virtual queue memory owned by a guest OS. This HW-acceler=
-ation
-> +  allows VM to work with the IOMMU HW directly without a VM Exit, i.e. r=
-educing
-> +  overhead from the hypercalls. Along with this vQUEUE object, iommufd p=
-rovides
-> +  user space an mmap interface for VMM to mmap a physical MMIO region fr=
-om the
-> +  host physical address space to the guest physical address space, allow=
-ing the
-> +  guest OS to control the allocated vQUEUE HW. Thus, when allocating a v=
-QUEUE,
-> +  the VMM must request a pair of VMA info (vm_pgoff/size) for an mmap sy=
-scall.
-> +  The length argument of an mmap syscall can be smaller than the given s=
-ize for
-> +  a partial mmap, but the addr argument of the mmap syscall should never=
- offset
-> +  from the returned vm_pgoff, which implies that an mmap will always sta=
-rt from
+Signed-off-by: Per Larsen <perlarsen@google.com>
+Signed-off-by: Per Larsen <perl@immunant.com>
+---
+ arch/arm64/kvm/hyp/nvhe/ffa.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-Did you mean never be offset from returned vm_pgoff?
+diff --git a/arch/arm64/kvm/hyp/nvhe/ffa.c b/arch/arm64/kvm/hyp/nvhe/ffa.c
+index 3369dd0c4009..10e88207b78e 100644
+--- a/arch/arm64/kvm/hyp/nvhe/ffa.c
++++ b/arch/arm64/kvm/hyp/nvhe/ffa.c
+@@ -712,7 +712,24 @@ static void do_ffa_version(struct arm_smccc_res *res,
 
-> +  the beginning of the physical MMIO region.
-> +
+  hyp_spin_lock(&version_lock);
+  if (has_version_negotiated) {
+- res->a0 = hyp_ffa_version;
++ /*
++ * FF-A implementations with the same major version must
++ * interoperate with earlier minor versions per DEN0077A 1.2
++ * REL0 13.2.1 but FF-A version 1.1 broke the ABI on several
++ * structures and 1.2 relies on SMCCC 1.2 is not backwards
++ * compatible with SMCCC 1.2 (see DEN0028 1.6 G BET0 Appendix F).
++ *
++ * If we return the negotiated hypervisor version when the host
++ * requests a lesser minor version, the host will rely on the
++ * aforementioned FF-A interoperability rules. Since the
++ * hypervisor does not currently have the necessary compatibility
++ * paths (e.g. to paper over the above-mentioned calling
++ * convention changes), return NOT_SUPPORTED.
++ */
++ if (FFA_MINOR_VERSION(ffa_req_version) < FFA_MINOR_VERSION(hyp_ffa_version))
++ res->a0 = FFA_RET_NOT_SUPPORTED;
++ else
++ res->a0 = hyp_ffa_version;
+  goto unlock;
+  }
 
-Confused...
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---VfsLxvgoTsplys2W
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaBRA6wAKCRD2uYlJVVFO
-o+SZAQDJ/gcFcLrWtK7lcL67yMIrbhi/Ip66m8FOzciKz7X4gAEAu6K/kN2zgCb1
-Up14Fvx9ssPG1/hIFF+QXlsxiG4N0Ag=
-=Umti
------END PGP SIGNATURE-----
-
---VfsLxvgoTsplys2W--
+-- 
+2.49.0.906.g1f30a19c02-goog
