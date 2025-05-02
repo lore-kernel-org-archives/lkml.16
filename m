@@ -1,62 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D242626AD9;
-	Fri,  2 May 2025 01:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F279726AD9;
+	Fri,  2 May 2025 01:44:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746149981; cv=none; b=URJVc1/XRyUggVthtQ6tnS+JbzHIoBzYX7arfvY7RKEPxcZA/97P8zTk2V0/GzthlJ7EuisW/m/GxwCnH62ylRGbp+6h8q1M1epPuORh4SIPQSAoJHciKUW9iwgtI2Er0ih/2kRMUS8UVGN4N/NA0qRdgQXCobtk0OFwvxCyAjU=
+	t=1746150259; cv=none; b=crpQLxK6S21G20JknF5Kd9LMBPRB1ROyk92KAW8unYmXYrieJezV/C+p8+IwsA11MjbP4Ra07SujTOjKebeSFCOBfmnEfnhRiUmInYpP55BXB+uZt36vE3/4zcxZLVeJbtDMti5gwAv18UsSZiyyiV5z0aae9hs/pLp9rE1a5js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746149981; c=relaxed/simple;
-	bh=3zVuQw+HTDcea1hXOfP2Sl/+HBL4z+uYXaoaFlkXkSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ClCVINsdh0RivXvBSjPqXaOwuthfenP2sfTPOxuq5KQTUhXD58RHo3e6ME9NZfWr/vunWXUswhYf+jkT3XPKfC6Y/rd8TJtQg68tmeG3uqVfvsacVYjLiZz1sfkhOxa66EDisFVI1abh5XqJC4UlA8yx8cgsoOpkNkNgRN96QCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RR6wK5c0; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746150259; c=relaxed/simple;
+	bh=NklsBFoXQZqbYwgkrxmJvsEcB2wYi6W8c8133u8st14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f+YYm7pZ2rECFIL/Sgom9nHYc02xcywP23xncEeGnl0Y+RJ3MrYUiPozPMGnwk8isXD2/2VdMN2zERPdsZICEMzExOJsrwOtDt74LjRlUAsEqvIVnKOdPq/V0dSzruJWdnDd5rwfZTujjTQ553hg45FbJOxPNWjKQoL2d3DwPk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qm3nRmRm; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RR6wK5c0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746149980; x=1777685980;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=3zVuQw+HTDcea1hXOfP2Sl/+HBL4z+uYXaoaFlkXkSo=;
-  b=RR6wK5c0kWmUZKE5o4RO8qORmnCudeoTdHGMBweuy1S3nkSJuw3+dTAV
-   AgHLbACdVfPfqbnhD6t/i3BzD8foQv4G/sxCwZDj2GBNmZkWSMcCm6MHf
-   yr2ONZtj6wKCm/U3U08SCzwuvdhkMliWHGMLHl1eBiLScFsiJgvx35kO5
-   YraBAd3XEXyNGRocXb3HlG6Da4m7RrpUhOX07g6wPrBAHTq4wyIotPHOR
-   XP9GvQYexLYzUSzGaGu84AhsiTFR+iLOSD0rtlZaVjqFiOiqpB1ArBSIE
-   gxxaoeN7A3xoTpOy56Aiue5OqfvIPXq+Rt1XMjqsPQ+j2cxLsaGfvfw7G
-   Q==;
-X-CSE-ConnectionGUID: JSyaFa8jQ46THra2kwIZaw==
-X-CSE-MsgGUID: 2XKc5gL2SRq8pHjCoo8rHA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="47716524"
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="47716524"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 18:39:39 -0700
-X-CSE-ConnectionGUID: iRlh85/DSx6/VwiNrNUPSw==
-X-CSE-MsgGUID: cgw/mgtRQPeG8pg+iW7zEQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
-   d="scan'208";a="139672933"
-Received: from qiuxu-clx.sh.intel.com ([10.239.53.109])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 May 2025 18:39:35 -0700
-From: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-To: Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Jason Baron <jbaron@akamai.com>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-	James Morse <james.morse@arm.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Robert Richter <rric@kernel.org>,
-	Yi Lai <yi1.lai@intel.com>,
-	linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] ie31200/EDAC: Add Intel Bartlett Lake-S SoCs support
-Date: Fri,  2 May 2025 09:39:00 +0800
-Message-ID: <20250502013900.343430-1-qiuxu.zhuo@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qm3nRmRm"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=4Lr87RbWXKo99QRyxBW8TG06bpLYqOX8TiwXB5KViIc=; b=qm3nRmRmSGqxmF1jh9W5clGYws
+	oEkYrAyNK+qKtTMRFqg9uGC61llzYkxahSLM02BDeJGJyucfIYDEASmD3Ipifv3kn5LST/RqxtBMt
+	Z/qXhPvcIp2C45GItMTzn/ZC2l+m4ViCBLWn1SY8av7fmV0aULKLAnkbmUsfjK2N6QZGMHmP9H18n
+	kmOzu5edPopr2P9sB1be883oTX9aleAKzkqY4OxCmbBT3B/zpydfqbp8uKGDb2vEJQSDRr7R7XtLq
+	l9MNVIPjNeriGQTjD+N91x+Y/gPdIKXYNNesomQ3lE5zl6Y9KQgOCbeIz+OIOpJkM3ly6DEsEQp20
+	oL83GGDg==;
+Received: from [50.39.124.201] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uAfRl-00000000Wil-01Kw;
+	Fri, 02 May 2025 01:44:13 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	John Johansen <john.johansen@canonical.com>,
+	John Johansen <john@apparmor.net>,
+	apparmor@lists.ubuntu.com,
+	linux-security-module@vger.kernel.org,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>
+Subject: [PATCH] apparmor: fix some kernel-doc issues in header files
+Date: Thu,  1 May 2025 18:44:12 -0700
+Message-ID: <20250502014412.682674-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,62 +51,103 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Bartlett Lake-S is a derivative of Raptor Lake-S and is optimized for
-IoT/Edge applications. It shares the same memory controller registers
-as Raptor Lake-S. Add compute die IDs of Bartlett Lake-S and reuse the
-configuration data of Raptor Lake-S for Bartlett Lake-S EDAC support.
 
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+cred.h:128: warning: expecting prototype for end_label_crit_section(). Prototype was for end_current_label_crit_section() instead
+file.h:108: warning: expecting prototype for aa_map_file_perms(). Prototype was for aa_map_file_to_perms() instead
+
+lib.h:159: warning: Function parameter or struct member 'hname' not described in 'basename'
+lib.h:159: warning: Excess function parameter 'name' description in 'basename'
+
+match.h:21: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
+ * The format used for transition tables is based on the GNU flex table
+ * The format used for transition tables is based on the GNU flex table
+
+perms.h:109: warning: Function parameter or struct member 'accum' not described in 'aa_perms_accum_raw'
+perms.h:109: warning: Function parameter or struct member 'addend' not described in 'aa_perms_accum_raw'
+perms.h:136: warning: Function parameter or struct member 'accum' not described in 'aa_perms_accum'
+perms.h:136: warning: Function parameter or struct member 'addend' not described in 'aa_perms_accum'
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: John Johansen <john.johansen@canonical.com>
+Cc: John Johansen <john@apparmor.net>
+Cc: apparmor@lists.ubuntu.com
+Cc: linux-security-module@vger.kernel.org
+Cc: Paul Moore <paul@paul-moore.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
 ---
-This patch is on top of the RAS tree edac-for-next branch [1] with the
-top commit [2].
+ security/apparmor/include/cred.h  |    2 +-
+ security/apparmor/include/file.h  |    2 +-
+ security/apparmor/include/lib.h   |    2 +-
+ security/apparmor/include/match.h |    2 +-
+ security/apparmor/include/perms.h |    8 ++++----
+ 5 files changed, 8 insertions(+), 8 deletions(-)
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git edac-for-next
-[2] 4521b86e4a6e ("Merge ras/edac-urgent into for-next")
-
- drivers/edac/ie31200_edac.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 55cf54741aa0..1ec00d458463 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -94,6 +94,18 @@
- /* Alder Lake-S */
- #define PCI_DEVICE_ID_INTEL_IE31200_ADL_S_1	0x4660
+--- linux-next-20250501.orig/security/apparmor/include/cred.h
++++ linux-next-20250501/security/apparmor/include/cred.h
+@@ -117,7 +117,7 @@ static inline struct aa_label *aa_get_cu
+ #define __end_current_label_crit_section(X) end_current_label_crit_section(X)
  
-+/* Bartlett Lake-S */
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_1	0x4639
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_2	0x463c
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_3	0x4642
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_4	0x4643
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_5	0xa731
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_6	0xa732
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_7	0xa733
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_8	0xa741
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_9	0xa744
-+#define PCI_DEVICE_ID_INTEL_IE31200_BTL_S_10	0xa745
-+
- #define IE31200_RANKS_PER_CHANNEL	8
- #define IE31200_DIMMS_PER_CHANNEL	2
- #define IE31200_CHANNELS		2
-@@ -740,6 +752,16 @@ static const struct pci_device_id ie31200_pci_tbl[] = {
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_RPL_S_3), (kernel_ulong_t)&rpl_s_cfg},
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_RPL_S_4), (kernel_ulong_t)&rpl_s_cfg},
- 	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_ADL_S_1), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_1), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_2), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_3), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_4), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_5), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_6), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_7), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_8), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_9), (kernel_ulong_t)&rpl_s_cfg},
-+	{ PCI_VDEVICE(INTEL, PCI_DEVICE_ID_INTEL_IE31200_BTL_S_10), (kernel_ulong_t)&rpl_s_cfg},
- 	{ 0, } /* 0 terminated list. */
- };
- MODULE_DEVICE_TABLE(pci, ie31200_pci_tbl);
--- 
-2.43.0
-
+ /**
+- * end_label_crit_section - put a reference found with begin_current_label..
++ * end_current_label_crit_section - put a reference found with begin_current_label..
+  * @label: label reference to put
+  *
+  * Should only be used with a reference obtained with
+--- linux-next-20250501.orig/security/apparmor/include/file.h
++++ linux-next-20250501/security/apparmor/include/file.h
+@@ -104,7 +104,7 @@ void aa_inherit_files(const struct cred
+ 
+ 
+ /**
+- * aa_map_file_perms - map file flags to AppArmor permissions
++ * aa_map_file_to_perms - map file flags to AppArmor permissions
+  * @file: open file to map flags to AppArmor permissions
+  *
+  * Returns: apparmor permission set for the file
+--- linux-next-20250501.orig/security/apparmor/include/lib.h
++++ linux-next-20250501/security/apparmor/include/lib.h
+@@ -170,7 +170,7 @@ struct aa_policy {
+ 
+ /**
+  * basename - find the last component of an hname
+- * @name: hname to find the base profile name component of  (NOT NULL)
++ * @hname: hname to find the base profile name component of  (NOT NULL)
+  *
+  * Returns: the tail (base profile name) name component of an hname
+  */
+--- linux-next-20250501.orig/security/apparmor/include/match.h
++++ linux-next-20250501/security/apparmor/include/match.h
+@@ -17,7 +17,7 @@
+ #define DFA_START			1
+ 
+ 
+-/**
++/*
+  * The format used for transition tables is based on the GNU flex table
+  * file format (--tables-file option; see Table File Format in the flex
+  * info pages and the flex sources for documentation). The magic number
+--- linux-next-20250501.orig/security/apparmor/include/perms.h
++++ linux-next-20250501/security/apparmor/include/perms.h
+@@ -101,8 +101,8 @@ extern struct aa_perms allperms;
+ 
+ /**
+  * aa_perms_accum_raw - accumulate perms with out masking off overlapping perms
+- * @accum - perms struct to accumulate into
+- * @addend - perms struct to add to @accum
++ * @accum: perms struct to accumulate into
++ * @addend: perms struct to add to @accum
+  */
+ static inline void aa_perms_accum_raw(struct aa_perms *accum,
+ 				      struct aa_perms *addend)
+@@ -128,8 +128,8 @@ static inline void aa_perms_accum_raw(st
+ 
+ /**
+  * aa_perms_accum - accumulate perms, masking off overlapping perms
+- * @accum - perms struct to accumulate into
+- * @addend - perms struct to add to @accum
++ * @accum: perms struct to accumulate into
++ * @addend: perms struct to add to @accum
+  */
+ static inline void aa_perms_accum(struct aa_perms *accum,
+ 				  struct aa_perms *addend)
