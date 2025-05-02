@@ -1,520 +1,225 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E654F26560D
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 07:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746170522; cv=none; b=WmLxvMX4UxexcQJ/oZmiOok7ag4rqckd3FYImIQQsLe8wVJRWUeLmunxkJHMdbDCXnBNuk4iKwEjuRDh0MmwV1yAZU2s+pBcCIa/3YaIbnJb7HzpdsxQyN7XnJStk5cqFb9plHeY0AKZ7ooMmG6lkdVhQMo8mTFnho2NaAwLrhI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746170522; c=relaxed/simple;
-	bh=RZJdcAjyimd22DywD5wOE1m6XQEmJDAKxoD3ogG2pZs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=L2699AQEsmuyU02QQ7XYAoP6unK3u1I+GhYDT4ps0biZwMvXAVFm/Girgur3rst2auLnhaycUwXhbxchQHV5f/tycF+1z5yr556ZhqtmdIval3qkLls3d3JVVRmIZxJi2cUcdBbuNScDDNT2D58JAgkjk7YO1+jyiMlFy5miOwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kOCbnk8v; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713831CBA02;
+	Fri,  2 May 2025 07:23:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.9
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746170593; cv=fail; b=h3aqoZWg3kvUJyn2VM0bJt+FiJ0sXQGW4HfxJpFYOmvlxGH2NWnvOBEeqOPAfYzPw2QtqtAbDl6jTvHl6Esv8e4QLWjh1WA40dYb49eRcKfQiyZksFbXVmM4wqHAL0eOszs4oTcBEwHl1Mny71OAZNoBhnlCHhlrRk9OD5FoIZs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746170593; c=relaxed/simple;
+	bh=GKr0Que1u4RzMiKBA+5CD5N9SQHgtBObnEf+sy7k9ag=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BvfZpUvR3Pkf1jTeelzg00kd+XbohHMhpm4N7vw8kSzziNVuWF5PXg9A3196guWXbMlmBwb5FVaK5Utr1mkuQ7AxQwXVdEw+V33K1PxQnPLzplf8jnKC3rH4A+4L61uGGMCDyWpUwQL/yBkzXTNiHHD6T11oqtiBIuwEZDBAvkU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BXtBOr+B; arc=fail smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kOCbnk8v"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac6ed4ab410so284876166b.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 00:21:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746170518; x=1746775318; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IJ/nFA68bcSOcsO0RPS+enF9OOXSeic2MUkRaM0A0LA=;
-        b=kOCbnk8v6bwWKn/uizgP1kHRIh2Hz7SRPyKfAqO5sBDqtsi3i1eQpY34QkPKUeselv
-         XGOxczAUJ1dkBeXnTxpSMRLgI2PbqS5ZGJ+PURD4nhc8QMGToucWS4IxLP1N7VyF/2Gl
-         9SIuKAba+NxPGU/oynmw6tEp6Fg+iSvXZ9sVBUEYiPfv995W8dNhIYRYk/LZgSeKqVzi
-         ZXhNsk6nN4nOJYI+zf5nj9MaVt5eHyzybyjFUWhrzej54Z62fNlVRIFNORrSfgB+qTab
-         CrdiiU4jbgSUR9wbLqD1RRAiPMV3EsnfFWHbY69vYVRy2BkinEpAibkSMckMi7WybFAD
-         lM5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746170518; x=1746775318;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IJ/nFA68bcSOcsO0RPS+enF9OOXSeic2MUkRaM0A0LA=;
-        b=QVKNx5ggjSTzcpWtcnR/mxaigr3PQR8JAhL67X2yHN5VN7VM4M4gHMeyeRwjhPRN6C
-         3F7TMgzSXqaue2lS6YY19EQvFv2qypKU4UWV4unfu/bA2X9NHrdByHwUCwdGKmYw06vQ
-         b6Mu7bCmyG9vI9x3Qyq/H9U/0iL5Cc5BEmcZuyQc0iL0vRy0pWcDA5OumksGDo5oSQ4d
-         ie9Z786yasrugsC8PdpAEu+Yr61RJvpxfWffwLXpQMw727HzHK0h2wbu2PJbxgrI/czk
-         uQxwA3T3eK8ux+j6GNI8t8WEgpP4//Pd6XdlfufpgLt7xWyT7rxi1AJn/XiT8iuHB4sL
-         oBLg==
-X-Forwarded-Encrypted: i=1; AJvYcCW/24akR6IEQ4qRDdaB/OscCp83xqjvG4DVEPBj+gCdtt27+DNbBOvqnbuoYNCyOFNleS4jUYeMp2UPK1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQZZQ/PvP9Z9U1tCqeb70bPnXord1l6sw5351HeawZzqBlBmUf
-	98Tb3igndpyMCNwAJWd0JIf/+3Qjq4luitMGwz5wC3oVCMPepFFb
-X-Gm-Gg: ASbGncupOSuxggGjxAXUD51rIklyJnd2l8NXShcKO5nT/0a6BjYNM2az5C7YhUNrf4O
-	onUa/l1qqJb1lUBUH21dY1eMhcXSntwgrJPN9jz25W+W//EnCmA8Ph3HTCi0NnKRDlu4RfSwQua
-	xwJijK65pqFwp1jwJ5auWGViwDN+539iz618P/ZhMM3QO1upTMYJWHYupd239yxg+xxsY+5rqYn
-	1Y7ej1qnWnIXwgGwAnKvPXEi6zXOSj8gJYJh3Z16IN9xnxXfttnY4SS2haazjVmnG1BBn3OtsaB
-	vpNgQPh2R6DPj+lI6Seg+FeL4mYv1KBFVe7gmj3z/u+81jVeoh8=
-X-Google-Smtp-Source: AGHT+IE6pLPp7pWg248OKsKwtD7ZbDGEVyJ3oZLyRrEg09KSZAqPuFKSx5M0FQFt9aS02HJFv9kscw==
-X-Received: by 2002:a17:906:6a2a:b0:ace:cb59:6c47 with SMTP id a640c23a62f3a-ad17ad88ddfmr202137566b.25.1746170518052;
-        Fri, 02 May 2025 00:21:58 -0700 (PDT)
-Received: from localhost.localdomain ([178.25.124.12])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ad1891f3c6bsm5691966b.82.2025.05.02.00.21.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 00:21:57 -0700 (PDT)
-From: Dave Penkler <dpenkler@gmail.com>
-To: gregkh@linuxfoundation.org,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org,
-	Dave Penkler <dpenkler@gmail.com>
-Subject: [PATCH 2/3 V2] staging: gpib: Declare driver entry points static
-Date: Fri,  2 May 2025 09:21:49 +0200
-Message-ID: <20250502072150.32714-3-dpenkler@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250502072150.32714-1-dpenkler@gmail.com>
-References: <20250502072150.32714-1-dpenkler@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BXtBOr+B"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746170592; x=1777706592;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=GKr0Que1u4RzMiKBA+5CD5N9SQHgtBObnEf+sy7k9ag=;
+  b=BXtBOr+B9lbexpuYY4oS+tYzhHaEEVFcNuime8peCTRGRcRuCtveLnGg
+   eznK8GmtbxrGNG4+DqFEr9FHKsRKssl5vyIWOtu0FZwSFQ1uo0pLhecUA
+   I5oNBGqxZJjpXbScKL//TOvKgLDNp3mkpcp1mmjP0rbSP1DgnA5Pma5K6
+   Uj4aZuZnF8P2tDSGKSGVYcAKb2qWOECqItDkmSMrNmBHBj9G+jI1zdzVS
+   LxhwSqHb4s8PtTOmZlnkPGh/7FwfFgNJHgCvkH8vm+Sn5uhfX6qCvpWLT
+   /I+Dp12998k/FumGIEG1MWKImx2JHKGroKMRsNDTRx8kdhjZg1jhNqkiF
+   w==;
+X-CSE-ConnectionGUID: leMwug+OR76dCciWMwwqgw==
+X-CSE-MsgGUID: ek17VLqQQXmxkooUpdELug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11420"; a="70352533"
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="70352533"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 00:23:10 -0700
+X-CSE-ConnectionGUID: ChGgDPgIRSix4GL0NMXyOA==
+X-CSE-MsgGUID: 1K1oautmRB+CF7xsazW/FA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,255,1739865600"; 
+   d="scan'208";a="135090025"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 00:23:09 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Fri, 2 May 2025 00:23:09 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Fri, 2 May 2025 00:23:09 -0700
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.40) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Fri, 2 May 2025 00:23:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=W552j3G5EQ1zPnf5irotK8y/MBSYQg+gv+Jbqf8ShUtGXu/idqiOn96WCWt0FkUfANVx5Aky3t4En6WlirT6F6NY/ESn/aEpf0g3Vh8Lgr4oOKc7L28MkN7PbZ4ThB2KKDvDWstWeUQXWQoC/e2ftOETiPZNLxqSUcNQt2iggIqOE0Je7V1FWc44UMHRmm1asZ4sZCskBfwyH1DnVUiZcH6+0/IPDFGOB0Pv+Wj9lvFAG8n292HgmUI4qMqm2MW0qJqnCXgjJDV+uo6atIKDnFAYbnXEKNyJfD1GrdE2vUEPir/iKkwswSg72/wxzV1i+rt7T4tzKodySoDgU/EqWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=GKr0Que1u4RzMiKBA+5CD5N9SQHgtBObnEf+sy7k9ag=;
+ b=qSIG0k92OnOd2n6i3aYFsdljVkj+XdCvSknxHibEjoSdfJJkE/MEqpARd0ERBFxE4HhV75/tarygLHTbAU1F30qfst6O1d0sL2XJoMsOv3+tPNAU1mvXzfswO9GuTXNo3OBETXaPd390sH0sTsqt2LrqhUOdnXsVJgJEFtLRR9aNoH78a+z7oChS/XyZpUZ8zIAymlpQ/wfRR/odrjRVGVmG6vurwD7ZIsv3S8opDfBZsIpn2sxI0nVeFBvjn+I+DaDACnDfwymQ3wKt90+rgR5jJ77MzeSzriVfMrZZTDZwhyQ5RFpggNG3sPfaAMDgnMeKfXV3i63rFstm6xRWRw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com (2603:10b6:8:11::17) by
+ SA1PR11MB8279.namprd11.prod.outlook.com (2603:10b6:806:25c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Fri, 2 May
+ 2025 07:22:52 +0000
+Received: from DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a]) by DM8PR11MB5750.namprd11.prod.outlook.com
+ ([fe80::4df9:c236:8b64:403a%7]) with mapi id 15.20.8699.022; Fri, 2 May 2025
+ 07:22:52 +0000
+From: "Reshetova, Elena" <elena.reshetova@intel.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+CC: "Hansen, Dave" <dave.hansen@intel.com>, Sean Christopherson
+	<seanjc@google.com>, "Huang, Kai" <kai.huang@intel.com>,
+	"linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>, "Scarlata, Vincent
+ R" <vincent.r.scarlata@intel.com>, "x86@kernel.org" <x86@kernel.org>,
+	"Annapurve, Vishal" <vannapurve@google.com>, "Cai, Chong"
+	<chongc@google.com>, "Mallick, Asit K" <asit.k.mallick@intel.com>, "Aktas,
+ Erdem" <erdemaktas@google.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "bondarn@google.com" <bondarn@google.com>,
+	"dionnaglaze@google.com" <dionnaglaze@google.com>, "Raynor, Scott"
+	<scott.raynor@intel.com>
+Subject: RE: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Thread-Topic: [PATCH v3 2/2] x86/sgx: Implement EUPDATESVN and
+ opportunistically call it during first EPC page alloc
+Thread-Index: AQHbrfzujDHiSNozs0m8Z6fqnS5FZ7Oph/QAgAXK54CAAG1QAIACw3gAgABd6wCAAAZ2IIAANiqAgADdHdCAALsMgIAABskAgAAXsoCAAAu/gIAADsCAgAAFLwCAAAnhgIAAAmEAgAWa6ZCAADM0gIABBeNggACU7ICAAqAl8A==
+Date: Fri, 2 May 2025 07:22:52 +0000
+Message-ID: <DM8PR11MB575014811E4007EA00F5B3E6E78D2@DM8PR11MB5750.namprd11.prod.outlook.com>
+References: <0d7d6b9a-e7bd-4225-8f08-05bd9473a894@intel.com>
+ <aAviqeAdGn-w1GpK@google.com>
+ <fbd2acdb-35dc-4e8c-9bd9-e84264f88648@intel.com>
+ <aAv445Sr71NUJP1X@google.com>
+ <db1fd062-5a66-4942-82e2-c889dd645a7b@intel.com>
+ <aAwFhaqQDLXoqbmv@google.com>
+ <4b4ecaa1-2ace-43bf-b71b-0de78bcf113c@intel.com>
+ <DM8PR11MB5750B39557F5062038D0E551E7802@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <8db47bc1-445b-49db-b932-96aff0eb58a9@intel.com>
+ <DM8PR11MB5750200DFF8CF40E3539B688E7832@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <aBI-xQzatja2Y9dh@kernel.org>
+In-Reply-To: <aBI-xQzatja2Y9dh@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM8PR11MB5750:EE_|SA1PR11MB8279:EE_
+x-ms-office365-filtering-correlation-id: 9acbcd25-1915-4111-06c3-08dd894a266f
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016|38070700018;
+x-microsoft-antispam-message-info: =?utf-8?B?N01sclU3Z09yck4zdjdPayt4blJaaDdZM0ZGQnl4NE1hdVBEK1gwYVN3TDVQ?=
+ =?utf-8?B?MUhXVTBXblpFam1hSnVoZXpNcU5QK3NMQnRTNCtzK2kyaWVyM3FTSThxUW1F?=
+ =?utf-8?B?cnBUYmI4cE1Rdkw0N0tSMWd2enh4aTJrdVY3SFpCOGlUV3pELzNCY3ZrNHlq?=
+ =?utf-8?B?cjBJMHhzRFg1NHA5TWxTdnZXdURNZzB4eEUrdDR5b1RVeUhLWmRRcDNoNG5a?=
+ =?utf-8?B?OFRkTjc0WXMvTFNvZmsySVVLd2RkS2dhTjIvaHRiU2Z1TUJsNG5JckRnYUtI?=
+ =?utf-8?B?NDUzTlUyWkZYMElmV0JYMmwwb0t5YWlGT01mVzVwc0JTYTNCdy9sZ3FWaW9o?=
+ =?utf-8?B?SmJYTmEzL3p5cW1sYVA4TUhEL3krSkJ0MEcvdTJIZzNiSklDczR0eHV4bmV4?=
+ =?utf-8?B?QU9wdFVMWWtsSkJMMk4rUEJiMVNjNXJxdms1QnlxN25TaWdMVm1JSHBTUzNN?=
+ =?utf-8?B?MnQwWTJPdXFEZlY0QmpzQlh2MUFPblNXdVF4QWRuV1pWNmxaVkRSMEQwWVYy?=
+ =?utf-8?B?VEg3N09kQjVBNUo3Z2E3cEkrNUYxUFRtblUyL1QrM3FRMmRsdUlzanVPN1JQ?=
+ =?utf-8?B?aHVUOThLYzI1Vm1zWlF3RWJKazR5MmtTOWFzUFhzem1NQ2lsWlVXRUtVcE82?=
+ =?utf-8?B?N2ZwaWRBbldSTjlGVkRleHZJMmdjTTFiVzBlbUIyQU52SGFLdjIxNUtVNmFr?=
+ =?utf-8?B?Wk5vbmd2SDROaVQ1T2tnODVPRGp3UHpCSkJuWTY3UjI0WHNlMHRJWGNzSTRk?=
+ =?utf-8?B?T0YraGFCY3FpSUlBLzIxYnBQc01jMlk3YmJGWEVFWjZtdkwxRlhVbjBwdkRQ?=
+ =?utf-8?B?Q2VZbGdTMXYrZzdIOVRZN3phNUpDZVE5YmIxL0ZoVjZiY3NGNlFJYVdtdnJH?=
+ =?utf-8?B?VFN1OVZLRnZ2cXpSSW1qUldIVVNBRTd1NlFRamRXQmliZ2NiWFlVVnhHY3p3?=
+ =?utf-8?B?d2lDemQxU2xMdGtEeUlCMlI5QXRnWUVEZkhsNm04bEc5NUpRQXV5cGY0ZlAr?=
+ =?utf-8?B?QUlFUFJpTTNYSTR1a01vMStSNXg1d042aitWZlF5VzRCYzRMeXBBKzRzd29p?=
+ =?utf-8?B?Q2tOS282M1U5emxLZ05BYjd3VEw4OWpnTkU3YSszcjJiZTg4ZjBtK1laaVdy?=
+ =?utf-8?B?azhPOEpNQytUM0lTWVJrMGxFRGYvRXpJV0l5R2RrYm56SDg3ZWpOQ01maEFm?=
+ =?utf-8?B?MXU2Wi80N0tON2dtTTZ2d3pkVlNpbytaeGtIYWNnV0FsbkJKZklEcWgwYkkv?=
+ =?utf-8?B?M2k4T0ZwUXRrbUpPbkNzeDNqcGRBcDFRRmRJMGF0VDRydzQrYUZoekx1OUdx?=
+ =?utf-8?B?TDl4Y0NiOHpMS0VwOVFNVmg1ZGtZeUs0aGRTWExBei9LUjFENnozVEZiWktx?=
+ =?utf-8?B?U0FhekJIM1Z6YTlXQWVmc01ZQlFINDNwMlFqalIvMnlHYmY2bmpZS1NlRVRy?=
+ =?utf-8?B?TGF4L1Yxai9NUGw2V0tDWGJ4VmVPMlVZOXFKK0V3QWF4VXQ2VEdSUmh1WitK?=
+ =?utf-8?B?RWJrT0s0ZHZLN3RQN2tZZEdLMkpzMWw1MkJ0WE52RXpFbGRoYmZFenpIQU5s?=
+ =?utf-8?B?Sll1RlBTbnVBY2MvVkR0NXl3YjJtRUhPYm90VWNobFV5M2tLb09kVXZnSG01?=
+ =?utf-8?B?RjNwRXkxQmplZFVtbDhnKzdNNnYvV0J4WGw4WVI4STlPUldvVmszcEV3czB0?=
+ =?utf-8?B?Um5HMkZodTk5OWtIYWoza0w0TVRpZjhCWGlQdmxHQ3JreW1rMzBVVGIySHkw?=
+ =?utf-8?B?cmhQbzd3YnR4cGVhekRjZzNXUlVRUW8rdGRKdHBSV2RraWVNT2xDZlRBa2pt?=
+ =?utf-8?B?WklqUVpKRTY4K3pQVHFuL05LWTUwRWwxQXFZOEdxQUtVeUpkRHd3b0NXTU9o?=
+ =?utf-8?B?WGl1SDNtQnRhRFg0S1BKRXdUaU5yMWhTY3NiYWpXVFRMNHU4Q3NaYkhtSE1U?=
+ =?utf-8?B?WitQSHoyZ3RZZnJ4MDQ0WFhiOHQxTmh1MWt4LzlldTVrUVNva1JkSWcrYTda?=
+ =?utf-8?Q?hudwqhzfuHcBPKkmmJF6hVgJ+yWiwA=3D?=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR11MB5750.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?WWtvVXU2bk8xTVE2Zkh2bHl6NldJZ3FWeE84ckdKanByamZLd0loS2hRa0sx?=
+ =?utf-8?B?UzdBN013Z21hSU1UUS9TU3NPSDFjY1dsRE0xWmhBZFJFTEsvUkgyM01BblIx?=
+ =?utf-8?B?MUwvN2RiTkQwL0FDT1VBdUZDTjRwZUY5U3NJSHRhazNWZktkK1RkWjIzZGZz?=
+ =?utf-8?B?b1V5dHVtckZMbHFCWEQ2ZWRkblRPc1JBRzdNTENnR05rSDFzUVd3NFN5R3d3?=
+ =?utf-8?B?YzJScGdTVHFibmM0Rk9ySWx3VzBsZk1MbVlzUy96VWZQMHNPTTlXSU1FQmNt?=
+ =?utf-8?B?ZW9iblpOZEdhTGNaK0x5SlZabFNFMDMyWVdORFArVjJTUEZZYVRESVYveDJo?=
+ =?utf-8?B?dFZjR3RTaUdHcTd5ZFBqZG5acXZXMXg3Wmp1Tm52NkJaUCs5YVdIeHNBRXNm?=
+ =?utf-8?B?V0tkYzBTTkNNbmJSTXhCcERVZzIwOWpFU1k5NXFKWkZpcmpFcVhGckxVeFVr?=
+ =?utf-8?B?MWRPSFpkaUp5L2c5Y25Lc0tXbGVvbUdJT0hrU04vQk9FSitJYzE2bVpsQjZj?=
+ =?utf-8?B?MXBVK2w1T0s2MWZLckdndFN1aHc0Tk0zb2kvK1l6TEo5Ukk5V3VJWStuMExL?=
+ =?utf-8?B?RFlzVnhTQjdNeEJDWnppRHFqbjR3ajRrRFBmbFlKSTBQMit3M3h6WWFhVnIx?=
+ =?utf-8?B?dm5scjFzYVR1bWlLa2NiOC9xYmNyNGw0clMzcnNMT3pid3EycnVuMEdweW9H?=
+ =?utf-8?B?Y2Y4ZVRuUHd4MmtkeUhBS0VhRzE4NVJnZXk4YTNoVnRydUdEZ3daMEtPTlB2?=
+ =?utf-8?B?Wlg5Z3NJUTB3am02ZWJjTHFhTDdkanExK2NOajBSNDZIcUtiQUhOK0w0VWVx?=
+ =?utf-8?B?di9TenduVnA2eVlEdEYxbkorczY0bWtHUzhOWFZ1Y1VmcDlDR241d0d5T080?=
+ =?utf-8?B?L2ROMjBMdXVLV1pTdnJjVUg0czU3ZEt2NGhHUXBpSXRLcG8vbUV3eXJzQk4x?=
+ =?utf-8?B?Q21qT3V6UmJSaHlPbEVtRXBqRlhUYWpZa2ZVdjhMcGhjbElEVUVmSU9GWkcx?=
+ =?utf-8?B?SXRmcE8zLzF2cWFlbExpeTF5K08wOE5FM0ZXb05qV0hJNnU1alBTWUNhM1Fz?=
+ =?utf-8?B?WHViaWVhY25vMkNROHFrcytBMXNhdnhxQXVYdEFkVDZ6RWNtTWZwSEw3NUxW?=
+ =?utf-8?B?bmREMTlWTnZ4RS9obUE3ZXIxdURKaWcxK0tDblB1bkl0VHRZR2twQm9NOHBr?=
+ =?utf-8?B?eWZvN3laQmtHWTRydlRrNS9LZjVHWEUzcU9GQUg5Rld2MFkxbHNyZ1VkTW1x?=
+ =?utf-8?B?QklKTitQeU1XcUs1VjdueTRHcmhEdFdaRlo4Q0d6K0xqNjdlNEh1Q0kySDhu?=
+ =?utf-8?B?SXRZdU1jQW9tZFl5NDJkZmhSZVZIbm45Z1JjUXQzRW5KZmlzbzZuaDNNWENZ?=
+ =?utf-8?B?RlJIaE5wY2Z5QVJIV2ZCdnpPUUhBL1ZBZWp2T0tSY2lJcWNsbCtqY3N3bTZT?=
+ =?utf-8?B?M0MrdHhoMENQeTRKQTRIL1llSFRiYmVQQ0ZBL2s3TFhmWU04Tjd6U3cwR25Y?=
+ =?utf-8?B?b3M1cHV4dzhJQTRMVzNqNWNTTVVJRTFNRkNPM25WTVg0TkdTeklVYWxlaXg2?=
+ =?utf-8?B?aVVHa3RDdWRNR1g2YlBIenRISjA0WmFnQTcreEFKRnJ0c0lqczRtOW9LYUEx?=
+ =?utf-8?B?VGNtUUdGRWNPaVlUdmpWQ3FFMVg5U3VXTFM5a1Y1eUdqdEdKUS85WHpFbzV6?=
+ =?utf-8?B?VHR6WUZXY2hEWjYyam84WHZJcTZwTmg1aE9jL0ZZV1c5VVhFMkNqVVhLblpV?=
+ =?utf-8?B?dktkV3JKRGFuOWZQT0NMOWszK0h4U2ZRc2JOOHh3MW0rS20wU3FVeXFRZkxT?=
+ =?utf-8?B?eEhrOHJJTThqb2xjZjg1TVk0Mnp0V2R5WmFpR05TVjVHNmFOeG5ZQVc1a0FP?=
+ =?utf-8?B?ODdycDliSU56dXBKRWI5eUxzcUMyOWN6c3ZnR1R1MjQxbFBhN0x5TW5jOGVH?=
+ =?utf-8?B?MFJMb1A1QkdZb2NtK203SmROSy9mb0pWUG9UcHo4WFNDQVlBYzJkbEhZTWNT?=
+ =?utf-8?B?SmRFZFFCSVkvSGxxMHNyYnRMNGNCUGVkOVR6VFZ6cEJ3RTZQTVhVaUl2SXF4?=
+ =?utf-8?B?d3ZBVUg0SThRSE80TDNvODFJc0l5SEI4eGt1aFE5a2cvYTBoL1lvMDRCbThW?=
+ =?utf-8?B?aHltVVQ2SzdRbFRyUm1jTkIzR3Q3ZUN3MUNEanM1M2dyZWpYRGZYK0N4czB1?=
+ =?utf-8?B?eUE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR11MB5750.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9acbcd25-1915-4111-06c3-08dd894a266f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 May 2025 07:22:52.1547
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lbv7SvGKrBak+uNg6U+fuPiCoraQLRLVDKsrDkrueIfa/MJDTd/SZFe/6QuF2BX9dLBGRUsY0wAmamTP7+GqZoxcepe/LJaoCfcaGxqIqsA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8279
+X-OriginatorOrg: intel.com
 
-Many of this driver's entry points were unecessarily not declared
-static.
-
-Remove the declarations from the include file.
-Make the declarations static in the .c file.
-Remove an uneccessary forward declaration in the .c file.
-
-Signed-off-by: Dave Penkler <dpenkler@gmail.com>
----
- drivers/staging/gpib/ines/ines.h      | 44 -------------
- drivers/staging/gpib/ines/ines_gpib.c | 92 ++++++++++++++-------------
- 2 files changed, 47 insertions(+), 89 deletions(-)
-
-diff --git a/drivers/staging/gpib/ines/ines.h b/drivers/staging/gpib/ines/ines.h
-index 07b82f790c4b..f0210ce2470d 100644
---- a/drivers/staging/gpib/ines/ines.h
-+++ b/drivers/staging/gpib/ines/ines.h
-@@ -35,45 +35,6 @@ struct ines_priv {
- 	u8 extend_mode_bits;
- };
- 
--// interface functions
--int ines_read(struct gpib_board *board, u8 *buffer, size_t length,
--	      int *end, size_t *bytes_read);
--int ines_write(struct gpib_board *board, u8 *buffer, size_t length,
--	       int send_eoi, size_t *bytes_written);
--int ines_accel_read(struct gpib_board *board, u8 *buffer, size_t length,
--		    int *end, size_t *bytes_read);
--int ines_accel_write(struct gpib_board *board, u8 *buffer, size_t length,
--		     int send_eoi, size_t *bytes_written);
--int ines_command(struct gpib_board *board, u8 *buffer, size_t length, size_t *bytes_written);
--int ines_take_control(struct gpib_board *board, int synchronous);
--int ines_go_to_standby(struct gpib_board *board);
--int ines_request_system_control(struct gpib_board *board, int request_control);
--void ines_interface_clear(struct gpib_board *board, int assert);
--void ines_remote_enable(struct gpib_board *board, int enable);
--int ines_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits);
--void ines_disable_eos(struct gpib_board *board);
--unsigned int ines_update_status(struct gpib_board *board, unsigned int clear_mask);
--int ines_primary_address(struct gpib_board *board, unsigned int address);
--int ines_secondary_address(struct gpib_board *board, unsigned int address, int enable);
--int ines_parallel_poll(struct gpib_board *board, u8 *result);
--void ines_parallel_poll_configure(struct gpib_board *board, u8 config);
--void ines_parallel_poll_response(struct gpib_board *board, int ist);
--void ines_serial_poll_response(struct gpib_board *board, u8 status);
--u8 ines_serial_poll_status(struct gpib_board *board);
--int ines_line_status(const struct gpib_board *board);
--int ines_t1_delay(struct gpib_board *board, unsigned int nano_sec);
--void ines_return_to_local(struct gpib_board *board);
--
--// interrupt service routines
--irqreturn_t ines_pci_interrupt(int irq, void *arg);
--irqreturn_t ines_interrupt(struct gpib_board *board);
--
--// utility functions
--void ines_free_private(struct gpib_board *board);
--int ines_generic_attach(struct gpib_board *board);
--void ines_online(struct ines_priv *priv, const struct gpib_board *board, int use_accel);
--void ines_set_xfer_counter(struct ines_priv *priv, unsigned int count);
--
- /* inb/outb wrappers */
- static inline unsigned int ines_inb(struct ines_priv *priv, unsigned int register_number)
- {
-@@ -88,11 +49,6 @@ static inline void ines_outb(struct ines_priv *priv, unsigned int value,
- 	     register_number * priv->nec7210_priv.offset);
- }
- 
--// pcmcia init/cleanup
--
--int ines_pcmcia_init_module(void);
--void ines_pcmcia_cleanup_module(void);
--
- enum ines_regs {
- 	// read
- 	FIFO_STATUS = 0x8,
-diff --git a/drivers/staging/gpib/ines/ines_gpib.c b/drivers/staging/gpib/ines/ines_gpib.c
-index 5168811ee850..a16219c0f7c8 100644
---- a/drivers/staging/gpib/ines/ines_gpib.c
-+++ b/drivers/staging/gpib/ines/ines_gpib.c
-@@ -25,7 +25,9 @@
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("GPIB driver for Ines iGPIB 72010");
- 
--int ines_line_status(const struct gpib_board *board)
-+static irqreturn_t ines_interrupt(struct gpib_board *board);
-+
-+static int ines_line_status(const struct gpib_board *board)
- {
- 	int status = VALID_ALL;
- 	int bcm_bits;
-@@ -55,7 +57,7 @@ int ines_line_status(const struct gpib_board *board)
- 	return status;
- }
- 
--void ines_set_xfer_counter(struct ines_priv *priv, unsigned int count)
-+static void ines_set_xfer_counter(struct ines_priv *priv, unsigned int count)
- {
- 	if (count > 0xffff) {
- 		pr_err("bug! tried to set xfer counter > 0xffff\n");
-@@ -65,7 +67,7 @@ void ines_set_xfer_counter(struct ines_priv *priv, unsigned int count)
- 	ines_outb(priv, count & 0xff, XFER_COUNT_LOWER);
- }
- 
--int ines_t1_delay(struct gpib_board *board, unsigned int nano_sec)
-+static int ines_t1_delay(struct gpib_board *board, unsigned int nano_sec)
- {
- 	struct ines_priv *ines_priv = board->private_data;
- 	struct nec7210_priv *nec_priv = &ines_priv->nec7210_priv;
-@@ -133,8 +135,8 @@ static ssize_t pio_read(struct gpib_board *board, struct ines_priv *ines_priv, u
- 	return retval;
- }
- 
--int ines_accel_read(struct gpib_board *board, u8 *buffer,
--		    size_t length, int *end, size_t *bytes_read)
-+static int ines_accel_read(struct gpib_board *board, u8 *buffer,
-+			   size_t length, int *end, size_t *bytes_read)
- {
- 	ssize_t retval = 0;
- 	struct ines_priv *ines_priv = board->private_data;
-@@ -213,8 +215,8 @@ static int ines_write_wait(struct gpib_board *board, struct ines_priv *ines_priv
- 	return 0;
- }
- 
--int ines_accel_write(struct gpib_board *board, u8 *buffer, size_t length,
--		     int send_eoi, size_t *bytes_written)
-+static int ines_accel_write(struct gpib_board *board, u8 *buffer, size_t length,
-+			    int send_eoi, size_t *bytes_written)
- {
- 	size_t count = 0;
- 	ssize_t retval = 0;
-@@ -264,7 +266,7 @@ int ines_accel_write(struct gpib_board *board, u8 *buffer, size_t length,
- 	return retval;
- }
- 
--irqreturn_t ines_pci_interrupt(int irq, void *arg)
-+static irqreturn_t ines_pci_interrupt(int irq, void *arg)
- {
- 	struct gpib_board *board = arg;
- 	struct ines_priv *priv = board->private_data;
-@@ -281,7 +283,7 @@ irqreturn_t ines_pci_interrupt(int irq, void *arg)
- 	return ines_interrupt(board);
- }
- 
--irqreturn_t ines_interrupt(struct gpib_board *board)
-+static irqreturn_t ines_interrupt(struct gpib_board *board)
- {
- 	struct ines_priv *priv = board->private_data;
- 	struct nec7210_priv *nec_priv = &priv->nec7210_priv;
-@@ -393,8 +395,8 @@ static struct ines_pci_id pci_ids[] = {
- static const int num_pci_chips = ARRAY_SIZE(pci_ids);
- 
- // wrappers for interface functions
--int ines_read(struct gpib_board *board, u8 *buffer, size_t length,
--	      int *end, size_t *bytes_read)
-+static int ines_read(struct gpib_board *board, u8 *buffer, size_t length,
-+		     int *end, size_t *bytes_read)
- {
- 	struct ines_priv *priv = board->private_data;
- 	struct nec7210_priv *nec_priv = &priv->nec7210_priv;
-@@ -412,127 +414,127 @@ int ines_read(struct gpib_board *board, u8 *buffer, size_t length,
- 	return retval;
- }
- 
--int ines_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
--	       size_t *bytes_written)
-+static int ines_write(struct gpib_board *board, u8 *buffer, size_t length, int send_eoi,
-+		      size_t *bytes_written)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_write(board, &priv->nec7210_priv, buffer, length, send_eoi, bytes_written);
- }
- 
--int ines_command(struct gpib_board *board, u8 *buffer, size_t length, size_t *bytes_written)
-+static int ines_command(struct gpib_board *board, u8 *buffer, size_t length, size_t *bytes_written)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_command(board, &priv->nec7210_priv, buffer, length, bytes_written);
- }
- 
--int ines_take_control(struct gpib_board *board, int synchronous)
-+static int ines_take_control(struct gpib_board *board, int synchronous)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_take_control(board, &priv->nec7210_priv, synchronous);
- }
- 
--int ines_go_to_standby(struct gpib_board *board)
-+static int ines_go_to_standby(struct gpib_board *board)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_go_to_standby(board, &priv->nec7210_priv);
- }
- 
--int ines_request_system_control(struct gpib_board *board, int request_control)
-+static int ines_request_system_control(struct gpib_board *board, int request_control)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_request_system_control(board, &priv->nec7210_priv, request_control);
- }
- 
--void ines_interface_clear(struct gpib_board *board, int assert)
-+static void ines_interface_clear(struct gpib_board *board, int assert)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_interface_clear(board, &priv->nec7210_priv, assert);
- }
- 
--void ines_remote_enable(struct gpib_board *board, int enable)
-+static void ines_remote_enable(struct gpib_board *board, int enable)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_remote_enable(board, &priv->nec7210_priv, enable);
- }
- 
--int ines_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
-+static int ines_enable_eos(struct gpib_board *board, u8 eos_byte, int compare_8_bits)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_enable_eos(board, &priv->nec7210_priv, eos_byte, compare_8_bits);
- }
- 
--void ines_disable_eos(struct gpib_board *board)
-+static void ines_disable_eos(struct gpib_board *board)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_disable_eos(board, &priv->nec7210_priv);
- }
- 
--unsigned int ines_update_status(struct gpib_board *board, unsigned int clear_mask)
-+static unsigned int ines_update_status(struct gpib_board *board, unsigned int clear_mask)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_update_status(board, &priv->nec7210_priv, clear_mask);
- }
- 
--int ines_primary_address(struct gpib_board *board, unsigned int address)
-+static int ines_primary_address(struct gpib_board *board, unsigned int address)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_primary_address(board, &priv->nec7210_priv, address);
- }
- 
--int ines_secondary_address(struct gpib_board *board, unsigned int address, int enable)
-+static int ines_secondary_address(struct gpib_board *board, unsigned int address, int enable)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_secondary_address(board, &priv->nec7210_priv, address, enable);
- }
- 
--int ines_parallel_poll(struct gpib_board *board, u8 *result)
-+static int ines_parallel_poll(struct gpib_board *board, u8 *result)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_parallel_poll(board, &priv->nec7210_priv, result);
- }
- 
--void ines_parallel_poll_configure(struct gpib_board *board, u8 config)
-+static void ines_parallel_poll_configure(struct gpib_board *board, u8 config)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_parallel_poll_configure(board, &priv->nec7210_priv, config);
- }
- 
--void ines_parallel_poll_response(struct gpib_board *board, int ist)
-+static void ines_parallel_poll_response(struct gpib_board *board, int ist)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_parallel_poll_response(board, &priv->nec7210_priv, ist);
- }
- 
--void ines_serial_poll_response(struct gpib_board *board, u8 status)
-+static void ines_serial_poll_response(struct gpib_board *board, u8 status)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	nec7210_serial_poll_response(board, &priv->nec7210_priv, status);
- }
- 
--u8 ines_serial_poll_status(struct gpib_board *board)
-+static u8 ines_serial_poll_status(struct gpib_board *board)
- {
- 	struct ines_priv *priv = board->private_data;
- 
- 	return nec7210_serial_poll_status(board, &priv->nec7210_priv);
- }
- 
--void ines_return_to_local(struct gpib_board *board)
-+static void ines_return_to_local(struct gpib_board *board)
- {
- 	struct ines_priv *priv = board->private_data;
- 
-@@ -664,13 +666,13 @@ static int ines_allocate_private(struct gpib_board *board)
- 	return 0;
- }
- 
--void ines_free_private(struct gpib_board *board)
-+static void ines_free_private(struct gpib_board *board)
- {
- 	kfree(board->private_data);
- 	board->private_data = NULL;
- }
- 
--int ines_generic_attach(struct gpib_board *board)
-+static int ines_generic_attach(struct gpib_board *board)
- {
- 	struct ines_priv *ines_priv;
- 	struct nec7210_priv *nec_priv;
-@@ -690,7 +692,7 @@ int ines_generic_attach(struct gpib_board *board)
- 	return 0;
- }
- 
--void ines_online(struct ines_priv *ines_priv, const struct gpib_board *board, int use_accel)
-+static void ines_online(struct ines_priv *ines_priv, const struct gpib_board *board, int use_accel)
- {
- 	struct nec7210_priv *nec_priv = &ines_priv->nec7210_priv;
- 
-@@ -852,7 +854,7 @@ static int ines_common_pci_attach(struct gpib_board *board, const struct gpib_bo
- 	return 0;
- }
- 
--int ines_pci_attach(struct gpib_board *board, const struct gpib_board_config *config)
-+static int ines_pci_attach(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	struct ines_priv *ines_priv;
- 	int retval;
-@@ -867,7 +869,7 @@ int ines_pci_attach(struct gpib_board *board, const struct gpib_board_config *co
- 	return 0;
- }
- 
--int ines_pci_accel_attach(struct gpib_board *board, const struct gpib_board_config *config)
-+static int ines_pci_accel_attach(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	struct ines_priv *ines_priv;
- 	int retval;
-@@ -884,7 +886,7 @@ int ines_pci_accel_attach(struct gpib_board *board, const struct gpib_board_conf
- 
- static const int ines_isa_iosize = 0x20;
- 
--int ines_isa_attach(struct gpib_board *board, const struct gpib_board_config *config)
-+static int ines_isa_attach(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	struct ines_priv *ines_priv;
- 	struct nec7210_priv *nec_priv;
-@@ -915,7 +917,7 @@ int ines_isa_attach(struct gpib_board *board, const struct gpib_board_config *co
- 	return 0;
- }
- 
--void ines_pci_detach(struct gpib_board *board)
-+static void ines_pci_detach(struct gpib_board *board)
- {
- 	struct ines_priv *ines_priv = board->private_data;
- 	struct nec7210_priv *nec_priv;
-@@ -949,7 +951,7 @@ void ines_pci_detach(struct gpib_board *board)
- 	ines_free_private(board);
- }
- 
--void ines_isa_detach(struct gpib_board *board)
-+static void ines_isa_detach(struct gpib_board *board)
- {
- 	struct ines_priv *ines_priv = board->private_data;
- 	struct nec7210_priv *nec_priv;
-@@ -1005,7 +1007,6 @@ static int ines_pcmcia_attach(struct gpib_board *board, const struct gpib_board_
- static int ines_pcmcia_accel_attach(struct gpib_board *board,
- 				    const struct gpib_board_config *config);
- static void ines_pcmcia_detach(struct gpib_board *board);
--static irqreturn_t ines_pcmcia_interrupt(int irq, void *arg);
- static int ines_common_pcmcia_attach(struct gpib_board *board);
- /*
-  * A linked list of "instances" of the gpib device.  Each actual
-@@ -1213,7 +1214,7 @@ static struct pcmcia_driver ines_gpib_cs_driver = {
- 	.resume		= ines_gpib_resume,
- };
- 
--void ines_pcmcia_cleanup_module(void)
-+static void ines_pcmcia_cleanup_module(void)
- {
- 	pcmcia_unregister_driver(&ines_gpib_cs_driver);
- }
-@@ -1302,14 +1303,14 @@ static struct gpib_interface ines_pcmcia_interface = {
- 	.return_to_local = ines_return_to_local,
- };
- 
--irqreturn_t ines_pcmcia_interrupt(int irq, void *arg)
-+static irqreturn_t ines_pcmcia_interrupt(int irq, void *arg)
- {
- 	struct gpib_board *board = arg;
- 
- 	return ines_interrupt(board);
- }
- 
--int ines_common_pcmcia_attach(struct gpib_board *board)
-+static int ines_common_pcmcia_attach(struct gpib_board *board)
- {
- 	struct ines_priv *ines_priv;
- 	struct nec7210_priv *nec_priv;
-@@ -1348,7 +1349,7 @@ int ines_common_pcmcia_attach(struct gpib_board *board)
- 	return 0;
- }
- 
--int ines_pcmcia_attach(struct gpib_board *board, const struct gpib_board_config *config)
-+static int ines_pcmcia_attach(struct gpib_board *board, const struct gpib_board_config *config)
- {
- 	struct ines_priv *ines_priv;
- 	int retval;
-@@ -1363,7 +1364,8 @@ int ines_pcmcia_attach(struct gpib_board *board, const struct gpib_board_config
- 	return 0;
- }
- 
--int ines_pcmcia_accel_attach(struct gpib_board *board, const struct gpib_board_config *config)
-+static int ines_pcmcia_accel_attach(struct gpib_board *board,
-+				    const struct gpib_board_config *config)
- {
- 	struct ines_priv *ines_priv;
- 	int retval;
-@@ -1378,7 +1380,7 @@ int ines_pcmcia_accel_attach(struct gpib_board *board, const struct gpib_board_c
- 	return 0;
- }
- 
--void ines_pcmcia_detach(struct gpib_board *board)
-+static void ines_pcmcia_detach(struct gpib_board *board)
- {
- 	struct ines_priv *ines_priv = board->private_data;
- 	struct nec7210_priv *nec_priv;
--- 
-2.49.0
-
+DQo+IA0KPiBPbiBXZWQsIEFwciAzMCwgMjAyNSBhdCAwNjo1MzozMkFNICswMDAwLCBSZXNoZXRv
+dmEsIEVsZW5hIHdyb3RlOg0KPiA+IDIuIFN3aXRjaCB0byBTZWFuJ3MgYXBwcm9hY2ggdG8gZXhl
+Y3V0ZSBFVVBEQVRFU1ZOIGR1cmluZyB0aGUNCj4gc2d4X29wZW4oKS4NCj4gPiBCdHcsIFNlYW4g
+ZG8geW91IGFncmVlIHRoYXQgd2UgZG9uJ3QgZ2FpbiBtdWNoIGRvaW5nIGl0IHNlY29uZCB0aW1l
+IGR1cmluZw0KPiA+IHJlbGVhc2UoKSBnaXZlbiB0aGUgbWljcm9jb2RlIGZsb3c/DQo+ID4gSSB3
+b3VsZCByYXRoZXIgbGVhdmUgb25seSBvbmUgaW52b2NhdGlvbiBvZiBldXBkYXRlc3ZuIGR1cmlu
+Zw0KPiBzZ3hfaW5jX3VzYWdlX2NvdW50KCkuDQo+ID4NCj4gPiBQcm9jOiBObyBuZXcgdUFCSS4g
+TW9yZSBwcmVkaWN0YWJsZSBvbiBzdm4gY2hhbmdlIGNvbXBhcmVkIHRvIG9wdGlvbiAxLg0KPiAN
+Cj4gPiBDb25zOiBUd28gZXhwbGljaXQgcGF0aHMgdG8gaG9vazogc2d4X29wZW4oKSBhbmQgc2d4
+X3ZlcGNfb3BlbigpLg0KPiANCj4gV2h5IHRoaXMgaXMgYSBjb24/DQoNCldlbGwsIGp1c3QgZnJv
+bSB0aGUgcG92IG9mIG5vdCBoYXZpbmcgYSBzaW5nbGUgcGF0aCB0byBlbmFibGUuIA0KQXJlIHlv
+dSBvayB3aXRoIG9wdGlvbiAyPyANCg0KQmVzdCBSZWdhcmRzLA0KRWxlbmEuDQo=
