@@ -1,38 +1,41 @@
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825F62580EA;
-	Fri,  2 May 2025 16:13:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD522580EA;
+	Fri,  2 May 2025 16:13:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746202388; cv=none; b=DBRwEk4fmvAoMP6zH+doRzvr3vGuqK3/syvSCFbeFvaEf0br1LVjmLlv8pxEQSVvaszEQIcYaat5UmT8hcf+GQJO3NZUO1z5cOK77jLkSb1qEVlxqxr98nNU1NvQ3pm1CLcrqnW+iKG2zVp8sykh18QFXfPZm8a5qJAnN7m1RG8=
+	t=1746202422; cv=none; b=bIhgPsabg9AIW2JVj5pIw21BZ/CYG9q/KAiGgGGN3ZnzfkKZBrhVsClaI0jy5EClVC1OdqP0CHonCAKP1va8g7rrzJOylb/PcebocJr1fkDxybZqrJpNmInMuGDRwYolBLYW7Hlun2Qfq3Sh5bykfrv8mDN29999DnEmj8DhLxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746202388; c=relaxed/simple;
-	bh=O42FzXmVIrNxY2NIxyW0vI1kl2XusvAI3zplmRlwZ5U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sMPCYWZAkUGeABedxXuyC6Xavf/mnSb4DYtYbh+prmuEo/php5YLymQxGiEFvAgDathRejc/X2JmX7siF30AkOC2k45jfyuXf4OOGVaDIBmgzJltZTUa2kZiGZ8/a0m6C3pnh5mlwa8PMcBAdxc577ZUzZtXN3K1O0B4g19dl6Y=
+	s=arc-20240116; t=1746202422; c=relaxed/simple;
+	bh=nhM/t1Q8GU9PEYeBNAfzztc0XkgCEm1u8Gq9Z/+PuS4=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nVuAb2H5MOQmWJXWhsADZ1Dxqtc11H9s5sU5blTt+HiU44g5ZniwJyrnNQqlUu+Pu/e7SDUTviQdc/lhzVFrjas5QFedHYetaWNKlSIut7JatZAYW6k0YkXMGcsAtJA0m5U7DxiXZOp3zxkhvs8/+WA03SvMhf080bGRBF0BTlo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zpwp058kKz6M4Tp;
-	Sat,  3 May 2025 00:08:40 +0800 (CST)
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Zpws91bZPz67J7D;
+	Sat,  3 May 2025 00:11:25 +0800 (CST)
 Received: from frapeml500003.china.huawei.com (unknown [7.182.85.28])
-	by mail.maildlp.com (Postfix) with ESMTPS id EB3491402F8;
-	Sat,  3 May 2025 00:13:03 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 540121402F8;
+	Sat,  3 May 2025 00:13:37 +0800 (CST)
 Received: from a2303103017.china.huawei.com (10.47.77.180) by
  frapeml500003.china.huawei.com (7.182.85.28) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 2 May 2025 18:13:03 +0200
+ 15.1.2507.39; Fri, 2 May 2025 18:13:36 +0200
 From: Alireza Sanaee <alireza.sanaee@huawei.com>
 To: <devicetree@vger.kernel.org>
 CC: <robh@kernel.org>, <jonathan.cameron@huawei.com>,
 	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
 	<linuxarm@huawei.com>, <mark.rutland@arm.com>,
 	<shameerali.kolothum.thodi@huawei.com>
-Subject: [PATCH v2 0/6] DT: Enable sharing resources for SMT threads
-Date: Fri, 2 May 2025 17:12:54 +0100
-Message-ID: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+Subject: [PATCH v2 1/6] of: add infra for finding CPU id from phandle
+Date: Fri, 2 May 2025 17:12:55 +0100
+Message-ID: <20250502161300.1411-2-alireza.sanaee@huawei.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250502161300.1411-1-alireza.sanaee@huawei.com>
+References: <20250502161300.1411-1-alireza.sanaee@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,69 +47,80 @@ Content-Type: text/plain
 X-ClientProxiedBy: lhrpeml100011.china.huawei.com (7.191.174.247) To
  frapeml500003.china.huawei.com (7.182.85.28)
 
-This patchset allows for sharing resources between SMT threads in the
-device tree (DT).
+Get CPU id from phandle. Many drivers get do this by getting hold of CPU
+node first through a phandle and then find the CPU ID using the relevant
+function. This commit encapsulates cpu node finding and improves
+readability.
 
-WHY? Given the current use of the DT, it is not possible to share L1
-caches, as well as other resources such as clock among SMT threads.
-However, DT spec in section Section 3.8.1 [1], describes how SMT threads
-can be described in the reg array, this is how PowerPC describes SMT
-threads in DT.
+The API interface requires two parameters, 1) node, 2) pointer to CPU
+node. API sets the pointer to the CPU node and allows the driver to play
+with the CPU itself, for logging purposes for instance.
+---
+ drivers/of/cpu.c   | 24 ++++++++++++++++++++++++
+ include/linux/of.h |  8 ++++++++
+ 2 files changed, 32 insertions(+)
 
-CHALLENGE: Given discussions with the community [2], it was apparent
-that it is not straightforward to implement this, since cpu-maps must
-point to a particular CPU node in DT [3], Section 2.1. However, it is
-not only the cpu-map but also there other nodes that point to cpu nodes
-which indeed need care and changes.
-
-SOLUTION: This led to more discussions on what the solution should look
-like and based on recent conversations we ended up with the following
-approach [4].
-
-core0 {
-  thread0 {
-    cpu = <&cpu0 0>;
-  };
-  thread1 {
-    cpu = <&cpu0 1>;
-  };
-};
-
-In this layout, first parameter is the phandle to cpu-node and second
-index would be the local-thread index in the reg array available in the
-cpu-node reg property.
-
-[1] https://github.com/devicetree-org/devicetree-specification/releases/download/v0.4/devicetree-specification-v0.4.pdf
-[2] https://lore.kernel.org/linux-arm-kernel/Z4FJZPRg75YIUR2l@J2N7QTR9R3/
-[3] https://www.kernel.org/doc/Documentation/devicetree/bindings/cpu/cpu-topology.txt
-[4] https://lore.kernel.org/devicetree-spec/CAL_JsqK1yqRLD9B+G7UUp=D8K++mXHq0Rmv=1i6DL_jXyZwXAw@mail.gmail.com/
-
-PRIOR VERSIONs:
-   [V1] https://lore.kernel.org/all/20250422084340.457-1-alireza.sanaee@huawei.com/
-
-CHANGE LOG:
-    V1 -> V2:
-        * Address Rob's comments.
-            ** Re-order patches.
-            ** Fix bugs.
-        * Remove #cpu-cells property
-
-Alireza Sanaee (6):
-  of: add infra for finding CPU id from phandle
-  arch_topology: update CPU map to use the new API
-  coresight: cti: Use of_cpu_phandle_to_id for grabbing CPU id
-  coresight: Use of_cpu_phandle_to_id for grabbing CPU id
-  arm64: of: handle multiple threads in ARM cpu node
-  of: of_cpu_phandle_to_id to support SMT threads
-
- arch/arm64/kernel/smp.c                       | 74 ++++++++++---------
- drivers/base/arch_topology.c                  | 12 +--
- .../coresight/coresight-cti-platform.c        | 15 +---
- .../hwtracing/coresight/coresight-platform.c  | 14 +---
- drivers/of/cpu.c                              | 51 +++++++++++++
- include/linux/of.h                            |  8 ++
- 6 files changed, 111 insertions(+), 63 deletions(-)
-
+diff --git a/drivers/of/cpu.c b/drivers/of/cpu.c
+index 5214dc3d05ae..1e8d1fa04d3c 100644
+--- a/drivers/of/cpu.c
++++ b/drivers/of/cpu.c
+@@ -173,6 +173,30 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
+ }
+ EXPORT_SYMBOL(of_cpu_node_to_id);
+ 
++/**
++ * of_cpu_phandle_to_id: Get the logical CPU number for a given device_node
++ *
++ * @node: Pointer to the device_node containing CPU phandle.
++ * @cpu_np: Pointer to the device_node for CPU.
++ *
++ * Return: The logical CPU number of the given CPU device_node or -ENODEV if
++ * the CPU is not found. If the property is not found, it returns -1. On
++ * success, cpu_np will always point to the retrieved CPU device_node.
++ */
++int of_cpu_phandle_to_id(const struct device_node *node,
++			 struct device_node **cpu_np)
++{
++	if (!node)
++		return -1;
++
++	*cpu_np = of_parse_phandle(node, "cpu", 0);
++	if (!cpu_np)
++		return -ENODEV;
++
++	return of_cpu_node_to_id(*cpu_np);
++}
++EXPORT_SYMBOL(of_cpu_phandle_to_id);
++
+ /**
+  * of_get_cpu_state_node - Get CPU's idle state node at the given index
+  *
+diff --git a/include/linux/of.h b/include/linux/of.h
+index eaf0e2a2b75c..4087f516b3db 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -360,6 +360,8 @@ extern const void *of_get_property(const struct device_node *node,
+ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
+ extern struct device_node *of_cpu_device_node_get(int cpu);
+ extern int of_cpu_node_to_id(struct device_node *np);
++extern int of_cpu_phandle_to_id(const struct device_node *np,
++				struct device_node **cpu_np);
+ extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
+ extern struct device_node *of_get_cpu_state_node(const struct device_node *cpu_node,
+ 						 int index);
+@@ -662,6 +664,12 @@ static inline int of_cpu_node_to_id(struct device_node *np)
+ 	return -ENODEV;
+ }
+ 
++static inline int of_cpu_phandle_to_id(const struct device_node *np,
++				       struct device_node **cpu_np)
++{
++	return -ENODEV;
++}
++
+ static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
+ {
+ 	return NULL;
 -- 
 2.34.1
 
