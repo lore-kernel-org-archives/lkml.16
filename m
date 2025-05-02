@@ -1,147 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A31255251;
-	Fri,  2 May 2025 13:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 035E125525E
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193167; cv=none; b=Bam3lhzHKPzn88pWemCQRl2gwmQ2MgEI4eMBESmZwTSuO4uLlry3S+yXeE3GWQBTs1xfqJzEoU2dx+3S54UTj0mOWtJhLGcFQ/2dg+qCEXPn+kmJPkKugaZ+g84zXTSoFZYb08fh01stDkO6A0Djw5HYNJD2M4JJLZnD6HdlKWY=
+	t=1746193167; cv=none; b=ksoSFJt731OUWv3shDAvCKE792YdyKi+m8PuSDRiH8KGNZopHaI3ra82fLXny7miYkeT+i80mODxLXKHv0pBJAE1u97+k03qDxttQt1s5jzs1iaJZOeIVn81dUnxp+4liVOG9YfMlbogkwyutSzJEvviGa+Vo6eLSkVc+0z0w/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746193167; c=relaxed/simple;
-	bh=4yziH8gPQQjHep6jRBqts+aOq1QN1siEDXOnHepEN28=;
+	bh=ei9NJ049uGIX5yQhrHbMy78H/I6x/HWbcZ6Sft85qyc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sC1XdAr61HbeCsdEa/2yx9dvUZYRDTud+lYiuCQjHu9LFrpB8UDxrPdyJxcT2ovGzNKLqk3TKs5ufJfuwO3398s/IHC+QR5/41kJ1xbEAJskBh5RmYKByR7AJi33fERDNRnGDVJ98yxHQ7rUFVw/fl1Dh1mgqfnzgTyiCDHMDOk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: 2h+AXFqpRgSgmte5Fa7qsw==
-X-CSE-MsgGUID: 9v4xbTIdRMiPWD0cFvFi4A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="58540234"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="58540234"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:39:24 -0700
-X-CSE-ConnectionGUID: IIxyxQM+QOmUH/rgTMx5hQ==
-X-CSE-MsgGUID: ZPGrgnO0T06p2/rhG8urrg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="139782666"
-Received: from smile.fi.intel.com ([10.237.72.55])
-  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 06:39:22 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andy@kernel.org>)
-	id 1uAqbn-00000002DDD-005d;
-	Fri, 02 May 2025 16:39:19 +0300
-Date: Fri, 2 May 2025 16:39:18 +0300
-From: Andy Shevchenko <andy@kernel.org>
-To: Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	David Lechner <dlechner@baylibre.com>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 3/5] iio: adc: ad7606: add offset and phase
- calibration support
-Message-ID: <aBTLBvw_88hQBbns@smile.fi.intel.com>
-References: <20250502-wip-bl-ad7606-calibration-v2-0-174bd0af081b@baylibre.com>
- <20250502-wip-bl-ad7606-calibration-v2-3-174bd0af081b@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ag7Jyfoy+qCc1DtOZ4+DCAnkHmJk2Rk7RRk5O42iDMrLg11cU9OtJe5BSTyH88IaAwPDInsJCk3CL2HvXvh4LxxJ3AlRozG2H3Sv3qe5CFl4yNAkUqvolH5TkzGWEPGC2/b0Yc65UIbkP572b1+SqF5+pLgtNKu1+/ggPspMghw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=DTFfkXyh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DTFfkXyh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1746193164;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=K0hWQbEiVuqrU1ymk0jKVlMwDBtK6gb14Cqvrvj+pXI=;
+	b=DTFfkXyhTOC0ocpw/AvKnMByHTuZbALOv3ST8nnOx02OlvU+VbcxKIX2ryS6qgVET4nSXL
+	gqAaXgw0Z8gu7ZlZpQhPWuSOuOKtkUeAKtenNkFz+cjF6XAgGDnqevddo+nCGG6g6m5wnX
+	geOCYPcQCKgQuTXf45PVHQ3Mtoo7K+s=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-680-6xq3AcOBM7mdk4HaYssYfg-1; Fri,
+ 02 May 2025 09:39:19 -0400
+X-MC-Unique: 6xq3AcOBM7mdk4HaYssYfg-1
+X-Mimecast-MFC-AGG-ID: 6xq3AcOBM7mdk4HaYssYfg_1746193158
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DDC60180087A;
+	Fri,  2 May 2025 13:39:17 +0000 (UTC)
+Received: from fedora (unknown [10.72.116.6])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6A41A1956094;
+	Fri,  2 May 2025 13:39:13 +0000 (UTC)
+Date: Fri, 2 May 2025 21:39:08 +0800
+From: Ming Lei <ming.lei@redhat.com>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Jens Axboe <axboe@kernel.dk>, Uday Shankar <ushankar@purestorage.com>,
+	linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/9] ublk: take const ubq pointer in ublk_get_iod()
+Message-ID: <aBTK_ObSmaG6NXlA@fedora>
+References: <20250430225234.2676781-1-csander@purestorage.com>
+ <20250430225234.2676781-5-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250502-wip-bl-ad7606-calibration-v2-3-174bd0af081b@baylibre.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250430225234.2676781-5-csander@purestorage.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On Fri, May 02, 2025 at 03:27:00PM +0200, Angelo Dureghello wrote:
-> From: Angelo Dureghello <adureghello@baylibre.com>
+On Wed, Apr 30, 2025 at 04:52:29PM -0600, Caleb Sander Mateos wrote:
+> ublk_get_iod() doesn't modify the struct ublk_queue it is passed.
+> Clarify that by making the argument a const pointer.
 > 
-> Add support for offset and phase calibration, only for
-> devices that support software mode, that are:
+> Move the function definition earlier in the file so it doesn't need a
+> forward declaration.
 > 
-> ad7606b
-> ad7606c-16
-> ad7606c-18
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
 
-...
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-> +static int ad7606_get_calib_offset(struct ad7606_state *st, int ch, int *val)
-> +{
-> +	int ret;
-> +
-> +	ret = st->bops->reg_read(st, AD7606_CALIB_OFFSET(ch));
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	*val = st->chip_info->calib_offset_avail[0] +
-> +		ret * st->chip_info->calib_offset_avail[1];
 
-Something wrong with the indentation.
-
-> +	return 0;
-> +}
-
-...
-
-> +static int ad7606_set_calib_offset(struct ad7606_state *st, int ch, int val)
-> +{
-> +	int start_val, step_val, stop_val;
-
-All need to be signed?
-
-> +	start_val = st->chip_info->calib_offset_avail[0];
-> +	step_val = st->chip_info->calib_offset_avail[1];
-> +	stop_val = st->chip_info->calib_offset_avail[2];
-> +
-> +	if (val < start_val || val > stop_val)
-> +		return -EINVAL;
-> +
-> +	val -= start_val;
-> +	val /= step_val;
-> +
-> +	return st->bops->reg_write(st, AD7606_CALIB_OFFSET(ch), val);
-> +}
-
-...
-
-> +static int ad7606_set_calib_phase(struct ad7606_state *st, int ch, int val,
-> +				  int val2)
-> +{
-> +	int wreg, start_ns, step_ns, stop_ns;
-
-Ditto.
-
-> +	if (val != 0)
-> +		return -EINVAL;
-> +
-> +	start_ns = st->chip_info->calib_phase_avail[0][1];
-> +	step_ns = st->chip_info->calib_phase_avail[1][1];
-> +	stop_ns = st->chip_info->calib_phase_avail[2][1];
-> +
-> +	/*
-> +	 * ad7606b: phase dielay from 0 to 318.75 μs in steps of 1.25 μs.
-> +	 * ad7606c-16/18: phase delay from 0 µs to 255 µs in steps of 1 µs.
-> +	 */
-> +	if (val2 < start_ns || val2 > stop_ns)
-> +			return -EINVAL;
-
-Wrong indentation. Please fix in all places where it happens.
-
-> +	wreg = val2 / step_ns;
-> +
-> +	return st->bops->reg_write(st, AD7606_CALIB_PHASE(ch), wreg);
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+thanks,
+Ming
 
