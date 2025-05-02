@@ -1,251 +1,127 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9E72AF04
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A60B3D76
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186434; cv=none; b=L6wwYpDFTrgWfiSRIqTHIwqxflWFKFA48elpz/MIKWIAoRg4zWKoD++pNvJiT7cBVWT/PF6QJ3pJYDo2cQPpWAoQEnqQG23hcTyfruJW058Pz9T46sxdCHlQ32QmmoIdQoxubSV1zRUTRQdOow3OuqWPC1aDmqyvlMiuCzfNI0o=
+	t=1746186635; cv=none; b=qIouWMXZpVXdt6XoBunQ5JFhXGbaI9oi8mOUWglBRBJYDuGCYAyRd+T8I5B+e05up546QhJGbQ8F6id5t0lzc4P22uSMe/1xBP5qByDMfIXltJoTkKjq+gLNsbJ1fyMoT8Dg9bZJxYsIOTLBWqZYCyk4JwOfXB0AFFJre0So3BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186434; c=relaxed/simple;
-	bh=cB2cxb192pgUkDCF/6JRnHqrlQVpXJEBsmB29jSR3dU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qni+VeZR5yvxhVqA7fIai7/7P7/FnzlUTcUUg5bn96o8+00KAfoBqe/uW5ea5eeUFJXKP3ArkWqQ+DJSljsEwlMbx+6foDCBg92LZqJGxvzog8aXa1QvjzbuFO9EeVp/gpTnnykoKhxZaso7LRHW/Gis2caeYd/F+jgK+F+ddHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fFkpBt5A; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fFkpBt5A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746186430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bd+qrSUziC6Hp37oryqfJ42cozggFXlnjz2f5SA/Nlw=;
-	b=fFkpBt5ASInIcYUqC1X3F4MllL7i2sYe+cL4uM1wEdqd+zLXJjUjRDRpRdm6c3kXuNIoW0
-	ZJkymdIeCfy09v6Z2aocdpq9Y8fWGws85ch1ZUSMPRBbfLcLJXbYltsxXWk4b1Sz3+OjFd
-	92n5MHsluco0W5rRu5GrjEbz1wB7PEE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-647-1745bmeePgKK5lvVj6s1bw-1; Fri, 02 May 2025 07:47:09 -0400
-X-MC-Unique: 1745bmeePgKK5lvVj6s1bw-1
-X-Mimecast-MFC-AGG-ID: 1745bmeePgKK5lvVj6s1bw_1746186429
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43d0830c3f7so12957195e9.2
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:47:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746186429; x=1746791229;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bd+qrSUziC6Hp37oryqfJ42cozggFXlnjz2f5SA/Nlw=;
-        b=e7S1ngxVX5xjtnGfYZycZsE5UAeJZ/1yCGaUOotK33p9/3m7yiixQE/gVbGilzawJZ
-         GevtdKS8gRbEMmP9rszQZE2y5zpHMGzHqXO9LBISN1TYKR+Pnm2dAv3Vw2oV2psuxPmd
-         vv+if3LP1C4zJKmOspTUed5KHWO9Ps0NhzQiKRX3wbgIUnucoHt82m6ILvAPnNUdOu2E
-         49y4pMXy5OZ1fwfsoeaUfz+XkMKcBceSNSKIXMt7jVU6gd4dLNlhBhmS7F0IEfCSoARM
-         vhR0/4hYR7aRA3yhIWx+sRiJSfIoG+7qUwRpMupuO1M+NufW54y1GBqTTkDF00Nvkh2v
-         a/wg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6kUxCAB/AZ7WsiwJO8t5u0ZVWoJScCsxKsYSI0B+bx42jLwqPj5r+BJ1atiXm1eS+zjwtcZyUPiR8bVs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbIE/LWJD8kClipTMISXGtb2kv25mIMj3cxH4qmwTo8o4Wq9I2
-	wqHlf8aEV/omb2PMsEmmDZEvInGLMJIvEjGmzwPndHcd7w3ZEZxogbxgIDQFXGzXZvh+iD3qZB8
-	QZ3MzGrxMUJbEDEQ1SYdkoYbNnPg4cdCFZNW4B86gIZ3OeMmE4noaWeYRH3uVpA==
-X-Gm-Gg: ASbGncspDK9RtAK/7i5GV6vLtJOXwqcFRkjW8uEIq63MokNG5D5pKDn1kZE6YNeJo7+
-	ywVyLn8LeXGpgbuRS0B3C0fJmBGiXIKIDD2e8ho86/iTEbgBvB1fj+BdsC5jRuc0yBlbr45h0Xs
-	APvQzb1Er5qMkY+iT0iorZGNybnJpgvCgv7/b6yHt4yDbvCP/VigurbI9rsjFXMYOk8YPvm+bSC
-	t4pRepJS51dYGbi+JiHQRgqGvL7+uxfbZmRvhrVPeItCaas8RHQQ4u7RayQ+hk/hDneOgD91F9m
-	BaKGYkwQ1/EprZUxD+E=
-X-Received: by 2002:a05:600c:1907:b0:43d:aed:f7de with SMTP id 5b1f17b1804b1-441bbf31b4fmr17578705e9.21.1746186428642;
-        Fri, 02 May 2025 04:47:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNkSVOCPi9/Yl9G06/uxys7n8ZbaJNy9wtYWx0RJ7ALzhpTB8PeBBxho/R9jjz77v4vvgt8Q==
-X-Received: by 2002:a05:600c:1907:b0:43d:aed:f7de with SMTP id 5b1f17b1804b1-441bbf31b4fmr17578465e9.21.1746186428227;
-        Fri, 02 May 2025 04:47:08 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:246d:aa10::f39? ([2a0d:3344:246d:aa10::f39])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b2aecc89sm87546305e9.9.2025.05.02.04.47.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 04:47:07 -0700 (PDT)
-Message-ID: <53433089-7beb-46cf-ae8a-6c58cd909e31@redhat.com>
-Date: Fri, 2 May 2025 13:47:04 +0200
+	s=arc-20240116; t=1746186635; c=relaxed/simple;
+	bh=J777bZBvblRFhUvgPhbRSI/pUJMpvYDRiGGLvvskkvE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zmy86nLGjOlT7EK0haNIR/+ukyCjDHCK98A60fI+oylHfrMh8nniazM9ZmV/qQru3jvCqcNn12jJmAheiBR4pgpscKoKkKTc5KRCpomrqwDQtDnS+QZs5p+bmwSUfaX2teDBNA1jGbKkTwPnuq7NbUgRet2v5yh8T4TTxVOEk18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uAouP-0006x9-G7; Fri, 02 May 2025 13:50:25 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uAouP-000kA8-00;
+	Fri, 02 May 2025 13:50:25 +0200
+Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ore@pengutronix.de>)
+	id 1uAouO-00GXaQ-2p;
+	Fri, 02 May 2025 13:50:24 +0200
+Date: Fri, 2 May 2025 13:50:24 +0200
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] counter: interrupt-cnt: Protect enable/disable OPs with
+ mutex
+Message-ID: <aBSxgDuw42kPlweT@pengutronix.de>
+References: <20250331163642.2382651-1-alexander.sverdlin@siemens.com>
+ <jir0aD7w3brmbPDdhC4xAhaEKCp-g08TBmtdn785u_Z5M77ZHMhsK7UoamaROSznl2WmcUmPSnocgVnCSYmUYg==@protonmail.internalid>
+ <8394ef31a75fdf9122331ecb97dd6f986d5026f1.camel@siemens.com>
+ <aBSv1pJ1mulT78gn@ishi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v13 4/9] net: devmem: Implement TX path
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- io-uring@vger.kernel.org, virtualization@lists.linux.dev,
- kvm@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Simon Horman <horms@kernel.org>, Donald Hunter <donald.hunter@gmail.com>,
- Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>,
- Jeroen de Borst <jeroendb@google.com>,
- Harshitha Ramamurthy <hramamurthy@google.com>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, Jens Axboe <axboe@kernel.dk>,
- Pavel Begunkov <asml.silence@gmail.com>, David Ahern <dsahern@kernel.org>,
- Neal Cardwell <ncardwell@google.com>, "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
- =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Stefan Hajnoczi <stefanha@redhat.com>,
- Stefano Garzarella <sgarzare@redhat.com>, Shuah Khan <shuah@kernel.org>,
- sdf@fomichev.me, dw@davidwei.uk, Jamal Hadi Salim <jhs@mojatatu.com>,
- Victor Nogueira <victor@mojatatu.com>, Pedro Tammela
- <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>,
- Kaiyuan Zhang <kaiyuanz@google.com>
-References: <20250429032645.363766-1-almasrymina@google.com>
- <20250429032645.363766-5-almasrymina@google.com>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250429032645.363766-5-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aBSv1pJ1mulT78gn@ishi>
+X-Sent-From: Pengutronix Hildesheim
+X-URL: http://www.pengutronix.de/
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ore@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 4/29/25 5:26 AM, Mina Almasry wrote:
-> Augment dmabuf binding to be able to handle TX. Additional to all the RX
-> binding, we also create tx_vec needed for the TX path.
+On Fri, May 02, 2025 at 08:43:18PM +0900, William Breathitt Gray wrote:
+> On Fri, May 02, 2025 at 09:24:20AM +0000, Sverdlin, Alexander wrote:
+> > Dear maintainers,
+> > 
+> > On Mon, 2025-03-31 at 18:36 +0200, A. Sverdlin wrote:
+> > > From: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> > >
+> > > Enable/disable seems to be racy on SMP, consider the following scenario:
+> > >
+> > > CPU0					CPU1
+> > >
+> > > interrupt_cnt_enable_write(true)
+> > > {
+> > > 	if (priv->enabled == enable)
+> > > 		return 0;
+> > >
+> > > 	if (enable) {
+> > > 		priv->enabled = true;
+> > > 					interrupt_cnt_enable_write(false)
+> > > 					{
+> > > 						if (priv->enabled == enable)
+> > > 							return 0;
+> > >
+> > > 						if (enable) {
+> > > 							priv->enabled = true;
+> > > 							enable_irq(priv->irq);
+> > > 						} else {
+> > > 							disable_irq(priv->irq)
+> > > 							priv->enabled = false;
+> > > 						}
+> > > 		enable_irq(priv->irq);
+> > > 	} else {
+> > > 		disable_irq(priv->irq);
+> > > 		priv->enabled = false;
+> > > 	}
+> > >
+> > > The above would result in priv->enabled == false, but IRQ left enabled.
+> > > Protect both write (above race) and read (to propagate the value on SMP)
+> > > callbacks with a mutex.
+> > >
+> > > Signed-off-by: Alexander Sverdlin <alexander.sverdlin@siemens.com>
+> > 
+> > I've noticed that the patch has been marked as "Changes Requested" in
+> > the patchwork, could it be a mistake? Because I never received any
+> > change request.
 > 
-> Provide API for sendmsg to be able to send dmabufs bound to this device:
+> Hi Alexander,
 > 
-> - Provide a new dmabuf_tx_cmsg which includes the dmabuf to send from.
-> - MSG_ZEROCOPY with SCM_DEVMEM_DMABUF cmsg indicates send from dma-buf.
+> I can't comment on the patchwork status because I don't use that
+> service, but I apologize nonetheless for the delay in responding to your
+> patch submission. I'm hoping for an Ack from Oleksij, but this is a
+> pretty straight-forward fix that I'll be happy to pick it up regardless.
 > 
-> Devmem is uncopyable, so piggyback off the existing MSG_ZEROCOPY
-> implementation, while disabling instances where MSG_ZEROCOPY falls back
-> to copying.
-> 
-> We additionally pipe the binding down to the new
-> zerocopy_fill_skb_from_devmem which fills a TX skb with net_iov netmems
-> instead of the traditional page netmems.
-> 
-> We also special case skb_frag_dma_map to return the dma-address of these
-> dmabuf net_iovs instead of attempting to map pages.
-> 
-> The TX path may release the dmabuf in a context where we cannot wait.
-> This happens when the user unbinds a TX dmabuf while there are still
-> references to its netmems in the TX path. In that case, the netmems will
-> be put_netmem'd from a context where we can't unmap the dmabuf, Resolve
-> this by making __net_devmem_dmabuf_binding_free schedule_work'd.
-> 
-> Based on work by Stanislav Fomichev <sdf@fomichev.me>. A lot of the meat
-> of the implementation came from devmem TCP RFC v1[1], which included the
-> TX path, but Stan did all the rebasing on top of netmem/net_iov.
-> 
-> Cc: Stanislav Fomichev <sdf@fomichev.me>
-> Signed-off-by: Kaiyuan Zhang <kaiyuanz@google.com>
-> Signed-off-by: Mina Almasry <almasrymina@google.com>
-> Acked-by: Stanislav Fomichev <sdf@fomichev.me>
+> Would you provide a Fixes line so the stable trees can pick this up for
+> the necessary kernel versions?
 
-I'm sorry for the late feedback. A bunch of things I did not notice
-before...
+Sorry for delay, you can add my
+Acked-by: Oleksij Rempel <o.rempel@pengutronix.de>
 
-> @@ -701,6 +743,8 @@ int __zerocopy_sg_from_iter(struct msghdr *msg, struct sock *sk,
->  
->  	if (msg && msg->msg_ubuf && msg->sg_from_iter)
->  		ret = msg->sg_from_iter(skb, from, length);
-> +	else if (unlikely(binding))
-
-I'm unsure if the unlikely() here (and in similar tests below) it's
-worthy: depending on the actual workload this condition could be very
-likely.
-
-[...]
-> @@ -1066,11 +1067,24 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->  	int flags, err, copied = 0;
->  	int mss_now = 0, size_goal, copied_syn = 0;
->  	int process_backlog = 0;
-> +	bool sockc_valid = true;
->  	int zc = 0;
->  	long timeo;
->  
->  	flags = msg->msg_flags;
->  
-> +	sockc = (struct sockcm_cookie){ .tsflags = READ_ONCE(sk->sk_tsflags),
-> +					.dmabuf_id = 0 };
-
-the '.dmabuf_id = 0' part is not needed, and possibly the code is
-clearer without it.
-
-> +	if (msg->msg_controllen) {
-> +		err = sock_cmsg_send(sk, msg, &sockc);
-> +		if (unlikely(err))
-> +			/* Don't return error until MSG_FASTOPEN has been
-> +			 * processed; that may succeed even if the cmsg is
-> +			 * invalid.
-> +			 */
-> +			sockc_valid = false;
-> +	}
-> +
->  	if ((flags & MSG_ZEROCOPY) && size) {
->  		if (msg->msg_ubuf) {
->  			uarg = msg->msg_ubuf;
-> @@ -1078,7 +1092,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->  				zc = MSG_ZEROCOPY;
->  		} else if (sock_flag(sk, SOCK_ZEROCOPY)) {
->  			skb = tcp_write_queue_tail(sk);
-> -			uarg = msg_zerocopy_realloc(sk, size, skb_zcopy(skb));
-> +			uarg = msg_zerocopy_realloc(sk, size, skb_zcopy(skb),
-> +						    sockc_valid && !!sockc.dmabuf_id);
-
-If sock_cmsg_send() failed and the user did not provide a dmabuf_id,
-memory accounting will be incorrect.
-
->  			if (!uarg) {
->  				err = -ENOBUFS;
->  				goto out_err;
-> @@ -1087,12 +1102,27 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->  				zc = MSG_ZEROCOPY;
->  			else
->  				uarg_to_msgzc(uarg)->zerocopy = 0;
-> +
-> +			if (sockc_valid && sockc.dmabuf_id) {
-> +				binding = net_devmem_get_binding(sk, sockc.dmabuf_id);
-> +				if (IS_ERR(binding)) {
-> +					err = PTR_ERR(binding);
-> +					binding = NULL;
-> +					goto out_err;
-> +				}
-> +			}
->  		}
->  	} else if (unlikely(msg->msg_flags & MSG_SPLICE_PAGES) && size) {
->  		if (sk->sk_route_caps & NETIF_F_SG)
->  			zc = MSG_SPLICE_PAGES;
->  	}
->  
-> +	if (sockc_valid && sockc.dmabuf_id &&
-> +	    (!(flags & MSG_ZEROCOPY) || !sock_flag(sk, SOCK_ZEROCOPY))) {
-> +		err = -EINVAL;
-> +		goto out_err;
-> +	}
-> +
->  	if (unlikely(flags & MSG_FASTOPEN ||
->  		     inet_test_bit(DEFER_CONNECT, sk)) &&
->  	    !tp->repair) {
-> @@ -1131,14 +1161,8 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
->  		/* 'common' sending to sendq */
->  	}
->  
-> -	sockc = (struct sockcm_cookie) { .tsflags = READ_ONCE(sk->sk_tsflags)};
-> -	if (msg->msg_controllen) {
-> -		err = sock_cmsg_send(sk, msg, &sockc);
-> -		if (unlikely(err)) {
-> -			err = -EINVAL;
-> -			goto out_err;
-> -		}
-> -	}
-> +	if (!sockc_valid)
-> +		goto out_err;
-
-Here 'err' could have been zeroed by tcp_sendmsg_fastopen(), and out_err
-could emit a wrong return value.
-
-Possibly it's better to keep the 'dmabuf_id' initialization out of
-sock_cmsg_send() in a separate helper could simplify the handling here?
-
-/P
-
+-- 
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
