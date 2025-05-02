@@ -1,108 +1,96 @@
-Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCDF2522AB
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:53:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D237F211A1E;
+	Fri,  2 May 2025 12:54:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746190391; cv=none; b=u5MInXCWj7beXLK5lb7kc5szsf/hTNBLTpeVuzhKAcFbOD73t4dOPTDs+iLkTqXBORBgtzpr/FmlG1fjQIOVt8Zi+8lidruM4bwOMkfa6C0inNu35GsfGFvD2zyXarvwNtQ8gG+Yq6VQwwZcWKEK+mJ26FJyd3XlkZmG0sFg2Fo=
+	t=1746190482; cv=none; b=AvSeRhMkrIbryT303F56W3mUagfwdQUWOVjyOowwGDzw22xReuhZ95ZJI9mpNQ8ZWHggtZO0TkBxQL7Es4h8fkSWQuOKwJVtS1rDS1uJcyZaCeCcffA4DHSVFWgzw77SrMxmmtDPlKmmSSzL3ExfB4vn1McD0wDcHmNEDYF0kCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746190391; c=relaxed/simple;
-	bh=d6BIDo5o6v8Og9mlVPWHFnFSpDPq3cOdjoFU7Gr+XSk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qcCsHkXOt4a3oWkMs1GaD246/dULWyfJv/om5IYEYNyLbp7ZEnEE9Nxt26aT/4FfKjMv/13SlgoAU+fjU5SVYpCNOoz38GPNTRgEsWwMca29bOFIa2b39rnjBY73bgyS0KtrASWNCpQD6fgZiLfCI/5NoPE48VAvPT/9Fy00YAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
-Received: from trampoline.thunk.org (pool-173-48-82-148.bstnma.fios.verizon.net [173.48.82.148])
-	(authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 542Cqu9M008239
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 May 2025 08:52:57 -0400
-Received: by trampoline.thunk.org (Postfix, from userid 15806)
-	id 0415B2E00E9; Fri, 02 May 2025 08:52:56 -0400 (EDT)
-Date: Fri, 2 May 2025 08:52:55 -0400
-From: "Theodore Ts'o" <tytso@mit.edu>
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-Cc: "glaubitz@physik.fu-berlin.de" <glaubitz@physik.fu-berlin.de>,
-        "frank.li@vivo.com" <frank.li@vivo.com>,
-        "slava@dubeyko.com" <slava@dubeyko.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: =?utf-8?B?5Zue5aSN?= =?utf-8?Q?=3A?=  [PATCH 1/2] hfsplus: fix
- to update ctime after rename
-Message-ID: <20250502125255.GA333135@mit.edu>
-References: <20250429201517.101323-1-frank.li@vivo.com>
- <d865b68eca9ac7455829e38665bda05d3d0790b0.camel@ibm.com>
- <SEZPR06MB52696A013C6D7553634C4429E8822@SEZPR06MB5269.apcprd06.prod.outlook.com>
- <b0181fae61173d3d463637c7f2b197a4befc4796.camel@ibm.com>
- <082cd97a11ca1680249852e975f8c3e06b53c26c.camel@physik.fu-berlin.de>
- <72b00e25d492fff6f457779a73ef8bc737467b39.camel@ibm.com>
+	s=arc-20240116; t=1746190482; c=relaxed/simple;
+	bh=0S4njLBx477UY0EGQFCzlms0FZEfXroNv1KmF3jVh3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jcqItCZuKJ5rs3HYwS+jjY/GzZ+uxUS7F2u6x4wpmrzdVMGpxcm9rleZt7EgWQjBxId+OC2erzRvgN4oJAdlNcK8MYjOkaoNCZRQ5PIMiBYXHLx3pQWnr2xD9QYc8g0047Wo8MWqiKeAcCBbYNQGuJEV7ixKZpZhBZ104nzIwS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=tefFsVbb; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="tefFsVbb"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=fdclFqSEaIk6BP0kwR3B1xdvCQwhZtNIC8kiyckL4fw=; b=tefFsVbbmieIaZxr6uA2/anU1g
+	k5v7LsaWGOffxM3gI22D/S19P9jGpatY0I/0oZwayz6xjHv/6xUm0WltatFayDFTdKe1OwucSY1OS
+	57MlVNPgsFcgJpfsHEYztOTk/I5iZ5Av7I3Q3/n/zxTEa1AdvOBRLDrsmJDSmOaM6JHt2SjnR1BZh
+	i5afFoydi+2HqxggIxX0YtqnCou8R5FlDgpQCRfmDvvSz7qK+CdZRaREeCVAHsDWueArLBGt+Cz2k
+	eg2CRZgqPXJx4JeLpHwMlj2sXdp3dhgnbT9mpQWGY7f2Wik9JZnmMzkYM8EFdQEF8OR/RLenGr4x4
+	hucT8ymg==;
+Date: Fri, 2 May 2025 14:54:20 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Johan Hovold <johan@kernel.org>, Johan Hovold <johan+linaro@kernel.org>,
+ Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Kevin
+ Hilman <khilman@baylibre.com>, Roger Quadros <rogerq@kernel.org>, Tony
+ Lindgren <tony@atomide.com>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+ linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jayesh Choudhary <j-choudhary@ti.com>
+Subject: Re: [PATCH] i2c: omap: fix deprecated of_property_read_bool() use
+Message-ID: <20250502145420.6bca53f9@akair>
+In-Reply-To: <hn3gsrizar6xbr4seclnb6xot4fo4ztryks4w7exvztsdzj4f6@jhobhujf3ezi>
+References: <20250415075230.16235-1-johan+linaro@kernel.org>
+	<vcwjwrjgzwoil5ydds4findhcgl2ujoxwia7eh7yrbdc45yx26@kmpmvataffzr>
+	<aAIiJQVAUdWJFVy7@hovoldconsulting.com>
+	<hn3gsrizar6xbr4seclnb6xot4fo4ztryks4w7exvztsdzj4f6@jhobhujf3ezi>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <72b00e25d492fff6f457779a73ef8bc737467b39.camel@ibm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, May 01, 2025 at 07:48:35PM +0000, Viacheslav Dubeyko wrote:
-> > Please note that when you apply patches with git-am, you should
-> > always use the "-s" option so that the patches are automatically
-> > signed-off with your own email address.
+Am Tue, 29 Apr 2025 15:10:13 +0200
+schrieb Andi Shyti <andi.shyti@kernel.org>:
 
-Pro tip: If you are using "b4 am" to download patches from
-lore.kernel.org, use the -c option, e.g., "b4 am -c [msgid]".  This
-will automatically check to make sure the patches have valid DKIM
-headers, etc. and will also check to see if there is a newer version
-of the patch series on lore.kernel.org and download it instead.
-
-Another cool command is "b4 shazaam"; see the b4 man page for more details.
-
-> > Btw, can you push your tree somewhere until you've got your
-> > kernel.org account?
+> Hi Johan,
 > 
-> Do we really need to create some temporary tree? I have a fork of
-> kernel tree on github where I am managing SSDFS source code. But I
-> am not sure that I can create another fork of kernel tree on github.
+> On Fri, Apr 18, 2025 at 11:57:57AM +0200, Johan Hovold wrote:
+> > On Thu, Apr 17, 2025 at 11:41:51PM +0200, Andi Shyti wrote:  
+> > > On Tue, Apr 15, 2025 at 09:52:30AM +0200, Johan Hovold wrote:  
+> > > > Using of_property_read_bool() for non-boolean properties is deprecated
+> > > > and results in a warning during runtime since commit c141ecc3cecd ("of:
+> > > > Warn when of_property_read_bool() is used on non-boolean properties").
+> > > > 
+> > > > Fixes: b6ef830c60b6 ("i2c: omap: Add support for setting mux")
+> > > > Cc: Jayesh Choudhary <j-choudhary@ti.com>
+> > > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>  
+> > > 
+> > > Thanks for your patch! I'm going to drop the Fixes tag, as this
+> > > isn't really a bug fix but rather a warning suppression during
+> > > boot time.  
+> > 
+> > Thanks, but I think you should have kept the Fixes tag and merged this
+> > for 6.15 (i2c-host-fixes) since this is a new warning in 6.15-rc1 (and
+> > that does warrant a Fixes tag). Perhaps I should have highlighted that
+> > better.
+> > 
+> > If the offending patch had been posted or merged before such uses
+> > started generating warnings in 6.14-rc1 then that would have been a
+> > different matter.  
+> 
+> I'm sorry, but as I understand it, the Fixes tag should be used
+> only when an actual bug is being fixed. I've seen stable
+> maintainers getting annoyed when it's used for non-bug issues.
+> 
+hmm, some issue new in -rc1 could be fixed in a later -rcX. I have seen
+a lot of typos and other minor stuff getting fixed that way. So
+it does not need to be backported to any stable/longterm tree at all.
+Are the rules for that really that tough as for stable trees? I really
+doubt.
 
-If you have a fork of the kernel tree, sure, you can just use that and
-tell folks what branch they should look at.
+Regards,
+Andreas 
 
-Github should be just fine creating another fork of the kernel tree,
-however.  One advantage of having separate forks is that once you set
-up the kernel.org tree from your local git tree, it becomes easier to
-update multiple trees via separate git trees.  So for example, when I
-push out changes, I might do
-
-git push ra     # ra.kernel.org is a CNAME for gitolite.kernel.org
-                # and is easier to type.   :-)
-git push github
-
-... and this will update my trees on kernel.org and github
-automatically, aince I have in my .git/config file:
-
-[remote "ra"]
-	url = ssh://gitolite@ra.kernel.org/pub/scm/linux/kernel/git/tytso/ext4.git
-	fetch = +refs/heads/*:refs/remotes/ext4/*
-	push = +master:master
-	push = +origin:origin
-	push = +fixes:fixes
-	push = +dev:dev
-	push = +test:test
-
-[remote "github"]
-	url = git@github.com:tytso/ext4.git
-	fetch = +refs/heads/*:refs/remotes/github/*
-	push = +master:master
-	push = +origin:origin
-	push = +fixes:fixes
-	push = +dev:dev
-	push = +test:test
-
-Cheers,
-
-						- Ted
