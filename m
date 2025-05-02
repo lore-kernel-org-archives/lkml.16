@@ -1,100 +1,134 @@
-Received: from mail.actia.se (mail.actia.se [212.181.117.226])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ED1024C664
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.181.117.226
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC57246769
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 11:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746186972; cv=none; b=SPc28mr4DiqIYj7Yr4Q7EofF4F7LOp1dke3133ifvjl0t0pWj9YWS9JguolaiPiXOZopZ1/EvkJfHr90A5SC0CSrLGKfhikWMVvrPTrkaHdbRVy6JjPJEV6x4NaMKl0f4eQiuipL67inoWLTD6DMR3ZlAkfkmlqDWSRuLfq5AZc=
+	t=1746186987; cv=none; b=dVvoPAg5O4wiYehix8l1YAH4Fr9El1hlMe0ke719pMcwo7NYTl87kYlmqAVhDkUe+NPOXxF4LQrnpbLHuF2hwW0GxlI39Ujz1Ty2Fji/Msvb4CpUeLjao74O69cRQ12o4eg1fpko+56/dCcxif/NklMYoFp1Nm/ZdW07GbxWg8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746186972; c=relaxed/simple;
-	bh=4qEqoKqvg+Xasg8DNYrixWeFQHuSwAzHyApDRtQCJ+s=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BefWA2ZMR/1/BSBrHNq85BQvOSXrOqmV2+ZNOHth7OJMmJKxUUwSwEQu6s5o/r4opMFSiiwePmHZgRyh2uQc2SoGWiXwydNSnpWEFCqpn7OMfFSWtVJCLhzjWPoEEbV4o/CdU9r+0QnFtfqBVUU+PQttQqM9oc/SDXOLQerHfO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se; spf=pass smtp.mailfrom=actia.se; arc=none smtp.client-ip=212.181.117.226
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=actia.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=actia.se
-Received: from S036ANL.actianordic.se (10.12.31.117) by S035ANL.actianordic.se
- (10.12.31.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 2 May
- 2025 13:40:56 +0200
-Received: from S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69]) by
- S036ANL.actianordic.se ([fe80::e13e:1feb:4ea6:ec69%3]) with mapi id
- 15.01.2507.039; Fri, 2 May 2025 13:40:56 +0200
-From: John Ernberg <john.ernberg@actia.se>
-To: Juergen Gross <jgross@suse.com>, Stefano Stabellini
-	<sstabellini@kernel.org>
-CC: Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, Catalin Marinas
-	<catalin.marinas@arm.com>, Andrew Morton <akpm@linux-foundation.org>,
-	"xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>, John Ernberg
-	<john.ernberg@actia.se>, "stable@kernel.org" <stable@kernel.org>
-Subject: [PATCH 1/2] xen: swiotlb: Use swiotlb bouncing if kmalloc allocation
- demands it
-Thread-Topic: [PATCH 1/2] xen: swiotlb: Use swiotlb bouncing if kmalloc
- allocation demands it
-Thread-Index: AQHbu1cQNcuPrbmRHEK42QDjG7hf6w==
-Date: Fri, 2 May 2025 11:40:55 +0000
-Message-ID: <20250502114043.1968976-2-john.ernberg@actia.se>
-References: <20250502114043.1968976-1-john.ernberg@actia.se>
-In-Reply-To: <20250502114043.1968976-1-john.ernberg@actia.se>
-Accept-Language: en-US, sv-SE
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-mailer: git-send-email 2.49.0
-x-esetresult: clean, is OK
-x-esetid: 37303A2956B14453667460
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1746186987; c=relaxed/simple;
+	bh=c+gKYUvL+mRmw0LVpyp2dts7T0YVjJ1xgr2xwpHqjV8=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=SHeK7GmnsBmbcE+3cPz0aNWKd6/HPfh1K00RrWWfTzutgwHuKBDSb2H6uW7kmb9HgJ9OjOGcTmMoiGKQ8rPCM0X3+tOSc8w1EOExWKFEbSmWl2cmog30yeLYttmJGuDjUfQuPjE6wEhzVozvZnW5piRFKNGIbvmXjqC1964EVVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pJpgYU1j; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pJpgYU1j"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30dd5a93b49so17838501fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 04:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1746186982; x=1746791782; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=rUNwIJ6BVyXnCNfhB8YdWYkkIgckWrMjQ8cfZd889F4=;
+        b=pJpgYU1ji4jGfIxLLtgJESHZTiUhNJ7ZklNVnZg6HcCtRxbwWGmFOhORaqK377mJVh
+         UY0FfG85ofIeI0S9Z6Ka+4N3lb/RR355qxMs4v4iLj8M68kvqGXhE57ucVeQTHM9yzKs
+         BibeDf7FnbQdCS4zhQ5wpnnIZLIrDpAuCmp4Zjv4uNCvhLmfRHB8Gg0fWcE8tcQvMiE2
+         Qk8p64t4tb2nAgBmAEdgdrJRwVlQ6LFEBU0ybhjVGZjvnLzGRT86oXj8WzEyw3MGkyOW
+         EP/wHTa18vLupIM1egkY8dD0lAzU2hUnBC3Iaxfv6uUKM6lJqyaTJMfIl3/kPRJaLwYD
+         jdKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746186982; x=1746791782;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rUNwIJ6BVyXnCNfhB8YdWYkkIgckWrMjQ8cfZd889F4=;
+        b=qA1A9ycIDell4oL4YRo23VQbtdatm3BRrk9YfTLN3Xb9vQNtmH+/bbiwO1wNDIiK5V
+         jvhhQ6sDKLecJkqrdR98JyB7P9Po69Wqz6bMQPuKQmkoSgL98AjkEStuHeUeG6INCl6m
+         XWgjmzqW6D0lZQ4yWWMlIS08zwKoQBAPEyXRNT/YJCrz4jaLv6x/811wVw9ThtpijaRn
+         SbBicYU39/lUPKBZSp0cJQZEvka0Kk/YtgnuycQkA0AaR2NuIJZ0MakhlyfcVaejS8d5
+         Aty1zFFNfy7PVwpzAyL/hGgO3hGJWAUVP7RTbyflxOFnpvptd8ogspgl1X+p04yZciIf
+         /xIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWKd4C7y/hX/pY3L5H7a2AJXybztvkjWoG9K7s3tDPhNx2sTNI4t+IDO0DWRpRCBGkDmNffoHh93bPy1os=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJQ1ujHKfyDrWaIFda8n90aIEyT0rVzCIsX87CCEt2itbPRU5y
+	jco6MQ20zN9PBmpJAifuq5DR/i7H7VxCYRcl5U7wqBgPiASJyFV70JWYGI8W3qWb+jz+m54P5rB
+	UA+Jti5jx4olOAAal01u6WfCfXP6D6RY4ut2JzA==
+X-Gm-Gg: ASbGncvhYh0NtK9ZyowNLbfG7yLt/p5HKKGDx1SyB1KQMtwIsnoqqLKn/evOVUrLdiW
+	CFsgGJHV19cSeF3RdJmTvImBS6azPzVD5vadoTXnUJJNCc2U+An3FPDc5NCJk00XQdnv1pCPYJ6
+	5PqT9rCILd/XqzJfJMqtGc9g==
+X-Google-Smtp-Source: AGHT+IFVQ8JKPYO1rnLcM2Y70dcTgwStoWvcnB2aoZEyQzs4B/b3M5+Y/SlSIKfzxsXCMLRLq9S0sgzPIPFIrl/mQKs=
+X-Received: by 2002:a2e:a812:0:b0:310:85ba:115f with SMTP id
+ 38308e7fff4ca-320c5be28efmr7733421fa.33.1746186981975; Fri, 02 May 2025
+ 04:56:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 2 May 2025 13:56:10 +0200
+X-Gm-Features: ATxdqUEieMo6zqI_jOq2JYpn2sJsyAQVwKrVkhKfiEUEH0GD9sH8kJFEH6gZSHg
+Message-ID: <CACRpkdbhYTFpA_jfMPFZ4t4bcVdO0+9iCsjtBnLpy9ok0U_wvQ@mail.gmail.com>
+Subject: [GIT PULL] pin control fixes for v6.15
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-Xen swiotlb support was missed when the patch set starting with
-4ab5f8ec7d71 ("mm/slab: decouple ARCH_KMALLOC_MINALIGN from
-ARCH_DMA_MINALIGN") was merged.
+Hi Linus,
 
-When running Xen on iMX8QXP, a SoC without IOMMU, the effect was that USB
-transfers ended up corrupted when there was more than one URB inflight at
-the same time.
+here are som Valborg-patches for pincontrol. All are driver
+fixes, nothing exciting at all other than that they fix bugs which
+is nice.
 
-Add a call to dma_kmalloc_needs_bounce() to make sure that allocations too
-small for DMA get bounced via swiotlb.
+Details are in the signed tag, please pull it in!
 
-Closes: https://lore.kernel.org/linux-usb/ab2776f0-b838-4cf6-a12a-c208eb6aa=
-d59@actia.se/
-Fixes: 4ab5f8ec7d71 ("mm/slab: decouple ARCH_KMALLOC_MINALIGN from ARCH_DMA=
-_MINALIGN")
-Cc: stable@kernel.org # v6.5+
-Signed-off-by: John Ernberg <john.ernberg@actia.se>
+Yours,
+Linus Walleij
 
----
+The following changes since commit 0af2f6be1b4281385b618cb86ad946eded089ac8:
 
-It's impossible to pick an exact fixes tag since this driver was missed
-in the flagged patch set. I picked one I felt gave a decent enough picture
-for someone coming across this later.
----
- drivers/xen/swiotlb-xen.c | 1 +
- 1 file changed, 1 insertion(+)
+  Linux 6.15-rc1 (2025-04-06 13:11:33 -0700)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index 1f65795cf5d7..ef56a2500ed6 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -217,6 +217,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *d=
-ev, struct page *page,
- 	 * buffering it.
- 	 */
- 	if (dma_capable(dev, dev_addr, size, true) &&
-+	    !dma_kmalloc_needs_bounce(dev, size, dir) &&
- 	    !range_straddles_page_boundary(phys, size) &&
- 		!xen_arch_need_swiotlb(dev, phys, dev_addr) &&
- 		!is_swiotlb_force_bounce(dev))
---=20
-2.49.0
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.15-2
+
+for you to fetch changes up to 12b8a672d2aa053064151659f49e7310674d42d3:
+
+  pinctrl: qcom: Fix PINGROUP definition for sm8750 (2025-04-29 10:27:25 +0200)
+
+----------------------------------------------------------------
+Pin control fixes for the v6.15 series:
+
+- Fix potential NULL dereference in the i.MX driver.
+
+- Fix the pull up/down resistor values in the Meson driver.
+
+- Fix the mapping of the PHY LED pins in the Airhoa driver.
+
+- Fix EINT interrupts on older controllers and a debounce value
+  issue in the Mediatek driver.
+
+- Fix an erronoeus PINGROUP define in the Qualcomm driver.
+
+----------------------------------------------------------------
+Chen-Yu Tsai (1):
+      pinctrl: mediatek: common-v1: Fix EINT breakage on older controllers
+
+Christian Marangi (1):
+      pinctrl: airoha: fix wrong PHY LED mapping and PHY2 LED defines
+
+Dan Carpenter (1):
+      pinctrl: mediatek: common-v1: Fix error checking in mtk_eint_init()
+
+Hao Chang (1):
+      pinctrl: mediatek: Fix new design debounce issue
+
+Hui Wang (1):
+      pinctrl: imx: Return NULL if no group is matched and found
+
+Martin Blumenstingl (1):
+      pinctrl: meson: define the pull up/down resistor value as 60 kOhm
+
+Maulik Shah (1):
+      pinctrl: qcom: Fix PINGROUP definition for sm8750
+
+ drivers/pinctrl/freescale/pinctrl-imx.c       |   6 +-
+ drivers/pinctrl/mediatek/mtk-eint.c           |   2 +-
+ drivers/pinctrl/mediatek/pinctrl-airoha.c     | 159 ++++++++++++--------------
+ drivers/pinctrl/mediatek/pinctrl-mtk-common.c |  12 +-
+ drivers/pinctrl/meson/pinctrl-meson.c         |   2 +-
+ drivers/pinctrl/qcom/pinctrl-sm8750.c         |   4 +-
+ 6 files changed, 87 insertions(+), 98 deletions(-)
