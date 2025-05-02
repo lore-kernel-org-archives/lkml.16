@@ -1,174 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from sonic309-27.consmr.mail.ne1.yahoo.com (sonic309-27.consmr.mail.ne1.yahoo.com [66.163.184.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C5325C6E1;
-	Fri,  2 May 2025 16:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B3325B68D
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 16:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=66.163.184.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746201654; cv=none; b=CkvyMKaN/WU9ELAXkX5qtagmeevihKjPIS3ChgqOQDj4HWt5IOVedOUs1OhhWBABxr5BVWFSLOgnisXBvnieb1WGQfwqoboEu3MNQ/sHt7vPl1GtsnQc2FjejqR3BKI/inuF/n5PUsDmvcd8wNa9xmgVSNCC5OZiK4s2ML69Z/c=
+	t=1746201657; cv=none; b=tiCJpPU1H8hyUYoF9Uf6WOUgsaifP9xQdB8WPZyML2fXbgSRh7OTG2ZADRJwlnx7KPFPoh/Kohzd/asUB2vq9kOIwdIu85tTgr3URQL+UZl+snIUs4fNNbK8JEH63j4rSCv8tF4skO/tJcy8LryaKvQYcQGNZJBGKVou2GK5+Uk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746201654; c=relaxed/simple;
-	bh=ytHKODURza7J0qG2g8cd79DBWYjObajhXHIR7ASo5uI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ok0Xa/VQdfarA35eTgFrmG+M2hhx3kLl7dpDgCBdXScDVuXwF0gCml+DKH8kLfpNLHmEbpJEVg7fIwr2Eoum6DptfxA5n5AB4lwbrUUNc9N8In4T57+r1iaWdHyrvq9NkVxWWc3O0uPYYeWrQqLKk1EaUJfKAyS/cg0i8NlGQMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXSS1bAx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746201657; c=relaxed/simple;
+	bh=9aTUd+XkE85PCNBhyXf/46k2tEVxDrnE1MU1E3sQYgA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lMZoLvViI6XVXY8hw+52QwgzLgGp9f3Z7hqeUtdzD5HXC9vWZ4SXMUTb0cIe95XjKKk/+mApoMoAJHXMhMi4yVNTXlWaJkK+gO7LMJCyXItzJ/uHw9k1PgCQ1+umLPtzkegTFQLKBIQFwmR7e7ZVYgmUZlYTf6cCQFcXHZt8/fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com; spf=none smtp.mailfrom=schaufler-ca.com; dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b=PSJtqjNr; arc=none smtp.client-ip=66.163.184.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=schaufler-ca.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=schaufler-ca.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXSS1bAx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B5D2C4CEE4;
-	Fri,  2 May 2025 16:00:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746201653;
-	bh=ytHKODURza7J0qG2g8cd79DBWYjObajhXHIR7ASo5uI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RXSS1bAx1hIWZJurAtU/etvjPHp88oygQMX9UTuCCs0tGl/3AOCmLonhYUSAmKL3f
-	 Mzt45VQDCE4qu2nawPsdC8byrqGHfYqBOL+ULJE3f1Q0t8qPkQQ9Cpjx0QWH3NWy2+
-	 iwWkq8gzG1C+pIji5Hm/AP5G4B2XCIVkX5UL4VBS8iSHfTAis1CoVFUIt/aj84lY1c
-	 XWlltAI/DTap/Tl+tpbvT+ifiySqF+3GAsFEIrpJpTLcN5zAAhzTVzju4pMGo1U4+2
-	 RDUYKudGMWXgARA5mn09yObEHbLVooHXUtsj10P+/h73CrWawAFNoxVDcFiyAIwEKq
-	 SQtV8uZQKgttw==
-Date: Fri, 2 May 2025 13:00:50 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Joe Mario <jmario@redhat.com>, Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>, Leo Yan <leo.yan@arm.com>
-Subject: Re: [RFC/PATCHSET 00/11] perf mem: Add new output fields for data
- source (v1)
-Message-ID: <aBTsMkY1nAVpIUQ4@x1>
-References: <20250430205548.789750-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="PSJtqjNr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746201647; bh=iMseOvbUafDVmbz7Z2NxQUSJNiEFWkLiEqvhg3BXCJ4=; h=Date:Subject:To:Cc:References:From:In-Reply-To:From:Subject:Reply-To; b=PSJtqjNrnBZnGf6aQf3fQ+tGF/2/YdgJASIU0myVZv+p2jEnfCSgmDZiJBSCycHJvwSzZSDm8P57EOOQMHRh5erKRGaVcxClhGHTjdTOg6ujyCHLXWWbmweg+Qo0g6fr8C9qMWFu5vGngc3kss126wah6GjqSFrFvu7a8BJL+O6hoPs0ioSd5CiM9cV0/SWthDA/7iQpjosJ3rme0TD2wyZDAk1QvDj5B3oEj8J5XEfNbpia58HJsMazQIB5Eso4Bqr4IwUsJbbM3GZcmeTFvlXjSz1OpbNf0AuSEHCj2ZC7QAKD16wMTCS3W3FW/fIyijwOQgq2R55wTpicLaTnAw==
+X-SONIC-DKIM-SIGN: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1746201647; bh=0631tDbHbIx70HaR7JIy8a0k4+g/G6zeeOALyTkTT0l=; h=X-Sonic-MF:Date:Subject:To:From:From:Subject; b=dp0vKkIeEan2F3VgydSB87IKUXBoBk1oqRaLgzsfK8EL7SP522/GjflgvuyyBzweY6efjLHtXlxlRhf+mOdlgzGefbyKeqQz+M5DdcHm50ZFyYEVIZJxFp+5YJBCFKBCuUevM7lHEG8LwAxotcQmnLOy0SGEcl8BuG7eq9EAce+SP0dia8MrxC5R58sqIV/51r0JQ8RBqkMzVr/ViBYdYql4hb3c5xik4jnKCGdj1yl9rHOTQhMKXUvtPuF0SEcR1ym3Vq8LazkS2SLztuC5r7wxTpPnIfadIaAcanASoEp+sOG3BU8rdp2Zjyo5QZMV/fyeSjNbAO4fCy/7NO1llw==
+X-YMail-OSG: GbsvcuMVM1nORwhGo4i4D19ac9Rpg4Nx4g0m59UpWxfqmATQHLa7TD1yc1iAHOP
+ QFbZmgIfyyRML0Hp6Fr58yZ.BusDbc5HApTsZ4fQ0P6xfqr_ADgYfkj.zpq7Z3BajqqCY3j.NpxI
+ FQ2Ee4PVgJgLEDx6WwguFtbywVXui0wQDCoOIEwtngvu2pqC9wvC5n.6gxlezVJa7R5pzLFzpbif
+ Qiq9_dC6UYw.5Y3lCkuwGUB4sosL1qtUnEo.wqTfyhqHhBMQSsibgHO2IWLm2EXVRvVBtosBpfHq
+ kmvZnorOXf7gWs0rBEg4YNMGAUvWzbFP4GiQwplwJYmhYd0rBY0DwvJY9sZROqgfzcuxBqyUb9qp
+ 7Mk8tQFaD_1Y.7LO7gxdZy8chFQh8KbWnEusilGQ8FwzUGAWXFJFOSfO0Nik3_mzXuNO0mpk5nqa
+ .wN1tXv6IpzHCAzbsBdnBLRsjo5uwleR8Qltux55Zb4W1gFoS2U.ngQ7NH2Ek3gcUZrRX5a80avE
+ bj7TSjvTfSxQzhtKYtZlw4F6bQrtLAG8UP46DRUd0eM.hmX04xWUPnHLnoYdDQon2HpA_Siuvwad
+ PQuQtxE_wzJVP72Dy84l8rGY3uSLLhUNko9R7erjH3pI1.nyuB_0iPi01DcXKldJ7b87tMoaADyx
+ 3NJ37eFV3WIfWmZkTIrqJa6r8LOLlPqbRK6qHH6iWBHBjdLqWn5SQ.d6iFq2ONF8C5RaxcGx29_n
+ PWhQeLlW9aN69YyK92NqXAsa5KCrC6m0Q3s8yxvlZj45kkBqx9KHLquuHlAPgvqTu7lKONaceZVY
+ A773213a74.uRoiT02Zrnw4X0CoCOCw2fOcNTNSIn6njz.RRckHUgzrABlc5C_9xOy1DJRcWTCWs
+ Kew1k8.JkjpQx4W.nKYTCnkixFCmG.FdlBgQaJosqyR.EFHpSXYEd5QMKoAqc4cAGtiVex1xvDLf
+ c0t363TT3bVw6e4c49FAhQ5mk25kBivF.8xw8YGLbJCKG6XiUWN0HUrzQFevH.vTxlC_W36FaNTo
+ oBE5w2tvDoGaloShbtjBqPN3aa3pHkYqVWC.VrOTaYa0oUg4E72O2k22NdONI98FczXOHkVNeI3r
+ Wqbq5vpeCtd1JXu5NJukcnvhy96qjho6E9F3_N62Rr02w3vSgwOfMGUJhiVb8_CrjbD5rjmKqULz
+ hOpZNnxXp9Ls2RDiQPmBC1yspF0A..cgiiXi74QHw9dzqnkDkjIGkvR3NrEx_qq4Dy3jnBauxaVs
+ 3Tf5BZu_qwBFdns9G2qmFAjekiw6WYIwpwgGWzdLlWFeamTLyVYZ4Gg7BoQj8GRIqzXTTS18Y9kH
+ uzJmOLKMOwcn7jhLo1rS_87eakLcRocMf2KBq5QTgTy9iJGrYa3Gms6tx3Ktfkn5SeGUeTtWIag9
+ 1DyWVsO.Eg2_mHn.pLnxrxaMnJhR4yYI61jTu.r_tC.32tvdKN9z.19JdkL7bybXPvyF63u1n9mG
+ lckbYevDCjphwniA7l7.h.xZZPncl85tnqmcTpNdbGlPW6KZCiHajyolxqKinA7BzVUv1CBBYOen
+ 6BGYjL80krNvJTpOOH3CmNt3Dsn22xehLJR3rZybFGTdkRGCrPEqUyQpkPzLGAy8G9SH6vXx7ERx
+ vNuKF8rc0Sn3ma_HXzTX62uwpod0eTPElP05OY4joOtIyKU1ZJtY5H_LNRwl86dUIz72nRMqGoLQ
+ daKbM.m7Gwa.5AQs74JAvDL_jrfYqRvrXNT5t33otELImoEvpB71MDbNQMoUBrlSTTSncdjVigki
+ F1737iPpxpM8y_bMIl4MzCAoozV8QNygAHmhzenzxNQpTbpRrMnu9qcmp6MvHqFi_WsXCA2LmzAS
+ yzM7riE6D2z3T0kWX8T.NGubBjeMSsPL9WlX5XttsTjY8zQIejKO4nITmuk5Qq2DAfh4LYJNotK5
+ Bw7QKS32GhGqNsnBk.3Sn7h4y0V5J3OMT3MdMBw_AvKjKnETA52uiBsOqwN9gl0keTKnpIN0BrFh
+ nv5vohNksBFNlHdxwiuPbhs9Dls9DGZ_hSn9hIr2a3wurMzuMiiEJmT__LD.y0bA5wDE5LlyNDYn
+ Dansi.7vz6FSIaRhwlnL0Tq4e0TBGQIiJX0ux28DxzfqSkTcLjJVWKlQbYxbLo_e3yuqcfCbbwow
+ LVIMysaRhtdlDFiQX.X9raLGkHotnJw_ReqXb9yAzKh6QhJsdqPRw9xlr0XTYwrWX8kZQ_9VIIYN
+ v335riCAjNyb3ZApIKow2u3GVaghxRVsKwBa.brSJDT80yd5gkrtpOib9kZAJ8pV09BYRE5yqN_t
+ kmUpdi95IMDAOkAFfA8tiTl_o62s-
+X-Sonic-MF: <casey@schaufler-ca.com>
+X-Sonic-ID: b23c0c71-a017-4559-a311-9884badcc492
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.ne1.yahoo.com with HTTP; Fri, 2 May 2025 16:00:47 +0000
+Received: by hermes--production-gq1-74d64bb7d7-dp9cd (Yahoo Inc. Hermes SMTP Server) with ESMTPA ID 0c2894cc6a103b4c7fa33041bb79f598;
+          Fri, 02 May 2025 15:50:35 +0000 (UTC)
+Message-ID: <774bce75-551e-486d-9e35-16da3cb962bb@schaufler-ca.com>
+Date: Fri, 2 May 2025 08:50:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250430205548.789750-1-namhyung@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] security/smack/smackfs: small kernel-doc fixes
+To: Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc: linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Casey Schaufler <casey@schaufler-ca.com>
+References: <20250502014421.682697-1-rdunlap@infradead.org>
+Content-Language: en-US
+From: Casey Schaufler <casey@schaufler-ca.com>
+In-Reply-To: <20250502014421.682697-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Mailer: WebService/1.1.23772 mail.backend.jedi.jws.acl:role.jedi.acl.token.atz.jws.hermes.yahoo
 
-On Wed, Apr 30, 2025 at 01:55:37PM -0700, Namhyung Kim wrote:
-> Hello,
- 
-> The perf mem uses PERF_SAMPLE_DATA_SRC which has a lot of information
-> for memory access.  It has various sort keys to group related samples
-> together but it's still cumbersome to see the result.  While perf c2c
-> command provides a way to investigate the data in a specific way, I'd
-> like to add more generic ways using new output fields.
- 
-> For example, the following is the 'cache' output field which breaks
-> down the sample weights into different level of caches.
+On 5/1/2025 6:44 PM, Randy Dunlap wrote:
+> Add function short descriptions to the kernel-doc where missing.
+> Correct a verb and add ending periods to sentences.
+>
+> smackfs.c:1080: warning: missing initial short description on line:
+>  * smk_net4addr_insert
+> smackfs.c:1343: warning: missing initial short description on line:
+>  * smk_net6addr_insert
+>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 
-Super cool!
- 
->   $ perf mem record -a sleep 1
->   
->   $ perf mem report -F cache,dso,sym --stdio
->   ...
->   #
->   # -------------- Cache --------------
->   #      L1     L2     L3 L1-buf  Other  Shared Object                                  Symbol
->   # ...................................  .....................................  .........................................
->   #
->        0.0%   0.0%   0.0%   0.0% 100.0%  [kernel.kallsyms]                      [k] ioread8
->      100.0%   0.0%   0.0%   0.0%   0.0%  [kernel.kallsyms]                      [k] _raw_spin_lock_irq
->        0.0%   0.0%   0.0%   0.0% 100.0%  [xhci_hcd]                             [k] xhci_update_erst_dequeue
->        0.0%   0.0%   0.0%  95.8%   4.2%  [kernel.kallsyms]                      [k] smaps_account
->        0.6%   1.8%  22.7%  45.5%  29.5%  [kernel.kallsyms]                      [k] sched_balance_update_blocked_averages
->       29.4%   0.0%   1.6%  58.8%  10.2%  [kernel.kallsyms]                      [k] __update_load_avg_cfs_rq
->        0.0%   8.5%   4.3%   0.0%  87.2%  [kernel.kallsyms]                      [k] copy_mc_enhanced_fast_string
->       63.9%   0.0%   8.0%  23.8%   4.3%  [kernel.kallsyms]                      [k] psi_group_change
->        3.9%   0.0%   9.3%  35.7%  51.1%  [kernel.kallsyms]                      [k] timerqueue_add
->       35.9%  10.9%   0.0%  39.0%  14.2%  [kernel.kallsyms]                      [k] memcpy
->       94.1%   0.0%   0.0%   5.9%   0.0%  [kernel.kallsyms]                      [k] unmap_page_range
->       25.7%   0.0%   4.9%  51.0%  18.4%  [kernel.kallsyms]                      [k] __update_load_avg_se
->        0.0%  24.9%  19.4%   9.6%  46.1%  [kernel.kallsyms]                      [k] _copy_to_iter
->       12.9%   0.0%   0.0%  87.1%   0.0%  [kernel.kallsyms]                      [k] next_uptodate_folio
->       36.8%   0.0%   9.5%  16.6%  37.1%  [kernel.kallsyms]                      [k] update_curr
->      100.0%   0.0%   0.0%   0.0%   0.0%  bpf_prog_b9611ccbbb3d1833_dfs_iter     [k] bpf_prog_b9611ccbbb3d1833_dfs_iter
->       45.4%   1.8%  20.4%  23.6%   8.8%  [kernel.kallsyms]                      [k] audit_filter_rules.isra.0
->       92.8%   0.0%   0.0%   7.2%   0.0%  [kernel.kallsyms]                      [k] filemap_map_pages
->       10.6%   0.0%   0.0%  89.4%   0.0%  [kernel.kallsyms]                      [k] smaps_page_accumulate
->       38.3%   0.0%  29.6%  27.1%   5.0%  [kernel.kallsyms]                      [k] __schedule
- 
-> Please see the description of each commit for other fields.
- 
-> New mem_stat field was added to the hist_entry to save this
-> information.  It's a generic data structure (array) to handle
-> different type of information like cache-level, memory location,
-> snoop-result, etc.
- 
-> The first patch is a fix for the hierarchy mode and it was sent
-> separately.  I just add it here not to break the hierarchy mode.  The
-> second patch is to enable SAMPLE_DATA_SRC without SAMPLE_ADDR and
-> perf_event_attr.mmap_data which generate a lot more data.
+I'll take this. Thank you.
 
-I merged it and added a test for the hierachy mode as mentioned in my
-reply to that patch.
- 
-> The name of some new fields are the same as the corresponding sort
-> keys (mem, op, snoop) so I had to change the order whether it's
-> applied as an output field or a sort key.  Maybe it's better to name
-> them differently but I couldn't come up with better ideas.
-
-Looks ok at first sight.
- 
-> That means, you need to use -F/--fields option to specify those fields
-> and the sort keys you want.  Maybe we can change the default output
-> and sort keys for perf mem report with this.
-
-Maybe we can come up with aliases to help using these new features
-without having to create a long command line, maybe:
-
-perf cache
-
-Or some other more suitable name.
-
-That would just be translated into the long command line for 'perf
-report', kinda like 'perf kvm', but maybe we can do it like with 'perf
-archive', i.e. just a shell wrapper?
- 
-> The code is available at 'perf/mem-field-v1' branch in
-
-I'll test it, and I'm CCing Joe Mario, who I think will be very much
-interesting in trying this!
-
-- Arnaldo
- 
->  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
- 
-> Thanks,
-> Namhyung
- 
-> Namhyung Kim (11):
->   perf hist: Remove output field from sort-list properly
->   perf record: Add --sample-mem-info option
->   perf hist: Support multi-line header
->   perf hist: Add struct he_mem_stat
->   perf hist: Basic support for mem_stat accounting
->   perf hist: Implement output fields for mem stats
->   perf mem: Add 'op' output field
->   perf hist: Hide unused mem stat columns
->   perf mem: Add 'cache' and 'memory' output fields
->   perf mem: Add 'snoop' output field
->   perf mem: Add 'dtlb' output field
-> 
->  tools/perf/Documentation/perf-record.txt |   7 +-
->  tools/perf/builtin-record.c              |   6 +
->  tools/perf/ui/browsers/hists.c           |  50 ++++-
->  tools/perf/ui/hist.c                     | 272 ++++++++++++++++++++++-
->  tools/perf/ui/stdio/hist.c               |  57 +++--
->  tools/perf/util/evsel.c                  |   2 +-
->  tools/perf/util/hist.c                   |  78 +++++++
->  tools/perf/util/hist.h                   |  22 ++
->  tools/perf/util/mem-events.c             | 183 ++++++++++++++-
->  tools/perf/util/mem-events.h             |  57 +++++
->  tools/perf/util/record.h                 |   1 +
->  tools/perf/util/sort.c                   |  42 +++-
->  12 files changed, 718 insertions(+), 59 deletions(-)
-> 
-> -- 
-> 2.49.0.906.g1f30a19c02-goog
+> Cc: Casey Schaufler <casey@schaufler-ca.com>
+> Cc: linux-security-module@vger.kernel.org
+> Cc: Paul Moore <paul@paul-moore.com>
+> Cc: James Morris <jmorris@namei.org>
+> Cc: "Serge E. Hallyn" <serge@hallyn.com>
+> ---
+>  security/smack/smackfs.c |   12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+>
+> --- linux-next-20250501.orig/security/smack/smackfs.c
+> +++ linux-next-20250501/security/smack/smackfs.c
+> @@ -1077,13 +1077,12 @@ static int smk_open_net4addr(struct inod
+>  }
+>  
+>  /**
+> - * smk_net4addr_insert
+> + * smk_net4addr_insert - insert a new entry into the net4addrs list
+>   * @new : netlabel to insert
+>   *
+> - * This helper insert netlabel in the smack_net4addrs list
+> + * This helper inserts netlabel in the smack_net4addrs list
+>   * sorted by netmask length (longest to smallest)
+> - * locked by &smk_net4addr_lock in smk_write_net4addr
+> - *
+> + * locked by &smk_net4addr_lock in smk_write_net4addr.
+>   */
+>  static void smk_net4addr_insert(struct smk_net4addr *new)
+>  {
+> @@ -1340,13 +1339,12 @@ static int smk_open_net6addr(struct inod
+>  }
+>  
+>  /**
+> - * smk_net6addr_insert
+> + * smk_net6addr_insert - insert a new entry into the net6addrs list
+>   * @new : entry to insert
+>   *
+>   * This inserts an entry in the smack_net6addrs list
+>   * sorted by netmask length (longest to smallest)
+> - * locked by &smk_net6addr_lock in smk_write_net6addr
+> - *
+> + * locked by &smk_net6addr_lock in smk_write_net6addr.
+>   */
+>  static void smk_net6addr_insert(struct smk_net6addr *new)
+>  {
+>
