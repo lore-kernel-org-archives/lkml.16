@@ -1,63 +1,41 @@
-Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com [209.85.210.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4695523B0
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6352571D2;
+	Fri,  2 May 2025 15:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746200558; cv=none; b=isJ48kryTBZuOO+9qJsQX1r/KF/WFGTjEa6+t9XaFE8xoAhicpAJY3vx0Wj+xC3DxPkthxKNZs5HaE+gXOicVw0xDXR/8725Yj5uCFr7Nt50EXpLSzz1PQ8S/ondDMwhWH3qS7nGQVqUVNr+MAoFIoyuptqcdOBC2SmPib5SNUk=
+	t=1746200592; cv=none; b=Uy8Jwab9ZyM6WZD/MbT+5AWD6nE7Bu/NW6+BgXl7Ko3ej1akM6DMI0aHtKaqqSdgZpe0gfutoNQPoxoXS+2T/kmHRt8pbttgPm+3GQru3klz2ZY7Kd+L+u2FuGbptM63miGdqFBkVSy9kUNadVLZiJpMToxtvV5B1JcZ5p74H9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746200558; c=relaxed/simple;
-	bh=QAJSt6rKKZp+7sJ7azwvwLPtYc9N4CHc3g0ulN45n1E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jxagQ5k5+7XThj3mRnF+/0XAWdlg5bNL24JOGcZhhN5rY3dVPg51HOPSp8VR2lSYn689oX+aYyHfo/rSITvcxLKXwsY4D7eJulOzjb7+GHq0Zuhi02etANV6XiGWjx2aPbuAyPiB09bOXtTrlv/NFDXYLxhcf05CVx3KM1Lnrqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=mZwrtYEK; arc=none smtp.client-ip=209.85.210.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1746200592; c=relaxed/simple;
+	bh=eBAnraOpFs24oa8cyCRi8zE49i9v3WmI83Gfc+9VYrU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q5eYWRaNjx/ldUN1T99GLa7xLYMG3qBG0fTLz4XV5ARkAPPC4Onx+2MVuS4X/WbFRlQUuQuUcHySQL9vEB5WsmEUd7IveKCW3OoIvJddjDrCbl1A0LK8ibafCSPjrEfQmRgz5ijpi+9ulq8NqTz9pJ/8Fad6GybeRdX9Alh+MKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=CcbBc+cP; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mZwrtYEK"
-Received: by mail-ot1-f53.google.com with SMTP id 46e09a7af769-73044329768so1675556a34.3
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:42:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1746200554; x=1746805354; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zSUCe1/D8mQxVmxIYOBMFbvuysALwG3zBMpMWpILAzw=;
-        b=mZwrtYEK0cqqk22BGKKQk6/rZhOdvSmvuklFWMuqd+W19cccwsAwp3mWrlU0JNxHfm
-         7a9sEiE+lFUN9SUyESzfnSEkVjuVeDm1qexyxT8CLQQiyBsM8kwWEqCQNtZTuQO3Kztl
-         fATW81Vext5MuIUr61Fm9cOIiUtnqG5FHl+mz1FCBsRZTbZ0DQyDvg+bPD7sYahLhaHL
-         fp/GZ5dqHWCpHhgDAAKiBH92t4E7Nf4C6Ljpb+ImUSvKbxXAzYXwKetsUROKwivBFGeq
-         KTNdVSdafqjpaCYuLrwIIQ2QKk0nxQC0M2w2cy1pB2Q5trVA/Tr1gkNI48tB+cpqU3ue
-         Qpjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746200554; x=1746805354;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zSUCe1/D8mQxVmxIYOBMFbvuysALwG3zBMpMWpILAzw=;
-        b=uguesuVQzyUjbrcQUMS6jEYGkX0gI2R5465s00+BwKSCBzC2AgqvyWYEqIxQmF+IBF
-         BgQPWxvSdhgg0GbBEYKEWG6cxqd83Nnv4cxclH8Avfghwus1Pg1jdlCI0Fb1vQToICcK
-         ncD5way+uq6C6pwZ9UAGnkHG0BlUZRHor4lOwcXZYq79V+SrKUpWAJ7OraJ8WOxbh1Jr
-         DGcKvWy1ujYmroyxLfPcC+/hpwK4vtDsm7yT9JTJswcnMp6qor2yY5ptvnrt8W64lImb
-         DKguoMadVUlcv1QTwWlTd2ljenuHq3D44XG4vtx9MW9s9je7bDGd1H9m5hN3Wxo0rQXn
-         xk3g==
-X-Forwarded-Encrypted: i=1; AJvYcCVFuYygaYqRhT2qKiKarkOexCxpxLVhmOtBMRtAX2CbCUrSFlAD4mFcH21omwklqXXFlLjXqLg+iPRukpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRDCnsaD3fR1SIM4h3BQmcYtOoft31wDFgPTROduPdI/cuMJUf
-	K9iP0eF3Y4y+iuQVDHIEMN+ogYjpE51P0VnbcUHsdINEgOOyx0nqXLpsVXVTLgo=
-X-Gm-Gg: ASbGnctXVl/SHmpzend5jEPlSjpKMVZQcc4KssmZ1zOV3cbktPZRj6ImMEi7SwXECM7
-	y1c5ZQjZn3PaeXwOkDhw4zqO+kkmpTyogu6WiWyZ7a3o7sq4JZHs77Bm8pYFmAj9+QUWV2dZqMM
-	/vC5UV2PVV3DnvoHIaTb7QwOZXVvYdPWLTk/gQCbvfnFEhmfL8hGGc8FERH7eBIqKHdEjL9Orat
-	1+V0hH3TIpGleHs0cNYQpP2mJgjbtsh+YVRkcPQ3Pjxfw6UXI2sS/48E7xux+J7tRM5a1DZL92a
-	XJ+t977bk9B1kq2GLIpdStPpggMqVYvpF/oO4Y1CDlT1T8M=
-X-Google-Smtp-Source: AGHT+IFa7ER/28ouws3j877IMwPaDN8EaWbEoMu5qoYoLPWpIthuQR+VxoPZcZGOZc+4wZgZGTbP6Q==
-X-Received: by 2002:a05:6830:349f:b0:72b:87f8:4935 with SMTP id 46e09a7af769-731da0dbd2bmr1986090a34.4.1746200554243;
-        Fri, 02 May 2025 08:42:34 -0700 (PDT)
-Received: from [127.0.1.1] ([2600:8803:e7e4:1d00:4489:d382:ca90:f531])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-731d350a8e1sm520709a34.64.2025.05.02.08.42.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:42:33 -0700 (PDT)
-From: David Lechner <dlechner@baylibre.com>
-Date: Fri, 02 May 2025 10:42:16 -0500
-Subject: [PATCH v2] iio: adc: ad7606_spi: add offload scan mask check
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="CcbBc+cP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746200587;
+	bh=eBAnraOpFs24oa8cyCRi8zE49i9v3WmI83Gfc+9VYrU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=CcbBc+cPJUJUUYJy1zR+8xwwsmi5CT00hhIA4U6hqXH+Jtp2mTuEpDbP5Tz3y0hRY
+	 EMXGwA+s1tLxbLSOqQrjIdLLGYcTtq2o4v4fH3KVMtG5lGTn+Adggtj56bVYD6H8wo
+	 38YMRcsqg1qOltyDqaqGQsbV+cP3q76KsfsYqIw1QO0ON/8a1zft2wHwzENfnLB6to
+	 i12LyVP4O02xuvZ78B9xspba73Kt/iVYLEa4EfJfNw1PgmYUN4ROY8SnmMpjsXf+9Z
+	 28TpGBOpPbpcL+350f0W5w5Ntrr2TBomlOmLHhrvZyGrM7ZNBXuLOMMBTVuIBKOYvP
+	 HUiDSOAHh+mvQ==
+Received: from [192.168.1.63] (unknown [70.107.117.78])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nfraprado)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2727B17E0858;
+	Fri,  2 May 2025 17:43:04 +0200 (CEST)
+From: =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
+Date: Fri, 02 May 2025 11:32:10 -0400
+Subject: [PATCH] arm64: dts: mediatek: mt6357: Drop regulator-fixed
+ compatibles
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,150 +43,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v2-1-e70c6d71baa3@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIANfnFGgC/52NSw6DMAxEr4KyriuHT/pZ9R4VqoJjikUhKKlQE
- eLuTTlCF7N4o9G8VUUOwlFds1UFniWKHxPkh0xRZ8cng7jEKse8wrJAEPFgHaWcDJpHnARa+YB
- v25e3DiLZEQYbe6COqQftigJLREJdqnQ6BU7zXXivE3cS3z4su3/Wv/Zv1axBw7nRpnIXZwj51
- tjlJU3gI/lB1du2fQF5SMJP7wAAAA==
-X-Change-ID: 20250430-iio-adc-ad7606_spi-fix-offload-scan-mask-check-1d330400c014
-To: Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Andy Shevchenko <andy@kernel.org>, 
- Angelo Dureghello <adureghello@baylibre.com>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
- linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- David Lechner <dlechner@baylibre.com>
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250502-mt6357-regulator-fixed-compatibles-removal-v1-1-a582c16743fe@collabora.com>
+X-B4-Tracking: v=1; b=H4sIAHnlFGgC/xWNQQrDIBBFrxJm3QGjGKFXKV2omaYDGsNoQiHk7
+ jXLx3/8d0IlYarwHE4QOrhyWTuMjwHi168LIc+dQSttlVUac5uMdSi07Mm3IvjhH80YS95845C
+ o9i2XwyccJ2dcMDaGaKAfbkK3fMde7+v6AypRQfJ8AAAA
+X-Change-ID: 20250502-mt6357-regulator-fixed-compatibles-removal-16737b35cbc3
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Matthias Brugger <matthias.bgg@gmail.com>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+ Alexandre Mergnat <amergnat@baylibre.com>, 
+ Fabien Parent <fparent@baylibre.com>
+Cc: kernel@collabora.com, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-mediatek@lists.infradead.org, 
+ =?utf-8?q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4325; i=dlechner@baylibre.com;
- h=from:subject:message-id; bh=QAJSt6rKKZp+7sJ7azwvwLPtYc9N4CHc3g0ulN45n1E=;
- b=owEBbQGS/pANAwAKAcLMIAH/AY/AAcsmYgBoFOfiRVXRvcNnCImEFkU2BueL0PIMiO/M6+MVB
- TfmXnM6Kc6JATMEAAEKAB0WIQTsGNmeYg6D1pzYaJjCzCAB/wGPwAUCaBTn4gAKCRDCzCAB/wGP
- wBHWB/4/Dwsx7aT3gL4Lh9bjJl/h6DZeqHuGrC0LN+5RBvXPez/KW/jw7+8ELm4Iy/uC6QxN3Cx
- 2RkccxOGK95u5TaqXPQd98NuiFHPW1ZHkEDuHOyI4JaakOcPdOigEduujcUNruogia0JsVLwfww
- /C6UxiXwsEhZDI70eBMjRrn3qO2r6OANCYmqOcFGniADu5CGrc2DwhcAzwCjCsUFhAxlsAR+560
- LUq92Zzp9EmHcHpu9GTNL0Grkf3/JaQ5Xcwq9T7GszV8dwh73A/gNI9VBVE6G6Q9Z+/HWE1JiIh
- 9sftsiG1K6u4peOfFAURQ4ksf1zNcQcpmXiWRBauWOhVlWXC
-X-Developer-Key: i=dlechner@baylibre.com; a=openpgp;
- fpr=8A73D82A6A1F509907F373881F8AF88C82F77C03
 
-Validate the scan mask when SPI offloading is being used.
+Some of the regulators in the MT6357 PMIC dtsi have compatible set to
+regulator-fixed, even though they don't serve any purpose: all those
+regulators are handled as a whole by the mt6357-regulator driver. In
+fact this is the only dtsi in this family of chips where this is the
+case: mt6359 and mt6358 don't have any such compatibles.
 
-Since this family of ADCs is simultaneous sampling, there isn't a way
-to selectively disable channels when reading sample data. (Technically,
-AD7616 has a sequencer so could have some control, but that is for
-another day).
+A side-effect caused by this is that the DT kselftest, which is supposed
+to identify nodes with compatibles that can be probed, but haven't,
+shows these nodes as failures.
 
-For "regular" IIO triggered buffer reads, this isn't a problem and the
-IIO core will demux the data and ignore data from disabled channels.
-However, since SPI offloading is done completely in hardware, we don't
-have a way to do the same. So before this patch, if less than all
-channels were enabled, the data would be misplaced in the buffer.
+Remove the useless compatibles to move the dtsi in line with the others
+in its family and fix the DT kselftest failures.
 
-By adding a check in update_scan_mode, we can fail to enable the buffer
-instead of having bad data returned to userspace.
-
-Fixes: e96d35faf357 ("iio: adc: ad7606: add SPI offload support")
-Signed-off-by: David Lechner <dlechner@baylibre.com>
+Fixes: 55749bb478f8 ("arm64: dts: mediatek: add mt6357 device-tree")
+Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 ---
-Changes in v2:
-- Use bitmap_weight() instead of bitmap_equal().
-- Link to v1: https://lore.kernel.org/r/20250430-iio-adc-ad7606_spi-fix-offload-scan-mask-check-v1-1-8b165d9d6c0e@baylibre.com
+ arch/arm64/boot/dts/mediatek/mt6357.dtsi | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-And in case it isn't obvious, the patch this fixes is fairly recent, so
-this goes in togreg rather than fixes-togreg.
----
- drivers/iio/adc/ad7606_spi.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
-
-diff --git a/drivers/iio/adc/ad7606_spi.c b/drivers/iio/adc/ad7606_spi.c
-index 997be483ebb93293481b922e13ece4edb47e940a..5b5b4677273b15956f1da73da41b16c5ee64e818 100644
---- a/drivers/iio/adc/ad7606_spi.c
-+++ b/drivers/iio/adc/ad7606_spi.c
-@@ -5,6 +5,7 @@
-  * Copyright 2011 Analog Devices Inc.
-  */
+diff --git a/arch/arm64/boot/dts/mediatek/mt6357.dtsi b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
+index 5fafa842d312f3b01e7d71ddc04ef48ca52bc89d..dca4e5c3d8e210c1e118539153e77e2822066da3 100644
+--- a/arch/arm64/boot/dts/mediatek/mt6357.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt6357.dtsi
+@@ -60,7 +60,6 @@ mt6357_vpa_reg: buck-vpa {
+ 			};
  
-+#include <linux/bitmap.h>
- #include <linux/err.h>
- #include <linux/math.h>
- #include <linux/module.h>
-@@ -329,19 +330,44 @@ static int ad7606_spi_offload_probe(struct device *dev,
- 	return 0;
- }
+ 			mt6357_vfe28_reg: ldo-vfe28 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vfe28";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+@@ -75,7 +74,6 @@ mt6357_vxo22_reg: ldo-vxo22 {
+ 			};
  
-+static int ad7606_spi_update_scan_mode(struct iio_dev *indio_dev,
-+				       const unsigned long *scan_mask)
-+{
-+	struct ad7606_state *st = iio_priv(indio_dev);
-+
-+	if (st->offload_en) {
-+		unsigned int num_adc_ch = st->chip_info->num_adc_channels;
-+
-+		/*
-+		 * SPI offload requires that all channels are enabled since
-+		 * there isn't a way to selectively disable channels that get
-+		 * read (this is simultaneous sampling ADC) and the DMA buffer
-+		 * has no way of demuxing the data to filter out unwanted
-+		 * channels.
-+		 */
-+		if (bitmap_weight(scan_mask, num_adc_ch) != num_adc_ch)
-+			return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- static const struct ad7606_bus_ops ad7606_spi_bops = {
- 	.offload_config = ad7606_spi_offload_probe,
- 	.read_block = ad7606_spi_read_block,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vrf18_reg: ldo-vrf18 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vrf18";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -83,7 +81,6 @@ mt6357_vrf18_reg: ldo-vrf18 {
+ 			};
  
- static const struct ad7606_bus_ops ad7607_spi_bops = {
- 	.offload_config = ad7606_spi_offload_probe,
- 	.read_block = ad7606_spi_read_block14to16,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vrf12_reg: ldo-vrf12 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vrf12";
+ 				regulator-min-microvolt = <1200000>;
+ 				regulator-max-microvolt = <1200000>;
+@@ -112,7 +109,6 @@ mt6357_vcn33_wifi_reg: ldo-vcn33-wifi {
+ 			};
  
- static const struct ad7606_bus_ops ad7608_spi_bops = {
- 	.offload_config = ad7606_spi_offload_probe,
- 	.read_block = ad7606_spi_read_block18to32,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vcn28_reg: ldo-vcn28 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vcn28";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+@@ -120,7 +116,6 @@ mt6357_vcn28_reg: ldo-vcn28 {
+ 			};
  
- static const struct ad7606_bus_ops ad7616_spi_bops = {
-@@ -350,6 +376,7 @@ static const struct ad7606_bus_ops ad7616_spi_bops = {
- 	.reg_read = ad7606_spi_reg_read,
- 	.reg_write = ad7606_spi_reg_write,
- 	.rd_wr_cmd = ad7616_spi_rd_wr_cmd,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vcn18_reg: ldo-vcn18 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vcn18";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -142,7 +137,6 @@ mt6357_vcamd_reg: ldo-vcamd {
+ 			};
  
- static const struct ad7606_bus_ops ad7606b_spi_bops = {
-@@ -359,6 +386,7 @@ static const struct ad7606_bus_ops ad7606b_spi_bops = {
- 	.reg_write = ad7606_spi_reg_write,
- 	.rd_wr_cmd = ad7606b_spi_rd_wr_cmd,
- 	.sw_mode_config = ad7606b_sw_mode_config,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vcamio_reg: ldo-vcamio18 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vcamio";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -175,7 +169,6 @@ mt6357_vsram_proc_reg: ldo-vsram-proc {
+ 			};
  
- static const struct ad7606_bus_ops ad7606c_18_spi_bops = {
-@@ -368,6 +396,7 @@ static const struct ad7606_bus_ops ad7606c_18_spi_bops = {
- 	.reg_write = ad7606_spi_reg_write,
- 	.rd_wr_cmd = ad7606b_spi_rd_wr_cmd,
- 	.sw_mode_config = ad7606b_sw_mode_config,
-+	.update_scan_mode = ad7606_spi_update_scan_mode,
- };
+ 			mt6357_vaux18_reg: ldo-vaux18 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vaux18";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
+@@ -183,7 +176,6 @@ mt6357_vaux18_reg: ldo-vaux18 {
+ 			};
  
- static const struct ad7606_bus_info ad7605_4_bus_info = {
+ 			mt6357_vaud28_reg: ldo-vaud28 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vaud28";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+@@ -191,7 +183,6 @@ mt6357_vaud28_reg: ldo-vaud28 {
+ 			};
+ 
+ 			mt6357_vio28_reg: ldo-vio28 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vio28";
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+@@ -199,7 +190,6 @@ mt6357_vio28_reg: ldo-vio28 {
+ 			};
+ 
+ 			mt6357_vio18_reg: ldo-vio18 {
+-				compatible = "regulator-fixed";
+ 				regulator-name = "vio18";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
 
 ---
-base-commit: a9b169746d2e299159d4dde190552ae620982bbd
-change-id: 20250430-iio-adc-ad7606_spi-fix-offload-scan-mask-check-1d330400c014
+base-commit: 37ff6e9a2ce321b7932d3987701757fb4d87b0e6
+change-id: 20250502-mt6357-regulator-fixed-compatibles-removal-16737b35cbc3
 
 Best regards,
 -- 
-David Lechner <dlechner@baylibre.com>
+Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
