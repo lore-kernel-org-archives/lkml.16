@@ -1,89 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5822B9A9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5B935950
 	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:46:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746197203; cv=none; b=TOx0mrN7KADKcyrwz2jPGcTm+PDX+6vSF4BkyqoEMjkkANJt/f++EHpjSaspzNnJVhgv9qloG4FhKexRWlKkt3CQaU9BMux2jGXjluXGLl+4v0yOxFZdwN54BB5JwJNvhNstA7EsUopCooxSvTIon9HBrMRlY6p9/IpmQuZiNTU=
+	t=1746197203; cv=none; b=l0Pk8zi5vpFqHkjgYVyW8DvAMlh5ol49YGpDxu8JjaGV6rmP5zceEKIHij7jGhP/qH5g20mx/7ny0/K4bXgC6ox4lmVJa5JttZzs/5HyG9WCuHT5MtLcvcGjJ9dJ7nAiBtutjKMhsgDDUpn2JwaBbakfgiyj7qfI9SbyzIRLeFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1746197203; c=relaxed/simple;
-	bh=yBuoyGD3IirnRYt2nJUc2XNTrOQGxG835wQJMTgtji0=;
-	h=Message-ID:Date:From:To:Cc:Subject; b=Z7kXf5B7i43hIqjAY1/t1KamoPs1+IIteo19k49O3Bg4VJ2s/kV8v8sZs0ZnaOSRcHNQKqdtIctUngChJmM9RbHygXuUkz1hYCuTEQWsXG+r0Xe2vsCXFGW/UtE9Tw1kn3yJFIFvpSrINeQi9BJcJBpowdfGBLoeiI81+ElCbow=
+	bh=BTbAWGyPvTmDexqJ2SsFmLFuM+6YA9TNNsCFweJ8EwU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=D4avnlJTSctrLBpzErMkN30h52jbknq1mpiDeW4y7UzehiMVMvT/N0r13RbUIrlt11Ze3dpPKUXx5Pt8UEOJC2Or3YiTqt0wKw6L6pATKA541TBlayRwaZZb3P0b+ldqJ6W0BNST5xJMHRNa9t+RiixEpFmUtgoCYF5ahTlu3kc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC87C4CEEB;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9BD4C4CEE4;
 	Fri,  2 May 2025 14:46:42 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uArf9-000000032u0-0PUK;
+	id 1uArf9-000000032uV-19lC;
 	Fri, 02 May 2025 10:46:51 -0400
-Message-ID: <20250502144607.785079223@goodmis.org>
+Message-ID: <20250502144651.127313773@goodmis.org>
 User-Agent: quilt/0.68
-Date: Fri, 02 May 2025 10:46:07 -0400
+Date: Fri, 02 May 2025 10:46:08 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 0/4] tracing: Fixes for v6.15
+ Andrew Morton <akpm@linux-foundation.org>,
+ syzbot+c8cd2d2c412b868263fb@syzkaller.appspotmail.com,
+ Jeongjun Park <aha310510@gmail.com>
+Subject: [for-linus][PATCH 1/4] tracing: Fix oob write in trace_seq_to_buffer()
+References: <20250502144607.785079223@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+From: Jeongjun Park <aha310510@gmail.com>
+
+syzbot reported this bug:
+==================================================================
+BUG: KASAN: slab-out-of-bounds in trace_seq_to_buffer kernel/trace/trace.c:1830 [inline]
+BUG: KASAN: slab-out-of-bounds in tracing_splice_read_pipe+0x6be/0xdd0 kernel/trace/trace.c:6822
+Write of size 4507 at addr ffff888032b6b000 by task syz.2.320/7260
+
+CPU: 1 UID: 0 PID: 7260 Comm: syz.2.320 Not tainted 6.15.0-rc1-syzkaller-00301-g3bde70a2c827 #0 PREEMPT(full)
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:408 [inline]
+ print_report+0xc3/0x670 mm/kasan/report.c:521
+ kasan_report+0xe0/0x110 mm/kasan/report.c:634
+ check_region_inline mm/kasan/generic.c:183 [inline]
+ kasan_check_range+0xef/0x1a0 mm/kasan/generic.c:189
+ __asan_memcpy+0x3c/0x60 mm/kasan/shadow.c:106
+ trace_seq_to_buffer kernel/trace/trace.c:1830 [inline]
+ tracing_splice_read_pipe+0x6be/0xdd0 kernel/trace/trace.c:6822
+ ....
+==================================================================
+
+It has been reported that trace_seq_to_buffer() tries to copy more data
+than PAGE_SIZE to buf. Therefore, to prevent this, we should use the
+smaller of trace_seq_used(&iter->seq) and PAGE_SIZE as an argument.
+
+Link: https://lore.kernel.org/20250422113026.13308-1-aha310510@gmail.com
+Reported-by: syzbot+c8cd2d2c412b868263fb@syzkaller.appspotmail.com
+Fixes: 3c56819b14b0 ("tracing: splice support for tracing_pipe")
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Jeongjun Park <aha310510@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 8ddf6b17215c..6d52dc108f00 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6821,13 +6821,14 @@ static ssize_t tracing_splice_read_pipe(struct file *filp,
+ 		/* Copy the data into the page, so we can start over. */
+ 		ret = trace_seq_to_buffer(&iter->seq,
+ 					  page_address(spd.pages[i]),
+-					  trace_seq_used(&iter->seq));
++					  min((size_t)trace_seq_used(&iter->seq),
++						  PAGE_SIZE));
+ 		if (ret < 0) {
+ 			__free_page(spd.pages[i]);
+ 			break;
+ 		}
+ 		spd.partial[i].offset = 0;
+-		spd.partial[i].len = trace_seq_used(&iter->seq);
++		spd.partial[i].len = ret;
+ 
+ 		trace_seq_init(&iter->seq);
+ 	}
+-- 
+2.47.2
 
 
-tracing updates for v6.15
-
-- Fix read out of bounds bug in tracing_splice_read_pipe()
-
-  The size of the sub page being read can now be greater than a page. But
-  the buffer used in tracing_splice_read_pipe() only allocates a page size.
-  The data copied to the buffer is the amount in sub buffer which can
-  overflow the buffer. Use min((size_t)trace_seq_used(&iter->seq), PAGE_SIZE)
-  to limit the amount copied to the buffer to a max of PAGE_SIZE.
-
-- Fix the test for NULL from "!filter_hash" to "!*filter_hash"
-
-  The add_next_hash() function checked for NULL at the wrong pointer level.
-
-- Do not use the array in trace_adjust_address() if there are no elements
-
-  The trace_adjust_address() finds the offset of a module that was stored in
-  the persistent buffer when reading the previous boot buffer to see if the
-  address belongs to a module that was loaded in the previous boot. An array
-  is created that matches currently loaded modules with previously loaded
-  modules. The trace_adjust_address() uses that array to find the new offset
-  of the address that's in the previous buffer.  But if no module was
-  loaded, it ends up reading the last element in an array that was never
-  allocated. Check if nr_entries is zero and exit out early if it is.
-
-- Remove nested lock of trace_event_sem in print_event_fields()
-
-  The print_event_fields() function iterates over the ftrace_events list and
-  requires the trace_event_sem semaphore held for read. But this function is
-  always called with that semaphore held for read. Remove the taking of the
-  semaphore and replace it with lockdep_assert_held_read(&trace_event_sem);
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-trace/fixes
-
-Head SHA1: 0a8f11f8569e7ed16cbcedeb28c4350f6378fea6
-
-
-Colin Ian King (1):
-      ftrace: Fix NULL memory allocation check
-
-Jeongjun Park (1):
-      tracing: Fix oob write in trace_seq_to_buffer()
-
-Steven Rostedt (2):
-      tracing: Fix trace_adjust_address() when there is no modules in scratch area
-      tracing: Do not take trace_event_sem in print_event_fields()
-
-----
- kernel/trace/ftrace.c       | 2 +-
- kernel/trace/trace.c        | 9 ++++++---
- kernel/trace/trace_output.c | 4 ++--
- 3 files changed, 9 insertions(+), 6 deletions(-)
