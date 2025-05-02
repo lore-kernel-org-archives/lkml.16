@@ -1,115 +1,184 @@
-Received: from lamorak.hansenpartnership.com (lamorak.hansenpartnership.com [198.37.111.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 155201D54D8;
-	Fri,  2 May 2025 18:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.37.111.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC4F1D54D8;
+	Fri,  2 May 2025 18:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746209491; cv=none; b=tas3TgojwYfWUejO6d4Os6G/CP+1BNfhCC+DwkwZVKVISeVEJokrh1ic1aczrJtxAWV6JuJBGX4kXFIAFlBSvRQC2CydJ3IK+sfDq4ojpNyY7cCZ1n5R/tW79uTUV4823tBI3dzPmRsDc2Aq61N33nGEGl4V1TL6keI2iM6KhnI=
+	t=1746209572; cv=none; b=BHVlYhoRE44eRjmdxY+btRrKKGL6blxcUIIgsf90GuWGl/OwRNTgVNBef98ka1ACegHJ/iB8343Er1j9a33tA+zzlqaCLrRMQ/4KCMMwUQyYc3GpKXwH7Q6buTxKVZ2eW8DGrVBRK44SOcViOYnLigtK7ugYp+tFlBN+WguTOdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746209491; c=relaxed/simple;
-	bh=oikHvStq7I5df3RPWVNm302xZdKUIQ7oDh52mVeWzhg=;
-	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=tuFqtFnc9yLUNHizH55p90LTJTJ9NiMewmh4VMn23oh6Cp/P/FGVVaAe69OE6qRmaLEdgktIvRQ/nl073Bv8InV2u5nGFgEnEyj+Vi2FaLUK3b9nBpl3BOds26FBs+ZIBjGegc1JlsCtw0AAr7hJpaAtIUxLLHATQFkUjL6bbJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com; spf=pass smtp.mailfrom=HansenPartnership.com; dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b=B1c1Afmw; arc=none smtp.client-ip=198.37.111.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=HansenPartnership.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=HansenPartnership.com
+	s=arc-20240116; t=1746209572; c=relaxed/simple;
+	bh=bPeDXBz2uBUUjye8DAfNaDDNnGdqoUDOEmhPQOwIVSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvAwLrLEQCUqDJXKTyTM528moqaFIyeihhXywgNSjBmSQkjZgZ69u9K6ksfUKmUPHwF1teV6QjMozRghHZsi0DAtU35wjWImJhQWzufYn2zUtjW4JB+qY22eXZ164OY5FTPXOsnCYCl9mZ+6v7FQSnj+uH2kVyZ6URSsSiOhAh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8jTWV8T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="B1c1Afmw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-	d=hansenpartnership.com; s=20151216; t=1746209487;
-	bh=oikHvStq7I5df3RPWVNm302xZdKUIQ7oDh52mVeWzhg=;
-	h=Message-ID:Subject:From:To:Date:From;
-	b=B1c1Afmwe2GzBcukIRqxG7RZZ+7l3JuxIIzRhRorvZuXKdCgA+1+HWzX9NfZchhAV
-	 lgw3M26afESXoF7gSEsWhoRt32N1/PgJWFtN+O1IQ77jF4aI2HDYocf2PTDDI+lo/B
-	 ufzKoQGJdbCn+tHNgq8e2I/8AUjxXBmOtBXu1PsQ=
-Received: from lingrow.int.hansenpartnership.com (unknown [IPv6:2601:5c4:4302:c21::a774])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by lamorak.hansenpartnership.com (Postfix) with ESMTPSA id ABEAA1C0030;
-	Fri, 02 May 2025 14:11:27 -0400 (EDT)
-Message-ID: <ee7c8d8f36e562711091ac1ed02b7d3b5d995eed.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 6.15-rc3
-From: James Bottomley <James.Bottomley@HansenPartnership.com>
-To: Andrew Morton <akpm@linux-foundation.org>, Linus Torvalds
-	 <torvalds@linux-foundation.org>
-Cc: linux-scsi <linux-scsi@vger.kernel.org>, linux-kernel
-	 <linux-kernel@vger.kernel.org>
-Date: Fri, 02 May 2025 14:11:26 -0400
-Autocrypt: addr=James.Bottomley@HansenPartnership.com;
- prefer-encrypt=mutual;
- keydata=mQENBE58FlABCADPM714lRLxGmba4JFjkocqpj1/6/Cx+IXezcS22azZetzCXDpm2MfNElecY3qkFjfnoffQiw5rrOO0/oRSATOh8+2fmJ6el7naRbDuh+i8lVESfdlkoqX57H5R8h/UTIp6gn1mpNlxjQv6QSZbl551zQ1nmkSVRbA5TbEp4br5GZeJ58esmYDCBwxuFTsSsdzbOBNthLcudWpJZHURfMc0ew24By1nldL9F37AktNcCipKpC2U0NtGlJjYPNSVXrCd1izxKmO7te7BLP+7B4DNj1VRnaf8X9+VIApCi/l4Kdx+ZR3aLTqSuNsIMmXUJ3T8JRl+ag7kby/KBp+0OpotABEBAAG0N0phbWVzIEJvdHRvbWxleSA8SmFtZXMuQm90dG9tbGV5QEhhbnNlblBhcnRuZXJzaGlwLmNvbT6JAVgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAhkBFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmBLmY0FCRs1hL0ACgkQgUrkfCFIVNaEiQgAg18F4G7PGWQ68xqnIrccke7Reh5thjUz6kQIii6Dh64BDW6/UvXn20UxK2uSs/0TBLO81k1mV4c6rNE+H8b7IEjieGR9frBsp/+Q01JpToJfzzMUY7ZTDV1IXQZ+AY9L7vRzyimnJHx0Ba4JTlAyHB+Ly5i4Ab2+uZcnNfBXquWrG3oPWz+qPK88LJLya5Jxse1m1QT6R/isDuPivBzntLOooxPk+Cwf5sFAAJND+idTAzWzslexr9j7rtQ1UW6FjO4CvK9yVNz7dgG6FvEZl6J/HOr1rivtGgpCZTBzKNF8jg034n49zGfKkkzWLuXbPUOp3/oGfsKv8pnEu1c2GbQpSmFtZXMgQm90dG9tbGV5IDxqZWpiQGxpbnV4LnZuZXQuaWJtLmNvbT6JAVYEEwEIAEACGwMHCwkIBwMCAQYVC
-	AIJCgsEFgIDAQIeAQIXgBYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJgS5mXBQkbNYS9AAoJEIFK5HwhSFTWEYEH/1YZpV+1uCI2MVz0wTRlnO/3OW/xnyigrw+K4cuO7MToo0tHJb/qL9CBJ2ddG6q+GTnF5kqUe87t7M7rSrIcAkIZMbJmtIbKk0j5EstyYqlE1HzvpmssGpg/8uJBBuWbU35af1ubKCjUs1+974mYXkfLmS0a6h+cG7atVLmyClIc2frd3o0zHF9+E7BaB+HQzT4lheQAXv9KI+63ksnbBpcZnS44t6mi1lzUE65+Am1z+1KJurF2Qbj4AkICzJjJa0bXa9DmFunjPhLbCU160LppaG3OksxuNOTkGCo/tEotDOotZNBYejWaXN2nr9WrH5hDfQ5zLayfKMtLSd33T9u0IUphbWVzIEJvdHRvbWxleSA8amVqYkBrZXJuZWwub3JnPokBVQQTAQgAPwIbAwYLCQgHAwIGFQgCCQoLBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmAUJGzWEvQAKCRCBSuR8IUhU1gacCAC+QZN+RQd+FOoh5g884HQm8S07ON0/2EMiaXBiL6KQb5yP3w2PKEhug3+uPzugftUfgPEw6emRucrFFpwguhriGhB3pgWJIrTD4JUevrBgjEGOztJpbD73bLLyitSiPQZ6OFVOqIGhdqlc3n0qoNQ45n/w3LMVj6yP43SfBQeQGEdq4yHQxXPs0XQCbmr6Nf2p8mNsIKRYf90fCDmABH1lfZxoGJH/frQOBCJ9bMRNCNy+aFtjd5m8ka5M7gcDvM7TAsKhD5O5qFs4aJHGajF4gCGoWmXZGrISQvrNl9kWUhgsvoPqb2OTTeAQVRuV8C4FQamxzE3MRNH25j6s/qujtCRKYW1lcyBCb3R0b21sZXkgPGplamJAbGludXguaWJtLmNvbT6JAVQEEwEIAD
-	4CGwMFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AWIQTVYG5zyLRicb6tmt+BSuR8IUhU1gUCYEuZmQUJGzWEvQAKCRCBSuR8IUhU1kyHB/9VIOkf8RapONUdZ+7FgEpDgESE/y3coDeeb8jrtJyeefWCA0sWU8GSc9KMcMoSUetUreB+fukeVTe/f2NcJ87Bkq5jUEWff4qsbqf5PPM+wlD873StFc6mP8koy8bb7QcH3asH9fDFXUz7Oz5ubI0sE8+qD+Pdlk5qmLY5IiZ4D98V239nrKIhDymcuL7VztyWfdFSnbVXmumIpi79Ox536P2aMe3/v+1jAsFQOIjThMo/2xmLkQiyacB2veMcBzBkcair5WC7SBgrz2YsMCbC37X7crDWmCI3xEuwRAeDNpmxhVCb7jEvigNfRWQ4TYQADdC4KsilPfuW8Edk/8tPtCVKYW1lcyBCb3R0b21sZXkgPEpCb3R0b21sZXlAT2Rpbi5jb20+iQEfBDABAgAJBQJXI+B0Ah0gAAoJEIFK5HwhSFTWzkwH+gOg1UG/oB2lc0DF3lAJPloSIDBW38D3rezXTUiJtAhenWrH2Cl/ejznjdTukxOcuR1bV8zxR9Zs9jhUin2tgCCxIbrdvFIoYilMMRKcue1q0IYQHaqjd7ko8BHn9UysuX8qltJFar0BOClIlH95gdKWJbK46mw7bsXeD66N9IhAsOMJt6mSJmUdIOMuKy4dD4X3adegKMmoTRvHOndZQClTZHiYt5ECRPO534Lb/gyKAKQkFiwirsgx11ZSx3zGlw28brco6ohSLMBylna/Pbbn5hII86cjrCXWtQ4mE0Y6ofeFjpmMdfSRUxy6LHYd3fxVq9PoAJTv7vQ6bLTDFNa0KkphbWVzIEJvdHRvbWxleSA8SkJvdHRvbWxleUBQYXJhbGxlbHMuY29tPokBHwQwAQIACQUCVyPgjAIdIAAKCRCBSuR8IUhU1tXiB/9D9OOU8qB
-	CZPxkxB6ofp0j0pbZppRe6iCJ+btWBhSURz25DQzQNu5GVBRQt1Us6v3PPGU1cEWi5WL935nw+1hXPIVB3x8hElvdCO2aU61bMcpFd138AFHMHJ+emboKHblnhuY5+L1OlA1QmPw6wQooCor1h113lZiBZGrPFxjRYbWYVQmVaM6zhkiGgIkzQw/g9v57nAzYuBhFjnVHgmmu6/B0N8z6xD5sSPCZSjYSS38UG9w189S8HVr4eg54jReIEvLPRaxqVEnsoKmLisryyaw3EpqZcYAWoX0Am+58CXq3j5OvrCvbyqQIWFElba3Ka/oT7CnTdo/SUL/jPNobtCxKYW1lcyBCb3R0b21sZXkgPGplamJAaGFuc2VucGFydG5lcnNoaXAuY29tPokBVwQTAQgAQRYhBNVgbnPItGJxvq2a34FK5HwhSFTWBQJjg2eQAhsDBQkbNYS9BQsJCAcCAiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEIFK5HwhSFTWbtAH/087y9vzXYAHMPbjd8etB/I3OEFKteFacXBRBRDKXI9ZqK5F/xvd1fuehwQWl2Y/sivD4cSAP0iM/rFOwv9GLyrr82pD/GV/+1iXt9kjlLY36/1U2qoyAczY+jsS72aZjWwcO7Og8IYTaRzlqif9Zpfj7Q0Q1e9SAefMlakI6dcZTSlZWaaXCefdPBCc7BZ0SFY4kIg0iqKaagdgQomwW61nJZ+woljMjgv3HKOkiJ+rcB/n+/moryd8RnDhNmvYASheazYvUwaF/aMj5rIb/0w5p6IbFax+wGF5RmH2U5NeUlhIkTodUF/P7g/cJf4HCL+RA1KU/xS9o8zrAOeut2+4UgRaZ7bmEwgqhkjOPQMBBwIDBH4GsIgL0yQij5S5ISDZmlR7qDQPcWUxMVx6zVPsAoITdjKFjaDmUATkS+l5zmiCrUBcJ6MBavPiYQ4kqn4/xwaJAbMEGAEIACYCGwIWIQTVYG5zyLRi
-	cb6tmt+BSuR8IUhU1gUCZag0LwUJDwLkSQCBdiAEGRMIAB0WIQTnYEDbdso9F2cI+arnQslM7pishQUCWme25gAKCRDnQslM7pishdi9AQDyOvLYOBkylBqiTlJrMnGCCsWgGZwPpKq3e3s7JQ/xBAEAlx29pPY5z0RLyIDUsjf9mtkSNTaeaQ6TIjDrFa+8XH8JEIFK5HwhSFTWkasH/j7LL9WH9dRfwfTwuMMj1/KGzjU/4KFIu4uKxDaevKpGS7sDx4F56mafCdGD8u4+ri6bJr/3mmuzIdyger0vJdRlTrnpX3ONXvR57p1JHgCljehE1ZB0RCzIk0vKhdt8+CDBQWfKbbKBTmzA7wR68raMQb2D7nQ9d0KXXbtr7Hag29yj92aUAZ/sFoe9RhDOcRUptdYyPKU1JHgJyc0Z7HwNjRSJ4lKJSKP+Px0/XxT3gV3LaDLtHuHa2IujLEAKcPzTr5DOV+xsgA3iSwTYI6H5aEe+ZRv/rA4sdjqRiVpo2d044aCUFUNQ3PiIHPAZR3KK5O64m6+BJMDXBvgSsMy4VgRaZ7clEggqhkjOPQMBBwIDBMfuMuE+PECbOoYjkD0Teno7TDbcgxJNgPV7Y2lQbNBnexMLOEY6/xJzRi1Xm/o9mOyZ+VIj8h4G5V/eWSntNkwDAQgHiQE8BBgBCAAmAhsMFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoNBwFCQ8C4/cACgkQgUrkfCFIVNZs4AgAnIjU1QEPLdpotiy3X01sKUO+hvcT3/Cd6g55sJyKJ5/U0o3f8fdSn6MWPhi1m62zbAxcLJFiTZ3OWNCZAMEvwHrXFb684Ey6yImQ9gm2dG2nVuCzr1+9gIaMSBeZ+4kUJqhdWSJjrNLQG38GbnBuYOJUD+x6oJ2AT10/mQfBVZ3qWDQXr/je2TSf0OIXaWyG6meG5yTqOEv0eaTH22yBb1nbodoZkmlMMb56jzRGZuorhFE06
-	N0Eb0kiGz5cCIrHZoH10dHWoa7/Z+AzfL0caOKjcmsnUPcmcrqmWzJTEibLA81z15GBCrldfQVt+dF7Us2kc0hKUgaWeI8Gv4CzwLkCDQRUdhaZARAApeF9gbNSBBudW8xeMQIiB/CZwK4VOEP7nGHZn3UsWemsvE9lvjbFzbqcIkbUp2V6ExM5tyEgzio2BavLe1ZJGHVaKkL3cKLABoYi/yBLEnogPFzzYfK2fdipm2G+GhLaqfDxtAQ7cqXeo1TCsZLSvjD+kLVV1TvKlaHS8tUCh2oUyR7fTbv6WHi5H8DLyR0Pnbt9E9/Gcs1j11JX+MWJ7jset2FVDsB5U1LM70AjhXiDiQCtNJzKaqKdMei8zazWS50iMKKeo4m/adWBjG/8ld3fQ7/Hcj6Opkh8xPaCnmgDZovYGavw4Am2tjRqE6G6rPQpS0we5I6lSsKNBP/2FhLmI9fnsBnZC1l1NrASRSX1BK0xf4LYB2Ww3fYQmbbApAUBbWZ/1aQoc2ECKbSK9iW0gfZ8rDggfMw8nzpmEEExl0hU6wtJLymyDV+QGoPx5KwYK/6qAUNJQInUYz8z2ERM/HOI09Zu3jiauFBDtouSIraX/2DDvTf7Lfe1+ihARFSlp64kEMAsjKutNBK2u5oj4H7hQ7zD+BvWLHxMgysOtYYtwggweOrM/k3RndsZ/z3nsGqF0ggct1VLuH2eznDksI+KkZ3Bg0WihQyJ7Z9omgaQAyRDFct+jnJsv2Iza+xIvPei+fpbGNAyFvj0e+TsZoQGcC34/ipGwze651UAEQEAAYkBHwQoAQIACQUCVT6BaAIdAwAKCRCBSuR8IUhU1p5QCAC7pgjOM17Hxwqz9mlGELilYqjzNPUoZt5xslcTFGxj/QWNzu0K8gEQPePnc5dTfumzWL077nxhdKYtoqwm2C6fOmXiJBZx6khBfRqctUvN2DlOB6dFf5I+1QT9TRBvceGzw01E4Gi0xjWKAB6OII
-	MAdnPcDVFzaXJdlAAJdjfg/lyJtAyxifflG8NnXJ3elwGqoBso84XBNWWzbc5VKmatzhYLOvXtfzDhu4mNPv/z7S1HTtRguI0NlH5RVBzSvfzybin9hysE3/+r3C0HJ2xiOHzucNAmG03aztzZYDMTbKQW4bQqeD5MJxT68vBYu8MtzfIe41lSLpb/qlwq1qg0iQElBBgBAgAPBQJUdhaZAhsMBQkA7U4AAAoJEIFK5HwhSFTW3YgH/AyJL2rlCvGrkLcas94ND9Pmn0cUlVrPl7wVGcIV+6I4nrw6u49TyqNMmsYam2YpjervJGgbvIbMzoHFCREi6R9XyUsw5w7GCRoWegw2blZYi5A52xe500+/RruG//MKfOtVUotu3N+u7FcXaYAg9gbYeGNZCV70vI+cnFgq0AEJRdjidzfCWVKPjafTo7jHeFxX7Q22kUfWOkMzzhoDbFg0jPhVYNiEXpNyXCwirzvKA7bvFwZPlRkbfihaiXDE7QKIUtQ10i5kw4C9rqDKwx8F0PaWDRF9gGaKd7/IJGHJaac/OcSJ36zxgkNgLsVX5GUroJ2GaZcR7W9Vppj5H+C4UgRkuRyTEwgqhkjOPQMBBwIDBOySomnsW2SkApXv1zUBaD38dFEj0LQeDEMdSE7bm1fnrdjAYt0f/CtbUUiDaPodQk2qeHzOP6wA/2K6rrjwNIWJAT0EGAEIACcDGyAEFiEE1WBuc8i0YnG+rZrfgUrkfCFIVNYFAmWoM/gFCQSxfmUACgkQgUrkfCFIVNZhTgf/VQxtQ5rgu2aoXh2KOH6naGzPKDkYDJ/K7XCJAq3nJYEpYN8G+F8mL/ql0hrihAsHfjmoDOlt+INa3AcG3v0jDZIMEzmcjAlu7g5NcXS3kntcMHgw3dCgE9eYDaKGipUCubdXvBaZWU6AUlTldaB8FE6u7It7+UO+IW4/L+KpLYKs8V5POInu2rqahlm7vgxY5iv4Txz4EvCW2e4dAlG
-	8mT2Eh9SkH+YVOmaKsajgZgrBxA7fWmGoxXswEVxJIFj3vW7yNc0C5HaUdYa5iGOMs4kg2ht4s7yy7NRQuh7BifWjo6BQ6k4S1H+6axZucxhSV1L6zN9d+lr3Xo/vy1unzA==
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.3 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8jTWV8T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04592C4CEE4;
+	Fri,  2 May 2025 18:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746209571;
+	bh=bPeDXBz2uBUUjye8DAfNaDDNnGdqoUDOEmhPQOwIVSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h8jTWV8T5PUKNuX7o32tMuuYIhKxp12+m12o+BqIbbRn4Li9/FehOockw4FrM7uFV
+	 mg7S1Y0a0cUtvvOyGbIwJeGGKJT+jUiPVpqloRQqHqUiwuVPQZL8+agg0U9VJF84VR
+	 UKbwLYpng5d6MCP1kIzHPQRqps26kEL5ybhG0hJYDbkduCjZ8Mq1W4ozKcRP69F+b2
+	 GuPjvjmDFKi5x64Iju3VV+BgAQwglY4BL+dQR8UOYt9l9KRK5RvjelBqNkJc3mp+i9
+	 JxjbsAt2wtcucJU9tiD1VWGdtl8W7H1sG7C7pMp3mQJENAxJYwfR317Iz7TErI9P2J
+	 pvylqyVKzJGqA==
+Date: Fri, 2 May 2025 11:12:49 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf hist: Remove output field from sort-list properly
+Message-ID: <aBULIc_DhfnY33dZ@google.com>
+References: <20250430180321.736939-1-namhyung@kernel.org>
+ <aBTqq3-splDRYxO5@x1>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aBTqq3-splDRYxO5@x1>
 
-Two minor updates, both in drivers.
+Hi Arnaldo,
 
-The patch is available here:
+On Fri, May 02, 2025 at 12:54:19PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Apr 30, 2025 at 11:03:21AM -0700, Namhyung Kim wrote:
+> > When it removes an output format for cancelled children or latency, it
+> > should delete itself from the sort list as well.  Otherwise assertion
+> > in fmt_free() will fire.
+> > 
+> >   $ perf report -H --stdio
+> >   perf: ui/hist.c:603: fmt_free: Assertion `!(!list_empty(&fmt->sort_list))' failed.
+> >   Aborted (core dumped)
+> > 
+> > Also convert to perf_hpp__column_unregister() for the same open codes.
+> > 
+> > Fixes: dbd11b6bdab12f60 ("perf hist: Remove formats in hierarchy when cancel children")
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> 
+> Tested and added the following patch just before this one.
+> 
+> Please check.
+> 
+> Thanks, applied to perf-tools-next.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+Thanks!
 
-The short changelog is:
+> 
+> - Arnaldo
+> 
+> From 0184752e038f00ea2ccdc4ef4fdb6713ef2a328e Mon Sep 17 00:00:00 2001
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Date: Fri, 2 May 2025 12:48:28 -0300
+> Subject: [PATCH 1/2] perf test perf-report-hierarchy: Add new test
+> 
+> Super simple test to check that at least we're not segfaulting when
+> trying to use 'perf report --hierarchy', more subtests should be added
+> to make sure the output is the expected one.
 
-Colin Ian King (1):
-      scsi: myrb: Fix spelling mistake "statux" -> "status"
+Thanks for doing this.  We have a test suite for perf report and there's
+a test for the --hierarchy option already.  But I'm afrail it didn't
+check if the command crashed.  I'm fine with adding this separately and
+maybe I can add more tests later.
 
-Keoseong Park (1):
-      scsi: ufs: core: Remove redundant query_complete trace
+Thanks,
+Namhyung
 
-And the diffstat:
-
- drivers/scsi/myrb.c       | 2 +-
- drivers/ufs/core/ufshcd.c | 2 --
- 2 files changed, 1 insertion(+), 3 deletions(-)
-
-With full diff below.
-
-Regards,
-
-James
-
----
-
-diff --git a/drivers/scsi/myrb.c b/drivers/scsi/myrb.c
-index dc4bd422b601..486db5b2f05d 100644
---- a/drivers/scsi/myrb.c
-+++ b/drivers/scsi/myrb.c
-@@ -891,7 +891,7 @@ static bool myrb_enable_mmio(struct myrb_hba *cb, mbox_=
-mmio_init_t mmio_init_fn)
- 		status =3D mmio_init_fn(pdev, base, &mbox);
- 		if (status !=3D MYRB_STATUS_SUCCESS) {
- 			dev_err(&pdev->dev,
--				"Failed to enable mailbox, statux %02X\n",
-+				"Failed to enable mailbox, status %02X\n",
- 				status);
- 			return false;
- 		}
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 5cb6132b8147..7735421e3991 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -7265,8 +7265,6 @@ static int ufshcd_issue_devman_upiu_cmd(struct ufs_hb=
-a *hba,
- 			err =3D -EINVAL;
- 		}
- 	}
--	ufshcd_add_query_upiu_trace(hba, err ? UFS_QUERY_ERR : UFS_QUERY_COMP,
--				    (struct utp_upiu_req *)lrbp->ucd_rsp_ptr);
-=20
- 	return err;
- }
-
+> 
+> This is being merged right before a fix for that that this test detects:
+> 
+>   # perf test hierarchy
+>    83: perf report --hierarchy                                         : FAILED!
+>   # perf test -v hierarchy
+>   --- start ---
+>   test child forked, pid 102242
+>   perf report --hierarchy
+>   Linux
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.025 MB /tmp/perf-test-report.HX0N85TlPq/perf-report-hierarchy-perf.data (6 samples) ]
+>   perf: ui/hist.c:603: fmt_free: Assertion `!(!list_empty(&fmt->sort_list))' failed.
+>   /home/acme/libexec/perf-core/tests/shell/perf-report-hierarchy.sh: line 34: 102250 Aborted                 (core dumped) perf report --hierarchy > /dev/null
+>   --- Cleaning up ---
+>   ---- end(-1) ----
+>    83: perf report --hierarchy                                         : FAILED!
+>   #
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Kan Liang <kan.liang@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Link: https://lore.kernel.org/lkml/20250430180321.736939-1-namhyung@kernel.org
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  .../perf/tests/shell/perf-report-hierarchy.sh | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/perf-report-hierarchy.sh
+> 
+> diff --git a/tools/perf/tests/shell/perf-report-hierarchy.sh b/tools/perf/tests/shell/perf-report-hierarchy.sh
+> new file mode 100755
+> index 0000000000000000..a9cc1edae36ba003
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/perf-report-hierarchy.sh
+> @@ -0,0 +1,47 @@
+> +#!/bin/sh
+> +# perf report --hierarchy
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Arnaldo Carvalho de Melo <acme@redhat.com> 
+> +
+> +set -e
+> +
+> +temp_dir=$(mktemp -d /tmp/perf-test-report.XXXXXXXXXX)
+> +
+> +perfdatafile="${temp_dir}/perf.data"
+> +
+> +err=0
+> +
+> +cleanup()
+> +{
+> +	trap - EXIT TERM INT
+> +	sane=$(echo "${temp_dir}" | cut -b 1-21)
+> +	if [ "${sane}" = "/tmp/perf-test-report" ] ; then
+> +		echo "--- Cleaning up ---"
+> +		rm -rf "${temp_dir:?}/"*
+> +		rmdir "${temp_dir}"
+> +	fi
+> +}
+> +
+> +trap_cleanup()
+> +{
+> +	cleanup
+> +	exit 1
+> +}
+> +
+> +trap trap_cleanup EXIT TERM INT
+> +
+> +test_report_hierarchy()
+> +{
+> +	echo "perf report --hierarchy"
+> +
+> +	perf_data="${temp_dir}/perf-report-hierarchy-perf.data"
+> +	perf record -o "${perf_data}" uname
+> +	perf report --hierarchy > /dev/null
+> +	echo "perf report --hierarchy test [Success]"
+> +}
+> +
+> +test_report_hierarchy
+> +
+> +cleanup
+> +
+> +exit $err
+> -- 
+> 2.49.0
+> 
