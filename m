@@ -1,372 +1,880 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8995518E3F
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 14:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE70F256C79;
+	Fri,  2 May 2025 14:35:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746196519; cv=none; b=tlmr62vc+TZboe5cN2cPW9zJv5uQ/L/G+pHbiOpJtmygE0+2jI6MZyAM5RBI92A2/XDq0xLb1rxQudNebMIMRLeZo0LLHc3XZkXjYoTnyE1KvP0JbduVuA91fFnaR6SICD5BAoRxOwCjddReop+CsBkH1w/ucrWYR9jnsQ8/6+4=
+	t=1746196524; cv=none; b=hTq9EbOI/Xaf/WSNpQysnQTLfnvogBZSu2soEMIKVRqUdalK5IVvdot1CRIJWIfyUjHGj13hNUm3CnVjS1Tmmj1LfHDoNg0+BJ4SlvTAdH2sYqmI3hMN6B3kT3NBuv4I2xLIA1bBegVSQUvSFTQLpAW39ZBy1yIktUNRIpbVneo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746196519; c=relaxed/simple;
-	bh=AMyf3hdlohi2x2Km7HL2Ta2wsROtvchKQeJeaBgulk0=;
+	s=arc-20240116; t=1746196524; c=relaxed/simple;
+	bh=cmJvH8vRyfLUx7Uw/BONuaY5D3j8PfF5lrORoj2T76Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XkgDbKkUYJeEwgqPKw0R4AeYRVQL0aEJ8i1NzO/OVpEgv9knp4uSyV9qcK2XL9LqoQIbLaiYvD+lQ+YFIDfcigZv319yJQEMQ7NDZLcNVKwOEFPyYQyiJzdZ4IAMWAud5g35sNOF1mBitCcmsgr9MhMjaNPTlM/wNlF01NC+VTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h0YwheHV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=o+y2p57Dz96YuioeInuHNGQUf4e/kTLix3/wl7oiocd1w3YU2cCX4liPGMJ4f5MNnDp4qS2vhJxxgLHN270z2lQ/scb9NI2AuFaDzlHSACiWLmrl594yxHmsDOIAhOJtHS28N0UplBTEm3kWE7TOAbt13rUn2/iri1Bjb2EiroE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Xl5h7qc1; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h0YwheHV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1746196514;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vUEcgZtCLeeqg0l4XTH5FFbd5+c5hm9UJNGNv5VwHHY=;
-	b=h0YwheHVb1J8iMH1s6Nwbgn1VlEiR/bodi/WC53re9yJePbXreYZX9mI23qXcqO2aSrWPg
-	VGmqPlwPptppLLBXgVriyeTzonPBPL6N6oxLkF5HLJjCfDOe6wKEqy8DqSYzbJbZp5k1J2
-	0/nIELZZSKyQeArzTyo4ltuHIyaBLk8=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-473-h3vnJuZlP9C4nwzBugGtZA-1; Fri,
- 02 May 2025 10:35:08 -0400
-X-MC-Unique: h3vnJuZlP9C4nwzBugGtZA-1
-X-Mimecast-MFC-AGG-ID: h3vnJuZlP9C4nwzBugGtZA_1746196506
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 324F219560B0;
-	Fri,  2 May 2025 14:35:05 +0000 (UTC)
-Received: from bfoster (unknown [10.22.64.112])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9A6D0195608D;
-	Fri,  2 May 2025 14:35:01 +0000 (UTC)
-Date: Fri, 2 May 2025 10:38:13 -0400
-From: Brian Foster <bfoster@redhat.com>
-To: "Lai, Yi" <yi1.lai@linux.intel.com>
-Cc: Zhang Yi <yi.zhang@huaweicloud.com>, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	djwong@kernel.org, hch@infradead.org, brauner@kernel.org,
-	david@fromorbit.com, chandanbabu@kernel.org, tytso@mit.edu,
-	jack@suse.cz, yi.zhang@huawei.com, chengzhihao1@huawei.com,
-	yukuai3@huawei.com, yi1.lai@intel.com
-Subject: Re: [PATCH v5 4/9] xfs: convert delayed extents to unwritten when
- zeroing post eof blocks
-Message-ID: <aBTY1XQw14eAs9KI@bfoster>
-References: <20240425131335.878454-1-yi.zhang@huaweicloud.com>
- <20240425131335.878454-5-yi.zhang@huaweicloud.com>
- <Z/9aNcsuz0VlvgYz@ly-workstation>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Xl5h7qc1"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 8A505AF;
+	Fri,  2 May 2025 16:35:11 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1746196511;
+	bh=cmJvH8vRyfLUx7Uw/BONuaY5D3j8PfF5lrORoj2T76Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xl5h7qc1IC9hNrNFOwINcOj7rabVTw0C+gJCnwD8ycEA7uw5Af+ZUKzkA2/4VqKg1
+	 4hZgCMYx6dVELy2pEIEpd2NaCDY3RPP+U0xNIhCoLuRCXDlIzh1lUXZinpzuC1SCHt
+	 gfqjKR/NwWPKpQk6fnY4JNzYOO4TAhrdvN7mdZHw=
+Date: Fri, 2 May 2025 17:35:10 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Michael Riesch <michael.riesch@collabora.com>
+Cc: Mehdi Djait <mehdi.djait@linux.intel.com>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
+	=?utf-8?B?VGjDqW8=?= Lebrun <theo.lebrun@bootlin.com>,
+	Gerald Loacker <gerald.loacker@wolfvision.net>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Nicolas Dufresne <nicolas.dufresne@collabora.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Collabora Kernel Team <kernel@collabora.com>,
+	Paul Kocialkowski <paulk@sys-base.io>,
+	Alexander Shiyan <eagle.alexander923@gmail.com>,
+	Val Packett <val@packett.cool>, Rob Herring <robh@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	Michael Riesch <michael.riesch@wolfvision.net>
+Subject: Re: [PATCH v6 07/13] media: rockchip: rkcif: add driver for mipi
+ csi-2 receiver
+Message-ID: <20250502143510.GA11226@pendragon.ideasonboard.com>
+References: <20240220-rk3568-vicap-v6-0-d2f5fbee1551@collabora.com>
+ <20240220-rk3568-vicap-v6-7-d2f5fbee1551@collabora.com>
+ <20250502133129.GA15945@pendragon.ideasonboard.com>
+ <0c9199be-5519-4523-9055-528673678d3b@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Z/9aNcsuz0VlvgYz@ly-workstation>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <0c9199be-5519-4523-9055-528673678d3b@collabora.com>
 
-On Wed, Apr 16, 2025 at 03:20:21PM +0800, Lai, Yi wrote:
-> Hi Zhang Yi,
+On Fri, May 02, 2025 at 04:19:59PM +0200, Michael Riesch wrote:
+> On 5/2/25 15:31, Laurent Pinchart wrote:
+> > On Wed, Apr 30, 2025 at 11:15:56AM +0200, Michael Riesch via B4 Relay wrote:
+> >> From: Michael Riesch <michael.riesch@wolfvision.net>
+> >>
+> >> The Rockchip RK3568 MIPI CSI-2 Receiver is a CSI-2 bridge with one
+> >> input port and one output port. It receives the data with the help
+> >> of an external MIPI PHY (C-PHY or D-PHY) and passes it to the
+> >> Rockchip RK3568 Video Capture (VICAP) block.
+> >>
+> >> Add a V4L2 subdevice driver for this unit.
+> >>
+> >> Signed-off-by: Michael Riesch <michael.riesch@wolfvision.net>
+> >> Signed-off-by: Michael Riesch <michael.riesch@collabora.com>
+> >> ---
+> >>  drivers/media/platform/rockchip/rkcif/Makefile     |   3 +
+> >>  .../rockchip/rkcif/rkcif-mipi-csi-receiver.c       | 731 +++++++++++++++++++++
+> >>  2 files changed, 734 insertions(+)
+> >>
+> >> diff --git a/drivers/media/platform/rockchip/rkcif/Makefile b/drivers/media/platform/rockchip/rkcif/Makefile
+> >> index 818424972c7b..a5c18a45c213 100644
+> >> --- a/drivers/media/platform/rockchip/rkcif/Makefile
+> >> +++ b/drivers/media/platform/rockchip/rkcif/Makefile
+> >> @@ -5,3 +5,6 @@ rockchip-cif-objs += rkcif-dev.o \
+> >>  	rkcif-capture-mipi.o \
+> >>  	rkcif-interface.o \
+> >>  	rkcif-stream.o
+> >> +
+> >> +obj-$(CONFIG_VIDEO_ROCKCHIP_CIF) += rockchip-mipi-csi.o
+> >> +rockchip-mipi-csi-objs += rkcif-mipi-csi-receiver.o
+> >> diff --git a/drivers/media/platform/rockchip/rkcif/rkcif-mipi-csi-receiver.c b/drivers/media/platform/rockchip/rkcif/rkcif-mipi-csi-receiver.c
+> >> new file mode 100644
+> >> index 000000000000..81489f70490f
+> >> --- /dev/null
+> >> +++ b/drivers/media/platform/rockchip/rkcif/rkcif-mipi-csi-receiver.c
+> >> @@ -0,0 +1,731 @@
+> >> +// SPDX-License-Identifier: GPL-2.0
+> >> +/*
+> >> + * Rockchip MIPI CSI-2 Receiver Driver
+> >> + *
+> >> + * Copyright (C) 2019 Rockchip Electronics Co., Ltd.
+> >> + * Copyright (C) 2025 Michael Riesch <michael.riesch@wolfvision.net>
+> >> + */
+> >> +
+> >> +#include <linux/clk.h>
+> >> +#include <linux/delay.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/module.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_graph.h>
+> >> +#include <linux/of_platform.h>
+> >> +#include <linux/phy/phy.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/pm_runtime.h>
+> >> +#include <linux/reset.h>
+> >> +
+> >> +#include <media/mipi-csi2.h>
+> >> +#include <media/v4l2-ctrls.h>
+> >> +#include <media/v4l2-fwnode.h>
+> >> +#include <media/v4l2-subdev.h>
+> >> +
+> >> +#define CSI2HOST_N_LANES     0x04
+> >> +#define CSI2HOST_CSI2_RESETN 0x10
+> >> +#define CSI2HOST_PHY_STATE   0x14
+> >> +#define CSI2HOST_ERR1	     0x20
+> >> +#define CSI2HOST_ERR2	     0x24
+> >> +#define CSI2HOST_MSK1	     0x28
+> >> +#define CSI2HOST_MSK2	     0x2c
+> >> +#define CSI2HOST_CONTROL     0x40
+> > 
+> > I'm trying to get to the bottom of the CSI-2 RX integration questions
+> > for the RK3568. Some of the registers here seem to the CSI2RX_1C00 block
+> > as documented starting on page 1059 of the RK3568 TRM (revision 1.1),
+> > but they're not an exact match. The control register, in particular,
+> > doesn't match at all. Where is this CSI-2 receiver documented in the TRM
+> > ?
 > 
-> Greetings!
+> That would be in Chapter 27 of the RK3568 TRM: "MIPI CSI HOST"
 > 
-> I used Syzkaller and found that there is WARNING in xfs_bmapi_convert_one_delalloc in linux v6.15-rc2.
+> The registers are at 0xfdfb0000 "CSI_RX_CTRL1", cf. Chapter 1 "System
+> Overview".
 > 
-> After bisection and the first bad commit is:
-> "
-> 5ce5674187c3 xfs: convert delayed extents to unwritten when zeroing post eof blocks
-> "
+> Naturally, this is quite confusing, as there is a "CSI2RX" whose
+> registers are embedded in the ISP register map.
 > 
+> "MIPI CSI HOST" and "CSI2RX" seem to be different IP cores but perform
+> the same job in principle. CSI2RX seems to have additional features
+> related to writing raw data into memory and to HDR, though.
+> 
+> Hope that helps!
 
-I took a look at this and it seems like the issue is a race between a
-failed writeback and zero range via write extension. The sequence is
-generally some file is written to with delalloc across the EOF folio. An
-fsync occurs on said file. The underlying fs is (I'm assuming
-deliberately) corrupted such that physical block allocation fails, so
-the writeback block map fails and drops the ilock.
+It does, thank you. I wonder how I missed that.
 
-An extending buffered write comes in and discovers the post-EOF delalloc
-range needs to be zeroed and then unlocks to fall into delalloc
-conversion. However, the writeback side was blocked waiting on the ilock
-in xfs_discard_folio(), which now punches out the blocks in the same
-range and thus causes the warning down in the conversion code on the
-buffered write / delalloc convert side where it finds a hole (and warns
-because it doesn't like that this is not the COW fork remap case).
+The IP seems very similar to other CSI-2 receivers already supported
+upstream, see drivers/media/platform/raspberrypi/rp1-cfe/dphy.c,
+drivers/media/platform/renesas/rcar-csi2.c and
+drivers/staging/media/imx/imx6-mipi-csi2.c. Those drivers combine
+support for the CSI-2 RX and D-PHY, explaining some of the differences
+(and in the case of the rcar-csi2 driver, I think it also combines
+support for different CSI-2 RX in a single driver).
 
-There's probably a few ways to address this. The most immediate that
-comes to mind for me is probably to just drop the warning, document how
-this can happen, and probably also tweak the error logic for the data
-fork case so the operation proceeds for remaining blocks beyond the
-folio that failed writeback. Another option could be to similarly return
-EAGAIN and trigger a retry in the iomap_begin() path. Can't say I'm in
-love with either one of those tbh, nor the whole convert blocks on zero
-range thing in the first place, but it's also a rare error case and
-perhaps not worth too much complexity.
+Is there something we could do to avoid adding a 4th driver for the same
+IP core family (from Synopsys or Cadence I assume) ? It could possibly
+be done on top of this series to avoid delaying VICAP support, but I'd
+really like to get this sorted out.
 
-That said, I've also wondered in the past if a higher level
-iomap_map_blocks() call that effectively implements a more generic
-->map_blocks() would be a more appropriate way to do this. Other
-thoughts?
+> >> +
+> >> +#define SW_CPHY_EN(x)	     ((x) << 0)
+> >> +#define SW_DSI_EN(x)	     ((x) << 4)
+> >> +#define SW_DATATYPE_FS(x)    ((x) << 8)
+> >> +#define SW_DATATYPE_FE(x)    ((x) << 14)
+> >> +#define SW_DATATYPE_LS(x)    ((x) << 20)
+> >> +#define SW_DATATYPE_LE(x)    ((x) << 26)
+> >> +
+> >> +#define RKCIF_CSI_CLKS_MAX   1
+> >> +
+> >> +enum {
+> >> +	RKCIF_CSI_PAD_SINK,
+> >> +	RKCIF_CSI_PAD_SRC,
+> >> +	RKCIF_CSI_PAD_MAX,
+> >> +};
+> >> +
+> >> +struct rkcif_csi_format {
+> >> +	u32 code;
+> >> +	u8 depth;
+> >> +	u8 csi_dt;
+> >> +};
+> >> +
+> >> +struct rkcif_csi_device {
+> >> +	struct device *dev;
+> >> +
+> >> +	void __iomem *base_addr;
+> >> +	struct clk_bulk_data *clks;
+> >> +	unsigned int clks_num;
+> >> +	struct phy *phy;
+> >> +	struct reset_control *reset;
+> >> +
+> >> +	const struct rkcif_csi_format *formats;
+> >> +	unsigned int formats_num;
+> >> +
+> >> +	struct media_pad pads[RKCIF_CSI_PAD_MAX];
+> >> +	struct v4l2_async_notifier notifier;
+> >> +	struct v4l2_fwnode_endpoint vep;
+> >> +	struct v4l2_subdev sd;
+> >> +
+> >> +	struct v4l2_subdev *source_sd;
+> >> +	u32 source_pad;
+> >> +};
+> >> +
+> >> +static const struct v4l2_mbus_framefmt default_format = {
+> >> +	.width = 3840,
+> >> +	.height = 2160,
+> >> +	.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+> >> +	.field = V4L2_FIELD_NONE,
+> >> +	.colorspace = V4L2_COLORSPACE_RAW,
+> >> +	.ycbcr_enc = V4L2_YCBCR_ENC_601,
+> >> +	.quantization = V4L2_QUANTIZATION_FULL_RANGE,
+> >> +	.xfer_func = V4L2_XFER_FUNC_NONE,
+> >> +};
+> >> +
+> >> +static const struct rkcif_csi_format formats[] = {
+> >> +	/* YUV formats */
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_YUYV8_1X16,
+> >> +		.depth = 16,
+> >> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_UYVY8_1X16,
+> >> +		.depth = 16,
+> >> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_YVYU8_1X16,
+> >> +		.depth = 16,
+> >> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_VYUY8_1X16,
+> >> +		.depth = 16,
+> >> +		.csi_dt = MIPI_CSI2_DT_YUV422_8B,
+> >> +	},
+> >> +	/* RGB formats */
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_RGB888_1X24,
+> >> +		.depth = 24,
+> >> +		.csi_dt = MIPI_CSI2_DT_RGB888,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_BGR888_1X24,
+> >> +		.depth = 24,
+> >> +		.csi_dt = MIPI_CSI2_DT_RGB888,
+> >> +	},
+> >> +	/* Bayer formats */
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SBGGR8_1X8,
+> >> +		.depth = 8,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW8,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGBRG8_1X8,
+> >> +		.depth = 8,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW8,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGRBG8_1X8,
+> >> +		.depth = 8,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW8,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SRGGB8_1X8,
+> >> +		.depth = 8,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW8,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SBGGR10_1X10,
+> >> +		.depth = 10,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW10,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGBRG10_1X10,
+> >> +		.depth = 10,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW10,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGRBG10_1X10,
+> >> +		.depth = 10,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW10,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SRGGB10_1X10,
+> >> +		.depth = 10,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW10,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SBGGR12_1X12,
+> >> +		.depth = 12,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW12,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGBRG12_1X12,
+> >> +		.depth = 12,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW12,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SGRBG12_1X12,
+> >> +		.depth = 12,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW12,
+> >> +	},
+> >> +	{
+> >> +		.code = MEDIA_BUS_FMT_SRGGB12_1X12,
+> >> +		.depth = 12,
+> >> +		.csi_dt = MIPI_CSI2_DT_RAW12,
+> >> +	},
+> >> +};
+> >> +
+> >> +static inline struct rkcif_csi_device *to_rkcif_csi(struct v4l2_subdev *sd)
+> >> +{
+> >> +	return container_of(sd, struct rkcif_csi_device, sd);
+> >> +}
+> >> +
+> >> +static inline __maybe_unused void
+> >> +rkcif_csi_write(struct rkcif_csi_device *csi_dev, unsigned int addr, u32 val)
+> >> +{
+> >> +	writel(val, csi_dev->base_addr + addr);
+> >> +}
+> >> +
+> >> +static inline __maybe_unused u32
+> >> +rkcif_csi_read(struct rkcif_csi_device *csi_dev, unsigned int addr)
+> >> +{
+> >> +	return readl(csi_dev->base_addr + addr);
+> >> +}
+> >> +
+> >> +static const struct rkcif_csi_format *
+> >> +rkcif_csi_find_format(struct rkcif_csi_device *csi_dev, u32 mbus_code)
+> >> +{
+> >> +	const struct rkcif_csi_format *format;
+> >> +
+> >> +	WARN_ON(csi_dev->formats_num == 0);
+> >> +
+> >> +	for (int i = 0; i < csi_dev->formats_num; i++) {
+> >> +		format = &csi_dev->formats[i];
+> >> +		if (format->code == mbus_code)
+> >> +			return format;
+> >> +	}
+> >> +
+> >> +	return NULL;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_start(struct rkcif_csi_device *csi_dev)
+> >> +{
+> >> +	enum v4l2_mbus_type bus_type = csi_dev->vep.bus_type;
+> >> +	union phy_configure_opts opts;
+> >> +	s64 link_freq;
+> >> +	u32 lanes = csi_dev->vep.bus.mipi_csi2.num_data_lanes;
+> >> +	u32 control = 0;
+> >> +
+> >> +	if (lanes < 1 || lanes > 4)
+> >> +		return -EINVAL;
+> >> +
+> >> +	/* set mult and div to 0, thus completely rely on V4L2_CID_LINK_FREQ */
+> >> +	link_freq = v4l2_get_link_freq(csi_dev->source_sd->ctrl_handler, 0, 0);
+> >> +	if (link_freq <= 0)
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (bus_type == V4L2_MBUS_CSI2_DPHY) {
+> >> +		struct phy_configure_opts_mipi_dphy *cfg = &opts.mipi_dphy;
+> >> +
+> >> +		phy_mipi_dphy_get_default_config_for_hsclk(link_freq * 2, lanes,
+> >> +							   cfg);
+> >> +		phy_set_mode(csi_dev->phy, PHY_MODE_MIPI_DPHY);
+> >> +		phy_configure(csi_dev->phy, &opts);
+> >> +
+> >> +		control |= SW_CPHY_EN(0);
+> >> +
+> >> +	} else if (bus_type == V4L2_MBUS_CSI2_CPHY) {
+> >> +		control |= SW_CPHY_EN(1);
+> >> +
+> >> +		/* TODO: implement CPHY configuration */
+> >> +	} else {
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >> +	control |= SW_DATATYPE_FS(0x00) | SW_DATATYPE_FE(0x01) |
+> >> +		   SW_DATATYPE_LS(0x02) | SW_DATATYPE_LE(0x03);
+> >> +
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_N_LANES, lanes - 1);
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_CONTROL, control);
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_CSI2_RESETN, 1);
+> >> +
+> >> +	phy_power_on(csi_dev->phy);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static void rkcif_csi_stop(struct rkcif_csi_device *csi_dev)
+> >> +{
+> >> +	phy_power_off(csi_dev->phy);
+> >> +
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_CSI2_RESETN, 0);
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_MSK1, ~0);
+> >> +	rkcif_csi_write(csi_dev, CSI2HOST_MSK2, ~0);
+> >> +}
+> >> +
+> >> +static const struct media_entity_operations rkcif_csi_media_ops = {
+> >> +	.link_validate = v4l2_subdev_link_validate,
+> >> +};
+> >> +
+> >> +static int rkcif_csi_enum_mbus_code(struct v4l2_subdev *sd,
+> >> +				    struct v4l2_subdev_state *sd_state,
+> >> +				    struct v4l2_subdev_mbus_code_enum *code)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = to_rkcif_csi(sd);
+> >> +
+> >> +	if (code->pad == RKCIF_CSI_PAD_SRC) {
+> >> +		const struct v4l2_mbus_framefmt *sink_fmt;
+> >> +
+> >> +		if (code->index)
+> >> +			return -EINVAL;
+> >> +
+> >> +		sink_fmt = v4l2_subdev_state_get_format(sd_state,
+> >> +							RKCIF_CSI_PAD_SINK);
+> >> +		code->code = sink_fmt->code;
+> >> +
+> >> +		return 0;
+> >> +	} else if (code->pad == RKCIF_CSI_PAD_SINK) {
+> >> +		if (code->index > csi_dev->formats_num)
+> >> +			return -EINVAL;
+> >> +
+> >> +		code->code = csi_dev->formats[code->index].code;
+> >> +		return 0;
+> >> +	}
+> >> +
+> >> +	return -EINVAL;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_set_fmt(struct v4l2_subdev *sd,
+> >> +			     struct v4l2_subdev_state *state,
+> >> +			     struct v4l2_subdev_format *format)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = to_rkcif_csi(sd);
+> >> +	const struct rkcif_csi_format *fmt;
+> >> +	struct v4l2_mbus_framefmt *sink, *src;
+> >> +
+> >> +	/* the format on the source pad always matches the sink pad */
+> >> +	if (format->pad == RKCIF_CSI_PAD_SRC)
+> >> +		return v4l2_subdev_get_fmt(sd, state, format);
+> >> +
+> >> +	sink = v4l2_subdev_state_get_format(state, format->pad, format->stream);
+> >> +	if (!sink)
+> >> +		return -EINVAL;
+> >> +
+> >> +	fmt = rkcif_csi_find_format(csi_dev, format->format.code);
+> >> +	if (fmt)
+> >> +		*sink = format->format;
+> >> +	else
+> >> +		*sink = default_format;
+> >> +
+> >> +	/* propagate the format to the source pad */
+> >> +	src = v4l2_subdev_state_get_opposite_stream_format(state, format->pad,
+> >> +							   format->stream);
+> >> +	if (!src)
+> >> +		return -EINVAL;
+> >> +
+> >> +	*src = *sink;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_set_routing(struct v4l2_subdev *sd,
+> >> +				 struct v4l2_subdev_state *state,
+> >> +				 enum v4l2_subdev_format_whence which,
+> >> +				 struct v4l2_subdev_krouting *routing)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	ret = v4l2_subdev_routing_validate(sd, routing,
+> >> +					   V4L2_SUBDEV_ROUTING_ONLY_1_TO_1);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	ret = v4l2_subdev_set_routing_with_fmt(sd, state, routing,
+> >> +					       &default_format);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_enable_streams(struct v4l2_subdev *sd,
+> >> +				    struct v4l2_subdev_state *state, u32 pad,
+> >> +				    u64 streams_mask)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = to_rkcif_csi(sd);
+> >> +	struct v4l2_subdev *remote_sd;
+> >> +	struct media_pad *sink_pad, *remote_pad;
+> >> +	struct device *dev = csi_dev->dev;
+> >> +	u64 mask;
+> >> +	int ret;
+> >> +
+> >> +	sink_pad = &sd->entity.pads[RKCIF_CSI_PAD_SINK];
+> >> +	remote_pad = media_pad_remote_pad_first(sink_pad);
+> >> +	remote_sd = media_entity_to_v4l2_subdev(remote_pad->entity);
+> >> +
+> >> +	mask = v4l2_subdev_state_xlate_streams(state, RKCIF_CSI_PAD_SINK,
+> >> +					       RKCIF_CSI_PAD_SRC,
+> >> +					       &streams_mask);
+> >> +
+> >> +	ret = pm_runtime_resume_and_get(dev);
+> >> +	if (ret)
+> >> +		goto err;
+> >> +
+> >> +	ret = rkcif_csi_start(csi_dev);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to enable CSI hardware\n");
+> >> +		goto err_pm_runtime_put;
+> >> +	}
+> >> +
+> >> +	ret = v4l2_subdev_enable_streams(remote_sd, remote_pad->index, mask);
+> >> +	if (ret)
+> >> +		goto err_csi_stop;
+> >> +
+> >> +	return 0;
+> >> +
+> >> +err_csi_stop:
+> >> +	rkcif_csi_stop(csi_dev);
+> >> +err_pm_runtime_put:
+> >> +	pm_runtime_put_sync(dev);
+> >> +err:
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_disable_streams(struct v4l2_subdev *sd,
+> >> +				     struct v4l2_subdev_state *state, u32 pad,
+> >> +				     u64 streams_mask)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = to_rkcif_csi(sd);
+> >> +	struct v4l2_subdev *remote_sd;
+> >> +	struct media_pad *sink_pad, *remote_pad;
+> >> +	struct device *dev = csi_dev->dev;
+> >> +	u64 mask;
+> >> +	int ret;
+> >> +
+> >> +	sink_pad = &sd->entity.pads[RKCIF_CSI_PAD_SINK];
+> >> +	remote_pad = media_pad_remote_pad_first(sink_pad);
+> >> +	remote_sd = media_entity_to_v4l2_subdev(remote_pad->entity);
+> >> +
+> >> +	mask = v4l2_subdev_state_xlate_streams(state, RKCIF_CSI_PAD_SINK,
+> >> +					       RKCIF_CSI_PAD_SRC,
+> >> +					       &streams_mask);
+> >> +
+> >> +	ret = v4l2_subdev_disable_streams(remote_sd, remote_pad->index, mask);
+> >> +
+> >> +	rkcif_csi_stop(csi_dev);
+> >> +
+> >> +	pm_runtime_mark_last_busy(dev);
+> >> +	pm_runtime_put_autosuspend(dev);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct v4l2_subdev_pad_ops rkcif_csi_pad_ops = {
+> >> +	.enum_mbus_code = rkcif_csi_enum_mbus_code,
+> >> +	.get_fmt = v4l2_subdev_get_fmt,
+> >> +	.set_fmt = rkcif_csi_set_fmt,
+> >> +	.set_routing = rkcif_csi_set_routing,
+> >> +	.enable_streams = rkcif_csi_enable_streams,
+> >> +	.disable_streams = rkcif_csi_disable_streams,
+> >> +};
+> >> +
+> >> +static const struct v4l2_subdev_ops rkcif_csi_ops = {
+> >> +	.pad = &rkcif_csi_pad_ops,
+> >> +};
+> >> +
+> >> +static int rkcif_csi_init_state(struct v4l2_subdev *sd,
+> >> +				struct v4l2_subdev_state *state)
+> >> +{
+> >> +	struct v4l2_subdev_route routes[] = {
+> >> +		{
+> >> +			.sink_pad = RKCIF_CSI_PAD_SINK,
+> >> +			.sink_stream = 0,
+> >> +			.source_pad = RKCIF_CSI_PAD_SRC,
+> >> +			.source_stream = 0,
+> >> +			.flags = V4L2_SUBDEV_ROUTE_FL_ACTIVE,
+> >> +		},
+> >> +	};
+> >> +	struct v4l2_subdev_krouting routing = {
+> >> +		.len_routes = ARRAY_SIZE(routes),
+> >> +		.num_routes = ARRAY_SIZE(routes),
+> >> +		.routes = routes,
+> >> +	};
+> >> +	int ret;
+> >> +
+> >> +	ret = v4l2_subdev_set_routing_with_fmt(sd, state, &routing,
+> >> +					       &default_format);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static const struct v4l2_subdev_internal_ops rkcif_csi_internal_ops = {
+> >> +	.init_state = rkcif_csi_init_state,
+> >> +};
+> >> +
+> >> +static int rkcif_csi_notifier_bound(struct v4l2_async_notifier *notifier,
+> >> +				    struct v4l2_subdev *sd,
+> >> +				    struct v4l2_async_connection *asd)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev =
+> >> +		container_of(notifier, struct rkcif_csi_device, notifier);
+> >> +	int source_pad;
+> >> +
+> >> +	source_pad = media_entity_get_fwnode_pad(&sd->entity, sd->fwnode,
+> >> +						 MEDIA_PAD_FL_SOURCE);
+> >> +	if (source_pad < 0) {
+> >> +		dev_err(csi_dev->dev, "failed to find source pad for %s\n",
+> >> +			sd->name);
+> >> +		return source_pad;
+> >> +	}
+> >> +
+> >> +	csi_dev->source_sd = sd;
+> >> +	csi_dev->source_pad = source_pad;
+> >> +
+> >> +	return media_create_pad_link(&sd->entity, source_pad,
+> >> +				     &csi_dev->sd.entity, RKCIF_CSI_PAD_SINK,
+> >> +				     MEDIA_LNK_FL_ENABLED);
+> >> +}
+> >> +
+> >> +static const struct v4l2_async_notifier_operations rkcif_csi_notifier_ops = {
+> >> +	.bound = rkcif_csi_notifier_bound,
+> >> +};
+> >> +
+> >> +static int rkcif_csi_register_notifier(struct rkcif_csi_device *csi_dev)
+> >> +{
+> >> +	struct v4l2_async_connection *asd;
+> >> +	struct v4l2_async_notifier *ntf = &csi_dev->notifier;
+> >> +	struct v4l2_fwnode_endpoint *vep = &csi_dev->vep;
+> >> +	struct v4l2_subdev *sd = &csi_dev->sd;
+> >> +	struct device *dev = csi_dev->dev;
+> >> +	struct fwnode_handle *ep;
+> >> +	int ret = 0;
+> >> +
+> >> +	ep = fwnode_graph_get_endpoint_by_id(dev_fwnode(dev), 0, 0, 0);
+> >> +	if (!ep)
+> >> +		return dev_err_probe(dev, -ENODEV, "failed to get endpoint\n");
+> >> +
+> >> +	vep->bus_type = V4L2_MBUS_UNKNOWN;
+> >> +	ret = v4l2_fwnode_endpoint_parse(ep, vep);
+> >> +	if (ret) {
+> >> +		ret = dev_err_probe(dev, ret, "failed to parse endpoint\n");
+> >> +		goto out;
+> >> +	}
+> >> +
+> >> +	if (vep->bus_type != V4L2_MBUS_CSI2_DPHY &&
+> >> +	    vep->bus_type != V4L2_MBUS_CSI2_CPHY) {
+> >> +		ret = dev_err_probe(dev, -EINVAL,
+> >> +				    "invalid bus type of endpoint\n");
+> >> +		goto out;
+> >> +	}
+> >> +
+> >> +	v4l2_async_subdev_nf_init(ntf, sd);
+> >> +	ntf->ops = &rkcif_csi_notifier_ops;
+> >> +
+> >> +	asd = v4l2_async_nf_add_fwnode_remote(ntf, ep,
+> >> +					      struct v4l2_async_connection);
+> >> +	if (IS_ERR(asd)) {
+> >> +		ret = PTR_ERR(asd);
+> >> +		goto err_nf_cleanup;
+> >> +	}
+> >> +
+> >> +	ret = v4l2_async_nf_register(ntf);
+> >> +	if (ret) {
+> >> +		ret = dev_err_probe(dev, ret, "failed to register notifier\n");
+> >> +		goto err_nf_cleanup;
+> >> +	}
+> >> +
+> >> +	goto out;
+> >> +
+> >> +err_nf_cleanup:
+> >> +	v4l2_async_nf_cleanup(ntf);
+> >> +out:
+> >> +	fwnode_handle_put(ep);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_register(struct rkcif_csi_device *csi_dev)
+> >> +{
+> >> +	struct media_pad *pads = csi_dev->pads;
+> >> +	struct v4l2_subdev *sd = &csi_dev->sd;
+> >> +	int ret;
+> >> +
+> >> +	ret = rkcif_csi_register_notifier(csi_dev);
+> >> +	if (ret)
+> >> +		goto err;
+> >> +
+> >> +	v4l2_subdev_init(sd, &rkcif_csi_ops);
+> >> +	sd->dev = csi_dev->dev;
+> >> +	sd->entity.ops = &rkcif_csi_media_ops;
+> >> +	sd->entity.function = MEDIA_ENT_F_VID_IF_BRIDGE;
+> >> +	sd->flags |= V4L2_SUBDEV_FL_HAS_DEVNODE | V4L2_SUBDEV_FL_STREAMS;
+> >> +	sd->internal_ops = &rkcif_csi_internal_ops;
+> >> +	sd->owner = THIS_MODULE;
+> >> +	snprintf(sd->name, sizeof(sd->name), "rockchip-mipi-csi %s",
+> >> +		 dev_name(csi_dev->dev));
+> >> +
+> >> +	pads[RKCIF_CSI_PAD_SINK].flags = MEDIA_PAD_FL_SINK |
+> >> +					 MEDIA_PAD_FL_MUST_CONNECT;
+> >> +	pads[RKCIF_CSI_PAD_SRC].flags = MEDIA_PAD_FL_SOURCE;
+> >> +	ret = media_entity_pads_init(&sd->entity, RKCIF_CSI_PAD_MAX, pads);
+> >> +	if (ret)
+> >> +		goto err_notifier_unregister;
+> >> +
+> >> +	ret = v4l2_subdev_init_finalize(sd);
+> >> +	if (ret)
+> >> +		goto err_entity_cleanup;
+> >> +
+> >> +	ret = v4l2_async_register_subdev(sd);
+> >> +	if (ret) {
+> >> +		dev_err(sd->dev, "failed to register CSI subdev\n");
+> >> +		goto err_subdev_cleanup;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +
+> >> +err_subdev_cleanup:
+> >> +	v4l2_subdev_cleanup(sd);
+> >> +err_entity_cleanup:
+> >> +	media_entity_cleanup(&sd->entity);
+> >> +err_notifier_unregister:
+> >> +	v4l2_async_nf_unregister(&csi_dev->notifier);
+> >> +	v4l2_async_nf_cleanup(&csi_dev->notifier);
+> >> +err:
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static void rkcif_csi_unregister(struct rkcif_csi_device *csi_dev)
+> >> +{
+> >> +	struct v4l2_subdev *sd = &csi_dev->sd;
+> >> +
+> >> +	v4l2_async_unregister_subdev(sd);
+> >> +	v4l2_subdev_cleanup(sd);
+> >> +	media_entity_cleanup(&sd->entity);
+> >> +	v4l2_async_nf_unregister(&csi_dev->notifier);
+> >> +	v4l2_async_nf_cleanup(&csi_dev->notifier);
+> >> +}
+> >> +
+> >> +static const struct of_device_id rkcif_csi_of_match[] = {
+> >> +	{
+> >> +		.compatible = "rockchip,rk3568-mipi-csi",
+> >> +	},
+> >> +	{}
+> >> +};
+> >> +MODULE_DEVICE_TABLE(of, rkcif_csi_of_match);
+> >> +
+> >> +static int rkcif_csi_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct device *dev = &pdev->dev;
+> >> +	struct rkcif_csi_device *csi_dev;
+> >> +	int ret;
+> >> +
+> >> +	csi_dev = devm_kzalloc(dev, sizeof(*csi_dev), GFP_KERNEL);
+> >> +	if (!csi_dev)
+> >> +		return -ENOMEM;
+> >> +	csi_dev->dev = dev;
+> >> +	dev_set_drvdata(dev, csi_dev);
+> >> +
+> >> +	csi_dev->base_addr = devm_platform_ioremap_resource(pdev, 0);
+> >> +	if (IS_ERR(csi_dev->base_addr))
+> >> +		return PTR_ERR(csi_dev->base_addr);
+> >> +
+> >> +	ret = devm_clk_bulk_get_all(dev, &csi_dev->clks);
+> >> +	if (ret != RKCIF_CSI_CLKS_MAX)
+> >> +		return dev_err_probe(dev, -ENODEV, "failed to get clocks\n");
+> >> +	csi_dev->clks_num = ret;
+> >> +
+> >> +	csi_dev->phy = devm_phy_get(dev, NULL);
+> >> +	if (IS_ERR(csi_dev->phy))
+> >> +		return dev_err_probe(dev, PTR_ERR(csi_dev->phy),
+> >> +				     "failed to get MIPI CSI PHY\n");
+> >> +
+> >> +	csi_dev->reset = devm_reset_control_array_get_exclusive(dev);
+> >> +	if (IS_ERR(csi_dev->reset))
+> >> +		return dev_err_probe(dev, PTR_ERR(csi_dev->reset),
+> >> +				     "failed to get reset\n");
+> >> +
+> >> +	csi_dev->formats = formats;
+> >> +	csi_dev->formats_num = ARRAY_SIZE(formats);
+> >> +
+> >> +	pm_runtime_enable(dev);
+> >> +
+> >> +	ret = phy_init(csi_dev->phy);
+> >> +	if (ret) {
+> >> +		ret = dev_err_probe(dev, ret,
+> >> +				    "failed to initialize MIPI CSI PHY\n");
+> >> +		goto err_pm_runtime_disable;
+> >> +	}
+> >> +
+> >> +	ret = rkcif_csi_register(csi_dev);
+> >> +	if (ret)
+> >> +		goto err_phy_exit;
+> >> +
+> >> +	return 0;
+> >> +
+> >> +err_phy_exit:
+> >> +	phy_exit(csi_dev->phy);
+> >> +err_pm_runtime_disable:
+> >> +	pm_runtime_disable(dev);
+> >> +	return ret;
+> >> +}
+> >> +
+> >> +static void rkcif_csi_remove(struct platform_device *pdev)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = platform_get_drvdata(pdev);
+> >> +	struct device *dev = &pdev->dev;
+> >> +
+> >> +	rkcif_csi_unregister(csi_dev);
+> >> +	phy_exit(csi_dev->phy);
+> >> +	pm_runtime_disable(dev);
+> >> +}
+> >> +
+> >> +static int rkcif_csi_runtime_suspend(struct device *dev)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = dev_get_drvdata(dev);
+> >> +
+> >> +	clk_bulk_disable_unprepare(csi_dev->clks_num, csi_dev->clks);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static int rkcif_csi_runtime_resume(struct device *dev)
+> >> +{
+> >> +	struct rkcif_csi_device *csi_dev = dev_get_drvdata(dev);
+> >> +	int ret;
+> >> +
+> >> +	reset_control_assert(csi_dev->reset);
+> >> +	udelay(5);
+> >> +	reset_control_deassert(csi_dev->reset);
+> >> +
+> >> +	ret = clk_bulk_prepare_enable(csi_dev->clks_num, csi_dev->clks);
+> >> +	if (ret) {
+> >> +		dev_err(dev, "failed to enable clocks\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +static const struct dev_pm_ops rkcif_csi_pm_ops = {
+> >> +	.runtime_suspend = rkcif_csi_runtime_suspend,
+> >> +	.runtime_resume = rkcif_csi_runtime_resume,
+> >> +};
+> >> +
+> >> +static struct platform_driver rkcif_csi_drv = {
+> >> +	.driver = {
+> >> +		   .name = "rockchip-mipi-csi",
+> >> +		   .of_match_table = rkcif_csi_of_match,
+> >> +		   .pm = &rkcif_csi_pm_ops,
+> >> +	},
+> >> +	.probe = rkcif_csi_probe,
+> >> +	.remove = rkcif_csi_remove,
+> >> +};
+> >> +module_platform_driver(rkcif_csi_drv);
+> >> +
+> >> +MODULE_DESCRIPTION("Rockchip MIPI CSI-2 Receiver platform driver");
+> >> +MODULE_LICENSE("GPL");
 
-Brian
+-- 
+Regards,
 
-> All detailed into can be found at:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc
-> Syzkaller repro code:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc/repro.c
-> Syzkaller repro syscall steps:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc/repro.prog
-> Syzkaller report:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc/repro.report
-> Kconfig(make olddefconfig):
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc/kconfig_origin
-> Bisect info:
-> https://github.com/laifryiee/syzkaller_logs/tree/main/250413_025108_xfs_bmapi_convert_one_delalloc/bisect_info.log
-> bzImage:
-> https://github.com/laifryiee/syzkaller_logs/raw/refs/heads/main/250413_025108_xfs_bmapi_convert_one_delalloc/bzImage_0af2f6be1b4281385b618cb86ad946eded089ac8
-> Issue dmesg:
-> https://github.com/laifryiee/syzkaller_logs/blob/main/250413_025108_xfs_bmapi_convert_one_delalloc/0af2f6be1b4281385b618cb86ad946eded089ac8_dmesg.log
-> 
-> "
-> [   21.631771] ------------[ cut here ]------------
-> [   21.632173] WARNING: CPU: 1 PID: 760 at fs/xfs/libxfs/xfs_bmap.c:4401 xfs_bmapi_convert_one_delalloc+0x520/0xca0
-> [   21.633001] Modules linked in:
-> [   21.633292] CPU: 1 UID: 0 PID: 760 Comm: repro Tainted: G        W           6.15.0-rc2-v6.15-rc2 #1 PREEMPT(voluntary) 
-> [   21.634151] Tainted: [W]=WARN
-> [   21.634401] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.3-0-ga6ed6b701f0a-prebuilt.qemu.org 04/01/2014
-> [   21.635476] RIP: 0010:xfs_bmapi_convert_one_delalloc+0x520/0xca0
-> [   21.635970] Code: fc ff ff e8 32 76 eb fe 44 89 fe bf 02 00 00 00 41 bc f5 ff ff ff e8 cf 70 eb fe 41 83 ff 02 0f 84 03 ff ff ff e8 10 76 eb fe <0f> 0b e9 f7 fe ff ff e8 04 76 eb fe 48 c7 c0 c0 ca ff 89 48 ba 00
-> [   21.637426] RSP: 0018:ff1100001cc37228 EFLAGS: 00010293
-> [   21.637855] RAX: 0000000000000000 RBX: ff1100001cc373e8 RCX: ffffffff829c44b1
-> [   21.638430] RDX: ff110000108b2bc0 RSI: ffffffff829c44c0 RDI: 0000000000000005
-> [   21.639001] RBP: ff1100001cc37410 R08: ff1100001cc37318 R09: fffffbfff0fdc374
-> [   21.639614] R10: 0000000000000000 R11: ff110000108b3a18 R12: 00000000fffffff5
-> [   21.640180] R13: ff1100001d471680 R14: ff1100000ec74000 R15: 0000000000000000
-> [   21.640751] FS:  00007f4c1b99a640(0000) GS:ff110000e3a84000(0000) knlGS:0000000000000000
-> [   21.641394] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   21.641862] CR2: 00007f4c14cfd000 CR3: 000000000d4f4006 CR4: 0000000000771ef0
-> [   21.642439] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   21.643007] DR3: 0000000000000000 DR6: 00000000fffe07f0 DR7: 0000000000000400
-> [   21.643620] PKRU: 55555554
-> [   21.643848] Call Trace:
-> [   21.644060]  <TASK>
-> [   21.644256]  ? __pfx_xfs_bmapi_convert_one_delalloc+0x10/0x10
-> [   21.644738]  ? __up_read+0x21e/0x810
-> [   21.645063]  ? unmap_mapping_range+0x118/0x2c0
-> [   21.645436]  ? lock_release+0x14f/0x2c0
-> [   21.645761]  ? __pfx_unmap_mapping_range+0x10/0x10
-> [   21.646164]  xfs_bmapi_convert_delalloc+0xb0/0x100
-> [   21.646568]  xfs_buffered_write_iomap_begin+0x153d/0x1890
-> [   21.647022]  ? __pfx_xfs_buffered_write_iomap_begin+0x10/0x10
-> [   21.647535]  ? filemap_range_has_writeback+0x318/0x460
-> [   21.647977]  ? filemap_range_has_writeback+0xf1/0x460
-> [   21.648395]  ? __pfx_xfs_buffered_write_iomap_begin+0x10/0x10
-> [   21.648870]  iomap_iter+0x58b/0xd30
-> [   21.649178]  iomap_zero_range+0x547/0x740
-> [   21.649526]  ? __pfx_iomap_zero_range+0x10/0x10
-> [   21.649926]  ? __this_cpu_preempt_check+0x21/0x30
-> [   21.650317]  ? lock_is_held_type+0xef/0x150
-> [   21.650673]  xfs_zero_range+0xaf/0x100
-> [   21.650990]  xfs_file_write_checks+0x639/0xa00
-> [   21.651385]  xfs_file_buffered_write+0x183/0x9a0
-> [   21.651806]  ? __pfx_xfs_file_buffered_write+0x10/0x10
-> [   21.652225]  ? __lock_acquire+0x410/0x2260
-> [   21.652580]  ? __lruvec_stat_mod_folio+0x1aa/0x3e0
-> [   21.652985]  xfs_file_write_iter+0x52a/0xc00
-> [   21.653350]  do_iter_readv_writev+0x6b1/0x9c0
-> [   21.653723]  ? __pfx_do_iter_readv_writev+0x10/0x10
-> [   21.654127]  ? __this_cpu_preempt_check+0x21/0x30
-> [   21.654526]  ? lock_is_held_type+0xef/0x150
-> [   21.654879]  vfs_writev+0x311/0xd70
-> [   21.655204]  ? __lock_acquire+0x410/0x2260
-> [   21.655574]  ? __pfx_vfs_writev+0x10/0x10
-> [   21.655922]  ? __fget_files+0x1fa/0x3b0
-> [   21.656251]  ? __this_cpu_preempt_check+0x21/0x30
-> [   21.656643]  ? lock_release+0x14f/0x2c0
-> [   21.656973]  ? __fget_files+0x204/0x3b0
-> [   21.657306]  do_pwritev+0x1c9/0x280
-> [   21.657612]  ? do_pwritev+0x1c9/0x280
-> [   21.657927]  ? __pfx_do_pwritev+0x10/0x10
-> [   21.658269]  ? __audit_syscall_entry+0x39c/0x500
-> [   21.658661]  __x64_sys_pwritev+0xa3/0x100
-> [   21.659000]  ? syscall_trace_enter+0x14d/0x280
-> [   21.659387]  x64_sys_call+0x1bbc/0x2150
-> [   21.659741]  do_syscall_64+0x6d/0x150
-> [   21.660055]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> [   21.660473] RIP: 0033:0x7f4c1b63ee5d
-> [   21.660774] Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 93 af 1b 00 f7 d8 64 89 01 48
-> [   21.662222] RSP: 002b:00007f4c1b999df8 EFLAGS: 00000202 ORIG_RAX: 0000000000000128
-> [   21.662830] RAX: ffffffffffffffda RBX: 00007f4c1b99a640 RCX: 00007f4c1b63ee5d
-> [   21.663432] RDX: 0000000000000001 RSI: 0000000020000300 RDI: 0000000000000004
-> [   21.664001] RBP: 00007f4c1b999e20 R08: 0000000000000000 R09: 0000000000000000
-> [   21.664569] R10: 0000000002fffffd R11: 0000000000000202 R12: 00007f4c1b99a640
-> [   21.665137] R13: 000000000000006e R14: 00007f4c1b69f560 R15: 0000000000000000
-> [   21.665726]  </TASK>
-> "
-> 
-> Hope this cound be insightful to you.
-> 
-> Regards,
-> Yi Lai
-> 
-> ---
-> 
-> If you don't need the following environment to reproduce the problem or if you
-> already have one reproduced environment, please ignore the following information.
-> 
-> How to reproduce:
-> git clone https://gitlab.com/xupengfe/repro_vm_env.git
-> cd repro_vm_env
-> tar -xvf repro_vm_env.tar.gz
-> cd repro_vm_env; ./start3.sh  // it needs qemu-system-x86_64 and I used v7.1.0
->   // start3.sh will load bzImage_2241ab53cbb5cdb08a6b2d4688feb13971058f65 v6.2-rc5 kernel
->   // You could change the bzImage_xxx as you want
->   // Maybe you need to remove line "-drive if=pflash,format=raw,readonly=on,file=./OVMF_CODE.fd \" for different qemu version
-> You could use below command to log in, there is no password for root.
-> ssh -p 10023 root@localhost
-> 
-> After login vm(virtual machine) successfully, you could transfer reproduced
-> binary to the vm by below way, and reproduce the problem in vm:
-> gcc -pthread -o repro repro.c
-> scp -P 10023 repro root@localhost:/root/
-> 
-> Get the bzImage for target kernel:
-> Please use target kconfig and copy it to kernel_src/.config
-> make olddefconfig
-> make -jx bzImage           //x should equal or less than cpu num your pc has
-> 
-> Fill the bzImage file into above start3.sh to load the target kernel in vm.
-> 
-> 
-> Tips:
-> If you already have qemu-system-x86_64, please ignore below info.
-> If you want to install qemu v7.1.0 version:
-> git clone https://github.com/qemu/qemu.git
-> cd qemu
-> git checkout -f v7.1.0
-> mkdir build
-> cd build
-> yum install -y ninja-build.x86_64
-> yum -y install libslirp-devel.x86_64
-> ../configure --target-list=x86_64-softmmu --enable-kvm --enable-vnc --enable-gtk --enable-sdl --enable-usb-redir --enable-slirp
-> make
-> make install 
-> 
-> On Thu, Apr 25, 2024 at 09:13:30PM +0800, Zhang Yi wrote:
-> > From: Zhang Yi <yi.zhang@huawei.com>
-> > 
-> > Current clone operation could be non-atomic if the destination of a file
-> > is beyond EOF, user could get a file with corrupted (zeroed) data on
-> > crash.
-> > 
-> > The problem is about preallocations. If you write some data into a file:
-> > 
-> > 	[A...B)
-> > 
-> > and XFS decides to preallocate some post-eof blocks, then it can create
-> > a delayed allocation reservation:
-> > 
-> > 	[A.........D)
-> > 
-> > The writeback path tries to convert delayed extents to real ones by
-> > allocating blocks. If there aren't enough contiguous free space, we can
-> > end up with two extents, the first real and the second still delalloc:
-> > 
-> > 	[A....C)[C.D)
-> > 
-> > After that, both the in-memory and the on-disk file sizes are still B.
-> > If we clone into the range [E...F) from another file:
-> > 
-> > 	[A....C)[C.D)      [E...F)
-> > 
-> > then xfs_reflink_zero_posteof() calls iomap_zero_range() to zero out the
-> > range [B, E) beyond EOF and flush it. Since [C, D) is still a delalloc
-> > extent, its pagecache will be zeroed and both the in-memory and on-disk
-> > size will be updated to D after flushing but before cloning. This is
-> > wrong, because the user can see the size change and read the zeroes
-> > while the clone operation is ongoing.
-> > 
-> > We need to keep the in-memory and on-disk size before the clone
-> > operation starts, so instead of writing zeroes through the page cache
-> > for delayed ranges beyond EOF, we convert these ranges to unwritten and
-> > invalidate any cached data over that range beyond EOF.
-> > 
-> > Suggested-by: Dave Chinner <david@fromorbit.com>
-> > Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
-> > ---
-> > Changes since v4:
-> > 
-> > Move the delalloc converting hunk before searching the COW fork. Because
-> > if the file has been reflinked and copied on write,
-> > xfs_bmap_extsize_align() aligned the range of COW delalloc extent, after
-> > the writeback, there might be some unwritten extents left over in the
-> > COW fork that overlaps the delalloc extent we found in data fork.
-> > 
-> >   data fork  ...wwww|dddddddddd...
-> >   cow fork          |uuuuuuuuuu...
-> >                     ^
-> >                   i_size
-> > 
-> > In my v4, we search the COW fork before checking the delalloc extent,
-> > goto found_cow tag and return unconverted delalloc srcmap in the above
-> > case, so the delayed extent in the data fork will have no chance to
-> > convert to unwritten, it will lead to delalloc extent residue and break
-> > generic/522 after merging patch 6.
-> > 
-> >  fs/xfs/xfs_iomap.c | 29 +++++++++++++++++++++++++++++
-> >  1 file changed, 29 insertions(+)
-> > 
-> > diff --git a/fs/xfs/xfs_iomap.c b/fs/xfs/xfs_iomap.c
-> > index 236ee78aa75b..2857ef1b0272 100644
-> > --- a/fs/xfs/xfs_iomap.c
-> > +++ b/fs/xfs/xfs_iomap.c
-> > @@ -1022,6 +1022,24 @@ xfs_buffered_write_iomap_begin(
-> >  		goto out_unlock;
-> >  	}
-> >  
-> > +	/*
-> > +	 * For zeroing, trim a delalloc extent that extends beyond the EOF
-> > +	 * block.  If it starts beyond the EOF block, convert it to an
-> > +	 * unwritten extent.
-> > +	 */
-> > +	if ((flags & IOMAP_ZERO) && imap.br_startoff <= offset_fsb &&
-> > +	    isnullstartblock(imap.br_startblock)) {
-> > +		xfs_fileoff_t eof_fsb = XFS_B_TO_FSB(mp, XFS_ISIZE(ip));
-> > +
-> > +		if (offset_fsb >= eof_fsb)
-> > +			goto convert_delay;
-> > +		if (end_fsb > eof_fsb) {
-> > +			end_fsb = eof_fsb;
-> > +			xfs_trim_extent(&imap, offset_fsb,
-> > +					end_fsb - offset_fsb);
-> > +		}
-> > +	}
-> > +
-> >  	/*
-> >  	 * Search the COW fork extent list even if we did not find a data fork
-> >  	 * extent.  This serves two purposes: first this implements the
-> > @@ -1167,6 +1185,17 @@ xfs_buffered_write_iomap_begin(
-> >  	xfs_iunlock(ip, lockmode);
-> >  	return xfs_bmbt_to_iomap(ip, iomap, &imap, flags, 0, seq);
-> >  
-> > +convert_delay:
-> > +	xfs_iunlock(ip, lockmode);
-> > +	truncate_pagecache(inode, offset);
-> > +	error = xfs_bmapi_convert_delalloc(ip, XFS_DATA_FORK, offset,
-> > +					   iomap, NULL);
-> > +	if (error)
-> > +		return error;
-> > +
-> > +	trace_xfs_iomap_alloc(ip, offset, count, XFS_DATA_FORK, &imap);
-> > +	return 0;
-> > +
-> >  found_cow:
-> >  	seq = xfs_iomap_inode_sequence(ip, 0);
-> >  	if (imap.br_startoff <= offset_fsb) {
-> > -- 
-> > 2.39.2
-> > 
-> 
-
+Laurent Pinchart
