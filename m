@@ -1,155 +1,137 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D898D2550CD;
-	Fri,  2 May 2025 16:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8A228E7;
+	Fri,  2 May 2025 17:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746204998; cv=none; b=e9kTqUyc5WEQ4k4zvegPoOAO+1pem1y1V9iddm2d8hoHqO/c7J1+WNcDWKwiS3/A6CO8ltlCn9vHt/RUbqZ3Eg+0o5LkGCXMZEmFWzacXU/H55LwD6y9dDNULU/Pd+2iOVd2B45mHSHN0+n0+NxUZkvA5ctK/RvAWnsz2+znHl0=
+	t=1746205222; cv=none; b=iaz3qSuYtdwzI65saF+tfsw1/vz6MqUlK7wpV76nN/MGuN/Jq5FmYB4r1OEEtYcxFAD90dtnCmGHk/rkVt3ITCs7rG1M4kcLJo9P5LaxmqOhSE0njdbxdga9vHvXLtChUVpj6D/lp/ur7tnM5832kPqjXX3FufKtPqRC6ygILlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746204998; c=relaxed/simple;
-	bh=GBHups5I+gIu6whqi8BvCYhA5MweTY00AdsyfZPYn9w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oOdoy6tOpo5nUx/GSQUvVm11WkkwIu2pJYxuEuZab0LXLR7YtAJmcTPfncgASgsmBlvbUdSiPd1WonTaEOM2UQr4zrBmigvZZWvK4O7FS1l9x4ppwUblSp1e5MUNxrG2/TLx8uFc+XI6gSrBk58/smsosCRAPzNcYJgKUqACfkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nBkKfka6; arc=none smtp.client-ip=209.85.210.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746205222; c=relaxed/simple;
+	bh=6EUUOk0NkULNMctsLZSQJhdZlUb9fiQj6X+JcAqW8Zc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C+aUWBZUDtNyTmXl1X5dgO9jQCATEfv5DjfMGjPOxJffNOlkURu88FozaRPnjmfYhSm8JX3HKMx7qhqaJRLWTGgMvrqSmqR/2wNtE2e4RZtDz99uLNJDxahVPgGn3mDrcaWbfUmeZDJtWqEn5xAop1OkcfDcwPuymGfciRY7btM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdbw+SbH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBkKfka6"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-736b0c68092so2229406b3a.0;
-        Fri, 02 May 2025 09:56:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746204996; x=1746809796; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FI9or1Ma4PHqswRmQGj0F/KO6MGilj/TeQYw7Kc/iS0=;
-        b=nBkKfka6R8It4tcbyf/6SY/t9U1jo4m3YGneeJ0fQ4UjXFPtN1jc2qqfWVdBDf2h12
-         v5Hg86M0105SW2h2sLIbz8XywYX77KbryDrCFpvYJMIxZr9wLIyvWsoqpv/LSb1jpoQF
-         0MIWEJmOqDANLLs6r/XTRSIkeH4Dov8yzgw+zvi16kF3orVHejK7ineYGqLvSfVnewWd
-         UJnr/BWN1wdXQh1AaaEtmmmlhLfRYzOUI+odZV3V3P6RCratQlYPc+BmcItZDt2/QkO9
-         YPFsBuJq9TKtbwZ+2n0XdWwB02llh+kqdwY5MX4xeRKAWkeGHK/VqLk9SYI2dlFYsYAe
-         iSMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746204996; x=1746809796;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FI9or1Ma4PHqswRmQGj0F/KO6MGilj/TeQYw7Kc/iS0=;
-        b=GeKpzR8JuAVgLIjitNl1jXJmkL0mzw89HfAo3WqGNBAZdtgCT0UhznvScFuAN02phz
-         lPXjFuMmzJhH1+m2suP7jtE6fsVDe8zlfH89cGAOmid6n8Xd4qND4D1eIREXdlV54nMl
-         OwR6vH2eT4U8rhVlxKhAo6s2tOZ1q3V0hxwgz+hD9bDqHtTqOEbVtfUvtfpiT2FU3toA
-         EEM0CRuFWzUlUiJSbMlI1SRvCdID9qKkuwS8HYQoyTq7NpNbcFVmzzF4rhQyLHxgetSO
-         RqWlPvD9vdyrDcLq2xa7xgppnyseeqaY8CC171EDphOmjLEl5Lj+yU7TQXWA+39c4/1o
-         WoXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUF8oKJEkO9zdRim+n1LfXp8mR36UUACvILTTdmHdLQDUB7DTjB46iY8VI7N+pfbvrDTwvHsUaNjeDFtYWSQ9o=@vger.kernel.org, AJvYcCWKDPgTT6vm8YUSADhyQl8AXsq3C9lPPFIFTHtoCjSgwpE3N6SGP1SVC1TYy77U2TqcotM5sRjH8fI5KUI3@vger.kernel.org, AJvYcCXQPgv6DjBn4L03BsCj07c0ww61bjCyD+vKEvtpmCnTRHzc+ASE/fzhnOwX84WoUIipksnjK8txT40=@vger.kernel.org, AJvYcCXqQkUzxFboL2liArtNhcu4TF/APP6zU8Nmq+Vfeob25PFtZ4XFez8dRSCKrRkurW7F5TCKIm3BUlw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj+SBNxJ2y7XQn8HbK2GNMSHhj79MccDisY9CInyH31XjH6eMb
-	gaAAsDw0fk3vzDfDLgAH2CJBYRLOiSA6PmjpnsGgPJrFqgfLcrps
-X-Gm-Gg: ASbGnctgTvq86Qc/Oa6BRptfjpz9yKrqOr1lfoDvI4f9SGeyQQQaKTs/OYM86iqKxfS
-	btFXCHn4o19AscbaEDzxv3KYAhHz/GbOZUVz/uo5lsdUeqUkmAg/+wOqmdKeZKBWybQV/v1PKGz
-	q0/eU7w9bsMdeecStl881xFnvNXghMgfqibQUMu2yN9r/gAWVbW5S3fiynOecKd+Cnskf/tkWAL
-	frWMoRNLsNri6v2SuGgRK8nGgmzT/FAfn3h6ULCswjFWtQkV4I8PX0Sj5uGl7JnWdT5t5eLg6oj
-	lPOLOretaluROBA6Pi2ftQBkBUp51Wu74TfacH/W
-X-Google-Smtp-Source: AGHT+IFADEip8AGWv+PRev2ND75le8BrTNt8vAuOXih7lmn25wXP4jLWsoV3+kT0W3JJXCuQ/tT5qQ==
-X-Received: by 2002:a05:6a00:ab86:b0:736:ab1d:83c4 with SMTP id d2e1a72fcca58-740587626dbmr5168007b3a.0.1746204996089;
-        Fri, 02 May 2025 09:56:36 -0700 (PDT)
-Received: from localhost ([216.228.127.130])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74058d7a47esm1825655b3a.29.2025.05.02.09.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 09:56:35 -0700 (PDT)
-Date: Fri, 2 May 2025 12:56:33 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-	Danilo Krummrich <dakr@redhat.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, linux-pm@vger.kernel.org,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-	rust-for-linux@vger.kernel.org,
-	Manos Pitsidianakis <manos.pitsidianakis@linaro.org>,
-	Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-	Joakim Bech <joakim.bech@linaro.org>, Rob Herring <robh@kernel.org>,
-	Burak Emir <bqe@google.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V11 01/15] rust: cpumask: Add few more helpers
-Message-ID: <aBT5QSEBG4H_wz3E@yury>
-References: <cover.1745218975.git.viresh.kumar@linaro.org>
- <944ee57ad1b190f6975c739802b4d93166bd00c5.1745218975.git.viresh.kumar@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdbw+SbH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F4AC4CEE4;
+	Fri,  2 May 2025 17:00:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746205220;
+	bh=6EUUOk0NkULNMctsLZSQJhdZlUb9fiQj6X+JcAqW8Zc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=jdbw+SbH8ItXlV2qdKVLIYkb6PYDUrr571gHiho3SuV6ew2Jx11oOiPjXHEW8KYaF
+	 dT0ST5z81a1SQ1Gk3sTJObWJ/rkZ4gVxQnGdqcY6sexKdL5yf8Y+tZ42FGdTiP55b0
+	 5KgYZc5YJnGP+n+Rll1JimuDu4nMoVrSsYKmjRUps8pPdgvtbwCRBpsgUsH5dKHnc/
+	 K5rHcXH3FLdkTEI4B+ECiZ+4p41b1GLa0Qxc0VJI/yqp9VF9kzFrCYFxZ7JxZ1E/6z
+	 6KnrYkPvQr1RQPR40in9FZIYXXlzK0c9Emcks1vEyOCAHRWp30QB9Y+l2x6Prf1hx8
+	 Bit79xGmXOPDw==
+Message-ID: <32460611-f05e-43ea-a57c-494a29d85bb3@kernel.org>
+Date: Fri, 2 May 2025 19:00:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <944ee57ad1b190f6975c739802b4d93166bd00c5.1745218975.git.viresh.kumar@linaro.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH] mptcp: Align mptcp_inet6_sk with other protocols
+Content-Language: en-GB, fr-BE
+To: Pedro Falcato <pfalcato@suse.de>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>
+Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250430154541.1038561-1-pfalcato@suse.de>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250430154541.1038561-1-pfalcato@suse.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Apr 21, 2025 at 12:52:08PM +0530, Viresh Kumar wrote:
-> Add few more cpumask helpers that are required by the Rust abstraction.
+Hi Pedro,
+
+On 30/04/2025 17:45, Pedro Falcato wrote:
+> Ever since commit f5f80e32de12 ("ipv6: remove hard coded limitation on
+> ipv6_pinfo") that protocols stopped using the old "obj_size -
+> sizeof(struct ipv6_pinfo)" way of grabbing ipv6_pinfo, that severely
+> restricted struct layout and caused fun, hard to see issues.
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-
-Acked-by: Yury Norov [NVIDIA] <yury.norov@gmail.com>
-
+> However, mptcp_inet6_sk wasn't fixed (unlike tcp_inet6_sk). Do so.
+> The non-cloned sockets already do the right thing using
+> ipv6_pinfo_offset + the generic IPv6 code.
+> 
+> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
 > ---
->  rust/helpers/cpumask.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+>  net/mptcp/protocol.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/rust/helpers/cpumask.c b/rust/helpers/cpumask.c
-> index 2d380a86c34a..eb10598a0242 100644
-> --- a/rust/helpers/cpumask.c
-> +++ b/rust/helpers/cpumask.c
-> @@ -7,16 +7,41 @@ void rust_helper_cpumask_set_cpu(unsigned int cpu, struct cpumask *dstp)
->  	cpumask_set_cpu(cpu, dstp);
->  }
->  
-> +void rust_helper___cpumask_set_cpu(unsigned int cpu, struct cpumask *dstp)
-> +{
-> +	__cpumask_set_cpu(cpu, dstp);
-> +}
-> +
->  void rust_helper_cpumask_clear_cpu(int cpu, struct cpumask *dstp)
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 26ffa06c21e8..c4fd558307f2 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -3142,9 +3142,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+>  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+>  static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
 >  {
->  	cpumask_clear_cpu(cpu, dstp);
->  }
+> -	unsigned int offset = sizeof(struct mptcp6_sock) - sizeof(struct ipv6_pinfo);
+> +	struct mptcp6_sock *msk6 = container_of(mptcp_sk(sk), struct mptcp6_sock, msk);
 >  
-> +void rust_helper___cpumask_clear_cpu(int cpu, struct cpumask *dstp)
-> +{
-> +	__cpumask_clear_cpu(cpu, dstp);
-> +}
-> +
-> +bool rust_helper_cpumask_test_cpu(int cpu, struct cpumask *srcp)
-> +{
-> +	return cpumask_test_cpu(cpu, srcp);
-> +}
-> +
->  void rust_helper_cpumask_setall(struct cpumask *dstp)
->  {
->  	cpumask_setall(dstp);
->  }
->  
-> +bool rust_helper_cpumask_empty(struct cpumask *srcp)
-> +{
-> +	return cpumask_empty(srcp);
-> +}
-> +
-> +bool rust_helper_cpumask_full(struct cpumask *srcp)
-> +{
-> +	return cpumask_full(srcp);
-> +}
-> +
->  unsigned int rust_helper_cpumask_weight(struct cpumask *srcp)
->  {
->  	return cpumask_weight(srcp);
-> -- 
-> 2.31.1.272.g89b43f80a514
+> -	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
+> +	return &msk6->np;
+
+Thank you for suggesting this! Good idea, that's clearer!
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+@Netdev maintainers: this can be applied in net-next directly.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
