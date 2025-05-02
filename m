@@ -1,186 +1,128 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3759925D90D;
-	Fri,  2 May 2025 16:36:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C922522E3FD;
+	Fri,  2 May 2025 16:38:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746203783; cv=none; b=TTqYPOSnM7yjA3Huuq0vvGeTsxMnGoaEr+myHq2Nud7RJw2JrBTncmT0BqKx/83rf3U/1jQh4ffMKSk4DF475it0WREQKVFhuId6sw1CpLlfGQIJLJnE0VlZaa8S5TQbXb6EVjEcqZi0ZPJKRrpPXhblrXFWDClm1WrsqQDaiL8=
+	t=1746203899; cv=none; b=IHW5XUry1IDaHGqx7wrEXu4HnnSuEayMKcOitlbYIYin7RKAHJP87ou5EUjprIKNvbrHc3DklNg+spaXlUic33ytm/JquTCysDKdyWOXtvSXvdP84HY9Fz/vLZ07eU7J3vLQE2Vg/YDF9dqt/fo/N7xO2BANG15ahBhWNcZHU4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746203783; c=relaxed/simple;
-	bh=ivA8S7TDV/NgCvRXyM+VhtT6b0bkMArt6486jbH8r94=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Laq26Jm2Gt9twuzo6v3Stc5bkjmJATQwg0PDwT5xduxSZQoEc75TZDOWVnXFQAMetuac8avLI4YjLURcSfx87pbhma7kzq1cFjPscO4Yw/t27TobSvG2ngLoNlAXID4ZhYpz6PmzaDUiTuxdqdPDWrcyP5QFFtW3gVnjTpLr3KU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iveQl/14; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746203899; c=relaxed/simple;
+	bh=StNCSoWqTHQVNnBSV3C33tQMvr1ACyrW1L37/XLZkWw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=XkcAu6GKHWJsuPfYy1KmnULDsKgLYKOlU6OMUmKWuTW3QUYZtUYK8yyXfBItGY8zCxXWuMdAmJwzyG3R/2NPJI/A7iMgxDPktD8u+vmPgHCmtf4RsHn5TTmcwsJEGi+3dpXOcWlY1k1eOVw2XTBp8mClQ/yBDpXDX9XogiNKC10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=VtI0M86i; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iveQl/14"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746203781; x=1777739781;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ivA8S7TDV/NgCvRXyM+VhtT6b0bkMArt6486jbH8r94=;
-  b=iveQl/14SsZ4JE+V+peyB0dCC9P5O2T8JjGSAz90NjfCLwoY+UHKKUPv
-   pXfo45CRJ1VYT/M9315BPFnkzaIkn8dhDg2fPfWfJtSLMtWDHvPeTsdR+
-   HrStVo/zoGIhQLRUiRCV5xRgRETicesvjUWl0iXzf1LbVN7uqRmlLw7b2
-   AaU8nul5a2PT3BygLorYygf95zleSWZ0qFImV3Lj57GbUGmYj3kd6im0v
-   08N0Ea/x4UbET0Bv2DUcR7zQibrvoxqanUmVytws2Uyos0anm7w7Nl7J+
-   aaeMPE/k863z/KDV9lbPakgN4Gx747TS1XqiSJeOHyg07TgWyoIIx6T4l
-   Q==;
-X-CSE-ConnectionGUID: 2e+oYUoyREaKGqWHrbv8Yg==
-X-CSE-MsgGUID: VG7RhlvyT2KNewoDvYXhSg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11421"; a="47778639"
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="47778639"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 09:36:16 -0700
-X-CSE-ConnectionGUID: tOv0ur8ST2yGWTeD12RPzg==
-X-CSE-MsgGUID: s6AxkAxuRe2enBp5bP0HSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,256,1739865600"; 
-   d="scan'208";a="134641312"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO [10.124.220.153]) ([10.124.220.153])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2025 09:36:15 -0700
-Message-ID: <1eefc8a3-a54f-44e7-ae60-739047230ac4@intel.com>
-Date: Fri, 2 May 2025 09:36:13 -0700
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="VtI0M86i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1746203895;
+	bh=StNCSoWqTHQVNnBSV3C33tQMvr1ACyrW1L37/XLZkWw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=VtI0M86iGqKNtCI/YHmVpMgC6HBmTIfOrA4YY+0vvgofcTMarsQ8v2IXDHfd+7LN2
+	 T34mfNirbEGRJenY9I0GDGUhwqurv/+5uI6DwA1HgtTEmIKBBwe8NIvbomKHRU9j4M
+	 EsoT3AYwn5z1ay8+NSg7SdmxFAUIVi7dtBkq0zc/B0Kx9fg58aw/Ni1uG6PZv6GvEv
+	 G0iLOL4zMW+gs81SiTPTKABjdSW0VpAJD6E3OANANxmE0PaeUE+uY+rqlsiJE6V37/
+	 y+Kv5j/4cb6N0mEPzL4+G7uB2tL3KAZQOGGQsx6q+Z5IuH++z9L6tXPGSRRJj1tgox
+	 dYzpmcjweClWA==
+Received: from [IPv6:2606:6d00:15:ec4::5ac] (unknown [IPv6:2606:6d00:15:ec4::5ac])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 48F3F17E0657;
+	Fri,  2 May 2025 18:38:13 +0200 (CEST)
+Message-ID: <2d82e4e0aa4c244e8b2d3f1e46e92760cd6238d7.camel@collabora.com>
+Subject: Re: [RFC PATCH 03/11] media: uapi: add nal unit header fields to
+ encode_params
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Marco Felsch <m.felsch@pengutronix.de>, benjamin.gaignard@collabora.com,
+ 	p.zabel@pengutronix.de, mchehab@kernel.org, shawnguo@kernel.org, Sascha
+ Hauer	 <s.hauer@pengutronix.de>, kernel@pengutronix.de, festevam@gmail.com,
+ 	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ paulk@sys-base.io, 	hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, 
+	sebastian.fricke@collabora.com, ming.qian@nxp.com
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, imx@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Michael
+ Tretter <m.tretter@pengutronix.de>
+Date: Fri, 02 May 2025 12:38:11 -0400
+In-Reply-To: <20250502150513.4169098-4-m.felsch@pengutronix.de>
+References: <20250502150513.4169098-1-m.felsch@pengutronix.de>
+	 <20250502150513.4169098-4-m.felsch@pengutronix.de>
+Organization: Collabora Canada
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: x86 RAR implementation
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
- Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
- kvm@vger.kernel.org, linux-arch@vger.kernel.org,
- Josh Poimboeuf <jpoimboe@kernel.org>, Daniel Wagner <dwagner@suse.de>,
- Sean Christopherson <seanjc@google.com>, Juergen Gross <jgross@suse.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Rik van Riel <riel@fb.com>
-References: <20250429113242.998312-1-vschneid@redhat.com>
- <fefcd1a6-f146-4f3c-b28b-f907e7346ddd@intel.com>
- <20250430132047.01d48647@gandalf.local.home>
- <019f6713-cfbd-466b-8fb5-dcd982cf8644@intel.com>
- <20250502112216.GZ4198@noisy.programming.kicks-ass.net>
- <6c44fa0e-28ed-400e-aaf2-e0e0720d3811@intel.com>
- <20250502152002.GX4439@noisy.programming.kicks-ass.net>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250502152002.GX4439@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Trimming down the cc list (and oh, what a cc list it was!!!) to x86 folks.
+Hi,
 
-On 5/2/25 08:20, Peter Zijlstra wrote:
-> So where IPI is:
+Le vendredi 02 mai 2025 à 17:05 +0200, Marco Felsch a écrit :
+> From: Michael Tretter <m.tretter@pengutronix.de>
 > 
->  - IPI all CPUs
->  - local invalidate
->  - wait for completion
+> The VEPU540 and VEPU580 may prepare the NAL unit headers in the coded
+> params. These values have to be provided by user space and be written
+> into the hardware registers.
 
-To drill down on this a bit, the IPI is actually something like
+To be reworked in future version. This commit message refers to RK356x and
+RK3688 encoders block from Rockchip. Though, its possible this applies for
+Hantro IP too.
 
-	for_each_cpu(IPI_cpumask)
-		per_cpu_ptr(cpu)->csd = 1;
-	send_ipi(IPI_cpumask)
-	// local invalidate
-	// wait for completion
-
-... and the send_ipi() can be a for loop too if it's in clustered mode.
-So there is at least _a_ for loop in this case in practice because each
-CPU has a per-cpu structure to tell it what to do in the IPI.
-
-> This then becomes:
+Nicolas
+ 
+> Furthermore, nal_ref_idc indicates if a picture will be used as
+> reference and is a hint to the driver, if it needs to keep the
+> reconstructed buffer or not.
 > 
->  for ()
->    - RAR some CPUs
->    - wait for completion
-
-Were you thinking that the "some CPUs" was limited to 64 because of the
-size of the payload table and action vectors? Maybe I was thinking of
-arranging the data structures differently.
-
-I was figuring that we could use one entry in the payload table per IPI
-operation, *not* one per CPU. Something like:
-
-	e = alloc_payload_entry();
-	payload_table[e] = payload;
-	for_each_cpu(RAR_cpumask)
-		per_cpu_ptr(cpu)->action_vector[e] = RAR_PENDING;
-	send_ipi(RAR_cpumask)
-	// local invalidate
-	// wait for completion
-	free_table_entry(e);
-
-In that silly scheme, the allocation can fail. But in that case it's
-easy to just fall back to IPIs. I _think_ that works, but it's all in my
-head and maybe I'm missing something silly.
-
-I think the mechanism you were thinking of was something like this
-(diff'd from what I had above):
-
--	e = alloc_payload_entry();
-+	e = smp_processor_id();
-	payload_table[e] = payload;
-	for_each_cpu(RAR_cpumask)
-		per_cpu_ptr(cpu)->action_vector[e] = RAR_PENDING;
-	send_ipi(RAR_cpumask)
-	// local invalidate
-	// wait for completion
--	free_table_entry(e);
-
-That beats my scheme because it doesn't have any allocation, free or
-locking overhead and can't fail to allocate. But it would be limited to
-<=64 CPUs because the payload table and action vector are only 64
-entries long.
-
-
+> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> ---
+>  include/uapi/linux/v4l2-controls.h | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+> index 670f822ee758..a8df393c9ead 100644
+> --- a/include/uapi/linux/v4l2-controls.h
+> +++ b/include/uapi/linux/v4l2-controls.h
+> @@ -1694,6 +1694,9 @@ struct v4l2_ctrl_h264_decode_params {
+>  	__u32 flags;
+>  };
+>  
+> +#define V4L2_H264_NAL_CODED_SLICE_NON_IDR_PIC	1
+> +#define V4L2_H264_NAL_CODED_SLICE_IDR_PIC	5
+> +
+>  #define V4L2_CID_STATELESS_H264_ENCODE_PARAMS	(V4L2_CID_CODEC_STATELESS_BASE + 8)
+>  
+>  /**
+> @@ -1719,6 +1722,8 @@ struct v4l2_ctrl_h264_decode_params {
+>   * @pic_init_qp_minus26: initial value minus 26 of luma qp for each slice.
+>   * @chroma_qp_index_offset: offset that shall be added to qp luma for addressing the
+>   * table of qp chroma values for the Cb chroma component.
+> + * @nal_ref_idc: nal_ref_idc for the header of the generated NAL unit
+> + * @nal_unit_type: one of the V4L2_H264_NAL_CODED_SLICE_{} values
+>   * @flags: combination of V4L2_H264_ENCODE_FLAG_{} flags.
+>   * @reference_ts: timestamp of the V4L2 buffer to use as reference
+>   */
+> @@ -1751,6 +1756,16 @@ struct v4l2_ctrl_h264_encode_params {
+>  
+>  	__u32 flags; /* V4L2_H264_ENCODE_FLAG_ */
+>  
+> +	/*
+> +	 * If nal_ref_idc is 0, the NAL unit won't be used as reference by
+> +	 * later NAL units. Any other value indicates that the NAL unit may be
+> +	 * used as reference.
+> +	 */
+> +	__u8 nal_ref_idc;
+> +
+> +	/* TODO Can we infer the nal_unit_type from the slice_type? */
+> +	__u8 nal_unit_type;
+> +
+>  	/* Reference */
+>  
+>  	__u64 reference_ts;
