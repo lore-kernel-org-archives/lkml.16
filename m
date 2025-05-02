@@ -1,181 +1,186 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A53962550D6
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129AB242D82;
+	Fri,  2 May 2025 13:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.156.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746192042; cv=none; b=fUjdcD4kr6FW5PSQrLSLiKrp5PJLSVHAEmJLaF1NQmXet0jw6ET3QV5/j9rVKb2+f/EbPv+Uq2qbRkZsCyphrEZHxFKl/TJouoFJNY93GY2kNRNZIayzcVisl4sEGC+VXK+wztiBI/KPzWwOjSnDCuVcJnF39J/MASdlPG+Bc0k=
+	t=1746192095; cv=none; b=uPm+dnnbXX2pJnBJQAoW2p9SmvoU9U4QYWs0OYQvojrJwQjLxpE6pog8xFN6VnUEx0l6idIu88tOSqGpQ1ez46SD9rE6QO59AqRJia6N0XqMiqCYKLV7JbdjByQfgY3o19Zot6pVgiyOD2eyjmQgrskqWCrzEODUQX4/sY4m7OE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746192042; c=relaxed/simple;
-	bh=5DyP5CH5llsrXoTjy9opbfOMo5C5G5RLl6+nE2p0vMs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZS65xA3YDqrArBoMb5YvHkUU+sicSmwCf4ng1GIy0jggOQSvcGQsQMxVl5TOIAkcx0p+E5XJzZJExDn01rsdR9xO1xOVbxub+w7rBsmVEoSY9G7I4nadyUWssRJ3E3lARO55IdXvqLxHYA25hNUlCKEPUHjRcKmRA/DYRpMXe4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4ZprnS0mDzz9sB5;
-	Fri,  2 May 2025 15:07:56 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id yTdoClDjHfzF; Fri,  2 May 2025 15:07:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4ZprnS03d6z9sB2;
-	Fri,  2 May 2025 15:07:56 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id F00368B765;
-	Fri,  2 May 2025 15:07:55 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id C9qmk7rqDkQY; Fri,  2 May 2025 15:07:55 +0200 (CEST)
-Received: from PO20335.idsi0.si.c-s.fr (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 806938B763;
-	Fri,  2 May 2025 15:07:55 +0200 (CEST)
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-To: Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] powerpc/8xx: Reduce alignment constraint for kernel memory
-Date: Fri,  2 May 2025 15:07:53 +0200
-Message-ID: <fa9927b70df13627cdf10b992ea71d6562c7760e.1746191262.git.christophe.leroy@csgroup.eu>
-X-Mailer: git-send-email 2.47.0
+	s=arc-20240116; t=1746192095; c=relaxed/simple;
+	bh=rIAlmlwMtQaUgow1iGT0jE1zo6pYUXceWlqRKjuOQxc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ltm75U9OENk77X5+RiRQiPS5TYKA2XxtgMoH6rw0CIZX84qmVQvY3Of4tTbnVDUhZ0MV345a1UnsYSpza/39/q7dwL7lYpb3IV7IbjM9eplZjlK8USW7OOMwAbSFfvz6UlI9Jt0hZhe5pwSF/z8Lp0hc2jbiwFvMnOgmMP4I2mE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=jwOsbvMa; arc=none smtp.client-ip=67.231.156.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="jwOsbvMa"
+Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
+	by mx0b-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5428rEtc026238;
+	Fri, 2 May 2025 06:20:51 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=2+wqQXMClAVhXAV0is5Y088
+	yZ6Z5k3S6DIxIe4xuZyg=; b=jwOsbvMa+ohV7liVQjtFOIkxlLgBGgq5VD6fOJB
+	58EAri/83tLKCYdDsWANmYXWmyjraw8h0difekZhpVF/fwod+B4ApPqikJpUQqej
+	YQ+6Vq+aSCFapg9WcCu2fUfGVt7GlTjOQlOu/2zHL1ewcsZxyYR1FARiseMx8iqi
+	d1midvaGa4eA0CcTAVhS9ipHeyiV+OQZZAKSlRk3doXKkZb6VPLlW2/M3C2gpRUI
+	hnxfcnMv5hzwuCcEcrqaxaGQPdtpnJtOxtw7+lOaCcPsUfvS8mALsdHxDSQaamcP
+	IHHekPYrLTbmj6+Z5XN/4BNrT2TWMfftr60f64CF/6GPK9g==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 46cjpb97tu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 06:20:51 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Fri, 2 May 2025 06:20:50 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Fri, 2 May 2025 06:20:50 -0700
+Received: from optiplex.marvell.com (unknown [10.28.34.253])
+	by maili.marvell.com (Postfix) with ESMTP id 908765B6921;
+	Fri,  2 May 2025 06:20:38 -0700 (PDT)
+From: Tanmay Jagdale <tanmay@marvell.com>
+To: <bbrezillon@kernel.org>, <arno@natisbad.org>, <schalla@marvell.com>,
+        <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
+        <sgoutham@marvell.com>, <lcherian@marvell.com>, <gakula@marvell.com>,
+        <jerinj@marvell.com>, <hkelam@marvell.com>, <sbhatta@marvell.com>,
+        <andrew+netdev@lunn.ch>, <edumazet@google.com>, <kuba@kernel.org>,
+        <pabeni@redhat.com>, <bbhushan2@marvell.com>, <bhelgaas@google.com>,
+        <pstanner@redhat.com>, <gregkh@linuxfoundation.org>,
+        <peterz@infradead.org>, <linux@treblig.org>,
+        <krzysztof.kozlowski@linaro.org>, <giovanni.cabiddu@intel.com>
+CC: <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <rkannoth@marvell.com>, <sumang@marvell.com>,
+        <gcherian@marvell.com>, Tanmay Jagdale <tanmay@marvell.com>
+Subject: [net-next PATCH v1 00/15] Enable Inbound IPsec offload on Marvell CN10K SoC
+Date: Fri, 2 May 2025 18:49:41 +0530
+Message-ID: <20250502132005.611698-1-tanmay@marvell.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746191273; l=5113; i=christophe.leroy@csgroup.eu; s=20211009; h=from:subject:message-id; bh=5DyP5CH5llsrXoTjy9opbfOMo5C5G5RLl6+nE2p0vMs=; b=uF1BTXzLim4U+Lw/FpCSAf59eNVyyt3u/EdmT2gO8CghLvC0q8dKtHVVqm4DePkGQmFxc/tKd TBEx1AWyGFBA0jW8VwEwUU9A9K097fGv/aFSwuX8TL4psaUYfcd1Qcy
-X-Developer-Key: i=christophe.leroy@csgroup.eu; a=ed25519; pk=HIzTzUj91asvincQGOFx6+ZF5AoUuP9GdOtQChs7Mm0=
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: gnSXQwkE1vHbwsI35uWgU8hgqyEOk8wn
+X-Proofpoint-ORIG-GUID: gnSXQwkE1vHbwsI35uWgU8hgqyEOk8wn
+X-Authority-Analysis: v=2.4 cv=Tu/mhCXh c=1 sm=1 tr=0 ts=6814c6b3 cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=dt9VzEwgFbYA:10 a=JobPnVYPRzK78MvRnRwA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDEwNiBTYWx0ZWRfX6bprN3aCERIj 54lRHMrkhAyALYu5vKvQrSiwwmbNd0ySOL46nTi910ZJv6WiDwjMFb0h0D2YP8h56zYMZnrL2vp fgDacnhk23P3/H9S20TdkuqkW3Non9g2+XRh++coKmaLlzXpsmnoH7cJNV1Ztfr9ssclbCFCkS4
+ bOoKpW2PtOrdNGrIc2WHJEvZLKp7m+z1scFTs9zGsgerPl9jr99/FVWptdn0VWmbTJD77ZUH1Rr futKXOqFBNfhw2IICkxoKjmBvDK9bGPsIhMtNX5SitG1eohv7WCK5VrexrjsfELATi1dPhTHJfv QyFGiEqntwozLd/ItLLg4aKCfi07FiWXd9O60DaI8TrCA5zlzxWWxY8ZSJEKHOQYrdstMkEnPJu
+ aIg9NgHquDA6larr6j3zfdrXx+OowAr/NRCnFmzgGhnvTXaSOAsLVzuNxy3lFH1miz9R7v9N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
 
-8xx has three large page sizes: 8M, 512k and 16k.
+This patch series adds support for inbound inline IPsec flows for the
+Marvell CN10K SoC.
 
-A too big alignment can lead to wasting memory. On a board which has
-only 32 MBytes of RAM, every single byte is worth it and a 512k
-alignment is sometimes too much.
+The packet flow
+---------------
+An encrypted IPSec packet goes through two passes in the RVU hardware
+before reaching the CPU.
+First Pass:
+  The first pass involves identifying the packet as IPSec, assigning an RQ,
+  allocating a buffer from the Aura pool and then send it to CPT for decryption.
 
-Allow mapping kernel memory with 16k pages and reduce the constraint
-on kernel memory alignment. 512k and 16k pages are handled the same
-way so reverse tests in order to make 8M pages the special case and
-other ones (512k and 16k) the alternative.
+Second Pass:
+  After CPT decrypts the packet, it sends a metapacket to NIXRX via the X2P
+  bus. The metapacket contains CPT_PARSE_HDR_S structure and some initial
+  bytes of the decrypted packet which would help NIXRX in classification.
+  CPT also sets BIT(11) of channel number to further help in identifcation.
+  NIXRX allocates a new buffer for this packet and submits it to the CPU.
 
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/Kconfig         | 10 +++++-----
- arch/powerpc/mm/nohash/8xx.c | 32 +++++++++++++++++---------------
- 2 files changed, 22 insertions(+), 20 deletions(-)
+Once the decrypted metapacket packet is delivered to the CPU, get the WQE
+pointer from CPT_PARSE_HDR_S in the packet buffer. This WQE points to the
+complete decrypted packet. We create an skb using this, set the relevant
+XFRM packet mode flags to indicate successful decryption, and submit it
+to the network stack.
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index 2519fc3538c6..c3e0cc83f120 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -895,7 +895,7 @@ config DATA_SHIFT
- 	int "Data shift" if DATA_SHIFT_BOOL
- 	default 24 if STRICT_KERNEL_RWX && PPC64
- 	range 17 28 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_BOOK3S_32
--	range 19 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_8xx
-+	range 14 23 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_8xx
- 	range 20 24 if (STRICT_KERNEL_RWX || DEBUG_PAGEALLOC || KFENCE) && PPC_85xx
- 	default 22 if STRICT_KERNEL_RWX && PPC_BOOK3S_32
- 	default 18 if (DEBUG_PAGEALLOC || KFENCE) && PPC_BOOK3S_32
-@@ -908,10 +908,10 @@ config DATA_SHIFT
- 	  On Book3S 32 (603+), DBATs are used to map kernel text and rodata RO.
- 	  Smaller is the alignment, greater is the number of necessary DBATs.
- 
--	  On 8xx, large pages (512kb or 8M) are used to map kernel linear
--	  memory. Aligning to 8M reduces TLB misses as only 8M pages are used
--	  in that case. If PIN_TLB is selected, it must be aligned to 8M as
--	  8M pages will be pinned.
-+	  On 8xx, large pages (16kb or 512kb or 8M) are used to map kernel
-+	  linear memory. Aligning to 8M reduces TLB misses as only 8M pages
-+	  are used in that case. If PIN_TLB is selected, it must be aligned
-+	  to 8M as 8M pages will be pinned.
- 
- config ARCH_FORCE_MAX_ORDER
- 	int "Order of maximal physically contiguous allocations"
-diff --git a/arch/powerpc/mm/nohash/8xx.c b/arch/powerpc/mm/nohash/8xx.c
-index 8b54f12d1889..ab1505cf42bf 100644
---- a/arch/powerpc/mm/nohash/8xx.c
-+++ b/arch/powerpc/mm/nohash/8xx.c
-@@ -54,20 +54,13 @@ static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
- {
- 	pmd_t *pmdp = pmd_off_k(va);
- 	pte_t *ptep;
--
--	if (WARN_ON(psize != MMU_PAGE_512K && psize != MMU_PAGE_8M))
--		return -EINVAL;
-+	unsigned int shift = mmu_psize_to_shift(psize);
- 
- 	if (new) {
- 		if (WARN_ON(slab_is_available()))
- 			return -EINVAL;
- 
--		if (psize == MMU_PAGE_512K) {
--			ptep = early_pte_alloc_kernel(pmdp, va);
--			/* The PTE should never be already present */
--			if (WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
--				return -EINVAL;
--		} else {
-+		if (psize == MMU_PAGE_8M) {
- 			if (WARN_ON(!pmd_none(*pmdp) || !pmd_none(*(pmdp + 1))))
- 				return -EINVAL;
- 
-@@ -78,20 +71,25 @@ static int __ref __early_map_kernel_hugepage(unsigned long va, phys_addr_t pa,
- 			pmd_populate_kernel(&init_mm, pmdp + 1, ptep);
- 
- 			ptep = (pte_t *)pmdp;
-+		} else {
-+			ptep = early_pte_alloc_kernel(pmdp, va);
-+			/* The PTE should never be already present */
-+			if (WARN_ON(pte_present(*ptep) && pgprot_val(prot)))
-+				return -EINVAL;
- 		}
- 	} else {
--		if (psize == MMU_PAGE_512K)
--			ptep = pte_offset_kernel(pmdp, va);
--		else
-+		if (psize == MMU_PAGE_8M)
- 			ptep = (pte_t *)pmdp;
-+		else
-+			ptep = pte_offset_kernel(pmdp, va);
- 	}
- 
- 	if (WARN_ON(!ptep))
- 		return -ENOMEM;
- 
- 	set_huge_pte_at(&init_mm, va, ptep,
--			pte_mkhuge(pfn_pte(pa >> PAGE_SHIFT, prot)),
--			1UL << mmu_psize_to_shift(psize));
-+			arch_make_huge_pte(pfn_pte(pa >> PAGE_SHIFT, prot), shift, 0),
-+			1UL << shift);
- 
- 	return 0;
- }
-@@ -123,14 +121,18 @@ static int mmu_mapin_ram_chunk(unsigned long offset, unsigned long top,
- 	unsigned long p = offset;
- 	int err = 0;
- 
--	WARN_ON(!IS_ALIGNED(offset, SZ_512K) || !IS_ALIGNED(top, SZ_512K));
-+	WARN_ON(!IS_ALIGNED(offset, SZ_16K) || !IS_ALIGNED(top, SZ_16K));
- 
-+	for (; p < ALIGN(p, SZ_512K) && p < top && !err; p += SZ_16K, v += SZ_16K)
-+		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_16K, new);
- 	for (; p < ALIGN(p, SZ_8M) && p < top && !err; p += SZ_512K, v += SZ_512K)
- 		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
- 	for (; p < ALIGN_DOWN(top, SZ_8M) && p < top && !err; p += SZ_8M, v += SZ_8M)
- 		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_8M, new);
- 	for (; p < ALIGN_DOWN(top, SZ_512K) && p < top && !err; p += SZ_512K, v += SZ_512K)
- 		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_512K, new);
-+	for (; p < ALIGN_DOWN(top, SZ_16K) && p < top && !err; p += SZ_16K, v += SZ_16K)
-+		err = __early_map_kernel_hugepage(v, p, prot, MMU_PAGE_16K, new);
- 
- 	if (!new)
- 		flush_tlb_kernel_range(PAGE_OFFSET + v, PAGE_OFFSET + top);
+
+Patches are grouped as follows:
+-------------------------------
+1) CPT LF movement from crypto driver to RVU AF
+    0001-crypto-octeontx2-Share-engine-group-info-with-AF-dri.patch
+    0002-octeontx2-af-Configure-crypto-hardware-for-inline-ip.patch
+    0003-octeontx2-af-Setup-Large-Memory-Transaction-for-cryp.patch
+    0004-octeontx2-af-Handle-inbound-inline-ipsec-config-in-A.patch
+    0005-crypto-octeontx2-Remove-inbound-inline-ipsec-config.patch
+
+2) RVU AF Mailbox changes for CPT 2nd pass RQ mask, SPI-to-SA table,
+   NIX-CPT BPID configuration
+    0006-octeontx2-af-Add-support-for-CPT-second-pass.patch
+    0007-octeontx2-af-Add-support-for-SPI-to-SA-index-transla.patch
+    0008-octeontx2-af-Add-mbox-to-alloc-free-BPIDs.patch
+
+3) Inbound Inline IPsec support patches
+    0009-octeontx2-pf-ipsec-Allocate-Ingress-SA-table.patch
+    0010-octeontx2-pf-ipsec-Setup-NIX-HW-resources-for-inboun.patch
+    0011-octeontx2-pf-ipsec-Handle-NPA-threshhold-interrupt.patch
+    0012-octeontx2-pf-ipsec-Initialize-ingress-IPsec.patch
+    0013-octeontx2-pf-ipsec-Manage-NPC-rules-and-SPI-to-SA-ta.patch
+    0014-octeontx2-pf-ipsec-Process-CPT-metapackets.patch
+    0015-octeontx2-pf-ipsec-Add-XFRM-state-and-policy-hooks-f.patch
+
+
+Bharat Bhushan (5):
+  crypto: octeontx2: Share engine group info with AF driver
+  octeontx2-af: Configure crypto hardware for inline ipsec
+  octeontx2-af: Setup Large Memory Transaction for crypto
+  octeontx2-af: Handle inbound inline ipsec config in AF
+  crypto: octeontx2: Remove inbound inline ipsec config
+
+Geetha sowjanya (1):
+  octeontx2-af: Add mbox to alloc/free BPIDs
+
+Kiran Kumar K (1):
+  octeontx2-af: Add support for SPI to SA index translation
+
+Rakesh Kudurumalla (1):
+  octeontx2-af: Add support for CPT second pass
+
+Tanmay Jagdale (7):
+  octeontx2-pf: ipsec: Allocate Ingress SA table
+  octeontx2-pf: ipsec: Setup NIX HW resources for inbound flows
+  octeontx2-pf: ipsec: Handle NPA threshold interrupt
+  octeontx2-pf: ipsec: Initialize ingress IPsec
+  octeontx2-pf: ipsec: Manage NPC rules and SPI-to-SA table entries
+  octeontx2-pf: ipsec: Process CPT metapackets
+  octeontx2-pf: ipsec: Add XFRM state and policy hooks for inbound flows
+
+ .../marvell/octeontx2/otx2_cpt_common.h       |    8 -
+ drivers/crypto/marvell/octeontx2/otx2_cptpf.h |   10 -
+ .../marvell/octeontx2/otx2_cptpf_main.c       |   50 +-
+ .../marvell/octeontx2/otx2_cptpf_mbox.c       |  286 +---
+ .../marvell/octeontx2/otx2_cptpf_ucode.c      |  116 +-
+ .../marvell/octeontx2/otx2_cptpf_ucode.h      |    3 +-
+ .../ethernet/marvell/octeontx2/af/Makefile    |    2 +-
+ .../ethernet/marvell/octeontx2/af/common.h    |    1 +
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |  119 +-
+ .../net/ethernet/marvell/octeontx2/af/rvu.c   |    9 +-
+ .../net/ethernet/marvell/octeontx2/af/rvu.h   |   71 +
+ .../ethernet/marvell/octeontx2/af/rvu_cn10k.c |   11 +
+ .../ethernet/marvell/octeontx2/af/rvu_cpt.c   |  706 +++++++++-
+ .../ethernet/marvell/octeontx2/af/rvu_cpt.h   |   71 +
+ .../ethernet/marvell/octeontx2/af/rvu_nix.c   |  230 +++-
+ .../marvell/octeontx2/af/rvu_nix_spi.c        |  220 +++
+ .../ethernet/marvell/octeontx2/af/rvu_reg.h   |   16 +
+ .../marvell/octeontx2/af/rvu_struct.h         |    4 +-
+ .../marvell/octeontx2/nic/cn10k_ipsec.c       | 1191 ++++++++++++++++-
+ .../marvell/octeontx2/nic/cn10k_ipsec.h       |  152 +++
+ .../marvell/octeontx2/nic/otx2_common.c       |   23 +-
+ .../marvell/octeontx2/nic/otx2_common.h       |   16 +
+ .../ethernet/marvell/octeontx2/nic/otx2_pf.c  |   17 +
+ .../marvell/octeontx2/nic/otx2_struct.h       |   16 +
+ .../marvell/octeontx2/nic/otx2_txrx.c         |   25 +-
+ .../ethernet/marvell/octeontx2/nic/otx2_vf.c  |    4 +
+ 26 files changed, 2915 insertions(+), 462 deletions(-)
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_cpt.h
+ create mode 100644 drivers/net/ethernet/marvell/octeontx2/af/rvu_nix_spi.c
+
 -- 
-2.47.0
+2.43.0
 
