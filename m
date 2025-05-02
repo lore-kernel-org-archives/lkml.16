@@ -1,187 +1,129 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D021FF56
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C059D226D07
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 09:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746178975; cv=none; b=uPMf+EPOMF2LzqthdiOHDZAlQXltacqr05tgtfUqRR6VQwG2x0ajpWHjKlYJc+kGOFfPHIr3bSdkqiMOP1319NfIP2Bn2mg/e+xswAKglE7iuDcCiQGg0vzcv1qCGE3jXxc8BH+tRqxLvOqFeqSqm9GUTKctOy8XPbr6MxTft1c=
+	t=1746178988; cv=none; b=bCMOgvxoj9gAYKbhhsm+EVdMNsrWEYF0Fxg+Hc+wnqZv8WRoQoFnJq70dAK6gU8Mk+ejZQ3jFWIB2OVaBSVqCMJHoij5XvnyVvHLayZAhIBvGiwfuh//pbidulVO9gRflIqzWhLVMYIuoNCmjbiyFVxaK8YwigWGuG8m+puy7iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746178975; c=relaxed/simple;
-	bh=XE7hRm0qUP0PF61AUPQ84APUG//4sM4kzYT+GWRzLUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=rzw5784hc3V0A+eT0hIjy37p3gc3ImWlMHYAuZC8qQBbrm1E1XUDOP3DWUZXDIMJi7oYT+gPkoKwX3CObXdjn40z7isnUx8rBVGTNFzNUjI8qRLJyLlAnR+8dU3edLY8c+ZFxh6BcxPpTOQziq450T96xe+zqCkGztk9uJl9k+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UTUTESF8; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746178988; c=relaxed/simple;
+	bh=EOXqPqomDY5NAmOBb/66KqDnP+k/LNaa1HXt0xFQ2zI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U1Fmvo0nTGgQwGBtBN+L2GwuwGbMW6L3ARFMRo34IUzPTf6Jdp4l2jEvYwiyQOCBfTxTblPBTYKChMbO9EYokpk40qEa7llzuGdgSLq7l0Wkr8vh8qbaBBzUOz2A3DnF7NFyLdBJLo10QdL85Sn0Ajn57LdVVh3K9U0BqWHyZcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FNh6wRok; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTUTESF8"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-39c1ef4ae3aso1054491f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 02:42:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FNh6wRok"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5f6214f189bso3371881a12.2
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 02:43:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746178972; x=1746783772; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=WX/evLS+DuAe/0hAk5mHgxdHnsJicsKUxinsRE+gIwI=;
-        b=UTUTESF8oIlgwT1NlAMe84PQyu+i2zvuu36LEu2IRmlO4C5699pofAS24BZRT+Nd8c
-         iPUzLgTYXIqfDrkaxKy+JPlWPSzupqok+ycdPWiJBIL8oIi2Fs9knsc89krO9dLNGfHL
-         30gBVBj5VR0c4b8p0xr+QehSMByt3cursARIoWDyCB1kZHTX1NtVQPp1dkPew0kMqpDY
-         MlRhcpT8hmIi6pJw2zXwuY9KhYsUI56QYTMjS+Ge+gIQAI9d29MTLYbtIgBsLPuVnnAJ
-         xbSDodvCMDzKrHkdQIbQvCeHrJZzsMaMX/cGz8mMiuH1FE8CQSae9DTl4Glky2M31H0k
-         cD6A==
+        d=suse.com; s=google; t=1746178985; x=1746783785; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EOXqPqomDY5NAmOBb/66KqDnP+k/LNaa1HXt0xFQ2zI=;
+        b=FNh6wRokeH/ZCOx305hS36t3HW2+EwT+Do9ehclCuwwr+qGSa/GJbRNbSo96uup9MA
+         Li4bnKCQCRy9YIIS2e/lT7F5Gvo5WsQHmOrEwdXsx9PRplZHbrZLmQ/f6wAO5vEp1cNJ
+         8S/hqtBxJal+gGXb3n+j43uZKENhG3bdnMCLV3jZdVEg5EnA4XlhkRCiiru3cHhfYQ66
+         dbEnFUUUUZWDuLg87insbdA0X9C/eUAknM1kuac6oUV4uvlBKmQg148blv2+ACJknt8F
+         KEU97tU08Nj4/daV5QVi/yMqlQcLcSAT24sTu92N9W+UkAQx8LDPOrGPie/NK8PFC2LI
+         Je6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746178972; x=1746783772;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WX/evLS+DuAe/0hAk5mHgxdHnsJicsKUxinsRE+gIwI=;
-        b=O8FsmdSZocE7LLt7GqATt+FmjO7v1fVzSrjPh7jLTbi5OHXCaTwZNSorZT6KXwjADY
-         zWoJGw9gmv7lvUDOJEpWo4bnqpWf+Rg3Wkh7QgeGURQJUVBJ4VFic5L3tg3AVl6BFzMq
-         GcMqHihAPI2Se/ch+YAPWVyVpvK88S6BjHart8vDylAMW0lhQz+wydqtQFFPHaB0bw3M
-         b81aL7qU3BMEEjQxGQC+vgT9SS2QeLqK/ijPhSpL0YJT/qooqEKxR8wNuQRAyRHMTOSD
-         SgHa80sHsOgcc4qq6BZAWOiZzlpRpOdaECjOb/Rvo/xRTJBilEBCu5rB5JQK8yyKdkT8
-         Y6Kw==
-X-Forwarded-Encrypted: i=1; AJvYcCUme3u6Dy4peLlcbQB23VztM+wG60QVEVQduAgqNY4W4AbNzSq9ee2fxglnyfMm8aUQEXER30rOFuo4fZg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6MzVkrNwe1kgOFUch0UPmH0FjjACuCd522BU3uuPyhguHt9Qz
-	U7gs4syYZ+Hzt7I4MuNnOck9gLst26l+n4r/rNxyx2QD+Gyqk/wX1lh+yFWJe/w=
-X-Gm-Gg: ASbGncvu/6mQtwNQjeh3yzu3+Q0SlJ8apdfv+UzqvM8ky6kYWrvHBGsGinq6NebrBHn
-	/EpJmfyCpykZxEzSyB/cmF3Yac8lkr5BFRUt/miuEteGWcz7UhN6oE/6zY5RZgnYtz0zVN//U3e
-	N7RCd56zkfckoCOz7c1tQKq1gUA4idpbyWyOH6NaUJKI43jJl4mC9eAu9j0VgHm1hzbbJBkqdQN
-	ZX5svTLKqec9zAqCbUcK25Y8+cuCrA8xf2nBeFrkB5KtW/SNRIVRBnauwk52CZxmIWitEc0o9+0
-	mvtJ52KLileRE4swCHyzqNoc6SIQS6a273VPZuyo0YIOV3WvCC9DaOM1wZqLXOLts1isBZN7YlZ
-	MNnGe
-X-Google-Smtp-Source: AGHT+IFiBHhJcjpY8AHYvmDW+6tcszRqTtvHysmH6lFStDCvbCOZgJoVZxZSTCZEdI78/1mXl/L2Pw==
-X-Received: by 2002:a05:6000:2585:b0:390:ec6e:43ea with SMTP id ffacd0b85a97d-3a094038f02mr4157873f8f.15.1746178972094;
-        Fri, 02 May 2025 02:42:52 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a099ae3c1fsm1660874f8f.37.2025.05.02.02.42.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 May 2025 02:42:51 -0700 (PDT)
-Message-ID: <356bc97a-bd75-4894-98fe-d7fb0e02e1c1@linaro.org>
-Date: Fri, 2 May 2025 11:42:50 +0200
+        d=1e100.net; s=20230601; t=1746178985; x=1746783785;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EOXqPqomDY5NAmOBb/66KqDnP+k/LNaa1HXt0xFQ2zI=;
+        b=S2sG1bUvJ9w5jjWfB+9QAlg8fOqOaBjkWerLDBjHLI9n2OT1/sCMJZxgUcLNDqoBhI
+         4jmaQYti8DWxqb2dboGuYBBIlguqWmVXm0+vGGykSrAU+Qk3EhCvBCqfEDYYCxFtdPNq
+         X0U4abhw16rHcvFebcWmvd3k52iCE6OAJQN5rL/Q4QqyunZccH9vDWlJBPf9swRyXtO9
+         qya6JwISKPR6BSIWfOymJjLYM8ah41hT+7MNVAnWJMJizYCYcao6JCfw4lSa7Cd2l6c7
+         1k/jA4iPAT1r0rnXNmxB2QGOUpnvKJmCXO1bzDICHQhugA3OK6fcKW/YDpgWgnkikW1e
+         pQVA==
+X-Forwarded-Encrypted: i=1; AJvYcCVmSYi3GUuCeImgUxih/ZPs9EDkBKKep7CTp1Y3qNXJwcNtyLXBtwjvflPuAtmaGXVV67ce2Y0iU6sHvhA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw8k9cStFB+HqQYexbepRw6XGmx4yuiOW6t2+XVMxjnxezkWkNk
+	JuKWSuoSrWb4D/KGGPKFyiIrtGPy+idEHz3lCmD8fTypTd4+tz+Gt0hmXhrpuKw=
+X-Gm-Gg: ASbGncuGXo68KsZs5mjsjTnC/j9p9ndb5CewXquOcbRe449LkUUtUxzCqQhqI3k0jSs
+	oQmOpJerIM9WSgkTwXM5FvIDJqu2U+1UnkvBvu/jncYLAl9wRqmp7j7hjsX8FhfE0AezNzGqnqM
+	fjb5UGnWTt49a1zH9bHe9y9271ZRKrf/wujB/40TM264ef3U6byWgQOGQx9DRvXybkynkyGhB7p
+	zM27kd8r3+oJy4SWa11+aqluDa5ugY2IbX4c5y0TvuFxXKXVubKhcM67AxepVgkHSHXUFZjNzcW
+	17ZDAYZjV6rMpYUL4iaWewOoRMN8rXFZCEmHWTYuJak=
+X-Google-Smtp-Source: AGHT+IFgoRhv9PuW/EWdVGOS2zvRloJtSnlLvctJGmfk/l9H9pNgE/zk8qe2KUDmO+lth2FLCAP8OA==
+X-Received: by 2002:a05:6402:d08:b0:5ee:497:89fc with SMTP id 4fb4d7f45d1cf-5fa7891aae1mr1661907a12.33.1746178985017;
+        Fri, 02 May 2025 02:43:05 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa7781bf5fsm942719a12.36.2025.05.02.02.43.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 May 2025 02:43:04 -0700 (PDT)
+Date: Fri, 2 May 2025 11:43:02 +0200
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Waiman Long <longman@redhat.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
+	Roman Gushchin <roman.gushchin@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Muchun Song <muchun.song@linux.dev>, Andrew Morton <akpm@linux-foundation.org>, 
+	Tejun Heo <tj@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v8 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+Message-ID: <vki6asa3arxitfgio3goox6hiyzmytxskoje6e2z55j3xrskly@4jq4btqz5nwd>
+References: <20250502010443.106022-1-longman@redhat.com>
+ <20250502010443.106022-2-longman@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] thermal: Add support for Airoha EN7581 thermal
- sensor
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-References: <20250226003608.8973-1-ansuelsmth@gmail.com>
- <20250226003608.8973-2-ansuelsmth@gmail.com>
-Content-Language: en-US
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Lukasz Luba
- <lukasz.luba@arm.com>, Rob Herring <robh@kernel.org>,
- linux-pm@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Conor Dooley <conor+dt@kernel.org>, Christian Marangi
- <ansuelsmth@gmail.com>, Zhang Rui <rui.zhang@intel.com>
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20250226003608.8973-2-ansuelsmth@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="55lyjcmxpait3n53"
+Content-Disposition: inline
+In-Reply-To: <20250502010443.106022-2-longman@redhat.com>
 
 
-Hi Angelo,
+--55lyjcmxpait3n53
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 1/2] selftests: memcg: Allow low event with no
+ memory.low and memory_recursiveprot on
+MIME-Version: 1.0
 
-AFAIR, the LVTS driver had issues with the interrupts.
+On Thu, May 01, 2025 at 09:04:42PM -0400, Waiman Long <longman@redhat.com> =
+wrote:
+> Modify the test_memcontrol.c to ignore low event in the 3rd child cgroup
+> with memory_recursiveprot on.
+>=20
+> The 4th child cgroup has no memory usage and so has an effective
+> low of 0. It has no low event count because the mem_cgroup_below_low()
+> check in shrink_node_memcgs() is skipped as mem_cgroup_below_min()
+> returns true. If we ever change mem_cgroup_below_min() in such a way
+> that it no longer skips the no usage case, we will have to add code to
+> explicitly skip it.
+>=20
+> With this patch applied, the test_memcg_low sub-test finishes
+> successfully without failure in most cases. Though both test_memcg_low
+> and test_memcg_min sub-tests may still fail occasionally if the
+> memory.current values fall outside of the expected ranges.
+>=20
+> Suggested-by: Michal Koutn=FD <mkoutny@suse.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-This driver proposed by Ansuel Smith looks very similar to the LVTS and 
-there are some comments regarding errors with the documentation below 
-which may appy to the LVTS driver too.
+Acked-by: Michal Koutn=FD <mkoutny@suse.com>
 
-Would you mind to check ?
-
-See below.
-
-On 26/02/2025 01:35, Christian Marangi wrote:
-> Add support for Airoha EN7581 thermal sensor. This provide support for
-> reading the CPU or SoC Package sensor and to setup trip points for hot
-> and critical condition. An interrupt is fired to react on this and
-> doesn't require passive poll to read the temperature.
-> 
-> The thermal regs provide a way to read the ADC value from an external
-> register placed in the Chip SCU regs. Monitor will read this value and
-> fire an interrupt if the trip condition configured is reached.
-> 
-> The Thermal Trip and Interrupt logic is conceptually similar to Mediatek
-> LVTS Thermal but differ in register mapping and actual function/bug
-> workaround. The implementation only share some register names but from
-> functionality observation it's very different and used only for the
-> basic function of periodically poll the temp and trip the interrupt.
-> 
-> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> ---
-
-[ ... ]
-
-> +#define   EN7581_HINTEN1			BIT(6)
-> +#define   EN7581_CINTEN1			BIT(5)
-> +#define   EN7581_NOHOTINTEN0			BIT(4)
-> +/* Similar to COLD and HOT also these seems to be swapped in documentation */
-> +#define   EN7581_LOFSINTEN0			BIT(3) /* In documentation: BIT(2) */
-> +#define   EN7581_HOFSINTEN0			BIT(2) /* In documentation: BIT(3) */
-> +/* It seems documentation have these swapped as the HW
-> + * - Fire BIT(1) when lower than EN7581_COLD_THRE
-> + * - Fire BIT(0) and BIT(5) when higher than EN7581_HOT2NORMAL_THRE or
-> + *     EN7581_HOT_THRE
-> + */
-> +#define   EN7581_CINTEN0			BIT(1) /* In documentation: BIT(0) */
-> +#define   EN7581_HINTEN0			BIT(0) /* In documentation: BIT(1) */
-> +#define EN7581_TEMPMONINTSTS			0x810
-> +#define   EN7581_STAGE3_INT_STAT		BIT(31)
-> +#define   EN7581_STAGE2_INT_STAT		BIT(30)
-> +#define   EN7581_STAGE1_INT_STAT		BIT(29)
-> +#define   EN7581_FILTER_INT_STAT_3		BIT(28)
-
-[ ... ]
-
-> +#define   EN7581_NOHOTINTSTS0			BIT(4)
-> +/* Similar to COLD and HOT also these seems to be swapped in documentation */
-> +#define   EN7581_LOFSINTSTS0			BIT(3) /* In documentation: BIT(2) */
-> +#define   EN7581_HOFSINTSTS0			BIT(2) /* In documentation: BIT(3) */
-> +/* It seems documentation have these swapped as the HW
-> + * - Fire BIT(1) when lower than EN7581_COLD_THRE
-> + * - Fire BIT(0) and BIT(5) when higher than EN7581_HOT2NORMAL_THRE or
-> + *     EN7581_HOT_THRE
-> + *
-> + * To clear things, we swap the define but we keep them documented here.
-> + */
-> +#define   EN7581_CINTSTS0			BIT(1) /* In documentation: BIT(0) */
-> +#define   EN7581_HINTSTS0			BIT(0) /* In documentation: BIT(1)*/
-> +/* Monitor will take the bigger threshold between HOT2NORMAL and HOT
-> + * and will fire both HOT2NORMAL and HOT interrupt when higher than the 2
-> + *
-> + * It has also been observed that not setting HOT2NORMAL makes the monitor
-> + * treat COLD threshold as HOT2NORMAL.
-> + */
-> +#define EN7581_TEMPH2NTHRE			0x824
-> +/* It seems HOT2NORMAL is actually NORMAL2HOT */
-> +#define   EN7581_HOT2NORMAL_THRE		GENMASK(11, 0)
-> +#define EN7581_TEMPHTHRE			0x828
-> +#define   EN7581_HOT_THRE			GENMASK(11, 0)
-> +/* Monitor will use this as HOT2NORMAL (fire interrupt when lower than...)*/
-> +#define EN7581_TEMPCTHRE			0x82c
-> +#define   EN7581_COLD_THRE			GENMASK(11, 0)
-> +/* Also LOW and HIGH offset register are swapped */
-> +#define EN7581_TEMPOFFSETL			0x830 /* In documentation: 0x834 */
-> +#define   EN7581_LOW_OFFSET			GENMASK(11, 0)
-> +#define EN7581_TEMPOFFSETH			0x834 /* In documentation: 0x830 */
-> +#define   EN7581_HIGH_OFFSET			GENMASK(11, 0)
-> +#define EN7581_TEMPMSRCTL0			0x838
-
-[ ... ]
+(Thank you. Not sure if this can be both with Suggested-by, so either of
+them alone is fine by me.)
 
 
+--55lyjcmxpait3n53
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCaBSTpAAKCRAt3Wney77B
+SclRAP4sVLHHxS41vhM1p+JYRz4x68kM1ToNUs7M3I1xd7X9XQEA9Lg0Obh9pUcU
+RmcQibMDF9amuynS7EPQ0DQjGlQ+lQ0=
+=iotP
+-----END PGP SIGNATURE-----
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+--55lyjcmxpait3n53--
