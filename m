@@ -1,574 +1,271 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD99F17A2FC;
-	Fri,  2 May 2025 20:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 023701F30DD;
+	Fri,  2 May 2025 20:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746216464; cv=none; b=ji/6l83rZn27laumzHJKNEN3CEm9oikGTTahc8hdNcEXdAovBQquZaUl0+1gtvP+wYjlj5XWP6qtz9F8PEYppcoB7/pO9ZSACV9B4gqB0pCka+TbiQdAacndzBPgTKGmKYcC06cMirs3N6105RoL4sPh7S4Q0F4dfZcMwXj3a14=
+	t=1746216665; cv=none; b=syiHbkXRBRCKwXIfrm8i8QeVKSuwNYJPLw60uaEovVlrsiuPEhK/yK6hnJ6lgvZlt4pnLwRTSm7jOHM3s2xr7sDrPdkAOqRmlfcX3Z05qDWMTfQstFQWepwm8s8XS4DVffbELeiMqrTPWFp9MTFzevonOHCvA4kugQwW5RgvFsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746216464; c=relaxed/simple;
-	bh=8SkWIe9P5Lgw+LPr1uiRXt5x+9SpwyzwztacaieB6IA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I7UpbvR7PU54cJ595BIBbjqJWb4CdU9+GabsqB7I6imKuT8PgWUhRJLQgHMYDswzWCYkA2zW1GgtKIoPM+vSz3wjmRFSVAkxcgJ2P4ZqBObtd61zBPff1R/k5iBi57lPuR0kTRG0DtV5MTc6bibf+yq28cnA0zBJfYDJ4CbuXUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=WuSNUape; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746216665; c=relaxed/simple;
+	bh=iTuW9YI+dyuT02HLYxJyyxkPKnlk5po8c12xAAkhwpw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Btc08IcTIyLS9U84eH3vCOneQY6L9JG0mkqXvQ0xYWKLOTjlLIkJPVj4MHj4KQxVxuagrjCHFrzct9JjulRHUz4UHaERCntiMELbL5/+sUZ/yjVKJxYkq89WfJJvAbsC9vsuMguzMaDmx4jKcE4l4W3QxQjVRRTxd2IN3lJ69Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sv864FeB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WuSNUape"
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 542K7TJC3944091
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 15:07:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746216449;
-	bh=tyjhtgVOZtOjrEte1Pcmb6EGFQGA8Fd7SNOyYBtBn9g=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=WuSNUapePKmA8JcVYFZZsMuvCxZN+qL/HpFE5H/eP83085WKCDqsM1AooMejmjVKx
-	 Lkdf2/VPf0Dwhqmk1l8sqU3t0yQ2/e2A5gx9U9NOabn0FF6ydud2hBmle1TI/VpzdI
-	 I5tGgNklaz3oVGe445apDLcSqYqz6F+itT+mlSv4=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 542K7TPJ008789
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 15:07:29 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 15:07:28 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 15:07:28 -0500
-Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 542K7SFd016646;
-	Fri, 2 May 2025 15:07:28 -0500
-Date: Fri, 2 May 2025 15:07:28 -0500
-From: Bryan Brattlof <bb@ti.com>
-To: Paresh Bhagat <p-bhagat@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
-        <afd@ti.com>
-Subject: Re: [PATCH v2 3/3] arm64: dts: ti: Add support for AM62D2-EVM
-Message-ID: <20250502200728.s6zyx2lgchftacno@bryanbrattlof.com>
-X-PGP-Fingerprint: D3D1 77E4 0A38 DF4D 1853 FEEF 41B9 0D5D 71D5 6CE0
-References: <20250502153915.734932-1-p-bhagat@ti.com>
- <20250502153915.734932-4-p-bhagat@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sv864FeB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ADB5C4CEE4;
+	Fri,  2 May 2025 20:10:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746216664;
+	bh=iTuW9YI+dyuT02HLYxJyyxkPKnlk5po8c12xAAkhwpw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Sv864FeBd9KxTRdvKgOZ+axY1H8VJH6iQ6cUVIomlzaF8Tt9DU1hTss3RaV0GZGw0
+	 RKet8XeU2WIeWeupCA3Z9iHmv84YHtpKjuDx2zS50DsC7PFGE3b0m1BzZhn6cqY0iw
+	 ZiOVbf4T5FM1pJ38MSl5brA85uW6PChKkKaCJiMldiQgECJympibLARyoEuarBSxjo
+	 Jp9rOnCwV3RTUZJmrxWtRmwna1eihF+o7ly+2lZSOrU06Jk4AfecpZXmte8Y09CbPd
+	 6lzKD8lSPHAJyJbSj9PDcRHDM5i4A1KjJtHmmESVkhFiw/Tp+pLNeiEVbXUFW6hF8c
+	 G56Lo/9mbOmqw==
+Date: Fri, 2 May 2025 22:10:57 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: Jann Horn <jannh@google.com>
+Cc: Eric Dumazet <edumazet@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Oleg Nesterov <oleg@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	"David S. Miller" <davem@davemloft.net>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Daan De Meyer <daan.j.demeyer@gmail.com>, David Rheinsberg <david@readahead.eu>, 
+	Jakub Kicinski <kuba@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Lennart Poettering <lennart@poettering.net>, Luca Boccassi <bluca@debian.org>, Mike Yuan <me@yhndnzj.com>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Zbigniew =?utf-8?Q?J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC v2 3/6] coredump: support AF_UNIX sockets
+Message-ID: <20250502-fanden-unbeschadet-89973225255f@brauner>
+References: <20250502-work-coredump-socket-v2-0-43259042ffc7@kernel.org>
+ <20250502-work-coredump-socket-v2-3-43259042ffc7@kernel.org>
+ <CAG48ez1w+25tbSPPU6=z1rWRm3ZXuGq0ypq4jffhzUva9Bwazw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250502153915.734932-4-p-bhagat@ti.com>
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+In-Reply-To: <CAG48ez1w+25tbSPPU6=z1rWRm3ZXuGq0ypq4jffhzUva9Bwazw@mail.gmail.com>
 
-On May  2, 2025 thus sayeth Paresh Bhagat:
-> AM62D-EVM evaluation module (EVM) is a low-cost expandable platform board
-> designed for TI’s AM62D2 SoC. It supports the following interfaces:
+On Fri, May 02, 2025 at 04:04:32PM +0200, Jann Horn wrote:
+> On Fri, May 2, 2025 at 2:42 PM Christian Brauner <brauner@kernel.org> wrote:
+> > diff --git a/fs/coredump.c b/fs/coredump.c
+> [...]
+> > @@ -801,6 +841,73 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+> >                 }
+> >                 break;
+> >         }
+> > +       case COREDUMP_SOCK: {
+> > +               struct file *file __free(fput) = NULL;
+> > +#ifdef CONFIG_UNIX
+> > +               ssize_t addr_size;
+> > +               struct sockaddr_un unix_addr = {
+> > +                       .sun_family = AF_UNIX,
+> > +               };
+> > +               struct sockaddr_storage *addr;
+> > +
+> > +               /*
+> > +                * TODO: We need to really support core_pipe_limit to
+> > +                * prevent the task from being reaped before userspace
+> > +                * had a chance to look at /proc/<pid>.
+> > +                *
+> > +                * I need help from the networking people (or maybe Oleg
+> > +                * also knows?) how to do this.
+> > +                *
+> > +                * IOW, we need to wait for the other side to shutdown
+> > +                * the socket/terminate the connection.
+> > +                *
+> > +                * We could just read but then userspace could sent us
+> > +                * SCM_RIGHTS and we just shouldn't need to deal with
+> > +                * any of that.
+> > +                */
 > 
-> * 4 GB LPDDR4 RAM
-> * x2 Gigabit Ethernet expansion connectors
-> * x4 3.5mm TRS Audio Jack Line In
-> * x4 3.5mm TRS Audio Jack Line Out
-> * x2 Audio expansion connectors
-> * x1 Type-A USB 2.0, x1 Type-C dual-role device (DRD) USB 2.0
-> * x1 UHS-1 capable µSD card slot
-> * 32 GB eMMC Flash
-> * 512 Mb OSPI NOR flash
-> * x4 UARTs via USB 2.0-B
-> * XDS110 for onboard JTAG debug using USB
-> * Temperature sensors, user push buttons and LEDs
-> 
-> Add basic support for AM62D2-EVM.
-> 
-> Schematics Link - https://www.ti.com/lit/zip/sprcal5
-> 
-> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
-> ---
->  arch/arm64/boot/dts/ti/Makefile          |   3 +
->  arch/arm64/boot/dts/ti/k3-am62d2-evm.dts | 445 +++++++++++++++++++++++
->  2 files changed, 448 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> 
-> diff --git a/arch/arm64/boot/dts/ti/Makefile b/arch/arm64/boot/dts/ti/Makefile
-> index a48e7608de8b..1971f30879c9 100644
-> --- a/arch/arm64/boot/dts/ti/Makefile
-> +++ b/arch/arm64/boot/dts/ti/Makefile
-> @@ -33,6 +33,9 @@ dtb-$(CONFIG_ARCH_K3) += k3-am62-pocketbeagle2.dtb
->  dtb-$(CONFIG_ARCH_K3) += k3-am62a7-sk.dtb
->  dtb-$(CONFIG_ARCH_K3) += k3-am62a7-phyboard-lyra-rdk.dtb
->  
-> +# Boards with AM62Dx SoC
-> +dtb-$(CONFIG_ARCH_K3) += k3-am62d2-evm.dtb
-> +
->  # Boards with AM62Px SoC
->  dtb-$(CONFIG_ARCH_K3) += k3-am62p5-sk.dtb
->  
-> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> new file mode 100644
-> index 000000000000..03c13b065143
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
-> @@ -0,0 +1,445 @@
-> +// SPDX-License-Identifier: GPL-2.0-only OR MIT
-> +/*
-> + * AM62D2 EVM: https://www.ti.com/lit/zip/sprcal5
-> + *
-> + * Copyright (C) 2025 Texas Instruments Incorporated - https://www.ti.com/
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/leds/common.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/net/ti-dp83867.h>
-> +#include "k3-am62a7.dtsi"
-> +
-> +/ {
-> +	compatible = "ti,am62d2-evm", "ti,am62d2";
-> +	model = "Texas Instruments AM62D2 EVM";
-> +
-> +	aliases {
-> +		serial0 = &wkup_uart0;
-> +		serial1 = &mcu_uart0;
-> +		serial2 = &main_uart0;
-> +		mmc1 = &sdhci1;
-> +		rtc0 = &wkup_rtc0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial2:115200n8";
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		/* 4G RAM */
-> +		reg = <0x00000000 0x80000000 0x00000000 0x80000000>,
-> +		      <0x00000008 0x80000000 0x00000000 0x80000000>;
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* global cma region */
-> +		linux,cma {
-> +			compatible = "shared-dma-pool";
-> +			reusable;
-> +			size = <0x00 0x2000000>;
-> +			alloc-ranges = <0x00 0xc0000000 0x00 0x2000000>;
-> +			linux,cma-default;
-> +		};
-> +
-> +		c7x_0_dma_memory_region: c7x-dma-memory@99800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x99800000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		c7x_0_memory_region: c7x-memory@99900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x99900000 0x00 0xf00000>;
-> +			no-map;
-> +		};
-> +
-> +		mcu_r5fss0_core0_dma_memory_region: r5f-dma-memory@9b800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9b800000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		mcu_r5fss0_core0_memory_region: r5f-dma-memory@9b900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9b900000 0x00 0xf00000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_dma_memory_region: r5f-dma-memory@9c800000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9c800000 0x00 0x100000>;
-> +			no-map;
-> +		};
-> +
-> +		wkup_r5fss0_core0_memory_region: r5f-dma-memory@9c900000 {
-> +			compatible = "shared-dma-pool";
-> +			reg = <0x00 0x9c900000 0x00 0xf00000>;
-> +			no-map;
-> +		};
-> +
-> +		secure_tfa_ddr: tfa@9e780000 {
-> +			reg = <0x00 0x9e780000 0x00 0x80000>;
+> I don't think userspace can send you SCM_RIGHTS if you don't do a
+> recvmsg() with a control data buffer?
 
-I don't think this is where TF-A actually is.
+Oh hm, then maybe just a regular read at the end would work. As soon as
+userspace send us anything or we get a close event we just disconnect.
 
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
-> +
-> +		secure_ddr: optee@9e800000 {
-> +			reg = <0x00 0x9e800000 0x00 0x01800000>; /* for OP-TEE */
-> +			alignment = <0x1000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	opp-table {
-> +		/* Requires VDD_CORE at 0v85 */
-> +		opp-1400000000 {
-> +			opp-hz = /bits/ 64 <1400000000>;
-> +			opp-supported-hw = <0x01 0x0004>;
-> +			clock-latency-ns = <6000000>;
-> +		};
-> +	};
-> +
-> +	vout_pd: regulator-1 {
-> +		/* TPS65988 PD CONTROLLER OUTPUT */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vout_pd";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vmain_pd: load-switch {
-> +		/* Output of TPS22811 */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vmain_pd";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vout_pd>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vcc_5v0: regulator-2 {
-> +		/* Output of TPS630702RNMR */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_5v0";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		vin-supply = <&vmain_pd>;
-> +		regulator-always-on;
-> +		regulator-boot-on;
-> +	};
-> +
-> +	vdd_mmc1: regulator-3 {
-> +		/* TPS22918DBVR */
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vdd_mmc1";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		enable-active-high;
-> +		gpio = <&exp1 3 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
-> +	vddshv_sdio: regulator-4 {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "vddshv_sdio";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&vddshv_sdio_pins_default>;
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		gpios = <&main_gpio1 31 GPIO_ACTIVE_HIGH>;
-> +		states = <1800000 0x0>,
-> +			 <3300000 0x1>;
-> +	};
-> +};
-> +
-> +&mcu_pmx0 {
-> +	wkup_uart0_pins_default: wkup-uart0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_MCU_IOPAD(0x0024, PIN_INPUT, 0) /* (C9) WKUP_UART0_RXD */
-> +			AM62DX_MCU_IOPAD(0x0028, PIN_OUTPUT, 0) /* (E9) WKUP_UART0_TXD */
-> +			AM62DX_MCU_IOPAD(0x002c, PIN_INPUT, 0) /* (C10) WKUP_UART0_CTSn */
-> +			AM62DX_MCU_IOPAD(0x0030, PIN_OUTPUT, 0) /* (C8) WKUP_UART0_RTSn */
-> +		>;
-> +	};
-> +};
-> +
-> +/* WKUP UART0 is used for DM firmware logs */
-> +&wkup_uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&wkup_uart0_pins_default>;
-> +	status = "reserved";
-> +};
-> +
-> +&main_pmx0 {
-> +	main_uart0_pins_default: main-uart0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x01c8, PIN_INPUT, 0) /* (E14) UART0_RXD */
-> +			AM62DX_IOPAD(0x01cc, PIN_OUTPUT, 0) /* (D15) UART0_TXD */
-> +		>;
-> +	};
-> +
-> +	main_i2c0_pins_default: main-i2c0-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x01e0, PIN_INPUT_PULLUP, 0) /* (D17) I2C0_SCL */
-> +			AM62DX_IOPAD(0x01e4, PIN_INPUT_PULLUP, 0) /* (E16) I2C0_SDA */
-> +		>;
-> +	};
-> +
-> +	main_i2c1_pins_default: main-i2c1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x01e8, PIN_INPUT_PULLUP, 0) /* (C17) I2C1_SCL */
-> +			AM62DX_IOPAD(0x01ec, PIN_INPUT_PULLUP, 0) /* (E17) I2C1_SDA */
-> +		>;
-> +	};
-> +
-> +	main_i2c2_pins_default: main-i2c2-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x00b0, PIN_INPUT_PULLUP, 1) /* (M22) GPMC0_CSn2.I2C2_SCL */
-> +			AM62DX_IOPAD(0x00b4, PIN_INPUT_PULLUP, 1) /* (M20) GPMC0_CSn3.I2C2_SDA */
-> +		>;
-> +	};
-> +
-> +	main_mmc1_pins_default: main-mmc1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x023c, PIN_INPUT, 0) /* (C21) MMC1_CMD */
-> +			AM62DX_IOPAD(0x0234, PIN_OUTPUT, 0) /* (E22) MMC1_CLK */
-> +			AM62DX_IOPAD(0x0230, PIN_INPUT, 0) /* (B22) MMC1_DAT0 */
-> +			AM62DX_IOPAD(0x022c, PIN_INPUT_PULLUP, 0) /* (D21) MMC1_DAT1 */
-> +			AM62DX_IOPAD(0x0228, PIN_INPUT_PULLUP, 0) /* (C22) MMC1_DAT2 */
-> +			AM62DX_IOPAD(0x0224, PIN_INPUT_PULLUP, 0) /* (D22) MMC1_DAT3 */
-> +			AM62DX_IOPAD(0x0240, PIN_INPUT, 0) /* (E18) MMC1_SDCD */
-> +			AM62DX_IOPAD(0x0244, PIN_INPUT, 0) /* (D18) MMC1_SDWP */
-> +		>;
-> +	};
-> +
-> +	main_mdio1_pins_default: main-mdio1-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x160, PIN_OUTPUT, 0) /* (V12) MDIO0_MDC */
-> +			AM62DX_IOPAD(0x15c, PIN_INPUT, 0) /* (V13) MDIO0_MDIO */
-> +		>;
-> +	};
-> +
-> +	main_gpio1_ioexp_intr_pins_default: main-gpio1-ioexp-intr-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x01d4, PIN_INPUT, 7) /* (C15) UART0_RTSn.GPIO1_23 */
-> +		>;
-> +	};
-> +
-> +	vddshv_sdio_pins_default: vddshv-sdio-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_IOPAD(0x1F4, PIN_OUTPUT, 7) /* (M19) GPMC0_CLK.GPIO1_31 */
-> +		>;
-> +	};
-> +};
-> +
-> +&mcu_pmx0 {
-> +	status = "okay";
-> +
-> +	pmic_irq_pins_default: pmic-irq-default-pins {
-> +		pinctrl-single,pins = <
-> +			AM62DX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (E11) MCU_GPIO0_0 */
-> +		>;
-> +	};
-> +};
-> +
-> +&mcu_gpio0 {
-> +	status = "okay";
-> +};
-> +
-> +&main_i2c0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c0_pins_default>;
-> +	clock-frequency = <400000>;
-> +
-> +	typec_pd0: usb-power-controller@3f {
-> +		compatible = "ti,tps6598x";
-> +		reg = <0x3f>;
-> +
-> +		connector {
-> +			compatible = "usb-c-connector";
-> +			label = "USB-C";
-> +			self-powered;
-> +			data-role = "dual";
-> +			power-role = "sink";
-> +			port {
-> +				usb_con_hs: endpoint {
-> +					remote-endpoint = <&usb0_hs_ep>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	exp1: gpio@22 {
-> +		compatible = "ti,tca6424";
-> +		reg = <0x22>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		interrupt-parent = <&main_gpio1>;
-> +		interrupts = <23 IRQ_TYPE_EDGE_FALLING>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&main_gpio1_ioexp_intr_pins_default>;
-> +
-> +		gpio-line-names = "GPIO_CPSW2_RST", "GPIO_CPSW1_RST",
-> +			"MMC1_SD_EN", "VPP_EN",
-> +			"GPIO_DIX_RST", "IO_EXP_OPT_EN",
-> +			"DIX_INT", "GPIO_eMMC_RSTn",
-> +			"CPLD2_DONE", "CPLD2_INTN",
-> +			"CPLD1_DONE", "CPLD1_INTN",
-> +			"USB_TYPEA_OC_INDICATION", "PCM1_INT",
-> +			"PCM2_INT", "GPIO_PCM1_RST",
-> +			"TEST_GPIO2", "GPIO_PCM2_RST",
-> +			"IO_MCAN0_STB", "IO_MCAN1_STB",
-> +			"PD_I2C_IRQ", "IO_EXP_TEST_LED";
-> +	};
-> +
-> +	exp2: gpio@23 {
-> +		compatible = "ti,tca6424";
-> +		reg = <0x23>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +
-> +		gpio-line-names = "", "DAC_LAT_CTRL",
-> +			"CPLD1_JTAGENB", "CPLD1_PROGRAMN",
-> +			"CPLD2_JTAGENB", "CPLD2_PROGRAMN",
-> +			"", "",
-> +			"", "",
-> +			"", "",
-> +			"", "",
-> +			"", "",
-> +			"", "",
-> +			"SoC_I2C0_SCL", "SoC_I2C0_SDA";
-> +	};
-> +};
-> +
-> +&main_i2c1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c1_pins_default>;
-> +	clock-frequency = <100000>;
-> +	bootph-all;
+But btw, I think we really need a recvmsg() flag that allows a receiver
+to refuse SCM_RIGHTS/file descriptors from being sent to it. IIRC, right
+now this is a real issue that systemd works around by always calling its
+cmsg_close_all() helper after each recvmsg() to ensure that no one sent
+it file descriptors it didn't want. The problem there is that someone
+could have sent it an fd to a hanging NFS server or something and then
+it would hang in close() even though it never even wanted any file
+descriptors in the first place.
 
-I'm not seeing other any other boot phase flags? What are you using to 
-boot this board?
-
-~Bryan
-
-> +};
-> +
-> +&main_i2c2 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_i2c2_pins_default>;
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&sdhci1 {
-> +	/* SD/MMC */
-> +	status = "okay";
-> +	vmmc-supply = <&vdd_mmc1>;
-> +	vqmmc-supply = <&vddshv_sdio>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_mmc1_pins_default>;
-> +	disable-wp;
-> +};
-> +
-> +&main_gpio0 {
-> +	status = "okay";
-> +};
-> +
-> +&main_gpio1 {
-> +	status = "okay";
-> +};
-> +
-> +&main_gpio_intr {
-> +	status = "okay";
-> +};
-> +
-> +&main_uart0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&main_uart0_pins_default>;
-> +};
-> +
-> +&usb0 {
-> +	usb-role-switch;
-> +
-> +	port {
-> +		usb0_hs_ep: endpoint {
-> +			remote-endpoint = <&usb_con_hs>;
-> +		};
-> +	};
-> +};
-> +
-> +&mailbox0_cluster0 {
-> +	status = "okay";
-> +
-> +	mbox_r5_0: mbox-r5-0 {
-> +		ti,mbox-rx = <0 0 0>;
-> +		ti,mbox-tx = <1 0 0>;
-> +	};
-> +};
-> +
-> +&mailbox0_cluster1 {
-> +	status = "okay";
-> +
-> +	mbox_c7x_0: mbox-c7x-0 {
-> +		ti,mbox-rx = <0 0 0>;
-> +		ti,mbox-tx = <1 0 0>;
-> +	};
-> +};
-> +
-> +&mailbox0_cluster2 {
-> +	status = "okay";
-> +
-> +	mbox_mcu_r5_0: mbox-mcu-r5-0 {
-> +		ti,mbox-rx = <0 0 0>;
-> +		ti,mbox-tx = <1 0 0>;
-> +	};
-> +};
-> +
-> +&wkup_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&wkup_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster0>, <&mbox_r5_0>;
-> +	memory-region = <&wkup_r5fss0_core0_dma_memory_region>,
-> +			<&wkup_r5fss0_core0_memory_region>;
-> +};
-> +
-> +&mcu_r5fss0 {
-> +	status = "okay";
-> +};
-> +
-> +&mcu_r5fss0_core0 {
-> +	mboxes = <&mailbox0_cluster2>, <&mbox_mcu_r5_0>;
-> +	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
-> +			<&mcu_r5fss0_core0_memory_region>;
-> +};
-> +
-> +&c7x_0 {
-> +	status = "okay";
-> +
-> +	mboxes = <&mailbox0_cluster1>, <&mbox_c7x_0>;
-> +	memory-region = <&c7x_0_dma_memory_region>,
-> +			<&c7x_0_memory_region>;
-> +};
-> +
-> +/* main_rti4 is used by C7x DSP */
-> +&main_rti4 {
-> +	status = "reserved";
-> +};
-> +
-> +/* main_timer2 is used by C7x DSP */
-> +&main_timer2 {
-> +	status = "reserved";
-> +};
-> -- 
-> 2.34.1
 > 
+> > +               if (WARN_ON_ONCE(core_pipe_limit)) {
+> > +                       retval = -EINVAL;
+> > +                       goto close_fail;
+> > +               }
+> > +
+> > +               retval = strscpy(unix_addr.sun_path, cn.corename, sizeof(unix_addr.sun_path));
+> > +               if (retval < 0)
+> > +                       goto close_fail;
+> > +               addr_size = offsetof(struct sockaddr_un, sun_path) + retval + 1,
+> > +
+> > +               file = __sys_socket_file(AF_UNIX, SOCK_STREAM, 0);
+> > +               if (IS_ERR(file))
+> > +                       goto close_fail;
+> > +
+> > +               /*
+> > +                * It is possible that the userspace process which is
+> > +                * supposed to handle the coredump and is listening on
+> > +                * the AF_UNIX socket coredumps. This should be fine
+> > +                * though. If this was the only process which was
+> > +                * listen()ing on the AF_UNIX socket for coredumps it
+> > +                * obviously won't be listen()ing anymore by the time it
+> > +                * gets here. So the __sys_connect_file() call will
+> > +                * often fail with ECONNREFUSED and the coredump.
+> 
+> Why will the server not be listening anymore? Have the task's file
+> descriptors already been closed by the time we get here?
+
+No, the file descriptors are still open.
+
+> 
+> (Maybe just get rid of this comment, I agree with the following
+> comment saying we should let userspace deal with this.)
+
+Good idea.
+
+> 
+> > +                * In general though, userspace should just mark itself
+> > +                * non dumpable and not do any of this nonsense. We
+> > +                * shouldn't work around this.
+> > +                */
+> > +               addr = (struct sockaddr_storage *)(&unix_addr);
+> > +               retval = __sys_connect_file(file, addr, addr_size, O_CLOEXEC);
+> 
+> Have you made an intentional decision on whether you want to connect
+> to a unix domain socket with a path relative to current->fs->root (so
+> that containers can do their own core dump handling) or relative to
+> the root namespace root (so that core dumps always reach the init
+> namespace's core dumping even if a process sandboxes itself with
+> namespaces or such)? Also, I think this connection attempt will be
+
+Fsck no. :) I just jotted this down as an RFC. Details below.
+
+> subject to restrictions imposed by (for example) Landlock or AppArmor,
+> I'm not sure if that is desired here (since this is not actually a
+> connection that the process in whose context the call happens decided
+> to make, it's something the system administrator decided to do, and
+> especially with Landlock, policies are controlled by individual
+> applications that may not know how core dumps work on the system).
+> 
+> I guess if we keep the current behavior where the socket path is
+> namespaced, then we also need to keep the security checks, since an
+> unprivileged user could probably set up a namespace and chroot() to a
+> place where the socket path (indirectly, through a symlink) refers to
+> an arbitrary socket...
+> 
+> An alternative design might be to directly register the server socket
+> on the userns/mountns/netns or such in some magic way, and then have
+> the core dumping walk up the namespace hierarchy until it finds a
+> namespace that has opted in to using its own core dumping socket, and
+> connect to that socket bypassing security checks. (A bit like how
+> namespaced binfmt_misc works.) Like, maybe userspace with namespaced
+
+Yeah, I namespaced that thing. :)
+
+> CAP_SYS_ADMIN could bind() to some magic UNIX socket address, or use
+> some new setsockopt() on the socket or such, to become the handler of
+> core dumps? This would also have the advantage that malicious
+> userspace wouldn't be able to send fake bogus core dumps to the
+> server, and the server would provide clear consent to being connected
+> to without security checks at connection time.
+
+I think that's policy that I absolute don't want the kernel to get
+involved in unless absolutely necessary. A few days ago I just discussed
+this at length with Lennart and the issue is that systemd would want to
+see all coredumps on the system independent of the namespace they're
+created in. To have a per-namespace (userns/mountns/netns) coredump
+socket would invalidate that one way or the other and end up hiding
+coredumps from the administrator unless there's some elaborate scheme
+where it doesn't.
+
+systemd-coredump (and Apport fwiw) has infrastructure to forward
+coredumps to individual services and containers and it's already based
+on AF_UNIX afaict. And I really like that it's the job of userspace to
+deal with this instead of the kernel having to get involved in that
+mess.
+
+So all of this should be relative to the initial namespace. I want a
+separate security hook though so an LSMs can be used to prevent
+processes from connecting to the coredump socket.
+
+My idea has been that systemd-coredump could use a bpf lsm program that
+would allow to abort a coredump before the crashing process connects to
+the socket and again make this a userspace policy issue.
+
+> 
+> > +               if (retval)
+> > +                       goto close_fail;
+> > +
+> > +               /* The peer isn't supposed to write and we for sure won't read. */
+> > +               retval =  __sys_shutdown_sock(sock_from_file(file), SHUT_RD);
+> > +               if (retval)
+> > +                       goto close_fail;
+> > +
+> > +               cprm.limit = RLIM_INFINITY;
+> > +#endif
+> > +               cprm.file = no_free_ptr(file);
+> > +               break;
+> > +       }
+> >         default:
+> >                 WARN_ON_ONCE(true);
+> >                 retval = -EINVAL;
+> > @@ -818,7 +925,10 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+> >                  * have this set to NULL.
+> >                  */
+> >                 if (!cprm.file) {
+> > -                       coredump_report_failure("Core dump to |%s disabled", cn.corename);
+> > +                       if (cn.core_type == COREDUMP_PIPE)
+> > +                               coredump_report_failure("Core dump to |%s disabled", cn.corename);
+> > +                       else
+> > +                               coredump_report_failure("Core dump to :%s disabled", cn.corename);
+> >                         goto close_fail;
+> >                 }
+> >                 if (!dump_vma_snapshot(&cprm))
+> > @@ -839,8 +949,25 @@ void do_coredump(const kernel_siginfo_t *siginfo)
+> >                 file_end_write(cprm.file);
+> >                 free_vma_snapshot(&cprm);
+> >         }
+> > -       if ((cn.core_type == COREDUMP_PIPE) && core_pipe_limit)
+> > -               wait_for_dump_helpers(cprm.file);
+> > +
+> > +       if (core_pipe_limit) {
+> > +               switch (cn.core_type) {
+> > +               case COREDUMP_PIPE:
+> > +                       wait_for_dump_helpers(cprm.file);
+> > +                       break;
+> > +               case COREDUMP_SOCK: {
+> > +                       /*
+> > +                        * TODO: Wait for the coredump handler to shut
+> > +                        * down the socket so we prevent the task from
+> > +                        * being reaped.
+> > +                        */
+> 
+> Hmm, I'm no expert but maybe you could poll for the POLLRDHUP event...
+> though that might require writing your own helper with a loop that
+> does vfs_poll() and waits for a poll wakeup, since I don't think there
+> is a kernel helper analogous to a synchronous poll() syscall yet.
+> 
+> > +                       break;
+> > +               }
+> > +               default:
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> >  close_fail:
+> >         if (cprm.file)
+> >                 filp_close(cprm.file, NULL);
