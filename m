@@ -1,115 +1,138 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+Received: from fout-a3-smtp.messagingengine.com (fout-a3-smtp.messagingengine.com [103.168.172.146])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EA221FF20;
-	Fri,  2 May 2025 06:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267E41B4231;
+	Fri,  2 May 2025 06:20:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.146
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746166767; cv=none; b=VN6bkV0Fh4LvE8NtDhSk4abKPnmcTYqOwLfeN11ReLG7jrN1iHpBD9DwMJcz/2WaUG3+RhbVtje64rskNq3b0FXOjFkrMsP9k6dffcGJhTZVlCka+LoQJisvQwWG2SZ+6uG6bssQNX7pT00u3wwz6OavJhQITL1csGjcOr/LYbc=
+	t=1746166838; cv=none; b=EGY2JdjUNJxdKU0cEAYTvGQVRPUTbNr3UwHX9TdPGwnZgQ0H5MGs2gJFmjeJ/ugOGV0ZOfqmBRy63Ej+5JVMsNmFcWSzncjAeN5naLjZkjGIr2EMgNLwFwt/XLl0nrKvjDFwUV/hyVNB1iOZRbD4PEcaT2SX5uhOpKsqYsBcLO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746166767; c=relaxed/simple;
-	bh=Nznyg0LG5io9vLtmVMBR4II8Mn63VTmHrHvN2HbmD/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=sHRJGOkqnAtYsnqXnSrMD0FUlTWSpAXhUyvipR9EpizHrCg0Yv2gUQUoQYUJAEOQiTktxO8Ziv0PrzglNkvj15C/+LXi7Bn49BYlgwLi+zACKP1YI6TB4Mmatb7SAN9s1l9kd7PxBMwOhhiWM2sscbH876hK/pJmHQgz+iQT3is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=oPDN5om4; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1746166838; c=relaxed/simple;
+	bh=WvuPt5RdAVARTfYOxm0Wmhk/DhsvsRamVJN5qy5+S9s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tPyYAlgPLEKN7tE64os4/bHTtyvOHW1p/2Isb62NlWhNH9hbtD7KzvoBP0xQAqUcfBKeDsa3NdWunS6X2ks2ihfYJRBM0fFp8NserAuPnohPtCFWR2uaQrIOfwykSA0gSETOXmsq4QMm/rr7fNdriU+PFVtKyaiMyYYQsLSRj04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=FXdPTY1L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ujPcTrex; arc=none smtp.client-ip=103.168.172.146
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oPDN5om4"
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 5426IsIj346797
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 2 May 2025 01:18:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1746166734;
-	bh=K0RNhMfK3sIBzFbukwC318fh71Ziu5vXXAkpvIWDZxI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=oPDN5om4VdiNS9FHLM0mQHoXcY1TMVEPLCYYtP4ccAerBHC7wM0LQ3pbfQCwJvMpj
-	 1+/FoT5lVgrky8w2nFwSuTeougZmyvZXCLlMgtsoLneMQ66CpZtqHk0rIh/DnP62Of
-	 Utwy567detCy+Xg2uBg5MFrj9tBqiUd4CYxcQ4fA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 5426IsJO022218
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 2 May 2025 01:18:54 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 2
- May 2025 01:18:53 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 2 May 2025 01:18:53 -0500
-Received: from [172.24.30.16] (lt9560gk3.dhcp.ti.com [172.24.30.16])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 5426IlMR072250;
-	Fri, 2 May 2025 01:18:48 -0500
-Message-ID: <64396b06-5ea7-4da9-b854-b3d42f2b9bde@ti.com>
-Date: Fri, 2 May 2025 11:48:47 +0530
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="FXdPTY1L";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ujPcTrex"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfout.phl.internal (Postfix) with ESMTP id EB32013801CD;
+	Fri,  2 May 2025 02:20:34 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-11.internal (MEProxy); Fri, 02 May 2025 02:20:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm3; t=1746166834; x=1746253234; bh=EGToxZctGt
+	PORdHrRC19/O8b5uQYvPDPBokXEfm3l4I=; b=FXdPTY1LnJNC0YYiru4tx3rOaB
+	gB5Z6A8FuaNaHQDmFj7acOL/AkjNB42eCJXw+haeu5vj5zPFOGgG+bk7gd3di4wh
+	/mVoQvyEYwHS7knJFU8058Zy9yCD2MqCMEPQXN47yMaZsVTXP4Tb4dVPMPat1GWE
+	+dsoh4H0Y2TgX1ELiBoc3CjomieV8dKnCrin8oW41t0I6jquyapja76t/9TY8ywp
+	D9g8Ie3IQYC11PpKetPcZWatq+FjqIjqo2yvmdc8n9Sgjfjg1af1Q0C3m6N+S9p/
+	amyiVU7gylSd8Kh5Kz4Xq6dCYCiemGgvhUeFcweVDyOCTzBjscQkH5nPbg1g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
+	1746166834; x=1746253234; bh=EGToxZctGtPORdHrRC19/O8b5uQYvPDPBok
+	XEfm3l4I=; b=ujPcTrex5pB9ZNmn9vUoBY2uPyfhxXSFWG4D6Nkm7kt7LqHpQLz
+	U1YjzdGrtLqgC5VjJ/bv4J0SqVd/2vlDWRmV3qKA9ceKgHIZd2xeyI0NluFsp5S8
+	yfrlMXCgfdNP6uuv5XKxyQypRrHLehKApy3YMamCv51nI+Du0RIhtOdAWvIZZr18
+	XB4UOfuuCOvtQ7zgEXj7o2NdeRoeIVkVXrazgUR4nV4z6pukLQcXdF9EgK4S/k9Q
+	cJlOiTT9B9GLEfQbzgu3XNQsIYdZvYzPGXX6oAdAdvn4uh/tjniOcSZZz03Rsarq
+	Ge3gSJi77Lc8Wyvmv37KG5Nxk+8QwbUPtzw==
+X-ME-Sender: <xms:MmQUaO_vtCo5kC7AtOCWSZ3jGMgK28GPRXn7gdg_4UTVKZDMpLmC6w>
+    <xme:MmQUaOv-5HiRdwjgZO97-iNM9TXAiR9XoufLsivjIWTaZ73IrYMDoUMFoNgEUhQYK
+    NB0Nqdj46ZWfg>
+X-ME-Received: <xmr:MmQUaEAEjPjxlL6QJ0MtsQBC19u5vhya4g8oqzuX9P_2Sqw2jOVHyR6qErC2kqAD2kRKr6M6ehlBaAT5ifApHLmeKdfh1EQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddvjedujeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepifhrvghgucfmjfcuoehgrhgvgheskhhrohgrhhdrtghomheqnecugg
+    ftrfgrthhtvghrnhepheegvdevvdeljeeugfdtudduhfekledtiefhveejkeejuefhtdeu
+    fefhgfehkeetnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrh
+    homhepghhrvghgsehkrhhorghhrdgtohhmpdhnsggprhgtphhtthhopeduvddpmhhouggv
+    pehsmhhtphhouhhtpdhrtghpthhtohepshhfrhestggrnhgsrdgruhhughdrohhrghdrrg
+    hupdhrtghpthhtohepshhrvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhu
+    gidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinh
+    hugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhhithhl
+    thhlrghtlhhtlhesghhmrghilhdrtghomhdprhgtphhtthhopehsvggsrghsthhirghnrd
+    hrvghitghhvghlsegtohhllhgrsghorhgrrdgtohhm
+X-ME-Proxy: <xmx:MmQUaGe7Uk-U6UOPZIvbpBDOmcmcDAr26VcaoJJZ6gp7qB1ZwQv4EA>
+    <xmx:MmQUaDMZ0GtcDOumI1zvi_7jB8C1rZgCDDzSUnf4eXvcvjMpyMcepA>
+    <xmx:MmQUaAkpKdTJ9RZZJuaw0BswtweKhBzn7LXBrtlkvMXEprVG36E5lw>
+    <xmx:MmQUaFsgTmXFOeCKh7no1Oh1asfmCt6FyVj9sIDhPgAP3G4pXSJL_w>
+    <xmx:MmQUaG5w1N0XBj3B22eu0Hl-E68nxCwV_lIrBBH40EtoqH-YRaty-Oz7>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 2 May 2025 02:20:34 -0400 (EDT)
+Date: Fri, 2 May 2025 08:20:28 +0200
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Sebastian Reichel <sre@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Pengyu Luo <mitltlatltl@gmail.com>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: linux-next: manual merge of the usb tree with the battery tree
+Message-ID: <2025050219-whoopee-duplicity-f859@gregkh>
+References: <20250501161515.21916747@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/4] net: ti: icssg-prueth: Report BQL before sending
- XDP packets
-To: Jakub Kicinski <kuba@kernel.org>
-CC: <dan.carpenter@linaro.org>, <john.fastabend@gmail.com>, <hawk@kernel.org>,
-        <daniel@iogearbox.net>, <ast@kernel.org>, <pabeni@redhat.com>,
-        <edumazet@google.com>, <davem@davemloft.net>, <andrew+netdev@lunn.ch>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <srk@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        Roger Quadros
-	<rogerq@kernel.org>, <danishanwar@ti.com>
-References: <20250428120459.244525-1-m-malladi@ti.com>
- <20250428120459.244525-3-m-malladi@ti.com>
- <20250501075357.37f2dc4f@kernel.org>
-Content-Language: en-US
-From: "Malladi, Meghana" <m-malladi@ti.com>
-In-Reply-To: <20250501075357.37f2dc4f@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250501161515.21916747@canb.auug.org.au>
 
-Hi Jakub,
-
-On 5/1/2025 8:23 PM, Jakub Kicinski wrote:
-> On Mon, 28 Apr 2025 17:34:57 +0530 Meghana Malladi wrote:
->> When sending out any kind of traffic, it is essential that the driver
->> keeps reporting BQL of the number of bytes that have been sent so that
->> BQL can track the amount of data in the queue and prevents it from
->> overflowing. If BQL is not reported, the driver may continue sending
->> packets even when the queue is full, leading to packet loss, congestion
->> and decreased network performance. Currently this is missing in
->> emac_xmit_xdp_frame() and this patch fixes it.
+On Thu, May 01, 2025 at 04:15:15PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> The ordering of patches in the series is a bit off.
-> The order should be something like:
+> Today's linux-next merge of the usb tree got a conflict in:
 > 
->    net: ti: icssg-prueth: Set XDP feature flags for ndev
->    net: ti: icssg-prueth: Fix kernel panic during concurrent Tx queue ...
->    net: ti: icssg-prueth: Fix race condition for traffic from different ...
->    net: ti: icssg-prueth: Report BQL before sending XDP packets
+>   MAINTAINERS
 > 
-> This patch is not correct without the extra locking in place.
+> between commit:
+> 
+>   cfe769670e82 ("power: supply: add Huawei Matebook E Go psy driver")
+> 
+> from the battery tree and commit:
+> 
+>   00327d7f2c8c ("usb: typec: ucsi: add Huawei Matebook E Go ucsi driver")
+> 
+> from the usb tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc MAINTAINERS
+> index f7a8c23d211c,91279eaec446..000000000000
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@@ -10998,7 -10967,7 +10998,8 @@@ M:	Pengyu Luo <mitltlatltl@gmail.com
+>   S:	Maintained
+>   F:	Documentation/devicetree/bindings/platform/huawei,gaokun-ec.yaml
+>   F:	drivers/platform/arm64/huawei-gaokun-ec.c
+>  +F:	drivers/power/supply/huawei-gaokun-battery.c
+> + F:	drivers/usb/typec/ucsi/ucsi_huawei_gaokun.c
+>   F:	include/linux/platform_data/huawei-gaokun-ec.h
+>   
+>   HUGETLB SUBSYSTEM
 
-Actually the order of bug fixes which I posted, is the order in which I 
-fixed the bugs, while running xdp-trafficgen:
-1. ndo_xdp_xmit() wasn't getting called because of missing XDP feature 
-flags check.
-2. kernel crash: kernel BUG at lib/dynamic_queue_limits.c:99! and was 
-fixed by reporting BQL for packet transmission.My bad, I forgot  to add 
-this in the commit message.
-3. kernel crash: kernel BUG at lib/genalloc.c:508! due to memory 
-corruption in DMA descriptors and fixed it with spinlock
-4. kernel crash: kernel BUG at lib/dynamic_queue_limits.c:99! due to 
-race condition in netif_txq and fixed it with __netif_tx_lock()
+Looks good to me, thanks!
 
-But yeah I think the order you suggested makes more sense. Let me try 
-that and post v2.
-
--- 
-Thanks,
-Meghana Malladi
-
+greg k-h
