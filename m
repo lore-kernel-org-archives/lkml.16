@@ -1,44 +1,44 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD2D7245031;
-	Fri,  2 May 2025 11:04:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D757D253F19;
+	Fri,  2 May 2025 11:04:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746183864; cv=pass; b=LLahpxn18kdSRV5LFNs2//haP8lIzJCAk10fpohJUm+cUEGRUaGH+OdGB6eb/5hbKMv46TJg61bR63Q6mZ52M2nymZT3hDizzOKzvNyEDos6838OmKqHRIepd5qPTPGL5yJ9Q21+f2RD3/TJgvSUJPTzRBXgkvKzthqv4yp3l4Q=
+	t=1746183868; cv=pass; b=tUXVsft6ZRcDoEPhcnijvORzusGQSWJK4+B3tadfkL+4SnY0tqzyAC+OOBcPBcKolcNziRWFdIJdH2Se2erZtE9ODmaoTvToXtlwDKR7/EbpzWC5xLUzS+UM3cV7uLOiffE1xeQVgBRuQhHb57MX+A3AR0SUHYVCVxchp2Ws2xc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746183864; c=relaxed/simple;
-	bh=tvDO/MHdKYxRqnKFi9aSnhppSJ3I2V07vjjtoqmd4vM=;
+	s=arc-20240116; t=1746183868; c=relaxed/simple;
+	bh=G5r+8wSTeKXYh5sogPC17TVylYXUxT/jT/+f1KJr0NE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hsLpFUNlFR4t8V1rAGwTNkzRNYHJaipsnsEilhpkEK6DocJ9NYVmOqmg8SPs2Km/MhNDFq9uCYZcDLbWPmptgir6c7c3AmHwj8EPK1fI7zWwtXdYm7vO07/efbGSTcG9AnEnZ/t2bxY+RZ8PvFIfBUWxEblIR+4xFWN5DIhsbWU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=E4Y2QTv1; arc=pass smtp.client-ip=136.143.188.112
+	 In-Reply-To:To:Cc; b=N10AZx5NKglTSKF4Fc2fVvX8nEP2UlTm6NtixKCdA7uo7bM+zCjxHuuLunkovwd0MG0lTKjxu93XGZbwBTP6zj6/yIUHZVy+3qaM3/fIcA6+MgYOEJ6qQselz/77sv9CkSWCAyqmOp+r8z2ottzd+HEPGI1OIQuR0Kz4QLZY0VQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=ZnrHWtIo; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="E4Y2QTv1"
-ARC-Seal: i=1; a=rsa-sha256; t=1746183833; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="ZnrHWtIo"
+ARC-Seal: i=1; a=rsa-sha256; t=1746183839; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=ZcFVGoEOKZ6opSPiRm58lBwy31HbQCD7AArR7Py7RK4KmyDZ81Eg5bQxKHai4PJoD9U2c2FTUgNQXapsi0Ymoqzo46WvxlAgISKboR5bxphl4dxbw20Ei0pgwX9ktK7AOFBPiYlmnBimEKyNBQSPGAdKQedkv1TnQ0K3ZotIF7w=
+	b=IGDBiVr+XbI3WMm93tqKREzyyTsjqqgjNFWqoYIgTDiig1NYqOiVzgqVRQkiScCnTMWFdPLipvqAvVIA9kVKHS2n9QI9+qzks13DzdEbTvQh7sHx94B6oGU3/a0w+6oaOegA/PCi5lYA+c7AHIYHdItHa7htbCbcGadyeD+wViM=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746183833; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=KsJ0uu0+k5q97j0fojNsiTYMw+kcsIPUow5pYeDRNeA=; 
-	b=kNDhVEp72aLlVqsrQvzKOBRWP7q4GpO0ue6cT8+kWl/FaCwIPDgTWfyrLqDFw7hhCHuYjYqNLOfsI38bq4lEXcUDdyZk8Fm7fAZHI4Pl/YzoZ1leQSk37G7qU5uEnQitsxuGJt5zhHYZWJeyrGWIUraOybfl7X8r37MyGgx2+K0=
+	t=1746183839; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=aYTdTPo7gdfIod3VXco89+GzTJbHnShql4UCGhP3aKM=; 
+	b=QVugQTjc/saGp/cYW1Npm3DDUDI5wdjWVc9rTMssQOW2X80coJu4tksGkj/k/cVCrzr9Xhf0WKvqgWF2DfTLYo1LmOYe8+43viKvCrQPzECuGraPXYYIq7r33SXfGLlI+OyftJG5RC7yzqGKeWyLSZLxS/BXPU0a/xVenxVLAZs=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746183833;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746183839;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
 	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
-	bh=KsJ0uu0+k5q97j0fojNsiTYMw+kcsIPUow5pYeDRNeA=;
-	b=E4Y2QTv1+WRePRFi8E1hKzIUehShpcAAhtEGPNPAm+Ja6v+brMxfgOBGuIT/kdaI
-	qD6vC11jwDIRgIuS9liO5AM7dqrMVRIbsuoPdPM6c30FP72K1+W3lKjpBqRyPdNpnZJ
-	HisSr4IT1/fc//dSqJRXxTMgP85SIDkyZnZg3E5E=
-Received: by mx.zohomail.com with SMTPS id 1746183831926614.9332549402269;
-	Fri, 2 May 2025 04:03:51 -0700 (PDT)
+	bh=aYTdTPo7gdfIod3VXco89+GzTJbHnShql4UCGhP3aKM=;
+	b=ZnrHWtIol75xCy5ZulgNFrCG7HlQeZbeCiyb3iWQMGUHtKokaIjoocLZ8oUUIUu/
+	wfp3UjcGqfZPMqYZZ3HH9JtgpEy2lHHHKbKkSY//GuerR8qt8RMI6SUgGtbJ+r438TC
+	7FvYk5f15QwGW0X7eB/RWOm0IobMk6/JlLgVYZ2s=
+Received: by mx.zohomail.com with SMTPS id 1746183837415802.8243954889812;
+	Fri, 2 May 2025 04:03:57 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Date: Fri, 02 May 2025 13:03:11 +0200
-Subject: [PATCH v3 05/10] arm64: dts: rockchip: Add RK3576 SAI nodes
+Date: Fri, 02 May 2025 13:03:12 +0200
+Subject: [PATCH v3 06/10] arm64: dts: rockchip: Add RK3576 HDMI audio
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,7 +47,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250502-rk3576-sai-v3-5-376cef19dd7c@collabora.com>
+Message-Id: <20250502-rk3576-sai-v3-6-376cef19dd7c@collabora.com>
 References: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
 In-Reply-To: <20250502-rk3576-sai-v3-0-376cef19dd7c@collabora.com>
 To: Michael Turquette <mturquette@baylibre.com>, 
@@ -67,244 +67,51 @@ Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>,
  Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 X-Mailer: b4 0.14.2
 
-The RK3576 SoC has 10 SAI controllers in total. Five of them are in the
-video output power domains, and are used for digital audio output along
-with the video signal of those, e.g. HDMI audio.
+The RK3576 SoC now has upstream support for HDMI.
 
-The other five, SAI0 through SAI4, are exposed externally. SAI0 and SAI1
-are capable of 8-channel audio, whereas SAI2, SAI3 and SAI4 are limited
-to two channels. These five are in the audio power domain.
+Add an HDMI audio node, which uses SAI6 as its audio controller
+according to downstream.
 
 Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3576.dtsi | 200 +++++++++++++++++++++++++++++++
- 1 file changed, 200 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/rockchip/rk3576.dtsi b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-index ddc92ccc530d6757660971f0a609b5127784bb04..7bb906c3cb4e80691abf39d0e57888f79370bc75 100644
+index 7bb906c3cb4e80691abf39d0e57888f79370bc75..cb53561f55f3dfb913f40eaab7b0c8e090d23c31 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3576.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3576.dtsi
-@@ -1010,6 +1010,41 @@ vop_mmu: iommu@27d07e00 {
+@@ -413,6 +413,22 @@ scmi_clk: protocol@14 {
+ 		};
+ 	};
+ 
++	hdmi_sound: hdmi-sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "HDMI";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,mclk-fs = <256>;
++		status = "disabled";
++
++		simple-audio-card,codec {
++			sound-dai = <&hdmi>;
++		};
++
++		simple-audio-card,cpu {
++			sound-dai = <&sai6>;
++		};
++	};
++
+ 	pmu_a53: pmu-a53 {
+ 		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1069,6 +1085,7 @@ hdmi: hdmi@27da0000 {
+ 			reset-names = "ref", "hdp";
+ 			rockchip,grf = <&ioc_grf>;
+ 			rockchip,vo-grf = <&vo0_grf>;
++			#sound-dai-cells = <0>;
  			status = "disabled";
- 		};
  
-+		sai5: sai@27d40000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27d40000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI5_8CH>, <&cru HCLK_SAI5_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 3>;
-+			dma-names = "rx";
-+			power-domains = <&power RK3576_PD_VO0>;
-+			resets = <&cru SRST_M_SAI5_8CH>, <&cru SRST_H_SAI5_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-rx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI5";
-+			status = "disabled";
-+		};
-+
-+		sai6: sai@27d50000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27d50000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI6_8CH>, <&cru HCLK_SAI6_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 4>, <&dmac2 5>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_VO0>;
-+			resets = <&cru SRST_M_SAI6_8CH>, <&cru SRST_H_SAI6_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-rx-route = <0 1 2 3>;
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI6";
-+			status = "disabled";
-+		};
-+
- 		hdmi: hdmi@27da0000 {
- 			compatible = "rockchip,rk3576-dw-hdmi-qp";
- 			reg = <0x0 0x27da0000 0x0 0x20000>;
-@@ -1050,6 +1085,57 @@ hdmi_out: port@1 {
- 			};
- 		};
- 
-+		sai7: sai@27ed0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ed0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI7_8CH>, <&cru HCLK_SAI7_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 19>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI7_8CH>, <&cru SRST_H_SAI7_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI7";
-+			status = "disabled";
-+		};
-+
-+		sai8: sai@27ee0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ee0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 372 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI8_8CH>, <&cru HCLK_SAI8_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 7>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI8_8CH>, <&cru SRST_H_SAI8_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI8";
-+			status = "disabled";
-+		};
-+
-+		sai9: sai@27ef0000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x27ef0000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 373 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI9_8CH>, <&cru HCLK_SAI9_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 26>;
-+			dma-names = "tx";
-+			power-domains = <&power RK3576_PD_VO1>;
-+			resets = <&cru SRST_M_SAI9_8CH>, <&cru SRST_H_SAI9_8CH>;
-+			reset-names = "m", "h";
-+			rockchip,sai-tx-route = <0 1 2 3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI9";
-+			status = "disabled";
-+		};
-+
- 		qos_hdcp1: qos@27f02000 {
- 			compatible = "rockchip,rk3576-qos", "syscon";
- 			reg = <0x0 0x27f02000 0x0 0x20>;
-@@ -1596,6 +1682,120 @@ log_leakage: log-leakage@22 {
- 			};
- 		};
- 
-+		sai0: sai@2a600000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a600000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI0_8CH>, <&cru HCLK_SAI0_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 0>, <&dmac0 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI0_8CH>, <&cru SRST_H_SAI0_8CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai0m0_lrck
-+				&sai0m0_sclk
-+				&sai0m0_sdi0
-+				&sai0m0_sdi1
-+				&sai0m0_sdi2
-+				&sai0m0_sdi3
-+				&sai0m0_sdo0
-+				&sai0m0_sdo1
-+				&sai0m0_sdo2
-+				&sai0m0_sdo3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI0";
-+			status = "disabled";
-+		};
-+
-+		sai1: sai@2a610000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a610000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI1_8CH>, <&cru HCLK_SAI1_8CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac0 2>, <&dmac0 3>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI1_8CH>, <&cru SRST_H_SAI1_8CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai1m0_lrck
-+				&sai1m0_sclk
-+				&sai1m0_sdi0
-+				&sai1m0_sdo0
-+				&sai1m0_sdo1
-+				&sai1m0_sdo2
-+				&sai1m0_sdo3>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI1";
-+			status = "disabled";
-+		};
-+
-+		sai2: sai@2a620000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a620000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI2_2CH>, <&cru HCLK_SAI2_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 0>, <&dmac1 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI2_2CH>, <&cru SRST_H_SAI2_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai2m0_lrck
-+				&sai2m0_sclk
-+				&sai2m0_sdi
-+				&sai2m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI2";
-+			status = "disabled";
-+		};
-+
-+		sai3: sai@2a630000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a630000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI3_2CH>, <&cru HCLK_SAI3_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac1 2>, <&dmac1 3>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI3_2CH>, <&cru SRST_H_SAI3_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai3m0_lrck
-+				&sai3m0_sclk
-+				&sai3m0_sdi
-+				&sai3m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI3";
-+			status = "disabled";
-+		};
-+
-+		sai4: sai@2a640000 {
-+			compatible = "rockchip,rk3576-sai";
-+			reg = <0x0 0x2a640000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cru MCLK_SAI4_2CH>, <&cru HCLK_SAI4_2CH>;
-+			clock-names = "mclk", "hclk";
-+			dmas = <&dmac2 0>, <&dmac2 1>;
-+			dma-names = "tx", "rx";
-+			power-domains = <&power RK3576_PD_AUDIO>;
-+			resets = <&cru SRST_M_SAI4_2CH>, <&cru SRST_H_SAI4_2CH>;
-+			reset-names = "m", "h";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&sai4m0_lrck
-+				&sai4m0_sclk
-+				&sai4m0_sdi
-+				&sai4m0_sdo>;
-+			#sound-dai-cells = <0>;
-+			sound-name-prefix = "SAI4";
-+			status = "disabled";
-+		};
-+
- 		gic: interrupt-controller@2a701000 {
- 			compatible = "arm,gic-400";
- 			reg = <0x0 0x2a701000 0 0x10000>,
+ 			ports {
 
 -- 
 2.49.0
