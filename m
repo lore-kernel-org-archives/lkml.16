@@ -1,128 +1,109 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com [209.85.166.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26692580C4
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1FA258CC4
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 15:25:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746199530; cv=none; b=OuRnrUUrtW8ImQpbut+yuts2+3Xc3+gXiceeOvZQaMiuGVEOgZuRDVq68S/mo85T2UbKB8sZ9IQ4163hA6q1oLP5XFN3Kc3KHBUHi0LN7JGr/R8giMGrAUSK+8+Ww2erA85IrTxTZt7/ex9G18qygpvtv/oRaRBTpn8FGgPbfBc=
+	t=1746199534; cv=none; b=TVXy8vNKQ5De/v5yOm9itJzDjILrzyuqiea7r+30CqCpdlxzz7pt/AIP2yG6G0NXuxgvGSh74Y5ESXQk/GVAKrtSrTz5S0k2WX/sBT32AHzJIs+XfQOPrxzJL0y70o5QP7uF/bo7q0EiXvmqS2a0CyJs2ex5a8a6wFrtPT14fcE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746199530; c=relaxed/simple;
-	bh=LugdRThvsGx2CMHigSiJVuGvIK3aWNwVUx/pou6IRSI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Aakley6N3AREpJa34g6CWe09KfkuQS0Ugk8NzGfmEWV4XlitLY4GV8DmeaYX16ghKIgjO7HrM4jgwxWWL+mX+F9KGWYCrPM95YKh4xw9IuWcKJkSaU8v/coaixv97t7neHi9pqAYTV9Sp+UsH23pt4SRMEH5/QMo247TaBAE7vI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yFPN4O74; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1746199534; c=relaxed/simple;
+	bh=QEVaQ8hifIZFBz0rVFqoScpf42YWpaUx83D/o0Kkscs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=KQh/H3gAk/jILpTozom7D7ZJZxiMCWwZPhxTUgr27AsS7f/MKHp/hW4L0VkrDCs/sL57pxIWX4n42dHCF/qSQ/XjNuPoBcSID400hVEkWZJnTogSi40bO1XdMONnYhglK1SU5vHC5N8g7ULBfNXISSTfl1c1RC3ZJpi4Tcn/eIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=kMUVTIyt; arc=none smtp.client-ip=209.85.166.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yFPN4O74"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2243803b776so37774705ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:25:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="kMUVTIyt"
+Received: by mail-io1-f46.google.com with SMTP id ca18e2360f4ac-85b3f92c8f8so254974839f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 08:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1746199527; x=1746804327; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7vtwnUwNKasAWxl8DSVgxrM1mcYEXj9Ayz7aojcassc=;
-        b=yFPN4O74yAhN2NDeW+wVC9rYdR4lG9CLBBiX5oNVpHeJEt5P22eLhLW+Gfg5Pbbqte
-         OAkFhN6gmXl6HqsgtO2aPsZUnSNjSVOAxNOZEBRD+GFOv1X81tzljNv3IbiyC/IAJm/V
-         IvESQwPQDF6IRvT3dZZRp4Beo2kuHRwOkjSdSiyJ55YfDyVbE/Wnlq9wCzJRa+GqD//M
-         H4XZMAEC1DANj+17xJrdk4iglrvnKCWAV5g5oUL8U/sPKFZR32kgMe5EWWXEJByG13em
-         13uUjOY1G4by4U9zBF05Q8lhwpGRKr5lE3LFz11o8NpFWS/hxjEuhS2RsHvaMHygRxZA
-         b6qQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1746199530; x=1746804330; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ht0Wss9NyJF6H00dXB/7b2Zl66sjzwkYRly7lnLnnR4=;
+        b=kMUVTIytm+WxaUFkbmlA3/wPY1/PsP6RvJyjTiZYBvRqtOhr2A9/QnJQWXApmSbPAh
+         H7pK6Jpib3EuJQpOwMRf/Ti6RTrVaXmKy0gBtw1h/PZXOeqFx0Y6I4G593SxTrbG02v5
+         GucdolxUCYJaKDSjLbfmoIer8cAceJA7SH/Izbwh5Q6fKLTroQZat30j+XH8qyV7xhJf
+         vro2rPCaiN7wGCGyhttnEH5C7IZTUEZ5KeHfvhv6VMP1/7t90oxZti+ctuABzKuUK6EQ
+         onvJJAOfXOYdD/9e1fWVHzN0Yke7w7SudPF0Qzmkxf4CIfty3dGVF3IGmiVi0mAqaAgW
+         d14w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746199527; x=1746804327;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7vtwnUwNKasAWxl8DSVgxrM1mcYEXj9Ayz7aojcassc=;
-        b=G3Vfmpcb4hL7iBlHatP5P0LyJv9+BZ580noIFwlWxKTaEtEubPUfLHMGqYH93io53H
-         RrGr24bEjJNPxiV6rzni9DR5OZLi26qxlx9QZTVKyIFHRBNsH0BKce6Fk3vZ849FLoDD
-         mwMPAj0+zEnUYD6elCkcWCbQ4hmgRyzBUJnzocUbl2GQMBA1Hg+Q9HAFlFjFTP+LrRGs
-         TUUDH1FxyKco06XZVCjXT7SrrinIR8oz1vGArZf31JU7Zxq6MpC5SsrVMH+tFiSWtoF+
-         53BCDlEXPGvV+nryRZaDSBOOra/35e3xdGU5D4tkyjzhZfpA0iXDfnUlQqwD1guWAF24
-         nOyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWVMqzbURiOx3iPwPsmVipmbcTgIgRTxk542Nv7F7Yw+Ou5vrT/rijZkGU4iBdNXBerV5zA3M1jieYiFnw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJVm+EYipGSIC2WnRAGOKovXT/ASD/TmLLTzhuq+An6oOtSQ2I
-	5to/GoAwJx1udUmjwS1RDmdfunZUG9CY2MUnXKi1O6KUJg1XpIRIX9hyxI9EoA==
-X-Gm-Gg: ASbGncvC2y8MFZK0WDms/FYQq+8nnOI8ywHGLW+zrfFDjNWbb0cyaq1V7jvXH6OhZon
-	h+zJe/hSKwWUhozJ8852A1M2KmKYlUWmHT8cCLWiithSsUzjp73zfO9SqnblMFBaKCfAjGMwIPI
-	dscpGxEsiBSthUYJf/QpJe9mPE1HvGsvwp//v/XNpASst/SohwM/WKm2xtKefHAHrIMBHj2AplB
-	JbFqzCWCyZ+civZ9Wmjh3Kazzg8JfKqZrXo0jz4EHlD25+p8aiOollxPu+NxSEbJDHvn3GBvUwc
-	AV71DHE9gMxEBZrsr/ZPU2qOxBbdPkEmAgcW/wNS1+GDD8wsBDwgFg==
-X-Google-Smtp-Source: AGHT+IHRKIqAtv7Ls6TzIfJYzOfALtMKzptW9t6NwjhMvUbrkIGXkQiOlsae6Xx1+FVT8dizOUKPfA==
-X-Received: by 2002:a17:902:e54a:b0:224:910:23f0 with SMTP id d9443c01a7336-22e103dd51fmr51268655ad.49.1746199526887;
-        Fri, 02 May 2025 08:25:26 -0700 (PDT)
-Received: from thinkpad ([220.158.156.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e1523205asm8677055ad.241.2025.05.02.08.25.22
+        d=1e100.net; s=20230601; t=1746199530; x=1746804330;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ht0Wss9NyJF6H00dXB/7b2Zl66sjzwkYRly7lnLnnR4=;
+        b=ulBMs1clE7TXsWOQmD5r0gKgiHqvOKzp+vZcnaQRsX2TJ01jsjXhx6KL2bX9D+OJEs
+         NTVyv+k++M8LapkM44TVM7A8vDQtHK7doq2w+gcrTTKgxWNpPyh4NPG8qMj4Kmi8nh3F
+         LERPpyVLtUz/9AFDtO4O1Knho6gTnKlCWC81DklWwj0Fpd96HQMka+eFcligw2VTYhyv
+         kspwzQnC7BVmpbRK2jy9GwDXcR/p4aOaENkqUowyl9klGUJvI5CelkH1P+s/+BSLyw6O
+         0gtYUzN3whq+He2Zed8jOOEd5Cef7ZA7AKXgHsEsEaPeydGVy/2aF9GjT9rPNTITVv/k
+         AV/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU/k3+oxLBMbFABZEkocU0NKa/KoQWYzlDDmh7iB0IZ7D2gdxLDc716j06gi26bB7xBT/Oe9xpAuhuJE2s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyXnvMbZXJeyxVDkXuxTA570k7DMYEhsXOfUR6/kk99j+hWV+Ob
+	T3baRDifHJzyopqTx19FaEe9iy/dnaprRR2XOmP41Mtp7ZslcmiDdDyZNU3CGIw=
+X-Gm-Gg: ASbGncvuv+cZbUJztSdoIIaJLKqozRLIjaucN0n4SO3vd7x4xXUMW7kXW9cjPxPzfAE
+	hqDojgka8r9VkXv4VglsSiMscjZNG4KdlVNitfOGvy3IKV+g45Y3cAjWqgtDrpPhT4O8/x2PHcn
+	j3KNstFYXrud4ZTe0M4Rv3D2zZ0yBHJI+kjzFSB1xgG9N7bcRgvLXukgbqVZCQqBeR7bYko1MEq
+	CdV4ZLH/04V7fUGrAw33C45W6XLK9t6KGdXKKeoXUsLukuNoqgRcqnhit7xv+LfkQds9kKwdK8D
+	ANsF81jtvnit75EwVmumjVM3u3/5RqTQFR2+fBDAeA==
+X-Google-Smtp-Source: AGHT+IGmGtJrlkTYA0am4TJuLz3eEpTp071t/1y4MtVFt5gMTy2hRkI4Kbwl9Q1I2GzWXhnL6/B14Q==
+X-Received: by 2002:a05:6602:3687:b0:864:a3d0:ddef with SMTP id ca18e2360f4ac-866b343cd04mr445080939f.6.1746199530264;
+        Fri, 02 May 2025 08:25:30 -0700 (PDT)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f88aa8e1f7sm429300173.121.2025.05.02.08.25.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 May 2025 08:25:26 -0700 (PDT)
-Date: Fri, 2 May 2025 20:55:20 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, cassel@kernel.org, 
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com, thippeswamy.havalige@amd.com
-Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: amd-mdb: Add `reset-gpios`
- property to example device tree
-Message-ID: <ph5rby7y3jnu4fnbhiojesu6dsnre63vc4hmsjyasajrvurj6g@g6eo7lvjtuax>
-References: <20250429090046.1512000-1-sai.krishna.musham@amd.com>
- <20250429090046.1512000-2-sai.krishna.musham@amd.com>
+        Fri, 02 May 2025 08:25:29 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Christoph Hellwig <hch@infradead.org>, linux-block@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250426011728.4189119-1-csander@purestorage.com>
+References: <20250426011728.4189119-1-csander@purestorage.com>
+Subject: Re: [PATCH v2 0/3] block: avoid hctx spinlock for plug with
+ multiple queues
+Message-Id: <174619952950.748556.3719586120129055173.b4-ty@kernel.dk>
+Date: Fri, 02 May 2025 09:25:29 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250429090046.1512000-2-sai.krishna.musham@amd.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-On Tue, Apr 29, 2025 at 02:30:45PM +0530, Sai Krishna Musham wrote:
-> Add `reset-gpios` property to the example device tree node for
-> GPIO-based handling of the PCIe Root Port (RP) PERST# signal.
+
+On Fri, 25 Apr 2025 19:17:25 -0600, Caleb Sander Mateos wrote:
+> blk_mq_flush_plug_list() has a fast path if all requests in the plug
+> are destined for the same request_queue. It calls ->queue_rqs() with the
+> whole batch of requests, falling back on ->queue_rq() for any requests
+> not handled by ->queue_rqs(). However, if the requests are destined for
+> multiple queues, blk_mq_flush_plug_list() has a slow path that calls
+> blk_mq_dispatch_list() repeatedly to filter the requests by ctx/hctx.
+> Each queue's requests are inserted into the hctx's dispatch list under a
+> spinlock, then __blk_mq_sched_dispatch_requests() takes them out of the
+> dispatch list (taking the spinlock again), and finally
+> blk_mq_dispatch_rq_list() calls ->queue_rq() on each request.
 > 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
-> ---
-> Changes in v2:
-> - Update commit message
-> ---
->  Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> index 43dc2585c237..e6117d326279 100644
-> --- a/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> +++ b/Documentation/devicetree/bindings/pci/amd,versal2-mdb-host.yaml
-> @@ -87,6 +87,7 @@ examples:
->    - |
->      #include <dt-bindings/interrupt-controller/arm-gic.h>
->      #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/gpio/gpio.h>
->  
->      soc {
->          #address-cells = <2>;
-> @@ -112,6 +113,7 @@ examples:
->              #size-cells = <2>;
->              #interrupt-cells = <1>;
->              device_type = "pci";
-> +            reset-gpios = <&tca6416_u37 7 GPIO_ACTIVE_LOW>;
+> [...]
 
-You should move this property to the PCI bridge node where it belongs to. We
-identified this issue of stuffing bridge specific properties to the controller
-node recently (yeah very late though), but since this controller doesn't have
-any bridge specific properties till now, I'd like it to do the right thing.
+Applied, thanks!
 
-So please refer the STM32 sereies on how to do it [1][2]. On the driver side,
-you specifically need to implement an equivalent of stm32_pcie_parse_port() in
-that patch that parses the bridge node(s) for these properties.
+[1/3] block: take rq_list instead of plug in dispatch functions
+      commit: 0aeb7ebfc7e3d4bef3542aadd33505452d2f9b82
+[2/3] block: factor out blk_mq_dispatch_queue_requests() helper
+      commit: a5728a1d1ef2d927c67e73fda94946c2c15106df
+[3/3] block: avoid hctx spinlock for plug with multiple queues
+      commit: 9712c57ec1117d6b5fe1cc8ad420049171140b26
 
-- Mani
-
-[1] https://lore.kernel.org/linux-pci/20250423090119.4003700-2-christian.bruel@foss.st.com/
-[2] https://lore.kernel.org/linux-pci/20250423090119.4003700-3-christian.bruel@foss.st.com/
-
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Jens Axboe
+
+
+
