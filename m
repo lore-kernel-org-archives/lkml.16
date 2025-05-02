@@ -1,124 +1,258 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4AF26AD9
-	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 01:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAD126AD9;
+	Fri,  2 May 2025 01:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746149720; cv=none; b=hvIZE21UE4dfi2U97T4NpNAEEbGP5TklNYJIdcHoKnxIfYaZdqE85M9zu0S6RwSG3nobACWvsYg71bTpxnFXucKVmkItTX26CxUwPerI3IDLVY2kfYWns2YWmHPjB9ZyQF3WJ8fxRZbZy547pA2emcW93CyjXzFoyPJGt8cYECg=
+	t=1746149736; cv=none; b=HDF1kDVTn8V5QuuFcVL3Gnp8N6jnU2kohPSPrlwzNm24ULnkKbIpnugKSf3AumlbYr/OKduMBZQmxBWgavOhhVzDvLagKRDqkYm0ANmXpNZgFVVMk8nTkhxcTkVxxrEOvblh+bj219egjD8PAaZv5tPQI0qYJYon90nr93Y8M0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746149720; c=relaxed/simple;
-	bh=0As8xmw9EhCI8l9UThvyG5mZVKiCmUiyNh+yysJrxBs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eHQ7v1okrE+V9CnDU7yqRbgfOoiCMCuAuNcUzWZxN33kTbPXZ0kReQ90GOaSeXKXJXvSheuBvEwmVy/VpMz9w0YKAtQ0nccg8pTQL8X4RfF/ugU6F9mgk0fnxHhZf3GXi2aLhWXNucZ5mtsIgN3e90cnWBh+2U44MiKCI0Sm0GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=SPprT+1n; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1746149736; c=relaxed/simple;
+	bh=0SkwgSNC+NzRjK0mPG6aKMmk51uVSzfevDMeWkjQZnc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MQfJFtI59fz+5sCzQE4FTwP/fN+v0GfxjPiBhDO5izQpf0+JFUXRKRHuDl9BNhB1n44o2dXqhmWxUflpfXYyVbY7KeW+h1ExdQVly6npNDO1ZJilRQp4sSjeYgcpjA75Urd96cGsYhVHR2BhryFbneexWTtBo2/6bw9JX7Hd5GY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOjAeTWe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="SPprT+1n"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5edc07c777eso2187156a12.3
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 18:35:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1746149716; x=1746754516; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=97MRcwlNgiaSiCPIOhEJ8niynAiuZuA+VUyMszsZ0b0=;
-        b=SPprT+1nFQ67fCpBtccCG0ezIC35XPVenOv47cyWL9UlhZCiEimwZxGyirEa1bosTv
-         HopzMfWDPB6cRJF4iA0xDZmbTQJxBVwhDCR2i4KNNGmC2ubug6/2gzVBy6hosWrFnSTz
-         Cp0Ieax/SA3Uzs648PAVJeVcM2HB2B5TGAXhg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746149716; x=1746754516;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=97MRcwlNgiaSiCPIOhEJ8niynAiuZuA+VUyMszsZ0b0=;
-        b=CSpOQhOQ8EDcbmb5sL0tzLS8gun0Xehm6IsQJoQyuWcs4cFyK/8gICt3iUIGHDK+Cr
-         N19e0tlbeDfZpmNAPKbprYr5d0MoFM1wjoCaez1Ii7yAugwWGO9r8ALH8KY0pc7VzI4z
-         W9RAfI+EVZ7inZL1nhwspNzFWuP95uzZuJVn0Gj0cYpB68lGbluBzjgdB+qVHHxYiqYW
-         qFCYItnCZXe9F5jE0BKJLWEBudlzEidVZ+p7YO8rOd1FoDIGWDZ8wKOb9hwnVvko9vQm
-         iQwAmd5fnjY7bTldnKUpHpvvymKqR3bsRG8bFqNsJB4DtaVIrGVjsRyClfAGsyI54yHq
-         qrXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7xcmbyNast48D2WIFoxJP7G2paGam4Cp6vJouIFmaEyr3EfvkJDEKIlUf9uKdJ8jRaSKxY84wJX4YE2I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD1092HipCab6H10KghpLSOuH5dn4jxQKe+5mvdkLvd8WlSy6f
-	1dq8UazQv6soQbqEzRQVEdLgvWF+lP3ueRKQ4SAEdTujqaLbHOCZeK5FP8w6CyjNdnclodo3UTS
-	zFUo=
-X-Gm-Gg: ASbGncuRHW8MSRHiBxQSnjA9T8Y1y44laFTrkGp9oCUZ0XNRiuGkVCr5NCLznAZq5qx
-	CxS99Gebhfg785MN6Fd9tSrZ46aQxLzrKEHaKCiJ3VXFfkjv/e6pppYT03ga31xWg19GLvZxcnn
-	5ZEUg2YtQY9f7FSVa85B1zTuDl4gwmVfPsqnyTQP35EpeCcIQPBJ0gO2Jx+csnRwlSsNNDhqaE4
-	IqafSRgOmQpvG8NS9CFxhyPJ76U3OWKYwFStm5Txn04IMuXcyvxYiAwCZF+ehYS1kYvppe/zGpk
-	uLyUZDN5M8K9UCLftUJMsJqmVXlfx3JyQED8KJpFX+ixky/svx8OS1hiqhJtr0sAtBOF9DNTcHP
-	Pvry1GW8kPhZ65Iw=
-X-Google-Smtp-Source: AGHT+IELPXnB9lKlBasOGUFYnlU512vWCF7LFI9g4JPofD0di8E6S9eBu2VHK600elfod/82/D0xkw==
-X-Received: by 2002:a05:6402:1e89:b0:5de:c9d0:6742 with SMTP id 4fb4d7f45d1cf-5fa78017633mr534470a12.9.1746149716572;
-        Thu, 01 May 2025 18:35:16 -0700 (PDT)
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com. [209.85.208.41])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5fa777561d3sm423826a12.16.2025.05.01.18.35.14
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 May 2025 18:35:15 -0700 (PDT)
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5f3f04b5dbcso2236604a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 01 May 2025 18:35:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXllsnaztabxFEeUjw2Y65iurgMHA9aybWDm7/xUfL6GqawEnAe4ZX13N/9fPGTrRjqaUj/Eus9a3/UfYo=@vger.kernel.org
-X-Received: by 2002:a05:6402:3806:b0:5f4:35c4:a935 with SMTP id
- 4fb4d7f45d1cf-5fa788ade3emr571279a12.21.1746149713941; Thu, 01 May 2025
- 18:35:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOjAeTWe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDBD8C4CEE3;
+	Fri,  2 May 2025 01:35:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746149736;
+	bh=0SkwgSNC+NzRjK0mPG6aKMmk51uVSzfevDMeWkjQZnc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=bOjAeTWecv6HKLmT4zeM0W2x1BLOtLJoySF4ckXIDwNm2DsOEC75RLRxXJzmfhHqC
+	 pGTHijfET86PFbATyPImqwDKhJowpOsbuFJ2MnHH4A6F2dzP2gRIYAjfDtQTqqd4GC
+	 ETHqqVV2KX5JweiV5axsG/NZC7mzJl23i1M9lxG9IVutVwZdE16MW2I0HBI5pmAb3z
+	 hVFF10/9zGy+M8OJ+JN0axDGsakAUPJfcamUaLvFHLzr/mcJLDkX4WY6yLZCVegC9o
+	 ZOBhlAjjojKy1iH78HGTEw42RG3IVElNPKm/sONYHp81LMOXyjGvCBq8rEmTAjgOdU
+	 1RE6gaq1CYIsw==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: PCI: Convert v3,v360epc-pci to DT schema
+Date: Thu,  1 May 2025 20:34:46 -0500
+Message-ID: <20250502013447.3416581-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250501-default-const-init-clang-v1-0-3d2c6c185dbb@kernel.org>
- <20250501-default-const-init-clang-v1-2-3d2c6c185dbb@kernel.org>
- <CAHk-=whL8rmneKbrXpccouEN1LYDtEX3L6xTr20rkn7O_XT4uw@mail.gmail.com> <20250502012449.GA1744689@ax162>
-In-Reply-To: <20250502012449.GA1744689@ax162>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 1 May 2025 18:34:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wif4eOpn3YaUXMKUhSrF1t-2ABasBiBRXR2Mxm059yXqQ@mail.gmail.com>
-X-Gm-Features: ATxdqUH6AO9B4IM6TzOpfLne5kIG1EGNzVEfwRIWeNnmYRyNorzVe6ZE38sDwtI
-Message-ID: <CAHk-=wif4eOpn3YaUXMKUhSrF1t-2ABasBiBRXR2Mxm059yXqQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] include/linux/typecheck.h: Zero initialize dummy variables
-To: Nathan Chancellor <nathan@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Nicolas Schier <nicolas.schier@linux.dev>, 
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
-	Justin Stitt <justinstitt@google.com>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, patches@lists.linux.dev, 
-	stable@vger.kernel.org, Linux Kernel Functional Testing <lkft@linaro.org>, 
-	Marcus Seyfarth <m.seyfarth@gmail.com>, Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 1 May 2025 at 18:24, Nathan Chancellor <nathan@kernel.org> wrote:
->
-> but '= {0}' appears to work: https://godbolt.org/z/x7eae5vex
->
-> If using that instead upsets sparse still, then I can just abandon this
-> change and update the other patch to disable -Wdefault-const-init-unsafe
-> altogether (
+Convert the v3,v360epc-pci binding to DT schema format.
 
-The "= { 0 }" form makes sparse unhappy for a different reason:
+Add "clocks" which was not documented and is required. Drop "syscon"
+which was documented, but is not used.
 
-       void *a = { 0 };
+Drop the "v3,v360epc-pci" compatible by itself as this device is only
+used on the Arm Integrator/AP and not likely going to be used anywhere
+else at this point.
 
-makes sparse (correctly) complain about the use of '0' for 'NULL'.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ .../bindings/pci/v3,v360epc-pci.yaml          | 100 ++++++++++++++++++
+ .../bindings/pci/v3-v360epc-pci.txt           |  76 -------------
+ 2 files changed, 100 insertions(+), 76 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
 
-    warning: Using plain integer as NULL pointer
+diff --git a/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml b/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
+new file mode 100644
+index 000000000000..38cac88f17bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/v3,v360epc-pci.yaml
+@@ -0,0 +1,100 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/v3,v360epc-pci.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: V3 Semiconductor V360 EPC PCI bridge
++
++maintainers:
++  - Linus Walleij <linus.walleij@linaro.org>
++
++description:
++  This bridge is found in the ARM Integrator/AP (Application Platform)
++
++allOf:
++  - $ref: /schemas/pci/pci-host-bridge.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: arm,integrator-ap-pci
++      - const: v3,v360epc-pci
++
++  reg:
++    items:
++      - description: V3 host bridge controller
++      - description: Configuration space
++
++  clocks:
++    maxItems: 1
++
++  dma-ranges:
++    maxItems: 2
++    description:
++      The inbound ranges must be aligned to a 1MB boundary, and may be 1MB, 2MB,
++      4MB, 8MB, 16MB, 32MB, 64MB, 128MB, 256MB, 512MB, 1GB or 2GB in size. The
++      memory should be marked as pre-fetchable.
++
++  interrupts:
++    description: Bus Error IRQ
++    maxItems: 1
++
++  ranges:
++    description:
++      The non-prefetchable and prefetchable memory windows must each be exactly
++      256MB (0x10000000) in size. The prefetchable memory window must be
++      immediately adjacent to the non-prefetchable memory window.
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - dma-ranges
++  - "#interrupt-cells"
++  - interrupt-map
++  - interrupt-map-mask
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pci@62000000 {
++        compatible = "arm,integrator-ap-pci", "v3,v360epc-pci";
++        #interrupt-cells = <1>;
++        #size-cells = <2>;
++        #address-cells = <3>;
++        reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
++        device_type = "pci";
++        interrupt-parent = <&pic>;
++        interrupts = <17>; /* Bus error IRQ */
++        clocks = <&pciclk>;
++        ranges = <0x01000000 0 0x00000000 0x60000000 0 0x01000000>,     /* 16 MiB @ LB 60000000 */
++                 <0x02000000 0 0x40000000 0x40000000 0 0x10000000>,     /* 256 MiB @ LB 40000000 1:1 */
++                 <0x42000000 0 0x50000000 0x50000000 0 0x10000000>;     /* 256 MiB @ LB 50000000 1:1 */
++        dma-ranges = <0x02000000 0 0x20000000 0x20000000 0 0x20000000>, /* EBI: 512 MB @ LB 20000000 1:1 */
++                     <0x02000000 0 0x80000000 0x80000000 0 0x40000000>; /* CM alias: 1GB @ LB 80000000 */
++        interrupt-map-mask = <0xf800 0 0 0x7>;
++        interrupt-map =
++            /* IDSEL 9 */
++            <0x4800 0 0 1 &pic 13>, /* INT A on slot 9 is irq 13 */
++            <0x4800 0 0 2 &pic 14>, /* INT B on slot 9 is irq 14 */
++            <0x4800 0 0 3 &pic 15>, /* INT C on slot 9 is irq 15 */
++            <0x4800 0 0 4 &pic 16>, /* INT D on slot 9 is irq 16 */
++            /* IDSEL 10 */
++            <0x5000 0 0 1 &pic 14>, /* INT A on slot 10 is irq 14 */
++            <0x5000 0 0 2 &pic 15>, /* INT B on slot 10 is irq 15 */
++            <0x5000 0 0 3 &pic 16>, /* INT C on slot 10 is irq 16 */
++            <0x5000 0 0 4 &pic 13>, /* INT D on slot 10 is irq 13 */
++            /* IDSEL 11 */
++            <0x5800 0 0 1 &pic 15>, /* INT A on slot 11 is irq 15 */
++            <0x5800 0 0 2 &pic 16>, /* INT B on slot 11 is irq 16 */
++            <0x5800 0 0 3 &pic 13>, /* INT C on slot 11 is irq 13 */
++            <0x5800 0 0 4 &pic 14>, /* INT D on slot 11 is irq 14 */
++            /* IDSEL 12 */
++            <0x6000 0 0 1 &pic 16>, /* INT A on slot 12 is irq 16 */
++            <0x6000 0 0 2 &pic 13>, /* INT B on slot 12 is irq 13 */
++            <0x6000 0 0 3 &pic 14>, /* INT C on slot 12 is irq 14 */
++            <0x6000 0 0 4 &pic 15>; /* INT D on slot 12 is irq 15 */
++    };
++...
+diff --git a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt b/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
+deleted file mode 100644
+index 11063293f761..000000000000
+--- a/Documentation/devicetree/bindings/pci/v3-v360epc-pci.txt
++++ /dev/null
+@@ -1,76 +0,0 @@
+-V3 Semiconductor V360 EPC PCI bridge
+-
+-This bridge is found in the ARM Integrator/AP (Application Platform)
+-
+-Required properties:
+-- compatible: should be one of:
+-  "v3,v360epc-pci"
+-  "arm,integrator-ap-pci", "v3,v360epc-pci"
+-- reg: should contain two register areas:
+-  first the base address of the V3 host bridge controller, 64KB
+-  second the configuration area register space, 16MB
+-- interrupts: should contain a reference to the V3 error interrupt
+-  as routed on the system.
+-- bus-range: see pci.txt
+-- ranges: this follows the standard PCI bindings in the IEEE Std
+-  1275-1994 (see pci.txt) with the following restriction:
+-  - The non-prefetchable and prefetchable memory windows must
+-    each be exactly 256MB (0x10000000) in size.
+-  - The prefetchable memory window must be immediately adjacent
+-    to the non-prefetcable memory window
+-- dma-ranges: three ranges for the inbound memory region. The ranges must
+-  be aligned to a 1MB boundary, and may be 1MB, 2MB, 4MB, 8MB, 16MB, 32MB,
+-  64MB, 128MB, 256MB, 512MB, 1GB or 2GB in size. The memory should be marked
+-  as pre-fetchable. Two ranges are supported by the hardware.
+-
+-Integrator-specific required properties:
+-- syscon: should contain a link to the syscon device node, since
+-  on the Integrator, some registers in the syscon are required to
+-  operate the V3 host bridge.
+-
+-Example:
+-
+-pci: pciv3@62000000 {
+-	compatible = "arm,integrator-ap-pci", "v3,v360epc-pci";
+-	#interrupt-cells = <1>;
+-	#size-cells = <2>;
+-	#address-cells = <3>;
+-	reg = <0x62000000 0x10000>, <0x61000000 0x01000000>;
+-	interrupt-parent = <&pic>;
+-	interrupts = <17>; /* Bus error IRQ */
+-	clocks = <&pciclk>;
+-	bus-range = <0x00 0xff>;
+-	ranges = 0x01000000 0 0x00000000 /* I/O space @00000000 */
+-		0x60000000 0 0x01000000 /* 16 MiB @ LB 60000000 */
+-		0x02000000 0 0x40000000 /* non-prefectable memory @40000000 */
+-		0x40000000 0 0x10000000 /* 256 MiB @ LB 40000000 1:1 */
+-		0x42000000 0 0x50000000 /* prefetchable memory @50000000 */
+-		0x50000000 0 0x10000000>; /* 256 MiB @ LB 50000000 1:1 */
+-	dma-ranges = <0x02000000 0 0x20000000 /* EBI memory space */
+-		0x20000000 0 0x20000000 /* 512 MB @ LB 20000000 1:1 */
+-		0x02000000 0 0x80000000 /* Core module alias memory */
+-		0x80000000 0 0x40000000>; /* 1GB @ LB 80000000 */
+-	interrupt-map-mask = <0xf800 0 0 0x7>;
+-	interrupt-map = <
+-	/* IDSEL 9 */
+-	0x4800 0 0 1 &pic 13 /* INT A on slot 9 is irq 13 */
+-	0x4800 0 0 2 &pic 14 /* INT B on slot 9 is irq 14 */
+-	0x4800 0 0 3 &pic 15 /* INT C on slot 9 is irq 15 */
+-	0x4800 0 0 4 &pic 16 /* INT D on slot 9 is irq 16 */
+-	/* IDSEL 10 */
+-	0x5000 0 0 1 &pic 14 /* INT A on slot 10 is irq 14 */
+-	0x5000 0 0 2 &pic 15 /* INT B on slot 10 is irq 15 */
+-	0x5000 0 0 3 &pic 16 /* INT C on slot 10 is irq 16 */
+-	0x5000 0 0 4 &pic 13 /* INT D on slot 10 is irq 13 */
+-	/* IDSEL 11 */
+-	0x5800 0 0 1 &pic 15 /* INT A on slot 11 is irq 15 */
+-	0x5800 0 0 2 &pic 16 /* INT B on slot 11 is irq 16 */
+-	0x5800 0 0 3 &pic 13 /* INT C on slot 11 is irq 13 */
+-	0x5800 0 0 4 &pic 14 /* INT D on slot 11 is irq 14 */
+-	/* IDSEL 12 */
+-	0x6000 0 0 1 &pic 16 /* INT A on slot 12 is irq 16 */
+-	0x6000 0 0 2 &pic 13 /* INT B on slot 12 is irq 13 */
+-	0x6000 0 0 3 &pic 14 /* INT C on slot 12 is irq 14 */
+-	0x6000 0 0 4 &pic 15 /* INT D on slot 12 is irq 15 */
+-	>;
+-};
+-- 
+2.47.2
 
-and gcc has also finally adopted that warning for braindamage:
-
-    warning: zero as null pointer constant [-Wzero-as-null-pointer-constant]
-
-although it's not on by default (and apparently we've never enabled it
-for the kernel - although we really should).
-
-sparse has complained about this since day one, because I personally
-find the "plain 0 as NULL" to be a complete BS mistake in the language
-(that came from avoiding a keyword, not from some "design" reason),
-and while it took C++ people three decades to figure that out, in the
-end they did indeed figure it out.
-
-In case anybody wonders why '0' is so broken for NULL, think stdarg.
-
-But also think "Christ people, it's fundamental type safety!!%^%!!"
-
-           Linus
