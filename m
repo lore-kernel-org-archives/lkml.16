@@ -1,94 +1,162 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4505525522C;
-	Fri,  2 May 2025 13:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746193417; cv=pass; b=VLB7dbL4xBdiGOCjK5j7cOxRdHT+vhA+/V/o6RAPCngzeDSmVeY3BJP5XErDj75AxhrMHQh4AA1AT8IbfXH3rc067IS7ZgO+nI46x7w0wjUDFJr0PvWw8ioRJ+WlfMekHvT/kRxoeNM4ASerM26XboKk4Uu4qHhuG8y6KdBnZ/Q=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746193417; c=relaxed/simple;
-	bh=z2AP0myLSw11g8ce2q1WXTGMIpb1bo7Up+bpw6XLGgU=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BAqDofvLpmAVtNq/VV7wGVhbLlZahLMtVnOh+BsTp5vncJRd/801t2bzKxLSFYHWM+lKL6MYKguiSqrMDm8S/xZSO34W1cd7RL9YMhJ2m+1Y505Xi7SxXaCxSugcpVlI1IkWYBvn9U+npqk5pu9iT0n1uHq0oqqStElXAsMY4ws=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=LhqEgtui; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52C6255E2B
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 13:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1746193461; cv=none; b=Q4wqO2qclhCovCiwnKTDcnbQ20tuo6zVrjwaikoCCVeE8q9Qoa/HJ08yqMgCyrV/rntYgKD5Ly1cBAb/nNWAd8XWNzQpAYc85DOTTDar4vNELa0VUz4/1ddn+J8kV1cWGKXtBobUlnOWwRhZ/LecM9YtZ7ko5SluCyGJ34y0WqI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1746193461; c=relaxed/simple;
+	bh=g1ZgZils+uIGmjH+sJCijkWj58eoAO+5+vhmz54zqng=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UckLT6Wpo9I46/8ko604lsjO01lMxFWSk6DDAbIUPbGo1+E19nXUi+t/ZuMX5VGbRydnslYn7S+q7xj13a6yHsUCiSuap+32eymws6rHGurm3a81ktCkx6GD1riMQjf/RFNzW8WZ5hOFWGxqtuZPsBnu9XDRPM+siycbWVEd7O8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AtW3CDbY; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="LhqEgtui"
-ARC-Seal: i=1; a=rsa-sha256; t=1746193406; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=O+iKH2DNLVLS065VEZRphvBhj8gkKv+XIXxHLbnsi+m8N82cd/S4VHNbRP7i3Q5QkxWXibRT/8v6QS8JgMcGp3PNVIFenWqBKfLlA7o0H5KTai7FozTMS6UK6ZkaUIWt4OtP+tHQo0yEXHlwlVu+lw1QMbP5xxX4veLtGIh5DGE=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1746193406; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Pz5xrUgMUPURonFjz/UHywG0LPoopmQOOvrkw0BhJBA=; 
-	b=UkKbTKXSqd1ypTdvamas2FCJ1bbZGR3wpd0XOd6nWwd6XCe99tFm5WX9tTGvgl7IwbtcBBuv4zl2UB2GuZo96eRX8TsBaLjGnVR0W2A1hClVqtuEH9JDc6I2XOCO2X5GFfSzJ7uPc98Zvejf07FtYZBALdrUTR1BN0LZv4sVEiE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1746193406;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=Message-ID:Date:Date:MIME-Version:Cc:Cc:Subject:Subject:To:To:References:From:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=Pz5xrUgMUPURonFjz/UHywG0LPoopmQOOvrkw0BhJBA=;
-	b=LhqEgtuif1wrhqAEd97CUglZvTwM/ZHuD1OfbL6fnbLwhK3SRAwQonzv05d2S5fA
-	KIyxm4vsrYCHEQfpr8DZFRrpfIuvDSMNSraKaRKV8wCythTTaH8DoxOtwmeADHvUKOR
-	oGkn4LA3BafFmxI152FiaZ8n0tAiEiC9bpJyApFs=
-Received: by mx.zohomail.com with SMTPS id 1746193404870810.7768218555155;
-	Fri, 2 May 2025 06:43:24 -0700 (PDT)
-Message-ID: <b67e43e5-3b56-4eec-9cae-00042e95e362@collabora.com>
-Date: Fri, 2 May 2025 18:43:19 +0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtW3CDbY"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-43947a0919aso13141055e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 06:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1746193458; x=1746798258; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8vTlnazaQVMThLmfIbwpqp3Xc7k0uu2U7TuS5r4iVAU=;
+        b=AtW3CDbYrEwsiz3JvGie3okg4UA6QXDOP91W3KSPhN/+ENd1ZwHeCwXfn+3euhw896
+         ICxtn1CH5uPrOTgmKuit2mEWQF027yMJEUxI6Gz8t4fGdWsOTv16vQ9jDvdSMBiP6DXP
+         EqTVzk1tnboNkuWF6xbBpzS6sXaC2FbYN4mzHvk55g47GooFHP+ejFvs8RijH6vEfUUn
+         yvKSZuSoVVBnUJEPQTv17FcO6SAsceXRPAbTjXkcPTU8U2xn7YMruRTilKxe59itUY8b
+         iWgE/MiK4BRpWFQ/xofKUHWWBWmp6gmkwSYoD267WMgnF5LyMdq2oaZoBDSQkPPAMlfW
+         QrZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746193458; x=1746798258;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8vTlnazaQVMThLmfIbwpqp3Xc7k0uu2U7TuS5r4iVAU=;
+        b=JEw5KmUAYEFVWFz1rzfx02oRCb+7mVQ1VC9b/KY/obMyltguf0f1mzXeF5UCzJPik+
+         ZyXAcLkJkuKj6FHejQTceBnFQdU8SKlPGZsnUrFERPwUCkTTIMBMGRFgzOB3DgsYBti4
+         VyNgkE3OakqnP4Ycfp8xwUGQ77gXSSEbDOs3rtFR2BZC8g/3vsjK3yOUe6OIh0uFBbap
+         3r4c472hJWGzAk8MWQWQ9IBUFz7vd5SBfsx7XcXX6eAp4HtBpKsmyWngujXRbeYMgGmY
+         I5nerEJ+8jKrD5JX0Hcyb+Sg37DARQ0daJ8Fuk4Qos13e6do+TRhOOMcGQoO0reUSurJ
+         VxKg==
+X-Forwarded-Encrypted: i=1; AJvYcCXosgejEkkSDuIOTNuOV7KnenPGTxYY6tJ5YHCFIKnCD7nbG03acNVPTbgcP3AF1mMpQxmrjpxd5Wr2DXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFjzKNdpf1BTW+BH/SMYERNg/wap5jahZ0v47by2Xt8m9sQXb8
+	rcqDNaSTvIKefvxJL3Fo5YvAHvhIJQCCN1qDfcHvO4sJwk4vD4XQHuDWKLSg8vyeTf8rKonqVjg
+	7Ngu2hLoUUq6LSQ==
+X-Google-Smtp-Source: AGHT+IEEgU9nO8+UD2Pb7fL6yoFx+ADY8fhoKwXwvYxRbDyw/NOtlc4poFHnBmyLm0nVuIh4YARc+RWwPkJd+/E=
+X-Received: from wmbbe6.prod.google.com ([2002:a05:600c:1e86:b0:440:5d4e:87])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1da6:b0:43d:fa59:be39 with SMTP id 5b1f17b1804b1-441bbf38afemr24834895e9.33.1746193458263;
+ Fri, 02 May 2025 06:44:18 -0700 (PDT)
+Date: Fri, 2 May 2025 13:44:16 +0000
+In-Reply-To: <20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 2/7] selftests: vDSO: clock_getres: Drop unused include of
- err.h
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
- Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Vincenzo Frascino <vincenzo.frascino@arm.com>, Shuah Khan
- <shuah@kernel.org>, "Jason A. Donenfeld" <Jason@zx2c4.com>
-References: <20250502-selftests-vdso-fixes-v1-0-fb5d640a4f78@linutronix.de>
- <20250502-selftests-vdso-fixes-v1-2-fb5d640a4f78@linutronix.de>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20250502-selftests-vdso-fixes-v1-2-fb5d640a4f78@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Mime-Version: 1.0
+References: <20250502-module-params-v3-v11-0-6096875a2b78@kernel.org> <20250502-module-params-v3-v11-2-6096875a2b78@kernel.org>
+Message-ID: <aBTMMHWNXS7wK7zS@google.com>
+Subject: Re: [PATCH v11 2/3] rust: add parameter support to the `module!` macro
+From: Alice Ryhl <aliceryhl@google.com>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Luis Chamberlain <mcgrof@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Nicolas Schier <nicolas.schier@linux.dev>, Trevor Gross <tmgross@umich.edu>, 
+	Adam Bratschi-Kaye <ark.email@gmail.com>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org, 
+	Petr Pavlu <petr.pavlu@suse.com>, Sami Tolvanen <samitolvanen@google.com>, 
+	Daniel Gomez <da.gomez@samsung.com>, Simona Vetter <simona.vetter@ffwll.ch>, 
+	Greg KH <gregkh@linuxfoundation.org>, Fiona Behrens <me@kloenk.dev>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, linux-modules@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On 5/2/25 5:40 PM, Thomas Weißschuh wrote:
-> Nothing from err.h is used.
+On Fri, May 02, 2025 at 02:16:35PM +0200, Andreas Hindborg wrote:
+> Add support for module parameters to the `module!` macro. Implement read
+> only support for integer types without `sysfs` support.
 > 
-> Drop the include.
-> 
-> Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+> Acked-by: Petr Pavlu <petr.pavlu@suse.com> # from modules perspective
+> Tested-by: Daniel Gomez <da.gomez@samsung.com>
+> Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-> ---
->  tools/testing/selftests/vDSO/vdso_test_clock_getres.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-> index 38d46a8bf7cba7a9b4a9b13b5eb17aa207972bd0..b5d5f59f725a703c357dfca91bfe170aaaeb42fa 100644
-> --- a/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-> +++ b/tools/testing/selftests/vDSO/vdso_test_clock_getres.c
-> @@ -13,7 +13,6 @@
->  
->  #define _GNU_SOURCE
->  #include <elf.h>
-> -#include <err.h>
->  #include <fcntl.h>
->  #include <stdint.h>
->  #include <stdio.h>
-> 
+> +unsafe extern "C" fn set_param<T>(
+> +    val: *const kernel::ffi::c_char,
+> +    param: *const crate::bindings::kernel_param,
+> +) -> core::ffi::c_int
+> +where
+> +    T: ModuleParam,
+> +{
+> +    // NOTE: If we start supporting arguments without values, val _is_ allowed
+> +    // to be null here.
+> +    if val.is_null() {
+> +        // TODO: Use pr_warn_once available.
+> +        crate::pr_warn!("Null pointer passed to `module_param::set_param`");
+> +        return EINVAL.to_errno();
+> +    }
+> +
+> +    // SAFETY: By function safety requirement, val is non-null and
+> +    // null-terminated. By C API contract, `val` is live and valid for reads
+> +    // for the duration of this function.
+> +    let arg = unsafe { CStr::from_char_ptr(val) };
+> +
+> +    crate::error::from_result(|| {
+> +        let new_value = T::try_from_param_arg(arg)?;
+> +
+> +        // SAFETY: `param` is guaranteed to be valid by C API contract
+> +        // and `arg` is guaranteed to point to an instance of `T`.
+> +        let old_value = unsafe { (*param).__bindgen_anon_1.arg as *mut T };
+> +
+> +        // SAFETY: `old_value` is valid for writes, as we have exclusive
+> +        // access. `old_value` is pointing to an initialized static, and
+> +        // so it is properly initialized.
+> +        unsafe { core::ptr::replace(old_value, new_value) };
 
+You don't use the return value of this, so this is equivalent to
+unsafe { *old_value = new_value };
 
--- 
-Regards,
-Usama
+> +macro_rules! make_param_ops {
+> +    ($ops:ident, $ty:ty) => {
+> +        ///
+> +        /// Static [`kernel_param_ops`](srctree/include/linux/moduleparam.h)
+> +        /// struct generated by `make_param_ops`
+> +        #[doc = concat!("for [`", stringify!($ty), "`].")]
+> +        pub static $ops: $crate::bindings::kernel_param_ops = $crate::bindings::kernel_param_ops {
+> +            flags: 0,
+> +            set: Some(set_param::<$ty>),
+> +            get: None,
+> +            free: Some(free::<$ty>),
+
+You could potentially only include `free` if
+`core::mem::needs_drop::<T>()` as an optimization.
+
+> +    fn emit_params(&mut self, info: &ModuleInfo) {
+> +        let Some(params) = &info.params else {
+> +            return;
+> +        };
+> +
+> +        for param in params {
+> +            let ops = param_ops_path(&param.ptype);
+> +
+> +            // Note: The spelling of these fields is dictated by the user space
+> +            // tool `modinfo`.
+> +            self.emit_param("parmtype", &param.name, &param.ptype);
+> +            self.emit_param("parm", &param.name, &param.description);
+> +
+> +            write!(
+> +                self.param_buffer,
+> +                "
+> +                    pub(crate) static {param_name}:
+> +                        ::kernel::module_param::ModuleParamAccess<{param_type}> =
+> +                            ::kernel::module_param::ModuleParamAccess::new({param_default});
+
+Is this global accessible to the user? It would be a use-after-free to
+access it during module teardown. For example, what if I access this
+static during its own destructor? Or during the destructor of another
+module parameter?
+
+Alice
