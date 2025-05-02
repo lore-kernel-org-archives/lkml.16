@@ -1,204 +1,230 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E5F22D4DB;
-	Fri,  2 May 2025 12:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BA2245000
+	for <linux-kernel@vger.kernel.org>; Fri,  2 May 2025 12:04:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746187439; cv=none; b=e+v/XfpssIqmblavT/VtwkEnivD/PwVJEwUKtBe4x/KMAWcZz8DZv/pTsynOCqCydW7SiFRSSoKNJN8Y9WSjXeVuhdXYOI9fp36RaZvEpslT6yeNRJ9imWTMOrN39VhyI1SojQh354caYurQhJl+pVEhkVY3wIn4U5B/wvC3DIE=
+	t=1746187451; cv=none; b=tdKdAW7GVPssyHwW3yySz8bEmgFpmdKo0edaPqTL2Kww58RQ6rrR9/bmj41ZIHsoCS10aHdg0VDlqP8bJJ2+HBYdBsgH0akBy4cdfD9mPPrdntiXCHHL/e7S/VV/u4uPaqIqiS0jTc/ET9Yp2Cm80Qe7yMBT95oL1d82U5rDbNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746187439; c=relaxed/simple;
-	bh=E3AueClkwR2N+GQSYCxK6LEoGj4sOArLMp5wfE67WKQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZlhSBuaaghjqq4EK0BMzAD1iGAcLxxxPFC0rGWuC9csor0fwn8YkzUxWHAN0pj2Q0Kbe6GR3fsTZaYV4iL6Ki8Y3XOdXcVTrWIBC3bwaKoGP+JbCS10+QJEZ1kGVcBRBNX20POsFiBTT5iBa8BMHBdyKi/tJ1+YR9QyZnvdFZaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=io6Wbuwn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=f7d2yuh5; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1746187451; c=relaxed/simple;
+	bh=k4toQUQd4GXmpTZtzVU6CEYOWMfMFzWaAitrU1KmboY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WIexZC3q95uwmW1fKWQtxA+Mo9O3sgFw+sNUC4qZZqYY7YtLWSNNtmUR4GqeHju4zqIWqxSVk7sXxQz63wzTBTm7C5w7rShfMYfTbX/6mWtaI54Ce7qgI9xPiElNZe9SJjIAld+yoH2qJPYEDTWBOSppmqWg2vJqACYYRwA2ZAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=XHoq/QPZ; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="io6Wbuwn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f7d2yuh5"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1746187435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mabMKuekHMCjBzOW268flwwbg7jhcHcFTug4i1NeKhA=;
-	b=io6WbuwnsyX3pWhy+Rt5zFTBefvCctPqE308jeIiShSqn5DnYObSopAmIDYrfOXP51HM5P
-	fuhD+e70ikbritpq156jLHKsDsKpNl8iU73q3/BYc8lhHs1Gun076wWThGazcS8/1fW0y0
-	mJsdA25qMUJ/yPREcVt49+TP8WpcTjuvc0CUqoL02rsZvJA1mV3lmYGbafbIRokFGnkxN6
-	QKzkH91CTumaj6+gLFsOWZjn/WuXpq80FDxiiK+mLTXIsPMBBRX1BaIddebopwRD7dDtBl
-	sBg2+V5sVtr0f8oN1l/o2XxSN1mo6OHBPC39V6XGanEgdoQR4A76U1rKB2BaVg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1746187435;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=mabMKuekHMCjBzOW268flwwbg7jhcHcFTug4i1NeKhA=;
-	b=f7d2yuh5bAWYZZ4xQlh3gm0Kl9BN5DM9+0vojIv/vVTZyuk9N/OuPr3aqGAxhVVf2yWycC
-	WnLOcOjhTzLPElDg==
-Date: Fri, 02 May 2025 14:03:50 +0200
-Subject: [PATCH 1/3] selftests/timens: Print TAP headers
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="XHoq/QPZ"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac345bd8e13so324357066b.0
+        for <linux-kernel@vger.kernel.org>; Fri, 02 May 2025 05:04:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1746187447; x=1746792247; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=BPRPIKfVSGRq6ITejbYYVt34aehlUZuBk2QnZqFxJlA=;
+        b=XHoq/QPZRT/kAdl4Tmg2DqqDg8Ad9aMkr/jb1BOxlpICsEzUjkm5KoEcrpPv01wkKv
+         JpIIK04NlTi74lxIMUs9759cWEQF/W69teoNMs4jffv8c8/GL17xwAc9qlg6VbRJbfqU
+         fbrgQCAHSkTyhhCwUvl5fVD/UAnaPUoL0rZdlzYOweGp3+7SVItw+DO5752w2gPk+seB
+         HR5lg4Anty32d5HUaq58R6MPv4YvqCjTjkDIcpqiymOd9/GwOb7EGL7vUnYjVwWI+t4T
+         iTld+KB0oRBGRZGtOav+IYZOyf95dGiajwMR1zILH7dShY6q4TV2/ELuF28jlnZ48X0G
+         2rtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746187447; x=1746792247;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BPRPIKfVSGRq6ITejbYYVt34aehlUZuBk2QnZqFxJlA=;
+        b=bQdd3j393AQhwtRthFPXKarZhSNQzKRmsEdGI7QTymqSx2qr8V8n/dYpfEylJxUefW
+         m1d01HLDzXBNyCJLf4d0McdRSdS/Ijias41lYZgg+0EBIyBhWtIBeLCpVGheKJYHzsF2
+         XbQvqMi5s+tXMG2qCFtusr6dLC6A5TfZLoVzlwHcct/uBPXCWVnH9DRIf8KIwQsdyGSQ
+         Ia53N/oVe2esp2bVMc8sxJ3jZxv1zr52rNmx6l7YU/2zcgHY7u5dx509xTFW6uEalo78
+         rYVJL2J94gi2GMqul0YtlKNJMUhweMMfmBIiIjKOwlroDXoqtFFmLkZtQXkY7fpDEZF6
+         PSuA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiAN01Cce9YSwZizfhGmVbIm+hxUvT7HZr3+N0WOSsaLmwfnP9u0VR00yOl0Fg9894VviYjoNQL4B3ORE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzWUeS5A4H1OX38R3q0FP/QQbnq9AxN/6bb7Q1ebZ+V+Li+ue0
+	pi8abhhLPlH27TpBgYDtnFjKGwH30WZt3fU4uoYoy/cT0kOa8p5UDy4nP5BzOYyZazSSJ1SqkC8
+	g+BBt37eMqRc21/7jbL2nYhhXnh3DJ4+mMsInDg==
+X-Gm-Gg: ASbGncs44qMkJ53TtIUHnl0vD/hkmOWEbTfS0MEGxOga3L3IbQnE3f76drE5GkbWADT
+	vlrev0kYKnVhlIiRpKBDCX6Gt4+howiOSzY7iNenGIDgYbgZRtzH7Q2aXUbcoOLcBjSKHbjYLk7
+	gwAGcpMtdaJYJQrNYOwTdL
+X-Google-Smtp-Source: AGHT+IFexHphn+QwtEkGN0QtvusZk4g7qhyXzh59CokpzsuzOfXNl9izhrW/FeZ+1YAKnoX41c8fmxfpp5LBg3FF4pw=
+X-Received: by 2002:a17:907:c28f:b0:acb:5583:6fe4 with SMTP id
+ a640c23a62f3a-ad17ad3b23dmr269340766b.6.1746187447432; Fri, 02 May 2025
+ 05:04:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250502-selftests-timens-fixes-v1-1-fb517c76f04d@linutronix.de>
-References: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
-In-Reply-To: <20250502-selftests-timens-fixes-v1-0-fb517c76f04d@linutronix.de>
-To: Shuah Khan <shuah@kernel.org>
-Cc: linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1746187432; l=4907;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=E3AueClkwR2N+GQSYCxK6LEoGj4sOArLMp5wfE67WKQ=;
- b=mTdVCIciiLP7jSpIlh1fngftlcPTtZMdXYMnrSeUeaa706IgUMDYjmxdGXeybgBUBnCyvyyYZ
- vQmqm85IWp0CDaoc7DDDYoQKMKKtUgEx1mH6V9X7O2cdYDPW99ILjva
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+References: <20250429151800.649010-1-neelx@suse.com> <20250430080317.GF9140@twin.jikos.cz>
+ <CAPjX3FfBoU9-wYP-JC63K6y8Pzocu0z8cKvXEbjD_NjdxWO+Og@mail.gmail.com>
+ <20250430133026.GH9140@suse.cz> <CAPjX3FdexSywSbJQfrj5pazrBRyVns3SdRCsw1VmvhrJv20bvw@mail.gmail.com>
+ <20250502105630.GO9140@suse.cz>
+In-Reply-To: <20250502105630.GO9140@suse.cz>
+From: Daniel Vacek <neelx@suse.com>
+Date: Fri, 2 May 2025 14:03:55 +0200
+X-Gm-Features: ATxdqUEf1RQiTTyAISQFpziz--aYmeR-Yd3u2T6S9hrE9Iviu6ITi3lYgPSwwQY
+Message-ID: <CAPjX3Ffy2=CQP2mx9Wa3BBR54fEAcuo8ADqeTVdcAmCO7g+gmg@mail.gmail.com>
+Subject: Re: [PATCH] btrfs: remove extent buffer's redundant `len` member field
+To: dsterba@suse.cz
+Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The TAP specification requires that the output begins with a header line.
-These headers lines are missing in the timens tests.
+On Fri, 2 May 2025 at 12:56, David Sterba <dsterba@suse.cz> wrote:
+>
+> On Wed, Apr 30, 2025 at 04:13:20PM +0200, Daniel Vacek wrote:
+> > On Wed, 30 Apr 2025 at 15:30, David Sterba <dsterba@suse.cz> wrote:
+> > >
+> > > On Wed, Apr 30, 2025 at 10:21:18AM +0200, Daniel Vacek wrote:
+> > > > > The benefit of duplicating the length in each eb is that it's in the
+> > > > > same cacheline as the other members that are used for offset
+> > > > > calculations or bit manipulations.
+> > > > >
+> > > > > Going to the fs_info->nodesize may or may not hit a cache, also because
+> > > > > it needs to do 2 pointer dereferences, so from that perspective I think
+> > > > > it's making it worse.
+> > > >
+> > > > I was considering that. Since fs_info is shared for all ebs and other
+> > > > stuff like transactions, etc. I think the cache is hot most of the
+> > > > time and there will be hardly any performance difference observable.
+> > > > Though without benchmarks this is just a speculation (on both sides).
+> > >
+> > > The comparison is between "always access 1 cacheline" and "hope that the
+> > > other cacheline is hot", yeah we don't have benchmarks for that but the
+> > > first access pattern is not conditional.
+> >
+> > That's quite right. Though in many places we already have fs_info
+> > anyways so it's rather accessing a cacheline in eb vs. accessing a
+> > cacheline in fs_info. In the former case it's likely a hot memory due
+> > to accessing surrounding members anyways, while in the later case is
+> > hopefully hot as it's a heavily shared resource accessed when
+> > processing other ebs or transactions.
+> > But yeah, in some places we don't have the fs_info pointer yet and two
+> > accesses are still needed.
+>
+> The fs_info got added to eb because it used to be passed as parameter to
+> many functions.
 
-Print such a line.
+Makes sense.
 
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
----
- tools/testing/selftests/timens/clock_nanosleep.c | 2 ++
- tools/testing/selftests/timens/exec.c            | 2 ++
- tools/testing/selftests/timens/futex.c           | 2 ++
- tools/testing/selftests/timens/gettime_perf.c    | 2 ++
- tools/testing/selftests/timens/procfs.c          | 2 ++
- tools/testing/selftests/timens/timens.c          | 2 ++
- tools/testing/selftests/timens/timer.c           | 2 ++
- tools/testing/selftests/timens/timerfd.c         | 2 ++
- tools/testing/selftests/timens/vfork_exec.c      | 2 ++
- 9 files changed, 18 insertions(+)
+> > In theory fs_info could be shuffled to move nodesize to the same
+> > cacheline with buffer_tree. Would that feel better to you?
+>
+> We'd get conflicting requirements for ordering in fs_info. Right now
+> the nodesize/sectorsize/... are in once cacheline in fs_info and they're
+> often used together in many functions. Reordering it to fit eb usage
+> pattern may work but I'm not convinced we need it.
 
-diff --git a/tools/testing/selftests/timens/clock_nanosleep.c b/tools/testing/selftests/timens/clock_nanosleep.c
-index 72d41b955fb2263ae74c34b446fb322d1bd50c6a..346bff3d128dfa8c8c743cc2eba74917994bb2f7 100644
---- a/tools/testing/selftests/timens/clock_nanosleep.c
-+++ b/tools/testing/selftests/timens/clock_nanosleep.c
-@@ -115,6 +115,8 @@ int main(int argc, char *argv[])
- {
- 	int ret, nsfd;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	ksft_set_plan(4);
-diff --git a/tools/testing/selftests/timens/exec.c b/tools/testing/selftests/timens/exec.c
-index d12ff955de0d8f6665fa957e81438e373af9f92c..a644162d56fdc86827b83a45f83c2597c253aa6a 100644
---- a/tools/testing/selftests/timens/exec.c
-+++ b/tools/testing/selftests/timens/exec.c
-@@ -36,6 +36,8 @@ int main(int argc, char *argv[])
- 		return 0;
- 	}
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	ksft_set_plan(1);
-diff --git a/tools/testing/selftests/timens/futex.c b/tools/testing/selftests/timens/futex.c
-index 6b2b9264e851caed06a628589eda0bf81ff33f16..339633ae037a74d2026ca835ac8600cd0394ae01 100644
---- a/tools/testing/selftests/timens/futex.c
-+++ b/tools/testing/selftests/timens/futex.c
-@@ -66,6 +66,8 @@ int main(int argc, char *argv[])
- 	pid_t pid;
- 	struct timespec mtime_now;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	ksft_set_plan(2);
-diff --git a/tools/testing/selftests/timens/gettime_perf.c b/tools/testing/selftests/timens/gettime_perf.c
-index 6b13dc277724126a9d2d5e17c805217760df72ad..d6658b7b754877fbf67237d6c22787a2a89066ce 100644
---- a/tools/testing/selftests/timens/gettime_perf.c
-+++ b/tools/testing/selftests/timens/gettime_perf.c
-@@ -67,6 +67,8 @@ int main(int argc, char *argv[])
- 	time_t offset = 10;
- 	int nsfd;
- 
-+	ksft_print_header();
-+
- 	ksft_set_plan(8);
- 
- 	fill_function_pointers();
-diff --git a/tools/testing/selftests/timens/procfs.c b/tools/testing/selftests/timens/procfs.c
-index 1833ca97eb247b1b45b7a86f0ca800d4a6e58c74..0a9ff90ee69a9327ed905428f1462fa189ffd830 100644
---- a/tools/testing/selftests/timens/procfs.c
-+++ b/tools/testing/selftests/timens/procfs.c
-@@ -180,6 +180,8 @@ int main(int argc, char *argv[])
- {
- 	int ret = 0;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	ksft_set_plan(2);
-diff --git a/tools/testing/selftests/timens/timens.c b/tools/testing/selftests/timens/timens.c
-index 387220791a052e6013bd0fb4162f123d85152183..a9c0534ef8f67184c34882ae163472c179f593e4 100644
---- a/tools/testing/selftests/timens/timens.c
-+++ b/tools/testing/selftests/timens/timens.c
-@@ -151,6 +151,8 @@ int main(int argc, char *argv[])
- 	time_t offset;
- 	int ret = 0;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	check_supported_timers();
-diff --git a/tools/testing/selftests/timens/timer.c b/tools/testing/selftests/timens/timer.c
-index 5b939f59dfa4d64e4c2e4dc8eb6a644d44211f13..51babe63e233bdaaef35c1cafbcb5b5cc91c021e 100644
---- a/tools/testing/selftests/timens/timer.c
-+++ b/tools/testing/selftests/timens/timer.c
-@@ -75,6 +75,8 @@ int main(int argc, char *argv[])
- 	pid_t pid;
- 	struct timespec btime_now, mtime_now;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	check_supported_timers();
-diff --git a/tools/testing/selftests/timens/timerfd.c b/tools/testing/selftests/timens/timerfd.c
-index a4196bbd6e33f41b6a3ae346070037aff1cf4087..e58bc8b64ce2738dccb8c2a2c88e592c237b55d5 100644
---- a/tools/testing/selftests/timens/timerfd.c
-+++ b/tools/testing/selftests/timens/timerfd.c
-@@ -82,6 +82,8 @@ int main(int argc, char *argv[])
- 	pid_t pid;
- 	struct timespec btime_now, mtime_now;
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	check_supported_timers();
-diff --git a/tools/testing/selftests/timens/vfork_exec.c b/tools/testing/selftests/timens/vfork_exec.c
-index 5b8907bf451dde3f3e2699f87797c155b9115aab..b957e1a651243adde41ec5cd57bbd12a7cac9eeb 100644
---- a/tools/testing/selftests/timens/vfork_exec.c
-+++ b/tools/testing/selftests/timens/vfork_exec.c
-@@ -91,6 +91,8 @@ int main(int argc, char *argv[])
- 		return check("child after exec", &now);
- 	}
- 
-+	ksft_print_header();
-+
- 	nscheck();
- 
- 	ksft_set_plan(4);
+I agree.
 
--- 
-2.49.0
+> > > > > I don't think we need to do the optimization right now, but maybe in the
+> > > > > future if there's a need to add something to eb. Still we can use the
+> > > > > remaining 16 bytes up to 256 without making things worse.
+> > > >
+> > > > This really depends on configuration. On my laptop (Debian -rt kernel)
+> > > > the eb struct is actually 272 bytes as the rt_mutex is significantly
+> > > > heavier than raw spin lock. And -rt is a first class citizen nowadays,
+> > > > often used in Kubernetes deployments like 5G RAN telco, dpdk and such.
+> > > > I think it would be nice to slim the struct below 256 bytes even there
+> > > > if that's your aim.
+> > >
+> > > I configured and built RT kernel to see if it's possible to go to 256
+> > > bytes on RT and it seems yes with a big sacrifice of removing several
+> > > struct members that cache values like folio_size or folio_shift and
+> > > generating worse code.
+> > >
+> > > As 272 is a multiple of 16 it's a reasonable size and we don't need to
+> > > optimize further. The number of ebs in one slab is 30, with the non-rt
+> > > build it's 34, which sounds OK.
+> >
+> > That sounds fair. Well the 256 bytes were your argument in the first place.
+>
+> Yeah, 256 is a nice number because it aligns with cachelines on multiple
+> architectures, this is useful for splitting the structure to the "data
+> accessed together" and locking/refcounting. It's a tentative goal, we
+> used to have larger eb size due to own locking implementation but with
+> rwsems it got close/under 256.
+>
+> The current size 240 is 1/4 of cacheline shifted so it's not all clean
+> but whe have some wiggle room for adding new members or cached values,
+> like folio_size/folio_shift/addr.
 
+Sounds like we could force align to cacheline or explicitly pad to
+256B? The later could be a bit tricky though.
+
+> >
+> > Still, with this:
+> >
+> > --- a/fs/btrfs/extent_io.h
+> > +++ b/fs/btrfs/extent_io.h
+> > @@ -82,7 +82,10 @@ void __cold extent_buffer_free_cachep(void);
+> >  struct extent_buffer {
+> >         u64 start;
+> >         u32 folio_size;
+> > -       unsigned long bflags;
+> > +       u8 folio_shift;
+> > +       /* >= 0 if eb belongs to a log tree, -1 otherwise */
+> > +       s8 log_index;
+> > +       unsigned short bflags;
+>
+> This does not compile because of set_bit/clear_bit/wait_on_bit API
+> requirements.
+
+Yeah, I realized when I tried to implement it. It was just an email
+idea when sent.
+
+> >         struct btrfs_fs_info *fs_info;
+> >
+> >         /*
+> > @@ -94,9 +97,6 @@ struct extent_buffer {
+> >         spinlock_t refs_lock;
+> >         atomic_t refs;
+> >         int read_mirror;
+> > -       /* >= 0 if eb belongs to a log tree, -1 otherwise */
+> > -       s8 log_index;
+> > -       u8 folio_shift;
+> >         struct rcu_head rcu_head;
+> >
+> >         struct rw_semaphore lock;
+> >
+> > you're down to 256 even on -rt. And the great part is I don't see any
+> > sacrifices (other than accessing a cacheline in fs_info). We're only
+> > using 8 flags now, so there is still some room left for another 8 if
+> > needed in the future.
+>
+> Which means that the size on non-rt would be something like 228, roughly
+> calculating the savings and the increase due to spinloct_t going from
+> 4 -> 32 bytes. Also I'd like to see the generated assembly after the
+> suggested reordering.
+
+If I see correctly the non-rt will not change when I keep ulong
+bflags. The -rt build goes down to 264 bytes. That's a bit better for
+free but still not ideal from alignment POV.
+
+> The eb may not be perfect, I think there could be false sharing of
+> refs_lock and refs but this is a wild guess and based only on code
+
+refs_lock and refs look like they share the same cacheline in every
+case. At least on x86.
+But still, the slab object is not aligned in the first place. Luckily
+the two fields roam together.
+
+Out of curiosity, is there any past experience where this kind of
+optimizations make a difference within a filesystem code?
+I can imagine perhaps for fast devices like NVDIMM or DAX the CPU may
+become the bottleneck? Or are nowadays NVMe devices already fast
+enough to saturate the CPU?
+
+I faintly recall one issue where I debugged a CPU which could not keep
+up with handling the interrupts of finished IO on NVMe submitted by
+other CPUs. Though that was on xfs (or maybe ext4) not on btrfs. But
+that was a power-play of one against the rest as the interrupt was not
+balanced or spread to more CPUs.
+
+> observation. You may have more luck with other data structures with
+> unnecessary holes but please optimize for non-RT first.
+
+Clearly non-rt is the default and most important. No questions here.
